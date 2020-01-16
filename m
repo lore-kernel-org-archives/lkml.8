@@ -2,111 +2,194 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C96C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65151C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7532E20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:40:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="isUQiE+G"
+	by mail.kernel.org (Postfix) with ESMTP id 373202073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:40:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579218023;
+	bh=3njkAxnNMx7xguEaAvRZU4TqOQELfCj4I94y4SfPoAk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=P3DDKryzTvfod9kNVxBx9xsUwDTrKqQeWTVvXCTQFIlibNqMDnvtDfnR81Tzo1OEf
+	 oJGVgRxVr8nmOwF9Oblfa9Dk4UtuoLxWL3zcYqd3b1H2kVyH12pmGFXONvvw1OQssT
+	 f0q0fhtPPvYy5ThrZKH1qheyiok0rJTfCKEgImDQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391780AbgAPXkT (ORCPT
+        id S1731526AbgAPXkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:40:19 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:19956 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2391680AbgAPXkO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:40:14 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579218014; h=References: In-Reply-To: Message-Id: Date:
- Subject: To: From: Sender;
- bh=LDZlibC7V5vrLNV2qPZ0WAjcYgQQq7dFFZfd1WhDPq8=; b=isUQiE+G+ceSWGsGfr06wWw8WKTGhfoaMCZqYRYchrDSxD8tJO9XQpH7OSDR3dHxdy+R5ndo
- WUFGdUYcvQmsv9qR3Z2nZagFtespikxNkRqxrBJn5UlKvFf0Nil6NneHdr1qJQI8fqWbMksj
- +u+3LPgaiR1Z5oaCN0sDWU9N+60=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e20f45c.7faae9450e30-smtp-out-n02;
- Thu, 16 Jan 2020 23:40:12 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7F1DDC433CB; Thu, 16 Jan 2020 23:40:12 +0000 (UTC)
-Received: from vgutta-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Thu, 16 Jan 2020 18:40:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59456 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390243AbgAPX1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:27:33 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: vgutta)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DC1DAC447A1;
-        Thu, 16 Jan 2020 23:40:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DC1DAC447A1
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vnkgutta@codeaurora.org
-From:   Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, vinod.koul@linaro.org,
-        psodagud@codeaurora.org, tsoni@codeaurora.org,
-        jshriram@codeaurora.org, tdas@codeaurora.org,
-        vnkgutta@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/7] dt-bindings: clock: Add RPMHCC bindings for SM8250
-Date:   Thu, 16 Jan 2020 15:39:48 -0800
-Message-Id: <1579217994-22219-2-git-send-email-vnkgutta@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1579217994-22219-1-git-send-email-vnkgutta@codeaurora.org>
-References: <1579217994-22219-1-git-send-email-vnkgutta@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A2B8206D9;
+        Thu, 16 Jan 2020 23:27:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579217252;
+        bh=3njkAxnNMx7xguEaAvRZU4TqOQELfCj4I94y4SfPoAk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=B66uSBHCOmv65U4hTGeL17bxmwOgtPr9bPCJIrR9eHBvJjPVOlJOmjwyZksjSrDeA
+         bxaej5nNQhXwo8cZ5qlS1T+TtEKITfUNjA4+poXN0j6IlWImHqhZkH9bge/J5iQfCF
+         lbFo8XHOWsPPmwf2ZJGKGgIC94JDfaTMuLTDDMZg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        David Howells <dhowells@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 192/203] rxrpc: Unlock new call in rxrpc_new_incoming_call() rather than the caller
+Date:   Fri, 17 Jan 2020 00:18:29 +0100
+Message-Id: <20200116231801.009945367@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
+References: <20200116231745.218684830@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taniya Das <tdas@codeaurora.org>
+From: David Howells <dhowells@redhat.com>
 
-Add bindings and update documentation for clock rpmh driver on SM8250.
+[ Upstream commit f33121cbe91973a08e68e4bde8c3f7e6e4e351c1 ]
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
-Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+Move the unlock and the ping transmission for a new incoming call into
+rxrpc_new_incoming_call() rather than doing it in the caller.  This makes
+it clearer to see what's going on.
+
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+cc: Ingo Molnar <mingo@redhat.com>
+cc: Will Deacon <will@kernel.org>
+cc: Davidlohr Bueso <dave@stgolabs.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml | 1 +
- include/dt-bindings/clock/qcom,rpmh.h                    | 4 +++-
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ net/rxrpc/call_accept.c | 36 ++++++++++++++++++++++++++++--------
+ net/rxrpc/input.c       | 18 ------------------
+ 2 files changed, 28 insertions(+), 26 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml b/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
-index 94e2f14..21398d1 100644
---- a/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
-+++ b/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
-@@ -20,6 +20,7 @@ properties:
-       - qcom,sc7180-rpmh-clk
-       - qcom,sdm845-rpmh-clk
-       - qcom,sm8150-rpmh-clk
-+      - qcom,sm8250-rpmh-clk
+diff --git a/net/rxrpc/call_accept.c b/net/rxrpc/call_accept.c
+index 135bf5cd8dd5..3685b1732f65 100644
+--- a/net/rxrpc/call_accept.c
++++ b/net/rxrpc/call_accept.c
+@@ -239,6 +239,22 @@ void rxrpc_discard_prealloc(struct rxrpc_sock *rx)
+ 	kfree(b);
+ }
  
-   clocks:
-     maxItems: 1
-diff --git a/include/dt-bindings/clock/qcom,rpmh.h b/include/dt-bindings/clock/qcom,rpmh.h
-index edcab3f..2e6c54e 100644
---- a/include/dt-bindings/clock/qcom,rpmh.h
-+++ b/include/dt-bindings/clock/qcom,rpmh.h
-@@ -1,5 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0 */
--/* Copyright (c) 2018, The Linux Foundation. All rights reserved. */
-+/* Copyright (c) 2018, 2020, The Linux Foundation. All rights reserved. */
++/*
++ * Ping the other end to fill our RTT cache and to retrieve the rwind
++ * and MTU parameters.
++ */
++static void rxrpc_send_ping(struct rxrpc_call *call, struct sk_buff *skb)
++{
++	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
++	ktime_t now = skb->tstamp;
++
++	if (call->peer->rtt_usage < 3 ||
++	    ktime_before(ktime_add_ms(call->peer->rtt_last_req, 1000), now))
++		rxrpc_propose_ACK(call, RXRPC_ACK_PING, sp->hdr.serial,
++				  true, true,
++				  rxrpc_propose_ack_ping_for_params);
++}
++
+ /*
+  * Allocate a new incoming call from the prealloc pool, along with a connection
+  * and a peer as necessary.
+@@ -346,9 +362,7 @@ struct rxrpc_call *rxrpc_new_incoming_call(struct rxrpc_local *local,
+ 				  sp->hdr.seq, RX_INVALID_OPERATION, ESHUTDOWN);
+ 		skb->mark = RXRPC_SKB_MARK_REJECT_ABORT;
+ 		skb->priority = RX_INVALID_OPERATION;
+-		_leave(" = NULL [close]");
+-		call = NULL;
+-		goto out;
++		goto no_call;
+ 	}
  
+ 	/* The peer, connection and call may all have sprung into existence due
+@@ -361,9 +375,7 @@ struct rxrpc_call *rxrpc_new_incoming_call(struct rxrpc_local *local,
+ 	call = rxrpc_alloc_incoming_call(rx, local, peer, conn, skb);
+ 	if (!call) {
+ 		skb->mark = RXRPC_SKB_MARK_REJECT_BUSY;
+-		_leave(" = NULL [busy]");
+-		call = NULL;
+-		goto out;
++		goto no_call;
+ 	}
  
- #ifndef _DT_BINDINGS_CLK_MSM_RPMH_H
-@@ -19,5 +19,7 @@
- #define RPMH_RF_CLK3				10
- #define RPMH_RF_CLK3_A				11
- #define RPMH_IPA_CLK				12
-+#define RPMH_LN_BB_CLK1				13
-+#define RPMH_LN_BB_CLK1_A			14
+ 	trace_rxrpc_receive(call, rxrpc_receive_incoming,
+@@ -432,10 +444,18 @@ struct rxrpc_call *rxrpc_new_incoming_call(struct rxrpc_local *local,
+ 	 */
+ 	rxrpc_put_call(call, rxrpc_call_put);
  
- #endif
+-	_leave(" = %p{%d}", call, call->debug_id);
+-out:
+ 	spin_unlock(&rx->incoming_lock);
++
++	rxrpc_send_ping(call, skb);
++	mutex_unlock(&call->user_mutex);
++
++	_leave(" = %p{%d}", call, call->debug_id);
+ 	return call;
++
++no_call:
++	spin_unlock(&rx->incoming_lock);
++	_leave(" = NULL [%u]", skb->mark);
++	return NULL;
+ }
+ 
+ /*
+diff --git a/net/rxrpc/input.c b/net/rxrpc/input.c
+index 157be1ff8697..86bd133b4fa0 100644
+--- a/net/rxrpc/input.c
++++ b/net/rxrpc/input.c
+@@ -192,22 +192,6 @@ send_extra_data:
+ 	goto out_no_clear_ca;
+ }
+ 
+-/*
+- * Ping the other end to fill our RTT cache and to retrieve the rwind
+- * and MTU parameters.
+- */
+-static void rxrpc_send_ping(struct rxrpc_call *call, struct sk_buff *skb)
+-{
+-	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
+-	ktime_t now = skb->tstamp;
+-
+-	if (call->peer->rtt_usage < 3 ||
+-	    ktime_before(ktime_add_ms(call->peer->rtt_last_req, 1000), now))
+-		rxrpc_propose_ACK(call, RXRPC_ACK_PING, sp->hdr.serial,
+-				  true, true,
+-				  rxrpc_propose_ack_ping_for_params);
+-}
+-
+ /*
+  * Apply a hard ACK by advancing the Tx window.
+  */
+@@ -1396,8 +1380,6 @@ int rxrpc_input_packet(struct sock *udp_sk, struct sk_buff *skb)
+ 		call = rxrpc_new_incoming_call(local, rx, skb);
+ 		if (!call)
+ 			goto reject_packet;
+-		rxrpc_send_ping(call, skb);
+-		mutex_unlock(&call->user_mutex);
+ 	}
+ 
+ 	/* Process a call packet; this either discards or passes on the ref
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.20.1
+
+
+
