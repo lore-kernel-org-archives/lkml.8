@@ -2,54 +2,51 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9122C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 409A9C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:52:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE79921582
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1651C208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:52:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193562;
-	bh=7X9djXMRPZ2MDbznjcbp/fyubI824GSoLXtTbSgovWI=;
+	s=default; t=1579193566;
+	bh=H6ajRm7v/INVO/OjCprFhS/ZmGye/MPtiF2yeOAxJRg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xoHrxxSxPMIdXqQ/LwO5n0cT4maEjlp8jNfVoDHlJD26wsMGZbfs5tD5K6ZLJ3o5G
-	 Bq4eR3ZKZMppqHw9FmJSx/yoGQzz0MEQgAWBHS9jHOpHKXx7gVOxBWtE5evP0+oX1G
-	 eAxJnpVw/KAhVHZxLjPQ3GIE+BZvfbVbyyQ8a4uc=
+	b=liT47cB4cYA5m6eZFsFTrkbz9kj2p71ORLXc9QaKWqleyCBlqRucgQG89Kxv/Cz3O
+	 U5v0gzs2MeE7gdswsbGvIdU7tH1wDksrrVNhcOm4d2oq0nVNSXSJgHnNI7ERCIC8fB
+	 7xe23iPjPCPnTJ50rpskr56RPy7gpDaVEteWIT3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729473AbgAPQwl (ORCPT
+        id S1730336AbgAPQwo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:52:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35808 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:52:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730170AbgAPQwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:52:40 -0500
+        id S1729351AbgAPQwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:52:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5959A21D56;
-        Thu, 16 Jan 2020 16:52:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD24E2192A;
+        Thu, 16 Jan 2020 16:52:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193559;
-        bh=7X9djXMRPZ2MDbznjcbp/fyubI824GSoLXtTbSgovWI=;
+        s=default; t=1579193561;
+        bh=H6ajRm7v/INVO/OjCprFhS/ZmGye/MPtiF2yeOAxJRg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LKOXLLo3/rHPeUtXP0BlNGXPvBTQbr5sMC2gpTjuvblBIojTgFHoCXFu1xr9NBwWq
-         XA54ajZyB9Qpwh+j0/00vDtXG2Gl/BeOOVTLKzC6D/Xd4YdYq8Vun8XPFM2jNs6ZDE
-         BKj72XBwgWCQ9n4FpxzXTcxkIqECyLQImQMvrGEk=
+        b=v0RzV1jfjt1dJa/5TLeU8romvhM+832WTI3MkLdbMGmYXVFR2OZhamG8dhxmPxmLE
+         4AuIiyhRKHFjgyH3cSXRfCw2sTaFR2OLsBDmcn81kyqLgU6drTmMHThHkZRPz10ETk
+         blXvtNQpF1iYs+PUFLChdVsDVcddhx2xq3oNJ2to=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Golle <daniel@makrotopia.org>, wbob <wbob@jify.de>,
-        Roman Yeryomin <roman@advem.lv>,
-        Stanislaw Gruszka <sgruszka@redhat.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 104/205] rt2800: remove errornous duplicate condition
-Date:   Thu, 16 Jan 2020 11:41:19 -0500
-Message-Id: <20200116164300.6705-104-sashal@kernel.org>
+Cc:     Eddie James <eajames@linux.ibm.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 106/205] hwmon: (pmbus/ibm-cffps) Fix LED blink behavior
+Date:   Thu, 16 Jan 2020 11:41:21 -0500
+Message-Id: <20200116164300.6705-106-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -62,77 +59,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Golle <daniel@makrotopia.org>
+From: Eddie James <eajames@linux.ibm.com>
 
-[ Upstream commit a1f7c2cabf701a17b1a05d6526bbdadc3d05e05c ]
+[ Upstream commit 92b39ad440968bab38eb6577d63c12994601ed94 ]
 
-On 2019-10-28 06:07, wbob wrote:
-> Hello Roman,
->
-> while reading around drivers/net/wireless/ralink/rt2x00/rt2800lib.c
-> I stumbled on what I think is an edit of yours made in error in march
-> 2017:
->
-> https://github.com/torvalds/linux/commit/41977e86#diff-dae5dc10da180f3b055809a48118e18aR5281
->
-> RT6352 in line 5281 should not have been introduced as the "else if"
-> below line 5291 can then not take effect for a RT6352 device. Another
-> possibility is for line 5291 to be not for RT6352, but this seems
-> very unlikely. Are you able to clarify still after this substantial time?
->
-> 5277: static int rt2800_init_registers(struct rt2x00_dev *rt2x00dev)
-> ...
-> 5279:  } else if (rt2x00_rt(rt2x00dev, RT5390) ||
-> 5280:         rt2x00_rt(rt2x00dev, RT5392) ||
-> 5281:         rt2x00_rt(rt2x00dev, RT6352)) {
-> ...
-> 5291:  } else if (rt2x00_rt(rt2x00dev, RT6352)) {
-> ...
+The LED blink_set function incorrectly did not tell the PSU LED to blink
+if brightness was LED_OFF. Fix this, and also correct the LED_OFF
+command data, which should give control of the LED back to the PSU
+firmware. Also prevent I2C failures from getting the driver LED state
+out of sync and add some dev_dbg statements.
 
-Hence remove errornous line 5281 to make the driver actually
-execute the correct initialization routine for MT7620 chips.
-
-As it was requested by Stanislaw Gruszka remove setting values of
-MIMO_PS_CFG and TX_PIN_CFG. MIMO_PS_CFG is responsible for MIMO
-power-safe mode (which is disabled), hence we can drop setting it.
-TX_PIN_CFG is set correctly in other functions, and as setting this
-value breaks some devices, rather don't set it here during init, but
-only modify it later on.
-
-Fixes: 41977e86c984 ("rt2x00: add support for MT7620")
-Reported-by: wbob <wbob@jify.de>
-Reported-by: Roman Yeryomin <roman@advem.lv>
-Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-Acked-by: Stanislaw Gruszka <sgruszka@redhat.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Link: https://lore.kernel.org/r/20191106200106.29519-3-eajames@linux.ibm.com
+Fixes: ef9e1cdf419a3 ("hwmon: (pmbus/cffps) Add led class device for power supply fault led")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ralink/rt2x00/rt2800lib.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/hwmon/pmbus/ibm-cffps.c | 27 +++++++++++++++++++--------
+ 1 file changed, 19 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/wireless/ralink/rt2x00/rt2800lib.c b/drivers/net/wireless/ralink/rt2x00/rt2800lib.c
-index f1cdcd61c54a..c99f1912e266 100644
---- a/drivers/net/wireless/ralink/rt2x00/rt2800lib.c
-+++ b/drivers/net/wireless/ralink/rt2x00/rt2800lib.c
-@@ -5839,8 +5839,7 @@ static int rt2800_init_registers(struct rt2x00_dev *rt2x00dev)
- 		rt2800_register_write(rt2x00dev, TX_TXBF_CFG_0, 0x8000fc21);
- 		rt2800_register_write(rt2x00dev, TX_TXBF_CFG_3, 0x00009c40);
- 	} else if (rt2x00_rt(rt2x00dev, RT5390) ||
--		   rt2x00_rt(rt2x00dev, RT5392) ||
--		   rt2x00_rt(rt2x00dev, RT6352)) {
-+		   rt2x00_rt(rt2x00dev, RT5392)) {
- 		rt2800_register_write(rt2x00dev, TX_SW_CFG0, 0x00000404);
- 		rt2800_register_write(rt2x00dev, TX_SW_CFG1, 0x00080606);
- 		rt2800_register_write(rt2x00dev, TX_SW_CFG2, 0x00000000);
-@@ -5854,8 +5853,6 @@ static int rt2800_init_registers(struct rt2x00_dev *rt2x00dev)
- 		rt2800_register_write(rt2x00dev, TX_SW_CFG0, 0x00000401);
- 		rt2800_register_write(rt2x00dev, TX_SW_CFG1, 0x000C0000);
- 		rt2800_register_write(rt2x00dev, TX_SW_CFG2, 0x00000000);
--		rt2800_register_write(rt2x00dev, MIMO_PS_CFG, 0x00000002);
--		rt2800_register_write(rt2x00dev, TX_PIN_CFG, 0x00150F0F);
- 		rt2800_register_write(rt2x00dev, TX_ALC_VGA3, 0x00000000);
- 		rt2800_register_write(rt2x00dev, TX0_BB_GAIN_ATTEN, 0x0);
- 		rt2800_register_write(rt2x00dev, TX1_BB_GAIN_ATTEN, 0x0);
+diff --git a/drivers/hwmon/pmbus/ibm-cffps.c b/drivers/hwmon/pmbus/ibm-cffps.c
+index aa4cdbbb100a..929c909ac27a 100644
+--- a/drivers/hwmon/pmbus/ibm-cffps.c
++++ b/drivers/hwmon/pmbus/ibm-cffps.c
+@@ -39,9 +39,13 @@
+ #define CFFPS_MFR_VAUX_FAULT			BIT(6)
+ #define CFFPS_MFR_CURRENT_SHARE_WARNING		BIT(7)
+ 
++/*
++ * LED off state actually relinquishes LED control to PSU firmware, so it can
++ * turn on the LED for faults.
++ */
++#define CFFPS_LED_OFF				0
+ #define CFFPS_LED_BLINK				BIT(0)
+ #define CFFPS_LED_ON				BIT(1)
+-#define CFFPS_LED_OFF				BIT(2)
+ #define CFFPS_BLINK_RATE_MS			250
+ 
+ enum {
+@@ -296,23 +300,31 @@ static int ibm_cffps_led_brightness_set(struct led_classdev *led_cdev,
+ 					enum led_brightness brightness)
+ {
+ 	int rc;
++	u8 next_led_state;
+ 	struct ibm_cffps *psu = container_of(led_cdev, struct ibm_cffps, led);
+ 
+ 	if (brightness == LED_OFF) {
+-		psu->led_state = CFFPS_LED_OFF;
++		next_led_state = CFFPS_LED_OFF;
+ 	} else {
+ 		brightness = LED_FULL;
++
+ 		if (psu->led_state != CFFPS_LED_BLINK)
+-			psu->led_state = CFFPS_LED_ON;
++			next_led_state = CFFPS_LED_ON;
++		else
++			next_led_state = CFFPS_LED_BLINK;
+ 	}
+ 
++	dev_dbg(&psu->client->dev, "LED brightness set: %d. Command: %d.\n",
++		brightness, next_led_state);
++
+ 	pmbus_set_page(psu->client, 0);
+ 
+ 	rc = i2c_smbus_write_byte_data(psu->client, CFFPS_SYS_CONFIG_CMD,
+-				       psu->led_state);
++				       next_led_state);
+ 	if (rc < 0)
+ 		return rc;
+ 
++	psu->led_state = next_led_state;
+ 	led_cdev->brightness = brightness;
+ 
+ 	return 0;
+@@ -325,10 +337,7 @@ static int ibm_cffps_led_blink_set(struct led_classdev *led_cdev,
+ 	int rc;
+ 	struct ibm_cffps *psu = container_of(led_cdev, struct ibm_cffps, led);
+ 
+-	psu->led_state = CFFPS_LED_BLINK;
+-
+-	if (led_cdev->brightness == LED_OFF)
+-		return 0;
++	dev_dbg(&psu->client->dev, "LED blink set.\n");
+ 
+ 	pmbus_set_page(psu->client, 0);
+ 
+@@ -337,6 +346,8 @@ static int ibm_cffps_led_blink_set(struct led_classdev *led_cdev,
+ 	if (rc < 0)
+ 		return rc;
+ 
++	psu->led_state = CFFPS_LED_BLINK;
++	led_cdev->brightness = LED_FULL;
+ 	*delay_on = CFFPS_BLINK_RATE_MS;
+ 	*delay_off = CFFPS_BLINK_RATE_MS;
+ 
 -- 
 2.20.1
 
