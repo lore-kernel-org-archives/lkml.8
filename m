@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D32BFC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CE2C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9B1C2468D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 048B92468D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:48:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196906;
-	bh=fPlNpHQvfkloCcuCGF/dUff98NWTDSU1o9YkuNNxshY=;
+	s=default; t=1579196911;
+	bh=Vl0mUl3nyA3+imvByviOLU+uQpGETegssy81vreRVno=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BgLKXi7ynPf6la0YvG2td7hFiMLGjKFHzgjUCkROMcsoUFPc3VL459XMMJQrNUNYS
-	 utHi4qYNJMoUoseuZXDebuLOJ4Fm7/TuIBdxfeidhTeV4z0fZXe3jUiqIASh75PIfg
-	 fJZkTRRxjViyzk2hth6LxvbVaBc0IMGI1KRSskSU=
+	b=MGDTGYQfTljHeLQMVu/MQ8ObS29yewEKlbjzHlyuoboi3TtVEX/RznIKQp4n3X5n0
+	 fldVUP2fhc/YoIfq4wJ14K/dDd8fYPoWxLPupTd0oLyeVQ6z5kCGTj4TBGcRGB6KBz
+	 LwK0BJX/Xe3wV7QjvNATvE+vE1U9F7yJ7HWh/+p8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394345AbgAPRsZ (ORCPT
+        id S2406717AbgAPRqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:48:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39522 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406720AbgAPRqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jan 2020 12:46:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39298 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406678AbgAPRq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:46:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5ECD1246B8;
-        Thu, 16 Jan 2020 17:46:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41340246EA;
+        Thu, 16 Jan 2020 17:46:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196795;
-        bh=fPlNpHQvfkloCcuCGF/dUff98NWTDSU1o9YkuNNxshY=;
+        s=default; t=1579196788;
+        bh=Vl0mUl3nyA3+imvByviOLU+uQpGETegssy81vreRVno=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hrnrYqVxzoEQlRmwjaDpfx3pt/mIJ1WJuSJFFjPdrwAk0fwLNES0GRH2Kh6jdLNjN
-         vOXZdkwGuF9G+iGTKHnuXT+Bp477OUwV+p3tOzp3G8i/LTY34ve/7dGeArcXP6Gltr
-         ATiEZZYUOoAcCQ7eYy710psBVjduG3WavhVuOVBc=
+        b=uOuj/myyekutclpFsBSSmvIfJ7KoYiWS5RXXje10aObPDmj5jA8Rlj/upN5sOhqk9
+         PJWn3g8Os2RErZWxc8lwKikXJng1cPNdu0ZAyGgd/YxYw72N0veLYjW4CI63vV92+v
+         KvN2WNtY/4VTPtspLAV6jDumkkARqDGR03sSmRKE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mans Rullgard <mans@mansr.com>,
-        Nicolas Ferre <nicolas.ferre@atmel.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.4 156/174] spi: atmel: fix handling of cs_change set on non-last xfer
-Date:   Thu, 16 Jan 2020 12:42:33 -0500
-Message-Id: <20200116174251.24326-156-sashal@kernel.org>
+Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
+        Jakub Kicinski <kubakici@wp.pl>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.4 151/174] mt7601u: fix bbp version check in mt7601u_wait_bbp_ready
+Date:   Thu, 16 Jan 2020 12:42:28 -0500
+Message-Id: <20200116174251.24326-151-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -62,65 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mans Rullgard <mans@mansr.com>
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-[ Upstream commit fed8d8c7a6dc2a76d7764842853d81c770b0788e ]
+[ Upstream commit 15e14f76f85f4f0eab3b8146e1cd3c58ce272823 ]
 
-The driver does the wrong thing when cs_change is set on a non-last
-xfer in a message.  When cs_change is set, the driver deactivates the
-CS and leaves it off until a later xfer again has cs_change set whereas
-it should be briefly toggling CS off and on again.
+Fix bbp ready check in mt7601u_wait_bbp_ready. The issue is reported by
+coverity with the following error:
 
-This patch brings the behaviour of the driver back in line with the
-documentation and common sense.  The delay of 10 us is the same as is
-used by the default spi_transfer_one_message() function in spi.c.
-[gregory: rebased on for-5.5 from spi tree]
-Fixes: 8090d6d1a415 ("spi: atmel: Refactor spi-atmel to use SPI framework queue")
-Signed-off-by: Mans Rullgard <mans@mansr.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Link: https://lore.kernel.org/r/20191018153504.4249-1-gregory.clement@bootlin.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Logical vs. bitwise operator
+The expression's value does not depend on the operands; inadvertent use
+of the wrong operator is a likely logic error.
+
+Addresses-Coverity-ID: 1309441 ("Logical vs. bitwise operator")
+Fixes: c869f77d6abb ("add mt7601u driver")
+Acked-by: Jakub Kicinski <kubakici@wp.pl>
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-atmel.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ drivers/net/wireless/mediatek/mt7601u/phy.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
-index 691c04b3e5b6..938840af9c50 100644
---- a/drivers/spi/spi-atmel.c
-+++ b/drivers/spi/spi-atmel.c
-@@ -315,7 +315,6 @@ struct atmel_spi {
- 	struct atmel_spi_dma	dma;
+diff --git a/drivers/net/wireless/mediatek/mt7601u/phy.c b/drivers/net/wireless/mediatek/mt7601u/phy.c
+index 1908af6add87..59ed073a8572 100644
+--- a/drivers/net/wireless/mediatek/mt7601u/phy.c
++++ b/drivers/net/wireless/mediatek/mt7601u/phy.c
+@@ -219,7 +219,7 @@ int mt7601u_wait_bbp_ready(struct mt7601u_dev *dev)
  
- 	bool			keep_cs;
--	bool			cs_active;
+ 	do {
+ 		val = mt7601u_bbp_rr(dev, MT_BBP_REG_VERSION);
+-		if (val && ~val)
++		if (val && val != 0xff)
+ 			break;
+ 	} while (--i);
  
- 	u32			fifo_size;
- };
-@@ -1404,11 +1403,9 @@ static int atmel_spi_one_transfer(struct spi_master *master,
- 				 &msg->transfers)) {
- 			as->keep_cs = true;
- 		} else {
--			as->cs_active = !as->cs_active;
--			if (as->cs_active)
--				cs_activate(as, msg->spi);
--			else
--				cs_deactivate(as, msg->spi);
-+			cs_deactivate(as, msg->spi);
-+			udelay(10);
-+			cs_activate(as, msg->spi);
- 		}
- 	}
- 
-@@ -1431,7 +1428,6 @@ static int atmel_spi_transfer_one_message(struct spi_master *master,
- 	atmel_spi_lock(as);
- 	cs_activate(as, spi);
- 
--	as->cs_active = true;
- 	as->keep_cs = false;
- 
- 	msg->status = 0;
 -- 
 2.20.1
 
