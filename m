@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD304C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C34C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:07:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8356A205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FC8822522
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:07:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194417;
-	bh=FNOQzJoFt9NO9rWRNVNyBAn/A5LtMTkJ6NiP6s5cEcA=;
+	s=default; t=1579194424;
+	bh=rgGdzB4cVLt1R+ntLiKhZow3VesNrvHG1CWg4LPL2Ek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OdfUKaJkjoPG67pOnlOgEuBWwaY+cVIXtxo44qa4B/ownG0xemVZhLHoTs/8apn3z
-	 TIIYWGBswwKL/iEHt69N/UOUhBLUvA8Rt0GjvUFcGMlOXFnBZzf0FKWB3o786yrXJg
-	 YH7xZJuSh7DKA5WVLzpvDssXyW4QsiZ6xBjaS8Ag=
+	b=eOHNY3Rhfx95MY0xrSUXTyKAI6w97hZSduTF6EPOBvCnODg6FG04WXqmWRE+cXfkD
+	 QmnRnQQxj0kEXdeyqai35wKnpHADUdiAV1/zpdWecAe+mv/bANJtDz2IZIfiM9/A7g
+	 8rBIHaxACCEyYPbq68Pb0ZHBB0UbrEKm+Q6s4hkM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389037AbgAPRG4 (ORCPT
+        id S2389046AbgAPRHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:06:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37350 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:07:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388974AbgAPRGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:06:43 -0500
+        id S2389006AbgAPRGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:06:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A15D32081E;
-        Thu, 16 Jan 2020 17:06:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC6D3205F4;
+        Thu, 16 Jan 2020 17:06:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194402;
-        bh=FNOQzJoFt9NO9rWRNVNyBAn/A5LtMTkJ6NiP6s5cEcA=;
+        s=default; t=1579194410;
+        bh=rgGdzB4cVLt1R+ntLiKhZow3VesNrvHG1CWg4LPL2Ek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=limP4l0d8wspYeu7np5jkieTw/t/Cid84yeDsxLGovkvjkBl6JdpYWufmxPrZSUmo
-         r5eiP6xctmkDbcGreOr3+0KRKjqYeKibzHNd4SdS2FMxMSRtS8oN/1iLq6W6ExTocC
-         NeuAypa/vfdUPY1f/kXIY6YCCcGM/OILn9Hfk9zI=
+        b=FOAunnuQD5J4gPd/0OTS2WFyD2mcHJpeYti0cxU2VmQQDJjqoFn4/sVNWIcBzyKs8
+         EwAYjSDgPG2uCS4UPpsCtG6fnRBpkhAQCx0OirKN13uv87fn6vJPUQ/7ksa6y+drHG
+         dvf9CW2Y8rlT//7Pp3PYRFbNT4Q84oPBmm6wogkM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jack Morgenstein <jackm@dev.mellanox.co.il>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 327/671] IB/mlx5: Add missing XRC options to QP optional params mask
-Date:   Thu, 16 Jan 2020 11:59:25 -0500
-Message-Id: <20200116170509.12787-64-sashal@kernel.org>
+Cc:     Sameeh Jubran <sameehj@amazon.com>,
+        Netanel Belgazal <netanel@amazon.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 333/671] net: ena: fix ena_com_fill_hash_function() implementation
+Date:   Thu, 16 Jan 2020 11:59:31 -0500
+Message-Id: <20200116170509.12787-70-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,88 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Morgenstein <jackm@dev.mellanox.co.il>
+From: Sameeh Jubran <sameehj@amazon.com>
 
-[ Upstream commit 8f4426aa19fcdb9326ac44154a117b1a3a5ae126 ]
+[ Upstream commit 11bd7a00c0d8ffe33d1e926f8e789b4aea787186 ]
 
-The QP transition optional parameters for the various transition for XRC
-QPs are identical to those for RC QPs.
+ena_com_fill_hash_function() didn't configure the rss->hash_func.
 
-Many of the XRC QP transition optional parameter bits are missing from the
-QP optional mask table.  These omissions caused failures when doing XRC QP
-state transitions.
-
-For example, when trying to change the response timer of an XRC receive QP
-via the RTS2RTS transition, the new timer value was ignored because
-MLX5_QP_OPTPAR_RNR_TIMEOUT bit was missing from the optional params mask
-for XRC qps for the RTS2RTS transition.
-
-Fix this by adding the missing XRC optional parameters for all QP
-transitions to the opt_mask table.
-
-Fixes: e126ba97dba9 ("mlx5: Add driver for Mellanox Connect-IB adapters")
-Fixes: a4774e9095de ("IB/mlx5: Fix opt param mask according to firmware spec")
-Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Netanel Belgazal <netanel@amazon.com>
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/qp.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ drivers/net/ethernet/amazon/ena/ena_com.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/infiniband/hw/mlx5/qp.c b/drivers/infiniband/hw/mlx5/qp.c
-index ef0f710587ad..4c0f0ce02d2f 100644
---- a/drivers/infiniband/hw/mlx5/qp.c
-+++ b/drivers/infiniband/hw/mlx5/qp.c
-@@ -2598,6 +2598,11 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
- 			[MLX5_QP_ST_UD] = MLX5_QP_OPTPAR_PKEY_INDEX	|
- 					  MLX5_QP_OPTPAR_Q_KEY		|
- 					  MLX5_QP_OPTPAR_PRI_PORT,
-+			[MLX5_QP_ST_XRC] = MLX5_QP_OPTPAR_RRE		|
-+					  MLX5_QP_OPTPAR_RAE		|
-+					  MLX5_QP_OPTPAR_RWE		|
-+					  MLX5_QP_OPTPAR_PKEY_INDEX	|
-+					  MLX5_QP_OPTPAR_PRI_PORT,
- 		},
- 		[MLX5_QP_STATE_RTR] = {
- 			[MLX5_QP_ST_RC] = MLX5_QP_OPTPAR_ALT_ADDR_PATH  |
-@@ -2631,6 +2636,12 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
- 					  MLX5_QP_OPTPAR_RWE		|
- 					  MLX5_QP_OPTPAR_PM_STATE,
- 			[MLX5_QP_ST_UD] = MLX5_QP_OPTPAR_Q_KEY,
-+			[MLX5_QP_ST_XRC] = MLX5_QP_OPTPAR_ALT_ADDR_PATH	|
-+					  MLX5_QP_OPTPAR_RRE		|
-+					  MLX5_QP_OPTPAR_RAE		|
-+					  MLX5_QP_OPTPAR_RWE		|
-+					  MLX5_QP_OPTPAR_PM_STATE	|
-+					  MLX5_QP_OPTPAR_RNR_TIMEOUT,
- 		},
- 	},
- 	[MLX5_QP_STATE_RTS] = {
-@@ -2647,6 +2658,12 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
- 			[MLX5_QP_ST_UD] = MLX5_QP_OPTPAR_Q_KEY		|
- 					  MLX5_QP_OPTPAR_SRQN		|
- 					  MLX5_QP_OPTPAR_CQN_RCV,
-+			[MLX5_QP_ST_XRC] = MLX5_QP_OPTPAR_RRE		|
-+					  MLX5_QP_OPTPAR_RAE		|
-+					  MLX5_QP_OPTPAR_RWE		|
-+					  MLX5_QP_OPTPAR_RNR_TIMEOUT	|
-+					  MLX5_QP_OPTPAR_PM_STATE	|
-+					  MLX5_QP_OPTPAR_ALT_ADDR_PATH,
- 		},
- 	},
- 	[MLX5_QP_STATE_SQER] = {
-@@ -2658,6 +2675,10 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
- 					   MLX5_QP_OPTPAR_RWE		|
- 					   MLX5_QP_OPTPAR_RAE		|
- 					   MLX5_QP_OPTPAR_RRE,
-+			[MLX5_QP_ST_XRC]  = MLX5_QP_OPTPAR_RNR_TIMEOUT	|
-+					   MLX5_QP_OPTPAR_RWE		|
-+					   MLX5_QP_OPTPAR_RAE		|
-+					   MLX5_QP_OPTPAR_RRE,
- 		},
- 	},
- };
+diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
+index 005882c40262..92261c946e2a 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_com.c
++++ b/drivers/net/ethernet/amazon/ena/ena_com.c
+@@ -2093,6 +2093,7 @@ int ena_com_fill_hash_function(struct ena_com_dev *ena_dev,
+ 		return -EINVAL;
+ 	}
+ 
++	rss->hash_func = func;
+ 	rc = ena_com_set_hash_function(ena_dev);
+ 
+ 	/* Restore the old function */
 -- 
 2.20.1
 
