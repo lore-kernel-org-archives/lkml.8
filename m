@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46893C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B87A2C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 104532072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:26:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89A252072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:26:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217196;
-	bh=SQLaG+Rhvxl7OCgsAARRdSQ0xmHBXEP/Q3RysXc5wEo=;
+	s=default; t=1579217200;
+	bh=rZxzFmoa86ylUJe4TS+EB8Wyx7/hluposH2EB+Imi8s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I1LATV+xD0dO2TOjLDlGBxHSF+X1Fdnvd2vwtqzSxBCebjTmxw9Z8o0chpn2j3dML
-	 MDNH2CZ9aQluMo4lGRiV82t1fqxmn2vOIYRgKNYdRpxyXfZRCe2KzCFI3Png5MGNGg
-	 2YAw5mdhKgXNserMqAjM5BFeDOljxJzpXtBEeftc=
+	b=N6pP1v4cXrVJgiyn+LZ+OS95Mk1RiVOH5HJ4bgzVzzN1Zk2pZodbr/2c4OtNC1d0m
+	 iEjdlDtmdIR0MHnp9cbw40ky0xjnWkdwHCuHZXQkBCC6TY+e75EndbGPJeJdrl/7b4
+	 cWMIBTgpyT2QF7GMd9W1fk2VXcHIUgGvVNy0VSq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388807AbgAPX0f (ORCPT
+        id S2389545AbgAPX0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:26:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56518 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:26:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388576AbgAPX0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:26:11 -0500
+        id S2388570AbgAPX0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:26:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 811182073A;
-        Thu, 16 Jan 2020 23:26:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3A6820684;
+        Thu, 16 Jan 2020 23:26:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217171;
-        bh=SQLaG+Rhvxl7OCgsAARRdSQ0xmHBXEP/Q3RysXc5wEo=;
+        s=default; t=1579217173;
+        bh=rZxzFmoa86ylUJe4TS+EB8Wyx7/hluposH2EB+Imi8s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SwRQBHX7SP+LR/DX0HWFoZLieAuaLChYrWfd7SeLs6bXhFxnWa+GdrEWK67bjKh4L
-         tp003UaiIUTYq37ybNqoaga/gQWPg0nt/YYcSD2JH08HLzpJ/J5j0m4qL9VEyowa3N
-         6mAAInqlV33mnNhLPPuIU6XV5ZucG7Gcvkvrfr+o=
+        b=CBSmewAdqMyX1J+/POXglJhtlNR34YfXIqxxGIx498Fa3z9p/7U+JDy+2Ez0jMgfQ
+         zkwtUWofElE1phB9HyYQKBsHI/D7drJZ6tkOblztblykS2H7XaLHj189AM2t7PcrzT
+         tLrtDAzKHxqjiyAhQLQ/c1hzNxf4IP5Yg1pHx88c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: [PATCH 5.4 176/203] f2fs: fix potential overflow
-Date:   Fri, 17 Jan 2020 00:18:13 +0100
-Message-Id: <20200116231759.851132096@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        "J. Bruce Fields" <bfields@redhat.com>
+Subject: [PATCH 5.4 177/203] NFSD fixing possible null pointer derefering in copy offload
+Date:   Fri, 17 Jan 2020 00:18:14 +0100
+Message-Id: <20200116231759.922172938@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -59,48 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Olga Kornievskaia <olga.kornievskaia@gmail.com>
 
-commit 1f0d5c911b64165c9754139a26c8c2fad352c132 upstream.
+commit 18f428d4e2f7eff162d80b2b21689496c4e82afd upstream.
 
-We expect 64-bit calculation result from below statement, however
-in 32-bit machine, looped left shift operation on pgoff_t type
-variable may cause overflow issue, fix it by forcing type cast.
+Static checker revealed possible error path leading to possible
+NULL pointer dereferencing.
 
-page->index << PAGE_SHIFT;
-
-Fixes: 26de9b117130 ("f2fs: avoid unnecessary updating inode during fsync")
-Fixes: 0a2aa8fbb969 ("f2fs: refactor __exchange_data_block for speed up")
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: e0639dc5805a: ("NFSD introduce async copy feature")
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/f2fs/data.c |    2 +-
- fs/f2fs/file.c |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ fs/nfsd/nfs4proc.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -2098,7 +2098,7 @@ static int __write_data_page(struct page
- 	loff_t i_size = i_size_read(inode);
- 	const pgoff_t end_index = ((unsigned long long) i_size)
- 							>> PAGE_SHIFT;
--	loff_t psize = (page->index + 1) << PAGE_SHIFT;
-+	loff_t psize = (loff_t)(page->index + 1) << PAGE_SHIFT;
- 	unsigned offset = 0;
- 	bool need_balance_fs = false;
- 	int err = 0;
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -1139,7 +1139,7 @@ static int __clone_blkaddrs(struct inode
- 				}
- 				dn.ofs_in_node++;
- 				i++;
--				new_size = (dst + i) << PAGE_SHIFT;
-+				new_size = (loff_t)(dst + i) << PAGE_SHIFT;
- 				if (dst_inode->i_size < new_size)
- 					f2fs_i_size_write(dst_inode, new_size);
- 			} while (--ilen && (do_replace[i] || blkaddr[i] == NULL_ADDR));
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -1298,7 +1298,8 @@ nfsd4_copy(struct svc_rqst *rqstp, struc
+ out:
+ 	return status;
+ out_err:
+-	cleanup_async_copy(async_copy);
++	if (async_copy)
++		cleanup_async_copy(async_copy);
+ 	goto out;
+ }
+ 
 
 
