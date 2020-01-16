@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E14EC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C77E0C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A974206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 948172467E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194597;
-	bh=sTa6ZD6iu74bDYP4DNGrCewWZyF0siD7KSRGu6ywPHs=;
+	s=default; t=1579194599;
+	bh=ndoE0vtiw44UxpP7RJFkZ4ATAyIcKw/7d2h5EyFh7Hk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MM5CDXg0tWqIQ5cnolDLGmUwFc91mcUTOCLQL4QC2x4O2DX3rR6cX04nry2kYWFB8
-	 i8/8I2EqelTTtRTQVIemvF+KvBmhuEKER5BqhKuwoBiflAQdvzT8U9IzE4WQ8iJQWg
-	 3vRl12h7SXFZvR9WUq05YkSrjmj5fpE5re0jhSQU=
+	b=T5k5qyogRXmyA80wH+R7TvFAkosfSCtxE3byvmNIVcbC1G9CKjp+4R+3KeO/31eHe
+	 sv2jvFDTtoeBDzBL9oaVWd1vTurkfkbN2FH0IjDdOLB0uYABnMTY2NfILzoCMdhXTU
+	 xZh390tTn4sOgXoIAfqZepyNSEzoWoA9XbMv7l0g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389789AbgAPRJ4 (ORCPT
+        id S2389467AbgAPRJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:09:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46394 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:09:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389740AbgAPRJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:09:46 -0500
+        id S2389743AbgAPRJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:09:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A298924687;
-        Thu, 16 Jan 2020 17:09:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DEE024690;
+        Thu, 16 Jan 2020 17:09:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194586;
-        bh=sTa6ZD6iu74bDYP4DNGrCewWZyF0siD7KSRGu6ywPHs=;
+        s=default; t=1579194587;
+        bh=ndoE0vtiw44UxpP7RJFkZ4ATAyIcKw/7d2h5EyFh7Hk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1FCYGCr+V3jQYly01quy1lQ5x8k/jTL5sDbLqEJ7l0VEM1fgV30GN47VjasdkvNen
-         oMSGKaMt4tyqU/Sfzv8iHL8wpdeOcBGdPFP8He8SycnDTsl+JbCo6LjO1ErNkcLZ4k
-         5uhgWMdDCikmVW7KYoWUODcIQUKJKXyM1dTR4nj8=
+        b=CAfpHZJLL2VfkjU9Xyia7L+Haqvg5YNd9YeuQXEUoVVQcziT9MDnCHwpF7lCS62Ec
+         lVmzQ3lupJyRPIS+yK6HeMNLVkCwL8a9x5nZLXQy1QcpFnofd1DiW+4uAi1Y0G0KXJ
+         d93jfZmspjqS8ZzwoTHPnzKASyH1y1JXcR3u+NxI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Yang <wen.yang99@zte.com.cn>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, netdev@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 458/671] net: pasemi: fix an use-after-free in pasemi_mac_phy_init()
-Date:   Thu, 16 Jan 2020 12:01:36 -0500
-Message-Id: <20200116170509.12787-195-sashal@kernel.org>
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Dirk van der Merwe <dirk.vandermerwe@netronome.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 459/671] net/tls: fix socket wmem accounting on fallback with netem
+Date:   Thu, 16 Jan 2020 12:01:37 -0500
+Message-Id: <20200116170509.12787-196-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -62,47 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-[ Upstream commit faf5577f2498cea23011b5c785ef853ded22700b ]
+[ Upstream commit 5c4b4608fe100838c62591877101128467e56c00 ]
 
-The phy_dn variable is still being used in of_phy_connect() after the
-of_node_put() call, which may result in use-after-free.
+netem runs skb_orphan_partial() which "disconnects" the skb
+from normal TCP write memory accounting.  We should not adjust
+sk->sk_wmem_alloc on the fallback path for such skbs.
 
-Fixes: 1dd2d06c0459 ("net: Rework pasemi_mac driver to use of_mdio infrastructure")
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Fixes: e8f69799810c ("net/tls: Add generic NIC offload infrastructure")
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reviewed-by: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/pasemi/pasemi_mac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/tls/tls_device_fallback.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/ethernet/pasemi/pasemi_mac.c b/drivers/net/ethernet/pasemi/pasemi_mac.c
-index 8a31a02c9f47..65f69e562618 100644
---- a/drivers/net/ethernet/pasemi/pasemi_mac.c
-+++ b/drivers/net/ethernet/pasemi/pasemi_mac.c
-@@ -1053,7 +1053,6 @@ static int pasemi_mac_phy_init(struct net_device *dev)
+diff --git a/net/tls/tls_device_fallback.c b/net/tls/tls_device_fallback.c
+index 426dd97725e4..6cf832891b53 100644
+--- a/net/tls/tls_device_fallback.c
++++ b/net/tls/tls_device_fallback.c
+@@ -208,6 +208,10 @@ static void complete_skb(struct sk_buff *nskb, struct sk_buff *skb, int headln)
  
- 	dn = pci_device_to_OF_node(mac->pdev);
- 	phy_dn = of_parse_phandle(dn, "phy-handle", 0);
--	of_node_put(phy_dn);
+ 	update_chksum(nskb, headln);
  
- 	mac->link = 0;
- 	mac->speed = 0;
-@@ -1062,6 +1061,7 @@ static int pasemi_mac_phy_init(struct net_device *dev)
- 	phydev = of_phy_connect(dev, phy_dn, &pasemi_adjust_link, 0,
- 				PHY_INTERFACE_MODE_SGMII);
- 
-+	of_node_put(phy_dn);
- 	if (!phydev) {
- 		printk(KERN_ERR "%s: Could not attach to phy\n", dev->name);
- 		return -ENODEV;
++	/* sock_efree means skb must gone through skb_orphan_partial() */
++	if (nskb->destructor == sock_efree)
++		return;
++
+ 	delta = nskb->truesize - skb->truesize;
+ 	if (likely(delta < 0))
+ 		WARN_ON_ONCE(refcount_sub_and_test(-delta, &sk->sk_wmem_alloc));
 -- 
 2.20.1
 
