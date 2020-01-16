@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F29C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A87DC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A445C2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:24:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1C7D2072B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:24:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217096;
-	bh=qMB28diCAzSFUtPOZijghXqt0dH6fNQmDLWrq0PeClw=;
+	s=default; t=1579217099;
+	bh=ti9OQzTrR39hfLZ/0pUi+SVIH06RaO/hmG3omslXZAI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j5Dj/vphgJq2qbCsvd3VBBn91kEqaAFlZdihFx4n0QfzTdpBGuZQSmWrvtex7XbM7
-	 5jxpI//j4FL7U+gQJKK9Uml8bomUL/HLdB3YMqYGYUbZsRKPTIkxjcivfhHCII0l2x
-	 qGRF97Jya+VAobHie/0TTfNCI3m2BeGWHTgaugEA=
+	b=XTYfSf7HWhpww0UM71tNKk4MdRI8S7PV6OLCvPlQ8PVhqs0JgRjBbAh9ff716yWG7
+	 s8HWp1mw3v/EI1awEkPE/95KTWJSFcCld+AhhtDS3YxKU6m9uHwa4eG/+tyYfrOJcI
+	 gzZHKAacKqzT8bZtzy0Hng/3kxejQeeAxibxL+9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731628AbgAPXYz (ORCPT
+        id S2388287AbgAPXY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:24:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53980 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:24:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388667AbgAPXYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:24:47 -0500
+        id S2387716AbgAPXYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:24:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0947E2072B;
-        Thu, 16 Jan 2020 23:24:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6656D206D9;
+        Thu, 16 Jan 2020 23:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217086;
-        bh=qMB28diCAzSFUtPOZijghXqt0dH6fNQmDLWrq0PeClw=;
+        s=default; t=1579217088;
+        bh=ti9OQzTrR39hfLZ/0pUi+SVIH06RaO/hmG3omslXZAI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YwR5cIieijALdDyIMnGDSGK5P12Xn8m/0nlDU5L0BTMrEf9xfdTNmRt1jycQAWwwY
-         CTzD4JmtmD9b2rzkdwAAPgnxuyvLKF37Z5gL8T/2bLFHPVT18mZX5liwE6vkY10OKK
-         zqLnF0hqGGgFGuvRxALLlhQohWd+ReXZXJE4SsbM=
+        b=bGDRdEvmIt8E5Z70OBVIF38a1dAXIu3oBNag2UZ/Fcwe99uVUQwxRW01PvRx/O55Z
+         ZVfoP0wPDCxvXeb+n8+5DfXQkDp58MHLwtrRf/8/hIAE/Udf9JtUc+qkg7zBbX09bR
+         4cNuKpiUMV1pq2XOSoOoHXTrRs5Ccly/xzlDhLMs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiaojie Yuan <xiaojie.yuan@amd.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.4 126/203] drm/amdgpu/discovery: reserve discovery data at the top of VRAM
-Date:   Fri, 17 Jan 2020 00:17:23 +0100
-Message-Id: <20200116231756.243240407@linuxfoundation.org>
+        stable@vger.kernel.org, linux-scsi@vger.kernel.org,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 5.4 127/203] scsi: sd: enable compat ioctls for sed-opal
+Date:   Fri, 17 Jan 2020 00:17:24 +0100
+Message-Id: <20200116231756.312596106@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -60,115 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaojie Yuan <xiaojie.yuan@amd.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 5f6a556f98de425fcb7928456839a06f02156633 upstream.
+commit 142b2ac82e31c174936c5719fa12ae28f51a55b7 upstream.
 
-IP Discovery data is TMR fenced by the latest PSP BL,
-so we need to reserve this region.
+The sed_ioctl() function is written to be compatible between
+32-bit and 64-bit processes, however compat mode is only
+wired up for nvme, not for sd.
 
-Tested on navi10/12/14 with VBIOS integrated with latest PSP BL.
+Add the missing call to sed_ioctl() in sd_compat_ioctl().
 
-v2: use DISCOVERY_TMR_SIZE macro as bo size
-    use amdgpu_bo_create_kernel_at() to allocate bo
-
-Signed-off-by: Xiaojie Yuan <xiaojie.yuan@amd.com>
-Reviewed-by: Hawking Zhang <Hawking.Zhang@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: d80210f25ff0 ("sd: add support for TCG OPAL self encrypting disks")
+Cc: linux-scsi@vger.kernel.org
+Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu.h           |    1 +
- drivers/gpu/drm/amd/amdgpu/amdgpu_discovery.c |    4 ++--
- drivers/gpu/drm/amd/amdgpu/amdgpu_discovery.h |    2 ++
- drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c       |   17 +++++++++++++++++
- drivers/gpu/drm/amd/include/discovery.h       |    1 -
- 5 files changed, 22 insertions(+), 3 deletions(-)
+ drivers/scsi/sd.c |   14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu.h
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
-@@ -813,6 +813,7 @@ struct amdgpu_device {
- 	uint8_t				*bios;
- 	uint32_t			bios_size;
- 	struct amdgpu_bo		*stolen_vga_memory;
-+	struct amdgpu_bo		*discovery_memory;
- 	uint32_t			bios_scratch_reg_offset;
- 	uint32_t			bios_scratch[AMDGPU_BIOS_NUM_SCRATCH];
- 
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_discovery.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_discovery.c
-@@ -136,7 +136,7 @@ static int amdgpu_discovery_read_binary(
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -1694,20 +1694,30 @@ static void sd_rescan(struct device *dev
+ static int sd_compat_ioctl(struct block_device *bdev, fmode_t mode,
+ 			   unsigned int cmd, unsigned long arg)
  {
- 	uint32_t *p = (uint32_t *)binary;
- 	uint64_t vram_size = (uint64_t)RREG32(mmRCC_CONFIG_MEMSIZE) << 20;
--	uint64_t pos = vram_size - BINARY_MAX_SIZE;
-+	uint64_t pos = vram_size - DISCOVERY_TMR_SIZE;
- 	unsigned long flags;
+-	struct scsi_device *sdev = scsi_disk(bdev->bd_disk)->device;
++	struct gendisk *disk = bdev->bd_disk;
++	struct scsi_disk *sdkp = scsi_disk(disk);
++	struct scsi_device *sdev = sdkp->device;
++	void __user *p = compat_ptr(arg);
+ 	int error;
  
- 	while (pos < vram_size) {
-@@ -179,7 +179,7 @@ int amdgpu_discovery_init(struct amdgpu_
- 	uint16_t checksum;
- 	int r;
- 
--	adev->discovery = kzalloc(BINARY_MAX_SIZE, GFP_KERNEL);
-+	adev->discovery = kzalloc(DISCOVERY_TMR_SIZE, GFP_KERNEL);
- 	if (!adev->discovery)
- 		return -ENOMEM;
- 
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_discovery.h
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_discovery.h
-@@ -24,6 +24,8 @@
- #ifndef __AMDGPU_DISCOVERY__
- #define __AMDGPU_DISCOVERY__
- 
-+#define DISCOVERY_TMR_SIZE  (64 << 10)
++	error = scsi_verify_blk_ioctl(bdev, cmd);
++	if (error < 0)
++		return error;
 +
- int amdgpu_discovery_init(struct amdgpu_device *adev);
- void amdgpu_discovery_fini(struct amdgpu_device *adev);
- int amdgpu_discovery_reg_base_init(struct amdgpu_device *adev);
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-@@ -1730,6 +1730,20 @@ int amdgpu_ttm_init(struct amdgpu_device
- 				    NULL, &stolen_vga_buf);
- 	if (r)
- 		return r;
+ 	error = scsi_ioctl_block_when_processing_errors(sdev, cmd,
+ 			(mode & FMODE_NDELAY) != 0);
+ 	if (error)
+ 		return error;
 +
-+	/*
-+	 * reserve one TMR (64K) memory at the top of VRAM which holds
-+	 * IP Discovery data and is protected by PSP.
-+	 */
-+	r = amdgpu_bo_create_kernel_at(adev,
-+				       adev->gmc.real_vram_size - DISCOVERY_TMR_SIZE,
-+				       DISCOVERY_TMR_SIZE,
-+				       AMDGPU_GEM_DOMAIN_VRAM,
-+				       &adev->discovery_memory,
-+				       NULL);
-+	if (r)
-+		return r;
-+
- 	DRM_INFO("amdgpu: %uM of VRAM memory ready\n",
- 		 (unsigned) (adev->gmc.real_vram_size / (1024 * 1024)));
- 
-@@ -1794,6 +1808,9 @@ void amdgpu_ttm_late_init(struct amdgpu_
- 	void *stolen_vga_buf;
- 	/* return the VGA stolen memory (if any) back to VRAM */
- 	amdgpu_bo_free_kernel(&adev->stolen_vga_memory, NULL, &stolen_vga_buf);
-+
-+	/* return the IP Discovery TMR memory back to VRAM */
-+	amdgpu_bo_free_kernel(&adev->discovery_memory, NULL, NULL);
++	if (is_sed_ioctl(cmd))
++		return sed_ioctl(sdkp->opal_dev, cmd, p);
+ 	       
+ 	/* 
+ 	 * Let the static ioctl translation table take care of it.
+ 	 */
+ 	if (!sdev->host->hostt->compat_ioctl)
+ 		return -ENOIOCTLCMD; 
+-	return sdev->host->hostt->compat_ioctl(sdev, cmd, (void __user *)arg);
++	return sdev->host->hostt->compat_ioctl(sdev, cmd, p);
  }
- 
- /**
---- a/drivers/gpu/drm/amd/include/discovery.h
-+++ b/drivers/gpu/drm/amd/include/discovery.h
-@@ -25,7 +25,6 @@
- #define _DISCOVERY_H_
- 
- #define PSP_HEADER_SIZE                 256
--#define BINARY_MAX_SIZE                 (64 << 10)
- #define BINARY_SIGNATURE                0x28211407
- #define DISCOVERY_TABLE_SIGNATURE       0x53445049
+ #endif
  
 
 
