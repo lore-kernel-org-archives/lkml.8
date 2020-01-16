@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E4F4C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15CD5C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0E652073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7D122073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:24:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202673;
-	bh=1xs49mwdR/FCYQ9FWc6NpwRLn6cFyMO2UT75/wF70C4=;
+	s=default; t=1579202679;
+	bh=oVEpUpIzVKUCnt2/4jdogUGDwyi7Ehjqtc97o16UCeo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=roDMp2+PM2pJhef4XwgL8xmMaI6l7OqjgCedXFyhvigQi0LQ/28LeGKrM5VmKTEQv
-	 R5Soyk/T9jqBFuj66d9ObZLHE6mXi3wiv+0HWPht90lHu3a8vYgQ5Z2HXvVHuIYNeq
-	 4q0MZtP3M0onrTr9kRJmeXwobZiyb8NJQHybFJz4=
+	b=B3gyy5sXDjaAm9/YcjhQXECP5l7Wh5gDAAMiA49QostpWdDN+81YbX3hCeIPTMYh+
+	 e3BQ1hhD2vzhy6Ncco0vAexK0lICGjuKemJ3E3j5+teZyGZE/KM7fnHcpDSDb5D3op
+	 escci+RPmN7oIyWmX5+j8/FTkgD3rjjKfNY8+tqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407410AbgAPTYc (ORCPT
+        id S1729143AbgAPTYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:24:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36220 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:24:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730472AbgAPQww (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:52:52 -0500
+        id S1729546AbgAPQwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:52:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 379B62073A;
-        Thu, 16 Jan 2020 16:52:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86B8622522;
+        Thu, 16 Jan 2020 16:52:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193571;
-        bh=1xs49mwdR/FCYQ9FWc6NpwRLn6cFyMO2UT75/wF70C4=;
+        s=default; t=1579193567;
+        bh=oVEpUpIzVKUCnt2/4jdogUGDwyi7Ehjqtc97o16UCeo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OcknU/QaUCgD7ZK9IvPgL0c2/WG1LBUiBP5+KdbdgE7CN8SKCC9XE50yA6IBOgJDr
-         7HpRIYFaqPpcqLCG95aCXZ2cmXz9PEsvn+h/MP97riOY9L9fU+oW09tt7gL0bnHUBH
-         xlH1i0YQnNC8Rkc0mP7IfgXOKkRyrKR10K3pc/J4=
+        b=QZREzzWsnHLYydb4OlYFa7rBCaondM2Om07Mf9ggfNavhHDyYDQOKdvPFsyzsibyP
+         ZeZuqL3il8TuzU1Errx1kJr00YT5GdWGxmtHnyZgmwWGAgUZB38WoYtgFFksi5BMx7
+         VxrsXyFseq/uGd3o+eLOQqtk18q+hy8wk4gQDuvM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.4 115/205] f2fs: fix potential overflow
-Date:   Thu, 16 Jan 2020 11:41:30 -0500
-Message-Id: <20200116164300.6705-115-sashal@kernel.org>
+Cc:     Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 111/205] libbpf: Fix memory leak/double free issue
+Date:   Thu, 16 Jan 2020 11:41:26 -0500
+Message-Id: <20200116164300.6705-111-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -59,52 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Andrii Nakryiko <andriin@fb.com>
 
-[ Upstream commit 1f0d5c911b64165c9754139a26c8c2fad352c132 ]
+[ Upstream commit 3dc5e059821376974177cc801d377e3fcdac6712 ]
 
-We expect 64-bit calculation result from below statement, however
-in 32-bit machine, looped left shift operation on pgoff_t type
-variable may cause overflow issue, fix it by forcing type cast.
+Coverity scan against Github libbpf code found the issue of not freeing memory and
+leaving already freed memory still referenced from bpf_program. Fix it by
+re-assigning successfully reallocated memory sooner.
 
-page->index << PAGE_SHIFT;
-
-Fixes: 26de9b117130 ("f2fs: avoid unnecessary updating inode during fsync")
-Fixes: 0a2aa8fbb969 ("f2fs: refactor __exchange_data_block for speed up")
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: 2993e0515bb4 ("tools/bpf: add support to read .BTF.ext sections")
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Link: https://lore.kernel.org/bpf/20191107020855.3834758-2-andriin@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/data.c | 2 +-
- fs/f2fs/file.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ tools/lib/bpf/libbpf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 5755e897a5f0..2e9c73165800 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -2098,7 +2098,7 @@ static int __write_data_page(struct page *page, bool *submitted,
- 	loff_t i_size = i_size_read(inode);
- 	const pgoff_t end_index = ((unsigned long long) i_size)
- 							>> PAGE_SHIFT;
--	loff_t psize = (page->index + 1) << PAGE_SHIFT;
-+	loff_t psize = (loff_t)(page->index + 1) << PAGE_SHIFT;
- 	unsigned offset = 0;
- 	bool need_balance_fs = false;
- 	int err = 0;
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 8ed8e4328bd1..fae665691481 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -1139,7 +1139,7 @@ static int __clone_blkaddrs(struct inode *src_inode, struct inode *dst_inode,
- 				}
- 				dn.ofs_in_node++;
- 				i++;
--				new_size = (dst + i) << PAGE_SHIFT;
-+				new_size = (loff_t)(dst + i) << PAGE_SHIFT;
- 				if (dst_inode->i_size < new_size)
- 					f2fs_i_size_write(dst_inode, new_size);
- 			} while (--ilen && (do_replace[i] || blkaddr[i] == NULL_ADDR));
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index a267cd0c0ce2..d98838c5820c 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -3220,6 +3220,7 @@ bpf_program__reloc_text(struct bpf_program *prog, struct bpf_object *obj,
+ 			pr_warning("oom in prog realloc\n");
+ 			return -ENOMEM;
+ 		}
++		prog->insns = new_insn;
+ 
+ 		if (obj->btf_ext) {
+ 			err = bpf_program_reloc_btf_ext(prog, obj,
+@@ -3231,7 +3232,6 @@ bpf_program__reloc_text(struct bpf_program *prog, struct bpf_object *obj,
+ 
+ 		memcpy(new_insn + prog->insns_cnt, text->insns,
+ 		       text->insns_cnt * sizeof(*insn));
+-		prog->insns = new_insn;
+ 		prog->main_prog_cnt = prog->insns_cnt;
+ 		prog->insns_cnt = new_cnt;
+ 		pr_debug("added %zd insn from %s to prog %s\n",
 -- 
 2.20.1
 
