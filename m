@@ -2,161 +2,115 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 148B1C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E778DC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D93CB2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:42:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200173;
-	bh=GMM7s8r0SOFZuVicWlQG6rZpTYZwNbPbSQsr0FJlWT8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=079/cWlE8TYVfW5LjvM/f4mFRRjxdI/ckQQyQFRQ4P9/7dMmKc1dUuS1GRF8EYS8k
-	 hVTTUYLmyyDjs/Qg5zwW4lk0XAuu8ZS6uU5KFnCfpo+LpUmkphzkNRt4Av9p0lXzke
-	 yjhjpW1M/J5PbWCcah5p0uqexH7/Nr7TM/Vs2DF8=
+	by mail.kernel.org (Postfix) with ESMTP id B8CE22073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:42:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=anarazel.de header.i=@anarazel.de header.b="FeT3Zq8G";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OGQecjOu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437011AbgAPSmw (ORCPT
+        id S2437016AbgAPSm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:42:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51894 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390227AbgAPRLX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:11:23 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80E1624686;
-        Thu, 16 Jan 2020 17:11:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194682;
-        bh=GMM7s8r0SOFZuVicWlQG6rZpTYZwNbPbSQsr0FJlWT8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r9I0q5EBWt9+De2zCMwXbb8vT+qppFTQ8eQUKpKoBzGrw9/4Y3wGrA510I2lJl78I
-         tMwvYz6dkwielt2mZIMUR7EwEOEXRV6lg2Q14u9ItyjC5EzfROhqIuu8lPL5a61T0o
-         WCEg83gXKIj+NYHCKQpFiHbVM1IMOC0wX2rbpiow=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-imx@nxp.com,
-        linux-serial@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 527/671] tty: serial: fsl_lpuart: Use appropriate lpuart32_* I/O funcs
-Date:   Thu, 16 Jan 2020 12:02:45 -0500
-Message-Id: <20200116170509.12787-264-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
-References: <20200116170509.12787-1-sashal@kernel.org>
+        Thu, 16 Jan 2020 13:42:58 -0500
+Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:44557 "EHLO
+        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388922AbgAPSmx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 13:42:53 -0500
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.west.internal (Postfix) with ESMTP id 8D4E6513;
+        Thu, 16 Jan 2020 13:42:52 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Thu, 16 Jan 2020 13:42:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=/7fhTR1f92cLpIrCbJ+2OWqkhpv
+        1kl/VUQPVVPmZgEc=; b=FeT3Zq8GQ8qzz7uwZ61cvMkHaF09X3eo/FpFVoHqOD3
+        fD2mUOt9ZN1aIwAIlALjLeieBa4NJV38bhYqf5lHt8/P6R0YWsGiFcsCGp8bjSUR
+        S5i+v2OLYpL3wN994Aa6eLnpfnxUUyTbZUvbUxqjSpfIq2LN8SjA06t3Aeurr63g
+        DFh3EId6sc4pd3ofGp0hCm2iQuuNFaFlTuOgifAF1YWmWiy9SJpZUZ4uCL+LTFOX
+        eJi4VkmRq21YTtPj0kWerE278gG75nGVd7DUOonrl86y4ie2zd97oESJkTDNTbbx
+        ZKDLTeMCZqgrvK4sgURIYvh0qyZLvgJjbQD3n62OZ1Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=/7fhTR
+        1f92cLpIrCbJ+2OWqkhpv1kl/VUQPVVPmZgEc=; b=OGQecjOuzXXqPotapCj+I4
+        hCuvcE20Lyo2NHyxVzMaaw5u6fApAawM44/CZ8My+gEWIpAs+A1W7yTbIl7stc4U
+        ISwGutrvWf/fY6Wmt+BLTxJ1+sYJIxqNYL8oYFngXv80cCUmI4Kgyktp6E0jpCpR
+        la10h+G6XmMbRRwLVVdI+K608MXDXZR1CuY72vVELP2tkdq2bnqgTQFu+9eyv4ml
+        TWU4fhudiNebOAXbnIIuo3/9sIsJT7wmpFBg//qGKmdnYKIMlN5gZmtAGuVO2V8U
+        L/HMsBy9jcqt7dhf/7FTqH8wbhGNS9Se5wRDTTxSRZlT7FmI2E9/H6+Ubg5IZw1w
+        ==
+X-ME-Sender: <xms:q64gXs06QPv33nJkcPtUk0Ur3ju3En2cj8wJxS3uN-QreHvl4-Pwrg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrtdehgdduudegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetnhgurhgv
+    shcuhfhrvghunhguuceorghnughrvghssegrnhgrrhgriigvlhdruggvqeenucfkphepie
+    ejrdduiedtrddvudejrddvhedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgv
+    shesrghnrghrrgiivghlrdguvgenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:q64gXtDAe7wB3ahvp589SNBrCT9khM1atZVGja4paJJTGI7rV0GEXQ>
+    <xmx:q64gXukD8ZZnxNDb3j7CjbDibL3L_2233B4CJth2LKaOHbZep9jdOA>
+    <xmx:q64gXmokCmoSG3Z4Djh47-T19UppDuXU2so7VC1b9R8rhdFOalZlKw>
+    <xmx:rK4gXuY4u1yVTdjBmqiSUv6UekfymvvUZDtRPdiw9i8O_zgjZHdeEw>
+Received: from intern.anarazel.de (c-67-160-217-250.hsd1.ca.comcast.net [67.160.217.250])
+        by mail.messagingengine.com (Postfix) with ESMTPA id A8DE13060840;
+        Thu, 16 Jan 2020 13:42:51 -0500 (EST)
+Date:   Thu, 16 Jan 2020 10:42:50 -0800
+From:   Andres Freund <andres@anarazel.de>
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc:     Tushar Dave <tushar.n.dave@intel.com>,
+        Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] thermal: intel_pch_thermal: Add PCI ids for Lewisburg
+ PCH.
+Message-ID: <20200116184250.qlvc3ilx2b42czqk@alap3.anarazel.de>
+References: <20200115184415.1726953-1-andres@anarazel.de>
+ <2a5e9df32e2df27297149a577512f6b1557de241.camel@linux.intel.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2a5e9df32e2df27297149a577512f6b1557de241.camel@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Hi,
 
-[ Upstream commit 1da17d7cf8e2c4b60163d54300f72c02f510327c ]
+On 2020-01-16 05:53:13 -0800, Srinivas Pandruvada wrote:
+> On Wed, 2020-01-15 at 10:44 -0800, Andres Freund wrote:
+> > I noticed that I couldn't read the PCH temperature on my workstation
+> > (C620 series chipset, w/ 2x Xeon Gold 5215 CPUs) directly, but had to
+> > go
+> > through IPMI. Looking at the data sheet, it looks to me like the
+> > existing intel PCH thermal driver should work without changes for
+> > Lewisburg.
+> Does the temperature reading match with what you read via IPMI?
 
-When dealing with 32-bit variant of LPUART IP block appropriate I/O
-helpers have to be used to properly deal with endianness
-differences. Change all of the offending code to do that.
+It does:
 
-Fixes: a5fa2660d787 ("tty/serial/fsl_lpuart: Add CONSOLE_POLL support
-for lpuart32.")
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Stefan Agner <stefan@agner.ch>
-Cc: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Cory Tusar <cory.tusar@zii.aero>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Slaby <jslaby@suse.com>
-Cc: linux-imx@nxp.com
-Cc: linux-serial@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Link: https://lore.kernel.org/r/20190729195226.8862-14-andrew.smirnov@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/tty/serial/fsl_lpuart.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+root@awork3:~# ipmitool sdr|grep ^PCH
+PCH Temp         | 58 degrees C      | ok
 
-diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
-index ee8a5cb61a5f..2daccb10ae2f 100644
---- a/drivers/tty/serial/fsl_lpuart.c
-+++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -528,26 +528,26 @@ static int lpuart32_poll_init(struct uart_port *port)
- 	spin_lock_irqsave(&sport->port.lock, flags);
- 
- 	/* Disable Rx & Tx */
--	writel(0, sport->port.membase + UARTCTRL);
-+	lpuart32_write(&sport->port, UARTCTRL, 0);
- 
--	temp = readl(sport->port.membase + UARTFIFO);
-+	temp = lpuart32_read(&sport->port, UARTFIFO);
- 
- 	/* Enable Rx and Tx FIFO */
--	writel(temp | UARTFIFO_RXFE | UARTFIFO_TXFE,
--		   sport->port.membase + UARTFIFO);
-+	lpuart32_write(&sport->port, UARTFIFO,
-+		       temp | UARTFIFO_RXFE | UARTFIFO_TXFE);
- 
- 	/* flush Tx and Rx FIFO */
--	writel(UARTFIFO_TXFLUSH | UARTFIFO_RXFLUSH,
--			sport->port.membase + UARTFIFO);
-+	lpuart32_write(&sport->port, UARTFIFO,
-+		       UARTFIFO_TXFLUSH | UARTFIFO_RXFLUSH);
- 
- 	/* explicitly clear RDRF */
--	if (readl(sport->port.membase + UARTSTAT) & UARTSTAT_RDRF) {
--		readl(sport->port.membase + UARTDATA);
--		writel(UARTFIFO_RXUF, sport->port.membase + UARTFIFO);
-+	if (lpuart32_read(&sport->port, UARTSTAT) & UARTSTAT_RDRF) {
-+		lpuart32_read(&sport->port, UARTDATA);
-+		lpuart32_write(&sport->port, UARTFIFO, UARTFIFO_RXUF);
- 	}
- 
- 	/* Enable Rx and Tx */
--	writel(UARTCTRL_RE | UARTCTRL_TE, sport->port.membase + UARTCTRL);
-+	lpuart32_write(&sport->port, UARTCTRL, UARTCTRL_RE | UARTCTRL_TE);
- 	spin_unlock_irqrestore(&sport->port.lock, flags);
- 
- 	return 0;
-@@ -555,18 +555,18 @@ static int lpuart32_poll_init(struct uart_port *port)
- 
- static void lpuart32_poll_put_char(struct uart_port *port, unsigned char c)
- {
--	while (!(readl(port->membase + UARTSTAT) & UARTSTAT_TDRE))
-+	while (!(lpuart32_read(port, UARTSTAT) & UARTSTAT_TDRE))
- 		barrier();
- 
--	writel(c, port->membase + UARTDATA);
-+	lpuart32_write(port, UARTDATA, c);
- }
- 
- static int lpuart32_poll_get_char(struct uart_port *port)
- {
--	if (!(readl(port->membase + UARTSTAT) & UARTSTAT_RDRF))
-+	if (!(lpuart32_read(port, UARTSTAT) & UARTSTAT_RDRF))
- 		return NO_POLL_CHAR;
- 
--	return readl(port->membase + UARTDATA);
-+	return lpuart32_read(port, UARTDATA);
- }
- #endif
- 
--- 
-2.20.1
+andres@awork3:~$ cat /sys/class/thermal/thermal_zone0/type
+pch_lewisburg
+andres@awork3:~$ cat /sys/class/thermal/thermal_zone0/temp
+58000
 
+And if I generate some load, it rises for both:
+root@awork3:~# ipmitool sdr|grep ^PCH
+PCH Temp         | 60 degrees C      | ok
+andres@awork3:~$ cat /sys/class/thermal/thermal_zone0/temp
+60000
+
+Regards,
+
+Andres
