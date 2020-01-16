@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E7B2C47409
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACACC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E431E2077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:38:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C6F6207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:39:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199934;
-	bh=8FK7pR8uE9doo6gMvke7PDQVUkNaOo7OBDbXcEqK7vs=;
+	s=default; t=1579199945;
+	bh=eIAApzGvKPVosDKptbudnKgGTlK2ZkjJDYSiHbW84mA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lsn9O+nXlwAbH/Wj4Fvcvy9Xu/7gg3MPmz0+JcGBdvtc94n8cJjqH2EobxqHZ4OZH
-	 Tkc8J6bL9YBIBbOQMtezebvamNo76dl2yjfSDh5mTKybMXX3jn7tl/0/C/fLGNEYzG
-	 clCWGLdPksNZ8DBMtNdhgyGuzijzQpsVsc7BuPK0=
+	b=LBg6gd1bqbVUG3Lo5FskueARYmmwg4nZtvYqxeFhluu4xyjA+3Yd2bPMSZpvz/Bq1
+	 hyLGuFO09b+pQN2PY6WOlI8iMj3V+FziQyuwDXxUFfzC339/yp8sOHU+xyVIhuOV7U
+	 MARUXr0W7Ux/P2dAqutMdp4oSVkL+8mtucrhefN4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436914AbgAPSiw (ORCPT
+        id S2407190AbgAPSjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:38:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54892 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:39:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390417AbgAPRMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:12:22 -0500
+        id S2390449AbgAPRMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:12:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2EAC24684;
-        Thu, 16 Jan 2020 17:12:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9624024692;
+        Thu, 16 Jan 2020 17:12:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194742;
-        bh=8FK7pR8uE9doo6gMvke7PDQVUkNaOo7OBDbXcEqK7vs=;
+        s=default; t=1579194739;
+        bh=eIAApzGvKPVosDKptbudnKgGTlK2ZkjJDYSiHbW84mA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X8lRaGgJsee9eN1nJ/iCMNxfiR1S/xVwdn9dB8LhAjd8pU1gwsYCeY66nXfjcvlSI
-         mVGQH93n+kNE/Mc4EooovNDL6R4S6WHtHw36/4xESGe4+vwN3zRIbDNn0zno346gR/
-         Q/Z7jzmvHvB78va+VHFZU02dwr7rxZC5vf9GvP/I=
+        b=dcUlBYpGzAc2DoFTjoZh1bVCJljc3Utb8A7uQP14hWA+snC0FCEXLWNfiIODkzWZf
+         i6GeU4jE5uBHd3cjFkOp9CpluhH4C1d//H+Pj/K6g6QYhD1EAKxBtorhdF3tEddmrB
+         QE4CB86lkpEbIz5b8w5a+xPqPGbkk/4OqcSJXHPc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vladimir Oltean <olteanv@gmail.com>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 572/671] net: sched: cbs: Avoid division by zero when calculating the port rate
-Date:   Thu, 16 Jan 2020 12:03:30 -0500
-Message-Id: <20200116170509.12787-309-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 570/671] net: nixge: Fix a signedness bug in nixge_probe()
+Date:   Thu, 16 Jan 2020 12:03:28 -0500
+Message-Id: <20200116170509.12787-307-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,37 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <olteanv@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 83c8c3cf45163f0c823db37be6ab04dfcf8ac751 ]
+[ Upstream commit 1a4b62a0b8a3b81eca24366f63e214a7144b9f02 ]
 
-As explained in the "net: sched: taprio: Avoid division by zero on
-invalid link speed" commit, it is legal for the ethtool API to return
-zero as a link speed. So guard against it to ensure we don't perform a
-division by zero in kernel.
+The "priv->phy_mode" is an enum and in this context GCC will treat it
+as an unsigned int so it can never be less than zero.
 
-Fixes: e0a7683d30e9 ("net/sched: cbs: fix port_rate miscalculation")
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Fixes: 492caffa8a1a ("net: ethernet: nixge: Add support for National Instruments XGE netdev")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/sch_cbs.c | 2 +-
+ drivers/net/ethernet/ni/nixge.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/sched/sch_cbs.c b/net/sched/sch_cbs.c
-index 289f66b9238d..940e72d6db18 100644
---- a/net/sched/sch_cbs.c
-+++ b/net/sched/sch_cbs.c
-@@ -310,7 +310,7 @@ static void cbs_set_port_rate(struct net_device *dev, struct cbs_sched_data *q)
- 	if (err < 0)
- 		goto skip;
+diff --git a/drivers/net/ethernet/ni/nixge.c b/drivers/net/ethernet/ni/nixge.c
+index 76efed058f33..a791d7932b0e 100644
+--- a/drivers/net/ethernet/ni/nixge.c
++++ b/drivers/net/ethernet/ni/nixge.c
+@@ -1233,7 +1233,7 @@ static int nixge_probe(struct platform_device *pdev)
+ 	}
  
--	if (ecmd.base.speed != SPEED_UNKNOWN)
-+	if (ecmd.base.speed && ecmd.base.speed != SPEED_UNKNOWN)
- 		speed = ecmd.base.speed;
- 
- skip:
+ 	priv->phy_mode = of_get_phy_mode(pdev->dev.of_node);
+-	if (priv->phy_mode < 0) {
++	if ((int)priv->phy_mode < 0) {
+ 		netdev_err(ndev, "not find \"phy-mode\" property\n");
+ 		err = -EINVAL;
+ 		goto unregister_mdio;
 -- 
 2.20.1
 
