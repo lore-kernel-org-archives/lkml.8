@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F98C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CADCC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E0EB24692
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:11:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D76924696
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:11:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194711;
-	bh=Xu//IoAjWDWjzdXNMwlzFCfDT/q5SDU77D+BGGYp3nA=;
+	s=default; t=1579194716;
+	bh=VpZbRTFKM0xn+6cjq7+IvuLQrY6Rt9Cnp9fdZkHXzlE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ryxh+3CAC6xwBN/FUaSwmI0qidIvcvrqQst9BXz9M5qaC4JIbaAGhpduQAphjbV2B
-	 /J7t73wCCm6gNimsw+/mYJ6Av1RnAbK2arg/Qq6Tk44z8ZQgF8eBLKdLCPfeu2OasL
-	 TTBECMsQ85bAlLxFND4KakRD8kh1FM+su6vbwuC0=
+	b=w2btqWr+s9iSuiwM9E3leEtEaQEj4Hl/TYpVAju4Gn4lJK3lnMPmOVFE9v3HuZuAr
+	 P4PWILy3X9PkZ+DS5aNr2QzYtoOZC4JGSUZ1KcVlG3TlfB/ZDEMsvJWn3mm7PMybIr
+	 tzv3DJjsK9bEwsEk2IKPhnGS/Do9EiWl3h6AY7mY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390039AbgAPRLu (ORCPT
+        id S2390339AbgAPRLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:11:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52806 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:11:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389990AbgAPRLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:11:41 -0500
+        id S1731333AbgAPRLp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:11:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D24F72468F;
-        Thu, 16 Jan 2020 17:11:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7259421D56;
+        Thu, 16 Jan 2020 17:11:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194700;
-        bh=Xu//IoAjWDWjzdXNMwlzFCfDT/q5SDU77D+BGGYp3nA=;
+        s=default; t=1579194704;
+        bh=VpZbRTFKM0xn+6cjq7+IvuLQrY6Rt9Cnp9fdZkHXzlE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sQKBxyxif97x+2N5aBUyI5uIlbrW5VlgBA91mDE0KaciUKQOdQArNB6m5BNcE0+9x
-         4/xQBYZ5mC4w5oJdcSecmWcU75uQd2NlPJ5CXPVgd9BeKyDABz1FmIvQ3X5qnQ/0Cy
-         VlSyRleVHMshyo/sk7WGjlCDPyPcDdeP/R5rtYgA=
+        b=AjGIKmFGrKiHOXc5MHkpzLw/AFs0atW4ZRp1h4cBfx9/aBP+qk6hZoH9WhjCGFAMl
+         +sKPbGV9CH5rylipwl06uUOPtwIIulIWhBljvedS7+lCOsJjjUY5GPY0XjI97dS+Ga
+         1o5R9synhO5ao6SelWRJFrL7btSU7aqQoxWCm8xc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Filipe Manana <fdmanana@suse.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 540/671] Btrfs: fix inode cache waiters hanging on failure to start caching thread
-Date:   Thu, 16 Jan 2020 12:02:58 -0500
-Message-Id: <20200116170509.12787-277-sashal@kernel.org>
+Cc:     Firo Yang <firo.yang@suse.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 543/671] ixgbe: sync the first fragment unconditionally
+Date:   Thu, 16 Jan 2020 12:03:01 -0500
+Message-Id: <20200116170509.12787-280-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,77 +62,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Firo Yang <firo.yang@suse.com>
 
-[ Upstream commit a68ebe0790fc88b4314d17984a2cf99ce2361901 ]
+[ Upstream commit e7ba676c6188d394a0133fc4b9bcd7ee50d54b7f ]
 
-If we fail to start the inode caching thread, we print an error message
-and disable the inode cache, however we never wake up any waiters, so they
-hang forever waiting for the caching to finish. Fix this by waking them
-up and have them fallback to a call to btrfs_find_free_objectid().
+In Xen environment, if Xen-swiotlb is enabled, ixgbe driver
+could possibly allocate a page, DMA memory buffer, for the first
+fragment which is not suitable for Xen-swiotlb to do DMA operations.
+Xen-swiotlb have to internally allocate another page for doing DMA
+operations. This mechanism requires syncing the data from the internal
+page to the page which ixgbe sends to upper network stack. However,
+since commit f3213d932173 ("ixgbe: Update driver to make use of DMA
+attributes in Rx path"), the unmap operation is performed with
+DMA_ATTR_SKIP_CPU_SYNC. As a result, the sync is not performed.
+Since the sync isn't performed, the upper network stack could receive
+a incomplete network packet. By incomplete, it means the linear data
+on the first fragment(between skb->head and skb->end) is invalid. So
+we have to copy the data from the internal xen-swiotlb page to the page
+which ixgbe sends to upper network stack through the sync operation.
 
-Fixes: e60efa84252c05 ("Btrfs: avoid triggering bug_on() when we fail to start inode caching task")
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+More details from Alexander Duyck:
+Specifically since we are mapping the frame with
+DMA_ATTR_SKIP_CPU_SYNC we have to unmap with that as well. As a result
+a sync is not performed on an unmap and must be done manually as we
+skipped it for the first frag. As such we need to always sync before
+possibly performing a page unmap operation.
+
+Fixes: f3213d932173 ("ixgbe: Update driver to make use of DMA attributes in Rx path")
+Signed-off-by: Firo Yang <firo.yang@suse.com>
+Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/inode-map.c | 23 ++++++++++++++++++-----
- 1 file changed, 18 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/fs/btrfs/inode-map.c b/fs/btrfs/inode-map.c
-index b3bd27070617..7c4d0107c6fb 100644
---- a/fs/btrfs/inode-map.c
-+++ b/fs/btrfs/inode-map.c
-@@ -12,6 +12,19 @@
- #include "inode-map.h"
- #include "transaction.h"
- 
-+static void fail_caching_thread(struct btrfs_root *root)
-+{
-+	struct btrfs_fs_info *fs_info = root->fs_info;
-+
-+	btrfs_warn(fs_info, "failed to start inode caching task");
-+	btrfs_clear_pending_and_info(fs_info, INODE_MAP_CACHE,
-+				     "disabling inode map caching");
-+	spin_lock(&root->ino_cache_lock);
-+	root->ino_cache_state = BTRFS_CACHE_ERROR;
-+	spin_unlock(&root->ino_cache_lock);
-+	wake_up(&root->ino_cache_wait);
-+}
-+
- static int caching_kthread(void *data)
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+index de65ca1e6558..51cd58fbab69 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+@@ -1822,13 +1822,7 @@ static void ixgbe_pull_tail(struct ixgbe_ring *rx_ring,
+ static void ixgbe_dma_sync_frag(struct ixgbe_ring *rx_ring,
+ 				struct sk_buff *skb)
  {
- 	struct btrfs_root *root = data;
-@@ -164,11 +177,8 @@ static void start_caching(struct btrfs_root *root)
+-	/* if the page was released unmap it, else just sync our portion */
+-	if (unlikely(IXGBE_CB(skb)->page_released)) {
+-		dma_unmap_page_attrs(rx_ring->dev, IXGBE_CB(skb)->dma,
+-				     ixgbe_rx_pg_size(rx_ring),
+-				     DMA_FROM_DEVICE,
+-				     IXGBE_RX_DMA_ATTR);
+-	} else if (ring_uses_build_skb(rx_ring)) {
++	if (ring_uses_build_skb(rx_ring)) {
+ 		unsigned long offset = (unsigned long)(skb->data) & ~PAGE_MASK;
  
- 	tsk = kthread_run(caching_kthread, root, "btrfs-ino-cache-%llu",
- 			  root->root_key.objectid);
--	if (IS_ERR(tsk)) {
--		btrfs_warn(fs_info, "failed to start inode caching task");
--		btrfs_clear_pending_and_info(fs_info, INODE_MAP_CACHE,
--					     "disabling inode map caching");
--	}
-+	if (IS_ERR(tsk))
-+		fail_caching_thread(root);
+ 		dma_sync_single_range_for_cpu(rx_ring->dev,
+@@ -1845,6 +1839,14 @@ static void ixgbe_dma_sync_frag(struct ixgbe_ring *rx_ring,
+ 					      skb_frag_size(frag),
+ 					      DMA_FROM_DEVICE);
+ 	}
++
++	/* If the page was released, just unmap it. */
++	if (unlikely(IXGBE_CB(skb)->page_released)) {
++		dma_unmap_page_attrs(rx_ring->dev, IXGBE_CB(skb)->dma,
++				     ixgbe_rx_pg_size(rx_ring),
++				     DMA_FROM_DEVICE,
++				     IXGBE_RX_DMA_ATTR);
++	}
  }
  
- int btrfs_find_free_ino(struct btrfs_root *root, u64 *objectid)
-@@ -186,11 +196,14 @@ int btrfs_find_free_ino(struct btrfs_root *root, u64 *objectid)
- 
- 	wait_event(root->ino_cache_wait,
- 		   root->ino_cache_state == BTRFS_CACHE_FINISHED ||
-+		   root->ino_cache_state == BTRFS_CACHE_ERROR ||
- 		   root->free_ino_ctl->free_space > 0);
- 
- 	if (root->ino_cache_state == BTRFS_CACHE_FINISHED &&
- 	    root->free_ino_ctl->free_space == 0)
- 		return -ENOSPC;
-+	else if (root->ino_cache_state == BTRFS_CACHE_ERROR)
-+		return btrfs_find_free_objectid(root, objectid);
- 	else
- 		goto again;
- }
+ /**
 -- 
 2.20.1
 
