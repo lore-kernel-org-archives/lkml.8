@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 653E4C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2EDC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D2582467C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:55:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4939C2464B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:55:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193708;
-	bh=bdU4W6NQUKwa38DROjElBeIEwAa7e1UupvtmZlJXjRM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Fvp2/wQMPr3gBk4lSszMmK1xMOtZSs/mKMd6fdScxzvjZ/FQ7vnnW//5qLEUH3viV
-	 1E+u9i9zdEkmOaDFt8GzDTM9EAQ3acbGntk2fgKNwXW7Vha9aNWziYgPtn8pD5+1Py
-	 39pXUwseikzmBBE4DgckVGCmyPzXe6vqcTnMQ1sw=
+	s=default; t=1579193719;
+	bh=5CBKbS1KO/YZE0mKdL4kHfuURCzzDa3uCPuV0/8xM3c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ZMQxmnzFqOAdS0VpK/WePyyHAknBlyqlcfFvguf15Uu/+E9j1jLnpVBbZItCw6UbL
+	 O6RvK7QUShtJ418ZyQ/0tsxbHkz5FES1rAsmL0vpJG1hC6sZj8IG6g0YETgbY8b1zX
+	 biw4dZPPfL61RH6/cbMtjv1zzy3ntpdED6l/Keus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730623AbgAPQzG (ORCPT
+        id S1730643AbgAPQzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:55:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39968 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:55:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727030AbgAPQzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:55:05 -0500
+        id S1732601AbgAPQzM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:55:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 082AD22464;
-        Thu, 16 Jan 2020 16:55:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D35BD2467C;
+        Thu, 16 Jan 2020 16:55:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193704;
-        bh=bdU4W6NQUKwa38DROjElBeIEwAa7e1UupvtmZlJXjRM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=MhbhV+5IxqV/Gye42s9tyuvD3p9gSzv6UwD2qIysvD8Qva7FoofrQdZiL94ZJ2TlW
-         RYepKR47FL49q+fgtKGxTUUPqO/QHnWho9uritmiImtDFTliSiLOx8J3fWlXxa5TQ0
-         5JDgD9gUnz5soFhdOborokc0UEtJAHFx+jQhdcZQ=
+        s=default; t=1579193711;
+        bh=5CBKbS1KO/YZE0mKdL4kHfuURCzzDa3uCPuV0/8xM3c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sM9NtRFIJcxT9BOhwsrwbXPIu33uE8Faqs27hqNJcgo4Xjylm6sE55x+5o/YdxTN+
+         zSZVjS4gJUZ0Xte64mb/PkBTUzgp9+SEBFCegBXS41FYf/Z0VsvByoX0rPeYhFc2X2
+         DF8Tc4AYsSsmwjx3qRFswnyueKUghkc6SVQKeaxc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Rosin <peda@axentia.se>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+Cc:     Tony Jones <tonyj@suse.de>,
+        John Johansen <john.johansen@canonical.com>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 001/671] drm/sti: do not remove the drm_bridge that was never added
-Date:   Thu, 16 Jan 2020 11:43:52 -0500
-Message-Id: <20200116165502.8838-1-sashal@kernel.org>
+        linux-security-module@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 007/671] apparmor: Fix network performance issue in aa_label_sk_perm
+Date:   Thu, 16 Jan 2020 11:43:58 -0500
+Message-Id: <20200116165502.8838-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
+References: <20200116165502.8838-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,53 +60,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Rosin <peda@axentia.se>
+From: Tony Jones <tonyj@suse.de>
 
-[ Upstream commit 66e31a72dc38543b2d9d1ce267dc78ba9beebcfd ]
+[ Upstream commit 5f997580e8b12b9f585e34cc16304925d26ce49e ]
 
-Removing the drm_bridge_remove call should avoid a NULL dereference
-during list processing in drm_bridge_remove if the error path is ever
-taken.
+The netperf benchmark shows a 5.73% reduction in throughput for
+small (64 byte) transfers by unconfined tasks.
 
-The more natural approach would perhaps be to add a drm_bridge_add,
-but there are several other bridges that never call drm_bridge_add.
-Just removing the drm_bridge_remove is the easier fix.
+DEFINE_AUDIT_SK() in aa_label_sk_perm() should not be performed
+unconditionally, rather only when the label is confined.
 
-Fixes: 84601dbdea36 ("drm: sti: rework init sequence")
-Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Peter Rosin <peda@axentia.se>
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20180806061910.29914-2-peda@axentia.se
+netperf-tcp
+                            56974a6fc^              56974a6fc
+Min       64         563.48 (   0.00%)      531.17 (  -5.73%)
+Min       128       1056.92 (   0.00%)      999.44 (  -5.44%)
+Min       256       1945.95 (   0.00%)     1867.97 (  -4.01%)
+Min       1024      6761.40 (   0.00%)     6364.23 (  -5.87%)
+Min       2048     11110.53 (   0.00%)    10606.20 (  -4.54%)
+Min       3312     13692.67 (   0.00%)    13158.41 (  -3.90%)
+Min       4096     14926.29 (   0.00%)    14457.46 (  -3.14%)
+Min       8192     18399.34 (   0.00%)    18091.65 (  -1.67%)
+Min       16384    21384.13 (   0.00%)    21158.05 (  -1.06%)
+Hmean     64         564.96 (   0.00%)      534.38 (  -5.41%)
+Hmean     128       1064.42 (   0.00%)     1010.12 (  -5.10%)
+Hmean     256       1965.85 (   0.00%)     1879.16 (  -4.41%)
+Hmean     1024      6839.77 (   0.00%)     6478.70 (  -5.28%)
+Hmean     2048     11154.80 (   0.00%)    10671.13 (  -4.34%)
+Hmean     3312     13838.12 (   0.00%)    13249.01 (  -4.26%)
+Hmean     4096     15009.99 (   0.00%)    14561.36 (  -2.99%)
+Hmean     8192     18975.57 (   0.00%)    18326.54 (  -3.42%)
+Hmean     16384    21440.44 (   0.00%)    21324.59 (  -0.54%)
+Stddev    64           1.24 (   0.00%)        2.85 (-130.64%)
+Stddev    128          4.51 (   0.00%)        6.53 ( -44.84%)
+Stddev    256         11.67 (   0.00%)        8.50 (  27.16%)
+Stddev    1024        48.33 (   0.00%)       75.07 ( -55.34%)
+Stddev    2048        54.82 (   0.00%)       65.16 ( -18.86%)
+Stddev    3312       153.57 (   0.00%)       56.29 (  63.35%)
+Stddev    4096       100.25 (   0.00%)       88.50 (  11.72%)
+Stddev    8192       358.13 (   0.00%)      169.99 (  52.54%)
+Stddev    16384       43.99 (   0.00%)      141.82 (-222.39%)
+
+Signed-off-by: Tony Jones <tonyj@suse.de>
+Fixes: 56974a6fcfef ("apparmor: add base infastructure for socket
+mediation")
+Signed-off-by: John Johansen <john.johansen@canonical.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/sti/sti_hda.c  | 1 -
- drivers/gpu/drm/sti/sti_hdmi.c | 1 -
- 2 files changed, 2 deletions(-)
+ security/apparmor/net.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/sti/sti_hda.c b/drivers/gpu/drm/sti/sti_hda.c
-index 49438337f70d..19b9b5ed1297 100644
---- a/drivers/gpu/drm/sti/sti_hda.c
-+++ b/drivers/gpu/drm/sti/sti_hda.c
-@@ -721,7 +721,6 @@ static int sti_hda_bind(struct device *dev, struct device *master, void *data)
- 	return 0;
+diff --git a/security/apparmor/net.c b/security/apparmor/net.c
+index bb24cfa0a164..d5d72dd1ca1f 100644
+--- a/security/apparmor/net.c
++++ b/security/apparmor/net.c
+@@ -146,17 +146,20 @@ int aa_af_perm(struct aa_label *label, const char *op, u32 request, u16 family,
+ static int aa_label_sk_perm(struct aa_label *label, const char *op, u32 request,
+ 			    struct sock *sk)
+ {
+-	struct aa_profile *profile;
+-	DEFINE_AUDIT_SK(sa, op, sk);
++	int error = 0;
  
- err_sysfs:
--	drm_bridge_remove(bridge);
- 	return -EINVAL;
+ 	AA_BUG(!label);
+ 	AA_BUG(!sk);
+ 
+-	if (unconfined(label))
+-		return 0;
++	if (!unconfined(label)) {
++		struct aa_profile *profile;
++		DEFINE_AUDIT_SK(sa, op, sk);
+ 
+-	return fn_for_each_confined(label, profile,
+-			aa_profile_af_sk_perm(profile, &sa, request, sk));
++		error = fn_for_each_confined(label, profile,
++			    aa_profile_af_sk_perm(profile, &sa, request, sk));
++	}
++
++	return error;
  }
  
-diff --git a/drivers/gpu/drm/sti/sti_hdmi.c b/drivers/gpu/drm/sti/sti_hdmi.c
-index 34cdc4644435..ccf718404a1c 100644
---- a/drivers/gpu/drm/sti/sti_hdmi.c
-+++ b/drivers/gpu/drm/sti/sti_hdmi.c
-@@ -1315,7 +1315,6 @@ static int sti_hdmi_bind(struct device *dev, struct device *master, void *data)
- 	return 0;
- 
- err_sysfs:
--	drm_bridge_remove(bridge);
- 	hdmi->drm_connector = NULL;
- 	return -EINVAL;
- }
+ int aa_sk_perm(const char *op, u32 request, struct sock *sk)
 -- 
 2.20.1
 
