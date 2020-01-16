@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB913C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7A1C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A255324693
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:14:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4E5224690
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:14:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194894;
-	bh=WUgtQX2ICeVXTVXxnODFc/ph/ERGo6v9PHgcy5ZwXTw=;
+	s=default; t=1579194898;
+	bh=TbGXhwCyiiSgzBOyD8VskMJHmRt2e+werhnVDQj3bmQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xXH8WZh7pBPaWdlQDaV2dPNW7JyUqNmz095/D4Pu6wP2p2+L3g00q+Xq38tFXsG/E
-	 vSuNzr0e05jxH3OE7U9xUhNqtdZ3cfy0lrVWnaHgsYWYaaiaZkwGIL05HlLKF6y8Nb
-	 lLwyt1tJ/op83PsOhKdyCM0OkEOrbP+RZ4/PX/Ow=
+	b=xnCLfE3xA/KabrNOQSYnKSe8ZrXgQ3riwjpifj9QNS9o67lo+hsubnkMlgRAsqfID
+	 0FcwUGxvZQiC6RGWxyA/LBa1dRHwWiSHB5bpVPCG6r4Vx2HtO68ga6703ezIGIZAEv
+	 827xHm6WNBOgUaI+4vKVp/Fq8ueikZGy//0Q+hew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729469AbgAPROx (ORCPT
+        id S2391098AbgAPRO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:14:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33848 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:14:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391010AbgAPROc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:14:32 -0500
+        id S2391036AbgAPROh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:14:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6A7D246A3;
-        Thu, 16 Jan 2020 17:14:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 588912469D;
+        Thu, 16 Jan 2020 17:14:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194872;
-        bh=WUgtQX2ICeVXTVXxnODFc/ph/ERGo6v9PHgcy5ZwXTw=;
+        s=default; t=1579194876;
+        bh=TbGXhwCyiiSgzBOyD8VskMJHmRt2e+werhnVDQj3bmQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ve6FsfyKQu5m+d1cYD4duYi/bolo2w3YRD2PiCyNgUDPWe3NplAobtwazUHezV1E8
-         +jhacxKKQe0nbN5S/Xl05t84kMIVhHVATZR3D2W4fJm9zV+1+kdqjAimgtZQ4B9Qq+
-         ah/fLQDt2ulaUxN8khnb/VCnP5XOwbrUKw3aZvTg=
+        b=rLR3WgDlUvBp8AxdEfOT9XiKpcDyUVbdqDK3h6YMYOrH26Ngka2R/o52dWuI/wh35
+         HjxGCe9eLSWqu3d1NN8CcR/H+feSWIDc8BmeAtEQ/pwcHjt5xjOg2ZzBO8MI4QfPP8
+         oqdEr450/zlvBP9ZjC2FW1CmX/Pj3qUGKIqRaA7g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 663/671] Revert "arm64: dts: juno: add dma-ranges property"
-Date:   Thu, 16 Jan 2020 12:05:01 -0500
-Message-Id: <20200116170509.12787-400-sashal@kernel.org>
+Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 666/671] samples/bpf: Fix broken xdp_rxq_info due to map order assumptions
+Date:   Thu, 16 Jan 2020 12:05:04 -0500
+Message-Id: <20200116170509.12787-403-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,59 +63,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudeep Holla <sudeep.holla@arm.com>
+From: Jesper Dangaard Brouer <brouer@redhat.com>
 
-[ Upstream commit 54fb3fe0f211d4729a2551cf9497bd612189af9d ]
+[ Upstream commit edbca120a8cdfa5a5793707e33497aa5185875ca ]
 
-This reverts commit 193d00a2b35ee3353813b4006a18131122087205.
+In the days of using bpf_load.c the order in which the 'maps' sections
+were defines in BPF side (*_kern.c) file, were used by userspace side
+to identify the map via using the map order as an index. In effect the
+order-index is created based on the order the maps sections are stored
+in the ELF-object file, by the LLVM compiler.
 
-Commit 951d48855d86 ("of: Make of_dma_get_range() work on bus nodes")
-reworked the logic such that of_dma_get_range() works correctly
-starting from a bus node containing "dma-ranges".
+This have also carried over in libbpf via API bpf_map__next(NULL, obj)
+to extract maps in the order libbpf parsed the ELF-object file.
 
-Since on Juno we don't have a SoC level bus node and "dma-ranges" is
-present only in the root node, we get the following error:
+When BTF based maps were introduced a new section type ".maps" were
+created. I found that the LLVM compiler doesn't create the ".maps"
+sections in the order they are defined in the C-file. The order in the
+ELF file is based on the order the map pointer is referenced in the code.
 
-OF: translation of DMA address(0) to CPU address failed node(/sram@2e000000)
-OF: translation of DMA address(0) to CPU address failed node(/uart@7ff80000)
-...
-OF: translation of DMA address(0) to CPU address failed node(/mhu@2b1f0000)
-OF: translation of DMA address(0) to CPU address failed node(/iommu@2b600000)
-OF: translation of DMA address(0) to CPU address failed node(/iommu@2b600000)
-OF: translation of DMA address(0) to CPU address failed node(/iommu@2b600000)
+This combination of changes lead to xdp_rxq_info mixing up the map
+file-descriptors in userspace, resulting in very broken behaviour, but
+without warning the user.
 
-So let's fix it by dropping the "dma-ranges" property for now. This
-should be fine since it doesn't represent any kind of device-visible
-restriction; it was only there for completeness, and we've since given
-in to the assumption that missing "dma-ranges" implies a 1:1 mapping
-anyway.
+This patch fix issue by instead using bpf_object__find_map_by_name()
+to find maps via their names. (Note, this is the ELF name, which can
+be longer than the name the kernel retains).
 
-We can add it later with a proper SoC bus node and moving all the
-devices that belong there along with the "dma-ranges" if required.
-
-Fixes: 193d00a2b35e ("arm64: dts: juno: add dma-ranges property")
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Liviu Dudau <liviu.dudau@arm.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Fixes: be5bca44aa6b ("samples: bpf: convert some XDP samples from bpf_load to libbpf")
+Fixes: 451d1dc886b5 ("samples: bpf: update map definition to new syntax BTF-defined map")
+Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Link: https://lore.kernel.org/bpf/157529025128.29832.5953245340679936909.stgit@firesoul
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/arm/juno-base.dtsi | 1 -
- 1 file changed, 1 deletion(-)
+ samples/bpf/xdp_rxq_info_user.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
-index ce56a4acda4f..b6f486737589 100644
---- a/arch/arm64/boot/dts/arm/juno-base.dtsi
-+++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
-@@ -6,7 +6,6 @@
- 	/*
- 	 *  Devices shared by all Juno boards
- 	 */
--	dma-ranges = <0 0 0 0 0x100 0>;
+diff --git a/samples/bpf/xdp_rxq_info_user.c b/samples/bpf/xdp_rxq_info_user.c
+index ef26f882f92f..a55c81301c1a 100644
+--- a/samples/bpf/xdp_rxq_info_user.c
++++ b/samples/bpf/xdp_rxq_info_user.c
+@@ -472,9 +472,9 @@ int main(int argc, char **argv)
+ 	if (bpf_prog_load_xattr(&prog_load_attr, &obj, &prog_fd))
+ 		return EXIT_FAIL;
  
- 	memtimer: timer@2a810000 {
- 		compatible = "arm,armv7-timer-mem";
+-	map = bpf_map__next(NULL, obj);
+-	stats_global_map = bpf_map__next(map, obj);
+-	rx_queue_index_map = bpf_map__next(stats_global_map, obj);
++	map =  bpf_object__find_map_by_name(obj, "config_map");
++	stats_global_map = bpf_object__find_map_by_name(obj, "stats_global_map");
++	rx_queue_index_map = bpf_object__find_map_by_name(obj, "rx_queue_index_map");
+ 	if (!map || !stats_global_map || !rx_queue_index_map) {
+ 		printf("finding a map in obj file failed\n");
+ 		return EXIT_FAIL;
 -- 
 2.20.1
 
