@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7080BC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2370C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 431B12075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8F3D2087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:12:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SlAEl8CC"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UBXELpEY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbgAPFMW (ORCPT
+        id S1726956AbgAPFMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 00:12:22 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:50406 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726872AbgAPFMV (ORCPT
+        Thu, 16 Jan 2020 00:12:30 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:34574 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726872AbgAPFM3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 00:12:21 -0500
-Received: by mail-pj1-f67.google.com with SMTP id r67so970425pjb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 21:12:21 -0800 (PST)
+        Thu, 16 Jan 2020 00:12:29 -0500
+Received: by mail-pj1-f65.google.com with SMTP id s94so2692165pjc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 21:12:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5t137Hgr25MSwppHZChMACb9jtzyL71KI0BNnXvPh60=;
-        b=SlAEl8CCKwgk2pji8uvv1hGfQcI6PJDUxs9aUvQwZ4wbz3FxpnRNbdItJGljwTH9St
-         X1vIOo4Je0wi019hxRim/DPOCMhcWop4I+Qd1spj0buvLJuzta/aohHVXvCIPxIwLUT8
-         SjL1n9SXeTVfpR0O36cgyvyp1clc5sdcfFDT4=
+        bh=MM1sOWvjZw+h8vu3/j7lHMVOWjzrQOXMF1caDGRlxsM=;
+        b=UBXELpEYZaaovPgS/erHW4L62w2arbooU5yS5QXYpMZPV450e4HZL/du/YMmlC6OLO
+         /XOUACrb2ABoUT2CMcudFe11l3pAT61IALWqFw3HUIklgU8z0Xd0g/41KFS0viVkqyMs
+         IgNoJGvtOKJrLR1cbo75xinWsCQAaZ9JOY3Hk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=5t137Hgr25MSwppHZChMACb9jtzyL71KI0BNnXvPh60=;
-        b=jr1W3he3A/9iCYH9zFUyXqRPE47896oZ+RhfgUvL3ZbHCvYaSH2bho0i3/uVxJpxkN
-         UMvgYKJHhVqHGh2SLE84VURdL1QLMN1ic+ypklBwNGr+l2taREo092aMWQEkyzKcmrai
-         psg1o3jTTzxUCN0nb8AfB0uMMevyj3P45ZediOJF+tREOUGK1DTIFFca4x+b3+BHgE2Q
-         a++WUet9oyiZNESMcF8u43jWdHYZO01XbFkUxB43A+KTFWq8yS2Tvk9UMJZm0QVAmSx9
-         Yp8PuCqGwXN93Ro8BfxnehYCnpCHsX5dSGpHobKqM9TXTDfKKZpAbqyigLJAhIjulMMA
-         QFmg==
-X-Gm-Message-State: APjAAAXDLmtU7JxRGESULXjaqrB7NGZC4LQ4nahZWb76v4u3997lPVej
-        OWqqsbuaFbUwKgMG+dDwFZx8Xw==
-X-Google-Smtp-Source: APXvYqwdOjdtFD1Iu7QVZbgDqB198xvL/e/t6J9kYjvjNo8/BuXY1Mw5Y9I4lFqL129beGOoLQukoQ==
-X-Received: by 2002:a17:902:a614:: with SMTP id u20mr30227332plq.107.1579151541051;
-        Wed, 15 Jan 2020 21:12:21 -0800 (PST)
+        bh=MM1sOWvjZw+h8vu3/j7lHMVOWjzrQOXMF1caDGRlxsM=;
+        b=uleN//4aALE8JQ2PYxaGo/M34cO5hzwE7Ca+VwgyxIpD4VBG7mRHD6GDnGpmJA2Xg8
+         kAkyMNVjErIdv4L6j7gp/tQYmkfOi8dMsW1D9qtQ7lAH9cABCSa1/oon3sSNizKDpB2X
+         3xulOIjvu8vFECpaDyCctZMgP1Hh5SSeahDG+VJp2asWaGqBvQBBOaiss+jLwCMDn4eZ
+         YwfQmOmP8sqntPtIQvcnTUC7JD5TMiJL1Z0LFhwRItRrdsoYvVbeWsNQpy2CyG+gnFPI
+         RciZLhCObOU6soQeTWJZ0lD3FdExEQE4fXEWGs6or4duorh/lGmPqoq1NFVp8V7sfRwT
+         IO2g==
+X-Gm-Message-State: APjAAAUc1o7D8qyTanF9wJ7eVbhOVnCBpFpEkvU9b0E2S8t0f+c5V4nd
+        8NW5NCDI9I8WIw5Cdd3hhJdjIw==
+X-Google-Smtp-Source: APXvYqz32hz+yU4Y2H7zyCA3RkeQAxrxGXqJ6o3lX0NPhyzrcMIWxMdF0Zmy/WCAcPiOdzOAA0SxTQ==
+X-Received: by 2002:a17:90a:fa88:: with SMTP id cu8mr4181651pjb.141.1579151548899;
+        Wed, 15 Jan 2020 21:12:28 -0800 (PST)
 Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
-        by smtp.gmail.com with ESMTPSA id l9sm21540217pgh.34.2020.01.15.21.12.19
+        by smtp.gmail.com with ESMTPSA id l9sm21540217pgh.34.2020.01.15.21.12.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 21:12:20 -0800 (PST)
+        Wed, 15 Jan 2020 21:12:28 -0800 (PST)
 From:   Hsin-Yi Wang <hsinyi@chromium.org>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Rob Herring <robh+dt@kernel.org>,
@@ -63,9 +63,9 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Nicolas Boichat <drinkcat@chromium.org>,
         Enric Balletbo i Serra <enric.balletbo@collabora.com>,
         Daniel Kurtz <djkurtz@chromium.org>
-Subject: [PATCH v3 1/3] dt-bindings: arm64: dts: mediatek: Add mt8173 elm and hana
-Date:   Thu, 16 Jan 2020 13:12:07 +0800
-Message-Id: <20200116051209.37970-2-hsinyi@chromium.org>
+Subject: [PATCH v3 2/3] arm64: dts: mt8173: add uart aliases
+Date:   Thu, 16 Jan 2020 13:12:08 +0800
+Message-Id: <20200116051209.37970-3-hsinyi@chromium.org>
 X-Mailer: git-send-email 2.25.0.rc1.283.g88dfdc4193-goog
 In-Reply-To: <20200116051209.37970-1-hsinyi@chromium.org>
 References: <20200116051209.37970-1-hsinyi@chromium.org>
@@ -76,48 +76,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Elm is Acer Chromebook R13. Hana is Lenovo Chromebook. Both uses mt8173
-SoC.
+Add serial as uart aliases in mt8173.
 
 Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/arm/mediatek.yaml     | 22 +++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml b/Documentation/devicetree/bindings/arm/mediatek.yaml
-index 4043c5046441..abc544dde692 100644
---- a/Documentation/devicetree/bindings/arm/mediatek.yaml
-+++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
-@@ -84,6 +84,28 @@ properties:
-           - enum:
-               - mediatek,mt8135-evbp1
-           - const: mediatek,mt8135
-+      - description: Google Elm (Acer Chromebook R13)
-+        items:
-+          - const: google,elm-rev8
-+          - const: google,elm-rev7
-+          - const: google,elm-rev6
-+          - const: google,elm-rev5
-+          - const: google,elm-rev4
-+          - const: google,elm-rev3
-+          - const: google,elm
-+          - const: mediatek,mt8173
-+      - description: Google Hana (Lenovo Chromebook N23 Yoga, C330, 300e,...)
-+        items:
-+          - const: google,hana-rev6
-+          - const: google,hana-rev5
-+          - const: google,hana-rev4
-+          - const: google,hana-rev3
-+          - const: google,hana
-+          - const: mediatek,mt8173
-+      - description: Google Hana rev7 (Poin2 Chromebook 11C)
-+        items:
-+          - const: google,hana-rev7
-+          - const: mediatek,mt8173
-       - items:
-           - enum:
-               - mediatek,mt8173-evb
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index 8b4e806d5119..790cd64aa447 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -50,6 +50,10 @@ aliases {
+ 		mdp_wdma0 = &mdp_wdma0;
+ 		mdp_wrot0 = &mdp_wrot0;
+ 		mdp_wrot1 = &mdp_wrot1;
++		serial0 = &uart0;
++		serial1 = &uart1;
++		serial2 = &uart2;
++		serial3 = &uart3;
+ 	};
+ 
+ 	cluster0_opp: opp_table0 {
 -- 
 2.25.0.rc1.283.g88dfdc4193-goog
 
