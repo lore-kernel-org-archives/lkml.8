@@ -2,62 +2,108 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCF1C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D568C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC7CB20730
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBA9620730
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:44:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbgAPLni convert rfc822-to-8bit (ORCPT
+        id S1726552AbgAPLoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 06:43:38 -0500
-Received: from mx2.suse.de ([195.135.220.15]:42808 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725999AbgAPLni (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 06:43:38 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 83B01AFF6;
-        Thu, 16 Jan 2020 11:43:36 +0000 (UTC)
-Date:   Thu, 16 Jan 2020 12:43:35 +0100
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Michael Reed <mdr@sgi.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scsi: qla1280: Fix dma firmware download, if dma
- address is 64bit
-Message-Id: <20200116124335.43a679198f514cbdf7a929c4@suse.de>
-In-Reply-To: <yq18sm8nitd.fsf@oracle.com>
-References: <20200114160936.1517-1-tbogendoerfer@suse.de>
-        <yq18sm8nitd.fsf@oracle.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8BIT
+        Thu, 16 Jan 2020 06:44:00 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:52119 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbgAPLoA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 06:44:00 -0500
+Received: from mail-qk1-f180.google.com ([209.85.222.180]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1Mlf8e-1jJBAl3H1u-00inxy; Thu, 16 Jan 2020 12:43:57 +0100
+Received: by mail-qk1-f180.google.com with SMTP id z76so18784614qka.2;
+        Thu, 16 Jan 2020 03:43:57 -0800 (PST)
+X-Gm-Message-State: APjAAAUBgqC4LsIWStm+C58fzLQYocijT5mOwNACoqLSWjIv999eaN06
+        IDlHXjCSgAc6K83QPdZj2Q7x9nE6wI3vi2UXIcc=
+X-Google-Smtp-Source: APXvYqym5eFiRPKVnv/qyi9spTjJFVaRol3iabOK0ekCyztzIvYdqXhBVKbxN+eRg7ZjVuhAgzjyuhoaOaMqN4MM72c=
+X-Received: by 2002:a05:620a:cef:: with SMTP id c15mr33307465qkj.352.1579175036455;
+ Thu, 16 Jan 2020 03:43:56 -0800 (PST)
+MIME-Version: 1.0
+References: <20200114200846.29434-1-vgupta@synopsys.com> <20200114200846.29434-2-vgupta@synopsys.com>
+ <CAK8P3a3W0eLK+qypnPwq=PdcF7+ey8OZEhmOoA6Bg7hMGm5hqQ@mail.gmail.com> <6eb7587b-c3bc-691d-9d27-d4e687114a42@synopsys.com>
+In-Reply-To: <6eb7587b-c3bc-691d-9d27-d4e687114a42@synopsys.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 16 Jan 2020 12:43:39 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a398-ojtETr9A7YsGTHBnmqyiykcC0YmHQSL5Cw1jy=Ew@mail.gmail.com>
+Message-ID: <CAK8P3a398-ojtETr9A7YsGTHBnmqyiykcC0YmHQSL5Cw1jy=Ew@mail.gmail.com>
+Subject: Re: [RFC 1/4] asm-generic/uaccess: don't define inline functions if
+ noinline lib/* in use
+To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc:     Khalid Aziz <khalid.aziz@oracle.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "open list:SYNOPSYS ARC ARCHITECTURE" 
+        <linux-snps-arc@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:Q4CixhMFzeFs5qRN0GqZo0A2jmXvoBMYLNempi2pLkd7iXyKdqE
+ z0xUosQIFT+YDAZAZ9LSLPodOvupbCk4k3GxnydQPsf4b1yZ8Ad8tiM9jSLJBwSNSIBz6o9
+ 5EDEOI92pRobI7RR259+4MViV2VkG2lRkbin9rQIkyDdvzB9CQ25uByolcrlbkMeWCmKgt+
+ zcXHKUE/S4oJsSgRZJlWA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ocrgz/UodCA=:/SYz91tU7TITsy+8qNZCB9
+ RdrtTSUrGTbqqwY8d/aMCAjYnajiXn9sg1gdL+RqNT+ZevEaopxAbZ5E6VDyouI7h/BVNmnw8
+ ti/vNsCduh3bH/qvaPihN6Y0B2nBRQfYozcJwkA/sV5hnjX92d89WJclz5BcS3cRAJ/2BJnhH
+ Z+JHlZebyZTbhcCqxBjktnq8nvydT3dzeh2aKAJ4i0KjN+GjAwIpBYM/7qAa26mrZfV64ceuX
+ gopGpGqG70b04LhAYY6UFSlQuV5DV89hWBOBKYqtGDhpcjYV1MFzuHJ66Zxxvw8swPZagB2oM
+ P1QmRmwaWMcwC0aelCPI859ycX7/kcv3f9l7ZEZZyoEd0nyXpWqWRCtY3G3vzk3YvdL/MoSfy
+ Hj6B7PJyXKy4WgHiTcTT8RQMQS5XEGmQV6oTSMKOXjpbfdCR8a+L/atES4l9ZqS6Rza8Pmejz
+ IdjeEZsyETkKG94x7swwZXeyjcvknr/30vXoUpOtg6uakvqDt80fPQ1KjeIx2GsJyEc9yHe/f
+ oiLOWziglWYofoWPHLmuSiT2G0M36nRfz8mYGe9UUiYPObsLbfaFJkWwH9JYNJa2SdAXsin8j
+ al3ChQXojlC/1af1AlVs8ZxQefPFiJGHFiRLSYUhV6ot6oiBsfRmLumb/VFeh4NGbtJxLDh/e
+ I25sHucnjS11dnucU5894i/7pWXNyY8+LL24bvor7dR8TRS5dAJVLG3H/nNt4AtMiBtiF2PhP
+ /02e7UtrlAUbkr3eLhSEVnSJROzUZClHSUjkoFocEKcH9SGE0oiBQ4oJHG0iTka6nc26HSgLA
+ VYDaqdJLS0vFfsdZ48OLA5ompDtHzgs4WJByCkZhHFJdbGl3H1m4uGoBloWJVekzYjZB+EPTZ
+ pGKjkbU5F+1XZBEVVEOQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jan 2020 23:09:34 -0500
-"Martin K. Petersen" <martin.petersen@oracle.com> wrote:
- 
-> > Do firmware download with 64bit LOAD_RAM command, if driver is using
-> > 64bit addressing.
-> 
-> Applied to 5.6/scsi-queue, thanks!
+On Thu, Jan 16, 2020 at 12:02 AM Vineet Gupta
+<Vineet.Gupta1@synopsys.com> wrote:
+> On 1/14/20 12:57 PM, Arnd Bergmann wrote:
+> > On Tue, Jan 14, 2020 at 9:08 PM Vineet Gupta <Vineet.Gupta1@synopsys.com> wrote:
+> >> There are 2 generic varaints of strncpy_from_user() / strnlen_user()
+> >>  (1). inline version in asm-generic/uaccess.h
+> >>  (2). optimized word-at-a-time version in lib/*
+> >>
+> >> This patch disables #1 if #2 selected. This allows arches to continue
+> >> reusing asm-generic/uaccess.h for rest of code
+> >>
+> >> This came up when switching ARC to generic word-at-a-time interface
+> >>
+> >> Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+> > This looks like a useful change, but I think we can do even better: It
+> > seems that
+> > there are no  callers of __strnlen_user or __strncpy_from_user  in the
+> > kernel today, so these should not be defined either when the Kconfig symbols
+> > are set. Also, I would suggest moving the 'extern' declaration for the two
+> > functions into the #else branch of the conditional so it does not need to be
+> > duplicated.
+>
+> Given where things seem to be heading, do u still want an updated patch for this
+> or do u plan to ditch the inline version in short term anyways.
 
-kbuild robot found an issue in the patch. Do you want a new version of
-the patch or an incremental patch ?
+I'm trying to come up with a cleanup series now that I'll send you.
+You can base on top of that if you like.
 
-Thomas.
-
--- 
-SUSE Software Solutions Germany GmbH
-HRB 36809 (AG Nürnberg)
-Geschäftsführer: Felix Imendörffer
+     Arnd
