@@ -4,62 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF11C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51EC5C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 665772073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:58:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E62D2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:58:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Kxs0ezyw"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="jazQCFCK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394667AbgAPR6f (ORCPT
+        id S2394680AbgAPR6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:58:35 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:42198 "EHLO pegase1.c-s.fr"
+        Thu, 16 Jan 2020 12:58:38 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:12220 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394143AbgAPR61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:58:27 -0500
+        id S2394598AbgAPR63 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:58:29 -0500
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 47zBkm2LMgz9v0MV;
-        Thu, 16 Jan 2020 18:58:24 +0100 (CET)
+        by localhost (Postfix) with ESMTP id 47zBkp72vRz9v0MY;
+        Thu, 16 Jan 2020 18:58:26 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Kxs0ezyw; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=jazQCFCK; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id ni5IDxU2PZjV; Thu, 16 Jan 2020 18:58:24 +0100 (CET)
+        with ESMTP id sWc84WilRORj; Thu, 16 Jan 2020 18:58:26 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47zBkm19zpz9v0MQ;
-        Thu, 16 Jan 2020 18:58:24 +0100 (CET)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47zBkp5myMz9v0MW;
+        Thu, 16 Jan 2020 18:58:26 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1579197504; bh=PWRUMcmoHAjONpDuJZiavA8lZ2SQsMCwaOs7HJNDLqQ=;
+        t=1579197506; bh=B22u4TdOal01xxsjkrua7iGmnqsKQfjsari1Wci2wQA=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=Kxs0ezywgzeua1J6Nz2TH6hRDY686ycC0eBvlT+7VEaf6BG1OMSaTqx3ZNlzL7Dmz
-         GOomaHsGdxWUoegNBMPuu9onZpq1TYLSdQDZtpQNH2tlc65PLxh72kb0MscKCVKpF5
-         /iR0akD7SHPV0Z7uztGRM/gxxxo2UJ/f+WVDgXqE=
+        b=jazQCFCKPDea5lYh2KgxAvOfg212DshtdG+JTeONviEiCNy0Rb1UeHG2HitQrkZta
+         dph9+c7i0zIG8Jmr7NFpb7OgHOnMdwyB7SSii7h7rc1yCgtyKb8alaGGzLoYDhGQpU
+         FC96U2rCRgY7UBaJdLOtZ1YGEFTk/Ou6UTLHKcpQ=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C7B508B82D;
-        Thu, 16 Jan 2020 18:58:25 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5395C8B82D;
+        Thu, 16 Jan 2020 18:58:28 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id YBr-0Bk7q74Z; Thu, 16 Jan 2020 18:58:25 +0100 (CET)
+        with ESMTP id l9JgyIsIeLnb; Thu, 16 Jan 2020 18:58:28 +0100 (CET)
 Received: from po14934vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 86BA18B82C;
-        Thu, 16 Jan 2020 18:58:25 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 93F048B82E;
+        Thu, 16 Jan 2020 18:58:27 +0100 (CET)
 Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 606F564A35; Thu, 16 Jan 2020 17:58:25 +0000 (UTC)
-Message-Id: <ea5531da61c0ede78226b4f6f0ee595be25c4309.1579196675.git.christophe.leroy@c-s.fr>
+        id 6D22D64A35; Thu, 16 Jan 2020 17:58:27 +0000 (UTC)
+Message-Id: <7ac2f0d21652f95e2bbdfa6bd514ae6c7caf53ab.1579196675.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1579196675.git.christophe.leroy@c-s.fr>
 References: <cover.1579196675.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [RFC PATCH v4 01/11] powerpc/64: Don't provide time functions in
- compat VDSO32
+Subject: [RFC PATCH v4 03/11] lib: vdso: only read hrtimer_res when needed in
+ __cvdso_clock_getres()
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>, nathanl@linux.ibm.com,
@@ -68,51 +68,49 @@ To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
         x86@kernel.org
-Date:   Thu, 16 Jan 2020 17:58:25 +0000 (UTC)
+Date:   Thu, 16 Jan 2020 17:58:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to allow use of generic C VDSO, remove time functions
-from the 32 bits VDSO on PPC64.
-
-This (temporary) removal is needed because powerpc kernel C headers
-are not prepared for building 32 bits code on PPC64.
+Only perform READ_ONCE(vd[CS_HRES_COARSE].hrtimer_res) for
+HRES and RAW clocks.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/kernel/vdso32/Makefile     | 3 ++-
- arch/powerpc/kernel/vdso32/vdso32.lds.S | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ lib/vdso/gettimeofday.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/kernel/vdso32/Makefile b/arch/powerpc/kernel/vdso32/Makefile
-index 06f54d947057..738d52105392 100644
---- a/arch/powerpc/kernel/vdso32/Makefile
-+++ b/arch/powerpc/kernel/vdso32/Makefile
-@@ -3,7 +3,8 @@
- # List of files in the vdso, has to be asm only for now
+diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
+index 9563be3cb5fa..8b3084d9a3ec 100644
+--- a/lib/vdso/gettimeofday.c
++++ b/lib/vdso/gettimeofday.c
+@@ -326,7 +326,6 @@ static __maybe_unused
+ int __cvdso_clock_getres_common(clockid_t clock, struct __kernel_timespec *res)
+ {
+ 	const struct vdso_data *vd = __arch_get_vdso_data();
+-	u64 hrtimer_res;
+ 	u32 msk;
+ 	u64 ns;
  
- obj-vdso32-$(CONFIG_PPC64) = getcpu.o
--obj-vdso32 = sigtramp.o gettimeofday.o datapage.o cacheflush.o note.o \
-+obj-vdso32-$(CONFIG_PPC32) = gettimeofday.o
-+obj-vdso32 = sigtramp.o datapage.o cacheflush.o note.o \
- 		$(obj-vdso32-y)
+@@ -338,7 +337,6 @@ int __cvdso_clock_getres_common(clockid_t clock, struct __kernel_timespec *res)
+ 	    vd->clock_mode == VDSO_CLOCKMODE_TIMENS)
+ 		vd = __arch_get_timens_vdso_data();
  
- # Build rules
-diff --git a/arch/powerpc/kernel/vdso32/vdso32.lds.S b/arch/powerpc/kernel/vdso32/vdso32.lds.S
-index 00c025ba4a92..9400b182e163 100644
---- a/arch/powerpc/kernel/vdso32/vdso32.lds.S
-+++ b/arch/powerpc/kernel/vdso32/vdso32.lds.S
-@@ -144,7 +144,7 @@ VERSION
- 		__kernel_datapage_offset;
- 
- 		__kernel_get_syscall_map;
--#ifndef CONFIG_PPC_BOOK3S_601
-+#if defined(CONFIG_PPC32) && !defined(CONFIG_PPC_BOOK3S_601)
- 		__kernel_gettimeofday;
- 		__kernel_clock_gettime;
- 		__kernel_clock_getres;
+-	hrtimer_res = READ_ONCE(vd[CS_HRES_COARSE].hrtimer_res);
+ 	/*
+ 	 * Convert the clockid to a bitmask and use it to check which
+ 	 * clocks are handled in the VDSO directly.
+@@ -348,7 +346,7 @@ int __cvdso_clock_getres_common(clockid_t clock, struct __kernel_timespec *res)
+ 		/*
+ 		 * Preserves the behaviour of posix_get_hrtimer_res().
+ 		 */
+-		ns = hrtimer_res;
++		ns = READ_ONCE(vd[CS_HRES_COARSE].hrtimer_res);
+ 	} else if (msk & VDSO_COARSE) {
+ 		/*
+ 		 * Preserves the behaviour of posix_get_coarse_res().
 -- 
 2.13.3
 
