@@ -2,186 +2,137 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0850BC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 997B7C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0838206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:44:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="lwBKeC3O"
+	by mail.kernel.org (Postfix) with ESMTP id 7966D20748
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:46:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729508AbgAPGor (ORCPT
+        id S1729551AbgAPGqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 01:44:47 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.84]:19158 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbgAPGoq (ORCPT
+        Thu, 16 Jan 2020 01:46:05 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:27902 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725973AbgAPGqE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 01:44:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1579157083;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=UsvSHT+Frq805jA7Se9Q9c/wAlk9BYIYlR1+Hqd6k74=;
-        b=lwBKeC3OK11AlDdc0lm8H7gOlHRbh9pdJfAmBJmFQ5LwOMQ+u6uJI1eIxDs6XhmpSl
-        yVuQUNGBEjQy1cnqudk/csbZr0pgU0m0HYKLqqKAz8/ETRGG2yEoHbcXvVCD5ayVk6qH
-        pAzLKh/pAaFgpV7XDaPNoPrVg6Li2lvxIKYOZPFWX8CZ0SEH+3LVeM8eydgzXBmzvJUU
-        enMEp0YZN1C5oZ2vksmC1nETJdpyXpeu4RYuHZdgJNgWzeHOKqHV4ETuawNfs8h7L89X
-        ZC86JatPqIX2uOg4+JkGTlF2Bc5tf3/MlXMSzFG0reGJICp5phTojCByFaJzLXmDwdPn
-        A9aQ==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPZJPScHivh"
-X-RZG-CLASS-ID: mo00
-Received: from tauon.chronox.de
-        by smtp.strato.de (RZmta 46.1.4 DYNA|AUTH)
-        with ESMTPSA id u04585w0G6hXa7Z
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Thu, 16 Jan 2020 07:43:33 +0100 (CET)
-From:   Stephan Mueller <smueller@chronox.de>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH v28 11/12] LRNG - add interface for gathering of raw entropy
-Date:   Thu, 16 Jan 2020 07:43:33 +0100
-Message-ID: <9116265.6Va6cPe1zF@tauon.chronox.de>
-In-Reply-To: <abde84fe-2599-0db8-2bad-d2ff29a3c4f0@infradead.org>
-References: <6157374.ptSnyUpaCn@positron.chronox.de> <2048458.ADJAtTWDj8@positron.chronox.de> <abde84fe-2599-0db8-2bad-d2ff29a3c4f0@infradead.org>
+        Thu, 16 Jan 2020 01:46:04 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00G6im9u003774;
+        Thu, 16 Jan 2020 01:45:46 -0500
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xj5xb7pk7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jan 2020 01:45:46 -0500
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 00G6fwKk027331;
+        Thu, 16 Jan 2020 06:45:44 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma01dal.us.ibm.com with ESMTP id 2xf758ev9f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jan 2020 06:45:44 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00G6jhj651446222
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jan 2020 06:45:43 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EF76C6E04E;
+        Thu, 16 Jan 2020 06:45:42 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 81A3B6E056;
+        Thu, 16 Jan 2020 06:45:39 +0000 (GMT)
+Received: from skywalker.ibmuc.com (unknown [9.199.45.56])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 16 Jan 2020 06:45:39 +0000 (GMT)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     akpm@linux-foundation.org, peterz@infradead.org, will@kernel.org,
+        mpe@ellerman.id.au
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Subject: [PATCH v4 0/9] Fixup page directory freeing
+Date:   Thu, 16 Jan 2020 12:15:22 +0530
+Message-Id: <20200116064531.483522-1-aneesh.kumar@linux.ibm.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-16_02:2020-01-16,2020-01-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=2
+ malwarescore=0 priorityscore=1501 mlxlogscore=523 clxscore=1015
+ impostorscore=0 phishscore=0 lowpriorityscore=0 bulkscore=0 adultscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001160055
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Donnerstag, 16. Januar 2020, 01:18:18 CET schrieb Randy Dunlap:
+This is a repost of patch series from Peter with the arch specific changes except ppc64 dropped.
+ppc64 changes are added here because we are redoing the patch series on top of ppc64 changes. This makes it
+easy to backport these changes. Only the first 2 patches need to be backported to stable. 
 
-Hi Randy,
+The thing is, on anything SMP, freeing page directories should observe the
+exact same order as normal page freeing:
 
-> On 1/15/20 2:35 AM, Stephan M=FCller wrote:
-> > CC: "Eric W. Biederman" <ebiederm@xmission.com>
-> > CC: "Alexander E. Patrakov" <patrakov@gmail.com>
-> > CC: "Ahmed S. Darwish" <darwish.07@gmail.com>
-> > CC: "Theodore Y. Ts'o" <tytso@mit.edu>
-> > CC: Willy Tarreau <w@1wt.eu>
-> > CC: Matthew Garrett <mjg59@srcf.ucam.org>
-> > CC: Vito Caputo <vcaputo@pengaru.com>
-> > CC: Andreas Dilger <adilger.kernel@dilger.ca>
-> > CC: Jan Kara <jack@suse.cz>
-> > CC: Ray Strode <rstrode@redhat.com>
-> > CC: William Jon McCann <mccann@jhu.edu>
-> > CC: zhangjs <zachary@baishancloud.com>
-> > CC: Andy Lutomirski <luto@kernel.org>
-> > CC: Florian Weimer <fweimer@redhat.com>
-> > CC: Lennart Poettering <mzxreary@0pointer.de>
-> > CC: Nicolai Stange <nstange@suse.de>
-> > Reviewed-by: Roman Drahtmueller <draht@schaltsekun.de>
-> > Tested-by: Roman Drahtm=FCller <draht@schaltsekun.de>
-> > Tested-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
-> > Tested-by: Neil Horman <nhorman@redhat.com>
-> > Signed-off-by: Stephan Mueller <smueller@chronox.de>
-> > ---
-> >=20
-> >  drivers/char/lrng/Kconfig        |  16 ++
-> >  drivers/char/lrng/Makefile       |   1 +
-> >  drivers/char/lrng/lrng_testing.c | 271 +++++++++++++++++++++++++++++++
-> >  3 files changed, 288 insertions(+)
-> >  create mode 100644 drivers/char/lrng/lrng_testing.c
-> >=20
-> > diff --git a/drivers/char/lrng/lrng_testing.c
-> > b/drivers/char/lrng/lrng_testing.c new file mode 100644
-> > index 000000000000..0e287eccd622
-> > --- /dev/null
-> > +++ b/drivers/char/lrng/lrng_testing.c
-> > @@ -0,0 +1,271 @@
-> > +// SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-> > +/*
-> > + * Linux Random Number Generator (LRNG) Raw entropy collection tool
-> > + *
-> > + * Copyright (C) 2019 - 2020, Stephan Mueller <smueller@chronox.de>
-> > + */
-> > +
-> > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> > +
-> > +#include <linux/atomic.h>
-> > +#include <linux/bug.h>
-> > +#include <linux/debugfs.h>
-> > +#include <linux/module.h>
-> > +#include <linux/sched.h>
-> > +#include <linux/sched/signal.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/string.h>
-> > +#include <linux/types.h>
-> > +#include <linux/uaccess.h>
-> > +#include <linux/workqueue.h>
-> > +#include <asm/errno.h>
-> > +
-> > +#include "lrng_internal.h"
-> > +
-> > +#define LRNG_TESTING_RINGBUFFER_SIZE	1024
-> > +#define LRNG_TESTING_RINGBUFFER_MASK	(LRNG_TESTING_RINGBUFFER_SIZE - 1)
-> > +
-> > +static u32 lrng_testing_rb[LRNG_TESTING_RINGBUFFER_SIZE];
-> > +static u32 lrng_rb_reader =3D 0;
-> > +static u32 lrng_rb_writer =3D 0;
-> > +static atomic_t lrng_testing_enabled =3D ATOMIC_INIT(0);
-> > +
-> > +static DECLARE_WAIT_QUEUE_HEAD(lrng_raw_read_wait);
-> > +static DEFINE_SPINLOCK(lrng_raw_lock);
-> > +
-> > +/*
-> > + * 0 =3D=3D> No boot test, gathering of runtime data allowed
-> > + * 1 =3D=3D> Boot test enabled and ready for collecting data, gathering
-> > runtime + *	 data is disabled
-> > + * 2 =3D=3D> Boot test completed and disabled, gathering of runtime da=
-ta is
-> > + *	 disabled
-> > + */
-> > +static u32 boot_test =3D 0;
-> > +module_param(boot_test, uint, 0644);
-> > +MODULE_PARM_DESC(boot_test, "Enable gathering boot time entropy of the
-> > first" +			    " entropy events");
->=20
-> One line for the string, please.
+ 1) unhook page/directory
+ 2) TLB invalidate
+ 3) free page/directory
 
-may I ask the question whether this should be done for all lines with print=
-k=20
-statements? As checkpatch.pl will complain if you have lines larger than 80=
-=20
-chars and complains about line-broken printk statements, I am always unsure=
-=20
-which way to go.
+Without this, any concurrent page-table walk could end up with a Use-after-Free.
+This is esp. trivial for anything that has software page-table walkers
+(HAVE_FAST_GUP / software TLB fill) or the hardware caches partial page-walks
+(ie. caches page directories).
 
-All printk statements in the patch series have line-broken printk statement=
-s.
+Even on UP this might give issues since mmu_gather is preemptible these days.
+An interrupt or preempted task accessing user pages might stumble into the free
+page if the hardware caches page directories.
 
-Ciao
-Stephan
+This patch series fixup ppc64 and add generic MMU_GATHER changes to support the conversion of other architectures.
+I haven't added patches w.r.t other architecture because they are yet to be acked.
 
+Changes from V3:
+* Added Cc:stable for first two patches
+* Explained why we have sparc related changes in patch 2
+
+Aneesh Kumar K.V (1):
+  powerpc/mmu_gather: Enable RCU_TABLE_FREE even for !SMP case
+
+Peter Zijlstra (8):
+  mm/mmu_gather: Invalidate TLB correctly on batch allocation failure
+    and flush
+  asm-generic/tlb: Avoid potential double flush
+  asm-gemeric/tlb: Remove stray function declarations
+  asm-generic/tlb: Add missing CONFIG symbol
+  asm-generic/tlb: Rename HAVE_RCU_TABLE_FREE
+  asm-generic/tlb: Rename HAVE_MMU_GATHER_PAGE_SIZE
+  asm-generic/tlb: Rename HAVE_MMU_GATHER_NO_GATHER
+  asm-generic/tlb: Provide MMU_GATHER_TABLE_FREE
+
+ arch/Kconfig                                 |  13 +-
+ arch/arm/Kconfig                             |   2 +-
+ arch/arm/include/asm/tlb.h                   |   4 -
+ arch/arm64/Kconfig                           |   2 +-
+ arch/powerpc/Kconfig                         |   5 +-
+ arch/powerpc/include/asm/book3s/32/pgalloc.h |   8 --
+ arch/powerpc/include/asm/book3s/64/pgalloc.h |   2 -
+ arch/powerpc/include/asm/nohash/pgalloc.h    |   8 --
+ arch/powerpc/include/asm/tlb.h               |  11 ++
+ arch/powerpc/mm/book3s64/pgtable.c           |   7 -
+ arch/s390/Kconfig                            |   4 +-
+ arch/sparc/Kconfig                           |   3 +-
+ arch/sparc/include/asm/tlb_64.h              |   9 ++
+ arch/x86/Kconfig                             |   2 +-
+ arch/x86/include/asm/tlb.h                   |   4 +-
+ include/asm-generic/tlb.h                    | 120 ++++++++++-------
+ mm/gup.c                                     |   2 +-
+ mm/mmu_gather.c                              | 134 +++++++++++++------
+ 18 files changed, 207 insertions(+), 133 deletions(-)
+
+-- 
+2.24.1
 
