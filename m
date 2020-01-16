@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80589C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6B0C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46E24208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:41:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B9732081E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:41:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200066;
-	bh=9CDhK2Sd42pZ+PhVJnnuGEpUks1p1zRL9gxcUm+9XKo=;
+	s=default; t=1579200070;
+	bh=KSoKe2uNa26+Y18rL2LmmLbZTgJ4wbXGLJZvGBEYWNg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a4BQcR+wmejwUOBMNT1b3u/vF7SFucrfU4xRj/A9jcZNpzEopkC+W4R0wVukcqHJD
-	 0dXWRua36yuhO/iQybAiYbcpACITkYm8yjCupmHipuIvnn2mSpu+9+UwairF11Xp2H
-	 ingu1MjeVzNOCc63XUAwd7HIuzlH0gnue7/G5I/I=
+	b=Os3XwXYCF6UgNLEidRRnpQ08jWHFz1LyogqZqmAfUFfO6luw4+cIP3XHz6DGzXTu9
+	 zWukXQOoY4XN/SMlMZxM+7GIe3hChXg2SCQeaeJRJtluMZMW9+7WB6HQnbq5CkAMJG
+	 KoYKbbBt+7e+hpJpX4PtKXWpKUeRzb+vJXkwfG5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437069AbgAPSlF (ORCPT
+        id S2390332AbgAPRLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:41:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53516 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389358AbgAPRLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jan 2020 12:11:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52868 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390298AbgAPRLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:11:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 767D824692;
-        Thu, 16 Jan 2020 17:11:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F6AB24681;
+        Thu, 16 Jan 2020 17:11:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194713;
-        bh=9CDhK2Sd42pZ+PhVJnnuGEpUks1p1zRL9gxcUm+9XKo=;
+        s=default; t=1579194701;
+        bh=KSoKe2uNa26+Y18rL2LmmLbZTgJ4wbXGLJZvGBEYWNg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t6cEFPn87+n2PhdBSnuuwAcwfVHCu0JhrizWUFUX/TnU1RTqu9OtjrD+ZrFlx7kFz
-         LYsvDJsBEufSZcb7o/JMFYAwkVzC+J9G54Wu8XdQaHS3/Y+nF7BHHEf0iUg+kWWTAV
-         k3U/JlXDLfmpB8vfgQCoG9d8rbPETdElKv8ddTjI=
+        b=dA46RSRF+6cllmPdwWzwTOCeYQ1QcXopZSaXGIB/N2aq9jxnr75bc+XYMEKAQ1FpU
+         FoJJLj+eREUMgNZan73OeD6SCMvTew3y0JQ9AHAlYCYbNmdOIG1yhIdOWi8fl5lnb4
+         xK6m4A11Frzw7QMGBD9ypY/ADt6aLyWhvgLdutkc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 550/671] RDMA: Fix goto target to release the allocated memory
-Date:   Thu, 16 Jan 2020 12:03:08 -0500
-Message-Id: <20200116170509.12787-287-sashal@kernel.org>
+Cc:     Filipe Manana <fdmanana@suse.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 541/671] Btrfs: fix inode cache waiters hanging on path allocation failure
+Date:   Thu, 16 Jan 2020 12:02:59 -0500
+Message-Id: <20200116170509.12787-278-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,36 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit 4a9d46a9fe14401f21df69cea97c62396d5fb053 ]
+[ Upstream commit 9d123a35d7e97bb2139747b16127c9b22b6a593e ]
 
-In bnxt_re_create_srq(), when ib_copy_to_udata() fails allocated memory
-should be released by goto fail.
+If the caching thread fails to allocate a path, it returns without waking
+up any cache waiters, leaving them hang forever. Fix this by following the
+same approach as when we fail to start the caching thread: print an error
+message, disable inode caching and make the wakers fallback to non-caching
+mode behaviour (calling btrfs_find_free_objectid()).
 
-Fixes: 37cb11acf1f7 ("RDMA/bnxt_re: Add SRQ support for Broadcom adapters")
-Link: https://lore.kernel.org/r/20190910222120.16517-1-navid.emamdoost@gmail.com
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 581bb050941b4f ("Btrfs: Cache free inode numbers in memory")
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/bnxt_re/ib_verbs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/inode-map.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/bnxt_re/ib_verbs.c b/drivers/infiniband/hw/bnxt_re/ib_verbs.c
-index bea8318e7007..a019ff266f52 100644
---- a/drivers/infiniband/hw/bnxt_re/ib_verbs.c
-+++ b/drivers/infiniband/hw/bnxt_re/ib_verbs.c
-@@ -1446,7 +1446,7 @@ struct ib_srq *bnxt_re_create_srq(struct ib_pd *ib_pd,
- 			dev_err(rdev_to_dev(rdev), "SRQ copy to udata failed!");
- 			bnxt_qplib_destroy_srq(&rdev->qplib_res,
- 					       &srq->qplib_srq);
--			goto exit;
-+			goto fail;
- 		}
- 	}
- 	if (nq)
+diff --git a/fs/btrfs/inode-map.c b/fs/btrfs/inode-map.c
+index 7c4d0107c6fb..c7dcb7c52108 100644
+--- a/fs/btrfs/inode-map.c
++++ b/fs/btrfs/inode-map.c
+@@ -41,8 +41,10 @@ static int caching_kthread(void *data)
+ 		return 0;
+ 
+ 	path = btrfs_alloc_path();
+-	if (!path)
++	if (!path) {
++		fail_caching_thread(root);
+ 		return -ENOMEM;
++	}
+ 
+ 	/* Since the commit root is read-only, we can safely skip locking. */
+ 	path->skip_locking = 1;
 -- 
 2.20.1
 
