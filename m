@@ -2,172 +2,108 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 999B7C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A6DC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D80F206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:34:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28BE3206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:34:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579199647;
+	bh=OTfyqL13mP7+4AKTzIHZPyB8/MGAlw88DMRmtis+I9c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xvSaW0sWFHgUJgExtoAw7wjVs0bk5gVhGXPe50dXhwOm+VL2Vdaon4UHnhph6bIHX
+	 kdvJuFtmQgyTaHVUIxCxkRExHUPwTQmAuMViFkPEGo8wiD9xK9tDw7k6RcHpphY0Cs
+	 5NgqbrOznTmZyZh/zi7PsMnl8I9nL/cFsxYhlm1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403794AbgAPRYo (ORCPT
+        id S2406990AbgAPSeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 16 Jan 2020 13:34:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59738 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403793AbgAPRYo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jan 2020 12:24:44 -0500
-Received: from out28-125.mail.aliyun.com ([115.124.28.125]:36193 "EHLO
-        out28-125.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403768AbgAPRYe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:24:34 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1272068|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.633143-0.024116-0.342741;DS=CONTINUE|ham_system_inform|0.00813291-0.000354104-0.991513;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03312;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=23;RT=23;SR=0;TI=SMTPD_---.GdEQRsw_1579195452;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GdEQRsw_1579195452)
-          by smtp.aliyun-inc.com(10.147.40.2);
-          Fri, 17 Jan 2020 01:24:24 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        mips-creator-ci20-dev@googlegroups.com, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
-        mark.rutland@arm.com, syq@debian.org, ralf@linux-mips.org,
-        rick.tyliu@ingenic.com, jason@lakedaemon.net,
-        keescook@chromium.org, geert+renesas@glider.be, krzk@kernel.org,
-        paul@crapouillou.net, prasannatsmkumar@gmail.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
-        ebiederm@xmission.com, hns@goldelico.com, paul@boddie.org.uk
-Subject: [PATCH v2 3/6] dt-bindings: MIPS: Document Ingenic SoCs binding.
-Date:   Fri, 17 Jan 2020 01:23:46 +0800
-Message-Id: <1579195429-59828-5-git-send-email-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1579195429-59828-1-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1579195429-59828-1-git-send-email-zhouyanjie@wanyeetech.com>
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BF6C2468C;
+        Thu, 16 Jan 2020 17:24:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579195483;
+        bh=OTfyqL13mP7+4AKTzIHZPyB8/MGAlw88DMRmtis+I9c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LxFfS7pDlFy5w39XwvkJ0T7w25YA2VSi6our4s1+8mdPsuhjSMMVl0s/3XDLJmobm
+         4wzsc5Rw6ntoKdu/lzTXtMSIT+wKGe+v8HFlAPUshcj+wDq/M20zE6IsRBtRIpGwfe
+         DCUiVu4gG6l8mnCjFyL+wWUv3PsF5gMzl3X/h7iw=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 088/371] rtc: pm8xxx: fix unintended sign extension
+Date:   Thu, 16 Jan 2020 12:19:20 -0500
+Message-Id: <20200116172403.18149-31-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
+References: <20200116172403.18149-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the available properties for the SoC root node and the
-CPU nodes of the devicetree for the Ingenic XBurst SoCs.
+From: Colin Ian King <colin.king@canonical.com>
 
-Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+[ Upstream commit e42280886018c6f77f0a90190f7cba344b0df3e0 ]
+
+Shifting a u8 by 24 will cause the value to be promoted to an integer. If
+the top bit of the u8 is set then the following conversion to an unsigned
+long will sign extend the value causing the upper 32 bits to be set in
+the result.
+
+Fix this by casting the u8 value to an unsigned long before the shift.
+
+Detected by CoverityScan, CID#1309693 ("Unintended sign extension")
+
+Fixes: 9a9a54ad7aa2 ("drivers/rtc: add support for Qualcomm PMIC8xxx RTC")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
+ drivers/rtc/rtc-pm8xxx.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Notes:
-    v1->v2:
-    Change the two Document from txt to yaml.
-
- .../bindings/mips/ingenic/ingenic,cpu.yaml         | 53 ++++++++++++++++++++++
- .../bindings/mips/ingenic/ingenic,soc,yaml         | 35 ++++++++++++++
- 2 files changed, 88 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
- create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,soc,yaml
-
-diff --git a/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
-new file mode 100644
-index 00000000..91041a4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
-@@ -0,0 +1,53 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mips/ingenic/ingenic,cpu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Bindings for Ingenic XBurst family CPUs
-+
-+maintainers:
-+  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-+description: |
-+  Ingenic XBurst family CPUs shall have the following properties.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - "ingenic,xburst".
-+      - "ingenic,xburst2".
-+
-+  reg:
-+    description: |
-+      The number of the CPU.
-+
-+required:
-+  - device_type
-+  - compatible
-+  - reg
-+
-+Example:
-+  - |
-+    cpus {
-+    	#address-cells = <1>;
-+    	#size-cells = <0>;
-+
-+    	cpu0: cpu@0 {
-+    		device_type = "cpu";
-+    		compatible = "ingenic,xburst";
-+    		reg = <0>;
-+
-+    		clocks = <&cgu JZ4780_CLK_CPU>;
-+    		clock-names = "cpu";
-+    	};
-+
-+    	cpu1: cpu@1 {
-+    		device_type = "cpu";
-+    		compatible = "ingenic,xburst";
-+    		reg = <1>;
-+
-+    		clocks = <&cgu JZ4780_CLK_CORE1>;
-+    		clock-names = "cpu";
-+    	};
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc,yaml b/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc,yaml
-new file mode 100644
-index 00000000..6269da7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc,yaml
-@@ -0,0 +1,35 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mips/ingenic/ingenic,soc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Bindings for Ingenic SoCs with XBurst CPU inside.
-+
-+maintainers:
-+  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-+description: |
-+  Ingenic SoCs with XBurst CPU inside shall have the following properties.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - "ingenic,jz4740".
-+      - "ingenic,jz4725b".
-+      - "ingenic,jz4760".
-+      - "ingenic,jz4760b".
-+      - "ingenic,jz4770".
-+      - "ingenic,jz4780".
-+      - "ingenic,x1000".
-+      - "ingenic,x1000e".
-+      - "ingenic,x1500".
-+
-+required:
-+  - compatible
-+
-+examples:
-+  - |
-+    #address-cells = <1>;
-+    #size-cells = <1>;
-+    compatible = "ingenic,jz4780";
-+...
+diff --git a/drivers/rtc/rtc-pm8xxx.c b/drivers/rtc/rtc-pm8xxx.c
+index fac835530671..a1b4b0ed1f19 100644
+--- a/drivers/rtc/rtc-pm8xxx.c
++++ b/drivers/rtc/rtc-pm8xxx.c
+@@ -186,7 +186,8 @@ static int pm8xxx_rtc_read_time(struct device *dev, struct rtc_time *tm)
+ 		}
+ 	}
+ 
+-	secs = value[0] | (value[1] << 8) | (value[2] << 16) | (value[3] << 24);
++	secs = value[0] | (value[1] << 8) | (value[2] << 16) |
++	       ((unsigned long)value[3] << 24);
+ 
+ 	rtc_time_to_tm(secs, tm);
+ 
+@@ -267,7 +268,8 @@ static int pm8xxx_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alarm)
+ 		return rc;
+ 	}
+ 
+-	secs = value[0] | (value[1] << 8) | (value[2] << 16) | (value[3] << 24);
++	secs = value[0] | (value[1] << 8) | (value[2] << 16) |
++	       ((unsigned long)value[3] << 24);
+ 
+ 	rtc_time_to_tm(secs, &alarm->time);
+ 
 -- 
-2.7.4
+2.20.1
 
