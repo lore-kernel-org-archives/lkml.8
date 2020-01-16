@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A69C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05BB0C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E2AC207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C51E22087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194273;
-	bh=qVfgptbKn+ym0tmO3LpA8NV2Q30OIGJxACekGXHTlgI=;
+	s=default; t=1579194285;
+	bh=K3uQlaV6PSVmkRvLY0TLcL34gXqHhh7+i0F5l/TLHtc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wsjBuWaGLfBfuu2HjfaPZQ7k/9cOZyV4OvrB9SB8wd+p9KoZsVGEE21bMeXWVsLBL
-	 oX9lFKD8zDJLfud0IhjTKubORp05zlyIuF+tiq5YNUzkddXM/aJu5uex5h404WNZ/N
-	 ybE6ObDwl4vsTJMr/rm5a+V0dZFpHBvHIJh/QvyY=
+	b=dbND0oFcG+4l/tahVSOOKZ1jmLOwiqTbQJGBwdXEkDEPhLrBhAcLs2ECiZhEHLXsW
+	 OT86PdOi8ZFw4D/7otwqbpOywK2X9B8aRMqSThq1mrmRuayBmNXjetXgeh9T3lZjLA
+	 11AB2iFPOTWciicYnsLoYzRcx2cxeV4GXqeYwYvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387834AbgAPREc (ORCPT
+        id S1730014AbgAPREo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:04:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55988 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:04:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388408AbgAPRCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:02:44 -0500
+        id S2388000AbgAPRCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:02:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A13624653;
-        Thu, 16 Jan 2020 17:02:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCDE12073A;
+        Thu, 16 Jan 2020 17:02:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194163;
-        bh=qVfgptbKn+ym0tmO3LpA8NV2Q30OIGJxACekGXHTlgI=;
+        s=default; t=1579194160;
+        bh=K3uQlaV6PSVmkRvLY0TLcL34gXqHhh7+i0F5l/TLHtc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FAEYld71RE1ZpKCXO+0MRSuViIdDZkc24mhPz7XU6vKdvwW4xTLBFbNvQ1VHdSxyM
-         ozEymgg43W0gPKZeWE11/jbeBTjIlgwhTNGD6PAVxtIHGhl4zt1JqkfTk6aDJFZYWw
-         pndGArqm/LlGLvd4dDAfT2QCk+2FA1ZwWGJG8/Aw=
+        b=DUimD86yJ9J4jjjXNtuWD6pDxneR+ZdShGgV/NxF+tr3zEJ6RKV3B55clt0UNTtTO
+         5+I4AnaUmFW91ghM+4fz0Gvs434gZ+hD28IyFHl88cYDamnsciNv/AzDxNxUsdZpGE
+         8p9ZioGtNwBmZvoMbO0Kh7BDvATckJp+WBSrbAXM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Feras Daoud <ferasda@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 244/671] net/mlx5e: IPoIB, Fix RX checksum statistics update
-Date:   Thu, 16 Jan 2020 11:52:33 -0500
-Message-Id: <20200116165940.10720-127-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Sasha Levin <sashal@kernel.org>, xen-devel@lists.xenproject.org
+Subject: [PATCH AUTOSEL 4.19 242/671] xen, cpu_hotplug: Prevent an out of bounds access
+Date:   Thu, 16 Jan 2020 11:52:31 -0500
+Message-Id: <20200116165940.10720-125-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -60,49 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Feras Daoud <ferasda@mellanox.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 3d6f3cdf9bfe92c430674308db0f1c8655f2c11d ]
+[ Upstream commit 201676095dda7e5b31a5e1d116d10fc22985075e ]
 
-Update the RX checksum only if the feature is enabled.
+The "cpu" variable comes from the sscanf() so Smatch marks it as
+untrusted data.  We can't pass a higher value than "nr_cpu_ids" to
+cpu_possible() or it results in an out of bounds access.
 
-Fixes: 9d6bd752c63c ("net/mlx5e: IPoIB, RX handler")
-Signed-off-by: Feras Daoud <ferasda@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: d68d82afd4c8 ("xen: implement CPU hotplugging")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_rx.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/xen/cpu_hotplug.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
-index 9cbc4173973e..044687a1f27c 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
-@@ -1364,8 +1364,14 @@ static inline void mlx5i_complete_rx_cqe(struct mlx5e_rq *rq,
- 
- 	skb->protocol = *((__be16 *)(skb->data));
- 
--	skb->ip_summed = CHECKSUM_COMPLETE;
--	skb->csum = csum_unfold((__force __sum16)cqe->check_sum);
-+	if (netdev->features & NETIF_F_RXCSUM) {
-+		skb->ip_summed = CHECKSUM_COMPLETE;
-+		skb->csum = csum_unfold((__force __sum16)cqe->check_sum);
-+		stats->csum_complete++;
-+	} else {
-+		skb->ip_summed = CHECKSUM_NONE;
-+		stats->csum_none++;
-+	}
- 
- 	if (unlikely(mlx5e_rx_hw_stamp(tstamp)))
- 		skb_hwtstamps(skb)->hwtstamp =
-@@ -1384,7 +1390,6 @@ static inline void mlx5i_complete_rx_cqe(struct mlx5e_rq *rq,
- 
- 	skb->dev = netdev;
- 
--	stats->csum_complete++;
- 	stats->packets++;
- 	stats->bytes += cqe_bcnt;
+diff --git a/drivers/xen/cpu_hotplug.c b/drivers/xen/cpu_hotplug.c
+index b1357aa4bc55..f192b6f42da9 100644
+--- a/drivers/xen/cpu_hotplug.c
++++ b/drivers/xen/cpu_hotplug.c
+@@ -54,7 +54,7 @@ static int vcpu_online(unsigned int cpu)
  }
+ static void vcpu_hotplug(unsigned int cpu)
+ {
+-	if (!cpu_possible(cpu))
++	if (cpu >= nr_cpu_ids || !cpu_possible(cpu))
+ 		return;
+ 
+ 	switch (vcpu_online(cpu)) {
 -- 
 2.20.1
 
