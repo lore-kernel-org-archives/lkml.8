@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9CAC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A95C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 862FD20730
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 358522073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198764;
-	bh=wU/9PA9pxNxoDXJ6lPoMf6WRbdEvS/5kHPeCbNbXJpU=;
+	s=default; t=1579198768;
+	bh=VgOQDA71uRDSsos4UvyhHQ5aQa7agYA/TfWi29gk9ks=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oe7TeGkH5zKsdmbxXRtz9Hy7ZVhM7AhjtF/Z9Jgc1WiTprO029VvPTCV3LyR6E9B4
-	 2vWr4s6RawsbWzlW2hxOyjtsiAY7P0JDJq1k7f0ovKUcedu9VBOYUKeB2i8RJP1URU
-	 dhXKUS1/4jKUGuy+P/+gNIweciv5VuZbXrV1FTns=
+	b=mkZRk+lB39wHtFXkkziYVwbf8dFRFHiTqoowmh2c7V8C2n4Vt2sSovvrZWhcauzUY
+	 lmMTgCI/uxA4DmaXEQKaDynVYOz7e0avwSwtUZ+DQumtiaBPAwy9W+1Fid2AzLlq3v
+	 ZawOgpAM+40O9lKoA5Ke3jy+Sy6t6uq6Q9Ut90/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395451AbgAPSTW (ORCPT
+        id S2395436AbgAPSTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:19:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39596 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:19:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392582AbgAPR23 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:28:29 -0500
+        id S2392588AbgAPR2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:28:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F303246F5;
-        Thu, 16 Jan 2020 17:28:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C00CD246D0;
+        Thu, 16 Jan 2020 17:28:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195709;
-        bh=wU/9PA9pxNxoDXJ6lPoMf6WRbdEvS/5kHPeCbNbXJpU=;
+        s=default; t=1579195711;
+        bh=VgOQDA71uRDSsos4UvyhHQ5aQa7agYA/TfWi29gk9ks=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Dzflyv4R0/TqyWbFz6J9fPWeUjIrCGylBM7bjL/AqvE1efgGgi4Pw1EMJlwSZmxw
-         /XSPIkMvG0Ajeb2bdmnbPrw9Pv/YdSkQEqCfDm8HvY4Blddk7JgrbyiO5sTfbFn9Q2
-         Y1JkP+EZFmq2Nb2JhbMds38Y2TdbPNpf55g1eStk=
+        b=xjqQ8Ql8jB03xs4SSwa8kd77FohHA24RLJBLmu5An4mulFzhilgzv/AoO937R3vea
+         4dy9jG51VIlNx5t6gvoTlZ5YmS/gYfXcUgecHhnV7CzL+05fwdjcRSFVsJ/az4sHYS
+         kUfaj7pRcuVjxy8AaWwXJsyeb9SUzXIjYcc5eaaQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 255/371] x86/kgbd: Use NMI_VECTOR not APIC_DM_NMI
-Date:   Thu, 16 Jan 2020 12:22:07 -0500
-Message-Id: <20200116172403.18149-198-sashal@kernel.org>
+Cc:     Johannes Berg <johannes@sipsolutions.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.14 257/371] ALSA: aoa: onyx: always initialize register read value
+Date:   Thu, 16 Jan 2020 12:22:09 -0500
+Message-Id: <20200116172403.18149-200-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -59,39 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Johannes Berg <johannes@sipsolutions.net>
 
-[ Upstream commit 2591bc4e8d70b4e1330d327fb7e3921f4e070a51 ]
+[ Upstream commit f474808acb3c4b30552d9c59b181244e0300d218 ]
 
-apic->send_IPI_allbutself() takes a vector number as argument.
+A lot of places in the driver use onyx_read_register() without
+checking the return value, and it's been working OK for ~10 years
+or so, so probably never fails ... Rather than trying to check the
+return value everywhere, which would be relatively intrusive, at
+least make sure we don't use an uninitialized value.
 
-APIC_DM_NMI is clearly not a vector number. It's defined to 0x400 which is
-outside the vector space.
-
-Use NMI_VECTOR instead as that's what it is intended to be.
-
-Fixes: 82da3ff89dc2 ("x86: kgdb support")
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190722105218.855189979@linutronix.de
+Fixes: f3d9478b2ce4 ("[ALSA] snd-aoa: add snd-aoa")
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Johannes Berg <johannes@sipsolutions.net>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/kgdb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/aoa/codecs/onyx.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/kgdb.c b/arch/x86/kernel/kgdb.c
-index 8e36f249646e..904e18bb38c5 100644
---- a/arch/x86/kernel/kgdb.c
-+++ b/arch/x86/kernel/kgdb.c
-@@ -438,7 +438,7 @@ static void kgdb_disable_hw_debug(struct pt_regs *regs)
-  */
- void kgdb_roundup_cpus(unsigned long flags)
- {
--	apic->send_IPI_allbutself(APIC_DM_NMI);
-+	apic->send_IPI_allbutself(NMI_VECTOR);
- }
- #endif
- 
+diff --git a/sound/aoa/codecs/onyx.c b/sound/aoa/codecs/onyx.c
+index d2d96ca082b7..6224fd3bbf7c 100644
+--- a/sound/aoa/codecs/onyx.c
++++ b/sound/aoa/codecs/onyx.c
+@@ -74,8 +74,10 @@ static int onyx_read_register(struct onyx *onyx, u8 reg, u8 *value)
+ 		return 0;
+ 	}
+ 	v = i2c_smbus_read_byte_data(onyx->i2c, reg);
+-	if (v < 0)
++	if (v < 0) {
++		*value = 0;
+ 		return -1;
++	}
+ 	*value = (u8)v;
+ 	onyx->cache[ONYX_REG_CONTROL-FIRSTREGISTER] = *value;
+ 	return 0;
 -- 
 2.20.1
 
