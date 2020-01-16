@@ -2,140 +2,191 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F898C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F05C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E61E206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D0082075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:53:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="nc6IvgLP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbgAPGuK (ORCPT
+        id S1726899AbgAPGxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 01:50:10 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:21296 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726406AbgAPGuK (ORCPT
+        Thu, 16 Jan 2020 01:53:07 -0500
+Received: from mo4-p03-ob.smtp.rzone.de ([81.169.146.172]:20503 "EHLO
+        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726160AbgAPGxG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 01:50:10 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00G6mxP6023622
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 01:50:09 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xh8d5prjv-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 01:50:08 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
-        Thu, 16 Jan 2020 06:50:06 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 16 Jan 2020 06:50:03 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00G6o2tq45940990
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 06:50:02 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 666374C040;
-        Thu, 16 Jan 2020 06:50:02 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7192A4C04A;
-        Thu, 16 Jan 2020 06:50:00 +0000 (GMT)
-Received: from [9.199.45.56] (unknown [9.199.45.56])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 16 Jan 2020 06:50:00 +0000 (GMT)
-Subject: Re: [PATCH v4 3/9] asm-generic/tlb: Avoid potential double flush
-To:     akpm@linux-foundation.org, peterz@infradead.org, will@kernel.org,
-        mpe@ellerman.id.au
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <20200116064531.483522-1-aneesh.kumar@linux.ibm.com>
- <20200116064531.483522-4-aneesh.kumar@linux.ibm.com>
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Date:   Thu, 16 Jan 2020 12:19:59 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Thu, 16 Jan 2020 01:53:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1579157583;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=zgxQEjrG5BmsUk2SBh3MYgSiUW2Bpqj/qNPvuxNbCXI=;
+        b=nc6IvgLP2xhxLp0CQKykBRB1q4bPBDz4cAfj+J9a/QPik7ohakQsYXgZAcxJK5IhPn
+        7yD2vtNUlFP3U6o7Fxwrv3flTTIaHf1czKYM1VICGaxKoXSdoRjfHuRzTo7kZPUtBJ2V
+        un3qPAgIVUvNAjmFU5YIQrg2SO6QlCXryYpZF44H06ohIGBI3XP2CFpvCosp7wfAK8zM
+        7Gh9qlEEDgXJXDJ8vdQK89xsIVdMriBSKMpzSzYCsczSt8xsplfi/3j8Z9WAdNuXE2QC
+        vJX9k49wkQI1aNtmXhmrmj0JpNZjkCoFTcDPZVw9DfbdzZHI3IsZahrLmRozKlwpFz/f
+        iaWQ==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPZJPScHivh"
+X-RZG-CLASS-ID: mo00
+Received: from tauon.chronox.de
+        by smtp.strato.de (RZmta 46.1.4 DYNA|AUTH)
+        with ESMTPSA id u04585w0G6pjaAI
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Thu, 16 Jan 2020 07:51:45 +0100 (CET)
+From:   Stephan Mueller <smueller@chronox.de>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Nicolai Stange <nstange@suse.de>,
+        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        Roman Drahtmueller <draht@schaltsekun.de>,
+        Neil Horman <nhorman@redhat.com>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH v28 09/12] LRNG - add Jitter RNG fast noise source
+Date:   Thu, 16 Jan 2020 07:51:45 +0100
+Message-ID: <6364272.m6LlNysOQA@tauon.chronox.de>
+In-Reply-To: <e354fe2f-2040-689a-4293-e1d919f14b74@infradead.org>
+References: <6157374.ptSnyUpaCn@positron.chronox.de> <2704719.5neY5jeiZ3@positron.chronox.de> <e354fe2f-2040-689a-4293-e1d919f14b74@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200116064531.483522-4-aneesh.kumar@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20011606-0012-0000-0000-0000037DC2F5
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20011606-0013-0000-0000-000021B9F5CD
-Message-Id: <c12bb139-9eda-74a9-b4de-b147a88ed1b0@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-16_02:2020-01-16,2020-01-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=2
- impostorscore=0 spamscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
- malwarescore=0 lowpriorityscore=0 phishscore=0 mlxscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-2001160056
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/16/20 12:15 PM, Aneesh Kumar K.V wrote:
-> From: Peter Zijlstra <peterz@infradead.org>
-> 
-> Aneesh reported that:
-> 
-> 	tlb_flush_mmu()
-> 	  tlb_flush_mmu_tlbonly()
-> 	    tlb_flush()			<-- #1
-> 	  tlb_flush_mmu_free()
-> 	    tlb_table_flush()
-> 	      tlb_table_invalidate()
-> 		tlb_flush_mmu_tlbonly()
-> 		  tlb_flush()		<-- #2
-> 
-> does two TLBIs when tlb->fullmm, because __tlb_reset_range() will not
-> clear tlb->end in that case.
-> 
-> Observe that any caller to __tlb_adjust_range() also sets at least one
-> of the tlb->freed_tables || tlb->cleared_p* bits, and those are
-> unconditionally cleared by __tlb_reset_range().
-> 
-> Change the condition for actually issuing TLBI to having one of those
-> bits set, as opposed to having tlb->end != 0.
-> 
+Am Donnerstag, 16. Januar 2020, 01:17:05 CET schrieb Randy Dunlap:
 
+Hi Randy,
 
-We should possibly get this to stable too along with the first two 
-patches. I am not quiet sure if this will qualify for a stable backport. 
-Hence avoided adding Cc:stable@kernel.org
+> On 1/15/20 2:34 AM, Stephan M=FCller wrote:
+> > CC: "Eric W. Biederman" <ebiederm@xmission.com>
+> > CC: "Alexander E. Patrakov" <patrakov@gmail.com>
+> > CC: "Ahmed S. Darwish" <darwish.07@gmail.com>
+> > CC: "Theodore Y. Ts'o" <tytso@mit.edu>
+> > CC: Willy Tarreau <w@1wt.eu>
+> > CC: Matthew Garrett <mjg59@srcf.ucam.org>
+> > CC: Vito Caputo <vcaputo@pengaru.com>
+> > CC: Andreas Dilger <adilger.kernel@dilger.ca>
+> > CC: Jan Kara <jack@suse.cz>
+> > CC: Ray Strode <rstrode@redhat.com>
+> > CC: William Jon McCann <mccann@jhu.edu>
+> > CC: zhangjs <zachary@baishancloud.com>
+> > CC: Andy Lutomirski <luto@kernel.org>
+> > CC: Florian Weimer <fweimer@redhat.com>
+> > CC: Lennart Poettering <mzxreary@0pointer.de>
+> > CC: Nicolai Stange <nstange@suse.de>
+> > Reviewed-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
+> > Reviewed-by: Roman Drahtmueller <draht@schaltsekun.de>
+> > Tested-by: Roman Drahtm=FCller <draht@schaltsekun.de>
+> > Tested-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
+> > Tested-by: Neil Horman <nhorman@redhat.com>
+> > Signed-off-by: Stephan Mueller <smueller@chronox.de>
+> > ---
+> >=20
+> >  drivers/char/lrng/Kconfig     | 11 +++++
+> >  drivers/char/lrng/Makefile    |  1 +
+> >  drivers/char/lrng/lrng_jent.c | 89 +++++++++++++++++++++++++++++++++++
+> >  3 files changed, 101 insertions(+)
+> >  create mode 100644 drivers/char/lrng/lrng_jent.c
+> >=20
+> > diff --git a/drivers/char/lrng/Kconfig b/drivers/char/lrng/Kconfig
+> > index 0d070a3897dd..10b7cbdb8c8e 100644
+> > --- a/drivers/char/lrng/Kconfig
+> > +++ b/drivers/char/lrng/Kconfig
+> > @@ -92,4 +92,15 @@ config LRNG_KCAPI
+> >=20
+> >  	  provided by the selected kernel crypto API RNG.
+> > =20
+> >  endif # LRNG_DRNG_SWITCH
+> >=20
+> > +config LRNG_JENT
+> > +	bool "Enable Jitter RNG as LRNG Seed Source"
+> > +	select CRYPTO_JITTERENTROPY
+>=20
+> Don't select unless CRYPTO is already set/enabled.
 
+I added "depends on=20
+>=20
+> > +	help
+> > +	  The Linux RNG may use the Jitter RNG as noise source. Enabling
+> > +	  this option enables the use of the Jitter RNG. Its default
+> > +	  entropy level is 16 bits of entropy per 256 data bits delivered
+> > +	  by the Jitter RNG. This entropy level can be changed at boot
+> > +	  time or at runtime with the lrng_base.jitterrng configuration
+> > +	  variable.
+> > +
+> >=20
+> >  endif # LRNG
+> >=20
+> > diff --git a/drivers/char/lrng/lrng_jent.c b/drivers/char/lrng/lrng_jen=
+t.c
+> > new file mode 100644
+> > index 000000000000..ff0bbe2680c4
+> > --- /dev/null
+> > +++ b/drivers/char/lrng/lrng_jent.c
+> > @@ -0,0 +1,89 @@
+> > +// SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
+> > +/*
+> > + * LRNG Fast Noise Source: Jitter RNG
+> > + *
+> > + * Copyright (C) 2016 - 2020, Stephan Mueller <smueller@chronox.de>
+> > + */
+> > +
+> > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> > +
+> > +#include <linux/types.h>
+> > +#include <crypto/internal/jitterentropy.h>
+> > +
+> > +#include "lrng_internal.h"
+> > +
+> > +/*
+> > + * Estimated entropy of data is a 16th of
+> > LRNG_DRNG_SECURITY_STRENGTH_BITS. + * Albeit a full entropy assessment =
+is
+> > provided for the noise source indicating + * that it provides high
+> > entropy rates and considering that it deactivates + * when it detects
+> > insufficient hardware, the chosen under estimation of + * entropy is
+> > considered to be acceptable to all reviewers.
+> > + */
+> > +static u32 jitterrng =3D LRNG_DRNG_SECURITY_STRENGTH_BITS>>4;
+> > +module_param(jitterrng, uint, 0644);
+> > +MODULE_PARM_DESC(jitterrng, "Entropy in bits of 256 data bits from Jit=
+ter
+> > " +			    "RNG noise source");
+>=20
+> One line for the string, please, not split to 2 lines.
 
-> Reported-by: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> ---
->   include/asm-generic/tlb.h | 7 ++++++-
->   1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
-> index 9e22ac369d1d..b36b3bef5661 100644
-> --- a/include/asm-generic/tlb.h
-> +++ b/include/asm-generic/tlb.h
-> @@ -402,7 +402,12 @@ tlb_update_vma_flags(struct mmu_gather *tlb, struct vm_area_struct *vma) { }
->   
->   static inline void tlb_flush_mmu_tlbonly(struct mmu_gather *tlb)
->   {
-> -	if (!tlb->end)
-> +	/*
-> +	 * Anything calling __tlb_adjust_range() also sets at least one of
-> +	 * these bits.
-> +	 */
-> +	if (!(tlb->freed_tables || tlb->cleared_ptes || tlb->cleared_pmds ||
-> +	      tlb->cleared_puds || tlb->cleared_p4ds))
->   		return;
->   
->   	tlb_flush(tlb);
-> 
+Changed.
+
+Thank you.
+
+Ciao
+Stephan
+
 
