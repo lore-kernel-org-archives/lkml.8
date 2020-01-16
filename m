@@ -2,88 +2,95 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CA1C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7FE2C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC66920663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:59:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Cs2GYr29"
+	by mail.kernel.org (Postfix) with ESMTP id 88A592053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:59:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579201152;
+	bh=NkGpowe9FnmmpR6ORNdzBt56niZjn5inrN0I8s/L6Y0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Tz1SNLymgvcEdeQNesq2hJZTvkgrckeaLjV2KbGpqWE4NIik7B9KQTa7Lviw7s6rH
+	 vC6VtbOHqWiHGNnlf76QDP0eL62vCIEb3j/OmkAuKLImsErqNKK9CdEXHH6+JzttI4
+	 rhIkWId8nM5ZFmw0swcnZtVS5roqdlhk2F7hL3W8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437209AbgAPS7C (ORCPT
+        id S2437215AbgAPS7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:59:02 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:60944 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388977AbgAPRGo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:06:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=O2oB/VU8iyxVCOuhkqWCVkodRFDstN8yc7koL+Xm+D0=; b=Cs2GYr29Sk6mgBrpJMwsneQ5V
-        2veU5z/gjrHrU71aINh9D5iD1aAExRuhDprTAaEsebypTxAJchrDZhyovQdEqTYLEUugPVwtxScA8
-        DvL6qrrLxYp/bX/DR97jxt5JSBFeszY1p9bjxKvlzirZl9W8KTfZ8CfnumW22DwFFHzc/xSaiO4pt
-        i/eHG0a+mVoMhvkGAjN6bzzGB/QYCACNVbX+2jYAc1Se0Pjp7xnX+ji1f771Po7TZimDFtMSsBc/m
-        BliXxXh2T2Y25LFDPZXC6CMB/o0/Ut14ssG54q/mfJ5scEfzy1yN6o5b6BlQe6kCp29D1nJXvdhPr
-        32AAbhyKA==;
-Received: from [2601:1c0:6280:3f0::ed68]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1is8bQ-0008Cf-UC; Thu, 16 Jan 2020 17:06:40 +0000
-To:     LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau@lists.freedesktop.org, Ben Skeggs <bskeggs@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] MAINTAINERS: nouveau mailing list is moderated
-Message-ID: <2684257e-1027-1c1b-d794-78bb1864b437@infradead.org>
-Date:   Thu, 16 Jan 2020 09:06:40 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 16 Jan 2020 13:59:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37250 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388966AbgAPRGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:06:41 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4523F2192A;
+        Thu, 16 Jan 2020 17:06:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579194401;
+        bh=NkGpowe9FnmmpR6ORNdzBt56niZjn5inrN0I8s/L6Y0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DY8XlMhkTXzhWCjgwA/8kJU4mHJ2xcGz12/XjzxhPom8palkKMmSVPs5XWZAUlxGT
+         1Pt5EqXApsawyCSE6P39+L0b6xba4Gs9+VLgL+pF9vROW8DBYReLc7EMi/J3lx/MiO
+         WeAWxYvvMZhqwhXj9LkStbSfxRtfUqEfM9Xp732c=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Minas Harutyunyan <minas.harutyunyan@synopsys.com>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 326/671] dwc2: gadget: Fix completed transfer size calculation in DDMA
+Date:   Thu, 16 Jan 2020 11:59:24 -0500
+Message-Id: <20200116170509.12787-63-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
+References: <20200116170509.12787-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Minas Harutyunyan <minas.harutyunyan@synopsys.com>
 
-Mark the nouveau@ mailing list as moderated for non-subscribers.
+[ Upstream commit 5acb4b970184d189d901192d075997c933b82260 ]
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Fix calculation of transfer size on completion in function
+dwc2_gadget_get_xfersize_ddma().
+
+Added increment of descriptor pointer to move to next descriptor in
+the loop.
+
+Fixes: aa3e8bc81311 ("usb: dwc2: gadget: DDMA transfer start and complete")
+
+Signed-off-by: Minas Harutyunyan <hminas@synopsys.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- MAINTAINERS |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/dwc2/gadget.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- linux-next-20200116.orig/MAINTAINERS
-+++ linux-next-20200116/MAINTAINERS
-@@ -5315,7 +5315,7 @@ F:	Documentation/devicetree/bindings/dis
- DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS
- M:	Ben Skeggs <bskeggs@redhat.com>
- L:	dri-devel@lists.freedesktop.org
--L:	nouveau@lists.freedesktop.org
-+L:	nouveau@lists.freedesktop.org (moderated for non-subscribers)
- T:	git git://github.com/skeggsb/linux
- S:	Supported
- F:	drivers/gpu/drm/nouveau/
-@@ -16914,7 +16914,7 @@ R:	Karol Herbst <karolherbst@gmail.com>
- R:	Pekka Paalanen <ppaalanen@gmail.com>
- S:	Maintained
- L:	linux-kernel@vger.kernel.org
--L:	nouveau@lists.freedesktop.org
-+L:	nouveau@lists.freedesktop.org (moderated for non-subscribers)
- F:	kernel/trace/trace_mmiotrace.c
- F:	include/linux/mmiotrace.h
- F:	arch/x86/mm/kmmio.c
+diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
+index 3f68edde0f03..f64d1cd08fb6 100644
+--- a/drivers/usb/dwc2/gadget.c
++++ b/drivers/usb/dwc2/gadget.c
+@@ -2230,6 +2230,7 @@ static unsigned int dwc2_gadget_get_xfersize_ddma(struct dwc2_hsotg_ep *hs_ep)
+ 		if (status & DEV_DMA_STS_MASK)
+ 			dev_err(hsotg->dev, "descriptor %d closed with %x\n",
+ 				i, status & DEV_DMA_STS_MASK);
++		desc++;
+ 	}
+ 
+ 	return bytes_rem;
+-- 
+2.20.1
 
