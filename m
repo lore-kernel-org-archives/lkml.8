@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CB1C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE30CC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D98252077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD8AE2077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:55:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197340;
-	bh=7fTI8hxW9dwg7fhTHSQjLr4YTp2ez/T5X8liCvd7LcM=;
+	s=default; t=1579197346;
+	bh=bIFZMnrtPxehiDYOcc4OQ4kbtN8MY8B3HN+2+c8olC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CnpfifliXVSDsdPlJBN5Z9J0kkmyI82pOQMUJRxV5eRBiCjNZOMBbvzHRXlrRRNhY
-	 t9qUqL+ljgYk8Klejq3D8rokLi6MiUUT0YIvzX4Y27gWNs50UXcW7TvxRl9xa2tR6N
-	 HhximS/MIx4z/hVlCW6QKeWonwFy9k98ZHoPxBFY=
+	b=fPsGpMWh044an+E6dZcc1y5jsa2j/PxJqW3GzgOKwQeOufX9qteqg0L8nuETAw4YS
+	 TCCPTJSY9vcP/2XwAJd9j+OluGhdGcdxKlB2OC3edRY9rb+MXVOSrNa+la4JyjuRCb
+	 zFuFTbx4PZ0z1pkCzfnoxISU01abTX+JBMHSeCik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394100AbgAPRoN (ORCPT
+        id S2394477AbgAPRzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:44:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34340 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:55:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394009AbgAPRnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:43:51 -0500
+        id S2394090AbgAPRoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:44:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BD8E2473E;
-        Thu, 16 Jan 2020 17:43:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9657B2474B;
+        Thu, 16 Jan 2020 17:44:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196630;
-        bh=7fTI8hxW9dwg7fhTHSQjLr4YTp2ez/T5X8liCvd7LcM=;
+        s=default; t=1579196652;
+        bh=bIFZMnrtPxehiDYOcc4OQ4kbtN8MY8B3HN+2+c8olC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SOKjCi78kxcX8i1NTJ2k/P5F7JdZtNgJohmPQAx40501dyIwsPPZft4W43NnkStMG
-         D6WEccnxTEquQOrAvhYnQ7qa8A4fnQvy6iIb7T7Zq7nTkTjN9PKorqjlVjnXIuzYno
-         +M966pTCLwUEHzkX1Euz71klIzHE9gLxWECPywE0=
+        b=Pv+sbMqouK/nfwKNy3GEWLDWwlqMtZpMwIpsOCZcM8iCs9aRzSfEhVgN8KdleGvWi
+         TnxE538H7pf2A68R61/CALBsMKRiDihHa/+hf4BafXVPiPFo9CSdnSj6LwgcRmxcXC
+         VAujNHlupGE3zX5xItvDeLy50ka5IFJHndBW7+2g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 044/174] pinctrl: sh-pfc: sh73a0: Fix fsic_spdif pin groups
-Date:   Thu, 16 Jan 2020 12:40:41 -0500
-Message-Id: <20200116174251.24326-44-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 060/174] media: cx18: update *pos correctly in cx18_read_pos()
+Date:   Thu, 16 Jan 2020 12:40:57 -0500
+Message-Id: <20200116174251.24326-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -60,35 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 0e6e448bdcf896d001a289a6112a704542d51516 ]
+[ Upstream commit 7afb0df554292dca7568446f619965fb8153085d ]
 
-There are two pin groups for the FSIC SPDIF signal, but the FSIC pin
-group array lists only one, and it refers to a nonexistent group.
+We should be updating *pos.  The current code is a no-op.
 
-Fixes: 2ecd4154c906b7d6 ("sh-pfc: sh73a0: Add FSI pin groups and functions")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Fixes: 1c1e45d17b66 ("V4L/DVB (7786): cx18: new driver for the Conexant CX23418 MPEG encoder chip")
+
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-sh73a0.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/media/pci/cx18/cx18-fileops.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-sh73a0.c b/drivers/pinctrl/sh-pfc/pfc-sh73a0.c
-index ea5da5dcad2c..b173bd759ee1 100644
---- a/drivers/pinctrl/sh-pfc/pfc-sh73a0.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-sh73a0.c
-@@ -2895,7 +2895,8 @@ static const char * const fsic_groups[] = {
- 	"fsic_sclk_out",
- 	"fsic_data_in",
- 	"fsic_data_out",
--	"fsic_spdif",
-+	"fsic_spdif_0",
-+	"fsic_spdif_1",
- };
+diff --git a/drivers/media/pci/cx18/cx18-fileops.c b/drivers/media/pci/cx18/cx18-fileops.c
+index df837408efd5..0171dc5b8809 100644
+--- a/drivers/media/pci/cx18/cx18-fileops.c
++++ b/drivers/media/pci/cx18/cx18-fileops.c
+@@ -490,7 +490,7 @@ static ssize_t cx18_read_pos(struct cx18_stream *s, char __user *ubuf,
  
- static const char * const fsid_groups[] = {
+ 	CX18_DEBUG_HI_FILE("read %zd from %s, got %zd\n", count, s->name, rc);
+ 	if (rc > 0)
+-		pos += rc;
++		*pos += rc;
+ 	return rc;
+ }
+ 
 -- 
 2.20.1
 
