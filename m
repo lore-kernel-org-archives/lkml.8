@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55EB3C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D182C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D5B3246A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 513F0246D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195517;
-	bh=9KQUfNd3Nvl/2tc+oWzrExL4KL6ShVPizW8ADsB0Frw=;
+	s=default; t=1579195522;
+	bh=o/9sH5pE9k4rFAh1zROCpzLfE+tZgovyTyZunZJY9j8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ICTZuoot5vXjZvSdgGYBVd05kOAdNk3QG8Az1jbTbOv6xCD80mOxg7RuFVJWMoTnk
-	 fmDaCmZ/rgSJ1oNIqxDABR0VYg1VQpL0RgY87yrrd4sG4v2BriHj5fAIPS2PNOvVE+
-	 eQMwrJoHQELu8BY7beZVdmbIEXnZfp0qv0WoiN4E=
+	b=X8N+aeyWGCh1A2sD9qbVbEkDd7vGZ3SdOiXbtkTNxXf0W3tN0m8eOUZLHp4SIMap7
+	 SSne3cC1Bb2g/v9ZOkTqppLVciMH+417PL8WYaNuMkQOdYDPfPua3uzA7oI59XMF7e
+	 hMlJrDa6hJmjZJcp5uK6myE6dvA0a7aVyXXzXrP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403854AbgAPRZQ (ORCPT
+        id S2391924AbgAPRZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:25:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60332 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:25:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391372AbgAPRY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:24:59 -0500
+        id S2391871AbgAPRZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:25:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6A6D246A3;
-        Thu, 16 Jan 2020 17:24:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82A7E246CD;
+        Thu, 16 Jan 2020 17:25:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195498;
-        bh=9KQUfNd3Nvl/2tc+oWzrExL4KL6ShVPizW8ADsB0Frw=;
+        s=default; t=1579195505;
+        bh=o/9sH5pE9k4rFAh1zROCpzLfE+tZgovyTyZunZJY9j8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JNNrfU0NOj7fMPkTLM6+VHhYUeSrJv+xwjurT/M3mwe0QC0wWu66NZkcdXtYx1Do+
-         DQbL3eXEFHJkLoHbT3COj/l2JbVE9xfjt9+ZdZIdu82HKKqMkwElxJe+hrFRphnKla
-         umDbfN11bA9+4+2w9CeOLouWmVQZipmf5l+drbDo=
+        b=a5UoZiRIaDUkMvWEV1sURwM6bY7eHa2BJorh1h/6RiJRTELGqb+e73v3IiEjxJgaH
+         AMn49uV601Yu21zGn/u8pUYs58989sreuH5wFSMAqnrjZgHbtTtHNpopy0XWRZES95
+         HbokOs3d8fMUqqjusprHK9SrpJo2YoQ+A3MgUqec=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ming Lei <ming.lei@redhat.com>, Omar Sandoval <osandov@fb.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 099/371] block: don't use bio->bi_vcnt to figure out segment number
-Date:   Thu, 16 Jan 2020 12:19:31 -0500
-Message-Id: <20200116172403.18149-42-sashal@kernel.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        John David Anglin <dave.anglin@bell.net>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 105/371] dmaengine: mv_xor: Use correct device for DMA API
+Date:   Thu, 16 Jan 2020 12:19:37 -0500
+Message-Id: <20200116172403.18149-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -59,48 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Robin Murphy <robin.murphy@arm.com>
 
-[ Upstream commit 1a67356e9a4829da2935dd338630a550c59c8489 ]
+[ Upstream commit 3e5daee5ecf314da33a890fabaa2404244cd2a36 ]
 
-It is wrong to use bio->bi_vcnt to figure out how many segments
-there are in the bio even though CLONED flag isn't set on this bio,
-because this bio may be splitted or advanced.
+Using dma_dev->dev for mappings before it's assigned with the correct
+device is unlikely to work as expected, and with future dma-direct
+changes, passing a NULL device may end up crashing entirely. I don't
+know enough about this hardware or the mv_xor_prep_dma_interrupt()
+operation to implement the appropriate error-handling logic that would
+have revealed those dma_map_single() calls failing on arm64 for as long
+as the driver has been enabled there, but moving the assignment earlier
+will at least make the current code operate as intended.
 
-So always use bio_segments() in blk_recount_segments(), and it shouldn't
-cause any performance loss now because the physical segment number is figured
-out in blk_queue_split() and BIO_SEG_VALID is set meantime since
-bdced438acd83ad83a6c ("block: setup bi_phys_segments after splitting").
-
-Reviewed-by: Omar Sandoval <osandov@fb.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Fixes: 76d8137a3113 ("blk-merge: recaculate segment if it isn't less than max segments")
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 22843545b200 ("dma: mv_xor: Add support for DMA_INTERRUPT")
+Reported-by: John David Anglin <dave.anglin@bell.net>
+Tested-by: John David Anglin <dave.anglin@bell.net>
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Tested-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-merge.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ drivers/dma/mv_xor.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/block/blk-merge.c b/block/blk-merge.c
-index f61b50a01bc7..415b5dafd9e6 100644
---- a/block/blk-merge.c
-+++ b/block/blk-merge.c
-@@ -299,13 +299,7 @@ void blk_recalc_rq_segments(struct request *rq)
+diff --git a/drivers/dma/mv_xor.c b/drivers/dma/mv_xor.c
+index 1993889003fd..1c57577f49fe 100644
+--- a/drivers/dma/mv_xor.c
++++ b/drivers/dma/mv_xor.c
+@@ -1059,6 +1059,7 @@ mv_xor_channel_add(struct mv_xor_device *xordev,
+ 		mv_chan->op_in_desc = XOR_MODE_IN_DESC;
  
- void blk_recount_segments(struct request_queue *q, struct bio *bio)
- {
--	unsigned short seg_cnt;
--
--	/* estimate segment number by bi_vcnt for non-cloned bio */
--	if (bio_flagged(bio, BIO_CLONED))
--		seg_cnt = bio_segments(bio);
--	else
--		seg_cnt = bio->bi_vcnt;
-+	unsigned short seg_cnt = bio_segments(bio);
+ 	dma_dev = &mv_chan->dmadev;
++	dma_dev->dev = &pdev->dev;
+ 	mv_chan->xordev = xordev;
  
- 	if (test_bit(QUEUE_FLAG_NO_SG_MERGE, &q->queue_flags) &&
- 			(seg_cnt < queue_max_segments(q)))
+ 	/*
+@@ -1091,7 +1092,6 @@ mv_xor_channel_add(struct mv_xor_device *xordev,
+ 	dma_dev->device_free_chan_resources = mv_xor_free_chan_resources;
+ 	dma_dev->device_tx_status = mv_xor_status;
+ 	dma_dev->device_issue_pending = mv_xor_issue_pending;
+-	dma_dev->dev = &pdev->dev;
+ 
+ 	/* set prep routines based on capability */
+ 	if (dma_has_cap(DMA_INTERRUPT, dma_dev->cap_mask))
 -- 
 2.20.1
 
