@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6B0C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC35C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B9732081E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE4DF2077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:41:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200070;
-	bh=KSoKe2uNa26+Y18rL2LmmLbZTgJ4wbXGLJZvGBEYWNg=;
+	s=default; t=1579200075;
+	bh=YSqZMwFEC5KIbfh4yOjDt6rdM32AL7ICzGhTCKJhBY8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Os3XwXYCF6UgNLEidRRnpQ08jWHFz1LyogqZqmAfUFfO6luw4+cIP3XHz6DGzXTu9
-	 zWukXQOoY4XN/SMlMZxM+7GIe3hChXg2SCQeaeJRJtluMZMW9+7WB6HQnbq5CkAMJG
-	 KoYKbbBt+7e+hpJpX4PtKXWpKUeRzb+vJXkwfG5E=
+	b=xmi8Kbinsact/Ws1eilin2rZpUcw8UuWKMLddIj282pMohZosvm5CdOspq2CTacOJ
+	 CkAjKDarinAgW2wIUXCsBf1pIxoHW6eCVz1aCaQwLm3437yCeSGXgm4PnmLD+XW5kR
+	 MG9HwpinGJC9HnbX3OfI+FkGTnJTUqSIXmymWqm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390332AbgAPRLx (ORCPT
+        id S2436968AbgAPSlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:11:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52868 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:41:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390298AbgAPRLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:11:42 -0500
+        id S2389947AbgAPRLw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:11:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F6AB24681;
-        Thu, 16 Jan 2020 17:11:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E48224695;
+        Thu, 16 Jan 2020 17:11:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194701;
-        bh=KSoKe2uNa26+Y18rL2LmmLbZTgJ4wbXGLJZvGBEYWNg=;
+        s=default; t=1579194712;
+        bh=YSqZMwFEC5KIbfh4yOjDt6rdM32AL7ICzGhTCKJhBY8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dA46RSRF+6cllmPdwWzwTOCeYQ1QcXopZSaXGIB/N2aq9jxnr75bc+XYMEKAQ1FpU
-         FoJJLj+eREUMgNZan73OeD6SCMvTew3y0JQ9AHAlYCYbNmdOIG1yhIdOWi8fl5lnb4
-         xK6m4A11Frzw7QMGBD9ypY/ADt6aLyWhvgLdutkc=
+        b=FzhlnxBl59HBNcvp60Bydi7uCLtmymR++kfxLk9huRI4wCODIXqBh+vWAkzz5J0bS
+         +YB5yZ1NIwn0zSlJpqPGFc5ZQYY0it7yxijIso/isCw2AVNcoGUBXcieuV75FUJV7Q
+         IlmN/q8NJKVDcXJ5NNCckc8zBs7LhsRl+ThxT298=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Filipe Manana <fdmanana@suse.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 541/671] Btrfs: fix inode cache waiters hanging on path allocation failure
-Date:   Thu, 16 Jan 2020 12:02:59 -0500
-Message-Id: <20200116170509.12787-278-sashal@kernel.org>
+Cc:     =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 549/671] RDMA/cma: Fix false error message
+Date:   Thu, 16 Jan 2020 12:03:07 -0500
+Message-Id: <20200116170509.12787-286-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,41 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Håkon Bugge <haakon.bugge@oracle.com>
 
-[ Upstream commit 9d123a35d7e97bb2139747b16127c9b22b6a593e ]
+[ Upstream commit a6e4d254c19b541a58caced322111084b27a7788 ]
 
-If the caching thread fails to allocate a path, it returns without waking
-up any cache waiters, leaving them hang forever. Fix this by following the
-same approach as when we fail to start the caching thread: print an error
-message, disable inode caching and make the wakers fallback to non-caching
-mode behaviour (calling btrfs_find_free_objectid()).
+In addr_handler(), assuming status == 0 and the device already has been
+acquired (id_priv->cma_dev != NULL), we get the following incorrect
+"error" message:
 
-Fixes: 581bb050941b4f ("Btrfs: Cache free inode numbers in memory")
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+RDMA CM: ADDR_ERROR: failed to resolve IP. status 0
+
+Fixes: 498683c6a7ee ("IB/cma: Add debug messages to error flows")
+Link: https://lore.kernel.org/r/20190902092731.1055757-1-haakon.bugge@oracle.com
+Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/inode-map.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/infiniband/core/cma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/inode-map.c b/fs/btrfs/inode-map.c
-index 7c4d0107c6fb..c7dcb7c52108 100644
---- a/fs/btrfs/inode-map.c
-+++ b/fs/btrfs/inode-map.c
-@@ -41,8 +41,10 @@ static int caching_kthread(void *data)
- 		return 0;
+diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
+index 319bfef00a4a..e16872e0724f 100644
+--- a/drivers/infiniband/core/cma.c
++++ b/drivers/infiniband/core/cma.c
+@@ -2889,7 +2889,7 @@ static void addr_handler(int status, struct sockaddr *src_addr,
+ 		if (status)
+ 			pr_debug_ratelimited("RDMA CM: ADDR_ERROR: failed to acquire device. status %d\n",
+ 					     status);
+-	} else {
++	} else if (status) {
+ 		pr_debug_ratelimited("RDMA CM: ADDR_ERROR: failed to resolve IP. status %d\n", status);
+ 	}
  
- 	path = btrfs_alloc_path();
--	if (!path)
-+	if (!path) {
-+		fail_caching_thread(root);
- 		return -ENOMEM;
-+	}
- 
- 	/* Since the commit root is read-only, we can safely skip locking. */
- 	path->skip_locking = 1;
 -- 
 2.20.1
 
