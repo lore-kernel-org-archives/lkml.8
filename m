@@ -7,51 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F44AC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A44F3C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 590612467E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:10:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DA452467E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:10:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194601;
-	bh=joScUPhdfCP23b6S5EFY5hYk38+64+HbNEWlfegz5v4=;
+	s=default; t=1579194604;
+	bh=VEqvj7Y0Mmc3ACabNYSWR3z88ZrthSjokdgjsRhukvk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xh5Cxzr0vdU1aGyLHp7vSYHoxdjtrqxKPyRdMl1WiIRBhZUs/ro4rNLwp8F9t9SfW
-	 G6qZ0ffgZO2UOeizjGdl/fwOjNh9B9tSrEhL54Q66Ui0zRNzYQ7urREFEVOPBO5/mT
-	 oly/qfYIkiKBzNQeJgUX9T/C38ozl4DgHg0X9aPk=
+	b=NIbf45INmTk8ZXOqAnjXa1HyYf0XJLEUJU3C95Z+onQevTXLFgOzqOyjg78jmPxHb
+	 aVaGGkmq9WM1/5U/EFpdjPCZ+ZGCm8jRJ34r6thierbgk0KN/jOh9Sauqir8XOdpCE
+	 Dh7ma7jmphdLIPKVMwsKaJA9uhLG0Sz3u0n6J1mo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389801AbgAPRKA (ORCPT
+        id S2389823AbgAPRKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:10:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46748 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:10:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389773AbgAPRJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:09:53 -0500
+        id S2389545AbgAPRJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:09:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E544217F4;
-        Thu, 16 Jan 2020 17:09:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4E6F2467E;
+        Thu, 16 Jan 2020 17:09:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194593;
-        bh=joScUPhdfCP23b6S5EFY5hYk38+64+HbNEWlfegz5v4=;
+        s=default; t=1579194595;
+        bh=VEqvj7Y0Mmc3ACabNYSWR3z88ZrthSjokdgjsRhukvk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VNIyg25loR56C6gni90jzFRznZjXzECZI64LY3HHPZ8NzN2AJLhYquA5rPtKf5Iy+
-         d0hQ6a+D5juvUU63l8kjNaxSxd/Ldz3kc/ImHbMwjV2SmVwAofCy/XbOMPsaN7mmXw
-         5tcvG+LMwm1vsz7kWOZySWRJ49iR/g/z4hr2iztQ=
+        b=gBA6+k/I69ZSXbPEhcA0m6FrYkXBTFlS13YUZWoGP6Wlhzz0xSqyDQ5prV8wG9KhY
+         368vlSJbvr63CtALRNqCG9KLAHk63Q9EUh5C9SrGWYWoHxHQu3gkACzxkIPXMOIh0T
+         OlxmTP4DJ5z/x2z9GPlq2FZ99pFit+WE5sga/B84=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Hannes Reinecke <hare@suse.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 463/671] scsi: libfc: fix null pointer dereference on a null lport
-Date:   Thu, 16 Jan 2020 12:01:41 -0500
-Message-Id: <20200116170509.12787-200-sashal@kernel.org>
+Cc:     Jani Nikula <jani.nikula@intel.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Sean Paul <sean@poorly.run>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 465/671] drm/panel: make drm_panel.h self-contained
+Date:   Thu, 16 Jan 2020 12:01:43 -0500
+Message-Id: <20200116170509.12787-202-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,37 +63,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Jani Nikula <jani.nikula@intel.com>
 
-[ Upstream commit 41a6bf6529edd10a6def42e3b2c34a7474bcc2f5 ]
+[ Upstream commit bf3f5e98559360661a3d2af340d46522512c0b00 ]
 
-Currently if lport is null then the null lport pointer is dereference when
-printing out debug via the FC_LPORT_DB macro. Fix this by using the more
-generic FC_LIBFC_DBG debug macro instead that does not use lport.
+Fix build warning if drm_panel.h is built with CONFIG_OF=n or
+CONFIG_DRM_PANEL=n and included without the prerequisite err.h:
 
-Addresses-Coverity: ("Dereference after null check")
-Fixes: 7414705ea4ae ("libfc: Add runtime debugging with debug_logging module parameter")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+./include/drm/drm_panel.h: In function ‘of_drm_find_panel’:
+./include/drm/drm_panel.h:203:9: error: implicit declaration of function ‘ERR_PTR’ [-Werror=implicit-function-declaration]
+  return ERR_PTR(-ENODEV);
+         ^~~~~~~
+./include/drm/drm_panel.h:203:9: error: returning ‘int’ from a function with return type ‘struct drm_panel *’ makes pointer from integer without a cast [-Werror=int-conversion]
+  return ERR_PTR(-ENODEV);
+         ^~~~~~~~~~~~~~~~
+
+Fixes: 5fa8e4a22182 ("drm/panel: Make of_drm_find_panel() return an ERR_PTR() instead of NULL")
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+Reviewed-by: Sean Paul <sean@poorly.run>
+Cc: Boris Brezillon <bbrezillon@kernel.org>
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190718161507.2047-2-sam@ravnborg.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/libfc/fc_exch.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/drm/drm_panel.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/libfc/fc_exch.c b/drivers/scsi/libfc/fc_exch.c
-index 42bcf7f3a0f9..6ba257cbc6d9 100644
---- a/drivers/scsi/libfc/fc_exch.c
-+++ b/drivers/scsi/libfc/fc_exch.c
-@@ -2603,7 +2603,7 @@ void fc_exch_recv(struct fc_lport *lport, struct fc_frame *fp)
+diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
+index 777814755fa6..675aa1e876ce 100644
+--- a/include/drm/drm_panel.h
++++ b/include/drm/drm_panel.h
+@@ -24,6 +24,7 @@
+ #ifndef __DRM_PANEL_H__
+ #define __DRM_PANEL_H__
  
- 	/* lport lock ? */
- 	if (!lport || lport->state == LPORT_ST_DISABLED) {
--		FC_LPORT_DBG(lport, "Receiving frames for an lport that "
-+		FC_LIBFC_DBG("Receiving frames for an lport that "
- 			     "has not been initialized correctly\n");
- 		fc_frame_free(fp);
- 		return;
++#include <linux/err.h>
+ #include <linux/errno.h>
+ #include <linux/list.h>
+ 
 -- 
 2.20.1
 
