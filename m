@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4F2C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30396C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A820A2081E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09CE2207FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:24:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202636;
-	bh=2Q9Q4pExj05WwTW9qKCbxEahwlpn9K6XUKlq3Krbhz4=;
+	s=default; t=1579202641;
+	bh=VTtE4Rn0eBatFxxgtwL7q8hKMpcItccYKxQo+yzmRow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yisBIknDyuyzk/WCo+RoAFVdwa94B/pI1YaxxA5Y+AwGyQ4Yy/ga6ac8h/rki6QyK
-	 GzukRlTjNKItxuqvKwB2Hzj2vXD9IFpGd88nxQ/FT5MgqVrxUosq53oiMqwfUh/Nx9
-	 eEPV2zgiDFtgbLeZbD5juH+rAXzRqhn2oFkCt1HE=
+	b=IpIXMQolGvwW6MzXgaHDAdDaCEatsqH/CtKi9VuNptiMUMGzgUweeB4JnHBvbZsBO
+	 TtKiBeODdVPqwqKmLaqhDujmRc4v4AtiUP/r9U9lCmEzgeVlYDixRmW4WHVxSOr2cb
+	 Nu9Cn2jZqz7svqKe65SY3X1nUK9n6K94c4+OhlvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407365AbgAPTXz (ORCPT
+        id S2407382AbgAPTYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:23:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36448 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:24:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730624AbgAPQxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:53:01 -0500
+        id S1729590AbgAPQw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:52:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B604205F4;
-        Thu, 16 Jan 2020 16:53:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9CDD22464;
+        Thu, 16 Jan 2020 16:52:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193581;
-        bh=2Q9Q4pExj05WwTW9qKCbxEahwlpn9K6XUKlq3Krbhz4=;
+        s=default; t=1579193578;
+        bh=VTtE4Rn0eBatFxxgtwL7q8hKMpcItccYKxQo+yzmRow=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jy9EBFGRrhYu8/kKJr8+WfZ0VLKTfkmWPVW1gUR+lmlwYTib90l33Gm32P6yMK5Ol
-         nb8CH1EK5DHtJ3vYsZgSxxnA9ymlaN6mP8lFM+Ixm+n3vkyFprYfVIZEu2ID3ltGsY
-         fVcXDz5SIxbo5/PFuymxXbpbC5BU7zcF2gZrLBJQ=
+        b=SWEZNtyOSD1XJ31MswRz1zukg721fEmERTCVyxCj0VWrVfLHf8yykAtsK00Sbizy6
+         9uudMB5VPK5LHWNuB2eQC8p4ckgPs9uXSEpjOAdhK4yod5craiDH6SM4FTsCC8c9ev
+         wnGk2zKP/cp7asxPoWwRYMA8SvCv/JjtbYrJyG/Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jonas Karlman <jonas@kwiboo.se>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 123/205] media: cedrus: Use correct H264 8x8 scaling list
-Date:   Thu, 16 Jan 2020 11:41:38 -0500
-Message-Id: <20200116164300.6705-123-sashal@kernel.org>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 121/205] packet: fix data-race in fanout_flow_is_huge()
+Date:   Thu, 16 Jan 2020 11:41:36 -0500
+Message-Id: <20200116164300.6705-121-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -62,38 +60,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonas Karlman <jonas@kwiboo.se>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit a6b8feae7c88343212686120740cf7551dd16e08 ]
+[ Upstream commit b756ad928d98e5ef0b74af7546a6a31a8dadde00 ]
 
-Documentation now defines the expected order of scaling lists,
-change to use correct indices.
+KCSAN reported the following data-race [1]
 
-Fixes: 6eb9b758e307 ("media: cedrus: Add H264 decoding support")
-Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Adding a couple of READ_ONCE()/WRITE_ONCE() should silence it.
+
+Since the report hinted about multiple cpus using the history
+concurrently, I added a test avoiding writing on it if the
+victim slot already contains the desired value.
+
+[1]
+
+BUG: KCSAN: data-race in fanout_demux_rollover / fanout_demux_rollover
+
+read to 0xffff8880b01786cc of 4 bytes by task 18921 on cpu 1:
+ fanout_flow_is_huge net/packet/af_packet.c:1303 [inline]
+ fanout_demux_rollover+0x33e/0x3f0 net/packet/af_packet.c:1353
+ packet_rcv_fanout+0x34e/0x490 net/packet/af_packet.c:1453
+ deliver_skb net/core/dev.c:1888 [inline]
+ dev_queue_xmit_nit+0x15b/0x540 net/core/dev.c:1958
+ xmit_one net/core/dev.c:3195 [inline]
+ dev_hard_start_xmit+0x3f5/0x430 net/core/dev.c:3215
+ __dev_queue_xmit+0x14ab/0x1b40 net/core/dev.c:3792
+ dev_queue_xmit+0x21/0x30 net/core/dev.c:3825
+ neigh_direct_output+0x1f/0x30 net/core/neighbour.c:1530
+ neigh_output include/net/neighbour.h:511 [inline]
+ ip6_finish_output2+0x7a2/0xec0 net/ipv6/ip6_output.c:116
+ __ip6_finish_output net/ipv6/ip6_output.c:142 [inline]
+ __ip6_finish_output+0x2d7/0x330 net/ipv6/ip6_output.c:127
+ ip6_finish_output+0x41/0x160 net/ipv6/ip6_output.c:152
+ NF_HOOK_COND include/linux/netfilter.h:294 [inline]
+ ip6_output+0xf2/0x280 net/ipv6/ip6_output.c:175
+ dst_output include/net/dst.h:436 [inline]
+ ip6_local_out+0x74/0x90 net/ipv6/output_core.c:179
+ ip6_send_skb+0x53/0x110 net/ipv6/ip6_output.c:1795
+ udp_v6_send_skb.isra.0+0x3ec/0xa70 net/ipv6/udp.c:1173
+ udpv6_sendmsg+0x1906/0x1c20 net/ipv6/udp.c:1471
+ inet6_sendmsg+0x6d/0x90 net/ipv6/af_inet6.c:576
+ sock_sendmsg_nosec net/socket.c:637 [inline]
+ sock_sendmsg+0x9f/0xc0 net/socket.c:657
+ ___sys_sendmsg+0x2b7/0x5d0 net/socket.c:2311
+ __sys_sendmmsg+0x123/0x350 net/socket.c:2413
+ __do_sys_sendmmsg net/socket.c:2442 [inline]
+ __se_sys_sendmmsg net/socket.c:2439 [inline]
+ __x64_sys_sendmmsg+0x64/0x80 net/socket.c:2439
+ do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+write to 0xffff8880b01786cc of 4 bytes by task 18922 on cpu 0:
+ fanout_flow_is_huge net/packet/af_packet.c:1306 [inline]
+ fanout_demux_rollover+0x3a4/0x3f0 net/packet/af_packet.c:1353
+ packet_rcv_fanout+0x34e/0x490 net/packet/af_packet.c:1453
+ deliver_skb net/core/dev.c:1888 [inline]
+ dev_queue_xmit_nit+0x15b/0x540 net/core/dev.c:1958
+ xmit_one net/core/dev.c:3195 [inline]
+ dev_hard_start_xmit+0x3f5/0x430 net/core/dev.c:3215
+ __dev_queue_xmit+0x14ab/0x1b40 net/core/dev.c:3792
+ dev_queue_xmit+0x21/0x30 net/core/dev.c:3825
+ neigh_direct_output+0x1f/0x30 net/core/neighbour.c:1530
+ neigh_output include/net/neighbour.h:511 [inline]
+ ip6_finish_output2+0x7a2/0xec0 net/ipv6/ip6_output.c:116
+ __ip6_finish_output net/ipv6/ip6_output.c:142 [inline]
+ __ip6_finish_output+0x2d7/0x330 net/ipv6/ip6_output.c:127
+ ip6_finish_output+0x41/0x160 net/ipv6/ip6_output.c:152
+ NF_HOOK_COND include/linux/netfilter.h:294 [inline]
+ ip6_output+0xf2/0x280 net/ipv6/ip6_output.c:175
+ dst_output include/net/dst.h:436 [inline]
+ ip6_local_out+0x74/0x90 net/ipv6/output_core.c:179
+ ip6_send_skb+0x53/0x110 net/ipv6/ip6_output.c:1795
+ udp_v6_send_skb.isra.0+0x3ec/0xa70 net/ipv6/udp.c:1173
+ udpv6_sendmsg+0x1906/0x1c20 net/ipv6/udp.c:1471
+ inet6_sendmsg+0x6d/0x90 net/ipv6/af_inet6.c:576
+ sock_sendmsg_nosec net/socket.c:637 [inline]
+ sock_sendmsg+0x9f/0xc0 net/socket.c:657
+ ___sys_sendmsg+0x2b7/0x5d0 net/socket.c:2311
+ __sys_sendmmsg+0x123/0x350 net/socket.c:2413
+ __do_sys_sendmmsg net/socket.c:2442 [inline]
+ __se_sys_sendmmsg net/socket.c:2439 [inline]
+ __x64_sys_sendmmsg+0x64/0x80 net/socket.c:2439
+ do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 0 PID: 18922 Comm: syz-executor.3 Not tainted 5.4.0-rc6+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+
+Fixes: 3b3a5b0aab5b ("packet: rollover huge flows before small flows")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Willem de Bruijn <willemb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/sunxi/cedrus/cedrus_h264.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/packet/af_packet.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-index 08c6c9c410cc..c07526c12629 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-@@ -244,8 +244,8 @@ static void cedrus_write_scaling_lists(struct cedrus_ctx *ctx,
- 			       sizeof(scaling->scaling_list_8x8[0]));
+diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+index 529d4ce945db..118cd66b7516 100644
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -1296,15 +1296,21 @@ static void packet_sock_destruct(struct sock *sk)
  
- 	cedrus_h264_write_sram(dev, CEDRUS_SRAM_H264_SCALING_LIST_8x8_1,
--			       scaling->scaling_list_8x8[3],
--			       sizeof(scaling->scaling_list_8x8[3]));
-+			       scaling->scaling_list_8x8[1],
-+			       sizeof(scaling->scaling_list_8x8[1]));
+ static bool fanout_flow_is_huge(struct packet_sock *po, struct sk_buff *skb)
+ {
+-	u32 rxhash;
++	u32 *history = po->rollover->history;
++	u32 victim, rxhash;
+ 	int i, count = 0;
  
- 	cedrus_h264_write_sram(dev, CEDRUS_SRAM_H264_SCALING_LIST_4x4,
- 			       scaling->scaling_list_4x4,
+ 	rxhash = skb_get_hash(skb);
+ 	for (i = 0; i < ROLLOVER_HLEN; i++)
+-		if (po->rollover->history[i] == rxhash)
++		if (READ_ONCE(history[i]) == rxhash)
+ 			count++;
+ 
+-	po->rollover->history[prandom_u32() % ROLLOVER_HLEN] = rxhash;
++	victim = prandom_u32() % ROLLOVER_HLEN;
++
++	/* Avoid dirtying the cache line if possible */
++	if (READ_ONCE(history[victim]) != rxhash)
++		WRITE_ONCE(history[victim], rxhash);
++
+ 	return count > (ROLLOVER_HLEN >> 1);
+ }
+ 
 -- 
 2.20.1
 
