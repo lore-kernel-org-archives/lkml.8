@@ -2,272 +2,168 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CEDBC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A34C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC09207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45C2C2081E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:12:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="VBfaiAUg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729710AbgAPGKV (ORCPT
+        id S1729955AbgAPGMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 01:10:21 -0500
-Received: from mga05.intel.com ([192.55.52.43]:12986 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728899AbgAPGKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 01:10:20 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 22:10:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,325,1574150400"; 
-   d="scan'208";a="213965076"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 15 Jan 2020 22:10:14 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iryM8-000Ivc-6I; Thu, 16 Jan 2020 14:10:12 +0800
-Date:   Thu, 16 Jan 2020 14:09:51 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Stephan =?iso-8859-1?Q?M=FCller?= <smueller@chronox.de>
-Cc:     kbuild-all@lists.01.org, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Julia Lawall <julia.lawall@inria.fr>
-Subject: Re: [PATCH v27 01/12] Linux Random Number Generator
-Message-ID: <202001161241.meGVaLli%lkp@intel.com>
-References: <112781836.sNYxTrJJ31@positron.chronox.de>
+        Thu, 16 Jan 2020 01:12:17 -0500
+Received: from mail-vi1eur05on2049.outbound.protection.outlook.com ([40.107.21.49]:9056
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728899AbgAPGMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 01:12:17 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jcxusYsRAN1PDo/+TuoOXFueOLDQW7jmnC787cramEudJ2qt3HhOdD01eDPorKIudWZYCMXkBMCq2ArAdAiLwyXUkjposdJJ7IACU2cSCWvOQa/FqXWwESrS1MPt9ZtXU9WhtiYSlkHwkz4W159GG4KjDjyTIb2wBk/AH4/9FvesyYppvKVVi4VKcXD0C2kQl/Zr5YRL3hjDTgVO4XMovzVyqfFZfY3yulpTupnJCG3j9FGdYTNJ718rwFlCD/dMwAwAYF64VuCGvygSJn5WCC+RgoOwsRY0hba5QJ/G5V1wIrZ3vTlJoiyowqJ7ha6Yp2tzREr7giRU1WPjHB0c7g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nZlp0hn5anwYHIFLGRSoB3cLtm5DuSiKODBoQcHQi3k=;
+ b=LC7IrrEBNhO2UgUGsH23+o6wheKflkgrWHfNOwqRsosvYeKB+8jUvQDqQFNM+gXW43Xj4Zcuq5B3kjGnZyXdbOAmS22coT8pTA9Skbgyik17hbveBV/3XIxGoM9yf5roQiSxr7On1CpsGW2+RH8Ual6pzbEm8ez1Nu1gexg5LfvHSfZjzpWZ/El9CO1hbimhB2nuK2vap5ClJDe39ZygQcBcMvSe2KYaZWEsN/DUPSK91Nep/pYy0m6IESJYbSfQHz74JzTSlouSo5k/Nwdu3luulp0fHjSoHkhzc/vlVSr9cwaiRbdp1WoH1oDmLVTqaFp4AJi1uC7TbE6kRFyEmA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nZlp0hn5anwYHIFLGRSoB3cLtm5DuSiKODBoQcHQi3k=;
+ b=VBfaiAUgH9czQ7LI+8ZLfdvIguHNTz9h2XD3wsTtePtoV6LB4svO52DDDU3vzeYTuCuD+QzuU0PGdNezzvLK/OuZtNjqKlERQyvZzz/RqTlWjNSfLgoi7Gh7FCXZiQXv7DoYbGR6hafrgNIBGX1DZJJBR8kaaQml1VVdR13CQcU=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB5108.eurprd04.prod.outlook.com (20.176.214.202) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.20; Thu, 16 Jan 2020 06:12:13 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2623.018; Thu, 16 Jan 2020
+ 06:12:13 +0000
+Received: from localhost.localdomain (119.31.174.66) by HK0PR03CA0117.apcprd03.prod.outlook.com (2603:1096:203:b0::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2644.20 via Frontend Transport; Thu, 16 Jan 2020 06:12:08 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH] dt-bindings: soc: imx: add binding doc for aips bus
+Thread-Topic: [PATCH] dt-bindings: soc: imx: add binding doc for aips bus
+Thread-Index: AQHVzDPkXhRChugwfUOXOWtxuk1SeA==
+Date:   Thu, 16 Jan 2020 06:12:12 +0000
+Message-ID: <1579154877-13210-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK0PR03CA0117.apcprd03.prod.outlook.com
+ (2603:1096:203:b0::33) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b13c75f0-d8fc-4049-72a9-08d79a4b0702
+x-ms-traffictypediagnostic: AM0PR04MB5108:|AM0PR04MB5108:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB51085722F26664CFB4C9BDEA88360@AM0PR04MB5108.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3276;
+x-forefront-prvs: 02843AA9E0
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(136003)(396003)(39860400002)(376002)(189003)(199004)(66556008)(8936002)(71200400001)(86362001)(81166006)(2906002)(81156014)(8676002)(36756003)(44832011)(5660300002)(66476007)(186003)(26005)(66946007)(66446008)(478600001)(64756008)(16526019)(69590400006)(316002)(54906003)(6506007)(6486002)(6512007)(2616005)(6666004)(966005)(956004)(110136005)(4326008)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5108;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: RhZIswzk02VpnWTg7hvuDaE6xUGNl6wTJAwdM3hntt+pKy43TgKEaUnI/Io4DxZ2q8p2HxSB8V36LEIk0uOS4EUKVmNfakwMVRq3/5y/tNv3/mTI/ZEbg8+2ZlRjHFfk+878asTkIC+RZNHrpgj1Sq7DuGjsEQTszDawfZpyiXNuxvLfVVSD9TvroCbF323tGFv46JxviKFxbFFMTNLOpeH29Qui2EyVE424NL7zQ1gJlJSc1JrkugFSSfk1EC1E2x2SoDvtTjRgf4DPqaGMKOYoPBXkklXsg/+2+Xz7fcfRE7m5aD1PeSZozUnyworx930/jL+ftH9S6PeIoaOWpoXVO3jhU7HV6QcV5kRC8DetlYK8nGZSK8islS+i4NPETRDrMS37JXkYk1qKp6uWROEMEPpovngL/7e0KbRQJNk7M3+Nez0Ms9JPkijdE5+qjZrP2CgJqLbTVSPzGbRMe+pG9mSYaTAF/jyL/K/GDjS1H+DUdpgzqeSsQCKsAkk29XPobyeHthnN2N3zRkoHW45VQTT2CP+QmtaI4VlYSdc=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <112781836.sNYxTrJJ31@positron.chronox.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b13c75f0-d8fc-4049-72a9-08d79a4b0702
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jan 2020 06:12:13.0038
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: B4kTMtZ0p4IKcpsgXWJyntYdMeU3tkCO1COaollfvejAQuJe2h1qKZwtg+UUp/mIzFWYML4PKhCU4VitsC04cw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi "Stephan,
+From: Peng Fan <peng.fan@nxp.com>
 
-Thank you for the patch! Perhaps something to improve:
+Add binding doc for fsl,aips-bus
 
-[auto build test WARNING on char-misc/char-misc-testing]
-[also build test WARNING on cryptodev/master crypto/master v5.5-rc6 next-20200110]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-
-url:    https://github.com/0day-ci/linux/commits/Stephan-M-ller/dev-random-a-new-approach-with-full-SP800-90B/20200110-084934
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git 68faa679b8be1a74e6663c21c3a9d25d32f1c079
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-130-g1a803e7a-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
-
-sparse warnings: (new ones prefixed by >>)
-
->> drivers/char/lrng/lrng_interfaces.c:455:16: sparse: sparse: incorrect type in return expression (different base types)
->> drivers/char/lrng/lrng_interfaces.c:455:16: sparse:    expected unsigned int
->> drivers/char/lrng/lrng_interfaces.c:455:16: sparse:    got restricted __poll_t [assigned] [usertype] mask
->> drivers/char/lrng/lrng_interfaces.c:586:18: sparse: sparse: incorrect type in initializer (different base types)
->> drivers/char/lrng/lrng_interfaces.c:586:18: sparse:    expected restricted __poll_t ( *poll )( ... )
->> drivers/char/lrng/lrng_interfaces.c:586:18: sparse:    got unsigned int ( * )( ... )
-   drivers/char/lrng/lrng_interfaces.c:605:49: sparse: sparse: undefined identifier 'GRND_INSECURE'
-   drivers/char/lrng/lrng_interfaces.c:613:15: sparse: sparse: undefined identifier 'GRND_INSECURE'
-   drivers/char/lrng/lrng_interfaces.c:613:47: sparse: sparse: undefined identifier 'GRND_INSECURE'
-   drivers/char/lrng/lrng_interfaces.c:619:21: sparse: sparse: undefined identifier 'GRND_INSECURE'
---
-   drivers/char/lrng/lrng_drng.c:378:6: sparse: sparse: symbol 'lrng_reset' was not declared. Should it be static?
->> drivers/char/lrng/lrng_internal.h:235:39: sparse: sparse: context imbalance in 'lrng_drng_inject' - unexpected unlock
->> drivers/char/lrng/lrng_internal.h:235:39: sparse: sparse: context imbalance in 'lrng_drng_seed' - unexpected unlock
->> drivers/char/lrng/lrng_internal.h:235:39: sparse: sparse: context imbalance in 'lrng_drng_get' - unexpected unlock
->> drivers/char/lrng/lrng_internal.h:235:39: sparse: sparse: context imbalance in 'lrng_drngs_init_cc20' - unexpected unlock
->> drivers/char/lrng/lrng_internal.h:235:39: sparse: sparse: context imbalance in '_lrng_reset' - unexpected unlock
-
-vim +455 drivers/char/lrng/lrng_interfaces.c
-
-   442	
-   443	static unsigned int lrng_random_poll(struct file *file, poll_table *wait)
-   444	{
-   445		__poll_t mask;
-   446	
-   447		poll_wait(file, &lrng_init_wait, wait);
-   448		poll_wait(file, &lrng_write_wait, wait);
-   449		mask = 0;
-   450		if (lrng_state_operational())
-   451			mask |= EPOLLIN | EPOLLRDNORM;
-   452		if (lrng_need_entropy() ||
-   453		    lrng_state_exseed_allow(lrng_noise_source_user))
-   454			mask |= EPOLLOUT | EPOLLWRNORM;
- > 455		return mask;
-   456	}
-   457	
-   458	static ssize_t lrng_drng_write_common(const char __user *buffer, size_t count,
-   459					      u32 entropy_bits)
-   460	{
-   461		ssize_t ret = 0;
-   462		u8 buf[64] __aligned(LRNG_KCAPI_ALIGN);
-   463		const char __user *p = buffer;
-   464		u32 orig_entropy_bits = entropy_bits;
-   465	
-   466		if (!lrng_get_available())
-   467			return -EAGAIN;
-   468	
-   469		count = min_t(size_t, count, INT_MAX);
-   470		while (count > 0) {
-   471			size_t bytes = min_t(size_t, count, sizeof(buf));
-   472			u32 ent = min_t(u32, bytes<<3, entropy_bits);
-   473	
-   474			if (copy_from_user(&buf, p, bytes))
-   475				return -EFAULT;
-   476			/* Inject data into entropy pool */
-   477			lrng_pool_lfsr(buf, bytes);
-   478			lrng_pool_add_entropy(ent);
-   479	
-   480			count -= bytes;
-   481			p += bytes;
-   482			ret += bytes;
-   483			entropy_bits -= ent;
-   484	
-   485			cond_resched();
-   486		}
-   487	
-   488		/* Force reseed of DRNG during next data request. */
-   489		if (!orig_entropy_bits)
-   490			lrng_drng_force_reseed();
-   491	
-   492		return ret;
-   493	}
-   494	
-   495	static ssize_t lrng_drng_read(struct file *file, char __user *buf,
-   496				      size_t nbytes, loff_t *ppos)
-   497	{
-   498		if (!lrng_state_min_seeded())
-   499			pr_notice_ratelimited("%s - use of insufficiently seeded DRNG "
-   500					      "(%zu bytes read)\n", current->comm,
-   501					      nbytes);
-   502		else if (!lrng_state_operational())
-   503			pr_debug_ratelimited("%s - use of not fully seeded DRNG (%zu "
-   504					     "bytes read)\n", current->comm, nbytes);
-   505	
-   506		return lrng_read_common(buf, nbytes);
-   507	}
-   508	
-   509	static ssize_t lrng_drng_write(struct file *file, const char __user *buffer,
-   510				       size_t count, loff_t *ppos)
-   511	{
-   512		return lrng_drng_write_common(buffer, count, 0);
-   513	}
-   514	
-   515	static long lrng_ioctl(struct file *f, unsigned int cmd, unsigned long arg)
-   516	{
-   517		int size, ent_count_bits;
-   518		int __user *p = (int __user *)arg;
-   519	
-   520		switch (cmd) {
-   521		case RNDGETENTCNT:
-   522			ent_count_bits = lrng_avail_entropy();
-   523			if (put_user(ent_count_bits, p))
-   524				return -EFAULT;
-   525			return 0;
-   526		case RNDADDTOENTCNT:
-   527			if (!capable(CAP_SYS_ADMIN))
-   528				return -EPERM;
-   529			if (get_user(ent_count_bits, p))
-   530				return -EFAULT;
-   531			ent_count_bits = (int)lrng_avail_entropy() + ent_count_bits;
-   532			if (ent_count_bits < 0)
-   533				ent_count_bits = 0;
-   534			if (ent_count_bits > LRNG_POOL_SIZE_BITS)
-   535				ent_count_bits = LRNG_POOL_SIZE_BITS;
-   536			lrng_pool_set_entropy(ent_count_bits);
-   537			return 0;
-   538		case RNDADDENTROPY:
-   539			if (!capable(CAP_SYS_ADMIN))
-   540				return -EPERM;
-   541			if (get_user(ent_count_bits, p++))
-   542				return -EFAULT;
-   543			if (ent_count_bits < 0)
-   544				return -EINVAL;
-   545			if (get_user(size, p++))
-   546				return -EFAULT;
-   547			if (size < 0)
-   548				return -EINVAL;
-   549			lrng_state_exseed_set(lrng_noise_source_user, false);
-   550			/* there cannot be more entropy than data */
-   551			ent_count_bits = min(ent_count_bits, size<<3);
-   552			return lrng_drng_write_common((const char __user *)p, size,
-   553						      ent_count_bits);
-   554		case RNDZAPENTCNT:
-   555		case RNDCLEARPOOL:
-   556			/* Clear the entropy pool counter. */
-   557			if (!capable(CAP_SYS_ADMIN))
-   558				return -EPERM;
-   559			lrng_pool_set_entropy(0);
-   560			return 0;
-   561		case RNDRESEEDCRNG:
-   562			/*
-   563			 * We leave the capability check here since it is present
-   564			 * in the upstream's RNG implementation. Yet, user space
-   565			 * can trigger a reseed as easy as writing into /dev/random
-   566			 * or /dev/urandom where no privilege is needed.
-   567			 */
-   568			if (!capable(CAP_SYS_ADMIN))
-   569				return -EPERM;
-   570			/* Force a reseed of all DRNGs */
-   571			lrng_drng_force_reseed();
-   572			return 0;
-   573		default:
-   574			return -EINVAL;
-   575		}
-   576	}
-   577	
-   578	static int lrng_fasync(int fd, struct file *filp, int on)
-   579	{
-   580		return fasync_helper(fd, filp, on, &fasync);
-   581	}
-   582	
-   583	const struct file_operations random_fops = {
-   584		.read  = lrng_drng_read_block,
-   585		.write = lrng_drng_write,
- > 586		.poll  = lrng_random_poll,
-   587		.unlocked_ioctl = lrng_ioctl,
-   588		.compat_ioctl = compat_ptr_ioctl,
-   589		.fasync = lrng_fasync,
-   590		.llseek = noop_llseek,
-   591	};
-   592	
-
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+ .../devicetree/bindings/soc/imx/fsl,aips-bus.yaml  | 38 ++++++++++++++++++=
+++++
+ 1 file changed, 38 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/imx/fsl,aips-bus.=
+yaml
+
+diff --git a/Documentation/devicetree/bindings/soc/imx/fsl,aips-bus.yaml b/=
+Documentation/devicetree/bindings/soc/imx/fsl,aips-bus.yaml
+new file mode 100644
+index 000000000000..73ce1b7fc306
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/imx/fsl,aips-bus.yaml
+@@ -0,0 +1,38 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/soc/imx/fsl,aips-bus.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: i.MX AHB to IP Bridge
++
++maintainers:
++  - Peng Fan <peng.fan@nxp.com>
++
++description: |
++  This particular peripheral is designed as the bridge between
++  AHB bus and peripherals with the lower bandwidth IP Slave (IPS)
++  buses.
++
++properties:
++  compatible:
++    oneOf:
++      - const: fsl,aips-bus
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    bus@30000000 {
++      compatible =3D "fsl,aips-bus", "simple-bus";
++      reg =3D <0x30000000 0x400000>;
++      #address-cells =3D <1>;
++      #size-cells =3D <1>;
++      ranges;
++    };
++...
+--=20
+2.16.4
+
