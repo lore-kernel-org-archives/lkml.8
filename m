@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20041C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B69C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB0C6206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78D4820663
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:08:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194530;
-	bh=T+FQIVTKiTyZ3ngH8ZTMP53N4ehYF3Kts2vYdU+aX0E=;
+	s=default; t=1579194532;
+	bh=qGCvbFL5fX//JsOK2d4ucXPkoRsm4vNcS0c4doK2kGQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GoBCdbA7FrZkb9vAyNDqwzW881Y3tjbXAs6MnafYcNrbsx7FHl2VROinMO4KEg+Ot
-	 H+xJpk8ZTBSuL7PhpKV59kjpta9Vw1mCIeodHwtKCPvgQrOpBmjoTIyHQgNTJofm5o
-	 wQOz/aPpBAtd3E7ZH1DNZChvrAoIrygy4C8zTjI0=
+	b=XYDyLj2SMbBIW8fc/fgmcztncyTA0TOAisScW9K/mULywTIV9A31fVTuuqRFyd3gX
+	 nOQOLtrgHmBQxfY9lN9Kclh0d2quZPBcluZtpPpu4owBoljyZOcsdds+KiCND+k08t
+	 x7PWs6SU6M1t7fmpQIDQbAMZGYCFLEFOUSS7vgIg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389505AbgAPRIt (ORCPT
+        id S2389513AbgAPRIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:08:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42998 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:08:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389473AbgAPRIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:08:43 -0500
+        id S2389464AbgAPRIm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:08:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6F4120663;
-        Thu, 16 Jan 2020 17:08:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89C3B24685;
+        Thu, 16 Jan 2020 17:08:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194522;
-        bh=T+FQIVTKiTyZ3ngH8ZTMP53N4ehYF3Kts2vYdU+aX0E=;
+        s=default; t=1579194521;
+        bh=qGCvbFL5fX//JsOK2d4ucXPkoRsm4vNcS0c4doK2kGQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dh9JizSbMXyvL2Nw8F8btack77CszDSjenm+OBdVk38m96Du4a2N20Aa4eC7zoU71
-         eIiVGB5odaf6m8m61oSGwdJeNkDKjCjc7pExYpHC8Xr8TKepxkwMfdczuJ7h9wqFip
-         HkYrGcwMN1428gWlTLStus0NYdnPtudViItW/XMI=
+        b=QKuemI4Nbw13GBzN+hv2i0EepCrU+H/koeP6WmViGvn/yirfBpzDRZ2UAQ4v+KIbg
+         AdKURLKl8zaJMC7v2bZhdA8/t4VN+c2jy6cqU15+6CMjpkZ+4lNzD5DdcVGLwUPefY
+         gCASUBGC/wHOr6klT548y2annMWxxoN/h4oOqkeU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michal Kalderon <michal.kalderon@marvell.com>,
-        Ariel Elior <ariel.elior@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 413/671] qed: iWARP - Use READ_ONCE and smp_store_release to access ep->state
-Date:   Thu, 16 Jan 2020 12:00:51 -0500
-Message-Id: <20200116170509.12787-150-sashal@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 412/671] PCI: PM: Skip devices in D0 for suspend-to-idle
+Date:   Thu, 16 Jan 2020 12:00:50 -0500
+Message-Id: <20200116170509.12787-149-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,78 +60,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Kalderon <michal.kalderon@marvell.com>
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-[ Upstream commit 6117561e1bb30b2fe7f51e1961f34dbedd0bec8a ]
+[ Upstream commit 3e26c5feed2add218046ecf91bab3cfa9bf762a6 ]
 
-Destroy QP waits for it's ep object state to be set to CLOSED
-before proceeding. ep->state can be updated from a different
-context. Add smp_store_release/READ_ONCE to synchronize.
+Commit d491f2b75237 ("PCI: PM: Avoid possible suspend-to-idle issue")
+attempted to avoid a problem with devices whose drivers want them to
+stay in D0 over suspend-to-idle and resume, but it did not go as far
+as it should with that.
 
-Fixes: fc4c6065e661 ("qed: iWARP implement disconnect flows")
-Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Namely, first of all, the power state of a PCI bridge with a
+downstream device in D0 must be D0 (based on the PCI PM spec r1.2,
+sec 6, table 6-1, if the bridge is not in D0, there can be no PCI
+transactions on its secondary bus), but that is not actively enforced
+during system-wide PM transitions, so use the skip_bus_pm flag
+introduced by commit d491f2b75237 for that.
+
+Second, the configuration of devices left in D0 (whatever the reason)
+during suspend-to-idle need not be changed and attempting to put them
+into D0 again by force is pointless, so explicitly avoid doing that.
+
+Fixes: d491f2b75237 ("PCI: PM: Avoid possible suspend-to-idle issue")
+Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_iwarp.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ drivers/pci/pci-driver.c | 47 ++++++++++++++++++++++++++++++----------
+ 1 file changed, 35 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-index 7002a660b6b4..c77babd0ef95 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-@@ -532,7 +532,8 @@ int qed_iwarp_destroy_qp(struct qed_hwfn *p_hwfn, struct qed_rdma_qp *qp)
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index 5c9873fcbd08..e69af9b8361d 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -526,7 +526,6 @@ static void pci_pm_default_resume_early(struct pci_dev *pci_dev)
+ 	pci_power_up(pci_dev);
+ 	pci_restore_state(pci_dev);
+ 	pci_pme_restore(pci_dev);
+-	pci_fixup_device(pci_fixup_resume_early, pci_dev);
+ }
  
- 	/* Make sure ep is closed before returning and freeing memory. */
- 	if (ep) {
--		while (ep->state != QED_IWARP_EP_CLOSED && wait_count++ < 200)
-+		while (READ_ONCE(ep->state) != QED_IWARP_EP_CLOSED &&
-+		       wait_count++ < 200)
- 			msleep(100);
+ /*
+@@ -833,18 +832,16 @@ static int pci_pm_suspend_noirq(struct device *dev)
  
- 		if (ep->state != QED_IWARP_EP_CLOSED)
-@@ -1023,8 +1024,6 @@ qed_iwarp_mpa_complete(struct qed_hwfn *p_hwfn,
+ 	if (pci_dev->skip_bus_pm) {
+ 		/*
+-		 * The function is running for the second time in a row without
++		 * Either the device is a bridge with a child in D0 below it, or
++		 * the function is running for the second time in a row without
+ 		 * going through full resume, which is possible only during
+-		 * suspend-to-idle in a spurious wakeup case.  Moreover, the
+-		 * device was originally left in D0, so its power state should
+-		 * not be changed here and the device register values saved
+-		 * originally should be restored on resume again.
++		 * suspend-to-idle in a spurious wakeup case.  The device should
++		 * be in D0 at this point, but if it is a bridge, it may be
++		 * necessary to save its state.
+ 		 */
+-		pci_dev->state_saved = true;
+-	} else if (pci_dev->state_saved) {
+-		if (pci_dev->current_state == PCI_D0)
+-			pci_dev->skip_bus_pm = true;
+-	} else {
++		if (!pci_dev->state_saved)
++			pci_save_state(pci_dev);
++	} else if (!pci_dev->state_saved) {
+ 		pci_save_state(pci_dev);
+ 		if (pci_power_manageable(pci_dev))
+ 			pci_prepare_to_sleep(pci_dev);
+@@ -853,6 +850,22 @@ static int pci_pm_suspend_noirq(struct device *dev)
+ 	dev_dbg(dev, "PCI PM: Suspend power state: %s\n",
+ 		pci_power_name(pci_dev->current_state));
  
- 	params.ep_context = ep;
++	if (pci_dev->current_state == PCI_D0) {
++		pci_dev->skip_bus_pm = true;
++		/*
++		 * Per PCI PM r1.2, table 6-1, a bridge must be in D0 if any
++		 * downstream device is in D0, so avoid changing the power state
++		 * of the parent bridge by setting the skip_bus_pm flag for it.
++		 */
++		if (pci_dev->bus->self)
++			pci_dev->bus->self->skip_bus_pm = true;
++	}
++
++	if (pci_dev->skip_bus_pm && !pm_suspend_via_firmware()) {
++		dev_dbg(dev, "PCI PM: Skipped\n");
++		goto Fixup;
++	}
++
+ 	pci_pm_set_unknown_state(pci_dev);
  
--	ep->state = QED_IWARP_EP_CLOSED;
--
- 	switch (fw_return_code) {
- 	case RDMA_RETURN_OK:
- 		ep->qp->max_rd_atomic_req = ep->cm_info.ord;
-@@ -1084,6 +1083,10 @@ qed_iwarp_mpa_complete(struct qed_hwfn *p_hwfn,
- 		break;
+ 	/*
+@@ -900,7 +913,16 @@ static int pci_pm_resume_noirq(struct device *dev)
+ 	if (dev_pm_smart_suspend_and_suspended(dev))
+ 		pm_runtime_set_active(dev);
+ 
+-	pci_pm_default_resume_early(pci_dev);
++	/*
++	 * In the suspend-to-idle case, devices left in D0 during suspend will
++	 * stay in D0, so it is not necessary to restore or update their
++	 * configuration here and attempting to put them into D0 again may
++	 * confuse some firmware, so avoid doing that.
++	 */
++	if (!pci_dev->skip_bus_pm || pm_suspend_via_firmware())
++		pci_pm_default_resume_early(pci_dev);
++
++	pci_fixup_device(pci_fixup_resume_early, pci_dev);
+ 
+ 	if (pci_has_legacy_pm_support(pci_dev))
+ 		return pci_legacy_resume_early(dev);
+@@ -1201,6 +1223,7 @@ static int pci_pm_restore_noirq(struct device *dev)
  	}
  
-+	if (fw_return_code != RDMA_RETURN_OK)
-+		/* paired with READ_ONCE in destroy_qp */
-+		smp_store_release(&ep->state, QED_IWARP_EP_CLOSED);
-+
- 	ep->event_cb(ep->cb_context, &params);
+ 	pci_pm_default_resume_early(pci_dev);
++	pci_fixup_device(pci_fixup_resume_early, pci_dev);
  
- 	/* on passive side, if there is no associated QP (REJECT) we need to
-@@ -2828,7 +2831,9 @@ static void qed_iwarp_qp_in_error(struct qed_hwfn *p_hwfn,
- 	params.status = (fw_return_code == IWARP_QP_IN_ERROR_GOOD_CLOSE) ?
- 			 0 : -ECONNRESET;
- 
--	ep->state = QED_IWARP_EP_CLOSED;
-+	/* paired with READ_ONCE in destroy_qp */
-+	smp_store_release(&ep->state, QED_IWARP_EP_CLOSED);
-+
- 	spin_lock_bh(&p_hwfn->p_rdma_info->iwarp.iw_lock);
- 	list_del(&ep->list_entry);
- 	spin_unlock_bh(&p_hwfn->p_rdma_info->iwarp.iw_lock);
-@@ -2917,7 +2922,8 @@ qed_iwarp_tcp_connect_unsuccessful(struct qed_hwfn *p_hwfn,
- 	params.event = QED_IWARP_EVENT_ACTIVE_COMPLETE;
- 	params.ep_context = ep;
- 	params.cm_info = &ep->cm_info;
--	ep->state = QED_IWARP_EP_CLOSED;
-+	/* paired with READ_ONCE in destroy_qp */
-+	smp_store_release(&ep->state, QED_IWARP_EP_CLOSED);
- 
- 	switch (fw_return_code) {
- 	case IWARP_CONN_ERROR_TCP_CONNECT_INVALID_PACKET:
+ 	if (pci_has_legacy_pm_support(pci_dev))
+ 		return pci_legacy_resume_early(dev);
 -- 
 2.20.1
 
