@@ -2,255 +2,145 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F3DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA6CC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB91D214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:03:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197793;
-	bh=k9k1upsn1p+uXZi8guLsNkJjkMkBN4Xwc9p6+wuw4Qc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yup4n2Gh5PytgY3hVds8owRFoWgv2h2/MBEU3YTZG7VmIpzmJb4/O8PFTUHcacx7I
-	 9JFyr7Bs3XQwA3ZPpZIyIvgMW25elSirriNE9HvI9DbtmumHt1997NlgLjK8e4Jt/t
-	 LzMdAiIKJWI7bCEgw7akXOVelXBAL+YXGo5yR58c=
+	by mail.kernel.org (Postfix) with ESMTP id 3A08E2464B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:03:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405363AbgAPRkx (ORCPT
+        id S2406899AbgAPSDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:40:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56756 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387950AbgAPRj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:39:58 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B93012470B;
-        Thu, 16 Jan 2020 17:39:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196397;
-        bh=k9k1upsn1p+uXZi8guLsNkJjkMkBN4Xwc9p6+wuw4Qc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V9hUym4NhuhOg69Ntci9sYN/tE2ZCN4vZOoNSKqnW8vntuF9jfShqZHARKvFKGDKv
-         0rXTDPcn3le4ay896UoGj0pg3FqCn56M6LA27f4FbBX61wd/c481cTss1XI59ZKcWW
-         1xKV6wiiK8bQF+7rcPMJEgOWP8RftHovwBrIXavc=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Wise <pabs3@bonedaddy.net>, Jakub Wilk <jwilk@jwilk.net>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 175/251] coredump: split pipe command whitespace before expanding template
-Date:   Thu, 16 Jan 2020 12:35:24 -0500
-Message-Id: <20200116173641.22137-135-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
-References: <20200116173641.22137-1-sashal@kernel.org>
+        Thu, 16 Jan 2020 13:03:16 -0500
+Received: from mail-io1-f71.google.com ([209.85.166.71]:43122 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393641AbgAPSDN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 13:03:13 -0500
+Received: by mail-io1-f71.google.com with SMTP id b25so13324481ioh.10
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 10:03:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=28w+TnfQPs2OAlAHKwypZqdlk2gBKd0vMI6H+yLAPI0=;
+        b=NHMv6zJ0kZhcCv4S3BvkyVs37m8rgdirozxWPvw7XFy4sRGb0uRzdJPqtV+4q/US1Z
+         AcGYEAUf4KYJz9/bGbrPEjSCkaHunRxolo0DQvLaJ58B/IsmDf/TCcyDK0EXUoUiPUmm
+         EE/H+cfY7uOFm5ZmnWJE7UuLYDBOLaYg2GE31ruyXKYJqouBwBFe0Qxub4HDJ5c5j0YG
+         n1ZUIQCe2AhlADN7rnIN+uwpS3fd7J4D148X+ce3tEKweECrVLx6Mp2/1fuENsFZaSvu
+         7jvjswRMsRwIkxJWCQualo7169+3mPbdnDAhMEWxVmHLtW/rqdkhkbXpw31soXqi9jxu
+         XUHg==
+X-Gm-Message-State: APjAAAXPh+TD7mOB7gZeaEz3ysN27jMpumgSmrhjQvyk2Yzu2jlVbYX7
+        5OYUqn15PSyP/5TK0cAaX701svYtHcVyL3sXU90qRnXiLyxc
+X-Google-Smtp-Source: APXvYqybWgtu4NPUk+UyS4Y5Wfio5iwok+mL2fZGLaLlhsUTF1Danv1Hrt5aE7S+K8IOFvuYNfvFLaq3HY6Bplk7v2ee+RfbLs+J
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a92:911b:: with SMTP id t27mr4584673ild.142.1579197793181;
+ Thu, 16 Jan 2020 10:03:13 -0800 (PST)
+Date:   Thu, 16 Jan 2020 10:03:13 -0800
+In-Reply-To: <00000000000074ed27059c33dedc@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007e27cd059c45a3b8@google.com>
+Subject: Re: general protection fault in nft_chain_parse_hook
+From:   syzbot <syzbot+156a04714799b1d480bc@syzkaller.appspotmail.com>
+To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
+        kadlec@netfilter.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        pablo@netfilter.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Wise <pabs3@bonedaddy.net>
+syzbot has found a reproducer for the following crash on:
 
-[ Upstream commit 315c69261dd3fa12dbc830d4fa00d1fad98d3b03 ]
+HEAD commit:    f5ae2ea6 Fix built-in early-load Intel microcode alignment
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=112c92d1e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d9290aeb7e6cf1c4
+dashboard link: https://syzkaller.appspot.com/bug?extid=156a04714799b1d480bc
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+userspace arch: i386
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=110253aee00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=170d8159e00000
 
-Save the offsets of the start of each argument to avoid having to update
-pointers to each argument after every corename krealloc and to avoid
-having to duplicate the memory for the dump command.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+156a04714799b1d480bc@syzkaller.appspotmail.com
 
-Executable names containing spaces were previously being expanded from
-%e or %E and then split in the middle of the filename.  This is
-incorrect behaviour since an argument list can represent arguments with
-spaces.
-
-The splitting could lead to extra arguments being passed to the core
-dump handler that it might have interpreted as options or ignored
-completely.
-
-Core dump handlers that are not aware of this Linux kernel issue will be
-using %e or %E without considering that it may be split and so they will
-be vulnerable to processes with spaces in their names breaking their
-argument list.  If their internals are otherwise well written, such as
-if they are written in shell but quote arguments, they will work better
-after this change than before.  If they are not well written, then there
-is a slight chance of breakage depending on the details of the code but
-they will already be fairly broken by the split filenames.
-
-Core dump handlers that are aware of this Linux kernel issue will be
-placing %e or %E as the last item in their core_pattern and then
-aggregating all of the remaining arguments into one, separated by
-spaces.  Alternatively they will be obtaining the filename via other
-methods.  Both of these will be compatible with the new arrangement.
-
-A side effect from this change is that unknown template types (for
-example %z) result in an empty argument to the dump handler instead of
-the argument being dropped.  This is a desired change as:
-
-It is easier for dump handlers to process empty arguments than dropped
-ones, especially if they are written in shell or don't pass each
-template item with a preceding command-line option in order to
-differentiate between individual template types.  Most core_patterns in
-the wild do not use options so they can confuse different template types
-(especially numeric ones) if an earlier one gets dropped in old kernels.
-If the kernel introduces a new template type and a core_pattern uses it,
-the core dump handler might not expect that the argument can be dropped
-in old kernels.
-
-For example, this can result in security issues when %d is dropped in
-old kernels.  This happened with the corekeeper package in Debian and
-resulted in the interface between corekeeper and Linux having to be
-rewritten to use command-line options to differentiate between template
-types.
-
-The core_pattern for most core dump handlers is written by the handler
-author who would generally not insert unknown template types so this
-change should be compatible with all the core dump handlers that exist.
-
-Link: http://lkml.kernel.org/r/20190528051142.24939-1-pabs3@bonedaddy.net
-Fixes: 74aadce98605 ("core_pattern: allow passing of arguments to user mode helper when core_pattern is a pipe")
-Signed-off-by: Paul Wise <pabs3@bonedaddy.net>
-Reported-by: Jakub Wilk <jwilk@jwilk.net> [https://bugs.debian.org/924398]
-Reported-by: Paul Wise <pabs3@bonedaddy.net> [https://lore.kernel.org/linux-fsdevel/c8b7ecb8508895bf4adb62a748e2ea2c71854597.camel@bonedaddy.net/]
-Suggested-by: Jakub Wilk <jwilk@jwilk.net>
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/coredump.c | 44 +++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 39 insertions(+), 5 deletions(-)
-
-diff --git a/fs/coredump.c b/fs/coredump.c
-index 4407e27beca9..98a45a727eb8 100644
---- a/fs/coredump.c
-+++ b/fs/coredump.c
-@@ -6,6 +6,7 @@
- #include <linux/stat.h>
- #include <linux/fcntl.h>
- #include <linux/swap.h>
-+#include <linux/ctype.h>
- #include <linux/string.h>
- #include <linux/init.h>
- #include <linux/pagemap.h>
-@@ -184,11 +185,13 @@ static int cn_print_exe_file(struct core_name *cn)
-  * name into corename, which must have space for at least
-  * CORENAME_MAX_SIZE bytes plus one byte for the zero terminator.
-  */
--static int format_corename(struct core_name *cn, struct coredump_params *cprm)
-+static int format_corename(struct core_name *cn, struct coredump_params *cprm,
-+			   size_t **argv, int *argc)
- {
- 	const struct cred *cred = current_cred();
- 	const char *pat_ptr = core_pattern;
- 	int ispipe = (*pat_ptr == '|');
-+	bool was_space = false;
- 	int pid_in_pattern = 0;
- 	int err = 0;
- 
-@@ -198,12 +201,35 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm)
- 		return -ENOMEM;
- 	cn->corename[0] = '\0';
- 
--	if (ispipe)
-+	if (ispipe) {
-+		int argvs = sizeof(core_pattern) / 2;
-+		(*argv) = kmalloc_array(argvs, sizeof(**argv), GFP_KERNEL);
-+		if (!(*argv))
-+			return -ENOMEM;
-+		(*argv)[(*argc)++] = 0;
- 		++pat_ptr;
-+	}
- 
- 	/* Repeat as long as we have more pattern to process and more output
- 	   space */
- 	while (*pat_ptr) {
-+		/*
-+		 * Split on spaces before doing template expansion so that
-+		 * %e and %E don't get split if they have spaces in them
-+		 */
-+		if (ispipe) {
-+			if (isspace(*pat_ptr)) {
-+				was_space = true;
-+				pat_ptr++;
-+				continue;
-+			} else if (was_space) {
-+				was_space = false;
-+				err = cn_printf(cn, "%c", '\0');
-+				if (err)
-+					return err;
-+				(*argv)[(*argc)++] = cn->used;
-+			}
-+		}
- 		if (*pat_ptr != '%') {
- 			err = cn_printf(cn, "%c", *pat_ptr++);
- 		} else {
-@@ -543,6 +569,8 @@ void do_coredump(const siginfo_t *siginfo)
- 	struct cred *cred;
- 	int retval = 0;
- 	int ispipe;
-+	size_t *argv = NULL;
-+	int argc = 0;
- 	struct files_struct *displaced;
- 	/* require nonrelative corefile path and be extra careful */
- 	bool need_suid_safe = false;
-@@ -589,9 +617,10 @@ void do_coredump(const siginfo_t *siginfo)
- 
- 	old_cred = override_creds(cred);
- 
--	ispipe = format_corename(&cn, &cprm);
-+	ispipe = format_corename(&cn, &cprm, &argv, &argc);
- 
- 	if (ispipe) {
-+		int argi;
- 		int dump_count;
- 		char **helper_argv;
- 		struct subprocess_info *sub_info;
-@@ -634,12 +663,16 @@ void do_coredump(const siginfo_t *siginfo)
- 			goto fail_dropcount;
- 		}
- 
--		helper_argv = argv_split(GFP_KERNEL, cn.corename, NULL);
-+		helper_argv = kmalloc_array(argc + 1, sizeof(*helper_argv),
-+					    GFP_KERNEL);
- 		if (!helper_argv) {
- 			printk(KERN_WARNING "%s failed to allocate memory\n",
- 			       __func__);
- 			goto fail_dropcount;
- 		}
-+		for (argi = 0; argi < argc; argi++)
-+			helper_argv[argi] = cn.corename + argv[argi];
-+		helper_argv[argi] = NULL;
- 
- 		retval = -ENOMEM;
- 		sub_info = call_usermodehelper_setup(helper_argv[0],
-@@ -649,7 +682,7 @@ void do_coredump(const siginfo_t *siginfo)
- 			retval = call_usermodehelper_exec(sub_info,
- 							  UMH_WAIT_EXEC);
- 
--		argv_free(helper_argv);
-+		kfree(helper_argv);
- 		if (retval) {
- 			printk(KERN_INFO "Core dump to |%s pipe failed\n",
- 			       cn.corename);
-@@ -768,6 +801,7 @@ void do_coredump(const siginfo_t *siginfo)
- 	if (ispipe)
- 		atomic_dec(&core_dump_count);
- fail_unlock:
-+	kfree(argv);
- 	kfree(cn.corename);
- 	coredump_finish(mm, core_dumped);
- 	revert_creds(old_cred);
--- 
-2.20.1
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 9678 Comm: syz-executor546 Not tainted 5.5.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:nft_chain_parse_hook+0x386/0xa10  
+net/netfilter/nf_tables_api.c:1767
+Code: e8 5f 27 0e fb 41 83 fd 05 0f 87 62 05 00 00 e8 d0 25 0e fb 49 8d 7c  
+24 18 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84  
+c0 74 08 3c 03 0f 8e a6 05 00 00 44 89 e9 be 01 00
+RSP: 0018:ffffc900021370f0 EFLAGS: 00010206
+RAX: dffffc0000000000 RBX: ffffc900021372a0 RCX: ffffffff8666cfa1
+RDX: 0000000000000003 RSI: ffffffff8666cfb0 RDI: 0000000000000018
+RBP: ffffc900021371e0 R08: ffff88809c7ce380 R09: 0000000000000000
+R10: fffff52000426e2d R11: ffffc9000213716f R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: ffffc900021371b8
+FS:  0000000000000000(0000) GS:ffff8880ae800000(0063) knlGS:0000000009dfd840
+CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
+CR2: 0000000020000280 CR3: 00000000a29dd000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  nf_tables_addchain.constprop.0+0x1c1/0x1520  
+net/netfilter/nf_tables_api.c:1888
+  nf_tables_newchain+0x1033/0x1820 net/netfilter/nf_tables_api.c:2196
+  nfnetlink_rcv_batch+0xf42/0x17a0 net/netfilter/nfnetlink.c:433
+  nfnetlink_rcv_skb_batch net/netfilter/nfnetlink.c:543 [inline]
+  nfnetlink_rcv+0x3e7/0x460 net/netfilter/nfnetlink.c:561
+  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+  netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
+  netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
+  sock_sendmsg_nosec net/socket.c:639 [inline]
+  sock_sendmsg+0xd7/0x130 net/socket.c:659
+  ____sys_sendmsg+0x753/0x880 net/socket.c:2330
+  ___sys_sendmsg+0x100/0x170 net/socket.c:2384
+  __sys_sendmsg+0x105/0x1d0 net/socket.c:2417
+  __compat_sys_sendmsg net/compat.c:642 [inline]
+  __do_compat_sys_sendmsg net/compat.c:649 [inline]
+  __se_compat_sys_sendmsg net/compat.c:646 [inline]
+  __ia32_compat_sys_sendmsg+0x7a/0xb0 net/compat.c:646
+  do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
+  do_fast_syscall_32+0x27b/0xe16 arch/x86/entry/common.c:408
+  entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+RIP: 0023:0xf7fafa39
+Code: 00 00 00 89 d3 5b 5e 5f 5d c3 b8 80 96 98 00 eb c4 8b 04 24 c3 8b 1c  
+24 c3 8b 34 24 c3 8b 3c 24 c3 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90  
+90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 002b:00000000ffc60f6c EFLAGS: 00000202 ORIG_RAX: 0000000000000172
+RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 000000002000d400
+RDX: 0000000004000000 RSI: 00000000080ea00c RDI: 0000000000000000
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace ef2c8b24d08b7122 ]---
+RIP: 0010:nft_chain_parse_hook+0x386/0xa10  
+net/netfilter/nf_tables_api.c:1767
+Code: e8 5f 27 0e fb 41 83 fd 05 0f 87 62 05 00 00 e8 d0 25 0e fb 49 8d 7c  
+24 18 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84  
+c0 74 08 3c 03 0f 8e a6 05 00 00 44 89 e9 be 01 00
+RSP: 0018:ffffc900021370f0 EFLAGS: 00010206
+RAX: dffffc0000000000 RBX: ffffc900021372a0 RCX: ffffffff8666cfa1
+RDX: 0000000000000003 RSI: ffffffff8666cfb0 RDI: 0000000000000018
+RBP: ffffc900021371e0 R08: ffff88809c7ce380 R09: 0000000000000000
+R10: fffff52000426e2d R11: ffffc9000213716f R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: ffffc900021371b8
+FS:  0000000000000000(0000) GS:ffff8880ae800000(0063) knlGS:0000000009dfd840
+CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
+CR2: 0000000020000280 CR3: 00000000a29dd000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
