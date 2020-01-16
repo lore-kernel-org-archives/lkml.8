@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05BB0C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6939DC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C51E22087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BAB420730
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:04:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194285;
-	bh=K3uQlaV6PSVmkRvLY0TLcL34gXqHhh7+i0F5l/TLHtc=;
+	s=default; t=1579194289;
+	bh=N/kyBEfQWkq0Pn0UNjKmxITDICB0c0Y8/CBAvgyWKnw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dbND0oFcG+4l/tahVSOOKZ1jmLOwiqTbQJGBwdXEkDEPhLrBhAcLs2ECiZhEHLXsW
-	 OT86PdOi8ZFw4D/7otwqbpOywK2X9B8aRMqSThq1mrmRuayBmNXjetXgeh9T3lZjLA
-	 11AB2iFPOTWciicYnsLoYzRcx2cxeV4GXqeYwYvg=
+	b=bTPJG4mSIaakhLXNLQop8yuaSue/5djHrKVOVdFb5imxWNkkgrKSOk3ImahN7BDTQ
+	 MYD/sqtQHwpO/kXpYYVaFxTT4GSOxLLWs1vgUuBxyfw8TWmZ0zFR6sELjR7C5a2yxX
+	 r5X1wyGNb4AlQxHZK3SIh/roP66gh5Kf3oS04/XI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730014AbgAPREo (ORCPT
+        id S2388430AbgAPRCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:04:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55844 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:02:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388000AbgAPRCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:02:41 -0500
+        id S2388375AbgAPRC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:02:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCDE12073A;
-        Thu, 16 Jan 2020 17:02:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DBF22073A;
+        Thu, 16 Jan 2020 17:02:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194160;
-        bh=K3uQlaV6PSVmkRvLY0TLcL34gXqHhh7+i0F5l/TLHtc=;
+        s=default; t=1579194147;
+        bh=N/kyBEfQWkq0Pn0UNjKmxITDICB0c0Y8/CBAvgyWKnw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DUimD86yJ9J4jjjXNtuWD6pDxneR+ZdShGgV/NxF+tr3zEJ6RKV3B55clt0UNTtTO
-         5+I4AnaUmFW91ghM+4fz0Gvs434gZ+hD28IyFHl88cYDamnsciNv/AzDxNxUsdZpGE
-         8p9ZioGtNwBmZvoMbO0Kh7BDvATckJp+WBSrbAXM=
+        b=FO7I9312jQOovwSX213/fzl1PY432guloubZOL2cUKuhKYzvhRwxT9KWWD0I66K+q
+         Nnemh8TT8DRHLoUJLK7KLxPjx1G/VtDc7wKJyO+bmud5pTiHQbAkiCvRtuf7BbPj2q
+         dKPbxXxuurLOAjZnyHVL81uwcOaW01F1G554EgWA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Sasha Levin <sashal@kernel.org>, xen-devel@lists.xenproject.org
-Subject: [PATCH AUTOSEL 4.19 242/671] xen, cpu_hotplug: Prevent an out of bounds access
-Date:   Thu, 16 Jan 2020 11:52:31 -0500
-Message-Id: <20200116165940.10720-125-sashal@kernel.org>
+Cc:     Igor Russkikh <Igor.Russkikh@aquantia.com>,
+        Nikita Danilov <nikita.danilov@aquantia.com>,
+        Igor Russkikh <igor.russkikh@aquantia.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 232/671] net: aquantia: fixed instack structure overflow
+Date:   Thu, 16 Jan 2020 11:52:21 -0500
+Message-Id: <20200116165940.10720-115-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -59,36 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Igor Russkikh <Igor.Russkikh@aquantia.com>
 
-[ Upstream commit 201676095dda7e5b31a5e1d116d10fc22985075e ]
+[ Upstream commit 8006e3730b6e900319411e35cee85b4513d298df ]
 
-The "cpu" variable comes from the sscanf() so Smatch marks it as
-untrusted data.  We can't pass a higher value than "nr_cpu_ids" to
-cpu_possible() or it results in an out of bounds access.
+This is a real stack undercorruption found by kasan build.
 
-Fixes: d68d82afd4c8 ("xen: implement CPU hotplugging")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
+The issue did no harm normally because it only overflowed
+2 bytes after `bitary` array which on most architectures
+were mapped into `err` local.
+
+Fixes: bab6de8fd180 ("net: ethernet: aquantia: Atlantic A0 and B0 specific functions.")
+Signed-off-by: Nikita Danilov <nikita.danilov@aquantia.com>
+Signed-off-by: Igor Russkikh <igor.russkikh@aquantia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/cpu_hotplug.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c | 4 ++--
+ drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/xen/cpu_hotplug.c b/drivers/xen/cpu_hotplug.c
-index b1357aa4bc55..f192b6f42da9 100644
---- a/drivers/xen/cpu_hotplug.c
-+++ b/drivers/xen/cpu_hotplug.c
-@@ -54,7 +54,7 @@ static int vcpu_online(unsigned int cpu)
- }
- static void vcpu_hotplug(unsigned int cpu)
- {
--	if (!cpu_possible(cpu))
-+	if (cpu >= nr_cpu_ids || !cpu_possible(cpu))
- 		return;
+diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c
+index 97addfa6f895..dab5891b9714 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c
++++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c
+@@ -207,8 +207,8 @@ static int hw_atl_a0_hw_rss_set(struct aq_hw_s *self,
+ 	u32 i = 0U;
+ 	u32 num_rss_queues = max(1U, self->aq_nic_cfg->num_rss_queues);
+ 	int err = 0;
+-	u16 bitary[(HW_ATL_A0_RSS_REDIRECTION_MAX *
+-					HW_ATL_A0_RSS_REDIRECTION_BITS / 16U)];
++	u16 bitary[1 + (HW_ATL_A0_RSS_REDIRECTION_MAX *
++		   HW_ATL_A0_RSS_REDIRECTION_BITS / 16U)];
  
- 	switch (vcpu_online(cpu)) {
+ 	memset(bitary, 0, sizeof(bitary));
+ 
+diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
+index 51cd1f98bcf0..c4f914a29c38 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
++++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
+@@ -192,8 +192,8 @@ static int hw_atl_b0_hw_rss_set(struct aq_hw_s *self,
+ 	u32 i = 0U;
+ 	u32 num_rss_queues = max(1U, self->aq_nic_cfg->num_rss_queues);
+ 	int err = 0;
+-	u16 bitary[(HW_ATL_B0_RSS_REDIRECTION_MAX *
+-					HW_ATL_B0_RSS_REDIRECTION_BITS / 16U)];
++	u16 bitary[1 + (HW_ATL_B0_RSS_REDIRECTION_MAX *
++		   HW_ATL_B0_RSS_REDIRECTION_BITS / 16U)];
+ 
+ 	memset(bitary, 0, sizeof(bitary));
+ 
 -- 
 2.20.1
 
