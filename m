@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C3BC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB377C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB4CB2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B72B020730
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:00:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194046;
-	bh=bEgqGDvIekdC+jCIEuWqKdDWTz3GB/UQAEQBREeG/W4=;
+	s=default; t=1579194048;
+	bh=4KwJYEY4NLAQPKKbonyJb+ZFRqThbJv4RYUN1FP+KZk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lC5YC5Z6clECrVqPrkA5ZQpCNrmA5Ip+P/q1OjX4jagV0khJ1G6JylnnOcSS03XUL
-	 myStcBF5YUatZfXYSChWtE3MXOS2DX+zmTNEib0QLp/FCP0r3w6R6g9g8RhHmQAEkM
-	 k54+Kj4B4J+DZooiWLoO1hkJvwQHAcWOmCmLGRJA=
+	b=rMad82X8zEK+XCbp6Tm4bnwFQzXn00ilEv/iqcXnZ5Or0KLKKiVI1sRCfp+NkUa0b
+	 zK7Se+T5QZNsEDmzoQ8ZL7x1unBOTVR2AZaE969AGCGxtl63k+FQCXwJEvm/Q0pUVD
+	 NGXXrrSB3MxiyIBa//Krcqlc9dh3XNI4ilwopcwE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387883AbgAPRAp (ORCPT
+        id S2387909AbgAPRAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:00:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50390 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:00:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387852AbgAPRAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:00:35 -0500
+        id S2387857AbgAPRAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:00:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D74A620730;
-        Thu, 16 Jan 2020 17:00:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3816020730;
+        Thu, 16 Jan 2020 17:00:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194034;
-        bh=bEgqGDvIekdC+jCIEuWqKdDWTz3GB/UQAEQBREeG/W4=;
+        s=default; t=1579194039;
+        bh=4KwJYEY4NLAQPKKbonyJb+ZFRqThbJv4RYUN1FP+KZk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l8uB9lFTiryH7dcqxUsWGMV5lOVJaAsB1hTaPY5a5NorqihW5h44p1nawDeEoQ1qn
-         dSZ6uGM5TE9aksGUNyjn4jgX0yaMsfhbg3FE8dRoyNNuzrDoncj3zY2br7N5UF5Br4
-         XcX1Lae2SCvEtv9S5xu3cgwpSciVwwO5UUjLhio4=
+        b=NLq8vCNXU3Gya7ugD7dgcICrG2T/NGdNHP+m0SxlO0UUtH+Y+dfHqve+2GAqVw49a
+         X+5qmaE5+jC9tT6L1Ljna5ZXd92E0RT0s6roL+oNtqAXtLxZ79RwpCSbjLTBNasFvl
+         kuhteyGH4wBm1oUzbEB8qUfS6L16ktCsTVihY1Nw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sara Sharon <sara.sharon@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 153/671] iwlwifi: mvm: fix RSS config command
-Date:   Thu, 16 Jan 2020 11:51:02 -0500
-Message-Id: <20200116165940.10720-36-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 156/671] rtc: ds1672: fix unintended sign extension
+Date:   Thu, 16 Jan 2020 11:51:05 -0500
+Message-Id: <20200116165940.10720-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -60,44 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sara Sharon <sara.sharon@intel.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 608dce95db10b8ee1a26dbce3f60204bb69812a5 ]
+[ Upstream commit f0c04c276739ed8acbb41b4868e942a55b128dca ]
 
-The hash mask is a bitmap, so we should use BIT() on
-the enum values.
+Shifting a u8 by 24 will cause the value to be promoted to an integer. If
+the top bit of the u8 is set then the following conversion to an unsigned
+long will sign extend the value causing the upper 32 bits to be set in
+the result.
 
-Signed-off-by: Sara Sharon <sara.sharon@intel.com>
-Fixes: 43413a975d06 ("iwlwifi: mvm: support rss queues configuration command")
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Fix this by casting the u8 value to an unsigned long before the shift.
+
+Detected by CoverityScan, CID#138801 ("Unintended sign extension")
+
+Fixes: edf1aaa31fc5 ("[PATCH] RTC subsystem: DS1672 driver")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/fw.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/rtc/rtc-ds1672.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-index 9808d954dca2..c7e2b88cd5ab 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-@@ -110,12 +110,12 @@ static int iwl_send_rss_cfg_cmd(struct iwl_mvm *mvm)
- 	int i;
- 	struct iwl_rss_config_cmd cmd = {
- 		.flags = cpu_to_le32(IWL_RSS_ENABLE),
--		.hash_mask = IWL_RSS_HASH_TYPE_IPV4_TCP |
--			     IWL_RSS_HASH_TYPE_IPV4_UDP |
--			     IWL_RSS_HASH_TYPE_IPV4_PAYLOAD |
--			     IWL_RSS_HASH_TYPE_IPV6_TCP |
--			     IWL_RSS_HASH_TYPE_IPV6_UDP |
--			     IWL_RSS_HASH_TYPE_IPV6_PAYLOAD,
-+		.hash_mask = BIT(IWL_RSS_HASH_TYPE_IPV4_TCP) |
-+			     BIT(IWL_RSS_HASH_TYPE_IPV4_UDP) |
-+			     BIT(IWL_RSS_HASH_TYPE_IPV4_PAYLOAD) |
-+			     BIT(IWL_RSS_HASH_TYPE_IPV6_TCP) |
-+			     BIT(IWL_RSS_HASH_TYPE_IPV6_UDP) |
-+			     BIT(IWL_RSS_HASH_TYPE_IPV6_PAYLOAD),
- 	};
+diff --git a/drivers/rtc/rtc-ds1672.c b/drivers/rtc/rtc-ds1672.c
+index 9caaccccaa57..b1ebca099b0d 100644
+--- a/drivers/rtc/rtc-ds1672.c
++++ b/drivers/rtc/rtc-ds1672.c
+@@ -58,7 +58,8 @@ static int ds1672_get_datetime(struct i2c_client *client, struct rtc_time *tm)
+ 		"%s: raw read data - counters=%02x,%02x,%02x,%02x\n",
+ 		__func__, buf[0], buf[1], buf[2], buf[3]);
  
- 	if (mvm->trans->num_rx_queues == 1)
+-	time = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
++	time = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
++	       (buf[1] << 8) | buf[0];
+ 
+ 	rtc_time_to_tm(time, tm);
+ 
 -- 
 2.20.1
 
