@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 368ACC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E30C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C687214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E5F521582
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:52:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193543;
-	bh=ZiZ6TkumCmKhw6ZAr6uKRo1tFs4kdys3f6UhWm76PA0=;
+	s=default; t=1579193549;
+	bh=z7KVdw7Z8+sBDxB18wiOv1PsdtW1lfFnRoY3zKQDzDI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X7IVu08UqCwAPAY9qpj0FABIIaBkLptTH9ao2kMZxUzioEj9cpr1CByolmP4+otSA
-	 vOtRK0KUbpbSnfUhpKcwhyfbkDHbzH63C2Nl9T1IFar45eI9dlmGx01H2p7my+tQvw
-	 CE99RBqBMs2cYR53q+ILlViczWQ9hsrToQy5R6JI=
+	b=sDnFHHT7482aWjzsVAa1Ly6Zi2iNklT+riogB3NsRHWndAcL2w7vjFZuWgcLTbHzd
+	 IOsqRabWJYCRF9MGVyisvva/8QTX0Fs1ZlNlZAAelAHgTRMpXgwiAduq8PLp1yHpfI
+	 wvWh/5DK/4oQuHZeWA6OUoyB8wAx2loIgGb+MD3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729970AbgAPQwW (ORCPT
+        id S1729180AbgAPQw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:52:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35368 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:52:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727008AbgAPQwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:52:21 -0500
+        id S1727008AbgAPQw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:52:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DD8B2073A;
-        Thu, 16 Jan 2020 16:52:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 521EC2081E;
+        Thu, 16 Jan 2020 16:52:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193540;
-        bh=ZiZ6TkumCmKhw6ZAr6uKRo1tFs4kdys3f6UhWm76PA0=;
+        s=default; t=1579193546;
+        bh=z7KVdw7Z8+sBDxB18wiOv1PsdtW1lfFnRoY3zKQDzDI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i0cttr4VSnItIHMZ85QwbkvMTIDoiALQYU2jHlndCgDzYBdj/NLaL8Z3aDVpsI+70
-         A49m78/g06U2Hv+KkpZUiNwiHvy+5piPHg9kdSudMWlVjfLwDRDRvq0zaV1nKufaPJ
-         49CyKUQb/ayDPYVGl3XQTvB6DCUicrhaD3Sj9bO4=
+        b=Xojj+wZx9ZHvc//UtF6JHXkeNEtyXIwIZcjI2NtVGR00TA9wYvoLv+5EshCiyJYfP
+         6WtcEYP9X00zOWckKu4do0kO1uM+UPsIOCr/dU8A19qFbK3Bq3uy/N16sVBzKqxYKQ
+         uX7r48x+B7qL1Hjibsw9Un+UKWZckrbCV76+C8e4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.4 099/205] powerpc/security: Fix debugfs data leak on 32-bit
-Date:   Thu, 16 Jan 2020 11:41:14 -0500
-Message-Id: <20200116164300.6705-99-sashal@kernel.org>
+Cc:     Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 100/205] media: exynos4-is: Fix recursive locking in isp_video_release()
+Date:   Thu, 16 Jan 2020 11:41:15 -0500
+Message-Id: <20200116164300.6705-100-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -59,87 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Seung-Woo Kim <sw0312.kim@samsung.com>
 
-[ Upstream commit 3b05a1e517e1a8cfda4866ec31d28b2bc4fee4c4 ]
+[ Upstream commit 704c6c80fb471d1bb0ef0d61a94617d1d55743cd ]
 
-"powerpc_security_features" is "unsigned long", i.e. 32-bit or 64-bit,
-depending on the platform (PPC_FSL_BOOK3E or PPC_BOOK3S_64).  Hence
-casting its address to "u64 *", and calling debugfs_create_x64() is
-wrong, and leaks 32-bit of nearby data to userspace on 32-bit platforms.
+>From isp_video_release(), &isp->video_lock is held and subsequent
+vb2_fop_release() tries to lock vdev->lock which is same with the
+previous one. Replace vb2_fop_release() with _vb2_fop_release() to
+fix the recursive locking.
 
-While all currently defined SEC_FTR_* security feature flags fit in
-32-bit, they all have "ULL" suffixes to make them 64-bit constants.
-Hence fix the leak by changing the type of "powerpc_security_features"
-(and the parameter types of its accessors) to "u64".  This also allows
-to drop the cast.
-
-Fixes: 398af571128fe75f ("powerpc/security: Show powerpc_security_features in debugfs")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191021142309.28105-1-geert+renesas@glider.be
+Fixes: 1380f5754cb0 ("[media] videobuf2: Add missing lock held on vb2_fop_release")
+Signed-off-by: Seung-Woo Kim <sw0312.kim@samsung.com>
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/security_features.h | 8 ++++----
- arch/powerpc/kernel/security.c               | 4 ++--
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/media/platform/exynos4-is/fimc-isp-video.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/include/asm/security_features.h b/arch/powerpc/include/asm/security_features.h
-index ccf44c135389..7c05e95a5c44 100644
---- a/arch/powerpc/include/asm/security_features.h
-+++ b/arch/powerpc/include/asm/security_features.h
-@@ -9,7 +9,7 @@
- #define _ASM_POWERPC_SECURITY_FEATURES_H
+diff --git a/drivers/media/platform/exynos4-is/fimc-isp-video.c b/drivers/media/platform/exynos4-is/fimc-isp-video.c
+index 378cc302e1f8..d2cbcdca0463 100644
+--- a/drivers/media/platform/exynos4-is/fimc-isp-video.c
++++ b/drivers/media/platform/exynos4-is/fimc-isp-video.c
+@@ -313,7 +313,7 @@ static int isp_video_release(struct file *file)
+ 		ivc->streaming = 0;
+ 	}
  
+-	vb2_fop_release(file);
++	_vb2_fop_release(file, NULL);
  
--extern unsigned long powerpc_security_features;
-+extern u64 powerpc_security_features;
- extern bool rfi_flush;
- 
- /* These are bit flags */
-@@ -24,17 +24,17 @@ void setup_stf_barrier(void);
- void do_stf_barrier_fixups(enum stf_barrier_type types);
- void setup_count_cache_flush(void);
- 
--static inline void security_ftr_set(unsigned long feature)
-+static inline void security_ftr_set(u64 feature)
- {
- 	powerpc_security_features |= feature;
- }
- 
--static inline void security_ftr_clear(unsigned long feature)
-+static inline void security_ftr_clear(u64 feature)
- {
- 	powerpc_security_features &= ~feature;
- }
- 
--static inline bool security_ftr_enabled(unsigned long feature)
-+static inline bool security_ftr_enabled(u64 feature)
- {
- 	return !!(powerpc_security_features & feature);
- }
-diff --git a/arch/powerpc/kernel/security.c b/arch/powerpc/kernel/security.c
-index d341b464f23c..1740a66cea84 100644
---- a/arch/powerpc/kernel/security.c
-+++ b/arch/powerpc/kernel/security.c
-@@ -16,7 +16,7 @@
- #include <asm/setup.h>
- 
- 
--unsigned long powerpc_security_features __read_mostly = SEC_FTR_DEFAULT;
-+u64 powerpc_security_features __read_mostly = SEC_FTR_DEFAULT;
- 
- enum count_cache_flush_type {
- 	COUNT_CACHE_FLUSH_NONE	= 0x1,
-@@ -109,7 +109,7 @@ device_initcall(barrier_nospec_debugfs_init);
- static __init int security_feature_debugfs_init(void)
- {
- 	debugfs_create_x64("security_features", 0400, powerpc_debugfs_root,
--			   (u64 *)&powerpc_security_features);
-+			   &powerpc_security_features);
- 	return 0;
- }
- device_initcall(security_feature_debugfs_init);
+ 	if (v4l2_fh_is_singular_file(file)) {
+ 		fimc_pipeline_call(&ivc->ve, close);
 -- 
 2.20.1
 
