@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 969E6C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E7AC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B8DE2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CFB52053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:00:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201194;
-	bh=ytr1jqxcGQfSHeYVEAxStVB/R5aVTSPwptwvqK57Oqs=;
+	s=default; t=1579201202;
+	bh=Oa+7Q3cW1yJ21jr6jVTw65O+99L2WuNePPKyUKSbhzQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OIZfvLjopK6qo1CndbC409PLsT/dv6ZoEp6h+9jAXpLHyWgExJ+oRBIP5GtVTzofX
-	 VRrsxe48C6YGugRzU9hnzVvY9K7ASBfTwGzuiI3R+Zf8d2sRBTRJFF97xVsaxSp3wf
-	 9ydKVCjQYffh0QkD5D+tRfedFU/YwkucEzg/ZyJQ=
+	b=1YA461i/I58vim+QnJRcUV0wdwryL2ig8btgu3K/Gej4T/sr25D9O7RIbUWeNa5H/
+	 auU+C5JGClGsbzZb7ztDXGmPLPgbt6ZY33ksSzM589CM4sly32e8DnUZBc6cwUmyBA
+	 bb859miaI66KhtB0mF2HKSnYE8btdaKlto7vafC8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388930AbgAPRG2 (ORCPT
+        id S2437236AbgAPTAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:06:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36120 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:00:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388866AbgAPRGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:06:13 -0500
+        id S2388923AbgAPRGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:06:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B66A22522;
-        Thu, 16 Jan 2020 17:06:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F47A20730;
+        Thu, 16 Jan 2020 17:06:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194372;
-        bh=ytr1jqxcGQfSHeYVEAxStVB/R5aVTSPwptwvqK57Oqs=;
+        s=default; t=1579194383;
+        bh=Oa+7Q3cW1yJ21jr6jVTw65O+99L2WuNePPKyUKSbhzQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JLoBr0/dv7JFKrmGrIYgQfiUF+O1+jxamFGwZjnWfQd3QIc/5Q22KDqZGaFdBxieV
-         MgkQwSaCe0Z5FP2xjuXIpvFpL8K4JwDOl0kmWKMNE5d3GJ9+9I+sFy+1zPc/J0R6j1
-         T+gFFLEFOdcmUZNiUerBuoJIDQgSmh43C4oTNOJc=
+        b=XtWKSIhUkVZlpQoYep1g8Pd4Kjg1bOlnC7ZhNuOKHye8D1zBK8aTGDJXvY210Yvog
+         QFUNzSXOLqYMqOUTAv+itk1wDVzdv5T9Lda8luq0KfzHO/3Sb0FUqeeIridHVap0Ku
+         V1qHfATH/SsqIH2I4DeHiweuqBhC4KrpJcLxnr6g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vladimir Oltean <olteanv@gmail.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 305/671] ARM: dts: ls1021: Fix SGMII PCS link remaining down after PHY disconnect
-Date:   Thu, 16 Jan 2020 11:59:03 -0500
-Message-Id: <20200116170509.12787-42-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 313/671] coresight: catu: fix clang build warning
+Date:   Thu, 16 Jan 2020 11:59:11 -0500
+Message-Id: <20200116170509.12787-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -61,93 +63,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <olteanv@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit c7861adbe37f576931650ad8ef805e0c47564b9a ]
+[ Upstream commit 59d63de076607a9334b11628b5c3ddda1d8f56cd ]
 
-Each eTSEC MAC has its own TBI (SGMII) PCS and private MDIO bus.
-But due to a DTS oversight, both SGMII-compatible MACs of the LS1021 SoC
-are pointing towards the same internal PCS. Therefore nobody is
-controlling the internal PCS of eTSEC0.
+Clang points out a syntax error, as the etr_catu_buf_ops structure is
+declared 'static' before the type is known:
 
-Upon initial ndo_open, the SGMII link is ok by virtue of U-boot
-initialization. But upon an ifdown/ifup sequence, the code path from
-ndo_open -> init_phy -> gfar_configure_serdes does not get executed for
-the PCS of eTSEC0 (and is executed twice for MAC eTSEC1). So the SGMII
-link remains down for eTSEC0. On the LS1021A-TWR board, to signal this
-failure condition, the PHY driver keeps printing
-'803x_aneg_done: SGMII link is not ok'.
+In file included from drivers/hwtracing/coresight/coresight-tmc-etr.c:12:
+drivers/hwtracing/coresight/coresight-catu.h:116:40: warning: tentative definition of variable with internal linkage has incomplete non-array type 'const struct etr_buf_operations' [-Wtentative-definition-incomplete-type]
+static const struct etr_buf_operations etr_catu_buf_ops;
+                                       ^
+drivers/hwtracing/coresight/coresight-catu.h:116:21: note: forward declaration of 'struct etr_buf_operations'
+static const struct etr_buf_operations etr_catu_buf_ops;
 
-Also, it changes compatible of mdio0 to "fsl,etsec2-mdio" to match
-mdio1 device.
+This seems worth fixing in the code, so replace pointer to the empty
+constant structure with a NULL pointer. We need an extra NULL pointer
+check here, but the result should be better object code otherwise,
+avoiding the silly empty structure.
 
-Fixes: 055223d4d22d ("ARM: dts: ls1021a: Enable the eTSEC ports on QDS and TWR")
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Reviewed-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-Acked-by: Li Yang <leoyang.li@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: 434d611cddef ("coresight: catu: Plug in CATU as a backend for ETR buffer")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+[Fixed line over 80 characters]
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/ls1021a-twr.dts |  9 ++++++++-
- arch/arm/boot/dts/ls1021a.dtsi    | 11 ++++++++++-
- 2 files changed, 18 insertions(+), 2 deletions(-)
+ drivers/hwtracing/coresight/coresight-catu.h    | 5 -----
+ drivers/hwtracing/coresight/coresight-tmc-etr.c | 5 +++--
+ 2 files changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
-index f0c949d74833..ec5afad3efd8 100644
---- a/arch/arm/boot/dts/ls1021a-twr.dts
-+++ b/arch/arm/boot/dts/ls1021a-twr.dts
-@@ -143,7 +143,7 @@
+diff --git a/drivers/hwtracing/coresight/coresight-catu.h b/drivers/hwtracing/coresight/coresight-catu.h
+index 1b281f0dcccc..1d2ad183fd92 100644
+--- a/drivers/hwtracing/coresight/coresight-catu.h
++++ b/drivers/hwtracing/coresight/coresight-catu.h
+@@ -109,11 +109,6 @@ static inline bool coresight_is_catu_device(struct coresight_device *csdev)
+ 	return true;
+ }
+ 
+-#ifdef CONFIG_CORESIGHT_CATU
+ extern const struct etr_buf_operations etr_catu_buf_ops;
+-#else
+-/* Dummy declaration for the CATU ops */
+-static const struct etr_buf_operations etr_catu_buf_ops;
+-#endif
+ 
+ #endif
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+index 2d6f428176ff..3b684687b5a7 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+@@ -747,7 +747,8 @@ static inline void tmc_etr_disable_catu(struct tmc_drvdata *drvdata)
+ static const struct etr_buf_operations *etr_buf_ops[] = {
+ 	[ETR_MODE_FLAT] = &etr_flat_buf_ops,
+ 	[ETR_MODE_ETR_SG] = &etr_sg_buf_ops,
+-	[ETR_MODE_CATU] = &etr_catu_buf_ops,
++	[ETR_MODE_CATU] = IS_ENABLED(CONFIG_CORESIGHT_CATU)
++						? &etr_catu_buf_ops : NULL,
  };
  
- &enet0 {
--	tbi-handle = <&tbi1>;
-+	tbi-handle = <&tbi0>;
- 	phy-handle = <&sgmii_phy2>;
- 	phy-connection-type = "sgmii";
- 	status = "okay";
-@@ -222,6 +222,13 @@
- 	sgmii_phy2: ethernet-phy@2 {
- 		reg = <0x2>;
- 	};
-+	tbi0: tbi-phy@1f {
-+		reg = <0x1f>;
-+		device_type = "tbi-phy";
-+	};
-+};
-+
-+&mdio1 {
- 	tbi1: tbi-phy@1f {
- 		reg = <0x1f>;
- 		device_type = "tbi-phy";
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index f18490548c78..7e22309bccac 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -584,7 +584,7 @@
- 		};
- 
- 		mdio0: mdio@2d24000 {
--			compatible = "gianfar";
-+			compatible = "fsl,etsec2-mdio";
- 			device_type = "mdio";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -592,6 +592,15 @@
- 			      <0x0 0x2d10030 0x0 0x4>;
- 		};
- 
-+		mdio1: mdio@2d64000 {
-+			compatible = "fsl,etsec2-mdio";
-+			device_type = "mdio";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x2d64000 0x0 0x4000>,
-+			      <0x0 0x2d50030 0x0 0x4>;
-+		};
-+
- 		ptp_clock@2d10e00 {
- 			compatible = "fsl,etsec-ptp";
- 			reg = <0x0 0x2d10e00 0x0 0xb0>;
+ static inline int tmc_etr_mode_alloc_buf(int mode,
+@@ -761,7 +762,7 @@ static inline int tmc_etr_mode_alloc_buf(int mode,
+ 	case ETR_MODE_FLAT:
+ 	case ETR_MODE_ETR_SG:
+ 	case ETR_MODE_CATU:
+-		if (etr_buf_ops[mode]->alloc)
++		if (etr_buf_ops[mode] && etr_buf_ops[mode]->alloc)
+ 			rc = etr_buf_ops[mode]->alloc(drvdata, etr_buf,
+ 						      node, pages);
+ 		if (!rc)
 -- 
 2.20.1
 
