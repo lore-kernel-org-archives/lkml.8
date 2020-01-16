@@ -2,126 +2,117 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58955C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11494C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25E7620728
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7D0520728
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:57:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Aod3SYFV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rpyy3YyC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387926AbgAPV5R (ORCPT
+        id S2388139AbgAPV5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 16:57:17 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:33202 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387718AbgAPV5R (ORCPT
+        Thu, 16 Jan 2020 16:57:48 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:37576 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729153AbgAPV5r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 16:57:17 -0500
-Received: by mail-qk1-f196.google.com with SMTP id d71so20798784qkc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 13:57:16 -0800 (PST)
+        Thu, 16 Jan 2020 16:57:47 -0500
+Received: by mail-qt1-f194.google.com with SMTP id w47so20219877qtk.4;
+        Thu, 16 Jan 2020 13:57:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=K2xuhFUNXht7fcfEH+3ztlqzjosMro36By5h4pXdIHc=;
-        b=Aod3SYFVPozEToTjnYF/YiRqPUPQyOs89E5qi9CDjvx1TxXnza6a/fgZ6irmTnQt4m
-         Fb3MVyT4sHRpVo3xNsrMfO96EWiIZ0DlApUvn8E4JEsBQ0mWcFW1osKcYKdA5Qwuq8iS
-         HUH5QtPX06IEKYllmnlLc/9+z6lQT4LJ+I7GI=
+         :cc:content-transfer-encoding;
+        bh=BKup+mN+yNw5E+RKZ+Bk6trS4fw29oa/jBU1SsMkNjo=;
+        b=rpyy3YyC3pc4ZrmsAjEayWTY6S5fFW2TfftXYZ9zA9d0TT+4oeNbZxyRWO7jd3qmqV
+         lAt0czVSnh36YxNThoGHWF2iAql/35TiHCv2iP6EJBeK1TrbRGU4rpH69mZsD05z4Z1d
+         dlFJDBgbbuQS6Cu6d8S8eCrtQ4UrFd3IXvEEFk83ElJTcQcjeUfr9+KT8o5nl0+dUuUt
+         P6D6IOLXb3m4P0jLT0OMi2S+EFsOQq0K5B6ELOgQVk8AxoysQv/LW9noMMP71kb5icEM
+         F3yct2QlOrcAuUM8yGI33B5Vzu/+4UKugaTww0OrhRh4f+owRPKpt/Os7T0PnnI06jeg
+         5z7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=K2xuhFUNXht7fcfEH+3ztlqzjosMro36By5h4pXdIHc=;
-        b=YpCPbgiRq3Prq2W+BAThvkkeJMxo6SQAjM8wwASKCGJ0th/4hJ/IT+h6AQ/nbCdzmb
-         RsWVxVCHwssMYTIvGy9c//rVUPJ7wTlaPOOYC31TAM4N+sn56Rg9WHlWwLoV8s10tXfb
-         XGKkTagQB1Zn7dc1KhzODPs0QLh3D7Rw3c6f3IeJvyUcyxCPvxGiQpXPLntJ5HulA827
-         Eaaj0d3Sw0kiCFyAvd3o3sHDIuSampx7zIMahA+/PK8he4fEwoBFgl6YrEvfxJWvwFyy
-         Nl/baCRWYvOsRnl2wFWL3G0y/1/Seqb7cX1rGJL/739yjvB+21qeOtb4ilbgRb+z4H1j
-         Cd5g==
-X-Gm-Message-State: APjAAAVevEjcrJjZyoVOtRkh6nhfS8qsnzCgdumTxOk2DcW2t0aDntdQ
-        VChNG6ZHtXJ1XzR2l11Llc0TaP9qq/OZxDtq1wR+9w==
-X-Google-Smtp-Source: APXvYqwy0IyiHirF5i1IcksR3wA9s3xZ6I9TI5yFROp2tDU1qUGmXAIsqH+a8/E5utq4wNqF047xga5FoevcUgRlqCA=
-X-Received: by 2002:a37:6d47:: with SMTP id i68mr1496273qkc.228.1579211836142;
- Thu, 16 Jan 2020 13:57:16 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=BKup+mN+yNw5E+RKZ+Bk6trS4fw29oa/jBU1SsMkNjo=;
+        b=LL3MAg8qOpuj41z6Cf0TImjeXYYUFrQDC2Ww79zilC+c/SCa2Ebiyxc+61CyGZ2IwD
+         ltAeT/uj3wmtX1TiCEQl9VWZ3JWCdbkmeUO3cwLrxftmKTbzlUUVMR5U2m8J9mU3846h
+         QUO8NPALQ5GLxMUr6CPZ8X+hbz3/N2WhQwfHiqUctlP5lepOKmuC6HethQmKGeBYHCUl
+         ehvdibtKCVRjqIADTQYlzboWOVEBOTNSJT+1DN+C3yaEJEY8lfIskbtwKc257IA7ugxU
+         JFfkiHcU1fmZ5yS/9QS1EsTmpRtGFNV8g8KWj0crKOyU4ZyjQ0iWKTWGf/N35JYgv/Tz
+         u1eQ==
+X-Gm-Message-State: APjAAAXeYoxFqikVDH05iHELuEehHGapMYAOo8IVRvFfQAFzX2owTG1r
+        +6bGXBkH3cJTURGH0qe+iw/BD9r4FTXOAfIKqJk=
+X-Google-Smtp-Source: APXvYqz6W4hGwAmtkVgT6A+/5UfZjE9EHGHzPkk6ExiU4zKRnlOidUa4twJjkynIyaiQT4AhpX3h1OBlBvadSgKQco8=
+X-Received: by 2002:ac8:4050:: with SMTP id j16mr4515795qtl.171.1579211866008;
+ Thu, 16 Jan 2020 13:57:46 -0800 (PST)
 MIME-Version: 1.0
-References: <20191004145741.118292-1-joel@joelfernandes.org> <20191004154102.GA20945@redhat.com>
-In-Reply-To: <20191004154102.GA20945@redhat.com>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Thu, 16 Jan 2020 16:57:05 -0500
-Message-ID: <CAEXW_YS20r3shEwk8GCTY9NcQB+duzTc82ROo5xgWakJwvKRRQ@mail.gmail.com>
-Subject: Re: [PATCH] Remove GP_REPLAY state from rcu_sync
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
+References: <157918093154.1357254.7616059374996162336.stgit@toke.dk> <157918093723.1357254.4296174077488807255.stgit@toke.dk>
+In-Reply-To: <157918093723.1357254.4296174077488807255.stgit@toke.dk>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 16 Jan 2020 13:57:34 -0800
+Message-ID: <CAEf4BzbA6TZHvQ-7YoHbf1wNn3OcpTEgUMh6uzwJnGOX0yDSDg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v3 05/11] selftests: Use consistent include paths
+ for libbpf
+To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        John Fastabend <john.fastabend@gmail.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>, rcu <rcu@vger.kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-rdma@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 11:41 AM Oleg Nesterov <oleg@redhat.com> wrote:
+On Thu, Jan 16, 2020 at 5:23 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@redh=
+at.com> wrote:
 >
-> On 10/04, Joel Fernandes (Google) wrote:
-> >
-> > But this is not always true if you consider the following events:
+> From: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
 >
-> I'm afraid I missed your point, but...
+> Fix all selftests to include libbpf header files with the bpf/ prefix, to
+> be consistent with external users of the library. Also ensure that all
+> includes of exported libbpf header files (those that are exported on 'mak=
+e
+> install' of the library) use bracketed includes instead of quoted.
 >
-> > ---------------------->
-> > GP num         111111     22222222222222222222222222222222233333333
-> > GP state  i    e     p    x                 r              rx     i
-> > CPU0 :         rse      rsx
-> > CPU1 :                         rse     rsx
-> > CPU2 :                                         rse     rsx
-> >
-> > Here, we had 3 grace periods that elapsed, 1 for the rcu_sync_enter(),
-> > and 2 for the rcu_sync_exit(s).
+> To not break the build, keep the old include path until everything has be=
+en
+> changed to the new one; a subsequent patch will remove that.
 >
-> But this is fine?
->
-> We only need to ensure that we have a full GP pass between the "last"
-> rcu_sync_exit() and GP_XXX -> GP_IDLE transition.
->
-> > However, we had 3 rcu_sync_exit()s, not 2. In other words, the
-> > rcu_sync_exit() got batched.
-> >
-> > So my point here is, rcu_sync_exit() does not really always cause a new
-> > GP to happen
->
-> See above, it should not.
->
-> > Then what is the point of the GP_REPLAY state at all if it does not
-> > always wait for a new GP?
->
-> Again, I don't understand... GP_REPLAY ensures that we will have a full GP
-> before rcu_sync_func() sets GP_IDLE, note that it does another "recursive"
-> call_rcu() if it sees GP_REPLAY.
+> Fixes: 6910d7d3867a ("selftests/bpf: Ensure bpf_helper_defs.h are taken f=
+rom selftests dir")
+> Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
+> ---
 
-I finally got back to this (meanwhile life, job things happened). You
-are right, only the last one needs a full GP and it does get one here.
-Probably a comment in rcu_sync_exit() explaining this might help the
-future reader.
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-Basically you are saying, if rcu_sync_exit() happens and GP_REPLAY is
-already set, we need not worry about starting a new GP because
-GP_REPLAY->GP_EXIT->GP_IDLE transition will involve a full GP anyway.
-And only if, GP_EXIT is already set, then we must set GP_REPLAY and
-wait for a full GP.  This ensures the last rcu_sync_exit() gets a full
-GP. I think that was what I was missing. Some reason I thought that
-every rcu_sync_exit() needs to start a full GP.
-
-thanks!
-
-- Joel
+[...]
