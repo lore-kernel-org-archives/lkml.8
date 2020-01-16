@@ -2,95 +2,114 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8233C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C376C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66DDE20748
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FABC20748
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:30:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dfDtNYV5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fTK2Lb9n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388214AbgAPV2m (ORCPT
+        id S2388639AbgAPVaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 16:28:42 -0500
-Received: from ozlabs.org ([203.11.71.1]:50089 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729238AbgAPV2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 16:28:42 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Thu, 16 Jan 2020 16:30:01 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58065 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388443AbgAPVaB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 16:30:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579210200;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=YUGNJL2/Wf026kdMIts/pJT5YKTZt1aptj+7LyeYLmk=;
+        b=fTK2Lb9nIWmkyged+E4vyCEMIUc4tO1xzyqthUG1F2nupgE4VTig3ZMbq4A3u7uiZtv+kv
+        0edXcSJ1xsPc0Hi6dIyQuNKmfs913MFCOwgf6HmR0HrfZ7g/CR67gEB3mjShKizlPRxe9l
+        392yUfIz9jbL4/vHFldhJwQ5uXCc58M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-48-4BE-gvcyMeSokQ9liZEf5A-1; Thu, 16 Jan 2020 16:29:58 -0500
+X-MC-Unique: 4BE-gvcyMeSokQ9liZEf5A-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47zHPM28Fcz9sRG;
-        Fri, 17 Jan 2020 08:28:39 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1579210119;
-        bh=dhL2oLt36qVVXXRO8eh4Ows9MshsQHRdLvBIk/5yB0M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=dfDtNYV5/j7GksYw3MLyIWid/fuA7f3YAQj50BONrulY9IJy6LzTaTUDAWXut9kZ+
-         3XhFE2dp5oHxKjr+zs5VxCaz5+KzfgVQgjXUgxmdM3bn38pk6lhsLaxeTmFz0Ww4Dy
-         ICgUXw1GsyQeAodj4/MRRffCpLKsad9bmQtjS7Nl8pH7srkZgbjTyhTs2GlSCdQdso
-         7cv1/2H/Ocu3xtPmMEb7oRoy1u4RPXpSnNpPon1iebq9XBrIJ9Twcs3MZs9XmYJt3i
-         95Racl9Jq0W5ks8KCfuDL3DYCk5rraKD4Tt+5H01jk0cENeyALI6x3PfKdP4qcaoyA
-         IHfMnI2W4XWAw==
-Date:   Fri, 17 Jan 2020 08:28:26 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failures after merge of the keys tree
-Message-ID: <20200117082826.38142c79@canb.auug.org.au>
-In-Reply-To: <20140.1579207620@warthog.procyon.org.uk>
-References: <20200109132240.264728ef@canb.auug.org.au>
-        <20191212115901.221d8ba1@canb.auug.org.au>
-        <20140.1579207620@warthog.procyon.org.uk>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9A02D803A20;
+        Thu, 16 Jan 2020 21:29:56 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-12.phx2.redhat.com [10.3.112.12])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1B0681001901;
+        Thu, 16 Jan 2020 21:29:48 +0000 (UTC)
+Date:   Thu, 16 Jan 2020 16:29:46 -0500
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netfilter-devel@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
+        sgrubb@redhat.com, omosnace@redhat.com, fw@strlen.de,
+        twoerner@redhat.com, eparis@parisplace.org, ebiederm@xmission.com,
+        tgraf@infradead.org
+Subject: Re: [PATCH ghak25 v2 1/9] netfilter: normalize x_table function
+ declarations
+Message-ID: <20200116212946.mwnk45v2px4e42uj@madcap2.tricolour.ca>
+References: <cover.1577830902.git.rgb@redhat.com>
+ <194bdc565d548a14e12357a7c1a594605b7fdf0f.1577830902.git.rgb@redhat.com>
+ <f8ee5829-f094-96b8-40c2-b0278f93fb03@6wind.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/lOiKmKB=FW9oFY1WmVaXxc7";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <f8ee5829-f094-96b8-40c2-b0278f93fb03@6wind.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/lOiKmKB=FW9oFY1WmVaXxc7
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 2020-01-08 17:47, Nicolas Dichtel wrote:
+> Le 06/01/2020 =E0 19:54, Richard Guy Briggs a =E9crit=A0:
+> > Git context diffs were being produced with unhelpful declaration type=
+s
+> > in the place of function names to help identify the funciton in which
+> > changes were made.
+> Just for my information, how do you reproduce that? With a 'git diff'?
 
-Hi David,
+git format-patch is how it is presenting as a problem, which I assume
+would also be git diff.
 
-On Thu, 16 Jan 2020 20:47:00 +0000 David Howells <dhowells@redhat.com> wrot=
-e:
->
-> Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> > Normalize x_table function declarations so that git context diff
+> > function labels work as expected.
+> >=20
+> [snip]
+> >=20
+> > --=20
+> > 1.8.3.1
+> git v1.8.3.1 is seven years old:
+> https://github.com/git/git/releases/tag/v1.8.3.1
 >=20
-> > Any ETA on when this tree will be updated? =20
->=20
-> That should be fixed now.
+> I don't see any problems with git v2.24. Not sure that the patch brings=
+ any
+> helpful value except complicating backports.
 
-Excellent, thanks.
+It brings value to anyone who is on a distro that is stable and only
+slightly behind.  There are other features of git 2.x that I'd like to
+start using (git worktrees) but I'll have to wait until I can afford to
+upgrade.
 
---=20
-Cheers,
-Stephen Rothwell
+> Nicolas
 
---Sig_/lOiKmKB=FW9oFY1WmVaXxc7
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+- RGB
 
------BEGIN PGP SIGNATURE-----
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4g1XoACgkQAVBC80lX
-0Gycmwf/SNhzBBck+HH1+pyi8USIswkz9E/UOdznEkXvqE3nhmw2IgWAMr7IZ4bo
-g5I71qiRh0MGjpug7pTuAaym/0ytv9+mzx64nyfNdPyBzLg3gkL0xR1sP6Uvo8N7
-m28OsT8D6m8yIFoqQqoUfhz/69w+mTRNl43/g8rRWpvPDtiJH/QI2ssHmZF1+Mcz
-eq8luXeAAdRTv1Rf88AmIC2zXihidaAxIXA0LyZOeQyPiVDGPQww5oTxHmP9rJov
-3v+9Y4YUkOPIepfNEsD1Ybw6uUknXlsL0Q0/ytZH5cQnM+JJt8ww+8ihbbvKtHO7
-XoFgqvKpe6ZKOCXLk8JiqcG5ES53tA==
-=Lv1B
------END PGP SIGNATURE-----
-
---Sig_/lOiKmKB=FW9oFY1WmVaXxc7--
