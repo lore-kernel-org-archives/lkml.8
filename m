@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E530C33CB7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 094F8C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 779F62075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:11:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7638206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:11:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201882;
-	bh=HhTOEnfVPXjkdgMI5j2Rj7f81dghYJkTfY6kVie9fZE=;
+	s=default; t=1579201887;
+	bh=+JWYpikP2XfRGIZwTlxZ+tio/c4gA2u4kGxorWRvbMU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GN+xcOJKDq1+OuEU0FqhFGlwkBL0on+Wq0jKZkGIhnHAbBJtBML/vzJ6vqNwdPAJw
-	 8Bavq20qHmlti9b2dHQnKbjj7kL11l4Jfi/Gl2f9eVtC59AQKYHdgX5zWwp6V57F+y
-	 J28GyE9ic02X6OT0++wwtQcwD3GqLCJgXFSOS9bY=
+	b=WZEJf/3zG+Ts4rvu+/Gp/J6pEoDKQf2JtKmgDmUgeMmZs11ZNEnP07iWE2FSJLBjZ
+	 09RkdXcUavxVuiB3TtOTZoEdV2fyVGhIHd8Gk4G6rxpw9VJ7BaVllk1nmbrfsMaTLY
+	 FmQ45ijy2xE6YdJ3YZrTlKLW5BtGO9ziwnPagcHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387728AbgAPRAU (ORCPT
+        id S2387935AbgAPTL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:00:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49578 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:11:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387676AbgAPRAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:00:09 -0500
+        id S2387480AbgAPRAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:00:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CD6624686;
-        Thu, 16 Jan 2020 17:00:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B9062467C;
+        Thu, 16 Jan 2020 17:00:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194008;
-        bh=HhTOEnfVPXjkdgMI5j2Rj7f81dghYJkTfY6kVie9fZE=;
+        s=default; t=1579194018;
+        bh=+JWYpikP2XfRGIZwTlxZ+tio/c4gA2u4kGxorWRvbMU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DhjDfcP4eTcGSP5jAbPvpQSQibbmMz/2JbyYcM2bXtWx598RB7tyL+NMkp2QC9LEH
-         TQL53P+c/angnZ9Izpw3u5E4Po4euHD/PkV5FVffy34n6f6pCBxBT6pSAnM86TZMcn
-         N+67QuqMHr5xKLtEQj0XjL5BrP72vym8Yq5EEniQ=
+        b=GW5AEPoU4PB5+Osfvgh6lfn77COFSJNSOjBYt/hMBwpA8o0fe46j6Vkj6JqB40ZNN
+         reG3aUirjTzARZxhqIH/xhkGMEN7ypOCl3P0auv82JpWBQF2/m/uPzNwaZ/N6TYkvx
+         bI43CETeGJHDOFAM44nKszkUq/sD6YrDJFwsWa/8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Moni Shoua <monis@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 133/671] net/mlx5: Take lock with IRQs disabled to avoid deadlock
-Date:   Thu, 16 Jan 2020 11:50:42 -0500
-Message-Id: <20200116165940.10720-16-sashal@kernel.org>
+Cc:     Liu Jian <liujian56@huawei.com>,
+        Hamish Martin <hamish.martin@alliedtelesis.co.nz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 139/671] driver: uio: fix possible memory leak in __uio_register_device
+Date:   Thu, 16 Jan 2020 11:50:48 -0500
+Message-Id: <20200116165940.10720-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -61,80 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Moni Shoua <monis@mellanox.com>
+From: Liu Jian <liujian56@huawei.com>
 
-[ Upstream commit 33814e5d127e21f53b52e17b0722c1b57d4f4d29 ]
+[ Upstream commit 1a392b3de7c5747506b38fc14b2e79977d3c7770 ]
 
-The lock in qp_table might be taken from process context or from
-interrupt context. This may lead to a deadlock unless it is taken with
-IRQs disabled.
+'idev' is malloced in __uio_register_device() and leak free it before
+leaving from the uio_get_minor() error handing case, it will cause
+memory leak.
 
-Discovered by lockdep
-
-================================
-WARNING: inconsistent lock state
-4.20.0-rc6
---------------------------------
-inconsistent {HARDIRQ-ON-W} -> {IN-HARDIRQ-W}
-
-python/12572 [HC1[1]:SC0[0]:HE0:SE1] takes:
-00000000052a4df4 (&(&table->lock)->rlock#2){?.+.}, /0x50 [mlx5_core]
-{HARDIRQ-ON-W} state was registered at:
-  _raw_spin_lock+0x33/0x70
-  mlx5_get_rsc+0x1a/0x50 [mlx5_core]
-  mlx5_ib_eqe_pf_action+0x493/0x1be0 [mlx5_ib]
-  process_one_work+0x90c/0x1820
-  worker_thread+0x87/0xbb0
-  kthread+0x320/0x3e0
-  ret_from_fork+0x24/0x30
-irq event stamp: 103928
-hardirqs last  enabled at (103927): [] nk+0x1a/0x1c
-hardirqs last disabled at (103928): [] unk+0x1a/0x1c
-softirqs last  enabled at (103924): [] tcp_sendmsg+0x31/0x40
-softirqs last disabled at (103922): [] 80
-
-other info that might help us debug this:
- Possible unsafe locking scenario:
-
-       CPU0
-       ----
-  lock(&(&table->lock)->rlock#2);
-
-    lock(&(&table->lock)->rlock#2);
-
- *** DEADLOCK ***
-
-Fixes: 032080ab43ac ("IB/mlx5: Lock QP during page fault handling")
-Signed-off-by: Moni Shoua <monis@mellanox.com>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: a93e7b331568 ("uio: Prevent device destruction while fds are open")
+Signed-off-by: Liu Jian <liujian56@huawei.com>
+Reviewed-by: Hamish Martin <hamish.martin@alliedtelesis.co.nz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/qp.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/uio/uio.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/qp.c b/drivers/net/ethernet/mellanox/mlx5/core/qp.c
-index f33707ce8b6b..479ac21cdbc6 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/qp.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/qp.c
-@@ -44,14 +44,15 @@ static struct mlx5_core_rsc_common *mlx5_get_rsc(struct mlx5_core_dev *dev,
- {
- 	struct mlx5_qp_table *table = &dev->priv.qp_table;
- 	struct mlx5_core_rsc_common *common;
-+	unsigned long flags;
+diff --git a/drivers/uio/uio.c b/drivers/uio/uio.c
+index 2762148c169d..e4b418757017 100644
+--- a/drivers/uio/uio.c
++++ b/drivers/uio/uio.c
+@@ -938,8 +938,10 @@ int __uio_register_device(struct module *owner,
+ 	atomic_set(&idev->event, 0);
  
--	spin_lock(&table->lock);
-+	spin_lock_irqsave(&table->lock, flags);
+ 	ret = uio_get_minor(idev);
+-	if (ret)
++	if (ret) {
++		kfree(idev);
+ 		return ret;
++	}
  
- 	common = radix_tree_lookup(&table->tree, rsn);
- 	if (common)
- 		atomic_inc(&common->refcount);
- 
--	spin_unlock(&table->lock);
-+	spin_unlock_irqrestore(&table->lock, flags);
- 
- 	if (!common) {
- 		mlx5_core_warn(dev, "Async event for bogus resource 0x%x\n",
+ 	idev->dev.devt = MKDEV(uio_major, idev->minor);
+ 	idev->dev.class = &uio_class;
 -- 
 2.20.1
 
