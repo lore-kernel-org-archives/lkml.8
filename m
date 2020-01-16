@@ -2,53 +2,55 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2039EC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E46C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0A182077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:36:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B375C2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:36:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199791;
-	bh=d9faV/auFDCcCdxfm/vkf4wabxx8xk1L7Zqi6hggSIk=;
+	s=default; t=1579199794;
+	bh=tdBSwxxCeitoPSZ6ScJGChgxmx8QvubbLNKi1Z1+VLQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u1/TfQ4CfR6SvdHyWJkOAMKH9CjmsIoMI94I/7V9fi32chgjlS/5RBf7ETztIc7tZ
-	 ORad1VsjcWwLCZPu3m6tQvcwBc9B/fR1KResF4k8wYHng1xj93X4ZS3AkovysTn+AR
-	 bw4t9GY6MxeE7LvezUsQ1Sn+n3gemJJhi0aO5oFg=
+	b=QO493+sVya/VuvMI0u2JXvVPHzd3BB0sQiWe0YXxw6d1Ahmf61UrYLKfHH1sbZw19
+	 yfMQnfbo69zM7yoe+MqYnqDIwiW5qxefd0ROtkg2vwNiglVjGjET+Ik0fyptcQGYrE
+	 dG6jM6Lvlbsat+ZPqz9z1D1eDuKNDhB/I8lJNRmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391687AbgAPRYM (ORCPT
+        id S2436803AbgAPSge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:24:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58100 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:36:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390778AbgAPRYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:24:07 -0500
+        id S2391685AbgAPRYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:24:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7768C214AF;
-        Thu, 16 Jan 2020 17:24:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2FD72468D;
+        Thu, 16 Jan 2020 17:24:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195447;
-        bh=d9faV/auFDCcCdxfm/vkf4wabxx8xk1L7Zqi6hggSIk=;
+        s=default; t=1579195452;
+        bh=tdBSwxxCeitoPSZ6ScJGChgxmx8QvubbLNKi1Z1+VLQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DuEf4XIyWa3sGS8N2RJfyn6l7yNH6BFHazEUN6UnkG9yBGuai5qGkUMPqqIdPDYVA
-         AJND7pLG1/1bA0A0ivCPn/eNpmv54nk+niGur+HibBRGgLuJd/wg2Yx4ijwHBonxED
-         +CHpsL08P2/E6SLOAXPqmHWwPHOXGxHRiyRmP9Lc=
+        b=ofdXbKysNZByOAQiJXWp7OpkNnWXMu018Xr7wUYLx9ItIzCuv2/FjaHnW9NFXnUvz
+         6yr+BOTZM11wBt48XPQvkxJv7qgi+3xJLSRv//JW6sQQ+leZ4YNC3tqJeOn9SjdOZh
+         LZafTS2dYYbhvO01j5vnDRZP1gQ9Se2lYvdwuzr4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 059/371] kbuild: mark prepare0 as PHONY to fix external module build
-Date:   Thu, 16 Jan 2020 12:18:51 -0500
-Message-Id: <20200116172403.18149-2-sashal@kernel.org>
+Cc:     Stefan Agner <stefan@agner.ch>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 062/371] ASoC: imx-sgtl5000: put of nodes if finding codec fails
+Date:   Thu, 16 Jan 2020 12:18:54 -0500
+Message-Id: <20200116172403.18149-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -61,70 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Stefan Agner <stefan@agner.ch>
 
-[ Upstream commit e00d8880481497474792d28c14479a9fb6752046 ]
+[ Upstream commit d9866572486802bc598a3e8576a5231378d190de ]
 
-Commit c3ff2a5193fa ("powerpc/32: add stack protector support")
-caused kernel panic on PowerPC when an external module is used with
-CONFIG_STACKPROTECTOR because the 'prepare' target was not executed
-for the external module build.
+Make sure to properly put the of node in case finding the codec
+fails.
 
-Commit e07db28eea38 ("kbuild: fix single target build for external
-module") turned it into a build error because the 'prepare' target is
-now executed but the 'prepare0' target is missing for the external
-module build.
-
-External module on arm/arm64 with CONFIG_STACKPROTECTOR_PER_TASK is
-also broken in the same way.
-
-Move 'PHONY += prepare0' to the common place. GNU Make is fine with
-missing rule for phony targets. I also removed the comment which is
-wrong irrespective of this commit.
-
-I minimize the change so it can be easily backported to 4.20.x
-
-To fix v4.20, please backport e07db28eea38 ("kbuild: fix single target
-build for external module"), and then this commit.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=201891
-Fixes: e07db28eea38 ("kbuild: fix single target build for external module")
-Fixes: c3ff2a5193fa ("powerpc/32: add stack protector support")
-Fixes: 189af4657186 ("ARM: smp: add support for per-task stack canaries")
-Fixes: 0a1213fa7432 ("arm64: enable per-task stack canaries")
-Cc: linux-stable <stable@vger.kernel.org> # v4.20
-Reported-by: Samuel Holland <samuel@sholland.org>
-Reported-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Tested-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Fixes: 81e8e4926167 ("ASoC: fsl: add sgtl5000 clock support for imx-sgtl5000")
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/fsl/imx-sgtl5000.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Makefile b/Makefile
-index 166e18aa9ca9..4560f763ad11 100644
---- a/Makefile
-+++ b/Makefile
-@@ -971,6 +971,7 @@ ifdef CONFIG_STACK_VALIDATION
-   endif
- endif
+diff --git a/sound/soc/fsl/imx-sgtl5000.c b/sound/soc/fsl/imx-sgtl5000.c
+index 8e525f7ac08d..3d99a8579c99 100644
+--- a/sound/soc/fsl/imx-sgtl5000.c
++++ b/sound/soc/fsl/imx-sgtl5000.c
+@@ -119,7 +119,8 @@ static int imx_sgtl5000_probe(struct platform_device *pdev)
+ 	codec_dev = of_find_i2c_device_by_node(codec_np);
+ 	if (!codec_dev) {
+ 		dev_err(&pdev->dev, "failed to find codec platform device\n");
+-		return -EPROBE_DEFER;
++		ret = -EPROBE_DEFER;
++		goto fail;
+ 	}
  
-+PHONY += prepare0
- 
- ifeq ($(KBUILD_EXTMOD),)
- core-y		+= kernel/ certs/ mm/ fs/ ipc/ security/ crypto/ block/
-@@ -1065,8 +1066,7 @@ include/config/kernel.release: include/config/auto.conf FORCE
- # archprepare is used in arch Makefiles and when processed asm symlink,
- # version.h and scripts_basic is processed / created.
- 
--# Listed in dependency order
--PHONY += prepare archprepare prepare0 prepare1 prepare2 prepare3
-+PHONY += prepare archprepare prepare1 prepare2 prepare3
- 
- # prepare3 is used to check if we are building in a separate output directory,
- # and if so do:
+ 	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
 -- 
 2.20.1
 
