@@ -2,108 +2,117 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 121D8C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD42C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D36FB20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:50:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193433;
-	bh=TxwKOVFcE2pzmB8eSzLGTN684D6ahhL2WTGB0irJpMc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uprlT0v2OgeDG7PTn0V/i3bHBJ1uOZj6QnacqI0JFbZ6kP0NYaPyXBsTkcPPpr2a9
-	 z8fJ6pKBxMGN8tfJ5/N1X6zAmghqlJR/N/UBpFd60T9s9xGwjnn3W/0EFqHQpSEtgW
-	 hTjH190P9uYu+UvFsR8LkRVcotiX7FVyR2aGfX98=
+	by mail.kernel.org (Postfix) with ESMTP id 930FB205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:51:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kv/rnQJp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729684AbgAPQrb (ORCPT
+        id S1729317AbgAPQvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:47:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57326 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729464AbgAPQrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:47:24 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24CA32073A;
-        Thu, 16 Jan 2020 16:47:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193244;
-        bh=TxwKOVFcE2pzmB8eSzLGTN684D6ahhL2WTGB0irJpMc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PzMZa/1uCMHSCpC8q61Q87mU/WI8XW++I8IRZK8R6OG6M/fjAnHH1DtNvJ7RhNO77
-         YUZCPYnFwehTxKJeHrLefpglJ9eVT9fn98CPCzcXf7p1qRaMX+YqCU314Eli8w3H/z
-         /HNCLxLp8g8mIAeLtTBjpSYVdTPSFJ253T+i254I=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ondrej Jirman <megous@megous.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 053/205] pwm: sun4i: Fix incorrect calculation of duty_cycle/period
-Date:   Thu, 16 Jan 2020 11:40:28 -0500
-Message-Id: <20200116164300.6705-53-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
-References: <20200116164300.6705-1-sashal@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
+        Thu, 16 Jan 2020 11:51:12 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36052 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727026AbgAPQvK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:51:10 -0500
+Received: by mail-pg1-f193.google.com with SMTP id k3so10179599pgc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 08:51:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:subject:cc:to:in-reply-to:references:message-id
+         :mime-version:content-transfer-encoding;
+        bh=WX8RB1wfJCliH8/zi+tgub32ZBfKjuIQgKJ9j2z+hKk=;
+        b=kv/rnQJpRXl8xuYnke8mUPEG7MMS88JHDJvb4E6uV0XFinTRPPD5C/d39TE0W1yLGg
+         IveHIwSKvWqF8GWIAVXys0ek01P0zlslB1NhEkYuOQTobMKrpWAalExl/JFK7yyU0Yq0
+         RN4d7oM83AIzhO/LQ+k2eKOtqcDgfMqR5K2BBoTBgPPcCQKjQY1vZxVsvLeeVpRJOZmD
+         eRQROKW+eN7NWuqRF8n1g54NyVDjBhvST3om4ni5PwBSIHk02pNmz2QDJ3oaBuELwJCe
+         7fXGPGZ2gXBewewkWEIYT5M6hJVT30iUAhLwPdqGbI+xXXqAP3MBupENf9wLl5FFPuhq
+         48fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:cc:to:in-reply-to:references
+         :message-id:mime-version:content-transfer-encoding;
+        bh=WX8RB1wfJCliH8/zi+tgub32ZBfKjuIQgKJ9j2z+hKk=;
+        b=OS5h3lxLJPjfUYM0bogoBdtKJrNYmmjHBbPkmn2HuDSO08WGrH+KVsWjTop9JU37DQ
+         3pfpLoFDhhQso12Fc1w1r7MCp2nwzkvhfHTKuMShFjfyZOe9KbK+42UEwUVRXrXBiGuo
+         Osj5mF/CGugVsd7cNDcG+GQyEwisNK+K5oAlzUEb0a+/ayqv3XPKFt8tt37XFpARVag0
+         TKfLN7+olMfTwPjCwfLA+MVqv25iAwa62e5EuS20QSGXcDyH0qkTu/pkEJlnqPjpTjEy
+         JenvDsSuZlkl+8tKYdYn/OD2d48g/6wsR35Vf9ilPt0idfuoOaJmhd3EROy3jtoTJLX8
+         Vj1A==
+X-Gm-Message-State: APjAAAXfQ0fGkCBzAxhj/DurW/vaE1hdhKZIlIr1vVgBxkhY51gc9M0T
+        Y8Iu7WMyjxFqD25SuwYTR49w5w==
+X-Google-Smtp-Source: APXvYqy27Y/ZAUAQAnIzlxv1ajCi6HqFGtLCh8M57hfohNhgC3bsmthRFBrHGcYWEFQ5TfRZ98IBsQ==
+X-Received: by 2002:a65:530d:: with SMTP id m13mr40368954pgq.351.1579193469245;
+        Thu, 16 Jan 2020 08:51:09 -0800 (PST)
+Received: from localhost ([2620:0:1000:2514:7f69:cd98:a2a2:a03d])
+        by smtp.gmail.com with ESMTPSA id s1sm24561586pgv.87.2020.01.16.08.51.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 08:51:08 -0800 (PST)
+Date:   Thu, 16 Jan 2020 08:51:08 -0800 (PST)
+X-Google-Original-Date: Thu, 16 Jan 2020 08:34:33 PST (-0800)
+From:   Palmer Dabbelt <palmerdabbelt@google.com>
+X-Google-Original-From: Palmer Dabbelt <palmer@dabbelt.com>
+Subject:     Re: [PATCH v10 01/19] RISC-V: Export riscv_cpuid_to_hartid_mask() API
+CC:     Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
+        pbonzini@redhat.com, rkrcmar@redhat.com, graf@amazon.com,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@lst.de>, anup@brainfault.org,
+        kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anup Patel <Anup.Patel@wdc.com>
+To:     Anup Patel <Anup.Patel@wdc.com>
+In-Reply-To: <20191223113443.68969-2-anup.patel@wdc.com>
+References: <20191223113443.68969-2-anup.patel@wdc.com>
+  <20191223113443.68969-1-anup.patel@wdc.com>
+Message-ID: <mhng-81eb8962-4c58-4e5b-9ee1-0e6c0afb2c00@palmerdabbelt-glaptop>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+On Mon, 23 Dec 2019 03:35:19 PST (-0800), Anup Patel wrote:
+> The riscv_cpuid_to_hartid_mask() API should be exported to allow
+> building KVM RISC-V as loadable module.
+>
+> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> ---
+>  arch/riscv/kernel/smp.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
+> index eb878abcaaf8..6fc7828d41e4 100644
+> --- a/arch/riscv/kernel/smp.c
+> +++ b/arch/riscv/kernel/smp.c
+> @@ -10,6 +10,7 @@
+>  
+>  #include <linux/cpu.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/module.h>
+>  #include <linux/profile.h>
+>  #include <linux/smp.h>
+>  #include <linux/sched.h>
+> @@ -63,6 +64,7 @@ void riscv_cpuid_to_hartid_mask(const struct cpumask *in, struct cpumask *out)
+>  	for_each_cpu(cpu, in)
+>  		cpumask_set_cpu(cpuid_to_hartid_map(cpu), out);
+>  }
+> +EXPORT_SYMBOL_GPL(riscv_cpuid_to_hartid_mask);
+>  
+>  bool arch_match_cpu_phys_id(int cpu, u64 phys_id)
+>  {
+> -- 
+> 2.17.1
 
-[ Upstream commit 50cc7e3e4f26e3bf5ed74a8d061195c4d2161b8b ]
-
-Since 5.4-rc1, pwm_apply_state calls ->get_state after ->apply
-if available, and this revealed an issue with integer precision
-when calculating duty_cycle and period for the currently set
-state in ->get_state callback.
-
-This issue manifested in broken backlight on several Allwinner
-based devices.
-
-Previously this worked, because ->apply updated the passed state
-directly.
-
-Fixes: deb9c462f4e53 ("pwm: sun4i: Don't update the state for the caller of pwm_apply_state")
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pwm/pwm-sun4i.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-index 6f5840a1a82d..05273725a9ff 100644
---- a/drivers/pwm/pwm-sun4i.c
-+++ b/drivers/pwm/pwm-sun4i.c
-@@ -137,10 +137,10 @@ static void sun4i_pwm_get_state(struct pwm_chip *chip,
- 
- 	val = sun4i_pwm_readl(sun4i_pwm, PWM_CH_PRD(pwm->hwpwm));
- 
--	tmp = prescaler * NSEC_PER_SEC * PWM_REG_DTY(val);
-+	tmp = (u64)prescaler * NSEC_PER_SEC * PWM_REG_DTY(val);
- 	state->duty_cycle = DIV_ROUND_CLOSEST_ULL(tmp, clk_rate);
- 
--	tmp = prescaler * NSEC_PER_SEC * PWM_REG_PRD(val);
-+	tmp = (u64)prescaler * NSEC_PER_SEC * PWM_REG_PRD(val);
- 	state->period = DIV_ROUND_CLOSEST_ULL(tmp, clk_rate);
- }
- 
--- 
-2.20.1
-
+Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
