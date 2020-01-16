@@ -2,93 +2,127 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84066C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A8EC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 617272467C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:31:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87C552087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:31:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e1Q+9nwi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389282AbgAPVbn (ORCPT
+        id S2389298AbgAPVbq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 16:31:43 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:53578 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388655AbgAPVbL (ORCPT
+        Thu, 16 Jan 2020 16:31:46 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38443 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389271AbgAPVbn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 16:31:11 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1isCjJ-0001ZA-NH; Thu, 16 Jan 2020 22:31:05 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1FF261C198C;
-        Thu, 16 Jan 2020 22:31:03 +0100 (CET)
-Date:   Thu, 16 Jan 2020 21:31:02 -0000
-From:   "tip-bot2 for Biju Das" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] dt-bindings: timer: renesas, cmt: Document
- r8a774b1 CMT support
-Cc:     Biju Das <biju.das@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <1570104229-59144-1-git-send-email-biju.das@bp.renesas.com>
-References: <1570104229-59144-1-git-send-email-biju.das@bp.renesas.com>
+        Thu, 16 Jan 2020 16:31:43 -0500
+Received: by mail-pl1-f195.google.com with SMTP id f20so8897722plj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 13:31:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CnVcYi/hHjaeb2++zB3QNjZWrPcPugEoKb4FEoIY0uc=;
+        b=e1Q+9nwivpUZ2eoLhWvQW1m6CVAfa3aaBK6UccLFGY6wRgCQaM0k2UwuA/r4xW72Fz
+         Cpa8tRIYCmLrOJczdtutg3hQgF5DQ/LN0HphoQosDw7iwLUx78p/zHtm31mmcOujIme5
+         IVDzoihrY9213l6cwwUw0YMFuljdl3ONuQPx8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CnVcYi/hHjaeb2++zB3QNjZWrPcPugEoKb4FEoIY0uc=;
+        b=BEzsvqCMcxtDOMo9ezaUknSSP6PyNphACN/YCmvihIgBCVarWYq72oNdtEx6MJoBqs
+         WLXPJ1QqAf8rV3JSh6mQXMLSptmWgISDnah3b3jXJZ5GCPEy9vIkvRAuOfLLk469buxo
+         ZEG3b+LiIIIAkemKbC/pueFW4C3TQZfORt5DYjlJ7xEi42IPu5ZP9FhBkJUTVRXqCd+1
+         epZsT4yWZwyiU0wf53KGXfkgrt9Rs7E/OyLVpe3+TvGER9sdDn7Bhf6BYm7TdZJj3TH2
+         C5J7Hg3Kn8SEPU0Flo0Vfzch5BFz45r82dr9CI5FgW05l3YQfuqigOOAFbV5vVWShMwu
+         oBCw==
+X-Gm-Message-State: APjAAAXygf8Y315MuHEMd/uoEwb9L++X0p0ri8Ew882gI5iEbcgJjH3e
+        7xcnw5P2JeasCNn+lWx13fldmw==
+X-Google-Smtp-Source: APXvYqxRm1Ch7JZUpuIlMAl3bHLM9JzmakZgQeA31Fg9jI5zsQYCQR2YD2ZlLu+lzl5fVGUJRQtt3A==
+X-Received: by 2002:a17:902:8202:: with SMTP id x2mr32885787pln.314.1579210302728;
+        Thu, 16 Jan 2020 13:31:42 -0800 (PST)
+Received: from evgreen2.mtv.corp.google.com ([2620:15c:202:201:ffda:7716:9afc:1301])
+        by smtp.gmail.com with ESMTPSA id g19sm26782723pfh.134.2020.01.16.13.31.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 16 Jan 2020 13:31:42 -0800 (PST)
+From:   Evan Green <evgreen@chromium.org>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Evan Green <evgreen@chromium.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI/MSI: Avoid torn updates to MSI pairs
+Date:   Thu, 16 Jan 2020 13:31:28 -0800
+Message-Id: <20200116133102.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Message-ID: <157921026296.396.11852919130295771125.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/core branch of tip:
+__pci_write_msi_msg() updates three registers in the device: address
+high, address low, and data. On x86 systems, address low contains
+CPU targeting info, and data contains the vector. The order of writes
+is address, then data.
 
-Commit-ID:     db95b8e3642a61b1576e600c3d313aca0c329db3
-Gitweb:        https://git.kernel.org/tip/db95b8e3642a61b1576e600c3d313aca0c329db3
-Author:        Biju Das <biju.das@bp.renesas.com>
-AuthorDate:    Thu, 03 Oct 2019 13:03:49 +01:00
-Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
-CommitterDate: Thu, 16 Jan 2020 19:06:57 +01:00
+This is problematic if an interrupt comes in after address has
+been written, but before data is updated, and the SMP affinity of
+the interrupt is changing. In this case, the interrupt targets the
+wrong vector on the new CPU.
 
-dt-bindings: timer: renesas, cmt: Document r8a774b1 CMT support
+This case is pretty easy to stumble into using xhci and CPU hotplugging.
+Create a script that targets interrupts at a set of cores and then
+offlines those cores. Put some stress on USB, and then watch xhci lose
+an interrupt and die.
 
-Document SoC specific bindings for RZ/G2N (r8a774b1) SoC.
+Avoid this by disabling MSIs during the update.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/1570104229-59144-1-git-send-email-biju.das@bp.renesas.com
+Signed-off-by: Evan Green <evgreen@chromium.org>
 ---
- Documentation/devicetree/bindings/timer/renesas,cmt.txt | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-index a444cfc..a747fab 100644
---- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-+++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-@@ -29,6 +29,8 @@ Required Properties:
-     - "renesas,r8a77470-cmt1" for the 48-bit CMT1 device included in r8a77470.
-     - "renesas,r8a774a1-cmt0" for the 32-bit CMT0 device included in r8a774a1.
-     - "renesas,r8a774a1-cmt1" for the 48-bit CMT devices included in r8a774a1.
-+    - "renesas,r8a774b1-cmt0" for the 32-bit CMT0 device included in r8a774b1.
-+    - "renesas,r8a774b1-cmt1" for the 48-bit CMT devices included in r8a774b1.
-     - "renesas,r8a774c0-cmt0" for the 32-bit CMT0 device included in r8a774c0.
-     - "renesas,r8a774c0-cmt1" for the 48-bit CMT devices included in r8a774c0.
-     - "renesas,r8a7790-cmt0" for the 32-bit CMT0 device included in r8a7790.
+
+Bjorn,
+I was unsure whether disabling MSIs temporarily is actually an okay
+thing to do. I considered using the mask bit, but got the impression
+that not all devices support the mask bit. Let me know if this going to
+cause problems or there's a better way. I can include the repro
+script I used to cause mayhem if needed.
+
+---
+ drivers/pci/msi.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+index 6b43a5455c7af..97856ef862d68 100644
+--- a/drivers/pci/msi.c
++++ b/drivers/pci/msi.c
+@@ -328,7 +328,7 @@ void __pci_write_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
+ 		u16 msgctl;
+ 
+ 		pci_read_config_word(dev, pos + PCI_MSI_FLAGS, &msgctl);
+-		msgctl &= ~PCI_MSI_FLAGS_QSIZE;
++		msgctl &= ~(PCI_MSI_FLAGS_QSIZE | PCI_MSI_FLAGS_ENABLE);
+ 		msgctl |= entry->msi_attrib.multiple << 4;
+ 		pci_write_config_word(dev, pos + PCI_MSI_FLAGS, msgctl);
+ 
+@@ -343,6 +343,9 @@ void __pci_write_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
+ 			pci_write_config_word(dev, pos + PCI_MSI_DATA_32,
+ 					      msg->data);
+ 		}
++
++		msgctl |= PCI_MSI_FLAGS_ENABLE;
++		pci_write_config_word(dev, pos + PCI_MSI_FLAGS, msgctl);
+ 	}
+ 
+ skip:
+-- 
+2.24.1
+
