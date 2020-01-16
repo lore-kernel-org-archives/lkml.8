@@ -7,52 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4288C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D47F3C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0F2C20730
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:17:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B22F620684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:17:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198656;
-	bh=Gsd2aWs4bWJrcO2HurqTW8C6UED0ESDNK7HNRkyRefE=;
+	s=default; t=1579198662;
+	bh=7VfQO9ZHJ8yQoCe1ayEZQ4PCtEclkhVMbtwss1+KNpg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=csdwODV6qflzWso2QGQAbYcuHmA6fxQiMRrxq1WlFBO9dHp8YdCRYCrqepOALSBaA
-	 P5O6nhu/u5n+mZk1ADLY4ZMcFl8jqsrub6okabN6NWIoHVC5TxNokVnDiKfcO8JhR/
-	 2/OPxASH6aTlLG0/7KeAWnIrx7q3a5qA61XTYi9Q=
+	b=vjkRST2iHSYUYgZdt8992T2U8514NsaCyRmqcXXdJdoJIe+cFnkvtc1MdI3nSkiYX
+	 6wZ1STudufiFeDXFHC/E0Ta/joPDeIHahfjDX6Y0oeVg4/mVlgiAnwOf0RvY1HlgPC
+	 Tvnml+O/zwSL9QvMtIe5hkWX0spCVjHaqAWK6P8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436567AbgAPSRc (ORCPT
+        id S2395057AbgAPSRm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:17:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40780 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:17:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404281AbgAPR3I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:29:08 -0500
+        id S2404253AbgAPR3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:29:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C03EF246F4;
-        Thu, 16 Jan 2020 17:29:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39659246FC;
+        Thu, 16 Jan 2020 17:29:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195748;
-        bh=Gsd2aWs4bWJrcO2HurqTW8C6UED0ESDNK7HNRkyRefE=;
+        s=default; t=1579195742;
+        bh=7VfQO9ZHJ8yQoCe1ayEZQ4PCtEclkhVMbtwss1+KNpg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1tY0tTv+kV7FGVTP4NfVZOFw1lVNGPhEzu8PgKyikd62RU82lQ2IdyGLtzxv9bi+R
-         44s3DJglWPR3CSlx3lbjagiAvkWos2d9iuub3WBVXm94toidTwdZLooh507IAh9IJi
-         RIpsB6cJpGP+4XjKOMLxyU+abuIyNXBJDR0gR7qc=
+        b=unL8YjmuExZMASV3330PgDjwSSRjUpYojhHvxSFiZaT/UMq5Y/5D1umLByPSvEJ41
+         GIlqhA806ODCjI+KNZIIUwkKO4hxWwZEjQMtreTOpZ+Mio7GHa2zLgjJMXSv1ktUI1
+         Q374bYQptw5AlcmsgMdyY6OleHyFZ7WYYzmOWD+w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tri Vo <trong@android.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 281/371] power: supply: Init device wakeup after device_add()
-Date:   Thu, 16 Jan 2020 12:22:33 -0500
-Message-Id: <20200116172403.18149-224-sashal@kernel.org>
+Cc:     Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 277/371] iommu/mediatek: Fix iova_to_phys PA start for 4GB mode
+Date:   Thu, 16 Jan 2020 12:22:29 -0500
+Message-Id: <20200116172403.18149-220-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -65,67 +61,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <swboyd@chromium.org>
+From: Yong Wu <yong.wu@mediatek.com>
 
-[ Upstream commit 8288022284859acbcc3cf1a073a1e2692d6c2543 ]
+[ Upstream commit 76ce65464fcd2c21db84391572b7938b716aceb0 ]
 
-We may want to use the device pointer in device_init_wakeup() with
-functions that expect the device to already be added with device_add().
-For example, if we were to link the device initializing wakeup to
-something in sysfs such as a class for wakeups we'll run into an error.
-It looks like this code was written with the assumption that the device
-would be added before initializing wakeup due to the order of operations
-in power_supply_unregister().
+In M4U 4GB mode, the physical address is remapped as below:
 
-Let's change the order of operations so we don't run into problems here.
+CPU Physical address:
 
-Fixes: 948dcf966228 ("power_supply: Prevent suspend until power supply events are processed")
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Tri Vo <trong@android.com>
-Cc: Kalesh Singh <kaleshsingh@google.com>
-Cc: Ravi Chandra Sadineni <ravisadineni@chromium.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+====================
+
+0      1G       2G     3G       4G     5G
+|---A---|---B---|---C---|---D---|---E---|
++--I/O--+------------Memory-------------+
+
+IOMMU output physical address:
+ =============================
+
+                                4G      5G     6G      7G      8G
+                                |---E---|---B---|---C---|---D---|
+                                +------------Memory-------------+
+
+The Region 'A'(I/O) can not be mapped by M4U; For Region 'B'/'C'/'D', the
+bit32 of the CPU physical address always is needed to set, and for Region
+'E', the CPU physical address keep as is. something looks like this:
+CPU PA         ->    M4U OUTPUT PA
+0x4000_0000          0x1_4000_0000 (Add bit32)
+0x8000_0000          0x1_8000_0000 ...
+0xc000_0000          0x1_c000_0000 ...
+0x1_0000_0000        0x1_0000_0000 (No change)
+
+Additionally, the iommu consumers always use the CPU phyiscal address.
+
+The PA in the iova_to_phys that is got from v7s always is u32, But
+from the CPU point of view, PA only need add BIT(32) when PA < 0x4000_0000.
+
+Fixes: 30e2fccf9512 ("iommu/mediatek: Enlarge the validate PA range
+for 4GB mode")
+Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/power_supply_core.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/iommu/mtk_iommu.c | 26 +++++++++++++++++++++++++-
+ 1 file changed, 25 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
-index 3226faebe0a0..0f1a0efd5926 100644
---- a/drivers/power/supply/power_supply_core.c
-+++ b/drivers/power/supply/power_supply_core.c
-@@ -891,14 +891,14 @@ __power_supply_register(struct device *parent,
- 	}
+diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+index c30f62700431..0f99e95a1a73 100644
+--- a/drivers/iommu/mtk_iommu.c
++++ b/drivers/iommu/mtk_iommu.c
+@@ -115,6 +115,30 @@ struct mtk_iommu_domain {
  
- 	spin_lock_init(&psy->changed_lock);
--	rc = device_init_wakeup(dev, ws);
--	if (rc)
--		goto wakeup_init_failed;
--
- 	rc = device_add(dev);
- 	if (rc)
- 		goto device_add_failed;
+ static struct iommu_ops mtk_iommu_ops;
  
-+	rc = device_init_wakeup(dev, ws);
-+	if (rc)
-+		goto wakeup_init_failed;
++/*
++ * In M4U 4GB mode, the physical address is remapped as below:
++ *
++ * CPU Physical address:
++ * ====================
++ *
++ * 0      1G       2G     3G       4G     5G
++ * |---A---|---B---|---C---|---D---|---E---|
++ * +--I/O--+------------Memory-------------+
++ *
++ * IOMMU output physical address:
++ *  =============================
++ *
++ *                                 4G      5G     6G      7G      8G
++ *                                 |---E---|---B---|---C---|---D---|
++ *                                 +------------Memory-------------+
++ *
++ * The Region 'A'(I/O) can NOT be mapped by M4U; For Region 'B'/'C'/'D', the
++ * bit32 of the CPU physical address always is needed to set, and for Region
++ * 'E', the CPU physical address keep as is.
++ * Additionally, The iommu consumers always use the CPU phyiscal address.
++ */
++#define MTK_IOMMU_4GB_MODE_REMAP_BASE	 0x40000000
 +
- 	rc = psy_register_thermal(psy);
- 	if (rc)
- 		goto register_thermal_failed;
-@@ -935,8 +935,8 @@ __power_supply_register(struct device *parent,
- 	psy_unregister_thermal(psy);
- register_thermal_failed:
- 	device_del(dev);
--device_add_failed:
- wakeup_init_failed:
-+device_add_failed:
- check_supplies_failed:
- dev_set_name_failed:
- 	put_device(dev);
+ static LIST_HEAD(m4ulist);	/* List all the M4U HWs */
+ 
+ #define for_each_m4u(data)	list_for_each_entry(data, &m4ulist, list)
+@@ -404,7 +428,7 @@ static phys_addr_t mtk_iommu_iova_to_phys(struct iommu_domain *domain,
+ 	pa = dom->iop->iova_to_phys(dom->iop, iova);
+ 	spin_unlock_irqrestore(&dom->pgtlock, flags);
+ 
+-	if (data->enable_4GB)
++	if (data->enable_4GB && pa < MTK_IOMMU_4GB_MODE_REMAP_BASE)
+ 		pa |= BIT_ULL(32);
+ 
+ 	return pa;
 -- 
 2.20.1
 
