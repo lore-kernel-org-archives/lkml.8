@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4F0C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9900C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 633BF207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:02:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE9AE2077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:02:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194157;
-	bh=2djee2Mzdhm5LjrME6B+HCK/qdkDAaWAQQU7n/IZMzE=;
+	s=default; t=1579194161;
+	bh=6azb/Fy2UuEvrdC3qRPeiBm9IqHqfM9HwCsIylrmiDY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yTUos0ifcQJaAFKHnjohm04mg1Szb0EtdfQQg7+j02K7DLYET1112oKP7yA7ncxgA
-	 ytt5vught04svfCFfI+xbKD6/8EG37bD3jMCXHcoUmR83k7RoIQN5mltuQ4Ok6GcTm
-	 CS5NedIQX2ormHXgYH3UjTE8xbrKZhFtickOYWFY=
+	b=qU5hDcP5Dl0CLXcs01i4RSktngdUpTMiMhX/nelA4n9bDqKjsYsDpNvt6LxUjbQPB
+	 8GKPkafp+FcuaJBi/E48VQE8I82r/nZfzbPJjxrW8ZzHAZxCDgIgKYxddKbilSf10t
+	 y8xy0JM76bNvZFzNsonC1OEi5voutIwvzVmdDzuk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388418AbgAPRCg (ORCPT
+        id S2388439AbgAPRCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:02:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55162 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:02:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388353AbgAPRC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:02:26 -0500
+        id S1730518AbgAPRCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:02:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 045592077B;
-        Thu, 16 Jan 2020 17:02:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4392321582;
+        Thu, 16 Jan 2020 17:02:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194145;
-        bh=2djee2Mzdhm5LjrME6B+HCK/qdkDAaWAQQU7n/IZMzE=;
+        s=default; t=1579194150;
+        bh=6azb/Fy2UuEvrdC3qRPeiBm9IqHqfM9HwCsIylrmiDY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ytHJ5U/FLurZzjsO/TBTD0rQ/0WDy8q5b+HpZS0GqeYgecUqp6Be2t1PaoFdP+neu
-         SMcJnm8a7sVUdu8IMT3vG11zidDPQP4NorZrXQ89zgpVr2HSRTzOLy79OeLTaU/a2E
-         2C+tr67UtiD4O6rFF3EPa/aIQZR6f/X9RYLRJUqI=
+        b=ubjj413BVog6aJwzSwQpp+1ngXkGGb5ty0jjIlVdLblD+e/LxXTP3mmVAaCPlNxb/
+         vBr48Scl3pGbbHu/3k3gUDb6vWFWvSokozmN0tUGEOrUAARPh9iiTGtjAXiF9Qi2N6
+         n1sGaW1dEB2bSxpFkW7mYiBMWA/VwWOgyDetufmI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 230/671] NFS: Add missing encode / decode sequence_maxsz to v4.2 operations
-Date:   Thu, 16 Jan 2020 11:52:19 -0500
-Message-Id: <20200116165940.10720-113-sashal@kernel.org>
+Cc:     Akihiro Tsukada <tskd08@gmail.com>, Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 234/671] media: dvb/earth-pt1: fix wrong initialization for demod blocks
+Date:   Thu, 16 Jan 2020 11:52:23 -0500
+Message-Id: <20200116165940.10720-117-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -59,86 +59,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+From: Akihiro Tsukada <tskd08@gmail.com>
 
-[ Upstream commit 1a3466aed3a17eed41cd9411f89eb637f58349b0 ]
+[ Upstream commit 15d90a6ae98e6d2c68497b44a491cb9efbb98ab1 ]
 
-These really should have been there from the beginning, but we never
-noticed because there was enough slack in the RPC request for the extra
-bytes. Chuck's recent patch to use au_cslack and au_rslack to compute
-buffer size shrunk the buffer enough that this was now a problem for
-SEEK operations on my test client.
+earth-pt1 driver was decomposed/restructured by the commit b732539efdba
+("media: dvb: earth-pt1: decompose pt1 driver into sub drivers"),
+but it introduced a problem regarding concurrent streaming:
+Opening a new terrestial stream stops the reception of an existing,
+already-opened satellite stream.
 
-Fixes: f4ac1674f5da4 ("nfs: Add ALLOCATE support")
-Fixes: 2e72448b07dc3 ("NFS: Add COPY nfs operation")
-Fixes: cb95deea0b4aa ("NFS OFFLOAD_CANCEL xdr")
-Fixes: 624bd5b7b683c ("nfs: Add DEALLOCATE support")
-Fixes: 1c6dcbe5ceff8 ("NFS: Implement SEEK")
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+The demod IC in earth-pt1 boards contains 2 pairs of terr. and sat. blocks,
+supporting 4 concurrent demodulations, and the above problem was because
+the config of a terr. block contained whole reset/init of the pair blocks,
+thus each open() of a terrestrial frontend wrongly cleared the config of
+its peer satellite block of the demod.
+This whole/pair reset should be executed earlier and not on each open().
+
+Fixes: b732539efdba ("media: dvb: earth-pt1: decompose pt1 driver into sub drivers")
+
+Signed-off-by: Akihiro Tsukada <tskd08@gmail.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs42xdr.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/media/pci/pt1/pt1.c | 54 ++++++++++++++++++++++++++++++++-----
+ 1 file changed, 48 insertions(+), 6 deletions(-)
 
-diff --git a/fs/nfs/nfs42xdr.c b/fs/nfs/nfs42xdr.c
-index 69f72ed2bf87..ec9803088f6b 100644
---- a/fs/nfs/nfs42xdr.c
-+++ b/fs/nfs/nfs42xdr.c
-@@ -59,43 +59,53 @@
- #define decode_clone_maxsz		(op_decode_hdr_maxsz)
+diff --git a/drivers/media/pci/pt1/pt1.c b/drivers/media/pci/pt1/pt1.c
+index 7f878fc41b7e..93fecffb36ee 100644
+--- a/drivers/media/pci/pt1/pt1.c
++++ b/drivers/media/pci/pt1/pt1.c
+@@ -200,16 +200,10 @@ static const u8 va1j5jf8007t_25mhz_configs[][2] = {
+ static int config_demod(struct i2c_client *cl, enum pt1_fe_clk clk)
+ {
+ 	int ret;
+-	u8 buf[2] = {0x01, 0x80};
+ 	bool is_sat;
+ 	const u8 (*cfg_data)[2];
+ 	int i, len;
  
- #define NFS4_enc_allocate_sz		(compound_encode_hdr_maxsz + \
-+					 encode_sequence_maxsz + \
- 					 encode_putfh_maxsz + \
- 					 encode_allocate_maxsz + \
- 					 encode_getattr_maxsz)
- #define NFS4_dec_allocate_sz		(compound_decode_hdr_maxsz + \
-+					 decode_sequence_maxsz + \
- 					 decode_putfh_maxsz + \
- 					 decode_allocate_maxsz + \
- 					 decode_getattr_maxsz)
- #define NFS4_enc_copy_sz		(compound_encode_hdr_maxsz + \
-+					 encode_sequence_maxsz + \
- 					 encode_putfh_maxsz + \
- 					 encode_savefh_maxsz + \
- 					 encode_putfh_maxsz + \
- 					 encode_copy_maxsz + \
- 					 encode_commit_maxsz)
- #define NFS4_dec_copy_sz		(compound_decode_hdr_maxsz + \
-+					 decode_sequence_maxsz + \
- 					 decode_putfh_maxsz + \
- 					 decode_savefh_maxsz + \
- 					 decode_putfh_maxsz + \
- 					 decode_copy_maxsz + \
- 					 decode_commit_maxsz)
- #define NFS4_enc_offload_cancel_sz	(compound_encode_hdr_maxsz + \
-+					 encode_sequence_maxsz + \
- 					 encode_putfh_maxsz + \
- 					 encode_offload_cancel_maxsz)
- #define NFS4_dec_offload_cancel_sz	(compound_decode_hdr_maxsz + \
-+					 decode_sequence_maxsz + \
- 					 decode_putfh_maxsz + \
- 					 decode_offload_cancel_maxsz)
- #define NFS4_enc_deallocate_sz		(compound_encode_hdr_maxsz + \
-+					 encode_sequence_maxsz + \
- 					 encode_putfh_maxsz + \
- 					 encode_deallocate_maxsz + \
- 					 encode_getattr_maxsz)
- #define NFS4_dec_deallocate_sz		(compound_decode_hdr_maxsz + \
-+					 decode_sequence_maxsz + \
- 					 decode_putfh_maxsz + \
- 					 decode_deallocate_maxsz + \
- 					 decode_getattr_maxsz)
- #define NFS4_enc_seek_sz		(compound_encode_hdr_maxsz + \
-+					 encode_sequence_maxsz + \
- 					 encode_putfh_maxsz + \
- 					 encode_seek_maxsz)
- #define NFS4_dec_seek_sz		(compound_decode_hdr_maxsz + \
-+					 decode_sequence_maxsz + \
- 					 decode_putfh_maxsz + \
- 					 decode_seek_maxsz)
- #define NFS4_enc_layoutstats_sz		(compound_encode_hdr_maxsz + \
+-	ret = i2c_master_send(cl, buf, 2);
+-	if (ret < 0)
+-		return ret;
+-	usleep_range(30000, 50000);
+-
+ 	is_sat = !strncmp(cl->name, TC90522_I2C_DEV_SAT,
+ 			  strlen(TC90522_I2C_DEV_SAT));
+ 	if (is_sat) {
+@@ -260,6 +254,46 @@ static int config_demod(struct i2c_client *cl, enum pt1_fe_clk clk)
+ 	return 0;
+ }
+ 
++/*
++ * Init registers for (each pair of) terrestrial/satellite block in demod.
++ * Note that resetting terr. block also resets its peer sat. block as well.
++ * This function must be called before configuring any demod block
++ * (before pt1_wakeup(), fe->ops.init()).
++ */
++static int pt1_demod_block_init(struct pt1 *pt1)
++{
++	struct i2c_client *cl;
++	u8 buf[2] = {0x01, 0x80};
++	int ret;
++	int i;
++
++	/* reset all terr. & sat. pairs first */
++	for (i = 0; i < PT1_NR_ADAPS; i++) {
++		cl = pt1->adaps[i]->demod_i2c_client;
++		if (strncmp(cl->name, TC90522_I2C_DEV_TER,
++			    strlen(TC90522_I2C_DEV_TER)))
++			continue;
++
++		ret = i2c_master_send(cl, buf, 2);
++		if (ret < 0)
++			return ret;
++		usleep_range(30000, 50000);
++	}
++
++	for (i = 0; i < PT1_NR_ADAPS; i++) {
++		cl = pt1->adaps[i]->demod_i2c_client;
++		if (strncmp(cl->name, TC90522_I2C_DEV_SAT,
++			    strlen(TC90522_I2C_DEV_SAT)))
++			continue;
++
++		ret = i2c_master_send(cl, buf, 2);
++		if (ret < 0)
++			return ret;
++		usleep_range(30000, 50000);
++	}
++	return 0;
++}
++
+ static void pt1_write_reg(struct pt1 *pt1, int reg, u32 data)
+ {
+ 	writel(data, pt1->regs + reg * 4);
+@@ -987,6 +1021,10 @@ static int pt1_init_frontends(struct pt1 *pt1)
+ 			goto tuner_release;
+ 	}
+ 
++	ret = pt1_demod_block_init(pt1);
++	if (ret < 0)
++		goto fe_unregister;
++
+ 	return 0;
+ 
+ tuner_release:
+@@ -1245,6 +1283,10 @@ static int pt1_resume(struct device *dev)
+ 	pt1_update_power(pt1);
+ 	usleep_range(1000, 2000);
+ 
++	ret = pt1_demod_block_init(pt1);
++	if (ret < 0)
++		goto resume_err;
++
+ 	for (i = 0; i < PT1_NR_ADAPS; i++)
+ 		dvb_frontend_reinitialise(pt1->adaps[i]->fe);
+ 
 -- 
 2.20.1
 
