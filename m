@@ -2,247 +2,113 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF32C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9355C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEADF2077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:26:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB4492077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:27:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tQJWWE+a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389994AbgAPW0R (ORCPT
+        id S2390003AbgAPW1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 17:26:17 -0500
-Received: from mga05.intel.com ([192.55.52.43]:47095 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729454AbgAPW0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 17:26:16 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 14:26:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,327,1574150400"; 
-   d="scan'208";a="274183391"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 16 Jan 2020 14:26:15 -0800
-Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
-        by linux.intel.com (Postfix) with ESMTP id 67C22580332;
-        Thu, 16 Jan 2020 14:26:15 -0800 (PST)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v12 8/8] PCI/ACPI: Enable EDR support
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Huong Nguyen <huong.nguyen@dell.com>,
-        Austin Bolen <Austin.Bolen@dell.com>
-References: <20200116221002.GA191067@google.com>
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <0723444f-6014-3e75-8116-f052f9a9cb24@linux.intel.com>
-Date:   Thu, 16 Jan 2020 14:24:10 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 16 Jan 2020 17:27:17 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:46106 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729454AbgAPW1R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 17:27:17 -0500
+Received: by mail-ot1-f65.google.com with SMTP id r9so20901309otp.13;
+        Thu, 16 Jan 2020 14:27:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iSl/iz8q5qsynSrNKHIQvHUN+GEAmInTpvYEYnskbhI=;
+        b=tQJWWE+aXJ7Q4PQlKya0EvRWlTVBsEAQxCUciiydmJ0zAadyfj/YO0XajNeBIEgEM5
+         m31QFefRbLVzSESQvsL5jAAya91YemMAr3ap9SvX7qX8YT8IMZ4PVIdHEWXkYHuHN30W
+         VVvFISoOixhkg8amsKwCYpz8WPStm6v5KGpN2mDZfe7S8iB0uAxA3o6EdJ/L1aKyC+cv
+         Su6aGd8HJ+g12eSz6gk5SfrBO3YQXgeRwL7KqHNgdDFlqam8o6n08iHDDL8vwPrInSyy
+         Zo5Hp8uCbJjCR1zC2BubBMAnbt2L6q8gfqkg3QQ5iQ9RIAfjGrUk4ka0FV8VnigLv+pi
+         g4iA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iSl/iz8q5qsynSrNKHIQvHUN+GEAmInTpvYEYnskbhI=;
+        b=cmZpxXMow0d6TUm6O5BFOk44hnYmg8uq1+bjVcquKnnwEOe/LU0DV7U7YMXtawNYUe
+         of3lEEtOkqzC7RAI4Mvu7+iAB38XDc4MheiE3cywVkGTVj0QGsnNCHwYMxSN3LCpgk/b
+         +VMBt4rNGmsGWl7G0UtjVVR9R9/wNVldktQkXYwYKYvd/JHvU8n+wIBXmyRRd5bJ0kc4
+         EDFXDqhd+Uv+W7kRZk5HvWm/KkoyPoQhyDlJbkjtQfJHyA8SJcLl9FzTGC9gLgqi9dh3
+         gP7tH3I626PkLEFLE8Yy+fLva/wzKi8HltPNnuHjmdPKGtgeH52iV1P+voaumT7hHSl5
+         7O4Q==
+X-Gm-Message-State: APjAAAWN5461K+05ouS7R2Pt4lIzhqaOmlhdgyeBaSAP1JNDPnfv+UnM
+        9xh6UAHQ83qTHR9W+/d3+zM=
+X-Google-Smtp-Source: APXvYqzFgJ0McJrahhe7vh2rOK8/NO5bak3ECkJ56UAVMeGC+zD/jnWt6BjxDAJVedX6AkXY0mFl5g==
+X-Received: by 2002:a05:6830:128e:: with SMTP id z14mr3883578otp.184.1579213636587;
+        Thu, 16 Jan 2020 14:27:16 -0800 (PST)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id i12sm8216172otk.11.2020.01.16.14.27.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 14:27:16 -0800 (PST)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] IB/hfi1: Fix logical condition in msix_request_irq
+Date:   Thu, 16 Jan 2020 15:26:58 -0700
+Message-Id: <20200116222658.5285-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-In-Reply-To: <20200116221002.GA191067@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Clang warns:
 
-On 1/16/20 2:10 PM, Bjorn Helgaas wrote:
-> On Sun, Jan 12, 2020 at 02:44:02PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>
->> As per PCI firmware specification r3.2 Downstream Port Containment
->> Related Enhancements ECN, sec 4.5.1, OS must implement following steps
->> to enable/use EDR feature.
->>
->> 1. OS can use bit 7 of _OSC Control Field to negotiate control over
->> Downstream Port Containment (DPC) configuration of PCIe port. After _OSC
->> negotiation, firmware will Set this bit to grant OS control over PCIe
->> DPC configuration and Clear it if this feature was requested and denied,
->> or was not requested.
->>
->> 2. Also, if OS supports EDR, it should expose its support to BIOS by
->> setting bit 7 of _OSC Support Field. And if OS sets bit 7 of _OSC
->> Control Field it must also expose support for EDR by setting bit 7 of
->> _OSC Support Field.
->>
->> Cc: Bjorn Helgaas <bhelgaas@google.com>
->> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
->> Cc: Len Brown <lenb@kernel.org>
->> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->> Acked-by: Keith Busch <keith.busch@intel.com>
->> Tested-by: Huong Nguyen <huong.nguyen@dell.com>
->> Tested-by: Austin Bolen <Austin.Bolen@dell.com>
->> ---
->>   drivers/acpi/pci_root.c         | 9 +++++++++
->>   drivers/pci/pcie/portdrv_core.c | 7 +++++--
->>   drivers/pci/probe.c             | 1 +
->>   include/linux/acpi.h            | 6 ++++--
->>   include/linux/pci.h             | 3 ++-
->>   5 files changed, 21 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
->> index d1e666ef3fcc..134e20474dfd 100644
->> --- a/drivers/acpi/pci_root.c
->> +++ b/drivers/acpi/pci_root.c
->> @@ -131,6 +131,7 @@ static struct pci_osc_bit_struct pci_osc_support_bit[] = {
->>   	{ OSC_PCI_CLOCK_PM_SUPPORT, "ClockPM" },
->>   	{ OSC_PCI_SEGMENT_GROUPS_SUPPORT, "Segments" },
->>   	{ OSC_PCI_MSI_SUPPORT, "MSI" },
->> +	{ OSC_PCI_EDR_SUPPORT, "EDR" },
->>   	{ OSC_PCI_HPX_TYPE_3_SUPPORT, "HPX-Type3" },
->>   };
->>   
->> @@ -141,6 +142,7 @@ static struct pci_osc_bit_struct pci_osc_control_bit[] = {
->>   	{ OSC_PCI_EXPRESS_AER_CONTROL, "AER" },
->>   	{ OSC_PCI_EXPRESS_CAPABILITY_CONTROL, "PCIeCapability" },
->>   	{ OSC_PCI_EXPRESS_LTR_CONTROL, "LTR" },
->> +	{ OSC_PCI_EXPRESS_DPC_CONTROL, "DPC" },
->>   };
->>   
->>   static void decode_osc_bits(struct acpi_pci_root *root, char *msg, u32 word,
->> @@ -440,6 +442,8 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
->>   		support |= OSC_PCI_ASPM_SUPPORT | OSC_PCI_CLOCK_PM_SUPPORT;
->>   	if (pci_msi_enabled())
->>   		support |= OSC_PCI_MSI_SUPPORT;
->> +	if (IS_ENABLED(CONFIG_PCIE_EDR))
->> +		support |= OSC_PCI_EDR_SUPPORT;
->>   
->>   	decode_osc_support(root, "OS supports", support);
->>   	status = acpi_pci_osc_support(root, support);
->> @@ -487,6 +491,9 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
->>   			control |= OSC_PCI_EXPRESS_AER_CONTROL;
->>   	}
->>   
->> +	if (IS_ENABLED(CONFIG_PCIE_DPC))
->> +		control |= OSC_PCI_EXPRESS_DPC_CONTROL;
-> The ECN [1] says:
->
->    If this bit is set by the OS, this indicates that it supports both
->    native OS control and firmware ownership models (i.e. Error
->    Disconnect Recover notification) of Downstream Port Containment.
->
-> But if CONFIG_PCIE_DPC=y and CONFIG_PCIE_EDR is not set, we will set
-> OSC_PCI_EXPRESS_DPC_CONTROL even though we don't support EDR.  That
-> doesn't seem to match what the spec says.
-Agreed.
->
-> I think this needs to be something like:
->
->    if (IS_ENABLED(CONFIG_PCIE_DPC) && IS_ENABLED(CONFIG_PCIE_EDR))
->      control |= OSC_PCI_EXPRESS_DPC_CONTROL;
-Since CONFIG_PCIE_EDR has dependency on CONFIG_PCIE_DPC,
-I think we can just use IS_ENABLED(CONFIG_PCIE_EDR) here.
+drivers/infiniband/hw/hfi1/msix.c:136:22: warning: overlapping
+comparisons always evaluate to false [-Wtautological-overlap-compare]
+        if (type < IRQ_SDMA && type >= IRQ_OTHER)
+            ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~
+1 warning generated.
 
-I will fix it and send an update. You want to me to send a new
-patch set of just an update to this patch ?
->
-> [1] Downstream Port Containment related Enhancements, PCI ECN, Jan 28,
-> 2019, Section 4.5.1, Table 4-5.
->
->>   	requested = control;
->>   	status = acpi_pci_osc_control_set(handle, &control,
->>   					  OSC_PCI_EXPRESS_CAPABILITY_CONTROL);
->> @@ -916,6 +923,8 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
->>   		host_bridge->native_pme = 0;
->>   	if (!(root->osc_control_set & OSC_PCI_EXPRESS_LTR_CONTROL))
->>   		host_bridge->native_ltr = 0;
->> +	if (!(root->osc_control_set & OSC_PCI_EXPRESS_DPC_CONTROL))
->> +		host_bridge->native_dpc = 0;
->>   
->>   	/*
->>   	 * Evaluate the "PCI Boot Configuration" _DSM Function.  If it
->> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
->> index 5075cb9e850c..009742c865d6 100644
->> --- a/drivers/pci/pcie/portdrv_core.c
->> +++ b/drivers/pci/pcie/portdrv_core.c
->> @@ -253,10 +253,13 @@ static int get_port_device_capability(struct pci_dev *dev)
->>   	/*
->>   	 * With dpc-native, allow Linux to use DPC even if it doesn't have
->>   	 * permission to use AER.
->> +	 * If EDR support is enabled in OS, then even if AER is not handled in
->> +	 * OS, DPC service can be enabled.
->>   	 */
->>   	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
->> -	    pci_aer_available() &&
->> -	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
->> +	    ((IS_ENABLED(CONFIG_PCIE_EDR) && !host->native_dpc) ||
->> +	    (pci_aer_available() &&
->> +	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))))
->>   		services |= PCIE_PORT_SERVICE_DPC;
->>   
->>   	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
->> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
->> index 512cb4312ddd..c9a9c5b42e72 100644
->> --- a/drivers/pci/probe.c
->> +++ b/drivers/pci/probe.c
->> @@ -598,6 +598,7 @@ static void pci_init_host_bridge(struct pci_host_bridge *bridge)
->>   	bridge->native_shpc_hotplug = 1;
->>   	bridge->native_pme = 1;
->>   	bridge->native_ltr = 1;
->> +	bridge->native_dpc = 1;
->>   }
->>   
->>   struct pci_host_bridge *pci_alloc_host_bridge(size_t priv)
->> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
->> index 0f37a7d5fa77..0a7aaa452a98 100644
->> --- a/include/linux/acpi.h
->> +++ b/include/linux/acpi.h
->> @@ -515,8 +515,9 @@ extern bool osc_pc_lpi_support_confirmed;
->>   #define OSC_PCI_CLOCK_PM_SUPPORT		0x00000004
->>   #define OSC_PCI_SEGMENT_GROUPS_SUPPORT		0x00000008
->>   #define OSC_PCI_MSI_SUPPORT			0x00000010
->> +#define OSC_PCI_EDR_SUPPORT			0x00000080
->>   #define OSC_PCI_HPX_TYPE_3_SUPPORT		0x00000100
->> -#define OSC_PCI_SUPPORT_MASKS			0x0000011f
->> +#define OSC_PCI_SUPPORT_MASKS			0x0000019f
->>   
->>   /* PCI Host Bridge _OSC: Capabilities DWORD 3: Control Field */
->>   #define OSC_PCI_EXPRESS_NATIVE_HP_CONTROL	0x00000001
->> @@ -525,7 +526,8 @@ extern bool osc_pc_lpi_support_confirmed;
->>   #define OSC_PCI_EXPRESS_AER_CONTROL		0x00000008
->>   #define OSC_PCI_EXPRESS_CAPABILITY_CONTROL	0x00000010
->>   #define OSC_PCI_EXPRESS_LTR_CONTROL		0x00000020
->> -#define OSC_PCI_CONTROL_MASKS			0x0000003f
->> +#define OSC_PCI_EXPRESS_DPC_CONTROL		0x00000080
->> +#define OSC_PCI_CONTROL_MASKS			0x000000bf
->>   
->>   #define ACPI_GSB_ACCESS_ATTRIB_QUICK		0x00000002
->>   #define ACPI_GSB_ACCESS_ATTRIB_SEND_RCV         0x00000004
->> diff --git a/include/linux/pci.h b/include/linux/pci.h
->> index c393dff2d66f..0b7c63c7888d 100644
->> --- a/include/linux/pci.h
->> +++ b/include/linux/pci.h
->> @@ -510,8 +510,9 @@ struct pci_host_bridge {
->>   	unsigned int	native_shpc_hotplug:1;	/* OS may use SHPC hotplug */
->>   	unsigned int	native_pme:1;		/* OS may use PCIe PME */
->>   	unsigned int	native_ltr:1;		/* OS may use PCIe LTR */
->> -	unsigned int	preserve_config:1;	/* Preserve FW resource setup */
->> +	unsigned int	native_dpc:1;		/* OS may use PCIe DPC */
->>   
->> +	unsigned int	preserve_config:1;	/* Preserve FW resource setup */
-> The blank line should stay after the bitfields.  Then this will look
-> like the simple insertion of native_dpc, as it should.
->
->>   	/* Resource alignment requirements */
->>   	resource_size_t (*align_resource)(struct pci_dev *dev,
->>   			const struct resource *res,
->> -- 
->> 2.21.0
->>
+It is impossible for something to be less than 0 (IRQ_SDMA) and greater
+than or equal to 3 (IRQ_OTHER) at the same time. A logical OR should
+have been used to keep the same logic as before.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/841
+Fixes: 13d2a8384bd9 ("IB/hfi1: Decouple IRQ name from type")
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/infiniband/hw/hfi1/msix.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/infiniband/hw/hfi1/msix.c b/drivers/infiniband/hw/hfi1/msix.c
+index 4a620cf80588..db82db497b2c 100644
+--- a/drivers/infiniband/hw/hfi1/msix.c
++++ b/drivers/infiniband/hw/hfi1/msix.c
+@@ -133,7 +133,7 @@ static int msix_request_irq(struct hfi1_devdata *dd, void *arg,
+ 	if (nr == dd->msix_info.max_requested)
+ 		return -ENOSPC;
+ 
+-	if (type < IRQ_SDMA && type >= IRQ_OTHER)
++	if (type < IRQ_SDMA || type >= IRQ_OTHER)
+ 		return -EINVAL;
+ 
+ 	irq = pci_irq_vector(dd->pcidev, nr);
 -- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+2.25.0
 
