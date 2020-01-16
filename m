@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC86C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BE0C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BED420728
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4C29246B5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196561;
-	bh=fQJtNVaV4DsQ61t6sF1IyLdmwc8TWrk8/h8SZp53dwE=;
+	s=default; t=1579196563;
+	bh=Gz3DyGPdoK3HaUxL8jcQcFzoATbXBNNfW6xPJ5GWL7Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uVT/GduY9R3rZArUgcERQV6U1dy40e03jMUZ6LdgawE3DX8E5ltBfoX6g+he6cfwF
-	 TH1taSS6MmLgGry+Jkg5qaLOFniQX4w3rZ8Ep9pcgpdeS6G+nd2D2Pi8C32fldh1ne
-	 wAkLLv6imdhzyeK/0tClM1hsTu7wEjIkWHMb5rOI=
+	b=EZXH8B3MxsNr/p3q6ZZNz2KIO0ZiGkR+eJY7cx8ApC1ZUipqDyZio9jU3trToZS5b
+	 7EQ62vS3NJnn59iECyx4rfSef14P3TjG0Th28Q2NVXkUY9/UYkzPA1PqAwBMVOT7rm
+	 GIgspS/cOv8XXke2Qw7IeQkIfKKOhOL6Cn+dF8n0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405830AbgAPRmh (ORCPT
+        id S2405829AbgAPRmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:42:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59778 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:42:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405806AbgAPRlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:41:52 -0500
+        id S2405784AbgAPRlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:41:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E55782469F;
-        Thu, 16 Jan 2020 17:41:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B88124731;
+        Thu, 16 Jan 2020 17:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196512;
-        bh=fQJtNVaV4DsQ61t6sF1IyLdmwc8TWrk8/h8SZp53dwE=;
+        s=default; t=1579196507;
+        bh=Gz3DyGPdoK3HaUxL8jcQcFzoATbXBNNfW6xPJ5GWL7Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U4cyyZHdZN2ga3CDzV5uiB93hiiL7w6zYPGb1mynqS0W5uLNp5kFV7LexSjFp4mt3
-         tsGssET+FsN0KaI//6rsGikyfJxDGmTPRbuWdFHV8EAzFJgiCtw92NzIlVzi5oWHCP
-         0fd2ckjOCTPqxme6HVmhF8MD74SGXzlGKvhM+XxE=
+        b=hVoTnASGp9KZ+4h9S/CNCVP6Glr6XM8r2+dYLixLD1klfK0Pt54t/NVa/k6tqx8hd
+         bjPOmTodDGV7zMLe31/+Ory395LypBdxqKeknnzYyuHOS4LlflinWzuYlMDm9SWdZp
+         tYcE+83UtrSQq7aHEG7NKm7tyfB6xdFX/+Xk2oNE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.9 250/251] powerpc/archrandom: fix arch_get_random_seed_int()
-Date:   Thu, 16 Jan 2020 12:36:39 -0500
-Message-Id: <20200116173641.22137-210-sashal@kernel.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>, Vinod Koul <vkoul@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 247/251] dmaengine: ti: edma: fix missed failure handling
+Date:   Thu, 16 Jan 2020 12:36:36 -0500
+Message-Id: <20200116173641.22137-207-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -59,45 +58,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit b6afd1234cf93aa0d71b4be4788c47534905f0be ]
+[ Upstream commit 340049d453682a9fe8d91fe794dd091730f4bb25 ]
 
-Commit 01c9348c7620ec65
+When devm_kcalloc fails, it forgets to call edma_free_slot.
+Replace direct return with failure handler to fix it.
 
-  powerpc: Use hardware RNG for arch_get_random_seed_* not arch_get_random_*
-
-updated arch_get_random_[int|long]() to be NOPs, and moved the hardware
-RNG backing to arch_get_random_seed_[int|long]() instead. However, it
-failed to take into account that arch_get_random_int() was implemented
-in terms of arch_get_random_long(), and so we ended up with a version
-of the former that is essentially a NOP as well.
-
-Fix this by calling arch_get_random_seed_long() from
-arch_get_random_seed_int() instead.
-
-Fixes: 01c9348c7620ec65 ("powerpc: Use hardware RNG for arch_get_random_seed_* not arch_get_random_*")
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191204115015.18015-1-ardb@kernel.org
+Fixes: 1be5336bc7ba ("dmaengine: edma: New device tree binding")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Link: https://lore.kernel.org/r/20191118073802.28424-1-hslester96@gmail.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/archrandom.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/edma.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/archrandom.h b/arch/powerpc/include/asm/archrandom.h
-index 85e88f7a59c0..9ff848e3c4a6 100644
---- a/arch/powerpc/include/asm/archrandom.h
-+++ b/arch/powerpc/include/asm/archrandom.h
-@@ -27,7 +27,7 @@ static inline int arch_get_random_seed_int(unsigned int *v)
- 	unsigned long val;
- 	int rc;
+diff --git a/drivers/dma/edma.c b/drivers/dma/edma.c
+index 72f31e837b1d..56ec72468745 100644
+--- a/drivers/dma/edma.c
++++ b/drivers/dma/edma.c
+@@ -2340,8 +2340,10 @@ static int edma_probe(struct platform_device *pdev)
  
--	rc = arch_get_random_long(&val);
-+	rc = arch_get_random_seed_long(&val);
- 	if (rc)
- 		*v = val;
+ 		ecc->tc_list = devm_kcalloc(dev, ecc->num_tc,
+ 					    sizeof(*ecc->tc_list), GFP_KERNEL);
+-		if (!ecc->tc_list)
+-			return -ENOMEM;
++		if (!ecc->tc_list) {
++			ret = -ENOMEM;
++			goto err_reg1;
++		}
  
+ 		for (i = 0;; i++) {
+ 			ret = of_parse_phandle_with_fixed_args(node, "ti,tptcs",
 -- 
 2.20.1
 
