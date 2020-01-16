@@ -2,155 +2,97 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7698C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8BBC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C571206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E0FD2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:52:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579200778;
+	bh=tlmDH8kBdbeHXD70yHSMesbYf928vFPBOSsTluSKbI0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=HFeIeDO46/dPkVuRCOgmPasTOsP+fpFAzOk8AiPsnkxp47uVm4lKyXx5lCBT5rOq0
+	 1sNEw5NvN9fP4eJYan8/mw4CJPSa33QC3iHewuACDYxCI2M/gXgSIbDsZ/YOHuvuiO
+	 ZlpGfP+n0zgg0I8g3YAsdCqdHPJ61gSTvlKe0FLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437121AbgAPSwl (ORCPT
+        id S2437124AbgAPSw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:52:41 -0500
-Received: from mga01.intel.com ([192.55.52.88]:8245 "EHLO mga01.intel.com"
+        Thu, 16 Jan 2020 13:52:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437111AbgAPSwh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 13:52:37 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 10:52:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,327,1574150400"; 
-   d="scan'208";a="214192638"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga007.jf.intel.com with ESMTP; 16 Jan 2020 10:52:36 -0800
-Date:   Thu, 16 Jan 2020 10:52:36 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>, Jan Kara <jack@suse.cz>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [RFC PATCH V2 01/12] fs/stat: Define DAX statx attribute
-Message-ID: <20200116185235.GE24522@iweiny-DESK2.sc.intel.com>
-References: <20200110192942.25021-1-ira.weiny@intel.com>
- <20200110192942.25021-2-ira.weiny@intel.com>
- <20200115113715.GB2595@quack2.suse.cz>
- <20200115173834.GD8247@magnolia>
- <20200115194512.GF23311@iweiny-DESK2.sc.intel.com>
- <CAPcyv4hwefzruFj02YHYiy8nOpHJFGLKksjiXoRUGpT3C2rDag@mail.gmail.com>
- <20200115223821.GG23311@iweiny-DESK2.sc.intel.com>
- <20200116053935.GB8235@magnolia>
- <20200116175501.GC24522@iweiny-DESK2.sc.intel.com>
- <20200116180421.GD8235@magnolia>
+        id S2389388AbgAPRIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:08:21 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4300E2467E;
+        Thu, 16 Jan 2020 17:08:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579194501;
+        bh=tlmDH8kBdbeHXD70yHSMesbYf928vFPBOSsTluSKbI0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yyU8WZ5oOfj1m1AWdlTU2JL/lWk60/OYaIAQ/HTgyg1aog5djP0wR6x96fEh7uNRH
+         TTCNmgO2qGgUseShl4NOGDTVixFfBDnXWVtDcJDuJ4FhBD5Zvd2K7F6JW4ILXdNtgN
+         vzCk2PEg1UYefgxAXAf42RbK+J2p3L9unSVtN3r8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 397/671] media: vivid: fix incorrect assignment operation when setting video mode
+Date:   Thu, 16 Jan 2020 12:00:35 -0500
+Message-Id: <20200116170509.12787-134-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
+References: <20200116170509.12787-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200116180421.GD8235@magnolia>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 10:04:21AM -0800, Darrick J. Wong wrote:
-> On Thu, Jan 16, 2020 at 09:55:02AM -0800, Ira Weiny wrote:
-> > On Wed, Jan 15, 2020 at 09:39:35PM -0800, Darrick J. Wong wrote:
-> > > On Wed, Jan 15, 2020 at 02:38:21PM -0800, Ira Weiny wrote:
-> > > > On Wed, Jan 15, 2020 at 12:10:50PM -0800, Dan Williams wrote:
-> > > > > On Wed, Jan 15, 2020 at 11:45 AM Ira Weiny <ira.weiny@intel.com> wrote:
-> > > > > >
-> > > > > > On Wed, Jan 15, 2020 at 09:38:34AM -0800, Darrick J. Wong wrote:
-> > > > > > > On Wed, Jan 15, 2020 at 12:37:15PM +0100, Jan Kara wrote:
-> > > > > > > > On Fri 10-01-20 11:29:31, ira.weiny@intel.com wrote:
-> > > > > > > > > From: Ira Weiny <ira.weiny@intel.com>
-> > > > > > > > >
-> > > > 
-> > 
-> > [snip]
-> > 
-> > > > 
-> > > > Sure, but for now I think referencing mmap for details on MAP_SYNC works.
-> > > > 
-> > > > I suspect that we may have some word smithing once I get this series in and we
-> > > > submit a change to the statx man page itself.  Can I move forward with the
-> > > > following for this patch?
-> > > > 
-> > > > <quote>
-> > > > STATX_ATTR_DAX
-> > > > 
-> > > >         The file is in the DAX (cpu direct access) state.  DAX state
-> > > 
-> > > Hmm, now that I see it written out, I <cough> kind of like "DAX mode"
-> > > better now. :/
-> > > 
-> > > "The file is in DAX (CPU direct access) mode.  DAX mode attempts..."
-> > 
-> > Sure...  now you tell me...  ;-)
-> > 
-> > Seriously, we could use mode here in the man page as this is less confusing to
-> > say "DAX mode".
-> > 
-> > But I think the code should still use 'state' because mode is just too
-> > overloaded.  You were not the only one who was thrown by my use of mode and I
-> > don't want that confusion when we look at this code 2 weeks from now...
-> > 
-> > https://www.reddit.com/r/ProgrammerHumor/comments/852og2/only_god_knows/
-> > 
-> > ;-)
-> 
-> Ok, let's leave it alone for now then.
+From: Colin Ian King <colin.king@canonical.com>
 
-Cool could I get a reviewed by?
+[ Upstream commit d4ec9550e4b2d2e357a46fdc65d8ef3d4d15984c ]
 
-And Jan is this reword of the man page/commit ok to keep your reviewed by?
+The assigment of FB_VMODE_NONINTERLACE to var->vmode should be a
+bit-wise or of FB_VMODE_NONINTERLACE instead of an assignment,
+otherwise the previous clearing of the FB_VMODE_MASK bits of
+var->vmode makes no sense and is redundant.
 
-> 
-> I'm not even sure what 'DAX' stands for.  Direct Access to ...
-> Professor Xavier? 8-)
+Addresses-Coverity: ("Unused value")
+Fixes: ad4e02d5081d ("[media] vivid: add a simple framebuffer device for overlay testing")
 
-That is pronounced 'Direct A'Xes'  you know, for chopping wood!
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/media/platform/vivid/vivid-osd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks everyone,
-Ira
+diff --git a/drivers/media/platform/vivid/vivid-osd.c b/drivers/media/platform/vivid/vivid-osd.c
+index bbbc1b6938a5..b24596697f57 100644
+--- a/drivers/media/platform/vivid/vivid-osd.c
++++ b/drivers/media/platform/vivid/vivid-osd.c
+@@ -155,7 +155,7 @@ static int _vivid_fb_check_var(struct fb_var_screeninfo *var, struct vivid_dev *
+ 	var->nonstd = 0;
+ 
+ 	var->vmode &= ~FB_VMODE_MASK;
+-	var->vmode = FB_VMODE_NONINTERLACED;
++	var->vmode |= FB_VMODE_NONINTERLACED;
+ 
+ 	/* Dummy values */
+ 	var->hsync_len = 24;
+-- 
+2.20.1
 
-> 
-> > > 
-> > > >         attempts to minimize software cache effects for both I/O and
-> > > >         memory mappings of this file.  It requires a file system which
-> > > >         has been configured to support DAX.
-> > > > 
-> > > >         DAX generally assumes all accesses are via cpu load / store
-> > > >         instructions which can minimize overhead for small accesses, but
-> > > >         may adversely affect cpu utilization for large transfers.
-> > > > 
-> > > >         File I/O is done directly to/from user-space buffers and memory
-> > > >         mapped I/O may be performed with direct memory mappings that
-> > > >         bypass kernel page cache.
-> > > > 
-> > > >         While the DAX property tends to result in data being transferred
-> > > >         synchronously, it does not give the same guarantees of
-> > > >         synchronous I/O where data and the necessary metadata are
-> > > >         transferred together.
-> > > 
-> > > (I'm frankly not sure that synchronous I/O actually guarantees that the
-> > > metadata has hit stable storage...)
-> > 
-> > I'll let you and Dan work this one out...  ;-)
-> 
-> Hehe.  I think the wording here is fine.
-> 
-> --D
-> 
-> > Ira
-> > 
