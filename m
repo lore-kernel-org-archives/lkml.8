@@ -2,102 +2,133 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50090C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 283E7C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BFAF24656
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00BB924656
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:15:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ihidpj77"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729841AbgAPDOS (ORCPT
+        id S1729977AbgAPDPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 22:14:18 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9626 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729486AbgAPDOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 22:14:12 -0500
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9E354639AE2689F3FF6F;
-        Thu, 16 Jan 2020 11:14:08 +0800 (CST)
-Received: from linux-ibm.site (10.175.102.37) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 16 Jan 2020 11:13:59 +0800
-From:   Xuefeng Wang <wxf.wang@hisilicon.com>
-To:     <arnd@arndb.de>, <akpm@linux-foundation.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <mark.rutland@arm.com>
-CC:     <linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-arm-kernel@lists.infradead.org>,
-        <chenzhou10@huawei.com>
-Subject: [PATCH 2/2] arm64: mm: rework the pmd protect changing flow
-Date:   Thu, 16 Jan 2020 11:09:17 +0800
-Message-ID: <1579144157-7736-3-git-send-email-wxf.wang@hisilicon.com>
-X-Mailer: git-send-email 1.7.12.4
-In-Reply-To: <1579144157-7736-1-git-send-email-wxf.wang@hisilicon.com>
-References: <1579144157-7736-1-git-send-email-wxf.wang@hisilicon.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.102.37]
-X-CFilter-Loop: Reflected
+        Wed, 15 Jan 2020 22:15:13 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:40020 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729012AbgAPDPM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 22:15:12 -0500
+Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id C577320EB6F2;
+        Wed, 15 Jan 2020 19:15:11 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C577320EB6F2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1579144511;
+        bh=51ZtaeTK0xdzML3ytYQategWAEvZogHwBZXh6YAH4qE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ihidpj779OugJ6Wfvc5HgzK4OihXNNL4PWL4Y3scEwGFgrfVT7dtQVgJLI2I+D2em
+         TJkUaIQ3jTDjr84kgt7axq6ECQSQ/qPLj2ZkOJtCSkS5S1TsiSp0MCT8wVtH4ox9Zs
+         9BGz7zX05QKI0BBkTex8Wp3o2dzQukr0LcHJRyJo=
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+To:     zohar@linux.ibm.com, James.Bottomley@HansenPartnership.com,
+        arnd@arndb.de, linux-integrity@vger.kernel.org
+Cc:     dhowells@redhat.com, sashal@kernel.org,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org
+Subject: [PATCH] IMA: pre-allocate keyrings string
+Date:   Wed, 15 Jan 2020 19:15:08 -0800
+Message-Id: <20200116031508.3481-1-nramas@linux.microsoft.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On KunPeng920 board. When changing permission of a large range region,
-pmdp_invalidate() takes about 65% in profile (with hugepages) in JIT tool.
-Kernel will flush tlb twice: first flush happens in pmdp_invalidate, second
-flush happens at the end of change_protect_range(). The first pmdp_invalidate
-is not necessary if the hardware support atomic pmdp changing. The atomic
-changing pimd to zero can prevent the hardware from update asynchronous.
-So reconstruct it and remove the first pmdp_invalidate. And the second tlb
-flush can make sure the new tlb entry valid.
+ima_match_keyring() is called while holding rcu read lock.
+Since this function executes in atmomic context, it should
+not call any function that can sleep (such as kstrdup()).
 
-Add pmdp_modify_prot_start() in arm64, which uses pmdp_huge_get_and_clear()
-to fetch the pmd and zero entry, preventing racing of any hardware updates.
+This patch pre-allocates a buffer to hold the keyrings
+string read from the IMA policy and uses that to check
+the given keyring in ima_match_keyring().
 
-After rework, the mprotect can get 3~13 times performace gain in range
-64M to 512M.
-
-4K granule/THP on
-memory size(M)	64	128	256	320	448	512
-pre-patch		0.77	1.40	2.64	3.23	4.49	5.10
-post-patch		0.20	0.23	0.28	0.31	0.37	0.39
-
-Signed-off-by: Xuefeng Wang <wxf.wang@hisilicon.com>
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Fixes: e9085e0ad38a ("IMA: Add support to limit measuring keys")
 ---
- arch/arm64/include/asm/pgtable.h | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ security/integrity/ima/ima_policy.c | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index cd5de0e40bfa..bccdaa5bd5f2 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -769,6 +769,20 @@ static inline pmd_t pmdp_huge_get_and_clear(struct mm_struct *mm,
- }
- #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index 9963863d6c92..0bb4376ddba7 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -207,6 +207,7 @@ static LIST_HEAD(ima_default_rules);
+ static LIST_HEAD(ima_policy_rules);
+ static LIST_HEAD(ima_temp_rules);
+ static struct list_head *ima_rules;
++static char *ima_keyrings;
  
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+#define __HAVE_ARCH_PMDP_MODIFY_PROT_TRANSACTION
-+static inline pmd_t pmdp_modify_prot_start(struct vm_area_struct *vma,
-+						unsigned long addr,
-+						pmd_t *pmdp)
-+{
-+	/*
-+	 * Atomic change pmd to zero, prevent the hardware from update
-+	 * aynchronously update it.
-+	 */
-+	return pmdp_huge_get_and_clear(vma->vm_mm, addr, pmdp);
-+}
-+#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+ static int ima_policy __initdata;
+ 
+@@ -369,7 +370,7 @@ int ima_lsm_policy_change(struct notifier_block *nb, unsigned long event,
+ static bool ima_match_keyring(struct ima_rule_entry *rule,
+ 			      const char *keyring, const struct cred *cred)
+ {
+-	char *keyrings, *next_keyring, *keyrings_ptr;
++	char *next_keyring, *keyrings_ptr;
+ 	bool matched = false;
+ 
+ 	if ((rule->flags & IMA_UID) && !rule->uid_op(cred->uid, rule->uid))
+@@ -381,15 +382,13 @@ static bool ima_match_keyring(struct ima_rule_entry *rule,
+ 	if (!keyring)
+ 		return false;
+ 
+-	keyrings = kstrdup(rule->keyrings, GFP_KERNEL);
+-	if (!keyrings)
+-		return false;
++	strcpy(ima_keyrings, rule->keyrings);
+ 
+ 	/*
+ 	 * "keyrings=" is specified in the policy in the format below:
+ 	 * keyrings=.builtin_trusted_keys|.ima|.evm
+ 	 */
+-	keyrings_ptr = keyrings;
++	keyrings_ptr = ima_keyrings;
+ 	while ((next_keyring = strsep(&keyrings_ptr, "|")) != NULL) {
+ 		if (!strcmp(next_keyring, keyring)) {
+ 			matched = true;
+@@ -397,8 +396,6 @@ static bool ima_match_keyring(struct ima_rule_entry *rule,
+ 		}
+ 	}
+ 
+-	kfree(keyrings);
+-
+ 	return matched;
+ }
+ 
+@@ -1120,8 +1117,17 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+ 				result = -EINVAL;
+ 				break;
+ 			}
 +
- /*
-  * ptep_set_wrprotect - mark read-only while trasferring potential hardware
-  * dirty status (PTE_DBM && !PTE_RDONLY) to the software PTE_DIRTY bit.
++			ima_keyrings = kstrdup(args[0].from, GFP_KERNEL);
++			if (!ima_keyrings) {
++				result = -ENOMEM;
++				break;
++			}
++
+ 			entry->keyrings = kstrdup(args[0].from, GFP_KERNEL);
+ 			if (!entry->keyrings) {
++				kfree(ima_keyrings);
++				ima_keyrings = NULL;
+ 				result = -ENOMEM;
+ 				break;
+ 			}
 -- 
 2.17.1
 
