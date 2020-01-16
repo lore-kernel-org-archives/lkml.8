@@ -4,52 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A501DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98717C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70B0F2464B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7077A2464B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197588;
-	bh=lqrIGMuhw2YUdZMNtbC+hPhbBIxoi+KdmiQHRp4jedg=;
+	s=default; t=1579197592;
+	bh=tBxxBgzuVF3cyv3BM1111FtWx8q4jyNNc4Fa0k9fg6o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MPfIZjKC7a/0VA+lyKybAi74zuPp7pOPOsw8lBIW6CSEEpL2sJIQjIkVz5w2vj1Ot
-	 AsoM/tXCuPr6RqtAUsDWvGrjY91FEnedWTuAz7AkGSzmwuFrolPtwSBGLOzQDy1s6P
-	 JEC3V4ZjaAwJtodGjGfFUSNanqM2mZ1d9lHKblCA=
+	b=FiE5hamdQoZzVm5XCx5fMPeTQkXm7NdACsVGkTF95hADVeK18H4mXjOFuVpMvxesq
+	 RO8Frn5ZB9eqr/keZTS7WSaUFCf+EulESQYx6y3XUgwb14RZU4KXGE6Vfjt37wp7FD
+	 WsZpfU0E6DcW4hZMMYCj4lTylWP/N+Rwo4sOg5+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388275AbgAPRm2 (ORCPT
+        id S2394769AbgAPR7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:42:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59264 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:59:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405739AbgAPRlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:41:36 -0500
+        id S2405858AbgAPRm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:42:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5D7124724;
-        Thu, 16 Jan 2020 17:41:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48097246A4;
+        Thu, 16 Jan 2020 17:42:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196495;
-        bh=lqrIGMuhw2YUdZMNtbC+hPhbBIxoi+KdmiQHRp4jedg=;
+        s=default; t=1579196576;
+        bh=tBxxBgzuVF3cyv3BM1111FtWx8q4jyNNc4Fa0k9fg6o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g9jQsq3oUg98Ms9bAlSSyZT8Oq914S6Dp5Rsba9Mj4AlRb7UahjKvqGg0XBM4lTGg
-         wMngyNGbV6QeCxY4CTD7B3lXS/qRFrQVUqKGChcN/ktmZUwFQludX9U216hVHtfrWB
-         uBekmljBfm07mk1b6tZpu5w59sN8/x9dqgWg6RVE=
+        b=uC/95qMfE7NpQCrQbtYzMMrGugo4esOnu/eJvJndWOJnup5G3PnnwqOobAJZahZRa
+         6WZZUPKYEkj2uy+SXVZ9otZ/Ynv0CWXobGtGdWcMgH0MRAJJsimIZL5EbxnNEpHcYF
+         T/5f2GgSaUiJr0QIIbQRo5DShrjsxnV8SA4irkw0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.9 238/251] f2fs: fix potential overflow
-Date:   Thu, 16 Jan 2020 12:36:27 -0500
-Message-Id: <20200116173641.22137-198-sashal@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 003/174] regulator: fixed: Default enable high on DT regulators
+Date:   Thu, 16 Jan 2020 12:40:00 -0500
+Message-Id: <20200116174251.24326-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
-References: <20200116173641.22137-1-sashal@kernel.org>
+In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
+References: <20200116174251.24326-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,59 +63,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit a9af3fdcc4258af406879eca63d82e9d6baa892e ]
+[ Upstream commit 28be5f15df2ee6882b0a122693159c96a28203c7 ]
 
-In build_sit_entries(), if valid_blocks in SIT block is smaller than
-valid_blocks in journal, for below calculation:
+commit efdfeb079cc3
+("regulator: fixed: Convert to use GPIO descriptor only")
+switched to use gpiod_get() to look up the regulator from the
+gpiolib core whether that is device tree or boardfile.
 
-sbi->discard_blks += old_valid_blocks - se->valid_blocks;
+This meant that we activate the code in
+a603a2b8d86e ("gpio: of: Add special quirk to parse regulator flags")
+which means the descriptors coming from the device tree already
+have the right inversion and open drain semantics set up from
+the gpiolib core.
 
-There will be two times potential overflow:
-- old_valid_blocks - se->valid_blocks will overflow, and be a very
-large number.
-- sbi->discard_blks += result will overflow again, comes out a correct
-result accidently.
+As the fixed regulator was inspected again we got the
+inverted inversion and things broke.
 
-Anyway, it should be fixed.
+Fix it by ignoring the config in the device tree for now: the
+later patches in the series will push all inversion handling
+over to the gpiolib core and set it up properly in the
+boardfiles for legacy devices, but I did not finish that
+for this kernel cycle.
 
-Fixes: d600af236da5 ("f2fs: avoid unneeded loop in build_sit_entries")
-Fixes: 1f43e2ad7bff ("f2fs: introduce CP_TRIMMED_FLAG to avoid unneeded discard")
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: commit efdfeb079cc3 ("regulator: fixed: Convert to use GPIO descriptor only")
+Reported-by: Leonard Crestez <leonard.crestez@nxp.com>
+Reported-by: Fabio Estevam <festevam@gmail.com>
+Reported-by: John Stultz <john.stultz@linaro.org>
+Reported-by: Anders Roxell <anders.roxell@linaro.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Tested-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/data.c | 2 +-
- fs/f2fs/file.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/regulator/fixed.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 0206c8c20784..b2cccd4083b8 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -1267,7 +1267,7 @@ static int f2fs_write_data_page(struct page *page,
- 	loff_t i_size = i_size_read(inode);
- 	const pgoff_t end_index = ((unsigned long long) i_size)
- 							>> PAGE_SHIFT;
--	loff_t psize = (page->index + 1) << PAGE_SHIFT;
-+	loff_t psize = (loff_t)(page->index + 1) << PAGE_SHIFT;
- 	unsigned offset = 0;
- 	bool need_balance_fs = false;
- 	int err = 0;
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index f46ac1651bd5..e3c438c8b8ce 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -980,7 +980,7 @@ static int __clone_blkaddrs(struct inode *src_inode, struct inode *dst_inode,
- 				}
- 				dn.ofs_in_node++;
- 				i++;
--				new_size = (dst + i) << PAGE_SHIFT;
-+				new_size = (loff_t)(dst + i) << PAGE_SHIFT;
- 				if (dst_inode->i_size < new_size)
- 					f2fs_i_size_write(dst_inode, new_size);
- 			} while (--ilen && (do_replace[i] || blkaddr[i] == NULL_ADDR));
+diff --git a/drivers/regulator/fixed.c b/drivers/regulator/fixed.c
+index ff62d69ba0be..24ad5e6832df 100644
+--- a/drivers/regulator/fixed.c
++++ b/drivers/regulator/fixed.c
+@@ -94,9 +94,14 @@ of_get_fixed_voltage_config(struct device *dev,
+ 
+ 	of_property_read_u32(np, "startup-delay-us", &config->startup_delay);
+ 
+-	config->enable_high = of_property_read_bool(np, "enable-active-high");
+-	config->gpio_is_open_drain = of_property_read_bool(np,
+-							   "gpio-open-drain");
++	/*
++	 * FIXME: we pulled active low/high and open drain handling into
++	 * gpiolib so it will be handled there. Delete this in the second
++	 * step when we also remove the custom inversion handling for all
++	 * legacy boardfiles.
++	 */
++	config->enable_high = 1;
++	config->gpio_is_open_drain = 0;
+ 
+ 	if (of_find_property(np, "vin-supply", NULL))
+ 		config->input_supply = "vin";
 -- 
 2.20.1
 
