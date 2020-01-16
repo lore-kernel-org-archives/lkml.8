@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0763C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6672C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A27E720728
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:16:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CD6B2075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:16:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194979;
-	bh=912VyeyXGgAbeCx4tEz5pHFeizG+cjTvFyy0Pv9bch0=;
+	s=default; t=1579194983;
+	bh=fV/V+x+V3P0Xx8321dLNqIHr1V6hB27Z0V+CnOMzFRE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wFD+gtqpzclWUqujwS3GB9r+NKntdLo4TXdzxaDwm+2BSE9Vi4yKxYWfFSznmuAHL
-	 YV3rod/q953qiBPlbClPuGKcZUazw2zr/1SY1BZhXiOdOl7GlD1908W6/NyQYf/INT
-	 0qDw4yZPaGUg1ENB/IzJ8W8u+7Toe2kim8vsZlfw=
+	b=RdPoijbN95T9U+uYevpqTKOr4qNTycS0o4/PDLLJ3A64Z32bLfcZfaLSVwF39ayWK
+	 fi2UBHN8Fo62whrkxfLBj3YJ05sgAt3WEnsZi+7mJeB7bZ5fc3Tvvu1VVdliUuUpVg
+	 HSpB1IoEuoXGqf4eLif2oxRslRnOr15cd9M37D+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390968AbgAPRQT (ORCPT
+        id S2390941AbgAPROL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:16:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32954 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:14:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390013AbgAPROQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:14:16 -0500
+        id S2390887AbgAPRN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:13:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFF96246A7;
-        Thu, 16 Jan 2020 17:14:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 253CA246A7;
+        Thu, 16 Jan 2020 17:13:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194855;
-        bh=912VyeyXGgAbeCx4tEz5pHFeizG+cjTvFyy0Pv9bch0=;
+        s=default; t=1579194838;
+        bh=fV/V+x+V3P0Xx8321dLNqIHr1V6hB27Z0V+CnOMzFRE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DIABhtMCloQLHIe7fZJ1ZbsXR3tu0zEOBYdqlqmlXoas2kSVN+enblA8Nn8KvwZDO
-         9/UVNA99lkOMrMN/YVu12iTFSDYPxs1PkNBVBW3Zm7jq+vT/LDpFM2oJrje+jaes5u
-         SxM7fUaslQrZvXrZqDsAw7glbIvfm3t+kZ117l3Q=
+        b=XW6SKsVWAjkrxwV9IgTNNDk74Gav/QSJohgUkFIPZDofft6W/D9YqvjhKg45o93oF
+         JGJ00bJokos5QMTfTrdgeyW7Lu7ehiSsdgs4AGpIADGMP1wRRo4Ng0qgCGAvnlApHT
+         EUVTBSxH5FF8S3ZDUegyxVre1QofO7sXQpNt6aEg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shuiqing Li <shuiqing.li@unisoc.com>,
-        Dongwei Wang <dongwei.wang@unisoc.com>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 651/671] watchdog: sprd: Fix the incorrect pointer getting from driver data
-Date:   Thu, 16 Jan 2020 12:04:49 -0500
-Message-Id: <20200116170509.12787-388-sashal@kernel.org>
+Cc:     Stephan Gerhold <stephan@gerhold.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 638/671] regulator: ab8500: Remove SYSCLKREQ from enum ab8505_regulator_id
+Date:   Thu, 16 Jan 2020 12:04:36 -0500
+Message-Id: <20200116170509.12787-375-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -62,60 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shuiqing Li <shuiqing.li@unisoc.com>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit 39e68d9e7ab276880980ee5386301fb218202192 ]
+[ Upstream commit 458ea3ad033fc86e291712ce50cbe60c3428cf30 ]
 
-The device driver data saved the 'struct sprd_wdt' object, it is
-incorrect to get 'struct watchdog_device' object from the driver
-data, thus fix it.
+Those regulators are not actually supported by the AB8500 regulator
+driver. There is no ab8500_regulator_info for them and no entry in
+ab8505_regulator_match.
 
-Fixes: 477603467009 ("watchdog: Add Spreadtrum watchdog driver")
-Reported-by: Dongwei Wang <dongwei.wang@unisoc.com>
-Signed-off-by: Shuiqing Li <shuiqing.li@unisoc.com>
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/76d4687189ec940baa90cb8d679a8d4c8f02ee80.1573210405.git.baolin.wang@linaro.org
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+As such, they cannot be registered successfully, and looking them
+up in ab8505_regulator_match causes an out-of-bounds array read.
+
+Fixes: 547f384f33db ("regulator: ab8500: add support for ab8505")
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20191106173125.14496-2-stephan@gerhold.net
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/sprd_wdt.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ include/linux/regulator/ab8500.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/watchdog/sprd_wdt.c b/drivers/watchdog/sprd_wdt.c
-index ff9397d9638a..b6c65afd3677 100644
---- a/drivers/watchdog/sprd_wdt.c
-+++ b/drivers/watchdog/sprd_wdt.c
-@@ -342,10 +342,9 @@ static int sprd_wdt_probe(struct platform_device *pdev)
+diff --git a/include/linux/regulator/ab8500.h b/include/linux/regulator/ab8500.h
+index 06978ce01302..d48ab3e66d0b 100644
+--- a/include/linux/regulator/ab8500.h
++++ b/include/linux/regulator/ab8500.h
+@@ -43,8 +43,6 @@ enum ab8505_regulator_id {
+ 	AB8505_LDO_ANAMIC2,
+ 	AB8505_LDO_AUX8,
+ 	AB8505_LDO_ANA,
+-	AB8505_SYSCLKREQ_2,
+-	AB8505_SYSCLKREQ_4,
+ 	AB8505_NUM_REGULATORS,
+ };
  
- static int __maybe_unused sprd_wdt_pm_suspend(struct device *dev)
- {
--	struct watchdog_device *wdd = dev_get_drvdata(dev);
- 	struct sprd_wdt *wdt = dev_get_drvdata(dev);
- 
--	if (watchdog_active(wdd))
-+	if (watchdog_active(&wdt->wdd))
- 		sprd_wdt_stop(&wdt->wdd);
- 	sprd_wdt_disable(wdt);
- 
-@@ -354,7 +353,6 @@ static int __maybe_unused sprd_wdt_pm_suspend(struct device *dev)
- 
- static int __maybe_unused sprd_wdt_pm_resume(struct device *dev)
- {
--	struct watchdog_device *wdd = dev_get_drvdata(dev);
- 	struct sprd_wdt *wdt = dev_get_drvdata(dev);
- 	int ret;
- 
-@@ -362,7 +360,7 @@ static int __maybe_unused sprd_wdt_pm_resume(struct device *dev)
- 	if (ret)
- 		return ret;
- 
--	if (watchdog_active(wdd)) {
-+	if (watchdog_active(&wdt->wdd)) {
- 		ret = sprd_wdt_start(&wdt->wdd);
- 		if (ret) {
- 			sprd_wdt_disable(wdt);
 -- 
 2.20.1
 
