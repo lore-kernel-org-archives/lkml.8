@@ -2,130 +2,98 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7CECC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7E6C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C593F2075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A3272075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:56:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="OKOV+7nD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728898AbgAPNzk (ORCPT
+        id S1726983AbgAPN4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 08:55:40 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:51797 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbgAPNzk (ORCPT
+        Thu, 16 Jan 2020 08:56:54 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54036 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbgAPN4x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 08:55:40 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1is5cP-0000FV-WE; Thu, 16 Jan 2020 14:55:30 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4CBAD1C086C;
-        Thu, 16 Jan 2020 14:55:29 +0100 (CET)
-Date:   Thu, 16 Jan 2020 13:55:29 -0000
-From:   "tip-bot2 for Petr Mladek" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/core] watchdog/softlockup: Remove obsolete check of last
- reported task
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Ziljstra <peterz@infradead.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191024114928.15377-2-pmladek@suse.com>
-References: <20191024114928.15377-2-pmladek@suse.com>
+        Thu, 16 Jan 2020 08:56:53 -0500
+Received: by mail-wm1-f65.google.com with SMTP id m24so3854060wmc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 05:56:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=TPojsvsruBFkmh5R4Sn2XZhT/gn9UgC49vEV8/Pvqyk=;
+        b=OKOV+7nDclQZcHlC42CU/LwNwZwIwaXsbY5Un7nFvh6eGOkX4phM36EChliLcKVD78
+         3hZCLEMgeB6A+6mU+WlVGCP6e3kXGZCvznaigQX+XGe/Ar/QCe5gid+xLUEFNmB+GfPz
+         nkd5V/dyKioDUmxgIiOuVC7iuSR9uewOUbA9EX3vwS0mATL094PH2NuOJ/KNIKeqXhHm
+         pBLlgB1S+yYTrAfbi+piEsik/kr42AUV3VDiAU9H8RcrdnZnTop5qP567HNrIOAMWn8g
+         QKnQWkuAZ/eaA1CEQYj1iIBZmI8cLbhqr+95teO2IfHUugB3KFB3qSalGCpWTGUWl6cD
+         YjeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TPojsvsruBFkmh5R4Sn2XZhT/gn9UgC49vEV8/Pvqyk=;
+        b=kHI18sMrTJ6cPkKmbLte8SXL7OqJWAdjUm5mLnsGINc9pys75fCx2io4gWbah2cUaG
+         dHpx3tJ44Ygab+7GF0KAkw3rqNQMKlLOKMoU1WCpjWghDWSd/L8c+BqRH9ZVbOAUIROP
+         kNhMoNoeNE+2YhOkqtOijR9wOB3E+UvFk2rDfLEWnqT4l0yjNdhbZU5wgULQf9KzUAFt
+         ywVD9DX6fXLlCCb3jDPzSxvWcG1H1VqwRGX5R2+4vAFBHSC9zv6JmgwYHytwArySlJrh
+         4akrF+NhckOryUt0vFxNlffkGqzHZrI7k85DO6M3NbCcNWlk2ihELEAYVzQ+bnz11wFq
+         UPvA==
+X-Gm-Message-State: APjAAAWuIGkJlAD0LEx665pxeVpr90EBcjFlqg+OEswIyMdo565StDW9
+        M2XT1TJuU58NWM75tBxvgATX3Q==
+X-Google-Smtp-Source: APXvYqwoKtV8ypKcPYIpChsk/BEL1BfpInAw53YPmsQP5BcLMFZJCiv9X66zQ81XYiGvcUMyZqXw4g==
+X-Received: by 2002:a1c:41c4:: with SMTP id o187mr6345016wma.24.1579183012065;
+        Thu, 16 Jan 2020 05:56:52 -0800 (PST)
+Received: from localhost (ip-78-102-249-43.net.upcbroadband.cz. [78.102.249.43])
+        by smtp.gmail.com with ESMTPSA id 60sm30094751wrn.86.2020.01.16.05.56.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 05:56:51 -0800 (PST)
+Date:   Thu, 16 Jan 2020 14:56:50 +0100
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Hongbo Yao <yaohongbo@huawei.com>, chenzhou10@huawei.com,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mlxsw@mellanox.com
+Subject: Re: [PATCH v2 -next] drivers/net: netdevsim depends on INET
+Message-ID: <20200116135412.GK2131@nanopsycho>
+References: <20200116131404.169423-1-yaohongbo@huawei.com>
+ <20200116053137.4b9f9ff9@cakuba.hsd1.ca.comcast.net>
 MIME-Version: 1.0
-Message-ID: <157918292903.396.3828152178044862176.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200116053137.4b9f9ff9@cakuba.hsd1.ca.comcast.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the core/core branch of tip:
+Thu, Jan 16, 2020 at 02:31:37PM CET, kuba@kernel.org wrote:
+>On Thu, 16 Jan 2020 21:14:04 +0800, Hongbo Yao wrote:
+>> If CONFIG_INET is not set and CONFIG_NETDEVSIM=y.
+>> Building drivers/net/netdevsim/fib.o will get the following error:
+>> 
+>> drivers/net/netdevsim/fib.o: In function `nsim_fib4_rt_hw_flags_set':
+>> fib.c:(.text+0x12b): undefined reference to `fib_alias_hw_flags_set'
+>> drivers/net/netdevsim/fib.o: In function `nsim_fib4_rt_destroy':
+>> fib.c:(.text+0xb11): undefined reference to `free_fib_info'
+>> 
+>> Correct the Kconfig for netdevsim.
+>> 
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Fixes: 48bb9eb47b270("netdevsim: fib: Add dummy implementation for FIB offload")
+>
+>Looks better :) Still missing a space between the hash and the bracket,
+>but:
+>
+>Acked-by: Jakub Kicinski <kuba@kernel.org>
+>
+>While at it - does mlxsw have the same problem by any chance?
 
-Commit-ID:     3a51449b7959f68cc45abe67298e40c7eb57167b
-Gitweb:        https://git.kernel.org/tip/3a51449b7959f68cc45abe67298e40c7eb57167b
-Author:        Petr Mladek <pmladek@suse.com>
-AuthorDate:    Thu, 24 Oct 2019 13:49:26 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 16 Jan 2020 14:52:48 +01:00
-
-watchdog/softlockup: Remove obsolete check of last reported task
-
-commit 9cf57731b63e ("watchdog/softlockup: Replace "watchdog/%u" threads
- with cpu_stop_work") ensures that the watchdog is reliably touched during
-a task switch.
-
-As a result the check for an unnoticed task switch is not longer needed.
-
-Remove the relevant code, which effectively reverts commit b1a8de1f5343
-("softlockup: make detector be aware of task switch of processes hogging
-cpu")
-
-Signed-off-by: Petr Mladek <pmladek@suse.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Ziljstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20191024114928.15377-2-pmladek@suse.com
----
- kernel/watchdog.c | 18 +-----------------
- 1 file changed, 1 insertion(+), 17 deletions(-)
-
-diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-index 0621301..e3774e9 100644
---- a/kernel/watchdog.c
-+++ b/kernel/watchdog.c
-@@ -173,7 +173,6 @@ static DEFINE_PER_CPU(struct hrtimer, watchdog_hrtimer);
- static DEFINE_PER_CPU(bool, softlockup_touch_sync);
- static DEFINE_PER_CPU(bool, soft_watchdog_warn);
- static DEFINE_PER_CPU(unsigned long, hrtimer_interrupts);
--static DEFINE_PER_CPU(struct task_struct *, softlockup_task_ptr_saved);
- static DEFINE_PER_CPU(unsigned long, hrtimer_interrupts_saved);
- static unsigned long soft_lockup_nmi_warn;
- 
-@@ -413,22 +412,8 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
- 			return HRTIMER_RESTART;
- 
- 		/* only warn once */
--		if (__this_cpu_read(soft_watchdog_warn) == true) {
--			/*
--			 * When multiple processes are causing softlockups the
--			 * softlockup detector only warns on the first one
--			 * because the code relies on a full quiet cycle to
--			 * re-arm.  The second process prevents the quiet cycle
--			 * and never gets reported.  Use task pointers to detect
--			 * this.
--			 */
--			if (__this_cpu_read(softlockup_task_ptr_saved) !=
--			    current) {
--				__this_cpu_write(soft_watchdog_warn, false);
--				__touch_watchdog();
--			}
-+		if (__this_cpu_read(soft_watchdog_warn) == true)
- 			return HRTIMER_RESTART;
--		}
- 
- 		if (softlockup_all_cpu_backtrace) {
- 			/* Prevent multiple soft-lockup reports if one cpu is already
-@@ -444,7 +429,6 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
- 		pr_emerg("BUG: soft lockup - CPU#%d stuck for %us! [%s:%d]\n",
- 			smp_processor_id(), duration,
- 			current->comm, task_pid_nr(current));
--		__this_cpu_write(softlockup_task_ptr_saved, current);
- 		print_modules();
- 		print_irqtrace_events(current);
- 		if (regs)
+Looks like it does.
