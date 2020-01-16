@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 725AFC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E6BC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4484624699
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:53:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E238C2077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:53:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197216;
-	bh=UV+UW21C0YLEnMbawAaEXJVN1QaXt/38CSxDdq3QTno=;
+	s=default; t=1579197220;
+	bh=dLQvfGJi3NQQvB4UPjX71ULAp+uMNloOrSYgR5aUL0w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u1/1uM4MX0Brx+qlt/kWiJZvp65ahx2ZBitIFMkWwupvljExWd5WLbI2VnP8JBH0n
-	 O4Z6atH89bXj2yqWEBj0oqDuR6lV1+3ddaCRKOVSnildJfbQRIPP4aR5g249oqTTfH
-	 q2Ty+a2uZfDFyJbLprKQ7QOS8fEiIsxPWCUjN1cM=
+	b=ldvjh4abdK/3CqRcyI3mbonqDpcAZ3EPoyDdkdBMRTpk8mSMURfN3jfLsg/ixomOk
+	 s2dxG6YedfSb0T7dDgub0TAoIZ6fgESzmAyg0tKKn2mGY+tYhVOgKshUOahB4gzigY
+	 oWnSRLwVPLKgP0MNFDThyyXK/B7XlEdKyrnOpe9I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394429AbgAPRxf (ORCPT
+        id S2406029AbgAPRo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:53:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36368 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:44:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406036AbgAPRpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:45:00 -0500
+        id S2394186AbgAPRoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:44:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EC4F2477C;
-        Thu, 16 Jan 2020 17:44:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C3972474F;
+        Thu, 16 Jan 2020 17:44:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196699;
-        bh=UV+UW21C0YLEnMbawAaEXJVN1QaXt/38CSxDdq3QTno=;
+        s=default; t=1579196672;
+        bh=dLQvfGJi3NQQvB4UPjX71ULAp+uMNloOrSYgR5aUL0w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GEpywa7uKQkIKbFnbjVj+P9B9w5mXDYUnCauv+xSSL55Jei0ncovnQyfqrcX0wtx/
-         c5VZRPFtnwxY1eGSZNCpbBnrzDVFeC9NGIYX3v48FrHVzQ63rn6fkcJpOX2fLX91WL
-         lZCEkN/E+lnS5T6g50xqtvxRg2NMrSDkfwotUtIQ=
+        b=Bd7ZF2Mi4gp8AqAklIucFFnaeW30oBlEXhgrESNCi/1O96atRt0mQLLp2ULMTY9pc
+         WkN3hVJE9QZP4Ll4PTP89AKghZ0Gv+GSr4Tl2lq6ulOJljmKcfjEmemE9Pv2Tbw4tg
+         1XDJgYFZWm4oYL5hg+pz+PUWkg0hPehqm5CvsHFk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brian Masney <masneyb@onstation.org>, Pavel Machek <pavel@ucw.cz>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 092/174] backlight: lm3630a: Return 0 on success in update_status functions
-Date:   Thu, 16 Jan 2020 12:41:29 -0500
-Message-Id: <20200116174251.24326-92-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 072/174] ehea: Fix a copy-paste err in ehea_init_port_res
+Date:   Thu, 16 Jan 2020 12:41:09 -0500
+Message-Id: <20200116174251.24326-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -61,48 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Masney <masneyb@onstation.org>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit d3f48ec0954c6aac736ab21c34a35d7554409112 ]
+[ Upstream commit c8f191282f819ab4e9b47b22a65c6c29734cefce ]
 
-lm3630a_bank_a_update_status() and lm3630a_bank_b_update_status()
-both return the brightness value if the brightness was successfully
-updated. Writing to these attributes via sysfs would cause a 'Bad
-address' error to be returned. These functions should return 0 on
-success, so let's change it to correct that error.
+pr->tx_bytes should be assigned to tx_bytes other than
+rx_bytes.
 
-Fixes: 28e64a68a2ef ("backlight: lm3630: apply chip revision")
-Signed-off-by: Brian Masney <masneyb@onstation.org>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: ce45b873028f ("ehea: Fixing statistics")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/backlight/lm3630a_bl.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/ibm/ehea/ehea_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
-index 35fe4825a454..5ef6f9d420a2 100644
---- a/drivers/video/backlight/lm3630a_bl.c
-+++ b/drivers/video/backlight/lm3630a_bl.c
-@@ -200,7 +200,7 @@ static int lm3630a_bank_a_update_status(struct backlight_device *bl)
- 				      LM3630A_LEDA_ENABLE, LM3630A_LEDA_ENABLE);
- 	if (ret < 0)
- 		goto out_i2c_err;
--	return bl->props.brightness;
-+	return 0;
+diff --git a/drivers/net/ethernet/ibm/ehea/ehea_main.c b/drivers/net/ethernet/ibm/ehea/ehea_main.c
+index 1a56de06b014..fdbba588c6db 100644
+--- a/drivers/net/ethernet/ibm/ehea/ehea_main.c
++++ b/drivers/net/ethernet/ibm/ehea/ehea_main.c
+@@ -1477,7 +1477,7 @@ static int ehea_init_port_res(struct ehea_port *port, struct ehea_port_res *pr,
  
- out_i2c_err:
- 	dev_err(pchip->dev, "i2c failed to access\n");
-@@ -277,7 +277,7 @@ static int lm3630a_bank_b_update_status(struct backlight_device *bl)
- 				      LM3630A_LEDB_ENABLE, LM3630A_LEDB_ENABLE);
- 	if (ret < 0)
- 		goto out_i2c_err;
--	return bl->props.brightness;
-+	return 0;
+ 	memset(pr, 0, sizeof(struct ehea_port_res));
  
- out_i2c_err:
- 	dev_err(pchip->dev, "i2c failed to access REG_CTRL\n");
+-	pr->tx_bytes = rx_bytes;
++	pr->tx_bytes = tx_bytes;
+ 	pr->tx_packets = tx_packets;
+ 	pr->rx_bytes = rx_bytes;
+ 	pr->rx_packets = rx_packets;
 -- 
 2.20.1
 
