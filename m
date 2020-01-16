@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF575C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C20DC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9294120730
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:19:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F74520730
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:19:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198742;
-	bh=RHts6TZLuIo0/HW1Ip3FqLUieOiVD/q8uDmfYAJqYhs=;
+	s=default; t=1579198749;
+	bh=2gwo0rggzrtUg5SVgG/lrv5BW6FQZM57rM5cLm35cB8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y/kT+5Fujn52PsQSr3n8VsGoOClm9JDXZwCSlTUYouoNu16/tEXfL3fZ19F0VNyC6
-	 XA9Btc4jSc6UqaeIpZK5MGLeTcZJ61FI1q9twI03bvRoTF3b4qVfpOm0LKMArcyMKs
-	 /q1icnPQaCJRIiaQnMrrMjOiiQ3yQt9dnSxD/cz8=
+	b=GaF29tITeuW1emwLLDCJuc0upek5uEd80ue7j3HYpTF8KON/T1cC7uYWWLOW/4m4n
+	 dBiXZndxDRJq8AM5iDbE3M+Cm+NKr7aboCaRPhbjK0pnZrRBQSemBz/b3ppuqZ1ScC
+	 q4m0peuY7AMYS3EKRLrLWeRKxBEITo8YcRZfpTSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395427AbgAPSTB (ORCPT
+        id S2388863AbgAPSTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:19:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39900 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:19:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732838AbgAPR2j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:28:39 -0500
+        id S2392419AbgAPR2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:28:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CA94246FC;
-        Thu, 16 Jan 2020 17:28:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C86C3246FD;
+        Thu, 16 Jan 2020 17:28:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195719;
-        bh=RHts6TZLuIo0/HW1Ip3FqLUieOiVD/q8uDmfYAJqYhs=;
+        s=default; t=1579195717;
+        bh=2gwo0rggzrtUg5SVgG/lrv5BW6FQZM57rM5cLm35cB8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f2Bb0rKhVfAQjNe3+9KYOVmbW9YrFLloh1rYtJrZtQWvvnyn74xH27prvoO4L9xOQ
-         rhgSOrvkM0JtP7qNosvVUlSOKjIbYttqPqBfJ6IptY92QrjpLzZJj0FUWTtMB/5M48
-         ZMhxZqVi89m6G5KB6YjxVymbFhJL07PQsXlykAT0=
+        b=GaoWpE0TLUwokpmxW/9iASLMVH3cssCKl4bVy0fTk9y7yFQHbL6vEkAhU0xh89HDT
+         9Ju8+bbatRhxMvDrJ/DdDULf2gzH4A0gkAqffKGgBLkdwd5uCvW2ZxyF3e4lpgBMkM
+         aspLR/ZgRDMAfIgyG8vJGa6+VhKFKmL3EmwKK7SU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steve French <stfrench@microsoft.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org
-Subject: [PATCH AUTOSEL 4.14 262/371] cifs: fix rmmod regression in cifs.ko caused by force_sig changes
-Date:   Thu, 16 Jan 2020 12:22:14 -0500
-Message-Id: <20200116172403.18149-205-sashal@kernel.org>
+Cc:     Mark Zhang <markz@mellanox.com>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 261/371] net/mlx5: Fix mlx5_ifc_query_lag_out_bits
+Date:   Thu, 16 Jan 2020 12:22:13 -0500
+Message-Id: <20200116172403.18149-204-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -61,36 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve French <stfrench@microsoft.com>
+From: Mark Zhang <markz@mellanox.com>
 
-[ Upstream commit 247bc9470b1eeefc7b58cdf2c39f2866ba651509 ]
+[ Upstream commit ea77388b02270b0af8dc57f668f311235ea068f0 ]
 
-Fixes: 72abe3bcf091 ("signal/cifs: Fix cifs_put_tcp_session to call send_sig instead of force_sig")
+Remove the "reserved_at_40" field to match the device specification.
 
-The global change from force_sig caused module unloading of cifs.ko
-to fail (since the cifsd process could not be killed, "rmmod cifs"
-now would always fail)
-
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
-CC: Eric W. Biederman <ebiederm@xmission.com>
+Fixes: 84df61ebc69b ("net/mlx5: Add HW interfaces used by LAG")
+Signed-off-by: Mark Zhang <markz@mellanox.com>
+Reviewed-by: Yishai Hadas <yishaih@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/mlx5/mlx5_ifc.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 51bbb1c0b71a..ed4a0352ea90 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -921,6 +921,7 @@ cifs_demultiplex_thread(void *p)
- 		mempool_resize(cifs_req_poolp, length + cifs_min_rcv);
+diff --git a/include/linux/mlx5/mlx5_ifc.h b/include/linux/mlx5/mlx5_ifc.h
+index 1d793d86d55f..6ffa181598e6 100644
+--- a/include/linux/mlx5/mlx5_ifc.h
++++ b/include/linux/mlx5/mlx5_ifc.h
+@@ -8671,8 +8671,6 @@ struct mlx5_ifc_query_lag_out_bits {
  
- 	set_freezable();
-+	allow_signal(SIGKILL);
- 	while (server->tcpStatus != CifsExiting) {
- 		if (try_to_freeze())
- 			continue;
+ 	u8         syndrome[0x20];
+ 
+-	u8         reserved_at_40[0x40];
+-
+ 	struct mlx5_ifc_lagc_bits ctx;
+ };
+ 
 -- 
 2.20.1
 
