@@ -2,117 +2,102 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11494C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5333DC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7D0520728
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EDDE20728
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:58:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rpyy3YyC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VNVb2CG8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388139AbgAPV5s (ORCPT
+        id S2388251AbgAPV6G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 16:57:48 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:37576 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729153AbgAPV5r (ORCPT
+        Thu, 16 Jan 2020 16:58:06 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:34361 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729380AbgAPV6G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 16:57:47 -0500
-Received: by mail-qt1-f194.google.com with SMTP id w47so20219877qtk.4;
-        Thu, 16 Jan 2020 13:57:46 -0800 (PST)
+        Thu, 16 Jan 2020 16:58:06 -0500
+Received: by mail-vs1-f67.google.com with SMTP id g15so13691680vsf.1
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 13:58:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=BKup+mN+yNw5E+RKZ+Bk6trS4fw29oa/jBU1SsMkNjo=;
-        b=rpyy3YyC3pc4ZrmsAjEayWTY6S5fFW2TfftXYZ9zA9d0TT+4oeNbZxyRWO7jd3qmqV
-         lAt0czVSnh36YxNThoGHWF2iAql/35TiHCv2iP6EJBeK1TrbRGU4rpH69mZsD05z4Z1d
-         dlFJDBgbbuQS6Cu6d8S8eCrtQ4UrFd3IXvEEFk83ElJTcQcjeUfr9+KT8o5nl0+dUuUt
-         P6D6IOLXb3m4P0jLT0OMi2S+EFsOQq0K5B6ELOgQVk8AxoysQv/LW9noMMP71kb5icEM
-         F3yct2QlOrcAuUM8yGI33B5Vzu/+4UKugaTww0OrhRh4f+owRPKpt/Os7T0PnnI06jeg
-         5z7g==
+         :cc;
+        bh=90kSKrsPpbCluN0U4RDiVNxyzvDrsXuzgr4VAEgKFuc=;
+        b=VNVb2CG8c3HkjMqddLo98y3OPZa+WSPTAgoYdSf7FbWI5WNi3wnlLK0p32BzwbDJkl
+         DxW3dVwqqXEzvQDJ/t2t8XVh7UcdBnxl57fQBAwB07GY+Kc5s2di8Ti7bcTy/S2/pe8U
+         ishyY7KqIu0u9X9VZYcJD0ArT3LnkwpSs93Icdin/XOuAUh49RrudpoY+q52GTTYSx40
+         GpnMdqP6bRbODHeQRjbKNwwaXhmlW1mB68/yoKkEelegSKWRaD4DkiQa+ct5BY9CQ8b+
+         WhW5jUQJ1e+6OM3m0IRmGb8dXhOkx9FNog8QbWSOqQkVjep7R9pRuyilDTthUXsbS/HD
+         LriA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=BKup+mN+yNw5E+RKZ+Bk6trS4fw29oa/jBU1SsMkNjo=;
-        b=LL3MAg8qOpuj41z6Cf0TImjeXYYUFrQDC2Ww79zilC+c/SCa2Ebiyxc+61CyGZ2IwD
-         ltAeT/uj3wmtX1TiCEQl9VWZ3JWCdbkmeUO3cwLrxftmKTbzlUUVMR5U2m8J9mU3846h
-         QUO8NPALQ5GLxMUr6CPZ8X+hbz3/N2WhQwfHiqUctlP5lepOKmuC6HethQmKGeBYHCUl
-         ehvdibtKCVRjqIADTQYlzboWOVEBOTNSJT+1DN+C3yaEJEY8lfIskbtwKc257IA7ugxU
-         JFfkiHcU1fmZ5yS/9QS1EsTmpRtGFNV8g8KWj0crKOyU4ZyjQ0iWKTWGf/N35JYgv/Tz
-         u1eQ==
-X-Gm-Message-State: APjAAAXeYoxFqikVDH05iHELuEehHGapMYAOo8IVRvFfQAFzX2owTG1r
-        +6bGXBkH3cJTURGH0qe+iw/BD9r4FTXOAfIKqJk=
-X-Google-Smtp-Source: APXvYqz6W4hGwAmtkVgT6A+/5UfZjE9EHGHzPkk6ExiU4zKRnlOidUa4twJjkynIyaiQT4AhpX3h1OBlBvadSgKQco8=
-X-Received: by 2002:ac8:4050:: with SMTP id j16mr4515795qtl.171.1579211866008;
- Thu, 16 Jan 2020 13:57:46 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=90kSKrsPpbCluN0U4RDiVNxyzvDrsXuzgr4VAEgKFuc=;
+        b=KEkNnaUhOKkzLdXcA5i1GVSycc9i45LRPAvjr+qjJzrmWSTEF7m9/sSXS9XDKwKqDm
+         bDcu1UF/MS6VcAJ7jdLhik9v4KeYQH0wux/mc59T8Ig6VZbF8Wnm0u81z4tSNKnmSzg/
+         Z7M2y7p/0K8g59dvL1950+GMvBuKlcSeM7vBVywVi6ikS5UCvZG98MfvbPHI2+gY0IM8
+         +hI3z3QMMGdh0zOytrLpuchhTuyZ+p5mxtyIleBQ8AiP8elREM4tE347X9K+5+ihbfn1
+         678JX6R6WiyZF4PMYnUaXZbImydQk3KyfPCqmsj5gozednWCDlGboNr6Zo9oCTTuE1DM
+         Iw6A==
+X-Gm-Message-State: APjAAAUaK2LCpOKRi1iXk31gCJK/6V1kw8qSa9/BkEUeRWRepEfBEi5H
+        k6aPW0CG/SckVQH/oAOtXzBNDzYnDRAFBUFt4dQs6w==
+X-Google-Smtp-Source: APXvYqzrUqH5/W2UZ+FeXG0hZr7Tack1J9k9eB9pBix6w41rOK+OkTqsOrnRDdc5aMPEGFoHQeXxcn/0tewoHbFlgSg=
+X-Received: by 2002:a67:ae43:: with SMTP id u3mr3413809vsh.44.1579211884786;
+ Thu, 16 Jan 2020 13:58:04 -0800 (PST)
 MIME-Version: 1.0
-References: <157918093154.1357254.7616059374996162336.stgit@toke.dk> <157918093723.1357254.4296174077488807255.stgit@toke.dk>
-In-Reply-To: <157918093723.1357254.4296174077488807255.stgit@toke.dk>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 16 Jan 2020 13:57:34 -0800
-Message-ID: <CAEf4BzbA6TZHvQ-7YoHbf1wNn3OcpTEgUMh6uzwJnGOX0yDSDg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3 05/11] selftests: Use consistent include paths
- for libbpf
-To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191206221351.38241-1-samitolvanen@google.com> <20191206221351.38241-15-samitolvanen@google.com>
+ <20200116182414.GC22420@willie-the-truck>
+In-Reply-To: <20200116182414.GC22420@willie-the-truck>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Thu, 16 Jan 2020 13:57:53 -0800
+Message-ID: <CABCJKucnitMPUv+NhZu4bscz9qs1qB9TXR1OP-ychFO0LQ4v_g@mail.gmail.com>
+Subject: Re: [PATCH v6 14/15] arm64: implement Shadow Call Stack
+To:     Will Deacon <will@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-rdma@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 5:23 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@redh=
-at.com> wrote:
+On Thu, Jan 16, 2020 at 10:24 AM Will Deacon <will@kernel.org> wrote:
+> >       .macro  irq_stack_entry
+> >       mov     x19, sp                 // preserve the original sp
+> > +#ifdef CONFIG_SHADOW_CALL_STACK
+> > +     mov     x20, x18                // preserve the original shadow stack
+> > +#endif
 >
-> From: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
->
-> Fix all selftests to include libbpf header files with the bpf/ prefix, to
-> be consistent with external users of the library. Also ensure that all
-> includes of exported libbpf header files (those that are exported on 'mak=
-e
-> install' of the library) use bracketed includes instead of quoted.
->
-> To not break the build, keep the old include path until everything has be=
-en
-> changed to the new one; a subsequent patch will remove that.
->
-> Fixes: 6910d7d3867a ("selftests/bpf: Ensure bpf_helper_defs.h are taken f=
-rom selftests dir")
-> Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
-> ---
+> Hmm, not sure about corrupting x20 here. Doesn't it hold the PMR value from
+> kernel_entry?
 
-Acked-by: Andrii Nakryiko <andriin@fb.com>
+You're right, and it's used in el1_irq after irq_handler if
+CONFIG_ARM64_PSEUDO_NMI is enabled. Thanks for pointing this out.
+Looks like one of x24-x29 should be safe here, and the comment needs
+to be updated to explain why x20-x23 shouldn't be corrupted.
 
-[...]
+Sami
