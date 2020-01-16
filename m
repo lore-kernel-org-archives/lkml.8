@@ -2,114 +2,373 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2CE8C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA075C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8B122077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:48:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579204117;
-	bh=eCRmzjTIyjfbPAe/mgLEe93bWWVURDrSsFcpf6uROXM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kh0OuESMksU0aYd3sDGVm3p6BDY0NcWXhw1JO4e9jGxrS80xxn37Ty9lTcjCwYVDu
-	 hbIcABwEbaB55yexADYEyw+Ste0rAYirDJBIKOX10MWophyTinIAYu2jIzLavh0vb3
-	 XxZBDTXu2uPTXhCv0vQNQ0qu0IMFUCPlzZNdZMNA=
+	by mail.kernel.org (Postfix) with ESMTP id AEE5E20730
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:49:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730217AbgAPTsg (ORCPT
+        id S1730408AbgAPTtN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:48:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43418 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730056AbgAPTsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 14:48:33 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4660520730;
-        Thu, 16 Jan 2020 19:48:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579204112;
-        bh=eCRmzjTIyjfbPAe/mgLEe93bWWVURDrSsFcpf6uROXM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NWyeid1GitOMqE3prMch6/hWlduNt9sJY2Qz8f5orJr7pXXcK5jrOwHt2yPJo5JAt
-         qkSGn8BCTgaxWqLcPZqSdnGSmNEBlVaiDlOwiYiS2wBtUgjGvdBR+GLL7PxGIY8xKt
-         QXCC908Z+SglQ58IDwsYgrc1X/SAahZRdscSSY20=
-Date:   Thu, 16 Jan 2020 20:48:30 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Julian Stecklina <julian.stecklina@cyberus-technology.de>
-Cc:     intel-gvt-dev@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        zhiyuan.lv@intel.com, hang.yuan@intel.com,
-        Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Thomas Prescher <thomas.prescher@cyberus-technology.de>
-Subject: Re: [RFC PATCH 4/4] drm/i915/gvt: move public gvt headers out into
- global include
-Message-ID: <20200116194830.GA1072059@kroah.com>
-References: <4079ce7c26a2d2a3c7e0828ed1ea6008d6e2c805.camel@cyberus-technology.de>
- <20200109171357.115936-1-julian.stecklina@cyberus-technology.de>
- <20200109171357.115936-5-julian.stecklina@cyberus-technology.de>
- <20200115152215.GA3830321@kroah.com>
- <9b32e225ee680e61716e300eb1ed8387599cc0dd.camel@cyberus-technology.de>
- <20200116142345.GA476889@kroah.com>
- <edb721906354e26c26883edf5bce09690ca07d6d.camel@cyberus-technology.de>
+        Thu, 16 Jan 2020 14:49:13 -0500
+Received: from mailoutvs52.siol.net ([185.57.226.243]:43940 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730020AbgAPTtN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 14:49:13 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTP id E34B35230FF;
+        Thu, 16 Jan 2020 20:49:07 +0100 (CET)
+X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id mP99053S9SkM; Thu, 16 Jan 2020 20:49:07 +0100 (CET)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTPS id 1D332523F57;
+        Thu, 16 Jan 2020 20:49:07 +0100 (CET)
+Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Zimbra) with ESMTPA id 20657523F03;
+        Thu, 16 Jan 2020 20:49:05 +0100 (CET)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     mchehab@kernel.org, mripard@kernel.org,
+        paul.kocialkowski@bootlin.com, Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     gregkh@linuxfoundation.org, wens@csie.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 2/4] media: cedrus: hevc: Add support for scaling matrix
+Date:   Thu, 16 Jan 2020 20:49:05 +0100
+Message-ID: <1738042.CQOukoFCf9@jernej-laptop>
+In-Reply-To: <46364792-7eaf-0a51-b8f8-db376cc2dbe2@xs4all.nl>
+References: <20191213160428.54303-1-jernej.skrabec@siol.net> <2627039.Y6S9NjorxK@jernej-laptop> <46364792-7eaf-0a51-b8f8-db376cc2dbe2@xs4all.nl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <edb721906354e26c26883edf5bce09690ca07d6d.camel@cyberus-technology.de>
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 04:05:22PM +0100, Julian Stecklina wrote:
-> Hi Greg,
-> 
-> On Thu, 2020-01-16 at 15:23 +0100, Greg KH wrote:
-> > On Thu, Jan 16, 2020 at 03:13:01PM +0100, Julian Stecklina wrote:
-> > > Hi Greg, Christoph,
-> > > 
-> > > On Wed, 2020-01-15 at 16:22 +0100, Greg KH wrote:
-> > > > On Thu, Jan 09, 2020 at 07:13:57PM +0200, Julian Stecklina wrote:
-> > > > > Now that the GVT interface to hypervisors does not depend on i915/GVT
-> > > > > internals anymore, we can move the headers to the global include/.
-> > > > > 
-> > > > > This makes out-of-tree modules for hypervisor integration possible.
-> > > > 
-> > > > What kind of out-of-tree modules do you need/want for this?
-> > > 
-> > > The mediated virtualization support in the i915 driver needs a backend to
-> > > the
-> > > hypervisor. There is currently one backend for KVM in the tree
-> > > (drivers/gpu/drm/i915/gvt/kvmgt.c) and at least 3 other hypervisor backends
-> > > out
-> > > of tree in various states of development that I know of. We are currently
-> > > developing one of these.
+Dne sreda, 08. januar 2020 ob 15:46:50 CET je Hans Verkuil napisal(a):
+> On 1/7/20 6:10 PM, Jernej Škrabec wrote:
+> > Hi!
 > > 
-> > Great, then just submit this patch series as part of your patch series
-> > when submitting yoru hypervisor code.  That's the normal way to export
-> > new symbols, we can't do so without an in-kernel user.
+> > Dne torek, 07. januar 2020 ob 16:01:16 CET je Hans Verkuil napisal(a):
+> >> On 12/13/19 5:04 PM, Jernej Skrabec wrote:
+> >>> HEVC frames may use scaling list feature. Add support for it.
+> >>> 
+> >>> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> >>> ---
+> >>> 
+> >>>  drivers/staging/media/sunxi/cedrus/cedrus.c   |  7 ++
+> >>>  drivers/staging/media/sunxi/cedrus/cedrus.h   |  1 +
+> >>>  .../staging/media/sunxi/cedrus/cedrus_dec.c   |  2 +
+> >>>  .../staging/media/sunxi/cedrus/cedrus_h265.c  | 70 ++++++++++++++++++-
+> >>>  .../staging/media/sunxi/cedrus/cedrus_regs.h  |  2 +
+> >>>  5 files changed, 81 insertions(+), 1 deletion(-)
+> >>> 
+> >>> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c
+> >>> b/drivers/staging/media/sunxi/cedrus/cedrus.c index
+> >>> c6ddd46eff82..bf68bc6b20c8 100644
+> >>> --- a/drivers/staging/media/sunxi/cedrus/cedrus.c
+> >>> +++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
+> >>> @@ -116,6 +116,13 @@ static const struct cedrus_control
+> >>> cedrus_controls[]
+> >>> = {>
+> >>> 
+> >>>  		.codec		= CEDRUS_CODEC_H265,
+> >>>  		.required	= true,
+> >>>  	
+> >>>  	},
+> >>> 
+> >>> +	{
+> >>> +		.cfg = {
+> >>> +			.id	=
+> > 
+> > V4L2_CID_MPEG_VIDEO_HEVC_SCALING_MATRIX,
+> > 
+> >>> +		},
+> >>> +		.codec		= CEDRUS_CODEC_H265,
+> >>> +		.required	= true,
+> >> 
+> >> Should this be true? This means that existing applications are now
+> >> suddenly required to always pass the scaling matrix for every buffer.
+> >> 
+> >> Especially since the commit log says: 'HEVC frames *may* use scaling list
+> >> feature', indicating that this is an optional feature.
+> > 
+> > True. Can you fix this when applying if this is the only issue?
 > 
-> Fair enough.
+> I realized that after changing this to false, you also need to document
+> what happens if you do NOT set this control in the request.
 > 
-> As I already said, the KVMGT code is the in-kernel user. But I guess I can
-> extend the already existing function pointer way of decoupling KVMGT from i915
-> and be on my way without exporting any symbols.
+> Does it fall back to default values? It looks like the HEVC spec defines
+> some defaults (if I understand it correctly).
+
+This control is needed only when V4L2_HEVC_SPS_FLAG_SCALING_LIST_ENABLED is 
+set. If flag is set but control is not provided, then it doesn't really matter 
+if default values or old values of control are used, image will be incorrectly 
+decoded anyway. I think it's more important that buffer is marked with 
+VB2_BUF_STATE_ERROR in such case.
+
+Best regards,
+Jernej
+
 > 
-> Somewhat independent of the current discussion, I also think that it's valuable
-> to have a defined API (I'm not saying stable API) for the hypervisor backends to
-> define what's okay and not okay for them to do.
+> Regards,
+> 
+> 	Hans
+> 
+> > Best regards,
+> > Jernej
+> > 
+> >> Regards,
+> >> 
+> >> 	Hans
+> >> 	
+> >>> +	},
+> >>> 
+> >>>  	{
+> >>>  	
+> >>>  		.cfg = {
+> >>>  		
+> >>>  			.id	=
+> > 
+> > V4L2_CID_MPEG_VIDEO_HEVC_DECODE_MODE,
+> > 
+> >>> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h
+> >>> b/drivers/staging/media/sunxi/cedrus/cedrus.h index
+> >>> 96765555ab8a..d945f4f0ff2d 100644
+> >>> --- a/drivers/staging/media/sunxi/cedrus/cedrus.h
+> >>> +++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
+> >>> @@ -73,6 +73,7 @@ struct cedrus_h265_run {
+> >>> 
+> >>>  	const struct v4l2_ctrl_hevc_sps			*sps;
+> >>>  	const struct v4l2_ctrl_hevc_pps			*pps;
+> >>>  	const struct v4l2_ctrl_hevc_slice_params	*slice_params;
+> >>> 
+> >>> +	const struct v4l2_ctrl_hevc_scaling_matrix
+> > 
+> > *scaling_matrix;
+> > 
+> >>>  };
+> >>>  
+> >>>  struct cedrus_run {
+> >>> 
+> >>> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> >>> b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c index
+> >>> 4a2fc33a1d79..327ed6c264dc 100644
+> >>> --- a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> >>> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> >>> @@ -66,6 +66,8 @@ void cedrus_device_run(void *priv)
+> >>> 
+> >>>  			V4L2_CID_MPEG_VIDEO_HEVC_PPS);
+> >>>  		
+> >>>  		run.h265.slice_params = cedrus_find_control_data(ctx,
+> >>>  		
+> >>>  			V4L2_CID_MPEG_VIDEO_HEVC_SLICE_PARAMS);
+> >>> 
+> >>> +		run.h265.scaling_matrix = cedrus_find_control_data(ctx,
+> >>> +			V4L2_CID_MPEG_VIDEO_HEVC_SCALING_MATRIX);
+> >>> 
+> >>>  		break;
+> >>>  	
+> >>>  	default:
+> >>> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
+> >>> b/drivers/staging/media/sunxi/cedrus/cedrus_h265.c index
+> >>> 6945dc74e1d7..888bfd5ca224 100644
+> >>> --- a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
+> >>> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
+> >>> @@ -220,6 +220,69 @@ static void cedrus_h265_pred_weight_write(struct
+> >>> cedrus_dev *dev,>
+> >>> 
+> >>>  	}
+> >>>  
+> >>>  }
+> >>> 
+> >>> +static void cedrus_h265_write_scaling_list(struct cedrus_ctx *ctx,
+> >>> +					   struct cedrus_run
+> > 
+> > *run)
+> > 
+> >>> +{
+> >>> +	const struct v4l2_ctrl_hevc_scaling_matrix *scaling;
+> >>> +	struct cedrus_dev *dev = ctx->dev;
+> >>> +	u32 i, j, k, val;
+> >>> +
+> >>> +	scaling = run->h265.scaling_matrix;
+> >>> +
+> >>> +	cedrus_write(dev, VE_DEC_H265_SCALING_LIST_DC_COEF0,
+> >>> +		     (scaling->scaling_list_dc_coef_32x32[1] << 24) |
+> >>> +		     (scaling->scaling_list_dc_coef_32x32[0] << 16) |
+> >>> +		     (scaling->scaling_list_dc_coef_16x16[1] << 8) |
+> >>> +		     (scaling->scaling_list_dc_coef_16x16[0] << 0));
+> >>> +
+> >>> +	cedrus_write(dev, VE_DEC_H265_SCALING_LIST_DC_COEF1,
+> >>> +		     (scaling->scaling_list_dc_coef_16x16[5] << 24) |
+> >>> +		     (scaling->scaling_list_dc_coef_16x16[4] << 16) |
+> >>> +		     (scaling->scaling_list_dc_coef_16x16[3] << 8) |
+> >>> +		     (scaling->scaling_list_dc_coef_16x16[2] << 0));
+> >>> +
+> >>> +	cedrus_h265_sram_write_offset(dev,
+> >>> VE_DEC_H265_SRAM_OFFSET_SCALING_LISTS); +
+> >>> +	for (i = 0; i < 6; i++)
+> >>> +		for (j = 0; j < 8; j++)
+> >>> +			for (k = 0; k < 8; k += 4) {
+> >>> +				val = ((u32)scaling-
+> >> 
+> >> scaling_list_8x8[i][j + (k + 3) * 8] << 24) |
+> >> 
+> >>> +				      ((u32)scaling-
+> >> 
+> >> scaling_list_8x8[i][j + (k + 2) * 8] << 16) |
+> >> 
+> >>> +				      ((u32)scaling-
+> >> 
+> >> scaling_list_8x8[i][j + (k + 1) * 8] << 8) |
+> >> 
+> >>> +				      scaling-
+> >> 
+> >> scaling_list_8x8[i][j + k * 8];
+> >> 
+> >>> +				cedrus_write(dev,
+> > 
+> > VE_DEC_H265_SRAM_DATA, val);
+> > 
+> >>> +			}
+> >>> +
+> >>> +	for (i = 0; i < 2; i++)
+> >>> +		for (j = 0; j < 8; j++)
+> >>> +			for (k = 0; k < 8; k += 4) {
+> >>> +				val = ((u32)scaling-
+> >> 
+> >> scaling_list_32x32[i][j + (k + 3) * 8] << 24) |
+> >> 
+> >>> +				      ((u32)scaling-
+> >> 
+> >> scaling_list_32x32[i][j + (k + 2) * 8] << 16) |
+> >> 
+> >>> +				      ((u32)scaling-
+> >> 
+> >> scaling_list_32x32[i][j + (k + 1) * 8] << 8) |
+> >> 
+> >>> +				      scaling-
+> >> 
+> >> scaling_list_32x32[i][j + k * 8];
+> >> 
+> >>> +				cedrus_write(dev,
+> > 
+> > VE_DEC_H265_SRAM_DATA, val);
+> > 
+> >>> +			}
+> >>> +
+> >>> +	for (i = 0; i < 6; i++)
+> >>> +		for (j = 0; j < 8; j++)
+> >>> +			for (k = 0; k < 8; k += 4) {
+> >>> +				val = ((u32)scaling-
+> >> 
+> >> scaling_list_16x16[i][j + (k + 3) * 8] << 24) |
+> >> 
+> >>> +				      ((u32)scaling-
+> >> 
+> >> scaling_list_16x16[i][j + (k + 2) * 8] << 16) |
+> >> 
+> >>> +				      ((u32)scaling-
+> >> 
+> >> scaling_list_16x16[i][j + (k + 1) * 8] << 8) |
+> >> 
+> >>> +				      scaling-
+> >> 
+> >> scaling_list_16x16[i][j + k * 8];
+> >> 
+> >>> +				cedrus_write(dev,
+> > 
+> > VE_DEC_H265_SRAM_DATA, val);
+> > 
+> >>> +			}
+> >>> +
+> >>> +	for (i = 0; i < 6; i++)
+> >>> +		for (j = 0; j < 4; j++) {
+> >>> +			val = ((u32)scaling->scaling_list_4x4[i][j +
+> > 
+> > 12] << 24) |
+> > 
+> >>> +			      ((u32)scaling->scaling_list_4x4[i][j +
+> > 
+> > 8] << 16) |
+> > 
+> >>> +			      ((u32)scaling->scaling_list_4x4[i][j +
+> > 
+> > 4] << 8) |
+> > 
+> >>> +			      scaling->scaling_list_4x4[i][j];
+> >>> +			cedrus_write(dev, VE_DEC_H265_SRAM_DATA,
+> > 
+> > val);
+> > 
+> >>> +		}
+> >>> +}
+> >>> +
+> >>> 
+> >>>  static void cedrus_h265_setup(struct cedrus_ctx *ctx,
+> >>>  
+> >>>  			      struct cedrus_run *run)
+> >>>  
+> >>>  {
+> >>> 
+> >>> @@ -499,7 +562,12 @@ static void cedrus_h265_setup(struct cedrus_ctx
+> >>> *ctx,
+> >>> 
+> >>>  	/* Scaling list. */
+> >>> 
+> >>> -	reg = VE_DEC_H265_SCALING_LIST_CTRL0_DEFAULT;
+> >>> +	if (sps->flags & V4L2_HEVC_SPS_FLAG_SCALING_LIST_ENABLED) {
+> >>> +		cedrus_h265_write_scaling_list(ctx, run);
+> >>> +		reg = VE_DEC_H265_SCALING_LIST_CTRL0_FLAG_ENABLED;
+> >>> +	} else {
+> >>> +		reg = VE_DEC_H265_SCALING_LIST_CTRL0_DEFAULT;
+> >>> +	}
+> >>> 
+> >>>  	cedrus_write(dev, VE_DEC_H265_SCALING_LIST_CTRL0, reg);
+> >>>  	
+> >>>  	/* Neightbor information address. */
+> >>> 
+> >>> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
+> >>> b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h index
+> >>> 7beb03d3bb39..0d9449fe2b28 100644
+> >>> --- a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
+> >>> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
+> >>> @@ -492,6 +492,8 @@
+> >>> 
+> >>>  #define VE_DEC_H265_ENTRY_POINT_OFFSET_ADDR	(VE_ENGINE_DEC_H265 +
+> > 
+> > 0x64)
+> > 
+> >>>  #define VE_DEC_H265_TILE_START_CTB		(VE_ENGINE_DEC_H265 +
+> > 
+> > 0x68)
+> > 
+> >>>  #define VE_DEC_H265_TILE_END_CTB		(VE_ENGINE_DEC_H265 +
+> > 
+> > 0x6c)
+> > 
+> >>> +#define VE_DEC_H265_SCALING_LIST_DC_COEF0	(VE_ENGINE_DEC_H265 +
+> > 
+> > 0x78)
+> > 
+> >>> +#define VE_DEC_H265_SCALING_LIST_DC_COEF1	(VE_ENGINE_DEC_H265 +
+> > 
+> > 0x7c)
+> > 
+> >>>  #define VE_DEC_H265_LOW_ADDR			
+(VE_ENGINE_DEC_H265 +
+> > 
+> > 0x80)
 
-The only way to get a "good" api is for at least 3 users of them get
-into the kernel tree.  If all you have is one or two, then you go with
-what you got, and evolve over time as more get added and find better
-ways to use them.
 
-In short, it's just basic evolution, not intelligent design :)
 
-thanks,
 
-greg k-h
