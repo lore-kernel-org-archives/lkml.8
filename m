@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE524C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3F1C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B947E2082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03A4B2072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:22:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579216939;
-	bh=77j/H3NJgU6yfAere1pTVjCPlRELhyyyD9Ei5/o5tXg=;
+	s=default; t=1579216944;
+	bh=YHCmKvqgNloUQ1CrqSeEmRJBO0gb6SZ/9jXI8HGzTVI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x/PCJJYssl7QFv5vXqcknEXKji9pUI4vpKwj5Ygf8P5D6fxfKhto/Z6XpOGDwa4X3
-	 i6FuRCdmaMu+hWXyXUjpP12MEGeofP9lz32j/6aqXIJ8t30Hiv6vHu5k4NNSq83T6q
-	 poUzdJXVCSSWoLOj4MuJtENyq+8FjXnAP+8E/dbs=
+	b=VsbPpyR2xednGOQPrsPRkAH1by4cdm2bpxGb+IQ7MwGNT8LzmYPtbZIktO6mpMvi2
+	 3O2a2f6CaZ1Cb+mun1nJA+DC6w+CGw6FbJIB9P3vT7v8bcqL9ewGNA2YwT8aRwYm48
+	 YxzJmWw732eS44xLvJ6BYXu5T9DBCXe+a1uVymlA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390912AbgAPXWR (ORCPT
+        id S1730121AbgAPXWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:22:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49848 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:22:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730651AbgAPXWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:22:08 -0500
+        id S2388828AbgAPXWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:22:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39E162072E;
-        Thu, 16 Jan 2020 23:22:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6E922075B;
+        Thu, 16 Jan 2020 23:22:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216927;
-        bh=77j/H3NJgU6yfAere1pTVjCPlRELhyyyD9Ei5/o5tXg=;
+        s=default; t=1579216930;
+        bh=YHCmKvqgNloUQ1CrqSeEmRJBO0gb6SZ/9jXI8HGzTVI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NUBo6J0fS03tLkG5imzuURdjwDS5wUTXzK+dn9dO7dwagr2DCyi+XNaF30U0syfuX
-         YAM1I8fgwpsqA8mz2fPxV+EMMyRuAstz05WEQvIOgxPJVQiO1ByhjyUCyvBCFViTF8
-         H9YRPIrlasVtUT13fgREHJxfN+bq4CTPmBSWBS4o=
+        b=d9wCnBwq3I8qsfM3eUwAEt18A5S+3SeTIZcUVDteF1tbf9b8FN66HGWhcr6A/6zz5
+         yMTftSC2gwP2XB2NsMwYf1zKoGGTWJuKysGL4S59esz+XzJbhFXcJoWtNcLrm8MtkV
+         T3tFP8an61TXvOqHkqmyLkrSw0XjJn9wZe6gbR7g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
         Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH 5.4 077/203] uaccess: Add non-pagefault user-space write function
-Date:   Fri, 17 Jan 2020 00:16:34 +0100
-Message-Id: <20200116231751.126349691@linuxfoundation.org>
+        Andrii Nakryiko <andriin@fb.com>
+Subject: [PATCH 5.4 078/203] bpf: Make use of probe_user_write in probe write helper
+Date:   Fri, 17 Jan 2020 00:16:35 +0100
+Message-Id: <20200116231751.315347781@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -63,122 +62,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Daniel Borkmann <daniel@iogearbox.net>
 
-commit 1d1585ca0f48fe7ed95c3571f3e4a82b2b5045dc upstream.
+commit eb1b66887472eaa7342305b7890ae510dd9d1a79 upstream.
 
-Commit 3d7081822f7f ("uaccess: Add non-pagefault user-space read functions")
-missed to add probe write function, therefore factor out a probe_write_common()
-helper with most logic of probe_kernel_write() except setting KERNEL_DS, and
-add a new probe_user_write() helper so it can be used from BPF side.
+Convert the bpf_probe_write_user() helper to probe_user_write() such that
+writes are not attempted under KERNEL_DS anymore which is buggy as kernel
+and user space pointers can have overlapping addresses. Also, given we have
+the access_ok() check inside probe_user_write(), the helper doesn't need
+to do it twice.
 
-Again, on some archs, the user address space and kernel address space can
-co-exist and be overlapping, so in such case, setting KERNEL_DS would mean
-that the given address is treated as being in kernel address space.
-
+Fixes: 96ae52279594 ("bpf: Add bpf_probe_write_user BPF helper to be called in tracers")
 Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Acked-by: Andrii Nakryiko <andriin@fb.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Link: https://lore.kernel.org/bpf/9df2542e68141bfa3addde631441ee45503856a8.1572649915.git.daniel@iogearbox.net
+Link: https://lore.kernel.org/bpf/841c461781874c07a0ee404a454c3bc0459eed30.1572649915.git.daniel@iogearbox.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/uaccess.h |   12 ++++++++++++
- mm/maccess.c            |   45 +++++++++++++++++++++++++++++++++++++++++----
- 2 files changed, 53 insertions(+), 4 deletions(-)
+ kernel/trace/bpf_trace.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/include/linux/uaccess.h
-+++ b/include/linux/uaccess.h
-@@ -337,6 +337,18 @@ extern long __probe_user_read(void *dst,
- extern long notrace probe_kernel_write(void *dst, const void *src, size_t size);
- extern long notrace __probe_kernel_write(void *dst, const void *src, size_t size);
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -163,7 +163,7 @@ static const struct bpf_func_proto bpf_p
+ 	.arg3_type	= ARG_ANYTHING,
+ };
  
-+/*
-+ * probe_user_write(): safely attempt to write to a location in user space
-+ * @dst: address to write to
-+ * @src: pointer to the data that shall be written
-+ * @size: size of the data chunk
-+ *
-+ * Safely write to address @dst from the buffer at @src.  If a kernel fault
-+ * happens, handle that and return -EFAULT.
-+ */
-+extern long notrace probe_user_write(void __user *dst, const void *src, size_t size);
-+extern long notrace __probe_user_write(void __user *dst, const void *src, size_t size);
-+
- extern long strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count);
- extern long strncpy_from_unsafe_user(char *dst, const void __user *unsafe_addr,
- 				     long count);
---- a/mm/maccess.c
-+++ b/mm/maccess.c
-@@ -18,6 +18,18 @@ probe_read_common(void *dst, const void
- 	return ret ? -EFAULT : 0;
+-BPF_CALL_3(bpf_probe_write_user, void *, unsafe_ptr, const void *, src,
++BPF_CALL_3(bpf_probe_write_user, void __user *, unsafe_ptr, const void *, src,
+ 	   u32, size)
+ {
+ 	/*
+@@ -186,10 +186,8 @@ BPF_CALL_3(bpf_probe_write_user, void *,
+ 		return -EPERM;
+ 	if (unlikely(!nmi_uaccess_okay()))
+ 		return -EPERM;
+-	if (!access_ok(unsafe_ptr, size))
+-		return -EPERM;
+ 
+-	return probe_kernel_write(unsafe_ptr, src, size);
++	return probe_user_write(unsafe_ptr, src, size);
  }
  
-+static __always_inline long
-+probe_write_common(void __user *dst, const void *src, size_t size)
-+{
-+	long ret;
-+
-+	pagefault_disable();
-+	ret = __copy_to_user_inatomic(dst, src, size);
-+	pagefault_enable();
-+
-+	return ret ? -EFAULT : 0;
-+}
-+
- /**
-  * probe_kernel_read(): safely attempt to read from a kernel-space location
-  * @dst: pointer to the buffer that shall take the data
-@@ -85,6 +97,7 @@ EXPORT_SYMBOL_GPL(probe_user_read);
-  * Safely write to address @dst from the buffer at @src.  If a kernel fault
-  * happens, handle that and return -EFAULT.
-  */
-+
- long __weak probe_kernel_write(void *dst, const void *src, size_t size)
-     __attribute__((alias("__probe_kernel_write")));
- 
-@@ -94,15 +107,39 @@ long __probe_kernel_write(void *dst, con
- 	mm_segment_t old_fs = get_fs();
- 
- 	set_fs(KERNEL_DS);
--	pagefault_disable();
--	ret = __copy_to_user_inatomic((__force void __user *)dst, src, size);
--	pagefault_enable();
-+	ret = probe_write_common((__force void __user *)dst, src, size);
- 	set_fs(old_fs);
- 
--	return ret ? -EFAULT : 0;
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(probe_kernel_write);
- 
-+/**
-+ * probe_user_write(): safely attempt to write to a user-space location
-+ * @dst: address to write to
-+ * @src: pointer to the data that shall be written
-+ * @size: size of the data chunk
-+ *
-+ * Safely write to address @dst from the buffer at @src.  If a kernel fault
-+ * happens, handle that and return -EFAULT.
-+ */
-+
-+long __weak probe_user_write(void __user *dst, const void *src, size_t size)
-+    __attribute__((alias("__probe_user_write")));
-+
-+long __probe_user_write(void __user *dst, const void *src, size_t size)
-+{
-+	long ret = -EFAULT;
-+	mm_segment_t old_fs = get_fs();
-+
-+	set_fs(USER_DS);
-+	if (access_ok(dst, size))
-+		ret = probe_write_common(dst, src, size);
-+	set_fs(old_fs);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(probe_user_write);
- 
- /**
-  * strncpy_from_unsafe: - Copy a NUL terminated string from unsafe address.
+ static const struct bpf_func_proto bpf_probe_write_user_proto = {
 
 
