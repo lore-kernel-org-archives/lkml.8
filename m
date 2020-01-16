@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B3AC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 205CAC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4462724681
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0D4924681
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:52:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197138;
-	bh=wCWvTwy7+lNxDWwzm1AyIA6v/IHLDstadwUxirEZ5fc=;
+	s=default; t=1579197142;
+	bh=eKMbYS1eV6aH1R+JumnZaqRP3Om9A8sq8qmG+cOdrOs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w2CB4Sg0f+yxiOLuqZxoqKEcI667Pk3CeXOiy+hCQShnPmDs34ry7vIRTpIR8Mluv
-	 KtzVdi7gYRb7vefOPiEtTvQp8iCIHrtT6d7JiMwdmA5HYayJFn6dZeQw6NsgwI49DG
-	 0q5TnYQPokyqUiRro8HxujhC1O8eSuFKC3X5gw3s=
+	b=n1BvRPi1/kz8xA0kpBw86RtJmzoU8sOuKc3iuxhkryLF4PMjt0va0S3tSuAvrzwky
+	 CqWcNgVpLo9ccb44u34rsG2zfpaPJjrmruRQLBiweOyOYZsPUSH9kZIdjP6VNboLXv
+	 9vtNDXbQwcKNIn9rHMJhhRECuajy5Vlwu2jcdyxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406369AbgAPRwR (ORCPT
+        id S2406159AbgAPRpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:52:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37110 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406188AbgAPRpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jan 2020 12:45:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36062 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732916AbgAPRow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:44:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E0D52477A;
-        Thu, 16 Jan 2020 17:45:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 587CF24779;
+        Thu, 16 Jan 2020 17:44:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196725;
-        bh=wCWvTwy7+lNxDWwzm1AyIA6v/IHLDstadwUxirEZ5fc=;
+        s=default; t=1579196692;
+        bh=eKMbYS1eV6aH1R+JumnZaqRP3Om9A8sq8qmG+cOdrOs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o/GkB627mg3mQCVZdGKdVykEToC+L/1bVuYfGwkd+YaonmtauH0SnbfZNeNWw5Fwb
-         +bKcwrrKEGHxmYN3cs/G7UQExjml+f3puRTb/sfhEsDcKk/mmi5N6Lz2fjytgZL3or
-         SotGM6KDvPJtzr1L1rsXIAbPdTrJ0lJgAZJ6zryA=
+        b=nn4KEevzmEqI0YmqH9PAUgVHK+USNt3orWa/T9q5RPgfHcLnbxasWRRBRePRk2132
+         0dmi8wqhSM/FPgFByVieBlXvjbmKvkg58PMQ1gqjuLzpK3jiVn5O2AepnuMlQIFHU4
+         mDaDZ5X7I6LHMNTHu2I3/YGUCOcrIGs/Yi0io0nk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Hannes Reinecke <hare@suse.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 110/174] scsi: libfc: fix null pointer dereference on a null lport
-Date:   Thu, 16 Jan 2020 12:41:47 -0500
-Message-Id: <20200116174251.24326-110-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        "Lad Prabhakar" <prabhakar.csengg@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 087/174] media: davinci/vpbe: array underflow in vpbe_enum_outputs()
+Date:   Thu, 16 Jan 2020 12:41:24 -0500
+Message-Id: <20200116174251.24326-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -60,37 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 41a6bf6529edd10a6def42e3b2c34a7474bcc2f5 ]
+[ Upstream commit b72845ee5577b227131b1fef23f9d9a296621d7b ]
 
-Currently if lport is null then the null lport pointer is dereference when
-printing out debug via the FC_LPORT_DB macro. Fix this by using the more
-generic FC_LIBFC_DBG debug macro instead that does not use lport.
+In vpbe_enum_outputs() we check if (temp_index >= cfg->num_outputs) but
+the problem is that "temp_index" can be negative.  This patch changes
+the types to unsigned to address this array underflow bug.
 
-Addresses-Coverity: ("Dereference after null check")
-Fixes: 7414705ea4ae ("libfc: Add runtime debugging with debug_logging module parameter")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 66715cdc3224 ("[media] davinci vpbe: VPBE display driver")
+
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: "Lad Prabhakar" <prabhakar.csengg@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/libfc/fc_exch.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/davinci/vpbe.c | 2 +-
+ include/media/davinci/vpbe.h          | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/libfc/fc_exch.c b/drivers/scsi/libfc/fc_exch.c
-index 30f9ef0c0d4f..b20c575564e4 100644
---- a/drivers/scsi/libfc/fc_exch.c
-+++ b/drivers/scsi/libfc/fc_exch.c
-@@ -2499,7 +2499,7 @@ void fc_exch_recv(struct fc_lport *lport, struct fc_frame *fp)
+diff --git a/drivers/media/platform/davinci/vpbe.c b/drivers/media/platform/davinci/vpbe.c
+index abce9c4a1a8e..59518c08528b 100644
+--- a/drivers/media/platform/davinci/vpbe.c
++++ b/drivers/media/platform/davinci/vpbe.c
+@@ -130,7 +130,7 @@ static int vpbe_enum_outputs(struct vpbe_device *vpbe_dev,
+ 			     struct v4l2_output *output)
+ {
+ 	struct vpbe_config *cfg = vpbe_dev->cfg;
+-	int temp_index = output->index;
++	unsigned int temp_index = output->index;
  
- 	/* lport lock ? */
- 	if (!lport || lport->state == LPORT_ST_DISABLED) {
--		FC_LPORT_DBG(lport, "Receiving frames for an lport that "
-+		FC_LIBFC_DBG("Receiving frames for an lport that "
- 			     "has not been initialized correctly\n");
- 		fc_frame_free(fp);
- 		return;
+ 	if (temp_index >= cfg->num_outputs)
+ 		return -EINVAL;
+diff --git a/include/media/davinci/vpbe.h b/include/media/davinci/vpbe.h
+index 4376beeb28c2..5d8ceeddc797 100644
+--- a/include/media/davinci/vpbe.h
++++ b/include/media/davinci/vpbe.h
+@@ -96,7 +96,7 @@ struct vpbe_config {
+ 	struct encoder_config_info *ext_encoders;
+ 	/* amplifier information goes here */
+ 	struct amp_config_info *amp;
+-	int num_outputs;
++	unsigned int num_outputs;
+ 	/* Order is venc outputs followed by LCD and then external encoders */
+ 	struct vpbe_output *outputs;
+ };
 -- 
 2.20.1
 
