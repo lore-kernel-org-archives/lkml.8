@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 013B9C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B72C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C15C5246B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:18:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC5A5246BD
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:18:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195103;
-	bh=IJdBW9s7P6muCDiCPH/9soWE1t/hJIAxQmIkypLgALw=;
+	s=default; t=1579195110;
+	bh=3h0DW03MYEyGX4g5wsz3PfnbfS8JW3fDyrakYNTlECA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1cZfYVf/fkjCLx318Qp1L4/3nWlemdxoGDWWjxNdXI81wW1RnIkroyZP1ll0+4KYW
-	 Tqe5FnTLPe/EzOlfa8tmyVCUcmda8ZxlfmoBoxRUmOYQF6QMa+D3z1xWQA/9G4HSEg
-	 /d+ykZSCeCKKS7Zn3uN4nYWVqbkjDG/W5dVB1mxc=
+	b=Dja2WBhzalZ9l8J6nW8+qLva8LYLeP2OGEaewkTPB14HajIi3pfLmm0/5LlAMJ5fI
+	 6h0PWB+RBfuIrlZC/B+XJidZvVv4lnq85577Nnb2rRC5Dspy8D97QDotzgDiy34IWu
+	 mFcG3GZY+jOL2z0P0GZ5xN103et1DRewrMQ/50e8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391382AbgAPRSW (ORCPT
+        id S2391155AbgAPRS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:18:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44964 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:18:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391394AbgAPRSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:18:10 -0500
+        id S2391121AbgAPRSR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:18:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 670E0246BB;
-        Thu, 16 Jan 2020 17:18:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EFAA246B2;
+        Thu, 16 Jan 2020 17:18:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195090;
-        bh=IJdBW9s7P6muCDiCPH/9soWE1t/hJIAxQmIkypLgALw=;
+        s=default; t=1579195096;
+        bh=3h0DW03MYEyGX4g5wsz3PfnbfS8JW3fDyrakYNTlECA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gXhlplOLVmrttep9BnH4R/B5mwNxNBPyA+Ottwo9y9z0UtaclBU6aftVO7kz0C3hV
-         tXIJKbYY1wk7NkZ7QIsy9bf3kjb1fagj6v6tdvgR4FTac5Ivw75eeoRkVP/5RRGu2a
-         IEdy2hRP0aIaPviQYChbXHoPITcFvaO+EJeIAzBo=
+        b=MFXFeUJZJUgKeQzj/pnYD01/zv+9L735MqKKpyZ9Sb7BwZrALkL00/zP9JsopkV50
+         QANPs04fiWhbPpvZtXBQ0MpqfDf2nly1JThbwc1LpeasFY8iqRIiRsTcktcxONqXJB
+         M4aIjRAxlh71Akq/9gkkCSBappvsUi/eT338mWFU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Yangtao Li <tiny.windzz@gmail.com>,
         Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 037/371] clk: qoriq: fix refcount leak in clockgen_init()
-Date:   Thu, 16 Jan 2020 12:11:45 -0500
-Message-Id: <20200116171719.16965-37-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 042/371] clk: imx7d: fix refcount leak in imx7d_clocks_init()
+Date:   Thu, 16 Jan 2020 12:11:50 -0500
+Message-Id: <20200116171719.16965-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116171719.16965-1-sashal@kernel.org>
 References: <20200116171719.16965-1-sashal@kernel.org>
@@ -61,32 +62,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yangtao Li <tiny.windzz@gmail.com>
 
-[ Upstream commit 70af6c5b5270e8101f318c4b69cc98a726edfab9 ]
+[ Upstream commit 5f8c183a996b76bb09748073c856e4246fd4ce95 ]
 
 The of_find_compatible_node() returns a node pointer with refcount
 incremented, but there is the lack of use of the of_node_put() when
 done. Add the missing of_node_put() to release the refcount.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-Fixes: 0dfc86b3173f ("clk: qoriq: Move chip-specific knowledge into driver")
+Fixes: 8f6d8094b215 ("ARM: imx: add imx7d clk tree support")
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk-qoriq.c | 1 +
+ drivers/clk/imx/clk-imx7d.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c
-index 1a292519d84f..999a90a16609 100644
---- a/drivers/clk/clk-qoriq.c
-+++ b/drivers/clk/clk-qoriq.c
-@@ -1382,6 +1382,7 @@ static void __init clockgen_init(struct device_node *np)
- 				pr_err("%s: Couldn't map %pOF regs\n", __func__,
- 				       guts);
- 			}
-+			of_node_put(guts);
- 		}
+diff --git a/drivers/clk/imx/clk-imx7d.c b/drivers/clk/imx/clk-imx7d.c
+index 0ac9b30c8b90..9f5e5b9d4a25 100644
+--- a/drivers/clk/imx/clk-imx7d.c
++++ b/drivers/clk/imx/clk-imx7d.c
+@@ -416,6 +416,7 @@ static void __init imx7d_clocks_init(struct device_node *ccm_node)
+ 	np = of_find_compatible_node(NULL, NULL, "fsl,imx7d-anatop");
+ 	base = of_iomap(np, 0);
+ 	WARN_ON(!base);
++	of_node_put(np);
  
- 	}
+ 	clks[IMX7D_PLL_ARM_MAIN_SRC]  = imx_clk_mux("pll_arm_main_src", base + 0x60, 14, 2, pll_bypass_src_sel, ARRAY_SIZE(pll_bypass_src_sel));
+ 	clks[IMX7D_PLL_DRAM_MAIN_SRC] = imx_clk_mux("pll_dram_main_src", base + 0x70, 14, 2, pll_bypass_src_sel, ARRAY_SIZE(pll_bypass_src_sel));
 -- 
 2.20.1
 
