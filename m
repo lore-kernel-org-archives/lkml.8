@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B5CC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 274E3C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76A482072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAC6F2072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:06:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201573;
-	bh=GhkAe2zMQTLuD474ErZ/Me1pHST6ZgL9D3RwQAoHn7Q=;
+	s=default; t=1579201583;
+	bh=10IWbZKtLiSfkMg+zSvCP4zf9XlLcu8JzOFTXwphxRA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nbd5q0o1xH2PDPJ2Uxkg4nAayN/G4i///aMnP38P+Sk0VrDaAB3xVbJvcC3EBjOm2
-	 d5kGPUJKRuUhirpTh+xkqEcFNH1+rTUFZMaUfnlYY0KLdmJFuOjVBYOqLVXk9ymjYO
-	 cVBOoGvVj4ue6ksP7iHs6DkQi4UjDG0P4vjFIK64=
+	b=Q/qKSdgoddBVQjakhO2Uk4+3GIgUz4QDS4XiDvDmz/5HHO/5hcgCsJsRw2NlJhgpR
+	 G7CvzltAcYNcsrTs1Q2z/gpMb8ynjR/RQnU3B15fI0eATEyui35CNVRWKHOKPiAF29
+	 F207Mk7UBzD/DuoyzflV7EoUldAhSbdDZWdF1cto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388250AbgAPTGL (ORCPT
+        id S2437281AbgAPTGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:06:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53078 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:06:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388146AbgAPRBl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:01:41 -0500
+        id S2388133AbgAPRBi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:01:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78DDE207FF;
-        Thu, 16 Jan 2020 17:01:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0755021582;
+        Thu, 16 Jan 2020 17:01:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194100;
-        bh=GhkAe2zMQTLuD474ErZ/Me1pHST6ZgL9D3RwQAoHn7Q=;
+        s=default; t=1579194097;
+        bh=10IWbZKtLiSfkMg+zSvCP4zf9XlLcu8JzOFTXwphxRA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LO7eXqfRYz59eZLpguPf6nWIiHEUdQZV0ywtvDTnzInYBFyCHuE7ww3zuo6nNIIoS
-         /ozFr2lnb77ev3iUKkRJn+Y3n955N/pL/dacG7hB13ROAFNo3RG31pdlmmgTPgF5ww
-         3Rmubpy8gaTDlg6MBbUKy6yCs5SMbRnq+B7Yj6gM=
+        b=EO+sJFhuPT9wWSZHJw5B/hsDaV0cSd9GAviG/Ufy9LXlHW5a224EsWbjYGX2EpcZh
+         LVTCSGVBp3jpr0MmglxfeqXjumL0GSxCxNtbOLCSwns1O4v/pvF8y808HyTuhFMX+s
+         IiF7Q7XbocuEY1uAw0z6bp/wPqWD4EnCsePqmpck=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leon Romanovsky <leonro@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 201/671] net/mlx5: Delete unused FPGA QPN variable
-Date:   Thu, 16 Jan 2020 11:51:50 -0500
-Message-Id: <20200116165940.10720-84-sashal@kernel.org>
+Cc:     Axel Lin <axel.lin@ingics.com>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 199/671] regulator: pv88090: Fix array out-of-bounds access
+Date:   Thu, 16 Jan 2020 11:51:48 -0500
+Message-Id: <20200116165940.10720-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -60,47 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@mellanox.com>
+From: Axel Lin <axel.lin@ingics.com>
 
-[ Upstream commit 566428375a53619196e31803130dd1a7010c4d7f ]
+[ Upstream commit a5455c9159414748bed4678184bf69989a4f7ba3 ]
 
-fpga_qpn was assigned but never used and compilation with W=1
-produced the following warning:
+Fix off-by-one while iterating current_limits array.
+The valid index should be 0 ~ n_current_limits -1.
 
-drivers/net/ethernet/mellanox/mlx5/core/fpga/core.c: In function _mlx5_fpga_event_:
-drivers/net/ethernet/mellanox/mlx5/core/fpga/core.c:320:6: warning:
-variable _fpga_qpn_ set but not used [-Wunused-but-set-variable]
-  u32 fpga_qpn;
-      ^~~~~~~~
-
-Fixes: 98db16bab59f ("net/mlx5: FPGA, Handle QP error event")
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: c90456e36d9c ("regulator: pv88090: new regulator driver")
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/fpga/core.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/regulator/pv88090-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fpga/core.c b/drivers/net/ethernet/mellanox/mlx5/core/fpga/core.c
-index 436a8136f26f..310f9e7d8320 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/fpga/core.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fpga/core.c
-@@ -289,7 +289,6 @@ void mlx5_fpga_event(struct mlx5_core_dev *mdev, u8 event, void *data)
- 	const char *event_name;
- 	bool teardown = false;
- 	unsigned long flags;
--	u32 fpga_qpn;
- 	u8 syndrome;
+diff --git a/drivers/regulator/pv88090-regulator.c b/drivers/regulator/pv88090-regulator.c
+index 7a0c15957bd0..2302b0df7630 100644
+--- a/drivers/regulator/pv88090-regulator.c
++++ b/drivers/regulator/pv88090-regulator.c
+@@ -157,7 +157,7 @@ static int pv88090_set_current_limit(struct regulator_dev *rdev, int min,
+ 	int i;
  
- 	switch (event) {
-@@ -300,7 +299,6 @@ void mlx5_fpga_event(struct mlx5_core_dev *mdev, u8 event, void *data)
- 	case MLX5_EVENT_TYPE_FPGA_QP_ERROR:
- 		syndrome = MLX5_GET(fpga_qp_error_event, data, syndrome);
- 		event_name = mlx5_fpga_qp_syndrome_to_string(syndrome);
--		fpga_qpn = MLX5_GET(fpga_qp_error_event, data, fpga_qpn);
- 		break;
- 	default:
- 		mlx5_fpga_warn_ratelimited(fdev, "Unexpected event %u\n",
+ 	/* search for closest to maximum */
+-	for (i = info->n_current_limits; i >= 0; i--) {
++	for (i = info->n_current_limits - 1; i >= 0; i--) {
+ 		if (min <= info->current_limits[i]
+ 			&& max >= info->current_limits[i]) {
+ 			return regmap_update_bits(rdev->regmap,
 -- 
 2.20.1
 
