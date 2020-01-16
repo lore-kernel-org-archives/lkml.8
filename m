@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E03C33CB7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B5CC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2ECB2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76A482072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:06:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201563;
-	bh=Vgu7OrnRpkJqobvkw4XRI1HavqMpMCUHZK0vAJPiCnE=;
+	s=default; t=1579201573;
+	bh=GhkAe2zMQTLuD474ErZ/Me1pHST6ZgL9D3RwQAoHn7Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LG5VbhZaT3XhP64ELGDs8xKyR1bOjzI10oWCyeomVdtBhIlpauUVSVF4wHztzgC6Y
-	 3QJaiV+b52BdG6tW+hgchjlu3bQ3mvKM04VaIJjptnCRMoNvHPOQ5+bMDtF5BS50Q8
-	 KtNXZ+GLsaIQTnICeu8PuvWvA8gqf1zoqg8Bl3YE=
+	b=Nbd5q0o1xH2PDPJ2Uxkg4nAayN/G4i///aMnP38P+Sk0VrDaAB3xVbJvcC3EBjOm2
+	 d5kGPUJKRuUhirpTh+xkqEcFNH1+rTUFZMaUfnlYY0KLdmJFuOjVBYOqLVXk9ymjYO
+	 cVBOoGvVj4ue6ksP7iHs6DkQi4UjDG0P4vjFIK64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388157AbgAPRBl (ORCPT
+        id S2388250AbgAPTGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:01:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52746 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:06:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387670AbgAPRBc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:01:32 -0500
+        id S2388146AbgAPRBl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:01:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 764D324684;
-        Thu, 16 Jan 2020 17:01:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78DDE207FF;
+        Thu, 16 Jan 2020 17:01:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194091;
-        bh=Vgu7OrnRpkJqobvkw4XRI1HavqMpMCUHZK0vAJPiCnE=;
+        s=default; t=1579194100;
+        bh=GhkAe2zMQTLuD474ErZ/Me1pHST6ZgL9D3RwQAoHn7Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r/TfxilhifLsWhasZBvK8b5B+GKFkjAvdCNndyV3lhxNJpcCD1eLZSaahAPiUcmxW
-         Gs48oZY7f5AxN/v4sQgB7MSPHGCfqCxjEkapHc1x/WKpgLCBm1TUae9/I55mtVmA1z
-         9ac9oPTBqjUn+WMCnLDi5pwL2x4gVbvSbF6HzoGs=
+        b=LO7eXqfRYz59eZLpguPf6nWIiHEUdQZV0ywtvDTnzInYBFyCHuE7ww3zuo6nNIIoS
+         /ozFr2lnb77ev3iUKkRJn+Y3n955N/pL/dacG7hB13ROAFNo3RG31pdlmmgTPgF5ww
+         3Rmubpy8gaTDlg6MBbUKy6yCs5SMbRnq+B7Yj6gM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        John David Anglin <dave.anglin@bell.net>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 194/671] dmaengine: mv_xor: Use correct device for DMA API
-Date:   Thu, 16 Jan 2020 11:51:43 -0500
-Message-Id: <20200116165940.10720-77-sashal@kernel.org>
+Cc:     Leon Romanovsky <leonro@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 201/671] net/mlx5: Delete unused FPGA QPN variable
+Date:   Thu, 16 Jan 2020 11:51:50 -0500
+Message-Id: <20200116165940.10720-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -61,51 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Murphy <robin.murphy@arm.com>
+From: Leon Romanovsky <leonro@mellanox.com>
 
-[ Upstream commit 3e5daee5ecf314da33a890fabaa2404244cd2a36 ]
+[ Upstream commit 566428375a53619196e31803130dd1a7010c4d7f ]
 
-Using dma_dev->dev for mappings before it's assigned with the correct
-device is unlikely to work as expected, and with future dma-direct
-changes, passing a NULL device may end up crashing entirely. I don't
-know enough about this hardware or the mv_xor_prep_dma_interrupt()
-operation to implement the appropriate error-handling logic that would
-have revealed those dma_map_single() calls failing on arm64 for as long
-as the driver has been enabled there, but moving the assignment earlier
-will at least make the current code operate as intended.
+fpga_qpn was assigned but never used and compilation with W=1
+produced the following warning:
 
-Fixes: 22843545b200 ("dma: mv_xor: Add support for DMA_INTERRUPT")
-Reported-by: John David Anglin <dave.anglin@bell.net>
-Tested-by: John David Anglin <dave.anglin@bell.net>
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Tested-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+drivers/net/ethernet/mellanox/mlx5/core/fpga/core.c: In function _mlx5_fpga_event_:
+drivers/net/ethernet/mellanox/mlx5/core/fpga/core.c:320:6: warning:
+variable _fpga_qpn_ set but not used [-Wunused-but-set-variable]
+  u32 fpga_qpn;
+      ^~~~~~~~
+
+Fixes: 98db16bab59f ("net/mlx5: FPGA, Handle QP error event")
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/mv_xor.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/fpga/core.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/dma/mv_xor.c b/drivers/dma/mv_xor.c
-index 969534c1a6c6..abc8d3e0487b 100644
---- a/drivers/dma/mv_xor.c
-+++ b/drivers/dma/mv_xor.c
-@@ -1059,6 +1059,7 @@ mv_xor_channel_add(struct mv_xor_device *xordev,
- 		mv_chan->op_in_desc = XOR_MODE_IN_DESC;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fpga/core.c b/drivers/net/ethernet/mellanox/mlx5/core/fpga/core.c
+index 436a8136f26f..310f9e7d8320 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/fpga/core.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fpga/core.c
+@@ -289,7 +289,6 @@ void mlx5_fpga_event(struct mlx5_core_dev *mdev, u8 event, void *data)
+ 	const char *event_name;
+ 	bool teardown = false;
+ 	unsigned long flags;
+-	u32 fpga_qpn;
+ 	u8 syndrome;
  
- 	dma_dev = &mv_chan->dmadev;
-+	dma_dev->dev = &pdev->dev;
- 	mv_chan->xordev = xordev;
- 
- 	/*
-@@ -1091,7 +1092,6 @@ mv_xor_channel_add(struct mv_xor_device *xordev,
- 	dma_dev->device_free_chan_resources = mv_xor_free_chan_resources;
- 	dma_dev->device_tx_status = mv_xor_status;
- 	dma_dev->device_issue_pending = mv_xor_issue_pending;
--	dma_dev->dev = &pdev->dev;
- 
- 	/* set prep routines based on capability */
- 	if (dma_has_cap(DMA_INTERRUPT, dma_dev->cap_mask))
+ 	switch (event) {
+@@ -300,7 +299,6 @@ void mlx5_fpga_event(struct mlx5_core_dev *mdev, u8 event, void *data)
+ 	case MLX5_EVENT_TYPE_FPGA_QP_ERROR:
+ 		syndrome = MLX5_GET(fpga_qp_error_event, data, syndrome);
+ 		event_name = mlx5_fpga_qp_syndrome_to_string(syndrome);
+-		fpga_qpn = MLX5_GET(fpga_qp_error_event, data, fpga_qpn);
+ 		break;
+ 	default:
+ 		mlx5_fpga_warn_ratelimited(fdev, "Unexpected event %u\n",
 -- 
 2.20.1
 
