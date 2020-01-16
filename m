@@ -2,52 +2,53 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 767F3C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 969E6C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E88D20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B8DE2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:59:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201190;
-	bh=fCDXDNbFuOEF9SBRaM6FbvZTrsBisZ6B5opHPwT6hkk=;
+	s=default; t=1579201194;
+	bh=ytr1jqxcGQfSHeYVEAxStVB/R5aVTSPwptwvqK57Oqs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yBNjP5KXyZuD+qRw+mj1ekkhBvFHBqzS6KQ/sG9JX+O0ZkVMCRtvypGgiSyBRdFhi
-	 KFSXtgKcZ1N2dP/x/ogTwnWd7D3zt445HljkvppdpsapNewPpwXV0CanXui31oSWeg
-	 6VIofDvRDrMZiHlK9CQm3txskFaYhMucbQgN495k=
+	b=OIZfvLjopK6qo1CndbC409PLsT/dv6ZoEp6h+9jAXpLHyWgExJ+oRBIP5GtVTzofX
+	 VRrsxe48C6YGugRzU9hnzVvY9K7ASBfTwGzuiI3R+Zf8d2sRBTRJFF97xVsaxSp3wf
+	 9ydKVCjQYffh0QkD5D+tRfedFU/YwkucEzg/ZyJQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437224AbgAPS7s (ORCPT
+        id S2388930AbgAPRG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:59:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36808 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:06:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387566AbgAPRGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:06:32 -0500
+        id S2388866AbgAPRGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:06:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E800220663;
-        Thu, 16 Jan 2020 17:06:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B66A22522;
+        Thu, 16 Jan 2020 17:06:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194391;
-        bh=fCDXDNbFuOEF9SBRaM6FbvZTrsBisZ6B5opHPwT6hkk=;
+        s=default; t=1579194372;
+        bh=ytr1jqxcGQfSHeYVEAxStVB/R5aVTSPwptwvqK57Oqs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EI0SZEFMQdfUsqcO8sAywHN5y8z2HES53cDpa100pOskxFJk1zkcENiI8sgEtqAsE
-         vkpQ0mFK9dfwR3cP6pjy5bceszF0pzcoPoj6Iah205uUMWxHGjRUzyYko6aoNLAIRY
-         0Hb8fKQLmyE6mAcQwdX4irqwrAf8qXX9oSVk/kqI=
+        b=JLoBr0/dv7JFKrmGrIYgQfiUF+O1+jxamFGwZjnWfQd3QIc/5Q22KDqZGaFdBxieV
+         MgkQwSaCe0Z5FP2xjuXIpvFpL8K4JwDOl0kmWKMNE5d3GJ9+9I+sFy+1zPc/J0R6j1
+         T+gFFLEFOdcmUZNiUerBuoJIDQgSmh43C4oTNOJc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Sasha Levin <sashal@kernel.org>, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 319/671] KVM: PPC: Book3S HV: Fix lockdep warning when entering the guest
-Date:   Thu, 16 Jan 2020 11:59:17 -0500
-Message-Id: <20200116170509.12787-56-sashal@kernel.org>
+Cc:     Vladimir Oltean <olteanv@gmail.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 305/671] ARM: dts: ls1021: Fix SGMII PCS link remaining down after PHY disconnect
+Date:   Thu, 16 Jan 2020 11:59:03 -0500
+Message-Id: <20200116170509.12787-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,98 +61,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
+From: Vladimir Oltean <olteanv@gmail.com>
 
-[ Upstream commit 3309bec85e60d60d6394802cb8e183a4f4a72def ]
+[ Upstream commit c7861adbe37f576931650ad8ef805e0c47564b9a ]
 
-The trace_hardirqs_on() sets current->hardirqs_enabled and from here
-the lockdep assumes interrupts are enabled although they are remain
-disabled until the context switches to the guest. Consequent
-srcu_read_lock() checks the flags in rcu_lock_acquire(), observes
-disabled interrupts and prints a warning (see below).
+Each eTSEC MAC has its own TBI (SGMII) PCS and private MDIO bus.
+But due to a DTS oversight, both SGMII-compatible MACs of the LS1021 SoC
+are pointing towards the same internal PCS. Therefore nobody is
+controlling the internal PCS of eTSEC0.
 
-This moves trace_hardirqs_on/off closer to __kvmppc_vcore_entry to
-prevent lockdep from being confused.
+Upon initial ndo_open, the SGMII link is ok by virtue of U-boot
+initialization. But upon an ifdown/ifup sequence, the code path from
+ndo_open -> init_phy -> gfar_configure_serdes does not get executed for
+the PCS of eTSEC0 (and is executed twice for MAC eTSEC1). So the SGMII
+link remains down for eTSEC0. On the LS1021A-TWR board, to signal this
+failure condition, the PHY driver keeps printing
+'803x_aneg_done: SGMII link is not ok'.
 
-DEBUG_LOCKS_WARN_ON(current->hardirqs_enabled)
-WARNING: CPU: 16 PID: 8038 at kernel/locking/lockdep.c:4128 check_flags.part.25+0x224/0x280
-[...]
-NIP [c000000000185b84] check_flags.part.25+0x224/0x280
-LR [c000000000185b80] check_flags.part.25+0x220/0x280
-Call Trace:
-[c000003fec253710] [c000000000185b80] check_flags.part.25+0x220/0x280 (unreliable)
-[c000003fec253780] [c000000000187ea4] lock_acquire+0x94/0x260
-[c000003fec253840] [c00800001a1e9768] kvmppc_run_core+0xa60/0x1ab0 [kvm_hv]
-[c000003fec253a10] [c00800001a1ed944] kvmppc_vcpu_run_hv+0x73c/0xec0 [kvm_hv]
-[c000003fec253ae0] [c00800001a1095dc] kvmppc_vcpu_run+0x34/0x48 [kvm]
-[c000003fec253b00] [c00800001a1056bc] kvm_arch_vcpu_ioctl_run+0x2f4/0x400 [kvm]
-[c000003fec253b90] [c00800001a0f3618] kvm_vcpu_ioctl+0x460/0x850 [kvm]
-[c000003fec253d00] [c00000000041c4f4] do_vfs_ioctl+0xe4/0x930
-[c000003fec253db0] [c00000000041ce04] ksys_ioctl+0xc4/0x110
-[c000003fec253e00] [c00000000041ce78] sys_ioctl+0x28/0x80
-[c000003fec253e20] [c00000000000b5a4] system_call+0x5c/0x70
-Instruction dump:
-419e0034 3d220004 39291730 81290000 2f890000 409e0020 3c82ffc6 3c62ffc5
-3884be70 386329c0 4bf6ea71 60000000 <0fe00000> 3c62ffc6 3863be90 4801273d
-irq event stamp: 1025
-hardirqs last  enabled at (1025): [<c00800001a1e9728>] kvmppc_run_core+0xa20/0x1ab0 [kvm_hv]
-hardirqs last disabled at (1024): [<c00800001a1e9358>] kvmppc_run_core+0x650/0x1ab0 [kvm_hv]
-softirqs last  enabled at (0): [<c0000000000f1210>] copy_process.isra.4.part.5+0x5f0/0x1d00
-softirqs last disabled at (0): [<0000000000000000>]           (null)
----[ end trace 31180adcc848993e ]---
-possible reason: unannotated irqs-off.
-irq event stamp: 1025
-hardirqs last  enabled at (1025): [<c00800001a1e9728>] kvmppc_run_core+0xa20/0x1ab0 [kvm_hv]
-hardirqs last disabled at (1024): [<c00800001a1e9358>] kvmppc_run_core+0x650/0x1ab0 [kvm_hv]
-softirqs last  enabled at (0): [<c0000000000f1210>] copy_process.isra.4.part.5+0x5f0/0x1d00
-softirqs last disabled at (0): [<0000000000000000>]           (null)
+Also, it changes compatible of mdio0 to "fsl,etsec2-mdio" to match
+mdio1 device.
 
-Fixes: 8b24e69fc47e ("KVM: PPC: Book3S HV: Close race with testing for signals on guest entry", 2017-06-26)
-Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+Fixes: 055223d4d22d ("ARM: dts: ls1021a: Enable the eTSEC ports on QDS and TWR")
+Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+Reviewed-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+Acked-by: Li Yang <leoyang.li@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kvm/book3s_hv.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ arch/arm/boot/dts/ls1021a-twr.dts |  9 ++++++++-
+ arch/arm/boot/dts/ls1021a.dtsi    | 11 ++++++++++-
+ 2 files changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-index 3ae3e8d141e3..dbfe32327212 100644
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -2993,25 +2993,26 @@ static noinline void kvmppc_run_core(struct kvmppc_vcore *vc)
- 		}
- 	}
+diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
+index f0c949d74833..ec5afad3efd8 100644
+--- a/arch/arm/boot/dts/ls1021a-twr.dts
++++ b/arch/arm/boot/dts/ls1021a-twr.dts
+@@ -143,7 +143,7 @@
+ };
  
--	/*
--	 * Interrupts will be enabled once we get into the guest,
--	 * so tell lockdep that we're about to enable interrupts.
--	 */
--	trace_hardirqs_on();
--
- 	guest_enter_irqoff();
- 
- 	srcu_idx = srcu_read_lock(&vc->kvm->srcu);
- 
- 	this_cpu_disable_ftrace();
- 
-+	/*
-+	 * Interrupts will be enabled once we get into the guest,
-+	 * so tell lockdep that we're about to enable interrupts.
-+	 */
-+	trace_hardirqs_on();
+ &enet0 {
+-	tbi-handle = <&tbi1>;
++	tbi-handle = <&tbi0>;
+ 	phy-handle = <&sgmii_phy2>;
+ 	phy-connection-type = "sgmii";
+ 	status = "okay";
+@@ -222,6 +222,13 @@
+ 	sgmii_phy2: ethernet-phy@2 {
+ 		reg = <0x2>;
+ 	};
++	tbi0: tbi-phy@1f {
++		reg = <0x1f>;
++		device_type = "tbi-phy";
++	};
++};
 +
- 	trap = __kvmppc_vcore_entry();
++&mdio1 {
+ 	tbi1: tbi-phy@1f {
+ 		reg = <0x1f>;
+ 		device_type = "tbi-phy";
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+index f18490548c78..7e22309bccac 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -584,7 +584,7 @@
+ 		};
  
-+	trace_hardirqs_off();
+ 		mdio0: mdio@2d24000 {
+-			compatible = "gianfar";
++			compatible = "fsl,etsec2-mdio";
+ 			device_type = "mdio";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+@@ -592,6 +592,15 @@
+ 			      <0x0 0x2d10030 0x0 0x4>;
+ 		};
+ 
++		mdio1: mdio@2d64000 {
++			compatible = "fsl,etsec2-mdio";
++			device_type = "mdio";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x0 0x2d64000 0x0 0x4000>,
++			      <0x0 0x2d50030 0x0 0x4>;
++		};
 +
- 	this_cpu_enable_ftrace();
- 
- 	srcu_read_unlock(&vc->kvm->srcu, srcu_idx);
- 
--	trace_hardirqs_off();
- 	set_irq_happened(trap);
- 
- 	spin_lock(&vc->lock);
+ 		ptp_clock@2d10e00 {
+ 			compatible = "fsl,etsec-ptp";
+ 			reg = <0x0 0x2d10e00 0x0 0xb0>;
 -- 
 2.20.1
 
