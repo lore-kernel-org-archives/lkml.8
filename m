@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E554AC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FFCC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3A3C246B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:41:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A43DC24727
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:41:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196487;
-	bh=qljT4y/A3k246iseBZPFaMQAh1Y9qLsRf7BctsBuqKE=;
+	s=default; t=1579196495;
+	bh=sqN9Ia28wx00eEWZy/Rnbw2Pe3jh79jsaCmiTr1yRgg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1efgGwPfDfvJJcrE5LpG6YffzsSvW7B70dQ+0XNU9F13rrj1RXFjqfbySdEyUjWt3
-	 PwlSLtZq/PIKrmcCvVdkZaDR06EbvYp7A6h4xAbQvAUBasPRqPhM27Wbjjz3rjF5pQ
-	 CueQ6lpmqqiRdV9BjTU7jfCHcJCxWvHb98wI63yY=
+	b=NVEbbSo+C5CmChhizf7YFB6yD3eNlCZrPhNndNdFRiT3aRqIB5L/zFAHDYA/ldu85
+	 TIV/LhJF8cwA/TJ7/owMfVEvX1stbmeRnMpPtdpTC84O6KLlRd++f44X0tXO8mhA47
+	 tF0b+/cdrBS23CfMLPKnNkqUeicOQjpLJkcjYZs0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405660AbgAPRl0 (ORCPT
+        id S2405733AbgAPRle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:41:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57856 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:41:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393643AbgAPRkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:40:37 -0500
+        id S2393674AbgAPRkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:40:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAAC82473C;
-        Thu, 16 Jan 2020 17:40:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C99C420684;
+        Thu, 16 Jan 2020 17:40:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196437;
-        bh=qljT4y/A3k246iseBZPFaMQAh1Y9qLsRf7BctsBuqKE=;
+        s=default; t=1579196444;
+        bh=sqN9Ia28wx00eEWZy/Rnbw2Pe3jh79jsaCmiTr1yRgg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nnONuHuR5IWr8X/cMTSdSQ7hwMzAz8jzuVRrMfXV5oy2s8+7iFqQY1TlODQ4oxFpV
-         NXQoaE/Pjgmka0xermbvndzgvZOioNNO0kA1O5MwnS78LYLL+DnZemgMaGyPIJK8/H
-         9STpOFE/wRD2CNyrOqwyv4Lr7Tz74rK0qf+Lm4NU=
+        b=fe+1XHfvoYKzPge4CU59RyEbdjgA/zw81HBzv/THFfB0swNARKsuAuDS6CfkiRosu
+         oPb+dC6otTDYqWdqAn1vTAYffnnFrsOO9muOIYIeprAbpRNEuLz9TtIZl4CzDWYEIk
+         EovAZujRvOJo4UI44AYbVesQziQPNAZbuNX60eJM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Filippo Sironi <sironi@amazon.de>, Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.9 202/251] iommu/amd: Wait for completion of IOTLB flush in attach_device
-Date:   Thu, 16 Jan 2020 12:35:51 -0500
-Message-Id: <20200116173641.22137-162-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 207/251] net: ethernet: stmmac: Fix signedness bug in ipq806x_gmac_of_parse()
+Date:   Thu, 16 Jan 2020 12:35:56 -0500
+Message-Id: <20200116173641.22137-167-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -59,35 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filippo Sironi <sironi@amazon.de>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 0b15e02f0cc4fb34a9160de7ba6db3a4013dc1b7 ]
+[ Upstream commit 231042181dc9d6122c6faba64e99ccb25f13cc6c ]
 
-To make sure the domain tlb flush completes before the
-function returns, explicitly wait for its completion.
+The "gmac->phy_mode" variable is an enum and in this context GCC will
+treat it as an unsigned int so the error handling will never be
+triggered.
 
-Signed-off-by: Filippo Sironi <sironi@amazon.de>
-Fixes: 42a49f965a8d ("amd-iommu: flush domain tlb when attaching a new device")
-[joro: Added commit message and fixes tag]
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: b1c17215d718 ("stmmac: add ipq806x glue layer")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index c898c70472bb..bb0448c91f67 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -2113,6 +2113,8 @@ static int attach_device(struct device *dev,
- 	 */
- 	domain_flush_tlb_pde(domain);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
+index 866444b6c82f..11a4a81b0397 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
+@@ -203,7 +203,7 @@ static int ipq806x_gmac_of_parse(struct ipq806x_gmac *gmac)
+ 	struct device *dev = &gmac->pdev->dev;
  
-+	domain_flush_complete(domain);
-+
- 	return ret;
- }
- 
+ 	gmac->phy_mode = of_get_phy_mode(dev->of_node);
+-	if (gmac->phy_mode < 0) {
++	if ((int)gmac->phy_mode < 0) {
+ 		dev_err(dev, "missing phy mode property\n");
+ 		return -EINVAL;
+ 	}
 -- 
 2.20.1
 
