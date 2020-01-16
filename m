@@ -2,224 +2,175 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD96C32771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 01:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 127CCC32771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 01:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA8342465A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 01:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C720220723
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 01:38:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cGAmr6kR"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kookV47t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729945AbgAPBgY (ORCPT
+        id S1730136AbgAPBi2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 20:36:24 -0500
-Received: from ozlabs.org ([203.11.71.1]:59705 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729195AbgAPBgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 20:36:24 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47ymxZ6wdlz9sR0;
-        Thu, 16 Jan 2020 12:36:18 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1579138579;
-        bh=3QgTtxEuHnvoA7D2nU9hi3dlGTa5xpKg0k5M4dwrBcM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=cGAmr6kRoOtgu1YBjBeAoJsO93EJhWjCKymmC7Msrdb9Z2d1F9WCSgZU6sjKWW8ze
-         brJ8kyTOrMzND20wcAtNekEa3w1eorKUkj3YPmbqYhPUOKK1RVcnfZo1u1rwxG/Pah
-         o+bNyIdWovOXWdGGB6ga3YuQ/cQ28cLgUzqWx+uGHYzu31BVhyvYURdnoqY1HURWhm
-         cx06/0X3vE/SKEN98tq/pNVcBFoPO2SAn7SE4ACc6NB4oZLwgDQyWi8ysX357GWqTP
-         JPrwLPDDfg0xfee/k4mCnTCUyiXDput0L1sSZCjrl7EtlPpyLs4xOcLx11WdidLAuv
-         93SUyQZoRd9eA==
-Date:   Thu, 16 Jan 2020 12:36:17 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build failure after merge of the keys tree
-Message-ID: <20200116123617.4a4b10f5@canb.auug.org.au>
+        Wed, 15 Jan 2020 20:38:28 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:39654 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729048AbgAPBi1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 20:38:27 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G1Tjmn050537;
+        Thu, 16 Jan 2020 01:37:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=GWh1sgtya/qcBgnEbum74PRtCB072WON8vFm/24xoNA=;
+ b=kookV47tfUn5jNN7eEWFXSoU8Z+PDWaJDgoDhv5GZY+bSTeS3BPrwuwgeuW5xCBtNrgI
+ jBEXHzmomWZl46Ay2GT42NyW2VKCZISvXOZsxPumQBnRuCAc1xwqxbVpYQtERuvEDvYP
+ gHM+ZZJo0BqpNm6SynXi/25c/3hwECSDygpIbQYpnneEtqJUiPYKBoNF0iTaGrwrPfAj
+ wtGKJIQUM0wBTbcAFrXiWMl2E6rYoYUR5Ic+vjgNBhgsgTv00xswyHnEPBJ89e88dyNa
+ 3Xpcz+Iaw3oDAM4aX379vIk8g770OreWIXLxui5OOJa6m9EmluzdEwgx+Oqy9vpxAEiC dw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2xf74sfp3c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jan 2020 01:37:22 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G1Uh6G131571;
+        Thu, 16 Jan 2020 01:37:22 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2xj61kq616-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jan 2020 01:37:21 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00G1bIbm030780;
+        Thu, 16 Jan 2020 01:37:18 GMT
+Received: from dhcp-10-132-95-72.usdhcp.oraclecorp.com (/10.132.95.72)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 15 Jan 2020 17:37:18 -0800
+Subject: Re: [PATCH] KVM: x86: Perform non-canonical checks in 32-bit KVM
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200115183605.15413-1-sean.j.christopherson@intel.com>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <cf9a9746-e0b8-8303-afd5-b1c3a2a9ac83@oracle.com>
+Date:   Wed, 15 Jan 2020 17:37:16 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.4.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/_CCL_Rl.YScGtz_kpkrvag_";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200115183605.15413-1-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=501
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001160010
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=554 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001160010
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/_CCL_Rl.YScGtz_kpkrvag_
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-After merging the keys tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+On 01/15/2020 10:36 AM, Sean Christopherson wrote:
+> Remove the CONFIG_X86_64 condition from the low level non-canonical
+> helpers to effectively enable non-canonical checks on 32-bit KVM.
+> Non-canonical checks are performed by hardware if the CPU *supports*
+> 64-bit mode, whether or not the CPU is actually in 64-bit mode is
+> irrelevant.
+>
+> For the most part, skipping non-canonical checks on 32-bit KVM is ok-ish
+> because 32-bit KVM always (hopefully) drops bits 63:32 of whatever value
+> it's checking before propagating it to hardware, and architecturally,
+> the expected behavior for the guest is a bit of a grey area since the
+> vCPU itself doesn't support 64-bit mode.  I.e. a 32-bit KVM guest can
+> observe the missed checks in several paths, e.g. INVVPID and VM-Enter,
+> but it's debatable whether or not the missed checks constitute a bug
+> because technically the vCPU doesn't support 64-bit mode.
+>
+> The primary motivation for enabling the non-canonical checks is defense
+> in depth.  As mentioned above, a guest can trigger a missed check via
+> INVVPID or VM-Enter.  INVVPID is straightforward as it takes a 64-bit
+> virtual address as part of its 128-bit INVVPID descriptor and fails if
+> the address is non-canonical, even if INVVPID is executed in 32-bit PM.
+> Nested VM-Enter is a bit more convoluted as it requires the guest to
+> write natural width VMCS fields via memory accesses and then VMPTRLD the
+> VMCS, but it's still possible.  In both cases, KVM is saved from a true
+> bug only because its flows that propagate values to hardware (correctly)
+> take "unsigned long" parameters and so drop bits 63:32 of the bad value.
+>
+> Explicitly performing the non-canonical checks makes it less likely that
+> a bad value will be propagated to hardware, e.g. in the INVVPID case,
+> if __invvpid() didn't implicitly drop bits 63:32 then KVM would BUG() on
+> the resulting unexpected INVVPID failure due to hardware rejecting the
+> non-canonical address.
+>
+> The only downside to enabling the non-canonical checks is that it adds a
+> relatively small amount of overhead, but the affected flows are not hot
+> paths, i.e. the overhead is negligible.
+>
+> Note, KVM technically could gate the non-canonical checks on 32-bit KVM
+> with static_cpu_has(X86_FEATURE_LM), but on bare metal that's an even
+> bigger waste of code for everyone except the 0.00000000000001% of the
+> population running on Yonah, and nested 32-bit on 64-bit already fudges
+> things with respect to 64-bit CPU behavior.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>   arch/x86/kvm/x86.h | 8 --------
+>   1 file changed, 8 deletions(-)
+>
+> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+> index cab5e71f0f0f..3ff590ec0238 100644
+> --- a/arch/x86/kvm/x86.h
+> +++ b/arch/x86/kvm/x86.h
+> @@ -166,21 +166,13 @@ static inline u64 get_canonical(u64 la, u8 vaddr_bits)
+>   
+>   static inline bool is_noncanonical_address(u64 la, struct kvm_vcpu *vcpu)
+>   {
+> -#ifdef CONFIG_X86_64
+>   	return get_canonical(la, vcpu_virt_addr_bits(vcpu)) != la;
+> -#else
+> -	return false;
+> -#endif
+>   }
+>   
+>   static inline bool emul_is_noncanonical_address(u64 la,
+>   						struct x86_emulate_ctxt *ctxt)
+>   {
+> -#ifdef CONFIG_X86_64
+>   	return get_canonical(la, ctxt_virt_addr_bits(ctxt)) != la;
+> -#else
+> -	return false;
+> -#endif
+>   }
+>   
+>   static inline void vcpu_cache_mmio_info(struct kvm_vcpu *vcpu,
 
-In file included from include/linux/keyctl.h:11,
-                 from include/linux/key.h:35,
-                 from include/linux/cred.h:13,
-                 from fs/verity/signature.c:10:
-fs/verity/signature.c: In function 'fsverity_init_signature':
-include/uapi/linux/keyctl.h:52:24: warning: passing argument 5 of 'keyring_=
-alloc' makes pointer from integer without a cast [-Wint-conversion]
-   52 | #define KEY_POS_SEARCH 0x08000000 /* possessor can find a key in se=
-arch / search a keyring */
-      |                        ^
-      |                        |
-      |                        int
-fs/verity/signature.c:140:25: note: in expansion of macro 'KEY_POS_SEARCH'
-  140 |         current_cred(), KEY_POS_SEARCH |
-      |                         ^~~~~~~~~~~~~~
-In file included from include/linux/cred.h:13,
-                 from fs/verity/signature.c:10:
-include/linux/key.h:390:20: note: expected 'struct key_acl *' but argument =
-is of type 'int'
-  390 | extern struct key *keyring_alloc(const char *description, kuid_t ui=
-d, kgid_t gid,
-      |                    ^~~~~~~~~~~~~
-fs/crypto/keysetup_v1.c: In function 'find_and_lock_process_key':
-fs/crypto/keysetup_v1.c:107:8: error: too few arguments to function 'reques=
-t_key'
-  107 |  key =3D request_key(&key_type_logon, description, NULL);
-      |        ^~~~~~~~~~~
-In file included from include/keys/user-type.h:11,
-                 from fs/crypto/keysetup_v1.c:25:
-include/linux/key.h:321:27: note: declared here
-  321 | static inline struct key *request_key(struct key_type *type,
-      |                           ^~~~~~~~~~~
-In file included from include/linux/keyctl.h:11,
-                 from include/linux/key.h:35,
-                 from include/linux/key-type.h:11,
-                 from fs/crypto/keyring.c:22:
-fs/crypto/keyring.c: In function 'allocate_filesystem_keyring':
-include/uapi/linux/keyctl.h:52:24: warning: passing argument 5 of 'keyring_=
-alloc' makes pointer from integer without a cast [-Wint-conversion]
-   52 | #define KEY_POS_SEARCH 0x08000000 /* possessor can find a key in se=
-arch / search a keyring */
-      |                        ^
-      |                        |
-      |                        int
-fs/crypto/keyring.c:208:21: note: in expansion of macro 'KEY_POS_SEARCH'
-  208 |     current_cred(), KEY_POS_SEARCH |
-      |                     ^~~~~~~~~~~~~~
-In file included from include/linux/key-type.h:11,
-                 from fs/crypto/keyring.c:22:
-include/linux/key.h:390:20: note: expected 'struct key_acl *' but argument =
-is of type 'int'
-  390 | extern struct key *keyring_alloc(const char *description, kuid_t ui=
-d, kgid_t gid,
-      |                    ^~~~~~~~~~~~~
-In file included from include/linux/keyctl.h:11,
-                 from include/linux/key.h:35,
-                 from include/linux/key-type.h:11,
-                 from fs/crypto/keyring.c:22:
-fs/crypto/keyring.c: In function 'allocate_master_key_users_keyring':
-include/uapi/linux/keyctl.h:52:24: warning: passing argument 5 of 'keyring_=
-alloc' makes pointer from integer without a cast [-Wint-conversion]
-   52 | #define KEY_POS_SEARCH 0x08000000 /* possessor can find a key in se=
-arch / search a keyring */
-      |                        ^
-      |                        |
-      |                        int
-fs/crypto/keyring.c:252:21: note: in expansion of macro 'KEY_POS_SEARCH'
-  252 |     current_cred(), KEY_POS_SEARCH |
-      |                     ^~~~~~~~~~~~~~
-In file included from include/linux/key-type.h:11,
-                 from fs/crypto/keyring.c:22:
-include/linux/key.h:390:20: note: expected 'struct key_acl *' but argument =
-is of type 'int'
-  390 | extern struct key *keyring_alloc(const char *description, kuid_t ui=
-d, kgid_t gid,
-      |                    ^~~~~~~~~~~~~
-In file included from include/linux/keyctl.h:11,
-                 from include/linux/key.h:35,
-                 from include/linux/key-type.h:11,
-                 from fs/crypto/keyring.c:22:
-fs/crypto/keyring.c: In function 'add_master_key_user':
-include/uapi/linux/keyctl.h:52:24: warning: passing argument 6 of 'key_allo=
-c' makes pointer from integer without a cast [-Wint-conversion]
-   52 | #define KEY_POS_SEARCH 0x08000000 /* possessor can find a key in se=
-arch / search a keyring */
-      |                        ^
-      |                        |
-      |                        int
-fs/crypto/keyring.c:290:8: note: in expansion of macro 'KEY_POS_SEARCH'
-  290 |        KEY_POS_SEARCH | KEY_USR_VIEW, 0, NULL);
-      |        ^~~~~~~~~~~~~~
-In file included from include/linux/key-type.h:11,
-                 from fs/crypto/keyring.c:22:
-include/linux/key.h:256:20: note: expected 'struct key_acl *' but argument =
-is of type 'int'
-  256 | extern struct key *key_alloc(struct key_type *type,
-      |                    ^~~~~~~~~
-In file included from include/linux/keyctl.h:11,
-                 from include/linux/key.h:35,
-                 from include/linux/key-type.h:11,
-                 from fs/crypto/keyring.c:22:
-fs/crypto/keyring.c: In function 'add_new_master_key':
-include/uapi/linux/keyctl.h:52:24: warning: passing argument 6 of 'key_allo=
-c' makes pointer from integer without a cast [-Wint-conversion]
-   52 | #define KEY_POS_SEARCH 0x08000000 /* possessor can find a key in se=
-arch / search a keyring */
-      |                        ^
-      |                        |
-      |                        int
-fs/crypto/keyring.c:362:4: note: in expansion of macro 'KEY_POS_SEARCH'
-  362 |    KEY_POS_SEARCH | KEY_USR_SEARCH | KEY_USR_VIEW,
-      |    ^~~~~~~~~~~~~~
-In file included from include/linux/key-type.h:11,
-                 from fs/crypto/keyring.c:22:
-include/linux/key.h:256:20: note: expected 'struct key_acl *' but argument =
-is of type 'int'
-  256 | extern struct key *key_alloc(struct key_type *type,
-      |                    ^~~~~~~~~
-drivers/md/dm-verity-verify-sig.c: In function 'verity_verify_get_sig_from_=
-key':
-drivers/md/dm-verity-verify-sig.c:38:8: error: too few arguments to functio=
-n 'request_key'
-   38 |  key =3D request_key(&key_type_user,
-      |        ^~~~~~~~~~~
-In file included from include/keys/user-type.h:11,
-                 from drivers/md/dm-verity-verify-sig.c:10:
-include/linux/key.h:321:27: note: declared here
-  321 | static inline struct key *request_key(struct key_type *type,
-      |                           ^~~~~~~~~~~
+nested_vmx_check_host_state() still won't call it on 32-bit because it 
+has the CONFIG_X86_64 guard around the callee:
 
-Caused by API updates in the keys tree without fixups of their uses.
+  #ifdef CONFIG_X86_64
+         if (CC(is_noncanonical_address(vmcs12->host_fs_base, vcpu)) ||
+             CC(is_noncanonical_address(vmcs12->host_gs_base, vcpu)) ||
+  ...
 
-The keys tree is now based on v5.5-rc3 ...
 
-The callis to keyring_alloc() in fs/verity/signature.c and
-fs/crypto/keyring.c were added in v5.4-rc1.  As were the calls to
-request_key() in fs/crypto/keysetup_v1.c and
-drivers/md/dm-verity-verify-sig.c.
-
-I have used the keys tree from next-20191211 again today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/_CCL_Rl.YScGtz_kpkrvag_
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4fvhEACgkQAVBC80lX
-0Gx9fgf+PEfKld65lctjHtkk8fkHMzqY6r7oLl/plq8UxvmvBJK7RF935zoFNUox
-/IhxTH+x4Q4f6szBIky9loq/ktOFOAydalo9+skYbnvb1cT9mIbH0cn6eq0quI7M
-ZmTJPhpZI2OtSu8tDHfHtHt0hYPkPcUAOkc0lSYXLjipk88WNXOBg4F9QQXlbZFq
-S5CC0k445EaiiuiBbXiHj31VzuHZbobQAFYVLyRvx5Dxt9DbgKZT+RbvVSgyAEXm
-TY9xAj5r86WeGaNlJ8kfIHLjYKkjzBqk1zZISUzWwi2uUwitzz3z8ibAnbKtQ9mZ
-Jt18qVpuMEBapTNgqhAFf+uVW9jSkA==
-=eB00
------END PGP SIGNATURE-----
-
---Sig_/_CCL_Rl.YScGtz_kpkrvag_--
+Don't we need to remove these guards in the callers as well ?
