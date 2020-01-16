@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A634C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B2BCC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64B052072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E4082072B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:20:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579216835;
-	bh=3yWjoeEIMnBoOIZGVRv9iSKJUBempfyyrqd4UN/dPGk=;
+	s=default; t=1579216838;
+	bh=z3iQ8r4YGWtapD/UG4MIECHZu1yq6TYsrjCMYFKWfJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E3gR5NcTxOWk2vRMKAJSecIa6FbfnwR6TrSyXMo25TJVTTzxn4FQD+q4od8XPrjiY
-	 7x1Zj9DRG8W1vIq7yyVnmjVBDBdnFeKeqVun+klwX2xN6wml81Ubpt4ME9dSWe0ghM
-	 HXMyZjWi1vi8plvB2Vt4VUf6F9GpaclRrKAD+nxo=
+	b=bbUUr1YIcsFPLPiKOtQjVWxGfVEXzYgQ+X6QQASfmD5X/FAteiIqk6VRjka5oRlKL
+	 VDmt12R8VQQ2JsjJiWa69hjKxkEoaAgrrqbsAVHNJnqiKXbhIEd2b1yQcV11/gfYw+
+	 W8L8kvIf2FkMu7HKdIZ7G38EceMLIGhukvYhKTEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390670AbgAPXUe (ORCPT
+        id S2390681AbgAPXUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:20:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47042 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:20:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389723AbgAPXU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:20:29 -0500
+        id S2389868AbgAPXUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:20:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DC452073A;
-        Thu, 16 Jan 2020 23:20:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC8E220684;
+        Thu, 16 Jan 2020 23:20:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216828;
-        bh=3yWjoeEIMnBoOIZGVRv9iSKJUBempfyyrqd4UN/dPGk=;
+        s=default; t=1579216831;
+        bh=z3iQ8r4YGWtapD/UG4MIECHZu1yq6TYsrjCMYFKWfJs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T90L4dTvc397uotyF516T3CBssoKKijqyZoWKLh2ZXP4DkrbBAlzxDdXmbSYpXz03
-         y4CqMFlO8hzgCgE/S03qnqFKTgmNVntN20FH0kGWqgrx7+fRN8/C/0gbPa3LEYTnwN
-         NgB9fI4veRyeUah5PZ8EBnAUlScGmAeEJUXkrxNQ=
+        b=extVgn8i0BKxXLjntPNgaEUW1TVzGKYc9d55+hSdnqvUu+kadcjl21tv1mJc4gu8i
+         jmf9N+38HVZIkXnNvVa/MFkSENE1TelSknPzmAe9bKXRulVa/XA/nQKkaUJKJgKsCF
+         ZGW9zARMZniE4OOoN0o7MkFJq46ffUKT9jw2XW2I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qianggui Song <qianggui.song@amlogic.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 5.4 019/203] pinctrl: meson: Fix wrong shift value when get drive-strength
-Date:   Fri, 17 Jan 2020 00:15:36 +0100
-Message-Id: <20200116231746.325188044@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Baluta <daniel.baluta@nxp.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.4 010/203] ASoC: soc-core: Set dpcm_playback / dpcm_capture
+Date:   Fri, 17 Jan 2020 00:15:27 +0100
+Message-Id: <20200116231745.837240568@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -59,36 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qianggui Song <qianggui.song@amlogic.com>
+From: Daniel Baluta <daniel.baluta@nxp.com>
 
-commit 35c60be220572de7d6605c4318f640d133982040 upstream.
+commit 218fe9b7ec7f32c10a07539365488d80af7b0084 upstream.
 
-In meson_pinconf_get_drive_strength, variable bit is calculated by
-meson_calc_reg_and_bit, this value is the offset from the first pin of a
-certain bank to current pin, while Meson SoCs use two bits for each pin
-to depict drive-strength. So a left shift by 1 should be done or node
-pinconf-pins shows wrong message.
+When converting a normal link to a DPCM link we need
+to set dpcm_playback / dpcm_capture otherwise playback/capture
+streams will not be created resulting in errors like this:
 
-Fixes: 6ea3e3bbef37 ("pinctrl: meson: add support of drive-strength-microamp")
+[   36.039111]  sai1-wm8960-hifi: ASoC: no backend playback stream
 
-Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
-Link: https://lore.kernel.org/r/20191226023734.9631-1-qianggui.song@amlogic.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: a655de808cbde ("ASoC: core: Allow topology to override machine driver FE DAI link config")
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Link: https://lore.kernel.org/r/20191204151333.26625-1-daniel.baluta@nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pinctrl/meson/pinctrl-meson.c |    1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/soc-core.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/pinctrl/meson/pinctrl-meson.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson.c
-@@ -441,6 +441,7 @@ static int meson_pinconf_get_drive_stren
- 		return ret;
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -1886,6 +1886,8 @@ match:
  
- 	meson_calc_reg_and_bit(bank, pin, REG_DS, &reg, &bit);
-+	bit = bit << 1;
+ 			/* convert non BE into BE */
+ 			dai_link->no_pcm = 1;
++			dai_link->dpcm_playback = 1;
++			dai_link->dpcm_capture = 1;
  
- 	ret = regmap_read(pc->reg_ds, reg, &val);
- 	if (ret)
+ 			/* override any BE fixups */
+ 			dai_link->be_hw_params_fixup =
 
 
