@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07AA4C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC5FC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC1EA2072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91C702072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:29:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217337;
-	bh=9XWg5J1roVA32YFDuVrObbNpztAQy9bBMeP5zOkQYBw=;
+	s=default; t=1579217340;
+	bh=/nGz56sMA8caDTBApOsOknhSoqaPclZYldLAfPUelVs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qQxU9TnC6ZMnVUnuIIHYDLtM7ZzyinCrhv9YX5esC54//moudebT6dnMGjObjIAcD
-	 NMx8xhQ4YXHHqEbw321+w9zVGiff9RgWNggWx9QSOtsELGAVVDytcOvbfyEfkwQfal
-	 dmurjTyEtdgE4wlks9m0yA82jHvalcHnT8tcW6is=
+	b=WrUIfIcFdqiZJAz346nir5y8PnnxXNl4uuPjJ/LomB9PZrLBkk9JJ8/mvOp42rWs2
+	 JAg9l07CBxp96uZeoZb9Nk3bPrBr9FtY6DBoA/DJM0TLRta+X3MoYx0cEXdMnUhyYD
+	 q2omNH8NtY+MZdv7o6duJB//buD4rAOKu0Alo+S0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391192AbgAPX24 (ORCPT
+        id S2391201AbgAPX27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:28:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33920 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:28:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390952AbgAPX2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:28:50 -0500
+        id S2388441AbgAPX2z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:28:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C396F206D9;
-        Thu, 16 Jan 2020 23:28:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A46B9206D9;
+        Thu, 16 Jan 2020 23:28:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217330;
-        bh=9XWg5J1roVA32YFDuVrObbNpztAQy9bBMeP5zOkQYBw=;
+        s=default; t=1579217335;
+        bh=/nGz56sMA8caDTBApOsOknhSoqaPclZYldLAfPUelVs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y/hehQ5PXFIeduOIM0zTZzO+19BYfgp+rWcz3R/SYhFMTH4NZcdk7y7+zfW1U0/h4
-         a1JDiae3YfhfEdw00fwrwfTNhcxzDwzQX938Q3SYqgNzVunqEILT+k1RUORm06i1GN
-         1zLlIBa4Ju9Ew4xcPAXSjaCv6YlmO5cva8LvFQuE=
+        b=fY+2gUB0jnQ7jRV3ric8AngJcsJzND/HPgLE1t6wESa6ChPaBcsaPIwes1WVCpGFf
+         IpwwrchCvP94a1uDdfmx1XEvfTV5E13Iqol4MEHKTFgyGdLfOM3DH1HENAQX/kfQlb
+         dB7quDUNMLU2gpxFh8JVs+gxVZX5h47rrR/vsQfc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
-        Daniel Drake <drake@endlessm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 4.19 39/84] platform/x86: asus-wmi: Fix keyboard brightness cannot be set to 0
-Date:   Fri, 17 Jan 2020 00:18:13 +0100
-Message-Id: <20200116231718.370865704@linuxfoundation.org>
+        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Subject: [PATCH 4.19 41/84] xprtrdma: Fix completion wait during device removal
+Date:   Fri, 17 Jan 2020 00:18:15 +0100
+Message-Id: <20200116231718.603428265@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
 References: <20200116231713.087649517@linuxfoundation.org>
@@ -60,40 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian-Hong Pan <jian-hong@endlessm.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-commit 176a7fca81c5090a7240664e3002c106d296bf31 upstream.
+commit 13cb886c591f341a8759f175292ddf978ef903a1 upstream.
 
-Some of ASUS laptops like UX431FL keyboard backlight cannot be set to
-brightness 0. According to ASUS' information, the brightness should be
-0x80 ~ 0x83. This patch fixes it by following the logic.
+I've found that on occasion, "rmmod <dev>" will hang while if an NFS
+is under load.
 
-Fixes: e9809c0b9670 ("asus-wmi: add keyboard backlight support")
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-Reviewed-by: Daniel Drake <drake@endlessm.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Ensure that ri_remove_done is initialized only just before the
+transport is woken up to force a close. This avoids the completion
+possibly getting initialized again while the CM event handler is
+waiting for a wake-up.
+
+Fixes: bebd031866ca ("xprtrdma: Support unplugging an HCA from under an NFS mount")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/platform/x86/asus-wmi.c |    8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ net/sunrpc/xprtrdma/verbs.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -463,13 +463,7 @@ static void kbd_led_update(struct work_s
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -248,6 +248,7 @@ rpcrdma_conn_upcall(struct rdma_cm_id *i
+ 			ia->ri_device->name,
+ 			rpcrdma_addrstr(xprt), rpcrdma_portstr(xprt));
+ #endif
++		init_completion(&ia->ri_remove_done);
+ 		set_bit(RPCRDMA_IAF_REMOVING, &ia->ri_flags);
+ 		ep->rep_connected = -ENODEV;
+ 		xprt_force_disconnect(&xprt->rx_xprt);
+@@ -306,7 +307,6 @@ rpcrdma_create_id(struct rpcrdma_xprt *x
+ 	trace_xprtrdma_conn_start(xprt);
  
- 	asus = container_of(work, struct asus_wmi, kbd_led_work);
+ 	init_completion(&ia->ri_done);
+-	init_completion(&ia->ri_remove_done);
  
--	/*
--	 * bits 0-2: level
--	 * bit 7: light on/off
--	 */
--	if (asus->kbd_led_wk > 0)
--		ctrl_param = 0x80 | (asus->kbd_led_wk & 0x7F);
--
-+	ctrl_param = 0x80 | (asus->kbd_led_wk & 0x7F);
- 	asus_wmi_set_devstate(ASUS_WMI_DEVID_KBD_BACKLIGHT, ctrl_param, NULL);
- 	led_classdev_notify_brightness_hw_changed(&asus->kbd_led, asus->kbd_led_wk);
- }
+ 	id = rdma_create_id(xprt->rx_xprt.xprt_net, rpcrdma_conn_upcall,
+ 			    xprt, RDMA_PS_TCP, IB_QPT_RC);
 
 
