@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEE9C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D2FC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FD5320661
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3016D20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:39:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217965;
-	bh=yWWbWA/a60bFs6M+W+yu8Q+ZUvBOx7ldAV+THpLEjR8=;
+	s=default; t=1579217968;
+	bh=zYyQCYQDckUrS/kpMNPDCdFrFdG67epaAPuttfXLJ8c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U7LLd6XJA3oOiyGntOYMGzBft4nQOzO0Jl2hEQMZuXG5U8j26QA0Jg87IrkzcOI0u
-	 wIbosx+G5nMByPEN/oGDpAuPLsU4LLR92syogUHkDbSviMMXkYPSAYKNjks8P0gyHC
-	 ANydPUfcCeD0BT9QY9HXteoWWZ41ydeYxSPN8ksQ=
+	b=j+Pw3QCBt//KwYTnwyxPLERK/JIaq8LBVzrJCicCOtGYokf+rwqggV/PFzl3axTEI
+	 I2LQFE+5e3WNeHx1rHLQKPS+rhviO7WOeoVUBvAPxoy3d5ukQ8VaAaJsFP4g+3iJlg
+	 cRIVWGhaNRVHQXyKyXoF6/VJ6LjICpKx7Ghcun2k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391083AbgAPX2U (ORCPT
+        id S2390933AbgAPXj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:28:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60862 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:39:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389500AbgAPX2O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:28:14 -0500
+        id S2391079AbgAPX2T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:28:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BB50206D9;
-        Thu, 16 Jan 2020 23:28:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E5E520684;
+        Thu, 16 Jan 2020 23:28:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217291;
-        bh=yWWbWA/a60bFs6M+W+yu8Q+ZUvBOx7ldAV+THpLEjR8=;
+        s=default; t=1579217298;
+        bh=zYyQCYQDckUrS/kpMNPDCdFrFdG67epaAPuttfXLJ8c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lmLN5x5T1TpMyc3MatDH2IM6iF+SOEy19mOMmVwaweYe7IQ90B1EzUY4AOKIYspoN
-         PYj6daHS1cexiSxrEUaeFH9d10xeGlYWHzjbacK08JUSjQQmmVT0lhVV6qjdmnKzvV
-         231O5wvnYjh3+71GHSbRYt9dZCSbhy4IjYyIchyc=
+        b=kVYn9eh/mZiBb23EWX9JsJPrwIkRcbmVAndLnNEqxNqVj6mIRqsjApDk+OJcl/o6A
+         BK4M0LNC+C1ylEsFbEMKFhGdR4ccGnHB5Z8912+8BvAHqXigSbP+wEdMy0LyrbuRCx
+         dfXsHysC+c5AkqvoFeW5HBL5UTnQ9EwJW7vtv+QM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olivier Moysan <olivier.moysan@st.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.19 22/84] ASoC: stm32: spdifrx: fix race condition in irq handler
-Date:   Fri, 17 Jan 2020 00:17:56 +0100
-Message-Id: <20200116231716.272428926@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 4.19 25/84] iommu: Remove device link to group on failure
+Date:   Fri, 17 Jan 2020 00:17:59 +0100
+Message-Id: <20200116231716.623652200@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
 References: <20200116231713.087649517@linuxfoundation.org>
@@ -59,108 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olivier Moysan <olivier.moysan@st.com>
+From: Jon Derrick <jonathan.derrick@intel.com>
 
-commit 86e1956af4c863d653136fd6e5694adf2054dbaa upstream.
+commit 7d4e6ccd1fb09dbfbc49746ca82bd5c25ad4bfe4 upstream.
 
-When snd_pcm_stop() is called in interrupt routine,
-substream context may have already been released.
-Add protection on substream context.
+This adds the missing teardown step that removes the device link from
+the group when the device addition fails.
 
-Fixes: 03e4d5d56fa5 ("ASoC: stm32: Add SPDIFRX support")
-
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-Link: https://lore.kernel.org/r/20191204154333.7152-3-olivier.moysan@st.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+Fixes: 797a8b4d768c5 ("iommu: Handle default domain attach failure")
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/stm/stm32_spdifrx.c |   24 +++++++++++++++++++-----
- 1 file changed, 19 insertions(+), 5 deletions(-)
+ drivers/iommu/iommu.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/sound/soc/stm/stm32_spdifrx.c
-+++ b/sound/soc/stm/stm32_spdifrx.c
-@@ -213,6 +213,7 @@
-  * @slave_config: dma slave channel runtime config pointer
-  * @phys_addr: SPDIFRX registers physical base address
-  * @lock: synchronization enabling lock
-+ * @irq_lock: prevent race condition with IRQ on stream state
-  * @cs: channel status buffer
-  * @ub: user data buffer
-  * @irq: SPDIFRX interrupt line
-@@ -233,6 +234,7 @@ struct stm32_spdifrx_data {
- 	struct dma_slave_config slave_config;
- 	dma_addr_t phys_addr;
- 	spinlock_t lock;  /* Sync enabling lock */
-+	spinlock_t irq_lock; /* Prevent race condition on stream state */
- 	unsigned char cs[SPDIFRX_CS_BYTES_NB];
- 	unsigned char ub[SPDIFRX_UB_BYTES_NB];
- 	int irq;
-@@ -645,7 +647,6 @@ static const struct regmap_config stm32_
- static irqreturn_t stm32_spdifrx_isr(int irq, void *devid)
- {
- 	struct stm32_spdifrx_data *spdifrx = (struct stm32_spdifrx_data *)devid;
--	struct snd_pcm_substream *substream = spdifrx->substream;
- 	struct platform_device *pdev = spdifrx->pdev;
- 	unsigned int cr, mask, sr, imr;
- 	unsigned int flags;
-@@ -713,14 +714,19 @@ static irqreturn_t stm32_spdifrx_isr(int
- 		regmap_update_bits(spdifrx->regmap, STM32_SPDIFRX_CR,
- 				   SPDIFRX_CR_SPDIFEN_MASK, cr);
- 
--		if (substream)
--			snd_pcm_stop(substream, SNDRV_PCM_STATE_DISCONNECTED);
-+		spin_lock(&spdifrx->irq_lock);
-+		if (spdifrx->substream)
-+			snd_pcm_stop(spdifrx->substream,
-+				     SNDRV_PCM_STATE_DISCONNECTED);
-+		spin_unlock(&spdifrx->irq_lock);
- 
- 		return IRQ_HANDLED;
- 	}
- 
--	if (err_xrun && substream)
--		snd_pcm_stop_xrun(substream);
-+	spin_lock(&spdifrx->irq_lock);
-+	if (err_xrun && spdifrx->substream)
-+		snd_pcm_stop_xrun(spdifrx->substream);
-+	spin_unlock(&spdifrx->irq_lock);
- 
- 	return IRQ_HANDLED;
- }
-@@ -729,9 +735,12 @@ static int stm32_spdifrx_startup(struct
- 				 struct snd_soc_dai *cpu_dai)
- {
- 	struct stm32_spdifrx_data *spdifrx = snd_soc_dai_get_drvdata(cpu_dai);
-+	unsigned long flags;
- 	int ret;
- 
-+	spin_lock_irqsave(&spdifrx->irq_lock, flags);
- 	spdifrx->substream = substream;
-+	spin_unlock_irqrestore(&spdifrx->irq_lock, flags);
- 
- 	ret = clk_prepare_enable(spdifrx->kclk);
- 	if (ret)
-@@ -807,8 +816,12 @@ static void stm32_spdifrx_shutdown(struc
- 				   struct snd_soc_dai *cpu_dai)
- {
- 	struct stm32_spdifrx_data *spdifrx = snd_soc_dai_get_drvdata(cpu_dai);
-+	unsigned long flags;
- 
-+	spin_lock_irqsave(&spdifrx->irq_lock, flags);
- 	spdifrx->substream = NULL;
-+	spin_unlock_irqrestore(&spdifrx->irq_lock, flags);
-+
- 	clk_disable_unprepare(spdifrx->kclk);
- }
- 
-@@ -912,6 +925,7 @@ static int stm32_spdifrx_probe(struct pl
- 	spdifrx->pdev = pdev;
- 	init_completion(&spdifrx->cs_completion);
- 	spin_lock_init(&spdifrx->lock);
-+	spin_lock_init(&spdifrx->irq_lock);
- 
- 	platform_set_drvdata(pdev, spdifrx);
- 
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -650,6 +650,7 @@ err_put_group:
+ 	mutex_unlock(&group->mutex);
+ 	dev->iommu_group = NULL;
+ 	kobject_put(group->devices_kobj);
++	sysfs_remove_link(group->devices_kobj, device->name);
+ err_free_name:
+ 	kfree(device->name);
+ err_remove_link:
 
 
