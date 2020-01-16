@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 027D3C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6783DC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C671E2077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:41:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4284E2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:41:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200089;
-	bh=K3LolZs8XlQX3PYd626tuVPkYCLVZ4cJ0j8MFdAn3jk=;
+	s=default; t=1579200093;
+	bh=PnVpT4/QJ3WAT4Ql9TmzLi2UZ2vA8VjV83vbwLPziJ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j8jIHukSTJ/HPjgUA+xfNbGna/GZtEGSqYVgY1xiot9i6iS1IvrMgruC8Uirw4ii+
-	 cNK64U8H+VFaFlUk4GTtRrlL1gkGvaiXOKtv+2IpqAl3vhyInoYkKEuJgxVvjCAkwa
-	 C4ocmLMPJBY26YTWekTh8IQ/oUwpo72fDiGTF+bQ=
+	b=qgUNZWWgACnCxJk0D2ofAT0BHk2M/bEcMP7100acj9QlDrqmDBAKPgzV5Xg3lNmeU
+	 6YU+FRgtGjCVR3pW8RSgMMSCQQZvIKasabxvcH1SEcEkWNjPm1/l88z6uR7M2elju/
+	 7KVfYlqaBRnAnqoIowmBJkqhNZTCwaPZm7w37rzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395227AbgAPSl2 (ORCPT
+        id S2389973AbgAPRLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:41:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53258 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:11:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390310AbgAPRLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:11:49 -0500
+        id S2389977AbgAPRLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:11:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3F5424691;
-        Thu, 16 Jan 2020 17:11:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6564224687;
+        Thu, 16 Jan 2020 17:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194708;
-        bh=K3LolZs8XlQX3PYd626tuVPkYCLVZ4cJ0j8MFdAn3jk=;
+        s=default; t=1579194699;
+        bh=PnVpT4/QJ3WAT4Ql9TmzLi2UZ2vA8VjV83vbwLPziJ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z+C7Lstzw+V+CGYiFjU6lJ3EV3hyiH6xjv/WEUs66x89bw9hatPlCpAVNgHG0Ef+m
-         HqndlbWZKQI3wJzlVdlV3TcP3IhICiJwh792nSo82gtZ80xxnRljc4KiNlXfs+VMKZ
-         p73oWYKfFPWUnj+laqgimQrNgovJAHC2ceQIJxe4=
+        b=wK2DK9DIc3Hvvou5nMFwkPodGrkHxYg0lowJLn2dXxm5UZlNHFWuNiRz/o0rPweHh
+         TdrljZYsW7YgySjIDZ4hX9OpBgmCVOYjW0eU4yo0PEkcw0oumaTvdKS5c+K7lh7Dy3
+         LWRxNfD0ygjkXbrIzL3eFKVx9KFoWT4g10oXhWWU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Li Jin <li.jin@broadcom.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 546/671] pinctrl: iproc-gpio: Fix incorrect pinconf configurations
-Date:   Thu, 16 Jan 2020 12:03:04 -0500
-Message-Id: <20200116170509.12787-283-sashal@kernel.org>
+Cc:     Filipe Manana <fdmanana@suse.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 539/671] Btrfs: fix hang when loading existing inode cache off disk
+Date:   Thu, 16 Jan 2020 12:02:57 -0500
+Message-Id: <20200116170509.12787-276-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,225 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li Jin <li.jin@broadcom.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit 398a1f50e3c731586182fd52b834103b0aa2f826 ]
+[ Upstream commit 7764d56baa844d7f6206394f21a0e8c1f303c476 ]
 
-Fix drive strength for AON/CRMU controller; fix pull-up/down setting
-for CCM/CDRU controller.
+If we are able to load an existing inode cache off disk, we set the state
+of the cache to BTRFS_CACHE_FINISHED, but we don't wake up any one waiting
+for the cache to be available. This means that anyone waiting for the
+cache to be available, waiting on the condition that either its state is
+BTRFS_CACHE_FINISHED or its available free space is greather than zero,
+can hang forever.
 
-Fixes: 616043d58a89 ("pinctrl: Rename gpio driver from cygnus to iproc")
-Signed-off-by: Li Jin <li.jin@broadcom.com>
-Link: https://lore.kernel.org/r/1567054348-19685-2-git-send-email-srinath.mannam@broadcom.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+This could be observed running fstests with MOUNT_OPTIONS="-o inode_cache",
+in particular test case generic/161 triggered it very frequently for me,
+producing a trace like the following:
+
+  [63795.739712] BTRFS info (device sdc): enabling inode map caching
+  [63795.739714] BTRFS info (device sdc): disk space caching is enabled
+  [63795.739716] BTRFS info (device sdc): has skinny extents
+  [64036.653886] INFO: task btrfs-transacti:3917 blocked for more than 120 seconds.
+  [64036.654079]       Not tainted 5.2.0-rc4-btrfs-next-50 #1
+  [64036.654143] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+  [64036.654232] btrfs-transacti D    0  3917      2 0x80004000
+  [64036.654239] Call Trace:
+  [64036.654258]  ? __schedule+0x3ae/0x7b0
+  [64036.654271]  schedule+0x3a/0xb0
+  [64036.654325]  btrfs_commit_transaction+0x978/0xae0 [btrfs]
+  [64036.654339]  ? remove_wait_queue+0x60/0x60
+  [64036.654395]  transaction_kthread+0x146/0x180 [btrfs]
+  [64036.654450]  ? btrfs_cleanup_transaction+0x620/0x620 [btrfs]
+  [64036.654456]  kthread+0x103/0x140
+  [64036.654464]  ? kthread_create_worker_on_cpu+0x70/0x70
+  [64036.654476]  ret_from_fork+0x3a/0x50
+  [64036.654504] INFO: task xfs_io:3919 blocked for more than 120 seconds.
+  [64036.654568]       Not tainted 5.2.0-rc4-btrfs-next-50 #1
+  [64036.654617] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+  [64036.654685] xfs_io          D    0  3919   3633 0x00000000
+  [64036.654691] Call Trace:
+  [64036.654703]  ? __schedule+0x3ae/0x7b0
+  [64036.654716]  schedule+0x3a/0xb0
+  [64036.654756]  btrfs_find_free_ino+0xa9/0x120 [btrfs]
+  [64036.654764]  ? remove_wait_queue+0x60/0x60
+  [64036.654809]  btrfs_create+0x72/0x1f0 [btrfs]
+  [64036.654822]  lookup_open+0x6bc/0x790
+  [64036.654849]  path_openat+0x3bc/0xc00
+  [64036.654854]  ? __lock_acquire+0x331/0x1cb0
+  [64036.654869]  do_filp_open+0x99/0x110
+  [64036.654884]  ? __alloc_fd+0xee/0x200
+  [64036.654895]  ? do_raw_spin_unlock+0x49/0xc0
+  [64036.654909]  ? do_sys_open+0x132/0x220
+  [64036.654913]  do_sys_open+0x132/0x220
+  [64036.654926]  do_syscall_64+0x60/0x1d0
+  [64036.654933]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fix this by adding a wake_up() call right after setting the cache state to
+BTRFS_CACHE_FINISHED, at start_caching(), when we are able to load the
+cache from disk.
+
+Fixes: 82d5902d9c681b ("Btrfs: Support reading/writing on disk free ino cache")
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/bcm/pinctrl-iproc-gpio.c | 96 +++++++++++++++++++-----
- 1 file changed, 77 insertions(+), 19 deletions(-)
+ fs/btrfs/inode-map.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-index b70058caee50..20b9864adce0 100644
---- a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-+++ b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-@@ -54,8 +54,12 @@
- /* drive strength control for ASIU GPIO */
- #define IPROC_GPIO_ASIU_DRV0_CTRL_OFFSET 0x58
- 
--/* drive strength control for CCM/CRMU (AON) GPIO */
--#define IPROC_GPIO_DRV0_CTRL_OFFSET  0x00
-+/* pinconf for CCM GPIO */
-+#define IPROC_GPIO_PULL_DN_OFFSET   0x10
-+#define IPROC_GPIO_PULL_UP_OFFSET   0x14
-+
-+/* pinconf for CRMU(aon) GPIO and CCM GPIO*/
-+#define IPROC_GPIO_DRV_CTRL_OFFSET  0x00
- 
- #define GPIO_BANK_SIZE 0x200
- #define NGPIOS_PER_BANK 32
-@@ -76,6 +80,12 @@ enum iproc_pinconf_param {
- 	IPROC_PINCON_MAX,
- };
- 
-+enum iproc_pinconf_ctrl_type {
-+	IOCTRL_TYPE_AON = 1,
-+	IOCTRL_TYPE_CDRU,
-+	IOCTRL_TYPE_INVALID,
-+};
-+
- /*
-  * Iproc GPIO core
-  *
-@@ -100,6 +110,7 @@ struct iproc_gpio {
- 
- 	void __iomem *base;
- 	void __iomem *io_ctrl;
-+	enum iproc_pinconf_ctrl_type io_ctrl_type;
- 
- 	raw_spinlock_t lock;
- 
-@@ -461,20 +472,44 @@ static const struct pinctrl_ops iproc_pctrl_ops = {
- static int iproc_gpio_set_pull(struct iproc_gpio *chip, unsigned gpio,
- 				bool disable, bool pull_up)
- {
-+	void __iomem *base;
- 	unsigned long flags;
-+	unsigned int shift;
-+	u32 val_1, val_2;
- 
- 	raw_spin_lock_irqsave(&chip->lock, flags);
--
--	if (disable) {
--		iproc_set_bit(chip, IPROC_GPIO_RES_EN_OFFSET, gpio, false);
-+	if (chip->io_ctrl_type == IOCTRL_TYPE_CDRU) {
-+		base = chip->io_ctrl;
-+		shift = IPROC_GPIO_SHIFT(gpio);
-+
-+		val_1 = readl(base + IPROC_GPIO_PULL_UP_OFFSET);
-+		val_2 = readl(base + IPROC_GPIO_PULL_DN_OFFSET);
-+		if (disable) {
-+			/* no pull-up or pull-down */
-+			val_1 &= ~BIT(shift);
-+			val_2 &= ~BIT(shift);
-+		} else if (pull_up) {
-+			val_1 |= BIT(shift);
-+			val_2 &= ~BIT(shift);
-+		} else {
-+			val_1 &= ~BIT(shift);
-+			val_2 |= BIT(shift);
-+		}
-+		writel(val_1, base + IPROC_GPIO_PULL_UP_OFFSET);
-+		writel(val_2, base + IPROC_GPIO_PULL_DN_OFFSET);
- 	} else {
--		iproc_set_bit(chip, IPROC_GPIO_PAD_RES_OFFSET, gpio,
--			       pull_up);
--		iproc_set_bit(chip, IPROC_GPIO_RES_EN_OFFSET, gpio, true);
-+		if (disable) {
-+			iproc_set_bit(chip, IPROC_GPIO_RES_EN_OFFSET, gpio,
-+				      false);
-+		} else {
-+			iproc_set_bit(chip, IPROC_GPIO_PAD_RES_OFFSET, gpio,
-+				      pull_up);
-+			iproc_set_bit(chip, IPROC_GPIO_RES_EN_OFFSET, gpio,
-+				      true);
-+		}
+diff --git a/fs/btrfs/inode-map.c b/fs/btrfs/inode-map.c
+index e1b50c62ba65..b3bd27070617 100644
+--- a/fs/btrfs/inode-map.c
++++ b/fs/btrfs/inode-map.c
+@@ -145,6 +145,7 @@ static void start_caching(struct btrfs_root *root)
+ 		spin_lock(&root->ino_cache_lock);
+ 		root->ino_cache_state = BTRFS_CACHE_FINISHED;
+ 		spin_unlock(&root->ino_cache_lock);
++		wake_up(&root->ino_cache_wait);
+ 		return;
  	}
  
- 	raw_spin_unlock_irqrestore(&chip->lock, flags);
--
- 	dev_dbg(chip->dev, "gpio:%u set pullup:%d\n", gpio, pull_up);
- 
- 	return 0;
-@@ -483,14 +518,35 @@ static int iproc_gpio_set_pull(struct iproc_gpio *chip, unsigned gpio,
- static void iproc_gpio_get_pull(struct iproc_gpio *chip, unsigned gpio,
- 				 bool *disable, bool *pull_up)
- {
-+	void __iomem *base;
- 	unsigned long flags;
-+	unsigned int shift;
-+	u32 val_1, val_2;
- 
- 	raw_spin_lock_irqsave(&chip->lock, flags);
--	*disable = !iproc_get_bit(chip, IPROC_GPIO_RES_EN_OFFSET, gpio);
--	*pull_up = iproc_get_bit(chip, IPROC_GPIO_PAD_RES_OFFSET, gpio);
-+	if (chip->io_ctrl_type == IOCTRL_TYPE_CDRU) {
-+		base = chip->io_ctrl;
-+		shift = IPROC_GPIO_SHIFT(gpio);
-+
-+		val_1 = readl(base + IPROC_GPIO_PULL_UP_OFFSET) & BIT(shift);
-+		val_2 = readl(base + IPROC_GPIO_PULL_DN_OFFSET) & BIT(shift);
-+
-+		*pull_up = val_1 ? true : false;
-+		*disable = (val_1 | val_2) ? false : true;
-+
-+	} else {
-+		*disable = !iproc_get_bit(chip, IPROC_GPIO_RES_EN_OFFSET, gpio);
-+		*pull_up = iproc_get_bit(chip, IPROC_GPIO_PAD_RES_OFFSET, gpio);
-+	}
- 	raw_spin_unlock_irqrestore(&chip->lock, flags);
- }
- 
-+#define DRV_STRENGTH_OFFSET(gpio, bit, type)  ((type) == IOCTRL_TYPE_AON ? \
-+	((2 - (bit)) * 4 + IPROC_GPIO_DRV_CTRL_OFFSET) : \
-+	((type) == IOCTRL_TYPE_CDRU) ? \
-+	((bit) * 4 + IPROC_GPIO_DRV_CTRL_OFFSET) : \
-+	((bit) * 4 + IPROC_GPIO_REG(gpio, IPROC_GPIO_ASIU_DRV0_CTRL_OFFSET)))
-+
- static int iproc_gpio_set_strength(struct iproc_gpio *chip, unsigned gpio,
- 				    unsigned strength)
- {
-@@ -505,11 +561,8 @@ static int iproc_gpio_set_strength(struct iproc_gpio *chip, unsigned gpio,
- 
- 	if (chip->io_ctrl) {
- 		base = chip->io_ctrl;
--		offset = IPROC_GPIO_DRV0_CTRL_OFFSET;
- 	} else {
- 		base = chip->base;
--		offset = IPROC_GPIO_REG(gpio,
--					 IPROC_GPIO_ASIU_DRV0_CTRL_OFFSET);
- 	}
- 
- 	shift = IPROC_GPIO_SHIFT(gpio);
-@@ -520,11 +573,11 @@ static int iproc_gpio_set_strength(struct iproc_gpio *chip, unsigned gpio,
- 	raw_spin_lock_irqsave(&chip->lock, flags);
- 	strength = (strength / 2) - 1;
- 	for (i = 0; i < GPIO_DRV_STRENGTH_BITS; i++) {
-+		offset = DRV_STRENGTH_OFFSET(gpio, i, chip->io_ctrl_type);
- 		val = readl(base + offset);
- 		val &= ~BIT(shift);
- 		val |= ((strength >> i) & 0x1) << shift;
- 		writel(val, base + offset);
--		offset += 4;
- 	}
- 	raw_spin_unlock_irqrestore(&chip->lock, flags);
- 
-@@ -541,11 +594,8 @@ static int iproc_gpio_get_strength(struct iproc_gpio *chip, unsigned gpio,
- 
- 	if (chip->io_ctrl) {
- 		base = chip->io_ctrl;
--		offset = IPROC_GPIO_DRV0_CTRL_OFFSET;
- 	} else {
- 		base = chip->base;
--		offset = IPROC_GPIO_REG(gpio,
--					 IPROC_GPIO_ASIU_DRV0_CTRL_OFFSET);
- 	}
- 
- 	shift = IPROC_GPIO_SHIFT(gpio);
-@@ -553,10 +603,10 @@ static int iproc_gpio_get_strength(struct iproc_gpio *chip, unsigned gpio,
- 	raw_spin_lock_irqsave(&chip->lock, flags);
- 	*strength = 0;
- 	for (i = 0; i < GPIO_DRV_STRENGTH_BITS; i++) {
-+		offset = DRV_STRENGTH_OFFSET(gpio, i, chip->io_ctrl_type);
- 		val = readl(base + offset) & BIT(shift);
- 		val >>= shift;
- 		*strength += (val << i);
--		offset += 4;
- 	}
- 
- 	/* convert to mA */
-@@ -734,6 +784,7 @@ static int iproc_gpio_probe(struct platform_device *pdev)
- 	u32 ngpios, pinconf_disable_mask = 0;
- 	int irq, ret;
- 	bool no_pinconf = false;
-+	enum iproc_pinconf_ctrl_type io_ctrl_type = IOCTRL_TYPE_INVALID;
- 
- 	/* NSP does not support drive strength config */
- 	if (of_device_is_compatible(dev->of_node, "brcm,iproc-nsp-gpio"))
-@@ -764,8 +815,15 @@ static int iproc_gpio_probe(struct platform_device *pdev)
- 			dev_err(dev, "unable to map I/O memory\n");
- 			return PTR_ERR(chip->io_ctrl);
- 		}
-+		if (of_device_is_compatible(dev->of_node,
-+					    "brcm,cygnus-ccm-gpio"))
-+			io_ctrl_type = IOCTRL_TYPE_CDRU;
-+		else
-+			io_ctrl_type = IOCTRL_TYPE_AON;
- 	}
- 
-+	chip->io_ctrl_type = io_ctrl_type;
-+
- 	if (of_property_read_u32(dev->of_node, "ngpios", &ngpios)) {
- 		dev_err(&pdev->dev, "missing ngpios DT property\n");
- 		return -ENODEV;
 -- 
 2.20.1
 
