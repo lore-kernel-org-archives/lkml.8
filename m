@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC38C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF26C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 905C42475D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:44:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76DD224773
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:44:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196685;
-	bh=GQCU0no0l5BLWAsjMwoqXKZkwUcKNtpdr0nZvy6+HE4=;
+	s=default; t=1579196690;
+	bh=XVeXgXUCIJpS32xus8OojbKyYYJFW7SwX6zT8JBfEtY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B+dEbHuvzsNbpRYT76Qf9j7FUEYE0FLE5omuMiHt72GwYTaVu5K9m+Z50V2PiqpAP
-	 OoMTJqmXR/SQZhONm477VCiLtGK3KtMXdQMatI5T+YDOcNWiGj5DyMB73OQVJE5ZqO
-	 qk+f6mqXzerI+VIKkU/XW7QmEVI3Z752ZnIzJp7g=
+	b=FMQw9IjyejsuPKVqVSFnLCzq2Y4a0+Wz5hla7Y6SfDeNDdAkh9O8VGh/iy9mHqUSV
+	 WPEIbyeS4O1G3IlF4dvy9gbXO14MZ9lilV7n3VIc+IeKqv+3pv/l0T3kDAC5FR312A
+	 48GuGrJfg8M0JS/t7vOAxIFao1rTMafoXqOsCOdE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405941AbgAPRoo (ORCPT
+        id S2405973AbgAPRot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:44:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35290 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:44:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394141AbgAPRoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:44:21 -0500
+        id S2394172AbgAPRo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:44:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 318102474F;
-        Thu, 16 Jan 2020 17:44:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63D3C2475E;
+        Thu, 16 Jan 2020 17:44:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196661;
-        bh=GQCU0no0l5BLWAsjMwoqXKZkwUcKNtpdr0nZvy6+HE4=;
+        s=default; t=1579196669;
+        bh=XVeXgXUCIJpS32xus8OojbKyYYJFW7SwX6zT8JBfEtY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yu2U+IG9jmdquhqdRFquP14VNLRnSYWShFWNQsr713c0xH9YjzvlNYr+0GgFiHMxQ
-         K5XieArzjE5d1YFnERnCMieBtWhNuhtH2LS0yZSLVSPHDlcYhFueCtisGzbufxzIuT
-         cqbGVEDmMe5bjKZ4bh7leO4lyHPsBHX0C3phOzgk=
+        b=yM8jhYhbddPS7UBKJQZuMs2+DCqss4lNoCXzZ7direrf3OPW2M8vIFJe6yMvDE12w
+         M/AsYQG/R8TzhgITTzSNytx5xdo5Ga1H9Y9koA63ohcQaVLxkIznAoSk1N7gfL6Jxx
+         mP3tjftbdiHdtyw6wwWfLditlvIjby067A+nGWpA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>, Paul Walmsley <paul@pwsan.com>,
-        Tero Kristo <t-kristo@ti.com>, Sasha Levin <sashal@kernel.org>,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.4 065/174] ARM: OMAP2+: Fix potentially uninitialized return value for _setup_reset()
-Date:   Thu, 16 Jan 2020 12:41:02 -0500
-Message-Id: <20200116174251.24326-65-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Li Yang <leoyang.li@nxp.com>, Sasha Levin <sashal@kernel.org>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.4 070/174] soc/fsl/qe: Fix an error code in qe_pin_request()
+Date:   Thu, 16 Jan 2020 12:41:07 -0500
+Message-Id: <20200116174251.24326-70-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -59,41 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 7f0d078667a494466991aa7133f49594f32ff6a2 ]
+[ Upstream commit 5674a92ca4b7e5a6a19231edd10298d30324cd27 ]
 
-Commit 747834ab8347 ("ARM: OMAP2+: hwmod: revise hardreset behavior") made
-the call to _enable() conditional based on no oh->rst_lines_cnt. This
-caused the return value to be potentially uninitialized. Curiously we see
-no compiler warnings for this, probably as this gets inlined.
+We forgot to set "err" on this error path.
 
-We call _setup_reset() from _setup() and only _setup_postsetup() if the
-return value is zero. Currently the return value can be uninitialized for
-cases where oh->rst_lines_cnt is set and HWMOD_INIT_NO_RESET is not set.
-
-Fixes: 747834ab8347 ("ARM: OMAP2+: hwmod: revise hardreset behavior")
-Cc: Paul Walmsley <paul@pwsan.com>
-Cc: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fixes: 1a2d397a6eb5 ("gpio/powerpc: Eliminate duplication of of_get_named_gpio_flags()")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Li Yang <leoyang.li@nxp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-omap2/omap_hwmod.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/sysdev/qe_lib/gpio.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-omap2/omap_hwmod.c b/arch/arm/mach-omap2/omap_hwmod.c
-index 36706d32d656..1bc87c29467b 100644
---- a/arch/arm/mach-omap2/omap_hwmod.c
-+++ b/arch/arm/mach-omap2/omap_hwmod.c
-@@ -2563,7 +2563,7 @@ static void _setup_iclk_autoidle(struct omap_hwmod *oh)
-  */
- static int _setup_reset(struct omap_hwmod *oh)
- {
--	int r;
-+	int r = 0;
+diff --git a/arch/powerpc/sysdev/qe_lib/gpio.c b/arch/powerpc/sysdev/qe_lib/gpio.c
+index 521e67a49dc4..4052e3d7edbd 100644
+--- a/arch/powerpc/sysdev/qe_lib/gpio.c
++++ b/arch/powerpc/sysdev/qe_lib/gpio.c
+@@ -155,8 +155,10 @@ struct qe_pin *qe_pin_request(struct device_node *np, int index)
+ 	if (err < 0)
+ 		goto err0;
+ 	gc = gpio_to_chip(err);
+-	if (WARN_ON(!gc))
++	if (WARN_ON(!gc)) {
++		err = -ENODEV;
+ 		goto err0;
++	}
  
- 	if (oh->_state != _HWMOD_STATE_INITIALIZED)
- 		return -EINVAL;
+ 	if (!of_device_is_compatible(gc->of_node, "fsl,mpc8323-qe-pario-bank")) {
+ 		pr_debug("%s: tried to get a non-qe pin\n", __func__);
 -- 
 2.20.1
 
