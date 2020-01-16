@@ -2,192 +2,226 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D209C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D81DC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D636820748
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:48:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11C7120748
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:49:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579207701;
-	bh=sovqMoJzNJbW/wMTxoZfJ3ui+9xtKfhoHmYs/tyDV68=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=alKrB/DvLpcwsnDxDgQoSbWSDJxamG4djZkzsUCSjSSDSRkE4iTefi310N33mbVhD
-	 n1k+jfP8aYeP/scbGN/82fqxgyJC6u4vqjfEmQxVx+24xgNDjHaTjkMqI1yAF1uFyJ
-	 LL+A1lZzZECqHy9cWt1YCGfbknJFCr4k9Auak4Mc=
+	s=default; t=1579207758;
+	bh=IzkOV/MDnTVbgOYPXlWksgY4o/gEojctfk8FimEbhlo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=SPg8OVAegDZRaiQ71PRxJOsVTTkC8Qb2ZadALdZ2SocjezQ9Kdo31RUuuVnB4YT4R
+	 BUxj4tyLOfNb7kZJoIl0OoiGMCgXNaxmv1RpREAi8/YqSpA+zZazpvP5pdvhkto5YB
+	 2guQ2gv4w3tsKsp/bXmIuCy5EJQ4T2uexmPOM5Yg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388150AbgAPUsU (ORCPT
+        id S2388179AbgAPUtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 15:48:20 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42058 "EHLO
+        Thu, 16 Jan 2020 15:49:17 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39822 "EHLO
         mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726994AbgAPUsU (ORCPT
+        with ESMTP id S1726994AbgAPUtR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 15:48:20 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 66so20650830otd.9;
-        Thu, 16 Jan 2020 12:48:19 -0800 (PST)
+        Thu, 16 Jan 2020 15:49:17 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 77so20669303oty.6;
+        Thu, 16 Jan 2020 12:49:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BKpDxkPQvhaYwq0BM0j0+4RX+8L/FqW/tD6hcJ/WZ8Y=;
-        b=ulOidGdKRiRdlY8VOZszJhyjAauTrxAXsdD7IE4cuJrJ30QApKjd0bvId4BtV+JP3p
-         UK4SbWHOqIgCWrxlej3LAP8DDdskftp9FTDtjHt98ieN1anyVCLBv2Ix6d2GChWkxL/t
-         BguuPl2HoetxwtUrcIRYT8SMLu9QM+/Lb9quMWrpMDXRIipIB5bZPBhASej64roO4s31
-         81Yu38XbJ96LgWTI/hq6Fo7DqI+eCLr+J/CerJCYILQasRaVJ1ikJECgdZollcXOS9VU
-         xd4LrQHJDHkCos37jQC1hY9x+lne9zXQxyOynoNq5Avf14doJl+CFCtrQvOU9syb8lxs
-         AyUw==
-X-Gm-Message-State: APjAAAUtsY1rsIF5Qn88rUTH41kodMdWHXq++ACf8NwxWt8CrCuiUqP3
-        VeyLo0eUM4qscGlDjUjS/g==
-X-Google-Smtp-Source: APXvYqwElUK+YujhdGIIl9hNxkKGMyK9dGJUHl9hNmGbi/q+K5ZFvapHlfm9AC50/8wXvJNavkLnjQ==
-X-Received: by 2002:a9d:6e03:: with SMTP id e3mr3614892otr.46.1579207699487;
-        Thu, 16 Jan 2020 12:48:19 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a17sm8039507otp.66.2020.01.16.12.48.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 12:48:18 -0800 (PST)
-Received: (nullmailer pid 14099 invoked by uid 1000);
-        Thu, 16 Jan 2020 20:48:17 -0000
-Date:   Thu, 16 Jan 2020 14:48:17 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jian Hu <jian.hu@amlogic.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 1/5] dt-bindings: clock: meson: add A1 PLL clock
- controller bindings
-Message-ID: <20200116204817.GA9529@bogus>
-References: <20200116080440.118679-1-jian.hu@amlogic.com>
- <20200116080440.118679-2-jian.hu@amlogic.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vKWl+i3G1M08ggLIoH2gqIF2689K3Ew0LiOCmwmp/BI=;
+        b=V9DyBpcccxtdBuEvMM+gi23TlnE/zd39fu6tgJhBHxAETFCwGAz/26cvswfCC/udCm
+         PlA5tl5ZZ45FUzLuR1OdnQ5Fwh3OqHgsfF4evsa9JaUiUlEGO6HLPPj/G/WxA0OMM6f4
+         vtJDEOB7cRNB1jTKFdHJPoliy1221zn5LuwOqsTUKzmfYh/OFA7YNeJc2oHuWRFnJOIG
+         uOJA0BlJUeI+IExCQHsc9oSThntENzckiNuUB080n662LC/BsyWbDf9SpKaYnGzG5Gcc
+         CpUlFcgpi8Cchjhk97ARSPExjfdXCwtKnXh0UPanM4zkVSg/dT43Cm+U4MjqV2UBIRtL
+         XB7g==
+X-Gm-Message-State: APjAAAUp1fkcnVTic37ZgZpSbeBcA+ixLmoORz/YbcGe57KGZQwV292T
+        PFoCTxCqCVcZx3wMY/O/aGOfikiM8fIFfwIDzwgF+g==
+X-Google-Smtp-Source: APXvYqzOLGos6s7Y71H1AklWTE2f09vz51ZGotacxjlP/Wsz27QuqtXTiEwUKaZ5USsXu+cAuD5Ns2IP/BanfxOXYCQ=
+X-Received: by 2002:a05:6830:4b9:: with SMTP id l25mr3602980otd.266.1579207755629;
+ Thu, 16 Jan 2020 12:49:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200116080440.118679-2-jian.hu@amlogic.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <d05a1c0c-1212-17f4-3772-042e2ff76a40@freesources.org>
+In-Reply-To: <d05a1c0c-1212-17f4-3772-042e2ff76a40@freesources.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 16 Jan 2020 21:49:05 +0100
+Message-ID: <CAJZ5v0gXMkL8Z_=jUvNGoVjDr4s5osO8RNekJ1yg-b+=zi7GSw@mail.gmail.com>
+Subject: Re: [PATCH v3] PM: suspend: Add sysfs attribute to control the "sync
+ on suspend" behavior
+To:     Jonas Meurer <jonas@freesources.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Tim Dittler <tim.dittler@systemli.org>,
+        Yannik Sembritzki <yannik@sembritzki.me>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 04:04:36PM +0800, Jian Hu wrote:
-> Add the documentation to support Amlogic A1 PLL clock driver,
-> and add A1 PLL clock controller bindings.
-> 
-> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+On Thu, Jan 16, 2020 at 12:53 PM Jonas Meurer <jonas@freesources.org> wrote:
+>
+> The sysfs attribute `/sys/power/sync_on_suspend` controls, whether or not
+> filesystems are synced by the kernel before system suspend.
+>
+> Congruously, the behaviour of build-time switch CONFIG_SUSPEND_SKIP_SYNC
+> is slightly changed: It now defines the run-tim default for the new sysfs
+> attribute `/sys/power/sync_on_suspend`.
+>
+> The run-time attribute is added because the existing corresponding
+> build-time Kconfig flag for (`CONFIG_SUSPEND_SKIP_SYNC`) is not flexible
+> enough. E.g. Linux distributions that provide pre-compiled kernels
+> usually want to stick with the default (sync filesystems before suspend)
+> but under special conditions this needs to be changed.
+>
+> One example for such a special condition is user-space handling of
+> suspending block devices (e.g. using `cryptsetup luksSuspend` or `dmsetup
+> suspend`) before system suspend. The Kernel trying to sync filesystems
+> after the underlying block device already got suspended obviously leads
+> to dead-locks. Be aware that you have to take care of the filesystem sync
+> yourself before suspending the system in those scenarios.
+>
+> Signed-off-by: Jonas Meurer <jonas@freesources.org>
+
+Applied as 5.6 material with minor changes in the ABI document, thanks!
+
 > ---
->  .../bindings/clock/amlogic,a1-pll-clkc.yaml   | 54 +++++++++++++++++++
->  include/dt-bindings/clock/a1-pll-clkc.h       | 16 ++++++
->  2 files changed, 70 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
->  create mode 100644 include/dt-bindings/clock/a1-pll-clkc.h
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
-> new file mode 100644
-> index 000000000000..071240b65e70
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
-> @@ -0,0 +1,54 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/amlogic,a1-pll-clkc.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>  Documentation/ABI/testing/sysfs-power | 13 +++++++++++
+>  include/linux/suspend.h               |  2 ++
+>  kernel/power/Kconfig                  |  5 +++-
+>  kernel/power/main.c                   | 33 +++++++++++++++++++++++++++
+>  kernel/power/suspend.c                |  2 +-
+>  5 files changed, 53 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/ABI/testing/sysfs-power b/Documentation/ABI/testing/sysfs-power
+> index 6f87b9dd384b..9392a83afce8 100644
+> --- a/Documentation/ABI/testing/sysfs-power
+> +++ b/Documentation/ABI/testing/sysfs-power
+> @@ -407,3 +407,16 @@ Contact:   Kalesh Singh <kaleshsingh96@gmail.com>
+>  Description:
+>                 The /sys/power/suspend_stats/last_failed_step file contains
+>                 the last failed step in the suspend/resume path.
 > +
-> +title: Amlogic Meson A/C serials PLL Clock Control Unit Device Tree Bindings
+> +What:          /sys/power/sync_on_suspend
+> +Date:          October 2019
+> +Contact:       Jonas Meurer <jonas@freesources.org>
+> +Description:
+> +               This file controls whether or not the kernel will sync()
+> +               filesystems during system suspend (after freezing user space
+> +               and before suspending devices).
 > +
-> +maintainers:
-> +  - Neil Armstrong <narmstrong@baylibre.com>
-> +  - Jerome Brunet <jbrunet@baylibre.com>
-> +  - Jian Hu <jian.hu@jian.hu.com>
+> +               Writing a "1" to this file enables the sync() and writing a
+> +               "0" disables it.  Reads from the file return the current value.
+> +               The default is "1" but can be configured with the build-time
+> +               config flag "SUSPEND_SKIP_SYNC".
+> diff --git a/include/linux/suspend.h b/include/linux/suspend.h
+> index 6fc8843f1c9e..4a230c2f1c31 100644
+> --- a/include/linux/suspend.h
+> +++ b/include/linux/suspend.h
+> @@ -329,6 +329,7 @@ extern void arch_suspend_disable_irqs(void);
+>  extern void arch_suspend_enable_irqs(void);
+>
+>  extern int pm_suspend(suspend_state_t state);
+> +extern bool sync_on_suspend_enabled;
+>  #else /* !CONFIG_SUSPEND */
+>  #define suspend_valid_only_mem NULL
+>
+> @@ -342,6 +343,7 @@ static inline bool pm_suspend_default_s2idle(void) { return false; }
+>
+>  static inline void suspend_set_ops(const struct platform_suspend_ops *ops) {}
+>  static inline int pm_suspend(suspend_state_t state) { return -ENOSYS; }
+> +static inline bool sync_on_suspend_enabled(void) { return true; }
+>  static inline bool idle_should_enter_s2idle(void) { return false; }
+>  static inline void __init pm_states_init(void) {}
+>  static inline void s2idle_set_ops(const struct platform_s2idle_ops *ops) {}
+> diff --git a/kernel/power/Kconfig b/kernel/power/Kconfig
+> index d3667b4075c1..7cbfbeacd68a 100644
+> --- a/kernel/power/Kconfig
+> +++ b/kernel/power/Kconfig
+> @@ -27,7 +27,10 @@ config SUSPEND_SKIP_SYNC
+>           Skip the kernel sys_sync() before freezing user processes.
+>           Some systems prefer not to pay this cost on every invocation
+>           of suspend, or they are content with invoking sync() from
+> -         user-space before invoking suspend.  Say Y if that's your case.
+> +         user-space before invoking suspend.  There's a run-time switch
+> +         at '/sys/power/sync_on_suspend' to configure this behaviour.
+> +         This setting changes the default for the run-tim switch. Say Y
+> +         to change the default to disable the kernel sys_sync().
+>
+>  config HIBERNATE_CALLBACKS
+>         bool
+> diff --git a/kernel/power/main.c b/kernel/power/main.c
+> index e26de7af520b..69b7a8aeca3b 100644
+> --- a/kernel/power/main.c
+> +++ b/kernel/power/main.c
+> @@ -190,6 +190,38 @@ static ssize_t mem_sleep_store(struct kobject *kobj, struct kobj_attribute *attr
+>  }
+>
+>  power_attr(mem_sleep);
 > +
-> +properties:
-> +  compatible:
-> +    const: amlogic,a1-pll-clkc
-> +
-> +  "#clock-cells":
-> +    const: 1
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 2
-
-Not necessary, so drop. Implied by the length of 'items'.
-
-> +    items:
-> +     - description: input xtal_fixpll
-> +     - description: input xtal_hifipll
-> +
-> +  clock-names:
-> +    maxItems: 2
-
-Same here.
-
-> +    items:
-> +      - const: xtal_fixpll
-> +      - const: xtal_hifipll
-> +
-> +required:
-> +  - compatible
-> +  - "#clock-cells"
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    clkc_pll: pll-clock-controller@7c80 {
-> +                compatible = "amlogic,a1-pll-clkc";
-> +                reg = <0 0x7c80 0 0x18c>;
-> +                #clock-cells = <1>;
-> +                clocks = <&clkc_periphs CLKID_XTAL_FIXPLL>,
-> +                         <&clkc_periphs CLKID_XTAL_HIFIPLL>;
-
-The example will fail to build because these aren't defined.
-
-Run 'make dt_binding_check'.
-
-> +                clock-names = "xtal_fixpll", "xtal_hifipll";
-> +    };
-> diff --git a/include/dt-bindings/clock/a1-pll-clkc.h b/include/dt-bindings/clock/a1-pll-clkc.h
-> new file mode 100644
-> index 000000000000..58eae237e503
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/a1-pll-clkc.h
-> @@ -0,0 +1,16 @@
-> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
 > +/*
-> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+> + * sync_on_suspend: invoke ksys_sync_helper() before suspend.
+> + *
+> + * show() returns whether ksys_sync_helper() is invoked before suspend.
+> + * store() accepts 0 or 1.  0 disables ksys_sync_helper() and 1 enables it.
 > + */
+> +bool sync_on_suspend_enabled = !IS_ENABLED(CONFIG_SUSPEND_SKIP_SYNC);
 > +
-> +#ifndef __A1_PLL_CLKC_H
-> +#define __A1_PLL_CLKC_H
+> +static ssize_t sync_on_suspend_show(struct kobject *kobj,
+> +                                  struct kobj_attribute *attr, char *buf)
+> +{
+> +       return sprintf(buf, "%d\n", sync_on_suspend_enabled);
+> +}
 > +
-> +#define CLKID_FIXED_PLL				1
-> +#define CLKID_FCLK_DIV2				6
-> +#define CLKID_FCLK_DIV3				7
-> +#define CLKID_FCLK_DIV5				8
-> +#define CLKID_FCLK_DIV7				9
-> +#define CLKID_HIFI_PLL				10
+> +static ssize_t sync_on_suspend_store(struct kobject *kobj,
+> +                                   struct kobj_attribute *attr,
+> +                                   const char *buf, size_t n)
+> +{
+> +       unsigned long val;
 > +
-> +#endif /* __A1_PLL_CLKC_H */
-> -- 
-> 2.24.0
-> 
+> +       if (kstrtoul(buf, 10, &val))
+> +               return -EINVAL;
+> +
+> +       if (val > 1)
+> +               return -EINVAL;
+> +
+> +       sync_on_suspend_enabled = !!val;
+> +       return n;
+> +}
+> +
+> +power_attr(sync_on_suspend);
+>  #endif /* CONFIG_SUSPEND */
+>
+>  #ifdef CONFIG_PM_SLEEP_DEBUG
+> @@ -855,6 +887,7 @@ static struct attribute * g[] = {
+>         &wakeup_count_attr.attr,
+>  #ifdef CONFIG_SUSPEND
+>         &mem_sleep_attr.attr,
+> +       &sync_on_suspend_attr.attr,
+>  #endif
+>  #ifdef CONFIG_PM_AUTOSLEEP
+>         &autosleep_attr.attr,
+> diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
+> index f3b7239f1892..2c47280fbfc7 100644
+> --- a/kernel/power/suspend.c
+> +++ b/kernel/power/suspend.c
+> @@ -564,7 +564,7 @@ static int enter_state(suspend_state_t state)
+>         if (state == PM_SUSPEND_TO_IDLE)
+>                 s2idle_begin();
+>
+> -       if (!IS_ENABLED(CONFIG_SUSPEND_SKIP_SYNC)) {
+> +       if (sync_on_suspend_enabled) {
+>                 trace_suspend_resume(TPS("sync_filesystems"), 0, true);
+>                 ksys_sync_helper();
+>                 trace_suspend_resume(TPS("sync_filesystems"), 0, false);
+> --
+> 2.20.1
+>
