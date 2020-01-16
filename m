@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA60BC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A6BC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91C242077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:17:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 884632073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:17:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202274;
-	bh=qOQzyhtcbChDzzbv1LEMKJgJf4TpU+N7xoKSA4d6j2I=;
+	s=default; t=1579202279;
+	bh=v62+uadh2EIx4wLh1tUeUy7PoYIjisnB1H3B4tUsUAI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jkBnBtkgLoqHI5XKVB1x/l6mbb3KWhc0hojq9xavhgu5og8TZ6VI94KbjbpZpC/h8
-	 Xv4zBPwIc973M4ZwuIRl5K7QBmWgrFgxM3GqDuZaLKFf7ZhRB78ZykEkwFq2ubcLsu
-	 eolfHfUiJf807xS24O79/jlmeL2oplTTcH79+Pk4=
+	b=2icrBGM600hS9UmsXWlkdcIl+taV+CJ+8v6M0i6WSIE0/iGjq893o9BfphANG4Cu1
+	 vNjBf/bkLiVlQU2HbKMm8ugGBKEdAXzdRbEL9JAaIkhKTsFan8rm7dDqBKBympwAXw
+	 KISxWTuB5QbUfq66sknnhy33k/lzBFWOLSH03zmA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730507AbgAPQzJ (ORCPT
+        id S2437576AbgAPTR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:55:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39988 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:17:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729340AbgAPQzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:55:06 -0500
+        id S1732589AbgAPQzK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:55:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30EAD22522;
-        Thu, 16 Jan 2020 16:55:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8E7F2192A;
+        Thu, 16 Jan 2020 16:55:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193705;
-        bh=qOQzyhtcbChDzzbv1LEMKJgJf4TpU+N7xoKSA4d6j2I=;
+        s=default; t=1579193710;
+        bh=v62+uadh2EIx4wLh1tUeUy7PoYIjisnB1H3B4tUsUAI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ssqj/+C3XsCKeXSJZFL5dZCVRxBl4O002yKwMlyPAGE2JcnLwz29beJLf0jl1BG1r
-         hTWYoU43jSzS+nIhne2s3SpCIBrfvwpPCZlbtdtjUeu8uI4v72+rV3M6rZMdev5CiH
-         vLijMY7x/JluTOhr/wdEqP2fFT7U553KoJyi8160=
+        b=wilJg2oU6tgT26GRcBRo9JKnK6FKKbM1dV37NvErbMInjdjuDdCBrT6XOlAGl2GNT
+         T/nIFd8gBN82WPpoICN9ZpaLKYRTORXjbmE+Y3g8Con6ISubkRdwHeMUvlbuCf5Rcp
+         lFc3D4f2eIv6dNUcOSxNtTPpPBGgtwa6gwy5Pu6Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Rosin <peda@axentia.se>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 002/671] ARM: dts: at91: nattis: set the PRLUD and HIPOW signals low
-Date:   Thu, 16 Jan 2020 11:43:53 -0500
-Message-Id: <20200116165502.8838-2-sashal@kernel.org>
+Cc:     Eugen Hristev <eugen.hristev@microchip.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 006/671] iio: fix position relative kernel version
+Date:   Thu, 16 Jan 2020 11:43:57 -0500
+Message-Id: <20200116165502.8838-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -60,44 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Rosin <peda@axentia.se>
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-[ Upstream commit 29feb2c960ab32fc24249443d4434194ce96f083 ]
+[ Upstream commit 21eab7861688aa4c69fcb88440cc0c4a422bdcd6 ]
 
-AT91_PINCTRL_OUTPUT_VAL(0) without AT91_PINCTRL_OUTPUT is a no-op, so
-make sure the pins really output a zero.
+Position relative channel type was added in 4.19 kernel version
 
-Fixes: 0e4323899973 ("ARM: dts: at91: add devicetree for the Axentia Nattis with Natte power")
-Signed-off-by: Peter Rosin <peda@axentia.se>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fixes: "3055a6cfa04ba" ("iio: Add channel for Position Relative")
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/at91-nattis-2-natte-2.dts | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ Documentation/ABI/testing/sysfs-bus-iio | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/at91-nattis-2-natte-2.dts b/arch/arm/boot/dts/at91-nattis-2-natte-2.dts
-index af9f38456d04..bfa5815a0721 100644
---- a/arch/arm/boot/dts/at91-nattis-2-natte-2.dts
-+++ b/arch/arm/boot/dts/at91-nattis-2-natte-2.dts
-@@ -38,14 +38,16 @@
- 						atmel,pins =
- 							<AT91_PIOA 21
- 							 AT91_PERIPH_GPIO
--							 AT91_PINCTRL_OUTPUT_VAL(0)>;
-+							 (AT91_PINCTRL_OUTPUT |
-+							  AT91_PINCTRL_OUTPUT_VAL(0))>;
- 					};
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+index a5b4f223641d..8127a08e366d 100644
+--- a/Documentation/ABI/testing/sysfs-bus-iio
++++ b/Documentation/ABI/testing/sysfs-bus-iio
+@@ -199,7 +199,7 @@ Description:
  
- 					pinctrl_lcd_hipow0: lcd_hipow0 {
- 						atmel,pins =
- 							<AT91_PIOA 23
- 							 AT91_PERIPH_GPIO
--							 AT91_PINCTRL_OUTPUT_VAL(0)>;
-+							 (AT91_PINCTRL_OUTPUT |
-+							  AT91_PINCTRL_OUTPUT_VAL(0))>;
- 					};
- 				};
- 			};
+ What:		/sys/bus/iio/devices/iio:deviceX/in_positionrelative_x_raw
+ What:		/sys/bus/iio/devices/iio:deviceX/in_positionrelative_y_raw
+-KernelVersion:	4.18
++KernelVersion:	4.19
+ Contact:	linux-iio@vger.kernel.org
+ Description:
+ 		Relative position in direction x or y on a pad (may be
 -- 
 2.20.1
 
