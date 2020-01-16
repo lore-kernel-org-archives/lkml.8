@@ -2,55 +2,51 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86988C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 109D7C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F2F020663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA90420663
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:54:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200881;
-	bh=2imUuZyJToGTz6oK6smINQHGEWTm0o6uwv3fDAo+Jr8=;
+	s=default; t=1579200884;
+	bh=SyGVpspHwVPxiQSr1Xp7q/vO0Wawnakxrt5Zj7aU2fE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q7F4yk6V0F8y2XlrMME8l1skdcR7bCHMRfYdzY2KhAJH6KLg+uGVI57UH6wwqC8Yy
-	 eTxsQb3xyk4gMsiVIRuX89DlFR06tgRt4bjsSoTmdiM7XRT+wWsbmCXtpkl9IkxOCy
-	 ip2UnD9ZP3VK+6rwvlvJDD7UKIwhQcxj2aLMCWJA=
+	b=YWo7ZDxA28cA8yPlyjl/4BoulCRrF8RmzKc06fodzD8CShU0QbQH1i25Z7Yg95Grz
+	 Af6aXriDOU9cYves5AkiIOZ8vBdtAwSuqK2fVVHs3c+bPWB7h9rm2mkhbBz6z4tvR+
+	 UQIUsjprHZ0ouuvoVSU5GSVJuHC5st5IFdyC37Rs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437111AbgAPSyj (ORCPT
+        id S1729437AbgAPRHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:54:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40704 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:07:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389248AbgAPRH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:07:57 -0500
+        id S2388956AbgAPRHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:07:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 545B120730;
-        Thu, 16 Jan 2020 17:07:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2824220730;
+        Thu, 16 Jan 2020 17:07:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194476;
-        bh=2imUuZyJToGTz6oK6smINQHGEWTm0o6uwv3fDAo+Jr8=;
+        s=default; t=1579194464;
+        bh=SyGVpspHwVPxiQSr1Xp7q/vO0Wawnakxrt5Zj7aU2fE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MeNmKVAkYgThOAOYvoiTyibnYTX93ifMFJ4ICdeRjZLPo3mKBwbd2CoWWohwC7OJW
-         Lxe8zvUNAlGz+nEvAEHXKAw0XoTcHJNc2fXYVQemikblb79vvnpNnh7Eg34r66fh6W
-         jwcPb7Qw0DkYuF9HCclwy3P9nC4xXYwQU8kLIqqM=
+        b=HU5tpInSKQptvWpeiHk/JdE3FlOagai812M4vUdcAhdoHX8S0gQmdjX/o1Cs6gL1s
+         KN+RsXTgWHBzOFCpjT3YF0tn3Uz3SkjyyhGfYGjaD+oYziUr5y8//Zsavxkt7fPOV4
+         rilByVirMlKY5lwoDmEgDMTIxhjUXsilFSKuLDOU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Stephen Hines <srhines@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 379/671] misc: sgi-xp: Properly initialize buf in xpc_get_rsvd_page_pa
-Date:   Thu, 16 Jan 2020 12:00:17 -0500
-Message-Id: <20200116170509.12787-116-sashal@kernel.org>
+Cc:     "Hook, Gary" <Gary.Hook@amd.com>, Gary R Hook <gary.hook@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 371/671] crypto: ccp - fix AES CFB error exposed by new test vectors
+Date:   Thu, 16 Jan 2020 12:00:09 -0500
+Message-Id: <20200116170509.12787-108-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -63,68 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: "Hook, Gary" <Gary.Hook@amd.com>
 
-[ Upstream commit b0576f9ecb5c51e9932531d23c447b2739261841 ]
+[ Upstream commit c3b359d6567c0b8f413e924feb37cf025067d55a ]
 
-Clang warns:
+Updated testmgr will exhibit this error message when loading the
+ccp-crypto module:
 
-drivers/misc/sgi-xp/xpc_partition.c:73:14: warning: variable 'buf' is
-uninitialized when used within its own initialization [-Wuninitialized]
-        void *buf = buf;
-              ~~~   ^~~
-1 warning generated.
+alg: skcipher: cfb-aes-ccp encryption failed with err -22 on test vector 3, cfg="in-place"
 
-Arnd's explanation during review:
+Update the CCP crypto driver to correctly treat CFB as a streaming mode
+cipher (instead of block mode). Update the configuration for CFB to
+specify the block size as a single byte;
 
-  /*
-   * Returns the physical address of the partition's reserved page through
-   * an iterative number of calls.
-   *
-   * On first call, 'cookie' and 'len' should be set to 0, and 'addr'
-   * set to the nasid of the partition whose reserved page's address is
-   * being sought.
-   * On subsequent calls, pass the values, that were passed back on the
-   * previous call.
-   *
-   * While the return status equals SALRET_MORE_PASSES, keep calling
-   * this function after first copying 'len' bytes starting at 'addr'
-   * into 'buf'. Once the return status equals SALRET_OK, 'addr' will
-   * be the physical address of the partition's reserved page. If the
-   * return status equals neither of these, an error as occurred.
-   */
-  static inline s64
-  sn_partition_reserved_page_pa(u64 buf, u64 *cookie, u64 *addr, u64 *len)
+Fixes: 2b789435d7f3 ('crypto: ccp - CCP AES crypto API support')
 
-  so *len is set to zero on the first call and tells the bios how many
-  bytes are accessible at 'buf', and it does get updated by the BIOS to
-  tell us how many bytes it needs, and then we allocate that and try again.
-
-Fixes: 279290294662 ("[IA64-SGI] cleanup the way XPC locates the reserved page")
-Link: https://github.com/ClangBuiltLinux/linux/issues/466
-Suggested-by: Stephen Hines <srhines@google.com>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Gary R Hook <gary.hook@amd.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/sgi-xp/xpc_partition.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/ccp/ccp-crypto-aes.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/misc/sgi-xp/xpc_partition.c b/drivers/misc/sgi-xp/xpc_partition.c
-index 0c3ef6f1df54..519826ba1378 100644
---- a/drivers/misc/sgi-xp/xpc_partition.c
-+++ b/drivers/misc/sgi-xp/xpc_partition.c
-@@ -70,7 +70,7 @@ xpc_get_rsvd_page_pa(int nasid)
- 	unsigned long rp_pa = nasid;	/* seed with nasid */
- 	size_t len = 0;
- 	size_t buf_len = 0;
--	void *buf = buf;
-+	void *buf = NULL;
- 	void *buf_base = NULL;
- 	enum xp_retval (*get_partition_rsvd_page_pa)
- 		(void *, u64 *, unsigned long *, size_t *) =
+diff --git a/drivers/crypto/ccp/ccp-crypto-aes.c b/drivers/crypto/ccp/ccp-crypto-aes.c
+index 89291c15015c..3f768699332b 100644
+--- a/drivers/crypto/ccp/ccp-crypto-aes.c
++++ b/drivers/crypto/ccp/ccp-crypto-aes.c
+@@ -1,7 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * AMD Cryptographic Coprocessor (CCP) AES crypto API support
+  *
+- * Copyright (C) 2013,2016 Advanced Micro Devices, Inc.
++ * Copyright (C) 2013-2019 Advanced Micro Devices, Inc.
+  *
+  * Author: Tom Lendacky <thomas.lendacky@amd.com>
+  *
+@@ -79,8 +80,7 @@ static int ccp_aes_crypt(struct ablkcipher_request *req, bool encrypt)
+ 		return -EINVAL;
+ 
+ 	if (((ctx->u.aes.mode == CCP_AES_MODE_ECB) ||
+-	     (ctx->u.aes.mode == CCP_AES_MODE_CBC) ||
+-	     (ctx->u.aes.mode == CCP_AES_MODE_CFB)) &&
++	     (ctx->u.aes.mode == CCP_AES_MODE_CBC)) &&
+ 	    (req->nbytes & (AES_BLOCK_SIZE - 1)))
+ 		return -EINVAL;
+ 
+@@ -291,7 +291,7 @@ static struct ccp_aes_def aes_algs[] = {
+ 		.version	= CCP_VERSION(3, 0),
+ 		.name		= "cfb(aes)",
+ 		.driver_name	= "cfb-aes-ccp",
+-		.blocksize	= AES_BLOCK_SIZE,
++		.blocksize	= 1,
+ 		.ivsize		= AES_BLOCK_SIZE,
+ 		.alg_defaults	= &ccp_aes_defaults,
+ 	},
 -- 
 2.20.1
 
