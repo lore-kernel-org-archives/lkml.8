@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EF0C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2AAC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99D5420728
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:58:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4313A20728
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:58:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193916;
-	bh=t2Cf19qAh/y87QNXqhTK7G7/xhCm5trITpzcvqL+r2E=;
+	s=default; t=1579193919;
+	bh=jcUO4aiGzaGJ0ae33gdIpJzoUiIP1myn1aets66c0us=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ipmlZHYHacLndhS/FA5+hrKMttdr+x/XLLPu8WuCYVR3drSe+Y5zZK0i5J1Jfy37W
-	 uaSCHlI3AOWjfPMjBRL8xH0IupU4Kx4ZveFC8nSengfvovCPuo7dcptfkVrN3NhFya
-	 8st0WIOYNpWmBSYdfiam82N+QAWitteFO4EqgYT4=
+	b=tMWIPbtm/7H7QaFXTu53WAjVL8v8sg8wSnlLj/FerSdU/VeqnzRz3aq2m8eb7vHfs
+	 uEvIU9N+gR4skiw0TM29IQS3fLA+TuWAt0A1Ta4/70W9wFVaqluT1tSw/J23AVWnzV
+	 8zQXaSgp8txPhIpt/QFs4bXPG+/3cQ172YFP3yFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733247AbgAPQ6f (ORCPT
+        id S2387527AbgAPQ5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:58:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45116 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:57:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729290AbgAPQ5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:57:42 -0500
+        id S1729290AbgAPQ53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:57:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C971C2467E;
-        Thu, 16 Jan 2020 16:57:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C0C620730;
+        Thu, 16 Jan 2020 16:57:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193861;
-        bh=t2Cf19qAh/y87QNXqhTK7G7/xhCm5trITpzcvqL+r2E=;
+        s=default; t=1579193849;
+        bh=jcUO4aiGzaGJ0ae33gdIpJzoUiIP1myn1aets66c0us=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vlWefamKVSObJiTsmxO4JXVQ49QLkxaz5DfyPhZbaPU4oEzy/EJJjMg1IfI5EQo8S
-         OtUpWHuIomWdKunmOIN764Fby9BDLkCwxrFZE08W81nooXqESYuqFYp24AuqJxsH+i
-         aEk3TaxvLrA9QMrx0KASNzFMaYsXQbi7Ju5gAl2M=
+        b=l3t1t2Cyo5PvWh41o1h8u/hb61U54iYEFY0WQW1gK2WEz8bpJShDbO+/T7hVHgiiS
+         AcKku1iQyWyFQL6yOxyed2SAkCpaRUsMKPtRHtAVzuJrdedIGWk1PMVMXr9LJWrUEC
+         HDaYRmLSbb9fb4Dk4MMTe5RJUvgcqgnYCLHxlZ2E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gal Pressman <galpress@amazon.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 109/671] RDMA/ocrdma: Fix out of bounds index check in query pkey
-Date:   Thu, 16 Jan 2020 11:45:40 -0500
-Message-Id: <20200116165502.8838-109-sashal@kernel.org>
+Cc:     Sibi Sankar <sibis@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 101/671] remoteproc: qcom: q6v5-mss: Add missing regulator for MSM8996
+Date:   Thu, 16 Jan 2020 11:45:32 -0500
+Message-Id: <20200116165502.8838-101-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -59,34 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gal Pressman <galpress@amazon.com>
+From: Sibi Sankar <sibis@codeaurora.org>
 
-[ Upstream commit b188940796c7be31c1b8c25a9a0e0842c2e7a49e ]
+[ Upstream commit 47b874748d500020026ee43b386b5598e20f3a68 ]
 
-The pkey table size is one element, index should be tested for > 0 instead
-of > 1.
+Add proxy vote for pll supply on MSM8996 SoC.
 
-Fixes: fe2caefcdf58 ("RDMA/ocrdma: Add driver for Emulex OneConnect IBoE RDMA adapter")
-Signed-off-by: Gal Pressman <galpress@amazon.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 9f058fa2efb1 ("remoteproc: qcom: Add support for mss remoteproc on msm8996")
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/ocrdma/ocrdma_verbs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/remoteproc/qcom_q6v5_pil.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/infiniband/hw/ocrdma/ocrdma_verbs.c b/drivers/infiniband/hw/ocrdma/ocrdma_verbs.c
-index c158ca9fde6d..08271fce0b9e 100644
---- a/drivers/infiniband/hw/ocrdma/ocrdma_verbs.c
-+++ b/drivers/infiniband/hw/ocrdma/ocrdma_verbs.c
-@@ -55,7 +55,7 @@
+diff --git a/drivers/remoteproc/qcom_q6v5_pil.c b/drivers/remoteproc/qcom_q6v5_pil.c
+index 073747ba8000..cc475dcbf27f 100644
+--- a/drivers/remoteproc/qcom_q6v5_pil.c
++++ b/drivers/remoteproc/qcom_q6v5_pil.c
+@@ -1268,6 +1268,13 @@ static const struct rproc_hexagon_res sdm845_mss = {
  
- int ocrdma_query_pkey(struct ib_device *ibdev, u8 port, u16 index, u16 *pkey)
- {
--	if (index > 1)
-+	if (index > 0)
- 		return -EINVAL;
- 
- 	*pkey = 0xffff;
+ static const struct rproc_hexagon_res msm8996_mss = {
+ 	.hexagon_mba_image = "mba.mbn",
++	.proxy_supply = (struct qcom_mss_reg_res[]) {
++		{
++			.supply = "pll",
++			.uA = 100000,
++		},
++		{}
++	},
+ 	.proxy_clk_names = (char*[]){
+ 			"xo",
+ 			"pnoc",
 -- 
 2.20.1
 
