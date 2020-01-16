@@ -2,229 +2,237 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36AB9C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA5DC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 054DA2072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:08:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579216101;
-	bh=RzdHsvb0dmyx5pMQeWPi5Wl7q2YHHnKJ8ATlccE8thE=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=KSAc7PazHFAgLpftkBCI0APUdYhwICphlSpdNNFxiXvPmy01w1nCUuB8vfrauRhI7
-	 /Dv8DJVypLtIE7WuS6wTTfv88hNq6aGSwppP/Kx7YLZTIEcMcluTX2pciMYYxBc5bL
-	 P0jXN3KO/Kg236NZY7p8ABPEwf3zx+C3+KAhTt9g=
+	by mail.kernel.org (Postfix) with ESMTP id A1E742072B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:12:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NR8T0dXf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390360AbgAPXIT (ORCPT
+        id S2390104AbgAPXM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:08:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35862 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729925AbgAPXIT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:08:19 -0500
-Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B641E2077B;
-        Thu, 16 Jan 2020 23:08:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216098;
-        bh=RzdHsvb0dmyx5pMQeWPi5Wl7q2YHHnKJ8ATlccE8thE=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=ZHPfgQWbFv9eMFg5n9gPuZaZNFgrVkfg5aa2UW/xp/BnWVbrblIuTqKyCA3+IsQkQ
-         J/p31vtD2zup8e/JAN9xQ+1fILY/Pofwz4WxBZH+g3vt0sHc1eJ+vEakkSxOUVywJH
-         K05c7AkRtMvrW/vMQRlowwnSVXht8Oqs+fR2kgSw=
-Message-ID: <1579216096.8397.34.camel@kernel.org>
-Subject: Re: Unresolved reference for histogram variable
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Date:   Thu, 16 Jan 2020 17:08:16 -0600
-In-Reply-To: <20200116154216.58ca08eb@gandalf.local.home>
-References: <20200116154216.58ca08eb@gandalf.local.home>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.1-1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 16 Jan 2020 18:12:28 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36778 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729336AbgAPXM2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:12:28 -0500
+Received: by mail-pl1-f193.google.com with SMTP id a6so9030335plm.3
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 15:12:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jrsnGmD7k4euNniLrflPRPNagVyaAgLcBWPJAW+V44Q=;
+        b=NR8T0dXfdUVUwJqxHxbpqe7dQKDKAShl/Nx238yaSB4fITUPrX/k99w+/SNTUaIEMZ
+         FK6mraGxEGM5MyNmYP+JWWWAHC+1S8s2Up9ze9xrgNw6StM1OwjyB/bO0vDX+LimAZEt
+         Y8nJvJpRQVwb02vL6LBCZ8HsywXP0tuzgdA6A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jrsnGmD7k4euNniLrflPRPNagVyaAgLcBWPJAW+V44Q=;
+        b=Jl0M+6+R08K21qBccdFfB17eBLFiPPP5QSqlFzskwDL2BlwebOb6/jfjiY24zgiK5y
+         yWiTk0lbOwyGn5bZwc5Tqf5/IqhXG3vp9vTtcM1Gtqk/GzHicmQJ+3d9x7bvnKk26IzT
+         8U2fc2Esw4SzexL86Alb2FupHrt1yAEh1z0OUclay1HdIcz7gU/MHyGAZWR6trGpwRuF
+         FxbzPifKP0rrd8Lwuo+RuPKi2l3Sh6IEYjlvbAW9b/X8WT8A05K5yyiTzKLfOO0z7U9Q
+         YP0fxVP5YWKgQP+T66x0rlHQKl98ymBGdjuj7AV2TRGFsI2gt8sRmDqzanGRyDK/OPro
+         oh8A==
+X-Gm-Message-State: APjAAAUnKaKcQfnI7/td0YHuWqWMBRMmYskl9erXt837UvYHsmCPyy8U
+        Ca4rgVnxZzkWayiQ4ANQbc24SQ==
+X-Google-Smtp-Source: APXvYqx22R84RCDJhB84vPYmaLLC1U7qP0HpuXKmLONtNcIIEF1ZBkCOu85pu3TTuNkcH+psBHl6TA==
+X-Received: by 2002:a17:90a:b318:: with SMTP id d24mr2165967pjr.142.1579216347569;
+        Thu, 16 Jan 2020 15:12:27 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id b15sm26703081pft.58.2020.01.16.15.12.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jan 2020 15:12:26 -0800 (PST)
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>
+Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Eduardo Valentin <edubezval@gmail.com>
+Subject: [PATCH v2] thermal: devfreq_cooling: Use PM QoS to set frequency limits
+Date:   Thu, 16 Jan 2020 15:12:23 -0800
+Message-Id: <20200116151219.v2.1.I146403d05b9ec82f48b807efd416a57f545b447a@changeid>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
+Now that devfreq supports limiting the frequency range of a device
+through PM QoS make use of it instead of disabling OPPs that should
+not be used.
 
-On Thu, 2020-01-16 at 15:42 -0500, Steven Rostedt wrote:
-> Hi Tom,
-> 
-> I'm working on the SQL converter to the ftrace histogram interface,
-> and
-> while testing the histogram code, I found something strange.
-> 
-> If I write the following:
-> 
->  # echo 'first u64 start_time u64 end_time pid_t pid u64 delta' >>
-> synthetic_events
->  # echo 'hist:keys=pid:start=common_timestamp' >
-> events/sched/sched_waking/trigger 
->  # echo 'hist:keys=next_pid:start2=$start,delta=common_timestamp-
-> $start:onmatch(sched.sched_waking).trace(first,$start2,common_timesta
-> mp,next_pid,$delta)' > events/sched/sched_switch/trigger
-> 
->  # cat events/sched/sched_switch/hist 
-> # event histogram
-> #
-> # trigger info:
-> hist:keys=next_pid:vals=hitcount:start2=$start,delta=common_timestamp
-> -$start:sort=hitcount:size=2048:clock=global:onmatch(sched.sched_waki
-> ng).trace(first,$start2,common_timestamp,next_pid,$delta) [active]
-> #
-> 
-> { next_pid:       1337 } hitcount:          1
-> { next_pid:         35 } hitcount:          1
-> { next_pid:        654 } hitcount:          1
-> { next_pid:         20 } hitcount:          1
-> { next_pid:       1392 } hitcount:          1
-> { next_pid:       1336 } hitcount:          1
-> { next_pid:         45 } hitcount:          1
-> { next_pid:         15 } hitcount:          1
-> { next_pid:        674 } hitcount:          1
-> { next_pid:         40 } hitcount:          1
-> { next_pid:          7 } hitcount:          1
-> { next_pid:         25 } hitcount:          1
-> { next_pid:         30 } hitcount:          1
-> { next_pid:         12 } hitcount:          1
-> { next_pid:       1693 } hitcount:          1
-> { next_pid:        206 } hitcount:          1
-> { next_pid:         27 } hitcount:          2
-> { next_pid:        694 } hitcount:          2
-> { next_pid:        438 } hitcount:          2
-> { next_pid:       1016 } hitcount:          3
-> { next_pid:         53 } hitcount:          4
-> { next_pid:       1688 } hitcount:          4
-> { next_pid:       1679 } hitcount:          4
-> { next_pid:       1066 } hitcount:          6
-> { next_pid:       1637 } hitcount:          6
-> { next_pid:       1635 } hitcount:         11
-> { next_pid:         11 } hitcount:         11
-> { next_pid:        196 } hitcount:         12
-> { next_pid:       1270 } hitcount:         15
-> { next_pid:       1506 } hitcount:         18
-> 
-> Totals:
->     Hits: 116
->     Entries: 30
->     Dropped: 0
-> 
-> 
-> All fine and dandy. But if I swap the two variables assignments...
-> 
->  from: start2=$start,delta=common_timestamp-$start
-> 
->  to: delta=common_timestamp-$start,start2=$start
-> 
-> Where I assign the delta before start2, I get this:
+The switch from disabling OPPs to PM QoS introduces a subtle behavioral
+change in case of conflicting requests (min > max): PM QoS gives
+precedence to the MIN_FREQUENCY request, while higher OPPs disabled
+with dev_pm_opp_disable() would override MIN_FREQUENCY.
 
-Yeah, what's happening is that after being used the $start variable
-gets 'unset', and then start2 is assigned to that unset variable so is
-also unset, and then the onmatch sees that $start2 is unset so results
-in the trigger not firing because it sees start2 as unset.
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+---
 
-In the first case, that doesn't happen, because start2 is assigned
-first, and is still set when the onmatch happens.
+Changes in v2:
+- added documentation for 'req_max_freq'
+- fixed jumps in of_devfreq_cooling_register_power() unwind
+- added comment about behavioral change to the commit message
 
-I think you're right and it should just refer to the same variable
-multiple times before it get unset.
+ drivers/thermal/devfreq_cooling.c | 70 ++++++++++---------------------
+ 1 file changed, 23 insertions(+), 47 deletions(-)
 
-> 
->  # cat events/sched/sched_switch/hist 
-> # event histogram
-> #
-> # trigger info:
-> hist:keys=next_pid:vals=hitcount:delta=common_timestamp-
-> $start,start2=$start:sort=hitcount:size=2048:clock=global:onmatch(sch
-> ed.sched_waking).trace(first,$start2,common_timestamp,next_pid,$delta
-> ) [active]
-> #
-> 
-> 
-> Totals:
->     Hits: 0
->     Entries: 0
->     Dropped: 0
-> 
-> 
-> After spending a day placing trace_printk() and printk()s in the
-> code,
-> I found the culprit, and it has to do with this line here:
-> 
-> in resolve_var_refs():
-> 
-> 		if (self || !hist_field->read_once)
-> 			var_val = tracing_map_read_var(var_elt,
-> var_idx);
-> 		else
-> 			var_val = tracing_map_read_var_once(var_elt,
-> var_idx);
-> 
-> 
-> It appears that:
-> 
->   start2=$start
-> 
-> does not set the read_once() to the variable, which allows for the
-> delta calculation to work. But the delta calculation has:
+diff --git a/drivers/thermal/devfreq_cooling.c b/drivers/thermal/devfreq_cooling.c
+index ef59256887ff63..cbbaf5bc425d1a 100644
+--- a/drivers/thermal/devfreq_cooling.c
++++ b/drivers/thermal/devfreq_cooling.c
+@@ -24,11 +24,13 @@
+ #include <linux/idr.h>
+ #include <linux/slab.h>
+ #include <linux/pm_opp.h>
++#include <linux/pm_qos.h>
+ #include <linux/thermal.h>
+ 
+ #include <trace/events/thermal.h>
+ 
+-#define SCALE_ERROR_MITIGATION 100
++#define HZ_PER_KHZ		1000
++#define SCALE_ERROR_MITIGATION	100
+ 
+ static DEFINE_IDA(devfreq_ida);
+ 
+@@ -53,6 +55,8 @@ static DEFINE_IDA(devfreq_ida);
+  *		'utilization' (which is	'busy_time / 'total_time').
+  *		The 'res_util' range is from 100 to (power_table[state] * 100)
+  *		for the corresponding 'state'.
++ * @req_max_freq:	PM QoS request for limiting the maximum frequency
++ *			of the devfreq device.
+  */
+ struct devfreq_cooling_device {
+ 	int id;
+@@ -65,49 +69,9 @@ struct devfreq_cooling_device {
+ 	struct devfreq_cooling_power *power_ops;
+ 	u32 res_util;
+ 	int capped_state;
++	struct dev_pm_qos_request req_max_freq;
+ };
+ 
+-/**
+- * partition_enable_opps() - disable all opps above a given state
+- * @dfc:	Pointer to devfreq we are operating on
+- * @cdev_state:	cooling device state we're setting
+- *
+- * Go through the OPPs of the device, enabling all OPPs until
+- * @cdev_state and disabling those frequencies above it.
+- */
+-static int partition_enable_opps(struct devfreq_cooling_device *dfc,
+-				 unsigned long cdev_state)
+-{
+-	int i;
+-	struct device *dev = dfc->devfreq->dev.parent;
+-
+-	for (i = 0; i < dfc->freq_table_size; i++) {
+-		struct dev_pm_opp *opp;
+-		int ret = 0;
+-		unsigned int freq = dfc->freq_table[i];
+-		bool want_enable = i >= cdev_state ? true : false;
+-
+-		opp = dev_pm_opp_find_freq_exact(dev, freq, !want_enable);
+-
+-		if (PTR_ERR(opp) == -ERANGE)
+-			continue;
+-		else if (IS_ERR(opp))
+-			return PTR_ERR(opp);
+-
+-		dev_pm_opp_put(opp);
+-
+-		if (want_enable)
+-			ret = dev_pm_opp_enable(dev, freq);
+-		else
+-			ret = dev_pm_opp_disable(dev, freq);
+-
+-		if (ret)
+-			return ret;
+-	}
+-
+-	return 0;
+-}
+-
+ static int devfreq_cooling_get_max_state(struct thermal_cooling_device *cdev,
+ 					 unsigned long *state)
+ {
+@@ -134,7 +98,7 @@ static int devfreq_cooling_set_cur_state(struct thermal_cooling_device *cdev,
+ 	struct devfreq_cooling_device *dfc = cdev->devdata;
+ 	struct devfreq *df = dfc->devfreq;
+ 	struct device *dev = df->dev.parent;
+-	int ret;
++	unsigned long freq;
+ 
+ 	if (state == dfc->cooling_state)
+ 		return 0;
+@@ -144,9 +108,10 @@ static int devfreq_cooling_set_cur_state(struct thermal_cooling_device *cdev,
+ 	if (state >= dfc->freq_table_size)
+ 		return -EINVAL;
+ 
+-	ret = partition_enable_opps(dfc, state);
+-	if (ret)
+-		return ret;
++	freq = dfc->freq_table[state];
++
++	dev_pm_qos_update_request(&dfc->req_max_freq,
++				  DIV_ROUND_UP(freq, HZ_PER_KHZ));
+ 
+ 	dfc->cooling_state = state;
+ 
+@@ -529,9 +494,15 @@ of_devfreq_cooling_register_power(struct device_node *np, struct devfreq *df,
+ 	if (err)
+ 		goto free_dfc;
+ 
+-	err = ida_simple_get(&devfreq_ida, 0, 0, GFP_KERNEL);
++	err = dev_pm_qos_add_request(df->dev.parent, &dfc->req_max_freq,
++				     DEV_PM_QOS_MAX_FREQUENCY,
++				     PM_QOS_MAX_FREQUENCY_DEFAULT_VALUE);
+ 	if (err < 0)
+ 		goto free_tables;
++
++	err = ida_simple_get(&devfreq_ida, 0, 0, GFP_KERNEL);
++	if (err < 0)
++		goto remove_qos_req;
+ 	dfc->id = err;
+ 
+ 	snprintf(dev_name, sizeof(dev_name), "thermal-devfreq-%d", dfc->id);
+@@ -552,6 +523,10 @@ of_devfreq_cooling_register_power(struct device_node *np, struct devfreq *df,
+ 
+ release_ida:
+ 	ida_simple_remove(&devfreq_ida, dfc->id);
++
++remove_qos_req:
++	dev_pm_qos_remove_request(&dfc->req_max_freq);
++
+ free_tables:
+ 	kfree(dfc->power_table);
+ 	kfree(dfc->freq_table);
+@@ -600,6 +575,7 @@ void devfreq_cooling_unregister(struct thermal_cooling_device *cdev)
+ 
+ 	thermal_cooling_device_unregister(dfc->cdev);
+ 	ida_simple_remove(&devfreq_ida, dfc->id);
++	dev_pm_qos_remove_request(&dfc->req_max_freq);
+ 	kfree(dfc->power_table);
+ 	kfree(dfc->freq_table);
+ 
+-- 
+2.25.0.341.g760bfbb309-goog
 
-In this case, the start2=$start happens before the expression that
-unsets it, so works, but when it happens afterwards, the read_once() in
-the expression causes the value to be unset, so results in the start2
-being unset.
-
-> 
-> in parse_expr():
-> 
-> 	operand1->read_once = true;
-> 	operand2->read_once = true;
-> 
-> Why is that?
-> 
-> This means that any variable used in an expression can not be use
-> later
-> on.
-
-The read_once is a a shortcut to prevent expressions from using
-uninitialized variables, so if any are unset, they cause any actions
-referring to unset variables to not be triggered, and after being read
-once the variables are unset.  It's better described in
-Documentation/histogram.rst:
-
-"A variable's value is normally available to any subsequent event until
-it is set to something else by a subsequent event.  The one exception
-to that rule is that any variable used in an expression is essentially
-'read-once' - once it's used by an expression in a subsequent event,
-it's reset to its 'unset' state, which means it can't be used again
-unless it's set again.  This ensures not only that an event doesn't
-use an uninitialized variable in a calculation, but that that variable
-is used only once and not for any unrelated subsequent match."
-
-The assumption was that expressions would generally be used that way
-e.g. like the common_timestamp-$ts0, where a bogus $ts0 would mean
-disaster.
-
-> 
-> Or should the variable be detected that it is used multiple times in
-> the expression, and have the parser detect this, and just reuse the
-> same variable multiple times?
-
-Yeah, I think that makes sense - I'll look at your patch and see if
-that's the best way to do it.
-
-Thanks,
-
-Tom
-
-> 
-> -- Steve
