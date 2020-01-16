@@ -2,200 +2,117 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8649BC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 496ACC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AA0C20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:10:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OYiDI3E0"
+	by mail.kernel.org (Postfix) with ESMTP id 20E4620663
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:11:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579205479;
+	bh=ksnhhuSQ1QJCKWVbxycdJPPdnNpLHb7Tfyo71D6g6mc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aCd/zVOMBBBEY8xM2//TAtjBsop8qM2DwkaAxH8KTVqIzElxjc2lI3FYznZ1lDnY+
+	 eoCam59okg79vz1RzzZ6m7dRgJVBrJDg5Mp0CUY2DhKPXhMnEJ8F7ktdF6O4G9VHTj
+	 ++Cba5BEuZFreqYSBHEbJrzLQ6IXCY2++KT/3QvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387416AbgAPUKn (ORCPT
+        id S2387476AbgAPULS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 15:10:43 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35814 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbgAPUKm (ORCPT
+        Thu, 16 Jan 2020 15:11:18 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46450 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387437AbgAPULR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 15:10:42 -0500
-Received: by mail-lj1-f195.google.com with SMTP id j1so23976247lja.2;
-        Thu, 16 Jan 2020 12:10:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pEuLrU2BpUSNmu4UveCDpaLLg5RgdT00zU5cu7LGBZo=;
-        b=OYiDI3E0+941verm/XyKBDtUuzeBmpC3dQzWzBwkMV2XnCoxs9/fS31Xq2a5jOFxDA
-         mwjTXSWEZobvhxVEv3+0tVLKNfr1lxKE2EqtAaX6aEuPBQmo6I0VBDBaX57DO9wlCaVz
-         stwqvbzL5dgy4028sWtq3otIOcS0c7kZk20DKMt1NfwtOeqa5fXQsHz/oI27TwA13kwJ
-         sGsPkvHxLT/lhqb7dFxhjCb7v97VpMY0QRxCwgaAUULyzr8jWqXUVV8QAVgs46hWN6Fz
-         ItqurV4kXbTK7i33pOaRgKoVIH2R2ikVDn7kRNm5til8ggpVUyquEutNY9IRcGTnSCkA
-         NPig==
+        Thu, 16 Jan 2020 15:11:17 -0500
+Received: by mail-pl1-f193.google.com with SMTP id y8so8794791pll.13;
+        Thu, 16 Jan 2020 12:11:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pEuLrU2BpUSNmu4UveCDpaLLg5RgdT00zU5cu7LGBZo=;
-        b=SUsmQpwJ31a2rZXpeGlYc9TMqSSCh9bFNb70IMXVHhiNS1bcdnxURBwJiyDSPjfAHN
-         bJr6yuLDJ8tNyomnQIeU+ijL6bmAN6wUf7ZtBO4OpVG8xjV4pkymUC1AWXVGrLHEpvPh
-         /B0nEDWDegYqN2SyoXEARV6L3uJ7rkli8XYLu2kBLX2nv22dp6cPjPQrtpmDDbMr4epa
-         SlOUTjDxsbZvYx81fi6or2wb4tS+wK09/gSrsCXyEb+hVtZd8eLtL922lw8OAMNTNDNk
-         gjoTkqWeyRFMpBk/kN2WgYzqRmuyFyGRFQdOV8JYz9ehYlFzuFyjFjP6G72c6f4COjC5
-         28lg==
-X-Gm-Message-State: APjAAAVCUnMB0f95rn/1b/Vpnk9vyCTCrWplpmw4sBI6bgSIF6Z2p6aL
-        EN2my0Z1dbLr9Cvz9G7B69mIy7ko
-X-Google-Smtp-Source: APXvYqzZnQfQ2a6Vct+CFJCYllwIuR6cpEoraA9CzIxdzJ0PID4MK+W4sOeq/jKjZ6+IkmeYOPDneA==
-X-Received: by 2002:a05:651c:2046:: with SMTP id t6mr3367132ljo.180.1579205439902;
-        Thu, 16 Jan 2020 12:10:39 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id r125sm11049150lff.70.2020.01.16.12.10.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jan 2020 12:10:39 -0800 (PST)
-Subject: Re: [PATCH v4 01/14] dmaengine: tegra-apb: Fix use-after-free
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200112173006.29863-1-digetx@gmail.com>
- <20200112173006.29863-2-digetx@gmail.com>
- <4c1b9e48-5468-0c03-2108-158ee814eea8@nvidia.com>
- <1327bb21-0364-da26-e6ed-ff6c19df03e6@gmail.com>
- <e39ef31d-4cff-838a-0fc1-73a39a8d6120@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <b0c85ca7-d8ac-5f9d-2c57-79543c1f9b5d@gmail.com>
-Date:   Thu, 16 Jan 2020 23:10:37 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Tm23PxhXo55Di3dhtZ2C51EXGzICtg127cF/oILr50A=;
+        b=rz3lxLhxXoqePSgakl8djESfGyMpk1CkyVl/OVsGJEw9UDKuIRgQAe+fDaB46He53C
+         +G74+Gy1dXYXyHSWIabHMvFH8bugWoOC4neIc/CjSC3VFxOmhC81YWM8ZSb7JHq1eRXd
+         K9dWa19NRYx2/sz67IytkCUSiv1nQL1+BhRPPURbrujEFH2WD7GZRu+IByQ249lCBFiH
+         ZbBttFBfjOwPbxEdc8Ht5d5cZF8N3YL42lLbivqA2nBjceHvNIywMOiMDIY6BM7cfWo0
+         gr1QYjXPpqoj8+zYOMI/kvdu6r10RGFa5X0WLEPEFUBG1sltcIH3xJpLLZvKrUI7rQdZ
+         2eZg==
+X-Gm-Message-State: APjAAAWRHNSIyMSgYXVhL2bkrQfGa+RT32UaDTldC7qItZMjAbI/j9cM
+        HgSU/Jx+a/WsHmMWojvbGGs=
+X-Google-Smtp-Source: APXvYqxALxH6RE6QR8Q0mmczdgGt4YUBXj86LMzvHDaKHxeqPk5YH8lJTwPvLsDAldKhkyPFv9VgzQ==
+X-Received: by 2002:a17:90a:21a7:: with SMTP id q36mr1112343pjc.140.1579205476399;
+        Thu, 16 Jan 2020 12:11:16 -0800 (PST)
+Received: from localhost (MIPS-TECHNO.ear1.SanJose1.Level3.net. [4.15.122.74])
+        by smtp.gmail.com with ESMTPSA id r66sm27423056pfc.74.2020.01.16.12.11.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 12:11:15 -0800 (PST)
+Date:   Thu, 16 Jan 2020 12:11:14 -0800
+From:   Paul Burton <paulburton@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        paul.burton@mips.com, luto@kernel.org,
+        kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH] MIPS: vdso: Define BUILD_VDSO32 when building a 32bit
+ kernel
+Message-ID: <20200116201114.44l7ou24ppz2jjjt@pburton-laptop>
+References: <20190830135902.20861-1-vincenzo.frascino@arm.com>
+ <20190830135902.20861-3-vincenzo.frascino@arm.com>
+ <87d0bjfaqa.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <e39ef31d-4cff-838a-0fc1-73a39a8d6120@nvidia.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <87d0bjfaqa.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-15.01.2020 12:00, Jon Hunter пишет:
+Hi Thomas,
+
+On Thu, Jan 16, 2020 at 08:43:41PM +0100, Thomas Gleixner wrote:
+> The confinement of the 32bit specific VDSO functions missed to define
+> BUILD_VDSO32 when building a 32bit MIPS kernel:
 > 
-> On 14/01/2020 20:33, Dmitry Osipenko wrote:
->> 14.01.2020 18:09, Jon Hunter пишет:
->>>
->>> On 12/01/2020 17:29, Dmitry Osipenko wrote:
->>>> I was doing some experiments with I2C and noticed that Tegra APB DMA
->>>> driver crashes sometime after I2C DMA transfer termination. The crash
->>>> happens because tegra_dma_terminate_all() bails out immediately if pending
->>>> list is empty, thus it doesn't release the half-completed descriptors
->>>> which are getting re-used before ISR tasklet kicks-in.
->>>
->>> Can you elaborate a bit more on how these are getting re-used? What is
->>> the sequence of events which results in the panic? I believe that this
->>> was also reported in the past [0] and so I don't doubt there is an issue
->>> here, but would like to completely understand this.
->>>
->>> Thanks!
->>> Jon
->>>
->>> [0] https://lore.kernel.org/patchwork/patch/675349/
->>>
->>
->> In my case it happens in the touchscreen driver during of the
->> touchscreen's interrupt handling (in a threaded IRQ handler) + CPU is
->> under load and there is other interrupts activity. So what happens here
->> is that the TS driver issues one I2C transfer, which fails with
->> (apparently bogus) timeout (because DMA descriptor is completed and
->> removed from the pending list, but tasklet not executed yet), and then
->> TS immediately issues another I2C transfer that re-uses the
->> yet-incompleted descriptor. That's my understanding.
+> arch/mips/vdso/vgettimeofday.c: In function ‘__vdso_clock_gettime’:
+> arch/mips/vdso/vgettimeofday.c:17:9: error: implicit declaration of function ‘__cvdso_clock_gettime32’
 > 
-> OK, but what is the exact sequence that it allowing it to re-use the
-> incompleted descriptor?
+> arch/mips/vdso/vgettimeofday.c: In function ‘__vdso_clock_getres’:
+> arch/mips/vdso/vgettimeofday.c:39:9: error: implicit declaration of function ‘__cvdso_clock_getres_time32’
+> 
+> Force the define for 32bit builds in the VDSO Makefile.
+> 
+> Fixes: bf279849ad59 ("lib/vdso: Build 32 bit specific functions in the right context")
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-   TDMA driver                      DMA Client
+Presuming you want to take this through timers/core along with the patch
+it fixes:
 
-1.
-                                    dmaengine_prep()
+    Acked-by: Paul Burton <paulburton@kernel.org>
 
-2.
-   tegra_dma_desc_get()
-   dma_desc = kzalloc()
-   ...
-   tegra_dma_prep_slave_sg()
-   INIT_LIST_HEAD(&dma_desc->tx_list);
-   INIT_LIST_HEAD(&dma_desc->cb_node);
-   list_add_tail(sgreq->node,
-                 dma_desc->tx_list)
+Thanks,
+    Paul
 
-3.
-                                    dma_async_issue_pending()
-
-4.
-   tegra_dma_tx_submit()
-   list_splice_tail_init(dma_desc->tx_list,
-                         tdc->pending_sg_req)
-
-5.
-   tegra_dma_isr()
-   ...
-   handle_once_dma_done()
-   ...
-   sgreq = list_first_entry(tdc->pending_sg_req)
-   list_del(sgreq->node);
-   ...
-   list_add_tail(dma_desc->cb_node,
-                 tdc->cb_desc);
-   list_add_tail(dma_desc->node,
-                 tdc->free_dma_desc);
-   ...
-   tasklet_schedule(&tdc->tasklet);
-   ...
-
-6.
-                                    timeout
-                                    dmaengine_terminate_async()
-
-7.
-   tegra_dma_terminate_all()
-   if (list_empty(tdc->pending_sg_req))
-       return 0;
-
-8.
-                                    dmaengine_prep()
-
-9.
-   tegra_dma_desc_get()
-   list_for_each_entry(dma_desc,
-                       tdc->free_dma_desc) {
-       list_del(dma_desc->node);
-       return dma_desc;
-   }
-   ...
-   tegra_dma_prep_slave_sg()
-   INIT_LIST_HEAD(&dma_desc->tx_list);
-   INIT_LIST_HEAD(&dma_desc->cb_node);
-
-   *** tdc->cb_desc list is wrecked now! ***
-
-   list_add_tail(sgreq->node,
-                 dma_desc->tx_list)
-   ...
-
-10.
-   same actions as in #4 #5 ...
-
-11.
-   tegra_dma_tasklet()
-   dma_desc = list_first_entry(tdc->cb_desc)
-   list_del(dma_desc->cb_node);
-
-   eventual woopsie
+> ---
+>  arch/mips/vdso/Makefile |    4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> --- a/arch/mips/vdso/Makefile
+> +++ b/arch/mips/vdso/Makefile
+> @@ -18,6 +18,10 @@ ccflags-vdso := \
+>  	$(filter -mno-loongson-%,$(KBUILD_CFLAGS)) \
+>  	-D__VDSO__
+>  
+> +ifndef CONFIG_64BIT
+> +ccflags-vdso += -DBUILD_VDSO32
+> +endif
+> +
+>  ifdef CONFIG_CC_IS_CLANG
+>  ccflags-vdso += $(filter --target=%,$(KBUILD_CFLAGS))
+>  endif
