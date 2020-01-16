@@ -2,89 +2,111 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C5E8C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CC4C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A558246DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:27:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="f2RCFwWZ"
+	by mail.kernel.org (Postfix) with ESMTP id 4050B246EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:27:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579195638;
+	bh=8iRFm89jihfp3NUUzy4kvRT0BpudT1RYy/C7LLvQQX0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Qohq5tXwJf5WcugoEwXDi13prM3vUnNg+idsMbfPOKFWX4GjmLXLf6IUQ4nqq8Nkw
+	 cpGQs0MnUYQt9/S7rvDZ2GTceO1QNmB1Ut8J3jj8zkGIE9M8Xvo+E7zg7nQ2gZyiu9
+	 Dzbj85PecABMwe+ol3uXm2OmwD89dlThFbR6z3zk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392434AbgAPR1O (ORCPT
+        id S2392447AbgAPR1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:27:14 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:43271 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392379AbgAPR1C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:27:02 -0500
-Received: by mail-qv1-f66.google.com with SMTP id p2so9398958qvo.10
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 09:27:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Paj9ZIyLKDeb3eXWIMYy+oZ8ADw3i4uQICVjpw67tFk=;
-        b=f2RCFwWZ11DI7in6/E+nFTYJ/u5RhRB+ZcKR2iC205+oCb21iMfwSFsEqOJN3H8VsI
-         QW3pUdOZLXChDAAUgzZgtfQI8uccUzbiveaULWwIGSd4S67ncfmjez1twkBLg761dJ8L
-         7GPnTtbkKaT4bKXm8l+TgIgRZbbSxG+nb1dBpwzThrY+rvMw63iVaHyQ7wZf7wWjn8/O
-         Z1zPbfaxyCtckJQLr6sU8kaAn9f5kyHg8C607d1QBUoB9E315ZuqrBB2rhElPX6mFtw2
-         ETButUBNGsuL5LQactvYsfc6mC+it7K5eh6Qy3PAKfi7J1X0BJwbktPM2/RUrZLNeCBZ
-         EseQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Paj9ZIyLKDeb3eXWIMYy+oZ8ADw3i4uQICVjpw67tFk=;
-        b=kHzIOZ8rYtN+3I23UhY65YDpgdMxqHx+SkhFUNG5IgvmJY7CzLrnkq0ZWdHSkU30Vz
-         gxuwYC/guH840hJAZGx+4BpvwqqtE+wCQRPDyk2F6SfTE+h5bnCJHYwRS0SEpTM+YIVl
-         KQplDZw4VQVXZh2Wa15Ug+P3rud5owDwWo8BCZIB/bbwPUDWpPp1W5M+6s/W4C+32QhP
-         oxsUNdXaLxo95c7xlmMx1tG+QAqPy95pYUcjajEj7S1miVQckPUUaMUt4EGSbchkTvpf
-         i2rD8/v/Q9NRST+KfHyEGGPERd2fen/8tI1pSyrgC26YoHsxHKAYd375BAg5/AUvJpl9
-         qeiA==
-X-Gm-Message-State: APjAAAWzj6N7Pb4wj1RRluvTKmxX+e9g5Ri85TmP4PWB9A9w2e6PY6r8
-        Y9MlxjCFggKxksR4qEE7L3vM0A==
-X-Google-Smtp-Source: APXvYqzZRxHopdpa2Nb71ImNjP3ATvX/yf9c6C1U8lHIp75fJqIsHlTarzIHRf/cnIUmt/WlGlhBYA==
-X-Received: by 2002:ad4:5586:: with SMTP id e6mr3710258qvx.92.1579195620917;
-        Thu, 16 Jan 2020 09:27:00 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::ae73])
-        by smtp.gmail.com with ESMTPSA id v7sm11862980qtk.89.2020.01.16.09.26.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 09:26:59 -0800 (PST)
-Date:   Thu, 16 Jan 2020 12:26:59 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH v2 5/6] mm: memcg/slab: cache page number in
- memcg_(un)charge_slab()
-Message-ID: <20200116172659.GE57074@cmpxchg.org>
-References: <20200109202659.752357-1-guro@fb.com>
- <20200109202659.752357-6-guro@fb.com>
+        Thu, 16 Jan 2020 12:27:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36514 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392392AbgAPR1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:27:04 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6BF6246D3;
+        Thu, 16 Jan 2020 17:27:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579195623;
+        bh=8iRFm89jihfp3NUUzy4kvRT0BpudT1RYy/C7LLvQQX0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AAtiSOQ6gsT+Q5CF9PJVkE9o7ubq4+Qq5E50qidI4+ipH3PDc89e2SjyJcFrIq/co
+         FKn+8lCsAZq1SQ7FuAAsM6N54D3AfkE+IyCtaeNz5G9EvkQg04Y144r6hNHwtnidby
+         IGEg5ob8xwoXYpeYuY74me1w8am2cmrIogwqLIVE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        "Lad Prabhakar" <prabhakar.csengg@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 194/371] media: davinci/vpbe: array underflow in vpbe_enum_outputs()
+Date:   Thu, 16 Jan 2020 12:21:06 -0500
+Message-Id: <20200116172403.18149-137-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
+References: <20200116172403.18149-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200109202659.752357-6-guro@fb.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 12:26:58PM -0800, Roman Gushchin wrote:
-> There are many places in memcg_charge_slab() and memcg_uncharge_slab()
-> which are calculating the number of pages to charge, css references to
-> grab etc depending on the order of the slab page.
-> 
-> Let's simplify the code by calculating it once and caching in the
-> local variable.
-> 
-> Signed-off-by: Roman Gushchin <guro@fb.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+[ Upstream commit b72845ee5577b227131b1fef23f9d9a296621d7b ]
+
+In vpbe_enum_outputs() we check if (temp_index >= cfg->num_outputs) but
+the problem is that "temp_index" can be negative.  This patch changes
+the types to unsigned to address this array underflow bug.
+
+Fixes: 66715cdc3224 ("[media] davinci vpbe: VPBE display driver")
+
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: "Lad Prabhakar" <prabhakar.csengg@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/media/platform/davinci/vpbe.c | 2 +-
+ include/media/davinci/vpbe.h          | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/media/platform/davinci/vpbe.c b/drivers/media/platform/davinci/vpbe.c
+index 1d3c13e36904..915af9ca4711 100644
+--- a/drivers/media/platform/davinci/vpbe.c
++++ b/drivers/media/platform/davinci/vpbe.c
+@@ -126,7 +126,7 @@ static int vpbe_enum_outputs(struct vpbe_device *vpbe_dev,
+ 			     struct v4l2_output *output)
+ {
+ 	struct vpbe_config *cfg = vpbe_dev->cfg;
+-	int temp_index = output->index;
++	unsigned int temp_index = output->index;
+ 
+ 	if (temp_index >= cfg->num_outputs)
+ 		return -EINVAL;
+diff --git a/include/media/davinci/vpbe.h b/include/media/davinci/vpbe.h
+index 79a566d7defd..180a05e91497 100644
+--- a/include/media/davinci/vpbe.h
++++ b/include/media/davinci/vpbe.h
+@@ -92,7 +92,7 @@ struct vpbe_config {
+ 	struct encoder_config_info *ext_encoders;
+ 	/* amplifier information goes here */
+ 	struct amp_config_info *amp;
+-	int num_outputs;
++	unsigned int num_outputs;
+ 	/* Order is venc outputs followed by LCD and then external encoders */
+ 	struct vpbe_output *outputs;
+ };
+-- 
+2.20.1
+
