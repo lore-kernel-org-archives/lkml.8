@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0201FC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEEB3C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C287120663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C68024685
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:08:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194520;
-	bh=k8GReeyE90iWoxw6ZmMi4YPvCx8AKmgbeGlh4ZYDKyk=;
+	s=default; t=1579194523;
+	bh=sT3KDcw/wc551YaCyJ5Nu5sFuDODu+pXhos+pJR1tjM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Uu/FEf/PYrLLefwgABQvWWNLDAfk42RiuTYewKgqUkgA1jrRy/Zk877qCZvRCHzRx
-	 FDgKSnYzGTjR3nH3TZXc2siXD/tDc9CApcuz/hYM9s8MdW9HKpjQ+vwWSi+oD+9YlY
-	 DlRUYtLG7oOfcw+lEimNtiZq5lV7ol6LefDP1Jh4=
+	b=Wfk2BSA1fTnYf29fkZfrzRGok7zFhJk+Te+hyFD+ZVkxWRBBxGhFS6ZvnoM/Xihee
+	 4Kzl1TBrRKik93UI+nuCok2zoDSYbVKT8hWhdXSN+G7VOIMj+1cEFmOTflUEkDeWK1
+	 q+jTtUM4ztQYGqVHXnpB1fxbwYLmc4/q9Kz4aV0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389462AbgAPRIk (ORCPT
+        id S2389476AbgAPRIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:08:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42574 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:08:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389443AbgAPRIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:08:35 -0500
+        id S2387629AbgAPRIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:08:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28F58205F4;
-        Thu, 16 Jan 2020 17:08:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BFC8206D9;
+        Thu, 16 Jan 2020 17:08:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194514;
-        bh=k8GReeyE90iWoxw6ZmMi4YPvCx8AKmgbeGlh4ZYDKyk=;
+        s=default; t=1579194519;
+        bh=sT3KDcw/wc551YaCyJ5Nu5sFuDODu+pXhos+pJR1tjM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VJniDalO1pbCuRUQLJg0M74UQn+KjrgEgmJGqwJoeCiDu4yCPchJ6A3LL9cet2Lvm
-         r2LoYsP7ox3xtyt7yVt8p6rEc6cf5p4piHjg9lZhryh8BmQSXGIXDhuvN2VgccNV3a
-         lYyI/sIuiq50w4/lxnhqIp5srS/AwTV+R8HAbgtM=
+        b=ZmBvMS89LGHR3ObDdlk9DC193sFJugueb6Fp3LID1KNDmocRLv+UK1PIyzVwMAVp1
+         Ec3ncba9aQVenPVUr7oxdLQv7l/wfn/FzHt2JriYo0MS1T+TshWlrh+Hw/qXvOEZzY
+         Hmu722oOwdj5sNBf2j/dYrIAU5j+sKSrZc3hpRU0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peng Fan <peng.fan@nxp.com>, Sudeep Holla <sudeep.holla@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 408/671] firmware: arm_scmi: update rate_discrete in clock_describe_rates_get
-Date:   Thu, 16 Jan 2020 12:00:46 -0500
-Message-Id: <20200116170509.12787-145-sashal@kernel.org>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 411/671] ASoC: meson: axg-tdmout: right_j is not supported
+Date:   Thu, 16 Jan 2020 12:00:49 -0500
+Message-Id: <20200116170509.12787-148-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,37 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit c0759b9b5d411ab27c479125cee9bae391a96436 ]
+[ Upstream commit 7e0d7d0fbd06af0507611f85dba8daf24832abd9 ]
 
-The boolean rate_discrete needs to be assigned to clk->rate_discrete,
-so that clock driver can distinguish between the continuous range and
-discrete rates. It uses this in scmi_clk_round_rate could get the
-rounded value if it's a continuous range.
+Right justified format is actually not supported by the amlogic tdm output
+encoder.
 
-Fixes: 5f6c6430e904 ("firmware: arm_scmi: add initial support for clock protocol")
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
-[sudeep.holla: updated commit message]
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Fixes: c41c2a355b86 ("ASoC: meson: add tdm output driver")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/arm_scmi/clock.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/meson/axg-tdmout.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/firmware/arm_scmi/clock.c b/drivers/firmware/arm_scmi/clock.c
-index 30fc04e28431..0a194af92438 100644
---- a/drivers/firmware/arm_scmi/clock.c
-+++ b/drivers/firmware/arm_scmi/clock.c
-@@ -185,6 +185,8 @@ scmi_clock_describe_rates_get(const struct scmi_handle *handle, u32 clk_id,
- 	if (rate_discrete)
- 		clk->list.num_rates = tot_rate_cnt;
+diff --git a/sound/soc/meson/axg-tdmout.c b/sound/soc/meson/axg-tdmout.c
+index f73368ee1088..d11acb3cc696 100644
+--- a/sound/soc/meson/axg-tdmout.c
++++ b/sound/soc/meson/axg-tdmout.c
+@@ -136,7 +136,6 @@ static int axg_tdmout_prepare(struct regmap *map, struct axg_tdm_stream *ts)
+ 		break;
  
-+	clk->rate_discrete = rate_discrete;
-+
- err:
- 	scmi_xfer_put(handle, t);
- 	return ret;
+ 	case SND_SOC_DAIFMT_LEFT_J:
+-	case SND_SOC_DAIFMT_RIGHT_J:
+ 	case SND_SOC_DAIFMT_DSP_B:
+ 		val |= TDMOUT_CTRL0_INIT_BITNUM(2);
+ 		break;
 -- 
 2.20.1
 
