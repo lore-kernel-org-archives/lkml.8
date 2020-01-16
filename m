@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4EAC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD2BC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B100E2077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 762A02077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:17:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202215;
-	bh=MGeSLlY5TsMsrM4CMCU6nTzFUKELvmTkU0CYxuigBdQ=;
+	s=default; t=1579202220;
+	bh=x8IBTbMc7q0xygme5mT2prwtW8teTHQaE5Z0R5c1sgQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mQ2g/qbHKF49shxD3s/S9NRTnaWo1w0Xio5JvgnJXskbr88Bo5UVWsOQHcnb77Fws
-	 +ypzim1edBGXtkN0q5obHnv+wMwHxAGqNrqVPemaQIOsNFb5nzdgjNGseDhLSjhj5L
-	 /Na2hN3Advse2Ub0+Dpm4lG7lvSXXevYD2iO8EnM=
+	b=b0k63OSb6kgcMUMiDjtzpoyj871SH0QQjk5gmpO7RqnDEqT6xOZ+tmjwbNPtIm4Oh
+	 XH7tycTQuauV9dUmPxwtd8mmvvGucgAAKZfp4oPeDemOudy30hms2r7PGAP5at2O+S
+	 hL6m5URBmFodA/RjaakAdecY7ggdL56FUlcQ8yyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730741AbgAPQzk (ORCPT
+        id S2407302AbgAPTQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:55:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40666 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:16:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732866AbgAPQz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:55:26 -0500
+        id S1733077AbgAPQzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:55:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B3E0205F4;
-        Thu, 16 Jan 2020 16:55:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF6652467A;
+        Thu, 16 Jan 2020 16:55:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193725;
-        bh=MGeSLlY5TsMsrM4CMCU6nTzFUKELvmTkU0CYxuigBdQ=;
+        s=default; t=1579193737;
+        bh=x8IBTbMc7q0xygme5mT2prwtW8teTHQaE5Z0R5c1sgQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oIaJjdIT+k5c3NBwORmIthTI4l2RoDce9vyxmBJsyU4HYmPkMuHJ2Ht+t7l+8rEwm
-         GLI0/f0N3DxHhiBFKKfgaOI4CakJNmdE/q0FuDiEYvpLgH9ce0/lw6OrVa2QKl/U4A
-         jKCnWAyXQBgGw4oK+rdrLu0cP8dVduDGMfE7GbZY=
+        b=l1uokLztaLSfQlxKIWgQwwbY7h1ETRJrYGBWSfn92GmyhGw2X5LHWzPlabJIycTXm
+         Fm7OaBmQd5Y7CKoN6MJftXISn5mgwsOWB0XfsGp99pBpBDu0a1Mc8WWoxchtfpCh/i
+         4IFf1mN3G56wvLk7C+338ma0+DK4BtaQ9ZRd75E8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhu Yanjun <yanjun.zhu@oracle.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 019/671] IB/rxe: replace kvfree with vfree
-Date:   Thu, 16 Jan 2020 11:44:10 -0500
-Message-Id: <20200116165502.8838-19-sashal@kernel.org>
+Cc:     Nicolas Huaman <nicolas@herochao.de>, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.19 029/671] ALSA: usb-audio: update quirk for B&W PX to remove microphone
+Date:   Thu, 16 Jan 2020 11:44:20 -0500
+Message-Id: <20200116165502.8838-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -60,75 +58,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhu Yanjun <yanjun.zhu@oracle.com>
+From: Nicolas Huaman <nicolas@herochao.de>
 
-[ Upstream commit 721ad7e643f7002efa398838693f90284ea216d1 ]
+[ Upstream commit c369c8db15d51fa175d2ba85928f79d16af6b562 ]
 
-The buf is allocated by vmalloc_user in the function rxe_queue_init.
-So it is better to free it by vfree.
+A quirk in snd-usb-audio was added to automate setting sample rate to
+4800k and remove the previously exposed nonfunctional microphone for
+the Bowers & Wilkins PX:
+commit 240a8af929c7c57dcde28682725b29cf8474e8e5
+https://lore.kernel.org/patchwork/patch/919689/
 
-Fixes: 8700e3e7c485 ("Soft RoCE driver")
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Zhu Yanjun <yanjun.zhu@oracle.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+However the headphones where updated shortly after that to remove the
+unintentional microphone functionality. I guess because of this the
+headphones now crash when connecting them via USB while the quirk is
+active. Dmesg:
+
+snd-usb-audio: probe of 2-3:1.0 failed with error -22
+usb 2-3: 2:1: cannot get min/max values for control 2 (id 2)
+
+This patch removes the microfone and allows the headphones to connect
+and work out of the box. It is based on the current mainline kernel
+ and successfully applied an tested on my machine (4.18.10.arch1-1).
+
+Fixes: 240a8af929c7 ("ALSA: usb-audio: Add a quirck for B&W PX headphones")
+Signed-off-by: Nicolas Huaman <nicolas@herochao.de>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/rxe/rxe_cq.c | 4 ++--
- drivers/infiniband/sw/rxe/rxe_qp.c | 5 +++--
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ sound/usb/quirks-table.h | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_cq.c b/drivers/infiniband/sw/rxe/rxe_cq.c
-index 2ee4b08b00ea..a57276f2cb84 100644
---- a/drivers/infiniband/sw/rxe/rxe_cq.c
-+++ b/drivers/infiniband/sw/rxe/rxe_cq.c
-@@ -30,7 +30,7 @@
-  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-  * SOFTWARE.
-  */
--
-+#include <linux/vmalloc.h>
- #include "rxe.h"
- #include "rxe_loc.h"
- #include "rxe_queue.h"
-@@ -97,7 +97,7 @@ int rxe_cq_from_init(struct rxe_dev *rxe, struct rxe_cq *cq, int cqe,
- 	err = do_mmap_info(rxe, uresp ? &uresp->mi : NULL, context,
- 			   cq->queue->buf, cq->queue->buf_size, &cq->queue->ip);
- 	if (err) {
--		kvfree(cq->queue->buf);
-+		vfree(cq->queue->buf);
- 		kfree(cq->queue);
- 		return err;
- 	}
-diff --git a/drivers/infiniband/sw/rxe/rxe_qp.c b/drivers/infiniband/sw/rxe/rxe_qp.c
-index c58452daffc7..230697fa31fe 100644
---- a/drivers/infiniband/sw/rxe/rxe_qp.c
-+++ b/drivers/infiniband/sw/rxe/rxe_qp.c
-@@ -34,6 +34,7 @@
- #include <linux/skbuff.h>
- #include <linux/delay.h>
- #include <linux/sched.h>
-+#include <linux/vmalloc.h>
- 
- #include "rxe.h"
- #include "rxe_loc.h"
-@@ -247,7 +248,7 @@ static int rxe_qp_init_req(struct rxe_dev *rxe, struct rxe_qp *qp,
- 			   &qp->sq.queue->ip);
- 
- 	if (err) {
--		kvfree(qp->sq.queue->buf);
-+		vfree(qp->sq.queue->buf);
- 		kfree(qp->sq.queue);
- 		return err;
- 	}
-@@ -300,7 +301,7 @@ static int rxe_qp_init_resp(struct rxe_dev *rxe, struct rxe_qp *qp,
- 				   qp->rq.queue->buf, qp->rq.queue->buf_size,
- 				   &qp->rq.queue->ip);
- 		if (err) {
--			kvfree(qp->rq.queue->buf);
-+			vfree(qp->rq.queue->buf);
- 			kfree(qp->rq.queue);
- 			return err;
- 		}
+diff --git a/sound/usb/quirks-table.h b/sound/usb/quirks-table.h
+index 65f9c4ba62ee..90d4f61cc230 100644
+--- a/sound/usb/quirks-table.h
++++ b/sound/usb/quirks-table.h
+@@ -3349,19 +3349,14 @@ AU0828_DEVICE(0x2040, 0x7270, "Hauppauge", "HVR-950Q"),
+ 				.ifnum = 0,
+ 				.type = QUIRK_AUDIO_STANDARD_MIXER,
+ 			},
+-			/* Capture */
+-			{
+-				.ifnum = 1,
+-				.type = QUIRK_IGNORE_INTERFACE,
+-			},
+ 			/* Playback */
+ 			{
+-				.ifnum = 2,
++				.ifnum = 1,
+ 				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
+ 				.data = &(const struct audioformat) {
+ 					.formats = SNDRV_PCM_FMTBIT_S16_LE,
+ 					.channels = 2,
+-					.iface = 2,
++					.iface = 1,
+ 					.altsetting = 1,
+ 					.altset_idx = 1,
+ 					.attributes = UAC_EP_CS_ATTR_FILL_MAX |
 -- 
 2.20.1
 
