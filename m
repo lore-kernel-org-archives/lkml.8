@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A84C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E14EC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A81B62468E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A974206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194595;
-	bh=yGgVaHGgBR6n1ABHhk0gvfmtZc0p3oSmfcOIHIkwBdU=;
+	s=default; t=1579194597;
+	bh=sTa6ZD6iu74bDYP4DNGrCewWZyF0siD7KSRGu6ywPHs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vYPrAY4u0p695BFJqAMG1ihuYJypjhZyNluVHIWp95xOOYH48/AFjG8yzgGMnfR3k
-	 gMoJMoTXFa4+STpli4IANgWFW7hPnLvyEVZGfm+yBwOy0fyaXmETPP2mutw7SKJbZx
-	 FMFGwVJN07cRy7qJgejSOuf9y5z7HXO/DNOmlBws=
+	b=MM5CDXg0tWqIQ5cnolDLGmUwFc91mcUTOCLQL4QC2x4O2DX3rR6cX04nry2kYWFB8
+	 i8/8I2EqelTTtRTQVIemvF+KvBmhuEKER5BqhKuwoBiflAQdvzT8U9IzE4WQ8iJQWg
+	 3vRl12h7SXFZvR9WUq05YkSrjmj5fpE5re0jhSQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389782AbgAPRJy (ORCPT
+        id S2389789AbgAPRJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:09:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46220 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:09:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389420AbgAPRJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:09:44 -0500
+        id S2389740AbgAPRJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:09:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B3F7206D9;
-        Thu, 16 Jan 2020 17:09:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A298924687;
+        Thu, 16 Jan 2020 17:09:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194583;
-        bh=yGgVaHGgBR6n1ABHhk0gvfmtZc0p3oSmfcOIHIkwBdU=;
+        s=default; t=1579194586;
+        bh=sTa6ZD6iu74bDYP4DNGrCewWZyF0siD7KSRGu6ywPHs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ng2qEHLLw856nVVkl4zL8YyDFArRc/4yBJbUNuqEhfC5SNZE3GxMBHufSPCQEAW8l
-         jAvXMd4kT93ugllclMDiw0lo7jpKKCXywzj+HLY9SUQcM12Jx/PUMLId8xaf1Ed4W0
-         gVpFqrf3CVNxNxGIQCqp56D4LkQRJt8KlfQ2DcMk=
+        b=1FCYGCr+V3jQYly01quy1lQ5x8k/jTL5sDbLqEJ7l0VEM1fgV30GN47VjasdkvNen
+         oMSGKaMt4tyqU/Sfzv8iHL8wpdeOcBGdPFP8He8SycnDTsl+JbCo6LjO1ErNkcLZ4k
+         5uhgWMdDCikmVW7KYoWUODcIQUKJKXyM1dTR4nj8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Minghuan Lian <Minghuan.Lian@nxp.com>,
-        Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 456/671] PCI: mobiveil: Fix the valid check for inbound and outbound windows
-Date:   Thu, 16 Jan 2020 12:01:34 -0500
-Message-Id: <20200116170509.12787-193-sashal@kernel.org>
+Cc:     Wen Yang <wen.yang99@zte.com.cn>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, netdev@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 458/671] net: pasemi: fix an use-after-free in pasemi_mac_phy_init()
+Date:   Thu, 16 Jan 2020 12:01:36 -0500
+Message-Id: <20200116170509.12787-195-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -61,46 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-[ Upstream commit ccd34dac2ed596b1f26079912bdf638e002a3979 ]
+[ Upstream commit faf5577f2498cea23011b5c785ef853ded22700b ]
 
-In program_ib/ob_windows() check the window index from the function
-parameter instead of the total number of initialized windows to
-determine if the specified window is valid.
+The phy_dn variable is still being used in of_phy_connect() after the
+of_node_put() call, which may result in use-after-free.
 
-Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+Fixes: 1dd2d06c0459 ("net: Rework pasemi_mac driver to use of_mdio infrastructure")
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pcie-mobiveil.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/pasemi/pasemi_mac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-index 476be4f3c7f6..14f816591e84 100644
---- a/drivers/pci/controller/pcie-mobiveil.c
-+++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -395,7 +395,7 @@ static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
- 	int amap_ctrl_dw;
- 	u64 size64 = ~(size - 1);
+diff --git a/drivers/net/ethernet/pasemi/pasemi_mac.c b/drivers/net/ethernet/pasemi/pasemi_mac.c
+index 8a31a02c9f47..65f69e562618 100644
+--- a/drivers/net/ethernet/pasemi/pasemi_mac.c
++++ b/drivers/net/ethernet/pasemi/pasemi_mac.c
+@@ -1053,7 +1053,6 @@ static int pasemi_mac_phy_init(struct net_device *dev)
  
--	if ((pcie->ib_wins_configured + 1) > pcie->ppio_wins) {
-+	if (win_num >= pcie->ppio_wins) {
- 		dev_err(&pcie->pdev->dev,
- 			"ERROR: max inbound windows reached !\n");
- 		return;
-@@ -429,7 +429,7 @@ static void program_ob_windows(struct mobiveil_pcie *pcie, int win_num,
- 	u32 value, type;
- 	u64 size64 = ~(size - 1);
+ 	dn = pci_device_to_OF_node(mac->pdev);
+ 	phy_dn = of_parse_phandle(dn, "phy-handle", 0);
+-	of_node_put(phy_dn);
  
--	if ((pcie->ob_wins_configured + 1) > pcie->apio_wins) {
-+	if (win_num >= pcie->apio_wins) {
- 		dev_err(&pcie->pdev->dev,
- 			"ERROR: max outbound windows reached !\n");
- 		return;
+ 	mac->link = 0;
+ 	mac->speed = 0;
+@@ -1062,6 +1061,7 @@ static int pasemi_mac_phy_init(struct net_device *dev)
+ 	phydev = of_phy_connect(dev, phy_dn, &pasemi_adjust_link, 0,
+ 				PHY_INTERFACE_MODE_SGMII);
+ 
++	of_node_put(phy_dn);
+ 	if (!phydev) {
+ 		printk(KERN_ERR "%s: Could not attach to phy\n", dev->name);
+ 		return -ENODEV;
 -- 
 2.20.1
 
