@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E22C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 787C2C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B8D92051A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:56:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41FC220730
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:56:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193798;
-	bh=pVwNJTS267s0DwV6idTs9NtxVWaFw9mF8KkJysJqDvQ=;
+	s=default; t=1579193804;
+	bh=pIaYyaxHpbQT38MmLmafgubNEt7PRUb/LGjMRMvir50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=awYusla9eixqGnRg1W/r4ZYfMCda959F+W3XyulA7/KVxwG/OnQ08QC/kD9/vYyFl
-	 jWgyYBwN3nxDpQAYhh71rp2LCtkqAUEfLJNmBeh9CWfK9w2e79utBsH+raBrYP3OOd
-	 bmp8q72ChETSizvy9oEfuvETCOzSo6VwgyoASLnU=
+	b=DGDgmjAu+2DH3/wNU/1wH0q7ge8U0KtStPQMCpd+VCa2awBgfGvtjStYoZ7DHbWf7
+	 99L0f8R0kiSj1i5lEY/aobtZp6tWizZtDQUpe8UiB9bLYsPwbgHYbv3N2nxKwEREjU
+	 ZzxhtWT4q14ahGgqZDqLfDUcAHProqTgo+FQP++I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730661AbgAPQ4h (ORCPT
+        id S1732359AbgAPQ4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:56:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42760 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:56:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732442AbgAPQ41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:56:27 -0500
+        id S1729634AbgAPQ4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:56:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8CF921582;
-        Thu, 16 Jan 2020 16:56:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D10F22192A;
+        Thu, 16 Jan 2020 16:56:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193786;
-        bh=pVwNJTS267s0DwV6idTs9NtxVWaFw9mF8KkJysJqDvQ=;
+        s=default; t=1579193798;
+        bh=pIaYyaxHpbQT38MmLmafgubNEt7PRUb/LGjMRMvir50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P3I23oJqFonzSqTR4u02vV9BYK+W8zgb9ZrVXg3IoPeuGcK5Q7+8sMYqKQ1i5ag4X
-         0UfImHgNus9qt3ATlKMuyGZbw4deQ9ffU4zsNY/r4xs2hVREiCONX7FIudUkn7QzIp
-         Vik8fBeVeanLYBX5dNavym+r0tfLjj/Ogt1GlPUo=
+        b=SH5WzASer0LXJL2v6VoKeEngzlP4iYquEC+QqCgaFru1+fjx/AIOREIUqWocfHqwQ
+         4+Rkwe7KF4l/16zWZF7zx1Y6sevHK0g70SuJAIHQW/kNtCWFt3yWEn1pzaW6LxrKoG
+         07MmL4d2YiE8R8igACGkgtiKKRBkeo/B5TWnfazc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yuval Shaia <yuval.shaia@oracle.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Zhu Yanjun <yanjun.zhu@oracle.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 062/671] IB/rxe: Fix incorrect cache cleanup in error flow
-Date:   Thu, 16 Jan 2020 11:44:53 -0500
-Message-Id: <20200116165502.8838-62-sashal@kernel.org>
+Cc:     Willem de Bruijn <willemb@google.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 067/671] ipv6: add missing tx timestamping on IPPROTO_RAW
+Date:   Thu, 16 Jan 2020 11:44:58 -0500
+Message-Id: <20200116165502.8838-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -62,73 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuval Shaia <yuval.shaia@oracle.com>
+From: Willem de Bruijn <willemb@google.com>
 
-[ Upstream commit 6db21d8986e14e2e86573a3b055b05296188bd2c ]
+[ Upstream commit fbfb2321e950918b430e7225546296b2dcadf725 ]
 
-Array iterator stays at the same slot, fix it.
+Raw sockets support tx timestamping, but one case is missing.
 
-Fixes: 8700e3e7c485 ("Soft RoCE driver")
-Signed-off-by: Yuval Shaia <yuval.shaia@oracle.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Zhu Yanjun <yanjun.zhu@oracle.com>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+IPPROTO_RAW takes a separate packet construction path. raw_send_hdrinc
+has an explicit call to sock_tx_timestamp, but rawv6_send_hdrinc does
+not. Add it.
+
+Fixes: 11878b40ed5c ("net-timestamp: SOCK_RAW and PING timestamping")
+Signed-off-by: Willem de Bruijn <willemb@google.com>
+Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/rxe/rxe_pool.c | 26 ++++++++++++++------------
- 1 file changed, 14 insertions(+), 12 deletions(-)
+ net/ipv6/raw.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_pool.c b/drivers/infiniband/sw/rxe/rxe_pool.c
-index b4a8acc7bb7d..0e2425f28233 100644
---- a/drivers/infiniband/sw/rxe/rxe_pool.c
-+++ b/drivers/infiniband/sw/rxe/rxe_pool.c
-@@ -112,6 +112,18 @@ static inline struct kmem_cache *pool_cache(struct rxe_pool *pool)
- 	return rxe_type_info[pool->type].cache;
- }
+diff --git a/net/ipv6/raw.c b/net/ipv6/raw.c
+index 4856d9320b28..a41156a00dd4 100644
+--- a/net/ipv6/raw.c
++++ b/net/ipv6/raw.c
+@@ -660,6 +660,8 @@ static int rawv6_send_hdrinc(struct sock *sk, struct msghdr *msg, int length,
  
-+static void rxe_cache_clean(size_t cnt)
-+{
-+	int i;
-+	struct rxe_type_info *type;
+ 	skb->ip_summed = CHECKSUM_NONE;
+ 
++	sock_tx_timestamp(sk, sockc->tsflags, &skb_shinfo(skb)->tx_flags);
 +
-+	for (i = 0; i < cnt; i++) {
-+		type = &rxe_type_info[i];
-+		kmem_cache_destroy(type->cache);
-+		type->cache = NULL;
-+	}
-+}
-+
- int rxe_cache_init(void)
- {
- 	int err;
-@@ -136,24 +148,14 @@ int rxe_cache_init(void)
- 	return 0;
+ 	if (flags & MSG_CONFIRM)
+ 		skb_set_dst_pending_confirm(skb, 1);
  
- err1:
--	while (--i >= 0) {
--		kmem_cache_destroy(type->cache);
--		type->cache = NULL;
--	}
-+	rxe_cache_clean(i);
- 
- 	return err;
- }
- 
- void rxe_cache_exit(void)
- {
--	int i;
--	struct rxe_type_info *type;
--
--	for (i = 0; i < RXE_NUM_TYPES; i++) {
--		type = &rxe_type_info[i];
--		kmem_cache_destroy(type->cache);
--		type->cache = NULL;
--	}
-+	rxe_cache_clean(RXE_NUM_TYPES);
- }
- 
- static int rxe_pool_init_index(struct rxe_pool *pool, u32 max, u32 min)
 -- 
 2.20.1
 
