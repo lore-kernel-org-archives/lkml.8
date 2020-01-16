@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8F5C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C96EC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F4B92469C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C62924748
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:43:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196608;
-	bh=4QCofp9d3SO9SZEIJdRAIXqfbCqY8aKuMPQJPKeHI4Y=;
+	s=default; t=1579196614;
+	bh=2Gp2Tp8VnXh2eaulPPIZdAlNW2teEQGzKNx7aT491rg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jJBoPZeD9qA8LrMgadFaCD9oIbf9HBmlsXIYuBnXlLbtaXAY2mifxmRDGKfKb50xm
-	 k5x69ww47/sp/u9V9USI4eMYtfCw/2x3V0amjLblfuERGE5LDmpLwz6FoLO58ER/H1
-	 q+utAE8lcdE4paMa14PhK/s29imui3Btp7UYxEWY=
+	b=zsEoszLGb92u5Vscj8+BuamS0/WNx1yxnOuOysIYmJrzq3DEiKDBm1iLCvT4AEdZg
+	 M9XmYwdW1b6JELlZP7ldGSKgTne6xgZ3NtmR14HtsGRS3hUqQzdYjWrrOifR1PWfGo
+	 2SbA+YZE2aXxOU3Dnu8QBnwmVvcaAfAbIRy7CM7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405886AbgAPRn0 (ORCPT
+        id S2393941AbgAPRnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:43:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33150 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:43:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393880AbgAPRnM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:43:12 -0500
+        id S2393912AbgAPRnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:43:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23E8E24718;
-        Thu, 16 Jan 2020 17:43:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 408DF24736;
+        Thu, 16 Jan 2020 17:43:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196591;
-        bh=4QCofp9d3SO9SZEIJdRAIXqfbCqY8aKuMPQJPKeHI4Y=;
+        s=default; t=1579196598;
+        bh=2Gp2Tp8VnXh2eaulPPIZdAlNW2teEQGzKNx7aT491rg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qt+hKvjtOE/5j2n+LdhK7EHW4BhTbUETSxUbTx4UyoBjunkJ1iLvKzLI0Z/rfbukC
-         hhkoD3/hlOCxOi70oDM8hdq6cTkzWvdGOpR54EhDP2mOFIaWKTe5iIsjlWowBzFn2G
-         AjdimMY20hUdmkrqD4VG8E5UyWlnwyw5n9M0deiM=
+        b=BrYKsEbGcsVf96M8FfuJ2yqSdV+Sa4DAgSmJRrAhYWCnaUAc0xU5SxK/QC5CemdkV
+         4pX+v+2R3stiFpB68aDWtwX3W+PQ4mFjK8UjNhBePHxEXMQbEZfkTbFpQ9GDhvL1Wa
+         +UPfRdw4n08ZH/YcXoTypFNkQECcoUT7mRcHfxqU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 015/174] pinctrl: sh-pfc: sh7734: Add missing IPSR11 field
-Date:   Thu, 16 Jan 2020 12:40:12 -0500
-Message-Id: <20200116174251.24326-15-sashal@kernel.org>
+Cc:     Yangtao Li <tiny.windzz@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 020/174] clk: qoriq: fix refcount leak in clockgen_init()
+Date:   Thu, 16 Jan 2020 12:40:17 -0500
+Message-Id: <20200116174251.24326-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -60,35 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Yangtao Li <tiny.windzz@gmail.com>
 
-[ Upstream commit 94482af7055e1ffa211c1135256b85590ebcac99 ]
+[ Upstream commit 70af6c5b5270e8101f318c4b69cc98a726edfab9 ]
 
-The Peripheral Function Select Register 11 contains 3 reserved bits and
-15 variable-width fields, but the variable field descriptor does not
-contain the 3-bit field IP11[25:23].
+The of_find_compatible_node() returns a node pointer with refcount
+incremented, but there is the lack of use of the of_node_put() when
+done. Add the missing of_node_put() to release the refcount.
 
-Fixes: 856cb4bb337ee504 ("sh: Add support pinmux for SH7734")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+Fixes: 0dfc86b3173f ("clk: qoriq: Move chip-specific knowledge into driver")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-sh7734.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/clk-qoriq.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7734.c b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-index ab09d385f95d..a0835306f76e 100644
---- a/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-@@ -2242,7 +2242,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 		FN_LCD_DATA15_B, 0, 0, 0 }
- 	},
- 	{ PINMUX_CFG_REG_VAR("IPSR11", 0xFFFC0048, 32,
--			3, 1, 2, 2, 2, 3, 3, 1, 2, 3, 3, 1, 1, 1, 1) {
-+			3, 1, 2, 3, 2, 2, 3, 3, 1, 2, 3, 3, 1, 1, 1, 1) {
- 	    /* IP11_31_29 [3] */
- 	    0, 0, 0, 0, 0, 0, 0, 0,
- 	    /* IP11_28 [1] */
+diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c
+index 7244a621c61b..efc9e1973295 100644
+--- a/drivers/clk/clk-qoriq.c
++++ b/drivers/clk/clk-qoriq.c
+@@ -1244,6 +1244,7 @@ static void __init clockgen_init(struct device_node *np)
+ 				pr_err("%s: Couldn't map %s regs\n", __func__,
+ 				       guts->full_name);
+ 			}
++			of_node_put(guts);
+ 		}
+ 
+ 	}
 -- 
 2.20.1
 
