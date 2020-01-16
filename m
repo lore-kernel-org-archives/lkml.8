@@ -2,166 +2,176 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E493FC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1065C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1C3621582
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE01E21582
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:13:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jn4zIb4q"
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="Q67DKvf3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730747AbgAPKNW (ORCPT
+        id S1730988AbgAPKNo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 05:13:22 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:43187 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbgAPKNW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 05:13:22 -0500
-Received: by mail-qt1-f195.google.com with SMTP id d18so18394728qtj.10
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 02:13:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1rX5IkiB8JnoTfZs5uAlFbe8tyhYqjCAyIiplOz/1Kc=;
-        b=jn4zIb4qAGDMK7he3rujwEt2kFJ8nh+3qcTL0IeX2mGtII77ctTbqQTL3Xz/ggwYSL
-         Yng2Dxnvx7bk+3yuD5hsbwo5MFrQVRsON277YPGXWsnXc4FKqRJcqSiKvvdrHACYMX8W
-         9iRegSAmGeDWiHdc+scR2sDX2iG+vNWmo4b4dlj9RzHNI7xNhoatHVWUdq8DpmTRytjy
-         nQ3QPTIE7G/ps37AYWdftpV5HecE/PWBcXqa02RV9osZPNJM9g1fKDg68UxWkNO54hAs
-         c6MfUGD/26SEgbClZDD18lcCIKAdvv1d7D8ad4iqo+m05iuA7pQi3TBtI0Bl54FwOm2e
-         gxag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1rX5IkiB8JnoTfZs5uAlFbe8tyhYqjCAyIiplOz/1Kc=;
-        b=IQhxfgE/hsY58B077MPt5JZX+Sc1bC+OdbGU0QZiPEVOrRYNxOmNLN6Bg84U0QdvtJ
-         4/YZqSLlfwjJNUegHvspuSr3CedQu6qArptIFQ/rSdI/f7D08pWw6w9wktIfj48A76QK
-         jVYD19JUL5AL03vXsMe6hxiDMyuoquEyfuTaVbD8oIO6yJynZ26X2gqpN3fc+8vsb9a0
-         cmrxXpPrh78A3VBv9k80EJV5kKwRTXblVkP0RO/v9xtghP5Njf51EgNB6ZRtmBzf08OK
-         UIGUkABCylr3oIe4WxEES5JXUgDz5/einmPCUq2u7hP8dVQqeA+BvnKjcA9qLXc2oH9D
-         lzOA==
-X-Gm-Message-State: APjAAAVr753TK7ts4/WKv8MYI/+VjOVepfP6XwJ7tJi33+KT1WitWQzb
-        i6i8vhP5pVUS4xhPjtbMRXPtPyPPQSz387gl1oa0kw==
-X-Google-Smtp-Source: APXvYqx4WBtKtL6XktEWiHiyq3Ao2I2Zn09FzikCu1MvcM716Qphn9AqdQAyZQmvqvdhK27tPjIyTZPcA0jsdbSBTKs=
-X-Received: by 2002:ac8:24c1:: with SMTP id t1mr1544540qtt.257.1579169600719;
- Thu, 16 Jan 2020 02:13:20 -0800 (PST)
+        Thu, 16 Jan 2020 05:13:44 -0500
+Received: from mail-eopbgr140090.outbound.protection.outlook.com ([40.107.14.90]:9739
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730518AbgAPKNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 05:13:43 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lowAAfNKBBI44s7Sy2zON8yRV/8JDnIw0kEiOZbkgAbgu/Gn2RRAqkJO2v0WfsYd6pOcc5cbwrBLs/6dPUExzAke0FWM62rETbQFbTwyLLgMWK/fF/WCXJa1pADNJFaoHdOMtaVmfdKoaSs+kCpMgkrqVxpiznQTky/gCQQ+tfREh0pVxnI4RW559fmTCmwIwAFeP9cQGiTp7yFk2HL2n91N0cFnD64VWF9ida5AbcoometBDhXXMr8wbr1RHS3NbBVZ5iE1KCsdDopKQD0MWU3lRq3HmLxJxkHy2jK7jML5LFP0NGjuqfsf1K8qpj4VYMGuSV0OtglyM9qV5M2yxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dkKzXsM3s74uTU9S8XWOVC0w3KDZaaTOjQY0qj10Yos=;
+ b=ExFCBrP/w9svAEcfQMr2KJLdnog9H6DBOsUYxj8IVGmy7m8JwQG/wYv2B9s9md8pWyf4XKIOkGjt69LSO01RiT09xIaUoVZkCIUekoh60LUpheBiR6Pfb3Y5hyj6wk3Ht5Tq4bTmgChUq2q6GoLTb076dc+hGYWRr/YmHUC2V7yYCEsCMJFNPyG3wFWo5MkfocsxCsIkqAIh6ugELkw6o3ZPehmGegkC9eabCq6Q8WSTf88cSJ76IDKeMPS8cBC3zTbzqbic3MvwGnKeT7QlfFuqpQ/ftWey56cD7zJR4wzElWLFcN/P+RxwgLsOLSNYkpDn19HUOTIt6FHi0fZMNA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
+ dkim=pass header.d=toradex.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dkKzXsM3s74uTU9S8XWOVC0w3KDZaaTOjQY0qj10Yos=;
+ b=Q67DKvf3Bn7bq7JZGcmCfxecrxONLLtU7waWw3ZdcjJCLAHj8Z/Rpr59Qu6cAHumfUI4eyelJxLSFvRwBZiFLYyf1V6MYsFVqMrq2sYCAnQmB0CMhLJjms9rciNsB92J7t2t365J23Lh/cGTyg2BIG5w5m0waR5i8m/FZAk+fhI=
+Received: from VI1PR05MB3279.eurprd05.prod.outlook.com (10.170.238.24) by
+ VI1PR05MB4175.eurprd05.prod.outlook.com (52.134.30.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.9; Thu, 16 Jan 2020 10:13:38 +0000
+Received: from VI1PR05MB3279.eurprd05.prod.outlook.com
+ ([fe80::c14f:4592:515f:6e52]) by VI1PR05MB3279.eurprd05.prod.outlook.com
+ ([fe80::c14f:4592:515f:6e52%7]) with mapi id 15.20.2644.015; Thu, 16 Jan 2020
+ 10:13:38 +0000
+Received: from localhost (194.105.145.90) by PR0P264CA0030.FRAP264.PROD.OUTLOOK.COM (2603:10a6:100:1::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.18 via Frontend Transport; Thu, 16 Jan 2020 10:13:37 +0000
+From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+To:     "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>
+CC:     Igor Opanyuk <igor.opanyuk@toradex.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] ARM: dts: colibri-imx7: fix ethernet performance
+Thread-Topic: [PATCH] ARM: dts: colibri-imx7: fix ethernet performance
+Thread-Index: AQHVzFWee8FNmNUk8keE1wDvLk5RZA==
+Date:   Thu, 16 Jan 2020 10:13:38 +0000
+Message-ID: <20200116101313.2524795-1-oleksandr.suvorov@toradex.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: PR0P264CA0030.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:100:1::18) To VI1PR05MB3279.eurprd05.prod.outlook.com
+ (2603:10a6:802:1c::24)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=oleksandr.suvorov@toradex.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.24.1
+x-originating-ip: [194.105.145.90]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 51da0de7-3c82-4b8f-eb05-08d79a6cc0d6
+x-ms-traffictypediagnostic: VI1PR05MB4175:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR05MB417555E88B07EEBA1E0271C6F9360@VI1PR05MB4175.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:190;
+x-forefront-prvs: 02843AA9E0
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(39850400004)(396003)(376002)(346002)(366004)(189003)(199004)(1076003)(54906003)(44832011)(66556008)(66476007)(64756008)(66446008)(66946007)(36756003)(26005)(8936002)(316002)(52116002)(6496006)(4326008)(16526019)(8676002)(186003)(6916009)(81166006)(81156014)(71200400001)(7416002)(86362001)(956004)(2616005)(6486002)(478600001)(5660300002)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR05MB4175;H:VI1PR05MB3279.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: toradex.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: YH6a89kakemV/NTkKgndqp6M8lnqhhJOy7VnFspue1jU3ueJse3WQJNwBcI8ut7ZyMTdcwh+LnxQOw/UfbLYqIUcGtOP2pWyBYhns82+Ulzz5k+SoPk9TuQfmZAscPuLkRRXXHfJzFCFYZ9xEALMyEtA/jXLxQsXJ2kZ+M84ah5gp/wfO6ZIZvdNDUpPjAbE4W7fEdKsQv35D9P2WDIirtcB85+cGhQ1dLU7SlaNowt6TRIlDAfD8/BhzrL4kwU8Bp2DZT0GVxOTMd/wvOvMhLVRKCmxaaZtoW9Q0NWe3s13rdyzM53L1cXi1GwVZZuKECCwCGaTAeRJL4PqVx60Uqel5fyo/YZ3JdGheaSGRUZk8fDGB5N1vM8mEFApbdG11BoaN9Iy2CxfW/8T5kBoedvmGVL8+8sBzG7NBoQhnzkjT7m2CDWQbd22yVpapdgF
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200115055426.vdjwvry44nfug7yy@kili.mountain>
- <d31f6069-bda7-2cdb-b770-0c9cddac7537@suse.cz> <CACT4Y+YF9kYEppMMg3oRkeo+OvhMS1hoKT6EqXCv1jRmA2dz3w@mail.gmail.com>
- <20200115150315.GH19428@dhcp22.suse.cz> <CACT4Y+Z6xW130JGcZE9X7wDCLamJA_s-STs2imnmW29SzQ-NyQ@mail.gmail.com>
- <20200115190528.GJ19428@dhcp22.suse.cz> <CACT4Y+b5HJW9PhjkSZ+L09YqQt08ALCtudHV4m5x5qv+xH-2Yg@mail.gmail.com>
- <20200116073922.GL19428@dhcp22.suse.cz>
-In-Reply-To: <20200116073922.GL19428@dhcp22.suse.cz>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 16 Jan 2020 11:13:09 +0100
-Message-ID: <CACT4Y+aWNQxSMSnHn6ORkBNM2wWp_K6tPxthj=_FmnyOfO5huA@mail.gmail.com>
-Subject: Re: [PATCH] mm/mempolicy.c: Fix out of bounds write in mpol_parse_str()
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Lee Schermerhorn <lee.schermerhorn@hp.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzbot <syzbot+e64a13c5369a194d67df@syzkaller.appspotmail.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, yang.shi@linux.alibaba.com
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 51da0de7-3c82-4b8f-eb05-08d79a6cc0d6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jan 2020 10:13:38.1178
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: YEnwdVGCwTSIVaS2JG9kEhxn8ZlBoYtKkiFzcowJlrUD10gA0kpiVbdZvbIa5RQMFZ3My/TAgDyiLoHFoOQOmPDZ1puv5ljs9UtC/5WkKd0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4175
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 8:39 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > > > > > > On 1/15/20 6:54 AM, Dan Carpenter wrote:
-> > > > > > > > What we are trying to do is change the '=' character to a NUL terminator
-> > > > > > > > and then at the end of the function we restore it back to an '='.  The
-> > > > > > > > problem is there are two error paths where we jump to the end of the
-> > > > > > > > function before we have replaced the '=' with NUL.  We end up putting
-> > > > > > > > the '=' in the wrong place (possibly one element before the start of
-> > > > > > > > the buffer).
-> > > > > > >
-> > > > > > > Bleh.
-> > > > > > >
-> > > > > > > > Reported-by: syzbot+e64a13c5369a194d67df@syzkaller.appspotmail.com
-> > > > > > > > Fixes: 095f1fc4ebf3 ("mempolicy: rework shmem mpol parsing and display")
-> > > > > > > > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > > > > > >
-> > > > > > > Acked-by: Vlastimil Babka <vbabka@suse.cz>
-> > > > > > >
-> > > > > > > CC stable perhaps? Can this (tmpfs mount options parsing AFAICS?) become
-> > > > > > > part of unprivileged operation in some scenarios?
-> > > > > >
-> > > > > > Yes, tmpfs can be mounted by any user inside of a user namespace.
-> > > > >
-> > > > > Huh, is there any restriction though? It is certainly not nice to have
-> > > > > an arbitrary memory allocated without a way of reclaiming it and OOM
-> > > > > killer wouldn't help for shmem.
-> > > >
-> > > > The last time I checked there were hundreds of ways to allocate
-> > > > arbitrary amounts of memory without any restrictions by any user. The
-> > > > example at hand was setting up GB-sized netfilter tables in netns
-> > > > under userns. It's not subject to ulimit/memcg.
-> > >
-> > > That's bad!
-> > >
-> > > > Most kmalloc/vmalloc's are not accounted and can be abused.
-> > >
-> > > Many of those should be bound to some objects and if those are directly
-> > > controllable by userspace then we should account at least. And if they
-> > > are not bound to a process life time then restricted.
-> >
-> > I see you actually added one GFP_ACCOUNT in netfilter in "netfilter:
-> > x_tables: do not fail xt_alloc_table_info too easilly". But it seems
-> > there are more:
-> >
-> > $ grep vmalloc\( net/netfilter/*.c
-> > net/netfilter/nf_tables_api.c: return kvmalloc(alloc, GFP_KERNEL);
-> > net/netfilter/x_tables.c: xt[af].compat_tab = vmalloc(mem);
-> > net/netfilter/x_tables.c: mem = vmalloc(len);
-> > net/netfilter/x_tables.c: info = kvmalloc(sz, GFP_KERNEL_ACCOUNT);
-> > net/netfilter/xt_hashlimit.c: /* FIXME: don't use vmalloc() here or
-> > anywhere else -HW */
-> > net/netfilter/xt_hashlimit.c: hinfo = vmalloc(struct_size(hinfo, hash, size));
-> >
-> > These are not bound to processes/threads as namespaces are orthogonal to tasks.
->
-> I cannot really comment on those. This is for networking people to
-> examine and find out whether they allow an untrusted user to runaway.
+Performance test of ethernet interface shows extremely low result:
 
-Unless I am missing an elephant in this whole picture, kernel code
-contains 20K+ unaccounted allocations and if I am not mistaken few of
-them were audited and are intentionally unaccounted rather than
-unaccounted just because it's the default. So if we want DoS
-protection, it's really for every kernel developer/maintainer to audit
-and fix these allocation sites. And since we have a unikernel, a
-single unaccounted allocation may compromise the whole kernel. I
-assume we would need something like GFP_UNACCOUNTED to mark audited
-allocations that don't need accounting and then slowly reduce number
-of allocations without both ACCOUNTED and UNACCOUNTED.
+=3D=3D=3D w/o fix =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+Connecting to host 192.168.x.x, port 5201
+[  5] local 192.168.x.y port59020 connected to 192.168.x.x port 5201
+...
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  2.78 MBytes  2.33 Mbits/sec  337      sender
+[  5]   0.00-10.00  sec  2.66 MBytes  2.23 Mbits/sec           receiver
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
 
+Adding correct settings of the mdio bus with the respective phy
+fixes this issue.
 
-> > Somebody told me that it's not good to use GFP_ACCOUNT if the
-> > allocation is not tied to the lifetime of the process. Is it still
-> > true?
->
-> Those are more tricky. Mostly because there is no way to reclaim the
-> memory once the hard limit is hit. Even the memcg oom killer will not
-> help much. So a care should be taken when adding GFP_ACCOUNT for those.
-> On the other hand it would prevent an unbounded allocations at least
-> so the DoS would be reduced to the hard limited memcg.
+=3D=3D=3D after fix =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+iperf3 -c 192.168.x.x
+Connecting to host 192.168.x.x, port 5201
+[  5] local 192.168.x.y port 50702 connected to 192.168.x.x port 5201
+...
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec   114 MBytes  95.4 Mbits/sec   56      sender
+[  5]   0.00-10.00  sec   112 MBytes  94.1 Mbits/sec           receiver
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
 
-What exactly is this care in practice?
-It seems that in a148ce15375fc664ad64762c751c0c2aecb2cafe you just
-added it and the allocation is not tied to the process. At least I
-don't see any explanation as to why that one is safe, while accounting
-other similar allocation is not...
+Fixed: commit b326629f25b7 ("ARM: dts: imx7: add Toradex Colibri
+                    iMX7S/iMX7D support")
+Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+
+---
+
+ arch/arm/boot/dts/imx7-colibri.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-c=
+olibri.dtsi
+index d05be3f0e2a7..7b6a7c124345 100644
+--- a/arch/arm/boot/dts/imx7-colibri.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+@@ -115,7 +115,20 @@ &fec1 {
+ 	assigned-clock-rates =3D <0>, <100000000>;
+ 	phy-mode =3D "rmii";
+ 	phy-supply =3D <&reg_LDO1>;
++	phy-handle =3D <&ethphy0>;
+ 	fsl,magic-packet;
++
++	mdio {
++		#address-cells =3D <1>;
++		#size-cells =3D <0>;
++
++		ethphy0: ethernet-phy@0 {
++			compatible =3D "ethernet-phy-ieee802.3-c22";
++			max-speed =3D <100>;
++			micrel,led-mode =3D <0>;
++			reg =3D <0>;
++		};
++	};
+ };
+=20
+ &flexcan1 {
+--=20
+2.24.1
+
