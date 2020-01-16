@@ -2,120 +2,115 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4882BC33CB7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E47C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D86B20730
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:04:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="su1RMBdp"
+	by mail.kernel.org (Postfix) with ESMTP id F367620748
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:05:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbgAPPEQ (ORCPT
+        id S1726778AbgAPPFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 10:04:16 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:35002 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbgAPPEP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 10:04:15 -0500
-Received: by mail-pj1-f65.google.com with SMTP id s7so1718372pjc.0;
-        Thu, 16 Jan 2020 07:04:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9aYYysUJc5O1GVrj/WJZfQ1VR8Kjol/FSsTxs8wt3Po=;
-        b=su1RMBdpMgNolta0yRnwdr2hFM60rZ6K0CJP2l3ExFb8UekzOBhvGCYzWj9Zjive1a
-         nfLfP7a5Idwr2vzP+5JMFW+5DuL2nIM5DcTIOpISxyXxKcxp9NHYUWr5gN+8SqzncaRX
-         kXgHeczMUSmyhiZ68VneOltC1XFA0yrE8q6+yV0t1YK/otddH6p31jIWrZpT5QrXHAzQ
-         4/DdQuxvEG5nw0nM2l7ngUvWroOh/lDta7eU+wWGbMDMRmXGdANBPFHWA48KMgStK/5b
-         yzf9OugbebywJa+hFCX83ukPpdd58F5MuoVwmYR7IE5pO52aI0tQmHJcrOc8yBC+cluM
-         GqeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9aYYysUJc5O1GVrj/WJZfQ1VR8Kjol/FSsTxs8wt3Po=;
-        b=SQDLKfnp7NTxnInRYCCfF8cY1tSeMoNGSDArdfdQ4tqsHaqnubqzqcwId5mz3dW+zH
-         qQY5zGyDgDwtgqzIYMKN5juMmGEMLa5Mn+L/HJ+uT0nS7xAqTfv8y32IclG/5JO64Nqw
-         sg6GHqhGukdcZBbfMTKtI/X19mqiVnPnMrJYKLaMQAk19CF0MXY4o5x5qS3qOi+TIwhx
-         eiDwdZ9pR9+8Yi4pIdUNEjxv9zXXPHeC67pnP225G9vCkHTuLZTYBZ7kkRUN9pF2qvv1
-         V1sxa+Rav1yv7+BPpC7hoOqTPVhbfLpMge1Ls/YCoTIG3fJv28yInltxmjNuXAz53wmD
-         gRFw==
-X-Gm-Message-State: APjAAAWdQqIeeS87jJE2dMImwl+DSXdV+ns2tBPVL7HCxlUVLfqqHtre
-        hlNWqw8UHTjK5E9AJRxGIb4=
-X-Google-Smtp-Source: APXvYqweT9duHvIwuiopBktIZ1DmoA3YPIEGyOxcRBNR8OotDJuab5tPjaSkV4tho7CtYEOjVqM+ew==
-X-Received: by 2002:a17:902:bb83:: with SMTP id m3mr32964602pls.258.1579187055039;
-        Thu, 16 Jan 2020 07:04:15 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id g22sm24354714pgk.85.2020.01.16.07.04.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jan 2020 07:04:14 -0800 (PST)
-Subject: Re: [PATCH 2/9] watchdog: of_xilinx_wdt: Used BIT macro
-To:     Srinivas Neeli <srinivas.neeli@xilinx.com>,
-        michal.simek@xilinx.com, shubhrajyoti.datta@xilinx.com,
-        sgoud@xilinx.com
-Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        git@xilinx.com
-References: <1579181217-31127-1-git-send-email-srinivas.neeli@xilinx.com>
- <1579181217-31127-3-git-send-email-srinivas.neeli@xilinx.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <3f904c30-32e2-914a-9545-9cd554b45bfe@roeck-us.net>
-Date:   Thu, 16 Jan 2020 07:04:12 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 16 Jan 2020 10:05:24 -0500
+Received: from correo.us.es ([193.147.175.20]:32970 "EHLO mail.us.es"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726189AbgAPPFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 10:05:23 -0500
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id A2723508CDF
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 16:05:21 +0100 (CET)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 93A32DA738
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 16:05:21 +0100 (CET)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id 88A74DA791; Thu, 16 Jan 2020 16:05:21 +0100 (CET)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 0FDC6DA712;
+        Thu, 16 Jan 2020 16:05:19 +0100 (CET)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Thu, 16 Jan 2020 16:05:19 +0100 (CET)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (unknown [90.77.255.23])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id DADC342EF9E1;
+        Thu, 16 Jan 2020 16:05:18 +0100 (CET)
+Date:   Thu, 16 Jan 2020 16:05:18 +0100
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netfilter-devel@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
+        sgrubb@redhat.com, omosnace@redhat.com, fw@strlen.de,
+        twoerner@redhat.com, eparis@parisplace.org, ebiederm@xmission.com,
+        tgraf@infradead.org
+Subject: Re: [PATCH ghak25 v2 0/9] Address NETFILTER_CFG issues
+Message-ID: <20200116150518.gfmzixoqagmk77rw@salvia>
+References: <cover.1577830902.git.rgb@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <1579181217-31127-3-git-send-email-srinivas.neeli@xilinx.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1577830902.git.rgb@redhat.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/16/20 5:26 AM, Srinivas Neeli wrote:
-> From: Srinivas Goud <srinivas.goud@xilinx.com>
+On Mon, Jan 06, 2020 at 01:54:01PM -0500, Richard Guy Briggs wrote:
+> There were questions about the presence and cause of unsolicited syscall events
+> in the logs containing NETFILTER_CFG records and sometimes unaccompanied
+> NETFILTER_CFG records.
 > 
-> Used BIT macro instead of mask value.
+> During testing at least the following list of events trigger NETFILTER_CFG
+> records and the syscalls related (There may be more events that will trigger
+> this message type.):
+> 	init_module, finit_module: modprobe
+> 	setsockopt: iptables-restore, ip6tables-restore, ebtables-restore
+> 	unshare: (h?)ostnamed
+> 	clone: libvirtd
 > 
-> Signed-off-by: Srinivas Goud <srinivas.goud@xilinx.com>
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> ---
->   drivers/watchdog/of_xilinx_wdt.c | 8 ++++----
->   1 file changed, 4 insertions(+), 4 deletions(-)
+> The syscall events unsolicited by any audit rule were found to be caused by a
+> missing !audit_dummy_context() check before creating a NETFILTER_CFG
+> record and issuing the record immediately rather than saving the
+> information to create the record at syscall exit.
+> Check !audit_dummy_context() before creating the NETFILTER_CFG record.
 > 
-> diff --git a/drivers/watchdog/of_xilinx_wdt.c b/drivers/watchdog/of_xilinx_wdt.c
-> index 00549164b3d7..0d7df2370db7 100644
-> --- a/drivers/watchdog/of_xilinx_wdt.c
-> +++ b/drivers/watchdog/of_xilinx_wdt.c
-> @@ -24,12 +24,12 @@
->   #define XWT_TBR_OFFSET      0x8 /* Timebase Register Offset */
->   
->   /* Control/Status Register Masks  */
-> -#define XWT_CSR0_WRS_MASK   0x00000008 /* Reset status */
-> -#define XWT_CSR0_WDS_MASK   0x00000004 /* Timer state  */
-> -#define XWT_CSR0_EWDT1_MASK 0x00000002 /* Enable bit 1 */
-> +#define XWT_CSR0_WRS_MASK	BIT(3) /* Reset status */
-> +#define XWT_CSR0_WDS_MASK	BIT(2) /* Timer state  */
-> +#define XWT_CSR0_EWDT1_MASK	BIT(1) /* Enable bit 1 */
->   
->   /* Control/Status Register 0/1 bits  */
-> -#define XWT_CSRX_EWDT2_MASK 0x00000001 /* Enable bit 2 */
-> +#define XWT_CSRX_EWDT2_MASK	BIT(0) /* Enable bit 2 */
->   
->   /* SelfTest constants */
->   #define XWT_MAX_SELFTEST_LOOP_COUNT 0x00010000
+> The vast majority of unaccompanied records are caused by the fedora default
+> rule: "-a never,task" and the occasional early startup one is I believe caused
+> by the iptables filter table module hard linked into the kernel rather than a
+> loadable module. The !audit_dummy_context() check above should avoid them.
 > 
-Using bitops also requires including linux/bits.h explicitly.
+> A couple of other factors should help eliminate unaccompanied records
+> which include commit cb74ed278f80 ("audit: always enable syscall
+> auditing when supported and audit is enabled") which makes sure that
+> when audit is enabled, so automatically is syscall auditing, and ghak66
+> which addressed initializing audit before PID 1.
+> 
+> Ebtables module initialization to register tables doesn't generate records
+> because it was never hooked in to audit.  Recommend adding audit hooks to log
+> this.
+> 
+> Table unregistration was never logged, which is now covered.
+> 
+> Seemingly duplicate records are not actually exact duplicates that are caused
+> by netfilter table initialization in different network namespaces from the same
+> syscall.  Recommend adding the network namespace ID (proc inode and dev)
+> to the record to make this obvious (address later with ghak79 after nsid
+> patches).
+> 
+> See: https://github.com/linux-audit/audit-kernel/issues/25
+> See: https://github.com/linux-audit/audit-kernel/issues/35
+> See: https://github.com/linux-audit/audit-kernel/issues/43
+> See: https://github.com/linux-audit/audit-kernel/issues/44
 
-Guenter
+What tree is this batch targeted to?
 
-
+Thanks.
