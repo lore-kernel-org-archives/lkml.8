@@ -2,105 +2,80 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 634F4C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 961A7C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 357C220661
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:49:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6754C20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:50:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731750AbgAPJtL convert rfc822-to-8bit (ORCPT
+        id S1731810AbgAPJuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 04:49:11 -0500
-Received: from mx2.suse.de ([195.135.220.15]:42442 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729546AbgAPJtL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 04:49:11 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 29BD1AED8;
-        Thu, 16 Jan 2020 09:49:09 +0000 (UTC)
-Date:   Thu, 16 Jan 2020 10:49:07 +0100
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 26/26] docs: i2c: rename sections so the overall picture
- is clearer
-Message-ID: <20200116104907.3f2de4d0@endymion>
-In-Reply-To: <20200106074905.14438-1-luca@lucaceresoli.net>
-References: <20200105224006.10321-1-luca@lucaceresoli.net>
-        <20200106074905.14438-1-luca@lucaceresoli.net>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Thu, 16 Jan 2020 04:50:01 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:60799 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726832AbgAPJuB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 04:50:01 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1is1ml-0007F2-1S; Thu, 16 Jan 2020 09:49:55 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Jens Wiklander <jens.wiklander@linaro.org>,
+        Gary R Hook <gary.hook@amd.com>,
+        Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
+        Rijo Thomas <Rijo-john.Thomas@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        tee-dev@lists.linaro.org, linux-crypto@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next][resend] tee: fix memory allocation failure checks on drv_data and amdtee
+Date:   Thu, 16 Jan 2020 09:49:54 +0000
+Message-Id: <20200116094954.54476-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  6 Jan 2020 08:49:05 +0100, Luca Ceresoli wrote:
-> Some of the section names are not very clear. Reading those names in the
-> index.rst page does not help much in grasping what the content is supposed
-> to be.
-> 
-> Rename those sections to clarify their content, especially when reading
-> the index page.
-> 
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-> Acked-by: Peter Rosin <peda@axentia.se>
-> ---
-> 
-> Note: here checkpatch complains:
-> 
->   WARNING: Missing or malformed SPDX-License-Identifier tag in line 1
-> 
-> Thas's because those files have no license line. I would gladly add a
-> proper license line, but what it the correct license here? Should I ask the
-> authors? GPLv2-only as the kernel default?
-> 
-> I'd appreciate a guidance here, thanks in advance.
+From: Colin Ian King <colin.king@canonical.com>
 
-I don't think we need a license for such documentation files, so I
-would just ignore checkpatch.
+Currently the memory allocation failure checks on drv_data and
+amdtee are using IS_ERR rather than checking for a null pointer.
+Fix these checks to use the conventional null pointer check.
 
-> ---
->  Documentation/i2c/dev-interface.rst         | 6 +++---
->  Documentation/i2c/i2c-protocol.rst          | 6 +++---
->  Documentation/i2c/i2c-topology.rst          | 6 +++---
->  Documentation/i2c/old-module-parameters.rst | 6 +++---
->  Documentation/i2c/smbus-protocol.rst        | 6 +++---
->  Documentation/i2c/summary.rst               | 6 +++---
->  Documentation/i2c/writing-clients.rst       | 6 +++---
->  7 files changed, 21 insertions(+), 21 deletions(-)
-> (...)
-> diff --git a/Documentation/i2c/summary.rst b/Documentation/i2c/summary.rst
-> index fc69d9567d9d..ae3bbb9fd8f1 100644
-> --- a/Documentation/i2c/summary.rst
-> +++ b/Documentation/i2c/summary.rst
-> @@ -1,6 +1,6 @@
-> -=============
-> -I2C and SMBus
-> -=============
-> +==============================
-> +Introductions to I2C and SMBus
-> +==============================
+Addresses-Coverity: ("Dereference null return")
+Fixes: 757cc3e9ff1d ("tee: add AMD-TEE driver")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/tee/amdtee/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I would use "Introduction", singular.
-
->  
->  I²C (pronounce: I squared C and written I2C in the kernel documentation) is
->  a protocol developed by Philips. It is a slow two-wire protocol (variable
-> (...)
-
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
-
+diff --git a/drivers/tee/amdtee/core.c b/drivers/tee/amdtee/core.c
+index 9d0cee1c837f..5fda810c79dc 100644
+--- a/drivers/tee/amdtee/core.c
++++ b/drivers/tee/amdtee/core.c
+@@ -444,11 +444,11 @@ static int __init amdtee_driver_init(void)
+ 		goto err_fail;
+ 
+ 	drv_data = kzalloc(sizeof(*drv_data), GFP_KERNEL);
+-	if (IS_ERR(drv_data))
++	if (!drv_data)
+ 		return -ENOMEM;
+ 
+ 	amdtee = kzalloc(sizeof(*amdtee), GFP_KERNEL);
+-	if (IS_ERR(amdtee)) {
++	if (!amdtee) {
+ 		rc = -ENOMEM;
+ 		goto err_kfree_drv_data;
+ 	}
 -- 
-Jean Delvare
-SUSE L3 Support
+2.24.0
+
