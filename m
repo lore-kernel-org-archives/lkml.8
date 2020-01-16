@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61120C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C63F1C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36DE620663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92A8720663
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:50:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193395;
-	bh=PUoEDVRt0Vq/MA1MsAUndMZOe/r4q+nBWFmFUNMUYLU=;
+	s=default; t=1579193400;
+	bh=8mMAnJ6sSB9neQCe3y0zMuhTxW55wS4PpkUYczb1s94=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jvav4wLOx6Nj2I+e+wEil0hhf16QjWWgZ2cpJqi0tg8F8mOOg8szsxNwHjlizPfR8
-	 v6C2/AA6XuAR/kp/kunKmKnKcN71Y69iM/LDFEU/Q01+dl7oYBXInP8yJ4snDU9yWI
-	 hzL7/0UCyiV+kTs+HfpTpZTR4TmE/PQ1g0S3v+wc=
+	b=z8gAmAd/iozrXaWNzvXPSQN+jnRyYdEgou5ZAYMvq/0heTfjyQ9foFR4CKEauxlB3
+	 fGqZmGwZprrDhylwVVYdpax/kPEC2tlFipu+hpXpT7VhppM7co8iWW4ZWaJIloowZE
+	 wL72rqSHt9pocz9kkWdk8mMR97vNWxXmjDawbG3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730457AbgAPQty (ORCPT
+        id S1729917AbgAPQto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:49:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60852 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:49:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729043AbgAPQtw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:49:52 -0500
+        id S1728928AbgAPQtk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:49:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1686220663;
-        Thu, 16 Jan 2020 16:49:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1F9E2073A;
+        Thu, 16 Jan 2020 16:49:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193391;
-        bh=PUoEDVRt0Vq/MA1MsAUndMZOe/r4q+nBWFmFUNMUYLU=;
+        s=default; t=1579193379;
+        bh=8mMAnJ6sSB9neQCe3y0zMuhTxW55wS4PpkUYczb1s94=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sLgeutq2jEJqVQQadfiLVZS7t+Ee4pndoi53MP8mEfLzDlVrtz9caE7xbM1BKR22u
-         uH3lCaotSzsxMmbKKM4Si4l0PAKUD//yMCNJXW1icVzhSe9MzqmbLWXYshZMF0F3hy
-         elvPAPyysxyTe8xhDvDckyATCLxlRiJNgX6YQ8Hs=
+        b=whs6A7FwmHhQAW2xiJuJTGRFceCE7PpWSAjFgTezX1sP/ohbEjwxRUzBblu42WfDf
+         fJmL7fd/wlS731OLKUjgqADQQfoOwT2QF+yHCJzP6iyeoe2WkHRqrgd8ez5Do+bWIn
+         fyVdyROtTrsTsafo6/frmy5mLkUFHYh5AM/jXxz4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Madalin Bucur <madalin.bucur@nxp.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 088/205] dpaa_eth: avoid timestamp read on error paths
-Date:   Thu, 16 Jan 2020 11:41:03 -0500
-Message-Id: <20200116164300.6705-88-sashal@kernel.org>
+Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 085/205] phy: lantiq: vrx200-pcie: fix error return code in ltq_vrx200_pcie_phy_power_on()
+Date:   Thu, 16 Jan 2020 11:41:00 -0500
+Message-Id: <20200116164300.6705-85-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -59,91 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madalin Bucur <madalin.bucur@nxp.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 9a4f4f3a894ff4487f5597b7aabba9432b238292 ]
+[ Upstream commit 82b5d164415549e74cfa1f9156ffd4463d0a76e2 ]
 
-The dpaa_cleanup_tx_fd() function is called by the frame transmit
-confirmation callback but also on several error paths. This function
-is reading the transmit timestamp value. Avoid reading an invalid
-timestamp value on the error paths.
+Fix to return a negative error code from the error handling
+case instead of 0, as done elsewhere in this function.
 
-Fixes: 4664856e9ca2 ("dpaa_eth: add support for hardware timestamping")
-Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: e52a632195bf ("phy: lantiq: vrx200-pcie: add a driver for the Lantiq VRX200 PCIe PHY")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/dpaa/dpaa_eth.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-index 54ffc9d3b0a9..fcbe01f61aa4 100644
---- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-@@ -1600,13 +1600,15 @@ static int dpaa_eth_refill_bpools(struct dpaa_priv *priv)
-  * Skb freeing is not handled here.
-  *
-  * This function may be called on error paths in the Tx function, so guard
-- * against cases when not all fd relevant fields were filled in.
-+ * against cases when not all fd relevant fields were filled in. To avoid
-+ * reading the invalid transmission timestamp for the error paths set ts to
-+ * false.
-  *
-  * Return the skb backpointer, since for S/G frames the buffer containing it
-  * gets freed here.
-  */
- static struct sk_buff *dpaa_cleanup_tx_fd(const struct dpaa_priv *priv,
--					  const struct qm_fd *fd)
-+					  const struct qm_fd *fd, bool ts)
- {
- 	const enum dma_data_direction dma_dir = DMA_TO_DEVICE;
- 	struct device *dev = priv->net_dev->dev.parent;
-@@ -1648,7 +1650,8 @@ static struct sk_buff *dpaa_cleanup_tx_fd(const struct dpaa_priv *priv,
- 	}
+diff --git a/drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c b/drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c
+index 544d64a84cc0..6e457967653e 100644
+--- a/drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c
++++ b/drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c
+@@ -323,7 +323,8 @@ static int ltq_vrx200_pcie_phy_power_on(struct phy *phy)
+ 		goto err_disable_pdi_clk;
  
- 	/* DMA unmapping is required before accessing the HW provided info */
--	if (priv->tx_tstamp && skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) {
-+	if (ts && priv->tx_tstamp &&
-+	    skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) {
- 		memset(&shhwtstamps, 0, sizeof(shhwtstamps));
+ 	/* Check if we are in "startup ready" status */
+-	if (ltq_vrx200_pcie_phy_wait_for_pll(phy) != 0)
++	ret = ltq_vrx200_pcie_phy_wait_for_pll(phy);
++	if (ret)
+ 		goto err_disable_phy_clk;
  
- 		if (!fman_port_get_tstamp(priv->mac_dev->port[TX], (void *)skbh,
-@@ -2116,7 +2119,7 @@ dpaa_start_xmit(struct sk_buff *skb, struct net_device *net_dev)
- 	if (likely(dpaa_xmit(priv, percpu_stats, queue_mapping, &fd) == 0))
- 		return NETDEV_TX_OK;
- 
--	dpaa_cleanup_tx_fd(priv, &fd);
-+	dpaa_cleanup_tx_fd(priv, &fd, false);
- skb_to_fd_failed:
- enomem:
- 	percpu_stats->tx_errors++;
-@@ -2162,7 +2165,7 @@ static void dpaa_tx_error(struct net_device *net_dev,
- 
- 	percpu_priv->stats.tx_errors++;
- 
--	skb = dpaa_cleanup_tx_fd(priv, fd);
-+	skb = dpaa_cleanup_tx_fd(priv, fd, false);
- 	dev_kfree_skb(skb);
- }
- 
-@@ -2202,7 +2205,7 @@ static void dpaa_tx_conf(struct net_device *net_dev,
- 
- 	percpu_priv->tx_confirm++;
- 
--	skb = dpaa_cleanup_tx_fd(priv, fd);
-+	skb = dpaa_cleanup_tx_fd(priv, fd, true);
- 
- 	consume_skb(skb);
- }
-@@ -2432,7 +2435,7 @@ static void egress_ern(struct qman_portal *portal,
- 	percpu_priv->stats.tx_fifo_errors++;
- 	count_ern(percpu_priv, msg);
- 
--	skb = dpaa_cleanup_tx_fd(priv, fd);
-+	skb = dpaa_cleanup_tx_fd(priv, fd, false);
- 	dev_kfree_skb_any(skb);
- }
- 
+ 	ltq_vrx200_pcie_phy_apply_workarounds(phy);
 -- 
 2.20.1
 
