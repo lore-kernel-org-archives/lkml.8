@@ -2,79 +2,119 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA648C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE2F2C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C27120684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:18:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UqIe4nQ2"
+	by mail.kernel.org (Postfix) with ESMTP id 9525C20730
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:18:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579198682;
+	bh=ewYn3Rzs8WG8sRJs5m3fMXgRAX3QqSzeKFi7bb7ATCc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nmCNmecmdEl96NO85nqxWIvd2TXDwvLJrmqyRGMTdzJ1MTvW+tVREPyvmVNKqC835
+	 Cmdehk1y31tqkBvftttfHwMmMWVXxWgwfu5P9t0yUa9X7vgUnE24Ac4mc+maJn2E15
+	 w3kaJX4qA5v6fOrM2xRRK54dhCwzyZUN7LTbWAq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407047AbgAPSR7 (ORCPT
+        id S2405061AbgAPSR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:17:59 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:26101 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387949AbgAPSR4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 13:17:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579198674;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=t3VlM5eWHxNK3W2wSrtp5Pl0J5UynFugOHYM0lHZotI=;
-        b=UqIe4nQ2/3lBBEF8O6bNW1YwGcWFpD98T/ymUuTAdZ/SUovgtHP33THsOUJHu5Y8fC4q5s
-        1QqAQxAJuEskoSQKd9t/eut8IcrdJd4/HmrV6esUozIz9YgRKNo1Gir11uPucMmIC7lbrj
-        TDsxPNmzyU2TnMcF2GD9VgYR56hb32E=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-276-aZJcF4RYP-a0nsHacWQwpA-1; Thu, 16 Jan 2020 13:17:53 -0500
-X-MC-Unique: aZJcF4RYP-a0nsHacWQwpA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 16 Jan 2020 13:17:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40276 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404207AbgAPR2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:28:54 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5FD4C18C35A0;
-        Thu, 16 Jan 2020 18:17:52 +0000 (UTC)
-Received: from gimli.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1A8AC5C241;
-        Thu, 16 Jan 2020 18:17:49 +0000 (UTC)
-Subject: [RFC PATCH 0/3] vfio/type1: Reduce vfio_iommu.lock contention
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     yan.y.zhao@intel.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 16 Jan 2020 11:17:49 -0700
-Message-ID: <157919849533.21002.4782774695733669879.stgit@gimli.home>
-User-Agent: StGit/0.19-dirty
+        by mail.kernel.org (Postfix) with ESMTPSA id EB1F524704;
+        Thu, 16 Jan 2020 17:28:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579195733;
+        bh=ewYn3Rzs8WG8sRJs5m3fMXgRAX3QqSzeKFi7bb7ATCc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ixNFVI8cFP9dnYjzaYbqk+CHpwqdCg4HaqTkcuU4YHmoQor2G0N6T+7e4KVYFqZmj
+         Z2wMYCZfbiWFkMc/ZgNIUF/k2GGG2oD4kbyDAdGvaWDdPtXYbgmBHR6k9gWFjENHBy
+         qvpsIOzftBb2IUhxEW/GJCtDoeAW116H2PTpVM0M=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 272/371] dmaengine: dw: platform: Switch to acpi_dma_controller_register()
+Date:   Thu, 16 Jan 2020 12:22:24 -0500
+Message-Id: <20200116172403.18149-215-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
+References: <20200116172403.18149-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yan,
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-I wonder if this might reduce the lock contention you're seeing in the
-vfio_dma_rw series.  These are only compile tested on my end, so I hope
-they're not too broken to test.  Thanks,
+[ Upstream commit e7b8514e4d68bec21fc6385fa0a66797ddc34ac9 ]
 
-Alex
+There is a possibility to have registered ACPI DMA controller
+while it has been gone already.
 
+To avoid the potential crash, move to non-managed
+acpi_dma_controller_register().
+
+Fixes: 42c91ee71d6d ("dw_dmac: add ACPI support")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Link: https://lore.kernel.org/r/20190820131546.75744-8-andriy.shevchenko@linux.intel.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
+ drivers/dma/dw/platform.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-Alex Williamson (3):
-      vfio/type1: Convert vfio_iommu.lock from mutex to rwsem
-      vfio/type1: Replace obvious read lock instances
-      vfio/type1: Introduce pfn_list mutex
-
-
- drivers/vfio/vfio_iommu_type1.c |   67 ++++++++++++++++++++++++---------------
- 1 file changed, 41 insertions(+), 26 deletions(-)
+diff --git a/drivers/dma/dw/platform.c b/drivers/dma/dw/platform.c
+index 46a519e07195..b408c07662f5 100644
+--- a/drivers/dma/dw/platform.c
++++ b/drivers/dma/dw/platform.c
+@@ -87,13 +87,20 @@ static void dw_dma_acpi_controller_register(struct dw_dma *dw)
+ 	dma_cap_set(DMA_SLAVE, info->dma_cap);
+ 	info->filter_fn = dw_dma_acpi_filter;
+ 
+-	ret = devm_acpi_dma_controller_register(dev, acpi_dma_simple_xlate,
+-						info);
++	ret = acpi_dma_controller_register(dev, acpi_dma_simple_xlate, info);
+ 	if (ret)
+ 		dev_err(dev, "could not register acpi_dma_controller\n");
+ }
++
++static void dw_dma_acpi_controller_free(struct dw_dma *dw)
++{
++	struct device *dev = dw->dma.dev;
++
++	acpi_dma_controller_free(dev);
++}
+ #else /* !CONFIG_ACPI */
+ static inline void dw_dma_acpi_controller_register(struct dw_dma *dw) {}
++static inline void dw_dma_acpi_controller_free(struct dw_dma *dw) {}
+ #endif /* !CONFIG_ACPI */
+ 
+ #ifdef CONFIG_OF
+@@ -249,6 +256,9 @@ static int dw_remove(struct platform_device *pdev)
+ {
+ 	struct dw_dma_chip *chip = platform_get_drvdata(pdev);
+ 
++	if (ACPI_HANDLE(&pdev->dev))
++		dw_dma_acpi_controller_free(chip->dw);
++
+ 	if (pdev->dev.of_node)
+ 		of_dma_controller_free(pdev->dev.of_node);
+ 
+-- 
+2.20.1
 
