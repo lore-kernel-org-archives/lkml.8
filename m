@@ -7,51 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5216BC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA624C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28B44207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 914722077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:19:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202349;
-	bh=wL/Vwkoh3kn1CKFREu9YqM3f6u8k3b3UToJfRagg7Ow=;
+	s=default; t=1579202355;
+	bh=Sz4GpaxAPtLgQkYlkXapgikiElCG4XG4t1osKrX0TIc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SuZDwkjWp6Fp1KabhWl3ns3B96/bccfP8s48cqgYzRNQZOcDsx+xwc6jVLDBAisd9
-	 5YO6YXDEDmj92ykrfrgJ+LhJmrKxfF6JAh4uwYmAFH6Os2YCIrqUGve0fb2ffVVf1u
-	 98p7sP2tnXX6UJ8Xm8dk5vhG8l9Xz0tqx4loFc+g=
+	b=r8hp0j9uuPWN5dThQEUq+leMwDM7n9quz/mOkeYsUv1yzAKyeENClWKCbGjqwpaIs
+	 NK3AjpSLn7LMuPhkjYNzPgTkPEWZy7+mUOkAC9ar6qsw4vgnKJoNl8R1r2A4fHxrj1
+	 XeHcsLQvnVdfRUgMyMCpSi0AHGzDI4M9/ceQQKDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390494AbgAPTTD (ORCPT
+        id S2407328AbgAPTTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:19:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39056 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:19:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729525AbgAPQy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:54:28 -0500
+        id S1731809AbgAPQyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:54:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5104A22525;
-        Thu, 16 Jan 2020 16:54:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84BCD214AF;
+        Thu, 16 Jan 2020 16:54:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193667;
-        bh=wL/Vwkoh3kn1CKFREu9YqM3f6u8k3b3UToJfRagg7Ow=;
+        s=default; t=1579193664;
+        bh=Sz4GpaxAPtLgQkYlkXapgikiElCG4XG4t1osKrX0TIc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AVyJnyekGEmvVNnS/2lZlN86hDVox0RM4vq1cQbTKWi7xoj+4ro/hEF19req3tpXg
-         Gct4kZ799Cxh+u7p9Seox6UTp4+JYc0PBG6VgfgM44494PYZzKzNPBXikrSrEzXJSU
-         wxb+LzlBdYeMUES1YSD1W1gB2RgZ0mDDtDMO6HVU=
+        b=Y/OlTywnOtPqRlM9LcrMQPcE68gnAxp+dHeYJPFa8tx4wXRJjgosH+cj2zWQx89qp
+         iZU9iRtJlSr1A7oUcRH3ZYxc/XorAIm4hZLigagWe3LuAEvaZjXscrOtnsCyH/+pMt
+         6/SWZXaka2WTpJw74HRqP2ifCtXkSxVGb6MIwCb0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Justin Tee <justin.tee@broadcom.com>,
-        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 193/205] block: fix memleak of bio integrity data
-Date:   Thu, 16 Jan 2020 11:42:48 -0500
-Message-Id: <20200116164300.6705-193-sashal@kernel.org>
+Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.4 191/205] samples/bpf: Fix broken xdp_rxq_info due to map order assumptions
+Date:   Thu, 16 Jan 2020 11:42:46 -0500
+Message-Id: <20200116164300.6705-191-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,85 +63,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Justin Tee <justin.tee@broadcom.com>
+From: Jesper Dangaard Brouer <brouer@redhat.com>
 
-[ Upstream commit ece841abbed2da71fa10710c687c9ce9efb6bf69 ]
+[ Upstream commit edbca120a8cdfa5a5793707e33497aa5185875ca ]
 
-7c20f11680a4 ("bio-integrity: stop abusing bi_end_io") moves
-bio_integrity_free from bio_uninit() to bio_integrity_verify_fn()
-and bio_endio(). This way looks wrong because bio may be freed
-without calling bio_endio(), for example, blk_rq_unprep_clone() is
-called from dm_mq_queue_rq() when the underlying queue of dm-mpath
-is busy.
+In the days of using bpf_load.c the order in which the 'maps' sections
+were defines in BPF side (*_kern.c) file, were used by userspace side
+to identify the map via using the map order as an index. In effect the
+order-index is created based on the order the maps sections are stored
+in the ELF-object file, by the LLVM compiler.
 
-So memory leak of bio integrity data is caused by commit 7c20f11680a4.
+This have also carried over in libbpf via API bpf_map__next(NULL, obj)
+to extract maps in the order libbpf parsed the ELF-object file.
 
-Fixes this issue by re-adding bio_integrity_free() to bio_uninit().
+When BTF based maps were introduced a new section type ".maps" were
+created. I found that the LLVM compiler doesn't create the ".maps"
+sections in the order they are defined in the C-file. The order in the
+ELF file is based on the order the map pointer is referenced in the code.
 
-Fixes: 7c20f11680a4 ("bio-integrity: stop abusing bi_end_io")
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by Justin Tee <justin.tee@broadcom.com>
+This combination of changes lead to xdp_rxq_info mixing up the map
+file-descriptors in userspace, resulting in very broken behaviour, but
+without warning the user.
 
-Add commit log, and simplify/fix the original patch wroten by Justin.
+This patch fix issue by instead using bpf_object__find_map_by_name()
+to find maps via their names. (Note, this is the ELF name, which can
+be longer than the name the kernel retains).
 
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: be5bca44aa6b ("samples: bpf: convert some XDP samples from bpf_load to libbpf")
+Fixes: 451d1dc886b5 ("samples: bpf: update map definition to new syntax BTF-defined map")
+Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Link: https://lore.kernel.org/bpf/157529025128.29832.5953245340679936909.stgit@firesoul
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bio-integrity.c | 2 +-
- block/bio.c           | 3 +++
- block/blk.h           | 4 ++++
- 3 files changed, 8 insertions(+), 1 deletion(-)
+ samples/bpf/xdp_rxq_info_user.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/block/bio-integrity.c b/block/bio-integrity.c
-index fb95dbb21dd8..bf62c25cde8f 100644
---- a/block/bio-integrity.c
-+++ b/block/bio-integrity.c
-@@ -87,7 +87,7 @@ EXPORT_SYMBOL(bio_integrity_alloc);
-  * Description: Used to free the integrity portion of a bio. Usually
-  * called from bio_free().
-  */
--static void bio_integrity_free(struct bio *bio)
-+void bio_integrity_free(struct bio *bio)
- {
- 	struct bio_integrity_payload *bip = bio_integrity(bio);
- 	struct bio_set *bs = bio->bi_pool;
-diff --git a/block/bio.c b/block/bio.c
-index c822ceb7c4de..006bcc52a77e 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -233,6 +233,9 @@ struct bio_vec *bvec_alloc(gfp_t gfp_mask, int nr, unsigned long *idx,
- void bio_uninit(struct bio *bio)
- {
- 	bio_disassociate_blkg(bio);
-+
-+	if (bio_integrity(bio))
-+		bio_integrity_free(bio);
- }
- EXPORT_SYMBOL(bio_uninit);
+diff --git a/samples/bpf/xdp_rxq_info_user.c b/samples/bpf/xdp_rxq_info_user.c
+index c7e4e45d824a..b88df17853b8 100644
+--- a/samples/bpf/xdp_rxq_info_user.c
++++ b/samples/bpf/xdp_rxq_info_user.c
+@@ -489,9 +489,9 @@ int main(int argc, char **argv)
+ 	if (bpf_prog_load_xattr(&prog_load_attr, &obj, &prog_fd))
+ 		return EXIT_FAIL;
  
-diff --git a/block/blk.h b/block/blk.h
-index ffea1691470e..ee3d5664d962 100644
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -122,6 +122,7 @@ static inline void blk_rq_bio_prep(struct request *rq, struct bio *bio,
- #ifdef CONFIG_BLK_DEV_INTEGRITY
- void blk_flush_integrity(void);
- bool __bio_integrity_endio(struct bio *);
-+void bio_integrity_free(struct bio *bio);
- static inline bool bio_integrity_endio(struct bio *bio)
- {
- 	if (bio_integrity(bio))
-@@ -167,6 +168,9 @@ static inline bool bio_integrity_endio(struct bio *bio)
- {
- 	return true;
- }
-+static inline void bio_integrity_free(struct bio *bio)
-+{
-+}
- #endif /* CONFIG_BLK_DEV_INTEGRITY */
- 
- unsigned long blk_rq_timeout(unsigned long timeout);
+-	map = bpf_map__next(NULL, obj);
+-	stats_global_map = bpf_map__next(map, obj);
+-	rx_queue_index_map = bpf_map__next(stats_global_map, obj);
++	map =  bpf_object__find_map_by_name(obj, "config_map");
++	stats_global_map = bpf_object__find_map_by_name(obj, "stats_global_map");
++	rx_queue_index_map = bpf_object__find_map_by_name(obj, "rx_queue_index_map");
+ 	if (!map || !stats_global_map || !rx_queue_index_map) {
+ 		printf("finding a map in obj file failed\n");
+ 		return EXIT_FAIL;
 -- 
 2.20.1
 
