@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC35C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F19C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE4DF2077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEEA72077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:41:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200075;
-	bh=YSqZMwFEC5KIbfh4yOjDt6rdM32AL7ICzGhTCKJhBY8=;
+	s=default; t=1579200083;
+	bh=jra6bcN6e0FvRK3fGf7npFyWGdYaW1XNRiWBWNJOPg0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xmi8Kbinsact/Ws1eilin2rZpUcw8UuWKMLddIj282pMohZosvm5CdOspq2CTacOJ
-	 CkAjKDarinAgW2wIUXCsBf1pIxoHW6eCVz1aCaQwLm3437yCeSGXgm4PnmLD+XW5kR
-	 MG9HwpinGJC9HnbX3OfI+FkGTnJTUqSIXmymWqm0=
+	b=gPksR9zuWJdH5GJ2Hgm2+1X7fNQe4BcNAfQhIVpVLgUsa870NfM6Ovx8FKUqjmJZS
+	 vN2XI5kQ6qZ1QiBtudCTkSfalPsP4sQbp3/Ob704mA++/9hE4bJ4LNzPGMtNZmLxeD
+	 SKnUnsy9fc03V/R/GefFFcNnS2Q64xnWt/0LOMd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436968AbgAPSlP (ORCPT
+        id S2436976AbgAPSlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:41:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53466 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:41:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389947AbgAPRLw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:11:52 -0500
+        id S2390316AbgAPRLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:11:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E48224695;
-        Thu, 16 Jan 2020 17:11:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CBD424697;
+        Thu, 16 Jan 2020 17:11:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194712;
-        bh=YSqZMwFEC5KIbfh4yOjDt6rdM32AL7ICzGhTCKJhBY8=;
+        s=default; t=1579194709;
+        bh=jra6bcN6e0FvRK3fGf7npFyWGdYaW1XNRiWBWNJOPg0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FzhlnxBl59HBNcvp60Bydi7uCLtmymR++kfxLk9huRI4wCODIXqBh+vWAkzz5J0bS
-         +YB5yZ1NIwn0zSlJpqPGFc5ZQYY0it7yxijIso/isCw2AVNcoGUBXcieuV75FUJV7Q
-         IlmN/q8NJKVDcXJ5NNCckc8zBs7LhsRl+ThxT298=
+        b=jApRsRWRSQi3D1AP/Uqo7Pc1vrRo1LZx7l05BL7qP2cL6K0g8JlO5Yz5yza8yu+KO
+         pJzPF/I4NsIc6AUtdqAgSC5nx3uC8UbUwjsYiblIIYN+GMDpmwYN9ahe4uKVU3R3pL
+         sIiv4zlSJmSkQp5ppfhSFm5uCroZme2JkJzeiyhM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 549/671] RDMA/cma: Fix false error message
-Date:   Thu, 16 Jan 2020 12:03:07 -0500
-Message-Id: <20200116170509.12787-286-sashal@kernel.org>
+Cc:     Rashmica Gupta <rashmica.g@gmail.com>,
+        Andrew Jeffery <andrew@aj.id.au>, Joel Stanley <joel@jms.d.au>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 547/671] gpio/aspeed: Fix incorrect number of banks
+Date:   Thu, 16 Jan 2020 12:03:05 -0500
+Message-Id: <20200116170509.12787-284-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,39 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Håkon Bugge <haakon.bugge@oracle.com>
+From: Rashmica Gupta <rashmica.g@gmail.com>
 
-[ Upstream commit a6e4d254c19b541a58caced322111084b27a7788 ]
+[ Upstream commit 3c4710ae6f883f9c6e3df5e27e274702a1221c57 ]
 
-In addr_handler(), assuming status == 0 and the device already has been
-acquired (id_priv->cma_dev != NULL), we get the following incorrect
-"error" message:
+The current calculation for the number of GPIO banks is only correct if
+the number of GPIOs is a multiple of 32 (if there were 31 GPIOs we would
+currently say there are 0 banks, which is incorrect).
 
-RDMA CM: ADDR_ERROR: failed to resolve IP. status 0
+Fixes: 361b79119a4b7 ('gpio: Add Aspeed driver')
 
-Fixes: 498683c6a7ee ("IB/cma: Add debug messages to error flows")
-Link: https://lore.kernel.org/r/20190902092731.1055757-1-haakon.bugge@oracle.com
-Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+Link: https://lore.kernel.org/r/20190906062623.13354-1-rashmica.g@gmail.com
+Reviewed-by: Joel Stanley <joel@jms.d.au>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/cma.c | 2 +-
+ drivers/gpio/gpio-aspeed.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
-index 319bfef00a4a..e16872e0724f 100644
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -2889,7 +2889,7 @@ static void addr_handler(int status, struct sockaddr *src_addr,
- 		if (status)
- 			pr_debug_ratelimited("RDMA CM: ADDR_ERROR: failed to acquire device. status %d\n",
- 					     status);
--	} else {
-+	} else if (status) {
- 		pr_debug_ratelimited("RDMA CM: ADDR_ERROR: failed to resolve IP. status %d\n", status);
- 	}
+diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
+index b696ec35efb3..e627e0e9001a 100644
+--- a/drivers/gpio/gpio-aspeed.c
++++ b/drivers/gpio/gpio-aspeed.c
+@@ -1199,7 +1199,7 @@ static int __init aspeed_gpio_probe(struct platform_device *pdev)
+ 	gpio->chip.irq.need_valid_mask = true;
  
+ 	/* Allocate a cache of the output registers */
+-	banks = gpio->config->nr_gpios >> 5;
++	banks = DIV_ROUND_UP(gpio->config->nr_gpios, 32);
+ 	gpio->dcache = devm_kcalloc(&pdev->dev,
+ 				    banks, sizeof(u32), GFP_KERNEL);
+ 	if (!gpio->dcache)
 -- 
 2.20.1
 
