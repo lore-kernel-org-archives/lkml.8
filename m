@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 988D5C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F03AAC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69FDA2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:15:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC8702073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:15:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202149;
-	bh=ivXiS/0NletdSdpGqEZ6JWiA8+PWPDz+IRO1QapDrGc=;
+	s=default; t=1579202152;
+	bh=iTZ3/mJbUdvgbPjh50KeuMkSDpA6gvzu10MlVUhBkFU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OZx16lDmvO9qAWEY0XodDN3KDjn/9jrRjpN2JPwll/fdsfKEFssRJ5CM+fBreVfiL
-	 d3KPWpdxbp8hxLmyfinKACMHXFNVDpXkOwZTECTIlPI5SaHOYuQEvIXj6fmDhc1hXV
-	 8dakF9ysBRLrsxHdPaRly8B4QqO/L32HOHLie6wo=
+	b=0cr7K79Wa1zF4foOzOYyLxkk4W7V7eJn3hWqgQmD1Q3bj+V279lVOmcWpnNakjNaW
+	 yQJd0kaZHs+FhYdJzlI1R0L6/dNQxeSvvrXzZ4xD/L/O+gDGdwQvcJzIN3SYjulE15
+	 2zxFjkURm0At8raWtA8p3yg2LpmBOUNdOfBy8Ccw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733099AbgAPQzw (ORCPT
+        id S2437511AbgAPTPv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:55:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41000 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:15:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733066AbgAPQzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:55:35 -0500
+        id S1733098AbgAPQzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:55:53 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71BF22176D;
-        Thu, 16 Jan 2020 16:55:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AA70205F4;
+        Thu, 16 Jan 2020 16:55:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193735;
-        bh=ivXiS/0NletdSdpGqEZ6JWiA8+PWPDz+IRO1QapDrGc=;
+        s=default; t=1579193752;
+        bh=iTZ3/mJbUdvgbPjh50KeuMkSDpA6gvzu10MlVUhBkFU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1v6UBU29SX/oyp1Fn+SX21KPD4UG5aDrMwXExm8SUOAPMe8TVlHP/Am7W8CPw3fcm
-         5r+7IxKRPeniSC7aNzNhiovOZAWlwtPV4ZabfkZcYXsS5eJwSF2Jp71Gvs1c3PUe03
-         1Z31PiCrjCLCrv/nU1xlN+I961KHAWeT8oZ30zrE=
+        b=fY9OI06C20zNRd6kpxMKAzgl4ydmIe71Hd05zn80cwe1PczRrN03cFV7bSu8uFlz/
+         T1SIfPnPYyglFFLxuY47Hq4E3LP9A4eOOPOMrvZRu4102RcMu2rtL0T9lGfrd2Hixl
+         npwFyfOVagYsYciLNZjR/ciXRXDnWZaiBVxFEpLY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 027/671] drm/msm: fix unsigned comparison with less than zero
-Date:   Thu, 16 Jan 2020 11:44:18 -0500
-Message-Id: <20200116165502.8838-27-sashal@kernel.org>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Giulio Benetti <giulio.benetti@micronovasrl.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 041/671] drm/sun4i: hdmi: Fix double flag assignation
+Date:   Thu, 16 Jan 2020 11:44:32 -0500
+Message-Id: <20200116165502.8838-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -60,39 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
 
-[ Upstream commit dfdb3be43ef1195c491e6c3760b922acb52e3575 ]
+[ Upstream commit 1e0ff648940e603cab6c52cf3723017d30d78f30 ]
 
-The return from the call to _mixer_stages can be a negative error
-code however this is being assigned to an unsigned variable 'stages'
-hence the check is always false. Fix this by making 'stages' an
-int.
+The is_double flag is a boolean currently assigned to the value of the d
+variable, that is either 1 or 2. It means that this is_double variable is
+always set to true, even though the initial intent was to have it set to
+true when d is 2.
 
-Detected by Coccinelle ("Unsigned expression compared with zero:
-stages < 0")
+Fix this.
 
-Fixes: 25fdd5933e4c ("drm/msm: Add SDM845 DPU support")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Rob Clark <robdclark@gmail.com>
+Fixes: 9c5681011a0c ("drm/sun4i: Add HDMI support")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Reviewed-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20181021163446.29135-2-maxime.ripard@bootlin.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c | 2 +-
+ drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c
-index 06be7cf7ce50..79bafea66354 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c
-@@ -310,7 +310,7 @@ static void dpu_hw_ctl_setup_blendstage(struct dpu_hw_ctl *ctx,
- 	u32 mixercfg = 0, mixercfg_ext = 0, mix, ext;
- 	u32 mixercfg_ext2 = 0, mixercfg_ext3 = 0;
- 	int i, j;
--	u8 stages;
-+	int stages;
- 	int pipes_per_stage;
- 
- 	stages = _mixer_stages(ctx->mixer_hw_caps, ctx->mixer_count, lm);
+diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c
+index 3ecffa52c814..a74adec6c5dc 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c
++++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c
+@@ -52,7 +52,7 @@ static unsigned long sun4i_tmds_calc_divider(unsigned long rate,
+ 			    (rate - tmp_rate) < (rate - best_rate)) {
+ 				best_rate = tmp_rate;
+ 				best_m = m;
+-				is_double = d;
++				is_double = (d == 2) ? true : false;
+ 			}
+ 		}
+ 	}
 -- 
 2.20.1
 
