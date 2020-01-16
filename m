@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CC4C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D4CC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4050B246EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D84B246DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:27:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195638;
-	bh=8iRFm89jihfp3NUUzy4kvRT0BpudT1RYy/C7LLvQQX0=;
+	s=default; t=1579195645;
+	bh=wRrTgLn1QD3Wghts6cEtMLEXaI0YQwcMzQY6pPr5mLw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qohq5tXwJf5WcugoEwXDi13prM3vUnNg+idsMbfPOKFWX4GjmLXLf6IUQ4nqq8Nkw
-	 cpGQs0MnUYQt9/S7rvDZ2GTceO1QNmB1Ut8J3jj8zkGIE9M8Xvo+E7zg7nQ2gZyiu9
-	 Dzbj85PecABMwe+ol3uXm2OmwD89dlThFbR6z3zk=
+	b=Ndp0Nk7yG/evFdbB3hsllYVMkljnNUQLPftCiK0RdVwhP70lGG4T1Fnm8Gt+UamQo
+	 Wt/f6BkUO6TAluTlIqtDvX8Bwg98OF01NUd3OCC6KFbcrCbtp92R4QwLcnPzawIXLZ
+	 bjbXpZrTUGNsd9oBavISxTemr6njAfxmmp8S5HWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392447AbgAPR1R (ORCPT
+        id S2391803AbgAPR1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:27:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36514 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:27:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392392AbgAPR1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:27:04 -0500
+        id S2392424AbgAPR1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:27:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6BF6246D3;
-        Thu, 16 Jan 2020 17:27:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8E5B246BE;
+        Thu, 16 Jan 2020 17:27:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195623;
-        bh=8iRFm89jihfp3NUUzy4kvRT0BpudT1RYy/C7LLvQQX0=;
+        s=default; t=1579195632;
+        bh=wRrTgLn1QD3Wghts6cEtMLEXaI0YQwcMzQY6pPr5mLw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AAtiSOQ6gsT+Q5CF9PJVkE9o7ubq4+Qq5E50qidI4+ipH3PDc89e2SjyJcFrIq/co
-         FKn+8lCsAZq1SQ7FuAAsM6N54D3AfkE+IyCtaeNz5G9EvkQg04Y144r6hNHwtnidby
-         IGEg5ob8xwoXYpeYuY74me1w8am2cmrIogwqLIVE=
+        b=2BQEPyIEocyDbie/W5xVKvVslVWKFlcQ0kbIibvfF2jQ0+dE1ZLEWbsDIN+z61Wwf
+         uMH8HTzjEvRPaKjU7KN5l8zRV843HRNBeCqCJP6GmQ8DzqB+U32TLDblAKOD/533BZ
+         66DAlJbHh/MeVUqmWLow8T0P0MFTS7flKJTbgaV4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        "Lad Prabhakar" <prabhakar.csengg@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 194/371] media: davinci/vpbe: array underflow in vpbe_enum_outputs()
-Date:   Thu, 16 Jan 2020 12:21:06 -0500
-Message-Id: <20200116172403.18149-137-sashal@kernel.org>
+Cc:     Bichao Zheng <bichao.zheng@amlogic.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 199/371] pwm: meson: Don't disable PWM when setting duty repeatedly
+Date:   Thu, 16 Jan 2020 12:21:11 -0500
+Message-Id: <20200116172403.18149-142-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -61,52 +63,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Bichao Zheng <bichao.zheng@amlogic.com>
 
-[ Upstream commit b72845ee5577b227131b1fef23f9d9a296621d7b ]
+[ Upstream commit a279345807e1e0ae79567a52cfdd9d30c9174a3c ]
 
-In vpbe_enum_outputs() we check if (temp_index >= cfg->num_outputs) but
-the problem is that "temp_index" can be negative.  This patch changes
-the types to unsigned to address this array underflow bug.
+There is an abnormally low about 20ms,when setting duty repeatedly.
+Because setting the duty will disable PWM and then enable. Delete
+this operation now.
 
-Fixes: 66715cdc3224 ("[media] davinci vpbe: VPBE display driver")
-
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: "Lad Prabhakar" <prabhakar.csengg@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 211ed630753d2f ("pwm: Add support for Meson PWM Controller")
+Signed-off-by: Bichao Zheng <bichao.zheng@amlogic.com>
+[ Dropped code instead of hiding it behind a comment ]
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/davinci/vpbe.c | 2 +-
- include/media/davinci/vpbe.h          | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/pwm/pwm-meson.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/media/platform/davinci/vpbe.c b/drivers/media/platform/davinci/vpbe.c
-index 1d3c13e36904..915af9ca4711 100644
---- a/drivers/media/platform/davinci/vpbe.c
-+++ b/drivers/media/platform/davinci/vpbe.c
-@@ -126,7 +126,7 @@ static int vpbe_enum_outputs(struct vpbe_device *vpbe_dev,
- 			     struct v4l2_output *output)
- {
- 	struct vpbe_config *cfg = vpbe_dev->cfg;
--	int temp_index = output->index;
-+	unsigned int temp_index = output->index;
- 
- 	if (temp_index >= cfg->num_outputs)
- 		return -EINVAL;
-diff --git a/include/media/davinci/vpbe.h b/include/media/davinci/vpbe.h
-index 79a566d7defd..180a05e91497 100644
---- a/include/media/davinci/vpbe.h
-+++ b/include/media/davinci/vpbe.h
-@@ -92,7 +92,7 @@ struct vpbe_config {
- 	struct encoder_config_info *ext_encoders;
- 	/* amplifier information goes here */
- 	struct amp_config_info *amp;
--	int num_outputs;
-+	unsigned int num_outputs;
- 	/* Order is venc outputs followed by LCD and then external encoders */
- 	struct vpbe_output *outputs;
- };
+diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
+index 9551f896dd6f..3d2c36963a4f 100644
+--- a/drivers/pwm/pwm-meson.c
++++ b/drivers/pwm/pwm-meson.c
+@@ -325,11 +325,6 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	if (state->period != channel->state.period ||
+ 	    state->duty_cycle != channel->state.duty_cycle ||
+ 	    state->polarity != channel->state.polarity) {
+-		if (channel->state.enabled) {
+-			meson_pwm_disable(meson, pwm->hwpwm);
+-			channel->state.enabled = false;
+-		}
+-
+ 		if (state->polarity != channel->state.polarity) {
+ 			if (state->polarity == PWM_POLARITY_NORMAL)
+ 				meson->inverter_mask |= BIT(pwm->hwpwm);
 -- 
 2.20.1
 
