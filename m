@@ -2,176 +2,111 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97EABC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C9D4C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F795217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:05:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="P/xpYMzs"
+	by mail.kernel.org (Postfix) with ESMTP id 094AC2192A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:05:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579197906;
+	bh=9mwGrx6aEgxNRi/HJ+0HH6YChaUmnqQW3NP2bo8ezdU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=afJB6rPEQF+57vYek3CZ6E/rPu6z0HL8ANDQWIPgyqhUcQ+om4RuPanvqp9jC9jcN
+	 vim7O8yyCZKptXL9tUZYM++fab4uWMXeWQhaCz+A7CBtqGQi8efIkGe1qWuYbubTfz
+	 m8xV6kDBqKmKp1Rc5kilhwgmTswczdUM6gGaTWFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406949AbgAPSE7 (ORCPT
+        id S2393602AbgAPRkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:04:59 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:37778 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406927AbgAPSEv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 13:04:51 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00GI3d2x032053;
-        Thu, 16 Jan 2020 18:04:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=Wz0bfYpv6qVBxaaDhPfuHMj6fRJ3/Ll2i4XCWCEkzKU=;
- b=P/xpYMzsQBE5bSIf2S5Rqg1imFhX6WSs+gM+2vlJjnEuX8CqmY+cnCyTLYqeL+nk6jJK
- JhEyImmV4seyD2OKgOsPG9vPvMbtqliB0wCrQgMlRgaia8zGn55X8/0qBAKoBu+tFf/j
- EGCnwUI/eE/YKnzFFyDulMHUTfZBKon5j4hwvQZpbRp71xa/v95DvKjA3dPwvf3XGxFd
- rdWyTXu+2UuJcb0UfglLCJOhdZzBbBKLnX9GeUDxxH5VU5aj6MxUK+putiEf6vO+Uu+v
- fmhY9Mnhg6L481saVULx+u4dmOsR2ydOneEQXD7B26uNZk595wXKPoG9TCeTUZtuGT0h yA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2xf73yv695-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 18:04:29 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00GI46wZ100800;
-        Thu, 16 Jan 2020 18:04:28 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2xj61n0etc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 18:04:28 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00GI4NWO015447;
-        Thu, 16 Jan 2020 18:04:23 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 16 Jan 2020 10:04:22 -0800
-Date:   Thu, 16 Jan 2020 10:04:21 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>, Jan Kara <jack@suse.cz>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [RFC PATCH V2 01/12] fs/stat: Define DAX statx attribute
-Message-ID: <20200116180421.GD8235@magnolia>
-References: <20200110192942.25021-1-ira.weiny@intel.com>
- <20200110192942.25021-2-ira.weiny@intel.com>
- <20200115113715.GB2595@quack2.suse.cz>
- <20200115173834.GD8247@magnolia>
- <20200115194512.GF23311@iweiny-DESK2.sc.intel.com>
- <CAPcyv4hwefzruFj02YHYiy8nOpHJFGLKksjiXoRUGpT3C2rDag@mail.gmail.com>
- <20200115223821.GG23311@iweiny-DESK2.sc.intel.com>
- <20200116053935.GB8235@magnolia>
- <20200116175501.GC24522@iweiny-DESK2.sc.intel.com>
+        Thu, 16 Jan 2020 12:40:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55522 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2393455AbgAPRjS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:39:18 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FCF8246D3;
+        Thu, 16 Jan 2020 17:39:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579196357;
+        bh=9mwGrx6aEgxNRi/HJ+0HH6YChaUmnqQW3NP2bo8ezdU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NTPUtDN3ntsnHm0vAwQCMFCH1duUlvPBF/lvgp5LnrbPzr98dKb8yWWLhkktl04Xn
+         uKb0QYhc06M9UGpQU/syMyUWyfaR+HOhC6zkDins2psvMo3wNfBgkjQUlJjBCzOhjy
+         0JcUmnf8LbfS6oXlma3ZuJb7TWoesEyNql1Cyvnw=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        Jeff Layton <jlayton@primarydata.com>,
+        Steve French <smfrench@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org
+Subject: [PATCH AUTOSEL 4.9 149/251] signal/cifs: Fix cifs_put_tcp_session to call send_sig instead of force_sig
+Date:   Thu, 16 Jan 2020 12:34:58 -0500
+Message-Id: <20200116173641.22137-109-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
+References: <20200116173641.22137-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200116175501.GC24522@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9502 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001160146
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9502 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001160146
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 09:55:02AM -0800, Ira Weiny wrote:
-> On Wed, Jan 15, 2020 at 09:39:35PM -0800, Darrick J. Wong wrote:
-> > On Wed, Jan 15, 2020 at 02:38:21PM -0800, Ira Weiny wrote:
-> > > On Wed, Jan 15, 2020 at 12:10:50PM -0800, Dan Williams wrote:
-> > > > On Wed, Jan 15, 2020 at 11:45 AM Ira Weiny <ira.weiny@intel.com> wrote:
-> > > > >
-> > > > > On Wed, Jan 15, 2020 at 09:38:34AM -0800, Darrick J. Wong wrote:
-> > > > > > On Wed, Jan 15, 2020 at 12:37:15PM +0100, Jan Kara wrote:
-> > > > > > > On Fri 10-01-20 11:29:31, ira.weiny@intel.com wrote:
-> > > > > > > > From: Ira Weiny <ira.weiny@intel.com>
-> > > > > > > >
-> > > 
-> 
-> [snip]
-> 
-> > > 
-> > > Sure, but for now I think referencing mmap for details on MAP_SYNC works.
-> > > 
-> > > I suspect that we may have some word smithing once I get this series in and we
-> > > submit a change to the statx man page itself.  Can I move forward with the
-> > > following for this patch?
-> > > 
-> > > <quote>
-> > > STATX_ATTR_DAX
-> > > 
-> > >         The file is in the DAX (cpu direct access) state.  DAX state
-> > 
-> > Hmm, now that I see it written out, I <cough> kind of like "DAX mode"
-> > better now. :/
-> > 
-> > "The file is in DAX (CPU direct access) mode.  DAX mode attempts..."
-> 
-> Sure...  now you tell me...  ;-)
-> 
-> Seriously, we could use mode here in the man page as this is less confusing to
-> say "DAX mode".
-> 
-> But I think the code should still use 'state' because mode is just too
-> overloaded.  You were not the only one who was thrown by my use of mode and I
-> don't want that confusion when we look at this code 2 weeks from now...
-> 
-> https://www.reddit.com/r/ProgrammerHumor/comments/852og2/only_god_knows/
-> 
-> ;-)
+From: "Eric W. Biederman" <ebiederm@xmission.com>
 
-Ok, let's leave it alone for now then.
+[ Upstream commit 72abe3bcf0911d69b46c1e8bdb5612675e0ac42c ]
 
-I'm not even sure what 'DAX' stands for.  Direct Access to ...
-Professor Xavier? 8-)
+The locking in force_sig_info is not prepared to deal with a task that
+exits or execs (as sighand may change).  The is not a locking problem
+in force_sig as force_sig is only built to handle synchronous
+exceptions.
 
-> > 
-> > >         attempts to minimize software cache effects for both I/O and
-> > >         memory mappings of this file.  It requires a file system which
-> > >         has been configured to support DAX.
-> > > 
-> > >         DAX generally assumes all accesses are via cpu load / store
-> > >         instructions which can minimize overhead for small accesses, but
-> > >         may adversely affect cpu utilization for large transfers.
-> > > 
-> > >         File I/O is done directly to/from user-space buffers and memory
-> > >         mapped I/O may be performed with direct memory mappings that
-> > >         bypass kernel page cache.
-> > > 
-> > >         While the DAX property tends to result in data being transferred
-> > >         synchronously, it does not give the same guarantees of
-> > >         synchronous I/O where data and the necessary metadata are
-> > >         transferred together.
-> > 
-> > (I'm frankly not sure that synchronous I/O actually guarantees that the
-> > metadata has hit stable storage...)
-> 
-> I'll let you and Dan work this one out...  ;-)
+Further the function force_sig_info changes the signal state if the
+signal is ignored, or blocked or if SIGNAL_UNKILLABLE will prevent the
+delivery of the signal.  The signal SIGKILL can not be ignored and can
+not be blocked and SIGNAL_UNKILLABLE won't prevent it from being
+delivered.
 
-Hehe.  I think the wording here is fine.
+So using force_sig rather than send_sig for SIGKILL is confusing
+and pointless.
 
---D
+Because it won't impact the sending of the signal and and because
+using force_sig is wrong, replace force_sig with send_sig.
 
-> Ira
-> 
+Cc: Namjae Jeon <namjae.jeon@samsung.com>
+Cc: Jeff Layton <jlayton@primarydata.com>
+Cc: Steve French <smfrench@gmail.com>
+Fixes: a5c3e1c725af ("Revert "cifs: No need to send SIGKILL to demux_thread during umount"")
+Fixes: e7ddee9037e7 ("cifs: disable sharing session and tcon and add new TCP sharing code")
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/cifs/connect.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index e43ba6db2bdd..110febd69737 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -2221,7 +2221,7 @@ cifs_put_tcp_session(struct TCP_Server_Info *server, int from_reconnect)
+ 
+ 	task = xchg(&server->tsk, NULL);
+ 	if (task)
+-		force_sig(SIGKILL, task);
++		send_sig(SIGKILL, task, 1);
+ }
+ 
+ static struct TCP_Server_Info *
+-- 
+2.20.1
+
