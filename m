@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E281C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7F1C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20D712081E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:07:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6880E217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:07:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194459;
-	bh=VFJctDrbefn6w/W8GiG7pae/I2U6dtsmHmDknQOiW3M=;
+	s=default; t=1579194461;
+	bh=IaqOLNm/i0yLc3Jpw9UIY1y+vn8BKJAc9Js6nsMGAnU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2SNlYwVxnVNvCnzJnWDO98jA7b2LLMvfcHoHxOccBPzDk9236oMqPdFLc62hEK2jU
-	 0uNMkL6gL4/mzZQh14RBIL+r//pSaQdA2bRdt/lgkH0EhY3IDT+CDyVPj3CLfk9hIm
-	 fuL2I4fBqMT6nZGAtni77pLGf9Ce6okqBzCx5e5M=
+	b=uik4IFKKJsq0ZiNoQoe64XqnISaXPZxWa9O2Gh5qdXogDzf/0KTdlFrfASbINt0Ka
+	 7IjYFBMGBousn4jvI3SZaOaLPLZZvjxCldKSILWIi4lKEvaxzgL4cI7VuDr7cDuvgR
+	 s9AfpdiQVCBErlqpgm1fFslOsZOJzUmVeCNx8UT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388464AbgAPRHh (ORCPT
+        id S2388737AbgAPRHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:07:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39512 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:07:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389182AbgAPRH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:07:29 -0500
+        id S2388697AbgAPRHb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:07:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09AB4205F4;
-        Thu, 16 Jan 2020 17:07:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64D7820663;
+        Thu, 16 Jan 2020 17:07:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194449;
-        bh=VFJctDrbefn6w/W8GiG7pae/I2U6dtsmHmDknQOiW3M=;
+        s=default; t=1579194451;
+        bh=IaqOLNm/i0yLc3Jpw9UIY1y+vn8BKJAc9Js6nsMGAnU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P9NsbxsB1qpd2lsPnTn6BWA3Mz2h12ZDSTcg2/4Qp8V48WE7hJUYv3MzIZAhuQkRY
-         y4S7nGsAVPB51VpFKv03RXZeNKMNHuR0DIitKffhQESANkY9DTW2X70toNRchH60sq
-         WgwGd6+cOipOCGJrQhk8trjjpEd4EUgh5+ufCpHY=
+        b=YHnU4ku9U560EOzCo3C39yibbBSRpxNCriJ9t9O2WljHTbFxPbsMPM/kZ2vRSAYEh
+         2h/wXPiPCt8/VuBvJ+fVdQKVujXJcWNllD9Ql8rc9bySUPIp4wnXX4MS/S5bnQnB1b
+         dz23RhC5/7ro5SiIscEZqLdW0QNDSSUWlJBqwFmM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robert Richter <rrichter@marvell.com>,
-        Borislav Petkov <bp@suse.de>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 359/671] EDAC/mc: Fix edac_mc_find() in case no device is found
-Date:   Thu, 16 Jan 2020 11:59:57 -0500
-Message-Id: <20200116170509.12787-96-sashal@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 361/671] afs: Don't invalidate callback if AFS_VNODE_DIR_VALID not set
+Date:   Thu, 16 Jan 2020 11:59:59 -0500
+Message-Id: <20200116170509.12787-98-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -62,63 +58,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Richter <rrichter@marvell.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 29a0c843973bc385918158c6976e4dbe891df969 ]
+[ Upstream commit d9052dda8a39069312218f913d22d99c48d90004 ]
 
-The function should return NULL in case no device is found, but it
-always returns the last checked mc device from the list even if the
-index did not match. Fix that.
+Don't invalidate the callback promise on a directory if the
+AFS_VNODE_DIR_VALID flag is not set (which indicates that the directory
+contents are invalid, due to edit failure, callback break, page reclaim).
 
-I did some analysis why this did not raise any issues for about 3 years
-and the reason is that edac_mc_find() is mostly used to search for
-existing devices. Thus, the bug is not triggered.
+The directory will be reloaded next time the directory is accessed, so
+clearing the callback flag at this point may race with a reload of the
+directory and cancel it's recorded callback promise.
 
- [ bp: Drop the if (mci->mc_idx > idx) test in favor of readability. ]
-
-Fixes: c73e8833bec5 ("EDAC, mc: Fix locking around mc_devices list")
-Signed-off-by: Robert Richter <rrichter@marvell.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Link: https://lkml.kernel.org/r/20190514104838.15065-1-rrichter@marvell.com
+Fixes: f3ddee8dc4e2 ("afs: Fix directory handling")
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/edac_mc.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+ fs/afs/inode.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-index f59511bd9926..fd440b35d76e 100644
---- a/drivers/edac/edac_mc.c
-+++ b/drivers/edac/edac_mc.c
-@@ -681,22 +681,18 @@ static int del_mc_from_global_list(struct mem_ctl_info *mci)
- 
- struct mem_ctl_info *edac_mc_find(int idx)
- {
--	struct mem_ctl_info *mci = NULL;
-+	struct mem_ctl_info *mci;
- 	struct list_head *item;
- 
- 	mutex_lock(&mem_ctls_mutex);
- 
- 	list_for_each(item, &mc_devices) {
- 		mci = list_entry(item, struct mem_ctl_info, link);
--
--		if (mci->mc_idx >= idx) {
--			if (mci->mc_idx == idx) {
--				goto unlock;
--			}
--			break;
--		}
-+		if (mci->mc_idx == idx)
-+			goto unlock;
- 	}
- 
-+	mci = NULL;
- unlock:
- 	mutex_unlock(&mem_ctls_mutex);
- 	return mci;
+diff --git a/fs/afs/inode.c b/fs/afs/inode.c
+index 718fab2f151a..e6f11da5461b 100644
+--- a/fs/afs/inode.c
++++ b/fs/afs/inode.c
+@@ -398,12 +398,9 @@ int afs_validate(struct afs_vnode *vnode, struct key *key)
+ 			vnode->cb_s_break = vnode->cb_interest->server->cb_s_break;
+ 			vnode->cb_v_break = vnode->volume->cb_v_break;
+ 			valid = false;
+-		} else if (vnode->status.type == AFS_FTYPE_DIR &&
+-			   (!test_bit(AFS_VNODE_DIR_VALID, &vnode->flags) ||
+-			    vnode->cb_expires_at - 10 <= now)) {
++		} else if (test_bit(AFS_VNODE_ZAP_DATA, &vnode->flags)) {
+ 			valid = false;
+-		} else if (test_bit(AFS_VNODE_ZAP_DATA, &vnode->flags) ||
+-			   vnode->cb_expires_at - 10 <= now) {
++		} else if (vnode->cb_expires_at - 10 <= now) {
+ 			valid = false;
+ 		} else {
+ 			valid = true;
 -- 
 2.20.1
 
