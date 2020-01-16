@@ -2,136 +2,247 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0621FC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF32C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAE222072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:26:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="aWzpkYr+"
+	by mail.kernel.org (Postfix) with ESMTP id BEADF2077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:26:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389903AbgAPW0I (ORCPT
+        id S2389994AbgAPW0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 17:26:08 -0500
-Received: from gateway24.websitewelcome.com ([192.185.51.35]:24805 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729319AbgAPW0I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 17:26:08 -0500
-X-Greylist: delayed 1358 seconds by postgrey-1.27 at vger.kernel.org; Thu, 16 Jan 2020 17:26:07 EST
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 9D3BD1F93
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 16:03:29 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id sDEfiaO5qNwe7sDEfiBDTS; Thu, 16 Jan 2020 16:03:29 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=lJqbOVGeD356I6fIe5iirDZBONX68UGjE9KZh7u5oGg=; b=aWzpkYr+XHoNFKlaSNzO+UXLZZ
-        fuXnIZFQyXXrqcldKm/2ji1V6SAct69fFyXrBXeg7DVIefdRIQICEGlgT808cM5xUVN9B9jBvmfrP
-        PVpJxi5Q7VK/lJ9YvgzhA8U3n/K/J3wgIpFHTSo/GDamYhIFLe+2qz5OJIgoauc2/IskXvvyxsN6H
-        N4B9Ulm2locWbjIebP7r4PEqfdXrlRhdE8CpnJhIt9CihJjJY0mVxRXL9LUlKq2z6Y2P1O3j4SDPf
-        8ZLE35/7SbDuXJ9c4EYXbvOL3FlwQlFHyNmN4D9vqWgIvXfKiGnEIzTI3k/EIfvZFxFf4A3zp+lwe
-        +AXwiraA==;
-Received: from 187-162-252-62.static.axtel.net ([187.162.252.62]:44004 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1isDEe-000egY-Bn; Thu, 16 Jan 2020 16:03:28 -0600
-Date:   Thu, 16 Jan 2020 16:03:27 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] USB: serial: garmin_gps: Use flexible-array member
-Message-ID: <20200116220327.GA12537@embeddedor.com>
+        Thu, 16 Jan 2020 17:26:17 -0500
+Received: from mga05.intel.com ([192.55.52.43]:47095 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729454AbgAPW0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 17:26:16 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 14:26:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,327,1574150400"; 
+   d="scan'208";a="274183391"
+Received: from linux.intel.com ([10.54.29.200])
+  by FMSMGA003.fm.intel.com with ESMTP; 16 Jan 2020 14:26:15 -0800
+Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
+        by linux.intel.com (Postfix) with ESMTP id 67C22580332;
+        Thu, 16 Jan 2020 14:26:15 -0800 (PST)
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v12 8/8] PCI/ACPI: Enable EDR support
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Keith Busch <keith.busch@intel.com>,
+        Huong Nguyen <huong.nguyen@dell.com>,
+        Austin Bolen <Austin.Bolen@dell.com>
+References: <20200116221002.GA191067@google.com>
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Organization: Intel
+Message-ID: <0723444f-6014-3e75-8116-f052f9a9cb24@linux.intel.com>
+Date:   Thu, 16 Jan 2020 14:24:10 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.252.62
-X-Source-L: No
-X-Exim-ID: 1isDEe-000egY-Bn
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-252-62.static.axtel.net (embeddedor) [187.162.252.62]:44004
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20200116221002.GA191067@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Old code in the kernel uses 1-byte and 0-byte arrays to indicate the
-presence of a "variable length array":
 
-struct something {
-    int length;
-    u8 data[1];
-};
+On 1/16/20 2:10 PM, Bjorn Helgaas wrote:
+> On Sun, Jan 12, 2020 at 02:44:02PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>
+>> As per PCI firmware specification r3.2 Downstream Port Containment
+>> Related Enhancements ECN, sec 4.5.1, OS must implement following steps
+>> to enable/use EDR feature.
+>>
+>> 1. OS can use bit 7 of _OSC Control Field to negotiate control over
+>> Downstream Port Containment (DPC) configuration of PCIe port. After _OSC
+>> negotiation, firmware will Set this bit to grant OS control over PCIe
+>> DPC configuration and Clear it if this feature was requested and denied,
+>> or was not requested.
+>>
+>> 2. Also, if OS supports EDR, it should expose its support to BIOS by
+>> setting bit 7 of _OSC Support Field. And if OS sets bit 7 of _OSC
+>> Control Field it must also expose support for EDR by setting bit 7 of
+>> _OSC Support Field.
+>>
+>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+>> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+>> Cc: Len Brown <lenb@kernel.org>
+>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>> Acked-by: Keith Busch <keith.busch@intel.com>
+>> Tested-by: Huong Nguyen <huong.nguyen@dell.com>
+>> Tested-by: Austin Bolen <Austin.Bolen@dell.com>
+>> ---
+>>   drivers/acpi/pci_root.c         | 9 +++++++++
+>>   drivers/pci/pcie/portdrv_core.c | 7 +++++--
+>>   drivers/pci/probe.c             | 1 +
+>>   include/linux/acpi.h            | 6 ++++--
+>>   include/linux/pci.h             | 3 ++-
+>>   5 files changed, 21 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+>> index d1e666ef3fcc..134e20474dfd 100644
+>> --- a/drivers/acpi/pci_root.c
+>> +++ b/drivers/acpi/pci_root.c
+>> @@ -131,6 +131,7 @@ static struct pci_osc_bit_struct pci_osc_support_bit[] = {
+>>   	{ OSC_PCI_CLOCK_PM_SUPPORT, "ClockPM" },
+>>   	{ OSC_PCI_SEGMENT_GROUPS_SUPPORT, "Segments" },
+>>   	{ OSC_PCI_MSI_SUPPORT, "MSI" },
+>> +	{ OSC_PCI_EDR_SUPPORT, "EDR" },
+>>   	{ OSC_PCI_HPX_TYPE_3_SUPPORT, "HPX-Type3" },
+>>   };
+>>   
+>> @@ -141,6 +142,7 @@ static struct pci_osc_bit_struct pci_osc_control_bit[] = {
+>>   	{ OSC_PCI_EXPRESS_AER_CONTROL, "AER" },
+>>   	{ OSC_PCI_EXPRESS_CAPABILITY_CONTROL, "PCIeCapability" },
+>>   	{ OSC_PCI_EXPRESS_LTR_CONTROL, "LTR" },
+>> +	{ OSC_PCI_EXPRESS_DPC_CONTROL, "DPC" },
+>>   };
+>>   
+>>   static void decode_osc_bits(struct acpi_pci_root *root, char *msg, u32 word,
+>> @@ -440,6 +442,8 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+>>   		support |= OSC_PCI_ASPM_SUPPORT | OSC_PCI_CLOCK_PM_SUPPORT;
+>>   	if (pci_msi_enabled())
+>>   		support |= OSC_PCI_MSI_SUPPORT;
+>> +	if (IS_ENABLED(CONFIG_PCIE_EDR))
+>> +		support |= OSC_PCI_EDR_SUPPORT;
+>>   
+>>   	decode_osc_support(root, "OS supports", support);
+>>   	status = acpi_pci_osc_support(root, support);
+>> @@ -487,6 +491,9 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
+>>   			control |= OSC_PCI_EXPRESS_AER_CONTROL;
+>>   	}
+>>   
+>> +	if (IS_ENABLED(CONFIG_PCIE_DPC))
+>> +		control |= OSC_PCI_EXPRESS_DPC_CONTROL;
+> The ECN [1] says:
+>
+>    If this bit is set by the OS, this indicates that it supports both
+>    native OS control and firmware ownership models (i.e. Error
+>    Disconnect Recover notification) of Downstream Port Containment.
+>
+> But if CONFIG_PCIE_DPC=y and CONFIG_PCIE_EDR is not set, we will set
+> OSC_PCI_EXPRESS_DPC_CONTROL even though we don't support EDR.  That
+> doesn't seem to match what the spec says.
+Agreed.
+>
+> I think this needs to be something like:
+>
+>    if (IS_ENABLED(CONFIG_PCIE_DPC) && IS_ENABLED(CONFIG_PCIE_EDR))
+>      control |= OSC_PCI_EXPRESS_DPC_CONTROL;
+Since CONFIG_PCIE_EDR has dependency on CONFIG_PCIE_DPC,
+I think we can just use IS_ENABLED(CONFIG_PCIE_EDR) here.
 
-struct something *instance;
-
-instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
-instance->length = size;
-memcpy(instance->data, source, size);
-
-There is also 0-byte arrays. Both cases pose confusion for things like
-sizeof(), CONFIG_FORTIFY_SOURCE, etc.[1] Instead, the preferred mechanism
-to declare variable-length types such as the one above is a flexible array
-member[2] which need to be the last member of a structure and empty-sized:
-
-struct something {
-        int stuff;
-        u8 data[];
-};
-
-Also, by making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-unadvertenly introduced[3] to the codebase from now on.
-
-[1] https://github.com/KSPP/linux/issues/21
-[2] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/usb/serial/garmin_gps.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/usb/serial/garmin_gps.c b/drivers/usb/serial/garmin_gps.c
-index 633550ec3025..ffd984142171 100644
---- a/drivers/usb/serial/garmin_gps.c
-+++ b/drivers/usb/serial/garmin_gps.c
-@@ -104,7 +104,7 @@ struct garmin_packet {
- 	int               seq;
- 	/* the real size of the data array, always > 0 */
- 	int               size;
--	__u8              data[1];
-+	__u8              data[];
- };
- 
- /* structure used to keep the current state of the driver */
+I will fix it and send an update. You want to me to send a new
+patch set of just an update to this patch ?
+>
+> [1] Downstream Port Containment related Enhancements, PCI ECN, Jan 28,
+> 2019, Section 4.5.1, Table 4-5.
+>
+>>   	requested = control;
+>>   	status = acpi_pci_osc_control_set(handle, &control,
+>>   					  OSC_PCI_EXPRESS_CAPABILITY_CONTROL);
+>> @@ -916,6 +923,8 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
+>>   		host_bridge->native_pme = 0;
+>>   	if (!(root->osc_control_set & OSC_PCI_EXPRESS_LTR_CONTROL))
+>>   		host_bridge->native_ltr = 0;
+>> +	if (!(root->osc_control_set & OSC_PCI_EXPRESS_DPC_CONTROL))
+>> +		host_bridge->native_dpc = 0;
+>>   
+>>   	/*
+>>   	 * Evaluate the "PCI Boot Configuration" _DSM Function.  If it
+>> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+>> index 5075cb9e850c..009742c865d6 100644
+>> --- a/drivers/pci/pcie/portdrv_core.c
+>> +++ b/drivers/pci/pcie/portdrv_core.c
+>> @@ -253,10 +253,13 @@ static int get_port_device_capability(struct pci_dev *dev)
+>>   	/*
+>>   	 * With dpc-native, allow Linux to use DPC even if it doesn't have
+>>   	 * permission to use AER.
+>> +	 * If EDR support is enabled in OS, then even if AER is not handled in
+>> +	 * OS, DPC service can be enabled.
+>>   	 */
+>>   	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
+>> -	    pci_aer_available() &&
+>> -	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
+>> +	    ((IS_ENABLED(CONFIG_PCIE_EDR) && !host->native_dpc) ||
+>> +	    (pci_aer_available() &&
+>> +	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))))
+>>   		services |= PCIE_PORT_SERVICE_DPC;
+>>   
+>>   	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
+>> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+>> index 512cb4312ddd..c9a9c5b42e72 100644
+>> --- a/drivers/pci/probe.c
+>> +++ b/drivers/pci/probe.c
+>> @@ -598,6 +598,7 @@ static void pci_init_host_bridge(struct pci_host_bridge *bridge)
+>>   	bridge->native_shpc_hotplug = 1;
+>>   	bridge->native_pme = 1;
+>>   	bridge->native_ltr = 1;
+>> +	bridge->native_dpc = 1;
+>>   }
+>>   
+>>   struct pci_host_bridge *pci_alloc_host_bridge(size_t priv)
+>> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+>> index 0f37a7d5fa77..0a7aaa452a98 100644
+>> --- a/include/linux/acpi.h
+>> +++ b/include/linux/acpi.h
+>> @@ -515,8 +515,9 @@ extern bool osc_pc_lpi_support_confirmed;
+>>   #define OSC_PCI_CLOCK_PM_SUPPORT		0x00000004
+>>   #define OSC_PCI_SEGMENT_GROUPS_SUPPORT		0x00000008
+>>   #define OSC_PCI_MSI_SUPPORT			0x00000010
+>> +#define OSC_PCI_EDR_SUPPORT			0x00000080
+>>   #define OSC_PCI_HPX_TYPE_3_SUPPORT		0x00000100
+>> -#define OSC_PCI_SUPPORT_MASKS			0x0000011f
+>> +#define OSC_PCI_SUPPORT_MASKS			0x0000019f
+>>   
+>>   /* PCI Host Bridge _OSC: Capabilities DWORD 3: Control Field */
+>>   #define OSC_PCI_EXPRESS_NATIVE_HP_CONTROL	0x00000001
+>> @@ -525,7 +526,8 @@ extern bool osc_pc_lpi_support_confirmed;
+>>   #define OSC_PCI_EXPRESS_AER_CONTROL		0x00000008
+>>   #define OSC_PCI_EXPRESS_CAPABILITY_CONTROL	0x00000010
+>>   #define OSC_PCI_EXPRESS_LTR_CONTROL		0x00000020
+>> -#define OSC_PCI_CONTROL_MASKS			0x0000003f
+>> +#define OSC_PCI_EXPRESS_DPC_CONTROL		0x00000080
+>> +#define OSC_PCI_CONTROL_MASKS			0x000000bf
+>>   
+>>   #define ACPI_GSB_ACCESS_ATTRIB_QUICK		0x00000002
+>>   #define ACPI_GSB_ACCESS_ATTRIB_SEND_RCV         0x00000004
+>> diff --git a/include/linux/pci.h b/include/linux/pci.h
+>> index c393dff2d66f..0b7c63c7888d 100644
+>> --- a/include/linux/pci.h
+>> +++ b/include/linux/pci.h
+>> @@ -510,8 +510,9 @@ struct pci_host_bridge {
+>>   	unsigned int	native_shpc_hotplug:1;	/* OS may use SHPC hotplug */
+>>   	unsigned int	native_pme:1;		/* OS may use PCIe PME */
+>>   	unsigned int	native_ltr:1;		/* OS may use PCIe LTR */
+>> -	unsigned int	preserve_config:1;	/* Preserve FW resource setup */
+>> +	unsigned int	native_dpc:1;		/* OS may use PCIe DPC */
+>>   
+>> +	unsigned int	preserve_config:1;	/* Preserve FW resource setup */
+> The blank line should stay after the bitfields.  Then this will look
+> like the simple insertion of native_dpc, as it should.
+>
+>>   	/* Resource alignment requirements */
+>>   	resource_size_t (*align_resource)(struct pci_dev *dev,
+>>   			const struct resource *res,
+>> -- 
+>> 2.21.0
+>>
 -- 
-2.23.0
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
 
