@@ -2,186 +2,170 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C597C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 101A1C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27814207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8FAB2077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:11:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="L4KNPdpP"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="JFr3/SZ3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728981AbgAPOJi (ORCPT
+        id S1726362AbgAPOLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 09:09:38 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:50640 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726861AbgAPOJS (ORCPT
+        Thu, 16 Jan 2020 09:11:43 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:46777 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbgAPOLn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 09:09:18 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200116140916euoutp017c0aa1a31ffd010b10a1479af88b1a16~qY0KBgQdf0369803698euoutp01O
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 14:09:16 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200116140916euoutp017c0aa1a31ffd010b10a1479af88b1a16~qY0KBgQdf0369803698euoutp01O
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579183756;
-        bh=BGAg8y4UkwrAPBhyuTyPVRdvR/Vd6CHyN7f6GtWcWZQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L4KNPdpPJ4GAJs6opH4MsqSXjZq/h/kVdC4uTbbpi5HGdVpKE+HFZ42elj6V5qPmw
-         rrZUCE34Vm6ByRLaDxMYWrcyQJp8U/4c9z+tsp/i8CzQCGx/xIydEci55num0TFxxx
-         JoPWozoIEU9VEjM4zjlGOXrvKSdKxUJTg14oELXw=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200116140916eucas1p17fbbeae2a88748fb6bf266b90dc4b20f~qY0Jypy2u0480104801eucas1p1f;
-        Thu, 16 Jan 2020 14:09:16 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 01.FD.60698.C8E602E5; Thu, 16
-        Jan 2020 14:09:16 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200116140916eucas1p1a6aff99bd371c4e23b1cc287bc3c42a8~qY0JcT-L61322413224eucas1p1M;
-        Thu, 16 Jan 2020 14:09:16 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200116140916eusmtrp2a95c5395f891c76eb43b800c1df445e1~qY0JbtfUU0965509655eusmtrp2E;
-        Thu, 16 Jan 2020 14:09:16 +0000 (GMT)
-X-AuditID: cbfec7f5-a0fff7000001ed1a-ac-5e206e8c3668
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 0A.FF.08375.B8E602E5; Thu, 16
-        Jan 2020 14:09:15 +0000 (GMT)
-Received: from AMDC3058.digital.local (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200116140915eusmtip10e5cd09bce3a469d76cf14e2fafd4e9b~qY0JKEJyx0239902399eusmtip1C;
-        Thu, 16 Jan 2020 14:09:15 +0000 (GMT)
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-To:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Cc:     Andrzej Hajda <a.hajda@samsung.com>, b.zolnierkie@samsung.com
-Subject: [PATCH 4/6] video: fbdev: controlfb: remove function prototypes
- part #1
-Date:   Thu, 16 Jan 2020 15:08:58 +0100
-Message-Id: <20200116140900.26363-5-b.zolnierkie@samsung.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200116140900.26363-1-b.zolnierkie@samsung.com>
+        Thu, 16 Jan 2020 09:11:43 -0500
+Received: by mail-qk1-f194.google.com with SMTP id r14so19148911qke.13
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 06:11:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=E4TXCvIZZmY4SQCWQzeLR1MFoYNB31lrG2Qln+AaBO4=;
+        b=JFr3/SZ3UQPbE6tN0WIDrmGEvvrNPfsLSUjntfSPf4H8CaB9Ec8m1JVzlwKdxQI7bR
+         3Wf7o15qkWvfU2BrXgUqDa/P5/s3JU86YwmHmVDJgHJVZpC48Wq+GwpiH70SVGZXzNCW
+         tUB0BZs20iU/qGmkxxbEKTg+rfI7uWyRi6HD7SwwKfn6eeOx5NXa2L4khYzmYqdU/Q73
+         XJzZwnq1+SkVZNFtHtVAhdji1nJv/bWhk/VqEp4wX7VCiTOc5nBu+Cv/vpBioS4yMhnI
+         nFwmiDzAw7e0YnFmBSZ6FJ2C6Eprq+qfGs/8uk/SzOBENKSHugI2ZSccx15T3V2aqTrv
+         rb8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=E4TXCvIZZmY4SQCWQzeLR1MFoYNB31lrG2Qln+AaBO4=;
+        b=J3Igr384+D5IPRCwG4ArhhYfqnJ4dIRG/0J2RgMx+DRE1fSJNCb1vR2dxr/FmNlQ7h
+         Z3kGkLwFYBN2t5mcV9oXmhLVsQQ58agOQihvJkJZQHyygn4qyx+BnGG0LSXWGridxYZe
+         gTPbNAJjLTlk6ghRv3pW00kQAkw16J7QY9QzWUrZoPHIFAsnjoTY6AQJ0Ff+d7VgPVWU
+         xeqb4g6xUJFNLGS8BOQYP4THxXTHz8AiMMMByAcKspyQylqNqfll7PKI8F/6ArtSZePC
+         LDzjFYqvjcy9YGB29WUf8mhD65ZiKksdBh6tBhVDVcg9qV4W2bJHo27KcN/wXSCFp2+H
+         L2XA==
+X-Gm-Message-State: APjAAAVLt/R1Eym5rReWfXpmeyVq/VXMaz9ChApLUtV5gVt/5DqyXmea
+        3yF53TolQMV8BeLetsLRKhIf7A==
+X-Google-Smtp-Source: APXvYqx6uZpu4GcW1N0sXEyw9K5yx2S6JPwxGtld6dzchDnf5W2zeuoRuG/8THysf1WiLlTh8VyUTg==
+X-Received: by 2002:a37:5fc2:: with SMTP id t185mr32372460qkb.271.1579183901908;
+        Thu, 16 Jan 2020 06:11:41 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id g53sm11292147qtk.76.2020.01.16.06.11.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 16 Jan 2020 06:11:41 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1is5s4-0003yp-CZ; Thu, 16 Jan 2020 10:11:40 -0400
+Date:   Thu, 16 Jan 2020 10:11:40 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+Cc:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ben Skeggs <bskeggs@redhat.com>, Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH v6 4/6] mm/mmu_notifier: add mmu_interval_notifier_find()
+Message-ID: <20200116141140.GA10759@ziepe.ca>
+References: <20200113224703.5917-1-rcampbell@nvidia.com>
+ <20200113224703.5917-5-rcampbell@nvidia.com>
+ <20200114124956.GN20978@mellanox.com>
+ <528c1cff-608c-d342-1e72-90d780555204@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgleLIzCtJLcpLzFFi42LZduznOd2ePIU4gxXLRS1urTvHarFxxnpW
-        iytf37NZnOj7wGpxedccNgdWj/vdx5k8+rasYvT4vEkugDmKyyYlNSezLLVI3y6BK2PtnUdM
-        BQtFKl48nMHUwDhTsIuRk0NCwERi07bvTF2MXBxCAisYJWYv38wEkhAS+MIo8bWHFyLxmVGi
-        e/M/NpiO1Qe2sUEULWeUWLPbA6IIqOHFt4XMIAk2ASuJie2rGEFsEYEEiRXTZwDZHBzMAo4S
-        zf18IKawQJDEzCNaIBUsAqoSZy41soDYvAK2Et9a1jBCrJKX2PrtEyuIzSlgJzHv1D1GiBpB
-        iZMzn4DVMwPVNG+dzQxygoTAdzaJ6V3nmSGaXSRmPN8AdbOwxKvjW9ghbBmJ/zvnM0E0rGOU
-        +NvxAqp7O6PE8skwX1pL3Dn3iw3iaE2J9bv0IcKOEm9fPgD7RUKAT+LGW0GII/gkJm2bzgwR
-        5pXoaBOCqFaT2LAM5gQZia6dK6FO85A4O+MLywRGxVlI3pmF5J1ZCHsXMDKvYhRPLS3OTU8t
-        Ns5LLdcrTswtLs1L10vOz93ECEwfp/8d/7qDcd+fpEOMAhyMSjy8H0IU4oRYE8uKK3MPMUpw
-        MCuJ8J6cIRsnxJuSWFmVWpQfX1Sak1p8iFGag0VJnNd40ctYIYH0xJLU7NTUgtQimCwTB6dU
-        A6NK4te38asNdld8fDv/uHf/Nb19l1tXTon3ev7E7jtHzcvmNY2RnKnNYud65Cc62nz4a9aq
-        sZ7txuYGhuVK/wPnnH31+EZw8An5fQd3CTSxljq+PZChdqxp8UWB2Ij/Mz6e3PeSeUPPw7s/
-        FjoUqbdfTfFoCQxMvPDJ4NL8U2zZ71S1I/pWax5TYinOSDTUYi4qTgQAhr99+RsDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrGLMWRmVeSWpSXmKPExsVy+t/xu7rdeQpxBi0zbSxurTvHarFxxnpW
-        iytf37NZnOj7wGpxedccNgdWj/vdx5k8+rasYvT4vEkugDlKz6Yov7QkVSEjv7jEVina0MJI
-        z9DSQs/IxFLP0Ng81srIVEnfziYlNSezLLVI3y5BL2PtnUdMBQtFKl48nMHUwDhTsIuRk0NC
-        wERi9YFtbF2MXBxCAksZJd5NnczUxcgBlJCROL6+DKJGWOLPtS42EFtI4BOjxIvL2iA2m4CV
-        xMT2VYwgtohAkkRnw0lmEJtZwFli1q1HTCC2sECAxJMV7WA2i4CqxJlLjSwgNq+ArcS3ljWM
-        EPPlJbZ++8QKYnMK2EnMO3WPEeQEIaCaQ9OkIMoFJU7OfMICMV5eonnrbOYJjAKzkKRmIUkt
-        YGRaxSiSWlqcm55bbKhXnJhbXJqXrpecn7uJERjm24793LyD8dLG4EOMAhyMSjy8M4IU4oRY
-        E8uKK3MPMUpwMCuJ8J6cIRsnxJuSWFmVWpQfX1Sak1p8iNEU6IeJzFKiyfnAGMwriTc0NTS3
-        sDQ0NzY3NrNQEuftEDgYIySQnliSmp2aWpBaBNPHxMEp1cDYEilzJNvplYLl6ZzF01Xm6m6Y
-        6xX2qSigY+tOy9A+FRXb2IvdU52ubPc6OvvZhMWJTQtaXm3aHjn/culSvstbt/N52+70E7ql
-        yGJwSJH54Z+9bZtd73lP4hLanXPptVZk6tJZT7hNPt47f/72vQ0pPaeCAsvVFGN7zTsWqfj9
-        WlIbbRZt4FSkxFKckWioxVxUnAgAGFA7sIkCAAA=
-X-CMS-MailID: 20200116140916eucas1p1a6aff99bd371c4e23b1cc287bc3c42a8
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200116140916eucas1p1a6aff99bd371c4e23b1cc287bc3c42a8
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200116140916eucas1p1a6aff99bd371c4e23b1cc287bc3c42a8
-References: <20200116140900.26363-1-b.zolnierkie@samsung.com>
-        <CGME20200116140916eucas1p1a6aff99bd371c4e23b1cc287bc3c42a8@eucas1p1.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <528c1cff-608c-d342-1e72-90d780555204@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reorder code a bit and then remove no longer needed function
-prototypes.
+On Wed, Jan 15, 2020 at 02:05:24PM -0800, Ralph Campbell wrote:
+> 
+> On 1/14/20 4:49 AM, Jason Gunthorpe wrote:
+> > On Mon, Jan 13, 2020 at 02:47:01PM -0800, Ralph Campbell wrote:
+> > > diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
+> > > index 47ad9cc89aab..4efecc0f13cb 100644
+> > > +++ b/mm/mmu_notifier.c
+> > > @@ -1171,6 +1171,39 @@ void mmu_interval_notifier_update(struct mmu_interval_notifier *mni,
+> > >   }
+> > >   EXPORT_SYMBOL_GPL(mmu_interval_notifier_update);
+> > > +struct mmu_interval_notifier *mmu_interval_notifier_find(struct mm_struct *mm,
+> > > +				const struct mmu_interval_notifier_ops *ops,
+> > > +				unsigned long start, unsigned long last)
+> > > +{
+> > > +	struct mmu_notifier_mm *mmn_mm = mm->mmu_notifier_mm;
+> > > +	struct interval_tree_node *node;
+> > > +	struct mmu_interval_notifier *mni;
+> > > +	struct mmu_interval_notifier *res = NULL;
+> > > +
+> > > +	spin_lock(&mmn_mm->lock);
+> > > +	node = interval_tree_iter_first(&mmn_mm->itree, start, last);
+> > > +	if (node) {
+> > > +		mni = container_of(node, struct mmu_interval_notifier,
+> > > +				   interval_tree);
+> > > +		while (true) {
+> > > +			if (mni->ops == ops) {
+> > > +				res = mni;
+> > > +				break;
+> > > +			}
+> > > +			node = interval_tree_iter_next(&mni->interval_tree,
+> > > +						       start, last);
+> > > +			if (!node)
+> > > +				break;
+> > > +			mni = container_of(node, struct mmu_interval_notifier,
+> > > +					   interval_tree);
+> > > +		}
+> > > +	}
+> > > +	spin_unlock(&mmn_mm->lock);
+> > 
+> > This doesn't seem safe at all, here we are returning a pointer to
+> > memory from the interval tree with out any kind of lifetime
+> > protection.
+> 
+> It is memory that the driver has allocated and has full control over
+> the lifetime since the driver does all the insertions and removals.
+> The driver does have to hold the HW page table lock so lookups are
+> synchronized with interval insertions and removals and page table
+> entry insertions and removals.
 
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
----
- drivers/video/fbdev/controlfb.c | 41 +++++++++++----------------------
- 1 file changed, 13 insertions(+), 28 deletions(-)
+No.. the ->release is async, so having the driver hold a lock around
+all the mmu_interval_ APIS still doesn't make it safe. The element
+could be on the defered list and it could become freed at any moment.
 
-diff --git a/drivers/video/fbdev/controlfb.c b/drivers/video/fbdev/controlfb.c
-index 87cd817ad4c6..32ee6e4b5db4 100644
---- a/drivers/video/fbdev/controlfb.c
-+++ b/drivers/video/fbdev/controlfb.c
-@@ -129,20 +129,6 @@ struct fb_info_control {
- #define CNTRL_REG(INFO,REG) (&(((INFO)->control_regs->REG).r))
- 
- 
--/******************** Prototypes for exported functions ********************/
--/*
-- * struct fb_ops
-- */
--static int controlfb_pan_display(struct fb_var_screeninfo *var,
--	struct fb_info *info);
--static int controlfb_setcolreg(u_int regno, u_int red, u_int green, u_int blue,
--	u_int transp, struct fb_info *info);
--static int controlfb_blank(int blank_mode, struct fb_info *info);
--static int controlfb_mmap(struct fb_info *info,
--	struct vm_area_struct *vma);
--static int controlfb_set_par (struct fb_info *info);
--static int controlfb_check_var (struct fb_var_screeninfo *var, struct fb_info *info);
--
- /******************** Prototypes for internal functions **********************/
- 
- static void set_control_clock(unsigned char *params);
-@@ -169,20 +155,6 @@ static int default_vmode __initdata = VMODE_NVRAM;
- static int default_cmode __initdata = CMODE_NVRAM;
- 
- 
--static const struct fb_ops controlfb_ops = {
--	.owner		= THIS_MODULE,
--	.fb_check_var	= controlfb_check_var,
--	.fb_set_par	= controlfb_set_par,
--	.fb_setcolreg	= controlfb_setcolreg,
--	.fb_pan_display = controlfb_pan_display,
--	.fb_blank	= controlfb_blank,
--	.fb_mmap	= controlfb_mmap,
--	.fb_fillrect	= cfb_fillrect,
--	.fb_copyarea	= cfb_copyarea,
--	.fb_imageblit	= cfb_imageblit,
--};
--
--
- /********************  The functions for controlfb_ops ********************/
- 
- /*
-@@ -1014,6 +986,19 @@ static inline void control_par_to_var(struct fb_par_control *par,
- 	var->pixclock >>= par->regvals.clock_params[2];
- }
- 
-+static const struct fb_ops controlfb_ops = {
-+	.owner		= THIS_MODULE,
-+	.fb_check_var	= controlfb_check_var,
-+	.fb_set_par	= controlfb_set_par,
-+	.fb_setcolreg	= controlfb_setcolreg,
-+	.fb_pan_display = controlfb_pan_display,
-+	.fb_blank	= controlfb_blank,
-+	.fb_mmap	= controlfb_mmap,
-+	.fb_fillrect	= cfb_fillrect,
-+	.fb_copyarea	= cfb_copyarea,
-+	.fb_imageblit	= cfb_imageblit,
-+};
-+
- /*
-  * Set misc info vars for this driver
-  */
--- 
-2.24.1
+> > If the interval tree is read it must be left in the read lock state
+> > until the caller is done with the pointer.
+> > 
+> > .. and this poses all sorts of questions about consistency with items
+> > on the deferred list. Should find return an item undergoing deletion?
+> 
+> I don't think so. The deferred operations are all complete when
+> mmu_interval_read_begin() returns, and the sequence number check
+> with mmu_interval_read_retry() guarantees there have been no changes
+> while not holding the driver page table lock and calling hmm_range_fault().
 
+It seems very dangerous to say, on one hand, that the driver is
+serialized because it holds a lock around all mmu_interval_* calls,
+while on the other saying that on rare edge cases find does not return
+a result that matches the serial-program-order sequence.
+
+This seems like a way to create bugs.
+
+For instance, if find is consistent with the defered list then it will
+not return any element that has a pending deletion and the above issue
+with lifetime wouldn't happen.
+
+However, I'm still not sure that providing an API tha requires the
+driver to provide tricky locking is the best idea. This basically says
+that if a driver uses find then every single other call to
+mmu_interval_* must be serialized with a single lock.
+
+Jason
