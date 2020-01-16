@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BF7C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF36C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9E362072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:09:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CC25206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:09:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201790;
-	bh=v6tS4y1asMskCCD9nEZM8dcf/I4zDbuioUqkT4qp+jY=;
+	s=default; t=1579201794;
+	bh=6Ug92YadfEZxVr0FlvxM6ejPmYEO8+O6flfaEHVSANM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jpG9oYg1DhM++voBa9qoPV4csEiQknpL4zdpsH9eKFzrCQHbutoUiO6OAMcbjWS8F
-	 AaWxboPGjgN2y2RfHi8Ea4soidDAFusZW4UqIAS/3X9HHinL0U84+J6tH2UjJxql3K
-	 Nk1WZuofZaWSVkpkgR44Xq9Iww3QD2/nYlw+bOGw=
+	b=yYbHY0XqId7AolMeUpbAKMFFr9JVRyFyaVsvCX6KvyfFzKNtlEkShb1LpaIOxpQeX
+	 SfDywGEJIbTbzt/b2jKhYFJiSk+7gM5QWA0OpNoAxj60ronnxYA1KZ/bsGcfBSymT1
+	 X1vGefw3ZdV1CWQ+bs8xfTmHVjdJAKu64WKv33pg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391421AbgAPTJs (ORCPT
+        id S2387848AbgAPRAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:09:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50552 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:00:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387861AbgAPRAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:00:40 -0500
+        id S2387847AbgAPRAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:00:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 579E920728;
-        Thu, 16 Jan 2020 17:00:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4984C21D56;
+        Thu, 16 Jan 2020 17:00:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194040;
-        bh=v6tS4y1asMskCCD9nEZM8dcf/I4zDbuioUqkT4qp+jY=;
+        s=default; t=1579194032;
+        bh=6Ug92YadfEZxVr0FlvxM6ejPmYEO8+O6flfaEHVSANM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kMPHkwv1g+xu+p1DDf8uBse4uV9TYqm+tb7z4D6mQf6DZAieb6SGIvP9uCchjRQKH
-         7EESZNRWZdkUKjfjs/sJjANij8duyVvzz7iA5aDzxEu8GPPm9w/FHeq00W3sLwvc4R
-         1kNrvGkU8fMuTmtTlX4Zmi7XLfkgo1k6+ggGLnHg=
+        b=n5KE6iQYgCQbYSXgX/M6CalYswcD/lgI3R0RbSs+ppcTISRNPQUgSRzylDLbIkFzL
+         6n+szvxBfwY8MMesK1uIdLWxAzBXhvHAJHcEx+JGAdC2/xUW7E0VoJ5VjzfWPYXF5u
+         I+jYtLSknQgIN/V+1WQV81aW4ROjXHwK0hQmxa1M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Kao <michael.kao@mediatek.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 157/671] thermal: mediatek: fix register index error
-Date:   Thu, 16 Jan 2020 11:51:06 -0500
-Message-Id: <20200116165940.10720-40-sashal@kernel.org>
+Cc:     Vladimir Zapolskiy <vz@mleia.com>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 151/671] ARM: dts: lpc32xx: phy3250: fix SD card regulator voltage
+Date:   Thu, 16 Jan 2020 11:51:00 -0500
+Message-Id: <20200116165940.10720-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -61,45 +58,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Kao <michael.kao@mediatek.com>
+From: Vladimir Zapolskiy <vz@mleia.com>
 
-[ Upstream commit eb9aecd90d1a39601e91cd08b90d5fee51d321a6 ]
+[ Upstream commit dc141b99fc36cf910a1d8d5ee30f43f2442fd1bd ]
 
-The index of msr and adcpnp should match the sensor
-which belongs to the selected bank in the for loop.
+The fixed voltage regulator on Phytec phyCORE-LPC3250 board, which
+supplies SD/MMC card's power, has a constant output voltage level
+of either 3.15V or 3.3V, the actual value depends on JP4 position,
+the power rail is referenced as VCC_SDIO in the board hardware manual.
 
-Fixes: b7cf0053738c ("thermal: Add Mediatek thermal driver for mt2701.")
-Signed-off-by: Michael Kao <michael.kao@mediatek.com>
-Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
+Fixes: d06670e96267 ("arm: dts: phy3250: add SD fixed regulator")
+Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/mtk_thermal.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/lpc3250-phy3250.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
-index 0691f260f6ea..f64643629d8b 100644
---- a/drivers/thermal/mtk_thermal.c
-+++ b/drivers/thermal/mtk_thermal.c
-@@ -431,7 +431,8 @@ static int mtk_thermal_bank_temperature(struct mtk_thermal_bank *bank)
- 	u32 raw;
- 
- 	for (i = 0; i < conf->bank_data[bank->id].num_sensors; i++) {
--		raw = readl(mt->thermal_base + conf->msr[i]);
-+		raw = readl(mt->thermal_base +
-+			    conf->msr[conf->bank_data[bank->id].sensors[i]]);
- 
- 		temp = raw_to_mcelsius(mt,
- 				       conf->bank_data[bank->id].sensors[i],
-@@ -568,7 +569,8 @@ static void mtk_thermal_init_bank(struct mtk_thermal *mt, int num,
- 
- 	for (i = 0; i < conf->bank_data[num].num_sensors; i++)
- 		writel(conf->sensor_mux_values[conf->bank_data[num].sensors[i]],
--		       mt->thermal_base + conf->adcpnp[i]);
-+		       mt->thermal_base +
-+		       conf->adcpnp[conf->bank_data[num].sensors[i]]);
- 
- 	writel((1 << conf->bank_data[num].num_sensors) - 1,
- 	       mt->thermal_base + TEMP_MONCTL0);
+diff --git a/arch/arm/boot/dts/lpc3250-phy3250.dts b/arch/arm/boot/dts/lpc3250-phy3250.dts
+index 1e1c2f517a82..ffcf78631b22 100644
+--- a/arch/arm/boot/dts/lpc3250-phy3250.dts
++++ b/arch/arm/boot/dts/lpc3250-phy3250.dts
+@@ -49,8 +49,8 @@
+ 		sd_reg: regulator@2 {
+ 			compatible = "regulator-fixed";
+ 			regulator-name = "sd_reg";
+-			regulator-min-microvolt = <1800000>;
+-			regulator-max-microvolt = <1800000>;
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
+ 			gpio = <&gpio 5 5 0>;
+ 			enable-active-high;
+ 		};
 -- 
 2.20.1
 
