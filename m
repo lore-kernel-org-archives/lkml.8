@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 740A1C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DA2C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E07822522
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24CC024653
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:06:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194361;
-	bh=O1gW2xHsT7KaiHvrJKm6nT3L0TVBbK/KXOUm2+acMbQ=;
+	s=default; t=1579194364;
+	bh=fdm15sX+9H9IMbXrt7R2PnFJZIXmBkvKcjedf0dZ86A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gpwckIc0PvPKcVsOhFEamdm4p2XpL8ORwj3aYtPR+0kygE4yCMRqPNTmSzGlmsOy8
-	 Vem9Am739jcijp3+iECxwaD3NrIGzpES/LRZJhmDjWf+Qr44ePqxAbS/+0C56Bk4OT
-	 jzG73uT7GJcUqUMY+QFR+W7shEjkm3PZfkxnkbWw=
+	b=0pf33PJek/uvAU+xXDFg9XuzipqB1BmW8Hc9FtPVPGortHzK26BXl1qX623MP0hMu
+	 dU1IK3oFNhWIErDXFhrX0NVUuOlKysCxVAfgDS3FiKN3X4rVaSRSXN8boxUX6OqvSN
+	 jiELw4+r4myVuKz9eSEAEexe5+aSEssHcdA4fpRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388623AbgAPRGA (ORCPT
+        id S2388822AbgAPRGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:06:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35264 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:06:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388782AbgAPRFu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:05:50 -0500
+        id S2387488AbgAPRFv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:05:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10E122192A;
-        Thu, 16 Jan 2020 17:05:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 822FD205F4;
+        Thu, 16 Jan 2020 17:05:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194350;
-        bh=O1gW2xHsT7KaiHvrJKm6nT3L0TVBbK/KXOUm2+acMbQ=;
+        s=default; t=1579194351;
+        bh=fdm15sX+9H9IMbXrt7R2PnFJZIXmBkvKcjedf0dZ86A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B3GwyvOAj9UNB4FflPr+LajT6Wo4n8p+8WbBk3bznxObKNARx7pA7Y3tYKJtjEo6g
-         SU2NwpTbJvx0nDOvJuWT+6mNjvzGQ5t9UG3585jK1I0npTqTJKMtKrwCSh1gcWR2ZW
-         feq2FL3pi0Uhp/cP4QRmTvyAC17X9hTXf/UM8lh0=
+        b=j9T84+R3ZU5FqTRCHw9H7T68ttAcD/RUqIaXf4Eji0RoOYpVETyrv1pRMbjFXuPlN
+         OW9vCjiWqEAiXcbuVrranf1ieRe+kb72Sm9EHP7ntooVppx/c53/RhpBeyMbuvnEZe
+         qi5wz1k3e5EUASFI7ABDFqGXgIUeYwfVBnYGrQdw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 290/671] brcmfmac: fix leak of mypkt on error return path
-Date:   Thu, 16 Jan 2020 11:58:48 -0500
-Message-Id: <20200116170509.12787-27-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 291/671] ARM: pxa: ssp: Fix "WARNING: invalid free of devm_ allocated data"
+Date:   Thu, 16 Jan 2020 11:58:49 -0500
+Message-Id: <20200116170509.12787-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -63,49 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit a927e8d8ab57e696800e20cf09a72b7dfe3bbebb ]
+[ Upstream commit 9ee8578d953023cc57e7e736ae48502c707c0210 ]
 
-Currently if the call to brcmf_sdiod_set_backplane_window fails then
-error return path leaks mypkt. Fix this by returning by a new
-error path labelled 'out' that calls brcmu_pkt_buf_free_skb to free
-mypkt.  Also remove redundant check on err before calling
-brcmf_sdiod_skbuff_write.
+Since commit 1c459de1e645 ("ARM: pxa: ssp: use devm_ functions")
+kfree, iounmap, clk_put etc are not needed anymore in remove path.
 
-Addresses-Coverity: ("Resource Leak")
-Fixes: a7c3aa1509e2 ("brcmfmac: Remove brcmf_sdiod_addrprep()")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 1c459de1e645 ("ARM: pxa: ssp: use devm_ functions")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+[ commit message spelling fix ]
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ arch/arm/plat-pxa/ssp.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
-index d2f788d88668..710dc59c5d34 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
-@@ -617,15 +617,13 @@ int brcmf_sdiod_send_buf(struct brcmf_sdio_dev *sdiodev, u8 *buf, uint nbytes)
+diff --git a/arch/arm/plat-pxa/ssp.c b/arch/arm/plat-pxa/ssp.c
+index f51919974183..bf25f780c1c9 100644
+--- a/arch/arm/plat-pxa/ssp.c
++++ b/arch/arm/plat-pxa/ssp.c
+@@ -183,18 +183,12 @@ static int pxa_ssp_probe(struct platform_device *pdev)
  
- 	err = brcmf_sdiod_set_backplane_window(sdiodev, addr);
- 	if (err)
--		return err;
-+		goto out;
+ static int pxa_ssp_remove(struct platform_device *pdev)
+ {
+-	struct resource *res;
+ 	struct ssp_device *ssp;
  
- 	addr &= SBSDIO_SB_OFT_ADDR_MASK;
- 	addr |= SBSDIO_SB_ACCESS_2_4B_FLAG;
+ 	ssp = platform_get_drvdata(pdev);
+ 	if (ssp == NULL)
+ 		return -ENODEV;
  
--	if (!err)
--		err = brcmf_sdiod_skbuff_write(sdiodev, sdiodev->func2, addr,
--					       mypkt);
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	release_mem_region(res->start, resource_size(res));
 -
-+	err = brcmf_sdiod_skbuff_write(sdiodev, sdiodev->func2, addr, mypkt);
-+out:
- 	brcmu_pkt_buf_free_skb(mypkt);
- 
- 	return err;
+-	clk_put(ssp->clk);
+-
+ 	mutex_lock(&ssp_lock);
+ 	list_del(&ssp->node);
+ 	mutex_unlock(&ssp_lock);
 -- 
 2.20.1
 
