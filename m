@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA8CC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB72C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4D882073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1569E207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:22:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202558;
-	bh=ZN3FHz/d8qAmPJ8meazGJB6yyASRZv5YcQU6R5IG9rk=;
+	s=default; t=1579202560;
+	bh=ZSxEVRSmMAAdMVZzDNhQUmTVVIl+v3iiq49YEo1QT9o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wsBw8K00RFTxEpz/x5owJnPnQrtUh7sbsrfxwlAqOyEuN4ErzAN2JrVSW26DQqu/v
-	 KmxUP1exSGrAWvVrhcMC3NkM/raq0WtFIOhCKy5x3pW1mk7JaDOVWsB34nrtuwOLVC
-	 6/ZubSm7Sv1oYZ1cO76hE0J2Q1oZ1UIFb8wioD88=
+	b=eofnczjtq7VE9QBwAmIzcXd+QIrB+s2XlfPdeF8mQE9piJjX2yT5rEwtkAg9LEndJ
+	 yGpUUSBk+zEloFF+exqCQNwzkl2SiNhW9tXdhlFzgJNq6OJjySRrKx8hYbBfHL+ldF
+	 Wbw1XflLm/kv+gR02oglEbsuzDRWYaDurA7/Quhg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437648AbgAPTWh (ORCPT
+        id S1730882AbgAPQxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:22:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37262 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:53:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730902AbgAPQxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:53:25 -0500
+        id S1730710AbgAPQxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:53:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 527E322522;
-        Thu, 16 Jan 2020 16:53:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1316F22464;
+        Thu, 16 Jan 2020 16:53:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193605;
-        bh=ZN3FHz/d8qAmPJ8meazGJB6yyASRZv5YcQU6R5IG9rk=;
+        s=default; t=1579193594;
+        bh=ZSxEVRSmMAAdMVZzDNhQUmTVVIl+v3iiq49YEo1QT9o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2aAdsYwl5C0oYo63AdtqGPE5QNBNhZsGfmRmbGOR5dEE9ITiAJ3g64NFOvCOPUEoF
-         ild9S/VJW+xxa7b11x43yEvp4WNZotxCAurz50IiR1HvWsaRzRLukWEmqqserGgwvG
-         OcqNOww5w6Z7AO7umFfBQnHmNiumx3n4weLivnH4=
+        b=kc7sez+dYG8soqToEjxoUc8ZCi4Sc6ycX8ij+bnlP3ikWKa10EgfhyycQMUaOFh0o
+         6Yeot9UcdOjM3mV4gOZU0yPgFEiBQmhGNsaBjGIpmhajSEYirhrbDahE3JRGjGRLNu
+         v119QNdxWXGoeqD7rB+xyEDXvtktXSZdsDyzsZw4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 143/205] mmc: sdio: fix wl1251 vendor id
-Date:   Thu, 16 Jan 2020 11:41:58 -0500
-Message-Id: <20200116164300.6705-143-sashal@kernel.org>
+Cc:     Scott Mayhew <smayhew@redhat.com>,
+        Jamie Heilman <jamie@audible.transient.net>,
+        "J . Bruce Fields" <bfields@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 134/205] nfsd: v4 support requires CRYPTO_SHA256
+Date:   Thu, 16 Jan 2020 11:41:49 -0500
+Message-Id: <20200116164300.6705-134-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -59,42 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
+From: Scott Mayhew <smayhew@redhat.com>
 
-[ Upstream commit e5db673e7fe2f971ec82039a28dc0811c2100e87 ]
+[ Upstream commit a2e2f2dc77a18d2b0f450fb7fcb4871c9f697822 ]
 
-v4.11-rc1 did introduce a patch series that rearranged the
-sdio quirks into a header file. Unfortunately this did forget
-to handle SDIO_VENDOR_ID_TI differently between wl1251 and
-wl1271 with the result that although the wl1251 was found on
-the sdio bus, the firmware did not load any more and there was
-no interface registration.
+The new nfsdcld client tracking operations use sha256 to compute hashes
+of the kerberos principals, so make sure CRYPTO_SHA256 is enabled.
 
-This patch defines separate constants to be used by sdio quirks
-and drivers.
-
-Fixes: 884f38607897 ("mmc: core: move some sdio IDs out of quirks file")
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Cc: <stable@vger.kernel.org> # v4.11+
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: 6ee95d1c8991 ("nfsd: add support for upcall version 2")
+Reported-by: Jamie Heilman <jamie@audible.transient.net>
+Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mmc/sdio_ids.h | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/nfsd/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/mmc/sdio_ids.h b/include/linux/mmc/sdio_ids.h
-index d1a5d5df02f5..08b25c02b5a1 100644
---- a/include/linux/mmc/sdio_ids.h
-+++ b/include/linux/mmc/sdio_ids.h
-@@ -71,6 +71,8 @@
- 
- #define SDIO_VENDOR_ID_TI			0x0097
- #define SDIO_DEVICE_ID_TI_WL1271		0x4076
-+#define SDIO_VENDOR_ID_TI_WL1251		0x104c
-+#define SDIO_DEVICE_ID_TI_WL1251		0x9066
- 
- #define SDIO_VENDOR_ID_STE			0x0020
- #define SDIO_DEVICE_ID_STE_CW1200		0x2280
+diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
+index 10cefb0c07c7..c4b1a89b8845 100644
+--- a/fs/nfsd/Kconfig
++++ b/fs/nfsd/Kconfig
+@@ -73,7 +73,7 @@ config NFSD_V4
+ 	select NFSD_V3
+ 	select FS_POSIX_ACL
+ 	select SUNRPC_GSS
+-	select CRYPTO
++	select CRYPTO_SHA256
+ 	select GRACE_PERIOD
+ 	help
+ 	  This option enables support in your system's NFS server for
 -- 
 2.20.1
 
