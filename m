@@ -2,115 +2,225 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF2B4C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC67C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AECB620748
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1E7B207FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:19:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SYYbnAVS"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WJ5IKs9f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730244AbgAPJSi (ORCPT
+        id S1730597AbgAPJTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 04:18:38 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:46001 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726684AbgAPJSi (ORCPT
+        Thu, 16 Jan 2020 04:19:10 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38779 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730342AbgAPJTJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 04:18:38 -0500
-Received: by mail-qv1-f67.google.com with SMTP id l14so8734878qvu.12
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 01:18:37 -0800 (PST)
+        Thu, 16 Jan 2020 04:19:09 -0500
+Received: by mail-io1-f68.google.com with SMTP id i7so12563733ioo.5
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 01:19:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=6aUm9IZBoyzrmlaZrE7sKzVINYzfYj5bNqwcb9Va7iI=;
-        b=SYYbnAVSUXIa9qjPlD9vE1jh2fCqbJAF0lK3PwmNSVGUE7fZ33KjX8Jp/FflTWJ3X3
-         WibzlMsnD5C7Lt1GTydrGs3zVxD8rnwiOHiHoAqyvYvBPqP+yN8skqAviLHJbytc34rv
-         r1N+iQyRTkh4D60kFtO93fnagprGQQ5hdkH4p3eNquV3KT22+JlLvIVEGK+Qfg3Cqtud
-         YwSEufB3R8cxmXBfTlzweLnBxfWw4pN4N+aUud8u7/3DBko8z2RIlzUQuZ5ZlFpc51wW
-         YGQ0KyakrxLSLYaMN/REc/+8bH2bZEvxQJlQfK6XAmp7Y9HFCC7PWOPxaSvQeqFWXvcK
-         jD/A==
+        bh=DEmkOKqY6q6hAhtGO8c8rmA8wwGHpO5BilLXpdIbB7I=;
+        b=WJ5IKs9fiBTVp8BuvxnKOBaru2rIXqED/Rq0yyQSdyRNzvJcbIJ8kJqtCUd+rcV6nn
+         EhI+mwh5Bq9EkGM1UCZoYtKiXQJb5mUkVbl5DEbwzwiQ5eWJf/1j5Inwc5mtqTXN+8cZ
+         lQKMTkatnFRaRzda7WRLP3JId4g6ZavROmaK4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6aUm9IZBoyzrmlaZrE7sKzVINYzfYj5bNqwcb9Va7iI=;
-        b=uar4rZGfQIP5bicmGmceh+kd8dkScuuDbY8OQVBYKwLICWw4/ynELRcyAwCWiMgHCA
-         ICbrabSHu0sziSLlFKGbO+ELdk7Afre1jCUHPSh5dkYaWt2oBOtCf4OUf/AFq9J2yHm8
-         0FM+F0GY3U642QO8K2acskBNi4xtjC2XdaqsYy4M0dzC00StxeMDOz61INBHc52QWcbI
-         ak9Q61J1uDd6OgbkvFX2eDme6bCOkJVKqopSvrnNT90ZNE7EBg0JdCFkGhFPEATmruCJ
-         JUvj6X/VuuQGf8Tn2KmN7BBhbB+bkObB99alFLGjN+RW248nPlOcN812YNVZ/wlcqYit
-         B3lA==
-X-Gm-Message-State: APjAAAU4Xj04o1bqbp0ucYBa0XHiqoEgW++cS3RTN0Cx8Nvovkfb0C4s
-        IKEIvdKlJyg8m83jAYJ2Gll0226nQXm+3ohesnBArX2WtLg=
-X-Google-Smtp-Source: APXvYqy8Op/c5GLfMYnJNdYmkCHYv+E4mN5Di6Wm/C4K++nSC7o+Ugdr1I5vYW/3smKnFkB3fD9x/EAI4aY8HUteVFQ=
-X-Received: by 2002:a05:6214:1103:: with SMTP id e3mr1646963qvs.159.1579166316797;
- Thu, 16 Jan 2020 01:18:36 -0800 (PST)
+        bh=DEmkOKqY6q6hAhtGO8c8rmA8wwGHpO5BilLXpdIbB7I=;
+        b=YKVprCUA4haZbcbDTKAt9FxUTKckoDtYph98E5T0WFcx3HhiCIEwH50KtaW4xRkUB7
+         cpyxA7V3mSIBLKmQEiKaKEpycuabH63gaXunppWLekCHRFfbNbQxHUp4c24H8nMH21JV
+         nnajy7OZO6aF0nV/VsbMk729lIWc6GJQ4tMnBvDxwTVorA5OhOSo9eyHfxTA6VmKGQwm
+         y+20Kvftb7DewYNlbVGH1Fp90HN7UuOED6VSGhNxkzmYT7Cg4HCXINPWKXqGjOtbGZJW
+         1wieGFfUnwkApXGuBJWcVVjUFW+NZcse8O4jaoESJf6HxzKsrYoEC0Mo2mOEHYTWzjOy
+         1vUQ==
+X-Gm-Message-State: APjAAAW2fNV6VTa0UK2KwKP2wc8tWjtm2+vpQ3iWVhbV2Jv+NbdvunAx
+        5Vrk/3nRPZnPQYMPnTKvPWOT3oOV4Z3q7ivqUYLzNg==
+X-Google-Smtp-Source: APXvYqzvaPrf1c/2YOtkHJqp95C4MJl+/6ictlNKs5rwIJmJYisKHyfz84aFv8nqE5MyfIb9iebBJBW44B4PJSvB2Ns=
+X-Received: by 2002:a5d:8cd6:: with SMTP id k22mr24400602iot.283.1579166348214;
+ Thu, 16 Jan 2020 01:19:08 -0800 (PST)
 MIME-Version: 1.0
-References: <20200115182816.33892-1-trishalfonso@google.com>
- <dce24e66d89940c8998ccc2916e57877ccc9f6ae.camel@sipsolutions.net>
- <CAKFsvU+sUdGC9TXK6vkg5ZM9=f7ePe7+rh29DO+kHDzFXacx2w@mail.gmail.com>
- <4f382794416c023b6711ed2ca645abe4fb17d6da.camel@sipsolutions.net> <b55720804de8e56febf48c7c3c11b578d06a8c9f.camel@sipsolutions.net>
-In-Reply-To: <b55720804de8e56febf48c7c3c11b578d06a8c9f.camel@sipsolutions.net>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 16 Jan 2020 10:18:25 +0100
-Message-ID: <CACT4Y+brqD-o-u3Vt=C-PBiS2Wz+wXN3Q3RqBhf3XyRYaRoZJw@mail.gmail.com>
-Subject: Re: [RFC PATCH] UML: add support for KASAN under x86_64
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     Patricia Alfonso <trishalfonso@google.com>,
-        Richard Weinberger <richard@nod.at>,
-        Jeff Dike <jdike@addtoit.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        linux-um@lists.infradead.org, David Gow <davidgow@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        anton.ivanov@cambridgegreys.com
+References: <20200115063410.131692-1-hsinyi@chromium.org> <8736cgxmxi.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <8736cgxmxi.fsf@nanos.tec.linutronix.de>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Thu, 16 Jan 2020 17:18:41 +0800
+Message-ID: <CAJMQK-jDi+AACE1Cv_hKSMq8VhGTBeh+kyHO2U4sx9w=9bO2mA@mail.gmail.com>
+Subject: Re: [PATCH v5] reboot: support offline CPUs before reboot
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Pavankumar Kondeti <pkondeti@codeaurora.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Aaro Koskinen <aaro.koskinen@nokia.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Will Deacon <will@kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, linux-csky@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390@vger.kernel.org,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        Linux PM <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 9:03 AM Johannes Berg <johannes@sipsolutions.net> wrote:
+On Thu, Jan 16, 2020 at 8:30 AM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
-> On Thu, 2020-01-16 at 08:57 +0100, Johannes Berg wrote:
-> >
-> > And if I remember from looking at KASAN, some of the constructors there
-> > depended on initializing after the KASAN data structures were set up (or
-> > at least allocated)? It may be that you solved that by allocating the
-> > shadow so very early though.
+> Hsin-Yi Wang <hsinyi@chromium.org> writes:
 >
-> Actually, no ... it's still after main(), and the constructors run
-> before.
+> > Currently system reboots uses architecture specific codes (smp_send_stop)
+> > to offline non reboot CPUs. Most architecture's implementation is looping
+> > through all non reboot online CPUs and call ipi function to each of them. Some
+> > architecture like arm64, arm, and x86... would set offline masks to cpu without
+> > really offline them. This causes some race condition and kernel warning comes
+> > out sometimes when system reboots.
 >
-> So I _think_ with the CONFIG_CONSTRUCTORS revert, this will no longer
-> work (but happy to be proven wrong!), if so then I guess we do have to
-> find a way to initialize the KASAN things from another (somehow
-> earlier?) constructor ...
+> 'some race condition and kernel warning' is pretty useless information.
+> Please describe exactly which kind of issues are caused by the current
+> mechanism. Especially the race conditions are the interesting part (the
+> warnings are just a consequence).
 >
-> Or find a way to fix CONFIG_CONSTRUCTORS and not revert, but I looked at
-> it quite a bit and didn't.
+> > This patch adds a config ARCH_OFFLINE_CPUS_ON_REBOOT, which would
+> > offline cpus in
+>
+> Please read Documentation/process/submitting-patches.rst and search for
+> 'This patch'.
+>
+> > migrate_to_reboot_cpu(). If non reboot cpus are all offlined here, the loop for
+> > checking online cpus would be an empty loop.
+>
+> This does not make any sense. The issues which you are trying to solve
+> are going to be still there when CONFIG_HOTPLUG_CPU is disabled.
+>
+> > If architecture don't enable this config, or some cpus somehow fails
+> > to offline, it would fallback to ipi function.
+>
+> This is really a half baken solution which keeps the various pointlessly
+> different pseudo reboot/kexec offlining implementations around. So with
+> this we have yet more code which only works depending on kernel
+> configuration and has the issue of potentially not being able to offline
+> a CPU. IOW this is going to fail completely in cases where a system is
+> in a state which prevents regular hotplug.
+>
+> The existing pseudo-offline functions have timeouts and eventually a
+> fallback, e.g. the NMI fallback on x86. With this proposed regular
+> offline solution this will just get stuck w/o a chance to force
+> recovery.
+>
+> While I like the idea and surely agree that the ideal solution is to
+> properly shutdown the CPUs on reboot, we need to take a step back and
+> look at the minimum requirements for a regular shutdown/reboot and at
+> the same time have a look at the requirements for emergency shutdown and
+> kexec/kcrash. Having proper information about the race conditions and
+> warnings you mentioned would be a good starting point.
+>
 
-Looking at this problem and at the number of KASAN_SANITIZE := n in
-Makefiles (some of which are pretty sad, e.g. ignoring string.c,
-kstrtox.c, vsprintf.c -- that's where the bugs are!), I think we
-initialize KASAN too late. I think we need to do roughly what we do in
-user-space asan (because it is user-space asan!). Constructors run
-before main and it's really good, we need to initialize KASAN from
-these constructors. Or if that's not enough in all cases, also add own
-constructor/.preinit array entry to initialize as early as possible.
-All we need to do is to call mmap syscall, there is really no
-dependencies on anything kernel-related.
-This should resolve the problem with constructors (after they
-initialize KASAN, they can proceed to do anything they need) and it
-should get rid of most KASAN_SANITIZE (in particular, all of
-lib/Makefile and kernel/Makefile) and should fix stack instrumentation
-(in case it does not work now). The only tiny bit we should not
-instrument is the path from constructor up to mmap call.
+We saw this issue on regular reboot (not panic) on arm64: If tick
+broadcast and smp_send_stop() happen together and the first broadcast
+arrives to some idled CPU that hasn't already executed reboot ipi to
+run in spinloop, it would try to broadcast to another CPU, but that
+target CPU is already marked as offline by set_cpu_online() in reboot
+ipi, and a warning comes out since tick_handle_oneshot_broadcast()
+would check if it tries to broadcast to offline cpus. Most of the time
+the CPU getting the broadcast interrupt is already in the spinloop and
+thus isn't going to receive interrupts from the broadcast timer.
+
+[   27.032080] Set kernel.core_pattern before fs.suid_dumpable.
+[   27.978628] reboot: Restarting system
+[   27.978919] WARNING: CPU: 3 PID: 0 at
+/mnt/host/source/src/third_party/kernel/v4.19/kernel/time/tick-broadcast.c:652
+tick_handle_oneshot_broadcast+0x1f8/0x214
+[   27.978932] Modules linked in: rfcomm uinput bridge stp llc
+nf_nat_tftp nf_conntrack_tftp nf_nat_ftp nf_conntrack_ftp esp6 ah6
+xfrm6_mode_tunnel xfrm6_mode_transport xfrm4_mode_tunnel
+xfrm4_mode_transport ip6t_REJECT ip6t_ipv6header hci_uart btqca
+bluetooth ipt_MASQUERADE ecdh_generic lzo_rle lzo_compress zram fuse
+cros_ec_sensors_sync cros_ec_sensors_ring cros_ec_light_prox
+cros_ec_sensors industrialio_triggered_buffer kfifo_buf
+cros_ec_sensors_core ath10k_sdio ath10k_core ath mac80211 cfg80211
+asix usbnet mii joydev
+[   27.979102] CPU: 3 PID: 0 Comm: swapper/3 Tainted: G S
+  4.19.56 #79
+[   27.979113] Hardware name: MediaTek krane sku176 board (DT)
+[   27.979127] pstate: 00000085 (nzcv daIf -PAN -UAO)
+[   27.979140] pc : tick_handle_oneshot_broadcast+0x1f8/0x214
+[   27.979154] lr : tick_handle_oneshot_broadcast+0x108/0x214
+[   27.979162] sp : fffffff85c851610
+[   27.979171] x29: fffffff85c851670 x28: ffffff9082785510
+[   27.979187] x27: ffffff90822da700 x26: ffffff90826169c8
+[   27.979202] x25: ffffff9082616000 x24: 0000000000000001
+[   27.979217] x23: ffffff90827854f8 x22: 000000067a6599b8
+[   27.979232] x21: 0000000000000000 x20: 7fffffffffffffff
+[   27.979248] x19: ffffff9082785508 x18: 0000000000000000
+[   27.979263] x17: 0000000000000000 x16: 0000000000000000
+[   27.979278] x15: 0000000000000000 x14: fffffff85bf08040
+[   27.979293] x13: ffffff9082785000 x12: 0000000000000069
+[   27.979308] x11: ffffff9082785000 x10: 0000000000000018
+[   27.979323] x9 : 0000000000000010 x8 : ffffff9082615000
+[   27.979338] x7 : 0000000000000000 x6 : 000000000000003f
+[   27.979353] x5 : 0000000000000040 x4 : 0000000000000102
+[   27.979367] x3 : 0000000000000000 x2 : 0000000000000007
+[   27.979383] x1 : 0000000000000008 x0 : 0000000000000008
+[   27.979399] Call trace:
+[   27.979413]  tick_handle_oneshot_broadcast+0x1f8/0x214
+[   27.979429]  mtk_syst_handler+0x34/0x44
+[   27.979443]  __handle_irq_event_percpu+0x134/0x254
+[   27.979454]  handle_irq_event_percpu+0x34/0x8c
+[   27.979465]  handle_irq_event+0x48/0x78
+[   27.979478]  handle_fasteoi_irq+0xd0/0x1a4
+[   27.979492]  __handle_domain_irq+0x84/0xc4
+[   27.979505]  gic_handle_irq+0x154/0x1a4
+[   27.979516]  el1_irq+0xb0/0x128
+[   27.979531]  cpuidle_enter_state+0x298/0x328
+[   27.979543]  cpuidle_enter+0x30/0x40
+[   27.979557]  do_idle+0x154/0x270
+[   27.979569]  cpu_startup_entry+0x24/0x28
+[   27.979584]  secondary_start_kernel+0x15c/0x168
+[   27.979594] ---[ end trace 57ed1d1fade60372 ]---
+
+If system supports hotplug, _cpu_down() would properly handle tasks
+termination such as remove CPU from timer broadcasting by
+tick_offline_cpu()...etc, as well as some interrupt handling.
+
+https://lore.kernel.org/patchwork/patch/1117201/ is a previous attempt
+to solve this issue by introducing another mask in reboot ipi function
+to avoid the cpu_online_mask being looked up in too many different
+places.
+
+> > Opt in this config for architectures that support CONFIG_HOTPLUG_CPU.
+>
+> This is not opt-in. You force that on all architectures which support
+> CONFIG_HOTPLUG_CPU. The way we do this normally is to provide the
+> infrastructure first and then have separate patches (one per
+> architecture) enabling this, which allows the architecture maintainers
+> to decide individually.
+
+Acked, thanks.
+
+>
+> Thanks,
+>
+>         tglx
