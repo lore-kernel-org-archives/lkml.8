@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3F1C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA485C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03A4B2072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A60282072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:22:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579216944;
-	bh=YHCmKvqgNloUQ1CrqSeEmRJBO0gb6SZ/9jXI8HGzTVI=;
+	s=default; t=1579216950;
+	bh=q8KLLowO5RVKGE68CuPMLPClTKRrKOm0YR/NZpURnGU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VsbPpyR2xednGOQPrsPRkAH1by4cdm2bpxGb+IQ7MwGNT8LzmYPtbZIktO6mpMvi2
-	 3O2a2f6CaZ1Cb+mun1nJA+DC6w+CGw6FbJIB9P3vT7v8bcqL9ewGNA2YwT8aRwYm48
-	 YxzJmWw732eS44xLvJ6BYXu5T9DBCXe+a1uVymlA=
+	b=EwZzlZcZwjwxblBS8ZXiNa+a/+paTfoNtSgRmmj8BwCQ18dPerlmLHtp3VKHAB12P
+	 lWr4I5o06kzMmHlvXodyaHqbRnJIC9OKsBtAtwSIFLg+jgXKC+z55i6OUeFXt7JSZU
+	 iQc9wHUt/atFPNPfOgydM8q8xtXB11Y321gTxFug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730121AbgAPXWX (ORCPT
+        id S1732408AbgAPXW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:22:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49936 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:22:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388828AbgAPXWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:22:10 -0500
+        id S2389386AbgAPXWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:22:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6E922075B;
-        Thu, 16 Jan 2020 23:22:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB74C206D9;
+        Thu, 16 Jan 2020 23:22:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216930;
-        bh=YHCmKvqgNloUQ1CrqSeEmRJBO0gb6SZ/9jXI8HGzTVI=;
+        s=default; t=1579216937;
+        bh=q8KLLowO5RVKGE68CuPMLPClTKRrKOm0YR/NZpURnGU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d9wCnBwq3I8qsfM3eUwAEt18A5S+3SeTIZcUVDteF1tbf9b8FN66HGWhcr6A/6zz5
-         yMTftSC2gwP2XB2NsMwYf1zKoGGTWJuKysGL4S59esz+XzJbhFXcJoWtNcLrm8MtkV
-         T3tFP8an61TXvOqHkqmyLkrSw0XjJn9wZe6gbR7g=
+        b=y4dZNLNF3v0GjyYEtq96i63CtJeiQC75mrBAVwRGoTS9G4rupqE03E1ZIodz0zdrv
+         uKQOQE2uoid6ifpHKN2NW54ow8zKv2bKrI0OZZQglQh/YDFzyFOTz6dg5ZHcp4FIy7
+         FfXEQ9pPipmmMF4eYu9YoPqa4LoXCRU6Uqf+c1Tg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>
-Subject: [PATCH 5.4 078/203] bpf: Make use of probe_user_write in probe write helper
-Date:   Fri, 17 Jan 2020 00:16:35 +0100
-Message-Id: <20200116231751.315347781@linuxfoundation.org>
+        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Yonghong Song <yhs@fb.com>
+Subject: [PATCH 5.4 081/203] libbpf: Fix Makefile libbpf symbol mismatch diagnostic
+Date:   Fri, 17 Jan 2020 00:16:38 +0100
+Message-Id: <20200116231751.972748677@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -60,49 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+From: Andrii Nakryiko <andriin@fb.com>
 
-commit eb1b66887472eaa7342305b7890ae510dd9d1a79 upstream.
+commit b568405856906ee4d9ba6284fd36f2928653a623 upstream.
 
-Convert the bpf_probe_write_user() helper to probe_user_write() such that
-writes are not attempted under KERNEL_DS anymore which is buggy as kernel
-and user space pointers can have overlapping addresses. Also, given we have
-the access_ok() check inside probe_user_write(), the helper doesn't need
-to do it twice.
+Fix Makefile's diagnostic diff output when there is LIBBPF_API-versioned
+symbols mismatch.
 
-Fixes: 96ae52279594 ("bpf: Add bpf_probe_write_user BPF helper to be called in tracers")
+Fixes: 1bd63524593b ("libbpf: handle symbol versioning properly for libbpf.a")
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
 Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/841c461781874c07a0ee404a454c3bc0459eed30.1572649915.git.daniel@iogearbox.net
+Acked-by: Yonghong Song <yhs@fb.com>
+Link: https://lore.kernel.org/bpf/20191127200134.1360660-1-andriin@fb.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/bpf_trace.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ tools/lib/bpf/Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -163,7 +163,7 @@ static const struct bpf_func_proto bpf_p
- 	.arg3_type	= ARG_ANYTHING,
- };
- 
--BPF_CALL_3(bpf_probe_write_user, void *, unsafe_ptr, const void *, src,
-+BPF_CALL_3(bpf_probe_write_user, void __user *, unsafe_ptr, const void *, src,
- 	   u32, size)
- {
- 	/*
-@@ -186,10 +186,8 @@ BPF_CALL_3(bpf_probe_write_user, void *,
- 		return -EPERM;
- 	if (unlikely(!nmi_uaccess_okay()))
- 		return -EPERM;
--	if (!access_ok(unsafe_ptr, size))
--		return -EPERM;
- 
--	return probe_kernel_write(unsafe_ptr, src, size);
-+	return probe_user_write(unsafe_ptr, src, size);
- }
- 
- static const struct bpf_func_proto bpf_probe_write_user_proto = {
+--- a/tools/lib/bpf/Makefile
++++ b/tools/lib/bpf/Makefile
+@@ -215,7 +215,7 @@ check_abi: $(OUTPUT)libbpf.so
+ 		     "versioned symbols in $^ ($(VERSIONED_SYM_COUNT))." \
+ 		     "Please make sure all LIBBPF_API symbols are"	 \
+ 		     "versioned in $(VERSION_SCRIPT)." >&2;		 \
+-		readelf -s --wide $(OUTPUT)libbpf-in.o |		 \
++		readelf -s --wide $(BPF_IN_SHARED) |			 \
+ 		    cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' |	 \
+ 		    awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$8}'|   \
+ 		    sort -u > $(OUTPUT)libbpf_global_syms.tmp;		 \
 
 
