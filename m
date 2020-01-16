@@ -2,87 +2,105 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 111BCC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CC7C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9A062073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37ED22073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:59:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uvRrgWRu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgAPM7X (ORCPT
+        id S1726928AbgAPM7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 07:59:23 -0500
-Received: from mga17.intel.com ([192.55.52.151]:22372 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726018AbgAPM7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 07:59:25 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:39765 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726688AbgAPM7V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jan 2020 07:59:21 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 04:59:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,326,1574150400"; 
-   d="scan'208";a="398268794"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 16 Jan 2020 04:59:20 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1is4k3-000HWS-Oj; Thu, 16 Jan 2020 20:59:19 +0800
-Date:   Thu, 16 Jan 2020 20:58:50 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:ras/core] BUILD SUCCESS
- 7a8bc2b0462eaca0072d1f7f4ddc749fcb8a773c
-Message-ID: <5e205e0a.xqwJbpFbpdGEpHCc%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Received: by mail-ed1-f68.google.com with SMTP id t17so18825612eds.6;
+        Thu, 16 Jan 2020 04:59:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=JU7gxEFwqK+Oxre///Ayp0+fP1f8xI82V+ZomELLvp4=;
+        b=uvRrgWRu7I86qKQ0Eh/qfeUUD9OLgTi++Ou/RhfFmXQjCXrOX8QDv22J1TqxwM/Wlp
+         niVoBjPZRgj8tNLCdLAJpQ2iVfWF/llODq/ZeOrv/cfXCwIIVUzHhsSEkBDS2K475/ho
+         9TSVe8mCOB8Bidp0Pvt3wJFnPSbjdSxSQqjN6Li313HIOOxImQy8pP3waJdKs8htJSG9
+         DnaoqS9TYiv7GxyqD4tDYM3AU9Tmh2oTBFtJ6w4VdfznHWqX0czUlLtCBaw1MHjijrfg
+         Ta3EB3PL6V0llGOgmQrSDOysAnbQJmkKVHXkKOQcFSBRTlDCg2hP7NPFVH8KPPlWJLds
+         IqTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=JU7gxEFwqK+Oxre///Ayp0+fP1f8xI82V+ZomELLvp4=;
+        b=DoVPCpQal6hg7tyOXz9ROX2D9plM6l//1BGWX5HQnuUjeCFmwt0GH3Ry18Q/o7biDg
+         QrgdCq7LdF8lK6MUMEawHc37FuaO6H7K+wBhKqaI8RfwGPbu2kZFvHmIPOAofKDvFHzi
+         5gHE6HRgRgUXxFOq9yQYCf0LkFNZZGlJGxXq9MySB1xFfzCveBBG859mUqJWxZd1oCFK
+         8iDkidGmw0QNqfvJUHVU5aGzwFYHQdWIGx7REsoZrU2FkQ6rh4Y3jMTtueqIUB/WuDOT
+         ZjN5ALKUjggckgtmtF4kbdtZYTscmB8NL5IpAt94zi+e7v0yPU6/aiDXphS2kWTFgMCp
+         MNlA==
+X-Gm-Message-State: APjAAAWaBOTv7gY18TphmUQoI04kJQItdRaZPNbdCzzM3SOVhD6kZLf+
+        mqzJJthP6ezx5P9lz4Ltcm8dA9lo
+X-Google-Smtp-Source: APXvYqyfBsE5jck3bw/VdTRhjo4kKjLHjrj51wfpyyBP+3PS7KhsSZxgaEYUA5oUGV8GEx8FoPdYIg==
+X-Received: by 2002:a17:906:86d7:: with SMTP id j23mr2843204ejy.89.1579179559263;
+        Thu, 16 Jan 2020 04:59:19 -0800 (PST)
+Received: from jwang-Latitude-5491.fritz.box ([2001:16b8:4956:1800:d464:b0ea:3ef4:abbb])
+        by smtp.gmail.com with ESMTPSA id b13sm697289ejl.5.2020.01.16.04.59.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 04:59:18 -0800 (PST)
+From:   Jack Wang <jinpuwang@gmail.com>
+To:     linux-block@vger.kernel.org, linux-rdma@vger.kernel.org
+Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
+        bvanassche@acm.org, leon@kernel.org, dledford@redhat.com,
+        jgg@ziepe.ca, danil.kipnis@cloud.ionos.com,
+        jinpu.wang@cloud.ionos.com, rpenyaev@suse.de,
+        Roman Pen <roman.penyaev@profitbricks.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v7 01/25] sysfs: export sysfs_remove_file_self()
+Date:   Thu, 16 Jan 2020 13:58:51 +0100
+Message-Id: <20200116125915.14815-2-jinpuwang@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200116125915.14815-1-jinpuwang@gmail.com>
+References: <20200116125915.14815-1-jinpuwang@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  ras/core
-branch HEAD: 7a8bc2b0462eaca0072d1f7f4ddc749fcb8a773c  x86/mce: Fix use of uninitialized MCE message string
+From: Jack Wang <jinpu.wang@cloud.ionos.com>
 
-elapsed time: 1709m
+Function is going to be used in transport over RDMA module
+in subsequent patches, so export it to GPL modules.
 
-configs tested: 24
-configs skipped: 107
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-um                                  defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-i386                             alldefconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-x86_64                                   rhel
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                               rhel-7.6
-
+Signed-off-by: Roman Pen <roman.penyaev@profitbricks.com>
+Acked-by: Tejun Heo <tj@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+[jwang: extend the commit message]
+Signed-off-by: Jack Wang <jinpu.wang@cloud.ionos.com>
 ---
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+ fs/sysfs/file.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
+index 130fc6fbcc03..1ff4672d7746 100644
+--- a/fs/sysfs/file.c
++++ b/fs/sysfs/file.c
+@@ -492,6 +492,7 @@ bool sysfs_remove_file_self(struct kobject *kobj, const struct attribute *attr)
+ 	kernfs_put(kn);
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(sysfs_remove_file_self);
+ 
+ void sysfs_remove_files(struct kobject *kobj, const struct attribute * const *ptr)
+ {
+-- 
+2.17.1
+
