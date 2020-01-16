@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC03C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3319C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C36752077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C8842073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:23:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202592;
-	bh=mEQ/YlD3A4QQywGbZn/iryMQxyRD6r1oKnXwOfcjIB0=;
+	s=default; t=1579202601;
+	bh=B39tRMTgHG+yvSL+XbOx831COUj/FX+wNF00LG9uoJk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G0UaukfbaKd9vI5WwBVh43dC+0p2f6vrXE7rXt5fVWOgC9oege2ZUgHzmslA3+9uo
-	 8Oe0QO4jyEPcHlJHwo39uK0A8Y5Kodbrhk50PoaM+hka8F6RcHaKvlRN6AsyzNWRZm
-	 nsxpAtqcDYdYSVDUtTF+vbWm+ZaHmJx4L8dnHLV4=
+	b=L7wGj5wVc68tmqfa72ZrNPRNHfMP41gyIqG/vOpUv87of/M14YLKVAOrMsTuSUDpf
+	 PccMYivUPFl1rFwvJC1mYUU5kT1Xiq4RtWBNGNASDPnL7BRAv3OzEnOjLTWRpa12sJ
+	 XbWFm+vu4PVJ8kpLNANEqHO52J1NTo0A4ksQzhyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437757AbgAPTXL (ORCPT
+        id S2437760AbgAPTXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:23:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37098 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:23:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730742AbgAPQxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:53:19 -0500
+        id S1729449AbgAPQxR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:53:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F84820730;
-        Thu, 16 Jan 2020 16:53:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34E8A2464B;
+        Thu, 16 Jan 2020 16:53:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193598;
-        bh=mEQ/YlD3A4QQywGbZn/iryMQxyRD6r1oKnXwOfcjIB0=;
+        s=default; t=1579193596;
+        bh=B39tRMTgHG+yvSL+XbOx831COUj/FX+wNF00LG9uoJk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XS08i3O7QuV3zGhxVSh54U5qxJ631PAJg8uDo96MCIn1qO/TW8LladCJzm5r5i97t
-         ZkXezyuQ/4ZI0YuW2qCZRfpZAbtj570oY3zIg6/YCdlz2Idq/TxoZkkcgFn9Hcre9h
-         uMnFSIOfRelXEkuos6gW3UlrnowNh1DTmi0vv88w=
+        b=yvIL3ts7e6/NBWXtNwwxW8XtNthX3dpgcuCCrdaxOYgKimQfYaL+yBnOLByp3wkc6
+         rgya7sajdqpgbzP8XrkO3cBX4O1+AZzcL6z3RfpxmpbRNQyLJP35UWglp8sYWW8Hpt
+         7jeaxjDZUDYMeBRjeqJQJNXL98zEkoF1fSqgwg6I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hoang Le <hoang.h.le@dektech.com.au>,
-        Jon Maloy <jon.maloy@ericsson.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.4 137/205] tipc: update mon's self addr when node addr generated
-Date:   Thu, 16 Jan 2020 11:41:52 -0500
-Message-Id: <20200116164300.6705-137-sashal@kernel.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 135/205] PCI: pciehp: Do not disable interrupt twice on suspend
+Date:   Thu, 16 Jan 2020 11:41:50 -0500
+Message-Id: <20200116164300.6705-135-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -61,89 +61,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hoang Le <hoang.h.le@dektech.com.au>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-[ Upstream commit 46cb01eeeb86fca6afe24dda1167b0cb95424e29 ]
+[ Upstream commit 75fcc0ce72e5cea2e357cdde858216c5bad40442 ]
 
-In commit 25b0b9c4e835 ("tipc: handle collisions of 32-bit node address
-hash values"), the 32-bit node address only generated after one second
-trial period expired. However the self's addr in struct tipc_monitor do
-not update according to node address generated. This lead to it is
-always zero as initial value. As result, sorting algorithm using this
-value does not work as expected, neither neighbor monitoring framework.
+We try to keep PCIe hotplug ports runtime suspended when entering system
+suspend. Because the PCIe portdrv sets the DPM_FLAG_NEVER_SKIP flag, the PM
+core always calls system suspend/resume hooks even if the device is left
+runtime suspended. Since PCIe hotplug driver re-used the same function for
+both runtime suspend and system suspend, it ended up disabling hotplug
+interrupt twice and the second time following was printed:
 
-In this commit, we add a fix to update self's addr when 32-bit node
-address generated.
+  pciehp 0000:03:01.0:pcie204: pcie_do_write_cmd: no response from device
 
-Fixes: 25b0b9c4e835 ("tipc: handle collisions of 32-bit node address hash values")
-Acked-by: Jon Maloy <jon.maloy@ericsson.com>
-Signed-off-by: Hoang Le <hoang.h.le@dektech.com.au>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Prevent this from happening by checking whether the device is already
+runtime suspended when the system suspend hook is called.
+
+Fixes: 9c62f0bfb832 ("PCI: pciehp: Implement runtime PM callbacks")
+Link: https://lore.kernel.org/r/20191029170022.57528-1-mika.westerberg@linux.intel.com
+Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/tipc/monitor.c | 15 +++++++++++++++
- net/tipc/monitor.h |  1 +
- net/tipc/net.c     |  2 ++
- 3 files changed, 18 insertions(+)
+ drivers/pci/hotplug/pciehp_core.c | 25 +++++++++++++++++++++++--
+ 1 file changed, 23 insertions(+), 2 deletions(-)
 
-diff --git a/net/tipc/monitor.c b/net/tipc/monitor.c
-index 6a6eae88442f..58708b4c7719 100644
---- a/net/tipc/monitor.c
-+++ b/net/tipc/monitor.c
-@@ -665,6 +665,21 @@ void tipc_mon_delete(struct net *net, int bearer_id)
- 	kfree(mon);
+diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
+index b3122c151b80..56daad828c9e 100644
+--- a/drivers/pci/hotplug/pciehp_core.c
++++ b/drivers/pci/hotplug/pciehp_core.c
+@@ -253,7 +253,7 @@ static bool pme_is_native(struct pcie_device *dev)
+ 	return pcie_ports_native || host->native_pme;
  }
  
-+void tipc_mon_reinit_self(struct net *net)
+-static int pciehp_suspend(struct pcie_device *dev)
++static void pciehp_disable_interrupt(struct pcie_device *dev)
+ {
+ 	/*
+ 	 * Disable hotplug interrupt so that it does not trigger
+@@ -261,7 +261,19 @@ static int pciehp_suspend(struct pcie_device *dev)
+ 	 */
+ 	if (pme_is_native(dev))
+ 		pcie_disable_interrupt(get_service_data(dev));
++}
+ 
++#ifdef CONFIG_PM_SLEEP
++static int pciehp_suspend(struct pcie_device *dev)
 +{
-+	struct tipc_monitor *mon;
-+	int bearer_id;
++	/*
++	 * If the port is already runtime suspended we can keep it that
++	 * way.
++	 */
++	if (dev_pm_smart_suspend_and_suspended(&dev->port->dev))
++		return 0;
 +
-+	for (bearer_id = 0; bearer_id < MAX_BEARERS; bearer_id++) {
-+		mon = tipc_monitor(net, bearer_id);
-+		if (!mon)
-+			continue;
-+		write_lock_bh(&mon->lock);
-+		mon->self->addr = tipc_own_addr(net);
-+		write_unlock_bh(&mon->lock);
-+	}
++	pciehp_disable_interrupt(dev);
+ 	return 0;
+ }
+ 
+@@ -279,6 +291,7 @@ static int pciehp_resume_noirq(struct pcie_device *dev)
+ 
+ 	return 0;
+ }
++#endif
+ 
+ static int pciehp_resume(struct pcie_device *dev)
+ {
+@@ -292,6 +305,12 @@ static int pciehp_resume(struct pcie_device *dev)
+ 	return 0;
+ }
+ 
++static int pciehp_runtime_suspend(struct pcie_device *dev)
++{
++	pciehp_disable_interrupt(dev);
++	return 0;
 +}
 +
- int tipc_nl_monitor_set_threshold(struct net *net, u32 cluster_size)
+ static int pciehp_runtime_resume(struct pcie_device *dev)
  {
- 	struct tipc_net *tn = tipc_net(net);
-diff --git a/net/tipc/monitor.h b/net/tipc/monitor.h
-index 2a21b93e0d04..ed63d2e650b0 100644
---- a/net/tipc/monitor.h
-+++ b/net/tipc/monitor.h
-@@ -77,6 +77,7 @@ int __tipc_nl_add_monitor(struct net *net, struct tipc_nl_msg *msg,
- 			  u32 bearer_id);
- int tipc_nl_add_monitor_peer(struct net *net, struct tipc_nl_msg *msg,
- 			     u32 bearer_id, u32 *prev_node);
-+void tipc_mon_reinit_self(struct net *net);
+ 	struct controller *ctrl = get_service_data(dev);
+@@ -318,10 +337,12 @@ static struct pcie_port_service_driver hpdriver_portdrv = {
+ 	.remove		= pciehp_remove,
  
- extern const int tipc_max_domain_size;
- #endif
-diff --git a/net/tipc/net.c b/net/tipc/net.c
-index 85707c185360..2de3cec9929d 100644
---- a/net/tipc/net.c
-+++ b/net/tipc/net.c
-@@ -42,6 +42,7 @@
- #include "node.h"
- #include "bcast.h"
- #include "netlink.h"
-+#include "monitor.h"
- 
- /*
-  * The TIPC locking policy is designed to ensure a very fine locking
-@@ -136,6 +137,7 @@ static void tipc_net_finalize(struct net *net, u32 addr)
- 	tipc_set_node_addr(net, addr);
- 	tipc_named_reinit(net);
- 	tipc_sk_reinit(net);
-+	tipc_mon_reinit_self(net);
- 	tipc_nametbl_publish(net, TIPC_CFG_SRV, addr, addr,
- 			     TIPC_CLUSTER_SCOPE, 0, addr);
- }
+ #ifdef	CONFIG_PM
++#ifdef	CONFIG_PM_SLEEP
+ 	.suspend	= pciehp_suspend,
+ 	.resume_noirq	= pciehp_resume_noirq,
+ 	.resume		= pciehp_resume,
+-	.runtime_suspend = pciehp_suspend,
++#endif
++	.runtime_suspend = pciehp_runtime_suspend,
+ 	.runtime_resume	= pciehp_runtime_resume,
+ #endif	/* PM */
+ };
 -- 
 2.20.1
 
