@@ -2,69 +2,137 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFBFC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C630C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C00D206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4684C208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:30:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199408;
-	bh=aF+qcS9mrjO8tbEi8YwhBFivADRMZws4q6LY/Bt7bLw=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=kAxmcoTbxEEe9cyhxepyg+iwGU2upb5KB64d+2ibV8QR/kHnv14I70iWcTA/iM7gv
-	 4KJoLQY/ogmLagKMLIVA8QBM3cR1CkntJaTGI3ekhIzx7mO7jFT9D+vB8N73oyEbYj
-	 eBpBd4HEUWHCvF/efYpkh/2nx2/9/SL9Mc9iVoAY=
+	s=default; t=1579199413;
+	bh=h53+j/01JZX1bOOeMLrpac4PzNOjahGiNC9oFjDcpo0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pl+hSJGYL7rLwI2q46PhsCTwizrOrow7a+pKEdXGlUBBjQZ0qVfqdxkj2QqUJvqW/
+	 Yg9fosqaHWn28sVNZdBslY2THLdy0OmjTHr8BG9lRVAnCcXHQOlbEHBdR1zczw9sFM
+	 /+Ev+lWw0MuWdD6bOJR46VHsvjuKi9FMKgHfFkfk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404007AbgAPSaH (ORCPT
+        id S2392126AbgAPRZi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:30:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34014 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:25:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436720AbgAPSaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 13:30:04 -0500
-Subject: Re: [GIT PULL] chrome-platform fixes for v5.5-rc7
+        id S2391910AbgAPRZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:25:20 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D34D3246C2;
+        Thu, 16 Jan 2020 17:25:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579199404;
-        bh=aF+qcS9mrjO8tbEi8YwhBFivADRMZws4q6LY/Bt7bLw=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=ZoBbonQLXLG7OOKSs39oqVjJ0jPHR2DnBCc7IWUXU4voThjbyYS6n1QTEN+8XZCuF
-         4l0YVn7T7Rr2S5kuEIaZwJzPKKkswWK0EYhOcmIOiC/M0TrOvuzGT8ahTyWs0Rn9W/
-         Tg5OGyTGTnuP3DexfCSKKl2fEi6p2OoTsd+LL+2Y=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200116175802.GA147875@google.com>
-References: <20200116175802.GA147875@google.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200116175802.GA147875@google.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git
- tags/tag-chrome-platform-fixes-for-v5.5-rc7
-X-PR-Tracked-Commit-Id: dfb9a8857f4decbba8c2206e8877e1d741ee1b47
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 0c99ee44b8921b872089a7374c733310d995fd92
-Message-Id: <157919940438.19397.11912146279100722478.pr-tracker-bot@kernel.org>
-Date:   Thu, 16 Jan 2020 18:30:04 +0000
-To:     Benson Leung <bleung@google.com>
-Cc:     torvalds@linux-foundation.org, bleung@kernel.org,
-        bleung@chromium.org, bleung@google.com,
-        enric.balletbo@collabora.com, linux-kernel@vger.kernel.org
+        s=default; t=1579195519;
+        bh=h53+j/01JZX1bOOeMLrpac4PzNOjahGiNC9oFjDcpo0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TTPYY/ViuYISSHbPi4Y4ebxfHZQQDQfiv54fmBghXQbAYmWP31KylWjpGwKk44gOC
+         qHcGCUbGo7gShRd3cYfqSBpFeUzHj4azZezZBGcE72xuo8T5e1vTkoy0j1r1JeMuMx
+         NHSJ8dCH/F/pVnWuBH1tYQVgDtsN2ilBZBWeg3L4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 117/371] NFS: Fix a soft lockup in the delegation recovery code
+Date:   Thu, 16 Jan 2020 12:19:49 -0500
+Message-Id: <20200116172403.18149-60-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
+References: <20200116172403.18149-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 16 Jan 2020 09:58:02 -0800:
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git tags/tag-chrome-platform-fixes-for-v5.5-rc7
+[ Upstream commit 6f9449be53f3ce383caed797708b332ede8d952c ]
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/0c99ee44b8921b872089a7374c733310d995fd92
+Fix a soft lockup when NFS client delegation recovery is attempted
+but the inode is in the process of being freed. When the
+igrab(inode) call fails, and we have to restart the recovery process,
+we need to ensure that we won't attempt to recover the same delegation
+again.
 
-Thank you!
+Fixes: 45870d6909d5a ("NFSv4.1: Test delegation stateids when server...")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/nfs/delegation.c | 20 ++++++++++++--------
+ fs/nfs/delegation.h |  1 +
+ 2 files changed, 13 insertions(+), 8 deletions(-)
 
+diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
+index 04d57e11577e..09b3bcb86d32 100644
+--- a/fs/nfs/delegation.c
++++ b/fs/nfs/delegation.c
+@@ -234,6 +234,8 @@ static struct inode *nfs_delegation_grab_inode(struct nfs_delegation *delegation
+ 	spin_lock(&delegation->lock);
+ 	if (delegation->inode != NULL)
+ 		inode = igrab(delegation->inode);
++	if (!inode)
++		set_bit(NFS_DELEGATION_INODE_FREEING, &delegation->flags);
+ 	spin_unlock(&delegation->lock);
+ 	return inode;
+ }
+@@ -863,10 +865,11 @@ void nfs_delegation_reap_unclaimed(struct nfs_client *clp)
+ 	list_for_each_entry_rcu(server, &clp->cl_superblocks, client_link) {
+ 		list_for_each_entry_rcu(delegation, &server->delegations,
+ 								super_list) {
+-			if (test_bit(NFS_DELEGATION_RETURNING,
+-						&delegation->flags))
+-				continue;
+-			if (test_bit(NFS_DELEGATION_NEED_RECLAIM,
++			if (test_bit(NFS_DELEGATION_INODE_FREEING,
++						&delegation->flags) ||
++			    test_bit(NFS_DELEGATION_RETURNING,
++						&delegation->flags) ||
++			    test_bit(NFS_DELEGATION_NEED_RECLAIM,
+ 						&delegation->flags) == 0)
+ 				continue;
+ 			if (!nfs_sb_active(server->super))
+@@ -971,10 +974,11 @@ void nfs_reap_expired_delegations(struct nfs_client *clp)
+ 	list_for_each_entry_rcu(server, &clp->cl_superblocks, client_link) {
+ 		list_for_each_entry_rcu(delegation, &server->delegations,
+ 								super_list) {
+-			if (test_bit(NFS_DELEGATION_RETURNING,
+-						&delegation->flags))
+-				continue;
+-			if (test_bit(NFS_DELEGATION_TEST_EXPIRED,
++			if (test_bit(NFS_DELEGATION_INODE_FREEING,
++						&delegation->flags) ||
++			    test_bit(NFS_DELEGATION_RETURNING,
++						&delegation->flags) ||
++			    test_bit(NFS_DELEGATION_TEST_EXPIRED,
+ 						&delegation->flags) == 0)
+ 				continue;
+ 			if (!nfs_sb_active(server->super))
+diff --git a/fs/nfs/delegation.h b/fs/nfs/delegation.h
+index df41d16dc6ab..510c9edcc712 100644
+--- a/fs/nfs/delegation.h
++++ b/fs/nfs/delegation.h
+@@ -34,6 +34,7 @@ enum {
+ 	NFS_DELEGATION_RETURNING,
+ 	NFS_DELEGATION_REVOKED,
+ 	NFS_DELEGATION_TEST_EXPIRED,
++	NFS_DELEGATION_INODE_FREEING,
+ };
+ 
+ int nfs_inode_set_delegation(struct inode *inode, struct rpc_cred *cred, struct nfs_openres *res);
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.20.1
+
