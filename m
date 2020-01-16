@@ -2,53 +2,53 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 354AEC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A96ACC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 064E9206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:30:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8661621D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:30:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199424;
-	bh=S4Dlq3sa5657ZS6YolMFvQrQk20VujSlpo3865fmlKg=;
+	s=default; t=1579199441;
+	bh=USVgftlGwiLXXi5/H+/NWK1w91iAaWxgSLPLjyHHRn8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v5U7DVd1l14a8CAr50lffRCxpbi6KkMgKkrPHuwgcu3dLJoiW0Sg11z4IE+zZGyi3
-	 cb5XV+ZUqsavrMnZjci9ds8B1Oss29p8Dq+dJSssPp0Y9k8wGpWD6rwPAOqY7sDNRR
-	 jEU6P37C3Tqd2qaoSU/x87K7MSO4szyAzNaxygSQ=
+	b=RD4ehjcoooxsyDQbuVS4VTtr7tCfV0qEm7tdiF8BGh0wjuHB85/Vina8tstSmhvhW
+	 YC5a9+gOvpg+AUVcPl6XABLbD9VTxbKfoD3KgsmeSSBMCLsHTTZ8lYDgpvA4EnhoRM
+	 vyNWUuA81dwWvM3fk9xWnWY/+y/TPORztMw1mKm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392023AbgAPRZc (ORCPT
+        id S2407116AbgAPSai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:25:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32840 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:30:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403858AbgAPRZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:25:17 -0500
+        id S2391990AbgAPRZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:25:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 160FB246A5;
-        Thu, 16 Jan 2020 17:25:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CB47246DC;
+        Thu, 16 Jan 2020 17:25:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195517;
-        bh=S4Dlq3sa5657ZS6YolMFvQrQk20VujSlpo3865fmlKg=;
+        s=default; t=1579195531;
+        bh=USVgftlGwiLXXi5/H+/NWK1w91iAaWxgSLPLjyHHRn8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EaTNr8OMBJSEbzAb5t+dBlDqv2Zsxofag85LRmE0bteL0fAy6KLq2BWsh9nigaRJl
-         mpO4D93M91etfCCme1q+clwe+RUdZDWz8QQ6Wv09k4yRG/h6PA99QPMM7eIKISeTmn
-         j6kMiMLtsMBbM7sl5PmDGc26kM6K1qrHRp7SHgS4=
+        b=iCtmNUd5wmY/ESVpu5SoLK8QS0X2M3wZDf+x0Wd3rpdSxw5HqC6Hkyv386Gotn4We
+         RKCdYzOyI/vyghcKf4ZYdgGEskN+8Qu6J0ESAfygW36C0iAOfgWdOMUh+RbGSAkxem
+         ro5i/+LFyQnBTsSCPV4+Q7DtXObX4ZFl/UFSCGnk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nicholas Mc Guire <hofrat@osadl.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 115/371] staging: rtlwifi: Use proper enum for return in halmac_parse_psd_data_88xx
-Date:   Thu, 16 Jan 2020 12:19:47 -0500
-Message-Id: <20200116172403.18149-58-sashal@kernel.org>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 126/371] netfilter: nft_set_hash: fix lookups with fixed size hash on big endian
+Date:   Thu, 16 Jan 2020 12:19:58 -0500
+Message-Id: <20200116172403.18149-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -61,46 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit e8edc32d70a4e09160835792eb5d1af71a0eec14 ]
+[ Upstream commit 3b02b0adc242a72b5e46019b6a9e4f84823592f6 ]
 
-Clang warns:
+Call jhash_1word() for the 4-bytes key case from the insertion and
+deactivation path, otherwise big endian arch set lookups fail.
 
-drivers/staging/rtlwifi/halmac/halmac_88xx/halmac_func_88xx.c:2472:11:
-warning: implicit conversion from enumeration type 'enum
-halmac_cmd_process_status' to different enumeration type 'enum
-halmac_ret_status' [-Wenum-conversion]
-                        return HALMAC_CMD_PROCESS_ERROR;
-                        ~~~~~~ ^~~~~~~~~~~~~~~~~~~~~~~~
-1 warning generated.
-
-Fix this by using the proper enum for allocation failures,
-HALMAC_RET_MALLOC_FAIL, which is used in the rest of this file.
-
-Fixes: e4b08e16b7d9 ("staging: r8822be: check kzalloc return or bail")
-Link: https://github.com/ClangBuiltLinux/linux/issues/375
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nicholas Mc Guire <hofrat@osadl.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 446a8268b7f5 ("netfilter: nft_set_hash: add lookup variant for fixed size hashtable")
+Reported-by: Florian Westphal <fw@strlen.de>
+Tested-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/rtlwifi/halmac/halmac_88xx/halmac_func_88xx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/netfilter/nft_set_hash.c | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/staging/rtlwifi/halmac/halmac_88xx/halmac_func_88xx.c b/drivers/staging/rtlwifi/halmac/halmac_88xx/halmac_func_88xx.c
-index 15091ee587db..65edd14a1147 100644
---- a/drivers/staging/rtlwifi/halmac/halmac_88xx/halmac_func_88xx.c
-+++ b/drivers/staging/rtlwifi/halmac/halmac_88xx/halmac_func_88xx.c
-@@ -2495,7 +2495,7 @@ halmac_parse_psd_data_88xx(struct halmac_adapter *halmac_adapter, u8 *c2h_buf,
- 	if (!psd_set->data) {
- 		psd_set->data = kzalloc(psd_set->data_size, GFP_KERNEL);
- 		if (!psd_set->data)
--			return HALMAC_CMD_PROCESS_ERROR;
-+			return HALMAC_RET_MALLOC_FAIL;
- 	}
+diff --git a/net/netfilter/nft_set_hash.c b/net/netfilter/nft_set_hash.c
+index 33aa2ac3a62e..73f8f99b1193 100644
+--- a/net/netfilter/nft_set_hash.c
++++ b/net/netfilter/nft_set_hash.c
+@@ -442,6 +442,23 @@ static bool nft_hash_lookup_fast(const struct net *net,
+ 	return false;
+ }
  
- 	if (segment_id == 0)
++static u32 nft_jhash(const struct nft_set *set, const struct nft_hash *priv,
++		     const struct nft_set_ext *ext)
++{
++	const struct nft_data *key = nft_set_ext_key(ext);
++	u32 hash, k1;
++
++	if (set->klen == 4) {
++		k1 = *(u32 *)key;
++		hash = jhash_1word(k1, priv->seed);
++	} else {
++		hash = jhash(key, set->klen, priv->seed);
++	}
++	hash = reciprocal_scale(hash, priv->buckets);
++
++	return hash;
++}
++
+ static int nft_hash_insert(const struct net *net, const struct nft_set *set,
+ 			   const struct nft_set_elem *elem,
+ 			   struct nft_set_ext **ext)
+@@ -451,8 +468,7 @@ static int nft_hash_insert(const struct net *net, const struct nft_set *set,
+ 	u8 genmask = nft_genmask_next(net);
+ 	u32 hash;
+ 
+-	hash = jhash(nft_set_ext_key(&this->ext), set->klen, priv->seed);
+-	hash = reciprocal_scale(hash, priv->buckets);
++	hash = nft_jhash(set, priv, &this->ext);
+ 	hlist_for_each_entry(he, &priv->table[hash], node) {
+ 		if (!memcmp(nft_set_ext_key(&this->ext),
+ 			    nft_set_ext_key(&he->ext), set->klen) &&
+@@ -491,8 +507,7 @@ static void *nft_hash_deactivate(const struct net *net,
+ 	u8 genmask = nft_genmask_next(net);
+ 	u32 hash;
+ 
+-	hash = jhash(nft_set_ext_key(&this->ext), set->klen, priv->seed);
+-	hash = reciprocal_scale(hash, priv->buckets);
++	hash = nft_jhash(set, priv, &this->ext);
+ 	hlist_for_each_entry(he, &priv->table[hash], node) {
+ 		if (!memcmp(nft_set_ext_key(&this->ext), &elem->key.val,
+ 			    set->klen) ||
 -- 
 2.20.1
 
