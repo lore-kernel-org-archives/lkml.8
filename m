@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7097C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFFD5C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7911F246A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9451D24695
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:41:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196467;
-	bh=Ufllj10GVb8c5uaGHvmfcbjCFK+zsR9xpfccnRZiLqk=;
+	s=default; t=1579196475;
+	bh=NXRH1zrkux0uh3Nx6CaKGorHIc5+hpGlHHAkdvf5fMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MyjoGGtwJaMIIDRszYBZTybRcyU9B8eFIs+XkmQWI7UBUa9t0XXbZoxLEjMrzKblq
-	 xLl+oiAhWgzrrrbKBWSE9xliOQSDinau6xe0uCIXevKGLcylBgDyfax4Mj1TSUpx8b
-	 YdUpQCtPirvBkKhyKhU+SZhrF7h3CzM9wfddzzss=
+	b=QRrg7j56k8oh5IeS0UQnIvpeVvfwgfg/RXglPp8tGPTIUI3f/PS8v9oRqF75rBTRT
+	 xbTCF72yTuXhsvCgmEHxkQNTktcejrG4CnNexe3rsK9N45fcKTStFxG7Sh4/rlBCzJ
+	 5+HyfRUTr9V1iP8Wi0ypib9n4DpRdjZrjz7f9LYA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405578AbgAPRlG (ORCPT
+        id S2405613AbgAPRlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:41:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57014 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:41:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730325AbgAPRkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:40:08 -0500
+        id S2393596AbgAPRkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:40:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54D8824721;
-        Thu, 16 Jan 2020 17:40:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D0FF2471B;
+        Thu, 16 Jan 2020 17:40:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196407;
-        bh=Ufllj10GVb8c5uaGHvmfcbjCFK+zsR9xpfccnRZiLqk=;
+        s=default; t=1579196412;
+        bh=NXRH1zrkux0uh3Nx6CaKGorHIc5+hpGlHHAkdvf5fMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VlDsIAh15tn+HMCiznaTDfqX8NhT5M5j3OOiy9rpBcerFgIeWJqebInxbdxWX/zbo
-         WEnpnhYkUIt21sWaGi8wh4jLzxbL/ZA+S9P1vjcaB/46JWQuv/uyG3NwpHrWvr6d+e
-         UPpd3HOopS/yBQpzTRND5JkBdYDKgI/ziMiewzqU=
+        b=PLhnPk7je4uzsf+4dFl2zJiLTl6U7kYt5Nkri4Ya0CGm9Q9p9CENDKSpchFMCs8s5
+         dMV8mvEj0WrC3Hzb2y8zJBmA+Lyx2GG2Gc7F1Q3+5/6fxzVO8oRRk6IBMqWVGOLfCg
+         ASA5YPNW5NbptIv/Vruame5PNPj7JmgD+I+d50tY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.9 182/251] ASoC: wm8737: Fix copy-paste error in wm8737_snd_controls
-Date:   Thu, 16 Jan 2020 12:35:31 -0500
-Message-Id: <20200116173641.22137-142-sashal@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 185/251] dmaengine: dw: platform: Switch to acpi_dma_controller_register()
+Date:   Thu, 16 Jan 2020 12:35:34 -0500
+Message-Id: <20200116173641.22137-145-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -61,39 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 554b75bde64bcad9662530726d1483f7ef012069 ]
+[ Upstream commit e7b8514e4d68bec21fc6385fa0a66797ddc34ac9 ]
 
-sound/soc/codecs/wm8737.c:112:29: warning:
- high_3d defined but not used [-Wunused-const-variable=]
+There is a possibility to have registered ACPI DMA controller
+while it has been gone already.
 
-'high_3d' should be used for 3D High Cut-off.
+To avoid the potential crash, move to non-managed
+acpi_dma_controller_register().
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 2a9ae13a2641 ("ASoC: Add initial WM8737 driver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20190815091920.64480-1-yuehaibing@huawei.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 42c91ee71d6d ("dw_dmac: add ACPI support")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Link: https://lore.kernel.org/r/20190820131546.75744-8-andriy.shevchenko@linux.intel.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm8737.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/dw/platform.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/codecs/wm8737.c b/sound/soc/codecs/wm8737.c
-index f0cb1c4afe3c..c5a8d758f58b 100644
---- a/sound/soc/codecs/wm8737.c
-+++ b/sound/soc/codecs/wm8737.c
-@@ -170,7 +170,7 @@ SOC_DOUBLE("Polarity Invert Switch", WM8737_ADC_CONTROL, 5, 6, 1, 0),
- SOC_SINGLE("3D Switch", WM8737_3D_ENHANCE, 0, 1, 0),
- SOC_SINGLE("3D Depth", WM8737_3D_ENHANCE, 1, 15, 0),
- SOC_ENUM("3D Low Cut-off", low_3d),
--SOC_ENUM("3D High Cut-off", low_3d),
-+SOC_ENUM("3D High Cut-off", high_3d),
- SOC_SINGLE_TLV("3D ADC Volume", WM8737_3D_ENHANCE, 7, 1, 1, adc_tlv),
+diff --git a/drivers/dma/dw/platform.c b/drivers/dma/dw/platform.c
+index 5bda0eb9f393..7536fe80bc33 100644
+--- a/drivers/dma/dw/platform.c
++++ b/drivers/dma/dw/platform.c
+@@ -87,13 +87,20 @@ static void dw_dma_acpi_controller_register(struct dw_dma *dw)
+ 	dma_cap_set(DMA_SLAVE, info->dma_cap);
+ 	info->filter_fn = dw_dma_acpi_filter;
  
- SOC_SINGLE("Noise Gate Switch", WM8737_NOISE_GATE, 0, 1, 0),
+-	ret = devm_acpi_dma_controller_register(dev, acpi_dma_simple_xlate,
+-						info);
++	ret = acpi_dma_controller_register(dev, acpi_dma_simple_xlate, info);
+ 	if (ret)
+ 		dev_err(dev, "could not register acpi_dma_controller\n");
+ }
++
++static void dw_dma_acpi_controller_free(struct dw_dma *dw)
++{
++	struct device *dev = dw->dma.dev;
++
++	acpi_dma_controller_free(dev);
++}
+ #else /* !CONFIG_ACPI */
+ static inline void dw_dma_acpi_controller_register(struct dw_dma *dw) {}
++static inline void dw_dma_acpi_controller_free(struct dw_dma *dw) {}
+ #endif /* !CONFIG_ACPI */
+ 
+ #ifdef CONFIG_OF
+@@ -226,6 +233,9 @@ static int dw_remove(struct platform_device *pdev)
+ {
+ 	struct dw_dma_chip *chip = platform_get_drvdata(pdev);
+ 
++	if (ACPI_HANDLE(&pdev->dev))
++		dw_dma_acpi_controller_free(chip->dw);
++
+ 	if (pdev->dev.of_node)
+ 		of_dma_controller_free(pdev->dev.of_node);
+ 
 -- 
 2.20.1
 
