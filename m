@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1532C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81843C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C60F220663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51F2E20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218361;
-	bh=LBIl3KGH8MIU5Exw1WYg3MjvGaf/2BdugHkjvTznKk0=;
+	s=default; t=1579218365;
+	bh=+u79EGEWU7tG3I/iN79MCTPpFJk0xtRQEd8Du1GoO2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q+lTG0wBl0pRSx8mkvJtBC42x/renhME6XPkAVm4nqC0qRMg7ZBjxyKMbh4CzAJV9
-	 NLGDxistWkeqjm+qd+g/ZYfHxaTcT9X31RY8UcrRuCN4MPtNC5hN2X2Y+TucEZHUOr
-	 nIkZw4BniWD1XQvYVA9CFSmDFOIxgPsd/cmcLbeQ=
+	b=ukLfpGpw0ohje98u1B/LSYIFNEY5qH3SoMb6aqXHWWZ8iskHvCcfUqxJHBK/4FdDf
+	 I0iqXqnAO0imwTD9+Ui2yIJjdzl27J4tTgx5YnLAuxWXevjMJI+5bS89sWNeZzZTl+
+	 RU2KOt2tVCriRG9GU9BZx/3CYsp7vudRL1GFDTJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388876AbgAPXW0 (ORCPT
+        id S2391953AbgAPXqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:22:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50008 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:46:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390907AbgAPXWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:22:15 -0500
+        id S2389145AbgAPXW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:22:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C8682082F;
-        Thu, 16 Jan 2020 23:22:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E22B2072E;
+        Thu, 16 Jan 2020 23:22:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216934;
-        bh=LBIl3KGH8MIU5Exw1WYg3MjvGaf/2BdugHkjvTznKk0=;
+        s=default; t=1579216947;
+        bh=+u79EGEWU7tG3I/iN79MCTPpFJk0xtRQEd8Du1GoO2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fkNhBNfnzXibjA4v6rcSwoO9pZVmX9JnlsDr5fqQD1WfN6YPmj5ydkZpxbM+36dD1
-         2Ye0zE5qoG/SP0YxNqGmMOiKHXAz2xeqldh7AKs4NdeSKkHjqr+JDakRuRsXSwXTUW
-         w4PxljrOlcJU08n3/qd18aVNGa9epZoP9W1Aoh7E=
+        b=YN0DkP0ddflbcXo9rP5NiPYIyGJSQbNBx5bdre+4Vm9Jkg7+iS/X1If/FamD+GCX/
+         660HVghCAjtUvwXLt0YvG/nIC4Lu5oM7ALYeEk91c89JddQT7liTYgTmTcWbBunMar
+         84DntYInnDVFxZ55TWVVH4kKqM6gNvSyrdh1iBOI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stanislav Fomichev <sdf@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>
-Subject: [PATCH 5.4 080/203] bpf: Support pre-2.25-binutils objcopy for vmlinux BTF
-Date:   Fri, 17 Jan 2020 00:16:37 +0100
-Message-Id: <20200116231751.746152866@linuxfoundation.org>
+        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Subject: [PATCH 5.4 069/203] xprtrdma: Connection becomes unstable after a reconnect
+Date:   Fri, 17 Jan 2020 00:16:26 +0100
+Message-Id: <20200116231750.164006120@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -61,62 +59,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanislav Fomichev <sdf@google.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-commit da5fb18225b49b97bb37c51bcbbb2990a507c364 upstream.
+commit a31b2f939219dd9bffdf01a45bd91f209f8cc369 upstream.
 
-If vmlinux BTF generation fails, but CONFIG_DEBUG_INFO_BTF is set,
-.BTF section of vmlinux is empty and kernel will prohibit
-BPF loading and return "in-kernel BTF is malformed".
+This is because xprt_request_get_cong() is allowing more than one
+RPC Call to be transmitted before the first Receive on the new
+connection. The first Receive fills the Receive Queue based on the
+server's credit grant. Before that Receive, there is only a single
+Receive WR posted because the client doesn't know the server's
+credit grant.
 
---dump-section argument to binutils' objcopy was added in version 2.25.
-When using pre-2.25 binutils, BTF generation silently fails. Convert
-to --only-section which is present on pre-2.25 binutils.
+Solution is to clear rq_cong on all outstanding rpc_rqsts when the
+the cwnd is reset. This is because an RPC/RDMA credit is good for
+one connection instance only.
 
-Documentation/process/changes.rst states that binutils 2.21+
-is supported, not sure those standards apply to BPF subsystem.
-
-v2:
-* exit and print an error if gen_btf fails (John Fastabend)
-
-v3:
-* resend with Andrii's Acked-by/Tested-by tags
-
-Fixes: 341dfcf8d78ea ("btf: expose BTF info through sysfs")
-Signed-off-by: Stanislav Fomichev <sdf@google.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Tested-by: Andrii Nakryiko <andriin@fb.com>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Cc: John Fastabend <john.fastabend@gmail.com>
-Link: https://lore.kernel.org/bpf/20191127161410.57327-1-sdf@google.com
+Fixes: 75891f502f5f ("SUNRPC: Support for congestion control ... ")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- scripts/link-vmlinux.sh |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ net/sunrpc/xprtrdma/transport.c |    3 +++
+ net/sunrpc/xprtrdma/verbs.c     |   22 ++++++++++++++++++++++
+ 2 files changed, 25 insertions(+)
 
---- a/scripts/link-vmlinux.sh
-+++ b/scripts/link-vmlinux.sh
-@@ -127,7 +127,8 @@ gen_btf()
- 		cut -d, -f1 | cut -d' ' -f2)
- 	bin_format=$(LANG=C ${OBJDUMP} -f ${1} | grep 'file format' | \
- 		awk '{print $4}')
--	${OBJCOPY} --dump-section .BTF=.btf.vmlinux.bin ${1} 2>/dev/null
-+	${OBJCOPY} --set-section-flags .BTF=alloc -O binary \
-+		--only-section=.BTF ${1} .btf.vmlinux.bin 2>/dev/null
- 	${OBJCOPY} -I binary -O ${bin_format} -B ${bin_arch} \
- 		--rename-section .data=.BTF .btf.vmlinux.bin ${2}
- }
-@@ -253,6 +254,10 @@ btf_vmlinux_bin_o=""
- if [ -n "${CONFIG_DEBUG_INFO_BTF}" ]; then
- 	if gen_btf .tmp_vmlinux.btf .btf.vmlinux.bin.o ; then
- 		btf_vmlinux_bin_o=.btf.vmlinux.bin.o
-+	else
-+		echo >&2 "Failed to generate BTF for vmlinux"
-+		echo >&2 "Try to disable CONFIG_DEBUG_INFO_BTF"
-+		exit 1
- 	fi
- fi
+--- a/net/sunrpc/xprtrdma/transport.c
++++ b/net/sunrpc/xprtrdma/transport.c
+@@ -428,8 +428,11 @@ void xprt_rdma_close(struct rpc_xprt *xp
+ 	/* Prepare @xprt for the next connection by reinitializing
+ 	 * its credit grant to one (see RFC 8166, Section 3.3.3).
+ 	 */
++	spin_lock(&xprt->transport_lock);
+ 	r_xprt->rx_buf.rb_credits = 1;
++	xprt->cong = 0;
+ 	xprt->cwnd = RPC_CWNDSHIFT;
++	spin_unlock(&xprt->transport_lock);
  
+ out:
+ 	xprt->reestablish_timeout = 0;
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -75,6 +75,7 @@
+  * internal functions
+  */
+ static void rpcrdma_sendctx_put_locked(struct rpcrdma_sendctx *sc);
++static void rpcrdma_reqs_reset(struct rpcrdma_xprt *r_xprt);
+ static void rpcrdma_reps_destroy(struct rpcrdma_buffer *buf);
+ static void rpcrdma_mrs_create(struct rpcrdma_xprt *r_xprt);
+ static void rpcrdma_mrs_destroy(struct rpcrdma_buffer *buf);
+@@ -780,6 +781,7 @@ rpcrdma_ep_disconnect(struct rpcrdma_ep
+ 	trace_xprtrdma_disconnect(r_xprt, rc);
+ 
+ 	rpcrdma_xprt_drain(r_xprt);
++	rpcrdma_reqs_reset(r_xprt);
+ }
+ 
+ /* Fixed-size circular FIFO queue. This implementation is wait-free and
+@@ -1042,6 +1044,26 @@ out1:
+ 	return NULL;
+ }
+ 
++/**
++ * rpcrdma_reqs_reset - Reset all reqs owned by a transport
++ * @r_xprt: controlling transport instance
++ *
++ * ASSUMPTION: the rb_allreqs list is stable for the duration,
++ * and thus can be walked without holding rb_lock. Eg. the
++ * caller is holding the transport send lock to exclude
++ * device removal or disconnection.
++ */
++static void rpcrdma_reqs_reset(struct rpcrdma_xprt *r_xprt)
++{
++	struct rpcrdma_buffer *buf = &r_xprt->rx_buf;
++	struct rpcrdma_req *req;
++
++	list_for_each_entry(req, &buf->rb_allreqs, rl_all) {
++		/* Credits are valid only for one connection */
++		req->rl_slot.rq_cong = 0;
++	}
++}
++
+ static struct rpcrdma_rep *rpcrdma_rep_create(struct rpcrdma_xprt *r_xprt,
+ 					      bool temp)
+ {
 
 
