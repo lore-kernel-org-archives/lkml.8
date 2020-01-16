@@ -4,57 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F4FC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E251C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B43FA2072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B8FC2072B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:19:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579216770;
-	bh=RvhoIAxXqYDw5faNpUGywRjxgGEB37kkvbofp85v6co=;
+	s=default; t=1579216774;
+	bh=IX/cPDOakdeiFjMrTgtNzPjJuBZ35xpG7WXIjxZz/dE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RMXzMH3VYvQq7NcSy3kAzxD9W2YYoRwYJA3R32M4LC0wqmRgoyuSiSsg8KN9fuA2l
-	 2W/XP5YuiuVqcG+JDlGCc2qmeVT9dyK+Wc8NQwAMZr3bs/NirfLvhdbbmxxUkbCMCl
-	 S0RzdRjMbHtbYNDYDDW0t8AVU+wZDWiRgP+/mdu8=
+	b=oyaIEUwROPBtxu1TCL9HQtDcfWayZiZtG6BjByjS+IxWgUxvUaNGoSnBeKIgkkDba
+	 CHEWLqNFRhTQ2kUu6fmlLWCVpquG2fWs0EPKD9k1FKZDEp7kGusc27hsPddq2E++n0
+	 sEZnLFAONZAUGyfNxMz15cNGsWlz/eb5e/rCrX7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390401AbgAPXTa (ORCPT
+        id S2390422AbgAPXTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:19:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45262 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:19:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729300AbgAPXT2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:19:28 -0500
+        id S1729300AbgAPXTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:19:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A16C20684;
-        Thu, 16 Jan 2020 23:19:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E999B2073A;
+        Thu, 16 Jan 2020 23:19:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216767;
-        bh=RvhoIAxXqYDw5faNpUGywRjxgGEB37kkvbofp85v6co=;
+        s=default; t=1579216770;
+        bh=IX/cPDOakdeiFjMrTgtNzPjJuBZ35xpG7WXIjxZz/dE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NPyKjcu1reryNXE2oymZW49RR3C6sgZY9Rxk8QNNJo4wBVK1VkKlcHE+QPF8tjpio
-         g2+Eio3+hEgO2l9EHYrkuKmO4QJESjrF8ZPXteqek3aLf+yQ4mM6/7vafKGofYMnhS
-         lcY8cS8V/1CAs2F3UdOr+XW4f3MzNbYuzWYyfK78=
+        b=QgddeGGZKv2vwi1ayAgBmmB7UlBBTEpWZOrh0X/QQ9YNWLILjrBPWyR+f25gultOK
+         sWEyNIyxLOdc6bjtevdLhsvPycgFLIsHlH1IcLEi2AuL6z60t0IqDLlbBxCmoBIF3m
+         iTnJiG7eNAvZUdJT/WM8Hvw/O18rZ7S+fxstkfHo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jacopo Mondi <jacopo@jmondi.org>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marcel Partap <mpartap@gmx.net>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Michael Scott <hashcode0f@gmail.com>,
-        NeKit <nekit1000@gmail.com>, Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 5.4 003/203] phy: mapphone-mdm6600: Fix uninitialized status value regression
-Date:   Fri, 17 Jan 2020 00:15:20 +0100
-Message-Id: <20200116231745.430527440@linuxfoundation.org>
+        stable@vger.kernel.org, Selvin Xavier <selvin.xavier@broadcom.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.4 004/203] RDMA/bnxt_re: Avoid freeing MR resources if dereg fails
+Date:   Fri, 17 Jan 2020 00:15:21 +0100
+Message-Id: <20200116231745.488375002@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -67,65 +59,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Selvin Xavier <selvin.xavier@broadcom.com>
 
-commit af5d44de571811a151510bfd1236407b7f551cd9 upstream.
+commit 9a4467a6b282a299b932608ac2c9034f8415359f upstream.
 
-Only the used bits get cleared with bitmap_zero() when we call
-gpiod_get_array_value_cansleep(). We must mask only the bits we're
-using for ddata->status as the other bits in the bitmap may not be
-initialized.
+The driver returns an error code for MR dereg, but frees the MR structure.
+When the MR dereg is retried due to previous error, the system crashes as
+the structure is already freed.
 
-And let's also drop useless debug code accidentally left over while
-at it.
+  BUG: unable to handle kernel NULL pointer dereference at 00000000000001b8
+  PGD 0 P4D 0
+  Oops: 0000 [#1] SMP PTI
+  CPU: 7 PID: 12178 Comm: ib_send_bw Kdump: loaded Not tainted 4.18.0-124.el8.x86_64 #1
+  Hardware name: Dell Inc. PowerEdge R430/03XKDV, BIOS 1.1.10 03/10/2015
+  RIP: 0010:__dev_printk+0x2a/0x70
+  Code: 0f 1f 44 00 00 49 89 d1 48 85 f6 0f 84 f6 2b 00 00 4c 8b 46 70 4d 85 c0 75 04 4c 8b
+46 10 48 8b 86 a8 00 00 00 48 85 c0 74 16 <48> 8b 08 0f be 7f 01 48 c7 c2 13 ac ac 83 83 ef 30 e9 10 fe ff ff
+  RSP: 0018:ffffaf7c04607a60 EFLAGS: 00010006
+  RAX: 00000000000001b8 RBX: ffffa0010c91c488 RCX: 0000000000000246
+  RDX: ffffaf7c04607a68 RSI: ffffa0010c91caa8 RDI: ffffffff83a788eb
+  RBP: ffffaf7c04607ac8 R08: 0000000000000000 R09: ffffaf7c04607a68
+  R10: 0000000000000000 R11: 0000000000000001 R12: ffffaf7c04607b90
+  R13: 000000000000000e R14: 0000000000000000 R15: 00000000ffffa001
+  FS:  0000146fa1f1cdc0(0000) GS:ffffa0012fac0000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 00000000000001b8 CR3: 000000007680a003 CR4: 00000000001606e0
+  Call Trace:
+   dev_err+0x6c/0x90
+   ? dev_printk_emit+0x4e/0x70
+   bnxt_qplib_rcfw_send_message+0x594/0x660 [bnxt_re]
+   ? dev_err+0x6c/0x90
+   bnxt_qplib_free_mrw+0x80/0xe0 [bnxt_re]
+   bnxt_re_dereg_mr+0x2e/0xd0 [bnxt_re]
+   ib_dereg_mr+0x2f/0x50 [ib_core]
+   destroy_hw_idr_uobject+0x20/0x70 [ib_uverbs]
+   uverbs_destroy_uobject+0x2e/0x170 [ib_uverbs]
+   __uverbs_cleanup_ufile+0x6e/0x90 [ib_uverbs]
+   uverbs_destroy_ufile_hw+0x61/0x130 [ib_uverbs]
+   ib_uverbs_close+0x1f/0x80 [ib_uverbs]
+   __fput+0xb7/0x230
+   task_work_run+0x8a/0xb0
+   do_exit+0x2da/0xb40
+...
+  RIP: 0033:0x146fa113a387
+  Code: Bad RIP value.
+  RSP: 002b:00007fff945d1478 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff02
+  RAX: 0000000000000000 RBX: 000055a248908d70 RCX: 0000000000000000
+  RDX: 0000146fa1f2b000 RSI: 0000000000000001 RDI: 000055a248906488
+  RBP: 000055a248909630 R08: 0000000000010000 R09: 0000000000000000
+  R10: 0000000000000000 R11: 0000000000000000 R12: 000055a248906488
+  R13: 0000000000000001 R14: 0000000000000000 R15: 000055a2489095f0
 
-Fixes: b9762bebc633 ("gpiolib: Pass bitmaps, not integer arrays, to get/set array")
-Cc: Jacopo Mondi <jacopo@jmondi.org>
-Cc: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Marcel Partap <mpartap@gmx.net>
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Michael Scott <hashcode0f@gmail.com>
-Cc: NeKit <nekit1000@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sre@kernel.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Do not free the MR structures, when driver returns error to the stack.
+
+Fixes: 872f3578241d ("RDMA/bnxt_re: Add support for MRs with Huge pages")
+Link: https://lore.kernel.org/r/1574671174-5064-2-git-send-email-selvin.xavier@broadcom.com
+Signed-off-by: Selvin Xavier <selvin.xavier@broadcom.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/phy/motorola/phy-mapphone-mdm6600.c |   11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ drivers/infiniband/hw/bnxt_re/ib_verbs.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/phy/motorola/phy-mapphone-mdm6600.c
-+++ b/drivers/phy/motorola/phy-mapphone-mdm6600.c
-@@ -200,7 +200,7 @@ static void phy_mdm6600_status(struct wo
- 	struct phy_mdm6600 *ddata;
- 	struct device *dev;
- 	DECLARE_BITMAP(values, PHY_MDM6600_NR_STATUS_LINES);
--	int error, i, val = 0;
-+	int error;
+--- a/drivers/infiniband/hw/bnxt_re/ib_verbs.c
++++ b/drivers/infiniband/hw/bnxt_re/ib_verbs.c
+@@ -3323,8 +3323,10 @@ int bnxt_re_dereg_mr(struct ib_mr *ib_mr
+ 	int rc;
  
- 	ddata = container_of(work, struct phy_mdm6600, status_work.work);
- 	dev = ddata->dev;
-@@ -212,16 +212,11 @@ static void phy_mdm6600_status(struct wo
- 	if (error)
- 		return;
+ 	rc = bnxt_qplib_free_mrw(&rdev->qplib_res, &mr->qplib_mr);
+-	if (rc)
++	if (rc) {
+ 		dev_err(rdev_to_dev(rdev), "Dereg MR failed: %#x\n", rc);
++		return rc;
++	}
  
--	for (i = 0; i < PHY_MDM6600_NR_STATUS_LINES; i++) {
--		val |= test_bit(i, values) << i;
--		dev_dbg(ddata->dev, "XXX %s: i: %i values[i]: %i val: %i\n",
--			__func__, i, test_bit(i, values), val);
--	}
--	ddata->status = values[0];
-+	ddata->status = values[0] & ((1 << PHY_MDM6600_NR_STATUS_LINES) - 1);
- 
- 	dev_info(dev, "modem status: %i %s\n",
- 		 ddata->status,
--		 phy_mdm6600_status_name[ddata->status & 7]);
-+		 phy_mdm6600_status_name[ddata->status]);
- 	complete(&ddata->ack);
- }
- 
+ 	if (mr->pages) {
+ 		rc = bnxt_qplib_free_fast_reg_page_list(&rdev->qplib_res,
 
 
