@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBE6C47409
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B397C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1C352075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AA602073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:19:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579216780;
-	bh=ypNyw1MjB0/bfpX02WXK0mi16a6Oth6mpa7Q0tMXgrs=;
+	s=default; t=1579216783;
+	bh=rLsv+qy28V1NQ/0M5cJFMA/bZ0WPRM3Q2uL7EYHh5bM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vDwrvqfRXaku+1l0wfIEHIaIItp1MuGElaZfnikdA+KuGIZAVXnkCV+mAcgQI/Giu
-	 aLPQRaqZ5jm6vgj2/BiyzlBF3OCCChyXyBJ7rM/9dpyfuhYahYW2koTKX8VqhXLCji
-	 jWnZlPDWy9/lONohtcdKFBjo7DdaYYSoX0UUPGh4=
+	b=qt0njJp0guSLkwOwQXg0kLK5eRUR/RxUnrO9a7erF8H4MBl2tN0D+SwhOfCkZ0/KS
+	 Lq3wKTM3kthL0ftl5K83ms3mkdm5tb16qgCeUFYlYGEJuTWNlmIb1CrZJd3U9w1+cF
+	 hpuCq6HVSrUbvUHRtT6XQdB0hVHPL0pty9o3TGss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390450AbgAPXTk (ORCPT
+        id S2390466AbgAPXTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:19:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45522 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:19:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388134AbgAPXTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:19:35 -0500
+        id S1729923AbgAPXTi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:19:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB30C2073A;
-        Thu, 16 Jan 2020 23:19:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 879D22072B;
+        Thu, 16 Jan 2020 23:19:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216775;
-        bh=ypNyw1MjB0/bfpX02WXK0mi16a6Oth6mpa7Q0tMXgrs=;
+        s=default; t=1579216778;
+        bh=rLsv+qy28V1NQ/0M5cJFMA/bZ0WPRM3Q2uL7EYHh5bM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A3LlWKjUALpCusB07jFaC6n6VHgtzukIhrYxPvafMDjkUCIfkFrg8jbZyE8O6Prf9
-         mQFkyZAN5lHWe+nk0rB9wbm6aiy+CJI3Cr/ZGCh09/w44DN8LFxhfTT248zTDqFgQb
-         4x2CTV6iUa8XQ+ZZi6l3q7RivNOyFkO43YR+UwNo=
+        b=h/O5zr++szCHxvrA2+DwvfuiZEMdiguWuoiLFwJzFVo+u71BTMz07Hf+6g557UDAC
+         W3ZRSN+kd8F+rJjb/a9wJBbP6eJ3ncb2SWC80OlRTMuSMZP6P8/BIIeaHMHZuuihv0
+         vowRnAbHZuVOTog0g/GoEgVMzUrDXUZKzSFpcqgA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.4 006/203] IB/hfi1: Dont cancel unused work item
-Date:   Fri, 17 Jan 2020 00:15:23 +0100
-Message-Id: <20200116231745.609284790@linuxfoundation.org>
+        Christophe Kerello <christophe.kerello@st.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 5.4 007/203] mtd: rawnand: stm32_fmc2: avoid to lock the CPU bus
+Date:   Fri, 17 Jan 2020 00:15:24 +0100
+Message-Id: <20200116231745.665943525@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -62,52 +60,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kaike Wan <kaike.wan@intel.com>
+From: Christophe Kerello <christophe.kerello@st.com>
 
-commit ca9033ba69c7e3477f207df69867b2ea969197c8 upstream.
+commit 4114b17af41272e14939b000ce8f3ed7ba937e3c upstream.
 
-In the iowait structure, two iowait_work entries were included to queue a
-given object: one for normal IB operations, and the other for TID RDMA
-operations. For non-TID RDMA operations, the iowait_work structure for TID
-RDMA is initialized to contain a NULL function (not used). When the QP is
-reset, the function iowait_cancel_work will be called to cancel any
-pending work. The problem is that this function will call
-cancel_work_sync() for both iowait_work entries, even though the one for
-TID RDMA is not used at all. Eventually, the call cascades to
-__flush_work(), wherein a WARN_ON will be triggered due to the fact that
-work->func is NULL.
+We are currently using nand_soft_waitrdy to poll the status of the NAND
+flash. FMC2 enables the wait feature bit (this feature is mandatory for
+the sequencer mode). By enabling this feature, we can't poll the status
+of the NAND flash, the read status command is stucked in FMC2 pipeline
+until R/B# signal is high, and locks the CPU bus.
+To avoid to lock the CPU bus, we poll FMC2 ISR register. This register
+reports the status of the R/B# signal.
 
-The WARN_ON was introduced in commit 4d43d395fed1 ("workqueue: Try to
-catch flush_work() without INIT_WORK().")
-
-This patch fixes the issue by making sure that a work function is present
-for TID RDMA before calling cancel_work_sync in iowait_cancel_work.
-
-Fixes: 4d43d395fed1 ("workqueue: Try to catch flush_work() without INIT_WORK().")
-Fixes: 5da0fc9dbf89 ("IB/hfi1: Prepare resource waits for dual leg")
-Link: https://lore.kernel.org/r/20191219211941.58387.39883.stgit@awfm-01.aw.intel.com
-Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 2cd457f328c1 ("mtd: rawnand: stm32_fmc2: add STM32 FMC2 NAND flash controller driver")
+Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/hfi1/iowait.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/mtd/nand/raw/stm32_fmc2_nand.c |   38 +++++++++++++++++++++++++++++++--
+ 1 file changed, 36 insertions(+), 2 deletions(-)
 
---- a/drivers/infiniband/hw/hfi1/iowait.c
-+++ b/drivers/infiniband/hw/hfi1/iowait.c
-@@ -81,7 +81,9 @@ void iowait_init(struct iowait *wait, u3
- void iowait_cancel_work(struct iowait *w)
- {
- 	cancel_work_sync(&iowait_get_ib_work(w)->iowork);
--	cancel_work_sync(&iowait_get_tid_work(w)->iowork);
-+	/* Make sure that the iowork for TID RDMA is used */
-+	if (iowait_get_tid_work(w)->iowork.func)
-+		cancel_work_sync(&iowait_get_tid_work(w)->iowork);
+--- a/drivers/mtd/nand/raw/stm32_fmc2_nand.c
++++ b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+@@ -37,6 +37,7 @@
+ /* Max ECC buffer length */
+ #define FMC2_MAX_ECC_BUF_LEN		(FMC2_BCHDSRS_LEN * FMC2_MAX_SG)
+ 
++#define FMC2_TIMEOUT_US			1000
+ #define FMC2_TIMEOUT_MS			1000
+ 
+ /* Timings */
+@@ -53,6 +54,8 @@
+ #define FMC2_PMEM			0x88
+ #define FMC2_PATT			0x8c
+ #define FMC2_HECCR			0x94
++#define FMC2_ISR			0x184
++#define FMC2_ICR			0x188
+ #define FMC2_CSQCR			0x200
+ #define FMC2_CSQCFGR1			0x204
+ #define FMC2_CSQCFGR2			0x208
+@@ -118,6 +121,12 @@
+ #define FMC2_PATT_ATTHIZ(x)		(((x) & 0xff) << 24)
+ #define FMC2_PATT_DEFAULT		0x0a0a0a0a
+ 
++/* Register: FMC2_ISR */
++#define FMC2_ISR_IHLF			BIT(1)
++
++/* Register: FMC2_ICR */
++#define FMC2_ICR_CIHLF			BIT(1)
++
+ /* Register: FMC2_CSQCR */
+ #define FMC2_CSQCR_CSQSTART		BIT(0)
+ 
+@@ -1322,6 +1331,31 @@ static void stm32_fmc2_write_data(struct
+ 		stm32_fmc2_set_buswidth_16(fmc2, true);
  }
  
- /**
++static int stm32_fmc2_waitrdy(struct nand_chip *chip, unsigned long timeout_ms)
++{
++	struct stm32_fmc2_nfc *fmc2 = to_stm32_nfc(chip->controller);
++	const struct nand_sdr_timings *timings;
++	u32 isr, sr;
++
++	/* Check if there is no pending requests to the NAND flash */
++	if (readl_relaxed_poll_timeout_atomic(fmc2->io_base + FMC2_SR, sr,
++					      sr & FMC2_SR_NWRF, 1,
++					      FMC2_TIMEOUT_US))
++		dev_warn(fmc2->dev, "Waitrdy timeout\n");
++
++	/* Wait tWB before R/B# signal is low */
++	timings = nand_get_sdr_timings(&chip->data_interface);
++	ndelay(PSEC_TO_NSEC(timings->tWB_max));
++
++	/* R/B# signal is low, clear high level flag */
++	writel_relaxed(FMC2_ICR_CIHLF, fmc2->io_base + FMC2_ICR);
++
++	/* Wait R/B# signal is high */
++	return readl_relaxed_poll_timeout_atomic(fmc2->io_base + FMC2_ISR,
++						 isr, isr & FMC2_ISR_IHLF,
++						 5, 1000 * timeout_ms);
++}
++
+ static int stm32_fmc2_exec_op(struct nand_chip *chip,
+ 			      const struct nand_operation *op,
+ 			      bool check_only)
+@@ -1366,8 +1400,8 @@ static int stm32_fmc2_exec_op(struct nan
+ 			break;
+ 
+ 		case NAND_OP_WAITRDY_INSTR:
+-			ret = nand_soft_waitrdy(chip,
+-						instr->ctx.waitrdy.timeout_ms);
++			ret = stm32_fmc2_waitrdy(chip,
++						 instr->ctx.waitrdy.timeout_ms);
+ 			break;
+ 		}
+ 	}
 
 
