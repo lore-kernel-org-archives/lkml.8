@@ -5,120 +5,296 @@ X-Spam-Level:
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5907BC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38003C47409
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:18:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 321EF2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BB6D20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:18:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dCR5b4G7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RHabMC4u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436496AbgAPSSO (ORCPT
+        id S2436477AbgAPSSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:18:14 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:37696 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2404213AbgAPSSM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jan 2020 13:18:12 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:25196 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2391584AbgAPSSE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 13:18:04 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579198691;
+        s=mimecast20190719; t=1579198683;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=LP60/34E9bpmTo0YvyONW5BNSwA1vtrUNhAbAktUFEI=;
-        b=dCR5b4G7HC/O0RXNQZ+1lYVASBef924MCK1l7Xncr8Rpj/lYMxm0Odb+ORttflCX6eNyI2
-        dl09liHM86Y5beY3kAl56NwgT0lliGU4hcGCm4pCnuCK49XDjKpMM5UwNEVv9u+c0YNtYs
-        XyvGBf0LNqjbQJ55V1EzAht12QUtJEM=
+        bh=niuGWb81Q8zr23FXcglCGpZUWD+TFqFFh4zn2anjs0s=;
+        b=RHabMC4uX+YTBdTWoGCgOyksjeUYRauhVX+uvj9CbnEhAtLF5q1a1d9agC27Rov74CR8Lj
+        2uDy9Xynw+/fz//PoVXSHhTgRoFWAvpfGQ4Da5PJcl/2W8IdCrD/bzhhHl2H8VBf8zPRuH
+        Y+7Aa+9CH3ESQsAMsLzHFumZrDZ8g+Q=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-354-CqNHnw9EMeGDxSYvVUjxCA-1; Thu, 16 Jan 2020 13:18:09 -0500
-X-MC-Unique: CqNHnw9EMeGDxSYvVUjxCA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+ us-mta-327-2pz5OV7JOFemg2VndDEo1Q-1; Thu, 16 Jan 2020 13:18:01 -0500
+X-MC-Unique: 2pz5OV7JOFemg2VndDEo1Q-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C29D01088380;
-        Thu, 16 Jan 2020 18:18:08 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A06B7800D5C;
+        Thu, 16 Jan 2020 18:18:00 +0000 (UTC)
 Received: from gimli.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7B5085D9C9;
-        Thu, 16 Jan 2020 18:18:06 +0000 (UTC)
-Subject: [RFC PATCH 2/3] vfio/type1: Replace obvious read lock instances
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 496AF80617;
+        Thu, 16 Jan 2020 18:17:57 +0000 (UTC)
+Subject: [RFC PATCH 1/3] vfio/type1: Convert vfio_iommu.lock from mutex to
+ rwsem
 From:   Alex Williamson <alex.williamson@redhat.com>
 To:     yan.y.zhao@intel.com
 Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 16 Jan 2020 11:18:05 -0700
-Message-ID: <157919868571.21002.6651113746893305820.stgit@gimli.home>
+Date:   Thu, 16 Jan 2020 11:17:57 -0700
+Message-ID: <157919867745.21002.3239982207630090516.stgit@gimli.home>
 In-Reply-To: <157919849533.21002.4782774695733669879.stgit@gimli.home>
 References: <157919849533.21002.4782774695733669879.stgit@gimli.home>
 User-Agent: StGit/0.19-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace some instances where no internal state is changed to read locks.
+As a first step reducing lock contention, maintain the same locking
+granularity using a rwsem rather than a mutex.
 
 Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 ---
- drivers/vfio/vfio_iommu_type1.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/vfio/vfio_iommu_type1.c |   51 ++++++++++++++++++++-------------------
+ 1 file changed, 26 insertions(+), 25 deletions(-)
 
 diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index 7ae58350af5b..e78067cc74b3 100644
+index 2ada8e6cdb88..7ae58350af5b 100644
 --- a/drivers/vfio/vfio_iommu_type1.c
 +++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -830,10 +830,10 @@ static unsigned long vfio_pgsize_bitmap(struct vfio_iommu *iommu)
+@@ -28,6 +28,7 @@
+ #include <linux/module.h>
+ #include <linux/mm.h>
+ #include <linux/rbtree.h>
++#include <linux/rwsem.h>
+ #include <linux/sched/signal.h>
+ #include <linux/sched/mm.h>
+ #include <linux/slab.h>
+@@ -64,7 +65,7 @@ struct vfio_iommu {
+ 	struct list_head	domain_list;
+ 	struct list_head	iova_list;
+ 	struct vfio_domain	*external_domain; /* domain for external user */
+-	struct mutex		lock;
++	struct rw_semaphore	lock;
+ 	struct rb_root		dma_list;
+ 	struct blocking_notifier_head notifier;
+ 	unsigned int		dma_avail;
+@@ -538,7 +539,7 @@ static int vfio_iommu_type1_pin_pages(void *iommu_data,
+ 	if (!iommu->v2)
+ 		return -EACCES;
+ 
+-	mutex_lock(&iommu->lock);
++	down_write(&iommu->lock);
+ 
+ 	/* Fail if notifier list is empty */
+ 	if (!iommu->notifier.head) {
+@@ -602,7 +603,7 @@ static int vfio_iommu_type1_pin_pages(void *iommu_data,
+ 		phys_pfn[j] = 0;
+ 	}
+ pin_done:
+-	mutex_unlock(&iommu->lock);
++	up_write(&iommu->lock);
+ 	return ret;
+ }
+ 
+@@ -621,7 +622,7 @@ static int vfio_iommu_type1_unpin_pages(void *iommu_data,
+ 	if (!iommu->v2)
+ 		return -EACCES;
+ 
+-	mutex_lock(&iommu->lock);
++	down_write(&iommu->lock);
+ 
+ 	do_accounting = !IS_IOMMU_CAP_DOMAIN_IN_CONTAINER(iommu);
+ 	for (i = 0; i < npage; i++) {
+@@ -636,7 +637,7 @@ static int vfio_iommu_type1_unpin_pages(void *iommu_data,
+ 	}
+ 
+ unpin_exit:
+-	mutex_unlock(&iommu->lock);
++	up_write(&iommu->lock);
+ 	return i > npage ? npage : (i > 0 ? i : -EINVAL);
+ }
+ 
+@@ -829,10 +830,10 @@ static unsigned long vfio_pgsize_bitmap(struct vfio_iommu *iommu)
  	struct vfio_domain *domain;
  	unsigned long bitmap = ULONG_MAX;
  
--	down_write(&iommu->lock);
-+	down_read(&iommu->lock);
+-	mutex_lock(&iommu->lock);
++	down_write(&iommu->lock);
  	list_for_each_entry(domain, &iommu->domain_list, next)
  		bitmap &= domain->domain->pgsize_bitmap;
--	up_write(&iommu->lock);
-+	up_read(&iommu->lock);
+-	mutex_unlock(&iommu->lock);
++	up_write(&iommu->lock);
  
  	/*
  	 * In case the IOMMU supports page sizes smaller than PAGE_SIZE
-@@ -2115,14 +2115,14 @@ static int vfio_domains_have_iommu_cache(struct vfio_iommu *iommu)
+@@ -870,7 +871,7 @@ static int vfio_dma_do_unmap(struct vfio_iommu *iommu,
+ 
+ 	WARN_ON(mask & PAGE_MASK);
+ again:
+-	mutex_lock(&iommu->lock);
++	down_write(&iommu->lock);
+ 
+ 	/*
+ 	 * vfio-iommu-type1 (v1) - User mappings were coalesced together to
+@@ -945,7 +946,7 @@ static int vfio_dma_do_unmap(struct vfio_iommu *iommu,
+ 			 * Vendor drivers MUST unpin pages in response to an
+ 			 * invalidation.
+ 			 */
+-			mutex_unlock(&iommu->lock);
++			up_write(&iommu->lock);
+ 			blocking_notifier_call_chain(&iommu->notifier,
+ 						    VFIO_IOMMU_NOTIFY_DMA_UNMAP,
+ 						    &nb_unmap);
+@@ -956,7 +957,7 @@ static int vfio_dma_do_unmap(struct vfio_iommu *iommu,
+ 	}
+ 
+ unlock:
+-	mutex_unlock(&iommu->lock);
++	up_write(&iommu->lock);
+ 
+ 	/* Report how much was unmapped */
+ 	unmap->size = unmapped;
+@@ -1081,7 +1082,7 @@ static int vfio_dma_do_map(struct vfio_iommu *iommu,
+ 	if (iova + size - 1 < iova || vaddr + size - 1 < vaddr)
+ 		return -EINVAL;
+ 
+-	mutex_lock(&iommu->lock);
++	down_write(&iommu->lock);
+ 
+ 	if (vfio_find_dma(iommu, iova, size)) {
+ 		ret = -EEXIST;
+@@ -1150,7 +1151,7 @@ static int vfio_dma_do_map(struct vfio_iommu *iommu,
+ 		ret = vfio_pin_map_dma(iommu, dma, size);
+ 
+ out_unlock:
+-	mutex_unlock(&iommu->lock);
++	up_write(&iommu->lock);
+ 	return ret;
+ }
+ 
+@@ -1645,18 +1646,18 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
+ 	LIST_HEAD(iova_copy);
+ 	LIST_HEAD(group_resv_regions);
+ 
+-	mutex_lock(&iommu->lock);
++	down_write(&iommu->lock);
+ 
+ 	list_for_each_entry(d, &iommu->domain_list, next) {
+ 		if (find_iommu_group(d, iommu_group)) {
+-			mutex_unlock(&iommu->lock);
++			up_write(&iommu->lock);
+ 			return -EINVAL;
+ 		}
+ 	}
+ 
+ 	if (iommu->external_domain) {
+ 		if (find_iommu_group(iommu->external_domain, iommu_group)) {
+-			mutex_unlock(&iommu->lock);
++			up_write(&iommu->lock);
+ 			return -EINVAL;
+ 		}
+ 	}
+@@ -1693,7 +1694,7 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
+ 
+ 			list_add(&group->next,
+ 				 &iommu->external_domain->group_list);
+-			mutex_unlock(&iommu->lock);
++			up_write(&iommu->lock);
+ 
+ 			return 0;
+ 		}
+@@ -1815,7 +1816,7 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
+ done:
+ 	/* Delete the old one and insert new iova list */
+ 	vfio_iommu_iova_insert_copy(iommu, &iova_copy);
+-	mutex_unlock(&iommu->lock);
++	up_write(&iommu->lock);
+ 	vfio_iommu_resv_free(&group_resv_regions);
+ 
+ 	return 0;
+@@ -1829,7 +1830,7 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
+ out_free:
+ 	kfree(domain);
+ 	kfree(group);
+-	mutex_unlock(&iommu->lock);
++	up_write(&iommu->lock);
+ 	return ret;
+ }
+ 
+@@ -1969,7 +1970,7 @@ static void vfio_iommu_type1_detach_group(void *iommu_data,
+ 	struct vfio_group *group;
+ 	LIST_HEAD(iova_copy);
+ 
+-	mutex_lock(&iommu->lock);
++	down_write(&iommu->lock);
+ 
+ 	if (iommu->external_domain) {
+ 		group = find_iommu_group(iommu->external_domain, iommu_group);
+@@ -2033,7 +2034,7 @@ static void vfio_iommu_type1_detach_group(void *iommu_data,
+ 		vfio_iommu_iova_free(&iova_copy);
+ 
+ detach_group_done:
+-	mutex_unlock(&iommu->lock);
++	up_write(&iommu->lock);
+ }
+ 
+ static void *vfio_iommu_type1_open(unsigned long arg)
+@@ -2062,7 +2063,7 @@ static void *vfio_iommu_type1_open(unsigned long arg)
+ 	INIT_LIST_HEAD(&iommu->iova_list);
+ 	iommu->dma_list = RB_ROOT;
+ 	iommu->dma_avail = dma_entry_limit;
+-	mutex_init(&iommu->lock);
++	init_rwsem(&iommu->lock);
+ 	BLOCKING_INIT_NOTIFIER_HEAD(&iommu->notifier);
+ 
+ 	return iommu;
+@@ -2114,14 +2115,14 @@ static int vfio_domains_have_iommu_cache(struct vfio_iommu *iommu)
  	struct vfio_domain *domain;
  	int ret = 1;
  
--	down_write(&iommu->lock);
-+	down_read(&iommu->lock);
+-	mutex_lock(&iommu->lock);
++	down_write(&iommu->lock);
  	list_for_each_entry(domain, &iommu->domain_list, next) {
  		if (!(domain->prot & IOMMU_CACHE)) {
  			ret = 0;
  			break;
  		}
  	}
--	up_write(&iommu->lock);
-+	up_read(&iommu->lock);
+-	mutex_unlock(&iommu->lock);
++	up_write(&iommu->lock);
  
  	return ret;
  }
-@@ -2156,7 +2156,7 @@ static int vfio_iommu_iova_build_caps(struct vfio_iommu *iommu,
+@@ -2155,7 +2156,7 @@ static int vfio_iommu_iova_build_caps(struct vfio_iommu *iommu,
  	size_t size;
  	int iovas = 0, i = 0, ret;
  
--	down_write(&iommu->lock);
-+	down_read(&iommu->lock);
+-	mutex_lock(&iommu->lock);
++	down_write(&iommu->lock);
  
  	list_for_each_entry(iova, &iommu->iova_list, list)
  		iovas++;
-@@ -2190,7 +2190,7 @@ static int vfio_iommu_iova_build_caps(struct vfio_iommu *iommu,
+@@ -2189,7 +2190,7 @@ static int vfio_iommu_iova_build_caps(struct vfio_iommu *iommu,
  
  	kfree(cap_iovas);
  out_unlock:
--	up_write(&iommu->lock);
-+	up_read(&iommu->lock);
+-	mutex_unlock(&iommu->lock);
++	up_write(&iommu->lock);
  	return ret;
  }
  
