@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E2C8C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FAA1C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B187214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CF70214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:02:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197758;
-	bh=wpw707HpFYDq89uTHid5xGLvMj+Vcf2BvVGilTsS0O0=;
+	s=default; t=1579197763;
+	bh=mlxYd5cszeChQ7P+G40T2hUzaO7kh5hQ4w884GddtDQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ULKU55CbiBFnYkgQMM0EAeOgSyINwX8TYrIPRdWf7jFpwRRTmn05w793zCHwxms8b
-	 ApYlNEN6xrMIwTlwZSLvlcHFba3ChnMjsM+EoLxRcw2fGB2TrZ7EXRmJ0JZBRrmLFd
-	 3pjfvyWd0XwrhLsKrrziy+opTMomWDxBeh1C/9f4=
+	b=wQ5rzb/L44vzMYMd6cg9uxabC9Tfix11ba9DJZqYglkxnf3iMncdiIz16uZGIGQF4
+	 wSXh5+fl8YzoQ5XRlAwRwWEdpqeNpgaYPCZOXygJdams8Py215CcshNCSNVzyYsrNV
+	 72USM/m2s1CPIQ0vtcdz5xJBdjAmFg+muvR9Ay4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394812AbgAPSCh (ORCPT
+        id S2405797AbgAPSCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:02:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58596 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:02:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405535AbgAPRlG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:41:06 -0500
+        id S2405083AbgAPRlF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:41:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B83B22469B;
-        Thu, 16 Jan 2020 17:41:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23EA42467C;
+        Thu, 16 Jan 2020 17:41:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196466;
-        bh=wpw707HpFYDq89uTHid5xGLvMj+Vcf2BvVGilTsS0O0=;
+        s=default; t=1579196464;
+        bh=mlxYd5cszeChQ7P+G40T2hUzaO7kh5hQ4w884GddtDQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2c1bIu+xGzssicJ8ozhA/mNgUq/3ZezXUknk7vGEkdXAGu9tPVR8KgCoUzjt0472y
-         XCgv3h8WFoLjw5mpyUvOFmBjlF2Q/WzzfV58zu/zY24ZNglYuHfBzz6vzZIeG5QfCt
-         yx3HhS3vAnfJBjiyUc1fBLAiX/o4JcWsyXUgfFis=
+        b=dlQzgEDzAxErlmX5rckjbCh1oqCCO6TtwIutbt5BH72z1FN8HlXQzl4GZiCf2kLEY
+         pgSVD79NwHBIYBbRa975zQUoi7VPFWwBW19lJt5Q/YFqOdzoeqxHeT0ZzTJ6mPhH/2
+         oHpYPE2d/IJXMl5LyqKBgBLTPnBJlQRh7H95E1sE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robin Gong <yibin.gong@nxp.com>, stable@vger.kernel,
-        Jurgen Lambrecht <J.Lambrecht@TELEVIC.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 218/251] dmaengine: imx-sdma: fix size check for sdma script_number
-Date:   Thu, 16 Jan 2020 12:36:07 -0500
-Message-Id: <20200116173641.22137-178-sashal@kernel.org>
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Hai Li <hali@codeaurora.org>, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>, Sean Paul <seanpaul@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.9 217/251] drm/msm/dsi: Implement reset correctly
+Date:   Thu, 16 Jan 2020 12:36:06 -0500
+Message-Id: <20200116173641.22137-177-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -60,71 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Gong <yibin.gong@nxp.com>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-[ Upstream commit bd73dfabdda280fc5f05bdec79b6721b4b2f035f ]
+[ Upstream commit 78e31c42261779a01bc73472d0f65f15378e9de3 ]
 
-Illegal memory will be touch if SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3
-(41) exceed the size of structure sdma_script_start_addrs(40),
-thus cause memory corrupt such as slob block header so that kernel
-trap into while() loop forever in slob_free(). Please refer to below
-code piece in imx-sdma.c:
-for (i = 0; i < sdma->script_number; i++)
-	if (addr_arr[i] > 0)
-		saddr_arr[i] = addr_arr[i]; /* memory corrupt here */
-That issue was brought by commit a572460be9cf ("dmaengine: imx-sdma: Add
-support for version 3 firmware") because SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3
-(38->41 3 scripts added) not align with script number added in
-sdma_script_start_addrs(2 scripts).
+On msm8998, vblank timeouts are observed because the DSI controller is not
+reset properly, which ends up stalling the MDP.  This is because the reset
+logic is not correct per the hardware documentation.
 
-Fixes: a572460be9cf ("dmaengine: imx-sdma: Add support for version 3 firmware")
-Cc: stable@vger.kernel
-Link: https://www.spinics.net/lists/arm-kernel/msg754895.html
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Reported-by: Jurgen Lambrecht <J.Lambrecht@TELEVIC.com>
-Link: https://lore.kernel.org/r/1569347584-3478-1-git-send-email-yibin.gong@nxp.com
-[vkoul: update the patch title]
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+The documentation states that after asserting reset, software should wait
+some time (no indication of how long), or poll the status register until it
+returns 0 before deasserting reset.
+
+wmb() is insufficient for this purpose since it just ensures ordering, not
+timing between writes.  Since asserting and deasserting reset occurs on the
+same register, ordering is already guaranteed by the architecture, making
+the wmb extraneous.
+
+Since we would define a timeout for polling the status register to avoid a
+possible infinite loop, lets just use a static delay of 20 ms, since 16.666
+ms is the time available to process one frame at 60 fps.
+
+Fixes: a689554ba6ed ("drm/msm: Initial add DSI connector support")
+Cc: Hai Li <hali@codeaurora.org>
+Cc: Rob Clark <robdclark@gmail.com>
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Reviewed-by: Sean Paul <sean@poorly.run>
+[seanpaul renamed RESET_DELAY to DSI_RESET_TOGGLE_DELAY_MS]
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191011133939.16551-1-jeffrey.l.hugo@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/imx-sdma.c                     | 8 ++++++++
- include/linux/platform_data/dma-imx-sdma.h | 3 +++
- 2 files changed, 11 insertions(+)
+ drivers/gpu/drm/msm/dsi/dsi_host.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 9f240b2d85a5..558d509b7d85 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -1441,6 +1441,14 @@ static void sdma_add_scripts(struct sdma_engine *sdma,
- 	if (!sdma->script_number)
- 		sdma->script_number = SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1;
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
+index 6f240021705b..e49b414c012c 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_host.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
+@@ -33,6 +33,8 @@
+ #include "sfpb.xml.h"
+ #include "dsi_cfg.h"
  
-+	if (sdma->script_number > sizeof(struct sdma_script_start_addrs)
-+				  / sizeof(s32)) {
-+		dev_err(sdma->dev,
-+			"SDMA script number %d not match with firmware.\n",
-+			sdma->script_number);
-+		return;
-+	}
++#define DSI_RESET_TOGGLE_DELAY_MS 20
 +
- 	for (i = 0; i < sdma->script_number; i++)
- 		if (addr_arr[i] > 0)
- 			saddr_arr[i] = addr_arr[i];
-diff --git a/include/linux/platform_data/dma-imx-sdma.h b/include/linux/platform_data/dma-imx-sdma.h
-index 2d08816720f6..5bb0a119f39a 100644
---- a/include/linux/platform_data/dma-imx-sdma.h
-+++ b/include/linux/platform_data/dma-imx-sdma.h
-@@ -50,7 +50,10 @@ struct sdma_script_start_addrs {
- 	/* End of v2 array */
- 	s32 zcanfd_2_mcu_addr;
- 	s32 zqspi_2_mcu_addr;
-+	s32 mcu_2_ecspi_addr;
- 	/* End of v3 array */
-+	s32 mcu_2_zqspi_addr;
-+	/* End of v4 array */
- };
+ static int dsi_get_version(const void __iomem *base, u32 *major, u32 *minor)
+ {
+ 	u32 ver;
+@@ -909,7 +911,7 @@ static void dsi_sw_reset(struct msm_dsi_host *msm_host)
+ 	wmb(); /* clocks need to be enabled before reset */
  
- /**
+ 	dsi_write(msm_host, REG_DSI_RESET, 1);
+-	wmb(); /* make sure reset happen */
++	msleep(DSI_RESET_TOGGLE_DELAY_MS); /* make sure reset happen */
+ 	dsi_write(msm_host, REG_DSI_RESET, 0);
+ }
+ 
+@@ -1288,7 +1290,7 @@ static void dsi_sw_reset_restore(struct msm_dsi_host *msm_host)
+ 
+ 	/* dsi controller can only be reset while clocks are running */
+ 	dsi_write(msm_host, REG_DSI_RESET, 1);
+-	wmb();	/* make sure reset happen */
++	msleep(DSI_RESET_TOGGLE_DELAY_MS); /* make sure reset happen */
+ 	dsi_write(msm_host, REG_DSI_RESET, 0);
+ 	wmb();	/* controller out of reset */
+ 	dsi_write(msm_host, REG_DSI_CTRL, data0);
 -- 
 2.20.1
 
