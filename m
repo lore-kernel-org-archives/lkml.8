@@ -2,124 +2,101 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C899C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 08:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C19D9C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 08:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 352C02073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 08:41:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 928E82073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 08:44:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="kk6g4iGb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G12enqTe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731272AbgAPIlP (ORCPT
+        id S1731286AbgAPIoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 03:41:15 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:17519 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727009AbgAPIlP (ORCPT
+        Thu, 16 Jan 2020 03:44:20 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:33544 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727009AbgAPIoU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 03:41:15 -0500
-X-UUID: 98a1ffaac5b04842b2e9094fe4b03bb8-20200116
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=tTAYhyV1yO1eGfYT9UX2vuD8lvcZaEL8mGmAAGdJsuQ=;
-        b=kk6g4iGbbeHRKbyQIY9b/5wh+CTLoS7BQGWBbPYDCwc7fy/YMeoX1csBUuSkyopBBwpNRFSaHe6jRx+e/OwwNgtI1KpJGOth80OPRTA1GrHT/7UtyuJaxcWNLbxdXv6sVJkYrD8iapIfv/BIzLEyAKAl/HiYwZMNL2EVNnqtaes=;
-X-UUID: 98a1ffaac5b04842b2e9094fe4b03bb8-20200116
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <gtk_ruiwang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 543665243; Thu, 16 Jan 2020 16:41:12 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 16 Jan 2020 16:40:43 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 16 Jan 2020 16:40:20 +0800
-From:   <gtk_ruiwang@mediatek.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tomasz Figa <tfiga@chromium.org>
-CC:     Tiffany Lin <tiffany.lin@mediatek.com>,
-        Longfei Wang <longfei.wang@mediatek.com>,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        Maoguang Meng <maoguang.meng@mediatek.com>,
-        <gtk_ruiwang@mediatek.com>, <linux-media@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <srv_heupstream@mediatek.com>
-Subject: [PATCH][v2] media: mtk-vcodec: reset segment data then trig decoder
-Date:   Thu, 16 Jan 2020 16:41:02 +0800
-Message-ID: <20200116084102.5079-1-gtk_ruiwang@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Thu, 16 Jan 2020 03:44:20 -0500
+Received: by mail-qk1-f195.google.com with SMTP id d71so18426603qkc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 00:44:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gJg5ZRxNcTyn3n/fup2Ib0eaCQR42k4DrKQJxK1gJxw=;
+        b=G12enqTe8piIdk84hriOXaCMmvMjuAV+b54nRadwgz9fnOZDPZjMVs6vyaOMZm6BhT
+         RoWzO8xuYgT5kkQqno/sAIDSdLvfhCH+2P8/sapey7phZaTUWKVwMp2KtXujHD3w1rlk
+         /bO6qrGSD9k/Xs7LsYwOZrmyqSeS95pmTZcsjr/W3hYr+ljqd7jmLyxVOZw/ICWeDoRR
+         tYP7OmYgGPokerki2/GaxidmGPM+wINVw42Zw+k45k2T+IF0Wws2xmfXmAYdYnx3ESw5
+         xhWlWlBSi5iX65Zd7PIY+HDXryTM2ykiffxi/kmIc6XBhjflgYZg79y+RB2U6uYCzIPM
+         b4mQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gJg5ZRxNcTyn3n/fup2Ib0eaCQR42k4DrKQJxK1gJxw=;
+        b=rk0MWsn5JfSQj6yKfA+yFdPvO0jFm2dem2DesKpAHFWSt2KNw4npJjV28t1OUHhL9F
+         oqea2d+gLdVjLcuehc8b7FedS78hA914aBCwNQMVDHc1TC8Gt6mi1kH9IaVmshLXJR/7
+         HU0XoSF8b/M/n2CWHdUcjtIAZzZfFWpslYyPj9tAa5BwRLUoVTQj0SbDHszIhF2UlRGs
+         xZhAkef8zQDLRX4kd9LkDE07ciPQVxzYbYrXlHmR5ZmmMIETIFopgqx2D1lTN0rPMuJG
+         z8UJfDjlIUc4Re2Hyu55lw8zxjuRonNgiuvJUaNXhXI9g7YpxjKjtB6voq3eqySp5++2
+         H74g==
+X-Gm-Message-State: APjAAAVBZI9/YHfT+1b8f27kbH2crI+ar1ij6TD1f3+OlvzXtt9sq99m
+        F127cE8kSiZ3jMvMwFNat1jOL+i2ok1j+ztTTvaYUw==
+X-Google-Smtp-Source: APXvYqzzVsXY7lf3ajp+EW83v/cLUPrf6701sXXFMVSN6cjNko4p+5PZvF5fmFE9GGnLBb9yOTy+hBPsO70Py44m5do=
+X-Received: by 2002:a37:e312:: with SMTP id y18mr32326765qki.250.1579164259120;
+ Thu, 16 Jan 2020 00:44:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200115182816.33892-1-trishalfonso@google.com>
+In-Reply-To: <20200115182816.33892-1-trishalfonso@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 16 Jan 2020 09:44:08 +0100
+Message-ID: <CACT4Y+bPzRbWw-dPQkLVENPKy_DBdjrbSce0f6XE3=W7RhfhBA@mail.gmail.com>
+Subject: Re: [RFC PATCH] UML: add support for KASAN under x86_64
+To:     Patricia Alfonso <trishalfonso@google.com>
+Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        anton.ivanov@cambridgegreys.com,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        David Gow <davidgow@google.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        linux-um@lists.infradead.org,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogZ3RrX3J1aXdhbmcgPGd0a19ydWl3YW5nQG1lZGlhdGVrLmNvbT4NCg0KVlA5IGJpdHN0
-cmVhbSBzcGVjaWZpY2F0aW9uIGluZGljYXRlIHNlZ21lbnQgZGF0YSBzaG91bGQgcmVzZXQgdG8N
-CmRlZmF1bHQgd2hlbiBtZWV0IGtleSBmcmFtZXMsIGludHJhIG9ubHkgZnJhbWVzIG9yIGVuYWJs
-ZSBlcnJvcg0KcmVzaWxpZW5jZSBtb2RlLiBTbyBtZW1zZXQgc2VnbWVudGF0aW9uIG1hcCBidWZm
-ZXIgYmVmb3JlIGV2ZXJ5DQpkZWNvZGUgcHJvY2VzcyBpcyBub3QgYXBwcm9wcmlhdGUuDQoNClJl
-c2V0IHNlZ21lbnQgZGF0YSBvbmx5IHdoZW4gbmVlZGVkLCB0aGVuIHN0YXJ0IGRlY29kZXIgaGFy
-ZHdhcmUNCg0KU2lnbmVkLW9mZi1ieTogUnVpIFdhbmcgPGd0a19ydWl3YW5nQG1lZGlhdGVrLmNv
-bT4NCi0tLQ0KQ2hhbmdlZCBpbiB2MjoNCi0gYWRkIGJpdDMmYml0NCBmb3Iga2VybmVsIGFuZCB2
-cHUtZmlybXdhcmUgY29tcGF0aWJpbGl0eSANCi0tLQ0KIC4uLi9wbGF0Zm9ybS9tdGstdmNvZGVj
-L3ZkZWMvdmRlY192cDlfaWYuYyAgICB8IDI5ICsrKysrKysrKysrKysrKystLS0NCiAxIGZpbGUg
-Y2hhbmdlZCwgMjUgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZjb2RlYy92ZGVjL3ZkZWNfdnA5X2lmLmMgYi9k
-cml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay12Y29kZWMvdmRlYy92ZGVjX3ZwOV9pZi5jDQppbmRl
-eCAyNGMxZjBiZjIxNDcuLjA4M2FlY2EyODhmNiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvbWVkaWEv
-cGxhdGZvcm0vbXRrLXZjb2RlYy92ZGVjL3ZkZWNfdnA5X2lmLmMNCisrKyBiL2RyaXZlcnMvbWVk
-aWEvcGxhdGZvcm0vbXRrLXZjb2RlYy92ZGVjL3ZkZWNfdnA5X2lmLmMNCkBAIC0xMTAsNyArMTEw
-LDExIEBAIHN0cnVjdCB2cDlfc2ZfcmVmX2ZiIHsNCiAgKiBAYnVmX2xlbl9zel9jIDogc2l6ZSB1
-c2VkIHRvIHN0b3JlIGNiY3IgcGxhbmUgdWZvIGluZm8gKEFQLVIsIFZQVS1XKQ0KIA0KICAqIEBw
-cm9maWxlIDogcHJvZmlsZSBzcGFyc2VkIGZyb20gdnB1IChBUC1SLCBWUFUtVykNCi0gKiBAc2hv
-d19mcmFtZSA6IGRpc3BsYXkgdGhpcyBmcmFtZSBvciBub3QgKEFQLVIsIFZQVS1XKQ0KKyAqIEBz
-aG93X2ZyYW1lIDogW0JJVCgwKV0gZGlzcGxheSB0aGlzIGZyYW1lIG9yIG5vdCAoQVAtUiwgVlBV
-LVcpDQorICoJW0JJVCgxKV0gcmVzZXQgc2VnbWVudCBkYXRhIG9yIG5vdCAoQVAtUiwgVlBVLVcp
-DQorICoJW0JJVCgyKV0gdHJpZyBkZWNvZGVyIGhhcmR3YXJlIG9yIG5vdCAoQVAtUiwgVlBVLVcp
-DQorICoJW0JJVCgzKV0gbm90aWZ5IFZQVSBzZXQgZGVjb2RlciBiZWhhdmlvciAoQVAtVywgVlBV
-LVIpDQorICoJW0JJVCg0KV0gZG8gbm90IHJlc2V0IHNlZ21lbnQgZGF0YSBiZWZvcmUgZXZlcnkg
-ZnJhbWUgKEFQLVIsIFZQVS1XKQ0KICAqIEBzaG93X2V4aXN0aW5nX2ZyYW1lIDogaW5mb3JtIHRo
-aXMgZnJhbWUgaXMgc2hvdyBleGlzdGluZyBmcmFtZQ0KICAqCShBUC1SLCBWUFUtVykNCiAgKiBA
-ZnJtX3RvX3Nob3dfaWR4IDogaW5kZXggdG8gc2hvdyBmcmFtZSAoQVAtUiwgVlBVLVcpDQpAQCAt
-NDk0LDEyICs0OTgsMTIgQEAgc3RhdGljIHZvaWQgdnA5X3N3YXBfZnJtX2J1ZnMoc3RydWN0IHZk
-ZWNfdnA5X2luc3QgKmluc3QpDQogCQkJCQlmcm1fdG9fc2hvdy0+ZmItPmJhc2VfeS5zaXplKTsN
-CiAJCX0NCiAJCWlmICghdnA5X2lzX3NmX3JlZl9mYihpbnN0LCBpbnN0LT5jdXJfZmIpKSB7DQot
-CQkJaWYgKHZzaS0+c2hvd19mcmFtZSkNCisJCQlpZiAodnNpLT5zaG93X2ZyYW1lICYgQklUKDAp
-KQ0KIAkJCQl2cDlfYWRkX3RvX2ZiX2Rpc3BfbGlzdChpbnN0LCBpbnN0LT5jdXJfZmIpOw0KIAkJ
-fQ0KIAl9IGVsc2Ugew0KIAkJaWYgKCF2cDlfaXNfc2ZfcmVmX2ZiKGluc3QsIGluc3QtPmN1cl9m
-YikpIHsNCi0JCQlpZiAodnNpLT5zaG93X2ZyYW1lKQ0KKwkJCWlmICh2c2ktPnNob3dfZnJhbWUg
-JiBCSVQoMCkpDQogCQkJCXZwOV9hZGRfdG9fZmJfZGlzcF9saXN0KGluc3QsIGZybV90b19zaG93
-LT5mYik7DQogCQl9DQogCX0NCkBAIC04MDAsNiArODA0LDkgQEAgc3RhdGljIGludCB2ZGVjX3Zw
-OV9pbml0KHN0cnVjdCBtdGtfdmNvZGVjX2N0eCAqY3R4KQ0KIAl9DQogDQogCWluc3QtPnZzaSA9
-IChzdHJ1Y3QgdmRlY192cDlfdnNpICopaW5zdC0+dnB1LnZzaTsNCisNCisJaW5zdC0+dnNpLT5z
-aG93X2ZyYW1lIHw9IEJJVCgzKTsNCisNCiAJaW5pdF9hbGxfZmJfbGlzdHMoaW5zdCk7DQogDQog
-CWN0eC0+ZHJ2X2hhbmRsZSA9IGluc3Q7DQpAQCAtODcwLDEzICs4NzcsMjcgQEAgc3RhdGljIGlu
-dCB2ZGVjX3ZwOV9kZWNvZGUodm9pZCAqaF92ZGVjLCBzdHJ1Y3QgbXRrX3Zjb2RlY19tZW0gKmJz
-LA0KIAkJCQkJdnNpLT5zZl9mcm1fc3pbaWR4XSk7DQogCQkJfQ0KIAkJfQ0KLQkJbWVtc2V0KGlu
-c3QtPnNlZ19pZF9idWYudmEsIDAsIGluc3QtPnNlZ19pZF9idWYuc2l6ZSk7DQorDQorCQlpZiAo
-ISh2c2ktPnNob3dfZnJhbWUgJiBCSVQoNCkpKQ0KKwkJCW1lbXNldChpbnN0LT5zZWdfaWRfYnVm
-LnZhLCAwLCBpbnN0LT5zZWdfaWRfYnVmLnNpemUpOw0KKw0KIAkJcmV0ID0gdnB1X2RlY19zdGFy
-dCgmaW5zdC0+dnB1LCBkYXRhLCAzKTsNCiAJCWlmIChyZXQpIHsNCiAJCQltdGtfdmNvZGVjX2Vy
-cihpbnN0LCAidnB1X2RlY19zdGFydCBmYWlsZWQiKTsNCiAJCQlnb3RvIERFQ09ERV9FUlJPUjsN
-CiAJCX0NCiANCisJCWlmICh2c2ktPnNob3dfZnJhbWUgJiBCSVQoMSkpIHsNCisJCQltZW1zZXQo
-aW5zdC0+c2VnX2lkX2J1Zi52YSwgMCwgaW5zdC0+c2VnX2lkX2J1Zi5zaXplKTsNCisNCisJCQlp
-ZiAodnNpLT5zaG93X2ZyYW1lICYgQklUKDIpKSB7DQorCQkJCWlmICh2cHVfZGVjX3N0YXJ0KCZp
-bnN0LT52cHUsIE5VTEwsIDApKSB7DQorCQkJCQltdGtfdmNvZGVjX2VycihpbnN0LCAidnB1IHRy
-aWcgZGVjb2RlciBmYWlsZWQiKTsNCisJCQkJCWdvdG8gREVDT0RFX0VSUk9SOw0KKwkJCQl9DQor
-CQkJfQ0KKwkJfQ0KKw0KIAkJcmV0ID0gdmFsaWRhdGVfdnNpX2FycmF5X2luZGV4ZXMoaW5zdCwg
-dnNpKTsNCiAJCWlmIChyZXQpIHsNCiAJCQltdGtfdmNvZGVjX2VycihpbnN0LCAiSW52YWxpZCB2
-YWx1ZXMgZnJvbSBWUFUuIik7DQotLSANCjIuMTguMA0K
+On Wed, Jan 15, 2020 at 7:28 PM Patricia Alfonso
+<trishalfonso@google.com> wrote:
+> +config KASAN_SHADOW_OFFSET
+> +       hex
+> +       depends on KASAN
+> +       default 0x100000000000
+> +       help
+> +         This is the offset at which the ~2.25TB of shadow memory is
+> +         initialized and used by KASAN for memory debugging. The default
+> +         is 0x100000000000.
 
+What are restrictions on this value?
+In user-space we use 0x7fff8000 as a base (just below 2GB) and it's
+extremely profitable wrt codegen since it fits into immediate of most
+instructions.
+We can load and add the base with a short instruction:
+    2d8c: 48 81 c2 00 80 ff 7f    add    $0x7fff8000,%rdx
+Or even add base, load shadow and check it with a single 7-byte instruction:
+     1e4: 80 b8 00 80 ff 7f 00    cmpb   $0x0,0x7fff8000(%rax)
+
+While with the large base, it takes 10 bytes just to load the const
+into a register (current x86 KASAN codegen):
+ffffffff81001571: 48 b8 00 00 00 00 00 fc ff df    movabs
+$0xdffffc0000000000,%rax
+Most instructions don't have 8-byte immediates, so then we separately
+need to add/load/check.
