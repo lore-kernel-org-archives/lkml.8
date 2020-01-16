@@ -2,143 +2,107 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19401C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A306C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E01782077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AC9420730
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:36:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="B3a+nJMY"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dryW2bgx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388015AbgAPUdZ (ORCPT
+        id S2388024AbgAPUgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 15:33:25 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:3910 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729067AbgAPUdY (ORCPT
+        Thu, 16 Jan 2020 15:36:15 -0500
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:39068 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729637AbgAPUgP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 15:33:24 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e20c8570000>; Thu, 16 Jan 2020 12:32:23 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 16 Jan 2020 12:33:20 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 16 Jan 2020 12:33:20 -0800
-Received: from [10.2.160.8] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 Jan
- 2020 20:33:19 +0000
-Subject: Re: [PATCH v12 04/22] mm: devmap: refactor 1-based refcounting for
- ZONE_DEVICE pages
-To:     Christoph Hellwig <hch@infradead.org>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-References: <20200107224558.2362728-1-jhubbard@nvidia.com>
- <20200107224558.2362728-5-jhubbard@nvidia.com>
- <20200115152306.GA19546@infradead.org>
- <4707f191-86f8-db4a-c3de-0a84b415b658@nvidia.com>
- <20200116093712.GA11011@infradead.org>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <ccf2723a-dcce-57d3-f63d-ee96dbf6653a@nvidia.com>
-Date:   Thu, 16 Jan 2020 12:30:26 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 16 Jan 2020 15:36:15 -0500
+Received: by mail-vk1-f193.google.com with SMTP id t129so6054447vkg.6
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 12:36:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RV6fXTo3b3qoT7vSlLu9LZXPKWnKYVEBYLBa7aJ3coE=;
+        b=dryW2bgxQT3TcmKHyF7k3/UkFi2E2Qunh6WctF3kjeRnNJDiSxf7obYQetkLkkmU/f
+         rsRO4G1R9NHiQfiB7IbS/g3e201MDYpYRfm3I3lKZQuJ6YOovOwoFVhI0kbjkNwOxZtP
+         m0dEx+VXLI9Cl6w4dCABDOZNZ3pChr94FxH3Dz3EX4sWv6ulIjkhtRpxwc+9VzwfxebA
+         cjQgmaLfTXvQy+lU5KMD7jPpMrGjZ09Pd0UPfHvYS5HSHD7Naska9ofDRIcdvtGMBkNE
+         kQkpg/ELqolO16Xjr3izfosdUsgTcuHhXOL5clFLaqYqXnnDVzR4Q0VRcIwAYcdwoE7u
+         IvEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RV6fXTo3b3qoT7vSlLu9LZXPKWnKYVEBYLBa7aJ3coE=;
+        b=tNhX/dPUUOBon9FKfbtIFtGUGlHEjTVW+FdifQsZP7xVTXI954paflMC3VdfdjVSwP
+         XcSveyEkbRwuyx51NYJpHIg/CiblBVu/c/l/d2ZAxUgk2+64IiOSsEbqSh6n7OyuVT3E
+         8BSbvOLaNC8dnuCoW7A9LczhGgrIWQSuMQWwwyydqU1FblAmrnrQ5BgPGGFkDC3S31H2
+         4bUwYjMmd2Ofs7jf6oV0g8HMTBw4vD17CLmhmfyR1jeb9he9lL7iruD9g+AwnNsmfpUr
+         JacUl2UUXVpnZLWPkDkHW/nbR4v6UOQXvJpGMDT1BQVWs32spOHQ4/PJ38XdtuvR45Hf
+         ebfg==
+X-Gm-Message-State: APjAAAVaewlAN0Krk01V+Mq7J71Ik6L//YSzYpgL1VPXNXXsEOOV5d+1
+        r3wCth48K4LKwJHlRzBjAQ5A49Z3TGNgCwYHQkk12w==
+X-Google-Smtp-Source: APXvYqy3hookrrU/Buxl44KY5o3vqIMbrfDIWbbyEY39r9m+d/9XpIDAayToTJcBMK5GJtdqCaMmmDL594aQGbaPCAk=
+X-Received: by 2002:a1f:2910:: with SMTP id p16mr18939592vkp.71.1579206972944;
+ Thu, 16 Jan 2020 12:36:12 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200116093712.GA11011@infradead.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1579206743; bh=EQpRDmAadXrYPrWI0G8MSYR7uqZas3jC8zZTGB2Hfnk=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=B3a+nJMY1e/PvYKAT7LBGlwa/kugx+AfoqbMvj/EyT3hxrpeJ7sQMsWMdJQlxzKho
-         jy2YJ47pzKLca9QqrMI2qpXvMA46wU1dfzb3yzBY8NTIGraOJl+bg0Pq/59xdUBLNS
-         /bnG7fSxkcGgsGNzlzCgQWOOUXWSDOgkuZxsp+8IlbnfinKUcliv6MqWXSulEsNyXv
-         EIh2GmNEud9hkIp72ZuHMkWrhgwhMDnw4xjgxdJ2+W90cT6UoDxxzOl8PDPrjhQ9p0
-         IklTRq4Mlrg+UVduRNOxi7jCeWI/98S5JYFUwVk8qaaNzULyUj0q2zlHy86g76FXcR
-         ZxTytDejWJDcw==
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191206221351.38241-1-samitolvanen@google.com> <20191206221351.38241-12-samitolvanen@google.com>
+ <20200116174450.GD21396@willie-the-truck>
+In-Reply-To: <20200116174450.GD21396@willie-the-truck>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Thu, 16 Jan 2020 12:36:01 -0800
+Message-ID: <CABCJKudsTFd22NzB9JdzrAo2UFzsfNVtB_zvdRiAEBXAC9t3=g@mail.gmail.com>
+Subject: Re: [PATCH v6 11/15] arm64: efi: restore x18 if it was corrupted
+To:     Will Deacon <will@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/16/20 1:37 AM, Christoph Hellwig wrote:
-> On Wed, Jan 15, 2020 at 01:19:41PM -0800, John Hubbard wrote:
->> On 1/15/20 7:23 AM, Christoph Hellwig wrote:
->> ...
->>>
->>> I'm really not sold on this scheme.  Note that I think it is
->>> particularly bad, but it also doesn't seem any better than what
->>> we had before, and it introduced quite a bit more code.
->>>
->>
->> Hi Christoph,
->>
->> All by itself, yes. But the very next patch (which needs a little
->> rework for other reasons, so not included here) needs to reuse some of
->> these functions within __unpin_devmap_managed_user_page():
-> 
-> Well, then combine it with the series that actually does the change.
+On Thu, Jan 16, 2020 at 9:45 AM Will Deacon <will@kernel.org> wrote:
+>
+> On Fri, Dec 06, 2019 at 02:13:47PM -0800, Sami Tolvanen wrote:
+> > -0:   b       efi_handle_corrupted_x18        // tail call
+> > +0:
+> > +#ifdef CONFIG_SHADOW_CALL_STACK
+> > +     /*
+> > +      * Restore x18 before returning to instrumented code. This is
+> > +      * safe because the wrapper is called with preemption disabled and
+> > +      * a separate shadow stack is used for interrupts.
+> > +      */
+> > +     mov     x18, x2
+> > +#endif
+>
+> Why not restore it regardless of CONFIG_SHADOW_CALL_STACK?
 
+The ifdefs are here only because restoring the register without SCS
+isn't actually necessary, but I'm fine with dropping them (and editing
+the comment) in the next version if you prefer.
 
-OK, that makes sense. I just double-checked with a quick test run, that it
-doesn't have dependencies with the rest of this series, and it came out clean,
-so:
-
-Andrew, could you please remove just this one patch from mmotm and linux-next?
-
-
-> 
-> Also my vaguely recollection is that we had some idea on how to get rid
-> of the off by one refcounting for the zone device pages, which would be
-> a much better outcome.
-> 
-
-Yes, I recall that Dan Williams mentioned it, but I don't think he provided
-any details yet.
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+Sami
