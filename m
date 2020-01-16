@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB39C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F46C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C44B8208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2AAA20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198253;
-	bh=TG5zhRS08XgjaFvPCbqcWFFnRDBrZMFyoPlDmRPuNak=;
+	s=default; t=1579198257;
+	bh=ON6UrWmq47JDT/IgdKlfSIgthc+sRzNmjam0nGQqChg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cNWAY/JjH3H30FoFzK7kkI4OusJYVPZ/aOcN3nCVkiFK+iJQZBozzoOtOdrp3QNA6
-	 yfOWel875+FZRg++TnSuFqlt03RHlXZ5kyh1jAdHvOLqR+LC8FASY+o0QpNC30GyVA
-	 jGP+jBeuKfoEfOOusuABXF0QSTnzQXGGSCGAJUYQ=
+	b=xvci974c1sbsCBTTdBDhneT7anKmVYdkIz319IiQO84ZlPwh0lZGQ1h38LW6+O4kq
+	 NUehmUp/sqhpQiiDXyVJwRCfuGjQbAbI0latj1SRnfDLB6PHwYoDEuKZpZ7IkGiKiG
+	 xFvUtoBJGEJ/VCiQTubfJgDR8qvm5r0XvDMUG0s4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395155AbgAPSKx (ORCPT
+        id S2395159AbgAPSK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:10:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53178 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:10:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393195AbgAPRhn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:37:43 -0500
+        id S2393109AbgAPRhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:37:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 116A2246D8;
-        Thu, 16 Jan 2020 17:37:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A855C246C0;
+        Thu, 16 Jan 2020 17:37:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196262;
-        bh=TG5zhRS08XgjaFvPCbqcWFFnRDBrZMFyoPlDmRPuNak=;
+        s=default; t=1579196261;
+        bh=ON6UrWmq47JDT/IgdKlfSIgthc+sRzNmjam0nGQqChg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jyHndrtOaGmWF4XI5RFtsLNV73Svb81iC57k6AZiKYRMO9Ab0qHjXnR8T0fW1oft+
-         kqxYyWDKhIkhGa3MZlIvvfWNn/gdvie4S+fefzzeeQdTbH4o68JV7HS9IlV3Xgd6Xj
-         d7byMNn61jZgjflj5W7xDA5xZ/zkS+WH0uE+S0jg=
+        b=xB51agJd95gsQ+efGgEquaZBw14Jt7xt/GG7d6eIoVS54PYnpjbRZtoPEkgSetc5n
+         636NFhJKigt7zPcFYUJlbdwwQcaIqxvvuoFZUM+JCHsz4wwubqC+vlkyU24wPgkavC
+         Vyq2VEnWZ+36mEJRsz7Ureu+Sj3YKe5NbeCiwTj0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Wahren <stefan.wahren@i2se.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 087/251] mmc: sdhci-brcmstb: handle mmc_of_parse() errors during probe
-Date:   Thu, 16 Jan 2020 12:33:56 -0500
-Message-Id: <20200116173641.22137-47-sashal@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 086/251] clocksource/drivers/exynos_mct: Fix error path in timer resources initialization
+Date:   Thu, 16 Jan 2020 12:33:55 -0500
+Message-Id: <20200116173641.22137-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -61,36 +63,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Wahren <stefan.wahren@i2se.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 1e20186e706da8446f9435f2924cd65ab1397e73 ]
+[ Upstream commit b9307420196009cdf18bad55e762ac49fb9a80f4 ]
 
-We need to handle mmc_of_parse() errors during probe otherwise the
-MMC driver could start without proper initialization (e.g. power sequence).
+While freeing interrupt handlers in error path, don't assume that all
+requested interrupts are per-processor interrupts and properly release
+standard interrupts too.
 
-Fixes: 476bf3d62d5c ("mmc: sdhci-brcmstb: Add driver for Broadcom BRCMSTB SoCs")
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
+Fixes: 56a94f13919c ("clocksource: exynos_mct: Avoid blocking calls in the cpu hotplug notifier")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-brcmstb.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/clocksource/exynos_mct.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/host/sdhci-brcmstb.c b/drivers/mmc/host/sdhci-brcmstb.c
-index 159f6f64c68e..ed6473731b45 100644
---- a/drivers/mmc/host/sdhci-brcmstb.c
-+++ b/drivers/mmc/host/sdhci-brcmstb.c
-@@ -90,7 +90,9 @@ static int sdhci_brcmstb_probe(struct platform_device *pdev)
- 	host->mmc->caps2 |= MMC_CAP2_HC_ERASE_SZ;
+diff --git a/drivers/clocksource/exynos_mct.c b/drivers/clocksource/exynos_mct.c
+index d32248e2ceab..ae3cbaeffd9c 100644
+--- a/drivers/clocksource/exynos_mct.c
++++ b/drivers/clocksource/exynos_mct.c
+@@ -563,7 +563,19 @@ static int __init exynos4_timer_resources(struct device_node *np, void __iomem *
+ 	return 0;
  
- 	sdhci_get_of_property(pdev);
--	mmc_of_parse(host->mmc);
-+	res = mmc_of_parse(host->mmc);
-+	if (res)
-+		goto err;
+ out_irq:
+-	free_percpu_irq(mct_irqs[MCT_L0_IRQ], &percpu_mct_tick);
++	if (mct_int_type == MCT_INT_PPI) {
++		free_percpu_irq(mct_irqs[MCT_L0_IRQ], &percpu_mct_tick);
++	} else {
++		for_each_possible_cpu(cpu) {
++			struct mct_clock_event_device *pcpu_mevt =
++				per_cpu_ptr(&percpu_mct_tick, cpu);
++
++			if (pcpu_mevt->evt.irq != -1) {
++				free_irq(pcpu_mevt->evt.irq, pcpu_mevt);
++				pcpu_mevt->evt.irq = -1;
++			}
++		}
++	}
+ 	return err;
+ }
  
- 	/*
- 	 * Supply the existing CAPS, but clear the UHS modes. This
 -- 
 2.20.1
 
