@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB13C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8704AC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C6C620684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6167E2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:22:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198967;
-	bh=IyVJUUC11dLAa8QrMgvrk1esYZLPoNn9NBnYfWYJU3E=;
+	s=default; t=1579198975;
+	bh=wwbE6782tZaeUv5UL03nSo40w+1Six7/290IIljvBUk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DadGTr6LEYgN2y2/mQnBg1ZkzI2EACsIx5Xbu0R+0KcWylYW0DMVWTXb+DJo23RsW
-	 ZjM1I1TBom+dpDadp05i1+K2ICRLUg5Ks2l/n44gCTd3QCIcTMudmZ5Igq3tUlE4Mt
-	 TOlyiFxjgYyZjBrFv0bEzHrX0M5maZphQ/2asWUw=
+	b=N16cQtNa6anUHr2gH5lHqfLPosuTyTz6m4V+joQHuFpWhGsF8pj4EgYw+jCJyjVHp
+	 hQcRNQ7bBoNrjEcAwLECql+FRzvIhL7PILyBwwYxWWV31uRfbln1M/djRZP5fFg4nN
+	 IfqFesni/z2rsyb/1PsHqUEX75Fe0exj8M3cUd9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404040AbgAPR10 (ORCPT
+        id S2388039AbgAPSWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:27:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36902 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:22:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392438AbgAPR1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:27:15 -0500
+        id S2404020AbgAPR1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:27:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1424246E4;
-        Thu, 16 Jan 2020 17:27:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD9EC246D0;
+        Thu, 16 Jan 2020 17:27:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195634;
-        bh=IyVJUUC11dLAa8QrMgvrk1esYZLPoNn9NBnYfWYJU3E=;
+        s=default; t=1579195644;
+        bh=wwbE6782tZaeUv5UL03nSo40w+1Six7/290IIljvBUk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hWC/8f6jJxMzRiewypC+dKDJ8UBiL3JHgDqwI53Qp5jSnecCKBkPT4GLQIoRC5ETH
-         E2996D4XYaAh5T8tbeeOVx8gHZ3u3+qC5ngc+8VnI2CSx9vgmmtjCfajCXI5m/pwCP
-         0n5Piv8nf7d74QLUMDWq/cfpJlOjnYbUrSk4+aWQ=
+        b=IKptHAxpRO3Ft+4mACFYhNXQgVYax7TzlLoPfPzjOlJ605A2krmgkhanSzhJ23SCh
+         fgPdsvuBx5VnIc3X52Q1Q81eocF4Mf9Y60Lr6jvrAaPmIcCaa1BUP12LhI3W5w6sLj
+         X367f3atBIv4KazVRUTT2C57XUfFdYgKnMhxcGEQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>,
-        kgdb-bugreport@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.14 201/371] kdb: do a sanity check on the cpu in kdb_per_cpu()
-Date:   Thu, 16 Jan 2020 12:21:13 -0500
-Message-Id: <20200116172403.18149-144-sashal@kernel.org>
+Cc:     Sagiv Ozeri <sagiv.ozeri@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 208/371] RDMA/qedr: Fix incorrect device rate.
+Date:   Thu, 16 Jan 2020 12:21:20 -0500
+Message-Id: <20200116172403.18149-151-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -61,36 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Sagiv Ozeri <sagiv.ozeri@marvell.com>
 
-[ Upstream commit b586627e10f57ee3aa8f0cfab0d6f7dc4ae63760 ]
+[ Upstream commit 69054666df0a9b4e8331319f98b6b9a88bc3fcc4 ]
 
-The "whichcpu" comes from argv[3].  The cpu_online() macro looks up the
-cpu in a bitmap of online cpus, but if the value is too high then it
-could read beyond the end of the bitmap and possibly Oops.
+Use the correct enum value introduced in commit 12113a35ada6 ("IB/core:
+Add HDR speed enum") Prior to this change a 50Gbps port would show 40Gbps.
 
-Fixes: 5d5314d6795f ("kdb: core for kgdb back end (1 of 2)")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+This patch also cleaned up the redundant redefiniton of ib speeds for
+qedr.
+
+Fixes: 12113a35ada6 ("IB/core: Add HDR speed enum")
+Signed-off-by: Sagiv Ozeri <sagiv.ozeri@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/debug/kdb/kdb_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/qedr/verbs.c | 25 +++++++++----------------
+ 1 file changed, 9 insertions(+), 16 deletions(-)
 
-diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
-index 993db6b2348e..15d902daeef6 100644
---- a/kernel/debug/kdb/kdb_main.c
-+++ b/kernel/debug/kdb/kdb_main.c
-@@ -2634,7 +2634,7 @@ static int kdb_per_cpu(int argc, const char **argv)
- 		diag = kdbgetularg(argv[3], &whichcpu);
- 		if (diag)
- 			return diag;
--		if (!cpu_online(whichcpu)) {
-+		if (whichcpu >= nr_cpu_ids || !cpu_online(whichcpu)) {
- 			kdb_printf("cpu %ld is not online\n", whichcpu);
- 			return KDB_BADCPUNUM;
- 		}
+diff --git a/drivers/infiniband/hw/qedr/verbs.c b/drivers/infiniband/hw/qedr/verbs.c
+index 8bfe9073da78..6ae72accae3d 100644
+--- a/drivers/infiniband/hw/qedr/verbs.c
++++ b/drivers/infiniband/hw/qedr/verbs.c
+@@ -178,54 +178,47 @@ int qedr_query_device(struct ib_device *ibdev,
+ 	return 0;
+ }
+ 
+-#define QEDR_SPEED_SDR		(1)
+-#define QEDR_SPEED_DDR		(2)
+-#define QEDR_SPEED_QDR		(4)
+-#define QEDR_SPEED_FDR10	(8)
+-#define QEDR_SPEED_FDR		(16)
+-#define QEDR_SPEED_EDR		(32)
+-
+ static inline void get_link_speed_and_width(int speed, u8 *ib_speed,
+ 					    u8 *ib_width)
+ {
+ 	switch (speed) {
+ 	case 1000:
+-		*ib_speed = QEDR_SPEED_SDR;
++		*ib_speed = IB_SPEED_SDR;
+ 		*ib_width = IB_WIDTH_1X;
+ 		break;
+ 	case 10000:
+-		*ib_speed = QEDR_SPEED_QDR;
++		*ib_speed = IB_SPEED_QDR;
+ 		*ib_width = IB_WIDTH_1X;
+ 		break;
+ 
+ 	case 20000:
+-		*ib_speed = QEDR_SPEED_DDR;
++		*ib_speed = IB_SPEED_DDR;
+ 		*ib_width = IB_WIDTH_4X;
+ 		break;
+ 
+ 	case 25000:
+-		*ib_speed = QEDR_SPEED_EDR;
++		*ib_speed = IB_SPEED_EDR;
+ 		*ib_width = IB_WIDTH_1X;
+ 		break;
+ 
+ 	case 40000:
+-		*ib_speed = QEDR_SPEED_QDR;
++		*ib_speed = IB_SPEED_QDR;
+ 		*ib_width = IB_WIDTH_4X;
+ 		break;
+ 
+ 	case 50000:
+-		*ib_speed = QEDR_SPEED_QDR;
+-		*ib_width = IB_WIDTH_4X;
++		*ib_speed = IB_SPEED_HDR;
++		*ib_width = IB_WIDTH_1X;
+ 		break;
+ 
+ 	case 100000:
+-		*ib_speed = QEDR_SPEED_EDR;
++		*ib_speed = IB_SPEED_EDR;
+ 		*ib_width = IB_WIDTH_4X;
+ 		break;
+ 
+ 	default:
+ 		/* Unsupported */
+-		*ib_speed = QEDR_SPEED_SDR;
++		*ib_speed = IB_SPEED_SDR;
+ 		*ib_width = IB_WIDTH_1X;
+ 	}
+ }
 -- 
 2.20.1
 
