@@ -7,55 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3DDC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 618D2C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA5B724695
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:06:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BE34214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:06:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197999;
-	bh=nE8tPGjSW5CKjuG7EIq5pE1gP4D2PGDFzgn5v05tthE=;
+	s=default; t=1579198004;
+	bh=bKQT/7rZlw5vM2UzsIygk7W3zxsSBTZ3Q0mIt1PLicU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=csGfRVn20PCeSEiGTmqgdisc0gJnAK6ReKV+iK154644XLEJLOPjyW/SrWcmm16et
-	 NKRtPGdTCB24IaBCllcaUwhqbRWOJeG0H69J2q5m5Q8hU1244bodYegKuQLYEwKGiT
-	 gH45MLbifyXvV5bNn39iIzAUDiiwqwCODPyEVtJw=
+	b=JtWu41t40Dba7xUzDBlDzNrRFoIXPZMC/iMidgs4NABLWfF00BbaEqxJFRnPyPys6
+	 SeIMViFEilq/UeohR33ufHSX634IEN8ysP4Y4uU4TH3pl7g0ri9CMG8gvvNkeKqQFd
+	 bBLB8DtOWlnSL7AJxHjyGTw6VIiXAl8bL6XOEaPg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394970AbgAPSGh (ORCPT
+        id S2387995AbgAPSGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:06:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55928 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:06:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390761AbgAPRje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:39:34 -0500
+        id S2393476AbgAPRj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:39:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C809724706;
-        Thu, 16 Jan 2020 17:39:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9223924706;
+        Thu, 16 Jan 2020 17:39:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196373;
-        bh=nE8tPGjSW5CKjuG7EIq5pE1gP4D2PGDFzgn5v05tthE=;
+        s=default; t=1579196367;
+        bh=bKQT/7rZlw5vM2UzsIygk7W3zxsSBTZ3Q0mIt1PLicU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=11tBIxcQ+C0fMXZ5d1u/mloUqB6g57WnLDs/md7nGSdTkBPSRQj5WpqHhbM3xjpGO
-         JKpiupTjp04uYeQoMztTrE+IxJ5S/Y+QRhgDZMdJdB8cFkGxkFwI6NbiVi6j0y4s1a
-         Mt0gtLGwvfFma/1ZBEqXAmupxFaEd16C0dehQ37w=
+        b=DfU1ZDgfr8/6WlLjgptjyppX1O8PcwCyVTHP7vD9LVW8F3RmZ7wG6Vvikw7zlCqRC
+         RRetsxpUDlOWtF1IDwce2hHZvkqK62Kpw62mIIS1xdudAyxOXg4zjZ7N+0JAMXiZ+w
+         N2Ya483iHj++IJgvKwTOZs4gCW4P0QJq/HUYDlPM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>, acme@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, maddy@linux.vnet.ibm.com,
-        mpe@ellerman.id.au, Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 159/251] perf/ioctl: Add check for the sample_period value
-Date:   Thu, 16 Jan 2020 12:35:08 -0500
-Message-Id: <20200116173641.22137-119-sashal@kernel.org>
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 155/251] net/af_iucv: always register net_device notifier
+Date:   Thu, 16 Jan 2020 12:35:04 -0500
+Message-Id: <20200116173641.22137-115-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -68,55 +61,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-[ Upstream commit 913a90bc5a3a06b1f04c337320e9aeee2328dd77 ]
+[ Upstream commit 06996c1d4088a0d5f3e7789d7f96b4653cc947cc ]
 
-perf_event_open() limits the sample_period to 63 bits. See:
+Even when running as VM guest (ie pr_iucv != NULL), af_iucv can still
+open HiperTransport-based connections. For robust operation these
+connections require the af_iucv_netdev_notifier, so register it
+unconditionally.
 
-  0819b2e30ccb ("perf: Limit perf_event_attr::sample_period to 63 bits")
+Also handle any error that register_netdevice_notifier() returns.
 
-Make ioctl() consistent with it.
-
-Also on PowerPC, negative sample_period could cause a recursive
-PMIs leading to a hang (reported when running perf-fuzzer).
-
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: acme@kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: maddy@linux.vnet.ibm.com
-Cc: mpe@ellerman.id.au
-Fixes: 0819b2e30ccb ("perf: Limit perf_event_attr::sample_period to 63 bits")
-Link: https://lkml.kernel.org/r/20190604042953.914-1-ravi.bangoria@linux.ibm.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 9fbd87d41392 ("af_iucv: handle netdev events")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Reviewed-by: Ursula Braun <ubraun@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/core.c | 3 +++
- 1 file changed, 3 insertions(+)
+ net/iucv/af_iucv.c | 27 ++++++++++++++++++++-------
+ 1 file changed, 20 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 5bbf7537a612..64ace5e9af2a 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -4624,6 +4624,9 @@ static int perf_event_period(struct perf_event *event, u64 __user *arg)
- 	if (perf_event_check_period(event, value))
- 		return -EINVAL;
+diff --git a/net/iucv/af_iucv.c b/net/iucv/af_iucv.c
+index c2dfc32eb9f2..02e10deef5b4 100644
+--- a/net/iucv/af_iucv.c
++++ b/net/iucv/af_iucv.c
+@@ -2431,6 +2431,13 @@ static int afiucv_iucv_init(void)
+ 	return err;
+ }
  
-+	if (!event->attr.freq && (value & (1ULL << 63)))
-+		return -EINVAL;
++static void afiucv_iucv_exit(void)
++{
++	device_unregister(af_iucv_dev);
++	driver_unregister(&af_iucv_driver);
++	pr_iucv->iucv_unregister(&af_iucv_handler, 0);
++}
 +
- 	event_function_call(event, __perf_event_period, &value);
- 
+ static int __init afiucv_init(void)
+ {
+ 	int err;
+@@ -2464,11 +2471,18 @@ static int __init afiucv_init(void)
+ 		err = afiucv_iucv_init();
+ 		if (err)
+ 			goto out_sock;
+-	} else
+-		register_netdevice_notifier(&afiucv_netdev_notifier);
++	}
++
++	err = register_netdevice_notifier(&afiucv_netdev_notifier);
++	if (err)
++		goto out_notifier;
++
+ 	dev_add_pack(&iucv_packet_type);
  	return 0;
+ 
++out_notifier:
++	if (pr_iucv)
++		afiucv_iucv_exit();
+ out_sock:
+ 	sock_unregister(PF_IUCV);
+ out_proto:
+@@ -2482,12 +2496,11 @@ static int __init afiucv_init(void)
+ static void __exit afiucv_exit(void)
+ {
+ 	if (pr_iucv) {
+-		device_unregister(af_iucv_dev);
+-		driver_unregister(&af_iucv_driver);
+-		pr_iucv->iucv_unregister(&af_iucv_handler, 0);
++		afiucv_iucv_exit();
+ 		symbol_put(iucv_if);
+-	} else
+-		unregister_netdevice_notifier(&afiucv_netdev_notifier);
++	}
++
++	unregister_netdevice_notifier(&afiucv_netdev_notifier);
+ 	dev_remove_pack(&iucv_packet_type);
+ 	sock_unregister(PF_IUCV);
+ 	proto_unregister(&iucv_proto);
 -- 
 2.20.1
 
