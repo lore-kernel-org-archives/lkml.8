@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A25C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DEB1C33CB7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E97ED22522
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BD15214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:07:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198045;
-	bh=YD5Ie152X2diOgl1WgLPBjDtz/7t+yfr5MhUnXiuwZo=;
+	s=default; t=1579198046;
+	bh=IOHIJn1hd8dW5gzYWJtv3qscA4KIgMUkNnFvO8mwH4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jZnjYa51MaJDniFsXRp1dctCdT5sULn55rjAWjMcYeG0CYLUMW2jIeBka3nFrtlJv
-	 36d5JMCeNH4doX6JGoD04A9ACjCdqwlvEVDl1G5lYc6L+LLPXSzYq4M4mvu8NCKlf2
-	 jIt/+dnfldKzURgOb5BqOTHNtPbqM1nCfNLJKWO4=
+	b=emyrkE/fe7YtdlpM+Z9Ul1EekdIh3PsTj6oWtsVJM6+k4lXKyXqKLSGwSC5P+DoJM
+	 dGWXsOz+jqRZVDyKP7+3d/VTbzpES8tXgtB2IvrH13/WqGfG3LLJPOCRG26qU+Lihb
+	 NEOshPvxAVEvbOMUVBbPpIzbLyW9cgZgXN1UwmDM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388447AbgAPRjJ (ORCPT
+        id S2405120AbgAPRkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:39:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54252 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:40:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404985AbgAPRiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:38:24 -0500
+        id S2393427AbgAPRjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:39:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F1AD246DB;
-        Thu, 16 Jan 2020 17:38:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1482246F7;
+        Thu, 16 Jan 2020 17:39:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196303;
-        bh=YD5Ie152X2diOgl1WgLPBjDtz/7t+yfr5MhUnXiuwZo=;
+        s=default; t=1579196347;
+        bh=IOHIJn1hd8dW5gzYWJtv3qscA4KIgMUkNnFvO8mwH4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pIpZVIffxzr+AGE8//7n3EkxavUHWj18OwhyVKbvt7/ZXEfv5L+EMJVr2Qg5oVOeK
-         svGIsrV5dej/xnKAgK0q342mKo6KrubruFpJWhU6KwLoSSzLWRTi07FDgqCBD6sT70
-         mNIgv6HFJ0vjKnXdsuJh0ZOMS1aUrwYWYCOZ0b38=
+        b=uN7BRFHp3xx0sjxEPF9xvSG4Hz6jchzCHr4uZcQDkOXCyn8lxJ6oK1MztGWo/9bd7
+         eWJJZZvq2zDGohi1VMLoxIRTAqbpUcNq1n5XI+l+0NrgBe7AShUgnPYJEpQ3vhmZ32
+         oZVryFBpD9YDseYEx9oFR3PyS6YeBnQj+h1k6K0Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        Giridhar Malavali <giridhar.malavali@qlogic.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 113/251] scsi: qla2xxx: Unregister chrdev if module initialization fails
-Date:   Thu, 16 Jan 2020 12:34:22 -0500
-Message-Id: <20200116173641.22137-73-sashal@kernel.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Javi Merino <javi.merino@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 142/251] thermal: cpu_cooling: Actually trace CPU load in thermal_power_cpu_get_power
+Date:   Thu, 16 Jan 2020 12:34:51 -0500
+Message-Id: <20200116173641.22137-102-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -61,98 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Matthias Kaehlcke <mka@chromium.org>
 
-[ Upstream commit c794d24ec9eb6658909955772e70f34bef5b5b91 ]
+[ Upstream commit bf45ac18b78038e43af3c1a273cae4ab5704d2ce ]
 
-If module initialization fails after the character device has been
-registered, unregister the character device. Additionally, avoid
-duplicating error path code.
+The CPU load values passed to the thermal_power_cpu_get_power
+tracepoint are zero for all CPUs, unless, unless the
+thermal_power_cpu_limit tracepoint is enabled too:
 
-Cc: Himanshu Madhani <hmadhani@marvell.com>
-Cc: Giridhar Malavali <giridhar.malavali@qlogic.com>
-Fixes: 6a03b4cd78f3 ("[SCSI] qla2xxx: Add char device to increase driver use count") # v2.6.35.
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+  irq/41-rockchip-98    [000] ....   290.972410: thermal_power_cpu_get_power:
+  cpus=0000000f freq=1800000 load={{0x0,0x0,0x0,0x0}} dynamic_power=4815
+
+vs
+
+  irq/41-rockchip-96    [000] ....    95.773585: thermal_power_cpu_get_power:
+  cpus=0000000f freq=1800000 load={{0x56,0x64,0x64,0x5e}} dynamic_power=4959
+  irq/41-rockchip-96    [000] ....    95.773596: thermal_power_cpu_limit:
+  cpus=0000000f freq=408000 cdev_state=10 power=416
+
+There seems to be no good reason for omitting the CPU load information
+depending on another tracepoint. My guess is that the intention was to
+check whether thermal_power_cpu_get_power is (still) enabled, however
+'load_cpu != NULL' already indicates that it was at least enabled when
+cpufreq_get_requested_power() was entered, there seems little gain
+from omitting the assignment if the tracepoint was just disabled, so
+just remove the check.
+
+Fixes: 6828a4711f99 ("thermal: add trace events to the power allocator governor")
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Acked-by: Javi Merino <javi.merino@kernel.org>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_os.c | 34 +++++++++++++++++++++-------------
- 1 file changed, 21 insertions(+), 13 deletions(-)
+ drivers/thermal/cpu_cooling.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index 3bae56b202f8..e730aabc26d0 100644
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -6055,8 +6055,7 @@ qla2x00_module_init(void)
- 	/* Initialize target kmem_cache and mem_pools */
- 	ret = qlt_init();
- 	if (ret < 0) {
--		kmem_cache_destroy(srb_cachep);
--		return ret;
-+		goto destroy_cache;
- 	} else if (ret > 0) {
- 		/*
- 		 * If initiator mode is explictly disabled by qlt_init(),
-@@ -6075,11 +6074,10 @@ qla2x00_module_init(void)
- 	qla2xxx_transport_template =
- 	    fc_attach_transport(&qla2xxx_transport_functions);
- 	if (!qla2xxx_transport_template) {
--		kmem_cache_destroy(srb_cachep);
- 		ql_log(ql_log_fatal, NULL, 0x0002,
- 		    "fc_attach_transport failed...Failing load!.\n");
--		qlt_exit();
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto qlt_exit;
- 	}
+diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
+index f49d2989d000..984e5f514140 100644
+--- a/drivers/thermal/cpu_cooling.c
++++ b/drivers/thermal/cpu_cooling.c
+@@ -607,7 +607,7 @@ static int cpufreq_get_requested_power(struct thermal_cooling_device *cdev,
+ 			load = 0;
  
- 	apidev_major = register_chrdev(0, QLA2XXX_APIDEV, &apidev_fops);
-@@ -6091,27 +6089,37 @@ qla2x00_module_init(void)
- 	qla2xxx_transport_vport_template =
- 	    fc_attach_transport(&qla2xxx_transport_vport_functions);
- 	if (!qla2xxx_transport_vport_template) {
--		kmem_cache_destroy(srb_cachep);
--		qlt_exit();
--		fc_release_transport(qla2xxx_transport_template);
- 		ql_log(ql_log_fatal, NULL, 0x0004,
- 		    "fc_attach_transport vport failed...Failing load!.\n");
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto unreg_chrdev;
- 	}
- 	ql_log(ql_log_info, NULL, 0x0005,
- 	    "QLogic Fibre Channel HBA Driver: %s.\n",
- 	    qla2x00_version_str);
- 	ret = pci_register_driver(&qla2xxx_pci_driver);
- 	if (ret) {
--		kmem_cache_destroy(srb_cachep);
--		qlt_exit();
--		fc_release_transport(qla2xxx_transport_template);
--		fc_release_transport(qla2xxx_transport_vport_template);
- 		ql_log(ql_log_fatal, NULL, 0x0006,
- 		    "pci_register_driver failed...ret=%d Failing load!.\n",
- 		    ret);
-+		goto release_vport_transport;
- 	}
- 	return ret;
-+
-+release_vport_transport:
-+	fc_release_transport(qla2xxx_transport_vport_template);
-+
-+unreg_chrdev:
-+	if (apidev_major >= 0)
-+		unregister_chrdev(apidev_major, QLA2XXX_APIDEV);
-+	fc_release_transport(qla2xxx_transport_template);
-+
-+qlt_exit:
-+	qlt_exit();
-+
-+destroy_cache:
-+	kmem_cache_destroy(srb_cachep);
-+	return ret;
- }
+ 		total_load += load;
+-		if (trace_thermal_power_cpu_limit_enabled() && load_cpu)
++		if (load_cpu)
+ 			load_cpu[i] = load;
  
- /**
+ 		i++;
 -- 
 2.20.1
 
