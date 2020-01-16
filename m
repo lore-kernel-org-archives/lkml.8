@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB73C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CFFC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACB89206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:09:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 908B8206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:09:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201744;
-	bh=4CVuzXqTGRz5Jz5nzwS8sQgnZy9ujrDNaP8rJyP7kKo=;
+	s=default; t=1579201746;
+	bh=BMgFxducrcVlOag3C3yZ/qE15LkMN0Q7yrMo9NxU0wI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VztoZLD/bxd33OpINbUvaEPhfqX4RHIGCqu09pLAg4NdwqHN6rS27NYNHiolgkMQG
-	 E4G8buqRz07e97OrTM0FeKZeSFI83Pzz6jvs2rJCjsGG0+OLl3jOouE+ofjrW7pyDB
-	 vwRAVC17Qw2LleC0m8RFtdSW5xenQ4IIZ11XBeRo=
+	b=pyGL74tVZw80qRwaEsY9uAlgtO/brhUWEJNpZv1hQipMz0VptT0HKKbqczIihqKYw
+	 KJYsmm1Rapgk1SddUrVqERc5bbJ80YGNq+c+Wmq9jqiyf/Vi+etAqmreZQjjSra1Jj
+	 pefhMuDnu1GoTgDRelAT34xXPC9374HG1Fk4UQFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388051AbgAPTJD (ORCPT
+        id S2387918AbgAPRAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:09:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51070 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387920AbgAPRAu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jan 2020 12:00:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50596 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387865AbgAPRAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:00:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7ED1920730;
-        Thu, 16 Jan 2020 17:00:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1A992467C;
+        Thu, 16 Jan 2020 17:00:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194050;
-        bh=4CVuzXqTGRz5Jz5nzwS8sQgnZy9ujrDNaP8rJyP7kKo=;
+        s=default; t=1579194041;
+        bh=BMgFxducrcVlOag3C3yZ/qE15LkMN0Q7yrMo9NxU0wI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dHTVKoQixGa2uj6wFCXjzQAbuTbVDyKWKV0hDe1tMwtsMzjcmIhv9CZKug9UoV1Zb
-         B+DUZLwEs7dip5Yqc2/goIfgphreMaXZ2gmzvmpFZ5h1p6ywj6oZGfzCAkbDY21Qa8
-         80MgS/8Xe67sg9MFgMiCyNCTPJ1AWMLqbqKJG0lA=
+        b=MFwOUWYJc+1/r92V2MhO2Ip3trQVYuETeq3YFVNAqwUleD9qJp1zvJwwIFZCugjqp
+         X/pHBPTByENxqWCi/XmM0SjNg3WzcOWcAQf3G6YK1qKFLlKZCRXC4Kie4RkEZW9CVG
+         tLvKXj2KfwCVYqiRNjaEkhXabx3iZRDItgSpJCPQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 165/671] rtc: pm8xxx: fix unintended sign extension
-Date:   Thu, 16 Jan 2020 11:51:14 -0500
-Message-Id: <20200116165940.10720-48-sashal@kernel.org>
+Cc:     Niklas Cassel <niklas.cassel@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 158/671] arm64: dts: msm8916: remove bogus argument to the cpu clock
+Date:   Thu, 16 Jan 2020 11:51:07 -0500
+Message-Id: <20200116165940.10720-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -59,51 +62,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Niklas Cassel <niklas.cassel@linaro.org>
 
-[ Upstream commit e42280886018c6f77f0a90190f7cba344b0df3e0 ]
+[ Upstream commit e4f045ef38e61ba37aa4afc916fce4fc1b37aa19 ]
 
-Shifting a u8 by 24 will cause the value to be promoted to an integer. If
-the top bit of the u8 is set then the following conversion to an unsigned
-long will sign extend the value causing the upper 32 bits to be set in
-the result.
+The apcs node has #clock-cells = <0>, which means that those who
+references it should specify 0 arguments.
 
-Fix this by casting the u8 value to an unsigned long before the shift.
+The apcs reference in the cpu node incorrectly specifies an argument,
+remove this bogus argument.
 
-Detected by CoverityScan, CID#1309693 ("Unintended sign extension")
-
-Fixes: 9a9a54ad7aa2 ("drivers/rtc: add support for Qualcomm PMIC8xxx RTC")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fixes: 65afdf458360 ("arm64: dts: qcom: msm8916: Add CPU frequency scaling support")
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-pm8xxx.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/rtc/rtc-pm8xxx.c b/drivers/rtc/rtc-pm8xxx.c
-index 29358a045925..e03104b734fc 100644
---- a/drivers/rtc/rtc-pm8xxx.c
-+++ b/drivers/rtc/rtc-pm8xxx.c
-@@ -213,7 +213,8 @@ static int pm8xxx_rtc_read_time(struct device *dev, struct rtc_time *tm)
- 		}
- 	}
- 
--	secs = value[0] | (value[1] << 8) | (value[2] << 16) | (value[3] << 24);
-+	secs = value[0] | (value[1] << 8) | (value[2] << 16) |
-+	       ((unsigned long)value[3] << 24);
- 
- 	rtc_time_to_tm(secs, tm);
- 
-@@ -288,7 +289,8 @@ static int pm8xxx_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alarm)
- 		return rc;
- 	}
- 
--	secs = value[0] | (value[1] << 8) | (value[2] << 16) | (value[3] << 24);
-+	secs = value[0] | (value[1] << 8) | (value[2] << 16) |
-+	       ((unsigned long)value[3] << 24);
- 
- 	rtc_time_to_tm(secs, &alarm->time);
- 
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 7b32b8990d62..8011e564a234 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -114,7 +114,7 @@
+ 			next-level-cache = <&L2_0>;
+ 			enable-method = "psci";
+ 			cpu-idle-states = <&CPU_SPC>;
+-			clocks = <&apcs 0>;
++			clocks = <&apcs>;
+ 			operating-points-v2 = <&cpu_opp_table>;
+ 			#cooling-cells = <2>;
+ 		};
+@@ -126,7 +126,7 @@
+ 			next-level-cache = <&L2_0>;
+ 			enable-method = "psci";
+ 			cpu-idle-states = <&CPU_SPC>;
+-			clocks = <&apcs 0>;
++			clocks = <&apcs>;
+ 			operating-points-v2 = <&cpu_opp_table>;
+ 			#cooling-cells = <2>;
+ 		};
+@@ -138,7 +138,7 @@
+ 			next-level-cache = <&L2_0>;
+ 			enable-method = "psci";
+ 			cpu-idle-states = <&CPU_SPC>;
+-			clocks = <&apcs 0>;
++			clocks = <&apcs>;
+ 			operating-points-v2 = <&cpu_opp_table>;
+ 			#cooling-cells = <2>;
+ 		};
+@@ -150,7 +150,7 @@
+ 			next-level-cache = <&L2_0>;
+ 			enable-method = "psci";
+ 			cpu-idle-states = <&CPU_SPC>;
+-			clocks = <&apcs 0>;
++			clocks = <&apcs>;
+ 			operating-points-v2 = <&cpu_opp_table>;
+ 			#cooling-cells = <2>;
+ 		};
 -- 
 2.20.1
 
