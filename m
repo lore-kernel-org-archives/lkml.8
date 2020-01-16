@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD62C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C04F2C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A3B920748
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:24:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C11C2075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:24:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217050;
-	bh=R+bh719d9Q5QgI+sWO+6UqYdpo93I4kzyTiicq2nTvY=;
+	s=default; t=1579217053;
+	bh=llcbE1wcQpude3dpR8hju5BDyHfnYm//qk0xuoLs8uk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zxyy7GQ1fOd7wTPQsf1YAKq+aBy1xqbY7lvM+iIxCrnRkG+hFHhMUO3lPVDyB8QMi
-	 duQUJp5k2mLumDvVyRFGVGtY4H5IOE19in0rlamWPr5BnVof8r+yJHJaWsWwyc+fYm
-	 Kjx9yNs82MHh5bX9DrlDf3rEjm04uDHY+yx3YS1Y=
+	b=AIyi250At0HQzgr8so3ZUO5i+Olrf/O4epYjGz5DybIRNUXtYd080V9dmfyetmVIE
+	 ym8ZYREK6SGlsu3M4K+YG999JMdyXi152I9t9HK6FLt4i07W+zgiFOvkizc0aVt7IY
+	 WDAt7uNcXaOKpriyE45irK5caPk0evcFLL45c+D0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730357AbgAPXYI (ORCPT
+        id S1730989AbgAPXYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:24:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52922 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:24:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727023AbgAPXYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:24:05 -0500
+        id S1730701AbgAPXYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:24:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 959A72075B;
-        Thu, 16 Jan 2020 23:24:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26383206D9;
+        Thu, 16 Jan 2020 23:24:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217045;
-        bh=R+bh719d9Q5QgI+sWO+6UqYdpo93I4kzyTiicq2nTvY=;
+        s=default; t=1579217042;
+        bh=llcbE1wcQpude3dpR8hju5BDyHfnYm//qk0xuoLs8uk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wYerBByNzbQ7wmc5JiVfgatCjMb3pylkShw9pj4qNft/YkFRhlJM9yMpAJYrCdEht
-         yn6yGhdQjR3eB0NjLmiNP/I1OpkDdGvi9mOZeBlhh/txM4Lx69la+6xfRaggF/190G
-         yOZcTVYPOe9g3dGvd6drZ1odIy0zmA1dDtaoF8MM=
+        b=j1lQG5leIO8vKbxEu1tEL5ItnICkqKlr8ACoXscCveavOrsUHQ0RUzRsf2yqSwuvo
+         ioE+LCC+Un95GmJw6dnnevvd6lOlyDRgD/ylPn2BnYxrBKvoHeHaF5yYiXQA5XSB7k
+         2AAOKVo3iel5DatwpopgCRFvmkLj9ff+mD5LzY0Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.4 109/203] iio: imu: st_lsm6dsx: fix gyro gain definitions for LSM9DS1
-Date:   Fri, 17 Jan 2020 00:17:06 +0100
-Message-Id: <20200116231755.033009357@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: [PATCH 5.4 108/203] NFSv4.x: Drop the slot if nfs4_delegreturn_prepare waits for layoutreturn
+Date:   Fri, 17 Jan 2020 00:17:05 +0100
+Message-Id: <20200116231754.960143265@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -59,36 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-commit 1b3751017e09f0857bc38f9b1be08dce38f3d92c upstream.
+commit 5326de9e94bedcf7366e7e7625d4deb8c1f1ca8a upstream.
 
-Fix typos in gyro gain definitions for LSM9DS1 sensor
+If nfs4_delegreturn_prepare needs to wait for a layoutreturn to complete
+then make sure we drop the sequence slot if we hold it.
 
-Fixes: 52f4b1f19679 ("iio: imu: st_lsm6dsx: add support for accel/gyro unit of lsm9ds1")
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: 1c5bd76d17cc ("pNFS: Enable layoutreturn operation for return-on-close")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ fs/nfs/nfs4proc.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-@@ -152,9 +152,10 @@ static const struct st_lsm6dsx_settings
- 					.addr = 0x10,
- 					.mask = GENMASK(4, 3),
- 				},
--				.fs_avl[0] = {  IIO_DEGREE_TO_RAD(245), 0x0 },
--				.fs_avl[1] = {  IIO_DEGREE_TO_RAD(500), 0x1 },
--				.fs_avl[2] = { IIO_DEGREE_TO_RAD(2000), 0x3 },
-+
-+				.fs_avl[0] = {  IIO_DEGREE_TO_RAD(8750), 0x0 },
-+				.fs_avl[1] = { IIO_DEGREE_TO_RAD(17500), 0x1 },
-+				.fs_avl[2] = { IIO_DEGREE_TO_RAD(70000), 0x3 },
- 				.fs_len = 3,
- 			},
- 		},
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -6252,8 +6252,10 @@ static void nfs4_delegreturn_prepare(str
+ 
+ 	d_data = (struct nfs4_delegreturndata *)data;
+ 
+-	if (!d_data->lr.roc && nfs4_wait_on_layoutreturn(d_data->inode, task))
++	if (!d_data->lr.roc && nfs4_wait_on_layoutreturn(d_data->inode, task)) {
++		nfs4_sequence_done(task, &d_data->res.seq_res);
+ 		return;
++	}
+ 
+ 	lo = d_data->args.lr_args ? d_data->args.lr_args->layout : NULL;
+ 	if (lo && !pnfs_layout_is_valid(lo)) {
 
 
