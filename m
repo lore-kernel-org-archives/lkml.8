@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34993C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEE9C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05D9E20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:39:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FD5320661
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:39:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217961;
-	bh=X/RhwB3ltoFu/o5xwb831LGVLfW0AvB+9BD9HsiGhGs=;
+	s=default; t=1579217965;
+	bh=yWWbWA/a60bFs6M+W+yu8Q+ZUvBOx7ldAV+THpLEjR8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IlnD9qDNGcxdNiag4n90C7Ee8s4e/81Xf3Nkd+n4onIjtg+4BibhZ4vsKNYt4jl6s
-	 v4wmb6dbFJRmV+IyKtc9eZzBTL6dUWknejbfgTODg32gy8Ba0qMKJpVo6pNo8l0KF7
-	 2XY6MPRSzipfUPGYAoaoptqaYcILNMc1dieig0E8=
+	b=U7LLd6XJA3oOiyGntOYMGzBft4nQOzO0Jl2hEQMZuXG5U8j26QA0Jg87IrkzcOI0u
+	 wIbosx+G5nMByPEN/oGDpAuPLsU4LLR92syogUHkDbSviMMXkYPSAYKNjks8P0gyHC
+	 ANydPUfcCeD0BT9QY9HXteoWWZ41ydeYxSPN8ksQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391134AbgAPXjT (ORCPT
+        id S2391083AbgAPX2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:39:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33046 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:28:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389017AbgAPX2Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:28:24 -0500
+        id S2389500AbgAPX2O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:28:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FD642072E;
-        Thu, 16 Jan 2020 23:28:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BB50206D9;
+        Thu, 16 Jan 2020 23:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217303;
-        bh=X/RhwB3ltoFu/o5xwb831LGVLfW0AvB+9BD9HsiGhGs=;
+        s=default; t=1579217291;
+        bh=yWWbWA/a60bFs6M+W+yu8Q+ZUvBOx7ldAV+THpLEjR8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JMd/C9uHfx7dUnS6BP0klwVYnfFFiX6U6tEMZ1EzL9WoL1L5bKAKTX31EYvLWjUOK
-         eDq+Ehr0TYmNKo9ldSTniUSZBRovlsvsYzZwBAtm7QrwAfQiGAx4fD+FXG6X1Eg3+Y
-         t1RIE9/7vfICA5SiMJylXhcUdhCiAddCKMAycMM8=
+        b=lmLN5x5T1TpMyc3MatDH2IM6iF+SOEy19mOMmVwaweYe7IQ90B1EzUY4AOKIYspoN
+         PYj6daHS1cexiSxrEUaeFH9d10xeGlYWHzjbacK08JUSjQQmmVT0lhVV6qjdmnKzvV
+         231O5wvnYjh3+71GHSbRYt9dZCSbhy4IjYyIchyc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 27/84] hsr: reset network header when supervision frame is created
-Date:   Fri, 17 Jan 2020 00:18:01 +0100
-Message-Id: <20200116231716.864291308@linuxfoundation.org>
+        stable@vger.kernel.org, Olivier Moysan <olivier.moysan@st.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.19 22/84] ASoC: stm32: spdifrx: fix race condition in irq handler
+Date:   Fri, 17 Jan 2020 00:17:56 +0100
+Message-Id: <20200116231716.272428926@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
 References: <20200116231713.087649517@linuxfoundation.org>
@@ -59,58 +59,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Olivier Moysan <olivier.moysan@st.com>
 
-commit 3ed0a1d563903bdb4b4c36c58c4d9c1bcb23a6e6 upstream.
+commit 86e1956af4c863d653136fd6e5694adf2054dbaa upstream.
 
-The supervision frame is L2 frame.
-When supervision frame is created, hsr module doesn't set network header.
-If tap routine is enabled, dev_queue_xmit_nit() is called and it checks
-network_header. If network_header pointer wasn't set(or invalid),
-it resets network_header and warns.
-In order to avoid unnecessary warning message, resetting network_header
-is needed.
+When snd_pcm_stop() is called in interrupt routine,
+substream context may have already been released.
+Add protection on substream context.
 
-Test commands:
-    ip netns add nst
-    ip link add veth0 type veth peer name veth1
-    ip link add veth2 type veth peer name veth3
-    ip link set veth1 netns nst
-    ip link set veth3 netns nst
-    ip link set veth0 up
-    ip link set veth2 up
-    ip link add hsr0 type hsr slave1 veth0 slave2 veth2
-    ip a a 192.168.100.1/24 dev hsr0
-    ip link set hsr0 up
-    ip netns exec nst ip link set veth1 up
-    ip netns exec nst ip link set veth3 up
-    ip netns exec nst ip link add hsr1 type hsr slave1 veth1 slave2 veth3
-    ip netns exec nst ip a a 192.168.100.2/24 dev hsr1
-    ip netns exec nst ip link set hsr1 up
-    tcpdump -nei veth0
+Fixes: 03e4d5d56fa5 ("ASoC: stm32: Add SPDIFRX support")
 
-Splat looks like:
-[  175.852292][    C3] protocol 88fb is buggy, dev veth0
-
-Fixes: f421436a591d ("net/hsr: Add support for the High-availability Seamless Redundancy protocol (HSRv0)")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Link: https://lore.kernel.org/r/20191204154333.7152-3-olivier.moysan@st.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/hsr/hsr_device.c |    2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/stm/stm32_spdifrx.c |   24 +++++++++++++++++++-----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
 
---- a/net/hsr/hsr_device.c
-+++ b/net/hsr/hsr_device.c
-@@ -281,6 +281,8 @@ static void send_hsr_supervision_frame(s
- 			    skb->dev->dev_addr, skb->len) <= 0)
- 		goto out;
- 	skb_reset_mac_header(skb);
-+	skb_reset_network_header(skb);
-+	skb_reset_transport_header(skb);
+--- a/sound/soc/stm/stm32_spdifrx.c
++++ b/sound/soc/stm/stm32_spdifrx.c
+@@ -213,6 +213,7 @@
+  * @slave_config: dma slave channel runtime config pointer
+  * @phys_addr: SPDIFRX registers physical base address
+  * @lock: synchronization enabling lock
++ * @irq_lock: prevent race condition with IRQ on stream state
+  * @cs: channel status buffer
+  * @ub: user data buffer
+  * @irq: SPDIFRX interrupt line
+@@ -233,6 +234,7 @@ struct stm32_spdifrx_data {
+ 	struct dma_slave_config slave_config;
+ 	dma_addr_t phys_addr;
+ 	spinlock_t lock;  /* Sync enabling lock */
++	spinlock_t irq_lock; /* Prevent race condition on stream state */
+ 	unsigned char cs[SPDIFRX_CS_BYTES_NB];
+ 	unsigned char ub[SPDIFRX_UB_BYTES_NB];
+ 	int irq;
+@@ -645,7 +647,6 @@ static const struct regmap_config stm32_
+ static irqreturn_t stm32_spdifrx_isr(int irq, void *devid)
+ {
+ 	struct stm32_spdifrx_data *spdifrx = (struct stm32_spdifrx_data *)devid;
+-	struct snd_pcm_substream *substream = spdifrx->substream;
+ 	struct platform_device *pdev = spdifrx->pdev;
+ 	unsigned int cr, mask, sr, imr;
+ 	unsigned int flags;
+@@ -713,14 +714,19 @@ static irqreturn_t stm32_spdifrx_isr(int
+ 		regmap_update_bits(spdifrx->regmap, STM32_SPDIFRX_CR,
+ 				   SPDIFRX_CR_SPDIFEN_MASK, cr);
  
- 	if (hsrVer > 0) {
- 		hsr_tag = skb_put(skb, sizeof(struct hsr_tag));
+-		if (substream)
+-			snd_pcm_stop(substream, SNDRV_PCM_STATE_DISCONNECTED);
++		spin_lock(&spdifrx->irq_lock);
++		if (spdifrx->substream)
++			snd_pcm_stop(spdifrx->substream,
++				     SNDRV_PCM_STATE_DISCONNECTED);
++		spin_unlock(&spdifrx->irq_lock);
+ 
+ 		return IRQ_HANDLED;
+ 	}
+ 
+-	if (err_xrun && substream)
+-		snd_pcm_stop_xrun(substream);
++	spin_lock(&spdifrx->irq_lock);
++	if (err_xrun && spdifrx->substream)
++		snd_pcm_stop_xrun(spdifrx->substream);
++	spin_unlock(&spdifrx->irq_lock);
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -729,9 +735,12 @@ static int stm32_spdifrx_startup(struct
+ 				 struct snd_soc_dai *cpu_dai)
+ {
+ 	struct stm32_spdifrx_data *spdifrx = snd_soc_dai_get_drvdata(cpu_dai);
++	unsigned long flags;
+ 	int ret;
+ 
++	spin_lock_irqsave(&spdifrx->irq_lock, flags);
+ 	spdifrx->substream = substream;
++	spin_unlock_irqrestore(&spdifrx->irq_lock, flags);
+ 
+ 	ret = clk_prepare_enable(spdifrx->kclk);
+ 	if (ret)
+@@ -807,8 +816,12 @@ static void stm32_spdifrx_shutdown(struc
+ 				   struct snd_soc_dai *cpu_dai)
+ {
+ 	struct stm32_spdifrx_data *spdifrx = snd_soc_dai_get_drvdata(cpu_dai);
++	unsigned long flags;
+ 
++	spin_lock_irqsave(&spdifrx->irq_lock, flags);
+ 	spdifrx->substream = NULL;
++	spin_unlock_irqrestore(&spdifrx->irq_lock, flags);
++
+ 	clk_disable_unprepare(spdifrx->kclk);
+ }
+ 
+@@ -912,6 +925,7 @@ static int stm32_spdifrx_probe(struct pl
+ 	spdifrx->pdev = pdev;
+ 	init_completion(&spdifrx->cs_completion);
+ 	spin_lock_init(&spdifrx->lock);
++	spin_lock_init(&spdifrx->irq_lock);
+ 
+ 	platform_set_drvdata(pdev, spdifrx);
+ 
 
 
