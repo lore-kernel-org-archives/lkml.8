@@ -2,50 +2,73 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 496DDC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC36C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 272262077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F77C2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:19:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbgAPLTP (ORCPT
+        id S1726555AbgAPLT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 06:19:15 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:34868 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbgAPLTP (ORCPT
+        Thu, 16 Jan 2020 06:19:58 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:51330 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbgAPLT6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 06:19:15 -0500
-Received: from ip5f5bd663.dynamic.kabel-deutschland.de ([95.91.214.99] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1is3B9-0000wC-Lv; Thu, 16 Jan 2020 11:19:11 +0000
-Date:   Thu, 16 Jan 2020 12:19:11 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     linux-snps-arc@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel@vger.kernel.org,
-        linux-arch <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH] ARC: wireup clone3 syscall
-Message-ID: <20200116111910.b3vhwudsdb4oe5b2@wittgenstein>
-References: <20200116000948.17646-1-vgupta@synopsys.com>
+        Thu, 16 Jan 2020 06:19:58 -0500
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1is3Bq-0005DA-Jz; Thu, 16 Jan 2020 12:19:54 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 3F1F8101B66; Thu, 16 Jan 2020 12:19:54 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Cc:     Sasha Levin <sashal@kernel.org>, Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        rcu@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 1/2] kernel: set taint flag 'L' at any kind of lockup
+In-Reply-To: <157503370645.8187.6335564487789994134.stgit@buzz>
+References: <157503370645.8187.6335564487789994134.stgit@buzz>
+Date:   Thu, 16 Jan 2020 12:19:54 +0100
+Message-ID: <87eevzwsv9.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200116000948.17646-1-vgupta@synopsys.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 04:09:48PM -0800, Vineet Gupta wrote:
-> Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Konstantin Khlebnikov <khlebnikov@yandex-team.ru> writes:
+> Any lockup or stall notifies about unexpected lack of progress.
+> It's better to know about them for further problem investigations.
+>
+> Right now only softlockup has own taint flag. Let's generalize it.
+>
+> This patch renames TAINT_SOFTLOCKUP into TAINT_LOCKUP at sets it for:
 
-Thanks!
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Please search 'This patch' in Documentation/process/submitting-patches.rst
+
+> - softlockup
+> - hardlockup
+> - RCU stalls
+> - stuck in workqueues
+> - detected task hung
+
+This does too many things at once and wants to be split in pieces:
+
+  1) Change the TAINT flag and update documentation
+
+  2) Add the tainting to the places which are not yet covered
+
+Thanks,
+
+        tglx
