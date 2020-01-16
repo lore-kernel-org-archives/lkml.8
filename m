@@ -2,98 +2,119 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCDD1C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 407ACC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD111206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:32:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199563;
-	bh=pApbjpB3M1WpmYu3P2kMlD3KDQd2NJxdcECDY4o+trk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u/UFDR+WYNGid8flosgGcUQW9o00hq8UioXB8Pz+XYTzWcLbf5vPJ+sq7ppkPHFqU
-	 OchU0TzOwNJEpJddpkygGDF6KHGu4wkOG6nkcz+xAXHejN5PU3OYzFFdx4ARqvpb38
-	 TX75bF3/m23DlUQwfqOdSFdskBQWlmnYzqxDhNWQ=
+	by mail.kernel.org (Postfix) with ESMTP id 17C31206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:32:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gAhyUALY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404512AbgAPScm (ORCPT
+        id S1729028AbgAPScq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:32:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60294 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391833AbgAPRY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:24:57 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F9952468D;
-        Thu, 16 Jan 2020 17:24:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195497;
-        bh=pApbjpB3M1WpmYu3P2kMlD3KDQd2NJxdcECDY4o+trk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q3bUW5hictFEyspyE7/eNRE8AEiyZ7hOTlQoCZu+jCkz3PaPbyvIW0hZeQ8en+ClZ
-         joPV/MAOPUJiSirVzg7grx88IQoN6Q2oVYflchJ73XTOuUuzsGa/4tjg8fpE4vSRLE
-         OLIDg3tHBqzKO33XP7ZkJXVyJzUIW5xuMw2mFulQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
-        Tony Lindgren <tony@atomide.com>, Bin Liu <b-liu@ti.com>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 098/371] usb: phy: twl6030-usb: fix possible use-after-free on remove
-Date:   Thu, 16 Jan 2020 12:19:30 -0500
-Message-Id: <20200116172403.18149-41-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
-References: <20200116172403.18149-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Thu, 16 Jan 2020 13:32:46 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:39086 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404304AbgAPSck (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 13:32:40 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00GI8ZCg056130;
+        Thu, 16 Jan 2020 18:32:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
+ bh=Y7GYug0Y8XatejflsaiCwFHDIXRQgLFG06sMutgJGzc=;
+ b=gAhyUALYvQYG/zDXlYZ3mvsab23rl3qGeP7/7OQVldBgergTPHSrMcEjEUFvIq4R7DEg
+ 3Gjuaacl3ZByuSErbpcdUm7WJhdj1ODv4cPtyclAoM9Y0Fc0cT3uJ11LyMZkrVmgllv2
+ KyHHaEmtxuo0kd/JQnaQoN8sIBSjejjIuoa/a3SroS2ddygA+dHw1OaaT+1g2l/qvhdc
+ 8w+Hp/LSZzjahXtQjuYlmuz4QCr3bpBuTyE9si5CgUTfLusknBHAC/F7ZLhn/bs//Mgk
+ dY9wJtjGnEFNqJmd6dJbsj1QfplvqlaPaSNoel6JFviqzSW1JFMKbTFy4RUigE5/VI2q mw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2xf74sm9r3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jan 2020 18:32:31 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00GI9PML124446;
+        Thu, 16 Jan 2020 18:30:31 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3020.oracle.com with ESMTP id 2xj1ptje07-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 16 Jan 2020 18:30:31 +0000
+Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id 00GIU9ew190457;
+        Thu, 16 Jan 2020 18:30:30 GMT
+Received: from ca-dev107.us.oracle.com (ca-dev107.us.oracle.com [10.129.135.36])
+        by userp3020.oracle.com with ESMTP id 2xj1ptjdxt-2;
+        Thu, 16 Jan 2020 18:30:30 +0000
+From:   rao Shoaib <rao.shoaib@oracle.com>
+To:     linux-rdma@vger.kernel.org
+Cc:     jgg@ziepe.ca, monis@mellanox.com, dledford@redhat.com,
+        sean.hefty@intel.com, hal.rosenstock@gmail.com,
+        linux-kernel@vger.kernel.org, Rao Shoaib <rao.shoaib@oracle.com>
+Subject: [PATCH v4 1/2] RDMA/rxe: use RXE_MAX_WQE_SIZE to enforce limits
+Date:   Thu, 16 Jan 2020 10:30:11 -0800
+Message-Id: <1579199412-15741-2-git-send-email-rao.shoaib@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1579199412-15741-1-git-send-email-rao.shoaib@oracle.com>
+References: <1579199412-15741-1-git-send-email-rao.shoaib@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9502 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=983 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001160147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Van Asbroeck <thesven73@gmail.com>
+From: Rao Shoaib <rao.shoaib@oracle.com>
 
-[ Upstream commit 5895d311d28f2605e2f71c1a3e043ed38f3ac9d2 ]
+Introduce RXE_MAX_WQE_SIZE to impose limits on max SGE's and inline data
+size
 
-In remove(), use cancel_delayed_work_sync() to cancel the
-delayed work. Otherwise there's a chance that this work
-will continue to run until after the device has been removed.
-
-This issue was detected with the help of Coccinelle.
-
-Cc: Tony Lindgren <tony@atomide.com>
-Cc: Bin Liu <b-liu@ti.com>
-Fixes: b6a619a883c3 ("usb: phy: Check initial state for twl6030")
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Rao Shoaib <rao.shoaib@oracle.com>
 ---
- drivers/usb/phy/phy-twl6030-usb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/sw/rxe/rxe_param.h | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/phy/phy-twl6030-usb.c b/drivers/usb/phy/phy-twl6030-usb.c
-index b5dc077ed7d3..8e14fa221191 100644
---- a/drivers/usb/phy/phy-twl6030-usb.c
-+++ b/drivers/usb/phy/phy-twl6030-usb.c
-@@ -413,7 +413,7 @@ static int twl6030_usb_remove(struct platform_device *pdev)
- {
- 	struct twl6030_usb *twl = platform_get_drvdata(pdev);
+diff --git a/drivers/infiniband/sw/rxe/rxe_param.h b/drivers/infiniband/sw/rxe/rxe_param.h
+index 353c666..f59616b 100644
+--- a/drivers/infiniband/sw/rxe/rxe_param.h
++++ b/drivers/infiniband/sw/rxe/rxe_param.h
+@@ -34,6 +34,8 @@
+ #ifndef RXE_PARAM_H
+ #define RXE_PARAM_H
  
--	cancel_delayed_work(&twl->get_status_work);
-+	cancel_delayed_work_sync(&twl->get_status_work);
- 	twl6030_interrupt_mask(TWL6030_USBOTG_INT_MASK,
- 		REG_INT_MSK_LINE_C);
- 	twl6030_interrupt_mask(TWL6030_USBOTG_INT_MASK,
++#include <uapi/rdma/rdma_user_rxe.h>
++
+ static inline enum ib_mtu rxe_mtu_int_to_enum(int mtu)
+ {
+ 	if (mtu < 256)
+@@ -64,7 +66,6 @@ enum rxe_device_param {
+ 	RXE_PAGE_SIZE_CAP		= 0xfffff000,
+ 	RXE_MAX_QP			= 0x10000,
+ 	RXE_MAX_QP_WR			= 0x4000,
+-	RXE_MAX_INLINE_DATA		= 400,
+ 	RXE_DEVICE_CAP_FLAGS		= IB_DEVICE_BAD_PKEY_CNTR
+ 					| IB_DEVICE_BAD_QKEY_CNTR
+ 					| IB_DEVICE_AUTO_PATH_MIG
+@@ -77,6 +78,10 @@ enum rxe_device_param {
+ 					| IB_DEVICE_MEM_MGT_EXTENSIONS
+ 					| IB_DEVICE_ALLOW_USER_UNREG,
+ 	RXE_MAX_SGE			= 32,
++	RXE_MAX_WQE_SIZE		= sizeof(struct rxe_send_wqe) +
++					  sizeof(struct ib_sge) * RXE_MAX_SGE,
++	RXE_MAX_INLINE_DATA		= RXE_MAX_WQE_SIZE -
++					  sizeof(struct rxe_send_wqe),
+ 	RXE_MAX_SGE_RD			= 32,
+ 	RXE_MAX_CQ			= 16384,
+ 	RXE_MAX_LOG_CQE			= 15,
 -- 
-2.20.1
+1.8.3.1
 
