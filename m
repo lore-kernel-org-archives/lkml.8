@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F249C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C22C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B6AC24681
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1CC624681
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:52:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197148;
-	bh=URLMyFA5OyAqy8XaRhkLkiQrA0i64bDb8l7lyFP+zeA=;
+	s=default; t=1579197153;
+	bh=/ajWpIEiZ1sIJCzJNkRWL1sdmnCFGCAzOPBjRo7dhZA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mmNv7Bofd/cptQJHzzxdkGRT0j40cUe93vp4A9nTEj1gVHqxzg/A6IcwxnQfh+glT
-	 sztLI25zqyy8R/KrjidQ8ug8vZeQUPQz7z+Q9fW7C8AGRUxzAqEtvhbnkH/Cje+Zjk
-	 BjWSfboRLby1vOWZuXR4Eb63a4+2UcVp2kAr8z9E=
+	b=QvltPOscY1XNZ3wksynwEc8i2Ww4p/47aHoElBx/Ap3IPukOG/wriw0YIKU5ETx2c
+	 Qdj1KyZfOe2UOMJ7ZH60JfD4uKAsy3nnzlprLTWKDGckbohuX5PCRQFWKS8m9nX6Jx
+	 t6a0fd2JPzYNaMtg7naOOG0D9WGdiOItouZNuygI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406393AbgAPRw1 (ORCPT
+        id S2406127AbgAPRpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:52:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37058 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:45:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729354AbgAPRpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:45:23 -0500
+        id S2405963AbgAPRos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:44:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D0BC24785;
-        Thu, 16 Jan 2020 17:45:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C777D2475E;
+        Thu, 16 Jan 2020 17:44:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196722;
-        bh=URLMyFA5OyAqy8XaRhkLkiQrA0i64bDb8l7lyFP+zeA=;
+        s=default; t=1579196688;
+        bh=/ajWpIEiZ1sIJCzJNkRWL1sdmnCFGCAzOPBjRo7dhZA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PgXmD9l2u4t8pd3qeCzkPOVYzbmOqlPZpYg/kJfDlbs64pX2CVu0QdGJBy3223ZQj
-         S6R8EHY5r+CBLCm+7L/1nQnumVryNmOBddRmTSZa+Q8D4VUi9XkiSzNZ0vA8I/W58w
-         nx8Y6kc4dtyfhmOJlfN0u8s8Fqs9uCMRzG+37fAE=
+        b=kn0BB4H8rPAcX49/Kq3bim9az+JiHKN0WVPk/2g7SRgLBgdlKI5e8sjH8OGUpT+DC
+         xIbDAMMYqkKANBMJuXBOB5VtrCdEJeKU6TLSGHBwovlLzZJ5SzrMc+++sroBO2xr7k
+         fjmxuaLUrvWwwh3h+kVELCfkKD+nvVCVTEvBdvvc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 108/174] devres: allow const resource arguments
-Date:   Thu, 16 Jan 2020 12:41:45 -0500
-Message-Id: <20200116174251.24326-108-sashal@kernel.org>
+Cc:     Jack Morgenstein <jackm@dev.mellanox.co.il>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 084/174] IB/mlx5: Add missing XRC options to QP optional params mask
+Date:   Thu, 16 Jan 2020 12:41:21 -0500
+Message-Id: <20200116174251.24326-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -61,61 +60,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Jack Morgenstein <jackm@dev.mellanox.co.il>
 
-[ Upstream commit 9dea44c91469512d346e638694c22c30a5273992 ]
+[ Upstream commit 8f4426aa19fcdb9326ac44154a117b1a3a5ae126 ]
 
-devm_ioremap_resource() does not currently take 'const' arguments,
-which results in a warning from the first driver trying to do it
-anyway:
+The QP transition optional parameters for the various transition for XRC
+QPs are identical to those for RC QPs.
 
-drivers/gpio/gpio-amd-fch.c: In function 'amd_fch_gpio_probe':
-drivers/gpio/gpio-amd-fch.c:171:49: error: passing argument 2 of 'devm_ioremap_resource' discards 'const' qualifier from pointer target type [-Werror=discarded-qualifiers]
-  priv->base = devm_ioremap_resource(&pdev->dev, &amd_fch_gpio_iores);
-                                                 ^~~~~~~~~~~~~~~~~~~
+Many of the XRC QP transition optional parameter bits are missing from the
+QP optional mask table.  These omissions caused failures when doing XRC QP
+state transitions.
 
-Change the prototype to allow it, as there is no real reason not to.
+For example, when trying to change the response timer of an XRC receive QP
+via the RTS2RTS transition, the new timer value was ignored because
+MLX5_QP_OPTPAR_RNR_TIMEOUT bit was missing from the optional params mask
+for XRC qps for the RTS2RTS transition.
 
-Fixes: 9bb2e0452508 ("gpio: amd: Make resource struct const")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20190628150049.1108048-1-arnd@arndb.de
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviwed-By: Enrico Weigelt <info@metux.net>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fix this by adding the missing XRC optional parameters for all QP
+transitions to the opt_mask table.
+
+Fixes: e126ba97dba9 ("mlx5: Add driver for Mellanox Connect-IB adapters")
+Fixes: a4774e9095de ("IB/mlx5: Fix opt param mask according to firmware spec")
+Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/device.h | 3 ++-
- lib/devres.c           | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/infiniband/hw/mlx5/qp.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 834000903525..eb891c9c4b62 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -677,7 +677,8 @@ extern unsigned long devm_get_free_pages(struct device *dev,
- 					 gfp_t gfp_mask, unsigned int order);
- extern void devm_free_pages(struct device *dev, unsigned long addr);
- 
--void __iomem *devm_ioremap_resource(struct device *dev, struct resource *res);
-+void __iomem *devm_ioremap_resource(struct device *dev,
-+				    const struct resource *res);
- 
- /* allows to add/remove a custom action to devres stack */
- int devm_add_action(struct device *dev, void (*action)(void *), void *data);
-diff --git a/lib/devres.c b/lib/devres.c
-index 8c85672639d3..9d18ccd00df5 100644
---- a/lib/devres.c
-+++ b/lib/devres.c
-@@ -131,7 +131,8 @@ EXPORT_SYMBOL(devm_iounmap);
-  *	if (IS_ERR(base))
-  *		return PTR_ERR(base);
-  */
--void __iomem *devm_ioremap_resource(struct device *dev, struct resource *res)
-+void __iomem *devm_ioremap_resource(struct device *dev,
-+				    const struct resource *res)
- {
- 	resource_size_t size;
- 	const char *name;
+diff --git a/drivers/infiniband/hw/mlx5/qp.c b/drivers/infiniband/hw/mlx5/qp.c
+index 43d277a931c2..eac5f5eff8d2 100644
+--- a/drivers/infiniband/hw/mlx5/qp.c
++++ b/drivers/infiniband/hw/mlx5/qp.c
+@@ -1426,6 +1426,11 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
+ 			[MLX5_QP_ST_UD] = MLX5_QP_OPTPAR_PKEY_INDEX	|
+ 					  MLX5_QP_OPTPAR_Q_KEY		|
+ 					  MLX5_QP_OPTPAR_PRI_PORT,
++			[MLX5_QP_ST_XRC] = MLX5_QP_OPTPAR_RRE		|
++					  MLX5_QP_OPTPAR_RAE		|
++					  MLX5_QP_OPTPAR_RWE		|
++					  MLX5_QP_OPTPAR_PKEY_INDEX	|
++					  MLX5_QP_OPTPAR_PRI_PORT,
+ 		},
+ 		[MLX5_QP_STATE_RTR] = {
+ 			[MLX5_QP_ST_RC] = MLX5_QP_OPTPAR_ALT_ADDR_PATH  |
+@@ -1459,6 +1464,12 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
+ 					  MLX5_QP_OPTPAR_RWE		|
+ 					  MLX5_QP_OPTPAR_PM_STATE,
+ 			[MLX5_QP_ST_UD] = MLX5_QP_OPTPAR_Q_KEY,
++			[MLX5_QP_ST_XRC] = MLX5_QP_OPTPAR_ALT_ADDR_PATH	|
++					  MLX5_QP_OPTPAR_RRE		|
++					  MLX5_QP_OPTPAR_RAE		|
++					  MLX5_QP_OPTPAR_RWE		|
++					  MLX5_QP_OPTPAR_PM_STATE	|
++					  MLX5_QP_OPTPAR_RNR_TIMEOUT,
+ 		},
+ 	},
+ 	[MLX5_QP_STATE_RTS] = {
+@@ -1475,6 +1486,12 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
+ 			[MLX5_QP_ST_UD] = MLX5_QP_OPTPAR_Q_KEY		|
+ 					  MLX5_QP_OPTPAR_SRQN		|
+ 					  MLX5_QP_OPTPAR_CQN_RCV,
++			[MLX5_QP_ST_XRC] = MLX5_QP_OPTPAR_RRE		|
++					  MLX5_QP_OPTPAR_RAE		|
++					  MLX5_QP_OPTPAR_RWE		|
++					  MLX5_QP_OPTPAR_RNR_TIMEOUT	|
++					  MLX5_QP_OPTPAR_PM_STATE	|
++					  MLX5_QP_OPTPAR_ALT_ADDR_PATH,
+ 		},
+ 	},
+ 	[MLX5_QP_STATE_SQER] = {
+@@ -1486,6 +1503,10 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
+ 					   MLX5_QP_OPTPAR_RWE		|
+ 					   MLX5_QP_OPTPAR_RAE		|
+ 					   MLX5_QP_OPTPAR_RRE,
++			[MLX5_QP_ST_XRC]  = MLX5_QP_OPTPAR_RNR_TIMEOUT	|
++					   MLX5_QP_OPTPAR_RWE		|
++					   MLX5_QP_OPTPAR_RAE		|
++					   MLX5_QP_OPTPAR_RRE,
+ 		},
+ 	},
+ };
 -- 
 2.20.1
 
