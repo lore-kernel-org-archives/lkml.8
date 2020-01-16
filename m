@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E6CC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A84C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 605D1208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:48:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C22762081E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:48:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193285;
-	bh=ylrQYMiUd958FmaBqH6W2z+JR6vME6Lajrty0yVxl4g=;
+	s=default; t=1579193290;
+	bh=SvnjTp3S3Rs2yeHSY5+SCBEcB5/rFV/XnzG7hbKOwAs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lOGXmgbxYGoKAPD88038I8uOLZX0vk6T6a2XO1ocQqdfDr+X+jY+RPdesDsGxLvOn
-	 yYcVtpSokzagD6nABnYMxnwz/kVwdlwb6g6L44hNPGAjLhsJTsIh45YJ47EUbvswI/
-	 DE/59p6fNzRmM0sz/OzM7kXeQRPoXwzsUAMMR7GA=
+	b=gUeAbn8fLe0GgNTPzrs6acicvgJIAIOEKtXes2foD58CTYrQdFCflzpwaQFsHi2Y2
+	 aowmIk6N7slvVO3/m2QjyDV5uuOd0J8N+Slxdqo2/7y8D7UOnbXpkk4yLIMd89N/SF
+	 1XaltoX0mDg8k/vI2AxSySfZL6R4JjLO4C21qLVQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730150AbgAPQsD (ORCPT
+        id S1730163AbgAPQsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:48:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58078 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:48:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730113AbgAPQsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:48:00 -0500
+        id S1729795AbgAPQsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:48:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF49220663;
-        Thu, 16 Jan 2020 16:47:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBF2520663;
+        Thu, 16 Jan 2020 16:48:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193279;
-        bh=ylrQYMiUd958FmaBqH6W2z+JR6vME6Lajrty0yVxl4g=;
+        s=default; t=1579193285;
+        bh=SvnjTp3S3Rs2yeHSY5+SCBEcB5/rFV/XnzG7hbKOwAs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yflLwB7+G0XhdyYmQBnKlNJhRkN2tusLhaIYDMYtVLQkXMu2NiKjjoYiiBoQdRI2c
-         /I5xt2GZv/CpPiaWqi5nDOoPw6bUwCHcDqcjXJJTqxSfTsoLER+wHulcRZjcGLK8GR
-         L3HfJEZw3ahEjtklDzDMmfFCUbWS+2ALrnBn7CxM=
+        b=Tn382tP+vC1YosrVFQbuXjhyzZKZsPAfIokd5ZSfkFAy1S0Tt0gz0q7/JKcv8FzI2
+         TzECo6eTeqhEKsiIQ0juLmhT3iwsEOMuakUesSalgsJ5kOia8bNa3yLUKDRsE2dIvH
+         LvqB2nu+t/I2kaw5PAR/VTJz2NmrNewzlZZCieVE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mordechay Goodstein <mordechay.goodstein@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 064/205] iwlwifi: mvm: consider ieee80211 station max amsdu value
-Date:   Thu, 16 Jan 2020 11:40:39 -0500
-Message-Id: <20200116164300.6705-64-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 066/205] drm/amdgpu/vi: silence an uninitialized variable warning
+Date:   Thu, 16 Jan 2020 11:40:41 -0500
+Message-Id: <20200116164300.6705-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -60,59 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mordechay Goodstein <mordechay.goodstein@intel.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit ee4cce9b9d6421d037ffc002536b918fd7f4aff3 ]
+[ Upstream commit 4ff17a1df7d550257972a838220a8af4611c8f2c ]
 
-debugfs amsdu_len sets only the max_amsdu_len for ieee80211 station
-so take it into consideration while getting max amsdu
+Smatch complains that we need to initialized "*cap" otherwise it can
+lead to an uninitialized variable bug in the caller.  This seems like a
+reasonable warning and it doesn't hurt to silence it at least.
 
-Fixes: af2984e9e625 ("iwlwifi: mvm: add a debugfs entry to set a fixed size AMSDU for all TX packets")
-Signed-off-by: Mordechay Goodstein <mordechay.goodstein@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+drivers/gpu/drm/amd/amdgpu/vi.c:767 vi_asic_reset_method() error: uninitialized symbol 'baco_reset'.
+
+Fixes: 425db2553e43 ("drm/amdgpu: expose BACO interfaces to upper level from PP")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c | 8 +++++++-
- drivers/net/wireless/intel/iwlwifi/mvm/tx.c    | 7 ++++++-
- 2 files changed, 13 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/powerplay/amd_powerplay.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c b/drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c
-index 8f50e2b121bd..098d48153a38 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c
-@@ -350,7 +350,13 @@ void iwl_mvm_tlc_update_notif(struct iwl_mvm *mvm,
- 		u16 size = le32_to_cpu(notif->amsdu_size);
- 		int i;
+diff --git a/drivers/gpu/drm/amd/powerplay/amd_powerplay.c b/drivers/gpu/drm/amd/powerplay/amd_powerplay.c
+index fa8ad7db2b3a..d306cc711997 100644
+--- a/drivers/gpu/drm/amd/powerplay/amd_powerplay.c
++++ b/drivers/gpu/drm/amd/powerplay/amd_powerplay.c
+@@ -1421,6 +1421,7 @@ static int pp_get_asic_baco_capability(void *handle, bool *cap)
+ {
+ 	struct pp_hwmgr *hwmgr = handle;
  
--		if (WARN_ON(sta->max_amsdu_len < size))
-+		/*
-+		 * In debug sta->max_amsdu_len < size
-+		 * so also check with orig_amsdu_len which holds the original
-+		 * data before debugfs changed the value
-+		 */
-+		if (WARN_ON(sta->max_amsdu_len < size &&
-+			    mvmsta->orig_amsdu_len < size))
- 			goto out;
++	*cap = false;
+ 	if (!hwmgr)
+ 		return -EINVAL;
  
- 		mvmsta->amsdu_enabled = le32_to_cpu(notif->amsdu_enabled);
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
-index 8a059da7a1fa..e3b2a2bf3863 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
-@@ -935,7 +935,12 @@ static int iwl_mvm_tx_tso(struct iwl_mvm *mvm, struct sk_buff *skb,
- 	    !(mvmsta->amsdu_enabled & BIT(tid)))
- 		return iwl_mvm_tx_tso_segment(skb, 1, netdev_flags, mpdus_skb);
- 
--	max_amsdu_len = iwl_mvm_max_amsdu_size(mvm, sta, tid);
-+	/*
-+	 * Take the min of ieee80211 station and mvm station
-+	 */
-+	max_amsdu_len =
-+		min_t(unsigned int, sta->max_amsdu_len,
-+		      iwl_mvm_max_amsdu_size(mvm, sta, tid));
- 
- 	/*
- 	 * Limit A-MSDU in A-MPDU to 4095 bytes when VHT is not
 -- 
 2.20.1
 
