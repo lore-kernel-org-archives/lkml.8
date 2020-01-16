@@ -2,146 +2,79 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA9AC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA648C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3914420684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:17:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198671;
-	bh=yVEIWg/Qhu2H3z5ZhV7BPUrVlpawvdNKn/VbgxC5zOw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y3XAYgehMVq5VZCJRDwsLvqr7dtzW1CpiPou+DhmZkQgHhq92vIVs+vEF9eOJlqGU
-	 L20isrVIrWOlaQTqlsJn+lQTbRNO/GYgX7y6+4LgVFld03uZVc4VZIxWbwx/Her4gx
-	 x8fck4Rsbtfj8nGIlDfMbHWE6WwA4Sl2PsEFaJo0=
+	by mail.kernel.org (Postfix) with ESMTP id 9C27120684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:18:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UqIe4nQ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395338AbgAPSRu (ORCPT
+        id S2407047AbgAPSR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:17:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40432 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404226AbgAPR27 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:28:59 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 16 Jan 2020 13:17:59 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:26101 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387949AbgAPSR4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 13:17:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579198674;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=t3VlM5eWHxNK3W2wSrtp5Pl0J5UynFugOHYM0lHZotI=;
+        b=UqIe4nQ2/3lBBEF8O6bNW1YwGcWFpD98T/ymUuTAdZ/SUovgtHP33THsOUJHu5Y8fC4q5s
+        1QqAQxAJuEskoSQKd9t/eut8IcrdJd4/HmrV6esUozIz9YgRKNo1Gir11uPucMmIC7lbrj
+        TDsxPNmzyU2TnMcF2GD9VgYR56hb32E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-276-aZJcF4RYP-a0nsHacWQwpA-1; Thu, 16 Jan 2020 13:17:53 -0500
+X-MC-Unique: aZJcF4RYP-a0nsHacWQwpA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 600D0246E3;
-        Thu, 16 Jan 2020 17:28:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195738;
-        bh=yVEIWg/Qhu2H3z5ZhV7BPUrVlpawvdNKn/VbgxC5zOw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M3vp3zRjuSCDdNdCVGyw2wOD2sqSFtU1zd+rl0cbvGmvwcZoi2POsgUa1UKrBxmXU
-         HPorXdHeKq6VNeXLRhIniHZU2Mia+UU7RWkvBK6oIMFTet5EdRxEYn4Bbt+6FaHeMv
-         8cCyX3tyPfaYMYT+CnCl3RFmq3LZ9UjMNlqeKzZY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bruno Thomsen <bruno.thomsen@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 275/371] rtc: pcf2127: bugfix: read rtc disables watchdog
-Date:   Thu, 16 Jan 2020 12:22:27 -0500
-Message-Id: <20200116172403.18149-218-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
-References: <20200116172403.18149-1-sashal@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5FD4C18C35A0;
+        Thu, 16 Jan 2020 18:17:52 +0000 (UTC)
+Received: from gimli.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1A8AC5C241;
+        Thu, 16 Jan 2020 18:17:49 +0000 (UTC)
+Subject: [RFC PATCH 0/3] vfio/type1: Reduce vfio_iommu.lock contention
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     yan.y.zhao@intel.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 16 Jan 2020 11:17:49 -0700
+Message-ID: <157919849533.21002.4782774695733669879.stgit@gimli.home>
+User-Agent: StGit/0.19-dirty
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bruno Thomsen <bruno.thomsen@gmail.com>
+Hi Yan,
 
-[ Upstream commit 7f43020e3bdb63d65661ed377682702f8b34d3ea ]
+I wonder if this might reduce the lock contention you're seeing in the
+vfio_dma_rw series.  These are only compile tested on my end, so I hope
+they're not too broken to test.  Thanks,
 
-The previous fix listed bulk read of registers as root cause of
-accendential disabling of watchdog, since the watchdog counter
-register (WD_VAL) was zeroed.
+Alex
 
-Fixes: 3769a375ab83 rtc: pcf2127: bulk read only date and time registers.
-
-Tested with the same PCF2127 chip as Sean reveled root cause
-of WD_VAL register value zeroing was caused by reading CTRL2
-register which is one of the watchdog feature control registers.
-
-So the solution is to not read the first two control registers
-(CTRL1 and CTRL2) in pcf2127_rtc_read_time as they are not
-needed anyway. Size of local buf variable is kept to allow
-easy usage of register defines to improve readability of code.
-
-Debug trace line was updated after CTRL1 and CTRL2 are no longer
-read from the chip. Also replaced magic numbers in buf access
-with register defines.
-
-Signed-off-by: Bruno Thomsen <bruno.thomsen@gmail.com>
-Link: https://lore.kernel.org/r/20190822131936.18772-3-bruno.thomsen@gmail.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-pcf2127.c | 32 ++++++++++++--------------------
- 1 file changed, 12 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/rtc/rtc-pcf2127.c b/drivers/rtc/rtc-pcf2127.c
-index 9f1b14bf91ae..367e0f803440 100644
---- a/drivers/rtc/rtc-pcf2127.c
-+++ b/drivers/rtc/rtc-pcf2127.c
-@@ -52,20 +52,14 @@ static int pcf2127_rtc_read_time(struct device *dev, struct rtc_time *tm)
- 	struct pcf2127 *pcf2127 = dev_get_drvdata(dev);
- 	unsigned char buf[10];
- 	int ret;
--	int i;
- 
--	for (i = 0; i <= PCF2127_REG_CTRL3; i++) {
--		ret = regmap_read(pcf2127->regmap, PCF2127_REG_CTRL1 + i,
--				  (unsigned int *)(buf + i));
--		if (ret) {
--			dev_err(dev, "%s: read error\n", __func__);
--			return ret;
--		}
--	}
--
--	ret = regmap_bulk_read(pcf2127->regmap, PCF2127_REG_SC,
--			       (buf + PCF2127_REG_SC),
--			       ARRAY_SIZE(buf) - PCF2127_REG_SC);
-+	/*
-+	 * Avoid reading CTRL2 register as it causes WD_VAL register
-+	 * value to reset to 0 which means watchdog is stopped.
-+	 */
-+	ret = regmap_bulk_read(pcf2127->regmap, PCF2127_REG_CTRL3,
-+			       (buf + PCF2127_REG_CTRL3),
-+			       ARRAY_SIZE(buf) - PCF2127_REG_CTRL3);
- 	if (ret) {
- 		dev_err(dev, "%s: read error\n", __func__);
- 		return ret;
-@@ -86,14 +80,12 @@ static int pcf2127_rtc_read_time(struct device *dev, struct rtc_time *tm)
- 	}
- 
- 	dev_dbg(dev,
--		"%s: raw data is cr1=%02x, cr2=%02x, cr3=%02x, "
--		"sec=%02x, min=%02x, hr=%02x, "
-+		"%s: raw data is cr3=%02x, sec=%02x, min=%02x, hr=%02x, "
- 		"mday=%02x, wday=%02x, mon=%02x, year=%02x\n",
--		__func__,
--		buf[0], buf[1], buf[2],
--		buf[3], buf[4], buf[5],
--		buf[6], buf[7], buf[8], buf[9]);
--
-+		__func__, buf[PCF2127_REG_CTRL3], buf[PCF2127_REG_SC],
-+		buf[PCF2127_REG_MN], buf[PCF2127_REG_HR],
-+		buf[PCF2127_REG_DM], buf[PCF2127_REG_DW],
-+		buf[PCF2127_REG_MO], buf[PCF2127_REG_YR]);
- 
- 	tm->tm_sec = bcd2bin(buf[PCF2127_REG_SC] & 0x7F);
- 	tm->tm_min = bcd2bin(buf[PCF2127_REG_MN] & 0x7F);
--- 
-2.20.1
+Alex Williamson (3):
+      vfio/type1: Convert vfio_iommu.lock from mutex to rwsem
+      vfio/type1: Replace obvious read lock instances
+      vfio/type1: Introduce pfn_list mutex
+
+
+ drivers/vfio/vfio_iommu_type1.c |   67 ++++++++++++++++++++++++---------------
+ 1 file changed, 41 insertions(+), 26 deletions(-)
 
