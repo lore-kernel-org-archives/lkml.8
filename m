@@ -2,114 +2,111 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C376C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D746C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FABC20748
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:30:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fTK2Lb9n"
+	by mail.kernel.org (Postfix) with ESMTP id 75A3A2087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:31:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388639AbgAPVaB (ORCPT
+        id S2388933AbgAPVbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 16:30:01 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58065 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388443AbgAPVaB (ORCPT
+        Thu, 16 Jan 2020 16:31:04 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:53521 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729211AbgAPVbE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 16:30:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579210200;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=YUGNJL2/Wf026kdMIts/pJT5YKTZt1aptj+7LyeYLmk=;
-        b=fTK2Lb9nIWmkyged+E4vyCEMIUc4tO1xzyqthUG1F2nupgE4VTig3ZMbq4A3u7uiZtv+kv
-        0edXcSJ1xsPc0Hi6dIyQuNKmfs913MFCOwgf6HmR0HrfZ7g/CR67gEB3mjShKizlPRxe9l
-        392yUfIz9jbL4/vHFldhJwQ5uXCc58M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-48-4BE-gvcyMeSokQ9liZEf5A-1; Thu, 16 Jan 2020 16:29:58 -0500
-X-MC-Unique: 4BE-gvcyMeSokQ9liZEf5A-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9A02D803A20;
-        Thu, 16 Jan 2020 21:29:56 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-12.phx2.redhat.com [10.3.112.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1B0681001901;
-        Thu, 16 Jan 2020 21:29:48 +0000 (UTC)
-Date:   Thu, 16 Jan 2020 16:29:46 -0500
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
-        sgrubb@redhat.com, omosnace@redhat.com, fw@strlen.de,
-        twoerner@redhat.com, eparis@parisplace.org, ebiederm@xmission.com,
-        tgraf@infradead.org
-Subject: Re: [PATCH ghak25 v2 1/9] netfilter: normalize x_table function
- declarations
-Message-ID: <20200116212946.mwnk45v2px4e42uj@madcap2.tricolour.ca>
-References: <cover.1577830902.git.rgb@redhat.com>
- <194bdc565d548a14e12357a7c1a594605b7fdf0f.1577830902.git.rgb@redhat.com>
- <f8ee5829-f094-96b8-40c2-b0278f93fb03@6wind.com>
+        Thu, 16 Jan 2020 16:31:04 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1isCjF-0001X0-Bu; Thu, 16 Jan 2020 22:31:01 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DE0471C198B;
+        Thu, 16 Jan 2020 22:31:00 +0100 (CET)
+Date:   Thu, 16 Jan 2020 21:31:00 -0000
+From:   "tip-bot2 for Yangtao Li" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/core] clocksource/drivers/timer-ti-dm: Convert to
+ devm_platform_ioremap_resource
+Cc:     Yangtao Li <tiny.windzz@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20191221173027.30716-4-tiny.windzz@gmail.com>
+References: <20191221173027.30716-4-tiny.windzz@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <f8ee5829-f094-96b8-40c2-b0278f93fb03@6wind.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <157921026065.396.7927045451384263252.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-08 17:47, Nicolas Dichtel wrote:
-> Le 06/01/2020 =E0 19:54, Richard Guy Briggs a =E9crit=A0:
-> > Git context diffs were being produced with unhelpful declaration type=
-s
-> > in the place of function names to help identify the funciton in which
-> > changes were made.
-> Just for my information, how do you reproduce that? With a 'git diff'?
+The following commit has been merged into the timers/core branch of tip:
 
-git format-patch is how it is presenting as a problem, which I assume
-would also be git diff.
+Commit-ID:     cdab83f9d0fb13926f6633f20c3327545fd6f70f
+Gitweb:        https://git.kernel.org/tip/cdab83f9d0fb13926f6633f20c3327545fd6f70f
+Author:        Yangtao Li <tiny.windzz@gmail.com>
+AuthorDate:    Sat, 21 Dec 2019 17:30:26 
+Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
+CommitterDate: Thu, 16 Jan 2020 19:06:57 +01:00
 
-> > Normalize x_table function declarations so that git context diff
-> > function labels work as expected.
-> >=20
-> [snip]
-> >=20
-> > --=20
-> > 1.8.3.1
-> git v1.8.3.1 is seven years old:
-> https://github.com/git/git/releases/tag/v1.8.3.1
->=20
-> I don't see any problems with git v2.24. Not sure that the patch brings=
- any
-> helpful value except complicating backports.
+clocksource/drivers/timer-ti-dm: Convert to devm_platform_ioremap_resource
 
-It brings value to anyone who is on a distro that is stable and only
-slightly behind.  There are other features of git 2.x that I'd like to
-start using (git worktrees) but I'll have to wait until I can afford to
-upgrade.
+Use devm_platform_ioremap_resource() to simplify code, which
+wraps 'platform_get_resource' and 'devm_ioremap_resource' in a
+single helper.
 
-> Nicolas
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20191221173027.30716-4-tiny.windzz@gmail.com
+---
+ drivers/clocksource/timer-ti-dm.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
-- RGB
-
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
-
+diff --git a/drivers/clocksource/timer-ti-dm.c b/drivers/clocksource/timer-ti-dm.c
+index 5394d9d..aa2ede2 100644
+--- a/drivers/clocksource/timer-ti-dm.c
++++ b/drivers/clocksource/timer-ti-dm.c
+@@ -780,7 +780,7 @@ static int omap_dm_timer_probe(struct platform_device *pdev)
+ {
+ 	unsigned long flags;
+ 	struct omap_dm_timer *timer;
+-	struct resource *mem, *irq;
++	struct resource *irq;
+ 	struct device *dev = &pdev->dev;
+ 	const struct dmtimer_platform_data *pdata;
+ 	int ret;
+@@ -802,18 +802,12 @@ static int omap_dm_timer_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 	}
+ 
+-	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (unlikely(!mem)) {
+-		dev_err(dev, "%s: no memory resource.\n", __func__);
+-		return -ENODEV;
+-	}
+-
+ 	timer = devm_kzalloc(dev, sizeof(*timer), GFP_KERNEL);
+ 	if (!timer)
+ 		return  -ENOMEM;
+ 
+ 	timer->fclk = ERR_PTR(-ENODEV);
+-	timer->io_base = devm_ioremap_resource(dev, mem);
++	timer->io_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(timer->io_base))
+ 		return PTR_ERR(timer->io_base);
+ 
