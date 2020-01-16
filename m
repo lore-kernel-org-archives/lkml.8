@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B2BCC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F3FC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E4082072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:20:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA6202072B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:20:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579216838;
-	bh=z3iQ8r4YGWtapD/UG4MIECHZu1yq6TYsrjCMYFKWfJs=;
+	s=default; t=1579216842;
+	bh=8HFTOHFdpVn8DqOi9ioDRy1zz3Sz9X+4Nb7QxL9ae6M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bbUUr1YIcsFPLPiKOtQjVWxGfVEXzYgQ+X6QQASfmD5X/FAteiIqk6VRjka5oRlKL
-	 VDmt12R8VQQ2JsjJiWa69hjKxkEoaAgrrqbsAVHNJnqiKXbhIEd2b1yQcV11/gfYw+
-	 W8L8kvIf2FkMu7HKdIZ7G38EceMLIGhukvYhKTEM=
+	b=yls56M7m19ifaJMlN+UzAEm4wVWAmhUh8pJRb++DolpGH0UZnqgMsxdC1WN6v12h2
+	 AIqMJyNQG9Vda8NDVYH0FbKuXFpN4I+vlfAL7gTwDyfdWu9E2kvGe+6mnEROzF63bb
+	 KVHzYQsgXY08QPddSVirQtjLG5TFWIgLzDRUMUZw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390681AbgAPXUg (ORCPT
+        id S2390700AbgAPXUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:20:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47096 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:20:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389868AbgAPXUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:20:31 -0500
+        id S2390664AbgAPXUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:20:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC8E220684;
-        Thu, 16 Jan 2020 23:20:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B2BE2082F;
+        Thu, 16 Jan 2020 23:20:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216831;
-        bh=z3iQ8r4YGWtapD/UG4MIECHZu1yq6TYsrjCMYFKWfJs=;
+        s=default; t=1579216838;
+        bh=8HFTOHFdpVn8DqOi9ioDRy1zz3Sz9X+4Nb7QxL9ae6M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=extVgn8i0BKxXLjntPNgaEUW1TVzGKYc9d55+hSdnqvUu+kadcjl21tv1mJc4gu8i
-         jmf9N+38HVZIkXnNvVa/MFkSENE1TelSknPzmAe9bKXRulVa/XA/nQKkaUJKJgKsCF
-         ZGW9zARMZniE4OOoN0o7MkFJq46ffUKT9jw2XW2I=
+        b=kLaqdDo/et75HaTM8zvkgka/iQF2OF+meGY8ulxArqzrXUbf9dt2CDrc96CUgRT+6
+         vCSSkCf7iWmNDP8jqshz7gmPBCk0ENp2NGroaeJJftuhrjnaEFM6KysiEJVByk83jF
+         6DSFQLRY20lqidNu7eDCqsMGAN9+tJonUGP9FSdE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Baluta <daniel.baluta@nxp.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 010/203] ASoC: soc-core: Set dpcm_playback / dpcm_capture
-Date:   Fri, 17 Jan 2020 00:15:27 +0100
-Message-Id: <20200116231745.837240568@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 5.4 040/203] MAINTAINERS: Append missed file to the database
+Date:   Fri, 17 Jan 2020 00:15:57 +0100
+Message-Id: <20200116231747.557078308@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -59,36 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Baluta <daniel.baluta@nxp.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-commit 218fe9b7ec7f32c10a07539365488d80af7b0084 upstream.
+commit 44fe5cb32c7599a4059931a98794e0418619aa96 upstream.
 
-When converting a normal link to a DPCM link we need
-to set dpcm_playback / dpcm_capture otherwise playback/capture
-streams will not be created resulting in errors like this:
+When gpiolib.h internal header had been split to few, the commit 77cb907abe6c
+("gpiolib: acpi: Split ACPI stuff to gpiolib-acpi.h") in particular missed
+the MAINTAINERS database update. Do it here.
 
-[   36.039111]  sai1-wm8960-hifi: ASoC: no backend playback stream
-
-Fixes: a655de808cbde ("ASoC: core: Allow topology to override machine driver FE DAI link config")
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-Link: https://lore.kernel.org/r/20191204151333.26625-1-daniel.baluta@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 77cb907abe6c ("gpiolib: acpi: Split ACPI stuff to gpiolib-acpi.h")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/soc-core.c |    2 ++
- 1 file changed, 2 insertions(+)
+ MAINTAINERS |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -1886,6 +1886,8 @@ match:
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6973,6 +6973,7 @@ L:	linux-acpi@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/firmware-guide/acpi/gpio-properties.rst
+ F:	drivers/gpio/gpiolib-acpi.c
++F:	drivers/gpio/gpiolib-acpi.h
  
- 			/* convert non BE into BE */
- 			dai_link->no_pcm = 1;
-+			dai_link->dpcm_playback = 1;
-+			dai_link->dpcm_capture = 1;
- 
- 			/* override any BE fixups */
- 			dai_link->be_hw_params_fixup =
+ GPIO IR Transmitter
+ M:	Sean Young <sean@mess.org>
 
 
