@@ -2,110 +2,114 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB19C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6645CC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22F782075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:09:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D6B52075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:12:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ILVeTiAH"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AWcTRLur"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbgAPFJc (ORCPT
+        id S1726897AbgAPFMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 00:09:32 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35795 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgAPFJb (ORCPT
+        Thu, 16 Jan 2020 00:12:18 -0500
+Received: from mail-pj1-f43.google.com ([209.85.216.43]:53074 "EHLO
+        mail-pj1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726872AbgAPFMS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 00:09:31 -0500
-Received: by mail-pf1-f194.google.com with SMTP id i23so9627703pfo.2;
-        Wed, 15 Jan 2020 21:09:30 -0800 (PST)
+        Thu, 16 Jan 2020 00:12:18 -0500
+Received: by mail-pj1-f43.google.com with SMTP id a6so969497pjh.2
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 21:12:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YENX8hiVU9VGaahzof39zWD+xiTd5KVBkuDLg5pimCk=;
-        b=ILVeTiAHzaiiBur5Z3L5U5lwL+6xoe6mE4zF2Gz6yoiUaAc3pEbLDECoNk20sanE9W
-         utwzTwrGspzWc4G9mz8fVBTyBFtPGeKlR1Tuc0wRKkaDrlJAiFSBpBwlAdPTQpWjpd8P
-         H9hOOG/RzsnGOpLN7C+PMeE4qr/Wd9K4PG4zsu3BjyB9fjqQd7ZB5Cp40w8Xm46Ld2Mj
-         2Ou/+4jDsqrXcr1N5FgeDzMsIikU61XqT+KkDCSM7RfdpeYNX7rA+M/WAPrZOH2f46jG
-         vxTwlHhE2Ovz3GSMT3FOo+o/jkszDGw3bEB6qU8asXntHydj599/IUSeGfwO09IUulCj
-         w5XA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BRe0TrdVmcVtbIZZ2KLRX9N0GymyC3/nGwiGQDyGEys=;
+        b=AWcTRLurLZrDTN4kPbgrNx+Gvro/+iF3bZo8jwglRFu5XImFzqd5qPmwHJKkGPO8Gs
+         yQacvOm7gemgiFs96KE+wH1Kp9lu/Thc+CATc/U2QbO6vKnHkgj90iIgRQT/rdtD9Jou
+         cq+KHPhTUF6UHJ8OJhmFP65f1xdRIHCv8LYwI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=YENX8hiVU9VGaahzof39zWD+xiTd5KVBkuDLg5pimCk=;
-        b=U2RJqk1BOj4UT/jmAQSq4DUvBJxzFc8YFx4uLJhCq2cP5OyrIKKny9S+MBN2/Xx5KL
-         ksuhA5j1ZTA7fQ+xDbRa8NYaHJ3FTEOlGL05ra2DPKj6vy8bsK8lNxMCgudELb3ETIqI
-         n3mPpopKLlVziZHFNT1cdSOAOuRn4gSZKH9UqVbrgpKWO8K9sWp5BiLmClHcRw7HDWE+
-         24nrUH2QCfgX64FEHtNTNIT2g0IkjMsErz9tn3WSapDW6LT31lr38pXnDK0y1ldRYNhd
-         gcY7EgFTmgteoIJ/rNGPFyo2i5zwvGzPvrysfM3XJ7kKiVIHXbKXGxF7t6PjVUx1OQWd
-         kYUw==
-X-Gm-Message-State: APjAAAVybDeaWz5FE0MLtmzZBqM7DPbGX6wu0PX7m+OVtlRRGk+Xl1xk
-        vIZ5msW34ucQtAlpD1XUjRs=
-X-Google-Smtp-Source: APXvYqzmhidzHKldpgAevjXwhrc2Qa32pr1CDX8k/3+7Fx4vQRmHtCNUHnWVMdHewxzjsqh1rApo5g==
-X-Received: by 2002:a63:b4d:: with SMTP id a13mr36135928pgl.388.1579151370463;
-        Wed, 15 Jan 2020 21:09:30 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id z30sm22546622pff.131.2020.01.15.21.09.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jan 2020 21:09:29 -0800 (PST)
-Subject: Re: [PATCH v2] hwmon: Driver for temperature sensors on SATA drives
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org,
-        Chris Healy <cphealy@gmail.com>
-References: <20191215174509.1847-1-linux@roeck-us.net>
- <20191215174509.1847-2-linux@roeck-us.net> <yq1r211dvck.fsf@oracle.com>
- <b22a519c-8f26-e731-345f-9deca1b2150e@roeck-us.net>
- <yq1sgkq21ll.fsf@oracle.com> <20200108153341.GB28530@roeck-us.net>
- <38af9fda-9edf-1b54-bd8d-92f712ae4cda@roeck-us.net>
- <yq1r202spr9.fsf@oracle.com>
- <403cfbf8-79da-94f1-509f-e90d1a165722@roeck-us.net>
- <yq14kwwnioo.fsf@oracle.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <a825a71f-6129-4aac-3430-66c67e4d3985@roeck-us.net>
-Date:   Wed, 15 Jan 2020 21:09:27 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        bh=BRe0TrdVmcVtbIZZ2KLRX9N0GymyC3/nGwiGQDyGEys=;
+        b=elMTbwpdl+xAZKBGrW6j3FIbs7ia4BxDxwMcQocQJ9O2WV132EOnwMCDQKY9n6/Me0
+         X7tOLPmrvwbJ3oNMMmhT3Hg8gpyKpAalN8X8VSXOre8vv2XEcqq8tOnqOltGxc7eCVA3
+         fYny8FP7tDxhWS1wtMecwZd3Sr0h69YFFjb3MbBqvf6xnTiElujk6TKcX7yilHLGvMZO
+         q3wy1T3Mbia8X3nlE5vXREbHwB3qKCxaEj/i3i2B0WDtVecxhi9Y22Jj+fOJ11LxFvlm
+         URuVfGt9q2DaaG8cXB+At/+iGsSppiWjhwBCcttHKGl4p36FOj5Rvd6HWAGs8neVucof
+         8/aQ==
+X-Gm-Message-State: APjAAAVmd6glztKgjw8G/40z3Jx53A93GUfmXTys1sESI3uxApqj6P9H
+        bMhchaEyY4HANIDLkO9SjlKMfw==
+X-Google-Smtp-Source: APXvYqxIfo2NO8XTOT3ctZvv2cDs0ozaWXCueeTQ9tAdo83/1BkyWq7joz0lSGjM0p0REFCHbibU8A==
+X-Received: by 2002:a17:902:9a08:: with SMTP id v8mr30503834plp.134.1579151537384;
+        Wed, 15 Jan 2020 21:12:17 -0800 (PST)
+Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
+        by smtp.gmail.com with ESMTPSA id l9sm21540217pgh.34.2020.01.15.21.12.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 21:12:16 -0800 (PST)
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Daniel Kurtz <djkurtz@chromium.org>
+Subject: [PATCH v3 0/3] Add mt8173 elm and hana board
+Date:   Thu, 16 Jan 2020 13:12:06 +0800
+Message-Id: <20200116051209.37970-1-hsinyi@chromium.org>
+X-Mailer: git-send-email 2.25.0.rc1.283.g88dfdc4193-goog
 MIME-Version: 1.0
-In-Reply-To: <yq14kwwnioo.fsf@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Martin,
+This series adds devicetree and binding document for Acer Chromebook R13 (elm)
+and Lenovo Chromebook (hana), which are using mt8173 as SoC.
 
-On 1/15/20 8:12 PM, Martin K. Petersen wrote:
-> 
-> Guenter,
-> 
->> The hwmon-next branch is based on v5.5-rc1. It might be better to
->> either merge hwmon-next into mainline, or to apply the drivetemp patch
->> to mainline, and test the result. I have seen some (unrelated) weird
->> tracebacks in the driver core with v5.5-rc1, so that may not be the
->> best baseline for a test.
-> 
-> I'm afraid the warnings still happen with hwmon-next on top of
-> linus/master.
-> 
+Changes in v3:
+- address comments in v2, major changes include:
+  * move uart aliases from mt8173-elm.dtsi to mt8173.dtsi
+  * remove brightness-levels in backlight
+  * add interrupt for da9211
+  * move pinmux for sdio_fixed_3v3 from mmc3_pins_default
+  * remove some non upstream property
+  * checked on schematic, cd-gpio in mmc1 should be GPIO_ACTIVE_LOW
 
-Can you possibly provide details, like the configuration you use for
-qemu, the qemu command line, and the exact command sequence you use
-in qemu to reproduce the problem ?
+Changes in v2:
+- fix mediatek.yaml
+- fixup some nodes and remove unused nodes in dts
 
-Thanks,
-Guenter
+Hsin-Yi Wang (3):
+  dt-bindings: arm64: dts: mediatek: Add mt8173 elm and hana
+  arm64: dts: mt8173: add uart aliases
+  arm64: dts: mediatek: add mt8173 elm and hana board
+
+ .../devicetree/bindings/arm/mediatek.yaml     |   22 +
+ arch/arm64/boot/dts/mediatek/Makefile         |    3 +
+ .../dts/mediatek/mt8173-elm-hana-rev7.dts     |   27 +
+ .../boot/dts/mediatek/mt8173-elm-hana.dts     |   14 +
+ .../boot/dts/mediatek/mt8173-elm-hana.dtsi    |   60 +
+ arch/arm64/boot/dts/mediatek/mt8173-elm.dts   |   14 +
+ arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi  | 1028 +++++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi      |    5 +-
+ 8 files changed, 1172 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm-hana-rev7.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dtsi
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
+
+-- 
+2.25.0.rc1.283.g88dfdc4193-goog
+
