@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 431C3C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E4AC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E9232053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:04:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83880206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:04:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201476;
-	bh=k71BLNRsuMPAi9MvMKInQupc8ZQztfy/jtY4owY8UIU=;
+	s=default; t=1579201484;
+	bh=O8o+WPlQAMCaUyaOt/651Bm5d0NIgeMC6LmTx2pz0D4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ilt0kBMEl0VuUb2YKOwRbiFGUtWhIR3c1gB1TrratkJsA6fIcCmbeYfjChvu38pnP
-	 1e7TMzGMCBenE+44wfsuQ0zrxRUlpW0ej8ZgHi58UtAgs8ul8mAgO9EVWBIUA5fnsV
-	 sK9Hgd838xENzHYpQe1nDm+EFsg+pb38Qgqeh1wQ=
+	b=FPXrYFR/V1jKLe04r9P/CvDycpx+TPNXorKh00TlT0KvisPhtE+RlHZwVNQhk7lZL
+	 uYvwzeH/MfKutYIAy41e0Oj/ZvQdtosR/a+SLqGpPUDoippJpv8TXyFoxhLUXzd+lh
+	 EQZrM49qLScXzDCx7y6iFIcXvRQFiNi3uaX9UZYo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436790AbgAPTEf (ORCPT
+        id S2388307AbgAPRCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:04:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54802 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:02:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388317AbgAPRCR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:02:17 -0500
+        id S2387879AbgAPRCD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:02:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1606321582;
-        Thu, 16 Jan 2020 17:02:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAB18207FF;
+        Thu, 16 Jan 2020 17:02:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194137;
-        bh=k71BLNRsuMPAi9MvMKInQupc8ZQztfy/jtY4owY8UIU=;
+        s=default; t=1579194123;
+        bh=O8o+WPlQAMCaUyaOt/651Bm5d0NIgeMC6LmTx2pz0D4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qA1ZDd651Z6gqDFfwL3kdwfG52muYXDvLOeflrJEJea+VDYJK47GK/wlRyUU28pRA
-         2SNVJNHFEjX7vd4I9of0SlfUq+XMVIb5s1J3ZiK5221dTHwX5vx8vWdxg5P+wfbw5m
-         RxunkcOCalr+v5tc/7WpVNtoU+0hD8owOZIlk/gs=
+        b=yOS+jh5ENfXYVU9YdVGqeuQItcI1qZtzvZXP6B9YUiCOu6YuQuESzOASw02YJAKpR
+         2/+/KyJr0724vrvB0xxjmvlBEqIb42xe02mO3Pur41+Xpd+xFzzLyYILNGgrLgPJPo
+         Aqnl21c+8QWxdbMhNS9cGg9xosKtG/h6W4VPbhaY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 225/671] netfilter: nft_set_hash: fix lookups with fixed size hash on big endian
-Date:   Thu, 16 Jan 2020 11:52:14 -0500
-Message-Id: <20200116165940.10720-108-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 215/671] clocksource/drivers/exynos_mct: Fix error path in timer resources initialization
+Date:   Thu, 16 Jan 2020 11:52:04 -0500
+Message-Id: <20200116165940.10720-98-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -61,70 +63,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 3b02b0adc242a72b5e46019b6a9e4f84823592f6 ]
+[ Upstream commit b9307420196009cdf18bad55e762ac49fb9a80f4 ]
 
-Call jhash_1word() for the 4-bytes key case from the insertion and
-deactivation path, otherwise big endian arch set lookups fail.
+While freeing interrupt handlers in error path, don't assume that all
+requested interrupts are per-processor interrupts and properly release
+standard interrupts too.
 
-Fixes: 446a8268b7f5 ("netfilter: nft_set_hash: add lookup variant for fixed size hashtable")
-Reported-by: Florian Westphal <fw@strlen.de>
-Tested-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
+Fixes: 56a94f13919c ("clocksource: exynos_mct: Avoid blocking calls in the cpu hotplug notifier")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_set_hash.c | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+ drivers/clocksource/exynos_mct.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nft_set_hash.c b/net/netfilter/nft_set_hash.c
-index 015124e649cb..8dde4bfe8b8a 100644
---- a/net/netfilter/nft_set_hash.c
-+++ b/net/netfilter/nft_set_hash.c
-@@ -488,6 +488,23 @@ static bool nft_hash_lookup_fast(const struct net *net,
- 	return false;
+diff --git a/drivers/clocksource/exynos_mct.c b/drivers/clocksource/exynos_mct.c
+index aaf5bfa9bd9c..e3ae041ac30e 100644
+--- a/drivers/clocksource/exynos_mct.c
++++ b/drivers/clocksource/exynos_mct.c
+@@ -563,7 +563,19 @@ static int __init exynos4_timer_resources(struct device_node *np, void __iomem *
+ 	return 0;
+ 
+ out_irq:
+-	free_percpu_irq(mct_irqs[MCT_L0_IRQ], &percpu_mct_tick);
++	if (mct_int_type == MCT_INT_PPI) {
++		free_percpu_irq(mct_irqs[MCT_L0_IRQ], &percpu_mct_tick);
++	} else {
++		for_each_possible_cpu(cpu) {
++			struct mct_clock_event_device *pcpu_mevt =
++				per_cpu_ptr(&percpu_mct_tick, cpu);
++
++			if (pcpu_mevt->evt.irq != -1) {
++				free_irq(pcpu_mevt->evt.irq, pcpu_mevt);
++				pcpu_mevt->evt.irq = -1;
++			}
++		}
++	}
+ 	return err;
  }
  
-+static u32 nft_jhash(const struct nft_set *set, const struct nft_hash *priv,
-+		     const struct nft_set_ext *ext)
-+{
-+	const struct nft_data *key = nft_set_ext_key(ext);
-+	u32 hash, k1;
-+
-+	if (set->klen == 4) {
-+		k1 = *(u32 *)key;
-+		hash = jhash_1word(k1, priv->seed);
-+	} else {
-+		hash = jhash(key, set->klen, priv->seed);
-+	}
-+	hash = reciprocal_scale(hash, priv->buckets);
-+
-+	return hash;
-+}
-+
- static int nft_hash_insert(const struct net *net, const struct nft_set *set,
- 			   const struct nft_set_elem *elem,
- 			   struct nft_set_ext **ext)
-@@ -497,8 +514,7 @@ static int nft_hash_insert(const struct net *net, const struct nft_set *set,
- 	u8 genmask = nft_genmask_next(net);
- 	u32 hash;
- 
--	hash = jhash(nft_set_ext_key(&this->ext), set->klen, priv->seed);
--	hash = reciprocal_scale(hash, priv->buckets);
-+	hash = nft_jhash(set, priv, &this->ext);
- 	hlist_for_each_entry(he, &priv->table[hash], node) {
- 		if (!memcmp(nft_set_ext_key(&this->ext),
- 			    nft_set_ext_key(&he->ext), set->klen) &&
-@@ -537,8 +553,7 @@ static void *nft_hash_deactivate(const struct net *net,
- 	u8 genmask = nft_genmask_next(net);
- 	u32 hash;
- 
--	hash = jhash(nft_set_ext_key(&this->ext), set->klen, priv->seed);
--	hash = reciprocal_scale(hash, priv->buckets);
-+	hash = nft_jhash(set, priv, &this->ext);
- 	hlist_for_each_entry(he, &priv->table[hash], node) {
- 		if (!memcmp(nft_set_ext_key(&this->ext), &elem->key.val,
- 			    set->klen) &&
 -- 
 2.20.1
 
