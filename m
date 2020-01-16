@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98953C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC17C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70ADD2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:22:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CBE32073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:22:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202543;
-	bh=GzZVKs81gxE1HKrzsUYG7XcO8p7ZAY/XBjGplBuf6U4=;
+	s=default; t=1579202547;
+	bh=wSffEsO+b1vvjUW27LhIwKxK2Fejp0AGQVP9VscghFE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iS+ZSzT8GOVGMxaECDBfryk1lb1qZ1ZntcZSxOsEeCpup9z/Tr6YrxhpWOWGdIuXx
-	 ZtgNFEuq5WmhhcKwUjgV9pODIWWbMIkDzEv0+Wd2XoMiQXyq2jS6gRW/sGzg85/y1l
-	 LFHckAdIV5gMylMhDnJW7FVohjlazqEvMx+1tG80=
+	b=KruE8fODD349BdPUj37rypSXc4u8cXqeRBmyF9kwxQSWWh1JE3dv1orLZWkmhUt5T
+	 oP2YwijLkEd2k74CdwP0GCsPOTEuoba3A5JHqZj6C5f6UkM2LesW9fMzDlCALv4zfl
+	 wbANy5zzdB5Fn1yqfal0dBC2d6XOleXUJXly5Nh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731272AbgAPTWV (ORCPT
+        id S1730950AbgAPQx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:22:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37344 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:53:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730970AbgAPQx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:53:28 -0500
+        id S1730749AbgAPQxU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:53:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D09F2176D;
-        Thu, 16 Jan 2020 16:53:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB2AD22464;
+        Thu, 16 Jan 2020 16:53:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193608;
-        bh=GzZVKs81gxE1HKrzsUYG7XcO8p7ZAY/XBjGplBuf6U4=;
+        s=default; t=1579193599;
+        bh=wSffEsO+b1vvjUW27LhIwKxK2Fejp0AGQVP9VscghFE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rc5xmr3JPIZGe+hQ0AYmRDikOU42o2AwLZwIDbu4/rcqORMvqNrS5RQ8IKA9nRxjQ
-         LOLTRYiZUbIP2cnOblstTueKIMTPo1NhzBVgBdvTt7+8cNKHha4cj7kpjh9PVYBd0b
-         X8wMBCgKXxql+sOtua0TaLI+P+wjYGTqh7BNJI0I=
+        b=HO2STl7H1/4MGm13LHw4gDcMoS6rKdPieQosykdS0ONXW8dpxMZdHvINxcwfGVFj9
+         Fl42Fjc8AncmEevIrio5EX7oBbVygrjC1FZJpPweaQtPmxgfKDHl8wtTDiUQuUZaF8
+         4+mT/itf9TDQxLQhODkIbrXKK1ytvDSVnBVGxSBM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jens Wiklander <jens.wiklander@linaro.org>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, tee-dev@lists.linaro.org
-Subject: [PATCH AUTOSEL 5.4 146/205] tee: optee: fix device enumeration error handling
-Date:   Thu, 16 Jan 2020 11:42:01 -0500
-Message-Id: <20200116164300.6705-146-sashal@kernel.org>
+Cc:     Peng Fan <peng.fan@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 138/205] tty: serial: imx: use the sg count from dma_map_sg
+Date:   Thu, 16 Jan 2020 11:41:53 -0500
+Message-Id: <20200116164300.6705-138-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -59,75 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Wiklander <jens.wiklander@linaro.org>
+From: Peng Fan <peng.fan@nxp.com>
 
-[ Upstream commit 03212e347f9443e524d6383c6806ac08295c1fb0 ]
+[ Upstream commit 596fd8dffb745afcebc0ec6968e17fe29f02044c ]
 
-Prior to this patch in optee_probe() when optee_enumerate_devices() was
-called the struct optee was fully initialized. If
-optee_enumerate_devices() returns an error optee_probe() is supposed to
-clean up and free the struct optee completely, but will at this late
-stage need to call optee_remove() instead. This isn't done and thus
-freeing the struct optee prematurely.
+The dmaengine_prep_slave_sg needs to use sg count returned
+by dma_map_sg, not use sport->dma_tx_nents, because the return
+value of dma_map_sg is not always same with "nents".
 
-With this patch the call to optee_enumerate_devices() is done after
-optee_probe() has returned successfully and in case
-optee_enumerate_devices() fails everything is cleaned up with a call to
-optee_remove().
-
-Fixes: c3fa24af9244 ("tee: optee: add TEE bus device enumeration support")
-Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
-Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+Fixes: b4cdc8f61beb ("serial: imx: add DMA support for imx6q")
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Link: https://lore.kernel.org/r/1573108875-26530-1-git-send-email-peng.fan@nxp.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tee/optee/core.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+ drivers/tty/serial/imx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/tee/optee/core.c b/drivers/tee/optee/core.c
-index 1854a3db7345..b830e0a87fba 100644
---- a/drivers/tee/optee/core.c
-+++ b/drivers/tee/optee/core.c
-@@ -643,11 +643,6 @@ static struct optee *optee_probe(struct device_node *np)
- 	if (optee->sec_caps & OPTEE_SMC_SEC_CAP_DYNAMIC_SHM)
- 		pr_info("dynamic shared memory is enabled\n");
- 
--	rc = optee_enumerate_devices();
--	if (rc)
--		goto err;
--
--	pr_info("initialized driver\n");
- 	return optee;
- err:
- 	if (optee) {
-@@ -702,9 +697,10 @@ static struct optee *optee_svc;
- 
- static int __init optee_driver_init(void)
- {
--	struct device_node *fw_np;
--	struct device_node *np;
--	struct optee *optee;
-+	struct device_node *fw_np = NULL;
-+	struct device_node *np = NULL;
-+	struct optee *optee = NULL;
-+	int rc = 0;
- 
- 	/* Node is supposed to be below /firmware */
- 	fw_np = of_find_node_by_name(NULL, "firmware");
-@@ -723,6 +719,14 @@ static int __init optee_driver_init(void)
- 	if (IS_ERR(optee))
- 		return PTR_ERR(optee);
- 
-+	rc = optee_enumerate_devices();
-+	if (rc) {
-+		optee_remove(optee);
-+		return rc;
-+	}
-+
-+	pr_info("initialized driver\n");
-+
- 	optee_svc = optee;
- 
- 	return 0;
+diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
+index 5e08f2657b90..34f602c3a882 100644
+--- a/drivers/tty/serial/imx.c
++++ b/drivers/tty/serial/imx.c
+@@ -619,7 +619,7 @@ static void imx_uart_dma_tx(struct imx_port *sport)
+ 		dev_err(dev, "DMA mapping error for TX.\n");
+ 		return;
+ 	}
+-	desc = dmaengine_prep_slave_sg(chan, sgl, sport->dma_tx_nents,
++	desc = dmaengine_prep_slave_sg(chan, sgl, ret,
+ 					DMA_MEM_TO_DEV, DMA_PREP_INTERRUPT);
+ 	if (!desc) {
+ 		dma_unmap_sg(dev, sgl, sport->dma_tx_nents,
 -- 
 2.20.1
 
