@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 450A1C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C754C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11D3120730
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FDB620730
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:03:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194209;
-	bh=61EJZJPc1a3gs4XIN+LWQPcIiCAAXoiKIMY7tgHtW+U=;
+	s=default; t=1579194214;
+	bh=vHtadKcVotoGdeCi2louG976/WWXNV/Ru4qS0lhAr2o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yj9hJVyHQK50dyPI4XRNPeJ7lvjOjY320obqVDvLlG+JGMLJUWVjGFr9N03J0/G/F
-	 bKi3KBtlHi+jWCUDcPTWY9XIwRapJPUvCAGxXgiUbBlB4hEL+L72scj8Tj3LBaafPh
-	 inh5SB3jSr88QtvNyT3Mo2YfQdmTKhlpZArltY6w=
+	b=fTrO1XKtABbF7n4MtGj0ywrufieddHLaW9ZidQS90M/mqZOL9SmZ5E0H8d9YsPvym
+	 U28ONn7JrqRYjK8h9GPOnnckjusOq2C2OHSRHQ/cXs6zCh/+sOA6NQDMydvu010SES
+	 8XwEJ1865BNppIOHRHj35igrKcRmhLY8QENXeA9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388589AbgAPRDL (ORCPT
+        id S1729028AbgAPRDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:03:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56990 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:03:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388562AbgAPRDH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:03:07 -0500
+        id S1729142AbgAPRDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:03:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B27FE2468A;
-        Thu, 16 Jan 2020 17:03:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20D8220730;
+        Thu, 16 Jan 2020 17:03:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194186;
-        bh=61EJZJPc1a3gs4XIN+LWQPcIiCAAXoiKIMY7tgHtW+U=;
+        s=default; t=1579194182;
+        bh=vHtadKcVotoGdeCi2louG976/WWXNV/Ru4qS0lhAr2o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W+5Dqh8nWgaS0eYSiPJ9OTDeNlpQdzsvPxyJwD9Ih1R4m5YtTTSWXzA790gZ/pjQz
-         ii3DB5Lng6zJ1WkhKiLkGX6fupPX1VuF0+8Vf8vFEy48zDMbSIYpQ9+a7JACoYUGiC
-         bOfKMyJ8FajXUXj4RNQluNNxnTZA9OpylS1TuIn8=
+        b=hdJDA98pHj8M6sUwskStHz+hpOFhm5zSuZW0Ilk3APGiSFOGcpajHg5CnlY+cb5qB
+         My9H7A5C3nI93/eQbqPg0ximYxNBe8uH5RPG40RUpGq068bgcm6HLwNdIKHiTaTFiB
+         na/eCYlH5duDDX1YVpIfayGbUJ12N5TqBs3JWtJo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 259/671] ARM: dts: sun9i: optimus: Fix fixed-regulators
-Date:   Thu, 16 Jan 2020 11:52:48 -0500
-Message-Id: <20200116165940.10720-142-sashal@kernel.org>
+Cc:     Finn Thain <fthain@telegraphics.com.au>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-m68k@lists.linux-m68k.org
+Subject: [PATCH AUTOSEL 4.19 256/671] m68k: mac: Fix VIA timer counter accesses
+Date:   Thu, 16 Jan 2020 11:52:45 -0500
+Message-Id: <20200116165940.10720-139-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -59,47 +60,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Ripard <maxime.ripard@bootlin.com>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-[ Upstream commit c2a5b554751545023056559121a8ecf86aebe541 ]
+[ Upstream commit 0ca7ce7db771580433bf24454f7a1542bd326078 ]
 
-Commit 1848f3f44444 ("ARM: dts: sun9i: Remove GPIO pinctrl nodes to avoid
-warnings") was wrong on the optimus, and instead of droping the
-pinctrl-names property, it dropped the regulator-name one.
+This resolves some bugs that affect VIA timer counter accesses.
+Avoid lost interrupts caused by reading the counter low byte register.
+Make allowance for the fact that the counter will be decremented to
+0xFFFF before being reloaded.
 
-Obviously, that wasn't what was intended. Reinstate regulator-name and drop
-pinctrl-names.
-
-Fixes: 1848f3f44444 ("ARM: dts: sun9i: Remove GPIO pinctrl nodes to avoid warnings")
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sun9i-a80-optimus.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/m68k/mac/via.c | 102 +++++++++++++++++++++++---------------------
+ 1 file changed, 53 insertions(+), 49 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun9i-a80-optimus.dts b/arch/arm/boot/dts/sun9i-a80-optimus.dts
-index 58a199b0e494..d1e58a6a4343 100644
---- a/arch/arm/boot/dts/sun9i-a80-optimus.dts
-+++ b/arch/arm/boot/dts/sun9i-a80-optimus.dts
-@@ -82,7 +82,7 @@
+diff --git a/arch/m68k/mac/via.c b/arch/m68k/mac/via.c
+index acdabbeecfd2..288ec3aa5b57 100644
+--- a/arch/m68k/mac/via.c
++++ b/arch/m68k/mac/via.c
+@@ -54,16 +54,6 @@ static __u8 rbv_clear;
  
- 	reg_usb1_vbus: usb1-vbus {
- 		compatible = "regulator-fixed";
--		pinctrl-names = "default";
-+		regulator-name = "usb1-vbus";
- 		regulator-min-microvolt = <5000000>;
- 		regulator-max-microvolt = <5000000>;
- 		enable-active-high;
-@@ -91,7 +91,7 @@
+ static int gIER,gIFR,gBufA,gBufB;
  
- 	reg_usb3_vbus: usb3-vbus {
- 		compatible = "regulator-fixed";
--		pinctrl-names = "default";
-+		regulator-name = "usb3-vbus";
- 		regulator-min-microvolt = <5000000>;
- 		regulator-max-microvolt = <5000000>;
- 		enable-active-high;
+-/*
+- * Timer defs.
+- */
+-
+-#define TICK_SIZE		10000
+-#define MAC_CLOCK_TICK		(783300/HZ)		/* ticks per HZ */
+-#define MAC_CLOCK_LOW		(MAC_CLOCK_TICK&0xFF)
+-#define MAC_CLOCK_HIGH		(MAC_CLOCK_TICK>>8)
+-
+-
+ /*
+  * On Macs with a genuine VIA chip there is no way to mask an individual slot
+  * interrupt. This limitation also seems to apply to VIA clone logic cores in
+@@ -267,22 +257,6 @@ void __init via_init(void)
+ 	}
+ }
+ 
+-/*
+- * Start the 100 Hz clock
+- */
+-
+-void __init via_init_clock(irq_handler_t func)
+-{
+-	via1[vACR] |= 0x40;
+-	via1[vT1LL] = MAC_CLOCK_LOW;
+-	via1[vT1LH] = MAC_CLOCK_HIGH;
+-	via1[vT1CL] = MAC_CLOCK_LOW;
+-	via1[vT1CH] = MAC_CLOCK_HIGH;
+-
+-	if (request_irq(IRQ_MAC_TIMER_1, func, 0, "timer", func))
+-		pr_err("Couldn't register %s interrupt\n", "timer");
+-}
+-
+ /*
+  * Debugging dump, used in various places to see what's going on.
+  */
+@@ -310,29 +284,6 @@ void via_debug_dump(void)
+ 	}
+ }
+ 
+-/*
+- * This is always executed with interrupts disabled.
+- *
+- * TBI: get time offset between scheduling timer ticks
+- */
+-
+-u32 mac_gettimeoffset(void)
+-{
+-	unsigned long ticks, offset = 0;
+-
+-	/* read VIA1 timer 2 current value */
+-	ticks = via1[vT1CL] | (via1[vT1CH] << 8);
+-	/* The probability of underflow is less than 2% */
+-	if (ticks > MAC_CLOCK_TICK - MAC_CLOCK_TICK / 50)
+-		/* Check for pending timer interrupt in VIA1 IFR */
+-		if (via1[vIFR] & 0x40) offset = TICK_SIZE;
+-
+-	ticks = MAC_CLOCK_TICK - ticks;
+-	ticks = ticks * 10000L / MAC_CLOCK_TICK;
+-
+-	return (ticks + offset) * 1000;
+-}
+-
+ /*
+  * Flush the L2 cache on Macs that have it by flipping
+  * the system into 24-bit mode for an instant.
+@@ -601,3 +552,56 @@ int via2_scsi_drq_pending(void)
+ 	return via2[gIFR] & (1 << IRQ_IDX(IRQ_MAC_SCSIDRQ));
+ }
+ EXPORT_SYMBOL(via2_scsi_drq_pending);
++
++/* timer and clock source */
++
++#define VIA_CLOCK_FREQ     783360                /* VIA "phase 2" clock in Hz */
++#define VIA_TIMER_INTERVAL (1000000 / HZ)        /* microseconds per jiffy */
++#define VIA_TIMER_CYCLES   (VIA_CLOCK_FREQ / HZ) /* clock cycles per jiffy */
++
++#define VIA_TC             (VIA_TIMER_CYCLES - 2) /* including 0 and -1 */
++#define VIA_TC_LOW         (VIA_TC & 0xFF)
++#define VIA_TC_HIGH        (VIA_TC >> 8)
++
++void __init via_init_clock(irq_handler_t timer_routine)
++{
++	if (request_irq(IRQ_MAC_TIMER_1, timer_routine, 0, "timer", NULL)) {
++		pr_err("Couldn't register %s interrupt\n", "timer");
++		return;
++	}
++
++	via1[vT1LL] = VIA_TC_LOW;
++	via1[vT1LH] = VIA_TC_HIGH;
++	via1[vT1CL] = VIA_TC_LOW;
++	via1[vT1CH] = VIA_TC_HIGH;
++	via1[vACR] |= 0x40;
++}
++
++u32 mac_gettimeoffset(void)
++{
++	unsigned long flags;
++	u8 count_high;
++	u16 count, offset = 0;
++
++	/*
++	 * Timer counter wrap-around is detected with the timer interrupt flag
++	 * but reading the counter low byte (vT1CL) would reset the flag.
++	 * Also, accessing both counter registers is essentially a data race.
++	 * These problems are avoided by ignoring the low byte. Clock accuracy
++	 * is 256 times worse (error can reach 0.327 ms) but CPU overhead is
++	 * reduced by avoiding slow VIA register accesses.
++	 */
++
++	local_irq_save(flags);
++	count_high = via1[vT1CH];
++	if (count_high == 0xFF)
++		count_high = 0;
++	if (count_high > 0 && (via1[vIFR] & VIA_TIMER_1_INT))
++		offset = VIA_TIMER_CYCLES;
++	local_irq_restore(flags);
++
++	count = count_high << 8;
++	count = VIA_TIMER_CYCLES - count + offset;
++
++	return ((count * VIA_TIMER_INTERVAL) / VIA_TIMER_CYCLES) * 1000;
++}
 -- 
 2.20.1
 
