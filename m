@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDEBC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45042C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F09BF2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:43:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 173BF2081E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:43:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193034;
-	bh=ULJTcAxwoARXlpJOWHSH7MmtTYHkEJ913MW2/8esPOU=;
+	s=default; t=1579193039;
+	bh=XGdk5WT+R06Kr+1Mhh/012oks8FY/Y1ued3z88w1Llw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KUIrKt6KtyYTtr0GaASrjYx3sGhzyp0XDMqRCQJ7hF8d2+Tz4gMQ8D4n12pQlBXew
-	 FvcrRX2YA3WyIR9aV8+ZrLDKSLRvfuUL+uTdXI+YP2yiSuGoZhN85LDTFZQNUd6yCc
-	 F431bheXDckZNP4vU6VENhJeqCDp+qXIt3iFBB6E=
+	b=SI2cAW+wgs08wcLrdNchHskjYC5SNURV3iTYsOQTzxQA4iNQfp/ncvTWxHD8RbEvd
+	 7TzzlP4eAjVVPABVn23fcjE4zeWN3gG0p8njKvFfmCWWdxBEYPw0XD68WxgghL6ZA+
+	 XhEtrFklWZQc0uZcVfrGDR0kAVfks4KqDMrm6Xtw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729186AbgAPQnx (ORCPT
+        id S1729210AbgAPQn5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:43:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51522 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:43:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726440AbgAPQnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:43:51 -0500
+        id S1726440AbgAPQnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:43:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 142C62073A;
-        Thu, 16 Jan 2020 16:43:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47F3221D56;
+        Thu, 16 Jan 2020 16:43:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193030;
-        bh=ULJTcAxwoARXlpJOWHSH7MmtTYHkEJ913MW2/8esPOU=;
+        s=default; t=1579193035;
+        bh=XGdk5WT+R06Kr+1Mhh/012oks8FY/Y1ued3z88w1Llw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0TGtmhZYf3mtIEfF9EkDrifxVcvC9EAera8/l3yrSCHwKugZdt+AECe3uJNfZNezl
-         EfLWNvNmmVPrl90lo+uYudyg7TGsoL2wwlQb4lG2PiYJ2IhGkiDWLsI6Y6F9YkxTzd
-         brlcx3RyIKfV3m5h9dvWSDSSM2C/BokEzdD0rJns=
+        b=aetdFYkie744r+ccxWQ00/E8k+ouMZ40We2HvkTmT9EC1dHXjy+vaFwAQo1WgwSd1
+         iMCPrftx/7RKnpdEy2u+RO2SrDhdzkMp5nc4ToYp6wLZq3aCWYPfLpLxcwm1eQRXnr
+         XzpR17j/2D8Kvo/6SvNL2+S5BO/hf0X3xfVT1YkE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 010/205] RDMA/siw: Fix port number endianness in a debug message
-Date:   Thu, 16 Jan 2020 11:39:45 -0500
-Message-Id: <20200116164300.6705-10-sashal@kernel.org>
+Cc:     Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 011/205] soc/tegra: pmc: Fix crashes for hierarchical interrupts
+Date:   Thu, 16 Jan 2020 11:39:46 -0500
+Message-Id: <20200116164300.6705-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -60,42 +58,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit 050dbddf249eee3e936b5734c30b2e1b427efdc3 ]
+[ Upstream commit c9e753767a9c75d2044fb7343950a6a992d34a16 ]
 
-sin_port and sin6_port are big endian member variables. Convert these port
-numbers into CPU endianness before printing.
+Interrupts that don't have an associated wake event or GPIO wake events
+end up with an associate IRQ chip that is NULL and which causes IRQ code
+to crash. This is because we don't implicitly set the parent IRQ chip by
+allocating the interrupt at the parent. However, there really isn't a
+corresponding interrupt at the parent, so we need to work around this by
+setting the special no_irq_chip as the IRQ chip for these interrupts.
 
-Link: https://lore.kernel.org/r/20190930231707.48259-5-bvanassche@acm.org
-Fixes: 6c52fdc244b5 ("rdma/siw: connection management")
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Bernard Metzler <bmt@zurich.ibm.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 19906e6b1667 ("soc/tegra: pmc: Add wake event support")
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/siw/siw_cm.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ drivers/soc/tegra/pmc.c | 28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/sw/siw/siw_cm.c b/drivers/infiniband/sw/siw/siw_cm.c
-index 8c1931a57f4a..0454561718d9 100644
---- a/drivers/infiniband/sw/siw/siw_cm.c
-+++ b/drivers/infiniband/sw/siw/siw_cm.c
-@@ -1867,14 +1867,7 @@ static int siw_listen_address(struct iw_cm_id *id, int backlog,
- 	list_add_tail(&cep->listenq, (struct list_head *)id->provider_data);
- 	cep->state = SIW_EPSTATE_LISTENING;
+diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+index 9f9c1c677cf4..0447afa970f5 100644
+--- a/drivers/soc/tegra/pmc.c
++++ b/drivers/soc/tegra/pmc.c
+@@ -1899,6 +1899,20 @@ static int tegra_pmc_irq_alloc(struct irq_domain *domain, unsigned int virq,
+ 							    event->id,
+ 							    &pmc->irq, pmc);
  
--	if (addr_family == AF_INET)
--		siw_dbg(id->device, "Listen at laddr %pI4 %u\n",
--			&(((struct sockaddr_in *)laddr)->sin_addr),
--			((struct sockaddr_in *)laddr)->sin_port);
--	else
--		siw_dbg(id->device, "Listen at laddr %pI6 %u\n",
--			&(((struct sockaddr_in6 *)laddr)->sin6_addr),
--			((struct sockaddr_in6 *)laddr)->sin6_port);
-+	siw_dbg(id->device, "Listen at laddr %pISp\n", laddr);
++			/*
++			 * GPIOs don't have an equivalent interrupt in the
++			 * parent controller (GIC). However some code, such
++			 * as the one in irq_get_irqchip_state(), require a
++			 * valid IRQ chip to be set. Make sure that's the
++			 * case by passing NULL here, which will install a
++			 * dummy IRQ chip for the interrupt in the parent
++			 * domain.
++			 */
++			if (domain->parent)
++				irq_domain_set_hwirq_and_chip(domain->parent,
++							      virq, 0, NULL,
++							      NULL);
++
+ 			break;
+ 		}
+ 	}
+@@ -1908,10 +1922,22 @@ static int tegra_pmc_irq_alloc(struct irq_domain *domain, unsigned int virq,
+ 	 * dummy hardware IRQ number. This is used in the ->irq_set_type()
+ 	 * and ->irq_set_wake() callbacks to return early for these IRQs.
+ 	 */
+-	if (i == soc->num_wake_events)
++	if (i == soc->num_wake_events) {
+ 		err = irq_domain_set_hwirq_and_chip(domain, virq, ULONG_MAX,
+ 						    &pmc->irq, pmc);
  
- 	return 0;
++		/*
++		 * Interrupts without a wake event don't have a corresponding
++		 * interrupt in the parent controller (GIC). Pass NULL for the
++		 * chip here, which causes a dummy IRQ chip to be installed
++		 * for the interrupt in the parent domain, to make this
++		 * explicit.
++		 */
++		if (domain->parent)
++			irq_domain_set_hwirq_and_chip(domain->parent, virq, 0,
++						      NULL, NULL);
++	}
++
+ 	return err;
+ }
  
 -- 
 2.20.1
