@@ -4,68 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E5F7C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 511E6C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7800D22522
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:24:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AC3E214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:24:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L3u4XrNN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NK+qvfDt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395559AbgAPSXc (ORCPT
+        id S2395482AbgAPSYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:23:32 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35786 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392452AbgAPSX0 (ORCPT
+        Thu, 16 Jan 2020 13:24:33 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50201 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2395552AbgAPSXd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 13:23:26 -0500
-Received: by mail-wm1-f66.google.com with SMTP id p17so4874527wmb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 10:23:25 -0800 (PST)
+        Thu, 16 Jan 2020 13:23:33 -0500
+Received: by mail-wm1-f65.google.com with SMTP id a5so4826347wmb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 10:23:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Fo5dGHfcTYvpzozVFBOXz3UkWraK5woc+oSC5HJiXcE=;
-        b=L3u4XrNNAszKKjQv0ZkuLk392iUHP396dPTe1o7i4I4Rn70UToXpoIinLrf97bIgV/
-         4ycDtsxqHT5eRK9I5QPcPP0MkHiJqiYFpSdIPOv8bdWw3QB99MSuyb7Vogr3wInAxyIm
-         QZw9fi2qlK4UbS/pwPZxkyo2L/x58od5e5xRvuVSlGCjyWevwpnQ3oP/Bdk+pqvME6hF
-         MoEhSpfIFzmhvLCoEAgrQbuSXbQVp462NQL01puaH4wPxBs1JRA7A8fOjHORJQko0h/X
-         O4b4aTrtQ+lp7G6vibDjGNBvRez28ZRQTzcgLNhZFet9mzBfgd3+Pkys/KqvHa2GyeQS
-         GRsg==
+        bh=XCi3giR9VTe0RVdSxNrJbzA2jQPkRo5HAD6T0ea6ezU=;
+        b=NK+qvfDtbcETsJbAUVtyYTvabKJ7laoZoo3Pi72AybzAYgicukjcCrWLCLPsmdQPQj
+         C0UI1PjWGa06gE5PQhLy87feylKf6CPXf2dkpMFywDgcIsqCO4MDp4VSmSdRlW2LEmCy
+         xI9fnWtM1bQBiAbH/XuAamzKVB7uJLB6NaQoVfy/p/KF6ia3cjsEr856YXyoF/ZKkohp
+         p/UrPuAqIKV6lDpaSd9WB6EXh8To64A5Qm2MDTJsX3vVT1od0n0ghNHpDw1sSY3G/L/x
+         SDy55Mxs4F2j+3td7ZJJZ9sle90kNaTdZ8yFYvEIbn5OpmNYMYSDRnLLOSyqpYC5aw+l
+         Qccg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Fo5dGHfcTYvpzozVFBOXz3UkWraK5woc+oSC5HJiXcE=;
-        b=h4oPVGp40D3/QUlyQ9wO1qH96b05wqo8NPBlIWDBg/q/k0scai3t+cZsUNsYuW+QGo
-         4oof2QRHBUhdWbM7Sl/pyixEZ1QdIlNW0iFDc60yjxa54cxPbZkuUOXHokTimfTZJlaT
-         5lqdYxDAx0gzAfwLgcteDhumx88QTJO93YRDZ85y9A1m0K0GLI/CnCKubZUWtuGxWm8z
-         zhGNy4a77Ud2Kd98KEmuIV14jR+ZsrQkFz8wRgcAVfY3l89R/+kdhElVdtjgZHbeK60+
-         ZnSXnsSLfVRk6RJvTG+I4Zo3wMLa49rBM42SVbEsD9HzMV9aDQvrHxJpihETXX4v6WFe
-         /Qzw==
-X-Gm-Message-State: APjAAAUE0E+kBCPZBB7srVOXAb3YnwnoacMBDtu5K6ZQEK+d9C6Y4qJ4
-        6mdOmpX3FS1F5Q/GkkAey2pc2A==
-X-Google-Smtp-Source: APXvYqyCzzb7myDBqaZc69hlCcYxwa+1kytjgGC2ZMeSwse/HZHd393PjH6eBsaFCSTiFqIQThSLpQ==
-X-Received: by 2002:a1c:7c18:: with SMTP id x24mr339057wmc.21.1579199004749;
-        Thu, 16 Jan 2020 10:23:24 -0800 (PST)
+        bh=XCi3giR9VTe0RVdSxNrJbzA2jQPkRo5HAD6T0ea6ezU=;
+        b=umQG8cfdMMrVY2mEbrkBV3y+Ltpwv4eoNiPWrkyUXaqRIb3d9WIRHUxql04eo0CKao
+         yXGGDgl2pqNQ0s4ttSwAt+CnFKEhgipjVvmDwM7Y4mdwqoxKPk1OiRK2KAV+DRaR1dSC
+         3onz3B5Bidj8eFqookEV+rdNl/fF8qR5HP8d1nzp2TNLxUQUUH7BiLIbwrqJphat9010
+         HdY+toxTMJ7OUdGO3xPIUJeQR54iyfAcpC3fBA1XGXgC+0BVJkC3iTeIOCsQHSivqVXv
+         MEaJsvlXcn/GCFbg7o/iDZR0RGpshgH96Tk9JiSm4rzTA5pVJCJ3Ny+7+DX7z5i+wiUT
+         ef8g==
+X-Gm-Message-State: APjAAAWJOLb1KU8nxAbs9W3MgLMtpbpUw7Ltr8XhIpCdZdIbnJkqruMC
+        lpgsEimjoJpB+hj4cV0r1PO71g==
+X-Google-Smtp-Source: APXvYqzzk/u9wMQmxsWFQjXXqLpW96/Wotc9bX/2MlWh/iCgtJD6BoISx1/3AIymdgPTxC0p+Kg8UQ==
+X-Received: by 2002:a1c:6707:: with SMTP id b7mr365782wmc.54.1579199011774;
+        Thu, 16 Jan 2020 10:23:31 -0800 (PST)
 Received: from mai.imgcgcw.net ([2a01:e34:ed2f:f020:6c63:1b50:1156:7f0f])
-        by smtp.gmail.com with ESMTPSA id b137sm1087920wme.26.2020.01.16.10.23.22
+        by smtp.gmail.com with ESMTPSA id b137sm1087920wme.26.2020.01.16.10.23.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 10:23:24 -0800 (PST)
+        Thu, 16 Jan 2020 10:23:30 -0800 (PST)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     tglx@linutronix.de
-Cc:     linux-kernel@vger.kernel.org, Boqun Feng <boqun.feng@gmail.com>,
-        linux-hyperv@vger.kernel.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 05/17] clocksource/drivers/hyper-v: Reserve PAGE_SIZE space for tsc page
-Date:   Thu, 16 Jan 2020 19:22:52 +0100
-Message-Id: <20200116182304.4926-5-daniel.lezcano@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/ZYNQ
+        ARCHITECTURE)
+Subject: [PATCH 07/17] clocksource/drivers/cadence-ttc: Use ttc driver as platform driver
+Date:   Thu, 16 Jan 2020 19:22:54 +0100
+Message-Id: <20200116182304.4926-7-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200116182304.4926-1-daniel.lezcano@linaro.org>
 References: <74bf7170-401f-2962-ea5a-1e21431a9349@linaro.org>
@@ -75,66 +73,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boqun Feng <boqun.feng@gmail.com>
+From: Rajan Vaja <rajan.vaja@xilinx.com>
 
-Currently, the reserved size for a tsc page is 4K, which is enough for
-communicating with hypervisor. However, in the case where we want to
-export the tsc page to userspace (e.g. for vDSO to read the
-clocksource), the tsc page should be at least PAGE_SIZE, otherwise, when
-PAGE_SIZE is larger than 4K, extra kernel data will be mapped into
-userspace, which means leaking kernel information.
+Currently TTC driver is TIMER_OF_DECLARE type driver. Because of
+that, TTC driver may be initialized before other clock drivers. If
+TTC driver is dependent on that clock driver then initialization of
+TTC driver will failed.
 
-Therefore reserve PAGE_SIZE space for tsc_pg as a preparation for the
-vDSO support of ARM64 in the future. Also, while at it, replace all
-reference to tsc_pg with hv_get_tsc_page() since it should be the only
-interface to access tsc page.
+So use TTC driver as platform driver instead of using
+TIMER_OF_DECLARE.
 
-Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
-Cc: linux-hyperv@vger.kernel.org
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+Tested-by: Michal Simek <michal.simek@xilinx.com>
+Acked-by: Michal Simek <michal.simek@xilinx.com>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20191126021723.4710-1-boqun.feng@gmail.com
+Link: https://lore.kernel.org/r/1573122988-18399-1-git-send-email-rajan.vaja@xilinx.com
 ---
- drivers/clocksource/hyperv_timer.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/clocksource/timer-cadence-ttc.c | 26 +++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-index 1aec08e82b7a..12d75b50a317 100644
---- a/drivers/clocksource/hyperv_timer.c
-+++ b/drivers/clocksource/hyperv_timer.c
-@@ -307,17 +307,20 @@ EXPORT_SYMBOL_GPL(hv_stimer_global_cleanup);
- struct clocksource *hyperv_cs;
- EXPORT_SYMBOL_GPL(hyperv_cs);
+diff --git a/drivers/clocksource/timer-cadence-ttc.c b/drivers/clocksource/timer-cadence-ttc.c
+index 88fe2e9ba9a3..38858e141731 100644
+--- a/drivers/clocksource/timer-cadence-ttc.c
++++ b/drivers/clocksource/timer-cadence-ttc.c
+@@ -15,6 +15,8 @@
+ #include <linux/of_irq.h>
+ #include <linux/slab.h>
+ #include <linux/sched_clock.h>
++#include <linux/module.h>
++#include <linux/of_platform.h>
  
--static struct ms_hyperv_tsc_page tsc_pg __aligned(PAGE_SIZE);
-+static union {
-+	struct ms_hyperv_tsc_page page;
-+	u8 reserved[PAGE_SIZE];
-+} tsc_pg __aligned(PAGE_SIZE);
- 
- struct ms_hyperv_tsc_page *hv_get_tsc_page(void)
- {
--	return &tsc_pg;
-+	return &tsc_pg.page;
+ /*
+  * This driver configures the 2 16/32-bit count-up timers as follows:
+@@ -464,13 +466,7 @@ static int __init ttc_setup_clockevent(struct clk *clk,
+ 	return 0;
  }
- EXPORT_SYMBOL_GPL(hv_get_tsc_page);
  
- static u64 notrace read_hv_clock_tsc(struct clocksource *arg)
+-/**
+- * ttc_timer_init - Initialize the timer
+- *
+- * Initializes the timer hardware and register the clock source and clock event
+- * timers with Linux kernal timer framework
+- */
+-static int __init ttc_timer_init(struct device_node *timer)
++static int __init ttc_timer_probe(struct platform_device *pdev)
  {
--	u64 current_tick = hv_read_tsc_page(&tsc_pg);
-+	u64 current_tick = hv_read_tsc_page(hv_get_tsc_page());
+ 	unsigned int irq;
+ 	void __iomem *timer_baseaddr;
+@@ -478,6 +474,7 @@ static int __init ttc_timer_init(struct device_node *timer)
+ 	static int initialized;
+ 	int clksel, ret;
+ 	u32 timer_width = 16;
++	struct device_node *timer = pdev->dev.of_node;
  
- 	if (current_tick == U64_MAX)
- 		hv_get_time_ref_count(current_tick);
-@@ -397,7 +400,7 @@ static bool __init hv_init_tsc_clocksource(void)
- 		return false;
+ 	if (initialized)
+ 		return 0;
+@@ -532,4 +529,17 @@ static int __init ttc_timer_init(struct device_node *timer)
+ 	return 0;
+ }
  
- 	hyperv_cs = &hyperv_cs_tsc;
--	phys_addr = virt_to_phys(&tsc_pg);
-+	phys_addr = virt_to_phys(hv_get_tsc_page());
- 
- 	/*
- 	 * The Hyper-V TLFS specifies to preserve the value of reserved
+-TIMER_OF_DECLARE(ttc, "cdns,ttc", ttc_timer_init);
++static const struct of_device_id ttc_timer_of_match[] = {
++	{.compatible = "cdns,ttc"},
++	{},
++};
++
++MODULE_DEVICE_TABLE(of, ttc_timer_of_match);
++
++static struct platform_driver ttc_timer_driver = {
++	.driver = {
++		.name	= "cdns_ttc_timer",
++		.of_match_table = ttc_timer_of_match,
++	},
++};
++builtin_platform_driver_probe(ttc_timer_driver, ttc_timer_probe);
 -- 
 2.17.1
 
