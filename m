@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B52BC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2A1C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC8FF20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:53:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F5DB20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:53:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200812;
-	bh=t9t6gy9pWd6c2UzdRr7ngXWkrFc5wXb5Du/woiRoHnE=;
+	s=default; t=1579200817;
+	bh=o/vLIVwfHkBmhxUHbHkIUMuS1REF90EwAkADCq6Uy+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g/l5FsFElZ+jPgXrRekkyjzsiBLnV8aXuh7iqx/aLmmck2pRhKLxructi8Yb4/WxZ
-	 8KDgS+uFaTO5a36kM4/tPxoZF/OpzUpMf57zBshj7rqi+vRHEOLT6SNT1iTIrgl+Ex
-	 9jji9cjdYYN7ZqdwpKO16ZhCcwIJHr4c//xhhIUk=
+	b=ZHy/Hic4Dr8cWYJX497Qg9Y0Z43Ah9Divec27hKLjxRNN+LXz8rxQFeJdEyCCLmWj
+	 VGWZnd/v+43G7gvmOa7/QduRK3ky4T67zQ8UYUqmWJVS334y8D5qU8pZU7RnGuQiDc
+	 leexOFTisRxlkV6dKx591lINwUp5cQJTMQyvvXoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437138AbgAPSxa (ORCPT
+        id S2389334AbgAPRIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:53:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41432 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729262AbgAPRIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jan 2020 12:08:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41168 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389282AbgAPRIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:08:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47CC224687;
-        Thu, 16 Jan 2020 17:08:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE60A21D56;
+        Thu, 16 Jan 2020 17:08:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194492;
-        bh=t9t6gy9pWd6c2UzdRr7ngXWkrFc5wXb5Du/woiRoHnE=;
+        s=default; t=1579194485;
+        bh=o/vLIVwfHkBmhxUHbHkIUMuS1REF90EwAkADCq6Uy+k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yxht9JtTwu4QISo4JeeXgxgGWxHDirrq1B/18c8aq6BZfXmVkF/2V/p3fFrHj5gTU
-         QKm2SRroZk3Vh05JNa8F7BiZMqeXafkMCkZ1P04vx0jzDMK12Rj6zgxNfcoDmKrcUU
-         Ld2SdCDi2w9wWo90DvRNWlU3jvvytphPBwsmswug=
+        b=mTOL3K605iBmV59ksAYhtuH1h/ZB4Ud9PYh5AIi5waSIxnoN4/aOL/nN1HT5m6mF8
+         PIB9NygFhMJcr2lMIhBrXpRMAwxJe4Vb/gDdWoDE+FJxH86drn8P8uLhSgdSWsMCH6
+         6RxZVjhQcnXU97XEf070ce3s6jm0yG3LHVNxSQW8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephen Hemminger <stephen@networkplumber.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
+Cc:     Huazhong Tan <tanhuazhong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 390/671] net: core: support XDP generic on stacked devices.
-Date:   Thu, 16 Jan 2020 12:00:28 -0500
-Message-Id: <20200116170509.12787-127-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 386/671] net: hns3: fix a memory leak issue for hclge_map_unmap_ring_to_vf_vector
+Date:   Thu, 16 Jan 2020 12:00:24 -0500
+Message-Id: <20200116170509.12787-123-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -61,121 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Hemminger <stephen@networkplumber.org>
+From: Huazhong Tan <tanhuazhong@huawei.com>
 
-[ Upstream commit 458bf2f224f04a513b0be972f8708e78ee2c986e ]
+[ Upstream commit 49f971bd308571fe466687227130a7082b662d0e ]
 
-When a device is stacked like (team, bonding, failsafe or netvsc) the
-XDP generic program for the parent device was not called.
+When hclge_bind_ring_with_vector() fails,
+hclge_map_unmap_ring_to_vf_vector() returns the error
+directly, so nobody will free the memory allocated by
+hclge_get_ring_chain_from_mbx().
 
-Move the call to XDP generic inside __netif_receive_skb_core where
-it can be done multiple times for stacked case.
+So hclge_free_vector_ring_chain() should be called no matter
+hclge_bind_ring_with_vector() fails or not.
 
-Fixes: d445516966dc ("net: xdp: support xdp generic on virtual devices")
-Signed-off-by: Stephen Hemminger <sthemmin@microsoft.com>
+Fixes: 84e095d64ed9 ("net: hns3: Change PF to add ring-vect binding & resetQ to mailbox")
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/dev.c | 58 +++++++++++---------------------------------------
- 1 file changed, 12 insertions(+), 46 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index a26d87073f71..935fe158cfaf 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -4465,23 +4465,6 @@ static int netif_rx_internal(struct sk_buff *skb)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
+index e08e82020402..997ca79ed892 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
+@@ -181,12 +181,10 @@ static int hclge_map_unmap_ring_to_vf_vector(struct hclge_vport *vport, bool en,
+ 		return ret;
  
- 	trace_netif_rx(skb);
+ 	ret = hclge_bind_ring_with_vector(vport, vector_id, en, &ring_chain);
+-	if (ret)
+-		return ret;
  
--	if (static_branch_unlikely(&generic_xdp_needed_key)) {
--		int ret;
--
--		preempt_disable();
--		rcu_read_lock();
--		ret = do_xdp_generic(rcu_dereference(skb->dev->xdp_prog), skb);
--		rcu_read_unlock();
--		preempt_enable();
--
--		/* Consider XDP consuming the packet a success from
--		 * the netdev point of view we do not want to count
--		 * this as an error.
--		 */
--		if (ret != XDP_PASS)
--			return NET_RX_SUCCESS;
--	}
--
- #ifdef CONFIG_RPS
- 	if (static_key_false(&rps_needed)) {
- 		struct rps_dev_flow voidflow, *rflow = &voidflow;
-@@ -4815,6 +4798,18 @@ static int __netif_receive_skb_core(struct sk_buff *skb, bool pfmemalloc,
+ 	hclge_free_vector_ring_chain(&ring_chain);
  
- 	__this_cpu_inc(softnet_data.processed);
+-	return 0;
++	return ret;
+ }
  
-+	if (static_branch_unlikely(&generic_xdp_needed_key)) {
-+		int ret2;
-+
-+		preempt_disable();
-+		ret2 = do_xdp_generic(rcu_dereference(skb->dev->xdp_prog), skb);
-+		preempt_enable();
-+
-+		if (ret2 != XDP_PASS)
-+			return NET_RX_DROP;
-+		skb_reset_mac_len(skb);
-+	}
-+
- 	if (skb->protocol == cpu_to_be16(ETH_P_8021Q) ||
- 	    skb->protocol == cpu_to_be16(ETH_P_8021AD)) {
- 		skb = skb_vlan_untag(skb);
-@@ -5133,19 +5128,6 @@ static int netif_receive_skb_internal(struct sk_buff *skb)
- 	if (skb_defer_rx_timestamp(skb))
- 		return NET_RX_SUCCESS;
- 
--	if (static_branch_unlikely(&generic_xdp_needed_key)) {
--		int ret;
--
--		preempt_disable();
--		rcu_read_lock();
--		ret = do_xdp_generic(rcu_dereference(skb->dev->xdp_prog), skb);
--		rcu_read_unlock();
--		preempt_enable();
--
--		if (ret != XDP_PASS)
--			return NET_RX_DROP;
--	}
--
- 	rcu_read_lock();
- #ifdef CONFIG_RPS
- 	if (static_key_false(&rps_needed)) {
-@@ -5166,7 +5148,6 @@ static int netif_receive_skb_internal(struct sk_buff *skb)
- 
- static void netif_receive_skb_list_internal(struct list_head *head)
- {
--	struct bpf_prog *xdp_prog = NULL;
- 	struct sk_buff *skb, *next;
- 	struct list_head sublist;
- 
-@@ -5179,21 +5160,6 @@ static void netif_receive_skb_list_internal(struct list_head *head)
- 	}
- 	list_splice_init(&sublist, head);
- 
--	if (static_branch_unlikely(&generic_xdp_needed_key)) {
--		preempt_disable();
--		rcu_read_lock();
--		list_for_each_entry_safe(skb, next, head, list) {
--			xdp_prog = rcu_dereference(skb->dev->xdp_prog);
--			skb_list_del_init(skb);
--			if (do_xdp_generic(xdp_prog, skb) == XDP_PASS)
--				list_add_tail(&skb->list, &sublist);
--		}
--		rcu_read_unlock();
--		preempt_enable();
--		/* Put passed packets back on main list */
--		list_splice_init(&sublist, head);
--	}
--
- 	rcu_read_lock();
- #ifdef CONFIG_RPS
- 	if (static_key_false(&rps_needed)) {
+ static int hclge_set_vf_promisc_mode(struct hclge_vport *vport,
 -- 
 2.20.1
 
