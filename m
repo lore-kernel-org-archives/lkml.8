@@ -2,156 +2,156 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F038EC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A09C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEFA920730
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72E63217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:41:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dSzoVn31"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="jy17ehUk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbgAPLjR (ORCPT
+        id S1726371AbgAPLle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 06:39:17 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38602 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbgAPLjQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 06:39:16 -0500
-Received: by mail-pg1-f194.google.com with SMTP id a33so9764076pgm.5
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 03:39:16 -0800 (PST)
+        Thu, 16 Jan 2020 06:41:34 -0500
+Received: from mail-bn8nam12on2079.outbound.protection.outlook.com ([40.107.237.79]:2498
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725999AbgAPLle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 06:41:34 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IDC6o+ecfcG3EA05Muid8ikkaYdj59fImLz8GFCmHlKslTGVYf7F4KW24bdrlaQ3AnR2TB1Dptx9C5hpwj8EkWUlPF8bwXUL2rFE0dk12hks180hmFZj3S6PhvHYRIETY/L/yAHBYemIHHz445pi1bSejrBoLj86IsfRXENmXp2RwJ24ntCOjnaDER1SxaSmnRxEBibkXQUFDH28oCE30KcZNCSkRjwr06t/u8uqaf2gJjaLC9dcvb0V9kYZwGkU/sFhMAcapkIHlkX8ny2G3oLo7IwOu+fS2j1b4ZYvCBE+bcEZGNts7ABpWLM8wf3pd6GJIUzLIxL+ppZpVHd8fA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SKup4/XUMY8qX58+CZySttIZaRAxOxZVoNjXFr4HkYM=;
+ b=E/GDHHziwMenKKYY5PR8iDLLlnXZCDYjq15QaJvArjv728wQJflE+zLr9PVPAX1krLWD8cUaOFcuf8WLJqlQde0AqTVKRTWh5r02tmvgis+fktE4yzAXMr9thB0TdVOv59JSJiNdZZFHPveB/SOwEdCS4yx7rSbtd4sF0YAwhlQRtupz/h3APaziwlCzb/LviYCPsXqr79yseJKVpF5ElKgDHv3wAuBD9dKQts3xG63T9GL7cuvcjXfj4qvJugU15v/P/llYw0qP+cUfHcMET+Leo0BsKsYi8fsP7cBwabpSMvad4TIXVVXGAMNHvHfohkLR4OFS0fCDHSTkzhf2bw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XQ2WYK66tyT9hqx5BTHGPz07wmp8qftkyUQb3t1BOpU=;
-        b=dSzoVn31mzKWef/nnHG1uXr6Zxopc4S8CzEfz2r4chbCqgoMBr1WNPGI3UOm05BjXO
-         9/X4lpg8BxT5BKjIc3NOY4KVOOXKJfWmnwQJH1PXcHMuih7x5I/D7TreTm1h5gqqgdLd
-         OnOQdwnNPQS/8579FMfo96clV/2yMUcT29zZW11W1OoDEcg7esEbyvieb7qeuPzSp+8R
-         WsPrn0XlQDD2p0fQPwevC+to99jaV5yAWNARP0JM1z76Lv0/B0pGtXqIEfUeeJUY5KV2
-         WqdSTFTgnqQ+D55RWTOwZwgwqsex2a5XXtNtarvAr3cTwgwMbGSMYofXI+eB6WsJlhv5
-         AOZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XQ2WYK66tyT9hqx5BTHGPz07wmp8qftkyUQb3t1BOpU=;
-        b=j6lUS6v5myP9K9nyhdukVR2PszTu0JOcPYrJ3xWNZ8CZs0eglyW24b8sMs4/wRc6Rh
-         KeuJwfxNG/UK7qEVvlK1X70bFpuJpByyNgwvf0QyHUXzJREG9mtnWFaNlwDNmB/YjEYQ
-         j72vn+1rN3xr6GFvArUGKWG4DUerW3KtmoLNQRX1gcbnLtjqKXFH8APTHQmNS6RYepKv
-         sL4kovJ2eIl6AgOy7C/WXMEz5KcbLXY+0RocJv7G2f5qWmBXGROO/ALJCiTKSvxAVs4w
-         OcZEsA/dTrOIP1k8bmdHIISGoa4BTt6lY6R+gPzKImscp71l8IH+WxAULJ8JeO+ooIu2
-         gklw==
-X-Gm-Message-State: APjAAAWOYkkIiLOjKh+A5VQUmc//RPb4lpRG8QfDK09hZNOHBgdmB0jj
-        AqXU7UDFhXTFJ9/qQfdj7zp85wA3mSqf3ueNf14P3w==
-X-Google-Smtp-Source: APXvYqwPiIfdOngwSbMd2ZgYuwpEaNsn3HmGYL37NV427Q34ckb5EtuW9e8KjyLgjS2c6xRf/5IIr2AKLYFnERKAMTk=
-X-Received: by 2002:a63:358a:: with SMTP id c132mr39524917pga.286.1579174755819;
- Thu, 16 Jan 2020 03:39:15 -0800 (PST)
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SKup4/XUMY8qX58+CZySttIZaRAxOxZVoNjXFr4HkYM=;
+ b=jy17ehUkCr0gnBD3NeNQGq0Cfwl3rnye/URvHDWO5/gcw7+gmBI4RF8079K/nXyYC95iIIQarEVFJDHzk47psE9dIn2l8DrzvPEoZoC4M6CHUsZs5/bf+YvGA+LB5J7kTuZOTnlsuAYysYvc8Ejn+Ei+i7osyobMSO0kmZ35mXo=
+Received: from BYAPR02MB4055.namprd02.prod.outlook.com (52.135.202.143) by
+ BYAPR02MB5462.namprd02.prod.outlook.com (20.177.229.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.18; Thu, 16 Jan 2020 11:41:28 +0000
+Received: from BYAPR02MB4055.namprd02.prod.outlook.com
+ ([fe80::f964:6ae7:834b:8fa7]) by BYAPR02MB4055.namprd02.prod.outlook.com
+ ([fe80::f964:6ae7:834b:8fa7%5]) with mapi id 15.20.2644.015; Thu, 16 Jan 2020
+ 11:41:28 +0000
+From:   Rajan Vaja <RAJANV@xilinx.com>
+To:     Michal Simek <michals@xilinx.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Michal Simek <michals@xilinx.com>,
+        Jolly Shah <JOLLYS@xilinx.com>,
+        "m.tretter@pengutronix.de" <m.tretter@pengutronix.de>,
+        "gustavo@embeddedor.com" <gustavo@embeddedor.com>,
+        Tejas Patel <TEJASP@xilinx.com>,
+        Nava kishore Manne <navam@xilinx.com>,
+        "mdf@kernel.org" <mdf@kernel.org>
+CC:     "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH v3 0/6] clk: zynqmp: Extend and fix zynqmp clock driver
+Thread-Topic: [PATCH v3 0/6] clk: zynqmp: Extend and fix zynqmp clock driver
+Thread-Index: AQHVqzaKZfjuMgYuu0e5sIMWLWz5cqe2qOMAgDbD6rA=
+Date:   Thu, 16 Jan 2020 11:41:27 +0000
+Message-ID: <BYAPR02MB405593B79AB01004F0BB9101B7360@BYAPR02MB4055.namprd02.prod.outlook.com>
+References: <1574415814-19797-1-git-send-email-rajan.vaja@xilinx.com>
+ <1575527759-26452-1-git-send-email-rajan.vaja@xilinx.com>
+ <19c5f918-7e00-75e4-10d1-53f0a30748b2@xilinx.com>
+In-Reply-To: <19c5f918-7e00-75e4-10d1-53f0a30748b2@xilinx.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=RAJANV@xilinx.com; 
+x-originating-ip: [14.142.15.114]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 090fb488-c584-4c6a-bf1c-08d79a79061b
+x-ms-traffictypediagnostic: BYAPR02MB5462:|BYAPR02MB5462:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR02MB5462D09D86D2F091F766E164B7360@BYAPR02MB5462.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 02843AA9E0
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(366004)(39860400002)(376002)(346002)(189003)(199004)(66476007)(86362001)(8936002)(66946007)(33656002)(64756008)(52536014)(55016002)(76116006)(7696005)(66446008)(2906002)(478600001)(66556008)(7416002)(4326008)(6506007)(55236004)(54906003)(8676002)(26005)(110136005)(81166006)(316002)(186003)(53546011)(81156014)(9686003)(71200400001)(5660300002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB5462;H:BYAPR02MB4055.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: GGTMoTl5P4oXHqIvzz+N45d+gcNjCSN+sgYDN7NAMI1uHYTafGeqSdbTjH1gnhJnORv9zOak2FzYMOZsWA9wmPSp3y1lVO1T8E7UvczhmL1lQpWyUOcHceMxWj0cu6s+d9ICDTpClw4Wpm3dXY1Rv8NA7/X1AwVCyMjlvz8h96oIZSw/TU/J4nBSiiA0zsWCqnxuAF7hZchSJnTi51KQbQ3CQjhuFcii9EnBwX3YbM27rtA3q3MgoiM/INA6kGBagLswkThafm571SVUg8LoSwPwlouqyXpfiUkpiwdvufeWu3xVBa5taDh8z1cD3ixwgCzYJ1pzHsezlznnVEqndceWztWnBQKY37UQoUjigqL2aHrMPebGLEy9MvpaZ4QqXLAHfv2gLShRPcUPbf8tTSnY4hu2jdtp0+eYBWKIwXD3bZWGYUWBdT55cCyibeUpzJFKay7BeUHW93a9iYErMvcx5un0aRnKsDKAKru1orV5pgSyX17MpDQTnvVvaMJM
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200116111449.217744-1-dvyukov@gmail.com>
-In-Reply-To: <20200116111449.217744-1-dvyukov@gmail.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Thu, 16 Jan 2020 12:39:04 +0100
-Message-ID: <CAAeHK+x1o+7qvZx0tkqqaSHJfovajywFh5PhACcjDu2PsNNpVw@mail.gmail.com>
-Subject: Re: [PATCH] kcov: ignore fault-inject and stacktrace
-To:     Dmitry Vyukov <dvyukov@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 090fb488-c584-4c6a-bf1c-08d79a79061b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jan 2020 11:41:27.8447
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: DpvNucDhAeCtij91AgK9dbSKS9Zg5LpDkGM7LAF+1/5Dbb3Q7EY6guvWdbJm0v8RP/i1YzUQvxjxcUJ96LrnBQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5462
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 12:14 PM Dmitry Vyukov <dvyukov@gmail.com> wrote:
->
-> From: Dmitry Vyukov <dvyukov@google.com>
->
-> Don't instrument 3 more files that contain debugging facilities and
-> produce large amounts of uninteresting coverage for every syscall.
-> The following snippets are sprinkled all over the place in kcov
-> traces in a debugging kernel. We already try to disable instrumentation
-> of stack unwinding code and of most debug facilities. I guess we
-> did not use fault-inject.c at the time, and stacktrace.c was somehow
-> missed (or something has changed in kernel/configs).
-> This change both speeds up kcov (kernel doesn't need to store these
-> PCs, user-space doesn't need to process them) and frees trace buffer
-> capacity for more useful coverage.
->
-> should_fail
-> lib/fault-inject.c:149
-> fail_dump
-> lib/fault-inject.c:45
->
-> stack_trace_save
-> kernel/stacktrace.c:124
-> stack_trace_consume_entry
-> kernel/stacktrace.c:86
-> stack_trace_consume_entry
-> kernel/stacktrace.c:89
-> ... a hundred frames skipped ...
-> stack_trace_consume_entry
-> kernel/stacktrace.c:93
-> stack_trace_consume_entry
-> kernel/stacktrace.c:86
->
-> Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-
-Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
-
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Andrey Konovalov <andreyknvl@google.com>
-> Cc: kasan-dev@googlegroups.com
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  kernel/Makefile | 1 +
->  lib/Makefile    | 1 +
->  mm/Makefile     | 1 +
->  3 files changed, 3 insertions(+)
->
-> diff --git a/kernel/Makefile b/kernel/Makefile
-> index e5ffd8c002541..5d935b63f812a 100644
-> --- a/kernel/Makefile
-> +++ b/kernel/Makefile
-> @@ -30,6 +30,7 @@ KCSAN_SANITIZE_softirq.o = n
->  # and produce insane amounts of uninteresting coverage.
->  KCOV_INSTRUMENT_module.o := n
->  KCOV_INSTRUMENT_extable.o := n
-> +KCOV_INSTRUMENT_stacktrace.o := n
->  # Don't self-instrument.
->  KCOV_INSTRUMENT_kcov.o := n
->  KASAN_SANITIZE_kcov.o := n
-> diff --git a/lib/Makefile b/lib/Makefile
-> index 004a4642938af..6cd19bb3085c5 100644
-> --- a/lib/Makefile
-> +++ b/lib/Makefile
-> @@ -16,6 +16,7 @@ KCOV_INSTRUMENT_rbtree.o := n
->  KCOV_INSTRUMENT_list_debug.o := n
->  KCOV_INSTRUMENT_debugobjects.o := n
->  KCOV_INSTRUMENT_dynamic_debug.o := n
-> +KCOV_INSTRUMENT_fault-inject.o := n
->
->  # Early boot use of cmdline, don't instrument it
->  ifdef CONFIG_AMD_MEM_ENCRYPT
-> diff --git a/mm/Makefile b/mm/Makefile
-> index 3c53198835479..c9696f3ec8408 100644
-> --- a/mm/Makefile
-> +++ b/mm/Makefile
-> @@ -28,6 +28,7 @@ KCOV_INSTRUMENT_kmemleak.o := n
->  KCOV_INSTRUMENT_memcontrol.o := n
->  KCOV_INSTRUMENT_mmzone.o := n
->  KCOV_INSTRUMENT_vmstat.o := n
-> +KCOV_INSTRUMENT_failslab.o := n
->
->  CFLAGS_init-mm.o += $(call cc-disable-warning, override-init)
->  CFLAGS_init-mm.o += $(call cc-disable-warning, initializer-overrides)
-> --
-> 2.25.0.rc1.283.g88dfdc4193-goog
->
+SGkgU3RlcGhlbiwNCg0KQ291bGQgcGxlYXNlIGxldCB1cyBrbm93IGlmIHlvdSBoYXZlIGNvbW1l
+bnQgb24gdGhpcyBwYXRjaCBzZXJpZXM/DQoNClRoYW5rcywNClJhamFuDQoNCj4gLS0tLS1Pcmln
+aW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTWljaGFsIFNpbWVrIDxtaWNoYWwuc2ltZWtAeGls
+aW54LmNvbT4NCj4gU2VudDogMTIgRGVjZW1iZXIgMjAxOSAwODo1MCBQTQ0KPiBUbzogUmFqYW4g
+VmFqYSA8UkFKQU5WQHhpbGlueC5jb20+OyBtdHVycXVldHRlQGJheWxpYnJlLmNvbTsNCj4gc2Jv
+eWRAa2VybmVsLm9yZzsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsg
+TWljaGFsIFNpbWVrDQo+IDxtaWNoYWxzQHhpbGlueC5jb20+OyBKb2xseSBTaGFoIDxKT0xMWVNA
+eGlsaW54LmNvbT47DQo+IG0udHJldHRlckBwZW5ndXRyb25peC5kZTsgZ3VzdGF2b0BlbWJlZGRl
+ZG9yLmNvbTsgVGVqYXMgUGF0ZWwNCj4gPFRFSkFTUEB4aWxpbnguY29tPjsgTmF2YSBraXNob3Jl
+IE1hbm5lIDxuYXZhbUB4aWxpbnguY29tPjsgbWRmQGtlcm5lbC5vcmcNCj4gQ2M6IGxpbnV4LWNs
+a0B2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4g
+a2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
+b3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgMC82XSBjbGs6IHp5bnFtcDogRXh0ZW5kIGFu
+ZCBmaXggenlucW1wIGNsb2NrIGRyaXZlcg0KPiANCj4gT24gMDUuIDEyLiAxOSA3OjM1LCBSYWph
+biBWYWphIHdyb3RlOg0KPiA+IFp5bnFNUCBjbG9jayBkcml2ZXIgY2FuIGJlIHVzZWQgZm9yIFZl
+cnNhbCBwbGF0Zm9ybSBhbHNvLiBBZGQgc3VwcG9ydA0KPiA+IGZvciBWZXJzYWwgcGxhdGZvcm0g
+aW4gWnlucU1QIGNsb2NrIGRyaXZlci4NCj4gPg0KPiA+IEFsc28gdGhpcyBwYXRjaCBzZXJpZXMg
+Zml4ZXMgZGl2aWRlciBjYWxjdWxhdGlvbiBhbmQgYWRkcyBzdXBwb3J0IGZvciBnZXQNCj4gPiBt
+YXhpbXVtIGRpdmlkZXIsIGNsb2NrIHdpdGggQ0xLX0RJVklERVJfUE9XRVJfT0ZfVFdPIGZsYWcg
+YW5kIHdhcm4gdXNlcg0KPiBpZg0KPiA+IGNsb2NrIHVzZXJzIGFyZSBtb3JlIHRoYW4gYWxsb3dl
+ZC4NCj4gPg0KPiA+IFJhamFuIFZhamEgKDUpOg0KPiA+ICAgZHQtYmluZGluZ3M6IGNsb2NrOiBB
+ZGQgYmluZGluZ3MgZm9yIHZlcnNhbCBjbG9jayBkcml2ZXINCj4gPiAgIGNsazogenlucW1wOiBF
+eHRlbmQgZHJpdmVyIGZvciB2ZXJzYWwNCj4gPiAgIGNsazogenlucW1wOiBXYXJuIHVzZXIgaWYg
+Y2xvY2sgdXNlciBhcmUgbW9yZSB0aGFuIGFsbG93ZWQNCj4gPiAgIGNsazogenlucW1wOiBBZGQg
+c3VwcG9ydCBmb3IgZ2V0IG1heCBkaXZpZGVyDQo+ID4gICBjbGs6IHp5bnFtcDogRml4IGRpdmlk
+ZXIgY2FsY3VsYXRpb24NCj4gPg0KPiA+IFRlamFzIFBhdGVsICgxKToNCj4gPiAgIGNsazogenlu
+cW1wOiBBZGQgc3VwcG9ydCBmb3IgY2xvY2sgd2l0aCBDTEtfRElWSURFUl9QT1dFUl9PRl9UV08g
+ZmxhZw0KPiA+DQo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3hsbngsdmVyc2Fs
+LWNsay55YW1sIHwgIDY0ICsrKysrKysrKysrDQo+ID4gIGRyaXZlcnMvY2xrL3p5bnFtcC9jbGtj
+LmMgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAzICstDQo+ID4gIGRyaXZlcnMvY2xrL3p5
+bnFtcC9kaXZpZGVyLmMgICAgICAgICAgICAgICAgICAgICAgIHwgMTE4ICsrKysrKysrKysrKysr
+KysrKystDQo+ID4gIGRyaXZlcnMvY2xrL3p5bnFtcC9wbGwuYyAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIHwgICA2ICstDQo+ID4gIGRyaXZlcnMvZmlybXdhcmUveGlsaW54L3p5bnFtcC5jICAg
+ICAgICAgICAgICAgICAgIHwgICAyICsNCj4gPiAgaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay94
+bG54LXZlcnNhbC1jbGsuaCAgICAgICAgfCAxMjMgKysrKysrKysrKysrKysrKysrKysrDQo+ID4g
+IGluY2x1ZGUvbGludXgvZmlybXdhcmUveGxueC16eW5xbXAuaCAgICAgICAgICAgICAgIHwgICAy
+ICsNCj4gPiAgNyBmaWxlcyBjaGFuZ2VkLCAzMTAgaW5zZXJ0aW9ucygrKSwgOCBkZWxldGlvbnMo
+LSkNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9jbG9jay94bG54LHZlcnNhbC0NCj4gY2xrLnlhbWwNCj4gPiAgY3JlYXRlIG1vZGUgMTAw
+NjQ0IGluY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2sveGxueC12ZXJzYWwtY2xrLmgNCj4gPg0KPiAN
+Cj4gVGhhdCBmaXJtd2FyZSBjaGFuZ2VzIGxvb2tzIGdvb2QuIFRoYXQncyB3aHkgZmVlbCBmcmVl
+IHRvIGFkZCBteQ0KPiBBY2tlZC1ieTogTWljaGFsIFNpbWVrIDxtaWNoYWwuc2ltZWtAeGlsaW54
+LmNvbT4NCj4gdG8gdGhhdCBwYXRjaGVzLg0KPiBJZiB5b3Ugd2FudCBtZSB0byB0YWtlIGl0IHZp
+YSBteSB0cmVlIHBsZWFzZSBsZXQgbWUga25vdy4NCj4gDQo+IFRoYW5rcywNCj4gTWljaGFsDQo=
