@@ -2,116 +2,210 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E83CCC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF05C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB7A42072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:34:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDA1D206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:37:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B7zGVFYy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dN4qqa3u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbgAPPed (ORCPT
+        id S1726908AbgAPPhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 10:34:33 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47002 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726151AbgAPPed (ORCPT
+        Thu, 16 Jan 2020 10:37:43 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43869 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726744AbgAPPhm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 10:34:33 -0500
+        Thu, 16 Jan 2020 10:37:42 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579188871;
+        s=mimecast20190719; t=1579189061;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=kK6Km6s43/DeUxpqxgZHiJ00km9z23ARb6cNGp/MiO8=;
-        b=B7zGVFYyekbp5ZfYtaG9QBMZakdMzfjk3UH5jaIqhgHf3qlahSmcnZnke5+y5Tuxdz7/xy
-        zY4AXSZuobkcUTZhz6qcX+1QT/dap6GqD5HUqONnymDKwZEvFea6VzW6dRqfuK83uDTBZD
-        z+srj6mYGIuHLcgQUEFaBAAb3zX5G1Y=
+        bh=rxATJWJ4rcj/wFapXV73v8XDh+PJUvOaeSFeG4RlODo=;
+        b=dN4qqa3u9nEQ01SHGpEwgDoTqMONFWWOlFt7TXpAA99e28tFbagsw3vac/ojAqiN3QJr8i
+        nPSTDx2W75IAhOBdNkJ+0EX5Hw6NFH0ZH70YK6exOndyIo7/1mxi3Tnv5aOy1pWyRUPWdv
+        +94/vdjWsIQiO4c/dqnqi1NtaEjhzKc=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-440-SKgw51c0PAWxiyIY-SCsiA-1; Thu, 16 Jan 2020 10:34:28 -0500
-X-MC-Unique: SKgw51c0PAWxiyIY-SCsiA-1
+ us-mta-105-46WynO7RPH-Cvo2cy4apiw-1; Thu, 16 Jan 2020 10:37:37 -0500
+X-MC-Unique: 46WynO7RPH-Cvo2cy4apiw-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 39D0A1005516;
-        Thu, 16 Jan 2020 15:34:22 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 22EA65C28F;
-        Thu, 16 Jan 2020 15:34:21 +0000 (UTC)
-Subject: Re: [PATCH v2] watchdog: Fix possible soft lockup warning at bootup
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Robert Richter <rrichter@marvell.com>,
-        Peter Zijlstra <peterz@infradead.org>
-References: <20200103151032.19590-1-longman@redhat.com>
- <87sgkgw3xq.fsf@nanos.tec.linutronix.de>
- <87blr3wrqw.fsf@nanos.tec.linutronix.de>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <bf71e29f-ae5a-aad0-758d-53293e2105b4@redhat.com>
-Date:   Thu, 16 Jan 2020 10:34:20 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7A0C386A063;
+        Thu, 16 Jan 2020 15:37:36 +0000 (UTC)
+Received: from w520.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 44B9166D22;
+        Thu, 16 Jan 2020 15:37:30 +0000 (UTC)
+Date:   Thu, 16 Jan 2020 08:37:29 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Yan Zhao <yan.y.zhao@intel.com>
+Cc:     "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "peterx@redhat.com" <peterx@redhat.com>
+Subject: Re: [PATCH v2 2/2] drm/i915/gvt: subsitute kvm_read/write_guest
+ with vfio_dma_rw
+Message-ID: <20200116083729.40983f38@w520.home>
+In-Reply-To: <20200116054941.GB1759@joy-OptiPlex-7040>
+References: <20200115034132.2753-1-yan.y.zhao@intel.com>
+        <20200115035455.12417-1-yan.y.zhao@intel.com>
+        <20200115130651.29d7e9e0@w520.home>
+        <20200116054941.GB1759@joy-OptiPlex-7040>
 MIME-Version: 1.0
-In-Reply-To: <87blr3wrqw.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/16/20 6:44 AM, Thomas Gleixner wrote:
-> Thomas Gleixner <tglx@linutronix.de> writes:
->
-> Added ARM64 and ThunderX folks 
->
->> Waiman Long <longman@redhat.com> writes:
->>> By adding some instrumentation code, it was found that for cpu 14,
->>> watchdog_enable() was called early with a timestamp of 1. That activates
->>> the watchdog time checking logic. It was also found that the monotonic
->>> time measured during the smp_init() phase runs much slower than the
->>> real elapsed time as shown by the below debug printf output:
->>>
->>>   [    1.138522] run_queues, watchdog_timer_fn: now =  170000000
->>>   [   25.519391] run_queues, watchdog_timer_fn: now = 4170000000
->>>
->>> In this particular case, it took about 24.4s of elapsed time for the
->>> clock to advance 4s which is the soft expiration time that is required
->>> to trigger the calling of watchdog_timer_fn(). That clock slowdown
->>> stopped once the smp_init() call was done and the clock time ran at
->>> the same rate as the elapsed time afterward.
-> And looking at this with a more awake brain, the root cause is pretty
-> obvious.
->
-> sched_clock() advances by 24 seconds, but clock MONOTONIC on which the
-> watchdog timer is based does not. As the timestamps you printed have 7
-> trailing zeros, it's pretty clear that timekeeping is still jiffies
-> based at this point and HZ is set to 100.
->
-> So while bringing up the non-boot CPUs the boot CPU loses ~2000 timer
-> interrupts. That needs to be fixed and not papered over.
->
-You are right that the root-causing effort wasn't complete and I took
-the easy way out. As I have limited knowledge on how the timer code
-work, I was not sure how to start further investigation at that time.
-Your insight gives me a hint on where to start now. So I will dig
-further in to see what causes this.
+On Thu, 16 Jan 2020 00:49:41 -0500
+Yan Zhao <yan.y.zhao@intel.com> wrote:
 
-Thanks,
-Longman
+> On Thu, Jan 16, 2020 at 04:06:51AM +0800, Alex Williamson wrote:
+> > On Tue, 14 Jan 2020 22:54:55 -0500
+> > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> >   
+> > > As a device model, it is better to read/write guest memory using vfio
+> > > interface, so that vfio is able to maintain dirty info of device IOVAs.
+> > > 
+> > > Compared to kvm interfaces kvm_read/write_guest(), vfio_dma_rw() has ~600
+> > > cycles more overhead on average.
+> > > 
+> > > -------------------------------------
+> > > |    interface     | avg cpu cycles |
+> > > |-----------------------------------|
+> > > | kvm_write_guest  |     1554       |
+> > > | ----------------------------------|
+> > > | kvm_read_guest   |     707        |
+> > > |-----------------------------------|
+> > > | vfio_dma_rw(w)   |     2274       |
+> > > |-----------------------------------|
+> > > | vfio_dma_rw(r)   |     1378       |
+> > > -------------------------------------  
+> > 
+> > In v1 you had:
+> > 
+> > -------------------------------------
+> > |    interface     | avg cpu cycles |
+> > |-----------------------------------|
+> > | kvm_write_guest  |     1546       |
+> > | ----------------------------------|
+> > | kvm_read_guest   |     686        |
+> > |-----------------------------------|
+> > | vfio_iova_rw(w)  |     2233       |
+> > |-----------------------------------|
+> > | vfio_iova_rw(r)  |     1262       |
+> > -------------------------------------
+> > 
+> > So the kvm numbers remained within +0.5-3% while the vfio numbers are
+> > now +1.8-9.2%.  I would have expected the algorithm change to at least
+> > not be worse for small accesses and be better for accesses crossing
+> > page boundaries.  Do you know what happened?
+> >  
+> I only tested the 4 interfaces in GVT's environment, where most of the
+> guest memory accesses are less than one page.
+> And the different fluctuations should be caused by the locks.
+> vfio_dma_rw contends locks with other vfio accesses which are assumed to
+> be abundant in the case of GVT.
+
+Hmm, so maybe it's time to convert vfio_iommu.lock from a mutex to a
+rwsem?  Thanks,
+
+Alex
+
+> > > Comparison of benchmarks scores are as blow:
+> > > ------------------------------------------------------
+> > > |  avg score  | kvm_read/write_guest  | vfio_dma_rw  |
+> > > |----------------------------------------------------|
+> > > |   Glmark2   |         1284          |    1296      |
+> > > |----------------------------------------------------|
+> > > |  Lightsmark |         61.24         |    61.27     |
+> > > |----------------------------------------------------|
+> > > |  OpenArena  |         140.9         |    137.4     |
+> > > |----------------------------------------------------|
+> > > |   Heaven    |          671          |     670      |
+> > > ------------------------------------------------------
+> > > No obvious performance downgrade found.
+> > > 
+> > > Cc: Kevin Tian <kevin.tian@intel.com>
+> > > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> > > ---
+> > >  drivers/gpu/drm/i915/gvt/kvmgt.c | 26 +++++++-------------------
+> > >  1 file changed, 7 insertions(+), 19 deletions(-)
+> > > 
+> > > diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c b/drivers/gpu/drm/i915/gvt/kvmgt.c
+> > > index bd79a9718cc7..17edc9a7ff05 100644
+> > > --- a/drivers/gpu/drm/i915/gvt/kvmgt.c
+> > > +++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
+> > > @@ -1966,31 +1966,19 @@ static int kvmgt_rw_gpa(unsigned long handle, unsigned long gpa,
+> > >  			void *buf, unsigned long len, bool write)
+> > >  {
+> > >  	struct kvmgt_guest_info *info;
+> > > -	struct kvm *kvm;
+> > > -	int idx, ret;
+> > > -	bool kthread = current->mm == NULL;
+> > > +	int ret;
+> > > +	struct intel_vgpu *vgpu;
+> > > +	struct device *dev;
+> > >  
+> > >  	if (!handle_valid(handle))
+> > >  		return -ESRCH;
+> > >  
+> > >  	info = (struct kvmgt_guest_info *)handle;
+> > > -	kvm = info->kvm;
+> > > -
+> > > -	if (kthread) {
+> > > -		if (!mmget_not_zero(kvm->mm))
+> > > -			return -EFAULT;
+> > > -		use_mm(kvm->mm);
+> > > -	}
+> > > -
+> > > -	idx = srcu_read_lock(&kvm->srcu);
+> > > -	ret = write ? kvm_write_guest(kvm, gpa, buf, len) :
+> > > -		      kvm_read_guest(kvm, gpa, buf, len);
+> > > -	srcu_read_unlock(&kvm->srcu, idx);
+> > > +	vgpu = info->vgpu;
+> > > +	dev = mdev_dev(vgpu->vdev.mdev);
+> > >  
+> > > -	if (kthread) {
+> > > -		unuse_mm(kvm->mm);
+> > > -		mmput(kvm->mm);
+> > > -	}
+> > > +	ret = write ? vfio_dma_rw(dev, gpa, buf, len, true) :
+> > > +			vfio_dma_rw(dev, gpa, buf, len, false);  
+> > 
+> > As Paolo suggested previously, this can be simplified:
+> > 
+> > ret = vfio_dma_rw(dev, gpa, buf, len, write);
+> >  
+> > >  
+> > >  	return ret;  
+> > 
+> > Or even more simple, remove the ret variable:
+> > 
+> > return vfio_dma_rw(dev, gpa, buf, len, write);
+> >   
+> oh, it seems that I missed Paolo's mail. will change it. thank you!
+> 
+> Thanks
+> Yan
+> >   
+> > >  }  
+> >   
+> 
 
