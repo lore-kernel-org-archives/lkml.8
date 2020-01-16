@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 578F9C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4F0C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E38B21582
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:02:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 633BF207FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:02:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194154;
-	bh=Bqung/CFGAAzncMdZ5Rf7tz3HPZrtQ1OIkm3NCvqIwQ=;
+	s=default; t=1579194157;
+	bh=2djee2Mzdhm5LjrME6B+HCK/qdkDAaWAQQU7n/IZMzE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TymZRtPx/oxUsy4N01C+hp7dizx25ensEeZ09FMVb81YZrlse9Uu2XbxCJx3/ZtEr
-	 4VxhmY6yoyYrLlNR9Dm5bT7PIw2SEeXYKHLaggXahMihqsYE7/2/tmfpxjPccOeqWX
-	 Q8HDmJ6uq6cNi+Kqq2gct4YJ8vKDkdqCqPu3iY/M=
+	b=yTUos0ifcQJaAFKHnjohm04mg1Szb0EtdfQQg7+j02K7DLYET1112oKP7yA7ncxgA
+	 ytt5vught04svfCFfI+xbKD6/8EG37bD3jMCXHcoUmR83k7RoIQN5mltuQ4Ok6GcTm
+	 CS5NedIQX2ormHXgYH3UjTE8xbrKZhFtickOYWFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388411AbgAPRCd (ORCPT
+        id S2388418AbgAPRCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:02:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54940 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:02:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387466AbgAPRCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:02:21 -0500
+        id S2388353AbgAPRC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:02:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F41702077B;
-        Thu, 16 Jan 2020 17:02:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 045592077B;
+        Thu, 16 Jan 2020 17:02:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194140;
-        bh=Bqung/CFGAAzncMdZ5Rf7tz3HPZrtQ1OIkm3NCvqIwQ=;
+        s=default; t=1579194145;
+        bh=2djee2Mzdhm5LjrME6B+HCK/qdkDAaWAQQU7n/IZMzE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JJ4vwbqDCC79kmnI+ss70m73rKckdjk69hvEmh8v7fl0Kr+ygqnuKUWYtOml2g9aG
-         nOkhja0UiV5OOaDKHnABDWRXZTj/3NysBFhiQCShh3/JlSuup53fBzRuW8eI2sNSUx
-         1xO+WwAHHzRwbxtDWwJCxicS9FSOuDfPmZiv1I00=
+        b=ytHJ5U/FLurZzjsO/TBTD0rQ/0WDy8q5b+HpZS0GqeYgecUqp6Be2t1PaoFdP+neu
+         SMcJnm8a7sVUdu8IMT3vG11zidDPQP4NorZrXQ89zgpVr2HSRTzOLy79OeLTaU/a2E
+         2C+tr67UtiD4O6rFF3EPa/aIQZR6f/X9RYLRJUqI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eli Britstein <elibr@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 227/671] net: sched: act_csum: Fix csum calc for tagged packets
-Date:   Thu, 16 Jan 2020 11:52:16 -0500
-Message-Id: <20200116165940.10720-110-sashal@kernel.org>
+Cc:     Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 230/671] NFS: Add missing encode / decode sequence_maxsz to v4.2 operations
+Date:   Thu, 16 Jan 2020 11:52:19 -0500
+Message-Id: <20200116165940.10720-113-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -59,89 +59,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eli Britstein <elibr@mellanox.com>
+From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-[ Upstream commit 2ecba2d1e45b24620a7c3df9531895cf68d5dec6 ]
+[ Upstream commit 1a3466aed3a17eed41cd9411f89eb637f58349b0 ]
 
-The csum calculation is different for IPv4/6. For VLAN packets,
-tc_skb_protocol returns the VLAN protocol rather than the packet's one
-(e.g. IPv4/6), so csum is not calculated. Furthermore, VLAN may not be
-stripped so csum is not calculated in this case too. Calculate the
-csum for those cases.
+These really should have been there from the beginning, but we never
+noticed because there was enough slack in the RPC request for the extra
+bytes. Chuck's recent patch to use au_cslack and au_rslack to compute
+buffer size shrunk the buffer enough that this was now a problem for
+SEEK operations on my test client.
 
-Fixes: d8b9605d2697 ("net: sched: fix skb->protocol use in case of accelerated vlan path")
-Signed-off-by: Eli Britstein <elibr@mellanox.com>
-Signed-off-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: f4ac1674f5da4 ("nfs: Add ALLOCATE support")
+Fixes: 2e72448b07dc3 ("NFS: Add COPY nfs operation")
+Fixes: cb95deea0b4aa ("NFS OFFLOAD_CANCEL xdr")
+Fixes: 624bd5b7b683c ("nfs: Add DEALLOCATE support")
+Fixes: 1c6dcbe5ceff8 ("NFS: Implement SEEK")
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/act_csum.c | 31 +++++++++++++++++++++++++++++--
- 1 file changed, 29 insertions(+), 2 deletions(-)
+ fs/nfs/nfs42xdr.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/net/sched/act_csum.c b/net/sched/act_csum.c
-index 1e269441065a..9ecbf8edcf39 100644
---- a/net/sched/act_csum.c
-+++ b/net/sched/act_csum.c
-@@ -560,8 +560,11 @@ static int tcf_csum_act(struct sk_buff *skb, const struct tc_action *a,
- 			struct tcf_result *res)
- {
- 	struct tcf_csum *p = to_tcf_csum(a);
-+	bool orig_vlan_tag_present = false;
-+	unsigned int vlan_hdr_count = 0;
- 	struct tcf_csum_params *params;
- 	u32 update_flags;
-+	__be16 protocol;
- 	int action;
+diff --git a/fs/nfs/nfs42xdr.c b/fs/nfs/nfs42xdr.c
+index 69f72ed2bf87..ec9803088f6b 100644
+--- a/fs/nfs/nfs42xdr.c
++++ b/fs/nfs/nfs42xdr.c
+@@ -59,43 +59,53 @@
+ #define decode_clone_maxsz		(op_decode_hdr_maxsz)
  
- 	params = rcu_dereference_bh(p->params);
-@@ -574,7 +577,9 @@ static int tcf_csum_act(struct sk_buff *skb, const struct tc_action *a,
- 		goto drop;
- 
- 	update_flags = params->update_flags;
--	switch (tc_skb_protocol(skb)) {
-+	protocol = tc_skb_protocol(skb);
-+again:
-+	switch (protocol) {
- 	case cpu_to_be16(ETH_P_IP):
- 		if (!tcf_csum_ipv4(skb, update_flags))
- 			goto drop;
-@@ -583,13 +588,35 @@ static int tcf_csum_act(struct sk_buff *skb, const struct tc_action *a,
- 		if (!tcf_csum_ipv6(skb, update_flags))
- 			goto drop;
- 		break;
-+	case cpu_to_be16(ETH_P_8021AD): /* fall through */
-+	case cpu_to_be16(ETH_P_8021Q):
-+		if (skb_vlan_tag_present(skb) && !orig_vlan_tag_present) {
-+			protocol = skb->protocol;
-+			orig_vlan_tag_present = true;
-+		} else {
-+			struct vlan_hdr *vlan = (struct vlan_hdr *)skb->data;
-+
-+			protocol = vlan->h_vlan_encapsulated_proto;
-+			skb_pull(skb, VLAN_HLEN);
-+			skb_reset_network_header(skb);
-+			vlan_hdr_count++;
-+		}
-+		goto again;
-+	}
-+
-+out:
-+	/* Restore the skb for the pulled VLAN tags */
-+	while (vlan_hdr_count--) {
-+		skb_push(skb, VLAN_HLEN);
-+		skb_reset_network_header(skb);
- 	}
- 
- 	return action;
- 
- drop:
- 	qstats_drop_inc(this_cpu_ptr(p->common.cpu_qstats));
--	return TC_ACT_SHOT;
-+	action = TC_ACT_SHOT;
-+	goto out;
- }
- 
- static int tcf_csum_dump(struct sk_buff *skb, struct tc_action *a, int bind,
+ #define NFS4_enc_allocate_sz		(compound_encode_hdr_maxsz + \
++					 encode_sequence_maxsz + \
+ 					 encode_putfh_maxsz + \
+ 					 encode_allocate_maxsz + \
+ 					 encode_getattr_maxsz)
+ #define NFS4_dec_allocate_sz		(compound_decode_hdr_maxsz + \
++					 decode_sequence_maxsz + \
+ 					 decode_putfh_maxsz + \
+ 					 decode_allocate_maxsz + \
+ 					 decode_getattr_maxsz)
+ #define NFS4_enc_copy_sz		(compound_encode_hdr_maxsz + \
++					 encode_sequence_maxsz + \
+ 					 encode_putfh_maxsz + \
+ 					 encode_savefh_maxsz + \
+ 					 encode_putfh_maxsz + \
+ 					 encode_copy_maxsz + \
+ 					 encode_commit_maxsz)
+ #define NFS4_dec_copy_sz		(compound_decode_hdr_maxsz + \
++					 decode_sequence_maxsz + \
+ 					 decode_putfh_maxsz + \
+ 					 decode_savefh_maxsz + \
+ 					 decode_putfh_maxsz + \
+ 					 decode_copy_maxsz + \
+ 					 decode_commit_maxsz)
+ #define NFS4_enc_offload_cancel_sz	(compound_encode_hdr_maxsz + \
++					 encode_sequence_maxsz + \
+ 					 encode_putfh_maxsz + \
+ 					 encode_offload_cancel_maxsz)
+ #define NFS4_dec_offload_cancel_sz	(compound_decode_hdr_maxsz + \
++					 decode_sequence_maxsz + \
+ 					 decode_putfh_maxsz + \
+ 					 decode_offload_cancel_maxsz)
+ #define NFS4_enc_deallocate_sz		(compound_encode_hdr_maxsz + \
++					 encode_sequence_maxsz + \
+ 					 encode_putfh_maxsz + \
+ 					 encode_deallocate_maxsz + \
+ 					 encode_getattr_maxsz)
+ #define NFS4_dec_deallocate_sz		(compound_decode_hdr_maxsz + \
++					 decode_sequence_maxsz + \
+ 					 decode_putfh_maxsz + \
+ 					 decode_deallocate_maxsz + \
+ 					 decode_getattr_maxsz)
+ #define NFS4_enc_seek_sz		(compound_encode_hdr_maxsz + \
++					 encode_sequence_maxsz + \
+ 					 encode_putfh_maxsz + \
+ 					 encode_seek_maxsz)
+ #define NFS4_dec_seek_sz		(compound_decode_hdr_maxsz + \
++					 decode_sequence_maxsz + \
+ 					 decode_putfh_maxsz + \
+ 					 decode_seek_maxsz)
+ #define NFS4_enc_layoutstats_sz		(compound_encode_hdr_maxsz + \
 -- 
 2.20.1
 
