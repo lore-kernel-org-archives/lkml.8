@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47527C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3DCC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BEE52072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB98D20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:21:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579216889;
-	bh=CODGFaDMfu5utrqevmW4YohwWqC+gBcwGWeVRKV/k6I=;
+	s=default; t=1579216892;
+	bh=e7f1OtDSuCXOA9woZZNqytKyrZXUnNRWbVnq/VpohTE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oinJVAdZwx5AELCINNP3ZxWUctjy7OfOElw98aK2Qq8WUti33oIqL9YVkpF5OjvIe
-	 WO5YowLGF7i6SFLOejoPtP4TIleeOaMQpkw6PuGHFGoUPhXdFdNAY6dBo60qoJdb6p
-	 47nRSU5mvyvQZqTezKdSUSnVhvY7zCifZ8xPIJKo=
+	b=xvnGLLLW7JaaS6QM88xm0zMyDp/ERInqqm/XOjZscROUEIQ4ovidRgBGGOvCRqTsq
+	 KoGRPPiVy1jbVndsycnZaM9Pl/wG/eWZFaQCYDj4OcIg5JV2D5Jj0ZOpmzsE5ndps6
+	 JBKfJyhlUogK3caR1ZqG4pSEH+Tl6SsCsbFKCGZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390828AbgAPXV2 (ORCPT
+        id S2390839AbgAPXVb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:21:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48566 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:21:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390810AbgAPXVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:21:24 -0500
+        id S2390824AbgAPXV1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:21:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CEAD20684;
-        Thu, 16 Jan 2020 23:21:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4ADB920684;
+        Thu, 16 Jan 2020 23:21:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216884;
-        bh=CODGFaDMfu5utrqevmW4YohwWqC+gBcwGWeVRKV/k6I=;
+        s=default; t=1579216886;
+        bh=e7f1OtDSuCXOA9woZZNqytKyrZXUnNRWbVnq/VpohTE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hvqVsAzpTS9QylhXNWO34Pft9l5hoEq0/JWZnKqKeeAgVhZxBNrbx/9dGMJQdVb2L
-         rv1bNT5iWQXLo6Mwwpr0ClRW62MXY6AXMSmndkyz9PEIWTXVQGJxe5hpaQ69svryOX
-         H6fzMCqrQ9mN3lHmAZoEPZXrGWXU9/kP02ef7VYw=
+        b=IoQCnxICGMeETjWpK/SBxSem31CYkrLDcQRWw5CoTHV+QThYFJAIeQoXaUBmEFeKf
+         3g+1l8tZhMPnNywzoqBSoFzM0u86BQvpLa03iTcWVCVfo93Od/o6aZ6rosVYXkRWET
+         booV7ES2ClK7Sd57lC8PY/02W9FPXWMOplvMJmMA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Jiada Wang <jiada_wang@mentor.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Nilkanth Ahirrao <anilkanth@jp.adit-jv.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 059/203] ASoC: core: Fix compile warning with CONFIG_DEBUG_FS=n
-Date:   Fri, 17 Jan 2020 00:16:16 +0100
-Message-Id: <20200116231749.178483016@linuxfoundation.org>
+Subject: [PATCH 5.4 060/203] ASoC: rsnd: fix DALIGN register for SSIU
+Date:   Fri, 17 Jan 2020 00:16:17 +0100
+Message-Id: <20200116231749.275523426@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -59,34 +64,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Nilkanth Ahirrao <anilkanth@jp.adit-jv.com>
 
-commit bd0b609e0c3362cb167c51d4bd4330d79fc00987 upstream.
+commit ef8e14794308a428b194f8b06ad9ae06b43466e4 upstream.
 
-Paper over a compile warning:
-  sound/soc/soc-pcm.c:1185:8: warning: unused variable ‘name’
+The current driver only sets 0x76543210 and 0x67452301 for DALIGN.
+This doesn’t work well for TDM split and ex-split mode for all SSIU.
+This patch programs the DALIGN registers based on the SSIU number.
 
-Fixes: 0632fa042541 ("ASoC: core: Fix pcm code debugfs error")
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Link: https://lore.kernel.org/r/20191107134833.1502-1-tiwai@suse.de
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Jiada Wang <jiada_wang@mentor.com>
+Cc: Andrew Gabbasov <andrew_gabbasov@mentor.com>
+Fixes: a914e44693d41b ("ASoC: rsnd: more clear rsnd_get_dalign() for DALIGN")
+Signed-off-by: Nilkanth Ahirrao <anilkanth@jp.adit-jv.com>
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Link: https://lore.kernel.org/r/20191121111023.10976-1-erosca@de.adit-jv.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/soc-pcm.c |    2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/sh/rcar/core.c |   20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
---- a/sound/soc/soc-pcm.c
-+++ b/sound/soc/soc-pcm.c
-@@ -1148,7 +1148,9 @@ static int dpcm_be_connect(struct snd_so
+--- a/sound/soc/sh/rcar/core.c
++++ b/sound/soc/sh/rcar/core.c
+@@ -376,6 +376,17 @@ u32 rsnd_get_adinr_bit(struct rsnd_mod *
+  */
+ u32 rsnd_get_dalign(struct rsnd_mod *mod, struct rsnd_dai_stream *io)
  {
- 	struct snd_soc_dpcm *dpcm;
- 	unsigned long flags;
-+#ifdef CONFIG_DEBUG_FS
- 	char *name;
-+#endif
++	static const u32 dalign_values[8][2] = {
++		{0x76543210, 0x67452301},
++		{0x00000032, 0x00000023},
++		{0x00007654, 0x00006745},
++		{0x00000076, 0x00000067},
++		{0xfedcba98, 0xefcdab89},
++		{0x000000ba, 0x000000ab},
++		{0x0000fedc, 0x0000efcd},
++		{0x000000fe, 0x000000ef},
++	};
++	int id = 0, inv;
+ 	struct rsnd_mod *ssiu = rsnd_io_to_mod_ssiu(io);
+ 	struct rsnd_mod *target;
+ 	struct snd_pcm_runtime *runtime = rsnd_io_to_runtime(io);
+@@ -411,13 +422,18 @@ u32 rsnd_get_dalign(struct rsnd_mod *mod
+ 		target = cmd ? cmd : ssiu;
+ 	}
  
- 	/* only add new dpcms */
- 	for_each_dpcm_be(fe, stream, dpcm) {
++	if (mod == ssiu)
++		id = rsnd_mod_id_sub(mod);
++
+ 	/* Non target mod or non 16bit needs normal DALIGN */
+ 	if ((snd_pcm_format_width(runtime->format) != 16) ||
+ 	    (mod != target))
+-		return 0x76543210;
++		inv = 0;
+ 	/* Target mod needs inverted DALIGN when 16bit */
+ 	else
+-		return 0x67452301;
++		inv = 1;
++
++	return dalign_values[id][inv];
+ }
+ 
+ u32 rsnd_get_busif_shift(struct rsnd_dai_stream *io, struct rsnd_mod *mod)
 
 
