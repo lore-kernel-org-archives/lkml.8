@@ -2,326 +2,233 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B42C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C6EC33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC8D3206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:43:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="NzBqNVQc"
+	by mail.kernel.org (Postfix) with ESMTP id DCA4D206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:44:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbgAPGnS (ORCPT
+        id S1728898AbgAPGo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 01:43:18 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.81]:25250 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726892AbgAPGnS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 01:43:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1579156994;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=EmJS1da7H20MBvjeIewu/x81ENVtvFY3QYzGzA/fbPw=;
-        b=NzBqNVQc9vQC3CtguF+W872bbLKg7X4Y0xBQNZgMyp5hu8Oe3TZwH5+HiywMLDzU72
-        k4hbkZ0gB+6qEn1qrvQtpP5pAC1hhqRdSKvPpoy7kKU3SxSgE2FlXdjil9XccXC+U8W1
-        dQDqOYraqYcmB/QV+GqkSz8MjzpXAw2qi6qHQHHg+NPEQH0OZbSbbeRpXiZBP2N0gy2j
-        cm7HqRXwAFH8qvm2seC6V5o6ihx2fxFmVHvF4QI9lSgGnmI3gdEXreX7fCEIpeTZR+04
-        Y5NoFQiWoH+Hok5MNPj2YnWS04yn22PYhs3nO0aVYMOjwhcdTJ8DB+6wIBsJMgGKifHP
-        Ibdw==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPZJPScHivh"
-X-RZG-CLASS-ID: mo00
-Received: from tauon.chronox.de
-        by smtp.strato.de (RZmta 46.1.4 DYNA|AUTH)
-        with ESMTPSA id u04585w0G6fna79
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Thu, 16 Jan 2020 07:41:49 +0100 (CET)
-From:   Stephan Mueller <smueller@chronox.de>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Julia Lawall <julia.lawall@inria.fr>
-Subject: Re: [PATCH v27 01/12] Linux Random Number Generator
-Date:   Thu, 16 Jan 2020 07:41:48 +0100
-Message-ID: <6012879.pHcDpAmSNa@tauon.chronox.de>
-In-Reply-To: <202001161241.meGVaLli%lkp@intel.com>
-References: <112781836.sNYxTrJJ31@positron.chronox.de> <202001161241.meGVaLli%lkp@intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Thu, 16 Jan 2020 01:44:26 -0500
+Received: from foss.arm.com ([217.140.110.172]:45496 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726513AbgAPGo0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 01:44:26 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 44F7E328;
+        Wed, 15 Jan 2020 22:44:25 -0800 (PST)
+Received: from p8cg001049571a15.arm.com (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CFED83F6C4;
+        Wed, 15 Jan 2020 22:47:49 -0800 (PST)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
+        catalin.marinas@arm.com, will@kernel.org
+Cc:     mark.rutland@arm.com, david@redhat.com, cai@lca.pw,
+        logang@deltatee.com, cpandya@codeaurora.org, arunks@codeaurora.org,
+        dan.j.williams@intel.com, mgorman@techsingularity.net,
+        osalvador@suse.de, ard.biesheuvel@arm.com, steve.capper@arm.com,
+        broonie@kernel.org, valentin.schneider@arm.com,
+        Robin.Murphy@arm.com, steven.price@arm.com, suzuki.poulose@arm.com,
+        ira.weiny@intel.com, Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: [PATCH V12 0/2] arm64/mm: Enable memory hot remove
+Date:   Thu, 16 Jan 2020 12:15:33 +0530
+Message-Id: <1579157135-10360-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Donnerstag, 16. Januar 2020, 07:09:51 CET schrieb kbuild test robot:
+This series enables memory hot remove functionality on arm64 platform. This
+is based on Linux 5.5-rc6 and particularly deals with a problem caused when
+boot memory is attempted to be removed.
 
-Hi kbuild,
+On arm64 platform, it is essential to ensure that the boot time discovered
+memory couldn't be hot-removed so that,
 
-> Hi "Stephan,
-> 
-> Thank you for the patch! Perhaps something to improve:
-> 
-> [auto build test WARNING on char-misc/char-misc-testing]
-> [also build test WARNING on cryptodev/master crypto/master v5.5-rc6
-> next-20200110] [if your patch is applied to the wrong git tree, please drop
-> us a note to help improve the system. BTW, we also suggest to use '--base'
-> option to specify the base tree in git format-patch, please see
-> https://stackoverflow.com/a/37406982]
+1. FW data structures used across kexec are idempotent
+   e.g. the EFI memory map.
 
-This patch requires the presence of patch 
-75551dbf112c992bc6c99a972990b3f272247e23 from Ted Tso's kernel tree as 
-documented in patch 0/12.
+2. linear map or vmemmap would not have to be dynamically split, and can
+   map boot memory at a large granularity
 
-I am not sure how to document it for the kbuild system.
-> 
-> url:   
-> https://github.com/0day-ci/linux/commits/Stephan-M-ller/dev-random-a-new-ap
-> proach-with-full-SP800-90B/20200110-084934 base:  
-> https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git
-> 68faa679b8be1a74e6663c21c3a9d25d32f1c079 reproduce:
->         # apt-get install sparse
->         # sparse version: v0.6.1-130-g1a803e7a-dirty
->         make ARCH=x86_64 allmodconfig
->         make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> 
-> sparse warnings: (new ones prefixed by >>)
-> 
-> >> drivers/char/lrng/lrng_interfaces.c:455:16: sparse: sparse: incorrect
-> >> type in return expression (different base types)
-> >> drivers/char/lrng/lrng_interfaces.c:455:16: sparse:    expected unsigned
-> >> int drivers/char/lrng/lrng_interfaces.c:455:16: sparse:    got
-> >> restricted __poll_t [assigned] [usertype] mask
-> >> drivers/char/lrng/lrng_interfaces.c:586:18: sparse: sparse: incorrect
-> >> type in initializer (different base types)
-> >> drivers/char/lrng/lrng_interfaces.c:586:18: sparse:    expected
-> >> restricted __poll_t ( *poll )( ... )
-> >> drivers/char/lrng/lrng_interfaces.c:586:18: sparse:    got unsigned int
-> >> ( * )( ... )
->    drivers/char/lrng/lrng_interfaces.c:605:49: sparse: sparse: undefined
-> identifier 'GRND_INSECURE' drivers/char/lrng/lrng_interfaces.c:613:15:
-> sparse: sparse: undefined identifier 'GRND_INSECURE'
-> drivers/char/lrng/lrng_interfaces.c:613:47: sparse: sparse: undefined
-> identifier 'GRND_INSECURE' drivers/char/lrng/lrng_interfaces.c:619:21:
-> sparse: sparse: undefined identifier 'GRND_INSECURE' --
->    drivers/char/lrng/lrng_drng.c:378:6: sparse: sparse: symbol 'lrng_reset'
-> was not declared. Should it be static?
-> >> drivers/char/lrng/lrng_internal.h:235:39: sparse: sparse: context
-> >> imbalance in 'lrng_drng_inject' - unexpected unlock
-> >> drivers/char/lrng/lrng_internal.h:235:39: sparse: sparse: context
-> >> imbalance in 'lrng_drng_seed' - unexpected unlock
-> >> drivers/char/lrng/lrng_internal.h:235:39: sparse: sparse: context
-> >> imbalance in 'lrng_drng_get' - unexpected unlock
-> >> drivers/char/lrng/lrng_internal.h:235:39: sparse: sparse: context
-> >> imbalance in 'lrng_drngs_init_cc20' - unexpected unlock
-> >> drivers/char/lrng/lrng_internal.h:235:39: sparse: sparse: context
-> >> imbalance in '_lrng_reset' - unexpected unlock
-> vim +455 drivers/char/lrng/lrng_interfaces.c
-> 
->    442
->    443	static unsigned int lrng_random_poll(struct file *file, poll_table
-> *wait) 444	{
->    445		__poll_t mask;
->    446
->    447		poll_wait(file, &lrng_init_wait, wait);
->    448		poll_wait(file, &lrng_write_wait, wait);
->    449		mask = 0;
->    450		if (lrng_state_operational())
->    451			mask |= EPOLLIN | EPOLLRDNORM;
->    452		if (lrng_need_entropy() ||
->    453		    lrng_state_exseed_allow(lrng_noise_source_user))
->    454			mask |= EPOLLOUT | EPOLLWRNORM;
-> 
->  > 455		return mask;
-> 
->    456	}
->    457
->    458	static ssize_t lrng_drng_write_common(const char __user *buffer,
-> size_t count, 459					      u32 
-entropy_bits)
->    460	{
->    461		ssize_t ret = 0;
->    462		u8 buf[64] __aligned(LRNG_KCAPI_ALIGN);
->    463		const char __user *p = buffer;
->    464		u32 orig_entropy_bits = entropy_bits;
->    465
->    466		if (!lrng_get_available())
->    467			return -EAGAIN;
->    468
->    469		count = min_t(size_t, count, INT_MAX);
->    470		while (count > 0) {
->    471			size_t bytes = min_t(size_t, count, sizeof(buf));
->    472			u32 ent = min_t(u32, bytes<<3, entropy_bits);
->    473
->    474			if (copy_from_user(&buf, p, bytes))
->    475				return -EFAULT;
->    476			/* Inject data into entropy pool */
->    477			lrng_pool_lfsr(buf, bytes);
->    478			lrng_pool_add_entropy(ent);
->    479
->    480			count -= bytes;
->    481			p += bytes;
->    482			ret += bytes;
->    483			entropy_bits -= ent;
->    484
->    485			cond_resched();
->    486		}
->    487
->    488		/* Force reseed of DRNG during next data request. */
->    489		if (!orig_entropy_bits)
->    490			lrng_drng_force_reseed();
->    491
->    492		return ret;
->    493	}
->    494
->    495	static ssize_t lrng_drng_read(struct file *file, char __user *buf,
->    496				      size_t nbytes, loff_t *ppos)
->    497	{
->    498		if (!lrng_state_min_seeded())
->    499			pr_notice_ratelimited("%s - use of insufficiently 
-seeded DRNG "
->    500					      "(%zu bytes read)\n", current-
->comm,
->    501					      nbytes);
->    502		else if (!lrng_state_operational())
->    503			pr_debug_ratelimited("%s - use of not fully seeded 
-DRNG (%zu "
->    504					     "bytes read)\n", current->comm, 
-nbytes);
->    505
->    506		return lrng_read_common(buf, nbytes);
->    507	}
->    508
->    509	static ssize_t lrng_drng_write(struct file *file, const char __user
-> *buffer, 510				       size_t count, loff_t *ppos)
->    511	{
->    512		return lrng_drng_write_common(buffer, count, 0);
->    513	}
->    514
->    515	static long lrng_ioctl(struct file *f, unsigned int cmd, unsigned
-> long arg) 516	{
->    517		int size, ent_count_bits;
->    518		int __user *p = (int __user *)arg;
->    519
->    520		switch (cmd) {
->    521		case RNDGETENTCNT:
->    522			ent_count_bits = lrng_avail_entropy();
->    523			if (put_user(ent_count_bits, p))
->    524				return -EFAULT;
->    525			return 0;
->    526		case RNDADDTOENTCNT:
->    527			if (!capable(CAP_SYS_ADMIN))
->    528				return -EPERM;
->    529			if (get_user(ent_count_bits, p))
->    530				return -EFAULT;
->    531			ent_count_bits = (int)lrng_avail_entropy() + 
-ent_count_bits;
->    532			if (ent_count_bits < 0)
->    533				ent_count_bits = 0;
->    534			if (ent_count_bits > LRNG_POOL_SIZE_BITS)
->    535				ent_count_bits = LRNG_POOL_SIZE_BITS;
->    536			lrng_pool_set_entropy(ent_count_bits);
->    537			return 0;
->    538		case RNDADDENTROPY:
->    539			if (!capable(CAP_SYS_ADMIN))
->    540				return -EPERM;
->    541			if (get_user(ent_count_bits, p++))
->    542				return -EFAULT;
->    543			if (ent_count_bits < 0)
->    544				return -EINVAL;
->    545			if (get_user(size, p++))
->    546				return -EFAULT;
->    547			if (size < 0)
->    548				return -EINVAL;
->    549			lrng_state_exseed_set(lrng_noise_source_user, false);
->    550			/* there cannot be more entropy than data */
->    551			ent_count_bits = min(ent_count_bits, size<<3);
->    552			return lrng_drng_write_common((const char __user *)p, 
-size,
->    553						      ent_count_bits);
->    554		case RNDZAPENTCNT:
->    555		case RNDCLEARPOOL:
->    556			/* Clear the entropy pool counter. */
->    557			if (!capable(CAP_SYS_ADMIN))
->    558				return -EPERM;
->    559			lrng_pool_set_entropy(0);
->    560			return 0;
->    561		case RNDRESEEDCRNG:
->    562			/*
->    563			 * We leave the capability check here since it is 
-present
->    564			 * in the upstream's RNG implementation. Yet, user 
-space
->    565			 * can trigger a reseed as easy as writing into /dev/
-random
->    566			 * or /dev/urandom where no privilege is needed.
->    567			 */
->    568			if (!capable(CAP_SYS_ADMIN))
->    569				return -EPERM;
->    570			/* Force a reseed of all DRNGs */
->    571			lrng_drng_force_reseed();
->    572			return 0;
->    573		default:
->    574			return -EINVAL;
->    575		}
->    576	}
->    577
->    578	static int lrng_fasync(int fd, struct file *filp, int on)
->    579	{
->    580		return fasync_helper(fd, filp, on, &fasync);
->    581	}
->    582
->    583	const struct file_operations random_fops = {
->    584		.read  = lrng_drng_read_block,
->    585		.write = lrng_drng_write,
-> 
->  > 586		.poll  = lrng_random_poll,
-> 
->    587		.unlocked_ioctl = lrng_ioctl,
->    588		.compat_ioctl = compat_ptr_ioctl,
->    589		.fasync = lrng_fasync,
->    590		.llseek = noop_llseek,
->    591	};
->    592
-> 
-> ---
-> 0-DAY kernel test infrastructure                 Open Source Technology
-> Center https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel
-> Corporation
+3. Avoid penalizing paths that have to walk page tables, where we can be
+   certain that the memory is not hot-removable
 
+This problem has been extensively discussed previously during V10 version
+which can be found here (https://lkml.org/lkml/2019/10/11/233). Never the
+less this series now adds memory hotplug notifier to prevent boot memory
+offlining and thus hot remove. It also fixes a potential race condition
+which might happen while trying to dump kernel page table entries along
+with a concurrent memory hot remove operation.
 
+Concurrent vmalloc() and hot-remove conflict:
 
-Ciao
-Stephan
+As pointed out earlier on the V5 thread [2] there can be potential conflict
+between concurrent vmalloc() and memory hot-remove operation. The problem here
+is caused by inadequate locking in vmalloc() which protects installation of a
+page table page but not the page table walk or the leaf entry modification.
 
+Now free_empty_tables() and it's children functions take into account a maximum
+possible range on which it operates as a floor-ceiling boundary. This makes sure
+that no page table page is freed unless its fully within the maximum possible
+range as decided by the caller.
+
+Testing:
+
+Memory hot remove has been tested on arm64 for 4K, 16K, 64K page config
+options with all possible CONFIG_ARM64_VA_BITS and CONFIG_PGTABLE_LEVELS
+combinations.
+
+Changes in V12:
+
+- Dropped all changes introduced earlier in V11
+- Added a memory hotplug notifier to prevent boot memory offlining per David
+
+Changes in V11: (https://lkml.org/lkml/2020/1/9/1159)
+
+- Bifurcated check_hotplug_memory_range() and carved out check_hotremove_memory_range()
+- Introduced arch_memory_removable() call back while validating hot remove range
+- Introduced memblock flag MEMBLOCK_BOOT in order to track boot memory at runtime
+- Marked all boot memory ranges on arm64 with MEMBLOCK_BOOT flag while processing FDT
+- Overridden arch_memory_removable() on arm64 to reject boot memory removal requests
+- Added an WARN_ON() in arch_remove_memory() when it receives boot memory removal request
+- Added arch_memory_removable() related updates in the commit message for core hot remove
+
+Changes in V10: (https://lkml.org/lkml/2019/10/11/233)
+
+- Perform just single TLBI invalidation for PMD or PUD block mappings per Catalin
+- Added comment in free_empty_pte_table() while validating PTE level clears per Catalin
+- Added comments in free_empty_pxx_table() while checking for non-clear entries per Catalin
+
+Changes in V9: (https://lkml.org/lkml/2019/10/9/131)
+
+- Dropped ACK tags from Steve and David as this series has changed since
+- Dropped WARN(!page) in free_hotplug_page_range() per Matthew Wilcox
+- Replaced pxx_page() with virt_to_page() in free_pxx_table() per Catalin
+- Dropped page and call virt_to_page() in free_hotplug_pgtable_page()
+- Replaced sparse_vmap with free_mapped per Catalin
+- Dropped ternary operators in all unmap_hotplug_pxx_range() per Catalin
+- Collapsed all free_pxx_table() into free_empty_pxx_table() per Catalin
+
+Changes in V8: (https://lkml.org/lkml/2019/9/23/22)
+
+- Dropped the first patch (memblock_[free|remove] reorder) from the series which
+  is no longer needed for arm64 hot-remove enablement and was posted separately
+  as (https://patchwork.kernel.org/patch/11146361/)
+- Dropped vmalloc-vmemmap detection and subsequent skipping of free_empty_tables()
+- Changed free_empty_[pxx]_tables() functions which now accepts a possible maximum
+  floor-ceiling address range on which it operates. Also changed free_pxx_table()
+  functions to check against required alignment as well as maximum floor-ceiling
+  range as another prerequisite before freeing the page table page.
+- Dropped remove_pagetable(), instead call it's constituent functions directly
+
+Changes in V7: (https://lkml.org/lkml/2019/9/3/326)
+
+- vmalloc_vmemmap_overlap gets evaluated early during boot for a given config
+- free_empty_tables() gets conditionally called based on vmalloc_vmemmap_overlap
+
+Changes in V6: (https://lkml.org/lkml/2019/7/15/36)
+
+- Implemented most of the suggestions from Mark Rutland
+- Added <linux/memory_hotplug.h> in ptdump
+- remove_pagetable() now has two distinct passes over the kernel page table
+- First pass unmap_hotplug_range() removes leaf level entries at all level
+- Second pass free_empty_tables() removes empty page table pages
+- Kernel page table lock has been dropped completely
+- vmemmap_free() does not call freee_empty_tables() to avoid conflict with vmalloc()
+- All address range scanning are converted to do {} while() loop
+- Added 'unsigned long end' in __remove_pgd_mapping()
+- Callers need not provide starting pointer argument to free_[pte|pmd|pud]_table() 
+- Drop the starting pointer argument from free_[pte|pmd|pud]_table() functions
+- Fetching pxxp[i] in free_[pte|pmd|pud]_table() is wrapped around in READ_ONCE()
+- free_[pte|pmd|pud]_table() now computes starting pointer inside the function
+- Fixed TLB handling while freeing huge page section mappings at PMD or PUD level
+- Added WARN_ON(!page) in free_hotplug_page_range()
+- Added WARN_ON(![pm|pud]_table(pud|pmd)) when there is no section mapping
+
+- [PATCH 1/3] mm/hotplug: Reorder memblock_[free|remove]() calls in try_remove_memory()
+- Request earlier for separate merger (https://patchwork.kernel.org/patch/10986599/)
+- s/__remove_memory/try_remove_memory in the subject line
+- s/arch_remove_memory/memblock_[free|remove] in the subject line
+- A small change in the commit message as re-order happens now for memblock remove
+  functions not for arch_remove_memory()
+
+Changes in V5: (https://lkml.org/lkml/2019/5/29/218)
+
+- Have some agreement [1] over using memory_hotplug_lock for arm64 ptdump
+- Change 7ba36eccb3f8 ("arm64/mm: Inhibit huge-vmap with ptdump") already merged
+- Dropped the above patch from this series
+- Fixed indentation problem in arch_[add|remove]_memory() as per David
+- Collected all new Acked-by tags
+ 
+Changes in V4: (https://lkml.org/lkml/2019/5/20/19)
+
+- Implemented most of the suggestions from Mark Rutland
+- Interchanged patch [PATCH 2/4] <---> [PATCH 3/4] and updated commit message
+- Moved CONFIG_PGTABLE_LEVELS inside free_[pud|pmd]_table()
+- Used READ_ONCE() in missing instances while accessing page table entries
+- s/p???_present()/p???_none() for checking valid kernel page table entries
+- WARN_ON() when an entry is !p???_none() and !p???_present() at the same time
+- Updated memory hot-remove commit message with additional details as suggested
+- Rebased the series on 5.2-rc1 with hotplug changes from David and Michal Hocko
+- Collected all new Acked-by tags
+
+Changes in V3: (https://lkml.org/lkml/2019/5/14/197)
+ 
+- Implemented most of the suggestions from Mark Rutland for remove_pagetable()
+- Fixed applicable PGTABLE_LEVEL wrappers around pgtable page freeing functions
+- Replaced 'direct' with 'sparse_vmap' in remove_pagetable() with inverted polarity
+- Changed pointer names ('p' at end) and removed tmp from iterations
+- Perform intermediate TLB invalidation while clearing pgtable entries
+- Dropped flush_tlb_kernel_range() in remove_pagetable()
+- Added flush_tlb_kernel_range() in remove_pte_table() instead
+- Renamed page freeing functions for pgtable page and mapped pages
+- Used page range size instead of order while freeing mapped or pgtable pages
+- Removed all PageReserved() handling while freeing mapped or pgtable pages
+- Replaced XXX_index() with XXX_offset() while walking the kernel page table
+- Used READ_ONCE() while fetching individual pgtable entries
+- Taken overall init_mm.page_table_lock instead of just while changing an entry
+- Dropped previously added [pmd|pud]_index() which are not required anymore
+- Added a new patch to protect kernel page table race condition for ptdump
+- Added a new patch from Mark Rutland to prevent huge-vmap with ptdump
+
+Changes in V2: (https://lkml.org/lkml/2019/4/14/5)
+
+- Added all received review and ack tags
+- Split the series from ZONE_DEVICE enablement for better review
+- Moved memblock re-order patch to the front as per Robin Murphy
+- Updated commit message on memblock re-order patch per Michal Hocko
+- Dropped [pmd|pud]_large() definitions
+- Used existing [pmd|pud]_sect() instead of earlier [pmd|pud]_large()
+- Removed __meminit and __ref tags as per Oscar Salvador
+- Dropped unnecessary 'ret' init in arch_add_memory() per Robin Murphy
+- Skipped calling into pgtable_page_dtor() for linear mapping page table
+  pages and updated all relevant functions
+
+Changes in V1: (https://lkml.org/lkml/2019/4/3/28)
+
+References:
+
+[1] https://lkml.org/lkml/2019/5/28/584
+[2] https://lkml.org/lkml/2019/6/11/709
+
+Anshuman Khandual (2):
+  arm64/mm: Hold memory hotplug lock while walking for kernel page table dump
+  arm64/mm: Enable memory hot remove
+
+ arch/arm64/Kconfig              |   3 +
+ arch/arm64/include/asm/memory.h |   1 +
+ arch/arm64/mm/mmu.c             | 342 ++++++++++++++++++++++++++++++++++++++--
+ arch/arm64/mm/ptdump_debugfs.c  |   4 +
+ 4 files changed, 341 insertions(+), 9 deletions(-)
+
+-- 
+2.7.4
 
