@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D22C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6BDC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0510246B4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EB57246DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:47:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196816;
-	bh=FyYFts8tn0057p/q55l5LaATDl1O4cx7TvuYkipMPco=;
+	s=default; t=1579196820;
+	bh=LImxpWH48XUcJ4jqv/KOtICIueN+UYO/dlffxiNMlSE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tOz0SXWOmI/cPjcaXgYFQD4VjhORetk0mIK+HK5XeTCnlMDM6PoIexrDb/8jFsX3V
-	 bPbCzLp7vmKDjihhXh7qEiPewx2FzEJsbS65Yv43zw7AstH4YcvkkyeuhbvuRYcAbh
-	 Bkzs+SnMYljJhJIiIwQ6AXY7djjhgP4ZGQ+OpOes=
+	b=k28ERnKo2+xvsi6sTE0KoghxFkgwHMUGXq61yMPD3DBnRt56eqaOr1ZeHMChhfYG+
+	 PiDys0xRiZ6cGEZxrs0qmziMawcA3yX1UZQZjiFaSosp1iNKTkv1FeGma613oJd1l7
+	 l0Y0YRckxbVU8hHDbus9wIGzocKoM1rwQsHpZjio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406838AbgAPRq4 (ORCPT
+        id S2406851AbgAPRq6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:46:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40032 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:46:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406823AbgAPRqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:46:53 -0500
+        id S2406837AbgAPRq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:46:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA9C8246DF;
-        Thu, 16 Jan 2020 17:46:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63914246EA;
+        Thu, 16 Jan 2020 17:46:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196812;
-        bh=FyYFts8tn0057p/q55l5LaATDl1O4cx7TvuYkipMPco=;
+        s=default; t=1579196815;
+        bh=LImxpWH48XUcJ4jqv/KOtICIueN+UYO/dlffxiNMlSE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wKdFk/zrXPfUBRa4bHCXEKats6QfAGhLmtgsKmJOwbKgQHV9I5Ei6grpi6xXi3vDA
-         DIzkzdDCPzQ1GbqC0bny5+HLbeMAUPjU6F2Np32dgth3KaqO6bymDUax0kWB5MJJrk
-         IcMjcCEq2ub1xQmWJkFKqWzspHRh5+PHb5DYlX0Q=
+        b=bXlMOMwEQ1NwobqIdbxXlraAqXcOVqAPz5nnUGuFC01Cxaj2qA2DhEWkAtyzyauTy
+         YBp4vjjLNU1QqgRAHCn6UO7JvTOee7ANVPm1YxWi8XKdMbqTfqxbTxMOI4Wyq6YE3c
+         kBR64HNl61JvZMWucHGMg9omz51sv2V+pXrJBODY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pan Bian <bianpan2016@163.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 169/174] scsi: bnx2i: fix potential use after free
-Date:   Thu, 16 Jan 2020 12:42:46 -0500
-Message-Id: <20200116174251.24326-169-sashal@kernel.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>, Vinod Koul <vkoul@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 171/174] dmaengine: ti: edma: fix missed failure handling
+Date:   Thu, 16 Jan 2020 12:42:48 -0500
+Message-Id: <20200116174251.24326-171-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -59,41 +58,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Bian <bianpan2016@163.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 29d28f2b8d3736ac61c28ef7e20fda63795b74d9 ]
+[ Upstream commit 340049d453682a9fe8d91fe794dd091730f4bb25 ]
 
-The member hba->pcidev may be used after its reference is dropped. Move the
-put function to where it is never used to avoid potential use after free
-issues.
+When devm_kcalloc fails, it forgets to call edma_free_slot.
+Replace direct return with failure handler to fix it.
 
-Fixes: a77171806515 ("[SCSI] bnx2i: Removed the reference to the netdev->base_addr")
-Link: https://lore.kernel.org/r/1573043541-19126-1-git-send-email-bianpan2016@163.com
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 1be5336bc7ba ("dmaengine: edma: New device tree binding")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Link: https://lore.kernel.org/r/20191118073802.28424-1-hslester96@gmail.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/bnx2i/bnx2i_iscsi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/edma.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/bnx2i/bnx2i_iscsi.c b/drivers/scsi/bnx2i/bnx2i_iscsi.c
-index 72894378ffcf..81de52943b01 100644
---- a/drivers/scsi/bnx2i/bnx2i_iscsi.c
-+++ b/drivers/scsi/bnx2i/bnx2i_iscsi.c
-@@ -915,12 +915,12 @@ void bnx2i_free_hba(struct bnx2i_hba *hba)
- 	INIT_LIST_HEAD(&hba->ep_ofld_list);
- 	INIT_LIST_HEAD(&hba->ep_active_list);
- 	INIT_LIST_HEAD(&hba->ep_destroy_list);
--	pci_dev_put(hba->pcidev);
+diff --git a/drivers/dma/edma.c b/drivers/dma/edma.c
+index e508c8c5f3fd..17521fcf226f 100644
+--- a/drivers/dma/edma.c
++++ b/drivers/dma/edma.c
+@@ -2288,8 +2288,10 @@ static int edma_probe(struct platform_device *pdev)
  
- 	if (hba->regview) {
- 		pci_iounmap(hba->pcidev, hba->regview);
- 		hba->regview = NULL;
- 	}
-+	pci_dev_put(hba->pcidev);
- 	bnx2i_free_mp_bdt(hba);
- 	bnx2i_release_free_cid_que(hba);
- 	iscsi_host_free(shost);
+ 		ecc->tc_list = devm_kcalloc(dev, ecc->num_tc,
+ 					    sizeof(*ecc->tc_list), GFP_KERNEL);
+-		if (!ecc->tc_list)
+-			return -ENOMEM;
++		if (!ecc->tc_list) {
++			ret = -ENOMEM;
++			goto err_reg1;
++		}
+ 
+ 		for (i = 0;; i++) {
+ 			ret = of_parse_phandle_with_fixed_args(node, "ti,tptcs",
 -- 
 2.20.1
 
