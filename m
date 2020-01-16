@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FEF0C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C270C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35B532077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:18:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 736D82077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:18:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202291;
-	bh=1+Bt01W5dmc2vbQUMNlQA0sITApzXtOYMPiixaFAWXQ=;
+	s=default; t=1579202297;
+	bh=2+gpWsmpb5DF4ayCzhFM7rLPmr+bUI4pfCSdEsSq01U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lNC9DAslMIypEvpMMcS3D6FqDr2mRiGPpIowPwc1t2541MWWHR137JZbYksUh5t1S
-	 fQqPy9CScO3W/BABok7REq6ibnIT0Ka6a2RfD+h3MykgU1+YcmTbgNG6GISCDPKJF8
-	 PByZggMf5XxNQGUWYMuU/0Y3rYDHAnnp5fJUjr2U=
+	b=AyYfz6O7htGWUwwagFB6ANQTbk+xnqe5lvh+oYckPtmzK4b9Sw4K7jHuffrJh5CLQ
+	 ulfx++P2SybM+LJbTqdJVtl2kNz86yxsXOOTCztDmQrZ/Jd1318D+xrxUYVBzA83LX
+	 hzhvk/q51BrNb5Vj7AlQWs67xVFUv4AiNkQ4MqgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729881AbgAPQyo (ORCPT
+        id S1733098AbgAPTSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:54:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39142 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:18:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731991AbgAPQyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:54:32 -0500
+        id S1731921AbgAPQym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:54:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06D5A22525;
-        Thu, 16 Jan 2020 16:54:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 357D0205F4;
+        Thu, 16 Jan 2020 16:54:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193670;
-        bh=1+Bt01W5dmc2vbQUMNlQA0sITApzXtOYMPiixaFAWXQ=;
+        s=default; t=1579193681;
+        bh=2+gpWsmpb5DF4ayCzhFM7rLPmr+bUI4pfCSdEsSq01U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uu6LmwA4870zB9grI71UQlwFZZ8dhmJInv8tOgwXpKH8ISD8jqhAU2rU+LSBL23Yf
-         5XWc2pmQqTOH+xTRmigI+pvbTsT0iTgYe762SVMhZ3sXmz6JqMtfeSexPqVtz6M69p
-         okXQideyUX6YkbSqG/l0Scv+QurwPiozJgl1PtwI=
+        b=QYggzVXXCODFuSTZWZYU5+bxpeO6VaNDduKGM30USXdWBfawyJU0JgGR3YdxZBeKW
+         Mm4GTk1Cj/pSbyYFv/wbRmYAomlUQY/n9ElWjevunkZ491Fd3XleQMglM6EwX1PINO
+         P3JroINuGe3dYoo2ICls2iQAcmQ8pO1smhTQp+gk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        Ondrej Jirman <megous@megous.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+Cc:     Jonas Karlman <jonas@kwiboo.se>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 196/205] ARM: 8943/1: Fix topology setup in case of CPU hotplug for CONFIG_SCHED_MC
-Date:   Thu, 16 Jan 2020 11:42:51 -0500
-Message-Id: <20200116164300.6705-196-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 205/205] phy/rockchip: inno-hdmi: round clock rate down to closest 1000 Hz
+Date:   Thu, 16 Jan 2020 11:43:00 -0500
+Message-Id: <20200116164300.6705-205-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -63,117 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+From: Jonas Karlman <jonas@kwiboo.se>
 
-[ Upstream commit ff98a5f624d2910de050f1fc7f2a32769da86b51 ]
+[ Upstream commit 4f510aa10468954b1da4e94689c38ac6ea8d3627 ]
 
-Commit ca74b316df96 ("arm: Use common cpu_topology structure and
-functions.") changed cpu_coregroup_mask() from the ARM32 specific
-implementation in arch/arm/include/asm/topology.h to the one shared
-with ARM64 and RISCV in drivers/base/arch_topology.c.
+Commit 287422a95fe2 ("drm/rockchip: Round up _before_ giving to the clock framework")
+changed what rate clk_round_rate() is called with, an additional 999 Hz
+added to the requsted mode clock. This has caused a regression on RK3328
+and presumably also on RK3228 because the inno-hdmi-phy clock requires an
+exact match of the requested rate in the pre pll config table.
 
-Currently on ARM32 (TC2 w/ CONFIG_SCHED_MC) the task scheduler setup
-code (w/ CONFIG_SCHED_DEBUG) shows this during CPU hotplug:
+When an exact match is not found the parent clock rate (24MHz) is returned
+to the clk_round_rate() caller. This cause wrong pixel clock to be used and
+result in no-signal when configuring a mode on RK3328.
 
-  ERROR: groups don't span domain->span
+Fix this by rounding the rate down to closest 1000 Hz in round_rate func,
+this allows an exact match to be found in pre pll config table.
 
-It happens to CPUs of the cluster of the CPU which gets hot-plugged
-out on scheduler domain MC.
-
-Turns out that the shared cpu_coregroup_mask() requires that the
-hot-plugged CPU is removed from the core_sibling mask via
-remove_cpu_topology(). Otherwise the 'is core_sibling subset of
-cpumask_of_node()' doesn't work. In this case the task scheduler has to
-deal with cpumask_of_node instead of core_sibling which is wrong on
-scheduler domain MC.
-
-e.g. CPU3 hot-plugged out on TC2 [cluster0: 0,3-4 cluster1: 1-2]:
-
-  cpu_coregroup_mask(): CPU3 cpumask_of_node=0-2,4 core_sibling=0,3-4
-                                                                  ^
-should be:
-
-  cpu_coregroup_mask(): CPU3 cpumask_of_node=0-2,4 core_sibling=0,4
-
-Add remove_cpu_topology() to __cpu_disable() to remove the CPU from the
-topology masks in case of a CPU hotplug out operation.
-
-At the same time tweak store_cpu_topology() slightly so it will call
-update_siblings_masks() in case of CPU hotplug in operation via
-secondary_start_kernel()->smp_store_cpu_info().
-
-This aligns the ARM32 implementation with the ARM64 one.
-
-Guarding remove_cpu_topology() with CONFIG_GENERIC_ARCH_TOPOLOGY is
-necessary since some Arm32 defconfigs (aspeed_g5_defconfig,
-milbeaut_m10v_defconfig, spear13xx_defconfig) specify an explicit
-
- # CONFIG_ARM_CPU_TOPOLOGY is not set
-
-w/ ./arch/arm/Kconfig: select GENERIC_ARCH_TOPOLOGY if ARM_CPU_TOPOLOGY
-
-Fixes: ca74b316df96 ("arm: Use common cpu_topology structure and functions")
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
-Tested-by: Lukasz Luba <lukasz.luba@arm.com>
-Tested-by: Ondrej Jirman <megous@megous.com>
-Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: 287422a95fe2 ("drm/rockchip: Round up _before_ giving to the clock framework")
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kernel/smp.c      |  4 ++++
- arch/arm/kernel/topology.c | 10 +++++-----
- 2 files changed, 9 insertions(+), 5 deletions(-)
+ drivers/phy/rockchip/phy-rockchip-inno-hdmi.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
-index 4b0bab2607e4..46e1be9e57a8 100644
---- a/arch/arm/kernel/smp.c
-+++ b/arch/arm/kernel/smp.c
-@@ -240,6 +240,10 @@ int __cpu_disable(void)
- 	if (ret)
- 		return ret;
+diff --git a/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c b/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
+index 2b97fb1185a0..9ca20c947283 100644
+--- a/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
++++ b/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
+@@ -603,6 +603,8 @@ static long inno_hdmi_phy_rk3228_clk_round_rate(struct clk_hw *hw,
+ {
+ 	const struct pre_pll_config *cfg = pre_pll_cfg_table;
  
-+#ifdef CONFIG_GENERIC_ARCH_TOPOLOGY
-+	remove_cpu_topology(cpu);
-+#endif
++	rate = (rate / 1000) * 1000;
 +
- 	/*
- 	 * Take this CPU offline.  Once we clear this, we can't return,
- 	 * and we must not schedule until we're ready to give up the cpu.
-diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
-index 5b9faba03afb..8d2e61d9e7a6 100644
---- a/arch/arm/kernel/topology.c
-+++ b/arch/arm/kernel/topology.c
-@@ -196,9 +196,8 @@ void store_cpu_topology(unsigned int cpuid)
- 	struct cpu_topology *cpuid_topo = &cpu_topology[cpuid];
- 	unsigned int mpidr;
+ 	for (; cfg->pixclock != 0; cfg++)
+ 		if (cfg->pixclock == rate && !cfg->fracdiv)
+ 			break;
+@@ -755,6 +757,8 @@ static long inno_hdmi_phy_rk3328_clk_round_rate(struct clk_hw *hw,
+ {
+ 	const struct pre_pll_config *cfg = pre_pll_cfg_table;
  
--	/* If the cpu topology has been already set, just return */
--	if (cpuid_topo->core_id != -1)
--		return;
-+	if (cpuid_topo->package_id != -1)
-+		goto topology_populated;
- 
- 	mpidr = read_cpuid_mpidr();
- 
-@@ -231,14 +230,15 @@ void store_cpu_topology(unsigned int cpuid)
- 		cpuid_topo->package_id = -1;
- 	}
- 
--	update_siblings_masks(cpuid);
--
- 	update_cpu_capacity(cpuid);
- 
- 	pr_info("CPU%u: thread %d, cpu %d, socket %d, mpidr %x\n",
- 		cpuid, cpu_topology[cpuid].thread_id,
- 		cpu_topology[cpuid].core_id,
- 		cpu_topology[cpuid].package_id, mpidr);
++	rate = (rate / 1000) * 1000;
 +
-+topology_populated:
-+	update_siblings_masks(cpuid);
- }
- 
- static inline int cpu_corepower_flags(void)
+ 	for (; cfg->pixclock != 0; cfg++)
+ 		if (cfg->pixclock == rate)
+ 			break;
 -- 
 2.20.1
 
