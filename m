@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 734F0C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40336C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49F85246B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13BE6246B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195068;
-	bh=47H3in3Ti6n0Ze1iwksWcpGbMYB5bXdY5ZkIePJCJvE=;
+	s=default; t=1579195071;
+	bh=hOjkk+9ukcJhXI0EqCJJubVofhE0FK+eKaZ29cbr58E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FD0jjvVgOE+5Rxv27EiAhF5YI1380xcJ5cT07sRW/mzaiGKEZoUp3cqQRGKFqPNLo
-	 7OLX69CLxyVDXQygKDTdDnblGmhow4cCgMGwvE+pj33yEeundjeuczBQQwPqRiWooD
-	 RlrlW6GvH92sk4mNvJL1I8DFCS61bw10F/T34Vsg=
+	b=qTr+OKEPph70MKJB0m6GQ0Czub2X5m1Zi3mvenmDlUb6AkViGlkwV++0QvsAkMhW1
+	 GTSY9aLUinfa42AtqYpwXxCrPUYCzlAhAYx0xsRV/dZhSCoNwysPWNZqtwasuE42RQ
+	 WBC+CCnf+Xns5UvFOM3de5Mt3GSCgHmm2ZAkXNgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391272AbgAPRRr (ORCPT
+        id S2390740AbgAPRRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:17:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43132 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:17:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391249AbgAPRRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:17:38 -0500
+        id S2387616AbgAPRRk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:17:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DE392075B;
-        Thu, 16 Jan 2020 17:17:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4D6E2051A;
+        Thu, 16 Jan 2020 17:17:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195057;
-        bh=47H3in3Ti6n0Ze1iwksWcpGbMYB5bXdY5ZkIePJCJvE=;
+        s=default; t=1579195059;
+        bh=hOjkk+9ukcJhXI0EqCJJubVofhE0FK+eKaZ29cbr58E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Phentg8aJqsy0qriHYlELIGpuykqFJgAU5Ukuk2KmmkkHOuPcD3nq1dZWfe4pOCMK
-         2ifG2scNGvc23d6efrW5kUkHpyFQMLEj6iEqQu1wMhh3E3Mhe4uFEDM9JS+tPiIizm
-         Rm6Qwf129AtMvSfxOAB+cTiEMU6Kka3p90ICUd7s=
+        b=s1moj+FaVZxyvVpDwOsbVrKmIGVe2uYaA8rT42AWwPyFL7cbbx2FseqvyBPEJHv6j
+         FOtY5DZ5/FQuXs8+xf6cobsiIghwBNSjJhspwyT1Sbhoie3YiwEMzvWwDN2nHf8YJs
+         4UkOI/yu52Bf+ZisRobaCk428n5/KFAQohvyokF0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.14 013/371] powerpc/kgdb: add kgdb_arch_set/remove_breakpoint()
-Date:   Thu, 16 Jan 2020 12:11:21 -0500
-Message-Id: <20200116171719.16965-13-sashal@kernel.org>
+Cc:     Petr Machata <petrm@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 015/371] mlxsw: reg: QEEC: Add minimum shaper fields
+Date:   Thu, 16 Jan 2020 12:11:23 -0500
+Message-Id: <20200116171719.16965-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116171719.16965-1-sashal@kernel.org>
 References: <20200116171719.16965-1-sashal@kernel.org>
@@ -59,134 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Petr Machata <petrm@mellanox.com>
 
-[ Upstream commit fb978ca207743badfe7efd9eebe68bcbb4969f79 ]
+[ Upstream commit 8b931821aa04823e2e5df0ae93937baabbd23286 ]
 
-Generic implementation fails to remove breakpoints after init
-when CONFIG_STRICT_KERNEL_RWX is selected:
+Add QEEC.mise (minimum shaper enable) and QEEC.min_shaper_rate to enable
+configuration of minimum shaper.
 
-[   13.251285] KGDB: BP remove failed: c001c338
-[   13.259587] kgdbts: ERROR PUT: end of test buffer on 'do_fork_test' line 8 expected OK got $E14#aa
-[   13.268969] KGDB: re-enter exception: ALL breakpoints killed
-[   13.275099] CPU: 0 PID: 1 Comm: init Not tainted 4.18.0-g82bbb913ffd8 #860
-[   13.282836] Call Trace:
-[   13.285313] [c60e1ba0] [c0080ef0] kgdb_handle_exception+0x6f4/0x720 (unreliable)
-[   13.292618] [c60e1c30] [c000e97c] kgdb_handle_breakpoint+0x3c/0x98
-[   13.298709] [c60e1c40] [c000af54] program_check_exception+0x104/0x700
-[   13.305083] [c60e1c60] [c000e45c] ret_from_except_full+0x0/0x4
-[   13.310845] [c60e1d20] [c02a22ac] run_simple_test+0x2b4/0x2d4
-[   13.316532] [c60e1d30] [c0081698] put_packet+0xb8/0x158
-[   13.321694] [c60e1d60] [c00820b4] gdb_serial_stub+0x230/0xc4c
-[   13.327374] [c60e1dc0] [c0080af8] kgdb_handle_exception+0x2fc/0x720
-[   13.333573] [c60e1e50] [c000e928] kgdb_singlestep+0xb4/0xcc
-[   13.339068] [c60e1e70] [c000ae1c] single_step_exception+0x90/0xac
-[   13.345100] [c60e1e80] [c000e45c] ret_from_except_full+0x0/0x4
-[   13.350865] [c60e1f40] [c000e11c] ret_from_syscall+0x0/0x38
-[   13.356346] Kernel panic - not syncing: Recursive entry to debugger
+Increase the QEEC length to 0x20 as well: that's the length that the
+register has had for a long time now, but with the configurations that
+mlxsw typically exercises, the firmware tolerated 0x1C-sized packets.
+With mise=true however, FW rejects packets unless they have the full
+required length.
 
-This patch creates powerpc specific version of
-kgdb_arch_set_breakpoint() and kgdb_arch_remove_breakpoint()
-using patch_instruction()
-
-Fixes: 1e0fc9d1eb2b ("powerpc/Kconfig: Enable STRICT_KERNEL_RWX for some configs")
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Fixes: b9b7cee40579 ("mlxsw: reg: Add QoS ETS Element Configuration register")
+Signed-off-by: Petr Machata <petrm@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/kgdb.h |  5 +++-
- arch/powerpc/kernel/kgdb.c      | 43 +++++++++++++++++++++++++++------
- 2 files changed, 39 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/reg.h | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/include/asm/kgdb.h b/arch/powerpc/include/asm/kgdb.h
-index 9db24e77b9f4..a9e098a3b881 100644
---- a/arch/powerpc/include/asm/kgdb.h
-+++ b/arch/powerpc/include/asm/kgdb.h
-@@ -26,9 +26,12 @@
- #define BREAK_INSTR_SIZE	4
- #define BUFMAX			((NUMREGBYTES * 2) + 512)
- #define OUTBUFMAX		((NUMREGBYTES * 2) + 512)
-+
-+#define BREAK_INSTR		0x7d821008	/* twge r2, r2 */
-+
- static inline void arch_kgdb_breakpoint(void)
- {
--	asm(".long 0x7d821008"); /* twge r2, r2 */
-+	asm(stringify_in_c(.long BREAK_INSTR));
- }
- #define CACHE_FLUSH_IS_SAFE	1
- #define DBG_MAX_REG_NUM     70
-diff --git a/arch/powerpc/kernel/kgdb.c b/arch/powerpc/kernel/kgdb.c
-index 35e240a0a408..59c578f865aa 100644
---- a/arch/powerpc/kernel/kgdb.c
-+++ b/arch/powerpc/kernel/kgdb.c
-@@ -24,6 +24,7 @@
- #include <asm/processor.h>
- #include <asm/machdep.h>
- #include <asm/debug.h>
-+#include <asm/code-patching.h>
- #include <linux/slab.h>
- 
- /*
-@@ -144,7 +145,7 @@ static int kgdb_handle_breakpoint(struct pt_regs *regs)
- 	if (kgdb_handle_exception(1, SIGTRAP, 0, regs) != 0)
- 		return 0;
- 
--	if (*(u32 *) (regs->nip) == *(u32 *) (&arch_kgdb_ops.gdb_bpt_instr))
-+	if (*(u32 *)regs->nip == BREAK_INSTR)
- 		regs->nip += BREAK_INSTR_SIZE;
- 
- 	return 1;
-@@ -441,16 +442,42 @@ int kgdb_arch_handle_exception(int vector, int signo, int err_code,
- 	return -1;
- }
- 
-+int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt)
-+{
-+	int err;
-+	unsigned int instr;
-+	unsigned int *addr = (unsigned int *)bpt->bpt_addr;
-+
-+	err = probe_kernel_address(addr, instr);
-+	if (err)
-+		return err;
-+
-+	err = patch_instruction(addr, BREAK_INSTR);
-+	if (err)
-+		return -EFAULT;
-+
-+	*(unsigned int *)bpt->saved_instr = instr;
-+
-+	return 0;
-+}
-+
-+int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt)
-+{
-+	int err;
-+	unsigned int instr = *(unsigned int *)bpt->saved_instr;
-+	unsigned int *addr = (unsigned int *)bpt->bpt_addr;
-+
-+	err = patch_instruction(addr, instr);
-+	if (err)
-+		return -EFAULT;
-+
-+	return 0;
-+}
-+
- /*
-  * Global data
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/reg.h b/drivers/net/ethernet/mellanox/mlxsw/reg.h
+index 8ab7a4f98a07..e7974ba06432 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/reg.h
++++ b/drivers/net/ethernet/mellanox/mlxsw/reg.h
+@@ -2452,7 +2452,7 @@ static inline void mlxsw_reg_qtct_pack(char *payload, u8 local_port,
+  * Configures the ETS elements.
   */
--struct kgdb_arch arch_kgdb_ops = {
--#ifdef __LITTLE_ENDIAN__
--	.gdb_bpt_instr = {0x08, 0x10, 0x82, 0x7d},
--#else
--	.gdb_bpt_instr = {0x7d, 0x82, 0x10, 0x08},
--#endif
--};
-+struct kgdb_arch arch_kgdb_ops;
+ #define MLXSW_REG_QEEC_ID 0x400D
+-#define MLXSW_REG_QEEC_LEN 0x1C
++#define MLXSW_REG_QEEC_LEN 0x20
  
- static int kgdb_not_implemented(struct pt_regs *regs)
- {
+ MLXSW_REG_DEFINE(qeec, MLXSW_REG_QEEC_ID, MLXSW_REG_QEEC_LEN);
+ 
+@@ -2494,6 +2494,15 @@ MLXSW_ITEM32(reg, qeec, element_index, 0x04, 0, 8);
+  */
+ MLXSW_ITEM32(reg, qeec, next_element_index, 0x08, 0, 8);
+ 
++/* reg_qeec_mise
++ * Min shaper configuration enable. Enables configuration of the min
++ * shaper on this ETS element
++ * 0 - Disable
++ * 1 - Enable
++ * Access: RW
++ */
++MLXSW_ITEM32(reg, qeec, mise, 0x0C, 31, 1);
++
+ enum {
+ 	MLXSW_REG_QEEC_BYTES_MODE,
+ 	MLXSW_REG_QEEC_PACKETS_MODE,
+@@ -2510,6 +2519,17 @@ enum {
+  */
+ MLXSW_ITEM32(reg, qeec, pb, 0x0C, 28, 1);
+ 
++/* The smallest permitted min shaper rate. */
++#define MLXSW_REG_QEEC_MIS_MIN	200000		/* Kbps */
++
++/* reg_qeec_min_shaper_rate
++ * Min shaper information rate.
++ * For CPU port, can only be configured for port hierarchy.
++ * When in bytes mode, value is specified in units of 1000bps.
++ * Access: RW
++ */
++MLXSW_ITEM32(reg, qeec, min_shaper_rate, 0x0C, 0, 28);
++
+ /* reg_qeec_mase
+  * Max shaper configuration enable. Enables configuration of the max
+  * shaper on this ETS element.
 -- 
 2.20.1
 
