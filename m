@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97321C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E60C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66343206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:03:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73EFF2075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:03:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201408;
-	bh=RWIpyYV2IZnnvLeNB3e+att7PsbnyepJ/57t61uI6Fc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kqsg3C0B40rdz4TEMDV7wA4JLoRI7QdXceklDjTp2ToNoaS9RpE0pEk5avIr6fyJ+
-	 p4x97p7g0stHKa4wV2d/v2Jf2oUUFpyDD+dJ+TMHakl6StESaVQfFzuU4gqBVmkI4j
-	 NjP4z1REtb6SlhtVkr5Znn6/LbwcsHptwPzrWWj4=
+	s=default; t=1579201412;
+	bh=qYzyfsKwX5P/PuWJpfC14glwxT+idLXapD5N8g1prvE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=aFBaK6204FJlDX71cdHwRuXUTM7mcloLKTSpErPxv5FU8vv0l/vTV9Q6SiE0LcPmT
+	 6qgv9zcMSuydDYvl5Vr2hyuDdR6VP+6rTE5mLp1HRzIPZVVjsg+t14hPnfhll3rmJS
+	 ix/K50VUPYuxD+keITAxLzhOGm6DV86sB0LkPPwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387544AbgAPRFM (ORCPT
+        id S2437340AbgAPTDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:05:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55450 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:03:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388412AbgAPRCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:02:34 -0500
+        id S2387697AbgAPRFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:05:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C960820730;
-        Thu, 16 Jan 2020 17:02:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9B522077B;
+        Thu, 16 Jan 2020 17:05:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194153;
-        bh=RWIpyYV2IZnnvLeNB3e+att7PsbnyepJ/57t61uI6Fc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=luu56mpsF9yPSv2pnMdasv/lDt5ZCAjR0UcD7nA7XvXrzLIqD4eHKrZpHlwO8exw0
-         DQOi341Hn6rAxW37Q95WSUW9jC49T2Wn2TpbK8svXiXS7pXm9DRczJCJHaWDh/rZy+
-         pQMOoobOU798WOZVKXobP+LFCdYmpIdDQa/4ZnXQ=
+        s=default; t=1579194311;
+        bh=qYzyfsKwX5P/PuWJpfC14glwxT+idLXapD5N8g1prvE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ND1YA85D+Ir14Xc2EjSui0jo0qJr4xassAjsjhWKhmaagrUocLAqVI42WqgXpN6uV
+         wXLrM4zQVsN5HkkmvEWwNUhtKAUDKWNQgfogMxaR1FMw3ZdH9PNggP3PgVwoDIHOCA
+         G6Xj4ncZ+0C98nBbGaPajzSxGfk4qj6Fz3kjgI/o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        nios2-dev@lists.rocketboards.org
-Subject: [PATCH AUTOSEL 4.19 237/671] nios2: ksyms: Add missing symbol exports
-Date:   Thu, 16 Jan 2020 11:52:26 -0500
-Message-Id: <20200116165940.10720-120-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 264/671] media: davinci-isif: avoid uninitialized variable use
+Date:   Thu, 16 Jan 2020 11:58:22 -0500
+Message-Id: <20200116170509.12787-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
-References: <20200116165940.10720-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,65 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 0f8ed994575429d6042cf5d7ef70081c94091587 ]
+[ Upstream commit 0e633f97162c1c74c68e2eb20bbd9259dce87cd9 ]
 
-Building nios2:allmodconfig fails as follows (each symbol is only listed
-once).
+clang warns about a possible variable use that gcc never
+complained about:
 
-ERROR: "__ashldi3" [drivers/md/dm-writecache.ko] undefined!
-ERROR: "__ashrdi3" [fs/xfs/xfs.ko] undefined!
-ERROR: "__ucmpdi2" [drivers/media/i2c/adv7842.ko] undefined!
-ERROR: "__lshrdi3" [drivers/md/dm-zoned.ko] undefined!
-ERROR: "flush_icache_range" [drivers/misc/lkdtm/lkdtm.ko] undefined!
-ERROR: "empty_zero_page" [drivers/md/dm-mod.ko] undefined!
+drivers/media/platform/davinci/isif.c:982:32: error: variable 'frame_size' is uninitialized when used here
+      [-Werror,-Wuninitialized]
+                dm365_vpss_set_pg_frame_size(frame_size);
+                                             ^~~~~~~~~~
+drivers/media/platform/davinci/isif.c:887:2: note: variable 'frame_size' is declared here
+        struct vpss_pg_frame_size frame_size;
+        ^
+1 error generated.
 
-The problem is seen with gcc 7.3.0.
+There is no initialization for this variable at all, and there
+has never been one in the mainline kernel, so we really should
+not put that stack data into an mmio register.
 
-Export the missing symbols.
+On the other hand, I suspect that gcc checks the condition
+more closely and notices that the global
+isif_cfg.bayer.config_params.test_pat_gen flag is initialized
+to zero and never written to from any code path, so anything
+depending on it can be eliminated.
 
-Fixes: 2fc8483fdcde ("nios2: Build infrastructure")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
+To shut up the clang warning, just remove the dead code manually,
+it has probably never been used because any attempt to do so
+would have resulted in undefined behavior.
+
+Fixes: 63e3ab142fa3 ("V4L/DVB: V4L - vpfe capture - source for ISIF driver on DM365")
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Lad Prabhakar <prabhakar.csengg@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/nios2/kernel/nios2_ksyms.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/media/platform/davinci/isif.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/arch/nios2/kernel/nios2_ksyms.c b/arch/nios2/kernel/nios2_ksyms.c
-index bf2f55d10a4d..4e704046a150 100644
---- a/arch/nios2/kernel/nios2_ksyms.c
-+++ b/arch/nios2/kernel/nios2_ksyms.c
-@@ -9,12 +9,20 @@
- #include <linux/export.h>
- #include <linux/string.h>
+diff --git a/drivers/media/platform/davinci/isif.c b/drivers/media/platform/davinci/isif.c
+index 340f8218f54d..80fa60a4c448 100644
+--- a/drivers/media/platform/davinci/isif.c
++++ b/drivers/media/platform/davinci/isif.c
+@@ -884,9 +884,7 @@ static int isif_set_hw_if_params(struct vpfe_hw_if_param *params)
+ static int isif_config_ycbcr(void)
+ {
+ 	struct isif_ycbcr_config *params = &isif_cfg.ycbcr;
+-	struct vpss_pg_frame_size frame_size;
+ 	u32 modeset = 0, ccdcfg = 0;
+-	struct vpss_sync_pol sync;
  
-+#include <asm/cacheflush.h>
-+#include <asm/pgtable.h>
-+
- /* string functions */
+ 	dev_dbg(isif_cfg.dev, "\nStarting isif_config_ycbcr...");
  
- EXPORT_SYMBOL(memcpy);
- EXPORT_SYMBOL(memset);
- EXPORT_SYMBOL(memmove);
+@@ -974,13 +972,6 @@ static int isif_config_ycbcr(void)
+ 		/* two fields are interleaved in memory */
+ 		regw(0x00000249, SDOFST);
  
-+/* memory management */
-+
-+EXPORT_SYMBOL(empty_zero_page);
-+EXPORT_SYMBOL(flush_icache_range);
-+
- /*
-  * libgcc functions - functions that are used internally by the
-  * compiler...  (prototypes are not correct though, but that
-@@ -31,3 +39,7 @@ DECLARE_EXPORT(__udivsi3);
- DECLARE_EXPORT(__umoddi3);
- DECLARE_EXPORT(__umodsi3);
- DECLARE_EXPORT(__muldi3);
-+DECLARE_EXPORT(__ucmpdi2);
-+DECLARE_EXPORT(__lshrdi3);
-+DECLARE_EXPORT(__ashldi3);
-+DECLARE_EXPORT(__ashrdi3);
+-	/* Setup test pattern if enabled */
+-	if (isif_cfg.bayer.config_params.test_pat_gen) {
+-		sync.ccdpg_hdpol = params->hd_pol;
+-		sync.ccdpg_vdpol = params->vd_pol;
+-		dm365_vpss_set_sync_pol(sync);
+-		dm365_vpss_set_pg_frame_size(frame_size);
+-	}
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
