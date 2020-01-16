@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8125C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F099AC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85E072073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC7F121582
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:52:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193554;
-	bh=w25Sz8SICwQl+XrqV3Xr7Ksv5FbWlYC8zU9L6OzLX84=;
+	s=default; t=1579193559;
+	bh=4+Jc9X+Bm+QQga3/srXTli+03HcHZcAlLxin47yvUVc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gr8pAqF/g4RvR2pBVWvu2WD3xftOtv7zTV6hJwXGioyRWw+wspOhO9IRlrGR/KLU8
-	 18sDrMdyaWhrXh1hWA+P0fKtyMuYsg+u4g7s8JFoYmQRQPnNjlluaUKHQHYkJfPPpj
-	 bD6h0BTgCN1p2MKPq7AKJRssWZghWSITLcCSJ9C8=
+	b=g4LojW2to7zIJnZVqLtmB30BHc5aSuBGV10cJfNIgrCnJGwzjOyq2g64hYLYTmHm8
+	 f6wjICkNG+qKcX85uRhXP6wSfdk4SzsxYOt0k0uyUZABg6U5nXh7X7xHxazyymbiOM
+	 ElhRb5+yWtNI+dfNB1jADLUePAcDXeGAkpQAxyG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730075AbgAPQwd (ORCPT
+        id S1730151AbgAPQwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:52:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35622 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:52:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727008AbgAPQwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:52:32 -0500
+        id S1727008AbgAPQwh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:52:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0132205F4;
-        Thu, 16 Jan 2020 16:52:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DEC521582;
+        Thu, 16 Jan 2020 16:52:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193552;
-        bh=w25Sz8SICwQl+XrqV3Xr7Ksv5FbWlYC8zU9L6OzLX84=;
+        s=default; t=1579193556;
+        bh=4+Jc9X+Bm+QQga3/srXTli+03HcHZcAlLxin47yvUVc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S+PtpmpXtJKv+UFrPBYbLiNzzKN/NZak7+MJg3dBK7p4rCaHGeCpJWa88HrZTUc6T
-         TpMxDkGq/C4oz01EWG+YabBr7kR0PGUOo+u86p40JM8FkX4uoeSKk3nIlVB++CKDVa
-         a/ffwNKiZnTz8uTft27j0vqrOfUDf6hHwKgBzKwY=
+        b=OlfMSBJoUSuKN8sDQwRfcqH1v4OndOIGTW9HfQybzIbhiAlqtQJ9Ie2x1TUFzxuX8
+         MA4GnuC02Ml+02/L07fyVTjjM1NE+pWv5z01pcBofWvz0nJ3vvV5bn/Z/ajNv2Tn9A
+         gts/xBuYtgve9yHMwGSUbpWP4GUgBqfR3uTNsUFE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 101/205] media: coda: fix deadlock between decoder picture run and start command
-Date:   Thu, 16 Jan 2020 11:41:16 -0500
-Message-Id: <20200116164300.6705-101-sashal@kernel.org>
+Cc:     Stephen Hemminger <sthemmin@microsoft.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 102/205] hv_netvsc: flag software created hash value
+Date:   Thu, 16 Jan 2020 11:41:17 -0500
+Message-Id: <20200116164300.6705-102-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -60,48 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philipp Zabel <p.zabel@pengutronix.de>
+From: Stephen Hemminger <sthemmin@microsoft.com>
 
-[ Upstream commit a3fd80198de6ab98a205cf7fb148d88e9e1c44bb ]
+[ Upstream commit df9f540ca74297a84bafacfa197e9347b20beea5 ]
 
-The BIT decoder picture run temporarily locks the bitstream mutex while
-the coda device mutex is locked, to refill the bitstream ring buffer.
-Consequently, the decoder start command, which locks both mutexes when
-flushing the bitstream ring buffer, must lock the coda device mutex
-first as well, to avoid an ABBA deadlock.
+When the driver needs to create a hash value because it
+was not done at higher level, then the hash should be marked
+as a software not hardware hash.
 
-Fixes: e7fd95849b3c ("media: coda: flush bitstream ring buffer on decoder restart")
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Fixes: f72860afa2e3 ("hv_netvsc: Exclude non-TCP port numbers from vRSS hashing")
+Signed-off-by: Stephen Hemminger <sthemmin@microsoft.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/coda/coda-common.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/hyperv/netvsc_drv.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/platform/coda/coda-common.c b/drivers/media/platform/coda/coda-common.c
-index 73222c0615c0..834f11fe9dc2 100644
---- a/drivers/media/platform/coda/coda-common.c
-+++ b/drivers/media/platform/coda/coda-common.c
-@@ -1084,16 +1084,16 @@ static int coda_decoder_cmd(struct file *file, void *fh,
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index 78e3e689a733..0dee358864f3 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -285,9 +285,9 @@ static inline u32 netvsc_get_hash(
+ 		else if (flow.basic.n_proto == htons(ETH_P_IPV6))
+ 			hash = jhash2((u32 *)&flow.addrs.v6addrs, 8, hashrnd);
+ 		else
+-			hash = 0;
++			return 0;
  
- 	switch (dc->cmd) {
- 	case V4L2_DEC_CMD_START:
--		mutex_lock(&ctx->bitstream_mutex);
- 		mutex_lock(&dev->coda_mutex);
-+		mutex_lock(&ctx->bitstream_mutex);
- 		coda_bitstream_flush(ctx);
--		mutex_unlock(&dev->coda_mutex);
- 		dst_vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx,
- 					 V4L2_BUF_TYPE_VIDEO_CAPTURE);
- 		vb2_clear_last_buffer_dequeued(dst_vq);
- 		ctx->bit_stream_param &= ~CODA_BIT_STREAM_END_FLAG;
- 		coda_fill_bitstream(ctx, NULL);
- 		mutex_unlock(&ctx->bitstream_mutex);
-+		mutex_unlock(&dev->coda_mutex);
- 		break;
- 	case V4L2_DEC_CMD_STOP:
- 		stream_end = false;
+-		skb_set_hash(skb, hash, PKT_HASH_TYPE_L3);
++		__skb_set_sw_hash(skb, hash, false);
+ 	}
+ 
+ 	return hash;
+@@ -795,8 +795,7 @@ static struct sk_buff *netvsc_alloc_recv_skb(struct net_device *net,
+ 	    skb->protocol == htons(ETH_P_IP))
+ 		netvsc_comp_ipcsum(skb);
+ 
+-	/* Do L4 checksum offload if enabled and present.
+-	 */
++	/* Do L4 checksum offload if enabled and present. */
+ 	if (csum_info && (net->features & NETIF_F_RXCSUM)) {
+ 		if (csum_info->receive.tcp_checksum_succeeded ||
+ 		    csum_info->receive.udp_checksum_succeeded)
 -- 
 2.20.1
 
