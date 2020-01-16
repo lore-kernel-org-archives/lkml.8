@@ -2,152 +2,95 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB5CC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F19C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DBC22077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:55:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="qf3BehJP"
+	by mail.kernel.org (Postfix) with ESMTP id 1E47F2077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:55:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729508AbgAPGzM (ORCPT
+        id S1729638AbgAPGz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 01:55:12 -0500
-Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.103]:23013 "EHLO
-        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725973AbgAPGzL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 01:55:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1579157709;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=TuMGu6eCqVUYEoh3TD5lXbSvO6CM/wB9pqQh/ZoBuBY=;
-        b=qf3BehJPpMWMEjAwpc96RMiqDWboEbHi5clMZpC1MST7Yg7oy0iKqTHNK1+9TZyGu/
-        Hlq9sTs1Li8OBhaQfdEmXDl+zsKtgwHB3k0/g5UPxsWqw0lnt1GYcPtAIe6qIPL6mukG
-        /q4KHUWWqOc1CTaclppIc44Q+NX/91zxdGoUh21ahTYFRfchJzQoip8QcOKMI37YbHMb
-        m1tqcxd20sOGvC8YkaGD6ROPzIytEUOqD0+T1umh1MhgTEdFkdFl/qE8vDrtEt2sE3Qk
-        1E3r06Yw4kYSdh75YysZ0/YWIkpN0eBsVqkD9kn/yd3zcXpcMnylJm7QSkEEh1SZCDgI
-        qbUw==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPZJPScHivh"
-X-RZG-CLASS-ID: mo00
-Received: from tauon.chronox.de
-        by smtp.strato.de (RZmta 46.1.4 DYNA|AUTH)
-        with ESMTPSA id u04585w0G6s1aB2
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Thu, 16 Jan 2020 07:54:01 +0100 (CET)
-From:   Stephan Mueller <smueller@chronox.de>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH v28 07/12] LRNG - add kernel crypto API PRNG extension
-Date:   Thu, 16 Jan 2020 07:54:00 +0100
-Message-ID: <6088699.12EYreDE7o@tauon.chronox.de>
-In-Reply-To: <d98e7a45-3d1b-8119-1ed0-87aea0f3c6f3@infradead.org>
-References: <6157374.ptSnyUpaCn@positron.chronox.de> <526421170.FD02tCEzJt@positron.chronox.de> <d98e7a45-3d1b-8119-1ed0-87aea0f3c6f3@infradead.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+        Thu, 16 Jan 2020 01:55:26 -0500
+Received: from mga07.intel.com ([134.134.136.100]:10523 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726897AbgAPGzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 01:55:25 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 22:55:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,325,1574150400"; 
+   d="scan'208";a="257217569"
+Received: from wanglin3-mobl.ccr.corp.intel.com ([10.255.31.165])
+  by fmsmga002.fm.intel.com with ESMTP; 15 Jan 2020 22:55:23 -0800
+Message-ID: <22cf7771952d633e36503ae3d8d462a1d40c3c90.camel@intel.com>
+Subject: Re: [PATCH] thermal: int340x: processor_thermal: Add Jasper Lake
+ support
+From:   Zhang Rui <rui.zhang@intel.com>
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Swaminathan, Nivedita" <nivedita.swaminathan@intel.com>
+Date:   Thu, 16 Jan 2020 14:55:55 +0800
+In-Reply-To: <20191212203025.36310-1-srinivas.pandruvada@linux.intel.com>
+References: <20191212203025.36310-1-srinivas.pandruvada@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Donnerstag, 16. Januar 2020, 01:15:46 CET schrieb Randy Dunlap:
+On Thu, 2019-12-12 at 12:30 -0800, Srinivas Pandruvada wrote:
+> From: "Swaminathan, Nivedita" <nivedita.swaminathan@intel.com>
+> 
+> Added new PCI id for Jasper Lake processor thermal device.
+> 
+> Signed-off-by: Swaminathan, Nivedita <nivedita.swaminathan@intel.com>
+> Signed-off-by: Srinivas Pandruvada <
+> srinivas.pandruvada@linux.intel.com>
 
-Hi Randy,
-
-> On 1/15/20 2:34 AM, Stephan M=FCller wrote:
-> > CC: "Eric W. Biederman" <ebiederm@xmission.com>
-> > CC: "Alexander E. Patrakov" <patrakov@gmail.com>
-> > CC: "Ahmed S. Darwish" <darwish.07@gmail.com>
-> > CC: "Theodore Y. Ts'o" <tytso@mit.edu>
-> > CC: Willy Tarreau <w@1wt.eu>
-> > CC: Matthew Garrett <mjg59@srcf.ucam.org>
-> > CC: Vito Caputo <vcaputo@pengaru.com>
-> > CC: Andreas Dilger <adilger.kernel@dilger.ca>
-> > CC: Jan Kara <jack@suse.cz>
-> > CC: Ray Strode <rstrode@redhat.com>
-> > CC: William Jon McCann <mccann@jhu.edu>
-> > CC: zhangjs <zachary@baishancloud.com>
-> > CC: Andy Lutomirski <luto@kernel.org>
-> > CC: Florian Weimer <fweimer@redhat.com>
-> > CC: Lennart Poettering <mzxreary@0pointer.de>
-> > CC: Nicolai Stange <nstange@suse.de>
-> > Reviewed-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
-> > Reviewed-by: Roman Drahtmueller <draht@schaltsekun.de>
-> > Tested-by: Roman Drahtm=FCller <draht@schaltsekun.de>
-> > Tested-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
-> > Tested-by: Neil Horman <nhorman@redhat.com>
-> > Signed-off-by: Stephan Mueller <smueller@chronox.de>
-> > ---
-> >=20
-> >  drivers/char/lrng/Kconfig      |  10 +
-> >  drivers/char/lrng/Makefile     |   1 +
-> >  drivers/char/lrng/lrng_kcapi.c | 327 +++++++++++++++++++++++++++++++++
-> >  3 files changed, 338 insertions(+)
-> >  create mode 100644 drivers/char/lrng/lrng_kcapi.c
-> >=20
-> > diff --git a/drivers/char/lrng/Kconfig b/drivers/char/lrng/Kconfig
-> > index 15fb623d9d1f..0d070a3897dd 100644
-> > --- a/drivers/char/lrng/Kconfig
-> > +++ b/drivers/char/lrng/Kconfig
-> > @@ -80,6 +80,16 @@ config LRNG_DRBG
-> >=20
-> >  	  Enable the SP800-90A DRBG support for the LRNG. Once the
-> >  	  module is loaded, output from /dev/random, /dev/urandom,
-> >  	  getrandom(2), or get_random_bytes is provided by a DRBG.
-> >=20
-> > +
-> > +config LRNG_KCAPI
-> > +	tristate "Kernel Crypto API support for the LRNG"
-> > +	select CRYPTO_RNG
->=20
-> Don't select CRYPTO_RNG unless you know that CRYPTO is set/enabled.
-
-I added "depends on CRYPTO"
->=20
-> > +	help
-> > +	  Enable the support for generic pseudo-random number
-> > +	  generators offered by the kernel crypto API with the
-> > +	  LRNG. Once the module is loaded, output from /dev/random,
-> > +	  /dev/urandom, getrandom(2), or get_random_bytes is
-> > +	  provided by the selected kernel crypto API RNG.
-> >=20
-> >  endif # LRNG_DRNG_SWITCH
-> > =20
-> >  endif # LRNG
-
-Thank you.
-
-Ciao
-Stephan
-
+Acked-by: Zhang Rui <rui.zhang@intel.com>
+> ---
+>  .../thermal/intel/int340x_thermal/processor_thermal_device.c  | 4
+> ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git
+> a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
+> b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
+> index 89a015387283..b1fd34516e28 100644
+> ---
+> a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
+> +++
+> b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
+> @@ -42,6 +42,9 @@
+>  /* IceLake thermal reporting device */
+>  #define PCI_DEVICE_ID_PROC_ICL_THERMAL	0x8a03
+>  
+> +/* JasperLake thermal reporting device */
+> +#define PCI_DEVICE_ID_PROC_JSL_THERMAL	0x4503
+> +
+>  #define DRV_NAME "proc_thermal"
+>  
+>  struct power_config {
+> @@ -724,6 +727,7 @@ static const struct pci_device_id
+> proc_thermal_pci_ids[] = {
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL,
+> PCI_DEVICE_ID_PROC_GLK_THERMAL)},
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL,
+> PCI_DEVICE_ID_PROC_ICL_THERMAL),
+>  		.driver_data = (kernel_ulong_t)&rapl_mmio_hsw, },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL,
+> PCI_DEVICE_ID_PROC_JSL_THERMAL)},
+>  	{ 0, },
+>  };
+>  
 
