@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 379FFC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DF6C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 115E924679
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:35:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 452D82073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:35:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199748;
-	bh=QWtqO8cKmXuOe/GJohipsedM7ZuIUCFySx/QbStoT4c=;
+	s=default; t=1579199751;
+	bh=VBidqZZy8EOM3EeYF2d/6iwoZ/CfMT1JUE7+LAaz+oI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yYxE6lDMeROimwFk2i6PfESnoO2ZiurJvDmZYaX/HsVnko3V6jUFxLxDWt1vEJqZG
-	 L8gQA7SpGt6egCBn+Tudl7FHi4REJHxWNOH94nWPuSb05hWLGKPkXfWDgFy2ckI94K
-	 y7VR/O/e1lcmIrBC6eaP64/9Lu/n1s9mKkGFIBHU=
+	b=S+Z3Wz+L0wjVRPnZBgSsQn00ZNJJblQCzVNioFNQZQhr/vRCHZAoQAqjPyWgDTkhf
+	 X4JBiJknb2g2Q5RNu+AqaLrzBEFqgOeXfcEwxsTsGUbSzNByKgHuHUoQ+oxnIA73YJ
+	 Voh4B4e/I2C4FQFjbb45si9nqClNUaj/N887o6Gc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407156AbgAPSfq (ORCPT
+        id S2391738AbgAPRYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:35:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58834 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:24:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391752AbgAPRYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:24:25 -0500
+        id S2391313AbgAPRYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:24:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01B6E2467E;
-        Thu, 16 Jan 2020 17:24:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A2B72468C;
+        Thu, 16 Jan 2020 17:24:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195464;
-        bh=QWtqO8cKmXuOe/GJohipsedM7ZuIUCFySx/QbStoT4c=;
+        s=default; t=1579195457;
+        bh=VBidqZZy8EOM3EeYF2d/6iwoZ/CfMT1JUE7+LAaz+oI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vyUlcp7Nne416IXNVikdneKWTNmEI59A03QD1+HEKx3Xv3/UYCfoqpNLVLKgB+eyV
-         rUQhAoyzpKPStc3OV+/8Fp2CkRVaroy3HrP1SLT7TYOKiub60utlMvtTGovu6vF1BO
-         bwcfP/6gmEPsiEDCno/9XHAG3qac7dtNWs42URsI=
+        b=Z1vDNqL9QC17BE5R0hdo3QYIt6qunOPlIrAO6ijpW1BCPhVbFulAWldZ2FAEYl4/N
+         aciZ5s1rBC2QPKunOXDrAo7EG+vfYA+adBxDRGBw/dLQrZAozdKTJPCtsdzTkgtnF7
+         DPN5WyjEo1qKoj+3dtLuUldo7jFTKJnOZTefZM+g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Liu Jian <liujian56@huawei.com>,
-        Hamish Martin <hamish.martin@alliedtelesis.co.nz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 072/371] driver: uio: fix possible use-after-free in __uio_register_device
-Date:   Thu, 16 Jan 2020 12:19:04 -0500
-Message-Id: <20200116172403.18149-15-sashal@kernel.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 066/371] clk: sunxi-ng: sun8i-a23: Enable PLL-MIPI LDOs when ungating it
+Date:   Thu, 16 Jan 2020 12:18:58 -0500
+Message-Id: <20200116172403.18149-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -60,56 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liu Jian <liujian56@huawei.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit 221a1f4ac12d2ab46246c160b2e00d1b1160d5d9 ]
+[ Upstream commit 108a459ef4cd17a28711d81092044e597b5c7618 ]
 
-In uio_dev_add_attributes() error handing case, idev is used after
-device_unregister(), in which 'idev' has been released, touch idev cause
-use-after-free.
+The PLL-MIPI clock is somewhat special as it has its own LDOs which
+need to be turned on for this PLL to actually work and output a clock
+signal.
 
-Fixes: a93e7b331568 ("uio: Prevent device destruction while fds are open")
-Signed-off-by: Liu Jian <liujian56@huawei.com>
-Reviewed-by: Hamish Martin <hamish.martin@alliedtelesis.co.nz>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Add the 2 LDO enable bits to the gate bits.
+
+Fixes: 5690879d93e8 ("clk: sunxi-ng: Add A23 CCU")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/uio/uio.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/clk/sunxi-ng/ccu-sun8i-a23.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/uio/uio.c b/drivers/uio/uio.c
-index 4e9b0ff79b13..7c18536a3742 100644
---- a/drivers/uio/uio.c
-+++ b/drivers/uio/uio.c
-@@ -944,6 +944,7 @@ int __uio_register_device(struct module *owner,
- 		return ret;
- 	}
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-a23.c b/drivers/clk/sunxi-ng/ccu-sun8i-a23.c
+index d93b452f0df9..1cef040ebe82 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-a23.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-a23.c
+@@ -132,7 +132,7 @@ static SUNXI_CCU_NKM_WITH_GATE_LOCK(pll_mipi_clk, "pll-mipi",
+ 				    8, 4,		/* N */
+ 				    4, 2,		/* K */
+ 				    0, 4,		/* M */
+-				    BIT(31),		/* gate */
++				    BIT(31) | BIT(23) | BIT(22), /* gate */
+ 				    BIT(28),		/* lock */
+ 				    CLK_SET_RATE_UNGATE);
  
-+	device_initialize(&idev->dev);
- 	idev->dev.devt = MKDEV(uio_major, idev->minor);
- 	idev->dev.class = &uio_class;
- 	idev->dev.parent = parent;
-@@ -954,7 +955,7 @@ int __uio_register_device(struct module *owner,
- 	if (ret)
- 		goto err_device_create;
- 
--	ret = device_register(&idev->dev);
-+	ret = device_add(&idev->dev);
- 	if (ret)
- 		goto err_device_create;
- 
-@@ -986,9 +987,10 @@ int __uio_register_device(struct module *owner,
- err_request_irq:
- 	uio_dev_del_attributes(idev);
- err_uio_dev_add_attributes:
--	device_unregister(&idev->dev);
-+	device_del(&idev->dev);
- err_device_create:
- 	uio_free_minor(idev);
-+	put_device(&idev->dev);
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(__uio_register_device);
 -- 
 2.20.1
 
