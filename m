@@ -2,130 +2,81 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B89B9C33CAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 01:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8D2C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 01:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DAAF2072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 01:33:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ah4TFo6I"
+	by mail.kernel.org (Postfix) with ESMTP id BCA102077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 01:38:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388414AbgAQBdY (ORCPT
+        id S2388484AbgAQBiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 20:33:24 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:45155 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730070AbgAQBdY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 20:33:24 -0500
-Received: by mail-lf1-f65.google.com with SMTP id 203so17067914lfa.12;
-        Thu, 16 Jan 2020 17:33:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=Vv41OytkG2lm8SDKlOhg/H6yihO/V8R0f5z4QUp0HiY=;
-        b=Ah4TFo6IAW4T2As4EOtGEwjyCC4a/sieRz+Y9ll6/X1YfVcWC45I32GbSnGbdYDCbA
-         PmwYVbh8mD6sH146gnqDd9pPR1E6Wq/Nq+0qVafy5jYXBBII88hwa9iBwTiZV7vqrRId
-         1Wrii4CzY7JPvxuGQgCME78phMA22NwqzOojZy+oSzxK2ADHsH9kRkkDpFjXeTZBm5zf
-         WF21SQmP/Gxcg9oxq7ylsx5S8xywWyAqoRb/aloJyaCiP1+z5T1+uaxRxL0c30rjTESI
-         4OyJorxOeoHIDMq1K0uow3O9+S8DnQ/2PY5qoNGc/ioUXKJ3s4FZHjgaA2QdicF47S1s
-         EFLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Vv41OytkG2lm8SDKlOhg/H6yihO/V8R0f5z4QUp0HiY=;
-        b=uOi99bAAaazzG0IL3qwUG7I/1PX17QvwtvsAWqV+cFx72PmTaQtrLm14oWTW/+REP3
-         UJfDDnWfOuJsqJHyDz5BK1SWQ35SolbWhd/d0WYv2P277XlbiJRhoFsT/qAKlssyJL7z
-         ekRoQ7bjprYT8YJXE9PZVGHU2JVnpXzZrW/0oouhhRnMBgNGhN2hS80X6caW0T6b7S0m
-         uRR6zoqujdUkBmDM4GgXmNN+PRHK5+k3CsyVVv46lqhqYsZy9s3CMfIlvXdnxWPsjd6j
-         lPjV0m821Nph+ZapwZfRvk9niqYRxC0kHHHVN28MA0OZcgCZRd1FK4OYTtSTcUx7/zz+
-         lydw==
-X-Gm-Message-State: APjAAAU1gzFLg5lnMN1vHF7RTF/zrT/uWNJk+f/edFWv4HwYG24VJ/wm
-        v9xXBAPyuTjS8i3gp+q/oQ4=
-X-Google-Smtp-Source: APXvYqxw8NkIQQimSy+3i2QsgTXNgXe3GdPb4+CIflp9GmK5A8gUyzNBZXzEBOPS4cO2XeJFaBceUQ==
-X-Received: by 2002:a19:c1c1:: with SMTP id r184mr4172932lff.128.1579224801780;
-        Thu, 16 Jan 2020 17:33:21 -0800 (PST)
-Received: from localhost.localdomain ([109.126.145.157])
-        by smtp.gmail.com with ESMTPSA id q10sm11608696ljj.60.2020.01.16.17.33.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 17:33:21 -0800 (PST)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>, willy@infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] fs: optimise kiocb_set_rw_flags()
-Date:   Fri, 17 Jan 2020 04:32:37 +0300
-Message-Id: <5328b35d948ea2a3aa5df2b1d740c7cb1f38c846.1579224594.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <8cecd243-38aa-292d-15cd-49b485f9253f@gmail.com>
-References: <8cecd243-38aa-292d-15cd-49b485f9253f@gmail.com>
+        Thu, 16 Jan 2020 20:38:23 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9180 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730720AbgAQBiX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 20:38:23 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 7529E2450DA21B6F08DA;
+        Fri, 17 Jan 2020 09:38:20 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Fri, 17 Jan 2020
+ 09:38:12 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <ast@kernel.org>, <daniel@iogearbox.net>, <kafai@fb.com>,
+        <songliubraving@fb.com>, <yhs@fb.com>, <andriin@fb.com>,
+        <brianvv@google.com>
+CC:     <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH bpf-next] bpf: Remove set but not used variable 'first_key'
+Date:   Thu, 16 Jan 2020 22:53:00 +0800
+Message-ID: <20200116145300.59056-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kiocb_set_rw_flags() generates a poor code with several memory writes
-and a lot of jumps. Help compilers to optimise it.
+kernel/bpf/syscall.c: In function generic_map_lookup_batch:
+kernel/bpf/syscall.c:1339:7: warning: variable first_key set but not used [-Wunused-but-set-variable]
 
-Tested with gcc 9.2 on x64-86, and as a result, it its output now is a
-plain code without jumps accumulating in a register before a memory
-write.
+It is never used, so remove it.
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
+ kernel/bpf/syscall.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-v2: check for 0 flags in advance (Matthew Wilcox)
-
- include/linux/fs.h | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
-
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 98e0349adb52..22b46fc8fdfa 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3402,22 +3402,28 @@ static inline int iocb_flags(struct file *file)
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 0d94d36..c26a714 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -1336,7 +1336,6 @@ int generic_map_lookup_batch(struct bpf_map *map,
+ 	void *buf, *buf_prevkey, *prev_key, *key, *value;
+ 	int err, retry = MAP_LOOKUP_RETRIES;
+ 	u32 value_size, cp, max_count;
+-	bool first_key = false;
  
- static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
- {
-+	int kiocb_flags = 0;
-+
-+	if (!flags)
-+		return 0;
- 	if (unlikely(flags & ~RWF_SUPPORTED))
- 		return -EOPNOTSUPP;
- 
- 	if (flags & RWF_NOWAIT) {
- 		if (!(ki->ki_filp->f_mode & FMODE_NOWAIT))
- 			return -EOPNOTSUPP;
--		ki->ki_flags |= IOCB_NOWAIT;
-+		kiocb_flags |= IOCB_NOWAIT;
+ 	if (attr->batch.elem_flags & ~BPF_F_LOCK)
+ 		return -EINVAL;
+@@ -1365,7 +1364,6 @@ int generic_map_lookup_batch(struct bpf_map *map,
  	}
- 	if (flags & RWF_HIPRI)
--		ki->ki_flags |= IOCB_HIPRI;
-+		kiocb_flags |= IOCB_HIPRI;
- 	if (flags & RWF_DSYNC)
--		ki->ki_flags |= IOCB_DSYNC;
-+		kiocb_flags |= IOCB_DSYNC;
- 	if (flags & RWF_SYNC)
--		ki->ki_flags |= (IOCB_DSYNC | IOCB_SYNC);
-+		kiocb_flags |= (IOCB_DSYNC | IOCB_SYNC);
- 	if (flags & RWF_APPEND)
--		ki->ki_flags |= IOCB_APPEND;
-+		kiocb_flags |= IOCB_APPEND;
-+
-+	ki->ki_flags |= kiocb_flags;
- 	return 0;
- }
  
+ 	err = -EFAULT;
+-	first_key = false;
+ 	prev_key = NULL;
+ 	if (ubatch && copy_from_user(buf_prevkey, ubatch, map->key_size))
+ 		goto free_buf;
 -- 
-2.24.0
+2.7.4
+
 
