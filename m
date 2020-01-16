@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62CE6C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A769CC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F4A920730
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:16:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83BDD20730
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:16:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198597;
-	bh=6iE2ejbYV4EdgBFaKfGUn3r49RQtWONk5VeROMmONp4=;
+	s=default; t=1579198604;
+	bh=6E0aL007KUO2++/022Cemxn4jgbFOFs5qPY3sv9tjLk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X8wdremroQehOxUQfYYIEPlMYjQ5ZRnQu2V/n6qcW52MKd5oZbEXd+fRZUfyqWIKh
-	 cbK2wtwQ2b6gCjC8S9Xlc9lLblhjNSJDldjQohGTzhcm6XGOemHG1D8n/0RBbGAFOx
-	 gPj1lmaFcEmzNbThjqdoMbhv/pvloeKmXTJQkdxo=
+	b=Y7C/AiRa8mPgiidPMZWreoyrzdJDHdhibwXdL1W1SC2WlDdalEx2dbtbVshxjn0uM
+	 Q+1QQSX3Gy3N9xez7eQh8MwJTiP5z9H+eqeaHI2gyQaSQ+DecnPcNWoP+r8daZ+i7N
+	 zvJmTIqhnfnL+ZAHA3QacZWxMhHPn+dbPCTHY7fU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393024AbgAPSQg (ORCPT
+        id S2406098AbgAPSQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:16:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41230 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:16:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392708AbgAPR3Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:29:25 -0500
+        id S1732131AbgAPR3Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:29:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF8D62470C;
-        Thu, 16 Jan 2020 17:29:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C79BD246F8;
+        Thu, 16 Jan 2020 17:29:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195765;
-        bh=6iE2ejbYV4EdgBFaKfGUn3r49RQtWONk5VeROMmONp4=;
+        s=default; t=1579195763;
+        bh=6E0aL007KUO2++/022Cemxn4jgbFOFs5qPY3sv9tjLk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ec+I362Th0RYFZpLLUldyebj5ShU+uxr+1mtcIMUsEhgGZ1iuZLx7Deb/3kXB28TK
-         4blwzyGSBipiqNUa3aY9/+YE38OUWqeo+SD8eXcyZupXQCkMTQfFeb5Zy08ZPoEtP7
-         6j/ZRFeC7N+mr4sCWMXR4yBxx19r5e7NOx3A35dI=
+        b=fRFkwl4NxDzCmwpL0CEFJWEQv42AL/OG4U2sWTA0RtXUUrGfB7mH5C93T1rsOm658
+         Orf0K2VfMrDedScCXNz5t1lV5HlYMrhRq3XJwUMabMSsOKJGMZv1K11xN+BbVLCjjv
+         dXgbHkcXX1I/R8VJ7qo2g/JzddqOKDoGQesIIUQM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Filipe Manana <fdmanana@suse.com>,
         Nikolay Borisov <nborisov@suse.com>,
         David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 293/371] Btrfs: fix inode cache waiters hanging on path allocation failure
-Date:   Thu, 16 Jan 2020 12:22:45 -0500
-Message-Id: <20200116172403.18149-236-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 292/371] Btrfs: fix inode cache waiters hanging on failure to start caching thread
+Date:   Thu, 16 Jan 2020 12:22:44 -0500
+Message-Id: <20200116172403.18149-235-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -62,39 +62,75 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit 9d123a35d7e97bb2139747b16127c9b22b6a593e ]
+[ Upstream commit a68ebe0790fc88b4314d17984a2cf99ce2361901 ]
 
-If the caching thread fails to allocate a path, it returns without waking
-up any cache waiters, leaving them hang forever. Fix this by following the
-same approach as when we fail to start the caching thread: print an error
-message, disable inode caching and make the wakers fallback to non-caching
-mode behaviour (calling btrfs_find_free_objectid()).
+If we fail to start the inode caching thread, we print an error message
+and disable the inode cache, however we never wake up any waiters, so they
+hang forever waiting for the caching to finish. Fix this by waking them
+up and have them fallback to a call to btrfs_find_free_objectid().
 
-Fixes: 581bb050941b4f ("Btrfs: Cache free inode numbers in memory")
+Fixes: e60efa84252c05 ("Btrfs: avoid triggering bug_on() when we fail to start inode caching task")
 Reviewed-by: Nikolay Borisov <nborisov@suse.com>
 Signed-off-by: Filipe Manana <fdmanana@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/inode-map.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/btrfs/inode-map.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
 diff --git a/fs/btrfs/inode-map.c b/fs/btrfs/inode-map.c
-index b1c3a4ec76c8..2ae32451fb5b 100644
+index 7dc2923655d9..b1c3a4ec76c8 100644
 --- a/fs/btrfs/inode-map.c
 +++ b/fs/btrfs/inode-map.c
-@@ -55,8 +55,10 @@ static int caching_kthread(void *data)
- 		return 0;
+@@ -26,6 +26,19 @@
+ #include "inode-map.h"
+ #include "transaction.h"
  
- 	path = btrfs_alloc_path();
--	if (!path)
-+	if (!path) {
++static void fail_caching_thread(struct btrfs_root *root)
++{
++	struct btrfs_fs_info *fs_info = root->fs_info;
++
++	btrfs_warn(fs_info, "failed to start inode caching task");
++	btrfs_clear_pending_and_info(fs_info, INODE_MAP_CACHE,
++				     "disabling inode map caching");
++	spin_lock(&root->ino_cache_lock);
++	root->ino_cache_state = BTRFS_CACHE_ERROR;
++	spin_unlock(&root->ino_cache_lock);
++	wake_up(&root->ino_cache_wait);
++}
++
+ static int caching_kthread(void *data)
+ {
+ 	struct btrfs_root *root = data;
+@@ -178,11 +191,8 @@ static void start_caching(struct btrfs_root *root)
+ 
+ 	tsk = kthread_run(caching_kthread, root, "btrfs-ino-cache-%llu",
+ 			  root->root_key.objectid);
+-	if (IS_ERR(tsk)) {
+-		btrfs_warn(fs_info, "failed to start inode caching task");
+-		btrfs_clear_pending_and_info(fs_info, INODE_MAP_CACHE,
+-					     "disabling inode map caching");
+-	}
++	if (IS_ERR(tsk))
 +		fail_caching_thread(root);
- 		return -ENOMEM;
-+	}
+ }
  
- 	/* Since the commit root is read-only, we can safely skip locking. */
- 	path->skip_locking = 1;
+ int btrfs_find_free_ino(struct btrfs_root *root, u64 *objectid)
+@@ -200,11 +210,14 @@ int btrfs_find_free_ino(struct btrfs_root *root, u64 *objectid)
+ 
+ 	wait_event(root->ino_cache_wait,
+ 		   root->ino_cache_state == BTRFS_CACHE_FINISHED ||
++		   root->ino_cache_state == BTRFS_CACHE_ERROR ||
+ 		   root->free_ino_ctl->free_space > 0);
+ 
+ 	if (root->ino_cache_state == BTRFS_CACHE_FINISHED &&
+ 	    root->free_ino_ctl->free_space == 0)
+ 		return -ENOSPC;
++	else if (root->ino_cache_state == BTRFS_CACHE_ERROR)
++		return btrfs_find_free_objectid(root, objectid);
+ 	else
+ 		goto again;
+ }
 -- 
 2.20.1
 
