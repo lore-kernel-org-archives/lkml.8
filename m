@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F59EC47409
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE445C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DB1E24683
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:33:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB0EA246A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:33:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195996;
-	bh=W5GsXPgetj+H1lgqnH7m0kOe+yhVb2jMSSzjWLFHHfI=;
+	s=default; t=1579196004;
+	bh=3bs2tt+BQ2aDv4/lJ7CKnWz3MwHNBltAwpNAaDCYLDw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WbXBdWOuwDHqo+UsvLNn7v32zKFw2vB9JImtW8jL2LRANUpCh0YTbI7+sEO4ZSF8d
-	 GvKKhAtgdctT+28mhI2dw3kLdOfzLB2C2bPeMyhC0AUS4IcTX0j5YvdaQg9xT3Xc+O
-	 WVxo8ahYlriU6IlrjpJYkXi2dsUOzGVf7xJ2eJy8=
+	b=CwYRJgeQALenUsXWrAYaxDm6TlSaM0kVpWOGQWwyv/hodosa7bQ+J+uS0q+sB23oK
+	 kFpWkJNBX0sPieqe+aIrii7IYuHCOkZVuMRCGX07hHVq85mHwC3o4mG9wuEEVQ/K+E
+	 wDy60m1Yub3hcOt+X0+kfnaOQSv0I0/h5HcP8WC4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404602AbgAPRaj (ORCPT
+        id S2404819AbgAPRdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:30:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43180 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:33:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404553AbgAPRaf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:30:35 -0500
+        id S2404589AbgAPRag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:30:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D23642471F;
-        Thu, 16 Jan 2020 17:30:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03CC02472C;
+        Thu, 16 Jan 2020 17:30:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195834;
-        bh=W5GsXPgetj+H1lgqnH7m0kOe+yhVb2jMSSzjWLFHHfI=;
+        s=default; t=1579195835;
+        bh=3bs2tt+BQ2aDv4/lJ7CKnWz3MwHNBltAwpNAaDCYLDw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CSw2iDg9C8biMbLoHS/PDFUBmbFy6rTmCeOdmalNUgnffdjHHLadrDQQkCg/gfvPh
-         MpE/QPcTZIRpB6c1s1rphhCqqpBsHLwatbRJnNucSR+a9OVehoPhq9LuUeTIYjed8g
-         ImgT4+tWoknflNlZNKoMTO0LI60LnucfcKofqYaI=
+        b=ZPZ8F3cS7N738lJD/6eWbG0Uhba+5z3HRZD6gLSa5wqHuehvPGtyAvbG3rSujufwN
+         PRJ5FwVIjWtjpSHuCqb4t0RqFAY9+ShJmvKz136O9EGDI8eOBFFEHCuzn8fK1TET5m
+         nyhV3dHFKXpuc1GB7pandRuHKTy/JkO2Y7afjfjg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 339/371] scsi: esas2r: unlock on error in esas2r_nvram_read_direct()
-Date:   Thu, 16 Jan 2020 12:23:31 -0500
-Message-Id: <20200116172403.18149-282-sashal@kernel.org>
+Cc:     Marian Mihailescu <mihailescu2m@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 340/371] clk: samsung: exynos5420: Preserve CPU clocks configuration during suspend/resume
+Date:   Thu, 16 Jan 2020 12:23:32 -0500
+Message-Id: <20200116172403.18149-283-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -59,33 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Marian Mihailescu <mihailescu2m@gmail.com>
 
-[ Upstream commit 906ca6353ac09696c1bf0892513c8edffff5e0a6 ]
+[ Upstream commit e21be0d1d7bd7f78a77613f6bcb6965e72b22fc1 ]
 
-This error path is missing an unlock.
+Save and restore top PLL related configuration registers for big (APLL)
+and LITTLE (KPLL) cores during suspend/resume cycle. So far, CPU clocks
+were reset to default values after suspend/resume cycle and performance
+after system resume was affected when performance governor has been selected.
 
-Fixes: 26780d9e12ed ("[SCSI] esas2r: ATTO Technology ExpressSAS 6G SAS/SATA RAID Adapter Driver")
-Link: https://lore.kernel.org/r/20191022102324.GA27540@mwanda
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 773424326b51 ("clk: samsung: exynos5420: add more registers to restore list")
+Signed-off-by: Marian Mihailescu <mihailescu2m@gmail.com>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/esas2r/esas2r_flash.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clk/samsung/clk-exynos5420.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/scsi/esas2r/esas2r_flash.c b/drivers/scsi/esas2r/esas2r_flash.c
-index 7bd376d95ed5..b02ac389e6c6 100644
---- a/drivers/scsi/esas2r/esas2r_flash.c
-+++ b/drivers/scsi/esas2r/esas2r_flash.c
-@@ -1197,6 +1197,7 @@ bool esas2r_nvram_read_direct(struct esas2r_adapter *a)
- 	if (!esas2r_read_flash_block(a, a->nvram, FLS_OFFSET_NVR,
- 				     sizeof(struct esas2r_sas_nvram))) {
- 		esas2r_hdebug("NVRAM read failed, using defaults");
-+		up(&a->nvram_semaphore);
- 		return false;
- 	}
- 
+diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+index 47a14f93f869..2f54df5bef8e 100644
+--- a/drivers/clk/samsung/clk-exynos5420.c
++++ b/drivers/clk/samsung/clk-exynos5420.c
+@@ -170,6 +170,8 @@ static const unsigned long exynos5x_clk_regs[] __initconst = {
+ 	GATE_BUS_CPU,
+ 	GATE_SCLK_CPU,
+ 	CLKOUT_CMU_CPU,
++	APLL_CON0,
++	KPLL_CON0,
+ 	CPLL_CON0,
+ 	DPLL_CON0,
+ 	EPLL_CON0,
 -- 
 2.20.1
 
