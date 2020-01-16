@@ -7,54 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E050C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE6DC33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4381D20730
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7B0F22464
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:54:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193653;
-	bh=ejBNIGZGMxjzJ1lBq89t0fo9r5nqDm5BVFfXjSVWCUI=;
+	s=default; t=1579193656;
+	bh=H4TGDuj/IGoXsgjHYEbP9PeZK/cLYnM2Qg5WbYMX6t8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cHDgbtD4gelgyyKdOw8ZRJa7BUH8mlMdTHaP2FzMW1x0VMQGUYDbSUzMoEKld+1Mx
-	 w1rHuLiPFOYOcR2TfZ9O0cHI+Es/X9jX3qHjTssv0zK9zHw+ZSuU26E66JO0h7CyIa
-	 OevBsFsrNIwWugf0giag8uVCMKLW3UZzZYrf+Ebo=
+	b=wyhPoKX+kcoFazZWMcno77VwtmNPdZ9Oc//KcPysS1dcD+/hPWVYGD+2nDDa6ncdq
+	 5ReMvpernndtJlRwVthzfFHJsVmXY+mltSaWUvtdoJcyRig+9zkwrYE7g0C7lsyqYA
+	 qmkMkQSJ90wQg6CFJMLKSh8j7NpA6xBYqPOectWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731622AbgAPQyM (ORCPT
+        id S1731650AbgAPQyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:54:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38250 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:54:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731391AbgAPQyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:54:01 -0500
+        id S1728921AbgAPQyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:54:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9468A214AF;
-        Thu, 16 Jan 2020 16:53:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C27220730;
+        Thu, 16 Jan 2020 16:54:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193640;
-        bh=ejBNIGZGMxjzJ1lBq89t0fo9r5nqDm5BVFfXjSVWCUI=;
+        s=default; t=1579193644;
+        bh=H4TGDuj/IGoXsgjHYEbP9PeZK/cLYnM2Qg5WbYMX6t8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=liLlk0aCw/ShY/8XOQYgqbmJ6H8xh/o9/29EpjhlN1oLbOvVKmWWG0wM+UvUlc5Up
-         Vm1aNOrz+XktAGIjgozrJ7mUaJ0si2JESte7uZfs9bbDUt7Mpgwp5tPhXhBHoQncmB
-         +2DcPPzxup9BudSirPc+rL3kP0zlfIr5b4a1f18w=
+        b=HFY2y+5wVsgRnfh/grr4YpYsMtEWr/4pXQyoEV08VaOXdIFYdmn9MO0Mb2rzJ3M9w
+         5EeB1naN0O5TRqrLlC6V1VC2tnFCzHnFOJm7CA8qO5OCZkaj2UIo0ve9ibkZ0YL4nF
+         qV3qquKA7x4yvXlfN+FBRljZpV2yAbHAsKmho1is=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Alexei Starovoitov <ast@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 172/205] xdp: Fix cleanup on map free for devmap_hash map type
-Date:   Thu, 16 Jan 2020 11:42:27 -0500
-Message-Id: <20200116164300.6705-172-sashal@kernel.org>
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sasha Levin <sashal@kernel.org>, linux-um@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 175/205] um: Don't trace irqflags during shutdown
+Date:   Thu, 16 Jan 2020 11:42:30 -0500
+Message-Id: <20200116164300.6705-175-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,169 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 071cdecec57fb5d5df78e6a12114ad7bccea5b0e ]
+[ Upstream commit 5c1f33e2a03c0b8710b5d910a46f1e1fb0607679 ]
 
-Tetsuo pointed out that it was not only the device unregister hook that was
-broken for devmap_hash types, it was also cleanup on map free. So better
-fix this as well.
+In the main() code, we eventually enable signals just before
+exec() or exit(), in order to to not have signals pending and
+delivered *after* the exec().
 
-While we're at it, there's no reason to allocate the netdev_map array for
-DEVMAP_HASH, so skip that and adjust the cost accordingly.
+I've observed SIGSEGV loops at this point, and the reason seems
+to be the irqflags tracing; this makes sense as the kernel is
+no longer really functional at this point. Since there's really
+no reason to use unblock_signals_trace() here (I had just done
+a global search & replace), use the plain unblock_signals() in
+this case to avoid going into the no longer functional kernel.
 
-Fixes: 6f9d451ab1a3 ("xdp: Add devmap_hash map type for looking up devices by hashed index")
-Reported-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: John Fastabend <john.fastabend@gmail.com>
-Link: https://lore.kernel.org/bpf/20191121133612.430414-1-toke@redhat.com
+Fixes: 0dafcbe128d2 ("um: Implement TRACE_IRQFLAGS_SUPPORT")
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/devmap.c | 74 ++++++++++++++++++++++++++++-----------------
- 1 file changed, 46 insertions(+), 28 deletions(-)
+ arch/um/os-Linux/main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
-index 3867864cdc2f..3d3d61b5985b 100644
---- a/kernel/bpf/devmap.c
-+++ b/kernel/bpf/devmap.c
-@@ -74,7 +74,7 @@ struct bpf_dtab_netdev {
+diff --git a/arch/um/os-Linux/main.c b/arch/um/os-Linux/main.c
+index 8014dfac644d..c8a42ecbd7a2 100644
+--- a/arch/um/os-Linux/main.c
++++ b/arch/um/os-Linux/main.c
+@@ -170,7 +170,7 @@ int __init main(int argc, char **argv, char **envp)
+ 	 * that they won't be delivered after the exec, when
+ 	 * they are definitely not expected.
+ 	 */
+-	unblock_signals_trace();
++	unblock_signals();
  
- struct bpf_dtab {
- 	struct bpf_map map;
--	struct bpf_dtab_netdev **netdev_map;
-+	struct bpf_dtab_netdev **netdev_map; /* DEVMAP type only */
- 	struct list_head __percpu *flush_list;
- 	struct list_head list;
- 
-@@ -101,6 +101,12 @@ static struct hlist_head *dev_map_create_hash(unsigned int entries)
- 	return hash;
- }
- 
-+static inline struct hlist_head *dev_map_index_hash(struct bpf_dtab *dtab,
-+						    int idx)
-+{
-+	return &dtab->dev_index_head[idx & (dtab->n_buckets - 1)];
-+}
-+
- static int dev_map_init_map(struct bpf_dtab *dtab, union bpf_attr *attr)
- {
- 	int err, cpu;
-@@ -120,8 +126,7 @@ static int dev_map_init_map(struct bpf_dtab *dtab, union bpf_attr *attr)
- 	bpf_map_init_from_attr(&dtab->map, attr);
- 
- 	/* make sure page count doesn't overflow */
--	cost = (u64) dtab->map.max_entries * sizeof(struct bpf_dtab_netdev *);
--	cost += sizeof(struct list_head) * num_possible_cpus();
-+	cost = (u64) sizeof(struct list_head) * num_possible_cpus();
- 
- 	if (attr->map_type == BPF_MAP_TYPE_DEVMAP_HASH) {
- 		dtab->n_buckets = roundup_pow_of_two(dtab->map.max_entries);
-@@ -129,6 +134,8 @@ static int dev_map_init_map(struct bpf_dtab *dtab, union bpf_attr *attr)
- 		if (!dtab->n_buckets) /* Overflow check */
- 			return -EINVAL;
- 		cost += (u64) sizeof(struct hlist_head) * dtab->n_buckets;
-+	} else {
-+		cost += (u64) dtab->map.max_entries * sizeof(struct bpf_dtab_netdev *);
- 	}
- 
- 	/* if map size is larger than memlock limit, reject it */
-@@ -143,24 +150,22 @@ static int dev_map_init_map(struct bpf_dtab *dtab, union bpf_attr *attr)
- 	for_each_possible_cpu(cpu)
- 		INIT_LIST_HEAD(per_cpu_ptr(dtab->flush_list, cpu));
- 
--	dtab->netdev_map = bpf_map_area_alloc(dtab->map.max_entries *
--					      sizeof(struct bpf_dtab_netdev *),
--					      dtab->map.numa_node);
--	if (!dtab->netdev_map)
--		goto free_percpu;
--
- 	if (attr->map_type == BPF_MAP_TYPE_DEVMAP_HASH) {
- 		dtab->dev_index_head = dev_map_create_hash(dtab->n_buckets);
- 		if (!dtab->dev_index_head)
--			goto free_map_area;
-+			goto free_percpu;
- 
- 		spin_lock_init(&dtab->index_lock);
-+	} else {
-+		dtab->netdev_map = bpf_map_area_alloc(dtab->map.max_entries *
-+						      sizeof(struct bpf_dtab_netdev *),
-+						      dtab->map.numa_node);
-+		if (!dtab->netdev_map)
-+			goto free_percpu;
- 	}
- 
- 	return 0;
- 
--free_map_area:
--	bpf_map_area_free(dtab->netdev_map);
- free_percpu:
- 	free_percpu(dtab->flush_list);
- free_charge:
-@@ -228,21 +233,40 @@ static void dev_map_free(struct bpf_map *map)
- 			cond_resched();
- 	}
- 
--	for (i = 0; i < dtab->map.max_entries; i++) {
--		struct bpf_dtab_netdev *dev;
-+	if (dtab->map.map_type == BPF_MAP_TYPE_DEVMAP_HASH) {
-+		for (i = 0; i < dtab->n_buckets; i++) {
-+			struct bpf_dtab_netdev *dev;
-+			struct hlist_head *head;
-+			struct hlist_node *next;
- 
--		dev = dtab->netdev_map[i];
--		if (!dev)
--			continue;
-+			head = dev_map_index_hash(dtab, i);
- 
--		free_percpu(dev->bulkq);
--		dev_put(dev->dev);
--		kfree(dev);
-+			hlist_for_each_entry_safe(dev, next, head, index_hlist) {
-+				hlist_del_rcu(&dev->index_hlist);
-+				free_percpu(dev->bulkq);
-+				dev_put(dev->dev);
-+				kfree(dev);
-+			}
-+		}
-+
-+		kfree(dtab->dev_index_head);
-+	} else {
-+		for (i = 0; i < dtab->map.max_entries; i++) {
-+			struct bpf_dtab_netdev *dev;
-+
-+			dev = dtab->netdev_map[i];
-+			if (!dev)
-+				continue;
-+
-+			free_percpu(dev->bulkq);
-+			dev_put(dev->dev);
-+			kfree(dev);
-+		}
-+
-+		bpf_map_area_free(dtab->netdev_map);
- 	}
- 
- 	free_percpu(dtab->flush_list);
--	bpf_map_area_free(dtab->netdev_map);
--	kfree(dtab->dev_index_head);
- 	kfree(dtab);
- }
- 
-@@ -263,12 +287,6 @@ static int dev_map_get_next_key(struct bpf_map *map, void *key, void *next_key)
- 	return 0;
- }
- 
--static inline struct hlist_head *dev_map_index_hash(struct bpf_dtab *dtab,
--						    int idx)
--{
--	return &dtab->dev_index_head[idx & (dtab->n_buckets - 1)];
--}
--
- struct bpf_dtab_netdev *__dev_map_hash_lookup_elem(struct bpf_map *map, u32 key)
- {
- 	struct bpf_dtab *dtab = container_of(map, struct bpf_dtab, map);
+ 	os_info("\n");
+ 	/* Reboot */
 -- 
 2.20.1
 
