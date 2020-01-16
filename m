@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 514A5C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5468CC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C127724684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12F4F2467E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:23:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195392;
-	bh=C9LryPPI8PsxaJh91bW40PmXS34SlvRrDvM0ud5fJqA=;
+	s=default; t=1579195398;
+	bh=Pzd0a7Xe9wrKAq2qwT7jhPVjmbyQ/lDkJMOn2OSbZKc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NPCwtFjqDTCEyWbAc0oV2btJ0PPlKXMzJODrmmwUDJrksJzy+hV5QvXpIUWXiL9wJ
-	 +OMqmoKjWUwIOKLtYY95rVhiaSoz4ncG9Q71WGZHl88B+COR/dW8jAbHtuvvScz01w
-	 KBKGFaPGAoJX/I966QzJ+v+t4kR4Cf8SfQfXzceY=
+	b=1R/vt9NBd86dBqhVB/QDlQo03RxUpq1mp7LQuLiRV1oDGsj8PVa5tkv4DAuVWIgLv
+	 o5dHibTY0atAotsHI3bdiWX85uObZJdHe0qc9n5glGUTDlaaVgDG6F+ptcneiFDz9V
+	 Qc3nhQRlOPY2gIX4ehxJsqA3+hzUnjpvp/fpnvUc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391320AbgAPRXM (ORCPT
+        id S2390689AbgAPRNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:23:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57930 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:13:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390699AbgAPRNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:13:17 -0500
+        id S2390646AbgAPRNH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:13:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 243432469F;
-        Thu, 16 Jan 2020 17:13:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0EC12469D;
+        Thu, 16 Jan 2020 17:13:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194797;
-        bh=C9LryPPI8PsxaJh91bW40PmXS34SlvRrDvM0ud5fJqA=;
+        s=default; t=1579194786;
+        bh=Pzd0a7Xe9wrKAq2qwT7jhPVjmbyQ/lDkJMOn2OSbZKc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=stMVjiCookmKK7J0kL2gEXUDZAL2nqDSpnO1FawTwNJ4sYVPLg632CiwqFTwLP+ue
-         m1W46oPO4mFdWNPIZ2xd/PkiMbuvkW6q2PFjsnd4BsbFA9R6cqmQttq7/khJSwz6Zd
-         QrA6rMGQmSCjgb+p3jM6X6d7V2d5+jnGH30vq4oo=
+        b=e9ZGMr0wlHxqo871n1IOEerNVCOTOP2FIW634ukT3FdwPuKMQK2Ml4PL4uYsnCIZx
+         SmFv4Hpn6ZChSBVSk2jH11BRDBMbgF8sAIVz22DulE989W6qB/9Ljyz4RlhUFdwUAk
+         3j3gXbpfL73cZduF7gM604JwTK5K5cpfsrchlZ5o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
-        Alexander Barabash <alexander.barabash@dell.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 609/671] ioat: ioat_alloc_ring() failure handling.
-Date:   Thu, 16 Jan 2020 12:04:07 -0500
-Message-Id: <20200116170509.12787-346-sashal@kernel.org>
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Simon Horman <simon.horman@netronome.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>,
+        netem@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 601/671] net: netem: correct the parent's backlog when corrupted packet was dropped
+Date:   Thu, 16 Jan 2020 12:03:59 -0500
+Message-Id: <20200116170509.12787-338-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -61,43 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-[ Upstream commit b0b5ce1010ffc50015eaec72b0028aaae3f526bb ]
+[ Upstream commit e0ad032e144731a5928f2d75e91c2064ba1a764c ]
 
-If dma_alloc_coherent() returns NULL in ioat_alloc_ring(), ring
-allocation must not proceed.
+If packet corruption failed we jump to finish_segs and return
+NET_XMIT_SUCCESS. Seeing success will make the parent qdisc
+increment its backlog, that's incorrect - we need to return
+NET_XMIT_DROP.
 
-Until now, if the first call to dma_alloc_coherent() in
-ioat_alloc_ring() returned NULL, the processing could proceed, failing
-with NULL-pointer dereferencing further down the line.
-
-Signed-off-by: Alexander Barabash <alexander.barabash@dell.com>
-Acked-by: Dave Jiang <dave.jiang@intel.com>
-Link: https://lore.kernel.org/r/75e9c0e84c3345d693c606c64f8b9ab5@x13pwhopdag1307.AMER.DELL.COM
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: 6071bd1aa13e ("netem: Segment GSO packets on enqueue")
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reviewed-by: Simon Horman <simon.horman@netronome.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/ioat/dma.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/sched/sch_netem.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
-index 23fb2fa04000..b94cece58b98 100644
---- a/drivers/dma/ioat/dma.c
-+++ b/drivers/dma/ioat/dma.c
-@@ -388,10 +388,11 @@ ioat_alloc_ring(struct dma_chan *c, int order, gfp_t flags)
- 
- 		descs->virt = dma_alloc_coherent(to_dev(ioat_chan),
- 						 SZ_2M, &descs->hw, flags);
--		if (!descs->virt && (i > 0)) {
-+		if (!descs->virt) {
- 			int idx;
- 
- 			for (idx = 0; idx < i; idx++) {
-+				descs = &ioat_chan->descs[idx];
- 				dma_free_coherent(to_dev(ioat_chan), SZ_2M,
- 						  descs->virt, descs->hw);
- 				descs->virt = NULL;
+diff --git a/net/sched/sch_netem.c b/net/sched/sch_netem.c
+index 7660aa5b80da..014a28d8dd4f 100644
+--- a/net/sched/sch_netem.c
++++ b/net/sched/sch_netem.c
+@@ -607,6 +607,8 @@ static int netem_enqueue(struct sk_buff *skb, struct Qdisc *sch,
+ 		}
+ 		/* Parent qdiscs accounted for 1 skb of size @prev_len */
+ 		qdisc_tree_reduce_backlog(sch, -(nb - 1), -(len - prev_len));
++	} else if (!skb) {
++		return NET_XMIT_DROP;
+ 	}
+ 	return NET_XMIT_SUCCESS;
+ }
 -- 
 2.20.1
 
