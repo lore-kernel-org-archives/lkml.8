@@ -2,139 +2,83 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E9C2C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64249C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF70120748
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:39:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217985;
-	bh=KNMUoW2XH5IzFZtNLY8+UWNfcdNo7DhgtsCcv8xcdIg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dCId+PokLPiVyPCwYz+huxoVq2TNkTwU9b/XYSYP1OoWcvI+eFuU3qm1MOzosiJvi
-	 tyrtMsijjc/4zfraOmLKq+z+0UrpuHBoncH5waCr9qG2g2NyngV8FfvnK83K67/WQ+
-	 zsLjQUp39stfXvW+aEgrryvb73V5OSzi8itUQswM=
+	by mail.kernel.org (Postfix) with ESMTP id 37C762073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:39:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389912AbgAPXjo (ORCPT
+        id S2390338AbgAPX1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:39:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60406 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390315AbgAPX17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:27:59 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E466020684;
-        Thu, 16 Jan 2020 23:27:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217279;
-        bh=KNMUoW2XH5IzFZtNLY8+UWNfcdNo7DhgtsCcv8xcdIg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mjVrixY9R7yWp89ICMg6AvCfSCPUvm8ZL6uWqgQjubVvt2TNNSwjUW/UOIzKb5Alz
-         8/Ps9/n0GEGxsNpQA2egW9TQP6LV0WWngec88STOmd3AExncv0eIPpzCyyShsuChYa
-         /f5TtGNpHqshAJoqWvsnWn+7A0kNloTHPuRFnghc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Selvin Xavier <selvin.xavier@broadcom.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.19 18/84] RDMA/bnxt_re: Avoid freeing MR resources if dereg fails
-Date:   Fri, 17 Jan 2020 00:17:52 +0100
-Message-Id: <20200116231715.784465944@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
-References: <20200116231713.087649517@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 16 Jan 2020 18:27:48 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:42951 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390324AbgAPX1o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:27:44 -0500
+Received: from 79.184.255.90.ipv4.supernova.orange.pl (79.184.255.90) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.320)
+ id 4b8442e69dabda39; Fri, 17 Jan 2020 00:27:41 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the kunit-next tree
+Date:   Fri, 17 Jan 2020 00:27:41 +0100
+Message-ID: <1721306.C5hDvk6sIF@kreacher>
+In-Reply-To: <alpine.LRH.2.20.2001161120230.2505@dhcp-10-175-200-122.vpn.oracle.com>
+References: <20200116165703.4e04be51@canb.auug.org.au> <alpine.LRH.2.20.2001161120230.2505@dhcp-10-175-200-122.vpn.oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Selvin Xavier <selvin.xavier@broadcom.com>
+On Thursday, January 16, 2020 12:23:09 PM CET Alan Maguire wrote:
+> On Thu, 16 Jan 2020, Stephen Rothwell wrote:
+> 
+> > Hi all,
+> > 
+> > After merging the kunit-next tree, today's linux-next build (x86_64
+> > allmodconfig) failed like this:
+> > 
+> > x86_64-linux-gnu-ld: drivers/base/test/property-entry-test.o: in function `kunit_test_suites_init':
+> > property-entry-test.c:(.text+0x26): undefined reference to `kunit_run_tests'
+> > x86_64-linux-gnu-ld: drivers/base/test/property-entry-test.o: in function `pe_test_reference':
+> > property-entry-test.c:(.text+0x275): undefined reference to `kunit_binary_assert_format'
+> > x86_64-linux-gnu-ld: property-entry-test.c:(.text+0x2c4): undefined reference to `kunit_do_assertion'
+> > 
+> > and lots more ...
+> > 
+> > Caused by commit
+> > 
+> >   27f9d7e984d9 ("software node: introduce CONFIG_KUNIT_DRIVER_PE_TEST")
+> > 
+> > from the pm tree interacting with commit
+> > 
+> >   35c57fc3f8ea ("kunit: building kunit as a module breaks allmodconfig")
+> > 
+> > I have disabled CONFIG_KUNIT_DRIVER_PE_TEST for today.
+> >
+> 
+> Apologies again, I should have explicitly specified that
+> CONFIG_KUNIT_DRIVER_PE_TEST depends on KUNIT=y; I've
+> sent a patch to fix this:
+> 
+> https://lore.kernel.org/lkml/1579173451-2439-1-git-send-email-alan.maguire@oracle.com/T/#u
 
-commit 9a4467a6b282a299b932608ac2c9034f8415359f upstream.
+I have folded this into the original patch and remerged the linux-next branch.
 
-The driver returns an error code for MR dereg, but frees the MR structure.
-When the MR dereg is retried due to previous error, the system crashes as
-the structure is already freed.
+Thanks!
 
-  BUG: unable to handle kernel NULL pointer dereference at 00000000000001b8
-  PGD 0 P4D 0
-  Oops: 0000 [#1] SMP PTI
-  CPU: 7 PID: 12178 Comm: ib_send_bw Kdump: loaded Not tainted 4.18.0-124.el8.x86_64 #1
-  Hardware name: Dell Inc. PowerEdge R430/03XKDV, BIOS 1.1.10 03/10/2015
-  RIP: 0010:__dev_printk+0x2a/0x70
-  Code: 0f 1f 44 00 00 49 89 d1 48 85 f6 0f 84 f6 2b 00 00 4c 8b 46 70 4d 85 c0 75 04 4c 8b
-46 10 48 8b 86 a8 00 00 00 48 85 c0 74 16 <48> 8b 08 0f be 7f 01 48 c7 c2 13 ac ac 83 83 ef 30 e9 10 fe ff ff
-  RSP: 0018:ffffaf7c04607a60 EFLAGS: 00010006
-  RAX: 00000000000001b8 RBX: ffffa0010c91c488 RCX: 0000000000000246
-  RDX: ffffaf7c04607a68 RSI: ffffa0010c91caa8 RDI: ffffffff83a788eb
-  RBP: ffffaf7c04607ac8 R08: 0000000000000000 R09: ffffaf7c04607a68
-  R10: 0000000000000000 R11: 0000000000000001 R12: ffffaf7c04607b90
-  R13: 000000000000000e R14: 0000000000000000 R15: 00000000ffffa001
-  FS:  0000146fa1f1cdc0(0000) GS:ffffa0012fac0000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 00000000000001b8 CR3: 000000007680a003 CR4: 00000000001606e0
-  Call Trace:
-   dev_err+0x6c/0x90
-   ? dev_printk_emit+0x4e/0x70
-   bnxt_qplib_rcfw_send_message+0x594/0x660 [bnxt_re]
-   ? dev_err+0x6c/0x90
-   bnxt_qplib_free_mrw+0x80/0xe0 [bnxt_re]
-   bnxt_re_dereg_mr+0x2e/0xd0 [bnxt_re]
-   ib_dereg_mr+0x2f/0x50 [ib_core]
-   destroy_hw_idr_uobject+0x20/0x70 [ib_uverbs]
-   uverbs_destroy_uobject+0x2e/0x170 [ib_uverbs]
-   __uverbs_cleanup_ufile+0x6e/0x90 [ib_uverbs]
-   uverbs_destroy_ufile_hw+0x61/0x130 [ib_uverbs]
-   ib_uverbs_close+0x1f/0x80 [ib_uverbs]
-   __fput+0xb7/0x230
-   task_work_run+0x8a/0xb0
-   do_exit+0x2da/0xb40
-...
-  RIP: 0033:0x146fa113a387
-  Code: Bad RIP value.
-  RSP: 002b:00007fff945d1478 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff02
-  RAX: 0000000000000000 RBX: 000055a248908d70 RCX: 0000000000000000
-  RDX: 0000146fa1f2b000 RSI: 0000000000000001 RDI: 000055a248906488
-  RBP: 000055a248909630 R08: 0000000000010000 R09: 0000000000000000
-  R10: 0000000000000000 R11: 0000000000000000 R12: 000055a248906488
-  R13: 0000000000000001 R14: 0000000000000000 R15: 000055a2489095f0
-
-Do not free the MR structures, when driver returns error to the stack.
-
-Fixes: 872f3578241d ("RDMA/bnxt_re: Add support for MRs with Huge pages")
-Link: https://lore.kernel.org/r/1574671174-5064-2-git-send-email-selvin.xavier@broadcom.com
-Signed-off-by: Selvin Xavier <selvin.xavier@broadcom.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/infiniband/hw/bnxt_re/ib_verbs.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
---- a/drivers/infiniband/hw/bnxt_re/ib_verbs.c
-+++ b/drivers/infiniband/hw/bnxt_re/ib_verbs.c
-@@ -3368,8 +3368,10 @@ int bnxt_re_dereg_mr(struct ib_mr *ib_mr
- 	int rc;
- 
- 	rc = bnxt_qplib_free_mrw(&rdev->qplib_res, &mr->qplib_mr);
--	if (rc)
-+	if (rc) {
- 		dev_err(rdev_to_dev(rdev), "Dereg MR failed: %#x\n", rc);
-+		return rc;
-+	}
- 
- 	if (mr->pages) {
- 		rc = bnxt_qplib_free_fast_reg_page_list(&rdev->qplib_res,
 
 
