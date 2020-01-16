@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9CFC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E6ADC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BD41205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFF80217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194543;
-	bh=nXH/IXtDlzIt6tW+/XPFdnZxULj6NHCbJTAbXTNAj/k=;
+	s=default; t=1579194549;
+	bh=1T5KwfbabrYdOeYJjrtT5zwNBpknelGGKcWhllIA+YI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sLFh2JSOK2u3PNNOVZKfodbo/pAwIxBCPwOhx8AZI7mDCP7/zxOYpmk6uqwv8AsHX
-	 NFt0pysXsTgNpz+ZQIt3GOmCvfcnQGPLLUGcCkKZerbqz4A1WszKRq+7Hn2/v/rCbn
-	 Ppa2Crc4lMZLQwlBmocCsg/yCkIf0BsYzrs91cHc=
+	b=hCmzM55CF3z3FSH73/eWYd1wiF5E5kdkMlsPzer0yu3hk4kaJZJ9Yfk3CL7TfAsRE
+	 DydmVfETAoO1W8Hqvy6hl4q9lz9GeGqtBCelUHQxguYsRdeoommHKE6HuzPQ7DC9eZ
+	 +7/JASamL8SquIMMUPIfbfYEUqL9HXIgNtOb4eBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389572AbgAPRJC (ORCPT
+        id S2389605AbgAPRJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:09:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43900 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:09:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389559AbgAPRJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:09:00 -0500
+        id S2389585AbgAPRJE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:09:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1523324685;
-        Thu, 16 Jan 2020 17:08:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C28722464;
+        Thu, 16 Jan 2020 17:09:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194539;
-        bh=nXH/IXtDlzIt6tW+/XPFdnZxULj6NHCbJTAbXTNAj/k=;
+        s=default; t=1579194543;
+        bh=1T5KwfbabrYdOeYJjrtT5zwNBpknelGGKcWhllIA+YI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ia1PFcj9QBbapLu1oMNPpXhut1LNsTrVGF5UqaJlhpsuqHLZcCEAvqzjWPxzqecm6
-         psfYzmsqaxNUV58piHRABKImfdxExHkmlIIXLA0GOpZIZe3HqtsqoZQ8mbRniCy1dK
-         1jgPtm8G6ew+5k3+GPCr1dTGiqDg/2ziH6JaAYKA=
+        b=PBpvXm0En7Almk3jSLqWQH+YKvKCuRX/V6nsxa9SCoiwLBUHWUQKYMZhfOBF7TJ3J
+         ZDPtFD3PeMLOugytanQIXSh9Nhlg4x5oEktxSR2NI7QgqJqbrwQ3UM567PxT66ao8Z
+         JSv2fKeufOs9KP0UaXwD3TeNNqe82CnE0pycpqFY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Chen-Yu Tsai <wens@csie.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 426/671] rtc: pcf8563: Clear event flags and disable interrupts before requesting irq
-Date:   Thu, 16 Jan 2020 12:01:04 -0500
-Message-Id: <20200116170509.12787-163-sashal@kernel.org>
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 429/671] arm64: dts: allwinner: h6: Pine H64: Add interrupt line for RTC
+Date:   Thu, 16 Jan 2020 12:01:07 -0500
+Message-Id: <20200116170509.12787-166-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -61,56 +62,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit 3572e8aea3bf925dac1dbf86127657c39fe5c254 ]
+[ Upstream commit 0bb9d1876c0605815ea0452f68cb819a775a75f9 ]
 
-Besides the alarm, the PCF8563 also has a timer triggered interrupt.
-In cases where the previous system left the timer and interrupts on,
-or somehow the bits got enabled, the interrupt would keep triggering
-as the kernel doesn't know about it.
+The external PCF8563 RTC chip's interrupt line is connected to the NMI
+line on the SoC.
 
-Clear both the alarm and timer event flags, and disable the interrupts,
-before requesting the interrupt line.
+Add the interrupt line to the device tree.
 
-Fixes: ede3e9d47cca ("drivers/rtc/rtc-pcf8563.c: add alarm support")
-Fixes: a45d528aab8b ("rtc: pcf8563: clear expired alarm at boot time")
+Fixes: 17ebc33afc35 ("arm64: allwinner: h6: add PCF8563 RTC on Pine H64 board")
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-pcf8563.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/rtc/rtc-pcf8563.c b/drivers/rtc/rtc-pcf8563.c
-index e358313466f1..d8adf69b6697 100644
---- a/drivers/rtc/rtc-pcf8563.c
-+++ b/drivers/rtc/rtc-pcf8563.c
-@@ -563,7 +563,6 @@ static int pcf8563_probe(struct i2c_client *client,
- 	struct pcf8563 *pcf8563;
- 	int err;
- 	unsigned char buf;
--	unsigned char alm_pending;
- 
- 	dev_dbg(&client->dev, "%s\n", __func__);
- 
-@@ -587,13 +586,13 @@ static int pcf8563_probe(struct i2c_client *client,
- 		return err;
- 	}
- 
--	err = pcf8563_get_alarm_mode(client, NULL, &alm_pending);
--	if (err) {
--		dev_err(&client->dev, "%s: read error\n", __func__);
-+	/* Clear flags and disable interrupts */
-+	buf = 0;
-+	err = pcf8563_write_block_data(client, PCF8563_REG_ST2, 1, &buf);
-+	if (err < 0) {
-+		dev_err(&client->dev, "%s: write error\n", __func__);
- 		return err;
- 	}
--	if (alm_pending)
--		pcf8563_set_alarm_mode(client, 0);
- 
- 	pcf8563->rtc = devm_rtc_device_register(&client->dev,
- 				pcf8563_driver.driver.name,
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+index 48daec7f78ba..6c3a47d90c79 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+@@ -176,6 +176,8 @@
+ 	pcf8563: rtc@51 {
+ 		compatible = "nxp,pcf8563";
+ 		reg = <0x51>;
++		interrupt-parent = <&r_intc>;
++		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+ 		#clock-cells = <0>;
+ 	};
+ };
 -- 
 2.20.1
 
