@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22385C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65ECAC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3AB22082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3020E2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:30:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217402;
-	bh=bRXWIdddXbaSpDKseEkgF8QW4FjBl0fHJoBki22Yous=;
+	s=default; t=1579217406;
+	bh=EpbH0jM1qqpILirwYTaP+35s+uBkOLXxHRMn5MSJZVs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rmOuIaRqy5mwKOJHar3fRMzzUbGiUnDJQGzDf8N18lovWb7ySl5/8+au3BbcT6Qpf
-	 TszRxb2MeNrQ0AoVqr7odj7/xjeS6nAsGRIwI/uXsMYPsYxzxQMToMe3giDZq9y/Sb
-	 FIqe2FZvuSGaBhMj2myhn1tjOvYAuvxVMu54pvxI=
+	b=JQ3cioIn11Z7iZy/F9GzrTfhQTQVZDUKi4yh+lauV7qTzcelcaOnWpWUhHhi7fGHd
+	 q2yLEwqr3hCD6EQsdkf2mjT7AgoYeSTqjlY5GHVSA9lK61o/XMoxh2L4YS1p6PMbxV
+	 2ru7pcLAstP8Qh+jL9lDsjm7MoZeWLJQZwGRsbl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403765AbgAPXaA (ORCPT
+        id S2403788AbgAPXaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:30:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35852 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:30:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391358AbgAPX3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:29:49 -0500
+        id S2391366AbgAPX3y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:29:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 497BF206D9;
-        Thu, 16 Jan 2020 23:29:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 390C9206D9;
+        Thu, 16 Jan 2020 23:29:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217388;
-        bh=bRXWIdddXbaSpDKseEkgF8QW4FjBl0fHJoBki22Yous=;
+        s=default; t=1579217393;
+        bh=EpbH0jM1qqpILirwYTaP+35s+uBkOLXxHRMn5MSJZVs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dVS6UMLWjgcaYeLFYKR/Q1kSHkv2B0xC5kPYYQ4zCN5l/xR312UfHMRqmNV3IT9T4
-         2HGXdFPjvBQmzfW1ADHmjJjHAQeRJHZ1nBVfhgEsRYJmXmbPA1EaZwogQ/aZa8/EvW
-         K0221Tu0sp32Sxt17yN371IeknwAJpE4us7DPGYM=
+        b=myQTrWUZaU3IoFb/iKIO8Ov1JDg1g+Gk85GCfGCVAOo3nXhTULW2i/bZsx+ottcrB
+         zrdioCB7LkxE89/91uQv5XmfGOOHIAddc4EEcsPQYNtGbubrgtjo+Do1xUsi6sHb2i
+         6h/So6lMFfqpBlDowSJBhR80ciebuGqUEvixHDyA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Honggang Li <honli@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.19 36/84] RDMA/srpt: Report the SCSI residual to the initiator
-Date:   Fri, 17 Jan 2020 00:18:10 +0100
-Message-Id: <20200116231718.035158071@linuxfoundation.org>
+        stable@vger.kernel.org, Alexandra Winter <wintera@linux.ibm.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 28/84] s390/qeth: fix false reporting of VNIC CHAR config failure
+Date:   Fri, 17 Jan 2020 00:18:02 +0100
+Message-Id: <20200116231716.994739626@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
 References: <20200116231713.087649517@linuxfoundation.org>
@@ -60,70 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Alexandra Winter <wintera@linux.ibm.com>
 
-commit e88982ad1bb12db699de96fbc07096359ef6176c upstream.
+commit 68c57bfd52836e31bff33e5e1fc64029749d2c35 upstream.
 
-The code added by this patch is similar to the code that already exists in
-ibmvscsis_determine_resid(). This patch has been tested by running the
-following command:
+Symptom: Error message "Configuring the VNIC characteristics failed"
+in dmesg whenever an OSA interface on z15 is set online.
 
-strace sg_raw -r 1k /dev/sdb 12 00 00 00 60 00 -o inquiry.bin |&
-    grep resid=
+The VNIC characteristics get re-programmed when setting a L2 device
+online. This follows the selected 'wanted' characteristics - with the
+exception that the INVISIBLE characteristic unconditionally gets
+switched off.
 
-Link: https://lore.kernel.org/r/20191105214632.183302-1-bvanassche@acm.org
-Fixes: a42d985bd5b2 ("ib_srpt: Initial SRP Target merge for v3.3-rc1")
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Acked-by: Honggang Li <honli@redhat.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+For devices that don't support INVISIBLE (ie. OSA), the resulting
+IO failure raises a noisy error message
+("Configuring the VNIC characteristics failed").
+For IQD, INVISIBLE is off by default anyways.
+
+So don't unnecessarily special-case the INVISIBLE characteristic, and
+thereby suppress the misleading error message on OSA devices.
+
+Fixes: caa1f0b10d18 ("s390/qeth: add VNICC enable/disable support")
+Signed-off-by: Alexandra Winter <wintera@linux.ibm.com>
+Reviewed-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/ulp/srpt/ib_srpt.c |   24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ drivers/s390/net/qeth_l2_main.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/drivers/infiniband/ulp/srpt/ib_srpt.c
-+++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
-@@ -1324,9 +1324,11 @@ static int srpt_build_cmd_rsp(struct srp
- 			      struct srpt_send_ioctx *ioctx, u64 tag,
- 			      int status)
- {
-+	struct se_cmd *cmd = &ioctx->cmd;
- 	struct srp_rsp *srp_rsp;
- 	const u8 *sense_data;
- 	int sense_data_len, max_sense_len;
-+	u32 resid = cmd->residual_count;
- 
- 	/*
- 	 * The lowest bit of all SAM-3 status codes is zero (see also
-@@ -1348,6 +1350,28 @@ static int srpt_build_cmd_rsp(struct srp
- 	srp_rsp->tag = tag;
- 	srp_rsp->status = status;
- 
-+	if (cmd->se_cmd_flags & SCF_UNDERFLOW_BIT) {
-+		if (cmd->data_direction == DMA_TO_DEVICE) {
-+			/* residual data from an underflow write */
-+			srp_rsp->flags = SRP_RSP_FLAG_DOUNDER;
-+			srp_rsp->data_out_res_cnt = cpu_to_be32(resid);
-+		} else if (cmd->data_direction == DMA_FROM_DEVICE) {
-+			/* residual data from an underflow read */
-+			srp_rsp->flags = SRP_RSP_FLAG_DIUNDER;
-+			srp_rsp->data_in_res_cnt = cpu_to_be32(resid);
-+		}
-+	} else if (cmd->se_cmd_flags & SCF_OVERFLOW_BIT) {
-+		if (cmd->data_direction == DMA_TO_DEVICE) {
-+			/* residual data from an overflow write */
-+			srp_rsp->flags = SRP_RSP_FLAG_DOOVER;
-+			srp_rsp->data_out_res_cnt = cpu_to_be32(resid);
-+		} else if (cmd->data_direction == DMA_FROM_DEVICE) {
-+			/* residual data from an overflow read */
-+			srp_rsp->flags = SRP_RSP_FLAG_DIOVER;
-+			srp_rsp->data_in_res_cnt = cpu_to_be32(resid);
-+		}
-+	}
-+
- 	if (sense_data_len) {
- 		BUILD_BUG_ON(MIN_MAX_RSP_SIZE <= sizeof(*srp_rsp));
- 		max_sense_len = ch->max_ti_iu_len - sizeof(*srp_rsp);
+--- a/drivers/s390/net/qeth_l2_main.c
++++ b/drivers/s390/net/qeth_l2_main.c
+@@ -2367,7 +2367,6 @@ static void qeth_l2_vnicc_init(struct qe
+ 	error = qeth_l2_vnicc_recover_timeout(card, QETH_VNICC_LEARNING,
+ 					      timeout);
+ 	chars_tmp = card->options.vnicc.wanted_chars ^ QETH_VNICC_DEFAULT;
+-	chars_tmp |= QETH_VNICC_BRIDGE_INVISIBLE;
+ 	chars_len = sizeof(card->options.vnicc.wanted_chars) * BITS_PER_BYTE;
+ 	for_each_set_bit(i, &chars_tmp, chars_len) {
+ 		vnicc = BIT(i);
 
 
