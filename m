@@ -2,130 +2,99 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C260C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F67C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A468207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE973207FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:45:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="n7aw89CP"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="WhGcOXtN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbgAPOph (ORCPT
+        id S1728986AbgAPOpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 09:45:37 -0500
-Received: from mout.web.de ([212.227.15.3]:59889 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726370AbgAPOph (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 09:45:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1579185922;
-        bh=BrCEZBbCAlCJ6Zr3PlMt7E/ZtpQfWtm6efY/aQWbWZo=;
-        h=X-UI-Sender-Class:Cc:Subject:To:From:Date;
-        b=n7aw89CPE2vbKRG0DG4Hu4tSNCAGaSpnYCuLjtgbbO9BxlnaxtJUpO1/1U5LDVJFi
-         S6I0AJ8UfB5hWRSMBR256wq9jmD+zrlpw/G1MXr0QZHv8d3CqHlLbTFpBNjTdED0LD
-         F/3oytkfSwG4PSbkXuFd+mnaw94hOb55Iz6yhkKw=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.6.163]) by smtp.web.de (mrweb002
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0M2dt7-1jkL0m3nGv-00sN2m; Thu, 16
- Jan 2020 15:45:22 +0100
-Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@lst.de>,
+        Thu, 16 Jan 2020 09:45:40 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:3756 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726370AbgAPOpj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 09:45:39 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00GEc9df028289;
+        Thu, 16 Jan 2020 15:45:31 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=MzhYp1pTTAFs6phM/AXFgfZU+jA+iDcfjidwqVIbTe8=;
+ b=WhGcOXtN3R71jqyfyCDB3m6yNwa2jZZ3phzNCF/y17QbIzICBWF3oHaBxnkBoct+/19W
+ 4btgHF008LAsBx6R4iZ4884x+SwjIQyVOfkuH/Ven0NmkLw7Kn4XdJanId/qgSfD8G4G
+ 37queaoZ/Gh9U4tYV/y/6gwcZTm7x5E4PIwQOHlYDycqeY3uWEL9jWz1BpQmUPujlmej
+ vV4ulYkyEYW4FEOQkPPC/Cj4NfIekfJNvuQ9M8DVGE0gMR8jUx7hbj7In9qAlHJ0Rvkr
+ 0BCZS3l0P0oWlArw3b61RKAx/+H+qAcn3Dpttg2JcnmuQtRTlFUXcCmIseKAYSaGEYNV 9Q== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xf78shvbp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jan 2020 15:45:31 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8E64B10002A;
+        Thu, 16 Jan 2020 15:45:30 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7BC7B2D3798;
+        Thu, 16 Jan 2020 15:45:30 +0100 (CET)
+Received: from localhost (10.75.127.45) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 16 Jan 2020 15:45:30
+ +0100
+From:   Amelie Delaunay <amelie.delaunay@st.com>
+To:     Minas Harutyunyan <hminas@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        linkinjeon@gmail.com
-Subject: Re: [PATCH v10 00/14] add the latest exfat driver
-To:     Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-fsdevel@vger.kernel.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <33ec9b62-c93a-f87e-3391-ae9afeff0e9e@web.de>
-Date:   Thu, 16 Jan 2020 15:45:20 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>
+Subject: [PATCHv2 0/2] USB DWC2 support for STM32MP15 SoCs USB OTG
+Date:   Thu, 16 Jan 2020 15:45:22 +0100
+Message-ID: <20200116144524.16070-1-amelie.delaunay@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:GxoRtMF+A/gG4f/kSInaHNp30b8Yabf8eXIfHfqpZkQrLHHo0+G
- JJRqmFWlm7E73+jVKIahwnXY9hSY9oeHuxhncyGbXr99M+pU52kxcJpLB6mkqL7cYf8GUXr
- DqL+AD8Fqu/3H5LEPz7XJUDZggNceWXwiHSN//otjGVhzcSIpW4v17Nr9VJmJ5TTqurwJA+
- SgMm5Iu3JJEWucZmFSxeg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:uEPG6TdKvK0=:G8wzjNOqb3RWFr7JeEW+Gv
- +HbA8WFFZXqG86y1uLijyY9EGQ+aUO4oyzhIdOraV31ihwdq7q5Ic7g1E2swFc/tkwG9lBAqb
- A3LPr8w/HLp07lK+Js9XCpVhC7X2rN/75UhDzX+NUQp721Nz0Er6ZhMeQuIdsr9tUlttjgfKq
- zaZAzDmbDcueWLuDEtM11MG1t0lOe0qDwKxtB41e2Du0sX53kFyL6tEzRjyh8CfiuVsi7tz5/
- MnOmJ2xlOkM15BhECQOYlhXtjtcUJuEgTRAH1FrkREV0uqaVhBznwjtXAcfAuETCW6HH1olOH
- x+QMSv5ZxgBh2ENiPuG/Pz4V/JvK9T//xk2MPimoZ/4FISMcrlMqvNnB4724Ihr7mp+DxG47h
- mu1HV9sIeZWziOp+XlfHpiWzJYjerslly0yspoTEKFnD39nQFY676GKwkMzyDXIk7Rc8jQBGK
- bHP+/GjpDPA0PAzHjcEmtSv5cgcFIzdFO4KvedXX/uCkjGcOhYBD/rcTWM9eucgele9lMS6X2
- GRA/OHQOv86E2WL4FpVRw6w9NNVPRoZJ0Qk/s8770/eKe2QxGo+1EIcB8HFLRLlh5Po0xVeI2
- mREPiBqShdC1f/Le4GlZ9U8c/uP9c1eCTT/NKk6laEogOUkWd/90/pEsvLkCFOonxhrc/lq7p
- oOPSvFWEbw5cqTIOKjaRs6q75FgwFJRIDPZo4Vd3wUfcbQCUPFJmZAzuli/Xw0Vo5Ati7aIQB
- 9lnBqbqsWW8niWbiy+wpUV122hoanaogdsET19rYvuYpRb1sby8uCiTd0NeH/bQeuyjD7rSLx
- LFd+sIPzLpTNhbqO/14+XRbOVzMANQiUC/v3YwKy/GL/1Ud77A26rFEHGpviU+oZr1elPBgXa
- iIJ1zTxWmW7qqjv2lDEaTVOXsGDeOTpY+/H2nJlBj4jpsGVHGQ5zk+1EJnl2x6QhTtNZb296V
- V2F8tZ7Vou6HyREW55/UmtET1dwvVOB8xOTaL/njdY5JFmXZlnlWmW2xXYqpykdLlTmiAcZIA
- q9H8Q24C2wlS3zI8TmcaIkcrbVqrPAv73KXe3IfJQcxqyeGc0mNpE1WzE9nX4Y2fSxC4of9v0
- CKhgydc7hyiTvCDiAbSdESTHSZK14hWT1fJRLQtJuHrys7TN5YNw6uJ+fy2BRUC82e4wXk/D9
- t3jGzgkyyFt/3TXND/faLANWgcnNUXN6fHj2ssNGgnJGUGIKTw4MA/A0hUh/SB/R7ScgIx3jY
- pcPUxy/kMEqtkv8dT+A6t6O7IatCkVeOK4lHQLEfQjZ6Dxp0B2GaBa/9ITPk=
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-16_04:2020-01-16,2020-01-15 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->  - Process utf16 surroage pair as one character.
+Adds support for STM32MP15 SoCs USB OTG HS and FS based on DWC2 IP.
 
-Would you like to mention =E2=80=9Csurrogates=E2=80=9D by this wording?
+STM32MP15 SoCs embeds a DWC2 IP that can be used in HS or in FS, and
+uses an external Vbus and ID level detection to support OTG operations.
 
-Regards,
-Markus
+Amelie Delaunay (2):
+  dt-bindings: usb: dwc2: add support for STM32MP15 SoCs USB OTG HS and
+    FS
+  usb: dwc2: add support for STM32MP15 SoCs USB OTG HS and FS
+---
+Changes in v2:
+- add Minas Acked-by on driver
+- use dwc2.yaml bindings
+
+ .../devicetree/bindings/usb/dwc2.yaml         |  6 ++
+ drivers/usb/dwc2/core.h                       |  8 ++
+ drivers/usb/dwc2/hw.h                         |  8 ++
+ drivers/usb/dwc2/params.c                     | 33 +++++++
+ drivers/usb/dwc2/platform.c                   | 94 ++++++++++++++++++-
+ 5 files changed, 147 insertions(+), 2 deletions(-)
+
+-- 
+2.17.1
+
