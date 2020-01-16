@@ -2,176 +2,90 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F175C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DABC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47CC82073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:18:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JoknkQfT"
+	by mail.kernel.org (Postfix) with ESMTP id 64889217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:18:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579198712;
+	bh=eK+zgsqPWz6GAYkJtti8rLXXAgfol0Ms7k1eGuEjvcg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nlt2wWiv0g5g1kfEXIujdDrCCnOdAJEsVhldjq/w1TX3rENZc13fvt6owM9jzVfa9
+	 gXJJSpGGCEXsAB9fa9j6tIa1qQHZ9giqixl3+uBWoaAsFqHQ1feBuPLbQ5bTAOFn2A
+	 jw9sPB8XM6Z659kmotA6XLReyB6hLYnFfReYTNLc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395393AbgAPSSY (ORCPT
+        id S2395410AbgAPSSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:18:24 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56898 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2392810AbgAPSSU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 13:18:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579198699;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=k1/NMdNWn1AdZcspQctzd5y5I9ng1wPTgP3J0ukiT7Q=;
-        b=JoknkQfT5ucMH2NQa0ZhWlA2mndVIttjue4/80/K3AzROjMwMHYP5GWsIiAIHG2QReeYAc
-        uXlwftRIX48VeeLeAOoNUtF4blbvTdtU6iBQsdzXDeDfdmUqGi7ll0r5Cp+02QPcfs0bf7
-        yyFB/HsDPCuZI0LfxbUTR92BIS0tB8M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-14-LCMC3GR5MASKg19CERzZTw-1; Thu, 16 Jan 2020 13:18:15 -0500
-X-MC-Unique: LCMC3GR5MASKg19CERzZTw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 16 Jan 2020 13:18:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33596 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387827AbgAPSS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 13:18:27 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8A6DD800D48;
-        Thu, 16 Jan 2020 18:18:14 +0000 (UTC)
-Received: from gimli.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 444755D9C9;
-        Thu, 16 Jan 2020 18:18:14 +0000 (UTC)
-Subject: [RFC PATCH 3/3] vfio/type1: Introduce pfn_list mutex
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     yan.y.zhao@intel.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 16 Jan 2020 11:18:13 -0700
-Message-ID: <157919869385.21002.5744246004583751102.stgit@gimli.home>
-In-Reply-To: <157919849533.21002.4782774695733669879.stgit@gimli.home>
-References: <157919849533.21002.4782774695733669879.stgit@gimli.home>
-User-Agent: StGit/0.19-dirty
+        by mail.kernel.org (Postfix) with ESMTPSA id BD97820684;
+        Thu, 16 Jan 2020 18:18:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579198706;
+        bh=eK+zgsqPWz6GAYkJtti8rLXXAgfol0Ms7k1eGuEjvcg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uSA1/16Jv5t+QkTG5DUYDIw5GCOnYY7mMdMEHjQJg4sRtJx0p92p7BGyiz1r3y+zt
+         HIA5X6uhHXR8fQZhMAgOktn72OxXqWdijpihtIWgO3rxYSaNPqu/WwZgGkRoZGgc3f
+         iezAkiFdQPopG1zeb3Cek072wQSLs3i8/5I2lSlQ=
+Date:   Thu, 16 Jan 2020 18:18:20 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 12/15] arm64: vdso: disable Shadow Call Stack
+Message-ID: <20200116181820.GB22420@willie-the-truck>
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191206221351.38241-1-samitolvanen@google.com>
+ <20191206221351.38241-13-samitolvanen@google.com>
+ <20200116174648.GE21396@willie-the-truck>
+ <CABCJKucWusLEaLyq=Dv5pWjxcUX7Q9dL=fSstwNK4eJ_6k33=w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABCJKucWusLEaLyq=Dv5pWjxcUX7Q9dL=fSstwNK4eJ_6k33=w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can promote external page {un}pinning to a reader lock, allowing
-concurrency since these don't change the vfio_iommu state.  We do need
-to protect the vpfn list per vfio_dma in place of that serialization
-though.
+On Thu, Jan 16, 2020 at 10:14:24AM -0800, Sami Tolvanen wrote:
+> On Thu, Jan 16, 2020 at 9:46 AM Will Deacon <will@kernel.org> wrote:
+> > Should we be removing -ffixed-x18 too, or does that not propagate here
+> > anyway?
+> 
+> No, we shouldn't touch -ffixed-x18 here. The vDSO is always built with
+> x18 reserved since commit 98cd3c3f83fbb ("arm64: vdso: Build vDSO with
+> -ffixed-x18").
 
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
----
- drivers/vfio/vfio_iommu_type1.c |   24 +++++++++++++++++++-----
- 1 file changed, 19 insertions(+), 5 deletions(-)
+Thanks, in which case:
 
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index e78067cc74b3..ea63306c16f7 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -90,6 +90,7 @@ struct vfio_dma {
- 	bool			iommu_mapped;
- 	bool			lock_cap;	/* capable(CAP_IPC_LOCK) */
- 	struct task_struct	*task;
-+	struct mutex		pfn_list_lock;
- 	struct rb_root		pfn_list;	/* Ex-user pinned pfn list */
- };
- 
-@@ -539,7 +540,7 @@ static int vfio_iommu_type1_pin_pages(void *iommu_data,
- 	if (!iommu->v2)
- 		return -EACCES;
- 
--	down_write(&iommu->lock);
-+	down_read(&iommu->lock);
- 
- 	/* Fail if notifier list is empty */
- 	if (!iommu->notifier.head) {
-@@ -570,8 +571,11 @@ static int vfio_iommu_type1_pin_pages(void *iommu_data,
- 			goto pin_unwind;
- 		}
- 
-+		mutex_lock(&dma->pfn_list_lock);
-+
- 		vpfn = vfio_iova_get_vfio_pfn(dma, iova);
- 		if (vpfn) {
-+			mutex_unlock(&dma->pfn_list_lock);
- 			phys_pfn[i] = vpfn->pfn;
- 			continue;
- 		}
-@@ -579,14 +583,19 @@ static int vfio_iommu_type1_pin_pages(void *iommu_data,
- 		remote_vaddr = dma->vaddr + iova - dma->iova;
- 		ret = vfio_pin_page_external(dma, remote_vaddr, &phys_pfn[i],
- 					     do_accounting);
--		if (ret)
-+		if (ret) {
-+			mutex_unlock(&dma->pfn_list_lock);
- 			goto pin_unwind;
-+		}
- 
- 		ret = vfio_add_to_pfn_list(dma, iova, phys_pfn[i]);
- 		if (ret) {
- 			vfio_unpin_page_external(dma, iova, do_accounting);
-+			mutex_unlock(&dma->pfn_list_lock);
- 			goto pin_unwind;
- 		}
-+
-+		mutex_unlock(&dma->pfn_list_lock);
- 	}
- 
- 	ret = i;
-@@ -599,11 +608,13 @@ static int vfio_iommu_type1_pin_pages(void *iommu_data,
- 
- 		iova = user_pfn[j] << PAGE_SHIFT;
- 		dma = vfio_find_dma(iommu, iova, PAGE_SIZE);
-+		mutex_lock(&dma->pfn_list_lock);
- 		vfio_unpin_page_external(dma, iova, do_accounting);
-+		mutex_unlock(&dma->pfn_list_lock);
- 		phys_pfn[j] = 0;
- 	}
- pin_done:
--	up_write(&iommu->lock);
-+	up_read(&iommu->lock);
- 	return ret;
- }
- 
-@@ -622,7 +633,7 @@ static int vfio_iommu_type1_unpin_pages(void *iommu_data,
- 	if (!iommu->v2)
- 		return -EACCES;
- 
--	down_write(&iommu->lock);
-+	down_read(&iommu->lock);
- 
- 	do_accounting = !IS_IOMMU_CAP_DOMAIN_IN_CONTAINER(iommu);
- 	for (i = 0; i < npage; i++) {
-@@ -633,11 +644,13 @@ static int vfio_iommu_type1_unpin_pages(void *iommu_data,
- 		dma = vfio_find_dma(iommu, iova, PAGE_SIZE);
- 		if (!dma)
- 			goto unpin_exit;
-+		mutex_lock(&dma->pfn_list_lock);
- 		vfio_unpin_page_external(dma, iova, do_accounting);
-+		mutex_unlock(&dma->pfn_list_lock);
- 	}
- 
- unpin_exit:
--	up_write(&iommu->lock);
-+	up_read(&iommu->lock);
- 	return i > npage ? npage : (i > 0 ? i : -EINVAL);
- }
- 
-@@ -1109,6 +1122,7 @@ static int vfio_dma_do_map(struct vfio_iommu *iommu,
- 	dma->iova = iova;
- 	dma->vaddr = vaddr;
- 	dma->prot = prot;
-+	mutex_init(&dma->pfn_list_lock);
- 
- 	/*
- 	 * We need to be able to both add to a task's locked memory and test
+Acked-by: Will Deacon <will@kernel.org>
 
+Will
