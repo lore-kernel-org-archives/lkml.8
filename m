@@ -4,56 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F616C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CBEC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D78F214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:11:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B602C2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198294;
-	bh=UiFLDXQzkZC+4y3mCWG74laBULrP/ebxQwss1ZNv54s=;
+	s=default; t=1579198298;
+	bh=QrbJSSFGZoHv8Kamr1uDkgCuY3Gp7yodECR1MkQoYUE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S1wHGLp+zOFqIKz/y+2ugwDKhyIfq3NwDyOPaHDXf0+gQjg8zICi4qHco1qN158UP
-	 KcirWsDeGG5r8sdzkdrQh0WvtW0mWag1w83oBlgnTei6PmcbUHay55VSHm2uMVbBKH
-	 NlmCr/oshK0So8q8EK46sLEKwMF5yG/fT4gGj/rc=
+	b=N1nzkIbiV+k0EXZqhXdBDxP3iV8Tz8nBWuQeQvb9RDWK9cdsvNktvEBkUnQNI4v+1
+	 FauUmHVMOGjAgJ4bTijv49/jZeSp1qtfxV128qW+dCF7Gtp9oPmay7mHz56DXDyhej
+	 Am850epftrKvUWB932SEezLElAmrRVZMw9+BvR4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395190AbgAPSL1 (ORCPT
+        id S2405374AbgAPRh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:11:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52906 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:37:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405390AbgAPRhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:37:32 -0500
+        id S2405332AbgAPRhV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:37:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AEFA246CE;
-        Thu, 16 Jan 2020 17:37:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C5CA246AD;
+        Thu, 16 Jan 2020 17:37:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196252;
-        bh=UiFLDXQzkZC+4y3mCWG74laBULrP/ebxQwss1ZNv54s=;
+        s=default; t=1579196240;
+        bh=QrbJSSFGZoHv8Kamr1uDkgCuY3Gp7yodECR1MkQoYUE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jk268xBCL34Gg0b36UHsUOHNomzQ4OYsnRK98/wrcd+kAPBYdsMsu8KSazqqidNOn
-         4JbyQN3TrmR73uQpAIM0alYtY7VjJHdF0c8RdRNCl4o4VEV/+/IdsS+iJoGf9rBswG
-         00yl38YSR6D/Fx00F9cYaxW7saH6kdlNAmt3/62I=
+        b=chkNu0AwsCxlDZaggyuODNp2g5mQ595K678IEpslIEmTAVN7eS73PWyNXKj+to6j4
+         gs7A8VaMBGtORmuuTw+U0gwvTfBvBPy0eG2ohmtsrZzjgPhdSY5Bqqfr2UGE/Ta/jS
+         VgxpN6Wa7WiWLrLWom4Evcs6BbRkgCQxg50fuECo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 079/251] net: dsa: qca8k: Enable delay for RGMII_ID mode
-Date:   Thu, 16 Jan 2020 12:33:48 -0500
-Message-Id: <20200116173641.22137-39-sashal@kernel.org>
+Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
+        Tony Lindgren <tony@atomide.com>, Bin Liu <b-liu@ti.com>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 070/251] usb: phy: twl6030-usb: fix possible use-after-free on remove
+Date:   Thu, 16 Jan 2020 12:33:39 -0500
+Message-Id: <20200116173641.22137-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,59 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vinod Koul <vkoul@kernel.org>
+From: Sven Van Asbroeck <thesven73@gmail.com>
 
-[ Upstream commit a968b5e9d5879f9535d6099505f9e14abcafb623 ]
+[ Upstream commit 5895d311d28f2605e2f71c1a3e043ed38f3ac9d2 ]
 
-RGMII_ID specifies that we should have internal delay, so resurrect the
-delay addition routine but under the RGMII_ID mode.
+In remove(), use cancel_delayed_work_sync() to cancel the
+delayed work. Otherwise there's a chance that this work
+will continue to run until after the device has been removed.
 
-Fixes: 40269aa9f40a ("net: dsa: qca8k: disable delay for RGMII mode")
-Tested-by: Michal Vokáč <michal.vokac@ysoft.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This issue was detected with the help of Coccinelle.
+
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Bin Liu <b-liu@ti.com>
+Fixes: b6a619a883c3 ("usb: phy: Check initial state for twl6030")
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/qca8k.c | 12 ++++++++++++
- drivers/net/dsa/qca8k.h |  1 +
- 2 files changed, 13 insertions(+)
+ drivers/usb/phy/phy-twl6030-usb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/dsa/qca8k.c b/drivers/net/dsa/qca8k.c
-index ebfbaf8597f4..3bbe85aae49b 100644
---- a/drivers/net/dsa/qca8k.c
-+++ b/drivers/net/dsa/qca8k.c
-@@ -460,6 +460,18 @@ qca8k_set_pad_ctrl(struct qca8k_priv *priv, int port, int mode)
- 		qca8k_write(priv, QCA8K_REG_PORT5_PAD_CTRL,
- 			    QCA8K_PORT_PAD_RGMII_RX_DELAY_EN);
- 		break;
-+	case PHY_INTERFACE_MODE_RGMII_ID:
-+		/* RGMII_ID needs internal delay. This is enabled through
-+		 * PORT5_PAD_CTRL for all ports, rather than individual port
-+		 * registers
-+		 */
-+		qca8k_write(priv, reg,
-+			    QCA8K_PORT_PAD_RGMII_EN |
-+			    QCA8K_PORT_PAD_RGMII_TX_DELAY(QCA8K_MAX_DELAY) |
-+			    QCA8K_PORT_PAD_RGMII_RX_DELAY(QCA8K_MAX_DELAY));
-+		qca8k_write(priv, QCA8K_REG_PORT5_PAD_CTRL,
-+			    QCA8K_PORT_PAD_RGMII_RX_DELAY_EN);
-+		break;
- 	case PHY_INTERFACE_MODE_SGMII:
- 		qca8k_write(priv, reg, QCA8K_PORT_PAD_SGMII_EN);
- 		break;
-diff --git a/drivers/net/dsa/qca8k.h b/drivers/net/dsa/qca8k.h
-index 9c22bc3210cd..db95168ca111 100644
---- a/drivers/net/dsa/qca8k.h
-+++ b/drivers/net/dsa/qca8k.h
-@@ -40,6 +40,7 @@
- 						((0x8 + (x & 0x3)) << 22)
- #define   QCA8K_PORT_PAD_RGMII_RX_DELAY(x)		\
- 						((0x10 + (x & 0x3)) << 20)
-+#define   QCA8K_MAX_DELAY				3
- #define   QCA8K_PORT_PAD_RGMII_RX_DELAY_EN		BIT(24)
- #define   QCA8K_PORT_PAD_SGMII_EN			BIT(7)
- #define QCA8K_REG_MODULE_EN				0x030
+diff --git a/drivers/usb/phy/phy-twl6030-usb.c b/drivers/usb/phy/phy-twl6030-usb.c
+index a72e8d670adc..cf0b67433ac9 100644
+--- a/drivers/usb/phy/phy-twl6030-usb.c
++++ b/drivers/usb/phy/phy-twl6030-usb.c
+@@ -422,7 +422,7 @@ static int twl6030_usb_remove(struct platform_device *pdev)
+ {
+ 	struct twl6030_usb *twl = platform_get_drvdata(pdev);
+ 
+-	cancel_delayed_work(&twl->get_status_work);
++	cancel_delayed_work_sync(&twl->get_status_work);
+ 	twl6030_interrupt_mask(TWL6030_USBOTG_INT_MASK,
+ 		REG_INT_MSK_LINE_C);
+ 	twl6030_interrupt_mask(TWL6030_USBOTG_INT_MASK,
 -- 
 2.20.1
 
