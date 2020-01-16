@@ -2,134 +2,124 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B013DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28193C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:57:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8420320663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:57:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YZ6F46+0"
+	by mail.kernel.org (Postfix) with ESMTP id F38DA20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:57:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579201037;
+	bh=bogbFyIWYY0db2aF3q1qJ65vkmKxitFEOw8bigE2K2Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=avGWhTTyPOsPiIDbFamXns4ywnLNeHJWjY4xGBcrhJhDltzo7Do8NGiMENhy/TA/7
+	 cTlPIJbELGyagoiH30tB268g/2bcLr/yNQoQeyikmUIE2XHEyI5H2Q2hiDNaOtw5Qy
+	 ROV6bGG6COOs5f1dkHHeg2wRvzBRpDXkVaYtP62U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437106AbgAPS5I (ORCPT
+        id S2437118AbgAPS5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:57:08 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:36178 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726892AbgAPS44 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 13:56:56 -0500
-Received: by mail-qv1-f66.google.com with SMTP id m14so9576781qvl.3;
-        Thu, 16 Jan 2020 10:56:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=X5psP6nW/Y1xNS1QkA2tl6VWc1qbUvTdajI5ErCGOQg=;
-        b=YZ6F46+0Ql9tiDax2D3pRIqtWb2uH/6clZ/R4Lr6fbgSm0ysX5ou/uyy5BuoC5KZHx
-         8st8/A/fzbPc5MEDM8ka45IeaEdn287jnQ09ulnDDbRU2Z+X+SJB5TGaya8YvZDQZOHo
-         dosE7fMsjYfRWSHJFTE2tfk+zQaKAlXFEsWRPQzjn2hNrk9bFtq/mkpNzaZhl1g/GU1r
-         /+QJBjUZvcHrQ3jOdx7G9oHco9tGCc12KUjRM/QhMKCAPh/G07H1B7cSxvYrsikb5slG
-         vuDOE2v9862YneE/V0EEIreA/AdnAlOtO3CsJiZ5ZnNjMhfQbY7dKZH2ZsZ4jo9fb65f
-         nbaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=X5psP6nW/Y1xNS1QkA2tl6VWc1qbUvTdajI5ErCGOQg=;
-        b=mmkwYGlsmoQcb6LyDk7pU17YWhomuo+9MwJIoTvwwdL3ygeov+ZAbMRUVze8p6nzAh
-         nu6PLm82nCxlNYN9uJalTPRyi/eFgxHq4IeriAQIxj/AJttAskOanqucUxNtta++Mx8W
-         y/YXHZsPygqIbZibOQXuIQRK+Ky9Ou0FGLTN06yBduGagIdLVhWcxBw08LKJLXERe113
-         cTlXE++xyHfOrICcXyeCssItK21dFkvKB7+G8I6zaDLt+q+BeUGDNoYdE59Bo9EzbsGI
-         BzqNMHkHLADjeVBrcdoF7eUNhW3npcsaNmBITRB2BLEsgipSdeY/c+6I5+VfwSN8WIeZ
-         f3qw==
-X-Gm-Message-State: APjAAAWRG4zY8xicW3o5o5fGkitJVhemICSUOcYMrTyrxd1nU3rWO3Kh
-        zPMlrsIQuqDqv46RIUn6jZoP3OB3/8uvOkyvAPs=
-X-Google-Smtp-Source: APXvYqwzM3eLifLjAwpflD/TvQsrWRZ8GO/WliSVFamg0MQXjTAHinaBTtjRPHfbzbRCU0WVklRUjmr9Sw4Bcdol86I=
-X-Received: by 2002:ad4:4e34:: with SMTP id dm20mr4141595qvb.163.1579201015134;
- Thu, 16 Jan 2020 10:56:55 -0800 (PST)
+        Thu, 16 Jan 2020 13:57:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38478 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389080AbgAPRHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:07:07 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26D1A205F4;
+        Thu, 16 Jan 2020 17:07:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579194427;
+        bh=bogbFyIWYY0db2aF3q1qJ65vkmKxitFEOw8bigE2K2Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tuGnI9+czYv1YxtcZIhxBfWZ7DHtTrQ9ehTc9NPg7xsXjqBqz7gloCuDHCPjX0MUT
+         C7zqO37tfqZmZfeFGszhapJhCVtKTwiEWZyTIdTr2sWI47jewm76XTHd163+mAz4oV
+         Zu/2iIFcb5j9nCg1+iEFbMTKolUOu5F/SSAGmXic=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.19 344/671] ALSA: aica: Fix a long-time build breakage
+Date:   Thu, 16 Jan 2020 11:59:42 -0500
+Message-Id: <20200116170509.12787-81-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
+References: <20200116170509.12787-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <157918093154.1357254.7616059374996162336.stgit@toke.dk> <157918093501.1357254.2594464485570114583.stgit@toke.dk>
-In-Reply-To: <157918093501.1357254.2594464485570114583.stgit@toke.dk>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 16 Jan 2020 10:56:43 -0800
-Message-ID: <CAEf4Bzb2NYxCG69s1f9NzFbLr+ZO6-ZWYyFGvFJFM_HUOX5YLA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3 03/11] selftests: Pass VMLINUX_BTF to
- runqslower Makefile
-To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-rdma@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 5:22 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@redh=
-at.com> wrote:
->
-> From: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
->
-> Add a VMLINUX_BTF variable with the locally-built path when calling the
-> runqslower Makefile from selftests. This makes sure a simple 'make'
-> invocation in the selftests dir works even when there is no BTF informati=
-on
-> for the running kernel. Because of the previous changes to the runqslower
-> Makefile, if no locally-built vmlinux file exists, the wildcard search wi=
-ll
-> fall back to the pre-defined paths (and error out if they don't exist).
->
-> Fixes: 3a0d3092a4ed ("selftests/bpf: Build runqslower from selftests")
-> Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
-> ---
->  tools/testing/selftests/bpf/Makefile |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftes=
-ts/bpf/Makefile
-> index 246d09ffb296..30d0e7a813d2 100644
-> --- a/tools/testing/selftests/bpf/Makefile
-> +++ b/tools/testing/selftests/bpf/Makefile
-> @@ -127,7 +127,7 @@ $(OUTPUT)/test_stub.o: test_stub.c
->  .PHONY: $(OUTPUT)/runqslower
->  $(OUTPUT)/runqslower: force
->         $(Q)$(MAKE) $(submake_extras) -C $(TOOLSDIR)/bpf/runqslower      =
-     \
-> -                   OUTPUT=3D$(CURDIR)/tools/
-> +                   OUTPUT=3D$(CURDIR)/tools/ VMLINUX_BTF=3D$(abspath ../=
-../../../vmlinux)
+From: Takashi Iwai <tiwai@suse.de>
 
-we can do "first match" wildcard trick here instead
+[ Upstream commit 534420c6ff87d3052540f1fd346e0adcff440819 ]
 
->
->  BPFOBJ :=3D $(OUTPUT)/libbpf.a
->
->
+The build of aica sound driver has been broken since the timer API
+conversion and some code rewrite.  This patch fixes the breakage by
+using the common substream field, as well as a bit cleaning up wrt the
+timer handling in the code.
+
+Fixes: d522bb6a105f ("ALSA: sh: aica: Convert timers to use timer_setup()")
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/sh/aica.c | 14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
+
+diff --git a/sound/sh/aica.c b/sound/sh/aica.c
+index 2b26311405a4..ad3f71358486 100644
+--- a/sound/sh/aica.c
++++ b/sound/sh/aica.c
+@@ -303,7 +303,7 @@ static void aica_period_elapsed(struct timer_list *t)
+ {
+ 	struct snd_card_aica *dreamcastcard = from_timer(dreamcastcard,
+ 							      t, timer);
+-	struct snd_pcm_substream *substream = dreamcastcard->timer_substream;
++	struct snd_pcm_substream *substream = dreamcastcard->substream;
+ 	/*timer function - so cannot sleep */
+ 	int play_period;
+ 	struct snd_pcm_runtime *runtime;
+@@ -335,13 +335,6 @@ static void spu_begin_dma(struct snd_pcm_substream *substream)
+ 	dreamcastcard = substream->pcm->private_data;
+ 	/*get the queue to do the work */
+ 	schedule_work(&(dreamcastcard->spu_dma_work));
+-	/* Timer may already be running */
+-	if (unlikely(dreamcastcard->timer_substream)) {
+-		mod_timer(&dreamcastcard->timer, jiffies + 4);
+-		return;
+-	}
+-	timer_setup(&dreamcastcard->timer, aica_period_elapsed, 0);
+-	dreamcastcard->timer_substream = substream;
+ 	mod_timer(&dreamcastcard->timer, jiffies + 4);
+ }
+ 
+@@ -379,8 +372,8 @@ static int snd_aicapcm_pcm_close(struct snd_pcm_substream
+ {
+ 	struct snd_card_aica *dreamcastcard = substream->pcm->private_data;
+ 	flush_work(&(dreamcastcard->spu_dma_work));
+-	if (dreamcastcard->timer_substream)
+-		del_timer(&dreamcastcard->timer);
++	del_timer(&dreamcastcard->timer);
++	dreamcastcard->substream = NULL;
+ 	kfree(dreamcastcard->channel);
+ 	spu_disable();
+ 	return 0;
+@@ -615,6 +608,7 @@ static int snd_aica_probe(struct platform_device *devptr)
+ 	       "Yamaha AICA Super Intelligent Sound Processor for SEGA Dreamcast");
+ 	/* Prepare to use the queue */
+ 	INIT_WORK(&(dreamcastcard->spu_dma_work), run_spu_dma);
++	timer_setup(&dreamcastcard->timer, aica_period_elapsed, 0);
+ 	/* Load the PCM 'chip' */
+ 	err = snd_aicapcmchip(dreamcastcard, 0);
+ 	if (unlikely(err < 0))
+-- 
+2.20.1
+
