@@ -2,69 +2,144 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CE5C32771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 02:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B214EC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 02:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B897B2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 02:38:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8701C2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 02:39:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DACA5Q1+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729546AbgAPCi0 (ORCPT
+        id S1729638AbgAPCje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 21:38:26 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8730 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729043AbgAPCi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 21:38:26 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B62D1671B6D0CA2B582D;
-        Thu, 16 Jan 2020 10:38:23 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 16 Jan 2020 10:38:14 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Robert Marko <robert.marko@sartura.hr>,
-        Axel Lin <axel.lin@ingics.com>, Mark Brown <broonie@kernel.org>
-CC:     YueHaibing <yuehaibing@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] regulator: vqmmc-ipq4019: Fix platform_no_drv_owner.cocci warnings
-Date:   Thu, 16 Jan 2020 02:33:44 +0000
-Message-ID: <20200116023344.163592-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 15 Jan 2020 21:39:34 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:41419 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729559AbgAPCje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 21:39:34 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47ypLW1t7yz9sR0;
+        Thu, 16 Jan 2020 13:39:31 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1579142371;
+        bh=wwSov16NNA8eswhryaE9UVLHmePc/RJK9qgpOXHnWd4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DACA5Q1+K6Xubv01HoN0I+VY0B6GvNV2+HNVMUHkr3DrgLR6967Ruzl8cgBKCF3ly
+         GnPZC3QOGgAUAUh6W7XlAUEvVnDW+ff5zQl3xn8VQHI/+cMqfe00yImz54P1vgGf1j
+         ZJoWNIP/5+qVjzgxDZcT3kZNxX4blUDYygREfiNDDKeuejt7ylHj3xS+T930E40JOm
+         CgueStoiSAI4n37zEkRCPokkIg0xNHAan/3TE/xPj3pxLpwrvNGCLAKrK3hCX0n3tk
+         UMB5O+b9Fq0Yfc05pe1T17WkgvcTlvSqx2XnX5un3/9l19Lgu/alsS1Zn1ERx7DwGH
+         o6AUXH4HCfd3A==
+Date:   Thu, 16 Jan 2020 13:39:30 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Fixes tag needs some work in the usb-gadget tree
+Message-ID: <20200116133930.74afaa91@canb.auug.org.au>
+In-Reply-To: <043cbd87-1d7d-e998-04a8-bbc9aec686df@linaro.org>
+References: <20200116070726.7e2ef8cc@canb.auug.org.au>
+        <b7ef5047-c8c3-42cc-d049-fb72563d3544@linaro.org>
+        <20200116124100.58af81d5@canb.auug.org.au>
+        <6b984328-b3f4-a23d-efb3-7e7955ad165a@linaro.org>
+        <20200116125851.474f3021@canb.auug.org.au>
+        <043cbd87-1d7d-e998-04a8-bbc9aec686df@linaro.org>
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="Sig_/8bjwNIkrgQ751QRdgJdr8ni";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove .owner field if calls are used which set it automatically
-Generated by: scripts/coccinelle/api/platform_no_drv_owner.cocci
+--Sig_/8bjwNIkrgQ751QRdgJdr8ni
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/regulator/vqmmc-ipq4019-regulator.c | 1 -
- 1 file changed, 1 deletion(-)
+Hi Bryan,
 
-diff --git a/drivers/regulator/vqmmc-ipq4019-regulator.c b/drivers/regulator/vqmmc-ipq4019-regulator.c
-index 685b585b39a1..6d5ae25d08d1 100644
---- a/drivers/regulator/vqmmc-ipq4019-regulator.c
-+++ b/drivers/regulator/vqmmc-ipq4019-regulator.c
-@@ -91,7 +91,6 @@ static struct platform_driver ipq4019_regulator_driver = {
- 	.probe = ipq4019_regulator_probe,
- 	.driver = {
- 		.name = "vqmmc-ipq4019-regulator",
--		.owner = THIS_MODULE,
- 		.of_match_table = of_match_ptr(regulator_ipq4019_of_match),
- 	},
- };
+On Thu, 16 Jan 2020 02:08:55 +0000 Bryan O'Donoghue <bryan.odonoghue@linaro=
+.org> wrote:
+>
+> On 16/01/2020 01:58, Stephen Rothwell wrote:
+> >=20
+> > On Thu, 16 Jan 2020 01:45:25 +0000 Bryan O'Donoghue <bryan.odonoghue@li=
+naro.org> wrote: =20
+> >>
+> >> On 16/01/2020 01:41, Stephen Rothwell wrote: =20
+> >>> Hi Bryan,
+> >>>
+> >>> On Thu, 16 Jan 2020 01:19:22 +0000 Bryan O'Donoghue <bryan.odonoghue@=
+linaro.org> wrote: =20
+> >>>>
+> >>>> How should extra long fixes like this be divided up ? =20
+> >>>
+> >>> Just let them run on even if they are too long i.e. don't split them =
+at all. =20
+> >>
+> >> That's what's in the git commit log though isn't it ? =20
+> >=20
+> > When you add a Fixes: tag to a commit, you quote the subject line of
+> > the commit you are fixing which, by definition, is a single line.  We
+> > want to keep it that way so it can be searched for easily.
+> >=20
+> > So to create a fixes line you can use this:
+> >=20
+> > git log -1 --format=3D'Fixes: %h ("%s")' <commit being fixed>
+> >=20
+> > i.e. in this case:
+> >=20
+> > $ git log -1 --format=3D'Fixes: %h (\"%s\")' 40d133d7f5426
+> > Fixes: 40d133d7f542 ("usb: gadget: f_ncm: convert to new function inter=
+face with backward compatibility")
+> >  =20
+>=20
+> doh sorry still not seeing it
+>=20
+> git remote -v
+> usb-next	git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git=20
+> (fetch)
+>=20
+> git fetch usb-next
+> git show 5b24c28cfe13
+>=20
+> that's a correctly formatted fixes right i.e. the same one as above
+>=20
+> :(
+>=20
+> not seeing the difference...
 
+Now I see our confusion.  There is another version of this patch in
+Felipe's tree as a different commit (6a6ae4e8e926) which has the Fixes
+tag split ...
 
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/8bjwNIkrgQ751QRdgJdr8ni
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4fzOIACgkQAVBC80lX
+0GwXoQf/Q7fcXZ24AxZZ5wvRgp2jqX4PaOKj+wNvbbYmqrsCkrnRQ2NsVsz3hxvs
+iLSXkggMlfL8AW8j2/utwI2SQ5+kwGRISkGNf7pTA+D+qbkyZVoCi+pNWCAu80+4
+4HtlMxKP3Q6gNs9uF9CFDXPX7L7EaIMbcUUIFX+VCz013sLT8w2vRewqzVXsHWxn
+Fez9vLKoYRTKw8875XWi+XXrj03AsguG+Q+miTR9k6DMuN35JkxZc+tFnBAfO9W/
+iId5mTWfDyay5r4FjjY9Oh/d7OnP5onQHnE+T+FK4QEQEQ0BTsf+s+sfdWKVw5WM
+0mYIVcy9jdWGvY5htg26JrwhopZsWA==
+=Kd58
+-----END PGP SIGNATURE-----
+
+--Sig_/8bjwNIkrgQ751QRdgJdr8ni--
