@@ -2,85 +2,95 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E12C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D589C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B126D20748
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFBFA2077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:44:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579175063;
+	bh=QJ/QIbQ3IuwPCQJtCT7AzPXw20qA5hQNFNTuF0hdQ0I=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=P8orybH3SMBgkt1YK9KvumAMIUCDwuodTIp8RP3fxSzqYNvUvD9oYHCJjHcWCSK3x
+	 JvUSQJ+o5lYpBe15kJxojuadcq435jfHKi874OgnGaJALSw/Whly8sx7M8wTleMYUT
+	 5wammUepTocreCpdzQZMeOu4Q1FTSZ3Sr0SvNhmA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbgAPLoS (ORCPT
+        id S1726861AbgAPLoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 06:44:18 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:51383 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbgAPLoS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 06:44:18 -0500
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1is3ZI-0005bg-09; Thu, 16 Jan 2020 12:44:08 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id A4864101B66; Thu, 16 Jan 2020 12:44:07 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Waiman Long <longman@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Waiman Long <longman@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Robert Richter <rrichter@marvell.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v2] watchdog: Fix possible soft lockup warning at bootup
-In-Reply-To: <87sgkgw3xq.fsf@nanos.tec.linutronix.de>
-References: <20200103151032.19590-1-longman@redhat.com> <87sgkgw3xq.fsf@nanos.tec.linutronix.de>
-Date:   Thu, 16 Jan 2020 12:44:07 +0100
-Message-ID: <87blr3wrqw.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Thu, 16 Jan 2020 06:44:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38092 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725999AbgAPLoV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 06:44:21 -0500
+Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E9E320730;
+        Thu, 16 Jan 2020 11:44:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579175061;
+        bh=QJ/QIbQ3IuwPCQJtCT7AzPXw20qA5hQNFNTuF0hdQ0I=;
+        h=From:To:Cc:Subject:Date:From;
+        b=XlYAY2QFoYif6kz680HtMEL+DHR+OTCwEJJA6RKmvHmGrbnygJQbw00/zivXpatZ6
+         Oqd/7Ua34yHkfpfBNg1C2SBvAFEeb3RhDtoZor+3ltViueXHP+yjaY61QzH6/gOVAc
+         E+/G8b0P29+5rpfYfXJTKJBzpk130SygeMQgivBE=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     linux-nfs@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+Subject: [PATCH 1/2] ARM: exynos_defconfig: Enable NFS v4.1 and v4.2
+Date:   Thu, 16 Jan 2020 12:44:06 +0100
+Message-Id: <1579175047-11351-1-git-send-email-krzk@kernel.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thomas Gleixner <tglx@linutronix.de> writes:
+NFS is widely used in debugging and Continuous Integration systems, so
+enable the newest versions of protocol: v4.1 and v4.2.
 
-Added ARM64 and ThunderX folks 
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-> Waiman Long <longman@redhat.com> writes:
->> By adding some instrumentation code, it was found that for cpu 14,
->> watchdog_enable() was called early with a timestamp of 1. That activates
->> the watchdog time checking logic. It was also found that the monotonic
->> time measured during the smp_init() phase runs much slower than the
->> real elapsed time as shown by the below debug printf output:
->>
->>   [    1.138522] run_queues, watchdog_timer_fn: now =  170000000
->>   [   25.519391] run_queues, watchdog_timer_fn: now = 4170000000
->>
->> In this particular case, it took about 24.4s of elapsed time for the
->> clock to advance 4s which is the soft expiration time that is required
->> to trigger the calling of watchdog_timer_fn(). That clock slowdown
->> stopped once the smp_init() call was done and the clock time ran at
->> the same rate as the elapsed time afterward.
+---
 
-And looking at this with a more awake brain, the root cause is pretty
-obvious.
+This happens to fix also troubles with mounting NFS v4 root after but in
+commit 6d972518b821 ("NFS: Add fs_context support."):
 
-sched_clock() advances by 24 seconds, but clock MONOTONIC on which the
-watchdog timer is based does not. As the timestamps you printed have 7
-trailing zeros, it's pretty clear that timekeeping is still jiffies
-based at this point and HZ is set to 100.
+  mount.nfs4 -o vers=4,nolock 192.168.1.10:/srv/nfs/odroidhc1 /new_root
+  [ 24.980839] NFS4: Couldn't follow remote path
+  [ 24.986201] NFS: Value for 'minorversion' out of range
+  mount.nfs4: Numerical result out of range
+---
+ arch/arm/configs/exynos_defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-So while bringing up the non-boot CPUs the boot CPU loses ~2000 timer
-interrupts. That needs to be fixed and not papered over.
+diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos_defconfig
+index ead8348ec999..756bbb6a641f 100644
+--- a/arch/arm/configs/exynos_defconfig
++++ b/arch/arm/configs/exynos_defconfig
+@@ -322,6 +322,8 @@ CONFIG_CRAMFS=y
+ CONFIG_ROMFS_FS=y
+ CONFIG_NFS_FS=y
+ CONFIG_NFS_V4=y
++CONFIG_NFS_V4_1=y
++CONFIG_NFS_V4_2=y
+ CONFIG_ROOT_NFS=y
+ CONFIG_NLS_CODEPAGE_437=y
+ CONFIG_NLS_ASCII=y
+-- 
+2.7.4
 
-Thanks,
-
-        tglx
