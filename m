@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A85DFC33CB6
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D28A6C33CB3
 	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 07:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ED85207FF
+	by mail.kernel.org (Postfix) with ESMTP id A94B72075B
 	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 07:37:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729138AbgAPHha (ORCPT
+        id S1729427AbgAPHhb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 02:37:30 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:60440 "EHLO inva021.nxp.com"
+        Thu, 16 Jan 2020 02:37:31 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:60494 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726230AbgAPHha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726160AbgAPHha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jan 2020 02:37:30 -0500
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3E167200682;
-        Thu, 16 Jan 2020 08:37:28 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id ABB1F2009E1;
+        Thu, 16 Jan 2020 08:37:29 +0100 (CET)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 307A7200659;
-        Thu, 16 Jan 2020 08:37:28 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9E3BE200659;
+        Thu, 16 Jan 2020 08:37:29 +0100 (CET)
 Received: from fsr-ub1864-014.ea.freescale.net (fsr-ub1864-014.ea.freescale.net [10.171.95.219])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 826722047A;
-        Thu, 16 Jan 2020 08:37:27 +0100 (CET)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id F037F2047A;
+        Thu, 16 Jan 2020 08:37:28 +0100 (CET)
 From:   =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
 To:     Shawn Guo <shawnguo@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
         Rob Herring <robh+dt@kernel.org>, Abel Vesa <abel.vesa@nxp.com>
@@ -41,9 +41,9 @@ Cc:     Mark Rutland <mark.rutland@arm.com>,
         Leonard Crestez <leonard.crestez@nxp.com>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/3] dt-bindings: clock: imx8mn: add SNVS clock
-Date:   Thu, 16 Jan 2020 09:37:16 +0200
-Message-Id: <20200116073718.4475-2-horia.geanta@nxp.com>
+Subject: [PATCH v2 3/3] arm64: dts: imx8mn: add clock for snvs rtc node
+Date:   Thu, 16 Jan 2020 09:37:18 +0200
+Message-Id: <20200116073718.4475-4-horia.geanta@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200116073718.4475-1-horia.geanta@nxp.com>
 References: <20200116073718.4475-1-horia.geanta@nxp.com>
@@ -56,27 +56,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add macro for the SNVS clock of the i.MX8MN.
+Initial commit adding imx8mn support:
+6c3debcbae47 ("arm64: dts: freescale: Add i.MX8MN dtsi support")
+added the "clock-names" property for the snvs rtc node,
+however it missed adding the clock.
 
 Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
 ---
- include/dt-bindings/clock/imx8mn-clock.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/freescale/imx8mn.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/dt-bindings/clock/imx8mn-clock.h b/include/dt-bindings/clock/imx8mn-clock.h
-index 0f2b8423ce1d..43883fe65db5 100644
---- a/include/dt-bindings/clock/imx8mn-clock.h
-+++ b/include/dt-bindings/clock/imx8mn-clock.h
-@@ -228,6 +228,8 @@
- #define IMX8MN_SYS_PLL2_333M_CG			209
- #define IMX8MN_SYS_PLL2_500M_CG			210
+diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+index a44b5438e842..d23347aaedda 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+@@ -358,6 +358,7 @@
+ 					offset = <0x34>;
+ 					interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
+ 						     <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
++					clocks = <&clk IMX8MN_CLK_SNVS_ROOT>;
+ 					clock-names = "snvs-rtc";
+ 				};
  
--#define IMX8MN_CLK_END				211
-+#define IMX8MN_CLK_SNVS_ROOT			211
-+
-+#define IMX8MN_CLK_END				212
- 
- #endif
 -- 
 2.17.1
 
