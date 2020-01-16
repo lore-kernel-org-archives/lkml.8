@@ -2,120 +2,91 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4109AC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 914DFC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1861C2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:39:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="r+BCuOqk"
+	by mail.kernel.org (Postfix) with ESMTP id 6130E2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:40:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579200001;
+	bh=0FEKFmNTzNHdWMgpZioN6dASvgMpPIEyyAdbTtRIJwQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=aviWJQoia/QIIFNKC9VeHNwzCn6/v6L1N1wUGEOBP3vMFEcT1rOX5HVPsc9kKPsMi
+	 54FSw0MfOkMcmWqLmeE+ccvBBN8BVigfE+eLrNm3dGHTJQNbZ2nfC6VF5y1A6KzTcA
+	 tZcwosW9RFhWMrf1ebSfqp6JtaHes1vIG+ej0ZcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392529AbgAPSjv (ORCPT
+        id S2390403AbgAPRML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:39:51 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34684 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730014AbgAPSjo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 13:39:44 -0500
-Received: by mail-lj1-f195.google.com with SMTP id z22so23843133ljg.1
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 10:39:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1NkxS1dJ4///PjDnpw3zqOnAHEcQBbdtsaoyImvFWzw=;
-        b=r+BCuOqk6DerwPHy3jM1T4vB+EtBpq4eqDuj5WdCTLhucLb9mR75gLvie4tcMoZ+2D
-         i+3VQyNa2eU4BZsH/70szQZkzCdCrYxrqyjlgBEOgH7uAus+pGgjIXiN7vvVCHrfO9Q5
-         9qhy//XHIa+yYjpT2/nnrYrzxPrBC+lxIH5VeNgkFUR6SH9DHxGO+v4EeQfEGKt+bNs7
-         ay//+Rz0Z6TZIaVm7dxqzkdC/5oA21DwhzKNoxFngX+gJbhZDOEiqcpmED0KG4wLVb0W
-         UNn7KBzcZvoPOdyxxMEFwQC1cFYQIZlRlxVgqquhyiMFYNoVvBNO6Wt7syx0eTMJZA9I
-         JVAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1NkxS1dJ4///PjDnpw3zqOnAHEcQBbdtsaoyImvFWzw=;
-        b=NB5puHLinrPNHg41Of+1Em1L7qzhx+qaudjgOBa/gQaLZfKTUrn9ECa4H31XvkAP++
-         ZYetStJyMiYpJtr8r9kY89X4P+JnmQGtUbufmNEHBQjp/yV2rCtqVd0YW5i1sffCC1Rk
-         f4KTqCVYQlaONuaDynt4AoR0Jx+R4oLz5wFryKqcI0TP3Utmb1ZlIIeyQCT5znSsQuB9
-         OMuQc2+8Ri8lEQva4OjqZj8C72szFZoFeFfeKDtVzuTKPF9LDJTF64lqIyvjHwVjM0Lw
-         Fsah/0HO1vFUEFTvTDv2G4L4WSwzU1GM11EQ9T6psrOsDbUO1sakNzCOwRagjQHqFYYx
-         E6Hw==
-X-Gm-Message-State: APjAAAVD9FXpu8D/xH29ce30i1SN31ymk+uAWANOy9xUYXq+gkGoZYvx
-        XzeDInYUmmZvq1VvcuvX4cCXCA==
-X-Google-Smtp-Source: APXvYqy1r4axnNLypvtxCDCBusTSJPvQ5bBth2V80eQ2aWR3SDteItjF5tjp00AcOpEuhWvIgDGEAg==
-X-Received: by 2002:a2e:93c5:: with SMTP id p5mr3077169ljh.192.1579199982123;
-        Thu, 16 Jan 2020 10:39:42 -0800 (PST)
-Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
-        by smtp.gmail.com with ESMTPSA id h10sm11007576ljc.39.2020.01.16.10.39.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 16 Jan 2020 10:39:40 -0800 (PST)
-Date:   Thu, 16 Jan 2020 10:39:32 -0800
-From:   Olof Johansson <olof@lixom.net>
-To:     Li Yang <leoyang.li@nxp.com>
-Cc:     arm@kernel.org, soc@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        shawnguo@kernel.org
-Subject: Re: [GIT PULL] soc/fsl drivers changes for next(v5.6)
-Message-ID: <20200116183932.qltqdtreeg4d2zq7@localhost>
-References: <1578608351-23289-1-git-send-email-leoyang.li@nxp.com>
+        Thu, 16 Jan 2020 12:12:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53884 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390367AbgAPRMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:12:00 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 701BF24697;
+        Thu, 16 Jan 2020 17:11:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579194719;
+        bh=0FEKFmNTzNHdWMgpZioN6dASvgMpPIEyyAdbTtRIJwQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bFvan5K5D6NtwOsJeh3BlvQo+yUi5WJqI7cIHhu7bxrmffeYY65vCAGF88I97Dihv
+         r+T+TTjOjPM07JXlt8ycb+fJkP+SQLbFwm/ZIQxZVteCZzDWARkprspJ9hyvnDAtLQ
+         2AeACDy/ZdWGu2ieWirRciPoSKS//AU6zVF7gPGE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 555/671] mailbox: qcom-apcs: fix max_register value
+Date:   Thu, 16 Jan 2020 12:03:13 -0500
+Message-Id: <20200116170509.12787-292-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
+References: <20200116170509.12787-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1578608351-23289-1-git-send-email-leoyang.li@nxp.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 
-On Thu, Jan 09, 2020 at 04:19:11PM -0600, Li Yang wrote:
-> Hi soc maintainers,
-> 
-> Please merge the following new changes for soc/fsl drivers.
-> 
-> Regards,
-> Leo
-> 
-> 
-> The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
-> 
->   Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/leo/linux.git tags/soc-fsl-next-v5.6
-> 
-> for you to fetch changes up to 6e62bd36e9ad85a22d92b1adce6a0336ea549733:
-> 
->   soc: fsl: qe: remove set but not used variable 'mm_gc' (2020-01-08 16:02:48 -0600)
-> 
-> ----------------------------------------------------------------
-> NXP/FSL SoC driver updates for v5.6
-> 
-> QUICC Engine drivers
-> - Improve the QE drivers to be compatible with ARM/ARM64/PPC64
-> architectures
-> - Various cleanups to the QE drivers
+[ Upstream commit 556a0964e28c4441dcdd50fb07596fd042246bd5 ]
 
-This branch contains a cross-section of drivers, including those who are
-normally sent to other maintainers/subsystems. I don't see dependencies that
-make them a requirement/easier to merge through the SoC tree at this time --
-for example the ucc_uart driver updates are mostly independent cleanups.
+The mailbox length is 0x1000 hence the max_register value is 0xFFC.
 
-Am I missing some aspect here, or should those just be merged through
-drivers/tty as other driver changes there? At the very least, we expect drivers
-that aren't merged through the normal path to have acks from those maintainers.
+Fixes: c6a8b171ca8e ("mailbox: qcom: Convert APCS IPC driver to use
+regmap")
+Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Mind following up on that? Thanks!
+diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+index 5255dcb551a7..d8b4f08f613b 100644
+--- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
++++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+@@ -36,7 +36,7 @@ static const struct regmap_config apcs_regmap_config = {
+ 	.reg_bits = 32,
+ 	.reg_stride = 4,
+ 	.val_bits = 32,
+-	.max_register = 0x1000,
++	.max_register = 0xFFC,
+ 	.fast_io = true,
+ };
+ 
+-- 
+2.20.1
 
-
--Olof
