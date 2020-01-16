@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D713CC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE2BC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A45482053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80E972053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:47:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200418;
-	bh=eS8mU3QIA0TBXe9Uxh91D1mjEfC0CK2I4ipAljZKsLQ=;
+	s=default; t=1579200426;
+	bh=aiSaP5lUXFc8+CWZRQ6GqqhVxMN+V6cg5bnGo3IhH30=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=myT20/5FEviygcxtCp0Lik654Mk65lUaEvx13KfShW6GQ1WZpxmXCZxWi56EdExGe
-	 kXhTlskH7u68M0p5W8YAVQyrnGnnhMmhHo7CN91cEM2lwHQcwlmbyG1Oq1QCeynOmM
-	 lNTU0A+9vUPqVjNvkC8QFpZGFhwGLSKYWvhkL39M=
+	b=roqlDWq0pK6XCU5AcKY4ShrEPtJ3Ucp29yaQzA5zXYEi/fzRrteUAQ6zJaev+cg4Z
+	 fNt8QAxm43joPDH7K4SjeTtcUotaaL/4GZS7ZgilpUXe7ajzM6pTjQW+EzW4oFqTmc
+	 1IAdj01wBEwzM2ju72jkbd9FS+xaoTHcR1ZLMxZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389846AbgAPRKI (ORCPT
+        id S2390969AbgAPSrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:10:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47098 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:47:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389800AbgAPRJ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:09:59 -0500
+        id S2389836AbgAPRKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:10:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB15E2081E;
-        Thu, 16 Jan 2020 17:09:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA996205F4;
+        Thu, 16 Jan 2020 17:10:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194598;
-        bh=eS8mU3QIA0TBXe9Uxh91D1mjEfC0CK2I4ipAljZKsLQ=;
+        s=default; t=1579194605;
+        bh=aiSaP5lUXFc8+CWZRQ6GqqhVxMN+V6cg5bnGo3IhH30=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tHe2yCUo03r9DVV9OR+QMC9NxqzVi8klYDBioAYSF6oyPFRYUdmbXUOnk8ftAGzKt
-         FIA5X36eOJSXh2NCKNHdPVzR/uODwrMqDGB+IEaooo8U5TLiV6jCBlZlxT0BIOXeqa
-         /adMn1qV8wplHBF5+6WknUdz+RpT6Ya14urI2Wng=
+        b=hIFmJVhfRtuVaNsEOb+1Qg6tBOcr4ht1nK9N8wiu2nWIlhrWepCGeVPBb3SoyvWFz
+         fDI3+2ZAIk28OVgEg8QMK1Qs60AEvdJOnPL+hII5JVEFS/FtZ2DELCY0EuSrpP3ftp
+         9gOb9GfmfGd28x10OgqSHPwFAsfIBEM6HOL4zfMI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 467/671] PM: sleep: Fix possible overflow in pm_system_cancel_wakeup()
-Date:   Thu, 16 Jan 2020 12:01:45 -0500
-Message-Id: <20200116170509.12787-204-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 472/671] mic: avoid statically declaring a 'struct device'.
+Date:   Thu, 16 Jan 2020 12:01:50 -0500
+Message-Id: <20200116170509.12787-209-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,36 +60,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 2933954b71f10d392764f95eec0f0aa2d103054b ]
+[ Upstream commit bc83f79bd2119230888fb8574639d5a51b38f903 ]
 
-It is not actually guaranteed that pm_abort_suspend will be
-nonzero when pm_system_cancel_wakeup() is called which may lead to
-subtle issues, so make it use atomic_dec_if_positive() instead of
-atomic_dec() for the safety sake.
+Generally, declaring a platform device as a static variable is
+a bad idea and can cause all kinds of problems, in particular
+with the DMA configuration and lifetime rules.
 
-Fixes: 33e4f80ee69b ("ACPI / PM: Ignore spurious SCI wakeups from suspend-to-idle")
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
+A specific problem we hit here is from a bug in clang that warns
+about certain (otherwise valid) macros when used in static variables:
+
+drivers/misc/mic/card/mic_x100.c:285:27: warning: shift count >= width of type [-Wshift-count-overflow]
+static u64 mic_dma_mask = DMA_BIT_MASK(64);
+                          ^~~~~~~~~~~~~~~~
+include/linux/dma-mapping.h:141:54: note: expanded from macro 'DMA_BIT_MASK'
+ #define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
+                                                     ^ ~~~
+
+A slightly better way here is to create the platform device dynamically
+and set the dma mask in the probe function.
+This avoids the warning and some other problems, but is still not ideal
+because the device creation should really be separated from the driver,
+and the fact that the device has no parent means we have to force
+the dma mask rather than having it set up from the bus that the device
+is actually on.
+
+Fixes: dd8d8d44df64 ("misc: mic: MIC card driver specific changes to enable SCIF")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20190712092426.872625-1-arnd@arndb.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/power/wakeup.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/misc/mic/card/mic_x100.c | 28 ++++++++++++----------------
+ 1 file changed, 12 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
-index 7c84f64c74f7..2dfa2e048745 100644
---- a/drivers/base/power/wakeup.c
-+++ b/drivers/base/power/wakeup.c
-@@ -875,7 +875,7 @@ EXPORT_SYMBOL_GPL(pm_system_wakeup);
+diff --git a/drivers/misc/mic/card/mic_x100.c b/drivers/misc/mic/card/mic_x100.c
+index b9f0710ffa6b..4007adc666f3 100644
+--- a/drivers/misc/mic/card/mic_x100.c
++++ b/drivers/misc/mic/card/mic_x100.c
+@@ -249,6 +249,9 @@ static int __init mic_probe(struct platform_device *pdev)
+ 	mdrv->dev = &pdev->dev;
+ 	snprintf(mdrv->name, sizeof(mic_driver_name), mic_driver_name);
  
- void pm_system_cancel_wakeup(void)
- {
--	atomic_dec(&pm_abort_suspend);
-+	atomic_dec_if_positive(&pm_abort_suspend);
++	/* FIXME: use dma_set_mask_and_coherent() and check result */
++	dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
++
+ 	mdev->mmio.pa = MIC_X100_MMIO_BASE;
+ 	mdev->mmio.len = MIC_X100_MMIO_LEN;
+ 	mdev->mmio.va = devm_ioremap(&pdev->dev, MIC_X100_MMIO_BASE,
+@@ -294,18 +297,6 @@ static void mic_platform_shutdown(struct platform_device *pdev)
+ 	mic_remove(pdev);
  }
  
- void pm_wakeup_clear(bool reset)
+-static u64 mic_dma_mask = DMA_BIT_MASK(64);
+-
+-static struct platform_device mic_platform_dev = {
+-	.name = mic_driver_name,
+-	.id   = 0,
+-	.num_resources = 0,
+-	.dev = {
+-		.dma_mask = &mic_dma_mask,
+-		.coherent_dma_mask = DMA_BIT_MASK(64),
+-	},
+-};
+-
+ static struct platform_driver __refdata mic_platform_driver = {
+ 	.probe = mic_probe,
+ 	.remove = mic_remove,
+@@ -315,6 +306,8 @@ static struct platform_driver __refdata mic_platform_driver = {
+ 	},
+ };
+ 
++static struct platform_device *mic_platform_dev;
++
+ static int __init mic_init(void)
+ {
+ 	int ret;
+@@ -328,9 +321,12 @@ static int __init mic_init(void)
+ 
+ 	request_module("mic_x100_dma");
+ 	mic_init_card_debugfs();
+-	ret = platform_device_register(&mic_platform_dev);
++
++	mic_platform_dev = platform_device_register_simple(mic_driver_name,
++							   0, NULL, 0);
++	ret = PTR_ERR_OR_ZERO(mic_platform_dev);
+ 	if (ret) {
+-		pr_err("platform_device_register ret %d\n", ret);
++		pr_err("platform_device_register_full ret %d\n", ret);
+ 		goto cleanup_debugfs;
+ 	}
+ 	ret = platform_driver_register(&mic_platform_driver);
+@@ -341,7 +337,7 @@ static int __init mic_init(void)
+ 	return ret;
+ 
+ device_unregister:
+-	platform_device_unregister(&mic_platform_dev);
++	platform_device_unregister(mic_platform_dev);
+ cleanup_debugfs:
+ 	mic_exit_card_debugfs();
+ done:
+@@ -351,7 +347,7 @@ static int __init mic_init(void)
+ static void __exit mic_exit(void)
+ {
+ 	platform_driver_unregister(&mic_platform_driver);
+-	platform_device_unregister(&mic_platform_dev);
++	platform_device_unregister(mic_platform_dev);
+ 	mic_exit_card_debugfs();
+ }
+ 
 -- 
 2.20.1
 
