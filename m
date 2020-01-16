@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C99A8C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D24C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A34182077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75FFA2077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:53:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197201;
-	bh=krZLWzFPW8uDsDaIIR1DImCnsMLd3rz+JBC8LgfUS8g=;
+	s=default; t=1579197207;
+	bh=IP02OrS0oqRKKzPOtb089VRTRAzmnUzERC6g3EaicoQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YgbpdqS7UJhhJllQxJtud49r1P0vXkiFGo169J51awU7GwlX7kRX12OZbedWaddVH
-	 JWYy4p2rY4a01IiL48aUs009plMQB1LCpfXIy0Q39dE7SRiVv47gPSxtdyPWmuLSXb
-	 jJDy58ljlK5O010i3aoZgw04zJv49tf+wuQGFie4=
+	b=gdse+qsppv531i74t4Sx/R0Oc9pn9LdgLe7cU2h10jM4eAh5S+zszTrh0uA8ExJ+W
+	 YLjxD/NISfDfSxQxuZNcucDmTezQe4how78zsE2nUO2OnSBQax6Ti9bV60JAyHLjlC
+	 lE0mumwsZEhP3EZqxYSyZE7ctj4WWRkJao+VFy8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406276AbgAPRxU (ORCPT
+        id S2406065AbgAPRpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:53:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36632 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:45:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727022AbgAPRpH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:45:07 -0500
+        id S2405903AbgAPRog (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:44:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 238B624767;
-        Thu, 16 Jan 2020 17:45:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F41902474F;
+        Thu, 16 Jan 2020 17:44:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196706;
-        bh=krZLWzFPW8uDsDaIIR1DImCnsMLd3rz+JBC8LgfUS8g=;
+        s=default; t=1579196676;
+        bh=IP02OrS0oqRKKzPOtb089VRTRAzmnUzERC6g3EaicoQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bbTUiRuuvpqvvDyPbKzoVuZBplglpcE9FLeR0GfYoydWH2bnhknZEN+RnsYP7SyeK
-         fb/4yiXV00WgKZJahBXoSVLyxItrVgPCwsyO/owbrN6D/SZiGVMnHZjRGmrQHn5EPa
-         uFe3Ads5HYc2R0/RSEqdDWiGP9OQVzwIdtTk6itQ=
+        b=Mym3iBnfdVlGcve6mp7jABqWkL/nvkJNH4eBOpAcfuT0eYiAGBOVtYIj/Si/EugS+
+         GLPuWsxPhaGQtb5agJ/2RPL+b3npn9tzkEQ77v0yh3AVOszLiOuF1s8YZAKBLKl2+V
+         m7OeLVwW4geBCNoJgZwAv73Yjd6+cS7M9LfxFpew=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        Jeff Layton <jlayton@primarydata.com>,
-        Steve French <smfrench@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org
-Subject: [PATCH AUTOSEL 4.4 097/174] signal/cifs: Fix cifs_put_tcp_session to call send_sig instead of force_sig
-Date:   Thu, 16 Jan 2020 12:41:34 -0500
-Message-Id: <20200116174251.24326-97-sashal@kernel.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 075/174] hwmon: (w83627hf) Use request_muxed_region for Super-IO accesses
+Date:   Thu, 16 Jan 2020 12:41:12 -0500
+Message-Id: <20200116174251.24326-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -62,51 +58,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Eric W. Biederman" <ebiederm@xmission.com>
+From: Guenter Roeck <linux@roeck-us.net>
 
-[ Upstream commit 72abe3bcf0911d69b46c1e8bdb5612675e0ac42c ]
+[ Upstream commit e95fd518d05bfc087da6fcdea4900a57cfb083bd ]
 
-The locking in force_sig_info is not prepared to deal with a task that
-exits or execs (as sighand may change).  The is not a locking problem
-in force_sig as force_sig is only built to handle synchronous
-exceptions.
+Super-IO accesses may fail on a system with no or unmapped LPC bus.
 
-Further the function force_sig_info changes the signal state if the
-signal is ignored, or blocked or if SIGNAL_UNKILLABLE will prevent the
-delivery of the signal.  The signal SIGKILL can not be ignored and can
-not be blocked and SIGNAL_UNKILLABLE won't prevent it from being
-delivered.
+Also, other drivers may attempt to access the LPC bus at the same time,
+resulting in undefined behavior.
 
-So using force_sig rather than send_sig for SIGKILL is confusing
-and pointless.
+Use request_muxed_region() to ensure that IO access on the requested
+address space is supported, and to ensure that access by multiple drivers
+is synchronized.
 
-Because it won't impact the sending of the signal and and because
-using force_sig is wrong, replace force_sig with send_sig.
-
-Cc: Namjae Jeon <namjae.jeon@samsung.com>
-Cc: Jeff Layton <jlayton@primarydata.com>
-Cc: Steve French <smfrench@gmail.com>
-Fixes: a5c3e1c725af ("Revert "cifs: No need to send SIGKILL to demux_thread during umount"")
-Fixes: e7ddee9037e7 ("cifs: disable sharing session and tcon and add new TCP sharing code")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Fixes: b72656dbc491 ("hwmon: (w83627hf) Stop using globals for I/O port numbers")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hwmon/w83627hf.c | 42 +++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 37 insertions(+), 5 deletions(-)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 63108343124a..b608ce741444 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -2246,7 +2246,7 @@ cifs_put_tcp_session(struct TCP_Server_Info *server, int from_reconnect)
- 
- 	task = xchg(&server->tsk, NULL);
- 	if (task)
--		force_sig(SIGKILL, task);
-+		send_sig(SIGKILL, task, 1);
+diff --git a/drivers/hwmon/w83627hf.c b/drivers/hwmon/w83627hf.c
+index 721295b9a051..43c0f89cefdf 100644
+--- a/drivers/hwmon/w83627hf.c
++++ b/drivers/hwmon/w83627hf.c
+@@ -130,17 +130,23 @@ superio_select(struct w83627hf_sio_data *sio, int ld)
+ 	outb(ld,  sio->sioaddr + 1);
  }
  
- static struct TCP_Server_Info *
+-static inline void
++static inline int
+ superio_enter(struct w83627hf_sio_data *sio)
+ {
++	if (!request_muxed_region(sio->sioaddr, 2, DRVNAME))
++		return -EBUSY;
++
+ 	outb(0x87, sio->sioaddr);
+ 	outb(0x87, sio->sioaddr);
++
++	return 0;
+ }
+ 
+ static inline void
+ superio_exit(struct w83627hf_sio_data *sio)
+ {
+ 	outb(0xAA, sio->sioaddr);
++	release_region(sio->sioaddr, 2);
+ }
+ 
+ #define W627_DEVID 0x52
+@@ -1275,7 +1281,7 @@ static DEVICE_ATTR(name, S_IRUGO, show_name, NULL);
+ static int __init w83627hf_find(int sioaddr, unsigned short *addr,
+ 				struct w83627hf_sio_data *sio_data)
+ {
+-	int err = -ENODEV;
++	int err;
+ 	u16 val;
+ 
+ 	static __initconst char *const names[] = {
+@@ -1287,7 +1293,11 @@ static int __init w83627hf_find(int sioaddr, unsigned short *addr,
+ 	};
+ 
+ 	sio_data->sioaddr = sioaddr;
+-	superio_enter(sio_data);
++	err = superio_enter(sio_data);
++	if (err)
++		return err;
++
++	err = -ENODEV;
+ 	val = force_id ? force_id : superio_inb(sio_data, DEVID);
+ 	switch (val) {
+ 	case W627_DEVID:
+@@ -1641,9 +1651,21 @@ static int w83627thf_read_gpio5(struct platform_device *pdev)
+ 	struct w83627hf_sio_data *sio_data = dev_get_platdata(&pdev->dev);
+ 	int res = 0xff, sel;
+ 
+-	superio_enter(sio_data);
++	if (superio_enter(sio_data)) {
++		/*
++		 * Some other driver reserved the address space for itself.
++		 * We don't want to fail driver instantiation because of that,
++		 * so display a warning and keep going.
++		 */
++		dev_warn(&pdev->dev,
++			 "Can not read VID data: Failed to enable SuperIO access\n");
++		return res;
++	}
++
+ 	superio_select(sio_data, W83627HF_LD_GPIO5);
+ 
++	res = 0xff;
++
+ 	/* Make sure these GPIO pins are enabled */
+ 	if (!(superio_inb(sio_data, W83627THF_GPIO5_EN) & (1<<3))) {
+ 		dev_dbg(&pdev->dev, "GPIO5 disabled, no VID function\n");
+@@ -1674,7 +1696,17 @@ static int w83687thf_read_vid(struct platform_device *pdev)
+ 	struct w83627hf_sio_data *sio_data = dev_get_platdata(&pdev->dev);
+ 	int res = 0xff;
+ 
+-	superio_enter(sio_data);
++	if (superio_enter(sio_data)) {
++		/*
++		 * Some other driver reserved the address space for itself.
++		 * We don't want to fail driver instantiation because of that,
++		 * so display a warning and keep going.
++		 */
++		dev_warn(&pdev->dev,
++			 "Can not read VID data: Failed to enable SuperIO access\n");
++		return res;
++	}
++
+ 	superio_select(sio_data, W83627HF_LD_HWM);
+ 
+ 	/* Make sure these GPIO pins are enabled */
 -- 
 2.20.1
 
