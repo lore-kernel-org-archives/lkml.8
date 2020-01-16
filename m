@@ -2,235 +2,123 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2A7C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F38C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4B64207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:18:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 086092077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:19:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jz8cR9sB"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XnuNuet4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbgAPOSX (ORCPT
+        id S1726861AbgAPOTe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 09:18:23 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41155 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726933AbgAPOSP (ORCPT
+        Thu, 16 Jan 2020 09:19:34 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:41079 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726362AbgAPOTe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 09:18:15 -0500
-Received: by mail-pf1-f193.google.com with SMTP id w62so10278002pfw.8;
-        Thu, 16 Jan 2020 06:18:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=seUK/JyxhRWMYA1ja0fRcFl7gNdd11FZuOX5tIhz6o4=;
-        b=jz8cR9sBbfsmWSgj6nQuh7q4/DORarQKf7m4rmnFRLbhDxisphLIrI8zkgCk/3U5+S
-         K37zkUeZ51c+k9AyhAsP0O9nvx7uzIGzLrCy8/C8GhflXsGlbWDJ/kb2X5GuCpnHJP3/
-         mDTwbJz78rq+owL2OReX86ZHk3QOURdLEy80bjCBNE+wFZ33kNk5vVwKPObdAOyjIlKK
-         fA7z86+jQS45RnK5aR5HEZuRawJW/buZE3dNLWQtT+E9aoR+UbxzgxSL8HQtHLcLx6Ws
-         tDookyPz/NS0YVztp1DnthfVlCGnnKtp4jZbVgbO61nTFEwQCLUludLYEJ8SW6vtHxe3
-         IW9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=seUK/JyxhRWMYA1ja0fRcFl7gNdd11FZuOX5tIhz6o4=;
-        b=kIv5PfKJReMNtJP2w7hrCCZWgz682Dp9Dmzkypl3Q6wwYFGI2t/YLJ40FjiUgrlFoQ
-         ZSIY/e/BsDGoRtwrFbHOM2hydUAkESmn+2hy7HQie+7pmjVu6x+L3GuQZGfCUE2N/01j
-         zvJDXaTiBS8MtTY8iplaE+tZ/kYy2CCpT1a5CBlHVwg2lLLSNmdUAXc9PNO3C1gncVXs
-         xvqWeELFgBLrOysmp4FD1Q841Ff97LVO7YjE1d7p7UQod6jQZUFWA2k3pCtj4c16yrAK
-         sY6RST6CClXzkPCLshCeG5U0j8TuZtLqx76RnrCcnPKren6RP7jcFoH5w2WfdzJkb/cA
-         ytbw==
-X-Gm-Message-State: APjAAAUvuhi+ctW2YUbgxuehlg1D5PWCuStTC30xUQBO61YSSkUkAQtw
-        7kru679VCJQ3oBo2SV0GZLpcrik9
-X-Google-Smtp-Source: APXvYqzq0QxK2/ou/gLtw66gjnVeUzZb9qI4LUpHIeA/fI8Zq5pSY2SF9Euu+DmUse5dnhYPOeOHQw==
-X-Received: by 2002:a63:1119:: with SMTP id g25mr39349489pgl.359.1579184294488;
-        Thu, 16 Jan 2020 06:18:14 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id i23sm25641983pfo.11.2020.01.16.06.18.13
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 16 Jan 2020 06:18:14 -0800 (PST)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     linux-hwmon@vger.kernel.org
-Cc:     Clemens Ladisch <clemens@ladisch.de>,
-        Jean Delvare <jdelvare@suse.com>, linux-kernel@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [RFT PATCH 3/4] hwmon: (k10temp) Report temperatures per CPU die
-Date:   Thu, 16 Jan 2020 06:17:59 -0800
-Message-Id: <20200116141800.9828-4-linux@roeck-us.net>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200116141800.9828-1-linux@roeck-us.net>
-References: <20200116141800.9828-1-linux@roeck-us.net>
+        Thu, 16 Jan 2020 09:19:34 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579184373; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=F/smCYCNf+T2ixQGU3VAUh8QI4L0ikLpSfao8JkC1WE=; b=XnuNuet477cSyDCMvYn8OKYOI9ltDh1v5W53iPm+eLmWKTRc4QUNTTILxPKLZgqClP8XUsfd
+ TOsB8hCizOcJlK/oXJ97erHmtrlTIXrZKZ+XRUmV11iIp4UsrkvOv3iHeY1Ep7a4yu0TIWgO
+ QMC0rJPgxNTw0QWTKvskTDlQM+g=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e2070f1.7f57b72bb618-smtp-out-n01;
+ Thu, 16 Jan 2020 14:19:29 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C9729C43383; Thu, 16 Jan 2020 14:19:29 +0000 (UTC)
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0B27DC433CB;
+        Thu, 16 Jan 2020 14:19:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0B27DC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        James Morse <james.morse@arm.com>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCH] arm64: Add KRYO{3,4}XX CPU cores to spectre-v2 safe list
+Date:   Thu, 16 Jan 2020 19:49:12 +0530
+Message-Id: <20200116141912.15465-1-saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Zen2 reports reporting temperatures per CPU die (called Core Complex Dies,
-or CCD, by AMD). Add support for it to the k10temp driver.
+KRYO3XX silver CPU cores and KRYO4XX silver, gold CPU cores
+are not affected by Spectre variant 2. Add them to spectre_v2
+safe list to correct ARM_SMCCC_ARCH_WORKAROUND_1 warning and
+vulnerability sysfs value.
 
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 ---
- drivers/hwmon/k10temp.c | 79 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 78 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/cputype.h | 6 ++++++
+ arch/arm64/kernel/cpu_errata.c   | 3 +++
+ 2 files changed, 9 insertions(+)
 
-diff --git a/drivers/hwmon/k10temp.c b/drivers/hwmon/k10temp.c
-index c45f6498a59b..944ba8008bc4 100644
---- a/drivers/hwmon/k10temp.c
-+++ b/drivers/hwmon/k10temp.c
-@@ -5,6 +5,12 @@
-  *
-  * Copyright (c) 2009 Clemens Ladisch <clemens@ladisch.de>
-  * Copyright (c) 2020 Guenter Roeck <linux@roeck-us.net>
-+ *
-+ * Implementation notes:
-+ * - CCD1 and CCD2 register address information as well as the calculation to
-+ *   convert raw register values is from https://github.com/ocerman/zenpower.
-+ *   The information is not confirmed from chip datasheets, but experiments
-+ *   suggest that it provides reasonable temperature values.
-  */
+diff --git a/arch/arm64/include/asm/cputype.h b/arch/arm64/include/asm/cputype.h
+index aca07c2f6e6e..7219cddeba66 100644
+--- a/arch/arm64/include/asm/cputype.h
++++ b/arch/arm64/include/asm/cputype.h
+@@ -85,6 +85,9 @@
+ #define QCOM_CPU_PART_FALKOR_V1		0x800
+ #define QCOM_CPU_PART_FALKOR		0xC00
+ #define QCOM_CPU_PART_KRYO		0x200
++#define QCOM_CPU_PART_KRYO_3XX_SILVER	0x803
++#define QCOM_CPU_PART_KRYO_4XX_GOLD	0x804
++#define QCOM_CPU_PART_KRYO_4XX_SILVER	0x805
  
- #include <linux/bitops.h>
-@@ -61,6 +67,8 @@ static DEFINE_MUTEX(nb_smu_ind_mutex);
- 
- /* F17h M01h Access througn SMN */
- #define F17H_M01H_REPORTED_TEMP_CTRL_OFFSET	0x00059800
-+#define F17H_M70H_CCD1_TEMP			0x00059954
-+#define F17H_M70H_CCD2_TEMP			0x00059958
- 
- #define CUR_TEMP_SHIFT				21
- #define CUR_TEMP_RANGE_SEL_MASK			BIT(19)
-@@ -72,6 +80,8 @@ struct k10temp_data {
- 	int temp_offset;
- 	u32 temp_adjust_mask;
- 	bool show_tdie;
-+	bool show_tccd1;
-+	bool show_tccd2;
+ #define NVIDIA_CPU_PART_DENVER		0x003
+ #define NVIDIA_CPU_PART_CARMEL		0x004
+@@ -111,6 +114,9 @@
+ #define MIDR_QCOM_FALKOR_V1 MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_FALKOR_V1)
+ #define MIDR_QCOM_FALKOR MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_FALKOR)
+ #define MIDR_QCOM_KRYO MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_KRYO)
++#define MIDR_QCOM_KRYO_3XX_SILVER MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_KRYO_3XX_SILVER)
++#define MIDR_QCOM_KRYO_4XX_GOLD MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_KRYO_4XX_GOLD)
++#define MIDR_QCOM_KRYO_4XX_SILVER MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_KRYO_4XX_SILVER)
+ #define MIDR_NVIDIA_DENVER MIDR_CPU_MODEL(ARM_CPU_IMP_NVIDIA, NVIDIA_CPU_PART_DENVER)
+ #define MIDR_NVIDIA_CARMEL MIDR_CPU_MODEL(ARM_CPU_IMP_NVIDIA, NVIDIA_CPU_PART_CARMEL)
+ #define MIDR_FUJITSU_A64FX MIDR_CPU_MODEL(ARM_CPU_IMP_FUJITSU, FUJITSU_CPU_PART_A64FX)
+diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
+index 85f4bec22f6d..58ba2d1c66a3 100644
+--- a/arch/arm64/kernel/cpu_errata.c
++++ b/arch/arm64/kernel/cpu_errata.c
+@@ -548,6 +548,9 @@ static const struct midr_range spectre_v2_safe_list[] = {
+ 	MIDR_ALL_VERSIONS(MIDR_CORTEX_A55),
+ 	MIDR_ALL_VERSIONS(MIDR_BRAHMA_B53),
+ 	MIDR_ALL_VERSIONS(MIDR_HISI_TSV110),
++	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_3XX_SILVER),
++	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_4XX_GOLD),
++	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_4XX_SILVER),
+ 	{ /* sentinel */ }
  };
  
- struct tctl_offset {
-@@ -143,6 +153,8 @@ static long get_raw_temp(struct k10temp_data *data)
- const char *k10temp_temp_label[] = {
- 	"Tdie",
- 	"Tctl",
-+	"Tccd1",
-+	"Tccd2",
- };
- 
- static int k10temp_read_labels(struct device *dev,
-@@ -172,6 +184,16 @@ static int k10temp_read(struct device *dev, enum hwmon_sensor_types type,
- 			if (*val < 0)
- 				*val = 0;
- 			break;
-+		case 2:		/* Tccd1 */
-+			amd_smn_read(amd_pci_dev_to_node_id(data->pdev),
-+				     F17H_M70H_CCD1_TEMP, &regval);
-+			*val = (regval & 0xfff) * 125 - 305000;
-+			break;
-+		case 3:		/* Tccd2 */
-+			amd_smn_read(amd_pci_dev_to_node_id(data->pdev),
-+				     F17H_M70H_CCD2_TEMP, &regval);
-+			*val = (regval & 0xfff) * 125 - 305000;
-+			break;
- 		default:
- 			return -EOPNOTSUPP;
- 		}
-@@ -206,8 +228,24 @@ static umode_t k10temp_is_visible(const void *_data,
- 	case hwmon_temp:
- 		switch (attr) {
- 		case hwmon_temp_input:
--			if (channel && !data->show_tdie)
-+			switch (channel) {
-+			case 0:		/* Tdie, or Tctl if we don't show it */
-+				break;
-+			case 1:		/* Tctl */
-+				if (!data->show_tdie)
-+					return 0;
-+				break;
-+			case 2:		/* Tccd1 */
-+				if (!data->show_tccd1)
-+					return 0;
-+				break;
-+			case 3:		/* Tccd2 */
-+				if (!data->show_tccd2)
-+					return 0;
-+				break;
-+			default:
- 				return 0;
-+			}
- 			break;
- 		case hwmon_temp_max:
- 			if (channel)
-@@ -229,8 +267,24 @@ static umode_t k10temp_is_visible(const void *_data,
- 				return 0;
- 			break;
- 		case hwmon_temp_label:
-+			/* No labels if we don't show the die temperature */
- 			if (!data->show_tdie)
- 				return 0;
-+			switch (channel) {
-+			case 0:		/* Tdie */
-+			case 1:		/* Tctl */
-+				break;
-+			case 2:		/* Tccd1 */
-+				if (!data->show_tccd1)
-+					return 0;
-+				break;
-+			case 3:		/* Tccd2 */
-+				if (!data->show_tccd2)
-+					return 0;
-+				break;
-+			default:
-+				return 0;
-+			}
- 			break;
- 		default:
- 			return 0;
-@@ -281,6 +335,8 @@ static const struct hwmon_channel_info *k10temp_info[] = {
- 			   HWMON_T_INPUT | HWMON_T_MAX |
- 			   HWMON_T_CRIT | HWMON_T_CRIT_HYST |
- 			   HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
-+			   HWMON_T_INPUT | HWMON_T_LABEL,
- 			   HWMON_T_INPUT | HWMON_T_LABEL),
- 	NULL
- };
-@@ -326,9 +382,30 @@ static int k10temp_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 		data->read_htcreg = read_htcreg_nb_f15;
- 		data->read_tempreg = read_tempreg_nb_f15;
- 	} else if (boot_cpu_data.x86 == 0x17 || boot_cpu_data.x86 == 0x18) {
-+		u32 regval;
-+
- 		data->temp_adjust_mask = CUR_TEMP_RANGE_SEL_MASK;
- 		data->read_tempreg = read_tempreg_nb_f17;
- 		data->show_tdie = true;
-+
-+		switch (boot_cpu_data.x86_model) {
-+		case 0x1:	/* Zen */
-+		case 0x8:	/* Zen+ */
-+		case 0x11:	/* Zen APU */
-+		case 0x18:	/* Zen+ APU */
-+			break;
-+		case 0x71:	/* Zen2 */
-+			amd_smn_read(amd_pci_dev_to_node_id(pdev),
-+				     F17H_M70H_CCD1_TEMP, &regval);
-+			if (regval & 0xfff)
-+				data->show_tccd1 = true;
-+
-+			amd_smn_read(amd_pci_dev_to_node_id(pdev),
-+				     F17H_M70H_CCD2_TEMP, &regval);
-+			if (regval & 0xfff)
-+				data->show_tccd2 = true;
-+			break;
-+		}
- 	} else {
- 		data->read_htcreg = read_htcreg_pci;
- 		data->read_tempreg = read_tempreg_pci;
 -- 
-2.17.1
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
