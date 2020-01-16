@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE6AC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23315C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A122C24728
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:43:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F12D4246A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:43:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196585;
-	bh=OrMNX1uLlv82W6tGFkTa+kfFkYiYi9GgSKXUK6E0HIg=;
+	s=default; t=1579196588;
+	bh=yIxhLpc4/8MptiFRK8fD88gnwx9ZyQChQN3xYV4/iOA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lwBhWhygR9d9cjIrQuFZ4CXYlDh0Sj2IazDUnKhkSGOwK2J5uVMcB/r402xOiI2iX
-	 HI4PkjBShnQRLAK+iRXs7QJITxYHzxM51Saeh2veqmjlJSyx9gxsKsO+4K2I6N6Ex6
-	 stvu5snSGE+S3mvNjO61JVKLXGIMMHpsAPyMLcGE=
+	b=XsjhqKU9EgyRGqnqZszkTsf5d9F3KSRZMiJKCElR/BgsPjeMbcnCHlcKXIga/gdyH
+	 oBf40zWRbp01fYgOspbrRjwIK3vYJvcdRRVf2QcGwm1nElKLnGk37MVkzdgC+4HXtn
+	 bOOpzLZTkvPgCojQPKKoYxIEVbsbuQbVM+b/jidg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393857AbgAPRnE (ORCPT
+        id S2393869AbgAPRnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:43:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32814 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:43:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405864AbgAPRm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:42:57 -0500
+        id S2393854AbgAPRnD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:43:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A29EB20728;
-        Thu, 16 Jan 2020 17:42:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEB0B24695;
+        Thu, 16 Jan 2020 17:43:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196577;
-        bh=OrMNX1uLlv82W6tGFkTa+kfFkYiYi9GgSKXUK6E0HIg=;
+        s=default; t=1579196583;
+        bh=yIxhLpc4/8MptiFRK8fD88gnwx9ZyQChQN3xYV4/iOA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uhx07Bv2J39zqCgIoKyMoRJyLjydvR1SF/RJCHAZEYokvIZx50ST1QuAU/Md5Mt3J
-         CiXDwmDCdQKnKm1xzjE7EOQTgb6pwgtJx49GR2NlARrI7WcKdqBavGoFHFAgFzI+qo
-         dEpxWdU/6X81wKaZEyGeOCTYPIw0ETcQkCbv+xwI=
+        b=HRYegrT7NDEUhYTfjkFGibtMv1uupUMU/wrXI4LTgcax3Y6FkieG+/StCnCt7216X
+         J4+x4rhV9kpbl75DEZnpX63pblK47jAP5I4yi07XbH9/urpCgmymhBZxAvOSFeuDPu
+         +yku1MLqW7B639o5PMVPEGmiyoPXZ9A7U62fC0Po=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolas Huaman <nicolas@herochao.de>, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.4 004/174] ALSA: usb-audio: update quirk for B&W PX to remove microphone
-Date:   Thu, 16 Jan 2020 12:40:01 -0500
-Message-Id: <20200116174251.24326-4-sashal@kernel.org>
+Cc:     Lyude Paul <lyude@redhat.com>, Jerry Zuo <Jerry.Zuo@amd.com>,
+        Harry Wentland <Harry.Wentland@amd.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.4 008/174] drm/dp_mst: Skip validating ports during destruction, just ref
+Date:   Thu, 16 Jan 2020 12:40:05 -0500
+Message-Id: <20200116174251.24326-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -58,62 +62,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Huaman <nicolas@herochao.de>
+From: Lyude Paul <lyude@redhat.com>
 
-[ Upstream commit c369c8db15d51fa175d2ba85928f79d16af6b562 ]
+[ Upstream commit c54c7374ff44de5e609506aca7c0deae4703b6d1 ]
 
-A quirk in snd-usb-audio was added to automate setting sample rate to
-4800k and remove the previously exposed nonfunctional microphone for
-the Bowers & Wilkins PX:
-commit 240a8af929c7c57dcde28682725b29cf8474e8e5
-https://lore.kernel.org/patchwork/patch/919689/
+Jerry Zuo pointed out a rather obscure hotplugging issue that it seems I
+accidentally introduced into DRM two years ago.
 
-However the headphones where updated shortly after that to remove the
-unintentional microphone functionality. I guess because of this the
-headphones now crash when connecting them via USB while the quirk is
-active. Dmesg:
+Pretend we have a topology like this:
 
-snd-usb-audio: probe of 2-3:1.0 failed with error -22
-usb 2-3: 2:1: cannot get min/max values for control 2 (id 2)
+|- DP-1: mst_primary
+   |- DP-4: active display
+   |- DP-5: disconnected
+   |- DP-6: active hub
+      |- DP-7: active display
+      |- DP-8: disconnected
+      |- DP-9: disconnected
 
-This patch removes the microfone and allows the headphones to connect
-and work out of the box. It is based on the current mainline kernel
- and successfully applied an tested on my machine (4.18.10.arch1-1).
+If we unplug DP-6, the topology starting at DP-7 will be destroyed but
+it's payloads will live on in DP-1's VCPI allocations and thus require
+removal. However, this removal currently fails because
+drm_dp_update_payload_part1() will (rightly so) try to validate the port
+before accessing it, fail then abort. If we keep going, eventually we
+run the MST hub out of bandwidth and all new allocations will start to
+fail (or in my case; all new displays just start flickering a ton).
 
-Fixes: 240a8af929c7 ("ALSA: usb-audio: Add a quirck for B&W PX headphones")
-Signed-off-by: Nicolas Huaman <nicolas@herochao.de>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+We could just teach drm_dp_update_payload_part1() not to drop the port
+ref in this case, but then we also need to teach
+drm_dp_destroy_payload_step1() to do the same thing, then hope no one
+ever adds anything to the that requires a validated port reference in
+drm_dp_destroy_connector_work(). Kind of sketchy.
+
+So let's go with a more clever solution: any port that
+drm_dp_destroy_connector_work() interacts with is guaranteed to still
+exist in memory until we say so. While said port might not be valid we
+don't really care: that's the whole reason we're destroying it in the
+first place! So, teach drm_dp_get_validated_port_ref() to use the all
+mighty current_work() function to avoid attempting to validate ports
+from the context of mgr->destroy_connector_work. I can't see any
+situation where this wouldn't be safe, and this avoids having to play
+whack-a-mole in the future of trying to work around port validation.
+
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Fixes: 263efde31f97 ("drm/dp/mst: Get validated port ref in drm_dp_update_payload_part1()")
+Reported-by: Jerry Zuo <Jerry.Zuo@amd.com>
+Cc: Jerry Zuo <Jerry.Zuo@amd.com>
+Cc: Harry Wentland <Harry.Wentland@amd.com>
+Cc: <stable@vger.kernel.org> # v4.6+
+Reviewed-by: Dave Airlie <airlied@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20181113224613.28809-1-lyude@redhat.com
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/quirks-table.h | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/drm_dp_mst_topology.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/sound/usb/quirks-table.h b/sound/usb/quirks-table.h
-index d32727c74a16..c892b4d1e733 100644
---- a/sound/usb/quirks-table.h
-+++ b/sound/usb/quirks-table.h
-@@ -3293,19 +3293,14 @@ AU0828_DEVICE(0x2040, 0x7270, "Hauppauge", "HVR-950Q"),
- 				.ifnum = 0,
- 				.type = QUIRK_AUDIO_STANDARD_MIXER,
- 			},
--			/* Capture */
--			{
--				.ifnum = 1,
--				.type = QUIRK_IGNORE_INTERFACE,
--			},
- 			/* Playback */
- 			{
--				.ifnum = 2,
-+				.ifnum = 1,
- 				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
- 				.data = &(const struct audioformat) {
- 					.formats = SNDRV_PCM_FMTBIT_S16_LE,
- 					.channels = 2,
--					.iface = 2,
-+					.iface = 1,
- 					.altsetting = 1,
- 					.altset_idx = 1,
- 					.attributes = UAC_EP_CS_ATTR_FILL_MAX |
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+index 2cb924ffd5a3..4d0f77f0edad 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -975,9 +975,20 @@ static struct drm_dp_mst_port *drm_dp_mst_get_port_ref_locked(struct drm_dp_mst_
+ static struct drm_dp_mst_port *drm_dp_get_validated_port_ref(struct drm_dp_mst_topology_mgr *mgr, struct drm_dp_mst_port *port)
+ {
+ 	struct drm_dp_mst_port *rport = NULL;
++
+ 	mutex_lock(&mgr->lock);
+-	if (mgr->mst_primary)
+-		rport = drm_dp_mst_get_port_ref_locked(mgr->mst_primary, port);
++	/*
++	 * Port may or may not be 'valid' but we don't care about that when
++	 * destroying the port and we are guaranteed that the port pointer
++	 * will be valid until we've finished
++	 */
++	if (current_work() == &mgr->destroy_connector_work) {
++		kref_get(&port->kref);
++		rport = port;
++	} else if (mgr->mst_primary) {
++		rport = drm_dp_mst_get_port_ref_locked(mgr->mst_primary,
++						       port);
++	}
+ 	mutex_unlock(&mgr->lock);
+ 	return rport;
+ }
 -- 
 2.20.1
 
