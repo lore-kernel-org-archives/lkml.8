@@ -2,162 +2,148 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F759C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6920EC33CB7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1499D208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:47:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193235;
-	bh=Yy84DGQLF/tHpAhgKO6JE9/YdrRcR9e+usfeH9XJYXQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A1p+NSwOhnHJRFtzO1KfR+J8ntSYqpsYjeL8cqaLCPfmvNvBNMOGsFOEPRDkPJ5Ke
-	 urWtxfnOtAtGH5wlBBf5TLrlifKPgGwLe0PG46GFEKtYjAvtWF9/5OFcWqlIjvbjUs
-	 MtwYW49v/0PWn7LimAu5S8TW0WPH1sgwFwAbV6fU=
+	by mail.kernel.org (Postfix) with ESMTP id 4A4AC2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:47:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729580AbgAPQrO (ORCPT
+        id S1729898AbgAPQrS convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:47:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56848 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729862AbgAPQrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:47:08 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B9CB21582;
-        Thu, 16 Jan 2020 16:47:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193228;
-        bh=Yy84DGQLF/tHpAhgKO6JE9/YdrRcR9e+usfeH9XJYXQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0duIkbEIGjIYHrud0BUWfk22jYXm9tdhBucvSHYYp6CGK/wNbVLi/CtbrYiLX7Vd2
-         kjpiGy9oX7kJdldVCh++RZQTgYe21usdK/LPSRgFO6Q+Cvq4dwZQWtzO/rXmdTEX5z
-         1OWlO0Z0ACtItmqlhOw4PzzwtM2TEOE6JXCxAfQg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 050/205] ACPI: platform: Unregister stale platform devices
-Date:   Thu, 16 Jan 2020 11:40:25 -0500
-Message-Id: <20200116164300.6705-50-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
-References: <20200116164300.6705-1-sashal@kernel.org>
+        Thu, 16 Jan 2020 11:47:18 -0500
+Received: from mailoutvs28.siol.net ([185.57.226.219]:60633 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729878AbgAPQrQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:47:16 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 3256D522C71;
+        Thu, 16 Jan 2020 17:47:13 +0100 (CET)
+X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id yW5AjuuxMjwE; Thu, 16 Jan 2020 17:47:12 +0100 (CET)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id C28C9523561;
+        Thu, 16 Jan 2020 17:47:12 +0100 (CET)
+Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id 66D88522C71;
+        Thu, 16 Jan 2020 17:47:12 +0100 (CET)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH] arm64: dts: allwinner: h6: tanix-tx6: Use internal oscillator
+Date:   Thu, 16 Jan 2020 17:47:12 +0100
+Message-ID: <20509747.EfDdHjke4D@jernej-laptop>
+In-Reply-To: <20200116080652.mp5z7dtrtj3nyhpq@gilmour.lan>
+References: <20200113180720.77461-1-jernej.skrabec@siol.net> <20200116080652.mp5z7dtrtj3nyhpq@gilmour.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Hi!
 
-[ Upstream commit cb0701acfa7e3fe9e919cf2aa2aa939b7fd603c2 ]
+Dne četrtek, 16. januar 2020 ob 09:06:52 CET je Maxime Ripard napisal(a):
+> Hi Jernej,
+> 
+> On Mon, Jan 13, 2020 at 07:07:20PM +0100, Jernej Skrabec wrote:
+> > Tanix TX6 doesn't have external 32 kHz oscillator, so switch RTC clock
+> > to internal one.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > ---
+> > 
+> > While this patch gives one possible solution, I mainly want to start
+> > discussion why Allwinner SoC dtsi reference external 32 kHz crystal
+> > although some boards don't have it. My proposal would be to make clock
+> > property optional, based on the fact if external crystal is present or
+> > not. However, I'm not sure if that is possible at this point or not.
+> 
+> It's probably a bit of a dumb question but.. are you sure the crystal
+> is missing?
 
-When commit 68bdb6773289 ("ACPI: add support for ACPI reconfiguration
-notifiers") introduced reconfiguration notifiers, it missed the point
-that the ACPI table, which might be loaded and then unloaded via
-ConfigFS, could contain devices that were not enumerated by their
-parents.
+Although I don't have schematic, I'm pretty sure. Without this patch or one at 
+[1], RTC gives a lot of errors in dmesg. I think that unpopulated XC2 pads 
+near SoC (see [2]) are probably reserved for crystal.
 
-In such cases, the stale platform device is dangling in the system
-while the rest of the devices from the same table are already gone.
+With patch in [1], which enables automatic switching in case of error, I saw 
+that on this box RTC always switched to internal RC.
 
-Introduce acpi_platform_device_remove_notify() notifier that, in
-similar way to I²C or SPI buses, unregisters the platform devices
-on table removal event.
+> 
+> The H6 datasheet mentions that the 32kHz crystal needs to be there,
+> and it's part of the power sequence, so I'd expect all boards to have
+> it.
 
-Fixes: 68bdb6773289 ("ACPI: add support for ACPI reconfiguration notifiers")
-Depends-on: 00500147cbd3 ("drivers: Introduce device lookup variants by ACPI_COMPANION device")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-[ rjw: Changelog & function rename ]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/acpi/acpi_platform.c | 43 ++++++++++++++++++++++++++++++++++++
- drivers/acpi/scan.c          |  1 +
- 2 files changed, 44 insertions(+)
+Can you be more specific where it is stated that crystal is mandatory? 
 
-diff --git a/drivers/acpi/acpi_platform.c b/drivers/acpi/acpi_platform.c
-index 00ec4f2bf015..c05050f474cd 100644
---- a/drivers/acpi/acpi_platform.c
-+++ b/drivers/acpi/acpi_platform.c
-@@ -31,6 +31,44 @@ static const struct acpi_device_id forbidden_id_list[] = {
- 	{"", 0},
- };
- 
-+static struct platform_device *acpi_platform_device_find_by_companion(struct acpi_device *adev)
-+{
-+	struct device *dev;
-+
-+	dev = bus_find_device_by_acpi_dev(&platform_bus_type, adev);
-+	return dev ? to_platform_device(dev) : NULL;
-+}
-+
-+static int acpi_platform_device_remove_notify(struct notifier_block *nb,
-+					      unsigned long value, void *arg)
-+{
-+	struct acpi_device *adev = arg;
-+	struct platform_device *pdev;
-+
-+	switch (value) {
-+	case ACPI_RECONFIG_DEVICE_ADD:
-+		/* Nothing to do here */
-+		break;
-+	case ACPI_RECONFIG_DEVICE_REMOVE:
-+		if (!acpi_device_enumerated(adev))
-+			break;
-+
-+		pdev = acpi_platform_device_find_by_companion(adev);
-+		if (!pdev)
-+			break;
-+
-+		platform_device_unregister(pdev);
-+		put_device(&pdev->dev);
-+		break;
-+	}
-+
-+	return NOTIFY_OK;
-+}
-+
-+static struct notifier_block acpi_platform_notifier = {
-+	.notifier_call = acpi_platform_device_remove_notify,
-+};
-+
- static void acpi_platform_fill_resource(struct acpi_device *adev,
- 	const struct resource *src, struct resource *dest)
- {
-@@ -130,3 +168,8 @@ struct platform_device *acpi_create_platform_device(struct acpi_device *adev,
- 	return pdev;
- }
- EXPORT_SYMBOL_GPL(acpi_create_platform_device);
-+
-+void __init acpi_platform_init(void)
-+{
-+	acpi_reconfig_notifier_register(&acpi_platform_notifier);
-+}
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index aad6be5c0af0..915650bf519f 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -2174,6 +2174,7 @@ int __init acpi_scan_init(void)
- 	acpi_pci_root_init();
- 	acpi_pci_link_init();
- 	acpi_processor_init();
-+	acpi_platform_init();
- 	acpi_lpss_init();
- 	acpi_apd_init();
- 	acpi_cmos_rtc_init();
--- 
-2.20.1
+Note that schematic of some boards, like OrangePi PC2 (H5) or OrangePi Zero 
+(H3) don't even have 32K crystal in them.
+
+> 
+> > Driver also considers missing clock property as deprecated (old DT) [1],
+> > so this might complicate things even further.
+> > 
+> > What do you think?
+> 
+> I'm pretty sure (but that would need to be checked) that we never got
+> a node without the clocks property on the H6. If that's the case, then
+> we can add a check on the compatible.
+
+Yes, that would be nice solution. I can work something out if you agree that 
+this is the way.
+
+> 
+> > Best regards,
+> > Jernej
+> > 
+> > [1]
+> > https://elixir.bootlin.com/linux/latest/source/drivers/rtc/rtc-sun6i.c#L2
+> > 63> 
+> >  arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+> > b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts index
+> > 83e6cb0e59ce..af3aebda47bb 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+> > @@ -91,6 +91,12 @@ &r_ir {
+> > 
+> >  	status = "okay";
+> >  
+> >  };
+> > 
+> > +/* This board doesn't have external 32 kHz crystal. */
+> > +&rtc {
+> > +	assigned-clocks = <&rtc 0>;
+> > +	assigned-clock-parents = <&rtc 2>;
+> > +};
+> > +
+> 
+> This should be dealt with in the driver however.
+
+Sure, it is something to start discussion, I don't like tackling clocks in DT 
+either.
+
+Best regards,
+Jernej
+
+[1] https://github.com/LibreELEC/LibreELEC.tv/blob/master/projects/Allwinner/
+devices/H6/patches/linux/15-RTC-workaround.patch
+[2] http://linux-sunxi.org/images/2/2e/Tanix_tx6_pcb_top.png
+
+
+
 
