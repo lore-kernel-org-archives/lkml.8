@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E0F3C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CB1C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DADC2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D98252077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197334;
-	bh=PkaWdYxqxdWMRUsmEVtqI7yY+n4bIU56XI/NRCZjYLc=;
+	s=default; t=1579197340;
+	bh=7fTI8hxW9dwg7fhTHSQjLr4YTp2ez/T5X8liCvd7LcM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qewau1j0n9C9E0oZFNpgTqefusJhrI43mPnmbhiYBXoIweW+AFogakUo/dX0KKGS9
-	 wz0MP4PL9mam38pUjab9cpif9K92eYPmmtDfx8MEYd0yxQ7MDoircJafieAvJ4aJ+W
-	 8L7k3VlNlzO+xGVoao79ul0HE2TYoPiHBAAkKDbE=
+	b=CnpfifliXVSDsdPlJBN5Z9J0kkmyI82pOQMUJRxV5eRBiCjNZOMBbvzHRXlrRRNhY
+	 t9qUqL+ljgYk8Klejq3D8rokLi6MiUUT0YIvzX4Y27gWNs50UXcW7TvxRl9xa2tR6N
+	 HhximS/MIx4z/hVlCW6QKeWonwFy9k98ZHoPxBFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394444AbgAPRzd (ORCPT
+        id S2394100AbgAPRoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:55:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35056 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:44:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394112AbgAPRoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:44:15 -0500
+        id S2394009AbgAPRnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:43:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12CEC2475E;
-        Thu, 16 Jan 2020 17:44:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BD8E2473E;
+        Thu, 16 Jan 2020 17:43:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196655;
-        bh=PkaWdYxqxdWMRUsmEVtqI7yY+n4bIU56XI/NRCZjYLc=;
+        s=default; t=1579196630;
+        bh=7fTI8hxW9dwg7fhTHSQjLr4YTp2ez/T5X8liCvd7LcM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z2Yv6oGDu/73qL1wVyB2YgBOUSu9qrutu64Xugk+hjVJwpVzclGdqHX9VW4/w89Wt
-         /6eYqcj7fEWC4PdL8kzdTW3lVf7CvCoKeoNdzBAnHyZmpR9mHyCYlUE0H5qQ4bfSM2
-         wkrgCqUCOcQekad6of2OQNfiUBrPGoLMnMAKtNuQ=
+        b=SOKjCi78kxcX8i1NTJ2k/P5F7JdZtNgJohmPQAx40501dyIwsPPZft4W43NnkStMG
+         D6WEccnxTEquQOrAvhYnQ7qa8A4fnQvy6iIb7T7Zq7nTkTjN9PKorqjlVjnXIuzYno
+         +M966pTCLwUEHzkX1Euz71klIzHE9gLxWECPywE0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Mc Guire <hofrat@osadl.org>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 062/174] media: cx23885: check allocation return
-Date:   Thu, 16 Jan 2020 12:40:59 -0500
-Message-Id: <20200116174251.24326-62-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 044/174] pinctrl: sh-pfc: sh73a0: Fix fsic_spdif pin groups
+Date:   Thu, 16 Jan 2020 12:40:41 -0500
+Message-Id: <20200116174251.24326-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -59,41 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Mc Guire <hofrat@osadl.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit a3d7f22ef34ec4206b50ee121384d5c8bebd5591 ]
+[ Upstream commit 0e6e448bdcf896d001a289a6112a704542d51516 ]
 
-Checking of kmalloc() seems to have been committed - as
-cx23885_dvb_register() is checking for != 0 return, returning
--ENOMEM should be fine here.  While at it address the coccicheck
-suggestion to move to kmemdup rather than using kmalloc+memcpy.
+There are two pin groups for the FSIC SPDIF signal, but the FSIC pin
+group array lists only one, and it refers to a nonexistent group.
 
-Fixes: 46b21bbaa8a8 ("[media] Add support for DViCO FusionHDTV DVB-T Dual Express2")
-
-Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 2ecd4154c906b7d6 ("sh-pfc: sh73a0: Add FSI pin groups and functions")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/cx23885/cx23885-dvb.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/pinctrl/sh-pfc/pfc-sh73a0.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/pci/cx23885/cx23885-dvb.c b/drivers/media/pci/cx23885/cx23885-dvb.c
-index e543cbbf2ec4..8fe78b8b1c25 100644
---- a/drivers/media/pci/cx23885/cx23885-dvb.c
-+++ b/drivers/media/pci/cx23885/cx23885-dvb.c
-@@ -1452,8 +1452,9 @@ static int dvb_register(struct cx23885_tsport *port)
- 		if (fe0->dvb.frontend != NULL) {
- 			struct i2c_adapter *tun_i2c;
+diff --git a/drivers/pinctrl/sh-pfc/pfc-sh73a0.c b/drivers/pinctrl/sh-pfc/pfc-sh73a0.c
+index ea5da5dcad2c..b173bd759ee1 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-sh73a0.c
++++ b/drivers/pinctrl/sh-pfc/pfc-sh73a0.c
+@@ -2895,7 +2895,8 @@ static const char * const fsic_groups[] = {
+ 	"fsic_sclk_out",
+ 	"fsic_data_in",
+ 	"fsic_data_out",
+-	"fsic_spdif",
++	"fsic_spdif_0",
++	"fsic_spdif_1",
+ };
  
--			fe0->dvb.frontend->sec_priv = kmalloc(sizeof(dib7000p_ops), GFP_KERNEL);
--			memcpy(fe0->dvb.frontend->sec_priv, &dib7000p_ops, sizeof(dib7000p_ops));
-+			fe0->dvb.frontend->sec_priv = kmemdup(&dib7000p_ops, sizeof(dib7000p_ops), GFP_KERNEL);
-+			if (!fe0->dvb.frontend->sec_priv)
-+				return -ENOMEM;
- 			tun_i2c = dib7000p_ops.get_i2c_master(fe0->dvb.frontend, DIBX000_I2C_INTERFACE_TUNER, 1);
- 			if (!dvb_attach(dib0070_attach, fe0->dvb.frontend, tun_i2c, &dib7070p_dib0070_config))
- 				return -ENODEV;
+ static const char * const fsid_groups[] = {
 -- 
 2.20.1
 
