@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9EDC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA2A2C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCAA220728
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:16:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 873762051A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:16:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194968;
-	bh=Pt1wIy+Ga/MODLru/Fw2LqJ2BaxDv6nVC/Ngcmk9cFE=;
+	s=default; t=1579194970;
+	bh=f34SOp6+FLcbF29xYL/8az99XfrepBn/grPWXRxjeGc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GW73BsN9Ya3SRysWGyhqF3D0AqR7KAW+5Snyee4JiwqkbIk3fY5NtCBB2cjdAilh6
-	 Tyg26cJKLmjj047Ae6P+KkEvCK7IAdsdV6QXvWdaBikB/RMBp8Lh96y2OpVQJDZ/vF
-	 F32G5Jh+N/E97us8oWxqaR/XNn6s53Gv+F3+O4zg=
+	b=eqNc461BZIyBwRP8rAc/ULuQ0liNL3Vswn5hJOBz+HOm+3gfPZ7R/LhsM1MdVIGS/
+	 gp837RwTlZGv2wkoCsAJXQ4fWNKoKy+PGDXx2/ugoHDC92ND/3uIGlRmyyJsd1zmF7
+	 CE02X5AKy71BarnfNkcNIgUyvWQz0pj1Tb1C/hkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390824AbgAPRQH (ORCPT
+        id S2390963AbgAPROU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:16:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33198 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:14:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390971AbgAPROV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:14:21 -0500
+        id S2390929AbgAPROI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:14:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7EC6246B8;
-        Thu, 16 Jan 2020 17:14:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65372246AF;
+        Thu, 16 Jan 2020 17:14:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194860;
-        bh=Pt1wIy+Ga/MODLru/Fw2LqJ2BaxDv6nVC/Ngcmk9cFE=;
+        s=default; t=1579194848;
+        bh=f34SOp6+FLcbF29xYL/8az99XfrepBn/grPWXRxjeGc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RtoqgRwkivpcJC2Asl5zeaJ2O+0wGaQxfTPwDYu0Ybm/BIQ4Fi6A3E9TdpBievH5h
-         rXshNCoMC3J9SV7GwYXVXIHk2zEAUX9rGVZ2iFv29d5OYwikWXcfxsFPJ6BoJacFjs
-         56W9e+JlD11DqFijKxeqIKrwNjdU8KrzWH7nWGhI=
+        b=sKI7SUkCuKGcLxObfcD/IFerXGSlXGz6WmJyq94gXHNLGQyu7GywgHT5/8LtxjFQ2
+         pt8Q+VkOHQXW3N+N0YJcGh+L+WY5Lw2HwdSvDMjSvOwzsq6GY81erzZb2LtEJzEjEp
+         ckdsWeLpJprxZATt+x4oJeu0asFYIL2v41R5VRj4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oliver O'Halloran <oohall@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 655/671] powerpc/powernv: Disable native PCIe port management
-Date:   Thu, 16 Jan 2020 12:04:53 -0500
-Message-Id: <20200116170509.12787-392-sashal@kernel.org>
+Cc:     Peng Fan <peng.fan@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 645/671] tty: serial: imx: use the sg count from dma_map_sg
+Date:   Thu, 16 Jan 2020 12:04:43 -0500
+Message-Id: <20200116170509.12787-382-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,78 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver O'Halloran <oohall@gmail.com>
+From: Peng Fan <peng.fan@nxp.com>
 
-[ Upstream commit 9d72dcef891030545f39ad386a30cf91df517fb2 ]
+[ Upstream commit 596fd8dffb745afcebc0ec6968e17fe29f02044c ]
 
-On PowerNV the PCIe topology is (currently) managed by the powernv platform
-code in Linux in cooperation with the platform firmware. Linux's native
-PCIe port service drivers operate independently of both and this can cause
-problems.
+The dmaengine_prep_slave_sg needs to use sg count returned
+by dma_map_sg, not use sport->dma_tx_nents, because the return
+value of dma_map_sg is not always same with "nents".
 
-The main issue is that the portbus driver will conflict with the platform
-specific hotplug driver (pnv_php) over ownership of the MSI used to notify
-the host when a hotplug event occurs. The portbus driver claims this MSI on
-behalf of the individual port services because the same interrupt is used
-for hotplug events, PMEs (on root ports), and link bandwidth change
-notifications. The portbus driver will always claim the interrupt even if
-the individual port service drivers, such as pciehp, are compiled out.
-
-The second, bigger, problem is that the hotplug port service driver
-fundamentally does not work on PowerNV. The platform assumes that all
-PCI devices have a corresponding arch-specific handle derived from the DT
-node for the device (pci_dn) and without one the platform will not allow
-a PCI device to be enabled. This problem is largely due to historical
-baggage, but it can't be resolved without significant re-factoring of the
-platform PCI support.
-
-We can fix these problems in the interim by setting the
-"pcie_ports_disabled" flag during platform initialisation. The flag
-indicates the platform owns the PCIe ports which stops the portbus driver
-from being registered.
-
-This does have the side effect of disabling all port services drivers
-that is: AER, PME, BW notifications, hotplug, and DPC. However, this is
-not a huge disadvantage on PowerNV since these services are either unused
-or handled through other means.
-
-Fixes: 66725152fb9f ("PCI/hotplug: PowerPC PowerNV PCI hotplug driver")
-Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191118065553.30362-1-oohall@gmail.com
+Fixes: b4cdc8f61beb ("serial: imx: add DMA support for imx6q")
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Link: https://lore.kernel.org/r/1573108875-26530-1-git-send-email-peng.fan@nxp.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/powernv/pci.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ drivers/tty/serial/imx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
-index db230a35609b..c846300b7836 100644
---- a/arch/powerpc/platforms/powernv/pci.c
-+++ b/arch/powerpc/platforms/powernv/pci.c
-@@ -1095,6 +1095,23 @@ void __init pnv_pci_init(void)
- 	if (!firmware_has_feature(FW_FEATURE_OPAL))
+diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
+index 989ca7d662f3..672e97978279 100644
+--- a/drivers/tty/serial/imx.c
++++ b/drivers/tty/serial/imx.c
+@@ -624,7 +624,7 @@ static void imx_uart_dma_tx(struct imx_port *sport)
+ 		dev_err(dev, "DMA mapping error for TX.\n");
  		return;
- 
-+#ifdef CONFIG_PCIEPORTBUS
-+	/*
-+	 * On PowerNV PCIe devices are (currently) managed in cooperation
-+	 * with firmware. This isn't *strictly* required, but there's enough
-+	 * assumptions baked into both firmware and the platform code that
-+	 * it's unwise to allow the portbus services to be used.
-+	 *
-+	 * We need to fix this eventually, but for now set this flag to disable
-+	 * the portbus driver. The AER service isn't required since that AER
-+	 * events are handled via EEH. The pciehp hotplug driver can't work
-+	 * without kernel changes (and portbus binding breaks pnv_php). The
-+	 * other services also require some thinking about how we're going
-+	 * to integrate them.
-+	 */
-+	pcie_ports_disabled = true;
-+#endif
-+
- 	/* Look for IODA IO-Hubs. */
- 	for_each_compatible_node(np, NULL, "ibm,ioda-hub") {
- 		pnv_pci_init_ioda_hub(np);
+ 	}
+-	desc = dmaengine_prep_slave_sg(chan, sgl, sport->dma_tx_nents,
++	desc = dmaengine_prep_slave_sg(chan, sgl, ret,
+ 					DMA_MEM_TO_DEV, DMA_PREP_INTERRUPT);
+ 	if (!desc) {
+ 		dma_unmap_sg(dev, sgl, sport->dma_tx_nents,
 -- 
 2.20.1
 
