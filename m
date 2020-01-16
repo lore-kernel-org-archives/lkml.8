@@ -7,80 +7,68 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B36C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 246EFC33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC8A420728
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB05C20728
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:12:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qdQEY1n8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FS766fJX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbgAPQL7 (ORCPT
+        id S1728982AbgAPQMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:11:59 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40354 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726965AbgAPQL7 (ORCPT
+        Thu, 16 Jan 2020 11:12:21 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37368 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbgAPQMV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:11:59 -0500
-Received: by mail-wm1-f68.google.com with SMTP id t14so4390750wmi.5
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 08:11:58 -0800 (PST)
+        Thu, 16 Jan 2020 11:12:21 -0500
+Received: by mail-wr1-f68.google.com with SMTP id w15so19779260wru.4
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 08:12:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wq116TZAe0p40heVVDfMLRBuWEj6xKtwx1Np2GXHzlk=;
-        b=qdQEY1n8v+dLZaHvHfDyqgC04UQvFEYkL0iVEjWLFmsSkU3RdqM+lv6eJPlKsfZZJo
-         V2U5I8ZZfySoMK28rBSpL6Qi9hZ1hBksNdUKrrlpCgVLxMi5EXSi5jSaVoIKprkgosd5
-         tsDC/ZoH/IOGHUHa5cOqrpght5pR8sZ8tAU7KkBzmrV/NVIcLC4BYWkLn3qFk7vMY0dG
-         3cUuGjOTM7lrJfGCwT9DuQ2es9Hy/CCF+RThAtg047ML104Uh1CTu5cc9rYcPLtsT3GC
-         B/ZdafPWXHclyQ++k9xdn+0fxAl7T0KV1vSnNRH8BNknm6iXsf0sfW0O3mzquuFtLaDf
-         naeA==
+        bh=ajindHD6YKAeKs/ZzBtR9DvEx9x1vi4mqA6C232qYvQ=;
+        b=FS766fJXgkwMdUfnkiI6wXw8eZ3oL1tMozAgrCSQOkFUb2nDzoL4kBSxcemQmjjTEi
+         1d/F/FUzI3teEb0TqLMAJv4W5QdQ/Z9FNb82PxHCq6VsvyuAo9YJsvinW/gS4yBxbRTM
+         Lq0U+OzTsEP08lbuURSJOyzFFeb26RRRUQxoanJSN+yNPwV96VfVfICZLXKMy3v2/g/k
+         NPJuz9B5Mo5OrfDmsx8P5hRPYEZF3wXL6FUavFGKd4LBRdO073kQm5ZOn8x+4Kv/AC5h
+         su5MPJde9cLLys78ZrMKseOS9vvLCBb3Z5pLniGSBvwnMLm1f9Wif4YzglSptMFuvmuC
+         G0WA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=wq116TZAe0p40heVVDfMLRBuWEj6xKtwx1Np2GXHzlk=;
-        b=rmdZjooNP9L0ivM+uEd/UZGFBUIkIhEMXTJ+HMWbq+mBZy9xeKzOTxJ0SMj1/y6zuK
-         nOgWP8hhlInvCG3Rdl+MXfPUZXdzverxJY1zEIHipvAoijN3rD0PB7IcZ4goWAq+WqyB
-         gmKimfBBdEm8L/vLeY1rQVL0x6I02ZHUMUUi8TcFkpkOFoREuKi6bPyjn4Gumfpd4FrI
-         AN+ZQZBfedu5/teRETnQfFoZ0M7lkA4Cug4Tr9ce9tBvxcMXTY36jr39LgLstaI0npvp
-         qn+3lwb2wXmU2bzLz4Ryjm6AMUjjszDalyuXzB4ApOo+JUH5mg2k6I15ViGJk5bb2sVG
-         TD2g==
-X-Gm-Message-State: APjAAAWck+rstcuYnqNkVQHpc00d/OeGBa77E+S3WfkGGhcGFEVzwcRF
-        Kdn7mAvAkrC9wzW3V3AVjlVADA==
-X-Google-Smtp-Source: APXvYqxia/hYDamKXklRlZ4uVwwfWKaRzmR3+FORgkBCwOjEeD6jP03Gwc0fSu+Qsj8bDjor8a5sTA==
-X-Received: by 2002:a1c:a982:: with SMTP id s124mr6705085wme.132.1579191117317;
-        Thu, 16 Jan 2020 08:11:57 -0800 (PST)
+        bh=ajindHD6YKAeKs/ZzBtR9DvEx9x1vi4mqA6C232qYvQ=;
+        b=HZCn2drWhtoVWT8kO2KLO6O0V3NF5sFYMAFDXBCHOLy2l1bxkWE6vwwz/Y8yRGUHkf
+         PI4RW3CnmZaJsPsyiVe66VylqFcFPwmhjz7T9OAy25EJ8fnAwSi+n+Q1AAL2yP1IV5vC
+         y70aBzwTX7HA0Kseb8YndkrJkhefetpr0LTCpk2QJWuxaQsa2qifO0tR3Q0KCqSW2+E6
+         1FaFaA2I/WhuepNxtjU9Aszq+7sRCMzhNvEjQCJ0ePQjx613iCF56WfX1MxWFkuvpYmX
+         s2c/x0tq9cNA+U5offwnfsx3Mg3jZgsgemMnYwqPUfkJ8LDsL49UlNm7AOjw5Om7XAcV
+         ZytQ==
+X-Gm-Message-State: APjAAAUkBDRfmXvlltjFXURDaI/RYYdGCcE3fIccvEfAWBNL96HwbyeD
+        sGAvR2xQyqHXgmUH92atRGQg5hxmwkg=
+X-Google-Smtp-Source: APXvYqwWRKtuISaCTL+ScX1YRZZ7sv+xBMRG3zNlLHX45zIFBpHomUDUZ2Mzma98iCWYTR2yYnslDA==
+X-Received: by 2002:adf:a48e:: with SMTP id g14mr333093wrb.409.1579191138796;
+        Thu, 16 Jan 2020 08:12:18 -0800 (PST)
 Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id i5sm30424978wrv.34.2020.01.16.08.11.54
+        by smtp.googlemail.com with ESMTPSA id n8sm29823680wrx.42.2020.01.16.08.12.17
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 Jan 2020 08:11:55 -0800 (PST)
-Subject: Re: [PATCH V2 3/7] dt-bindings: imx-ocotp: Add i.MX8MP compatible
-To:     Anson Huang <Anson.Huang@nxp.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, vkoul@kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        ulf.hansson@linaro.org, broonie@kernel.org,
-        manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com,
-        rjones@gateworks.com, marcel.ziswiler@toradex.com,
-        sebastien.szymanski@armadeus.com, aisheng.dong@nxp.com,
-        richard.hu@technexion.com, angus@akkea.ca, cosmin.stoica@nxp.com,
-        l.stach@pengutronix.de, rabeeh@solid-run.com,
-        leonard.crestez@nxp.com, daniel.baluta@nxp.com, jun.li@nxp.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-spi@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-References: <1578893602-14395-1-git-send-email-Anson.Huang@nxp.com>
- <1578893602-14395-3-git-send-email-Anson.Huang@nxp.com>
+        Thu, 16 Jan 2020 08:12:18 -0800 (PST)
+Subject: Re: [PATCH v2] nvmem: add QTI SDAM driver
+To:     Shyam Kumar Thella <sthella@codeaurora.org>
+Cc:     Anirudh Ghayal <aghayal@codeaurora.org>, agross@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <1577098347-32526-1-git-send-email-sthella@codeaurora.org>
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <c2c3d925-a69a-d7f8-a58a-5f4abe46960b@linaro.org>
-Date:   Thu, 16 Jan 2020 16:11:54 +0000
+Message-ID: <c5f024ec-c73a-63ac-f677-9b6178f16b95@linaro.org>
+Date:   Thu, 16 Jan 2020 16:12:17 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1578893602-14395-3-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1577098347-32526-1-git-send-email-sthella@codeaurora.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -91,10 +79,17 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 13/01/2020 05:33, Anson Huang wrote:
-> Add compatible and description for i.MX8MP.
+On 23/12/2019 10:52, Shyam Kumar Thella wrote:
+> From: Anirudh Ghayal <aghayal@codeaurora.org>
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> QTI SDAM driver allows PMIC peripherals to access the shared memory
+> that is available on QTI PMICs.
+> 
+> Use subsys_initcall as PMIC SDAM NV memory is accessed by multiple PMIC
+> drivers (charger, fuel guage) to store/restore data across reboots
+> required during their initialization.
+> 
+> Signed-off-by: Shyam Kumar Thella <sthella@codeaurora.org>
 
 Applied Thanks,
 
