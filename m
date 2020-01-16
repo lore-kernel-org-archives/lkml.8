@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D15C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACCBC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA1AC2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:03:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 372F12053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:03:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201431;
-	bh=rOBWmBUqsRKtqSJgMsVu02iSM9VhORwgoCJfqubhHAY=;
+	s=default; t=1579201436;
+	bh=ym474XaUAzg8O52I4veViPZJ5pKolRrM+e+R9cUVBp0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B915K+IJVOg3s9zG2gOR/zuOAYh+Zf5GnLph/SljCrGcwmucqf27bu8vL/oXECV8p
-	 nfvrVNZd7mW4tuirFM/Ows7QkpzKmrHZKTefStaFBs3chCaPjpTZaJaqv2hwQCTdV3
-	 G0Lx8EMb++GTttH0Ymn9DK6e1ypQgjyVXBPAKsfo=
+	b=ltlVj4ajxNoF656cuKq6WwN8ALmz0LHW2Ex/O7fB5fhtuG1g4qVQFcQm3Jtde1beU
+	 N2rRcUGwYOLvNhmUZSylFg1LesPS3FoKllMUXcv5lWygDQ8tpgIvw1fxRzXRVS+i0G
+	 +ZKbnsI1YiIpmfiiangcz9HIVN398C5/cW0njCpw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388388AbgAPRC3 (ORCPT
+        id S2407287AbgAPTDz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:02:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54748 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:03:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388308AbgAPRCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:02:16 -0500
+        id S1729160AbgAPRC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:02:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD34E2087E;
-        Thu, 16 Jan 2020 17:02:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B5CA2077B;
+        Thu, 16 Jan 2020 17:02:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194135;
-        bh=rOBWmBUqsRKtqSJgMsVu02iSM9VhORwgoCJfqubhHAY=;
+        s=default; t=1579194148;
+        bh=ym474XaUAzg8O52I4veViPZJ5pKolRrM+e+R9cUVBp0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pON7C8X6geuB9UDERestAlQt29G+rIfXWcLm9aIWec8DSEAJukXIjoXUO86cnuFDO
-         pYqJo01yF+Ay9J9tv+lFX9uGFo1MTl+rJDNDK483h4EzBZqo9ExGADmGg93KcW0+mG
-         YNvNxaxkS6whAResfPjCgigqeKuXQBZCWgXG3o70=
+        b=DQgBoH4kgHn/niKQ53i4AaY2d1e7N9ayBDbQ9c73nm6y3wwOk0RucJpD0CcAIiBig
+         /1oFoSevypSj1y/SyYmKZxYBMjVA/mRyZ76088jhbizxSdjj4Jy5q+SrHe/oV9WNxW
+         R/GDp/E7Q4h7PNbr3KjndSMIE/L3JFCxcya5gxrw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Surabhi Vishnoi <svishnoi@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 224/671] ath10k: Fix length of wmi tlv command for protected mgmt frames
-Date:   Thu, 16 Jan 2020 11:52:13 -0500
-Message-Id: <20200116165940.10720-107-sashal@kernel.org>
+Cc:     Rashmica Gupta <rashmica.g@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 233/671] powerpc/mm: Check secondary hash page table
+Date:   Thu, 16 Jan 2020 11:52:22 -0500
+Message-Id: <20200116165940.10720-116-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -60,47 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Surabhi Vishnoi <svishnoi@codeaurora.org>
+From: Rashmica Gupta <rashmica.g@gmail.com>
 
-[ Upstream commit 761156ff573d1002983416e4fd1fe8d3489c4bd8 ]
+[ Upstream commit 790845e2f12709d273d08ea7a2af7c2593689519 ]
 
-The length of wmi tlv command for management tx send is calculated
-incorrectly in case of protected management frames as there is addition
-of IEEE80211_CCMP_MIC_LEN twice. This leads to improper behaviour of
-firmware as the wmi tlv mgmt tx send command for protected mgmt frames
-is formed wrongly.
+We were always calling base_hpte_find() with primary = true,
+even when we wanted to check the secondary table.
 
-Fix the length calculation of wmi tlv command for mgmt tx send in case
-of protected management frames by adding the IEEE80211_CCMP_MIC_LEN only
-once.
+mpe: I broke this when refactoring Rashmica's original patch.
 
-Tested HW: WCN3990
-Tested FW: WLAN.HL.3.1-00784-QCAHLSWMTPLZ-1
-
-Fixes: 1807da49733e "ath10k: wmi: add management tx by reference support over wmi"
-Signed-off-by: Surabhi Vishnoi <svishnoi@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 1515ab932156 ("powerpc/mm: Dump hash table")
+Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/wmi-tlv.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/powerpc/mm/dump_hashpagetable.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/wmi-tlv.c b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
-index cdc1e64d52ad..a90990b8008d 100644
---- a/drivers/net/wireless/ath/ath10k/wmi-tlv.c
-+++ b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
-@@ -2692,10 +2692,8 @@ ath10k_wmi_tlv_op_gen_mgmt_tx_send(struct ath10k *ar, struct sk_buff *msdu,
- 	if ((ieee80211_is_action(hdr->frame_control) ||
- 	     ieee80211_is_deauth(hdr->frame_control) ||
- 	     ieee80211_is_disassoc(hdr->frame_control)) &&
--	     ieee80211_has_protected(hdr->frame_control)) {
--		len += IEEE80211_CCMP_MIC_LEN;
-+	     ieee80211_has_protected(hdr->frame_control))
- 		buf_len += IEEE80211_CCMP_MIC_LEN;
--	}
+diff --git a/arch/powerpc/mm/dump_hashpagetable.c b/arch/powerpc/mm/dump_hashpagetable.c
+index 869294695048..b430e4e08af6 100644
+--- a/arch/powerpc/mm/dump_hashpagetable.c
++++ b/arch/powerpc/mm/dump_hashpagetable.c
+@@ -342,7 +342,7 @@ static unsigned long hpte_find(struct pg_state *st, unsigned long ea, int psize)
  
- 	buf_len = min_t(u32, buf_len, WMI_TLV_MGMT_TX_FRAME_MAX_LEN);
- 	buf_len = round_up(buf_len, 4);
+ 	/* Look in secondary table */
+ 	if (slot == -1)
+-		slot = base_hpte_find(ea, psize, true, &v, &r);
++		slot = base_hpte_find(ea, psize, false, &v, &r);
+ 
+ 	/* No entry found */
+ 	if (slot == -1)
 -- 
 2.20.1
 
