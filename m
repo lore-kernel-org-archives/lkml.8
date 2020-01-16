@@ -2,56 +2,58 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3B1C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 899C4C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A622D2176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:31:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B6D12087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:32:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217517;
-	bh=f4TxQLy3Mhny7mtPzUFHT8lgsurK/XC2ANZvQ3SRims=;
+	s=default; t=1579217524;
+	bh=uk26Je1JebfBch9yNEDF84kYvcYTlH1CZ/ZpZ9BNG2g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xns0H2yy8g0mwK8LL1zutgHFrZYnmoceBaCbPbqmu2zMIdPIQvqeo8lfLKz9Q04xP
-	 130pyzAnzZj2GUDgpdWN+FGVYoNOn86ELb7QMXzkcRIYj0bSh565E/cFsyPwzDtC5W
-	 C1cPooNcjL4sktGC7sUxu+ugnOtf6+rDArJmScZY=
+	b=DUm9+qd8w3M1+eMJDT6UnwQHuY2LXH4IHTd9q6+/4BR/YM/2qG4IGTBk/zs4j/5Zu
+	 tmV4RVH1SVERX5tkBaADCNcp2X3lH8FZD6E1ZraQaPH4hMbyWOai+eCRok/F1XrsmQ
+	 q50TPjqf17D99F66VZqa47jWs95fWkrss3G5O7Lw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404082AbgAPXb5 (ORCPT
+        id S2391559AbgAPXcD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:31:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37546 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:32:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404103AbgAPXaf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:30:35 -0500
+        id S2391544AbgAPXbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:31:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E639206D9;
-        Thu, 16 Jan 2020 23:30:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2BB022522;
+        Thu, 16 Jan 2020 23:31:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217434;
-        bh=f4TxQLy3Mhny7mtPzUFHT8lgsurK/XC2ANZvQ3SRims=;
+        s=default; t=1579217512;
+        bh=uk26Je1JebfBch9yNEDF84kYvcYTlH1CZ/ZpZ9BNG2g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lI72m9lq7UBDVaqMJiRL0GB44XW3WLVhOp5eateLFSofSDq8NGl0f0B4t4qA42HFd
-         tpn3XIAOrWtL7MUO0ClQvKxjhd0aPJl/OMfc6mCuJYENyPp0P6VDNTk59Ki9dd7XyS
-         eEOV5gXND+7SdpScS7rblRFim4d+8OVXzGnK8Iyo=
+        b=jHCKvL7UQlqWcUf1TzONVbyvhBmplGnXNqwlTZYoiyewJ3LBF2JbiY4W9uYUJqGvw
+         Ey7VhLU7Tm0ij9Bp2d3OpMofLbJSB9uaGuOuFgy8eY3PHMFezqIcDgcdHWDFbnCwaO
+         5hjw0JAj0RFqjkJgQ62KJFTaiFMJ6tjiJ0G3Neqg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Barabash <alexander.barabash@dell.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 81/84] ioat: ioat_alloc_ring() failure handling.
-Date:   Fri, 17 Jan 2020 00:18:55 +0100
-Message-Id: <20200116231722.980630735@linuxfoundation.org>
+        stable@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Bob Picco <bob.picco@oracle.com>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 4.14 07/71] arm64: dont open code page table entry creation
+Date:   Fri, 17 Jan 2020 00:18:05 +0100
+Message-Id: <20200116231710.452938295@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
-References: <20200116231713.087649517@linuxfoundation.org>
+In-Reply-To: <20200116231709.377772748@linuxfoundation.org>
+References: <20200116231709.377772748@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,45 +63,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander.Barabash@dell.com <Alexander.Barabash@dell.com>
+From: Kristina Martsenko <kristina.martsenko@arm.com>
 
-[ Upstream commit b0b5ce1010ffc50015eaec72b0028aaae3f526bb ]
+commit 193383043f14a398393dc18bae8380f7fe665ec3 upstream.
 
-If dma_alloc_coherent() returns NULL in ioat_alloc_ring(), ring
-allocation must not proceed.
+Instead of open coding the generation of page table entries, use the
+macros/functions that exist for this - pfn_p*d and p*d_populate. Most
+code in the kernel already uses these macros, this patch tries to fix
+up the few places that don't. This is useful for the next patch in this
+series, which needs to change the page table entry logic, and it's
+better to have that logic in one place.
 
-Until now, if the first call to dma_alloc_coherent() in
-ioat_alloc_ring() returned NULL, the processing could proceed, failing
-with NULL-pointer dereferencing further down the line.
+The KVM extended ID map is special, since we're creating a level above
+CONFIG_PGTABLE_LEVELS and the required function isn't available. Leave
+it as is and add a comment to explain it. (The normal kernel ID map code
+doesn't need this change because its page tables are created in assembly
+(__create_page_tables)).
 
-Signed-off-by: Alexander Barabash <alexander.barabash@dell.com>
-Acked-by: Dave Jiang <dave.jiang@intel.com>
-Link: https://lore.kernel.org/r/75e9c0e84c3345d693c606c64f8b9ab5@x13pwhopdag1307.AMER.DELL.COM
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Tested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
+Tested-by: Bob Picco <bob.picco@oracle.com>
+Reviewed-by: Bob Picco <bob.picco@oracle.com>
+Signed-off-by: Kristina Martsenko <kristina.martsenko@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/dma/ioat/dma.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/kvm_mmu.h |    5 +++++
+ arch/arm64/include/asm/pgtable.h |    1 +
+ arch/arm64/kernel/hibernate.c    |    3 +--
+ arch/arm64/mm/mmu.c              |   14 +++++++++-----
+ 4 files changed, 16 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
-index 23fb2fa04000..b94cece58b98 100644
---- a/drivers/dma/ioat/dma.c
-+++ b/drivers/dma/ioat/dma.c
-@@ -388,10 +388,11 @@ ioat_alloc_ring(struct dma_chan *c, int order, gfp_t flags)
+--- a/arch/arm64/include/asm/kvm_mmu.h
++++ b/arch/arm64/include/asm/kvm_mmu.h
+@@ -296,6 +296,11 @@ static inline bool __kvm_cpu_uses_extend
+ 	return __cpu_uses_extended_idmap();
+ }
  
- 		descs->virt = dma_alloc_coherent(to_dev(ioat_chan),
- 						 SZ_2M, &descs->hw, flags);
--		if (!descs->virt && (i > 0)) {
-+		if (!descs->virt) {
- 			int idx;
++/*
++ * Can't use pgd_populate here, because the extended idmap adds an extra level
++ * above CONFIG_PGTABLE_LEVELS (which is 2 or 3 if we're using the extended
++ * idmap), and pgd_populate is only available if CONFIG_PGTABLE_LEVELS = 4.
++ */
+ static inline void __kvm_extend_hypmap(pgd_t *boot_hyp_pgd,
+ 				       pgd_t *hyp_pgd,
+ 				       pgd_t *merged_hyp_pgd,
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -343,6 +343,7 @@ static inline int pmd_protnone(pmd_t pmd
  
- 			for (idx = 0; idx < i; idx++) {
-+				descs = &ioat_chan->descs[idx];
- 				dma_free_coherent(to_dev(ioat_chan), SZ_2M,
- 						  descs->virt, descs->hw);
- 				descs->virt = NULL;
--- 
-2.20.1
-
+ #define pud_write(pud)		pte_write(pud_pte(pud))
+ #define pud_pfn(pud)		(((pud_val(pud) & PUD_MASK) & PHYS_MASK) >> PAGE_SHIFT)
++#define pfn_pud(pfn,prot)	(__pud(((phys_addr_t)(pfn) << PAGE_SHIFT) | pgprot_val(prot)))
+ 
+ #define set_pmd_at(mm, addr, pmdp, pmd)	set_pte_at(mm, addr, (pte_t *)pmdp, pmd_pte(pmd))
+ 
+--- a/arch/arm64/kernel/hibernate.c
++++ b/arch/arm64/kernel/hibernate.c
+@@ -246,8 +246,7 @@ static int create_safe_exec_page(void *s
+ 	}
+ 
+ 	pte = pte_offset_kernel(pmd, dst_addr);
+-	set_pte(pte, __pte(virt_to_phys((void *)dst) |
+-			 pgprot_val(PAGE_KERNEL_EXEC)));
++	set_pte(pte, pfn_pte(virt_to_pfn(dst), PAGE_KERNEL_EXEC));
+ 
+ 	/*
+ 	 * Load our new page tables. A strict BBM approach requires that we
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -605,8 +605,8 @@ static void __init map_kernel(pgd_t *pgd
+ 		 * entry instead.
+ 		 */
+ 		BUG_ON(!IS_ENABLED(CONFIG_ARM64_16K_PAGES));
+-		set_pud(pud_set_fixmap_offset(pgd, FIXADDR_START),
+-			__pud(__pa_symbol(bm_pmd) | PUD_TYPE_TABLE));
++		pud_populate(&init_mm, pud_set_fixmap_offset(pgd, FIXADDR_START),
++			     lm_alias(bm_pmd));
+ 		pud_clear_fixmap();
+ 	} else {
+ 		BUG();
+@@ -721,7 +721,7 @@ int __meminit vmemmap_populate(unsigned
+ 			if (!p)
+ 				return -ENOMEM;
+ 
+-			set_pmd(pmd, __pmd(__pa(p) | PROT_SECT_NORMAL));
++			pmd_set_huge(pmd, __pa(p), __pgprot(PROT_SECT_NORMAL));
+ 		} else
+ 			vmemmap_verify((pte_t *)pmd, node, addr, next);
+ 	} while (addr = next, addr != end);
+@@ -915,15 +915,19 @@ int __init arch_ioremap_pmd_supported(vo
+ 
+ int pud_set_huge(pud_t *pud, phys_addr_t phys, pgprot_t prot)
+ {
++	pgprot_t sect_prot = __pgprot(PUD_TYPE_SECT |
++					pgprot_val(mk_sect_prot(prot)));
+ 	BUG_ON(phys & ~PUD_MASK);
+-	set_pud(pud, __pud(phys | PUD_TYPE_SECT | pgprot_val(mk_sect_prot(prot))));
++	set_pud(pud, pfn_pud(__phys_to_pfn(phys), sect_prot));
+ 	return 1;
+ }
+ 
+ int pmd_set_huge(pmd_t *pmd, phys_addr_t phys, pgprot_t prot)
+ {
++	pgprot_t sect_prot = __pgprot(PMD_TYPE_SECT |
++					pgprot_val(mk_sect_prot(prot)));
+ 	BUG_ON(phys & ~PMD_MASK);
+-	set_pmd(pmd, __pmd(phys | PMD_TYPE_SECT | pgprot_val(mk_sect_prot(prot))));
++	set_pmd(pmd, pfn_pmd(__phys_to_pfn(phys), sect_prot));
+ 	return 1;
+ }
+ 
 
 
