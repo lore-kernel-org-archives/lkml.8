@@ -2,181 +2,109 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34AB3C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A27D0C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B24524693
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DujDkG5W"
+	by mail.kernel.org (Postfix) with ESMTP id 7598E246A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579194913;
+	bh=rrhEdS2kNqQJmlV3Thq14xN8wxbM2iGtBl9NJUCf7u4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=iklNYWtkBFGrz0PPEoxV/BBhRe70m6j3Srx1f4fo3vuN744zJjCaXsMPM3q2SCEzY
+	 CCVA0dh81Lod4eXzdNiklx7D5YzM9HcCtPCERvOFpvb21vbBb2RiMKBW7wKMYCEs1J
+	 USRWPjx9aWGWby6lQni3QDM69e+2PHzVt6tgX9Bk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391139AbgAPRPJ (ORCPT
+        id S2391124AbgAPRPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:15:09 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:43600 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391101AbgAPRO7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:14:59 -0500
-Received: by mail-qk1-f196.google.com with SMTP id t129so19796598qke.10;
-        Thu, 16 Jan 2020 09:14:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=qbPesbI6+o4JGTWaTpLZljTSTXaCbDPO7M6CK9Z7jy0=;
-        b=DujDkG5W3ILpYM8qyT0dAcZJClk1ACfv/flsghX/egJkq4WsWkCtz+kypqB1mcFslN
-         uDXKIvfdULD4F80JGgtROcDeW1eHH825VujncNlxJoLvi91ZMb7rGYi6KoVPXitLX6ty
-         u90XUpHcsUCTK0dKYWhkjIb6zzFW7fRHX5we0nzj8d/clbEcl4H3OrL3VGB1gXmxorEK
-         KYfP0As9yW35L0kqcdFLDRmRNbtk0tdGhY5Dkni8Pv2sjPewW92s1Vl0SKCEQiEkkYZI
-         aQEnAchcYdP+TGnVTg0I81U5jTnEQj3onFKb9erpdMhab2+L4nNJXpnIewRzpj+eFbsQ
-         0CLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=qbPesbI6+o4JGTWaTpLZljTSTXaCbDPO7M6CK9Z7jy0=;
-        b=EdVXhet3OBYS+raDRU+w0vw7BHT6JkYr+Z/760/yxGUPWp1S+vvd9sA40D3i2FaDJr
-         0MxD19pPOdSBjmj1cfSVPt2stTGenOZxrUMh2c8YEJGVGN5EFXy9U6uvuhN0SrngvVvl
-         ecvly5J14MBF9XeR9gWtYAlMbyljGc+dPULe3aCFfi6BRBribLPv/uthlHKw97X2S3lc
-         Wbj0K2lWAdshNLLtxFmCCG5LsQuchA7TbYlVn8yI0DzHo/HuWwP66ifekuVAImQAPJZL
-         mm6vDiJzxiNhHmrVr0clRaS6R3+X16Jf8IVU7eLY+j1Tz3hLlNWF/V/JbkLyMtQNLTCz
-         C8gg==
-X-Gm-Message-State: APjAAAUBNF+Ur4sOO6yAvDQr2mKsdWlAIx5t/V9o9xO97pgKhn8O5pWf
-        PVAQKdsZVq6i6QUM1bvwOyYHWonPacr+ITcD+j0=
-X-Google-Smtp-Source: APXvYqye2xzTJ5xPc92metlBwExlrGUNWRrkmB/ybM14ARqiI3YrIFXjSAmln3PIxwPT0fU+QKgzeO269EhwuJ8/F3g=
-X-Received: by 2002:a05:620a:5ae:: with SMTP id q14mr29954210qkq.437.1579194898228;
- Thu, 16 Jan 2020 09:14:58 -0800 (PST)
+        Thu, 16 Jan 2020 12:15:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34382 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391067AbgAPROm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:14:42 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E58BA24690;
+        Thu, 16 Jan 2020 17:14:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579194881;
+        bh=rrhEdS2kNqQJmlV3Thq14xN8wxbM2iGtBl9NJUCf7u4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=h0zos+81pQSw5ZbCtZwpHeusU6qIwyRJLsNImJLc70bLNQoZV209RcQHhpOMU5PXi
+         paeIGCYrgbsfAaZU0tHjoATPFmcsZ9cxno08b25PeuieE6DHxDUay1WnZvlqz2Dugs
+         /VGSlzQg7qb7yMvRXVtg53UHlZBHN93Op2k/CEDg=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 670/671] serial: stm32: fix clearing interrupt error flags
+Date:   Thu, 16 Jan 2020 12:05:08 -0500
+Message-Id: <20200116170509.12787-407-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
+References: <20200116170509.12787-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <157909756858.1192265.6657542187065456112.stgit@toke.dk>
- <157909757089.1192265.9038866294345740126.stgit@toke.dk> <CAEf4BzbqY8zivZy637Xy=iTECzBAYQ7vo=M7TvsLM2Yp12bJpg@mail.gmail.com>
- <87v9pctlvn.fsf@toke.dk> <CAEf4BzZpGe-1S5_iwS8GBw9iiyFJmDUkOaO+2qaftRn_iy5cNA@mail.gmail.com>
- <87a76nu5yo.fsf@toke.dk>
-In-Reply-To: <87a76nu5yo.fsf@toke.dk>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 16 Jan 2020 09:14:47 -0800
-Message-ID: <CAEf4BzYLycZb+DBkao-jt+5sGgi3vbmzQ4Ogq9eRXZ+Jvew-ZA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 02/10] tools/bpf/runqslower: Fix override
- option for VMLINUX_BTF
-To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-rdma@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 1:05 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@redh=
-at.com> wrote:
->
-> Andrii Nakryiko <andrii.nakryiko@gmail.com> writes:
->
-> > On Wed, Jan 15, 2020 at 2:06 PM Toke H=C3=B8iland-J=C3=B8rgensen <toke@=
-redhat.com> wrote:
-> >>
-> >> Andrii Nakryiko <andrii.nakryiko@gmail.com> writes:
-> >>
-> >> > On Wed, Jan 15, 2020 at 6:13 AM Toke H=C3=B8iland-J=C3=B8rgensen <to=
-ke@redhat.com> wrote:
-> >> >>
-> >> >> From: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
-> >> >>
-> >> >> The runqslower tool refuses to build without a file to read vmlinux=
- BTF
-> >> >> from. The build fails with an error message to override the locatio=
-n by
-> >> >> setting the VMLINUX_BTF variable if autodetection fails. However, t=
-he
-> >> >> Makefile doesn't actually work with that override - the error messa=
-ge is
-> >> >> still emitted.
-> >> >
-> >> > Do you have example command with VMLINUX_BTF override that didn't wo=
-rk
-> >> > (and what error message was emitted)?
-> >>
-> >> Before this patch:
-> >>
-> >> $ cd ~/build/linux/tools/bpf/runqslower
-> >> $ make
-> >> Makefile:18: *** "Can't detect kernel BTF, use VMLINUX_BTF to specify =
-it explicitly".  Stop.
-> >>
-> >> $ make VMLINUX_BTF=3D~/build/linux/vmlinux
-> >> Makefile:18: *** "Can't detect kernel BTF, use VMLINUX_BTF to specify =
-it explicitly".  Stop.
-> >
-> > Ok, so this is strange. Try make clean and run with V=3D1, it might hel=
-p
-> > to debug this. This could happen if ~/build/linux/vmlinux doesn't
-> > exist, but I assume you double-checked that. It works for me just fine
-> > (Makefile won't do VMLINUX_BTF :=3D assignment, if it's defined through
-> > make invocation, so your change should be a no-op in that regard):
-> >
-> > $ make clean
-> > $ make VMLINUX_BTF=3D~/linux-build/default/vmlinux V=3D1
-> > ...
-> > .output/sbin/bpftool btf dump file ~/linux-build/default/vmlinux
-> > format c > .output/vmlinux.h
-> > ...
-> >
-> > Wonder what your output looks like?
->
-> $ make clean
-> Makefile:18: *** "Can't detect kernel BTF, use VMLINUX_BTF to specify it =
-explicitly".  Stop.
-> $ make VMLINUX_BTF=3D~/build/linux/vmlinux V=3D1
-> Makefile:18: *** "Can't detect kernel BTF, use VMLINUX_BTF to specify it =
-explicitly".  Stop.
->
-> Take another look at the relevant part of the makefile:
->
->   ifneq ("$(wildcard /sys/kernel/btf/vmlinux)","")
->   VMLINUX_BTF :=3D /sys/kernel/btf/vmlinux
->   else ifneq ("$(wildcard /boot/vmlinux-$(KERNEL_REL))","")
->   VMLINUX_BTF :=3D /boot/vmlinux-$(KERNEL_REL)
->   else
->   $(error "Can't detect kernel BTF, use VMLINUX_BTF to specify it explici=
-tly")
->   endif
->
-> That if/else doesn't actually consider the value of VMLINUX_BTF; so the
-> override only works if one of the files being considered by the
-> auto-detection actually exists... :)
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
 
-Ah, right, unconditional $(error), completely missed that few times, thanks=
-!
+[ Upstream commit 1250ed7114a977cdc2a67a0c09d6cdda63970eb9 ]
 
->
-> -Toke
->
+The interrupt clear flag register is a "write 1 to clear" register.
+So, only writing ones allows to clear flags:
+- Replace buggy stm32_clr_bits() by a simple write to clear error flags
+- Replace useless read/modify/write stm32_set_bits() routine by a
+  simple write to clear TC (transfer complete) flag.
+
+Fixes: 4f01d833fdcd ("serial: stm32: fix rx error handling")
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/1574323849-1909-1-git-send-email-fabrice.gasnier@st.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/tty/serial/stm32-usart.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
+index d096e552176c..bce4ac1787ad 100644
+--- a/drivers/tty/serial/stm32-usart.c
++++ b/drivers/tty/serial/stm32-usart.c
+@@ -239,8 +239,8 @@ static void stm32_receive_chars(struct uart_port *port, bool threaded)
+ 		 * cleared by the sequence [read SR - read DR].
+ 		 */
+ 		if ((sr & USART_SR_ERR_MASK) && ofs->icr != UNDEF_REG)
+-			stm32_clr_bits(port, ofs->icr, USART_ICR_ORECF |
+-				       USART_ICR_PECF | USART_ICR_FECF);
++			writel_relaxed(sr & USART_SR_ERR_MASK,
++				       port->membase + ofs->icr);
+ 
+ 		c = stm32_get_char(port, &sr, &stm32_port->last_res);
+ 		port->icount.rx++;
+@@ -409,7 +409,7 @@ static void stm32_transmit_chars(struct uart_port *port)
+ 	if (ofs->icr == UNDEF_REG)
+ 		stm32_clr_bits(port, ofs->isr, USART_SR_TC);
+ 	else
+-		stm32_set_bits(port, ofs->icr, USART_ICR_TCCF);
++		writel_relaxed(USART_ICR_TCCF, port->membase + ofs->icr);
+ 
+ 	if (stm32_port->tx_ch)
+ 		stm32_transmit_chars_dma(port);
+-- 
+2.20.1
+
