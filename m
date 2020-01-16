@@ -2,104 +2,127 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C2DC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5F9C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:57:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BC342073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:56:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EC65207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:57:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MzQ7ulmh"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="AuoH5wpo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgAPP4G (ORCPT
+        id S1726933AbgAPP5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 10:56:06 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:31961 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726440AbgAPP4F (ORCPT
+        Thu, 16 Jan 2020 10:57:16 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:11478 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726730AbgAPP5Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 10:56:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579190164;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=59rSP/4nG5ysgfDP2nwJUgUTFNS/i6M0+YH8HiBE7YE=;
-        b=MzQ7ulmhiE7+yz0UAnyTG3LAv7hAGbDW9Hy6+U07nPNWxEgc3BRS2zN7MdTafpmLRT55g7
-        Fs3F92o3t6VwMCBqizxW7nzd5/H9Q3EaEarBO9KqL1nkR1q7qzwVy1vnQ07l9JHp/DK1G8
-        HVEYqFZs5N22dOIq0LQUvlIvyFnkbj8=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-301-_gXHYdhXOo6IgMqwpVxdnA-1; Thu, 16 Jan 2020 10:56:01 -0500
-X-MC-Unique: _gXHYdhXOo6IgMqwpVxdnA-1
-Received: by mail-wr1-f71.google.com with SMTP id t3so9345635wrm.23
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 07:56:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=59rSP/4nG5ysgfDP2nwJUgUTFNS/i6M0+YH8HiBE7YE=;
-        b=CpP8aN80o5DHuMk6WnHsmAX2ILEA4peVAxt9VxCIUkleZTF+Mx9+jKY3xfUoAQ6gRH
-         Y7zBFGswcWh5jYPIUBmXhmhQcvWWZNJ1ArkDvTNf2OP/jv+1ELV4HcsopJ86Gtg17shV
-         j9/5kf3Q8onRHMipK2SpLKAmCXjVSVZKZP/QGUk0N2E/9u+8YH5j6GyJwfaH/fWQ8lyK
-         M7rZyG4UABShEwI5IfZP852tk5zrfjIvCeMAJ5Dgzdg7LtmgLBqkPLbf9On/kc2rj7dc
-         OwpB4QPvLMaLXG7yi97PDe7FP0z9PeJtbvkTwueCJxfPoIARuNFneUR4b8XEndyoToN1
-         0EvQ==
-X-Gm-Message-State: APjAAAUyVANJsdBNHl/1mLOOtpb9MLGY1jPJIGeRVib2ADBYMOi1aId0
-        XGjVO2ydnpUxIi+TFeovthtlZpFcZWMPw7oOv/rT0ylBAB0/HkpA4HXybabEZH8PYm8Etd/oP35
-        36ADjXYYLDkBxRa1w9as7yM+a
-X-Received: by 2002:a1c:488a:: with SMTP id v132mr4006wma.153.1579190160202;
-        Thu, 16 Jan 2020 07:56:00 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyARJugJk6ZQ7MpUK2INr7v0S3I+70oMKj69iGSMkRzx4xa29/fG8xCm60wqugTUISWTMXsWQ==
-X-Received: by 2002:a1c:488a:: with SMTP id v132mr3985wma.153.1579190159959;
-        Thu, 16 Jan 2020 07:55:59 -0800 (PST)
-Received: from steredhat (host84-49-dynamic.31-79-r.retail.telecomitalia.it. [79.31.49.84])
-        by smtp.gmail.com with ESMTPSA id n67sm5422048wmf.46.2020.01.16.07.55.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 07:55:59 -0800 (PST)
-Date:   Thu, 16 Jan 2020 16:55:57 +0100
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] io_uring: wakeup threads waiting for EPOLLOUT events
-Message-ID: <20200116155557.mwjc7vu33xespiag@steredhat>
-References: <20200116134946.184711-1-sgarzare@redhat.com>
- <2d2dda92-3c50-ee62-5ffe-0589d4c8fc0d@kernel.dk>
+        Thu, 16 Jan 2020 10:57:16 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579190235; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=iru6tv9Z7QQCV5dgJVR7xZ6Q0DYAM+fSwdOud0OR7R8=;
+ b=AuoH5wpofyk7h930gMWr73mxkX4MEEZEP0hlEH3vkJV+FP5fTypEd3mtn80jLGNp3EBvMqFj
+ +G5bV8A5cLOsWDto3gkRxzlkCysIB2l4GeApDwF5qeQgnsFrFEcLXs5oOBxfIywk5tEVDzXu
+ bwr4xer7FJhVeHA4HsWduaetjbw=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e2087d5.7efd8b9079d0-smtp-out-n03;
+ Thu, 16 Jan 2020 15:57:09 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 715B0C4479C; Thu, 16 Jan 2020 15:57:08 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B9DA2C43383;
+        Thu, 16 Jan 2020 15:57:07 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2d2dda92-3c50-ee62-5ffe-0589d4c8fc0d@kernel.dk>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 16 Jan 2020 21:27:07 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Jeffrey Hugo <jhugo@codeaurora.org>, Will Deacon <will@kernel.org>
+Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andre Przywara <andre.przywara@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] arm64: Add KRYO{3,4}XX CPU cores to spectre-v2 safe list
+In-Reply-To: <1a114449-8026-b99d-a4ce-93aac2ffdcb3@codeaurora.org>
+References: <20200116141912.15465-1-saiprakash.ranjan@codeaurora.org>
+ <20200116153235.GA18909@willie-the-truck>
+ <1a114449-8026-b99d-a4ce-93aac2ffdcb3@codeaurora.org>
+Message-ID: <ff70f2fd2fd8525f919ff9a872d33041@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 08:29:07AM -0700, Jens Axboe wrote:
-> On 1/16/20 6:49 AM, Stefano Garzarella wrote:
-> > io_uring_poll() sets EPOLLOUT flag if there is space in the
-> > SQ ring, then we should wakeup threads waiting for EPOLLOUT
-> > events when we expose the new SQ head to the userspace.
-> > 
-> > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> > ---
-> > 
-> > Do you think is better to change the name of 'cq_wait' and 'cq_fasync'?
+Hi Jeffrey,
+
+On 2020-01-16 21:12, Jeffrey Hugo wrote:
+> On 1/16/2020 8:32 AM, Will Deacon wrote:
+>> [+Jeffrey]
+>> 
+>> On Thu, Jan 16, 2020 at 07:49:12PM +0530, Sai Prakash Ranjan wrote:
+>>> KRYO3XX silver CPU cores and KRYO4XX silver, gold CPU cores
+>>> are not affected by Spectre variant 2. Add them to spectre_v2
+>>> safe list to correct ARM_SMCCC_ARCH_WORKAROUND_1 warning and
+>>> vulnerability sysfs value.
+>>> 
+>>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>>> ---
+>>>   arch/arm64/include/asm/cputype.h | 6 ++++++
+>>>   arch/arm64/kernel/cpu_errata.c   | 3 +++
+>>>   2 files changed, 9 insertions(+)
+>>> 
+>>> diff --git a/arch/arm64/include/asm/cputype.h 
+>>> b/arch/arm64/include/asm/cputype.h
+>>> index aca07c2f6e6e..7219cddeba66 100644
+>>> --- a/arch/arm64/include/asm/cputype.h
+>>> +++ b/arch/arm64/include/asm/cputype.h
+>>> @@ -85,6 +85,9 @@
+>>>   #define QCOM_CPU_PART_FALKOR_V1		0x800
+>>>   #define QCOM_CPU_PART_FALKOR		0xC00
+>>>   #define QCOM_CPU_PART_KRYO		0x200
+>>> +#define QCOM_CPU_PART_KRYO_3XX_SILVER	0x803
+>>> +#define QCOM_CPU_PART_KRYO_4XX_GOLD	0x804
+>>> +#define QCOM_CPU_PART_KRYO_4XX_SILVER	0x805
+>> 
+>> Jeffrey is the only person I know who understands the CPU naming here, 
+>> so
+>> I've added him in case this needs either renaming or extending to 
+>> cover
+>> other CPUs. I wouldn't be at all surprised if we need a function call
+>> rather than a bunch of table entries...
 > 
-> I honestly think it'd be better to have separate waits for in/out poll,
-> the below patch will introduce some unfortunate cacheline traffic
-> between the submitter and completer side.
+> The added lines look sane to me, from a naming and MIDR perspective.
+> I don't know off hand if these CPUs are really fixed or not.
+> 
+> I wonder why a "KRYO_3XX_GOLD  0x802" line is not being added.  Sai?
+> 
 
-Agree, make sense. I'll send a v2 with a new 'sq_wait'.
-
-About fasync, do you think could be useful the POLL_OUT support?
-In this case, maybe is not simple to have two separate fasync_struct,
-do you have any advice?
+KRYO_3XX_GOLD is based on Cortex-A75 which is not spectre v2 safe.
 
 Thanks,
-Stefano
+Sai
 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
