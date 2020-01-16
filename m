@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB9AC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F183DC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ED6024718
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC5F524695
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196554;
-	bh=yIJkJxmik4IXSliExkB5nxxRKUuXaE04cSZDwEwRw6E=;
+	s=default; t=1579196560;
+	bh=iaYM8yr6l8gDQemWgAjVPFMFQoyPaBfA/0vFKhM6ELY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GvzivM5ybyyKOhD+NQmaNqfdTphcDxHRb+QsO9anz1qRM9GOTHP2aA+uLX7gPmYqu
-	 YQdF/vaVxmSEwMwoeUrlLg55F6Cn9VlF31+MrJ0DeZ8cXGX7wqbuWGK9aJt43TNHmA
-	 XQrmUX3SmqI1ZO/QNOhyhHP9XWGUf7Ygx9jRaTwg=
+	b=RJvIbN9MHRDBhYND6D/0afT4W+PCU24TEKGis4u1WGSlC1BTDBlSquN447uwfP4Eo
+	 Eg0qP9xeJFGL9F/4Q4kzu7ZSqBJCgOm0wpCF1HZJhNmjlMiXfv/h8He1r5AGXPJtrj
+	 RUweWgCX4duusTaU+aLbwITAnS4ClLAf0sr9BJcM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393834AbgAPRmd (ORCPT
+        id S2405838AbgAPRmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:42:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59458 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:42:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393681AbgAPRln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:41:43 -0500
+        id S2405813AbgAPRly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:41:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F170246B5;
-        Thu, 16 Jan 2020 17:41:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57C95246A4;
+        Thu, 16 Jan 2020 17:41:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196502;
-        bh=yIJkJxmik4IXSliExkB5nxxRKUuXaE04cSZDwEwRw6E=;
+        s=default; t=1579196513;
+        bh=iaYM8yr6l8gDQemWgAjVPFMFQoyPaBfA/0vFKhM6ELY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rDbXVS2/0HJ1zQiSm/hu7FxRYeJgDSz6M63tg/2SslcLH7+vJpNd6xonPVsv/641y
-         aQt6ePZA2oRTc8N2RqYT63dumr3WWs8EtUuZzV67ukAwmUgO1V3OFsBl4vxJlQFCNh
-         x7hOnTh88QWSTGZWHNfyXV3PU2DaGUN02EqpqGos=
+        b=oZqRovVXZNK7KSBjGDF0P+oXin15069m5aK7EHb3h5ATyKSKanKD4L6nL9ore9m/z
+         +VC3x24kM+Am+34FjDquWyqFSudLzVsR8WNx79NoEb0NthLt/6ggC/QFOls3luiRe8
+         e+sSP2tUUnGZMO+dsZWwKUKHgXOkdRW1l7Uhpp4M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pan Bian <bianpan2016@163.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 244/251] scsi: bnx2i: fix potential use after free
-Date:   Thu, 16 Jan 2020 12:36:33 -0500
-Message-Id: <20200116173641.22137-204-sashal@kernel.org>
+Cc:     Max Gurtovoy <maxg@mellanox.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Israel Rukshin <israelr@mellanox.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 251/251] IB/iser: Fix dma_nents type definition
+Date:   Thu, 16 Jan 2020 12:36:40 -0500
+Message-Id: <20200116173641.22137-211-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -59,41 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Bian <bianpan2016@163.com>
+From: Max Gurtovoy <maxg@mellanox.com>
 
-[ Upstream commit 29d28f2b8d3736ac61c28ef7e20fda63795b74d9 ]
+[ Upstream commit c1545f1a200f4adc4ef8dd534bf33e2f1aa22c2f ]
 
-The member hba->pcidev may be used after its reference is dropped. Move the
-put function to where it is never used to avoid potential use after free
-issues.
+The retured value from ib_dma_map_sg saved in dma_nents variable. To avoid
+future mismatch between types, define dma_nents as an integer instead of
+unsigned.
 
-Fixes: a77171806515 ("[SCSI] bnx2i: Removed the reference to the netdev->base_addr")
-Link: https://lore.kernel.org/r/1573043541-19126-1-git-send-email-bianpan2016@163.com
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 57b26497fabe ("IB/iser: Pass the correct number of entries for dma mapped SGL")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Israel Rukshin <israelr@mellanox.com>
+Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
+Acked-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/bnx2i/bnx2i_iscsi.c | 2 +-
+ drivers/infiniband/ulp/iser/iscsi_iser.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/bnx2i/bnx2i_iscsi.c b/drivers/scsi/bnx2i/bnx2i_iscsi.c
-index 133901fd3e35..6d1f8b22bd83 100644
---- a/drivers/scsi/bnx2i/bnx2i_iscsi.c
-+++ b/drivers/scsi/bnx2i/bnx2i_iscsi.c
-@@ -915,12 +915,12 @@ void bnx2i_free_hba(struct bnx2i_hba *hba)
- 	INIT_LIST_HEAD(&hba->ep_ofld_list);
- 	INIT_LIST_HEAD(&hba->ep_active_list);
- 	INIT_LIST_HEAD(&hba->ep_destroy_list);
--	pci_dev_put(hba->pcidev);
+diff --git a/drivers/infiniband/ulp/iser/iscsi_iser.h b/drivers/infiniband/ulp/iser/iscsi_iser.h
+index cb48e22afff7..a3614f7f0007 100644
+--- a/drivers/infiniband/ulp/iser/iscsi_iser.h
++++ b/drivers/infiniband/ulp/iser/iscsi_iser.h
+@@ -197,7 +197,7 @@ struct iser_data_buf {
+ 	struct scatterlist *sg;
+ 	int                size;
+ 	unsigned long      data_len;
+-	unsigned int       dma_nents;
++	int                dma_nents;
+ };
  
- 	if (hba->regview) {
- 		pci_iounmap(hba->pcidev, hba->regview);
- 		hba->regview = NULL;
- 	}
-+	pci_dev_put(hba->pcidev);
- 	bnx2i_free_mp_bdt(hba);
- 	bnx2i_release_free_cid_que(hba);
- 	iscsi_host_free(shost);
+ /* fwd declarations */
 -- 
 2.20.1
 
