@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14616C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB570C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFEB62073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACBDF206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:31:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217457;
-	bh=SI/+LUsCkOv6mqjlDDK/Lkt8c1rVlXx+mAffa9wYcvE=;
+	s=default; t=1579217466;
+	bh=7SrXtY3zhTAIs5OpgjwMMDDZzdGmV1xifK4ax0OnMDI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jX0V9eS3PWGoRqPb0SW02wdoP0sl9bqsefRed5pPh/EIJNt2woK+gLDpJ5B/GOBNi
-	 tcT6KgkUuvD+7wQLVo7j9K09bltdMsW/cdCE/MrmS5/4gwR/onCBPt7X1xZUtfHrk6
-	 Fal6qcb4oiLy/Yg8jarQFiRSm0z9Z21zLzdZuUYI=
+	b=2u0ZqmYY5lAUVltjtTEC0RT/dZwyVxybCX+boaDlnuwNYaLsIZe6IWh6GAB2Tl5P3
+	 1u0IcLiL+T4dm4ptmGPUTpwALiIhHujhEfastRf0Cp2u7Mtayi05N6rECVbjGW+lfx
+	 eh1HrTuFlc2FcOEchGjpDpUGMwupi1ApZMkCXFjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391443AbgAPXa4 (ORCPT
+        id S2391459AbgAPXbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:30:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36972 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:31:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403838AbgAPXaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:30:18 -0500
+        id S2403924AbgAPXa1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:30:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 486242072E;
-        Thu, 16 Jan 2020 23:30:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1F372072B;
+        Thu, 16 Jan 2020 23:30:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217417;
-        bh=SI/+LUsCkOv6mqjlDDK/Lkt8c1rVlXx+mAffa9wYcvE=;
+        s=default; t=1579217427;
+        bh=7SrXtY3zhTAIs5OpgjwMMDDZzdGmV1xifK4ax0OnMDI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2TafAsYeW4jihm58c/c7/rv/JuoVuiuCaslH/AzN1nbo+cVqr1/1uZdjU6Ud1qba4
-         z4oy7E8eFSSCPcmHWB1wc3SOsO153E0hNQuDw3gYIv40T/jJJoJAMAYOhSUzkyiK3l
-         8IvwpVFySVN2iRnUJo3xYxREqHBinVbsGAnRTh+A=
+        b=DQoCpW/x9fREcrz7GcKC33WwKl/plsl5S123mapuGSVtJFTe4SalJt9jkFTumy3De
+         29TRAloAvrcW5hMvownm8zaX/q0tAaRBjWrLsh5zKr1SeabZ8mfIB7kXF/7YLMPgLT
+         oyqTTEVAZH1AulSNMzzUGekMYs9zY3jZxdG4Gpe4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 75/84] selftests: firmware: Fix it to do root uid check and skip
-Date:   Fri, 17 Jan 2020 00:18:49 +0100
-Message-Id: <20200116231722.365608827@linuxfoundation.org>
+        stable@vger.kernel.org, Jouni Hogander <jouni.hogander@unikie.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 78/84] MIPS: Prevent link failure with kcov instrumentation
+Date:   Fri, 17 Jan 2020 00:18:52 +0100
+Message-Id: <20200116231722.693197398@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
 References: <20200116231713.087649517@linuxfoundation.org>
@@ -59,57 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shuah Khan <skhan@linuxfoundation.org>
+From: Jouni Hogander <jouni.hogander@unikie.com>
 
-[ Upstream commit c65e41538b04e0d64a673828745a00cb68a24371 ]
+[ Upstream commit a4a3893114a41e365274d5fab5d9ff5acc235ff0 ]
 
-firmware attempts to load test modules that require root access
-and fail. Fix it to check for root uid and exit with skip code
-instead.
+__sanitizer_cov_trace_pc() is not linked in and causing link
+failure if KCOV_INSTRUMENT is enabled. Fix this by disabling
+instrumentation for compressed image.
 
-Before this fix:
-
-selftests: firmware: fw_run_tests.sh
-modprobe: ERROR: could not insert 'test_firmware': Operation not permitted
-You must have the following enabled in your kernel:
-CONFIG_TEST_FIRMWARE=y
-CONFIG_FW_LOADER=y
-CONFIG_FW_LOADER_USER_HELPER=y
-CONFIG_IKCONFIG=y
-CONFIG_IKCONFIG_PROC=y
-not ok 1 selftests: firmware: fw_run_tests.sh # SKIP
-
-With this fix:
-
-selftests: firmware: fw_run_tests.sh
-skip all tests: must be run as root
-not ok 1 selftests: firmware: fw_run_tests.sh # SKIP
-
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-Reviwed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc: linux-mips@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/firmware/fw_lib.sh | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/mips/boot/compressed/Makefile | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/testing/selftests/firmware/fw_lib.sh b/tools/testing/selftests/firmware/fw_lib.sh
-index 1cbb12e284a6..8a853ace55a2 100755
---- a/tools/testing/selftests/firmware/fw_lib.sh
-+++ b/tools/testing/selftests/firmware/fw_lib.sh
-@@ -28,6 +28,12 @@ test_modprobe()
+diff --git a/arch/mips/boot/compressed/Makefile b/arch/mips/boot/compressed/Makefile
+index 172801ed35b8..d859f079b771 100644
+--- a/arch/mips/boot/compressed/Makefile
++++ b/arch/mips/boot/compressed/Makefile
+@@ -29,6 +29,9 @@ KBUILD_AFLAGS := $(KBUILD_AFLAGS) -D__ASSEMBLY__ \
+ 	-DBOOT_HEAP_SIZE=$(BOOT_HEAP_SIZE) \
+ 	-DKERNEL_ENTRY=$(VMLINUX_ENTRY_ADDRESS)
  
- check_mods()
- {
-+	local uid=$(id -u)
-+	if [ $uid -ne 0 ]; then
-+		echo "skip all tests: must be run as root" >&2
-+		exit $ksft_skip
-+	fi
++# Prevents link failures: __sanitizer_cov_trace_pc() is not linked in.
++KCOV_INSTRUMENT		:= n
 +
- 	trap "test_modprobe" EXIT
- 	if [ ! -d $DIR ]; then
- 		modprobe test_firmware
+ # decompressor objects (linked with vmlinuz)
+ vmlinuzobjs-y := $(obj)/head.o $(obj)/decompress.o $(obj)/string.o
+ 
 -- 
 2.20.1
 
