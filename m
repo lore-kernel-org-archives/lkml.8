@@ -4,50 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 595DFC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB38C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FC1220684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 700BA206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:26:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217170;
-	bh=DxL97Mube6rfLAuMouuyK1bFCfxxgK8KTNyr1qECnpY=;
+	s=default; t=1579217174;
+	bh=1RVsmw/AN+bMpGsTR/ZalrOfVHM0V8DoXXYrZD5lshs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zV6CIs6HrjFcveNpdBazp+aIRdYhKuEGBMTw5FOB9lhjJE4tVlbWtCPcjnZ/iKNSK
-	 TpFK44SLF9wAl7V/1DCDc7rr1ATYWg3xbyJpDFcPWepZLd92NFvs4W6/FfFJMMCmNY
-	 H1oDnhlpuWuC9t3n7iGbwoZ1Hp/cQyYVgJjxDx3Q=
+	b=woksTMj51J7BP9jhF8OKtF3Q/lPOnmUevpgKcA/UQQemI5LYRo2ZttJZhq5uyNCW8
+	 smx3soxZymdxsiRncF1E6rKpwtYIYIpilsxUS+GrlgI0FaqrHEQnWawmBhguDjeZNX
+	 mZq7PoluRCI7Fjs5eNEYKoQ0j8IzjLIZdMoZjdc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733310AbgAPX0J (ORCPT
+        id S2388525AbgAPX0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:26:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55588 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:26:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733168AbgAPXZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:25:45 -0500
+        id S1731354AbgAPXZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:25:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 116FA20684;
-        Thu, 16 Jan 2020 23:25:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D107B2072E;
+        Thu, 16 Jan 2020 23:25:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217144;
-        bh=DxL97Mube6rfLAuMouuyK1bFCfxxgK8KTNyr1qECnpY=;
+        s=default; t=1579217149;
+        bh=1RVsmw/AN+bMpGsTR/ZalrOfVHM0V8DoXXYrZD5lshs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jJ/q9Xgsjqz27KVmVkJhmKDTUGtv6gkw3YQZznru2Nxf2/NxeiBBr9qUXCQlMihCW
-         DyqlKUF4Coc14rx3RsEMR9mgH9bjG6SMFDykWrvnk2+7SL9hOz+u34U1oG+qnXpHbF
-         OSDkxxRhPsf7YSnBtLJbJtZ6LSv+q5IKCjaYB1jM=
+        b=uhl/oZSXzR9u+QDL0pzM0Crxo/vUuMN7Ra4lLJqDBkaK8pkGUMxunWoJ2i5taO3q8
+         dLJJ0COfH0keWkckhkwQJ2OGBcSQl7uqW2vm68rgvjbsSmy4a+tLbmiWsMokwukA65
+         Aoeh91GWxIyJ6V10OVgs/GWzkuR4zGbY5O+EVMiA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>
-Subject: [PATCH 5.4 166/203] mtd: spi-nor: fix silent truncation in spi_nor_read()
-Date:   Fri, 17 Jan 2020 00:18:03 +0100
-Message-Id: <20200116231759.152183681@linuxfoundation.org>
+        stable@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
+        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Mark Brown <broonie@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: [PATCH 5.4 168/203] spi: pxa2xx: Set controller->max_transfer_size in dma mode
+Date:   Fri, 17 Jan 2020 00:18:05 +0100
+Message-Id: <20200116231759.290885917@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -60,34 +66,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-commit a719a75a7761e4139dd099330d9fe3589d844f9b upstream.
+commit b2662a164f9dc48da8822e56600686d639056282 upstream.
 
-spi_nor_read() assigns the result of 'ssize_t spi_nor_read_data()'
-to the 'int ret' variable, while 'ssize_t' is a 64-bit type and *int*
-is a 32-bit type on the 64-bit machines. This silent truncation isn't
-really valid, so fix up the variable's type.
+In DMA mode we have a maximum transfer size, past that the driver
+falls back to PIO (see the check at the top of pxa2xx_spi_transfer_one).
+Falling back to PIO for big transfers defeats the point of a dma engine,
+hence set the max transfer size to inform spi clients that they need
+to do something smarter.
 
-Fixes: 59451e1233bd ("mtd: spi-nor: change return value of read/write")
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+This was uncovered by the drm_mipi_dbi spi panel code, which does
+large spi transfers, but stopped splitting them after:
+
+commit e143364b4c1774f68e923a5a0bb0fca28ac25888
+Author: Noralf Trønnes <noralf@tronnes.org>
+Date:   Fri Jul 19 17:59:10 2019 +0200
+
+    drm/tinydrm: Remove tinydrm_spi_max_transfer_size()
+
+After this commit the code relied on the spi core to split transfers
+into max dma-able blocks, which also papered over the PIO fallback issue.
+
+Fix this by setting the overall max transfer size to the DMA limit,
+but only when the controller runs in DMA mode.
+
+Fixes: e143364b4c17 ("drm/tinydrm: Remove tinydrm_spi_max_transfer_size()")
+Cc: Sam Ravnborg <sam@ravnborg.org>
+Cc: Noralf Trønnes <noralf@tronnes.org>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>
+Reported-and-tested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Daniel Mack <daniel@zonque.org>
+Cc: Haojian Zhuang <haojian.zhuang@gmail.com>
+Cc: Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-spi@vger.kernel.org
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Link: https://lore.kernel.org/r/20191017064426.30814-1-daniel.vetter@ffwll.ch
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/spi-nor/spi-nor.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-pxa2xx.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -2544,7 +2544,7 @@ static int spi_nor_read(struct mtd_info
- 			size_t *retlen, u_char *buf)
- {
- 	struct spi_nor *nor = mtd_to_spi_nor(mtd);
--	int ret;
-+	ssize_t ret;
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -1612,6 +1612,11 @@ static int pxa2xx_spi_fw_translate_cs(st
+ 	return cs;
+ }
  
- 	dev_dbg(nor->dev, "from 0x%08x, len %zd\n", (u32)from, len);
++static size_t pxa2xx_spi_max_dma_transfer_size(struct spi_device *spi)
++{
++	return MAX_DMA_LEN;
++}
++
+ static int pxa2xx_spi_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -1717,6 +1722,8 @@ static int pxa2xx_spi_probe(struct platf
+ 		} else {
+ 			controller->can_dma = pxa2xx_spi_can_dma;
+ 			controller->max_dma_len = MAX_DMA_LEN;
++			controller->max_transfer_size =
++				pxa2xx_spi_max_dma_transfer_size;
+ 		}
+ 	}
  
 
 
