@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9083C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:10:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB39C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D48C217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:10:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C44B8208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:10:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198246;
-	bh=FeTWHdpvBDTIIq6Cc4JwoyeiwKCZmDFPfiY6d1lavtg=;
+	s=default; t=1579198253;
+	bh=TG5zhRS08XgjaFvPCbqcWFFnRDBrZMFyoPlDmRPuNak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T21hA04vidMrCkOF6iAU2YZJzdf2G4ISJhx04BVTgqcyV04ANjTtgUallVL35YdFB
-	 MSOnNCSWvk6fcBX72BlvKpoA2umq1V74EMS8RxnSU/VqHLfJkywlO19WmxA+H6bIQ8
-	 zbILbiHLi9puj61jkfIvPTesAQvzJidWfXEQIgps=
+	b=cNWAY/JjH3H30FoFzK7kkI4OusJYVPZ/aOcN3nCVkiFK+iJQZBozzoOtOdrp3QNA6
+	 yfOWel875+FZRg++TnSuFqlt03RHlXZ5kyh1jAdHvOLqR+LC8FASY+o0QpNC30GyVA
+	 jGP+jBeuKfoEfOOusuABXF0QSTnzQXGGSCGAJUYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394223AbgAPSKo (ORCPT
+        id S2395155AbgAPSKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:10:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53256 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:10:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393125AbgAPRhq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:37:46 -0500
+        id S2393195AbgAPRhn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:37:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7859A246DB;
-        Thu, 16 Jan 2020 17:37:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 116A2246D8;
+        Thu, 16 Jan 2020 17:37:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196266;
-        bh=FeTWHdpvBDTIIq6Cc4JwoyeiwKCZmDFPfiY6d1lavtg=;
+        s=default; t=1579196262;
+        bh=TG5zhRS08XgjaFvPCbqcWFFnRDBrZMFyoPlDmRPuNak=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XHxl9FtcgP9218af1ZFmAFN90WICjE5OvCdmfe79RlQd9fhtn/BBucYRg75EMi+00
-         YbmB11Epz89MsWNtnis5NPD3KxL52lRKagVzRidpFAsgj9z7/v2D6sl1Ln4kOCHawz
-         tCfi/f5gl8Ic6KzN/8Oc9Baj+CMwFMGnTxIKx+jw=
+        b=jyHndrtOaGmWF4XI5RFtsLNV73Svb81iC57k6AZiKYRMO9Ab0qHjXnR8T0fW1oft+
+         kqxYyWDKhIkhGa3MZlIvvfWNn/gdvie4S+fefzzeeQdTbH4o68JV7HS9IlV3Xgd6Xj
+         d7byMNn61jZgjflj5W7xDA5xZ/zkS+WH0uE+S0jg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vladimir Murzin <vladimir.murzin@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>,
+Cc:     Stefan Wahren <stefan.wahren@i2se.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 089/251] ARM: 8848/1: virt: Align GIC version check with arm64 counterpart
-Date:   Thu, 16 Jan 2020 12:33:58 -0500
-Message-Id: <20200116173641.22137-49-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 087/251] mmc: sdhci-brcmstb: handle mmc_of_parse() errors during probe
+Date:   Thu, 16 Jan 2020 12:33:56 -0500
+Message-Id: <20200116173641.22137-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -61,38 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Murzin <vladimir.murzin@arm.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
 
-[ Upstream commit 9db043d36bd379f4cc99054c079de0dabfc38d03 ]
+[ Upstream commit 1e20186e706da8446f9435f2924cd65ab1397e73 ]
 
-arm64 has got relaxation on GIC version check at early boot stage due
-to update of the GIC architecture let's align ARM with that.
+We need to handle mmc_of_parse() errors during probe otherwise the
+MMC driver could start without proper initialization (e.g. power sequence).
 
-To help backports (even though the code was correct at the time of writing)
-Fixes: e59941b9b381 ("ARM: 8527/1: virt: enable GICv3 system registers")
-Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
-Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: 476bf3d62d5c ("mmc: sdhci-brcmstb: Add driver for Broadcom BRCMSTB SoCs")
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kernel/hyp-stub.S | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/mmc/host/sdhci-brcmstb.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/kernel/hyp-stub.S b/arch/arm/kernel/hyp-stub.S
-index 15d073ae5da2..f5e5e3e19659 100644
---- a/arch/arm/kernel/hyp-stub.S
-+++ b/arch/arm/kernel/hyp-stub.S
-@@ -179,8 +179,8 @@ ARM_BE8(orr	r7, r7, #(1 << 25))     @ HSCTLR.EE
- 	@ Check whether GICv3 system registers are available
- 	mrc	p15, 0, r7, c0, c1, 1	@ ID_PFR1
- 	ubfx	r7, r7, #28, #4
--	cmp	r7, #1
--	bne	2f
-+	teq	r7, #0
-+	beq	2f
+diff --git a/drivers/mmc/host/sdhci-brcmstb.c b/drivers/mmc/host/sdhci-brcmstb.c
+index 159f6f64c68e..ed6473731b45 100644
+--- a/drivers/mmc/host/sdhci-brcmstb.c
++++ b/drivers/mmc/host/sdhci-brcmstb.c
+@@ -90,7 +90,9 @@ static int sdhci_brcmstb_probe(struct platform_device *pdev)
+ 	host->mmc->caps2 |= MMC_CAP2_HC_ERASE_SZ;
  
- 	@ Enable system register accesses
- 	mrc	p15, 4, r7, c12, c9, 5	@ ICC_HSRE
+ 	sdhci_get_of_property(pdev);
+-	mmc_of_parse(host->mmc);
++	res = mmc_of_parse(host->mmc);
++	if (res)
++		goto err;
+ 
+ 	/*
+ 	 * Supply the existing CAPS, but clear the UHS modes. This
 -- 
 2.20.1
 
