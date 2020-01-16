@@ -2,94 +2,100 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87842C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D857EC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E3012081E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:21:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202473;
-	bh=rNQrhZDV21oaKlrh7C5bTvuE3dr16hMZ8aHHmoo8iyM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kyye4QbJ8BUOXKsAm94Q4qCo4ovNKPJhkq6UI4Wa6PWNRjUAq7p/3YVLnWz0k/hMH
-	 wZwzTMAHmdeMtLkICIrzcSJRGnJAVnsswXGBjgopweSVA2E8DU5YC91WU+NLN1eXFW
-	 rQLsl2+Vh4QWpbwAyQ/BIwnCuyv3jep4CHMrM9Dg=
+	by mail.kernel.org (Postfix) with ESMTP id B2D8C20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:21:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407359AbgAPTVH (ORCPT
+        id S2437522AbgAPTVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:21:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37790 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731176AbgAPQxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:53:46 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 565EF22522;
-        Thu, 16 Jan 2020 16:53:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193626;
-        bh=rNQrhZDV21oaKlrh7C5bTvuE3dr16hMZ8aHHmoo8iyM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MFuTxxkkcTmZdz0Kk+ANFoJY5juN+8C4teZVz22RHadpfKI7je8YyQ+FLDaJn3Lxg
-         At4oNwISSIhDEswMxxO7K+nBUCExtIyf9K/XAIJUClST3oT4bhMqkeGKksUY1l5USp
-         a3qxAXquhxfamSl9IbPUBG1AUwc4sFaQzliAnMt4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 160/205] ARM: dts: dra7: fix cpsw mdio fck clock
-Date:   Thu, 16 Jan 2020 11:42:15 -0500
-Message-Id: <20200116164300.6705-160-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
-References: <20200116164300.6705-1-sashal@kernel.org>
+        Thu, 16 Jan 2020 14:21:17 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:53078 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731179AbgAPTVO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 14:21:14 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1isAhZ-0007xm-EH; Thu, 16 Jan 2020 20:21:09 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id EECA41C0882;
+        Thu, 16 Jan 2020 20:21:08 +0100 (CET)
+Date:   Thu, 16 Jan 2020 19:21:08 -0000
+From:   "tip-bot2 for Tom Lendacky" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/CPU/AMD: Ensure clearing of SME/SEV features is
+ maintained
+Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
+        Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: =?utf-8?q?=3C226de90a703c3c0be5a49565047905ac4e94e8f3=2E15791?=
+ =?utf-8?q?25915=2Egit=2Ethomas=2Elendacky=40amd=2Ecom=3E?=
+References: =?utf-8?q?=3C226de90a703c3c0be5a49565047905ac4e94e8f3=2E157912?=
+ =?utf-8?q?5915=2Egit=2Ethomas=2Elendacky=40amd=2Ecom=3E?=
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Message-ID: <157920246871.396.11570015734463738210.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+The following commit has been merged into the x86/urgent branch of tip:
 
-[ Upstream commit 6af0a549c25e0d02366aa95507bfe3cad2f7b68b ]
+Commit-ID:     c575dc89440e838ba27dff1a36b599dbbc8a0c18
+Gitweb:        https://git.kernel.org/tip/c575dc89440e838ba27dff1a36b599dbbc8a0c18
+Author:        Tom Lendacky <thomas.lendacky@amd.com>
+AuthorDate:    Wed, 15 Jan 2020 16:05:16 -06:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Thu, 16 Jan 2020 20:17:53 +01:00
 
-The DRA7 CPSW MDIO functional clock (gmac_clkctrl DRA7_GMAC_GMAC_CLKCTRL 0)
-is specified incorrectly, which is caused incorrect MDIO bus clock
-configuration MDCLK. The correct CPSW MDIO functional clock is
-gmac_main_clk (125MHz), which is the same as CPSW fck. Hence fix it.
+x86/CPU/AMD: Ensure clearing of SME/SEV features is maintained
 
-Fixes: 1faa415c9c6e ("ARM: dts: Add fck for cpsw mdio for omap variants")
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+If the SME and SEV features are present via CPUID, but memory encryption
+support is not enabled (MSR 0xC001_0010[23]), the feature flags are cleared
+using clear_cpu_cap(). However, if get_cpu_cap() is later called, these
+feature flags will be reset back to present, which is not desired.
+
+Change from using clear_cpu_cap() to setup_clear_cpu_cap() so that the
+clearing of the flags is maintained.
+
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/226de90a703c3c0be5a49565047905ac4e94e8f3.1579125915.git.thomas.lendacky@amd.com
 ---
- arch/arm/boot/dts/dra7-l4.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/cpu/amd.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
-index 5cac2dd58241..c3954e34835b 100644
---- a/arch/arm/boot/dts/dra7-l4.dtsi
-+++ b/arch/arm/boot/dts/dra7-l4.dtsi
-@@ -3059,7 +3059,7 @@
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index 90f75e5..62c3027 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -615,9 +615,9 @@ static void early_detect_mem_encrypt(struct cpuinfo_x86 *c)
+ 		return;
  
- 				davinci_mdio: mdio@1000 {
- 					compatible = "ti,cpsw-mdio","ti,davinci_mdio";
--					clocks = <&gmac_clkctrl DRA7_GMAC_GMAC_CLKCTRL 0>;
-+					clocks = <&gmac_main_clk>;
- 					clock-names = "fck";
- 					#address-cells = <1>;
- 					#size-cells = <0>;
--- 
-2.20.1
-
+ clear_all:
+-		clear_cpu_cap(c, X86_FEATURE_SME);
++		setup_clear_cpu_cap(X86_FEATURE_SME);
+ clear_sev:
+-		clear_cpu_cap(c, X86_FEATURE_SEV);
++		setup_clear_cpu_cap(X86_FEATURE_SEV);
+ 	}
+ }
+ 
