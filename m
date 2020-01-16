@@ -2,95 +2,120 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67445C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4109AC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FB59207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:39:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199986;
-	bh=6qCs0Tzxgc3wJtYtfYBsByJSiSkeMGo4KBX8tHMMJlI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eozslclRguJNM2Ijp0qodCIOK0phy+6uFnlQopxz20hrtK/3sKgK5xyiJBQtCM9OG
-	 QLhGkQ4PtkY/8zJSyY96i/SmzJWLGeRpIBPPfNfCkLFdKWXaYqhJq8BZwSnMi/aEx+
-	 wrbUloV2McivoYxfx4wwikxiORk+b/H/6pmAtQos=
+	by mail.kernel.org (Postfix) with ESMTP id 1861C2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:39:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="r+BCuOqk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406414AbgAPSjo (ORCPT
+        id S2392529AbgAPSjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 16 Jan 2020 13:39:51 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34684 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730014AbgAPSjo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jan 2020 13:39:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54422 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390404AbgAPRML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:12:11 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FD5124694;
-        Thu, 16 Jan 2020 17:12:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194731;
-        bh=6qCs0Tzxgc3wJtYtfYBsByJSiSkeMGo4KBX8tHMMJlI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rwr3ceSe+/WGcm0SJlS7x3A5ADjYkO+y73HG1B/dhnEqnS5iqsAInjoRYmw/P7K4s
-         NxJrOn67G5eZmx+WfcKd3s5VfD0ePbNYQSyRXzUcjsE44uaNY5OmgjWLsCIzvo4sNH
-         Y8VCW4/S5I2iDal+l9Iy7FLpP+YCWNOQ7NcpJAtI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 564/671] net: broadcom/bcmsysport: Fix signedness in bcm_sysport_probe()
-Date:   Thu, 16 Jan 2020 12:03:22 -0500
-Message-Id: <20200116170509.12787-301-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
-References: <20200116170509.12787-1-sashal@kernel.org>
+Received: by mail-lj1-f195.google.com with SMTP id z22so23843133ljg.1
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 10:39:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1NkxS1dJ4///PjDnpw3zqOnAHEcQBbdtsaoyImvFWzw=;
+        b=r+BCuOqk6DerwPHy3jM1T4vB+EtBpq4eqDuj5WdCTLhucLb9mR75gLvie4tcMoZ+2D
+         i+3VQyNa2eU4BZsH/70szQZkzCdCrYxrqyjlgBEOgH7uAus+pGgjIXiN7vvVCHrfO9Q5
+         9qhy//XHIa+yYjpT2/nnrYrzxPrBC+lxIH5VeNgkFUR6SH9DHxGO+v4EeQfEGKt+bNs7
+         ay//+Rz0Z6TZIaVm7dxqzkdC/5oA21DwhzKNoxFngX+gJbhZDOEiqcpmED0KG4wLVb0W
+         UNn7KBzcZvoPOdyxxMEFwQC1cFYQIZlRlxVgqquhyiMFYNoVvBNO6Wt7syx0eTMJZA9I
+         JVAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1NkxS1dJ4///PjDnpw3zqOnAHEcQBbdtsaoyImvFWzw=;
+        b=NB5puHLinrPNHg41Of+1Em1L7qzhx+qaudjgOBa/gQaLZfKTUrn9ECa4H31XvkAP++
+         ZYetStJyMiYpJtr8r9kY89X4P+JnmQGtUbufmNEHBQjp/yV2rCtqVd0YW5i1sffCC1Rk
+         f4KTqCVYQlaONuaDynt4AoR0Jx+R4oLz5wFryKqcI0TP3Utmb1ZlIIeyQCT5znSsQuB9
+         OMuQc2+8Ri8lEQva4OjqZj8C72szFZoFeFfeKDtVzuTKPF9LDJTF64lqIyvjHwVjM0Lw
+         Fsah/0HO1vFUEFTvTDv2G4L4WSwzU1GM11EQ9T6psrOsDbUO1sakNzCOwRagjQHqFYYx
+         E6Hw==
+X-Gm-Message-State: APjAAAVD9FXpu8D/xH29ce30i1SN31ymk+uAWANOy9xUYXq+gkGoZYvx
+        XzeDInYUmmZvq1VvcuvX4cCXCA==
+X-Google-Smtp-Source: APXvYqy1r4axnNLypvtxCDCBusTSJPvQ5bBth2V80eQ2aWR3SDteItjF5tjp00AcOpEuhWvIgDGEAg==
+X-Received: by 2002:a2e:93c5:: with SMTP id p5mr3077169ljh.192.1579199982123;
+        Thu, 16 Jan 2020 10:39:42 -0800 (PST)
+Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
+        by smtp.gmail.com with ESMTPSA id h10sm11007576ljc.39.2020.01.16.10.39.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 16 Jan 2020 10:39:40 -0800 (PST)
+Date:   Thu, 16 Jan 2020 10:39:32 -0800
+From:   Olof Johansson <olof@lixom.net>
+To:     Li Yang <leoyang.li@nxp.com>
+Cc:     arm@kernel.org, soc@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        shawnguo@kernel.org
+Subject: Re: [GIT PULL] soc/fsl drivers changes for next(v5.6)
+Message-ID: <20200116183932.qltqdtreeg4d2zq7@localhost>
+References: <1578608351-23289-1-git-send-email-leoyang.li@nxp.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1578608351-23289-1-git-send-email-leoyang.li@nxp.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+Hi,
 
-[ Upstream commit 25a584955f020d6ec499c513923fb220f3112d2b ]
+On Thu, Jan 09, 2020 at 04:19:11PM -0600, Li Yang wrote:
+> Hi soc maintainers,
+> 
+> Please merge the following new changes for soc/fsl drivers.
+> 
+> Regards,
+> Leo
+> 
+> 
+> The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+> 
+>   Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/leo/linux.git tags/soc-fsl-next-v5.6
+> 
+> for you to fetch changes up to 6e62bd36e9ad85a22d92b1adce6a0336ea549733:
+> 
+>   soc: fsl: qe: remove set but not used variable 'mm_gc' (2020-01-08 16:02:48 -0600)
+> 
+> ----------------------------------------------------------------
+> NXP/FSL SoC driver updates for v5.6
+> 
+> QUICC Engine drivers
+> - Improve the QE drivers to be compatible with ARM/ARM64/PPC64
+> architectures
+> - Various cleanups to the QE drivers
 
-The "priv->phy_interface" variable is an enum and in this context GCC
-will treat it as unsigned so the error handling will never be
-triggered.
+This branch contains a cross-section of drivers, including those who are
+normally sent to other maintainers/subsystems. I don't see dependencies that
+make them a requirement/easier to merge through the SoC tree at this time --
+for example the ucc_uart driver updates are mostly independent cleanups.
 
-Fixes: 80105befdb4b ("net: systemport: add Broadcom SYSTEMPORT Ethernet MAC driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/broadcom/bcmsysport.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Am I missing some aspect here, or should those just be merged through
+drivers/tty as other driver changes there? At the very least, we expect drivers
+that aren't merged through the normal path to have acks from those maintainers.
 
-diff --git a/drivers/net/ethernet/broadcom/bcmsysport.c b/drivers/net/ethernet/broadcom/bcmsysport.c
-index 0bdbc72605e1..49aa3b5ea57c 100644
---- a/drivers/net/ethernet/broadcom/bcmsysport.c
-+++ b/drivers/net/ethernet/broadcom/bcmsysport.c
-@@ -2470,7 +2470,7 @@ static int bcm_sysport_probe(struct platform_device *pdev)
- 
- 	priv->phy_interface = of_get_phy_mode(dn);
- 	/* Default to GMII interface mode */
--	if (priv->phy_interface < 0)
-+	if ((int)priv->phy_interface < 0)
- 		priv->phy_interface = PHY_INTERFACE_MODE_GMII;
- 
- 	/* In the case of a fixed PHY, the DT node associated
--- 
-2.20.1
+Mind following up on that? Thanks!
 
+
+-Olof
