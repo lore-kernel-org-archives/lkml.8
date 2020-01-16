@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48CD9C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE47EC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BB27214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB655214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:02:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197720;
-	bh=o5gPEcy6S1beDbI7ydtgK1Bj4YDqYXTv+xEShICgOHs=;
+	s=default; t=1579197724;
+	bh=Yk51PWyC/332orkYl4cepqAhNFoWYHBOdBYLngvoHqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JP1/xLJ7t5BpScSZGUDj7Iq7ZhKGdnzg5vgoZPG4mVxxYwz5ekSzp7FuPHruEtbzc
-	 N3ELLVhlSzfAgW8Qndvtk2IzOSVyd+z5mi1ZiaMK5x+0dxxqxKHKd6sgrV5kVin5ZT
-	 UTj+AfV6sjyD8cxKaPNWJrEPDBOn6Hl/3X3ot0wc=
+	b=tjyj8YYIOnVW+nr74mkTF9BRsrkHzB4+KgyRIdt4yWH0+zwR4J/wdk7OVVC3E0Ckc
+	 ERHbBxN6Eq5y+DHnkyJUwR+vP29iavcK6AkM4lsHzY4i6/be4uSLa/ODXP0pmNPg1L
+	 IhPOZsDMkYwdRXov6NsaygtkQoRVBv1vVClI51Ms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405640AbgAPRlU (ORCPT
+        id S2394805AbgAPSCD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:41:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57530 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:02:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393267AbgAPRkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:40:23 -0500
+        id S2405637AbgAPRlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:41:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BC2E24730;
-        Thu, 16 Jan 2020 17:40:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39491246AE;
+        Thu, 16 Jan 2020 17:41:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196423;
-        bh=o5gPEcy6S1beDbI7ydtgK1Bj4YDqYXTv+xEShICgOHs=;
+        s=default; t=1579196480;
+        bh=Yk51PWyC/332orkYl4cepqAhNFoWYHBOdBYLngvoHqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YvUjOYf4fE+gyEfpCzUNA9r4tTsqRsIJeqxzm41wP103b6v8gwpgCNgmnE/s6hFXt
-         XjFsbDC1iNRjJ7e/+XKlPLkITnaBQZrylXU/vs7ek31zNItxQa/NLvAHBLmfDHq9rQ
-         QgwJSzDJC2GzEfijezd6+Sv/mhbErtEmRbqq/PY0=
+        b=Qd0AShrskAWn+jNWTQCtnyODhtyDjq7VWe7YaseEdnQOBh1dNeEkw9rAofEzLFAOq
+         sr6FufiGHaz2aDRqWf8LzVFMiGPq2Vbbbx7BnUpuREuKXcNogvJBUb8xab1KWvoXav
+         6REy0/mGeSvGQkZiC55gpV8jreqqSfiUnRtC1CYg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 192/251] x86, perf: Fix the dependency of the x86 insn decoder selftest
-Date:   Thu, 16 Jan 2020 12:35:41 -0500
-Message-Id: <20200116173641.22137-152-sashal@kernel.org>
+Cc:     Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 227/251] media: ov6650: Fix .get_fmt() V4L2_SUBDEV_FORMAT_TRY support
+Date:   Thu, 16 Jan 2020 12:36:16 -0500
+Message-Id: <20200116173641.22137-187-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -61,38 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 
-[ Upstream commit 7720804a2ae46c90265a32c81c45fb6f8d2f4e8b ]
+[ Upstream commit 39034bb0c26b76a2c3abc54aa28c185f18b40c2f ]
 
-Since x86 instruction decoder is not only for kprobes,
-it should be tested when the insn.c is compiled.
-(e.g. perf is enabled but kprobes is disabled)
+Commit da298c6d98d5 ("[media] v4l2: replace video op g_mbus_fmt by pad
+op get_fmt") converted a former ov6650_g_fmt() video operation callback
+to an ov6650_get_fmt() pad operation callback.  However, the converted
+function disregards a format->which flag that pad operations should
+obey and always returns active frame format settings.
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: cbe5c34c8c1f ("x86: Compile insn.c and inat.c only for KPROBES")
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+That can be fixed by always responding to V4L2_SUBDEV_FORMAT_TRY with
+-EINVAL, or providing the response from a pad config argument, likely
+updated by a former user call to V4L2_SUBDEV_FORMAT_TRY .set_fmt().
+Since implementation of the latter is trivial, go for it.
+
+Fixes: da298c6d98d5 ("[media] v4l2: replace video op g_mbus_fmt by pad op get_fmt")
+Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/Kconfig.debug | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/i2c/soc_camera/ov6650.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/Kconfig.debug b/arch/x86/Kconfig.debug
-index 4386440fe463..f09a192260f8 100644
---- a/arch/x86/Kconfig.debug
-+++ b/arch/x86/Kconfig.debug
-@@ -192,7 +192,7 @@ config HAVE_MMIOTRACE_SUPPORT
+diff --git a/drivers/media/i2c/soc_camera/ov6650.c b/drivers/media/i2c/soc_camera/ov6650.c
+index 3b118d45d433..3c959e48855c 100644
+--- a/drivers/media/i2c/soc_camera/ov6650.c
++++ b/drivers/media/i2c/soc_camera/ov6650.c
+@@ -526,10 +526,16 @@ static int ov6650_get_fmt(struct v4l2_subdev *sd,
+ 	*mf = ov6650_def_fmt;
  
- config X86_DECODER_SELFTEST
- 	bool "x86 instruction decoder selftest"
--	depends on DEBUG_KERNEL && KPROBES
-+	depends on DEBUG_KERNEL && INSTRUCTION_DECODER
- 	depends on !COMPILE_TEST
- 	---help---
- 	 Perform x86 instruction decoder selftests at build time.
+ 	/* update media bus format code and frame size */
+-	mf->width	= priv->rect.width >> priv->half_scale;
+-	mf->height	= priv->rect.height >> priv->half_scale;
+-	mf->code	= priv->code;
++	if (format->which == V4L2_SUBDEV_FORMAT_TRY) {
++		mf->width = cfg->try_fmt.width;
++		mf->height = cfg->try_fmt.height;
++		mf->code = cfg->try_fmt.code;
+ 
++	} else {
++		mf->width = priv->rect.width >> priv->half_scale;
++		mf->height = priv->rect.height >> priv->half_scale;
++		mf->code = priv->code;
++	}
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
