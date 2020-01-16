@@ -2,55 +2,51 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 369FBC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C22C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F03A621582
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5F0820663
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:06:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194396;
-	bh=rn4pfLKM3XRU+IxIe6/WS+j0s2MfQwOgjyTvquAUgQk=;
+	s=default; t=1579194401;
+	bh=L7fkY0DoLkorBMTSb+d8sevRoSALkZA895W1kCzGVqo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TcfRsIdcSuXIfOZyL/33Ovhv2uy817+4+uQvASdhLouvPDaCZcUCT/zOMD5JDQPmo
-	 2u+JNUVvyuk5aL2GWkgtcTV0OkXKAgLXGmOzYgtP3xYWQRsf/260FbuVacMqsmOI8S
-	 3m1597LFJmHrZKT0jWP1wp+0fjz3oqnWZHMbXMmc=
+	b=sC6p2s04h7pVU1kMnSOMI48zsbfIBBFJloKIq/OJMVC+ZFdUcAcQ7sU5CrjFstvvf
+	 SZd5L65TN+abLGyF2y4PlaT9aeMxnlv3NGHl0e9gCFTN7g1yldHW6h2jiH+Kk7NTss
+	 NH5N6TJBpTEBKzos3bGaJGETgyAowqjfS/GH8iLQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387818AbgAPRGe (ORCPT
+        id S2388958AbgAPRGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:06:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36212 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:06:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388888AbgAPRGQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:06:16 -0500
+        id S2388926AbgAPRG1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:06:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D739124653;
-        Thu, 16 Jan 2020 17:06:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C6A8214AF;
+        Thu, 16 Jan 2020 17:06:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194375;
-        bh=rn4pfLKM3XRU+IxIe6/WS+j0s2MfQwOgjyTvquAUgQk=;
+        s=default; t=1579194386;
+        bh=L7fkY0DoLkorBMTSb+d8sevRoSALkZA895W1kCzGVqo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X01f7pf7F0gXTH5zBZGMfMo0ulW8oAH7vzDtxIShecrJQlVUVIVettKkvOqrJ2zig
-         SlgZiF9OjhvWxh9rzkQa+4gakoL9cbsi0aWehsh/hbDPpYHBqDgww+Nvn/BteUpp0F
-         bjcOPS0JNx/a/11z7RtnDVgPEfMGlcyv3WGD03wg=
+        b=LHrgPg2q+o6mJMG6d/1X+lHMCad/4wfMQCEcFC6Ln2J7rn7DSpDx21bnjukhdNeAa
+         ChHcoaVC7urO4bmq1xBFrAh5z/YDe0hB8OGHLmi9nHa1rndd4M/Z/lvQKp6z6kg8Pb
+         ceYtpCL5vCM4bfaaQ98edPNntIqiNYJZJyzx+6zc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Jukka Rissanen <jukka.rissanen@linux.intel.com>,
-        Alexander Aring <aring@mojatatu.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org, linux-wpan@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 307/671] 6lowpan: Off by one handling ->nexthdr
-Date:   Thu, 16 Jan 2020 11:59:05 -0500
-Message-Id: <20200116170509.12787-44-sashal@kernel.org>
+Cc:     Hongbo Yao <yaohongbo@huawei.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 315/671] irqchip/gic-v3-its: fix some definitions of inner cacheability attributes
+Date:   Thu, 16 Jan 2020 11:59:13 -0500
+Message-Id: <20200116170509.12787-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -63,39 +59,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Hongbo Yao <yaohongbo@huawei.com>
 
-[ Upstream commit f57c4bbf34439531adccd7d3a4ecc14f409c1399 ]
+[ Upstream commit 0f29456d08042134aff6e562d07a6365c841c4ad ]
 
-NEXTHDR_MAX is 255.  What happens here is that we take a u8 value
-"hdr->nexthdr" from the network and then look it up in
-lowpan_nexthdr_nhcs[].  The problem is that if hdr->nexthdr is 0xff then
-we read one element beyond the end of the array so the array needs to
-be one element larger.
+Some definitions of Inner Cacheability attibutes need to be corrected.
 
-Fixes: 92aa7c65d295 ("6lowpan: add generic nhc layer interface")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Jukka Rissanen <jukka.rissanen@linux.intel.com>
-Acked-by: Alexander Aring <aring@mojatatu.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Fixes: 8c828a535e29f ("irqchip/gicv3-its: Restore all cacheability attributes")
+Signed-off-by: Hongbo Yao <yaohongbo@huawei.com>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/6lowpan/nhc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/irqchip/arm-gic-v3.h | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/net/6lowpan/nhc.c b/net/6lowpan/nhc.c
-index 4fa2fdda174d..9e56fb98f33c 100644
---- a/net/6lowpan/nhc.c
-+++ b/net/6lowpan/nhc.c
-@@ -18,7 +18,7 @@
- #include "nhc.h"
- 
- static struct rb_root rb_root = RB_ROOT;
--static struct lowpan_nhc *lowpan_nexthdr_nhcs[NEXTHDR_MAX];
-+static struct lowpan_nhc *lowpan_nexthdr_nhcs[NEXTHDR_MAX + 1];
- static DEFINE_SPINLOCK(lowpan_nhc_lock);
- 
- static int lowpan_nhc_insert(struct lowpan_nhc *nhc)
+diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
+index 3188c0bef3e7..1d21e98d6854 100644
+--- a/include/linux/irqchip/arm-gic-v3.h
++++ b/include/linux/irqchip/arm-gic-v3.h
+@@ -165,7 +165,7 @@
+ #define GICR_PROPBASER_nCnB	GIC_BASER_CACHEABILITY(GICR_PROPBASER, INNER, nCnB)
+ #define GICR_PROPBASER_nC 	GIC_BASER_CACHEABILITY(GICR_PROPBASER, INNER, nC)
+ #define GICR_PROPBASER_RaWt	GIC_BASER_CACHEABILITY(GICR_PROPBASER, INNER, RaWt)
+-#define GICR_PROPBASER_RaWb	GIC_BASER_CACHEABILITY(GICR_PROPBASER, INNER, RaWt)
++#define GICR_PROPBASER_RaWb	GIC_BASER_CACHEABILITY(GICR_PROPBASER, INNER, RaWb)
+ #define GICR_PROPBASER_WaWt	GIC_BASER_CACHEABILITY(GICR_PROPBASER, INNER, WaWt)
+ #define GICR_PROPBASER_WaWb	GIC_BASER_CACHEABILITY(GICR_PROPBASER, INNER, WaWb)
+ #define GICR_PROPBASER_RaWaWt	GIC_BASER_CACHEABILITY(GICR_PROPBASER, INNER, RaWaWt)
+@@ -192,7 +192,7 @@
+ #define GICR_PENDBASER_nCnB	GIC_BASER_CACHEABILITY(GICR_PENDBASER, INNER, nCnB)
+ #define GICR_PENDBASER_nC 	GIC_BASER_CACHEABILITY(GICR_PENDBASER, INNER, nC)
+ #define GICR_PENDBASER_RaWt	GIC_BASER_CACHEABILITY(GICR_PENDBASER, INNER, RaWt)
+-#define GICR_PENDBASER_RaWb	GIC_BASER_CACHEABILITY(GICR_PENDBASER, INNER, RaWt)
++#define GICR_PENDBASER_RaWb	GIC_BASER_CACHEABILITY(GICR_PENDBASER, INNER, RaWb)
+ #define GICR_PENDBASER_WaWt	GIC_BASER_CACHEABILITY(GICR_PENDBASER, INNER, WaWt)
+ #define GICR_PENDBASER_WaWb	GIC_BASER_CACHEABILITY(GICR_PENDBASER, INNER, WaWb)
+ #define GICR_PENDBASER_RaWaWt	GIC_BASER_CACHEABILITY(GICR_PENDBASER, INNER, RaWaWt)
+@@ -251,7 +251,7 @@
+ #define GICR_VPROPBASER_nCnB	GIC_BASER_CACHEABILITY(GICR_VPROPBASER, INNER, nCnB)
+ #define GICR_VPROPBASER_nC 	GIC_BASER_CACHEABILITY(GICR_VPROPBASER, INNER, nC)
+ #define GICR_VPROPBASER_RaWt	GIC_BASER_CACHEABILITY(GICR_VPROPBASER, INNER, RaWt)
+-#define GICR_VPROPBASER_RaWb	GIC_BASER_CACHEABILITY(GICR_VPROPBASER, INNER, RaWt)
++#define GICR_VPROPBASER_RaWb	GIC_BASER_CACHEABILITY(GICR_VPROPBASER, INNER, RaWb)
+ #define GICR_VPROPBASER_WaWt	GIC_BASER_CACHEABILITY(GICR_VPROPBASER, INNER, WaWt)
+ #define GICR_VPROPBASER_WaWb	GIC_BASER_CACHEABILITY(GICR_VPROPBASER, INNER, WaWb)
+ #define GICR_VPROPBASER_RaWaWt	GIC_BASER_CACHEABILITY(GICR_VPROPBASER, INNER, RaWaWt)
+@@ -277,7 +277,7 @@
+ #define GICR_VPENDBASER_nCnB	GIC_BASER_CACHEABILITY(GICR_VPENDBASER, INNER, nCnB)
+ #define GICR_VPENDBASER_nC 	GIC_BASER_CACHEABILITY(GICR_VPENDBASER, INNER, nC)
+ #define GICR_VPENDBASER_RaWt	GIC_BASER_CACHEABILITY(GICR_VPENDBASER, INNER, RaWt)
+-#define GICR_VPENDBASER_RaWb	GIC_BASER_CACHEABILITY(GICR_VPENDBASER, INNER, RaWt)
++#define GICR_VPENDBASER_RaWb	GIC_BASER_CACHEABILITY(GICR_VPENDBASER, INNER, RaWb)
+ #define GICR_VPENDBASER_WaWt	GIC_BASER_CACHEABILITY(GICR_VPENDBASER, INNER, WaWt)
+ #define GICR_VPENDBASER_WaWb	GIC_BASER_CACHEABILITY(GICR_VPENDBASER, INNER, WaWb)
+ #define GICR_VPENDBASER_RaWaWt	GIC_BASER_CACHEABILITY(GICR_VPENDBASER, INNER, RaWaWt)
+@@ -351,7 +351,7 @@
+ #define GITS_CBASER_nCnB	GIC_BASER_CACHEABILITY(GITS_CBASER, INNER, nCnB)
+ #define GITS_CBASER_nC		GIC_BASER_CACHEABILITY(GITS_CBASER, INNER, nC)
+ #define GITS_CBASER_RaWt	GIC_BASER_CACHEABILITY(GITS_CBASER, INNER, RaWt)
+-#define GITS_CBASER_RaWb	GIC_BASER_CACHEABILITY(GITS_CBASER, INNER, RaWt)
++#define GITS_CBASER_RaWb	GIC_BASER_CACHEABILITY(GITS_CBASER, INNER, RaWb)
+ #define GITS_CBASER_WaWt	GIC_BASER_CACHEABILITY(GITS_CBASER, INNER, WaWt)
+ #define GITS_CBASER_WaWb	GIC_BASER_CACHEABILITY(GITS_CBASER, INNER, WaWb)
+ #define GITS_CBASER_RaWaWt	GIC_BASER_CACHEABILITY(GITS_CBASER, INNER, RaWaWt)
+@@ -375,7 +375,7 @@
+ #define GITS_BASER_nCnB		GIC_BASER_CACHEABILITY(GITS_BASER, INNER, nCnB)
+ #define GITS_BASER_nC		GIC_BASER_CACHEABILITY(GITS_BASER, INNER, nC)
+ #define GITS_BASER_RaWt		GIC_BASER_CACHEABILITY(GITS_BASER, INNER, RaWt)
+-#define GITS_BASER_RaWb		GIC_BASER_CACHEABILITY(GITS_BASER, INNER, RaWt)
++#define GITS_BASER_RaWb		GIC_BASER_CACHEABILITY(GITS_BASER, INNER, RaWb)
+ #define GITS_BASER_WaWt		GIC_BASER_CACHEABILITY(GITS_BASER, INNER, WaWt)
+ #define GITS_BASER_WaWb		GIC_BASER_CACHEABILITY(GITS_BASER, INNER, WaWb)
+ #define GITS_BASER_RaWaWt	GIC_BASER_CACHEABILITY(GITS_BASER, INNER, RaWaWt)
 -- 
 2.20.1
 
