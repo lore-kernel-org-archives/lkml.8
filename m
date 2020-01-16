@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE387C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4688EC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6BD3206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EEDA2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:45:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200338;
-	bh=WmkmH9k1I+h9YStmDsNCig/jfY5LcZcLHbuDnJJLezs=;
+	s=default; t=1579200346;
+	bh=UjDRz+2jQ+4DGwwvu1ypOz4jh6xd6EedOG9bfUkItyg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bNyzUkgjh0FF1h3CT9Hrvu2g74WxsD7eUQjscpXzwKvQ+wueImEdgbFtS/JIywE6O
-	 Xf2Szogsi8kP9lUKxyXelj5MLXc/6ZWuwv23NDuDr+onFxygITSnYZqtz+jbU7ORtn
-	 0Uevt6dyIOoMts5E5KnPt0jz+1YdVvc3nC3ojgyc=
+	b=keqVa8X3nZKx1QMR8xtjr3M4d5UdLd6uuTQNRI/MNPSIDrk683/ehYRwUrvHjJclO
+	 r0KIoHlU/SCzw2TICLjlz+gF31/MWttTYXOMXxVnfK5AXHbhm/sfU6l5iTf+EcPdkh
+	 3xfH/fT79ZYVjZ8Rkki15fnVFVhp4gVaNeoLikv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391091AbgAPSpb (ORCPT
+        id S2389511AbgAPSpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:45:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49238 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:45:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390046AbgAPRKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:10:39 -0500
+        id S1729290AbgAPRKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:10:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EE1A2468A;
-        Thu, 16 Jan 2020 17:10:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45CD42468B;
+        Thu, 16 Jan 2020 17:10:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194638;
-        bh=WmkmH9k1I+h9YStmDsNCig/jfY5LcZcLHbuDnJJLezs=;
+        s=default; t=1579194637;
+        bh=UjDRz+2jQ+4DGwwvu1ypOz4jh6xd6EedOG9bfUkItyg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oene3RMOt3ES08W6Ci8eYQYRVHE8kfHe1KzBqYbKq2S3H2Jc0lY0+/SIzJm2QN2rZ
-         /n/2rNcgSDLGVHx/7/+LYxnqTI9J/yLIlJsDF+Ha2YCnXdRraWlsABCRcYcA4Q4pJA
-         e5ed7H+wi1qptOO6oJ5hZsY7sh8ZkQFv/tpZpnXE=
+        b=yECtWdrdobRuWl9m/oCXb3Y8K7z7SQK5FKGcOHjXHOBy35uQ2e8vS6DICpiFp9MZH
+         FSSiGD64YnbtsxIirrHSddkJI5yREx8g7Y/rBROmt76qh6JHPsGqbs6EiMwPItJokd
+         WoCCvtEihKsdmI4ixgEJxTH3lXfKuSRm3EPYqZRs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 496/671] drm: rcar-du: lvds: Fix bridge_to_rcar_lvds
-Date:   Thu, 16 Jan 2020 12:02:14 -0500
-Message-Id: <20200116170509.12787-233-sashal@kernel.org>
+Cc:     Quentin Monnet <quentin.monnet@netronome.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 495/671] tools: bpftool: fix format strings and arguments for jsonw_printf()
+Date:   Thu, 16 Jan 2020 12:02:13 -0500
+Message-Id: <20200116170509.12787-232-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,46 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+From: Quentin Monnet <quentin.monnet@netronome.com>
 
-[ Upstream commit 0b936e6122738f4cf474d1f3ff636cba0edc8b94 ]
+[ Upstream commit 22c349e8db89df86804d3ba23cef037ccd44a8bf ]
 
-Using name "bridge" for macro bridge_to_rcar_lvds argument doesn't
-work when the pointer name used by the caller is not "bridge".
-Rename the argument to "b" to allow for any pointer name.
+There are some mismatches between format strings and arguments passed to
+jsonw_printf() in the BTF dumper for bpftool, which seems harmless but
+may result in warnings if the "__printf()" attribute is used correctly
+for jsonw_printf(). Let's fix relevant format strings and type cast.
 
-While at it, fix the connector_to_rcar_lvds macro similarly.
-
-Fixes: c6a27fa41fab ("drm: rcar-du: Convert LVDS encoder code to bridge driver")
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-[Fix connector_to_rcar_lvds]
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Fixes: b12d6ec09730 ("bpf: btf: add btf print functionality")
+Signed-off-by: Quentin Monnet <quentin.monnet@netronome.com>
+Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/rcar-du/rcar_lvds.c | 8 ++++----
+ tools/bpf/bpftool/btf_dumper.c | 8 ++++----
  1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-index 4c39de3f4f0f..b6dc91cdff68 100644
---- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-@@ -59,11 +59,11 @@ struct rcar_lvds {
- 	enum rcar_lvds_mode mode;
- };
- 
--#define bridge_to_rcar_lvds(bridge) \
--	container_of(bridge, struct rcar_lvds, bridge)
-+#define bridge_to_rcar_lvds(b) \
-+	container_of(b, struct rcar_lvds, bridge)
- 
--#define connector_to_rcar_lvds(connector) \
--	container_of(connector, struct rcar_lvds, connector)
-+#define connector_to_rcar_lvds(c) \
-+	container_of(c, struct rcar_lvds, connector)
- 
- static void rcar_lvds_write(struct rcar_lvds *lvds, u32 reg, u32 data)
+diff --git a/tools/bpf/bpftool/btf_dumper.c b/tools/bpf/bpftool/btf_dumper.c
+index e4e6e2b3fd84..ff0cc3c17141 100644
+--- a/tools/bpf/bpftool/btf_dumper.c
++++ b/tools/bpf/bpftool/btf_dumper.c
+@@ -26,9 +26,9 @@ static void btf_dumper_ptr(const void *data, json_writer_t *jw,
+ 			   bool is_plain_text)
  {
+ 	if (is_plain_text)
+-		jsonw_printf(jw, "%p", *(unsigned long *)data);
++		jsonw_printf(jw, "%p", data);
+ 	else
+-		jsonw_printf(jw, "%u", *(unsigned long *)data);
++		jsonw_printf(jw, "%lu", *(unsigned long *)data);
+ }
+ 
+ static int btf_dumper_modifier(const struct btf_dumper *d, __u32 type_id,
+@@ -129,7 +129,7 @@ static int btf_dumper_int(const struct btf_type *t, __u8 bit_offset,
+ 	switch (BTF_INT_ENCODING(*int_type)) {
+ 	case 0:
+ 		if (BTF_INT_BITS(*int_type) == 64)
+-			jsonw_printf(jw, "%lu", *(__u64 *)data);
++			jsonw_printf(jw, "%llu", *(__u64 *)data);
+ 		else if (BTF_INT_BITS(*int_type) == 32)
+ 			jsonw_printf(jw, "%u", *(__u32 *)data);
+ 		else if (BTF_INT_BITS(*int_type) == 16)
+@@ -142,7 +142,7 @@ static int btf_dumper_int(const struct btf_type *t, __u8 bit_offset,
+ 		break;
+ 	case BTF_INT_SIGNED:
+ 		if (BTF_INT_BITS(*int_type) == 64)
+-			jsonw_printf(jw, "%ld", *(long long *)data);
++			jsonw_printf(jw, "%lld", *(long long *)data);
+ 		else if (BTF_INT_BITS(*int_type) == 32)
+ 			jsonw_printf(jw, "%d", *(int *)data);
+ 		else if (BTF_INT_BITS(*int_type) == 16)
 -- 
 2.20.1
 
