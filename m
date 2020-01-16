@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83FC4C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A00DCC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A8D02192A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:07:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7447A21582
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:07:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194472;
-	bh=ODcoQ+mY2oLja9c28nzGREyEoh/V0uG1n+lF7bN44zc=;
+	s=default; t=1579194477;
+	bh=Yw7Sxwca5v+5wc2avdjj/iOaHU0AHaZFoEdAY1dbTaA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r3tDufCPDMjDoMxPOY9qOfv0N1ruBQAO/gue2+EjxtHFKLoLmDi7OjJW5sM0HF1if
-	 d4T6VWiI4VIT2wIvXzb3ZJITAbWzr4KiIitihvtj2cw5rm+PVSpk+is36+yl/B9mzu
-	 R56Aj5XDyd8q71BpAk7Fg2MoGNj2aEMaixL6CREU=
+	b=JcnIy6eO3R6uy67RuJ+RspjFMpoBtJWa867Thqb3WU0gTTQjJOy4vFQ5MYMlX3NYK
+	 lRcWPWZ51C4OPQuGnVPY1TEBvgAgrs+f+/aMFMjHqzrK2fnwms3oyHCUAeUyDSZTAO
+	 OKKrRT41Gx+c4JrPID7vYhDdoseFzdZRwwR57NvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389227AbgAPRHv (ORCPT
+        id S2389247AbgAPRH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:07:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40058 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:07:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729996AbgAPRHn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:07:43 -0500
+        id S2387474AbgAPRHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:07:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46AFC2081E;
-        Thu, 16 Jan 2020 17:07:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51619217F4;
+        Thu, 16 Jan 2020 17:07:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194462;
-        bh=ODcoQ+mY2oLja9c28nzGREyEoh/V0uG1n+lF7bN44zc=;
+        s=default; t=1579194466;
+        bh=Yw7Sxwca5v+5wc2avdjj/iOaHU0AHaZFoEdAY1dbTaA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rval7wWWdkG1B/h2o8/fKezagDJXFH1GnT9K3kOeqm+VPxlN8ruhQU6oWYuJmsdd/
-         n3CXidFihLamu1BUF10kPsSMhpFtcL/ATu3EVuYAXTvzr6G3QNY9czatRJC/4O8tLv
-         y8xk1UK7oNTaDums2YL6JArSk2irSGi/7LmaqcsQ=
+        b=J8p+xcfMr6RUXwVUWCf7TRoWlxWlFkcB5gFffskG8LlD1BtLEh6A3uhCMFXh1nmfJ
+         Jlx6eyCk0jGwG1NDTJlCVfCbg3HY49m8WEYgrByh0dgfpTnyN8kRhQYWjHhPSq6fxA
+         mQ3Zmuk/REDx5VNr1mVm+yO/G898R/Ur7+z07iN8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sagiv Ozeri <sagiv.ozeri@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 369/671] RDMA/qedr: Fix incorrect device rate.
-Date:   Thu, 16 Jan 2020 12:00:07 -0500
-Message-Id: <20200116170509.12787-106-sashal@kernel.org>
+Cc:     "Hook, Gary" <Gary.Hook@amd.com>, Gary R Hook <gary.hook@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 372/671] crypto: ccp - Fix 3DES complaint from ccp-crypto module
+Date:   Thu, 16 Jan 2020 12:00:10 -0500
+Message-Id: <20200116170509.12787-109-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,93 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagiv Ozeri <sagiv.ozeri@marvell.com>
+From: "Hook, Gary" <Gary.Hook@amd.com>
 
-[ Upstream commit 69054666df0a9b4e8331319f98b6b9a88bc3fcc4 ]
+[ Upstream commit 89646fdda4cae203185444ac7988835f36a21ee1 ]
 
-Use the correct enum value introduced in commit 12113a35ada6 ("IB/core:
-Add HDR speed enum") Prior to this change a 50Gbps port would show 40Gbps.
+Crypto self-tests reveal an error:
 
-This patch also cleaned up the redundant redefiniton of ib speeds for
-qedr.
+alg: skcipher: cbc-des3-ccp encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
 
-Fixes: 12113a35ada6 ("IB/core: Add HDR speed enum")
-Signed-off-by: Sagiv Ozeri <sagiv.ozeri@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+The offset value should not be recomputed when retrieving the context.
+Also, a code path exists which makes decisions based on older (version 3)
+hardware; a v3 device deosn't support 3DES so remove this check.
+
+Fixes: 990672d48515 ('crypto: ccp - Enable 3DES function on v5 CCPs')
+
+Signed-off-by: Gary R Hook <gary.hook@amd.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/qedr/verbs.c | 25 +++++++++----------------
- 1 file changed, 9 insertions(+), 16 deletions(-)
+ drivers/crypto/ccp/ccp-ops.c | 15 ++++-----------
+ 1 file changed, 4 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/infiniband/hw/qedr/verbs.c b/drivers/infiniband/hw/qedr/verbs.c
-index 8fd8b97348bf..38fe2f741375 100644
---- a/drivers/infiniband/hw/qedr/verbs.c
-+++ b/drivers/infiniband/hw/qedr/verbs.c
-@@ -158,54 +158,47 @@ int qedr_query_device(struct ib_device *ibdev,
- 	return 0;
- }
+diff --git a/drivers/crypto/ccp/ccp-ops.c b/drivers/crypto/ccp/ccp-ops.c
+index 1e2e42106dee..4b48b8523a40 100644
+--- a/drivers/crypto/ccp/ccp-ops.c
++++ b/drivers/crypto/ccp/ccp-ops.c
+@@ -1293,6 +1293,9 @@ static int ccp_run_des3_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
+ 	int ret;
  
--#define QEDR_SPEED_SDR		(1)
--#define QEDR_SPEED_DDR		(2)
--#define QEDR_SPEED_QDR		(4)
--#define QEDR_SPEED_FDR10	(8)
--#define QEDR_SPEED_FDR		(16)
--#define QEDR_SPEED_EDR		(32)
+ 	/* Error checks */
++	if (cmd_q->ccp->vdata->version < CCP_VERSION(5, 0))
++		return -EINVAL;
++
+ 	if (!cmd_q->ccp->vdata->perform->des3)
+ 		return -EINVAL;
+ 
+@@ -1375,8 +1378,6 @@ static int ccp_run_des3_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
+ 	 * passthru option to convert from big endian to little endian.
+ 	 */
+ 	if (des3->mode != CCP_DES3_MODE_ECB) {
+-		u32 load_mode;
 -
- static inline void get_link_speed_and_width(int speed, u8 *ib_speed,
- 					    u8 *ib_width)
- {
- 	switch (speed) {
- 	case 1000:
--		*ib_speed = QEDR_SPEED_SDR;
-+		*ib_speed = IB_SPEED_SDR;
- 		*ib_width = IB_WIDTH_1X;
- 		break;
- 	case 10000:
--		*ib_speed = QEDR_SPEED_QDR;
-+		*ib_speed = IB_SPEED_QDR;
- 		*ib_width = IB_WIDTH_1X;
- 		break;
+ 		op.sb_ctx = cmd_q->sb_ctx;
  
- 	case 20000:
--		*ib_speed = QEDR_SPEED_DDR;
-+		*ib_speed = IB_SPEED_DDR;
- 		*ib_width = IB_WIDTH_4X;
- 		break;
+ 		ret = ccp_init_dm_workarea(&ctx, cmd_q,
+@@ -1392,12 +1393,8 @@ static int ccp_run_des3_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
+ 		if (ret)
+ 			goto e_ctx;
  
- 	case 25000:
--		*ib_speed = QEDR_SPEED_EDR;
-+		*ib_speed = IB_SPEED_EDR;
- 		*ib_width = IB_WIDTH_1X;
- 		break;
+-		if (cmd_q->ccp->vdata->version == CCP_VERSION(3, 0))
+-			load_mode = CCP_PASSTHRU_BYTESWAP_NOOP;
+-		else
+-			load_mode = CCP_PASSTHRU_BYTESWAP_256BIT;
+ 		ret = ccp_copy_to_sb(cmd_q, &ctx, op.jobid, op.sb_ctx,
+-				     load_mode);
++				     CCP_PASSTHRU_BYTESWAP_256BIT);
+ 		if (ret) {
+ 			cmd->engine_error = cmd_q->cmd_error;
+ 			goto e_ctx;
+@@ -1459,10 +1456,6 @@ static int ccp_run_des3_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
+ 		}
  
- 	case 40000:
--		*ib_speed = QEDR_SPEED_QDR;
-+		*ib_speed = IB_SPEED_QDR;
- 		*ib_width = IB_WIDTH_4X;
- 		break;
- 
- 	case 50000:
--		*ib_speed = QEDR_SPEED_QDR;
--		*ib_width = IB_WIDTH_4X;
-+		*ib_speed = IB_SPEED_HDR;
-+		*ib_width = IB_WIDTH_1X;
- 		break;
- 
- 	case 100000:
--		*ib_speed = QEDR_SPEED_EDR;
-+		*ib_speed = IB_SPEED_EDR;
- 		*ib_width = IB_WIDTH_4X;
- 		break;
- 
- 	default:
- 		/* Unsupported */
--		*ib_speed = QEDR_SPEED_SDR;
-+		*ib_speed = IB_SPEED_SDR;
- 		*ib_width = IB_WIDTH_1X;
+ 		/* ...but we only need the last DES3_EDE_BLOCK_SIZE bytes */
+-		if (cmd_q->ccp->vdata->version == CCP_VERSION(3, 0))
+-			dm_offset = CCP_SB_BYTES - des3->iv_len;
+-		else
+-			dm_offset = 0;
+ 		ccp_get_dm_area(&ctx, dm_offset, des3->iv, 0,
+ 				DES3_EDE_BLOCK_SIZE);
  	}
- }
 -- 
 2.20.1
 
