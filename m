@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9900C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B277C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE9AE2077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5412424653
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:02:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194161;
-	bh=6azb/Fy2UuEvrdC3qRPeiBm9IqHqfM9HwCsIylrmiDY=;
+	s=default; t=1579194168;
+	bh=tH7fwmpQiZPw0MyDgLkGZKtY/tukBcVLLZDmKus01K4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qU5hDcP5Dl0CLXcs01i4RSktngdUpTMiMhX/nelA4n9bDqKjsYsDpNvt6LxUjbQPB
-	 8GKPkafp+FcuaJBi/E48VQE8I82r/nZfzbPJjxrW8ZzHAZxCDgIgKYxddKbilSf10t
-	 y8xy0JM76bNvZFzNsonC1OEi5voutIwvzVmdDzuk=
+	b=KE+yifptjuvxhsePPtVaUKjgBzFVRVkssVcXQjj/1I5gJS30YEzfMu3KfrM3zllQu
+	 JPqtSLWj54cyrT/8rsCmKBvAxl7OpZTeFn6kD0ZXnbEUDPT72tEc9UXhe91yIY4egY
+	 uhx8eyfMKk1O667zMV2qY2+usdB40uEkghf9mLhs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388439AbgAPRCk (ORCPT
+        id S2388479AbgAPRCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:02:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55296 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:02:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730518AbgAPRCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:02:31 -0500
+        id S2388435AbgAPRCj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:02:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4392321582;
-        Thu, 16 Jan 2020 17:02:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 909612467E;
+        Thu, 16 Jan 2020 17:02:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194150;
-        bh=6azb/Fy2UuEvrdC3qRPeiBm9IqHqfM9HwCsIylrmiDY=;
+        s=default; t=1579194159;
+        bh=tH7fwmpQiZPw0MyDgLkGZKtY/tukBcVLLZDmKus01K4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ubjj413BVog6aJwzSwQpp+1ngXkGGb5ty0jjIlVdLblD+e/LxXTP3mmVAaCPlNxb/
-         vBr48Scl3pGbbHu/3k3gUDb6vWFWvSokozmN0tUGEOrUAARPh9iiTGtjAXiF9Qi2N6
-         n1sGaW1dEB2bSxpFkW7mYiBMWA/VwWOgyDetufmI=
+        b=AXBk1q/z2vlL4yCOsGemOEGoKAAo2JNay6AmXM6AI7gbIC+SFmUTidpUoKGLSuKT6
+         /DvdBYeLknZWIQ/QFpD0yaWlWT+svREbbg+0ttRF73OMTstURNkG8389ZOhZbR5TG9
+         1W08gLwGBo7kMbTRYZboJ8glkOlzXpAPSdg4lqU8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Akihiro Tsukada <tskd08@gmail.com>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 234/671] media: dvb/earth-pt1: fix wrong initialization for demod blocks
-Date:   Thu, 16 Jan 2020 11:52:23 -0500
-Message-Id: <20200116165940.10720-117-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Alexandre Bounine <alexandre.bounine@idt.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 241/671] drivers/rapidio/rio_cm.c: fix potential oops in riocm_ch_listen()
+Date:   Thu, 16 Jan 2020 11:52:30 -0500
+Message-Id: <20200116165940.10720-124-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -59,123 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Akihiro Tsukada <tskd08@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 15d90a6ae98e6d2c68497b44a491cb9efbb98ab1 ]
+[ Upstream commit 5ac188b12e7cbdd92dee60877d1fac913fc1d074 ]
 
-earth-pt1 driver was decomposed/restructured by the commit b732539efdba
-("media: dvb: earth-pt1: decompose pt1 driver into sub drivers"),
-but it introduced a problem regarding concurrent streaming:
-Opening a new terrestial stream stops the reception of an existing,
-already-opened satellite stream.
+If riocm_get_channel() fails, then we should just return -EINVAL.
+Calling riocm_put_channel() will trigger a NULL dereference and
+generally we should call put() if the get() didn't succeed.
 
-The demod IC in earth-pt1 boards contains 2 pairs of terr. and sat. blocks,
-supporting 4 concurrent demodulations, and the above problem was because
-the config of a terr. block contained whole reset/init of the pair blocks,
-thus each open() of a terrestrial frontend wrongly cleared the config of
-its peer satellite block of the demod.
-This whole/pair reset should be executed earlier and not on each open().
-
-Fixes: b732539efdba ("media: dvb: earth-pt1: decompose pt1 driver into sub drivers")
-
-Signed-off-by: Akihiro Tsukada <tskd08@gmail.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Link: http://lkml.kernel.org/r/20190110130230.GB27017@kadam
+Fixes: b6e8d4aa1110 ("rapidio: add RapidIO channelized messaging driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Matt Porter <mporter@kernel.crashing.org>
+Cc: Alexandre Bounine <alexandre.bounine@idt.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/pt1/pt1.c | 54 ++++++++++++++++++++++++++++++++-----
- 1 file changed, 48 insertions(+), 6 deletions(-)
+ drivers/rapidio/rio_cm.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/pci/pt1/pt1.c b/drivers/media/pci/pt1/pt1.c
-index 7f878fc41b7e..93fecffb36ee 100644
---- a/drivers/media/pci/pt1/pt1.c
-+++ b/drivers/media/pci/pt1/pt1.c
-@@ -200,16 +200,10 @@ static const u8 va1j5jf8007t_25mhz_configs[][2] = {
- static int config_demod(struct i2c_client *cl, enum pt1_fe_clk clk)
- {
- 	int ret;
--	u8 buf[2] = {0x01, 0x80};
- 	bool is_sat;
- 	const u8 (*cfg_data)[2];
- 	int i, len;
+diff --git a/drivers/rapidio/rio_cm.c b/drivers/rapidio/rio_cm.c
+index ef989a15aefc..b29fc258eeba 100644
+--- a/drivers/rapidio/rio_cm.c
++++ b/drivers/rapidio/rio_cm.c
+@@ -1215,7 +1215,9 @@ static int riocm_ch_listen(u16 ch_id)
+ 	riocm_debug(CHOP, "(ch_%d)", ch_id);
  
--	ret = i2c_master_send(cl, buf, 2);
--	if (ret < 0)
--		return ret;
--	usleep_range(30000, 50000);
--
- 	is_sat = !strncmp(cl->name, TC90522_I2C_DEV_SAT,
- 			  strlen(TC90522_I2C_DEV_SAT));
- 	if (is_sat) {
-@@ -260,6 +254,46 @@ static int config_demod(struct i2c_client *cl, enum pt1_fe_clk clk)
- 	return 0;
- }
- 
-+/*
-+ * Init registers for (each pair of) terrestrial/satellite block in demod.
-+ * Note that resetting terr. block also resets its peer sat. block as well.
-+ * This function must be called before configuring any demod block
-+ * (before pt1_wakeup(), fe->ops.init()).
-+ */
-+static int pt1_demod_block_init(struct pt1 *pt1)
-+{
-+	struct i2c_client *cl;
-+	u8 buf[2] = {0x01, 0x80};
-+	int ret;
-+	int i;
-+
-+	/* reset all terr. & sat. pairs first */
-+	for (i = 0; i < PT1_NR_ADAPS; i++) {
-+		cl = pt1->adaps[i]->demod_i2c_client;
-+		if (strncmp(cl->name, TC90522_I2C_DEV_TER,
-+			    strlen(TC90522_I2C_DEV_TER)))
-+			continue;
-+
-+		ret = i2c_master_send(cl, buf, 2);
-+		if (ret < 0)
-+			return ret;
-+		usleep_range(30000, 50000);
-+	}
-+
-+	for (i = 0; i < PT1_NR_ADAPS; i++) {
-+		cl = pt1->adaps[i]->demod_i2c_client;
-+		if (strncmp(cl->name, TC90522_I2C_DEV_SAT,
-+			    strlen(TC90522_I2C_DEV_SAT)))
-+			continue;
-+
-+		ret = i2c_master_send(cl, buf, 2);
-+		if (ret < 0)
-+			return ret;
-+		usleep_range(30000, 50000);
-+	}
-+	return 0;
-+}
-+
- static void pt1_write_reg(struct pt1 *pt1, int reg, u32 data)
- {
- 	writel(data, pt1->regs + reg * 4);
-@@ -987,6 +1021,10 @@ static int pt1_init_frontends(struct pt1 *pt1)
- 			goto tuner_release;
- 	}
- 
-+	ret = pt1_demod_block_init(pt1);
-+	if (ret < 0)
-+		goto fe_unregister;
-+
- 	return 0;
- 
- tuner_release:
-@@ -1245,6 +1283,10 @@ static int pt1_resume(struct device *dev)
- 	pt1_update_power(pt1);
- 	usleep_range(1000, 2000);
- 
-+	ret = pt1_demod_block_init(pt1);
-+	if (ret < 0)
-+		goto resume_err;
-+
- 	for (i = 0; i < PT1_NR_ADAPS; i++)
- 		dvb_frontend_reinitialise(pt1->adaps[i]->fe);
- 
+ 	ch = riocm_get_channel(ch_id);
+-	if (!ch || !riocm_cmp_exch(ch, RIO_CM_CHAN_BOUND, RIO_CM_LISTEN))
++	if (!ch)
++		return -EINVAL;
++	if (!riocm_cmp_exch(ch, RIO_CM_CHAN_BOUND, RIO_CM_LISTEN))
+ 		ret = -EINVAL;
+ 	riocm_put_channel(ch);
+ 	return ret;
 -- 
 2.20.1
 
