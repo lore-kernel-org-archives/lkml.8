@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EEFDC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB10C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEF472073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F9E3246A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:51:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197087;
-	bh=UXa8m6DU4r8Aux3+ktngeVRdN4MC9pFpVAeuu6a93bo=;
+	s=default; t=1579197089;
+	bh=cqjn5jMaYHSe51uIwrnkRtASULWXpQYZWh94y+2SXFE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qz5W/rW/9og4ksAYWf59tlQ+GiPJIfQWIxuh4ejP7p67mztXM3FIOQ42bMtNf6x3T
-	 HKa1H5J5fUgaDN7hOnri1DJaLh1Waf/o/YAT9P4BuFOdpgb7gNcg/gFf1vVfpoQNox
-	 7QcBvp1SZmnciZrTyeAQ7TbDKvcoSrFFyW39xpE8=
+	b=JypRFNLqFlCssoGxSX3udSQ7GrP5UkP2KxYCV8WS09al7iTIxdmdbpvsq2O2NkdTU
+	 xxbSxf4tgr2XQIUIxpYT+FN5xpkBCMR0dD3K5bx+i85uaYgicLgEcXaZlil5+UFUZ5
+	 ASca7mHAyutIdzQdPQbN5vq44cUjaHssjbo83Vz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406360AbgAPRpc (ORCPT
+        id S2406510AbgAPRpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:45:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36650 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:45:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406083AbgAPRpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:45:08 -0500
+        id S2406383AbgAPRpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:45:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA07C24773;
-        Thu, 16 Jan 2020 17:45:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0FCA2478D;
+        Thu, 16 Jan 2020 17:45:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196707;
-        bh=UXa8m6DU4r8Aux3+ktngeVRdN4MC9pFpVAeuu6a93bo=;
+        s=default; t=1579196741;
+        bh=cqjn5jMaYHSe51uIwrnkRtASULWXpQYZWh94y+2SXFE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FyTXd74eQomhb1X+h1rQrJJlNXkfKCCppJDskBEFHjZlO4Sco3yRDyTOhlh5Gy9SW
-         YTodSFMh4OeexXJxo/Mz19IfE5ALnU2Sae175Qpva0I6E1cBmSHcm+zPBo8j03Xa+y
-         q3CxZhF+KT/z33VlFvF7zHAC917uzEOH85c9QpD0=
+        b=P2IebU6KcnlP8F5kwSksLsHTuo98/f9ReY4zwR3DJdfrnVAHcTFKu0FvrarnjWCqp
+         PkCYMOWFNKnoO9ozc2j+5p/xJ/PdlRrpUeCF/BNomxLVxR3UYVB560cdoAUFry6Q+j
+         r1XTsToIQtS2cOYhO5TmXpyEgFrae1k+lASzSjkA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-wpan@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 098/174] inet: frags: call inet_frags_fini() after unregister_pernet_subsys()
-Date:   Thu, 16 Jan 2020 12:41:35 -0500
-Message-Id: <20200116174251.24326-98-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.4 122/174] ASoC: wm8737: Fix copy-paste error in wm8737_snd_controls
+Date:   Thu, 16 Jan 2020 12:41:59 -0500
+Message-Id: <20200116174251.24326-122-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -60,54 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit ae7352d384a552d8c799c242e74a934809990a71 ]
+[ Upstream commit 554b75bde64bcad9662530726d1483f7ef012069 ]
 
-Both IPv6 and 6lowpan are calling inet_frags_fini() too soon.
+sound/soc/codecs/wm8737.c:112:29: warning:
+ high_3d defined but not used [-Wunused-const-variable=]
 
-inet_frags_fini() is dismantling a kmem_cache, that might be needed
-later when unregister_pernet_subsys() eventually has to remove
-frags queues from hash tables and free them.
+'high_3d' should be used for 3D High Cut-off.
 
-This fixes potential use-after-free, and is a prereq for the following patch.
-
-Fixes: d4ad4d22e7ac ("inet: frags: use kmem_cache for inet_frag_queue")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 2a9ae13a2641 ("ASoC: Add initial WM8737 driver")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20190815091920.64480-1-yuehaibing@huawei.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ieee802154/6lowpan/reassembly.c | 2 +-
- net/ipv6/reassembly.c               | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/codecs/wm8737.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/ieee802154/6lowpan/reassembly.c b/net/ieee802154/6lowpan/reassembly.c
-index 6183730d38db..e728dae467c3 100644
---- a/net/ieee802154/6lowpan/reassembly.c
-+++ b/net/ieee802154/6lowpan/reassembly.c
-@@ -634,7 +634,7 @@ int __init lowpan_net_frag_init(void)
+diff --git a/sound/soc/codecs/wm8737.c b/sound/soc/codecs/wm8737.c
+index e7807601e675..ae69cb790ac3 100644
+--- a/sound/soc/codecs/wm8737.c
++++ b/sound/soc/codecs/wm8737.c
+@@ -170,7 +170,7 @@ SOC_DOUBLE("Polarity Invert Switch", WM8737_ADC_CONTROL, 5, 6, 1, 0),
+ SOC_SINGLE("3D Switch", WM8737_3D_ENHANCE, 0, 1, 0),
+ SOC_SINGLE("3D Depth", WM8737_3D_ENHANCE, 1, 15, 0),
+ SOC_ENUM("3D Low Cut-off", low_3d),
+-SOC_ENUM("3D High Cut-off", low_3d),
++SOC_ENUM("3D High Cut-off", high_3d),
+ SOC_SINGLE_TLV("3D ADC Volume", WM8737_3D_ENHANCE, 7, 1, 1, adc_tlv),
  
- void lowpan_net_frag_exit(void)
- {
--	inet_frags_fini(&lowpan_frags);
- 	lowpan_frags_sysctl_unregister();
- 	unregister_pernet_subsys(&lowpan_frags_ops);
-+	inet_frags_fini(&lowpan_frags);
- }
-diff --git a/net/ipv6/reassembly.c b/net/ipv6/reassembly.c
-index ec917f58d105..17e9ed2edb86 100644
---- a/net/ipv6/reassembly.c
-+++ b/net/ipv6/reassembly.c
-@@ -774,8 +774,8 @@ int __init ipv6_frag_init(void)
- 
- void ipv6_frag_exit(void)
- {
--	inet_frags_fini(&ip6_frags);
- 	ip6_frags_sysctl_unregister();
- 	unregister_pernet_subsys(&ip6_frags_ops);
- 	inet6_del_protocol(&frag_protocol, IPPROTO_FRAGMENT);
-+	inet_frags_fini(&ip6_frags);
- }
+ SOC_SINGLE("Noise Gate Switch", WM8737_NOISE_GATE, 0, 1, 0),
 -- 
 2.20.1
 
