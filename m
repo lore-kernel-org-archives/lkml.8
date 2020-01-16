@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3319C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB009C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C8842073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:23:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C295620661
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:23:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202601;
-	bh=B39tRMTgHG+yvSL+XbOx831COUj/FX+wNF00LG9uoJk=;
+	s=default; t=1579202612;
+	bh=OEnWGrgvNT9GZVvzp8phpkWRl3yWQ6tbihlsEPw0Iro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L7wGj5wVc68tmqfa72ZrNPRNHfMP41gyIqG/vOpUv87of/M14YLKVAOrMsTuSUDpf
-	 PccMYivUPFl1rFwvJC1mYUU5kT1Xiq4RtWBNGNASDPnL7BRAv3OzEnOjLTWRpa12sJ
-	 XbWFm+vu4PVJ8kpLNANEqHO52J1NTo0A4ksQzhyA=
+	b=zS5E8zk+c0L4zIC40VDCXPa8ZRtyvMoeH8Fy5KJtOnHq/coDXrB83ncWtfaHDoVph
+	 IYrBcHxHHN27B59PW7YCOrMmvE2gMxhEckCd47ex3r2IWB2q2z8yf4fSpndEdXmtXg
+	 go1EzhJZAx4JYpTSEKBhvhE7a2uJvI5+2NBMIt8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437760AbgAPTXU (ORCPT
+        id S2437773AbgAPTXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:23:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36944 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:23:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729449AbgAPQxR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:53:17 -0500
+        id S1730546AbgAPQxK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:53:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34E8A2464B;
-        Thu, 16 Jan 2020 16:53:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34D792073A;
+        Thu, 16 Jan 2020 16:53:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193596;
-        bh=B39tRMTgHG+yvSL+XbOx831COUj/FX+wNF00LG9uoJk=;
+        s=default; t=1579193589;
+        bh=OEnWGrgvNT9GZVvzp8phpkWRl3yWQ6tbihlsEPw0Iro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yvIL3ts7e6/NBWXtNwwxW8XtNthX3dpgcuCCrdaxOYgKimQfYaL+yBnOLByp3wkc6
-         rgya7sajdqpgbzP8XrkO3cBX4O1+AZzcL6z3RfpxmpbRNQyLJP35UWglp8sYWW8Hpt
-         7jeaxjDZUDYMeBRjeqJQJNXL98zEkoF1fSqgwg6I=
+        b=wl77zXH6Rt0yOHyUvXXjRyPqln1kwY8Vrmkam4XPKHR9AbcFPMryWM9QkCZEhV0vf
+         YL7gqy7ZPlncSb1u/fpIvW70GxahkQylu+7iEehoo4N7CoTFE+7PJoFR+zPhQ+gHk9
+         m9d7HkzEKVXxAuj9nS6+O5N34nz0NJUwdyB7wc1g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 135/205] PCI: pciehp: Do not disable interrupt twice on suspend
-Date:   Thu, 16 Jan 2020 11:41:50 -0500
-Message-Id: <20200116164300.6705-135-sashal@kernel.org>
+Cc:     Alain Volmat <alain.volmat@st.com>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 129/205] i2c: stm32f7: report dma error during probe
+Date:   Thu, 16 Jan 2020 11:41:44 -0500
+Message-Id: <20200116164300.6705-129-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -61,102 +62,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Alain Volmat <alain.volmat@st.com>
 
-[ Upstream commit 75fcc0ce72e5cea2e357cdde858216c5bad40442 ]
+[ Upstream commit d77eceb2de99f5d7e0c645bad15511fe1af59e09 ]
 
-We try to keep PCIe hotplug ports runtime suspended when entering system
-suspend. Because the PCIe portdrv sets the DPM_FLAG_NEVER_SKIP flag, the PM
-core always calls system suspend/resume hooks even if the device is left
-runtime suspended. Since PCIe hotplug driver re-used the same function for
-both runtime suspend and system suspend, it ended up disabling hotplug
-interrupt twice and the second time following was printed:
+Distinguish between the case where dma information is not provided
+within the DT and the case of an error during the dma init.
+Exit the probe with error in case of an error during dma init.
 
-  pciehp 0000:03:01.0:pcie204: pcie_do_write_cmd: no response from device
-
-Prevent this from happening by checking whether the device is already
-runtime suspended when the system suspend hook is called.
-
-Fixes: 9c62f0bfb832 ("PCI: pciehp: Implement runtime PM callbacks")
-Link: https://lore.kernel.org/r/20191029170022.57528-1-mika.westerberg@linux.intel.com
-Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: bb8822cbbc53 ("i2c: i2c-stm32: Add generic DMA API")
+Signed-off-by: Alain Volmat <alain.volmat@st.com>
+Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/hotplug/pciehp_core.c | 25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+ drivers/i2c/busses/i2c-stm32.c   | 16 ++++++++--------
+ drivers/i2c/busses/i2c-stm32f7.c |  9 +++++++++
+ 2 files changed, 17 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
-index b3122c151b80..56daad828c9e 100644
---- a/drivers/pci/hotplug/pciehp_core.c
-+++ b/drivers/pci/hotplug/pciehp_core.c
-@@ -253,7 +253,7 @@ static bool pme_is_native(struct pcie_device *dev)
- 	return pcie_ports_native || host->native_pme;
+diff --git a/drivers/i2c/busses/i2c-stm32.c b/drivers/i2c/busses/i2c-stm32.c
+index 07d5dfce68d4..1da347e6a358 100644
+--- a/drivers/i2c/busses/i2c-stm32.c
++++ b/drivers/i2c/busses/i2c-stm32.c
+@@ -20,13 +20,13 @@ struct stm32_i2c_dma *stm32_i2c_dma_request(struct device *dev,
+ 
+ 	dma = devm_kzalloc(dev, sizeof(*dma), GFP_KERNEL);
+ 	if (!dma)
+-		return NULL;
++		return ERR_PTR(-ENOMEM);
+ 
+ 	/* Request and configure I2C TX dma channel */
+-	dma->chan_tx = dma_request_slave_channel(dev, "tx");
+-	if (!dma->chan_tx) {
++	dma->chan_tx = dma_request_chan(dev, "tx");
++	if (IS_ERR(dma->chan_tx)) {
+ 		dev_dbg(dev, "can't request DMA tx channel\n");
+-		ret = -EINVAL;
++		ret = PTR_ERR(dma->chan_tx);
+ 		goto fail_al;
+ 	}
+ 
+@@ -42,10 +42,10 @@ struct stm32_i2c_dma *stm32_i2c_dma_request(struct device *dev,
+ 	}
+ 
+ 	/* Request and configure I2C RX dma channel */
+-	dma->chan_rx = dma_request_slave_channel(dev, "rx");
+-	if (!dma->chan_rx) {
++	dma->chan_rx = dma_request_chan(dev, "rx");
++	if (IS_ERR(dma->chan_rx)) {
+ 		dev_err(dev, "can't request DMA rx channel\n");
+-		ret = -EINVAL;
++		ret = PTR_ERR(dma->chan_rx);
+ 		goto fail_tx;
+ 	}
+ 
+@@ -75,7 +75,7 @@ struct stm32_i2c_dma *stm32_i2c_dma_request(struct device *dev,
+ 	devm_kfree(dev, dma);
+ 	dev_info(dev, "can't use DMA\n");
+ 
+-	return NULL;
++	return ERR_PTR(ret);
  }
  
--static int pciehp_suspend(struct pcie_device *dev)
-+static void pciehp_disable_interrupt(struct pcie_device *dev)
- {
- 	/*
- 	 * Disable hotplug interrupt so that it does not trigger
-@@ -261,7 +261,19 @@ static int pciehp_suspend(struct pcie_device *dev)
- 	 */
- 	if (pme_is_native(dev))
- 		pcie_disable_interrupt(get_service_data(dev));
-+}
+ void stm32_i2c_dma_free(struct stm32_i2c_dma *dma)
+diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+index 84cfed17ff4f..37a76516e203 100644
+--- a/drivers/i2c/busses/i2c-stm32f7.c
++++ b/drivers/i2c/busses/i2c-stm32f7.c
+@@ -1955,6 +1955,15 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
+ 	i2c_dev->dma = stm32_i2c_dma_request(i2c_dev->dev, phy_addr,
+ 					     STM32F7_I2C_TXDR,
+ 					     STM32F7_I2C_RXDR);
++	if (PTR_ERR(i2c_dev->dma) == -ENODEV)
++		i2c_dev->dma = NULL;
++	else if (IS_ERR(i2c_dev->dma)) {
++		ret = PTR_ERR(i2c_dev->dma);
++		if (ret != -EPROBE_DEFER)
++			dev_err(&pdev->dev,
++				"Failed to request dma error %i\n", ret);
++		goto clk_free;
++	}
  
-+#ifdef CONFIG_PM_SLEEP
-+static int pciehp_suspend(struct pcie_device *dev)
-+{
-+	/*
-+	 * If the port is already runtime suspended we can keep it that
-+	 * way.
-+	 */
-+	if (dev_pm_smart_suspend_and_suspended(&dev->port->dev))
-+		return 0;
-+
-+	pciehp_disable_interrupt(dev);
- 	return 0;
- }
+ 	platform_set_drvdata(pdev, i2c_dev);
  
-@@ -279,6 +291,7 @@ static int pciehp_resume_noirq(struct pcie_device *dev)
- 
- 	return 0;
- }
-+#endif
- 
- static int pciehp_resume(struct pcie_device *dev)
- {
-@@ -292,6 +305,12 @@ static int pciehp_resume(struct pcie_device *dev)
- 	return 0;
- }
- 
-+static int pciehp_runtime_suspend(struct pcie_device *dev)
-+{
-+	pciehp_disable_interrupt(dev);
-+	return 0;
-+}
-+
- static int pciehp_runtime_resume(struct pcie_device *dev)
- {
- 	struct controller *ctrl = get_service_data(dev);
-@@ -318,10 +337,12 @@ static struct pcie_port_service_driver hpdriver_portdrv = {
- 	.remove		= pciehp_remove,
- 
- #ifdef	CONFIG_PM
-+#ifdef	CONFIG_PM_SLEEP
- 	.suspend	= pciehp_suspend,
- 	.resume_noirq	= pciehp_resume_noirq,
- 	.resume		= pciehp_resume,
--	.runtime_suspend = pciehp_suspend,
-+#endif
-+	.runtime_suspend = pciehp_runtime_suspend,
- 	.runtime_resume	= pciehp_runtime_resume,
- #endif	/* PM */
- };
 -- 
 2.20.1
 
