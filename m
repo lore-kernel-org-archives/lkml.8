@@ -2,221 +2,115 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD95C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C28C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:08:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 251F42064C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FC3C2064C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:08:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Q7wnOTFY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733282AbgAPUFY (ORCPT
+        id S1733293AbgAPUIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 15:05:24 -0500
-Received: from mailoutvs53.siol.net ([185.57.226.244]:40873 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730357AbgAPUFY (ORCPT
+        Thu, 16 Jan 2020 15:08:30 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:57712 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbgAPUIa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 15:05:24 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id A5E355243C8;
-        Thu, 16 Jan 2020 21:05:20 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id pO70ArcDTR1J; Thu, 16 Jan 2020 21:05:20 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 3912A5243C0;
-        Thu, 16 Jan 2020 21:05:20 +0100 (CET)
-Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id A29E85243C8;
-        Thu, 16 Jan 2020 21:05:19 +0100 (CET)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     mripard@kernel.org, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        roman.stratiienko@globallogic.com
-Cc:     Roman Stratiienko <roman.stratiienko@globallogic.com>
-Subject: Re: [PATCH v3 2/2] drm/sun4i: Add alpha property for sun8i and sun50i VI layer
-Date:   Thu, 16 Jan 2020 21:05:19 +0100
-Message-ID: <2397109.Lt9SDvczpP@jernej-laptop>
-In-Reply-To: <20200103211901.44201-2-roman.stratiienko@globallogic.com>
-References: <20200103211901.44201-1-roman.stratiienko@globallogic.com> <20200103211901.44201-2-roman.stratiienko@globallogic.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Thu, 16 Jan 2020 15:08:30 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00GK368V132707;
+        Thu, 16 Jan 2020 20:07:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2019-08-05;
+ bh=VXKP063RLeaEtvwZyxBIApAY7BlmugdZZoADPBt2YAg=;
+ b=Q7wnOTFYlvOxiPoKMEqnlqRwvviOsCfv6eCIMDbOBNmD3T5Hyi6Z8ku4oy52bDgGr/Ls
+ 3euJmiXxZCmpVtlHKqb/TH4X19wd33S7+N9MN3T81wsn/xfL0ANlnJtUKJz0c/hMCtjh
+ oCwuXlcYqrKqsrl/Mume1bsu8hKFpqOwfm22a6MD3T42DrxkHscIVxNGa54hrz3Gvu0E
+ /ijxtHZeK011ndqjila2pTiVp8x8n502gLOQgLLfwhiVRgXmGMNiUxFn7WW23BQfTGbY
+ b9VOJoX/f9548CXyKyZOiNelfyAum0DBOVDurNpd4P8YwIsQEsRu38iG6a/bkIgfAQ/I EA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2xf73yvu5p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jan 2020 20:07:56 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00GK3mcQ042328;
+        Thu, 16 Jan 2020 20:07:56 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2xj1ptpydj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jan 2020 20:07:55 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00GK7q6v014129;
+        Thu, 16 Jan 2020 20:07:52 GMT
+Received: from localhost.localdomain (/10.159.157.9)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 16 Jan 2020 12:07:52 -0800
+From:   Santosh Shilimkar <santosh.shilimkar@oracle.com>
+To:     soc@kernel.org, arm@kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     khilman@kernel.org, arnd@arndb.de, olof@lixom.net,
+        linux-kernel@vger.kernel.org, santosh.shilimkar@oracle.com,
+        vkoul@kernel.org
+Subject: [GIT_PULL] SOC: TI Keystone Ring Accelerator driver for v5.6
+Date:   Thu, 16 Jan 2020 12:07:39 -0800
+Message-Id: <1579205259-4845-1-git-send-email-santosh.shilimkar@oracle.com>
+X-Mailer: git-send-email 1.9.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9502 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=749
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001160161
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9502 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=824 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001160161
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+Its bit late for pull request, but if possible, please pull it to
+soc drivers tree.
 
-Sorry for late reply.
+The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
 
-Dne petek, 03. januar 2020 ob 22:19:01 CET je 
-roman.stratiienko@globallogic.com napisal(a):
-> From: Roman Stratiienko <roman.stratiienko@globallogic.com>
-> 
-> DE3.0 VI layers supports plane-global alpha channel.
-> DE2.0 FCC block have GLOBAL_ALPHA register that can be used as alpha source
-> for blender.
-> 
-> Add alpha property to the DRM plane and connect it to the
-> corresponding registers in the mixer.
-> 
-> Do not add alpha property for systems with DE2.0 and more than 1 VI planes.
-> 
-> Signed-off-by: Roman Stratiienko <roman.stratiienko@globallogic.com>
+  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
 
-This looks fine to me.
-Reviewed-by: Jernej Skrabec <jernej.skrabec@siol.net>
+are available in the git repository at:
 
-Best regards,
-Jernej
+  git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git tags/drivers_soc_for_5.6
 
-> ---
-> v2: Initial version by mistake
-> v3:
-> - Skip adding & applying alpha property if VI count > 1
-> ---
->  drivers/gpu/drm/sun4i/sun8i_vi_layer.c | 48 +++++++++++++++++++++-----
->  drivers/gpu/drm/sun4i/sun8i_vi_layer.h | 11 ++++++
->  2 files changed, 51 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-> b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c index 42d445d23773..e61aec7d6d07
-> 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-> +++ b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-> @@ -65,6 +65,36 @@ static void sun8i_vi_layer_enable(struct sun8i_mixer
-> *mixer, int channel, }
->  }
-> 
-> +static void sun8i_vi_layer_update_alpha(struct sun8i_mixer *mixer, int
-> channel, +					int overlay, struct 
-drm_plane *plane)
-> +{
-> +	u32 mask, val, ch_base;
-> +
-> +	ch_base = sun8i_channel_base(mixer, channel);
-> +
-> +	if (mixer->cfg->is_de3) {
-> +		mask = SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MASK |
-> +		       SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MODE_MASK;
-> +		val = SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA
-> +			(plane->state->alpha >> 8);
-> +
-> +		val |= (plane->state->alpha == DRM_BLEND_ALPHA_OPAQUE) ?
-> +			
-SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MODE_PIXEL :
-> +			
-SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MODE_COMBINED;
-> +
-> +		regmap_update_bits(mixer->engine.regs,
-> +				   
-SUN8I_MIXER_CHAN_VI_LAYER_ATTR(ch_base,
-> +								
-  overlay),
-> +				   mask, val);
-> +	} else if (mixer->cfg->vi_num == 1) {
-> +		regmap_update_bits(mixer->engine.regs,
-> +				   
-SUN8I_MIXER_FCC_GLOBAL_ALPHA_REG,
-> +				   
-SUN8I_MIXER_FCC_GLOBAL_ALPHA_MASK,
-> +				   SUN8I_MIXER_FCC_GLOBAL_ALPHA
-> +					(plane->state->alpha >> 
-8));
-> +	}
-> +}
-> +
->  static int sun8i_vi_layer_update_coord(struct sun8i_mixer *mixer, int
-> channel, int overlay, struct drm_plane *plane,
->  				       unsigned int zpos)
-> @@ -248,14 +278,6 @@ static int sun8i_vi_layer_update_formats(struct
-> sun8i_mixer *mixer, int channel, SUN8I_MIXER_CHAN_VI_LAYER_ATTR(ch_base,
-> overlay),
->  			   SUN8I_MIXER_CHAN_VI_LAYER_ATTR_RGB_MODE, 
-val);
-> 
-> -	/* It seems that YUV formats use global alpha setting. */
-> -	if (mixer->cfg->is_de3)
-> -		regmap_update_bits(mixer->engine.regs,
-> -				   
-SUN8I_MIXER_CHAN_VI_LAYER_ATTR(ch_base,
-> -								
-  overlay),
-> -				   
-SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MASK,
-> -				   
-SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA(0xff));
-> -
->  	return 0;
->  }
-> 
-> @@ -373,6 +395,8 @@ static void sun8i_vi_layer_atomic_update(struct
-> drm_plane *plane,
-> 
->  	sun8i_vi_layer_update_coord(mixer, layer->channel,
->  				    layer->overlay, plane, zpos);
-> +	sun8i_vi_layer_update_alpha(mixer, layer->channel,
-> +				    layer->overlay, plane);
->  	sun8i_vi_layer_update_formats(mixer, layer->channel,
->  				      layer->overlay, plane);
->  	sun8i_vi_layer_update_buffer(mixer, layer->channel,
-> @@ -464,6 +488,14 @@ struct sun8i_vi_layer *sun8i_vi_layer_init_one(struct
-> drm_device *drm,
-> 
->  	plane_cnt = mixer->cfg->ui_num + mixer->cfg->vi_num;
-> 
-> +	if (mixer->cfg->vi_num == 1 || mixer->cfg->is_de3) {
-> +		ret = drm_plane_create_alpha_property(&layer->plane);
-> +		if (ret) {
-> +			dev_err(drm->dev, "Couldn't add alpha 
-property\n");
-> +			return ERR_PTR(ret);
-> +		}
-> +	}
-> +
->  	ret = drm_plane_create_zpos_property(&layer->plane, index,
->  					     0, plane_cnt - 
-1);
->  	if (ret) {
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_vi_layer.h
-> b/drivers/gpu/drm/sun4i/sun8i_vi_layer.h index eaa6076f5dbc..48c399e1c86d
-> 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_vi_layer.h
-> +++ b/drivers/gpu/drm/sun4i/sun8i_vi_layer.h
-> @@ -29,14 +29,25 @@
->  #define SUN8I_MIXER_CHAN_VI_VDS_UV(base) \
->  		((base) + 0xfc)
-> 
-> +#define SUN8I_MIXER_FCC_GLOBAL_ALPHA_REG \
-> +		(0xAA000 + 0x90)
-> +
-> +#define SUN8I_MIXER_FCC_GLOBAL_ALPHA(x)			((x) << 24)
-> +#define SUN8I_MIXER_FCC_GLOBAL_ALPHA_MASK		GENMASK(31, 
-24)
-> +
->  #define SUN8I_MIXER_CHAN_VI_LAYER_ATTR_EN		BIT(0)
->  /* RGB mode should be set for RGB formats and cleared for YCbCr */
->  #define SUN8I_MIXER_CHAN_VI_LAYER_ATTR_RGB_MODE		BIT(15)
->  #define SUN8I_MIXER_CHAN_VI_LAYER_ATTR_FBFMT_OFFSET	8
->  #define SUN8I_MIXER_CHAN_VI_LAYER_ATTR_FBFMT_MASK	GENMASK(12, 8)
-> +#define SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MODE_MASK	GENMASK(2, 1)
->  #define SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MASK	GENMASK(31, 24)
->  #define SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA(x)	((x) << 24)
-> 
-> +#define SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MODE_PIXEL	((0) << 1)
-> +#define SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MODE_LAYER	((1) << 1)
-> +#define SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MODE_COMBINED	((2) << 1)
-> +
->  #define SUN8I_MIXER_CHAN_VI_DS_N(x)			((x) << 16)
->  #define SUN8I_MIXER_CHAN_VI_DS_M(x)			((x) << 0)
+for you to fetch changes up to 3277e8aa2504d97e022ecb9777d784ac1a439d36:
 
+  soc: ti: k3: add navss ringacc driver (2020-01-15 10:07:27 -0800)
 
+----------------------------------------------------------------
+SOC: TI Keystone Ring Accelerator driver
 
+The Ring Accelerator (RINGACC or RA) provides hardware acceleration to
+enable straightforward passing of work between a producer and a consumer.
+There is one RINGACC module per NAVSS on TI AM65x SoCs.
 
+----------------------------------------------------------------
+Grygorii Strashko (2):
+      bindings: soc: ti: add documentation for k3 ringacc
+      soc: ti: k3: add navss ringacc driver
+
+ .../devicetree/bindings/soc/ti/k3-ringacc.txt      |   59 +
+ drivers/soc/ti/Kconfig                             |   11 +
+ drivers/soc/ti/Makefile                            |    1 +
+ drivers/soc/ti/k3-ringacc.c                        | 1157 ++++++++++++++++++++
+ include/linux/soc/ti/k3-ringacc.h                  |  244 +++++
+ 5 files changed, 1472 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
+ create mode 100644 drivers/soc/ti/k3-ringacc.c
+ create mode 100644 include/linux/soc/ti/k3-ringacc.h
