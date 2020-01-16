@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A87DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFD7C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1C7D2072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:24:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F91E2077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:25:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217099;
-	bh=ti9OQzTrR39hfLZ/0pUi+SVIH06RaO/hmG3omslXZAI=;
+	s=default; t=1579217101;
+	bh=86Pm6fYfDDizdEsbuHEgjTe6dYvfZcvkBZXO+WecKPA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XTYfSf7HWhpww0UM71tNKk4MdRI8S7PV6OLCvPlQ8PVhqs0JgRjBbAh9ff716yWG7
-	 s8HWp1mw3v/EI1awEkPE/95KTWJSFcCld+AhhtDS3YxKU6m9uHwa4eG/+tyYfrOJcI
-	 gzZHKAacKqzT8bZtzy0Hng/3kxejQeeAxibxL+9w=
+	b=x4rwDjyPd7lsrSDCPtwLeFH9XJDYkcf4ZEOIS8ig+nokYEaa7wafsKdYbdI9utC75
+	 h3bzg9gyikkpAXj0+pEKZ2AoI84RHC/G1I+C8A7mdfcttcSENi81fe91THv1mMXVWS
+	 nbDT1Ewfekr/Clp5WHUnnAnfZf/t/ldLOYBah31k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388287AbgAPXY5 (ORCPT
+        id S2388301AbgAPXZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:24:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54040 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:25:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387716AbgAPXYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:24:49 -0500
+        id S1729409AbgAPXYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:24:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6656D206D9;
-        Thu, 16 Jan 2020 23:24:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3276A2072E;
+        Thu, 16 Jan 2020 23:24:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217088;
-        bh=ti9OQzTrR39hfLZ/0pUi+SVIH06RaO/hmG3omslXZAI=;
+        s=default; t=1579217093;
+        bh=86Pm6fYfDDizdEsbuHEgjTe6dYvfZcvkBZXO+WecKPA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bGDRdEvmIt8E5Z70OBVIF38a1dAXIu3oBNag2UZ/Fcwe99uVUQwxRW01PvRx/O55Z
-         ZVfoP0wPDCxvXeb+n8+5DfXQkDp58MHLwtrRf/8/hIAE/Udf9JtUc+qkg7zBbX09bR
-         4cNuKpiUMV1pq2XOSoOoHXTrRs5Ccly/xzlDhLMs=
+        b=OKhHGaNxZ2/RLOKp1dGSW1uF12B/rSFhvmKT7rs5lncJV6ir0wtYgZhzFh9Vjph5I
+         Bhl7Y1ST5P4clIPGFVHbd3abuvCJrgO26f7oPXxKvO8AWeagHPyzfNSmvy2JHMckoh
+         JNHwWIjA1+7rjXEsTcVRiPexxVBjsBnw/EjLXK64=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, linux-scsi@vger.kernel.org,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 5.4 127/203] scsi: sd: enable compat ioctls for sed-opal
-Date:   Fri, 17 Jan 2020 00:17:24 +0100
-Message-Id: <20200116231756.312596106@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 5.4 119/203] pinctl: ti: iodelay: fix error checking on pinctrl_count_index_with_args call
+Date:   Fri, 17 Jan 2020 00:17:16 +0100
+Message-Id: <20200116231755.744533697@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -61,61 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit 142b2ac82e31c174936c5719fa12ae28f51a55b7 upstream.
+commit 5ff8aca906f3a7a7db79fad92f2a4401107ef50d upstream.
 
-The sed_ioctl() function is written to be compatible between
-32-bit and 64-bit processes, however compat mode is only
-wired up for nvme, not for sd.
+The call to pinctrl_count_index_with_args checks for a -EINVAL return
+however this function calls pinctrl_get_list_and_count and this can
+return -ENOENT. Rather than check for a specific error, fix this by
+checking for any error return to catch the -ENOENT case.
 
-Add the missing call to sed_ioctl() in sd_compat_ioctl().
-
-Fixes: d80210f25ff0 ("sd: add support for TCG OPAL self encrypting disks")
-Cc: linux-scsi@vger.kernel.org
-Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Addresses-Coverity: ("Improper use of negative")
+Fixes: 003910ebc83b ("pinctrl: Introduce TI IOdelay configuration driver")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Link: https://lore.kernel.org/r/20190920122030.14340-1-colin.king@canonical.com
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/sd.c |   14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ drivers/pinctrl/ti/pinctrl-ti-iodelay.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -1694,20 +1694,30 @@ static void sd_rescan(struct device *dev
- static int sd_compat_ioctl(struct block_device *bdev, fmode_t mode,
- 			   unsigned int cmd, unsigned long arg)
- {
--	struct scsi_device *sdev = scsi_disk(bdev->bd_disk)->device;
-+	struct gendisk *disk = bdev->bd_disk;
-+	struct scsi_disk *sdkp = scsi_disk(disk);
-+	struct scsi_device *sdev = sdkp->device;
-+	void __user *p = compat_ptr(arg);
- 	int error;
+--- a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
++++ b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
+@@ -496,7 +496,7 @@ static int ti_iodelay_dt_node_to_map(str
+ 		return -EINVAL;
  
-+	error = scsi_verify_blk_ioctl(bdev, cmd);
-+	if (error < 0)
-+		return error;
-+
- 	error = scsi_ioctl_block_when_processing_errors(sdev, cmd,
- 			(mode & FMODE_NDELAY) != 0);
- 	if (error)
- 		return error;
-+
-+	if (is_sed_ioctl(cmd))
-+		return sed_ioctl(sdkp->opal_dev, cmd, p);
- 	       
- 	/* 
- 	 * Let the static ioctl translation table take care of it.
- 	 */
- 	if (!sdev->host->hostt->compat_ioctl)
- 		return -ENOIOCTLCMD; 
--	return sdev->host->hostt->compat_ioctl(sdev, cmd, (void __user *)arg);
-+	return sdev->host->hostt->compat_ioctl(sdev, cmd, p);
- }
- #endif
+ 	rows = pinctrl_count_index_with_args(np, name);
+-	if (rows == -EINVAL)
++	if (rows < 0)
+ 		return rows;
  
+ 	*map = devm_kzalloc(iod->dev, sizeof(**map), GFP_KERNEL);
 
 
