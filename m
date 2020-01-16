@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9850EC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA8CC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71B932073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:22:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4D882073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:22:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202550;
-	bh=3dY9UzQ5FnrJjjb34dZYUEMkKYZza9PI9MXrctpD6Z8=;
+	s=default; t=1579202558;
+	bh=ZN3FHz/d8qAmPJ8meazGJB6yyASRZv5YcQU6R5IG9rk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QXxQDFBLJOA0mg0Jk1aL/Y61yqjJeDc5BEqyNbkotXQoe+KqzqNV5w2YwFHVXqY1Q
-	 XLplbqV8CnT+xSn2quN7O0LRDfduQYK06rh8sWGlapWG5GJDsz+W6zUccXH0LkuMD3
-	 934kJDXVZNzDMv/bB5ctT3HJAp8D/6R84pLpRCJ8=
+	b=wsBw8K00RFTxEpz/x5owJnPnQrtUh7sbsrfxwlAqOyEuN4ErzAN2JrVSW26DQqu/v
+	 KmxUP1exSGrAWvVrhcMC3NkM/raq0WtFIOhCKy5x3pW1mk7JaDOVWsB34nrtuwOLVC
+	 6/ZubSm7Sv1oYZ1cO76hE0J2Q1oZ1UIFb8wioD88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390261AbgAPTW3 (ORCPT
+        id S2437648AbgAPTWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:22:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37312 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:22:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730943AbgAPQx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:53:27 -0500
+        id S1730902AbgAPQxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:53:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70A442081E;
-        Thu, 16 Jan 2020 16:53:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 527E322522;
+        Thu, 16 Jan 2020 16:53:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193607;
-        bh=3dY9UzQ5FnrJjjb34dZYUEMkKYZza9PI9MXrctpD6Z8=;
+        s=default; t=1579193605;
+        bh=ZN3FHz/d8qAmPJ8meazGJB6yyASRZv5YcQU6R5IG9rk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rZSp6M301GnniJmB2EJCSeRiZieKla1KH8QXFQg0BR7KeGUqzARKfQt/SC8QqJQVi
-         kc0qs08+paKlVj3SRntSVkDaJqsLIM03XBCHKtxKKn+rNsWhZNkBTnKOS74filSbWD
-         I/Mdjcxp3yTSLAw8tYVTcCB8wfrw4uB5mYNVz3RE=
+        b=2aAdsYwl5C0oYo63AdtqGPE5QNBNhZsGfmRmbGOR5dEE9ITiAJ3g64NFOvCOPUEoF
+         ild9S/VJW+xxa7b11x43yEvp4WNZotxCAurz50IiR1HvWsaRzRLukWEmqqserGgwvG
+         OcqNOww5w6Z7AO7umFfBQnHmNiumx3n4weLivnH4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sumit Garg <sumit.garg@linaro.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, tee-dev@lists.linaro.org
-Subject: [PATCH AUTOSEL 5.4 145/205] tee: optee: Fix dynamic shm pool allocations
-Date:   Thu, 16 Jan 2020 11:42:00 -0500
-Message-Id: <20200116164300.6705-145-sashal@kernel.org>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 143/205] mmc: sdio: fix wl1251 vendor id
+Date:   Thu, 16 Jan 2020 11:41:58 -0500
+Message-Id: <20200116164300.6705-143-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -59,81 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sumit Garg <sumit.garg@linaro.org>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
 
-[ Upstream commit a249dd200d03791cab23e47571f3e13d9c72af6c ]
+[ Upstream commit e5db673e7fe2f971ec82039a28dc0811c2100e87 ]
 
-In case of dynamic shared memory pool, kernel memory allocated using
-dmabuf_mgr pool needs to be registered with OP-TEE prior to its usage
-during optee_open_session() or optee_invoke_func().
+v4.11-rc1 did introduce a patch series that rearranged the
+sdio quirks into a header file. Unfortunately this did forget
+to handle SDIO_VENDOR_ID_TI differently between wl1251 and
+wl1271 with the result that although the wl1251 was found on
+the sdio bus, the firmware did not load any more and there was
+no interface registration.
 
-So fix dmabuf_mgr pool allocations via an additional call to
-optee_shm_register().
+This patch defines separate constants to be used by sdio quirks
+and drivers.
 
-Also, allow kernel pages to be registered as shared memory with OP-TEE.
-
-Fixes: 9733b072a12a ("optee: allow to work without static shared memory")
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+Fixes: 884f38607897 ("mmc: core: move some sdio IDs out of quirks file")
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Cc: <stable@vger.kernel.org> # v4.11+
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tee/optee/call.c     |  7 +++++++
- drivers/tee/optee/shm_pool.c | 12 +++++++++++-
- 2 files changed, 18 insertions(+), 1 deletion(-)
+ include/linux/mmc/sdio_ids.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/tee/optee/call.c b/drivers/tee/optee/call.c
-index 13b0269a0abc..cf2367ba08d6 100644
---- a/drivers/tee/optee/call.c
-+++ b/drivers/tee/optee/call.c
-@@ -554,6 +554,13 @@ static int check_mem_type(unsigned long start, size_t num_pages)
- 	struct mm_struct *mm = current->mm;
- 	int rc;
+diff --git a/include/linux/mmc/sdio_ids.h b/include/linux/mmc/sdio_ids.h
+index d1a5d5df02f5..08b25c02b5a1 100644
+--- a/include/linux/mmc/sdio_ids.h
++++ b/include/linux/mmc/sdio_ids.h
+@@ -71,6 +71,8 @@
  
-+	/*
-+	 * Allow kernel address to register with OP-TEE as kernel
-+	 * pages are configured as normal memory only.
-+	 */
-+	if (virt_addr_valid(start))
-+		return 0;
-+
- 	down_read(&mm->mmap_sem);
- 	rc = __check_mem_type(find_vma(mm, start),
- 			      start + num_pages * PAGE_SIZE);
-diff --git a/drivers/tee/optee/shm_pool.c b/drivers/tee/optee/shm_pool.c
-index de1d9b8fad90..0332a5301d61 100644
---- a/drivers/tee/optee/shm_pool.c
-+++ b/drivers/tee/optee/shm_pool.c
-@@ -17,6 +17,7 @@ static int pool_op_alloc(struct tee_shm_pool_mgr *poolm,
- {
- 	unsigned int order = get_order(size);
- 	struct page *page;
-+	int rc = 0;
+ #define SDIO_VENDOR_ID_TI			0x0097
+ #define SDIO_DEVICE_ID_TI_WL1271		0x4076
++#define SDIO_VENDOR_ID_TI_WL1251		0x104c
++#define SDIO_DEVICE_ID_TI_WL1251		0x9066
  
- 	page = alloc_pages(GFP_KERNEL | __GFP_ZERO, order);
- 	if (!page)
-@@ -26,12 +27,21 @@ static int pool_op_alloc(struct tee_shm_pool_mgr *poolm,
- 	shm->paddr = page_to_phys(page);
- 	shm->size = PAGE_SIZE << order;
- 
--	return 0;
-+	if (shm->flags & TEE_SHM_DMA_BUF) {
-+		shm->flags |= TEE_SHM_REGISTER;
-+		rc = optee_shm_register(shm->ctx, shm, &page, 1 << order,
-+					(unsigned long)shm->kaddr);
-+	}
-+
-+	return rc;
- }
- 
- static void pool_op_free(struct tee_shm_pool_mgr *poolm,
- 			 struct tee_shm *shm)
- {
-+	if (shm->flags & TEE_SHM_DMA_BUF)
-+		optee_shm_unregister(shm->ctx, shm);
-+
- 	free_pages((unsigned long)shm->kaddr, get_order(shm->size));
- 	shm->kaddr = NULL;
- }
+ #define SDIO_VENDOR_ID_STE			0x0020
+ #define SDIO_DEVICE_ID_STE_CW1200		0x2280
 -- 
 2.20.1
 
