@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC9AC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FF4C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 825B8206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:10:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFC3F24684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:10:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194613;
-	bh=TJeYjIHhNMiZ37QzlXdwOSx5qNMJPZ9IvTSccoEPWic=;
+	s=default; t=1579194618;
+	bh=B2qxsZi5im0ROgTjukgilkJpFct4R/89pn0HPMplz3o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oDz91JIEGxpxvlW9du6Yi5gkGCKylTj7DZ9sSIniUY2VID87dmWz4YAiUvvzisEMM
-	 oxo4xGMqGraeY3oYIFeIKwmK2tdGpsLulbajMXXU+W6K67Y9AYPW8vqoDeWS/uesdA
-	 yKVi6xGJ/cpphrU8uUj93sQxqQqqh1OQ7bqyWE8E=
+	b=DZrYIqiEdB1fUZiC/PGtRigYs+azfMTwUo0Zqa3cxTgVcTmF3O43Ztr9CB0fjDKHz
+	 MWF5gHNeFSJcP4gDOK9px/RTz7LE84bU+nJGuPYlpL97TNElhu4REcS3yeA4AmeRcq
+	 Sbt9FdnhivWUlZZoEdWZja4ht1O2RBHzSWgY4iio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389866AbgAPRKM (ORCPT
+        id S2389883AbgAPRKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:10:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47296 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:10:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389472AbgAPRKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:10:03 -0500
+        id S2389845AbgAPRKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:10:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C300E2468B;
-        Thu, 16 Jan 2020 17:10:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B92724689;
+        Thu, 16 Jan 2020 17:10:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194602;
-        bh=TJeYjIHhNMiZ37QzlXdwOSx5qNMJPZ9IvTSccoEPWic=;
+        s=default; t=1579194607;
+        bh=B2qxsZi5im0ROgTjukgilkJpFct4R/89pn0HPMplz3o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A5r9ZtMD/Xkf2pkecLYcP1Folb3hWpATx/l/HKsd7OiVqpw3AbLdx/cSIrZRLergw
-         HJGFjTxvEeIbB5+rRO/iick8M0bhLlWQmONRTB+/aEK/vsqn6179JAdblOR4d854TY
-         ISipe1oP/VgOGfzTiz/hXmg/+jY1lVYhXZ0iOacU=
+        b=HwkOcHM5HI/Bqoek7oJ4barDqOq1RtUNIRe0s1LAaJ+iUJvfObNpPr5J2apPARTJ6
+         GIef1aU5NQ2fuyyCgcP7SemHEi0jC4aaM5A3LuNYedMGGY0cGo3V3QFp0nAfCWMd9h
+         uv5wU+ApBhbAhSv7mKD4Re8oO/gqUd9Ob1HlH39M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ruslan Bilovol <ruslan.bilovol@gmail.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 470/671] usb: host: xhci-hub: fix extra endianness conversion
-Date:   Thu, 16 Jan 2020 12:01:48 -0500
-Message-Id: <20200116170509.12787-207-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 474/671] crypto: ccp - Reduce maximum stack usage
+Date:   Thu, 16 Jan 2020 12:01:52 -0500
+Message-Id: <20200116170509.12787-211-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,42 +60,176 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ruslan Bilovol <ruslan.bilovol@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 6269e4c76eacabaea0d0099200ae1a455768d208 ]
+[ Upstream commit 72c8117adfced37df101c8c0b3f363e0906f83f0 ]
 
-Don't do extra cpu_to_le32 conversion for
-put_unaligned_le32 because it is already implemented
-in this function.
+Each of the operations in ccp_run_cmd() needs several hundred
+bytes of kernel stack. Depending on the inlining, these may
+need separate stack slots that add up to more than the warning
+limit, as shown in this clang based build:
 
-Fixes sparse error:
-xhci-hub.c:1152:44: warning: incorrect type in argument 1 (different base types)
-xhci-hub.c:1152:44:    expected unsigned int [usertype] val
-xhci-hub.c:1152:44:    got restricted __le32 [usertype]
+drivers/crypto/ccp/ccp-ops.c:871:12: error: stack frame size of 1164 bytes in function 'ccp_run_aes_cmd' [-Werror,-Wframe-larger-than=]
+static int ccp_run_aes_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
 
-Fixes: 395f540 "xhci: support new USB 3.1 hub request to get extended port status"
-Cc: Mathias Nyman <mathias.nyman@linux.intel.com>
-Signed-off-by: Ruslan Bilovol <ruslan.bilovol@gmail.com>
-Link: https://lore.kernel.org/r/1562501839-26522-1-git-send-email-ruslan.bilovol@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The problem may also happen when there is no warning, e.g. in the
+ccp_run_cmd()->ccp_run_aes_cmd()->ccp_run_aes_gcm_cmd() call chain with
+over 2000 bytes.
+
+Mark each individual function as 'noinline_for_stack' to prevent
+this from happening, and move the calls to the two special cases for aes
+into the top-level function. This will keep the actual combined stack
+usage to the mimimum: 828 bytes for ccp_run_aes_gcm_cmd() and
+at most 524 bytes for each of the other cases.
+
+Fixes: 63b945091a07 ("crypto: ccp - CCP device driver and interface support")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci-hub.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/ccp/ccp-ops.c | 52 +++++++++++++++++++++---------------
+ 1 file changed, 31 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
-index 8f180bf7561a..9772c0de59b7 100644
---- a/drivers/usb/host/xhci-hub.c
-+++ b/drivers/usb/host/xhci-hub.c
-@@ -1104,7 +1104,7 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
- 			}
- 			port_li = readl(ports[wIndex]->addr + PORTLI);
- 			status = xhci_get_ext_port_status(temp, port_li);
--			put_unaligned_le32(cpu_to_le32(status), &buf[4]);
-+			put_unaligned_le32(status, &buf[4]);
- 		}
+diff --git a/drivers/crypto/ccp/ccp-ops.c b/drivers/crypto/ccp/ccp-ops.c
+index 4b48b8523a40..330853a2702f 100644
+--- a/drivers/crypto/ccp/ccp-ops.c
++++ b/drivers/crypto/ccp/ccp-ops.c
+@@ -458,8 +458,8 @@ static int ccp_copy_from_sb(struct ccp_cmd_queue *cmd_q,
+ 	return ccp_copy_to_from_sb(cmd_q, wa, jobid, sb, byte_swap, true);
+ }
+ 
+-static int ccp_run_aes_cmac_cmd(struct ccp_cmd_queue *cmd_q,
+-				struct ccp_cmd *cmd)
++static noinline_for_stack int
++ccp_run_aes_cmac_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
+ {
+ 	struct ccp_aes_engine *aes = &cmd->u.aes;
+ 	struct ccp_dm_workarea key, ctx;
+@@ -614,8 +614,8 @@ static int ccp_run_aes_cmac_cmd(struct ccp_cmd_queue *cmd_q,
+ 	return ret;
+ }
+ 
+-static int ccp_run_aes_gcm_cmd(struct ccp_cmd_queue *cmd_q,
+-			       struct ccp_cmd *cmd)
++static noinline_for_stack int
++ccp_run_aes_gcm_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
+ {
+ 	struct ccp_aes_engine *aes = &cmd->u.aes;
+ 	struct ccp_dm_workarea key, ctx, final_wa, tag;
+@@ -897,7 +897,8 @@ static int ccp_run_aes_gcm_cmd(struct ccp_cmd_queue *cmd_q,
+ 	return ret;
+ }
+ 
+-static int ccp_run_aes_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
++static noinline_for_stack int
++ccp_run_aes_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
+ {
+ 	struct ccp_aes_engine *aes = &cmd->u.aes;
+ 	struct ccp_dm_workarea key, ctx;
+@@ -907,12 +908,6 @@ static int ccp_run_aes_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
+ 	bool in_place = false;
+ 	int ret;
+ 
+-	if (aes->mode == CCP_AES_MODE_CMAC)
+-		return ccp_run_aes_cmac_cmd(cmd_q, cmd);
+-
+-	if (aes->mode == CCP_AES_MODE_GCM)
+-		return ccp_run_aes_gcm_cmd(cmd_q, cmd);
+-
+ 	if (!((aes->key_len == AES_KEYSIZE_128) ||
+ 	      (aes->key_len == AES_KEYSIZE_192) ||
+ 	      (aes->key_len == AES_KEYSIZE_256)))
+@@ -1080,8 +1075,8 @@ static int ccp_run_aes_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
+ 	return ret;
+ }
+ 
+-static int ccp_run_xts_aes_cmd(struct ccp_cmd_queue *cmd_q,
+-			       struct ccp_cmd *cmd)
++static noinline_for_stack int
++ccp_run_xts_aes_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
+ {
+ 	struct ccp_xts_aes_engine *xts = &cmd->u.xts;
+ 	struct ccp_dm_workarea key, ctx;
+@@ -1280,7 +1275,8 @@ static int ccp_run_xts_aes_cmd(struct ccp_cmd_queue *cmd_q,
+ 	return ret;
+ }
+ 
+-static int ccp_run_des3_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
++static noinline_for_stack int
++ccp_run_des3_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
+ {
+ 	struct ccp_des3_engine *des3 = &cmd->u.des3;
+ 
+@@ -1476,7 +1472,8 @@ static int ccp_run_des3_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
+ 	return ret;
+ }
+ 
+-static int ccp_run_sha_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
++static noinline_for_stack int
++ccp_run_sha_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
+ {
+ 	struct ccp_sha_engine *sha = &cmd->u.sha;
+ 	struct ccp_dm_workarea ctx;
+@@ -1820,7 +1817,8 @@ static int ccp_run_sha_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
+ 	return ret;
+ }
+ 
+-static int ccp_run_rsa_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
++static noinline_for_stack int
++ccp_run_rsa_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
+ {
+ 	struct ccp_rsa_engine *rsa = &cmd->u.rsa;
+ 	struct ccp_dm_workarea exp, src, dst;
+@@ -1951,8 +1949,8 @@ static int ccp_run_rsa_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
+ 	return ret;
+ }
+ 
+-static int ccp_run_passthru_cmd(struct ccp_cmd_queue *cmd_q,
+-				struct ccp_cmd *cmd)
++static noinline_for_stack int
++ccp_run_passthru_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
+ {
+ 	struct ccp_passthru_engine *pt = &cmd->u.passthru;
+ 	struct ccp_dm_workarea mask;
+@@ -2083,7 +2081,8 @@ static int ccp_run_passthru_cmd(struct ccp_cmd_queue *cmd_q,
+ 	return ret;
+ }
+ 
+-static int ccp_run_passthru_nomap_cmd(struct ccp_cmd_queue *cmd_q,
++static noinline_for_stack int
++ccp_run_passthru_nomap_cmd(struct ccp_cmd_queue *cmd_q,
+ 				      struct ccp_cmd *cmd)
+ {
+ 	struct ccp_passthru_nomap_engine *pt = &cmd->u.passthru_nomap;
+@@ -2424,7 +2423,8 @@ static int ccp_run_ecc_pm_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
+ 	return ret;
+ }
+ 
+-static int ccp_run_ecc_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
++static noinline_for_stack int
++ccp_run_ecc_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
+ {
+ 	struct ccp_ecc_engine *ecc = &cmd->u.ecc;
+ 
+@@ -2461,7 +2461,17 @@ int ccp_run_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
+ 
+ 	switch (cmd->engine) {
+ 	case CCP_ENGINE_AES:
+-		ret = ccp_run_aes_cmd(cmd_q, cmd);
++		switch (cmd->u.aes.mode) {
++		case CCP_AES_MODE_CMAC:
++			ret = ccp_run_aes_cmac_cmd(cmd_q, cmd);
++			break;
++		case CCP_AES_MODE_GCM:
++			ret = ccp_run_aes_gcm_cmd(cmd_q, cmd);
++			break;
++		default:
++			ret = ccp_run_aes_cmd(cmd_q, cmd);
++			break;
++		}
  		break;
- 	case SetPortFeature:
+ 	case CCP_ENGINE_XTS_AES_128:
+ 		ret = ccp_run_xts_aes_cmd(cmd_q, cmd);
 -- 
 2.20.1
 
