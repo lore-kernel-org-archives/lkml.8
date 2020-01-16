@@ -2,29 +2,29 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D20DC33CB2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50090C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EDF32465A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BFAF24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:14:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729692AbgAPDOO (ORCPT
+        id S1729841AbgAPDOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 22:14:14 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:39380 "EHLO huawei.com"
+        Wed, 15 Jan 2020 22:14:18 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9626 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729472AbgAPDOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 22:14:11 -0500
+        id S1729486AbgAPDOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 22:14:12 -0500
 Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D32D92D23A1DF1A05B8C;
+        by Forcepoint Email with ESMTP id 9E354639AE2689F3FF6F;
         Thu, 16 Jan 2020 11:14:08 +0800 (CST)
 Received: from linux-ibm.site (10.175.102.37) by
  DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 16 Jan 2020 11:13:58 +0800
+ 14.3.439.0; Thu, 16 Jan 2020 11:13:59 +0800
 From:   Xuefeng Wang <wxf.wang@hisilicon.com>
 To:     <arnd@arndb.de>, <akpm@linux-foundation.org>,
         <catalin.marinas@arm.com>, <will@kernel.org>,
@@ -32,10 +32,12 @@ To:     <arnd@arndb.de>, <akpm@linux-foundation.org>,
 CC:     <linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-mm@kvack.org>, <linux-arm-kernel@lists.infradead.org>,
         <chenzhou10@huawei.com>
-Subject: [PATCH 0/2] mm/thp: rework the pmd protect changing flow
-Date:   Thu, 16 Jan 2020 11:09:15 +0800
-Message-ID: <1579144157-7736-1-git-send-email-wxf.wang@hisilicon.com>
+Subject: [PATCH 2/2] arm64: mm: rework the pmd protect changing flow
+Date:   Thu, 16 Jan 2020 11:09:17 +0800
+Message-ID: <1579144157-7736-3-git-send-email-wxf.wang@hisilicon.com>
 X-Mailer: git-send-email 1.7.12.4
+In-Reply-To: <1579144157-7736-1-git-send-email-wxf.wang@hisilicon.com>
+References: <1579144157-7736-1-git-send-email-wxf.wang@hisilicon.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.175.102.37]
@@ -54,27 +56,48 @@ changing pimd to zero can prevent the hardware from update asynchronous.
 So reconstruct it and remove the first pmdp_invalidate. And the second tlb
 flush can make sure the new tlb entry valid.
 
-This patch series add a pmdp_modify_prot transaction abstraction firstly.
-Then add pmdp_modify_prot_start() in arm64, which uses pmdp_huge_get_and_clear()
-to atomically fetch the pmd and zero the entry.
+Add pmdp_modify_prot_start() in arm64, which uses pmdp_huge_get_and_clear()
+to fetch the pmd and zero entry, preventing racing of any hardware updates.
 
 After rework, the mprotect can get 3~13 times performace gain in range
-64M to 512M on KunPeng920:
+64M to 512M.
 
 4K granule/THP on
 memory size(M)	64	128	256	320	448	512
 pre-patch		0.77	1.40	2.64	3.23	4.49	5.10
 post-patch		0.20	0.23	0.28	0.31	0.37	0.39
 
-Xuefeng Wang (2):
-  mm: add helpers pmdp_modify_prot_start/commit
-  arm64: mm: rework the pmd protect changing flow
+Signed-off-by: Xuefeng Wang <wxf.wang@hisilicon.com>
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+---
+ arch/arm64/include/asm/pgtable.h | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
- arch/arm64/include/asm/pgtable.h | 14 +++++++++++++
- include/asm-generic/pgtable.h    | 35 ++++++++++++++++++++++++++++++++
- mm/huge_memory.c                 | 19 ++++++++---------
- 3 files changed, 57 insertions(+), 11 deletions(-)
-
+diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+index cd5de0e40bfa..bccdaa5bd5f2 100644
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -769,6 +769,20 @@ static inline pmd_t pmdp_huge_get_and_clear(struct mm_struct *mm,
+ }
+ #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+ 
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
++#define __HAVE_ARCH_PMDP_MODIFY_PROT_TRANSACTION
++static inline pmd_t pmdp_modify_prot_start(struct vm_area_struct *vma,
++						unsigned long addr,
++						pmd_t *pmdp)
++{
++	/*
++	 * Atomic change pmd to zero, prevent the hardware from update
++	 * aynchronously update it.
++	 */
++	return pmdp_huge_get_and_clear(vma->vm_mm, addr, pmdp);
++}
++#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
++
+ /*
+  * ptep_set_wrprotect - mark read-only while trasferring potential hardware
+  * dirty status (PTE_DBM && !PTE_RDONLY) to the software PTE_DIRTY bit.
 -- 
 2.17.1
 
