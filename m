@@ -2,241 +2,120 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C089C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A3AC33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:23:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 693992077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E27D7206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:23:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OZdQn+Tv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbgAPFRT (ORCPT
+        id S1728925AbgAPFXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 00:17:19 -0500
-Received: from esa4.mentor.iphmx.com ([68.232.137.252]:18103 "EHLO
-        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727005AbgAPFRT (ORCPT
+        Thu, 16 Jan 2020 00:23:15 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:37164 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbgAPFXP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 00:17:19 -0500
-X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Thu, 16 Jan 2020 00:17:18 EST
-IronPort-SDR: OX6zJ95sovONRfQnTjo48l7mK51NATeL9LWJ4HdR/EqgorebtLgAc9bQIChkKdQgDB3Glq2PiD
- xOMdkaJje84Hm5Lr0kJh2qxG+uXnamP4t57G7T+A/qGv6chu2ts9ldYPs5T1WYAhUQEjl4/n2p
- 2F+nz8kU/RdCQXBoqePy1fQ0QYjma5O7Aq146nY4DbjDodD89jKlAK+aRh+VJzIqpNobEiJyjp
- GQrv5Q2aJKtNmNv5czH3+Nn0cYMezDWeteh7iEkaif5ZMk9R8tm52rV7TT8JyzG1QA0kjqnUcy
- P+Q=
-X-IronPort-AV: E=Sophos;i="5.70,325,1574150400"; 
-   d="scan'208";a="44969072"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa4.mentor.iphmx.com with ESMTP; 15 Jan 2020 21:10:10 -0800
-IronPort-SDR: CHHfjXsW/HCOjvakfqh9V09To9kzoQTZOG4Rcz17cazoVVdFgLqd3Hm7/2PrOdBpfxeRRbAU/a
- tyu49+9J2KA96RnqRs33qh5KKl3ZGAIhlW6qFvMSyJLtyTqKy/+emp9dROwp3CW8EpNe6ALtH0
- SARCIu3JMQjkMDnmMial2ExZ+SGnCclmQ57YnlJnQFubmsCxQCTv0aZdDgWmw0eXaiFs0NtnTV
- TpcfPnhsiFcu1Y3MKfOPf8c8sojt2X1/cucTpepI+k7iCGMoerw/G6jfPzaVLRe/MXAD4Ff9fQ
- Ac8=
-Subject: Re: [PATCH v3 4/7] dt-bindings: gpio: Add gpio-repeater bindings
-From:   Harish Jenny K N <harish_kandiga@mentor.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Rob Herring <robh@kernel.org>
-CC:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>
-References: <20191127084253.16356-1-geert+renesas@glider.be>
- <20191127084253.16356-5-geert+renesas@glider.be>
- <20191205210653.GA29969@bogus>
- <CAMuHMdXKPC7-XaezodwL1Dhvke6PUVSZEbvN-sm3Uh6T61qbhQ@mail.gmail.com>
- <CAL_JsqJLJPSYroX0mbBUpgWPV0oEvKEUNC-VZt4XFDF8tLuNFA@mail.gmail.com>
- <CAMuHMdXOJSZUDmn8aeTynN0TKCS5hJR+uMSinOmgbmA8YmsQjw@mail.gmail.com>
- <bb5fb539-0d0d-6356-35c2-8ba47cb9fcbf@mentor.com>
-Message-ID: <4dccaf48-c652-a5f4-49f3-ccc279d5548e@mentor.com>
-Date:   Thu, 16 Jan 2020 10:39:50 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 16 Jan 2020 00:23:15 -0500
+Received: by mail-qt1-f193.google.com with SMTP id w47so17927111qtk.4
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 21:23:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yYiCDbJIjI5Gc+HCG21eDD5I0VhMo0bA/4w6OlV0KM0=;
+        b=OZdQn+TvUSWi/oF2OJXBWYergJZIBJToM3HOQU6970b09/FLyJPx63uozadrIKOSke
+         7WQfW38XDvSv/ei69rGnz+BMbLc7RsmzG0R8DjIwDh4d8sh5LI7J6rx1v4pGEGP+2OmU
+         rvIlS1hXGHMkWvy8Yj7bvaLiK7paHjRYm6hpU+Qt88QjCp5nW1QwQrubI+c45EJJQhWW
+         1Hrz76UGwF/MsCKxVvXnfs8jDzA/gDWziOlQgDkAEjg6Or1cqYyvyCqlWDm7R7s+j4pY
+         JuOChq4Z1ceGy/gf72gVjXTzq0EUo63uR5Evy5iVYkBBiyiC9x/ooDoPPQQlWf0NHfkY
+         hJgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yYiCDbJIjI5Gc+HCG21eDD5I0VhMo0bA/4w6OlV0KM0=;
+        b=OE3om7IW5DCWIkMIJAde3oKtHf/t/a58n4suxRr+8+8LfT6fiswtd2WYjdi3NcFDsS
+         LvVN4levZeLMv0J/54DWciXDrtjsvUGFZNopaOrdsiw8h6hEc9oST+jC4GS4EJOBM3On
+         CYi/p59gC/IcEMCWXgOY56vBuFfj4qwu3ohGjeARXF276o/SsZuJavljLuAEkK7FKuT6
+         FjQpaGe9uF98T5jjdpxqf1I4T2+kwWo/ENimuRH5094mSLozRSRMc5nhHECN35ASysK8
+         uz8vZShGINOCDSAlwkGoCuDGTmzpx2jfYn6wPe/1JNBg+tA425Ze992IuwOWIyrb3aNM
+         vr1Q==
+X-Gm-Message-State: APjAAAURREzG0KMh0rFwc1cRX85oB3J7IZAPeEJjxbp9Rro6jrbypzI8
+        EsAY7rqr0/BXlPEizbV65cTloPQ5ZqKYRtX+amZF3Q==
+X-Google-Smtp-Source: APXvYqyc2uMQyHBLqa2xRW14JXfYwcgrlEF0pcUP7UrNbOp8FUjMFUfn4BIGXFvt+xh+6usK+SZ0+OlCkP1VAjWRSOI=
+X-Received: by 2002:ac8:71d7:: with SMTP id i23mr784628qtp.50.1579152193440;
+ Wed, 15 Jan 2020 21:23:13 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <bb5fb539-0d0d-6356-35c2-8ba47cb9fcbf@mentor.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: SVR-IES-MBX-08.mgc.mentorg.com (139.181.222.8) To
- svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1)
+References: <20200116012321.26254-1-keescook@chromium.org> <20200116012321.26254-6-keescook@chromium.org>
+In-Reply-To: <20200116012321.26254-6-keescook@chromium.org>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 16 Jan 2020 06:23:01 +0100
+Message-ID: <CACT4Y+batRaj_PaDnfzLjpLDOCChhpiayKeab-rNLx5LAj1sSQ@mail.gmail.com>
+Subject: Re: [PATCH v3 5/6] kasan: Unset panic_on_warn before calling panic()
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Elena Petrova <lenaptr@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-hardening@lists.openwall.com,
+        syzkaller <syzkaller@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
-
-
-On 07/01/20 2:52 PM, Harish Jenny K N wrote:
-> On 06/01/20 1:42 PM, Geert Uytterhoeven wrote:
->> Hi Rob,
->>
->> On Fri, Dec 6, 2019 at 4:04 PM Rob Herring <robh@kernel.org> wrote:
->>> On Fri, Dec 6, 2019 at 3:17 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->>>> On Thu, Dec 5, 2019 at 10:06 PM Rob Herring <robh@kernel.org> wrote:
->>>>> On Wed, Nov 27, 2019 at 09:42:50AM +0100, Geert Uytterhoeven wrote:
->>>>>> Add Device Tree bindings for a GPIO repeater, with optional translation
->>>>>> of physical signal properties.  This is useful for describing explicitly
->>>>>> the presence of e.g. an inverter on a GPIO line, and was inspired by the
->>>>>> non-YAML gpio-inverter bindings by Harish Jenny K N
->>>>>> <harish_kandiga@mentor.com>[1].
->>>>>>
->>>>>> Note that this is different from a GPIO Nexus Node[2], which cannot do
->>>>>> physical signal property translation.
->>>>> It can't? Why not? The point of the passthru mask is to not do
->>>>> translation of flags, but without it you are always doing translation of
->>>>> cells.
->>>> Thanks for pushing me deeper into nexuses!
->>>> You're right, you can map from one type to another.
->>>> However, you cannot handle the "double inversion" of an ACTIVE_LOW
->>>> signal with a physical inverter added:
->>>>
->>>>         nexus: led-nexus {
->>>>                 #gpio-cells = <2>;
->>>>                 gpio-map = <0 0 &gpio2 19 GPIO_ACTIVE_LOW>,     // inverted
->>>>                            <1 0 &gpio2 20 GPIO_ACTIVE_HIGH>,    // noninverted
->>>>                            <2 0 &gpio2 21 GPIO_ACTIVE_LOW>;     // inverted
->>>>                 gpio-map-mask = <3 0>;
->>>>                 // default gpio-map-pass-thru = <0 0>;
->>>>         };
->>>>
->>>>         leds {
->>>>                 compatible = "gpio-leds";
->>>>                 led6-inverted {
->>>>                         gpios = <&nexus 0 GPIO_ACTIVE_HIGH>;
->>>>                 };
->>>>                 led7-noninverted {
->>>>                         gpios = <&nexus 1 GPIO_ACTIVE_HIGH>;
->>>>                 };
->>>>                 led8-double-inverted {  // FAILS: still inverted
->>>>                         gpios = <&nexus 2 GPIO_ACTIVE_LOW>;
->>>>                 };
->>>>         };
->>>>
->>>> It "works" if the last entry in gpio-map is changed to GPIO_ACTIVE_HIGH.
->>>> Still, the consumer would see the final translated polarity, and not the
->>>> actual one it needs to program the consumer for.
->>> I'm not really following. Why isn't a double inversion just the same
->>> as no inversion?
->> Because the nexus can only mask and/or substitute bits.
->> It cannot do a XOR operation on the GPIO flags.
->>
->>>>>> While an inverter can be described implicitly by exchanging the
->>>>>> GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags, this has its limitations.
->>>>>> Each GPIO line has only a single GPIO_ACTIVE_* flag, but applies to both
->>>>>> th provider and consumer sides:
->>>>>>   1. The GPIO provider (controller) looks at the flags to know the
->>>>>>      polarity, so it can translate between logical (active/not active)
->>>>>>      and physical (high/low) signal levels.
->>>>>>   2. While the signal polarity is usually fixed on the GPIO consumer
->>>>>>      side (e.g. an LED is tied to either the supply voltage or GND),
->>>>>>      it may be configurable on some devices, and both sides need to
->>>>>>      agree.  Hence the GPIO_ACTIVE_* flag as seen by the consumer must
->>>>>>      match the actual polarity.
->>>>>>      There exists a similar issue with interrupt flags, where both the
->>>>>>      interrupt controller and the device generating the interrupt need
->>>>>>      to agree, which breaks in the presence of a physical inverter not
->>>>>>      described in DT (see e.g. [3]).
->>>>> Adding an inverted flag as I've suggested would also solve this issue.
->>>> As per your suggestion in "Re: [PATCH V4 2/2] gpio: inverter: document
->>>> the inverter bindings"?
->>>> https://lore.kernel.org/linux-devicetree/CAL_JsqLp___2O-naU+2PPQy0QmJX6+aN3hByz-OB9+qFvWgN9Q@mail.gmail.com/
->>>>
->>>> Oh, now I understand. I was misguided by Harish' interpretation
->>>> https://lore.kernel.org/linux-devicetree/dde73334-a26d-b53f-6b97-4101c1cdc185@mentor.com/
->>>> which assumed an "inverted" property, e.g.
->>>>
->>>>     inverted = /bits/ 8 <0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0>;
->>>>
->>>> But you actually meant a new GPIO_INVERTED flag, to be ORed into the 2nd
->>>> cell of a GPIO specifier? I.e. add to include/dt-bindings/gpio/gpio.h"
->>>>
->>>>     /* Bit 6 expresses the presence of a physical inverter */
->>>>     #define GPIO_INVERTED 64
->>> Exactly.
->> OK, makes sense.
+On Thu, Jan 16, 2020 at 2:24 AM Kees Cook <keescook@chromium.org> wrote:
 >
-> The reason I went for "inverted" property is because, we can specify this for gpios at provider side.
+> As done in the full WARN() handler, panic_on_warn needs to be cleared
+> before calling panic() to avoid recursive panics.
 >
-> The usecase needed to define the polarity which did not have kernel space consumer driver.
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  mm/kasan/report.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
 >
->
-> I am not sure how do we achieve this using GPIO_INVERTED flag. We need some sort of node/gpio-hog to specify these
->
-> type of properties? Otherwise gpio-pin will be held by kernel or the module using the hog property and the user space application will not be able to access pin.
->
->
-> or please let me know if I am missing something.
->
->
->>>> We need to be very careful in defining to which side the GPIO_ACTIVE_*
->>>> applies to (consumer?), and which side the GPIO_INVERTED flag (provider?).
->>>> Still, this doesn't help if e.g. a FET is used instead of a push-pull
->>>> inverter, as the former needs translation of other flags (which the
->>>> nexus can do, the caveats above still applies, though).
->>> Yes. Historically the cells values are meaningful to the provider and
->>> opaque to the consumer. Standardized cell values changes that
->>> somewhat. I think we want the active flag to be from the provider's
->>> prospective because the provider always needs to know. The consumer
->>> often doesn't need to know. That also means things work without the
->>> GPIO_INVERTED flag if the consumer doesn't care which is what we have
->>> today already and we can't go back in time.
->>>
-> Things will work without GPIO_INVERTED flag for consumers which can specify GPIO_ACTIVE_* flags.
->
->
->
->>>> Same for adding IRQ_TYPE_INVERTED.
->>> I suppose so, yes.
->>>
->>>> Related issue: how to handle physical inverters on SPI chip select lines,
->>>> if the SPI slave can be configured for both polarities?
->>> Good question. Perhaps in a different way because we have to handle
->>> both h/w controlled and gpio chip selects.
->>>
->>> However, how would one configure the polarity in the device in the
->>> first place? You have to assert the CS first to give a command to
->>> reprogram it.
->> That's indeed true for a simple SPI slave.
->> But if it is a smarter device (e.g. a generic micro controller), it may use the
->> system's DTB to configure itself.
->>
->> Gr{oetje,eeting}s,
->>
->>                         Geert
->>
+> diff --git a/mm/kasan/report.c b/mm/kasan/report.c
+> index 621782100eaa..844554e78893 100644
+> --- a/mm/kasan/report.c
+> +++ b/mm/kasan/report.c
+> @@ -92,8 +92,16 @@ static void end_report(unsigned long *flags)
+>         pr_err("==================================================================\n");
+>         add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
+>         spin_unlock_irqrestore(&report_lock, *flags);
+> -       if (panic_on_warn)
+> +       if (panic_on_warn) {
+> +               /*
+> +                * This thread may hit another WARN() in the panic path.
+> +                * Resetting this prevents additional WARN() from panicking the
+> +                * system on this thread.  Other threads are blocked by the
+> +                * panic_mutex in panic().
 
+I don't understand part about other threads.
+Other threads are not necessary inside of panic(). And in fact since
+we reset panic_on_warn, they will not get there even if they should.
+If I am reading this correctly, once one thread prints a warning and
+is going to panic, other threads may now print infinite amounts of
+warning and proceed past them freely. Why is this the behavior we
+want?
 
-Can you please let me know your inputs on this ?
-
-
-Now that Geert has sent v4 patch of GPIO Aggregator by "Dropping controversial GPIO repeater", I do not see the above mentioned inverter usecase can be handled anymore.
-
-
-Is the observation/patch submitted in https://lore.kernel.org/linux-devicetree/dde73334-a26d-b53f-6b97-4101c1cdc185@mentor.com/ still not acceptable?
-
-
-
-Thanks,
-
-Harish
-
+> +                */
+> +               panic_on_warn = 0;
+>                 panic("panic_on_warn set ...\n");
+> +       }
+>         kasan_enable_current();
+>  }
