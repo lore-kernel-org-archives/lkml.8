@@ -2,320 +2,312 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE2DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D79FDC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:13:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B70DC20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:12:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="il+uX7ct"
+	by mail.kernel.org (Postfix) with ESMTP id A8A702077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:13:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579205588;
+	bh=Oku1SgUcFNGjAlZYS25MeT7pk3002sc2qQcj/8n+Jy8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=DWjC6g2hCpMqrLdWHmmMrY4VraNrqsCQ4XBv0p9TtoaxH30r8yn2Ok5pCIrQo+GLl
+	 KLyZkyMmjzM7lBE1KLCNJIKvVYfVhtw2XbcgrBhtH18S1pAk5lsvET1VNPmkxjJa1y
+	 XQdnXTKq2mYjKce9+oeOBUE86Yn+EQIHPVlvGK/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387511AbgAPUMN (ORCPT
+        id S2387528AbgAPUNH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 15:12:13 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35835 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730031AbgAPUMK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 15:12:10 -0500
-Received: by mail-pg1-f194.google.com with SMTP id l24so10464208pgk.2
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 12:12:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6J6Nc5ckDiDXa+2kUuoaoERkijlEiyl14mk6r9DI/r4=;
-        b=il+uX7ctaW0X4oV7wVZmOeXa38f+NsrzJ3oIEJQs9pyD2xFA2xUgGuuyDJDXeotVuR
-         ErD3IkuyqfnwU/ypu47lv+XFoN6tHIDKa7PK2NMtSWgHwOKsAdyvzTIwxjsPrX3M2+qW
-         YA2TPkU29XRrqJWPS/B9APr/Nr++fzwz3wOZtmAWYqQgTDFRP8R08YbC4hH45N0LYoIv
-         U6IlYROUwbzenbJK6VloMe6PJbHwvvA3mah+letARJpI7LD4B6ew9K1TtQCJODH+YsFD
-         tvv+SzItC46/HoVO/xcUj5kd9GA2fwPO9zjXFavbvW2VPGruqGkUZuar8sumvh74CbB7
-         7ukg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6J6Nc5ckDiDXa+2kUuoaoERkijlEiyl14mk6r9DI/r4=;
-        b=l78DVwneDE2wlXWPzjNZFHje7fqhwsYwA1ZVZ/aG6wKd9XqMkR36XBdbKUCcaVigLh
-         2s/T9dxnxZ1WythAJ56fGOuF7GWGqDOqOa/R1ACmF+7fw0GVPpnzZtUxO5tLJP8w7YMt
-         GbabWaZ80PnHTK2JQWHbqKqA1IfHLJ6rtpSzWRVshbe8vhOKZp67+zet1s0DMs/vNQXD
-         cFTKs5Ws//k9bPhjtzsIBaCefxnvWHmHipqCkFYOzK/OFt1Za1ndKuQUU5Lc5/XHoaZP
-         9+1oRHsWdReVdNp3FkKjppbwuMfK+Hu6EGYthMTkHx/HINUmWmtKBmBjXUvIQsedZsrG
-         6Rzw==
-X-Gm-Message-State: APjAAAWrAygn1cwi91ukTH+yoHKSq//0hSf4pYwv28oZV+MO+jW9/baG
-        4hM2Waustbd4ybrcNTsRKqeTzg==
-X-Google-Smtp-Source: APXvYqwhmSa09FzuE/crdLMwuXjVa5mwdfG9E8SQM4dMlQmUd2VHEupHs1k8SakPeZ4umTGmE02VpQ==
-X-Received: by 2002:a63:d705:: with SMTP id d5mr40744138pgg.24.1579205529705;
-        Thu, 16 Jan 2020 12:12:09 -0800 (PST)
-Received: from google.com ([2620:15c:202:201:bc61:d85d:eb16:9036])
-        by smtp.gmail.com with ESMTPSA id l21sm26553092pff.100.2020.01.16.12.12.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 12:12:08 -0800 (PST)
-Date:   Thu, 16 Jan 2020 12:12:04 -0800
-From:   Benson Leung <bleung@google.com>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        groeck@chromium.org, bleung@chromium.org, dtor@chromium.org,
-        gwendal@chromium.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Evan Green <evgreen@chromium.org>
-Subject: Re: [PATCH] platform/chrome: cros_ec: Match implementation with
- headers
-Message-ID: <20200116201204.GE208460@google.com>
-References: <20191210100645.12138-1-enric.balletbo@collabora.com>
+        Thu, 16 Jan 2020 15:13:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35488 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730031AbgAPUNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 15:13:06 -0500
+Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD59120663;
+        Thu, 16 Jan 2020 20:13:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579205585;
+        bh=Oku1SgUcFNGjAlZYS25MeT7pk3002sc2qQcj/8n+Jy8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=IhK1f48Tna9dZ0CNq2pVZVJvKPG/cdAIh6XcKxhAJvXjvcOtTlpFNH6+h67axVlEE
+         TzPpUl0Qmm0F++vi8zFvYulQgCWNekYQQBNkKMLHCCnzq5JUrNzhVSenwf47miEj3D
+         z0SAzM3CIDXcKrYOY59mYoiq5Gzljk4zmpKSpT3w=
+Date:   Thu, 16 Jan 2020 14:13:03 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Remi Pommarel <repk@triplefau.lt>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Yue Wang <yue.wang@Amlogic.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v5 7/7] PCI: amlogic: Use AXG PCIE
+Message-ID: <20200116201303.GA187897@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="X3gaHHMYHkYqP6yf"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191210100645.12138-1-enric.balletbo@collabora.com>
+In-Reply-To: <20200116111850.23690-8-repk@triplefau.lt>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[+cc linux-pci, series at https://lore.kernel.org/r/20200116111850.23690-1-repk@triplefau.lt]
 
---X3gaHHMYHkYqP6yf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Enric,
-
-On Tue, Dec 10, 2019 at 11:06:45AM +0100, Enric Balletbo i Serra wrote:
-> The 'cros_ec' core driver is the common interface for the cros_ec
-> transport drivers to do the shared operations to register, unregister,
-> suspend and resume. The interface is provided by including the header
-> 'include/linux/platform_data/cros_ec_proto.h', however, instead of have
-> the implementation of these functions in cros_ec_proto.c, it is in
-> 'cros_ec.c', which is a different kernel module. Apart from being a bad
-> practice, this can induce confusions allowing the users of the cros_ec
-> protocol to call these functions.
->=20
-> The register, unregister, suspend and resume functions *should* only be
-
-Also mention that this moves the cros_ec_handle_event definition too.
-
-> called by the different transport drivers (i2c, spi, lpc, etc.), so make
-> this a bit less confusing by moving these functions from the public
-> in-kernel space to a private include in platform/chrome, and then, the
-> interface for cros_ec module and for the cros_ec_proto module is clean.
->=20
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+On Thu, Jan 16, 2020 at 12:18:50PM +0100, Remi Pommarel wrote:
+> Now that PCIE PHY has been introduced for AXG, the whole has_shared_phy
+> logic can be mutualized between AXG and G12A platforms.
+> 
+> This new PHY makes use of the optional shared MIPI/PCIE analog PHY
+> found on AXG platforms, which need to be used in order to have reliable
+> PCIE communications.
+> 
+> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
 > ---
->=20
->  drivers/platform/chrome/cros_ec.c           |  2 ++
->  drivers/platform/chrome/cros_ec.h           | 25 +++++++++++++++++++++
->  drivers/platform/chrome/cros_ec_i2c.c       |  2 ++
->  drivers/platform/chrome/cros_ec_ishtp.c     |  2 ++
->  drivers/platform/chrome/cros_ec_lpc.c       |  1 +
->  drivers/platform/chrome/cros_ec_rpmsg.c     |  2 ++
->  drivers/platform/chrome/cros_ec_spi.c       |  2 ++
->  include/linux/platform_data/cros_ec_proto.h | 16 -------------
->  8 files changed, 36 insertions(+), 16 deletions(-)
->  create mode 100644 drivers/platform/chrome/cros_ec.h
->=20
-> diff --git a/drivers/platform/chrome/cros_ec.c b/drivers/platform/chrome/=
-cros_ec.c
-> index 6d6ce86a1408..65c3207d2d90 100644
-> --- a/drivers/platform/chrome/cros_ec.c
-> +++ b/drivers/platform/chrome/cros_ec.c
-> @@ -18,6 +18,8 @@
->  #include <linux/suspend.h>
->  #include <asm/unaligned.h>
-> =20
-> +#include "cros_ec.h"
-> +
->  #define CROS_EC_DEV_EC_INDEX 0
->  #define CROS_EC_DEV_PD_INDEX 1
-> =20
-> diff --git a/drivers/platform/chrome/cros_ec.h b/drivers/platform/chrome/=
-cros_ec.h
-> new file mode 100644
-> index 000000000000..dc80550f5eaa
-> --- /dev/null
-> +++ b/drivers/platform/chrome/cros_ec.h
-> @@ -0,0 +1,25 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * ChromeOS Embedded Controller core interface.
-> + *
-> + * Copyright (C) 2012 Google, Inc
-
-Set Copyright date to 2020, especially for new file.
-
-> + */
-> +
-> +#ifndef __CROS_EC_H
-> +#define __CROS_EC_H
-> +
-> +/*
-> + * The EC is unresponsive for a time after a reboot command.  Add a
-> + * simple delay to make sure that the bus stays locked.
-> + */
-> +#define EC_REBOOT_DELAY_MS	50
-> +
-> +int cros_ec_register(struct cros_ec_device *ec_dev);
-> +int cros_ec_unregister(struct cros_ec_device *ec_dev);
-> +
-> +int cros_ec_suspend(struct cros_ec_device *ec_dev);
-> +int cros_ec_resume(struct cros_ec_device *ec_dev);
-> +
-> +bool cros_ec_handle_event(struct cros_ec_device *ec_dev);
-> +
-> +#endif /* __CROS_EC_H */
-> diff --git a/drivers/platform/chrome/cros_ec_i2c.c b/drivers/platform/chr=
-ome/cros_ec_i2c.c
-> index 9bd97bc8454b..6119eccd8a18 100644
-> --- a/drivers/platform/chrome/cros_ec_i2c.c
-> +++ b/drivers/platform/chrome/cros_ec_i2c.c
-> @@ -14,6 +14,8 @@
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
-> =20
-> +#include "cros_ec.h"
-> +
->  /**
->   * Request format for protocol v3
->   * byte 0	0xda (EC_COMMAND_PROTOCOL_3)
-> diff --git a/drivers/platform/chrome/cros_ec_ishtp.c b/drivers/platform/c=
-hrome/cros_ec_ishtp.c
-> index e5996821d08b..e1fdb491a9a7 100644
-> --- a/drivers/platform/chrome/cros_ec_ishtp.c
-> +++ b/drivers/platform/chrome/cros_ec_ishtp.c
-> @@ -14,6 +14,8 @@
->  #include <linux/platform_data/cros_ec_proto.h>
->  #include <linux/intel-ish-client-if.h>
-> =20
-> +#include "cros_ec.h"
-> +
->  /*
->   * ISH TX/RX ring buffer pool size
->   *
-> diff --git a/drivers/platform/chrome/cros_ec_lpc.c b/drivers/platform/chr=
-ome/cros_ec_lpc.c
-> index dccf479c6625..3e8ddd84bc41 100644
-> --- a/drivers/platform/chrome/cros_ec_lpc.c
-> +++ b/drivers/platform/chrome/cros_ec_lpc.c
-> @@ -23,6 +23,7 @@
->  #include <linux/printk.h>
->  #include <linux/suspend.h>
-> =20
-> +#include "cros_ec.h"
->  #include "cros_ec_lpc_mec.h"
-> =20
->  #define DRV_NAME "cros_ec_lpcs"
-> diff --git a/drivers/platform/chrome/cros_ec_rpmsg.c b/drivers/platform/c=
-hrome/cros_ec_rpmsg.c
-> index bd068afe43b5..dbc3f5523b83 100644
-> --- a/drivers/platform/chrome/cros_ec_rpmsg.c
-> +++ b/drivers/platform/chrome/cros_ec_rpmsg.c
-> @@ -13,6 +13,8 @@
->  #include <linux/rpmsg.h>
->  #include <linux/slab.h>
-> =20
-> +#include "cros_ec.h"
-> +
->  #define EC_MSG_TIMEOUT_MS	200
->  #define HOST_COMMAND_MARK	1
->  #define HOST_EVENT_MARK		2
-> diff --git a/drivers/platform/chrome/cros_ec_spi.c b/drivers/platform/chr=
-ome/cros_ec_spi.c
-> index a831bd5a5b2f..46786d2d679a 100644
-> --- a/drivers/platform/chrome/cros_ec_spi.c
-> +++ b/drivers/platform/chrome/cros_ec_spi.c
-> @@ -14,6 +14,8 @@
->  #include <linux/spi/spi.h>
->  #include <uapi/linux/sched/types.h>
-> =20
-> +#include "cros_ec.h"
-> +
->  /* The header byte, which follows the preamble */
->  #define EC_MSG_HEADER			0xec
-> =20
-> diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/=
-platform_data/cros_ec_proto.h
-> index 119b9951c055..f490e208540a 100644
-> --- a/include/linux/platform_data/cros_ec_proto.h
-> +++ b/include/linux/platform_data/cros_ec_proto.h
-> @@ -21,12 +21,6 @@
->  #define CROS_EC_DEV_SCP_NAME	"cros_scp"
->  #define CROS_EC_DEV_TP_NAME	"cros_tp"
-> =20
-> -/*
-> - * The EC is unresponsive for a time after a reboot command.  Add a
-> - * simple delay to make sure that the bus stays locked.
-> - */
-> -#define EC_REBOOT_DELAY_MS		50
+>  drivers/pci/controller/dwc/pci-meson.c | 116 +++++--------------------
+>  1 file changed, 22 insertions(+), 94 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
+> index 3772b02a5c55..3715dceca1bf 100644
+> --- a/drivers/pci/controller/dwc/pci-meson.c
+> +++ b/drivers/pci/controller/dwc/pci-meson.c
+> @@ -66,7 +66,6 @@
+>  #define PORT_CLK_RATE			100000000UL
+>  #define MAX_PAYLOAD_SIZE		256
+>  #define MAX_READ_REQ_SIZE		256
+> -#define MESON_PCIE_PHY_POWERUP		0x1c
+>  #define PCIE_RESET_DELAY		500
+>  #define PCIE_SHARED_RESET		1
+>  #define PCIE_NORMAL_RESET		0
+> @@ -81,26 +80,19 @@ enum pcie_data_rate {
+>  struct meson_pcie_mem_res {
+>  	void __iomem *elbi_base;
+>  	void __iomem *cfg_base;
+> -	void __iomem *phy_base;
+>  };
+>  
+>  struct meson_pcie_clk_res {
+>  	struct clk *clk;
+> -	struct clk *mipi_gate;
+>  	struct clk *port_clk;
+>  	struct clk *general_clk;
+>  };
+>  
+>  struct meson_pcie_rc_reset {
+> -	struct reset_control *phy;
+>  	struct reset_control *port;
+>  	struct reset_control *apb;
+>  };
+>  
+> -struct meson_pcie_param {
+> -	bool has_shared_phy;
+> -};
 > -
-
-Any reason why this define was moved?
-
->  /*
->   * Max bus-specific overhead incurred by request/responses.
->   * I2C requires 1 additional byte for requests.
-> @@ -206,10 +200,6 @@ struct cros_ec_dev {
-> =20
->  #define to_cros_ec_dev(dev)  container_of(dev, struct cros_ec_dev, class=
-_dev)
-> =20
-> -int cros_ec_suspend(struct cros_ec_device *ec_dev);
+>  struct meson_pcie {
+>  	struct dw_pcie pci;
+>  	struct meson_pcie_mem_res mem_res;
+> @@ -108,7 +100,6 @@ struct meson_pcie {
+>  	struct meson_pcie_rc_reset mrst;
+>  	struct gpio_desc *reset_gpio;
+>  	struct phy *phy;
+> -	const struct meson_pcie_param *param;
+>  };
+>  
+>  static struct reset_control *meson_pcie_get_reset(struct meson_pcie *mp,
+> @@ -130,13 +121,6 @@ static int meson_pcie_get_resets(struct meson_pcie *mp)
+>  {
+>  	struct meson_pcie_rc_reset *mrst = &mp->mrst;
+>  
+> -	if (!mp->param->has_shared_phy) {
+> -		mrst->phy = meson_pcie_get_reset(mp, "phy", PCIE_SHARED_RESET);
+> -		if (IS_ERR(mrst->phy))
+> -			return PTR_ERR(mrst->phy);
+> -		reset_control_deassert(mrst->phy);
+> -	}
 > -
-> -int cros_ec_resume(struct cros_ec_device *ec_dev);
+>  	mrst->port = meson_pcie_get_reset(mp, "port", PCIE_NORMAL_RESET);
+>  	if (IS_ERR(mrst->port))
+>  		return PTR_ERR(mrst->port);
+> @@ -162,22 +146,6 @@ static void __iomem *meson_pcie_get_mem(struct platform_device *pdev,
+>  	return devm_ioremap_resource(dev, res);
+>  }
+>  
+> -static void __iomem *meson_pcie_get_mem_shared(struct platform_device *pdev,
+> -					       struct meson_pcie *mp,
+> -					       const char *id)
+> -{
+> -	struct device *dev = mp->pci.dev;
+> -	struct resource *res;
 > -
->  int cros_ec_prepare_tx(struct cros_ec_device *ec_dev,
->  		       struct cros_ec_command *msg);
-> =20
-> @@ -222,10 +212,6 @@ int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
->  int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
->  			    struct cros_ec_command *msg);
-> =20
-> -int cros_ec_register(struct cros_ec_device *ec_dev);
+> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, id);
+> -	if (!res) {
+> -		dev_err(dev, "No REG resource %s\n", id);
+> -		return ERR_PTR(-ENXIO);
+> -	}
 > -
-> -int cros_ec_unregister(struct cros_ec_device *ec_dev);
+> -	return devm_ioremap(dev, res->start, resource_size(res));
+> -}
 > -
->  int cros_ec_query_all(struct cros_ec_device *ec_dev);
-> =20
->  int cros_ec_get_next_event(struct cros_ec_device *ec_dev,
-> @@ -238,8 +224,6 @@ int cros_ec_check_features(struct cros_ec_dev *ec, in=
-t feature);
-> =20
->  int cros_ec_get_sensor_count(struct cros_ec_dev *ec);
-> =20
-> -bool cros_ec_handle_event(struct cros_ec_device *ec_dev);
+>  static int meson_pcie_get_mems(struct platform_device *pdev,
+>  			       struct meson_pcie *mp)
+>  {
+> @@ -189,14 +157,6 @@ static int meson_pcie_get_mems(struct platform_device *pdev,
+>  	if (IS_ERR(mp->mem_res.cfg_base))
+>  		return PTR_ERR(mp->mem_res.cfg_base);
+>  
+> -	/* Meson AXG SoC has two PCI controllers use same phy register */
+> -	if (!mp->param->has_shared_phy) {
+> -		mp->mem_res.phy_base =
+> -			meson_pcie_get_mem_shared(pdev, mp, "phy");
+> -		if (IS_ERR(mp->mem_res.phy_base))
+> -			return PTR_ERR(mp->mem_res.phy_base);
+> -	}
 > -
->  /**
->   * cros_ec_get_time_ns() - Return time in ns.
->   *
-> --=20
-> 2.20.1
->=20
-
---=20
-Benson Leung
-Staff Software Engineer
-Chrome OS Kernel
-Google Inc.
-bleung@google.com
-Chromium OS Project
-bleung@chromium.org
-
---X3gaHHMYHkYqP6yf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQQCtZK6p/AktxXfkOlzbaomhzOwwgUCXiDDlAAKCRBzbaomhzOw
-wvccAP93CPSSy+I2J/PuIoyga1nkkngYhKUJxU2yznrqozfqwQD+PJmDLiDF5SWF
-vo3zC0TaxwQK9uQtt2K7gD7HhovosQ8=
-=Tohc
------END PGP SIGNATURE-----
-
---X3gaHHMYHkYqP6yf--
+>  	return 0;
+>  }
+>  
+> @@ -204,37 +164,33 @@ static int meson_pcie_power_on(struct meson_pcie *mp)
+>  {
+>  	int ret = 0;
+>  
+> -	if (mp->param->has_shared_phy) {
+> -		ret = phy_init(mp->phy);
+> -		if (ret)
+> -			return ret;
+> +	ret = phy_init(mp->phy);
+> +	if (ret)
+> +		return ret;
+>  
+> -		ret = phy_power_on(mp->phy);
+> -		if (ret) {
+> -			phy_exit(mp->phy);
+> -			return ret;
+> -		}
+> -	} else
+> -		writel(MESON_PCIE_PHY_POWERUP, mp->mem_res.phy_base);
+> +	ret = phy_power_on(mp->phy);
+> +	if (ret) {
+> +		phy_exit(mp->phy);
+> +		return ret;
+> +	}
+>  
+>  	return 0;
+>  }
+>  
+> +static void meson_pcie_power_off(struct meson_pcie *mp)
+> +{
+> +	phy_power_off(mp->phy);
+> +	phy_exit(mp->phy);
+> +}
+> +
+>  static int meson_pcie_reset(struct meson_pcie *mp)
+>  {
+>  	struct meson_pcie_rc_reset *mrst = &mp->mrst;
+>  	int ret = 0;
+>  
+> -	if (mp->param->has_shared_phy) {
+> -		ret = phy_reset(mp->phy);
+> -		if (ret)
+> -			return ret;
+> -	} else {
+> -		reset_control_assert(mrst->phy);
+> -		udelay(PCIE_RESET_DELAY);
+> -		reset_control_deassert(mrst->phy);
+> -		udelay(PCIE_RESET_DELAY);
+> -	}
+> +	ret = phy_reset(mp->phy);
+> +	if (ret)
+> +		return ret;
+>  
+>  	reset_control_assert(mrst->port);
+>  	reset_control_assert(mrst->apb);
+> @@ -286,12 +242,6 @@ static int meson_pcie_probe_clocks(struct meson_pcie *mp)
+>  	if (IS_ERR(res->port_clk))
+>  		return PTR_ERR(res->port_clk);
+>  
+> -	if (!mp->param->has_shared_phy) {
+> -		res->mipi_gate = meson_pcie_probe_clock(dev, "mipi", 0);
+> -		if (IS_ERR(res->mipi_gate))
+> -			return PTR_ERR(res->mipi_gate);
+> -	}
+> -
+>  	res->general_clk = meson_pcie_probe_clock(dev, "general", 0);
+>  	if (IS_ERR(res->general_clk))
+>  		return PTR_ERR(res->general_clk);
+> @@ -562,7 +512,6 @@ static const struct dw_pcie_ops dw_pcie_ops = {
+>  
+>  static int meson_pcie_probe(struct platform_device *pdev)
+>  {
+> -	const struct meson_pcie_param *match_data;
+>  	struct device *dev = &pdev->dev;
+>  	struct dw_pcie *pci;
+>  	struct meson_pcie *mp;
+> @@ -576,17 +525,10 @@ static int meson_pcie_probe(struct platform_device *pdev)
+>  	pci->dev = dev;
+>  	pci->ops = &dw_pcie_ops;
+>  
+> -	match_data = of_device_get_match_data(dev);
+> -	if (!match_data) {
+> -		dev_err(dev, "failed to get match data\n");
+> -		return -ENODEV;
+> -	}
+> -	mp->param = match_data;
+> -
+> -	if (mp->param->has_shared_phy) {
+> -		mp->phy = devm_phy_get(dev, "pcie");
+> -		if (IS_ERR(mp->phy))
+> -			return PTR_ERR(mp->phy);
+> +	mp->phy = devm_phy_get(dev, "pcie");
+> +	if (IS_ERR(mp->phy)) {
+> +		dev_err(dev, "get phy failed, %ld\n", PTR_ERR(mp->phy));
+> +		return PTR_ERR(mp->phy);
+>  	}
+>  
+>  	mp->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+> @@ -636,30 +578,16 @@ static int meson_pcie_probe(struct platform_device *pdev)
+>  	return 0;
+>  
+>  err_phy:
+> -	if (mp->param->has_shared_phy) {
+> -		phy_power_off(mp->phy);
+> -		phy_exit(mp->phy);
+> -	}
+> -
+> +	meson_pcie_power_off(mp);
+>  	return ret;
+>  }
+>  
+> -static struct meson_pcie_param meson_pcie_axg_param = {
+> -	.has_shared_phy = false,
+> -};
+> -
+> -static struct meson_pcie_param meson_pcie_g12a_param = {
+> -	.has_shared_phy = true,
+> -};
+> -
+>  static const struct of_device_id meson_pcie_of_match[] = {
+>  	{
+>  		.compatible = "amlogic,axg-pcie",
+> -		.data = &meson_pcie_axg_param,
+>  	},
+>  	{
+>  		.compatible = "amlogic,g12a-pcie",
+> -		.data = &meson_pcie_g12a_param,
+>  	},
+>  	{},
+>  };
+> -- 
+> 2.24.1
+> 
