@@ -2,138 +2,112 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB29C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90740C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B1B620728
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F51220728
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:58:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="vX6fievF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iTHCSL4X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388408AbgAPV60 (ORCPT
+        id S2388566AbgAPV6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 16:58:26 -0500
-Received: from gateway30.websitewelcome.com ([192.185.150.24]:30773 "EHLO
-        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729380AbgAPV6Z (ORCPT
+        Thu, 16 Jan 2020 16:58:34 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33637 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388409AbgAPV6d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 16:58:25 -0500
-X-Greylist: delayed 1317 seconds by postgrey-1.27 at vger.kernel.org; Thu, 16 Jan 2020 16:58:25 EST
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway30.websitewelcome.com (Postfix) with ESMTP id 9DBBE2FD24F
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 15:36:27 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id sCoViv3QVqNtvsCoViWjog; Thu, 16 Jan 2020 15:36:27 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=eAKpUW4Y8qknkzN4AAowy2Wed9URe9xaFrVdLf7t/EI=; b=vX6fievFaA18QZ1ClygheHbXNM
-        QdTnvyNZ4p1+AAUymuJXsaetAMLpJB8ixy5m3U0VlDqut8iQMCzL8rPbI14J7rDedsJF487gyKOj4
-        jDyiwHjZrCBdOxcPnTHVCjFDY4vyIlXO2roP85bEE1YXax1uR42+DJx6PiGUom0n52ZJNG4CEJnsd
-        pPp/l7A4aiYhaJTzeSVwfqx93xWolfSwpGYZcZTpe7XhWRY/9EIZVkgHSGNMzNXEsklY8O8DniIkS
-        g31CZl/IUyXR3TQI9/4s+pAPu0Ai0SMgYtHWX11Tkw81aViB9LcTi0RAihyoHqbLD2qskeLuZ/CUN
-        lOLKjSnA==;
-Received: from 187-162-252-62.static.axtel.net ([187.162.252.62]:43810 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1isCoT-000Pu6-Im; Thu, 16 Jan 2020 15:36:25 -0600
-Date:   Thu, 16 Jan 2020 15:36:25 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH net-next] net: sched: cls_u32: Use flexible-array member
-Message-ID: <20200116213625.GA9294@embeddedor.com>
+        Thu, 16 Jan 2020 16:58:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579211912;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=NLaw4B7huFIwZYCLSPZwzOsmw0wrqPy7mWFaVTWj5mc=;
+        b=iTHCSL4XQZtr2LJ6hNcct0R6FH3PJLW/CO93NlfU1I/CWBgo3Oq0/+6HbHiTumh2vd8OD5
+        yu7bGV1I64Ls1rmRElrHLTuPO5ZH9qytCCNlB6U6a9ZUTNhyMjI7nAe0twm6i9AGgQFBXn
+        upaPUHlpLB6ixGHPDi6XtpcEsWp73uE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-325-lfqB6_TkP7qCQUyQ7P3ndA-1; Thu, 16 Jan 2020 16:58:31 -0500
+X-MC-Unique: lfqB6_TkP7qCQUyQ7P3ndA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5FD52100550E;
+        Thu, 16 Jan 2020 21:58:30 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-16.pek2.redhat.com [10.72.8.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8F4617DB4F;
+        Thu, 16 Jan 2020 21:58:19 +0000 (UTC)
+Date:   Fri, 17 Jan 2020 05:58:14 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Peter Xu <peterx@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>
+Subject: Re: [PATCH] sched/isolation: isolate from handling managed interrupt
+Message-ID: <20200116215814.GA24827@ming.t460p>
+References: <20200116094806.25372-1-ming.lei@redhat.com>
+ <875zhbwqmm.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.252.62
-X-Source-L: No
-X-Exim-ID: 1isCoT-000Pu6-Im
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-252-62.static.axtel.net (embeddedor) [187.162.252.62]:43810
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 6
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <875zhbwqmm.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Old code in the kernel uses 1-byte and 0-byte arrays to indicate the
-presence of a "variable length array":
+Hi Thomas,
 
-struct something {
-    int length;
-    u8 data[1];
-};
+On Thu, Jan 16, 2020 at 01:08:17PM +0100, Thomas Gleixner wrote:
+> Ming,
+> 
+> Ming Lei <ming.lei@redhat.com> writes:
+> 
+> > @@ -212,12 +213,29 @@ int irq_do_set_affinity(struct irq_data *data, const struct cpumask *mask,
+> >  {
+> >  	struct irq_desc *desc = irq_data_to_desc(data);
+> >  	struct irq_chip *chip = irq_data_get_irq_chip(data);
+> > +	const struct cpumask *housekeeping_mask =
+> > +		housekeeping_cpumask(HK_FLAG_MANAGED_IRQ);
+> >  	int ret;
+> > +	cpumask_var_t tmp_mask = (struct cpumask *)mask;
+> >  
+> >  	if (!chip || !chip->irq_set_affinity)
+> >  		return -EINVAL;
+> >  
+> > -	ret = chip->irq_set_affinity(data, mask, force);
+> > +	zalloc_cpumask_var(&tmp_mask, GFP_ATOMIC);
+> 
+> I clearly told you:
+> 
+>     "That's wrong. This code is called with interrupts disabled, so
+>      GFP_KERNEL is wrong. And NO, we won't do a GFP_ATOMIC allocation
+>      here."
+> 
+> Is that last sentence unclear in any way?
 
-struct something *instance;
+Yeah, it is clear.
 
-instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
-instance->length = size;
-memcpy(instance->data, source, size);
+But GFP_ATOMIC is usually allowed in atomic context, could you
+explain it a bit why it can't be done in this case?
 
-There is also 0-byte arrays. Both cases pose confusion for things like
-sizeof(), CONFIG_FORTIFY_SOURCE, etc.[1] Instead, the preferred mechanism
-to declare variable-length types such as the one above is a flexible array
-member[2] which need to be the last member of a structure and empty-sized:
+We still can fallback to current behavior if the allocation
+fails.
 
-struct something {
-        int stuff;
-        u8 data[];
-};
+Or could you suggest to solve the issue in other way if GFP_ATOMIC
+can't be done?
 
-Also, by making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-unadvertenly introduced[3] to the codebase from now on.
 
-[1] https://github.com/KSPP/linux/issues/21
-[2] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- net/sched/cls_u32.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/sched/cls_u32.c b/net/sched/cls_u32.c
-index a0e6fac613de..5537b5b72ad5 100644
---- a/net/sched/cls_u32.c
-+++ b/net/sched/cls_u32.c
-@@ -79,7 +79,7 @@ struct tc_u_hnode {
- 	/* The 'ht' field MUST be the last field in structure to allow for
- 	 * more entries allocated at end of structure.
- 	 */
--	struct tc_u_knode __rcu	*ht[1];
-+	struct tc_u_knode __rcu	*ht[];
- };
- 
- struct tc_u_common {
--- 
-2.23.0
+Thanks,
+Ming
 
