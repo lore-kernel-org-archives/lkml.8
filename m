@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0772BC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F603C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D392E24653
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:16:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B0712077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:16:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202176;
-	bh=z+L7J1b81PD8q0LsBdYiD30Fdaao3OMlu+10Bo8WG2o=;
+	s=default; t=1579202184;
+	bh=hUCMA1DGQK64tNMuIDmFJLb5pl45o3fY3EpLSObaZ9Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OFukDBXg2U7WWILLBb7bsSNkgEc5yqMfouEJEbXfnVszGRpU0ubZrW5SwYr6KcJzS
-	 xa4ntIuDlMIN3sA7yhfiJq3Sm1acLrPDlR18jNuC+lpxF9pw+afvJSWo+pATz0Ccga
-	 q5WdoP4FBgo+zYpc+Ol4RXUTEmU7Kmb4eSbhc5mE=
+	b=EMbSpjsHvLwdO9VYzrau76Q7E4LLs8A7RnACyq8t062MKw+QqHMGanuXzSF7Y9zhi
+	 ujoCtcgqqWman+TeBpekAu1gkczVOArGOxKTRDdE1xyq9FbPvke4Gpv633882dMD41
+	 u1jbFEnCnonCw0UYBgIS3TC8RrAr/PGm8hKZuhlk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437553AbgAPTQP (ORCPT
+        id S2437475AbgAPTQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:16:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41392 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:16:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730960AbgAPQzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:55:46 -0500
+        id S1732911AbgAPQzp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:55:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44E542051A;
-        Thu, 16 Jan 2020 16:55:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04FBE22464;
+        Thu, 16 Jan 2020 16:55:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193745;
-        bh=z+L7J1b81PD8q0LsBdYiD30Fdaao3OMlu+10Bo8WG2o=;
+        s=default; t=1579193744;
+        bh=hUCMA1DGQK64tNMuIDmFJLb5pl45o3fY3EpLSObaZ9Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MbVTYfmDPJJsjVOtBBzx1kxk+onkx9NwLNthObnGxtvdlhMwuNKaIY10H4mpVJQDk
-         +iSD0sbdviXIlAADli26QxAGf+LXw9IXwZTsl7TZPR2zNuW3dlijjTZnIrZr/SEUn7
-         mfONFuVBL4vcCwb/LWALVoizX1rWNxdQI5WbejXg=
+        b=Tglqb4bJtEo97ASRsPLOIOJADIVEQVQcygimF+rZ0VqV5jnBTIVe3J07vX1CZ7b1q
+         07xSydo8FwysKKMcT3zm07tEcUNSPM/MJdfZmTPkmCwZprBtyEribSWYyQ/d+tVgWx
+         vpZPyNrokoX7FFEL1dEmb9IMEv4FxCNypmaImmM8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Selvin Xavier <selvin.xavier@broadcom.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 036/671] RDMA/bnxt_re: Add missing spin lock initialization
-Date:   Thu, 16 Jan 2020 11:44:27 -0500
-Message-Id: <20200116165502.8838-36-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 035/671] rtlwifi: rtl8821ae: replace _rtl8821ae_mrate_idx_to_arfr_id with generic version
+Date:   Thu, 16 Jan 2020 11:44:26 -0500
+Message-Id: <20200116165502.8838-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -59,45 +61,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Selvin Xavier <selvin.xavier@broadcom.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 5a23e0b1dd51fe0efae666b03fdb15e1301f437a ]
+[ Upstream commit c894696188d5c2af1e636e458190e80c53fb893d ]
 
-Add the missing initalization of the cq_lock and qplib.flush_lock.
+Function _rtl8821ae_mrate_idx_to_arfr_id is functionally identical to
+the generic version rtl_mrate_idx_to_arfr_id, so remove
+_rtl8821ae_mrate_idx_to_arfr_id and use the generic one instead.
 
-Fixes: 942c9b6ca8de ("RDMA/bnxt_re: Avoid Hard lockup during error CQE processing")
-Signed-off-by: Selvin Xavier <selvin.xavier@broadcom.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+This also fixes a missing break statement found by CoverityScan in
+_rtl8821ae_mrate_idx_to_arfr_id, namely: CID#1167237 ("Missing break
+in switch")
+
+Thanks to Joe Perches for spotting this when I submitted an earlier patch.
+
+Fixes: 3c05bedb5fef ("Staging: rtl8812ae: Add Realtek 8821 PCI WIFI driver")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+ACKed-by: Larry Finger <Larry.Finger@lwfinger.net>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/bnxt_re/ib_verbs.c | 1 +
- drivers/infiniband/hw/bnxt_re/qplib_fp.c | 1 +
- 2 files changed, 2 insertions(+)
+ .../wireless/realtek/rtlwifi/rtl8821ae/hw.c   | 71 +------------------
+ 1 file changed, 1 insertion(+), 70 deletions(-)
 
-diff --git a/drivers/infiniband/hw/bnxt_re/ib_verbs.c b/drivers/infiniband/hw/bnxt_re/ib_verbs.c
-index bc2b9e038439..bea8318e7007 100644
---- a/drivers/infiniband/hw/bnxt_re/ib_verbs.c
-+++ b/drivers/infiniband/hw/bnxt_re/ib_verbs.c
-@@ -2664,6 +2664,7 @@ struct ib_cq *bnxt_re_create_cq(struct ib_device *ibdev,
- 	nq->budget++;
+diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/hw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/hw.c
+index 317c1b3101da..ba258318ee9f 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/hw.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/hw.c
+@@ -3404,75 +3404,6 @@ static void rtl8821ae_update_hal_rate_table(struct ieee80211_hw *hw,
+ 		 "%x\n", rtl_read_dword(rtlpriv, REG_ARFR0));
+ }
  
- 	atomic_inc(&rdev->cq_count);
-+	spin_lock_init(&cq->cq_lock);
+-static u8 _rtl8821ae_mrate_idx_to_arfr_id(
+-	struct ieee80211_hw *hw, u8 rate_index,
+-	enum wireless_mode wirelessmode)
+-{
+-	struct rtl_priv *rtlpriv = rtl_priv(hw);
+-	struct rtl_phy *rtlphy = &rtlpriv->phy;
+-	u8 ret = 0;
+-	switch (rate_index) {
+-	case RATR_INX_WIRELESS_NGB:
+-		if (rtlphy->rf_type == RF_1T1R)
+-			ret = 1;
+-		else
+-			ret = 0;
+-		; break;
+-	case RATR_INX_WIRELESS_N:
+-	case RATR_INX_WIRELESS_NG:
+-		if (rtlphy->rf_type == RF_1T1R)
+-			ret = 5;
+-		else
+-			ret = 4;
+-		; break;
+-	case RATR_INX_WIRELESS_NB:
+-		if (rtlphy->rf_type == RF_1T1R)
+-			ret = 3;
+-		else
+-			ret = 2;
+-		; break;
+-	case RATR_INX_WIRELESS_GB:
+-		ret = 6;
+-		break;
+-	case RATR_INX_WIRELESS_G:
+-		ret = 7;
+-		break;
+-	case RATR_INX_WIRELESS_B:
+-		ret = 8;
+-		break;
+-	case RATR_INX_WIRELESS_MC:
+-		if ((wirelessmode == WIRELESS_MODE_B)
+-			|| (wirelessmode == WIRELESS_MODE_G)
+-			|| (wirelessmode == WIRELESS_MODE_N_24G)
+-			|| (wirelessmode == WIRELESS_MODE_AC_24G))
+-			ret = 6;
+-		else
+-			ret = 7;
+-	case RATR_INX_WIRELESS_AC_5N:
+-		if (rtlphy->rf_type == RF_1T1R)
+-			ret = 10;
+-		else
+-			ret = 9;
+-		break;
+-	case RATR_INX_WIRELESS_AC_24N:
+-		if (rtlphy->current_chan_bw == HT_CHANNEL_WIDTH_80) {
+-			if (rtlphy->rf_type == RF_1T1R)
+-				ret = 10;
+-			else
+-				ret = 9;
+-		} else {
+-			if (rtlphy->rf_type == RF_1T1R)
+-				ret = 11;
+-			else
+-				ret = 12;
+-		}
+-		break;
+-	default:
+-		ret = 0; break;
+-	}
+-	return ret;
+-}
+-
+ static u32 _rtl8821ae_rate_to_bitmap_2ssvht(__le16 vht_rate)
+ {
+ 	u8 i, j, tmp_rate;
+@@ -3761,7 +3692,7 @@ static void rtl8821ae_update_hal_rate_mask(struct ieee80211_hw *hw,
+ 		break;
+ 	}
  
- 	if (context) {
- 		struct bnxt_re_cq_resp resp;
-diff --git a/drivers/infiniband/hw/bnxt_re/qplib_fp.c b/drivers/infiniband/hw/bnxt_re/qplib_fp.c
-index 249efa0a6aba..c828c715d3cf 100644
---- a/drivers/infiniband/hw/bnxt_re/qplib_fp.c
-+++ b/drivers/infiniband/hw/bnxt_re/qplib_fp.c
-@@ -1970,6 +1970,7 @@ int bnxt_qplib_create_cq(struct bnxt_qplib_res *res, struct bnxt_qplib_cq *cq)
- 	INIT_LIST_HEAD(&cq->sqf_head);
- 	INIT_LIST_HEAD(&cq->rqf_head);
- 	spin_lock_init(&cq->compl_lock);
-+	spin_lock_init(&cq->flush_lock);
- 
- 	bnxt_qplib_arm_cq_enable(cq);
- 	return 0;
+-	ratr_index = _rtl8821ae_mrate_idx_to_arfr_id(hw, ratr_index, wirelessmode);
++	ratr_index = rtl_mrate_idx_to_arfr_id(hw, ratr_index, wirelessmode);
+ 	sta_entry->ratr_index = ratr_index;
+ 	ratr_bitmap = _rtl8821ae_set_ra_vht_ratr_bitmap(hw, wirelessmode,
+ 							ratr_bitmap);
 -- 
 2.20.1
 
