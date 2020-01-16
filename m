@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4EBC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22EF5C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 160D52077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:05:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E28CF205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:05:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194345;
-	bh=8CbT8TZ2iRcbrH7EgaNzFCMgeHLem/RyTXHo5n0sxLw=;
+	s=default; t=1579194348;
+	bh=Hv37BfS55KKDAbh7Qq/n5MYz80MnjEqtZFsgK6Mdv/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VBeLugO0ZqstD02T2vIQFE4EpxjjmJGV8mPRUPKYlZFgbp15M73W54/ZNjIm9UZgJ
-	 Q2TaE4FQmMsdikKtPjgUbmkxGAw0g9iHr9vzjvdZ9G6Fa5UcsVk90xMT4VBEu0W1AY
-	 MwuTUcKgBLj7k9FvW/oS1QUlscvspLhWQWuQI5Io=
+	b=dsRVr4hv/VwtUXyFhZvYcwTiSoODpRABtXlqGCR3Jc0V+v/gzwvo030adCGijU2mw
+	 JAMkvjg9VDCBT2Eq8GhNuskuKgsytBQHC6JScf8SAqzrFrnRu/cZhW1cdM08dmGP7L
+	 Gjha5pPUq93ENwpf09LCeEwLYYtW+0sf7sM9nack=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388666AbgAPRFo (ORCPT
+        id S2388732AbgAPRFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:05:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34036 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:05:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388595AbgAPRFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:05:24 -0500
+        id S2388740AbgAPRFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:05:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 659512081E;
-        Thu, 16 Jan 2020 17:05:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4079A24684;
+        Thu, 16 Jan 2020 17:05:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194323;
-        bh=8CbT8TZ2iRcbrH7EgaNzFCMgeHLem/RyTXHo5n0sxLw=;
+        s=default; t=1579194331;
+        bh=Hv37BfS55KKDAbh7Qq/n5MYz80MnjEqtZFsgK6Mdv/o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s+f1/t4j15A6mUfFpPUpjoqkauVsXngnwLsonZ7POkBwc766U4Ne/zTwMGlLPoiXX
-         G0MNSvExTBYABNHJvFKzuIQaIlBl/SHkzWtLvZrkHMPPsZNfdrsh4eKAIsEZ5uRinl
-         bZUaoGzJzvKwJmwKbBdlvx0hi9GAoNYVhP+0Beuo=
+        b=AQ/uDMdir2IB3IrBlV2W3YTW8sv0wY7TTiSHV3sflENNBUKSmnS7P1pyACU8+cnJS
+         sUME1CAOQWUPYx/Veep3HNMjzg6eyPrnsBUnKAemLUQ6kh7KnFT0yYKwcQScsVmLC2
+         sm5wloc9N4aqok52LqwZSQWVTYNTj32bMD1aYgMI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, dccp@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 272/671] dccp: Fix memleak in __feat_register_sp
-Date:   Thu, 16 Jan 2020 11:58:30 -0500
-Message-Id: <20200116170509.12787-9-sashal@kernel.org>
+Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 278/671] rtc: mt6397: Don't call irq_dispose_mapping.
+Date:   Thu, 16 Jan 2020 11:58:36 -0500
+Message-Id: <20200116170509.12787-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -61,41 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Pi-Hsun Shih <pihsun@chromium.org>
 
-[ Upstream commit 1d3ff0950e2b40dc861b1739029649d03f591820 ]
+[ Upstream commit 24db953e942bd7a983e97892bdaddf69d00b1199 ]
 
-If dccp_feat_push_change fails, we forget free the mem
-which is alloced by kmemdup in dccp_feat_clone_sp_val.
+The IRQ mapping was changed to not being created in the rtc-mt6397
+driver, so the irq_dispose_mapping is no longer needed.
+Also the dev_id passed to free_irq should be the same as the last
+argument passed to request_threaded_irq.
+This prevents a "Trying to free already-free IRQ 274" warning when
+unbinding the driver.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: e8ef967a54f4 ("dccp: Registration routines for changing feature values")
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: e695d3a0b3b3 ("mfd: mt6397: Create irq mappings in mfd core driver")
+Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/dccp/feat.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/rtc/rtc-mt6397.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/net/dccp/feat.c b/net/dccp/feat.c
-index f227f002c73d..db87d9f58019 100644
---- a/net/dccp/feat.c
-+++ b/net/dccp/feat.c
-@@ -738,7 +738,12 @@ static int __feat_register_sp(struct list_head *fn, u8 feat, u8 is_local,
- 	if (dccp_feat_clone_sp_val(&fval, sp_val, sp_len))
- 		return -ENOMEM;
+diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+index e9a25ec4d434..c06cf5202e02 100644
+--- a/drivers/rtc/rtc-mt6397.c
++++ b/drivers/rtc/rtc-mt6397.c
+@@ -343,7 +343,7 @@ static int mtk_rtc_probe(struct platform_device *pdev)
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Failed to request alarm IRQ: %d: %d\n",
+ 			rtc->irq, ret);
+-		goto out_dispose_irq;
++		return ret;
+ 	}
  
--	return dccp_feat_push_change(fn, feat, is_local, mandatory, &fval);
-+	if (dccp_feat_push_change(fn, feat, is_local, mandatory, &fval)) {
-+		kfree(fval.sp.vec);
-+		return -ENOMEM;
-+	}
-+
-+	return 0;
+ 	device_init_wakeup(&pdev->dev, 1);
+@@ -359,9 +359,7 @@ static int mtk_rtc_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+ out_free_irq:
+-	free_irq(rtc->irq, rtc->rtc_dev);
+-out_dispose_irq:
+-	irq_dispose_mapping(rtc->irq);
++	free_irq(rtc->irq, rtc);
+ 	return ret;
  }
  
- /**
+@@ -369,8 +367,7 @@ static int mtk_rtc_remove(struct platform_device *pdev)
+ {
+ 	struct mt6397_rtc *rtc = platform_get_drvdata(pdev);
+ 
+-	free_irq(rtc->irq, rtc->rtc_dev);
+-	irq_dispose_mapping(rtc->irq);
++	free_irq(rtc->irq, rtc);
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
