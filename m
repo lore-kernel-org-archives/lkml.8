@@ -2,89 +2,167 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B538C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD43C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9523207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:23:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579184629;
-	bh=KNIqX/sx4KhchS5SQ+KG9h+E5ENCroy3R1j54AGgznA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lg3KtYP+WzSOsIw/rwuXq+5LWiKAfeaVUniA1tAi7cAtAi4k3Txy9ZKbKAxNkFJ4c
-	 ITYV8+UESD87P4Da40qJJywClR8BlLZsPloXjws+X6fRztqh3O1aLatcv990bAgGYl
-	 GF/uCZCTUfOvILQDb98uwzVz7neQdFIUiafyhnsw=
+	by mail.kernel.org (Postfix) with ESMTP id 5A05321582
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:25:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbgAPOXt (ORCPT
+        id S1726371AbgAPOZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 09:23:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50320 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726160AbgAPOXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 09:23:48 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81FE320748;
-        Thu, 16 Jan 2020 14:23:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579184628;
-        bh=KNIqX/sx4KhchS5SQ+KG9h+E5ENCroy3R1j54AGgznA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qzkkuiBSFvpSjZIZT5iwzK6+SGNRGnsX9btY+dsBHaEtaAAr7Hp6kSV75PxZnJ88G
-         pI4YRdXBW1PtXG9RMyBnrnBvHt8vNe9aXrZ+QTF2pDm0j9oonu2NuWdU39ddwuQ/bP
-         E64IUuwgHDIjro25Fo9XF1lXa9hf7HTki+u7jTrY=
-Date:   Thu, 16 Jan 2020 15:23:45 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Julian Stecklina <julian.stecklina@cyberus-technology.de>
-Cc:     intel-gvt-dev@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        zhiyuan.lv@intel.com, hang.yuan@intel.com,
-        Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Thomas Prescher <thomas.prescher@cyberus-technology.de>
-Subject: Re: [RFC PATCH 4/4] drm/i915/gvt: move public gvt headers out into
- global include
-Message-ID: <20200116142345.GA476889@kroah.com>
-References: <4079ce7c26a2d2a3c7e0828ed1ea6008d6e2c805.camel@cyberus-technology.de>
- <20200109171357.115936-1-julian.stecklina@cyberus-technology.de>
- <20200109171357.115936-5-julian.stecklina@cyberus-technology.de>
- <20200115152215.GA3830321@kroah.com>
- <9b32e225ee680e61716e300eb1ed8387599cc0dd.camel@cyberus-technology.de>
+        Thu, 16 Jan 2020 09:25:27 -0500
+Received: from magratgarlick.emantor.de ([78.46.208.201]:43864 "EHLO
+        magratgarlick.emantor.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbgAPOZ1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 09:25:27 -0500
+X-Greylist: delayed 383 seconds by postgrey-1.27 at vger.kernel.org; Thu, 16 Jan 2020 09:25:26 EST
+Received: by magratgarlick.emantor.de (Postfix, from userid 114)
+        id AAC28E7124; Thu, 16 Jan 2020 15:19:01 +0100 (CET)
+Received: from localhost (unknown [IPv6:2a01:598:a087:a19a:907e:a13:431:7da5])
+        by magratgarlick.emantor.de (Postfix) with ESMTPSA id 441B6E7121;
+        Thu, 16 Jan 2020 15:18:59 +0100 (CET)
+From:   Rouven Czerwinski <r.czerwinski@pengutronix.de>
+To:     s.hauer@pengutronix.de, shawnguo@kernel.org
+Cc:     kernel@pengutronix.de, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, festevam@gmail.com,
+        linux-imx@nxp.com, Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Rouven Czerwinski <r.czerwinski@pengutronix.de>
+Subject: [PATCH] ARM: imx: build v7_cpu_resume() unconditionally
+Date:   Thu, 16 Jan 2020 15:18:49 +0100
+Message-Id: <20200116141849.73955-1-r.czerwinski@pengutronix.de>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9b32e225ee680e61716e300eb1ed8387599cc0dd.camel@cyberus-technology.de>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 03:13:01PM +0100, Julian Stecklina wrote:
-> Hi Greg, Christoph,
-> 
-> On Wed, 2020-01-15 at 16:22 +0100, Greg KH wrote:
-> > On Thu, Jan 09, 2020 at 07:13:57PM +0200, Julian Stecklina wrote:
-> > > Now that the GVT interface to hypervisors does not depend on i915/GVT
-> > > internals anymore, we can move the headers to the global include/.
-> > > 
-> > > This makes out-of-tree modules for hypervisor integration possible.
-> > 
-> > What kind of out-of-tree modules do you need/want for this?
-> 
-> The mediated virtualization support in the i915 driver needs a backend to the
-> hypervisor. There is currently one backend for KVM in the tree
-> (drivers/gpu/drm/i915/gvt/kvmgt.c) and at least 3 other hypervisor backends out
-> of tree in various states of development that I know of. We are currently
-> developing one of these.
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
 
-Great, then just submit this patch series as part of your patch series
-when submitting yoru hypervisor code.  That's the normal way to export
-new symbols, we can't do so without an in-kernel user.
+This function is not only needed by the platform suspend code, but is also
+reused as the CPU resume function when the ARM cores can be powered down
+completely in deep idle, which is the case on i.MX6SX and i.MX6UL(L).
 
-thanks,
+Providing the static inline stub whenever CONFIG_SUSPEND is disabled means
+that those platforms will hang on resume from cpuidle if suspend is disabled.
 
-greg k-h
+So there are two problems:
+
+  - The static inline stub masks the linker error
+  - The function is not available where needed
+
+Fix both by just building the function unconditionally, when
+CONFIG_SOC_IMX6 is enabled. The actual code is three instructions long,
+so it's arguably ok to just leave it in for all i.MX6 kernel configurations.
+
+Fixes: 05136f0897b5 ("ARM: imx: support arm power off in cpuidle for i.mx6sx")
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+Signed-off-by: Rouven Czerwinski <r.czerwinski@pengutronix.de>
+---
+ arch/arm/mach-imx/Makefile       |  2 ++
+ arch/arm/mach-imx/common.h       |  4 ++--
+ arch/arm/mach-imx/resume-imx6.S  | 24 ++++++++++++++++++++++++
+ arch/arm/mach-imx/suspend-imx6.S | 14 --------------
+ 4 files changed, 28 insertions(+), 16 deletions(-)
+ create mode 100644 arch/arm/mach-imx/resume-imx6.S
+
+diff --git a/arch/arm/mach-imx/Makefile b/arch/arm/mach-imx/Makefile
+index 35ff620537e6..03506ce46149 100644
+--- a/arch/arm/mach-imx/Makefile
++++ b/arch/arm/mach-imx/Makefile
+@@ -91,6 +91,8 @@ AFLAGS_suspend-imx6.o :=-Wa,-march=armv7-a
+ obj-$(CONFIG_SOC_IMX6) += suspend-imx6.o
+ obj-$(CONFIG_SOC_IMX53) += suspend-imx53.o
+ endif
++AFLAGS_resume-imx6.o :=-Wa,-march=armv7-a
++obj-$(CONFIG_SOC_IMX6) += resume-imx6.o
+ obj-$(CONFIG_SOC_IMX6) += pm-imx6.o
+ 
+ obj-$(CONFIG_SOC_IMX1) += mach-imx1.o
+diff --git a/arch/arm/mach-imx/common.h b/arch/arm/mach-imx/common.h
+index 912aeceb4ff8..5aa5796cff0e 100644
+--- a/arch/arm/mach-imx/common.h
++++ b/arch/arm/mach-imx/common.h
+@@ -109,17 +109,17 @@ void imx_cpu_die(unsigned int cpu);
+ int imx_cpu_kill(unsigned int cpu);
+ 
+ #ifdef CONFIG_SUSPEND
+-void v7_cpu_resume(void);
+ void imx53_suspend(void __iomem *ocram_vbase);
+ extern const u32 imx53_suspend_sz;
+ void imx6_suspend(void __iomem *ocram_vbase);
+ #else
+-static inline void v7_cpu_resume(void) {}
+ static inline void imx53_suspend(void __iomem *ocram_vbase) {}
+ static const u32 imx53_suspend_sz;
+ static inline void imx6_suspend(void __iomem *ocram_vbase) {}
+ #endif
+ 
++void v7_cpu_resume(void);
++
+ void imx6_pm_ccm_init(const char *ccm_compat);
+ void imx6q_pm_init(void);
+ void imx6dl_pm_init(void);
+diff --git a/arch/arm/mach-imx/resume-imx6.S b/arch/arm/mach-imx/resume-imx6.S
+new file mode 100644
+index 000000000000..5bd1ba7ef15b
+--- /dev/null
++++ b/arch/arm/mach-imx/resume-imx6.S
+@@ -0,0 +1,24 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ * Copyright 2014 Freescale Semiconductor, Inc.
++ */
++
++#include <linux/linkage.h>
++#include <asm/assembler.h>
++#include <asm/asm-offsets.h>
++#include <asm/hardware/cache-l2x0.h>
++#include "hardware.h"
++
++/*
++ * The following code must assume it is running from physical address
++ * where absolute virtual addresses to the data section have to be
++ * turned into relative ones.
++ */
++
++ENTRY(v7_cpu_resume)
++	bl	v7_invalidate_l1
++#ifdef CONFIG_CACHE_L2X0
++	bl	l2c310_early_resume
++#endif
++	b	cpu_resume
++ENDPROC(v7_cpu_resume)
+diff --git a/arch/arm/mach-imx/suspend-imx6.S b/arch/arm/mach-imx/suspend-imx6.S
+index 062391ff13da..1eabf2d2834b 100644
+--- a/arch/arm/mach-imx/suspend-imx6.S
++++ b/arch/arm/mach-imx/suspend-imx6.S
+@@ -327,17 +327,3 @@ resume:
+ 
+ 	ret	lr
+ ENDPROC(imx6_suspend)
+-
+-/*
+- * The following code must assume it is running from physical address
+- * where absolute virtual addresses to the data section have to be
+- * turned into relative ones.
+- */
+-
+-ENTRY(v7_cpu_resume)
+-	bl	v7_invalidate_l1
+-#ifdef CONFIG_CACHE_L2X0
+-	bl	l2c310_early_resume
+-#endif
+-	b	cpu_resume
+-ENDPROC(v7_cpu_resume)
+-- 
+2.25.0
+
