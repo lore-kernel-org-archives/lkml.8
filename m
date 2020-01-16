@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8383EC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:08:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03923C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60E26214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:08:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C76482176D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:08:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198115;
-	bh=YXwEQI5JMci/hGOk9y58JJmQluDIMuFT/4wVYdl73Do=;
+	s=default; t=1579198123;
+	bh=DFY2xJ6oT72ntgufKPgHkk3dp5CRgSUSTNJfVJtkg/4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eNkFcShBhPQzK3/Ibetgle/AU8ZVwBHZJv+D3ExEIsesLAy/pjdCO17dq9g+YMbp6
-	 Ug24jpBYRNm7er0S5hRrn7L/e8KjcJzhIrvGrdolFFgRpwLHFlEY/+gxl1n4xm8XFD
-	 MCisxwehGqm2voKqAy6QrUQXP1eLv+n3TQe6OcgI=
+	b=FIBPYIZ4m37ALvneG+O+0OLLqtWc9PwuBvkzZ5R1SmIJMpJegOQkixEQ8O7e6h7qA
+	 06/JJxh/gU+28tWPFmdEAWsWdWdLtcdP4Pj8sYqEwMstQLvgod7iumbYSIjN5Rt/4V
+	 nNPXgMsnZbAbF/xHt2BMdb48piHE7gEliiE0OQvQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395031AbgAPSIe (ORCPT
+        id S2395039AbgAPSIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:08:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54656 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:08:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393367AbgAPRio (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:38:44 -0500
+        id S2393232AbgAPRil (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:38:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5697024702;
-        Thu, 16 Jan 2020 17:38:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8267E246DD;
+        Thu, 16 Jan 2020 17:38:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196323;
-        bh=YXwEQI5JMci/hGOk9y58JJmQluDIMuFT/4wVYdl73Do=;
+        s=default; t=1579196320;
+        bh=DFY2xJ6oT72ntgufKPgHkk3dp5CRgSUSTNJfVJtkg/4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o0dLW2XlehWBxW2jvOPFzhwzaSlz6Ze17x4e7z9w3b0B+twI8SQ1QgKCAxc2BP1PD
-         0uadFLuKeu1rpGC3DZYJBvhfp8BA0PhVnN8Dn90etipUIBf7Csgg6ARXTIEh8uYKsz
-         4gS3dDTdyun+2qi9Bh4NaCeSeCR/Chu5Urlh6FK4=
+        b=hToWdV+Km+6kDlybUFPYBC3xSS07l+gWxswA851Yg90F7+1rpNqyF6AKFopIfl7Ju
+         c0GbLaK5J0WR9+GOweycNdzgWl0BmEXDhvd1XMGZGCzkRXXBkwlkmpTRuqWFp556Nx
+         I7fC71mf76tOywkQAeRt1MMt9fo9t3T1DBloC6JM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jack Morgenstein <jackm@dev.mellanox.co.il>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 126/251] IB/mlx5: Add missing XRC options to QP optional params mask
-Date:   Thu, 16 Jan 2020 12:34:35 -0500
-Message-Id: <20200116173641.22137-86-sashal@kernel.org>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.9 124/251] ASoC: fix valid stream condition
+Date:   Thu, 16 Jan 2020 12:34:33 -0500
+Message-Id: <20200116173641.22137-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -60,88 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Morgenstein <jackm@dev.mellanox.co.il>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit 8f4426aa19fcdb9326ac44154a117b1a3a5ae126 ]
+[ Upstream commit 6a7c59c6d9f3b280e81d7a04bbe4e55e90152dce ]
 
-The QP transition optional parameters for the various transition for XRC
-QPs are identical to those for RC QPs.
+A stream may specify a rate range using 'rate_min' and 'rate_max', so a
+stream may be valid and not specify any rates. However, as stream cannot
+be valid and not have any channel. Let's use this condition instead to
+determine if a stream is valid or not.
 
-Many of the XRC QP transition optional parameter bits are missing from the
-QP optional mask table.  These omissions caused failures when doing XRC QP
-state transitions.
-
-For example, when trying to change the response timer of an XRC receive QP
-via the RTS2RTS transition, the new timer value was ignored because
-MLX5_QP_OPTPAR_RNR_TIMEOUT bit was missing from the optional params mask
-for XRC qps for the RTS2RTS transition.
-
-Fix this by adding the missing XRC optional parameters for all QP
-transitions to the opt_mask table.
-
-Fixes: e126ba97dba9 ("mlx5: Add driver for Mellanox Connect-IB adapters")
-Fixes: a4774e9095de ("IB/mlx5: Fix opt param mask according to firmware spec")
-Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: cde79035c6cf ("ASoC: Handle multiple codecs with split playback / capture")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/qp.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ sound/soc/soc-pcm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx5/qp.c b/drivers/infiniband/hw/mlx5/qp.c
-index a7bc89f5dae7..4d906a790481 100644
---- a/drivers/infiniband/hw/mlx5/qp.c
-+++ b/drivers/infiniband/hw/mlx5/qp.c
-@@ -2324,6 +2324,11 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
- 			[MLX5_QP_ST_UD] = MLX5_QP_OPTPAR_PKEY_INDEX	|
- 					  MLX5_QP_OPTPAR_Q_KEY		|
- 					  MLX5_QP_OPTPAR_PRI_PORT,
-+			[MLX5_QP_ST_XRC] = MLX5_QP_OPTPAR_RRE		|
-+					  MLX5_QP_OPTPAR_RAE		|
-+					  MLX5_QP_OPTPAR_RWE		|
-+					  MLX5_QP_OPTPAR_PKEY_INDEX	|
-+					  MLX5_QP_OPTPAR_PRI_PORT,
- 		},
- 		[MLX5_QP_STATE_RTR] = {
- 			[MLX5_QP_ST_RC] = MLX5_QP_OPTPAR_ALT_ADDR_PATH  |
-@@ -2357,6 +2362,12 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
- 					  MLX5_QP_OPTPAR_RWE		|
- 					  MLX5_QP_OPTPAR_PM_STATE,
- 			[MLX5_QP_ST_UD] = MLX5_QP_OPTPAR_Q_KEY,
-+			[MLX5_QP_ST_XRC] = MLX5_QP_OPTPAR_ALT_ADDR_PATH	|
-+					  MLX5_QP_OPTPAR_RRE		|
-+					  MLX5_QP_OPTPAR_RAE		|
-+					  MLX5_QP_OPTPAR_RWE		|
-+					  MLX5_QP_OPTPAR_PM_STATE	|
-+					  MLX5_QP_OPTPAR_RNR_TIMEOUT,
- 		},
- 	},
- 	[MLX5_QP_STATE_RTS] = {
-@@ -2373,6 +2384,12 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
- 			[MLX5_QP_ST_UD] = MLX5_QP_OPTPAR_Q_KEY		|
- 					  MLX5_QP_OPTPAR_SRQN		|
- 					  MLX5_QP_OPTPAR_CQN_RCV,
-+			[MLX5_QP_ST_XRC] = MLX5_QP_OPTPAR_RRE		|
-+					  MLX5_QP_OPTPAR_RAE		|
-+					  MLX5_QP_OPTPAR_RWE		|
-+					  MLX5_QP_OPTPAR_RNR_TIMEOUT	|
-+					  MLX5_QP_OPTPAR_PM_STATE	|
-+					  MLX5_QP_OPTPAR_ALT_ADDR_PATH,
- 		},
- 	},
- 	[MLX5_QP_STATE_SQER] = {
-@@ -2384,6 +2401,10 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
- 					   MLX5_QP_OPTPAR_RWE		|
- 					   MLX5_QP_OPTPAR_RAE		|
- 					   MLX5_QP_OPTPAR_RRE,
-+			[MLX5_QP_ST_XRC]  = MLX5_QP_OPTPAR_RNR_TIMEOUT	|
-+					   MLX5_QP_OPTPAR_RWE		|
-+					   MLX5_QP_OPTPAR_RAE		|
-+					   MLX5_QP_OPTPAR_RRE,
- 		},
- 	},
- };
+diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+index d69559e45872..635b22fa1101 100644
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -48,8 +48,8 @@ static bool snd_soc_dai_stream_valid(struct snd_soc_dai *dai, int stream)
+ 	else
+ 		codec_stream = &dai->driver->capture;
+ 
+-	/* If the codec specifies any rate at all, it supports the stream. */
+-	return codec_stream->rates;
++	/* If the codec specifies any channels at all, it supports the stream */
++	return codec_stream->channels_min;
+ }
+ 
+ /**
 -- 
 2.20.1
 
