@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F75C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE524C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9CAE2087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:22:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B947E2082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:22:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579216935;
-	bh=V2J9YfWSVeAVG7GVUmiIj3FqxophZV4LyMA8bfFylx4=;
+	s=default; t=1579216939;
+	bh=77j/H3NJgU6yfAere1pTVjCPlRELhyyyD9Ei5/o5tXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MoPjTNavuhfccQ8nWZoMTlQ14GRgLhf1aOH+yEyCt0ZOe3iIHgoQfZOBvA54/prZP
-	 U9vDmheqpnbnU/6n6AvqxF0Sh0h7ZEDb8j4B9MQpTyERLXGmSE0GFRHwPuzy70uHbZ
-	 DdX/gxcG6AQAVpApwmqZra6Lv4xCIoFt8iPRCmZw=
+	b=x/PCJJYssl7QFv5vXqcknEXKji9pUI4vpKwj5Ygf8P5D6fxfKhto/Z6XpOGDwa4X3
+	 i6FuRCdmaMu+hWXyXUjpP12MEGeofP9lz32j/6aqXIJ8t30Hiv6vHu5k4NNSq83T6q
+	 poUzdJXVCSSWoLOj4MuJtENyq+8FjXnAP+8E/dbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390906AbgAPXWN (ORCPT
+        id S2390912AbgAPXWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:22:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49810 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:22:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390894AbgAPXWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:22:05 -0500
+        id S1730651AbgAPXWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:22:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAB44206D9;
-        Thu, 16 Jan 2020 23:22:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39E162072E;
+        Thu, 16 Jan 2020 23:22:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216925;
-        bh=V2J9YfWSVeAVG7GVUmiIj3FqxophZV4LyMA8bfFylx4=;
+        s=default; t=1579216927;
+        bh=77j/H3NJgU6yfAere1pTVjCPlRELhyyyD9Ei5/o5tXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J+Aa1uEGVZw8IVKzPlNj40rXhZLgiHmicJaTFakGkpV5MTGw3AH3cI9pW5Nlzv0RN
-         ZQ4wOwtMxjTSe0wwQstEqJQGnyK+rGrQyvgAEUi+vYM/8jlyvUj0yyF5Bh9mbWWvPC
-         pNWp/kTrLKGbjLhx8cMFAkSje545PaiEMq9rMzTI=
+        b=NUBo6J0fS03tLkG5imzuURdjwDS5wUTXzK+dn9dO7dwagr2DCyi+XNaF30U0syfuX
+         YAM1I8fgwpsqA8mz2fPxV+EMMyRuAstz05WEQvIOgxPJVQiO1ByhjyUCyvBCFViTF8
+         H9YRPIrlasVtUT13fgREHJxfN+bq4CTPmBSWBS4o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Honggang Li <honli@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.4 076/203] RDMA/srpt: Report the SCSI residual to the initiator
-Date:   Fri, 17 Jan 2020 00:16:33 +0100
-Message-Id: <20200116231750.951965385@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH 5.4 077/203] uaccess: Add non-pagefault user-space write function
+Date:   Fri, 17 Jan 2020 00:16:34 +0100
+Message-Id: <20200116231751.126349691@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -60,70 +61,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Daniel Borkmann <daniel@iogearbox.net>
 
-commit e88982ad1bb12db699de96fbc07096359ef6176c upstream.
+commit 1d1585ca0f48fe7ed95c3571f3e4a82b2b5045dc upstream.
 
-The code added by this patch is similar to the code that already exists in
-ibmvscsis_determine_resid(). This patch has been tested by running the
-following command:
+Commit 3d7081822f7f ("uaccess: Add non-pagefault user-space read functions")
+missed to add probe write function, therefore factor out a probe_write_common()
+helper with most logic of probe_kernel_write() except setting KERNEL_DS, and
+add a new probe_user_write() helper so it can be used from BPF side.
 
-strace sg_raw -r 1k /dev/sdb 12 00 00 00 60 00 -o inquiry.bin |&
-    grep resid=
+Again, on some archs, the user address space and kernel address space can
+co-exist and be overlapping, so in such case, setting KERNEL_DS would mean
+that the given address is treated as being in kernel address space.
 
-Link: https://lore.kernel.org/r/20191105214632.183302-1-bvanassche@acm.org
-Fixes: a42d985bd5b2 ("ib_srpt: Initial SRP Target merge for v3.3-rc1")
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Acked-by: Honggang Li <honli@redhat.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Link: https://lore.kernel.org/bpf/9df2542e68141bfa3addde631441ee45503856a8.1572649915.git.daniel@iogearbox.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/ulp/srpt/ib_srpt.c |   24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ include/linux/uaccess.h |   12 ++++++++++++
+ mm/maccess.c            |   45 +++++++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 53 insertions(+), 4 deletions(-)
 
---- a/drivers/infiniband/ulp/srpt/ib_srpt.c
-+++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
-@@ -1364,9 +1364,11 @@ static int srpt_build_cmd_rsp(struct srp
- 			      struct srpt_send_ioctx *ioctx, u64 tag,
- 			      int status)
- {
-+	struct se_cmd *cmd = &ioctx->cmd;
- 	struct srp_rsp *srp_rsp;
- 	const u8 *sense_data;
- 	int sense_data_len, max_sense_len;
-+	u32 resid = cmd->residual_count;
+--- a/include/linux/uaccess.h
++++ b/include/linux/uaccess.h
+@@ -337,6 +337,18 @@ extern long __probe_user_read(void *dst,
+ extern long notrace probe_kernel_write(void *dst, const void *src, size_t size);
+ extern long notrace __probe_kernel_write(void *dst, const void *src, size_t size);
  
- 	/*
- 	 * The lowest bit of all SAM-3 status codes is zero (see also
-@@ -1388,6 +1390,28 @@ static int srpt_build_cmd_rsp(struct srp
- 	srp_rsp->tag = tag;
- 	srp_rsp->status = status;
- 
-+	if (cmd->se_cmd_flags & SCF_UNDERFLOW_BIT) {
-+		if (cmd->data_direction == DMA_TO_DEVICE) {
-+			/* residual data from an underflow write */
-+			srp_rsp->flags = SRP_RSP_FLAG_DOUNDER;
-+			srp_rsp->data_out_res_cnt = cpu_to_be32(resid);
-+		} else if (cmd->data_direction == DMA_FROM_DEVICE) {
-+			/* residual data from an underflow read */
-+			srp_rsp->flags = SRP_RSP_FLAG_DIUNDER;
-+			srp_rsp->data_in_res_cnt = cpu_to_be32(resid);
-+		}
-+	} else if (cmd->se_cmd_flags & SCF_OVERFLOW_BIT) {
-+		if (cmd->data_direction == DMA_TO_DEVICE) {
-+			/* residual data from an overflow write */
-+			srp_rsp->flags = SRP_RSP_FLAG_DOOVER;
-+			srp_rsp->data_out_res_cnt = cpu_to_be32(resid);
-+		} else if (cmd->data_direction == DMA_FROM_DEVICE) {
-+			/* residual data from an overflow read */
-+			srp_rsp->flags = SRP_RSP_FLAG_DIOVER;
-+			srp_rsp->data_in_res_cnt = cpu_to_be32(resid);
-+		}
-+	}
++/*
++ * probe_user_write(): safely attempt to write to a location in user space
++ * @dst: address to write to
++ * @src: pointer to the data that shall be written
++ * @size: size of the data chunk
++ *
++ * Safely write to address @dst from the buffer at @src.  If a kernel fault
++ * happens, handle that and return -EFAULT.
++ */
++extern long notrace probe_user_write(void __user *dst, const void *src, size_t size);
++extern long notrace __probe_user_write(void __user *dst, const void *src, size_t size);
 +
- 	if (sense_data_len) {
- 		BUILD_BUG_ON(MIN_MAX_RSP_SIZE <= sizeof(*srp_rsp));
- 		max_sense_len = ch->max_ti_iu_len - sizeof(*srp_rsp);
+ extern long strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count);
+ extern long strncpy_from_unsafe_user(char *dst, const void __user *unsafe_addr,
+ 				     long count);
+--- a/mm/maccess.c
++++ b/mm/maccess.c
+@@ -18,6 +18,18 @@ probe_read_common(void *dst, const void
+ 	return ret ? -EFAULT : 0;
+ }
+ 
++static __always_inline long
++probe_write_common(void __user *dst, const void *src, size_t size)
++{
++	long ret;
++
++	pagefault_disable();
++	ret = __copy_to_user_inatomic(dst, src, size);
++	pagefault_enable();
++
++	return ret ? -EFAULT : 0;
++}
++
+ /**
+  * probe_kernel_read(): safely attempt to read from a kernel-space location
+  * @dst: pointer to the buffer that shall take the data
+@@ -85,6 +97,7 @@ EXPORT_SYMBOL_GPL(probe_user_read);
+  * Safely write to address @dst from the buffer at @src.  If a kernel fault
+  * happens, handle that and return -EFAULT.
+  */
++
+ long __weak probe_kernel_write(void *dst, const void *src, size_t size)
+     __attribute__((alias("__probe_kernel_write")));
+ 
+@@ -94,15 +107,39 @@ long __probe_kernel_write(void *dst, con
+ 	mm_segment_t old_fs = get_fs();
+ 
+ 	set_fs(KERNEL_DS);
+-	pagefault_disable();
+-	ret = __copy_to_user_inatomic((__force void __user *)dst, src, size);
+-	pagefault_enable();
++	ret = probe_write_common((__force void __user *)dst, src, size);
+ 	set_fs(old_fs);
+ 
+-	return ret ? -EFAULT : 0;
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(probe_kernel_write);
+ 
++/**
++ * probe_user_write(): safely attempt to write to a user-space location
++ * @dst: address to write to
++ * @src: pointer to the data that shall be written
++ * @size: size of the data chunk
++ *
++ * Safely write to address @dst from the buffer at @src.  If a kernel fault
++ * happens, handle that and return -EFAULT.
++ */
++
++long __weak probe_user_write(void __user *dst, const void *src, size_t size)
++    __attribute__((alias("__probe_user_write")));
++
++long __probe_user_write(void __user *dst, const void *src, size_t size)
++{
++	long ret = -EFAULT;
++	mm_segment_t old_fs = get_fs();
++
++	set_fs(USER_DS);
++	if (access_ok(dst, size))
++		ret = probe_write_common(dst, src, size);
++	set_fs(old_fs);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(probe_user_write);
+ 
+ /**
+  * strncpy_from_unsafe: - Copy a NUL terminated string from unsafe address.
 
 
