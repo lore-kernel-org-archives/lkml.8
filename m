@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4939DC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D290C33CB7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2208217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8B6B2467E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:22:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195356;
-	bh=QGsiU+u5Ni+a2mgblIM6INl9p21+IYQkMFGB7cMcRf4=;
+	s=default; t=1579195364;
+	bh=wMgQC9Nxeaz0aIRTUtqD2m4QS3kZMLRfFhrPVF3c2AM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1utLcUmT+fE+buwL6AaruOWJRj693dEuFOGJQrhMpwlocttjmVOmT2wddqLZvymf2
-	 BSngVbQnVmW6P573WPtYmS/gn5vq1peeInSKZ4sRJaWcROylgtcSf5et4r+yjaPOWi
-	 nXM6xqIO7P2rKtxiWmAwCdX+7u/uxkPYhcDWsXy0=
+	b=dB5Bot6Dfff1ypUiDVDvZJk2AxriX5AVhu3qupIfKM8qcdq/43KNzOtkzpMDQU2S6
+	 fKUvFZtkYGHxMiw6nIOthfimSjcxK1z1hhIQBJFW0FqqKiNkst0CZA26X4oadyXTUJ
+	 3Mr98QvtunVP/BhBcmpp43YiCMtRpwHAX/t41sUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391642AbgAPRWg (ORCPT
+        id S2391661AbgAPRWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:22:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58734 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:22:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390764AbgAPRNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:13:31 -0500
+        id S2390748AbgAPRN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:13:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F145F246AA;
-        Thu, 16 Jan 2020 17:13:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 733D9246AF;
+        Thu, 16 Jan 2020 17:13:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194811;
-        bh=QGsiU+u5Ni+a2mgblIM6INl9p21+IYQkMFGB7cMcRf4=;
+        s=default; t=1579194807;
+        bh=wMgQC9Nxeaz0aIRTUtqD2m4QS3kZMLRfFhrPVF3c2AM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fjUq/BIw48N8Yk1Zk4rxe0/4rOSqDZ72IySqsRLbibKe6B4sUC/3Mv4h6wVvRhPJc
-         qc84L3cvNV5ctaRb4bvOlzFCTZd2APwy+ocnmPME/YyZneAgSyX8q3wFsnh6wT8LT0
-         gtDLdbRjUbLYnzoQ39/vFJP5Hi7Eyb/k6rDNjd3I=
+        b=YQcR5Ak2cnhmS1224Qr/de5NIiG10eoZTQtt1MKfh5FARRvH/Ue8KKuY2u6MEW7lp
+         snnei4aqsbA3XPy7coSR/19ZGOxFp5WDvYbpfnYSibAvZvG7gzqpr/6A3ObG2/leez
+         CpFyQyhtxfF8/uGMsldt3NWnGhn7gVXDNjFwii80=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 618/671] pinctl: ti: iodelay: fix error checking on pinctrl_count_index_with_args call
-Date:   Thu, 16 Jan 2020 12:04:16 -0500
-Message-Id: <20200116170509.12787-355-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 616/671] cw1200: Fix a signedness bug in cw1200_load_firmware()
+Date:   Thu, 16 Jan 2020 12:04:14 -0500
+Message-Id: <20200116170509.12787-353-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,39 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 5ff8aca906f3a7a7db79fad92f2a4401107ef50d ]
+[ Upstream commit 4a50d454502f1401171ff061a5424583f91266db ]
 
-The call to pinctrl_count_index_with_args checks for a -EINVAL return
-however this function calls pinctrl_get_list_and_count and this can
-return -ENOENT. Rather than check for a specific error, fix this by
-checking for any error return to catch the -ENOENT case.
+The "priv->hw_type" is an enum and in this context GCC will treat it
+as an unsigned int so the error handling will never trigger.
 
-Addresses-Coverity: ("Improper use of negative")
-Fixes: 003910ebc83b ("pinctrl: Introduce TI IOdelay configuration driver")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Link: https://lore.kernel.org/r/20190920122030.14340-1-colin.king@canonical.com
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: a910e4a94f69 ("cw1200: add driver for the ST-E CW1100 & CW1200 WLAN chipsets")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/ti/pinctrl-ti-iodelay.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/st/cw1200/fwio.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-index 8782c348ebe9..4eda888b4d04 100644
---- a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-+++ b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-@@ -496,7 +496,7 @@ static int ti_iodelay_dt_node_to_map(struct pinctrl_dev *pctldev,
- 		return -EINVAL;
+diff --git a/drivers/net/wireless/st/cw1200/fwio.c b/drivers/net/wireless/st/cw1200/fwio.c
+index 30e7646d04af..16be7fa82a23 100644
+--- a/drivers/net/wireless/st/cw1200/fwio.c
++++ b/drivers/net/wireless/st/cw1200/fwio.c
+@@ -323,12 +323,12 @@ int cw1200_load_firmware(struct cw1200_common *priv)
+ 		goto out;
+ 	}
  
- 	rows = pinctrl_count_index_with_args(np, name);
--	if (rows == -EINVAL)
-+	if (rows < 0)
- 		return rows;
+-	priv->hw_type = cw1200_get_hw_type(val32, &major_revision);
+-	if (priv->hw_type < 0) {
++	ret = cw1200_get_hw_type(val32, &major_revision);
++	if (ret < 0) {
+ 		pr_err("Can't deduce hardware type.\n");
+-		ret = -ENOTSUPP;
+ 		goto out;
+ 	}
++	priv->hw_type = ret;
  
- 	*map = devm_kzalloc(iod->dev, sizeof(**map), GFP_KERNEL);
+ 	/* Set DPLL Reg value, and read back to confirm writes work */
+ 	ret = cw1200_reg_write_32(priv, ST90TDS_TSET_GEN_R_W_REG_ID,
 -- 
 2.20.1
 
