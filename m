@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6207BC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F41C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BDD92468D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:46:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8AC4246ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:46:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196789;
-	bh=TlY7+H+pFZQjyCcJQCbjvS+Mb5wwpsI2xEG8bwG2vNg=;
+	s=default; t=1579196792;
+	bh=FUskxwFtJmB85g2QoWufT+EQlsqoA9fp/l3uqUwyw5s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zjL/a5byPRJVQ7MSBn11i6PzwRgWB8ZtDjdqakTrwHRLWerPVAMSrjjqARIIcpyM7
-	 JTPYmx4tFMYB1CaJlYlAFlSHHctOaeeJlJdOosGs9kWxosOcJN1n3NJ46ISPRBrJey
-	 i0IBpWmUxnzBtEylRhYZdPtCW5myDUbTU+7MroQM=
+	b=WzOc8/osvdE6512rvficWGJRB4dSYEAsyXkGGWU5tT1m75HGFM+qFdAR+lMK2N/wA
+	 qaXikd5RSxW2RzCKHhanOF2KtF10w6LmDRWIjL6k5OFUom8uOkG8wF+Rfke3bEmi7l
+	 rVHUJHTZF6T4JNCZKNt2AB3m85npT+lVLG0rKPc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406677AbgAPRq2 (ORCPT
+        id S2406698AbgAPRqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:46:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39096 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:46:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406659AbgAPRqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:46:24 -0500
+        id S2406668AbgAPRq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:46:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAEE0246D9;
-        Thu, 16 Jan 2020 17:46:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD659246B7;
+        Thu, 16 Jan 2020 17:46:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196783;
-        bh=TlY7+H+pFZQjyCcJQCbjvS+Mb5wwpsI2xEG8bwG2vNg=;
+        s=default; t=1579196786;
+        bh=FUskxwFtJmB85g2QoWufT+EQlsqoA9fp/l3uqUwyw5s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=klPjZohtPJlkbl4UlxBbtHSv18XCf+KW0cL4FoGxp5tvuIC2xOWrx05m2so2d3+4J
-         LvqhhsGnSwStO3FbLv9vRgpe/7zSwUkEHZIm1HhIehSI5UIgfxyZOArexnO8DIzmjc
-         8I95IpnTmT7LwTWcg87a1EW/FrqiMN3VrZGfbG5U=
+        b=jZ4O0IpYZbRh3/X28IvOTtrgRukS4jcCikzd9DrJWhc8G4zNB8DyWR1SEG29kPJLW
+         IRQ7muT5iInLeK7un9P92iyf8nloG8VS2AlFFAVf2Xw+00h9xzT5ZToSGzu071t4qU
+         cSev6X6sKrMTdMpcqd7jyxd4dgLo+anKXffY8k9Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Hai Li <hali@codeaurora.org>, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, Sean Paul <seanpaul@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.4 148/174] drm/msm/dsi: Implement reset correctly
-Date:   Thu, 16 Jan 2020 12:42:25 -0500
-Message-Id: <20200116174251.24326-148-sashal@kernel.org>
+Cc:     Stefan Wahren <stefan.wahren@in-tech.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 150/174] net: qca_spi: Move reset_count to struct qcaspi
+Date:   Thu, 16 Jan 2020 12:42:27 -0500
+Message-Id: <20200116174251.24326-150-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -61,71 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+From: Stefan Wahren <stefan.wahren@in-tech.com>
 
-[ Upstream commit 78e31c42261779a01bc73472d0f65f15378e9de3 ]
+[ Upstream commit bc19c32904e36548335b35fdce6ce734e20afc0a ]
 
-On msm8998, vblank timeouts are observed because the DSI controller is not
-reset properly, which ends up stalling the MDP.  This is because the reset
-logic is not correct per the hardware documentation.
+The reset counter is specific for every QCA700x chip. So move this
+into the private driver struct. Otherwise we get unpredictable reset
+behavior in setups with multiple QCA700x chips.
 
-The documentation states that after asserting reset, software should wait
-some time (no indication of how long), or poll the status register until it
-returns 0 before deasserting reset.
-
-wmb() is insufficient for this purpose since it just ensures ordering, not
-timing between writes.  Since asserting and deasserting reset occurs on the
-same register, ordering is already guaranteed by the architecture, making
-the wmb extraneous.
-
-Since we would define a timeout for polling the status register to avoid a
-possible infinite loop, lets just use a static delay of 20 ms, since 16.666
-ms is the time available to process one frame at 60 fps.
-
-Fixes: a689554ba6ed ("drm/msm: Initial add DSI connector support")
-Cc: Hai Li <hali@codeaurora.org>
-Cc: Rob Clark <robdclark@gmail.com>
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Reviewed-by: Sean Paul <sean@poorly.run>
-[seanpaul renamed RESET_DELAY to DSI_RESET_TOGGLE_DELAY_MS]
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191011133939.16551-1-jeffrey.l.hugo@gmail.com
+Fixes: 291ab06ecf67 (net: qualcomm: new Ethernet over SPI driver for QCA7000)
+Signed-off-by: Stefan Wahren <stefan.wahren@in-tech.com>
+Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/dsi/dsi_host.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/qualcomm/qca_spi.c | 9 ++++-----
+ drivers/net/ethernet/qualcomm/qca_spi.h | 1 +
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
-index 4c49868efcda..12ddbbb53107 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_host.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
-@@ -30,6 +30,8 @@
- #include "dsi.xml.h"
- #include "dsi_cfg.h"
+diff --git a/drivers/net/ethernet/qualcomm/qca_spi.c b/drivers/net/ethernet/qualcomm/qca_spi.c
+index 7886a8a5b55b..fb944e65c632 100644
+--- a/drivers/net/ethernet/qualcomm/qca_spi.c
++++ b/drivers/net/ethernet/qualcomm/qca_spi.c
+@@ -438,7 +438,6 @@ qcaspi_qca7k_sync(struct qcaspi *qca, int event)
+ 	u16 signature = 0;
+ 	u16 spi_config;
+ 	u16 wrbuf_space = 0;
+-	static u16 reset_count;
  
-+#define DSI_RESET_TOGGLE_DELAY_MS 20
-+
- static int dsi_get_version(const void __iomem *base, u32 *major, u32 *minor)
- {
- 	u32 ver;
-@@ -764,7 +766,7 @@ static void dsi_sw_reset(struct msm_dsi_host *msm_host)
- 	wmb(); /* clocks need to be enabled before reset */
+ 	if (event == QCASPI_EVENT_CPUON) {
+ 		/* Read signature twice, if not valid
+@@ -491,13 +490,13 @@ qcaspi_qca7k_sync(struct qcaspi *qca, int event)
  
- 	dsi_write(msm_host, REG_DSI_RESET, 1);
--	wmb(); /* make sure reset happen */
-+	msleep(DSI_RESET_TOGGLE_DELAY_MS); /* make sure reset happen */
- 	dsi_write(msm_host, REG_DSI_RESET, 0);
- }
+ 		qca->sync = QCASPI_SYNC_RESET;
+ 		qca->stats.trig_reset++;
+-		reset_count = 0;
++		qca->reset_count = 0;
+ 		break;
+ 	case QCASPI_SYNC_RESET:
+-		reset_count++;
++		qca->reset_count++;
+ 		netdev_dbg(qca->net_dev, "sync: waiting for CPU on, count %u.\n",
+-			   reset_count);
+-		if (reset_count >= QCASPI_RESET_TIMEOUT) {
++			   qca->reset_count);
++		if (qca->reset_count >= QCASPI_RESET_TIMEOUT) {
+ 			/* reset did not seem to take place, try again */
+ 			qca->sync = QCASPI_SYNC_UNKNOWN;
+ 			qca->stats.reset_timeout++;
+diff --git a/drivers/net/ethernet/qualcomm/qca_spi.h b/drivers/net/ethernet/qualcomm/qca_spi.h
+index 6e31a0e744a4..c48c314ca4df 100644
+--- a/drivers/net/ethernet/qualcomm/qca_spi.h
++++ b/drivers/net/ethernet/qualcomm/qca_spi.h
+@@ -97,6 +97,7 @@ struct qcaspi {
  
-@@ -1111,7 +1113,7 @@ static void dsi_sw_reset_restore(struct msm_dsi_host *msm_host)
+ 	unsigned int intr_req;
+ 	unsigned int intr_svc;
++	u16 reset_count;
  
- 	/* dsi controller can only be reset while clocks are running */
- 	dsi_write(msm_host, REG_DSI_RESET, 1);
--	wmb();	/* make sure reset happen */
-+	msleep(DSI_RESET_TOGGLE_DELAY_MS); /* make sure reset happen */
- 	dsi_write(msm_host, REG_DSI_RESET, 0);
- 	wmb();	/* controller out of reset */
- 	dsi_write(msm_host, REG_DSI_CTRL, data0);
+ #ifdef CONFIG_DEBUG_FS
+ 	struct dentry *device_root;
 -- 
 2.20.1
 
