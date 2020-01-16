@@ -2,174 +2,121 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC9FC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8482FC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F35020748
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="dNP82Xt3"
+	by mail.kernel.org (Postfix) with ESMTP id 4D1822072B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579218400;
+	bh=4QuQBs/y2wtwL6SKyn0ignYxYeQE9C0+uY2gTmS+OEY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=MegK5yNDAYXD3WQjd4S9mSQViYDLsEvDupr+w1wuJ1pTO2/HrUef3BefypfmCVCeO
+	 B7JYSz+zxDQEXB0TWE5r0dU4pKkOsDK1aiH7Rm6se+P7+6Gmb8N4eBy72SCaMTPUZ/
+	 pbA2WJxbpCm//MMpiOPy9Rqx6HKC1BxFuc4Micqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391995AbgAPXqd (ORCPT
+        id S2392060AbgAPXqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:46:33 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:57364 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730479AbgAPXq2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:46:28 -0500
-Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 39C3120B4798;
-        Thu, 16 Jan 2020 15:46:27 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 39C3120B4798
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1579218387;
-        bh=nQJSr6RPBnyKTrsutV6KOIA9o9XsfPqJs74csjph0zY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=dNP82Xt3tJIuRcfYBkPaJOEgMu9iK3hC51XgjYZV6d6U9qYdhu8WURpgw5CVdGpWX
-         L/AUa1B03RHNyHCBCDbcmBUsquyZFPF+2dvlhNl3dtx1r/ZfRVxTtNHS8Zjn8qYwZY
-         hvqsbGnC8cQbU/iubuimwDJn2FQIwC7R5ULdODpY=
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-To:     zohar@linux.ibm.com, James.Bottomley@HansenPartnership.com,
-        linux-integrity@vger.kernel.org
-Cc:     dhowells@redhat.com, sashal@kernel.org,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org
-Subject: [PATCH v1] IMA: pre-allocate buffer to hold keyrings string
-Date:   Thu, 16 Jan 2020 15:46:23 -0800
-Message-Id: <20200116234623.2959-1-nramas@linux.microsoft.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 16 Jan 2020 18:46:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49374 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729624AbgAPXVs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:21:48 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D078A2077C;
+        Thu, 16 Jan 2020 23:21:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579216908;
+        bh=4QuQBs/y2wtwL6SKyn0ignYxYeQE9C0+uY2gTmS+OEY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Q66Qc8a/TKR8xnb1geFdOgRfdZnhD6EpmBZZjD3mbQzVGJ6ZpBvWU2GTKp9nOClNd
+         Mbz62iVC5LiBEmJAUy8Krd7KcTX7AzKFnTKuVFHlTldaCPm03r1HhuTicrsEtxJbkx
+         f+ZnuVksLxMWzNpxH+BZkJ7WvusklB+cktpxeO7o=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.4 053/203] netfilter: nf_tables_offload: release flow_rule on error from commit path
+Date:   Fri, 17 Jan 2020 00:16:10 +0100
+Message-Id: <20200116231748.608901770@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
+References: <20200116231745.218684830@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ima_match_keyring() is called while holding rcu read lock. Since this
-function executes in atmomic context, it should not call any function
-that can sleep (such as kstrdup()).
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-This patch pre-allocates a buffer to hold the keyrings string read from
-the IMA policy and uses that to match the given keyring.
+commit 23403cd8898dbc9808d3eb2f63bc1db8a340b751 upstream.
 
-Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Fixes: e9085e0ad38a ("IMA: Add support to limit measuring keys")
+If hardware offload commit path fails, release all flow_rule objects.
+
+Fixes: c9626a2cbdb2 ("netfilter: nf_tables: add hardware offload support")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- security/integrity/ima/ima_policy.c | 50 ++++++++++++++++++++++++-----
- 1 file changed, 42 insertions(+), 8 deletions(-)
+ net/netfilter/nf_tables_offload.c |   26 +++++++++++++++++++++-----
+ 1 file changed, 21 insertions(+), 5 deletions(-)
 
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index 9963863d6c92..180e2069e075 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -208,6 +208,10 @@ static LIST_HEAD(ima_policy_rules);
- static LIST_HEAD(ima_temp_rules);
- static struct list_head *ima_rules;
+--- a/net/netfilter/nf_tables_offload.c
++++ b/net/netfilter/nf_tables_offload.c
+@@ -358,14 +358,14 @@ int nft_flow_rule_offload_commit(struct
+ 				continue;
  
-+/* Pre-allocated buffer used for matching keyrings. */
-+static char *ima_keyrings;
-+static size_t ima_keyrings_len;
-+
- static int ima_policy __initdata;
- 
- static int __init default_measure_policy_setup(char *str)
-@@ -369,7 +373,7 @@ int ima_lsm_policy_change(struct notifier_block *nb, unsigned long event,
- static bool ima_match_keyring(struct ima_rule_entry *rule,
- 			      const char *keyring, const struct cred *cred)
- {
--	char *keyrings, *next_keyring, *keyrings_ptr;
-+	char *next_keyring, *keyrings_ptr;
- 	bool matched = false;
- 
- 	if ((rule->flags & IMA_UID) && !rule->uid_op(cred->uid, rule->uid))
-@@ -381,15 +385,13 @@ static bool ima_match_keyring(struct ima_rule_entry *rule,
- 	if (!keyring)
- 		return false;
- 
--	keyrings = kstrdup(rule->keyrings, GFP_KERNEL);
--	if (!keyrings)
--		return false;
-+	strcpy(ima_keyrings, rule->keyrings);
- 
- 	/*
- 	 * "keyrings=" is specified in the policy in the format below:
- 	 * keyrings=.builtin_trusted_keys|.ima|.evm
- 	 */
--	keyrings_ptr = keyrings;
-+	keyrings_ptr = ima_keyrings;
- 	while ((next_keyring = strsep(&keyrings_ptr, "|")) != NULL) {
- 		if (!strcmp(next_keyring, keyring)) {
- 			matched = true;
-@@ -397,8 +399,6 @@ static bool ima_match_keyring(struct ima_rule_entry *rule,
+ 			if (trans->ctx.flags & NLM_F_REPLACE ||
+-			    !(trans->ctx.flags & NLM_F_APPEND))
+-				return -EOPNOTSUPP;
+-
++			    !(trans->ctx.flags & NLM_F_APPEND)) {
++				err = -EOPNOTSUPP;
++				break;
++			}
+ 			err = nft_flow_offload_rule(trans->ctx.chain,
+ 						    nft_trans_rule(trans),
+ 						    nft_trans_flow_rule(trans),
+ 						    FLOW_CLS_REPLACE);
+-			nft_flow_rule_destroy(nft_trans_flow_rule(trans));
+ 			break;
+ 		case NFT_MSG_DELRULE:
+ 			if (!(trans->ctx.chain->flags & NFT_CHAIN_HW_OFFLOAD))
+@@ -379,7 +379,23 @@ int nft_flow_rule_offload_commit(struct
  		}
+ 
+ 		if (err)
+-			return err;
++			break;
++	}
++
++	list_for_each_entry(trans, &net->nft.commit_list, list) {
++		if (trans->ctx.family != NFPROTO_NETDEV)
++			continue;
++
++		switch (trans->msg_type) {
++		case NFT_MSG_NEWRULE:
++			if (!(trans->ctx.chain->flags & NFT_CHAIN_HW_OFFLOAD))
++				continue;
++
++			nft_flow_rule_destroy(nft_trans_flow_rule(trans));
++			break;
++		default:
++			break;
++		}
  	}
  
--	kfree(keyrings);
--
- 	return matched;
- }
- 
-@@ -949,6 +949,7 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
- 	bool uid_token;
- 	struct ima_template_desc *template_desc;
- 	int result = 0;
-+	size_t keyrings_len;
- 
- 	ab = integrity_audit_log_start(audit_context(), GFP_KERNEL,
- 				       AUDIT_INTEGRITY_POLICY_RULE);
-@@ -1114,14 +1115,47 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
- 		case Opt_keyrings:
- 			ima_log_string(ab, "keyrings", args[0].from);
- 
-+			keyrings_len = strlen(args[0].from) + 1;
-+
- 			if ((entry->keyrings) ||
- 			    (entry->action != MEASURE) ||
--			    (entry->func != KEY_CHECK)) {
-+			    (entry->func != KEY_CHECK) ||
-+			    (keyrings_len < 2)) {
- 				result = -EINVAL;
- 				break;
- 			}
-+
-+			if (ima_keyrings) {
-+				if (keyrings_len > ima_keyrings_len) {
-+					char *tmpbuf;
-+
-+					tmpbuf = krealloc(ima_keyrings,
-+							  keyrings_len,
-+							  GFP_KERNEL);
-+					if (!tmpbuf) {
-+						result = -ENOMEM;
-+						break;
-+					}
-+
-+					ima_keyrings = tmpbuf;
-+					ima_keyrings_len = keyrings_len;
-+				}
-+			} else {
-+				ima_keyrings = kzalloc(keyrings_len,
-+						       GFP_KERNEL);
-+				if (!ima_keyrings) {
-+					result = -ENOMEM;
-+					break;
-+				}
-+
-+				ima_keyrings_len = keyrings_len;
-+			}
-+
- 			entry->keyrings = kstrdup(args[0].from, GFP_KERNEL);
- 			if (!entry->keyrings) {
-+				kfree(ima_keyrings);
-+				ima_keyrings = NULL;
-+				ima_keyrings_len = 0;
- 				result = -ENOMEM;
- 				break;
- 			}
--- 
-2.17.1
+ 	return err;
+
 
