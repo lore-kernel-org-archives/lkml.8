@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DB2C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21207C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99E03246D0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E49D62468D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:46:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196782;
-	bh=CVftgOMjwtO0Hr3BJ7bhXGZiI3Nu/IJzjCujFjRIFa0=;
+	s=default; t=1579196786;
+	bh=MwSgVhG+pTafHyYyuQL3MwKEqFMypOUPahmZrsashQo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=im6rTLE1S7jokG1VxkFHlELSPjBLw0jD0eZtkd7anlfUsvZra6aVCcYomBtdFv9Yw
-	 31gZ32VJmw6vXUNP8mJjDeRoVct/eY868GyThHGf+ytmf8VuS+pDuE8+bBbEOQyM/l
-	 GrgrwkLyjmtPhApv5uKieoxaNB0zmS9hZYmjV9Fk=
+	b=b0n/QufoJ+gGnPOElNUfO34i5dnbDMdJ+rhz6H5kGVAnZjo0IHtZaSxWTUaQ6dBT2
+	 WSlXT52nEu/3vIxHX1NWNB8roi2A6m86L1/jGiuuqLR1mrbv2YWeShQIRHGcZ2Ibg8
+	 i9s2uPBa8KMZeI9baf4dVgT9SWXClOj3TatLz27o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406605AbgAPRqV (ORCPT
+        id S2406663AbgAPRqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:46:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38946 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:46:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406638AbgAPRqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:46:19 -0500
+        id S2406651AbgAPRqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:46:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDF04246D9;
-        Thu, 16 Jan 2020 17:46:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90F0B246DE;
+        Thu, 16 Jan 2020 17:46:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196778;
-        bh=CVftgOMjwtO0Hr3BJ7bhXGZiI3Nu/IJzjCujFjRIFa0=;
+        s=default; t=1579196781;
+        bh=MwSgVhG+pTafHyYyuQL3MwKEqFMypOUPahmZrsashQo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=02lSa9J2YlgxpBe0ApH742dMJpVG/Muhe2WcBEy0Q9Q5oLDjSJxz2Qztxx9ba4At4
-         R/4OU/FEUaR4siGd2vZG8spL3jlVCrBmi26yZ8Ob0uuQiZysySV1pzCwfGaxQUtEyG
-         peHf6vwYzi8xhOIlIITG/5/SaJibjCmDnyFyM56w=
+        b=uyyuOhmADeFjifvnVXF3/EQS6Ao40c+nnccvT5cWrcGE6sbwTJD2BzAxoBgBaYA5x
+         ylPGgRFtSBe/7tJmxE2Zf5yzHzoFwnmf+el0paqdYfvznrSR6kuU082hL0YPfCY41I
+         73BGVAUrRddIuE/ojaIkeCHU5MjGGV64w0Kx3zvQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 145/174] llc: fix sk_buff refcounting in llc_conn_state_process()
-Date:   Thu, 16 Jan 2020 12:42:22 -0500
-Message-Id: <20200116174251.24326-145-sashal@kernel.org>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 147/174] USB: usb-skeleton: fix use-after-free after driver unbind
+Date:   Thu, 16 Jan 2020 12:42:24 -0500
+Message-Id: <20200116174251.24326-147-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -59,123 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit 36453c852816f19947ca482a595dffdd2efa4965 ]
+[ Upstream commit 6353001852776e7eeaab4da78922d4c6f2b076af ]
 
-If llc_conn_state_process() sees that llc_conn_service() put the skb on
-a list, it will drop one fewer references to it.  This is wrong because
-the current behavior is that llc_conn_service() never consumes a
-reference to the skb.
+The driver failed to stop its read URB on disconnect, something which
+could lead to a use-after-free in the completion handler after driver
+unbind in case the character device has been closed.
 
-The code also makes the number of skb references being dropped
-conditional on which of ind_prim and cfm_prim are nonzero, yet neither
-of these affects how many references are *acquired*.  So there is extra
-code that tries to fix this up by sometimes taking another reference.
-
-Remove the unnecessary/broken refcounting logic and instead just add an
-skb_get() before the only two places where an extra reference is
-actually consumed.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Fixes: e7389cc9a7ff ("USB: skel_read really sucks royally")
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191009170944.30057-3-johan@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/llc/llc_conn.c | 33 ++++++---------------------------
- 1 file changed, 6 insertions(+), 27 deletions(-)
+ drivers/usb/usb-skeleton.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/llc/llc_conn.c b/net/llc/llc_conn.c
-index 5d653f5261c5..3b002ab68b29 100644
---- a/net/llc/llc_conn.c
-+++ b/net/llc/llc_conn.c
-@@ -64,12 +64,6 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 	struct llc_sock *llc = llc_sk(skb->sk);
- 	struct llc_conn_state_ev *ev = llc_conn_ev(skb);
+diff --git a/drivers/usb/usb-skeleton.c b/drivers/usb/usb-skeleton.c
+index 871c366d9229..efc716f26cf5 100644
+--- a/drivers/usb/usb-skeleton.c
++++ b/drivers/usb/usb-skeleton.c
+@@ -592,6 +592,7 @@ static void skel_disconnect(struct usb_interface *interface)
+ 	dev->disconnected = 1;
+ 	mutex_unlock(&dev->io_mutex);
  
--	/*
--	 * We have to hold the skb, because llc_conn_service will kfree it in
--	 * the sending path and we need to look at the skb->cb, where we encode
--	 * llc_conn_state_ev.
--	 */
--	skb_get(skb);
- 	ev->ind_prim = ev->cfm_prim = 0;
- 	/*
- 	 * Send event to state machine
-@@ -77,21 +71,12 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 	rc = llc_conn_service(skb->sk, skb);
- 	if (unlikely(rc != 0)) {
- 		printk(KERN_ERR "%s: llc_conn_service failed\n", __func__);
--		goto out_kfree_skb;
--	}
--
--	if (unlikely(!ev->ind_prim && !ev->cfm_prim)) {
--		/* indicate or confirm not required */
--		if (!skb->next)
--			goto out_kfree_skb;
- 		goto out_skb_put;
- 	}
++	usb_kill_urb(dev->bulk_in_urb);
+ 	usb_kill_anchored_urbs(&dev->submitted);
  
--	if (unlikely(ev->ind_prim && ev->cfm_prim)) /* Paranoia */
--		skb_get(skb);
--
- 	switch (ev->ind_prim) {
- 	case LLC_DATA_PRIM:
-+		skb_get(skb);
- 		llc_save_primitive(sk, skb, LLC_DATA_PRIM);
- 		if (unlikely(sock_queue_rcv_skb(sk, skb))) {
- 			/*
-@@ -108,6 +93,7 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 		 * skb->sk pointing to the newly created struct sock in
- 		 * llc_conn_handler. -acme
- 		 */
-+		skb_get(skb);
- 		skb_queue_tail(&sk->sk_receive_queue, skb);
- 		sk->sk_state_change(sk);
- 		break;
-@@ -123,7 +109,6 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 				sk->sk_state_change(sk);
- 			}
- 		}
--		kfree_skb(skb);
- 		sock_put(sk);
- 		break;
- 	case LLC_RESET_PRIM:
-@@ -132,14 +117,11 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 		 * RESET is not being notified to upper layers for now
- 		 */
- 		printk(KERN_INFO "%s: received a reset ind!\n", __func__);
--		kfree_skb(skb);
- 		break;
- 	default:
--		if (ev->ind_prim) {
-+		if (ev->ind_prim)
- 			printk(KERN_INFO "%s: received unknown %d prim!\n",
- 				__func__, ev->ind_prim);
--			kfree_skb(skb);
--		}
- 		/* No indication */
- 		break;
- 	}
-@@ -181,15 +163,12 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 		printk(KERN_INFO "%s: received a reset conf!\n", __func__);
- 		break;
- 	default:
--		if (ev->cfm_prim) {
-+		if (ev->cfm_prim)
- 			printk(KERN_INFO "%s: received unknown %d prim!\n",
- 					__func__, ev->cfm_prim);
--			break;
--		}
--		goto out_skb_put; /* No confirmation */
-+		/* No confirmation */
-+		break;
- 	}
--out_kfree_skb:
--	kfree_skb(skb);
- out_skb_put:
- 	kfree_skb(skb);
- 	return rc;
+ 	/* decrement our usage count */
 -- 
 2.20.1
 
