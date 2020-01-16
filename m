@@ -2,52 +2,51 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E310C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8EBEC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2B26206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:21:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D09C2077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:21:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579216882;
-	bh=2kKG/27VuOVK4lQ4VGSOkWD7HQ57Q6d5cJDxLBh9vbw=;
+	s=default; t=1579216884;
+	bh=OJr/ByO9TRbCM9xgvCxyO58tS8jx1apSCf0bS3fx80w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d019TjK1CZn16YOQHxm4vzV8Fa5zH6J733+NqrIqcQGKl1uSz5sz10GvFICxKIsGt
-	 xSOdi+koezGEmXU9zkxTVwQIjqPxjuoSiH6A6Mm7nRnQ4elOgANmWIOcDKRPdb5Ngt
-	 dnhCpaUKOF+DTHkvTDzmnfsub0pkOuX5XPTJiT5A=
+	b=SZgxGYB44iRTy2bPG5ajA6v8WHQN/OZqSjC3bFC54SbOaR1vXdb+ndJcJjQ9CK7Q4
+	 +b8AmeRYDLMiV+l+mGWfP0r4+Y9BiVAZ8hWyWZb2slNwBG9PeBKFHI0nXWZrjTkFze
+	 TrGwp0rZWL/dcJqEB43rp9cZW8vU0fztbzVndvD4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387921AbgAPXVU (ORCPT
+        id S2390806AbgAPXVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:21:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48238 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:21:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389910AbgAPXVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:21:13 -0500
+        id S2389488AbgAPXVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:21:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ED3E2072B;
-        Thu, 16 Jan 2020 23:21:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F85F2072B;
+        Thu, 16 Jan 2020 23:21:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216872;
-        bh=2kKG/27VuOVK4lQ4VGSOkWD7HQ57Q6d5cJDxLBh9vbw=;
+        s=default; t=1579216875;
+        bh=OJr/ByO9TRbCM9xgvCxyO58tS8jx1apSCf0bS3fx80w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=inBZddWSC84YgxejRSaF/xm5sT8yjlQaAwjuhZ1R4GHfdMsfwXbLOK7tITemQPVm2
-         DjC+By6dQuusW0AJtE8HYjDdL1FZaNag6J4yXuO0h9VvMr56uDfIMueyPfdbqgz0p2
-         uOg5SwPp9R93/fVwJvSpHca6y/EMx5YECCzzqbDY=
+        b=tLgBwiULRTiBv0MYfwQiilXs79t29C1de+YxvK8xA1miMW1116+GGrZU493kjcA7C
+         bnqwyzZjfm9ZGmvI5psbynaaEc4sOp5enXxh4QU7Echw08YlucTRpOrAEEWwrNBbVQ
+         cHSX1duwovQegvgVHKB8c0s6W3dmFhSmJ4bqLpdg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 5.4 038/203] cifs: Adjust indentation in smb2_open_file
-Date:   Fri, 17 Jan 2020 00:15:55 +0100
-Message-Id: <20200116231747.421371600@linuxfoundation.org>
+        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
+        Dmitry Osipenko <digetx@gmail.com>
+Subject: [PATCH 5.4 029/203] drm/tegra: Fix ordering of cleanup code
+Date:   Fri, 17 Jan 2020 00:15:46 +0100
+Message-Id: <20200116231746.894208763@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -60,45 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Thierry Reding <treding@nvidia.com>
 
-commit 7935799e041ae10d380d04ea23868240f082bd11 upstream.
+commit 051172e8c1ceef8749f19faacc1d3bef65d20d8d upstream.
 
-Clang warns:
+Commit Fixes: b9f8b09ce256 ("drm/tegra: Setup shared IOMMU domain after
+initialization") changed the initialization order of the IOMMU related
+bits but didn't update the cleanup path accordingly. This asymmetry can
+cause failures during error recovery.
 
-../fs/cifs/smb2file.c:70:3: warning: misleading indentation; statement
-is not part of the previous 'if' [-Wmisleading-indentation]
-         if (oparms->tcon->use_resilient) {
-         ^
-../fs/cifs/smb2file.c:66:2: note: previous statement is here
-        if (rc)
-        ^
-1 warning generated.
-
-This warning occurs because there is a space after the tab on this line.
-Remove it so that the indentation is consistent with the Linux kernel
-coding style and clang no longer warns.
-
-Fixes: 592fafe644bf ("Add resilienthandles mount parm")
-Link: https://github.com/ClangBuiltLinux/linux/issues/826
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Fixes: b9f8b09ce256 ("drm/tegra: Setup shared IOMMU domain after initialization")
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Tested-by: Dmitry Osipenko <digetx@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smb2file.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/tegra/drm.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
---- a/fs/cifs/smb2file.c
-+++ b/fs/cifs/smb2file.c
-@@ -67,7 +67,7 @@ smb2_open_file(const unsigned int xid, s
- 		goto out;
- 
- 
--	 if (oparms->tcon->use_resilient) {
-+	if (oparms->tcon->use_resilient) {
- 		/* default timeout is 0, servers pick default (120 seconds) */
- 		nr_ioctl_req.Timeout =
- 			cpu_to_le32(oparms->tcon->handle_timeout);
+--- a/drivers/gpu/drm/tegra/drm.c
++++ b/drivers/gpu/drm/tegra/drm.c
+@@ -201,19 +201,19 @@ hub:
+ 	if (tegra->hub)
+ 		tegra_display_hub_cleanup(tegra->hub);
+ device:
+-	host1x_device_exit(device);
+-fbdev:
+-	drm_kms_helper_poll_fini(drm);
+-	tegra_drm_fb_free(drm);
+-config:
+-	drm_mode_config_cleanup(drm);
+-
+ 	if (tegra->domain) {
+ 		mutex_destroy(&tegra->mm_lock);
+ 		drm_mm_takedown(&tegra->mm);
+ 		put_iova_domain(&tegra->carveout.domain);
+ 		iova_cache_put();
+ 	}
++
++	host1x_device_exit(device);
++fbdev:
++	drm_kms_helper_poll_fini(drm);
++	tegra_drm_fb_free(drm);
++config:
++	drm_mode_config_cleanup(drm);
+ domain:
+ 	if (tegra->domain)
+ 		iommu_domain_free(tegra->domain);
 
 
