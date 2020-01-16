@@ -4,61 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAEA2C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F30C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82487206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A793206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:11:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201891;
-	bh=XJsT8yuWRar5rcW9ic8cnSGX4AC8Y2NbaaCWvpdk/dw=;
+	s=default; t=1579201897;
+	bh=pIk3itN6SGLX9r+2vgQu8eYemBT/0ZRS1G62zBb6kZE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZnZ0+Ll0yWtpZe6SfS+rKKa8nbq1axqOmoYkGU4NBGskLeltirJXE80esyGtH8gZw
-	 LagpT+xrxrAB1KDEforW67szX3LHJamsu2ZYYo6mcJXhWy2QotsUgqikZdz63qdFZn
-	 s9wHJ5zbJAzA9yBn7BuvHPTzhtx8tJope34Do9N8=
+	b=pdWLI2ugZdHqg50KfAFfoV5a61VHkT5lgogJ8V8j7nixqtG+bjlzb4WsFJlQmvNkj
+	 Sc+lNvNVGxw+exxXIeiD95ER+ZXGqru68iLrnosMIiu9vwV8O1VGfUGtPyKPO0Zffk
+	 x/BdQjl/RMxa9W2p12k/3YqSfCFhq+8j+26N09LI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387759AbgAPTLa (ORCPT
+        id S2387710AbgAPRAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:11:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49726 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:00:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387721AbgAPRAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:00:16 -0500
+        id S2387654AbgAPRAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:00:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 520C120730;
-        Thu, 16 Jan 2020 17:00:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5605F2467C;
+        Thu, 16 Jan 2020 17:00:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194015;
-        bh=XJsT8yuWRar5rcW9ic8cnSGX4AC8Y2NbaaCWvpdk/dw=;
+        s=default; t=1579194005;
+        bh=pIk3itN6SGLX9r+2vgQu8eYemBT/0ZRS1G62zBb6kZE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0my1jBkrH9fyXVNW+PH7DtzMBsDo7AEI1BBZWZhxw0UtnNLhALnkWfAWJDwyjqtIS
-         1Hlsj41IwDfa5IuH/fcBXBN48OBS6f7Xn0yGr8vtxJZDb+am50Fopzj9TqI/x0WZxH
-         xgTt4lRmLBQaQwYlXr/mfNjsUwqLchEgbnv3TYLI=
+        b=sq1HwvwJjd62VyOy8XCLqsdLcf+yYuLARkGkQqEGtyfaw9y2QQMzzZVcBRrKWKlm3
+         ioy4sh6Hxl0CtqjTW4Wc8mGYKQFZ8O2G1HstPvMQQaePHbgwIsHrpzgClf/XVLHddK
+         6JHHyjZqJFcnMWyAK36tJNu2UHGtk3Mgi5UTwXRw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "H . Nikolaus Schaller" <hns@goldelico.com>,
-        Keerthy <j-keerthy@ti.com>,
-        Ladislav Michl <ladis@linux-mips.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 137/671] bus: ti-sysc: Fix timer handling with drop pm_runtime_irq_safe()
-Date:   Thu, 16 Jan 2020 11:50:46 -0500
-Message-Id: <20200116165940.10720-20-sashal@kernel.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 131/671] clk: sunxi-ng: sun8i-a23: Enable PLL-MIPI LDOs when ungating it
+Date:   Thu, 16 Jan 2020 11:50:40 -0500
+Message-Id: <20200116165940.10720-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -71,99 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit 9bd34c63f5536c490c152833c77fa47f59aeade3 ]
+[ Upstream commit 108a459ef4cd17a28711d81092044e597b5c7618 ]
 
-Commit 84badc5ec5fc ("ARM: dts: omap4: Move l4 child devices to probe
-them with ti-sysc") started producing a warning for pwm-omap-dmtimer:
+The PLL-MIPI clock is somewhat special as it has its own LDOs which
+need to be turned on for this PLL to actually work and output a clock
+signal.
 
-WARNING: CPU: 0 PID: 77 at drivers/bus/omap_l3_noc.c:147
-l3_interrupt_handler+0x2f8/0x388
-44000000.ocp:L3 Custom Error: MASTER MPU TARGET L4PER2 (Idle):
-Data Access in Supervisor mode during Functional access
-...
-__pm_runtime_idle
-omap_dm_timer_disable
-pwm_omap_dmtimer_start
-pwm_omap_dmtimer_enable
-pwm_apply_state
-pwm_vibrator_start
-pwm_vibrator_play_work
+Add the 2 LDO enable bits to the gate bits.
 
-This is because the timer that pwm-omap-dmtimer is using is now being
-probed with ti-sysc interconnect target module instead of omap_device
-and the ti-sysc quirk for SYSC_QUIRK_LEGACY_IDLE is not fully
-compatible with what omap_device has been doing.
-
-We could fix this by reverting the timer changes and have the timer
-probe again with omap_device. Or we could add more quirk handling to
-ti-sysc driver. But as these options don't work nicely as longer term
-solutions, let's just make timers probe with ti-sysc without any
-quirks.
-
-To do this, all we need to do is remove quirks for timers for ti-sysc,
-and drop the bogus pm_runtime_irq_safe() flag for timer-ti-dm.
-
-We should not use pm_runtime_irq_safe() anyways for drivers as it will
-take a permanent use count on the parent device blocking the parent
-devices from idling and has been forcing ti-sysc driver to use a
-quirk flag.
-
-Note that we will move the timer data to DEBUG section later on in
-clean-up patches.
-
-Fixes: 84badc5ec5fc ("ARM: dts: omap4: Move l4 child devices to probe them with ti-sysc")
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: H. Nikolaus Schaller <hns@goldelico.com>
-Cc: Keerthy <j-keerthy@ti.com>
-Cc: Ladislav Michl <ladis@linux-mips.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sre@kernel.org>
-Cc: Tero Kristo <t-kristo@ti.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
-Tested-By: Andreas Kemnade <andreas@kemnade.info>
-Tested-By: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fixes: 5690879d93e8 ("clk: sunxi-ng: Add A23 CCU")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bus/ti-sysc.c             | 4 ++--
- drivers/clocksource/timer-ti-dm.c | 1 -
- 2 files changed, 2 insertions(+), 3 deletions(-)
+ drivers/clk/sunxi-ng/ccu-sun8i-a23.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-index 926c83398b27..2813f9ed57c0 100644
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -888,10 +888,10 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- 	SYSC_QUIRK("smartreflex", 0, -1, 0x38, -1, 0x00000000, 0xffffffff,
- 		   SYSC_QUIRK_LEGACY_IDLE),
- 	SYSC_QUIRK("timer", 0, 0, 0x10, 0x14, 0x00000015, 0xffffffff,
--		   SYSC_QUIRK_LEGACY_IDLE),
-+		   0),
- 	/* Some timers on omap4 and later */
- 	SYSC_QUIRK("timer", 0, 0, 0x10, -1, 0x4fff1301, 0xffffffff,
--		   SYSC_QUIRK_LEGACY_IDLE),
-+		   0),
- 	SYSC_QUIRK("uart", 0, 0x50, 0x54, 0x58, 0x00000052, 0xffffffff,
- 		   SYSC_QUIRK_LEGACY_IDLE),
- 	/* Uarts on omap4 and later */
-diff --git a/drivers/clocksource/timer-ti-dm.c b/drivers/clocksource/timer-ti-dm.c
-index 3ecf84706640..23414dddc3ba 100644
---- a/drivers/clocksource/timer-ti-dm.c
-+++ b/drivers/clocksource/timer-ti-dm.c
-@@ -868,7 +868,6 @@ static int omap_dm_timer_probe(struct platform_device *pdev)
- 	timer->pdev = pdev;
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-a23.c b/drivers/clk/sunxi-ng/ccu-sun8i-a23.c
+index a4fa2945f230..4b5f8f4e4ab8 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-a23.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-a23.c
+@@ -144,7 +144,7 @@ static SUNXI_CCU_NKM_WITH_GATE_LOCK(pll_mipi_clk, "pll-mipi",
+ 				    8, 4,		/* N */
+ 				    4, 2,		/* K */
+ 				    0, 4,		/* M */
+-				    BIT(31),		/* gate */
++				    BIT(31) | BIT(23) | BIT(22), /* gate */
+ 				    BIT(28),		/* lock */
+ 				    CLK_SET_RATE_UNGATE);
  
- 	pm_runtime_enable(dev);
--	pm_runtime_irq_safe(dev);
- 
- 	if (!timer->reserved) {
- 		ret = pm_runtime_get_sync(dev);
 -- 
 2.20.1
 
