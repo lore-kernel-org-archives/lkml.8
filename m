@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE657C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25887C33CB7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4525246E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:27:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E45D6246EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:27:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195675;
-	bh=tSUlR4tPDzSqua/yvIuaf3Ye6cFWN6b1St9+UreSkGU=;
+	s=default; t=1579195680;
+	bh=oZRjKA7GGnkS5D3Z+OySvQJHR7OF8LYaprgmuTMpSj0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FCyq9qSLecjNCPX8gPjX0B1VY98cmYG5+0jYs/Xl4/a+WjPpfeCkYVgokRfgrdiGx
-	 NH7/ceTCD2jEPp5L2P9iTjOdOdlOlK0EkhTRneQf27RUA/3uZLAoAeDZYwK3ZkYW+k
-	 X/B2bS/Vy1RInsj75qFyFWEbRI1K/cWDYt4GuxH8=
+	b=geL6A+bskWqA4V1MZYTYCwbNh4lhY7LgkWqyXc/xqt6PY95JULqdaJ+UuYNVdKllN
+	 zZkCslvHkro+vCm+BfJ3k6Fhydm3M9nS1KGb5+rZACJzXfBvCyVG5lqkwfzWdVUsGO
+	 xSM6EncZZMEcixwZ2eHrhqnoyVQ0PzRcIDTaSydI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392103AbgAPR1y (ORCPT
+        id S2392528AbgAPR17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:27:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38092 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:27:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404052AbgAPR1v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:27:51 -0500
+        id S2392110AbgAPR1z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:27:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EB98246E4;
-        Thu, 16 Jan 2020 17:27:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C578246EB;
+        Thu, 16 Jan 2020 17:27:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195670;
-        bh=tSUlR4tPDzSqua/yvIuaf3Ye6cFWN6b1St9+UreSkGU=;
+        s=default; t=1579195674;
+        bh=oZRjKA7GGnkS5D3Z+OySvQJHR7OF8LYaprgmuTMpSj0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nojWxQOABPwnfGbRct44E9sGN2KLiiR/WIGxesvDelBkqeYn+B2MyHTiYtrFGrp/u
-         HW+k3E8nEz5ye7epX4mPZpz4fIJTjjCyX0Lr2jP5cd5P47JByJpDNcM8y4MGLBJQ7a
-         QtdhMN5n5iYvkSY9sB9loGu0X1zyXOkijAGWDwtc=
+        b=st0XS/CsQB3YY4tUoFRsxc0l5o31qvG6+abTFCqybodyOiaMb06D9J642JYzlKJCq
+         KJBgjnQBIE/thyBEvAYScVfgNdH+iyUbiWltfEKx6jljKQqLwZeOvl1yswwgSDj50x
+         EEmzTIES5JykYg68UrolHQEUW66dv/CmPHleSJRc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michal Kalderon <michal.kalderon@marvell.com>,
-        Ariel Elior <ariel.elior@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 227/371] qed: iWARP - Use READ_ONCE and smp_store_release to access ep->state
-Date:   Thu, 16 Jan 2020 12:21:39 -0500
-Message-Id: <20200116172403.18149-170-sashal@kernel.org>
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 230/371] drm/msm/mdp5: Fix mdp5_cfg_init error return
+Date:   Thu, 16 Jan 2020 12:21:42 -0500
+Message-Id: <20200116172403.18149-173-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -60,78 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Kalderon <michal.kalderon@marvell.com>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-[ Upstream commit 6117561e1bb30b2fe7f51e1961f34dbedd0bec8a ]
+[ Upstream commit fc19cbb785d7bbd1a1af26229b5240a3ab332744 ]
 
-Destroy QP waits for it's ep object state to be set to CLOSED
-before proceeding. ep->state can be updated from a different
-context. Add smp_store_release/READ_ONCE to synchronize.
+If mdp5_cfg_init fails because of an unknown major version, a null pointer
+dereference occurs.  This is because the caller of init expects error
+pointers, but init returns NULL on error.  Fix this by returning the
+expected values on error.
 
-Fixes: fc4c6065e661 ("qed: iWARP implement disconnect flows")
-Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 2e362e1772b8 (drm/msm/mdp5: introduce mdp5_cfg module)
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_iwarp.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-index bb09f5a9846f..38d0f62bf037 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-@@ -509,7 +509,8 @@ int qed_iwarp_destroy_qp(struct qed_hwfn *p_hwfn, struct qed_rdma_qp *qp)
+diff --git a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c
+index 824067d2d427..42f0ecb0cf35 100644
+--- a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c
++++ b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c
+@@ -635,7 +635,7 @@ struct mdp5_cfg_handler *mdp5_cfg_init(struct mdp5_kms *mdp5_kms,
+ 	if (cfg_handler)
+ 		mdp5_cfg_destroy(cfg_handler);
  
- 	/* Make sure ep is closed before returning and freeing memory. */
- 	if (ep) {
--		while (ep->state != QED_IWARP_EP_CLOSED && wait_count++ < 200)
-+		while (READ_ONCE(ep->state) != QED_IWARP_EP_CLOSED &&
-+		       wait_count++ < 200)
- 			msleep(100);
+-	return NULL;
++	return ERR_PTR(ret);
+ }
  
- 		if (ep->state != QED_IWARP_EP_CLOSED)
-@@ -991,8 +992,6 @@ qed_iwarp_mpa_complete(struct qed_hwfn *p_hwfn,
- 
- 	params.ep_context = ep;
- 
--	ep->state = QED_IWARP_EP_CLOSED;
--
- 	switch (fw_return_code) {
- 	case RDMA_RETURN_OK:
- 		ep->qp->max_rd_atomic_req = ep->cm_info.ord;
-@@ -1052,6 +1051,10 @@ qed_iwarp_mpa_complete(struct qed_hwfn *p_hwfn,
- 		break;
- 	}
- 
-+	if (fw_return_code != RDMA_RETURN_OK)
-+		/* paired with READ_ONCE in destroy_qp */
-+		smp_store_release(&ep->state, QED_IWARP_EP_CLOSED);
-+
- 	ep->event_cb(ep->cb_context, &params);
- 
- 	/* on passive side, if there is no associated QP (REJECT) we need to
-@@ -2069,7 +2072,9 @@ void qed_iwarp_qp_in_error(struct qed_hwfn *p_hwfn,
- 	params.status = (fw_return_code == IWARP_QP_IN_ERROR_GOOD_CLOSE) ?
- 			 0 : -ECONNRESET;
- 
--	ep->state = QED_IWARP_EP_CLOSED;
-+	/* paired with READ_ONCE in destroy_qp */
-+	smp_store_release(&ep->state, QED_IWARP_EP_CLOSED);
-+
- 	spin_lock_bh(&p_hwfn->p_rdma_info->iwarp.iw_lock);
- 	list_del(&ep->list_entry);
- 	spin_unlock_bh(&p_hwfn->p_rdma_info->iwarp.iw_lock);
-@@ -2157,7 +2162,8 @@ qed_iwarp_tcp_connect_unsuccessful(struct qed_hwfn *p_hwfn,
- 	params.event = QED_IWARP_EVENT_ACTIVE_COMPLETE;
- 	params.ep_context = ep;
- 	params.cm_info = &ep->cm_info;
--	ep->state = QED_IWARP_EP_CLOSED;
-+	/* paired with READ_ONCE in destroy_qp */
-+	smp_store_release(&ep->state, QED_IWARP_EP_CLOSED);
- 
- 	switch (fw_return_code) {
- 	case IWARP_CONN_ERROR_TCP_CONNECT_INVALID_PACKET:
+ static struct mdp5_cfg_platform *mdp5_get_config(struct platform_device *dev)
 -- 
 2.20.1
 
