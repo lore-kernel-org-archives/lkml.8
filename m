@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E405C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC52C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB4602077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:31:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C6E22077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:31:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389371AbgAPVby (ORCPT
+        id S2389332AbgAPVbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 16:31:54 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:53546 "EHLO
+        Thu, 16 Jan 2020 16:31:51 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:53553 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388949AbgAPVbI (ORCPT
+        with ESMTP id S2388956AbgAPVbI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jan 2020 16:31:08 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1isCjD-0001Vr-PU; Thu, 16 Jan 2020 22:30:59 +0100
+        id 1isCjE-0001Vu-6T; Thu, 16 Jan 2020 22:31:00 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 248441C1970;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A81821C198B;
         Thu, 16 Jan 2020 22:30:59 +0100 (CET)
-Date:   Thu, 16 Jan 2020 21:30:58 -0000
-From:   "tip-bot2 for Andrea Parri" <tip-bot2@linutronix.de>
+Date:   Thu, 16 Jan 2020 21:30:59 -0000
+From:   "tip-bot2 for Claudiu Beznea" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] clocksource/drivers/hyper-v: Set TSC clocksource
- as default w/ InvariantTSC
-Cc:     Andrea Parri <parri.andrea@gmail.com>,
-        Michael Kelley <mikelley@microsoft.com>,
+Subject: [tip: timers/core] clocksource/drivers/timer-microchip-pit64b: Fix
+ sparse warning
+Cc:     kbuild test robot <lkp@intel.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200109160650.16150-3-parri.andrea@gmail.com>
-References: <20200109160650.16150-3-parri.andrea@gmail.com>
+In-Reply-To: <1578304688-14882-1-git-send-email-claudiu.beznea@microchip.com>
+References: <1578304688-14882-1-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
-Message-ID: <157921025889.396.394289795605229140.tip-bot2@tip-bot2>
+Message-ID: <157921025951.396.5929727901438281211.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,65 +58,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     9e0333ae38eeb42249e10f95d209244a6e22ac9f
-Gitweb:        https://git.kernel.org/tip/9e0333ae38eeb42249e10f95d209244a6e22ac9f
-Author:        Andrea Parri <parri.andrea@gmail.com>
-AuthorDate:    Thu, 09 Jan 2020 17:06:50 +01:00
+Commit-ID:     b9c60a741f06eda56d12c7216accb317b74266b4
+Gitweb:        https://git.kernel.org/tip/b9c60a741f06eda56d12c7216accb317b74266b4
+Author:        Claudiu Beznea <claudiu.beznea@microchip.com>
+AuthorDate:    Mon, 06 Jan 2020 11:58:08 +02:00
 Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
 CommitterDate: Thu, 16 Jan 2020 19:09:02 +01:00
 
-clocksource/drivers/hyper-v: Set TSC clocksource as default w/ InvariantTSC
+clocksource/drivers/timer-microchip-pit64b: Fix sparse warning
 
-Change the Hyper-V clocksource ratings to 250, below the TSC clocksource
-rating of 300.  In configurations where Hyper-V offers an InvariantTSC,
-the TSC is not marked "unstable", so the TSC clocksource is available
-and preferred.  With the higher rating, it will be the default.  On
-older hardware and Hyper-V versions, the TSC is marked "unstable", so no
-TSC clocksource is created and the selected Hyper-V clocksource will be
-the default.
+Fix sparse warning:
+"warning: Using plain integer as NULL pointer"
 
-Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200109160650.16150-3-parri.andrea@gmail.com
+Link: https://lore.kernel.org/r/1578304688-14882-1-git-send-email-claudiu.beznea@microchip.com
 ---
- drivers/clocksource/hyperv_timer.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/clocksource/timer-microchip-pit64b.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-index 42748ad..9d808d5 100644
---- a/drivers/clocksource/hyperv_timer.c
-+++ b/drivers/clocksource/hyperv_timer.c
-@@ -302,6 +302,14 @@ EXPORT_SYMBOL_GPL(hv_stimer_global_cleanup);
-  * the other that uses the TSC reference page feature as defined in the
-  * TLFS.  The MSR version is for compatibility with old versions of
-  * Hyper-V and 32-bit x86.  The TSC reference page version is preferred.
-+ *
-+ * The Hyper-V clocksource ratings of 250 are chosen to be below the
-+ * TSC clocksource rating of 300.  In configurations where Hyper-V offers
-+ * an InvariantTSC, the TSC is not marked "unstable", so the TSC clocksource
-+ * is available and preferred.  With the higher rating, it will be the
-+ * default.  On older hardware and Hyper-V versions, the TSC is marked
-+ * "unstable", so no TSC clocksource is created and the selected Hyper-V
-+ * clocksource will be the default.
-  */
+diff --git a/drivers/clocksource/timer-microchip-pit64b.c b/drivers/clocksource/timer-microchip-pit64b.c
+index 27a389a..bd63d34 100644
+--- a/drivers/clocksource/timer-microchip-pit64b.c
++++ b/drivers/clocksource/timer-microchip-pit64b.c
+@@ -248,6 +248,8 @@ static int __init mchp_pit64b_init_mode(struct mchp_pit64b_timer *timer,
+ 	if (!pclk_rate)
+ 		return -EINVAL;
  
- u64 (*hv_read_reference_counter)(void);
-@@ -363,7 +371,7 @@ static void resume_hv_clock_tsc(struct clocksource *arg)
- 
- static struct clocksource hyperv_cs_tsc = {
- 	.name	= "hyperv_clocksource_tsc_page",
--	.rating	= 400,
-+	.rating	= 250,
- 	.read	= read_hv_clock_tsc_cs,
- 	.mask	= CLOCKSOURCE_MASK(64),
- 	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
-@@ -395,7 +403,7 @@ static u64 read_hv_sched_clock_msr(void)
- 
- static struct clocksource hyperv_cs_msr = {
- 	.name	= "hyperv_clocksource_msr",
--	.rating	= 400,
-+	.rating	= 250,
- 	.read	= read_hv_clock_msr_cs,
- 	.mask	= CLOCKSOURCE_MASK(64),
- 	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
++	timer->mode = 0;
++
+ 	/* Try using GCLK. */
+ 	gclk_round = clk_round_rate(timer->gclk, max_rate);
+ 	if (gclk_round < 0)
+@@ -360,7 +362,7 @@ static int __init mchp_pit64b_dt_init_timer(struct device_node *node,
+ 					    bool clkevt)
+ {
+ 	u32 freq = clkevt ? MCHP_PIT64B_DEF_CE_FREQ : MCHP_PIT64B_DEF_CS_FREQ;
+-	struct mchp_pit64b_timer timer = { 0 };
++	struct mchp_pit64b_timer timer;
+ 	unsigned long clk_rate;
+ 	u32 irq = 0;
+ 	int ret;
