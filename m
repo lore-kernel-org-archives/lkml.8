@@ -2,63 +2,73 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55400C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EFA2C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35F492075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 084652077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:59:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbgAPN7Q (ORCPT
+        id S1727040AbgAPN7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 08:59:16 -0500
-Received: from relay10.mail.gandi.net ([217.70.178.230]:48083 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbgAPN7Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 08:59:16 -0500
-Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 94863240019;
-        Thu, 16 Jan 2020 13:59:12 +0000 (UTC)
-Date:   Thu, 16 Jan 2020 14:59:12 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc:     richard.genoud@gmail.com, radu_nicolae.pirea@upb.ro,
-        lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        nicolas.ferre@microchip.com, ludovic.desroches@microchip.com,
-        a.zummo@towertech.it, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v4 4/5] ARM: at91/defconfig: enable MMC_SDHCI_OF_AT91 and
- MICROCHIP_PIT64B
-Message-ID: <20200116135912.GH100374@piout.net>
-References: <1579085987-13976-1-git-send-email-claudiu.beznea@microchip.com>
- <1579085987-13976-5-git-send-email-claudiu.beznea@microchip.com>
+        Thu, 16 Jan 2020 08:59:37 -0500
+Received: from correo.us.es ([193.147.175.20]:60964 "EHLO mail.us.es"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726527AbgAPN7g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 08:59:36 -0500
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id EE8E52A2BBE
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 14:59:34 +0100 (CET)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id E0A97DA710
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 14:59:34 +0100 (CET)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id CD07EDA70E; Thu, 16 Jan 2020 14:59:34 +0100 (CET)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id C8B9EDA707;
+        Thu, 16 Jan 2020 14:59:32 +0100 (CET)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Thu, 16 Jan 2020 14:59:32 +0100 (CET)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (unknown [90.77.255.23])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id A603342EF9E1;
+        Thu, 16 Jan 2020 14:59:32 +0100 (CET)
+Date:   Thu, 16 Jan 2020 14:59:32 +0100
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     coreteam@netfilter.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        syzbot <syzbot+f9d4095107fc8749c69c@syzkaller.appspotmail.com>
+Subject: Re: [PATCH] netfilter: nf_tables: fix memory leak in
+ nf_tables_parse_netdev_hooks()
+Message-ID: <20200116135932.64pqshxvvvpoqawo@salvia>
+References: <000000000000ffbba3059c3b5352@google.com>
+ <20200116100931.ot2ef4jvsw4ldye2@kili.mountain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1579085987-13976-5-git-send-email-claudiu.beznea@microchip.com>
+In-Reply-To: <20200116100931.ot2ef4jvsw4ldye2@kili.mountain>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/01/2020 12:59:46+0200, Claudiu Beznea wrote:
-> Enable MMC_SDHCI_OF_AT91 and MICROCHIP_PIT64B. These are necessary
-> for SAM9X60.
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> ---
->  arch/arm/configs/at91_dt_defconfig | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-Applied, thanks.
+On Thu, Jan 16, 2020 at 01:09:31PM +0300, Dan Carpenter wrote:
+> Syzbot detected a leak in nf_tables_parse_netdev_hooks().  If the hook
+> already exists, then the error handling doesn't free the newest "hook".
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Applied, thanks.
