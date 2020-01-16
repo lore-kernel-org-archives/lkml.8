@@ -2,123 +2,110 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B092EC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40510C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE2E206D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:21:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 206BA206D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:21:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726933AbgAPQVE (ORCPT
+        id S1727029AbgAPQVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:21:04 -0500
-Received: from mga07.intel.com ([134.134.136.100]:43485 "EHLO mga07.intel.com"
+        Thu, 16 Jan 2020 11:21:10 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:42214 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726151AbgAPQVE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:21:04 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 08:21:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,326,1574150400"; 
-   d="scan'208";a="219732066"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga007.fm.intel.com with ESMTP; 16 Jan 2020 08:21:02 -0800
-Date:   Thu, 16 Jan 2020 08:21:02 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Liran Alon <liran.alon@oracle.com>, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        linux-kernel@vger.kernel.org, Roman Kagan <rkagan@virtuozzo.com>
-Subject: Re: [PATCH RFC 3/3] x86/kvm/hyper-v: don't allow to turn on
- unsupported VMX controls for nested guests
-Message-ID: <20200116162101.GD20561@linux.intel.com>
-References: <20200115171014.56405-1-vkuznets@redhat.com>
- <20200115171014.56405-4-vkuznets@redhat.com>
- <CF37ED31-4ED0-45C2-A309-3E1E2C2E54F8@oracle.com>
- <874kwvixuq.fsf@vitty.brq.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <874kwvixuq.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        id S1726935AbgAPQVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:21:09 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 39EEA1A0942;
+        Thu, 16 Jan 2020 17:21:08 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2D29B1A06B0;
+        Thu, 16 Jan 2020 17:21:08 +0100 (CET)
+Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 9589820567;
+        Thu, 16 Jan 2020 17:21:07 +0100 (CET)
+From:   Iuliana Prodan <iuliana.prodan@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Silvano Di Ninno <silvano.dininno@nxp.com>,
+        Franck Lenormand <franck.lenormand@nxp.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx <linux-imx@nxp.com>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>
+Subject: [PATCH v3 0/9] crypto: caam - backlogging support
+Date:   Thu, 16 Jan 2020 18:20:44 +0200
+Message-Id: <1579191653-400-1-git-send-email-iuliana.prodan@nxp.com>
+X-Mailer: git-send-email 2.1.0
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 09:55:57AM +0100, Vitaly Kuznetsov wrote:
-> Liran Alon <liran.alon@oracle.com> writes:
-> 
-> >> On 15 Jan 2020, at 19:10, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
-> >> 
-> >> Sane L1 hypervisors are not supposed to turn any of the unsupported VMX
-> >> controls on for its guests and nested_vmx_check_controls() checks for
-> >> that. This is, however, not the case for the controls which are supported
-> >> on the host but are missing in enlightened VMCS and when eVMCS is in use.
-> >> 
-> >> It would certainly be possible to add these missing checks to
-> >> nested_check_vm_execution_controls()/_vm_exit_controls()/.. but it seems
-> >> preferable to keep eVMCS-specific stuff in eVMCS and reduce the impact on
-> >> non-eVMCS guests by doing less unrelated checks. Create a separate
-> >> nested_evmcs_check_controls() for this purpose.
-> >> 
-> >> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> >> ---
-> >> arch/x86/kvm/vmx/evmcs.c  | 56 ++++++++++++++++++++++++++++++++++++++-
-> >> arch/x86/kvm/vmx/evmcs.h  |  1 +
-> >> arch/x86/kvm/vmx/nested.c |  3 +++
-> >> 3 files changed, 59 insertions(+), 1 deletion(-)
-> >> 
-> >> diff --git a/arch/x86/kvm/vmx/evmcs.c b/arch/x86/kvm/vmx/evmcs.c
-> >> index b5d6582ba589..88f462866396 100644
-> >> --- a/arch/x86/kvm/vmx/evmcs.c
-> >> +++ b/arch/x86/kvm/vmx/evmcs.c
-> >> @@ -4,9 +4,11 @@
-> >> #include <linux/smp.h>
-> >> 
-> >> #include "../hyperv.h"
-> >> -#include "evmcs.h"
-> >> #include "vmcs.h"
-> >> +#include "vmcs12.h"
-> >> +#include "evmcs.h"
-> >> #include "vmx.h"
-> >> +#include "trace.h"
-> >> 
-> >> DEFINE_STATIC_KEY_FALSE(enable_evmcs);
-> >> 
-> >> @@ -378,6 +380,58 @@ void nested_evmcs_filter_control_msr(u32 msr_index, u64 *pdata)
-> >> 	*pdata = ctl_low | ((u64)ctl_high << 32);
-> >> }
-> >> 
-> >> +int nested_evmcs_check_controls(struct vmcs12 *vmcs12)
-> >> +{
-> >> +	int ret = 0;
-> >> +	u32 unsupp_ctl;
-> >> +
-> >> +	unsupp_ctl = vmcs12->pin_based_vm_exec_control &
-> >> +		EVMCS1_UNSUPPORTED_PINCTRL;
-> >> +	if (unsupp_ctl) {
-> >> +		trace_kvm_nested_vmenter_failed(
-> >> +			"eVMCS: unsupported pin-based VM-execution controls",
-> >> +			unsupp_ctl);
-> >
-> > Why not move "CC” macro from nested.c to nested.h and use it here as-well instead of replicating it’s logic?
-> >
-> 
-> Because error messages I add are both human readable and conform to SDM!
-> :-)
-> 
-> On a more serious not yes, we should probably do that. We may even want
-> to use it in non-nesting (and non VMX) code in KVM.
+Integrate crypto_engine framework into CAAM, to make use of
+the engine queue.
+Added support for SKCIPHER, HASH, RSA and AEAD algorithms.
+This is intended to be used for CAAM backlogging support.
+The requests, with backlog flag (e.g. from dm-crypt) will be
+listed into crypto-engine queue and processed by CAAM when free.
 
-No, the CC() macro is short for Consistency Check, i.e. specific to nVMX.
-Even if KVM ends up adding nested_evmcs_check_controls(), which I'm hoping
-can be avoided, I'd still be hesitant to expose CC() in nested.h.
+While here, I've also made some refactorization.
+Patches #1 - #4 include some refactorizations on caamalg, caamhash
+and caampkc.
+Patch #5 changes the return code of caam_jr_enqueue function
+to -EINPROGRESS, in case of success, -ENOSPC in case the CAAM is
+busy, -EIO if it cannot map the caller's descriptor.
+Patches #6 - #9 integrate crypto_engine into CAAM, for
+SKCIPHER/AEAD/RSA/HASH algorithms.
+
+---
+Changes since V2:
+	- remove patch ("crypto: caam - refactor caam_jr_enqueue"),
+	  that added some structures not needed anymore;
+	- use _done_ callback function directly for skcipher and aead;
+	- handle resource leak in case of transfer request to crypto-engine;
+	- update commit messages.
+
+Changes since V1:
+	- remove helper function - akcipher_request_cast;
+	- remove any references to crypto_async_request,
+	  use specific request type;
+	- remove bypass crypto-engine queue, in case is empty;
+	- update some commit messages;
+	- remove unrelated changes, like whitespaces;
+	- squash some changes from patch #9 to patch #6;
+	- added Reviewed-by.
+---
+
+Iuliana Prodan (9):
+  crypto: caam - refactor skcipher/aead/gcm/chachapoly {en,de}crypt
+    functions
+  crypto: caam - refactor ahash_done callbacks
+  crypto: caam - refactor ahash_edesc_alloc
+  crypto: caam - refactor RSA private key _done callbacks
+  crypto: caam - change return code in caam_jr_enqueue function
+  crypto: caam - support crypto_engine framework for SKCIPHER algorithms
+  crypto: caam - add crypto_engine support for AEAD algorithms
+  crypto: caam - add crypto_engine support for RSA algorithms
+  crypto: caam - add crypto_engine support for HASH algorithms
+
+ drivers/crypto/caam/Kconfig    |   1 +
+ drivers/crypto/caam/caamalg.c  | 416 ++++++++++++++++++-----------------------
+ drivers/crypto/caam/caamhash.c | 341 ++++++++++++++++-----------------
+ drivers/crypto/caam/caampkc.c  | 187 +++++++++++-------
+ drivers/crypto/caam/caampkc.h  |  10 +
+ drivers/crypto/caam/caamrng.c  |   4 +-
+ drivers/crypto/caam/intern.h   |   2 +
+ drivers/crypto/caam/jr.c       |  37 +++-
+ drivers/crypto/caam/key_gen.c  |   2 +-
+ 9 files changed, 523 insertions(+), 477 deletions(-)
+
+-- 
+2.1.0
+
