@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF849C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:29:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBF5C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 892A420684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:29:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B377620684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:29:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199349;
-	bh=FZy4B6ACB0AJRRp1NQg/HilcBklYKC3iMiP8P/aG7kU=;
+	s=default; t=1579199352;
+	bh=RWIpyYV2IZnnvLeNB3e+att7PsbnyepJ/57t61uI6Fc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ycPgUwvKyQUpOVfxi2fM2O+mf9FnnjjjfKvLRjYc38B8ber2XxQ48RT97JQfeZrAj
-	 F6WTP27eiXq2X+rQTjn4qzI+5nhuV8kG69U+W153zr/sICWhmSu8Rn2p6Nux85br3F
-	 r42C4PgLZ13rsOYMBILAGJjVGQwtdq2GmWrzJNLk=
+	b=FRU+c6m9hY+qXpKms2g12yTfC8MWcNeQ9VwSgnVJbKK5d0dwf8iU2PEU5HQ9TXeuY
+	 vOUg1HCFoC6TyAFKKRpfmiograYmj1NWEeDgh5nVgvjgab4iPFAuAPMf2Iebow9tNG
+	 YqnB8K+wDd5VKSuB/xQyg+/m29XKR1vfXT4tnNPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392211AbgAPR0A (ORCPT
+        id S2392200AbgAPRZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:26:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33550 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:25:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392127AbgAPRZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:25:39 -0500
+        id S2392117AbgAPRZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:25:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10B16246A3;
-        Thu, 16 Jan 2020 17:25:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10E40246CA;
+        Thu, 16 Jan 2020 17:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195538;
-        bh=FZy4B6ACB0AJRRp1NQg/HilcBklYKC3iMiP8P/aG7kU=;
+        s=default; t=1579195535;
+        bh=RWIpyYV2IZnnvLeNB3e+att7PsbnyepJ/57t61uI6Fc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YegsDGBNJVbKwE/MoAJ3fEaWUcQg4+Air28evjf0GIhUtLWBB9zVQc+PboevJVE5c
-         6Z5dGGofJdLj/vDUZsDLdRdDXzW2X9x77btAgXXd7RWl1p2oTYm5wS4gnhX2cil9l1
-         HB1c6LPc21Jm+RNTQw+G7TIua/urQ7H0WpYnyJYg=
+        b=puucLYIkRxSJodtDQOtaDZNdDFDKlZ7GRzByUa1SpGWUdKed2bH4CMggYNJcD8PHb
+         z76lAxvutzAwo8oMABCqKPnYXuw3+luWyiqftdxEVsJy0i/57EHr+OfYrdz9uh3oZj
+         2z/IiPdurBryQzmmVqgdDDr1/NOWpzLehjgiZeiw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steve Sistare <steven.sistare@oracle.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
         Sasha Levin <sashal@kernel.org>,
-        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 132/371] scsi: megaraid_sas: reduce module load time
-Date:   Thu, 16 Jan 2020 12:20:04 -0500
-Message-Id: <20200116172403.18149-75-sashal@kernel.org>
+        nios2-dev@lists.rocketboards.org
+Subject: [PATCH AUTOSEL 4.14 130/371] nios2: ksyms: Add missing symbol exports
+Date:   Thu, 16 Jan 2020 12:20:02 -0500
+Message-Id: <20200116172403.18149-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -61,65 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Sistare <steven.sistare@oracle.com>
+From: Guenter Roeck <linux@roeck-us.net>
 
-[ Upstream commit 31b6a05f86e690e1818116fd23c3be915cc9d9ed ]
+[ Upstream commit 0f8ed994575429d6042cf5d7ef70081c94091587 ]
 
-megaraid_sas takes 1+ seconds to load while waiting for firmware:
+Building nios2:allmodconfig fails as follows (each symbol is only listed
+once).
 
-[2.822603] megaraid_sas 0000:03:00.0: Waiting for FW to come to ready state
-[3.871003] megaraid_sas 0000:03:00.0: FW now in Ready state
+ERROR: "__ashldi3" [drivers/md/dm-writecache.ko] undefined!
+ERROR: "__ashrdi3" [fs/xfs/xfs.ko] undefined!
+ERROR: "__ucmpdi2" [drivers/media/i2c/adv7842.ko] undefined!
+ERROR: "__lshrdi3" [drivers/md/dm-zoned.ko] undefined!
+ERROR: "flush_icache_range" [drivers/misc/lkdtm/lkdtm.ko] undefined!
+ERROR: "empty_zero_page" [drivers/md/dm-mod.ko] undefined!
 
-This is due to the following loop in megasas_transition_to_ready(), which
-waits a minimum of 1 second, even though the FW becomes ready in tens of
-millisecs:
+The problem is seen with gcc 7.3.0.
 
-        /*
-         * The cur_state should not last for more than max_wait secs
-         */
-        for (i = 0; i < max_wait; i++) {
-                ...
-                msleep(1000);
-        ...
-        dev_info(&instance->pdev->dev, "FW now in Ready state\n");
+Export the missing symbols.
 
-This is a regression, caused by a change of the msleep granularity from 1
-to 1000 due to concern about waiting too long on systems with coarse
-jiffies.
-
-To fix, increase iterations and use msleep(20), which results in:
-
-[2.670627] megaraid_sas 0000:03:00.0: Waiting for FW to come to ready state
-[2.739386] megaraid_sas 0000:03:00.0: FW now in Ready state
-
-Fixes: fb2f3e96d80f ("scsi: megaraid_sas: Fix msleep granularity")
-Signed-off-by: Steve Sistare <steven.sistare@oracle.com>
-Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 2fc8483fdcde ("nios2: Build infrastructure")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/megaraid/megaraid_sas_base.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/nios2/kernel/nios2_ksyms.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index 577513649afb..6abad63b127a 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -3823,12 +3823,12 @@ megasas_transition_to_ready(struct megasas_instance *instance, int ocr)
- 		/*
- 		 * The cur_state should not last for more than max_wait secs
- 		 */
--		for (i = 0; i < max_wait; i++) {
-+		for (i = 0; i < max_wait * 50; i++) {
- 			curr_abs_state = instance->instancet->
- 				read_fw_status_reg(instance->reg_set);
+diff --git a/arch/nios2/kernel/nios2_ksyms.c b/arch/nios2/kernel/nios2_ksyms.c
+index bf2f55d10a4d..4e704046a150 100644
+--- a/arch/nios2/kernel/nios2_ksyms.c
++++ b/arch/nios2/kernel/nios2_ksyms.c
+@@ -9,12 +9,20 @@
+ #include <linux/export.h>
+ #include <linux/string.h>
  
- 			if (abs_state == curr_abs_state) {
--				msleep(1000);
-+				msleep(20);
- 			} else
- 				break;
- 		}
++#include <asm/cacheflush.h>
++#include <asm/pgtable.h>
++
+ /* string functions */
+ 
+ EXPORT_SYMBOL(memcpy);
+ EXPORT_SYMBOL(memset);
+ EXPORT_SYMBOL(memmove);
+ 
++/* memory management */
++
++EXPORT_SYMBOL(empty_zero_page);
++EXPORT_SYMBOL(flush_icache_range);
++
+ /*
+  * libgcc functions - functions that are used internally by the
+  * compiler...  (prototypes are not correct though, but that
+@@ -31,3 +39,7 @@ DECLARE_EXPORT(__udivsi3);
+ DECLARE_EXPORT(__umoddi3);
+ DECLARE_EXPORT(__umodsi3);
+ DECLARE_EXPORT(__muldi3);
++DECLARE_EXPORT(__ucmpdi2);
++DECLARE_EXPORT(__lshrdi3);
++DECLARE_EXPORT(__ashldi3);
++DECLARE_EXPORT(__ashrdi3);
 -- 
 2.20.1
 
