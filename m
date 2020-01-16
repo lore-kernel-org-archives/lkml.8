@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6109C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7EBC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8E932467C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:08:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 252A32192A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:08:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194501;
-	bh=P2tgffq5is540UJYUH8qV+fPM1TviJzp/s9I/PyPUFI=;
+	s=default; t=1579194504;
+	bh=eIgptUVK7RSEOmpu2bxskleTrU5m+xjTInP8YUwnX0s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xSoC3wcSpgYXBMGM7kwNAH2+wq3pLZE9RTrKwjVuak7A0eXE5abLs17rdj95FNf4z
-	 p/2sgJjE11vmLX8jRTzuQhvcUchKxUHKdaofce2vtKzGznjk2mmDrVeEY9/4Y5q4bs
-	 Klfw83A+PCHW3ewfrFVa4CeJGK107i9nr2W6iS5o=
+	b=YwXmf0CsqEPdnjiFaIaG+uGpeUCwKUT2Ne75WIgtRH1Xg/0gxWZJ6iJBe4Klilbxh
+	 3+430fw2YbQPEktGJYN3Ypt8+CcCgcBw3rtgrdETVIXalNLaWvOmi/21scs/akrxtg
+	 s8+mlyWOvlW6YuDqKmfwrKdqW/Fp1fTuzVPbcRHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389386AbgAPRIU (ORCPT
+        id S2389395AbgAPRIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:08:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41538 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:08:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389352AbgAPRIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:08:16 -0500
+        id S2389376AbgAPRIT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:08:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F11452192A;
-        Thu, 16 Jan 2020 17:08:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB4E0205F4;
+        Thu, 16 Jan 2020 17:08:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194494;
-        bh=P2tgffq5is540UJYUH8qV+fPM1TviJzp/s9I/PyPUFI=;
+        s=default; t=1579194498;
+        bh=eIgptUVK7RSEOmpu2bxskleTrU5m+xjTInP8YUwnX0s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JS+8Uns+KYbrGqBdoY32UUWrhuGde+JPYFFSYAkvIvAbM8Tbcpo3eMqCCP07EEWAI
-         wg0jmtxddsNHr11eelKbjJLlXvp5UfXqrEI1OtTVsJj3hW5LyxmCuWEGUAKRBlTA1j
-         GonVH68mK/p7syaw4MvQrXTusDqZCHm2Yw7p687g=
+        b=xF+D4psUuPDDH+Wn7ZZrph0K5/2zoVcjaKEdLPGsxRoeEpTnfBawiSRNzQp/CZV/b
+         iXGSDD8YvXaH71H2ErV90ALtzcIHhIYEE/a1VGcMttN1c+Yfo7hgdiMxAkxKQTvoR6
+         JtJNxV+TtS6DGBnTJ1RomnYQR6k+teCcWMMX0fb0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        David Beckett <david.beckett@netronome.com>,
-        Dirk van der Merwe <dirk.vandermerwe@netronome.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 392/671] net: don't clear sock->sk early to avoid trouble in strparser
-Date:   Thu, 16 Jan 2020 12:00:30 -0500
-Message-Id: <20200116170509.12787-129-sashal@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Markus Mayer <mmayer@broadcom.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 395/671] cpufreq: brcmstb-avs-cpufreq: Fix types for voltage/frequency
+Date:   Thu, 16 Jan 2020 12:00:33 -0500
+Message-Id: <20200116170509.12787-132-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -61,83 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 2b81f8161dfeda4017cef4f2498ccb64b13f0d61 ]
+[ Upstream commit 4c5681fcc684c762b09435de3e82ffeee7769d21 ]
 
-af_inet sets sock->sk to NULL which trips strparser over:
+What we read back from the register is going to be capped at 32-bits,
+and cpufreq_freq_table.frequency is an unsigned int. Avoid any possible
+value truncation by using the appropriate return value.
 
-BUG: kernel NULL pointer dereference, address: 0000000000000012
-PGD 0 P4D 0
-Oops: 0000 [#1] SMP PTI
-CPU: 7 PID: 0 Comm: swapper/7 Not tainted 5.2.0-rc1-00139-g14629453a6d3 #21
-RIP: 0010:tcp_peek_len+0x10/0x60
-RSP: 0018:ffffc02e41c54b98 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: ffff9cf924c4e030 RCX: 0000000000000051
-RDX: 0000000000000000 RSI: 000000000000000c RDI: ffff9cf97128f480
-RBP: ffff9cf9365e0300 R08: ffff9cf94fe7d2c0 R09: 0000000000000000
-R10: 000000000000036b R11: ffff9cf939735e00 R12: ffff9cf91ad9ae40
-R13: ffff9cf924c4e000 R14: ffff9cf9a8fcbaae R15: 0000000000000020
-FS: 0000000000000000(0000) GS:ffff9cf9af7c0000(0000) knlGS:0000000000000000
-CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000012 CR3: 000000013920a003 CR4: 00000000003606e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
- Call Trace:
- <IRQ>
- strp_data_ready+0x48/0x90
- tls_data_ready+0x22/0xd0 [tls]
- tcp_rcv_established+0x569/0x620
- tcp_v4_do_rcv+0x127/0x1e0
- tcp_v4_rcv+0xad7/0xbf0
- ip_protocol_deliver_rcu+0x2c/0x1c0
- ip_local_deliver_finish+0x41/0x50
- ip_local_deliver+0x6b/0xe0
- ? ip_protocol_deliver_rcu+0x1c0/0x1c0
- ip_rcv+0x52/0xd0
- ? ip_rcv_finish_core.isra.20+0x380/0x380
- __netif_receive_skb_one_core+0x7e/0x90
- netif_receive_skb_internal+0x42/0xf0
- napi_gro_receive+0xed/0x150
- nfp_net_poll+0x7a2/0xd30 [nfp]
- ? kmem_cache_free_bulk+0x286/0x310
- net_rx_action+0x149/0x3b0
- __do_softirq+0xe3/0x30a
- ? handle_irq_event_percpu+0x6a/0x80
- irq_exit+0xe8/0xf0
- do_IRQ+0x85/0xd0
- common_interrupt+0xf/0xf
- </IRQ>
-RIP: 0010:cpuidle_enter_state+0xbc/0x450
-
-To avoid this issue set sock->sk after sk_prot->close.
-My grepping and testing did not discover any code which
-would depend on the current behaviour.
-
-Fixes: c46234ebb4d1 ("tls: RX path for ktls")
-Reported-by: David Beckett <david.beckett@netronome.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: de322e085995 ("cpufreq: brcmstb-avs-cpufreq: AVS CPUfreq driver for Broadcom STB SoCs")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Acked-by: Markus Mayer <mmayer@broadcom.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/af_inet.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/cpufreq/brcmstb-avs-cpufreq.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/net/ipv4/af_inet.c b/net/ipv4/af_inet.c
-index 1fbe2f815474..bbf3b3daa999 100644
---- a/net/ipv4/af_inet.c
-+++ b/net/ipv4/af_inet.c
-@@ -424,8 +424,8 @@ int inet_release(struct socket *sock)
- 		if (sock_flag(sk, SOCK_LINGER) &&
- 		    !(current->flags & PF_EXITING))
- 			timeout = sk->sk_lingertime;
--		sock->sk = NULL;
- 		sk->sk_prot->close(sk, timeout);
-+		sock->sk = NULL;
- 	}
- 	return 0;
+diff --git a/drivers/cpufreq/brcmstb-avs-cpufreq.c b/drivers/cpufreq/brcmstb-avs-cpufreq.c
+index 6ed53ca8aa98..77b0e5d0fb13 100644
+--- a/drivers/cpufreq/brcmstb-avs-cpufreq.c
++++ b/drivers/cpufreq/brcmstb-avs-cpufreq.c
+@@ -384,12 +384,12 @@ static int brcm_avs_set_pstate(struct private_data *priv, unsigned int pstate)
+ 	return __issue_avs_command(priv, AVS_CMD_SET_PSTATE, true, args);
  }
+ 
+-static unsigned long brcm_avs_get_voltage(void __iomem *base)
++static u32 brcm_avs_get_voltage(void __iomem *base)
+ {
+ 	return readl(base + AVS_MBOX_VOLTAGE1);
+ }
+ 
+-static unsigned long brcm_avs_get_frequency(void __iomem *base)
++static u32 brcm_avs_get_frequency(void __iomem *base)
+ {
+ 	return readl(base + AVS_MBOX_FREQUENCY) * 1000;	/* in kHz */
+ }
+@@ -653,14 +653,14 @@ static ssize_t show_brcm_avs_voltage(struct cpufreq_policy *policy, char *buf)
+ {
+ 	struct private_data *priv = policy->driver_data;
+ 
+-	return sprintf(buf, "0x%08lx\n", brcm_avs_get_voltage(priv->base));
++	return sprintf(buf, "0x%08x\n", brcm_avs_get_voltage(priv->base));
+ }
+ 
+ static ssize_t show_brcm_avs_frequency(struct cpufreq_policy *policy, char *buf)
+ {
+ 	struct private_data *priv = policy->driver_data;
+ 
+-	return sprintf(buf, "0x%08lx\n", brcm_avs_get_frequency(priv->base));
++	return sprintf(buf, "0x%08x\n", brcm_avs_get_frequency(priv->base));
+ }
+ 
+ cpufreq_freq_attr_ro(brcm_avs_pstate);
 -- 
 2.20.1
 
