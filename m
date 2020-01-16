@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05490C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F3AFC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6BED206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:02:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3967206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:02:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201359;
-	bh=w6wJVyJd/kuPH8qGD/8P6BTNCcpOsgYiYAKAiUexPA0=;
+	s=default; t=1579201368;
+	bh=oGGrABFoCE66QEGKz/t3ZELCjP6BGSRD8f8dFyHbJzA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zvR3yxc94YH1NPzYUOoMuI5yuyOCPowxYJl26Oki6my4P/ecs6u0Z+Y4FaLD6iwx5
-	 ZeqrKWfJrgPYO2nE1fOSUgt0/Bz/9Yy9n3+7+9Gn2jV2p1K8vGvJM8vD0weGMBGefB
-	 pEEuFmRuX3vUpFcEJa9s7a/oZiKqnrbAl0/jViRc=
+	b=fQTn+WNPU+xWTtpQ772HEl/NIto4ygsAI7KCjhhwbWXuyvjcp8GIlsXssKmKi8yu+
+	 ilfb4qOnT5/di5lZDnuqjKWhMvi2Ljm9ZCxMtYKU2W8YAefxbd87/bUO7CegVxtNyg
+	 tHjEArVabH06ohgfoRI3s8Z2ofoY75/klhg1UP3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388760AbgAPRFg (ORCPT
+        id S2407275AbgAPTCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:05:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33898 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:02:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387502AbgAPRFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:05:22 -0500
+        id S2388757AbgAPRFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:05:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA97F20728;
-        Thu, 16 Jan 2020 17:05:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EE39207FF;
+        Thu, 16 Jan 2020 17:05:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194321;
-        bh=w6wJVyJd/kuPH8qGD/8P6BTNCcpOsgYiYAKAiUexPA0=;
+        s=default; t=1579194335;
+        bh=oGGrABFoCE66QEGKz/t3ZELCjP6BGSRD8f8dFyHbJzA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SLBe0WM5Jn5GbB0wqBenH8ShF2pXCwow6GwqcxjeGvHJVHZ3BuZw1dUqiecnj0mfv
-         9S+GECfWMr/lezj8SIqxF7A5wTFmTDR0pH7rLVzBUR4UhkUMv07dskrgn2ep5dMseX
-         Y0Ii4CjpQ8zGCfZteNLvp4upWlYK3xnECigzwN+w=
+        b=FtV9ru17zvXYaT2+yBSPgA9J6FVZubqqhapcYJQ/u+2gYC6NFg5VXsDNfWqM8cg8a
+         SMVKc6xgPi+PDP5Uj6IZFQFI8UmUzJ8kKrG+HuVoaAe1CdnG4ZprbfXVtDKXIKaAuN
+         u+AEt5v8d0jYE5tMU3QB7cwk+PP5LtvdKiQXMPX4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
-Subject: [PATCH AUTOSEL 4.19 270/671] spi: tegra114: configure dma burst size to fifo trig level
-Date:   Thu, 16 Jan 2020 11:58:28 -0500
-Message-Id: <20200116170509.12787-7-sashal@kernel.org>
+Cc:     Andrey Ignatov <rdna@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 280/671] bpf: Add missed newline in verifier verbose log
+Date:   Thu, 16 Jan 2020 11:58:38 -0500
+Message-Id: <20200116170509.12787-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -61,133 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
+From: Andrey Ignatov <rdna@fb.com>
 
-[ Upstream commit f4ce428c41fb22e3ed55496dded94df44cb920fa ]
+[ Upstream commit 1fbd20f8b77b366ea4aeb92ade72daa7f36a7e3b ]
 
-Fixes: Configure DMA burst size to be same as SPI TX/RX trigger levels
-to avoid mismatch.
+check_stack_access() that prints verbose log is used in
+adjust_ptr_min_max_vals() that prints its own verbose log and now they
+stick together, e.g.:
 
-SPI FIFO trigger levels are calculated based on the transfer length.
-So this patch moves DMA slave configuration to happen before start
-of DMAs.
+  variable stack access var_off=(0xfffffffffffffff0; 0x4) off=-16
+  size=1R2 stack pointer arithmetic goes out of range, prohibited for
+  !root
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Add missing newline so that log is more readable:
+  variable stack access var_off=(0xfffffffffffffff0; 0x4) off=-16 size=1
+  R2 stack pointer arithmetic goes out of range, prohibited for !root
+
+Fixes: f1174f77b50c ("bpf/verifier: rework value tracking")
+Signed-off-by: Andrey Ignatov <rdna@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-tegra114.c | 52 ++++++++++++++++++++++----------------
- 1 file changed, 30 insertions(+), 22 deletions(-)
+ kernel/bpf/verifier.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
-index 5114b8008472..09cfae3abce2 100644
---- a/drivers/spi/spi-tegra114.c
-+++ b/drivers/spi/spi-tegra114.c
-@@ -529,6 +529,8 @@ static int tegra_spi_start_dma_based_transfer(
- 	u32 val;
- 	unsigned int len;
- 	int ret = 0;
-+	u8 dma_burst;
-+	struct dma_slave_config dma_sconfig = {0};
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 9e72b2f8c3dd..0952049b5ff1 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -1253,7 +1253,7 @@ static int check_stack_access(struct bpf_verifier_env *env,
+ 		char tn_buf[48];
  
- 	val = SPI_DMA_BLK_SET(tspi->curr_dma_words - 1);
- 	tegra_spi_writel(tspi, val, SPI_DMA_BLK);
-@@ -540,12 +542,16 @@ static int tegra_spi_start_dma_based_transfer(
- 		len = tspi->curr_dma_words * 4;
- 
- 	/* Set attention level based on length of transfer */
--	if (len & 0xF)
-+	if (len & 0xF) {
- 		val |= SPI_TX_TRIG_1 | SPI_RX_TRIG_1;
--	else if (((len) >> 4) & 0x1)
-+		dma_burst = 1;
-+	} else if (((len) >> 4) & 0x1) {
- 		val |= SPI_TX_TRIG_4 | SPI_RX_TRIG_4;
--	else
-+		dma_burst = 4;
-+	} else {
- 		val |= SPI_TX_TRIG_8 | SPI_RX_TRIG_8;
-+		dma_burst = 8;
-+	}
- 
- 	if (tspi->cur_direction & DATA_DIR_TX)
- 		val |= SPI_IE_TX;
-@@ -556,7 +562,18 @@ static int tegra_spi_start_dma_based_transfer(
- 	tegra_spi_writel(tspi, val, SPI_DMA_CTL);
- 	tspi->dma_control_reg = val;
- 
-+	dma_sconfig.device_fc = true;
- 	if (tspi->cur_direction & DATA_DIR_TX) {
-+		dma_sconfig.dst_addr = tspi->phys + SPI_TX_FIFO;
-+		dma_sconfig.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-+		dma_sconfig.dst_maxburst = dma_burst;
-+		ret = dmaengine_slave_config(tspi->tx_dma_chan, &dma_sconfig);
-+		if (ret < 0) {
-+			dev_err(tspi->dev,
-+				"DMA slave config failed: %d\n", ret);
-+			return ret;
-+		}
-+
- 		tegra_spi_copy_client_txbuf_to_spi_txbuf(tspi, t);
- 		ret = tegra_spi_start_tx_dma(tspi, len);
- 		if (ret < 0) {
-@@ -567,6 +584,16 @@ static int tegra_spi_start_dma_based_transfer(
+ 		tnum_strn(tn_buf, sizeof(tn_buf), reg->var_off);
+-		verbose(env, "variable stack access var_off=%s off=%d size=%d",
++		verbose(env, "variable stack access var_off=%s off=%d size=%d\n",
+ 			tn_buf, off, size);
+ 		return -EACCES;
  	}
- 
- 	if (tspi->cur_direction & DATA_DIR_RX) {
-+		dma_sconfig.src_addr = tspi->phys + SPI_RX_FIFO;
-+		dma_sconfig.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-+		dma_sconfig.src_maxburst = dma_burst;
-+		ret = dmaengine_slave_config(tspi->rx_dma_chan, &dma_sconfig);
-+		if (ret < 0) {
-+			dev_err(tspi->dev,
-+				"DMA slave config failed: %d\n", ret);
-+			return ret;
-+		}
-+
- 		/* Make the dma buffer to read by dma */
- 		dma_sync_single_for_device(tspi->dev, tspi->rx_dma_phys,
- 				tspi->dma_buf_size, DMA_FROM_DEVICE);
-@@ -626,7 +653,6 @@ static int tegra_spi_init_dma_param(struct tegra_spi_data *tspi,
- 	u32 *dma_buf;
- 	dma_addr_t dma_phys;
- 	int ret;
--	struct dma_slave_config dma_sconfig;
- 
- 	dma_chan = dma_request_slave_channel_reason(tspi->dev,
- 					dma_to_memory ? "rx" : "tx");
-@@ -646,19 +672,6 @@ static int tegra_spi_init_dma_param(struct tegra_spi_data *tspi,
- 		return -ENOMEM;
- 	}
- 
--	if (dma_to_memory) {
--		dma_sconfig.src_addr = tspi->phys + SPI_RX_FIFO;
--		dma_sconfig.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
--		dma_sconfig.src_maxburst = 0;
--	} else {
--		dma_sconfig.dst_addr = tspi->phys + SPI_TX_FIFO;
--		dma_sconfig.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
--		dma_sconfig.dst_maxburst = 0;
--	}
--
--	ret = dmaengine_slave_config(dma_chan, &dma_sconfig);
--	if (ret)
--		goto scrub;
- 	if (dma_to_memory) {
- 		tspi->rx_dma_chan = dma_chan;
- 		tspi->rx_dma_buf = dma_buf;
-@@ -669,11 +682,6 @@ static int tegra_spi_init_dma_param(struct tegra_spi_data *tspi,
- 		tspi->tx_dma_phys = dma_phys;
- 	}
- 	return 0;
--
--scrub:
--	dma_free_coherent(tspi->dev, tspi->dma_buf_size, dma_buf, dma_phys);
--	dma_release_channel(dma_chan);
--	return ret;
- }
- 
- static void tegra_spi_deinit_dma_param(struct tegra_spi_data *tspi,
 -- 
 2.20.1
 
