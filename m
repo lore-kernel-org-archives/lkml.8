@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA106C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB35CC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A0D320684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:26:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A945520684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:26:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199164;
-	bh=URVlNpz36JagQMGfWzHmNoaliWIGdNwMq4GhgYpLYFg=;
+	s=default; t=1579199167;
+	bh=ieJkzsq2/84pTU3c/SVOjaz3uB2wVQvR8Wq0qMkdhtc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MFfHQ7PepzsIpvls3ndu52dAUM7j71E48fhI5ZEl/2lhS/4TtCeV9K8qutXXn66Ty
-	 T5J1NQgbhQr5ARzm1qDOIVARHGzxZ3ccFMZydL3b2/2vVDzz62t0k0IJlYUyxVeh7p
-	 mofe0xjgCKc6MeNKVhUPER3Wvci1ibLO8P9ZzZiE=
+	b=lDeqfO3aUwjIpB5+/ZiU8mBIqGddHAuEuuwUh9e6Dn0tdWeF9W/5sMiBF/9tW0SUS
+	 fAL1eRf/4FjFgKC8GUQhPHMpvi0hHcNKRXjVDcUL4EfSYhduipMUp6gxhcVfU2q5x+
+	 Nnqq0P/ij5M+suhZMzQMQrEdKvsc01ah6q4ofGmE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436677AbgAPS0D (ORCPT
+        id S2405608AbgAPS0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:26:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35944 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:26:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391895AbgAPR0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:26:49 -0500
+        id S2391223AbgAPR0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:26:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8273D246CD;
-        Thu, 16 Jan 2020 17:26:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08CF9246D0;
+        Thu, 16 Jan 2020 17:26:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195608;
-        bh=URVlNpz36JagQMGfWzHmNoaliWIGdNwMq4GhgYpLYFg=;
+        s=default; t=1579195607;
+        bh=ieJkzsq2/84pTU3c/SVOjaz3uB2wVQvR8Wq0qMkdhtc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TKwk52LmOFjq6MQnNgG9iiSI3dQMxrMOxqm1sZy+feZmgiSRTkfvsnLp5RHxrbRNL
-         bU2jCYeJlIEuuUYskgLDjHLjDqpAUhb6g8K91D2BlW/aSM6iNZwxiyL84dLeC7+aaF
-         +WXyaevGlryiePWa5Cp7kxcdRYq+iFSKu+lR6+Ks=
+        b=nHB+UJD7ho6lM7AqcVmWXSrdXOZtcOewnnUV/Yml9rVgkDYNCBibzoyIBcTC3LVZd
+         KFndUBqF4+VYF3zn3H3Q3E771+4lBJpwSUdCQBZP9eW1RYmj6jHZn1Yjba70sG+UR+
+         diUypcyhRnKTxF4zXvYdH4soSvT1ywZhXYG+kj28=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sameeh Jubran <sameehj@amazon.com>,
-        Saeed Bshara <saeedb@amazon.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 182/371] net: ena: fix swapped parameters when calling ena_com_indirect_table_fill_entry
-Date:   Thu, 16 Jan 2020 12:20:54 -0500
-Message-Id: <20200116172403.18149-125-sashal@kernel.org>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.14 181/371] iommu/vt-d: Make kernel parameter igfx_off work with vIOMMU
+Date:   Thu, 16 Jan 2020 12:20:53 -0500
+Message-Id: <20200116172403.18149-124-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -60,36 +64,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sameeh Jubran <sameehj@amazon.com>
+From: Lu Baolu <baolu.lu@linux.intel.com>
 
-[ Upstream commit 3c6eeff295f01bdf1c6c3addcb0a04c0c6c029e9 ]
+[ Upstream commit 5daab58043ee2bca861068e2595564828f3bc663 ]
 
-second parameter should be the index of the table rather than the value.
+The kernel parameter igfx_off is used by users to disable
+DMA remapping for the Intel integrated graphic device. It
+was designed for bare metal cases where a dedicated IOMMU
+is used for graphic. This doesn't apply to virtual IOMMU
+case where an include-all IOMMU is used.  This makes the
+kernel parameter work with virtual IOMMU as well.
 
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Saeed Bshara <saeedb@amazon.com>
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Ashok Raj <ashok.raj@intel.com>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Suggested-by: Kevin Tian <kevin.tian@intel.com>
+Fixes: c0771df8d5297 ("intel-iommu: Export a flag indicating that the IOMMU is used for iGFX.")
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Tested-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_ethtool.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/iommu/intel-iommu.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_ethtool.c b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-index 967020fb26ee..a2f02c23fe14 100644
---- a/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-@@ -694,8 +694,8 @@ static int ena_set_rxfh(struct net_device *netdev, const u32 *indir,
- 	if (indir) {
- 		for (i = 0; i < ENA_RX_RSS_TABLE_SIZE; i++) {
- 			rc = ena_com_indirect_table_fill_entry(ena_dev,
--							       ENA_IO_RXQ_IDX(indir[i]),
--							       i);
-+							       i,
-+							       ENA_IO_RXQ_IDX(indir[i]));
- 			if (unlikely(rc)) {
- 				netif_err(adapter, drv, netdev,
- 					  "Cannot fill indirect table (index is too large)\n");
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 523d0889c2a4..4fbd183d973a 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -3361,9 +3361,12 @@ static int __init init_dmars(void)
+ 		iommu_identity_mapping |= IDENTMAP_ALL;
+ 
+ #ifdef CONFIG_INTEL_IOMMU_BROKEN_GFX_WA
+-	iommu_identity_mapping |= IDENTMAP_GFX;
++	dmar_map_gfx = 0;
+ #endif
+ 
++	if (!dmar_map_gfx)
++		iommu_identity_mapping |= IDENTMAP_GFX;
++
+ 	check_tylersburg_isoch();
+ 
+ 	if (iommu_identity_mapping) {
 -- 
 2.20.1
 
