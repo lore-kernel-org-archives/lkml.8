@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57977C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E37E0C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 219952072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:33:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2A642072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:33:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217602;
-	bh=SZxaZFJ7NM5F+JBcsLK0Ldt06QMXpR+LSdlaT2v1Gc4=;
+	s=default; t=1579217604;
+	bh=hNUI5rCXY/JGwB+H+BOV4HGykXp69tf62roWzp9ofdo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kS9IUEtHwaUgHH9jCUp9bAWSyrPX3g2+bAq5Lx8r7TZhXS/n2rmcSyCSMkQ8+7ioC
-	 TAwXWqt5KboFqnqNDLv58esZuz/dGX/7dviQgq9CHBTT+6zdKYcj5+goKZIg0gGocE
-	 Qsxbxu2K0vABhZMPx5Hu7IYZ0xraa8IEKwT5u5gw=
+	b=HVSi8/hFSLddmK05y+4aI5+Q9GuQR+75/t/XgL0fZONswVQjjv42akQLG2FCKTRdV
+	 CWKTOQpIT3F9a/XKug72eqXQdYJoSDXWZUzOlkIvnkf8cK0SiBVFgoZXf4PxbaSWR1
+	 Z9m25EzAQDh0aA1bjpX+9l1bONTxgoiSK1oNJun0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404331AbgAPXdV (ORCPT
+        id S2404335AbgAPXdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:33:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43456 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:33:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404315AbgAPXdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:33:16 -0500
+        id S2404329AbgAPXdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:33:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A5612072B;
-        Thu, 16 Jan 2020 23:33:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F8252072B;
+        Thu, 16 Jan 2020 23:33:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217595;
-        bh=SZxaZFJ7NM5F+JBcsLK0Ldt06QMXpR+LSdlaT2v1Gc4=;
+        s=default; t=1579217600;
+        bh=hNUI5rCXY/JGwB+H+BOV4HGykXp69tf62roWzp9ofdo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DOqCPj0kNfigZlwHK6fim62Awmc+dQ0e6JJ49/a/vr3F/zpBdFGZdqCL3n+YDXBxV
-         y8c/OIbKhu0UZx4n8itWxpwKQFwvi9V216BUwgTcEWpLwkdGEXj798tBIYEMNgemE3
-         QyrsHsOe1gOS5GgeOQ05UDe7G58bxgFFIDSaWtyI=
+        b=uX7Mj7BYkZxS0uQ3rUz4GSCLul+QTkTP5CGF5mkmCCRVS30JXWfWxew4EkBl3Rhwq
+         FdxXYVXZB97CR7bj8SeAxxAY8MG+mJkOY693Mnvz+lBTLTB98M0wMTAWwwuHJ6lqFQ
+         /hdNTdOl/HDaPK0AvTXYmH3pYBXIfTQeflKD1cIM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Varun Prakash <varun@chelsio.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        Vladimir Kondratiev <vladimir.kondratiev@intel.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 63/71] scsi: libcxgbi: fix NULL pointer dereference in cxgbi_device_destroy()
-Date:   Fri, 17 Jan 2020 00:19:01 +0100
-Message-Id: <20200116231718.159085218@linuxfoundation.org>
+Subject: [PATCH 4.14 65/71] mips: cacheinfo: report shared CPU map
+Date:   Fri, 17 Jan 2020 00:19:03 +0100
+Message-Id: <20200116231718.415567488@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231709.377772748@linuxfoundation.org>
 References: <20200116231709.377772748@linuxfoundation.org>
@@ -60,35 +63,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Varun Prakash <varun@chelsio.com>
+From: Vladimir Kondratiev <vladimir.kondratiev@intel.com>
 
-[ Upstream commit 71482fde704efdd8c3abe0faf34d922c61e8d76b ]
+[ Upstream commit 3b1313eb32c499d46dc4c3e896d19d9564c879c4 ]
 
-If cxgb4i_ddp_init() fails then cdev->cdev2ppm will be NULL, so add a check
-for NULL pointer before dereferencing it.
+Report L1 caches as shared per core; L2 - per cluster.
 
-Link: https://lore.kernel.org/r/1576676731-3068-1-git-send-email-varun@chelsio.com
-Signed-off-by: Varun Prakash <varun@chelsio.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+This fixes "perf" that went crazy if shared_cpu_map attribute not
+reported on sysfs, in form of
+
+/sys/devices/system/cpu/cpu*/cache/index*/shared_cpu_list
+/sys/devices/system/cpu/cpu*/cache/index*/shared_cpu_map
+
+Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@intel.com>
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/cxgbi/libcxgbi.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/mips/kernel/cacheinfo.c | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/cxgbi/libcxgbi.c b/drivers/scsi/cxgbi/libcxgbi.c
-index 902f5e03ec94..0d45658f163a 100644
---- a/drivers/scsi/cxgbi/libcxgbi.c
-+++ b/drivers/scsi/cxgbi/libcxgbi.c
-@@ -121,7 +121,8 @@ static inline void cxgbi_device_destroy(struct cxgbi_device *cdev)
- 		"cdev 0x%p, p# %u.\n", cdev, cdev->nports);
- 	cxgbi_hbas_remove(cdev);
- 	cxgbi_device_portmap_cleanup(cdev);
--	cxgbi_ppm_release(cdev->cdev2ppm(cdev));
-+	if (cdev->cdev2ppm)
-+		cxgbi_ppm_release(cdev->cdev2ppm(cdev));
- 	if (cdev->pmap.max_connect)
- 		cxgbi_free_big_mem(cdev->pmap.port_csk);
- 	kfree(cdev);
+diff --git a/arch/mips/kernel/cacheinfo.c b/arch/mips/kernel/cacheinfo.c
+index 428ef2189203..3ea95568ece4 100644
+--- a/arch/mips/kernel/cacheinfo.c
++++ b/arch/mips/kernel/cacheinfo.c
+@@ -61,6 +61,25 @@ static int __init_cache_level(unsigned int cpu)
+ 	return 0;
+ }
+ 
++static void fill_cpumask_siblings(int cpu, cpumask_t *cpu_map)
++{
++	int cpu1;
++
++	for_each_possible_cpu(cpu1)
++		if (cpus_are_siblings(cpu, cpu1))
++			cpumask_set_cpu(cpu1, cpu_map);
++}
++
++static void fill_cpumask_cluster(int cpu, cpumask_t *cpu_map)
++{
++	int cpu1;
++	int cluster = cpu_cluster(&cpu_data[cpu]);
++
++	for_each_possible_cpu(cpu1)
++		if (cpu_cluster(&cpu_data[cpu1]) == cluster)
++			cpumask_set_cpu(cpu1, cpu_map);
++}
++
+ static int __populate_cache_leaves(unsigned int cpu)
+ {
+ 	struct cpuinfo_mips *c = &current_cpu_data;
+@@ -68,14 +87,20 @@ static int __populate_cache_leaves(unsigned int cpu)
+ 	struct cacheinfo *this_leaf = this_cpu_ci->info_list;
+ 
+ 	if (c->icache.waysize) {
++		/* L1 caches are per core */
++		fill_cpumask_siblings(cpu, &this_leaf->shared_cpu_map);
+ 		populate_cache(dcache, this_leaf, 1, CACHE_TYPE_DATA);
++		fill_cpumask_siblings(cpu, &this_leaf->shared_cpu_map);
+ 		populate_cache(icache, this_leaf, 1, CACHE_TYPE_INST);
+ 	} else {
+ 		populate_cache(dcache, this_leaf, 1, CACHE_TYPE_UNIFIED);
+ 	}
+ 
+-	if (c->scache.waysize)
++	if (c->scache.waysize) {
++		/* L2 cache is per cluster */
++		fill_cpumask_cluster(cpu, &this_leaf->shared_cpu_map);
+ 		populate_cache(scache, this_leaf, 2, CACHE_TYPE_UNIFIED);
++	}
+ 
+ 	if (c->tcache.waysize)
+ 		populate_cache(tcache, this_leaf, 3, CACHE_TYPE_UNIFIED);
 -- 
 2.20.1
 
