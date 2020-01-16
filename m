@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E00C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA89C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E7E2246C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:37:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A579E246B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:37:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196240;
-	bh=OTfyqL13mP7+4AKTzIHZPyB8/MGAlw88DMRmtis+I9c=;
+	s=default; t=1579196248;
+	bh=7A14jb2PjfoR+fEvkt84buZ8GcXTgrnwQi2RbaAjuos=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tYf4bwvTNpOyMjU+EnZY51z90jLM42pBhbynjSL0uY/MjI8p6dI0Q6WIwM1iFMLbC
-	 QyOCxyI/CA244OiLpA8+Buc2ehU8L3NWqlfRP/WK6j6Dm7/TZ862xr5LcMcPNtPQfR
-	 B+xiKG82gdf1BP4u/q6rnX9doPGZpEMr+lL7YS6M=
+	b=fbQmO4UGgc/eGe3Nf8CIMG85+sgVj8A/aos0SFZlhdrAjc6mfV4naVS/j4XgIAIFS
+	 6ycIkUCuFuUBKHgeJ1pA9TRbjBXxH9vguYPDFSwsQI0CcNaqopCdGPx/ztkK58D2YM
+	 Kqay3QMxwCO6FudX29C7cnRLAg0dD7ChTGSAZFZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404964AbgAPRhT (ORCPT
+        id S2405356AbgAPRh0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:37:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52272 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:37:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405322AbgAPRhL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:37:11 -0500
+        id S2393172AbgAPRhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:37:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0B21246B9;
-        Thu, 16 Jan 2020 17:37:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AF4E246CA;
+        Thu, 16 Jan 2020 17:37:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196230;
-        bh=OTfyqL13mP7+4AKTzIHZPyB8/MGAlw88DMRmtis+I9c=;
+        s=default; t=1579196237;
+        bh=7A14jb2PjfoR+fEvkt84buZ8GcXTgrnwQi2RbaAjuos=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nvBmPZEEXOD2MfIApSAPka3dt08xR3oclZv7lK10vQ9PN26AmN8lgi6sg5HP4PRno
-         QJausW8mXboMrjINklBzrlA/pEIfYpVETZoZR5IjZHVbt9LhWbMCvumhW0RGC4IqW5
-         mofMLs1N/ZKjvMzaYCf46Em0NbPjmmgplbFB5v4Q=
+        b=ebleJ6G/ZXVb0TdEnN5Tbi0q3oeQEgpLUYkSnI2SqctoXvpGlgJi5nWUu6NYEQGjS
+         0260Wz0OWiRoal2VMGDctKr/ZIzJms7qhKqXdJMHRZVTZfuE9l4CTOM3/8gfVI5TPu
+         ymYVXZxxeqVDur7Yf2wg21IgrCfOyCM/H2PeqwfQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 062/251] rtc: pm8xxx: fix unintended sign extension
-Date:   Thu, 16 Jan 2020 12:33:31 -0500
-Message-Id: <20200116173641.22137-22-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 068/251] pinctrl: sh-pfc: r8a7792: Fix vin1_data18_b pin group
+Date:   Thu, 16 Jan 2020 12:33:37 -0500
+Message-Id: <20200116173641.22137-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -59,51 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit e42280886018c6f77f0a90190f7cba344b0df3e0 ]
+[ Upstream commit b9fd50488b4939ce5b3a026d29e752e17c2d1800 ]
 
-Shifting a u8 by 24 will cause the value to be promoted to an integer. If
-the top bit of the u8 is set then the following conversion to an unsigned
-long will sign extend the value causing the upper 32 bits to be set in
-the result.
+The vin1_data18_b pin group itself is present, but it is not listed in
+the VIN1 pin group array, and thus cannot be selected.
 
-Fix this by casting the u8 value to an unsigned long before the shift.
-
-Detected by CoverityScan, CID#1309693 ("Unintended sign extension")
-
-Fixes: 9a9a54ad7aa2 ("drivers/rtc: add support for Qualcomm PMIC8xxx RTC")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fixes: 7dd74bb1f058786e ("pinctrl: sh-pfc: r8a7792: Add VIN pin groups")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-pm8xxx.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/pinctrl/sh-pfc/pfc-r8a7792.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/rtc/rtc-pm8xxx.c b/drivers/rtc/rtc-pm8xxx.c
-index fac835530671..a1b4b0ed1f19 100644
---- a/drivers/rtc/rtc-pm8xxx.c
-+++ b/drivers/rtc/rtc-pm8xxx.c
-@@ -186,7 +186,8 @@ static int pm8xxx_rtc_read_time(struct device *dev, struct rtc_time *tm)
- 		}
- 	}
- 
--	secs = value[0] | (value[1] << 8) | (value[2] << 16) | (value[3] << 24);
-+	secs = value[0] | (value[1] << 8) | (value[2] << 16) |
-+	       ((unsigned long)value[3] << 24);
- 
- 	rtc_time_to_tm(secs, tm);
- 
-@@ -267,7 +268,8 @@ static int pm8xxx_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alarm)
- 		return rc;
- 	}
- 
--	secs = value[0] | (value[1] << 8) | (value[2] << 16) | (value[3] << 24);
-+	secs = value[0] | (value[1] << 8) | (value[2] << 16) |
-+	       ((unsigned long)value[3] << 24);
- 
- 	rtc_time_to_tm(secs, &alarm->time);
- 
+diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7792.c b/drivers/pinctrl/sh-pfc/pfc-r8a7792.c
+index 21badb6166b9..97998929db93 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a7792.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a7792.c
+@@ -1863,6 +1863,7 @@ static const char * const vin1_groups[] = {
+ 	"vin1_data8",
+ 	"vin1_data24_b",
+ 	"vin1_data20_b",
++	"vin1_data18_b",
+ 	"vin1_data16_b",
+ 	"vin1_sync",
+ 	"vin1_field",
 -- 
 2.20.1
 
