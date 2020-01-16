@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F670C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A8DC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 418E82082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:27:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 762FF21582
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:27:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217236;
-	bh=T9fqrrkfooFFhTRKTUscSsrpJdO1WsvH0QD9PwLE1V0=;
+	s=default; t=1579217238;
+	bh=qWOkWTZDvoUQZWOJhFV2LbB6L4U3PuOYfjsuKkBo8X0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Gxv2wUMVOsjjmd23ApRRN9LEWb3uSMwVgLuA9ZeoBxQ1dBliQmn2qWjU7+hXqq8e
-	 eKccif3pkG9Dw13sK2ZOruOpsTUvM4a6DtMmZ/M+kxAgc3lJ7nbml3O9wst3rPqnz3
-	 3iHaHQp4lIGdSNOOlHm9qQzoS8MFQicmMBrGnqkc=
+	b=DxO6w7ZGm6JKVU1//lccnnV+XDmfQ1dNVBSUf0qUib9r/2qDolIj0NeVszSq2F4+R
+	 1/spB5K6rr1M1XF6pEOkjBaaMg0up5Qept1ftWk6JvmDOf12SI91paUaGEN0tptBUE
+	 SSbleV6qBn+YrKxNm+7XsgMrpWtcdyQQn65hfLSI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389695AbgAPX1P (ORCPT
+        id S2390045AbgAPX1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:27:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58104 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:27:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730261AbgAPX06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:26:58 -0500
+        id S2387585AbgAPX1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:27:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9453320684;
-        Thu, 16 Jan 2020 23:26:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2FDD20684;
+        Thu, 16 Jan 2020 23:26:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217217;
-        bh=T9fqrrkfooFFhTRKTUscSsrpJdO1WsvH0QD9PwLE1V0=;
+        s=default; t=1579217219;
+        bh=qWOkWTZDvoUQZWOJhFV2LbB6L4U3PuOYfjsuKkBo8X0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jOTQaP+T0hMNZy1jXp0VJawZSjSL3Tx6bkz6Fbquy2yBruHj8u7FVlFhJczKMTQ60
-         6p3NCAbCkbtEaNpucFY1ztPabD+Ee8Tig1UPueZXo/E4XSITcQ2GoBivsaWBmeT13n
-         xfNsLbF2tgxjVkB6PWIne4bIedgRCZMIahBHf7hA=
+        b=Ftn84ud6IdNM0LygXEcMgvsobP19oyW15lmM71sRwcXMBkrlhKtBBWbDsUCu6TU++
+         DeFYOVhwmWbXtmHYSoeY3TBSytmsbnpb1FSROmdGG3kpkROm2cZvMW7aIM3LQC3QWz
+         7bNVFlmz1UjfKn9rQT9xcIpHmdfZbxjLWgyTJrvY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 196/203] s390/qeth: lock the card while changing its hsuid
-Date:   Fri, 17 Jan 2020 00:18:33 +0100
-Message-Id: <20200116231801.292602782@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Barabash <alexander.barabash@dell.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 197/203] ioat: ioat_alloc_ring() failure handling.
+Date:   Fri, 17 Jan 2020 00:18:34 +0100
+Message-Id: <20200116231801.362880214@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -60,118 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Alexander.Barabash@dell.com <Alexander.Barabash@dell.com>
 
-[ Upstream commit 5b6c7b55cfe26224b0f41b1c226d3534c542787f ]
+[ Upstream commit b0b5ce1010ffc50015eaec72b0028aaae3f526bb ]
 
-qeth_l3_dev_hsuid_store() initially checks the card state, but doesn't
-take the conf_mutex to ensure that the card stays in this state while
-being reconfigured.
+If dma_alloc_coherent() returns NULL in ioat_alloc_ring(), ring
+allocation must not proceed.
 
-Rework the code to take this lock, and drop a redundant state check in a
-helper function.
+Until now, if the first call to dma_alloc_coherent() in
+ioat_alloc_ring() returned NULL, the processing could proceed, failing
+with NULL-pointer dereferencing further down the line.
 
-Fixes: b333293058aa ("qeth: add support for af_iucv HiperSockets transport")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Alexander Barabash <alexander.barabash@dell.com>
+Acked-by: Dave Jiang <dave.jiang@intel.com>
+Link: https://lore.kernel.org/r/75e9c0e84c3345d693c606c64f8b9ab5@x13pwhopdag1307.AMER.DELL.COM
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_core_main.c |  5 ----
- drivers/s390/net/qeth_l3_sys.c    | 40 +++++++++++++++++++++----------
- 2 files changed, 28 insertions(+), 17 deletions(-)
+ drivers/dma/ioat/dma.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index 94e5b6e15ef9..5be4d800e4ba 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -3378,11 +3378,6 @@ int qeth_configure_cq(struct qeth_card *card, enum qeth_cq cq)
- 			goto out;
- 		}
+diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
+index 1a422a8b43cf..18c011e57592 100644
+--- a/drivers/dma/ioat/dma.c
++++ b/drivers/dma/ioat/dma.c
+@@ -377,10 +377,11 @@ ioat_alloc_ring(struct dma_chan *c, int order, gfp_t flags)
  
--		if (card->state != CARD_STATE_DOWN) {
--			rc = -1;
--			goto out;
--		}
--
- 		qeth_free_qdio_queues(card);
- 		card->options.cq = cq;
- 		rc = 0;
-diff --git a/drivers/s390/net/qeth_l3_sys.c b/drivers/s390/net/qeth_l3_sys.c
-index 2f73b33c9347..333fd4619dc6 100644
---- a/drivers/s390/net/qeth_l3_sys.c
-+++ b/drivers/s390/net/qeth_l3_sys.c
-@@ -270,24 +270,36 @@ static ssize_t qeth_l3_dev_hsuid_store(struct device *dev,
- 		struct device_attribute *attr, const char *buf, size_t count)
- {
- 	struct qeth_card *card = dev_get_drvdata(dev);
-+	int rc = 0;
- 	char *tmp;
--	int rc;
+ 		descs->virt = dma_alloc_coherent(to_dev(ioat_chan),
+ 						 SZ_2M, &descs->hw, flags);
+-		if (!descs->virt && (i > 0)) {
++		if (!descs->virt) {
+ 			int idx;
  
- 	if (!card)
- 		return -EINVAL;
- 
- 	if (!IS_IQD(card))
- 		return -EPERM;
--	if (card->state != CARD_STATE_DOWN)
--		return -EPERM;
--	if (card->options.sniffer)
--		return -EPERM;
--	if (card->options.cq == QETH_CQ_NOTAVAILABLE)
--		return -EPERM;
-+
-+	mutex_lock(&card->conf_mutex);
-+	if (card->state != CARD_STATE_DOWN) {
-+		rc = -EPERM;
-+		goto out;
-+	}
-+
-+	if (card->options.sniffer) {
-+		rc = -EPERM;
-+		goto out;
-+	}
-+
-+	if (card->options.cq == QETH_CQ_NOTAVAILABLE) {
-+		rc = -EPERM;
-+		goto out;
-+	}
- 
- 	tmp = strsep((char **)&buf, "\n");
--	if (strlen(tmp) > 8)
--		return -EINVAL;
-+	if (strlen(tmp) > 8) {
-+		rc = -EINVAL;
-+		goto out;
-+	}
- 
- 	if (card->options.hsuid[0])
- 		/* delete old ip address */
-@@ -298,11 +310,13 @@ static ssize_t qeth_l3_dev_hsuid_store(struct device *dev,
- 		card->options.hsuid[0] = '\0';
- 		memcpy(card->dev->perm_addr, card->options.hsuid, 9);
- 		qeth_configure_cq(card, QETH_CQ_DISABLED);
--		return count;
-+		goto out;
- 	}
- 
--	if (qeth_configure_cq(card, QETH_CQ_ENABLED))
--		return -EPERM;
-+	if (qeth_configure_cq(card, QETH_CQ_ENABLED)) {
-+		rc = -EPERM;
-+		goto out;
-+	}
- 
- 	snprintf(card->options.hsuid, sizeof(card->options.hsuid),
- 		 "%-8s", tmp);
-@@ -311,6 +325,8 @@ static ssize_t qeth_l3_dev_hsuid_store(struct device *dev,
- 
- 	rc = qeth_l3_modify_hsuid(card, true);
- 
-+out:
-+	mutex_unlock(&card->conf_mutex);
- 	return rc ? rc : count;
- }
- 
+ 			for (idx = 0; idx < i; idx++) {
++				descs = &ioat_chan->descs[idx];
+ 				dma_free_coherent(to_dev(ioat_chan), SZ_2M,
+ 						  descs->virt, descs->hw);
+ 				descs->virt = NULL;
 -- 
 2.20.1
 
