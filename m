@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7FE2C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B36C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88A592053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:59:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99D542053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:59:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201152;
-	bh=NkGpowe9FnmmpR6ORNdzBt56niZjn5inrN0I8s/L6Y0=;
+	s=default; t=1579201155;
+	bh=Idwdf9oYrNJnx5TDr3DzrtEpAiY/RJkENvQhosI7ETE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tz1SNLymgvcEdeQNesq2hJZTvkgrckeaLjV2KbGpqWE4NIik7B9KQTa7Lviw7s6rH
-	 vC6VtbOHqWiHGNnlf76QDP0eL62vCIEb3j/OmkAuKLImsErqNKK9CdEXHH6+JzttI4
-	 rhIkWId8nM5ZFmw0swcnZtVS5roqdlhk2F7hL3W8=
+	b=W7QqMRYxG0NWjtYrOHKjNTNRFn6DtaTrOcvRN/qkAqDsyGQjoMLPT9xJ1h0cV5DMS
+	 aKrNnR2GR0BrSY1Zq7i8SRW7/xvNWzFfbI9cQ/Zqq2sQ+IgFpQfwW4/Fb434kPm6Os
+	 LsgJnkxMcOH2PVNu6o0hZA15h6af7Sfi3FYISIm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437215AbgAPS7K (ORCPT
+        id S2388950AbgAPRGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:59:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37250 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:06:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388966AbgAPRGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:06:41 -0500
+        id S2388920AbgAPRGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:06:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4523F2192A;
-        Thu, 16 Jan 2020 17:06:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 119C3214AF;
+        Thu, 16 Jan 2020 17:06:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194401;
-        bh=NkGpowe9FnmmpR6ORNdzBt56niZjn5inrN0I8s/L6Y0=;
+        s=default; t=1579194381;
+        bh=Idwdf9oYrNJnx5TDr3DzrtEpAiY/RJkENvQhosI7ETE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DY8XlMhkTXzhWCjgwA/8kJU4mHJ2xcGz12/XjzxhPom8palkKMmSVPs5XWZAUlxGT
-         1Pt5EqXApsawyCSE6P39+L0b6xba4Gs9+VLgL+pF9vROW8DBYReLc7EMi/J3lx/MiO
-         WeAWxYvvMZhqwhXj9LkStbSfxRtfUqEfM9Xp732c=
+        b=CJd8+FHwyrcbzO1a3Ajv4PySqwwEAhe+xq4hctAyuJL8uR4/Z4pDVNzxMgQ521QR9
+         rzNCKxYPJmb4l4fA3v9FVyVp8zYvW7AA1+xoox0t2CmIm2+P+Sd3rmMc9OkZmAFo5F
+         QiVRnwooj/tSgz1i0FEAUWFy4jw6WYsHflYrjznw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Minas Harutyunyan <minas.harutyunyan@synopsys.com>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 326/671] dwc2: gadget: Fix completed transfer size calculation in DDMA
-Date:   Thu, 16 Jan 2020 11:59:24 -0500
-Message-Id: <20200116170509.12787-63-sashal@kernel.org>
+Cc:     Trond Myklebust <trondmy@gmail.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 312/671] NFS: Don't interrupt file writeout due to fatal errors
+Date:   Thu, 16 Jan 2020 11:59:10 -0500
+Message-Id: <20200116170509.12787-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,37 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Minas Harutyunyan <minas.harutyunyan@synopsys.com>
+From: Trond Myklebust <trondmy@gmail.com>
 
-[ Upstream commit 5acb4b970184d189d901192d075997c933b82260 ]
+[ Upstream commit 14bebe3c90b326d2a0df78aed5e9de090c71d878 ]
 
-Fix calculation of transfer size on completion in function
-dwc2_gadget_get_xfersize_ddma().
+When flushing out dirty pages, the fact that we may hit fatal errors
+is not a reason to stop writeback. Those errors are reported through
+fsync(), not through the flush mechanism.
 
-Added increment of descriptor pointer to move to next descriptor in
-the loop.
-
-Fixes: aa3e8bc81311 ("usb: dwc2: gadget: DDMA transfer start and complete")
-
-Signed-off-by: Minas Harutyunyan <hminas@synopsys.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Fixes: a6598813a4c5b ("NFS: Don't write back further requests if there...")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc2/gadget.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/nfs/write.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
-index 3f68edde0f03..f64d1cd08fb6 100644
---- a/drivers/usb/dwc2/gadget.c
-+++ b/drivers/usb/dwc2/gadget.c
-@@ -2230,6 +2230,7 @@ static unsigned int dwc2_gadget_get_xfersize_ddma(struct dwc2_hsotg_ep *hs_ep)
- 		if (status & DEV_DMA_STS_MASK)
- 			dev_err(hsotg->dev, "descriptor %d closed with %x\n",
- 				i, status & DEV_DMA_STS_MASK);
-+		desc++;
- 	}
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index 117ffd90419e..e27637fa0f79 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -646,7 +646,7 @@ static int nfs_page_async_flush(struct nfs_pageio_descriptor *pgio,
+ 	return ret;
+ out_launder:
+ 	nfs_write_error_remove_page(req);
+-	return ret;
++	return 0;
+ }
  
- 	return bytes_rem;
+ static int nfs_do_writepage(struct page *page, struct writeback_control *wbc,
 -- 
 2.20.1
 
