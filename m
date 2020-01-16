@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C27A1C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E7BC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90F7420730
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC05320730
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:03:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194224;
-	bh=0sOUfuaGCRPeaY77jrD259i3y62WK0oAolMW1IHHZUw=;
+	s=default; t=1579194226;
+	bh=ItdymbY3cxx7Vs0Ay9YoFG4jc2dykjPUgdGqWPKckIA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fcMSKYBKNYWVyUL8gSpM16khCsx1nQRje1IfMRigcUbLYgCmQWu7u9isBTyf1ROQl
-	 DosSQU2AEA4AuAHSs12e4G7KTNCu8TuiUCVG8IDCabHvllrWZ5xOv+UW6wCowqX6tL
-	 mi90DDy14LmWt6qFYaxkLYMaoAWmZgNgjvRTIWIk=
+	b=D6Zj9NbB7tG0tLAKBX3TcP7sQO2H37pXXD1OyHTn79Ey59PHLK/XQ7F82zGYu27pH
+	 TyN79CAZrhtZDl1pv0//ncB/5KXsr1jqxri7sGllTu6XHUkfzUXZBZqW2zjQgCnJlX
+	 Qt4R0s785LL1mgKD8XdGFyfpdymvs+yID3DGVc0M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388528AbgAPRDA (ORCPT
+        id S2388586AbgAPRDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:03:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56264 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:03:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388491AbgAPRCv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:02:51 -0500
+        id S2388527AbgAPRC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:02:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 796F92077B;
-        Thu, 16 Jan 2020 17:02:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CFA524653;
+        Thu, 16 Jan 2020 17:02:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194171;
-        bh=0sOUfuaGCRPeaY77jrD259i3y62WK0oAolMW1IHHZUw=;
+        s=default; t=1579194179;
+        bh=ItdymbY3cxx7Vs0Ay9YoFG4jc2dykjPUgdGqWPKckIA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x2d3rkZELqOrX7tTQVl+L5z8bZyDk2OwMQ6P63CMWXxrsLhvVaJIVqPBk7pUAE+Ms
-         EfGnWXTTMpAL7c+W9nj4OBpDsyuFZyz97yqx732JKI+CW2KDIUa2DjkuKbgzSnzkLV
-         newZ5DHSt0cMgNFSIqaew77rwRx0fA6dYidwkrHY=
+        b=MszLItXwG5L0GcAFmi1cAG2mKR4F4y9oB5UFKd0Vsi4wqx1EG1GS6nye0284HIzYP
+         vm70YvLAEBH4USxRqvmpiGvdEgR32jCWD8nZWuqISO1M7x4ZxTlm2atHE96cg3Y0hp
+         z5g/bJFsClZ2kHUVbF/FjhichybVdN9FeDPqUY4U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 250/671] media: wl128x: Fix an error code in fm_download_firmware()
-Date:   Thu, 16 Jan 2020 11:52:39 -0500
-Message-Id: <20200116165940.10720-133-sashal@kernel.org>
+Cc:     Jon Maloy <jon.maloy@ericsson.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 255/671] tipc: tipc clang warning
+Date:   Thu, 16 Jan 2020 11:52:44 -0500
+Message-Id: <20200116165940.10720-138-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -60,38 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Jon Maloy <jon.maloy@ericsson.com>
 
-[ Upstream commit ef4bb63dc1f7213c08e13f6943c69cd27f69e4a3 ]
+[ Upstream commit 737889efe9713a0f20a75fd0de952841d9275e6b ]
 
-We forgot to set "ret" on this error path.
+When checking the code with clang -Wsometimes-uninitialized we get the
+following warning:
 
-Fixes: e8454ff7b9a4 ("[media] drivers:media:radio: wl128x: FM Driver Common sources")
+if (!tipc_link_is_establishing(l)) {
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+net/tipc/node.c:847:46: note: uninitialized use occurs here
+      tipc_bearer_xmit(n->net, bearer_id, &xmitq, maddr);
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+net/tipc/node.c:831:2: note: remove the 'if' if its condition is always
+true
+if (!tipc_link_is_establishing(l)) {
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+net/tipc/node.c:821:31: note: initialize the variable 'maddr' to silence
+this warning
+struct tipc_media_addr *maddr;
+
+We fix this by initializing 'maddr' to NULL. For the matter of clarity,
+we also test if 'xmitq' is non-empty before we use it and 'maddr'
+further down in the  function. It will never happen that 'xmitq' is non-
+empty at the same time as 'maddr' is NULL, so this is a sufficient test.
+
+Fixes: 598411d70f85 ("tipc: make resetting of links non-atomic")
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Jon Maloy <jon.maloy@ericsson.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/radio/wl128x/fmdrv_common.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/tipc/node.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/radio/wl128x/fmdrv_common.c b/drivers/media/radio/wl128x/fmdrv_common.c
-index 1cf4019689a5..cccf1a743f4e 100644
---- a/drivers/media/radio/wl128x/fmdrv_common.c
-+++ b/drivers/media/radio/wl128x/fmdrv_common.c
-@@ -1271,8 +1271,9 @@ static int fm_download_firmware(struct fmdev *fmdev, const u8 *fw_name)
+diff --git a/net/tipc/node.c b/net/tipc/node.c
+index 32556f480a60..e67ffd194927 100644
+--- a/net/tipc/node.c
++++ b/net/tipc/node.c
+@@ -810,10 +810,10 @@ static void __tipc_node_link_down(struct tipc_node *n, int *bearer_id,
+ static void tipc_node_link_down(struct tipc_node *n, int bearer_id, bool delete)
+ {
+ 	struct tipc_link_entry *le = &n->links[bearer_id];
++	struct tipc_media_addr *maddr = NULL;
+ 	struct tipc_link *l = le->link;
+-	struct tipc_media_addr *maddr;
+-	struct sk_buff_head xmitq;
+ 	int old_bearer_id = bearer_id;
++	struct sk_buff_head xmitq;
  
- 		switch (action->type) {
- 		case ACTION_SEND_COMMAND:	/* Send */
--			if (fmc_send_cmd(fmdev, 0, 0, action->data,
--						action->size, NULL, NULL))
-+			ret = fmc_send_cmd(fmdev, 0, 0, action->data,
-+					   action->size, NULL, NULL);
-+			if (ret)
- 				goto rel_fw;
+ 	if (!l)
+ 		return;
+@@ -835,7 +835,8 @@ static void tipc_node_link_down(struct tipc_node *n, int bearer_id, bool delete)
+ 	tipc_node_write_unlock(n);
+ 	if (delete)
+ 		tipc_mon_remove_peer(n->net, n->addr, old_bearer_id);
+-	tipc_bearer_xmit(n->net, bearer_id, &xmitq, maddr);
++	if (!skb_queue_empty(&xmitq))
++		tipc_bearer_xmit(n->net, bearer_id, &xmitq, maddr);
+ 	tipc_sk_rcv(n->net, &le->inputq);
+ }
  
- 			cmd_cnt++;
 -- 
 2.20.1
 
