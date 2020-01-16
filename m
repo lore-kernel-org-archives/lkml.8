@@ -2,135 +2,152 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD648C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE7DC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79B842064C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:49:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KwvjQE6K"
+	by mail.kernel.org (Postfix) with ESMTP id 40ECF206B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:52:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388819AbgAPXtm (ORCPT
+        id S2388117AbgAPXwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:49:42 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44789 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729923AbgAPXtm (ORCPT
+        Thu, 16 Jan 2020 18:52:34 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37038 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729565AbgAPXwd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:49:42 -0500
-Received: by mail-pf1-f196.google.com with SMTP id 62so4384062pfu.11
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 15:49:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=OBxWYYcj5NPKpHkfAvk0D+yaQt02q3V7O1jMrLi++8s=;
-        b=KwvjQE6Km2etTVhaE8nM7iQgSseVckSPoFXS9z+61asz/2ydl2l/LbosucQ6amtpmp
-         fWlc71/0KBd52vPDs17gTauBeKCkWZCnvN84QFS8KBmhRwyICKbV5BfsSMnxRla368u5
-         tAw1bQ/sDNosVbDntEEHkjhH9DLmKgsfCIQJw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OBxWYYcj5NPKpHkfAvk0D+yaQt02q3V7O1jMrLi++8s=;
-        b=iNMPmVwAqjuCMkMSgaykfn/bsb2mmIikE0ndHQgA25FWn9d0YPeJonlPVR117GySf4
-         DSvUNFL+9K22qqw5D83vtDQfVNQXg8TL6pXhKwwQ2TskU4//yjjOnoNfwmRsBo1IS7NX
-         bYtE885WRbrnzfr16+9oAFljMH34BiIcW1+dHCcljvl1+n5S+gpDC9RGOa85UDdLy4LM
-         kxivRO8AxCzU73W9O1KbFIM3A06fz1dtfCnoDcgThcRCGg5oZoRoBHHpPfYueFcL8+S8
-         bJeZIqq8WLXLQAmnYlSf5n2GVcUBD4mCuHsBlNb9y0lFF/0VGibsqeA4DQlFe5dW4SXr
-         709g==
-X-Gm-Message-State: APjAAAVgPWoxtniDrdYzOpygDrhmKjnwq1TUFhD8noQIqSkCFEyho2iY
-        RnOBuW+WYz9HkV7qhl77Y2VybA==
-X-Google-Smtp-Source: APXvYqyTkCmgC2RjcsZ0Ylbb4YhfLljHgWOdH3ZZOWEWWwjqeDUK0+AGE5a35VIRuk7qsju46ToEZg==
-X-Received: by 2002:a62:158c:: with SMTP id 134mr44301pfv.81.1579218581788;
-        Thu, 16 Jan 2020 15:49:41 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p5sm25618874pgs.28.2020.01.16.15.49.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 15:49:40 -0800 (PST)
-Date:   Thu, 16 Jan 2020 15:49:39 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Elena Petrova <lenaptr@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-hardening@lists.openwall.com,
-        syzkaller <syzkaller@googlegroups.com>
-Subject: Re: [PATCH v3 5/6] kasan: Unset panic_on_warn before calling panic()
-Message-ID: <202001161548.9E126B774F@keescook>
-References: <20200116012321.26254-1-keescook@chromium.org>
- <20200116012321.26254-6-keescook@chromium.org>
- <CACT4Y+batRaj_PaDnfzLjpLDOCChhpiayKeab-rNLx5LAj1sSQ@mail.gmail.com>
+        Thu, 16 Jan 2020 18:52:33 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00GNbqqp011853;
+        Thu, 16 Jan 2020 18:52:18 -0500
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xk0qs1p3p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jan 2020 18:52:18 -0500
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 00GNqGHf029549;
+        Thu, 16 Jan 2020 23:52:17 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma02dal.us.ibm.com with ESMTP id 2xjvwnty1e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jan 2020 23:52:17 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00GNqFpH55705958
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jan 2020 23:52:15 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BCB0C136051;
+        Thu, 16 Jan 2020 23:52:15 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 68694136053;
+        Thu, 16 Jan 2020 23:52:14 +0000 (GMT)
+Received: from oc8380061452.ibm.com (unknown [9.80.209.6])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 16 Jan 2020 23:52:13 +0000 (GMT)
+Subject: Re: [PATCH v2] Fix display of Maximum Memory
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Gustavo Walbon <gwalbon@linux.ibm.com>,
+        Paul Mackerras <paulus@samba.org>
+References: <5577aef8-1d5a-ca95-ff0a-9c7b5977e5bf@linux.ibm.com>
+ <8736cg9cay.fsf@mpe.ellerman.id.au>
+From:   Michael Bringmann <mwb@linux.ibm.com>
+Openpgp: preference=signencrypt
+Organization: IBM Linux Technology Center
+Message-ID: <bf5c536a-6ca4-0a1a-043d-69b002a34c17@linux.ibm.com>
+Date:   Thu, 16 Jan 2020 17:52:13 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+batRaj_PaDnfzLjpLDOCChhpiayKeab-rNLx5LAj1sSQ@mail.gmail.com>
+In-Reply-To: <8736cg9cay.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-16_06:2020-01-16,2020-01-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ malwarescore=0 suspectscore=0 impostorscore=0 priorityscore=1501
+ adultscore=0 phishscore=0 mlxscore=0 lowpriorityscore=0 spamscore=0
+ bulkscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001160189
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 06:23:01AM +0100, Dmitry Vyukov wrote:
-> On Thu, Jan 16, 2020 at 2:24 AM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > As done in the full WARN() handler, panic_on_warn needs to be cleared
-> > before calling panic() to avoid recursive panics.
-> >
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  mm/kasan/report.c | 10 +++++++++-
-> >  1 file changed, 9 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-> > index 621782100eaa..844554e78893 100644
-> > --- a/mm/kasan/report.c
-> > +++ b/mm/kasan/report.c
-> > @@ -92,8 +92,16 @@ static void end_report(unsigned long *flags)
-> >         pr_err("==================================================================\n");
-> >         add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
-> >         spin_unlock_irqrestore(&report_lock, *flags);
-> > -       if (panic_on_warn)
-> > +       if (panic_on_warn) {
-> > +               /*
-> > +                * This thread may hit another WARN() in the panic path.
-> > +                * Resetting this prevents additional WARN() from panicking the
-> > +                * system on this thread.  Other threads are blocked by the
-> > +                * panic_mutex in panic().
+On 1/15/20 11:53 PM, Michael Ellerman wrote:
+> Michael Bringmann <mwb@linux.ibm.com> writes:
+>> Correct overflow problem in calculation+display of Maximum Memory
+>> value to syscfg where 32bits is insufficient.
+>>
+>> Signed-off-by: Michael Bringmann <mwb@linux.ibm.com>
+>> ---
+>>  arch/powerpc/platforms/pseries/lparcfg.c | 8 ++++----
+>>  1 file changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/powerpc/platforms/pseries/lparcfg.c b/arch/powerpc/platforms/pseries/lparcfg.c
+>> index e33e8bc..f00411c 100644
+>> --- a/arch/powerpc/platforms/pseries/lparcfg.c
+>> +++ b/arch/powerpc/platforms/pseries/lparcfg.c
+>> @@ -433,12 +433,12 @@ static void parse_em_data(struct seq_file *m)
+>>  
+>>  static void maxmem_data(struct seq_file *m)
+>>  {
+>> -	unsigned long maxmem = 0;
+>> +	u64 maxmem = 0;
 > 
-> I don't understand part about other threads.
-> Other threads are not necessary inside of panic(). And in fact since
-> we reset panic_on_warn, they will not get there even if they should.
-> If I am reading this correctly, once one thread prints a warning and
-> is going to panic, other threads may now print infinite amounts of
-> warning and proceed past them freely. Why is this the behavior we
-> want?
-
-AIUI, the issue is the current thread hitting another WARN and blocking
-on trying to call panic again. WARNs encountered during the execution of
-panic() need to not attempt to call panic() again.
-
--Kees
-
+> This is 64-bit only code, so u64 == unsigned long.
 > 
-> > +                */
-> > +               panic_on_warn = 0;
-> >                 panic("panic_on_warn set ...\n");
-> > +       }
-> >         kasan_enable_current();
-> >  }
+>> -	maxmem += drmem_info->n_lmbs * drmem_info->lmb_size;
+>> -	maxmem += hugetlb_total_pages() * PAGE_SIZE;
+>> +	maxmem += (u64)drmem_info->n_lmbs * drmem_info->lmb_size;
+> 
+> The only problem AFAICS is n_lmbs is int and lmb_size is u32, so this
+> multiplication will overflow.
+> 
+>> +	maxmem += (u64)hugetlb_total_pages() * PAGE_SIZE;
+> 
+> hugetlb_total_pages() already returns unsigned long.
+> 
+>> -	seq_printf(m, "MaxMem=%ld\n", maxmem);
+>> +	seq_printf(m, "MaxMem=%llu\n", maxmem);
+>>  }
+> 
+> This should be sufficient?
+> 
+> diff --git a/arch/powerpc/platforms/pseries/lparcfg.c b/arch/powerpc/platforms/pseries/lparcfg.c
+> index e33e8bc4b69b..38c306551f76 100644
+> --- a/arch/powerpc/platforms/pseries/lparcfg.c
+> +++ b/arch/powerpc/platforms/pseries/lparcfg.c
+> @@ -435,10 +435,10 @@ static void maxmem_data(struct seq_file *m)
+>  {
+>         unsigned long maxmem = 0;
+>  
+> -       maxmem += drmem_info->n_lmbs * drmem_info->lmb_size;
+> +       maxmem += (unsigned long)drmem_info->n_lmbs * drmem_info->lmb_size;
+>         maxmem += hugetlb_total_pages() * PAGE_SIZE;
+>  
+> -       seq_printf(m, "MaxMem=%ld\n", maxmem);
+> +       seq_printf(m, "MaxMem=%lu\n", maxmem);
+>  }
+>  
+>  static int pseries_lparcfg_data(struct seq_file *m, void *v)
+> 
+> 
+> cheers
+> 
+
+Trying it out.
 
 -- 
-Kees Cook
+Michael W. Bringmann
+Linux Technology Center
+IBM Corporation
+Tie-Line  363-5196
+External: (512) 286-5196
+Cell:       (512) 466-0650
+mwb@linux.ibm.com
