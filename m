@@ -2,86 +2,84 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E33A0C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E58F5C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC85E20748
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:02:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cWuckLUj"
+	by mail.kernel.org (Postfix) with ESMTP id B23C620728
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:04:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389693AbgAPWCx (ORCPT
+        id S2389705AbgAPWE6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 17:02:53 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:44979 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387539AbgAPWCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 17:02:53 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47zJ8q4lk1z9sSn;
-        Fri, 17 Jan 2020 09:02:51 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1579212171;
-        bh=pv8Q3HOS38HCAHqBfnCQ+EVnANNpsImx4iZ8jwZYnXg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=cWuckLUjN8I4uSwaAr0c3c74m+C6/n1WaOYmH/Xm4fc3xGz9sfh8RLtE6UWtPq0J6
-         6Q9DkQfCsh52jokK6pqzPsD+WFIOCDdT7GxtpdFfNvh6XdKZoKDNEMxZsN988TKLo6
-         RszM57KT7ZGOVdiyXnNECc7KC39yPpMUMXhTrHL50ACacGRwUiFQQhJi8ly5VuOyBv
-         lUP1c89HiI46bPyz8QwUAh+H4i0WWQcvWFbOmE/T5D5X8HA6mCfpFFOQjSZeroNUtf
-         eKzN4iMD+e9+rj8HYnA+zG2cDciNtQ05728gTTMguJnavHMQpc+druZv+CBPpP6uVn
-         2ouWRYKh1kdBA==
-Date:   Fri, 17 Jan 2020 09:02:48 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the selinux tree
-Message-ID: <20200117090248.392f40cb@canb.auug.org.au>
+        Thu, 16 Jan 2020 17:04:58 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:53679 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729260AbgAPWE5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 17:04:57 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1isDFy-00029r-RE; Thu, 16 Jan 2020 23:04:50 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 4D96A101226; Thu, 16 Jan 2020 23:04:50 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Vipul Kumar <vipulk0511@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>,
+        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
+        Vipul Kumar <vipul_kumar@mentor.com>, x86@kernel.org,
+        Bin Gao <bin.gao@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Len Brown <len.brown@intel.com>
+Subject: Re: [PATCH] x86/tsc: Unset TSC_KNOWN_FREQ and TSC_RELIABLE flags on Intel Bay Trail SoC
+In-Reply-To: <1576683039-5311-1-git-send-email-vipulk0511@gmail.com>
+References: <1576683039-5311-1-git-send-email-vipulk0511@gmail.com>
+Date:   Thu, 16 Jan 2020 23:04:50 +0100
+Message-ID: <87pnfjdpml.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/aoVM0yRI4n8jIqPaFIoDWjX";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/aoVM0yRI4n8jIqPaFIoDWjX
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Vipul,
 
-Hi all,
+please always CC the relevant maintainers. Aside of that it's good
+practice to CC the author of a particular commit you identified.
 
-Commit
+Vipul Kumar <vipulk0511@gmail.com> writes:
 
-  6bae00459f0c ("selinux: do not allocate ancillary buffer on first load")
+> From: Vipul Kumar <vipul_kumar@mentor.com>
+>
+> 'commit f3a02ecebed7 ("x86/tsc: Set TSC_KNOWN_FREQ and TSC_RELIABLE
+> flags on Intel Atom SoCs")', causing time drift for Bay trail SoC.
+> These flags are set for SoCs having cpuid_level 0x15 or more.
+> Bay trail is having cpuid_level 0xb.
 
-is missing a Signed-off-by from its committer.
+Which is completely irrelevant. These CPUs read their frequency from
+MSRs not from CPUID.
 
---=20
-Cheers,
-Stephen Rothwell
+> So, unset both flags to make sure the clocksource calibration can
+> be done.
 
---Sig_/aoVM0yRI4n8jIqPaFIoDWjX
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+That's going to break tons of ATOM SoC based systems which have neither
+HPET not PIT.
 
------BEGIN PGP SIGNATURE-----
+Aside of that on some systems HPET/PIT based calibration is not really
+more accurate than the MSR based frequency, quite the contrary.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4g3YgACgkQAVBC80lX
-0GzYrAf/XbUUZrpbMXNJH0bUpse3RM/zNAdAYlY4/KSp2a3NEwtJyOSNAt8DcLXN
-8y8WLyWIxlhS4UT/9LSnBix7NpsZM+Iesy01qEbAMoeQ1Y7/sMeD6Dyu2Uu33kSb
-AtXVTeqOMs6go9rgA6SAFsnXvLYHc08cJl07HfdGqLzY4A6Em1Aj/Gce2PucnPLH
-hsZ/2w6hINnuf0FhOSvy4X/nm24WHZO435ZTD4o1YSYi2kNr5ieHqrkd6E4quYKa
-mGw5cFlwX+j5S+gWUUrSndap5tmrSFNFsk0tjFabPWLJImkGW3OFgdOos9tI3qGj
-/rkqMC7ajtEW8RWrLzZtFviqV7AkYA==
-=GTbr
------END PGP SIGNATURE-----
+Can you please provide detailed data about the problem you are trying to
+solve? 'time drift' is pretty unspecific.
 
---Sig_/aoVM0yRI4n8jIqPaFIoDWjX--
+Thanks,
+
+        tglx
