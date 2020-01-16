@@ -2,153 +2,144 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19BFFC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22126C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE83820728
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE7EC24695
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579196574;
+	bh=mgprMcwg5geRqmgaKiU1wuHYHMykWSduBoXMRAfD5oU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uOsuv6vMAXsyB+cUH1rn5BH15mGGFXbr+hGBO+LorCGqeWqbFm4MXNQ1Cgzizfd3C
+	 EvbA8GSbF/QIMEpuh7w7SKcLeS2mpByqMTBYTKVZM3LpRzvkDGFRpmH23WIv9BwroG
+	 2Cht/mL5StBh4gvi+hM+MlzLcKKzeBmwVN+OXBEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405850AbgAPRmr (ORCPT
+        id S2405854AbgAPRmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:42:47 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9643 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2405840AbgAPRmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:42:43 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B466F908C1939F7E015F;
-        Fri, 17 Jan 2020 01:42:40 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 17 Jan 2020 01:42:31 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <tglx@linutronix.de>, <jason@lakedaemon.net>, <maz@kernel.org>
-CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
-        John Garry <john.garry@huawei.com>
-Subject: [PATCH] irqchip/mbigen: Set driver .suppress_bind_attrs to avoid remove problems
-Date:   Fri, 17 Jan 2020 01:38:43 +0800
-Message-ID: <1579196323-180137-1-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        Thu, 16 Jan 2020 12:42:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60506 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2393828AbgAPRmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:42:32 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBF40246A4;
+        Thu, 16 Jan 2020 17:42:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579196551;
+        bh=mgprMcwg5geRqmgaKiU1wuHYHMykWSduBoXMRAfD5oU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Mgw6egZbi23SsHpczLIWPA2oAwGPyk1eHd0VM6m9t7cbSHqf6wpmF1ExXLBq+pIoS
+         ao91bTU+o5nHjuJ5t+13jNG0TuB8o3S23+d9VEpLJq1SU98zND0ETuVrwom6LsbauM
+         AfXlJFTytG/yjer33m8X2wJA8Wvp2M4SU906Ij2A=
+Date:   Thu, 16 Jan 2020 17:42:25 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 10/15] arm64: preserve x18 when CPU is suspended
+Message-ID: <20200116174225.GC21396@willie-the-truck>
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191206221351.38241-1-samitolvanen@google.com>
+ <20191206221351.38241-11-samitolvanen@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191206221351.38241-11-samitolvanen@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following crash can be seen for setting
-CONFIG_DEBUG_TEST_DRIVER_REMOVE=y for DT FW (which some people still use):
+On Fri, Dec 06, 2019 at 02:13:46PM -0800, Sami Tolvanen wrote:
+> Don't lose the current task's shadow stack when the CPU is suspended.
+> 
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+> ---
+>  arch/arm64/include/asm/suspend.h |  2 +-
+>  arch/arm64/mm/proc.S             | 14 ++++++++++++++
+>  2 files changed, 15 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/include/asm/suspend.h b/arch/arm64/include/asm/suspend.h
+> index 8939c87c4dce..0cde2f473971 100644
+> --- a/arch/arm64/include/asm/suspend.h
+> +++ b/arch/arm64/include/asm/suspend.h
+> @@ -2,7 +2,7 @@
+>  #ifndef __ASM_SUSPEND_H
+>  #define __ASM_SUSPEND_H
+>  
+> -#define NR_CTX_REGS 12
+> +#define NR_CTX_REGS 13
+>  #define NR_CALLEE_SAVED_REGS 12
+>  
+>  /*
+> diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
+> index fdabf40a83c8..5c8219c55948 100644
+> --- a/arch/arm64/mm/proc.S
+> +++ b/arch/arm64/mm/proc.S
+> @@ -49,6 +49,8 @@
+>   * cpu_do_suspend - save CPU registers context
+>   *
+>   * x0: virtual address of context pointer
+> + *
+> + * This must be kept in sync with struct cpu_suspend_ctx in <asm/suspend.h>.
+>   */
+>  ENTRY(cpu_do_suspend)
+>  	mrs	x2, tpidr_el0
+> @@ -73,6 +75,11 @@ alternative_endif
+>  	stp	x8, x9, [x0, #48]
+>  	stp	x10, x11, [x0, #64]
+>  	stp	x12, x13, [x0, #80]
+> +	/*
+> +	 * Save x18 as it may be used as a platform register, e.g. by shadow
+> +	 * call stack.
+> +	 */
+> +	str	x18, [x0, #96]
+>  	ret
+>  ENDPROC(cpu_do_suspend)
+>  
+> @@ -89,6 +96,13 @@ ENTRY(cpu_do_resume)
+>  	ldp	x9, x10, [x0, #48]
+>  	ldp	x11, x12, [x0, #64]
+>  	ldp	x13, x14, [x0, #80]
+> +	/*
+> +	 * Restore x18, as it may be used as a platform register, and clear
+> +	 * the buffer to minimize the risk of exposure when used for shadow
+> +	 * call stack.
+> +	 */
+> +	ldr	x18, [x0, #96]
+> +	str	xzr, [x0, #96]
 
-Hisilicon MBIGEN-V2 60080000.interrupt-controller: Failed to create mbi-gen irqdomain
-Hisilicon MBIGEN-V2: probe of 60080000.interrupt-controller failed with error -12
+Mumble, mumble, spectre-v4.
 
-[...]
+But I think it's fairly hopeless trying to fix that everywhere it crops up,
+so:
 
-Unable to handle kernel paging request at virtual address 0000000000005008
- Mem abort info:
-   ESR = 0x96000004
-   EC = 0x25: DABT (current EL), IL = 32 bits
-   SET = 0, FnV = 0
-   EA = 0, S1PTW = 0
- Data abort info:
-   ISV = 0, ISS = 0x00000004
-   CM = 0, WnR = 0
- user pgtable: 4k pages, 48-bit VAs, pgdp=0000041fb9990000
- [0000000000005008] pgd=0000000000000000
- Internal error: Oops: 96000004 [#1] PREEMPT SMP
- Modules linked in:
- CPU: 7 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc6-00002-g3fc42638a506-dirty #1622
- Hardware name: Huawei Taishan 2280 /D05, BIOS Hisilicon D05 IT21 Nemo 2.0 RC0 04/18/2018
- pstate: 40000085 (nZcv daIf -PAN -UAO)
- pc : mbigen_set_type+0x38/0x60
- lr : __irq_set_trigger+0x6c/0x188
- sp : ffff800014b4b400
- x29: ffff800014b4b400 x28: 0000000000000007
- x27: 0000000000000000 x26: 0000000000000000
- x25: ffff041fd83bd0d4 x24: ffff041fd83bd188
- x23: 0000000000000000 x22: ffff80001193ce00
- x21: 0000000000000004 x20: 0000000000000000
- x19: ffff041fd83bd000 x18: ffffffffffffffff
- x17: 0000000000000000 x16: 0000000000000000
- x15: ffff8000119098c8 x14: ffff041fb94ec91c
- x13: ffff041fb94ec1a1 x12: 0000000000000030
- x11: 0101010101010101 x10: 0000000000000040
- x9 : 0000000000000000 x8 : ffff041fb98c6680
- x7 : ffff800014b4b380 x6 : ffff041fd81636c8
- x5 : 0000000000000000 x4 : 000000000000025f
- x3 : 0000000000005000 x2 : 0000000000005008
- x1 : 0000000000000004 x0 : 0000000080000000
- Call trace:
-  mbigen_set_type+0x38/0x60
-  __setup_irq+0x744/0x900
-  request_threaded_irq+0xe0/0x198
-  pcie_pme_probe+0x98/0x118
-  pcie_port_probe_service+0x38/0x78
-  really_probe+0xa0/0x3e0
-  driver_probe_device+0x58/0x100
-  __device_attach_driver+0x90/0xb0
-  bus_for_each_drv+0x64/0xc8
-  __device_attach+0xd8/0x138
-  device_initial_probe+0x10/0x18
-  bus_probe_device+0x90/0x98
-  device_add+0x4c4/0x770
-  device_register+0x1c/0x28
-  pcie_port_device_register+0x1e4/0x4f0
-  pcie_portdrv_probe+0x34/0xd8
-  local_pci_probe+0x3c/0xa0
-  pci_device_probe+0x128/0x1c0
-  really_probe+0xa0/0x3e0
-  driver_probe_device+0x58/0x100
-  __device_attach_driver+0x90/0xb0
-  bus_for_each_drv+0x64/0xc8
-  __device_attach+0xd8/0x138
-  device_attach+0x10/0x18
-  pci_bus_add_device+0x4c/0xb8
-  pci_bus_add_devices+0x38/0x88
-  pci_host_probe+0x3c/0xc0
-  pci_host_common_probe+0xf0/0x208
-  hisi_pcie_almost_ecam_probe+0x24/0x30
-  platform_drv_probe+0x50/0xa0
-  really_probe+0xa0/0x3e0
-  driver_probe_device+0x58/0x100
-  device_driver_attach+0x6c/0x90
-  __driver_attach+0x84/0xc8
-  bus_for_each_dev+0x74/0xc8
-  driver_attach+0x20/0x28
-  bus_add_driver+0x148/0x1f0
-  driver_register+0x60/0x110
-  __platform_driver_register+0x40/0x48
-  hisi_pcie_almost_ecam_driver_init+0x1c/0x24
+Acked-by: Will Deacon <will@kernel.org>
 
-The specific problem here is that the mbigen driver real probe has failed
-as the mbigen_of_create_domain()->of_platform_device_create() call fails,
-the reason for that being that we never destroyed the platform device
-created during the remove test dry run and there is some conflict.
-
-Since we generally would never want to unbind this driver, and to save
-adding a driver tear down path for that, just set the driver
-.suppress_bind_attrs member to avoid this possibility.
-
-Signed-off-by: John Garry <john.garry@huawei.com>
-
-diff --git a/drivers/irqchip/irq-mbigen.c b/drivers/irqchip/irq-mbigen.c
-index 3f09f658e8e2..6b566bba263b 100644
---- a/drivers/irqchip/irq-mbigen.c
-+++ b/drivers/irqchip/irq-mbigen.c
-@@ -374,6 +374,7 @@ static struct platform_driver mbigen_platform_driver = {
- 		.name		= "Hisilicon MBIGEN-V2",
- 		.of_match_table	= mbigen_of_match,
- 		.acpi_match_table = ACPI_PTR(mbigen_acpi_match),
-+		.suppress_bind_attrs = true,
- 	},
- 	.probe			= mbigen_device_probe,
- };
--- 
-2.17.1
-
+Will
