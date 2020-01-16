@@ -7,49 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E8DDC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 229EDC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36416206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2E86206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:05:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201509;
-	bh=sGT4U/EuUFpxYX6PNmsr5Up6MeN1x5KpmDS/cSuuv8U=;
+	s=default; t=1579201512;
+	bh=YQ/Hcyv+U1F9awMquJDtHPpWKxuAbPdy3YF5Mp56J9o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NEK77bjIMBhm2ZelXLWK78QVZdnziCc3JEUeeiGfEQZ7rC5WfpZrInOsVWLnPs72z
-	 GEJX85DUatEJFGGkBx8IM04tAvX9yUzZK4bRrbxcI9t+u9u1WJVEaQARAkOKV43U8H
-	 ZXPgcUYgIzD6TAzEa37iEFX359tPAtv8EO3ouM8g=
+	b=frYdjJ1jFLS6SpxfWBE+24MpycDdW/pDDtrNiizWmxnoYI8sqivWvfawq5s29GE1h
+	 o09FRPJhunlS22PbxjOwkYDKgcnmewFdEvldLtnq2v1zw2ulvoVG6jUXTapeyK2BnL
+	 KTlZns39rvTsHKkp3SsPnxwfDHH7vkwi/Dwu1pGg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437283AbgAPTFI (ORCPT
+        id S2388254AbgAPRCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:05:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54316 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:02:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388261AbgAPRCG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:02:06 -0500
+        id S1733180AbgAPRBz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:01:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDCC424685;
-        Thu, 16 Jan 2020 17:02:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02CEE21582;
+        Thu, 16 Jan 2020 17:01:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194125;
-        bh=sGT4U/EuUFpxYX6PNmsr5Up6MeN1x5KpmDS/cSuuv8U=;
+        s=default; t=1579194114;
+        bh=YQ/Hcyv+U1F9awMquJDtHPpWKxuAbPdy3YF5Mp56J9o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CHqHbnPx9nc+b0nSIz6C8HVYp6Py/yrL4rkPXinym7Adygd2REDVle80ceJNgmMLA
-         36fgFcx1IbF2dVPJbWzCdZBvMbEga3EJjP7UQFVCF6fa0shv8g43RKwOWBkaiPIbrX
-         Qj6ovrlQxBG4bFgU+iqvTGHXFD6ItYuV9x0iqJ7k=
+        b=okHWbA6wXlGlsJ4rqusMjuzWgrtmD2JPeVrc6MGyVmdRYcbtPmJ+GY7DrkzIlgxuF
+         EI7B+PMmDs3wkQ1kGJSNCt/rMMJsHhoao5qzitdMofd+QXXXVoL4z0I8EobcrcnL6w
+         TdqjHTloCOr9O9n8MnMsKO2+QCW7MMrICWYch4vE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 217/671] NFS/pnfs: Bulk destroy of layouts needs to be safe w.r.t. umount
-Date:   Thu, 16 Jan 2020 11:52:06 -0500
-Message-Id: <20200116165940.10720-100-sashal@kernel.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 210/671] powerpc/64s: Fix logic when handling unknown CPU features
+Date:   Thu, 16 Jan 2020 11:51:59 -0500
+Message-Id: <20200116165940.10720-93-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,92 +61,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 5085607d209102b37b169bc94d0aa39566a9842a ]
+[ Upstream commit 8cfaf106918a8c13abb24c641556172afbb9545c ]
 
-If a bulk layout recall or a metadata server reboot coincides with a
-umount, then holding a reference to an inode is unsafe unless we
-also hold a reference to the super block.
+In cpufeatures_process_feature(), if a provided CPU feature is unknown and
+enable_unknown is false, we erroneously print that the feature is being
+enabled and return true, even though no feature has been enabled, and
+may also set feature bits based on the last entry in the match table.
 
-Fixes: fd9a8d7160937 ("NFSv4.1: Fix bulk recall and destroy of layouts")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Fix this so that we only set feature bits from the match table if we have
+actually enabled a feature from that table, and when failing to enable an
+unknown feature, always print the "not enabling" message and return false.
+
+Coincidentally, some older gccs (<GCC 7), when invoked with
+-fsanitize-coverage=trace-pc, cause a spurious uninitialised variable
+warning in this function:
+
+  arch/powerpc/kernel/dt_cpu_ftrs.c: In function ‘cpufeatures_process_feature’:
+  arch/powerpc/kernel/dt_cpu_ftrs.c:686:7: warning: ‘m’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+    if (m->cpu_ftr_bit_mask)
+
+An upcoming patch will enable support for kcov, which requires this option.
+This patch avoids the warning.
+
+Fixes: 5a61ef74f269 ("powerpc/64s: Support new device tree binding for discovering CPU features")
+Reported-by: Segher Boessenkool <segher@kernel.crashing.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+[ajd: add commit message]
+Signed-off-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/pnfs.c | 33 +++++++++++++++++++++++----------
- fs/nfs/pnfs.h |  1 +
- 2 files changed, 24 insertions(+), 10 deletions(-)
+ arch/powerpc/kernel/dt_cpu_ftrs.c | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
-diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index c818f9886f61..66f699e18755 100644
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -758,22 +758,35 @@ static int
- pnfs_layout_bulk_destroy_byserver_locked(struct nfs_client *clp,
- 		struct nfs_server *server,
- 		struct list_head *layout_list)
-+	__must_hold(&clp->cl_lock)
-+	__must_hold(RCU)
- {
- 	struct pnfs_layout_hdr *lo, *next;
- 	struct inode *inode;
+diff --git a/arch/powerpc/kernel/dt_cpu_ftrs.c b/arch/powerpc/kernel/dt_cpu_ftrs.c
+index c6f41907f0d7..a4b31e17492d 100644
+--- a/arch/powerpc/kernel/dt_cpu_ftrs.c
++++ b/arch/powerpc/kernel/dt_cpu_ftrs.c
+@@ -666,8 +666,10 @@ static bool __init cpufeatures_process_feature(struct dt_cpu_feature *f)
+ 		m = &dt_cpu_feature_match_table[i];
+ 		if (!strcmp(f->name, m->name)) {
+ 			known = true;
+-			if (m->enable(f))
++			if (m->enable(f)) {
++				cur_cpu_spec->cpu_features |= m->cpu_ftr_bit_mask;
+ 				break;
++			}
  
- 	list_for_each_entry_safe(lo, next, &server->layouts, plh_layouts) {
--		if (test_bit(NFS_LAYOUT_INVALID_STID, &lo->plh_flags))
-+		if (test_bit(NFS_LAYOUT_INVALID_STID, &lo->plh_flags) ||
-+		    test_bit(NFS_LAYOUT_INODE_FREEING, &lo->plh_flags) ||
-+		    !list_empty(&lo->plh_bulk_destroy))
- 			continue;
-+		/* If the sb is being destroyed, just bail */
-+		if (!nfs_sb_active(server->super))
-+			break;
- 		inode = igrab(lo->plh_inode);
--		if (inode == NULL)
--			continue;
--		list_del_init(&lo->plh_layouts);
--		if (pnfs_layout_add_bulk_destroy_list(inode, layout_list))
--			continue;
--		rcu_read_unlock();
--		spin_unlock(&clp->cl_lock);
--		iput(inode);
-+		if (inode != NULL) {
-+			list_del_init(&lo->plh_layouts);
-+			if (pnfs_layout_add_bulk_destroy_list(inode,
-+						layout_list))
-+				continue;
-+			rcu_read_unlock();
-+			spin_unlock(&clp->cl_lock);
-+			iput(inode);
-+		} else {
-+			rcu_read_unlock();
-+			spin_unlock(&clp->cl_lock);
-+			set_bit(NFS_LAYOUT_INODE_FREEING, &lo->plh_flags);
-+		}
-+		nfs_sb_deactive(server->super);
- 		spin_lock(&clp->cl_lock);
- 		rcu_read_lock();
- 		return -EAGAIN;
-@@ -811,7 +824,7 @@ pnfs_layout_free_bulk_destroy_list(struct list_head *layout_list,
- 		/* Free all lsegs that are attached to commit buckets */
- 		nfs_commit_inode(inode, 0);
- 		pnfs_put_layout_hdr(lo);
--		iput(inode);
-+		nfs_iput_and_deactive(inode);
+ 			pr_info("not enabling: %s (disabled or unsupported by kernel)\n",
+ 				f->name);
+@@ -675,17 +677,12 @@ static bool __init cpufeatures_process_feature(struct dt_cpu_feature *f)
+ 		}
  	}
- 	return ret;
- }
-diff --git a/fs/nfs/pnfs.h b/fs/nfs/pnfs.h
-index ece367ebde69..3ba44819a88a 100644
---- a/fs/nfs/pnfs.h
-+++ b/fs/nfs/pnfs.h
-@@ -104,6 +104,7 @@ enum {
- 	NFS_LAYOUT_RETURN_REQUESTED,	/* Return this layout ASAP */
- 	NFS_LAYOUT_INVALID_STID,	/* layout stateid id is invalid */
- 	NFS_LAYOUT_FIRST_LAYOUTGET,	/* Serialize first layoutget */
-+	NFS_LAYOUT_INODE_FREEING,	/* The inode is being freed */
- };
  
- enum layoutdriver_policy_flags {
+-	if (!known && enable_unknown) {
+-		if (!feat_try_enable_unknown(f)) {
+-			pr_info("not enabling: %s (unknown and unsupported by kernel)\n",
+-				f->name);
+-			return false;
+-		}
++	if (!known && (!enable_unknown || !feat_try_enable_unknown(f))) {
++		pr_info("not enabling: %s (unknown and unsupported by kernel)\n",
++			f->name);
++		return false;
+ 	}
+ 
+-	if (m->cpu_ftr_bit_mask)
+-		cur_cpu_spec->cpu_features |= m->cpu_ftr_bit_mask;
+-
+ 	if (known)
+ 		pr_debug("enabling: %s\n", f->name);
+ 	else
 -- 
 2.20.1
 
