@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2766FC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4908C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03EAC206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:01:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 711BE206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:02:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201312;
-	bh=CG0j5CIjKNoT9C0veCZho73jXHeOkr6pOUdwpcE3xic=;
+	s=default; t=1579201324;
+	bh=/iN5Lv/5xS6+NV97ObyRAfHsQdm5wUcuDcmt1iZWIz4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eUj6TTMwPQ/rJQFppkpbwCqUSFw7OQhwSIv3YZFkiMcIkerTvKh79u8GRxbAsE4Z8
-	 QqZDgcbYiaQyeRKOGS7ku+1pZ7x2EHTAWxmngpwG3Y9rL1oAgQzPfi0hfifX6f03Z2
-	 h3pjBG9y7giiWYAgSJ7HE9gyzFCXO0wGTDrYltNw=
+	b=vq82QJlnXZFJHGvpv8jn/Q0fls+iE8ZmcKOg664n/XTX7ILcVHGj4JXLjtpibGBFB
+	 m22i25JnbNmq0joFFzANMbfYuoD6zzmX/Yb9S77YRdyU5xGDDTSuVpXGjf1xwZmB8q
+	 eYeqGPn1WQYHSxWZaExXttarZJIAuR1zpj/ATkwY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437299AbgAPTBu (ORCPT
+        id S2437308AbgAPTCD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:01:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35110 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:02:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388733AbgAPRFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:05:48 -0500
+        id S2388712AbgAPRFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:05:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D6AD20730;
-        Thu, 16 Jan 2020 17:05:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20CBF205F4;
+        Thu, 16 Jan 2020 17:05:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194347;
-        bh=CG0j5CIjKNoT9C0veCZho73jXHeOkr6pOUdwpcE3xic=;
+        s=default; t=1579194344;
+        bh=/iN5Lv/5xS6+NV97ObyRAfHsQdm5wUcuDcmt1iZWIz4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PS4as2vySiimtkRm/RTXAH7MkR5Ndw7Ff7NhMObimaa22ALkrF+CY4hyNz/3yvWtc
-         xJoiXJ1IVI2iG2Y6C4cVTzBlgmoQ0+HdHq1ZfBK5ijFok6SiY1MToAwd2syM2jOb1k
-         fCdyd1X/UDRnM+NSb2rQ/WtB2sCfuedIix0drRBQ=
+        b=dqqx47MhkPwf/LIZ9LtHMaba5k0eplb2MLFh6gh2RqRF5DEvk1lvakYlUdAFPujqc
+         pHRW008HUgJoFwbn+4hzgDntVA7nDnCrDOFxmJeprWnEDieJdaPoFY3CWYT9v9rP6G
+         X0F0cSrAByGSwG+izYy3zZbwEmt0CdRzUuOGtJFA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeffrey Altman <jaltman@auristor.com>,
-        David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 288/671] rxrpc: Fix detection of out of order acks
-Date:   Thu, 16 Jan 2020 11:58:46 -0500
-Message-Id: <20200116170509.12787-25-sashal@kernel.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Zhao Lijian <lijian.zhao@intel.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 286/671] ACPI: button: reinitialize button state upon resume
+Date:   Thu, 16 Jan 2020 11:58:44 -0500
+Message-Id: <20200116170509.12787-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -62,112 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeffrey Altman <jaltman@auristor.com>
+From: Zhang Rui <rui.zhang@intel.com>
 
-[ Upstream commit 1a2391c30c0b9d041bc340f68df81d49c53546cc ]
+[ Upstream commit 13e962140be671f31a011543f11477af67a6c33e ]
 
-The rxrpc packet serial number cannot be safely used to compute out of
-order ack packets for several reasons:
+With commit dfa46c50f65b ("ACPI / button: Fix an issue in
+button.lid_init_state=ignore mode"), the lid device is considered to be
+not compliant to SW_LID if the Lid state is unchanged when updating it.
 
- 1. The allocation of serial numbers cannot be assumed to imply the order
-    by which acks are populated and transmitted.  In some rxrpc
-    implementations, delayed acks and ping acks are transmitted
-    asynchronously to the receipt of data packets and so may be transmitted
-    out of order.  As a result, they can race with idle acks.
+This is not wrong, but we overlooked the resume case, where Lid state is
+updated unconditionally in the button driver .resume() callback. And this
+results in warning message "ACPI: button: The lid device is not compliant
+to  SW_LID." after resume, if the machine is suspended with Lid opened and
+then resumed with Lid opened.
 
- 2. Serial numbers are allocated by the rxrpc connection and not the call
-    and as such may wrap independently if multiple channels are in use.
+Fix this by flushing the cached lid state before updating the Lid device
+in .resume() callback.
 
-In any case, what matters is whether the ack packet provides new
-information relating to the bounds of the window (the firstPacket and
-previousPacket in the ACK data).
-
-Fix this by discarding packets that appear to wind back the window bounds
-rather than on serial number procession.
-
-Fixes: 298bc15b2079 ("rxrpc: Only take the rwind and mtu values from latest ACK")
-Signed-off-by: Jeffrey Altman <jaltman@auristor.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Tested-by: Marc Dionne <marc.dionne@auristor.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: dfa46c50f65b ("ACPI / button: Fix an issue in button.lid_init_state=ignore mode")
+Reported-and-tested-by: Zhao Lijian <lijian.zhao@intel.com>
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/rxrpc/ar-internal.h |  1 +
- net/rxrpc/input.c       | 18 ++++++++++++------
- 2 files changed, 13 insertions(+), 6 deletions(-)
+ drivers/acpi/button.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/net/rxrpc/ar-internal.h b/net/rxrpc/ar-internal.h
-index dfd9eab77cc8..37e4c1801a41 100644
---- a/net/rxrpc/ar-internal.h
-+++ b/net/rxrpc/ar-internal.h
-@@ -644,6 +644,7 @@ struct rxrpc_call {
- 	u8			ackr_reason;	/* reason to ACK */
- 	u16			ackr_skew;	/* skew on packet being ACK'd */
- 	rxrpc_serial_t		ackr_serial;	/* serial of packet being ACK'd */
-+	rxrpc_serial_t		ackr_first_seq;	/* first sequence number received */
- 	rxrpc_seq_t		ackr_prev_seq;	/* previous sequence number received */
- 	rxrpc_seq_t		ackr_consumed;	/* Highest packet shown consumed */
- 	rxrpc_seq_t		ackr_seen;	/* Highest packet shown seen */
-diff --git a/net/rxrpc/input.c b/net/rxrpc/input.c
-index 7965600ee5de..2f91ab909191 100644
---- a/net/rxrpc/input.c
-+++ b/net/rxrpc/input.c
-@@ -837,7 +837,7 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb,
- 		u8 acks[RXRPC_MAXACKS];
- 	} buf;
- 	rxrpc_serial_t acked_serial;
--	rxrpc_seq_t first_soft_ack, hard_ack;
-+	rxrpc_seq_t first_soft_ack, hard_ack, prev_pkt;
- 	int nr_acks, offset, ioffset;
+diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
+index 870eb5c7516a..a25d77b3a16a 100644
+--- a/drivers/acpi/button.c
++++ b/drivers/acpi/button.c
+@@ -467,8 +467,11 @@ static int acpi_button_resume(struct device *dev)
+ 	struct acpi_button *button = acpi_driver_data(device);
  
- 	_enter("");
-@@ -851,13 +851,14 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb,
- 
- 	acked_serial = ntohl(buf.ack.serial);
- 	first_soft_ack = ntohl(buf.ack.firstPacket);
-+	prev_pkt = ntohl(buf.ack.previousPacket);
- 	hard_ack = first_soft_ack - 1;
- 	nr_acks = buf.ack.nAcks;
- 	summary.ack_reason = (buf.ack.reason < RXRPC_ACK__INVALID ?
- 			      buf.ack.reason : RXRPC_ACK__INVALID);
- 
- 	trace_rxrpc_rx_ack(call, sp->hdr.serial, acked_serial,
--			   first_soft_ack, ntohl(buf.ack.previousPacket),
-+			   first_soft_ack, prev_pkt,
- 			   summary.ack_reason, nr_acks);
- 
- 	if (buf.ack.reason == RXRPC_ACK_PING_RESPONSE)
-@@ -878,8 +879,9 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb,
- 				  rxrpc_propose_ack_respond_to_ack);
- 	}
- 
--	/* Discard any out-of-order or duplicate ACKs. */
--	if (before_eq(sp->hdr.serial, call->acks_latest))
-+	/* Discard any out-of-order or duplicate ACKs (outside lock). */
-+	if (before(first_soft_ack, call->ackr_first_seq) ||
-+	    before(prev_pkt, call->ackr_prev_seq))
- 		return;
- 
- 	buf.info.rxMTU = 0;
-@@ -890,12 +892,16 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb,
- 
- 	spin_lock(&call->input_lock);
- 
--	/* Discard any out-of-order or duplicate ACKs. */
--	if (before_eq(sp->hdr.serial, call->acks_latest))
-+	/* Discard any out-of-order or duplicate ACKs (inside lock). */
-+	if (before(first_soft_ack, call->ackr_first_seq) ||
-+	    before(prev_pkt, call->ackr_prev_seq))
- 		goto out;
- 	call->acks_latest_ts = skb->tstamp;
- 	call->acks_latest = sp->hdr.serial;
- 
-+	call->ackr_first_seq = first_soft_ack;
-+	call->ackr_prev_seq = prev_pkt;
-+
- 	/* Parse rwind and mtu sizes if provided. */
- 	if (buf.info.rxMTU)
- 		rxrpc_input_ackinfo(call, skb, &buf.info);
+ 	button->suspended = false;
+-	if (button->type == ACPI_BUTTON_TYPE_LID && button->input->users)
++	if (button->type == ACPI_BUTTON_TYPE_LID && button->input->users) {
++		button->last_state = !!acpi_lid_evaluate_state(device);
++		button->last_time = ktime_get();
+ 		acpi_lid_initialize_state(device);
++	}
+ 	return 0;
+ }
+ #endif
 -- 
 2.20.1
 
