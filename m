@@ -2,204 +2,112 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB25FC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE83C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 939DF2192A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1681322522
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:03:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579197822;
+	bh=/gTnbs5dM7uA8O+BlS4BLa17DHcgz+gruW6s5dE6BkU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=EIkqoqDlZQwT10UgyVtxONQD90mkZ+HemvsVEpG5Z3WXTdxFKd5CTdBVrxvGChEPU
+	 SUe63Gwck4SeWE/HMcWdzfBhh65yHHCRtL7h3Gny0TygM47NUii/qQGZRxGZRAnZIn
+	 3/+UXw7Q7upLkZShKPgvLqa/c7uxRvm1Ggavc02o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406907AbgAPSDg (ORCPT
+        id S2394143AbgAPSDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:03:36 -0500
-Received: from foss.arm.com ([217.140.110.172]:56900 "EHLO foss.arm.com"
+        Thu, 16 Jan 2020 13:03:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393641AbgAPSDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 13:03:34 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DF3BD31B;
-        Thu, 16 Jan 2020 10:03:33 -0800 (PST)
-Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE2C73F534;
-        Thu, 16 Jan 2020 10:03:32 -0800 (PST)
-Date:   Thu, 16 Jan 2020 18:03:26 +0000
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Radhey Shyam Pandey <radheys@xilinx.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Michal Simek <michals@xilinx.com>,
-        Robert Hancock <hancock@sedsystems.ca>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 03/14] net: axienet: Fix DMA descriptor cleanup path
-Message-ID: <20200116180326.47c93ce2@donnerap.cambridge.arm.com>
-In-Reply-To: <CH2PR02MB70008D24DA7D1426E8A71013C7380@CH2PR02MB7000.namprd02.prod.outlook.com>
-References: <20200110115415.75683-1-andre.przywara@arm.com>
-        <20200110115415.75683-4-andre.przywara@arm.com>
-        <CH2PR02MB7000F64AB27D352E00DC77A7C7380@CH2PR02MB7000.namprd02.prod.outlook.com>
-        <20200110154328.6676215f@donnerap.cambridge.arm.com>
-        <CH2PR02MB70008D24DA7D1426E8A71013C7380@CH2PR02MB7000.namprd02.prod.outlook.com>
-Organization: ARM
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+        id S2393686AbgAPRks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:40:48 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBF5C217F4;
+        Thu, 16 Jan 2020 17:40:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579196447;
+        bh=/gTnbs5dM7uA8O+BlS4BLa17DHcgz+gruW6s5dE6BkU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GvQ/IypKtdf15fJuVu7BM6327RwEbdW7bnmpwTRbpdgHP5Z62Fh08CPNmoJH5htBV
+         jf7oi2F3V0mC0R4iq4o1/znWS9m5/sTaelIek212y1YPXN+xrIXk/0DZTnR8YJ5x6y
+         IKTKrScW1PlC7FiiuouRCx2boi6TuCLiiSrK7tS4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 209/251] nvme: retain split access workaround for capability reads
+Date:   Thu, 16 Jan 2020 12:35:58 -0500
+Message-Id: <20200116173641.22137-169-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
+References: <20200116173641.22137-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jan 2020 17:05:45 +0000
-Radhey Shyam Pandey <radheys@xilinx.com> wrote:
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-Hi,
+[ Upstream commit 3a8ecc935efabdad106b5e06d07b150c394b4465 ]
 
-> > -----Original Message-----
-> > From: Andre Przywara <andre.przywara@arm.com>
-> > Sent: Friday, January 10, 2020 9:13 PM
-> > To: Radhey Shyam Pandey <radheys@xilinx.com>
-> > Cc: David S . Miller <davem@davemloft.net>; Michal Simek
-> > <michals@xilinx.com>; Robert Hancock <hancock@sedsystems.ca>;
-> > netdev@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> > kernel@vger.kernel.org
-> > Subject: Re: [PATCH 03/14] net: axienet: Fix DMA descriptor cleanup path
-> > 
-> > On Fri, 10 Jan 2020 15:14:46 +0000
-> > Radhey Shyam Pandey <radheys@xilinx.com> wrote:
-> > 
-> > Hi Radhey,
-> > 
-> > thanks for having a look!
-> >   
-> > > > -----Original Message-----
-> > > > From: Andre Przywara <andre.przywara@arm.com>
-> > > > Sent: Friday, January 10, 2020 5:24 PM
-> > > > To: David S . Miller <davem@davemloft.net>; Radhey Shyam Pandey
-> > > > <radheys@xilinx.com>
-> > > > Cc: Michal Simek <michals@xilinx.com>; Robert Hancock
-> > > > <hancock@sedsystems.ca>; netdev@vger.kernel.org; linux-arm-
-> > > > kernel@lists.infradead.org; linux-kernel@vger.kernel.org
-> > > > Subject: [PATCH 03/14] net: axienet: Fix DMA descriptor cleanup path
-> > > >
-> > > > When axienet_dma_bd_init() bails out during the initialisation process,
-> > > > it might do so with parts of the structure already allocated and
-> > > > initialised, while other parts have not been touched yet. Before
-> > > > returning in this case, we call axienet_dma_bd_release(), which does not
-> > > > take care of this corner case.
-> > > > This is most obvious by the first loop happily dereferencing
-> > > > lp->rx_bd_v, which we actually check to be non NULL *afterwards*.
-> > > >
-> > > > Make sure we only unmap or free already allocated structures, by:
-> > > > - directly returning with -ENOMEM if nothing has been allocated at all
-> > > > - checking for lp->rx_bd_v to be non-NULL *before* using it
-> > > > - only unmapping allocated DMA RX regions
-> > > >
-> > > > This avoids NULL pointer dereferences when initialisation fails.
-> > > >
-> > > > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> > > > ---
-> > > >  .../net/ethernet/xilinx/xilinx_axienet_main.c | 43 ++++++++++++-------
-> > > >  1 file changed, 28 insertions(+), 15 deletions(-)
-> > > >
-> > > > diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> > > > b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> > > > index 97482cf093ce..7e90044cf2d9 100644
-> > > > --- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> > > > +++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> > > > @@ -160,24 +160,37 @@ static void axienet_dma_bd_release(struct
-> > > > net_device *ndev)
-> > > >  	int i;
-> > > >  	struct axienet_local *lp = netdev_priv(ndev);
-> > > >
-> > > > +	/* If we end up here, tx_bd_v must have been DMA allocated. */
-> > > > +	dma_free_coherent(ndev->dev.parent,
-> > > > +			  sizeof(*lp->tx_bd_v) * lp->tx_bd_num,
-> > > > +			  lp->tx_bd_v,
-> > > > +			  lp->tx_bd_p);
-> > > > +
-> > > > +	if (!lp->rx_bd_v)
-> > > > +		return;
-> > > > +
-> > > >  	for (i = 0; i < lp->rx_bd_num; i++) {
-> > > > -		dma_unmap_single(ndev->dev.parent, lp->rx_bd_v[i].phys,
-> > > > -				 lp->max_frm_size, DMA_FROM_DEVICE);
-> > > > +		/* A NULL skb means this descriptor has not been initialised
-> > > > +		 * at all.
-> > > > +		 */
-> > > > +		if (!lp->rx_bd_v[i].skb)
-> > > > +			break;
-> > > > +
-> > > >  		dev_kfree_skb(lp->rx_bd_v[i].skb);
-> > > > -	}
-> > > >
-> > > > -	if (lp->rx_bd_v) {
-> > > > -		dma_free_coherent(ndev->dev.parent,
-> > > > -				  sizeof(*lp->rx_bd_v) * lp->rx_bd_num,
-> > > > -				  lp->rx_bd_v,
-> > > > -				  lp->rx_bd_p);
-> > > > -	}
-> > > > -	if (lp->tx_bd_v) {
-> > > > -		dma_free_coherent(ndev->dev.parent,
-> > > > -				  sizeof(*lp->tx_bd_v) * lp->tx_bd_num,
-> > > > -				  lp->tx_bd_v,
-> > > > -				  lp->tx_bd_p);
-> > > > +		/* For each descriptor, we programmed cntrl with the (non-
-> > > > zero)
-> > > > +		 * descriptor size, after it had been successfully allocated.
-> > > > +		 * So a non-zero value in there means we need to unmap it.
-> > > > +		 */  
-> > >  
-> > > > +		if (lp->rx_bd_v[i].cntrl)  
-> > >
-> > > I think it should ok to unmap w/o any check?  
-> > 
-> > Do you mean because .phys would be 0 if not initialised? AFAIK 0 can be a
-> > valid DMA address, so there is no special check for that, and unmapping
-> > DMA address 0 will probably go wrong at some point. So it's unlike
-> > kfree(NULL).  
-> 
-> I mean if skb allocation is successful in _dma_bd_init then in release path
-> we can assume .phys is always a valid address and skip rx_bd_v[i].cntrl
-> check.
+Commit 7fd8930f26be4
 
-I don't think we can assume this. If the skb allocation succeeded, but then the dma_map_single failed (which we check with dma_mapping_error()), we would end up with a valid skb, but an uninitialised phys DMA address in the registers. That's why I set .cntrl only after having checked the dma_map_single() result.
+  "nvme: add a common helper to read Identify Controller data"
 
-Or am I missing something?
+has re-introduced an issue that we have attempted to work around in the
+past, in commit a310acd7a7ea ("NVMe: use split lo_hi_{read,write}q").
 
-Cheers,
-Andre
+The problem is that some PCIe NVMe controllers do not implement 64-bit
+outbound accesses correctly, which is why the commit above switched
+to using lo_hi_[read|write]q for all 64-bit BAR accesses occuring in
+the code.
+
+In the mean time, the NVMe subsystem has been refactored, and now calls
+into the PCIe support layer for NVMe via a .reg_read64() method, which
+fails to use lo_hi_readq(), and thus reintroduces the problem that the
+workaround above aimed to address.
+
+Given that, at the moment, .reg_read64() is only used to read the
+capability register [which is known to tolerate split reads], let's
+switch .reg_read64() to lo_hi_readq() as well.
+
+This fixes a boot issue on some ARM boxes with NVMe behind a Synopsys
+DesignWare PCIe host controller.
+
+Fixes: 7fd8930f26be4 ("nvme: add a common helper to read Identify Controller data")
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/nvme/host/pci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 1ac4cec5f4f7..e2bce9385eda 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -1863,7 +1863,7 @@ static int nvme_pci_reg_write32(struct nvme_ctrl *ctrl, u32 off, u32 val)
  
-> > > > +			dma_unmap_single(ndev->dev.parent, lp-  
-> > > > >rx_bd_v[i].phys,  
-> > > > +					 lp->max_frm_size,
-> > > > DMA_FROM_DEVICE);
-> > > >  	}
-> > > > +
-> > > > +	dma_free_coherent(ndev->dev.parent,
-> > > > +			  sizeof(*lp->rx_bd_v) * lp->rx_bd_num,
-> > > > +			  lp->rx_bd_v,
-> > > > +			  lp->rx_bd_p);
-> > > >  }
-> > > >
-> > > >  /**
-> > > > @@ -207,7 +220,7 @@ static int axienet_dma_bd_init(struct net_device
-> > > > *ndev)
-> > > >  					 sizeof(*lp->tx_bd_v) * lp-  
-> > > > >tx_bd_num,  
-> > > >  					 &lp->tx_bd_p, GFP_KERNEL);
-> > > >  	if (!lp->tx_bd_v)
-> > > > -		goto out;
-> > > > +		return -ENOMEM;
-> > > >
-> > > >  	lp->rx_bd_v = dma_alloc_coherent(ndev->dev.parent,
-> > > >  					 sizeof(*lp->rx_bd_v) * lp-  
-> > > > >rx_bd_num,  
-> > > > --
-> > > > 2.17.1  
-> > >  
-> 
+ static int nvme_pci_reg_read64(struct nvme_ctrl *ctrl, u32 off, u64 *val)
+ {
+-	*val = readq(to_nvme_dev(ctrl)->bar + off);
++	*val = lo_hi_readq(to_nvme_dev(ctrl)->bar + off);
+ 	return 0;
+ }
+ 
+-- 
+2.20.1
 
