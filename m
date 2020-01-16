@@ -7,51 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05CA9C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1EAC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3824246D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 987BE246D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:27:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195620;
-	bh=ANUvViKeXBvEPwexAXTC3sSiZj/WPinEAqQ8t19PqOc=;
+	s=default; t=1579195626;
+	bh=4ObR9pZ3j4UB200gUrKQfZlwtblOWEmrN4/PjLnBIOs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A/LtHs10ceVIDO7UJ0isfICLerZCC5xAs0JcKa9JT+Z/kzUsCFsPjv58QOYE6sE69
-	 uptyZaMRAyjU2GFDwTtu2nFgmOw5YL2homUZRmV9nrg5dDJj3mv6xJoZf6+gtG1hEh
-	 3QyG1eaGSPPMB3hPI2+tXd5Dc3cWUstvbTrlutqo=
+	b=ZnVMbh34/ya7nAryIGmIApn2eYCmRyEq8lS0hNrc6p/aW89kL+Cc4TjEfy/cnZSxw
+	 uht7E0PmHnbY3y1drCovrj3PpC4uE7cmhrgvf7kRaQsGnn72xoBqpwnklHM6K699hw
+	 g4+DIkt2OOTZiFboiPMx96oY8LLxetcLfo2b7duU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392365AbgAPR07 (ORCPT
+        id S2392403AbgAPR1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:26:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36024 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:27:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392321AbgAPR0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:26:51 -0500
+        id S2392350AbgAPR04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:26:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7360246BE;
-        Thu, 16 Jan 2020 17:26:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE9E0246D9;
+        Thu, 16 Jan 2020 17:26:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195610;
-        bh=ANUvViKeXBvEPwexAXTC3sSiZj/WPinEAqQ8t19PqOc=;
+        s=default; t=1579195615;
+        bh=4ObR9pZ3j4UB200gUrKQfZlwtblOWEmrN4/PjLnBIOs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KrVTv2TxoJtxyjgeDn1kd170hWr2gRZ4Tfr9PQ0eixlS9f/1n+Ms241jtZGx2ww8X
-         MwFNEUBRE9graXx7WRIr1AhBnLRpYExSCvWk7lIkYCobu/ragDjxY4SgvqUULiHJYT
-         aQAADU4RmLCkiJZsQ+CaM1jvmKPyruLJ4jN8abLU=
+        b=t+QvEue5Nbp8lhf2dFz7i995taaq1iJKlVHd+ZWbUkc5mmA7DWq0HKTf5M07v9WfU
+         HgVe2aCjIm2Rz7fZJ4SsjxgRaraiiKhhSxQZH19vMf8DRxCF5eIMG4vjOmAFwpv/WM
+         ADaGvQFpblK5EKKkyiWhiSnhe37D7/tc4qQxltGo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sameeh Jubran <sameehj@amazon.com>,
-        Arthur Kiyanovski <akiyano@amazon.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 184/371] net: ena: fix incorrect test of supported hash function
-Date:   Thu, 16 Jan 2020 12:20:56 -0500
-Message-Id: <20200116172403.18149-127-sashal@kernel.org>
+Cc:     Igor Konopko <igor.j.konopko@intel.com>,
+        =?UTF-8?q?Javier=20Gonz=C3=A1lez?= <javier@javigon.com>,
+        Hans Holmberg <hans.holmberg@cnexlabs.com>,
+        =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 188/371] lightnvm: pblk: fix lock order in pblk_rb_tear_down_check
+Date:   Thu, 16 Jan 2020 12:21:00 -0500
+Message-Id: <20200116172403.18149-131-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,38 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sameeh Jubran <sameehj@amazon.com>
+From: Igor Konopko <igor.j.konopko@intel.com>
 
-[ Upstream commit d3cfe7ddbc3dfbb9b201615b7fef8fd66d1b5fe8 ]
+[ Upstream commit 486b5aac85f6ec0b2df3e82a6a629d5eb7804db5 ]
 
-ena_com_set_hash_function() tests if a hash function is supported
-by the device before setting it.
-The test returns the opposite result than needed.
-Reverse the condition to return the correct value.
-Also use the BIT macro instead of inline shift.
+In pblk_rb_tear_down_check() the spinlock functions are not
+called in proper order.
 
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: a4bd217 ("lightnvm: physical block device (pblk) target")
+Signed-off-by: Igor Konopko <igor.j.konopko@intel.com>
+Reviewed-by: Javier González <javier@javigon.com>
+Reviewed-by: Hans Holmberg <hans.holmberg@cnexlabs.com>
+Signed-off-by: Matias Bjørling <mb@lightnvm.io>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_com.c | 2 +-
+ drivers/lightnvm/pblk-rb.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
-index 1a4ffc5d3da4..011b54c541aa 100644
---- a/drivers/net/ethernet/amazon/ena/ena_com.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.c
-@@ -2002,7 +2002,7 @@ int ena_com_set_hash_function(struct ena_com_dev *ena_dev)
- 	if (unlikely(ret))
- 		return ret;
+diff --git a/drivers/lightnvm/pblk-rb.c b/drivers/lightnvm/pblk-rb.c
+index c0dd17a82170..73de2deaba67 100644
+--- a/drivers/lightnvm/pblk-rb.c
++++ b/drivers/lightnvm/pblk-rb.c
+@@ -825,8 +825,8 @@ int pblk_rb_tear_down_check(struct pblk_rb *rb)
+ 	}
  
--	if (get_resp.u.flow_hash_func.supported_func & (1 << rss->hash_func)) {
-+	if (!(get_resp.u.flow_hash_func.supported_func & BIT(rss->hash_func))) {
- 		pr_err("Func hash %d isn't supported by device, abort\n",
- 		       rss->hash_func);
- 		return -EOPNOTSUPP;
+ out:
+-	spin_unlock(&rb->w_lock);
+ 	spin_unlock_irq(&rb->s_lock);
++	spin_unlock(&rb->w_lock);
+ 
+ 	return ret;
+ }
 -- 
 2.20.1
 
