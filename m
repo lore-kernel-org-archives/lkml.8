@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C2CC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC4C4C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B85F20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 798372064C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:50:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200637;
-	bh=Nj6XKZCEDxGaXQwinQLQ2eXpL34/hG9ANdGyJ2pmAbE=;
+	s=default; t=1579200644;
+	bh=VJQh8LzQJm90j6pqB8gOqtTs5p3bVSui1JBgLcl6G1E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZBO4TrcNoUSP5pNLZMv0zZ8mEUUtuHDqF9kknt/CkZEs02iiiF1oRibhYCrictfKM
-	 pYI4fIEh57lYDbLDNY4sOz7B4SyA9I1U0tiQbMwWDRayDbyzJlSF+/ROli+KdIcKWO
-	 v+ZB8TKMfT+mQxKF5jyJgcRv8t6NHQlvNG1nr4UM=
+	b=Uq2fWfooOIEZgKlayU/OC/nIVtDxwTxWmwEdT7BeDlLUJd63cfW9EJdPSvQU2g3l8
+	 pwZ2zJdsoi2oppZnRGzUZkJ7jhuA0ErgzTAgwCkshCHBRsR7WyVZgP2EskH7aynOBA
+	 gsuwUxlMbApZSeme6WVvv8883utRyZGtFZ1O6t5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387548AbgAPRJE (ORCPT
+        id S2389553AbgAPRI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:09:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43952 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:08:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388255AbgAPRJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:09:01 -0500
+        id S2389527AbgAPRIz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:08:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2334C2192A;
-        Thu, 16 Jan 2020 17:09:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F05D21D56;
+        Thu, 16 Jan 2020 17:08:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194541;
-        bh=Nj6XKZCEDxGaXQwinQLQ2eXpL34/hG9ANdGyJ2pmAbE=;
+        s=default; t=1579194534;
+        bh=VJQh8LzQJm90j6pqB8gOqtTs5p3bVSui1JBgLcl6G1E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jHuT7nlb+bZjAcA83Lp4WdzTSY9ABMLEFOk9j24pyRCMDkwFXBbjxt+VjaNCsKuBM
-         1X2upgN3c0140osOHm5e/5ElfWt998xOYaIC/VPohYJnKd1BnX9B+hY7d6MMJ89Q6Q
-         /J21zszYgn8gOCJrHfJbcKvK5xj6KcmyTNRe17mE=
+        b=rf9WYvg2/xb1r3RMXmn3AJkmuv7C/vV22EzrAy1T1jdy5TNOvjpy60ksj2xNmwGJG
+         c/M2vud/mJ9x6iDP9MlJjv94X97XIGuO/OzcqKv4cRT+om4W/RoxXi0p55yPV6Duwf
+         lxYrcQpNJLl1dEgkzo7k994S34VwcdBlZsJFT6vk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 427/671] ARM: dts: iwg20d-q7-common: Fix SDHI1 VccQ regularor
-Date:   Thu, 16 Jan 2020 12:01:05 -0500
-Message-Id: <20200116170509.12787-164-sashal@kernel.org>
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 422/671] net/af_iucv: build proper skbs for HiperTransport
+Date:   Thu, 16 Jan 2020 12:01:00 -0500
+Message-Id: <20200116170509.12787-159-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,40 +60,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-[ Upstream commit d211650a87edc7f4130651c0ccbc0a4583fd72d3 ]
+[ Upstream commit 238965b71b968dc5b3c0fe430e946f488322c4b5 ]
 
-SDR50 isn't working anymore because the GPIO regulator
-driver is using descriptors since
-commit d6cd33ad7102 ("regulator: gpio: Convert to use descriptors")
-which in turn causes the system to use the polarity of the
-GPIOs (as specified in the DT) for selecting the states,
-but the polarity specified in the DT is wrong.
-This patch fixes the regulator DT definition, and that fixes
-SDR50.
+The HiperSockets-based transport path in af_iucv is still too closely
+entangled with qeth.
+With commit a647a02512ca ("s390/qeth: speed-up L3 IQD xmit"), the
+relevant xmit code in qeth has begun to use skb_cow_head(). So to avoid
+unnecessary skb head expansions, af_iucv must learn to
+1) respect dev->needed_headroom when allocating skbs, and
+2) drop the header reference before cloning the skb.
 
-Fixes: 029efb3a03c5 ("ARM: dts: iwg20d-q7: Add SDHI1 support")
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+While at it, also stop hard-coding the LL-header creation stage and just
+use the appropriate helper.
+
+Fixes: a647a02512ca ("s390/qeth: speed-up L3 IQD xmit")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/iwg20d-q7-common.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/iucv/af_iucv.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/iwg20d-q7-common.dtsi b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
-index 5cae74eb6cdd..a2c9a1e88c1a 100644
---- a/arch/arm/boot/dts/iwg20d-q7-common.dtsi
-+++ b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
-@@ -87,7 +87,7 @@
- 		regulator-min-microvolt = <1800000>;
- 		regulator-max-microvolt = <3300000>;
+diff --git a/net/iucv/af_iucv.c b/net/iucv/af_iucv.c
+index f024914da1b2..e07daee1227c 100644
+--- a/net/iucv/af_iucv.c
++++ b/net/iucv/af_iucv.c
+@@ -13,6 +13,7 @@
+ #define pr_fmt(fmt) KMSG_COMPONENT ": " fmt
  
--		gpios = <&gpio2 30 GPIO_ACTIVE_LOW>;
-+		gpios = <&gpio2 30 GPIO_ACTIVE_HIGH>;
- 		gpios-states = <1>;
- 		states = <3300000 1
- 			  1800000 0>;
+ #include <linux/module.h>
++#include <linux/netdevice.h>
+ #include <linux/types.h>
+ #include <linux/list.h>
+ #include <linux/errno.h>
+@@ -355,6 +356,9 @@ static int afiucv_hs_send(struct iucv_message *imsg, struct sock *sock,
+ 		err = -ENODEV;
+ 		goto err_free;
+ 	}
++
++	dev_hard_header(skb, skb->dev, ETH_P_AF_IUCV, NULL, NULL, skb->len);
++
+ 	if (!(skb->dev->flags & IFF_UP) || !netif_carrier_ok(skb->dev)) {
+ 		err = -ENETDOWN;
+ 		goto err_free;
+@@ -367,6 +371,8 @@ static int afiucv_hs_send(struct iucv_message *imsg, struct sock *sock,
+ 		skb_trim(skb, skb->dev->mtu);
+ 	}
+ 	skb->protocol = cpu_to_be16(ETH_P_AF_IUCV);
++
++	__skb_header_release(skb);
+ 	nskb = skb_clone(skb, GFP_ATOMIC);
+ 	if (!nskb) {
+ 		err = -ENOMEM;
+@@ -466,12 +472,14 @@ static void iucv_sever_path(struct sock *sk, int with_user_data)
+ /* Send controlling flags through an IUCV socket for HIPER transport */
+ static int iucv_send_ctrl(struct sock *sk, u8 flags)
+ {
++	struct iucv_sock *iucv = iucv_sk(sk);
+ 	int err = 0;
+ 	int blen;
+ 	struct sk_buff *skb;
+ 	u8 shutdown = 0;
+ 
+-	blen = sizeof(struct af_iucv_trans_hdr) + ETH_HLEN;
++	blen = sizeof(struct af_iucv_trans_hdr) +
++	       LL_RESERVED_SPACE(iucv->hs_dev);
+ 	if (sk->sk_shutdown & SEND_SHUTDOWN) {
+ 		/* controlling flags should be sent anyway */
+ 		shutdown = sk->sk_shutdown;
+@@ -1131,7 +1139,8 @@ static int iucv_sock_sendmsg(struct socket *sock, struct msghdr *msg,
+ 	 * segmented records using the MSG_EOR flag), but
+ 	 * for SOCK_STREAM we might want to improve it in future */
+ 	if (iucv->transport == AF_IUCV_TRANS_HIPER) {
+-		headroom = sizeof(struct af_iucv_trans_hdr) + ETH_HLEN;
++		headroom = sizeof(struct af_iucv_trans_hdr) +
++			   LL_RESERVED_SPACE(iucv->hs_dev);
+ 		linear = len;
+ 	} else {
+ 		if (len < PAGE_SIZE) {
 -- 
 2.20.1
 
