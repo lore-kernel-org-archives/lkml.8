@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B28DC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B669BC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 273A92077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85CB02077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202068;
-	bh=9Y8lZosqwOZm9f9IpU+vg+FnGM9OlCRJiHE5R83s5tQ=;
+	s=default; t=1579202073;
+	bh=EVK8+bMUW7+5NJwclqnG4oQpje6rvaXknNBN5JRwWNY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EEDWWqE8fCVPg87qcGQmjfTZgNe/J8nTBM072rwI/LUovRZwireAhYDaP5OcBpoiX
-	 XRWjpcOnTB3u3bnNOhIGo1dYtN9naykEoMEqtbFQc5KC9zobF99FNP54j5tKCUyV15
-	 QhWlcqDB3i+u4hsMzAsi1Er1RzRkUJuhwUd2j/rc=
+	b=DZ4F7FcMWGaUAGCpG9B3vFjvs6YPnQYnLvSgJcUshFlOhRIlUEGFiDSGkPkEYGFnJ
+	 f7fJa4/TPtU0t0pwnamPAtIIvEiZ+jc5Vc+itIYoyOeSUscXOa5kuQIkMJwD2qHrx0
+	 LxUX7ZdGsf2SdU+7pBCL1523RGa2N5WB+IMl/Re8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731640AbgAPQ4a (ORCPT
+        id S2437527AbgAPTOc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:56:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42346 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:14:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729604AbgAPQ4M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:56:12 -0500
+        id S1733241AbgAPQ42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:56:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3458A24656;
-        Thu, 16 Jan 2020 16:56:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 428EB20730;
+        Thu, 16 Jan 2020 16:56:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193772;
-        bh=9Y8lZosqwOZm9f9IpU+vg+FnGM9OlCRJiHE5R83s5tQ=;
+        s=default; t=1579193788;
+        bh=EVK8+bMUW7+5NJwclqnG4oQpje6rvaXknNBN5JRwWNY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fVioAeugnMVb6B5YFgtClQnMSLV9F1Q+CxzPdmTsXGKP9ql4lOPYFpwELGyJvSbCv
-         nDh2JC0/AO/pLZbMxdv7XB21yozKjcYSd9pblEiqRO8WweiEeHqI5XiLasq4N/NLuI
-         +/Kam6xD/F65/EsfCpQLmDvttiRxw4hVg5qshGiE=
+        b=abUxfRduBk7SB4/x3lNPU/NxN2ukO7IUtqZKd1WpQgMw1oxCXzKq6lzYa41rstK/y
+         bWmCsaXBf2Qi3fGgxBaGjlExudHWlyUrj3+5NQk+DH7UqHvYVybFbYgY3CZ6jjBaAY
+         xyA1AOKuLbCGolt3OlWJD3Hr8/0ZISYxdvzfHtWo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Willem de Bruijn <willemb@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 055/671] net: always initialize pagedlen
-Date:   Thu, 16 Jan 2020 11:44:46 -0500
-Message-Id: <20200116165502.8838-55-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Nishanth Menon <nm@ti.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 063/671] mailbox: ti-msgmgr: Off by one in ti_msgmgr_of_xlate()
+Date:   Thu, 16 Jan 2020 11:44:54 -0500
+Message-Id: <20200116165502.8838-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -59,70 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit aba36930a35e7f1fe1319b203f25c05d6c119936 ]
+[ Upstream commit 78f3ff524fca63e7d2a57149a34ade23d2c12798 ]
 
-In ip packet generation, pagedlen is initialized for each skb at the
-start of the loop in __ip(6)_append_data, before label alloc_new_skb.
+The > comparison should be >= or we access one element beyond the end
+of the array.
 
-Depending on compiler options, code can be generated that jumps to
-this label, triggering use of an an uninitialized variable.
+(The inst->qinsts[] array is allocated in the ti_msgmgr_probe() function
+and it has ->num_valid_queues elements.)
 
-In practice, at -O2, the generated code moves the initialization below
-the label. But the code should not rely on that for correctness.
-
-Fixes: 15e36f5b8e98 ("udp: paged allocation with gso")
-Signed-off-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: a2b79838b891 ("mailbox: ti-msgmgr: Add support for Secure Proxy")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Nishanth Menon <nm@ti.com>
+Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/ip_output.c  | 3 ++-
- net/ipv6/ip6_output.c | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/mailbox/ti-msgmgr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/ipv4/ip_output.c b/net/ipv4/ip_output.c
-index d63091812342..fbf30122e8bf 100644
---- a/net/ipv4/ip_output.c
-+++ b/net/ipv4/ip_output.c
-@@ -940,7 +940,7 @@ static int __ip_append_data(struct sock *sk,
- 			unsigned int fraglen;
- 			unsigned int fraggap;
- 			unsigned int alloclen;
--			unsigned int pagedlen = 0;
-+			unsigned int pagedlen;
- 			struct sk_buff *skb_prev;
- alloc_new_skb:
- 			skb_prev = skb;
-@@ -957,6 +957,7 @@ static int __ip_append_data(struct sock *sk,
- 			if (datalen > mtu - fragheaderlen)
- 				datalen = maxfraglen - fragheaderlen;
- 			fraglen = datalen + fragheaderlen;
-+			pagedlen = 0;
+diff --git a/drivers/mailbox/ti-msgmgr.c b/drivers/mailbox/ti-msgmgr.c
+index 5bceafbf6699..01e9e462512b 100644
+--- a/drivers/mailbox/ti-msgmgr.c
++++ b/drivers/mailbox/ti-msgmgr.c
+@@ -547,7 +547,7 @@ static struct mbox_chan *ti_msgmgr_of_xlate(struct mbox_controller *mbox,
+ 	}
  
- 			if ((flags & MSG_MORE) &&
- 			    !(rt->dst.dev->features&NETIF_F_SG))
-diff --git a/net/ipv6/ip6_output.c b/net/ipv6/ip6_output.c
-index eed9231c90ad..9886a84c2511 100644
---- a/net/ipv6/ip6_output.c
-+++ b/net/ipv6/ip6_output.c
-@@ -1357,7 +1357,7 @@ static int __ip6_append_data(struct sock *sk,
- 			unsigned int fraglen;
- 			unsigned int fraggap;
- 			unsigned int alloclen;
--			unsigned int pagedlen = 0;
-+			unsigned int pagedlen;
- alloc_new_skb:
- 			/* There's no room in the current skb */
- 			if (skb)
-@@ -1381,6 +1381,7 @@ static int __ip6_append_data(struct sock *sk,
- 			if (datalen > (cork->length <= mtu && !(cork->flags & IPCORK_ALLFRAG) ? mtu : maxfraglen) - fragheaderlen)
- 				datalen = maxfraglen - fragheaderlen - rt->dst.trailer_len;
- 			fraglen = datalen + fragheaderlen;
-+			pagedlen = 0;
- 
- 			if ((flags & MSG_MORE) &&
- 			    !(rt->dst.dev->features&NETIF_F_SG))
+ 	if (d->is_sproxy) {
+-		if (req_pid > d->num_valid_queues)
++		if (req_pid >= d->num_valid_queues)
+ 			goto err;
+ 		qinst = &inst->qinsts[req_pid];
+ 		return qinst->chan;
 -- 
 2.20.1
 
