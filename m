@@ -2,156 +2,132 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A33C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B2BC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23DDD2064C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C94A120748
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:16:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="7VhVkJeo"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="kHJ/FujL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731589AbgAPJN3 (ORCPT
+        id S1729210AbgAPJQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 04:13:29 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:27570 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729139AbgAPJNG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 04:13:06 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00G9CfLB024975;
-        Thu, 16 Jan 2020 04:13:03 -0500
-Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2059.outbound.protection.outlook.com [104.47.36.59])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2xfc59my65-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jan 2020 04:13:03 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H0O2zgpx/TTAGIRP+gQyhloWtLN+VrHnlBPPRZg42ubroOyybMytHOXcr0r4VQ7D94nakclOHzhHTgORk/lnupEhxHgF6sw1UKM1yahoHOWUdPoOlLeZh8qGSNv6BhCQi4InDv1z5O451vBHdguDQb8bQ6NcOTdOd2SDAx1ZNjY1aLpDyphBzSUIUHrZJrRJDaUi6PaM0Kukx5SH3vzKNFGFMniqsYvSr7NU+//rtad+sMB5+MnHl6pM56g14YDRAtmCeeFC2YyfDSImdroGPJr/B5GNNyO25EfRd+H8L1dmzzynscT3yUdD0xFSPc6jnmJbj+qjZ6icfzkEr8GVeA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P6aFuv9/zOIxMP3IBXnBJplTzMYLCE0fPq1lnckqF+c=;
- b=R+0YRT1aqMb0eRV15YYWCvO6TQGDghfK2NKHXS+KXXmOFr1z5+VjMQzfAYmLhS6BR0ncGiUWKXMNj4TXBEyPPI24/fK/b7tr91ojFxoNpZ7JT8uVF7DRlME5wGYO4ABtD4jFS5a+uHABNW7XovZrBVrxv5Mzj8P7s7jID1TZ+F3J0JQyKUBH9rcNPhwxBGYgj3a1XZ3TF2ORHavrbgTSCPCGpB6Ho61cAso9xYBu8ykeg5+VF9fcZYK5vjJPAWaUTbaoTLyfUWV9OUr4U4FirngIypmL3HVW8r6OvXcpHy8LEAwsvJIhPWw2NeU60XmQDgPsYi4KWU6lzkGpl30Zlw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.55) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P6aFuv9/zOIxMP3IBXnBJplTzMYLCE0fPq1lnckqF+c=;
- b=7VhVkJeo2Yfi76t6dZh7lBaUbdhiFnL4sNJXW0ricd54/Rivl84Q3iWH+Yazh2k2pin5fPUglkQFMEf3dYK2ahExWiaLiS5b9ShIgEp2V9bedMo0ctTR34gFjIcV02nPcY7GwgzbGcpEs5G0wQ8vlZ+EoH8t5iMQKVs36i2/Xm0=
-Received: from BN6PR03CA0089.namprd03.prod.outlook.com (2603:10b6:405:6f::27)
- by BN8PR03MB5123.namprd03.prod.outlook.com (2603:10b6:408:dd::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.19; Thu, 16 Jan
- 2020 09:13:01 +0000
-Received: from SN1NAM02FT037.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::201) by BN6PR03CA0089.outlook.office365.com
- (2603:10b6:405:6f::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.13 via Frontend
- Transport; Thu, 16 Jan 2020 09:13:01 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
-Received: from nwd2mta1.analog.com (137.71.25.55) by
- SN1NAM02FT037.mail.protection.outlook.com (10.152.72.89) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2644.19
- via Frontend Transport; Thu, 16 Jan 2020 09:13:00 +0000
-Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id 00G9Clgw032333
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
-        Thu, 16 Jan 2020 01:12:48 -0800
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Thu, 16 Jan
- 2020 01:12:58 -0800
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Thu, 16 Jan 2020 04:12:51 -0500
-Received: from saturn.ad.analog.com ([10.48.65.124])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00G9CkjV020088;
-        Thu, 16 Jan 2020 04:12:47 -0500
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <davem@davemloft.net>, <andrew@lunn.ch>, <f.fainelli@gmail.com>,
-        <hkallweit1@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH 0/4] net: phy: adin: implement support for 1588 start-of-packet indication
-Date:   Thu, 16 Jan 2020 11:14:50 +0200
-Message-ID: <20200116091454.16032-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 16 Jan 2020 04:16:23 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:1558 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726970AbgAPJQW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 04:16:22 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 47yz8L74yxz9tyQR;
+        Thu, 16 Jan 2020 10:16:18 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=kHJ/FujL; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id lt8jAOtwQ37r; Thu, 16 Jan 2020 10:16:18 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47yz8L5yqZz9tyQP;
+        Thu, 16 Jan 2020 10:16:18 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1579166178; bh=zhSNNoA19/DJtyqK00k6NS1e1aITemDpv4Uo0GCOeHg=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=kHJ/FujLNVI5NHn588r9Xp2wHJbaCU+ZBkfGxNVcWiwtRBmZW0lfLLuD4NqyCZjiq
+         +rTgIsm7pFN1rx7YTTWhuMQluEkHnAwg5Mf/G4PgNahbW9tMt03xitw118O2by2nT9
+         rGG+pJM5Wh/XK2tpcgdQ3yLjIqpixSaM9eK0L1tQ=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id DA4C58B811;
+        Thu, 16 Jan 2020 10:16:19 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id FPW2Cv_UNA79; Thu, 16 Jan 2020 10:16:19 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 212448B810;
+        Thu, 16 Jan 2020 10:16:19 +0100 (CET)
+Subject: Re: [RFC PATCH v3 08/12] lib: vdso: allow arches to provide vdso data
+ pointer
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+To:     Thomas Gleixner <tglx@linutronix.de>, luto@kernel.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, arnd@arndb.de,
+        vincenzo.frascino@arm.com, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org
+References: <cover.1578934751.git.christophe.leroy@c-s.fr>
+ <381e547dbb3c48fd39d6cf208033bba38ad048fb.1578934751.git.christophe.leroy@c-s.fr>
+ <87ftghbpuu.fsf@nanos.tec.linutronix.de>
+ <d2de3211-9d7c-513e-fe0f-8bdce623fb65@c-s.fr>
+Message-ID: <b5fddcf8-99ff-fc0d-40c0-0eb81ad4e94a@c-s.fr>
+Date:   Thu, 16 Jan 2020 10:16:18 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
+In-Reply-To: <d2de3211-9d7c-513e-fe0f-8bdce623fb65@c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(136003)(376002)(346002)(396003)(189003)(199004)(54906003)(44832011)(110136005)(426003)(246002)(36756003)(316002)(7636002)(2616005)(8676002)(4326008)(70206006)(5660300002)(70586007)(1076003)(107886003)(2906002)(26005)(7696005)(186003)(336012)(8936002)(356004)(478600001)(6666004)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR03MB5123;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 3cefe399-2581-4f04-e970-08d79a64491a
-X-MS-TrafficTypeDiagnostic: BN8PR03MB5123:
-X-Microsoft-Antispam-PRVS: <BN8PR03MB51233B6BDF47BC6CD07C2480F9360@BN8PR03MB5123.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 02843AA9E0
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: HAbuWAyoRi7u7+QMR+uBzrcITIsAjomQnNSWFvSM0tHpmLk2zQogxojWZerG8jTgtkiZa4hcRp/6qi+ZIZ8uRq7IcYsBhFITLpnQPAdh2c+Ky1lPlbCW/3+jcvp3wEQMiLPUUkdZQQuiRNKdue68aDyWvX/X7oo4oU1g3yK9dAHhgvecbeeF1m0eGLcOB2bm52cOYvkX5MY5r69rKSkYbqfPSk8jZEIBrxyGcoBhUK/RmI2jxAq/QLhu4PbH5FnPZgbLDh/j9E3Hv/m8WoDwd4KmCXMDMe+f8d3njyOWk5nP0587ewgmpMat2JZuc9S4OM5EbxYHfnBA8CshjdjIT0VjO+FOjCdATjzMWOgldh4cK5OlknPRT+R7N4KdbQqs5TZqPvxn5cabV/X6Hwmzdvs/uKVUM5POy6MppuOOgrDvQoNtoy/SGOV0XY56VJp+
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2020 09:13:00.8841
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3cefe399-2581-4f04-e970-08d79a64491a
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR03MB5123
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-16_02:2020-01-16,2020-01-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- mlxlogscore=923 malwarescore=0 suspectscore=0 bulkscore=0 clxscore=1015
- mlxscore=0 priorityscore=1501 lowpriorityscore=0 adultscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-2001160078
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ADIN1300 & ADIN1200 PHYs support detection of IEEE 1588 time stamp
-packets. This mechanism can be used to signal the MAC via a pulse-signal
-when the PHY detects such a packet.
-This reduces the time when the MAC can check these packets and can improve
-the accuracy of the PTP algorithm.
+Thomas, Andy,
 
-The PHYs support configurable delays for when the signaling happens to the
-MAC. These delays would typically get adjusted using a userspace phytool to
-identify the best value for the setup. That values can then be added in the
-system configuration via device-tree or ACPI and read as an array of 3
-elements.
+Le 15/01/2020 à 07:15, Christophe Leroy a écrit :
+> 
+> 
+> Le 15/01/2020 à 00:06, Thomas Gleixner a écrit :
+>> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+>>>   static __maybe_unused int
+>>> +#ifdef VDSO_GETS_VD_PTR_FROM_ARCH
+>>> +__cvdso_clock_gettime_common(const struct vdso_data *vd, clockid_t 
+>>> clock,
+>>> +              struct __kernel_timespec *ts)
+>>> +{
+>>> +#else
+>>>   __cvdso_clock_gettime_common(clockid_t clock, struct 
+>>> __kernel_timespec *ts)
+>>>   {
+>>>       const struct vdso_data *vd = __arch_get_vdso_data();
+>>> +#endif
+>>>       u32 msk;
+>>
+>> If we do that, then there is no point in propagating this to the inner
+>> functions. It's perfectly fine to have this distinction at the outermost
+>> level.
+> 
+> In v2, I did it at the arch level (see 
+> https://patchwork.ozlabs.org/patch/1214983/). Andy was concerned about 
+> it being suboptimal for arches which (unlike powerpc) have PC related 
+> data addressing mode.
+> 
+> Wouldn't it be the same issue if doing it at the outermost level of 
+> generic VDSO ?
 
-For the RX delays, the units are in MII clock cycles, while for TX delays
-the units are in 8 nano-second intervals.
+Any opinion on this ?
 
-The indication of either RX or TX must use one of 4 pins from the device:
-LED_0, LINK_ST, GP_CLK and INT_N.
+ From your point of view, what should I do:
+A/ __arch_get_vdso_data() handled entirely at arch level and arches 
+handing over the vdso data pointer to generic C VDSO functions all the 
+time (as in my v2 series) ?
+B/ Data pointer being handed over all the way up for arches wanting to 
+do so, no changes at all for others (as in my v3 series) ?
+C/ __arch_get_vdso_data() being called at the outermost generic level 
+for arches not interested in handling data pointer from the caller (as 
+suggested by Thomas) ?
 
-The driver will make sure that TX SOP & RX SOP will not use the same pin.
+Andy, with A/ you were concerned about arches being able to do PC 
+related accesses. Would it be an issue for C/ as well ? If not, I guess 
+C/ would be cleaner than B/ allthought not as clean as A which doesn't 
+add any #ifdefery at all.
 
-Alexandru Ardelean (4):
-  net: phy: adin: const-ify static data
-  net: phy: adin: rename struct adin_hw_stat -> adin_map
-  net: phy: adin: implement support for 1588 start-of-packet indication
-  dt-bindings: net: adin: document 1588 TX/RX SOP bindings
-
- .../devicetree/bindings/net/adi,adin.yaml     |  60 +++++
- drivers/net/phy/adin.c                        | 227 +++++++++++++++++-
- 2 files changed, 274 insertions(+), 13 deletions(-)
-
--- 
-2.20.1
-
+Thanks
+Christophe
