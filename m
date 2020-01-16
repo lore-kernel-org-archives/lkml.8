@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA89C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA56CC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A579E246B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:37:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ACE7246CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:37:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196248;
-	bh=7A14jb2PjfoR+fEvkt84buZ8GcXTgrnwQi2RbaAjuos=;
+	s=default; t=1579196257;
+	bh=kgcXj89cU6yu7VY5V4Lql3Si5XHC1Fct90VFT76Z6Ns=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fbQmO4UGgc/eGe3Nf8CIMG85+sgVj8A/aos0SFZlhdrAjc6mfV4naVS/j4XgIAIFS
-	 6ycIkUCuFuUBKHgeJ1pA9TRbjBXxH9vguYPDFSwsQI0CcNaqopCdGPx/ztkK58D2YM
-	 Kqay3QMxwCO6FudX29C7cnRLAg0dD7ChTGSAZFZg=
+	b=VWoRnwjJXEVeIARxZOiFgqQhT2CyLCWfKshLkow4Igm/jRNpy6QdJEPJfIm7gkHsA
+	 hJrTx8JWq+XlIutvI1oNUbXChd6WLBL6fO7d0tM2ecARnIjZJkti0TleWjkju8rEI0
+	 mJXi+2O6k+4k2vOLN07aAGJa+xuls18oNn5b5XAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405356AbgAPRh0 (ORCPT
+        id S2405411AbgAPRhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:37:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52470 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:37:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393172AbgAPRhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:37:18 -0500
+        id S2405050AbgAPRf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:35:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AF4E246CA;
-        Thu, 16 Jan 2020 17:37:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7776D246C0;
+        Thu, 16 Jan 2020 17:35:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196237;
-        bh=7A14jb2PjfoR+fEvkt84buZ8GcXTgrnwQi2RbaAjuos=;
+        s=default; t=1579196126;
+        bh=kgcXj89cU6yu7VY5V4Lql3Si5XHC1Fct90VFT76Z6Ns=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ebleJ6G/ZXVb0TdEnN5Tbi0q3oeQEgpLUYkSnI2SqctoXvpGlgJi5nWUu6NYEQGjS
-         0260Wz0OWiRoal2VMGDctKr/ZIzJms7qhKqXdJMHRZVTZfuE9l4CTOM3/8gfVI5TPu
-         ymYVXZxxeqVDur7Yf2wg21IgrCfOyCM/H2PeqwfQ=
+        b=zzAwNxQ4LJOgDoD/Imi29+1RKZH0ZfuwCix+Nrfw9qb8AmZxG2X15qchOjjx9Zz6m
+         PHvLtmYe8o9zSt2bhZRpod3gNGVNtzztfZRzB7eHWh9Zh8rj10Zi7GMQVptHpseDyO
+         ceUPLrlQmv6ErIBWZFIHQCr8Hxk2P2odNqzqxIIs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 068/251] pinctrl: sh-pfc: r8a7792: Fix vin1_data18_b pin group
-Date:   Thu, 16 Jan 2020 12:33:37 -0500
-Message-Id: <20200116173641.22137-28-sashal@kernel.org>
+Cc:     Yangtao Li <tiny.windzz@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 031/251] clk: vf610: fix refcount leak in vf610_clocks_init()
+Date:   Thu, 16 Jan 2020 12:31:05 -0500
+Message-Id: <20200116173445.21385-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
-References: <20200116173641.22137-1-sashal@kernel.org>
+In-Reply-To: <20200116173445.21385-1-sashal@kernel.org>
+References: <20200116173445.21385-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,33 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Yangtao Li <tiny.windzz@gmail.com>
 
-[ Upstream commit b9fd50488b4939ce5b3a026d29e752e17c2d1800 ]
+[ Upstream commit 567177024e0313e4f0dcba7ba10c0732e50e655d ]
 
-The vin1_data18_b pin group itself is present, but it is not listed in
-the VIN1 pin group array, and thus cannot be selected.
+The of_find_compatible_node() returns a node pointer with refcount
+incremented, but there is the lack of use of the of_node_put() when
+done. Add the missing of_node_put() to release the refcount.
 
-Fixes: 7dd74bb1f058786e ("pinctrl: sh-pfc: r8a7792: Add VIN pin groups")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+Fixes: 1f2c5fd5f048 ("ARM: imx: add VF610 clock support")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-r8a7792.c | 1 +
+ drivers/clk/imx/clk-vf610.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7792.c b/drivers/pinctrl/sh-pfc/pfc-r8a7792.c
-index 21badb6166b9..97998929db93 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a7792.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a7792.c
-@@ -1863,6 +1863,7 @@ static const char * const vin1_groups[] = {
- 	"vin1_data8",
- 	"vin1_data24_b",
- 	"vin1_data20_b",
-+	"vin1_data18_b",
- 	"vin1_data16_b",
- 	"vin1_sync",
- 	"vin1_field",
+diff --git a/drivers/clk/imx/clk-vf610.c b/drivers/clk/imx/clk-vf610.c
+index 0476353ab423..a19ab032d073 100644
+--- a/drivers/clk/imx/clk-vf610.c
++++ b/drivers/clk/imx/clk-vf610.c
+@@ -203,6 +203,7 @@ static void __init vf610_clocks_init(struct device_node *ccm_node)
+ 	np = of_find_compatible_node(NULL, NULL, "fsl,vf610-anatop");
+ 	anatop_base = of_iomap(np, 0);
+ 	BUG_ON(!anatop_base);
++	of_node_put(np);
+ 
+ 	np = ccm_node;
+ 	ccm_base = of_iomap(np, 0);
 -- 
 2.20.1
 
