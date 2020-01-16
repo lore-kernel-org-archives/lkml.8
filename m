@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF13C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9619CC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15AF120663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5743B206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:00:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201212;
-	bh=ryvnHzpuITDiog6yAtNfhu9cp1jL8iaUbsyk6nz4nM0=;
+	s=default; t=1579201213;
+	bh=qPP+4rvc+wOJ1GVPfeMrqNAhnOuLeCOV7YvNE2rx4Io=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o+gbROEyWFZ1pUqOdz43gtHIz4xygNHgl/pa3BUDts5L1dEMCVK6pcrBryskyRKyY
-	 Ss2MhKm4fe8x38ru+49MjgIwqtXP2c7bJRCSlLQhGdWrGqIN0MPHjwPHx4FtVBafdG
-	 XC8cAYWnA2R5EEIiJr60bcgy3amEALPf8nqz3qBc=
+	b=zOYsb1Hr6UagJcQqBeoaKNTLV0tJYP/EqnGkYZVwLpqtcgK6OWpgsusvc67FraI6V
+	 1cgLqGnVGajrGurCzOz7R3ob1kiEQOAe6DdtJTJ1B4h/qxm1JuRMF9W4mcTLFh4caC
+	 vjFJUcSqqEafH+02Kc6vIA+4CpQhP5a+1VjX+tdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391286AbgAPTAK (ORCPT
+        id S2388908AbgAPRGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:00:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36374 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:06:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388913AbgAPRGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:06:22 -0500
+        id S2388839AbgAPRGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:06:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 129C82051A;
-        Thu, 16 Jan 2020 17:06:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D49521D56;
+        Thu, 16 Jan 2020 17:06:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194380;
-        bh=ryvnHzpuITDiog6yAtNfhu9cp1jL8iaUbsyk6nz4nM0=;
+        s=default; t=1579194367;
+        bh=qPP+4rvc+wOJ1GVPfeMrqNAhnOuLeCOV7YvNE2rx4Io=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qx0OnJNEim3M9wFHVkGDpPi+xwlhaJAbVJYhP46n1nK0eWdQ+vbOAvIIlTxUnK3pU
-         RrbGlGRH6dP2GnLEuapeclou9wXkv0YlA9P0xGGmsju9Cokn2u1WyemUoAZ/gD3urp
-         zLdYSiTNy3i4ewMum1lYBlMupMztNZ5VixQ+ar9U=
+        b=m4g7aTJbF1rE6jIh9C2vP5Yjxxa10G90Nijw6k+JovQXEegrhGrlmAkUTEo30nS+c
+         cX6FCo7/AT7dxovWane+3bCHLSYBLyf4jXdGCWoNQpLQLDToWPP7o6KY/2LaUnWt/i
+         KwVxzskXdlr0Y9/INgVXd2PF4eYSgtdWDX2u4PFo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
-        Jonathan Billings <jsbillin@umich.edu>,
-        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 311/671] afs: Further fix file locking
-Date:   Thu, 16 Jan 2020 11:59:09 -0500
-Message-Id: <20200116170509.12787-48-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 301/671] usb: typec: tcpm: Notify the tcpc to start connection-detection for SRPs
+Date:   Thu, 16 Jan 2020 11:58:59 -0500
+Message-Id: <20200116170509.12787-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,628 +62,266 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 4be5975aea154e164696128d049dec9ed341585c ]
+[ Upstream commit 7893f9e1c26d1f9ea02622902ee671de45ad377b ]
 
-Further fix the file locking in the afs filesystem client in a number of
-ways, including:
+Some tcpc device-drivers need to explicitly be told to watch for connection
+events, otherwise the tcpc will not generate any TCPM_CC_EVENTs and devices
+being plugged into the Type-C port will not be noticed.
 
- (1) Don't submit the operation to obtain a lock from the server in a work
-     queue context, but rather do it in the process context of whoever
-     issued the requesting system call.
+For dual-role ports tcpm_start_drp_toggling() is used to tell the tcpc to
+watch for connection events. Sofar we lack a similar callback to the tcpc
+for single-role ports. With some tcpc-s such as the fusb302 this means
+no TCPM_CC_EVENTs will be generated when the port is configured as a
+single-role port.
 
- (2) The owner of the file_lock struct at the front of the pending_locks
-     queue now owns right to talk to the server.
+This commit renames start_drp_toggling to start_toggling and since the
+device-properties are parsed by the tcpm-core, adds a port_type parameter
+to the start_toggling callback so that the tcpc_dev driver knows the
+port-type and can act accordingly when it starts toggling.
 
- (3) Write locks can be instantly granted if they don't overlap with any
-     other locks *and* we have a write lock on the server.
+The new start_toggling callback now always gets called if defined, instead
+of only being called for DRP ports.
 
- (4) In the event of an authentication/permission error, all other matching
-     pending locks requests are also immediately aborted.
+To avoid this causing undesirable functional changes all existing
+start_drp_toggling implementations are not only renamed to start_toggling,
+but also get a port_type check added and return -EOPNOTSUPP when port_type
+is not DRP.
 
- (5) Properly use VFS core locks_lock_file_wait() to distribute the server
-     lock amongst local client locks, including waiting for the lock to
-     become available.
-
-Test with:
-
-	sqlite3 /afs/.../scratch/billings.sqlite <<EOF
-	CREATE TABLE hosts (
-	    hostname varchar(80),
-	    shorthost varchar(80),
-	    room varchar(30),
-	    building varchar(30),
-	    PRIMARY KEY(shorthost)
-	    );
-	EOF
-
-With the version of sqlite3 that I have, this should fail consistently with
-EAGAIN, whether or not the program is straced (which introduces some delays
-between lock syscalls).
-
-Fixes: 0fafdc9f888b ("afs: Fix file locking")
-Reported-by: Jonathan Billings <jsbillin@umich.edu>
-Signed-off-by: David Howells <dhowells@redhat.com>
+Fixes: ea3b4d5523bc("usb: typec: fusb302: Resolve fixed power role ...")
+Cc: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Tested-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/flock.c | 390 ++++++++++++++++++++++++-------------------------
- 1 file changed, 195 insertions(+), 195 deletions(-)
+ drivers/usb/typec/fusb302/fusb302.c | 10 ++++++---
+ drivers/usb/typec/tcpci.c           | 10 ++++++---
+ drivers/usb/typec/tcpm.c            | 32 +++++++++++++----------------
+ drivers/usb/typec/typec_wcove.c     | 10 ++++++---
+ include/linux/usb/tcpm.h            | 13 ++++++------
+ 5 files changed, 42 insertions(+), 33 deletions(-)
 
-diff --git a/fs/afs/flock.c b/fs/afs/flock.c
-index dffbb456629c..075fe7f94810 100644
---- a/fs/afs/flock.c
-+++ b/fs/afs/flock.c
-@@ -13,9 +13,11 @@
- 
- #define AFS_LOCK_GRANTED	0
- #define AFS_LOCK_PENDING	1
-+#define AFS_LOCK_YOUR_TRY	2
- 
- struct workqueue_struct *afs_lock_manager;
- 
-+static void afs_next_locker(struct afs_vnode *vnode, int error);
- static void afs_fl_copy_lock(struct file_lock *new, struct file_lock *fl);
- static void afs_fl_release_private(struct file_lock *fl);
- 
-@@ -24,6 +26,12 @@ static const struct file_lock_operations afs_lock_ops = {
- 	.fl_release_private	= afs_fl_release_private,
- };
- 
-+static inline void afs_set_lock_state(struct afs_vnode *vnode, enum afs_lock_state state)
-+{
-+	_debug("STATE %u -> %u", vnode->lock_state, state);
-+	vnode->lock_state = state;
-+}
-+
- /*
-  * if the callback is broken on this vnode, then the lock may now be available
-  */
-@@ -31,7 +39,13 @@ void afs_lock_may_be_available(struct afs_vnode *vnode)
- {
- 	_enter("{%x:%u}", vnode->fid.vid, vnode->fid.vnode);
- 
--	queue_delayed_work(afs_lock_manager, &vnode->lock_work, 0);
-+	if (vnode->lock_state != AFS_VNODE_LOCK_WAITING_FOR_CB)
-+		return;
-+
-+	spin_lock(&vnode->lock);
-+	if (vnode->lock_state == AFS_VNODE_LOCK_WAITING_FOR_CB)
-+		afs_next_locker(vnode, 0);
-+	spin_unlock(&vnode->lock);
- }
- 
- /*
-@@ -49,22 +63,65 @@ static void afs_schedule_lock_extension(struct afs_vnode *vnode)
-  * first lock in the queue is itself a readlock)
-  * - the caller must hold the vnode lock
-  */
--static void afs_grant_locks(struct afs_vnode *vnode, struct file_lock *fl)
-+static void afs_grant_locks(struct afs_vnode *vnode)
- {
- 	struct file_lock *p, *_p;
-+	bool exclusive = (vnode->lock_type == AFS_LOCK_WRITE);
- 
--	list_move_tail(&fl->fl_u.afs.link, &vnode->granted_locks);
--	if (fl->fl_type == F_RDLCK) {
--		list_for_each_entry_safe(p, _p, &vnode->pending_locks,
--					 fl_u.afs.link) {
--			if (p->fl_type == F_RDLCK) {
--				p->fl_u.afs.state = AFS_LOCK_GRANTED;
--				list_move_tail(&p->fl_u.afs.link,
--					       &vnode->granted_locks);
--				wake_up(&p->fl_wait);
--			}
-+	list_for_each_entry_safe(p, _p, &vnode->pending_locks, fl_u.afs.link) {
-+		if (!exclusive && p->fl_type == F_WRLCK)
-+			continue;
-+
-+		list_move_tail(&p->fl_u.afs.link, &vnode->granted_locks);
-+		p->fl_u.afs.state = AFS_LOCK_GRANTED;
-+		wake_up(&p->fl_wait);
-+	}
-+}
-+
-+/*
-+ * If an error is specified, reject every pending lock that matches the
-+ * authentication and type of the lock we failed to get.  If there are any
-+ * remaining lockers, try to wake up one of them to have a go.
-+ */
-+static void afs_next_locker(struct afs_vnode *vnode, int error)
-+{
-+	struct file_lock *p, *_p, *next = NULL;
-+	struct key *key = vnode->lock_key;
-+	unsigned int fl_type = F_RDLCK;
-+
-+	_enter("");
-+
-+	if (vnode->lock_type == AFS_LOCK_WRITE)
-+		fl_type = F_WRLCK;
-+
-+	list_for_each_entry_safe(p, _p, &vnode->pending_locks, fl_u.afs.link) {
-+		if (error &&
-+		    p->fl_type == fl_type &&
-+		    afs_file_key(p->fl_file) == key) {
-+			list_del_init(&p->fl_u.afs.link);
-+			p->fl_u.afs.state = error;
-+			wake_up(&p->fl_wait);
- 		}
-+
-+		/* Select the next locker to hand off to. */
-+		if (next &&
-+		    (next->fl_type == F_WRLCK || p->fl_type == F_RDLCK))
-+			continue;
-+		next = p;
- 	}
-+
-+	vnode->lock_key = NULL;
-+	key_put(key);
-+
-+	if (next) {
-+		afs_set_lock_state(vnode, AFS_VNODE_LOCK_SETTING);
-+		next->fl_u.afs.state = AFS_LOCK_YOUR_TRY;
-+		wake_up(&next->fl_wait);
-+	} else {
-+		afs_set_lock_state(vnode, AFS_VNODE_LOCK_NONE);
-+	}
-+
-+	_leave("");
- }
- 
- /*
-@@ -170,8 +227,6 @@ void afs_lock_work(struct work_struct *work)
- {
- 	struct afs_vnode *vnode =
- 		container_of(work, struct afs_vnode, lock_work.work);
--	struct file_lock *fl, *next;
--	afs_lock_type_t type;
- 	struct key *key;
- 	int ret;
- 
-@@ -184,7 +239,7 @@ void afs_lock_work(struct work_struct *work)
- 	switch (vnode->lock_state) {
- 	case AFS_VNODE_LOCK_NEED_UNLOCK:
- 		_debug("unlock");
--		vnode->lock_state = AFS_VNODE_LOCK_UNLOCKING;
-+		afs_set_lock_state(vnode, AFS_VNODE_LOCK_UNLOCKING);
- 		spin_unlock(&vnode->lock);
- 
- 		/* attempt to release the server lock; if it fails, we just
-@@ -196,22 +251,9 @@ void afs_lock_work(struct work_struct *work)
- 			       vnode->fid.vid, vnode->fid.vnode, ret);
- 
- 		spin_lock(&vnode->lock);
--		key_put(vnode->lock_key);
--		vnode->lock_key = NULL;
--		vnode->lock_state = AFS_VNODE_LOCK_NONE;
--
--		if (list_empty(&vnode->pending_locks)) {
--			spin_unlock(&vnode->lock);
--			return;
--		}
--
--		/* The new front of the queue now owns the state variables. */
--		next = list_entry(vnode->pending_locks.next,
--				  struct file_lock, fl_u.afs.link);
--		vnode->lock_key = key_get(afs_file_key(next->fl_file));
--		vnode->lock_type = (next->fl_type == F_RDLCK) ? AFS_LOCK_READ : AFS_LOCK_WRITE;
--		vnode->lock_state = AFS_VNODE_LOCK_WAITING_FOR_CB;
--		goto again;
-+		afs_next_locker(vnode, 0);
-+		spin_unlock(&vnode->lock);
-+		return;
- 
- 	/* If we've already got a lock, then it must be time to extend that
- 	 * lock as AFS locks time out after 5 minutes.
-@@ -222,7 +264,7 @@ void afs_lock_work(struct work_struct *work)
- 		ASSERT(!list_empty(&vnode->granted_locks));
- 
- 		key = key_get(vnode->lock_key);
--		vnode->lock_state = AFS_VNODE_LOCK_EXTENDING;
-+		afs_set_lock_state(vnode, AFS_VNODE_LOCK_EXTENDING);
- 		spin_unlock(&vnode->lock);
- 
- 		ret = afs_extend_lock(vnode, key); /* RPC */
-@@ -236,72 +278,26 @@ void afs_lock_work(struct work_struct *work)
- 
- 		if (vnode->lock_state != AFS_VNODE_LOCK_EXTENDING)
- 			goto again;
--		vnode->lock_state = AFS_VNODE_LOCK_GRANTED;
-+		afs_set_lock_state(vnode, AFS_VNODE_LOCK_GRANTED);
- 
--		if (ret == 0)
--			afs_schedule_lock_extension(vnode);
--		else
-+		if (ret != 0)
- 			queue_delayed_work(afs_lock_manager, &vnode->lock_work,
- 					   HZ * 10);
- 		spin_unlock(&vnode->lock);
- 		_leave(" [ext]");
- 		return;
- 
--		/* If we don't have a granted lock, then we must've been called
--		 * back by the server, and so if might be possible to get a
--		 * lock we're currently waiting for.
--		 */
-+	/* If we're waiting for a callback to indicate lock release, we can't
-+	 * actually rely on this, so need to recheck at regular intervals.  The
-+	 * problem is that the server might not notify us if the lock just
-+	 * expires (say because a client died) rather than being explicitly
-+	 * released.
-+	 */
- 	case AFS_VNODE_LOCK_WAITING_FOR_CB:
--		_debug("get");
--
--		key = key_get(vnode->lock_key);
--		type = vnode->lock_type;
--		vnode->lock_state = AFS_VNODE_LOCK_SETTING;
-+		_debug("retry");
-+		afs_next_locker(vnode, 0);
- 		spin_unlock(&vnode->lock);
--
--		ret = afs_set_lock(vnode, key, type); /* RPC */
--		key_put(key);
--
--		spin_lock(&vnode->lock);
--		switch (ret) {
--		case -EWOULDBLOCK:
--			_debug("blocked");
--			break;
--		case 0:
--			_debug("acquired");
--			vnode->lock_state = AFS_VNODE_LOCK_GRANTED;
--			/* Fall through */
--		default:
--			/* Pass the lock or the error onto the first locker in
--			 * the list - if they're looking for this type of lock.
--			 * If they're not, we assume that whoever asked for it
--			 * took a signal.
--			 */
--			if (list_empty(&vnode->pending_locks)) {
--				_debug("withdrawn");
--				vnode->lock_state = AFS_VNODE_LOCK_NEED_UNLOCK;
--				goto again;
--			}
--
--			fl = list_entry(vnode->pending_locks.next,
--					struct file_lock, fl_u.afs.link);
--			type = (fl->fl_type == F_RDLCK) ? AFS_LOCK_READ : AFS_LOCK_WRITE;
--			if (vnode->lock_type != type) {
--				_debug("changed");
--				vnode->lock_state = AFS_VNODE_LOCK_NEED_UNLOCK;
--				goto again;
--			}
--
--			fl->fl_u.afs.state = ret;
--			if (ret == 0)
--				afs_grant_locks(vnode, fl);
--			else
--				list_del_init(&fl->fl_u.afs.link);
--			wake_up(&fl->fl_wait);
--			spin_unlock(&vnode->lock);
--			_leave(" [granted]");
--			return;
--		}
-+		return;
- 
- 	default:
- 		/* Looks like a lock request was withdrawn. */
-@@ -319,14 +315,15 @@ void afs_lock_work(struct work_struct *work)
-  */
- static void afs_defer_unlock(struct afs_vnode *vnode)
- {
--	_enter("");
-+	_enter("%u", vnode->lock_state);
- 
--	if (vnode->lock_state == AFS_VNODE_LOCK_GRANTED ||
--	    vnode->lock_state == AFS_VNODE_LOCK_EXTENDING) {
-+	if (list_empty(&vnode->granted_locks) &&
-+	    (vnode->lock_state == AFS_VNODE_LOCK_GRANTED ||
-+	     vnode->lock_state == AFS_VNODE_LOCK_EXTENDING)) {
- 		cancel_delayed_work(&vnode->lock_work);
- 
--		vnode->lock_state = AFS_VNODE_LOCK_NEED_UNLOCK;
--		afs_lock_may_be_available(vnode);
-+		afs_set_lock_state(vnode, AFS_VNODE_LOCK_NEED_UNLOCK);
-+		queue_delayed_work(afs_lock_manager, &vnode->lock_work, 0);
- 	}
- }
- 
-@@ -375,50 +372,6 @@ static int afs_do_setlk_check(struct afs_vnode *vnode, struct key *key,
- 	return 0;
- }
- 
--/*
-- * Remove the front runner from the pending queue.
-- * - The caller must hold vnode->lock.
-- */
--static void afs_dequeue_lock(struct afs_vnode *vnode, struct file_lock *fl)
--{
--	struct file_lock *next;
--
--	_enter("");
--
--	/* ->lock_type, ->lock_key and ->lock_state only belong to this
--	 * file_lock if we're at the front of the pending queue or if we have
--	 * the lock granted or if the lock_state is NEED_UNLOCK or UNLOCKING.
--	 */
--	if (vnode->granted_locks.next == &fl->fl_u.afs.link &&
--	    vnode->granted_locks.prev == &fl->fl_u.afs.link) {
--		list_del_init(&fl->fl_u.afs.link);
--		afs_defer_unlock(vnode);
--		return;
--	}
--
--	if (!list_empty(&vnode->granted_locks) ||
--	    vnode->pending_locks.next != &fl->fl_u.afs.link) {
--		list_del_init(&fl->fl_u.afs.link);
--		return;
--	}
--
--	list_del_init(&fl->fl_u.afs.link);
--	key_put(vnode->lock_key);
--	vnode->lock_key = NULL;
--	vnode->lock_state = AFS_VNODE_LOCK_NONE;
--
--	if (list_empty(&vnode->pending_locks))
--		return;
--
--	/* The new front of the queue now owns the state variables. */
--	next = list_entry(vnode->pending_locks.next,
--			  struct file_lock, fl_u.afs.link);
--	vnode->lock_key = key_get(afs_file_key(next->fl_file));
--	vnode->lock_type = (next->fl_type == F_RDLCK) ? AFS_LOCK_READ : AFS_LOCK_WRITE;
--	vnode->lock_state = AFS_VNODE_LOCK_WAITING_FOR_CB;
--	afs_lock_may_be_available(vnode);
--}
--
- /*
-  * request a lock on a file on the server
-  */
-@@ -443,44 +396,66 @@ static int afs_do_setlk(struct file *file, struct file_lock *fl)
- 		return ret;
- 
- 	spin_lock(&vnode->lock);
-+	list_add_tail(&fl->fl_u.afs.link, &vnode->pending_locks);
- 
--	/* If we've already got a readlock on the server then we instantly
--	 * grant another readlock, irrespective of whether there are any
--	 * pending writelocks.
-+	/* If we've already got a lock on the server then try to move to having
-+	 * the VFS grant the requested lock.  Note that this means that other
-+	 * clients may get starved out.
- 	 */
--	if (type == AFS_LOCK_READ &&
--	    vnode->lock_state == AFS_VNODE_LOCK_GRANTED &&
--	    vnode->lock_type == AFS_LOCK_READ) {
--		_debug("instant readlock");
--		ASSERT(!list_empty(&vnode->granted_locks));
--		goto share_existing_lock;
--	}
-+	_debug("try %u", vnode->lock_state);
-+	if (vnode->lock_state == AFS_VNODE_LOCK_GRANTED) {
-+		if (type == AFS_LOCK_READ) {
-+			_debug("instant readlock");
-+			list_move_tail(&fl->fl_u.afs.link, &vnode->granted_locks);
-+			fl->fl_u.afs.state = AFS_LOCK_GRANTED;
-+			goto vnode_is_locked_u;
-+		}
- 
--	list_add_tail(&fl->fl_u.afs.link, &vnode->pending_locks);
-+		if (vnode->lock_type == AFS_LOCK_WRITE) {
-+			_debug("instant writelock");
-+			list_move_tail(&fl->fl_u.afs.link, &vnode->granted_locks);
-+			fl->fl_u.afs.state = AFS_LOCK_GRANTED;
-+			goto vnode_is_locked_u;
-+		}
-+	}
- 
- 	if (vnode->lock_state != AFS_VNODE_LOCK_NONE)
- 		goto need_to_wait;
- 
-+try_to_lock:
- 	/* We don't have a lock on this vnode and we aren't currently waiting
- 	 * for one either, so ask the server for a lock.
- 	 *
- 	 * Note that we need to be careful if we get interrupted by a signal
- 	 * after dispatching the request as we may still get the lock, even
- 	 * though we don't wait for the reply (it's not too bad a problem - the
--	 * lock will expire in 10 mins anyway).
-+	 * lock will expire in 5 mins anyway).
- 	 */
- 	_debug("not locked");
- 	vnode->lock_key = key_get(key);
- 	vnode->lock_type = type;
--	vnode->lock_state = AFS_VNODE_LOCK_SETTING;
-+	afs_set_lock_state(vnode, AFS_VNODE_LOCK_SETTING);
- 	spin_unlock(&vnode->lock);
- 
- 	ret = afs_set_lock(vnode, key, type); /* RPC */
- 
- 	spin_lock(&vnode->lock);
- 	switch (ret) {
-+	case -EKEYREJECTED:
-+	case -EKEYEXPIRED:
-+	case -EKEYREVOKED:
-+	case -EPERM:
-+	case -EACCES:
-+		fl->fl_u.afs.state = ret;
-+		list_del_init(&fl->fl_u.afs.link);
-+		afs_next_locker(vnode, ret);
-+		goto error_unlock;
-+
- 	default:
--		goto abort_attempt;
-+		fl->fl_u.afs.state = ret;
-+		list_del_init(&fl->fl_u.afs.link);
-+		afs_next_locker(vnode, 0);
-+		goto error_unlock;
- 
- 	case -EWOULDBLOCK:
- 		/* The server doesn't have a lock-waiting queue, so the client
-@@ -490,29 +465,23 @@ static int afs_do_setlk(struct file *file, struct file_lock *fl)
- 		_debug("would block");
- 		ASSERT(list_empty(&vnode->granted_locks));
- 		ASSERTCMP(vnode->pending_locks.next, ==, &fl->fl_u.afs.link);
--		vnode->lock_state = AFS_VNODE_LOCK_WAITING_FOR_CB;
--		goto need_to_wait;
-+		goto lock_is_contended;
- 
- 	case 0:
- 		_debug("acquired");
--		break;
-+		afs_set_lock_state(vnode, AFS_VNODE_LOCK_GRANTED);
-+		afs_grant_locks(vnode);
-+		goto vnode_is_locked_u;
- 	}
- 
--	/* we've acquired a server lock, but it needs to be renewed after 5
--	 * mins */
--	vnode->lock_state = AFS_VNODE_LOCK_GRANTED;
--	afs_schedule_lock_extension(vnode);
--
--share_existing_lock:
--	/* the lock has been granted as far as we're concerned... */
--	fl->fl_u.afs.state = AFS_LOCK_GRANTED;
--	list_move_tail(&fl->fl_u.afs.link, &vnode->granted_locks);
--
--given_lock:
--	/* ... but we do still need to get the VFS's blessing */
-+vnode_is_locked_u:
- 	spin_unlock(&vnode->lock);
-+vnode_is_locked:
-+	/* the lock has been granted by the server... */
-+	ASSERTCMP(fl->fl_u.afs.state, ==, AFS_LOCK_GRANTED);
- 
--	ret = posix_lock_file(file, fl, NULL);
-+	/* ... but the VFS still needs to distribute access on this client. */
-+	ret = locks_lock_file_wait(file, fl);
- 	if (ret < 0)
- 		goto vfs_rejected_lock;
- 
-@@ -524,38 +493,61 @@ static int afs_do_setlk(struct file *file, struct file_lock *fl)
- 	_leave(" = 0");
- 	return 0;
- 
-+lock_is_contended:
-+	if (!(fl->fl_flags & FL_SLEEP)) {
-+		list_del_init(&fl->fl_u.afs.link);
-+		afs_next_locker(vnode, 0);
-+		ret = -EAGAIN;
-+		goto error_unlock;
-+	}
-+
-+	afs_set_lock_state(vnode, AFS_VNODE_LOCK_WAITING_FOR_CB);
-+	queue_delayed_work(afs_lock_manager, &vnode->lock_work, HZ * 5);
-+
- need_to_wait:
- 	/* We're going to have to wait.  Either this client doesn't have a lock
- 	 * on the server yet and we need to wait for a callback to occur, or
--	 * the client does have a lock on the server, but it belongs to some
--	 * other process(es) and is incompatible with the lock we want.
-+	 * the client does have a lock on the server, but it's shared and we
-+	 * need an exclusive lock.
- 	 */
--	ret = -EAGAIN;
--	if (fl->fl_flags & FL_SLEEP) {
--		spin_unlock(&vnode->lock);
-+	spin_unlock(&vnode->lock);
- 
--		_debug("sleep");
--		ret = wait_event_interruptible(fl->fl_wait,
--					       fl->fl_u.afs.state != AFS_LOCK_PENDING);
-+	_debug("sleep");
-+	ret = wait_event_interruptible(fl->fl_wait,
-+				       fl->fl_u.afs.state != AFS_LOCK_PENDING);
-+	_debug("wait = %d", ret);
- 
-+	if (fl->fl_u.afs.state >= 0 && fl->fl_u.afs.state != AFS_LOCK_GRANTED) {
- 		spin_lock(&vnode->lock);
--	}
- 
--	if (fl->fl_u.afs.state == AFS_LOCK_GRANTED)
--		goto given_lock;
--	if (fl->fl_u.afs.state < 0)
--		ret = fl->fl_u.afs.state;
-+		switch (fl->fl_u.afs.state) {
-+		case AFS_LOCK_YOUR_TRY:
-+			fl->fl_u.afs.state = AFS_LOCK_PENDING;
-+			goto try_to_lock;
-+		case AFS_LOCK_PENDING:
-+			if (ret > 0) {
-+				/* We need to retry the lock.  We may not be
-+				 * notified by the server if it just expired
-+				 * rather than being released.
-+				 */
-+				ASSERTCMP(vnode->lock_state, ==, AFS_VNODE_LOCK_WAITING_FOR_CB);
-+				afs_set_lock_state(vnode, AFS_VNODE_LOCK_SETTING);
-+				fl->fl_u.afs.state = AFS_LOCK_PENDING;
-+				goto try_to_lock;
-+			}
-+			goto error_unlock;
-+		case AFS_LOCK_GRANTED:
-+		default:
-+			break;
-+		}
- 
--abort_attempt:
--	/* we aren't going to get the lock, either because we're unwilling to
--	 * wait, or because some signal happened */
--	_debug("abort");
--	afs_dequeue_lock(vnode, fl);
-+		spin_unlock(&vnode->lock);
-+	}
- 
--error_unlock:
--	spin_unlock(&vnode->lock);
--	_leave(" = %d", ret);
--	return ret;
-+	if (fl->fl_u.afs.state == AFS_LOCK_GRANTED)
-+		goto vnode_is_locked;
-+	ret = fl->fl_u.afs.state;
-+	goto error;
- 
- vfs_rejected_lock:
- 	/* The VFS rejected the lock we just obtained, so we have to discard
-@@ -565,9 +557,13 @@ static int afs_do_setlk(struct file *file, struct file_lock *fl)
- 	_debug("vfs refused %d", ret);
- 	spin_lock(&vnode->lock);
- 	list_del_init(&fl->fl_u.afs.link);
--	if (list_empty(&vnode->granted_locks))
--		afs_defer_unlock(vnode);
--	goto error_unlock;
-+	afs_defer_unlock(vnode);
-+
-+error_unlock:
-+	spin_unlock(&vnode->lock);
-+error:
-+	_leave(" = %d", ret);
-+	return ret;
- }
- 
- /*
-@@ -583,7 +579,7 @@ static int afs_do_unlk(struct file *file, struct file_lock *fl)
- 	/* Flush all pending writes before doing anything with locks. */
- 	vfs_fsync(file, 0);
- 
--	ret = posix_lock_file(file, fl, NULL);
-+	ret = locks_lock_file_wait(file, fl);
- 	_leave(" = %d [%u]", ret, vnode->lock_state);
+diff --git a/drivers/usb/typec/fusb302/fusb302.c b/drivers/usb/typec/fusb302/fusb302.c
+index 62a0060d39d8..c749ce486ec8 100644
+--- a/drivers/usb/typec/fusb302/fusb302.c
++++ b/drivers/usb/typec/fusb302/fusb302.c
+@@ -990,13 +990,17 @@ static int tcpm_set_roles(struct tcpc_dev *dev, bool attached,
  	return ret;
  }
-@@ -705,7 +701,11 @@ static void afs_fl_release_private(struct file_lock *fl)
- 	_enter("");
  
- 	spin_lock(&vnode->lock);
--	afs_dequeue_lock(vnode, fl);
+-static int tcpm_start_drp_toggling(struct tcpc_dev *dev,
+-				   enum typec_cc_status cc)
++static int tcpm_start_toggling(struct tcpc_dev *dev,
++			       enum typec_port_type port_type,
++			       enum typec_cc_status cc)
+ {
+ 	struct fusb302_chip *chip = container_of(dev, struct fusb302_chip,
+ 						 tcpc_dev);
+ 	int ret = 0;
+ 
++	if (port_type != TYPEC_PORT_DRP)
++		return -EOPNOTSUPP;
 +
-+	list_del_init(&fl->fl_u.afs.link);
-+	if (list_empty(&vnode->granted_locks))
-+		afs_defer_unlock(vnode);
-+
- 	_debug("state %u for %p", vnode->lock_state, vnode);
- 	spin_unlock(&vnode->lock);
+ 	mutex_lock(&chip->lock);
+ 	ret = fusb302_set_src_current(chip, cc_src_current[cc]);
+ 	if (ret < 0) {
+@@ -1206,7 +1210,7 @@ static void init_tcpc_dev(struct tcpc_dev *fusb302_tcpc_dev)
+ 	fusb302_tcpc_dev->set_vbus = tcpm_set_vbus;
+ 	fusb302_tcpc_dev->set_pd_rx = tcpm_set_pd_rx;
+ 	fusb302_tcpc_dev->set_roles = tcpm_set_roles;
+-	fusb302_tcpc_dev->start_drp_toggling = tcpm_start_drp_toggling;
++	fusb302_tcpc_dev->start_toggling = tcpm_start_toggling;
+ 	fusb302_tcpc_dev->pd_transmit = tcpm_pd_transmit;
  }
+ 
+diff --git a/drivers/usb/typec/tcpci.c b/drivers/usb/typec/tcpci.c
+index ac6b418b15f1..c1f7073a56de 100644
+--- a/drivers/usb/typec/tcpci.c
++++ b/drivers/usb/typec/tcpci.c
+@@ -100,13 +100,17 @@ static int tcpci_set_cc(struct tcpc_dev *tcpc, enum typec_cc_status cc)
+ 	return 0;
+ }
+ 
+-static int tcpci_start_drp_toggling(struct tcpc_dev *tcpc,
+-				    enum typec_cc_status cc)
++static int tcpci_start_toggling(struct tcpc_dev *tcpc,
++				enum typec_port_type port_type,
++				enum typec_cc_status cc)
+ {
+ 	int ret;
+ 	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
+ 	unsigned int reg = TCPC_ROLE_CTRL_DRP;
+ 
++	if (port_type != TYPEC_PORT_DRP)
++		return -EOPNOTSUPP;
++
+ 	/* Handle vendor drp toggling */
+ 	if (tcpci->data->start_drp_toggling) {
+ 		ret = tcpci->data->start_drp_toggling(tcpci, tcpci->data, cc);
+@@ -511,7 +515,7 @@ struct tcpci *tcpci_register_port(struct device *dev, struct tcpci_data *data)
+ 	tcpci->tcpc.get_cc = tcpci_get_cc;
+ 	tcpci->tcpc.set_polarity = tcpci_set_polarity;
+ 	tcpci->tcpc.set_vconn = tcpci_set_vconn;
+-	tcpci->tcpc.start_drp_toggling = tcpci_start_drp_toggling;
++	tcpci->tcpc.start_toggling = tcpci_start_toggling;
+ 
+ 	tcpci->tcpc.set_pd_rx = tcpci_set_pd_rx;
+ 	tcpci->tcpc.set_roles = tcpci_set_roles;
+diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
+index 39cf19001239..29d72e9b0f01 100644
+--- a/drivers/usb/typec/tcpm.c
++++ b/drivers/usb/typec/tcpm.c
+@@ -31,7 +31,7 @@
+ 
+ #define FOREACH_STATE(S)			\
+ 	S(INVALID_STATE),			\
+-	S(DRP_TOGGLING),			\
++	S(TOGGLING),			\
+ 	S(SRC_UNATTACHED),			\
+ 	S(SRC_ATTACH_WAIT),			\
+ 	S(SRC_ATTACHED),			\
+@@ -473,7 +473,7 @@ static void tcpm_log(struct tcpm_port *port, const char *fmt, ...)
+ 	/* Do not log while disconnected and unattached */
+ 	if (tcpm_port_is_disconnected(port) &&
+ 	    (port->state == SRC_UNATTACHED || port->state == SNK_UNATTACHED ||
+-	     port->state == DRP_TOGGLING))
++	     port->state == TOGGLING))
+ 		return;
+ 
+ 	va_start(args, fmt);
+@@ -2561,20 +2561,16 @@ static int tcpm_set_charge(struct tcpm_port *port, bool charge)
+ 	return 0;
+ }
+ 
+-static bool tcpm_start_drp_toggling(struct tcpm_port *port,
+-				    enum typec_cc_status cc)
++static bool tcpm_start_toggling(struct tcpm_port *port, enum typec_cc_status cc)
+ {
+ 	int ret;
+ 
+-	if (port->tcpc->start_drp_toggling &&
+-	    port->port_type == TYPEC_PORT_DRP) {
+-		tcpm_log_force(port, "Start DRP toggling");
+-		ret = port->tcpc->start_drp_toggling(port->tcpc, cc);
+-		if (!ret)
+-			return true;
+-	}
++	if (!port->tcpc->start_toggling)
++		return false;
+ 
+-	return false;
++	tcpm_log_force(port, "Start toggling");
++	ret = port->tcpc->start_toggling(port->tcpc, port->port_type, cc);
++	return ret == 0;
+ }
+ 
+ static void tcpm_set_cc(struct tcpm_port *port, enum typec_cc_status cc)
+@@ -2868,15 +2864,15 @@ static void run_state_machine(struct tcpm_port *port)
+ 
+ 	port->enter_state = port->state;
+ 	switch (port->state) {
+-	case DRP_TOGGLING:
++	case TOGGLING:
+ 		break;
+ 	/* SRC states */
+ 	case SRC_UNATTACHED:
+ 		if (!port->non_pd_role_swap)
+ 			tcpm_swap_complete(port, -ENOTCONN);
+ 		tcpm_src_detach(port);
+-		if (tcpm_start_drp_toggling(port, tcpm_rp_cc(port))) {
+-			tcpm_set_state(port, DRP_TOGGLING, 0);
++		if (tcpm_start_toggling(port, tcpm_rp_cc(port))) {
++			tcpm_set_state(port, TOGGLING, 0);
+ 			break;
+ 		}
+ 		tcpm_set_cc(port, tcpm_rp_cc(port));
+@@ -3074,8 +3070,8 @@ static void run_state_machine(struct tcpm_port *port)
+ 			tcpm_swap_complete(port, -ENOTCONN);
+ 		tcpm_pps_complete(port, -ENOTCONN);
+ 		tcpm_snk_detach(port);
+-		if (tcpm_start_drp_toggling(port, TYPEC_CC_RD)) {
+-			tcpm_set_state(port, DRP_TOGGLING, 0);
++		if (tcpm_start_toggling(port, TYPEC_CC_RD)) {
++			tcpm_set_state(port, TOGGLING, 0);
+ 			break;
+ 		}
+ 		tcpm_set_cc(port, TYPEC_CC_RD);
+@@ -3642,7 +3638,7 @@ static void _tcpm_cc_change(struct tcpm_port *port, enum typec_cc_status cc1,
+ 						       : "connected");
+ 
+ 	switch (port->state) {
+-	case DRP_TOGGLING:
++	case TOGGLING:
+ 		if (tcpm_port_is_debug(port) || tcpm_port_is_audio(port) ||
+ 		    tcpm_port_is_source(port))
+ 			tcpm_set_state(port, SRC_ATTACH_WAIT, 0);
+diff --git a/drivers/usb/typec/typec_wcove.c b/drivers/usb/typec/typec_wcove.c
+index 6770afd40765..f1f8f45e2f3d 100644
+--- a/drivers/usb/typec/typec_wcove.c
++++ b/drivers/usb/typec/typec_wcove.c
+@@ -416,12 +416,16 @@ static int wcove_pd_transmit(struct tcpc_dev *tcpc,
+ 	return regmap_write(wcove->regmap, USBC_TXCMD, cmd | USBC_TXCMD_START);
+ }
+ 
+-static int wcove_start_drp_toggling(struct tcpc_dev *tcpc,
+-				    enum typec_cc_status cc)
++static int wcove_start_toggling(struct tcpc_dev *tcpc,
++				enum typec_port_type port_type,
++				enum typec_cc_status cc)
+ {
+ 	struct wcove_typec *wcove = tcpc_to_wcove(tcpc);
+ 	unsigned int usbc_ctrl;
+ 
++	if (port_type != TYPEC_PORT_DRP)
++		return -EOPNOTSUPP;
++
+ 	usbc_ctrl = USBC_CONTROL1_MODE_DRP | USBC_CONTROL1_DRPTOGGLE_RANDOM;
+ 
+ 	switch (cc) {
+@@ -642,7 +646,7 @@ static int wcove_typec_probe(struct platform_device *pdev)
+ 	wcove->tcpc.set_polarity = wcove_set_polarity;
+ 	wcove->tcpc.set_vconn = wcove_set_vconn;
+ 	wcove->tcpc.set_current_limit = wcove_set_current_limit;
+-	wcove->tcpc.start_drp_toggling = wcove_start_drp_toggling;
++	wcove->tcpc.start_toggling = wcove_start_toggling;
+ 
+ 	wcove->tcpc.set_pd_rx = wcove_set_pd_rx;
+ 	wcove->tcpc.set_roles = wcove_set_roles;
+diff --git a/include/linux/usb/tcpm.h b/include/linux/usb/tcpm.h
+index 50c74a77db55..8cb93aff69f1 100644
+--- a/include/linux/usb/tcpm.h
++++ b/include/linux/usb/tcpm.h
+@@ -121,10 +121,10 @@ struct tcpc_config {
+  *		with partner.
+  * @set_pd_rx:	Called to enable or disable reception of PD messages
+  * @set_roles:	Called to set power and data roles
+- * @start_drp_toggling:
+- *		Optional; if supported by hardware, called to start DRP
+- *		toggling. DRP toggling is stopped automatically if
+- *		a connection is established.
++ * @start_toggling:
++ *		Optional; if supported by hardware, called to start dual-role
++ *		toggling or single-role connection detection. Toggling stops
++ *		automatically if a connection is established.
+  * @try_role:	Optional; called to set a preferred role
+  * @pd_transmit:Called to transmit PD message
+  * @mux:	Pointer to multiplexer data
+@@ -147,8 +147,9 @@ struct tcpc_dev {
+ 	int (*set_pd_rx)(struct tcpc_dev *dev, bool on);
+ 	int (*set_roles)(struct tcpc_dev *dev, bool attached,
+ 			 enum typec_role role, enum typec_data_role data);
+-	int (*start_drp_toggling)(struct tcpc_dev *dev,
+-				  enum typec_cc_status cc);
++	int (*start_toggling)(struct tcpc_dev *dev,
++			      enum typec_port_type port_type,
++			      enum typec_cc_status cc);
+ 	int (*try_role)(struct tcpc_dev *dev, int role);
+ 	int (*pd_transmit)(struct tcpc_dev *dev, enum tcpm_transmit_type type,
+ 			   const struct pd_message *msg);
 -- 
 2.20.1
 
