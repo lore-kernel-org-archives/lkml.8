@@ -2,242 +2,146 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5EEFC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E45C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B72A20730
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:56:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2A5320730
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:58:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Ezra2HVM"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Zr5NYVN4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726220AbgAPK4O (ORCPT
+        id S1726362AbgAPK6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 05:56:14 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:15408 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725800AbgAPK4O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 05:56:14 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00GArDEK015410;
-        Thu, 16 Jan 2020 11:53:13 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
- date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=FJhGdmI22PlzIP0rf9aoCbEMHmoRGzoHUIfTd1NB+Ks=;
- b=Ezra2HVMwUC9n9znb9TonHuOKEUJsV4SDn2frdUGkV2KoNpH/1QyyHziJFWEiJ8G7tJv
- nkovaGWcA3TcFzRUvsMxM81PT5hRu/yLtxy+c/Iu4I3um8I2qIs4Tyspfa5wTPKHNQSZ
- DTygHpKi40Y9SQ1+i5Ke5XZNcM8bARRrwF3Hu3DkpT2iecSvFg2HdcHmww7dQNfHIaMm
- xsveDYg4ZyeiyA8iIMW+dWhYgT6E3fx8KormqVZByu5aLdm7i3dlyUmrRtjbR6u6OCVW
- eU5djocsKhmTqZbvmG+nFEb9uaAQfzSgQJS3HgRefyBj1O/0ZdqddoeOZdvDkfRZgakI uw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xf77b8k1y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jan 2020 11:53:13 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 37F3A10002A;
-        Thu, 16 Jan 2020 11:53:11 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A6C5A2AD9ED;
-        Thu, 16 Jan 2020 11:53:11 +0100 (CET)
-Received: from localhost (10.75.127.46) by SFHDAG6NODE2.st.com (10.75.127.17)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 16 Jan 2020 11:53:11
- +0100
-From:   Olivier Moysan <olivier.moysan@st.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <alsa-devel@alsa-project.org>,
-        <robh@kernel.org>, <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <olivier.moysan@st.com>
-Subject: [PATCH v2] ASoC: dt-bindings: stm32: convert spdfirx to json-schema
-Date:   Thu, 16 Jan 2020 11:52:44 +0100
-Message-ID: <20200116105244.13485-1-olivier.moysan@st.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 16 Jan 2020 05:58:54 -0500
+Received: from mail-mw2nam10on2069.outbound.protection.outlook.com ([40.107.94.69]:16923
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725800AbgAPK6y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 05:58:54 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=J07uo289QU58HU+pYJNwNTk/Nyx+wPdydWxTGEBdiiuKRmthKsHqHA5gMOdIRv5uTzl2dlz7Grf6vKSdPI2dvOC6qUJCaicEDV5xZbL3Ed7wrT8/5lWpY+F5rkHHOmGacaEhpofJ0fuvCYvDjyehh6Nn3hnhHuU0QvK4rzmDObuLVjq3VSn/aibE3ZJjJ0HFFP0E/GNThtmRYoh7KURNmm4DSz3xZJnK6+usgVjUVgXXAWrEB0qSHrQPxRHM/674YtNEM66fJ6tpKEiIFHM7J3ZcZySNNQO6MPpCUwRXo191YRzLeuy4mey5ofu/t8JjuXRQjSTWBKKa0VWhni7CvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HGAG+slMqjyAWdX8XkdmD1ChjaZBeRgZdoGenTW0mPE=;
+ b=bOT5HWuVDqo4f3Z8IxpjwvXYob1grI/E9BUVa014II1w4V38tQv7duwUwNtuC+4zewAtP3sai+f93ymVW99EO1bhSH6GWWXiWITL3Kv8ZrP/lIn8GwTW0yN7qx53+jaN7YPfXPvA1Om1pV05f/LBgRzNCiFdhVnGrJpUtkaJcqjsgy9u2h9298oy9dq0obuwZb7SJHph5n7Z1ygYRnS+X6PVTMJOVT9OxVoq4A0/yTkHC+2iJWoT3a/+8nRC7mdTDcgr5kbm7exi1ud9IIW2wgrQRXEg/JawD4UnZmJY1hhJ1sEK8jUv+aPjJny24xBptquyWiySJ6AIjCfQJX44GA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HGAG+slMqjyAWdX8XkdmD1ChjaZBeRgZdoGenTW0mPE=;
+ b=Zr5NYVN4qr/i5Z/+NLHkxhhxClro1y/Xi9seND2ufvbW1iSmGcoqtDC6Bk/Kqy3xTKcM+pju5A1yImyXYMAPperjzSxf5+e9dQIY5ZEE1dW4TDrXG9QS4abtfPZ8FWf7kd0VmC7TbmBKqst2uuY8EXbyJyRRcMW3TwQi/u/Hdow=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Rijo-john.Thomas@amd.com; 
+Received: from CY4PR12MB1925.namprd12.prod.outlook.com (10.175.62.7) by
+ CY4PR12MB1783.namprd12.prod.outlook.com (10.175.62.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.20; Thu, 16 Jan 2020 10:58:50 +0000
+Received: from CY4PR12MB1925.namprd12.prod.outlook.com
+ ([fe80::9be:baba:170f:3e2]) by CY4PR12MB1925.namprd12.prod.outlook.com
+ ([fe80::9be:baba:170f:3e2%3]) with mapi id 15.20.2644.015; Thu, 16 Jan 2020
+ 10:58:50 +0000
+Subject: Re: [PATCH][next][resend] tee: fix memory allocation failure checks
+ on drv_data and amdtee
+To:     Colin King <colin.king@canonical.com>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Gary R Hook <gary.hook@amd.com>,
+        Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        tee-dev@lists.linaro.org, linux-crypto@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200116094954.54476-1-colin.king@canonical.com>
+From:   "Thomas, Rijo-john" <Rijo-john.Thomas@amd.com>
+Message-ID: <b90be612-a08d-86f8-3419-8988289147ad@amd.com>
+Date:   Thu, 16 Jan 2020 16:28:38 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+In-Reply-To: <20200116094954.54476-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA1PR01CA0119.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:35::13) To CY4PR12MB1925.namprd12.prod.outlook.com
+ (2603:10b6:903:120::7)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-16_03:2020-01-16,2020-01-15 signatures=0
+Received: from [10.138.134.82] (165.204.156.251) by MA1PR01CA0119.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:35::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.19 via Frontend Transport; Thu, 16 Jan 2020 10:58:47 +0000
+X-Originating-IP: [165.204.156.251]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 2410e713-b888-42ae-377c-08d79a73117b
+X-MS-TrafficTypeDiagnostic: CY4PR12MB1783:|CY4PR12MB1783:
+X-LD-Processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <CY4PR12MB17833F1138C862D15E2706BCCF360@CY4PR12MB1783.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
+X-Forefront-PRVS: 02843AA9E0
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(39860400002)(366004)(346002)(136003)(189003)(199004)(52116002)(26005)(16526019)(31686004)(66556008)(66476007)(66946007)(86362001)(186003)(110136005)(36756003)(5660300002)(316002)(16576012)(81156014)(8936002)(8676002)(31696002)(53546011)(81166006)(6486002)(478600001)(6666004)(2616005)(956004)(2906002)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1783;H:CY4PR12MB1925.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: hM0QzSEpgiAd1Cnjjvnig/WGWriNbF6RBlEV8gGdHvYYU13saiUMER3Gs6/GoiImMdMivfkFQVYDbL6kKpqFu2HbQSjBV8S4WElqbWLFp/CHPSDO4v3oPCBGG3h8irSsBiBIsuhaWidWqUatebiNlXq5wVmkeUkonFzmBm+4WOUQa8JolovZIGFNuQpotzcIoDA9ZNeGEJ0eE8C14lCRS88UjA4eNzrsutCnJMFbmtG/NP74Gn7Ed1vur4LGnSo0fcLgIhx4Gawy7dSEzNjtNYy4+lYGz+R+RUa2FDT6PcSory04PQdUDb+2GApdY7bi3IB6BqrMoMDVhLa2OC/YUpYeQUGxWjCHZDLYL9YoOt5MllwNEyulpciAlhefymaZa5QA6oGbJqoqZpuvAnXV5JP3oUlogieE0L1/ZbMVOB/JID4eryenyAAC9TUvxLZQ
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2410e713-b888-42ae-377c-08d79a73117b
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2020 10:58:50.3138
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8MN/EU9bCbkYovv3H4AGHmZaquytUlIoluME/p4nG5Xi5bnikgni1ZjLHeEHqNIF5Y+qKLZOTe+KwpSZnPR1Zg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1783
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the STM32 SPDIFRX bindings to DT schema format using json-schema.
+Hi Colin,
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
----
-Changes in v2:
-- Add "additionalProperties: false"
-- Also change minItems to 2 for dmas property, as both DMAs are required.
----
- .../bindings/sound/st,stm32-spdifrx.txt       | 56 -------------
- .../bindings/sound/st,stm32-spdifrx.yaml      | 84 +++++++++++++++++++
- 2 files changed, 84 insertions(+), 56 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
- create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml
+On 16/01/20 3:19 pm, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Currently the memory allocation failure checks on drv_data and
+> amdtee are using IS_ERR rather than checking for a null pointer.
+> Fix these checks to use the conventional null pointer check.
+> 
 
-diff --git a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
-deleted file mode 100644
-index 33826f2459fa..000000000000
---- a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
-+++ /dev/null
-@@ -1,56 +0,0 @@
--STMicroelectronics STM32 S/PDIF receiver (SPDIFRX).
--
--The SPDIFRX peripheral, is designed to receive an S/PDIF flow compliant with
--IEC-60958 and IEC-61937.
--
--Required properties:
--  - compatible: should be "st,stm32h7-spdifrx"
--  - reg: cpu DAI IP base address and size
--  - clocks: must contain an entry for kclk (used as S/PDIF signal reference)
--  - clock-names: must contain "kclk"
--  - interrupts: cpu DAI interrupt line
--  - dmas: DMA specifiers for audio data DMA and iec control flow DMA
--    See STM32 DMA bindings, Documentation/devicetree/bindings/dma/stm32-dma.txt
--  - dma-names: two dmas have to be defined, "rx" and "rx-ctrl"
--
--Optional properties:
--  - resets: Reference to a reset controller asserting the SPDIFRX
--
--The device node should contain one 'port' child node with one child 'endpoint'
--node, according to the bindings defined in Documentation/devicetree/bindings/
--graph.txt.
--
--Example:
--spdifrx: spdifrx@40004000 {
--	compatible = "st,stm32h7-spdifrx";
--	reg = <0x40004000 0x400>;
--	clocks = <&rcc SPDIFRX_CK>;
--	clock-names = "kclk";
--	interrupts = <97>;
--	dmas = <&dmamux1 2 93 0x400 0x0>,
--	       <&dmamux1 3 94 0x400 0x0>;
--	dma-names = "rx", "rx-ctrl";
--	pinctrl-0 = <&spdifrx_pins>;
--	pinctrl-names = "default";
--
--	spdifrx_port: port {
--		cpu_endpoint: endpoint {
--			remote-endpoint = <&codec_endpoint>;
--		};
--	};
--};
--
--spdif_in: spdif-in {
--	compatible = "linux,spdif-dir";
--
--	codec_port: port {
--		codec_endpoint: endpoint {
--			remote-endpoint = <&cpu_endpoint>;
--		};
--	};
--};
--
--soundcard {
--	compatible = "audio-graph-card";
--	dais = <&spdifrx_port>;
--};
-diff --git a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml
-new file mode 100644
-index 000000000000..e19313e7a552
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml
-@@ -0,0 +1,84 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/st,stm32-spdifrx.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STMicroelectronics STM32 S/PDIF receiver (SPDIFRX)
-+
-+maintainers:
-+  - Olivier Moysan <olivier.moysan@st.com>
-+
-+description: |
-+  The SPDIFRX peripheral, is designed to receive an S/PDIF flow compliant with
-+  IEC-60958 and IEC-61937.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - st,stm32h7-spdifrx
-+
-+  "#sound-dai-cells":
-+    const: 0
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: kclk
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  dmas:
-+    description: |
-+      Two DMA channel specifiers are requested:
-+      - audio data capture DMA
-+      - IEC status bits capture DMA
-+      See STM32 DMA bindings /bindings/dma/stm32-dma.txt.
-+    minItems: 2
-+    maxItems: 2
-+
-+  dma-names:
-+    items:
-+      - const: rx
-+      - const: rx-ctrl
-+
-+  resets:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - "#sound-dai-cells"
-+  - reg
-+  - clocks
-+  - clock-names
-+  - interrupts
-+  - dmas
-+  - dma-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/stm32mp1-clks.h>
-+    spdifrx: spdifrx@40004000 {
-+        compatible = "st,stm32h7-spdifrx";
-+        #sound-dai-cells = <0>;
-+        reg = <0x40004000 0x400>;
-+        clocks = <&rcc SPDIF_K>;
-+        clock-names = "kclk";
-+        interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
-+        dmas = <&dmamux1 2 93 0x400 0x0>,
-+               <&dmamux1 3 94 0x400 0x0>;
-+        dma-names = "rx", "rx-ctrl";
-+        pinctrl-0 = <&spdifrx_pins>;
-+        pinctrl-names = "default";
-+    };
-+
-+...
--- 
-2.17.1
+This patch does not apply cleanly to current cryptodev-2.6 tree.
+Request you to pull and rebase the patch to current cryptodev-2.6 tree,
+build and then submit.
 
+Thanks,
+Rijo
+
+> Addresses-Coverity: ("Dereference null return")
+> Fixes: 757cc3e9ff1d ("tee: add AMD-TEE driver")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/tee/amdtee/core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/tee/amdtee/core.c b/drivers/tee/amdtee/core.c
+> index 9d0cee1c837f..5fda810c79dc 100644
+> --- a/drivers/tee/amdtee/core.c
+> +++ b/drivers/tee/amdtee/core.c
+> @@ -444,11 +444,11 @@ static int __init amdtee_driver_init(void)
+>  		goto err_fail;
+>  
+>  	drv_data = kzalloc(sizeof(*drv_data), GFP_KERNEL);
+> -	if (IS_ERR(drv_data))
+> +	if (!drv_data)
+>  		return -ENOMEM;
+>  
+>  	amdtee = kzalloc(sizeof(*amdtee), GFP_KERNEL);
+> -	if (IS_ERR(amdtee)) {
+> +	if (!amdtee) {
+>  		rc = -ENOMEM;
+>  		goto err_kfree_drv_data;
+>  	}
+> 
