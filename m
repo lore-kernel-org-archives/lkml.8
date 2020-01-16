@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4491CC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 151EDC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ADC524730
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:30:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D51DD24731
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:30:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195826;
-	bh=onNKvePQ5dSjlq0g96r5jBlvfg1PIt+O8/+H0jBtY4M=;
+	s=default; t=1579195836;
+	bh=WRlB/7PfMxIkIkqQfKBYkUm9ZHK2r2Jsr31KLUsv3vg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UNeW22AqdLysbwiHKbqDz+pqada/ebCWKakUy8xv8UcqC7UwHJj3RVkDHFU1Z4Ial
-	 nx5P0cD8s/ex5f0X/qHBT2YB3Gg2i4RLYEIvmLQ0wQ3uKaG7YTiHnDDTjRSg+vmgu4
-	 4rv3Rp4WwkIeKc6K718syJDkRz7UjpvxRIUBrmLo=
+	b=2B/tF7irkWZEayLniB+Kx+ij6nSNgAFc2PTYasTVlom4/+/BXLQkY6wAJn7Q1yycr
+	 1PBhaP2HdtIRkqIk0nYfc+JErdbwXBhqZ3N0HwwfHnKVg65B824HVgTBQa1ygDHNqm
+	 wD5WsmYMJgpPxWTBsCkEvkw3FR2EFayKKBcwIFh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404432AbgAPRaZ (ORCPT
+        id S2404486AbgAPRab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:30:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42968 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:30:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404414AbgAPRaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:30:24 -0500
+        id S2404460AbgAPRaa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:30:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 370DF24724;
-        Thu, 16 Jan 2020 17:30:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FE7524726;
+        Thu, 16 Jan 2020 17:30:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195823;
-        bh=onNKvePQ5dSjlq0g96r5jBlvfg1PIt+O8/+H0jBtY4M=;
+        s=default; t=1579195829;
+        bh=WRlB/7PfMxIkIkqQfKBYkUm9ZHK2r2Jsr31KLUsv3vg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uq3i1se6vsvc7KnCZ3Uta2w23Cf0peyh99ho+fr0kexnvChScSfpVszZzzdx0o8v0
-         csSKbpas7wV6WoVSGyyDPXbuMFT+ncghK3ck+urQ9qmnb+0Z+9+fBHK+WUw2yOlPHw
-         dpFsUPvSqmq3rQVfzSSueiAEw7KJRZXVuVEJsBLQ=
+        b=sG1h+YBQPGkTvHI6Jga0c+1JLF6rSchwFrF3/nRT0TD3nrbhX42QC2hCNSFAGgaMd
+         9T2oHPQbK9kNl3gXikCxAj2mvT402UW8dgYe+xS4f8iTz3Emihzl6ZAgqqxwz8DIpp
+         BAeSie0F2l1ZFabRRcmZjK8t/8wK4cayMZAIkX1U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 331/371] media: ov6650: Fix some format attributes not under control
-Date:   Thu, 16 Jan 2020 12:23:23 -0500
-Message-Id: <20200116172403.18149-274-sashal@kernel.org>
+Cc:     Loic Poulain <loic.poulain@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 336/371] arm64: dts: apq8096-db820c: Increase load on l21 for SDCARD
+Date:   Thu, 16 Jan 2020 12:23:28 -0500
+Message-Id: <20200116172403.18149-279-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -60,130 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+From: Loic Poulain <loic.poulain@linaro.org>
 
-[ Upstream commit 1c6a2b63095154bbf9e8f38d79487a728331bf65 ]
+[ Upstream commit e38161bd325ea541ef2f258d8e28281077dde524 ]
 
-User arguments passed to .get/set_fmt() pad operation callbacks may
-contain unsupported values.  The driver takes control over frame size
-and pixel code as well as colorspace and field attributes but has never
-cared for remainig format attributes, i.e., ycbcr_enc, quantization
-and xfer_func, introduced by commit 11ff030c7365 ("[media]
-v4l2-mediabus: improve colorspace support").  Fix it.
+In the same way as for msm8974-hammerhead, l21 load, used for SDCARD
+VMMC, needs to be increased in order to prevent any voltage drop issues
+(due to limited current) happening with some SDCARDS or during specific
+operations (e.g. write).
 
-Set up a static v4l2_mbus_framefmt structure with attributes
-initialized to reasonable defaults and use it for updating content of
-user provided arguments.  In case of V4L2_SUBDEV_FORMAT_ACTIVE,
-postpone frame size update, now performed from inside ov6650_s_fmt()
-helper, util the user argument is first updated in ov6650_set_fmt() with
-default frame format content.  For V4L2_SUBDEV_FORMAT_TRY, don't copy
-all attributes to pad config, only those handled by the driver, then
-fill the response with the default frame format updated with resulting
-pad config format code and frame size.
-
-Fixes: 11ff030c7365 ("[media] v4l2-mediabus: improve colorspace support")
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixes: 660a9763c6a9 (arm64: dts: qcom: db820c: Add pm8994 regulator node)
+Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov6650.c | 51 +++++++++++++++++++++++++++++---------
- 1 file changed, 39 insertions(+), 12 deletions(-)
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/i2c/ov6650.c b/drivers/media/i2c/ov6650.c
-index 5d6a231a4163..044ede441fd6 100644
---- a/drivers/media/i2c/ov6650.c
-+++ b/drivers/media/i2c/ov6650.c
-@@ -215,6 +215,17 @@ static u32 ov6650_codes[] = {
- 	MEDIA_BUS_FMT_Y8_1X8,
- };
- 
-+static const struct v4l2_mbus_framefmt ov6650_def_fmt = {
-+	.width		= W_CIF,
-+	.height		= H_CIF,
-+	.code		= MEDIA_BUS_FMT_SBGGR8_1X8,
-+	.colorspace	= V4L2_COLORSPACE_SRGB,
-+	.field		= V4L2_FIELD_NONE,
-+	.ycbcr_enc	= V4L2_YCBCR_ENC_DEFAULT,
-+	.quantization	= V4L2_QUANTIZATION_DEFAULT,
-+	.xfer_func	= V4L2_XFER_FUNC_DEFAULT,
-+};
-+
- /* read a register */
- static int ov6650_reg_read(struct i2c_client *client, u8 reg, u8 *val)
- {
-@@ -516,11 +527,13 @@ static int ov6650_get_fmt(struct v4l2_subdev *sd,
- 	if (format->pad)
- 		return -EINVAL;
- 
-+	/* initialize response with default media bus frame format */
-+	*mf = ov6650_def_fmt;
-+
-+	/* update media bus format code and frame size */
- 	mf->width	= priv->rect.width >> priv->half_scale;
- 	mf->height	= priv->rect.height >> priv->half_scale;
- 	mf->code	= priv->code;
--	mf->colorspace	= V4L2_COLORSPACE_SRGB;
--	mf->field	= V4L2_FIELD_NONE;
- 
- 	return 0;
- }
-@@ -659,10 +672,6 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
- 	if (!ret)
- 		priv->code = code;
- 
--	if (!ret) {
--		mf->width = priv->rect.width >> half_scale;
--		mf->height = priv->rect.height >> half_scale;
--	}
- 	return ret;
- }
- 
-@@ -681,9 +690,6 @@ static int ov6650_set_fmt(struct v4l2_subdev *sd,
- 		v4l_bound_align_image(&mf->width, 2, W_CIF, 1,
- 				&mf->height, 2, H_CIF, 1, 0);
- 
--	mf->field = V4L2_FIELD_NONE;
--	mf->colorspace = V4L2_COLORSPACE_SRGB;
--
- 	switch (mf->code) {
- 	case MEDIA_BUS_FMT_Y10_1X10:
- 		mf->code = MEDIA_BUS_FMT_Y8_1X8;
-@@ -701,10 +707,31 @@ static int ov6650_set_fmt(struct v4l2_subdev *sd,
- 		break;
- 	}
- 
--	if (format->which == V4L2_SUBDEV_FORMAT_ACTIVE)
--		return ov6650_s_fmt(sd, mf);
--	cfg->try_fmt = *mf;
-+	if (format->which == V4L2_SUBDEV_FORMAT_TRY) {
-+		/* store media bus format code and frame size in pad config */
-+		cfg->try_fmt.width = mf->width;
-+		cfg->try_fmt.height = mf->height;
-+		cfg->try_fmt.code = mf->code;
- 
-+		/* return default mbus frame format updated with pad config */
-+		*mf = ov6650_def_fmt;
-+		mf->width = cfg->try_fmt.width;
-+		mf->height = cfg->try_fmt.height;
-+		mf->code = cfg->try_fmt.code;
-+
-+	} else {
-+		/* apply new media bus format code and frame size */
-+		int ret = ov6650_s_fmt(sd, mf);
-+
-+		if (ret)
-+			return ret;
-+
-+		/* return default format updated with active size and code */
-+		*mf = ov6650_def_fmt;
-+		mf->width = priv->rect.width >> priv->half_scale;
-+		mf->height = priv->rect.height >> priv->half_scale;
-+		mf->code = priv->code;
-+	}
- 	return 0;
- }
- 
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+index 789f3e87321e..7a510505e0c2 100644
+--- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+@@ -262,6 +262,8 @@
+ 				l21 {
+ 					regulator-min-microvolt = <2950000>;
+ 					regulator-max-microvolt = <2950000>;
++					regulator-allow-set-load;
++					regulator-system-load = <200000>;
+ 				};
+ 				l22 {
+ 					regulator-min-microvolt = <3300000>;
 -- 
 2.20.1
 
