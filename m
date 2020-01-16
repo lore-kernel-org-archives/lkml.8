@@ -2,235 +2,184 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20037C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DC7C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:23:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E01B0206D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:23:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4018E2075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:23:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="cfuMKh85"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729214AbgAPNXd convert rfc822-to-8bit (ORCPT
+        id S1729241AbgAPNXh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 08:23:33 -0500
-Received: from mga17.intel.com ([192.55.52.151]:28647 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726406AbgAPNXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 08:23:33 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 05:23:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,326,1574150400"; 
-   d="scan'208";a="273984161"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by FMSMGA003.fm.intel.com with ESMTP; 16 Jan 2020 05:23:32 -0800
-Received: from fmsmsx606.amr.corp.intel.com (10.18.126.86) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 16 Jan 2020 05:23:32 -0800
-Received: from fmsmsx606.amr.corp.intel.com (10.18.126.86) by
- fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 16 Jan 2020 05:23:32 -0800
-Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
- fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 16 Jan 2020 05:23:32 -0800
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.197]) by
- SHSMSX151.ccr.corp.intel.com ([169.254.3.55]) with mapi id 14.03.0439.000;
- Thu, 16 Jan 2020 21:23:29 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: RE: [PATCH v4 11/12] samples: add vfio-mdev-pci driver
-Thread-Topic: [PATCH v4 11/12] samples: add vfio-mdev-pci driver
-Thread-Index: AQHVxVUACBwDAx59j0yR27cHCInk46frLluAgAIeFUA=
-Date:   Thu, 16 Jan 2020 13:23:28 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A184041@SHSMSX104.ccr.corp.intel.com>
-References: <1578398509-26453-1-git-send-email-yi.l.liu@intel.com>
-        <1578398509-26453-12-git-send-email-yi.l.liu@intel.com>
- <20200115133027.228452fd.cohuck@redhat.com>
-In-Reply-To: <20200115133027.228452fd.cohuck@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNWZmMTIwOTctMjY5My00ZGM3LThhOGEtYmMxYTNkZDA5NzM4IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiT2tpR1dWU2RxaXBpNzI5QUlySzB2QU1UQlphS21cL2luSU5wXC9DeCtHSytMZnIxM1wvRTBhMjB0YnhuZ2lURmtMZSJ9
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 16 Jan 2020 08:23:37 -0500
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:20458 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726378AbgAPNXf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 08:23:35 -0500
+Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00GDL9Qr017160;
+        Thu, 16 Jan 2020 08:23:08 -0500
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2171.outbound.protection.outlook.com [104.47.55.171])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2xhb7tett0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jan 2020 08:23:08 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PQOJBDqUq12s1+brHzDfx1J36jXFKre9G+ilJa+9KMADXqanR3OdBVo3S7Fy5UDF9EECoWbExyMEQcWsS5jmj0r1VaCHXDBiEtSQhyjZYMDmFe26eBK6fziW2b4AR/M4Xv9gM3hTdBX1LojQ++TZcYFE1Un4W6ApHVuqjHyyuWC7HJ/3nOPj/48sO1gHkslvPavrInZb6MphgaEZXIK8YU6n6w/yJKBepw3pNtgoGcUukZz3bEx0sX92AtrvwQbTjgcySlV1hUQVNgIEiozvTQclYLfSTVgabm0oNFP0uLiIJZzQ7nt41gbXNzvBa+a0XpB/7I7y4a/icYX75QsZgQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=x1A0TVV0RinjTXYSceoz6tha2RJHcz9JsjpvTTIugtc=;
+ b=BTwclKMiX4WEcai2BYX5vQW2YU/AITst9Kz0XDru55F1hWPBIo3x1kY59fICGdcKvcH3Tt9o4/Vu0wyuy0OennIsZru1dwMQOYzbIRKQZ1Uv1qy9VuCIA8ura6GzFlyFMp2odSAz4yx2RvGhGMyYEZXTlwUdiMghfZtN0CM82+lu+wG3hcr2lmGjIWxkt2rKHTBDjINdPMjbXQWnWg9X6PMTdJiZmj9sKOGlCJ9wuF1pntpoTidFtVOoxeztq4Km80XyVkpRW8ZSiiZ/fAIch6T75bJ0KOA9x1EFLfwlQF+Fb40UGFQFgHF4vNOeNkAAJ5S3d3IS4uaNi3pmoebw8Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.55) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=x1A0TVV0RinjTXYSceoz6tha2RJHcz9JsjpvTTIugtc=;
+ b=cfuMKh85Fcv4MxQu40HAuVRBcV1twBPtpGEtccAHN/GsvIJeaGJ1pcRdEQuqsXwrhu9UGmIdYVGJyCGwzZXpVIcsLojwMMzECh+Jghn6yXIwAFuyKAsaNdZCSZ37ryEOTiGSZGYTGsu5ZtCE725eenx6hJN3FDse4+UfB7gm/Js=
+Received: from BN3PR03CA0064.namprd03.prod.outlook.com
+ (2a01:111:e400:7a4d::24) by DM6PR03MB4842.namprd03.prod.outlook.com
+ (2603:10b6:5:182::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.18; Thu, 16 Jan
+ 2020 13:23:07 +0000
+Received: from CY1NAM02FT018.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::208) by BN3PR03CA0064.outlook.office365.com
+ (2a01:111:e400:7a4d::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.20 via Frontend
+ Transport; Thu, 16 Jan 2020 13:23:06 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
+Received: from nwd2mta1.analog.com (137.71.25.55) by
+ CY1NAM02FT018.mail.protection.outlook.com (10.152.75.183) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2644.19
+ via Frontend Transport; Thu, 16 Jan 2020 13:23:06 +0000
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id 00GDMrNZ023184
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
+        Thu, 16 Jan 2020 05:22:53 -0800
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Thu, 16 Jan
+ 2020 08:23:03 -0500
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Thu, 16 Jan 2020 05:23:02 -0800
+Received: from saturn.ad.analog.com ([10.48.65.124])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00GDMx8g025341;
+        Thu, 16 Jan 2020 08:22:59 -0500
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
+        <bigeasy@linutronix.de>, Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Olbrich <m.olbrich@pengutronix.de>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH][RESEND] usb: dwc3: gadget: Handle dequeuing of non queued URB gracefully
+Date:   Thu, 16 Jan 2020 15:24:59 +0200
+Message-ID: <20200116132459.22383-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191106144553.16956-1-alexandru.ardelean@analog.com>
+References: <20191106144553.16956-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(376002)(396003)(346002)(136003)(199004)(189003)(2906002)(336012)(7636002)(1076003)(54906003)(5660300002)(7696005)(86362001)(44832011)(356004)(26005)(246002)(36756003)(70586007)(186003)(478600001)(8676002)(110136005)(107886003)(966005)(70206006)(316002)(8936002)(4326008)(2616005)(426003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB4842;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: fd2d6f25-706c-4f3d-7cae-08d79a8738f0
+X-MS-TrafficTypeDiagnostic: DM6PR03MB4842:
+X-Microsoft-Antispam-PRVS: <DM6PR03MB48421F81AD87DC874684AB17F9360@DM6PR03MB4842.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-Forefront-PRVS: 02843AA9E0
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 2sB0oHqINzvy+AWw97n3O0KD2ZfNOzKfNu+ZWRuaMKwQTSTAgdyLw9dDKLpP++uHGeqvt3sF9VFn4v71iqlN6mxCvhnmsPWSMx5dBFj0F6TJiORSf4Am2SsQ1/WuapdwEn/CCqnx5fLwEhMMK4gmOSUo1+QvS37eLQtgeS0P/zO96pByk2/nwzyAvkP9R9Js7m+MV/xPEOyLa+C3Hxvs02RR/Gpzq/pGcFugg5wuXYHelebryeeozZxEqKf3dFMQNTpKdl5+3p6ImhXY3TJL9FLnnd7V81RrbBjXSBnbpl1cLf0DrnkK+7Adsz6GI7WpdNy3BYa0zfaBeqzceEVxdmFYU3PKwcoN4UQBIMMpQ8S+spwnp3d35yJbKzwnYEBck+XBLCXIooQV06BTSOi4AlI0s2+4hWo/i0CX+3vttYZUJiAVFGSM46SCbMrHt8u9I8k9mludBQszz3r6wHN1NrpqnGxJRp+LUrffsZl9fSz0+duBopi/m6CDPWR/tAeoO5HZOnVCA2G8HIPGFAYygw==
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2020 13:23:06.0009
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd2d6f25-706c-4f3d-7cae-08d79a8738f0
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4842
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-16_04:2020-01-16,2020-01-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=862 malwarescore=0 lowpriorityscore=0 mlxscore=0 clxscore=1015
+ adultscore=0 phishscore=0 spamscore=0 priorityscore=1501 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001160114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Cornelia Huck [mailto:cohuck@redhat.com]
-> Sent: Wednesday, January 15, 2020 8:30 PM
-> To: Liu, Yi L <yi.l.liu@intel.com>
-> Subject: Re: [PATCH v4 11/12] samples: add vfio-mdev-pci driver
-> 
-> On Tue,  7 Jan 2020 20:01:48 +0800
-> Liu Yi L <yi.l.liu@intel.com> wrote:
-> 
-> > This patch adds sample driver named vfio-mdev-pci. It is to wrap
-> > a PCI device as a mediated device. For a pci device, once bound
-> > to vfio-mdev-pci driver, user space access of this device will
-> > go through vfio mdev framework. The usage of the device follows
-> > mdev management method. e.g. user should create a mdev before
-> > exposing the device to user-space.
-> >
-> > Benefit of this new driver would be acting as a sample driver
-> > for recent changes from "vfio/mdev: IOMMU aware mediated device"
-> > patchset. Also it could be a good experiment driver for future
-> > device specific mdev migration support. This sample driver only
-> > supports singleton iommu groups, for non-singleton iommu groups,
-> > this sample driver doesn't work. It will fail when trying to assign
-> > the non-singleton iommu group to VMs.
-> >
-> > To use this driver:
-> > a) build and load vfio-mdev-pci.ko module
-> >    execute "make menuconfig" and config CONFIG_SAMPLE_VFIO_MDEV_PCI
-> >    then load it with following command:
-> >    > sudo modprobe vfio
-> >    > sudo modprobe vfio-pci
-> >    > sudo insmod samples/vfio-mdev-pci/vfio-mdev-pci.ko
-> >
-> > b) unbind original device driver
-> >    e.g. use following command to unbind its original driver
-> >    > echo $dev_bdf > /sys/bus/pci/devices/$dev_bdf/driver/unbind
-> >
-> > c) bind vfio-mdev-pci driver to the physical device
-> >    > echo $vend_id $dev_id > /sys/bus/pci/drivers/vfio-mdev-pci/new_id
-> >
-> > d) check the supported mdev instances
-> >    > ls /sys/bus/pci/devices/$dev_bdf/mdev_supported_types/
-> >      vfio-mdev-pci-type_name
-> >    > ls /sys/bus/pci/devices/$dev_bdf/mdev_supported_types/\
-> >      vfio-mdev-pci-type_name/
-> >      available_instances  create  device_api  devices  name
-> >
-> > e)  create mdev on this physical device (only 1 instance)
-> >    > echo "83b8f4f2-509f-382f-3c1e-e6bfe0fa1003" > \
-> >      /sys/bus/pci/devices/$dev_bdf/mdev_supported_types/\
-> >      vfio-mdev-pci-type_name/create
-> >
-> > f) passthru the mdev to guest
-> >    add the following line in QEMU boot command
-> >     -device vfio-pci,\
-> >      sysfsdev=/sys/bus/mdev/devices/83b8f4f2-509f-382f-3c1e-e6bfe0fa1003
-> >
-> > g) destroy mdev
-> >    > echo 1 > /sys/bus/mdev/devices/83b8f4f2-509f-382f-3c1e-e6bfe0fa1003/\
-> >      remove
-> 
-> I think much/most of those instructions should go (additionally) into
-> the sample driver source.
+From: Lars-Peter Clausen <lars@metafoo.de>
 
-yes, it would be helpful to add it in a doc.
+Trying to dequeue and URB that is currently not queued should be a no-op
+and be handled gracefully.
 
-> Otherwise, it's not clear to the reader why
-> they should wrap the device in mdev instead of simply using a normal
-> vfio-pci device.
+Use the list field of the URB to indicate whether it is queued or not by
+setting it to the empty list when it is not queued.
 
-Actually, the reason of wrapping device in mdev instead of simply using
-a normal vfio-pci is to let vendor specific driver to intercept some
-device access which is not allowed in vfio-pci usage. We only have PCI
-config space access intercepted and some other special accesses intercepted
-in vfio-pci. While for some vendor specific handling, it would be nice
-to have a way to let vendor specific driver intercept in. mdev allows it.
+Handling this gracefully allows for race condition free synchronization
+between the complete callback being called to to a completed transfer and
+trying to call usb_ep_dequeue() at the same time.
 
-And back to the purpose of introducing this sample driver, it is supposed
-to test IOMMU-capable mdev. We don't have real hardware on market, there
-is no way to test the VFIO extensions for IOMMU-capable mdev. Wrapping a
-PCI device in mdev can test the VFIO extensions well as it has hardware
-enforce DMA isolation. Thus makes it possible to test the extensions in VFIO.
+Tested-by: Michael Olbrich <m.olbrich@pengutronix.de>
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
 
-> 
-> >
-> > Cc: Kevin Tian <kevin.tian@intel.com>
-> > Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > Suggested-by: Alex Williamson <alex.williamson@redhat.com>
-> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > ---
-> >  samples/Kconfig                       |  10 +
-> >  samples/Makefile                      |   1 +
-> >  samples/vfio-mdev-pci/Makefile        |   4 +
-> >  samples/vfio-mdev-pci/vfio_mdev_pci.c | 397
-> ++++++++++++++++++++++++++++++++++
-> >  4 files changed, 412 insertions(+)
-> >  create mode 100644 samples/vfio-mdev-pci/Makefile
-> >  create mode 100644 samples/vfio-mdev-pci/vfio_mdev_pci.c
-> >
-> > diff --git a/samples/Kconfig b/samples/Kconfig
-> > index 9d236c3..50d207c 100644
-> > --- a/samples/Kconfig
-> > +++ b/samples/Kconfig
-> > @@ -190,5 +190,15 @@ config SAMPLE_INTEL_MEI
-> >  	help
-> >  	  Build a sample program to work with mei device.
-> >
-> > +config SAMPLE_VFIO_MDEV_PCI
-> > +	tristate "Sample driver for wrapping PCI device as a mdev"
-> > +	select VFIO_PCI_COMMON
-> > +	select VFIO_PCI
-> 
-> Why does this still need to select VFIO_PCI? Shouldn't all needed
-> infrastructure rather be covered by VFIO_PCI_COMMON already?
+* Added Michael Olbrich's Tested-by tag
+  https://lore.kernel.org/linux-usb/20191112144108.GA1859@pengutronix.de/
 
-VFIO_PCI_COMMON is supposed to be the dependency of both VFIO_PCI and
-SAMPLE_VFIO_MDEV_PCI. However, the source code of VFIO_PCI_COMMON are
-under drivers/vfio/pci which is compiled per the configuration of VFIO_PCI.
-Besides of letting SAMPLE_VFIO_MDEV_PCI select VFIO_PCI, I can also add
-a line in drivers/vfio/Makefile to make the source code under drivers/vfio/pci
-to be compiled when either VFIO_PCI or VFIO_PCI_COMMON are configed. But
-I'm afraid it is a bit ugly. So I choose to let SAMPLE_VFIO_MDEV_PCI select
-VFIO_PCI. If you have other idea, I would be pleased to
-know it. :-)
+ drivers/usb/dwc3/gadget.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-> 
-> > +	depends on VFIO_MDEV && VFIO_MDEV_DEVICE
-> 
-> VFIO_MDEV_DEVICE already depends on VFIO_MDEV. But maybe also make this
-> depend on PCI?
-> 
-> > +	help
-> > +	  Sample driver for wrapping a PCI device as a mdev. Once bound to
-> > +	  this driver, device passthru should through mdev path.
-> 
-> "A PCI device bound to this driver will be assigned through the
-> mediated device framework."
-> 
-> ?
-
-Maybe I should have mentioned it as "A PCI device bound to this
-sample driver should follow the passthru steps for mdevs as showed
-in Documentation/driver-api/vfio-mediated-device.rst."
-
-Does it make more sense?
-
-Thanks,
-Yi Liu
-
-> 
-> > +
-> > +	  If you don't know what to do here, say N.
-> >
-> >  endif # SAMPLES
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 1b8014ab0b25..22a78eb41a5b 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -177,7 +177,7 @@ static void dwc3_gadget_del_and_unmap_request(struct dwc3_ep *dep,
+ {
+ 	struct dwc3			*dwc = dep->dwc;
+ 
+-	list_del(&req->list);
++	list_del_init(&req->list);
+ 	req->remaining = 0;
+ 	req->needs_extra_trb = false;
+ 
+@@ -847,6 +847,7 @@ static struct usb_request *dwc3_gadget_ep_alloc_request(struct usb_ep *ep,
+ 	req->epnum	= dep->number;
+ 	req->dep	= dep;
+ 	req->status	= DWC3_REQUEST_STATUS_UNKNOWN;
++	INIT_LIST_HEAD(&req->list);
+ 
+ 	trace_dwc3_alloc_request(req);
+ 
+@@ -1549,6 +1550,10 @@ static int dwc3_gadget_ep_dequeue(struct usb_ep *ep,
+ 
+ 	spin_lock_irqsave(&dwc->lock, flags);
+ 
++	/* Not queued, nothing to do */
++	if (list_empty(&req->list))
++		goto out0;
++
+ 	list_for_each_entry(r, &dep->pending_list, list) {
+ 		if (r == req)
+ 			break;
+-- 
+2.20.1
 
