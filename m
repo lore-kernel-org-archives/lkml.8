@@ -2,302 +2,157 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 782E5C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 07:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A233AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 07:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4364820663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 07:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78D3E2176D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 07:51:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YqcS4ShZ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Lxq5C+Dd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729635AbgAPHtB (ORCPT
+        id S1729441AbgAPHv0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 02:49:01 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:50356 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726887AbgAPHtA (ORCPT
+        Thu, 16 Jan 2020 02:51:26 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:52126 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726369AbgAPHv0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 02:49:00 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579160938; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=LeX5HX3rkYH2PnvSEJOJKoKg9DCtPQiRr5VOCPlPpMY=; b=YqcS4ShZeop9cR2TUSJY5FPnNT95/we2co5ikg8I3k4bQHD5ZRkqtE2WCw2w4X7HJZQIlfb4
- XxiW7wFTXAHnnAuwoGSeoQPsjKvneK8J+XYPoaahGfG7+AVIqAxk2x0i1WFFl211bMo9/Koq
- p3fU8UiUZCQR8AjfgUMgfimeL3I=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e201568.7f29deef7180-smtp-out-n02;
- Thu, 16 Jan 2020 07:48:56 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7BD42C4479F; Thu, 16 Jan 2020 07:48:55 +0000 (UTC)
-Received: from [192.168.1.8] (unknown [171.76.62.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sricharan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2D392C43383;
-        Thu, 16 Jan 2020 07:48:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2D392C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
-Subject: Re: [PATCH V4 1/5] dt-bindings: pinctrl: qcom: Add ipq6018 pinctrl
- bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     agross@kernel.org, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org,
-        sivaprak@codeaurora.org,
-        Rajkumar Ayyasamy <arajkuma@codeaurora.org>,
-        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
-References: <1578561543-23132-1-git-send-email-sricharan@codeaurora.org>
- <1578561543-23132-2-git-send-email-sricharan@codeaurora.org>
- <20200113224931.GA1297@bogus>
-From:   Sricharan R <sricharan@codeaurora.org>
-Message-ID: <6c5a0e35-b02c-ad52-bae9-ce05c64e98ee@codeaurora.org>
-Date:   Thu, 16 Jan 2020 13:18:47 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Thu, 16 Jan 2020 02:51:26 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00G7pNCX119651;
+        Thu, 16 Jan 2020 01:51:23 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579161083;
+        bh=w7vzdMvfFmc+atK4e4y3iJy2N7LLIkGApbrMpU6UVFE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Lxq5C+DdEA/XuOwf4RaExziSKgDJfXAENoWcLnK7o/ah6Xpw/kK3jWnYjEu5GYa3B
+         FA29RAFWQZh3vAsMRahdLXkJ8RnsaTT/CkJ8WB/lj5bNJGpiGrwB+apotDmtKHdD+g
+         7OrUmbp8q1eDnDd39B/toxJ+joMr9oh+khQcTpP0=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00G7pNhd077404;
+        Thu, 16 Jan 2020 01:51:23 -0600
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 16
+ Jan 2020 01:51:21 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 16 Jan 2020 01:51:21 -0600
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00G7pJhg111677;
+        Thu, 16 Jan 2020 01:51:19 -0600
+Subject: Re: [RESEND PATCHv4 01/14] dt-bindings: remoteproc: Add OMAP
+ remoteproc bindings
+To:     Suman Anna <s-anna@ti.com>, <bjorn.andersson@linaro.org>,
+        <ohad@wizery.com>, <linux-remoteproc@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
+        <linux-omap@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20200102131845.12992-2-t-kristo@ti.com>
+ <20200102132512.13248-1-t-kristo@ti.com>
+ <f4ac066a-e5ee-f888-42bb-3f6d444747ee@ti.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <1d4597f7-9e28-8b16-7679-c8abd291346d@ti.com>
+Date:   Thu, 16 Jan 2020 09:51:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200113224931.GA1297@bogus>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <f4ac066a-e5ee-f888-42bb-3f6d444747ee@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
-  Thanks for the review, fixed all below comments and posted V5.
-
-
-On 1/14/2020 4:19 AM, Rob Herring wrote:
-> On Thu, Jan 09, 2020 at 02:48:59PM +0530, Sricharan R wrote:
->> Add device tree binding Documentation details for ipq6018
->> pinctrl driver.
+On 08/01/2020 18:49, Suman Anna wrote:
+> Hi Tero,
+> 
+> On 1/2/20 7:25 AM, Tero Kristo wrote:
+>> From: Suman Anna <s-anna@ti.com>
 >>
->> Co-developed-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
->> Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
->> Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
->> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
->> Co-developed-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
->> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
->> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+>> Add the device tree bindings document for the IPU and DSP
+>> remote processor devices on OMAP4+ SoCs.
+>>
+>> Cc: Rob Herring <robh@kernel.org>
+>> Cc: devicetree@vger.kernel.org
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> [t-kristo@ti.com: converted to schema]
+>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
 >> ---
->> [V4]
->>   * cleaned-up schema as per Rob's comments.
->>   * Ran make dt_binding_check and no issues.
+>> v4: added ti,bootreg-shift and ti,autosuspend-delay properties
+> 
+> You missed out on my v3 comment on the firmware-name on Example 2. Can
+> you please address it when you post the next version?
+
+I don't think I missed it, but you never told what is the actual name to 
+use there. Firmware name generally does not matter, as user can provide 
+whatever he wants via DT now.
+
+-Tero
+
+> 
 >>
->>  .../bindings/pinctrl/qcom,ipq6018-pinctrl.yaml     | 140 +++++++++++++++++++++
->>  1 file changed, 140 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
+>>   .../remoteproc/ti,omap-remoteproc.yaml        | 329 ++++++++++++++++++
+>>   1 file changed, 329 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
 >>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
+>> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
 >> new file mode 100644
->> index 0000000..68c3c8c
+>> index 000000000000..f53d58efaae3
 >> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
->> @@ -0,0 +1,140 @@
->> +# SPDX-License-Identifier: GPL-2.0-or-later
+>> +++ b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
 > 
-> Dual license please.
+> [snip]
 > 
-> (GPL-2.0-only or BSD-2-Clause)
->
-
- ok, fixed in V5
- 
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/pinctrl/qcom,ipq6018-pinctrl.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +  - |+
 >> +
->> +title: Qualcomm Technologies, Inc. IPQ6018 TLMM block
+>> +    //Example 2: OMAP5 IPU
 >> +
->> +maintainers:
->> +  - Sricharan R <sricharan@codeaurora.org>
+>> +    /* IPU Reserved Memory node */
+>> +    #include <dt-bindings/clock/omap5.h>
+>> +    reserved-memory {
+>> +        #address-cells = <2>;
+>> +        #size-cells = <2>;
 >> +
->> +description: |
->> +  This binding describes the Top Level Mode Multiplexer block found in the
->> +  IPQ6018 platform.
+>> +        ipu_memory_region: ipu-memory@95800000 {
+>> +            compatible = "shared-dma-pool";
+>> +            reg = <0 0x95800000 0 0x3800000>;
+>> +            reusable;
+>> +        };
+>> +    };
 >> +
->> +properties:
->> +  compatible:
->> +    const: qcom,ipq6018-pinctrl
+>> +    /* IPU node */
+>> +    ocp {
+>> +        #address-cells = <1>;
+>> +        #size-cells = <1>;
 >> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  interrupts:
->> +    description: Specifies the TLMM summary IRQ
->> +    maxItems: 1
->> +
->> +  interrupt-controller: true
->> +
->> +  '#interrupt-cells':
->> +    description:
->> +      Specifies the PIN numbers and Flags, as defined in defined in
->> +      include/dt-bindings/interrupt-controller/irq.h
->> +    const: 2
->> +
->> +  gpio-controller: true
->> +
->> +  '#gpio-cells':
->> +    description: Specifying the pin number and flags, as defined in
->> +      include/dt-bindings/gpio/gpio.h
->> +    const: 2
->> +
->> +  gpio-ranges:
->> +    description: Documentation/devicetree/bindings/gpio/gpio.txt
->> +    maxItems: 1
->> +
->> +#PIN CONFIGURATION NODES
->> +patternProperties:
->> +  '-pins$':
->> +    type: object
->> +    description:
->> +      Pinctrl node's client devices use subnodes for desired pin configuration.
->> +      Client device subnodes use below standard properties.
->> +    allOf:
->> +      - $ref: "/schemas/pinctrl/pincfg-node.yaml"
->> +
->> +    properties:
->> +      pins:
->> +        description:
->> +          List of gpio pins affected by the properties specified in this
->> +          subnode.
->> +        allOf:
->> +          - $ref: "/schemas/types.yaml#/definitions/string"
+>> +        ipu: ipu@55020000 {
+>> +            compatible = "ti,omap5-ipu";
+>> +            reg = <0x55020000 0x10000>;
+>> +            reg-names = "l2ram";
+>> +            iommus = <&mmu_ipu>;
+>> +            mboxes = <&mailbox &mbox_ipu>;
+>> +            memory-region = <&ipu_memory_region>;
+>> +            ti,timers = <&timer3>, <&timer4>;
+>> +            ti,watchdog-timers = <&timer9>, <&timer11>;
+>> +            clocks = <&ipu_clkctrl OMAP5_MMU_IPU_CLKCTRL 0>;
+>> +            resets = <&prm_core 2>;
+>> +            firmware-name = "omap5-ipu-fw.xem";
+>> +        };
+>> +    };
 > 
-> No need for type ref as the common binding does this.
->
-
- ok. fixed in V5.
-
- 
->> +          - enum: ['gpio$', sdc1_clk, sdc1_cmd, sdc1_data, sdc2_clk, sdc2_cmd,
->> +            sdc2_data, qdsd_cmd, qdsd_data0, qdsd_data1, qdsd_data2,
->> +            qdsd_data3]
->> +
->> +      function:
->> +        description:
->> +          Specify the alternative function to be configured for the specified
->> +          pins.
->> +        allOf:
->> +          - $ref: "/schemas/types.yaml#/definitions/string"
+> regards
+> Suman
 > 
-> Same here.
->
 
- ok, fixed in V5.
-
- 
->> +          - enum: [ adsp_ext, alsp_int, atest_bbrx0, atest_bbrx1, atest_char,
->> +            atest_char0, atest_char1, atest_char2, atest_char3, atest_combodac,
->> +            atest_gpsadc0, atest_gpsadc1, atest_tsens, atest_wlan0,
->> +            atest_wlan1, backlight_en, bimc_dte0, bimc_dte1, blsp_i2c1,
->> +            blsp_i2c2, blsp_i2c3, blsp_i2c4, blsp_i2c5, blsp_i2c6,  blsp_spi1,
->> +            blsp_spi1_cs1, blsp_spi1_cs2, blsp_spi1_cs3, blsp_spi2,
->> +            blsp_spi2_cs1, blsp_spi2_cs2, blsp_spi2_cs3, blsp_spi3,
->> +            blsp_spi3_cs1, blsp_spi3_cs2, blsp_spi3_cs3, blsp_spi4, blsp_spi5,
->> +            blsp_spi6, blsp_uart1, blsp_uart2, blsp_uim1, blsp_uim2, cam1_rst,
->> +            cam1_standby, cam_mclk0, cam_mclk1, cci_async, cci_i2c, cci_timer0,
->> +            cci_timer1, cci_timer2, cdc_pdm0, codec_mad, dbg_out, display_5v,
->> +            dmic0_clk, dmic0_data, dsi_rst, ebi0_wrcdc, euro_us, ext_lpass,
->> +            flash_strobe, gcc_gp1_clk_a, gcc_gp1_clk_b, gcc_gp2_clk_a,
->> +            gcc_gp2_clk_b, gcc_gp3_clk_a, gcc_gp3_clk_b, gpio, gsm0_tx0,
->> +            gsm0_tx1, gsm1_tx0, gsm1_tx1, gyro_accl, kpsns0, kpsns1, kpsns2,
->> +            ldo_en, ldo_update, mag_int, mdp_vsync, modem_tsync, m_voc,
->> +            nav_pps, nav_tsync, pa_indicator, pbs0, pbs1, pbs2, pri_mi2s,
->> +            pri_mi2s_ws, prng_rosc, pwr_crypto_enabled_a, pwr_crypto_enabled_b,
->> +            pwr_modem_enabled_a,  pwr_modem_enabled_b, pwr_nav_enabled_a,
->> +            pwr_nav_enabled_b, qdss_ctitrig_in_a0, qdss_ctitrig_in_a1,
->> +            qdss_ctitrig_in_b0, qdss_ctitrig_in_b1, qdss_ctitrig_out_a0,
->> +            qdss_ctitrig_out_a1, qdss_ctitrig_out_b0, qdss_ctitrig_out_b1,
->> +            qdss_traceclk_a, qdss_traceclk_b, qdss_tracectl_a, qdss_tracectl_b,
->> +            qdss_tracedata_a, qdss_tracedata_b, reset_n, sd_card, sd_write,
->> +            sec_mi2s, smb_int, ssbi_wtr0, ssbi_wtr1, uim1, uim2, uim3,
->> +            uim_batt, wcss_bt, wcss_fm, wcss_wlan, webcam1_rst ]
->> +
->> +      drive-strength:
->> +        allOf:
->> +          - $ref: "/schemas/types.yaml#/definitions/uint32"
-> 
-> Same here.
->
-
-fixed in v5.
-
- 
->> +          - enum: [2, 4, 6, 8, 10, 12, 14, 16]
-> 
-> default?
->
-
-fixed in v5.
-
- 
->> +        description:
->> +          Selects the drive strength for the specified pins, in mA.
-> 
->> +
->> +    required:
->> +      - pins
->> +      - function
-> 
->        additionalProperties: false
-> 
-> You'll need to list any other properties you use. Based 
-> on the example, you'll need 'bias-pull-down: true'.
->
-
- ok, fixed in v5.
-
- 
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - interrupts
->> +  - interrupt-controller
->> +  - '#interrupt-cells'
->> +  - gpio-controller
->> +  - '#gpio-cells'
->> +  - gpio-ranges
-> 
-> additionalProperties: false
->
-
- ok, fixed in v5.
- 
->> +
->> +examples:
->> +  - |
->> +        #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +        tlmm: pinctrl@1000000 {
->> +              compatible = "qcom,ipq6018-pinctrl";
->> +              reg = <0x01000000 0x300000>;
->> +              interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
->> +              gpio-controller;
->> +              #gpio-cells = <2>;
->> +              gpio-ranges = <&tlmm 0 80>;
->> +              interrupt-controller;
->> +              #interrupt-cells = <2>;
->> +
->> +              serial3-pinmux {
-> 
-> Doesn't match the schema.
-
- fixed in v5.
-
-
-Regards,
- Sricharan
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
