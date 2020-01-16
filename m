@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5754C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 650CFC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 975C72176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 379F32176D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:06:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197973;
-	bh=PXQFvQNyrDPH2CKZiiPjTiE2R+ts7o1QbdbLstCsITE=;
+	s=default; t=1579197979;
+	bh=+JvpNlVQp+syDwo0lHqeS6oTSkgWZhGvMmmUQwVPhkY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R3jroNABPeSnfYUW1qrmKS2eKHCZzQtxKfXx7qRmAmfkIYovb1/7Y1/wQ82tP0b93
-	 4b9GZTmCdEuCZ1aZglvvtTeT6r22wn3BmtG//uhnQfk/tXmlwe1Ej5JTwvhC8JC44e
-	 pOVIT9hlMQwnreFNIwDSyThCzDcrziLIMhIqzsQ0=
+	b=uFJqnGEWEHjjH+F8F1GNA55c2i6/SJTm2AnheR/KjHy5R5djhnlztiiCMy/bH/e3W
+	 reAGkb2zaKYFtjtD/1pqWEviN/MU1f0UXXKRJssgnbEr5bH2aZ5Fh5ixSeuW34eD6v
+	 NTegIxIsVncd+Sq5I2D9Figm1bvacLDkYTF6V7zo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394949AbgAPSGN (ORCPT
+        id S2393507AbgAPRjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:06:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56382 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:39:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393529AbgAPRjr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:39:47 -0500
+        id S2393374AbgAPRiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:38:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0961246EF;
-        Thu, 16 Jan 2020 17:39:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 024D7246B1;
+        Thu, 16 Jan 2020 17:38:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196387;
-        bh=PXQFvQNyrDPH2CKZiiPjTiE2R+ts7o1QbdbLstCsITE=;
+        s=default; t=1579196325;
+        bh=+JvpNlVQp+syDwo0lHqeS6oTSkgWZhGvMmmUQwVPhkY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BI7ciwC2fMLYojhPNFWKpsK65m9uk1v0LCbv/MHiiTJIRZoobOVcskVe3/I1V4Lmh
-         oMXGMCCZeAW7KqrTeFav7qaj5w6wxzUo8IKLEJvYDxunwKz7cPfz72tqDjuNRuqfom
-         0xYopUWiGEkJFIurCGVasayCLYEUu02RGH4K462k=
+        b=x6VK6QLPPlsG+wp2Zi8UMYv994CQXbP5yyOwxZv8nwI8KFMfmvHM4PI/dMhDMAZzv
+         X3QaJvQFvJwhrhwvgroTJrqctKD6X2+gIpPxpvLGafAcNB8eYk5szdx+HOirD6IxIM
+         3CAUCebuoDcPaaSan8Xdfe8yOwkj8D24K271WYCA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Hannes Reinecke <hare@suse.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 168/251] scsi: libfc: fix null pointer dereference on a null lport
-Date:   Thu, 16 Jan 2020 12:35:17 -0500
-Message-Id: <20200116173641.22137-128-sashal@kernel.org>
+Cc:     Sameeh Jubran <sameehj@amazon.com>,
+        Saeed Bshara <saeedb@amazon.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 128/251] net: ena: fix swapped parameters when calling ena_com_indirect_table_fill_entry
+Date:   Thu, 16 Jan 2020 12:34:37 -0500
+Message-Id: <20200116173641.22137-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -60,37 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Sameeh Jubran <sameehj@amazon.com>
 
-[ Upstream commit 41a6bf6529edd10a6def42e3b2c34a7474bcc2f5 ]
+[ Upstream commit 3c6eeff295f01bdf1c6c3addcb0a04c0c6c029e9 ]
 
-Currently if lport is null then the null lport pointer is dereference when
-printing out debug via the FC_LPORT_DB macro. Fix this by using the more
-generic FC_LIBFC_DBG debug macro instead that does not use lport.
+second parameter should be the index of the table rather than the value.
 
-Addresses-Coverity: ("Dereference after null check")
-Fixes: 7414705ea4ae ("libfc: Add runtime debugging with debug_logging module parameter")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Saeed Bshara <saeedb@amazon.com>
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/libfc/fc_exch.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/amazon/ena/ena_ethtool.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/libfc/fc_exch.c b/drivers/scsi/libfc/fc_exch.c
-index 16ca31ad5ec0..d0a86ef80652 100644
---- a/drivers/scsi/libfc/fc_exch.c
-+++ b/drivers/scsi/libfc/fc_exch.c
-@@ -2506,7 +2506,7 @@ void fc_exch_recv(struct fc_lport *lport, struct fc_frame *fp)
- 
- 	/* lport lock ? */
- 	if (!lport || lport->state == LPORT_ST_DISABLED) {
--		FC_LPORT_DBG(lport, "Receiving frames for an lport that "
-+		FC_LIBFC_DBG("Receiving frames for an lport that "
- 			     "has not been initialized correctly\n");
- 		fc_frame_free(fp);
- 		return;
+diff --git a/drivers/net/ethernet/amazon/ena/ena_ethtool.c b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
+index 67b2338f8fb3..06fd061a20e9 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_ethtool.c
++++ b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
+@@ -697,8 +697,8 @@ static int ena_set_rxfh(struct net_device *netdev, const u32 *indir,
+ 	if (indir) {
+ 		for (i = 0; i < ENA_RX_RSS_TABLE_SIZE; i++) {
+ 			rc = ena_com_indirect_table_fill_entry(ena_dev,
+-							       ENA_IO_RXQ_IDX(indir[i]),
+-							       i);
++							       i,
++							       ENA_IO_RXQ_IDX(indir[i]));
+ 			if (unlikely(rc)) {
+ 				netif_err(adapter, drv, netdev,
+ 					  "Cannot fill indirect table (index is too large)\n");
 -- 
 2.20.1
 
