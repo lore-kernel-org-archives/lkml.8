@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E1EC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB398C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C603A246DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:27:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82F59246DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:27:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195653;
-	bh=yvtZJ7G06qHmIA9YwZK0mSiWIPHTw3YbdwvdRaviQYo=;
+	s=default; t=1579195660;
+	bh=SyGVpspHwVPxiQSr1Xp7q/vO0Wawnakxrt5Zj7aU2fE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DFnLhWF/RpIQ/DjYhzFyMgBKjde2FXVCnzfSlB9u8oXHZ9aUm03DyVf1UVm+UjknX
-	 uGyYbt7hpj4U5h3tuH7tylto/o9tFIi6SPVKPw20+dla139waVHY1mhr32RSvFVbeI
-	 QZF74K61eSI9ToXTh2SSFUa3t3aIJD5LwS33qfrs=
+	b=R2BbuuUGgdDrwSaIy2Nw0jNJNE+mUe+XGRn7Bjdo3lAfE3D+ecFUqXKEeFu8KOfIV
+	 iSElhAwvPdnJrkgAADA3Ke9zqs/Xd7GrpX3No0rJ6PWJVqIaTib0DV1qjus+4wvhJC
+	 luOn2cnMV6QgdQ5q7Mhk9LRDC6R206ew3/WfRgoc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404070AbgAPR1c (ORCPT
+        id S2392196AbgAPR1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:27:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37194 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:27:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392460AbgAPR1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:27:23 -0500
+        id S2404042AbgAPR11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:27:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1E22246C9;
-        Thu, 16 Jan 2020 17:27:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32292246BE;
+        Thu, 16 Jan 2020 17:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195642;
-        bh=yvtZJ7G06qHmIA9YwZK0mSiWIPHTw3YbdwvdRaviQYo=;
+        s=default; t=1579195647;
+        bh=SyGVpspHwVPxiQSr1Xp7q/vO0Wawnakxrt5Zj7aU2fE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pjd9ACNqw4hLwObOVPMDYTuGffB0mEz7mJN108mF/b6+Vfo6orfPcAScekLe0eYel
-         iZgAgZn5KkddF6uF3O2CNq+egijIzneYXF/Ww5/lanep31Pt8U2bM8VkA8nA6s7Q15
-         CS+PPBx9ALpE9KAcd8ggFtiYXwUS0p1sMfcyV96c=
+        b=Dqv9k+/yueCpGwfWNUnmW4eGVAHw706+3Uk1UIqSm0p3tlB980SbUkJ6GXw7bptlF
+         Pbq18Dp9ovhf9dvPjV/zeiv0J7C+moRBtma3eVkQr+DHWVqo3XdlPGEwhjvY4NOsM3
+         6NzVJ72UwsFV47PWsQHXvBFjlK+QS/czS/XQnpco=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jon Hunter <jonathanh@nvidia.com>, Vinod Koul <vkoul@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 206/371] dmaengine: tegra210-adma: Fix crash during probe
-Date:   Thu, 16 Jan 2020 12:21:18 -0500
-Message-Id: <20200116172403.18149-149-sashal@kernel.org>
+Cc:     "Hook, Gary" <Gary.Hook@amd.com>, Gary R Hook <gary.hook@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 210/371] crypto: ccp - fix AES CFB error exposed by new test vectors
+Date:   Thu, 16 Jan 2020 12:21:22 -0500
+Message-Id: <20200116172403.18149-153-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -59,90 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Hunter <jonathanh@nvidia.com>
+From: "Hook, Gary" <Gary.Hook@amd.com>
 
-[ Upstream commit b53611fb1ce9b1786bd18205473e0c1d6bfa8934 ]
+[ Upstream commit c3b359d6567c0b8f413e924feb37cf025067d55a ]
 
-Commit f33e7bb3eb92 ("dmaengine: tegra210-adma: restore channel status")
-added support to save and restore the DMA channel registers when runtime
-suspending the ADMA. This change is causing the kernel to crash when
-probing the ADMA, if the device is probed deferred when looking up the
-channel interrupts. The crash occurs because not all of the channel base
-addresses have been setup at this point and in the clean-up path of the
-probe, pm_runtime_suspend() is called invoking its callback which
-expects all the channel base addresses to be initialised.
+Updated testmgr will exhibit this error message when loading the
+ccp-crypto module:
 
-Although this could be fixed by simply checking for a NULL address, on
-further review of the driver it seems more appropriate that we only call
-pm_runtime_get_sync() after all the channel interrupts and base
-addresses have been configured. Therefore, fix this crash by moving the
-calls to pm_runtime_enable(), pm_runtime_get_sync() and
-tegra_adma_init() after the DMA channels have been initialised.
+alg: skcipher: cfb-aes-ccp encryption failed with err -22 on test vector 3, cfg="in-place"
 
-Fixes: f33e7bb3eb92 ("dmaengine: tegra210-adma: restore channel status")
+Update the CCP crypto driver to correctly treat CFB as a streaming mode
+cipher (instead of block mode). Update the configuration for CFB to
+specify the block size as a single byte;
 
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: 2b789435d7f3 ('crypto: ccp - CCP AES crypto API support')
+
+Signed-off-by: Gary R Hook <gary.hook@amd.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/tegra210-adma.c | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+ drivers/crypto/ccp/ccp-crypto-aes.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index ac2a6b800db3..4f4733d831a1 100644
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -744,16 +744,6 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 		return PTR_ERR(tdma->ahub_clk);
- 	}
+diff --git a/drivers/crypto/ccp/ccp-crypto-aes.c b/drivers/crypto/ccp/ccp-crypto-aes.c
+index 89291c15015c..3f768699332b 100644
+--- a/drivers/crypto/ccp/ccp-crypto-aes.c
++++ b/drivers/crypto/ccp/ccp-crypto-aes.c
+@@ -1,7 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * AMD Cryptographic Coprocessor (CCP) AES crypto API support
+  *
+- * Copyright (C) 2013,2016 Advanced Micro Devices, Inc.
++ * Copyright (C) 2013-2019 Advanced Micro Devices, Inc.
+  *
+  * Author: Tom Lendacky <thomas.lendacky@amd.com>
+  *
+@@ -79,8 +80,7 @@ static int ccp_aes_crypt(struct ablkcipher_request *req, bool encrypt)
+ 		return -EINVAL;
  
--	pm_runtime_enable(&pdev->dev);
--
--	ret = pm_runtime_get_sync(&pdev->dev);
--	if (ret < 0)
--		goto rpm_disable;
--
--	ret = tegra_adma_init(tdma);
--	if (ret)
--		goto rpm_put;
--
- 	INIT_LIST_HEAD(&tdma->dma_dev.channels);
- 	for (i = 0; i < tdma->nr_channels; i++) {
- 		struct tegra_adma_chan *tdc = &tdma->channels[i];
-@@ -771,6 +761,16 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 		tdc->tdma = tdma;
- 	}
+ 	if (((ctx->u.aes.mode == CCP_AES_MODE_ECB) ||
+-	     (ctx->u.aes.mode == CCP_AES_MODE_CBC) ||
+-	     (ctx->u.aes.mode == CCP_AES_MODE_CFB)) &&
++	     (ctx->u.aes.mode == CCP_AES_MODE_CBC)) &&
+ 	    (req->nbytes & (AES_BLOCK_SIZE - 1)))
+ 		return -EINVAL;
  
-+	pm_runtime_enable(&pdev->dev);
-+
-+	ret = pm_runtime_get_sync(&pdev->dev);
-+	if (ret < 0)
-+		goto rpm_disable;
-+
-+	ret = tegra_adma_init(tdma);
-+	if (ret)
-+		goto rpm_put;
-+
- 	dma_cap_set(DMA_SLAVE, tdma->dma_dev.cap_mask);
- 	dma_cap_set(DMA_PRIVATE, tdma->dma_dev.cap_mask);
- 	dma_cap_set(DMA_CYCLIC, tdma->dma_dev.cap_mask);
-@@ -812,13 +812,13 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 
- dma_remove:
- 	dma_async_device_unregister(&tdma->dma_dev);
--irq_dispose:
--	while (--i >= 0)
--		irq_dispose_mapping(tdma->channels[i].irq);
- rpm_put:
- 	pm_runtime_put_sync(&pdev->dev);
- rpm_disable:
- 	pm_runtime_disable(&pdev->dev);
-+irq_dispose:
-+	while (--i >= 0)
-+		irq_dispose_mapping(tdma->channels[i].irq);
- 
- 	return ret;
- }
+@@ -291,7 +291,7 @@ static struct ccp_aes_def aes_algs[] = {
+ 		.version	= CCP_VERSION(3, 0),
+ 		.name		= "cfb(aes)",
+ 		.driver_name	= "cfb-aes-ccp",
+-		.blocksize	= AES_BLOCK_SIZE,
++		.blocksize	= 1,
+ 		.ivsize		= AES_BLOCK_SIZE,
+ 		.alg_defaults	= &ccp_aes_defaults,
+ 	},
 -- 
 2.20.1
 
