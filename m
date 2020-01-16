@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 783E7C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8E4C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49C142073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8BB720684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:22:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579216961;
-	bh=qoJiw2UXqelVfmejQw9na4k5RWtdEIUMon8F8KKTfQI=;
+	s=default; t=1579216964;
+	bh=Wdqt4q3dgQL4m2vcqrAU819Plg9TCXVFUs4S+PXx47Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YetVV+umdS5b9hxmLtPe37DvqKuvlIaYg+ttlaVwZ93+K08cLA0AtAmMc/5hb/Ik1
-	 etAlHhLOpD7oAZpjxiLEQb0lBT8d+oFf2f3zBK2VG0hfO2sFZ0W5M80c9VNTP3yNKp
-	 fwT6Vr3lZ0EKRG3z4O959bbc2t0m+ScQlZxA2R68=
+	b=OudcnA36vSHEd5EWJyJ+Q1Yo5YbJdqYMx1X7+K2ywHg5iE3Xmw5g6oF8GdHbJWhUJ
+	 HEQuJ1COTpLKsHWrJJm1ItlA2mtnFKrf3bUL90QjhYr4fBcc819TXUJiSZlrQa0hDi
+	 fnlPVnH87O/ivQ4/mNbfoo/GrUSFKvTCbKabXyCU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733198AbgAPXWk (ORCPT
+        id S2389156AbgAPXWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:22:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50408 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:22:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733309AbgAPXWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:22:33 -0500
+        id S2388399AbgAPXWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:22:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FAF32072E;
-        Thu, 16 Jan 2020 23:22:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D61120684;
+        Thu, 16 Jan 2020 23:22:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216952;
-        bh=qoJiw2UXqelVfmejQw9na4k5RWtdEIUMon8F8KKTfQI=;
+        s=default; t=1579216954;
+        bh=Wdqt4q3dgQL4m2vcqrAU819Plg9TCXVFUs4S+PXx47Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k1tSku9dsfQIJQ7SruDHJUTsAU0PUlDg2wmnQyEZsSepN9L3FMYhEMPMMUGDlnPeC
-         xCNKFaBFn/3bgfl4TexVb1IlGq/JWc98Pl1BO45wGF1GU9aC6vzvyNKR27m1UUE9ZK
-         wYcTSbO2IdI7fRRQjSjSHxcL5cgNE24HgU8/AVIE=
+        b=1EREG5KEuBgpSG/p6vJhY9uNpR8OlwZFugBOw7nJpx2ug4Ex8m0wFEhmfyWBg3PfA
+         C+mz/xKEzv0otHUMmPvG5Dni0lMbp0OgDihqOw8EPXp8Ar1GRr+lFMs4BkV0Ai4h8+
+         6BirF6D69zAVdmev1F9yzW0zT0shZ5fP8O4UbWJQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 5.4 071/203] xprtrdma: Close window between waking RPC senders and posting Receives
-Date:   Fri, 17 Jan 2020 00:16:28 +0100
-Message-Id: <20200116231750.370321270@linuxfoundation.org>
+        stable@vger.kernel.org, Lijun Ou <oulijun@huawei.com>,
+        Weihang Li <liweihang@hisilicon.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.4 072/203] RDMA/hns: Fix to support 64K page for srq
+Date:   Fri, 17 Jan 2020 00:16:29 +0100
+Message-Id: <20200116231750.455933921@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -59,90 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Lijun Ou <oulijun@huawei.com>
 
-commit 2ae50ad68cd79224198b525f7bd645c9da98b6ff upstream.
+commit 5c7e76fb7cb5071be800c938ebf2c475e140d3f0 upstream.
 
-A recent clean up attempted to separate Receive handling and RPC
-Reply processing, in the name of clean layering.
+SRQ's page size configuration of BA and buffer should depend on current
+PAGE_SHIFT, or it can't work in scenario of 64K page.
 
-Unfortunately, we can't do this because the Receive Queue has to be
-refilled _after_ the most recent credit update from the responder
-is parsed from the transport header, but _before_ we wake up the
-next RPC sender. That is right in the middle of
-rpcrdma_reply_handler().
-
-Usually this isn't a problem because current responder
-implementations don't vary their credit grant. The one exception is
-when a connection is established: the grant goes from one to a much
-larger number on the first Receive. The requester MUST post enough
-Receives right then so that any outstanding requests can be sent
-without risking RNR and connection loss.
-
-Fixes: 6ceea36890a0 ("xprtrdma: Refactor Receive accounting")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Fixes: c7bcb13442e1 ("RDMA/hns: Add SRQ support for hip08 kernel mode")
+Link: https://lore.kernel.org/r/1571908917-16220-2-git-send-email-liweihang@hisilicon.com
+Signed-off-by: Lijun Ou <oulijun@huawei.com>
+Signed-off-by: Weihang Li <liweihang@hisilicon.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/sunrpc/xprtrdma/rpc_rdma.c  |    1 +
- net/sunrpc/xprtrdma/verbs.c     |   11 +++++++----
- net/sunrpc/xprtrdma/xprt_rdma.h |    1 +
- 3 files changed, 9 insertions(+), 4 deletions(-)
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/sunrpc/xprtrdma/rpc_rdma.c
-+++ b/net/sunrpc/xprtrdma/rpc_rdma.c
-@@ -1362,6 +1362,7 @@ void rpcrdma_reply_handler(struct rpcrdm
- 		xprt->cwnd = credits << RPC_CWNDSHIFT;
- 		spin_unlock(&xprt->transport_lock);
- 	}
-+	rpcrdma_post_recvs(r_xprt, false);
+--- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
++++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+@@ -6088,11 +6088,11 @@ static void hns_roce_v2_write_srqc(struc
+ 	roce_set_field(srq_context->byte_44_idxbufpgsz_addr,
+ 		       SRQC_BYTE_44_SRQ_IDX_BA_PG_SZ_M,
+ 		       SRQC_BYTE_44_SRQ_IDX_BA_PG_SZ_S,
+-		       hr_dev->caps.idx_ba_pg_sz);
++		       hr_dev->caps.idx_ba_pg_sz + PG_SHIFT_OFFSET);
+ 	roce_set_field(srq_context->byte_44_idxbufpgsz_addr,
+ 		       SRQC_BYTE_44_SRQ_IDX_BUF_PG_SZ_M,
+ 		       SRQC_BYTE_44_SRQ_IDX_BUF_PG_SZ_S,
+-		       hr_dev->caps.idx_buf_pg_sz);
++		       hr_dev->caps.idx_buf_pg_sz + PG_SHIFT_OFFSET);
  
- 	req = rpcr_to_rdmar(rqst);
- 	if (req->rl_reply) {
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -84,7 +84,6 @@ rpcrdma_regbuf_alloc(size_t size, enum d
- 		     gfp_t flags);
- static void rpcrdma_regbuf_dma_unmap(struct rpcrdma_regbuf *rb);
- static void rpcrdma_regbuf_free(struct rpcrdma_regbuf *rb);
--static void rpcrdma_post_recvs(struct rpcrdma_xprt *r_xprt, bool temp);
- 
- /* Wait for outstanding transport work to finish. ib_drain_qp
-  * handles the drains in the wrong order for us, so open code
-@@ -170,7 +169,6 @@ rpcrdma_wc_receive(struct ib_cq *cq, str
- 				   rdmab_addr(rep->rr_rdmabuf),
- 				   wc->byte_len, DMA_FROM_DEVICE);
- 
--	rpcrdma_post_recvs(r_xprt, false);
- 	rpcrdma_reply_handler(rep);
- 	return;
- 
-@@ -1478,8 +1476,13 @@ rpcrdma_ep_post(struct rpcrdma_ia *ia,
- 	return 0;
- }
- 
--static void
--rpcrdma_post_recvs(struct rpcrdma_xprt *r_xprt, bool temp)
-+/**
-+ * rpcrdma_post_recvs - Refill the Receive Queue
-+ * @r_xprt: controlling transport instance
-+ * @temp: mark Receive buffers to be deleted after use
-+ *
-+ */
-+void rpcrdma_post_recvs(struct rpcrdma_xprt *r_xprt, bool temp)
- {
- 	struct rpcrdma_buffer *buf = &r_xprt->rx_buf;
- 	struct rpcrdma_ep *ep = &r_xprt->rx_ep;
---- a/net/sunrpc/xprtrdma/xprt_rdma.h
-+++ b/net/sunrpc/xprtrdma/xprt_rdma.h
-@@ -474,6 +474,7 @@ void rpcrdma_ep_disconnect(struct rpcrdm
- 
- int rpcrdma_ep_post(struct rpcrdma_ia *, struct rpcrdma_ep *,
- 				struct rpcrdma_req *);
-+void rpcrdma_post_recvs(struct rpcrdma_xprt *r_xprt, bool temp);
- 
- /*
-  * Buffer calls - xprtrdma/verbs.c
+ 	srq_context->idx_nxt_blk_addr =
+ 		cpu_to_le32(mtts_idx[1] >> PAGE_ADDR_SHIFT);
 
 
