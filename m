@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2300FC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D67C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAE592051A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D5CF2051A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:21:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198897;
-	bh=v9Lp2EmHI5PVUDJ4zW54quaf6jsktkRDtB35oO0fFgY=;
+	s=default; t=1579198902;
+	bh=MVuQihC75yyeoF/lahCObJDjcs4ywXW3oeFo6Zh6GIE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H8zcwK9WRLFiX7KyfCJvHj3uej/w40ywldghentpaSU4FYcCuPg892RyK9yXoUbR/
-	 7Lo0FqdbQNHQcne70lMk9lQNDF63SSXC7cq/ztj3wC4eR9fJw9ZqQi4h9KRW7k1dAa
-	 s3zU4+NEryyYl5XtiHZfyy7nkayaCyB2MHWmcuB4=
+	b=x6okWZwJxZZehSRNgJIb0q2RRwCXFwDUwk62RKDXwZi3XOUTubFR6Btpaoy6OYhK5
+	 N7IGODl2CoB4wMWjHPBegFKAKWHJJT++2S8rdNtNzTsK/etsCLQZEb9gnJMwoIN/Jh
+	 65CLQWqJgboq3qSghsoX4XLv+U1Krz0+3ens0WF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395483AbgAPSVe (ORCPT
+        id S2392071AbgAPR1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:21:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37982 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:27:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392060AbgAPR1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:27:48 -0500
+        id S2390821AbgAPR1h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:27:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEB25246E9;
-        Thu, 16 Jan 2020 17:27:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4AEC246DC;
+        Thu, 16 Jan 2020 17:27:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195667;
-        bh=v9Lp2EmHI5PVUDJ4zW54quaf6jsktkRDtB35oO0fFgY=;
+        s=default; t=1579195656;
+        bh=MVuQihC75yyeoF/lahCObJDjcs4ywXW3oeFo6Zh6GIE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1DUNFNza02c56GAuL1C+0nMf0V1I+DRRmSV2QunylJh8CODRf1ACz4i7AGryqr7kw
-         IfFCeoAnAMEQNeNYbgNahVj1aMMg8LfKtJeBsdDPvPCu/MX4j8Z+MQtKPib+nybApL
-         tQO9Qb7qkIx8pAtZz8wSNVA6q4YasmnpE94AqxRE=
+        b=2reit09ulDujz+8GyMgmEtoVYMj1UmcJzVBX03UtFapvWVnR4sWzaHgDVmptG3w1R
+         wJ06mD6ndxoswhRhctL108pJl8VN7XFWR0h+IMQWJ+YC3ioRW+Sr3BWJl8FGEjGxn+
+         yWqAkvNIR//7Govug0KXDod1lx2IlDo2sahsXvQY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     George Wilkie <gwilkie@vyatta.att-mail.com>,
-        David Ahern <dsahern@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 225/371] mpls: fix warning with multi-label encap
-Date:   Thu, 16 Jan 2020 12:21:37 -0500
-Message-Id: <20200116172403.18149-168-sashal@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 217/371] PCI: PM: Avoid possible suspend-to-idle issue
+Date:   Thu, 16 Jan 2020 12:21:29 -0500
+Message-Id: <20200116172403.18149-160-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -60,43 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: George Wilkie <gwilkie@vyatta.att-mail.com>
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-[ Upstream commit 2f3f7d1fa0d1039b24a55d127ed190f196fc3e79 ]
+[ Upstream commit d491f2b75237ef37d8867830ab7fad8d9659e853 ]
 
-If you configure a route with multiple labels, e.g.
-  ip route add 10.10.3.0/24 encap mpls 16/100 via 10.10.2.2 dev ens4
-A warning is logged:
-  kernel: [  130.561819] netlink: 'ip': attribute type 1 has an invalid
-  length.
+If a PCI driver leaves the device handled by it in D0 and calls
+pci_save_state() on the device in its ->suspend() or ->suspend_late()
+callback, it can expect the device to stay in D0 over the whole
+s2idle cycle.  However, that may not be the case if there is a
+spurious wakeup while the system is suspended, because in that case
+pci_pm_suspend_noirq() will run again after pci_pm_resume_noirq()
+which calls pci_restore_state(), via pci_pm_default_resume_early(),
+so state_saved is cleared and the second iteration of
+pci_pm_suspend_noirq() will invoke pci_prepare_to_sleep() which
+may change the power state of the device.
 
-This happens because mpls_iptunnel_policy has set the type of
-MPLS_IPTUNNEL_DST to fixed size NLA_U32.
-Change it to a minimum size.
-nla_get_labels() does the remaining validation.
+To avoid that, add a new internal flag, skip_bus_pm, that will be set
+by pci_pm_suspend_noirq() when it runs for the first time during the
+given system suspend-resume cycle if the state of the device has
+been saved already and the device is still in D0.  Setting that flag
+will cause the next iterations of pci_pm_suspend_noirq() to set
+state_saved for pci_pm_resume_noirq(), so that it always restores the
+device state from the originally saved data, and avoid calling
+pci_prepare_to_sleep() for the device.
 
-Fixes: e3e4712ec096 ("mpls: ip tunnel support")
-Signed-off-by: George Wilkie <gwilkie@vyatta.att-mail.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 33e4f80ee69b ("ACPI / PM: Ignore spurious SCI wakeups from suspend-to-idle")
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Keith Busch <keith.busch@intel.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mpls/mpls_iptunnel.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/pci-driver.c | 17 ++++++++++++++++-
+ include/linux/pci.h      |  1 +
+ 2 files changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/net/mpls/mpls_iptunnel.c b/net/mpls/mpls_iptunnel.c
-index 6e558a419f60..6c01166f972b 100644
---- a/net/mpls/mpls_iptunnel.c
-+++ b/net/mpls/mpls_iptunnel.c
-@@ -28,7 +28,7 @@
- #include "internal.h"
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index 522e59274b5d..1589a147c536 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -728,6 +728,8 @@ static int pci_pm_suspend(struct device *dev)
+ 	struct pci_dev *pci_dev = to_pci_dev(dev);
+ 	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
  
- static const struct nla_policy mpls_iptunnel_policy[MPLS_IPTUNNEL_MAX + 1] = {
--	[MPLS_IPTUNNEL_DST]	= { .type = NLA_U32 },
-+	[MPLS_IPTUNNEL_DST]	= { .len = sizeof(u32) },
- 	[MPLS_IPTUNNEL_TTL]	= { .type = NLA_U8 },
- };
++	pci_dev->skip_bus_pm = false;
++
+ 	if (pci_has_legacy_pm_support(pci_dev))
+ 		return pci_legacy_suspend(dev, PMSG_SUSPEND);
  
+@@ -801,7 +803,20 @@ static int pci_pm_suspend_noirq(struct device *dev)
+ 		}
+ 	}
+ 
+-	if (!pci_dev->state_saved) {
++	if (pci_dev->skip_bus_pm) {
++		/*
++		 * The function is running for the second time in a row without
++		 * going through full resume, which is possible only during
++		 * suspend-to-idle in a spurious wakeup case.  Moreover, the
++		 * device was originally left in D0, so its power state should
++		 * not be changed here and the device register values saved
++		 * originally should be restored on resume again.
++		 */
++		pci_dev->state_saved = true;
++	} else if (pci_dev->state_saved) {
++		if (pci_dev->current_state == PCI_D0)
++			pci_dev->skip_bus_pm = true;
++	} else {
+ 		pci_save_state(pci_dev);
+ 		if (pci_power_manageable(pci_dev))
+ 			pci_prepare_to_sleep(pci_dev);
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 59f4d10568c6..430f3c335446 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -346,6 +346,7 @@ struct pci_dev {
+ 						   D3cold, not set for devices
+ 						   powered on/off by the
+ 						   corresponding bridge */
++	unsigned int	skip_bus_pm:1;	/* Internal: Skip bus-level PM */
+ 	unsigned int	ignore_hotplug:1;	/* Ignore hotplug events */
+ 	unsigned int	hotplug_user_indicators:1; /* SlotCtl indicators
+ 						      controlled exclusively by
 -- 
 2.20.1
 
