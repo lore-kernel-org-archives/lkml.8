@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE3DC33CB7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F148DC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D33832072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1F5D206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:06:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201601;
-	bh=IVGWB140nrt+GHipb+qYIHmKcToavEP9uvo3bLo7vEs=;
+	s=default; t=1579201609;
+	bh=tvYjhdGG/mNMo4H1UoE0B3fWCG3cdfeEEw8tNd+7JHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PDbDGm8kfiK0+Tjg0zPAEY7rPR9oxcNVKiPIjTFp4QvfW4hGomNa3vadIc1o01o+a
-	 1p+cLkqPzDNROpdduA+9wDKoKZZRQ23yXlpOWB4EBqdnS3Adj7ZNgcXy9GQ8uYNmCd
-	 9rIKa0iMpDNhPWBznJAV1T5bcLQ8k382h/Kwz0YU=
+	b=TpgyxVeEr8bHtOmLzIxDfHqEKwi30pg+CT6pTZH8UOR5YM+Q/SUc9wtvYICW09/+u
+	 14VPEbMJxbLrohLsYyGgteQUqT5zyJIw1e9pBinGJBZY9bO9sUHEJfhPJCUlFDp8Io
+	 6W3bbwwIgqJ/+JPmLUf/2zBymfh9JuqnayjKysfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388107AbgAPRBd (ORCPT
+        id S2407262AbgAPTGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:01:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52552 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:06:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388094AbgAPRB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:01:27 -0500
+        id S2387495AbgAPRB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:01:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 454C021D56;
-        Thu, 16 Jan 2020 17:01:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0319821582;
+        Thu, 16 Jan 2020 17:01:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194086;
-        bh=IVGWB140nrt+GHipb+qYIHmKcToavEP9uvo3bLo7vEs=;
+        s=default; t=1579194087;
+        bh=tvYjhdGG/mNMo4H1UoE0B3fWCG3cdfeEEw8tNd+7JHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hr9M3MbiaK4mF2ZfL1i6Vhj9NbZcWtIZgsQ3UMcnHut1AwecU4Ob+XfjeoNTwe1y7
-         ZjW+3sJxcSbclQZ/4vDQG53PIXj646ae2jP1td4ixpM+OGGHcetPmRMHTf7IwJx1f7
-         2PYiRnzci3YTXwco36n/NOh0KUd7JaWGLc2NqIoc=
+        b=M2bStPI7KLfUHBotrPbSt+6gfLdLZljOYdwOy+lbVntTI6gXum4Z11EuVkJGxbUBQ
+         Rtjyy4YZCJdvhOV33aKW65Jqe4tq3a+87/QF6KEOXejP2bCg7pBp0DzUTKP1UZPCGU
+         pvzU8guJIbnnG8Q/Ihn7FX5YIG19aXC4Rxnkf2Y0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vadim Pasternak <vadimp@mellanox.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 190/671] hwmon: (pmbus/tps53679) Fix driver info initialization in probe routine
-Date:   Thu, 16 Jan 2020 11:51:39 -0500
-Message-Id: <20200116165940.10720-73-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 191/671] mdio_bus: Fix PTR_ERR() usage after initialization to constant
+Date:   Thu, 16 Jan 2020 11:51:40 -0500
+Message-Id: <20200116165940.10720-74-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -59,45 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vadim Pasternak <vadimp@mellanox.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit ff066653aeed8ee2d4dadb1e35774dd91ecbb19f ]
+[ Upstream commit 780feae7eb69388c8d8b661cda6706b0dc0f642b ]
 
-Fix tps53679_probe() by using dynamically allocated "pmbus_driver_info"
-structure instead of static. Usage of static structures causes
-overwritten of the field "vrm_version", in case the system is equipped
-with several tps53679 devices with the different "vrm_version".
-In such case the last probed device overwrites this field for all
-others.
+Fix coccinelle warning:
 
-Fixes: 610526527a13 ("hwmon: (pmbus) Add support for Texas Instruments tps53679 device")
-Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+./drivers/net/phy/mdio_bus.c:51:5-12: ERROR: PTR_ERR applied after initialization to constant on line 44
+./drivers/net/phy/mdio_bus.c:52:5-12: ERROR: PTR_ERR applied after initialization to constant on line 44
+
+fix this by using IS_ERR before PTR_ERR
+
+Fixes: bafbdd527d56 ("phylib: Add device reset GPIO support")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/pmbus/tps53679.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/net/phy/mdio_bus.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/hwmon/pmbus/tps53679.c b/drivers/hwmon/pmbus/tps53679.c
-index 85b515cd9df0..2bc352c5357f 100644
---- a/drivers/hwmon/pmbus/tps53679.c
-+++ b/drivers/hwmon/pmbus/tps53679.c
-@@ -80,7 +80,14 @@ static struct pmbus_driver_info tps53679_info = {
- static int tps53679_probe(struct i2c_client *client,
- 			  const struct i2c_device_id *id)
- {
--	return pmbus_do_probe(client, id, &tps53679_info);
-+	struct pmbus_driver_info *info;
-+
-+	info = devm_kmemdup(&client->dev, &tps53679_info, sizeof(*info),
-+			    GFP_KERNEL);
-+	if (!info)
-+		return -ENOMEM;
-+
-+	return pmbus_do_probe(client, id, info);
- }
+diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
+index c5588d4508f9..5c89a310359d 100644
+--- a/drivers/net/phy/mdio_bus.c
++++ b/drivers/net/phy/mdio_bus.c
+@@ -56,11 +56,12 @@ static int mdiobus_register_gpiod(struct mdio_device *mdiodev)
+ 		gpiod = fwnode_get_named_gpiod(&mdiodev->dev.of_node->fwnode,
+ 					       "reset-gpios", 0, GPIOD_OUT_LOW,
+ 					       "PHY reset");
+-	if (PTR_ERR(gpiod) == -ENOENT ||
+-	    PTR_ERR(gpiod) == -ENOSYS)
+-		gpiod = NULL;
+-	else if (IS_ERR(gpiod))
+-		return PTR_ERR(gpiod);
++	if (IS_ERR(gpiod)) {
++		if (PTR_ERR(gpiod) == -ENOENT || PTR_ERR(gpiod) == -ENOSYS)
++			gpiod = NULL;
++		else
++			return PTR_ERR(gpiod);
++	}
  
- static const struct i2c_device_id tps53679_id[] = {
+ 	mdiodev->reset = gpiod;
+ 
 -- 
 2.20.1
 
