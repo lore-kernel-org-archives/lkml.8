@@ -2,60 +2,53 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31898C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D91B9C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 058D72073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA2542073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:44:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200253;
-	bh=odziI9yQ1/r+MOSZC+bk4hQhBJnZAFnQo3/fMMks6ZE=;
+	s=default; t=1579200255;
+	bh=4Qr1vxM8qtnQZjjUu2ifOXJvofGV+XG+POpK/9OBvBU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GL4mKc03MlPSOh7G+SAMO5py2x4HWYeLl4760ZnES2Xe5NCoc4A3IwHJQNZ2vvBbt
-	 Ly0hDpJhUlF4eo5prXsJCvh7bmxuSLLuOdS4ZchuSHITPx4cjQ6VmaygRaosOuIVxT
-	 8j/DfR6Wj8MSIEib67HenrvOarRey1eZ+K3TV3t8=
+	b=P0w4M6URh6+KhWQ6z0+QXHlk6dAXBcG4AM414i+f6z1achO7UhqDF1S4y3cUIHRy/
+	 qatlNfs/AO1apkwo5CyRvxP3ot9JrD+ls431roMhCbXMMxmR7ppsmgsUG0CHy9dc6W
+	 maOvQIpDaFwNmfAlCCBfFU9EZRlKDg+21h1r/wbo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390120AbgAPRK7 (ORCPT
+        id S2389742AbgAPSoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:10:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50354 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:44:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390090AbgAPRK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:10:57 -0500
+        id S2390113AbgAPRK7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:10:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0E0B2468C;
-        Thu, 16 Jan 2020 17:10:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DF3524692;
+        Thu, 16 Jan 2020 17:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194655;
-        bh=odziI9yQ1/r+MOSZC+bk4hQhBJnZAFnQo3/fMMks6ZE=;
+        s=default; t=1579194658;
+        bh=4Qr1vxM8qtnQZjjUu2ifOXJvofGV+XG+POpK/9OBvBU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g0fpha4zcqvRi0dy2X33hCffzcMP+S4+bft3lRAoUMV0DWjisllG+rwysjC8ujU1a
-         yALTT+5e4aKWBKkkFac7E+EipjQeqKz9rVnXW/jt79y1jfOYi5gqbKCaJ3cWUVVUvg
-         QGXUPYXwWO3ZFEo3GQH/bZrIvSKXjgh+TM1Co1tQ=
+        b=eLs64+6cTFRnxrSO979mp4+WHbEF1PiT2JljecPgSK1C7ra5aVdM1RM7p3xyo+lUp
+         7Z46GPiCqu9lKaNiveQEiq3Xnub4py7Pdl5HufQptw4hLds/rfkw1OVq6y7s1ivIJY
+         mcfPRJ/17r+asq2hhP3mjIyObvX2CXxDSGxNne78=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>,
-        Paul Burton <paul.burton@mips.com>, ralf@linux-mips.org,
-        jhogan@kernel.org, "Maciej W . Rozycki" <macro@linux-mips.org>,
-        Hassan Naveed <hnaveed@wavecomp.com>,
-        Stephen Kitt <steve@sk2.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, linux-mips@vger.kernel.org,
-        clang-built-linux@googlegroups.com, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 508/671] mips: avoid explicit UB in assignment of mips_io_port_base
-Date:   Thu, 16 Jan 2020 12:02:26 -0500
-Message-Id: <20200116170509.12787-245-sashal@kernel.org>
+Cc:     Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 510/671] iommu/mediatek: Fix iova_to_phys PA start for 4GB mode
+Date:   Thu, 16 Jan 2020 12:02:28 -0500
+Message-Id: <20200116170509.12787-247-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -68,101 +61,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Desaulniers <ndesaulniers@google.com>
+From: Yong Wu <yong.wu@mediatek.com>
 
-[ Upstream commit 12051b318bc3ce5b42d6d786191008284b067d83 ]
+[ Upstream commit 76ce65464fcd2c21db84391572b7938b716aceb0 ]
 
-The code in question is modifying a variable declared const through
-pointer manipulation.  Such code is explicitly undefined behavior, and
-is the lone issue preventing malta_defconfig from booting when built
-with Clang:
+In M4U 4GB mode, the physical address is remapped as below:
 
-If an attempt is made to modify an object defined with a const-qualified
-type through use of an lvalue with non-const-qualified type, the
-behavior is undefined.
+CPU Physical address:
 
-LLVM is removing such assignments. A simple fix is to not declare
-variables const that you plan on modifying.  Limiting the scope would be
-a better method of preventing unwanted writes to such a variable.
+====================
 
-Further, the code in question mentions "compiler bugs" without any links
-to bug reports, so it is difficult to know if the issue is resolved in
-GCC. The patch was authored in 2006, which would have been GCC 4.0.3 or
-4.1.1. The minimal supported version of GCC in the Linux kernel is
-currently 4.6.
+0      1G       2G     3G       4G     5G
+|---A---|---B---|---C---|---D---|---E---|
++--I/O--+------------Memory-------------+
 
-For what its worth, there was UB before the commit in question, it just
-added a barrier and got lucky IRT codegen. I don't think there's any
-actual compiler bugs related, just runtime bugs due to UB.
+IOMMU output physical address:
+ =============================
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/610
-Fixes: 966f4406d903 ("[MIPS] Work around bad code generation for <asm/io.h>.")
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Debugged-by: Nathan Chancellor <natechancellor@gmail.com>
-Suggested-by: Eli Friedman <efriedma@quicinc.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: ralf@linux-mips.org
-Cc: jhogan@kernel.org
-Cc: Maciej W. Rozycki <macro@linux-mips.org>
-Cc: Hassan Naveed <hnaveed@wavecomp.com>
-Cc: Stephen Kitt <steve@sk2.org>
-Cc: Serge Semin <fancer.lancer@gmail.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: clang-built-linux@googlegroups.com
+                                4G      5G     6G      7G      8G
+                                |---E---|---B---|---C---|---D---|
+                                +------------Memory-------------+
+
+The Region 'A'(I/O) can not be mapped by M4U; For Region 'B'/'C'/'D', the
+bit32 of the CPU physical address always is needed to set, and for Region
+'E', the CPU physical address keep as is. something looks like this:
+CPU PA         ->    M4U OUTPUT PA
+0x4000_0000          0x1_4000_0000 (Add bit32)
+0x8000_0000          0x1_8000_0000 ...
+0xc000_0000          0x1_c000_0000 ...
+0x1_0000_0000        0x1_0000_0000 (No change)
+
+Additionally, the iommu consumers always use the CPU phyiscal address.
+
+The PA in the iova_to_phys that is got from v7s always is u32, But
+from the CPU point of view, PA only need add BIT(32) when PA < 0x4000_0000.
+
+Fixes: 30e2fccf9512 ("iommu/mediatek: Enlarge the validate PA range
+for 4GB mode")
+Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/include/asm/io.h | 14 ++------------
- arch/mips/kernel/setup.c   |  2 +-
- 2 files changed, 3 insertions(+), 13 deletions(-)
+ drivers/iommu/mtk_iommu.c | 26 +++++++++++++++++++++++++-
+ 1 file changed, 25 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
-index 54c730aed327..df1eaa365279 100644
---- a/arch/mips/include/asm/io.h
-+++ b/arch/mips/include/asm/io.h
-@@ -62,21 +62,11 @@
-  * instruction, so the lower 16 bits must be zero.  Should be true on
-  * on any sane architecture; generic code does not use this assumption.
-  */
--extern const unsigned long mips_io_port_base;
-+extern unsigned long mips_io_port_base;
+diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+index f9f69f7111a9..c88cc299e3c9 100644
+--- a/drivers/iommu/mtk_iommu.c
++++ b/drivers/iommu/mtk_iommu.c
+@@ -115,6 +115,30 @@ struct mtk_iommu_domain {
  
--/*
-- * Gcc will generate code to load the value of mips_io_port_base after each
-- * function call which may be fairly wasteful in some cases.  So we don't
-- * play quite by the book.  We tell gcc mips_io_port_base is a long variable
-- * which solves the code generation issue.  Now we need to violate the
-- * aliasing rules a little to make initialization possible and finally we
-- * will need the barrier() to fight side effects of the aliasing chat.
-- * This trickery will eventually collapse under gcc's optimizer.  Oh well.
-- */
- static inline void set_io_port_base(unsigned long base)
- {
--	* (unsigned long *) &mips_io_port_base = base;
--	barrier();
-+	mips_io_port_base = base;
- }
+ static struct iommu_ops mtk_iommu_ops;
  
- /*
-diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index 8aaaa42f91ed..e87c98b8a72c 100644
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -76,7 +76,7 @@ static char __initdata builtin_cmdline[COMMAND_LINE_SIZE] = CONFIG_CMDLINE;
-  * mips_io_port_base is the begin of the address space to which x86 style
-  * I/O ports are mapped.
-  */
--const unsigned long mips_io_port_base = -1;
-+unsigned long mips_io_port_base = -1;
- EXPORT_SYMBOL(mips_io_port_base);
++/*
++ * In M4U 4GB mode, the physical address is remapped as below:
++ *
++ * CPU Physical address:
++ * ====================
++ *
++ * 0      1G       2G     3G       4G     5G
++ * |---A---|---B---|---C---|---D---|---E---|
++ * +--I/O--+------------Memory-------------+
++ *
++ * IOMMU output physical address:
++ *  =============================
++ *
++ *                                 4G      5G     6G      7G      8G
++ *                                 |---E---|---B---|---C---|---D---|
++ *                                 +------------Memory-------------+
++ *
++ * The Region 'A'(I/O) can NOT be mapped by M4U; For Region 'B'/'C'/'D', the
++ * bit32 of the CPU physical address always is needed to set, and for Region
++ * 'E', the CPU physical address keep as is.
++ * Additionally, The iommu consumers always use the CPU phyiscal address.
++ */
++#define MTK_IOMMU_4GB_MODE_REMAP_BASE	 0x40000000
++
+ static LIST_HEAD(m4ulist);	/* List all the M4U HWs */
  
- static struct resource code_resource = { .name = "Kernel code", };
+ #define for_each_m4u(data)	list_for_each_entry(data, &m4ulist, list)
+@@ -409,7 +433,7 @@ static phys_addr_t mtk_iommu_iova_to_phys(struct iommu_domain *domain,
+ 	pa = dom->iop->iova_to_phys(dom->iop, iova);
+ 	spin_unlock_irqrestore(&dom->pgtlock, flags);
+ 
+-	if (data->enable_4GB)
++	if (data->enable_4GB && pa < MTK_IOMMU_4GB_MODE_REMAP_BASE)
+ 		pa |= BIT_ULL(32);
+ 
+ 	return pa;
 -- 
 2.20.1
 
