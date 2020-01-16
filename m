@@ -2,52 +2,44 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD29C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB988C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 302242064C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:25:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579170356;
-	bh=rfbKFjdigRuq8AVbOSw0k4NXMuREWFVYbNiLvRYfj88=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=jWwon/lFKaQlsfWHyHiUZJvVWSizUETMiXXeI486RZCan+MWuhesZ5GxXbRNzOypf
-	 LYPui5GB+DluG6iikyWVm/ruev9xk1bhxaekgyM6bVvZMXBpxkOuChmA6kPlA+cZFP
-	 ie4wR3Ytgb2oMInUAhV6hOPGH8PTrASVEVU0PXN4=
+	by mail.kernel.org (Postfix) with ESMTP id 92A7820661
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:28:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbgAPKZz (ORCPT
+        id S1726160AbgAPK2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 05:25:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47928 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 05:28:02 -0500
+Received: from mx2.suse.de ([195.135.220.15]:37176 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726187AbgAPKZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 05:25:55 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 469582053B;
-        Thu, 16 Jan 2020 10:25:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579170353;
-        bh=rfbKFjdigRuq8AVbOSw0k4NXMuREWFVYbNiLvRYfj88=;
-        h=Date:From:To:Cc:Subject:From;
-        b=a7Rll640V8lSXwIwcQMbTU5F422ieKtpgEDvghdlnKJZHqHmMXFhArtpu8tZ2drEg
-         qJehFzVPpI0wYOKA/Ja+z4lgq8GNw2DwW7yOkVrXHFWAR+SISQ04oAoR73r82nI3zX
-         yt/E1ziPduV/QHANAsH6itgKnaoYB5nx5enVH6/Q=
-Date:   Thu, 16 Jan 2020 10:25:49 +0000
-From:   Will Deacon <will@kernel.org>
-To:     joro@8bytes.org
-Cc:     iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        robin.murphy@arm.com, jean-philippe@linaro.org,
-        kernel-team@android.com
-Subject: [GIT PULL] iommu/arm-smmu: Updates for 5.6
-Message-ID: <20200116102548.GA14761@willie-the-truck>
+        id S1725800AbgAPK2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 05:28:02 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 83CFFACB8;
+        Thu, 16 Jan 2020 10:27:59 +0000 (UTC)
+Date:   Thu, 16 Jan 2020 11:27:58 +0100
+From:   Libor Pechacek <lpechacek@suse.cz>
+To:     linuxppc-dev@lists.ozlabs.org,
+        Nathan Fontenot <nfont@linux.vnet.ibm.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Suchanek <msuchanek@suse.cz>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Leonardo Bras <leonardo@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>, stable@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] powerpc: drmem: avoid NULL pointer dereference when drmem is
+ unavailable
+Message-ID: <20200116102758.GC25138@fm.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -57,109 +49,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joerg,
+In KVM guests drmem structure is only zero initialized. Trying to
+manipulate DLPAR parameters results in a crash in this environment.
 
-Please pull these Arm SMMU updates for 5.6. The branch is based on your
-arm/smmu branch and includes a patch addressing the feedback from Greg
-about setting the module 'owner' field in the 'iommu_ops'.
+$ echo "memory add count 1" > /sys/kernel/dlpar
+Oops: Kernel access of bad area, sig: 11 [#1]
+LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+Modules linked in: af_packet(E) rfkill(E) nvram(E) vmx_crypto(E)
+gf128mul(E) e1000(E) virtio_balloon(E) rtc_generic(E) crct10dif_vpmsum(E)
+btrfs(E) blake2b_generic(E) libcrc32c(E) xor(E) raid6_pq(E) virtio_rng(E)
+virtio_blk(E) ohci_pci(E) ehci_pci(E) ohci_hcd(E) ehci_hcd(E)
+crc32c_vpmsum(E) usbcore(E) virtio_pci(E) virtio_ring(E) virtio(E) sg(E)
+dm_multipath(E) dm_mod(E) scsi_dh_rdac(E) scsi_dh_emc(E) scsi_dh_alua(E)
+scsi_mod(E)
+CPU: 1 PID: 4114 Comm: bash Kdump: loaded Tainted: G            E     5.5.0-rc6-2-default #1
+NIP:  c0000000000ff294 LR: c0000000000ff248 CTR: 0000000000000000
+REGS: c0000000fb9d3880 TRAP: 0300   Tainted: G            E      (5.5.0-rc6-2-default)
+MSR:  8000000000009033 <SF,EE,ME,IR,DR,RI,LE>  CR: 28242428  XER: 20000000
+CFAR: c0000000009a6c10 DAR: 0000000000000010 DSISR: 40000000 IRQMASK: 0
+GPR00: c0000000000ff248 c0000000fb9d3b10 c000000001682e00 0000000000000033
+GPR04: c0000000ff30bf90 c0000000ff394800 0000000000005110 ffffffffffffffe8
+GPR08: 0000000000000000 0000000000000000 00000000fe1c0000 0000000000000000
+GPR12: 0000000000002200 c00000003fffee00 0000000000000000 000000011cbc37c0
+GPR16: 000000011cb27ed0 0000000000000000 000000011cb6dd10 0000000000000000
+GPR20: 000000011cb7db28 000001003ce035f0 000000011cbc7828 000000011cbc6c70
+GPR24: 000001003cf01210 0000000000000000 c0000000ffade4e0 c000000002d7216b
+GPR28: 0000000000000001 c000000002d78560 0000000000000000 c0000000015458d0
+NIP [c0000000000ff294] dlpar_memory+0x6e4/0xd00
+LR [c0000000000ff248] dlpar_memory+0x698/0xd00
+Call Trace:
+[c0000000fb9d3b10] [c0000000000ff248] dlpar_memory+0x698/0xd00 (unreliable)
+[c0000000fb9d3ba0] [c0000000000f5990] handle_dlpar_errorlog+0xc0/0x190
+[c0000000fb9d3c10] [c0000000000f5c58] dlpar_store+0x198/0x4a0
+[c0000000fb9d3cd0] [c000000000c4cb00] kobj_attr_store+0x30/0x50
+[c0000000fb9d3cf0] [c0000000005a37b4] sysfs_kf_write+0x64/0x90
+[c0000000fb9d3d10] [c0000000005a2c90] kernfs_fop_write+0x1b0/0x290
+[c0000000fb9d3d60] [c0000000004a2bec] __vfs_write+0x3c/0x70
+[c0000000fb9d3d80] [c0000000004a6560] vfs_write+0xd0/0x260
+[c0000000fb9d3dd0] [c0000000004a69ac] ksys_write+0xdc/0x130
+[c0000000fb9d3e20] [c00000000000b478] system_call+0x5c/0x68
+Instruction dump:
+ebc90000 1ce70018 38e7ffe8 7cfe3a14 7fbe3840 419dff14 fb610068 7fc9f378
+39000000 4800000c 60000000 4195fef4 <81490010> 39290018 38c80001 7ea93840
+---[ end trace cc2dd8152608c295 ]---
 
-I've used a signed tag this time, so you can see the summary of the
-changes listed in there. The big deal is that we're laying the groundwork
-for PCIe PASID support in SMMUv3, and I expect to hook that up for PCIe
-masters in 5.7 once we've exported the necessary symbols to do so.
+Taking closer look at the code, I can see that for_each_drmem_lmb is a
+macro expanding into `for (lmb = &drmem_info->lmbs[0]; lmb <=
+&drmem_info->lmbs[drmem_info->n_lmbs - 1]; lmb++)`. When drmem_info->lmbs
+is NULL, the loop would iterate through the whole address range if it
+weren't stopped by the NULL pointer dereference on the next line.
 
-Cheers,
+This patch aligns for_each_drmem_lmb and for_each_drmem_lmb_in_range macro
+behavior with the common C semantics, where the end marker does not belong
+to the scanned range, and alters get_lmb_range() semantics. As a side
+effect, the wraparound observed in the crash is prevented.
 
-Will
+Fixes: 6c6ea53725b3 ("powerpc/mm: Separate ibm, dynamic-memory data from DT format")
+Cc: Michal Suchanek <msuchanek@suse.cz>
+Cc: stable@vger.kernel.org
+Signed-off-by: Libor Pechacek <lpechacek@suse.cz>
+---
+ arch/powerpc/include/asm/drmem.h                | 4 ++--
+ arch/powerpc/platforms/pseries/hotplug-memory.c | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
---->8
+diff --git a/arch/powerpc/include/asm/drmem.h b/arch/powerpc/include/asm/drmem.h
+index 3d76e1c388c2..28c3d936fdf3 100644
+--- a/arch/powerpc/include/asm/drmem.h
++++ b/arch/powerpc/include/asm/drmem.h
+@@ -27,12 +27,12 @@ struct drmem_lmb_info {
+ extern struct drmem_lmb_info *drmem_info;
+ 
+ #define for_each_drmem_lmb_in_range(lmb, start, end)		\
+-	for ((lmb) = (start); (lmb) <= (end); (lmb)++)
++	for ((lmb) = (start); (lmb) < (end); (lmb)++)
+ 
+ #define for_each_drmem_lmb(lmb)					\
+ 	for_each_drmem_lmb_in_range((lmb),			\
+ 		&drmem_info->lmbs[0],				\
+-		&drmem_info->lmbs[drmem_info->n_lmbs - 1])
++		&drmem_info->lmbs[drmem_info->n_lmbs])
+ 
+ /*
+  * The of_drconf_cell_v1 struct defines the layout of the LMB data
+diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/powerpc/platforms/pseries/hotplug-memory.c
+index c126b94d1943..4ea6af002e27 100644
+--- a/arch/powerpc/platforms/pseries/hotplug-memory.c
++++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
+@@ -236,9 +236,9 @@ static int get_lmb_range(u32 drc_index, int n_lmbs,
+ 	if (!start)
+ 		return -EINVAL;
+ 
+-	end = &start[n_lmbs - 1];
++	end = &start[n_lmbs];
+ 
+-	last_lmb = &drmem_info->lmbs[drmem_info->n_lmbs - 1];
++	last_lmb = &drmem_info->lmbs[drmem_info->n_lmbs];
+ 	if (end > last_lmb)
+ 		return -EINVAL;
+ 
+-- 
+2.24.1
 
-The following changes since commit 1ea27ee2f76e67f98b9942988f1336a70d351317:
 
-  iommu/arm-smmu: Update my email address in MODULE_AUTHOR() (2019-12-23 14:06:06 +0100)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git tags/arm-smmu-updates
-
-for you to fetch changes up to 5a4549fd790500d7db94b7d2af6d60cee42110c3:
-
-  PCI/ATS: Add PASID stubs (2020-01-15 16:30:28 +0000)
-
-----------------------------------------------------------------
-Arm SMMU updates for 5.6
-
-- Support for building, and {un,}loading the SMMU drivers as modules
-
-- Minor cleanups
-
-- SMMUv3:
-  * Non-critical fix to encoding of TLBI_NH_VA invalidation command
-  * Fix broken sanity check on size of MMIO resource during probe
-  * Support for Substream IDs which will soon be provided by PCI PASIDs
-
-- io-pgtable:
-  * Finish off the TTBR1 preparation work partially merged last cycle
-  * Ensure correct memory attributes for non-cacheable mappings
-
-- SMMU:
-  * Namespace public #defines to avoid collisions with arch/arm64/
-  * Avoid using valid SMR register when probing mask size
-
-----------------------------------------------------------------
-Jean-Philippe Brucker (12):
-      iommu/arm-smmu-v3: Drop __GFP_ZERO flag from DMA allocation
-      dt-bindings: document PASID property for IOMMU masters
-      iommu/arm-smmu-v3: Parse PASID devicetree property of platform devices
-      ACPI/IORT: Parse SSID property of named component node
-      iommu/arm-smmu-v3: Prepare arm_smmu_s1_cfg for SSID support
-      iommu/arm-smmu-v3: Add context descriptor tables allocators
-      iommu/arm-smmu-v3: Add support for Substream IDs
-      iommu/arm-smmu-v3: Propagate ssid_bits
-      iommu/arm-smmu-v3: Prepare for handling arm_smmu_write_ctx_desc() failure
-      iommu/arm-smmu-v3: Add second level of context descriptor table
-      iommu/arm-smmu-v3: Improve add_device() error handling
-      PCI/ATS: Add PASID stubs
-
-Masahiro Yamada (3):
-      iommu/arm-smmu-v3: Fix resource_size check
-      iommu/arm-smmu-v3: Remove useless of_match_ptr()
-      iommu/arm-smmu: Fix -Wunused-const-variable warning
-
-Robin Murphy (5):
-      iommu/io-pgtable-arm: Rationalise TTBRn handling
-      iommu/io-pgtable-arm: Improve attribute handling
-      iommu/io-pgtable-arm: Rationalise TCR handling
-      iommu/io-pgtable-arm: Prepare for TTBR1 usage
-      iommu/arm-smmu: Improve SMR mask test
-
-Shameer Kolothum (1):
-      iommu/arm-smmu-v3: Populate VMID field for CMDQ_OP_TLBI_NH_VA
-
-Will Deacon (7):
-      drivers/iommu: Initialise module 'owner' field in iommu_device_set_ops()
-      iommu/io-pgtable-arm: Support non-coherent stage-2 page tables
-      iommu/io-pgtable-arm: Ensure ARM_64_LPAE_S2_TCR_RES1 is unsigned
-      iommu/arm-smmu: Rename public #defines under ARM_SMMU_ namespace
-      iommu/io-pgtable-arm: Rationalise VTCR handling
-      iommu/arm-smmu-v3: Use WRITE_ONCE() when changing validity of an STE
-      iommu/arm-smmu-v3: Return -EBUSY when trying to re-add a device
-
- Documentation/devicetree/bindings/iommu/iommu.txt |   6 +
- drivers/acpi/arm64/iort.c                         |  18 +
- drivers/iommu/arm-smmu-impl.c                     |   2 +-
- drivers/iommu/arm-smmu-v3.c                       | 499 +++++++++++++++++-----
- drivers/iommu/arm-smmu.c                          | 197 +++++----
- drivers/iommu/arm-smmu.h                          | 228 ++++++----
- drivers/iommu/io-pgtable-arm-v7s.c                |  22 +-
- drivers/iommu/io-pgtable-arm.c                    | 164 ++++---
- drivers/iommu/io-pgtable.c                        |   2 +-
- drivers/iommu/ipmmu-vmsa.c                        |   2 +-
- drivers/iommu/msm_iommu.c                         |   4 +-
- drivers/iommu/mtk_iommu.c                         |   4 +-
- drivers/iommu/of_iommu.c                          |   6 +-
- drivers/iommu/qcom_iommu.c                        |  25 +-
- include/linux/io-pgtable.h                        |  27 +-
- include/linux/iommu.h                             |  13 +-
- include/linux/pci-ats.h                           |   3 +
- 17 files changed, 810 insertions(+), 412 deletions(-)
+-- 
+Libor Pechacek
+SUSE Labs                                Remember to have fun...
