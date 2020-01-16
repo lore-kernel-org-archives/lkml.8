@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E3B6C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1875C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BF08206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:08:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F4D0206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:08:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201697;
-	bh=qAJVdmPz7SId3e3ffjn7MuWUJTLbtffxPCjvPdE4Zks=;
+	s=default; t=1579201706;
+	bh=UUbtdtYPxr1Fu2Ab0dI1KWoUNyTnq3mp4rCOTqYE0Cc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kLvdGgkYfZmoiFgd7FcKwT4sFtwZwYKNabgOHyPZtQwR7GBX2Do1eftOM+/ex+fWc
-	 qxUSvFk7JcU4mj8M/0eWQt45MjeyuhEF+tHSwVkMt8w7fl3qmS8N63+DEkYweIJAwS
-	 yRUQuxR51HrEUlQLs0BQSseqHaBPWWRegxqTuCAA=
+	b=cbsqiaTm3PjygkZ9YxcAtB4MmCzHvHA/g2jtB6/M1A5Bokttefgc8pGqRymSqFVFV
+	 jEVL94SgMaYRJdVQmfs7R++90Wr4/dByprN4sKyi+7e8LNJhU3mmClHl6WrMcrG54/
+	 rWPRdXVRj95GYgFz7RPcbej0x6DJG0XqSAqjS7U8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388200AbgAPTIP (ORCPT
+        id S2392587AbgAPTIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:08:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51752 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:08:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387997AbgAPRBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:01:06 -0500
+        id S2387966AbgAPRBA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:01:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 849E124684;
-        Thu, 16 Jan 2020 17:01:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BEA520730;
+        Thu, 16 Jan 2020 17:00:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194065;
-        bh=qAJVdmPz7SId3e3ffjn7MuWUJTLbtffxPCjvPdE4Zks=;
+        s=default; t=1579194060;
+        bh=UUbtdtYPxr1Fu2Ab0dI1KWoUNyTnq3mp4rCOTqYE0Cc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eEhRrZvYL5EGcI3mPKujAy16YWG/2MHrLolIDmIA4X4xz3yo7migf8NO/z/Shc5jc
-         ZICAwhvFNqBhHacXLW6IC08tJQ7ObLJEzinejNbwHMfaYiekASjI9zYulaOzRT29c/
-         TN4+wfW64OYY4OpUX3Uc0uim7oRZfp9RKEIG6Wwo=
+        b=DLdZDnCLjA1nqHtFqVY7Ml1JYHighXnlOLb5vc5aGMBfCM3yUpW/uGtuf2d7jClxs
+         492zZ5BUKsnes4el8LJsXW0WbUOh2Og7U7/57uXvoLNW7XWno1/9dbFzcBDPxtUgL0
+         4rj7RMgXpfWvEaALJDEYsaAjO4IkbbJ8jYZH0uYk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 176/671] pinctrl: sh-pfc: r8a7792: Fix vin1_data18_b pin group
-Date:   Thu, 16 Jan 2020 11:51:25 -0500
-Message-Id: <20200116165940.10720-59-sashal@kernel.org>
+Cc:     Paul Selles <paul.selles@microchip.com>,
+        Wesley Sheng <wesley.sheng@microchip.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>,
+        linux-pci@vger.kernel.org, linux-ntb@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 172/671] ntb_hw_switchtec: debug print 64bit aligned crosslink BAR Numbers
+Date:   Thu, 16 Jan 2020 11:51:21 -0500
+Message-Id: <20200116165940.10720-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -60,33 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Paul Selles <paul.selles@microchip.com>
 
-[ Upstream commit b9fd50488b4939ce5b3a026d29e752e17c2d1800 ]
+[ Upstream commit cce8e04cf79e47809455215744685e8eb56f94bb ]
 
-The vin1_data18_b pin group itself is present, but it is not listed in
-the VIN1 pin group array, and thus cannot be selected.
+Switchtec NTB crosslink BARs are 64bit addressed but they are printed as
+32bit addressed BARs. Fix debug log to increment the BAR numbers by 2 to
+reflect the 64bit address alignment.
 
-Fixes: 7dd74bb1f058786e ("pinctrl: sh-pfc: r8a7792: Add VIN pin groups")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Fixes: 017525018202 ("ntb_hw_switchtec: Add initialization code for crosslink")
+Signed-off-by: Paul Selles <paul.selles@microchip.com>
+Signed-off-by: Wesley Sheng <wesley.sheng@microchip.com>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-r8a7792.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/ntb/hw/mscc/ntb_hw_switchtec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7792.c b/drivers/pinctrl/sh-pfc/pfc-r8a7792.c
-index cc3597f66605..46c41ca6ea38 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a7792.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a7792.c
-@@ -1916,6 +1916,7 @@ static const char * const vin1_groups[] = {
- 	"vin1_data8",
- 	"vin1_data24_b",
- 	"vin1_data20_b",
-+	"vin1_data18_b",
- 	"vin1_data16_b",
- 	"vin1_sync",
- 	"vin1_field",
+diff --git a/drivers/ntb/hw/mscc/ntb_hw_switchtec.c b/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
+index 5ee5f40b4dfc..9916bc5b6759 100644
+--- a/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
++++ b/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
+@@ -1120,7 +1120,7 @@ static int crosslink_enum_partition(struct switchtec_ntb *sndev,
+ 
+ 		dev_dbg(&sndev->stdev->dev,
+ 			"Crosslink BAR%d addr: %llx\n",
+-			i, bar_addr);
++			i*2, bar_addr);
+ 
+ 		if (bar_addr != bar_space * i)
+ 			continue;
 -- 
 2.20.1
 
