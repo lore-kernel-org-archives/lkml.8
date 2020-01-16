@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C099BC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2704C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D9992073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4C312073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:56:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197383;
-	bh=vayA911Fv7W0NJw9zCefiHtXsDCZZGzMTTeGqFHphFI=;
+	s=default; t=1579197389;
+	bh=3FrFC1OLRTzIJtgYEMGP4U0VmRLAUSOFAgj941QtiJw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1KEI6aCsYMYoois7S2jQAC2QuDghabe0dByN71+zXQGWoAF8FXssGyYuyVxoU7vZj
-	 vAtnDnqHCedFACU5Z89L6jKsD0MaLLHq3k3obOK78XmIt3e3zOHgi6SauQJmHdB5pv
-	 /2E9KHAmaKUGemqihdmpaxX2maHUMJXX3ltR74qw=
+	b=UHNDzQct8B3n6TcgToX2PH+LV2dCkSFGFuCyg6utO5P7FVxTTS/TTj03IPWkOkgT0
+	 CnSqXOfbQkkggQEb2QcbrxU/+SfPlc/Ea9BGxxVkTOVOV3o1mdorrceNfFGVglXRfv
+	 zVEhi7Cm80YNCSdl2GuIv5mc2dIyAp+68HrM0c+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405975AbgAPR4W (ORCPT
+        id S2406095AbgAPR43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:56:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34536 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:56:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391412AbgAPRn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:43:58 -0500
+        id S2394036AbgAPRn5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:43:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A10524743;
-        Thu, 16 Jan 2020 17:43:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE50124741;
+        Thu, 16 Jan 2020 17:43:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196637;
-        bh=vayA911Fv7W0NJw9zCefiHtXsDCZZGzMTTeGqFHphFI=;
+        s=default; t=1579196636;
+        bh=3FrFC1OLRTzIJtgYEMGP4U0VmRLAUSOFAgj941QtiJw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bAUqhYGM+r6AVdL67h7WT+OeO6ckuEya0EF34VvPTRoGSnllkXeVAgWU+YtjXjoc+
-         MuaVjMCVutjzd18F/iVqpXPkBRgL0T9LOuRaAjnJhbgCqQD8Tr55EiUVtj9FFL5+OS
-         WzZaILYxWQ0V340229Igsk88l7PicEVIngOyu3JM=
+        b=iN9BW0eJ6Squj3N5Nsbhmkvgj1ZsVXG1zzrg9MtsEM2NX1LYQSj+E7C1E5HG6Cgw0
+         nq+i5awJM0pesdaxNTYheGq5Ytdys0iXCiIWpCxP5WidBXM4zL4kiU1YIUIbQktyWx
+         YWvqHTDGSdwqGZQ3S91vmvtRQ7IoS2BnGRi1sdd0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.4 050/174] ASoC: qcom: Fix of-node refcount unbalance in apq8016_sbc_parse_of()
-Date:   Thu, 16 Jan 2020 12:40:47 -0500
-Message-Id: <20200116174251.24326-50-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.4 049/174] drm/nouveau/pmu: don't print reply values if exec is false
+Date:   Thu, 16 Jan 2020 12:40:46 -0500
+Message-Id: <20200116174251.24326-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -60,89 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 8d1667200850f8753c0265fa4bd25c9a6e5f94ce ]
+[ Upstream commit b1d03fc36ec9834465a08c275c8d563e07f6f6bf ]
 
-The apq8016 driver leaves the of-node refcount at aborting from the
-loop of for_each_child_of_node() in the error path.  Not only the
-iterator node of for_each_child_of_node(), the children nodes referred
-from it for codec and cpu have to be properly unreferenced.
+Currently the uninitialized values in the array reply are printed out
+when exec is false and nvkm_pmu_send has not updated the array. Avoid
+confusion by only dumping out these values if they have been actually
+updated.
 
-Fixes: bdb052e81f62 ("ASoC: qcom: add apq8016 sound card support")
-Cc: Patrick Lai <plai@codeaurora.org>
-Cc: Banajit Goswami <bgoswami@codeaurora.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Detected by CoverityScan, CID#1271291 ("Uninitialized scaler variable")
+Fixes: ebb58dc2ef8c ("drm/nouveau/pmu: rename from pwr (no binary change)")
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/qcom/apq8016_sbc.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/qcom/apq8016_sbc.c b/sound/soc/qcom/apq8016_sbc.c
-index 1efdf0088ecd..886f2027e671 100644
---- a/sound/soc/qcom/apq8016_sbc.c
-+++ b/sound/soc/qcom/apq8016_sbc.c
-@@ -98,13 +98,15 @@ static struct apq8016_sbc_data *apq8016_sbc_parse_of(struct snd_soc_card *card)
- 
- 		if (!cpu || !codec) {
- 			dev_err(dev, "Can't find cpu/codec DT node\n");
--			return ERR_PTR(-EINVAL);
-+			ret = -EINVAL;
-+			goto error;
- 		}
- 
- 		link->cpu_of_node = of_parse_phandle(cpu, "sound-dai", 0);
- 		if (!link->cpu_of_node) {
- 			dev_err(card->dev, "error getting cpu phandle\n");
--			return ERR_PTR(-EINVAL);
-+			ret = -EINVAL;
-+			goto error;
- 		}
- 
- 		link->codec_of_node = of_parse_phandle(codec, "sound-dai", 0);
-@@ -116,13 +118,13 @@ static struct apq8016_sbc_data *apq8016_sbc_parse_of(struct snd_soc_card *card)
- 		ret = snd_soc_of_get_dai_name(cpu, &link->cpu_dai_name);
- 		if (ret) {
- 			dev_err(card->dev, "error getting cpu dai name\n");
--			return ERR_PTR(ret);
-+			goto error;
- 		}
- 
- 		ret = snd_soc_of_get_dai_name(codec, &link->codec_dai_name);
- 		if (ret) {
- 			dev_err(card->dev, "error getting codec dai name\n");
--			return ERR_PTR(ret);
-+			goto error;
- 		}
- 
- 		link->platform_of_node = link->cpu_of_node;
-@@ -132,15 +134,24 @@ static struct apq8016_sbc_data *apq8016_sbc_parse_of(struct snd_soc_card *card)
- 		ret = of_property_read_string(np, "link-name", &link->name);
- 		if (ret) {
- 			dev_err(card->dev, "error getting codec dai_link name\n");
--			return ERR_PTR(ret);
-+			goto error;
- 		}
- 
- 		link->stream_name = link->name;
- 		link->init = apq8016_sbc_dai_init;
- 		link++;
-+
-+		of_node_put(cpu);
-+		of_node_put(codec);
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c b/drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c
+index e6f74168238c..2ef9e942f43a 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c
+@@ -87,10 +87,10 @@ nvkm_memx_fini(struct nvkm_memx **pmemx, bool exec)
+ 	if (exec) {
+ 		nvkm_pmu_send(pmu, reply, PROC_MEMX, MEMX_MSG_EXEC,
+ 			      memx->base, finish);
++		nvkm_debug(subdev, "Exec took %uns, PMU_IN %08x\n",
++			   reply[0], reply[1]);
  	}
  
- 	return data;
-+
-+ error:
-+	of_node_put(np);
-+	of_node_put(cpu);
-+	of_node_put(codec);
-+	return ERR_PTR(ret);
+-	nvkm_debug(subdev, "Exec took %uns, PMU_IN %08x\n",
+-		   reply[0], reply[1]);
+ 	kfree(memx);
+ 	return 0;
  }
- 
- static int apq8016_sbc_platform_probe(struct platform_device *pdev)
 -- 
 2.20.1
 
