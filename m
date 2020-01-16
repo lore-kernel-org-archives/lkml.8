@@ -2,54 +2,52 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E19FC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 521D8C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42C2A24683
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:31:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2665724683
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:31:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195899;
-	bh=1SjJAlZJgHXI8ZPZc0v1AGoOUn/u9gQxhzVoZQ7cp+w=;
+	s=default; t=1579195903;
+	bh=0++cJLb9/80RaLZW+1yZLHRT93Jn23hqDa/931c+WFA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vsowCOD1K1NWAewZ3tsJ5BNPlzzPj0XvQElKTqAlHMgBa71TRTSX33hw4L9sfWUV7
-	 5qX+BfdTeA4JUsByXRhcxwsIAga5h2l1TWVvgBbWNMVinzlfUBDcqyHcUTbkV1MrSX
-	 ZPp+khUW4NLsdnnrrANHxqPMCGLDn6fPVxr0QX24=
+	b=Rkdozk429z0upZgJ4wc3OX1BJ9AcWkimOYzzzdWSI3+Pt39MryFinmUMev6ZV+NYD
+	 QiRfjX0277j1hNNZ5QDCH9dA2VSdlAVeKUigctnBZD8JaUKBI2ujtfdA5SqCAldsAd
+	 Yq92IKw0gNBMwn6f8WLoLtPlmZKaDFwifJv9LQeY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404786AbgAPRbi (ORCPT
+        id S2392893AbgAPRbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:31:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43156 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:31:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404521AbgAPRad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:30:33 -0500
+        id S2404713AbgAPRbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:31:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1882724726;
-        Thu, 16 Jan 2020 17:30:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99A7F246B2;
+        Thu, 16 Jan 2020 17:31:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195833;
-        bh=1SjJAlZJgHXI8ZPZc0v1AGoOUn/u9gQxhzVoZQ7cp+w=;
+        s=default; t=1579195869;
+        bh=0++cJLb9/80RaLZW+1yZLHRT93Jn23hqDa/931c+WFA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w0YU8g8K22n1vSX3m8G8Oj3GQBJ+oWkAyBWO/6HQAwQIQGGHevu5d/m81MqDCMGa4
-         YelmOT94UbjfZxnRvqNzZYL8W7hltmEuupk/JM0RJwpghVdf8ITIvK5fq2ramnJS7i
-         O1l6iuLiMIN32ZXE1Li69i+DAEVBGbq4/T9E6bMA=
+        b=iT2//tQ7bGyIJpasxBtxUunv+Tdc6nPltHfT+E/nDq378emhO/gxclgnjc9gOdNML
+         9Xji8CBS6x9kls2Vw5acHw23B2nYuNsf+R/uxftQIytV46lK7bpu8snRajscDfAqg/
+         hhrvcd0T9YwqBeUBj+/rVKuZukxUZSSHoANBif1Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Ping-Ke Shih <pkshih@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 338/371] rtlwifi: Remove unnecessary NULL check in rtl_regd_init
-Date:   Thu, 16 Jan 2020 12:23:30 -0500
-Message-Id: <20200116172403.18149-281-sashal@kernel.org>
+Cc:     Martin Wilck <mwilck@suse.com>, David Bond <dbond@suse.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 365/371] scsi: qla2xxx: fix rports not being mark as lost in sync fabric scan
+Date:   Thu, 16 Jan 2020 12:23:57 -0500
+Message-Id: <20200116172403.18149-308-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -62,53 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Martin Wilck <mwilck@suse.com>
 
-[ Upstream commit 091c6e9c083f7ebaff00b37ad13562d51464d175 ]
+[ Upstream commit d341e9a8f2cffe4000c610225c629f62c7489c74 ]
 
-When building with Clang + -Wtautological-pointer-compare:
+In qla2x00_find_all_fabric_devs(), fcport->flags & FCF_LOGIN_NEEDED is a
+necessary condition for logging into new rports, but not for dropping lost
+ones.
 
-drivers/net/wireless/realtek/rtlwifi/regd.c:389:33: warning: comparison
-of address of 'rtlpriv->regd' equal to a null pointer is always false
-[-Wtautological-pointer-compare]
-        if (wiphy == NULL || &rtlpriv->regd == NULL)
-                              ~~~~~~~~~^~~~    ~~~~
-1 warning generated.
-
-The address of an array member is never NULL unless it is the first
-struct member so remove the unnecessary check. This was addressed in
-the staging version of the driver in commit f986978b32b3 ("Staging:
-rtlwifi: remove unnecessary NULL check").
-
-While we are here, fix the following checkpatch warning:
-
-CHECK: Comparison to NULL could be written "!wiphy"
-35: FILE: drivers/net/wireless/realtek/rtlwifi/regd.c:389:
-+       if (wiphy == NULL)
-
-Fixes: 0c8173385e54 ("rtl8192ce: Add new driver")
-Link:https://github.com/ClangBuiltLinux/linux/issues/750
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Ping-Ke Shih <pkshih@realtek.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 726b85487067 ("qla2xxx: Add framework for async fabric discovery")
+Link: https://lore.kernel.org/r/20191122221912.20100-2-martin.wilck@suse.com
+Tested-by: David Bond <dbond@suse.com>
+Signed-off-by: Martin Wilck <mwilck@suse.com>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtlwifi/regd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_init.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/regd.c b/drivers/net/wireless/realtek/rtlwifi/regd.c
-index 1bf3eb25c1da..72ca370331fb 100644
---- a/drivers/net/wireless/realtek/rtlwifi/regd.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/regd.c
-@@ -427,7 +427,7 @@ int rtl_regd_init(struct ieee80211_hw *hw,
- 	struct wiphy *wiphy = hw->wiphy;
- 	struct country_code_to_enum_rd *country = NULL;
+diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
+index bd2421863510..a66f7cec797c 100644
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -5145,8 +5145,7 @@ qla2x00_find_all_fabric_devs(scsi_qla_host_t *vha)
+ 		if (test_bit(LOOP_RESYNC_NEEDED, &vha->dpc_flags))
+ 			break;
  
--	if (wiphy == NULL || &rtlpriv->regd == NULL)
-+	if (!wiphy)
- 		return -EINVAL;
+-		if ((fcport->flags & FCF_FABRIC_DEVICE) == 0 ||
+-		    (fcport->flags & FCF_LOGIN_NEEDED) == 0)
++		if ((fcport->flags & FCF_FABRIC_DEVICE) == 0)
+ 			continue;
  
- 	/* init country_code from efuse channel plan */
+ 		if (fcport->scan_state == QLA_FCPORT_SCAN) {
+@@ -5171,7 +5170,8 @@ qla2x00_find_all_fabric_devs(scsi_qla_host_t *vha)
+ 			}
+ 		}
+ 
+-		if (fcport->scan_state == QLA_FCPORT_FOUND)
++		if (fcport->scan_state == QLA_FCPORT_FOUND &&
++		    (fcport->flags & FCF_LOGIN_NEEDED) != 0)
+ 			qla24xx_fcport_handle_login(vha, fcport);
+ 	}
+ 	return (rval);
 -- 
 2.20.1
 
