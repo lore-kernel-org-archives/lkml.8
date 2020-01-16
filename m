@@ -2,52 +2,55 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4ACEC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86988C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77E3D20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F2F020663
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:54:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200874;
-	bh=g4t8kFndCxD6s/8W5gK5vLLMfA5wtpfK7dLthKUgN6I=;
+	s=default; t=1579200881;
+	bh=2imUuZyJToGTz6oK6smINQHGEWTm0o6uwv3fDAo+Jr8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wBZeiaEH4lqN37KhnapCUabhhRO3mtRQcJvYQ4VORr+UHYj/VKWCDVeLAC5F3cyZz
-	 OeNqUAltoFWAZE7wYufiXRKW1mXI0F6omwX7NUbljbtpybA3w75SXRE484Nzhiambb
-	 mfs9akNPZG0v9HKh3GAkauziyzRS96Q7vcO3UPbI=
+	b=q7F4yk6V0F8y2XlrMME8l1skdcR7bCHMRfYdzY2KhAJH6KLg+uGVI57UH6wwqC8Yy
+	 eTxsQb3xyk4gMsiVIRuX89DlFR06tgRt4bjsSoTmdiM7XRT+wWsbmCXtpkl9IkxOCy
+	 ip2UnD9ZP3VK+6rwvlvJDD7UKIwhQcxj2aLMCWJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437119AbgAPSyd (ORCPT
+        id S2437111AbgAPSyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:54:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40850 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:54:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389255AbgAPRH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:07:59 -0500
+        id S2389248AbgAPRH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:07:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46BB4206D9;
-        Thu, 16 Jan 2020 17:07:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 545B120730;
+        Thu, 16 Jan 2020 17:07:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194479;
-        bh=g4t8kFndCxD6s/8W5gK5vLLMfA5wtpfK7dLthKUgN6I=;
+        s=default; t=1579194476;
+        bh=2imUuZyJToGTz6oK6smINQHGEWTm0o6uwv3fDAo+Jr8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D3pcXu8vL+Fmw9KJui888lvTtBP+o1hP7ikuOxRqtGrzzoq3ZWihEp/1eF5Psh1NM
-         2kFGUDQs2enm32RDGAvtlVT/XVAtj5Ime2zuhj1hCRFj8t6xXawovP/PtMM8v/mZdX
-         OHSyH/XXJ7pEihAeuLszDhuGQ4F4ou0WMEdGj9xA=
+        b=MeNmKVAkYgThOAOYvoiTyibnYTX93ifMFJ4ICdeRjZLPo3mKBwbd2CoWWohwC7OJW
+         Lxe8zvUNAlGz+nEvAEHXKAw0XoTcHJNc2fXYVQemikblb79vvnpNnh7Eg34r66fh6W
+         jwcPb7Qw0DkYuF9HCclwy3P9nC4xXYwQU8kLIqqM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Stephen Hines <srhines@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.19 381/671] iommu: Add missing new line for dma type
-Date:   Thu, 16 Jan 2020 12:00:19 -0500
-Message-Id: <20200116170509.12787-118-sashal@kernel.org>
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 379/671] misc: sgi-xp: Properly initialize buf in xpc_get_rsvd_page_pa
+Date:   Thu, 16 Jan 2020 12:00:17 -0500
+Message-Id: <20200116170509.12787-116-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,33 +63,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Baolu <baolu.lu@linux.intel.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 24f307d8abf79486dd3c1b645037df7d91602aaa ]
+[ Upstream commit b0576f9ecb5c51e9932531d23c447b2739261841 ]
 
-So that all types are printed in the same format.
+Clang warns:
 
-Fixes: c52c72d3dee81 ("iommu: Add sysfs attribyte for domain type")
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+drivers/misc/sgi-xp/xpc_partition.c:73:14: warning: variable 'buf' is
+uninitialized when used within its own initialization [-Wuninitialized]
+        void *buf = buf;
+              ~~~   ^~~
+1 warning generated.
+
+Arnd's explanation during review:
+
+  /*
+   * Returns the physical address of the partition's reserved page through
+   * an iterative number of calls.
+   *
+   * On first call, 'cookie' and 'len' should be set to 0, and 'addr'
+   * set to the nasid of the partition whose reserved page's address is
+   * being sought.
+   * On subsequent calls, pass the values, that were passed back on the
+   * previous call.
+   *
+   * While the return status equals SALRET_MORE_PASSES, keep calling
+   * this function after first copying 'len' bytes starting at 'addr'
+   * into 'buf'. Once the return status equals SALRET_OK, 'addr' will
+   * be the physical address of the partition's reserved page. If the
+   * return status equals neither of these, an error as occurred.
+   */
+  static inline s64
+  sn_partition_reserved_page_pa(u64 buf, u64 *cookie, u64 *addr, u64 *len)
+
+  so *len is set to zero on the first call and tells the bios how many
+  bytes are accessible at 'buf', and it does get updated by the BIOS to
+  tell us how many bytes it needs, and then we allocate that and try again.
+
+Fixes: 279290294662 ("[IA64-SGI] cleanup the way XPC locates the reserved page")
+Link: https://github.com/ClangBuiltLinux/linux/issues/466
+Suggested-by: Stephen Hines <srhines@google.com>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/iommu.c | 2 +-
+ drivers/misc/sgi-xp/xpc_partition.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index bc14825edc9c..d588b6844f5f 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -317,7 +317,7 @@ static ssize_t iommu_group_show_type(struct iommu_group *group,
- 			type = "unmanaged\n";
- 			break;
- 		case IOMMU_DOMAIN_DMA:
--			type = "DMA";
-+			type = "DMA\n";
- 			break;
- 		}
- 	}
+diff --git a/drivers/misc/sgi-xp/xpc_partition.c b/drivers/misc/sgi-xp/xpc_partition.c
+index 0c3ef6f1df54..519826ba1378 100644
+--- a/drivers/misc/sgi-xp/xpc_partition.c
++++ b/drivers/misc/sgi-xp/xpc_partition.c
+@@ -70,7 +70,7 @@ xpc_get_rsvd_page_pa(int nasid)
+ 	unsigned long rp_pa = nasid;	/* seed with nasid */
+ 	size_t len = 0;
+ 	size_t buf_len = 0;
+-	void *buf = buf;
++	void *buf = NULL;
+ 	void *buf_base = NULL;
+ 	enum xp_retval (*get_partition_rsvd_page_pa)
+ 		(void *, u64 *, unsigned long *, size_t *) =
 -- 
 2.20.1
 
