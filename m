@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9580FC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6D3C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F9B720684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBC9920684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:19:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198773;
-	bh=aiSaP5lUXFc8+CWZRQ6GqqhVxMN+V6cg5bnGo3IhH30=;
+	s=default; t=1579198778;
+	bh=4njscMVRamwTD/3+ApG2GUvE64k++H3GsbZ2/ieNP3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uWayTkXBLsHutb9B7aM1GAcs8aGfpdgXcKxePm/eBGbtAb8xm9o0Utu8bplaWG76v
-	 19quQfsfvM1Sx3JtPrQh3rtaf0TRJvfmTFjmuvLvdPPD5yJ26yoBZHgAs2ND/YdyIc
-	 VT/5W+N/eU3NJhz4pQPJH+shf2hsDp3wuwexR1AI=
+	b=0diHbRHhzn22qcNIww4eyMIJRgl0R8omLaI0D+VN+cgTSXca55YJ52shX+4CBvIfV
+	 KuMrsmuKcoDSnSUrdr4lPNxW1iD9iBeVpQyWwqGtnQugaYshZFBL4TKQXYOBDyU/aC
+	 DVvNMfUCsN/QgnAqiRKN1nNHaLbKOs6OaRcw0M7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395452AbgAPSTc (ORCPT
+        id S2395454AbgAPSTh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:19:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39558 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:19:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392575AbgAPR23 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:28:29 -0500
+        id S2392559AbgAPR21 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:28:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCD0E246EA;
-        Thu, 16 Jan 2020 17:28:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B511B246F5;
+        Thu, 16 Jan 2020 17:28:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195708;
-        bh=aiSaP5lUXFc8+CWZRQ6GqqhVxMN+V6cg5bnGo3IhH30=;
+        s=default; t=1579195706;
+        bh=4njscMVRamwTD/3+ApG2GUvE64k++H3GsbZ2/ieNP3g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P7bvObhYPyU7yGp0INY0EI21KorhGVyKOo2fNjLKipE76rNylK8kfksSgVLBtgA2r
-         ynW4T5VXn4bD9d7EOZzGSwtp2cioYoRVSPfZ2gs87gsUCLH/NTPJTorg+0Jqz8s0XE
-         /OhRW0zU18gXMQCYgesynqMypNXlBK3hppkl9L4w=
+        b=ihIIAoh+zJKDMzPDs7yZhR6bQkSdDRHErvU43/MAhJ5lp0QxmjcmI/fOfuMqK0hqV
+         D+VDFr2dGqKX7PdYtA8tFFL/+Mv4kTpQljiJVDFLNZNl514dD+EpVf8LUN/V/Styat
+         kLWtpVTCzt9iWuT1pU1qEOUt2duqVrW9crttPTqI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
+Cc:     Ruslan Bilovol <ruslan.bilovol@gmail.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 254/371] mic: avoid statically declaring a 'struct device'.
-Date:   Thu, 16 Jan 2020 12:22:06 -0500
-Message-Id: <20200116172403.18149-197-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 253/371] usb: host: xhci-hub: fix extra endianness conversion
+Date:   Thu, 16 Jan 2020 12:22:05 -0500
+Message-Id: <20200116172403.18149-196-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -60,116 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Ruslan Bilovol <ruslan.bilovol@gmail.com>
 
-[ Upstream commit bc83f79bd2119230888fb8574639d5a51b38f903 ]
+[ Upstream commit 6269e4c76eacabaea0d0099200ae1a455768d208 ]
 
-Generally, declaring a platform device as a static variable is
-a bad idea and can cause all kinds of problems, in particular
-with the DMA configuration and lifetime rules.
+Don't do extra cpu_to_le32 conversion for
+put_unaligned_le32 because it is already implemented
+in this function.
 
-A specific problem we hit here is from a bug in clang that warns
-about certain (otherwise valid) macros when used in static variables:
+Fixes sparse error:
+xhci-hub.c:1152:44: warning: incorrect type in argument 1 (different base types)
+xhci-hub.c:1152:44:    expected unsigned int [usertype] val
+xhci-hub.c:1152:44:    got restricted __le32 [usertype]
 
-drivers/misc/mic/card/mic_x100.c:285:27: warning: shift count >= width of type [-Wshift-count-overflow]
-static u64 mic_dma_mask = DMA_BIT_MASK(64);
-                          ^~~~~~~~~~~~~~~~
-include/linux/dma-mapping.h:141:54: note: expanded from macro 'DMA_BIT_MASK'
- #define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
-                                                     ^ ~~~
-
-A slightly better way here is to create the platform device dynamically
-and set the dma mask in the probe function.
-This avoids the warning and some other problems, but is still not ideal
-because the device creation should really be separated from the driver,
-and the fact that the device has no parent means we have to force
-the dma mask rather than having it set up from the bus that the device
-is actually on.
-
-Fixes: dd8d8d44df64 ("misc: mic: MIC card driver specific changes to enable SCIF")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20190712092426.872625-1-arnd@arndb.de
+Fixes: 395f540 "xhci: support new USB 3.1 hub request to get extended port status"
+Cc: Mathias Nyman <mathias.nyman@linux.intel.com>
+Signed-off-by: Ruslan Bilovol <ruslan.bilovol@gmail.com>
+Link: https://lore.kernel.org/r/1562501839-26522-1-git-send-email-ruslan.bilovol@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/mic/card/mic_x100.c | 28 ++++++++++++----------------
- 1 file changed, 12 insertions(+), 16 deletions(-)
+ drivers/usb/host/xhci-hub.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/misc/mic/card/mic_x100.c b/drivers/misc/mic/card/mic_x100.c
-index b9f0710ffa6b..4007adc666f3 100644
---- a/drivers/misc/mic/card/mic_x100.c
-+++ b/drivers/misc/mic/card/mic_x100.c
-@@ -249,6 +249,9 @@ static int __init mic_probe(struct platform_device *pdev)
- 	mdrv->dev = &pdev->dev;
- 	snprintf(mdrv->name, sizeof(mic_driver_name), mic_driver_name);
- 
-+	/* FIXME: use dma_set_mask_and_coherent() and check result */
-+	dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
-+
- 	mdev->mmio.pa = MIC_X100_MMIO_BASE;
- 	mdev->mmio.len = MIC_X100_MMIO_LEN;
- 	mdev->mmio.va = devm_ioremap(&pdev->dev, MIC_X100_MMIO_BASE,
-@@ -294,18 +297,6 @@ static void mic_platform_shutdown(struct platform_device *pdev)
- 	mic_remove(pdev);
- }
- 
--static u64 mic_dma_mask = DMA_BIT_MASK(64);
--
--static struct platform_device mic_platform_dev = {
--	.name = mic_driver_name,
--	.id   = 0,
--	.num_resources = 0,
--	.dev = {
--		.dma_mask = &mic_dma_mask,
--		.coherent_dma_mask = DMA_BIT_MASK(64),
--	},
--};
--
- static struct platform_driver __refdata mic_platform_driver = {
- 	.probe = mic_probe,
- 	.remove = mic_remove,
-@@ -315,6 +306,8 @@ static struct platform_driver __refdata mic_platform_driver = {
- 	},
- };
- 
-+static struct platform_device *mic_platform_dev;
-+
- static int __init mic_init(void)
- {
- 	int ret;
-@@ -328,9 +321,12 @@ static int __init mic_init(void)
- 
- 	request_module("mic_x100_dma");
- 	mic_init_card_debugfs();
--	ret = platform_device_register(&mic_platform_dev);
-+
-+	mic_platform_dev = platform_device_register_simple(mic_driver_name,
-+							   0, NULL, 0);
-+	ret = PTR_ERR_OR_ZERO(mic_platform_dev);
- 	if (ret) {
--		pr_err("platform_device_register ret %d\n", ret);
-+		pr_err("platform_device_register_full ret %d\n", ret);
- 		goto cleanup_debugfs;
- 	}
- 	ret = platform_driver_register(&mic_platform_driver);
-@@ -341,7 +337,7 @@ static int __init mic_init(void)
- 	return ret;
- 
- device_unregister:
--	platform_device_unregister(&mic_platform_dev);
-+	platform_device_unregister(mic_platform_dev);
- cleanup_debugfs:
- 	mic_exit_card_debugfs();
- done:
-@@ -351,7 +347,7 @@ static int __init mic_init(void)
- static void __exit mic_exit(void)
- {
- 	platform_driver_unregister(&mic_platform_driver);
--	platform_device_unregister(&mic_platform_dev);
-+	platform_device_unregister(mic_platform_dev);
- 	mic_exit_card_debugfs();
- }
- 
+diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
+index d1363f3fabfa..3bb38d9dc45b 100644
+--- a/drivers/usb/host/xhci-hub.c
++++ b/drivers/usb/host/xhci-hub.c
+@@ -1118,7 +1118,7 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 			}
+ 			port_li = readl(port_array[wIndex] + PORTLI);
+ 			status = xhci_get_ext_port_status(temp, port_li);
+-			put_unaligned_le32(cpu_to_le32(status), &buf[4]);
++			put_unaligned_le32(status, &buf[4]);
+ 		}
+ 		break;
+ 	case SetPortFeature:
 -- 
 2.20.1
 
