@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17BF8C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E44C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC4DD207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4B742081E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:37:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199843;
-	bh=hVLeEUaOeMMSd2tkkAvEA9VjNWHrwdwc57q7m5N+ncE=;
+	s=default; t=1579199849;
+	bh=0tf7ycelAdvsqxIAW/LQpLuzSb4Rkln2Jb86A9uToFg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XlZU9ieLZClLJTsQib+vQMlH0ETBZRSHtuSgWXY0p54nhe115+NLvNo/0B9Oe5k1K
-	 kEu7Wzp7BtC/XvhxZB9CnN0VMX+CNsLOAQvYxbSHCC8BSCSBfq19ZRnUZBbStEmVQZ
-	 60knZJ6/bKY07fPzBrTaDRS3U3j5nOfrW1PAfLnM=
+	b=2KR8ep64DSCUkm5Kpn1QMnS5IrpIfR07eTZ2Rl+ZXKqHqiyUwTmiELrDDyO/cl+rh
+	 QSPZF4ubAGX9uBMzfrk3a2/WRJ0K3jTP/f28XMBoCXt9jCpS38rh4fCcloggJAPSy3
+	 FbFKaM0lXGnTi2f1qRKksJ8uZuRz/vo7iCoKUb/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390588AbgAPRMw (ORCPT
+        id S2436890AbgAPSh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:12:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56306 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:37:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729521AbgAPRMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:12:49 -0500
+        id S2391657AbgAPRYW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:24:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B30A246AB;
-        Thu, 16 Jan 2020 17:12:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A98992469F;
+        Thu, 16 Jan 2020 17:24:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194769;
-        bh=hVLeEUaOeMMSd2tkkAvEA9VjNWHrwdwc57q7m5N+ncE=;
+        s=default; t=1579195462;
+        bh=0tf7ycelAdvsqxIAW/LQpLuzSb4Rkln2Jb86A9uToFg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UkVO47LnPojkPZzkoB5s+FH83RHkcqm6EElDRbtJlO63lq8s5Nal07DmrLnKUpMsf
-         cRzJ9WlNAySIJpCzIC9RxKvWwWaIfnYdB+6QOffz7rtkWudVgCK+lH9v2WtY61mc54
-         snEZnX+R+eBXW7Dd4IXDrP0uU9NWff9axV9doSMg=
+        b=WM4YhO0ky/16gDmtV1Kn+53aLvSlTtIym1dvcDCRXUbn5CXSsqetL78hJb03MMf4d
+         gt+qSAYe6rvkhnqToBxGw+QshisCXX/oVxuk2JKhj+voS5BiyvHbyuwCrho9rjoxG0
+         FPBAr0rB6oXXYhKSn5TlJ6YVHHA7uJlfp1APuRws=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 588/671] act_mirred: Fix mirred_init_module error handling
-Date:   Thu, 16 Jan 2020 12:03:46 -0500
-Message-Id: <20200116170509.12787-325-sashal@kernel.org>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 070/371] tty: ipwireless: Fix potential NULL pointer dereference
+Date:   Thu, 16 Jan 2020 12:19:02 -0500
+Message-Id: <20200116172403.18149-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
-References: <20200116170509.12787-1-sashal@kernel.org>
+In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
+References: <20200116172403.18149-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,36 +61,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 11c9a7d38af524217efb7a176ad322b97ac2f163 ]
+[ Upstream commit 7dd50e205b3348dc7784efbdf85723551de64a25 ]
 
-If tcf_register_action failed, mirred_device_notifier
-should be unregistered.
+There is a potential NULL pointer dereference in case
+alloc_ctrl_packet() fails and returns NULL.
 
-Fixes: 3b87956ea645 ("net sched: fix race in mirred device removal")
+Fixes: 099dc4fb6265 ("ipwireless: driver for PC Card 3G/UMTS modem")
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/act_mirred.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/tty/ipwireless/hardware.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/sched/act_mirred.c b/net/sched/act_mirred.c
-index 399e3beae6cf..a30c17a28281 100644
---- a/net/sched/act_mirred.c
-+++ b/net/sched/act_mirred.c
-@@ -445,7 +445,11 @@ static int __init mirred_init_module(void)
- 		return err;
+diff --git a/drivers/tty/ipwireless/hardware.c b/drivers/tty/ipwireless/hardware.c
+index a6b8240af6cd..960e9375a1a9 100644
+--- a/drivers/tty/ipwireless/hardware.c
++++ b/drivers/tty/ipwireless/hardware.c
+@@ -1516,6 +1516,8 @@ static void ipw_send_setup_packet(struct ipw_hardware *hw)
+ 			sizeof(struct ipw_setup_get_version_query_packet),
+ 			ADDR_SETUP_PROT, TL_PROTOCOLID_SETUP,
+ 			TL_SETUP_SIGNO_GET_VERSION_QRY);
++	if (!ver_packet)
++		return;
+ 	ver_packet->header.length = sizeof(struct tl_setup_get_version_qry);
  
- 	pr_info("Mirror/redirect action on\n");
--	return tcf_register_action(&act_mirred_ops, &mirred_net_ops);
-+	err = tcf_register_action(&act_mirred_ops, &mirred_net_ops);
-+	if (err)
-+		unregister_netdevice_notifier(&mirred_device_notifier);
-+
-+	return err;
- }
- 
- static void __exit mirred_cleanup_module(void)
+ 	/*
 -- 
 2.20.1
 
