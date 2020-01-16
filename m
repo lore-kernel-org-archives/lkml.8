@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A9FC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49AA1C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67750246F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22B872470E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:29:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195738;
-	bh=Ufllj10GVb8c5uaGHvmfcbjCFK+zsR9xpfccnRZiLqk=;
+	s=default; t=1579195740;
+	bh=joW9gCGtn7LIvHqY6FdzL63I+rB36f9vG8zWb0MgOoc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Uy5YocU1/wdmLUq+DsnBHsYe75e7DzHykEjT2T8m/fdb7NAh3U6AT2K3twAyuKQFc
-	 cqN+OiX82gP4ltukB1mlCs2d5h0j0d1VYJZJJiVzOrH+YgXxtlifxn+qLYiIo8R2kp
-	 bi1vyJouQALeRhv1XlL5/zHJhFmRKTCTrP3P5D98=
+	b=GEejF4Nn5ysjPuB4nNoT1EP1VQ1NlagqhkTHSqi+iFgBbgsvTw0ioKMBORpyLIi5U
+	 K3eh8a5pZKCyRKp8EK75W108NTJMvCEfcn9+/9f+Yc0hUuTtr8CPEA7SVzs93/Q78M
+	 1cxV26YHtVtym9jJbX9rV/YYCgVPHI5UDyn3IYFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404218AbgAPR24 (ORCPT
+        id S2404234AbgAPR27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:28:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40072 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:28:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392651AbgAPR2q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:28:46 -0500
+        id S2392658AbgAPR2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:28:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4FD2246DE;
-        Thu, 16 Jan 2020 17:28:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8824B246EE;
+        Thu, 16 Jan 2020 17:28:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195725;
-        bh=Ufllj10GVb8c5uaGHvmfcbjCFK+zsR9xpfccnRZiLqk=;
+        s=default; t=1579195728;
+        bh=joW9gCGtn7LIvHqY6FdzL63I+rB36f9vG8zWb0MgOoc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j6W8gwn3OzcS69fWBve9KPCM2KhnvYtTwnHx/WZobpKfhjyNdkQ+oHjVfglw839kI
-         x6jC8qckSGQPxSliwzp/Q8iWTJ1/mH8lB/h7zzfBX6djy/fNcD+PybxaUGvNeZtj1P
-         PDwsNj7uv/cLoUU+LjAo6A/UMfC4b9b6/hR0qlHE=
+        b=OtC/Lj/5wY84wjxqDudsQxiW3FfVwcD0WGJQZutF/zK5yj/dQ0+vi7PnOnHbD0A2B
+         I+7wsZfXDe+QwFrMnVFEiKh3fPb2jcOx7qE4ozbuz2tNGGz+HKj0hx1jt0hMwZqR7i
+         MsOAOJ3+PWjz6r8aaRKpC//YvO18t5VU9S0GJpf8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.14 267/371] ASoC: wm8737: Fix copy-paste error in wm8737_snd_controls
-Date:   Thu, 16 Jan 2020 12:22:19 -0500
-Message-Id: <20200116172403.18149-210-sashal@kernel.org>
+Cc:     Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 269/371] bnxt_en: Fix handling FRAG_ERR when NVM_INSTALL_UPDATE cmd fails
+Date:   Thu, 16 Jan 2020 12:22:21 -0500
+Message-Id: <20200116172403.18149-212-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -61,39 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-[ Upstream commit 554b75bde64bcad9662530726d1483f7ef012069 ]
+[ Upstream commit dd2ebf3404c7c295014bc025dea23960960ceb1a ]
 
-sound/soc/codecs/wm8737.c:112:29: warning:
- high_3d defined but not used [-Wunused-const-variable=]
+If FW returns FRAG_ERR in response error code, driver is resending the
+command only when HWRM command returns success. Fix the code to resend
+NVM_INSTALL_UPDATE command with DEFRAG install flags, if FW returns
+FRAG_ERR in its response error code.
 
-'high_3d' should be used for 3D High Cut-off.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 2a9ae13a2641 ("ASoC: Add initial WM8737 driver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20190815091920.64480-1-yuehaibing@huawei.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: cb4d1d626145 ("bnxt_en: Retry failed NVM_INSTALL_UPDATE with defragmentation flag enabled.")
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm8737.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/sound/soc/codecs/wm8737.c b/sound/soc/codecs/wm8737.c
-index f0cb1c4afe3c..c5a8d758f58b 100644
---- a/sound/soc/codecs/wm8737.c
-+++ b/sound/soc/codecs/wm8737.c
-@@ -170,7 +170,7 @@ SOC_DOUBLE("Polarity Invert Switch", WM8737_ADC_CONTROL, 5, 6, 1, 0),
- SOC_SINGLE("3D Switch", WM8737_3D_ENHANCE, 0, 1, 0),
- SOC_SINGLE("3D Depth", WM8737_3D_ENHANCE, 1, 15, 0),
- SOC_ENUM("3D Low Cut-off", low_3d),
--SOC_ENUM("3D High Cut-off", low_3d),
-+SOC_ENUM("3D High Cut-off", high_3d),
- SOC_SINGLE_TLV("3D ADC Volume", WM8737_3D_ENHANCE, 7, 1, 1, adc_tlv),
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+index 963beaa8fabb..3c78cd1cdd6f 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+@@ -1667,21 +1667,19 @@ static int bnxt_flash_package_from_file(struct net_device *dev,
+ 	mutex_lock(&bp->hwrm_cmd_lock);
+ 	hwrm_err = _hwrm_send_message(bp, &install, sizeof(install),
+ 				      INSTALL_PACKAGE_TIMEOUT);
+-	if (hwrm_err)
+-		goto flash_pkg_exit;
+-
+-	if (resp->error_code) {
++	if (hwrm_err) {
+ 		u8 error_code = ((struct hwrm_err_output *)resp)->cmd_err;
  
- SOC_SINGLE("Noise Gate Switch", WM8737_NOISE_GATE, 0, 1, 0),
+-		if (error_code == NVM_INSTALL_UPDATE_CMD_ERR_CODE_FRAG_ERR) {
++		if (resp->error_code && error_code ==
++		    NVM_INSTALL_UPDATE_CMD_ERR_CODE_FRAG_ERR) {
+ 			install.flags |= cpu_to_le16(
+ 			       NVM_INSTALL_UPDATE_REQ_FLAGS_ALLOWED_TO_DEFRAG);
+ 			hwrm_err = _hwrm_send_message(bp, &install,
+ 						      sizeof(install),
+ 						      INSTALL_PACKAGE_TIMEOUT);
+-			if (hwrm_err)
+-				goto flash_pkg_exit;
+ 		}
++		if (hwrm_err)
++			goto flash_pkg_exit;
+ 	}
+ 
+ 	if (resp->result) {
 -- 
 2.20.1
 
