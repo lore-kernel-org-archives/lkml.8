@@ -2,193 +2,98 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2D7C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C104C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA6282077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:16:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202190;
-	bh=DZkziBpfqckwNkeg7jDD1qzOPOfp/MLw+qLK75gTTdc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xg9biyuxKticcjDIgL/P+6KApfrSJrsXHr2gYjq58eb5o+dzlPQUOK2diyvHwLRIK
-	 BKB9dO2fD/gP0NLsKEJHQW/nXfKxy/eyysIskYoYyERrAVX3xwJOtcV8G+CvyTY16F
-	 ERkKwapy1sxm7dlsxzKNbWBk6Z9TqQrToPhgd9q8=
+	by mail.kernel.org (Postfix) with ESMTP id 2E4792077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:16:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437594AbgAPTQ3 (ORCPT
+        id S2407298AbgAPTQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:16:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41310 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:16:36 -0500
+Received: from mga11.intel.com ([192.55.52.93]:50650 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732878AbgAPQzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:55:44 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1FFF21D56;
-        Thu, 16 Jan 2020 16:55:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193743;
-        bh=DZkziBpfqckwNkeg7jDD1qzOPOfp/MLw+qLK75gTTdc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yo1evpO9gbTWjj++VsyQPLPlRzWWUivmxMNKEuV6aOhuvBUnFRY884JYwrgZobw1j
-         v7q4QrqWb6yPI8l21zX8OmatSkA/bXEIs34R3uTJhqEBOCboi+4wVg6yn3znciKuZx
-         QNzJ7xiLEsfMwY8icM2q4KEq6BF6YsC4b+LSJTD8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 034/671] powerpc/pseries/memory-hotplug: Fix return value type of find_aa_index
-Date:   Thu, 16 Jan 2020 11:44:25 -0500
-Message-Id: <20200116165502.8838-34-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
-References: <20200116165502.8838-1-sashal@kernel.org>
+        id S1733204AbgAPTQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 14:16:33 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 11:16:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,327,1574150400"; 
+   d="scan'208";a="373426824"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
+  by orsmga004.jf.intel.com with ESMTP; 16 Jan 2020 11:16:32 -0800
+Date:   Thu, 16 Jan 2020 11:16:32 -0800
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Jari Ruusu <jari.ruusu@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Fenghua Yu <fenghua.yu@intel.com>, johannes.berg@intel.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: Fix built-in early-load Intel microcode alignment
+Message-ID: <20200116191632.GB117689@otc-nc-03>
+References: <CACMCwJLJCA2iXS0QMKKAWQv252oUcmfsNvwDNP5+4Z_9VB-rTg@mail.gmail.com>
+ <5C216684-6FDF-41B5-9F51-89DC295F6DDC@amacapital.net>
+ <CACMCwJLogOH-nG7QEMzrXK-iJPOdzCrL05y0a6yAbtPsfdRjsQ@mail.gmail.com>
+ <CAHk-=wiqPHc=BzSYO4N=awucq0td3s9VuBkct=m-B_xZVCgzBg@mail.gmail.com>
+ <CACMCwJL+kdkJRfRhG6bt_ojU0UeipqxVL3vwS3ETqVEjnWL1ew@mail.gmail.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACMCwJL+kdkJRfRhG6bt_ojU0UeipqxVL3vwS3ETqVEjnWL1ew@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+Hi Jari
 
-[ Upstream commit b45e9d761ba2d60044b610297e3ef9f947ac157f ]
+Sorry for the delay, just returned after a long vacation. 
 
-The variable 'aa_index' is defined as an unsigned value in
-update_lmb_associativity_index(), but find_aa_index() may return -1
-when dlpar_clone_property() fails. So change find_aa_index() to return
-a bool, which indicates whether 'aa_index' was found or not.
+On Thu, Jan 16, 2020 at 08:55:52AM +0200, Jari Ruusu wrote:
+> On 1/15/20, Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> > However, the most likely cause is that you have a borderline dodgy
+> > system, and the microcode update then just triggers a pre-existing
+> > problem.
+> 
+> For that particular processor model, there appears to be microcode
+> updates for four steppings: 9 10 11 and 12. My model is stepping
+> 9, so it appears to be early commercially sold version of that
+> model. Probably more problems on it than on later steppings.
 
-Fixes: c05a5a40969e ("powerpc/pseries: Dynamic add entires to associativity lookup array")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Nathan Fontenot nfont@linux.vnet.ibm.com>
-[mpe: Tweak changelog, rename is_found to just found]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../platforms/pseries/hotplug-memory.c        | 61 +++++++++----------
- 1 file changed, 28 insertions(+), 33 deletions(-)
+I don't suspect the alignment issue during microcode load to trigger
+any hangs after couple days. Its only used to copy to some internal store.
+So once the ucode is loaded and if you look at /proc/cpuinfo and it reflects
+the latest microcode you are past the alignment issue. I suspect its
+something else.
 
-diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/powerpc/platforms/pseries/hotplug-memory.c
-index 7f86bc3eaade..62d3c72cd931 100644
---- a/arch/powerpc/platforms/pseries/hotplug-memory.c
-+++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
-@@ -101,11 +101,12 @@ static struct property *dlpar_clone_property(struct property *prop,
- 	return new_prop;
- }
- 
--static u32 find_aa_index(struct device_node *dr_node,
--			 struct property *ala_prop, const u32 *lmb_assoc)
-+static bool find_aa_index(struct device_node *dr_node,
-+			 struct property *ala_prop,
-+			 const u32 *lmb_assoc, u32 *aa_index)
- {
--	u32 *assoc_arrays;
--	u32 aa_index;
-+	u32 *assoc_arrays, new_prop_size;
-+	struct property *new_prop;
- 	int aa_arrays, aa_array_entries, aa_array_sz;
- 	int i, index;
- 
-@@ -121,46 +122,39 @@ static u32 find_aa_index(struct device_node *dr_node,
- 	aa_array_entries = be32_to_cpu(assoc_arrays[1]);
- 	aa_array_sz = aa_array_entries * sizeof(u32);
- 
--	aa_index = -1;
- 	for (i = 0; i < aa_arrays; i++) {
- 		index = (i * aa_array_entries) + 2;
- 
- 		if (memcmp(&assoc_arrays[index], &lmb_assoc[1], aa_array_sz))
- 			continue;
- 
--		aa_index = i;
--		break;
-+		*aa_index = i;
-+		return true;
- 	}
- 
--	if (aa_index == -1) {
--		struct property *new_prop;
--		u32 new_prop_size;
--
--		new_prop_size = ala_prop->length + aa_array_sz;
--		new_prop = dlpar_clone_property(ala_prop, new_prop_size);
--		if (!new_prop)
--			return -1;
--
--		assoc_arrays = new_prop->value;
-+	new_prop_size = ala_prop->length + aa_array_sz;
-+	new_prop = dlpar_clone_property(ala_prop, new_prop_size);
-+	if (!new_prop)
-+		return false;
- 
--		/* increment the number of entries in the lookup array */
--		assoc_arrays[0] = cpu_to_be32(aa_arrays + 1);
-+	assoc_arrays = new_prop->value;
- 
--		/* copy the new associativity into the lookup array */
--		index = aa_arrays * aa_array_entries + 2;
--		memcpy(&assoc_arrays[index], &lmb_assoc[1], aa_array_sz);
-+	/* increment the number of entries in the lookup array */
-+	assoc_arrays[0] = cpu_to_be32(aa_arrays + 1);
- 
--		of_update_property(dr_node, new_prop);
-+	/* copy the new associativity into the lookup array */
-+	index = aa_arrays * aa_array_entries + 2;
-+	memcpy(&assoc_arrays[index], &lmb_assoc[1], aa_array_sz);
- 
--		/*
--		 * The associativity lookup array index for this lmb is
--		 * number of entries - 1 since we added its associativity
--		 * to the end of the lookup array.
--		 */
--		aa_index = be32_to_cpu(assoc_arrays[0]) - 1;
--	}
-+	of_update_property(dr_node, new_prop);
- 
--	return aa_index;
-+	/*
-+	 * The associativity lookup array index for this lmb is
-+	 * number of entries - 1 since we added its associativity
-+	 * to the end of the lookup array.
-+	 */
-+	*aa_index = be32_to_cpu(assoc_arrays[0]) - 1;
-+	return true;
- }
- 
- static int update_lmb_associativity_index(struct drmem_lmb *lmb)
-@@ -169,6 +163,7 @@ static int update_lmb_associativity_index(struct drmem_lmb *lmb)
- 	struct property *ala_prop;
- 	const u32 *lmb_assoc;
- 	u32 aa_index;
-+	bool found;
- 
- 	parent = of_find_node_by_path("/");
- 	if (!parent)
-@@ -200,12 +195,12 @@ static int update_lmb_associativity_index(struct drmem_lmb *lmb)
- 		return -ENODEV;
- 	}
- 
--	aa_index = find_aa_index(dr_node, ala_prop, lmb_assoc);
-+	found = find_aa_index(dr_node, ala_prop, lmb_assoc, &aa_index);
- 
- 	of_node_put(dr_node);
- 	dlpar_free_cc_nodes(lmb_node);
- 
--	if (aa_index < 0) {
-+	if (!found) {
- 		pr_err("Could not find LMB associativity\n");
- 		return -1;
- 	}
--- 
-2.20.1
+Can you please also document the OEM, BIOS versions, and also both the
+old and new microcode versions after the update.
 
+Would suggest logging the hang issue in public github for microcode issues.
+This would let the product folks look at them.
+
+https://github.com/intel/Intel-Linux-Processor-Microcode-Data-Files
+
+> 
+> > But it might be worth it if the intel people could check up with their
+> > microcode people on this anyway - if there is _one_ report of "my
+> > system locks up with newer ucode", that's one thing. But if Jari isn't
+> > alone...
+> 
+
+Cheers,
+Ashok
