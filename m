@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B134EC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 725AFC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D7BD24699
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:53:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4484624699
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:53:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197211;
-	bh=lk3FVBU4uC8MX9Fd58BWPUzIhSu9tVPZz+az2+3aBhc=;
+	s=default; t=1579197216;
+	bh=UV+UW21C0YLEnMbawAaEXJVN1QaXt/38CSxDdq3QTno=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VVAcOHS3hE0mbdLwHg5nzm8ER3lkguYbf2g+soR95PJclTloyjDudHp8XojDBUCK2
-	 0T+twJaaB2iyCRSHX7p9QqzRKckGuV+fsfVd4/u/xg9rNl7GCkPdkqWt5tj0dCiq2Z
-	 +O2ZWWOSBSDl6Z/XZUhQuQ1h6JxTNZd+t/Ef9xgA=
+	b=u1/1uM4MX0Brx+qlt/kWiJZvp65ahx2ZBitIFMkWwupvljExWd5WLbI2VnP8JBH0n
+	 O4Z6atH89bXj2yqWEBj0oqDuR6lV1+3ddaCRKOVSnildJfbQRIPP4aR5g249oqTTfH
+	 q2Ty+a2uZfDFyJbLprKQ7QOS8fEiIsxPWCUjN1cM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406051AbgAPRpD (ORCPT
+        id S2394429AbgAPRxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:45:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35634 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:53:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405851AbgAPRof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:44:35 -0500
+        id S2406036AbgAPRpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:45:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D69AE24763;
-        Thu, 16 Jan 2020 17:44:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EC4F2477C;
+        Thu, 16 Jan 2020 17:44:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196674;
-        bh=lk3FVBU4uC8MX9Fd58BWPUzIhSu9tVPZz+az2+3aBhc=;
+        s=default; t=1579196699;
+        bh=UV+UW21C0YLEnMbawAaEXJVN1QaXt/38CSxDdq3QTno=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SNGHNvAZzXiYiQTu0XHt6WLHuaUKY/i6yLprVI6mdYfJ83wIChteP/EazPOl10+jm
-         oeEU3Ll9ovkV4kRKLdH+1GlEJSjWHFTvQAMiuDv9KqdV+gbTWIl9jF7mzUJ3M0iWJr
-         lKm5dZkt+D5RZRZj12uLey8lPED/Ed5963RIzBIw=
+        b=GEpywa7uKQkIKbFnbjVj+P9B9w5mXDYUnCauv+xSSL55Jei0ncovnQyfqrcX0wtx/
+         c5VZRPFtnwxY1eGSZNCpbBnrzDVFeC9NGIYX3v48FrHVzQ63rn6fkcJpOX2fLX91WL
+         lZCEkN/E+lnS5T6g50xqtvxRg2NMrSDkfwotUtIQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
+Cc:     Brian Masney <masneyb@onstation.org>, Pavel Machek <pavel@ucw.cz>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.4 074/174] ARM: pxa: ssp: Fix "WARNING: invalid free of devm_ allocated data"
-Date:   Thu, 16 Jan 2020 12:41:11 -0500
-Message-Id: <20200116174251.24326-74-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 092/174] backlight: lm3630a: Return 0 on success in update_status functions
+Date:   Thu, 16 Jan 2020 12:41:29 -0500
+Message-Id: <20200116174251.24326-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -60,45 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Brian Masney <masneyb@onstation.org>
 
-[ Upstream commit 9ee8578d953023cc57e7e736ae48502c707c0210 ]
+[ Upstream commit d3f48ec0954c6aac736ab21c34a35d7554409112 ]
 
-Since commit 1c459de1e645 ("ARM: pxa: ssp: use devm_ functions")
-kfree, iounmap, clk_put etc are not needed anymore in remove path.
+lm3630a_bank_a_update_status() and lm3630a_bank_b_update_status()
+both return the brightness value if the brightness was successfully
+updated. Writing to these attributes via sysfs would cause a 'Bad
+address' error to be returned. These functions should return 0 on
+success, so let's change it to correct that error.
 
-Fixes: 1c459de1e645 ("ARM: pxa: ssp: use devm_ functions")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-[ commit message spelling fix ]
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+Fixes: 28e64a68a2ef ("backlight: lm3630: apply chip revision")
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/plat-pxa/ssp.c | 6 ------
- 1 file changed, 6 deletions(-)
+ drivers/video/backlight/lm3630a_bl.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/plat-pxa/ssp.c b/arch/arm/plat-pxa/ssp.c
-index 6748827c2ec8..b6b0979e3cf9 100644
---- a/arch/arm/plat-pxa/ssp.c
-+++ b/arch/arm/plat-pxa/ssp.c
-@@ -231,18 +231,12 @@ static int pxa_ssp_probe(struct platform_device *pdev)
+diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
+index 35fe4825a454..5ef6f9d420a2 100644
+--- a/drivers/video/backlight/lm3630a_bl.c
++++ b/drivers/video/backlight/lm3630a_bl.c
+@@ -200,7 +200,7 @@ static int lm3630a_bank_a_update_status(struct backlight_device *bl)
+ 				      LM3630A_LEDA_ENABLE, LM3630A_LEDA_ENABLE);
+ 	if (ret < 0)
+ 		goto out_i2c_err;
+-	return bl->props.brightness;
++	return 0;
  
- static int pxa_ssp_remove(struct platform_device *pdev)
- {
--	struct resource *res;
- 	struct ssp_device *ssp;
+ out_i2c_err:
+ 	dev_err(pchip->dev, "i2c failed to access\n");
+@@ -277,7 +277,7 @@ static int lm3630a_bank_b_update_status(struct backlight_device *bl)
+ 				      LM3630A_LEDB_ENABLE, LM3630A_LEDB_ENABLE);
+ 	if (ret < 0)
+ 		goto out_i2c_err;
+-	return bl->props.brightness;
++	return 0;
  
- 	ssp = platform_get_drvdata(pdev);
- 	if (ssp == NULL)
- 		return -ENODEV;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	release_mem_region(res->start, resource_size(res));
--
--	clk_put(ssp->clk);
--
- 	mutex_lock(&ssp_lock);
- 	list_del(&ssp->node);
- 	mutex_unlock(&ssp_lock);
+ out_i2c_err:
+ 	dev_err(pchip->dev, "i2c failed to access REG_CTRL\n");
 -- 
 2.20.1
 
