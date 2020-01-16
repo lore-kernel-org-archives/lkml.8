@@ -2,125 +2,204 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D194C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C58DBC33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED75920748
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:45:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Vj1+B0II"
+	by mail.kernel.org (Postfix) with ESMTP id 97E2B2051A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:45:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731672AbgAPJpk (ORCPT
+        id S1731702AbgAPJpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 04:45:40 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38778 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731650AbgAPJpj (ORCPT
+        Thu, 16 Jan 2020 04:45:52 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:55406 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730061AbgAPJpw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 04:45:39 -0500
-Received: by mail-wm1-f68.google.com with SMTP id u2so3031747wmc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 01:45:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JZyqN5qlv5csEwwF7mhl4MB8eUdR7toL/H4ZfMDEk6g=;
-        b=Vj1+B0IIOY42PaOZgZVxmKH8K8KawfI8k4ca+yD6NCdW9+m0f5RoQyWsqVZre+box/
-         fdaYwemzm3+elzGhL9u8RQika/e+KsR6BCsRvDSOP7/WdmttrcXjUGi2bPNRrkEDEY+w
-         3XpXWf4FWF6aOFv9YPM5+29NEYL1aRkb5JXqc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JZyqN5qlv5csEwwF7mhl4MB8eUdR7toL/H4ZfMDEk6g=;
-        b=b0gUEUh9BmmDS3xKxCoK70dlQN805f5mGuFFxL9FkZPj0/97BOR5ZcqGLQmGYB0rWC
-         jwvi7nffDSXufL9C5JaMoIXMSU4+mTNPbDtXbfkel5THWHHHa4gIMsHXIoeppvXI9vW9
-         hmrlGGV2+lbH7CeyFPcNnQwEB+fNDKAk9mos7n2dQtWC7MLDFcscVPr72penQLLjdKhD
-         tn/TZ4KH+tPLoUOWsOg2I7Sl8rMF5NGqB+lidxy8HNNYFB09DA4lbi0lNjPkX+aIXiaa
-         weEtyZT3s9uMtl/u9z4EECFpxxNWwuKRNJmtpVoAHo/hxGDhSjv3SD/dhdfloV1VTXw8
-         iYTg==
-X-Gm-Message-State: APjAAAUvgeDWhVFvqe+EmuR74+ju7ZD416A5EPd87PzaC1ecV1F4B3nN
-        WIC+iBTyHdiVFhAZps+HacEQzA==
-X-Google-Smtp-Source: APXvYqzodqnf952non/Pp68saYtHh4fQCSMqKy/g+z0HaIiKWSZD+4CRhvDznRr+j4DRUZr2Hi54TQ==
-X-Received: by 2002:a1c:7d93:: with SMTP id y141mr5300109wmc.111.1579167938030;
-        Thu, 16 Jan 2020 01:45:38 -0800 (PST)
-Received: from google.com ([2a00:79e0:42:204:8a21:ba0c:bb42:75ec])
-        by smtp.gmail.com with ESMTPSA id x10sm27801564wrv.60.2020.01.16.01.45.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 01:45:37 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Thu, 16 Jan 2020 10:45:35 +0100
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     KP Singh <kpsingh@chromium.org>, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
-Subject: Re: [PATCH bpf-next v2 06/10] bpf: lsm: Implement attach, detach and
- execution
-Message-ID: <20200116094535.GA240584@google.com>
-References: <20200115171333.28811-1-kpsingh@chromium.org>
- <20200115171333.28811-7-kpsingh@chromium.org>
- <20200115172417.GC4127163@kroah.com>
+        Thu, 16 Jan 2020 04:45:52 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 5D07E293886
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Collabora Kernel ML <kernel@collabora.com>, drinkcat@chromium.org,
+        Mark Brown <broonie@kernel.org>, dianders@chromium.org,
+        Liam Girdwood <lgirdwood@gmail.com>, mka@chromium.org,
+        Dmitry Osipenko <digetx@gmail.com>
+Subject: [PATCH] regulator: vctrl-regulator: Avoid deadlock getting and setting the voltage
+Date:   Thu, 16 Jan 2020 10:45:43 +0100
+Message-Id: <20200116094543.2847321-1-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200115172417.GC4127163@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15-Jan 18:24, Greg Kroah-Hartman wrote:
-> On Wed, Jan 15, 2020 at 06:13:29PM +0100, KP Singh wrote:
-> > From: KP Singh <kpsingh@google.com>
-> > 
-> > JITed BPF programs are used by the BPF LSM as dynamically allocated
-> > security hooks. arch_bpf_prepare_trampoline handles the
-> > arch_bpf_prepare_trampoline generates code to handle conversion of the
-> > signature of the hook to the BPF context and allows the BPF program to
-> > be called directly as a C function.
-> > 
-> > The following permissions are required to attach a program to a hook:
-> > 
-> > - CAP_SYS_ADMIN to load the program
-> > - CAP_MAC_ADMIN to attach it (i.e. to update the security policy)
-> 
-> You forgot to list "GPL-compatible license" here :)
+`cat /sys/kernel/debug/regulator/regulator_summary` ends on a deadlock
+when you have a voltage controlled regulator (vctrl).
 
-Added it to the commit log for v3.
+The problem is that the vctrl_get_voltage() and vctrl_set_voltage() calls the
+regulator_get_voltage() and regulator_set_voltage() and that will try to lock
+again the dependent regulators (the regulator supplying the control voltage).
 
-> 
-> Anyway, looks good to me:
+Fix the issue by exporting the unlocked version of the regulator_get_voltage()
+and regulator_set_voltage() API so drivers that need it, like the voltage
+controlled regulator driver can use it.
 
-Thanks! :)
+Fixes: f8702f9e4aa7 ("regulator: core: Use ww_mutex for regulators locking")
+Reported-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+---
 
-> 
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ drivers/regulator/core.c            |  2 ++
+ drivers/regulator/vctrl-regulator.c | 38 +++++++++++++++++------------
+ 2 files changed, 25 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 03d79fee2987..e7d167ce326c 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -3470,6 +3470,7 @@ int regulator_set_voltage_rdev(struct regulator_dev *rdev, int min_uV,
+ out:
+ 	return ret;
+ }
++EXPORT_SYMBOL(regulator_set_voltage_rdev);
+ 
+ static int regulator_limit_voltage_step(struct regulator_dev *rdev,
+ 					int *current_uV, int *min_uV)
+@@ -4034,6 +4035,7 @@ int regulator_get_voltage_rdev(struct regulator_dev *rdev)
+ 		return ret;
+ 	return ret - rdev->constraints->uV_offset;
+ }
++EXPORT_SYMBOL(regulator_get_voltage_rdev);
+ 
+ /**
+  * regulator_get_voltage - get regulator output voltage
+diff --git a/drivers/regulator/vctrl-regulator.c b/drivers/regulator/vctrl-regulator.c
+index 9a9ee8188109..cbadb1c99679 100644
+--- a/drivers/regulator/vctrl-regulator.c
++++ b/drivers/regulator/vctrl-regulator.c
+@@ -11,10 +11,13 @@
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
++#include <linux/regulator/coupler.h>
+ #include <linux/regulator/driver.h>
+ #include <linux/regulator/of_regulator.h>
+ #include <linux/sort.h>
+ 
++#include "internal.h"
++
+ struct vctrl_voltage_range {
+ 	int min_uV;
+ 	int max_uV;
+@@ -79,7 +82,7 @@ static int vctrl_calc_output_voltage(struct vctrl_data *vctrl, int ctrl_uV)
+ static int vctrl_get_voltage(struct regulator_dev *rdev)
+ {
+ 	struct vctrl_data *vctrl = rdev_get_drvdata(rdev);
+-	int ctrl_uV = regulator_get_voltage(vctrl->ctrl_reg);
++	int ctrl_uV = regulator_get_voltage_rdev(vctrl->ctrl_reg->rdev);
+ 
+ 	return vctrl_calc_output_voltage(vctrl, ctrl_uV);
+ }
+@@ -90,16 +93,16 @@ static int vctrl_set_voltage(struct regulator_dev *rdev,
+ {
+ 	struct vctrl_data *vctrl = rdev_get_drvdata(rdev);
+ 	struct regulator *ctrl_reg = vctrl->ctrl_reg;
+-	int orig_ctrl_uV = regulator_get_voltage(ctrl_reg);
++	int orig_ctrl_uV = regulator_get_voltage_rdev(ctrl_reg->rdev);
+ 	int uV = vctrl_calc_output_voltage(vctrl, orig_ctrl_uV);
+ 	int ret;
+ 
+ 	if (req_min_uV >= uV || !vctrl->ovp_threshold)
+ 		/* voltage rising or no OVP */
+-		return regulator_set_voltage(
+-			ctrl_reg,
++		return regulator_set_voltage_rdev(ctrl_reg->rdev,
+ 			vctrl_calc_ctrl_voltage(vctrl, req_min_uV),
+-			vctrl_calc_ctrl_voltage(vctrl, req_max_uV));
++			vctrl_calc_ctrl_voltage(vctrl, req_max_uV),
++			PM_SUSPEND_ON);
+ 
+ 	while (uV > req_min_uV) {
+ 		int max_drop_uV = (uV * vctrl->ovp_threshold) / 100;
+@@ -114,9 +117,10 @@ static int vctrl_set_voltage(struct regulator_dev *rdev,
+ 		next_uV = max_t(int, req_min_uV, uV - max_drop_uV);
+ 		next_ctrl_uV = vctrl_calc_ctrl_voltage(vctrl, next_uV);
+ 
+-		ret = regulator_set_voltage(ctrl_reg,
++		ret = regulator_set_voltage_rdev(ctrl_reg->rdev,
++					    next_ctrl_uV,
+ 					    next_ctrl_uV,
+-					    next_ctrl_uV);
++					    PM_SUSPEND_ON);
+ 		if (ret)
+ 			goto err;
+ 
+@@ -130,7 +134,8 @@ static int vctrl_set_voltage(struct regulator_dev *rdev,
+ 
+ err:
+ 	/* Try to go back to original voltage */
+-	regulator_set_voltage(ctrl_reg, orig_ctrl_uV, orig_ctrl_uV);
++	regulator_set_voltage_rdev(ctrl_reg->rdev, orig_ctrl_uV, orig_ctrl_uV,
++				   PM_SUSPEND_ON);
+ 
+ 	return ret;
+ }
+@@ -155,9 +160,10 @@ static int vctrl_set_voltage_sel(struct regulator_dev *rdev,
+ 
+ 	if (selector >= vctrl->sel || !vctrl->ovp_threshold) {
+ 		/* voltage rising or no OVP */
+-		ret = regulator_set_voltage(ctrl_reg,
++		ret = regulator_set_voltage_rdev(ctrl_reg->rdev,
++					    vctrl->vtable[selector].ctrl,
+ 					    vctrl->vtable[selector].ctrl,
+-					    vctrl->vtable[selector].ctrl);
++					    PM_SUSPEND_ON);
+ 		if (!ret)
+ 			vctrl->sel = selector;
+ 
+@@ -173,9 +179,10 @@ static int vctrl_set_voltage_sel(struct regulator_dev *rdev,
+ 		else
+ 			next_sel = vctrl->vtable[vctrl->sel].ovp_min_sel;
+ 
+-		ret = regulator_set_voltage(ctrl_reg,
++		ret = regulator_set_voltage_rdev(ctrl_reg->rdev,
+ 					    vctrl->vtable[next_sel].ctrl,
+-					    vctrl->vtable[next_sel].ctrl);
++					    vctrl->vtable[next_sel].ctrl,
++					    PM_SUSPEND_ON);
+ 		if (ret) {
+ 			dev_err(&rdev->dev,
+ 				"failed to set control voltage to %duV\n",
+@@ -195,9 +202,10 @@ static int vctrl_set_voltage_sel(struct regulator_dev *rdev,
+ err:
+ 	if (vctrl->sel != orig_sel) {
+ 		/* Try to go back to original voltage */
+-		if (!regulator_set_voltage(ctrl_reg,
++		if (!regulator_set_voltage_rdev(ctrl_reg->rdev,
++					   vctrl->vtable[orig_sel].ctrl,
+ 					   vctrl->vtable[orig_sel].ctrl,
+-					   vctrl->vtable[orig_sel].ctrl))
++					   PM_SUSPEND_ON))
+ 			vctrl->sel = orig_sel;
+ 		else
+ 			dev_warn(&rdev->dev,
+@@ -482,7 +490,7 @@ static int vctrl_probe(struct platform_device *pdev)
+ 		if (ret)
+ 			return ret;
+ 
+-		ctrl_uV = regulator_get_voltage(vctrl->ctrl_reg);
++		ctrl_uV = regulator_get_voltage_rdev(vctrl->ctrl_reg->rdev);
+ 		if (ctrl_uV < 0) {
+ 			dev_err(&pdev->dev, "failed to get control voltage\n");
+ 			return ctrl_uV;
+-- 
+2.24.1
+
