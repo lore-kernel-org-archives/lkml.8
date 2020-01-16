@@ -2,100 +2,89 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C1C9C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F3ACC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 086592077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:04:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194247;
-	bh=cptCo7/ZT7TtmpKLsgFyIEJ5nLFSH3EM9lZa+qr5o60=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bvVlVERN8c8mXQrOZVxQoFvxs8gpfH3DYlhjeV6IyC3kTvwvI5tYEPTIAeqI7ipc0
-	 YZLYddIw1zgB4NphGb29f8Oyeswwv1iPQMSdJFZJvYkHuT2iCyNt4jr1nWzAmFoO50
-	 5Btu8LEaNGgWafbdLBuAPso6NfprbbEyEVB35b6U=
+	by mail.kernel.org (Postfix) with ESMTP id 3F04E207FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:04:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="F91F41bi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388302AbgAPREG (ORCPT
+        id S2388629AbgAPREI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:04:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56378 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733246AbgAPRCy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:02:54 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 16 Jan 2020 12:04:08 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:21771 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388044AbgAPREF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:04:05 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579194245; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=jyDX0RkCRR3RXyVljn8CGp1pK1triQLesamc/wgsgLM=; b=F91F41bi6tDQ85feQfn1HvKPoczWeDUhoJrwCmNL/p7Y4b1+eFOYxUhwB4kh8bDB/gYf4o2y
+ xMvTyL84BxvOk/3AisExkcg02YfgsADlApN+gBUCe4Bu0W0E/iHhJctslBiO4NMqcf1gjq2e
+ dlWbYoU8faYjnuZYJ5IJrpmYYUk=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e209783.7fe471b55a08-smtp-out-n02;
+ Thu, 16 Jan 2020 17:04:03 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2885DC447AB; Thu, 16 Jan 2020 17:04:02 +0000 (UTC)
+Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F083020730;
-        Thu, 16 Jan 2020 17:02:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194173;
-        bh=cptCo7/ZT7TtmpKLsgFyIEJ5nLFSH3EM9lZa+qr5o60=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D4YH/NeXol7NdS1Vb81DpTNy1Fsc+3ib3Or4HWy6xCNcx/gJw2JDb+16tWotNbIp8
-         4IGa/X0TKc/smJTsuFzZ2AZVDvUMWPobP/JzmXAyVo6CYQANOWH9a3UzqGhwPYVjAa
-         DMeItmesGASSKM6jwLaKQq922z7gL5ZFuMi8PjwY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Axel Lin <axel.lin@ingics.com>, "Andrew F . Davis" <afd@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 252/671] regulator: tps65086: Fix tps65086_ldoa1_ranges for selector 0xB
-Date:   Thu, 16 Jan 2020 11:52:41 -0500
-Message-Id: <20200116165940.10720-135-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
-References: <20200116165940.10720-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        (Authenticated sender: vbadigan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3E419C447A9;
+        Thu, 16 Jan 2020 17:03:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3E419C447A9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+To:     ulf.hansson@linaro.org, adrian.hunter@intel.com
+Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
+        sayalil@codeaurora.org, cang@codeaurora.org,
+        rampraka@codeaurora.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Subject: [PATCH V2 0/2] Add CQHCI support for sdhci-msm
+Date:   Thu, 16 Jan 2020 22:33:09 +0530
+Message-Id: <1579194192-7942-1-git-send-email-vbadigan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Axel Lin <axel.lin@ingics.com>
+Changes since V1: (https://lkml.org/lkml/2019/12/17/455)
+	- Select MMC_CQHCI in Kconfig
+	- Making use of host->alloc_desc_size variable for allocation
+	  of ADMA table and host->desc_size for updating decriptor
+	  size dynamically.
 
-[ Upstream commit e69b394703e032e56a140172440ec4f9890b536d ]
+Changes since RFC (https://lkml.org/lkml/2017/8/30/313)
+	- Updated settings so that TDLBA won't get reset when
+	  CQE is enabled.
+	- Removed new compatible string and moved to supports-cqe
+	  dt flag to identify CQE support.
+	- Incorporated review comments.
 
-selector 0xB (1011) should be 2.6V rather than 2.7V, fit ix.
+Tested on: qcs404, sc7180
 
-Table 5-4. LDOA1 Output Voltage Options
-VID Bits VOUT VID Bits VOUT VID Bits VOUT VID Bits VOUT
-0000     1.35 0100     1.8  1000     2.3  1100     2.85
-0001     1.5  0101     1.9  1001     2.4  1101     3.0
-0010     1.6  0110     2.0  1010     2.5  1110     3.3
-0011     1.7  0111     2.1  1011     2.6  1111     Not Used
+Ritesh Harjani (1):
+  mmc: sdhci-msm: Add CQHCI support for sdhci-msm
 
-Fixes: d2a2e729a666 ("regulator: tps65086: Add regulator driver for the TPS65086 PMIC")
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Acked-by: Andrew F. Davis <afd@ti.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/regulator/tps65086-regulator.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Veerabhadrarao Badiganti (1):
+  mmc: sdhci: Let a vendor driver supply and update ADMA descriptor size
 
-diff --git a/drivers/regulator/tps65086-regulator.c b/drivers/regulator/tps65086-regulator.c
-index 45e96e154690..5a5e9b5bf4be 100644
---- a/drivers/regulator/tps65086-regulator.c
-+++ b/drivers/regulator/tps65086-regulator.c
-@@ -90,8 +90,8 @@ static const struct regulator_linear_range tps65086_buck345_25mv_ranges[] = {
- static const struct regulator_linear_range tps65086_ldoa1_ranges[] = {
- 	REGULATOR_LINEAR_RANGE(1350000, 0x0, 0x0, 0),
- 	REGULATOR_LINEAR_RANGE(1500000, 0x1, 0x7, 100000),
--	REGULATOR_LINEAR_RANGE(2300000, 0x8, 0xA, 100000),
--	REGULATOR_LINEAR_RANGE(2700000, 0xB, 0xD, 150000),
-+	REGULATOR_LINEAR_RANGE(2300000, 0x8, 0xB, 100000),
-+	REGULATOR_LINEAR_RANGE(2850000, 0xC, 0xD, 150000),
- 	REGULATOR_LINEAR_RANGE(3300000, 0xE, 0xE, 0),
- };
- 
+ drivers/mmc/host/Kconfig     |   1 +
+ drivers/mmc/host/sdhci-msm.c | 133 ++++++++++++++++++++++++++++++++++++++++++-
+ drivers/mmc/host/sdhci.c     |   7 ++-
+ drivers/mmc/host/sdhci.h     |   1 +
+ 4 files changed, 139 insertions(+), 3 deletions(-)
+
 -- 
-2.20.1
-
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
