@@ -2,127 +2,268 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,PI_IMPORTANCE_HIGH,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C355C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0A4C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB2D72075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:30:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NETORGFT5553569.onmicrosoft.com header.i=@NETORGFT5553569.onmicrosoft.com header.b="IWzFzTuh"
+	by mail.kernel.org (Postfix) with ESMTP id A8B5F20748
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:36:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbgAPGau (ORCPT
+        id S1726983AbgAPGg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 01:30:50 -0500
-Received: from mail-ma1ind01hn2106.outbound.protection.outlook.com ([52.103.200.106]:6215
-        "EHLO IND01-MA1-obe.outbound.protection.outlook.com"
+        Thu, 16 Jan 2020 01:36:57 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:36964 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725973AbgAPGat (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 01:30:49 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NpsN7TnnbygZM8RirA0jC6kq7qvN8ildWUToZ3pPQxa4i2231cDQLaG0WGOcNEhFX+ZyiXTBdwG7dP/WSbMdJa3djHkWRmms4FqpmMH0m6UWELLECNXqEXZTYnAKEWo0fGAIy31w4cZpAoFg5GSwL61nC3Af3VmIKDX3Hon7OcNCKBTiDR6Xz+Z2WT77s/STKTUMWwsCZ7A30sMa3J+MIpCPSJU2ysOvhihOTY8/iwkj+Z9dyf48iU1hUQ9aacPhHTHwis0E9A2gb2b7Pja2exDms9nysQGVPe2gmbevEBdQ5kGr2dnktWWqwZvkgtSuG20rjM/fmr4wU3qKGtc7Dg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nIlcsXQe2P1VV6AprxUr872/iLpmI6OLNSAMzZ5u+7c=;
- b=IG9OhAfnrUqvdKTEgy1zUgDHnmGzRrfzfk8fNkCBg2LWebYZYYruE7A8XM9Vl1OibAZgew853BQ/pUnE1SXxTPfVrv+4cqio5FMMS1y6NN1kspUV79jM1I/SF30XIcEQ4KupDrnfzGJxaDksMzuj+5EiQE6b44JTOD6OwhH54EX58RTHDuB0rY1CQZR94iRudrE2NneFO0G7X0L++FpDAOQeH/jilQ3Y1ps+5VuLJtrL3D38fGoQI5D3Hr4dUzN3YsUC5xDpaZ7YmsLDd3gxIAF4t+cGIHpeIoPvmpBSEEXoUABCW5NpyQtYOlOdX7PkanQ7qT+Uyu77B33KDObzQg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oceanedata.com; dmarc=pass action=none
- header.from=oceanedata.com; dkim=pass header.d=oceanedata.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=NETORGFT5553569.onmicrosoft.com;
- s=selector1-NETORGFT5553569-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nIlcsXQe2P1VV6AprxUr872/iLpmI6OLNSAMzZ5u+7c=;
- b=IWzFzTuhkMwdxSPNcLf5kIbg8KqInELOAuVAZhxh2ta70Fv/NJVquSXDjVgz/AmVMOde6GeHeFVh1Ao2bW+t7diHfWQ0y/rrqJrTf+YQXN3iOp9NEOwuQm3ZnWNJYS42qSLLmDDb0CMiqEb9jDeDuYY4TejbP8nizaQlcW147WQ=
-Received: from BMXPR01MB3894.INDPRD01.PROD.OUTLOOK.COM (20.179.243.10) by
- BMXPR01MB3800.INDPRD01.PROD.OUTLOOK.COM (10.255.157.77) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.9; Thu, 16 Jan 2020 06:30:45 +0000
-Received: from BMXPR01MB3894.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::d960:ff9d:e6e4:2c1]) by BMXPR01MB3894.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::d960:ff9d:e6e4:2c1%5]) with mapi id 15.20.2644.015; Thu, 16 Jan 2020
- 06:30:45 +0000
-Received: from DESKTOPMPN5UI4 (106.51.17.50) by MAXPR01CA0091.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:49::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.20 via Frontend Transport; Thu, 16 Jan 2020 06:30:44 +0000
-From:   Mary Smith <mary.smith@oceanedata.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Leads On Embedded World  2020
-Thread-Topic: Leads On Embedded World  2020
-Thread-Index: AdXMNnp/Prpn2F8zTbiFMhQ6tOX+JQ==
-Importance: high
-X-Priority: 1
-Date:   Thu, 16 Jan 2020 06:30:45 +0000
-Message-ID: <!&!AAAAAAAAAAAYAAAAAAAAAPfxu8Y9lMVAhLaSR/F6sVHCgAAAEAAAAKuY8NYSOGRDkEGiewT8y/EBAAAAAA==@oceanedata.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MAXPR01CA0091.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:49::33) To BMXPR01MB3894.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:61::10)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mary.smith@oceanedata.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: Microsoft Outlook 15.0
-x-originating-ip: [106.51.17.50]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 00a49c9e-a038-4393-abbd-08d79a4d9e0e
-x-ms-traffictypediagnostic: BMXPR01MB3800:
-x-microsoft-antispam-prvs: <BMXPR01MB3800382AF1AA9BC57DBA5A5FE4360@BMXPR01MB3800.INDPRD01.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 02843AA9E0
-x-forefront-antispam-report: SFV:SPM;SFS:(10019020)(376002)(346002)(136003)(366004)(396003)(39830400003)(189003)(199004)(36756003)(4744005)(6916009)(508600001)(956004)(2616005)(5660300002)(2906002)(6486002)(316002)(86362001)(71200400001)(186003)(16526019)(81166006)(26005)(1006002)(66946007)(81156014)(8936002)(55236004)(44832011)(8676002)(66446008)(64756008)(66556008)(66476007)(6496006)(52116002)(32030200002);DIR:OUT;SFP:1501;SCL:5;SRVR:BMXPR01MB3800;H:BMXPR01MB3894.INDPRD01.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: oceanedata.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: vUGPjd6LWuVhATsPoK5XKI+N7tsPK0l6uhyKHCkX1GmJODQ3O2Nua+0BpaeFPkVE9E+6LZ4D69V83bu8JCdjKduTqxzzEklGCKiYcNAmQXx3BanqnN8tnpY3k6H9fQPRSTDreuji8PWw+yRlBAAOov9oLY2gKPi+6Yh4RgCL6V64O3/W5RdJNM5mV8dMF27Eyi5+iItTHx8oMWp9HBf8UDy3QU0tzKziennkc0goGVP8Ue9wL90OJ6WSlFm7LGLOYkrZddWPctyVETQwi4pvLaot5kuWmS1SqjOXqn64S+nDG/XAXQu2XLZ0LwcZ09MwHdkM7f4c0c6xtGkDyBmZFTVoz8s1CLU07KJnACePJYglMm6g2usP3++1uNzqAkYUUZL3Fs96m/iNIJ2PcFa1Ycr/I7k51TNYR6b6sWhC86bISXOUBT3ovHnrBjJUg733oRTgbmEThH5nAaX60FDb6PH4WEUovUZeF9wqoVyG1NSozGY1r3vXYrxxrAVFyn2HgCL9j7+5V0LERc9xT5jypFZ5BrZfbhXdjNymmZ+Pa1kzZRE8I8sdctVl6VRTeaWEuA4/f2dIslpv6AjisIOLGqF4p43yVjm4Z4gdMyiaTGOszZ70EdXstjZoA5yL9Dceuy134z8USN93i66lijUDO6NFRM6P0QHvDdS5G+J+pHk9u4uKiDdDfJVn/2hoyod3luh9/YMGYsx1O8Z08RpfVPgqMxFkFyI+djU/nM7x5HRlkgxu0qku/LhqPa2/mQbFBjq3AQM6hpyQy7AfsI/gsw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <771B740DB8F3BD498D5DAEE93D21A2BD@INDPRD01.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: quoted-printable
+        id S1726369AbgAPGg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 01:36:57 -0500
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id A929DF09DF9202DD1280;
+        Thu, 16 Jan 2020 14:36:54 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Thu, 16 Jan 2020
+ 14:36:45 +0800
+From:   yu kuai <yukuai3@huawei.com>
+To:     <hch@infradead.org>, <darrick.wong@oracle.com>
+CC:     <linux-xfs@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <yukuai3@huawei.com>,
+        <houtao1@huawei.com>, <zhengbin13@huawei.com>,
+        <yi.zhang@huawei.com>
+Subject: [RFC] iomap: fix race between readahead and direct write
+Date:   Thu, 16 Jan 2020 14:36:01 +0800
+Message-ID: <20200116063601.39201-1-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-X-OriginatorOrg: oceanedata.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 00a49c9e-a038-4393-abbd-08d79a4d9e0e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jan 2020 06:30:45.2294
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 03cbc421-e565-4cc8-bf1c-64e35a1b9e25
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: boLRO+IVMTokLeIAk/XSws0IwIxsqaYdBze7n6j0MUKiTbxMDlh05CmgcPXhqHeKEhVJwX+QctzeTvBI9iiG2/AlhkakCCz4fBCKygCyMgM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BMXPR01MB3800
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-=20
-I wanted to reach out you if there is any need of Email list of Embedded
-World 2020 Attendees?
+I noticed that generic/418 test may fail with small probability. And with
+futher investiation, it can be reproduced with:
 
-Industry verticals: Electronic Systems, Embedded Technology, Embedded
-Systems, E-mobility and Distributed Intelligence
+./src/dio-invalidate-cache -wp -b 4096 -n 8 -i 1 -f filename
+./src/dio-invalidate-cache -wt -b 4096-n 8 -i 1 -f filename
 
-Each record in the list contains - Contact Name, Job Title, Company/Busines=
-s
-Name, Complete Mailing Details, email, Tel/Fax Number, Website/URL etc.
+The failure is because direct write wrote none-zero but buffer read got
+zero.
 
-If you are interested, please let me know your thoughts, so that I can send
-you the counts, samples and discounted pricing for your review.=20
+In the process of buffer read, if the page do not exist, readahead will
+be triggered.  __do_page_cache_readahead() will allocate page first. Next,
+if the file block is unwritten(or hole), iomap_begin() will set iomap->type
+to IOMAP_UNWRITTEN(or IOMAP_HOLE). Then, iomap_readpages_actor() will add
+page to page cache. Finally, iomap_readpage_actor() will zero the page.
 
-Looking forward to hear from you.
-=20
-Best Regards,
-Mary Smith
-Senior Marketing Executive
+However, there is no lock or serialization between initializing iomap and
+adding page to page cache against direct write. If direct write happen to
+fininsh between them, the type of iomap should be IOMAP_MAPPED instead of
+IOMAP_UNWRITTEN or IOMAP_HOLE. And the page will end up zeroed out in page
+cache, while on-disk page hold the data of direct write.
 
-We can also provide - Industry Specific List | Title Specific List |
-Technology User List and many more.
+| thread 1                    | thread 2                   |
+| --------------------------  | -------------------------- |
+| generic_file_buffered_read  |                            |
+|  ondemand_readahead         |                            |
+|   read_pages                |                            |
+|    iomap_readpages          |                            |
+|     iomap_apply             |                            |
+|      xfs_read_iomap_begin   |                            |
+|                             | xfs_file_dio_aio_write     |
+|                             |  iomap_dio_rw              |
+|                             |   ioamp_apply              |
+|     ioamp_readpages_actor   |                            |
+|      iomap_next_page        |                            |
+|       add_to_page_cache_lru |                            |
+|      iomap_readpage_actor   |                            |
+|       zero_user             |                            |
+|    iomap_set_range_uptodate |                            |
+|                             | generic_file_buffered_read |
+|                             |  copy_page_to_iter        |
 
-If you do not wish to receive future emails from us, please reply as
-"Remove" in subject line
+For consequences, the content in the page is zero while the content in the
+disk is not.
+
+I tried to fix the problem by moving "add to page cache" before
+iomap_begin(). However, performance might be worse since iomap_begin()
+will be called for each page. I tested the performance for sequential
+read with fio:
+
+kernel version: v5.5-rc6
+platform: arm64, 96 cpu
+fio version: fio-3.15-2
+test cmd:
+fio -filename=/mnt/testfile -rw=read -bs=4k -size=20g -direct=0 -fsync=0
+-numjobs=1 / 32 -ioengine=libaio -name=test -ramp_time=10 -runtime=120
+test result:
+|                  | without patch MiB/s | with patch MiB/s |
+| ---------------- | ------------------- | ---------------- |
+| ssd, numjobs=1   | 512                 | 512              |
+| ssd, numjobs=32  | 3615                | 3714             |
+| nvme, numjobs=1  | 1167                | 1118             |
+| nvme, numjobs=32 | 3679                | 3606             |
+
+Test result shows that the impact on performance is minimal.
+
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+---
+ fs/iomap/buffered-io.c | 104 ++++++++++++++++++++---------------------
+ 1 file changed, 52 insertions(+), 52 deletions(-)
+
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index 828444e14d09..ccfa1a52d966 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -329,26 +329,44 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
+ 	return pos - orig_pos + plen;
+ }
+ 
+-int
+-iomap_readpage(struct page *page, const struct iomap_ops *ops)
++static int
++do_iomap_readpage_apply(
++	loff_t				offset,
++	int				flag,
++	const struct iomap_ops		*ops,
++	struct iomap_readpage_ctx	*ctx,
++	iomap_actor_t			actor,
++	bool				fatal)
+ {
+-	struct iomap_readpage_ctx ctx = { .cur_page = page };
+-	struct inode *inode = page->mapping->host;
+-	unsigned poff;
+-	loff_t ret;
+-
+-	trace_iomap_readpage(page->mapping->host, 1);
++	unsigned int			poff;
++	loff_t				ret;
++	struct page			*page = ctx->cur_page;
++	struct inode			*inode = page->mapping->host;
+ 
+ 	for (poff = 0; poff < PAGE_SIZE; poff += ret) {
+-		ret = iomap_apply(inode, page_offset(page) + poff,
+-				PAGE_SIZE - poff, 0, ops, &ctx,
+-				iomap_readpage_actor);
++		ret = iomap_apply(inode, offset + poff, PAGE_SIZE - poff,
++				  flag, ops, ctx, actor);
+ 		if (ret <= 0) {
+ 			WARN_ON_ONCE(ret == 0);
++			if (fatal)
++				return ret;
+ 			SetPageError(page);
+-			break;
++			return 0;
+ 		}
+ 	}
++	return ret;
++}
++
++
++int
++iomap_readpage(struct page *page, const struct iomap_ops *ops)
++{
++	struct iomap_readpage_ctx ctx = { .cur_page = page };
++
++	trace_iomap_readpage(page->mapping->host, 1);
++
++	do_iomap_readpage_apply(page_offset(page), 0, ops, &ctx,
++				iomap_readpage_actor, false);
+ 
+ 	if (ctx.bio) {
+ 		submit_bio(ctx.bio);
+@@ -395,34 +413,6 @@ iomap_next_page(struct inode *inode, struct list_head *pages, loff_t pos,
+ 	return NULL;
+ }
+ 
+-static loff_t
+-iomap_readpages_actor(struct inode *inode, loff_t pos, loff_t length,
+-		void *data, struct iomap *iomap, struct iomap *srcmap)
+-{
+-	struct iomap_readpage_ctx *ctx = data;
+-	loff_t done, ret;
+-
+-	for (done = 0; done < length; done += ret) {
+-		if (ctx->cur_page && offset_in_page(pos + done) == 0) {
+-			if (!ctx->cur_page_in_bio)
+-				unlock_page(ctx->cur_page);
+-			put_page(ctx->cur_page);
+-			ctx->cur_page = NULL;
+-		}
+-		if (!ctx->cur_page) {
+-			ctx->cur_page = iomap_next_page(inode, ctx->pages,
+-					pos, length, &done);
+-			if (!ctx->cur_page)
+-				break;
+-			ctx->cur_page_in_bio = false;
+-		}
+-		ret = iomap_readpage_actor(inode, pos + done, length - done,
+-				ctx, iomap, srcmap);
+-	}
+-
+-	return done;
+-}
+-
+ int
+ iomap_readpages(struct address_space *mapping, struct list_head *pages,
+ 		unsigned nr_pages, const struct iomap_ops *ops)
+@@ -433,22 +423,32 @@ iomap_readpages(struct address_space *mapping, struct list_head *pages,
+ 	};
+ 	loff_t pos = page_offset(list_entry(pages->prev, struct page, lru));
+ 	loff_t last = page_offset(list_entry(pages->next, struct page, lru));
+-	loff_t length = last - pos + PAGE_SIZE, ret = 0;
++	loff_t length = last - pos + PAGE_SIZE, ret = 0, done;
+ 
+ 	trace_iomap_readpages(mapping->host, nr_pages);
+ 
+-	while (length > 0) {
+-		ret = iomap_apply(mapping->host, pos, length, 0, ops,
+-				&ctx, iomap_readpages_actor);
++	for (done = 0; done < length; done += PAGE_SIZE) {
++		if (ctx.cur_page) {
++			if (!ctx.cur_page_in_bio)
++				unlock_page(ctx.cur_page);
++			put_page(ctx.cur_page);
++			ctx.cur_page = NULL;
++		}
++		ctx.cur_page = iomap_next_page(mapping->host, ctx.pages,
++					       pos, length, &done);
++		if (!ctx.cur_page)
++			break;
++		ctx.cur_page_in_bio = false;
++
++		ret = do_iomap_readpage_apply(pos+done, 0, ops, &ctx,
++					      iomap_readpage_actor, true);
+ 		if (ret <= 0) {
+-			WARN_ON_ONCE(ret == 0);
+-			goto done;
++			done = ret;
++			break;
+ 		}
+-		pos += ret;
+-		length -= ret;
++
+ 	}
+-	ret = 0;
+-done:
++
+ 	if (ctx.bio)
+ 		submit_bio(ctx.bio);
+ 	if (ctx.cur_page) {
+@@ -461,8 +461,8 @@ iomap_readpages(struct address_space *mapping, struct list_head *pages,
+ 	 * Check that we didn't lose a page due to the arcance calling
+ 	 * conventions..
+ 	 */
+-	WARN_ON_ONCE(!ret && !list_empty(ctx.pages));
+-	return ret;
++	WARN_ON_ONCE((done == length) && !list_empty(ctx.pages));
++	return done;
+ }
+ EXPORT_SYMBOL_GPL(iomap_readpages);
+ 
+-- 
+2.17.2
 
