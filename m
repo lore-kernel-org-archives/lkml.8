@@ -2,72 +2,57 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B6BC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF9BC33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68BD62075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:30:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="0OtEu5+A"
+	by mail.kernel.org (Postfix) with ESMTP id C8B94207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:31:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579181473;
+	bh=qvuk5F+xmELcJe88I5F+jzPf6ddii5WX6OLaF/dNf94=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=M8NE7VaY9bGOukV0gup/C/izue6KfzmvdNdsXa5zhY0DjmnpYhrnPdkSkEsa+Bdzw
+	 /dm+UfY0OZTgil0yykHMh5R2ZAcXPcA7tAviHk6aWX/otV0zb4voTQbtqXbWHYoAL5
+	 J13u+n/fasfLD6COARlxYaq03abLzv4gqi0YsdMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729142AbgAPNao (ORCPT
+        id S1729145AbgAPNbN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 08:30:44 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36494 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728986AbgAPNah (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 08:30:37 -0500
-Received: by mail-wr1-f68.google.com with SMTP id z3so19177314wru.3
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 05:30:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Q0KVm2jLb2riQiTD9KW6RurAfIWMzOlCyoKI6A+fmL8=;
-        b=0OtEu5+AObic6YxPuEUL27zKtHFkaPwW3uZDXZkURVhmSBGdUIFs0+7S7CW0GhzGoq
-         6nan7z4oJ7l0IGF/WOgGeJxix64kH+kg+ByzFw+hNd3TWfoRhsBiPMgUmW7Pd874leyA
-         VT74AuBydpGbqBx7T4LsKSHTZ/hvPsq2ACEtGtXGZKRXZeJwWOE4WW+nI9wy3zRHNqg2
-         qe6cCSGDYJrX0KFGIiH+IHkrfELrLjwib6YUN03fU5pw2PstctU2Pnu5wNgxC6y0Hsog
-         BVUVa2ito2sy3hLfCviZSHjGRor6CaKGIWEy29h19mhjar43O8VK4tgLfcxcHKMLe3jE
-         7AGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Q0KVm2jLb2riQiTD9KW6RurAfIWMzOlCyoKI6A+fmL8=;
-        b=oJJ/xLTc2vbv1iXk1Y+zbUFHDUulD5OB7WDlw10Ly05d+1qNXvYx5Vz7/I3AGzsyn3
-         mpYin0ghmy5Zlm00vlYQ7mCRr27kGNRgNGGicMAfdOh2cc9+v1/T34Lu6NRttqm6Kr1i
-         urq+JWH22bebSNuHVtOh+esGQmtNEndniz/13MriFrmcRkss01dpmgKL8nJkmNkUs2r1
-         bIer+ifU45FOnJRiOxE0nYi0T+wW2hOzPF2E4kZg/IoWjCCNYmadfSo6R8YcM50ByjEq
-         6p1rApWqsXFYRmAgq4MNnsqrCWOsKHXorjSqTG8PQGiqNUFj310ikT4KG+DgzcRjqLTy
-         n6hA==
-X-Gm-Message-State: APjAAAWT+n9gOquEKXdVIRQRRmSu2IV/SaVvoKIKtj/BggIzA5PHR9XU
-        REfhjswkKdsOaSM89x8NwHbUbquvzfALAg==
-X-Google-Smtp-Source: APXvYqzb2h+SLFkIZxWNSTRKdJFk89HATO5pTrnJcudIdK8E5S4X0uU9qdmlh0OfZLQxFaefY768BA==
-X-Received: by 2002:a5d:448c:: with SMTP id j12mr3346411wrq.125.1579181433311;
-        Thu, 16 Jan 2020 05:30:33 -0800 (PST)
-Received: from bender.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id e16sm29256898wrs.73.2020.01.16.05.30.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 05:30:32 -0800 (PST)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     mchehab@kernel.org, hans.verkuil@cisco.com
-Cc:     Maxime Jourdan <mjourdan@baylibre.com>,
-        linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v4 4/4] media: meson: vdec: add H.264 decoding support
-Date:   Thu, 16 Jan 2020 14:30:25 +0100
-Message-Id: <20200116133025.1903-5-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200116133025.1903-1-narmstrong@baylibre.com>
-References: <20200116133025.1903-1-narmstrong@baylibre.com>
+        Thu, 16 Jan 2020 08:31:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39798 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726706AbgAPNbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 08:31:12 -0500
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 740662077C;
+        Thu, 16 Jan 2020 13:31:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579181472;
+        bh=qvuk5F+xmELcJe88I5F+jzPf6ddii5WX6OLaF/dNf94=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Iv0S4zPQTLTUnKqhHMoePKpNsWwRciozw42y1viUstYS74mK2w42OgLlVnDejAoyE
+         8L537Hqy8FsXLSzU85zU6pFWs9nwPQJzS5ppfEfKzfIbplfxicoqqS53980zXh4kG1
+         ukK+u3Jl05VQS+1wlHXjkilVgczRX5u/zJlHsJ9U=
+Message-ID: <eb1e0cd575d21b744acdc8b588769f0e648fecb2.camel@kernel.org>
+Subject: Re: [PATCH]--fix the race condition of remove_session_caps of ceph
+ which tirgger bugon
+From:   Jeff Layton <jlayton@kernel.org>
+To:     =?UTF-8?Q?=E9=99=88=E5=AE=89=E5=BA=86?= <chenanqing@oppo.com>,
+        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     "Yan, Zheng" <zyan@redhat.com>
+Date:   Thu, 16 Jan 2020 08:31:10 -0500
+In-Reply-To: <HK0PR02MB256313E669FF1C2BDA9155EEAB360@HK0PR02MB2563.apcprd02.prod.outlook.com>
+References: <HK0PR02MB256313E669FF1C2BDA9155EEAB360@HK0PR02MB2563.apcprd02.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,644 +60,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Jourdan <mjourdan@baylibre.com>
+On Thu, 2020-01-16 at 02:02 +0000, 陈安庆 wrote:
+> Hi All，I think I find a bug in the ceph .
+>  
+>  
+> background:
+> [3418687.123610] kernel BUG at fs/ceph/mds_client.c:1325! 
+> [3418687.124102] invalid opcode: 0000 [#1] SMP
+> [3418687.130132] CPU: 27 PID: 453692 Comm: kworker/27:2 Kdump: loaded Tainted: P OE ------------ T 3.10.0-957.27.2.el7.x86_64 #1
+> [3418687.131427] Hardware name: Inspur NF5288M5/YZMB-00834-101, BIOS 4.0.08 09/19/2019
+> [3418687.132109] Workqueue: ceph-msgr ceph_con_workfn [libceph]
+> [3418687.132792] task: ffff94c932652080 ti: ffff94b73dae4000 task.ti: ffff94b73dae4000
+> [3418687.133488] RIP: 0010:[<ffffffffc1acdc9f>] [<ffffffffc1acdc9f>] remove_session_caps+0x1bf/0x1d0 [ceph]
+> [3418687.134213] RSP: 0018:ffff94b73dae7be0 EFLAGS: 00010202
+> [3418687.134933] RAX: 0000000000000001 RBX: ffff94a09a49ed38 RCX: ffff94b73dae7be8
+> [3418687.135668] RDX: ffff94c409f78118 RSI: ffff94b73dae7be8 RDI: ffff94a09a49e800
+> [3418687.136407] RBP: ffff94b73dae7c38 R08: ffff94c409f78118 R09: 0000000000000001
+> [3418687.137147] R10: 0000000000000000 R11: 0000000000000000 R12: ffff94a09a49e800
+> [3418687.137895] R13: ffff94b73dae7be8 R14: ffff94c409f78000 R15: ffff94a09a49ed40
+> [3418687.138648] FS: 0000000000000000(0000) GS:ffff94e0bc0c0000(0000) knlGS:0000000000000000
+> [3418687.139414] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [3418687.140175] CR2: 00007f49c861a330 CR3: 0000002e4eec4000 CR4: 00000000007607e0
+> [3418687.140939] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [3418687.141694] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [3418687.142439] PKRU: 00000000
+> [3418687.143173] Call Trace:
+> [3418687.143907] [<ffffffffc1ad399c>] dispatch+0x39c/0xb00 [ceph]
+> [3418687.144635] [<ffffffffbd81b56a>] ? kernel_recvmsg+0x3a/0x50
+> [3418687.145361] [<ffffffffc1a60fb4>] try_read+0x514/0x12c0 [libceph]
+> [3418687.146081] [<ffffffffc1a61f64>] ceph_con_workfn+0xe4/0x1530 [libceph]
+> [3418687.146795] [<ffffffffbd2d1b60>] ? finish_task_switch+0xe0/0x1c0
+> [3418687.147502] [<ffffffffbd969aba>] ? __schedule+0x42a/0x860
+> [3418687.148201] [<ffffffffbd2baf9f>] process_one_work+0x17f/0x440
+> [3418687.148895] [<ffffffffbd2bc036>] worker_thread+0x126/0x3c0
+> [3418687.149579] [<ffffffffbd2bbf10>] ? manage_workers.isra.25+0x2a0/0x2a0
+> [3418687.150261] [<ffffffffbd2c2e81>] kthread+0xd1/0xe0
+> [3418687.150933] [<ffffffffbd2c2db0>] ? insert_kthread_work+0x40/0x40
+> [3418687.151603] [<ffffffffbd976c1d>] ret_from_fork_nospec_begin+0x7/0x21
+> [3418687.152266] [<ffffffffbd2c2db0>] ? insert_kthread_work+0x40/0x40
+> [3418687.152921] Code: 5d 41 5e 41 5f 5d c3 48 89 fa 48 c7 c6 68 31 ae c1 48 c7 c7 98 0f af c1 31 c0 e8 8d 5c ad fb e9 96 fe ff ff e8 03 a9 7c fb 0f 0b <0f> 0b 0f 1f 44 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00
+> [3418687.154318] RIP [<ffffffffc1acdc9f>] remove_session_caps+0x1bf/0x1d0 [ceph]
+> [3418687.154998] RSP <ffff94b73dae7be0>
+>  
+>  
+> and I find another thread which is waiting for the spinlock of session->s_cap_lock.
+> PID: 512130 TASK: ffff94bcb5afc100 CPU: 62 COMMAND: "kworker/62:4"
+> #0 [ffff94e0bc588e48] crash_nmi_callback at ffffffffbd256027
+> #1 [ffff94e0bc588e58] nmi_handle at ffffffffbd96e91c
+> #2 [ffff94e0bc588eb0] do_nmi at ffffffffbd96eb3d
+> #3 [ffff94e0bc588ef0] end_repeat_nmi at ffffffffbd96dd89
+> [exception RIP: native_queued_spin_lock_slowpath+462]
+> RIP: ffffffffbd3135de RSP: ffff94cfbf2cf800 RFLAGS: 00000202
+> RAX: 0000000000000001 RBX: ffff94c409f78000 RCX: 0000000000000001
+> RDX: 0000000000000101 RSI: 0000000000000001 RDI: ffff94a09a49ed38
+> RBP: ffff94cfbf2cf800 R8: 0000000000000101 R9: ffff94a1e6d2e180
+> R10: ffff94e1bfbba0e0 R11: ffffffffffffffff R12: ffff94a6c763e9b0
+> R13: ffff94a09a49ed38 R14: ffff94a09a49e800 R15: 0000000000000400
+> ORIG_RAX: ffffffffffffffff CS: 0010 SS: 0018
+> --- <NMI exception stack> ---
+> #4 [ffff94cfbf2cf800] native_queued_spin_lock_slowpath at ffffffffbd3135de
+> #5 [ffff94cfbf2cf808] queued_spin_lock_slowpath at ffffffffbd95e2cb
+> #6 [ffff94cfbf2cf818] _raw_spin_lock at ffffffffbd96c7a0
+> #7 [ffff94cfbf2cf828] __ceph_remove_cap at ffffffffc1ac1366 [ceph]----------this function is waiting for spinlock of session->s_cap_lock 
+> #8 [ffff94cfbf2cf870] ceph_queue_caps_release at ffffffffc1ac156c [ceph]
+> #9 [ffff94cfbf2cf890] ceph_destroy_inode at ffffffffc1aaabd5 [ceph]
+> #10 [ffff94cfbf2cf8d0] destroy_inode at ffffffffbd45fe4b
+> #11 [ffff94cfbf2cf8e8] evict at ffffffffbd45ff85
+> #12 [ffff94cfbf2cf910] iput at ffffffffbd46082c
+> #13 [ffff94cfbf2cf940] ceph_put_wrbuffer_cap_refs at ffffffffc1ac46e4 [ceph]
+> #14 [ffff94cfbf2cf9b0] writepages_finish at ffffffffc1ab9ecc [ceph]
+> #15 [ffff94cfbf2cfa30] __complete_request at ffffffffc1a67ebe [libceph]
+> #16 [ffff94cfbf2cfa50] handle_reply at ffffffffc1a70d1d [libceph]
+> #17 [ffff94cfbf2cfc10] dispatch at ffffffffc1a72ae3 [libceph]
+> #18 [ffff94cfbf2cfcd0] try_read at ffffffffc1a60fb4 [libceph]
+> #19 [ffff94cfbf2cfd90] ceph_con_workfn at ffffffffc1a61f64 [libceph]
+> #20 [ffff94cfbf2cfe20] process_one_work at ffffffffbd2baf9f
+> #21 [ffff94cfbf2cfe68] worker_thread at ffffffffbd2bc036
+> #22 [ffff94cfbf2cfec8] kthread at ffffffffbd2c2e81
+> #23 [ffff94cfbf2cff50] ret_from_fork_nospec_begin at ffffffffbd976c1d
+>  
+> after I read the ceph module of https://github.com/torvalds/linux.git and
+> kernel/git/next/linux-next.git ,I think the bug is existed all the same.
+>  
+> so I make a patch,maybe I should replace the pr_warn_ratelimited by some function like udelay?
+>  
 
-Add support for the H264 compressed format (V4L2_PIX_FMT_H264).
+Thanks for the patch.
 
-Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/staging/media/meson/vdec/Makefile     |   2 +-
- drivers/staging/media/meson/vdec/codec_h264.c | 482 ++++++++++++++++++
- drivers/staging/media/meson/vdec/codec_h264.h |  14 +
- .../staging/media/meson/vdec/vdec_platform.c  |  61 +++
- 4 files changed, 558 insertions(+), 1 deletion(-)
- create mode 100644 drivers/staging/media/meson/vdec/codec_h264.c
- create mode 100644 drivers/staging/media/meson/vdec/codec_h264.h
+First, be sure you follow the patch submission guidelines when sending a
+patch. In particular, git-send-email is really the best way to submit
+patches.
 
-diff --git a/drivers/staging/media/meson/vdec/Makefile b/drivers/staging/media/meson/vdec/Makefile
-index 6bea129084b7..711d990c760e 100644
---- a/drivers/staging/media/meson/vdec/Makefile
-+++ b/drivers/staging/media/meson/vdec/Makefile
-@@ -3,6 +3,6 @@
- 
- meson-vdec-objs = esparser.o vdec.o vdec_helpers.o vdec_platform.o
- meson-vdec-objs += vdec_1.o
--meson-vdec-objs += codec_mpeg12.o
-+meson-vdec-objs += codec_mpeg12.o codec_h264.o
- 
- obj-$(CONFIG_VIDEO_MESON_VDEC) += meson-vdec.o
-diff --git a/drivers/staging/media/meson/vdec/codec_h264.c b/drivers/staging/media/meson/vdec/codec_h264.c
-new file mode 100644
-index 000000000000..4528a6a01c3d
---- /dev/null
-+++ b/drivers/staging/media/meson/vdec/codec_h264.c
-@@ -0,0 +1,482 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (C) 2019 BayLibre, SAS
-+ * Author: Maxime Jourdan <mjourdan@baylibre.com>
-+ */
-+
-+#include <media/v4l2-mem2mem.h>
-+#include <media/videobuf2-dma-contig.h>
-+
-+#include "vdec_helpers.h"
-+#include "dos_regs.h"
-+
-+#define SIZE_EXT_FW	(20 * SZ_1K)
-+#define SIZE_WORKSPACE	0x1ee000
-+#define SIZE_SEI	(8 * SZ_1K)
-+
-+/*
-+ * Offset added by the firmware which must be substracted
-+ * from the workspace phyaddr
-+ */
-+#define WORKSPACE_BUF_OFFSET	0x1000000
-+
-+/* ISR status */
-+#define CMD_MASK		GENMASK(7, 0)
-+#define CMD_SRC_CHANGE		1
-+#define CMD_FRAMES_READY	2
-+#define CMD_FATAL_ERROR		6
-+#define CMD_BAD_WIDTH		7
-+#define CMD_BAD_HEIGHT		8
-+
-+#define SEI_DATA_READY	BIT(15)
-+
-+/* Picture type */
-+#define PIC_TOP_BOT	5
-+#define PIC_BOT_TOP	6
-+
-+/* Size of Motion Vector per macroblock */
-+#define MB_MV_SIZE	96
-+
-+/* Frame status data */
-+#define PIC_STRUCT_BIT	5
-+#define PIC_STRUCT_MASK	GENMASK(2, 0)
-+#define BUF_IDX_MASK	GENMASK(4, 0)
-+#define ERROR_FLAG	BIT(9)
-+#define OFFSET_BIT	16
-+#define OFFSET_MASK	GENMASK(15, 0)
-+
-+/* Bitstream parsed data */
-+#define MB_TOTAL_BIT	8
-+#define MB_TOTAL_MASK	GENMASK(15, 0)
-+#define MB_WIDTH_MASK	GENMASK(7, 0)
-+#define MAX_REF_BIT	24
-+#define MAX_REF_MASK	GENMASK(6, 0)
-+#define AR_IDC_BIT	16
-+#define AR_IDC_MASK	GENMASK(7, 0)
-+#define AR_PRESENT_FLAG	BIT(0)
-+#define AR_EXTEND	0xff
-+
-+/*
-+ * Buffer to send to the ESPARSER to signal End Of Stream for H.264.
-+ * This is a 16x16 encoded picture that will trigger drain firmware-side.
-+ * There is no known alternative.
-+ */
-+static const u8 eos_sequence[SZ_4K] = {
-+	0x00, 0x00, 0x00, 0x01, 0x06, 0x05, 0xff, 0xe4, 0xdc, 0x45, 0xe9, 0xbd,
-+	0xe6, 0xd9, 0x48, 0xb7,	0x96, 0x2c, 0xd8, 0x20, 0xd9, 0x23, 0xee, 0xef,
-+	0x78, 0x32, 0x36, 0x34, 0x20, 0x2d, 0x20, 0x63,	0x6f, 0x72, 0x65, 0x20,
-+	0x36, 0x37, 0x20, 0x72, 0x31, 0x31, 0x33, 0x30, 0x20, 0x38, 0x34, 0x37,
-+	0x35, 0x39, 0x37, 0x37, 0x20, 0x2d, 0x20, 0x48, 0x2e, 0x32, 0x36, 0x34,
-+	0x2f, 0x4d, 0x50, 0x45,	0x47, 0x2d, 0x34, 0x20, 0x41, 0x56, 0x43, 0x20,
-+	0x63, 0x6f, 0x64, 0x65, 0x63, 0x20, 0x2d, 0x20,	0x43, 0x6f, 0x70, 0x79,
-+	0x6c, 0x65, 0x66, 0x74, 0x20, 0x32, 0x30, 0x30, 0x33, 0x2d, 0x32, 0x30,
-+	0x30, 0x39, 0x20, 0x2d, 0x20, 0x68, 0x74, 0x74, 0x70, 0x3a, 0x2f, 0x2f,
-+	0x77, 0x77, 0x77, 0x2e,	0x76, 0x69, 0x64, 0x65, 0x6f, 0x6c, 0x61, 0x6e,
-+	0x2e, 0x6f, 0x72, 0x67, 0x2f, 0x78, 0x32, 0x36,	0x34, 0x2e, 0x68, 0x74,
-+	0x6d, 0x6c, 0x20, 0x2d, 0x20, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x73,
-+	0x3a, 0x20, 0x63, 0x61, 0x62, 0x61, 0x63, 0x3d, 0x31, 0x20, 0x72, 0x65,
-+	0x66, 0x3d, 0x31, 0x20,	0x64, 0x65, 0x62, 0x6c, 0x6f, 0x63, 0x6b, 0x3d,
-+	0x31, 0x3a, 0x30, 0x3a, 0x30, 0x20, 0x61, 0x6e,	0x61, 0x6c, 0x79, 0x73,
-+	0x65, 0x3d, 0x30, 0x78, 0x31, 0x3a, 0x30, 0x78, 0x31, 0x31, 0x31, 0x20,
-+	0x6d, 0x65, 0x3d, 0x68, 0x65, 0x78, 0x20, 0x73, 0x75, 0x62, 0x6d, 0x65,
-+	0x3d, 0x36, 0x20, 0x70,	0x73, 0x79, 0x5f, 0x72, 0x64, 0x3d, 0x31, 0x2e,
-+	0x30, 0x3a, 0x30, 0x2e, 0x30, 0x20, 0x6d, 0x69,	0x78, 0x65, 0x64, 0x5f,
-+	0x72, 0x65, 0x66, 0x3d, 0x30, 0x20, 0x6d, 0x65, 0x5f, 0x72, 0x61, 0x6e,
-+	0x67, 0x65, 0x3d, 0x31, 0x36, 0x20, 0x63, 0x68, 0x72, 0x6f, 0x6d, 0x61,
-+	0x5f, 0x6d, 0x65, 0x3d,	0x31, 0x20, 0x74, 0x72, 0x65, 0x6c, 0x6c, 0x69,
-+	0x73, 0x3d, 0x30, 0x20, 0x38, 0x78, 0x38, 0x64,	0x63, 0x74, 0x3d, 0x30,
-+	0x20, 0x63, 0x71, 0x6d, 0x3d, 0x30, 0x20, 0x64, 0x65, 0x61, 0x64, 0x7a,
-+	0x6f, 0x6e, 0x65, 0x3d, 0x32, 0x31, 0x2c, 0x31, 0x31, 0x20, 0x63, 0x68,
-+	0x72, 0x6f, 0x6d, 0x61,	0x5f, 0x71, 0x70, 0x5f, 0x6f, 0x66, 0x66, 0x73,
-+	0x65, 0x74, 0x3d, 0x2d, 0x32, 0x20, 0x74, 0x68,	0x72, 0x65, 0x61, 0x64,
-+	0x73, 0x3d, 0x31, 0x20, 0x6e, 0x72, 0x3d, 0x30, 0x20, 0x64, 0x65, 0x63,
-+	0x69, 0x6d, 0x61, 0x74, 0x65, 0x3d, 0x31, 0x20, 0x6d, 0x62, 0x61, 0x66,
-+	0x66, 0x3d, 0x30, 0x20,	0x62, 0x66, 0x72, 0x61, 0x6d, 0x65, 0x73, 0x3d,
-+	0x30, 0x20, 0x6b, 0x65, 0x79, 0x69, 0x6e, 0x74,	0x3d, 0x32, 0x35, 0x30,
-+	0x20, 0x6b, 0x65, 0x79, 0x69, 0x6e, 0x74, 0x5f, 0x6d, 0x69, 0x6e, 0x3d,
-+	0x32, 0x35, 0x20, 0x73, 0x63, 0x65, 0x6e, 0x65, 0x63, 0x75, 0x74, 0x3d,
-+	0x34, 0x30, 0x20, 0x72,	0x63, 0x3d, 0x61, 0x62, 0x72, 0x20, 0x62, 0x69,
-+	0x74, 0x72, 0x61, 0x74, 0x65, 0x3d, 0x31, 0x30,	0x20, 0x72, 0x61, 0x74,
-+	0x65, 0x74, 0x6f, 0x6c, 0x3d, 0x31, 0x2e, 0x30, 0x20, 0x71, 0x63, 0x6f,
-+	0x6d, 0x70, 0x3d, 0x30, 0x2e, 0x36, 0x30, 0x20, 0x71, 0x70, 0x6d, 0x69,
-+	0x6e, 0x3d, 0x31, 0x30,	0x20, 0x71, 0x70, 0x6d, 0x61, 0x78, 0x3d, 0x35,
-+	0x31, 0x20, 0x71, 0x70, 0x73, 0x74, 0x65, 0x70,	0x3d, 0x34, 0x20, 0x69,
-+	0x70, 0x5f, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x3d, 0x31, 0x2e, 0x34, 0x30,
-+	0x20, 0x61, 0x71, 0x3d, 0x31, 0x3a, 0x31, 0x2e, 0x30, 0x30, 0x00, 0x80,
-+	0x00, 0x00, 0x00, 0x01,	0x67, 0x4d, 0x40, 0x0a, 0x9a, 0x74, 0xf4, 0x20,
-+	0x00, 0x00, 0x03, 0x00, 0x20, 0x00, 0x00, 0x06,	0x51, 0xe2, 0x44, 0xd4,
-+	0x00, 0x00, 0x00, 0x01, 0x68, 0xee, 0x32, 0xc8, 0x00, 0x00, 0x00, 0x01,
-+	0x65, 0x88, 0x80, 0x20, 0x00, 0x08, 0x7f, 0xea, 0x6a, 0xe2, 0x99, 0xb6,
-+	0x57, 0xae, 0x49, 0x30,	0xf5, 0xfe, 0x5e, 0x46, 0x0b, 0x72, 0x44, 0xc4,
-+	0xe1, 0xfc, 0x62, 0xda, 0xf1, 0xfb, 0xa2, 0xdb,	0xd6, 0xbe, 0x5c, 0xd7,
-+	0x24, 0xa3, 0xf5, 0xb9, 0x2f, 0x57, 0x16, 0x49, 0x75, 0x47, 0x77, 0x09,
-+	0x5c, 0xa1, 0xb4, 0xc3, 0x4f, 0x60, 0x2b, 0xb0, 0x0c, 0xc8, 0xd6, 0x66,
-+	0xba, 0x9b, 0x82, 0x29,	0x33, 0x92, 0x26, 0x99, 0x31, 0x1c, 0x7f, 0x9b,
-+	0x00, 0x00, 0x01, 0x0ff,
-+};
-+
-+static const u8 *codec_h264_eos_sequence(u32 *len)
-+{
-+	*len = ARRAY_SIZE(eos_sequence);
-+	return eos_sequence;
-+}
-+
-+struct codec_h264 {
-+	/* H.264 decoder requires an extended firmware */
-+	void      *ext_fw_vaddr;
-+	dma_addr_t ext_fw_paddr;
-+
-+	/* Buffer for the H.264 Workspace */
-+	void      *workspace_vaddr;
-+	dma_addr_t workspace_paddr;
-+
-+	/* Buffer for the H.264 references MV */
-+	void      *ref_vaddr;
-+	dma_addr_t ref_paddr;
-+	u32	   ref_size;
-+
-+	/* Buffer for parsed SEI data */
-+	void      *sei_vaddr;
-+	dma_addr_t sei_paddr;
-+
-+	u32 mb_width;
-+	u32 mb_height;
-+	u32 max_refs;
-+};
-+
-+static int codec_h264_can_recycle(struct amvdec_core *core)
-+{
-+	return !amvdec_read_dos(core, AV_SCRATCH_7) ||
-+	       !amvdec_read_dos(core, AV_SCRATCH_8);
-+}
-+
-+static void codec_h264_recycle(struct amvdec_core *core, u32 buf_idx)
-+{
-+	/*
-+	 * Tell the firmware it can recycle this buffer.
-+	 * AV_SCRATCH_8 serves the same purpose.
-+	 */
-+	if (!amvdec_read_dos(core, AV_SCRATCH_7))
-+		amvdec_write_dos(core, AV_SCRATCH_7, buf_idx + 1);
-+	else
-+		amvdec_write_dos(core, AV_SCRATCH_8, buf_idx + 1);
-+}
-+
-+static int codec_h264_start(struct amvdec_session *sess)
-+{
-+	u32 workspace_offset;
-+	struct amvdec_core *core = sess->core;
-+	struct codec_h264 *h264 = sess->priv;
-+
-+	/* Allocate some memory for the H.264 decoder's state */
-+	h264->workspace_vaddr =
-+		dma_alloc_coherent(core->dev, SIZE_WORKSPACE,
-+				   &h264->workspace_paddr, GFP_KERNEL);
-+	if (!h264->workspace_vaddr)
-+		return -ENOMEM;
-+
-+	/* Allocate some memory for the H.264 SEI dump */
-+	h264->sei_vaddr = dma_alloc_coherent(core->dev, SIZE_SEI,
-+					     &h264->sei_paddr, GFP_KERNEL);
-+	if (!h264->sei_vaddr)
-+		return -ENOMEM;
-+
-+	amvdec_write_dos_bits(core, POWER_CTL_VLD, BIT(9) | BIT(6));
-+
-+	workspace_offset = h264->workspace_paddr - WORKSPACE_BUF_OFFSET;
-+	amvdec_write_dos(core, AV_SCRATCH_1, workspace_offset);
-+	amvdec_write_dos(core, AV_SCRATCH_G, h264->ext_fw_paddr);
-+	amvdec_write_dos(core, AV_SCRATCH_I, h264->sei_paddr -
-+					     workspace_offset);
-+
-+	/* Enable "error correction" */
-+	amvdec_write_dos(core, AV_SCRATCH_F,
-+			 (amvdec_read_dos(core, AV_SCRATCH_F) & 0xffffffc3) |
-+			 BIT(4) | BIT(7));
-+
-+	amvdec_write_dos(core, MDEC_PIC_DC_THRESH, 0x404038aa);
-+
-+	return 0;
-+}
-+
-+static int codec_h264_stop(struct amvdec_session *sess)
-+{
-+	struct codec_h264 *h264 = sess->priv;
-+	struct amvdec_core *core = sess->core;
-+
-+	if (h264->ext_fw_vaddr)
-+		dma_free_coherent(core->dev, SIZE_EXT_FW,
-+				  h264->ext_fw_vaddr, h264->ext_fw_paddr);
-+
-+	if (h264->workspace_vaddr)
-+		dma_free_coherent(core->dev, SIZE_WORKSPACE,
-+				 h264->workspace_vaddr, h264->workspace_paddr);
-+
-+	if (h264->ref_vaddr)
-+		dma_free_coherent(core->dev, h264->ref_size,
-+				  h264->ref_vaddr, h264->ref_paddr);
-+
-+	if (h264->sei_vaddr)
-+		dma_free_coherent(core->dev, SIZE_SEI,
-+				  h264->sei_vaddr, h264->sei_paddr);
-+
-+	return 0;
-+}
-+
-+static int codec_h264_load_extended_firmware(struct amvdec_session *sess,
-+					     const u8 *data, u32 len)
-+{
-+	struct codec_h264 *h264;
-+	struct amvdec_core *core = sess->core;
-+
-+	if (len < SIZE_EXT_FW)
-+		return -EINVAL;
-+
-+	h264 = kzalloc(sizeof(*h264), GFP_KERNEL);
-+	if (!h264)
-+		return -ENOMEM;
-+
-+	h264->ext_fw_vaddr = dma_alloc_coherent(core->dev, SIZE_EXT_FW,
-+					      &h264->ext_fw_paddr, GFP_KERNEL);
-+	if (!h264->ext_fw_vaddr) {
-+		kfree(h264);
-+		return -ENOMEM;
-+	}
-+
-+	memcpy(h264->ext_fw_vaddr, data, SIZE_EXT_FW);
-+	sess->priv = h264;
-+
-+	return 0;
-+}
-+
-+static const struct v4l2_fract par_table[] = {
-+	{ 1, 1 },   { 1, 1 },    { 12, 11 }, { 10, 11 },
-+	{ 16, 11 }, { 40, 33 },  { 24, 11 }, { 20, 11 },
-+	{ 32, 11 }, { 80, 33 },  { 18, 11 }, { 15, 11 },
-+	{ 64, 33 }, { 160, 99 }, { 4, 3 },   { 3, 2 },
-+	{ 2, 1 }
-+};
-+
-+static void codec_h264_set_par(struct amvdec_session *sess)
-+{
-+	struct amvdec_core *core = sess->core;
-+	u32 seq_info = amvdec_read_dos(core, AV_SCRATCH_2);
-+	u32 ar_idc = (seq_info >> AR_IDC_BIT) & AR_IDC_MASK;
-+
-+	if (!(seq_info & AR_PRESENT_FLAG))
-+		return;
-+
-+	if (ar_idc == AR_EXTEND) {
-+		u32 ar_info = amvdec_read_dos(core, AV_SCRATCH_3);
-+
-+		sess->pixelaspect.numerator = ar_info & 0xffff;
-+		sess->pixelaspect.denominator = (ar_info >> 16) & 0xffff;
-+		return;
-+	}
-+
-+	if (ar_idc >= ARRAY_SIZE(par_table))
-+		return;
-+
-+	sess->pixelaspect = par_table[ar_idc];
-+}
-+
-+static void codec_h264_resume(struct amvdec_session *sess)
-+{
-+	struct amvdec_core *core = sess->core;
-+	struct codec_h264 *h264 = sess->priv;
-+	u32 mb_width, mb_height, mb_total;
-+
-+	amvdec_set_canvases(sess, (u32[]){ ANC0_CANVAS_ADDR, 0 },
-+				  (u32[]){ 24, 0 });
-+
-+	dev_dbg(core->dev, "max_refs = %u; actual_dpb_size = %u\n",
-+		h264->max_refs, sess->num_dst_bufs);
-+
-+	/* Align to a multiple of 4 macroblocks */
-+	mb_width = ALIGN(h264->mb_width, 4);
-+	mb_height = ALIGN(h264->mb_height, 4);
-+	mb_total = mb_width * mb_height;
-+
-+	h264->ref_size = mb_total * MB_MV_SIZE * h264->max_refs;
-+	h264->ref_vaddr = dma_alloc_coherent(core->dev, h264->ref_size,
-+					     &h264->ref_paddr, GFP_KERNEL);
-+	if (!h264->ref_vaddr) {
-+		amvdec_abort(sess);
-+		return;
-+	}
-+
-+	/* Address to store the references' MVs */
-+	amvdec_write_dos(core, AV_SCRATCH_1, h264->ref_paddr);
-+	/* End of ref MV */
-+	amvdec_write_dos(core, AV_SCRATCH_4, h264->ref_paddr + h264->ref_size);
-+
-+	amvdec_write_dos(core, AV_SCRATCH_0, (h264->max_refs << 24) |
-+					     (sess->num_dst_bufs << 16) |
-+					     ((h264->max_refs - 1) << 8));
-+}
-+
-+/**
-+ * Configure the H.264 decoder when the parser detected a parameter set change
-+ */
-+static void codec_h264_src_change(struct amvdec_session *sess)
-+{
-+	struct amvdec_core *core = sess->core;
-+	struct codec_h264 *h264 = sess->priv;
-+	u32 parsed_info, mb_total;
-+	u32 crop_infor, crop_bottom, crop_right;
-+	u32 frame_width, frame_height;
-+
-+	sess->keyframe_found = 1;
-+
-+	parsed_info = amvdec_read_dos(core, AV_SCRATCH_1);
-+
-+	/* Total number of 16x16 macroblocks */
-+	mb_total = (parsed_info >> MB_TOTAL_BIT) & MB_TOTAL_MASK;
-+	/* Number of macroblocks per line */
-+	h264->mb_width = parsed_info & MB_WIDTH_MASK;
-+	/* Number of macroblock lines */
-+	h264->mb_height = mb_total / h264->mb_width;
-+
-+	h264->max_refs = ((parsed_info >> MAX_REF_BIT) & MAX_REF_MASK) + 1;
-+
-+	crop_infor = amvdec_read_dos(core, AV_SCRATCH_6);
-+	crop_bottom = (crop_infor & 0xff);
-+	crop_right = (crop_infor >> 16) & 0xff;
-+
-+	frame_width = h264->mb_width * 16 - crop_right;
-+	frame_height = h264->mb_height * 16 - crop_bottom;
-+
-+	dev_dbg(core->dev, "frame: %ux%u; crop: %u %u\n",
-+		frame_width, frame_height, crop_right, crop_bottom);
-+
-+	codec_h264_set_par(sess);
-+	amvdec_src_change(sess, frame_width, frame_height, h264->max_refs + 5);
-+}
-+
-+/**
-+ * The bitstream offset is split in half in 2 different registers.
-+ * Fetch its MSB here, which location depends on the frame number.
-+ */
-+static u32 get_offset_msb(struct amvdec_core *core, int frame_num)
-+{
-+	int take_msb = frame_num % 2;
-+	int reg_offset = (frame_num / 2) * 4;
-+	u32 offset_msb = amvdec_read_dos(core, AV_SCRATCH_A + reg_offset);
-+
-+	if (take_msb)
-+		return offset_msb & 0xffff0000;
-+
-+	return (offset_msb & 0x0000ffff) << 16;
-+}
-+
-+static void codec_h264_frames_ready(struct amvdec_session *sess, u32 status)
-+{
-+	struct amvdec_core *core = sess->core;
-+	int error_count;
-+	int num_frames;
-+	int i;
-+
-+	error_count = amvdec_read_dos(core, AV_SCRATCH_D);
-+	num_frames = (status >> 8) & 0xff;
-+	if (error_count) {
-+		dev_warn(core->dev,
-+			 "decoder error(s) happened, count %d\n", error_count);
-+		amvdec_write_dos(core, AV_SCRATCH_D, 0);
-+	}
-+
-+	for (i = 0; i < num_frames; i++) {
-+		u32 frame_status = amvdec_read_dos(core, AV_SCRATCH_1 + i * 4);
-+		u32 buffer_index = frame_status & BUF_IDX_MASK;
-+		u32 pic_struct = (frame_status >> PIC_STRUCT_BIT) &
-+				 PIC_STRUCT_MASK;
-+		u32 offset = (frame_status >> OFFSET_BIT) & OFFSET_MASK;
-+		u32 field = V4L2_FIELD_NONE;
-+
-+		/*
-+		 * A buffer decode error means it was decoded,
-+		 * but part of the picture will have artifacts.
-+		 * Typical reason is a temporarily corrupted bitstream
-+		 */
-+		if (frame_status & ERROR_FLAG)
-+			dev_dbg(core->dev, "Buffer %d decode error\n",
-+				buffer_index);
-+
-+		if (pic_struct == PIC_TOP_BOT)
-+			field = V4L2_FIELD_INTERLACED_TB;
-+		else if (pic_struct == PIC_BOT_TOP)
-+			field = V4L2_FIELD_INTERLACED_BT;
-+
-+		offset |= get_offset_msb(core, i);
-+		amvdec_dst_buf_done_idx(sess, buffer_index, offset, field);
-+	}
-+}
-+
-+static irqreturn_t codec_h264_threaded_isr(struct amvdec_session *sess)
-+{
-+	struct amvdec_core *core = sess->core;
-+	u32 status;
-+	u32 size;
-+	u8 cmd;
-+
-+	status = amvdec_read_dos(core, AV_SCRATCH_0);
-+	cmd = status & CMD_MASK;
-+
-+	switch (cmd) {
-+	case CMD_SRC_CHANGE:
-+		codec_h264_src_change(sess);
-+		break;
-+	case CMD_FRAMES_READY:
-+		codec_h264_frames_ready(sess, status);
-+		break;
-+	case CMD_FATAL_ERROR:
-+		dev_err(core->dev, "H.264 decoder fatal error\n");
-+		goto abort;
-+	case CMD_BAD_WIDTH:
-+		size = (amvdec_read_dos(core, AV_SCRATCH_1) + 1) * 16;
-+		dev_err(core->dev, "Unsupported video width: %u\n", size);
-+		goto abort;
-+	case CMD_BAD_HEIGHT:
-+		size = (amvdec_read_dos(core, AV_SCRATCH_1) + 1) * 16;
-+		dev_err(core->dev, "Unsupported video height: %u\n", size);
-+		goto abort;
-+	case 0: /* Unused but not worth printing for */
-+	case 9:
-+		break;
-+	default:
-+		dev_info(core->dev, "Unexpected H264 ISR: %08X\n", cmd);
-+		break;
-+	}
-+
-+	if (cmd && cmd != CMD_SRC_CHANGE)
-+		amvdec_write_dos(core, AV_SCRATCH_0, 0);
-+
-+	/* Decoder has some SEI data for us ; ignore */
-+	if (amvdec_read_dos(core, AV_SCRATCH_J) & SEI_DATA_READY)
-+		amvdec_write_dos(core, AV_SCRATCH_J, 0);
-+
-+	return IRQ_HANDLED;
-+abort:
-+	amvdec_abort(sess);
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t codec_h264_isr(struct amvdec_session *sess)
-+{
-+	struct amvdec_core *core = sess->core;
-+
-+	amvdec_write_dos(core, ASSIST_MBOX1_CLR_REG, 1);
-+
-+	return IRQ_WAKE_THREAD;
-+}
-+
-+struct amvdec_codec_ops codec_h264_ops = {
-+	.start = codec_h264_start,
-+	.stop = codec_h264_stop,
-+	.load_extended_firmware = codec_h264_load_extended_firmware,
-+	.isr = codec_h264_isr,
-+	.threaded_isr = codec_h264_threaded_isr,
-+	.can_recycle = codec_h264_can_recycle,
-+	.recycle = codec_h264_recycle,
-+	.eos_sequence = codec_h264_eos_sequence,
-+	.resume = codec_h264_resume,
-+};
-diff --git a/drivers/staging/media/meson/vdec/codec_h264.h b/drivers/staging/media/meson/vdec/codec_h264.h
-new file mode 100644
-index 000000000000..7cb4fb86ff36
---- /dev/null
-+++ b/drivers/staging/media/meson/vdec/codec_h264.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/*
-+ * Copyright (C) 2019 BayLibre, SAS
-+ * Author: Maxime Jourdan <mjourdan@baylibre.com>
-+ */
-+
-+#ifndef __MESON_VDEC_CODEC_H264_H_
-+#define __MESON_VDEC_CODEC_H264_H_
-+
-+#include "vdec.h"
-+
-+extern struct amvdec_codec_ops codec_h264_ops;
-+
-+#endif
-diff --git a/drivers/staging/media/meson/vdec/vdec_platform.c b/drivers/staging/media/meson/vdec/vdec_platform.c
-index 066d4a055894..e9356a46828f 100644
---- a/drivers/staging/media/meson/vdec/vdec_platform.c
-+++ b/drivers/staging/media/meson/vdec/vdec_platform.c
-@@ -9,9 +9,22 @@
- 
- #include "vdec_1.h"
- #include "codec_mpeg12.h"
-+#include "codec_h264.h"
- 
- static const struct amvdec_format vdec_formats_gxbb[] = {
- 	{
-+		.pixfmt = V4L2_PIX_FMT_H264,
-+		.min_buffers = 2,
-+		.max_buffers = 24,
-+		.max_width = 1920,
-+		.max_height = 1080,
-+		.vdec_ops = &vdec_1_ops,
-+		.codec_ops = &codec_h264_ops,
-+		.firmware_path = "meson/vdec/gxbb_h264.bin",
-+		.pixfmts_cap = { V4L2_PIX_FMT_NV12M, 0 },
-+		.flags = V4L2_FMT_FLAG_COMPRESSED |
-+			 V4L2_FMT_FLAG_DYN_RESOLUTION,
-+	}, {
- 		.pixfmt = V4L2_PIX_FMT_MPEG1,
- 		.min_buffers = 8,
- 		.max_buffers = 8,
-@@ -38,6 +51,18 @@ static const struct amvdec_format vdec_formats_gxbb[] = {
- 
- static const struct amvdec_format vdec_formats_gxl[] = {
- 	{
-+		.pixfmt = V4L2_PIX_FMT_H264,
-+		.min_buffers = 2,
-+		.max_buffers = 24,
-+		.max_width = 3840,
-+		.max_height = 2160,
-+		.vdec_ops = &vdec_1_ops,
-+		.codec_ops = &codec_h264_ops,
-+		.firmware_path = "meson/vdec/gxl_h264.bin",
-+		.pixfmts_cap = { V4L2_PIX_FMT_NV12M, 0 },
-+		.flags = V4L2_FMT_FLAG_COMPRESSED |
-+			 V4L2_FMT_FLAG_DYN_RESOLUTION,
-+	}, {
- 		.pixfmt = V4L2_PIX_FMT_MPEG1,
- 		.min_buffers = 8,
- 		.max_buffers = 8,
-@@ -64,6 +89,18 @@ static const struct amvdec_format vdec_formats_gxl[] = {
- 
- static const struct amvdec_format vdec_formats_gxm[] = {
- 	{
-+		.pixfmt = V4L2_PIX_FMT_H264,
-+		.min_buffers = 2,
-+		.max_buffers = 24,
-+		.max_width = 3840,
-+		.max_height = 2160,
-+		.vdec_ops = &vdec_1_ops,
-+		.codec_ops = &codec_h264_ops,
-+		.firmware_path = "meson/vdec/gxm_h264.bin",
-+		.pixfmts_cap = { V4L2_PIX_FMT_NV12M, 0 },
-+		.flags = V4L2_FMT_FLAG_COMPRESSED |
-+			 V4L2_FMT_FLAG_DYN_RESOLUTION,
-+	}, {
- 		.pixfmt = V4L2_PIX_FMT_MPEG1,
- 		.min_buffers = 8,
- 		.max_buffers = 8,
-@@ -90,6 +127,18 @@ static const struct amvdec_format vdec_formats_gxm[] = {
- 
- static const struct amvdec_format vdec_formats_g12a[] = {
- 	{
-+		.pixfmt = V4L2_PIX_FMT_H264,
-+		.min_buffers = 2,
-+		.max_buffers = 24,
-+		.max_width = 3840,
-+		.max_height = 2160,
-+		.vdec_ops = &vdec_1_ops,
-+		.codec_ops = &codec_h264_ops,
-+		.firmware_path = "meson/vdec/g12a_h264.bin",
-+		.pixfmts_cap = { V4L2_PIX_FMT_NV12M, 0 },
-+		.flags = V4L2_FMT_FLAG_COMPRESSED |
-+			 V4L2_FMT_FLAG_DYN_RESOLUTION,
-+	}, {
- 		.pixfmt = V4L2_PIX_FMT_MPEG1,
- 		.min_buffers = 8,
- 		.max_buffers = 8,
-@@ -116,6 +165,18 @@ static const struct amvdec_format vdec_formats_g12a[] = {
- 
- static const struct amvdec_format vdec_formats_sm1[] = {
- 	{
-+		.pixfmt = V4L2_PIX_FMT_H264,
-+		.min_buffers = 2,
-+		.max_buffers = 24,
-+		.max_width = 3840,
-+		.max_height = 2160,
-+		.vdec_ops = &vdec_1_ops,
-+		.codec_ops = &codec_h264_ops,
-+		.firmware_path = "meson/vdec/g12a_h264.bin",
-+		.pixfmts_cap = { V4L2_PIX_FMT_NV12M, 0 },
-+		.flags = V4L2_FMT_FLAG_COMPRESSED |
-+			 V4L2_FMT_FLAG_DYN_RESOLUTION,
-+	}, {
- 		.pixfmt = V4L2_PIX_FMT_MPEG1,
- 		.min_buffers = 8,
- 		.max_buffers = 8,
+> diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
+> index 4cfc4df9fc34..3734d2afb3c5 100644
+> --- a/fs/ceph/mds_client.c
+> +++ b/fs/ceph/mds_client.c
+> @@ -1503,8 +1503,14 @@ static void remove_session_caps(struct ceph_mds_session *session)
+>                 while (!list_empty(&session->s_caps)) {
+>                         cap = list_entry(session->s_caps.next,
+>                                          struct ceph_cap, session_caps);
+> -                       if (cap == prev)
+> -                                break;
+> +                       if (cap == prev) {
+> +                               spin_unlock(&session->s_cap_lock);
+> +                               pr_warn_ratelimited(
+> +                               "removing cap %p, inode is %p be delayed\n",
+> +                               cap,  inode);
+> +                               spin_lock(&session->s_cap_lock);
+> +                               continue;
+> +                       }
+
+(cc'ing Zheng)
+
+That seems like it might be prone to spinning for a very long time if we
+have an inode with an outstanding reference for a long time. I get that
+this is a problem though. 
+
+I think the real bug is that this is not moving the cap to the end of
+the list, so that it can attempt to clean up more than one that might be
+there. Probably we just need to do a list_move_tail on the entry before
+dropping the spinlock?
+
+
+
+>                         prev = cap;
+>                         vino = cap->ci->i_vino;
+>                         spin_unlock(&session->s_cap_lock);
+> @@ -1520,6 +1526,13 @@ static void remove_session_caps(struct ceph_mds_session *session)
+>         // drop cap expires and unlock s_cap_lock
+>         detach_cap_releases(session, &dispose);
+>  
+> +       /*
+> +        * if ceph_async_iput execute ceph_destroy_inode which
+> +        * call __ceph_remove_cap finally to dec the session->s_nr_caps
+> +        * maybe after than BUGON,because it need session->s_cap_lock
+> +        * then BUGON(session->s_nr_caps > 0) must be triggered ,
+> +        * although it is just a race condition.
+> +        */
+>         BUG_ON(session->s_nr_caps > 0);
+>         BUG_ON(!list_empty(&session->s_cap_flushing));
+>         spin_unlock(&session->s_cap_lock);
+> OPPO
+> 
+> 本电子邮件及其附件含有OPPO公司的保密信息，仅限于邮件指明的收件人使用（包含个人及群组）。禁止任何人在未经授权的情况下以任何形式使用。如果您错收了本邮件，请立即以电子邮件通知发件人并删除本邮件及其附件。
+> This e-mail and its attachments contain confidential information from OPPO, which is intended only for the person or entity whose address is listed above. Any use of the information contained herein in any way (including, but not limited to, total or partial disclosure, reproduction, or dissemination) by persons other than the intended recipient(s) is prohibited. If you receive this e-mail in error, please notify the sender by phone or email immediately and delete it!
+
 -- 
-2.22.0
+Jeff Layton <jlayton@kernel.org>
 
