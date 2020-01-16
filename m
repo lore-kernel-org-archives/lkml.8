@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBDDC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C33C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43CEF24685
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D541A24684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:10:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194636;
-	bh=2oal85QJQmFK27RIhexDkWAXpYE3elUidpuhTil+uP4=;
+	s=default; t=1579194638;
+	bh=GxpxSfn4Aog9jObkkwzJClYhMneNU3fTJqn+IXbCiGo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2qeQs2zyVh91KPfrOhdW85qnRKEAt/eAxhqRMEY4NcQslE4mbaz+sZkkgaD5dYquK
-	 0rDzOzRwFxkfDMT7rlE+hQdzoJ1590vGFKSzXlLAHiiFpj0CNicieuBEqkDh5XSXg3
-	 nw4sahs/la//gkqAdjZBDyBDr9zvbA+wuf75rMJY=
+	b=Jd90Byj5qYjdEosPKiO+0rMMYPvmZ3+QSuJwMQVfMFKk3+zyKwEzFKwzm9TkWC8pg
+	 kCxMT9j/g6w0Hie/EgnIb1sp8eJbNcY9aoKsrarKlCGkvbMCTaXreUezv8g8kPkpO6
+	 5XoUeG8FLHdg+PtngvgL4qlnZ4oOWO77LRvz9yDE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390035AbgAPRKf (ORCPT
+        id S2390045AbgAPRKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:10:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48292 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:10:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389905AbgAPRKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:10:21 -0500
+        id S2389911AbgAPRKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:10:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1A1324684;
-        Thu, 16 Jan 2020 17:10:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B356205F4;
+        Thu, 16 Jan 2020 17:10:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194620;
-        bh=2oal85QJQmFK27RIhexDkWAXpYE3elUidpuhTil+uP4=;
+        s=default; t=1579194622;
+        bh=GxpxSfn4Aog9jObkkwzJClYhMneNU3fTJqn+IXbCiGo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oSr4kwOxfqPfZ/WYzBaNSfAC7vHrRBYZo8wtIzjDU82FXRR1vaMmU/jf3Ier0YxK1
-         xmyaYlNouynMauaEHrYMZSqWd930APeYcZ9tV2o7YMUnfzmy0VcoCRGT4o/RR5+zkP
-         9dpAJfNvpqfjtPlaXlIvpFqJUhqRGA+I/6OShuDk=
+        b=Wyz+O5Rwk/jbC8uaAyi+p+7sltSdczBBFyYQEAZ9cSDrEjrm3czSklo4fgikssVbQ
+         uFK52lkIgZ4Cv4p3oIVftIMLGNRGO8dfzkOJsXi5VdUZpmMlKaoo1qJVaaSEhUah66
+         qckkt7DThFaicMLB7iDYDm5RlT8fMqtANF+saWjQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 482/671] iio: tsl2772: Use devm_add_action_or_reset for tsl2772_chip_off
-Date:   Thu, 16 Jan 2020 12:02:00 -0500
-Message-Id: <20200116170509.12787-219-sashal@kernel.org>
+Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
+        Brandon Cazander <brandon.cazander@multapplied.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 483/671] net: fix bpf_xdp_adjust_head regression for generic-XDP
+Date:   Thu, 16 Jan 2020 12:02:01 -0500
+Message-Id: <20200116170509.12787-220-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,72 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Jesper Dangaard Brouer <brouer@redhat.com>
 
-[ Upstream commit 338084135aeddb103624a6841972fb8588295cc6 ]
+[ Upstream commit 065af355470519bd184019a93ac579f22b036045 ]
 
-Use devm_add_action_or_reset to call tsl2772_chip_off
-when the device is removed.
-This also fixes the issue that the chip is turned off
-before the device is unregistered.
+When generic-XDP was moved to a later processing step by commit
+458bf2f224f0 ("net: core: support XDP generic on stacked devices.")
+a regression was introduced when using bpf_xdp_adjust_head.
 
-Not marked for stable as fairly hard to hit the bug and
-this is in the middle of a set making other cleanups
-to the driver.  Hence will probably need explicit backporting.
+The issue is that after this commit the skb->network_header is now
+changed prior to calling generic XDP and not after. Thus, if the header
+is changed by XDP (via bpf_xdp_adjust_head), then skb->network_header
+also need to be updated again.  Fix by calling skb_reset_network_header().
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Fixes: c06c4d793584 ("staging: iio: tsl2x7x/tsl2772: move out of staging")
-Reviewed-by: Brian Masney <masneyb@onstation.org>
-Tested-by: Brian Masney <masneyb@onstation.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: 458bf2f224f0 ("net: core: support XDP generic on stacked devices.")
+Reported-by: Brandon Cazander <brandon.cazander@multapplied.net>
+Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/light/tsl2772.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ net/core/dev.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/iio/light/tsl2772.c b/drivers/iio/light/tsl2772.c
-index df5b2a0da96c..f2e308c6d6d7 100644
---- a/drivers/iio/light/tsl2772.c
-+++ b/drivers/iio/light/tsl2772.c
-@@ -716,6 +716,13 @@ static int tsl2772_chip_off(struct iio_dev *indio_dev)
- 	return tsl2772_write_control_reg(chip, 0x00);
- }
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 935fe158cfaf..73ebacabfde8 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -4349,12 +4349,17 @@ static u32 netif_receive_generic_xdp(struct sk_buff *skb,
  
-+static void tsl2772_chip_off_action(void *data)
-+{
-+	struct iio_dev *indio_dev = data;
+ 	act = bpf_prog_run_xdp(xdp_prog, xdp);
+ 
++	/* check if bpf_xdp_adjust_head was used */
+ 	off = xdp->data - orig_data;
+-	if (off > 0)
+-		__skb_pull(skb, off);
+-	else if (off < 0)
+-		__skb_push(skb, -off);
+-	skb->mac_header += off;
++	if (off) {
++		if (off > 0)
++			__skb_pull(skb, off);
++		else if (off < 0)
++			__skb_push(skb, -off);
 +
-+	tsl2772_chip_off(indio_dev);
-+}
-+
- /**
-  * tsl2772_invoke_change - power cycle the device to implement the user
-  *                         parameters
-@@ -1711,9 +1718,14 @@ static int tsl2772_probe(struct i2c_client *clientp,
- 	if (ret < 0)
- 		return ret;
++		skb->mac_header += off;
++		skb_reset_network_header(skb);
++	}
  
-+	ret = devm_add_action_or_reset(&clientp->dev,
-+					tsl2772_chip_off_action,
-+					indio_dev);
-+	if (ret < 0)
-+		return ret;
-+
- 	ret = iio_device_register(indio_dev);
- 	if (ret) {
--		tsl2772_chip_off(indio_dev);
- 		dev_err(&clientp->dev,
- 			"%s: iio registration failed\n", __func__);
- 		return ret;
-@@ -1740,8 +1752,6 @@ static int tsl2772_remove(struct i2c_client *client)
- {
- 	struct iio_dev *indio_dev = i2c_get_clientdata(client);
- 
--	tsl2772_chip_off(indio_dev);
--
- 	iio_device_unregister(indio_dev);
- 
- 	return 0;
+ 	/* check if bpf_xdp_adjust_tail was used. it can only "shrink"
+ 	 * pckt.
 -- 
 2.20.1
 
