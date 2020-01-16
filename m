@@ -2,185 +2,149 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C1A5C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14231C33CB7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F6632077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:27:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D53AF2077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:27:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="YoHEr+Kv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbgAPN1Z (ORCPT
+        id S1726994AbgAPN11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 08:27:25 -0500
-Received: from mail.loongson.cn ([114.242.206.163]:42992 "EHLO loongson.cn"
+        Thu, 16 Jan 2020 08:27:27 -0500
+Received: from mail-eopbgr760049.outbound.protection.outlook.com ([40.107.76.49]:28865
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726378AbgAPN1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 08:27:23 -0500
-Received: from linux.loongson.cn (unknown [10.20.41.119])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxv92vZCBes+wFAA--.20S2;
-        Thu, 16 Jan 2020 21:27:11 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Jean Delvare <jdelvare@suse.com>
-Cc:     Huacai Chen <chenhc@lemote.com>,
-        Xuefeng Li <lixuefeng@loongson.cn>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yinglu Yang <yangyinglu@loongson.cn>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH v2,RESEND] MIPS: Scan the DMI system information
-Date:   Thu, 16 Jan 2020 21:26:05 +0800
-Message-Id: <1579181165-2493-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9Dxv92vZCBes+wFAA--.20S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxCr4xAw4rtFy7Zw45AF17GFg_yoWrCFy7pF
-        4DC3Z5tr4DGF17G3yfAa4xur13Zan3Wry5KFyj9347ZasxX34xJrs7GwsxAryUAr4kKa40
-        93WagF45KFZFvaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkS14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE-syl42xK
-        82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGw
-        C20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48J
-        MIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMI
-        IF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY
-        6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUOGQDUUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        id S1726924AbgAPN1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 08:27:25 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hXZ0tIsX4BOucsqjx2jY6JAT+tBS5tDR2+DrSL4OiCR9F7m6t1H3RIRKuyXaTQ8uygp7G/u4N3wzj3V1m1UI+Yw+MlvVN1LkiOMmSolezFwE1sDstzz85VxJvq4MZ6137LJhqBxWnZpXuxyMnnVrdUMotkTswbVQsE+fGdnpkP0bsDnDwT9lcWPYfIcM534JtOIUQQC13tnrNNI98awnAPgSQT5AdnTNsZcJSiv4UwciXMYq9e9v4mNo2YQ+6ISPsAAklqNKJ1C+NJRVfUo/IHwq7VIK7bmeZxTDVmZB50GgE5ST+h5xpSkTHtfS44dIgroHVaAwHO3w5mRTamviIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SohAmnEleKXC9cfOGrkhl6a21KPcCXdeTpPDjGU32OI=;
+ b=kib0qf1kilsEshKjKY51zJYEOoD18+lRd7EZa/mV8PRGIGhQLjeZsFjZ7GIBMIQ9GZPQ7Gdq8Oa/ZgM5JXTPRfLa1to9mjxLttbCXsI8arr3hHq5qTGMCENbY8AqEnEd6rScGuAkD1/koDS8TVOLABWplk23uPi6oryncSZxLA+6EwMueMgN4/tg0jyzomFN90rzZD31Qy2oAUT+qaH9AK0IRd5ssZ/BbG5FFn0r4vqJDJgb1dDXcZN82zWE96ZAcmz3z0/onCTXZF3mLmqIZRb+/XMBrsmgM2T73IUZnLGP425xxt6qpmzoc3hz+kFGwEHjvsHZ9xZGP+6tkXhaeQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SohAmnEleKXC9cfOGrkhl6a21KPcCXdeTpPDjGU32OI=;
+ b=YoHEr+KvoyYl3w8j7xaKyFqy6qb6Fssih+b4IknCE6lIyesLqsvdEdl9RGmsZ79DPHSeHAyUnVWNbAyJQWDLRqivHGynFO0pMlxwLDYDV65P1bIu0/9fH3iB8q2yBMalgImSCxlhUxbpjPrgiR2jY+ri4g0P0IHwsngY746xHEs=
+Received: from BYAPR02CA0056.namprd02.prod.outlook.com (2603:10b6:a03:54::33)
+ by BYAPR02MB4693.namprd02.prod.outlook.com (2603:10b6:a03:4d::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.9; Thu, 16 Jan
+ 2020 13:27:22 +0000
+Received: from CY1NAM02FT013.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::203) by BYAPR02CA0056.outlook.office365.com
+ (2603:10b6:a03:54::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.15 via Frontend
+ Transport; Thu, 16 Jan 2020 13:27:21 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT013.mail.protection.outlook.com (10.152.75.162) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2644.19
+ via Frontend Transport; Thu, 16 Jan 2020 13:27:21 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1is5BA-0005vG-Kr; Thu, 16 Jan 2020 05:27:20 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1is5B2-0001BU-Tu; Thu, 16 Jan 2020 05:27:12 -0800
+Received: from xsj-pvapsmtp01 (mailhost.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 00GDR3RD015649;
+        Thu, 16 Jan 2020 05:27:04 -0800
+Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1is5At-00018J-5C; Thu, 16 Jan 2020 05:27:03 -0800
+From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
+To:     linux@roeck-us.net, michal.simek@xilinx.com,
+        shubhrajyoti.datta@xilinx.com, sgoud@xilinx.com
+Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        git@xilinx.com
+Subject: [PATCH 1/9] watchdog: of_xilinx_wdt: Add comment to spinlock
+Date:   Thu, 16 Jan 2020 18:56:49 +0530
+Message-Id: <1579181217-31127-2-git-send-email-srinivas.neeli@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1579181217-31127-1-git-send-email-srinivas.neeli@xilinx.com>
+References: <1579181217-31127-1-git-send-email-srinivas.neeli@xilinx.com>
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(346002)(376002)(39860400002)(189003)(199004)(2906002)(426003)(44832011)(107886003)(26005)(7696005)(36756003)(4744005)(2616005)(4326008)(316002)(70206006)(6636002)(186003)(9786002)(6666004)(81156014)(81166006)(356004)(8676002)(478600001)(70586007)(8936002)(5660300002)(336012);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB4693;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 39afc424-1e31-46fb-293a-08d79a87d0e3
+X-MS-TrafficTypeDiagnostic: BYAPR02MB4693:
+X-Microsoft-Antispam-PRVS: <BYAPR02MB4693CDD8922922468408C064AF360@BYAPR02MB4693.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:2733;
+X-Forefront-PRVS: 02843AA9E0
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: pd6iULf1Oc31wda139h2d8k6hnWfUDTQV77RBl6woLkD4zWlVUFVOW5y3tSSEEFxd4+Zh+plPr964bc+i3FePk7P3Kgykhfz5z6Iv02fOo/7NIRyrzTeAF2FVCkKmCteIB5vlSo2JRLmW76CHqrudopfnSZXm2qk98m+61qG+lRNCB5F+DwLkmxZclKkfZKFN+tjQxwNBhKff2aMCEKH9gjNuWQqOW2cLNCJEr6eTH1mPVOfasz6q3jLd2jzqVK5VWINvEy/0H0oFZ0EIkh4exi/kkyD6uhzSTWdQJat2bGrXWSClbHwTSvrBRnU1BERe4bnMkeEkJxNu4axI6jWu4Le+pQXdq0kBXY5MmUBFnk1hR5tHxcuKo0q0rKOWA6ybIw7Ml6D7XpBDPeCtXs2XnCvOwdNrXWTWNAtujfJn75Heg5jaVPg0l+BKHdrz3hK
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2020 13:27:21.0744
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 39afc424-1e31-46fb-293a-08d79a87d0e3
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4693
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable DMI scanning on the MIPS architecture, this setups DMI identifiers
-(dmi_system_id) for printing it out on task dumps and prepares DIMM entry
-information (dmi_memdev_info) from the SMBIOS table. With this patch, the
-driver can easily match various of mainboards.
+From: Srinivas Goud <srinivas.goud@xilinx.com>
 
-In the SMBIOS reference specification, the table anchor string "_SM_" is
-present in the address range 0xF0000 to 0xFFFFF on a 16-byte boundary,
-but there exists a special case for Loongson platform, when call function
-dmi_early_remap, it should specify the start address to 0xFFFE000 due to
-it is reserved for SMBIOS and can be normally access in the BIOS.
+Based on checkpatch every spinlock should be documented.
+The patch is fixing this issue:
+./scripts/checkpatch.pl --strict -f drivers/watchdog/of_xilinx_wdt.c
+CHECK: spinlock_t definition without comment
++	spinlock_t spinlock;
 
-This patch works fine on the Loongson 3A3000 platform which belongs to
-MIPS architecture and has no influence on the other architectures such
-as x86 and ARM.
-
-Co-developed-by: Yinglu Yang <yangyinglu@loongson.cn>
-Signed-off-by: Yinglu Yang <yangyinglu@loongson.cn>
-[jiaxun.yang@flygoat.com: Refine definitions and Kconfig]
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Reviewed-by: Huacai Chen <chenhc@lemote.com>
+Signed-off-by: Srinivas Goud <srinivas.goud@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 ---
+ drivers/watchdog/of_xilinx_wdt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-v2:
-  - add SMBIOS_ENTRY_POINT_SCAN_START suggested by Jean
-  - refine definitions and Kconfig by Jiaxun
-
- arch/mips/Kconfig           | 10 ++++++++++
- arch/mips/include/asm/dmi.h | 20 ++++++++++++++++++++
- arch/mips/kernel/setup.c    |  2 ++
- drivers/firmware/dmi_scan.c |  6 +++++-
- 4 files changed, 37 insertions(+), 1 deletion(-)
- create mode 100644 arch/mips/include/asm/dmi.h
-
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 4b83507..c097f78 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -2773,6 +2773,16 @@ config HW_PERF_EVENTS
- 	  Enable hardware performance counter support for perf events. If
- 	  disabled, perf events will use software events only.
- 
-+config DMI
-+	default y if MACH_LOONGSON64
-+	select DMI_SCAN_MACHINE_NON_EFI_FALLBACK
-+	bool "Enable DMI scanning"
-+	help
-+	  Enabled scanning of DMI to identify machine quirks. Say Y
-+	  here unless you have verified that your setup is not
-+	  affected by entries in the DMI blacklist. Required by PNP
-+	  BIOS code.
-+
- config SMP
- 	bool "Multi-Processing support"
- 	depends on SYS_SUPPORTS_SMP
-diff --git a/arch/mips/include/asm/dmi.h b/arch/mips/include/asm/dmi.h
-new file mode 100644
-index 0000000..27415a2
---- /dev/null
-+++ b/arch/mips/include/asm/dmi.h
-@@ -0,0 +1,20 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_DMI_H
-+#define _ASM_DMI_H
-+
-+#include <linux/io.h>
-+#include <linux/memblock.h>
-+
-+#define dmi_early_remap(x, l)		ioremap_cache(x, l)
-+#define dmi_early_unmap(x, l)		iounmap(x)
-+#define dmi_remap(x, l)			ioremap_cache(x, l)
-+#define dmi_unmap(x)			iounmap(x)
-+
-+/* MIPS initialize DMI scan before SLAB is ready, so we use memblock here */
-+#define dmi_alloc(l)			memblock_alloc_low(l, PAGE_SIZE)
-+
-+#if defined(CONFIG_MACH_LOONGSON64)
-+#define SMBIOS_ENTRY_POINT_SCAN_START	0xFFFE000
-+#endif
-+
-+#endif /* _ASM_DMI_H */
-diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index 701f4bc..d9bd841 100644
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -28,6 +28,7 @@
- #include <linux/decompress/generic.h>
- #include <linux/of_fdt.h>
- #include <linux/of_reserved_mem.h>
-+#include <linux/dmi.h>
- 
- #include <asm/addrspace.h>
- #include <asm/bootinfo.h>
-@@ -800,6 +801,7 @@ void __init setup_arch(char **cmdline_p)
- #endif
- 
- 	arch_mem_init(cmdline_p);
-+	dmi_setup();
- 
- 	resource_init();
- 	plat_smp_setup();
-diff --git a/drivers/firmware/dmi_scan.c b/drivers/firmware/dmi_scan.c
-index 2045566..f59163c 100644
---- a/drivers/firmware/dmi_scan.c
-+++ b/drivers/firmware/dmi_scan.c
-@@ -11,6 +11,10 @@
- #include <asm/dmi.h>
- #include <asm/unaligned.h>
- 
-+#ifndef SMBIOS_ENTRY_POINT_SCAN_START
-+#define SMBIOS_ENTRY_POINT_SCAN_START 0xF0000
-+#endif
-+
- struct kobject *dmi_kobj;
- EXPORT_SYMBOL_GPL(dmi_kobj);
- 
-@@ -663,7 +667,7 @@ static void __init dmi_scan_machine(void)
- 			return;
- 		}
- 	} else if (IS_ENABLED(CONFIG_DMI_SCAN_MACHINE_NON_EFI_FALLBACK)) {
--		p = dmi_early_remap(0xF0000, 0x10000);
-+		p = dmi_early_remap(SMBIOS_ENTRY_POINT_SCAN_START, 0x10000);
- 		if (p == NULL)
- 			goto error;
- 
+diff --git a/drivers/watchdog/of_xilinx_wdt.c b/drivers/watchdog/of_xilinx_wdt.c
+index 7fe4f7c3f7ce..00549164b3d7 100644
+--- a/drivers/watchdog/of_xilinx_wdt.c
++++ b/drivers/watchdog/of_xilinx_wdt.c
+@@ -40,7 +40,7 @@
+ struct xwdt_device {
+ 	void __iomem *base;
+ 	u32 wdt_interval;
+-	spinlock_t spinlock;
++	spinlock_t spinlock; /* spinlock for register handling */
+ 	struct watchdog_device xilinx_wdt_wdd;
+ 	struct clk		*clk;
+ };
 -- 
-2.1.0
+2.7.4
 
