@@ -2,54 +2,52 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFE8C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2CFC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AE33246AA
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 987E8246A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196527;
-	bh=Lr6Bj4/TyC+oAE4CYiw02LFvCpPbnBN1dY4qg7FKstg=;
+	s=default; t=1579196529;
+	bh=Nl/4LuWz6wnqaAMRmetzu5XfYYSDKGkIzi00bNh4lHs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zMaLwTsnrvtM2f2DxsJnzifjbFrjR244Bid3Sk9G57K7rqKD6+fAeg1l+KcwV27NI
-	 b1i4qwxQn2xMmKvEcA/K1R9tvHTvl3zjejVTfws0WCSwHKxzqd/kkSELdMzslzf2d2
-	 USrtWMDngtydIstpKrdsLUToRDhUcmg8FdTP1XLQ=
+	b=mXKOJwM0Yv3rncZHxdio2XduE2l9yScVlHEtinQ/aQfhQRtmwgqcnTe742pG2ohjc
+	 7zLk6k/F5RzIWN0HIsLVuKTUxrOSIUVdNukhJQ5RHumRAcEA0eu8pZwvSxLIH4ZPUP
+	 2eXmoyg5BiqSn0M1xaLnV7tT33mHtx9qyJgel/Ss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405425AbgAPRmG (ORCPT
+        id S2405465AbgAPRmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:42:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59032 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:42:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393786AbgAPRlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:41:24 -0500
+        id S2405280AbgAPRk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:40:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5791D246E0;
-        Thu, 16 Jan 2020 17:41:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E754F2470F;
+        Thu, 16 Jan 2020 17:40:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196484;
-        bh=Lr6Bj4/TyC+oAE4CYiw02LFvCpPbnBN1dY4qg7FKstg=;
+        s=default; t=1579196427;
+        bh=Nl/4LuWz6wnqaAMRmetzu5XfYYSDKGkIzi00bNh4lHs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A5i47zp4mH5cUNJbYp773ugLW4F3sExzpXrQWZbN0iWN8pO5Kdyx7CcD4Q0RN6h9t
-         lV6wtNlnX964dxrC7m7nTWdDLICUKve1z3dvmg3L6mn1eYqRlAULHknUmNRPk7TkoF
-         SaBV7lWwPa/rDXDTmmJJ29HtXByMhzvYsqIoZb1g=
+        b=0Y68BBEc4W0u7TzeNj4Mvn8BoG40pQenyctwYnx+WdS9/55myvUQ5o2FlK18orY/l
+         0MIwP7oo1FiyKb44stlY9BesBUD8RwglIZ0NfSbEiZJbydja4GJf1R7tsrXLuSvp2H
+         70mzlBGTCJUGDpcctGBGYSDTpKL405uZ+jKIP/5I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Ping-Ke Shih <pkshih@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.9 230/251] rtlwifi: Remove unnecessary NULL check in rtl_regd_init
-Date:   Thu, 16 Jan 2020 12:36:19 -0500
-Message-Id: <20200116173641.22137-190-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 195/251] iio: dac: ad5380: fix incorrect assignment to val
+Date:   Thu, 16 Jan 2020 12:35:44 -0500
+Message-Id: <20200116173641.22137-155-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -62,53 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 091c6e9c083f7ebaff00b37ad13562d51464d175 ]
+[ Upstream commit b1e18768ef1214c0a8048327918a182cabe09f9d ]
 
-When building with Clang + -Wtautological-pointer-compare:
+Currently the pointer val is being incorrectly incremented
+instead of the value pointed to by val. Fix this by adding
+in the missing * indirection operator.
 
-drivers/net/wireless/realtek/rtlwifi/regd.c:389:33: warning: comparison
-of address of 'rtlpriv->regd' equal to a null pointer is always false
-[-Wtautological-pointer-compare]
-        if (wiphy == NULL || &rtlpriv->regd == NULL)
-                              ~~~~~~~~~^~~~    ~~~~
-1 warning generated.
-
-The address of an array member is never NULL unless it is the first
-struct member so remove the unnecessary check. This was addressed in
-the staging version of the driver in commit f986978b32b3 ("Staging:
-rtlwifi: remove unnecessary NULL check").
-
-While we are here, fix the following checkpatch warning:
-
-CHECK: Comparison to NULL could be written "!wiphy"
-35: FILE: drivers/net/wireless/realtek/rtlwifi/regd.c:389:
-+       if (wiphy == NULL)
-
-Fixes: 0c8173385e54 ("rtl8192ce: Add new driver")
-Link:https://github.com/ClangBuiltLinux/linux/issues/750
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Ping-Ke Shih <pkshih@realtek.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Addresses-Coverity: ("Unused value")
+Fixes: c03f2c536818 ("staging:iio:dac: Add AD5380 driver")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtlwifi/regd.c | 2 +-
+ drivers/iio/dac/ad5380.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/regd.c b/drivers/net/wireless/realtek/rtlwifi/regd.c
-index 6ee6bf8e7eaf..ab53cf42cf42 100644
---- a/drivers/net/wireless/realtek/rtlwifi/regd.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/regd.c
-@@ -427,7 +427,7 @@ int rtl_regd_init(struct ieee80211_hw *hw,
- 	struct wiphy *wiphy = hw->wiphy;
- 	struct country_code_to_enum_rd *country = NULL;
- 
--	if (wiphy == NULL || &rtlpriv->regd == NULL)
-+	if (!wiphy)
- 		return -EINVAL;
- 
- 	/* init country_code from efuse channel plan */
+diff --git a/drivers/iio/dac/ad5380.c b/drivers/iio/dac/ad5380.c
+index 97d2c5111f43..8bf7fc626a9d 100644
+--- a/drivers/iio/dac/ad5380.c
++++ b/drivers/iio/dac/ad5380.c
+@@ -221,7 +221,7 @@ static int ad5380_read_raw(struct iio_dev *indio_dev,
+ 		if (ret)
+ 			return ret;
+ 		*val >>= chan->scan_type.shift;
+-		val -= (1 << chan->scan_type.realbits) / 2;
++		*val -= (1 << chan->scan_type.realbits) / 2;
+ 		return IIO_VAL_INT;
+ 	case IIO_CHAN_INFO_SCALE:
+ 		*val = 2 * st->vref;
 -- 
 2.20.1
 
