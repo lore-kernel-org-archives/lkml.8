@@ -2,195 +2,324 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33562C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE300C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10D0B2469F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 735C12469A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f44+CoWj"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="dNaSZZMd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394744AbgAPR7M (ORCPT
+        id S2394736AbgAPR7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:59:12 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:34334 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394723AbgAPR7I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:59:08 -0500
-Received: by mail-ed1-f66.google.com with SMTP id l8so19738719edw.1
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 09:59:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ownIKscCoJ0ifHnW+WtXLNIaHz3TKTKB9xX6VT8y1A8=;
-        b=f44+CoWj4lO/C+QdvGojAgqPOI4YZ5boSw/hGgMBaiTA4H+d+tLuOpWvF99HpOOy3A
-         iqkPKL8kBRo9t8ns8InBbiB/zCzzOxaT0N7uBbkLZGBFz8f/SvuTmzL5s/PgsrFmPg76
-         Bjtkflj/Fk1zbC/Vt4uT8Aa+gjWLtXgUcFpMY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ownIKscCoJ0ifHnW+WtXLNIaHz3TKTKB9xX6VT8y1A8=;
-        b=qV98hMd0yGFSyTeECaO+Cv2Bchta8ZC60JpFC/hvfQpEUPbZ1iuL5PfYl32B7Och93
-         RtKcFYS++tWdal0RmPu/kbyIYoFrrOz842wHP90taHDIol/q+tJuNtOapSs4d+/9gG2M
-         qwLQmfVrh96MFjQzNbH5CqKaWnCqGLqvbNR99tRS4gDYUa6pZ738RJ2xc0pLp7Sy3fld
-         vlqqh86kyEf1ajIGck70Z0H1aMuKEBzefCw/IvUPseFePnaMcO6g4Wx1DK8CUj4/GnVl
-         UNHwtmY4ps9+mdEPR8r80yMm9oeGTthlk3QOgCJ9EemADZUkaT02oIFQPJnncHIvk+/X
-         Sy9w==
-X-Gm-Message-State: APjAAAVSSwbDJ4rvb56v3NQ29gHlFEhuBm4mhkffcFPwRZpVnP8h0P3c
-        /2Nw55Qvt++TSZnesGeqVDKbvifXNV4=
-X-Google-Smtp-Source: APXvYqw4PTotrGhk2VAOEhyS3ZV29hZJWI/gUNyedOEjBfJkvCixcYNhB9g+Jdp0Q9shEYA7I5SGvg==
-X-Received: by 2002:a17:906:33db:: with SMTP id w27mr4168230eja.347.1579197545699;
-        Thu, 16 Jan 2020 09:59:05 -0800 (PST)
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com. [209.85.208.42])
-        by smtp.gmail.com with ESMTPSA id k26sm902652edv.13.2020.01.16.09.59.04
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jan 2020 09:59:05 -0800 (PST)
-Received: by mail-ed1-f42.google.com with SMTP id l8so19738641edw.1
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 09:59:04 -0800 (PST)
-X-Received: by 2002:a05:6402:1547:: with SMTP id p7mr37597769edx.73.1579197544298;
- Thu, 16 Jan 2020 09:59:04 -0800 (PST)
-MIME-Version: 1.0
-References: <20191217005424.226858-1-swboyd@chromium.org> <CAD=FV=UQAgd2R=ykTCnBZuOvFFKoWu4o-3Rq=GEdrc1KKSi9cQ@mail.gmail.com>
- <20191220231040.GA11384@bogus> <5e12cc29.1c69fb81.fe838.d5f3@mx.google.com>
-In-Reply-To: <5e12cc29.1c69fb81.fe838.d5f3@mx.google.com>
-From:   Andrey Pronin <apronin@chromium.org>
-Date:   Thu, 16 Jan 2020 09:58:52 -0800
-X-Gmail-Original-Message-ID: <CAP7wa8Lfgm5h5j0jvkYP+sFHnz6jRb1m8fCi-8AvPmNqfupenw@mail.gmail.com>
-Message-ID: <CAP7wa8Lfgm5h5j0jvkYP+sFHnz6jRb1m8fCi-8AvPmNqfupenw@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: tpm: Convert cr50 binding to YAML
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Doug Anderson <dianders@chromium.org>,
-        Rob Herring <robh@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 16 Jan 2020 12:59:10 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:35137 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2394626AbgAPR6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:58:32 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 47zBkr5cnDz9v0MZ;
+        Thu, 16 Jan 2020 18:58:28 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=dNaSZZMd; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id lxkM1Q1uavb5; Thu, 16 Jan 2020 18:58:28 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47zBkr4TBWz9v0MW;
+        Thu, 16 Jan 2020 18:58:28 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1579197508; bh=EIMY8bcz3Kggh/rQrqzeXyhyN/ypWY7RKWhqCLsPPhA=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=dNaSZZMdsamn13Og26ImXHhnMXZdk5xDJEwGe0Qg3xduFHMhE6M/X+Di8nhsSKKX4
+         HdAfyTZOaOfDdpTxR5inPMloOibW2IRXPtXKGXlYeNPiDyXTePWEWEys0c6oFRrqOH
+         n7yQ4+FXQc/UDS1YW3Yjr6EWcgwPLiPsG0yRjQtY=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E0C1D8B831;
+        Thu, 16 Jan 2020 18:58:29 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id xCQEXJ4grRuA; Thu, 16 Jan 2020 18:58:29 +0100 (CET)
+Received: from po14934vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9F0D58B82E;
+        Thu, 16 Jan 2020 18:58:28 +0100 (CET)
+Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 786CA64A33; Thu, 16 Jan 2020 17:58:28 +0000 (UTC)
+Message-Id: <634e654d8204ce12f688c655aee1dd0f75905ffb.1579196675.git.christophe.leroy@c-s.fr>
+In-Reply-To: <cover.1579196675.git.christophe.leroy@c-s.fr>
+References: <cover.1579196675.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [RFC PATCH v4 04/11] powerpc/vdso: simplify __get_datapage()
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, nathanl@linux.ibm.com,
+        arnd@arndb.de, tglx@linutronix.de, vincenzo.frascino@arm.com,
+        luto@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        x86@kernel.org
+Date:   Thu, 16 Jan 2020 17:58:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 5, 2020 at 9:57 PM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Rob Herring (2019-12-20 15:10:40)
-> > On Tue, Dec 17, 2019 at 09:45:02AM -0800, Doug Anderson wrote:
-> > > On Mon, Dec 16, 2019 at 4:54 PM Stephen Boyd <swboyd@chromium.org> wrote:
-> > > > diff --git a/Documentation/devicetree/bindings/security/tpm/google,cr50.yaml b/Documentation/devicetree/bindings/security/tpm/google,cr50.yaml
-> > > > new file mode 100644
-> > > > index 000000000000..8bfff0e757af
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/security/tpm/google,cr50.yaml
-> > > > @@ -0,0 +1,52 @@
-> > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: http://devicetree.org/schemas/tpm/google,cr50.yaml#
-> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > +
-> > > > +title: H1 Secure Microcontroller with Cr50 Firmware on SPI Bus
-> > > > +
-> > > > +description:
-> > > > +  H1 Secure Microcontroller running Cr50 firmware provides several functions,
-> > > > +  including TPM-like functionality. It communicates over SPI using the FIFO
-> > > > +  protocol described in the PTP Spec, section 6.
-> > > > +
-> > > > +maintainers:
-> > > > +  - Andrey Pronin <apronin@chromium.org>
-> > >
-> > > Does Andrey agree to be the maintainer here?
->
-> I Cced Andrey in hopes of eliciting a response.
+The VDSO datapage and the text pages are always located immediately
+next to each other, so it can be hardcoded without an indirection
+through __kernel_datapage_offset
 
-Yes, I finally can confirm I agree to be the maintainer.
+In order to ease things, move the data page in front like other
+arches, that way there is no need to know the size of the library
+to locate the data page.
 
->
-> > >
-> > >
-> > > I'd like to see if we can delete most of what you've written here.
-> > > Specifically in "spi/spi-controller.yaml" you can see a really nice
-> > > description of what SPI devices ought to look like.  Can we just
-> > > reference that?  To do that I _think_ we actually need to break that
-> > > description into a separate YAML file and then include it from there
-> > > and here.  Maybe someone on the list can confirm or we can just post
-> > > some patches for that?
->
-> I'm not sure what to do here.
->
-> > >
-> > >
-> > > > +properties:
-> > > > +  compatible:
-> > > > +    const: google,cr50
-> > > > +
-> > > > +  reg:
-> > > > +    maxItems: 1
-> > >
-> > > I'm curious if you need a minItems here.  ...and if we don't somehow
-> > > include it, should we follow 'spi-controller.yaml' and treat this like
-> > > an int?
-> >
-> > Really, just 'true' is sufficient as you can't say which CS number it is
-> > here.
->
-> Ok.
->
-> > >
-> > >
-> > > > +required:
-> > > > +  - compatible
-> > > > +  - reg
-> > > > +  - spi-max-frequency
-> > >
-> > > Technically spi-max-frequency might not be required (the SPI binding
-> > > doesn't list it as such), but I guess it was before...
-> >
-> > Generally, we expect a device knows its max and this should only be used
-> > it a board has a lower value. However, sometimes there's exceptions.
-> >
-> > Shouldn't really be debate here unless the old binding doc was wrong.
->
-> The old binding doc had it as required and the spi framework seems to
-> bail out if this property isn't specified (see of_spi_parse_dt() for
-> more details).
->
-> >
-> > >
-> > >
-> > > > +  - interrupts
-> > > > +
-> > > > +additionalProperties: false
-> > > > +
-> > > > +examples:
-> > > > +  - |
-> > > > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > > > +    spi {
-> > > > +      #address-cells = <0x1>;
-> > > > +      #size-cells = <0x0>;
-> > > > +      tpm@0 {
-> > > > +          compatible = "google,cr50";
-> > > > +          reg = <0>;
-> > > > +          spi-max-frequency = <800000>;
-> > > > +          interrupts = <50 IRQ_TYPE_EDGE_RISING>;
-> > >
-> > > I would tend to prefer seeing the interrupt parent in the example
-> > > since it's pretty likely that the GPIO controller isn't the overall
-> > > parent and likely that our interrupt is a GPIO.  I'm not sure the
-> > > convention, though.
-> >
-> > Example is fine, but shouldn't be in the schema.
->
-> Ok. Will add an interrupt parent like
->
->         interrupt-parent = <&gpio_controller>;
->
+Before:
+clock-getres-realtime-coarse:    vdso: 714 nsec/call
+clock-gettime-realtime-coarse:    vdso: 792 nsec/call
+clock-gettime-realtime:    vdso: 1243 nsec/call
 
+After:
+clock-getres-realtime-coarse:    vdso: 699 nsec/call
+clock-gettime-realtime-coarse:    vdso: 784 nsec/call
+clock-gettime-realtime:    vdso: 1231 nsec/call
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/kernel/vdso.c              | 53 +++++----------------------------
+ arch/powerpc/kernel/vdso32/datapage.S   | 10 +++----
+ arch/powerpc/kernel/vdso32/vdso32.lds.S |  7 ++---
+ arch/powerpc/kernel/vdso64/datapage.S   | 10 +++----
+ arch/powerpc/kernel/vdso64/vdso64.lds.S |  7 ++---
+ 5 files changed, 19 insertions(+), 68 deletions(-)
 
+diff --git a/arch/powerpc/kernel/vdso.c b/arch/powerpc/kernel/vdso.c
+index 16a44bffe698..c093d90a222a 100644
+--- a/arch/powerpc/kernel/vdso.c
++++ b/arch/powerpc/kernel/vdso.c
+@@ -191,7 +191,7 @@ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
+ 	 * install_special_mapping or the perf counter mmap tracking code
+ 	 * will fail to recognise it as a vDSO (since arch_vma_name fails).
+ 	 */
+-	current->mm->context.vdso_base = vdso_base;
++	current->mm->context.vdso_base = vdso_base + PAGE_SIZE;
+ 
+ 	/*
+ 	 * our vma flags don't have VM_WRITE so by default, the process isn't
+@@ -488,42 +488,6 @@ static __init void vdso_setup_trampolines(struct lib32_elfinfo *v32,
+ 	vdso32_rt_sigtramp = find_function32(v32, "__kernel_sigtramp_rt32");
+ }
+ 
+-static __init int vdso_fixup_datapage(struct lib32_elfinfo *v32,
+-				       struct lib64_elfinfo *v64)
+-{
+-#ifdef CONFIG_VDSO32
+-	Elf32_Sym *sym32;
+-#endif
+-#ifdef CONFIG_PPC64
+-	Elf64_Sym *sym64;
+-
+-       	sym64 = find_symbol64(v64, "__kernel_datapage_offset");
+-	if (sym64 == NULL) {
+-		printk(KERN_ERR "vDSO64: Can't find symbol "
+-		       "__kernel_datapage_offset !\n");
+-		return -1;
+-	}
+-	*((int *)(vdso64_kbase + sym64->st_value - VDSO64_LBASE)) =
+-		(vdso64_pages << PAGE_SHIFT) -
+-		(sym64->st_value - VDSO64_LBASE);
+-#endif /* CONFIG_PPC64 */
+-
+-#ifdef CONFIG_VDSO32
+-	sym32 = find_symbol32(v32, "__kernel_datapage_offset");
+-	if (sym32 == NULL) {
+-		printk(KERN_ERR "vDSO32: Can't find symbol "
+-		       "__kernel_datapage_offset !\n");
+-		return -1;
+-	}
+-	*((int *)(vdso32_kbase + (sym32->st_value - VDSO32_LBASE))) =
+-		(vdso32_pages << PAGE_SHIFT) -
+-		(sym32->st_value - VDSO32_LBASE);
+-#endif
+-
+-	return 0;
+-}
+-
+-
+ static __init int vdso_fixup_features(struct lib32_elfinfo *v32,
+ 				      struct lib64_elfinfo *v64)
+ {
+@@ -624,9 +588,6 @@ static __init int vdso_setup(void)
+ 	if (vdso_do_find_sections(&v32, &v64))
+ 		return -1;
+ 
+-	if (vdso_fixup_datapage(&v32, &v64))
+-		return -1;
+-
+ 	if (vdso_fixup_features(&v32, &v64))
+ 		return -1;
+ 
+@@ -771,26 +732,26 @@ static int __init vdso_init(void)
+ 	vdso32_pagelist = kcalloc(vdso32_pages + 2, sizeof(struct page *),
+ 				  GFP_KERNEL);
+ 	BUG_ON(vdso32_pagelist == NULL);
++	vdso32_pagelist[0] = virt_to_page(vdso_data);
+ 	for (i = 0; i < vdso32_pages; i++) {
+ 		struct page *pg = virt_to_page(vdso32_kbase + i*PAGE_SIZE);
+ 		get_page(pg);
+-		vdso32_pagelist[i] = pg;
++		vdso32_pagelist[i + 1] = pg;
+ 	}
+-	vdso32_pagelist[i++] = virt_to_page(vdso_data);
+-	vdso32_pagelist[i] = NULL;
++	vdso32_pagelist[i + 1] = NULL;
+ #endif
+ 
+ #ifdef CONFIG_PPC64
+ 	vdso64_pagelist = kcalloc(vdso64_pages + 2, sizeof(struct page *),
+ 				  GFP_KERNEL);
+ 	BUG_ON(vdso64_pagelist == NULL);
++	vdso64_pagelist[0] = virt_to_page(vdso_data);
+ 	for (i = 0; i < vdso64_pages; i++) {
+ 		struct page *pg = virt_to_page(vdso64_kbase + i*PAGE_SIZE);
+ 		get_page(pg);
+-		vdso64_pagelist[i] = pg;
++		vdso64_pagelist[i + 1] = pg;
+ 	}
+-	vdso64_pagelist[i++] = virt_to_page(vdso_data);
+-	vdso64_pagelist[i] = NULL;
++	vdso64_pagelist[i + 1] = NULL;
+ #endif /* CONFIG_PPC64 */
+ 
+ 	get_page(virt_to_page(vdso_data));
+diff --git a/arch/powerpc/kernel/vdso32/datapage.S b/arch/powerpc/kernel/vdso32/datapage.S
+index 6c7401bd284e..d839aa1a4f01 100644
+--- a/arch/powerpc/kernel/vdso32/datapage.S
++++ b/arch/powerpc/kernel/vdso32/datapage.S
+@@ -12,9 +12,6 @@
+ #include <asm/vdso.h>
+ 
+ 	.text
+-	.global	__kernel_datapage_offset;
+-__kernel_datapage_offset:
+-	.long	0
+ 
+ V_FUNCTION_BEGIN(__get_datapage)
+   .cfi_startproc
+@@ -31,10 +28,11 @@ V_FUNCTION_BEGIN(__get_datapage)
+ data_page_branch:
+ 	mflr	r3
+ 	mtlr	r0
+-	addi	r3, r3, __kernel_datapage_offset-data_page_branch
+-	lwz	r0,0(r3)
++#if CONFIG_PPC_PAGE_SHIFT > 14
++	addis	r3, r3, (_vdso_datapage - data_page_branch)@ha
++#endif
++	addi	r3, r3, (_vdso_datapage - data_page_branch)@l
+   .cfi_restore lr
+-	add	r3,r0,r3
+ 	blr
+   .cfi_endproc
+ V_FUNCTION_END(__get_datapage)
+diff --git a/arch/powerpc/kernel/vdso32/vdso32.lds.S b/arch/powerpc/kernel/vdso32/vdso32.lds.S
+index 9400b182e163..f09c2354bd21 100644
+--- a/arch/powerpc/kernel/vdso32/vdso32.lds.S
++++ b/arch/powerpc/kernel/vdso32/vdso32.lds.S
+@@ -4,6 +4,7 @@
+  * library
+  */
+ #include <asm/vdso.h>
++#include <asm/page.h>
+ 
+ #ifdef __LITTLE_ENDIAN__
+ OUTPUT_FORMAT("elf32-powerpcle", "elf32-powerpcle", "elf32-powerpcle")
+@@ -15,6 +16,7 @@ ENTRY(_start)
+ 
+ SECTIONS
+ {
++	PROVIDE(_vdso_datapage = . - PAGE_SIZE);
+ 	. = VDSO32_LBASE + SIZEOF_HEADERS;
+ 
+ 	.hash          	: { *(.hash) }			:text
+@@ -138,11 +140,6 @@ VERSION
+ {
+ 	VDSO_VERSION_STRING {
+ 	global:
+-		/*
+-		 * Has to be there for the kernel to find
+-		 */
+-		__kernel_datapage_offset;
+-
+ 		__kernel_get_syscall_map;
+ #if defined(CONFIG_PPC32) && !defined(CONFIG_PPC_BOOK3S_601)
+ 		__kernel_gettimeofday;
+diff --git a/arch/powerpc/kernel/vdso64/datapage.S b/arch/powerpc/kernel/vdso64/datapage.S
+index 4808ce9eeb3d..8c41e1a93980 100644
+--- a/arch/powerpc/kernel/vdso64/datapage.S
++++ b/arch/powerpc/kernel/vdso64/datapage.S
+@@ -12,9 +12,6 @@
+ #include <asm/vdso.h>
+ 
+ 	.text
+-.global	__kernel_datapage_offset;
+-__kernel_datapage_offset:
+-	.long	0
+ 
+ _GLOBAL(__get_datapage)
+   .cfi_startproc
+@@ -31,10 +28,11 @@ _GLOBAL(__get_datapage)
+ data_page_branch:
+ 	mflr	r3
+ 	mtlr	r0
+-	addi	r3, r3, __kernel_datapage_offset-data_page_branch
+-	lwz	r0,0(r3)
++#if CONFIG_PPC_PAGE_SHIFT > 14
++	addis	r3, r3, (_vdso_datapage - data_page_branch)@ha
++#endif
++	addi	r3, r3, (_vdso_datapage - data_page_branch)@l
+   .cfi_restore lr
+-	add	r3,r0,r3
+ 	blr
+   .cfi_endproc
+ 
+diff --git a/arch/powerpc/kernel/vdso64/vdso64.lds.S b/arch/powerpc/kernel/vdso64/vdso64.lds.S
+index 256fb9720298..f58c7e2e9cbd 100644
+--- a/arch/powerpc/kernel/vdso64/vdso64.lds.S
++++ b/arch/powerpc/kernel/vdso64/vdso64.lds.S
+@@ -4,6 +4,7 @@
+  * library
+  */
+ #include <asm/vdso.h>
++#include <asm/page.h>
+ 
+ #ifdef __LITTLE_ENDIAN__
+ OUTPUT_FORMAT("elf64-powerpcle", "elf64-powerpcle", "elf64-powerpcle")
+@@ -15,6 +16,7 @@ ENTRY(_start)
+ 
+ SECTIONS
+ {
++	PROVIDE(_vdso_datapage = . - PAGE_SIZE);
+ 	. = VDSO64_LBASE + SIZEOF_HEADERS;
+ 
+ 	.hash		: { *(.hash) }			:text
+@@ -138,11 +140,6 @@ VERSION
+ {
+ 	VDSO_VERSION_STRING {
+ 	global:
+-		/*
+-		 * Has to be there for the kernel to find
+-		 */
+-		__kernel_datapage_offset;
+-
+ 		__kernel_get_syscall_map;
+ 		__kernel_gettimeofday;
+ 		__kernel_clock_gettime;
 -- 
-Andrey
+2.13.3
+
