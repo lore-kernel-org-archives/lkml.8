@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4ED2C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E462C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9215A20684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A08620684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:21:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195259;
-	bh=qR9z+vhMoovUMCDKsNJsPHdQQAm57/Nlj/ycMZRmjCo=;
+	s=default; t=1579195266;
+	bh=1HtmT7m+kFaRKNM2WgnRVGCCkcls9ULYbGmvbiUNWpU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W9L2O7eETpd0muniXeP0c5vfFY8Ei/P36HMlR/x+uO6w5FhJhHJdWzj22AoTO7BH0
-	 eBOcMgWVFZuJtnY7w6ezZ0ELhvrTM5yAnKepibPcqZ19EGdXiBg7+6dT8d0woXEoUL
-	 EMpl0bBb6RPAdW4I0TJb5kg1/s3wY3hqHiq2RX4Y=
+	b=YWS2XZHRawaFhJslOgOLfKaqI4bA6W71pSeex08P01twAMEMEnmmMsK4Ddsyk833r
+	 aPHifaclv81XTfTXM0XFRUWvttfyLugSyvnG7HWuHhfX6BYk5PqrjloQg6VamemBNL
+	 YsNBN3W7bOHFAgQi89VMA8RyJXALayH72Q0MF5lI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391448AbgAPRU6 (ORCPT
+        id S2391504AbgAPRVF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:20:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44068 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:21:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391298AbgAPRRy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:17:54 -0500
+        id S2391280AbgAPRRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:17:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDA5A246B2;
-        Thu, 16 Jan 2020 17:17:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D184E2075B;
+        Thu, 16 Jan 2020 17:17:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195074;
-        bh=qR9z+vhMoovUMCDKsNJsPHdQQAm57/Nlj/ycMZRmjCo=;
+        s=default; t=1579195069;
+        bh=1HtmT7m+kFaRKNM2WgnRVGCCkcls9ULYbGmvbiUNWpU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0FNtyjz6JKGPjsKlTcuwYT7jPGBkMfal1bp4yRXw1uBs5rU7bDFHvK4LBaX1945nk
-         fWr24knHfxhrxa+E847lDk7p3tVbR47cOGQC2rqi6/Gfs3f9hDVYxjvtMzslGvuY60
-         PnSucxR9rbCTULbkqYNemmNzp7W4TKMwZlsUy7W0=
+        b=sgWMjhZUr6V1iPCupAmP4er6NOv76X8/hGz2qRqruqEMuAgQbJSFfiXjUFmWhunZd
+         65WluACAqaUr3KB6ykIL00YF26TGzNg8Nx0mDbUTMxJVZeYXzhhGlODtnxH/lBUSYn
+         OhgYeMWBZYhKyK2M3hH6WtnePN4RR7F13iudxfvc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
+Cc:     Stefan Wahren <stefan.wahren@i2se.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 025/371] pinctrl: sh-pfc: r8a7740: Add missing LCD0 marks to lcd0_data24_1 group
-Date:   Thu, 16 Jan 2020 12:11:33 -0500
-Message-Id: <20200116171719.16965-25-sashal@kernel.org>
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 4.14 022/371] staging: bcm2835-camera: Abort probe if there is no camera
+Date:   Thu, 16 Jan 2020 12:11:30 -0500
+Message-Id: <20200116171719.16965-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116171719.16965-1-sashal@kernel.org>
 References: <20200116171719.16965-1-sashal@kernel.org>
@@ -60,33 +64,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Stefan Wahren <stefan.wahren@i2se.com>
 
-[ Upstream commit 96bb2a6ab4eca10e5b6490b3f0738e9f7ec22c2b ]
+[ Upstream commit 7566f39dfdc11f8a97d5810c6e6295a88f97ef91 ]
 
-The lcd0_data24_1_pins[] array contains the LCD0 D1[2-5] pin numbers,
-but the lcd0_data24_1_mux[] array lacks the corresponding pin marks.
+Abort the probing of the camera driver in case there isn't a camera
+actually connected to the Raspberry Pi. This solution also avoids a
+NULL ptr dereference of mmal instance on driver unload.
 
-Fixes: 06c7dd866da70f6c ("sh-pfc: r8a7740: Add LCDC0 and LCDC1 pin groups and functions")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Fixes: 7b3ad5abf027 ("staging: Import the BCM2835 MMAL-based V4L2 camera driver.")
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-r8a7740.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../vc04_services/bcm2835-camera/bcm2835-camera.c        | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7740.c b/drivers/pinctrl/sh-pfc/pfc-r8a7740.c
-index d8077065636e..e9739dbcb356 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a7740.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a7740.c
-@@ -2154,6 +2154,7 @@ static const unsigned int lcd0_data24_1_mux[] = {
- 	LCD0_D0_MARK, LCD0_D1_MARK, LCD0_D2_MARK, LCD0_D3_MARK,
- 	LCD0_D4_MARK, LCD0_D5_MARK, LCD0_D6_MARK, LCD0_D7_MARK,
- 	LCD0_D8_MARK, LCD0_D9_MARK, LCD0_D10_MARK, LCD0_D11_MARK,
-+	LCD0_D12_MARK, LCD0_D13_MARK, LCD0_D14_MARK, LCD0_D15_MARK,
- 	LCD0_D16_MARK, LCD0_D17_MARK, LCD0_D18_PORT163_MARK,
- 	LCD0_D19_PORT162_MARK, LCD0_D20_PORT161_MARK, LCD0_D21_PORT158_MARK,
- 	LCD0_D22_PORT160_MARK, LCD0_D23_PORT159_MARK,
+diff --git a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
+index 377da037f31c..b521752d9aa0 100644
+--- a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
++++ b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
+@@ -1849,6 +1849,12 @@ static int __init bm2835_mmal_init(void)
+ 	num_cameras = get_num_cameras(instance,
+ 				      resolutions,
+ 				      MAX_BCM2835_CAMERAS);
++
++	if (num_cameras < 1) {
++		ret = -ENODEV;
++		goto cleanup_mmal;
++	}
++
+ 	if (num_cameras > MAX_BCM2835_CAMERAS)
+ 		num_cameras = MAX_BCM2835_CAMERAS;
+ 
+@@ -1948,6 +1954,9 @@ static int __init bm2835_mmal_init(void)
+ 	pr_info("%s: error %d while loading driver\n",
+ 		BM2835_MMAL_MODULE_NAME, ret);
+ 
++cleanup_mmal:
++	vchiq_mmal_finalise(instance);
++
+ 	return ret;
+ }
+ 
 -- 
 2.20.1
 
