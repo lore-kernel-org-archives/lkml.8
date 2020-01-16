@@ -2,54 +2,53 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D31C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2039EC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FF672073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0A182077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:36:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199788;
-	bh=DD5b3OtEOuYFjYuUz0V1Ew0UTKdSxEIPHB7MzvFpuk4=;
+	s=default; t=1579199791;
+	bh=d9faV/auFDCcCdxfm/vkf4wabxx8xk1L7Zqi6hggSIk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CH7ojR46PrBBDhudMUwq6jF4BBFQ0FOoHaqyijfMHAf89jlX4w/ajl8mAWrFZFrIW
-	 qwRt6UjsGfSpxK4SfSS2JYEjmbjXJ4h8v8mh/E/f9HHZe5MQsHZg0n8krLzEeY16nG
-	 oYuTj3blYRPaRZfZOPOU2+TEsBoNSNA7GkooSVEc=
+	b=u1/TfQ4CfR6SvdHyWJkOAMKH9CjmsIoMI94I/7V9fi32chgjlS/5RBf7ETztIc7tZ
+	 ORad1VsjcWwLCZPu3m6tQvcwBc9B/fR1KResF4k8wYHng1xj93X4ZS3AkovysTn+AR
+	 bw4t9GY6MxeE7LvezUsQ1Sn+n3gemJJhi0aO5oFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436854AbgAPSg1 (ORCPT
+        id S2391687AbgAPRYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:36:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58384 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:24:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391701AbgAPRYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:24:15 -0500
+        id S2390778AbgAPRYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:24:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C286724690;
-        Thu, 16 Jan 2020 17:24:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7768C214AF;
+        Thu, 16 Jan 2020 17:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195454;
-        bh=DD5b3OtEOuYFjYuUz0V1Ew0UTKdSxEIPHB7MzvFpuk4=;
+        s=default; t=1579195447;
+        bh=d9faV/auFDCcCdxfm/vkf4wabxx8xk1L7Zqi6hggSIk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DpqtVad4Nv93wAgq8gyksdsvlmz0G/HFyVRwxiowH32zAFfv8VY/rPt1WjwGgydYj
-         1iVTeuE5NQ4GQpvDCeAfyR64DN8lpUtr5hYez3OFzJBt2VEkHFoxaPoNp/Dyl+Iwtf
-         uFs+fsmNffchnUmtYFdHAoBynFAgfWmRIEdal0e0=
+        b=DuEf4XIyWa3sGS8N2RJfyn6l7yNH6BFHazEUN6UnkG9yBGuai5qGkUMPqqIdPDYVA
+         AJND7pLG1/1bA0A0ivCPn/eNpmv54nk+niGur+HibBRGgLuJd/wg2Yx4ijwHBonxED
+         +CHpsL08P2/E6SLOAXPqmHWwPHOXGxHRiyRmP9Lc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Wong <e@80x24.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Sylvain Chouleur <sylvain.chouleur@intel.com>,
-        Patrick McDermott <patrick.mcdermott@libiquity.com>,
-        linux-rtc@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 064/371] rtc: cmos: ignore bogus century byte
-Date:   Thu, 16 Jan 2020 12:18:56 -0500
-Message-Id: <20200116172403.18149-7-sashal@kernel.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 059/371] kbuild: mark prepare0 as PHONY to fix external module build
+Date:   Thu, 16 Jan 2020 12:18:51 -0500
+Message-Id: <20200116172403.18149-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -62,43 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Wong <e@80x24.org>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit 2a4daadd4d3e507138f8937926e6a4df49c6bfdc ]
+[ Upstream commit e00d8880481497474792d28c14479a9fb6752046 ]
 
-Older versions of Libreboot and Coreboot had an invalid value
-(`3' in my case) in the century byte affecting the GM45 in
-the Thinkpad X200.  Not everybody's updated their firmwares,
-and Linux <= 4.2 was able to read the RTC without problems,
-so workaround this by ignoring invalid values.
+Commit c3ff2a5193fa ("powerpc/32: add stack protector support")
+caused kernel panic on PowerPC when an external module is used with
+CONFIG_STACKPROTECTOR because the 'prepare' target was not executed
+for the external module build.
 
-Fixes: 3c217e51d8a272b9 ("rtc: cmos: century support")
+Commit e07db28eea38 ("kbuild: fix single target build for external
+module") turned it into a build error because the 'prepare' target is
+now executed but the 'prepare0' target is missing for the external
+module build.
 
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Alessandro Zummo <a.zummo@towertech.it>
-Cc: Sylvain Chouleur <sylvain.chouleur@intel.com>
-Cc: Patrick McDermott <patrick.mcdermott@libiquity.com>
-Cc: linux-rtc@vger.kernel.org
-Signed-off-by: Eric Wong <e@80x24.org>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+External module on arm/arm64 with CONFIG_STACKPROTECTOR_PER_TASK is
+also broken in the same way.
+
+Move 'PHONY += prepare0' to the common place. GNU Make is fine with
+missing rule for phony targets. I also removed the comment which is
+wrong irrespective of this commit.
+
+I minimize the change so it can be easily backported to 4.20.x
+
+To fix v4.20, please backport e07db28eea38 ("kbuild: fix single target
+build for external module"), and then this commit.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=201891
+Fixes: e07db28eea38 ("kbuild: fix single target build for external module")
+Fixes: c3ff2a5193fa ("powerpc/32: add stack protector support")
+Fixes: 189af4657186 ("ARM: smp: add support for per-task stack canaries")
+Fixes: 0a1213fa7432 ("arm64: enable per-task stack canaries")
+Cc: linux-stable <stable@vger.kernel.org> # v4.20
+Reported-by: Samuel Holland <samuel@sholland.org>
+Reported-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Tested-by: Alexey Kardashevskiy <aik@ozlabs.ru>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-mc146818-lib.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/rtc/rtc-mc146818-lib.c b/drivers/rtc/rtc-mc146818-lib.c
-index 2f1772a358ca..18a6f15e313d 100644
---- a/drivers/rtc/rtc-mc146818-lib.c
-+++ b/drivers/rtc/rtc-mc146818-lib.c
-@@ -82,7 +82,7 @@ unsigned int mc146818_get_time(struct rtc_time *time)
- 	time->tm_year += real_year - 72;
- #endif
+diff --git a/Makefile b/Makefile
+index 166e18aa9ca9..4560f763ad11 100644
+--- a/Makefile
++++ b/Makefile
+@@ -971,6 +971,7 @@ ifdef CONFIG_STACK_VALIDATION
+   endif
+ endif
  
--	if (century)
-+	if (century > 20)
- 		time->tm_year += (century - 19) * 100;
++PHONY += prepare0
  
- 	/*
+ ifeq ($(KBUILD_EXTMOD),)
+ core-y		+= kernel/ certs/ mm/ fs/ ipc/ security/ crypto/ block/
+@@ -1065,8 +1066,7 @@ include/config/kernel.release: include/config/auto.conf FORCE
+ # archprepare is used in arch Makefiles and when processed asm symlink,
+ # version.h and scripts_basic is processed / created.
+ 
+-# Listed in dependency order
+-PHONY += prepare archprepare prepare0 prepare1 prepare2 prepare3
++PHONY += prepare archprepare prepare1 prepare2 prepare3
+ 
+ # prepare3 is used to check if we are building in a separate output directory,
+ # and if so do:
 -- 
 2.20.1
 
