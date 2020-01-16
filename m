@@ -2,104 +2,172 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB23EC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 999B7C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C294C206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:33:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199639;
-	bh=irA/cM1vWOhJmBs2PD0tW5ZUlPA/Ji3OJu6aU8hDEuU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rA5FJJ5CaGPWzdoyM1rj6BzMXmOXPMoP1NDAFB6SRixry1A6P1SqGd9YiS/hD+MEd
-	 Feq/vfKrSVVcXhZP+qGRbjdYqo5X1jyuZN5Msm1JSQCYjLxYUIi2qlmCHrH8WoxzUY
-	 h5Kmdnq8S0Ak6Fk1J7vgYHmsBJm1ExHChdMpyjUE=
+	by mail.kernel.org (Postfix) with ESMTP id 7D80F206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:34:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403804AbgAPRYp (ORCPT
+        id S2403794AbgAPRYo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:24:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59518 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391791AbgAPRYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:24:38 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58E72246BD;
-        Thu, 16 Jan 2020 17:24:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195478;
-        bh=irA/cM1vWOhJmBs2PD0tW5ZUlPA/Ji3OJu6aU8hDEuU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lfv7Lzr8ezbvpiBB+Zm+NGQFEIuZlcaX8Lxj90nmTjzYRXuo0Y4ZUv7ROBRDb9HGH
-         3g3ZnU3dzcCrMkH9kGSE+E7xSXnOLndynfKp0GWwNpP3LKRhN/Rkv0egqE1FiBkZzY
-         vu7XlzHoHJrFNCpxkk8s6wEBTOv/DAXmAMhHRevQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Kao <michael.kao@mediatek.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 083/371] thermal: mediatek: fix register index error
-Date:   Thu, 16 Jan 2020 12:19:15 -0500
-Message-Id: <20200116172403.18149-26-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
-References: <20200116172403.18149-1-sashal@kernel.org>
+        Thu, 16 Jan 2020 12:24:44 -0500
+Received: from out28-125.mail.aliyun.com ([115.124.28.125]:36193 "EHLO
+        out28-125.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403768AbgAPRYe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:24:34 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1272068|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.633143-0.024116-0.342741;DS=CONTINUE|ham_system_inform|0.00813291-0.000354104-0.991513;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03312;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=23;RT=23;SR=0;TI=SMTPD_---.GdEQRsw_1579195452;
+Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GdEQRsw_1579195452)
+          by smtp.aliyun-inc.com(10.147.40.2);
+          Fri, 17 Jan 2020 01:24:24 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        mips-creator-ci20-dev@googlegroups.com, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
+        mark.rutland@arm.com, syq@debian.org, ralf@linux-mips.org,
+        rick.tyliu@ingenic.com, jason@lakedaemon.net,
+        keescook@chromium.org, geert+renesas@glider.be, krzk@kernel.org,
+        paul@crapouillou.net, prasannatsmkumar@gmail.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
+        ebiederm@xmission.com, hns@goldelico.com, paul@boddie.org.uk
+Subject: [PATCH v2 3/6] dt-bindings: MIPS: Document Ingenic SoCs binding.
+Date:   Fri, 17 Jan 2020 01:23:46 +0800
+Message-Id: <1579195429-59828-5-git-send-email-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1579195429-59828-1-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1579195429-59828-1-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Kao <michael.kao@mediatek.com>
+Document the available properties for the SoC root node and the
+CPU nodes of the devicetree for the Ingenic XBurst SoCs.
 
-[ Upstream commit eb9aecd90d1a39601e91cd08b90d5fee51d321a6 ]
-
-The index of msr and adcpnp should match the sensor
-which belongs to the selected bank in the for loop.
-
-Fixes: b7cf0053738c ("thermal: Add Mediatek thermal driver for mt2701.")
-Signed-off-by: Michael Kao <michael.kao@mediatek.com>
-Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
 ---
- drivers/thermal/mtk_thermal.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
-index 1e61c09153c9..76b92083744c 100644
---- a/drivers/thermal/mtk_thermal.c
-+++ b/drivers/thermal/mtk_thermal.c
-@@ -407,7 +407,8 @@ static int mtk_thermal_bank_temperature(struct mtk_thermal_bank *bank)
- 	u32 raw;
- 
- 	for (i = 0; i < conf->bank_data[bank->id].num_sensors; i++) {
--		raw = readl(mt->thermal_base + conf->msr[i]);
-+		raw = readl(mt->thermal_base +
-+			    conf->msr[conf->bank_data[bank->id].sensors[i]]);
- 
- 		temp = raw_to_mcelsius(mt,
- 				       conf->bank_data[bank->id].sensors[i],
-@@ -544,7 +545,8 @@ static void mtk_thermal_init_bank(struct mtk_thermal *mt, int num,
- 
- 	for (i = 0; i < conf->bank_data[num].num_sensors; i++)
- 		writel(conf->sensor_mux_values[conf->bank_data[num].sensors[i]],
--		       mt->thermal_base + conf->adcpnp[i]);
-+		       mt->thermal_base +
-+		       conf->adcpnp[conf->bank_data[num].sensors[i]]);
- 
- 	writel((1 << conf->bank_data[num].num_sensors) - 1,
- 	       mt->thermal_base + TEMP_MONCTL0);
+Notes:
+    v1->v2:
+    Change the two Document from txt to yaml.
+
+ .../bindings/mips/ingenic/ingenic,cpu.yaml         | 53 ++++++++++++++++++++++
+ .../bindings/mips/ingenic/ingenic,soc,yaml         | 35 ++++++++++++++
+ 2 files changed, 88 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+ create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,soc,yaml
+
+diff --git a/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+new file mode 100644
+index 00000000..91041a4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+@@ -0,0 +1,53 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mips/ingenic/ingenic,cpu.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Bindings for Ingenic XBurst family CPUs
++
++maintainers:
++  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
++description: |
++  Ingenic XBurst family CPUs shall have the following properties.
++
++properties:
++  compatible:
++    oneOf:
++      - "ingenic,xburst".
++      - "ingenic,xburst2".
++
++  reg:
++    description: |
++      The number of the CPU.
++
++required:
++  - device_type
++  - compatible
++  - reg
++
++Example:
++  - |
++    cpus {
++    	#address-cells = <1>;
++    	#size-cells = <0>;
++
++    	cpu0: cpu@0 {
++    		device_type = "cpu";
++    		compatible = "ingenic,xburst";
++    		reg = <0>;
++
++    		clocks = <&cgu JZ4780_CLK_CPU>;
++    		clock-names = "cpu";
++    	};
++
++    	cpu1: cpu@1 {
++    		device_type = "cpu";
++    		compatible = "ingenic,xburst";
++    		reg = <1>;
++
++    		clocks = <&cgu JZ4780_CLK_CORE1>;
++    		clock-names = "cpu";
++    	};
++    };
++...
+diff --git a/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc,yaml b/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc,yaml
+new file mode 100644
+index 00000000..6269da7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc,yaml
+@@ -0,0 +1,35 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mips/ingenic/ingenic,soc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Bindings for Ingenic SoCs with XBurst CPU inside.
++
++maintainers:
++  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
++description: |
++  Ingenic SoCs with XBurst CPU inside shall have the following properties.
++
++properties:
++  compatible:
++    oneOf:
++      - "ingenic,jz4740".
++      - "ingenic,jz4725b".
++      - "ingenic,jz4760".
++      - "ingenic,jz4760b".
++      - "ingenic,jz4770".
++      - "ingenic,jz4780".
++      - "ingenic,x1000".
++      - "ingenic,x1000e".
++      - "ingenic,x1500".
++
++required:
++  - compatible
++
++examples:
++  - |
++    #address-cells = <1>;
++    #size-cells = <1>;
++    compatible = "ingenic,jz4780";
++...
 -- 
-2.20.1
+2.7.4
 
