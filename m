@@ -2,163 +2,165 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CC2C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F171C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4D472053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 318EC20728
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:02:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NcAE1SH8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pZIi5sE/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389661AbgAPWAn (ORCPT
+        id S2389668AbgAPWCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 17:00:43 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53333 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729503AbgAPWAm (ORCPT
+        Thu, 16 Jan 2020 17:02:02 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:39521 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388162AbgAPWCC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 17:00:42 -0500
-Received: by mail-wm1-f68.google.com with SMTP id m24so5381251wmc.3;
-        Thu, 16 Jan 2020 14:00:41 -0800 (PST)
+        Thu, 16 Jan 2020 17:02:02 -0500
+Received: by mail-pj1-f66.google.com with SMTP id e11so2308240pjt.4
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 14:02:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=oIn+Jvngj5pWP7exdhrbj7B/VR3utuuUJaPI5QggeLQ=;
-        b=NcAE1SH8vL4NAONhNeG3//w0M7GQVz0DiGsz3fshkybB7yDqnoQZYxTAbSfDKfXF8A
-         A0bTHvade4wpI81k3lhLKM+eCzubM7WT/1gbfD/qoB0xxjCTpbnJCV/1+726JSy6Eef/
-         EgWKfViiYtxdqLFHMDD1MATTee5qvUEV+0jXQ2udUHWswG82cQQLVRlwReFLRh8WqWf5
-         xN8xBkAZSHnYnej8oJpE3nW00sH3N9FFAtWvMwUifgDodx1WfyAldA6wjmcElI6vE8L6
-         z5XS6nlwz2B7jAhVuyHZan5ssOg24naz7twy72uwvVanyslzOZGZFhYXNw+8vz1kjVA+
-         FW8Q==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=3l1bLmmeM9s291uP94O9U/aPjNKzd/SwoB7qzxFa1R0=;
+        b=pZIi5sE/9TH17JjoL4l5dJZZrLpm7nc9kqlJkmnnzJuXTFlpU/YTZtduls0CTZLNQm
+         E6ll5YpO8ByoE0nF7TJYBSt49NmIhu3tapebJ0GHzTHlrn11c9dfl4pg11YGNTtRTxRR
+         g6ct6R0KdTbp94x6U595KvssLi8FgrCtpq3PPgsq7ZGsbVAGcsoE8WV0gRTaMptR7kLu
+         Avzv6iRXqtNfuUucdsVE8Dx8aZKT07u4EELR1eoXNKnKFbnCN1FSuHa3xuv9FxuzLVhY
+         UCe+3l+fC3JBlJNBgau4SWMziDCNmnvE5ZBSRsIY9lzxnRJqtiLV5b10eh8jS8HfF/jk
+         VwwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=oIn+Jvngj5pWP7exdhrbj7B/VR3utuuUJaPI5QggeLQ=;
-        b=ZjOd90H2wsrlTV1WC+/XDE+9Kc03jXVQrkAlE6wo3nde6P3KcS5LZTpocwblZJoHXo
-         rbobTh2oYxjYeipefgg1k/tOI7iI32y2vyjVQQmguneynTgoLvb1nfCyUmdg6IuoEStf
-         xNRHavfybTFVkxhtCDMsN95KOKsgNi9OvymSdUu/Jr5YSFUVU5T4K8wif71/nFk33cFc
-         zv3yIN98VoSOL7JzlnS19pYbfy9xoesuNysWxY8nX34Y6UviuyMjaRwhMkAnvIPTWrvj
-         Tv1MzzkmKqDS8S11L+GmCg+GL/faTVcTxuf8lXiGmiD2umMhOkbz7SwuZMScD955Y7sE
-         y/Jw==
-X-Gm-Message-State: APjAAAWSpxTeUhiG5pAsbYIk3m48/3Fp0nM8dwmH7fE+6280bFPOhVBU
-        ogRlWnqYTLqA35PGe0sP5oU=
-X-Google-Smtp-Source: APXvYqw6KydyP6gocEdkQdlORTHH7IwMM6gD5avULnOd8yG9XpYgcEHS59fdqBAmXXnGFgFhGaTNlQ==
-X-Received: by 2002:a7b:c5cd:: with SMTP id n13mr1148335wmk.172.1579212040835;
-        Thu, 16 Jan 2020 14:00:40 -0800 (PST)
-Received: from localhost.localdomain (ip5f5bee3c.dynamic.kabel-deutschland.de. [95.91.238.60])
-        by smtp.gmail.com with ESMTPSA id a14sm32418131wrx.81.2020.01.16.14.00.39
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=3l1bLmmeM9s291uP94O9U/aPjNKzd/SwoB7qzxFa1R0=;
+        b=csJNNQtRevc8NyFon7W6CUlquIV4z/ETFYyi2noJed1f3gw1fcrbgWHg3qfTFAvF4g
+         sjv4LOVoRdWIjHaW6XV7DOZlJi7YOlelgs9Ys94CbL55N31Q5h/WZ42lphLNVLcLVuh/
+         73Y42kAmNmig2IA/39R+JUCT26khhryqLLxYj3Dc8wfoX0hFWK/WsY38aTihBnFcW4bJ
+         jhdBfRwsFoJrnNOiMFT5Tq3WZ+pmhDqZG0/ezGjlMKgWl6kPvsqfAz05IHHeFeEBN55j
+         P99UALE/PDxLAtLNKCy4g0aNFfou3bjCC1L4e6rl3R1EWFnolqRGGllAa4it6wHaEoY4
+         +irg==
+X-Gm-Message-State: APjAAAWuVvjV6MCBOYPX4r1A34B01/uyWKANFCPxPWn4JZU2BECiia/m
+        Fzmpq4GKN+/WGW3od3XiFLnCcw==
+X-Google-Smtp-Source: APXvYqzz/Iq1AFC0H0qPvPoBp1sq2GZeTe9qAtImzX2gAXb3xw+Gl7BruUV5FjWVCYBAKEETDQCciw==
+X-Received: by 2002:a17:90a:238b:: with SMTP id g11mr1756480pje.128.1579212121109;
+        Thu, 16 Jan 2020 14:02:01 -0800 (PST)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id v4sm26425893pff.174.2020.01.16.14.02.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 14:00:40 -0800 (PST)
-From:   Bean Huo <huobean@gmail.com>
-To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
-        asutoshd@codeaurora.org, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, stanley.chu@mediatek.com,
-        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
-        cang@codeaurora.org
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 9/9] scsi: ufs: Use UFS device indicated maximum LU number
-Date:   Thu, 16 Jan 2020 22:59:14 +0100
-Message-Id: <20200116215914.16015-10-huobean@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200116215914.16015-1-huobean@gmail.com>
-References: <20200116215914.16015-1-huobean@gmail.com>
+        Thu, 16 Jan 2020 14:02:00 -0800 (PST)
+Date:   Thu, 16 Jan 2020 14:01:59 -0800 (PST)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+cc:     Wei Yang <richardw.yang@linux.intel.com>, hannes@cmpxchg.org,
+        mhocko@kernel.org, vdavydov.dev@gmail.com,
+        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
+        yang.shi@linux.alibaba.com, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        alexander.duyck@gmail.com, stable@vger.kernel.org
+Subject: Re: [Patch v3] mm: thp: grab the lock before manipulation defer
+ list
+In-Reply-To: <0bb34c4a-97c7-0b3c-cf43-8af6cf9c4396@virtuozzo.com>
+Message-ID: <alpine.DEB.2.21.2001161357240.109233@chino.kir.corp.google.com>
+References: <20200116013100.7679-1-richardw.yang@linux.intel.com> <0bb34c4a-97c7-0b3c-cf43-8af6cf9c4396@virtuozzo.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bean Huo <beanhuo@micron.com>
+On Thu, 16 Jan 2020, Kirill Tkhai wrote:
 
-According to Jedec standard UFS 3.0 and UFS 2.1 Spec, the maximum number
-of logical units supported by the UFS device is indicated by parameter
-bMaxNumberLU in Geometry Descriptor. This patch is to delete current
-hard code macro definition of UFS_UPIU_MAX_GENERAL_LUN and switch to
-use device indicated number instead.
+> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> > index c5b5f74cfd4d..6450bbe394e2 100644
+> > --- a/mm/memcontrol.c
+> > +++ b/mm/memcontrol.c
+> > @@ -5360,10 +5360,12 @@ static int mem_cgroup_move_account(struct page *page,
+> >  	}
+> >  
+> >  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> > -	if (compound && !list_empty(page_deferred_list(page))) {
+> > +	if (compound) {
+> >  		spin_lock(&from->deferred_split_queue.split_queue_lock);
+> > -		list_del_init(page_deferred_list(page));
+> > -		from->deferred_split_queue.split_queue_len--;
+> > +		if (!list_empty(page_deferred_list(page))) {
+> > +			list_del_init(page_deferred_list(page));
+> > +			from->deferred_split_queue.split_queue_len--;
+> > +		}
+> >  		spin_unlock(&from->deferred_split_queue.split_queue_lock);
+> >  	}
+> >  #endif
+> > @@ -5377,11 +5379,13 @@ static int mem_cgroup_move_account(struct page *page,
+> >  	page->mem_cgroup = to;
+> >  
+> >  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> > -	if (compound && list_empty(page_deferred_list(page))) {
+> > +	if (compound) {
+> >  		spin_lock(&to->deferred_split_queue.split_queue_lock);
+> > -		list_add_tail(page_deferred_list(page),
+> > -			      &to->deferred_split_queue.split_queue);
+> > -		to->deferred_split_queue.split_queue_len++;
+> > +		if (list_empty(page_deferred_list(page))) {
+> > +			list_add_tail(page_deferred_list(page),
+> > +				      &to->deferred_split_queue.split_queue);
+> > +			to->deferred_split_queue.split_queue_len++;
+> > +		}
+> >  		spin_unlock(&to->deferred_split_queue.split_queue_lock);
+> >  	}
+> >  #endif
+> 
+> The patch looks OK for me. But there is another question. I forget, why we unconditionally
+> add a page with empty deferred list to deferred_split_queue. Shouldn't we also check that
+> it was initially in the list? Something like:
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index d4394ae4e5be..0be0136adaa6 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -5289,6 +5289,7 @@ static int mem_cgroup_move_account(struct page *page,
+>  	struct pglist_data *pgdat;
+>  	unsigned long flags;
+>  	unsigned int nr_pages = compound ? hpage_nr_pages(page) : 1;
+> +	bool split = false;
+>  	int ret;
+>  	bool anon;
+>  
+> @@ -5346,6 +5347,7 @@ static int mem_cgroup_move_account(struct page *page,
+>  		if (!list_empty(page_deferred_list(page))) {
+>  			list_del_init(page_deferred_list(page));
+>  			from->deferred_split_queue.split_queue_len--;
+> +			split = true;
+>  		}
+>  		spin_unlock(&from->deferred_split_queue.split_queue_lock);
+>  	}
+> @@ -5360,7 +5362,7 @@ static int mem_cgroup_move_account(struct page *page,
+>  	page->mem_cgroup = to;
+>  
+>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> -	if (compound) {
+> +	if (compound && split) {
+>  		spin_lock(&to->deferred_split_queue.split_queue_lock);
+>  		if (list_empty(page_deferred_list(page))) {
+>  			list_add_tail(page_deferred_list(page),
+> 
 
-Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
-Signed-off-by: Bean Huo <beanhuo@micron.com>
----
- drivers/scsi/ufs/ufs-sysfs.c |  2 +-
- drivers/scsi/ufs/ufs.h       | 12 +++++++++---
- drivers/scsi/ufs/ufshcd.c    |  4 ++--
- 3 files changed, 12 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/scsi/ufs/ufs-sysfs.c b/drivers/scsi/ufs/ufs-sysfs.c
-index 720be3f64be7..dbdf8b01abed 100644
---- a/drivers/scsi/ufs/ufs-sysfs.c
-+++ b/drivers/scsi/ufs/ufs-sysfs.c
-@@ -713,7 +713,7 @@ static ssize_t _pname##_show(struct device *dev,			\
- 	struct scsi_device *sdev = to_scsi_device(dev);			\
- 	struct ufs_hba *hba = shost_priv(sdev->host);			\
- 	u8 lun = ufshcd_scsi_to_upiu_lun(sdev->lun);			\
--	if (!ufs_is_valid_unit_desc_lun(lun))				\
-+	if (!ufs_is_valid_unit_desc_lun(&hba->dev_info, lun))		\
- 		return -EINVAL;						\
- 	return ufs_sysfs_read_desc_param(hba, QUERY_DESC_IDN_##_duname,	\
- 		lun, _duname##_DESC_PARAM##_puname, buf, _size);	\
-diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
-index c982bcc94662..dde2eb02f76f 100644
---- a/drivers/scsi/ufs/ufs.h
-+++ b/drivers/scsi/ufs/ufs.h
-@@ -63,7 +63,6 @@
- #define UFS_UPIU_MAX_UNIT_NUM_ID	0x7F
- #define UFS_MAX_LUNS		(SCSI_W_LUN_BASE + UFS_UPIU_MAX_UNIT_NUM_ID)
- #define UFS_UPIU_WLUN_ID	(1 << 7)
--#define UFS_UPIU_MAX_GENERAL_LUN	8
- 
- /* Well known logical unit id in LUN field of UPIU */
- enum {
-@@ -539,12 +538,19 @@ struct ufs_dev_info {
- 
- /**
-  * ufs_is_valid_unit_desc_lun - checks if the given LUN has a unit descriptor
-+ * @dev_info: pointer of instance of struct ufs_dev_info
-  * @lun: LU number to check
-  * @return: true if the lun has a matching unit descriptor, false otherwise
-  */
--static inline bool ufs_is_valid_unit_desc_lun(u8 lun)
-+static inline bool ufs_is_valid_unit_desc_lun(struct ufs_dev_info *dev_info,
-+		u8 lun)
- {
--	return lun == UFS_UPIU_RPMB_WLUN || (lun < UFS_UPIU_MAX_GENERAL_LUN);
-+	if (!dev_info || !dev_info->max_lu_supported) {
-+		pr_err("Max General LU supported by UFS isn't initilized\n");
-+		return false;
-+	}
-+
-+	return lun == UFS_UPIU_RPMB_WLUN || (lun < dev_info->max_lu_supported);
- }
- 
- #endif /* End of Header */
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 0c4fb5d447da..a942d5346793 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -3270,7 +3270,7 @@ static inline int ufshcd_read_unit_desc_param(struct ufs_hba *hba,
- 	 * Unit descriptors are only available for general purpose LUs (LUN id
- 	 * from 0 to 7) and RPMB Well known LU.
- 	 */
--	if (!ufs_is_valid_unit_desc_lun(lun))
-+	if (!ufs_is_valid_unit_desc_lun(&hba->dev_info, lun))
- 		return -EOPNOTSUPP;
- 
- 	return ufshcd_read_desc_param(hba, QUERY_DESC_IDN_UNIT, lun,
-@@ -4525,7 +4525,7 @@ static int ufshcd_get_lu_wp(struct ufs_hba *hba,
- 	 * protected so skip reading bLUWriteProtect parameter for
- 	 * it. For other W-LUs, UNIT DESCRIPTOR is not available.
- 	 */
--	else if (lun >= UFS_UPIU_MAX_GENERAL_LUN)
-+	else if (lun >= hba->dev_info.max_lu_supported)
- 		ret = -ENOTSUPP;
- 	else
- 		ret = ufshcd_read_unit_desc_param(hba,
--- 
-2.17.1
-
+I think that's a good point, especially considering that the current code 
+appears to unconditionally place any compound page on the deferred split 
+queue of the destination memcg.  The correct list that it should appear 
+on, I believe, depends on whether the pmd has been split for the process 
+being moved: note the MC_TARGET_PAGE caveat in 
+mem_cgroup_move_charge_pte_range() that does not move the charge for 
+compound pages with split pmds.  So when mem_cgroup_move_account() is 
+called with compound == true, we're moving the charge of the entire 
+compound page: why would it appear on that memcg's deferred split queue?
