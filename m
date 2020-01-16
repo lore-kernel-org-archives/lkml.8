@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC56C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCDD1C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B469206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD111206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:32:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199556;
-	bh=hxpdLvO6UKAuakXwvmsgeuSBLao07IE25tdYjVr2xl4=;
+	s=default; t=1579199563;
+	bh=pApbjpB3M1WpmYu3P2kMlD3KDQd2NJxdcECDY4o+trk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1fDqAttvLU9EHpztCWWhXtc3sffeFiUWaBzCLLUbtum3pvWKpb3jEG6ySFImBx+dO
-	 g7BfTEFNUciJm17L9TiANnq3t8gfQjWednVW/80mrhR64totxw32FlsW61xFUxlYiu
-	 1+Vpp5E3qj9B5q57k1NxKh2+GlLfxqH3GGGNBLmY=
+	b=u/UFDR+WYNGid8flosgGcUQW9o00hq8UioXB8Pz+XYTzWcLbf5vPJ+sq7ppkPHFqU
+	 OchU0TzOwNJEpJddpkygGDF6KHGu4wkOG6nkcz+xAXHejN5PU3OYzFFdx4ARqvpb38
+	 TX75bF3/m23DlUQwfqOdSFdskBQWlmnYzqxDhNWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391838AbgAPRY6 (ORCPT
+        id S2404512AbgAPScm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:24:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59824 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:32:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403812AbgAPRYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:24:47 -0500
+        id S2391833AbgAPRY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:24:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2CDC2468C;
-        Thu, 16 Jan 2020 17:24:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F9952468D;
+        Thu, 16 Jan 2020 17:24:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195486;
-        bh=hxpdLvO6UKAuakXwvmsgeuSBLao07IE25tdYjVr2xl4=;
+        s=default; t=1579195497;
+        bh=pApbjpB3M1WpmYu3P2kMlD3KDQd2NJxdcECDY4o+trk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bWxtZ/pXwj8JB3+lGnbkaiwZ6alTSd6bJrvmS+ykhcLijIV/llU/22RvzRVNomYre
-         9zg1P0pl9v3AvTUF56z53sDKQTCsvslnn1G716aSXiRXsNzWAnBZEFsb9rGW9oohOC
-         91DGoWlQJ8ajKi/qBcOPjI27unUe/LkfV+oqowVI=
+        b=q3bUW5hictFEyspyE7/eNRE8AEiyZ7hOTlQoCZu+jCkz3PaPbyvIW0hZeQ8en+ClZ
+         joPV/MAOPUJiSirVzg7grx88IQoN6Q2oVYflchJ73XTOuUuzsGa/4tjg8fpE4vSRLE
+         OLIDg3tHBqzKO33XP7ZkJXVyJzUIW5xuMw2mFulQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steve Wise <swise@opengridcomputing.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 090/371] iw_cxgb4: use tos when importing the endpoint
-Date:   Thu, 16 Jan 2020 12:19:22 -0500
-Message-Id: <20200116172403.18149-33-sashal@kernel.org>
+Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
+        Tony Lindgren <tony@atomide.com>, Bin Liu <b-liu@ti.com>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 098/371] usb: phy: twl6030-usb: fix possible use-after-free on remove
+Date:   Thu, 16 Jan 2020 12:19:30 -0500
+Message-Id: <20200116172403.18149-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -59,33 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Wise <swise@opengridcomputing.com>
+From: Sven Van Asbroeck <thesven73@gmail.com>
 
-[ Upstream commit cb3ba0bde881f0cb7e3945d2a266901e2bd18c92 ]
+[ Upstream commit 5895d311d28f2605e2f71c1a3e043ed38f3ac9d2 ]
 
-import_ep() is passed the correct tos, but doesn't use it correctly.
+In remove(), use cancel_delayed_work_sync() to cancel the
+delayed work. Otherwise there's a chance that this work
+will continue to run until after the device has been removed.
 
-Fixes: ac8e4c69a021 ("cxgb4/iw_cxgb4: TOS support")
-Signed-off-by: Steve Wise <swise@opengridcomputing.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+This issue was detected with the help of Coccinelle.
+
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Bin Liu <b-liu@ti.com>
+Fixes: b6a619a883c3 ("usb: phy: Check initial state for twl6030")
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/cxgb4/cm.c | 2 +-
+ drivers/usb/phy/phy-twl6030-usb.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
-index 3668cc71b47e..942403e42dd0 100644
---- a/drivers/infiniband/hw/cxgb4/cm.c
-+++ b/drivers/infiniband/hw/cxgb4/cm.c
-@@ -2056,7 +2056,7 @@ static int import_ep(struct c4iw_ep *ep, int iptype, __u8 *peer_ip,
- 	} else {
- 		pdev = get_real_dev(n->dev);
- 		ep->l2t = cxgb4_l2t_get(cdev->rdev.lldi.l2t,
--					n, pdev, 0);
-+					n, pdev, rt_tos2priority(tos));
- 		if (!ep->l2t)
- 			goto out;
- 		ep->mtu = dst_mtu(dst);
+diff --git a/drivers/usb/phy/phy-twl6030-usb.c b/drivers/usb/phy/phy-twl6030-usb.c
+index b5dc077ed7d3..8e14fa221191 100644
+--- a/drivers/usb/phy/phy-twl6030-usb.c
++++ b/drivers/usb/phy/phy-twl6030-usb.c
+@@ -413,7 +413,7 @@ static int twl6030_usb_remove(struct platform_device *pdev)
+ {
+ 	struct twl6030_usb *twl = platform_get_drvdata(pdev);
+ 
+-	cancel_delayed_work(&twl->get_status_work);
++	cancel_delayed_work_sync(&twl->get_status_work);
+ 	twl6030_interrupt_mask(TWL6030_USBOTG_INT_MASK,
+ 		REG_INT_MSK_LINE_C);
+ 	twl6030_interrupt_mask(TWL6030_USBOTG_INT_MASK,
 -- 
 2.20.1
 
