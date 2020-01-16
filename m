@@ -7,54 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F304FC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1406C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9E9420661
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F24D2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:48:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200497;
-	bh=6Wvt9vJWgQlGcJlbt5KEJbH/p4c5jmdOeNTFfjihnc4=;
+	s=default; t=1579200506;
+	bh=ds3K/+Shpqm/cw3bLKGdAoAuyM1oYw+f5Ag3IkVPWAc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wPcvW858XEw2NmsWt2kUOZC8T6xWmyb3kgdCT4O3vj+E/yU/5hIxR11AJPHsi30nA
-	 t+9KDtYKOh0VlJgtLuNJ1Np8aLnwgpAGr8en7KhUuYwuEf2m+JM3MnsFOSdT1faVU4
-	 BVDlB7qyGAKnmdDjVHrH2ww0ca4KaTtdrnq0qUFE=
+	b=IY349nLW8X/D3g83CPSprAIO+4InSne5Mix0Ezn0p9W9jEprFhMX85XIBj55T+rrg
+	 qF29QtpAG2VqUDYmoFmlsNcLgruTVvZjS7Dg1ref5JKZO/R5vbBFZ+kP9mhcrTJhB9
+	 yAwhjFyGW4QZGiqnBYYQyxptPilXtmXIsqmyPi80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394013AbgAPSsQ (ORCPT
+        id S2395467AbgAPSsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:48:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46612 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:48:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389758AbgAPRJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:09:51 -0500
+        id S2389752AbgAPRJt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:09:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38CAB205F4;
-        Thu, 16 Jan 2020 17:09:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 231B8206D9;
+        Thu, 16 Jan 2020 17:09:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194590;
-        bh=6Wvt9vJWgQlGcJlbt5KEJbH/p4c5jmdOeNTFfjihnc4=;
+        s=default; t=1579194588;
+        bh=ds3K/+Shpqm/cw3bLKGdAoAuyM1oYw+f5Ag3IkVPWAc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V7sqlYPKkRtZgf/dbgK55YcuEHNqq3xlwFlpDrh34AFB8h9YOsOHGQf/6L/8K2m5r
-         ON9V2Kcs4qptgGVMN1ej6YfppoQym3eI73U+TJBTH7WfMYGp7UiFXNw4VYyifAvBRQ
-         PG6/cAO7ySyj04kKvE4NGUx443byLq2if+Kslmbg=
+        b=quaA4PiILbj4XbPKVWBigMMPc08Pe4KpkTeztuF/UZu3Az989FRY4eWyJsvdY0uNY
+         P2wL9OIZ/X9ZqPyoG4jRZ767Cy9SwVJ7xjlZk+uDkyF436qk0d92QD6yh2luylNMEZ
+         VY9MtUFpTMyNBFv8CjYWixWRdYGi/759EmUqGwBg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ilya Maximets <i.maximets@samsung.com>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        William Tu <u9012063@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 461/671] xdp: fix possible cq entry leak
-Date:   Thu, 16 Jan 2020 12:01:39 -0500
-Message-Id: <20200116170509.12787-198-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 460/671] x86/pgtable/32: Fix LOWMEM_PAGES constant
+Date:   Thu, 16 Jan 2020 12:01:38 -0500
+Message-Id: <20200116170509.12787-197-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,64 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Maximets <i.maximets@samsung.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 675716400da6f15b9d3db04ef74ee74ca9a00af3 ]
+[ Upstream commit 26515699863d68058e290e18e83f444925920be5 ]
 
-Completion queue address reservation could not be undone.
-In case of bad 'queue_id' or skb allocation failure, reserved entry
-will be leaked reducing the total capacity of completion queue.
+clang points out that the computation of LOWMEM_PAGES causes a signed
+integer overflow on 32-bit x86:
 
-Fix that by moving reservation to the point where failure is not
-possible. Additionally, 'queue_id' checking moved out from the loop
-since there is no point to check it there.
+arch/x86/kernel/head32.c:83:20: error: signed shift result (0x100000000) requires 34 bits to represent, but 'int' only has 32 bits [-Werror,-Wshift-overflow]
+                (PAGE_TABLE_SIZE(LOWMEM_PAGES) << PAGE_SHIFT);
+                                 ^~~~~~~~~~~~
+arch/x86/include/asm/pgtable_32.h:109:27: note: expanded from macro 'LOWMEM_PAGES'
+ #define LOWMEM_PAGES ((((2<<31) - __PAGE_OFFSET) >> PAGE_SHIFT))
+                         ~^ ~~
+arch/x86/include/asm/pgtable_32.h:98:34: note: expanded from macro 'PAGE_TABLE_SIZE'
+ #define PAGE_TABLE_SIZE(pages) ((pages) / PTRS_PER_PGD)
 
-Fixes: 35fcde7f8deb ("xsk: support for Tx")
-Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
-Acked-by: Björn Töpel <bjorn.topel@intel.com>
-Tested-by: William Tu <u9012063@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Use the _ULL() macro to make it a 64-bit constant.
+
+Fixes: 1e620f9b23e5 ("x86/boot/32: Convert the 32-bit pgtable setup code from assembly to C")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190710130522.1802800-1-arnd@arndb.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xdp/xsk.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ arch/x86/include/asm/pgtable_32.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
-index 547fc4554b22..c90854bc3048 100644
---- a/net/xdp/xsk.c
-+++ b/net/xdp/xsk.c
-@@ -218,6 +218,9 @@ static int xsk_generic_xmit(struct sock *sk, struct msghdr *m,
+diff --git a/arch/x86/include/asm/pgtable_32.h b/arch/x86/include/asm/pgtable_32.h
+index b3ec519e3982..71e1df860176 100644
+--- a/arch/x86/include/asm/pgtable_32.h
++++ b/arch/x86/include/asm/pgtable_32.h
+@@ -106,6 +106,6 @@ do {						\
+  * with only a host target support using a 32-bit type for internal
+  * representation.
+  */
+-#define LOWMEM_PAGES ((((2<<31) - __PAGE_OFFSET) >> PAGE_SHIFT))
++#define LOWMEM_PAGES ((((_ULL(2)<<31) - __PAGE_OFFSET) >> PAGE_SHIFT))
  
- 	mutex_lock(&xs->mutex);
- 
-+	if (xs->queue_id >= xs->dev->real_num_tx_queues)
-+		goto out;
-+
- 	while (xskq_peek_desc(xs->tx, &desc)) {
- 		char *buffer;
- 		u64 addr;
-@@ -228,12 +231,6 @@ static int xsk_generic_xmit(struct sock *sk, struct msghdr *m,
- 			goto out;
- 		}
- 
--		if (xskq_reserve_addr(xs->umem->cq))
--			goto out;
--
--		if (xs->queue_id >= xs->dev->real_num_tx_queues)
--			goto out;
--
- 		len = desc.len;
- 		skb = sock_alloc_send_skb(sk, len, 1, &err);
- 		if (unlikely(!skb)) {
-@@ -245,7 +242,7 @@ static int xsk_generic_xmit(struct sock *sk, struct msghdr *m,
- 		addr = desc.addr;
- 		buffer = xdp_umem_get_data(xs->umem, addr);
- 		err = skb_store_bits(skb, 0, buffer, len);
--		if (unlikely(err)) {
-+		if (unlikely(err) || xskq_reserve_addr(xs->umem->cq)) {
- 			kfree_skb(skb);
- 			goto out;
- 		}
+ #endif /* _ASM_X86_PGTABLE_32_H */
 -- 
 2.20.1
 
