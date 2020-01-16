@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0212AC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2300FC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3A722051A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:21:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAE592051A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:21:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198890;
-	bh=wygwIN3lmpIrS23TwGIj4zb3LYORD77VRrH5I6tWMJs=;
+	s=default; t=1579198897;
+	bh=v9Lp2EmHI5PVUDJ4zW54quaf6jsktkRDtB35oO0fFgY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yqnrc44ZKjNFfTaZ9VHZKKT3M5vFlfoI6lji7YlIDYEAPQ1xq7jTGUDU4eI0s1Ike
-	 qsPBH7b+Erpdg1Wr9SuHWhYy2Shsq3gZ5LU82VahE7rudmthIsNZQUpFQQwLocvmuo
-	 7NkMUdXYrTsSemEC0FmGS1szQC7g4BMOHbbIu92s=
+	b=H8zcwK9WRLFiX7KyfCJvHj3uej/w40ywldghentpaSU4FYcCuPg892RyK9yXoUbR/
+	 7Lo0FqdbQNHQcne70lMk9lQNDF63SSXC7cq/ztj3wC4eR9fJw9ZqQi4h9KRW7k1dAa
+	 s3zU4+NEryyYl5XtiHZfyy7nkayaCyB2MHWmcuB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392042AbgAPR1s (ORCPT
+        id S2395483AbgAPSVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:27:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37638 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:21:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392476AbgAPR1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:27:38 -0500
+        id S2392060AbgAPR1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:27:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F257C246D3;
-        Thu, 16 Jan 2020 17:27:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEB25246E9;
+        Thu, 16 Jan 2020 17:27:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195657;
-        bh=wygwIN3lmpIrS23TwGIj4zb3LYORD77VRrH5I6tWMJs=;
+        s=default; t=1579195667;
+        bh=v9Lp2EmHI5PVUDJ4zW54quaf6jsktkRDtB35oO0fFgY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0RKbL0L6iSb9hiKknhuSf79+jRgw41T6a0bPwLOWW+hdiP9egO4/8pdejEmM81MCA
-         EWka1JADkhgfpsGsv6wJeu0zziHAB7vU5+D1LN6cnOalhKZ7s+roI+1Kg9uJPHn5H8
-         QY5h/qPw/4BndsDRx59fTHWJljvH25GjWIvL+31E=
+        b=1DUNFNza02c56GAuL1C+0nMf0V1I+DRRmSV2QunylJh8CODRf1ACz4i7AGryqr7kw
+         IfFCeoAnAMEQNeNYbgNahVj1aMMg8LfKtJeBsdDPvPCu/MX4j8Z+MQtKPib+nybApL
+         tQO9Qb7qkIx8pAtZz8wSNVA6q4YasmnpE94AqxRE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.14 218/371] iommu: Use right function to get group for device
-Date:   Thu, 16 Jan 2020 12:21:30 -0500
-Message-Id: <20200116172403.18149-161-sashal@kernel.org>
+Cc:     George Wilkie <gwilkie@vyatta.att-mail.com>,
+        David Ahern <dsahern@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 225/371] mpls: fix warning with multi-label encap
+Date:   Thu, 16 Jan 2020 12:21:37 -0500
+Message-Id: <20200116172403.18149-168-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -60,39 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Baolu <baolu.lu@linux.intel.com>
+From: George Wilkie <gwilkie@vyatta.att-mail.com>
 
-[ Upstream commit 57274ea25736496ee019a5c40479855b21888839 ]
+[ Upstream commit 2f3f7d1fa0d1039b24a55d127ed190f196fc3e79 ]
 
-The iommu_group_get_for_dev() will allocate a group for a
-device if it isn't in any group. This isn't the use case
-in iommu_request_dm_for_dev(). Let's use iommu_group_get()
-instead.
+If you configure a route with multiple labels, e.g.
+  ip route add 10.10.3.0/24 encap mpls 16/100 via 10.10.2.2 dev ens4
+A warning is logged:
+  kernel: [  130.561819] netlink: 'ip': attribute type 1 has an invalid
+  length.
 
-Fixes: d290f1e70d85a ("iommu: Introduce iommu_request_dm_for_dev()")
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+This happens because mpls_iptunnel_policy has set the type of
+MPLS_IPTUNNEL_DST to fixed size NLA_U32.
+Change it to a minimum size.
+nla_get_labels() does the remaining validation.
+
+Fixes: e3e4712ec096 ("mpls: ip tunnel support")
+Signed-off-by: George Wilkie <gwilkie@vyatta.att-mail.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/iommu.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/mpls/mpls_iptunnel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 1620a6f49989..37fe0223d07c 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -1855,9 +1855,9 @@ int iommu_request_dm_for_dev(struct device *dev)
- 	int ret;
+diff --git a/net/mpls/mpls_iptunnel.c b/net/mpls/mpls_iptunnel.c
+index 6e558a419f60..6c01166f972b 100644
+--- a/net/mpls/mpls_iptunnel.c
++++ b/net/mpls/mpls_iptunnel.c
+@@ -28,7 +28,7 @@
+ #include "internal.h"
  
- 	/* Device must already be in a group before calling this function */
--	group = iommu_group_get_for_dev(dev);
--	if (IS_ERR(group))
--		return PTR_ERR(group);
-+	group = iommu_group_get(dev);
-+	if (!group)
-+		return -EINVAL;
- 
- 	mutex_lock(&group->mutex);
+ static const struct nla_policy mpls_iptunnel_policy[MPLS_IPTUNNEL_MAX + 1] = {
+-	[MPLS_IPTUNNEL_DST]	= { .type = NLA_U32 },
++	[MPLS_IPTUNNEL_DST]	= { .len = sizeof(u32) },
+ 	[MPLS_IPTUNNEL_TTL]	= { .type = NLA_U8 },
+ };
  
 -- 
 2.20.1
