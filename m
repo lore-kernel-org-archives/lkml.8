@@ -2,93 +2,247 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5638C32771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C86A5C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86C7D2465A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92B0424656
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:57:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="ZPeO/qK4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729850AbgAPAzF (ORCPT
+        id S1729900AbgAPA5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 19:55:05 -0500
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:55969 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726513AbgAPAzF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 19:55:05 -0500
-Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 15 Jan 2020 16:55:04 -0800
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 15 Jan 2020 16:55:04 -0800
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id E2573499B; Wed, 15 Jan 2020 16:55:03 -0800 (PST)
-Date:   Wed, 15 Jan 2020 16:55:03 -0800
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/1] pwm: Convert period and duty cycle to u64
-Message-ID: <20200116005503.GA8559@codeaurora.org>
-References: <cover.1578959442.git.gurus@codeaurora.org>
- <21a1431edfa86e061528b80021351c25c76976a9.1578959442.git.gurus@codeaurora.org>
- <20200114074710.kxkz4664oap3r752@pengutronix.de>
+        Wed, 15 Jan 2020 19:57:52 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:33349 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726310AbgAPA5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 19:57:52 -0500
+Received: by ozlabs.org (Postfix, from userid 1007)
+        id 47ym581jzNz9sR0; Thu, 16 Jan 2020 11:57:48 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+        d=gibson.dropbear.id.au; s=201602; t=1579136268;
+        bh=NFWvXfvHC7UESUpRUwyZiWw9YmMUD96laMG2kvm+8QA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZPeO/qK4XhPI8W819KTOvE+cwkwGFXZK4tJT8MyspF3I/AB1QWDzu4z25p+iMtF/S
+         m0rwJw5FHXlbWQUiXE5EfCQuDDhNkY0vnsrXqqdm+DwlKOLkZTHPhha5u2IUT+I4rZ
+         dgMbeYHBGonofYnUPAFRMZltYelNKcHTNbmsnHX0=
+Date:   Thu, 16 Jan 2020 10:57:41 +1000
+From:   David Gibson <david@gibson.dropbear.id.au>
+To:     Alexandre Torgue <alexandre.torgue@st.com>
+Cc:     robh+dt@kernel.org, Frank Rowand <frowand.list@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>, sjg@chromium.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, devicetree-compiler@vger.kernel.org
+Subject: Re: [RFC PATCH 1/3] dtc: Add dtb build information option
+Message-ID: <20200116005741.GB54439@umbus>
+References: <20200113181625.3130-1-alexandre.torgue@st.com>
+ <20200113181625.3130-2-alexandre.torgue@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="gj572EiMnwbLXET9"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200114074710.kxkz4664oap3r752@pengutronix.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20200113181625.3130-2-alexandre.torgue@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Uwe,
 
-On Tue, Jan 14, 2020 at 08:47:10AM +0100, Uwe Kleine-König wrote:
-> I didn't thought about that much, but it would be great if we could
-> prepare the affected drivers to work with both, int and u64 and switch
-> in a separate commit. Reverting would then become cheaper.
-> The conversion to 64-bit division macros could be done even without
-> actually converting period and duty cycle, couldn't it?
+--gj572EiMnwbLXET9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I do agree that with such a two-step process the reverting (should the
-need arise) would be much cheaper. I tried out your suggestion and saw
-that this is not possible as the patch stands currently due to
-compilation warning and errors that arise for various architectures:
+On Mon, Jan 13, 2020 at 07:16:23PM +0100, Alexandre Torgue wrote:
+> This commit adds the possibility to add build information for a DTB.
+> Build information can be: build date, DTS version, "who built the DTB"
+> (same kind of information that we get in Linux with the Linux banner).
+>=20
+> To do this, an extra option "-B" using an information file as argument
+> has been added. If this option is used, input device tree is appended with
+> a new string property "Build-info". This property is built with informati=
+on
+> found in information file given as argument. This file has to be generated
+> by user and shouldn't exceed 256 bytes.
+>=20
+> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
 
-warning: comparison of distinct pointer types lacks a cast
-warning: right shift count >= width of type [-Wshift-count-overflow]
-error: passing argument 1 of '__div64_32' from incompatible pointer type [-Werror=incompatible-pointer-types]
-note: expected 'uint64_t *' {aka 'long long unsigned int *'} but argument is of type 'unsigned int *'
-warning: format '%llu' expects argument of type 'long long unsigned int', but argument 4 has type 'unsigned int' [-Wformat=]
+At the very least, this patch of the series will need to be sent to
+upstream dtc first.
 
-Could you please indicate how we should proceed further?
+I'm also not terribly clear on what you're trying to accomplish here,
+and why it's useful.
 
-> This Reported-by: looks wrong. It gave some hints about what had to be
-> improved in an earlier revision of this patch, but usually this means
-> that the patch is a fix for an earlier commit. So I would put this in
-> the text, something like:
-> 
-> 	The kbuild test robot helped to improve this patch series to
-> 	(hopefully) catch all code sites having to be adapted.
+Since you're doing this specifically for use with dtbs built in the
+kernel build, could you just use a:
+	Build-info =3D /incbin/ "build-info.txt";
+in each of the in-kernel .dts files?
 
-Noted, will make this change.
+Altough you probably shouldn't use "Build-info" since it doesn't match
+device tree property naming conventions.  My suggestion would be
+"linux,build-info".
 
-> In ir-rx51.c you used DIV_ROUND_CLOSEST_ULL to replace
-> DIV_ROUND_CLOSEST, here it is DIV64_U64_ROUND_CLOSEST. Maybe it is worth
-> to describe the relevant difference shortly in the commit log.
+> diff --git a/scripts/dtc/dtc.c b/scripts/dtc/dtc.c
+> index bdb3f5945699..294828bac20b 100644
+> --- a/scripts/dtc/dtc.c
+> +++ b/scripts/dtc/dtc.c
+> @@ -18,6 +18,7 @@ int padsize;		/* Additional padding to blob */
+>  int alignsize;		/* Additional padding to blob accroding to the alignsize=
+ */
+>  int phandle_format =3D PHANDLE_EPAPR;	/* Use linux,phandle or phandle pr=
+operties */
+>  int generate_symbols;	/* enable symbols & fixup support */
+> +int generate_build_info;	/* Add build information: time, source version =
+=2E.. */
+>  int generate_fixups;		/* suppress generation of fixups on symbol support=
+ */
+>  int auto_label_aliases;		/* auto generate labels -> aliases */
+>  int annotate;		/* Level of annotation: 1 for input source location
+> @@ -45,9 +46,42 @@ static void fill_fullpaths(struct node *tree, const ch=
+ar *prefix)
+>  		fill_fullpaths(child, tree->fullpath);
+>  }
+> =20
+> +static void fill_build_info(struct node *tree, const char *fname)
+> +{
+> +	struct data d =3D empty_data;
+> +	char *tmp;
+> +	FILE *f;
+> +	int len;
+> +
+> +	tmp =3D xmalloc(sizeof(char) * 256);
+> +
+> +	f =3D fopen(fname, "r");
+> +	if (!f) {
+> +		printf("Can't open file %s\n", fname);
+> +		return;
+> +	}
+> +
+> +	len =3D fread(tmp, sizeof(char), 256, f);
+> +	if (!len) {
+> +		printf("Can't read file %s\n", fname);
+> +		fclose(f);
+> +		free(tmp);
+> +	}
+> +	fclose(f);
 
-Sure, will make a note of this in the commit log. In short, one is used
-when only the numerator is 64-bit while the other is meant for the case
-when both numerator and denominator are 64-bit.
+You have no useful error reporting if the file is larger than the limit.
 
-Thank you.
+> +
+> +	tmp[len - 1] =3D '\0';
+> +
+> +	d =3D data_add_marker(d, TYPE_STRING, tmp);
+> +	d =3D data_append_data(d, tmp, len);
 
-Guru Das.
+You can essentially do this better with data_copy_file().
+
+> +
+> +	add_property(tree, build_property("Build-info", d, NULL));
+> +
+> +	free(tmp);
+> +}
+> +
+>  /* Usage related data. */
+>  static const char usage_synopsis[] =3D "dtc [options] <input file>";
+> -static const char usage_short_opts[] =3D "qI:O:o:V:d:R:S:p:a:fb:i:H:sW:E=
+:@AThv";
+> +static const char usage_short_opts[] =3D "qI:O:o:V:d:R:S:p:a:fb:i:H:sW:E=
+:@AT:B:hv";
+>  static struct option const usage_long_opts[] =3D {
+>  	{"quiet",            no_argument, NULL, 'q'},
+>  	{"in-format",         a_argument, NULL, 'I'},
+> @@ -69,6 +103,7 @@ static struct option const usage_long_opts[] =3D {
+>  	{"symbols",	     no_argument, NULL, '@'},
+>  	{"auto-alias",       no_argument, NULL, 'A'},
+>  	{"annotate",         no_argument, NULL, 'T'},
+> +	{"build-info",	      a_argument, NULL, 'B'},
+>  	{"help",             no_argument, NULL, 'h'},
+>  	{"version",          no_argument, NULL, 'v'},
+>  	{NULL,               no_argument, NULL, 0x0},
+> @@ -106,6 +141,7 @@ static const char * const usage_opts_help[] =3D {
+>  	"\n\tEnable generation of symbols",
+>  	"\n\tEnable auto-alias of labels",
+>  	"\n\tAnnotate output .dts with input source file and line (-T -T for mo=
+re details)",
+> +	"\n\tAdd build information (date, version, ...) in the blob",
+>  	"\n\tPrint this help and exit",
+>  	"\n\tPrint version and exit",
+>  	NULL,
+> @@ -164,6 +200,7 @@ int main(int argc, char *argv[])
+>  	const char *outform =3D NULL;
+>  	const char *outname =3D "-";
+>  	const char *depname =3D NULL;
+> +	const char *version =3D NULL;
+>  	bool force =3D false, sort =3D false;
+>  	const char *arg;
+>  	int opt;
+> @@ -256,9 +293,12 @@ int main(int argc, char *argv[])
+>  		case 'T':
+>  			annotate++;
+>  			break;
+> -
+>  		case 'h':
+>  			usage(NULL);
+> +		case 'B':
+> +			version =3D optarg;
+> +			generate_build_info =3D 1;
+> +			break;
+>  		default:
+>  			usage("unknown option");
+>  		}
+> @@ -296,14 +336,17 @@ int main(int argc, char *argv[])
+>  	}
+>  	if (annotate && (!streq(inform, "dts") || !streq(outform, "dts")))
+>  		die("--annotate requires -I dts -O dts\n");
+> -	if (streq(inform, "dts"))
+> +	if (streq(inform, "dts")) {
+>  		dti =3D dt_from_source(arg);
+> -	else if (streq(inform, "fs"))
+> +		if (generate_build_info)
+> +			fill_build_info(dti->dt, version);
+> +	} else if (streq(inform, "fs")) {
+>  		dti =3D dt_from_fs(arg);
+> -	else if(streq(inform, "dtb"))
+> +	} else if (streq(inform, "dtb")) {
+>  		dti =3D dt_from_blob(arg);
+> -	else
+> +	} else {
+>  		die("Unknown input format \"%s\"\n", inform);
+> +	}
+> =20
+>  	dti->outname =3D outname;
+> =20
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--gj572EiMnwbLXET9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl4ftQIACgkQbDjKyiDZ
+s5KzNhAA4xu6t0uG6xcZ/G1wNX3HVW1UGJ7aleePRrxOTUFMG3568GE/Cnbj3RmG
+Y8Is7j9vRJb53GgE4EFPxgneVXzKviAXP7R8cy8AEBzM3esnmleq8WC3bUCQY4AC
+mVHpsRk1GuAjYdsoXF+k1CSA5agjt5RUlsv/pNFPFfISKck1AuYz+yLt24INAzZH
+yH+aJMohYZbGq6PYZUPtK/CHZEo7KFP+YdMq214JU4P/zrMc0tQ+auuYDwVBwBBP
+7WsuO/agnc+wklSlhjdGXFj48X2ALThqxJzYwYZSPXA0waWngdqDOvHVaufw454K
+CMm0ISit01OEszGWN6Mh7HZmco2b3w4rrN3Gxvg/BChGBkBEkZw8VqetVHWiEIPi
+JgjaB3FZQ4vkdOGZQ38OO/gcfkSYn9n9Aq8pVg1YhHcggL3jHqEbRXOe9TK1tU8B
+QzDbrpYdfGpctnR2aO9bY3znUNNZ4F4UGObX5JBSHR7TnFed2mxC4SN/j/8wRlE4
+gH3BhM+4Kbjy9C6q9fcSb+6AaJrg5yTzeJLLiyvdVIhaF0iGNeydE1F9GjdnOhwr
+bhSaaBqB97qsAszfuN+Moxr4BrVuZePxl+oEy/QdOt+U4MB1cSLQxGl9xlz+J53d
+V5PF3y2VyfcJrX7I28GY2sGpu2ocWPsXP+7to/G/lxZargPS5/0=
+=4txu
+-----END PGP SIGNATURE-----
+
+--gj572EiMnwbLXET9--
