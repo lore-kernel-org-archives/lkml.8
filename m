@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 409A9C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E04C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1651C208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EE8A24673
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:52:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193566;
-	bh=H6ajRm7v/INVO/OjCprFhS/ZmGye/MPtiF2yeOAxJRg=;
+	s=default; t=1579193568;
+	bh=5OSgDCpJR1yIIS5o3VLRZAg16ZeNnZaOuTTpNXh9dFI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=liT47cB4cYA5m6eZFsFTrkbz9kj2p71ORLXc9QaKWqleyCBlqRucgQG89Kxv/Cz3O
-	 U5v0gzs2MeE7gdswsbGvIdU7tH1wDksrrVNhcOm4d2oq0nVNSXSJgHnNI7ERCIC8fB
-	 7xe23iPjPCPnTJ50rpskr56RPy7gpDaVEteWIT3g=
+	b=ZvZOrzk3uTrAlQ6/ixcWawQqkA+AK7+MlILBiNZIiYsDwtwH9vAMowv6QfvUaZCWY
+	 4l0+9y5EFrJM8B5MRsi8khLtqoiSIl0BgOzHhX7XJ6BwQTr3wYoezxs9A+vcmwKkeE
+	 Q25ISDif/8D8DS9GOyc0nQpVk30q5TBWNgTyb6Ms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730336AbgAPQwo (ORCPT
+        id S1729094AbgAPQws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:52:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35894 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:52:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729351AbgAPQwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:52:42 -0500
+        id S1727029AbgAPQwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:52:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD24E2192A;
-        Thu, 16 Jan 2020 16:52:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3056208C3;
+        Thu, 16 Jan 2020 16:52:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193561;
-        bh=H6ajRm7v/INVO/OjCprFhS/ZmGye/MPtiF2yeOAxJRg=;
+        s=default; t=1579193562;
+        bh=5OSgDCpJR1yIIS5o3VLRZAg16ZeNnZaOuTTpNXh9dFI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v0RzV1jfjt1dJa/5TLeU8romvhM+832WTI3MkLdbMGmYXVFR2OZhamG8dhxmPxmLE
-         4AuIiyhRKHFjgyH3cSXRfCw2sTaFR2OLsBDmcn81kyqLgU6drTmMHThHkZRPz10ETk
-         blXvtNQpF1iYs+PUFLChdVsDVcddhx2xq3oNJ2to=
+        b=WZ7nYl8EeY/vfY3hhWOqp1fHD3CEAh5V7zKUs50HweW2CYHdJ9DHrS+x7WJNfrm1A
+         Tz0C7w5GorvhjK/rV3/0oq9lmnkZLfWsOqhOFKByed6/qdSs9n4brXZN5xIMcDLFuQ
+         wtv+s6W1ucdzxEbFQJLeEZk43oQr77Iry0dwN3FM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eddie James <eajames@linux.ibm.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 106/205] hwmon: (pmbus/ibm-cffps) Fix LED blink behavior
-Date:   Thu, 16 Jan 2020 11:41:21 -0500
-Message-Id: <20200116164300.6705-106-sashal@kernel.org>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 107/205] net: neigh: use long type to store jiffies delta
+Date:   Thu, 16 Jan 2020 11:41:22 -0500
+Message-Id: <20200116164300.6705-107-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -59,100 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eddie James <eajames@linux.ibm.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 92b39ad440968bab38eb6577d63c12994601ed94 ]
+[ Upstream commit 9d027e3a83f39b819e908e4e09084277a2e45e95 ]
 
-The LED blink_set function incorrectly did not tell the PSU LED to blink
-if brightness was LED_OFF. Fix this, and also correct the LED_OFF
-command data, which should give control of the LED back to the PSU
-firmware. Also prevent I2C failures from getting the driver LED state
-out of sync and add some dev_dbg statements.
+A difference of two unsigned long needs long storage.
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
-Link: https://lore.kernel.org/r/20191106200106.29519-3-eajames@linux.ibm.com
-Fixes: ef9e1cdf419a3 ("hwmon: (pmbus/cffps) Add led class device for power supply fault led")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Fixes: c7fb64db001f ("[NETLINK]: Neighbour table configuration and statistics via rtnetlink")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/pmbus/ibm-cffps.c | 27 +++++++++++++++++++--------
- 1 file changed, 19 insertions(+), 8 deletions(-)
+ net/core/neighbour.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hwmon/pmbus/ibm-cffps.c b/drivers/hwmon/pmbus/ibm-cffps.c
-index aa4cdbbb100a..929c909ac27a 100644
---- a/drivers/hwmon/pmbus/ibm-cffps.c
-+++ b/drivers/hwmon/pmbus/ibm-cffps.c
-@@ -39,9 +39,13 @@
- #define CFFPS_MFR_VAUX_FAULT			BIT(6)
- #define CFFPS_MFR_CURRENT_SHARE_WARNING		BIT(7)
- 
-+/*
-+ * LED off state actually relinquishes LED control to PSU firmware, so it can
-+ * turn on the LED for faults.
-+ */
-+#define CFFPS_LED_OFF				0
- #define CFFPS_LED_BLINK				BIT(0)
- #define CFFPS_LED_ON				BIT(1)
--#define CFFPS_LED_OFF				BIT(2)
- #define CFFPS_BLINK_RATE_MS			250
- 
- enum {
-@@ -296,23 +300,31 @@ static int ibm_cffps_led_brightness_set(struct led_classdev *led_cdev,
- 					enum led_brightness brightness)
- {
- 	int rc;
-+	u8 next_led_state;
- 	struct ibm_cffps *psu = container_of(led_cdev, struct ibm_cffps, led);
- 
- 	if (brightness == LED_OFF) {
--		psu->led_state = CFFPS_LED_OFF;
-+		next_led_state = CFFPS_LED_OFF;
- 	} else {
- 		brightness = LED_FULL;
-+
- 		if (psu->led_state != CFFPS_LED_BLINK)
--			psu->led_state = CFFPS_LED_ON;
-+			next_led_state = CFFPS_LED_ON;
-+		else
-+			next_led_state = CFFPS_LED_BLINK;
- 	}
- 
-+	dev_dbg(&psu->client->dev, "LED brightness set: %d. Command: %d.\n",
-+		brightness, next_led_state);
-+
- 	pmbus_set_page(psu->client, 0);
- 
- 	rc = i2c_smbus_write_byte_data(psu->client, CFFPS_SYS_CONFIG_CMD,
--				       psu->led_state);
-+				       next_led_state);
- 	if (rc < 0)
- 		return rc;
- 
-+	psu->led_state = next_led_state;
- 	led_cdev->brightness = brightness;
- 
- 	return 0;
-@@ -325,10 +337,7 @@ static int ibm_cffps_led_blink_set(struct led_classdev *led_cdev,
- 	int rc;
- 	struct ibm_cffps *psu = container_of(led_cdev, struct ibm_cffps, led);
- 
--	psu->led_state = CFFPS_LED_BLINK;
--
--	if (led_cdev->brightness == LED_OFF)
--		return 0;
-+	dev_dbg(&psu->client->dev, "LED blink set.\n");
- 
- 	pmbus_set_page(psu->client, 0);
- 
-@@ -337,6 +346,8 @@ static int ibm_cffps_led_blink_set(struct led_classdev *led_cdev,
- 	if (rc < 0)
- 		return rc;
- 
-+	psu->led_state = CFFPS_LED_BLINK;
-+	led_cdev->brightness = LED_FULL;
- 	*delay_on = CFFPS_BLINK_RATE_MS;
- 	*delay_off = CFFPS_BLINK_RATE_MS;
- 
+diff --git a/net/core/neighbour.c b/net/core/neighbour.c
+index f2452496ad9f..920784a9b7ff 100644
+--- a/net/core/neighbour.c
++++ b/net/core/neighbour.c
+@@ -2049,8 +2049,8 @@ static int neightbl_fill_info(struct sk_buff *skb, struct neigh_table *tbl,
+ 		goto nla_put_failure;
+ 	{
+ 		unsigned long now = jiffies;
+-		unsigned int flush_delta = now - tbl->last_flush;
+-		unsigned int rand_delta = now - tbl->last_rand;
++		long flush_delta = now - tbl->last_flush;
++		long rand_delta = now - tbl->last_rand;
+ 		struct neigh_hash_table *nht;
+ 		struct ndt_config ndc = {
+ 			.ndtc_key_len		= tbl->key_len,
 -- 
 2.20.1
 
