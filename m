@@ -2,126 +2,100 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98717C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C91C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7077A2464B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197592;
-	bh=tBxxBgzuVF3cyv3BM1111FtWx8q4jyNNc4Fa0k9fg6o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FiE5hamdQoZzVm5XCx5fMPeTQkXm7NdACsVGkTF95hADVeK18H4mXjOFuVpMvxesq
-	 RO8Frn5ZB9eqr/keZTS7WSaUFCf+EulESQYx6y3XUgwb14RZU4KXGE6Vfjt37wp7FD
-	 WsZpfU0E6DcW4hZMMYCj4lTylWP/N+Rwo4sOg5+Q=
+	by mail.kernel.org (Postfix) with ESMTP id D7F812464B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="SD6U3h6U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394769AbgAPR7v (ORCPT
+        id S2394780AbgAPR7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:59:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32778 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:59:54 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:43863 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405858AbgAPRm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:42:56 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48097246A4;
-        Thu, 16 Jan 2020 17:42:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196576;
-        bh=tBxxBgzuVF3cyv3BM1111FtWx8q4jyNNc4Fa0k9fg6o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uC/95qMfE7NpQCrQbtYzMMrGugo4esOnu/eJvJndWOJnup5G3PnnwqOobAJZahZRa
-         6WZZUPKYEkj2uy+SXVZ9otZ/Ynv0CWXobGtGdWcMgH0MRAJJsimIZL5EbxnNEpHcYF
-         T/5f2GgSaUiJr0QIIbQRo5DShrjsxnV8SA4irkw0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 003/174] regulator: fixed: Default enable high on DT regulators
-Date:   Thu, 16 Jan 2020 12:40:00 -0500
-Message-Id: <20200116174251.24326-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
-References: <20200116174251.24326-1-sashal@kernel.org>
+        id S2394768AbgAPR7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:59:51 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 47zBmN5N54z9v4gc;
+        Thu, 16 Jan 2020 18:59:48 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=SD6U3h6U; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id EJWppnBr9WvY; Thu, 16 Jan 2020 18:59:48 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47zBmN44pnz9v4gT;
+        Thu, 16 Jan 2020 18:59:48 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1579197588; bh=IindQu42iENkFluTxFQueQVsDRT1L9tio2zY26H9ooU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=SD6U3h6UXcUuVSAFLlW6xTpgLah4GnfwkGmyYPfYMJEZ80vWz5QKjLUAJrqbLUTPG
+         FHu5B9HP7RgOIk7EhNh31YeJb4FEx+y8aJnktskyHe7iF3+iFf5JvawY+g5g9uqjxF
+         PgKwNxeR1X6+lUsmGgkzOI/BXQUo3iKSj9by4vDk=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 43AEF8B82C;
+        Thu, 16 Jan 2020 18:59:50 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id x7-gj-n_L5z9; Thu, 16 Jan 2020 18:59:50 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id BFD998B82A;
+        Thu, 16 Jan 2020 18:59:49 +0100 (CET)
+Subject: Re: [PATCH vdsotest] Use vdso wrapper for gettimeofday()
+To:     Nathan Lynch <nathanl@linux.ibm.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <0eddeeb64c97b8b5ce0abd74e88d2cc0303e49c6.1579090596.git.christophe.leroy@c-s.fr>
+ <871rrzjq5j.fsf@linux.ibm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <01e576b8-fe93-1026-5b39-f878297d6835@c-s.fr>
+Date:   Thu, 16 Jan 2020 18:59:49 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+In-Reply-To: <871rrzjq5j.fsf@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit 28be5f15df2ee6882b0a122693159c96a28203c7 ]
 
-commit efdfeb079cc3
-("regulator: fixed: Convert to use GPIO descriptor only")
-switched to use gpiod_get() to look up the regulator from the
-gpiolib core whether that is device tree or boardfile.
+Le 16/01/2020 à 17:56, Nathan Lynch a écrit :
+> Hi Christophe,
+> 
+> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+>> To properly handle errors returned by gettimeofday(), the
+>> DO_VDSO_CALL() macro has to be used, otherwise vdsotest
+>> misinterpret VDSO function return on error.
+>>
+>> This has gone unnoticed until now because the powerpc VDSO
+>> gettimeofday() always succeed, but while porting powerpc to
+>> generic C VDSO, the following has been encountered:
+> 
+> Thanks for this, I'll review it soon.
+> 
+> Can you point me to patches for the powerpc generic vdso work?
+> 
 
-This meant that we activate the code in
-a603a2b8d86e ("gpio: of: Add special quirk to parse regulator flags")
-which means the descriptors coming from the device tree already
-have the right inversion and open drain semantics set up from
-the gpiolib core.
+Sure.
 
-As the fixed regulator was inspected again we got the
-inverted inversion and things broke.
+v3 is at 
+https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=152867
 
-Fix it by ignoring the config in the device tree for now: the
-later patches in the series will push all inversion handling
-over to the gpiolib core and set it up properly in the
-boardfiles for legacy devices, but I did not finish that
-for this kernel cycle.
+I added you in v4 destinees.
 
-Fixes: commit efdfeb079cc3 ("regulator: fixed: Convert to use GPIO descriptor only")
-Reported-by: Leonard Crestez <leonard.crestez@nxp.com>
-Reported-by: Fabio Estevam <festevam@gmail.com>
-Reported-by: John Stultz <john.stultz@linaro.org>
-Reported-by: Anders Roxell <anders.roxell@linaro.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Tested-by: John Stultz <john.stultz@linaro.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/regulator/fixed.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/regulator/fixed.c b/drivers/regulator/fixed.c
-index ff62d69ba0be..24ad5e6832df 100644
---- a/drivers/regulator/fixed.c
-+++ b/drivers/regulator/fixed.c
-@@ -94,9 +94,14 @@ of_get_fixed_voltage_config(struct device *dev,
- 
- 	of_property_read_u32(np, "startup-delay-us", &config->startup_delay);
- 
--	config->enable_high = of_property_read_bool(np, "enable-active-high");
--	config->gpio_is_open_drain = of_property_read_bool(np,
--							   "gpio-open-drain");
-+	/*
-+	 * FIXME: we pulled active low/high and open drain handling into
-+	 * gpiolib so it will be handled there. Delete this in the second
-+	 * step when we also remove the custom inversion handling for all
-+	 * legacy boardfiles.
-+	 */
-+	config->enable_high = 1;
-+	config->gpio_is_open_drain = 0;
- 
- 	if (of_find_property(np, "vin-supply", NULL))
- 		config->input_supply = "vin";
--- 
-2.20.1
-
+Christophe
