@@ -2,100 +2,101 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C91C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C99FBC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7F812464B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="SD6U3h6U"
+	by mail.kernel.org (Postfix) with ESMTP id 99AE324679
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579197599;
+	bh=f74gY0E9na8zmrM+BoXB/Vj4yu0BmvUtSEC1+S/QcdM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PfkwGQ8+OtZxqtF22hDE4Wu2gepoJYYqmpYyPt4z1dd83++yKTKSLO5l7zWJ8mPFq
+	 k6Yx/1ZcIQ7zYqobLRhXb5VGR9+KUMnmJaCSpx7PIl0OyjIkP6SzN4EyWopIDOKgmh
+	 upK0ttbOss42kjGJpggcsF8rpHD/eDAmuCgtTFb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394780AbgAPR7y (ORCPT
+        id S2405553AbgAPRmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:59:54 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:43863 "EHLO pegase1.c-s.fr"
+        Thu, 16 Jan 2020 12:42:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394768AbgAPR7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:59:51 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 47zBmN5N54z9v4gc;
-        Thu, 16 Jan 2020 18:59:48 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=SD6U3h6U; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id EJWppnBr9WvY; Thu, 16 Jan 2020 18:59:48 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47zBmN44pnz9v4gT;
-        Thu, 16 Jan 2020 18:59:48 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1579197588; bh=IindQu42iENkFluTxFQueQVsDRT1L9tio2zY26H9ooU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=SD6U3h6UXcUuVSAFLlW6xTpgLah4GnfwkGmyYPfYMJEZ80vWz5QKjLUAJrqbLUTPG
-         FHu5B9HP7RgOIk7EhNh31YeJb4FEx+y8aJnktskyHe7iF3+iFf5JvawY+g5g9uqjxF
-         PgKwNxeR1X6+lUsmGgkzOI/BXQUo3iKSj9by4vDk=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 43AEF8B82C;
-        Thu, 16 Jan 2020 18:59:50 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id x7-gj-n_L5z9; Thu, 16 Jan 2020 18:59:50 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id BFD998B82A;
-        Thu, 16 Jan 2020 18:59:49 +0100 (CET)
-Subject: Re: [PATCH vdsotest] Use vdso wrapper for gettimeofday()
-To:     Nathan Lynch <nathanl@linux.ibm.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <0eddeeb64c97b8b5ce0abd74e88d2cc0303e49c6.1579090596.git.christophe.leroy@c-s.fr>
- <871rrzjq5j.fsf@linux.ibm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <01e576b8-fe93-1026-5b39-f878297d6835@c-s.fr>
-Date:   Thu, 16 Jan 2020 18:59:49 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        id S2405700AbgAPRla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:41:30 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 623B7246B6;
+        Thu, 16 Jan 2020 17:41:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579196490;
+        bh=f74gY0E9na8zmrM+BoXB/Vj4yu0BmvUtSEC1+S/QcdM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bSwUuEn+zYoPPo8c6j4hnIOELr5RdYEeECwhm62m044bLJynll8qYLrPF72LPDdbO
+         mkzTZd5U4jXA/7M3ItKTNh069xY1c7XthlvGmzMuoV+JARle24aQEqCM49GP3nJ6HB
+         lGy3o6AV0a40/dWDwSmRdihj4slRDw1MdW2iee7A=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 234/251] MIPS: Loongson: Fix return value of loongson_hwmon_init
+Date:   Thu, 16 Jan 2020 12:36:23 -0500
+Message-Id: <20200116173641.22137-194-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
+References: <20200116173641.22137-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <871rrzjq5j.fsf@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
+[ Upstream commit dece3c2a320b0a6d891da6ff774ab763969b6860 ]
 
-Le 16/01/2020 à 17:56, Nathan Lynch a écrit :
-> Hi Christophe,
-> 
-> Christophe Leroy <christophe.leroy@c-s.fr> writes:
->> To properly handle errors returned by gettimeofday(), the
->> DO_VDSO_CALL() macro has to be used, otherwise vdsotest
->> misinterpret VDSO function return on error.
->>
->> This has gone unnoticed until now because the powerpc VDSO
->> gettimeofday() always succeed, but while porting powerpc to
->> generic C VDSO, the following has been encountered:
-> 
-> Thanks for this, I'll review it soon.
-> 
-> Can you point me to patches for the powerpc generic vdso work?
-> 
+When call function hwmon_device_register failed, use the actual
+return value instead of always -ENOMEM.
 
-Sure.
+Fixes: 64f09aa967e1 ("MIPS: Loongson-3: Add CPU Hwmon platform driver")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: Huacai Chen <chenhc@lemote.com>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/mips/cpu_hwmon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-v3 is at 
-https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=152867
+diff --git a/drivers/platform/mips/cpu_hwmon.c b/drivers/platform/mips/cpu_hwmon.c
+index 4300a558d0f3..d02214a3f8e3 100644
+--- a/drivers/platform/mips/cpu_hwmon.c
++++ b/drivers/platform/mips/cpu_hwmon.c
+@@ -155,7 +155,7 @@ static int __init loongson_hwmon_init(void)
+ 
+ 	cpu_hwmon_dev = hwmon_device_register(NULL);
+ 	if (IS_ERR(cpu_hwmon_dev)) {
+-		ret = -ENOMEM;
++		ret = PTR_ERR(cpu_hwmon_dev);
+ 		pr_err("hwmon_device_register fail!\n");
+ 		goto fail_hwmon_device_register;
+ 	}
+-- 
+2.20.1
 
-I added you in v4 destinees.
-
-Christophe
