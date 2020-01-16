@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62BD1C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA00C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27E39206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81A1424685
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194575;
-	bh=xjgxhO45dHjd130Ym0AGnbBoCRkmzFTzfxB9a2hD2AI=;
+	s=default; t=1579194577;
+	bh=PEm+bMJbk/ztRxGX3pMP4loztHjfCNeyUsny1mCgJ7c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xRhPT5+YxiYH3kIse8MVa8MEujJtpjsMyQhMjE/WUTok5K9ycPeDlQ8JCQFZRER3+
-	 tanOIGOOqt79NA1IcplhRLMUo/RRh0tAltcjuA9EorjwRrqJiPUoW74XD8zBq9bKb6
-	 GCjY+ojfrATJhU8R7VkHU96mxGpX9jbktE5Yeya4=
+	b=OeEK925OisU4b9q4+f2lI3HDNa4H+/DVjTves1kb3rTXTO9xUVune9sxcPbikS4P1
+	 lT6qTAvDoI9V6GBtcit9plbydIP4r9AVMPeMLN8r4jBwIirC3+up5hgXevzct6bm9c
+	 HGIB7OS5WhJ3MA7BLqfS/KctC27fsMiWqvFqnH+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389403AbgAPRJe (ORCPT
+        id S2389711AbgAPRJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:09:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45220 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:09:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389676AbgAPRJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:09:23 -0500
+        id S2389283AbgAPRJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:09:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1B9C205F4;
-        Thu, 16 Jan 2020 17:09:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCDE52467A;
+        Thu, 16 Jan 2020 17:09:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194563;
-        bh=xjgxhO45dHjd130Ym0AGnbBoCRkmzFTzfxB9a2hD2AI=;
+        s=default; t=1579194566;
+        bh=PEm+bMJbk/ztRxGX3pMP4loztHjfCNeyUsny1mCgJ7c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=apx21vAiOVPCKu85y2G0sCn+T946FgqtTLWpP28txWTkZ8IfW82F/OY7bbCAtHRsz
-         VNMDM0H07HkFcD2WoIUueSFlQ7CN2cNy9DPI+nRnu2PV3vTthDbhSxMUXKMQLnGU4C
-         RMnO1hs+OAyB4vPKQJ8LJ8H4yI4R3bvxUq6yNdXc=
+        b=DDwmW6kiU/bcq2j1fmxZohvs888Ylny+MNgxnLQNAuOVFPzCpKBeLylL4IZphC+Oi
+         Vwo1tnRDXTRYECLGlnuwzFRZVIIPZhteHeCR5vr8B0FeiDQ8KCq7GsbF/OX7NrVXtT
+         q+GbgcHgL25BzPK3yKpXpk2e6PKgILffOp3WLU68=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 443/671] mfd: intel-lpss: Release IDA resources
-Date:   Thu, 16 Jan 2020 12:01:21 -0500
-Message-Id: <20200116170509.12787-180-sashal@kernel.org>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 445/671] xprtrdma: Fix use-after-free in rpcrdma_post_recvs
+Date:   Thu, 16 Jan 2020 12:01:23 -0500
+Message-Id: <20200116170509.12787-182-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,34 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit 02f36911c1b41fcd8779fa0c135aab0554333fa5 ]
+[ Upstream commit 2d0abe36cf13fb7b577949fd1539326adddcc9bc ]
 
-ida instances allocate some internal memory for ->free_bitmap
-in addition to the base 'struct ida'. Use ida_destroy() to release
-that memory at module_exit().
+Dereference wr->next /before/ the memory backing wr has been
+released. This issue was found by code inspection. It is not
+expected to be a significant problem because it is in an error
+path that is almost never executed.
 
-Fixes: 4b45efe85263 ("mfd: Add support for Intel Sunrisepoint LPSS devices")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Fixes: 7c8d9e7c8863 ("xprtrdma: Move Receive posting to ... ")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/intel-lpss.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/sunrpc/xprtrdma/verbs.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/intel-lpss.c b/drivers/mfd/intel-lpss.c
-index ff3fba16e735..95e217e6b6d7 100644
---- a/drivers/mfd/intel-lpss.c
-+++ b/drivers/mfd/intel-lpss.c
-@@ -545,6 +545,7 @@ module_init(intel_lpss_init);
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index 5ddbf227e7c6..2a1d8ec7f706 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -1558,10 +1558,11 @@ rpcrdma_post_recvs(struct rpcrdma_xprt *r_xprt, bool temp)
+ 	rc = ib_post_recv(r_xprt->rx_ia.ri_id->qp, wr,
+ 			  (const struct ib_recv_wr **)&bad_wr);
+ 	if (rc) {
+-		for (wr = bad_wr; wr; wr = wr->next) {
++		for (wr = bad_wr; wr;) {
+ 			struct rpcrdma_rep *rep;
  
- static void __exit intel_lpss_exit(void)
- {
-+	ida_destroy(&intel_lpss_devid_ida);
- 	debugfs_remove(intel_lpss_debugfs);
- }
- module_exit(intel_lpss_exit);
+ 			rep = container_of(wr, struct rpcrdma_rep, rr_recv_wr);
++			wr = wr->next;
+ 			rpcrdma_recv_buffer_put(rep);
+ 			--count;
+ 		}
 -- 
 2.20.1
 
