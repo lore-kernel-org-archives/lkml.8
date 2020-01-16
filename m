@@ -2,54 +2,53 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E81EC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF087C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1827A21582
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD57821582
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:02:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194120;
-	bh=9RoupKSfcykgyD2NpcWBXX4b5QsSwGAv82kXQcrkiEQ=;
+	s=default; t=1579194123;
+	bh=mj3HslSb1a5eU9nWcmhRgwdvOAOv8VDJJFtg0QffIwc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z7tzI6rC9oG2J4Y6iVLP/l1hcF2QmgSyVLjXehmIVtFJjsS2NGjsOEmgEcTSoTxNo
-	 3/XI4lAfsm/0ARQETYG/5krUXUnDWp2Xx2UlGkcQ/j0LdSWG8ZlsaCY+HdwaJxsV21
-	 yEvBTp5NZ8E5MI4FhxNJ1n9Pfs4vtOCHbaP9fMgY=
+	b=b2eD69JL4k5njrXznXI6rurWUODB3X7ZnJ6dZ6Z6XEoWPY7ZvF6o2YJSxBO8bMh4g
+	 q4fLWSUn3EIFMop+nJpqCKZqSDpcFICNMN8gjjH01bDsct0v+d7veyP+UbIwBNWIJH
+	 D5VK7ERuy3Ya5+RUBPczkpG3cN32qxuujtbROJ9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388228AbgAPRB6 (ORCPT
+        id S2388245AbgAPRCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:01:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53454 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:02:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388187AbgAPRBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:01:48 -0500
+        id S2387862AbgAPRBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:01:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BB3721D56;
-        Thu, 16 Jan 2020 17:01:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A736207FF;
+        Thu, 16 Jan 2020 17:01:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194107;
-        bh=9RoupKSfcykgyD2NpcWBXX4b5QsSwGAv82kXQcrkiEQ=;
+        s=default; t=1579194113;
+        bh=mj3HslSb1a5eU9nWcmhRgwdvOAOv8VDJJFtg0QffIwc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wb+jo2GCg+AhV7RUxmPZjio//N58RoB5cXBUgcommlFTmMuPfoTkgTgCmSBkHmlX3
-         gkR5bSJCcP2syxXEBeH+xB05jqmR/NUTvCPAIrFl/gkslGo2SbzYxVT4YtNmr+B4KB
-         DnalNxEeuUm2arYKiTWCb11K2RpTiJRAQQRhKEUs=
+        b=Fe7OK/c5wdkbYM1XiWYj2W+Plp7dIN660SmjMxlXLpvLhwXiJ+lvZBDjfFHUJbYz+
+         uzNjIH5ih//4VFE5A2/2rlOqXTQStiMSW3lVJEt3tA26W6quvxTl7xPng2lcerWqnY
+         pqH0UP2xWtYAd/pZ4njIX22p/FH/K4kVLOvrd06c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Thierry Reding <treding@nvidia.com>,
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Nicholas Mc Guire <hofrat@osadl.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 205/671] driver core: Fix PM-runtime for links added during consumer probe
-Date:   Thu, 16 Jan 2020 11:51:54 -0500
-Message-Id: <20200116165940.10720-88-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 209/671] staging: rtlwifi: Use proper enum for return in halmac_parse_psd_data_88xx
+Date:   Thu, 16 Jan 2020 11:51:58 -0500
+Message-Id: <20200116165940.10720-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -62,163 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 36003d4cf57ca431fb3f94d317bcca426a2394d6 ]
+[ Upstream commit e8edc32d70a4e09160835792eb5d1af71a0eec14 ]
 
-Commit 4c06c4e6cf63 ("driver core: Fix possible supplier PM-usage
-counter imbalance") introduced a regression that causes suppliers
-to be suspended prematurely for device links added during consumer
-driver probe if the initial PM-runtime status of the consumer is
-"suspended" and the consumer is resumed after adding the link and
-before pm_runtime_put_suppliers() is called.  In that case,
-pm_runtime_put_suppliers() will drop the rpm_active refcount for
-the link by one and (since rpm_active is equal to two after the
-preceding consumer resume) the supplier's PM-runtime usage counter
-will be decremented, which may cause the supplier to suspend even
-though the consumer's PM-runtime status is "active".
+Clang warns:
 
-For this reason, partially revert commit 4c06c4e6cf63 as the problem
-it tried to fix needs to be addressed somewhat differently, and
-change pm_runtime_get_suppliers() and pm_runtime_put_suppliers() so
-that the latter only drops rpm_active references acquired by the
-former.  [This requires adding a new field to struct device_link,
-but I coulnd't find a cleaner way to address the issue that would
-work in all cases.]
+drivers/staging/rtlwifi/halmac/halmac_88xx/halmac_func_88xx.c:2472:11:
+warning: implicit conversion from enumeration type 'enum
+halmac_cmd_process_status' to different enumeration type 'enum
+halmac_ret_status' [-Wenum-conversion]
+                        return HALMAC_CMD_PROCESS_ERROR;
+                        ~~~~~~ ^~~~~~~~~~~~~~~~~~~~~~~~
+1 warning generated.
 
-This causes pm_runtime_put_suppliers() to effectively ignore device
-links added during consumer probe, so device_link_add() doesn't need
-to worry about ensuring that suppliers will remain active after
-pm_runtime_put_suppliers() for links created with DL_FLAG_RPM_ACTIVE
-set and it only needs to bump up rpm_active by one for those links,
-so pm_runtime_active_link() is not necessary any more.
+Fix this by using the proper enum for allocation failures,
+HALMAC_RET_MALLOC_FAIL, which is used in the rest of this file.
 
-Fixes: 4c06c4e6cf63 ("driver core: Fix possible supplier PM-usage counter imbalance")
-Reported-by: Jon Hunter <jonathanh@nvidia.com>
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-Tested-by: Ulf Hansson <ulf.hansson@linaro.org>
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Tested-by: Thierry Reding <treding@nvidia.com>
+Fixes: e4b08e16b7d9 ("staging: r8822be: check kzalloc return or bail")
+Link: https://github.com/ClangBuiltLinux/linux/issues/375
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nicholas Mc Guire <hofrat@osadl.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/core.c          |  4 ++--
- drivers/base/power/runtime.c | 29 ++++++-----------------------
- include/linux/device.h       |  1 +
- include/linux/pm_runtime.h   |  4 ----
- 4 files changed, 9 insertions(+), 29 deletions(-)
+ drivers/staging/rtlwifi/halmac/halmac_88xx/halmac_func_88xx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index ab08211ba5d2..742bc60e9cca 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -253,7 +253,7 @@ struct device_link *device_link_add(struct device *consumer,
- 				link->flags |= DL_FLAG_PM_RUNTIME;
- 			}
- 			if (flags & DL_FLAG_RPM_ACTIVE)
--				pm_runtime_active_link(link, supplier);
-+				refcount_inc(&link->rpm_active);
- 		}
- 
- 		kref_get(&link->kref);
-@@ -268,7 +268,7 @@ struct device_link *device_link_add(struct device *consumer,
- 
- 	if (flags & DL_FLAG_PM_RUNTIME) {
- 		if (flags & DL_FLAG_RPM_ACTIVE)
--			pm_runtime_active_link(link, supplier);
-+			refcount_inc(&link->rpm_active);
- 
- 		pm_runtime_new_link(consumer);
+diff --git a/drivers/staging/rtlwifi/halmac/halmac_88xx/halmac_func_88xx.c b/drivers/staging/rtlwifi/halmac/halmac_88xx/halmac_func_88xx.c
+index ec742da030db..ddbeff8224ab 100644
+--- a/drivers/staging/rtlwifi/halmac/halmac_88xx/halmac_func_88xx.c
++++ b/drivers/staging/rtlwifi/halmac/halmac_88xx/halmac_func_88xx.c
+@@ -2469,7 +2469,7 @@ halmac_parse_psd_data_88xx(struct halmac_adapter *halmac_adapter, u8 *c2h_buf,
+ 	if (!psd_set->data) {
+ 		psd_set->data = kzalloc(psd_set->data_size, GFP_KERNEL);
+ 		if (!psd_set->data)
+-			return HALMAC_CMD_PROCESS_ERROR;
++			return HALMAC_RET_MALLOC_FAIL;
  	}
-diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
-index 0527890b4c19..303ce7d54a30 100644
---- a/drivers/base/power/runtime.c
-+++ b/drivers/base/power/runtime.c
-@@ -1571,6 +1571,7 @@ void pm_runtime_get_suppliers(struct device *dev)
  
- 	list_for_each_entry_rcu(link, &dev->links.suppliers, c_node)
- 		if (link->flags & DL_FLAG_PM_RUNTIME) {
-+			link->supplier_preactivated = true;
- 			refcount_inc(&link->rpm_active);
- 			pm_runtime_get_sync(link->supplier);
- 		}
-@@ -1590,9 +1591,11 @@ void pm_runtime_put_suppliers(struct device *dev)
- 	idx = device_links_read_lock();
- 
- 	list_for_each_entry_rcu(link, &dev->links.suppliers, c_node)
--		if (link->flags & DL_FLAG_PM_RUNTIME &&
--		    refcount_dec_not_one(&link->rpm_active))
--			pm_runtime_put(link->supplier);
-+		if (link->supplier_preactivated) {
-+			link->supplier_preactivated = false;
-+			if (refcount_dec_not_one(&link->rpm_active))
-+				pm_runtime_put(link->supplier);
-+		}
- 
- 	device_links_read_unlock(idx);
- }
-@@ -1604,26 +1607,6 @@ void pm_runtime_new_link(struct device *dev)
- 	spin_unlock_irq(&dev->power.lock);
- }
- 
--/**
-- * pm_runtime_active_link - Set up new device link as active for PM-runtime.
-- * @link: Device link to be set up as active.
-- * @supplier: Supplier end of the link.
-- *
-- * Add 2 to the rpm_active refcount of @link and increment the PM-runtime
-- * usage counter of @supplier once more in case the link is being added while
-- * the consumer driver is probing and pm_runtime_put_suppliers() will be called
-- * subsequently.
-- *
-- * Note that this doesn't prevent rpm_put_suppliers() from decreasing the link's
-- * rpm_active refcount down to one, so runtime suspend of the consumer end of
-- * @link is not affected.
-- */
--void pm_runtime_active_link(struct device_link *link, struct device *supplier)
--{
--	refcount_add(2, &link->rpm_active);
--	pm_runtime_get_noresume(supplier);
--}
--
- void pm_runtime_drop_link(struct device *dev)
- {
- 	spin_lock_irq(&dev->power.lock);
-diff --git a/include/linux/device.h b/include/linux/device.h
-index b8fd2a1f859d..e9d1c768f972 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -854,6 +854,7 @@ struct device_link {
- #ifdef CONFIG_SRCU
- 	struct rcu_head rcu_head;
- #endif
-+	bool supplier_preactivated; /* Owned by consumer probe. */
- };
- 
- /**
-diff --git a/include/linux/pm_runtime.h b/include/linux/pm_runtime.h
-index bace7df51af4..f0fc4700b6ff 100644
---- a/include/linux/pm_runtime.h
-+++ b/include/linux/pm_runtime.h
-@@ -59,8 +59,6 @@ extern void pm_runtime_clean_up_links(struct device *dev);
- extern void pm_runtime_get_suppliers(struct device *dev);
- extern void pm_runtime_put_suppliers(struct device *dev);
- extern void pm_runtime_new_link(struct device *dev);
--extern void pm_runtime_active_link(struct device_link *link,
--				   struct device *supplier);
- extern void pm_runtime_drop_link(struct device *dev);
- 
- static inline void pm_suspend_ignore_children(struct device *dev, bool enable)
-@@ -178,8 +176,6 @@ static inline void pm_runtime_clean_up_links(struct device *dev) {}
- static inline void pm_runtime_get_suppliers(struct device *dev) {}
- static inline void pm_runtime_put_suppliers(struct device *dev) {}
- static inline void pm_runtime_new_link(struct device *dev) {}
--static inline void pm_runtime_active_link(struct device_link *link,
--					  struct device *supplier) {}
- static inline void pm_runtime_drop_link(struct device *dev) {}
- 
- #endif /* !CONFIG_PM */
+ 	if (segment_id == 0)
 -- 
 2.20.1
 
