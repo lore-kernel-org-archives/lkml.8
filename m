@@ -2,111 +2,223 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DC3C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C27C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5333206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:34:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBE782077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:40:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="ZgcbuRsf"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Xwz8WLjs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728898AbgAPFe3 (ORCPT
+        id S1726812AbgAPFkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 00:34:29 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42061 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbgAPFe2 (ORCPT
+        Thu, 16 Jan 2020 00:40:04 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:37862 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726082AbgAPFkE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 00:34:28 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 4so9648401pfz.9
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 21:34:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=OjhLrwSUixWKfHPYVjag4pJ4Twky6Gk6dHImQohRolQ=;
-        b=ZgcbuRsf2JHWAKem4b8L9QCIstpEILQ+LtgpSvVyEIFmuJkHkq4wV3UhW+NB3I/p7L
-         g8PhhD9MkXc8GNcgMLwPiGkXbVvTxOXXqfpvUxWGjbrkeerRAqqt7CgHVi3clSMsX94r
-         2eu6s/C0/gJJDbr9MjhIhO6KsPExdslbKPn1s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=OjhLrwSUixWKfHPYVjag4pJ4Twky6Gk6dHImQohRolQ=;
-        b=LX4If+iq320QcGq751gOgYkUcQNAdeqd8H7ls4djDnZP/2wU6ZAPO55EGpN722b9P3
-         qDc1U7V2dELSGMnSp5rJHke3IWxToo1ETaZZc7A+DKCPyJXg/YPy+8S9XDcPTfzKw1uw
-         PevVih2yahiT+cX7Bnbsroy43ZCav/Xst/2zj6lSAHSqwPTBY/vYxg3uCPidvxqh1t1T
-         UhmZ1Mx41ZYFEYAKbF48wHRkOlar44PSRxGyysZWyS/q7Y5dMHJAD4w3DPBnQIsd9cbH
-         /uHEXzvwUkblOnBLd3tC1AW+4gsoavdjCTuPUGrUG2i8gP7jHtLisSrKD+bN/a7ntspw
-         m1EQ==
-X-Gm-Message-State: APjAAAV8jrsWTBrTBeAexKttm+pKouHPNs4AZLqdJboLBXJRlJazfBs5
-        ou5abTXgLv/POafABSnvh1RaBQ==
-X-Google-Smtp-Source: APXvYqxrN0+qBEVUpua94Qb8xZteFhv2nkLn9S7EhrqzK/2c5Vhq+y51pzR4+MJYtOWvoNtguucHYw==
-X-Received: by 2002:aa7:98d0:: with SMTP id e16mr34318946pfm.77.1579152866617;
-        Wed, 15 Jan 2020 21:34:26 -0800 (PST)
-Received: from localhost (2001-44b8-1113-6700-097c-7eed-afd4-cd15.static.ipv6.internode.on.net. [2001:44b8:1113:6700:97c:7eed:afd4:cd15])
-        by smtp.gmail.com with ESMTPSA id p16sm24333466pfq.184.2020.01.15.21.34.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 21:34:25 -0800 (PST)
-From:   Daniel Axtens <dja@axtens.net>
-To:     Dmitry Vyukov <dvyukov@google.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     linux-s390 <linux-s390@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org,
-        the arch/x86 maintainers <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/2] kasan: stop tests being eliminated as dead code with FORTIFY_SOURCE
-In-Reply-To: <CACT4Y+Y-qPLzn2sur5QnS2h4=Qb2B_5rFxwMKuzhe-hwsReGqg@mail.gmail.com>
-References: <20200115063710.15796-1-dja@axtens.net> <20200115063710.15796-2-dja@axtens.net> <CACT4Y+bAuaeHOcTHqp-=ckOb58fRajpGYk4khNzpS7_OyBDQYQ@mail.gmail.com> <917cc571-a25c-3d3e-547c-c537149834d6@c-s.fr> <CACT4Y+Y-qPLzn2sur5QnS2h4=Qb2B_5rFxwMKuzhe-hwsReGqg@mail.gmail.com>
-Date:   Thu, 16 Jan 2020 16:34:23 +1100
-Message-ID: <87zheoj76o.fsf@dja-thinkpad.axtens.net>
+        Thu, 16 Jan 2020 00:40:04 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G5d5VM174531;
+        Thu, 16 Jan 2020 05:39:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=ZvhUMad29Q7lSqgVCA5o0Rvkn84v5bmJgkpac83lhOw=;
+ b=Xwz8WLjsjRYhW7x+YlXoHgXJ1rLTWNix812/W9nXlfXTwm/gMJoMyfoO0hO0pe+sOQea
+ 3yjMk2iw+MVORoBxt30KWwzlMr7bqH0hmoo9vyvC1SWnRbW9pB3kXcAiEgbix1Yu65HR
+ xLLd+Z30bDonOev13PvgbLHzqy9/Iwv5nSTcCpVVo/QAX/oGRPyvHsbYu0daPGI+/9su
+ PzAWtRJ/bGr9Pt77spupAQ5FjBYqtPyyI82xZ2FS8H47+mmo6l5zRJq+mklQ/o9b3J4k
+ F06qGYgtdT8PquY+zR3x4S3qluI9Lv1BJQg2Z5Q9vrdRq1FeDuVhz7tysitrbgo9i/AU rQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2xf73u0706-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jan 2020 05:39:42 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G5d1te153489;
+        Thu, 16 Jan 2020 05:39:42 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2xhy22nqg1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jan 2020 05:39:41 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00G5dbMg027086;
+        Thu, 16 Jan 2020 05:39:37 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 15 Jan 2020 21:39:37 -0800
+Date:   Wed, 15 Jan 2020 21:39:35 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>, Jan Kara <jack@suse.cz>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [RFC PATCH V2 01/12] fs/stat: Define DAX statx attribute
+Message-ID: <20200116053935.GB8235@magnolia>
+References: <20200110192942.25021-1-ira.weiny@intel.com>
+ <20200110192942.25021-2-ira.weiny@intel.com>
+ <20200115113715.GB2595@quack2.suse.cz>
+ <20200115173834.GD8247@magnolia>
+ <20200115194512.GF23311@iweiny-DESK2.sc.intel.com>
+ <CAPcyv4hwefzruFj02YHYiy8nOpHJFGLKksjiXoRUGpT3C2rDag@mail.gmail.com>
+ <20200115223821.GG23311@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200115223821.GG23311@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001160047
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001160047
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> >> +/*
->> >> + * We assign some test results to these globals to make sure the tests
->> >> + * are not eliminated as dead code.
->> >> + */
->> >> +
->> >> +int int_result;
->> >> +void *ptr_result;
->> >
->> > These are globals, but are not static and don't have kasan_ prefix.
->> > But I guess this does not matter for modules?
->> > Otherwise:
->> >
->> > Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
->> >
->>
->> I think if you make them static, GCC will see they aren't used and will
->> eliminate everything still ?
->
-> static volatile? :)
+On Wed, Jan 15, 2020 at 02:38:21PM -0800, Ira Weiny wrote:
+> On Wed, Jan 15, 2020 at 12:10:50PM -0800, Dan Williams wrote:
+> > On Wed, Jan 15, 2020 at 11:45 AM Ira Weiny <ira.weiny@intel.com> wrote:
+> > >
+> > > On Wed, Jan 15, 2020 at 09:38:34AM -0800, Darrick J. Wong wrote:
+> > > > On Wed, Jan 15, 2020 at 12:37:15PM +0100, Jan Kara wrote:
+> > > > > On Fri 10-01-20 11:29:31, ira.weiny@intel.com wrote:
+> > > > > > From: Ira Weiny <ira.weiny@intel.com>
+> > > > > >
+> 
+> [snip]
+> 
+> > > Ok I changed a couple of things as well.  How does this sound?
+> > >
+> > >
+> > > STATX_ATTR_DAX
+> > >
+> > >         DAX (cpu direct access) is a file mode that attempts to minimize
+> > 
+> > s/mode/state/?
+> 
+> DOH!  yes state...  ;-)
+> 
+> > 
+> > >         software cache effects for both I/O and memory mappings of this
+> > >         file.  It requires a block device and file system which have
+> > >         been configured to support DAX.
+> > 
+> > It may not require a block device in the future.
+> 
+> Ok:
+> 
+> "It requires a file system which has been configured to support DAX." ?
+> 
+> I'm trying to separate the user of the individual STATX DAX flag from the Admin
+> details of configuring the file system and/or devices which supports it.
+> 
+> Also, I just realized that we should follow the format of the other STATX_*
+> attributes.  They all read something like "the file is..."
+> 
+> So I'm adding that text as well.
+> 
+> > 
+> > >
+> > >         DAX generally assumes all accesses are via cpu load / store
+> > >         instructions which can minimize overhead for small accesses, but
+> > >         may adversely affect cpu utilization for large transfers.
+> > >
+> > >         File I/O is done directly to/from user-space buffers and memory
+> > >         mapped I/O may be performed with direct memory mappings that
+> > >         bypass kernel page cache.
+> > >
+> > >         While the DAX property tends to result in data being transferred
+> > >         synchronously, it does not give the same guarantees of
+> > >         synchronous I/O where data and the necessary metadata are
+> > 
+> > Maybe use "O_SYNC I/O" explicitly to further differentiate the 2
+> > meanings of "synchronous" in this sentence?
+> 
+> Done.
+> 
+> > 
+> > >         transferred together.
+> > >
+> > >         A DAX file may support being mapped with the MAP_SYNC flag,
+> > >         which enables a program to use CPU cache flush operations to
+> > 
+> > s/operations/instructions/
+> 
+> Done.
+> 
+> > 
+> > >         persist CPU store operations without an explicit fsync(2).  See
+> > >         mmap(2) for more information.
+> > 
+> > I think this also wants a reference to the Linux interpretation of
+> > platform "persistence domains" we were discussing that here [1], but
+> > maybe it should be part of a "pmem" manpage that can be referenced
+> > from this man page.
+> 
+> Sure, but for now I think referencing mmap for details on MAP_SYNC works.
+> 
+> I suspect that we may have some word smithing once I get this series in and we
+> submit a change to the statx man page itself.  Can I move forward with the
+> following for this patch?
+> 
+> <quote>
+> STATX_ATTR_DAX
+> 
+>         The file is in the DAX (cpu direct access) state.  DAX state
 
-Yeah so these are module globals. They'd be accessible from any other
-files you linked into the module (currently there are no such
-files). They're not visible outside the module because they're not
-EXPORTed.
+Hmm, now that I see it written out, I <cough> kind of like "DAX mode"
+better now. :/
 
-Making them static does lead to them getting eliminated, and 'static
-volatile' seems both gross and like something checkpatch would complain
-about. I'll leave them as they are but stick a kasan_ prefix on them
-just for the additional tidiness.
+"The file is in DAX (CPU direct access) mode.  DAX mode attempts..."
 
-Regards,
-Daniel
+>         attempts to minimize software cache effects for both I/O and
+>         memory mappings of this file.  It requires a file system which
+>         has been configured to support DAX.
+> 
+>         DAX generally assumes all accesses are via cpu load / store
+>         instructions which can minimize overhead for small accesses, but
+>         may adversely affect cpu utilization for large transfers.
+> 
+>         File I/O is done directly to/from user-space buffers and memory
+>         mapped I/O may be performed with direct memory mappings that
+>         bypass kernel page cache.
+> 
+>         While the DAX property tends to result in data being transferred
+>         synchronously, it does not give the same guarantees of
+>         synchronous I/O where data and the necessary metadata are
+>         transferred together.
+
+(I'm frankly not sure that synchronous I/O actually guarantees that the
+metadata has hit stable storage...)
+
+--D
+
+>         A DAX file may support being mapped with the MAP_SYNC flag,
+>         which enables a program to use CPU cache flush instructions to
+>         persist CPU store operations without an explicit fsync(2).  See
+>         mmap(2) for more information.
+> </quote>
+> 
+> Ira
+> 
+> > 
+> > [1]: http://lore.kernel.org/r/20200108064905.170394-1-aneesh.kumar@linux.ibm.com
