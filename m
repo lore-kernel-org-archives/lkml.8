@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CBBDC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 043BCC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B69F2072E
+	by mail.kernel.org (Postfix) with ESMTP id D2D91206E6
 	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:08:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1579201736;
-	bh=bT5/2MJcIpgpjY2eppwjDB2SlZlU7x8jPy5Cpzfz2y0=;
+	bh=3cn6uR4r1i3Inhwez/LWbQO5x28qjVfQFjlcdDRYWq4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bgLHICVK4R7kP3ELeIuqd5VYQ9W3vzXYug7F5YqDj+3rpN5jUXRwCg/s5IB0B9Me8
-	 LSiE/67OH50je1wRmL7vVdaqKe8tlmhq+LscJaAy6ICh3mwLwQkk9JgIoFUcOYSyVM
-	 w7ntvwFlM9Qmv2drmVvhVw/Xa3w33JEatVX810Sc=
+	b=xltvJ2sycs5Y+5v9MQkWg7Lz1Xzmw3KYGWBDNBgubvV2Oq+Yq72fgaNYB9zsYBWS1
+	 rUd7jL8qe339UFsDjHHAYsF9cvVkvsbxg4GflZfXpR2sAZD60iKhVKX+xfP0jyUUti
+	 PvwUXEfJbVthLzZ94URchcdpvjH1/ExzeY4bZQww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437315AbgAPTIx (ORCPT
+        id S2387930AbgAPRAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:08:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51130 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:00:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387924AbgAPRAw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:00:52 -0500
+        id S1732881AbgAPRAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:00:44 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D0B621D56;
-        Thu, 16 Jan 2020 17:00:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1208920730;
+        Thu, 16 Jan 2020 17:00:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194051;
-        bh=bT5/2MJcIpgpjY2eppwjDB2SlZlU7x8jPy5Cpzfz2y0=;
+        s=default; t=1579194043;
+        bh=3cn6uR4r1i3Inhwez/LWbQO5x28qjVfQFjlcdDRYWq4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wj4mjaLPZfvZya4xeBPPnty6U73TvSUyvMcLIiTfHBFSO/js7b9Q0D86QUFs8W4jL
-         PTw2ef9OWwoduo4KibUka6s7ycYs/LGOAFYjzADMuxWIraa5YheS1ogaEWhu9SqmM6
-         XCoiJyUFTQ6TKyQnSTAfctibR2J1fSnVsstor2kY=
+        b=atkAS5eoehYQRQQHpygFLgSvaOn3leanfnQnA9ufpm+49ztezcaq8w/sA9axWTzuH
+         wGpqfy90AzIHqBU6fOXLS5FQ9VANZawpUwGqXZQ2yG72n9sC27+cAt86C+8xID8NSX
+         Z7xvh9QCP+/jgaVTqJLA+d7hq3tiVF+4VZLTkBV0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 166/671] fbdev: chipsfb: remove set but not used variable 'size'
-Date:   Thu, 16 Jan 2020 11:51:15 -0500
-Message-Id: <20200116165940.10720-49-sashal@kernel.org>
+Cc:     Rakesh Pillai <pillair@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 159/671] ath10k: fix dma unmap direction for management frames
+Date:   Thu, 16 Jan 2020 11:51:08 -0500
+Message-Id: <20200116165940.10720-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -63,49 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Rakesh Pillai <pillair@codeaurora.org>
 
-[ Upstream commit 8e71fa5e4d86bedfd26df85381d65d6b4c860020 ]
+[ Upstream commit 6e8a8991e2103dcb6a9cff28f460390e8e360848 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+The management frames transmitted are dma mapped with
+direction TO_DEVICE, but incorrectly mapped with
+direction FROM_DEVICE during tx complete and error cases.
 
-drivers/video/fbdev/chipsfb.c: In function 'chipsfb_pci_init':
-drivers/video/fbdev/chipsfb.c:352:22: warning:
- variable 'size' set but not used [-Wunused-but-set-variable]
+Fix the direction of dma during dma unmap of the
+transmitted management frames.
 
-Fixes: 8c8709334cec ("[PATCH] ppc32: Remove CONFIG_PMAC_PBOOK").
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-[b.zolnierkie: minor commit summary and description fixups]
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Tested HW: WCN3990
+Tested FW: WLAN.HL.2.0-01188-QCAHLSWMTPLZ-1
+
+Fixes: 38a1390e02b7 ("ath10k: dma unmap mgmt tx buffer if wmi cmd send fails")
+Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/chipsfb.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/wireless/ath/ath10k/mac.c | 4 ++--
+ drivers/net/wireless/ath/ath10k/wmi.c | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/video/fbdev/chipsfb.c b/drivers/video/fbdev/chipsfb.c
-index f103665cad43..f9b366d17587 100644
---- a/drivers/video/fbdev/chipsfb.c
-+++ b/drivers/video/fbdev/chipsfb.c
-@@ -350,7 +350,7 @@ static void init_chips(struct fb_info *p, unsigned long addr)
- static int chipsfb_pci_init(struct pci_dev *dp, const struct pci_device_id *ent)
- {
- 	struct fb_info *p;
--	unsigned long addr, size;
-+	unsigned long addr;
- 	unsigned short cmd;
- 	int rc = -ENODEV;
+diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
+index 448e3a8c33a6..a09d7a07e90a 100644
+--- a/drivers/net/wireless/ath/ath10k/mac.c
++++ b/drivers/net/wireless/ath/ath10k/mac.c
+@@ -1,7 +1,7 @@
+ /*
+  * Copyright (c) 2005-2011 Atheros Communications Inc.
+  * Copyright (c) 2011-2017 Qualcomm Atheros, Inc.
+- * Copyright (c) 2018, The Linux Foundation. All rights reserved.
++ * Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+  *
+  * Permission to use, copy, modify, and/or distribute this software for any
+  * purpose with or without fee is hereby granted, provided that the above
+@@ -3853,7 +3853,7 @@ void ath10k_mgmt_over_wmi_tx_work(struct work_struct *work)
+ 				ath10k_warn(ar, "failed to transmit management frame by ref via WMI: %d\n",
+ 					    ret);
+ 				dma_unmap_single(ar->dev, paddr, skb->len,
+-						 DMA_FROM_DEVICE);
++						 DMA_TO_DEVICE);
+ 				ieee80211_free_txskb(ar->hw, skb);
+ 			}
+ 		} else {
+diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
+index aefc92d2c09b..0f6ff7a78e49 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi.c
++++ b/drivers/net/wireless/ath/ath10k/wmi.c
+@@ -1,7 +1,7 @@
+ /*
+  * Copyright (c) 2005-2011 Atheros Communications Inc.
+  * Copyright (c) 2011-2017 Qualcomm Atheros, Inc.
+- * Copyright (c) 2018, The Linux Foundation. All rights reserved.
++ * Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+  *
+  * Permission to use, copy, modify, and/or distribute this software for any
+  * purpose with or without fee is hereby granted, provided that the above
+@@ -2340,7 +2340,7 @@ static int wmi_process_mgmt_tx_comp(struct ath10k *ar, u32 desc_id,
  
-@@ -362,7 +362,6 @@ static int chipsfb_pci_init(struct pci_dev *dp, const struct pci_device_id *ent)
- 	if ((dp->resource[0].flags & IORESOURCE_MEM) == 0)
- 		goto err_disable;
- 	addr = pci_resource_start(dp, 0);
--	size = pci_resource_len(dp, 0);
- 	if (addr == 0)
- 		goto err_disable;
+ 	msdu = pkt_addr->vaddr;
+ 	dma_unmap_single(ar->dev, pkt_addr->paddr,
+-			 msdu->len, DMA_FROM_DEVICE);
++			 msdu->len, DMA_TO_DEVICE);
+ 	info = IEEE80211_SKB_CB(msdu);
  
+ 	if (status)
 -- 
 2.20.1
 
