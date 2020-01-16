@@ -2,127 +2,78 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5F9C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21161C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EC65207E0
+	by mail.kernel.org (Postfix) with ESMTP id EBC88207FF
 	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:57:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="AuoH5wpo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726933AbgAPP5Q (ORCPT
+        id S1726973AbgAPP5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 16 Jan 2020 10:57:16 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:11478 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726730AbgAPP5Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+Received: from mga14.intel.com ([192.55.52.115]:54160 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726741AbgAPP5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jan 2020 10:57:16 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579190235; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=iru6tv9Z7QQCV5dgJVR7xZ6Q0DYAM+fSwdOud0OR7R8=;
- b=AuoH5wpofyk7h930gMWr73mxkX4MEEZEP0hlEH3vkJV+FP5fTypEd3mtn80jLGNp3EBvMqFj
- +G5bV8A5cLOsWDto3gkRxzlkCysIB2l4GeApDwF5qeQgnsFrFEcLXs5oOBxfIywk5tEVDzXu
- bwr4xer7FJhVeHA4HsWduaetjbw=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e2087d5.7efd8b9079d0-smtp-out-n03;
- Thu, 16 Jan 2020 15:57:09 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 715B0C4479C; Thu, 16 Jan 2020 15:57:08 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B9DA2C43383;
-        Thu, 16 Jan 2020 15:57:07 +0000 (UTC)
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 07:57:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,326,1574150400"; 
+   d="scan'208";a="274042229"
+Received: from frederic-mobl1.amr.corp.intel.com (HELO [10.251.150.187]) ([10.251.150.187])
+  by FMSMGA003.fm.intel.com with ESMTP; 16 Jan 2020 07:57:14 -0800
+Subject: Re: [alsa-devel] [PATCH] soundwire: cadence: fix kernel-doc parameter
+ descriptions
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        broonie@kernel.org, srinivas.kandagatla@linaro.org,
+        jank@cadence.com, slawomir.blauciak@intel.com,
+        Sanyog Kale <sanyog.r.kale@intel.com>,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>
+References: <20200114233124.13888-1-pierre-louis.bossart@linux.intel.com>
+ <20200116120459.GP2818@vkoul-mobl> <20200116120918.GR2818@vkoul-mobl>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <bd2dc7aa-d626-6efc-9ba2-9212a23855c4@linux.intel.com>
+Date:   Thu, 16 Jan 2020 08:27:13 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 16 Jan 2020 21:27:07 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Jeffrey Hugo <jhugo@codeaurora.org>, Will Deacon <will@kernel.org>
-Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andre Przywara <andre.przywara@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] arm64: Add KRYO{3,4}XX CPU cores to spectre-v2 safe list
-In-Reply-To: <1a114449-8026-b99d-a4ce-93aac2ffdcb3@codeaurora.org>
-References: <20200116141912.15465-1-saiprakash.ranjan@codeaurora.org>
- <20200116153235.GA18909@willie-the-truck>
- <1a114449-8026-b99d-a4ce-93aac2ffdcb3@codeaurora.org>
-Message-ID: <ff70f2fd2fd8525f919ff9a872d33041@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+In-Reply-To: <20200116120918.GR2818@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jeffrey,
 
-On 2020-01-16 21:12, Jeffrey Hugo wrote:
-> On 1/16/2020 8:32 AM, Will Deacon wrote:
->> [+Jeffrey]
->> 
->> On Thu, Jan 16, 2020 at 07:49:12PM +0530, Sai Prakash Ranjan wrote:
->>> KRYO3XX silver CPU cores and KRYO4XX silver, gold CPU cores
->>> are not affected by Spectre variant 2. Add them to spectre_v2
->>> safe list to correct ARM_SMCCC_ARCH_WORKAROUND_1 warning and
->>> vulnerability sysfs value.
->>> 
->>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->>> ---
->>>   arch/arm64/include/asm/cputype.h | 6 ++++++
->>>   arch/arm64/kernel/cpu_errata.c   | 3 +++
->>>   2 files changed, 9 insertions(+)
->>> 
->>> diff --git a/arch/arm64/include/asm/cputype.h 
->>> b/arch/arm64/include/asm/cputype.h
->>> index aca07c2f6e6e..7219cddeba66 100644
->>> --- a/arch/arm64/include/asm/cputype.h
->>> +++ b/arch/arm64/include/asm/cputype.h
->>> @@ -85,6 +85,9 @@
->>>   #define QCOM_CPU_PART_FALKOR_V1		0x800
->>>   #define QCOM_CPU_PART_FALKOR		0xC00
->>>   #define QCOM_CPU_PART_KRYO		0x200
->>> +#define QCOM_CPU_PART_KRYO_3XX_SILVER	0x803
->>> +#define QCOM_CPU_PART_KRYO_4XX_GOLD	0x804
->>> +#define QCOM_CPU_PART_KRYO_4XX_SILVER	0x805
->> 
->> Jeffrey is the only person I know who understands the CPU naming here, 
->> so
->> I've added him in case this needs either renaming or extending to 
->> cover
->> other CPUs. I wouldn't be at all surprised if we need a function call
->> rather than a bunch of table entries...
+
+On 1/16/20 6:09 AM, Vinod Koul wrote:
+> On 16-01-20, 17:35, Vinod Koul wrote:
+>> On 14-01-20, 17:31, Pierre-Louis Bossart wrote:
+>>> Fix previous update, bad git merge likely. oops.
+>>
+>> Applied, thanks
 > 
-> The added lines look sane to me, from a naming and MIDR perspective.
-> I don't know off hand if these CPUs are really fixed or not.
+> Btw I still have these warns on my next with W=1
 > 
-> I wonder why a "KRYO_3XX_GOLD  0x802" line is not being added.  Sai?
-> 
+> drivers/soundwire/intel_init.c:193:7: warning: no previous prototype for ‘sdw_intel_init’ [-Wmissing-prototypes]
+>   void *sdw_intel_init(acpi_handle *parent_handle, struct sdw_intel_res *res)
+>         ^~~~~~~~~~~~~~
+> drivers/soundwire/cadence_master.c:1022: warning: Function parameter or member 'clock_stop_exit' not described in 'sdw_cdns_init'
+>    LD [M]  drivers/soundwire/soundwire-cadence.o
+> drivers/soundwire/intel_init.c:214: warning: Function parameter or member 'ctx' not described in 'sdw_intel_exit'
+> drivers/soundwire/intel_init.c:214: warning: Excess function parameter 'arg' description in 'sdw_intel_exit'
 
-KRYO_3XX_GOLD is based on Cortex-A75 which is not spectre v2 safe.
-
-Thanks,
-Sai
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+All of this is replaced by new code already submitted for review. try 
+our SOF upstream/soundwire branch and you'll see.
