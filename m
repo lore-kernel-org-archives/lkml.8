@@ -2,115 +2,92 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B362EC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 711F4C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85CD32073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46CF9207FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:42:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IIXiwZgo"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="XSlT6svp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgAPQiV (ORCPT
+        id S1726936AbgAPQm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:38:21 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46707 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbgAPQiV (ORCPT
+        Thu, 16 Jan 2020 11:42:57 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:35465 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbgAPQm5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:38:21 -0500
-Received: by mail-lj1-f196.google.com with SMTP id m26so23358045ljc.13;
-        Thu, 16 Jan 2020 08:38:19 -0800 (PST)
+        Thu, 16 Jan 2020 11:42:57 -0500
+Received: by mail-qt1-f193.google.com with SMTP id e12so19388779qto.2
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 08:42:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=eCcZLabUeQdma4/BEVorroq8W4egZf/HDAPymRFcBkY=;
-        b=IIXiwZgozLSY/IJmPPLGcHn8Ve+FgoEn7EaVcMqcMMeebjIZ+Vw/Hi5mXg02Vz/Uj+
-         a46bCj6F5Pvtwnz/F2fVi4cB/S+HlGcemlkqOaem7j82L4V12zZGZxSk7A3sg0rja3a8
-         sK/l9oGkVNrW2PnfHXbFOQj2aZgV+0EFo4stRtu+YnKWdESXWd5BgNHfRTeqtzjPzv5E
-         KSyNNCZQhZEYpNv8SSu/8Uv07j+T7apB+68x8Kka+HpqoZjlYedvDZmRNhaT8t+r9g/Q
-         uHmmhHpvqzV62J3zdT0RIXNb+q5NFjYx82jmdcuTedHNI/cuHtgLTWsNJF9Hk0dygwkn
-         KWeg==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=b9QE+LiR9p5+Rf6la4xwWf8GBTBoS3t/ZtAxNnRV06w=;
+        b=XSlT6svpQF6nyePrDNcw3mK3DVodnWYihXivlGOCaQJzN08v+8Q7IpWsA+jgk+chSN
+         iOr+CJ0MglJ7e/UF/mitK3eCl6sxBxbaUkG0GZeFVPH9bOvKwF+3U67HVm6XWaS3kPvu
+         zBwDrFq+4FZWKhOy14L6LboCalNQEpKUVK0+8F9JP7nIk+APLQ23X+6IrveLkf+qmA2U
+         WMHRLLUoKEA5Jc3yT3HKWCbejWJ0cw1zzHH0KDiMIBZTNM6Ls8RU9w/546r7NUCOmOrL
+         85RCE7D9OkL8TeXEUV3flv7M1c1sUSpyBScQ7BzMJHUjgRFE/mMoLgRh3LsEF9Wa7OaS
+         vl3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eCcZLabUeQdma4/BEVorroq8W4egZf/HDAPymRFcBkY=;
-        b=ka3vwIE4r9/bqu7uyOH5qdgz5TaQ4Ig5+Un1OC03ML0vIoM0ZhJeBpMRlDmoG1o07A
-         +fPpdx6LpWdQ7KNZwg1bmOCGPMjwjgagSF4dPEU55M4pnC4y3pdGTDfYoeUaIFEQn4Hj
-         VY6omgt/UdBqkpvY/FbmleMnDMlTdX2AmCQR4fq8qzV7pSwPyo7kHZqhrZHMVjLJPjdW
-         fYHpxGIn+++kqW+l7umfzNsP+qH/+zszY3UDsVn9V7cGyLhDhGWfWAAWQFp6UNID3QJf
-         6k34XfRkiPbgXNDpi9cRETqRSa0ebOCrZVkKOR2/JVmnSXsOqNXJKj8/TwOrK2FdL/xm
-         8dKg==
-X-Gm-Message-State: APjAAAXNL0LJUMHwQQ/uPH49BYWZJ0XKa5dXgID7Q+0Nplt1fUOalJY5
-        G3j1k7ThJmtyB+iFcH+tCVKIXnKY
-X-Google-Smtp-Source: APXvYqz+lJxd7qiwm/1Ps+yifU0qnOuTOxg4aKH59jWE+KR0fwxiDO8dW/SZzFqFZZxus4z+RfcSFQ==
-X-Received: by 2002:a2e:9708:: with SMTP id r8mr2871050lji.92.1579192698498;
-        Thu, 16 Jan 2020 08:38:18 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id t27sm11161859ljd.26.2020.01.16.08.38.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jan 2020 08:38:17 -0800 (PST)
-Subject: Re: [PATCH v5 0/8] NVIDIA Tegra I2C driver fixes and improvements
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>, linux-i2c@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200114013442.28448-1-digetx@gmail.com>
- <20200115173535.GF1239@ninjato>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <ea7c484b-d8ae-48b9-84ca-db26902f4654@gmail.com>
-Date:   Thu, 16 Jan 2020 19:38:16 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=b9QE+LiR9p5+Rf6la4xwWf8GBTBoS3t/ZtAxNnRV06w=;
+        b=XsQ+i+E83BHbdk/PHMd7qh/lmH2VGlFuITthi0dNt4IAR8eYZUUpRts6PEBa3oBOMe
+         c/ks8PXkTriwbmWVoKWUIKJ0KRqLnNyf5oItvuypqWBqVc/gUikOT606UrG3dDxT8NJ5
+         Jo6hnbzZAQIakct0o42IUl1rp9dlAWw8vWIGktwB1rJm0ji6/A9z5nzeY2T6/cwACtwM
+         jFeMZeABXNXU8IG5B9GOled1uudSdXmqLVPu7TeSogzdnb9t2j8SWhuRBXDUzbMwG9xA
+         0rB3YQMDK1nSUxMEaQPS5UQYIhGftWszvrvhA0oKNjzC+O3mA0X/N5IG9J4PL2OYgTi4
+         1E9w==
+X-Gm-Message-State: APjAAAUbCjd/K7LV7t1zkhBGlx1GVG4E9FzrqRevgGsUPfLdoBp5NdFt
+        Hv+niflrJDJFCupgiZtuitc/mA==
+X-Google-Smtp-Source: APXvYqySzySo51TXep6EqsPITQBtocJvlfi1ukosJSOLAfK/96Fmm2WbUvhYipDHcE9PO9YzQvYqjQ==
+X-Received: by 2002:ac8:7b24:: with SMTP id l4mr3244090qtu.3.1579192973797;
+        Thu, 16 Jan 2020 08:42:53 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::ae73])
+        by smtp.gmail.com with ESMTPSA id f4sm10245757qka.89.2020.01.16.08.42.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 08:42:52 -0800 (PST)
+Date:   Thu, 16 Jan 2020 11:42:52 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH v2 1/6] mm: kmem: cleanup (__)memcg_kmem_charge_memcg()
+ arguments
+Message-ID: <20200116164252.GA57074@cmpxchg.org>
+References: <20200109202659.752357-1-guro@fb.com>
+ <20200109202659.752357-2-guro@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <20200115173535.GF1239@ninjato>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200109202659.752357-2-guro@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-15.01.2020 20:35, Wolfram Sang пишет:
-> On Tue, Jan 14, 2020 at 04:34:34AM +0300, Dmitry Osipenko wrote:
->> Hello,
->>
->> This patchset adds support for atomic transfers which are required for
->> shutting down machine properly. Secondly, a (not)suspending I2C and some
->> other things are fixed/improved by this small series as well. Please review
->> and apply, thanks in advance!
->>
->> Changelog:
->>
->> v5: Improved commit message of the "Support atomic transfers" patch,
->>     thanks to Wolfram Sang.
->>
->>     Added explicit stable tags to these patches:
->>
->>       i2c: tegra: Fix suspending in active runtime PM state
->>       i2c: tegra: Properly disable runtime PM on driver's probe error
+On Thu, Jan 09, 2020 at 12:26:54PM -0800, Roman Gushchin wrote:
+> The first argument of memcg_kmem_charge_memcg() and
+> __memcg_kmem_charge_memcg() is the page pointer and it's not used.
+> Let's drop it.
 > 
-> Patches 1+2 applied to for-current and patches 3-8 applied to for-next,
-> thanks!
+> Memcg pointer is passed as the last argument. Move it to
+> the first place for consistency with other memcg functions,
+> e.g. __memcg_kmem_uncharge_memcg() or try_charge().
 > 
-> Checkpatch spit out some of those:
-> 
-> CHECK: Lines should not end with a '('
-> 
-> I didn't mind. We can fix it incrementally if you want to fix it.
-> 
+> Signed-off-by: Roman Gushchin <guro@fb.com>
 
-Thank you very much!
+Looks good to me.
 
-I was aware of those minor warnings, but couldn't instantly see how to
-fix them without making code less readable.
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
