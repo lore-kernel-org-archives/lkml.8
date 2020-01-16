@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A1EBC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8825CC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB7FF2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A80C2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:54:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200847;
-	bh=oLW8bhEuqWvslr3yGFZ5KkqJyKsLCXsxNqmIHwnuDoc=;
+	s=default; t=1579200851;
+	bh=XAohMiQdsEPByrIu6KzGUA3M3MrVIHV9qkKScFLTiAU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0rgIeK0FlYIy7UaZ/b1uj1shDAj2NTu/hsvAzydQG67iyTk/YlKLLix2aupcv6cB0
-	 wx4Nuo4yqryVnBhM+JtBHx4v1QcglnVT7f0IV5JEozdi6HNvJ8U9LKpKsKfTtgd8s3
-	 n1jjpWzvgJKGwyMhWTkIo/DoXfpQqaF6+3ZcVwNA=
+	b=AcSQ/+OV1oSTAZmpkSL8E4vRlYH+irJXNNuPwubZXFazlXGkG/ZzlaQeQVyyp6fkA
+	 tPs5hW80+rb7BZD5SX4MWHVMgzig4Y6ExqTa0N5X/O+aEH3tokHPko/TlT4AhJMmFM
+	 PsPWZ3OyMlu22FtsXtFGxsSCd2P8Dz4fAHJtjQPg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389452AbgAPSyF (ORCPT
+        id S2389274AbgAPRIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:54:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41128 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:08:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389278AbgAPRIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:08:05 -0500
+        id S2389228AbgAPRHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:07:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CB592192A;
-        Thu, 16 Jan 2020 17:08:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92D5D20663;
+        Thu, 16 Jan 2020 17:07:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194484;
-        bh=oLW8bhEuqWvslr3yGFZ5KkqJyKsLCXsxNqmIHwnuDoc=;
+        s=default; t=1579194471;
+        bh=XAohMiQdsEPByrIu6KzGUA3M3MrVIHV9qkKScFLTiAU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RxTH9/OEO6pTnNDPpRW5Ljx++8CFOvHD8pyatmLxZYVowwxb65MY/4cbKYIaF/PFw
-         JeC0/hnN584QHAX3QleO/xI5cBChVotPlj+67f40LURI2w/fVfU5Z5/D1wqZEvQttt
-         wypq/Qepnai5xOp4aSfAbrvrLbUcI9pkVWu6wEXg=
+        b=NRlX9eqQXkUub4vEc3my0BOIqELnx/Mx1/9F8NB/DZIjnZNxlUoesG8JdWBlhJZmj
+         5pUIpOn7oR9qy2VOitW1zNQV9d+VzteOHXCK/L0P7v8p1xK0o4C8xmP/5SRRaoaQOO
+         afe7yIoyD1UnsYrN8FP9LzFIgsd8JJenlzjNpDkM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-wpan@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 385/671] inet: frags: call inet_frags_fini() after unregister_pernet_subsys()
-Date:   Thu, 16 Jan 2020 12:00:23 -0500
-Message-Id: <20200116170509.12787-122-sashal@kernel.org>
+Cc:     Erwan Le Ray <erwan.leray@st.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 376/671] serial: stm32: fix transmit_chars when tx is stopped
+Date:   Thu, 16 Jan 2020 12:00:14 -0500
+Message-Id: <20200116170509.12787-113-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,54 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Erwan Le Ray <erwan.leray@st.com>
 
-[ Upstream commit ae7352d384a552d8c799c242e74a934809990a71 ]
+[ Upstream commit b83b957c91f68e53f0dc596e129e8305761f2a32 ]
 
-Both IPv6 and 6lowpan are calling inet_frags_fini() too soon.
+Disables the tx irq  when the transmission is ended and updates stop_tx
+conditions for code cleanup.
 
-inet_frags_fini() is dismantling a kmem_cache, that might be needed
-later when unregister_pernet_subsys() eventually has to remove
-frags queues from hash tables and free them.
-
-This fixes potential use-after-free, and is a prereq for the following patch.
-
-Fixes: d4ad4d22e7ac ("inet: frags: use kmem_cache for inet_frag_queue")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 48a6092fb41f ("serial: stm32-usart: Add STM32 USART Driver")
+Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ieee802154/6lowpan/reassembly.c | 2 +-
- net/ipv6/reassembly.c               | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/tty/serial/stm32-usart.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/net/ieee802154/6lowpan/reassembly.c b/net/ieee802154/6lowpan/reassembly.c
-index e7857a8ac86d..f3074249c6fc 100644
---- a/net/ieee802154/6lowpan/reassembly.c
-+++ b/net/ieee802154/6lowpan/reassembly.c
-@@ -629,7 +629,7 @@ int __init lowpan_net_frag_init(void)
+diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
+index 0a7953e5ce47..2e7757d5e5d8 100644
+--- a/drivers/tty/serial/stm32-usart.c
++++ b/drivers/tty/serial/stm32-usart.c
+@@ -420,13 +420,8 @@ static void stm32_transmit_chars(struct uart_port *port)
+ 		return;
+ 	}
  
- void lowpan_net_frag_exit(void)
- {
--	inet_frags_fini(&lowpan_frags);
- 	lowpan_frags_sysctl_unregister();
- 	unregister_pernet_subsys(&lowpan_frags_ops);
-+	inet_frags_fini(&lowpan_frags);
- }
-diff --git a/net/ipv6/reassembly.c b/net/ipv6/reassembly.c
-index 095825f964e2..c6132e39ab16 100644
---- a/net/ipv6/reassembly.c
-+++ b/net/ipv6/reassembly.c
-@@ -593,8 +593,8 @@ int __init ipv6_frag_init(void)
+-	if (uart_tx_stopped(port)) {
+-		stm32_stop_tx(port);
+-		return;
+-	}
+-
+-	if (uart_circ_empty(xmit)) {
+-		stm32_stop_tx(port);
++	if (uart_circ_empty(xmit) || uart_tx_stopped(port)) {
++		stm32_clr_bits(port, ofs->cr1, USART_CR1_TXEIE);
+ 		return;
+ 	}
  
- void ipv6_frag_exit(void)
- {
--	inet_frags_fini(&ip6_frags);
- 	ip6_frags_sysctl_unregister();
- 	unregister_pernet_subsys(&ip6_frags_ops);
- 	inet6_del_protocol(&frag_protocol, IPPROTO_FRAGMENT);
-+	inet_frags_fini(&ip6_frags);
+@@ -439,7 +434,7 @@ static void stm32_transmit_chars(struct uart_port *port)
+ 		uart_write_wakeup(port);
+ 
+ 	if (uart_circ_empty(xmit))
+-		stm32_stop_tx(port);
++		stm32_clr_bits(port, ofs->cr1, USART_CR1_TXEIE);
  }
+ 
+ static irqreturn_t stm32_interrupt(int irq, void *ptr)
 -- 
 2.20.1
 
