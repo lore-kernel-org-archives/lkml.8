@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D9DC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E29BC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CFF12072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2A0B22522
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:35:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217704;
-	bh=yPILc2EaqVkJZiRtfHC31Gm8I44unw4nu8DjMiE840U=;
+	s=default; t=1579217712;
+	bh=+Bey1xABKC1HL/CAqE3249BlH7P2i2zLFnUs7uty0ro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HKtW+U1QyQcN+3XQpumG/DpOzByNutzsqyz2cwkwh4GBqZHXvv0pBXG4a6Wnsw2d5
-	 dhInyFWN+bZRI4PmjqGYyRFHSe+wiKjQ0qRgU5SffBkAz5c3rFYig8xDkC6+4gCYmy
-	 rdGLJPfo5e7yvkCqB1B78zXtgf1pMU+dK3PH9vBs=
+	b=s4yPn7UE4O1exdu2LbudIKas21LfcwM8IncMXzY0S4rH/6dURMYRRDIkndnW2tFW3
+	 3FZ2tPWy98ktTHtsFG7/SUI/hK5BDb86C+JLxtWNNUpF1JtQi+M4GH5Hf79x5aS7+f
+	 v5y4Mt0GsTESrW687DolzBYDIfTUqmGClQToIufU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404120AbgAPXcn (ORCPT
+        id S2404222AbgAPXfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:32:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42064 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:35:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391582AbgAPXce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:32:34 -0500
+        id S2404089AbgAPXci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:32:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A564206D9;
-        Thu, 16 Jan 2020 23:32:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCA5F206D9;
+        Thu, 16 Jan 2020 23:32:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217553;
-        bh=yPILc2EaqVkJZiRtfHC31Gm8I44unw4nu8DjMiE840U=;
+        s=default; t=1579217558;
+        bh=+Bey1xABKC1HL/CAqE3249BlH7P2i2zLFnUs7uty0ro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t+BjNGwJsFUQlCQVVLC4GvksiIfp8QKB353e87CMHewZOqWNRxz0bGerKNXejBnxI
-         kcisUfynCxTlKgYcWkQV2+cn6g2s6IWo6Fk2atAc/U7bcM4P9qLZnjE4L1xridPLG+
-         RAt30PhpeUyGOQQkql9C6KmQ26Lj1Vok9zIgA/7o=
+        b=aoNIjrWaor9TuHMgxnH7/BUMEiuFLcWMQ0NmPcnVGmJHq0tS65a/yuuoZolKBfOfQ
+         r+HWgXOruzDR4Xn9d8n+tIGT8uPr1POpolwefSpiN6OGxU2aZD0wwfn7Bs8PJ6TVp1
+         SLqyS5gU7nv1vUPSr0b1ulI0/gWDgpYWAb1hrIgo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Loic Poulain <loic.poulain@linaro.org>
-Subject: [PATCH 4.14 45/71] arm64: dts: apq8096-db820c: Increase load on l21 for SDCARD
-Date:   Fri, 17 Jan 2020 00:18:43 +0100
-Message-Id: <20200116231715.985523042@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 4.14 47/71] compat_ioctl: handle SIOCOUTQNSD
+Date:   Fri, 17 Jan 2020 00:18:45 +0100
+Message-Id: <20200116231716.236179399@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231709.377772748@linuxfoundation.org>
 References: <20200116231709.377772748@linuxfoundation.org>
@@ -60,35 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Loic Poulain <loic.poulain@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit e38161bd325ea541ef2f258d8e28281077dde524 upstream.
+commit 9d7bf41fafa5b5ddd4c13eb39446b0045f0a8167 upstream.
 
-In the same way as for msm8974-hammerhead, l21 load, used for SDCARD
-VMMC, needs to be increased in order to prevent any voltage drop issues
-(due to limited current) happening with some SDCARDS or during specific
-operations (e.g. write).
+Unlike the normal SIOCOUTQ, SIOCOUTQNSD was never handled in compat
+mode. Add it to the common socket compat handler along with similar
+ones.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Fixes: 660a9763c6a9 (arm64: dts: qcom: db820c: Add pm8994 regulator node)
-Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixes: 2f4e1b397097 ("tcp: ioctl type SIOCOUTQNSD returns amount of data not sent")
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: netdev@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi |    2 ++
- 1 file changed, 2 insertions(+)
+ net/socket.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -262,6 +262,8 @@
- 				l21 {
- 					regulator-min-microvolt = <2950000>;
- 					regulator-max-microvolt = <2950000>;
-+					regulator-allow-set-load;
-+					regulator-system-load = <200000>;
- 				};
- 				l22 {
- 					regulator-min-microvolt = <3300000>;
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -3267,6 +3267,7 @@ static int compat_sock_ioctl_trans(struc
+ 	case SIOCSARP:
+ 	case SIOCGARP:
+ 	case SIOCDARP:
++	case SIOCOUTQNSD:
+ 	case SIOCATMARK:
+ 		return sock_do_ioctl(net, sock, cmd, arg);
+ 	}
 
 
