@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C85EC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B52BC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B305206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:53:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC8FF20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200803;
-	bh=3HHfS9JyXTsPeo4L+d32CBBCjD70uuHQHAkyQG+Vet0=;
+	s=default; t=1579200812;
+	bh=t9t6gy9pWd6c2UzdRr7ngXWkrFc5wXb5Du/woiRoHnE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WYfQPPTeU1vRIG6tH23uISs/T0sKEQPBJiyadnHvAk04ARyDM0HwCiLFqd9NvuPli
-	 smJU1LQuG3OFTZhOWM5wAW37HJx2LeksCgox+z0UUFsL2GIvZKMfjXBDcUcmdgdnZk
-	 fAhX7R9jlXmpGjGwEWKzy6TvAa1JCq0W0/nfTK8Q=
+	b=g/l5FsFElZ+jPgXrRekkyjzsiBLnV8aXuh7iqx/aLmmck2pRhKLxructi8Yb4/WxZ
+	 8KDgS+uFaTO5a36kM4/tPxoZF/OpzUpMf57zBshj7rqi+vRHEOLT6SNT1iTIrgl+Ex
+	 9jji9cjdYYN7ZqdwpKO16ZhCcwIJHr4c//xhhIUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436958AbgAPSxW (ORCPT
+        id S2437138AbgAPSxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:53:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41602 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:53:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388563AbgAPRIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:08:16 -0500
+        id S1729262AbgAPRIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:08:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B15A2467E;
-        Thu, 16 Jan 2020 17:08:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47CC224687;
+        Thu, 16 Jan 2020 17:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194496;
-        bh=3HHfS9JyXTsPeo4L+d32CBBCjD70uuHQHAkyQG+Vet0=;
+        s=default; t=1579194492;
+        bh=t9t6gy9pWd6c2UzdRr7ngXWkrFc5wXb5Du/woiRoHnE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nsKXi8THRlduP2alsLDLBH4iDyaPv00XqYbBhU1Y5IMtH490i86yo9B7PXt1B+VOv
-         RGkVoFp7/zhGnNIGNR+Bmpga0zDZwks9jJdfxDO2bO2dvk7ymCQVY9Xd7y9TnT0TW6
-         +6bJjPBdwRde+g994qVkXcpYwb7CNTJtiHxlWC/0=
+        b=Yxht9JtTwu4QISo4JeeXgxgGWxHDirrq1B/18c8aq6BZfXmVkF/2V/p3fFrHj5gTU
+         QKm2SRroZk3Vh05JNa8F7BiZMqeXafkMCkZ1P04vx0jzDMK12Rj6zgxNfcoDmKrcUU
+         Ld2SdCDi2w9wWo90DvRNWlU3jvvytphPBwsmswug=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 393/671] phy: qcom-qusb2: fix missing assignment of ret when calling clk_prepare_enable
-Date:   Thu, 16 Jan 2020 12:00:31 -0500
-Message-Id: <20200116170509.12787-130-sashal@kernel.org>
+Cc:     Stephen Hemminger <stephen@networkplumber.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 390/671] net: core: support XDP generic on stacked devices.
+Date:   Thu, 16 Jan 2020 12:00:28 -0500
+Message-Id: <20200116170509.12787-127-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,36 +61,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Stephen Hemminger <stephen@networkplumber.org>
 
-[ Upstream commit d98010817a26eba8d4d1e8a639e0b7d7f042308a ]
+[ Upstream commit 458bf2f224f04a513b0be972f8708e78ee2c986e ]
 
-The error return from the call to clk_prepare_enable is not being assigned
-to variable ret even though ret is being used to check if the call failed.
-Fix this by adding in the missing assignment.
+When a device is stacked like (team, bonding, failsafe or netvsc) the
+XDP generic program for the parent device was not called.
 
-Addresses-Coverity: ("Logically dead code")
-Fixes: 891a96f65ac3 ("phy: qcom-qusb2: Add support for runtime PM")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Move the call to XDP generic inside __netif_receive_skb_core where
+it can be done multiple times for stacked case.
+
+Fixes: d445516966dc ("net: xdp: support xdp generic on virtual devices")
+Signed-off-by: Stephen Hemminger <sthemmin@microsoft.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/qualcomm/phy-qcom-qusb2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/core/dev.c | 58 +++++++++++---------------------------------------
+ 1 file changed, 12 insertions(+), 46 deletions(-)
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qusb2.c b/drivers/phy/qualcomm/phy-qcom-qusb2.c
-index 69c92843eb3b..9b7ae93e9df1 100644
---- a/drivers/phy/qualcomm/phy-qcom-qusb2.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qusb2.c
-@@ -526,7 +526,7 @@ static int __maybe_unused qusb2_phy_runtime_resume(struct device *dev)
- 	}
+diff --git a/net/core/dev.c b/net/core/dev.c
+index a26d87073f71..935fe158cfaf 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -4465,23 +4465,6 @@ static int netif_rx_internal(struct sk_buff *skb)
  
- 	if (!qphy->has_se_clk_scheme) {
--		clk_prepare_enable(qphy->ref_clk);
-+		ret = clk_prepare_enable(qphy->ref_clk);
- 		if (ret) {
- 			dev_err(dev, "failed to enable ref clk, %d\n", ret);
- 			goto disable_ahb_clk;
+ 	trace_netif_rx(skb);
+ 
+-	if (static_branch_unlikely(&generic_xdp_needed_key)) {
+-		int ret;
+-
+-		preempt_disable();
+-		rcu_read_lock();
+-		ret = do_xdp_generic(rcu_dereference(skb->dev->xdp_prog), skb);
+-		rcu_read_unlock();
+-		preempt_enable();
+-
+-		/* Consider XDP consuming the packet a success from
+-		 * the netdev point of view we do not want to count
+-		 * this as an error.
+-		 */
+-		if (ret != XDP_PASS)
+-			return NET_RX_SUCCESS;
+-	}
+-
+ #ifdef CONFIG_RPS
+ 	if (static_key_false(&rps_needed)) {
+ 		struct rps_dev_flow voidflow, *rflow = &voidflow;
+@@ -4815,6 +4798,18 @@ static int __netif_receive_skb_core(struct sk_buff *skb, bool pfmemalloc,
+ 
+ 	__this_cpu_inc(softnet_data.processed);
+ 
++	if (static_branch_unlikely(&generic_xdp_needed_key)) {
++		int ret2;
++
++		preempt_disable();
++		ret2 = do_xdp_generic(rcu_dereference(skb->dev->xdp_prog), skb);
++		preempt_enable();
++
++		if (ret2 != XDP_PASS)
++			return NET_RX_DROP;
++		skb_reset_mac_len(skb);
++	}
++
+ 	if (skb->protocol == cpu_to_be16(ETH_P_8021Q) ||
+ 	    skb->protocol == cpu_to_be16(ETH_P_8021AD)) {
+ 		skb = skb_vlan_untag(skb);
+@@ -5133,19 +5128,6 @@ static int netif_receive_skb_internal(struct sk_buff *skb)
+ 	if (skb_defer_rx_timestamp(skb))
+ 		return NET_RX_SUCCESS;
+ 
+-	if (static_branch_unlikely(&generic_xdp_needed_key)) {
+-		int ret;
+-
+-		preempt_disable();
+-		rcu_read_lock();
+-		ret = do_xdp_generic(rcu_dereference(skb->dev->xdp_prog), skb);
+-		rcu_read_unlock();
+-		preempt_enable();
+-
+-		if (ret != XDP_PASS)
+-			return NET_RX_DROP;
+-	}
+-
+ 	rcu_read_lock();
+ #ifdef CONFIG_RPS
+ 	if (static_key_false(&rps_needed)) {
+@@ -5166,7 +5148,6 @@ static int netif_receive_skb_internal(struct sk_buff *skb)
+ 
+ static void netif_receive_skb_list_internal(struct list_head *head)
+ {
+-	struct bpf_prog *xdp_prog = NULL;
+ 	struct sk_buff *skb, *next;
+ 	struct list_head sublist;
+ 
+@@ -5179,21 +5160,6 @@ static void netif_receive_skb_list_internal(struct list_head *head)
+ 	}
+ 	list_splice_init(&sublist, head);
+ 
+-	if (static_branch_unlikely(&generic_xdp_needed_key)) {
+-		preempt_disable();
+-		rcu_read_lock();
+-		list_for_each_entry_safe(skb, next, head, list) {
+-			xdp_prog = rcu_dereference(skb->dev->xdp_prog);
+-			skb_list_del_init(skb);
+-			if (do_xdp_generic(xdp_prog, skb) == XDP_PASS)
+-				list_add_tail(&skb->list, &sublist);
+-		}
+-		rcu_read_unlock();
+-		preempt_enable();
+-		/* Put passed packets back on main list */
+-		list_splice_init(&sublist, head);
+-	}
+-
+ 	rcu_read_lock();
+ #ifdef CONFIG_RPS
+ 	if (static_key_false(&rps_needed)) {
 -- 
 2.20.1
 
