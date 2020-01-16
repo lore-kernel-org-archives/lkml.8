@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55810C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1AACC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26E9124656
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 895BC21D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:55:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193696;
-	bh=pVmR2uthoKLDfspvx7wxCvETNXMl8k1lcP38v1hsNyA=;
+	s=default; t=1579193703;
+	bh=KwjDVFbYw+rVNx+dp2OcqyOgdPW3JmecrfBX7PlNNsA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vcnhpBgUFO+KhdoLXO/+GFTsVQBydtH3etWRvGy7BsRN0xlJpMZw+7Jy0Raj4iAO8
-	 /I2Oh8fcfW//6yfcwEEQZwFMnEM2+ZECblIlOIFqNEYFa24FhTmhlAvbWSQtGaZ1Pl
-	 QY6pXrRqPbppoHyVfnH/pWSeg16rQ0XD45ixlpjE=
+	b=qrwxGkWHUP0Z7nIvqLULiHuIJfe/SK9eMIXy7d8viiH479PXn4yB/4yCoTWBXtjKw
+	 Uf2BZsGge5XKyYXapYSpt6/ckWxfC8IP6j9wU0p+onjptlcpl3yq32WZCx7Pfw489G
+	 bXkxZweC5q6s6Rl0G8S9JtlnbyePVIqtk+exjTCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730977AbgAPQyz (ORCPT
+        id S1730113AbgAPQyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:54:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39384 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:54:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730776AbgAPQyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:54:41 -0500
+        id S1729225AbgAPQyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:54:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F095C2176D;
-        Thu, 16 Jan 2020 16:54:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E308E20730;
+        Thu, 16 Jan 2020 16:54:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193680;
-        bh=pVmR2uthoKLDfspvx7wxCvETNXMl8k1lcP38v1hsNyA=;
+        s=default; t=1579193674;
+        bh=KwjDVFbYw+rVNx+dp2OcqyOgdPW3JmecrfBX7PlNNsA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YNVK5fRUJA4cT/CqhYY6CGJeWP8PRjN15R7rJhEdSn2qZp0svvM9bW8Z5vqTf14Bi
-         9HSUsi+PCbiaTSoIa8/DPfaCHwTJzhZn9wRqeiS0belC2Jcj50e2nCiD5u3ztJnfjY
-         OE5rZWww+6XZU/FOkazHAZiYPkGuSOupm6o+Mg7o=
+        b=KF/bgcjUQ6fGDGbGXgCFC0sOBU85OD+e6lk9JAy8++Rz7MEWP2iXne2rkREFyc1kD
+         hTTqV8SPfUzgAseu1GJLVv8nuDx336Ig1jD+ZOJl7O/OKRKPCnHtRm4GKRriP4m1UY
+         0MBseTMhv0GCmQNoDuBXaCePifxZL4dLpmc3n5Q8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>,
-        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 204/205] scsi: mpt3sas: Fix double free in attach error handling
-Date:   Thu, 16 Jan 2020 11:42:59 -0500
-Message-Id: <20200116164300.6705-204-sashal@kernel.org>
+Cc:     Patrick Steinhardt <ps@pks.im>,
+        "J . Bruce Fields" <bfields@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 199/205] nfsd: depend on CRYPTO_MD5 for legacy client tracking
+Date:   Thu, 16 Jan 2020 11:42:54 -0500
+Message-Id: <20200116164300.6705-199-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -61,45 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Patrick Steinhardt <ps@pks.im>
 
-[ Upstream commit ee560e7bbab0c10cf3f0e71997fbc354ab2ee5cb ]
+[ Upstream commit 38a2204f5298620e8a1c3b1dc7b831425106dbc0 ]
 
-The caller also calls _base_release_memory_pools() on error so it leads to
-a number of double frees:
+The legacy client tracking infrastructure of nfsd makes use of MD5 to
+derive a client's recovery directory name. As the nfsd module doesn't
+declare any dependency on CRYPTO_MD5, though, it may fail to allocate
+the hash if the kernel was compiled without it. As a result, generation
+of client recovery directories will fail with the following error:
 
-drivers/scsi/mpt3sas/mpt3sas_base.c:7207 mpt3sas_base_attach() warn: 'ioc->chain_dma_pool' double freed
-drivers/scsi/mpt3sas/mpt3sas_base.c:7207 mpt3sas_base_attach() warn: 'ioc->hpr_lookup' double freed
-drivers/scsi/mpt3sas/mpt3sas_base.c:7207 mpt3sas_base_attach() warn: 'ioc->internal_lookup' double freed
-drivers/scsi/mpt3sas/mpt3sas_base.c:7207 mpt3sas_base_attach() warn: 'ioc->pcie_sgl_dma_pool' double freed
-drivers/scsi/mpt3sas/mpt3sas_base.c:7207 mpt3sas_base_attach() warn: 'ioc->reply_dma_pool' double freed
-drivers/scsi/mpt3sas/mpt3sas_base.c:7207 mpt3sas_base_attach() warn: 'ioc->reply_free_dma_pool' double freed
-drivers/scsi/mpt3sas/mpt3sas_base.c:7207 mpt3sas_base_attach() warn: 'ioc->reply_post_free_array_dma_pool' double freed
-drivers/scsi/mpt3sas/mpt3sas_base.c:7207 mpt3sas_base_attach() warn: 'ioc->reply_post_free_dma_pool' double freed
-drivers/scsi/mpt3sas/mpt3sas_base.c:7207 mpt3sas_base_attach() warn: 'ioc->sense_dma_pool' double freed
+    NFSD: unable to generate recoverydir name
 
-Fixes: 74522a92bbf0 ("scsi: mpt3sas: Optimize I/O memory consumption in driver.")
-Link: https://lore.kernel.org/r/20191203093652.gyntgvnkw2udatyc@kili.mountain
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+The explicit dependency on CRYPTO_MD5 was removed as redundant back in
+6aaa67b5f3b9 (NFSD: Remove redundant "select" clauses in fs/Kconfig
+2008-02-11) as it was already implicitly selected via RPCSEC_GSS_KRB5.
+This broke when RPCSEC_GSS_KRB5 was made optional for NFSv4 in commit
+df486a25900f (NFS: Fix the selection of security flavours in Kconfig) at
+a later point.
+
+Fix the issue by adding back an explicit dependency on CRYPTO_MD5.
+
+Fixes: df486a25900f (NFS: Fix the selection of security flavours in Kconfig)
+Signed-off-by: Patrick Steinhardt <ps@pks.im>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/mpt3sas/mpt3sas_base.c | 1 -
- 1 file changed, 1 deletion(-)
+ fs/nfsd/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_base.c b/drivers/scsi/mpt3sas/mpt3sas_base.c
-index fea3cb6a090b..752b71cfbe12 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_base.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
-@@ -5234,7 +5234,6 @@ _base_allocate_memory_pools(struct MPT3SAS_ADAPTER *ioc)
- 					&ct->chain_buffer_dma);
- 			if (!ct->chain_buffer) {
- 				ioc_err(ioc, "chain_lookup: pci_pool_alloc failed\n");
--				_base_release_memory_pools(ioc);
- 				goto out;
- 			}
- 		}
+diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
+index c4b1a89b8845..f2f81561ebb6 100644
+--- a/fs/nfsd/Kconfig
++++ b/fs/nfsd/Kconfig
+@@ -73,6 +73,7 @@ config NFSD_V4
+ 	select NFSD_V3
+ 	select FS_POSIX_ACL
+ 	select SUNRPC_GSS
++	select CRYPTO_MD5
+ 	select CRYPTO_SHA256
+ 	select GRACE_PERIOD
+ 	help
 -- 
 2.20.1
 
