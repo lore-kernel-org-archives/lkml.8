@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A44AC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D37A7C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2671C20684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA24120684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:21:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195273;
-	bh=pVwNJTS267s0DwV6idTs9NtxVWaFw9mF8KkJysJqDvQ=;
+	s=default; t=1579195281;
+	bh=cyolrKyQqcWnUj1w/WpO+8ZHLz1C8xJEUPgOyPSTNaY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OPKZi9HZh3EPrXyEGrwSAOccEjsIu5TCoYR+6K3RnsqK8QKReXfC7Jv5wK+MYeoM7
-	 V465RViVyEIayQtPq7SKDNEyan0gMfx1mvmPrTpa2IuJ6N0QvujZj5F7zxvvjgHTQq
-	 mHBnVFviXpmEJD3Zy1D19/4xvUlnchejRq5hTXx4=
+	b=m5Nf7jOvjsAlvZBjoy3ISyXvXGdInqvA65PDo3a5A1Tkoq3T/YUZUtCdwIsVZHzC2
+	 CSFLTTPIZSnwDrDeJVCGBvjEn8ItlR97/fIsG0QA6L1PAypjqChVjMP6Zxf+yiJxkx
+	 HzzZdqKiqUo6px/kfh5goUVvrobk752e4yZUZaFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391625AbgAPRVM (ORCPT
+        id S2391197AbgAPRRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:21:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43708 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:17:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391249AbgAPRRs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:17:48 -0500
+        id S2391238AbgAPRRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:17:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7509822522;
-        Thu, 16 Jan 2020 17:17:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF35220730;
+        Thu, 16 Jan 2020 17:17:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195067;
-        bh=pVwNJTS267s0DwV6idTs9NtxVWaFw9mF8KkJysJqDvQ=;
+        s=default; t=1579195054;
+        bh=cyolrKyQqcWnUj1w/WpO+8ZHLz1C8xJEUPgOyPSTNaY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vF5LgtYKaVoZQhUUikUtq3Bs+zc3ci3wcvAqwnm3Ff8X/NaJv7PmOqO9b3varnS2E
-         kjdvPVjgrTqK3h5NxtyTxIsIZVBx2xHAWbux026+MUrw0VTibMSvgPNXfvlVO2BuA0
-         4d5KeI8iyhzObv0OIxs5zmT9lX6+0bdSKexxLY8s=
+        b=YR1HFR7FBUCqiLf9TW4p0MgDCbB4vnrY6I6JytCxEjORw0JWV4g/LfS8EiGsQagX5
+         Gw2M5CfU5CDSXqkNl1ylNHsW1FmeOPjjKbCNvFzh05uGLQYzIMUC85SiT8ST+lTi8r
+         Mt7agqCoVxC7Pq4F9FdMhKj0l3ZEEBSayiab2NRQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yuval Shaia <yuval.shaia@oracle.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Zhu Yanjun <yanjun.zhu@oracle.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 021/371] IB/rxe: Fix incorrect cache cleanup in error flow
-Date:   Thu, 16 Jan 2020 12:11:29 -0500
-Message-Id: <20200116171719.16965-21-sashal@kernel.org>
+Cc:     "Spencer E. Olson" <olsonse@umich.edu>,
+        Ian Abbott <abbotti@mev.co.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 4.14 011/371] staging: comedi: ni_mio_common: protect register write overflow
+Date:   Thu, 16 Jan 2020 12:11:19 -0500
+Message-Id: <20200116171719.16965-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116171719.16965-1-sashal@kernel.org>
 References: <20200116171719.16965-1-sashal@kernel.org>
@@ -62,73 +60,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuval Shaia <yuval.shaia@oracle.com>
+From: "Spencer E. Olson" <olsonse@umich.edu>
 
-[ Upstream commit 6db21d8986e14e2e86573a3b055b05296188bd2c ]
+[ Upstream commit 1cbca5852d6c16e85a21487a15d211195aacd4a1 ]
 
-Array iterator stays at the same slot, fix it.
+Fixes two problems introduced as early as
+commit 03aef4b6dc12  ("Staging: comedi: add ni_mio_common code"):
+(1) Ensures that the last four bits of NISTC_RTSI_TRIGB_OUT_REG register is
+    not unduly overwritten on e-series devices.  On e-series devices, the
+    first three of the last four bits are reserved.  The last bit defines
+    the output selection of the RGOUT0 pin, otherwise known as
+    RTSI_Sub_Selection.  For m-series devices, these last four bits are
+    indeed used as the output selection of the RTSI7 pin (and the
+    RTSI_Sub_Selection bit for the RGOUT0 pin is moved to the
+    RTSI_Trig_Direction register.
+(2) Allows all 4 RTSI_BRD lines to be treated as valid sources for RTSI
+    lines.
 
-Fixes: 8700e3e7c485 ("Soft RoCE driver")
-Signed-off-by: Yuval Shaia <yuval.shaia@oracle.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Zhu Yanjun <yanjun.zhu@oracle.com>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+This patch also cleans up the ni_get_rtsi_routing command for readability.
+
+Fixes: 03aef4b6dc12  ("Staging: comedi: add ni_mio_common code")
+Signed-off-by: Spencer E. Olson <olsonse@umich.edu>
+Reviewed-by: Ian Abbott <abbotti@mev.co.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/rxe/rxe_pool.c | 26 ++++++++++++++------------
- 1 file changed, 14 insertions(+), 12 deletions(-)
+ .../staging/comedi/drivers/ni_mio_common.c    | 24 +++++++++++++------
+ 1 file changed, 17 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/infiniband/sw/rxe/rxe_pool.c b/drivers/infiniband/sw/rxe/rxe_pool.c
-index b4a8acc7bb7d..0e2425f28233 100644
---- a/drivers/infiniband/sw/rxe/rxe_pool.c
-+++ b/drivers/infiniband/sw/rxe/rxe_pool.c
-@@ -112,6 +112,18 @@ static inline struct kmem_cache *pool_cache(struct rxe_pool *pool)
- 	return rxe_type_info[pool->type].cache;
+diff --git a/drivers/staging/comedi/drivers/ni_mio_common.c b/drivers/staging/comedi/drivers/ni_mio_common.c
+index 36361bdf934a..2f82dcb1fd06 100644
+--- a/drivers/staging/comedi/drivers/ni_mio_common.c
++++ b/drivers/staging/comedi/drivers/ni_mio_common.c
+@@ -4991,7 +4991,10 @@ static int ni_valid_rtsi_output_source(struct comedi_device *dev,
+ 	case NI_RTSI_OUTPUT_G_SRC0:
+ 	case NI_RTSI_OUTPUT_G_GATE0:
+ 	case NI_RTSI_OUTPUT_RGOUT0:
+-	case NI_RTSI_OUTPUT_RTSI_BRD_0:
++	case NI_RTSI_OUTPUT_RTSI_BRD(0):
++	case NI_RTSI_OUTPUT_RTSI_BRD(1):
++	case NI_RTSI_OUTPUT_RTSI_BRD(2):
++	case NI_RTSI_OUTPUT_RTSI_BRD(3):
+ 		return 1;
+ 	case NI_RTSI_OUTPUT_RTSI_OSC:
+ 		return (devpriv->is_m_series) ? 1 : 0;
+@@ -5012,11 +5015,18 @@ static int ni_set_rtsi_routing(struct comedi_device *dev,
+ 		devpriv->rtsi_trig_a_output_reg |= NISTC_RTSI_TRIG(chan, src);
+ 		ni_stc_writew(dev, devpriv->rtsi_trig_a_output_reg,
+ 			      NISTC_RTSI_TRIGA_OUT_REG);
+-	} else if (chan < 8) {
++	} else if (chan < NISTC_RTSI_TRIG_NUM_CHAN(devpriv->is_m_series)) {
+ 		devpriv->rtsi_trig_b_output_reg &= ~NISTC_RTSI_TRIG_MASK(chan);
+ 		devpriv->rtsi_trig_b_output_reg |= NISTC_RTSI_TRIG(chan, src);
+ 		ni_stc_writew(dev, devpriv->rtsi_trig_b_output_reg,
+ 			      NISTC_RTSI_TRIGB_OUT_REG);
++	} else if (chan != NISTC_RTSI_TRIG_OLD_CLK_CHAN) {
++		/* probably should never reach this, since the
++		 * ni_valid_rtsi_output_source above errors out if chan is too
++		 * high
++		 */
++		dev_err(dev->class_dev, "%s: unknown rtsi channel\n", __func__);
++		return -EINVAL;
+ 	}
+ 	return 2;
  }
- 
-+static void rxe_cache_clean(size_t cnt)
-+{
-+	int i;
-+	struct rxe_type_info *type;
+@@ -5032,12 +5042,12 @@ static unsigned int ni_get_rtsi_routing(struct comedi_device *dev,
+ 	} else if (chan < NISTC_RTSI_TRIG_NUM_CHAN(devpriv->is_m_series)) {
+ 		return NISTC_RTSI_TRIG_TO_SRC(chan,
+ 					      devpriv->rtsi_trig_b_output_reg);
+-	} else {
+-		if (chan == NISTC_RTSI_TRIG_OLD_CLK_CHAN)
+-			return NI_RTSI_OUTPUT_RTSI_OSC;
+-		dev_err(dev->class_dev, "bug! should never get here?\n");
+-		return 0;
++	} else if (chan == NISTC_RTSI_TRIG_OLD_CLK_CHAN) {
++		return NI_RTSI_OUTPUT_RTSI_OSC;
+ 	}
 +
-+	for (i = 0; i < cnt; i++) {
-+		type = &rxe_type_info[i];
-+		kmem_cache_destroy(type->cache);
-+		type->cache = NULL;
-+	}
-+}
-+
- int rxe_cache_init(void)
- {
- 	int err;
-@@ -136,24 +148,14 @@ int rxe_cache_init(void)
- 	return 0;
- 
- err1:
--	while (--i >= 0) {
--		kmem_cache_destroy(type->cache);
--		type->cache = NULL;
--	}
-+	rxe_cache_clean(i);
- 
- 	return err;
++	dev_err(dev->class_dev, "%s: unknown rtsi channel\n", __func__);
++	return -EINVAL;
  }
  
- void rxe_cache_exit(void)
- {
--	int i;
--	struct rxe_type_info *type;
--
--	for (i = 0; i < RXE_NUM_TYPES; i++) {
--		type = &rxe_type_info[i];
--		kmem_cache_destroy(type->cache);
--		type->cache = NULL;
--	}
-+	rxe_cache_clean(RXE_NUM_TYPES);
- }
- 
- static int rxe_pool_init_index(struct rxe_pool *pool, u32 max, u32 min)
+ static int ni_rtsi_insn_config(struct comedi_device *dev,
 -- 
 2.20.1
 
