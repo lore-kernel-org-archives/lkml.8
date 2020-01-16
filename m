@@ -4,50 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F6DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2012CC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C48F20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED086206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:01:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201260;
-	bh=DIN3t0CL3qc9oQivN4pyYzvvL2OYzqK+JGu7m+2wO8M=;
+	s=default; t=1579201275;
+	bh=5ZAPg471S2A5E6Enli8+3P4H33han+F9kWFXlzSdx7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TrkbL8B9kxteJD2eXOKih2RzR0q5NI0aaItMQC+3n7xf2FEPRIDsWMwi03NmLnQIa
-	 IgRkJCr52TIn5rD+rEyrsvzQUiF9tvi98NWJH+aEH7P1aW4CuA1dI6v6YS3HnBv4oz
-	 j3fBVOTVvMMiAnTAGsh/h4x9QJghnirWxQizF6Mc=
+	b=qvaUsU9K2CbMV2a6MiBwCLzXdusheTryxi+Fk9gyeOn0YN84qDBbAzLgfiyDVohbD
+	 x48/EPGT6yh4L8iafpRCT7BUoIbYwKiWqNt6ChtfeLwhgZQguAlL9PHncNewaqna8L
+	 Aw9kxHo1NPxh4EC1flUju26P3f1YqJI5oV+elMAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729679AbgAPTA6 (ORCPT
+        id S2407080AbgAPTBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:00:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35986 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:01:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388481AbgAPRGJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:06:09 -0500
+        id S1729346AbgAPRF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:05:58 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A403122522;
-        Thu, 16 Jan 2020 17:06:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 510752192A;
+        Thu, 16 Jan 2020 17:05:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194368;
-        bh=DIN3t0CL3qc9oQivN4pyYzvvL2OYzqK+JGu7m+2wO8M=;
+        s=default; t=1579194357;
+        bh=5ZAPg471S2A5E6Enli8+3P4H33han+F9kWFXlzSdx7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ffdNfVSH0xKwPk6evCnL/w9ZxtSx4/AI3Hqy3ZTrzqX+X3CFKC4MxxtbJV+mqiFma
-         4ITk3wIOvaSNXh7ZAzfBruALNB4013PNaOIz77zzrHsuSmmKVbD2oswda2mAmLCjOI
-         NMG7pLNhuE+S+vtSxLCvUTmlicf5f60j3LW+XdHE=
+        b=O7zf5lEFYZXGJ4YBk8Nr0xGpTE9U5TOQpY50Gq2CfgwyGb9B1ZiOZK8Lvo+ldMSgB
+         4nIgZtph0ufkBE+QBbpbtLQyJMsOCuF1Yo+oP4xVUecUI3CvbIcQUObynYanxA3325
+         nsmbOzW3XMoqtvHqrYpuw5NBaZ1DzuafoNU2fukI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 302/671] selftests/ipc: Fix msgque compiler warnings
-Date:   Thu, 16 Jan 2020 11:59:00 -0500
-Message-Id: <20200116170509.12787-39-sashal@kernel.org>
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 295/671] perf/core: Fix the address filtering fix
+Date:   Thu, 16 Jan 2020 11:58:53 -0500
+Message-Id: <20200116170509.12787-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,74 +66,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-[ Upstream commit a147faa96f832f76e772b1e448e94ea84c774081 ]
+[ Upstream commit 52a44f83fc2d64a5e74d5d685fad2fecc7b7a321 ]
 
-This fixes the various compiler warnings when building the msgque
-selftest. The primary change is using sys/msg.h instead of linux/msg.h
-directly to gain the API declarations.
+The following recent commit:
 
-Fixes: 3a665531a3b7 ("selftests: IPC message queue copy feature test")
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+  c60f83b813e5 ("perf, pt, coresight: Fix address filters for vmas with non-zero offset")
+
+changes the address filtering logic to communicate filter ranges to the PMU driver
+via a single address range object, instead of having the driver do the final bit of
+math.
+
+That change forgets to take into account kernel filters, which are not calculated
+the same way as DSO based filters.
+
+Fix that by passing the kernel filters the same way as file-based filters.
+This doesn't require any additional changes in the drivers.
+
+Reported-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Fixes: c60f83b813e5 ("perf, pt, coresight: Fix address filters for vmas with non-zero offset")
+Link: https://lkml.kernel.org/r/20190329091212.29870-1-alexander.shishkin@linux.intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/ipc/msgque.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ kernel/events/core.c | 37 +++++++++++++++++++++----------------
+ 1 file changed, 21 insertions(+), 16 deletions(-)
 
-diff --git a/tools/testing/selftests/ipc/msgque.c b/tools/testing/selftests/ipc/msgque.c
-index dac927e82336..4c156aeab6b8 100644
---- a/tools/testing/selftests/ipc/msgque.c
-+++ b/tools/testing/selftests/ipc/msgque.c
-@@ -1,9 +1,10 @@
- // SPDX-License-Identifier: GPL-2.0
-+#define _GNU_SOURCE
- #include <stdlib.h>
- #include <stdio.h>
- #include <string.h>
- #include <errno.h>
--#include <linux/msg.h>
-+#include <sys/msg.h>
- #include <fcntl.h>
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 4eef2d42d05c..751888cbed5c 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -8861,26 +8861,29 @@ static void perf_event_addr_filters_apply(struct perf_event *event)
+ 	if (task == TASK_TOMBSTONE)
+ 		return;
  
- #include "../kselftest.h"
-@@ -73,7 +74,7 @@ int restore_queue(struct msgque_data *msgque)
- 	return 0;
+-	if (!ifh->nr_file_filters)
+-		return;
+-
+-	mm = get_task_mm(event->ctx->task);
+-	if (!mm)
+-		goto restart;
++	if (ifh->nr_file_filters) {
++		mm = get_task_mm(event->ctx->task);
++		if (!mm)
++			goto restart;
  
- destroy:
--	if (msgctl(id, IPC_RMID, 0))
-+	if (msgctl(id, IPC_RMID, NULL))
- 		printf("Failed to destroy queue: %d\n", -errno);
- 	return ret;
- }
-@@ -120,7 +121,7 @@ int check_and_destroy_queue(struct msgque_data *msgque)
+-	down_read(&mm->mmap_sem);
++		down_read(&mm->mmap_sem);
++	}
  
- 	ret = 0;
- err:
--	if (msgctl(msgque->msq_id, IPC_RMID, 0)) {
-+	if (msgctl(msgque->msq_id, IPC_RMID, NULL)) {
- 		printf("Failed to destroy queue: %d\n", -errno);
- 		return -errno;
+ 	raw_spin_lock_irqsave(&ifh->lock, flags);
+ 	list_for_each_entry(filter, &ifh->list, entry) {
+-		event->addr_filter_ranges[count].start = 0;
+-		event->addr_filter_ranges[count].size = 0;
++		if (filter->path.dentry) {
++			/*
++			 * Adjust base offset if the filter is associated to a
++			 * binary that needs to be mapped:
++			 */
++			event->addr_filter_ranges[count].start = 0;
++			event->addr_filter_ranges[count].size = 0;
+ 
+-		/*
+-		 * Adjust base offset if the filter is associated to a binary
+-		 * that needs to be mapped:
+-		 */
+-		if (filter->path.dentry)
+ 			perf_addr_filter_apply(filter, mm, &event->addr_filter_ranges[count]);
++		} else {
++			event->addr_filter_ranges[count].start = filter->offset;
++			event->addr_filter_ranges[count].size  = filter->size;
++		}
+ 
+ 		count++;
  	}
-@@ -129,7 +130,7 @@ int check_and_destroy_queue(struct msgque_data *msgque)
+@@ -8888,9 +8891,11 @@ static void perf_event_addr_filters_apply(struct perf_event *event)
+ 	event->addr_filters_gen++;
+ 	raw_spin_unlock_irqrestore(&ifh->lock, flags);
  
- int dump_queue(struct msgque_data *msgque)
- {
--	struct msqid64_ds ds;
-+	struct msqid_ds ds;
- 	int kern_id;
- 	int i, ret;
+-	up_read(&mm->mmap_sem);
++	if (ifh->nr_file_filters) {
++		up_read(&mm->mmap_sem);
  
-@@ -245,7 +246,7 @@ int main(int argc, char **argv)
- 	return ksft_exit_pass();
+-	mmput(mm);
++		mmput(mm);
++	}
  
- err_destroy:
--	if (msgctl(msgque.msq_id, IPC_RMID, 0)) {
-+	if (msgctl(msgque.msq_id, IPC_RMID, NULL)) {
- 		printf("Failed to destroy queue: %d\n", -errno);
- 		return ksft_exit_fail();
- 	}
+ restart:
+ 	perf_event_stop(event, 1);
 -- 
 2.20.1
 
