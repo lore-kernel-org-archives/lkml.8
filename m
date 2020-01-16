@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8000AC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9A0C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51973206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:04:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7FAB206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:04:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201451;
-	bh=4FwwNBMxPQsMF1REKzY3u6wC+rgjFHSdFCTiwJQWwUo=;
+	s=default; t=1579201455;
+	bh=Arr1726Id5mEVcSp5PE/MtW4ooJu4KwJFMqCkc++vG4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zpf1Ik18Fuv9y0t6504bzkZJglZ08cdzNBU4IJbJiAuAbuhYwibSu8SPPG77dDFgI
-	 eX+hDa5wx7m7q0Qiw7QyiwfdS/TwsPmyaPoUhjpRFCEn/5WtCmPAT+hVnz3ruuzBwZ
-	 R9ipQhaC9W6aSdi/UvjEOHAd41YcXbkUVwkKyF0Y=
+	b=Mjq2oEbubX31tvuqmPIjr9X5G4zc2kqczN55tddlxTBiBqmLvNm90we0uhF8nR76Z
+	 fIGuRWDJCHynJKeEBo0gC+nVH3zJtJdAtJVgTFitkewRU5V4lC2wS+Asp2QivBDAk5
+	 sdF7rq8dxQm7hPaI1HoyqbPpFR3gpgScApXo1dV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388352AbgAPRCZ (ORCPT
+        id S2388763AbgAPTEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:02:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54612 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:04:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388292AbgAPRCM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:02:12 -0500
+        id S2387934AbgAPRCW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:02:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40D9C20730;
-        Thu, 16 Jan 2020 17:02:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BAA720730;
+        Thu, 16 Jan 2020 17:02:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194131;
-        bh=4FwwNBMxPQsMF1REKzY3u6wC+rgjFHSdFCTiwJQWwUo=;
+        s=default; t=1579194141;
+        bh=Arr1726Id5mEVcSp5PE/MtW4ooJu4KwJFMqCkc++vG4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EKJlT9iQRPPEyx5xPP1S2zzkqUUwk+LsqQUDlNcFKfgUUD0uJfOxYfAFew5HVtSdJ
-         VUOdRGTjfihENyOyF5wPdqXh1Vorf8DmR/8cF2L9+qMR0GbtpdAfhIP4GWWeQekvXR
-         0pk+vSR0Rrz20Rsnm0H5+k6f0YFntzIglyMZXm0w=
+        b=TBA4yWuW2SPxELObiTIT9AOZ2+XzAAwuGz3AHJP7VVH9r2IwVDGFjzm9MkMUah01g
+         CMFuI41pt4osmvHshFtv2C1aoyymgELT85AN7PQz8uFnVvkytQYwBfPdef1iUIxSn7
+         r9dgI1qUR80yNRaFVo88iguEBxhXtmAbbQy8yju4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vladimir Murzin <vladimir.murzin@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>,
+Cc:     Jonas Gorski <jonas.gorski@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 221/671] ARM: 8848/1: virt: Align GIC version check with arm64 counterpart
-Date:   Thu, 16 Jan 2020 11:52:10 -0500
-Message-Id: <20200116165940.10720-104-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 228/671] hwrng: bcm2835 - fix probe as platform device
+Date:   Thu, 16 Jan 2020 11:52:17 -0500
+Message-Id: <20200116165940.10720-111-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -61,38 +63,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Murzin <vladimir.murzin@arm.com>
+From: Jonas Gorski <jonas.gorski@gmail.com>
 
-[ Upstream commit 9db043d36bd379f4cc99054c079de0dabfc38d03 ]
+[ Upstream commit 984798de671a927ac73da31096a150df42e6aaf3 ]
 
-arm64 has got relaxation on GIC version check at early boot stage due
-to update of the GIC architecture let's align ARM with that.
+BCM63XX (MIPS) does not use device tree, so there cannot be any
+of_device_id, causing the driver to fail on probe:
 
-To help backports (even though the code was correct at the time of writing)
-Fixes: e59941b9b381 ("ARM: 8527/1: virt: enable GICv3 system registers")
-Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
-Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+[    0.904564] bcm2835-rng: probe of bcm63xx-rng failed with error -22
+
+Fix this by checking for match data only if we are probing from device
+tree.
+
+Fixes: 8705f24f7b57 ("hwrng: bcm2835 - Enable BCM2835 RNG to work on BCM63xx platforms")
+Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kernel/hyp-stub.S | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/char/hw_random/bcm2835-rng.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/kernel/hyp-stub.S b/arch/arm/kernel/hyp-stub.S
-index 60146e32619a..82a942894fc0 100644
---- a/arch/arm/kernel/hyp-stub.S
-+++ b/arch/arm/kernel/hyp-stub.S
-@@ -180,8 +180,8 @@ ARM_BE8(orr	r7, r7, #(1 << 25))     @ HSCTLR.EE
- 	@ Check whether GICv3 system registers are available
- 	mrc	p15, 0, r7, c0, c1, 1	@ ID_PFR1
- 	ubfx	r7, r7, #28, #4
--	cmp	r7, #1
--	bne	2f
-+	teq	r7, #0
-+	beq	2f
+diff --git a/drivers/char/hw_random/bcm2835-rng.c b/drivers/char/hw_random/bcm2835-rng.c
+index 6767d965c36c..19bde680aee1 100644
+--- a/drivers/char/hw_random/bcm2835-rng.c
++++ b/drivers/char/hw_random/bcm2835-rng.c
+@@ -171,14 +171,16 @@ static int bcm2835_rng_probe(struct platform_device *pdev)
+ 	priv->rng.read = bcm2835_rng_read;
+ 	priv->rng.cleanup = bcm2835_rng_cleanup;
  
- 	@ Enable system register accesses
- 	mrc	p15, 4, r7, c12, c9, 5	@ ICC_HSRE
+-	rng_id = of_match_node(bcm2835_rng_of_match, np);
+-	if (!rng_id)
+-		return -EINVAL;
+-
+-	/* Check for rng init function, execute it */
+-	of_data = rng_id->data;
+-	if (of_data)
+-		priv->mask_interrupts = of_data->mask_interrupts;
++	if (dev_of_node(dev)) {
++		rng_id = of_match_node(bcm2835_rng_of_match, np);
++		if (!rng_id)
++			return -EINVAL;
++
++		/* Check for rng init function, execute it */
++		of_data = rng_id->data;
++		if (of_data)
++			priv->mask_interrupts = of_data->mask_interrupts;
++	}
+ 
+ 	/* register driver */
+ 	err = devm_hwrng_register(dev, &priv->rng);
 -- 
 2.20.1
 
