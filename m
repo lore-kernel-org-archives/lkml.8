@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D76CC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC5B6C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBFA520748
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77100206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:24:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217078;
-	bh=oXcqTYvmKHG2Oyu7/RIiGJnpCLc/p7lAUB5yf0Pq8iY=;
+	s=default; t=1579217085;
+	bh=r+x76sD36E+bLkWQym59zq8FtZSERquePm26s+owZXE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FKEOtmL4dQRJO5RSb7C2d9P8GhPCvYHr49wAfM7JRKC/XxIxSmtTDNKzsYFbDBwsK
-	 SqNTQiMMn4y+TEj15IUeUmLGA84FEW/eKA8o4FFtcDyR/qUjVpvmlljf6gxRU0iBol
-	 Z1Fyy/LFxIzL074ryONGlOXyAsTFnEWm5eSBCVEo=
+	b=tBDzrKjCsV2JhIf32pEbtc5/aBf6Dym9ZvJWp0425iymdk7znNgcurFCdP247AwBZ
+	 YZHG1pj/mFRwZnYvXoQQj1nmv/uTORRdAjrDEEzlxbWb97y4wb7z93f+1qjRSx0NEy
+	 314DCexOSFX+aB3w/CUlhN7Ls6bNQxka+dzqDvZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733216AbgAPXYh (ORCPT
+        id S1730591AbgAPXYo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:24:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53582 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:24:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388172AbgAPXY3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:24:29 -0500
+        id S2388054AbgAPXYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:24:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1299E2072B;
-        Thu, 16 Jan 2020 23:24:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BC6A20748;
+        Thu, 16 Jan 2020 23:24:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217069;
-        bh=oXcqTYvmKHG2Oyu7/RIiGJnpCLc/p7lAUB5yf0Pq8iY=;
+        s=default; t=1579217081;
+        bh=r+x76sD36E+bLkWQym59zq8FtZSERquePm26s+owZXE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GnLln8KxGw8bsVYiJIxiLm+Nd1FHoMwm1juzz/yWc/GxZxtvUakX8aNzLIpj4u4lt
-         8tAuHRRu3msQoIXQRQrwunbm9+qUjxfFPEgzUPffZtQW0QWWEIGDejDmnro9k7E1h+
-         OCVUfN6Xl4miLsCgYEzaWWYdjJzZcreepsH6dtf8=
+        b=B8n7NxMG0RVxMEEZdcHGVsB1/59SseMV8yxszAP0Y829K8GITdaB4gHv7xaIbOKMj
+         9zvlO/C3lMObibELEgfjVw1UsVk32xjB3ivANZqBALDNkdNsxWKSkQCkhZkMhmlva1
+         D1sSsgAF39ecpue4Liy0oO463LJogIxtKGhdGn3I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH 5.4 135/203] PCI: Fix missing bridge dma_ranges resource list cleanup
-Date:   Fri, 17 Jan 2020 00:17:32 +0100
-Message-Id: <20200116231756.875627199@linuxfoundation.org>
+        stable@vger.kernel.org, Gerd Hoffmann <kraxel@redhat.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Chia-I Wu <olvaffe@gmail.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 124/203] Revert "drm/virtio: switch virtio_gpu_wait_ioctl() to gem helper."
+Date:   Fri, 17 Jan 2020 00:17:21 +0100
+Message-Id: <20200116231756.104058057@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -60,36 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit 7608158df3ed87a5c938c4a0b91f5b11101a9be1 upstream.
+This reverts commit e6733ec8948475c4b62574e452135dc629294d75 which is
+commit 29cf12394c0565d7eb1685bf0c1b4749aa6a8b66 upstream.
 
-Commit e80a91ad302b ("PCI: Add dma_ranges window list") added a
-dma_ranges resource list, but failed to correctly free the list when
-devm_pci_alloc_host_bridge() is used.
+Alistair writes:
+	After updating to 5.4.7 we noticed that virtio_gpu's wait ioctl
+	stopped working correctly.
 
-Only the iproc host bridge driver is using the dma_ranges list.
+	It looks like 29cf12394c05 ("drm/virtio: switch
+	virtio_gpu_wait_ioctl() to gem helper.") was picked up automatically,
+	but it depends on 889165ad6190 ("drm/virtio: pass gem reservation
+	object to ttm init") from earlier in Gerd's series in Linus's tree,
+	which was not picked up.
 
-Fixes: e80a91ad302b ("PCI: Add dma_ranges window list")
-Link: https://lore.kernel.org/r/20191008012325.25700-1-robh@kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Srinath Mannam <srinath.mannam@broadcom.com>
+Cc: Gerd Hoffmann <kraxel@redhat.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Chia-I Wu <olvaffe@gmail.com>
+Cc: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/pci/probe.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/virtio/virtgpu_ioctl.c |   28 ++++++++++++----------------
+ 1 file changed, 12 insertions(+), 16 deletions(-)
 
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -572,6 +572,7 @@ static void devm_pci_release_host_bridge
- 		bridge->release_fn(bridge);
- 
- 	pci_free_resource_list(&bridge->windows);
-+	pci_free_resource_list(&bridge->dma_ranges);
+--- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
++++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
+@@ -463,29 +463,25 @@ out:
  }
  
- static void pci_release_host_bridge_dev(struct device *dev)
+ static int virtio_gpu_wait_ioctl(struct drm_device *dev, void *data,
+-				 struct drm_file *file)
++			    struct drm_file *file)
+ {
+ 	struct drm_virtgpu_3d_wait *args = data;
+-	struct drm_gem_object *obj;
+-	long timeout = 15 * HZ;
++	struct drm_gem_object *gobj = NULL;
++	struct virtio_gpu_object *qobj = NULL;
+ 	int ret;
++	bool nowait = false;
+ 
+-	obj = drm_gem_object_lookup(file, args->handle);
+-	if (obj == NULL)
++	gobj = drm_gem_object_lookup(file, args->handle);
++	if (gobj == NULL)
+ 		return -ENOENT;
+ 
+-	if (args->flags & VIRTGPU_WAIT_NOWAIT) {
+-		ret = dma_resv_test_signaled_rcu(obj->resv, true);
+-	} else {
+-		ret = dma_resv_wait_timeout_rcu(obj->resv, true, true,
+-						timeout);
+-	}
+-	if (ret == 0)
+-		ret = -EBUSY;
+-	else if (ret > 0)
+-		ret = 0;
++	qobj = gem_to_virtio_gpu_obj(gobj);
+ 
+-	drm_gem_object_put_unlocked(obj);
++	if (args->flags & VIRTGPU_WAIT_NOWAIT)
++		nowait = true;
++	ret = virtio_gpu_object_wait(qobj, nowait);
++
++	drm_gem_object_put_unlocked(gobj);
+ 	return ret;
+ }
+ 
 
 
