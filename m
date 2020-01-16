@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 968ABC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC56C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 698D2206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:32:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B469206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:32:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199550;
-	bh=3GDST97Zptw0/e84om70F9jZkf2LN43fAxlrhDAXbIw=;
+	s=default; t=1579199556;
+	bh=hxpdLvO6UKAuakXwvmsgeuSBLao07IE25tdYjVr2xl4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nXXDsgALvleb8TWD9uFOvaKp5TVkIw5VSO2wgySQb6Uq1JHDKLB3/bMkEq256KFdE
-	 W89ZfgTqvWhzErmjQ2ik6g25OhgXHu1qobS82DDih62iPdzHrKQPLWL+/jgSx565R0
-	 N5gfLQyYebfxG7xfA2BKG1bLCT8Xmg+bsA49+WUM=
+	b=1fDqAttvLU9EHpztCWWhXtc3sffeFiUWaBzCLLUbtum3pvWKpb3jEG6ySFImBx+dO
+	 g7BfTEFNUciJm17L9TiANnq3t8gfQjWednVW/80mrhR64totxw32FlsW61xFUxlYiu
+	 1+Vpp5E3qj9B5q57k1NxKh2+GlLfxqH3GGGNBLmY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404605AbgAPSc2 (ORCPT
+        id S2391838AbgAPRY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:32:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60360 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:24:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391849AbgAPRZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:25:00 -0500
+        id S2403812AbgAPRYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:24:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E33F2246A5;
-        Thu, 16 Jan 2020 17:24:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2CDC2468C;
+        Thu, 16 Jan 2020 17:24:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195499;
-        bh=3GDST97Zptw0/e84om70F9jZkf2LN43fAxlrhDAXbIw=;
+        s=default; t=1579195486;
+        bh=hxpdLvO6UKAuakXwvmsgeuSBLao07IE25tdYjVr2xl4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BpwG32FE5HKa3b6t5qUW/+4XxzQ/5T354s3lYXPGpVJ7KGKoqMeU88WhEk4NVhWfR
-         2cEoRjbqX8qRwmmHFgCISiVjC0Aazdjilf6aniIuKI4OXoyLa6r7sAeKYPdTezoOC1
-         qMW/SunBZoRi9rc+0ObspA8xfIFFlec9mWpZPtHw=
+        b=bWxtZ/pXwj8JB3+lGnbkaiwZ6alTSd6bJrvmS+ykhcLijIV/llU/22RvzRVNomYre
+         9zg1P0pl9v3AvTUF56z53sDKQTCsvslnn1G716aSXiRXsNzWAnBZEFsb9rGW9oohOC
+         91DGoWlQJ8ajKi/qBcOPjI27unUe/LkfV+oqowVI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
-        James Morris <james.morris@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 100/371] keys: Timestamp new keys
-Date:   Thu, 16 Jan 2020 12:19:32 -0500
-Message-Id: <20200116172403.18149-43-sashal@kernel.org>
+Cc:     Steve Wise <swise@opengridcomputing.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 090/371] iw_cxgb4: use tos when importing the endpoint
+Date:   Thu, 16 Jan 2020 12:19:22 -0500
+Message-Id: <20200116172403.18149-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -60,32 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Steve Wise <swise@opengridcomputing.com>
 
-[ Upstream commit 7c1857bdbdf1e4c541e45eab477ee23ed4333ea4 ]
+[ Upstream commit cb3ba0bde881f0cb7e3945d2a266901e2bd18c92 ]
 
-Set the timestamp on new keys rather than leaving it unset.
+import_ep() is passed the correct tos, but doesn't use it correctly.
 
-Fixes: 31d5a79d7f3d ("KEYS: Do LRU discard in full keyrings")
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: James Morris <james.morris@microsoft.com>
+Fixes: ac8e4c69a021 ("cxgb4/iw_cxgb4: TOS support")
+Signed-off-by: Steve Wise <swise@opengridcomputing.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/keys/key.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/infiniband/hw/cxgb4/cm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/security/keys/key.c b/security/keys/key.c
-index 87172f99f73e..17244f5f54c6 100644
---- a/security/keys/key.c
-+++ b/security/keys/key.c
-@@ -297,6 +297,7 @@ struct key *key_alloc(struct key_type *type, const char *desc,
- 	key->gid = gid;
- 	key->perm = perm;
- 	key->restrict_link = restrict_link;
-+	key->last_used_at = ktime_get_real_seconds();
- 
- 	if (!(flags & KEY_ALLOC_NOT_IN_QUOTA))
- 		key->flags |= 1 << KEY_FLAG_IN_QUOTA;
+diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
+index 3668cc71b47e..942403e42dd0 100644
+--- a/drivers/infiniband/hw/cxgb4/cm.c
++++ b/drivers/infiniband/hw/cxgb4/cm.c
+@@ -2056,7 +2056,7 @@ static int import_ep(struct c4iw_ep *ep, int iptype, __u8 *peer_ip,
+ 	} else {
+ 		pdev = get_real_dev(n->dev);
+ 		ep->l2t = cxgb4_l2t_get(cdev->rdev.lldi.l2t,
+-					n, pdev, 0);
++					n, pdev, rt_tos2priority(tos));
+ 		if (!ep->l2t)
+ 			goto out;
+ 		ep->mtu = dst_mtu(dst);
 -- 
 2.20.1
 
