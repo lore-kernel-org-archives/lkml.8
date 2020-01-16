@@ -2,119 +2,140 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9026FC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A54DBC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70F7D214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B6DA2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:27:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nEFmlIIk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbgAPLZY (ORCPT
+        id S1726370AbgAPL1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 06:25:24 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:35004 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbgAPLZY (ORCPT
+        Thu, 16 Jan 2020 06:27:43 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:48494 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbgAPL1n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 06:25:24 -0500
-Received: from ip5f5bd663.dynamic.kabel-deutschland.de ([95.91.214.99] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1is3H5-0001S8-FE; Thu, 16 Jan 2020 11:25:19 +0000
-Date:   Thu, 16 Jan 2020 12:25:18 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     Christian Brauner <christian@brauner.io>,
+        Thu, 16 Jan 2020 06:27:43 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00GBRGdj061689;
+        Thu, 16 Jan 2020 05:27:16 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579174036;
+        bh=myfrgAkACHwJfmdNtMcuEJNJskU9ZB6VVutnIR84JH4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=nEFmlIIkHRmg720elyKMOm+dhwS+GmQz54J/Pk0oyMkOmh+nf69RXMnk221Fm2/e7
+         NSzzCU2NpIciRM4d5s7zg63jd0GcYITe/s87EiYMWMO+9mg4DS68MEI0wBotVnoNJ0
+         KvXPQQC6+eWZhLjEpa5vffjlE8C0JzoLPGRujhCI=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00GBRGVV021247
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 16 Jan 2020 05:27:16 -0600
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 16
+ Jan 2020 05:27:16 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 16 Jan 2020 05:27:15 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00GBR8Tb095885;
+        Thu, 16 Jan 2020 05:27:11 -0600
+Subject: Re: [PATCH 2/7] dt-bindings: PCI: cadence: Add binding to specify max
+ virtual functions
+To:     Rob Herring <robh@kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Tom Joseph <tjoseph@cadence.com>,
         Arnd Bergmann <arnd@arndb.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        arcml <linux-snps-arc@lists.infradead.org>
-Subject: Re: clone3 on ARC (was Re: [PATCH v3 2/2] arch: wire-up clone3()
- syscall)
-Message-ID: <20200116112517.53luv7qolevtqjpu@wittgenstein>
-References: <20190604160944.4058-1-christian@brauner.io>
- <20190604160944.4058-2-christian@brauner.io>
- <CAK8P3a0OfBpx6y4m5uWX-DUg16NoFby5ik-3xCcD+yMrw0tbEw@mail.gmail.com>
- <20190604212930.jaaztvkent32b7d3@brauner.io>
- <a58c8425-83a3-b64c-339a-7e94a72f4bee@synopsys.com>
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-doc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-rockchip@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20191231113534.30405-1-kishon@ti.com>
+ <20191231113534.30405-3-kishon@ti.com> <20200115014026.GA10726@bogus>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <f0690395-4ce7-df93-e837-670829aafb03@ti.com>
+Date:   Thu, 16 Jan 2020 16:59:20 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <a58c8425-83a3-b64c-339a-7e94a72f4bee@synopsys.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200115014026.GA10726@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 10:41:20PM +0000, Vineet Gupta wrote:
-> On 6/4/19 2:29 PM, Christian Brauner wrote:
-> > On Tue, Jun 04, 2019 at 08:40:01PM +0200, Arnd Bergmann wrote:
-> >> On Tue, Jun 4, 2019 at 6:09 PM Christian Brauner <christian@brauner.io> wrote:
-> >>>
-> >>> Wire up the clone3() call on all arches that don't require hand-rolled
-> >>> assembly.
-> >>>
-> >>> Some of the arches look like they need special assembly massaging and it is
-> >>> probably smarter if the appropriate arch maintainers would do the actual
-> >>> wiring. Arches that are wired-up are:
-> >>> - x86{_32,64}
-> >>> - arm{64}
-> >>> - xtensa
-> >>
-> >> The ones you did look good to me. I would hope that we can do all other
-> >> architectures the same way, even if they have special assembly wrappers
-> >> for the old clone(). The most interesting cases appear to be ia64, alpha,
-> >> m68k and sparc, so it would be good if their maintainers could take a
-> >> look.
-> > 
-> > Yes, agreed. They can sort this out even after this lands.
-> > 
-> >>
-> >> What do you use for testing? Would it be possible to override the
-> >> internal clone() function in glibc with an LD_PRELOAD library
-> >> to quickly test one of the other architectures for regressions?
-> > 
-> > I have a test program that is rather horrendously ugly and I compiled
-> > kernels for x86 and the arms and tested in qemu. The program basically
-> > looks like [1].
-> 
-> I just got around to fixing this for ARC (patch to follow after we sort out the
-> testing) and was trying to use the test case below for a qucik and dirty smoke
-> test (so existing toolchain lacking with headers lacking NR_clone3 or struct
-> clone_args etc). I did hack those up, but then spotted below
-> 
-> uapi/linux/sched.h
-> 
-> |    struct clone_args {
-> |	__aligned_u64 flags;
-> |	__aligned_u64 pidfd;
-> |	__aligned_u64 child_tid;
-> |	__aligned_u64 parent_tid;
-> ..
-> ..
-> 
-> Are all clone3 arg fields supposed to be 64-bit wide, even things like @child_tid,
-> @tls .... which are traditionally ARCH word wide ?
+Hi Rob,
 
-This is just the kernel ABI we expose to userspace with the intention to
-make it easy for us to handle 32 and 64 bit. A libc like glibc is
-expected to expose a properly typed struct to userspace. The kernel
-struct kernel_clone_args has "correct" typing.
+On 15/01/20 7:10 AM, Rob Herring wrote:
+> On Tue, Dec 31, 2019 at 05:05:29PM +0530, Kishon Vijay Abraham I wrote:
+>> Add binding to specify maximum number of virtual functions that can be
+>> associated with each physical function.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  .../devicetree/bindings/pci/cdns,cdns-pcie-ep.txt         | 2 ++
+>>  .../devicetree/bindings/pci/ti,j721e-pci-ep.yaml          | 8 ++++++++
+>>  2 files changed, 10 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+>> index 4a0475e2ba7e..432578202733 100644
+>> --- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+>> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+>> @@ -9,6 +9,8 @@ Required properties:
+>>  
+>>  Optional properties:
+>>  - max-functions: Maximum number of functions that can be configured (default 1).
+>> +- max-virtual-functions: Maximum number of virtual functions that can be
+>> +    associated with each physical function.
+>>  - phys: From PHY bindings: List of Generic PHY phandles. One per lane if more
+>>    than one in the list.  If only one PHY listed it must manage all lanes. 
+>>  - phy-names:  List of names to identify the PHY.
+>> diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+>> index 4621c62016c7..1d4964ba494f 100644
+>> --- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+>> +++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+>> @@ -61,6 +61,12 @@ properties:
+>>      minimum: 1
+>>      maximum: 6
+>>  
+>> +  max-virtual-functions:
+>> +    minItems: 1
+>> +    maxItems: 6
+> 
+> Is there a PCIe spec limit to number of virtual functions per phy 
+> function? Or 2^32 virtual functions is okay.
 
-Christian
+The PCIe spec provides a 16 bit field to specify number of virtual
+functions in the SR-IOV extended capability.
+
+
+> 
+>> +    description: As defined in
+>> +                 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+> 
+> I suspect this this be a common property.
+
+Right now we don't have common EP property binding across all
+controllers. Maybe should create one?
+
+Thanks
+Kishon
