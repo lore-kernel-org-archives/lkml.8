@@ -2,278 +2,98 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE2DC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A0DC33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECA4F206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:34:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="l95hx+vH"
+	by mail.kernel.org (Postfix) with ESMTP id 6D40F2077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:35:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbgAPQeP (ORCPT
+        id S1726924AbgAPQff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:34:15 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:48590 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726343AbgAPQeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:34:14 -0500
-Received: from zn.tnic (p200300EC2F0B2300140B140D62B5CC9C.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:2300:140b:140d:62b5:cc9c])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4F9FC1EC0391;
-        Thu, 16 Jan 2020 17:34:13 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1579192453;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=waSyRTZ8/lhsXH/OWB+jXSGGZbqUfyQsZNqfwd45Pyo=;
-        b=l95hx+vHGYmND/zji6oFl6ubsI9qlIfQDQcaNG6k1mwj2xsvhSmen9ZebR15aVwNP+DNFm
-        zjbixr/RHLN4IjKAeMZZFtCTdzOleHhwAdFX27ysdtf1G8jiUGrdEsx9gghr9zVqQ6ouUS
-        BhJ/nv1Mxka1+o/2Ennk/Sz0JhLnFDQ=
-Date:   Thu, 16 Jan 2020 17:34:03 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Yazen Ghannam <Yazen.Ghannam@amd.com>
-Cc:     linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tony.luck@intel.com, x86@kernel.org
-Subject: Re: [PATCH 0/5] MCA and EDAC updates for AMD Family 19h
-Message-ID: <20200116163403.GF27148@zn.tnic>
-References: <20200110015651.14887-1-Yazen.Ghannam@amd.com>
+        Thu, 16 Jan 2020 11:35:35 -0500
+Received: from outbound-smtp16.blacknight.com ([46.22.139.233]:36214 "EHLO
+        outbound-smtp16.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726151AbgAPQff (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:35:35 -0500
+Received: from mail.blacknight.com (pemlinmail05.blacknight.ie [81.17.254.26])
+        by outbound-smtp16.blacknight.com (Postfix) with ESMTPS id 72E321C38FE
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 16:35:32 +0000 (GMT)
+Received: (qmail 32691 invoked from network); 16 Jan 2020 16:35:32 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 16 Jan 2020 16:35:32 -0000
+Date:   Thu, 16 Jan 2020 16:35:29 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Phil Auld <pauld@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Parth Shah <parth@linux.ibm.com>,
+        Rik van Riel <riel@surriel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] sched, fair: Allow a small load imbalance between low
+ utilisation SD_NUMA domains v4
+Message-ID: <20200116163529.GP3466@techsingularity.net>
+References: <20200114101319.GO3466@techsingularity.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <20200110015651.14887-1-Yazen.Ghannam@amd.com>
+In-Reply-To: <20200114101319.GO3466@techsingularity.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 01:56:46AM +0000, Yazen Ghannam wrote:
-> From: Yazen Ghannam <yazen.ghannam@amd.com>
+On Tue, Jan 14, 2020 at 10:13:20AM +0000, Mel Gorman wrote:
+> Changelog since V3
+> o Allow a fixed imbalance a basic comparison with 2 tasks. This turned out to
+>   be as good or better than allowing an imbalance based on the group weight
+>   without worrying about potential spillover of the lower scheduler domains.
 > 
-> Hi Boris,
+> Changelog since V2
+> o Only allow a small imbalance when utilisation is low to address reports that
+>   higher utilisation workloads were hitting corner cases.
 > 
-> This patchset adds MCA and EDAC support for AMD Family 19h.
+> Changelog since V1
+> o Alter code flow 						vincent.guittot
+> o Use idle CPUs for comparison instead of sum_nr_running	vincent.guittot
+> o Note that the division is still in place. Without it and taking
+>   imbalance_adj into account before the cutoff, two NUMA domains
+>   do not converage as being equally balanced when the number of
+>   busy tasks equals the size of one domain (50% of the sum).
 > 
-> There aren't any functional changes. Mostly we just need to add new PCI
-> IDs and a new MCA bank type. I've also included a couple of patches that
-> do away with family checks where appropriate.
+> The CPU load balancer balances between different domains to spread load
+> and strives to have equal balance everywhere. Communicating tasks can
+> migrate so they are topologically close to each other but these decisions
+> are independent. On a lightly loaded NUMA machine, two communicating tasks
+> pulled together at wakeup time can be pushed apart by the load balancer.
+> In isolation, the load balancer decision is fine but it ignores the tasks
+> data locality and the wakeup/LB paths continually conflict. NUMA balancing
+> is also a factor but it also simply conflicts with the load balancer.
 > 
-> Thanks,
-> Yazen
+> This patch allows a fixed degree of imbalance of two tasks to exist
+> between NUMA domains regardless of utilisation levels. In many cases,
+> this prevents communicating tasks being pulled apart. It was evaluated
+> whether the imbalance should be scaled to the domain size. However, no
+> additional benefit was measured across a range of workloads and machines
+> and scaling adds the risk that lower domains have to be rebalanced. While
+> this could change again in the future, such a change should specify the
+> use case and benefit.
 > 
-> Yazen Ghannam (5):
->   x86/MCE/AMD, EDAC/mce_amd: Add new Load Store unit McaType
->   EDAC/mce_amd: Always load on SMCA systems
->   x86/amd_nb: Add Family 19h PCI IDs
->   EDAC/amd64: Add family ops for Family 19h Models 00h-0Fh
->   EDAC/amd64: Drop some family checks for newer systems
-> 
->  arch/x86/include/asm/mce.h    |  1 +
->  arch/x86/kernel/amd_nb.c      |  3 ++
->  arch/x86/kernel/cpu/mce/amd.c |  2 ++
->  drivers/edac/amd64_edac.c     | 62 ++++++++++++++++++++---------------
->  drivers/edac/amd64_edac.h     |  3 ++
->  drivers/edac/mce_amd.c        | 41 ++++++++++++++++++++---
->  include/linux/pci_ids.h       |  1 +
->  7 files changed, 82 insertions(+), 31 deletions(-)
-> 
-> -- 
 
-Btw, I'll slap this ontop:
-
----
-From: Borislav Petkov <bp@suse.de>
-Date: Thu, 16 Jan 2020 17:28:39 +0100
-Subject: [PATCH] EDAC/mce_amd: Make fam_ops static global
-
-... and do not kmalloc a three-pointer struct. Which simplifies
-mce_amd_init() a bit.
-
-No functional changes.
-
-Signed-off-by: Borislav Petkov <bp@suse.de>
----
- drivers/edac/mce_amd.c | 69 ++++++++++++++++++------------------------
- 1 file changed, 30 insertions(+), 39 deletions(-)
-
-diff --git a/drivers/edac/mce_amd.c b/drivers/edac/mce_amd.c
-index 524c63fdad42..df95a05c9f23 100644
---- a/drivers/edac/mce_amd.c
-+++ b/drivers/edac/mce_amd.c
-@@ -6,7 +6,7 @@
- 
- #include "mce_amd.h"
- 
--static struct amd_decoder_ops *fam_ops;
-+static struct amd_decoder_ops fam_ops;
- 
- static u8 xec_mask	 = 0xf;
- 
-@@ -583,7 +583,7 @@ static void decode_mc0_mce(struct mce *m)
- 					    : (xec ? "multimatch" : "parity")));
- 			return;
- 		}
--	} else if (fam_ops->mc0_mce(ec, xec))
-+	} else if (fam_ops.mc0_mce(ec, xec))
- 		;
- 	else
- 		pr_emerg(HW_ERR "Corrupted MC0 MCE info?\n");
-@@ -697,7 +697,7 @@ static void decode_mc1_mce(struct mce *m)
- 			pr_cont("Hardware Assert.\n");
- 		else
- 			goto wrong_mc1_mce;
--	} else if (fam_ops->mc1_mce(ec, xec))
-+	} else if (fam_ops.mc1_mce(ec, xec))
- 		;
- 	else
- 		goto wrong_mc1_mce;
-@@ -831,7 +831,7 @@ static void decode_mc2_mce(struct mce *m)
- 
- 	pr_emerg(HW_ERR "MC2 Error: ");
- 
--	if (!fam_ops->mc2_mce(ec, xec))
-+	if (!fam_ops.mc2_mce(ec, xec))
- 		pr_cont(HW_ERR "Corrupted MC2 MCE info?\n");
- }
- 
-@@ -1130,7 +1130,8 @@ amd_decode_mce(struct notifier_block *nb, unsigned long val, void *data)
- 	if (m->tsc)
- 		pr_emerg(HW_ERR "TSC: %llu\n", m->tsc);
- 
--	if (!fam_ops)
-+	/* Doesn't matter which member to test. */
-+	if (!fam_ops.mc0_mce)
- 		goto err_code;
- 
- 	switch (m->bank) {
-@@ -1185,10 +1186,6 @@ static int __init mce_amd_init(void)
- 	    c->x86_vendor != X86_VENDOR_HYGON)
- 		return -ENODEV;
- 
--	fam_ops = kzalloc(sizeof(struct amd_decoder_ops), GFP_KERNEL);
--	if (!fam_ops)
--		return -ENOMEM;
--
- 	if (boot_cpu_has(X86_FEATURE_SMCA)) {
- 		xec_mask = 0x3f;
- 		goto out;
-@@ -1196,59 +1193,58 @@ static int __init mce_amd_init(void)
- 
- 	switch (c->x86) {
- 	case 0xf:
--		fam_ops->mc0_mce = k8_mc0_mce;
--		fam_ops->mc1_mce = k8_mc1_mce;
--		fam_ops->mc2_mce = k8_mc2_mce;
-+		fam_ops.mc0_mce = k8_mc0_mce;
-+		fam_ops.mc1_mce = k8_mc1_mce;
-+		fam_ops.mc2_mce = k8_mc2_mce;
- 		break;
- 
- 	case 0x10:
--		fam_ops->mc0_mce = f10h_mc0_mce;
--		fam_ops->mc1_mce = k8_mc1_mce;
--		fam_ops->mc2_mce = k8_mc2_mce;
-+		fam_ops.mc0_mce = f10h_mc0_mce;
-+		fam_ops.mc1_mce = k8_mc1_mce;
-+		fam_ops.mc2_mce = k8_mc2_mce;
- 		break;
- 
- 	case 0x11:
--		fam_ops->mc0_mce = k8_mc0_mce;
--		fam_ops->mc1_mce = k8_mc1_mce;
--		fam_ops->mc2_mce = k8_mc2_mce;
-+		fam_ops.mc0_mce = k8_mc0_mce;
-+		fam_ops.mc1_mce = k8_mc1_mce;
-+		fam_ops.mc2_mce = k8_mc2_mce;
- 		break;
- 
- 	case 0x12:
--		fam_ops->mc0_mce = f12h_mc0_mce;
--		fam_ops->mc1_mce = k8_mc1_mce;
--		fam_ops->mc2_mce = k8_mc2_mce;
-+		fam_ops.mc0_mce = f12h_mc0_mce;
-+		fam_ops.mc1_mce = k8_mc1_mce;
-+		fam_ops.mc2_mce = k8_mc2_mce;
- 		break;
- 
- 	case 0x14:
--		fam_ops->mc0_mce = cat_mc0_mce;
--		fam_ops->mc1_mce = cat_mc1_mce;
--		fam_ops->mc2_mce = k8_mc2_mce;
-+		fam_ops.mc0_mce = cat_mc0_mce;
-+		fam_ops.mc1_mce = cat_mc1_mce;
-+		fam_ops.mc2_mce = k8_mc2_mce;
- 		break;
- 
- 	case 0x15:
- 		xec_mask = c->x86_model == 0x60 ? 0x3f : 0x1f;
- 
--		fam_ops->mc0_mce = f15h_mc0_mce;
--		fam_ops->mc1_mce = f15h_mc1_mce;
--		fam_ops->mc2_mce = f15h_mc2_mce;
-+		fam_ops.mc0_mce = f15h_mc0_mce;
-+		fam_ops.mc1_mce = f15h_mc1_mce;
-+		fam_ops.mc2_mce = f15h_mc2_mce;
- 		break;
- 
- 	case 0x16:
- 		xec_mask = 0x1f;
--		fam_ops->mc0_mce = cat_mc0_mce;
--		fam_ops->mc1_mce = cat_mc1_mce;
--		fam_ops->mc2_mce = f16h_mc2_mce;
-+		fam_ops.mc0_mce = cat_mc0_mce;
-+		fam_ops.mc1_mce = cat_mc1_mce;
-+		fam_ops.mc2_mce = f16h_mc2_mce;
- 		break;
- 
- 	case 0x17:
- 	case 0x18:
- 		pr_warn("Decoding supported only on Scalable MCA processors.\n");
--		goto err_out;
--		break;
-+		return -EINVAL;
- 
- 	default:
- 		printk(KERN_WARNING "Huh? What family is it: 0x%x?!\n", c->x86);
--		goto err_out;
-+		return -EINVAL;
- 	}
- 
- out:
-@@ -1257,11 +1253,6 @@ static int __init mce_amd_init(void)
- 	mce_register_decode_chain(&amd_mce_dec_nb);
- 
- 	return 0;
--
--err_out:
--	kfree(fam_ops);
--	fam_ops = NULL;
--	return -EINVAL;
- }
- early_initcall(mce_amd_init);
- 
-@@ -1269,7 +1260,7 @@ early_initcall(mce_amd_init);
- static void __exit mce_amd_exit(void)
- {
- 	mce_unregister_decode_chain(&amd_mce_dec_nb);
--	kfree(fam_ops);
-+	memset(&fam_ops, 0, sizeof(struct amd_decoder_ops));
- }
- 
- MODULE_DESCRIPTION("AMD MCE decoder");
--- 
-2.21.0
-
+Any thoughts on whether this is ok for tip or are there suggestions on
+an alternative approach?
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Mel Gorman
+SUSE Labs
