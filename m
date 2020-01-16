@@ -7,45 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB32BC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9666C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AD832053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9494C2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:56:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200957;
-	bh=9e5byxJIih88ju7Q5B5t6AA+zLK+ZzuP/KEvyl4o2mQ=;
+	s=default; t=1579200961;
+	bh=C7GWMH4e8A+00KK7ertF2ir/PvFAXPbJTUdWcrjSCdQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HciwGP7VZao4qBftVuGiF5oeWrH5d5Vk9wbXiKORgAfT+nNt3GO8idb9I+huyCktP
-	 gwslrHrHDJV6POUpvrcMBYKnOV2fP9fnDK+J7QOB61Ew3E6PlMFLIoDlvrqGzJU2za
-	 tY2cXyY94JMgkSxnmCu4CI3wsLZgfKgWiexPM90o=
+	b=qtyV9FysSGQz3rUBvPvoJBWBjuJ7gu27Qvvn7+Kowo1fBOv89m6VJQkrY0eapqsjm
+	 E/BkJFwwT9sklxOVhEIAG94rVXcYKWhdtSNq6+IBxW1AjmeAwHlMDFo0ncFjB7WENU
+	 p0CVc7drG6pH9Ki9e74xgwLL7NEuBFjhfaTQSST0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407313AbgAPSzz (ORCPT
+        id S2389181AbgAPRH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:55:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39548 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:07:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389187AbgAPRHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:07:30 -0500
+        id S2388946AbgAPRHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:07:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69DD32081E;
-        Thu, 16 Jan 2020 17:07:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDCCD20663;
+        Thu, 16 Jan 2020 17:07:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194450;
-        bh=9e5byxJIih88ju7Q5B5t6AA+zLK+ZzuP/KEvyl4o2mQ=;
+        s=default; t=1579194437;
+        bh=C7GWMH4e8A+00KK7ertF2ir/PvFAXPbJTUdWcrjSCdQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NjAHG8TUPKQ6ek3lDq8+EyVOwHb8G3C1NKEMFCaqib7D7MfUgpKrsgpglIxBYmBpS
-         AYnTmMshOI9F2E4FJYUGpMVX+pv1G4ij+p+iMuGraHMzv/XIDdFpNmTvWav3MDp3i8
-         NPM88Drkm274Yc5ag0McSrO/UrRqeM3qcad4tM78=
+        b=XTiYYdLO4saJtXbaXGO1UcOG28/HiZNQFl+im+BBBcSR+FJNkvr141s/IjK+4SB9Q
+         x+RP72Ss86l10Fn5PZf5gQl/eOd7jVGHVWN8Tem9tBAxyi+gBTEsXViWvFJzXRlQ4y
+         CMaW4eJeGxaVLR4bD4+zSyt2sqppyg3Xlx8bbWZg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 360/671] afs: Fix key leak in afs_release() and afs_evict_inode()
-Date:   Thu, 16 Jan 2020 11:59:58 -0500
-Message-Id: <20200116170509.12787-97-sashal@kernel.org>
+Cc:     Bichao Zheng <bichao.zheng@amlogic.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 351/671] pwm: meson: Don't disable PWM when setting duty repeatedly
+Date:   Thu, 16 Jan 2020 11:59:49 -0500
+Message-Id: <20200116170509.12787-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -58,67 +63,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Bichao Zheng <bichao.zheng@amlogic.com>
 
-[ Upstream commit a1b879eefc2b34cd3f17187ef6fc1cf3960e9518 ]
+[ Upstream commit a279345807e1e0ae79567a52cfdd9d30c9174a3c ]
 
-Fix afs_release() to go through the cleanup part of the function if
-FMODE_WRITE is set rather than exiting through vfs_fsync() (which skips the
-cleanup).  The cleanup involves discarding the refs on the key used for
-file ops and the writeback key record.
+There is an abnormally low about 20ms,when setting duty repeatedly.
+Because setting the duty will disable PWM and then enable. Delete
+this operation now.
 
-Also fix afs_evict_inode() to clean up any left over wb keys attached to
-the inode/vnode when it is removed.
-
-Fixes: 5a8132761609 ("afs: Do better accretion of small writes on newly created content")
-Signed-off-by: David Howells <dhowells@redhat.com>
+Fixes: 211ed630753d2f ("pwm: Add support for Meson PWM Controller")
+Signed-off-by: Bichao Zheng <bichao.zheng@amlogic.com>
+[ Dropped code instead of hiding it behind a comment ]
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/file.c  | 7 ++++---
- fs/afs/inode.c | 1 +
- 2 files changed, 5 insertions(+), 3 deletions(-)
+ drivers/pwm/pwm-meson.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/fs/afs/file.c b/fs/afs/file.c
-index 843d3b970b84..0bd78df6a64e 100644
---- a/fs/afs/file.c
-+++ b/fs/afs/file.c
-@@ -169,11 +169,12 @@ int afs_release(struct inode *inode, struct file *file)
- {
- 	struct afs_vnode *vnode = AFS_FS_I(inode);
- 	struct afs_file *af = file->private_data;
-+	int ret = 0;
- 
- 	_enter("{%x:%u},", vnode->fid.vid, vnode->fid.vnode);
- 
- 	if ((file->f_mode & FMODE_WRITE))
--		return vfs_fsync(file, 0);
-+		ret = vfs_fsync(file, 0);
- 
- 	file->private_data = NULL;
- 	if (af->wb)
-@@ -181,8 +182,8 @@ int afs_release(struct inode *inode, struct file *file)
- 	key_put(af->key);
- 	kfree(af);
- 	afs_prune_wb_keys(vnode);
--	_leave(" = 0");
--	return 0;
-+	_leave(" = %d", ret);
-+	return ret;
- }
- 
- /*
-diff --git a/fs/afs/inode.c b/fs/afs/inode.c
-index 0726e40db0f8..718fab2f151a 100644
---- a/fs/afs/inode.c
-+++ b/fs/afs/inode.c
-@@ -541,6 +541,7 @@ void afs_evict_inode(struct inode *inode)
- 	}
- #endif
- 
-+	afs_prune_wb_keys(vnode);
- 	afs_put_permits(rcu_access_pointer(vnode->permit_cache));
- 	key_put(vnode->lock_key);
- 	vnode->lock_key = NULL;
+diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
+index 4b708c1fcb1d..e247ab632530 100644
+--- a/drivers/pwm/pwm-meson.c
++++ b/drivers/pwm/pwm-meson.c
+@@ -325,11 +325,6 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	if (state->period != channel->state.period ||
+ 	    state->duty_cycle != channel->state.duty_cycle ||
+ 	    state->polarity != channel->state.polarity) {
+-		if (channel->state.enabled) {
+-			meson_pwm_disable(meson, pwm->hwpwm);
+-			channel->state.enabled = false;
+-		}
+-
+ 		if (state->polarity != channel->state.polarity) {
+ 			if (state->polarity == PWM_POLARITY_NORMAL)
+ 				meson->inverter_mask |= BIT(pwm->hwpwm);
 -- 
 2.20.1
 
