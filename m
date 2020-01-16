@@ -2,109 +2,154 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8744C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5F8C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91DCB2192A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:22:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198956;
-	bh=AQ8ic89c7+1mEdQVK2dagDthUfeUVWLZ6nusFWJq5o8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N1R1gvkJ6jjpXOAnH3g3t/QT1Dm6IZockEfaDG+PJezKuWpJEd80dx03PSepVhsuY
-	 K62qNHszuC3iwUDq3GC973MBsS1FHt0/G+ztn7vtXam9xfX+4pQ4cyczra4hig5fWw
-	 y+ZIBUGye3eICCVMtQW/zizdxx6jN8FYzPiY8EJI=
+	by mail.kernel.org (Postfix) with ESMTP id 45F9A20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:22:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395460AbgAPSWb (ORCPT
+        id S2395527AbgAPSWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:22:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37408 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:22:39 -0500
+Received: from mga01.intel.com ([192.55.52.88]:4949 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404061AbgAPR1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:27:31 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14275246BE;
-        Thu, 16 Jan 2020 17:27:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195651;
-        bh=AQ8ic89c7+1mEdQVK2dagDthUfeUVWLZ6nusFWJq5o8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mU8xIU+akZ0Oaqlycf+PT2yzNsvAR383C2t+Y0ou8P17POVSeOydGk7KAdhsyiW1/
-         gJc4yCrVJXqKkm1gf4srMq+b/YMnhDZSEiR1yzY3ZjUs8dr1YejcNJivzFTQ5sUKGJ
-         SSYGhT83zJ/HPMsRNKg1a+mui0nRtBJNUYHygT1Y=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Erwan Le Ray <erwan.leray@st.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 213/371] serial: stm32: fix transmit_chars when tx is stopped
-Date:   Thu, 16 Jan 2020 12:21:25 -0500
-Message-Id: <20200116172403.18149-156-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
-References: <20200116172403.18149-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        id S2395520AbgAPSWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 13:22:36 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 10:22:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,327,1574150400"; 
+   d="scan'208";a="243378222"
+Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.45])
+  by orsmga002.jf.intel.com with ESMTP; 16 Jan 2020 10:22:35 -0800
+From:   kan.liang@linux.intel.com
+To:     peterz@infradead.org, acme@redhat.com, mingo@kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     ak@linux.intel.com, eranian@google.com,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: [RESEND PATCH V2] perf/x86/intel: Avoid unnecessary PEBS_ENABLE MSR access in PMI
+Date:   Thu, 16 Jan 2020 10:21:12 -0800
+Message-Id: <20200116182112.20782-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erwan Le Ray <erwan.leray@st.com>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-[ Upstream commit b83b957c91f68e53f0dc596e129e8305761f2a32 ]
+The perf PMI handler, intel_pmu_handle_irq(), currently does
+unnecessary MSR accesses for PEBS_ENABLE MSR in
+__intel_pmu_enable/disable_all() when PEBS is enabled.
 
-Disables the tx irq  when the transmission is ended and updates stop_tx
-conditions for code cleanup.
+When entering the handler, global ctrl is explicitly disabled. All
+counters do not count anymore. It doesn't matter if PEBS is enabled
+or not in a PMI handler.
+Furthermore, for most cases, the cpuc->pebs_enabled is not changed in
+PMI. The PEBS status doesn't change. The PEBS_ENABLE MSR doesn't need to
+be changed either when exiting the handler.
 
-Fixes: 48a6092fb41f ("serial: stm32-usart: Add STM32 USART Driver")
-Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+PMI throttle may change the PEBS status during PMI handler. The
+x86_pmu_stop() ends up in intel_pmu_pebs_disable() which can update
+cpuc->pebs_enabled. But the PEBS_ENABLE MSR will be updated as well when
+cpuc->enabled == 1. No need to access PEBS_ENABLE MSR again for this
+case when exiting the handler.
+
+A PMI may land after cpuc->enabled=0 in x86_pmu_disable() and
+PMI throttle may be triggered for the PMI. For this rare case,
+intel_pmu_pebs_disable() will not touch PEBS_ENABLE MSR. The patch
+explicitly disable the PEBS for this case.
+
+Use ftrace to measure the duration of intel_pmu_handle_irq() on BDX.
+   #perf record -e cycles:P -- ./tchain_edit
+
+The average duration of intel_pmu_handle_irq()
+Without the patch       1.144 us
+With the patch          1.025 us
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- drivers/tty/serial/stm32-usart.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
-index c43590077372..a1e31913bcf9 100644
---- a/drivers/tty/serial/stm32-usart.c
-+++ b/drivers/tty/serial/stm32-usart.c
-@@ -310,13 +310,8 @@ static void stm32_transmit_chars(struct uart_port *port)
- 		return;
- 	}
+Changes since V1:
+- Update description and comments
+- Handle a rare case. The PMI may land after cpuc->enabled=0 in
+  x86_pmu_disable() and PMI throttle may be triggered for the PMI.
+
+ arch/x86/events/intel/core.c | 22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index bc6468329c52..18e1132c0fd7 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -1963,6 +1963,14 @@ static __initconst const u64 knl_hw_cache_extra_regs
+  * intel_bts events don't coexist with intel PMU's BTS events because of
+  * x86_add_exclusive(x86_lbr_exclusive_lbr); there's no need to keep them
+  * disabled around intel PMU's event batching etc, only inside the PMI handler.
++ *
++ * Avoid PEBS_ENABLE MSR access in PMIs.
++ * The GLOBAL_CTRL has been disabled. All the counters do not count anymore.
++ * It doesn't matter if the PEBS is enabled or not.
++ * Usually, the PEBS status are not changed in PMIs. It's unnecessary to
++ * access PEBS_ENABLE MSR in disable_all()/enable_all().
++ * However, there are some cases which may change PEBS status, e.g. PMI
++ * throttle. The PEBS_ENABLE should be updated where the status changes.
+  */
+ static void __intel_pmu_disable_all(void)
+ {
+@@ -1972,13 +1980,12 @@ static void __intel_pmu_disable_all(void)
  
--	if (uart_tx_stopped(port)) {
--		stm32_stop_tx(port);
--		return;
--	}
+ 	if (test_bit(INTEL_PMC_IDX_FIXED_BTS, cpuc->active_mask))
+ 		intel_pmu_disable_bts();
 -
--	if (uart_circ_empty(xmit)) {
--		stm32_stop_tx(port);
-+	if (uart_circ_empty(xmit) || uart_tx_stopped(port)) {
-+		stm32_clr_bits(port, ofs->cr1, USART_CR1_TXEIE);
- 		return;
- 	}
- 
-@@ -329,7 +324,7 @@ static void stm32_transmit_chars(struct uart_port *port)
- 		uart_write_wakeup(port);
- 
- 	if (uart_circ_empty(xmit))
--		stm32_stop_tx(port);
-+		stm32_clr_bits(port, ofs->cr1, USART_CR1_TXEIE);
+-	intel_pmu_pebs_disable_all();
  }
  
- static irqreturn_t stm32_interrupt(int irq, void *ptr)
+ static void intel_pmu_disable_all(void)
+ {
+ 	__intel_pmu_disable_all();
++	intel_pmu_pebs_disable_all();
+ 	intel_pmu_lbr_disable_all();
+ }
+ 
+@@ -1986,7 +1993,6 @@ static void __intel_pmu_enable_all(int added, bool pmi)
+ {
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 
+-	intel_pmu_pebs_enable_all();
+ 	intel_pmu_lbr_enable_all(pmi);
+ 	wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL,
+ 			x86_pmu.intel_ctrl & ~cpuc->intel_ctrl_guest_mask);
+@@ -2004,6 +2010,7 @@ static void __intel_pmu_enable_all(int added, bool pmi)
+ 
+ static void intel_pmu_enable_all(int added)
+ {
++	intel_pmu_pebs_enable_all();
+ 	__intel_pmu_enable_all(added, false);
+ }
+ 
+@@ -2620,6 +2627,15 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
+ 		handled++;
+ 		x86_pmu.drain_pebs(regs);
+ 		status &= x86_pmu.intel_ctrl | GLOBAL_STATUS_TRACE_TOPAPMI;
++
++		/*
++		 * PMI may land after cpuc->enabled=0 in x86_pmu_disable() and
++		 * PMI throttle may be triggered for the PMI.
++		 * For this rare case, intel_pmu_pebs_disable() will not touch
++		 * MSR_IA32_PEBS_ENABLE. Explicitly disable the PEBS here.
++		 */
++		if (unlikely(!cpuc->enabled && !cpuc->pebs_enabled))
++			wrmsrl(MSR_IA32_PEBS_ENABLE, 0);
+ 	}
+ 
+ 	/*
 -- 
-2.20.1
+2.17.1
 
