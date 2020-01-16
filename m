@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB3CC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CA8C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2A012468D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4FE3246C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:49:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196985;
-	bh=SkswhNMWRdcaeSocgMGmhwvlU47KjHFhf6aXYz5t+A8=;
+	s=default; t=1579196995;
+	bh=Nl/4LuWz6wnqaAMRmetzu5XfYYSDKGkIzi00bNh4lHs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QfYh8yxbKEmBbGGGxAV47r8B9WH+3vQQhPWyE24Qc9IdjgfXy8EKvuCRrN3TtgkaX
-	 w8u49VHC2YvQdCnsiZfg9FzJnhG86gEB9D5cRBz0XplQvXTkJ72ZK0vjL40nw7UzEa
-	 FdF9lE6rgGAsgTBT7eE4D1t7vRAYgks5kj8pi9Jw=
+	b=rQHK8pqcYEvbG+IJIBtW3KWL55KM4EJHEyPtM/haYINIIGgKmbC7/cw+7ePMOgCMK
+	 JPjL2zh2WagRxNhsyu2tpNPkc2hs49MAbL1QbtX4SOaExVPhlntBkams5cagmdrgMj
+	 Yccj8LOQaHHXs0cDtH/PT1cJVO+IpnoeLxHWDyV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406670AbgAPRto (ORCPT
+        id S2394109AbgAPRqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:49:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38498 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:46:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394201AbgAPRqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:46:04 -0500
+        id S2406569AbgAPRp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:45:58 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2453C246D5;
-        Thu, 16 Jan 2020 17:46:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97D06246CA;
+        Thu, 16 Jan 2020 17:45:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196763;
-        bh=SkswhNMWRdcaeSocgMGmhwvlU47KjHFhf6aXYz5t+A8=;
+        s=default; t=1579196757;
+        bh=Nl/4LuWz6wnqaAMRmetzu5XfYYSDKGkIzi00bNh4lHs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zl3SmxNomkNA+fE2CopOTSy+reOpe0dToSqrHWCzddRZYbcekwLqa+Im9jG2FMezm
-         cLt8AVpJZmf3Q8f6mEkcOUJkwbGg82HkkH42iwCpBXrUc4L7lBxIkhj393vUtwy9qs
-         lxnmxUJickkJ6+yoKxNF/5kxK4QPjDx5tidCgC5k=
+        b=t6F+aOvAfqf7rft9WdF/B8Ykj8cork+Yttf6qNPNdaum6J4GoCzyTWLy+0b5J0Y7a
+         x4RV2q27KknPqxq5X6i06+2ZmmZtfAiEJGi1Pj2VKYvQD9qdTyuewoVaD3M+C5/OD7
+         3xmw/uDbvjNof4r0XNAeL7di5g1xA3SyXJaZ+2jg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mao Wenan <maowenan@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 137/174] net: sonic: replace dev_kfree_skb in sonic_send_packet
-Date:   Thu, 16 Jan 2020 12:42:14 -0500
-Message-Id: <20200116174251.24326-137-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 132/174] iio: dac: ad5380: fix incorrect assignment to val
+Date:   Thu, 16 Jan 2020 12:42:09 -0500
+Message-Id: <20200116174251.24326-132-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -59,35 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <maowenan@huawei.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 49f6c90bf6805948b597eabb499e500a47cf24be ]
+[ Upstream commit b1e18768ef1214c0a8048327918a182cabe09f9d ]
 
-sonic_send_packet will be processed in irq or non-irq
-context, so it would better use dev_kfree_skb_any
-instead of dev_kfree_skb.
+Currently the pointer val is being incorrectly incremented
+instead of the value pointed to by val. Fix this by adding
+in the missing * indirection operator.
 
-Fixes: d9fb9f384292 ("*sonic/natsemi/ns83829: Move the National Semi-conductor drivers")
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Addresses-Coverity: ("Unused value")
+Fixes: c03f2c536818 ("staging:iio:dac: Add AD5380 driver")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/natsemi/sonic.c | 2 +-
+ drivers/iio/dac/ad5380.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
-index b5f1f4ea9d4a..667900578249 100644
---- a/drivers/net/ethernet/natsemi/sonic.c
-+++ b/drivers/net/ethernet/natsemi/sonic.c
-@@ -222,7 +222,7 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
- 	laddr = dma_map_single(lp->device, skb->data, length, DMA_TO_DEVICE);
- 	if (!laddr) {
- 		pr_err_ratelimited("%s: failed to map tx DMA buffer.\n", dev->name);
--		dev_kfree_skb(skb);
-+		dev_kfree_skb_any(skb);
- 		return NETDEV_TX_OK;
- 	}
- 
+diff --git a/drivers/iio/dac/ad5380.c b/drivers/iio/dac/ad5380.c
+index 97d2c5111f43..8bf7fc626a9d 100644
+--- a/drivers/iio/dac/ad5380.c
++++ b/drivers/iio/dac/ad5380.c
+@@ -221,7 +221,7 @@ static int ad5380_read_raw(struct iio_dev *indio_dev,
+ 		if (ret)
+ 			return ret;
+ 		*val >>= chan->scan_type.shift;
+-		val -= (1 << chan->scan_type.realbits) / 2;
++		*val -= (1 << chan->scan_type.realbits) / 2;
+ 		return IIO_VAL_INT;
+ 	case IIO_CHAN_INFO_SCALE:
+ 		*val = 2 * st->vref;
 -- 
 2.20.1
 
