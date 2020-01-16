@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B00C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 838E3C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7503F2467E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5046F21D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:11:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194661;
-	bh=8pmzowCdGMNdlrVuisE8cxbRdFU+AF3IhU1RZb79fXs=;
+	s=default; t=1579194664;
+	bh=Ne2nJp0Qbpt+S4EZUaud66Ptl6nB1AtRcC/mImsohUU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rwNvkQ8A+73tEtBH9qdK08OvNkb/wTH6Ar+djI8FfXORDClJ8QVXsHjLOApfk3Pb6
-	 exwCXkk6PVYqIiURYSUe8e4UUevSaBxMK4/8+SVWRgmbgf/xabdqzCIATOgAQuoK4H
-	 v5i8f5vCYoywBBjUL3xEJt8JmBEc2kj4GLcpHUJk=
+	b=JR6aSY+Z3+6ojKPsE2F8sWK7SB6rNftRWS2MrydT41ROfpI6d5EVhsktNY9oDbh14
+	 sIiWgNj+H1+jeaSUFiq/mZaThq+31kLtmeVv4kgejketYotQji1O9+D0eWGjAY6x2p
+	 MWuuUqxYjQtVmZ0+OiAf+5mcVX/A7FS1YcUV6lrE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390128AbgAPRLA (ORCPT
+        id S2390138AbgAPRLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:11:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50436 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:11:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390096AbgAPRK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:10:57 -0500
+        id S2390125AbgAPRLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:11:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5338A20684;
-        Thu, 16 Jan 2020 17:10:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D95D32467E;
+        Thu, 16 Jan 2020 17:10:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194657;
-        bh=8pmzowCdGMNdlrVuisE8cxbRdFU+AF3IhU1RZb79fXs=;
+        s=default; t=1579194660;
+        bh=Ne2nJp0Qbpt+S4EZUaud66Ptl6nB1AtRcC/mImsohUU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R6DGo0TfYnHDMguMkacizVMRDWtJsZY/9KZalJIHL/uvtV2gsAwH2flLt3xwvoL5/
-         +4LnV07EZM5htYrALAaAholzMU7qYEIN5EAbdeUUeTUevPtuoShHLMtsf1jwG0kDoG
-         pUJNYHnkN+7SX6sh93tI2MYFsUPxTz/X41F2wmuA=
+        b=G/CkQe6unRl5W+Hqur3pJCvN4Gd2TXb9f7nXOZgksGb35iV70BjAo/gQJmvBN3agy
+         rsjVcOnYAmlnQPO4++QfZRCmVsBa1NYMvdnlGNDFgC5Iyr51G/DB4/aU1SF1dqlJaY
+         aY6mvPiCsHu9MWTNPoruseHuXBK3Kx59qSVul3oQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Markus Elfring <elfring@users.sourceforge.net>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 509/671] media: em28xx: Fix exception handling in em28xx_alloc_urbs()
-Date:   Thu, 16 Jan 2020 12:02:27 -0500
-Message-Id: <20200116170509.12787-246-sashal@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Chuansheng Liu <chuansheng.liu@intel.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-ide@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 511/671] ahci: Do not export local variable ahci_em_messages
+Date:   Thu, 16 Jan 2020 12:02:29 -0500
+Message-Id: <20200116170509.12787-248-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,39 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit ecbce48f1ff2442371ebcd12ec0ecddb431fbd72 ]
+[ Upstream commit 60fc35f327e0a9e60b955c0f3c3ed623608d1baa ]
 
-A null pointer would be passed to a call of the function "kfree" directly
-after a call of the function "kcalloc" failed at one place.
-Pass the data structure member "urb" instead for which memory
-was allocated before (so that this resource will be properly cleaned up).
+The commit ed08d40cdec4
+  ("ahci: Changing two module params with static and __read_mostly")
+moved ahci_em_messages to be static while missing the fact of exporting it.
 
-This issue was detected by using the Coccinelle software.
+WARNING: "ahci_em_messages" [vmlinux] is a static EXPORT_SYMBOL_GPL
 
-Fixes: d571b592c6206d33731f41aa710fa0f69ac8611b ("media: em28xx: don't use coherent buffer for DMA transfers")
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Drop export for the local variable ahci_em_messages.
+
+Fixes: ed08d40cdec4 ("ahci: Changing two module params with static and __read_mostly")
+Cc: Chuansheng Liu <chuansheng.liu@intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/em28xx/em28xx-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/ata/libahci.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/media/usb/em28xx/em28xx-core.c b/drivers/media/usb/em28xx/em28xx-core.c
-index 5657f8710ca6..69445c8e38e2 100644
---- a/drivers/media/usb/em28xx/em28xx-core.c
-+++ b/drivers/media/usb/em28xx/em28xx-core.c
-@@ -930,7 +930,7 @@ int em28xx_alloc_urbs(struct em28xx *dev, enum em28xx_mode mode, int xfer_bulk,
+diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
+index b5f57c69c487..2bdb250a2142 100644
+--- a/drivers/ata/libahci.c
++++ b/drivers/ata/libahci.c
+@@ -191,7 +191,6 @@ struct ata_port_operations ahci_pmp_retry_srst_ops = {
+ EXPORT_SYMBOL_GPL(ahci_pmp_retry_srst_ops);
  
- 	usb_bufs->buf = kcalloc(num_bufs, sizeof(void *), GFP_KERNEL);
- 	if (!usb_bufs->buf) {
--		kfree(usb_bufs->buf);
-+		kfree(usb_bufs->urb);
- 		return -ENOMEM;
- 	}
- 
+ static bool ahci_em_messages __read_mostly = true;
+-EXPORT_SYMBOL_GPL(ahci_em_messages);
+ module_param(ahci_em_messages, bool, 0444);
+ /* add other LED protocol types when they become supported */
+ MODULE_PARM_DESC(ahci_em_messages,
 -- 
 2.20.1
 
