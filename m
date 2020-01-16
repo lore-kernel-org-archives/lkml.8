@@ -2,103 +2,154 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BA2C33CB2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 02:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA24C33CB2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 02:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60F2B22522
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 02:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 698582081E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 02:15:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="GlLuzYVE"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="lDmTDI3p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730878AbgAPCPf (ORCPT
+        id S1730921AbgAPCPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 21:15:35 -0500
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:19591 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730712AbgAPCPa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 21:15:30 -0500
-X-UUID: f6febd604f064cc2878b7004d03748cc-20200116
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=+VvUdG5czMFQ6vj3bLpdxYbfWO+M89EVYUK9328VdMQ=;
-        b=GlLuzYVEcGzvZ/TfRlq0XpBvBVsSvecEtKzkYW/UddzGodIpT6fZI8Tqb0+hCHCf4do/OVcJE5buLB2I8WWIrMMmxzFJ+gS4PKpfO05OXwLsrUgculvnkPQhwbIySRJHyxXV+Lhf5PGrZSaNemi+s5OM3yB/1zGP0qtJ4QcqMlA=;
-X-UUID: f6febd604f064cc2878b7004d03748cc-20200116
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <jitao.shi@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 550764611; Thu, 16 Jan 2020 10:15:24 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33DR.mediatek.inc
- (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 16 Jan
- 2020 10:12:06 +0800
-Received: from mszsdclx1018.gcn.mediatek.inc (10.16.6.18) by
- MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Thu, 16 Jan 2020 10:14:29 +0800
-From:   Jitao Shi <jitao.shi@mediatek.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-CC:     <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
-        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
-        <bibby.hsieh@mediatek.com>, <ck.hu@mediatek.com>,
-        <stonea168@163.com>, Jitao Shi <jitao.shi@mediatek.com>
-Subject: [PATCH v9 4/5] drm/panel: support for boe,tv101wum-n53 wuxga dsi video mode panel
-Date:   Thu, 16 Jan 2020 10:15:10 +0800
-Message-ID: <20200116021511.22675-5-jitao.shi@mediatek.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200116021511.22675-1-jitao.shi@mediatek.com>
-References: <20200116021511.22675-1-jitao.shi@mediatek.com>
+        Wed, 15 Jan 2020 21:15:46 -0500
+Received: from mail-eopbgr60072.outbound.protection.outlook.com ([40.107.6.72]:55367
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730202AbgAPCPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 21:15:46 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=c/j9gNwJKJ4p/xGAb/EYagmUEWJTCmNBgqXktEuySJWDwPpYIHzdZO5k9dYaOHcx9OgqdO3Zoq9WJR6olrQiRN1WF1baMpCqcLPSnB1DpEFt1fz5BjRHXrUUUn0oo4ZXhWCeg8Cdsv6IvqcY9a+boVMkjMcf2L9X3GEuCK1V2gIrl7EmgBtX3C0PEaQ613RDe199XWELdER5SLpZyHY1K3mF5kcQSHkywhPa3enBQlipGZpARbuToPgaqJuFKd+XCaDzj3g0QVr3sGNI9G51EtCDmvgK/zcSnVDlB2IpOHh8P14iRsBUGmrdNLQhQPNwRan1bdp8xTytW9uiriXikA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Mk8wqONt0m5VutgAp1dDRQ1onFLZAHSZSFGDHYgXc1I=;
+ b=NlKM+ybPZtiRltEc3orZLG5xuIkdf7Lw5dk15rL60mzhHGDEXYXliGnC2nLjgTRGUY4WlUD8kGjgW+LVBsVyQquNt7UHVmNB36DIu7oESYSRXAS+1I4wjIb3h46H8oDWbqhdi6i4KOpXv3cBOUNbR9eaTNMQFAgXp95asOmk7cB60Rhm/0IpFXnxttrXAgz0g8PYClL3r4JfKlcMkkEI6VcKVWmFtvKKijVKfwtQc5goWsaGohEa4UTs8qiMrMgb2PyOjNO6IUxI2CuNBrBnYA2uezU2s7Iaj6f6G7hrU/g4g/txvD85payEUCVicv5XLe+D8Ra4UBXMOJZD0psBKQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Mk8wqONt0m5VutgAp1dDRQ1onFLZAHSZSFGDHYgXc1I=;
+ b=lDmTDI3pkRvoop9Nn1ANEmmdsqZiuAxAK6KpWdw8AFofDO9RVVFyuNkIGteDs/ScszXF1R/Ex1RpqRdj+V4jD7nhb7KOLxYMSQLrCrAD4O38LopcmweO/PNI6qmyWDPuBrpRQM1OHDQjAL8XlZ76jIZmaFRv571ncPIiTRL3SbA=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB6289.eurprd04.prod.outlook.com (20.179.35.151) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.20; Thu, 16 Jan 2020 02:15:42 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2623.018; Thu, 16 Jan 2020
+ 02:15:42 +0000
+Received: from localhost.localdomain (119.31.174.66) by HK2PR0302CA0012.apcprd03.prod.outlook.com (2603:1096:202::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2644.6 via Frontend Transport; Thu, 16 Jan 2020 02:15:36 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "sboyd@kernel.org" <sboyd@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>
+CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH V3 0/4] clk: imx: imx8m: introduce imx8m_clk_hw_composite_core
+Thread-Topic: [PATCH V3 0/4] clk: imx: imx8m: introduce
+ imx8m_clk_hw_composite_core
+Thread-Index: AQHVzBLaTlW3Hwqw+ku5LVRzcstOhQ==
+Date:   Thu, 16 Jan 2020 02:15:42 +0000
+Message-ID: <1579140562-8060-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2PR0302CA0012.apcprd03.prod.outlook.com
+ (2603:1096:202::22) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 8181c590-83c3-4a5c-58ca-08d79a29fc87
+x-ms-traffictypediagnostic: AM0PR04MB6289:|AM0PR04MB6289:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB6289984E9B5EE15A87383EEF88360@AM0PR04MB6289.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 02843AA9E0
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(39860400002)(396003)(136003)(366004)(189003)(199004)(478600001)(4326008)(5660300002)(316002)(54906003)(110136005)(8936002)(81166006)(81156014)(8676002)(36756003)(6512007)(71200400001)(69590400006)(16526019)(6636002)(26005)(6506007)(186003)(86362001)(52116002)(64756008)(956004)(6666004)(66946007)(66476007)(6486002)(66556008)(44832011)(66446008)(2616005)(2906002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6289;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 84aZxjSKhi+ihad2GpR/THb8HU+EzE/LakfJBYDnzwqXcA0WxqwakRqS+Yn0in7FFm624A53SVRrZ87ybzJ158kRQeCRz75bgoryu6hwfOAhxv+ntEs9EIZS8unb5Ce7KrdBepp68TZOp3cjXwtL6hamJQ7IEW/Czpl2LlPt17hc71OvAWhjSInBsMeniLb9Q+INVom1UoPC/N0ro0KY6MYgymcSlhurSvyQqbRaIBj+EiLsKJdPhUAQs5Qm/0RlsHr44ADRkMQL7KwKTC0H2jdfj4irTpfSRmaVmj50T/aVnJq5b5jXstiXAkAoGcz7syX2pUQmsXszB2K5xoYACp0S4uyXW0V9FimlEbw5wGgLz/IjBgWlsn1Se4VHOghYNmnPGRdLeoNdSR/oPRtZn+Tu4kOQ6Dpx5yRtuLiui+5BHPYPmJmvWv3++uL9vTMAFLv8jiUhXOmBNnUg+0JfgIJu0fovonv4snKK5h8hPMsVRmka6S0VVRg0L+e9AuTSf/UNKsjXfQXDV3Rf2r46yA==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: FAF22AD0A3DD6B2AF3AB04947F472BD4E082D584A9AAFC91FC73C7D0AC42B8AB2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8181c590-83c3-4a5c-58ca-08d79a29fc87
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jan 2020 02:15:42.0917
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Ia+cxtc1zzL7zi/SnTatGMrxUx96vCXijzwI1Ob1MOXax+oxVoDPdrZfLVbazcSXCoYQ7c89YNGvoQP+pvzVkQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6289
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Qm9lLHR2MTAxd3VtLW41MydzIGNvbm5lY3RvciBpcyBzYW1lIGFzIGJvZSx0djEwMXd1bS1ubDYu
-DQpUaGUgbW9zdCBjb2RlcyBjYW4gYmUgcmV1c2UuDQpTbyBib2UsdHYxMDF3dW0tbjUzIGFuZCBi
-b2UsdHYxMDF3dW0tbmw2IHVzZSBvbmUgZHJpdmVyIGZpbGUuDQpBZGQgdGhlIGRpZmZlcmVudCBw
-YXJ0cyBpbiBkcml2ZXIgZGF0YS4NCg0KU2lnbmVkLW9mZi1ieTogSml0YW8gU2hpIDxqaXRhby5z
-aGlAbWVkaWF0ZWsuY29tPg0KUmV2aWV3ZWQtYnk6IFNhbSBSYXZuYm9yZyA8c2FtQHJhdm5ib3Jn
-Lm9yZz4NCi0tLQ0KIC4uLi9ncHUvZHJtL3BhbmVsL3BhbmVsLWJvZS10djEwMXd1bS1ubDYuYyAg
-ICB8IDMxICsrKysrKysrKysrKysrKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgMzEgaW5zZXJ0aW9u
-cygrKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLWJvZS10djEw
-MXd1bS1ubDYuYyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1ib2UtdHYxMDF3dW0tbmw2
-LmMNCmluZGV4IDIxNjAxNDRjYTUxYi4uZTc3ZWE1NzdkOTNhIDEwMDY0NA0KLS0tIGEvZHJpdmVy
-cy9ncHUvZHJtL3BhbmVsL3BhbmVsLWJvZS10djEwMXd1bS1ubDYuYw0KKysrIGIvZHJpdmVycy9n
-cHUvZHJtL3BhbmVsL3BhbmVsLWJvZS10djEwMXd1bS1ubDYuYw0KQEAgLTU5Myw2ICs1OTMsMzQg
-QEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIGF1b19rZDEwMW44MF80NW5hX2Rlc2Mg
-PSB7DQogCS5kaXNjaGFyZ2Vfb25fZGlzYWJsZSA9IHRydWUsDQogfTsNCiANCitzdGF0aWMgY29u
-c3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgYm9lX3R2MTAxd3VtX241M19kZWZhdWx0X21vZGUg
-PSB7DQorCS5jbG9jayA9IDE1OTkxNiwNCisJLmhkaXNwbGF5ID0gMTIwMCwNCisJLmhzeW5jX3N0
-YXJ0ID0gMTIwMCArIDgwLA0KKwkuaHN5bmNfZW5kID0gMTIwMCArIDgwICsgMjQsDQorCS5odG90
-YWwgPSAxMjAwICsgODAgKyAyNCArIDQwLA0KKwkudmRpc3BsYXkgPSAxOTIwLA0KKwkudnN5bmNf
-c3RhcnQgPSAxOTIwICsgMjAsDQorCS52c3luY19lbmQgPSAxOTIwICsgMjAgKyA0LA0KKwkudnRv
-dGFsID0gMTkyMCArIDIwICsgNCArIDEwLA0KKwkudnJlZnJlc2ggPSA2MCwNCisJLnR5cGUgPSBE
-Uk1fTU9ERV9UWVBFX0RSSVZFUiB8IERSTV9NT0RFX1RZUEVfUFJFRkVSUkVELA0KK307DQorDQor
-c3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIGJvZV90djEwMXd1bV9uNTNfZGVzYyA9IHsN
-CisJLm1vZGVzID0gJmJvZV90djEwMXd1bV9uNTNfZGVmYXVsdF9tb2RlLA0KKwkuYnBjID0gOCwN
-CisJLnNpemUgPSB7DQorCQkud2lkdGhfbW0gPSAxMzUsDQorCQkuaGVpZ2h0X21tID0gMjE2LA0K
-Kwl9LA0KKwkubGFuZXMgPSA0LA0KKwkuZm9ybWF0ID0gTUlQSV9EU0lfRk1UX1JHQjg4OCwNCisJ
-Lm1vZGVfZmxhZ3MgPSBNSVBJX0RTSV9NT0RFX1ZJREVPIHwgTUlQSV9EU0lfTU9ERV9WSURFT19T
-WU5DX1BVTFNFIHwNCisJCSAgICAgIE1JUElfRFNJX01PREVfTFBNLA0KKwkuaW5pdF9jbWRzID0g
-Ym9lX2luaXRfY21kLA0KK307DQorDQogc3RhdGljIGludCBib2VfcGFuZWxfZ2V0X21vZGVzKHN0
-cnVjdCBkcm1fcGFuZWwgKnBhbmVsLA0KIAkJCSAgICAgICBzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAq
-Y29ubmVjdG9yKQ0KIHsNCkBAIC03MjUsNiArNzUzLDkgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBv
-Zl9kZXZpY2VfaWQgYm9lX29mX21hdGNoW10gPSB7DQogCXsgLmNvbXBhdGlibGUgPSAiYXVvLGtk
-MTAxbjgwLTQ1bmEiLA0KIAkgIC5kYXRhID0gJmF1b19rZDEwMW44MF80NW5hX2Rlc2MNCiAJfSwN
-CisJeyAuY29tcGF0aWJsZSA9ICJib2UsdHYxMDF3dW0tbjUzIiwNCisJICAuZGF0YSA9ICZib2Vf
-dHYxMDF3dW1fbjUzX2Rlc2MNCisJfSwNCiAJeyAvKiBzZW50aW5lbCAqLyB9DQogfTsNCiBNT0RV
-TEVfREVWSUNFX1RBQkxFKG9mLCBib2Vfb2ZfbWF0Y2gpOw0KLS0gDQoyLjIxLjANCg==
+From: Peng Fan <peng.fan@nxp.com>
+
+
+Leonard,
+ Please help review this V3 patchset.
+
+V3:
+ Add CLK_SET_RATE_NO_REPARENT and CLK_OPS_PARENT_ENABLE for core
+ Avoid break DT for i.MX8MQ
+
+V2:
+ Rename imx8m_clk_hw_core_composite to imx8m_clk_hw_composite_core
+ Add Abel's tag
+
+To i.MX8M family, there are different types of clock slices,
+bus/core/ip and etc. Currently, the imx8m_clk_hw_composite
+api could only handle bus and ip clock slice, it could
+not handle core slice. The difference is core slice not have
+pre divider and the width of post divider is 3 bits.
+
+To simplify code and reuse imx8m_clk_hw_composite, introduce a
+flag IMX_COMPOSITE_CORE to differentiate the slices.
+
+With this new helper, we could simplify i.MX8M SoC clk drivers.
+
+Peng Fan (4):
+  clk: imx: composite-8m: add imx8m_clk_hw_composite_core
+  clk: imx: imx8mq: use imx8m_clk_hw_composite_core
+  clk: imx: imx8mm: use imx8m_clk_hw_composite_core
+  clk: imx: imx8mn: use imx8m_clk_hw_composite_core
+
+ drivers/clk/imx/clk-composite-8m.c | 18 ++++++++++++++----
+ drivers/clk/imx/clk-imx8mm.c       | 17 +++++------------
+ drivers/clk/imx/clk-imx8mn.c       | 10 +++-------
+ drivers/clk/imx/clk-imx8mq.c       | 22 ++++++++--------------
+ drivers/clk/imx/clk.h              | 13 +++++++++++--
+ 5 files changed, 41 insertions(+), 39 deletions(-)
+
+--=20
+2.16.4
 
