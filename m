@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D182C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 970AEC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 513F0246D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 387A5246DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:25:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195522;
-	bh=o/9sH5pE9k4rFAh1zROCpzLfE+tZgovyTyZunZJY9j8=;
+	s=default; t=1579195535;
+	bh=GsLx3ylHwcKDm38Tz7iGZPcINyNQlX8kvooHKto/2bc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X8N+aeyWGCh1A2sD9qbVbEkDd7vGZ3SdOiXbtkTNxXf0W3tN0m8eOUZLHp4SIMap7
-	 SSne3cC1Bb2g/v9ZOkTqppLVciMH+417PL8WYaNuMkQOdYDPfPua3uzA7oI59XMF7e
-	 hMlJrDa6hJmjZJcp5uK6myE6dvA0a7aVyXXzXrP8=
+	b=PFFn496CHRaQCjeubxF3LAsuyO6xik0dN6E0RzC/CB/ACZdp+vq7eL2VZhX1F2uJN
+	 q201/Q9dpVoD7voasOdceJVtY6mWCC6Eif0sDB9bbY5yiRuaQQJI84R2XCKahi34yL
+	 sZlShxSa+ZT9okWl/SQ7f2kJ/sO3BJPwMdhE4N38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391924AbgAPRZV (ORCPT
+        id S2391976AbgAPRZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:25:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60568 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:25:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391871AbgAPRZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:25:06 -0500
+        id S2391903AbgAPRZN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:25:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82A7E246CD;
-        Thu, 16 Jan 2020 17:25:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CDC9246AB;
+        Thu, 16 Jan 2020 17:25:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195505;
-        bh=o/9sH5pE9k4rFAh1zROCpzLfE+tZgovyTyZunZJY9j8=;
+        s=default; t=1579195513;
+        bh=GsLx3ylHwcKDm38Tz7iGZPcINyNQlX8kvooHKto/2bc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a5UoZiRIaDUkMvWEV1sURwM6bY7eHa2BJorh1h/6RiJRTELGqb+e73v3IiEjxJgaH
-         AMn49uV601Yu21zGn/u8pUYs58989sreuH5wFSMAqnrjZgHbtTtHNpopy0XWRZES95
-         HbokOs3d8fMUqqjusprHK9SrpJo2YoQ+A3MgUqec=
+        b=L9jQTU0Ore94CYfTxrcPcC4y9OBqqnMuRKF1ML+xqi+FeY3uhmpt8UzDdJQKlL9eb
+         Eg7jVsgnrItTRO4zWcszP8OrEZOPhZ3Al+iznfzBTTpWBbog9U94ALb8K2eYx2GCKw
+         +wSEkMdc6IIK8Yu/hz/Nxa9O4jNc+GsWS5uRqgMQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        John David Anglin <dave.anglin@bell.net>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 105/371] dmaengine: mv_xor: Use correct device for DMA API
-Date:   Thu, 16 Jan 2020 12:19:37 -0500
-Message-Id: <20200116172403.18149-48-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 112/371] drm/nouveau/pmu: don't print reply values if exec is false
+Date:   Thu, 16 Jan 2020 12:19:44 -0500
+Message-Id: <20200116172403.18149-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -61,51 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Murphy <robin.murphy@arm.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 3e5daee5ecf314da33a890fabaa2404244cd2a36 ]
+[ Upstream commit b1d03fc36ec9834465a08c275c8d563e07f6f6bf ]
 
-Using dma_dev->dev for mappings before it's assigned with the correct
-device is unlikely to work as expected, and with future dma-direct
-changes, passing a NULL device may end up crashing entirely. I don't
-know enough about this hardware or the mv_xor_prep_dma_interrupt()
-operation to implement the appropriate error-handling logic that would
-have revealed those dma_map_single() calls failing on arm64 for as long
-as the driver has been enabled there, but moving the assignment earlier
-will at least make the current code operate as intended.
+Currently the uninitialized values in the array reply are printed out
+when exec is false and nvkm_pmu_send has not updated the array. Avoid
+confusion by only dumping out these values if they have been actually
+updated.
 
-Fixes: 22843545b200 ("dma: mv_xor: Add support for DMA_INTERRUPT")
-Reported-by: John David Anglin <dave.anglin@bell.net>
-Tested-by: John David Anglin <dave.anglin@bell.net>
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Tested-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Detected by CoverityScan, CID#1271291 ("Uninitialized scaler variable")
+Fixes: ebb58dc2ef8c ("drm/nouveau/pmu: rename from pwr (no binary change)")
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/mv_xor.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/mv_xor.c b/drivers/dma/mv_xor.c
-index 1993889003fd..1c57577f49fe 100644
---- a/drivers/dma/mv_xor.c
-+++ b/drivers/dma/mv_xor.c
-@@ -1059,6 +1059,7 @@ mv_xor_channel_add(struct mv_xor_device *xordev,
- 		mv_chan->op_in_desc = XOR_MODE_IN_DESC;
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c b/drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c
+index 11b28b086a06..7b052879af72 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c
+@@ -88,10 +88,10 @@ nvkm_memx_fini(struct nvkm_memx **pmemx, bool exec)
+ 	if (exec) {
+ 		nvkm_pmu_send(pmu, reply, PROC_MEMX, MEMX_MSG_EXEC,
+ 			      memx->base, finish);
++		nvkm_debug(subdev, "Exec took %uns, PMU_IN %08x\n",
++			   reply[0], reply[1]);
+ 	}
  
- 	dma_dev = &mv_chan->dmadev;
-+	dma_dev->dev = &pdev->dev;
- 	mv_chan->xordev = xordev;
- 
- 	/*
-@@ -1091,7 +1092,6 @@ mv_xor_channel_add(struct mv_xor_device *xordev,
- 	dma_dev->device_free_chan_resources = mv_xor_free_chan_resources;
- 	dma_dev->device_tx_status = mv_xor_status;
- 	dma_dev->device_issue_pending = mv_xor_issue_pending;
--	dma_dev->dev = &pdev->dev;
- 
- 	/* set prep routines based on capability */
- 	if (dma_has_cap(DMA_INTERRUPT, dma_dev->cap_mask))
+-	nvkm_debug(subdev, "Exec took %uns, PMU_IN %08x\n",
+-		   reply[0], reply[1]);
+ 	kfree(memx);
+ 	return 0;
+ }
 -- 
 2.20.1
 
