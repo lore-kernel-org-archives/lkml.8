@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 875E0C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F5CC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F46324687
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D56324687
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194936;
-	bh=P4JS33lPfd5CksSa+DV0l9XssAnGxxCSrEewU7X7u24=;
+	s=default; t=1579194939;
+	bh=/2xFaNxLa7K50Z785BV0wVYEyuwasJCRGTuj3dfdc2s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JzgjuQ+tNU3nRG7FKNmG+nNhk9MvRoLhaKFEvp0Ud+m2pU35ZXNFvY9YuR86HFobS
-	 lyz9MVs1rwi5NxPCOh/Q2TWaKYPNeEmh2o2nDsDdasXv6zTqJRJmGtczFy6L+Kje2d
-	 jPY5RwDA+5Pl0AAvfjf4RJFFUccrkYSvLKESU0NQ=
+	b=lJ76qJIH8PNw+3mzPjc+2zoUzg2o4zFBUejECqX9b88T34tWIzfXa1ywVzpmlPzOC
+	 TwEOjVggxk/3mzmaOq1YE10ZUzbpgRpeF7+08sDJpTs6EhVsJ0zdj/YCmFvXxyqqHw
+	 uBaYV8pPF2iBaLJykiXE5rMiqcMeXpLZl3dmLYuM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390580AbgAPRPe (ORCPT
+        id S2391029AbgAPROf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:15:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34160 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:14:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390246AbgAPROi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:14:38 -0500
+        id S2390962AbgAPROU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:14:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFB28246A0;
-        Thu, 16 Jan 2020 17:14:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D677246AF;
+        Thu, 16 Jan 2020 17:14:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194878;
-        bh=P4JS33lPfd5CksSa+DV0l9XssAnGxxCSrEewU7X7u24=;
+        s=default; t=1579194859;
+        bh=/2xFaNxLa7K50Z785BV0wVYEyuwasJCRGTuj3dfdc2s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zvOCsLo0W1tG7EA5E9DeS4bKV1Xh3i2RwDQjV4HEOfaE3zuGOw6J/D/tcB/9v/H9B
-         MtsQ9eENvmTR0hDySd6+3vODzO/nTkQYjEYGcf7S9uzQYvXBqwSJEIKpZoX8bIIPes
-         bcmn77XRd/kfwEVztUin1Qy9OXTWOf2naH6YpkwY=
+        b=T7w8pQeJmlq+dr+hcya24HDCQoaa4itAaZ1885nbHGQXIniSmfPI9+3qp6RChugo9
+         AsPIorMJA0H8734JpgmcfSkIEjz32Z7umDxNvwuiSNv2bgvFJ+fnXW0+attPC1+k3U
+         wdUQ9b6Oi2JJyeiF/LyXc0wkWrqqFdRPE1EXJjLs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Olof Johansson <olof@lixom.net>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 667/671] soc: aspeed: Fix snoop_file_poll()'s return type
-Date:   Thu, 16 Jan 2020 12:05:05 -0500
-Message-Id: <20200116170509.12787-404-sashal@kernel.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Christoph Hellwig <hch@lst.de>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 654/671] scsi: target: core: Fix a pr_debug() argument
+Date:   Thu, 16 Jan 2020 12:04:52 -0500
+Message-Id: <20200116170509.12787-391-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -62,48 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit a4e55ccd4392e70f296d12e81b93c6ca96ee21d5 ]
+[ Upstream commit c941e0d172605731de9b4628bd4146d35cf2e7d6 ]
 
-snoop_file_poll() is defined as returning 'unsigned int' but the
-.poll method is declared as returning '__poll_t', a bitwise type.
+Print the string for which conversion failed instead of printing the
+function name twice.
 
-Fix this by using the proper return type and using the EPOLL
-constants instead of the POLL ones, as required for __poll_t.
-
-Link: https://lore.kernel.org/r/20191121051851.268726-1-joel@jms.id.au
-Fixes: 3772e5da4454 ("drivers/misc: Aspeed LPC snoop output using misc chardev")
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Reviewed-by: Joel Stanley <joel@jms.id.au>
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
-Signed-off-by: Olof Johansson <olof@lixom.net>
+Fixes: 2650d71e244f ("target: move transport ID handling to the core")
+Cc: Christoph Hellwig <hch@lst.de>
+Link: https://lore.kernel.org/r/20191107215525.64415-1-bvanassche@acm.org
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/aspeed-lpc-snoop.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/target/target_core_fabric_lib.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/misc/aspeed-lpc-snoop.c b/drivers/misc/aspeed-lpc-snoop.c
-index 2feb4347d67f..c10be21a1663 100644
---- a/drivers/misc/aspeed-lpc-snoop.c
-+++ b/drivers/misc/aspeed-lpc-snoop.c
-@@ -101,13 +101,13 @@ static ssize_t snoop_file_read(struct file *file, char __user *buffer,
- 	return ret ? ret : copied;
- }
+diff --git a/drivers/target/target_core_fabric_lib.c b/drivers/target/target_core_fabric_lib.c
+index 71a80257a052..10fae26b44ad 100644
+--- a/drivers/target/target_core_fabric_lib.c
++++ b/drivers/target/target_core_fabric_lib.c
+@@ -131,7 +131,7 @@ static int srp_get_pr_transport_id(
+ 	memset(buf + 8, 0, leading_zero_bytes);
+ 	rc = hex2bin(buf + 8 + leading_zero_bytes, p, count);
+ 	if (rc < 0) {
+-		pr_debug("hex2bin failed for %s: %d\n", __func__, rc);
++		pr_debug("hex2bin failed for %s: %d\n", p, rc);
+ 		return rc;
+ 	}
  
--static unsigned int snoop_file_poll(struct file *file,
-+static __poll_t snoop_file_poll(struct file *file,
- 				    struct poll_table_struct *pt)
- {
- 	struct aspeed_lpc_snoop_channel *chan = snoop_file_to_chan(file);
- 
- 	poll_wait(file, &chan->wq, pt);
--	return !kfifo_is_empty(&chan->fifo) ? POLLIN : 0;
-+	return !kfifo_is_empty(&chan->fifo) ? EPOLLIN : 0;
- }
- 
- static const struct file_operations snoop_fops = {
 -- 
 2.20.1
 
