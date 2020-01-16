@@ -2,109 +2,102 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79CDCC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F2CC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FA182077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:03:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194236;
-	bh=7xz+vLnFw4XjnRLafaQcO0K8hzVM1v1QHQw2s1h9R3w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BeFBCv1SqSFg1nUjoohulXO0qb18X6DSuKQlpy9+UVQwSdrl8YlrVC0aPjcCYs1zf
-	 fJ/+u1CpgcAvna65X/oYs25z4g84OMQITZa2qVSE+ue0pMTllYzvg5yahazOFS2vvb
-	 k67JKRA5UkO+VRY496yY0dK/vZ4Sf2U7RC1Om4GQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8AE89207FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:03:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MDVXOi9l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388291AbgAPRDz (ORCPT
+        id S1730090AbgAPRD6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:03:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56452 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388024AbgAPRC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:02:56 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66F9C24653;
-        Thu, 16 Jan 2020 17:02:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194175;
-        bh=7xz+vLnFw4XjnRLafaQcO0K8hzVM1v1QHQw2s1h9R3w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qKz9uwGZgwfXW1zZw1M1kT0RzuyUwj6yYdLXGx5lUr4o/sYPSnrZy016LSdpoOEvF
-         casriQ2qURnN0gZfRmYaPHZOgkgBb1PRQLYP1wPnkoJB73WzMJ8bx3uw0MB0wAL1FH
-         xnfyn478eq3vstIeASNMdS9yWEWbXjeC2LKUxM1M=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 253/671] crypto: ccree - reduce kernel stack usage with clang
-Date:   Thu, 16 Jan 2020 11:52:42 -0500
-Message-Id: <20200116165940.10720-136-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
-References: <20200116165940.10720-1-sashal@kernel.org>
+        Thu, 16 Jan 2020 12:03:58 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20627 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387767AbgAPRDy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:03:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579194233;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=dwuqMFEPkLVf1SB1Qby1DH0sArybWQvfhVUygmsr0E4=;
+        b=MDVXOi9lel4KL7Rwg/MNFUAQKPIirjV8lafVt94sqWFMt1n7NMwmXj2pQDmPvt1EkK2YCZ
+        gAGOFloJdEBmFolPOHDYK+XGXfRrz4pzlKnsy3UexPnwBTNUvNdPJY0XUaVInHOyCcFK6O
+        j7ODrAhICyA8xaWVP5u93WwNW7Tcn4o=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-385-HhwCKwLyPcePp0c-P2fBsw-1; Thu, 16 Jan 2020 12:03:46 -0500
+X-MC-Unique: HhwCKwLyPcePp0c-P2fBsw-1
+Received: by mail-wr1-f69.google.com with SMTP id b13so9435337wrx.22
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 09:03:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=dwuqMFEPkLVf1SB1Qby1DH0sArybWQvfhVUygmsr0E4=;
+        b=VZ7Wofx2lWFqT6858tau3SnUrcCyLrz90HYCZdhQqASBUkjO1Lu+DVh76NeE2hlQ7Z
+         V9SXQrzrPbxnaz2N152Ul/O5BZkSfm9ku4YGmzqu+qTFDWRBFtDIvX/TVC7P80g26tt9
+         BvkoTZN8dM1Q8A7PORmJhNUrJ1eLIjil7ZwBdowLJAIsNoAU7j+gChqJlI/R2g/rGYcN
+         CV2AAVAuwX8twsyiLvBEnSUjxLo+qUsS9LMQb5I02oh/MPqdnKjJPf9BaQiOcLizpX9e
+         tMyC0DFYko44m+kxDEEnrrvBGJhla8wkJpZd7KNArsD1SttXO6WDAIdJBUoBAEcKNr3T
+         tZTA==
+X-Gm-Message-State: APjAAAXaOJz8nfurxHFRBhh026nsWl2NvY6N29UpJJtOnHt0BqXTsilH
+        PqmVCYT8CYX7QI2wa1IF2kP8mqQYbNL1kUgg+4vrMfx/VPEZ0sHz4qMisxQl8a0YP1EkOWojm65
+        6NGsQSkTVE6hCl/0rLPkCjtJk
+X-Received: by 2002:adf:ce87:: with SMTP id r7mr4222757wrn.245.1579194225147;
+        Thu, 16 Jan 2020 09:03:45 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwmahambFLYvDPNDfSiuwfj+RNjJ2awrp8kvOtBAw+JLe5Wbrx78e1fRaCj45Q555ccQHKFSw==
+X-Received: by 2002:adf:ce87:: with SMTP id r7mr4222739wrn.245.1579194224894;
+        Thu, 16 Jan 2020 09:03:44 -0800 (PST)
+Received: from steredhat (host84-49-dynamic.31-79-r.retail.telecomitalia.it. [79.31.49.84])
+        by smtp.gmail.com with ESMTPSA id q15sm29985051wrr.11.2020.01.16.09.03.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 09:03:44 -0800 (PST)
+Date:   Thu, 16 Jan 2020 18:03:42 +0100
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] io_uring: wakeup threads waiting for EPOLLOUT events
+Message-ID: <20200116170342.4jvkhbbw4x6z3txn@steredhat>
+References: <20200116134946.184711-1-sgarzare@redhat.com>
+ <2d2dda92-3c50-ee62-5ffe-0589d4c8fc0d@kernel.dk>
+ <20200116155557.mwjc7vu33xespiag@steredhat>
+ <5723453a-9326-e954-978e-910b8b495b38@kernel.dk>
+ <20200116162630.6r3xc55kdyyq5tvz@steredhat>
+ <a02a58dc-bf23-ed74-aec6-52c85360fe00@kernel.dk>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a02a58dc-bf23-ed74-aec6-52c85360fe00@kernel.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Thu, Jan 16, 2020 at 09:30:12AM -0700, Jens Axboe wrote:
+> On 1/16/20 9:26 AM, Stefano Garzarella wrote:
+> >> Since the use case is mostly single submitter, unless you're doing
+> >> something funky or unusual, you're not going to be needing POLLOUT ever.
+> > 
+> > The case that I had in mind was with kernel side polling enabled and
+> > a single submitter that can use epoll() to wait free slots in the SQ
+> > ring. (I don't have a test, maybe I can write one...)
+> 
+> Right, I think that's the only use case where it makes sense, because
+> you have someone else draining the sq side for you. A test case would
+> indeed be nice, liburing has a good arsenal of test cases and this would
+> be a good addition!
 
-[ Upstream commit 5db46ac29a6797541943d3c4081821747e342732 ]
+Sure, I'll send a test to liburing for this case!
 
-Building with clang for a 32-bit architecture runs over the stack
-frame limit in the setkey function:
-
-drivers/crypto/ccree/cc_cipher.c:318:12: error: stack frame size of 1152 bytes in function 'cc_cipher_setkey' [-Werror,-Wframe-larger-than=]
-
-The problem is that there are two large variables: the temporary
-'tmp' array and the SHASH_DESC_ON_STACK() declaration. Moving
-the first into the block in which it is used reduces the
-total frame size to 768 bytes, which seems more reasonable
-and is under the warning limit.
-
-Fixes: 63ee04c8b491 ("crypto: ccree - add skcipher support")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-By: Gilad Ben-Yossef <gilad@benyossef.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/crypto/ccree/cc_cipher.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/crypto/ccree/cc_cipher.c b/drivers/crypto/ccree/cc_cipher.c
-index 54a39164aab8..28a5b8b38fa2 100644
---- a/drivers/crypto/ccree/cc_cipher.c
-+++ b/drivers/crypto/ccree/cc_cipher.c
-@@ -306,7 +306,6 @@ static int cc_cipher_setkey(struct crypto_skcipher *sktfm, const u8 *key,
- 	struct crypto_tfm *tfm = crypto_skcipher_tfm(sktfm);
- 	struct cc_cipher_ctx *ctx_p = crypto_tfm_ctx(tfm);
- 	struct device *dev = drvdata_to_dev(ctx_p->drvdata);
--	u32 tmp[DES3_EDE_EXPKEY_WORDS];
- 	struct cc_crypto_alg *cc_alg =
- 			container_of(tfm->__crt_alg, struct cc_crypto_alg,
- 				     skcipher_alg.base);
-@@ -332,6 +331,7 @@ static int cc_cipher_setkey(struct crypto_skcipher *sktfm, const u8 *key,
- 	 * HW does the expansion on its own.
- 	 */
- 	if (ctx_p->flow_mode == S_DIN_to_DES) {
-+		u32 tmp[DES3_EDE_EXPKEY_WORDS];
- 		if (keylen == DES3_EDE_KEY_SIZE &&
- 		    __des3_ede_setkey(tmp, &tfm->crt_flags, key,
- 				      DES3_EDE_KEY_SIZE)) {
--- 
-2.20.1
+Thanks,
+Stefano
 
