@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A8EC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E171CC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 300F520728
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD6B020728
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194952;
-	bh=E86M/yB9LlwscpjTS9a3Gyhc0HS7U3WsZg2MvJo/zMY=;
+	s=default; t=1579194955;
+	bh=CLw4gHOlzKBi2xPBIjgsxQE+QMGm79q1jYQOrUriOKw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tQefeq12Hk+9Agx1CIpdOSZesT/NtLIBPuInKN3RtbJED8T20U3/L89QiAWO8eNmG
-	 St6P0ScllaeUWQSxFVK86HGMcY+R50CnoiLU/ElQGFeftVDBsvUWrPsRtAxi8olgo0
-	 sHucrpMc7b3p9R9uApedd9jZLIXo6IFS9cElxVP0=
+	b=BQ475SAVU5tOS/EHdn3S7mKwHYx63UKlb9EDGptr9GOFILCw+rdOETiFpxJqYdgPV
+	 yQosfGC8mny3OcwTbmPiuyY/oFUpRnlSWR2CCd0Lr7UBOD5zsy2BzwnHqGQAceXHLh
+	 U3Ihz4BntzPSO+QBGPyJmaVXuGL2OKZrNKPGnOe4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390814AbgAPRPv (ORCPT
+        id S2387976AbgAPRO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:15:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33718 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390994AbgAPRO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jan 2020 12:14:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32842 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390337AbgAPRON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:14:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5ADB72469C;
-        Thu, 16 Jan 2020 17:14:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8998C246B0;
+        Thu, 16 Jan 2020 17:14:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194868;
-        bh=E86M/yB9LlwscpjTS9a3Gyhc0HS7U3WsZg2MvJo/zMY=;
+        s=default; t=1579194853;
+        bh=CLw4gHOlzKBi2xPBIjgsxQE+QMGm79q1jYQOrUriOKw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sHle893fGGQJH7RG/0BC5VGqUhHMAyoOAaI/uBF2kbjF83X4/cAOywVjYYvddoaue
-         N5TvKKpGmV7bkDzipPU9NlO9qftYk7z5dg2nVKr4YzPLQCEG2ENhknkTlL1PeyxBK6
-         9JfnGVljXMN0RusewRSabOGSu23KOY28z4X5a3nw=
+        b=sUISP019mid0IRN2r3mZ5GFvkt98KFbLiChtrnr0zZmcJkADeihqAmfI63E9Ab63X
+         jnJ46OZSRdMMKHlrLqqEf4GvAj8CgPWm7r2nZce3wsFYG4qrBsJxL9MDPPYah6WXQ0
+         0o/vJLCxWqsSR5rOGVxWr7jI+4jtouaA36+eJGWo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Wilck <mwilck@suse.com>, David Bond <dbond@suse.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 661/671] scsi: qla2xxx: fix rports not being mark as lost in sync fabric scan
-Date:   Thu, 16 Jan 2020 12:04:59 -0500
-Message-Id: <20200116170509.12787-398-sashal@kernel.org>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 649/671] affs: fix a memory leak in affs_remount
+Date:   Thu, 16 Jan 2020 12:04:47 -0500
+Message-Id: <20200116170509.12787-386-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,49 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Wilck <mwilck@suse.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit d341e9a8f2cffe4000c610225c629f62c7489c74 ]
+[ Upstream commit 450c3d4166837c496ebce03650c08800991f2150 ]
 
-In qla2x00_find_all_fabric_devs(), fcport->flags & FCF_LOGIN_NEEDED is a
-necessary condition for logging into new rports, but not for dropping lost
-ones.
+In affs_remount if data is provided it is duplicated into new_opts.  The
+allocated memory for new_opts is only released if parse_options fails.
 
-Fixes: 726b85487067 ("qla2xxx: Add framework for async fabric discovery")
-Link: https://lore.kernel.org/r/20191122221912.20100-2-martin.wilck@suse.com
-Tested-by: David Bond <dbond@suse.com>
-Signed-off-by: Martin Wilck <mwilck@suse.com>
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+There's a bit of history behind new_options, originally there was
+save/replace options on the VFS layer so the 'data' passed must not
+change (thus strdup), this got cleaned up in later patches. But not
+completely.
+
+There's no reason to do the strdup in cases where the filesystem does
+not need to reuse the 'data' again, because strsep would modify it
+directly.
+
+Fixes: c8f33d0bec99 ("affs: kstrdup() memory handling")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+[ update changelog ]
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_init.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/affs/super.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
-index 851f75b12216..f45759b353be 100644
---- a/drivers/scsi/qla2xxx/qla_init.c
-+++ b/drivers/scsi/qla2xxx/qla_init.c
-@@ -5710,8 +5710,7 @@ qla2x00_find_all_fabric_devs(scsi_qla_host_t *vha)
- 		if (test_bit(LOOP_RESYNC_NEEDED, &vha->dpc_flags))
- 			break;
+diff --git a/fs/affs/super.c b/fs/affs/super.c
+index d1ad11a8a4a5..b6ce0c36029b 100644
+--- a/fs/affs/super.c
++++ b/fs/affs/super.c
+@@ -561,14 +561,9 @@ affs_remount(struct super_block *sb, int *flags, char *data)
+ 	int			 root_block;
+ 	unsigned long		 mount_flags;
+ 	int			 res = 0;
+-	char			*new_opts;
+ 	char			 volume[32];
+ 	char			*prefix = NULL;
  
--		if ((fcport->flags & FCF_FABRIC_DEVICE) == 0 ||
--		    (fcport->flags & FCF_LOGIN_NEEDED) == 0)
-+		if ((fcport->flags & FCF_FABRIC_DEVICE) == 0)
- 			continue;
+-	new_opts = kstrdup(data, GFP_KERNEL);
+-	if (data && !new_opts)
+-		return -ENOMEM;
+-
+ 	pr_debug("%s(flags=0x%x,opts=\"%s\")\n", __func__, *flags, data);
  
- 		if (fcport->scan_state == QLA_FCPORT_SCAN) {
-@@ -5734,7 +5733,8 @@ qla2x00_find_all_fabric_devs(scsi_qla_host_t *vha)
- 			}
- 		}
- 
--		if (fcport->scan_state == QLA_FCPORT_FOUND)
-+		if (fcport->scan_state == QLA_FCPORT_FOUND &&
-+		    (fcport->flags & FCF_LOGIN_NEEDED) != 0)
- 			qla24xx_fcport_handle_login(vha, fcport);
+ 	sync_filesystem(sb);
+@@ -579,7 +574,6 @@ affs_remount(struct super_block *sb, int *flags, char *data)
+ 			   &blocksize, &prefix, volume,
+ 			   &mount_flags)) {
+ 		kfree(prefix);
+-		kfree(new_opts);
+ 		return -EINVAL;
  	}
- 	return (rval);
+ 
 -- 
 2.20.1
 
