@@ -2,52 +2,53 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBFFC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE98C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1E97206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:28:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 928D42072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:28:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217310;
-	bh=X5PyMUU+RG4IUsY1i6M/W1WoIHZtq2RRh1byEbhrB2k=;
+	s=default; t=1579217313;
+	bh=K7nuYz1eNgGESYAGCl+dzAzfUti/VATJU0c//XrLoB4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vXduVCYaKppjmCJjMK6aVOh1en2MIxkTIM8Kb3PzlKGfXTyYR2UECBn9o6WO8SLFn
-	 Lq79SHMdKgJGIhV+EvXStSOrNTBJBleHS+8TSYj2P9zo5kiwpsa0Ty4HjHYUwrlLRI
-	 yDOxqT64YFAdYvgcqptb8zSY+6sTMByYrN7DBs/M=
+	b=0dfMnQ6OifrfUjcL0snNxpA+X5VJgyHtNgySEu4uN/dbeXr/fvxleNmtKhKsIntMY
+	 tuWm8E/nCYzSw4ZVyrWNZmNO2Zfyw0F77HRJYlXlJWnuhkUSPitWt1yXuQxy3fb1Or
+	 d2QS6EIXL38ke9G/nAg0tdfXZGbV2pfxLKZAjtGg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391110AbgAPX23 (ORCPT
+        id S2391121AbgAPX2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:28:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33128 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:28:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390142AbgAPX20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:28:26 -0500
+        id S2389402AbgAPX2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:28:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A930120684;
-        Thu, 16 Jan 2020 23:28:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 154D820684;
+        Thu, 16 Jan 2020 23:28:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217306;
-        bh=X5PyMUU+RG4IUsY1i6M/W1WoIHZtq2RRh1byEbhrB2k=;
+        s=default; t=1579217308;
+        bh=K7nuYz1eNgGESYAGCl+dzAzfUti/VATJU0c//XrLoB4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lvoZqzVOubs47D0IFPbCeLBiSqVIm3RGg5YYedTqh92KdxTZhC/WnqNkERLLSBLwE
-         elPNb8IDFYqjRLLY4kCnQiEx6DmUSNdsNmfg3loC43+CxQX1UUgUwKShwHb/+Mrvbh
-         dRSpyDiGXRfnlHJE5zK0NaZk6G7uL44qCCDMvUHE=
+        b=CzUK44a679LmB6FQku9xY9/cArJRLW97tlvvwqSR8JgycF2FZ87dgJyMeHZcQQNvp
+         nzdMbz2kNxijDz2LbCGM0kDog0vV2Cf9Wyp3k6PZ/TCoMTtTVslIWbjidy3PyNnwyl
+         LqOVgx8Cl4X1seFv7lClHfYzRI29btGrejUM7Rcc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 03/84] HID: hidraw, uhid: Always report EPOLLOUT
-Date:   Fri, 17 Jan 2020 00:17:37 +0100
-Message-Id: <20200116231713.677596697@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        "David S. Miller" <davem@davemloft.net>,
+        Miles Chen <miles.chen@mediatek.com>
+Subject: [PATCH 4.19 04/84] ethtool: reduce stack usage with clang
+Date:   Fri, 17 Jan 2020 00:17:38 +0100
+Message-Id: <20200116231713.857936861@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
 References: <20200116231713.087649517@linuxfoundation.org>
@@ -60,69 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Kosina <jkosina@suse.cz>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 9e635c2851df6caee651e589fbf937b637973c91 ]
+commit 3499e87ea0413ee5b2cc028f4c8ed4d424bc7f98 upstream.
 
-hidraw and uhid device nodes are always available for writing so we should
-always report EPOLLOUT and EPOLLWRNORM bits, not only in the cases when
-there is nothing to read.
+clang inlines the dev_ethtool() more aggressively than gcc does, leading
+to a larger amount of used stack space:
 
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Fixes: be54e7461ffdc ("HID: uhid: Fix returning EPOLLOUT from uhid_char_poll")
-Fixes: 9f3b61dc1dd7b ("HID: hidraw: Fix returning EPOLLOUT from hidraw_poll")
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+net/core/ethtool.c:2536:24: error: stack frame size of 1216 bytes in function 'dev_ethtool' [-Werror,-Wframe-larger-than=]
+
+Marking the sub-functions that require the most stack space as
+noinline_for_stack gives us reasonable behavior on all compilers.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/hid/hidraw.c | 7 ++++---
- drivers/hid/uhid.c   | 5 +++--
- 2 files changed, 7 insertions(+), 5 deletions(-)
+ net/core/ethtool.c |   16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/hid/hidraw.c b/drivers/hid/hidraw.c
-index a025b6961896..c4ba2d28dd73 100644
---- a/drivers/hid/hidraw.c
-+++ b/drivers/hid/hidraw.c
-@@ -257,13 +257,14 @@ out:
- static __poll_t hidraw_poll(struct file *file, poll_table *wait)
- {
- 	struct hidraw_list *list = file->private_data;
-+	__poll_t mask = EPOLLOUT | EPOLLWRNORM; /* hidraw is always writable */
- 
- 	poll_wait(file, &list->hidraw->wait, wait);
- 	if (list->head != list->tail)
--		return EPOLLIN | EPOLLRDNORM;
-+		mask |= EPOLLIN | EPOLLRDNORM;
- 	if (!list->hidraw->exist)
--		return EPOLLERR | EPOLLHUP;
--	return EPOLLOUT | EPOLLWRNORM;
-+		mask |= EPOLLERR | EPOLLHUP;
-+	return mask;
+--- a/net/core/ethtool.c
++++ b/net/core/ethtool.c
+@@ -2413,9 +2413,10 @@ static int ethtool_set_tunable(struct ne
+ 	return ret;
  }
  
- static int hidraw_open(struct inode *inode, struct file *file)
-diff --git a/drivers/hid/uhid.c b/drivers/hid/uhid.c
-index 8508dbac2657..29e63330c1b5 100644
---- a/drivers/hid/uhid.c
-+++ b/drivers/hid/uhid.c
-@@ -769,13 +769,14 @@ unlock:
- static __poll_t uhid_char_poll(struct file *file, poll_table *wait)
+-static int ethtool_get_per_queue_coalesce(struct net_device *dev,
+-					  void __user *useraddr,
+-					  struct ethtool_per_queue_op *per_queue_opt)
++static noinline_for_stack int
++ethtool_get_per_queue_coalesce(struct net_device *dev,
++			       void __user *useraddr,
++			       struct ethtool_per_queue_op *per_queue_opt)
  {
- 	struct uhid_device *uhid = file->private_data;
-+	__poll_t mask = EPOLLOUT | EPOLLWRNORM; /* uhid is always writable */
- 
- 	poll_wait(file, &uhid->waitq, wait);
- 
- 	if (uhid->head != uhid->tail)
--		return EPOLLIN | EPOLLRDNORM;
-+		mask |= EPOLLIN | EPOLLRDNORM;
- 
--	return EPOLLOUT | EPOLLWRNORM;
-+	return mask;
+ 	u32 bit;
+ 	int ret;
+@@ -2443,9 +2444,10 @@ static int ethtool_get_per_queue_coalesc
+ 	return 0;
  }
  
- static const struct file_operations uhid_fops = {
--- 
-2.20.1
-
+-static int ethtool_set_per_queue_coalesce(struct net_device *dev,
+-					  void __user *useraddr,
+-					  struct ethtool_per_queue_op *per_queue_opt)
++static noinline_for_stack int
++ethtool_set_per_queue_coalesce(struct net_device *dev,
++			       void __user *useraddr,
++			       struct ethtool_per_queue_op *per_queue_opt)
+ {
+ 	u32 bit;
+ 	int i, ret = 0;
+@@ -2499,7 +2501,7 @@ roll_back:
+ 	return ret;
+ }
+ 
+-static int ethtool_set_per_queue(struct net_device *dev,
++static int noinline_for_stack ethtool_set_per_queue(struct net_device *dev,
+ 				 void __user *useraddr, u32 sub_cmd)
+ {
+ 	struct ethtool_per_queue_op per_queue_opt;
 
 
