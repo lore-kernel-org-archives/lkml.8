@@ -7,52 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E73C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55EB3C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE027246CF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D5B3246A9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:25:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195514;
-	bh=BR4bAa3sU9jTA4hgBf/kKhrT7L1DR2b3BRTZ3iHNCgU=;
+	s=default; t=1579195517;
+	bh=9KQUfNd3Nvl/2tc+oWzrExL4KL6ShVPizW8ADsB0Frw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LmYC6b9eXgoM79sUF8vsYfri/50+DUiMAlTakBX5DLstXd9TixzhhBtkdgurlKsy4
-	 xRYPkUSwK6C91OBAhTVU8P2sfxSxhrMjmX2TsTGKoU/wgIYpvEHWOeTCgIElEzFSUH
-	 rdjyR5AUmCfRU3ABNJsSqY5Vq043+ObY/PGgUxJI=
+	b=ICTZuoot5vXjZvSdgGYBVd05kOAdNk3QG8Az1jbTbOv6xCD80mOxg7RuFVJWMoTnk
+	 fmDaCmZ/rgSJ1oNIqxDABR0VYg1VQpL0RgY87yrrd4sG4v2BriHj5fAIPS2PNOvVE+
+	 eQMwrJoHQELu8BY7beZVdmbIEXnZfp0qv0WoiN4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731740AbgAPRZO (ORCPT
+        id S2403854AbgAPRZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:25:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60228 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:25:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391824AbgAPRY4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:24:56 -0500
+        id S2391372AbgAPRY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:24:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A51FE246AE;
-        Thu, 16 Jan 2020 17:24:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6A6D246A3;
+        Thu, 16 Jan 2020 17:24:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195495;
-        bh=BR4bAa3sU9jTA4hgBf/kKhrT7L1DR2b3BRTZ3iHNCgU=;
+        s=default; t=1579195498;
+        bh=9KQUfNd3Nvl/2tc+oWzrExL4KL6ShVPizW8ADsB0Frw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FAWRqBduZG6ms5+eyc5GmhQd/ljzUuWYFKKyQjfvuC+sJ+Mpq+2+aI47QiICaou4h
-         czCwGaP3Vn0BAuLFE5m5TlZyesdG6giHLInyK3sS7E46JyMbXfJc8KxSIzQLnYP32S
-         lXUwxawg+/KFa6XlfYINEY1pXyYh489G7cN3sTBw=
+        b=JNNrfU0NOj7fMPkTLM6+VHhYUeSrJv+xwjurT/M3mwe0QC0wWu66NZkcdXtYx1Do+
+         DQbL3eXEFHJkLoHbT3COj/l2JbVE9xfjt9+ZdZIdu82HKKqMkwElxJe+hrFRphnKla
+         umDbfN11bA9+4+2w9CeOLouWmVQZipmf5l+drbDo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Yang <wen.yang99@zte.com.cn>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Niklas Cassel <niklas.cassel@axis.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Cyrille Pitchen <cyrille.pitchen@free-electrons.com>,
-        linux-pci@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 097/371] PCI: endpoint: functions: Use memcpy_fromio()/memcpy_toio()
-Date:   Thu, 16 Jan 2020 12:19:29 -0500
-Message-Id: <20200116172403.18149-40-sashal@kernel.org>
+Cc:     Ming Lei <ming.lei@redhat.com>, Omar Sandoval <osandov@fb.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 099/371] block: don't use bio->bi_vcnt to figure out segment number
+Date:   Thu, 16 Jan 2020 12:19:31 -0500
+Message-Id: <20200116172403.18149-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -65,56 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+From: Ming Lei <ming.lei@redhat.com>
 
-[ Upstream commit 726dabfde6aa35a4f1508e235ae37edbbf9fbc65 ]
+[ Upstream commit 1a67356e9a4829da2935dd338630a550c59c8489 ]
 
-Functions copying from/to IO addresses should use the
-memcpy_fromio()/memcpy_toio() API rather than plain memcpy().
+It is wrong to use bio->bi_vcnt to figure out how many segments
+there are in the bio even though CLONED flag isn't set on this bio,
+because this bio may be splitted or advanced.
 
-Fix the issue detected through the sparse tool.
+So always use bio_segments() in blk_recount_segments(), and it shouldn't
+cause any performance loss now because the physical segment number is figured
+out in blk_queue_split() and BIO_SEG_VALID is set meantime since
+bdced438acd83ad83a6c ("block: setup bi_phys_segments after splitting").
 
-Fixes: 349e7a85b25f ("PCI: endpoint: functions: Add an EP function to test PCI")
-Suggested-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-[lorenzo.pieralisi@arm.com: updated log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-CC: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC: Bjorn Helgaas <bhelgaas@google.com>
-CC: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-CC: Niklas Cassel <niklas.cassel@axis.com>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
-CC: linux-pci@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
+Reviewed-by: Omar Sandoval <osandov@fb.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Fixes: 76d8137a3113 ("blk-merge: recaculate segment if it isn't less than max segments")
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/endpoint/functions/pci-epf-test.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ block/blk-merge.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index f9308c2f22e6..c2541a772abc 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -177,7 +177,7 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
- 		goto err_map_addr;
- 	}
+diff --git a/block/blk-merge.c b/block/blk-merge.c
+index f61b50a01bc7..415b5dafd9e6 100644
+--- a/block/blk-merge.c
++++ b/block/blk-merge.c
+@@ -299,13 +299,7 @@ void blk_recalc_rq_segments(struct request *rq)
  
--	memcpy(buf, src_addr, reg->size);
-+	memcpy_fromio(buf, src_addr, reg->size);
+ void blk_recount_segments(struct request_queue *q, struct bio *bio)
+ {
+-	unsigned short seg_cnt;
+-
+-	/* estimate segment number by bi_vcnt for non-cloned bio */
+-	if (bio_flagged(bio, BIO_CLONED))
+-		seg_cnt = bio_segments(bio);
+-	else
+-		seg_cnt = bio->bi_vcnt;
++	unsigned short seg_cnt = bio_segments(bio);
  
- 	crc32 = crc32_le(~0, buf, reg->size);
- 	if (crc32 != reg->checksum)
-@@ -231,7 +231,7 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
- 	get_random_bytes(buf, reg->size);
- 	reg->checksum = crc32_le(~0, buf, reg->size);
- 
--	memcpy(dst_addr, buf, reg->size);
-+	memcpy_toio(dst_addr, buf, reg->size);
- 
- 	/*
- 	 * wait 1ms inorder for the write to complete. Without this delay L3
+ 	if (test_bit(QUEUE_FLAG_NO_SG_MERGE, &q->queue_flags) &&
+ 			(seg_cnt < queue_max_segments(q)))
 -- 
 2.20.1
 
