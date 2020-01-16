@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43282C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C63AAC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19C152468A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:10:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C6E124689
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:10:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194650;
-	bh=BzWGq08Cw707pQ2k90WhyO1dpmbOcfJvExvmh/Tx6H0=;
+	s=default; t=1579194652;
+	bh=VBZLFpQEWBzgGdKuOJhdUA477Que6sRO1rLaseY0ejw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SIz+BwGVx6u67n24aB+t9z4eOtDeXIai4NOLoaLtcDGMxRB/c5CfyWi1ORYgVCPhy
-	 y6SbKxOrjZ2wBM076MTDquN59LhapDV/STLK3PWieJeHJb93ZlX/7PHUJV2CyniRxi
-	 vqrE3/UVaqEmY0GBelIkMLQwslBzdBk/to36KVZ0=
+	b=JzI2ypklyxLiuyS2g8+uD91nQtKgirz9CHcs6DJ7aitWirRe6+8euqCl0IJwRJys0
+	 3MeCGbldRqVYd1RbJIEQB6mZ79gsgmryJ6Nx7Lzkc71K2XOO5m3iJGLTP0XUHlFLRw
+	 nWveymKCfNXsmiC/ikEPGUl83UopocZ0qd2EMZyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390063AbgAPRKs (ORCPT
+        id S2389667AbgAPRKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:10:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49328 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:10:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390049AbgAPRKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:10:40 -0500
+        id S2390005AbgAPRKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:10:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C30AE2467C;
-        Thu, 16 Jan 2020 17:10:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 498D224685;
+        Thu, 16 Jan 2020 17:10:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194639;
-        bh=BzWGq08Cw707pQ2k90WhyO1dpmbOcfJvExvmh/Tx6H0=;
+        s=default; t=1579194645;
+        bh=VBZLFpQEWBzgGdKuOJhdUA477Que6sRO1rLaseY0ejw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nIDx07yRwemt5WKIMJwJmabnX6JjAnVEtKH5J0Qo90hrub+fRjauSJWZKQUiioC6P
-         3aY5hH2Jl0U1Plvr/ChUBDlm+t2tC91sTCNBloVGuGi6A2BQTg7nq81ztfhfRGuCqw
-         TEmK1YjxpjTy8t0DiCb4fD792WeeigRBBf5v+Yng=
+        b=CAKOCVtDABMJtnXhzYiXZM16bpQcUUlu43NPzY2w5+1BFGZo5Y1nRzhXRi9gNnicG
+         oABOLDnavBzR00yxr7jw+K38XHpxxWfxKPDcvYPFafBBh9w/VbRpDnZ9KcWWiXBCEA
+         0tMW79kGbhcpfD1ifL4VNkJcqxWyuGry8DiDJy1k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 497/671] bnxt_en: Fix handling FRAG_ERR when NVM_INSTALL_UPDATE cmd fails
-Date:   Thu, 16 Jan 2020 12:02:15 -0500
-Message-Id: <20200116170509.12787-234-sashal@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 501/671] dmaengine: dw: platform: Switch to acpi_dma_controller_register()
+Date:   Thu, 16 Jan 2020 12:02:19 -0500
+Message-Id: <20200116170509.12787-238-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,55 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit dd2ebf3404c7c295014bc025dea23960960ceb1a ]
+[ Upstream commit e7b8514e4d68bec21fc6385fa0a66797ddc34ac9 ]
 
-If FW returns FRAG_ERR in response error code, driver is resending the
-command only when HWRM command returns success. Fix the code to resend
-NVM_INSTALL_UPDATE command with DEFRAG install flags, if FW returns
-FRAG_ERR in its response error code.
+There is a possibility to have registered ACPI DMA controller
+while it has been gone already.
 
-Fixes: cb4d1d626145 ("bnxt_en: Retry failed NVM_INSTALL_UPDATE with defragmentation flag enabled.")
-Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+To avoid the potential crash, move to non-managed
+acpi_dma_controller_register().
+
+Fixes: 42c91ee71d6d ("dw_dmac: add ACPI support")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Link: https://lore.kernel.org/r/20190820131546.75744-8-andriy.shevchenko@linux.intel.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ drivers/dma/dw/platform.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-index dc63d269f01d..cdbb8940a4ae 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-@@ -1778,21 +1778,19 @@ static int bnxt_flash_package_from_file(struct net_device *dev,
- 	mutex_lock(&bp->hwrm_cmd_lock);
- 	hwrm_err = _hwrm_send_message(bp, &install, sizeof(install),
- 				      INSTALL_PACKAGE_TIMEOUT);
--	if (hwrm_err)
--		goto flash_pkg_exit;
--
--	if (resp->error_code) {
-+	if (hwrm_err) {
- 		u8 error_code = ((struct hwrm_err_output *)resp)->cmd_err;
+diff --git a/drivers/dma/dw/platform.c b/drivers/dma/dw/platform.c
+index c299ff181bb6..62218ea0894c 100644
+--- a/drivers/dma/dw/platform.c
++++ b/drivers/dma/dw/platform.c
+@@ -87,13 +87,20 @@ static void dw_dma_acpi_controller_register(struct dw_dma *dw)
+ 	dma_cap_set(DMA_SLAVE, info->dma_cap);
+ 	info->filter_fn = dw_dma_acpi_filter;
  
--		if (error_code == NVM_INSTALL_UPDATE_CMD_ERR_CODE_FRAG_ERR) {
-+		if (resp->error_code && error_code ==
-+		    NVM_INSTALL_UPDATE_CMD_ERR_CODE_FRAG_ERR) {
- 			install.flags |= cpu_to_le16(
- 			       NVM_INSTALL_UPDATE_REQ_FLAGS_ALLOWED_TO_DEFRAG);
- 			hwrm_err = _hwrm_send_message(bp, &install,
- 						      sizeof(install),
- 						      INSTALL_PACKAGE_TIMEOUT);
--			if (hwrm_err)
--				goto flash_pkg_exit;
- 		}
-+		if (hwrm_err)
-+			goto flash_pkg_exit;
- 	}
+-	ret = devm_acpi_dma_controller_register(dev, acpi_dma_simple_xlate,
+-						info);
++	ret = acpi_dma_controller_register(dev, acpi_dma_simple_xlate, info);
+ 	if (ret)
+ 		dev_err(dev, "could not register acpi_dma_controller\n");
+ }
++
++static void dw_dma_acpi_controller_free(struct dw_dma *dw)
++{
++	struct device *dev = dw->dma.dev;
++
++	acpi_dma_controller_free(dev);
++}
+ #else /* !CONFIG_ACPI */
+ static inline void dw_dma_acpi_controller_register(struct dw_dma *dw) {}
++static inline void dw_dma_acpi_controller_free(struct dw_dma *dw) {}
+ #endif /* !CONFIG_ACPI */
  
- 	if (resp->result) {
+ #ifdef CONFIG_OF
+@@ -249,6 +256,9 @@ static int dw_remove(struct platform_device *pdev)
+ {
+ 	struct dw_dma_chip *chip = platform_get_drvdata(pdev);
+ 
++	if (ACPI_HANDLE(&pdev->dev))
++		dw_dma_acpi_controller_free(chip->dw);
++
+ 	if (pdev->dev.of_node)
+ 		of_dma_controller_free(pdev->dev.of_node);
+ 
 -- 
 2.20.1
 
