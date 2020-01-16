@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9746BC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05AC7C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 698F82073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:44:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2D792073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:44:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200260;
-	bh=ZdbHos6Uuvv8uJ4Qqh+vNVE+QXIY/vFLK+H5KBg96yE=;
+	s=default; t=1579200265;
+	bh=UkDYX+AVN0sx2l2HvyraE4qpL1+m/Wbdc9iDyQCvfYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ikCIh0JTzxg3YzJf5Ky0q9NVCD/PQSDN4U3c4+PRzedudRzo7uMs2aHRzil4Gz5ay
-	 Z2mY64Mjc85rYFwSHoVk42BSXUYeb2OOpExJq0YBXbKhmU7hHoB/EUryCV2P6YbMq2
-	 PdXnMNu3t5JO1hs6rIX3QzoXu1s7KnuM21AD0GlU=
+	b=znPg+pEzfPYz8OBWw3Q7FEUzt9oR0i0LupId9vLXLZUhRbPEJHGMZyrLITcTKzCic
+	 K46+OT+tvkBw9d2NYcuan1nr1oVkxN7jkZTx36UEHj2Htcw+NEsSwjHHCljLmIM/Z7
+	 uP10SoF0+JH+dDsT4lI7lHBVilPw92Cle5eXJ+HQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390107AbgAPRK6 (ORCPT
+        id S2390093AbgAPRK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:10:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50180 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:10:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732587AbgAPRKy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:10:54 -0500
+        id S2389702AbgAPRKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:10:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7434120684;
-        Thu, 16 Jan 2020 17:10:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA08124685;
+        Thu, 16 Jan 2020 17:10:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194653;
-        bh=ZdbHos6Uuvv8uJ4Qqh+vNVE+QXIY/vFLK+H5KBg96yE=;
+        s=default; t=1579194649;
+        bh=UkDYX+AVN0sx2l2HvyraE4qpL1+m/Wbdc9iDyQCvfYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l60DLbL9/ifYtCo2pVDhZNiztbRuA8c/Hc/EixvPbUyC6+9W2jU5hBGW0NYVm1zwH
-         snwSxlmskeVKBOXwkttvvh3ZR5WeiE0yk1qng22aTGGTvEz//hZL+RFFeAdXxOaYk/
-         1IBHavqT21HDW+z3Mftb2rtakv5MLP6jfzk+qOnQ=
+        b=BZl+O7vXawB0IJh5q9vHNP0puzJsjOqAELxpBtcvl7BJNSn7Y5aOc1pnt/4H3NBKh
+         ungFE0Gs03pi7c8j0c9ug7J4HSPqduNYpU8/A3EzdwUpBGodEU45FJ0kuxNCHfaEGA
+         o2vzvA9mZtivQ42i5D/cTPgLaCut4y4bUYdV5HrI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bruno Thomsen <bruno.thomsen@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 507/671] rtc: pcf2127: bugfix: read rtc disables watchdog
-Date:   Thu, 16 Jan 2020 12:02:25 -0500
-Message-Id: <20200116170509.12787-244-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 504/671] i40e: reduce stack usage in i40e_set_fc
+Date:   Thu, 16 Jan 2020 12:02:22 -0500
+Message-Id: <20200116170509.12787-241-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,89 +62,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bruno Thomsen <bruno.thomsen@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 7f43020e3bdb63d65661ed377682702f8b34d3ea ]
+[ Upstream commit 33b165684ab70867d4545643f550a5d48d3ddc57 ]
 
-The previous fix listed bulk read of registers as root cause of
-accendential disabling of watchdog, since the watchdog counter
-register (WD_VAL) was zeroed.
+The functions i40e_aq_get_phy_abilities_resp() and i40e_set_fc() both
+have giant structure on the stack, which makes each one use stack frames
+larger than 500 bytes.
 
-Fixes: 3769a375ab83 rtc: pcf2127: bulk read only date and time registers.
+As clang decides one function into the other, we get a warning for
+exceeding the frame size limit on 32-bit architectures:
 
-Tested with the same PCF2127 chip as Sean reveled root cause
-of WD_VAL register value zeroing was caused by reading CTRL2
-register which is one of the watchdog feature control registers.
+drivers/net/ethernet/intel/i40e/i40e_common.c:1654:23: error: stack frame size of 1116 bytes in function 'i40e_set_fc' [-Werror,-Wframe-larger-than=]
 
-So the solution is to not read the first two control registers
-(CTRL1 and CTRL2) in pcf2127_rtc_read_time as they are not
-needed anyway. Size of local buf variable is kept to allow
-easy usage of register defines to improve readability of code.
+When building with gcc, the inlining does not happen, but i40e_set_fc()
+calls i40e_aq_get_phy_abilities_resp() anyway, so they add up on the
+kernel stack just as much.
 
-Debug trace line was updated after CTRL1 and CTRL2 are no longer
-read from the chip. Also replaced magic numbers in buf access
-with register defines.
+The parts that actually use large stacks don't overlap, so make sure
+each one is a separate function, and mark them as noinline_for_stack to
+prevent the compilers from combining them again.
 
-Signed-off-by: Bruno Thomsen <bruno.thomsen@gmail.com>
-Link: https://lore.kernel.org/r/20190822131936.18772-3-bruno.thomsen@gmail.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fixes: 0a862b43acc6 ("i40e/i40evf: Add module_types and update_link_info")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-pcf2127.c | 32 ++++++++++++--------------------
- 1 file changed, 12 insertions(+), 20 deletions(-)
+ drivers/net/ethernet/intel/i40e/i40e_common.c | 91 +++++++++++--------
+ 1 file changed, 51 insertions(+), 40 deletions(-)
 
-diff --git a/drivers/rtc/rtc-pcf2127.c b/drivers/rtc/rtc-pcf2127.c
-index 7cb786d76e3c..8c62406f92dd 100644
---- a/drivers/rtc/rtc-pcf2127.c
-+++ b/drivers/rtc/rtc-pcf2127.c
-@@ -57,20 +57,14 @@ static int pcf2127_rtc_read_time(struct device *dev, struct rtc_time *tm)
- 	struct pcf2127 *pcf2127 = dev_get_drvdata(dev);
- 	unsigned char buf[10];
- 	int ret;
--	int i;
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_common.c b/drivers/net/ethernet/intel/i40e/i40e_common.c
+index 85f75b5978fc..eb0ae6ab01e2 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_common.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_common.c
+@@ -1668,25 +1668,15 @@ enum i40e_status_code i40e_aq_set_phy_config(struct i40e_hw *hw,
+ 	return status;
+ }
  
--	for (i = 0; i <= PCF2127_REG_CTRL3; i++) {
--		ret = regmap_read(pcf2127->regmap, PCF2127_REG_CTRL1 + i,
--				  (unsigned int *)(buf + i));
--		if (ret) {
--			dev_err(dev, "%s: read error\n", __func__);
--			return ret;
--		}
--	}
+-/**
+- * i40e_set_fc
+- * @hw: pointer to the hw struct
+- * @aq_failures: buffer to return AdminQ failure information
+- * @atomic_restart: whether to enable atomic link restart
+- *
+- * Set the requested flow control mode using set_phy_config.
+- **/
+-enum i40e_status_code i40e_set_fc(struct i40e_hw *hw, u8 *aq_failures,
+-				  bool atomic_restart)
++static noinline_for_stack enum i40e_status_code
++i40e_set_fc_status(struct i40e_hw *hw,
++		   struct i40e_aq_get_phy_abilities_resp *abilities,
++		   bool atomic_restart)
+ {
+-	enum i40e_fc_mode fc_mode = hw->fc.requested_mode;
+-	struct i40e_aq_get_phy_abilities_resp abilities;
+ 	struct i40e_aq_set_phy_config config;
+-	enum i40e_status_code status;
++	enum i40e_fc_mode fc_mode = hw->fc.requested_mode;
+ 	u8 pause_mask = 0x0;
+ 
+-	*aq_failures = 0x0;
 -
--	ret = regmap_bulk_read(pcf2127->regmap, PCF2127_REG_SC,
--			       (buf + PCF2127_REG_SC),
--			       ARRAY_SIZE(buf) - PCF2127_REG_SC);
-+	/*
-+	 * Avoid reading CTRL2 register as it causes WD_VAL register
-+	 * value to reset to 0 which means watchdog is stopped.
-+	 */
-+	ret = regmap_bulk_read(pcf2127->regmap, PCF2127_REG_CTRL3,
-+			       (buf + PCF2127_REG_CTRL3),
-+			       ARRAY_SIZE(buf) - PCF2127_REG_CTRL3);
- 	if (ret) {
- 		dev_err(dev, "%s: read error\n", __func__);
- 		return ret;
-@@ -91,14 +85,12 @@ static int pcf2127_rtc_read_time(struct device *dev, struct rtc_time *tm)
+ 	switch (fc_mode) {
+ 	case I40E_FC_FULL:
+ 		pause_mask |= I40E_AQ_PHY_FLAG_PAUSE_TX;
+@@ -1702,6 +1692,48 @@ enum i40e_status_code i40e_set_fc(struct i40e_hw *hw, u8 *aq_failures,
+ 		break;
  	}
  
- 	dev_dbg(dev,
--		"%s: raw data is cr1=%02x, cr2=%02x, cr3=%02x, "
--		"sec=%02x, min=%02x, hr=%02x, "
-+		"%s: raw data is cr3=%02x, sec=%02x, min=%02x, hr=%02x, "
- 		"mday=%02x, wday=%02x, mon=%02x, year=%02x\n",
--		__func__,
--		buf[0], buf[1], buf[2],
--		buf[3], buf[4], buf[5],
--		buf[6], buf[7], buf[8], buf[9]);
--
-+		__func__, buf[PCF2127_REG_CTRL3], buf[PCF2127_REG_SC],
-+		buf[PCF2127_REG_MN], buf[PCF2127_REG_HR],
-+		buf[PCF2127_REG_DM], buf[PCF2127_REG_DW],
-+		buf[PCF2127_REG_MO], buf[PCF2127_REG_YR]);
++	memset(&config, 0, sizeof(struct i40e_aq_set_phy_config));
++	/* clear the old pause settings */
++	config.abilities = abilities->abilities & ~(I40E_AQ_PHY_FLAG_PAUSE_TX) &
++			   ~(I40E_AQ_PHY_FLAG_PAUSE_RX);
++	/* set the new abilities */
++	config.abilities |= pause_mask;
++	/* If the abilities have changed, then set the new config */
++	if (config.abilities == abilities->abilities)
++		return 0;
++
++	/* Auto restart link so settings take effect */
++	if (atomic_restart)
++		config.abilities |= I40E_AQ_PHY_ENABLE_ATOMIC_LINK;
++	/* Copy over all the old settings */
++	config.phy_type = abilities->phy_type;
++	config.phy_type_ext = abilities->phy_type_ext;
++	config.link_speed = abilities->link_speed;
++	config.eee_capability = abilities->eee_capability;
++	config.eeer = abilities->eeer_val;
++	config.low_power_ctrl = abilities->d3_lpan;
++	config.fec_config = abilities->fec_cfg_curr_mod_ext_info &
++			    I40E_AQ_PHY_FEC_CONFIG_MASK;
++
++	return i40e_aq_set_phy_config(hw, &config, NULL);
++}
++
++/**
++ * i40e_set_fc
++ * @hw: pointer to the hw struct
++ * @aq_failures: buffer to return AdminQ failure information
++ * @atomic_restart: whether to enable atomic link restart
++ *
++ * Set the requested flow control mode using set_phy_config.
++ **/
++enum i40e_status_code i40e_set_fc(struct i40e_hw *hw, u8 *aq_failures,
++				  bool atomic_restart)
++{
++	struct i40e_aq_get_phy_abilities_resp abilities;
++	enum i40e_status_code status;
++
++	*aq_failures = 0x0;
++
+ 	/* Get the current phy config */
+ 	status = i40e_aq_get_phy_capabilities(hw, false, false, &abilities,
+ 					      NULL);
+@@ -1710,31 +1742,10 @@ enum i40e_status_code i40e_set_fc(struct i40e_hw *hw, u8 *aq_failures,
+ 		return status;
+ 	}
  
- 	tm->tm_sec = bcd2bin(buf[PCF2127_REG_SC] & 0x7F);
- 	tm->tm_min = bcd2bin(buf[PCF2127_REG_MN] & 0x7F);
+-	memset(&config, 0, sizeof(struct i40e_aq_set_phy_config));
+-	/* clear the old pause settings */
+-	config.abilities = abilities.abilities & ~(I40E_AQ_PHY_FLAG_PAUSE_TX) &
+-			   ~(I40E_AQ_PHY_FLAG_PAUSE_RX);
+-	/* set the new abilities */
+-	config.abilities |= pause_mask;
+-	/* If the abilities have changed, then set the new config */
+-	if (config.abilities != abilities.abilities) {
+-		/* Auto restart link so settings take effect */
+-		if (atomic_restart)
+-			config.abilities |= I40E_AQ_PHY_ENABLE_ATOMIC_LINK;
+-		/* Copy over all the old settings */
+-		config.phy_type = abilities.phy_type;
+-		config.phy_type_ext = abilities.phy_type_ext;
+-		config.link_speed = abilities.link_speed;
+-		config.eee_capability = abilities.eee_capability;
+-		config.eeer = abilities.eeer_val;
+-		config.low_power_ctrl = abilities.d3_lpan;
+-		config.fec_config = abilities.fec_cfg_curr_mod_ext_info &
+-				    I40E_AQ_PHY_FEC_CONFIG_MASK;
+-		status = i40e_aq_set_phy_config(hw, &config, NULL);
++	status = i40e_set_fc_status(hw, &abilities, atomic_restart);
++	if (status)
++		*aq_failures |= I40E_SET_FC_AQ_FAIL_SET;
+ 
+-		if (status)
+-			*aq_failures |= I40E_SET_FC_AQ_FAIL_SET;
+-	}
+ 	/* Update the link info */
+ 	status = i40e_update_link_info(hw);
+ 	if (status) {
+@@ -2563,7 +2574,7 @@ i40e_status i40e_get_link_status(struct i40e_hw *hw, bool *link_up)
+  * i40e_updatelink_status - update status of the HW network link
+  * @hw: pointer to the hw struct
+  **/
+-i40e_status i40e_update_link_info(struct i40e_hw *hw)
++noinline_for_stack i40e_status i40e_update_link_info(struct i40e_hw *hw)
+ {
+ 	struct i40e_aq_get_phy_abilities_resp abilities;
+ 	i40e_status status = 0;
 -- 
 2.20.1
 
