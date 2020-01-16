@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3203BC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 856A5C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 020522064C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E43A206B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:47:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218427;
-	bh=SVLO7tEHdnLI7m6T+W/vO/glj99aOKwiy6fqanCwsqE=;
+	s=default; t=1579218433;
+	bh=CIYpgwu0DJgMuL2/3x+8Uiv1IJB/8q1HMWHq4U8GsC4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V29JEum3ZWUXn3FJpBJrDfEy1Ywi5kRK3IhdTGyihtDu1cXWmNjvSd45K9ajU/iLz
-	 Ign5zdBC7NmKm/na/tveq2W0wUgcZaC2oNbvfiImbQnHjil9gxyDwIyzo3yHoMYYyK
-	 ncpKePKmUHnGvIXeKndf7Mb06AITLg4Zsws+V9kc=
+	b=woovxub9VFbrm8fgwSQbwEbFeuHeBPUPzMVuxkfW9NMHmGIhnAWeK6mF42lGXA0sw
+	 8ITO9CzFliXLebaPADhLuqGYp9etwKem8FNOW6E8vWcmOlaKGJ1yDwul+aO5O58lUZ
+	 JDwx+L4bKa6zoAI+Mw4ZcZB6qJUX/7uXyRu5UDuc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404136AbgAPXrF (ORCPT
+        id S2392093AbgAPXrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:47:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48492 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:47:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389656AbgAPXVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:21:22 -0500
+        id S2387608AbgAPXVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:21:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C1B52077C;
-        Thu, 16 Jan 2020 23:21:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3521020684;
+        Thu, 16 Jan 2020 23:21:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216882;
-        bh=SVLO7tEHdnLI7m6T+W/vO/glj99aOKwiy6fqanCwsqE=;
+        s=default; t=1579216879;
+        bh=CIYpgwu0DJgMuL2/3x+8Uiv1IJB/8q1HMWHq4U8GsC4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c8H4+grn5j/kiF6lhpERMq14UR6qhpp1iaQ+8iYvMoacoLtmziH3meQ+dU0AEeE09
-         TRLCyYZOXK0mDVLoH3zNAeE94DXz8Ac3/KoNNprxF2r8aSnZBalUzKdDWEEfrYbkkD
-         zSFQ6AXu15KS5tLKkNcMlPcbyXVFFtbs83+d5jS4=
+        b=X2Gm8gqH0FwapxYbAXWV6eTStnvR3sS0+0YL9vJNOXvSFEeNdMRQkE4NUmy161rBx
+         AUZ39ybmKE8wzusf1Ig6twYb9eUU1QOod66wU/U2oXO2k+yTi1FlqQVGDf02LGEf8q
+         z5eA7ag/khWP4Z+lNhJl3Y5Pah7tkrSSFTBU0bvM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 058/203] ASoC: SOF: Intel: Broadwell: clarify mutual exclusion with legacy driver
-Date:   Fri, 17 Jan 2020 00:16:15 +0100
-Message-Id: <20200116231749.071108262@linuxfoundation.org>
+Subject: [PATCH 5.4 057/203] ASoC: fsl_esai: Add spin lock to protect reset, stop and start
+Date:   Fri, 17 Jan 2020 00:16:14 +0100
+Message-Id: <20200116231748.979057805@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -60,62 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-commit a6955fe0e2309feeab5ec71e4b0dcbe498f4f497 upstream.
+commit 35dac627471938eda89fa39ee4ead1f7667e0f57 upstream.
 
-Some distros select all options blindly, which leads to confusion and
-bug reports. SOF does not fully support Broadwell due to firmware
-dependencies, the machine drivers can only support one option, and
-UCM/topology files are still being propagated to downstream distros,
-so make SOF on Broadwell an opt-in option that first require distros
-to opt-out of existing defaults.
+xrun may happen at the end of stream, the
+trigger->fsl_esai_trigger_stop maybe called in the middle of
+fsl_esai_hw_reset, this may cause esai in wrong state
+after stop, and there may be endless xrun interrupt.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204237
-Fixes: f35bf70f61d3 ('ASoC: Intel: Make sure BDW based machine drivers build for SOF')
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20191101173045.27099-3-pierre-louis.bossart@linux.intel.com
+This issue may also happen with trigger->fsl_esai_trigger_start.
+
+So Add spin lock to lock those functions.
+
+Fixes: 7ccafa2b3879 ("ASoC: fsl_esai: recover the channel swap after xrun")
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Link: https://lore.kernel.org/r/52e92c4221a83e39a84a6cd92fc3d5479b44894c.1572252321.git.shengjiu.wang@nxp.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/intel/Kconfig     |    3 +++
- sound/soc/sof/intel/Kconfig |   10 +++++++++-
- 2 files changed, 12 insertions(+), 1 deletion(-)
+ sound/soc/fsl/fsl_esai.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
---- a/sound/soc/intel/Kconfig
-+++ b/sound/soc/intel/Kconfig
-@@ -59,6 +59,9 @@ config SND_SOC_INTEL_HASWELL
- 	  If you have a Intel Haswell or Broadwell platform connected to
- 	  an I2S codec, then enable this option by saying Y or m. This is
- 	  typically used for Chromebooks. This is a recommended option.
-+	  This option is mutually exclusive with the SOF support on
-+	  Broadwell. If you want to enable SOF on Broadwell, you need to
-+	  deselect this option first.
+--- a/sound/soc/fsl/fsl_esai.c
++++ b/sound/soc/fsl/fsl_esai.c
+@@ -33,6 +33,7 @@
+  * @fsysclk: system clock source to derive HCK, SCK and FS
+  * @spbaclk: SPBA clock (optional, depending on SoC design)
+  * @task: tasklet to handle the reset operation
++ * @lock: spin lock between hw_reset() and trigger()
+  * @fifo_depth: depth of tx/rx FIFO
+  * @slot_width: width of each DAI slot
+  * @slots: number of slots
+@@ -56,6 +57,7 @@ struct fsl_esai {
+ 	struct clk *fsysclk;
+ 	struct clk *spbaclk;
+ 	struct tasklet_struct task;
++	spinlock_t lock; /* Protect hw_reset and trigger */
+ 	u32 fifo_depth;
+ 	u32 slot_width;
+ 	u32 slots;
+@@ -676,8 +678,10 @@ static void fsl_esai_hw_reset(unsigned l
+ {
+ 	struct fsl_esai *esai_priv = (struct fsl_esai *)arg;
+ 	bool tx = true, rx = false, enabled[2];
++	unsigned long lock_flags;
+ 	u32 tfcr, rfcr;
  
- config SND_SOC_INTEL_BAYTRAIL
- 	tristate "Baytrail (legacy) Platforms"
---- a/sound/soc/sof/intel/Kconfig
-+++ b/sound/soc/sof/intel/Kconfig
-@@ -76,10 +76,18 @@ config SND_SOC_SOF_BAYTRAIL
++	spin_lock_irqsave(&esai_priv->lock, lock_flags);
+ 	/* Save the registers */
+ 	regmap_read(esai_priv->regmap, REG_ESAI_TFCR, &tfcr);
+ 	regmap_read(esai_priv->regmap, REG_ESAI_RFCR, &rfcr);
+@@ -715,6 +719,8 @@ static void fsl_esai_hw_reset(unsigned l
+ 		fsl_esai_trigger_start(esai_priv, tx);
+ 	if (enabled[rx])
+ 		fsl_esai_trigger_start(esai_priv, rx);
++
++	spin_unlock_irqrestore(&esai_priv->lock, lock_flags);
+ }
  
- config SND_SOC_SOF_BROADWELL_SUPPORT
- 	bool "SOF support for Broadwell"
-+	depends on SND_SOC_INTEL_HASWELL=n
- 	help
- 	  This adds support for Sound Open Firmware for Intel(R) platforms
- 	  using the Broadwell processors.
--	  Say Y if you have such a device.
-+	  This option is mutually exclusive with the Haswell/Broadwell legacy
-+	  driver. If you want to enable SOF on Broadwell you need to deselect
-+	  the legacy driver first.
-+	  SOF does fully support Broadwell yet, so this option is not
-+	  recommended for distros. At some point all legacy drivers will be
-+	  deprecated but not before all userspace firmware/topology/UCM files
-+	  are made available to downstream distros.
-+	  Say Y if you want to enable SOF on Broadwell
- 	  If unsure select "N".
+ static int fsl_esai_trigger(struct snd_pcm_substream *substream, int cmd,
+@@ -722,6 +728,7 @@ static int fsl_esai_trigger(struct snd_p
+ {
+ 	struct fsl_esai *esai_priv = snd_soc_dai_get_drvdata(dai);
+ 	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
++	unsigned long lock_flags;
  
- config SND_SOC_SOF_BROADWELL
+ 	esai_priv->channels[tx] = substream->runtime->channels;
+ 
+@@ -729,12 +736,16 @@ static int fsl_esai_trigger(struct snd_p
+ 	case SNDRV_PCM_TRIGGER_START:
+ 	case SNDRV_PCM_TRIGGER_RESUME:
+ 	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
++		spin_lock_irqsave(&esai_priv->lock, lock_flags);
+ 		fsl_esai_trigger_start(esai_priv, tx);
++		spin_unlock_irqrestore(&esai_priv->lock, lock_flags);
+ 		break;
+ 	case SNDRV_PCM_TRIGGER_SUSPEND:
+ 	case SNDRV_PCM_TRIGGER_STOP:
+ 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
++		spin_lock_irqsave(&esai_priv->lock, lock_flags);
+ 		fsl_esai_trigger_stop(esai_priv, tx);
++		spin_unlock_irqrestore(&esai_priv->lock, lock_flags);
+ 		break;
+ 	default:
+ 		return -EINVAL;
+@@ -1002,6 +1013,7 @@ static int fsl_esai_probe(struct platfor
+ 
+ 	dev_set_drvdata(&pdev->dev, esai_priv);
+ 
++	spin_lock_init(&esai_priv->lock);
+ 	ret = fsl_esai_hw_init(esai_priv);
+ 	if (ret)
+ 		return ret;
 
 
