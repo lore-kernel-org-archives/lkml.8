@@ -2,157 +2,73 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3EAC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2399EC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4B7F20684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:42:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qGFNauyA"
+	by mail.kernel.org (Postfix) with ESMTP id 01F5320684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:43:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbgAPOmz (ORCPT
+        id S1727007AbgAPOnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 09:42:55 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:58974 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbgAPOmn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 09:42:43 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200116144241euoutp02fe20c944b952dd74e42350d0ecc22190~qZRVjEmpr2958429584euoutp02h
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 14:42:41 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200116144241euoutp02fe20c944b952dd74e42350d0ecc22190~qZRVjEmpr2958429584euoutp02h
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579185761;
-        bh=8Ahf2/0EsEBYG+/Mv5cyXwGGbXnNjNkyPPuFLBhAkYQ=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=qGFNauyArbJxWpVSh/xTaYHLyTlldsLv0uAEsQAHlPwZmyDS9MsmfVunPRStnc61P
-         TjBiTeG8jFl7zCOC8iWFJDb/iINEV8+jRDf4RyT32AQv17S2XGvdl5lk05vPsD/o0o
-         +I5dZL0WMgb+mOrQiVOdrWj+AOsdmmqn0f1lKPhg=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200116144241eucas1p21fbfa0f4e0e68dedad3a4bc6dcafeb64~qZRVRthGZ2314923149eucas1p2C;
-        Thu, 16 Jan 2020 14:42:41 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 14.D2.60698.166702E5; Thu, 16
-        Jan 2020 14:42:41 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200116144241eucas1p226c1d7fc2fad5bd1b9fb6d0fb1b22bff~qZRU3h-381442314423eucas1p2V;
-        Thu, 16 Jan 2020 14:42:41 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200116144241eusmtrp13ad69389c59a3c9b12dbcdca183a5a2a~qZRU20qKm0584505845eusmtrp1T;
-        Thu, 16 Jan 2020 14:42:41 +0000 (GMT)
-X-AuditID: cbfec7f5-a0fff7000001ed1a-e6-5e20766159d0
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id D4.64.08375.166702E5; Thu, 16
-        Jan 2020 14:42:41 +0000 (GMT)
-Received: from AMDC3555.digital.local (unknown [106.120.51.67]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200116144240eusmtip2b01528aecb320a8b1705f43c2d4928bd~qZRUV2MnO2614526145eusmtip2N;
-        Thu, 16 Jan 2020 14:42:40 +0000 (GMT)
-From:   =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@samsung.com>
-To:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org
-Cc:     =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@samsung.com>,
-        georgi.djakov@linaro.org, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, m.szyprowski@samsung.com, krzk@kernel.org
-Subject: [PATCH v4 0/3] interconnect: Support Samsung Exynos use-case
-Date:   Thu, 16 Jan 2020 15:41:59 +0100
-Message-Id: <20200116144202.12116-1-a.swigon@samsung.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 16 Jan 2020 09:43:40 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9642 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726189AbgAPOnj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 09:43:39 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A556629ABDF8C6D0FF45;
+        Thu, 16 Jan 2020 22:43:37 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Thu, 16 Jan 2020
+ 22:43:28 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
+        <orito.takao@socionext.com>
+CC:     <linux-mmc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] mmc: sdhci-milbeaut:  Remove redundant platform_get_irq error message
+Date:   Thu, 16 Jan 2020 22:43:22 +0800
+Message-ID: <20200116144322.57308-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAKsWRmVeSWpSXmKPExsWy7djP87qJZQpxBg23ZCzuz2tltNg4Yz2r
-        xfUvz1ktpu/dxGZx/vwGdovLu+awWXzuPcJoMeP8PiaLtUfusjtwemxa1cnmcefaHjaPvi2r
-        GD0+b5ILYInisklJzcksSy3St0vgyvj68j57wQ/eihcn5jA2MG7m7mLk5JAQMJHomdfPDmIL
-        CaxglOj/FQ9hf2GUuHfcu4uRC8j+zCix6/kzJpiGxzvesEAULWeU2P8+DaIIqOH95UVsIAk2
-        AUeJSVMfgE0VEYiX+LjtHwtIEbPATkaJI3//gE0SFnCV2NT4jRnEZhFQlfg6qQsszitgKXHo
-        7wxGiG3yEqs3HGCGiAtKnJz5BGwzM1C8eetsZpChEgKT2SUatu2DOs9FYtmaecwQtrDEq+Nb
-        2CFsGYnTk3tYIOxiiac777NCNDcwSmxadgSqwVrizrlfQC9wAG3QlFi/Sx/ElAD6Zvu6IAiT
-        T+LGW0GIE/gkJm2bzgwR5pXoaBOCMJUkds3kgxgnIdG0+hrUaA+JPTcWQ4MtVqLjSD/LBEaF
-        WUj+moXkr1kIFyxgZF7FKJ5aWpybnlpsnJdarlecmFtcmpeul5yfu4kRmG5O/zv+dQfjvj9J
-        hxgFOBiVeHg/hCjECbEmlhVX5h5ilOBgVhLhPTlDNk6INyWxsiq1KD++qDQntfgQozQHi5I4
-        r/Gil7FCAumJJanZqakFqUUwWSYOTqkGRqGyQ3Y2P4pn1Lg0yKxjkSvd7bagsnCGq6NV1bVL
-        f93Mw+adKuXPmT1z1u7U284T3s2av971voaD86+vJS+qPUWb0mMZrh22eGC1csksdtW9ba8N
-        W32eLJ47aXnlV6f4ZxlaCosLJ3++YhCRvGt6sQz/qb3Hpj89o5V192uWmMf+iRqplxMuPlFi
-        Kc5INNRiLipOBACAgVbSMwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIIsWRmVeSWpSXmKPExsVy+t/xe7qJZQpxBvs+sljcn9fKaLFxxnpW
-        i+tfnrNaTN+7ic3i/PkN7BaXd81hs/jce4TRYsb5fUwWa4/cZXfg9Ni0qpPN4861PWwefVtW
-        MXp83iQXwBKlZ1OUX1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwea2VkqqRvZ5OSmpNZllqk
-        b5egl/H15X32gh+8FS9OzGFsYNzM3cXIySEhYCLxeMcbli5GLg4hgaWMEj1757NDJCQkPq6/
-        wQphC0v8udbFBlH0iVFi+dSHbCAJNgFHiUlTH4A1iAgkStx69JgZpIhZYD+jxMs7bWBFwgKu
-        EpsavzGD2CwCqhJfJ3Uxgdi8ApYSh/7OYITYIC+xesMBZoi4oMTJmU+ATuIAGqQusX6eEEiY
-        Gaikeets5gmM/LOQVM1CqJqFpGoBI/MqRpHU0uLc9NxiQ73ixNzi0rx0veT83E2MwOjYduzn
-        5h2MlzYGH2IU4GBU4uGdEaQQJ8SaWFZcmXuIUYKDWUmE9+QM2Tgh3pTEyqrUovz4otKc1OJD
-        jKZAL0xklhJNzgdGbl5JvKGpobmFpaG5sbmxmYWSOG+HwMEYIYH0xJLU7NTUgtQimD4mDk6p
-        BkYPuZPXN+z/env+vG3yN9TFdmq/Vr345sxDVsNCn1f7rp1b8/yzd+jbTZwVq66KvPpQdch+
-        rwSXfx3vrwaT1isP1wq7s5VwPl40p3l7SdG3PPcfD3/ViC1XtFH+zuL3ujtIMdT5zIcSzyJW
-        RtUb98463LJPVn/jKH5SzuzIXKctsx68W72Eg91IiaU4I9FQi7moOBEA6vO3GKQCAAA=
-X-CMS-MailID: 20200116144241eucas1p226c1d7fc2fad5bd1b9fb6d0fb1b22bff
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200116144241eucas1p226c1d7fc2fad5bd1b9fb6d0fb1b22bff
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200116144241eucas1p226c1d7fc2fad5bd1b9fb6d0fb1b22bff
-References: <CGME20200116144241eucas1p226c1d7fc2fad5bd1b9fb6d0fb1b22bff@eucas1p2.samsung.com>
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Previously posted as a part of a larger RFC: [1].
+platform_get_irq() will call dev_err() itself on failure,
+so there is no need for the driver to also do this.
+This is detected by coccinelle.
 
-The Exynos SoC family relies on the devfreq driver for frequency
-scaling. However, a way to programmatically enforce QoS contraints
-(i.e., minimum frequency) is desired. A solution which uses the
-interconnect framework to ensure QoS is currently being developed[1].
-
-The exynos-bus hierarchy is composed of multiple buses which are probed
-separately. Sometimes the DMC is even handled by a different driver.
-Since the exynos-bus driver is generic and supports multiple differing
-bus hierarchies, IDs for nodes (i.e. buses) are assigned dynamically. Due
-to the unspecified relative probing order, every bus registers its own
-interconnect provider.
-
-Rationale for each patch in this series:
-* Patch 01 (exporting of_icc_get_from_provider()) makes it easy to
-  retrieve the parent node from the DT (cf. patch 05 in [1]).
-* Patch 02 (allowing #interconnect-cells = <0>) allows to remove dummy
-  node IDs from the DT.
-* Patch 03 (allowing inter-provider node pairs) is necessary to make
-  such multi-provider hierarchy work. A new approach implemented in v3
-  ensures not to break any existing drivers.
-
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
-Changes since v3 (to patches in this series):
-* Improve commit messages.
+ drivers/mmc/host/sdhci-milbeaut.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
----
-Artur Świgoń
-Samsung R&D Institute Poland
-Samsung Electronics
-
----
-References:
-[1] https://patchwork.kernel.org/patch/11305287/
-
-Artur Świgoń (3):
-  interconnect: Export of_icc_get_from_provider()
-  interconnect: Relax requirement in of_icc_get_from_provider()
-  interconnect: Allow inter-provider pairs to be configured
-
- drivers/interconnect/core.c           | 16 ++++++++--------
- include/linux/interconnect-provider.h |  8 ++++++++
- 2 files changed, 16 insertions(+), 8 deletions(-)
-
+diff --git a/drivers/mmc/host/sdhci-milbeaut.c b/drivers/mmc/host/sdhci-milbeaut.c
+index e6245b7..92f30a1 100644
+--- a/drivers/mmc/host/sdhci-milbeaut.c
++++ b/drivers/mmc/host/sdhci-milbeaut.c
+@@ -246,10 +246,8 @@ static int sdhci_milbeaut_probe(struct platform_device *pdev)
+ 	struct f_sdhost_priv *priv;
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(dev, "%s: no irq specified\n", __func__);
++	if (irq < 0)
+ 		return irq;
+-	}
+ 
+ 	host = sdhci_alloc_host(dev, sizeof(struct f_sdhost_priv));
+ 	if (IS_ERR(host))
 -- 
-2.17.1
+2.7.4
+
 
