@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9149C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 290F0C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8404E2064C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E752E207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218379;
-	bh=s8TLmbI5O28ao/0WFz+LLo1bxPeLMw8soqZjjhXbPtM=;
+	s=default; t=1579218383;
+	bh=+NWel1XDc0nVhEjZEKuLMD5HJ5Mm8G7/Xz0caA0IHO8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2ApdB/ONqbYCks0hBx7FbvgxYiKlfW+lvzi7akPu7vVL6rF71cPAwI7wUu/fHiBLl
-	 cNyGettpK/xS5JHhTjdaSrf0B4y10TOJgNf1KOmgbIne2Yog6PL0Fy0vIlaAb4SFxM
-	 G5S9g1du5OXhciDqsavNvLqpFRKUbhX5ZUyQvJkI=
+	b=atV5qVJxU8bdtPd15ryexv17O8SkwX/KlINjuyytNDdnMZhN3EoIyMZXSzhXkj3Hl
+	 z4ge1fx5zgbQoU/mLOaCPFvAnXtndWe9ztW8LGljxIyB0US4llvCGK2VXEfa2EWjYZ
+	 DTkzfdVnaLwkPZE3a0QAZ0KkFKU9UpXHSJ+ZGln0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389576AbgAPXWL (ORCPT
+        id S2389464AbgAPXWF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:22:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49780 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:22:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388394AbgAPXWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:22:03 -0500
+        id S1731984AbgAPXVz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:21:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EA3F2075B;
-        Thu, 16 Jan 2020 23:22:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12C9220684;
+        Thu, 16 Jan 2020 23:21:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216922;
-        bh=s8TLmbI5O28ao/0WFz+LLo1bxPeLMw8soqZjjhXbPtM=;
+        s=default; t=1579216915;
+        bh=+NWel1XDc0nVhEjZEKuLMD5HJ5Mm8G7/Xz0caA0IHO8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ST6rDSsCD8IORsUu7D6G889UVLcd8M1asu+m4h3JHuySqrU5reDEscGoe6SnJv6PY
-         +1dt6wmELfLmXc3Q5h9GxtPKIVJb8xUkxBGpb1d/rYHx81qlVSjVk0M+qIfGi1fgZI
-         5A6BdKcJz4C/6TUnzCVl6LvBemt2Pzs/iQ2EBoJI=
+        b=T8RbaMF/gWoCFzeG8PCVZDF+yK36JqfzfLzMwpzwsiWzQXHHnYTwvV0/mBNWaUVL/
+         0zm4QGagiD+V8/a42X3MYfgpzDD+egJEH4YXsV7f9I5Ilf7LXr6MN5hz3/Ehmtu5u2
+         tXFL8wnU2OZNJqd1IVMmh38mfBus91Q+hauvJOF8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.4 075/203] RDMA/mlx5: Return proper error value
-Date:   Fri, 17 Jan 2020 00:16:32 +0100
-Message-Id: <20200116231750.786477600@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Baluta <daniel.baluta@nxp.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.4 056/203] ASoC: simple_card_utils.h: Add missing include
+Date:   Fri, 17 Jan 2020 00:16:13 +0100
+Message-Id: <20200116231748.878130122@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -59,35 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@mellanox.com>
+From: Daniel Baluta <daniel.baluta@nxp.com>
 
-commit 546d30099ed204792083f043cd7e016de86016a3 upstream.
+commit 4bbee14d8e5487e3d2662138e3767cf4678cdf57 upstream.
 
-Returned value from mlx5_mr_cache_alloc() is checked to be error or real
-pointer. Return proper error code instead of NULL which is not checked
-later.
+When debug is enabled compiler cannot find the definition of
+clk_get_rate resulting in the following error:
 
-Fixes: 81713d3788d2 ("IB/mlx5: Add implicit MR support")
-Link: https://lore.kernel.org/r/20191029055721.7192-1-leon@kernel.org
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+./include/sound/simple_card_utils.h:168:40: note: previous implicit
+declaration of ‘clk_get_rate’ was here
+   dev_dbg(dev, "%s clk %luHz\n", name, clk_get_rate(dai->clk));
+./include/sound/simple_card_utils.h:168:3: note: in expansion of macro
+‘dev_dbg’
+   dev_dbg(dev, "%s clk %luHz\n", name, clk_get_rate(dai->clk));
+
+Fix this by including the appropriate header.
+
+Fixes: 0580dde59438686d ("ASoC: simple-card-utils: add asoc_simple_debug_info()")
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Link: https://lore.kernel.org/r/20191009153615.32105-2-daniel.baluta@nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/mlx5/mr.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/sound/simple_card_utils.h |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/infiniband/hw/mlx5/mr.c
-+++ b/drivers/infiniband/hw/mlx5/mr.c
-@@ -428,7 +428,7 @@ struct mlx5_ib_mr *mlx5_mr_cache_alloc(s
+--- a/include/sound/simple_card_utils.h
++++ b/include/sound/simple_card_utils.h
+@@ -8,6 +8,7 @@
+ #ifndef __SIMPLE_CARD_UTILS_H
+ #define __SIMPLE_CARD_UTILS_H
  
- 	if (entry < 0 || entry >= MAX_MR_CACHE_ENTRIES) {
- 		mlx5_ib_err(dev, "cache entry %d is out of range\n", entry);
--		return NULL;
-+		return ERR_PTR(-EINVAL);
- 	}
++#include <linux/clk.h>
+ #include <sound/soc.h>
  
- 	ent = &cache->ent[entry];
+ #define asoc_simple_init_hp(card, sjack, prefix) \
 
 
