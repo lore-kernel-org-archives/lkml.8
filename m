@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8908EC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DF4C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 571272073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83E422073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:09:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198184;
-	bh=PydPYIzYqd2xMae7JH6yTW0jxoVCJa+t/kLy24YHEwU=;
+	s=default; t=1579198191;
+	bh=h0/3iljzW0rYzzvQoCv8z9SKBKD3/Vi8vYokNesmrYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jmz0cHKFHPKILIoMs/q2Vgqcp5DXtUoie4PbJfWA4xkioTVf9QN7oM3LdFIeMNnG+
-	 PLdeDosb1KzXD6CcAh58+muCb7zJd5s3k9y8TT9Ya0HeR5o6KScSUzSWwwmv7RJh18
-	 J5GxmRrxjhcjaeJoae1eOjbRspOcbts4eSJLkwxg=
+	b=cPgwn3jG7ptLKWBL+KI6dAqlWM+FCkD6qo9EjFDwNIIxCjPWTyh1Q7KyMpj0xPw+d
+	 4+/JF9VPUVY1msugvMPuNQI27NM7l5U7vOr4mAiXqtqp72V9U9Zrh1V1gMW4ODdwEU
+	 OBCRDuEwGn23ZAd9xU9IzErOJZMeS1Jt91FXLR3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395084AbgAPSJn (ORCPT
+        id S2395095AbgAPSJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:09:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53958 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:09:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393295AbgAPRiM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:38:12 -0500
+        id S2393279AbgAPRiI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:38:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18542246D6;
-        Thu, 16 Jan 2020 17:38:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D7A3246DA;
+        Thu, 16 Jan 2020 17:38:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196291;
-        bh=PydPYIzYqd2xMae7JH6yTW0jxoVCJa+t/kLy24YHEwU=;
+        s=default; t=1579196287;
+        bh=h0/3iljzW0rYzzvQoCv8z9SKBKD3/Vi8vYokNesmrYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gIGWLsEbka3/WN7CubisCHLawGMUuGzdTNfxteIvr+XCCyagmtNNw4AF8IPGNCb6b
-         wWKnSumzHTnPWL6dNAAMGfOLDTGTesJDYED8AGO16LEhMZli7ibM0/V8ojX83yCF+Y
-         Nxy52WeWimqpMafk5fvha6iSP59RWJpoGNRIuyts=
+        b=bwmO+qy/g5NA63w4IK3jFjmLzntHwkQALec0ubFhSER93fv8FDmZO/0JAay8a+VGq
+         2OHEVduaf7IDBUr7fdfaRR7vK9x+mQ+1uU78bW5rE7UWFK9b/SWiQXeeuwXBQYQjfr
+         yKufbeuBF5ZEIEI8JB07D/H3JVwa0r6CsG6IsljE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 106/251] media: tw5864: Fix possible NULL pointer dereference in tw5864_handle_frame
-Date:   Thu, 16 Jan 2020 12:34:15 -0500
-Message-Id: <20200116173641.22137-66-sashal@kernel.org>
+Cc:     Finn Thain <fthain@telegraphics.com.au>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-m68k@lists.linux-m68k.org
+Subject: [PATCH AUTOSEL 4.9 103/251] m68k: mac: Fix VIA timer counter accesses
+Date:   Thu, 16 Jan 2020 12:34:12 -0500
+Message-Id: <20200116173641.22137-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -60,44 +60,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-[ Upstream commit 2e7682ebfc750177a4944eeb56e97a3f05734528 ]
+[ Upstream commit 0ca7ce7db771580433bf24454f7a1542bd326078 ]
 
-'vb' null check should be done before dereferencing it in
-tw5864_handle_frame, otherwise a NULL pointer dereference
-may occur.
+This resolves some bugs that affect VIA timer counter accesses.
+Avoid lost interrupts caused by reading the counter low byte register.
+Make allowance for the fact that the counter will be decremented to
+0xFFFF before being reloaded.
 
-Fixes: 34d1324edd31 ("[media] pci: Add tw5864 driver")
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/tw5864/tw5864-video.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/m68k/mac/via.c | 102 +++++++++++++++++++++++---------------------
+ 1 file changed, 53 insertions(+), 49 deletions(-)
 
-diff --git a/drivers/media/pci/tw5864/tw5864-video.c b/drivers/media/pci/tw5864/tw5864-video.c
-index 1ddf80f85c24..27ff6e0d9845 100644
---- a/drivers/media/pci/tw5864/tw5864-video.c
-+++ b/drivers/media/pci/tw5864/tw5864-video.c
-@@ -1386,13 +1386,13 @@ static void tw5864_handle_frame(struct tw5864_h264_frame *frame)
- 	input->vb = NULL;
- 	spin_unlock_irqrestore(&input->slock, flags);
+diff --git a/arch/m68k/mac/via.c b/arch/m68k/mac/via.c
+index 920ff63d4a81..c27bf9a906be 100644
+--- a/arch/m68k/mac/via.c
++++ b/arch/m68k/mac/via.c
+@@ -53,16 +53,6 @@ static __u8 rbv_clear;
  
--	v4l2_buf = to_vb2_v4l2_buffer(&vb->vb.vb2_buf);
+ static int gIER,gIFR,gBufA,gBufB;
+ 
+-/*
+- * Timer defs.
+- */
 -
- 	if (!vb) { /* Gone because of disabling */
- 		dev_dbg(&dev->pci->dev, "vb is empty, dropping frame\n");
- 		return;
+-#define TICK_SIZE		10000
+-#define MAC_CLOCK_TICK		(783300/HZ)		/* ticks per HZ */
+-#define MAC_CLOCK_LOW		(MAC_CLOCK_TICK&0xFF)
+-#define MAC_CLOCK_HIGH		(MAC_CLOCK_TICK>>8)
+-
+-
+ /*
+  * On Macs with a genuine VIA chip there is no way to mask an individual slot
+  * interrupt. This limitation also seems to apply to VIA clone logic cores in
+@@ -277,22 +267,6 @@ void __init via_init(void)
  	}
+ }
  
-+	v4l2_buf = to_vb2_v4l2_buffer(&vb->vb.vb2_buf);
+-/*
+- * Start the 100 Hz clock
+- */
+-
+-void __init via_init_clock(irq_handler_t func)
+-{
+-	via1[vACR] |= 0x40;
+-	via1[vT1LL] = MAC_CLOCK_LOW;
+-	via1[vT1LH] = MAC_CLOCK_HIGH;
+-	via1[vT1CL] = MAC_CLOCK_LOW;
+-	via1[vT1CH] = MAC_CLOCK_HIGH;
+-
+-	if (request_irq(IRQ_MAC_TIMER_1, func, 0, "timer", func))
+-		pr_err("Couldn't register %s interrupt\n", "timer");
+-}
+-
+ /*
+  * Debugging dump, used in various places to see what's going on.
+  */
+@@ -320,29 +294,6 @@ void via_debug_dump(void)
+ 	}
+ }
+ 
+-/*
+- * This is always executed with interrupts disabled.
+- *
+- * TBI: get time offset between scheduling timer ticks
+- */
+-
+-u32 mac_gettimeoffset(void)
+-{
+-	unsigned long ticks, offset = 0;
+-
+-	/* read VIA1 timer 2 current value */
+-	ticks = via1[vT1CL] | (via1[vT1CH] << 8);
+-	/* The probability of underflow is less than 2% */
+-	if (ticks > MAC_CLOCK_TICK - MAC_CLOCK_TICK / 50)
+-		/* Check for pending timer interrupt in VIA1 IFR */
+-		if (via1[vIFR] & 0x40) offset = TICK_SIZE;
+-
+-	ticks = MAC_CLOCK_TICK - ticks;
+-	ticks = ticks * 10000L / MAC_CLOCK_TICK;
+-
+-	return (ticks + offset) * 1000;
+-}
+-
+ /*
+  * Flush the L2 cache on Macs that have it by flipping
+  * the system into 24-bit mode for an instant.
+@@ -619,3 +570,56 @@ int via2_scsi_drq_pending(void)
+ 	return via2[gIFR] & (1 << IRQ_IDX(IRQ_MAC_SCSIDRQ));
+ }
+ EXPORT_SYMBOL(via2_scsi_drq_pending);
 +
- 	/*
- 	 * Check for space.
- 	 * Mind the overhead of startcode emulation prevention.
++/* timer and clock source */
++
++#define VIA_CLOCK_FREQ     783360                /* VIA "phase 2" clock in Hz */
++#define VIA_TIMER_INTERVAL (1000000 / HZ)        /* microseconds per jiffy */
++#define VIA_TIMER_CYCLES   (VIA_CLOCK_FREQ / HZ) /* clock cycles per jiffy */
++
++#define VIA_TC             (VIA_TIMER_CYCLES - 2) /* including 0 and -1 */
++#define VIA_TC_LOW         (VIA_TC & 0xFF)
++#define VIA_TC_HIGH        (VIA_TC >> 8)
++
++void __init via_init_clock(irq_handler_t timer_routine)
++{
++	if (request_irq(IRQ_MAC_TIMER_1, timer_routine, 0, "timer", NULL)) {
++		pr_err("Couldn't register %s interrupt\n", "timer");
++		return;
++	}
++
++	via1[vT1LL] = VIA_TC_LOW;
++	via1[vT1LH] = VIA_TC_HIGH;
++	via1[vT1CL] = VIA_TC_LOW;
++	via1[vT1CH] = VIA_TC_HIGH;
++	via1[vACR] |= 0x40;
++}
++
++u32 mac_gettimeoffset(void)
++{
++	unsigned long flags;
++	u8 count_high;
++	u16 count, offset = 0;
++
++	/*
++	 * Timer counter wrap-around is detected with the timer interrupt flag
++	 * but reading the counter low byte (vT1CL) would reset the flag.
++	 * Also, accessing both counter registers is essentially a data race.
++	 * These problems are avoided by ignoring the low byte. Clock accuracy
++	 * is 256 times worse (error can reach 0.327 ms) but CPU overhead is
++	 * reduced by avoiding slow VIA register accesses.
++	 */
++
++	local_irq_save(flags);
++	count_high = via1[vT1CH];
++	if (count_high == 0xFF)
++		count_high = 0;
++	if (count_high > 0 && (via1[vIFR] & VIA_TIMER_1_INT))
++		offset = VIA_TIMER_CYCLES;
++	local_irq_restore(flags);
++
++	count = count_high << 8;
++	count = VIA_TIMER_CYCLES - count + offset;
++
++	return ((count * VIA_TIMER_INTERVAL) / VIA_TIMER_CYCLES) * 1000;
++}
 -- 
 2.20.1
 
