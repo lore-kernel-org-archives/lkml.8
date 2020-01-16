@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A96C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26081C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 376DF2081E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E216A2077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:40:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200020;
-	bh=v3FcY8PQf8rf8lrSuh8yn3I1G69/fKrawZrx+yER9fc=;
+	s=default; t=1579200036;
+	bh=+Odn+h8Q5EuGZ9Q+Z9sZ/rzkiyJVGyEikcgRAqyYqME=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gIISGObXqW69KIG2fRbft++Rc/1fkWkdRQ50h7qNAe1VyILg8gdqd2DLWGIiClU2z
-	 gVJdKQuAFp+lYyPrRNgB+GMZidgXzQUa1yusVBqFiZwxjdXjkhQiw8bsMyMaEeq+tz
-	 R/JQR59h8dvNtByxZKOlgBDgEWb8VVvnJq1xcoRc=
+	b=HdqK+CEZuCrlXckzqKqUcONAWOAQ8Z+qfZNTDAGYimevKYCc+o4XFfoQo8g13zWeA
+	 Y/iS0UP72yOaat5AuHys3p4WOwS71SE6DSjbkoxWS43Mhbd+ggKV/kkabl4y2PBEKs
+	 e6dzMoBMIIifIXrZ2JFAgmiesbPbzhpiUNCk3pac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436935AbgAPSkH (ORCPT
+        id S2436911AbgAPSk3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:40:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54394 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:40:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390400AbgAPRMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:12:10 -0500
+        id S2390393AbgAPRMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:12:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E80E24692;
-        Thu, 16 Jan 2020 17:12:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90E2E24692;
+        Thu, 16 Jan 2020 17:12:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194730;
-        bh=v3FcY8PQf8rf8lrSuh8yn3I1G69/fKrawZrx+yER9fc=;
+        s=default; t=1579194726;
+        bh=+Odn+h8Q5EuGZ9Q+Z9sZ/rzkiyJVGyEikcgRAqyYqME=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wcsug/D15oZfTVw22gmYOvZ7vmAUaLgsGkvWoEd+Yv1O22R1QN+lKvplGJkIFV1G8
-         qZDP7382vw+3M/Oci3vuVryXnk9y1DSUYO6jy2S0aYK9UfYjOQJttDAuoxpZtqk6ca
-         3yWiEK7aBhq2rg3qXqNDBk0n18kvlyMi9hf56v58=
+        b=PRk2nrr0TOuLHLxtQQdfnhOS2QrXnsyw18ffemNCDIRpuphC+7e/4UWrPlyyHEuJD
+         7UxNhyM6wPSTrnb6+A2ZH8a+EAytfhmKLi8d/Z42nKaIwQXCMtlYUrtfBYElwFavT/
+         jQziL5au5HxDupnRS/HhDgog5Kvng+9VeNXb/OJ8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 563/671] net: hisilicon: Fix signedness bug in hix5hd2_dev_probe()
-Date:   Thu, 16 Jan 2020 12:03:21 -0500
-Message-Id: <20200116170509.12787-300-sashal@kernel.org>
+Cc:     Filippo Sironi <sironi@amazon.de>, Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.19 560/671] iommu/amd: Wait for completion of IOTLB flush in attach_device
+Date:   Thu, 16 Jan 2020 12:03:18 -0500
+Message-Id: <20200116170509.12787-297-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,34 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Filippo Sironi <sironi@amazon.de>
 
-[ Upstream commit 002dfe8085255b7bf1e0758c3d195c5412d35be9 ]
+[ Upstream commit 0b15e02f0cc4fb34a9160de7ba6db3a4013dc1b7 ]
 
-The "priv->phy_mode" variable is an enum and in this context GCC will
-treat it as unsigned to the error handling will never trigger.
+To make sure the domain tlb flush completes before the
+function returns, explicitly wait for its completion.
 
-Fixes: 57c5bc9ad7d7 ("net: hisilicon: add hix5hd2 mac driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Filippo Sironi <sironi@amazon.de>
+Fixes: 42a49f965a8d ("amd-iommu: flush domain tlb when attaching a new device")
+[joro: Added commit message and fixes tag]
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hix5hd2_gmac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iommu/amd_iommu.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c b/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
-index 471805ea363b..b63871ef8a40 100644
---- a/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
-+++ b/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
-@@ -1201,7 +1201,7 @@ static int hix5hd2_dev_probe(struct platform_device *pdev)
- 		goto err_free_mdio;
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 9991386fb700..bea19aa33758 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -2153,6 +2153,8 @@ static int attach_device(struct device *dev,
+ 	 */
+ 	domain_flush_tlb_pde(domain);
  
- 	priv->phy_mode = of_get_phy_mode(node);
--	if (priv->phy_mode < 0) {
-+	if ((int)priv->phy_mode < 0) {
- 		netdev_err(ndev, "not find phy-mode\n");
- 		ret = -EINVAL;
- 		goto err_mdiobus;
++	domain_flush_complete(domain);
++
+ 	return ret;
+ }
+ 
 -- 
 2.20.1
 
