@@ -5,59 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3C8C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA306C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 778B52075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:54:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C533207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:54:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IjqPPwGi"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WeRYo2p0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbgAPNyB (ORCPT
+        id S1728903AbgAPNyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 08:54:01 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:36152 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726555AbgAPNyB (ORCPT
+        Thu, 16 Jan 2020 08:54:06 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:60064 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727011AbgAPNyE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 08:54:01 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00GDrwLm104986;
-        Thu, 16 Jan 2020 07:53:58 -0600
+        Thu, 16 Jan 2020 08:54:04 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00GDs3oK068540;
+        Thu, 16 Jan 2020 07:54:03 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579182838;
-        bh=3335OBNSeNqKf9CdpRf2hX3VULgYCttigThoY/TBuVI=;
+        s=ti-com-17Q1; t=1579182843;
+        bh=3S3pfBeW3AptJwuVCiU3uN/ahFU8Sx5s+Un4Aj2yolE=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=IjqPPwGieLBRtbc2kBgKpC2rMV3+nd2EH2rNFr2+UE1Qb29Ppjc8tuLT87n0Vcefk
-         bUFPCvMAFBTeFY4tPpKcMHlc0WKDq+dtX/zA8eZejs64zbN7QZOpJ7DtByoXAkzcmE
-         3q4IYtP/CFNHeLwdJp24O+AlNfwr2PefWw9AqcIw=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00GDrw74091818
+        b=WeRYo2p01AN8dzLqk/IQbKS1qOMr+K8Bwm1nf1P2RaGXBU+z21fGnoO7LyBsfsbBE
+         xpZLRkvLyFAbaKFXyI85oW6tnL3kVPqHNvBAkdWHGh4wtNkaIXVxi5ABgrhLiOfqLC
+         DUzOX2XRxPeIiO7NjRLD6FErGL4CB6Z5MSCqQG68=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00GDs2d4101548
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 16 Jan 2020 07:53:58 -0600
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 16 Jan 2020 07:54:03 -0600
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 16
- Jan 2020 07:53:57 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ Jan 2020 07:54:02 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 16 Jan 2020 07:53:57 -0600
+ Frontend Transport; Thu, 16 Jan 2020 07:54:02 -0600
 Received: from sokoban.bb.dnainternet.fi (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00GDrqdT048732;
-        Thu, 16 Jan 2020 07:53:55 -0600
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00GDrqdV048732;
+        Thu, 16 Jan 2020 07:54:00 -0600
 From:   Tero Kristo <t-kristo@ti.com>
 To:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
         <linux-remoteproc@vger.kernel.org>
 CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
         <s-anna@ti.com>, <linux-omap@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>, <devicetree@vger.kernel.org>,
         Tero Kristo <t-kristo@ti.com>
-Subject: [PATCHv5 01/14] dt-bindings: remoteproc: Add OMAP remoteproc bindings
-Date:   Thu, 16 Jan 2020 15:53:19 +0200
-Message-ID: <20200116135332.7819-2-t-kristo@ti.com>
+Subject: [PATCHv5 03/14] remoteproc/omap: Add a sanity check for DSP boot address alignment
+Date:   Thu, 16 Jan 2020 15:53:21 +0200
+Message-ID: <20200116135332.7819-4-t-kristo@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200116135332.7819-1-t-kristo@ti.com>
 References: <20200116135332.7819-1-t-kristo@ti.com>
@@ -71,355 +70,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Suman Anna <s-anna@ti.com>
 
-Add the device tree bindings document for the IPU and DSP
-remote processor devices on OMAP4+ SoCs.
+The DSP remote processors on OMAP SoCs require a boot register to
+be programmed with a boot address, and this boot address needs to
+be on a 1KB boundary. The current code is simply masking the boot
+address appropriately without performing any sanity checks before
+releasing the resets. An unaligned boot address results in an
+undefined execution behavior and can result in various bus errors
+like MMU Faults or L3 NoC errors. Such errors are hard to debug and
+can be easily avoided by adding a sanity check for the alignment
+before booting a DSP remote processor.
 
-Cc: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org
 Signed-off-by: Suman Anna <s-anna@ti.com>
-[t-kristo@ti.com: converted to schema]
 Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
-v5:
-  - enforced ordering of reg-names
-  - removed ti,bootreg-shift, instead added this under ti,bootreg
-    property
-  - renamed ti,autosuspend-delay to ti,autosuspend-delay-ms
-  - fixed required property handling
-  - fixed the omap5 ipu example firmware name extension
-  
- .../remoteproc/ti,omap-remoteproc.yaml        | 322 ++++++++++++++++++
- 1 file changed, 322 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
+v5: no changes
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
-new file mode 100644
-index 000000000000..b910aac7895e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
-@@ -0,0 +1,322 @@
-+# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/remoteproc/ti,omap-remoteproc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+ drivers/remoteproc/omap_remoteproc.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
+index 6c603c2cd895..2935a8edb3a6 100644
+--- a/drivers/remoteproc/omap_remoteproc.c
++++ b/drivers/remoteproc/omap_remoteproc.c
+@@ -122,13 +122,22 @@ static void omap_rproc_kick(struct rproc *rproc, int vqid)
+  *
+  * Set boot address for a supported DSP remote processor.
+  */
+-static void omap_rproc_write_dsp_boot_addr(struct rproc *rproc)
++static int omap_rproc_write_dsp_boot_addr(struct rproc *rproc)
+ {
++	struct device *dev = rproc->dev.parent;
+ 	struct omap_rproc *oproc = rproc->priv;
+ 	struct omap_rproc_boot_data *bdata = oproc->boot_data;
+ 	u32 offset = bdata->boot_reg;
+ 
++	if (rproc->bootaddr & (SZ_1K - 1)) {
++		dev_err(dev, "invalid boot address 0x%x, must be aligned on a 1KB boundary\n",
++			rproc->bootaddr);
++		return -EINVAL;
++	}
 +
-+title: OMAP4+ Remoteproc Devices
+ 	regmap_write(bdata->syscon, offset, rproc->bootaddr);
 +
-+maintainers:
-+  - Suman Anna <s-anna@ti.com>
-+
-+description:
-+  The OMAP family of SoCs usually have one or more slave processor sub-systems
-+  that are used to offload some of the processor-intensive tasks, or to manage
-+  other hardware accelerators, for achieving various system level goals.
-+
-+  The processor cores in the sub-system are usually behind an IOMMU, and may
-+  contain additional sub-modules like Internal RAM and/or ROMs, L1 and/or L2
-+  caches, an Interrupt Controller, a Cache Controller etc.
-+
-+  The OMAP SoCs usually have a DSP processor sub-system and/or an IPU processor
-+  sub-system. The DSP processor sub-system can contain any of the TI's C64x,
-+  C66x or C67x family of DSP cores as the main execution unit. The IPU processor
-+  sub-system usually contains either a Dual-Core Cortex-M3 or Dual-Core
-+  Cortex-M4 processors.
-+
-+  Each remote processor sub-system is represented as a single DT node. Each node
-+  has a number of required or optional properties that enable the OS running on
-+  the host processor (MPU) to perform the device management of the remote
-+  processor and to communicate with the remote processor. The various properties
-+  can be classified as constant or variable. The constant properties are
-+  dictated by the SoC and does not change from one board to another having the
-+  same SoC. Examples of constant properties include 'iommus', 'reg'. The
-+  variable properties are dictated by the system integration aspects such as
-+  memory on the board, or configuration used within the corresponding firmware
-+  image. Examples of variable properties include 'mboxes', 'memory-region',
-+  'timers', 'watchdog-timers' etc.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ti,omap4-dsp
-+      - ti,omap5-dsp
-+      - ti,dra7-dsp
-+      - ti,omap4-ipu
-+      - ti,omap5-ipu
-+      - ti,dra7-ipu
-+
-+  iommus:
-+    minItems: 1
-+    maxItems: 2
-+    description: |
-+      phandles to OMAP IOMMU nodes, that need to be programmed
-+      for this remote processor to access any external RAM memory or
-+      other peripheral device address spaces. This property usually
-+      has only a single phandle. Multiple phandles are used only in
-+      cases where the sub-system has different ports for different
-+      sub-modules within the processor sub-system (eg: DRA7 DSPs),
-+      and need the same programming in both the MMUs.
-+
-+  mboxes:
-+    minItems: 1
-+    maxItems: 2
-+    description: |
-+      OMAP Mailbox specifier denoting the sub-mailbox, to be used for
-+      communication with the remote processor. The specifier format is
-+      as per the bindings,
-+      Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
-+      This property should match with the sub-mailbox node used in
-+      the firmware image.
-+
-+  clocks:
-+    description: |
-+      Main functional clock for the remote processor
-+
-+  resets:
-+    description: |
-+      Reset handles for the remote processor
-+
-+  memory-region:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: |
-+      phandle to the reserved memory node to be associated
-+      with the remoteproc device. The reserved memory node
-+      can be a CMA memory node, and should be defined as
-+      per the bindings,
-+      Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-+
-+  firmware-name:
-+    description: |
-+      Default name of the firmware to load to the remote processor.
-+
-+# Optional properties:
-+# --------------------
-+# Some of these properties are mandatory on some SoCs, and some are optional
-+# depending on the configuration of the firmware image to be executed on the
-+# remote processor. The conditions are mentioned for each property.
-+#
-+# The following are the optional properties:
-+
-+  reg:
-+    description: |
-+      Address space for any remoteproc memories present on
-+      the SoC. Should contain an entry for each value in
-+      'reg-names'. These are mandatory for all DSP and IPU
-+      processors that have them (OMAP4/OMAP5 DSPs do not have
-+      any RAMs)
-+
-+  reg-names:
-+    description: |
-+      Required names for each of the address spaces defined in
-+      the 'reg' property. Expects the names from the following
-+      list, in the specified order, each representing the corresponding
-+      internal RAM memory region.
-+    minItems: 1
-+    maxItems: 3
-+    items:
-+      - const: l2ram
-+      - const: l1pram
-+      - const: l1dram
-+
-+  ti,bootreg:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description: |
-+      Should be a triple of the phandle to the System Control
-+      Configuration region that contains the boot address
-+      register, the register offset of the boot address
-+      register within the System Control module, and the bit
-+      shift within the register. This property is required for
-+      all the DSP instances on OMAP4, OMAP5 and DRA7xx SoCs.
-+
-+  ti,autosuspend-delay-ms:
-+    description: |
-+      Custom autosuspend delay for the remoteproc in milliseconds.
-+
-+  ti,timers:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description: |
-+      One or more phandles to OMAP DMTimer nodes, that serve
-+      as System/Tick timers for the OS running on the remote
-+      processors. This will usually be a single timer if the
-+      processor sub-system is running in SMP mode, or one per
-+      core in the processor sub-system. This can also be used
-+      to reserve specific timers to be dedicated to the
-+      remote processors.
-+
-+      This property is mandatory on remote processors requiring
-+      external tick wakeup, and to support Power Management
-+      features. The timers to be used should match with the
-+      timers used in the firmware image.
-+
-+  ti,watchdog-timers:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description: |
-+      One or more phandles to OMAP DMTimer nodes, used to
-+      serve as Watchdog timers for the processor cores. This
-+      will usually be one per executing processor core, even
-+      if the processor sub-system is running a SMP OS.
-+
-+      The timers to be used should match with the watchdog
-+      timers used in the firmware image.
-+
-+if:
-+  properties:
-+    compatible:
-+      enum:
-+        - ti,dra7-dsp
-+then:
-+  properties:
-+    reg:
-+      minItems: 3
-+      maxItems: 3
-+  required:
-+    - reg
-+    - reg-names
-+    - ti,bootreg
-+
-+else:
-+  if:
-+    properties:
-+      compatible:
-+        enum:
-+          - ti,omap4-ipu
-+          - ti,omap5-ipu
-+          - ti,dra7-ipu
-+  then:
-+    properties:
-+      reg:
-+        minItems: 1
-+        maxItems: 1
-+      ti,bootreg: false
-+    required:
-+      - reg
-+      - reg-names
-+
-+  else:
-+    properties:
-+      reg: false
-+    required:
-+      - ti,bootreg
-+
-+required:
-+  - compatible
-+  - iommus
-+  - mboxes
-+  - memory-region
-+  - clocks
-+  - resets
-+  - firmware-name
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+
-+    //Example 1: OMAP4 DSP
-+
-+    /* DSP Reserved Memory node */
-+    #include <dt-bindings/clock/omap4.h>
-+    reserved-memory {
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+
-+        dsp_memory_region: dsp-memory@98000000 {
-+            compatible = "shared-dma-pool";
-+            reg = <0x98000000 0x800000>;
-+            reusable;
-+        };
-+    };
-+
-+    /* DSP node */
-+    ocp {
-+        dsp: dsp {
-+            compatible = "ti,omap4-dsp";
-+            ti,bootreg = <&scm_conf 0x304 0>;
-+            iommus = <&mmu_dsp>;
-+            mboxes = <&mailbox &mbox_dsp>;
-+            memory-region = <&dsp_memory_region>;
-+            ti,timers = <&timer5>;
-+            ti,watchdog-timers = <&timer6>;
-+            clocks = <&tesla_clkctrl OMAP4_DSP_CLKCTRL 0>;
-+            resets = <&prm_tesla 0>, <&prm_tesla 1>;
-+            firmware-name = "omap4-dsp-fw.xe64T";
-+        };
-+    };
-+
-+  - |+
-+
-+    //Example 2: OMAP5 IPU
-+
-+    /* IPU Reserved Memory node */
-+    #include <dt-bindings/clock/omap5.h>
-+    reserved-memory {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        ipu_memory_region: ipu-memory@95800000 {
-+            compatible = "shared-dma-pool";
-+            reg = <0 0x95800000 0 0x3800000>;
-+            reusable;
-+        };
-+    };
-+
-+    /* IPU node */
-+    ocp {
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+
-+        ipu: ipu@55020000 {
-+            compatible = "ti,omap5-ipu";
-+            reg = <0x55020000 0x10000>;
-+            reg-names = "l2ram";
-+            iommus = <&mmu_ipu>;
-+            mboxes = <&mailbox &mbox_ipu>;
-+            memory-region = <&ipu_memory_region>;
-+            ti,timers = <&timer3>, <&timer4>;
-+            ti,watchdog-timers = <&timer9>, <&timer11>;
-+            clocks = <&ipu_clkctrl OMAP5_MMU_IPU_CLKCTRL 0>;
-+            resets = <&prm_core 2>;
-+            firmware-name = "omap5-ipu-fw.xem4";
-+        };
-+    };
-+
-+  - |+
-+
-+    //Example 3: DRA7xx/AM57xx DSP
-+
-+    /* DSP1 Reserved Memory node */
-+    #include <dt-bindings/clock/dra7.h>
-+    reserved-memory {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        dsp1_memory_region: dsp1-memory@99000000 {
-+            compatible = "shared-dma-pool";
-+            reg = <0x0 0x99000000 0x0 0x4000000>;
-+            reusable;
-+        };
-+    };
-+
-+    /* DSP1 node */
-+    ocp {
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+
-+        dsp1: dsp@40800000 {
-+            compatible = "ti,dra7-dsp";
-+            reg = <0x40800000 0x48000>,
-+                  <0x40e00000 0x8000>,
-+                  <0x40f00000 0x8000>;
-+            reg-names = "l2ram", "l1pram", "l1dram";
-+            ti,bootreg = <&scm_conf 0x55c 0>;
-+            iommus = <&mmu0_dsp1>, <&mmu1_dsp1>;
-+            mboxes = <&mailbox5 &mbox_dsp1_ipc3x>;
-+            memory-region = <&dsp1_memory_region>;
-+            ti,timers = <&timer5>;
-+            ti,watchdog-timers = <&timer10>;
-+            resets = <&prm_dsp1 0>;
-+            clocks = <&dsp1_clkctrl DRA7_DSP1_MMU0_DSP1_CLKCTRL 0>;
-+            firmware-name = "dra7-dsp1-fw.xe66";
-+        };
-+    };
++	return 0;
+ }
+ 
+ /*
+@@ -145,8 +154,11 @@ static int omap_rproc_start(struct rproc *rproc)
+ 	int ret;
+ 	struct mbox_client *client = &oproc->client;
+ 
+-	if (oproc->boot_data)
+-		omap_rproc_write_dsp_boot_addr(rproc);
++	if (oproc->boot_data) {
++		ret = omap_rproc_write_dsp_boot_addr(rproc);
++		if (ret)
++			return ret;
++	}
+ 
+ 	client->dev = dev;
+ 	client->tx_done = NULL;
 -- 
 2.17.1
 
