@@ -2,129 +2,170 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96850C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE290C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5708F207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:06:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="pWfMRRoY"
+	by mail.kernel.org (Postfix) with ESMTP id 7DCE020730
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:06:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579179988;
+	bh=Yq3SYcm+qrM2iizdDOxdiKVBOfAzBdFIM0RTIxOCnP0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=dz0HOCTR9EcMyqyv85KZjEoRcSUY7mPCPnWSE0fTgL1EFE81twIJKSUtqTDKyr26c
+	 FeAq7G0U/jDzPY9lxVCOctRdlxddwWrd9feGQPCAIWGOuc9hGZkF25RuwolsbX4KpG
+	 bhBAjtvgA68sGjgswcjASaviRke+7bB5IWbgsi+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbgAPNGI (ORCPT
+        id S1726908AbgAPNG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 08:06:08 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:8606 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726018AbgAPNGI (ORCPT
+        Thu, 16 Jan 2020 08:06:27 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:34278 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbgAPNG1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 08:06:08 -0500
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00GD06CQ001642;
-        Thu, 16 Jan 2020 08:05:39 -0500
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2042.outbound.protection.outlook.com [104.47.66.42])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2xf93b5rut-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jan 2020 08:05:39 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QEU2jext2I58s0c++fnA5G3py+C80LM1p5Vr3nulsLJPQkL2HBHn7S0/v/mHWCXeGQbg96swuGlbg0jNiPcNWoZiGa6R+l0A5iOtRc6GUXa39L3PuhG0xs+s8osw0jzt+eGaHltH6vF6Ev0RVHWHnX2miNOeswfKa3Q+/Tky/LY/6WwuU+Dxo+zBpYs6/L5B4efd8POuIYmttj+XQAjvg+MKmwr0z5gmb1ZeLm+f9fcWdhAjYsIg0Kniq99mmOAqaLIHBm+wrusba7OPToD4gszLyyIZDL4mRi/V5cLKRAHVmvIsGzdi+IXmJjr40K6o1zqT0H8hhO5eoBVhaUeqNg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IwsH6qUAWOEm40XDwmBJZolLNgw8emMljUUgMsP+brI=;
- b=mMyubQbUDTjhGvFwFvWvrYLAWv5ZcvLDDaEVzjMtkwQBZx5lE4jOTvWyEFfQKDoW7BcbMpj5CZsUE7cynk+ZU1FfRVyFz0ksQ6tq7Xm9PNKV01ZbdtU7BPYmYsiPj0x647gI8z//GfkfstgznFVTw6t4dDCxSFeG9qhYM5sow46eUASugNzP6LmZKqsTt2CXc/AeAAN+f+khIAB4f2ADmD0V4F8lSqHqc6XfaBIQIHnhIEgHuDZ+nUDmp/9h87I0Vcp9Jsn4JXI1f905i3RAYLRHQTj7Fq1+ovqszIc3T4zpE19SiogW26aA2/yMUyU5+8Q3O70BgCjCLmbENB/+tg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
+        Thu, 16 Jan 2020 08:06:27 -0500
+Received: by mail-lf1-f65.google.com with SMTP id l18so15523392lfc.1;
+        Thu, 16 Jan 2020 05:06:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IwsH6qUAWOEm40XDwmBJZolLNgw8emMljUUgMsP+brI=;
- b=pWfMRRoYDOee5DQoujA19WTf6NhaIKIoz6+FinkREoJ+xBPDCu+HkXDSyvI3h6M87pph2n9j92WcpyN0kaktoRYjDiZ7lv6KZj61xkkBGvjXm/W8zNusBcFtnFnaGuvUeYrNDemn1FTzjdth9iKoaGk9/mqfTMdZU7hhbhBDP3I=
-Received: from CH2PR03MB5192.namprd03.prod.outlook.com (20.180.12.152) by
- CH2PR03MB5367.namprd03.prod.outlook.com (20.180.15.147) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.20; Thu, 16 Jan 2020 13:05:38 +0000
-Received: from CH2PR03MB5192.namprd03.prod.outlook.com
- ([fe80::dce7:7fec:f33f:ad39]) by CH2PR03MB5192.namprd03.prod.outlook.com
- ([fe80::dce7:7fec:f33f:ad39%7]) with mapi id 15.20.2644.021; Thu, 16 Jan 2020
- 13:05:37 +0000
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "balbi@kernel.org" <balbi@kernel.org>
-CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "mina86@mina86.com" <mina86@mina86.com>,
-        "lars@metafoo.de" <lars@metafoo.de>
-Subject: Re: [PATCH] usb: gadget: ffs: ffs_aio_cancel(): Save/restore IRQ
- flags
-Thread-Topic: [PATCH] usb: gadget: ffs: ffs_aio_cancel(): Save/restore IRQ
- flags
-Thread-Index: AQHVlJoPRhMSTshV10KJVpaiJ2qsxKftk2wAgAAebwCAAADVgA==
-Date:   Thu, 16 Jan 2020 13:05:37 +0000
-Message-ID: <9943963591465db81be57d4e1bb98ac4cd16d9b2.camel@analog.com>
-References: <20191106120219.15028-1-alexandru.ardelean@analog.com>
-         <f3f8e2a6480da78ba23ddedb68beee71f47e178f.camel@analog.com>
-         <87imlb5z7z.fsf@kernel.org>
-In-Reply-To: <87imlb5z7z.fsf@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [137.71.226.54]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 3d8bc602-ede7-4f10-a9f6-08d79a84c81a
-x-ms-traffictypediagnostic: CH2PR03MB5367:
-x-microsoft-antispam-prvs: <CH2PR03MB536735DE989D5757D3D1A8EAF9360@CH2PR03MB5367.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3631;
-x-forefront-prvs: 02843AA9E0
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(136003)(396003)(366004)(39860400002)(376002)(189003)(199004)(966005)(110136005)(54906003)(5660300002)(71200400001)(6512007)(4326008)(6506007)(186003)(26005)(316002)(76116006)(36756003)(66476007)(66556008)(6486002)(66446008)(4744005)(66946007)(2616005)(478600001)(64756008)(86362001)(8936002)(81166006)(81156014)(8676002)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR03MB5367;H:CH2PR03MB5192.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: YJa8gKIDP8GMUYnre+3vWqf8JrFMCu0haklnLzBrN1W1u1dGKqCPLQwllFGKSU3GGT3ywsMIrAxsERXcgHg7jfVO+YQZp0Dk8D/E0EYKmp/qgQ5XZcppHpMHLg8iYXZxcgEkiNb4bCJ4vxg7xqdnXTmNlsbWa+GNUh/skJIxS2Rggu/33WcOLuURDEYznVeviW7z4O4Nfk7nnY5KyTFrlpBMOfnsLV6H5yAKKZTIBgvdgZizE1NZJG7YSTOJhNJhrdbCaDFAeEle3dQFjYbRtB6nMuN0kKyAYWmb7wsC7EF9JYSnVGiMervMNwVZUVR5j4oXttSEBXbeDTTRNP7pqa70Hz3oig54W4niCAxQUe+Ex+MabXTWeOTUnlgwegoZFrYaucsHzauPTVU5xxqF6BZ1H+LFYtgdSHexvJscaS2M1kZM35Nn8LcLXKKzmZS6JmGJwXsdPUyTA9fj7rn6vTwlzgiEviYcJGKAg9tOWAFOJWgfJ97B/nRidRlgwXbUtZtMAOOmBjPiM9c0JrIVZQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <3CB7CA755C5C384E924F9B02AD2AAD36@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=+dNIN0Bjh5Sxdgv0PYr0Z5RysmQAzFZOMNbfc2kLg64=;
+        b=bpnPK79KV8o1kxZWO2tX6t8DYBai/NrXry7NuVI+5uPOVE0k9lc6d+ARUf2cN9bxf/
+         5WJW5601UNN7/NimbpIgTrqweltBCD1kBQAQIqDf2wny3D53fBc+L4Yapykz2LevNFcN
+         bck07JqEMIMsh7RBuGkHWvYCwxWLh4DevgmqkEAGgVRVVGX1BsuDiyalR9+XQb/6pjwn
+         k6mUTr7p5fPvCwC9/p6UGhGF5flumXwyYSf5I/MmO5M3t7fDONpQao4Lr5es+46mM3Se
+         IGCk3xbKs+5F8Ja1qlalybnqI+olQ03wjhR108GUtDzNxdhUVUwCdL+cfA570MFoIJt8
+         IlhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=+dNIN0Bjh5Sxdgv0PYr0Z5RysmQAzFZOMNbfc2kLg64=;
+        b=rxCdOKKWNoCu19bu9n4seyjjkMskzVCZM88JpMyfHUknurm+mwwZDjHy5nRfGK4X1G
+         FRZjwtmQCHNRetT+Anzz192yjGBK+0NYNHqjmn7GQvYTq4Pc6AZc3AtLbUQQShSQSU3v
+         hv08roMik0wPAmIZfdJ4BAVATEAIRwmDh/scBa7BLjOFUoUgXozRw2Rf81h2UHKDwyqc
+         qRHRMRKWFPP4xspIiCwVh/063I5opkUgjZjgve9megk54mTn9u88ZSIMjyRhcc0fVHiV
+         hETvC4QJbA70cCvxUXYggtdOWYCZDCKnGUVDejUTPWU119znsB7tVV3hxKdxNGiU3CRa
+         jU2Q==
+X-Gm-Message-State: APjAAAVVJZ2ddLkvNNGhf8FiW+Dd2ruDYgGuSTuLpCh2IseI9ho7cEbI
+        fSZEfp9R+AOorU8nhBFUwY+xJ0zN9WANzQ==
+X-Google-Smtp-Source: APXvYqxGw8p8gSkVUsyQc0mke41Aje2NcawWOQbz83HoLaJGXLV3PNEs1w430cZplT5IhJcD2DDGhQ==
+X-Received: by 2002:ac2:5c4b:: with SMTP id s11mr2529380lfp.133.1579179984942;
+        Thu, 16 Jan 2020 05:06:24 -0800 (PST)
+Received: from saruman (88-113-215-33.elisa-laajakaista.fi. [88.113.215.33])
+        by smtp.gmail.com with ESMTPSA id k12sm10540574lfc.33.2020.01.16.05.06.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 16 Jan 2020 05:06:24 -0800 (PST)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Fixes tag needs some work in the usb-gadget tree
+In-Reply-To: <20200116133930.74afaa91@canb.auug.org.au>
+References: <20200116070726.7e2ef8cc@canb.auug.org.au> <b7ef5047-c8c3-42cc-d049-fb72563d3544@linaro.org> <20200116124100.58af81d5@canb.auug.org.au> <6b984328-b3f4-a23d-efb3-7e7955ad165a@linaro.org> <20200116125851.474f3021@canb.auug.org.au> <043cbd87-1d7d-e998-04a8-bbc9aec686df@linaro.org> <20200116133930.74afaa91@canb.auug.org.au>
+Date:   Thu, 16 Jan 2020 15:07:24 +0200
+Message-ID: <87d0bj5z3n.fsf@kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d8bc602-ede7-4f10-a9f6-08d79a84c81a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jan 2020 13:05:37.7963
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /T4vfcXqblKa/sCIjAHxdSRopTXJiVOMGU3AgAyw9WmwYimmM8JnBPoVVN4z1YyoE6HTsMkc/vwrVAHvuGmlJafL/l+GNqL3mIceghDqeN4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR03MB5367
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-16_04:2020-01-16,2020-01-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 adultscore=0 mlxlogscore=628 bulkscore=0 clxscore=1015
- mlxscore=0 malwarescore=0 phishscore=0 priorityscore=1501 impostorscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001160110
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTAxLTE2IGF0IDE1OjA0ICswMjAwLCBGZWxpcGUgQmFsYmkgd3JvdGU6DQo+
-IFtFeHRlcm5hbF0NCj4gDQo+IA0KPiBIaSwNCj4gDQo+ICJBcmRlbGVhbiwgQWxleGFuZHJ1IiA8
-YWxleGFuZHJ1LkFyZGVsZWFuQGFuYWxvZy5jb20+IHdyaXRlczoNCj4gDQo+ID4gT24gV2VkLCAy
-MDE5LTExLTA2IGF0IDE0OjAyICswMjAwLCBBbGV4YW5kcnUgQXJkZWxlYW4gd3JvdGU6DQo+ID4g
-PiBGcm9tOiBMYXJzLVBldGVyIENsYXVzZW4gPGxhcnNAbWV0YWZvby5kZT4NCj4gPiA+IA0KPiA+
-ID4gZmZzX2Fpb19jYW5jZWwoKSBjYW4gYmUgY2FsbGVkIGZyb20gYm90aCBpbnRlcnJ1cHQgYW5k
-IHRocmVhZA0KPiA+ID4gY29udGV4dC4NCj4gPiA+IE1ha2UNCj4gPiA+IHN1cmUgdGhhdCB0aGUg
-Y3VycmVudCBJUlEgc3RhdGUgaXMgc2F2ZWQgYW5kIHJlc3RvcmVkIGJ5IHVzaW5nDQo+ID4gPiBz
-cGluX3t1bix9bG9ja19pcnF7c2F2ZSxyZXN0b3JlfSgpLg0KPiA+ID4gDQo+ID4gPiBPdGhlcndp
-c2UgdW5kZWZpbmVkIGJlaGF2aW9yIG1pZ2h0IG9jY3VyLg0KPiA+IA0KPiA+IEhleSwNCj4gPiAN
-Cj4gPiBUaGlzIGlzIGEgcGF0Y2gtcGluZy4NCj4gDQo+IFBsZWFzZSByZWFkOg0KPiANCj4gaHR0
-cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGludXgtdXNiLzg3NXpoZDZwdzAuZnNmQGtlcm5lbC5vcmcv
-VC8jdQ0KPiANCj4gV2UncmUgZ29ubmEgbmVlZCBhIHJlc2VuZCwgc29ycnkNCj4gDQoNCkFjay4N
-Cg0KVGhhbmtzIGZvciB0aGUgcmVwbHkuDQpXaWxsIHJlLXNlbmQuDQo=
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+
+Hi
+
+Stephen Rothwell <sfr@canb.auug.org.au> writes:
+> Hi Bryan,
+>
+> On Thu, 16 Jan 2020 02:08:55 +0000 Bryan O'Donoghue <bryan.odonoghue@lina=
+ro.org> wrote:
+>>
+>> On 16/01/2020 01:58, Stephen Rothwell wrote:
+>> >=20
+>> > On Thu, 16 Jan 2020 01:45:25 +0000 Bryan O'Donoghue <bryan.odonoghue@l=
+inaro.org> wrote:=20=20
+>> >>
+>> >> On 16/01/2020 01:41, Stephen Rothwell wrote:=20=20
+>> >>> Hi Bryan,
+>> >>>
+>> >>> On Thu, 16 Jan 2020 01:19:22 +0000 Bryan O'Donoghue <bryan.odonoghue=
+@linaro.org> wrote:=20=20
+>> >>>>
+>> >>>> How should extra long fixes like this be divided up ?=20=20
+>> >>>
+>> >>> Just let them run on even if they are too long i.e. don't split them=
+ at all.=20=20
+>> >>
+>> >> That's what's in the git commit log though isn't it ?=20=20
+>> >=20
+>> > When you add a Fixes: tag to a commit, you quote the subject line of
+>> > the commit you are fixing which, by definition, is a single line.  We
+>> > want to keep it that way so it can be searched for easily.
+>> >=20
+>> > So to create a fixes line you can use this:
+>> >=20
+>> > git log -1 --format=3D'Fixes: %h ("%s")' <commit being fixed>
+>> >=20
+>> > i.e. in this case:
+>> >=20
+>> > $ git log -1 --format=3D'Fixes: %h (\"%s\")' 40d133d7f5426
+>> > Fixes: 40d133d7f542 ("usb: gadget: f_ncm: convert to new function inte=
+rface with backward compatibility")
+>> >=20=20=20
+>>=20
+>> doh sorry still not seeing it
+>>=20
+>> git remote -v
+>> usb-next	git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git=20
+>> (fetch)
+>>=20
+>> git fetch usb-next
+>> git show 5b24c28cfe13
+>>=20
+>> that's a correctly formatted fixes right i.e. the same one as above
+>>=20
+>> :(
+>>=20
+>> not seeing the difference...
+>
+> Now I see our confusion.  There is another version of this patch in
+> Felipe's tree as a different commit (6a6ae4e8e926) which has the Fixes
+> tag split ...
+
+Right, Greg applied my tree as patches to fix this problem. I need to
+rebase my tree on Greg's to get rid of this problem.
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl4gYAwACgkQzL64meEa
+mQa55w//YQdHsr9ZTJ5WnNG3W05EC7qG6HDXzicUiSf2XyrnRytXO6IMxGFTQ9I7
+iEUbF1iudLZ6jdSbSbYEnkBTRL9iMrFYQSMy6IWgedTKOyn21e0gK9pELtyB62Di
+tSktp8NDMiMb6WSynL1nkNmkT+NNEYAFPBGk4DLqQ8FH6io3WRQgbMR42+tYh+OQ
+ZvGy88PtALdQsy/BWjiVSG86wCcpMBpO0oK+KcQV8BijPGxTaW46kFjtH2zHImXt
+arXl/fODh2VHwQZPvCkFer5UBR4CM7a230yfSRqlh1HVjQHRD5XcQXp/i94ZUsIJ
+ibW47ApsAv2IlqhSIzyt+78CgGTqkW7cuDGwVRQW6uQiZtVgtulZyBnRVYeIRQPt
+RjIqSdaDxbn6bMmUt/sERuPwoj2PPAEHBhT4TD3X4GmFgqHlhoK8Qzm/pxsuZxz5
+yHEw/lL8WLFhspdnC966VjyUnYwoj6Vuim6zzeclswFk1RL7Ny2oGgrhw30xj3bU
+7/NK/1GJ/OFzJF9OHnwR3PavWm3hW8N9c2ohStW/s5FjMX5OMBe48EcuyTRhX5kE
+tovBcA1uuoFkwmd7oVUlG+6alXsGo4SxHNgdZosezbF6T6gbH0Wm8jgpZpUung8U
+/QGLf/LnPkCgl0h3aZdnqcj3OCssiQ1TKs4behXrx+mz/eGMdtw=
+=OZMi
+-----END PGP SIGNATURE-----
+--=-=-=--
