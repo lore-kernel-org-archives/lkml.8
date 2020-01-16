@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2245C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4D7C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEC1C20684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8602520684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:25:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199149;
-	bh=b5bbwaFLgQvjArAtfG/H2/8OOvBX8ntW6iaFKtCKbvE=;
+	s=default; t=1579199155;
+	bh=/BiG7XnHSpy02jJX1wPJR7iIcxMHxKPsnxQQrDiZEQI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sua6Ib6UMf+Y/5bLJLDEXoAEZ48o8iA4iHcfwW3Xk0XNvlZQwdnUuTd6izp3zTWPz
-	 KhIJmt1gg7gtU8wko3kSi7HgaLc/r7UQNRF/j53r85e7cc0t3dw9LGF2hSPqbBxLw6
-	 slisVbNK/5b6wLPf9p321pjUinp09SoV2iE4Hokw=
+	b=fZkqBVUctZO0B3D6wFlkkGkEktNhxhqMBP9zbruDNPkE+ywnxtEnADdQLE7QojG4r
+	 0jL2uY4ntHiYCAUCS1nRcLtNix7wroBFyKCj72ACXtiXZeJRa3c6J+MEL+nrJ/MzIo
+	 Byv3HdMvcgqV4Pmx7B/hFOoNzHWzguO7ex18767A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392337AbgAPR0x (ORCPT
+        id S2392055AbgAPSZy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:26:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35768 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:25:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404020AbgAPR0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:26:43 -0500
+        id S2392327AbgAPR0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:26:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A3E9246C8;
-        Thu, 16 Jan 2020 17:26:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26628246CD;
+        Thu, 16 Jan 2020 17:26:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195603;
-        bh=b5bbwaFLgQvjArAtfG/H2/8OOvBX8ntW6iaFKtCKbvE=;
+        s=default; t=1579195611;
+        bh=/BiG7XnHSpy02jJX1wPJR7iIcxMHxKPsnxQQrDiZEQI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M6vwuRJTTc0FcAuJ8twtbrO1E6x3m40Pxl/ZfBnxS/G3Y4egCnZ2QK5v9iV9GmV6h
-         BwL1JIv+6fy9BwDGQtz7YD9eJ96kSj96aHsHzwdd/++d9u3b9wUIf9U0ldInVUOnGB
-         AVTbB4urKFHHed0VGNbu+517gJgbdrTsLE1QS7KY=
+        b=dnNjml2C8jbynp48BJbrzjV3BHRtQQfrzdsine8yVyPqEMCgC1A8fQSpuFxO6QMnU
+         dQU4FdFQ76R8Jktae35O23M8rFqr7QFoHSX02Xk0QruyGXZ0CDPaC3ekORB8oYflyt
+         zNqOKPuWRMzdNBxwXGfhan7LHXnfZeUkek3k8k/A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 178/371] usb: gadget: fsl: fix link error against usb-gadget module
-Date:   Thu, 16 Jan 2020 12:20:50 -0500
-Message-Id: <20200116172403.18149-121-sashal@kernel.org>
+Cc:     Sameeh Jubran <sameehj@amazon.com>,
+        Netanel Belgazal <netanel@amazon.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 185/371] net: ena: fix ena_com_fill_hash_function() implementation
+Date:   Thu, 16 Jan 2020 12:20:57 -0500
+Message-Id: <20200116172403.18149-128-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -59,39 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Sameeh Jubran <sameehj@amazon.com>
 
-[ Upstream commit 2100e3ca3676e894fa48b8f6f01d01733387fe81 ]
+[ Upstream commit 11bd7a00c0d8ffe33d1e926f8e789b4aea787186 ]
 
-The dependency to ensure this driver links correctly fails since
-it can not be a loadable module:
+ena_com_fill_hash_function() didn't configure the rss->hash_func.
 
-drivers/usb/phy/phy-fsl-usb.o: In function `fsl_otg_set_peripheral':
-phy-fsl-usb.c:(.text+0x2224): undefined reference to `usb_gadget_vbus_disconnect'
-
-Make the option 'tristate' so it can work correctly.
-
-Fixes: 5a8d651a2bde ("usb: gadget: move gadget API functions to udc-core")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Netanel Belgazal <netanel@amazon.com>
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/phy/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/amazon/ena/ena_com.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
-index 85a92d0813dd..440238061edd 100644
---- a/drivers/usb/phy/Kconfig
-+++ b/drivers/usb/phy/Kconfig
-@@ -20,7 +20,7 @@ config AB8500_USB
- 	  in host mode, low speed.
+diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
+index 011b54c541aa..10e6053f6671 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_com.c
++++ b/drivers/net/ethernet/amazon/ena/ena_com.c
+@@ -2087,6 +2087,7 @@ int ena_com_fill_hash_function(struct ena_com_dev *ena_dev,
+ 		return -EINVAL;
+ 	}
  
- config FSL_USB2_OTG
--	bool "Freescale USB OTG Transceiver Driver"
-+	tristate "Freescale USB OTG Transceiver Driver"
- 	depends on USB_EHCI_FSL && USB_FSL_USB2 && USB_OTG_FSM=y && PM
- 	depends on USB_GADGET || !USB_GADGET # if USB_GADGET=m, this can't be 'y'
- 	select USB_PHY
++	rss->hash_func = func;
+ 	rc = ena_com_set_hash_function(ena_dev);
+ 
+ 	/* Restore the old function */
 -- 
 2.20.1
 
