@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4DC6C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16DDEC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81A07246AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:14:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D33C124690
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:14:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194867;
-	bh=uiyL146gBQbKyGHOm/82jyr/FK1liKTy5cBZOD/FFEg=;
+	s=default; t=1579194871;
+	bh=8cY0lhb2As8j2MTW3fqxxsG0Os5auK3r8F7h9ClHNOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tl0QuGc/jPBSUsDl6ilE5yQfq61wNTY+X3KlknKP/ihhoPVUbIFX3dRi8F+lIRRAW
-	 Tux7relVuUhoinbaGr+kXVbQjkk8Pj8P7Gg6MQaIKd6rXD9/p535S8v35BLU+YxA/U
-	 kKb35Z3UyAMtGh+7sOUBzuRPia7GTw3uc+lOwsP0=
+	b=th+ARPhGUhmRVtF7CPf+7bxYyxw09iiIH2OmmXG+fuCCaQ+bLkrtvd3iNlvkMshIx
+	 /NPHjSBOWWsgSBuc+cRtP8jX8ar40hBhmSoNLSuGNzowfYcIzXqZi6pxOWAndKiTWb
+	 1Y+Wbcg685ZoUGhBmTBuy78e003GIkkSX0wvJIiY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390985AbgAPRO0 (ORCPT
+        id S2391001AbgAPROb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:14:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60974 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:14:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390938AbgAPROL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:14:11 -0500
+        id S2390946AbgAPROP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:14:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62C41246B9;
-        Thu, 16 Jan 2020 17:14:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99A6F246B8;
+        Thu, 16 Jan 2020 17:14:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194851;
-        bh=uiyL146gBQbKyGHOm/82jyr/FK1liKTy5cBZOD/FFEg=;
+        s=default; t=1579194854;
+        bh=8cY0lhb2As8j2MTW3fqxxsG0Os5auK3r8F7h9ClHNOc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xUDRi07tjJO+ZHo94peedHMjx2Zav5gaUIwHxbXDtUCYKhTaXzDIJdWxzf058ty8C
-         C2uywtvQ91oqztgPlZlDYK7Zb5y5axmdk1a93orVLUuRso0uSYVCZU/5eQaf/eTbCB
-         a2JX4g8+7Lep/ipCLjBLAUe0ElaTQKebsunyyNX4=
+        b=YTDvVBnBky/HvFMcSv/2o7snmRb0Y5cWpkjzpIvRvaf0PRdZtCFMKdzGjNSJrmV+a
+         18QbiJHN2KuD6glXTPmO6z7AKnwlB6+bsTBkE+M6gPVP56iZRo9SeoB1j9mpiy0J/d
+         8hrBih4nPZtETMa+2LWUPgc7t9LnBoSMk047UEXw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 647/671] mmc: sdio: fix wl1251 vendor id
-Date:   Thu, 16 Jan 2020 12:04:45 -0500
-Message-Id: <20200116170509.12787-384-sashal@kernel.org>
+Cc:     Kars de Jong <jongk@linux-m68k.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 650/671] rtc: msm6242: Fix reading of 10-hour digit
+Date:   Thu, 16 Jan 2020 12:04:48 -0500
+Message-Id: <20200116170509.12787-387-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,42 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
+From: Kars de Jong <jongk@linux-m68k.org>
 
-[ Upstream commit e5db673e7fe2f971ec82039a28dc0811c2100e87 ]
+[ Upstream commit e34494c8df0cd96fc432efae121db3212c46ae48 ]
 
-v4.11-rc1 did introduce a patch series that rearranged the
-sdio quirks into a header file. Unfortunately this did forget
-to handle SDIO_VENDOR_ID_TI differently between wl1251 and
-wl1271 with the result that although the wl1251 was found on
-the sdio bus, the firmware did not load any more and there was
-no interface registration.
+The driver was reading the wrong register as the 10-hour digit due to
+a misplaced ')'. It was in fact reading the 1-second digit register due
+to this bug.
 
-This patch defines separate constants to be used by sdio quirks
-and drivers.
+Also remove the use of a magic number for the hour mask and use the define
+for it which was already present.
 
-Fixes: 884f38607897 ("mmc: core: move some sdio IDs out of quirks file")
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Cc: <stable@vger.kernel.org> # v4.11+
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: 4f9b9bba1dd1 ("rtc: Add an RTC driver for the Oki MSM6242")
+Tested-by: Kars de Jong <jongk@linux-m68k.org>
+Signed-off-by: Kars de Jong <jongk@linux-m68k.org>
+Link: https://lore.kernel.org/r/20191116110548.8562-1-jongk@linux-m68k.org
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mmc/sdio_ids.h | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/rtc/rtc-msm6242.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/mmc/sdio_ids.h b/include/linux/mmc/sdio_ids.h
-index 4224902a8e22..358d6be357ed 100644
---- a/include/linux/mmc/sdio_ids.h
-+++ b/include/linux/mmc/sdio_ids.h
-@@ -68,6 +68,8 @@
- 
- #define SDIO_VENDOR_ID_TI			0x0097
- #define SDIO_DEVICE_ID_TI_WL1271		0x4076
-+#define SDIO_VENDOR_ID_TI_WL1251		0x104c
-+#define SDIO_DEVICE_ID_TI_WL1251		0x9066
- 
- #define SDIO_VENDOR_ID_STE			0x0020
- #define SDIO_DEVICE_ID_STE_CW1200		0x2280
+diff --git a/drivers/rtc/rtc-msm6242.c b/drivers/rtc/rtc-msm6242.c
+index 0c72a2e8ec67..6aace9319fe9 100644
+--- a/drivers/rtc/rtc-msm6242.c
++++ b/drivers/rtc/rtc-msm6242.c
+@@ -132,7 +132,8 @@ static int msm6242_read_time(struct device *dev, struct rtc_time *tm)
+ 		      msm6242_read(priv, MSM6242_SECOND1);
+ 	tm->tm_min  = msm6242_read(priv, MSM6242_MINUTE10) * 10 +
+ 		      msm6242_read(priv, MSM6242_MINUTE1);
+-	tm->tm_hour = (msm6242_read(priv, MSM6242_HOUR10 & 3)) * 10 +
++	tm->tm_hour = (msm6242_read(priv, MSM6242_HOUR10) &
++		       MSM6242_HOUR10_HR_MASK) * 10 +
+ 		      msm6242_read(priv, MSM6242_HOUR1);
+ 	tm->tm_mday = msm6242_read(priv, MSM6242_DAY10) * 10 +
+ 		      msm6242_read(priv, MSM6242_DAY1);
 -- 
 2.20.1
 
