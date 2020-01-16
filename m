@@ -2,109 +2,71 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81789C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CECC33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 512AC206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:51:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JcdhHgxg"
+	by mail.kernel.org (Postfix) with ESMTP id BCB50214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:51:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729035AbgAPKv0 (ORCPT
+        id S1729019AbgAPKvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 05:51:26 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:44892 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbgAPKvI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 05:51:08 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00GAp10K050263;
-        Thu, 16 Jan 2020 04:51:01 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579171861;
-        bh=T3h+Fu6ytCpvSGafi/xfB4tD7d0LWp5ziadK1cgAJQo=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=JcdhHgxgHU8Yl9zfU/0N3piCMwGTC8K6u3Eyb3pTJ62DE7gsbEpoZnVrU2M4oBHMH
-         aP8PzR8IBFQB9NdOn+UTpXMwnH9HsMzT7vQxopSWj4+9s3lAfC/wUV/OSp6Z17R9nb
-         ncU7HZKAGrvdar//KoX/a2FcofTnpLLVh8g2hBIU=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00GAp1n8016974
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 16 Jan 2020 04:51:01 -0600
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 16
- Jan 2020 04:51:01 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 16 Jan 2020 04:51:01 -0600
-Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00GAoRdb000589;
-        Thu, 16 Jan 2020 04:50:58 -0600
-From:   Faiz Abbas <faiz_abbas@ti.com>
-To:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-mmc@vger.kernel.org>
-CC:     <adrian.hunter@intel.com>, <kishon@ti.com>, <mark.rutland@arm.com>,
-        <robh+dt@kernel.org>, <ulf.hansson@linaro.org>,
-        <faiz_abbas@ti.com>, <tony@atomide.com>
-Subject: [PATCH v5 09/10] mmc: sdhci-omap: Add am335x and am437x specific compatibles
-Date:   Thu, 16 Jan 2020 16:21:53 +0530
-Message-ID: <20200116105154.7685-10-faiz_abbas@ti.com>
-X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20200116105154.7685-1-faiz_abbas@ti.com>
-References: <20200116105154.7685-1-faiz_abbas@ti.com>
+        Thu, 16 Jan 2020 05:51:25 -0500
+Received: from verein.lst.de ([213.95.11.211]:55329 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726187AbgAPKvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 05:51:12 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 0DE4F68B20; Thu, 16 Jan 2020 11:51:09 +0100 (CET)
+Date:   Thu, 16 Jan 2020 11:51:08 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
+        sj1557.seo@samsung.com, linkinjeon@gmail.com, arnd@arndb.de
+Subject: Re: [PATCH v10 00/14] add the latest exfat driver
+Message-ID: <20200116105108.GA16924@lst.de>
+References: <CGME20200115082818epcas1p4892a99345626188afd111ee263132458@epcas1p4.samsung.com> <20200115082447.19520-1-namjae.jeon@samsung.com> <20200115094732.bou23s3bduxpnr4k@pali>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20200115094732.bou23s3bduxpnr4k@pali>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for new compatible for TI's am335x and am437x devices.
+On Wed, Jan 15, 2020 at 10:47:32AM +0100, Pali Rohár wrote:
+> Next steps for future:
+> 
+> * De-duplicate cache code between fat and exfat. Currently fs/exfat
+>   cache code is heavily copy-paste of fs/fat cache code.
 
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
----
- drivers/mmc/host/sdhci-omap.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+As said before I don't think this should be a merge blocker.  I actually
+see this more of an experiment as the sharing might make things worse.
+But at least it is worth giving it a try.
 
-diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
-index 1f05c8e98d62..5433c9e6ac10 100644
---- a/drivers/mmc/host/sdhci-omap.c
-+++ b/drivers/mmc/host/sdhci-omap.c
-@@ -898,6 +898,14 @@ static const struct sdhci_omap_data k2g_data = {
- 	.offset = 0x200,
- };
- 
-+static const struct sdhci_omap_data am335_data = {
-+	.offset = 0x200,
-+};
-+
-+static const struct sdhci_omap_data am437_data = {
-+	.offset = 0x200,
-+};
-+
- static const struct sdhci_omap_data dra7_data = {
- 	.offset = 0x200,
- 	.flags	= SDHCI_OMAP_REQUIRE_IODELAY,
-@@ -906,6 +914,8 @@ static const struct sdhci_omap_data dra7_data = {
- static const struct of_device_id omap_sdhci_match[] = {
- 	{ .compatible = "ti,dra7-sdhci", .data = &dra7_data },
- 	{ .compatible = "ti,k2g-sdhci", .data = &k2g_data },
-+	{ .compatible = "ti,am335-sdhci", .data = &am335_data },
-+	{ .compatible = "ti,am437-sdhci", .data = &am437_data },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, omap_sdhci_match);
--- 
-2.19.2
+> * De-duplicate UTF-16 functions. Currently fs/exfat has e.g. helper
+>   functions for surrogate pairs copy-paste from fs/nls.
 
+If you looked into that can you post a list of suspected duplicates?
+
+> 
+> * Unify EXFAT_DEFAULT_IOCHARSET and FAT_DEFAULT_IOCHARSET. Or maybe
+>   unify it with other filesystems too.
+
+For the initial merge I think they should be kept separate, as
+referencing other file systems Kconfig variable is confusing.
+Investingating if we could a single common one sounds like a good idea,
+though.
+
+> * After applying this patch series, remote staging exfat implementation.
+
+I think Greg wants to do that separately.  I still hope we can do that
+in the same merge window, though.
