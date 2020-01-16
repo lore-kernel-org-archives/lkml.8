@@ -2,77 +2,115 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BC4C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B14C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28FB22075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:52:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B16732077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:53:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbgAPNwM (ORCPT
+        id S1726974AbgAPNxP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 08:52:12 -0500
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:44655 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbgAPNwM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 08:52:12 -0500
-X-Originating-IP: 90.65.102.129
-Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id D60D2C0019;
-        Thu, 16 Jan 2020 13:52:08 +0000 (UTC)
-Date:   Thu, 16 Jan 2020 14:52:08 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc:     richard.genoud@gmail.com, radu_nicolae.pirea@upb.ro,
-        lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        nicolas.ferre@microchip.com, ludovic.desroches@microchip.com,
-        a.zummo@towertech.it, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org,
-        Sandeep Sheriker Mallikarjun 
-        <sandeepsheriker.mallikarjun@microchip.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Subject: Re: [PATCH v4 5/5] ARM: dts: at91: sam9x60: add device tree for soc
- and board
-Message-ID: <20200116135208.GG100374@piout.net>
-References: <1579085987-13976-1-git-send-email-claudiu.beznea@microchip.com>
- <1579085987-13976-6-git-send-email-claudiu.beznea@microchip.com>
+        Thu, 16 Jan 2020 08:53:15 -0500
+Received: from mga09.intel.com ([134.134.136.24]:43661 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726084AbgAPNxO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 08:53:14 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 05:53:14 -0800
+X-IronPort-AV: E=Sophos;i="5.70,326,1574150400"; 
+   d="scan'208";a="373316388"
+Received: from dlneuman-mobl1.amr.corp.intel.com ([10.254.178.157])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 05:53:13 -0800
+Message-ID: <2a5e9df32e2df27297149a577512f6b1557de241.camel@linux.intel.com>
+Subject: Re: [PATCH] thermal: intel_pch_thermal: Add PCI ids for Lewisburg
+ PCH.
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Andres Freund <andres@anarazel.de>,
+        Tushar Dave <tushar.n.dave@intel.com>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 16 Jan 2020 05:53:13 -0800
+In-Reply-To: <20200115184415.1726953-1-andres@anarazel.de>
+References: <20200115184415.1726953-1-andres@anarazel.de>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1579085987-13976-6-git-send-email-claudiu.beznea@microchip.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/01/2020 12:59:47+0200, Claudiu Beznea wrote:
-> From: Sandeep Sheriker Mallikarjun <sandeepsheriker.mallikarjun@microchip.com>
-> 
-> Add device tree files for SAM9X60 SoC and SAM9X60-EK board.
-> 
-> Signed-off-by: Sandeep Sheriker Mallikarjun <sandeepsheriker.mallikarjun@microchip.com>
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-> Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-> ---
->  arch/arm/boot/dts/Makefile           |   2 +
->  arch/arm/boot/dts/at91-sam9x60ek.dts | 647 ++++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/sam9x60.dtsi       | 691 +++++++++++++++++++++++++++++++++++
->  3 files changed, 1340 insertions(+)
->  create mode 100644 arch/arm/boot/dts/at91-sam9x60ek.dts
->  create mode 100644 arch/arm/boot/dts/sam9x60.dtsi
-> 
-Applied, thanks.
+On Wed, 2020-01-15 at 10:44 -0800, Andres Freund wrote:
+> I noticed that I couldn't read the PCH temperature on my workstation
+> (C620 series chipset, w/ 2x Xeon Gold 5215 CPUs) directly, but had to
+> go
+> through IPMI. Looking at the data sheet, it looks to me like the
+> existing intel PCH thermal driver should work without changes for
+> Lewisburg.
+Does the temperature reading match with what you read via IPMI?
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+The patch looks fine to me otherwise.
+
+Thanks,
+Srinivas
+
+> 
+> I suspect there's some other PCI id's missing. But I hope somebody at
+> Intel would have an easier time figuring that out than I...
+> 
+> Signed-off-by: Andres Freund <andres@anarazel.de>
+> ---
+>  drivers/thermal/intel/intel_pch_thermal.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/thermal/intel/intel_pch_thermal.c
+> b/drivers/thermal/intel/intel_pch_thermal.c
+> index 4f0bb8f502e1..1f3ff0d489ef 100644
+> --- a/drivers/thermal/intel/intel_pch_thermal.c
+> +++ b/drivers/thermal/intel/intel_pch_thermal.c
+> @@ -23,6 +23,7 @@
+>  #define PCH_THERMAL_DID_SKL_H	0xA131 /* Skylake PCH 100
+> series */
+>  #define PCH_THERMAL_DID_CNL	0x9Df9 /* CNL PCH */
+>  #define PCH_THERMAL_DID_CNL_H	0xA379 /* CNL-H PCH */
+> +#define PCH_THERMAL_DID_LWB	0xA1B1 /* Lewisburg PCH */
+>  
+>  /* Wildcat Point-LP  PCH Thermal registers */
+>  #define WPT_TEMP	0x0000	/* Temperature */
+> @@ -272,6 +273,7 @@ enum board_ids {
+>  	board_wpt,
+>  	board_skl,
+>  	board_cnl,
+> +	board_lwb,
+>  };
+>  
+>  static const struct board_info {
+> @@ -294,6 +296,10 @@ static const struct board_info {
+>  		.name = "pch_cannonlake",
+>  		.ops = &pch_dev_ops_wpt,
+>  	},
+> +	[board_lwb] = {
+> +		.name = "pch_lewisburg",
+> +		.ops = &pch_dev_ops_wpt,
+> +	},
+>  };
+>  
+>  static int intel_pch_thermal_probe(struct pci_dev *pdev,
+> @@ -398,6 +404,8 @@ static const struct pci_device_id
+> intel_pch_thermal_id[] = {
+>  		.driver_data = board_cnl, },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCH_THERMAL_DID_CNL_H),
+>  		.driver_data = board_cnl, },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCH_THERMAL_DID_LWB),
+> +		.driver_data = board_lwb, },
+>  	{ 0, },
+>  };
+>  MODULE_DEVICE_TABLE(pci, intel_pch_thermal_id);
+
