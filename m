@@ -2,194 +2,351 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65151C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CCAC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 373202073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:40:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218023;
-	bh=3njkAxnNMx7xguEaAvRZU4TqOQELfCj4I94y4SfPoAk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P3DDKryzTvfod9kNVxBx9xsUwDTrKqQeWTVvXCTQFIlibNqMDnvtDfnR81Tzo1OEf
-	 oJGVgRxVr8nmOwF9Oblfa9Dk4UtuoLxWL3zcYqd3b1H2kVyH12pmGFXONvvw1OQssT
-	 f0q0fhtPPvYy5ThrZKH1qheyiok0rJTfCKEgImDQ=
+	by mail.kernel.org (Postfix) with ESMTP id B8B2C2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:40:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bGPaRe65"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731526AbgAPXkV (ORCPT
+        id S2391806AbgAPXkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 16 Jan 2020 18:40:25 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:37482 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2391784AbgAPXkV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jan 2020 18:40:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59456 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390243AbgAPX1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:27:33 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579218020; h=References: In-Reply-To: Message-Id: Date:
+ Subject: To: From: Sender;
+ bh=s/kX43VVZA99BNsnU6juUiCq0FtSTE+YdVsoFlrX6zM=; b=bGPaRe65auspf06o/MG+kdzrWJQFE+tDTKvz9g4LgGa7nsYv1IipzQn/FjEkJHuB9nxfM+Rf
+ JXqOvPEhfor9uCBfND4jn6XoMJzzpnrvtHifuDoESy6QPX6j9VXt2pHpwFZalTGSCym2828+
+ qUYkgLRdZmf81Mxq6W/JaO39Spk=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e20f461.7fdf7fc93308-smtp-out-n02;
+ Thu, 16 Jan 2020 23:40:17 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id EEDFFC447B0; Thu, 16 Jan 2020 23:40:16 +0000 (UTC)
+Received: from vgutta-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A2B8206D9;
-        Thu, 16 Jan 2020 23:27:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217252;
-        bh=3njkAxnNMx7xguEaAvRZU4TqOQELfCj4I94y4SfPoAk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B66uSBHCOmv65U4hTGeL17bxmwOgtPr9bPCJIrR9eHBvJjPVOlJOmjwyZksjSrDeA
-         bxaej5nNQhXwo8cZ5qlS1T+TtEKITfUNjA4+poXN0j6IlWImHqhZkH9bge/J5iQfCF
-         lbFo8XHOWsPPmwf2ZJGKGgIC94JDfaTMuLTDDMZg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        David Howells <dhowells@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 192/203] rxrpc: Unlock new call in rxrpc_new_incoming_call() rather than the caller
-Date:   Fri, 17 Jan 2020 00:18:29 +0100
-Message-Id: <20200116231801.009945367@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
-References: <20200116231745.218684830@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        (Authenticated sender: vgutta)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D5EBBC447A5;
+        Thu, 16 Jan 2020 23:40:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D5EBBC447A5
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vnkgutta@codeaurora.org
+From:   Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, vinod.koul@linaro.org,
+        psodagud@codeaurora.org, tsoni@codeaurora.org,
+        jshriram@codeaurora.org, tdas@codeaurora.org,
+        vnkgutta@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 4/7] clk: qcom: clk-alpha-pll: Add support for controlling Lucid PLLs
+Date:   Thu, 16 Jan 2020 15:39:51 -0800
+Message-Id: <1579217994-22219-5-git-send-email-vnkgutta@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1579217994-22219-1-git-send-email-vnkgutta@codeaurora.org>
+References: <1579217994-22219-1-git-send-email-vnkgutta@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Taniya Das <tdas@codeaurora.org>
 
-[ Upstream commit f33121cbe91973a08e68e4bde8c3f7e6e4e351c1 ]
+Add programming sequence support for managing the Lucid PLLs.
 
-Move the unlock and the ping transmission for a new incoming call into
-rxrpc_new_incoming_call() rather than doing it in the caller.  This makes
-it clearer to see what's going on.
-
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-cc: Ingo Molnar <mingo@redhat.com>
-cc: Will Deacon <will@kernel.org>
-cc: Davidlohr Bueso <dave@stgolabs.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Taniya Das <tdas@codeaurora.org>
+Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
 ---
- net/rxrpc/call_accept.c | 36 ++++++++++++++++++++++++++++--------
- net/rxrpc/input.c       | 18 ------------------
- 2 files changed, 28 insertions(+), 26 deletions(-)
+ drivers/clk/qcom/clk-alpha-pll.c | 190 +++++++++++++++++++++++++++++++++++++++
+ drivers/clk/qcom/clk-alpha-pll.h |  12 +++
+ 2 files changed, 202 insertions(+)
 
-diff --git a/net/rxrpc/call_accept.c b/net/rxrpc/call_accept.c
-index 135bf5cd8dd5..3685b1732f65 100644
---- a/net/rxrpc/call_accept.c
-+++ b/net/rxrpc/call_accept.c
-@@ -239,6 +239,22 @@ void rxrpc_discard_prealloc(struct rxrpc_sock *rx)
- 	kfree(b);
- }
+diff --git a/drivers/clk/qcom/clk-alpha-pll.c b/drivers/clk/qcom/clk-alpha-pll.c
+index 1b073b2..4258ab0 100644
+--- a/drivers/clk/qcom/clk-alpha-pll.c
++++ b/drivers/clk/qcom/clk-alpha-pll.c
+@@ -52,6 +52,7 @@
+ #define PLL_CONFIG_CTL_U1(p)	((p)->offset + (p)->regs[PLL_OFF_CONFIG_CTL_U1])
+ #define PLL_TEST_CTL(p)		((p)->offset + (p)->regs[PLL_OFF_TEST_CTL])
+ #define PLL_TEST_CTL_U(p)	((p)->offset + (p)->regs[PLL_OFF_TEST_CTL_U])
++#define PLL_TEST_CTL_U1(p)     ((p)->offset + (p)->regs[PLL_OFF_TEST_CTL_U1])
+ #define PLL_STATUS(p)		((p)->offset + (p)->regs[PLL_OFF_STATUS])
+ #define PLL_OPMODE(p)		((p)->offset + (p)->regs[PLL_OFF_OPMODE])
+ #define PLL_FRAC(p)		((p)->offset + (p)->regs[PLL_OFF_FRAC])
+@@ -116,6 +117,22 @@
+ 		[PLL_OFF_ALPHA_VAL] = 0x40,
+ 		[PLL_OFF_CAL_VAL] = 0x44,
+ 	},
++	[CLK_ALPHA_PLL_TYPE_LUCID] =  {
++		[PLL_OFF_L_VAL] = 0x04,
++		[PLL_OFF_CAL_L_VAL] = 0x08,
++		[PLL_OFF_USER_CTL] = 0x0c,
++		[PLL_OFF_USER_CTL_U] = 0x10,
++		[PLL_OFF_USER_CTL_U1] = 0x14,
++		[PLL_OFF_CONFIG_CTL] = 0x18,
++		[PLL_OFF_CONFIG_CTL_U] = 0x1c,
++		[PLL_OFF_CONFIG_CTL_U1] = 0x20,
++		[PLL_OFF_TEST_CTL] = 0x24,
++		[PLL_OFF_TEST_CTL_U] = 0x28,
++		[PLL_OFF_TEST_CTL_U1] = 0x2c,
++		[PLL_OFF_STATUS] = 0x30,
++		[PLL_OFF_OPMODE] = 0x38,
++		[PLL_OFF_ALPHA_VAL] = 0x40,
++	},
+ };
+ EXPORT_SYMBOL_GPL(clk_alpha_pll_regs);
  
-+/*
-+ * Ping the other end to fill our RTT cache and to retrieve the rwind
-+ * and MTU parameters.
-+ */
-+static void rxrpc_send_ping(struct rxrpc_call *call, struct sk_buff *skb)
-+{
-+	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
-+	ktime_t now = skb->tstamp;
+@@ -139,6 +156,10 @@
+ #define PLL_OUT_MASK		0x7
+ #define PLL_RATE_MARGIN		500
+ 
++/* LUCID PLL specific settings and offsets */
++#define LUCID_PLL_CAL_VAL	0x44
++#define LUCID_PCAL_DONE		BIT(26)
 +
-+	if (call->peer->rtt_usage < 3 ||
-+	    ktime_before(ktime_add_ms(call->peer->rtt_last_req, 1000), now))
-+		rxrpc_propose_ACK(call, RXRPC_ACK_PING, sp->hdr.serial,
-+				  true, true,
-+				  rxrpc_propose_ack_ping_for_params);
+ #define pll_alpha_width(p)					\
+ 		((PLL_ALPHA_VAL_U(p) - PLL_ALPHA_VAL(p) == 4) ?	\
+ 				 ALPHA_REG_BITWIDTH : ALPHA_REG_16BIT_WIDTH)
+@@ -1367,3 +1388,172 @@ static int clk_alpha_pll_postdiv_fabia_set_rate(struct clk_hw *hw,
+ 	.set_rate = clk_alpha_pll_postdiv_fabia_set_rate,
+ };
+ EXPORT_SYMBOL_GPL(clk_alpha_pll_postdiv_fabia_ops);
++
++void clk_lucid_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
++			     const struct alpha_pll_config *config)
++{
++	if (config->l)
++		regmap_write(regmap, PLL_L_VAL(pll), config->l);
++
++	regmap_write(regmap, PLL_CAL_L_VAL(pll), LUCID_PLL_CAL_VAL);
++
++	if (config->alpha)
++		regmap_write(regmap, PLL_ALPHA_VAL(pll), config->alpha);
++
++	if (config->config_ctl_val)
++		regmap_write(regmap, PLL_CONFIG_CTL(pll),
++			     config->config_ctl_val);
++
++	if (config->config_ctl_hi_val)
++		regmap_write(regmap, PLL_CONFIG_CTL_U(pll),
++			     config->config_ctl_hi_val);
++
++	if (config->config_ctl_hi1_val)
++		regmap_write(regmap, PLL_CONFIG_CTL_U1(pll),
++			     config->config_ctl_hi1_val);
++
++	if (config->user_ctl_val)
++		regmap_write(regmap, PLL_USER_CTL(pll),
++			     config->user_ctl_val);
++
++	if (config->user_ctl_hi_val)
++		regmap_write(regmap, PLL_USER_CTL_U(pll),
++			     config->user_ctl_hi_val);
++
++	if (config->user_ctl_hi1_val)
++		regmap_write(regmap, PLL_USER_CTL_U1(pll),
++			     config->user_ctl_hi1_val);
++
++	if (config->test_ctl_val)
++		regmap_write(regmap, PLL_TEST_CTL(pll),
++			     config->test_ctl_val);
++
++	if (config->test_ctl_hi_val)
++		regmap_write(regmap, PLL_TEST_CTL_U(pll),
++			     config->test_ctl_hi_val);
++
++	if (config->test_ctl_hi1_val)
++		regmap_write(regmap, PLL_TEST_CTL_U1(pll),
++			     config->test_ctl_hi1_val);
++
++	regmap_update_bits(regmap, PLL_MODE(pll), PLL_UPDATE_BYPASS,
++			   PLL_UPDATE_BYPASS);
++
++	/* Disable PLL output */
++	regmap_update_bits(regmap, PLL_MODE(pll),  PLL_OUTCTRL, 0);
++
++	/* Set operation mode to OFF */
++	regmap_write(regmap, PLL_OPMODE(pll), PLL_STANDBY);
++
++	/* PLL should be in OFF mode before continuing */
++	wmb();
++
++	/* Place the PLL in STANDBY mode */
++	regmap_update_bits(regmap, PLL_MODE(pll), PLL_RESET_N, PLL_RESET_N);
++}
++EXPORT_SYMBOL_GPL(clk_lucid_pll_configure);
++
++/*
++ * The Lucid PLL requires a power-on self-calibration which happens when the
++ * PLL comes out of reset. Calibrate in case it is not completed.
++ */
++static int alpha_pll_lucid_prepare(struct clk_hw *hw)
++{
++	struct clk_alpha_pll *pll = to_clk_alpha_pll(hw);
++	u32 regval;
++	int ret;
++
++	/* Return early if calibration is not needed. */
++	regmap_read(pll->clkr.regmap, PLL_STATUS(pll), &regval);
++	if (regval & LUCID_PCAL_DONE)
++		return 0;
++
++	ret = clk_trion_pll_enable(hw);
++	if (ret)
++		return ret;
++
++	clk_trion_pll_disable(hw);
++
++	return 0;
 +}
 +
- /*
-  * Allocate a new incoming call from the prealloc pool, along with a connection
-  * and a peer as necessary.
-@@ -346,9 +362,7 @@ struct rxrpc_call *rxrpc_new_incoming_call(struct rxrpc_local *local,
- 				  sp->hdr.seq, RX_INVALID_OPERATION, ESHUTDOWN);
- 		skb->mark = RXRPC_SKB_MARK_REJECT_ABORT;
- 		skb->priority = RX_INVALID_OPERATION;
--		_leave(" = NULL [close]");
--		call = NULL;
--		goto out;
-+		goto no_call;
- 	}
- 
- 	/* The peer, connection and call may all have sprung into existence due
-@@ -361,9 +375,7 @@ struct rxrpc_call *rxrpc_new_incoming_call(struct rxrpc_local *local,
- 	call = rxrpc_alloc_incoming_call(rx, local, peer, conn, skb);
- 	if (!call) {
- 		skb->mark = RXRPC_SKB_MARK_REJECT_BUSY;
--		_leave(" = NULL [busy]");
--		call = NULL;
--		goto out;
-+		goto no_call;
- 	}
- 
- 	trace_rxrpc_receive(call, rxrpc_receive_incoming,
-@@ -432,10 +444,18 @@ struct rxrpc_call *rxrpc_new_incoming_call(struct rxrpc_local *local,
- 	 */
- 	rxrpc_put_call(call, rxrpc_call_put);
- 
--	_leave(" = %p{%d}", call, call->debug_id);
--out:
- 	spin_unlock(&rx->incoming_lock);
++static int alpha_pll_lucid_set_rate(struct clk_hw *hw, unsigned long rate,
++				    unsigned long prate)
++{
++	struct clk_alpha_pll *pll = to_clk_alpha_pll(hw);
++	unsigned long rrate;
++	u32 regval, l, alpha_width = pll_alpha_width(pll);
++	u64 a;
++	int ret;
 +
-+	rxrpc_send_ping(call, skb);
-+	mutex_unlock(&call->user_mutex);
++	rrate = alpha_pll_round_rate(rate, prate, &l, &a, alpha_width);
 +
-+	_leave(" = %p{%d}", call, call->debug_id);
- 	return call;
++	/*
++	 * Due to a limited number of bits for fractional rate programming, the
++	 * rounded up rate could be marginally higher than the requested rate.
++	 */
++	if (rrate > (rate + PLL_RATE_MARGIN) || rrate < rate) {
++		pr_err("Call set rate on the PLL with rounded rates!\n");
++		return -EINVAL;
++	}
 +
-+no_call:
-+	spin_unlock(&rx->incoming_lock);
-+	_leave(" = NULL [%u]", skb->mark);
-+	return NULL;
- }
++	regmap_write(pll->clkr.regmap, PLL_L_VAL(pll), l);
++	regmap_write(pll->clkr.regmap, PLL_ALPHA_VAL(pll), a);
++
++	/* Latch the PLL input */
++	ret = regmap_update_bits(pll->clkr.regmap, PLL_MODE(pll),
++				 PLL_UPDATE, PLL_UPDATE);
++	if (ret)
++		return ret;
++
++	/* Wait for 2 reference cycles before checking the ACK bit. */
++	udelay(1);
++	regmap_read(pll->clkr.regmap, PLL_MODE(pll), &regval);
++	if (!(regval & ALPHA_PLL_ACK_LATCH)) {
++		WARN(1, "PLL latch failed. Output may be unstable!\n");
++		return -EINVAL;
++	}
++
++	/* Return the latch input to 0 */
++	ret = regmap_update_bits(pll->clkr.regmap, PLL_MODE(pll),
++				 PLL_UPDATE, 0);
++	if (ret)
++		return ret;
++
++	if (clk_hw_is_enabled(hw)) {
++		ret = wait_for_pll_enable_lock(pll);
++		if (ret)
++			return ret;
++	}
++
++	/* Wait for PLL output to stabilize */
++	udelay(100);
++	return 0;
++}
++
++const struct clk_ops clk_alpha_pll_lucid_ops = {
++	.prepare = alpha_pll_lucid_prepare,
++	.enable = clk_trion_pll_enable,
++	.disable = clk_trion_pll_disable,
++	.is_enabled = clk_trion_pll_is_enabled,
++	.recalc_rate = clk_trion_pll_recalc_rate,
++	.round_rate = clk_alpha_pll_round_rate,
++	.set_rate = alpha_pll_lucid_set_rate,
++};
++EXPORT_SYMBOL_GPL(clk_alpha_pll_lucid_ops);
++
++const struct clk_ops clk_alpha_pll_fixed_lucid_ops = {
++	.enable = clk_trion_pll_enable,
++	.disable = clk_trion_pll_disable,
++	.is_enabled = clk_trion_pll_is_enabled,
++	.recalc_rate = clk_trion_pll_recalc_rate,
++	.round_rate = clk_alpha_pll_round_rate,
++};
++EXPORT_SYMBOL_GPL(clk_alpha_pll_fixed_lucid_ops);
++
++const struct clk_ops clk_alpha_pll_postdiv_lucid_ops = {
++	.recalc_rate = clk_alpha_pll_postdiv_fabia_recalc_rate,
++	.round_rate = clk_alpha_pll_postdiv_fabia_round_rate,
++	.set_rate = clk_alpha_pll_postdiv_fabia_set_rate,
++};
++EXPORT_SYMBOL_GPL(clk_alpha_pll_postdiv_lucid_ops);
+diff --git a/drivers/clk/qcom/clk-alpha-pll.h b/drivers/clk/qcom/clk-alpha-pll.h
+index fbc1f67..704674a 100644
+--- a/drivers/clk/qcom/clk-alpha-pll.h
++++ b/drivers/clk/qcom/clk-alpha-pll.h
+@@ -14,6 +14,7 @@ enum {
+ 	CLK_ALPHA_PLL_TYPE_BRAMMO,
+ 	CLK_ALPHA_PLL_TYPE_FABIA,
+ 	CLK_ALPHA_PLL_TYPE_TRION,
++	CLK_ALPHA_PLL_TYPE_LUCID,
+ 	CLK_ALPHA_PLL_TYPE_MAX,
+ };
  
- /*
-diff --git a/net/rxrpc/input.c b/net/rxrpc/input.c
-index 157be1ff8697..86bd133b4fa0 100644
---- a/net/rxrpc/input.c
-+++ b/net/rxrpc/input.c
-@@ -192,22 +192,6 @@ send_extra_data:
- 	goto out_no_clear_ca;
- }
+@@ -30,6 +31,7 @@ enum {
+ 	PLL_OFF_CONFIG_CTL_U1,
+ 	PLL_OFF_TEST_CTL,
+ 	PLL_OFF_TEST_CTL_U,
++	PLL_OFF_TEST_CTL_U1,
+ 	PLL_OFF_STATUS,
+ 	PLL_OFF_OPMODE,
+ 	PLL_OFF_FRAC,
+@@ -94,10 +96,13 @@ struct alpha_pll_config {
+ 	u32 alpha_hi;
+ 	u32 config_ctl_val;
+ 	u32 config_ctl_hi_val;
++	u32 config_ctl_hi1_val;
+ 	u32 user_ctl_val;
+ 	u32 user_ctl_hi_val;
++	u32 user_ctl_hi1_val;
+ 	u32 test_ctl_val;
+ 	u32 test_ctl_hi_val;
++	u32 test_ctl_hi1_val;
+ 	u32 main_output_mask;
+ 	u32 aux_output_mask;
+ 	u32 aux2_output_mask;
+@@ -123,10 +128,17 @@ struct alpha_pll_config {
+ extern const struct clk_ops clk_alpha_pll_fixed_fabia_ops;
+ extern const struct clk_ops clk_alpha_pll_postdiv_fabia_ops;
  
--/*
-- * Ping the other end to fill our RTT cache and to retrieve the rwind
-- * and MTU parameters.
-- */
--static void rxrpc_send_ping(struct rxrpc_call *call, struct sk_buff *skb)
--{
--	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
--	ktime_t now = skb->tstamp;
--
--	if (call->peer->rtt_usage < 3 ||
--	    ktime_before(ktime_add_ms(call->peer->rtt_last_req, 1000), now))
--		rxrpc_propose_ACK(call, RXRPC_ACK_PING, sp->hdr.serial,
--				  true, true,
--				  rxrpc_propose_ack_ping_for_params);
--}
--
- /*
-  * Apply a hard ACK by advancing the Tx window.
-  */
-@@ -1396,8 +1380,6 @@ int rxrpc_input_packet(struct sock *udp_sk, struct sk_buff *skb)
- 		call = rxrpc_new_incoming_call(local, rx, skb);
- 		if (!call)
- 			goto reject_packet;
--		rxrpc_send_ping(call, skb);
--		mutex_unlock(&call->user_mutex);
- 	}
++extern const struct clk_ops clk_alpha_pll_lucid_ops;
++extern const struct clk_ops clk_alpha_pll_fixed_lucid_ops;
++extern const struct clk_ops clk_alpha_pll_postdiv_lucid_ops;
++
+ void clk_alpha_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
+ 			     const struct alpha_pll_config *config);
+ void clk_fabia_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
+ 				const struct alpha_pll_config *config);
++void clk_lucid_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
++			     const struct alpha_pll_config *config);
++
+ extern const struct clk_ops clk_trion_fixed_pll_ops;
+ extern const struct clk_ops clk_trion_pll_postdiv_ops;
  
- 	/* Process a call packet; this either discards or passes on the ref
 -- 
-2.20.1
-
-
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
