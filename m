@@ -2,99 +2,77 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6DF4C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B32B5C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F3B4206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:13:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579205593;
-	bh=fPP11jfjDsjW6JkTbSPKOQE44w8JcAdCqd6Zok8K0Rk=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=ay3CzjfU/3z2bfQBr78VTWh/GrdBnMdFZwlij4Mg36JQZfTrUq/n8StOQyNlf03Yi
-	 L9v6Hcr9y0wDsp1mVyJ9jCJ2CaNH2ZpImCiufZfGvcK2QYpd7PW3x9emFGtEnHzjjM
-	 wCQ7sb0EVUHA8rBuIhMC0mnBnWHo0bZDPJniOe+w=
+	by mail.kernel.org (Postfix) with ESMTP id 94F4220663
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:14:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387574AbgAPUNM (ORCPT
+        id S2387598AbgAPUOJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 15:13:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35612 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730031AbgAPUNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 15:13:11 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B3CB20663;
-        Thu, 16 Jan 2020 20:13:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579205590;
-        bh=fPP11jfjDsjW6JkTbSPKOQE44w8JcAdCqd6Zok8K0Rk=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=MjYBJTb4mO0VQE47tEHcptW+/xfnm8QuiiE8Z1Ru88f4hTrfdiYh7WnjYvvbx1mrD
-         03v48LZXueLLw5+ZWjTSx0oX9S0Mswd+RSAynxTUcewAeCLgOEO6SeNkGMsUrEr/Qb
-         vAKYYdmQ4EF+NCi+ruEEaqhu6rLxIZKSah6Laa1U=
-Subject: Re: [PATCH][next] selftests: fix spelling mistake "chainged" ->
- "chained"
-To:     Colin King <colin.king@canonical.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        linux-kselftest@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shuah <shuah@kernel.org>
-References: <20191210112455.171482-1-colin.king@canonical.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <2a02d10f-2ae1-acfc-d5c3-fe49dee9cba3@kernel.org>
-Date:   Thu, 16 Jan 2020 13:13:09 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 16 Jan 2020 15:14:09 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:53240 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729030AbgAPUOJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 15:14:09 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1isBWc-0000Wb-NU; Thu, 16 Jan 2020 21:13:54 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id F20D7101226; Thu, 16 Jan 2020 21:13:53 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, nathanl@linux.ibm.com,
+        arnd@arndb.de, vincenzo.frascino@arm.com, luto@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [RFC PATCH v4 08/11] lib: vdso: allow fixed clock mode
+In-Reply-To: <1b278bc1f6859d4df734fb2cde61cf298e6e07fd.1579196675.git.christophe.leroy@c-s.fr>
+References: <cover.1579196675.git.christophe.leroy@c-s.fr> <1b278bc1f6859d4df734fb2cde61cf298e6e07fd.1579196675.git.christophe.leroy@c-s.fr>
+Date:   Thu, 16 Jan 2020 21:13:53 +0100
+Message-ID: <874kwvf9by.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20191210112455.171482-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/10/19 4:24 AM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> There is a spelling mistake in a literal string, fix it.
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->   tools/testing/selftests/openat2/resolve_test.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/openat2/resolve_test.c b/tools/testing/selftests/openat2/resolve_test.c
-> index 7a94b1da8e7b..bbafad440893 100644
-> --- a/tools/testing/selftests/openat2/resolve_test.c
-> +++ b/tools/testing/selftests/openat2/resolve_test.c
-> @@ -230,7 +230,7 @@ void test_openat2_opath_tests(void)
->   		{ .name = "[in_root] garbage link to /root",
->   		  .path = "cheeky/garbageself",	.how.resolve = RESOLVE_IN_ROOT,
->   		  .out.path = "root",		.pass = true },
-> -		{ .name = "[in_root] chainged garbage links to /root",
-> +		{ .name = "[in_root] chained garbage links to /root",
->   		  .path = "abscheeky/garbageself", .how.resolve = RESOLVE_IN_ROOT,
->   		  .out.path = "root",		.pass = true },
->   		{ .name = "[in_root] relative path to 'root'",
-> 
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
 
-It didn't apply to linux-kselftest next
+Can you please adjust the prefix for future patches to lib/vdso: and
+start the sentence after the colon with an uppercase letter?
 
-If this is going through opennat2 tree then,
+> On arches like POWERPC, the clock is always the timebase, it
 
-Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+Please spell out architectures. Changelogs are not space constraint.
 
-If not I can this for 5.6-rc2
+> cannot be changed on the fly and it is always VDSO capable.
 
-thanks,
--- Shuah
+Also this sentence does not make sense as it might suggests that
+architectures with a fixed compile time known clocksource have something
+named timebase. Something like this is more clear:
+
+Some architectures have a fixed clocksource which is known at compile
+time and cannot be replaced or disabled at runtime, e.g. timebase on
+PowerPC. For such cases the clock mode check in the VDSO code is
+pointless.
+
+Hmm?
+
+Thanks,
+
+        tglx
