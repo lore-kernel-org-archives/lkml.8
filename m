@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2113C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E9AC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B986F2075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:02:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 116A52075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:02:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388315AbgAPVCo (ORCPT
+        id S2388415AbgAPVCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 16:02:44 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:53377 "EHLO
+        Thu, 16 Jan 2020 16:02:48 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:53389 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726994AbgAPVCm (ORCPT
+        with ESMTP id S1726994AbgAPVCr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 16:02:42 -0500
+        Thu, 16 Jan 2020 16:02:47 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1isCHl-00013g-0y; Thu, 16 Jan 2020 22:02:37 +0100
+        id 1isCHk-00013P-E9; Thu, 16 Jan 2020 22:02:36 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7F7901C0E70;
-        Thu, 16 Jan 2020 22:02:36 +0100 (CET)
-Date:   Thu, 16 Jan 2020 21:02:36 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id F0BB91C18C0;
+        Thu, 16 Jan 2020 22:02:35 +0100 (CET)
+Date:   Thu, 16 Jan 2020 21:02:35 -0000
 From:   "tip-bot2 for Yazen Ghannam" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: ras/core] x86/MCE/AMD, EDAC/mce_amd: Add new Load Store unit McaType
+Subject: [tip: ras/core] x86/amd_nb: Add Family 19h PCI IDs
 Cc:     Yazen Ghannam <yazen.ghannam@amd.com>,
         Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200110015651.14887-2-Yazen.Ghannam@amd.com>
-References: <20200110015651.14887-2-Yazen.Ghannam@amd.com>
+In-Reply-To: <20200110015651.14887-4-Yazen.Ghannam@amd.com>
+References: <20200110015651.14887-4-Yazen.Ghannam@amd.com>
 MIME-Version: 1.0
-Message-ID: <157920855629.396.3345590993818919194.tip-bot2@tip-bot2>
+Message-ID: <157920855582.396.16470693063688916445.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,108 +56,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the ras/core branch of tip:
 
-Commit-ID:     89a76171bf50bd20d44338408b8c09433c302956
-Gitweb:        https://git.kernel.org/tip/89a76171bf50bd20d44338408b8c09433c302956
+Commit-ID:     b3f79ae45904ae987a7c06a9e8d6084d7b73e67f
+Gitweb:        https://git.kernel.org/tip/b3f79ae45904ae987a7c06a9e8d6084d7b73e67f
 Author:        Yazen Ghannam <yazen.ghannam@amd.com>
-AuthorDate:    Fri, 10 Jan 2020 01:56:47 
+AuthorDate:    Fri, 10 Jan 2020 01:56:49 
 Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Thu, 16 Jan 2020 17:09:02 +01:00
+CommitterDate: Thu, 16 Jan 2020 17:09:18 +01:00
 
-x86/MCE/AMD, EDAC/mce_amd: Add new Load Store unit McaType
+x86/amd_nb: Add Family 19h PCI IDs
 
-Add support for a new version of the Load Store unit bank type as
-indicated by its McaType value, which will be present in future SMCA
-systems.
-
-Add the new (HWID, MCATYPE) tuple. Reuse the same name, since this is
-logically the same to the user.
-
-Also, add the new error descriptions to edac_mce_amd.
+Add the new PCI Device 18h IDs for AMD Family 19h systems. Note that
+Family 19h systems will not have a new PCI root device ID.
 
 Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200110015651.14887-2-Yazen.Ghannam@amd.com
+Link: https://lkml.kernel.org/r/20200110015651.14887-4-Yazen.Ghannam@amd.com
 ---
- arch/x86/include/asm/mce.h    |  1 +
- arch/x86/kernel/cpu/mce/amd.c |  2 ++
- drivers/edac/mce_amd.c        | 28 ++++++++++++++++++++++++++++
- 3 files changed, 31 insertions(+)
+ arch/x86/kernel/amd_nb.c | 3 +++
+ include/linux/pci_ids.h  | 1 +
+ 2 files changed, 4 insertions(+)
 
-diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
-index c8ff6f6..4359b95 100644
---- a/arch/x86/include/asm/mce.h
-+++ b/arch/x86/include/asm/mce.h
-@@ -290,6 +290,7 @@ extern void apei_mce_report_mem_error(int corrected,
- /* These may be used by multiple smca_hwid_mcatypes */
- enum smca_bank_types {
- 	SMCA_LS = 0,	/* Load Store */
-+	SMCA_LS_V2,	/* Load Store */
- 	SMCA_IF,	/* Instruction Fetch */
- 	SMCA_L2_CACHE,	/* L2 Cache */
- 	SMCA_DE,	/* Decoder Unit */
-diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
-index 5167bd2..36211b9 100644
---- a/arch/x86/kernel/cpu/mce/amd.c
-+++ b/arch/x86/kernel/cpu/mce/amd.c
-@@ -78,6 +78,7 @@ struct smca_bank_name {
+diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
+index 251c795..69aed0e 100644
+--- a/arch/x86/kernel/amd_nb.c
++++ b/arch/x86/kernel/amd_nb.c
+@@ -22,6 +22,7 @@
+ #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F4 0x15ec
+ #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F4 0x1494
+ #define PCI_DEVICE_ID_AMD_17H_M70H_DF_F4 0x1444
++#define PCI_DEVICE_ID_AMD_19H_DF_F4	0x1654
  
- static struct smca_bank_name smca_names[] = {
- 	[SMCA_LS]	= { "load_store",	"Load Store Unit" },
-+	[SMCA_LS_V2]	= { "load_store",	"Load Store Unit" },
- 	[SMCA_IF]	= { "insn_fetch",	"Instruction Fetch Unit" },
- 	[SMCA_L2_CACHE]	= { "l2_cache",		"L2 Cache" },
- 	[SMCA_DE]	= { "decode_unit",	"Decode Unit" },
-@@ -138,6 +139,7 @@ static struct smca_hwid smca_hwid_mcatypes[] = {
- 
- 	/* ZN Core (HWID=0xB0) MCA types */
- 	{ SMCA_LS,	 HWID_MCATYPE(0xB0, 0x0), 0x1FFFFF },
-+	{ SMCA_LS_V2,	 HWID_MCATYPE(0xB0, 0x10), 0xFFFFFF },
- 	{ SMCA_IF,	 HWID_MCATYPE(0xB0, 0x1), 0x3FFF },
- 	{ SMCA_L2_CACHE, HWID_MCATYPE(0xB0, 0x2), 0xF },
- 	{ SMCA_DE,	 HWID_MCATYPE(0xB0, 0x3), 0x1FF },
-diff --git a/drivers/edac/mce_amd.c b/drivers/edac/mce_amd.c
-index ea622c6..aa6ea53 100644
---- a/drivers/edac/mce_amd.c
-+++ b/drivers/edac/mce_amd.c
-@@ -175,6 +175,33 @@ static const char * const smca_ls_mce_desc[] = {
- 	"L2 Fill Data error",
+ /* Protect the PCI config register pairs used for SMN and DF indirect access. */
+ static DEFINE_MUTEX(smn_mutex);
+@@ -52,6 +53,7 @@ const struct pci_device_id amd_nb_misc_ids[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F3) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F3) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F3) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_DF_F3) },
+ 	{}
  };
- 
-+static const char * const smca_ls2_mce_desc[] = {
-+	"An ECC error was detected on a data cache read by a probe or victimization",
-+	"An ECC error or L2 poison was detected on a data cache read by a load",
-+	"An ECC error was detected on a data cache read-modify-write by a store",
-+	"An ECC error or poison bit mismatch was detected on a tag read by a probe or victimization",
-+	"An ECC error or poison bit mismatch was detected on a tag read by a load",
-+	"An ECC error or poison bit mismatch was detected on a tag read by a store",
-+	"An ECC error was detected on an EMEM read by a load",
-+	"An ECC error was detected on an EMEM read-modify-write by a store",
-+	"A parity error was detected in an L1 TLB entry by any access",
-+	"A parity error was detected in an L2 TLB entry by any access",
-+	"A parity error was detected in a PWC entry by any access",
-+	"A parity error was detected in an STQ entry by any access",
-+	"A parity error was detected in an LDQ entry by any access",
-+	"A parity error was detected in a MAB entry by any access",
-+	"A parity error was detected in an SCB entry state field by any access",
-+	"A parity error was detected in an SCB entry address field by any access",
-+	"A parity error was detected in an SCB entry data field by any access",
-+	"A parity error was detected in a WCB entry by any access",
-+	"A poisoned line was detected in an SCB entry by any access",
-+	"A SystemReadDataError error was reported on read data returned from L2 for a load",
-+	"A SystemReadDataError error was reported on read data returned from L2 for an SCB store",
-+	"A SystemReadDataError error was reported on read data returned from L2 for a WCB store",
-+	"A hardware assertion error was reported",
-+	"A parity error was detected in an STLF, SCB EMEM entry or SRB store data by any access",
-+};
-+
- static const char * const smca_if_mce_desc[] = {
- 	"Op Cache Microtag Probe Port Parity Error",
- 	"IC Microtag or Full Tag Multi-hit Error",
-@@ -378,6 +405,7 @@ struct smca_mce_desc {
- 
- static struct smca_mce_desc smca_mce_descs[] = {
- 	[SMCA_LS]	= { smca_ls_mce_desc,	ARRAY_SIZE(smca_ls_mce_desc)	},
-+	[SMCA_LS_V2]	= { smca_ls2_mce_desc,	ARRAY_SIZE(smca_ls2_mce_desc)	},
- 	[SMCA_IF]	= { smca_if_mce_desc,	ARRAY_SIZE(smca_if_mce_desc)	},
- 	[SMCA_L2_CACHE]	= { smca_l2_mce_desc,	ARRAY_SIZE(smca_l2_mce_desc)	},
- 	[SMCA_DE]	= { smca_de_mce_desc,	ARRAY_SIZE(smca_de_mce_desc)	},
+ EXPORT_SYMBOL_GPL(amd_nb_misc_ids);
+@@ -66,6 +68,7 @@ static const struct pci_device_id amd_nb_link_ids[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F4) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F4) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F4) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_DF_F4) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F4) },
+ 	{}
+ };
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 2302d13..352c0d7 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -549,6 +549,7 @@
+ #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F3 0x15eb
+ #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F3 0x1493
+ #define PCI_DEVICE_ID_AMD_17H_M70H_DF_F3 0x1443
++#define PCI_DEVICE_ID_AMD_19H_DF_F3	0x1653
+ #define PCI_DEVICE_ID_AMD_CNB17H_F3	0x1703
+ #define PCI_DEVICE_ID_AMD_LANCE		0x2000
+ #define PCI_DEVICE_ID_AMD_LANCE_HOME	0x2001
