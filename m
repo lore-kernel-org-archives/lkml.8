@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D93CC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A52C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DC14246CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01A4C246B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:37:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196225;
-	bh=UvvU2ACvuYDR0k0CFkDRQnXCIO/igM/KM/2IdQE1i8c=;
+	s=default; t=1579196229;
+	bh=t2GXjzwBgoeqYAw8napByv5NY1waa24NneZgdpaJBzE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1xIoUtKdgnfkZKS9Ognc+ACJREm/xuG7YcgsLkdo3h18Y0uMReGeUGt54tAExZpyG
-	 MbpdASyefE2LV07gtyLH2BTe/4l0scUzCIigdLdia1473tgNHAgy0sfK6WQlLdqTKe
-	 r0Y0MCOGj4elzt7KLnSbNCHX0pS/3GRlQtQEcUxw=
+	b=JNdUvpmHUtthkvu9qYpDLDvXVIwXfx34yu/5dDhHLPER0AC4QKW9kso3mzbI54iXt
+	 nJUX++ouJIhAxO9hRNd+Qt2EhXbwU/p0Ac3pXKLheZWJ2pZW/NOiIyRODC0g/21aic
+	 P2sdoBQkuXwbo3ncZp1I/Mot4s0Dd1JbA7tKXpIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405286AbgAPRhE (ORCPT
+        id S2405304AbgAPRhI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:37:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52016 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:37:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405255AbgAPRhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:37:00 -0500
+        id S2405281AbgAPRhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:37:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0BD6246BA;
-        Thu, 16 Jan 2020 17:36:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D1692468C;
+        Thu, 16 Jan 2020 17:37:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196219;
-        bh=UvvU2ACvuYDR0k0CFkDRQnXCIO/igM/KM/2IdQE1i8c=;
+        s=default; t=1579196223;
+        bh=t2GXjzwBgoeqYAw8napByv5NY1waa24NneZgdpaJBzE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ROBap01PvHQouCXsF0Wlabbi4pMK30Mqnqkzaqpm8jGwVJwLPQrSPbHa8W3kTz41t
-         AmU2vegVAFTOd1E63N6YdGse6DeFrZsEmvgC1/L4x91Hg9bOLjnXvT8rOz/nAtrova
-         BykAzUraE9HtM+4aeLiObJeJthZQ7zjeMetyXako=
+        b=OzreNqh0WIHZ4tnqr/NcFLCg5wH4QFHD0OX6Dlleslksj/7Riij1KmB7PjSxNFhqn
+         X7T3Z6HqSY7P7/efyiO7dSa3Imfcr9E6acno8HRMs6p1CeceeelEv0UUKxfmnPUhOS
+         +/pslDHirFrz29ZGG7/iVo4833KKeu+cNm0lflIk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vladimir Zapolskiy <vz@mleia.com>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 054/251] ARM: dts: lpc32xx: phy3250: fix SD card regulator voltage
-Date:   Thu, 16 Jan 2020 12:33:23 -0500
-Message-Id: <20200116173641.22137-14-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 057/251] rtc: ds1672: fix unintended sign extension
+Date:   Thu, 16 Jan 2020 12:33:26 -0500
+Message-Id: <20200116173641.22137-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -58,37 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Zapolskiy <vz@mleia.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit dc141b99fc36cf910a1d8d5ee30f43f2442fd1bd ]
+[ Upstream commit f0c04c276739ed8acbb41b4868e942a55b128dca ]
 
-The fixed voltage regulator on Phytec phyCORE-LPC3250 board, which
-supplies SD/MMC card's power, has a constant output voltage level
-of either 3.15V or 3.3V, the actual value depends on JP4 position,
-the power rail is referenced as VCC_SDIO in the board hardware manual.
+Shifting a u8 by 24 will cause the value to be promoted to an integer. If
+the top bit of the u8 is set then the following conversion to an unsigned
+long will sign extend the value causing the upper 32 bits to be set in
+the result.
 
-Fixes: d06670e96267 ("arm: dts: phy3250: add SD fixed regulator")
-Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+Fix this by casting the u8 value to an unsigned long before the shift.
+
+Detected by CoverityScan, CID#138801 ("Unintended sign extension")
+
+Fixes: edf1aaa31fc5 ("[PATCH] RTC subsystem: DS1672 driver")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/lpc3250-phy3250.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/rtc/rtc-ds1672.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/lpc3250-phy3250.dts b/arch/arm/boot/dts/lpc3250-phy3250.dts
-index b7bd3a110a8d..dd0bdf765599 100644
---- a/arch/arm/boot/dts/lpc3250-phy3250.dts
-+++ b/arch/arm/boot/dts/lpc3250-phy3250.dts
-@@ -49,8 +49,8 @@
- 		sd_reg: regulator@2 {
- 			compatible = "regulator-fixed";
- 			regulator-name = "sd_reg";
--			regulator-min-microvolt = <1800000>;
--			regulator-max-microvolt = <1800000>;
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
- 			gpio = <&gpio 5 5 0>;
- 			enable-active-high;
- 		};
+diff --git a/drivers/rtc/rtc-ds1672.c b/drivers/rtc/rtc-ds1672.c
+index 5c18ac7394c4..c911f2db0af5 100644
+--- a/drivers/rtc/rtc-ds1672.c
++++ b/drivers/rtc/rtc-ds1672.c
+@@ -58,7 +58,8 @@ static int ds1672_get_datetime(struct i2c_client *client, struct rtc_time *tm)
+ 		"%s: raw read data - counters=%02x,%02x,%02x,%02x\n",
+ 		__func__, buf[0], buf[1], buf[2], buf[3]);
+ 
+-	time = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
++	time = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
++	       (buf[1] << 8) | buf[0];
+ 
+ 	rtc_time_to_tm(time, tm);
+ 
 -- 
 2.20.1
 
