@@ -2,37 +2,68 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C58DBC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 620ACC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97E2B2051A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:45:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32E5920661
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:47:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uw76ZTf1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731702AbgAPJpw (ORCPT
+        id S1730710AbgAPJrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 04:45:52 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:55406 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730061AbgAPJpw (ORCPT
+        Thu, 16 Jan 2020 04:47:46 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38545 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729388AbgAPJrq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 04:45:52 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 5D07E293886
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Collabora Kernel ML <kernel@collabora.com>, drinkcat@chromium.org,
-        Mark Brown <broonie@kernel.org>, dianders@chromium.org,
-        Liam Girdwood <lgirdwood@gmail.com>, mka@chromium.org,
-        Dmitry Osipenko <digetx@gmail.com>
-Subject: [PATCH] regulator: vctrl-regulator: Avoid deadlock getting and setting the voltage
-Date:   Thu, 16 Jan 2020 10:45:43 +0100
-Message-Id: <20200116094543.2847321-1-enric.balletbo@collabora.com>
+        Thu, 16 Jan 2020 04:47:46 -0500
+Received: by mail-pf1-f193.google.com with SMTP id x185so9966970pfc.5;
+        Thu, 16 Jan 2020 01:47:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=l8c+LvOlIaXBLMpBu+gnW139ZMvxJSLj7Fg/MJCqoms=;
+        b=Uw76ZTf1zqvHyf8Pb1Grjc71wgfq1iGAmnabYrBeQrIukT2j1sy4rVufnuSiGrKhma
+         zifubk7YsrNHn0M8EAd8EDjnqA0TEi4gXg4BNUAtasgzFw0SAbtqTa5h3HZCnk5F3FX1
+         X7xrSfCKmmeu2lufBaFobIDDSlq0fJSHTIMh93+xSzJ/NHgAit3Nbg0skYVYKALg8ahy
+         /bTPieJQuT5hVd1AGweD6V3VNpwxFTtNxi4aitap1JeEgpdTPHKRFG5Sn0/n8Rw7rkf0
+         a69hrk3BPRsPhNrCjsSudQuaZeHjxTwRuX3JyIC6YLMNPMtgBxFyzCK/GVoa1V+mOTBM
+         pvgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=l8c+LvOlIaXBLMpBu+gnW139ZMvxJSLj7Fg/MJCqoms=;
+        b=sOuBy40FcT8g52m0OSu2f8rjYjrVrK0Ha+MDZtUqePU5tyFSkxHb1+JOWXuLC6ejOZ
+         rjxSZEbmxQdIB6lWs6AWfie8tcLvoa3uIRTen7XkmPTvUhLujr3TyKsL55Njw6SvaWzU
+         ib8CdikCjFsV0t5gi6sy4DAW7BVNHMwSvAHtZsZX7k1h6OjFJW7SF+PRclX8mMLo1XS7
+         1SzbFU9sqIE/spycw6erUoN197BRd7mG/Y3Pv6q2pQN03CMXp//3ly5DTjfqPwskZmln
+         4mY0K7eNKO6vQCK1zoppZ0huxSAchKOlduOWgYB7w9YDDYtNkc/DHeCOChc8ZtbPJTAz
+         569w==
+X-Gm-Message-State: APjAAAWRJ6kAg7cheQXFnYBY0Z1MOP2F+RS6sANE29ee0+IrB33LNoi3
+        zX9ErswUONA1BOC55A77xNqZEDGlvEKf4g==
+X-Google-Smtp-Source: APXvYqzS4tS+2x7b/vzd5Xd9KF74XNEVfPPpaUoOihOElllpwY8XHXjCXoLWjVQUe1B1ZGwevI6YGw==
+X-Received: by 2002:a62:5c43:: with SMTP id q64mr36911958pfb.194.1579168065677;
+        Thu, 16 Jan 2020 01:47:45 -0800 (PST)
+Received: from localhost.localdomain (FL1-122-135-105-104.tky.mesh.ad.jp. [122.135.105.104])
+        by smtp.gmail.com with ESMTPSA id 144sm26366256pfc.124.2020.01.16.01.47.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 01:47:45 -0800 (PST)
+From:   Masami Ichikawa <masami256@gmail.com>
+To:     rostedt@goodmis.org, mingo@redhat.com
+Cc:     Masami Ichikawa <masami256@gmail.com>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: [PATCH] tracing: Do not set trace clock  if tracefs lockdown is in effect
+Date:   Thu, 16 Jan 2020 18:47:06 +0900
+Message-Id: <20200116094707.3846565-1-masami256@gmail.com>
 X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -41,165 +72,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-`cat /sys/kernel/debug/regulator/regulator_summary` ends on a deadlock
-when you have a voltage controlled regulator (vctrl).
+When trace_clock option is not set and unstable clcok detected,
+tracing_set_default_clock() sets trace_clock(ThinkPad A285 is one of
+case). In that case, if lockdown is in effect, null pointer
+dereference error happens in ring_buffer_set_clock().
 
-The problem is that the vctrl_get_voltage() and vctrl_set_voltage() calls the
-regulator_get_voltage() and regulator_set_voltage() and that will try to lock
-again the dependent regulators (the regulator supplying the control voltage).
-
-Fix the issue by exporting the unlocked version of the regulator_get_voltage()
-and regulator_set_voltage() API so drivers that need it, like the voltage
-controlled regulator driver can use it.
-
-Fixes: f8702f9e4aa7 ("regulator: core: Use ww_mutex for regulators locking")
-Reported-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Link: https://bugzilla.redhat.com/show_bug.cgi?id=1788488
+Signed-off-by: Masami Ichikawa <masami256@gmail.com>
 ---
+ kernel/trace/trace.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
- drivers/regulator/core.c            |  2 ++
- drivers/regulator/vctrl-regulator.c | 38 +++++++++++++++++------------
- 2 files changed, 25 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 03d79fee2987..e7d167ce326c 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -3470,6 +3470,7 @@ int regulator_set_voltage_rdev(struct regulator_dev *rdev, int min_uV,
- out:
- 	return ret;
- }
-+EXPORT_SYMBOL(regulator_set_voltage_rdev);
- 
- static int regulator_limit_voltage_step(struct regulator_dev *rdev,
- 					int *current_uV, int *min_uV)
-@@ -4034,6 +4035,7 @@ int regulator_get_voltage_rdev(struct regulator_dev *rdev)
- 		return ret;
- 	return ret - rdev->constraints->uV_offset;
- }
-+EXPORT_SYMBOL(regulator_get_voltage_rdev);
- 
- /**
-  * regulator_get_voltage - get regulator output voltage
-diff --git a/drivers/regulator/vctrl-regulator.c b/drivers/regulator/vctrl-regulator.c
-index 9a9ee8188109..cbadb1c99679 100644
---- a/drivers/regulator/vctrl-regulator.c
-+++ b/drivers/regulator/vctrl-regulator.c
-@@ -11,10 +11,13 @@
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <linux/regulator/coupler.h>
- #include <linux/regulator/driver.h>
- #include <linux/regulator/of_regulator.h>
- #include <linux/sort.h>
- 
-+#include "internal.h"
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index ddb7e7f5fe8d..5b6ee4aadc26 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -9420,6 +9420,11 @@ __init static int tracing_set_default_clock(void)
+ {
+ 	/* sched_clock_stable() is determined in late_initcall */
+ 	if (!trace_boot_clock && !sched_clock_stable()) {
++		if (security_locked_down(LOCKDOWN_TRACEFS)) {
++			pr_warn("Can not set tracing clock due to lockdown\n");
++			return -EPERM;
++		}
 +
- struct vctrl_voltage_range {
- 	int min_uV;
- 	int max_uV;
-@@ -79,7 +82,7 @@ static int vctrl_calc_output_voltage(struct vctrl_data *vctrl, int ctrl_uV)
- static int vctrl_get_voltage(struct regulator_dev *rdev)
- {
- 	struct vctrl_data *vctrl = rdev_get_drvdata(rdev);
--	int ctrl_uV = regulator_get_voltage(vctrl->ctrl_reg);
-+	int ctrl_uV = regulator_get_voltage_rdev(vctrl->ctrl_reg->rdev);
- 
- 	return vctrl_calc_output_voltage(vctrl, ctrl_uV);
- }
-@@ -90,16 +93,16 @@ static int vctrl_set_voltage(struct regulator_dev *rdev,
- {
- 	struct vctrl_data *vctrl = rdev_get_drvdata(rdev);
- 	struct regulator *ctrl_reg = vctrl->ctrl_reg;
--	int orig_ctrl_uV = regulator_get_voltage(ctrl_reg);
-+	int orig_ctrl_uV = regulator_get_voltage_rdev(ctrl_reg->rdev);
- 	int uV = vctrl_calc_output_voltage(vctrl, orig_ctrl_uV);
- 	int ret;
- 
- 	if (req_min_uV >= uV || !vctrl->ovp_threshold)
- 		/* voltage rising or no OVP */
--		return regulator_set_voltage(
--			ctrl_reg,
-+		return regulator_set_voltage_rdev(ctrl_reg->rdev,
- 			vctrl_calc_ctrl_voltage(vctrl, req_min_uV),
--			vctrl_calc_ctrl_voltage(vctrl, req_max_uV));
-+			vctrl_calc_ctrl_voltage(vctrl, req_max_uV),
-+			PM_SUSPEND_ON);
- 
- 	while (uV > req_min_uV) {
- 		int max_drop_uV = (uV * vctrl->ovp_threshold) / 100;
-@@ -114,9 +117,10 @@ static int vctrl_set_voltage(struct regulator_dev *rdev,
- 		next_uV = max_t(int, req_min_uV, uV - max_drop_uV);
- 		next_ctrl_uV = vctrl_calc_ctrl_voltage(vctrl, next_uV);
- 
--		ret = regulator_set_voltage(ctrl_reg,
-+		ret = regulator_set_voltage_rdev(ctrl_reg->rdev,
-+					    next_ctrl_uV,
- 					    next_ctrl_uV,
--					    next_ctrl_uV);
-+					    PM_SUSPEND_ON);
- 		if (ret)
- 			goto err;
- 
-@@ -130,7 +134,8 @@ static int vctrl_set_voltage(struct regulator_dev *rdev,
- 
- err:
- 	/* Try to go back to original voltage */
--	regulator_set_voltage(ctrl_reg, orig_ctrl_uV, orig_ctrl_uV);
-+	regulator_set_voltage_rdev(ctrl_reg->rdev, orig_ctrl_uV, orig_ctrl_uV,
-+				   PM_SUSPEND_ON);
- 
- 	return ret;
- }
-@@ -155,9 +160,10 @@ static int vctrl_set_voltage_sel(struct regulator_dev *rdev,
- 
- 	if (selector >= vctrl->sel || !vctrl->ovp_threshold) {
- 		/* voltage rising or no OVP */
--		ret = regulator_set_voltage(ctrl_reg,
-+		ret = regulator_set_voltage_rdev(ctrl_reg->rdev,
-+					    vctrl->vtable[selector].ctrl,
- 					    vctrl->vtable[selector].ctrl,
--					    vctrl->vtable[selector].ctrl);
-+					    PM_SUSPEND_ON);
- 		if (!ret)
- 			vctrl->sel = selector;
- 
-@@ -173,9 +179,10 @@ static int vctrl_set_voltage_sel(struct regulator_dev *rdev,
- 		else
- 			next_sel = vctrl->vtable[vctrl->sel].ovp_min_sel;
- 
--		ret = regulator_set_voltage(ctrl_reg,
-+		ret = regulator_set_voltage_rdev(ctrl_reg->rdev,
- 					    vctrl->vtable[next_sel].ctrl,
--					    vctrl->vtable[next_sel].ctrl);
-+					    vctrl->vtable[next_sel].ctrl,
-+					    PM_SUSPEND_ON);
- 		if (ret) {
- 			dev_err(&rdev->dev,
- 				"failed to set control voltage to %duV\n",
-@@ -195,9 +202,10 @@ static int vctrl_set_voltage_sel(struct regulator_dev *rdev,
- err:
- 	if (vctrl->sel != orig_sel) {
- 		/* Try to go back to original voltage */
--		if (!regulator_set_voltage(ctrl_reg,
-+		if (!regulator_set_voltage_rdev(ctrl_reg->rdev,
-+					   vctrl->vtable[orig_sel].ctrl,
- 					   vctrl->vtable[orig_sel].ctrl,
--					   vctrl->vtable[orig_sel].ctrl))
-+					   PM_SUSPEND_ON))
- 			vctrl->sel = orig_sel;
- 		else
- 			dev_warn(&rdev->dev,
-@@ -482,7 +490,7 @@ static int vctrl_probe(struct platform_device *pdev)
- 		if (ret)
- 			return ret;
- 
--		ctrl_uV = regulator_get_voltage(vctrl->ctrl_reg);
-+		ctrl_uV = regulator_get_voltage_rdev(vctrl->ctrl_reg->rdev);
- 		if (ctrl_uV < 0) {
- 			dev_err(&pdev->dev, "failed to get control voltage\n");
- 			return ctrl_uV;
+ 		printk(KERN_WARNING
+ 		       "Unstable clock detected, switching default tracing clock to \"global\"\n"
+ 		       "If you want to keep using the local clock, then add:\n"
 -- 
 2.24.1
 
