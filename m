@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 961E0C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52425C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CD81206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:01:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E238206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:01:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201303;
-	bh=4Pp4UyDFYiG/ROGt91fvWF9zDwzdijE459rGVCPFR4w=;
+	s=default; t=1579201307;
+	bh=sDHeSNFZTFf/Qdc7mGgk87AI8Jz5FOfYbi9yfRQ7+BY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yh5fO0mRxSahS5ZSLkAkWEIaU8nTK6/xUX0vSSfZgWYglzOW5Z21e/lPkDvvlFLL2
-	 W8NbxyvHY2yt/nmDotnS1Ay+E+ujWqOKZlCAKziTSxceZ01ga1SrWKyB4YbgRv36dt
-	 minMlJ70NQMNqoVAu4zrRDZfAIFUBEYaHKE7p7pU=
+	b=frRiFbZwRyyHpYxyTlHAOLJLdvg0WYNNSObepJCjJiqoiYF9qLLV4iP9R7w/gdlFL
+	 sSUgS64jn+29DjNqCJwlHk58aU4Gm1lyYGqj+F67wPz1N834npcIdX8v6dkkGn/sgr
+	 qpK0mjTOPxXhec9FuXFp+lVtbQ/0G8i1USC9Nkb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388749AbgAPRFt (ORCPT
+        id S2388962AbgAPTBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:05:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34478 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:01:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388552AbgAPRFe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:05:34 -0500
+        id S2388740AbgAPRFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:05:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D413820730;
-        Thu, 16 Jan 2020 17:05:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CAEA2077B;
+        Thu, 16 Jan 2020 17:05:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194333;
-        bh=4Pp4UyDFYiG/ROGt91fvWF9zDwzdijE459rGVCPFR4w=;
+        s=default; t=1579194348;
+        bh=sDHeSNFZTFf/Qdc7mGgk87AI8Jz5FOfYbi9yfRQ7+BY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OULyfUDEeUY8Bx97kTiQO6oZ3yZuoYJBfOA4zAOczvXf8L/4mfe+WNgkLLAzMpZFu
-         fPzm+xB1c25vSIwOnsC0XiaT3hPeZCmw5tzzjIHQBc4pqCLrMX7tfvEva8hC+mTexA
-         riwvnL7dbIQVqAWMReBmiNZ/06ZrLfaBJ0Me2s7o=
+        b=ZMRRmtPIFv3FVd3yDU6e+moqLMh2HfJp/4wPkENpj5O0zV8RHBzSxXZjahVIPqDza
+         gXbYi1n7DvqsAj5AlNIYca+x6FJhBhDYmCzH00iO1rMZxOGMnKa1nyi/BUarJ9WvKA
+         Kurc9zcEQyJ4pYyJys/ElZuD13X/6MgvX5Wtptt4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 279/671] ehea: Fix a copy-paste err in ehea_init_port_res
-Date:   Thu, 16 Jan 2020 11:58:37 -0500
-Message-Id: <20200116170509.12787-16-sashal@kernel.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Mike Christie <mchristi@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Hannes Reinecke <hare@suse.com>,
+        Nicholas Bellinger <nab@linux-iscsi.org>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 289/671] scsi: target/core: Fix a race condition in the LUN lookup code
+Date:   Thu, 16 Jan 2020 11:58:47 -0500
+Message-Id: <20200116170509.12787-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,36 +64,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit c8f191282f819ab4e9b47b22a65c6c29734cefce ]
+[ Upstream commit 63f7479439c95bcd49b7dd4af809862c316c71a3 ]
 
-pr->tx_bytes should be assigned to tx_bytes other than
-rx_bytes.
+The rcu_dereference(deve->se_lun) expression occurs twice in the LUN lookup
+functions. Since these expressions are not serialized against deve->se_lun
+assignments each of these expressions may yield a different result. Avoid
+that the wrong LUN pointer is stored in se_cmd by reading deve->se_lun only
+once.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: ce45b873028f ("ehea: Fixing statistics")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Mike Christie <mchristi@redhat.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Nicholas Bellinger <nab@linux-iscsi.org>
+Fixes: 29a05deebf6c ("target: Convert se_node_acl->device_list[] to RCU hlist") # v4.10
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ibm/ehea/ehea_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/target/target_core_device.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/ibm/ehea/ehea_main.c b/drivers/net/ethernet/ibm/ehea/ehea_main.c
-index e8ee69d4e4d3..0f799e8e093c 100644
---- a/drivers/net/ethernet/ibm/ehea/ehea_main.c
-+++ b/drivers/net/ethernet/ibm/ehea/ehea_main.c
-@@ -1464,7 +1464,7 @@ static int ehea_init_port_res(struct ehea_port *port, struct ehea_port_res *pr,
+diff --git a/drivers/target/target_core_device.c b/drivers/target/target_core_device.c
+index e9ff2a7c0c0e..22e97a93728d 100644
+--- a/drivers/target/target_core_device.c
++++ b/drivers/target/target_core_device.c
+@@ -85,7 +85,7 @@ transport_lookup_cmd_lun(struct se_cmd *se_cmd, u64 unpacked_lun)
+ 			goto out_unlock;
+ 		}
  
- 	memset(pr, 0, sizeof(struct ehea_port_res));
+-		se_cmd->se_lun = rcu_dereference(deve->se_lun);
++		se_cmd->se_lun = se_lun;
+ 		se_cmd->pr_res_key = deve->pr_res_key;
+ 		se_cmd->orig_fe_lun = unpacked_lun;
+ 		se_cmd->se_cmd_flags |= SCF_SE_LUN_CMD;
+@@ -176,7 +176,7 @@ int transport_lookup_tmr_lun(struct se_cmd *se_cmd, u64 unpacked_lun)
+ 			goto out_unlock;
+ 		}
  
--	pr->tx_bytes = rx_bytes;
-+	pr->tx_bytes = tx_bytes;
- 	pr->tx_packets = tx_packets;
- 	pr->rx_bytes = rx_bytes;
- 	pr->rx_packets = rx_packets;
+-		se_cmd->se_lun = rcu_dereference(deve->se_lun);
++		se_cmd->se_lun = se_lun;
+ 		se_cmd->pr_res_key = deve->pr_res_key;
+ 		se_cmd->orig_fe_lun = unpacked_lun;
+ 		se_cmd->se_cmd_flags |= SCF_SE_LUN_CMD;
 -- 
 2.20.1
 
