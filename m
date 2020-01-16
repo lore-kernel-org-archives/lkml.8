@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 914DFC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B455C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6130E2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65C8D2077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:40:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200001;
-	bh=0FEKFmNTzNHdWMgpZioN6dASvgMpPIEyyAdbTtRIJwQ=;
+	s=default; t=1579200003;
+	bh=82bJvPDnc5G4xgw16Uc87CO0wdYNO9sE+vaqbaDhJas=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aviWJQoia/QIIFNKC9VeHNwzCn6/v6L1N1wUGEOBP3vMFEcT1rOX5HVPsc9kKPsMi
-	 54FSw0MfOkMcmWqLmeE+ccvBBN8BVigfE+eLrNm3dGHTJQNbZ2nfC6VF5y1A6KzTcA
-	 tZcwosW9RFhWMrf1ebSfqp6JtaHes1vIG+ej0ZcE=
+	b=pm1EiKojZZ23ftNu8CFBbwtDC1YEzYfhFY1CSNGgztLCpGBPWB082JxtC2LtTXmL+
+	 SKfOU/PYZtAjZ9q2241MqdN6Ht8SMBgtZi9sArsivOiuUjNk1WsZotR+y5Fjf9JFsl
+	 dQ1OlpkchbB8Jn9+JrNsFfyVj7QvO+bQzy3av/Fk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390403AbgAPRML (ORCPT
+        id S2389802AbgAPRMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:12:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53884 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:12:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390367AbgAPRMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:12:00 -0500
+        id S2390358AbgAPRL6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:11:58 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 701BF24697;
-        Thu, 16 Jan 2020 17:11:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5925524696;
+        Thu, 16 Jan 2020 17:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194719;
-        bh=0FEKFmNTzNHdWMgpZioN6dASvgMpPIEyyAdbTtRIJwQ=;
+        s=default; t=1579194718;
+        bh=82bJvPDnc5G4xgw16Uc87CO0wdYNO9sE+vaqbaDhJas=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bFvan5K5D6NtwOsJeh3BlvQo+yUi5WJqI7cIHhu7bxrmffeYY65vCAGF88I97Dihv
-         r+T+TTjOjPM07JXlt8ycb+fJkP+SQLbFwm/ZIQxZVteCZzDWARkprspJ9hyvnDAtLQ
-         2AeACDy/ZdWGu2ieWirRciPoSKS//AU6zVF7gPGE=
+        b=Pupw2R84sojUTP7T7avYluQoBBQnbTfUyrWIqKu2FWTD4nvP63safLWrdITKm10w3
+         brlbqVY29cX2Pbkc2X+5OYLJWKJ+vY0IcIiuJEm79Ea/qTYbHNhddg5LfY4huaSehD
+         gn6uPjHAaW475k6M/KvoDWf19LGnESgmk8oWqFwY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 555/671] mailbox: qcom-apcs: fix max_register value
-Date:   Thu, 16 Jan 2020 12:03:13 -0500
-Message-Id: <20200116170509.12787-292-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.19 554/671] f2fs: fix to avoid accessing uninitialized field of inode page in is_alive()
+Date:   Thu, 16 Jan 2020 12:03:12 -0500
+Message-Id: <20200116170509.12787-291-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,33 +59,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 556a0964e28c4441dcdd50fb07596fd042246bd5 ]
+[ Upstream commit 98194030554cd9b10568a9b58f5a135c7e7cba85 ]
 
-The mailbox length is 0x1000 hence the max_register value is 0xFFC.
+If inode is newly created, inode page may not synchronize with inode cache,
+so fields like .i_inline or .i_extra_isize could be wrong, in below call
+path, we may access such wrong fields, result in failing to migrate valid
+target block.
 
-Fixes: c6a8b171ca8e ("mailbox: qcom: Convert APCS IPC driver to use
-regmap")
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+Thread A				Thread B
+- f2fs_create
+ - f2fs_add_link
+  - f2fs_add_dentry
+   - f2fs_init_inode_metadata
+    - f2fs_add_inline_entry
+     - f2fs_new_inode_page
+     - f2fs_put_page
+     : inode page wasn't updated with inode cache
+					- gc_data_segment
+					 - is_alive
+					  - f2fs_get_node_page
+					  - datablock_addr
+					   - offset_in_addr
+					   : access uninitialized fields
+
+Fixes: 7a2af766af15 ("f2fs: enhance on-disk inode structure scalability")
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mailbox/qcom-apcs-ipc-mailbox.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/f2fs/dir.c    | 5 +++++
+ fs/f2fs/inline.c | 5 +++++
+ 2 files changed, 10 insertions(+)
 
-diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-index 5255dcb551a7..d8b4f08f613b 100644
---- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-+++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-@@ -36,7 +36,7 @@ static const struct regmap_config apcs_regmap_config = {
- 	.reg_bits = 32,
- 	.reg_stride = 4,
- 	.val_bits = 32,
--	.max_register = 0x1000,
-+	.max_register = 0xFFC,
- 	.fast_io = true,
- };
+diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
+index cd611a57d04d..8692cfa89a1c 100644
+--- a/fs/f2fs/dir.c
++++ b/fs/f2fs/dir.c
+@@ -572,6 +572,11 @@ int f2fs_add_regular_entry(struct inode *dir, const struct qstr *new_name,
+ 
+ 	if (inode) {
+ 		f2fs_i_pino_write(inode, dir->i_ino);
++
++		/* synchronize inode page's data from inode cache */
++		if (is_inode_flag_set(inode, FI_NEW_INODE))
++			f2fs_update_inode(inode, page);
++
+ 		f2fs_put_page(page, 1);
+ 	}
+ 
+diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
+index 3fe0dd531390..c1ba29d10789 100644
+--- a/fs/f2fs/inline.c
++++ b/fs/f2fs/inline.c
+@@ -578,6 +578,11 @@ int f2fs_add_inline_entry(struct inode *dir, const struct qstr *new_name,
+ 	/* we don't need to mark_inode_dirty now */
+ 	if (inode) {
+ 		f2fs_i_pino_write(inode, dir->i_ino);
++
++		/* synchronize inode page's data from inode cache */
++		if (is_inode_flag_set(inode, FI_NEW_INODE))
++			f2fs_update_inode(inode, page);
++
+ 		f2fs_put_page(page, 1);
+ 	}
  
 -- 
 2.20.1
