@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF20C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF11AC47409
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A93F20684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:21:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEF70208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:22:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198918;
-	bh=Yw7Sxwca5v+5wc2avdjj/iOaHU0AHaZFoEdAY1dbTaA=;
+	s=default; t=1579198921;
+	bh=CVd3bSBd9CWFqE/y5OmTSYd0iUg3npMQRQpRGVYmRrs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RP+f8cqpbvC8Yk2oNKKoK99RW8hNcwtpV949DBEaWai+XOWWjmOrfUykzzj4iNqKQ
-	 qlCkOxXQ9eyFS7SjYEPPQh8HfU0RlZzqAIys1LAPFn0c8t+KqV+Yvijr10b5+YILIl
-	 IhifJ0rkFNS+POxR3Kik5/1Yz0MV0NaprjQIU4Ek=
+	b=2MYMzBfXsVhtEyJKT6DDdXspGzj/lqkLTVbLzxKKKLZ6Je8nNQXyO6AJJXri0ltAR
+	 d2tkHG4PKgNrcVWqg7yvx5nVzgFDHRwkGr8Z6FDObqNc6EHMkIuR8ELBkdOcoSv+Zz
+	 Gzx8Jy4DcQ4xJj+OCtFexuRFns+GnmcfhJpRBHRo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392496AbgAPR1n (ORCPT
+        id S2436528AbgAPSWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:27:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37362 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:22:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404052AbgAPR12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:27:28 -0500
+        id S2392490AbgAPR1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:27:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 631E5246D1;
-        Thu, 16 Jan 2020 17:27:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEE53246D0;
+        Thu, 16 Jan 2020 17:27:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195648;
-        bh=Yw7Sxwca5v+5wc2avdjj/iOaHU0AHaZFoEdAY1dbTaA=;
+        s=default; t=1579195661;
+        bh=CVd3bSBd9CWFqE/y5OmTSYd0iUg3npMQRQpRGVYmRrs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qvhdai3pPUeQZkLpiuKIh8zLFAEuLCtkgin/44YKhetSoXgnSuCmObQNnU1KwlITM
-         mVLB7jDVQXoJPvY5WlHTyZy3+8lxJi8wHixxkYQgWGOnbO3M0QkrOHIGedIRrQnJeL
-         h3URBEr/WOBI9Wi+tiA+9uPmK68jQ91k+PMtfImU=
+        b=aG1GWq9OmGhi0zp8H+OuqZakMbbxhbZQhZsJK6oGAi+MSimq6vMS0xtG0J2qJQ5mo
+         aHExGYnb+xVO29H7qFZbXfSnxJd1SK0n4yczY/T6qmHNeq91yvvPRzfiLzr7ULtpIw
+         dx3RruDkEKUi3Bzh4zxeDAnnE92E00xzw+FzgxGg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Hook, Gary" <Gary.Hook@amd.com>, Gary R Hook <gary.hook@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 211/371] crypto: ccp - Fix 3DES complaint from ccp-crypto module
-Date:   Thu, 16 Jan 2020 12:21:23 -0500
-Message-Id: <20200116172403.18149-154-sashal@kernel.org>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-wpan@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 220/371] inet: frags: call inet_frags_fini() after unregister_pernet_subsys()
+Date:   Thu, 16 Jan 2020 12:21:32 -0500
+Message-Id: <20200116172403.18149-163-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -59,75 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Hook, Gary" <Gary.Hook@amd.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 89646fdda4cae203185444ac7988835f36a21ee1 ]
+[ Upstream commit ae7352d384a552d8c799c242e74a934809990a71 ]
 
-Crypto self-tests reveal an error:
+Both IPv6 and 6lowpan are calling inet_frags_fini() too soon.
 
-alg: skcipher: cbc-des3-ccp encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
+inet_frags_fini() is dismantling a kmem_cache, that might be needed
+later when unregister_pernet_subsys() eventually has to remove
+frags queues from hash tables and free them.
 
-The offset value should not be recomputed when retrieving the context.
-Also, a code path exists which makes decisions based on older (version 3)
-hardware; a v3 device deosn't support 3DES so remove this check.
+This fixes potential use-after-free, and is a prereq for the following patch.
 
-Fixes: 990672d48515 ('crypto: ccp - Enable 3DES function on v5 CCPs')
-
-Signed-off-by: Gary R Hook <gary.hook@amd.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: d4ad4d22e7ac ("inet: frags: use kmem_cache for inet_frag_queue")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/ccp/ccp-ops.c | 15 ++++-----------
- 1 file changed, 4 insertions(+), 11 deletions(-)
+ net/ieee802154/6lowpan/reassembly.c | 2 +-
+ net/ipv6/reassembly.c               | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/crypto/ccp/ccp-ops.c b/drivers/crypto/ccp/ccp-ops.c
-index 1e2e42106dee..4b48b8523a40 100644
---- a/drivers/crypto/ccp/ccp-ops.c
-+++ b/drivers/crypto/ccp/ccp-ops.c
-@@ -1293,6 +1293,9 @@ static int ccp_run_des3_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
- 	int ret;
+diff --git a/net/ieee802154/6lowpan/reassembly.c b/net/ieee802154/6lowpan/reassembly.c
+index ec7a5da56129..e873a6a007f2 100644
+--- a/net/ieee802154/6lowpan/reassembly.c
++++ b/net/ieee802154/6lowpan/reassembly.c
+@@ -634,7 +634,7 @@ int __init lowpan_net_frag_init(void)
  
- 	/* Error checks */
-+	if (cmd_q->ccp->vdata->version < CCP_VERSION(5, 0))
-+		return -EINVAL;
-+
- 	if (!cmd_q->ccp->vdata->perform->des3)
- 		return -EINVAL;
+ void lowpan_net_frag_exit(void)
+ {
+-	inet_frags_fini(&lowpan_frags);
+ 	lowpan_frags_sysctl_unregister();
+ 	unregister_pernet_subsys(&lowpan_frags_ops);
++	inet_frags_fini(&lowpan_frags);
+ }
+diff --git a/net/ipv6/reassembly.c b/net/ipv6/reassembly.c
+index fe797b29ca89..6dea6e92e686 100644
+--- a/net/ipv6/reassembly.c
++++ b/net/ipv6/reassembly.c
+@@ -593,8 +593,8 @@ int __init ipv6_frag_init(void)
  
-@@ -1375,8 +1378,6 @@ static int ccp_run_des3_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
- 	 * passthru option to convert from big endian to little endian.
- 	 */
- 	if (des3->mode != CCP_DES3_MODE_ECB) {
--		u32 load_mode;
--
- 		op.sb_ctx = cmd_q->sb_ctx;
- 
- 		ret = ccp_init_dm_workarea(&ctx, cmd_q,
-@@ -1392,12 +1393,8 @@ static int ccp_run_des3_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
- 		if (ret)
- 			goto e_ctx;
- 
--		if (cmd_q->ccp->vdata->version == CCP_VERSION(3, 0))
--			load_mode = CCP_PASSTHRU_BYTESWAP_NOOP;
--		else
--			load_mode = CCP_PASSTHRU_BYTESWAP_256BIT;
- 		ret = ccp_copy_to_sb(cmd_q, &ctx, op.jobid, op.sb_ctx,
--				     load_mode);
-+				     CCP_PASSTHRU_BYTESWAP_256BIT);
- 		if (ret) {
- 			cmd->engine_error = cmd_q->cmd_error;
- 			goto e_ctx;
-@@ -1459,10 +1456,6 @@ static int ccp_run_des3_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
- 		}
- 
- 		/* ...but we only need the last DES3_EDE_BLOCK_SIZE bytes */
--		if (cmd_q->ccp->vdata->version == CCP_VERSION(3, 0))
--			dm_offset = CCP_SB_BYTES - des3->iv_len;
--		else
--			dm_offset = 0;
- 		ccp_get_dm_area(&ctx, dm_offset, des3->iv, 0,
- 				DES3_EDE_BLOCK_SIZE);
- 	}
+ void ipv6_frag_exit(void)
+ {
+-	inet_frags_fini(&ip6_frags);
+ 	ip6_frags_sysctl_unregister();
+ 	unregister_pernet_subsys(&ip6_frags_ops);
+ 	inet6_del_protocol(&frag_protocol, IPPROTO_FRAGMENT);
++	inet_frags_fini(&ip6_frags);
+ }
 -- 
 2.20.1
 
