@@ -2,72 +2,152 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73610C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB5CC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53F322075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:55:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DBC22077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:55:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="qf3BehJP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729274AbgAPGzI (ORCPT
+        id S1729508AbgAPGzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 01:55:08 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:38318 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726410AbgAPGzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 01:55:07 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 080A6200659;
-        Thu, 16 Jan 2020 07:55:06 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 60AEC200654;
-        Thu, 16 Jan 2020 07:55:00 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A42EA402C7;
-        Thu, 16 Jan 2020 14:54:53 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     mturquette@baylibre.com, sboyd@kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        leonard.crestez@nxp.com, peng.fan@nxp.com, ping.bai@nxp.com,
-        yuehaibing@huawei.com, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] clk: imx: pll14xx: Add new frequency entries for pll1443x table
-Date:   Thu, 16 Jan 2020 14:50:49 +0800
-Message-Id: <1579157449-7602-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 16 Jan 2020 01:55:12 -0500
+Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.103]:23013 "EHLO
+        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725973AbgAPGzL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 01:55:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1579157709;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=TuMGu6eCqVUYEoh3TD5lXbSvO6CM/wB9pqQh/ZoBuBY=;
+        b=qf3BehJPpMWMEjAwpc96RMiqDWboEbHi5clMZpC1MST7Yg7oy0iKqTHNK1+9TZyGu/
+        Hlq9sTs1Li8OBhaQfdEmXDl+zsKtgwHB3k0/g5UPxsWqw0lnt1GYcPtAIe6qIPL6mukG
+        /q4KHUWWqOc1CTaclppIc44Q+NX/91zxdGoUh21ahTYFRfchJzQoip8QcOKMI37YbHMb
+        m1tqcxd20sOGvC8YkaGD6ROPzIytEUOqD0+T1umh1MhgTEdFkdFl/qE8vDrtEt2sE3Qk
+        1E3r06Yw4kYSdh75YysZ0/YWIkpN0eBsVqkD9kn/yd3zcXpcMnylJm7QSkEEh1SZCDgI
+        qbUw==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPZJPScHivh"
+X-RZG-CLASS-ID: mo00
+Received: from tauon.chronox.de
+        by smtp.strato.de (RZmta 46.1.4 DYNA|AUTH)
+        with ESMTPSA id u04585w0G6s1aB2
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Thu, 16 Jan 2020 07:54:01 +0100 (CET)
+From:   Stephan Mueller <smueller@chronox.de>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Nicolai Stange <nstange@suse.de>,
+        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        Roman Drahtmueller <draht@schaltsekun.de>,
+        Neil Horman <nhorman@redhat.com>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH v28 07/12] LRNG - add kernel crypto API PRNG extension
+Date:   Thu, 16 Jan 2020 07:54:00 +0100
+Message-ID: <6088699.12EYreDE7o@tauon.chronox.de>
+In-Reply-To: <d98e7a45-3d1b-8119-1ed0-87aea0f3c6f3@infradead.org>
+References: <6157374.ptSnyUpaCn@positron.chronox.de> <526421170.FD02tCEzJt@positron.chronox.de> <d98e7a45-3d1b-8119-1ed0-87aea0f3c6f3@infradead.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add new frequency entries to pll1443x table to meet different
-display settings requirement.
+Am Donnerstag, 16. Januar 2020, 01:15:46 CET schrieb Randy Dunlap:
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- drivers/clk/imx/clk-pll14xx.c | 2 ++
- 1 file changed, 2 insertions(+)
+Hi Randy,
 
-diff --git a/drivers/clk/imx/clk-pll14xx.c b/drivers/clk/imx/clk-pll14xx.c
-index 5b0519a..37e311e 100644
---- a/drivers/clk/imx/clk-pll14xx.c
-+++ b/drivers/clk/imx/clk-pll14xx.c
-@@ -55,8 +55,10 @@ static const struct imx_pll14xx_rate_table imx_pll1416x_tbl[] = {
- };
- 
- static const struct imx_pll14xx_rate_table imx_pll1443x_tbl[] = {
-+	PLL_1443X_RATE(1039500000U, 173, 2, 1, 16384),
- 	PLL_1443X_RATE(650000000U, 325, 3, 2, 0),
- 	PLL_1443X_RATE(594000000U, 198, 2, 2, 0),
-+	PLL_1443X_RATE(519750000U, 173, 2, 2, 16384),
- 	PLL_1443X_RATE(393216000U, 262, 2, 3, 9437),
- 	PLL_1443X_RATE(361267200U, 361, 3, 3, 17511),
- };
--- 
-2.7.4
+> On 1/15/20 2:34 AM, Stephan M=FCller wrote:
+> > CC: "Eric W. Biederman" <ebiederm@xmission.com>
+> > CC: "Alexander E. Patrakov" <patrakov@gmail.com>
+> > CC: "Ahmed S. Darwish" <darwish.07@gmail.com>
+> > CC: "Theodore Y. Ts'o" <tytso@mit.edu>
+> > CC: Willy Tarreau <w@1wt.eu>
+> > CC: Matthew Garrett <mjg59@srcf.ucam.org>
+> > CC: Vito Caputo <vcaputo@pengaru.com>
+> > CC: Andreas Dilger <adilger.kernel@dilger.ca>
+> > CC: Jan Kara <jack@suse.cz>
+> > CC: Ray Strode <rstrode@redhat.com>
+> > CC: William Jon McCann <mccann@jhu.edu>
+> > CC: zhangjs <zachary@baishancloud.com>
+> > CC: Andy Lutomirski <luto@kernel.org>
+> > CC: Florian Weimer <fweimer@redhat.com>
+> > CC: Lennart Poettering <mzxreary@0pointer.de>
+> > CC: Nicolai Stange <nstange@suse.de>
+> > Reviewed-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
+> > Reviewed-by: Roman Drahtmueller <draht@schaltsekun.de>
+> > Tested-by: Roman Drahtm=FCller <draht@schaltsekun.de>
+> > Tested-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
+> > Tested-by: Neil Horman <nhorman@redhat.com>
+> > Signed-off-by: Stephan Mueller <smueller@chronox.de>
+> > ---
+> >=20
+> >  drivers/char/lrng/Kconfig      |  10 +
+> >  drivers/char/lrng/Makefile     |   1 +
+> >  drivers/char/lrng/lrng_kcapi.c | 327 +++++++++++++++++++++++++++++++++
+> >  3 files changed, 338 insertions(+)
+> >  create mode 100644 drivers/char/lrng/lrng_kcapi.c
+> >=20
+> > diff --git a/drivers/char/lrng/Kconfig b/drivers/char/lrng/Kconfig
+> > index 15fb623d9d1f..0d070a3897dd 100644
+> > --- a/drivers/char/lrng/Kconfig
+> > +++ b/drivers/char/lrng/Kconfig
+> > @@ -80,6 +80,16 @@ config LRNG_DRBG
+> >=20
+> >  	  Enable the SP800-90A DRBG support for the LRNG. Once the
+> >  	  module is loaded, output from /dev/random, /dev/urandom,
+> >  	  getrandom(2), or get_random_bytes is provided by a DRBG.
+> >=20
+> > +
+> > +config LRNG_KCAPI
+> > +	tristate "Kernel Crypto API support for the LRNG"
+> > +	select CRYPTO_RNG
+>=20
+> Don't select CRYPTO_RNG unless you know that CRYPTO is set/enabled.
+
+I added "depends on CRYPTO"
+>=20
+> > +	help
+> > +	  Enable the support for generic pseudo-random number
+> > +	  generators offered by the kernel crypto API with the
+> > +	  LRNG. Once the module is loaded, output from /dev/random,
+> > +	  /dev/urandom, getrandom(2), or get_random_bytes is
+> > +	  provided by the selected kernel crypto API RNG.
+> >=20
+> >  endif # LRNG_DRNG_SWITCH
+> > =20
+> >  endif # LRNG
+
+Thank you.
+
+Ciao
+Stephan
+
 
