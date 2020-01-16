@@ -2,57 +2,56 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C719C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7B7C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D51712072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C96CD2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:40:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218004;
-	bh=2slIPSeN0K9COdPi9pHFU+IzZRcSjCu1x7KhCyX6gMQ=;
+	s=default; t=1579218007;
+	bh=Q38lxsXrd6RMZPU5R2oxnuqAMgrL9i1BFETIT3lzb5Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bXcY03qO61v5yWMO3ZRY24h7a+YivOdCctNp7G62xRsiMPpPQybPRAUjSNp9Og57o
-	 W+FOiZDdXhc9hkiFWV9Mh9TjOO7uNshXpW5FJk5fkmHzzLyz1HFOzN5wRcMm1sSEAk
-	 IKBfHQngCmFh0SPGd28R/6yc0eA9cRUfQs3IYaW8=
+	b=b0+Rzj2sf0uL2HsZ0MB7gjGQZ6/03Ny6tBVdPOkF8ZTmC61lyb/znfjOmt3pxuMSe
+	 54m3gynJy7PEwxOeCeWQ8Igha8zO5EOHqrmeUcvJhy9x/OywCimikQ3YEkPZX5AMmU
+	 6iHl9MtxSAo13IgGeRHsJpCOrMml8KAV9DEVx6UI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390286AbgAPX1l (ORCPT
+        id S2391578AbgAPXkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:27:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59544 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:40:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390267AbgAPX1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:27:35 -0500
+        id S2390229AbgAPX1k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:27:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A066B2072E;
-        Thu, 16 Jan 2020 23:27:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C87020684;
+        Thu, 16 Jan 2020 23:27:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217255;
-        bh=2slIPSeN0K9COdPi9pHFU+IzZRcSjCu1x7KhCyX6gMQ=;
+        s=default; t=1579217260;
+        bh=Q38lxsXrd6RMZPU5R2oxnuqAMgrL9i1BFETIT3lzb5Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l418/EnECoOQeNJBryjRavVU3r8TUpZWpS7NX1F9LjZ/Zru4611wzNJGYoScEepWW
-         33ZPLt8TNFFwS5Uw4z608/+OPj0FwhKuAGPPHPMGUf2qSmfnOiX1F4YG1eNF3ARB5Q
-         C8l1piM8eRwhoMjstcWwQTbdF3yVIF3mEZZfku+w=
+        b=IxDdSx8Y/USCSdcgzw9vGi25FRU+Hn8FJCBmuFH+zA34tqNbTcB35pKHzb+OeiBXx
+         Fm4H4LNKqxTtzViCCoQk1KvhxBORZ8kNyh/ZFoutbCz6YUDU/zz6Zi37XGuwdCkg51
+         UdhEqnYNERsB57GZ87ZsabqiDnF1C6aSzONIfVOk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Israel Rukshin <israelr@mellanox.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 183/203] scsi: target/iblock: Fix protection error with blocks greater than 512B
-Date:   Fri, 17 Jan 2020 00:18:20 +0100
-Message-Id: <20200116231800.360412824@linuxfoundation.org>
+        stable@vger.kernel.org, Gong Chen <gongchen4@huawei.com>,
+        Sheng Yong <shengyong1@huawei.com>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 4.19 10/84] f2fs: check if file namelen exceeds max value
+Date:   Fri, 17 Jan 2020 00:17:44 +0100
+Message-Id: <20200116231714.780541022@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
-References: <20200116231745.218684830@linuxfoundation.org>
+In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
+References: <20200116231713.087649517@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,52 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Israel Rukshin <israelr@mellanox.com>
+From: Sheng Yong <shengyong1@huawei.com>
 
-[ Upstream commit e4dc9a4c31fe10d1751c542702afc85be8a5c56a ]
+commit 720db068634c91553a8e1d9a0fcd8c7050e06d2b upstream.
 
-The sector size of the block layer is 512 bytes, but integrity interval
-size might be different (in case of 4K block size of the media). At the
-initiator side the virtual start sector is the one that was originally
-submitted by the block layer (512 bytes) for the Reftag usage. The
-initiator converts the Reftag to integrity interval units and sends it to
-the target. So the target virtual start sector should be calculated at
-integrity interval units. prepare_fn() and complete_fn() don't remap
-correctly the Reftag when using incorrect units of the virtual start
-sector, which leads to the following protection error at the device:
+Dentry bitmap is not enough to detect incorrect dentries. So this patch
+also checks the namelen value of a dentry.
 
-"blk_update_request: protection error, dev sdb, sector 2048 op 0x0:(READ)
-flags 0x10000 phys_seg 1 prio class 0"
-
-To fix that, set the seed in integrity interval units.
-
-Link: https://lore.kernel.org/r/1576078562-15240-1-git-send-email-israelr@mellanox.com
-Signed-off-by: Israel Rukshin <israelr@mellanox.com>
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Gong Chen <gongchen4@huawei.com>
+Signed-off-by: Sheng Yong <shengyong1@huawei.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/target/target_core_iblock.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/f2fs/dir.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/target/target_core_iblock.c b/drivers/target/target_core_iblock.c
-index 6949ea8bc387..51ffd5c002de 100644
---- a/drivers/target/target_core_iblock.c
-+++ b/drivers/target/target_core_iblock.c
-@@ -646,7 +646,9 @@ iblock_alloc_bip(struct se_cmd *cmd, struct bio *bio,
- 	}
+--- a/fs/f2fs/dir.c
++++ b/fs/f2fs/dir.c
+@@ -808,7 +808,8 @@ int f2fs_fill_dentries(struct dir_contex
  
- 	bip->bip_iter.bi_size = bio_integrity_bytes(bi, bio_sectors(bio));
--	bip_set_seed(bip, bio->bi_iter.bi_sector);
-+	/* virtual start sector must be in integrity interval units */
-+	bip_set_seed(bip, bio->bi_iter.bi_sector >>
-+				  (bi->interval_exp - SECTOR_SHIFT));
- 
- 	pr_debug("IBLOCK BIP Size: %u Sector: %llu\n", bip->bip_iter.bi_size,
- 		 (unsigned long long)bip->bip_iter.bi_sector);
--- 
-2.20.1
-
+ 		/* check memory boundary before moving forward */
+ 		bit_pos += GET_DENTRY_SLOTS(le16_to_cpu(de->name_len));
+-		if (unlikely(bit_pos > d->max)) {
++		if (unlikely(bit_pos > d->max ||
++				le16_to_cpu(de->name_len) > F2FS_NAME_LEN)) {
+ 			f2fs_msg(sbi->sb, KERN_WARNING,
+ 				"%s: corrupted namelen=%d, run fsck to fix.",
+ 				__func__, le16_to_cpu(de->name_len));
 
 
