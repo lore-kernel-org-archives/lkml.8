@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23237C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3595C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E91982082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A587B20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:31:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217501;
-	bh=QhDuRihVewIz5CytlLdSwyeRemwsU1io9cNcH9Q4hXk=;
+	s=default; t=1579217504;
+	bh=ix/mQLxi3KZU+nbONVL+rbEycWfox2G4fhX4kilNJt4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MzuI+Ko4betlN5hakT3LfFbaV2qucjPPig/6E/eyL9HiGKy/hPU2KB4RODr7iiVK+
-	 iDS5XfPMHUYwnTp/+QqXV0xGBhDRK9NsXpLlLtmn2Fd+X+THzCsGT/FwPMo+4VCdRV
-	 lkP/vhF1CFPekVGin+2AVJYgAXjYuZBDmMiRhbUc=
+	b=xdrjGWuQgzqdsA5x4c8bYZGDGYsb7R5N1DzV6xh/+wFOzRZ1yrgewJMr1yYFg26zH
+	 RD6wvpsoPfJCSXlXZrTlzYRb3famvag+5VFdGM3vckHrlGqoHXVtH/NrOvoxrYB7mo
+	 JZ+JNfEJm7uLDHTJhtkouBiqvPQc2e3y+9AeWjuQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391469AbgAPXbk (ORCPT
+        id S2391476AbgAPXbn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:31:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39112 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:31:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391476AbgAPXbO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:31:14 -0500
+        id S2391482AbgAPXbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:31:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC1D020661;
-        Thu, 16 Jan 2020 23:31:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68D5E20684;
+        Thu, 16 Jan 2020 23:31:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217473;
-        bh=QhDuRihVewIz5CytlLdSwyeRemwsU1io9cNcH9Q4hXk=;
+        s=default; t=1579217475;
+        bh=ix/mQLxi3KZU+nbONVL+rbEycWfox2G4fhX4kilNJt4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ci5Vj3v4hVa3G+Ink5eSCKQmv6dGaFk3Zd2zBcziUmwK/DV5E59ztSPLP6veuylaj
-         /eskqOns6wzfmsn5FHAGGCWoQhammnQdsT1XGZkckst7z7asjIBpQBYlpALs1ipW15
-         YuhrFxHp4bT017p2SvootetfcwWI/NeDPjoUNLO8=
+        b=mwAkJ13+pbczslqmCEM3tCvdaYrY21XrU84AKpg/Kr74NjGOai1el2Th2EU6z0fRT
+         GCxYNK3z/IxQmH294xrnjEVoc/d4vHwevEyPYWL0Yfuu0zQC7g3D57rfC54Mcw8nI/
+         ZmQWIUcv4BSX9RWd8nJ9MML2NaYqrcUCNtTn1hRg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+66010012fd4c531a1a96@syzkaller.appspotmail.com,
-        Vandana BN <bnvandana@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
+        Steve French <stfrench@microsoft.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
         Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.14 13/71] media: usb:zr364xx:Fix KASAN:null-ptr-deref Read in zr364xx_vidioc_querycap
-Date:   Fri, 17 Jan 2020 00:18:11 +0100
-Message-Id: <20200116231711.357238880@linuxfoundation.org>
+Subject: [PATCH 4.14 14/71] cifs: Fix lease buffer length error
+Date:   Fri, 17 Jan 2020 00:18:12 +0100
+Message-Id: <20200116231711.535850476@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231709.377772748@linuxfoundation.org>
 References: <20200116231709.377772748@linuxfoundation.org>
@@ -63,80 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vandana BN <bnvandana@gmail.com>
+From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
 
-commit 5d2e73a5f80a5b5aff3caf1ec6d39b5b3f54b26e upstream.
+commit b57a55e2200ede754e4dc9cce4ba9402544b9365 upstream.
 
-SyzKaller hit the null pointer deref while reading from uninitialized
-udev->product in zr364xx_vidioc_querycap().
+There is a KASAN slab-out-of-bounds:
+BUG: KASAN: slab-out-of-bounds in _copy_from_iter_full+0x783/0xaa0
+Read of size 80 at addr ffff88810c35e180 by task mount.cifs/539
 
-==================================================================
-BUG: KASAN: null-ptr-deref in read_word_at_a_time+0xe/0x20
-include/linux/compiler.h:274
-Read of size 1 at addr 0000000000000000 by task v4l_id/5287
-
-CPU: 1 PID: 5287 Comm: v4l_id Not tainted 5.1.0-rc3-319004-g43151d6 #6
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-Google 01/01/2011
+CPU: 1 PID: 539 Comm: mount.cifs Not tainted 4.19 #10
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+            rel-1.12.0-0-ga698c8995f-prebuilt.qemu.org 04/01/2014
 Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xe8/0x16e lib/dump_stack.c:113
-  kasan_report.cold+0x5/0x3c mm/kasan/report.c:321
-  read_word_at_a_time+0xe/0x20 include/linux/compiler.h:274
-  strscpy+0x8a/0x280 lib/string.c:207
-  zr364xx_vidioc_querycap+0xb5/0x210 drivers/media/usb/zr364xx/zr364xx.c:706
-  v4l_querycap+0x12b/0x340 drivers/media/v4l2-core/v4l2-ioctl.c:1062
-  __video_do_ioctl+0x5bb/0xb40 drivers/media/v4l2-core/v4l2-ioctl.c:2874
-  video_usercopy+0x44e/0xf00 drivers/media/v4l2-core/v4l2-ioctl.c:3056
-  v4l2_ioctl+0x14e/0x1a0 drivers/media/v4l2-core/v4l2-dev.c:364
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xced/0x12f0 fs/ioctl.c:696
-  ksys_ioctl+0xa0/0xc0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x74/0xb0 fs/ioctl.c:718
-  do_syscall_64+0xcf/0x4f0 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x7f3b56d8b347
-Code: 90 90 90 48 8b 05 f1 fa 2a 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff
-ff c3 90 90 90 90 90 90 90 90 90 90 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff
-ff 73 01 c3 48 8b 0d c1 fa 2a 00 31 d2 48 29 c2 64
-RSP: 002b:00007ffe005d5d68 EFLAGS: 00000202 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f3b56d8b347
-RDX: 00007ffe005d5d70 RSI: 0000000080685600 RDI: 0000000000000003
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000400884
-R13: 00007ffe005d5ec0 R14: 0000000000000000 R15: 0000000000000000
-==================================================================
+ dump_stack+0xdd/0x12a
+ print_address_description+0xa7/0x540
+ kasan_report+0x1ff/0x550
+ check_memory_region+0x2f1/0x310
+ memcpy+0x2f/0x80
+ _copy_from_iter_full+0x783/0xaa0
+ tcp_sendmsg_locked+0x1840/0x4140
+ tcp_sendmsg+0x37/0x60
+ inet_sendmsg+0x18c/0x490
+ sock_sendmsg+0xae/0x130
+ smb_send_kvec+0x29c/0x520
+ __smb_send_rqst+0x3ef/0xc60
+ smb_send_rqst+0x25a/0x2e0
+ compound_send_recv+0x9e8/0x2af0
+ cifs_send_recv+0x24/0x30
+ SMB2_open+0x35e/0x1620
+ open_shroot+0x27b/0x490
+ smb2_open_op_close+0x4e1/0x590
+ smb2_query_path_info+0x2ac/0x650
+ cifs_get_inode_info+0x1058/0x28f0
+ cifs_root_iget+0x3bb/0xf80
+ cifs_smb3_do_mount+0xe00/0x14c0
+ cifs_do_mount+0x15/0x20
+ mount_fs+0x5e/0x290
+ vfs_kern_mount+0x88/0x460
+ do_mount+0x398/0x31e0
+ ksys_mount+0xc6/0x150
+ __x64_sys_mount+0xea/0x190
+ do_syscall_64+0x122/0x590
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-For this device udev->product is not initialized and accessing it causes a NULL pointer deref.
+It can be reproduced by the following step:
+  1. samba configured with: server max protocol = SMB2_10
+  2. mount -o vers=default
 
-The fix is to check for NULL before strscpy() and copy empty string, if
-product is NULL
+When parse the mount version parameter, the 'ops' and 'vals'
+was setted to smb30,  if negotiate result is smb21, just
+update the 'ops' to smb21, but the 'vals' is still smb30.
+When add lease context, the iov_base is allocated with smb21
+ops, but the iov_len is initiallited with the smb30. Because
+the iov_len is longer than iov_base, when send the message,
+copy array out of bounds.
 
-Reported-by: syzbot+66010012fd4c531a1a96@syzkaller.appspotmail.com
-Signed-off-by: Vandana BN <bnvandana@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-[bwh: Backported to 4.14: This function uses strlcpy() instead of strscpy()]
+we need to keep the 'ops' and 'vals' consistent.
+
+Fixes: 9764c02fcbad ("SMB3: Add support for multidialect negotiate (SMB2.1 and later)")
+Fixes: d5c7076b772a ("smb3: add smb3.1.1 to default dialect list")
+
+Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+[bwh: Backported to 4.14: We never switch to SMB3.1.1 here]
 Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/media/usb/zr364xx/zr364xx.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/cifs/smb2pdu.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/media/usb/zr364xx/zr364xx.c
-+++ b/drivers/media/usb/zr364xx/zr364xx.c
-@@ -706,7 +706,8 @@ static int zr364xx_vidioc_querycap(struc
- 	struct zr364xx_camera *cam = video_drvdata(file);
- 
- 	strlcpy(cap->driver, DRIVER_DESC, sizeof(cap->driver));
--	strlcpy(cap->card, cam->udev->product, sizeof(cap->card));
-+	if (cam->udev->product)
-+		strlcpy(cap->card, cam->udev->product, sizeof(cap->card));
- 	strlcpy(cap->bus_info, dev_name(&cam->udev->dev),
- 		sizeof(cap->bus_info));
- 	cap->device_caps = V4L2_CAP_VIDEO_CAPTURE |
+--- a/fs/cifs/smb2pdu.c
++++ b/fs/cifs/smb2pdu.c
+@@ -575,6 +575,7 @@ SMB2_negotiate(const unsigned int xid, s
+ 		} else if (rsp->DialectRevision == cpu_to_le16(SMB21_PROT_ID)) {
+ 			/* ops set to 3.0 by default for default so update */
+ 			ses->server->ops = &smb21_operations;
++			ses->server->vals = &smb21_values;
+ 		}
+ 	} else if (le16_to_cpu(rsp->DialectRevision) !=
+ 				ses->server->vals->protocol_id) {
 
 
