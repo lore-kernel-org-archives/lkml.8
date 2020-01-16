@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE633C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93840C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CEEA2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:14:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 637FA208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:15:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198499;
-	bh=mynUvU4VETLk4vLUkgEPwAa4WjJc/2pFfQfwylbPkYE=;
+	s=default; t=1579198506;
+	bh=SDIJYKrcaxCHsyHrfJ79C5x/3Dng5f9PEgcisQhgeBg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E+Je9GIJ5zgfXYjB62Gf3X27nXNHQXXyK0QnZCQtnQCi/zraA+RdTEithaW3Cz1cO
-	 tiVXJ0wAfjQZVWEnFL/afL9arlzsC2v8DlunY5t/OzENXaTcsRROA1QP7IuMiWYdcH
-	 1px2y7U0jtaUilLDBnihzwaCUQK8wa72pYEuqsPo=
+	b=cFraVUC8KC7F+AYlyK09O0SWkrSwXuPZAynf+e1xXVURlbOh+AUQzAiHtCjYAONVJ
+	 6RwHR1+p3coLW9sPBw6Oggj97gH1gZkiFyEnjxDHz7RVW6i54zx21CzUmu8Gy5KcM3
+	 2fz6Tm9Tq4NWl2rslbj0OD5bHEVUHBxpwkfvJoeU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392890AbgAPR3x (ORCPT
+        id S2395262AbgAPSPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:29:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41750 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:15:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392462AbgAPR3q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:29:46 -0500
+        id S2392585AbgAPR3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:29:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC7022470A;
-        Thu, 16 Jan 2020 17:29:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02E87246FB;
+        Thu, 16 Jan 2020 17:29:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195785;
-        bh=mynUvU4VETLk4vLUkgEPwAa4WjJc/2pFfQfwylbPkYE=;
+        s=default; t=1579195792;
+        bh=SDIJYKrcaxCHsyHrfJ79C5x/3Dng5f9PEgcisQhgeBg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k1ZkjEh13eyfql86wVInOymiwYpB6e4YvDILRqUD0TZuvXc8OHOfOsjwoUihzjURS
-         oJD8gfZ5vpkdi3eyiOyCBw7/nUIXOyozj/e+LypN5dp5OS6BiosOfj7v9/C4RP+gGK
-         fMOdaNje/1/thnKYHHRMls/oWYGWx5uC7xgwjFtg=
+        b=J09T6e/T684XdpAhaXXFg6cND5yc0u4z85RaeYVgadoenCShavNc5jRiQjyvd6uxI
+         z13b2pF8dnJDzNJb82Uhpc3ShRrd9FF1IrJ4YsIQK7wJIOmjLsfqjJj7TCahA1yUTh
+         cZXx5S+KM2iOfEzmhYc1CbyI6KZWOQtjxK+nQ2hs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 308/371] of: mdio: Fix a signedness bug in of_phy_get_and_connect()
-Date:   Thu, 16 Jan 2020 12:23:00 -0500
-Message-Id: <20200116172403.18149-251-sashal@kernel.org>
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 313/371] mac80211: accept deauth frames in IBSS mode
+Date:   Thu, 16 Jan 2020 12:23:05 -0500
+Message-Id: <20200116172403.18149-256-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -60,34 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit d7eb651212fdbafa82d485d8e76095ac3b14c193 ]
+[ Upstream commit 95697f9907bfe3eab0ef20265a766b22e27dde64 ]
 
-The "iface" variable is an enum and in this context GCC treats it as
-an unsigned int so the error handling is never triggered.
+We can process deauth frames and all, but we drop them very
+early in the RX path today - this could never have worked.
 
-Fixes: b78624125304 ("of_mdio: Abstract a general interface for phy connect")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 2cc59e784b54 ("mac80211: reply to AUTH with DEAUTH if sta allocation fails in IBSS")
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Link: https://lore.kernel.org/r/20191004123706.15768-2-luca@coelho.fi
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/of/of_mdio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/mac80211/rx.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-index 8c1819230ed2..fe26697d3bd7 100644
---- a/drivers/of/of_mdio.c
-+++ b/drivers/of/of_mdio.c
-@@ -358,7 +358,7 @@ struct phy_device *of_phy_get_and_connect(struct net_device *dev,
- 	struct phy_device *phy;
- 
- 	iface = of_get_phy_mode(np);
--	if (iface < 0)
-+	if ((int)iface < 0)
- 		return NULL;
- 
- 	phy_np = of_parse_phandle(np, "phy-handle", 0);
+diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
+index 4a6b3c7b35e3..31000622376d 100644
+--- a/net/mac80211/rx.c
++++ b/net/mac80211/rx.c
+@@ -3227,9 +3227,18 @@ ieee80211_rx_h_mgmt(struct ieee80211_rx_data *rx)
+ 	case cpu_to_le16(IEEE80211_STYPE_PROBE_RESP):
+ 		/* process for all: mesh, mlme, ibss */
+ 		break;
++	case cpu_to_le16(IEEE80211_STYPE_DEAUTH):
++		if (is_multicast_ether_addr(mgmt->da) &&
++		    !is_broadcast_ether_addr(mgmt->da))
++			return RX_DROP_MONITOR;
++
++		/* process only for station/IBSS */
++		if (sdata->vif.type != NL80211_IFTYPE_STATION &&
++		    sdata->vif.type != NL80211_IFTYPE_ADHOC)
++			return RX_DROP_MONITOR;
++		break;
+ 	case cpu_to_le16(IEEE80211_STYPE_ASSOC_RESP):
+ 	case cpu_to_le16(IEEE80211_STYPE_REASSOC_RESP):
+-	case cpu_to_le16(IEEE80211_STYPE_DEAUTH):
+ 	case cpu_to_le16(IEEE80211_STYPE_DISASSOC):
+ 		if (is_multicast_ether_addr(mgmt->da) &&
+ 		    !is_broadcast_ether_addr(mgmt->da))
 -- 
 2.20.1
 
