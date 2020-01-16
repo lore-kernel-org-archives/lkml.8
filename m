@@ -2,122 +2,125 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A533C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D633AC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54C26206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:59:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FPGCKqX8"
+	by mail.kernel.org (Postfix) with ESMTP id AEB6420663
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:59:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579201166;
+	bh=G119LmTMJv1Qr6TBvPOcR64ACHZ5QVcS4KzM4Z6mSc0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=z+IM1GuvdO9Bcur1C1bqJz3+Jwuf4mRPYFKp43tgdY/EFr8Rrc7IQLaFT7Oc2GzJf
+	 qEBDlRjuiTnlRxmNcqAZ2vauqxrSWbxyq8iMFr+nsm3M8yVhKouZpcjKILSxjThucO
+	 C4gVxetxHjMOKButFCqqQRQY0k+mxJTTwT6FcYis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404442AbgAPS7W (ORCPT
+        id S2388658AbgAPS70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:59:22 -0500
-Received: from mail-wr1-f47.google.com ([209.85.221.47]:39397 "EHLO
-        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388966AbgAPS7P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 13:59:15 -0500
-Received: by mail-wr1-f47.google.com with SMTP id y11so20278849wrt.6;
-        Thu, 16 Jan 2020 10:59:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=2DWGq5gFkTQz9Z549OauU3Snuf7YD40/bBF5v2Ql2zI=;
-        b=FPGCKqX8kIQmBKqhTOE7gZhpo0QuSqWtC+dsBEgOG4E7mC53Z+oSsmnmea0gX5KtBa
-         x13xSnB5MFoQRcweDldi6GH/tXwG13MC70BJ99ln5HLxKodLzQtFRtGEF+BRKTTp38vC
-         D2+p7XWDwpMH9ow/nXhBj+agKPHm6eAxYFOheFPbageZxC5nn4M+YkjlROPwkwcjjxKW
-         la3wIBzi8kfv9ZgxXqmeq0fFxAG1Dr+iJjDuzppPEH8MD43TcYBbIBruUTItQ92hj9LJ
-         fVfigSkyjIoezbBZ3l372/nK0FTMFpdqG90aERrWS4U86uy2FreCmFsS9E0pd6W9RZXV
-         GeJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=2DWGq5gFkTQz9Z549OauU3Snuf7YD40/bBF5v2Ql2zI=;
-        b=ffmGQO8D+Crg7hP+3El5oN73ZkSDP90FsEgbgaKmOvPA/uNL61rfmcpHaR9sK+9PdW
-         3lLVHg4hv7DoS+1kqK3Bvq0XWyQEc/rGAlkI08HEegnj1B9rS3AQ3MCSUUowrKjKJg0K
-         iqETcPn3mlwXq3W1KCZ71BgFSxoYgBgXeG7cAW2MTXv+z1vcZPGfMOUW61w9oHmDI0h5
-         uoqWXGo5zOW1jAgGtEoJHTh5VEUcBssyk5jDAWDol33xm5UID+1tM80xYliDiAFucAAi
-         wRGAtOrTl/fKBncfwsV4EEJQFlrvIiz8SpCSvkQXXzLQQSmphkcyEL8tRsQhSxc1WRR1
-         9H1Q==
-X-Gm-Message-State: APjAAAWc0n6Akm1Df2Nerqv218E/IrWszqg9qssBbkNKOUVp5OqAEPD8
-        qxSm6eloNAurYtMAFZMwcto=
-X-Google-Smtp-Source: APXvYqzYjPgwGGI5+FIdKtuP92i9axf1hPbcu9ABihedq39Srwjpw3NK58jyqgqVSEltCvdwE6yY/A==
-X-Received: by 2002:adf:ebd0:: with SMTP id v16mr4863743wrn.146.1579201153435;
-        Thu, 16 Jan 2020 10:59:13 -0800 (PST)
-Received: from felia.fritz.box ([2001:16b8:2dbe:4a00:e092:254d:41ed:2e49])
-        by smtp.gmail.com with ESMTPSA id f207sm974443wme.9.2020.01.16.10.59.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 10:59:13 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Micah Morton <mortonm@chromium.org>
-Cc:     Joe Perches <joe@perches.com>,
-        linux-security-module@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH RESEND] MAINTAINERS: fix style in SAFESETID SECURITY MODULE
-Date:   Thu, 16 Jan 2020 19:58:44 +0100
-Message-Id: <20200116185844.11201-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 16 Jan 2020 13:59:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37124 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388960AbgAPRGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:06:37 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E9E32467C;
+        Thu, 16 Jan 2020 17:06:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579194397;
+        bh=G119LmTMJv1Qr6TBvPOcR64ACHZ5QVcS4KzM4Z6mSc0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ex/JPYY/T8U2o1oTjLQrXC6rojB2JJfZGsd3Cd6mf/SMGnCKFle8+DTyRAVdQBwF2
+         4SxSWFSgeKzxtlqiVNlhD+egu5VW09kpbMO1gqW4wQcvvBn3ctlD2wM7o71eDOT2pH
+         vU/KwdhcNaN0JCPhG+GjU+wH3gBmj1Oy9rEjSalU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Willem de Bruijn <willemb@google.com>,
+        David Laight <David.Laight@aculab.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 323/671] packet: in recvmsg msg_name return at least sizeof sockaddr_ll
+Date:   Thu, 16 Jan 2020 11:59:21 -0500
+Message-Id: <20200116170509.12787-60-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
+References: <20200116170509.12787-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit fc5b34a35458 ("Add entry in MAINTAINERS file for SafeSetID LSM")
-slips in some formatting with spaces instead of tabs, which
-./scripts/checkpatch.pl -f MAINTAINERS complains about:
+From: Willem de Bruijn <willemb@google.com>
 
-  WARNING: MAINTAINERS entries use one tab after TYPE:
-  #14394: FILE: MAINTAINERS:14394:
-  +M:     Micah Morton <mortonm@chromium.org>
+[ Upstream commit b2cf86e1563e33a14a1c69b3e508d15dc12f804c ]
 
-  WARNING: MAINTAINERS entries use one tab after TYPE:
-  #14395: FILE: MAINTAINERS:14395:
-  +S:     Supported
+Packet send checks that msg_name is at least sizeof sockaddr_ll.
+Packet recv must return at least this length, so that its output
+can be passed unmodified to packet send.
 
-  WARNING: MAINTAINERS entries use one tab after TYPE:
-  #14396: FILE: MAINTAINERS:14396:
-  +F:     security/safesetid/
+This ceased to be true since adding support for lladdr longer than
+sll_addr. Since, the return value uses true address length.
 
-  WARNING: MAINTAINERS entries use one tab after TYPE:
-  #14397: FILE: MAINTAINERS:14397:
-  +F:     Documentation/admin-guide/LSM/SafeSetID.rst
+Always return at least sizeof sockaddr_ll, even if address length
+is shorter. Zero the padding bytes.
 
-Fixes: fc5b34a35458 ("Add entry in MAINTAINERS file for SafeSetID LSM")
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Change v1->v2: do not overwrite zeroed padding again. use copy_len.
+
+Fixes: 0fb375fb9b93 ("[AF_PACKET]: Allow for > 8 byte hardware addresses.")
+Suggested-by: David Laight <David.Laight@aculab.com>
+Signed-off-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-applies cleanly on v5.5-rc6 and next-20200116
-Micah, please pick this patch.
+ net/packet/af_packet.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
- MAINTAINERS | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a66cb722c675..d2aa9db61ab6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14415,10 +14415,10 @@ F:	drivers/media/pci/saa7146/
- F:	include/media/drv-intf/saa7146*
+diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+index ac65e66d1d72..60ba18a4bb0f 100644
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -3371,20 +3371,29 @@ static int packet_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
+ 	sock_recv_ts_and_drops(msg, sk, skb);
  
- SAFESETID SECURITY MODULE
--M:     Micah Morton <mortonm@chromium.org>
--S:     Supported
--F:     security/safesetid/
--F:     Documentation/admin-guide/LSM/SafeSetID.rst
-+M:	Micah Morton <mortonm@chromium.org>
-+S:	Supported
-+F:	security/safesetid/
-+F:	Documentation/admin-guide/LSM/SafeSetID.rst
+ 	if (msg->msg_name) {
++		int copy_len;
++
+ 		/* If the address length field is there to be filled
+ 		 * in, we fill it in now.
+ 		 */
+ 		if (sock->type == SOCK_PACKET) {
+ 			__sockaddr_check_size(sizeof(struct sockaddr_pkt));
+ 			msg->msg_namelen = sizeof(struct sockaddr_pkt);
++			copy_len = msg->msg_namelen;
+ 		} else {
+ 			struct sockaddr_ll *sll = &PACKET_SKB_CB(skb)->sa.ll;
  
- SAMSUNG AUDIO (ASoC) DRIVERS
- M:	Krzysztof Kozlowski <krzk@kernel.org>
+ 			msg->msg_namelen = sll->sll_halen +
+ 				offsetof(struct sockaddr_ll, sll_addr);
++			copy_len = msg->msg_namelen;
++			if (msg->msg_namelen < sizeof(struct sockaddr_ll)) {
++				memset(msg->msg_name +
++				       offsetof(struct sockaddr_ll, sll_addr),
++				       0, sizeof(sll->sll_addr));
++				msg->msg_namelen = sizeof(struct sockaddr_ll);
++			}
+ 		}
+-		memcpy(msg->msg_name, &PACKET_SKB_CB(skb)->sa,
+-		       msg->msg_namelen);
++		memcpy(msg->msg_name, &PACKET_SKB_CB(skb)->sa, copy_len);
+ 	}
+ 
+ 	if (pkt_sk(sk)->auxdata) {
 -- 
-2.17.1
+2.20.1
 
