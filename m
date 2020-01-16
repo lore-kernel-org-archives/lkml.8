@@ -4,55 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C69EC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC58C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67DD8206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F38E420661
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:46:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200383;
-	bh=7rQWqqy9vB7cmNBIyVXD5ebsvNXRbNqggHGF1w89Uj8=;
+	s=default; t=1579200398;
+	bh=AoP3OOWfzX2lH8u8U55CO/Qyhb9NQUI2z689M7v43fM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xVBl2XNb9nRVj+ucglryDtjIDqJ49boioPIESEWuceRwD1UCwqQDUsE2hmy0TEWfV
-	 Du+RqAy3c1M5ay5g8v6UqyWrICPY6HHBHpxB0m2g8PLv6JPwOEHklr6gb4KVqrOE7r
-	 upjK++A7bNhHjs3ohtx1MOcvqUsMLTzUgJoDDZ7k=
+	b=SBStR3mpSj+fwXvTwvzNF8OFjDyoxLEo1puE5Wd2bqPq4HjHodB4PGq3urmSLgFze
+	 oOEiH+MgSr+r93rUbZ75Ic9GqWXNOvtJMuJg0IkflRmqKFmqe4vSHT9FJ9dtg9McBn
+	 4QSanpCyyrNIJM+0xER84JKDjEjGn/cw21c9yZMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389516AbgAPRKX (ORCPT
+        id S2389875AbgAPRKO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:10:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47880 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389874AbgAPRKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jan 2020 12:10:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47374 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389832AbgAPRKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:10:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EF972467E;
-        Thu, 16 Jan 2020 17:10:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00E2224683;
+        Thu, 16 Jan 2020 17:10:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194614;
-        bh=7rQWqqy9vB7cmNBIyVXD5ebsvNXRbNqggHGF1w89Uj8=;
+        s=default; t=1579194604;
+        bh=AoP3OOWfzX2lH8u8U55CO/Qyhb9NQUI2z689M7v43fM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qFX1nVxzB1GdDzOqBcP1Dee2bNRaL++j1QV0/8Z8XcXtQXOQBbdiWiDCWWgWCZPcs
-         AvGOffJlXwonQ06C4jqjRTOL43odLG5y1fQRTb86540ude3jiOYpo4o72qK5RSld92
-         9rhjZW4SUCpRCOLfNhphqSdEIfdf6v9QGfjOPqkI=
+        b=lyroaGKsBMWFT3or/bR/ixFKt2UAAPQcmEk2Ns84DZX5UDQR7gRbxI751+hLtPU9k
+         P17mMa1Lcb4GO3X5E2gTZBiY0DPu0WzissMak7UPEnWyXb3RD/k7anPAUUu45b4zpQ
+         V7ARbge5Dkk/Vl8j+gsbXRA03EuYI685FZa09Wko=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 478/671] ARM: dts: stm32: add missing vdda-supply to adc on stm32h743i-eval
-Date:   Thu, 16 Jan 2020 12:01:56 -0500
-Message-Id: <20200116170509.12787-215-sashal@kernel.org>
+Cc:     =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 471/671] media: rcar-vin: Clean up correct notifier in error path
+Date:   Thu, 16 Jan 2020 12:01:49 -0500
+Message-Id: <20200116170509.12787-208-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,34 +66,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
+From: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 
-[ Upstream commit 493e84c5dc4d703d976b5875f5db22dae08a0782 ]
+[ Upstream commit 0bd465765f8d1300040de627f0a0971a8849d654 ]
 
-Add missing vdda-supply required by STM32 ADC.
+The parallel input initialization error path cleans up the wrong
+async notifier, fix this by cleaning up the correct notifier.
 
-Fixes: 090992a9ca54 ("ARM: dts: stm32: enable ADC on stm32h743i-eval
-board")
-
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+Fixes: 9863bc8695bc36e3 ("media: rcar-vin: Cleanup notifier in error path")
+Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/stm32h743i-eval.dts | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/platform/rcar-vin/rcar-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/stm32h743i-eval.dts b/arch/arm/boot/dts/stm32h743i-eval.dts
-index 3f8e0c4a998d..5bf64e63cdf3 100644
---- a/arch/arm/boot/dts/stm32h743i-eval.dts
-+++ b/arch/arm/boot/dts/stm32h743i-eval.dts
-@@ -79,6 +79,7 @@
- };
+diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
+index 485fa3fa8b49..c389ba9ba74d 100644
+--- a/drivers/media/platform/rcar-vin/rcar-core.c
++++ b/drivers/media/platform/rcar-vin/rcar-core.c
+@@ -631,7 +631,7 @@ static int rvin_parallel_init(struct rvin_dev *vin)
+ 	ret = v4l2_async_notifier_register(&vin->v4l2_dev, &vin->notifier);
+ 	if (ret < 0) {
+ 		vin_err(vin, "Notifier registration failed\n");
+-		v4l2_async_notifier_cleanup(&vin->group->notifier);
++		v4l2_async_notifier_cleanup(&vin->notifier);
+ 		return ret;
+ 	}
  
- &adc_12 {
-+	vdda-supply = <&vdda>;
- 	vref-supply = <&vdda>;
- 	status = "okay";
- 	adc1: adc@0 {
 -- 
 2.20.1
 
