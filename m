@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2704C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60140C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4C312073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:56:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BDEA2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:56:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197389;
-	bh=3FrFC1OLRTzIJtgYEMGP4U0VmRLAUSOFAgj941QtiJw=;
+	s=default; t=1579197395;
+	bh=rO9MRv8YhSyyoMyG5psAWUEUdC5BhENMela2iZyySFM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UHNDzQct8B3n6TcgToX2PH+LV2dCkSFGFuCyg6utO5P7FVxTTS/TTj03IPWkOkgT0
-	 CnSqXOfbQkkggQEb2QcbrxU/+SfPlc/Ea9BGxxVkTOVOV3o1mdorrceNfFGVglXRfv
-	 zVEhi7Cm80YNCSdl2GuIv5mc2dIyAp+68HrM0c+4=
+	b=UjMw+LtdwVSz0ey4RF3vLT/KkQUMP+Ea0NEgvOXlJZug1mZkSFzWBkbCsr/cNQO0F
+	 CiSb3QlXhRHy9gKUJfyBDgReuzvPHkCtZ4dN6MlRu04fs0VpWz+Nf/O0at/GijfeZC
+	 oy2Dw4Qo6uOkNrcI9oL0Uw0DKclrGvoCL6l2YgNs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406095AbgAPR43 (ORCPT
+        id S2406294AbgAPR4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:56:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34508 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:56:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394036AbgAPRn5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:43:57 -0500
+        id S2394018AbgAPRnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:43:53 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE50124741;
-        Thu, 16 Jan 2020 17:43:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B0F62469C;
+        Thu, 16 Jan 2020 17:43:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196636;
-        bh=3FrFC1OLRTzIJtgYEMGP4U0VmRLAUSOFAgj941QtiJw=;
+        s=default; t=1579196633;
+        bh=rO9MRv8YhSyyoMyG5psAWUEUdC5BhENMela2iZyySFM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iN9BW0eJ6Squj3N5Nsbhmkvgj1ZsVXG1zzrg9MtsEM2NX1LYQSj+E7C1E5HG6Cgw0
-         nq+i5awJM0pesdaxNTYheGq5Ytdys0iXCiIWpCxP5WidBXM4zL4kiU1YIUIbQktyWx
-         YWvqHTDGSdwqGZQ3S91vmvtRQ7IoS2BnGRi1sdd0=
+        b=OdW3audGyD4SAepaIpUtVm8seXjSXCMX7pRabt5ri8HWERWHErCHAYXtt43f1+UHK
+         BaZHmN7K0D0rYkA3bt4AuvSX3eaklx2h3JNJwi1K6tCZWTMJIa3nK5qfwntQZ2OnH+
+         Ab2wu9dWGZmFdheMM7Fqf8TwtnJZgQ2sfJ/1fs7c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.4 049/174] drm/nouveau/pmu: don't print reply values if exec is false
-Date:   Thu, 16 Jan 2020 12:40:46 -0500
-Message-Id: <20200116174251.24326-49-sashal@kernel.org>
+Cc:     Eric Auger <eric.auger@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 046/174] vfio_pci: Enable memory accesses before calling pci_map_rom
+Date:   Thu, 16 Jan 2020 12:40:43 -0500
+Message-Id: <20200116174251.24326-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -60,42 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Eric Auger <eric.auger@redhat.com>
 
-[ Upstream commit b1d03fc36ec9834465a08c275c8d563e07f6f6bf ]
+[ Upstream commit 0cfd027be1d6def4a462cdc180c055143af24069 ]
 
-Currently the uninitialized values in the array reply are printed out
-when exec is false and nvkm_pmu_send has not updated the array. Avoid
-confusion by only dumping out these values if they have been actually
-updated.
+pci_map_rom/pci_get_rom_size() performs memory access in the ROM.
+In case the Memory Space accesses were disabled, readw() is likely
+to trigger a synchronous external abort on some platforms.
 
-Detected by CoverityScan, CID#1271291 ("Uninitialized scaler variable")
-Fixes: ebb58dc2ef8c ("drm/nouveau/pmu: rename from pwr (no binary change)")
+In case memory accesses were disabled, re-enable them before the
+call and disable them back again just after.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Fixes: 89e1f7d4c66d ("vfio: Add PCI device driver")
+Signed-off-by: Eric Auger <eric.auger@redhat.com>
+Suggested-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/vfio/pci/vfio_pci.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c b/drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c
-index e6f74168238c..2ef9e942f43a 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/pmu/memx.c
-@@ -87,10 +87,10 @@ nvkm_memx_fini(struct nvkm_memx **pmemx, bool exec)
- 	if (exec) {
- 		nvkm_pmu_send(pmu, reply, PROC_MEMX, MEMX_MSG_EXEC,
- 			      memx->base, finish);
-+		nvkm_debug(subdev, "Exec took %uns, PMU_IN %08x\n",
-+			   reply[0], reply[1]);
- 	}
+diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+index 4b62eb3b5923..7a82735d5308 100644
+--- a/drivers/vfio/pci/vfio_pci.c
++++ b/drivers/vfio/pci/vfio_pci.c
+@@ -496,6 +496,7 @@ static long vfio_pci_ioctl(void *device_data,
+ 		{
+ 			void __iomem *io;
+ 			size_t size;
++			u16 orig_cmd;
  
--	nvkm_debug(subdev, "Exec took %uns, PMU_IN %08x\n",
--		   reply[0], reply[1]);
- 	kfree(memx);
- 	return 0;
- }
+ 			info.offset = VFIO_PCI_INDEX_TO_OFFSET(info.index);
+ 			info.flags = 0;
+@@ -505,15 +506,23 @@ static long vfio_pci_ioctl(void *device_data,
+ 			if (!info.size)
+ 				break;
+ 
+-			/* Is it really there? */
++			/*
++			 * Is it really there?  Enable memory decode for
++			 * implicit access in pci_map_rom().
++			 */
++			pci_read_config_word(pdev, PCI_COMMAND, &orig_cmd);
++			pci_write_config_word(pdev, PCI_COMMAND,
++					      orig_cmd | PCI_COMMAND_MEMORY);
++
+ 			io = pci_map_rom(pdev, &size);
+-			if (!io || !size) {
++			if (io) {
++				info.flags = VFIO_REGION_INFO_FLAG_READ;
++				pci_unmap_rom(pdev, io);
++			} else {
+ 				info.size = 0;
+-				break;
+ 			}
+-			pci_unmap_rom(pdev, io);
+ 
+-			info.flags = VFIO_REGION_INFO_FLAG_READ;
++			pci_write_config_word(pdev, PCI_COMMAND, orig_cmd);
+ 			break;
+ 		}
+ 		case VFIO_PCI_VGA_REGION_INDEX:
 -- 
 2.20.1
 
