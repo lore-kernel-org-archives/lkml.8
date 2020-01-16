@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1ABBC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A630FC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8E84246A8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77B192469F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:13:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194799;
-	bh=FDSPOsl2IE3xgi7CEM4aPdLM4iubDmai2eRPB1R9cyY=;
+	s=default; t=1579194801;
+	bh=P1G9auVIUmaWNza7wK89ziQf//pzJfFobjzADmIi774=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qkCdhLBUAsCMTq9+8sTtpRJWuSgTaZi0Dt00C3s1+LAwH8BErKzVRkXhWQtOb39yb
-	 /mccKCw0ZjWtNFQjUw676Rq2YRDUDXwmlXRAn2q7mru8x0Cevs0SZgo3EN3F+5R2uo
-	 cTcVlHNyz1Gk2xjHm2Hysw/xBcXURMpCYi7rDqB4=
+	b=cEaWGG1xwDev5AcMy6SX/C/LOVh36gZNQ9zQ4ZiqI7Inht43ZQSdX2y7pqgv2jVSE
+	 e6cUpkYmK2UgwoWLrgQLXbvGvvEzT3F/wKo57gr0G8gsbDRy/8nBPxYi7zzYpsv3eF
+	 FZ5Zmr/rZufcQ9npccxCMhsk99UFlzf856/SDTnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390703AbgAPRNS (ORCPT
+        id S2390714AbgAPRNU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:13:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57568 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:13:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390669AbgAPRNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:13:11 -0500
+        id S2390680AbgAPRNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:13:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A601246A2;
-        Thu, 16 Jan 2020 17:13:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5975246A3;
+        Thu, 16 Jan 2020 17:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194790;
-        bh=FDSPOsl2IE3xgi7CEM4aPdLM4iubDmai2eRPB1R9cyY=;
+        s=default; t=1579194794;
+        bh=P1G9auVIUmaWNza7wK89ziQf//pzJfFobjzADmIi774=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RybESspi5Jz3vAARLyul0cC6B1CGcjjVE+8BHts9Uziv6iNVoJZ39MuiGzozkwsGL
-         A+6CGQcKAqoRrKEcm8/YLSubchS6kO0mmnqCu1435wwqU6Se/LH2iFwNR39Wuxn4Oe
-         WyFZxEg98DWHLBjxR/pYOmNraNSRJ0oMubTA4564=
+        b=ax557HWArn4VSmeDulL8G9NP0f7DbJB5js3D2Dn/nvLkGaThrj+RLPWM+5l7dJp9r
+         a8qEHz6A56tH9WiGIUwrUix3KfN4e3P9s2Y9+LFasQYhS3i9A5Mk1ISFKRCh71c7qT
+         qlKBxpvc3IvGUr8ANVxauewsFnD6dxBy5iuNF4iM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 604/671] afs: Fix missing timeout reset
-Date:   Thu, 16 Jan 2020 12:04:02 -0500
-Message-Id: <20200116170509.12787-341-sashal@kernel.org>
+Cc:     Haiyang Zhang <haiyangz@microsoft.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 607/671] hv_netvsc: Fix send_table offset in case of a host bug
+Date:   Thu, 16 Jan 2020 12:04:05 -0500
+Message-Id: <20200116170509.12787-344-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,49 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Haiyang Zhang <haiyangz@microsoft.com>
 
-[ Upstream commit c74386d50fbaf4a54fd3fe560f1abc709c0cff4b ]
+[ Upstream commit 171c1fd98df3d5948d9a9eb755274850fa5e59c6 ]
 
-In afs_wait_for_call_to_complete(), rather than immediately aborting an
-operation if a signal occurs, the code attempts to wait for it to
-complete, using a schedule timeout of 2*RTT (or min 2 jiffies) and a
-check that we're still receiving relevant packets from the server before
-we consider aborting the call.  We may even ping the server to check on
-the status of the call.
+If negotiated NVSP version <= NVSP_PROTOCOL_VERSION_6, the offset may
+be wrong (too small) due to a host bug. This can cause missing the
+end of the send indirection table, and add multiple zero entries from
+leading zeros before the data region. This bug adds extra burden on
+channel 0.
 
-However, there's a missing timeout reset in the event that we do
-actually get a packet to process, such that if we then get a couple of
-short stalls, we then time out when progress is actually being made.
+So fix the offset by computing it from the data structure sizes. This
+will ensure netvsc driver runs normally on unfixed hosts, and future
+fixed hosts.
 
-Fix this by resetting the timeout any time we get something to process.
-If it's the failure of the call then the call state will get changed and
-we'll exit the loop shortly thereafter.
-
-A symptom of this is data fetches and stores failing with EINTR when
-they really shouldn't.
-
-Fixes: bc5e3a546d55 ("rxrpc: Use MSG_WAITALL to tell sendmsg() to temporarily ignore signals")
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 5b54dac856cb ("hyperv: Add support for virtual Receive Side Scaling (vRSS)")
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/rxrpc.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/hyperv/netvsc.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/fs/afs/rxrpc.c b/fs/afs/rxrpc.c
-index 2543f24d23f8..560dd5ff5a15 100644
---- a/fs/afs/rxrpc.c
-+++ b/fs/afs/rxrpc.c
-@@ -573,6 +573,7 @@ static long afs_wait_for_call_to_complete(struct afs_call *call,
- 			call->need_attention = false;
- 			__set_current_state(TASK_RUNNING);
- 			afs_deliver_to_call(call);
-+			timeout = rtt2;
- 			continue;
- 		}
+diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
+index 68c23a64e565..dbfd3a0c97d3 100644
+--- a/drivers/net/hyperv/netvsc.c
++++ b/drivers/net/hyperv/netvsc.c
+@@ -1182,6 +1182,7 @@ static int netvsc_receive(struct net_device *ndev,
+ }
  
+ static void netvsc_send_table(struct net_device *ndev,
++			      struct netvsc_device *nvscdev,
+ 			      const struct nvsp_message *nvmsg,
+ 			      u32 msglen)
+ {
+@@ -1197,6 +1198,16 @@ static void netvsc_send_table(struct net_device *ndev,
+ 		return;
+ 	}
+ 
++	/* If negotiated version <= NVSP_PROTOCOL_VERSION_6, the offset may be
++	 * wrong due to a host bug. So fix the offset here.
++	 */
++	if (nvscdev->nvsp_version <= NVSP_PROTOCOL_VERSION_6 &&
++	    msglen >= sizeof(struct nvsp_message_header) +
++	    sizeof(union nvsp_6_message_uber) + count * sizeof(u32))
++		offset = sizeof(struct nvsp_message_header) +
++			 sizeof(union nvsp_6_message_uber);
++
++	/* Boundary check for all versions */
+ 	if (offset > msglen - count * sizeof(u32)) {
+ 		netdev_err(ndev, "Received send-table offset too big:%u\n",
+ 			   offset);
+@@ -1222,12 +1233,13 @@ static void netvsc_send_vf(struct net_device *ndev,
+ }
+ 
+ static void netvsc_receive_inband(struct net_device *ndev,
++				  struct netvsc_device *nvscdev,
+ 				  const struct nvsp_message *nvmsg,
+ 				  u32 msglen)
+ {
+ 	switch (nvmsg->hdr.msg_type) {
+ 	case NVSP_MSG5_TYPE_SEND_INDIRECTION_TABLE:
+-		netvsc_send_table(ndev, nvmsg, msglen);
++		netvsc_send_table(ndev, nvscdev, nvmsg, msglen);
+ 		break;
+ 
+ 	case NVSP_MSG4_TYPE_SEND_VF_ASSOCIATION:
+@@ -1260,7 +1272,7 @@ static int netvsc_process_raw_pkt(struct hv_device *device,
+ 		break;
+ 
+ 	case VM_PKT_DATA_INBAND:
+-		netvsc_receive_inband(ndev, nvmsg, msglen);
++		netvsc_receive_inband(ndev, net_device, nvmsg, msglen);
+ 		break;
+ 
+ 	default:
 -- 
 2.20.1
 
