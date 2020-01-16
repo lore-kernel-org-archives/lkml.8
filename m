@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA623C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FA5C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BE4E2468D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:49:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8574A2468D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:49:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196957;
-	bh=YOIE4NNw0fteHkmepF0f7B4QZv5cJzxsWkK7m3/I6zQ=;
+	s=default; t=1579196976;
+	bh=ChIPeAG1dGINkg+Fp76gMqPv0W47WaRVmtClRrlqMlk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cjDNxIq795mckbwgXCGL0xsiEO9a8q1LDkvr4NukYvExts5s5QhnFYF+G17VPlfBd
-	 oYuK+RfXiZ2kUJZ3xZ43EQhG66WD+R9b848SbUStLqnShLIu2w6b8nqnV2+O0L6PzY
-	 b+obMzcBTzeH6kBcgj2EpyaCiNMi2sqULmFIjSSQ=
+	b=Dg1MyyXUf3ITw3htJ+dusjizAS7nApDbf58v4rIT8w1uLe4Zuc36pyp2RPtjTC7uk
+	 OvkcrPjK8CJuHFyDiDu5lhmIRgaTLt+s3GieCAtm/C57VypsIaIWilQv8nYG+p4Nws
+	 dZ62P2lm7Kn8mQVlOlq3GbPjM49aZl/NEW1hp7EE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406626AbgAPRqR (ORCPT
+        id S2394213AbgAPRqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:46:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38734 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:46:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406584AbgAPRqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:46:12 -0500
+        id S2394179AbgAPRqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:46:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78D23246DB;
-        Thu, 16 Jan 2020 17:46:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F5C0246D0;
+        Thu, 16 Jan 2020 17:46:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196772;
-        bh=YOIE4NNw0fteHkmepF0f7B4QZv5cJzxsWkK7m3/I6zQ=;
+        s=default; t=1579196762;
+        bh=ChIPeAG1dGINkg+Fp76gMqPv0W47WaRVmtClRrlqMlk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WIy2oMHHRsivfAaWL3d29+UxuwrlVDv+fAnxWb+9Zlu+9vKpUuhiEDuP7qDtdk77r
-         CZez3125JD+IhXlA/GRic1gykM/FwZN+i+JwI2MP41W3COKQnohBBB1XKR84F5ptim
-         27wtzw56OnhBuHw5GgpnrUNvlSHI5AK6gDSBHMUI=
+        b=O3u/z+mdJGwhBBIGBj62TNvkBh+0kWRitc0OQzNkn8r4PpCfudTJdDMrAkwJtuJyL
+         fQzkGUqe6Tvda4IRGPVZG/87W3prUwivDd4xMvdh+f9vktciWhu5Mf8t2sqIWZuJMR
+         /IV7fUlpFszKdRz6l9DNsSqVMM+Z4N+Ylp3to2g0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 143/174] mac80211: accept deauth frames in IBSS mode
-Date:   Thu, 16 Jan 2020 12:42:20 -0500
-Message-Id: <20200116174251.24326-143-sashal@kernel.org>
+Cc:     Dan Robertson <dan@dlrobertson.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 136/174] hwmon: (shtc1) fix shtc1 and shtw1 id mask
+Date:   Thu, 16 Jan 2020 12:42:13 -0500
+Message-Id: <20200116174251.24326-136-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -60,47 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Dan Robertson <dan@dlrobertson.com>
 
-[ Upstream commit 95697f9907bfe3eab0ef20265a766b22e27dde64 ]
+[ Upstream commit fdc7d8e829ec755c5cfb2f5a8d8c0cdfb664f895 ]
 
-We can process deauth frames and all, but we drop them very
-early in the RX path today - this could never have worked.
+Fix an error in the bitmaskfor the shtc1 and shtw1 bitmask used to
+retrieve the chip ID from the ID register. See section 5.7 of the shtw1
+or shtc1 datasheet for details.
 
-Fixes: 2cc59e784b54 ("mac80211: reply to AUTH with DEAUTH if sta allocation fails in IBSS")
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Link: https://lore.kernel.org/r/20191004123706.15768-2-luca@coelho.fi
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 1a539d372edd9832444e7a3daa710c444c014dc9 ("hwmon: add support for Sensirion SHTC1 sensor")
+Signed-off-by: Dan Robertson <dan@dlrobertson.com>
+Link: https://lore.kernel.org/r/20190905014554.21658-3-dan@dlrobertson.com
+[groeck: Reordered to be first in series and adjusted accordingly]
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/rx.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/hwmon/shtc1.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
-index 3b8e2f97d815..2b7975c4dac7 100644
---- a/net/mac80211/rx.c
-+++ b/net/mac80211/rx.c
-@@ -3040,9 +3040,18 @@ ieee80211_rx_h_mgmt(struct ieee80211_rx_data *rx)
- 	case cpu_to_le16(IEEE80211_STYPE_PROBE_RESP):
- 		/* process for all: mesh, mlme, ibss */
- 		break;
-+	case cpu_to_le16(IEEE80211_STYPE_DEAUTH):
-+		if (is_multicast_ether_addr(mgmt->da) &&
-+		    !is_broadcast_ether_addr(mgmt->da))
-+			return RX_DROP_MONITOR;
-+
-+		/* process only for station/IBSS */
-+		if (sdata->vif.type != NL80211_IFTYPE_STATION &&
-+		    sdata->vif.type != NL80211_IFTYPE_ADHOC)
-+			return RX_DROP_MONITOR;
-+		break;
- 	case cpu_to_le16(IEEE80211_STYPE_ASSOC_RESP):
- 	case cpu_to_le16(IEEE80211_STYPE_REASSOC_RESP):
--	case cpu_to_le16(IEEE80211_STYPE_DEAUTH):
- 	case cpu_to_le16(IEEE80211_STYPE_DISASSOC):
- 		if (is_multicast_ether_addr(mgmt->da) &&
- 		    !is_broadcast_ether_addr(mgmt->da))
+diff --git a/drivers/hwmon/shtc1.c b/drivers/hwmon/shtc1.c
+index decd7df995ab..2a18539591ea 100644
+--- a/drivers/hwmon/shtc1.c
++++ b/drivers/hwmon/shtc1.c
+@@ -38,7 +38,7 @@ static const unsigned char shtc1_cmd_read_id_reg[]	       = { 0xef, 0xc8 };
+ 
+ /* constants for reading the ID register */
+ #define SHTC1_ID	  0x07
+-#define SHTC1_ID_REG_MASK 0x1f
++#define SHTC1_ID_REG_MASK 0x3f
+ 
+ /* delays for non-blocking i2c commands, both in us */
+ #define SHTC1_NONBLOCKING_WAIT_TIME_HPM  14400
 -- 
 2.20.1
 
