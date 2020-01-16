@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0A1C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79CF7C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15EBF2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:16:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 542142077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:16:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202200;
-	bh=2xRJRWDQlQ6lgY7clO/7aQlHd9NaMYeMsWsqynNKo3s=;
+	s=default; t=1579202202;
+	bh=bH2Qc2xCK/qCMgBfXfFwb99YTiO2dHrcA5sxfHP6jLY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ugt6JCG6hvUisQtCvGjJD9Fbsc5balWVryd0iiAnleoxhB2ELhcOkYsEd/E228O6i
-	 lwQqR0NPEy/KNyUqolqbyJ45cGeYMl0mi2PDWCxHSJ3+R3+vyvFPejHYuxtlDs+l7e
-	 cITNCmLp27SDP+o53DtXDCJdsbPnHOc2KkCLIr+0=
+	b=GYE/afh38uKBsmwvE0ptalmDlNGbmT2BGRGFC+FXp7SyqZMRIn/0V3RQFKIl9BlsD
+	 Rdw0Aqln8mN1jj/vaEmJlwywcTjy4tshGdmG4SVMwD1qa/ID/dHFcsv0L5zU//dWoz
+	 QvVa3YhaHIw8UUabEIYddALIXKudwBzD3UsDq8Bg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732825AbgAPQzm (ORCPT
+        id S2437600AbgAPTQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:55:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40680 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:16:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729368AbgAPQz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:55:28 -0500
+        id S1729977AbgAPQzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:55:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 492852176D;
-        Thu, 16 Jan 2020 16:55:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 956D4205F4;
+        Thu, 16 Jan 2020 16:55:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193727;
-        bh=2xRJRWDQlQ6lgY7clO/7aQlHd9NaMYeMsWsqynNKo3s=;
+        s=default; t=1579193742;
+        bh=bH2Qc2xCK/qCMgBfXfFwb99YTiO2dHrcA5sxfHP6jLY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cknxyQGl+PdMwEB1PSUAey06jw/z+vNIrTqFiLzOs/KFFIql5aE3fsVcbwIq7LmN2
-         CgK+c1pJfYKpV9TovmA1hO69Tj7AfwXWhXXkucZ3ZMd/aXCDZzYZF4YnZq0N9SHoYp
-         6r2DE/e6f4i05lXxx15QiNdFvCyv6roDPdYDb0Xs=
+        b=MeOX9LdJN1JIee0tKdRl4iOG346cHy3MkGsUQSnZ1+ySAG3cyUhSIXZZhkt8EHblE
+         wYcBqTyXJqMDGV74G0rjhyAby5iYvIv7kr04aNCJcpqgJbs62jasIfGI7k9dEkL+b3
+         KGw10q1cinGNn6G56rrZdJ6wd0xLAJffSfwEUYy4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alex Estrin <alex.estrin@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        "Michael J . Ruhl" <michael.j.ruhl@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 020/671] IB/hfi1: Add mtu check for operational data VLs
-Date:   Thu, 16 Jan 2020 11:44:11 -0500
-Message-Id: <20200116165502.8838-20-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 033/671] pwm: lpss: Release runtime-pm reference from the driver's remove callback
+Date:   Thu, 16 Jan 2020 11:44:24 -0500
+Message-Id: <20200116165502.8838-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -62,72 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Estrin <alex.estrin@intel.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit eb50130964e8c1379f37c3d3bab33a411ec62e98 ]
+[ Upstream commit 42885551cedb45961879d2fc3dc3c4dc545cc23e ]
 
-Since Virtual Lanes BCT credits and MTU are set through separate MADs, we
-have to ensure both are valid, and data VLs are ready for transmission
-before we allow port transition to Armed state.
+For each pwm output which gets enabled through pwm_lpss_apply(), we do a
+pm_runtime_get_sync().
 
-Fixes: 5e2d6764a729 ("IB/hfi1: Verify port data VLs credits on transition to Armed")
-Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
-Signed-off-by: Alex Estrin <alex.estrin@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+This commit adds pm_runtime_put() calls to pwm_lpss_remove() to balance
+these when the driver gets removed with some of the outputs still enabled.
+
+Fixes: f080be27d7d9 ("pwm: lpss: Add support for runtime PM")
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hfi1/chip.c | 26 ++++++++++++++++++++++----
- 1 file changed, 22 insertions(+), 4 deletions(-)
+ drivers/pwm/pwm-lpss.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/infiniband/hw/hfi1/chip.c b/drivers/infiniband/hw/hfi1/chip.c
-index 6b8935361133..b09a4b1cf397 100644
---- a/drivers/infiniband/hw/hfi1/chip.c
-+++ b/drivers/infiniband/hw/hfi1/chip.c
-@@ -10580,12 +10580,29 @@ void set_link_down_reason(struct hfi1_pportdata *ppd, u8 lcl_reason,
- 	}
- }
+diff --git a/drivers/pwm/pwm-lpss.c b/drivers/pwm/pwm-lpss.c
+index 1e69c1c9ec09..7a4a6406cf69 100644
+--- a/drivers/pwm/pwm-lpss.c
++++ b/drivers/pwm/pwm-lpss.c
+@@ -216,6 +216,12 @@ EXPORT_SYMBOL_GPL(pwm_lpss_probe);
  
--/*
-- * Verify if BCT for data VLs is non-zero.
-+/**
-+ * data_vls_operational() - Verify if data VL BCT credits and MTU
-+ *			    are both set.
-+ * @ppd: pointer to hfi1_pportdata structure
-+ *
-+ * Return: true - Ok, false -otherwise.
-  */
- static inline bool data_vls_operational(struct hfi1_pportdata *ppd)
+ int pwm_lpss_remove(struct pwm_lpss_chip *lpwm)
  {
--	return !!ppd->actual_vls_operational;
 +	int i;
-+	u64 reg;
 +
-+	if (!ppd->actual_vls_operational)
-+		return false;
-+
-+	for (i = 0; i < ppd->vls_supported; i++) {
-+		reg = read_csr(ppd->dd, SEND_CM_CREDIT_VL + (8 * i));
-+		if ((reg && !ppd->dd->vld[i].mtu) ||
-+		    (!reg && ppd->dd->vld[i].mtu))
-+			return false;
++	for (i = 0; i < lpwm->info->npwm; i++) {
++		if (pwm_is_enabled(&lpwm->chip.pwms[i]))
++			pm_runtime_put(lpwm->chip.dev);
 +	}
-+
-+	return true;
+ 	return pwmchip_remove(&lpwm->chip);
  }
- 
- /*
-@@ -10698,7 +10715,8 @@ int set_link_state(struct hfi1_pportdata *ppd, u32 state)
- 
- 		if (!data_vls_operational(ppd)) {
- 			dd_dev_err(dd,
--				   "%s: data VLs not operational\n", __func__);
-+				   "%s: Invalid data VL credits or mtu\n",
-+				   __func__);
- 			ret = -EINVAL;
- 			break;
- 		}
+ EXPORT_SYMBOL_GPL(pwm_lpss_remove);
 -- 
 2.20.1
 
