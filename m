@@ -2,186 +2,148 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0EAC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 08:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F456C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 08:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C484206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 08:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E60920748
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 08:31:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fggrzmcf"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="KiWTrmcG";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="HnB2xD+y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731081AbgAPIav (ORCPT
+        id S1731151AbgAPIbU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 03:30:51 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:52698 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbgAPIav (ORCPT
+        Thu, 16 Jan 2020 03:31:20 -0500
+Received: from sv2-smtprelay2.synopsys.com ([149.117.73.133]:46838 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726230AbgAPIbT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 03:30:51 -0500
-Received: by mail-pj1-f65.google.com with SMTP id a6so1202585pjh.2;
-        Thu, 16 Jan 2020 00:30:50 -0800 (PST)
+        Thu, 16 Jan 2020 03:31:19 -0500
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 641CE40704;
+        Thu, 16 Jan 2020 08:31:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1579163478; bh=tkpPyFahm6kn8v3+DnM5uKmzdo17bDOR+juBQ1gI85A=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=KiWTrmcGNHF6oW8Uw3LDjIDuZK1GLSgYMzD1gr8UjD7IrWB2mTlSREhWZlHp2roGA
+         rPTXfXJiK2WiI1yID7Uip6zY9m8vr2e8N8K0XlJBq/eBDX45ZkOSc8JiqGkAfwFP4u
+         4r7mZbpI3DZJA0KFV5OPUBw/SotSaaqHYhKwExhADs8dB2ffax7SDJiPHNokcR5vhm
+         XQm8ahRdd+w/zsbQj6yFqxoLsGbDJ4ZUt5SrbVFY64m/4hPxtjIXAoXZMdPhHNzb4U
+         X9qNF3NahdrmkxEzfoUVmTlmh1nJoqtitYI6stqCaIa/ZnnIqi6p5Vo7HbWbFGMiaV
+         isnk5PjY1kLYg==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 2231AA0079;
+        Thu, 16 Jan 2020 08:31:17 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 16 Jan 2020 00:30:04 -0800
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Thu, 16 Jan 2020 00:30:04 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=V1+qPsUotpdxIXicBOHppgHs1M2iPLXnaeYqhE9Kl4A0Xqu7+21FS/cwPRuAFpdfEv+mnMeZyIFMzI21MxnupP0tCdOuH12z7xiXMYHETXMDk+MgOaqUeUdh6CCLWCNUeCsG9Mki5CseLC+N3/+Fnszp7IXknTLTivb1IHGxjFXoWCSKGv3ZCgg822JGvPto2I4VSy1dOL6gchOBIJxGIMBoGQ6bQnGJMXSIJM7BbaYAeZVF8M//9fEKG0hBwwY7kXUHPMq5dNjrf0/mQSEvQoE1yQ1/eTJ4mLxUmqlB6a/igmc8aNY8779Nwk6ILpMB9LQo2ijlXzTOi7RndB0CGA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SE1bYDD4RkZp+aX9S3ANQi6+v2eTdeCtIfxgSt7XgI0=;
+ b=aITQMaZL/JBgmO2GatZnraNgoa13+8dp2z1ov35DsboIInsgLHY55EptSey5dhiybrNNUf59Im9yu2NQ+ezuCS+3ZC/HQTOXWgwrU22FyOstY+ZrGsXRt4ubcuPIURTfPze9RfXsBG5T+C3hR1ER5UL7520Eue7c9wpQrppCat67+Bv/SHjpYJFoiWH6ijuZQ201oAAsH8rHD61PBdBgmljSfiDB/E1D2SqP96QLV5H/FK2D/jy/8MDoZYIrgqpBT8owO5YmqdlKT58uC55xzldBDzyjSAUUlqc7J++dAJUAHeI1YSon6bvMIrTHhMDnlfnlMADVb0qDuZaMSkcogg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PRD6aeufLSd46od9AzCBC//aqtaStUZLDGOKGtSVPRE=;
-        b=FggrzmcfUxGIJSa3geWjNxYL4+CEFhT7P/fxy7SEYin7E8xeo3A9XygBO9kjb2n0E+
-         gVwbZbyE6Mvar8FK2QVTSKXxQ6j/pwH8YZH/hjhKFjIfEjJc2T4b5e42PhZRuU/4mZyc
-         YYi6c5eIi94a3DvgGQoIEElGlCWiJ1YQdXrhVRvO+TwLFfd/9/jqWep7s/pmc3CrC+3m
-         wV7xy1FvASlYZRH/7a/zyVP8guxAn+z3JPu2ay67O9EszexVbVmypIAgJzSZJG+6AB8n
-         hfBZGZMqgfj9PYEso1aQ+Rzas4r6mJu+OXVG3OOmgTbd4bnsnD21bDN5KZr3UVEbD3FP
-         W2BA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=PRD6aeufLSd46od9AzCBC//aqtaStUZLDGOKGtSVPRE=;
-        b=RsNoa6EPFBQWXhOwIRshsXSdE+H1pqPpVGuAxB1Oi2XjikJzPa5SfcipWQ7x4RJmIR
-         osexnV5dXH50HWf5aQ7VWPuzUAHxTTYdraFS44oLHfVZkrnESmU+iV6JOZh8+CcY6Y8f
-         eJR4az/jvqqAixdXfohaeSTF5OqHshnqihs6uH496lYycK7+boJxqHUIheaGyfThMvSq
-         WIOwYZtFSDgemv6/DoPdKd0rzJ4d3beNTE8TINyoaSj7Dt8jy0hLzb8ise9io+4TkLe6
-         0PVFH24S8p0YhXMrhvd1xO4JKuYAXEPjhQe2WQstRx+5d9tgm6jcLkRQrwtfl8vjONz+
-         SzGQ==
-X-Gm-Message-State: APjAAAUyTg2pI2u1xTfkkgHWhwt+K39P/LYlrtF8XeBxPxAQjoSDJ4Ag
-        HLPCJ2K7JAJA9FsKEkjdmvv8PNmK6freWw==
-X-Google-Smtp-Source: APXvYqweeOU4USwlRuwhMJ38zJ0vYKCTyawhwg7skQD3cW4OokmktruOFDl7FFPKS4Hg3FkZEK4TYA==
-X-Received: by 2002:a17:90a:c78f:: with SMTP id gn15mr5534469pjb.88.1579163450116;
-        Thu, 16 Jan 2020 00:30:50 -0800 (PST)
-Received: from xps.lan ([103.125.232.133])
-        by smtp.gmail.com with ESMTPSA id l10sm2509108pjy.5.2020.01.16.00.30.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 00:30:49 -0800 (PST)
-From:   YunQiang Su <syq@debian.org>
-To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        James.Bottomley@hansenpartnership.com, viro@zeniv.linux.org.uk,
-        laurent@vivier.eu
-Cc:     YunQiang Su <ysu@wavecomp.com>
-Subject: [PATCH v3] binfmt_misc: pass info about P flag by AT_FLAGS
-Date:   Thu, 16 Jan 2020 16:30:31 +0800
-Message-Id: <20200116083031.174367-1-syq@debian.org>
-X-Mailer: git-send-email 2.25.0.rc1
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SE1bYDD4RkZp+aX9S3ANQi6+v2eTdeCtIfxgSt7XgI0=;
+ b=HnB2xD+y1RN3IZTgNmz3pITrNUky7gvq7tvGnYjVJDrPjTyHvyirnA2eILy85FurgHs/b+ClTt/pz/hSqZ82VU0vIFPoni6pO/rhyhKGqLvum183jXvBZpp0MKzIPvrqL2GCeVWgsXcHgOlnUHLZK411mGnLvHQQS05sqnQ8gyc=
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.67.145) by
+ BN8PR12MB2963.namprd12.prod.outlook.com (20.178.208.85) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.9; Thu, 16 Jan 2020 08:30:02 +0000
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::c62:b247:6963:9da2]) by BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::c62:b247:6963:9da2%6]) with mapi id 15.20.2623.018; Thu, 16 Jan 2020
+ 08:30:02 +0000
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Ong Boon Leong <boon.leong.ong@intel.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     Jakub Kicinski <kubakici@wp.pl>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Tan Tee Min <tee.min.tan@intel.com>,
+        "Voon Weifeng" <weifeng.voon@intel.com>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH net v2 0/4] net: stmmac: general fixes for Ethernet
+ functionality
+Thread-Topic: [PATCH net v2 0/4] net: stmmac: general fixes for Ethernet
+ functionality
+Thread-Index: AQHVy3L8gC9rJbZo/EWGaQN98Kr0mafs9y/g
+Date:   Thu, 16 Jan 2020 08:30:02 +0000
+Message-ID: <BN8PR12MB3266D34E72DF8650CD1A0E25D3360@BN8PR12MB3266.namprd12.prod.outlook.com>
+References: <20200115071003.42820-1-boon.leong.ong@intel.com>
+In-Reply-To: <20200115071003.42820-1-boon.leong.ong@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=joabreu@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b376d520-051d-4d62-6764-08d79a5e485e
+x-ms-traffictypediagnostic: BN8PR12MB2963:
+x-microsoft-antispam-prvs: <BN8PR12MB2963A825F5CD8E593A7D54F2D3360@BN8PR12MB2963.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 02843AA9E0
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(39860400002)(366004)(396003)(376002)(199004)(189003)(4744005)(52536014)(5660300002)(66946007)(478600001)(186003)(86362001)(66446008)(2906002)(66476007)(64756008)(26005)(76116006)(66556008)(55016002)(9686003)(316002)(110136005)(33656002)(71200400001)(54906003)(8676002)(81166006)(81156014)(4326008)(6506007)(8936002)(7696005)(7416002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB2963;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: K2SpoxhLTfB+M9TfU0rctjqH7sK8cHqG0lOpuXpvSlL3FjvhcWvPAglPM7pwt3mj+P2wvrv2+TAlwrk03S2io/Dfhc/WRrmYlL+AMpcJo3V4RmVp1Ta+XXdg2CrWmHZY8Wk2XCxPxiGKYLQOfH0NyxxI6Ttj04uil1DH71X7/Pgr6XiJxDGjVejohIZ3N5I3f9lYS6QmnZYVcIWmrqFVP9pGKLVGkqEOzMz7OFusiSHLnWEwJGwyt3fu8KTqpaY3tMXJfDSQzU/khjwK1MUDaA7PhVEP6U6xVlc1Wzuf+u6DsVqZQljv0ijQzV10+XE49vWGTA3jNF7b3OXip+hEk0yTbbH6GYDtW0FkrmLtODl00lICJYusp2NwZpE72WNIfwcBxjj7fxJjw2clcVlOnSjXKmkqm2FiQ2NCY5OdlxWbaWbeN3g5aFGuBdshRnjs
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: b376d520-051d-4d62-6764-08d79a5e485e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jan 2020 08:30:02.7124
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: h6yqNadTp8smp4eVRfF8BV5s4lFDAh+gYrTrCQ/72UP4XcjaDP6I4R5IDMvjSBpT/UsnJlPhe9Lrmza7yMN9Uw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB2963
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YunQiang Su <ysu@wavecomp.com>
+From: Ong Boon Leong <boon.leong.ong@intel.com>
+Date: Jan/15/2020, 07:09:59 (UTC+00:00)
 
-Currently program invoked by binfmt_misc cannot be aware about whether
-P flag, aka preserve path is enabled.
+> 2/4: It ensures that the previous value of GMAC_VLAN_TAG register is
+>      read first before for updating the register.
+>=20
+> 3/4: It ensures the GMAC IP v4.xx and above behaves correctly to:-
+>        ip link set <devname> multicast off|on
 
-Some applications like qemu need to know since it has 2 use case:
-  1. call by hand, like: qemu-mipsel-static test.app OPTION
-     so, qemu have to assume that P option is not enabled.
-  2. call by binfmt_misc. If qemu cannot know about whether P flag is
-     enabled, distribution's have to set qemu without P flag, and
-     binfmt_misc call qemu like:
-       qemu-mipsel-static /absolute/path/to/test.app OPTION
-     even test.app is not called by absoulute path, like
-       ./relative/path/to/test.app
+Can we please also get these fixes in XGMAC core ? The code base is very=20
+similar so it should be pretty straight forward.
 
-This patch passes this information by the 0st bits of unused AT_FLAGS.
-Then, in qemu, we can get this info by:
-   getauxval(AT_FLAGS) & (1<<0)
-
-v2->v3:
-  define a new AT_FLAGS_PRESERVE_ARGV0 as (1<<0), so now we use 0st bit.
-
-v1->v2:
-  not enable kdebug
-
-See: https://bugs.launchpad.net/qemu/+bug/1818483
-Signed-off-by: YunQiang Su <ysu@wavecomp.com>
 ---
- fs/binfmt_elf.c         | 6 +++++-
- fs/binfmt_elf_fdpic.c   | 6 +++++-
- fs/binfmt_misc.c        | 2 ++
- include/linux/binfmts.h | 4 ++++
- 4 files changed, 16 insertions(+), 2 deletions(-)
-
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index f4713ea76e82..c4efff74223f 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -178,6 +178,7 @@ create_elf_tables(struct linux_binprm *bprm, const struct elfhdr *exec,
- 	unsigned char k_rand_bytes[16];
- 	int items;
- 	elf_addr_t *elf_info;
-+	elf_addr_t flags = 0;
- 	int ei_index;
- 	const struct cred *cred = current_cred();
- 	struct vm_area_struct *vma;
-@@ -252,7 +253,10 @@ create_elf_tables(struct linux_binprm *bprm, const struct elfhdr *exec,
- 	NEW_AUX_ENT(AT_PHENT, sizeof(struct elf_phdr));
- 	NEW_AUX_ENT(AT_PHNUM, exec->e_phnum);
- 	NEW_AUX_ENT(AT_BASE, interp_load_addr);
--	NEW_AUX_ENT(AT_FLAGS, 0);
-+	if (bprm->interp_flags & BINPRM_FLAGS_PRESERVE_ARGV0) {
-+		flags |= AT_FLAGS_PRESERVE_ARGV0;
-+	}
-+	NEW_AUX_ENT(AT_FLAGS, flags);
- 	NEW_AUX_ENT(AT_ENTRY, e_entry);
- 	NEW_AUX_ENT(AT_UID, from_kuid_munged(cred->user_ns, cred->uid));
- 	NEW_AUX_ENT(AT_EUID, from_kuid_munged(cred->user_ns, cred->euid));
-diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
-index 240f66663543..c89a4630efad 100644
---- a/fs/binfmt_elf_fdpic.c
-+++ b/fs/binfmt_elf_fdpic.c
-@@ -507,6 +507,7 @@ static int create_elf_fdpic_tables(struct linux_binprm *bprm,
- 	char __user *u_platform, *u_base_platform, *p;
- 	int loop;
- 	int nr;	/* reset for each csp adjustment */
-+	unsigned long flags = 0;
- 
- #ifdef CONFIG_MMU
- 	/* In some cases (e.g. Hyper-Threading), we want to avoid L1 evictions
-@@ -647,7 +648,10 @@ static int create_elf_fdpic_tables(struct linux_binprm *bprm,
- 	NEW_AUX_ENT(AT_PHENT,	sizeof(struct elf_phdr));
- 	NEW_AUX_ENT(AT_PHNUM,	exec_params->hdr.e_phnum);
- 	NEW_AUX_ENT(AT_BASE,	interp_params->elfhdr_addr);
--	NEW_AUX_ENT(AT_FLAGS,	0);
-+	if (bprm->interp_flags & BINPRM_FLAGS_PRESERVE_ARGV0) {
-+		flags |= AT_FLAGS_PRESERVE_ARGV0;
-+	}
-+	NEW_AUX_ENT(AT_FLAGS,	flags);
- 	NEW_AUX_ENT(AT_ENTRY,	exec_params->entry_addr);
- 	NEW_AUX_ENT(AT_UID,	(elf_addr_t) from_kuid_munged(cred->user_ns, cred->uid));
- 	NEW_AUX_ENT(AT_EUID,	(elf_addr_t) from_kuid_munged(cred->user_ns, cred->euid));
-diff --git a/fs/binfmt_misc.c b/fs/binfmt_misc.c
-index cdb45829354d..cb14e9bbf00f 100644
---- a/fs/binfmt_misc.c
-+++ b/fs/binfmt_misc.c
-@@ -158,6 +158,8 @@ static int load_misc_binary(struct linux_binprm *bprm)
- 		retval = remove_arg_zero(bprm);
- 		if (retval)
- 			goto ret;
-+	} else {
-+		bprm->interp_flags |= AT_FLAGS_PRESERVE_ARGV0;
- 	}
- 
- 	if (fmt->flags & MISC_FMT_OPEN_BINARY) {
-diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
-index b40fc633f3be..380a30a46db1 100644
---- a/include/linux/binfmts.h
-+++ b/include/linux/binfmts.h
-@@ -78,6 +78,10 @@ struct linux_binprm {
- #define BINPRM_FLAGS_PATH_INACCESSIBLE_BIT 2
- #define BINPRM_FLAGS_PATH_INACCESSIBLE (1 << BINPRM_FLAGS_PATH_INACCESSIBLE_BIT)
- 
-+/* if preserve the argv0 for the interpreter  */
-+#define AT_FLAGS_PRESERVE_ARGV0_BIT 0
-+#define AT_FLAGS_PRESERVE_ARGV0 (1 << AT_FLAGS_PRESERVE_ARGV0_BIT)
-+
- /* Function parameter for binfmt->coredump */
- struct coredump_params {
- 	const kernel_siginfo_t *siginfo;
--- 
-2.25.0.rc1
-
+Thanks,
+Jose Miguel Abreu
