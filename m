@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F8DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E730FC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B15A02081E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0E11207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:43:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200207;
-	bh=hHuk0naSNm8WN8GbfxGfbUUDOXEIo3+eCFwDtWGPcrI=;
+	s=default; t=1579200212;
+	bh=60NeydsyNRZmBePJiIoUojEbDfMld1Pha7HAOLhDSA0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=obu4u9qhQxwEi8I+xJb0TTPvI6diy2PPNo403evkpkqUqeZgDjQoHU63dp4Gnt2g6
-	 ktRG4E5KXvJCSgYsrQ+iVLWs905JPfy4U6r4pDUHQ1xxTq8UQ02ba+WjqhwRYV/pWJ
-	 ILAvciHZfAbBqukoWJqZISspm+AgMjDVBHzfmWTw=
+	b=dPR2mmcFBUnupPz9kAFXfNd1EzKTj1wyGxwVwm5c4JyzUDpHSGzzkVySpKODaNlOB
+	 dpQnT11mLultsVXUzZTk2k5whkOVZRftyj5DQ1+m/qrAnXnnqPUXNTgrFFV6rGX6If
+	 2nuzmAifW9srgp2BoCiUs3KzpWMvHxCcPhI9kRMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389738AbgAPSn1 (ORCPT
+        id S2389517AbgAPRLO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:43:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51574 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:11:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390198AbgAPRLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:11:17 -0500
+        id S2390170AbgAPRLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:11:11 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2351A21D56;
-        Thu, 16 Jan 2020 17:11:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6808024694;
+        Thu, 16 Jan 2020 17:11:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194676;
-        bh=hHuk0naSNm8WN8GbfxGfbUUDOXEIo3+eCFwDtWGPcrI=;
+        s=default; t=1579194670;
+        bh=60NeydsyNRZmBePJiIoUojEbDfMld1Pha7HAOLhDSA0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PQNj0SVAfNhrDTwZDm8DDntsxSIt9gBoDkUoX75FsMAGRPcHA32MGb+fkf7P/yMFw
-         XSGGnDOwclvHT+FKQmPiweiMCGM9Mh1bwrmIrVjqFxwNpZ0rJABUGxMs9mbA+fw6Lk
-         0hob0VT/+KbnQz0HHYp2PJLtFegD4f2Awp87h9CU=
+        b=Pm+9oclYRzsgUaEEmzmTkHeccCuviZneXB/bIAsCvR/SeXPeVgxCIGBc+XCsv7gNd
+         MKIBffT/WX7YH9JHdTXYs0YxEuZyBRWHxpgYrMOGolEfGMq2irUOIu/riMdtn8fWcj
+         15T2xG7dn4RmavZoY1iRyGc1NwXSjKqMOqC7nuVQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 523/671] iio: dac: ad5380: fix incorrect assignment to val
-Date:   Thu, 16 Jan 2020 12:02:41 -0500
-Message-Id: <20200116170509.12787-260-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Rui Miguel Silva <rmfrfs@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, greybus-dev@lists.linaro.org,
+        devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 4.19 518/671] staging: greybus: light: fix a couple double frees
+Date:   Thu, 16 Jan 2020 12:02:36 -0500
+Message-Id: <20200116170509.12787-255-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,37 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit b1e18768ef1214c0a8048327918a182cabe09f9d ]
+[ Upstream commit 329101244f214952606359d254ae883b7109e1a5 ]
 
-Currently the pointer val is being incorrectly incremented
-instead of the value pointed to by val. Fix this by adding
-in the missing * indirection operator.
+The problem is in gb_lights_request_handler().  If we get a request to
+change the config then we release the light with gb_lights_light_release()
+and re-allocated it.  However, if the allocation fails part way through
+then we call gb_lights_light_release() again.  This can lead to a couple
+different double frees where we haven't cleared out the original values:
 
-Addresses-Coverity: ("Unused value")
-Fixes: c03f2c536818 ("staging:iio:dac: Add AD5380 driver")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+	gb_lights_light_v4l2_unregister(light);
+	...
+	kfree(light->channels);
+	kfree(light->name);
+
+I also made a small change to how we set "light->channels_count = 0;".
+The original code handled this part fine and did not cause a use after
+free but it was sort of complicated to read.
+
+Fixes: 2870b52bae4c ("greybus: lights: add lights implementation")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Rui Miguel Silva <rmfrfs@gmail.com>
+Link: https://lore.kernel.org/r/20190829122839.GA20116@mwanda
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/dac/ad5380.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/greybus/light.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/iio/dac/ad5380.c b/drivers/iio/dac/ad5380.c
-index 873c2bf637c0..617c9f7fe59a 100644
---- a/drivers/iio/dac/ad5380.c
-+++ b/drivers/iio/dac/ad5380.c
-@@ -221,7 +221,7 @@ static int ad5380_read_raw(struct iio_dev *indio_dev,
- 		if (ret)
- 			return ret;
- 		*val >>= chan->scan_type.shift;
--		val -= (1 << chan->scan_type.realbits) / 2;
-+		*val -= (1 << chan->scan_type.realbits) / 2;
- 		return IIO_VAL_INT;
- 	case IIO_CHAN_INFO_SCALE:
- 		*val = 2 * st->vref;
+diff --git a/drivers/staging/greybus/light.c b/drivers/staging/greybus/light.c
+index 010ae1e9c7fb..40680eaf3974 100644
+--- a/drivers/staging/greybus/light.c
++++ b/drivers/staging/greybus/light.c
+@@ -1098,21 +1098,21 @@ static void gb_lights_channel_release(struct gb_channel *channel)
+ static void gb_lights_light_release(struct gb_light *light)
+ {
+ 	int i;
+-	int count;
+ 
+ 	light->ready = false;
+ 
+-	count = light->channels_count;
+-
+ 	if (light->has_flash)
+ 		gb_lights_light_v4l2_unregister(light);
++	light->has_flash = false;
+ 
+-	for (i = 0; i < count; i++) {
++	for (i = 0; i < light->channels_count; i++)
+ 		gb_lights_channel_release(&light->channels[i]);
+-		light->channels_count--;
+-	}
++	light->channels_count = 0;
++
+ 	kfree(light->channels);
++	light->channels = NULL;
+ 	kfree(light->name);
++	light->name = NULL;
+ }
+ 
+ static void gb_lights_release(struct gb_lights *glights)
 -- 
 2.20.1
 
