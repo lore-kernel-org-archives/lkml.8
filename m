@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52EBCC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DACC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A8032073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:51:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF40320663
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:51:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200703;
-	bh=WI1HRNwC+S8LZwMMoMbdsvOEmQ+jtENgPVAfkgO1+rw=;
+	s=default; t=1579200710;
+	bh=qXcDlE2DPQQ8J4GRdU74EnWdqMEs2DTcyMuubdAScgw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gIc6Gb+NYE7l964cI4m3MWvK4hyK2bME0q+Gh5u2WbA6RroNMjrvgayvsGrFzlssH
-	 mQObnKztbnI+PxUaHNStcas0NsU5HdAX8XhDWEsOIUNmC8Mz77qGLEdpXUp+RmCssD
-	 ZtH8XN0zc4C9DWt8idBujclJSMGXtQKsvwxNKrC0=
+	b=Z1gXOgm6yo9Ua1s47ymUoS8slmUZ8IwbiWzdCyMizQReXWVz1xNUEeR/r/zoLypnw
+	 H2L3bwU/3j+ho/q1WpA/N5I9alElTXo0x1tt7A0xttlvi/uGEcdefxg1qHX+oIfgni
+	 cU5DUEdPaHsSQ319Lp7sh7btsIaAgjaZGRXdWxqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407187AbgAPSvm (ORCPT
+        id S2437066AbgAPSvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:51:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43194 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:51:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389486AbgAPRIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:08:47 -0500
+        id S2387921AbgAPRIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:08:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B021B217F4;
-        Thu, 16 Jan 2020 17:08:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25E0A2467C;
+        Thu, 16 Jan 2020 17:08:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194526;
-        bh=WI1HRNwC+S8LZwMMoMbdsvOEmQ+jtENgPVAfkgO1+rw=;
+        s=default; t=1579194525;
+        bh=qXcDlE2DPQQ8J4GRdU74EnWdqMEs2DTcyMuubdAScgw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LMF1jXVFPNeHpVrazMLDh1u9G8aDAl+P8C5ecNVj7ppUpr2B4FrQKRcVGhLlbxCFD
-         UMqSuwlNjdlcbTlV+da0T+sCE+lfJFzfHm7xLy6r3kQuDeB0Zu/fs7cYtGLWKLcMpb
-         MpNguiXV5SRn8H5G2M2TfV4bnBLb/4jTz6Em9LU8=
+        b=nJ6/xU5HnomLKJdntBOc1zNlHP70fCAQVEydrWy1N3Fn5U/gGxds4iqP7/TmC8aZC
+         re9BF9MytLcjsI/PA9GTosKMONnOl772rRBdIzSA/y9qzI/zzuDduLlYZ2ZO4aSl6r
+         2WNwEKP7xC3WVDa5TmDdxCQPPgrxcsmtZR8xDBbY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Nathan Lynch <nathanl@linux.ibm.com>,
         "Gautham R . Shenoy" <ego@linux.vnet.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 416/671] powerpc/pseries/mobility: rebuild cacheinfo hierarchy post-migration
-Date:   Thu, 16 Jan 2020 12:00:54 -0500
-Message-Id: <20200116170509.12787-153-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 415/671] powerpc/cacheinfo: add cacheinfo_teardown, cacheinfo_rebuild
+Date:   Thu, 16 Jan 2020 12:00:53 -0500
+Message-Id: <20200116170509.12787-152-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -62,34 +62,13 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nathan Lynch <nathanl@linux.ibm.com>
 
-[ Upstream commit e610a466d16a086e321f0bd421e2fc75cff28605 ]
+[ Upstream commit d4aa219a074a5abaf95a756b9f0d190b5c03a945 ]
 
-It's common for the platform to replace the cache device nodes after a
-migration. Since the cacheinfo code is never informed about this, it
-never drops its references to the source system's cache nodes, causing
-it to wind up in an inconsistent state resulting in warnings and oopses
-as soon as CPU online/offline occurs after the migration, e.g.
+Allow external callers to force the cacheinfo code to release all its
+references to cache nodes, e.g. before processing device tree updates
+post-migration, and to rebuild the hierarchy afterward.
 
-  cache for /cpus/l3-cache@3113(Unified) refers to cache for /cpus/l2-cache@200d(Unified)
-  WARNING: CPU: 15 PID: 86 at arch/powerpc/kernel/cacheinfo.c:176 release_cache+0x1bc/0x1d0
-  [...]
-  NIP release_cache+0x1bc/0x1d0
-  LR  release_cache+0x1b8/0x1d0
-  Call Trace:
-    release_cache+0x1b8/0x1d0 (unreliable)
-    cacheinfo_cpu_offline+0x1c4/0x2c0
-    unregister_cpu_online+0x1b8/0x260
-    cpuhp_invoke_callback+0x114/0xf40
-    cpuhp_thread_fun+0x270/0x310
-    smpboot_thread_fn+0x2c8/0x390
-    kthread+0x1b8/0x1c0
-    ret_from_kernel_thread+0x5c/0x68
-
-Using device tree notifiers won't work since we want to rebuild the
-hierarchy only after all the removals and additions have occurred and
-the device tree is in a consistent state. Call cacheinfo_teardown()
-before processing device tree updates, and rebuild the hierarchy
-afterward.
+CPU online/offline must be blocked by callers; enforce this.
 
 Fixes: 410bccf97881 ("powerpc/pseries: Partition migration in the kernel")
 Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
@@ -97,42 +76,53 @@ Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/mobility.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/powerpc/kernel/cacheinfo.c | 21 +++++++++++++++++++++
+ arch/powerpc/kernel/cacheinfo.h |  4 ++++
+ 2 files changed, 25 insertions(+)
 
-diff --git a/arch/powerpc/platforms/pseries/mobility.c b/arch/powerpc/platforms/pseries/mobility.c
-index e4ea71383383..70744b4fbd9e 100644
---- a/arch/powerpc/platforms/pseries/mobility.c
-+++ b/arch/powerpc/platforms/pseries/mobility.c
-@@ -24,6 +24,7 @@
- #include <asm/machdep.h>
- #include <asm/rtas.h>
- #include "pseries.h"
-+#include "../../kernel/cacheinfo.h"
- 
- static struct kobject *mobility_kobj;
- 
-@@ -360,11 +361,20 @@ void post_mobility_fixup(void)
- 	 */
- 	cpus_read_lock();
- 
-+	/*
-+	 * It's common for the destination firmware to replace cache
-+	 * nodes.  Release all of the cacheinfo hierarchy's references
-+	 * before updating the device tree.
-+	 */
-+	cacheinfo_teardown();
+diff --git a/arch/powerpc/kernel/cacheinfo.c b/arch/powerpc/kernel/cacheinfo.c
+index a8f20e5928e1..9edb45430133 100644
+--- a/arch/powerpc/kernel/cacheinfo.c
++++ b/arch/powerpc/kernel/cacheinfo.c
+@@ -865,4 +865,25 @@ void cacheinfo_cpu_offline(unsigned int cpu_id)
+ 	if (cache)
+ 		cache_cpu_clear(cache, cpu_id);
+ }
 +
- 	rc = pseries_devicetree_update(MIGRATION_SCOPE);
- 	if (rc)
- 		printk(KERN_ERR "Post-mobility device tree update "
- 			"failed: %d\n", rc);
- 
-+	cacheinfo_rebuild();
++void cacheinfo_teardown(void)
++{
++	unsigned int cpu;
 +
- 	cpus_read_unlock();
++	lockdep_assert_cpus_held();
++
++	for_each_online_cpu(cpu)
++		cacheinfo_cpu_offline(cpu);
++}
++
++void cacheinfo_rebuild(void)
++{
++	unsigned int cpu;
++
++	lockdep_assert_cpus_held();
++
++	for_each_online_cpu(cpu)
++		cacheinfo_cpu_online(cpu);
++}
++
+ #endif /* (CONFIG_PPC_PSERIES && CONFIG_SUSPEND) || CONFIG_HOTPLUG_CPU */
+diff --git a/arch/powerpc/kernel/cacheinfo.h b/arch/powerpc/kernel/cacheinfo.h
+index 955f5e999f1b..52bd3fc6642d 100644
+--- a/arch/powerpc/kernel/cacheinfo.h
++++ b/arch/powerpc/kernel/cacheinfo.h
+@@ -6,4 +6,8 @@
+ extern void cacheinfo_cpu_online(unsigned int cpu_id);
+ extern void cacheinfo_cpu_offline(unsigned int cpu_id);
  
- 	/* Possibly switch to a new RFI flush type */
++/* Allow migration/suspend to tear down and rebuild the hierarchy. */
++extern void cacheinfo_teardown(void);
++extern void cacheinfo_rebuild(void);
++
+ #endif /* _PPC_CACHEINFO_H */
 -- 
 2.20.1
 
