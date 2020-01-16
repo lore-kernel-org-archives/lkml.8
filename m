@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6804C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB404C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89B8F2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:26:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 826C62072B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:26:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217204;
-	bh=04qAfMYFUg3t8AAxzMc2ejr9JJEv682j1pDNk6mf4nE=;
+	s=default; t=1579217207;
+	bh=A6436PZoUeMYCaPwbbuffN8Sf6L/qwVP+r2XQSU7Uwg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eYw1IVe1f6Ua43rZVjf5zSnHCh36ZVnG2UMlNPcoF7cag0b+vS8SiwXOCsWW5gPrP
-	 frTtgpGk9XAYRpdpyNKyFIHJBff0/iglhUmk/dt7XTa1hbmcYb++hCEtIFfy/8F9C4
-	 m+zss1gjble0Ua4KaIa9TFmmkloiWyBn0hrnJdxQ=
+	b=TykUeW5fn5fIgz2Y3VwXnyK0/yAsjtSvKOAfxYIc9aRtihGIm+2Gdt/cEisASl5k3
+	 u1QHzRxp9TW2rDS5CbMLCql6qinvUICnPWBISOOHewAfqS2zvqG/fWOiwD1CkDP9k8
+	 f3CfNL97ufdcQnsXRvVYiXd9Dbi6/zj7rRnsdTOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbgAPX0n (ORCPT
+        id S2388396AbgAPX0q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:26:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56642 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:26:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388596AbgAPX0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:26:16 -0500
+        id S2388801AbgAPX0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:26:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7402E2072B;
-        Thu, 16 Jan 2020 23:26:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D67F820684;
+        Thu, 16 Jan 2020 23:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217175;
-        bh=04qAfMYFUg3t8AAxzMc2ejr9JJEv682j1pDNk6mf4nE=;
+        s=default; t=1579217178;
+        bh=A6436PZoUeMYCaPwbbuffN8Sf6L/qwVP+r2XQSU7Uwg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XGuc1HuIrV9Y0Idnr0Pu/STJINTvBCM9XhGViWwEbloyBUP1soNfKWxEpV/isH0T6
-         5ZzsVh7dR34fuXhngicC7vsvnQmQ+UJdO8tF6YykfZNnG96PMUiZ1Cgi9bGh3zMjmZ
-         l7CVGccc5110jZh/vdw9gHRrflGZLauxfLLHDcjw=
+        b=C4BZmuHvgubTJEIK05NTPiB41uRpzBqeKR/LqvDV8uzKDFhR86RI/M55Ygn1Of2v/
+         54btpxESy2WfITZ1JBkFoK5Ykq6zLT0sWyS4gTjcbXp7AVViwaRRaQ+EtiUykQc/M5
+         +p5aKVX2W8Q7N85p6SirLRUV/iB8l5lR8F0dVWyY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kars de Jong <jongk@linux-m68k.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 5.4 178/203] rtc: msm6242: Fix reading of 10-hour digit
-Date:   Fri, 17 Jan 2020 00:18:15 +0100
-Message-Id: <20200116231759.995926476@linuxfoundation.org>
+Subject: [PATCH 5.4 179/203] rtc: brcmstb-waketimer: add missed clk_disable_unprepare
+Date:   Fri, 17 Jan 2020 00:18:16 +0100
+Message-Id: <20200116231800.071360519@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -60,40 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kars de Jong <jongk@linux-m68k.org>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-commit e34494c8df0cd96fc432efae121db3212c46ae48 upstream.
+commit 94303f8930ed78aea0f189b703c9d79fff9555d7 upstream.
 
-The driver was reading the wrong register as the 10-hour digit due to
-a misplaced ')'. It was in fact reading the 1-second digit register due
-to this bug.
+This driver forgets to disable and unprepare clock when remove.
+Add a call to clk_disable_unprepare to fix it.
 
-Also remove the use of a magic number for the hour mask and use the define
-for it which was already present.
-
-Fixes: 4f9b9bba1dd1 ("rtc: Add an RTC driver for the Oki MSM6242")
-Tested-by: Kars de Jong <jongk@linux-m68k.org>
-Signed-off-by: Kars de Jong <jongk@linux-m68k.org>
-Link: https://lore.kernel.org/r/20191116110548.8562-1-jongk@linux-m68k.org
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Fixes: c4f07ecee22e ("rtc: brcmstb-waketimer: Add Broadcom STB wake-timer")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Link: https://lore.kernel.org/r/20191105160043.20018-1-hslester96@gmail.com
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/rtc/rtc-msm6242.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/rtc/rtc-brcmstb-waketimer.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/rtc/rtc-msm6242.c
-+++ b/drivers/rtc/rtc-msm6242.c
-@@ -133,7 +133,8 @@ static int msm6242_read_time(struct devi
- 		      msm6242_read(priv, MSM6242_SECOND1);
- 	tm->tm_min  = msm6242_read(priv, MSM6242_MINUTE10) * 10 +
- 		      msm6242_read(priv, MSM6242_MINUTE1);
--	tm->tm_hour = (msm6242_read(priv, MSM6242_HOUR10 & 3)) * 10 +
-+	tm->tm_hour = (msm6242_read(priv, MSM6242_HOUR10) &
-+		       MSM6242_HOUR10_HR_MASK) * 10 +
- 		      msm6242_read(priv, MSM6242_HOUR1);
- 	tm->tm_mday = msm6242_read(priv, MSM6242_DAY10) * 10 +
- 		      msm6242_read(priv, MSM6242_DAY1);
+--- a/drivers/rtc/rtc-brcmstb-waketimer.c
++++ b/drivers/rtc/rtc-brcmstb-waketimer.c
+@@ -277,6 +277,7 @@ static int brcmstb_waketmr_remove(struct
+ 	struct brcmstb_waketmr *timer = dev_get_drvdata(&pdev->dev);
+ 
+ 	unregister_reboot_notifier(&timer->reboot_notifier);
++	clk_disable_unprepare(timer->clk);
+ 
+ 	return 0;
+ }
 
 
