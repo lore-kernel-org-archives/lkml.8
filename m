@@ -2,100 +2,113 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 013FFC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48436C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C75FA207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:27:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199227;
-	bh=rn4pfLKM3XRU+IxIe6/WS+j0s2MfQwOgjyTvquAUgQk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XKyaFi7s5qj6fAT6WQheinkJzNEGxG+gbxcIyMK56ECo8OKRRyQGJVxSiFOX5qDlP
-	 YU8kNiY94fpAA3EJw7pYSQEKwEXHkGse7tcyT1ZLBCNSf/D6bs3wRpE3DJxBE4CUw7
-	 fXm3n7T/BaUgmryRhqDqb6W6MnbwfZoI5n+Z8h2U=
+	by mail.kernel.org (Postfix) with ESMTP id 290DD2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:27:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405506AbgAPS1G (ORCPT
+        id S2406852AbgAPS1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:27:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35372 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:27:10 -0500
+Received: from foss.arm.com ([217.140.110.172]:58314 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403921AbgAPR0c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:26:32 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D8EF246BC;
-        Thu, 16 Jan 2020 17:26:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195591;
-        bh=rn4pfLKM3XRU+IxIe6/WS+j0s2MfQwOgjyTvquAUgQk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=stcOJe6T2M5WSwoPKWQYSpQzu8RCkZvbllZUvZIA4a2YUe5TQMpKuD9pqmk209a+O
-         BWdc0f34pZdvL8kIN7FVYRKl+NdqDTzjPkVri+rgaiHswAzryNc3VSO5wOtbyMgmmG
-         z7ZyKowlUWorkDkw3KAEqDS9D6vigkpq5XYkWhpU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Jukka Rissanen <jukka.rissanen@linux.intel.com>,
-        Alexander Aring <aring@mojatatu.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-bluetooth@vger.kernel.org, linux-wpan@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 169/371] 6lowpan: Off by one handling ->nexthdr
-Date:   Thu, 16 Jan 2020 12:20:41 -0500
-Message-Id: <20200116172403.18149-112-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
-References: <20200116172403.18149-1-sashal@kernel.org>
+        id S2436715AbgAPS1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 13:27:04 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7B4AC139F;
+        Thu, 16 Jan 2020 10:27:04 -0800 (PST)
+Received: from [10.1.194.46] (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C99B23F534;
+        Thu, 16 Jan 2020 10:27:03 -0800 (PST)
+Subject: Re: [regression] cpuset: offlined CPUs removed from affinity masks
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Li Zefan <lizefan@huawei.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+References: <1251528473.590671.1579196495905.JavaMail.zimbra@efficios.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <3010d5a9-cce9-bc79-22c0-365d88f1135c@arm.com>
+Date:   Thu, 16 Jan 2020 18:27:02 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1251528473.590671.1579196495905.JavaMail.zimbra@efficios.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+On 16/01/2020 17:41, Mathieu Desnoyers wrote:
+> Hi,
+> 
+> I noticed the following regression with CONFIG_CPUSET=y. Note that
+> I am not using cpusets at all (only using the root cpuset I'm given
+> at boot), it's just configured in. I am currently working on a 5.2.5
+> kernel. I am simply combining use of taskset(1) (setting the affinity
+> mask of a process) and cpu hotplug. The result is that with
+> CONFIG_CPUSET=y, setting the affinity mask including an offline CPU number
+> don't keep that CPU in the affinity mask, and it is never put back when the
+> CPU comes back online. CONFIG_CPUSET=n behaves as expected, and puts back
+> the CPU into the affinity mask reported to user-space when it comes back
+> online.
+> 
+> 
+> * With CONFIG_CPUSET=y (unexpected behavior):
+> 
+> # echo 0 > /sys/devices/system/cpu/cpu1/online
+> 
+> % taskset 0x7 ./loop &
+> % taskset -p $!
+> pid 1341's current affinity mask: 5
+> 
+> # echo 1 > /sys/devices/system/cpu/cpu1/online
+> 
+> taskset -p $!
+> pid 1341's current affinity mask: 5
+> 
+> kill $!
+> 
 
-[ Upstream commit f57c4bbf34439531adccd7d3a4ecc14f409c1399 ]
+As discussed on IRC, this is because we have in sched_setaffinity():
 
-NEXTHDR_MAX is 255.  What happens here is that we take a u8 value
-"hdr->nexthdr" from the network and then look it up in
-lowpan_nexthdr_nhcs[].  The problem is that if hdr->nexthdr is 0xff then
-we read one element beyond the end of the array so the array needs to
-be one element larger.
+  cpuset_cpus_allowed(p, cpus_allowed);
+  cpumask_and(new_mask, in_mask, cpus_allowed);
 
-Fixes: 92aa7c65d295 ("6lowpan: add generic nhc layer interface")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Jukka Rissanen <jukka.rissanen@linux.intel.com>
-Acked-by: Alexander Aring <aring@mojatatu.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/6lowpan/nhc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Another source of issue is that CPUs are taken out of cpusets when
+hotplugged out, and not put back in when hotplugged back in (except for the
+root cpuset which follows cpu_active_mask).
 
-diff --git a/net/6lowpan/nhc.c b/net/6lowpan/nhc.c
-index 4fa2fdda174d..9e56fb98f33c 100644
---- a/net/6lowpan/nhc.c
-+++ b/net/6lowpan/nhc.c
-@@ -18,7 +18,7 @@
- #include "nhc.h"
- 
- static struct rb_root rb_root = RB_ROOT;
--static struct lowpan_nhc *lowpan_nexthdr_nhcs[NEXTHDR_MAX];
-+static struct lowpan_nhc *lowpan_nexthdr_nhcs[NEXTHDR_MAX + 1];
- static DEFINE_SPINLOCK(lowpan_nhc_lock);
- 
- static int lowpan_nhc_insert(struct lowpan_nhc *nhc)
--- 
-2.20.1
+Both cpuset.effective_cpus and cpuset.allowed_cpus seem to only span
+online CPUs:
 
+  root@valsch-juno:~# cat /sys/fs/cgroup/cpuset/cpuset.effective_cpus 
+  0-5
+  root@valsch-juno:~# cat /sys/fs/cgroup/cpuset/cpuset.cpus
+  0-5
+  root@valsch-juno:~# echo 0 > /sys/devices/system/cpu/cpu3/online                                     
+  [93418.733050] CPU3: shutdown
+  [93418.735815] psci: CPU3 killed (polled 0 ms)
+  root@valsch-juno:~# cat /sys/fs/cgroup/cpuset/cpuset.cpus                                            
+  0-2,4-5
+  root@valsch-juno:~# cat /sys/fs/cgroup/cpuset/cpuset.effective_cpus                                  
+  0-2,4-5
+
+The thing is, with CONFIG_CPUSET=n, we can absolutely cope with p->cpus_ptr
+spanning CPUs that are offline because we still check the active/online
+mask (is_cpu_allowed()). So one thing I'd like to know is why do cpusets
+remove offline cpus from their mask? I could see cpuset.allowed containing
+both online & offline CPUs, and cpuset.effective containing just the online
+ones.
+
+That way in sched_setaffinity() we can still check for cpuset.allowed, and
+we still have the online/active check in __set_cpus_allowed_ptr() to deny
+stupid requests.
