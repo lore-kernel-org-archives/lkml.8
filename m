@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C25C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 475D1C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5ACA20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:36:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1460720661
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:36:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217770;
-	bh=hkDV0F8DLyWObmZCImCKkV2o6hcgmEmc5ef/rDnXpIE=;
+	s=default; t=1579217780;
+	bh=r3CjGXlTky99boRzd8VktX2hXmeXhqpzLTfCpBadJw0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bH9188hGyQPzmywFtxvz5Owb/7Pv/DsdLpX2jK/8gHWBqKvbAGX67HN1Te1Tk2Gl3
-	 6flx7aeuU6Vlyxi5BE2izsD966/p0QBgvDZJS1Ni3owLWC3sJe96hRmhYMRF91vas6
-	 IS/vQTViztZRWCq397H2iAHNs7otkJVC85C+WU3g=
+	b=j8ZjDdq/QoG45Dt5JkJxrPfmypwCZjbYyMztlO1E2fFCWFJhTRIWjVwKxg7s3oyQn
+	 IuWLoM/9k3kNKRT5biG16z4fp9R5+OftNGsCfo/eDHRVgXRx8HqMukEqj3qftZw2pm
+	 MVwq//OyMrUalNl17yKlQ5ZGl5yw2nysHihPus3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389019AbgAPXgK (ORCPT
+        id S2404302AbgAPXgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:36:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40588 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:36:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391534AbgAPXbu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:31:50 -0500
+        id S1732981AbgAPXbk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:31:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FF63206D9;
-        Thu, 16 Jan 2020 23:31:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB608206D9;
+        Thu, 16 Jan 2020 23:31:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217509;
-        bh=hkDV0F8DLyWObmZCImCKkV2o6hcgmEmc5ef/rDnXpIE=;
+        s=default; t=1579217500;
+        bh=r3CjGXlTky99boRzd8VktX2hXmeXhqpzLTfCpBadJw0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mHhD5IO2Xuis3yl/t3SkluJs/BnUTCKtbZIcCMAHDasZqv54bxv0QBn6EdyZL1QCg
-         +SxTuhx8rWH+bdZkIAZUT0rzzHjLyklDOxWSKjtFrMyOq7ERE4x9vfpkQEcQA3mM6t
-         w2F4h0UCP8ctSp8QjyAamh+pVwu12VqbU82HI5CA=
+        b=RGjRAi6OFx+nzeQ8/wamB72hjvJd421KYQ1K4LV7jVa1xPGHy54PoDoh365zhJeet
+         OuKu4ctwTFAhhqgpkB5QlkFTkip4KqOiDybN2kzYlek84Ftlvdzi+E2OKiSdZw5y9E
+         92s0aytcHYAeE5d6vptiDF3X1uc1X3VGzz/nzIyo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sanjay Konduri <sanjay.konduri@redpinesignals.com>,
-        Sushant Kumar Mishra <sushant.mishra@redpinesignals.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.14 06/71] rsi: add fix for crash during assertions
-Date:   Fri, 17 Jan 2020 00:18:04 +0100
-Message-Id: <20200116231710.324691968@linuxfoundation.org>
+        stable@vger.kernel.org, Olivier Moysan <olivier.moysan@st.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.14 23/71] ASoC: stm32: spdifrx: fix race condition in irq handler
+Date:   Fri, 17 Jan 2020 00:18:21 +0100
+Message-Id: <20200116231712.748003784@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231709.377772748@linuxfoundation.org>
 References: <20200116231709.377772748@linuxfoundation.org>
@@ -62,34 +59,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sanjay Konduri <sanjay.konduri@redpinesignals.com>
+From: Olivier Moysan <olivier.moysan@st.com>
 
-commit abd39c6ded9db53aa44c2540092bdd5fb6590fa8 upstream.
+commit 86e1956af4c863d653136fd6e5694adf2054dbaa upstream.
 
-Observed crash in some scenarios when assertion has occurred,
-this is because hw structure is freed and is tried to get
-accessed in some functions where null check is already
-present. So, avoided the crash by making the hw to NULL after
-freeing.
+When snd_pcm_stop() is called in interrupt routine,
+substream context may have already been released.
+Add protection on substream context.
 
-Signed-off-by: Sanjay Konduri <sanjay.konduri@redpinesignals.com>
-Signed-off-by: Sushant Kumar Mishra <sushant.mishra@redpinesignals.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Fixes: 03e4d5d56fa5 ("ASoC: stm32: Add SPDIFRX support")
+
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Link: https://lore.kernel.org/r/20191204154333.7152-3-olivier.moysan@st.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/wireless/rsi/rsi_91x_mac80211.c |    1 +
- 1 file changed, 1 insertion(+)
 
---- a/drivers/net/wireless/rsi/rsi_91x_mac80211.c
-+++ b/drivers/net/wireless/rsi/rsi_91x_mac80211.c
-@@ -218,6 +218,7 @@ void rsi_mac80211_detach(struct rsi_hw *
- 		ieee80211_stop_queues(hw);
- 		ieee80211_unregister_hw(hw);
- 		ieee80211_free_hw(hw);
-+		adapter->hw = NULL;
+---
+ sound/soc/stm/stm32_spdifrx.c |   24 +++++++++++++++++++-----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
+
+--- a/sound/soc/stm/stm32_spdifrx.c
++++ b/sound/soc/stm/stm32_spdifrx.c
+@@ -213,6 +213,7 @@
+  * @slave_config: dma slave channel runtime config pointer
+  * @phys_addr: SPDIFRX registers physical base address
+  * @lock: synchronization enabling lock
++ * @irq_lock: prevent race condition with IRQ on stream state
+  * @cs: channel status buffer
+  * @ub: user data buffer
+  * @irq: SPDIFRX interrupt line
+@@ -233,6 +234,7 @@ struct stm32_spdifrx_data {
+ 	struct dma_slave_config slave_config;
+ 	dma_addr_t phys_addr;
+ 	spinlock_t lock;  /* Sync enabling lock */
++	spinlock_t irq_lock; /* Prevent race condition on stream state */
+ 	unsigned char cs[SPDIFRX_CS_BYTES_NB];
+ 	unsigned char ub[SPDIFRX_UB_BYTES_NB];
+ 	int irq;
+@@ -646,7 +648,6 @@ static const struct regmap_config stm32_
+ static irqreturn_t stm32_spdifrx_isr(int irq, void *devid)
+ {
+ 	struct stm32_spdifrx_data *spdifrx = (struct stm32_spdifrx_data *)devid;
+-	struct snd_pcm_substream *substream = spdifrx->substream;
+ 	struct platform_device *pdev = spdifrx->pdev;
+ 	unsigned int cr, mask, sr, imr;
+ 	unsigned int flags;
+@@ -714,14 +715,19 @@ static irqreturn_t stm32_spdifrx_isr(int
+ 		regmap_update_bits(spdifrx->regmap, STM32_SPDIFRX_CR,
+ 				   SPDIFRX_CR_SPDIFEN_MASK, cr);
+ 
+-		if (substream)
+-			snd_pcm_stop(substream, SNDRV_PCM_STATE_DISCONNECTED);
++		spin_lock(&spdifrx->irq_lock);
++		if (spdifrx->substream)
++			snd_pcm_stop(spdifrx->substream,
++				     SNDRV_PCM_STATE_DISCONNECTED);
++		spin_unlock(&spdifrx->irq_lock);
+ 
+ 		return IRQ_HANDLED;
  	}
  
- 	for (band = 0; band < NUM_NL80211_BANDS; band++) {
+-	if (err_xrun && substream)
+-		snd_pcm_stop_xrun(substream);
++	spin_lock(&spdifrx->irq_lock);
++	if (err_xrun && spdifrx->substream)
++		snd_pcm_stop_xrun(spdifrx->substream);
++	spin_unlock(&spdifrx->irq_lock);
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -730,9 +736,12 @@ static int stm32_spdifrx_startup(struct
+ 				 struct snd_soc_dai *cpu_dai)
+ {
+ 	struct stm32_spdifrx_data *spdifrx = snd_soc_dai_get_drvdata(cpu_dai);
++	unsigned long flags;
+ 	int ret;
+ 
++	spin_lock_irqsave(&spdifrx->irq_lock, flags);
+ 	spdifrx->substream = substream;
++	spin_unlock_irqrestore(&spdifrx->irq_lock, flags);
+ 
+ 	ret = clk_prepare_enable(spdifrx->kclk);
+ 	if (ret)
+@@ -804,8 +813,12 @@ static void stm32_spdifrx_shutdown(struc
+ 				   struct snd_soc_dai *cpu_dai)
+ {
+ 	struct stm32_spdifrx_data *spdifrx = snd_soc_dai_get_drvdata(cpu_dai);
++	unsigned long flags;
+ 
++	spin_lock_irqsave(&spdifrx->irq_lock, flags);
+ 	spdifrx->substream = NULL;
++	spin_unlock_irqrestore(&spdifrx->irq_lock, flags);
++
+ 	clk_disable_unprepare(spdifrx->kclk);
+ }
+ 
+@@ -910,6 +923,7 @@ static int stm32_spdifrx_probe(struct pl
+ 	spdifrx->pdev = pdev;
+ 	init_completion(&spdifrx->cs_completion);
+ 	spin_lock_init(&spdifrx->lock);
++	spin_lock_init(&spdifrx->irq_lock);
+ 
+ 	platform_set_drvdata(pdev, spdifrx);
+ 
 
 
