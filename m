@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0BEDC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2C2C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABDBD20684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39AB12073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:14:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198436;
-	bh=Elx75ZoziRcWQxYB+5OsFGbfB+A2fuv9iTxGFqKZcIo=;
+	s=default; t=1579198444;
+	bh=UC001LbTVcSUiGfdFhBBYLJYxKzjHeFOJ8dBTV+YjLc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GzoE/Gsll8xZNd4CNIBELj27753FIOQIwGybkKS5vWuOkhsilvDMCYSD9jQTRHwao
-	 yHvqbjxb5K1ufy69vPGsHzU98g8LFF/h6+XIY5rCui+lrKFiGxRFXfeoHjqZIED3RM
-	 yAMotu4xs4G5OEK9AQp9RwLvivjh8V9FhT++nLts=
+	b=vw5u1fOF6G1kb4J4ZT9YyuvvSEXly6psAJdu+PrRKttqL/ntGE5/6Mn5Hd22bKCeg
+	 WWTaviEjfpjR2dAgOmlOs+RdSLmgvxGlF8z6B6zW75KQZ0pqGrRK5gKXtM1pIK9/IO
+	 b2keAK0h0EuIzlNHik5muV/AEY48oLIRlOZubl3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395300AbgAPSNz (ORCPT
+        id S2395324AbgAPSOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:13:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49172 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:14:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404823AbgAPRfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:35:03 -0500
+        id S2404891AbgAPRfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:35:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D3F3246A1;
-        Thu, 16 Jan 2020 17:35:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14B88246D8;
+        Thu, 16 Jan 2020 17:35:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196102;
-        bh=Elx75ZoziRcWQxYB+5OsFGbfB+A2fuv9iTxGFqKZcIo=;
+        s=default; t=1579196101;
+        bh=UC001LbTVcSUiGfdFhBBYLJYxKzjHeFOJ8dBTV+YjLc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tURNdOMMkAEIqCshP6LD33tmo8oAUultY+T77VhPJ/beSJ06531e1UMrfItKKE2IS
-         Kf+CMjKL09VPCFe1Se3GHpiUN237AY7Ow90yHLAbhrJeb2WLYSCe/i2ToGnkEnbUE3
-         8g3ZDtqJN2BKJUL6XzJ+cL0Vi6mCZRifZPsQzq4k=
+        b=g4ggoxynddU/gcjm3w1S5xD0yI13WBtpTDKVNObbcCHW6gua4vrNlBTLEfPe5ofsm
+         DwmAEmO0XiQXcnln10o6CysD9ePO0bfSt3K4i4WsBdbws3Y23im7G9JXeFWBVFe9Hv
+         vAWa43fhXU8hQ+avCHi0CxfW8v9noqfP4x74C55k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 013/251] net: phy: Fix not to call phy_resume() if PHY is not attached
-Date:   Thu, 16 Jan 2020 12:30:47 -0500
-Message-Id: <20200116173445.21385-13-sashal@kernel.org>
+Cc:     Lyude Paul <lyude@redhat.com>, Jerry Zuo <Jerry.Zuo@amd.com>,
+        Harry Wentland <Harry.Wentland@amd.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.9 012/251] drm/dp_mst: Skip validating ports during destruction, just ref
+Date:   Thu, 16 Jan 2020 12:30:46 -0500
+Message-Id: <20200116173445.21385-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173445.21385-1-sashal@kernel.org>
 References: <20200116173445.21385-1-sashal@kernel.org>
@@ -59,66 +62,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+From: Lyude Paul <lyude@redhat.com>
 
-[ Upstream commit ef1b5bf506b1f0ee3edc98533e1f3ecb105eb46a ]
+[ Upstream commit c54c7374ff44de5e609506aca7c0deae4703b6d1 ]
 
-This patch fixes an issue that mdio_bus_phy_resume() doesn't call
-phy_resume() if the PHY is not attached.
+Jerry Zuo pointed out a rather obscure hotplugging issue that it seems I
+accidentally introduced into DRM two years ago.
 
-Fixes: 803dd9c77ac3 ("net: phy: avoid suspending twice a PHY")
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Pretend we have a topology like this:
+
+|- DP-1: mst_primary
+   |- DP-4: active display
+   |- DP-5: disconnected
+   |- DP-6: active hub
+      |- DP-7: active display
+      |- DP-8: disconnected
+      |- DP-9: disconnected
+
+If we unplug DP-6, the topology starting at DP-7 will be destroyed but
+it's payloads will live on in DP-1's VCPI allocations and thus require
+removal. However, this removal currently fails because
+drm_dp_update_payload_part1() will (rightly so) try to validate the port
+before accessing it, fail then abort. If we keep going, eventually we
+run the MST hub out of bandwidth and all new allocations will start to
+fail (or in my case; all new displays just start flickering a ton).
+
+We could just teach drm_dp_update_payload_part1() not to drop the port
+ref in this case, but then we also need to teach
+drm_dp_destroy_payload_step1() to do the same thing, then hope no one
+ever adds anything to the that requires a validated port reference in
+drm_dp_destroy_connector_work(). Kind of sketchy.
+
+So let's go with a more clever solution: any port that
+drm_dp_destroy_connector_work() interacts with is guaranteed to still
+exist in memory until we say so. While said port might not be valid we
+don't really care: that's the whole reason we're destroying it in the
+first place! So, teach drm_dp_get_validated_port_ref() to use the all
+mighty current_work() function to avoid attempting to validate ports
+from the context of mgr->destroy_connector_work. I can't see any
+situation where this wouldn't be safe, and this avoids having to play
+whack-a-mole in the future of trying to work around port validation.
+
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Fixes: 263efde31f97 ("drm/dp/mst: Get validated port ref in drm_dp_update_payload_part1()")
+Reported-by: Jerry Zuo <Jerry.Zuo@amd.com>
+Cc: Jerry Zuo <Jerry.Zuo@amd.com>
+Cc: Harry Wentland <Harry.Wentland@amd.com>
+Cc: <stable@vger.kernel.org> # v4.6+
+Reviewed-by: Dave Airlie <airlied@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20181113224613.28809-1-lyude@redhat.com
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/phy_device.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/drm_dp_mst_topology.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 3289fd910c4a..487d0372a444 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -80,7 +80,7 @@ static LIST_HEAD(phy_fixup_list);
- static DEFINE_MUTEX(phy_fixup_lock);
- 
- #ifdef CONFIG_PM
--static bool mdio_bus_phy_may_suspend(struct phy_device *phydev)
-+static bool mdio_bus_phy_may_suspend(struct phy_device *phydev, bool suspend)
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+index e05dda92398c..17aedaaf364c 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -980,9 +980,20 @@ static struct drm_dp_mst_port *drm_dp_mst_get_port_ref_locked(struct drm_dp_mst_
+ static struct drm_dp_mst_port *drm_dp_get_validated_port_ref(struct drm_dp_mst_topology_mgr *mgr, struct drm_dp_mst_port *port)
  {
- 	struct device_driver *drv = phydev->mdio.dev.driver;
- 	struct phy_driver *phydrv = to_phy_driver(drv);
-@@ -92,10 +92,11 @@ static bool mdio_bus_phy_may_suspend(struct phy_device *phydev)
- 	/* PHY not attached? May suspend if the PHY has not already been
- 	 * suspended as part of a prior call to phy_disconnect() ->
- 	 * phy_detach() -> phy_suspend() because the parent netdev might be the
--	 * MDIO bus driver and clock gated at this point.
-+	 * MDIO bus driver and clock gated at this point. Also may resume if
-+	 * PHY is not attached.
- 	 */
- 	if (!netdev)
--		return !phydev->suspended;
-+		return suspend ? !phydev->suspended : phydev->suspended;
- 
- 	/* Don't suspend PHY if the attached netdev parent may wakeup.
- 	 * The parent may point to a PCI device, as in tg3 driver.
-@@ -125,7 +126,7 @@ static int mdio_bus_phy_suspend(struct device *dev)
- 	if (phydev->attached_dev && phydev->adjust_link)
- 		phy_stop_machine(phydev);
- 
--	if (!mdio_bus_phy_may_suspend(phydev))
-+	if (!mdio_bus_phy_may_suspend(phydev, true))
- 		return 0;
- 
- 	return phy_suspend(phydev);
-@@ -136,7 +137,7 @@ static int mdio_bus_phy_resume(struct device *dev)
- 	struct phy_device *phydev = to_phy_device(dev);
- 	int ret;
- 
--	if (!mdio_bus_phy_may_suspend(phydev))
-+	if (!mdio_bus_phy_may_suspend(phydev, false))
- 		goto no_resume;
- 
- 	ret = phy_resume(phydev);
+ 	struct drm_dp_mst_port *rport = NULL;
++
+ 	mutex_lock(&mgr->lock);
+-	if (mgr->mst_primary)
+-		rport = drm_dp_mst_get_port_ref_locked(mgr->mst_primary, port);
++	/*
++	 * Port may or may not be 'valid' but we don't care about that when
++	 * destroying the port and we are guaranteed that the port pointer
++	 * will be valid until we've finished
++	 */
++	if (current_work() == &mgr->destroy_connector_work) {
++		kref_get(&port->kref);
++		rport = port;
++	} else if (mgr->mst_primary) {
++		rport = drm_dp_mst_get_port_ref_locked(mgr->mst_primary,
++						       port);
++	}
+ 	mutex_unlock(&mgr->lock);
+ 	return rport;
+ }
 -- 
 2.20.1
 
