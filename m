@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67BDAC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54942C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30BAA206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:29:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 256832072B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:29:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217344;
-	bh=0OrMHnukN32l1tTlce+BD7S8E7gNYvNKNM/0qoVDPS8=;
+	s=default; t=1579217347;
+	bh=+vvDOcRdhJp6OiqKi07LAjtkECQRNIemvqgQAgj+pz8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k1WT1eGDlDa6wRps3sHdOKjLEpA0M+ie3wKbSuklmifGz1ArIoCQ6n8LUFKWNTmZj
-	 ZbTBMBdi+TiepxrOxFvl2mDPIz4M/aip9BpETSXQxEZy1WJp++PhVX7kQITP1iDQ6g
-	 ea9BSLrEgW38XHaJ4zcoszp+WCgX/FRGSsHUtj8o=
+	b=pbf9YpcmteNVoG0+Qj2UuzgTInQ1u9AdztjIBswnBui55IFMZDBSPFbn0Q6KfhDxE
+	 mGmfLmORiyJWyLuhHS131i0muerweOj+llyGIfI2WHrZ7x96jyzPMPqU0qwpJplTAS
+	 b+UbNAj6bNivJVle/KtH8/u104G33Nd5QHc4xeFo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390598AbgAPX3D (ORCPT
+        id S2391216AbgAPX3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:29:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34156 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:29:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389637AbgAPX26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:28:58 -0500
+        id S2391035AbgAPX3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:29:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 157FD20684;
-        Thu, 16 Jan 2020 23:28:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E941920684;
+        Thu, 16 Jan 2020 23:29:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217337;
-        bh=0OrMHnukN32l1tTlce+BD7S8E7gNYvNKNM/0qoVDPS8=;
+        s=default; t=1579217342;
+        bh=+vvDOcRdhJp6OiqKi07LAjtkECQRNIemvqgQAgj+pz8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HSL6+w1KfxfhRHTlLGJ8Fua+xN/fDdY3yOEJeKqubQV/tLkTQM0fqEd4gA3UDu7U1
-         wnJUFWWhdpHFtXoUpz/9zPpBalYxvZRpu0QCcSRwPuorNh9Pt38somCPguZHxiL8dm
-         26LG4GTwA7Wn4tL+d4gkudAytpV3+4/Q0xL10UMY=
+        b=hteXR38UXZIa5mpkxLhjL5m7atGwZxudclWxitjsXKXS7mHteMX/H9LFNtZxZrwUm
+         PY/UryKR7mLJUGGvEk9i3m2YhgAobewJnONjBg+vjquv89Bs/is88CCs0Hr3gpnLuf
+         ZJiZMZLx5b/EYNyDP0wEjiMFSissoNdbs7rlXSuE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Gonglei <arei.gonglei@huawei.com>,
-        virtualization@lists.linux-foundation.org,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 42/84] crypto: virtio - implement missing support for output IVs
-Date:   Fri, 17 Jan 2020 00:18:16 +0100
-Message-Id: <20200116231718.728089716@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: [PATCH 4.19 44/84] NFSv4.x: Drop the slot if nfs4_delegreturn_prepare waits for layoutreturn
+Date:   Fri, 17 Jan 2020 00:18:18 +0100
+Message-Id: <20200116231718.983518480@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
 References: <20200116231713.087649517@linuxfoundation.org>
@@ -63,52 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-commit 500e6807ce93b1fdc7d5b827c5cc167cc35630db upstream.
+commit 5326de9e94bedcf7366e7e7625d4deb8c1f1ca8a upstream.
 
-In order to allow for CBC to be chained, which is something that the
-CTS template relies upon, implementations of CBC need to pass the
-IV to be used for subsequent invocations via the IV buffer. This was
-not implemented yet for virtio-crypto so implement it now.
+If nfs4_delegreturn_prepare needs to wait for a layoutreturn to complete
+then make sure we drop the sequence slot if we hold it.
 
-Fixes: dbaf0624ffa5 ("crypto: add virtio-crypto driver")
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>
-Cc: Gonglei <arei.gonglei@huawei.com>
-Cc: virtualization@lists.linux-foundation.org
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 1c5bd76d17cc ("pNFS: Enable layoutreturn operation for return-on-close")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/virtio/virtio_crypto_algs.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ fs/nfs/nfs4proc.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/crypto/virtio/virtio_crypto_algs.c
-+++ b/drivers/crypto/virtio/virtio_crypto_algs.c
-@@ -449,6 +449,11 @@ __virtio_crypto_ablkcipher_do_req(struct
- 		goto free;
- 	}
- 	memcpy(iv, req->info, ivsize);
-+	if (!vc_sym_req->encrypt)
-+		scatterwalk_map_and_copy(req->info, req->src,
-+					 req->nbytes - AES_BLOCK_SIZE,
-+					 AES_BLOCK_SIZE, 0);
-+
- 	sg_init_one(&iv_sg, iv, ivsize);
- 	sgs[num_out++] = &iv_sg;
- 	vc_sym_req->iv = iv;
-@@ -585,6 +590,10 @@ static void virtio_crypto_ablkcipher_fin
- 	struct ablkcipher_request *req,
- 	int err)
- {
-+	if (vc_sym_req->encrypt)
-+		scatterwalk_map_and_copy(req->info, req->dst,
-+					 req->nbytes - AES_BLOCK_SIZE,
-+					 AES_BLOCK_SIZE, 0);
- 	crypto_finalize_ablkcipher_request(vc_sym_req->base.dataq->engine,
- 					   req, err);
- 	kzfree(vc_sym_req->iv);
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -6103,8 +6103,10 @@ static void nfs4_delegreturn_prepare(str
+ 
+ 	d_data = (struct nfs4_delegreturndata *)data;
+ 
+-	if (!d_data->lr.roc && nfs4_wait_on_layoutreturn(d_data->inode, task))
++	if (!d_data->lr.roc && nfs4_wait_on_layoutreturn(d_data->inode, task)) {
++		nfs4_sequence_done(task, &d_data->res.seq_res);
+ 		return;
++	}
+ 
+ 	lo = d_data->args.lr_args ? d_data->args.lr_args->layout : NULL;
+ 	if (lo && !pnfs_layout_is_valid(lo)) {
 
 
