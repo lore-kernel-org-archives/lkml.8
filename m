@@ -7,53 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 867BBC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 110E9C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FB732064C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:49:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E127E206B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:49:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200557;
-	bh=LhOSRmKm4uP3chQZOSrM41PFKG+C1PjndW0AUBoxZMw=;
+	s=default; t=1579200566;
+	bh=YCE3P0Dt8ru4cxQvKA45tn/Skbj37sq/a/SFLEu/yZ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DBSweO8zf1FkABRul5fnKKpoipQ/bg7mAyx+tf6V6mI8l5rKum79JXu4/o44O+cRb
-	 jvqxdyN7JAphLruyehN1jG+J9vpak4AwtbxAHY2ItJugn3nBnqT3+7yBWH03GnzeAp
-	 mpolrMOhW3nI1gM1Tx8fzSplFhyuAZTr0t3Jxkyk=
+	b=Es8+3OzI7JIcSjIF34TKsz2m0WCDrKGVMiXjuh86Rv/FqRBrrgQml0mBlaQS83PFV
+	 xkVbE1cvzGOdlYlAaR6362J5WzgqqTwSt7YDisGwpEe4vAhdpMD9C2c73mf7VUTdsW
+	 77RD+AhsbWsAkhngGHZsrfDgodvNbwUSnY+wsXy8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389694AbgAPRJa (ORCPT
+        id S2391283AbgAPStY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:09:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45306 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:49:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389371AbgAPRJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:09:26 -0500
+        id S2389682AbgAPRJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:09:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A00C24694;
-        Thu, 16 Jan 2020 17:09:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1029B205F4;
+        Thu, 16 Jan 2020 17:09:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194565;
-        bh=LhOSRmKm4uP3chQZOSrM41PFKG+C1PjndW0AUBoxZMw=;
+        s=default; t=1579194567;
+        bh=YCE3P0Dt8ru4cxQvKA45tn/Skbj37sq/a/SFLEu/yZ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SlynQfjRVAp3SOGNm6A9xuZT63nyISnldytOC/R3yQF8woy2GWeHHAT256CFaHLGv
-         8crI3xLcY8eJnc8+1umZ4IiCGRWaNoMbjlooROiOPvmCqaoK+yJwidQyYJNHxprDRR
-         rYRs8MbaUzVs9yxTm7cwkW/oiNu6kAHBY3fIevss=
+        b=o5Xj3Fsgn9Usm155x5HeiPYccik/Nnh75lcG6Kd74FY1s5bLWLTjW8rJakCxKoEgv
+         SVHW6Wun1DJVn+Dvfs2w8M2B63Sm1BlTDWeAuTMLb8efEdITindF0a8QDV2BsOqguB
+         EPm65d2uTjiclCrC6guD9Dj6WM31mK9i2Wb1KlfY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 444/671] rxrpc: Fix uninitialized error code in rxrpc_send_data_packet()
-Date:   Thu, 16 Jan 2020 12:01:22 -0500
-Message-Id: <20200116170509.12787-181-sashal@kernel.org>
+Cc:     Jouni Malinen <j@w1.fi>, Johannes Berg <johannes.berg@intel.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sasha Levin <sashal@kernel.org>, linux-um@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 446/671] um: Fix IRQ controller regression on console read
+Date:   Thu, 16 Jan 2020 12:01:24 -0500
+Message-Id: <20200116170509.12787-183-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,47 +59,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Jouni Malinen <j@w1.fi>
 
-[ Upstream commit 3427beb6375d04e9627c67343872e79341a684ea ]
+[ Upstream commit bebe4681d0e7e1be2608282dc86645728bc7f623 ]
 
-With gcc 4.1:
+The conversion of UML to use epoll based IRQ controller claimed that
+clone_one_chan() can safely call um_free_irq() while starting to ignore
+the delay_free_irq parameter that explicitly noted that the IRQ cannot
+be freed because this is being called from chan_interrupt(). This
+resulted in free_irq() getting called in interrupt context ("Trying to
+free IRQ 6 from IRQ context!").
 
-    net/rxrpc/output.c: In function ‘rxrpc_send_data_packet’:
-    net/rxrpc/output.c:338: warning: ‘ret’ may be used uninitialized in this function
+Fix this by restoring previously used delay_free_irq processing.
 
-Indeed, if the first jump to the send_fragmentable label is made, and
-the address family is not handled in the switch() statement, ret will be
-used uninitialized.
-
-Fix this by BUG()'ing as is done in other places in rxrpc where internal
-support for future address families will need adding.  It should not be
-possible to reach this normally as the address families are checked
-up-front.
-
-Fixes: 5a924b8951f835b5 ("rxrpc: Don't store the rxrpc header in the Tx queue sk_buffs")
-Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: ff6a17989c08 ("Epoll based IRQ controller")
+Signed-off-by: Jouni Malinen <j@w1.fi>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/rxrpc/output.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/um/drivers/chan_kern.c | 52 +++++++++++++++++++++++++++++++------
+ arch/um/kernel/irq.c        |  4 +++
+ 2 files changed, 48 insertions(+), 8 deletions(-)
 
-diff --git a/net/rxrpc/output.c b/net/rxrpc/output.c
-index 345dc1c5fe72..31e47cfb3e68 100644
---- a/net/rxrpc/output.c
-+++ b/net/rxrpc/output.c
-@@ -524,6 +524,9 @@ int rxrpc_send_data_packet(struct rxrpc_call *call, struct sk_buff *skb,
- 		}
- 		break;
- #endif
-+
-+	default:
-+		BUG();
- 	}
+diff --git a/arch/um/drivers/chan_kern.c b/arch/um/drivers/chan_kern.c
+index 05588f9466c7..13ba195f9c9c 100644
+--- a/arch/um/drivers/chan_kern.c
++++ b/arch/um/drivers/chan_kern.c
+@@ -171,19 +171,55 @@ int enable_chan(struct line *line)
+ 	return err;
+ }
  
- 	if (ret < 0)
++/* Items are added in IRQ context, when free_irq can't be called, and
++ * removed in process context, when it can.
++ * This handles interrupt sources which disappear, and which need to
++ * be permanently disabled.  This is discovered in IRQ context, but
++ * the freeing of the IRQ must be done later.
++ */
++static DEFINE_SPINLOCK(irqs_to_free_lock);
++static LIST_HEAD(irqs_to_free);
++
++void free_irqs(void)
++{
++	struct chan *chan;
++	LIST_HEAD(list);
++	struct list_head *ele;
++	unsigned long flags;
++
++	spin_lock_irqsave(&irqs_to_free_lock, flags);
++	list_splice_init(&irqs_to_free, &list);
++	spin_unlock_irqrestore(&irqs_to_free_lock, flags);
++
++	list_for_each(ele, &list) {
++		chan = list_entry(ele, struct chan, free_list);
++
++		if (chan->input && chan->enabled)
++			um_free_irq(chan->line->driver->read_irq, chan);
++		if (chan->output && chan->enabled)
++			um_free_irq(chan->line->driver->write_irq, chan);
++		chan->enabled = 0;
++	}
++}
++
+ static void close_one_chan(struct chan *chan, int delay_free_irq)
+ {
++	unsigned long flags;
++
+ 	if (!chan->opened)
+ 		return;
+ 
+-    /* we can safely call free now - it will be marked
+-     *  as free and freed once the IRQ stopped processing
+-     */
+-	if (chan->input && chan->enabled)
+-		um_free_irq(chan->line->driver->read_irq, chan);
+-	if (chan->output && chan->enabled)
+-		um_free_irq(chan->line->driver->write_irq, chan);
+-	chan->enabled = 0;
++	if (delay_free_irq) {
++		spin_lock_irqsave(&irqs_to_free_lock, flags);
++		list_add(&chan->free_list, &irqs_to_free);
++		spin_unlock_irqrestore(&irqs_to_free_lock, flags);
++	} else {
++		if (chan->input && chan->enabled)
++			um_free_irq(chan->line->driver->read_irq, chan);
++		if (chan->output && chan->enabled)
++			um_free_irq(chan->line->driver->write_irq, chan);
++		chan->enabled = 0;
++	}
+ 	if (chan->ops->close != NULL)
+ 		(*chan->ops->close)(chan->fd, chan->data);
+ 
+diff --git a/arch/um/kernel/irq.c b/arch/um/kernel/irq.c
+index 6b7f3827d6e4..2753718d31b9 100644
+--- a/arch/um/kernel/irq.c
++++ b/arch/um/kernel/irq.c
+@@ -21,6 +21,8 @@
+ #include <irq_user.h>
+ 
+ 
++extern void free_irqs(void);
++
+ /* When epoll triggers we do not know why it did so
+  * we can also have different IRQs for read and write.
+  * This is why we keep a small irq_fd array for each fd -
+@@ -100,6 +102,8 @@ void sigio_handler(int sig, struct siginfo *unused_si, struct uml_pt_regs *regs)
+ 			}
+ 		}
+ 	}
++
++	free_irqs();
+ }
+ 
+ static int assign_epoll_events_to_irq(struct irq_entry *irq_entry)
 -- 
 2.20.1
 
