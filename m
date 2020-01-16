@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 833FAC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E35AEC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 507992072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:41:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA3802072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:42:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218116;
-	bh=NFxnKCjBfr6dkSPF25OUS484+i8f0PDBqaTCmWfvZms=;
+	s=default; t=1579218122;
+	bh=GIBu8aN+NLGZjEDEJVl+vrMoHlDNqN/VUeTvSJEg2Ec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jN3gV06JlTitD0zEyMrYDs8jDFlLNhcE1T5BzkbAZyf29WV0DGv96TC5guPHxDfJr
-	 kB31sjaPZPBIEwInwRFDX4v/9lbFERIbDQ5KItXM2KLDRQOZkDreW2+dLrT4SytCIz
-	 hIyPQQobmFkCic8+GxRJRlcm/ncGXmT3DghmRqPw=
+	b=hF8DBxxjpyVU1hRJnvHixr7fCRtxUA1DYB44RRWERe9U9lPFRzt4ixdVbDgFl9P1q
+	 hNuhOAXf9d6z2QYpc0A2gDg/wHopGNLrpi+WNQfpJMf36+reuIACjuagYYK+vNfOJb
+	 Aeno1TcuzKtPE5AztEWnRN1AZt8tIM0u7IJaEYaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391885AbgAPXly (ORCPT
+        id S2388275AbgAPX0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:41:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58288 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:26:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389199AbgAPX1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:27:02 -0500
+        id S2389311AbgAPX00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:26:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B1502072E;
-        Thu, 16 Jan 2020 23:27:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1663B20684;
+        Thu, 16 Jan 2020 23:26:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217221;
-        bh=NFxnKCjBfr6dkSPF25OUS484+i8f0PDBqaTCmWfvZms=;
+        s=default; t=1579217185;
+        bh=GIBu8aN+NLGZjEDEJVl+vrMoHlDNqN/VUeTvSJEg2Ec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TGUezLwA9UFAgDN7mC9h4sAaeHaVTqRiUwVM5+CMN97NimQkpVI1d7ib89pVddh2x
-         9DcH/XXyMyoePrK1AzZi7Nk2bIr9rvUyyX13nB2mO9xPqAe0GpRVdGxKd/BEgAcHoA
-         AhAzVsLeWAPAGY0XrN5cLHRrayfor3OB6d6uAvGk=
+        b=FjMJ8pmFar8REV/LCe/yejEGI/4uq8YOCvtfAqlBOyb/KBG3fQeUZnI2dDBjComAa
+         PJATh0wRyVNM4jrTsaobezJXT+HCj66D3Lp2pGTppCrW3YZ1CDD97BHl2cRyOhjSt8
+         8SwwfqGpxFqFc2axODL9GSQhefHBnLX4TANinoUg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, changzhu <Changfeng.Zhu@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Varun Prakash <varun@chelsio.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 198/203] drm/amdgpu: enable gfxoff for raven1 refresh
-Date:   Fri, 17 Jan 2020 00:18:35 +0100
-Message-Id: <20200116231801.435065278@linuxfoundation.org>
+Subject: [PATCH 5.4 182/203] scsi: libcxgbi: fix NULL pointer dereference in cxgbi_device_destroy()
+Date:   Fri, 17 Jan 2020 00:18:19 +0100
+Message-Id: <20200116231800.287864258@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -61,50 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: changzhu <Changfeng.Zhu@amd.com>
+From: Varun Prakash <varun@chelsio.com>
 
-[ Upstream commit e0c63812352298efbce2a71483c1dab627d0c288 ]
+[ Upstream commit 71482fde704efdd8c3abe0faf34d922c61e8d76b ]
 
-When smu version is larger than 0x41e2b, it will load
-raven_kicker_rlc.bin.To enable gfxoff for raven_kicker_rlc.bin,it
-needs to avoid adev->pm.pp_feature &= ~PP_GFXOFF_MASK when it loads
-raven_kicker_rlc.bin.
+If cxgb4i_ddp_init() fails then cdev->cdev2ppm will be NULL, so add a check
+for NULL pointer before dereferencing it.
 
-Signed-off-by: changzhu <Changfeng.Zhu@amd.com>
-Reviewed-by: Huang Rui <ray.huang@amd.com>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Link: https://lore.kernel.org/r/1576676731-3068-1-git-send-email-varun@chelsio.com
+Signed-off-by: Varun Prakash <varun@chelsio.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c | 15 ++++-----------
- 1 file changed, 4 insertions(+), 11 deletions(-)
+ drivers/scsi/cxgbi/libcxgbi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-index c9ba2ec6d038..ab4a0d8545dc 100644
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-@@ -1038,17 +1038,10 @@ static void gfx_v9_0_check_if_need_gfxoff(struct amdgpu_device *adev)
- 	case CHIP_VEGA20:
- 		break;
- 	case CHIP_RAVEN:
--		/* Disable GFXOFF on original raven.  There are combinations
--		 * of sbios and platforms that are not stable.
--		 */
--		if (!(adev->rev_id >= 0x8 || adev->pdev->device == 0x15d8))
--			adev->pm.pp_feature &= ~PP_GFXOFF_MASK;
--		else if (!(adev->rev_id >= 0x8 || adev->pdev->device == 0x15d8)
--			 &&((adev->gfx.rlc_fw_version != 106 &&
--			     adev->gfx.rlc_fw_version < 531) ||
--			    (adev->gfx.rlc_fw_version == 53815) ||
--			    (adev->gfx.rlc_feature_version < 1) ||
--			    !adev->gfx.rlc.is_rlc_v2_1))
-+		if (!(adev->rev_id >= 0x8 ||
-+		      adev->pdev->device == 0x15d8) &&
-+		    (adev->pm.fw_version < 0x41e2b || /* not raven1 fresh */
-+		     !adev->gfx.rlc.is_rlc_v2_1)) /* without rlc save restore ucodes */
- 			adev->pm.pp_feature &= ~PP_GFXOFF_MASK;
- 
- 		if (adev->pm.pp_feature & PP_GFXOFF_MASK)
+diff --git a/drivers/scsi/cxgbi/libcxgbi.c b/drivers/scsi/cxgbi/libcxgbi.c
+index 3e17af8aedeb..2cd2761bd249 100644
+--- a/drivers/scsi/cxgbi/libcxgbi.c
++++ b/drivers/scsi/cxgbi/libcxgbi.c
+@@ -121,7 +121,8 @@ static inline void cxgbi_device_destroy(struct cxgbi_device *cdev)
+ 		"cdev 0x%p, p# %u.\n", cdev, cdev->nports);
+ 	cxgbi_hbas_remove(cdev);
+ 	cxgbi_device_portmap_cleanup(cdev);
+-	cxgbi_ppm_release(cdev->cdev2ppm(cdev));
++	if (cdev->cdev2ppm)
++		cxgbi_ppm_release(cdev->cdev2ppm(cdev));
+ 	if (cdev->pmap.max_connect)
+ 		cxgbi_free_big_mem(cdev->pmap.port_csk);
+ 	kfree(cdev);
 -- 
 2.20.1
 
