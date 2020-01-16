@@ -2,145 +2,169 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB90AC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B4DC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC6AB206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:36:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74919214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:41:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HzD292mX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbgAPMgi (ORCPT
+        id S1726535AbgAPMlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 07:36:38 -0500
-Received: from relay.sw.ru ([185.231.240.75]:39066 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726084AbgAPMgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 07:36:37 -0500
-Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104] helo=localhost.localdomain)
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1is4NS-0000yP-4A; Thu, 16 Jan 2020 15:35:58 +0300
-Subject: [PATCH block v2 1/3] block: Add @flags argument to
- bdev_write_zeroes_sectors()
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        martin.petersen@oracle.com, axboe@kernel.dk, tytso@mit.edu,
-        adilger.kernel@dilger.ca, Chaitanya.Kulkarni@wdc.com,
-        darrick.wong@oracle.com, ming.lei@redhat.com, osandov@fb.com,
-        jthumshirn@suse.de, minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
-        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
-        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
-        chaitanya.kulkarni@wdc.com, bvanassche@acm.org,
-        dhowells@redhat.com, asml.silence@gmail.com, ktkhai@virtuozzo.com
-Date:   Thu, 16 Jan 2020 15:35:58 +0300
-Message-ID: <157917815798.88675.11900718803129164489.stgit@localhost.localdomain>
-In-Reply-To: <157917805422.88675.6477661554332322975.stgit@localhost.localdomain>
-References: <157917805422.88675.6477661554332322975.stgit@localhost.localdomain>
-User-Agent: StGit/0.19
+        Thu, 16 Jan 2020 07:41:53 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:34679 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726082AbgAPMlx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 07:41:53 -0500
+Received: by mail-qt1-f195.google.com with SMTP id 5so18727681qtz.1
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 04:41:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=66dhlEQDrHSjOUhcN0J+RlWrYRnqNftWeH9/h19zJqE=;
+        b=HzD292mXDA4Uc2YDOUBTPcMfo/4DPQYugXWdaX0Yi9oDHGyOawgFsfjrJnciVl53XG
+         N/9xPwd7/xURu9rmTLDJ4o7iFkqwmWgcuq4WYfZ7YWsfe5+ncb/gbF8lwtiWczyS8pBE
+         zFWGWhiIKaA49W3q/ddLP/gfrcaEY1MVHagHGUtJrxZynWAisjz/nIbhKttj/05Jtp7N
+         mTX82v4s8OHRSyQOUfg8kWJR8F8AhDaJBZKx+s7xccailZvaTFfr5jgqFNLYjrhIsJEn
+         We4p5fcrx7UXVIVCV/VoQLn9rE/DWbO0xYR0YVtTKPuyggnVxBVsFrD7mvl4uXAicqQZ
+         0EOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=66dhlEQDrHSjOUhcN0J+RlWrYRnqNftWeH9/h19zJqE=;
+        b=ZUNQP2M/euK47AZhgVtyVkPvx74k9n2SHD6n1MDe6FiVp9tclqxjZSRvcWc2Nv3/cq
+         UPYIYSvra4d2UWasMzyHXw50VTVQrsL+2fpR1t/AAfW47ZcDWaP5pik2CAVF3niWlth4
+         u9TEDcbjBiIH6bdU7lih62Jf93xQF99Tr6WJ2j8I6BzuNYoQ1SWA+NDBPmmAKmq/NO6v
+         cp2bqGEJFy4C7K9IgWP7mDVcpeXcdinIABiJybmRgUDEAlVAnlQm0JmovFGtORhroJ0H
+         Zq1zwMGttpd9Kv1TsRwYjm9tJIpmf3CLGwmj4sw2Y7Yxx/qJPxzPUrmxIPOwVOAtK1bz
+         5rFg==
+X-Gm-Message-State: APjAAAXHAQXcH0qaakU82mLR450LKhaACp5GtwsdKpncyI5afTpfVJ01
+        rNyQcFdwt5zSCbpPRbn+KJ4+szn3SZL33tjx1qtt0Q==
+X-Google-Smtp-Source: APXvYqxlejRZxmLuXJnWJ9cauttbfHc/ZXgeSpho6vFMKkro/9rq9op8xw3jfRMleIFBY5zU+IuVxq4wfSxhn1I8kRc=
+X-Received: by 2002:aed:2465:: with SMTP id s34mr2116794qtc.158.1579178511854;
+ Thu, 16 Jan 2020 04:41:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20200115055426.vdjwvry44nfug7yy@kili.mountain>
+ <d31f6069-bda7-2cdb-b770-0c9cddac7537@suse.cz> <CACT4Y+YF9kYEppMMg3oRkeo+OvhMS1hoKT6EqXCv1jRmA2dz3w@mail.gmail.com>
+ <20200115150315.GH19428@dhcp22.suse.cz> <CACT4Y+Z6xW130JGcZE9X7wDCLamJA_s-STs2imnmW29SzQ-NyQ@mail.gmail.com>
+ <20200115190528.GJ19428@dhcp22.suse.cz> <CACT4Y+b5HJW9PhjkSZ+L09YqQt08ALCtudHV4m5x5qv+xH-2Yg@mail.gmail.com>
+ <20200116073922.GL19428@dhcp22.suse.cz> <CACT4Y+aWNQxSMSnHn6ORkBNM2wWp_K6tPxthj=_FmnyOfO5huA@mail.gmail.com>
+ <20200116115123.GR19428@dhcp22.suse.cz>
+In-Reply-To: <20200116115123.GR19428@dhcp22.suse.cz>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 16 Jan 2020 13:41:39 +0100
+Message-ID: <CACT4Y+b_ybuMRJBtqFnttTv+vfNVKivUH-UmhHtuHh06tVxB_g@mail.gmail.com>
+Subject: Re: [PATCH] mm/mempolicy.c: Fix out of bounds write in mpol_parse_str()
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Lee Schermerhorn <lee.schermerhorn@hp.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzbot <syzbot+e64a13c5369a194d67df@syzkaller.appspotmail.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, yang.shi@linux.alibaba.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a preparation for next patch, which introduces
-a new flag BLKDEV_ZERO_ALLOCATE for calls, which need
-only allocation of blocks and don't need actual blocks
-zeroing.
+On Thu, Jan 16, 2020 at 12:51 PM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Thu 16-01-20 11:13:09, Dmitry Vyukov wrote:
+> > On Thu, Jan 16, 2020 at 8:39 AM Michal Hocko <mhocko@kernel.org> wrote:
+> [...]
+> > > > $ grep vmalloc\( net/netfilter/*.c
+> > > > net/netfilter/nf_tables_api.c: return kvmalloc(alloc, GFP_KERNEL);
+> > > > net/netfilter/x_tables.c: xt[af].compat_tab = vmalloc(mem);
+> > > > net/netfilter/x_tables.c: mem = vmalloc(len);
+> > > > net/netfilter/x_tables.c: info = kvmalloc(sz, GFP_KERNEL_ACCOUNT);
+> > > > net/netfilter/xt_hashlimit.c: /* FIXME: don't use vmalloc() here or
+> > > > anywhere else -HW */
+> > > > net/netfilter/xt_hashlimit.c: hinfo = vmalloc(struct_size(hinfo, hash, size));
+> > > >
+> > > > These are not bound to processes/threads as namespaces are orthogonal to tasks.
+> > >
+> > > I cannot really comment on those. This is for networking people to
+> > > examine and find out whether they allow an untrusted user to runaway.
+> >
+> > Unless I am missing an elephant in this whole picture, kernel code
+> > contains 20K+ unaccounted allocations and if I am not mistaken few of
+> > them were audited and are intentionally unaccounted rather than
+> > unaccounted just because it's the default. So if we want DoS
+> > protection, it's really for every kernel developer/maintainer to audit
+> > and fix these allocation sites. And since we have a unikernel, a
+> > single unaccounted allocation may compromise the whole kernel. I
+> > assume we would need something like GFP_UNACCOUNTED to mark audited
+> > allocations that don't need accounting and then slowly reduce number
+> > of allocations without both ACCOUNTED and UNACCOUNTED.
+>
+> This is the original approach which led to all sorts of problems and so
+> we switched the opt-out to opt-in. Have a look at a9bb7e620efd ("memcg:
+> only account kmem allocations marked as __GFP_ACCOUNT").
+> Our protection will never be perfect because that would require to
+> design the system with the protection in mind.
 
-CC: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
----
- block/blk-lib.c                     |    6 +++---
- drivers/md/dm-kcopyd.c              |    2 +-
- drivers/target/target_core_iblock.c |    4 ++--
- include/linux/blkdev.h              |    3 ++-
- 4 files changed, 8 insertions(+), 7 deletions(-)
+I don't mean to switch the default. I mean adding a way to distinguish
+between reviewed and intentionally unaccounted allocation and
+unreviewed allocation which is unaccounted just because that's the
+default. This would allow to progress incrementally, rather than redo
+the same work again and again.
 
-diff --git a/block/blk-lib.c b/block/blk-lib.c
-index 5f2c429d4378..3e38c93cfc53 100644
---- a/block/blk-lib.c
-+++ b/block/blk-lib.c
-@@ -224,7 +224,7 @@ static int __blkdev_issue_write_zeroes(struct block_device *bdev,
- 		return -EPERM;
- 
- 	/* Ensure that max_write_zeroes_sectors doesn't overflow bi_size */
--	max_write_zeroes_sectors = bdev_write_zeroes_sectors(bdev);
-+	max_write_zeroes_sectors = bdev_write_zeroes_sectors(bdev, 0);
- 
- 	if (max_write_zeroes_sectors == 0)
- 		return -EOPNOTSUPP;
-@@ -362,7 +362,7 @@ int blkdev_issue_zeroout(struct block_device *bdev, sector_t sector,
- 	sector_t bs_mask;
- 	struct bio *bio;
- 	struct blk_plug plug;
--	bool try_write_zeroes = !!bdev_write_zeroes_sectors(bdev);
-+	bool try_write_zeroes = !!bdev_write_zeroes_sectors(bdev, 0);
- 
- 	bs_mask = (bdev_logical_block_size(bdev) >> 9) - 1;
- 	if ((sector | nr_sects) & bs_mask)
-@@ -391,7 +391,7 @@ int blkdev_issue_zeroout(struct block_device *bdev, sector_t sector,
- 			try_write_zeroes = false;
- 			goto retry;
- 		}
--		if (!bdev_write_zeroes_sectors(bdev)) {
-+		if (!bdev_write_zeroes_sectors(bdev, 0)) {
- 			/*
- 			 * Zeroing offload support was indicated, but the
- 			 * device reported ILLEGAL REQUEST (for some devices
-diff --git a/drivers/md/dm-kcopyd.c b/drivers/md/dm-kcopyd.c
-index 1bbe4a34ef4c..f1b8e7926dd4 100644
---- a/drivers/md/dm-kcopyd.c
-+++ b/drivers/md/dm-kcopyd.c
-@@ -831,7 +831,7 @@ void dm_kcopyd_copy(struct dm_kcopyd_client *kc, struct dm_io_region *from,
- 		 */
- 		job->rw = REQ_OP_WRITE_ZEROES;
- 		for (i = 0; i < job->num_dests; i++)
--			if (!bdev_write_zeroes_sectors(job->dests[i].bdev)) {
-+			if (!bdev_write_zeroes_sectors(job->dests[i].bdev, 0)) {
- 				job->rw = WRITE;
- 				break;
- 			}
-diff --git a/drivers/target/target_core_iblock.c b/drivers/target/target_core_iblock.c
-index 51ffd5c002de..73a63e197bf5 100644
---- a/drivers/target/target_core_iblock.c
-+++ b/drivers/target/target_core_iblock.c
-@@ -117,7 +117,7 @@ static int iblock_configure_device(struct se_device *dev)
- 	 * Enable write same emulation for IBLOCK and use 0xFFFF as
- 	 * the smaller WRITE_SAME(10) only has a two-byte block count.
- 	 */
--	max_write_zeroes_sectors = bdev_write_zeroes_sectors(bd);
-+	max_write_zeroes_sectors = bdev_write_zeroes_sectors(bd, 0);
- 	if (max_write_zeroes_sectors)
- 		dev->dev_attrib.max_write_same_len = max_write_zeroes_sectors;
- 	else
-@@ -468,7 +468,7 @@ iblock_execute_write_same(struct se_cmd *cmd)
- 		return TCM_INVALID_CDB_FIELD;
- 	}
- 
--	if (bdev_write_zeroes_sectors(bdev)) {
-+	if (bdev_write_zeroes_sectors(bdev, 0)) {
- 		if (!iblock_execute_zero_out(bdev, cmd))
- 			return 0;
- 	}
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index c45779f00cbd..4cd69552df9a 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -1418,7 +1418,8 @@ static inline unsigned int bdev_write_same(struct block_device *bdev)
- 	return 0;
- }
- 
--static inline unsigned int bdev_write_zeroes_sectors(struct block_device *bdev)
-+static inline unsigned int bdev_write_zeroes_sectors(struct block_device *bdev,
-+						     unsigned int flags)
- {
- 	struct request_queue *q = bdev_get_queue(bdev);
- 
+> > > > Somebody told me that it's not good to use GFP_ACCOUNT if the
+> > > > allocation is not tied to the lifetime of the process. Is it still
+> > > > true?
+> > >
+> > > Those are more tricky. Mostly because there is no way to reclaim the
+> > > memory once the hard limit is hit. Even the memcg oom killer will not
+> > > help much. So a care should be taken when adding GFP_ACCOUNT for those.
+> > > On the other hand it would prevent an unbounded allocations at least
+> > > so the DoS would be reduced to the hard limited memcg.
+> >
+> > What exactly is this care in practice?
+> > It seems that in a148ce15375fc664ad64762c751c0c2aecb2cafe you just
+> > added it and the allocation is not tied to the process. At least I
+> > don't see any explanation as to why that one is safe, while accounting
+> > other similar allocation is not...
+>
+> My memory is dim but AFAIR the memcg accounting was compromise between
+> usability and the whole system stability. Really large tables could be
+> allocated by untrusted users and that was seen as a _real_ problem. The
+> previous solution added _some_ protection which led to regressions
+> even for reasonable cases though. Memcg accounting was deemed as
+> reasonable middle ground.
+>
+> The result is that a completely depleted memcg requires an admin
+> intervention and the admin has to know what to do to tear it down.
+> Kernel cannot do anything about that. And that is the trickiness I've
+> had in mind. Listing page tables is something admins can do quite
+> easily, right? There are many other objects which are much harder to act
+> about. E.g. what are you going to do with tmpfs mounts? Are you going to
+> remove them and cause potential data loss? That being said some objects
+> really have to be limited even before they start consuming memory IMHO.
 
+Interesting. But there is really no admin today, or at least nothing
+should rely on one in any way. Either because of the scale (you have
+thousands/millions of machines and spending human time on each of them
+individually is not going to fly) and/or because there is nobody
+qualified enough around (e.g. who is an admin of a median android
+phone? and what does they know about tearing down namespaces and
+mounts) or there is nobody interested enough (it's fun sometimes, but
+not always)... but I agree that retrofitting this level of resource
+control into a large existing complex system is close to impossible.
 
+Thank a lot for bearing with me and answering my questions. I have a
+better understanding of this now.
