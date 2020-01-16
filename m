@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FA0C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43282C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07A6324687
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:10:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19C152468A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:10:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194645;
-	bh=NGYOXAqlPS4bqo7xOtMaITDjIpO5eesQycQgJxxykAU=;
+	s=default; t=1579194650;
+	bh=BzWGq08Cw707pQ2k90WhyO1dpmbOcfJvExvmh/Tx6H0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gRf2tL801KxOWyH1LBidPXCELaRv2YVtC6SuY6L042kF5vn4wQsqIKT8/cgtReVGV
-	 5FNjsyqxo026Y6sTCQ52cC1TH4Lu1FdEBpOsLw7i98ILf/ZocAJm4YKhVtt9fxIMzW
-	 fg/McBTlJQdjux0Cv8InykEq36kUGKb8GQGrXH6I=
+	b=SIz+BwGVx6u67n24aB+t9z4eOtDeXIai4NOLoaLtcDGMxRB/c5CfyWi1ORYgVCPhy
+	 y6SbKxOrjZ2wBM076MTDquN59LhapDV/STLK3PWieJeHJb93ZlX/7PHUJV2CyniRxi
+	 vqrE3/UVaqEmY0GBelIkMLQwslBzdBk/to36KVZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388717AbgAPRKo (ORCPT
+        id S2390063AbgAPRKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:10:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48882 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:10:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390024AbgAPRKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:10:32 -0500
+        id S2390049AbgAPRKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:10:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12E262468A;
-        Thu, 16 Jan 2020 17:10:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C30AE2467C;
+        Thu, 16 Jan 2020 17:10:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194631;
-        bh=NGYOXAqlPS4bqo7xOtMaITDjIpO5eesQycQgJxxykAU=;
+        s=default; t=1579194639;
+        bh=BzWGq08Cw707pQ2k90WhyO1dpmbOcfJvExvmh/Tx6H0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HE5jKCIj4N60r7Jbjo1LoFpnowUo98mUbYtWg/O726OHbsicOSUwjhXd4EGtKPK83
-         TeTjth5TRcjrZOyYyVVlK4eUI80OuuWKSI2fz9Cd8JWk7p8diH1p/PHnzk8G1xseVD
-         2jZDDgJ+f+AtmgIenzHgHCCrY9iAT0lVIQ31Hoi0=
+        b=nIDx07yRwemt5WKIMJwJmabnX6JjAnVEtKH5J0Qo90hrub+fRjauSJWZKQUiioC6P
+         3aY5hH2Jl0U1Plvr/ChUBDlm+t2tC91sTCNBloVGuGi6A2BQTg7nq81ztfhfRGuCqw
+         TEmK1YjxpjTy8t0DiCb4fD792WeeigRBBf5v+Yng=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.19 491/671] ASoC: cs4349: Use PM ops 'cs4349_runtime_pm'
-Date:   Thu, 16 Jan 2020 12:02:09 -0500
-Message-Id: <20200116170509.12787-228-sashal@kernel.org>
+Cc:     Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 497/671] bnxt_en: Fix handling FRAG_ERR when NVM_INSTALL_UPDATE cmd fails
+Date:   Thu, 16 Jan 2020 12:02:15 -0500
+Message-Id: <20200116170509.12787-234-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,38 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-[ Upstream commit 9b4275c415acca6264a3d7f1182589959c93d530 ]
+[ Upstream commit dd2ebf3404c7c295014bc025dea23960960ceb1a ]
 
-sound/soc/codecs/cs4349.c:358:32: warning:
- cs4349_runtime_pm defined but not used [-Wunused-const-variable=]
+If FW returns FRAG_ERR in response error code, driver is resending the
+command only when HWRM command returns success. Fix the code to resend
+NVM_INSTALL_UPDATE command with DEFRAG install flags, if FW returns
+FRAG_ERR in its response error code.
 
-cs4349_runtime_pm ops already defined, it seems
-we should enable it.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: e40da86 ("ASoC: cs4349: Add support for Cirrus Logic CS4349")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lore.kernel.org/r/20190815090157.70036-1-yuehaibing@huawei.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: cb4d1d626145 ("bnxt_en: Retry failed NVM_INSTALL_UPDATE with defragmentation flag enabled.")
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/cs4349.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/sound/soc/codecs/cs4349.c b/sound/soc/codecs/cs4349.c
-index bee0e343723f..f08d7a296c0c 100644
---- a/sound/soc/codecs/cs4349.c
-+++ b/sound/soc/codecs/cs4349.c
-@@ -381,6 +381,7 @@ static struct i2c_driver cs4349_i2c_driver = {
- 	.driver = {
- 		.name		= "cs4349",
- 		.of_match_table	= cs4349_of_match,
-+		.pm = &cs4349_runtime_pm,
- 	},
- 	.id_table	= cs4349_i2c_id,
- 	.probe		= cs4349_i2c_probe,
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+index dc63d269f01d..cdbb8940a4ae 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+@@ -1778,21 +1778,19 @@ static int bnxt_flash_package_from_file(struct net_device *dev,
+ 	mutex_lock(&bp->hwrm_cmd_lock);
+ 	hwrm_err = _hwrm_send_message(bp, &install, sizeof(install),
+ 				      INSTALL_PACKAGE_TIMEOUT);
+-	if (hwrm_err)
+-		goto flash_pkg_exit;
+-
+-	if (resp->error_code) {
++	if (hwrm_err) {
+ 		u8 error_code = ((struct hwrm_err_output *)resp)->cmd_err;
+ 
+-		if (error_code == NVM_INSTALL_UPDATE_CMD_ERR_CODE_FRAG_ERR) {
++		if (resp->error_code && error_code ==
++		    NVM_INSTALL_UPDATE_CMD_ERR_CODE_FRAG_ERR) {
+ 			install.flags |= cpu_to_le16(
+ 			       NVM_INSTALL_UPDATE_REQ_FLAGS_ALLOWED_TO_DEFRAG);
+ 			hwrm_err = _hwrm_send_message(bp, &install,
+ 						      sizeof(install),
+ 						      INSTALL_PACKAGE_TIMEOUT);
+-			if (hwrm_err)
+-				goto flash_pkg_exit;
+ 		}
++		if (hwrm_err)
++			goto flash_pkg_exit;
+ 	}
+ 
+ 	if (resp->result) {
 -- 
 2.20.1
 
