@@ -2,89 +2,106 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F3ACC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5CEC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F04E207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:04:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="F91F41bi"
+	by mail.kernel.org (Postfix) with ESMTP id C74582077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:04:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579194254;
+	bh=DxDMkXN6W8HXA9Tv9UdkQdLIiC4v0uFN8JnUp4MuYaQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=yxGiOUVDiEeKetVVPV8WisR9t1Xr6/p4FzrvSZaiccqP8kh/ro/hmVzRpiMDOubZl
+	 c0RcQ9sx+J6KNdW2qS6v8+1Isv1lXf17P6xjlnhKtHwnOpmQsUgUYE5i5cYwMetNzh
+	 HZafBTkO81eCFW17NbzECOh69LvU7ZfLK/FZtjcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388629AbgAPREI (ORCPT
+        id S2388487AbgAPRCu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:04:08 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:21771 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388044AbgAPREF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:04:05 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579194245; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=jyDX0RkCRR3RXyVljn8CGp1pK1triQLesamc/wgsgLM=; b=F91F41bi6tDQ85feQfn1HvKPoczWeDUhoJrwCmNL/p7Y4b1+eFOYxUhwB4kh8bDB/gYf4o2y
- xMvTyL84BxvOk/3AisExkcg02YfgsADlApN+gBUCe4Bu0W0E/iHhJctslBiO4NMqcf1gjq2e
- dlWbYoU8faYjnuZYJ5IJrpmYYUk=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e209783.7fe471b55a08-smtp-out-n02;
- Thu, 16 Jan 2020 17:04:03 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2885DC447AB; Thu, 16 Jan 2020 17:04:02 +0000 (UTC)
-Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Thu, 16 Jan 2020 12:02:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55952 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388036AbgAPRCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:02:43 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3E419C447A9;
-        Thu, 16 Jan 2020 17:03:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3E419C447A9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-To:     ulf.hansson@linaro.org, adrian.hunter@intel.com
-Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
-        sayalil@codeaurora.org, cang@codeaurora.org,
-        rampraka@codeaurora.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Subject: [PATCH V2 0/2] Add CQHCI support for sdhci-msm
-Date:   Thu, 16 Jan 2020 22:33:09 +0530
-Message-Id: <1579194192-7942-1-git-send-email-vbadigan@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 04F9D207FF;
+        Thu, 16 Jan 2020 17:02:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579194162;
+        bh=DxDMkXN6W8HXA9Tv9UdkQdLIiC4v0uFN8JnUp4MuYaQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=c7dM815HwtyBCpR5EmbF7N7NOBhiFqdfO1RAM1lSVKMJbEtTDuYEFWoatCqzwrCZv
+         tleyxGE1W+FGV5FBaE1vuTfBtBrGo4BF/SknKzllZukF2BRluza5ntlOSVuPdVVmZ7
+         ryu1kPcT/Qu8idP3sJh3elVk1a5ilrDtf4nILMQM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Eli Britstein <elibr@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 243/671] net/mlx5: Fix multiple updates of steering rules in parallel
+Date:   Thu, 16 Jan 2020 11:52:32 -0500
+Message-Id: <20200116165940.10720-126-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
+References: <20200116165940.10720-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes since V1: (https://lkml.org/lkml/2019/12/17/455)
-	- Select MMC_CQHCI in Kconfig
-	- Making use of host->alloc_desc_size variable for allocation
-	  of ADMA table and host->desc_size for updating decriptor
-	  size dynamically.
+From: Eli Britstein <elibr@mellanox.com>
 
-Changes since RFC (https://lkml.org/lkml/2017/8/30/313)
-	- Updated settings so that TDLBA won't get reset when
-	  CQE is enabled.
-	- Removed new compatible string and moved to supports-cqe
-	  dt flag to identify CQE support.
-	- Incorporated review comments.
+[ Upstream commit 6237634d8fcc65c9e3348382910e7cdb15084c68 ]
 
-Tested on: qcs404, sc7180
+There might be a condition where the fte found is not active yet. In
+this case we should not use it, but continue to search for another, or
+allocate a new one.
 
-Ritesh Harjani (1):
-  mmc: sdhci-msm: Add CQHCI support for sdhci-msm
+Fixes: bd71b08ec2ee ("net/mlx5: Support multiple updates of steering rules in parallel")
+Signed-off-by: Eli Britstein <elibr@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/fs_core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Veerabhadrarao Badiganti (1):
-  mmc: sdhci: Let a vendor driver supply and update ADMA descriptor size
-
- drivers/mmc/host/Kconfig     |   1 +
- drivers/mmc/host/sdhci-msm.c | 133 ++++++++++++++++++++++++++++++++++++++++++-
- drivers/mmc/host/sdhci.c     |   7 ++-
- drivers/mmc/host/sdhci.h     |   1 +
- 4 files changed, 139 insertions(+), 3 deletions(-)
-
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
+index 82a53317285d..b16e0f45d28c 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
+@@ -469,6 +469,7 @@ static void del_hw_fte(struct fs_node *node)
+ 			mlx5_core_warn(dev,
+ 				       "flow steering can't delete fte in index %d of flow group id %d\n",
+ 				       fte->index, fg->id);
++		node->active = 0;
+ 	}
+ }
+ 
+@@ -1597,6 +1598,11 @@ lookup_fte_locked(struct mlx5_flow_group *g,
+ 		fte_tmp = NULL;
+ 		goto out;
+ 	}
++	if (!fte_tmp->node.active) {
++		tree_put_node(&fte_tmp->node);
++		fte_tmp = NULL;
++		goto out;
++	}
+ 
+ 	nested_down_write_ref_node(&fte_tmp->node, FS_LOCK_CHILD);
+ out:
 -- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+2.20.1
+
