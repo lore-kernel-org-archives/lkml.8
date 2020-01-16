@@ -7,58 +7,59 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E79CC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 072F5C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A3652469A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6E3124681
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="VpEAVsMo"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="hu4ilqW7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394607AbgAPR7A (ORCPT
+        id S2394721AbgAPR7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:59:00 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:32060 "EHLO pegase1.c-s.fr"
+        Thu, 16 Jan 2020 12:59:05 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:56142 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394662AbgAPR6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:58:35 -0500
+        id S2394630AbgAPR6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:58:33 -0500
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 47zBkv4jWBz9v4gd;
-        Thu, 16 Jan 2020 18:58:31 +0100 (CET)
+        by localhost (Postfix) with ESMTP id 47zBks4rWmz9v3G9;
+        Thu, 16 Jan 2020 18:58:29 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=VpEAVsMo; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=hu4ilqW7; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id DXtJZSmMJMX7; Thu, 16 Jan 2020 18:58:31 +0100 (CET)
+        with ESMTP id O51UVLooQNFG; Thu, 16 Jan 2020 18:58:29 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47zBkv3NwQz9v4gc;
-        Thu, 16 Jan 2020 18:58:31 +0100 (CET)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47zBks3d0qz9v0Mk;
+        Thu, 16 Jan 2020 18:58:29 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1579197511; bh=wfHgFrBCUMEE5/kS6fI9jRYQD9EPAenOLbEqfa9DCHQ=;
+        t=1579197509; bh=8NMCNHuubcE6t4e17wk7DBu9YLriy2ZDehAsOAuF4AM=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=VpEAVsMoaRaYR/GDi6jEna8DY+dp86tqIqGVdjZ9p7CFVKq9q4/QlPb4PyiZjRSKd
-         pkZmibrJqKFhI86ouCtZlJGL+CvG8vsycMzfZZq6zR5sEiwOxE1evs6xYe+ppXJtC0
-         rPKQ3nF22KjCabgC73k1U7UYgFh9oD/+ZhvTL1ik=
+        b=hu4ilqW7N3T8WujMXabIwtHKKTKsmMtwFUCZFVxCoaYZhizxdgG91lNwgD9tz6FyN
+         uAxw87XR6KVTrvW4It/YMNKKcsT/90SNK/yrsdGq5RLmxki5jNn8tARXBLEi5E8HYL
+         bOCKf2uGE6tihxiwW/DhFtaOPssrZOPbyYQhcHVo=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id F39148B82D;
-        Thu, 16 Jan 2020 18:58:32 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 282748B82A;
+        Thu, 16 Jan 2020 18:58:31 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id yj3XipUHd9_m; Thu, 16 Jan 2020 18:58:32 +0100 (CET)
+        with ESMTP id viixK8XbZXYy; Thu, 16 Jan 2020 18:58:31 +0100 (CET)
 Received: from po14934vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B80628B82A;
-        Thu, 16 Jan 2020 18:58:32 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id ABC488B82D;
+        Thu, 16 Jan 2020 18:58:30 +0100 (CET)
 Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 8FAE264A33; Thu, 16 Jan 2020 17:58:32 +0000 (UTC)
-Message-Id: <1b278bc1f6859d4df734fb2cde61cf298e6e07fd.1579196675.git.christophe.leroy@c-s.fr>
+        id 84AC364A33; Thu, 16 Jan 2020 17:58:30 +0000 (UTC)
+Message-Id: <2e730f4e6ef77be2d5bfc38273d8a622e2cb4f97.1579196675.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1579196675.git.christophe.leroy@c-s.fr>
 References: <cover.1579196675.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [RFC PATCH v4 08/11] lib: vdso: allow fixed clock mode
+Subject: [RFC PATCH v4 06/11] powerpc/vdso: provide inline alternative to
+ __get_datapage()
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>, nathanl@linux.ibm.com,
@@ -67,60 +68,57 @@ To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
         x86@kernel.org
-Date:   Thu, 16 Jan 2020 17:58:32 +0000 (UTC)
+Date:   Thu, 16 Jan 2020 17:58:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On arches like POWERPC, the clock is always the timebase, it
-cannot be changed on the fly and it is always VDSO capable.
+__get_datapage() is only a few instructions to retrieve the
+address of the page where the kernel stores data to the VDSO.
 
-Therefore, give arches the opportunity to redefine the way
-clock_mode is checked by moving the check into an overridable
-__arch_vdso_capable() macro.
+By inlining this function into its users, a bl/blr pair and
+a mflr/mtlr pair is avoided, plus a few reg moves.
+
+The improvement is noticeable (about 55 nsec/call on an 8xx)
+
+With current __get_datapage() function:
+gettimeofday:    vdso: 731 nsec/call
+clock-gettime-realtime-coarse:    vdso: 668 nsec/call
+clock-gettime-monotonic-coarse:    vdso: 745 nsec/call
+
+Using the __get_datapage macro provided by this patch:
+gettimeofday:    vdso: 677 nsec/call
+clock-gettime-realtime-coarse:    vdso: 613 nsec/call
+clock-gettime-monotonic-coarse:    vdso: 690 nsec/call
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- lib/vdso/gettimeofday.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ arch/powerpc/include/asm/vdso_datapage.h | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
-index 9fa249809399..724b45c3e8ac 100644
---- a/lib/vdso/gettimeofday.c
-+++ b/lib/vdso/gettimeofday.c
-@@ -46,6 +46,13 @@ static inline bool __arch_vdso_hres_capable(void)
- }
- #endif
+diff --git a/arch/powerpc/include/asm/vdso_datapage.h b/arch/powerpc/include/asm/vdso_datapage.h
+index 4d7965bf369e..7342cc0c1ae4 100644
+--- a/arch/powerpc/include/asm/vdso_datapage.h
++++ b/arch/powerpc/include/asm/vdso_datapage.h
+@@ -105,6 +105,17 @@ struct vdso_arch_data {
  
-+#ifndef __arch_vdso_capable
-+static inline bool __arch_vdso_capable(const struct vdso_data *vd)
-+{
-+	return vd->clock_mode != VDSO_CLOCKMODE_NONE;
-+}
-+#endif
+ extern struct vdso_arch_data *vdso_data;
+ 
++#else /* __ASSEMBLY__ */
 +
- #ifdef CONFIG_TIME_NS
- static int do_hres_timens(const struct vdso_data *vdns, clockid_t clk,
- 			  struct __kernel_timespec *ts)
-@@ -66,7 +73,7 @@ static int do_hres_timens(const struct vdso_data *vdns, clockid_t clk,
- 	do {
- 		seq = vdso_read_begin(vd);
++.macro get_datapage ptr, offset=0
++	bcl	20, 31, .+4
++	mflr	\ptr
++#if CONFIG_PPC_PAGE_SHIFT > 14
++	addis	\ptr, \ptr, (_vdso_datapage + \offset - (.-4))@ha
++#endif
++	addi	\ptr, \ptr, (_vdso_datapage + \offset - (.-4))@l
++.endm
++
+ #endif /* __ASSEMBLY__ */
  
--		if (unlikely(vd->clock_mode == VDSO_CLOCKMODE_NONE))
-+		if (unlikely(!__arch_vdso_capable(vd)))
- 			return -1;
- 
- 		cycles = __arch_get_hw_counter(vd->clock_mode);
-@@ -134,7 +141,7 @@ static __always_inline int do_hres(const struct vdso_data *vd, clockid_t clk,
- 		}
- 		smp_rmb();
- 
--		if (unlikely(vd->clock_mode == VDSO_CLOCKMODE_NONE))
-+		if (unlikely(!__arch_vdso_capable(vd)))
- 			return -1;
- 
- 		cycles = __arch_get_hw_counter(vd->clock_mode);
+ #endif /* __KERNEL__ */
 -- 
 2.13.3
 
