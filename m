@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3230DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF849C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:29:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03F3020684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:29:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 892A420684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:29:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199347;
-	bh=LSH4FYBmw7ZPauxZ6yfhbgNklBLUqMNtnR6gucz/zuI=;
+	s=default; t=1579199349;
+	bh=FZy4B6ACB0AJRRp1NQg/HilcBklYKC3iMiP8P/aG7kU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y1LbAVyGbVxVHMjyZpFOtbOm3uqthYyQr/Z7OM71qpyZr6XLCma7Rx27Co8q6ltZ8
-	 TOi1iE5OwEJDtSa/k4VspZJgiFWT1pdLEQWv7ICdSY3RCZFoaqbOIXyPliFREy896V
-	 FTNr5yRTm4KTlsobGg5o+iJ/BjrSaFwWt2Y92tgs=
+	b=ycPgUwvKyQUpOVfxi2fM2O+mf9FnnjjjfKvLRjYc38B8ber2XxQ48RT97JQfeZrAj
+	 F6WTP27eiXq2X+rQTjn4qzI+5nhuV8kG69U+W153zr/sICWhmSu8Rn2p6Nux85br3F
+	 r42C4PgLZ13rsOYMBILAGJjVGQwtdq2GmWrzJNLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403946AbgAPS3F (ORCPT
+        id S2392211AbgAPR0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:29:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34294 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:26:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390691AbgAPR0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:26:01 -0500
+        id S2392127AbgAPRZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:25:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42C5C246B9;
-        Thu, 16 Jan 2020 17:26:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10B16246A3;
+        Thu, 16 Jan 2020 17:25:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195561;
-        bh=LSH4FYBmw7ZPauxZ6yfhbgNklBLUqMNtnR6gucz/zuI=;
+        s=default; t=1579195538;
+        bh=FZy4B6ACB0AJRRp1NQg/HilcBklYKC3iMiP8P/aG7kU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e9rzzKOP43HszqKke5+yShRLY29OSgv3vQz0DVjnBPg5Pw6KdZSgci/Bjv06Zg+4m
-         RNb6wg/Gkr+iyohgzerEmS59mZ9tm93gMM0qyoXSRcbixBf6PDvPtGvwK14dW3QrIe
-         g7Jr4xCpDaorSP8s3Hot+x3SHBJojDM7Cm8QCiuI=
+        b=YegsDGBNJVbKwE/MoAJ3fEaWUcQg4+Air28evjf0GIhUtLWBB9zVQc+PboevJVE5c
+         6Z5dGGofJdLj/vDUZsDLdRdDXzW2X9x77btAgXXd7RWl1p2oTYm5wS4gnhX2cil9l1
+         HB1c6LPc21Jm+RNTQw+G7TIua/urQ7H0WpYnyJYg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 148/371] media: tw5864: Fix possible NULL pointer dereference in tw5864_handle_frame
-Date:   Thu, 16 Jan 2020 12:20:20 -0500
-Message-Id: <20200116172403.18149-91-sashal@kernel.org>
+Cc:     Steve Sistare <steven.sistare@oracle.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>,
+        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 132/371] scsi: megaraid_sas: reduce module load time
+Date:   Thu, 16 Jan 2020 12:20:04 -0500
+Message-Id: <20200116172403.18149-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -60,44 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Steve Sistare <steven.sistare@oracle.com>
 
-[ Upstream commit 2e7682ebfc750177a4944eeb56e97a3f05734528 ]
+[ Upstream commit 31b6a05f86e690e1818116fd23c3be915cc9d9ed ]
 
-'vb' null check should be done before dereferencing it in
-tw5864_handle_frame, otherwise a NULL pointer dereference
-may occur.
+megaraid_sas takes 1+ seconds to load while waiting for firmware:
 
-Fixes: 34d1324edd31 ("[media] pci: Add tw5864 driver")
+[2.822603] megaraid_sas 0000:03:00.0: Waiting for FW to come to ready state
+[3.871003] megaraid_sas 0000:03:00.0: FW now in Ready state
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+This is due to the following loop in megasas_transition_to_ready(), which
+waits a minimum of 1 second, even though the FW becomes ready in tens of
+millisecs:
+
+        /*
+         * The cur_state should not last for more than max_wait secs
+         */
+        for (i = 0; i < max_wait; i++) {
+                ...
+                msleep(1000);
+        ...
+        dev_info(&instance->pdev->dev, "FW now in Ready state\n");
+
+This is a regression, caused by a change of the msleep granularity from 1
+to 1000 due to concern about waiting too long on systems with coarse
+jiffies.
+
+To fix, increase iterations and use msleep(20), which results in:
+
+[2.670627] megaraid_sas 0000:03:00.0: Waiting for FW to come to ready state
+[2.739386] megaraid_sas 0000:03:00.0: FW now in Ready state
+
+Fixes: fb2f3e96d80f ("scsi: megaraid_sas: Fix msleep granularity")
+Signed-off-by: Steve Sistare <steven.sistare@oracle.com>
+Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/tw5864/tw5864-video.c | 4 ++--
+ drivers/scsi/megaraid/megaraid_sas_base.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/pci/tw5864/tw5864-video.c b/drivers/media/pci/tw5864/tw5864-video.c
-index e7bd2b8484e3..ee1230440b39 100644
---- a/drivers/media/pci/tw5864/tw5864-video.c
-+++ b/drivers/media/pci/tw5864/tw5864-video.c
-@@ -1395,13 +1395,13 @@ static void tw5864_handle_frame(struct tw5864_h264_frame *frame)
- 	input->vb = NULL;
- 	spin_unlock_irqrestore(&input->slock, flags);
+diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
+index 577513649afb..6abad63b127a 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_base.c
++++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+@@ -3823,12 +3823,12 @@ megasas_transition_to_ready(struct megasas_instance *instance, int ocr)
+ 		/*
+ 		 * The cur_state should not last for more than max_wait secs
+ 		 */
+-		for (i = 0; i < max_wait; i++) {
++		for (i = 0; i < max_wait * 50; i++) {
+ 			curr_abs_state = instance->instancet->
+ 				read_fw_status_reg(instance->reg_set);
  
--	v4l2_buf = to_vb2_v4l2_buffer(&vb->vb.vb2_buf);
--
- 	if (!vb) { /* Gone because of disabling */
- 		dev_dbg(&dev->pci->dev, "vb is empty, dropping frame\n");
- 		return;
- 	}
- 
-+	v4l2_buf = to_vb2_v4l2_buffer(&vb->vb.vb2_buf);
-+
- 	/*
- 	 * Check for space.
- 	 * Mind the overhead of startcode emulation prevention.
+ 			if (abs_state == curr_abs_state) {
+-				msleep(1000);
++				msleep(20);
+ 			} else
+ 				break;
+ 		}
 -- 
 2.20.1
 
