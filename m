@@ -2,93 +2,86 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EEBFC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3989DC47409
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08EB420728
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:58:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193925;
-	bh=bRJwGJyGPypJB2TUxFTv7I8uq4hF8Uyq6ct81Bq1hJQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aVI8BK4SF5KIxEWlk4keKmLeI88RWrWCVzluQCMRrm2cWDzAxq/EsHo+Fsh8hPvVf
-	 VgFR0wxX93Dih5sQLHI2sl0Q8V6wprtlb6HcOiduPUDQWSCKzqcPzhtZUDPBw6LvfU
-	 8DKfHkjFDvL0p9lr65ALLKMPdcPDvlPheH5QcEDs=
+	by mail.kernel.org (Postfix) with ESMTP id 0CE3220728
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:58:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387459AbgAPQ6n (ORCPT
+        id S1732903AbgAPQ5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:58:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45082 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387523AbgAPQ5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:57:40 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D92224673;
-        Thu, 16 Jan 2020 16:57:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193860;
-        bh=bRJwGJyGPypJB2TUxFTv7I8uq4hF8Uyq6ct81Bq1hJQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OVDBzh1dqNb1COl/KVkh7XSWwnYHFp8L5uBx9GOAYeZcQKReMa9neT1g/4lRduht4
-         Mp+aQn4U1CcsBS2mhJaoBzTPBNjZtDEODERkFxm4kg1Xab5T8/hXFFvjCsWAyPGFzj
-         NLe6UV56RaekqO64Yp0NMAwI4ppudnZT2nVQVkk4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gal Pressman <galpress@amazon.com>,
-        Parvi Kaustubhi <pkaustub@cisco.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 108/671] IB/usnic: Fix out of bounds index check in query pkey
-Date:   Thu, 16 Jan 2020 11:45:39 -0500
-Message-Id: <20200116165502.8838-108-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
-References: <20200116165502.8838-1-sashal@kernel.org>
+        Thu, 16 Jan 2020 11:57:39 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:4342 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387483AbgAPQ5X (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:57:23 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00GGqYn4000998;
+        Thu, 16 Jan 2020 11:57:00 -0500
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xfaw2n90s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jan 2020 11:57:00 -0500
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 00GGqo28029144;
+        Thu, 16 Jan 2020 16:56:58 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma01dal.us.ibm.com with ESMTP id 2xf758m72s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jan 2020 16:56:58 +0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00GGuvLU45351198
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jan 2020 16:56:57 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 96292124053;
+        Thu, 16 Jan 2020 16:56:57 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5FC47124052;
+        Thu, 16 Jan 2020 16:56:57 +0000 (GMT)
+Received: from localhost (unknown [9.41.100.106])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 16 Jan 2020 16:56:57 +0000 (GMT)
+From:   Nathan Lynch <nathanl@linux.ibm.com>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH vdsotest] Use vdso wrapper for gettimeofday()
+In-Reply-To: <0eddeeb64c97b8b5ce0abd74e88d2cc0303e49c6.1579090596.git.christophe.leroy@c-s.fr>
+References: <0eddeeb64c97b8b5ce0abd74e88d2cc0303e49c6.1579090596.git.christophe.leroy@c-s.fr>
+Date:   Thu, 16 Jan 2020 10:56:56 -0600
+Message-ID: <871rrzjq5j.fsf@linux.ibm.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-16_05:2020-01-16,2020-01-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
+ suspectscore=1 adultscore=0 priorityscore=1501 lowpriorityscore=0
+ malwarescore=0 phishscore=0 mlxlogscore=665 bulkscore=0 mlxscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001160136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gal Pressman <galpress@amazon.com>
+Hi Christophe,
 
-[ Upstream commit 4959d5da5737dd804255c75b8cea0a2929ce279a ]
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
+> To properly handle errors returned by gettimeofday(), the
+> DO_VDSO_CALL() macro has to be used, otherwise vdsotest
+> misinterpret VDSO function return on error.
+>
+> This has gone unnoticed until now because the powerpc VDSO
+> gettimeofday() always succeed, but while porting powerpc to
+> generic C VDSO, the following has been encountered:
 
-The pkey table size is one element, index should be tested for > 0 instead
-of > 1.
+Thanks for this, I'll review it soon.
 
-Fixes: e3cf00d0a87f ("IB/usnic: Add Cisco VIC low-level hardware driver")
-Signed-off-by: Gal Pressman <galpress@amazon.com>
-Acked-by: Parvi Kaustubhi <pkaustub@cisco.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/infiniband/hw/usnic/usnic_ib_verbs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/infiniband/hw/usnic/usnic_ib_verbs.c b/drivers/infiniband/hw/usnic/usnic_ib_verbs.c
-index 3db232429630..e611f133aa97 100644
---- a/drivers/infiniband/hw/usnic/usnic_ib_verbs.c
-+++ b/drivers/infiniband/hw/usnic/usnic_ib_verbs.c
-@@ -447,7 +447,7 @@ struct net_device *usnic_get_netdev(struct ib_device *device, u8 port_num)
- int usnic_ib_query_pkey(struct ib_device *ibdev, u8 port, u16 index,
- 				u16 *pkey)
- {
--	if (index > 1)
-+	if (index > 0)
- 		return -EINVAL;
- 
- 	*pkey = 0xffff;
--- 
-2.20.1
-
+Can you point me to patches for the powerpc generic vdso work?
