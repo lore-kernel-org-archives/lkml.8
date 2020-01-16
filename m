@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6927C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B27AC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CE31246C8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:26:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69CC7246BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:26:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195565;
-	bh=K3uQlaV6PSVmkRvLY0TLcL34gXqHhh7+i0F5l/TLHtc=;
+	s=default; t=1579195570;
+	bh=9lFcSaXVFg63NRWGeDrv05C73dAUr2huwxo00KwwHQs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ge0CVuLLnvNx0GqUbfi+LuHdY0eNg9LhBWpKMAd3f1EJ35aQJkwjW4LdIXCVXTG+p
-	 vJpvHgrZfYhlLbTWV5vOiF5nOCKegrnx8/dhY+R5jMHgyKRyOtGAb72YV08J0CDaff
-	 7fSSiazr/B4Mme6ZAKw143jC1SLwE+JMPL1PFITk=
+	b=2R/bJa3nTbLG0KeYiwZ+vFx4pTEB6M0AN1fp89uExcFvErbMwyJhVkkGNRkMb0+yX
+	 c/rx+oiznJBqFQVmSEK6M5wxilp+TKLbEoZJgAJt55O0zNI4GyGPt3oXz+NFTeh9AB
+	 jiG9XD3fAZNBT1zLlF8Iv2iaoC5VpdlyxT3ixXec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392234AbgAPR0E (ORCPT
+        id S2392251AbgAPR0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:26:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33652 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:26:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392139AbgAPRZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:25:41 -0500
+        id S2392024AbgAPRZt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:25:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 921BF246BF;
-        Thu, 16 Jan 2020 17:25:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 230E5207E0;
+        Thu, 16 Jan 2020 17:25:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195541;
-        bh=K3uQlaV6PSVmkRvLY0TLcL34gXqHhh7+i0F5l/TLHtc=;
+        s=default; t=1579195548;
+        bh=9lFcSaXVFg63NRWGeDrv05C73dAUr2huwxo00KwwHQs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A80b3Lmp+4GU1OSGbxMj+yP7MVNf7Ycw4SQgdq87YiP9a9NqeMkusIwxu/QQ3aMAy
-         ZnfDa0ItWpUKLPZoI5SEPHOvU/ynpjEm+cQ9YNMGAQfa2Ies+q+8AYg539Gc2sEv8N
-         r0YbrZwXNyjNM+HQTDJSeBKdiwfyz0Te77Cdz+Ng=
+        b=ILoDX4Cuu/pnA2naHsUkAcgcDBs54TbdKsGGqcjNbUDpw2Bk9rIzUniGp/6SxRi9u
+         5lXa/vnya0akNVBqm+31XiWPGk6uRmJxxodtRda07NlaYs5TmxLsfj0+9TUvtwaZSQ
+         RfFKsJ1fieg9pnQ+N6qhm7pDcEy2pNMBTMWZojsU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Sasha Levin <sashal@kernel.org>, xen-devel@lists.xenproject.org
-Subject: [PATCH AUTOSEL 4.14 134/371] xen, cpu_hotplug: Prevent an out of bounds access
-Date:   Thu, 16 Jan 2020 12:20:06 -0500
-Message-Id: <20200116172403.18149-77-sashal@kernel.org>
+Cc:     Nicholas Mc Guire <hofrat@osadl.org>, Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 140/371] media: cx23885: check allocation return
+Date:   Thu, 16 Jan 2020 12:20:12 -0500
+Message-Id: <20200116172403.18149-83-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -59,36 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Nicholas Mc Guire <hofrat@osadl.org>
 
-[ Upstream commit 201676095dda7e5b31a5e1d116d10fc22985075e ]
+[ Upstream commit a3d7f22ef34ec4206b50ee121384d5c8bebd5591 ]
 
-The "cpu" variable comes from the sscanf() so Smatch marks it as
-untrusted data.  We can't pass a higher value than "nr_cpu_ids" to
-cpu_possible() or it results in an out of bounds access.
+Checking of kmalloc() seems to have been committed - as
+cx23885_dvb_register() is checking for != 0 return, returning
+-ENOMEM should be fine here.  While at it address the coccicheck
+suggestion to move to kmemdup rather than using kmalloc+memcpy.
 
-Fixes: d68d82afd4c8 ("xen: implement CPU hotplugging")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
+Fixes: 46b21bbaa8a8 ("[media] Add support for DViCO FusionHDTV DVB-T Dual Express2")
+
+Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/cpu_hotplug.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/pci/cx23885/cx23885-dvb.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/xen/cpu_hotplug.c b/drivers/xen/cpu_hotplug.c
-index b1357aa4bc55..f192b6f42da9 100644
---- a/drivers/xen/cpu_hotplug.c
-+++ b/drivers/xen/cpu_hotplug.c
-@@ -54,7 +54,7 @@ static int vcpu_online(unsigned int cpu)
- }
- static void vcpu_hotplug(unsigned int cpu)
- {
--	if (!cpu_possible(cpu))
-+	if (cpu >= nr_cpu_ids || !cpu_possible(cpu))
- 		return;
+diff --git a/drivers/media/pci/cx23885/cx23885-dvb.c b/drivers/media/pci/cx23885/cx23885-dvb.c
+index e795ddeb7fe2..60f122edaefb 100644
+--- a/drivers/media/pci/cx23885/cx23885-dvb.c
++++ b/drivers/media/pci/cx23885/cx23885-dvb.c
+@@ -1460,8 +1460,9 @@ static int dvb_register(struct cx23885_tsport *port)
+ 		if (fe0->dvb.frontend != NULL) {
+ 			struct i2c_adapter *tun_i2c;
  
- 	switch (vcpu_online(cpu)) {
+-			fe0->dvb.frontend->sec_priv = kmalloc(sizeof(dib7000p_ops), GFP_KERNEL);
+-			memcpy(fe0->dvb.frontend->sec_priv, &dib7000p_ops, sizeof(dib7000p_ops));
++			fe0->dvb.frontend->sec_priv = kmemdup(&dib7000p_ops, sizeof(dib7000p_ops), GFP_KERNEL);
++			if (!fe0->dvb.frontend->sec_priv)
++				return -ENOMEM;
+ 			tun_i2c = dib7000p_ops.get_i2c_master(fe0->dvb.frontend, DIBX000_I2C_INTERFACE_TUNER, 1);
+ 			if (!dvb_attach(dib0070_attach, fe0->dvb.frontend, tun_i2c, &dib7070p_dib0070_config))
+ 				return -ENODEV;
 -- 
 2.20.1
 
