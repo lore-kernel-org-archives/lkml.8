@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7464DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 137BBC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 512CE206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA1BA206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:05:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201498;
-	bh=ylwMJWEEUgx9Jz1+skWKJV/2ksoOZollbQbmJVsr5VY=;
+	s=default; t=1579201504;
+	bh=hbejOm8sc5vQB9Dn0jxr/R1aRYq57xznvqqEKeG02qo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jc6kA7B1zU1ArPDAdSwsFM4doQ8sQcLDCiHa+znGHVy+T5izTpyZSg5XFG/TKdcLY
-	 KDSENSqnr5cM5TrlWqyUhY9s8YHEOtXlVY2fitAWv741steftZed2s0qWh1enswcz0
-	 aaU3l5fKCxjHtuQnTy/V22c3qmBAap56SulKIJGA=
+	b=L4KyjpEl2XIHg5rxx4ieFLkjrJybH7aF8jAq6/62akYY49Tuvox7T0D+MKxwTJdBz
+	 qrt2bPRelZzqYjfNeQmpXWOC2FdDGjY/ROjJZH4QtGESdKuAzcK432voGVY6zZ6Tqb
+	 gw2LuzqUwTuebTc2z+IFd5Ss0u3S37kect4178fM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388277AbgAPRCI (ORCPT
+        id S2437268AbgAPTFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:02:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53886 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:05:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388226AbgAPRB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:01:58 -0500
+        id S2388269AbgAPRCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:02:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 980BC21D56;
-        Thu, 16 Jan 2020 17:01:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7C582073A;
+        Thu, 16 Jan 2020 17:02:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194117;
-        bh=ylwMJWEEUgx9Jz1+skWKJV/2ksoOZollbQbmJVsr5VY=;
+        s=default; t=1579194126;
+        bh=hbejOm8sc5vQB9Dn0jxr/R1aRYq57xznvqqEKeG02qo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2m/mq+vfTgRj2EEwBKm1hRNtMkBLYXqwnSLScXmcCut4HCPtI7HvS/56/oJqAH4oW
-         Cfj29cmJoyEXCljLQJNlakPtEUs67xDJIJEx4vubvEZJRCcrhLCHSBoIhEKtK/xhG3
-         cdh45+0pdWuqMuUNIhcOZ18F4axLlbqo1ienxxy0=
+        b=x7Vqz4YgbVCrN6YvBu205//6h12CuZFCcaytbpMOlFcF6vQ8uwETsObXsYDSPy18K
+         FUsX90/Y6bvwTRUL9b6wVLJKAQT8QTnvKyFzDngL426QUQ16WQm5SQnOo5sSRefENp
+         S9Krb/ACUqur24i9/rQpyPuWxT1yss+Jk/Npx9c4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mansour Alharthi <malharthi9@gatech.edu>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 212/671] perf: Copy parent's address filter offsets on clone
-Date:   Thu, 16 Jan 2020 11:52:01 -0500
-Message-Id: <20200116165940.10720-95-sashal@kernel.org>
+Cc:     Stefan Wahren <stefan.wahren@i2se.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 218/671] mmc: sdhci-brcmstb: handle mmc_of_parse() errors during probe
+Date:   Thu, 16 Jan 2020 11:52:07 -0500
+Message-Id: <20200116165940.10720-101-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -63,61 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
 
-[ Upstream commit 18736eef12137c59f60cc9f56dc5bea05c92e0eb ]
+[ Upstream commit 1e20186e706da8446f9435f2924cd65ab1397e73 ]
 
-When a child event is allocated in the inherit_event() path, the VMA
-based filter offsets are not copied from the parent, even though the
-address space mapping of the new task remains the same, which leads to
-no trace for the new task until exec.
+We need to handle mmc_of_parse() errors during probe otherwise the
+MMC driver could start without proper initialization (e.g. power sequence).
 
-Reported-by: Mansour Alharthi <malharthi9@gatech.edu>
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Tested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Acked-by: Peter Zijlstra <peterz@infradead.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Fixes: 375637bc5249 ("perf/core: Introduce address range filtering")
-Link: http://lkml.kernel.org/r/20190215115655.63469-2-alexander.shishkin@linux.intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 476bf3d62d5c ("mmc: sdhci-brcmstb: Add driver for Broadcom BRCMSTB SoCs")
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/core.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/mmc/host/sdhci-brcmstb.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 460d5fd3ec4e..9a5559f5938a 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -1254,6 +1254,7 @@ static void put_ctx(struct perf_event_context *ctx)
-  *	      perf_event_context::lock
-  *	    perf_event::mmap_mutex
-  *	    mmap_sem
-+ *	      perf_addr_filters_head::lock
-  *
-  *    cpu_hotplug_lock
-  *      pmus_lock
-@@ -10136,6 +10137,20 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
- 			goto err_per_task;
- 		}
- 
-+		/*
-+		 * Clone the parent's vma offsets: they are valid until exec()
-+		 * even if the mm is not shared with the parent.
-+		 */
-+		if (event->parent) {
-+			struct perf_addr_filters_head *ifh = perf_event_addr_filters(event);
-+
-+			raw_spin_lock_irq(&ifh->lock);
-+			memcpy(event->addr_filters_offs,
-+			       event->parent->addr_filters_offs,
-+			       pmu->nr_addr_filters * sizeof(unsigned long));
-+			raw_spin_unlock_irq(&ifh->lock);
-+		}
-+
- 		/* force hw sync on the address filters */
- 		event->addr_filters_gen = 1;
+diff --git a/drivers/mmc/host/sdhci-brcmstb.c b/drivers/mmc/host/sdhci-brcmstb.c
+index 552bddc5096c..1cd10356fc14 100644
+--- a/drivers/mmc/host/sdhci-brcmstb.c
++++ b/drivers/mmc/host/sdhci-brcmstb.c
+@@ -55,7 +55,9 @@ static int sdhci_brcmstb_probe(struct platform_device *pdev)
  	}
+ 
+ 	sdhci_get_of_property(pdev);
+-	mmc_of_parse(host->mmc);
++	res = mmc_of_parse(host->mmc);
++	if (res)
++		goto err;
+ 
+ 	/*
+ 	 * Supply the existing CAPS, but clear the UHS modes. This
 -- 
 2.20.1
 
