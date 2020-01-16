@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FAEFC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF50C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E361A2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:56:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28EBD2464B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:56:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197415;
-	bh=IvhLZl9OwsezdqO6p8i8hAjb0pJmYjgbg9Le9zB7u1Y=;
+	s=default; t=1579197418;
+	bh=98beNfV0hie/L+0Qn0HzOYwCS5/+cPSO2gow27zvHbo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yxrC1wfhRQbNEK7Is0ocd4nkPMr144WWYwasZLnT9yJx6yakYfmnMR3wXQ17+EAsi
-	 njNI+WokZXCzgqK7j2DEQC2/OMoWPTI2biisLV/UoBILKmYbNDQfa35NBnJ6xqmfH2
-	 DGAj0szlD9lTM9XBpazZcZNhYJ/wJKa9nLJ5D8MQ=
+	b=uw1qBPlEFIJ1T1SjtQWe1Fv4sZSOu/xW/2kdO2kg7PXYez/q0SnOoeO9EWR7dcxhz
+	 eTQy1W7tviUXfv9gwmqCgTQTX3y9bJ/TwvIHATGV+EcH/cbElT9VK5aQm/rV2kK8kU
+	 bxuuZLCv7zDPzhBrRmMfNPaWadbmSLK9cSYb6bXw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394547AbgAPR4w (ORCPT
+        id S2394120AbgAPR44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:56:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34182 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:56:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393989AbgAPRnr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:43:47 -0500
+        id S2393983AbgAPRnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:43:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC13A2474D;
-        Thu, 16 Jan 2020 17:43:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5412124718;
+        Thu, 16 Jan 2020 17:43:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196626;
-        bh=IvhLZl9OwsezdqO6p8i8hAjb0pJmYjgbg9Le9zB7u1Y=;
+        s=default; t=1579196625;
+        bh=98beNfV0hie/L+0Qn0HzOYwCS5/+cPSO2gow27zvHbo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k7ZNkqtjrikdPsUPSDCY8ptR1QSb1X/oLiREGBLCqVcb8JXp6E2qbDum+eqAlAApd
-         kT7pR1aSkiv5sZSppD6RzSBvhKH2QYQKGALseJrtcoxy9UeHZ6FBrVoghUAoVbHyAp
-         K3lMXpnFzFPY4eVuqQCWm8azjXZXMz4H8rOnkElg=
+        b=j1IDDAmEj3kEi4FvZ7YpARIpCy0Gns6DIlwck4qSS/3Xwuu1zpLCMlrjTj90xuUhy
+         dLOgJczjs9TX0QvaWIPs0QrhEitKJCBBXK6/tbYP6yJLHSGLRqZZD5oFbjy/Y66hrD
+         uIMPtdWPoeQYZOSoaNLN1Fd1KJnzw2zM/Jgfyz8Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 041/174] fbdev: chipsfb: remove set but not used variable 'size'
-Date:   Thu, 16 Jan 2020 12:40:38 -0500
-Message-Id: <20200116174251.24326-41-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 040/174] rtc: pm8xxx: fix unintended sign extension
+Date:   Thu, 16 Jan 2020 12:40:37 -0500
+Message-Id: <20200116174251.24326-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -63,48 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 8e71fa5e4d86bedfd26df85381d65d6b4c860020 ]
+[ Upstream commit e42280886018c6f77f0a90190f7cba344b0df3e0 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Shifting a u8 by 24 will cause the value to be promoted to an integer. If
+the top bit of the u8 is set then the following conversion to an unsigned
+long will sign extend the value causing the upper 32 bits to be set in
+the result.
 
-drivers/video/fbdev/chipsfb.c: In function 'chipsfb_pci_init':
-drivers/video/fbdev/chipsfb.c:352:22: warning:
- variable 'size' set but not used [-Wunused-but-set-variable]
+Fix this by casting the u8 value to an unsigned long before the shift.
 
-Fixes: 8c8709334cec ("[PATCH] ppc32: Remove CONFIG_PMAC_PBOOK").
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-[b.zolnierkie: minor commit summary and description fixups]
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Detected by CoverityScan, CID#1309693 ("Unintended sign extension")
+
+Fixes: 9a9a54ad7aa2 ("drivers/rtc: add support for Qualcomm PMIC8xxx RTC")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/chipsfb.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/rtc/rtc-pm8xxx.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/video/fbdev/chipsfb.c b/drivers/video/fbdev/chipsfb.c
-index 59abdc6a97f6..314b7eceb81c 100644
---- a/drivers/video/fbdev/chipsfb.c
-+++ b/drivers/video/fbdev/chipsfb.c
-@@ -350,7 +350,7 @@ static void init_chips(struct fb_info *p, unsigned long addr)
- static int chipsfb_pci_init(struct pci_dev *dp, const struct pci_device_id *ent)
- {
- 	struct fb_info *p;
--	unsigned long addr, size;
-+	unsigned long addr;
- 	unsigned short cmd;
- 	int rc = -ENODEV;
+diff --git a/drivers/rtc/rtc-pm8xxx.c b/drivers/rtc/rtc-pm8xxx.c
+index 795fcbd02ea3..a0dae6271ff6 100644
+--- a/drivers/rtc/rtc-pm8xxx.c
++++ b/drivers/rtc/rtc-pm8xxx.c
+@@ -186,7 +186,8 @@ static int pm8xxx_rtc_read_time(struct device *dev, struct rtc_time *tm)
+ 		}
+ 	}
  
-@@ -362,7 +362,6 @@ static int chipsfb_pci_init(struct pci_dev *dp, const struct pci_device_id *ent)
- 	if ((dp->resource[0].flags & IORESOURCE_MEM) == 0)
- 		goto err_disable;
- 	addr = pci_resource_start(dp, 0);
--	size = pci_resource_len(dp, 0);
- 	if (addr == 0)
- 		goto err_disable;
+-	secs = value[0] | (value[1] << 8) | (value[2] << 16) | (value[3] << 24);
++	secs = value[0] | (value[1] << 8) | (value[2] << 16) |
++	       ((unsigned long)value[3] << 24);
+ 
+ 	rtc_time_to_tm(secs, tm);
+ 
+@@ -267,7 +268,8 @@ static int pm8xxx_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alarm)
+ 		return rc;
+ 	}
+ 
+-	secs = value[0] | (value[1] << 8) | (value[2] << 16) | (value[3] << 24);
++	secs = value[0] | (value[1] << 8) | (value[2] << 16) |
++	       ((unsigned long)value[3] << 24);
+ 
+ 	rtc_time_to_tm(secs, &alarm->time);
  
 -- 
 2.20.1
