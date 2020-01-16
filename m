@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC98C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72428C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2504624653
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E51A246D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:26:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195599;
-	bh=0FKWZpV9F/7n4Ytt8eDke0QPjCHQ1w9exMsGFljJeqY=;
+	s=default; t=1579195603;
+	bh=206sE0FgN/guZTm+kxehiEoGAU09Y0UfRM/qPQMxmPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QckD0Udn3TL9QxirzEgFLFWZ6yowXWrFOTin5ndYBS/+0n0nhSlLhT8zS2NcUdjcq
-	 7Bb0OCKL/Quki5dGQCTuwKe45D1SkFXG8ZO+mZMxCamhVm5/xB8XBBP77SzLInIQ9C
-	 kyALQ0r7x06dn53NCBvkJnLyROpcTJIIeDNLKHdA=
+	b=n5Gh81tTMQjDyMhJ3syMnMKpN0SusSEKKnU3N6h+XP/B1cQ+eSF+nKJyP9y3ESJlA
+	 PiLKeDBufsl5auFOu4RzapmBdilXv4bUnM8xl8I/4k+vAgSzO3+yp/0CBkfaZbyVne
+	 +1ADoOgWh9dA1BFnEQYKBEaWoBEA45mxRFezQXI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403994AbgAPR0i (ORCPT
+        id S2404016AbgAPR0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:26:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35268 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:26:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392250AbgAPR03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:26:29 -0500
+        id S2403966AbgAPR0d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:26:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34FDC246CD;
-        Thu, 16 Jan 2020 17:26:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2515246BE;
+        Thu, 16 Jan 2020 17:26:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195588;
-        bh=0FKWZpV9F/7n4Ytt8eDke0QPjCHQ1w9exMsGFljJeqY=;
+        s=default; t=1579195592;
+        bh=206sE0FgN/guZTm+kxehiEoGAU09Y0UfRM/qPQMxmPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DPrC15sbEyvas9cHc5yyiUPJpcih69yijeWp9OGM4Tp/5ffZ/lGu2hxZa6OUwkp7Q
-         73KPIFCJKV8AmxeRI8vxVNgtjyMcBFVo5qPevl77czCDn5oTyg3XtE1365rh0xJvkz
-         wFKqVs645ur/yegvgQzkzlMGBeoRFqyWDIQO5/3s=
+        b=lcEa72yR+CEIYivF1+ofSUFTWceGg1eAVQeoJ1HkKIi47PGYO1Fzi4tsYfzqoj/p0
+         Wv3HyTj0hoPZvD2c7ysRhq1EGMElexoQdgUdzHhaw/nAtQsFhQV2EztKxQV3qzDmiM
+         BBxA+WtPJUnwB+6+yrN+ZaoxRwdDmohCq+UVaqsY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vladimir Oltean <olteanv@gmail.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 167/371] ARM: dts: ls1021: Fix SGMII PCS link remaining down after PHY disconnect
-Date:   Thu, 16 Jan 2020 12:20:39 -0500
-Message-Id: <20200116172403.18149-110-sashal@kernel.org>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 170/371] dmaengine: axi-dmac: Don't check the number of frames for alignment
+Date:   Thu, 16 Jan 2020 12:20:42 -0500
+Message-Id: <20200116172403.18149-113-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -61,92 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <olteanv@gmail.com>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-[ Upstream commit c7861adbe37f576931650ad8ef805e0c47564b9a ]
+[ Upstream commit 648865a79d8ee3d1aa64aab5eb2a9d12eeed14f9 ]
 
-Each eTSEC MAC has its own TBI (SGMII) PCS and private MDIO bus.
-But due to a DTS oversight, both SGMII-compatible MACs of the LS1021 SoC
-are pointing towards the same internal PCS. Therefore nobody is
-controlling the internal PCS of eTSEC0.
+In 2D transfers (for the AXI DMAC), the number of frames (numf) represents
+Y_LENGTH, and the length of a frame is X_LENGTH. 2D transfers are useful
+for video transfers where screen resolutions ( X * Y ) are typically
+aligned for X, but not for Y.
 
-Upon initial ndo_open, the SGMII link is ok by virtue of U-boot
-initialization. But upon an ifdown/ifup sequence, the code path from
-ndo_open -> init_phy -> gfar_configure_serdes does not get executed for
-the PCS of eTSEC0 (and is executed twice for MAC eTSEC1). So the SGMII
-link remains down for eTSEC0. On the LS1021A-TWR board, to signal this
-failure condition, the PHY driver keeps printing
-'803x_aneg_done: SGMII link is not ok'.
+There is no requirement for Y_LENGTH to be aligned to the bus-width (or
+anything), and this is also true for AXI DMAC.
 
-Also, it changes compatible of mdio0 to "fsl,etsec2-mdio" to match
-mdio1 device.
+Checking the Y_LENGTH for alignment causes false errors when initiating DMA
+transfers. This change fixes this by checking only that the Y_LENGTH is
+non-zero.
 
-Fixes: 055223d4d22d ("ARM: dts: ls1021a: Enable the eTSEC ports on QDS and TWR")
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Reviewed-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-Acked-by: Li Yang <leoyang.li@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: 0e3b67b348b8 ("dmaengine: Add support for the Analog Devices AXI-DMAC DMA controller")
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/ls1021a-twr.dts |  9 ++++++++-
- arch/arm/boot/dts/ls1021a.dtsi    | 11 ++++++++++-
- 2 files changed, 18 insertions(+), 2 deletions(-)
+ drivers/dma/dma-axi-dmac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
-index 44715c8ef756..72a3fc63d0ec 100644
---- a/arch/arm/boot/dts/ls1021a-twr.dts
-+++ b/arch/arm/boot/dts/ls1021a-twr.dts
-@@ -143,7 +143,7 @@
- };
+diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
+index 7f0b9aa15867..9887f2a14aa9 100644
+--- a/drivers/dma/dma-axi-dmac.c
++++ b/drivers/dma/dma-axi-dmac.c
+@@ -451,7 +451,7 @@ static struct dma_async_tx_descriptor *axi_dmac_prep_interleaved(
  
- &enet0 {
--	tbi-handle = <&tbi1>;
-+	tbi-handle = <&tbi0>;
- 	phy-handle = <&sgmii_phy2>;
- 	phy-connection-type = "sgmii";
- 	status = "okay";
-@@ -222,6 +222,13 @@
- 	sgmii_phy2: ethernet-phy@2 {
- 		reg = <0x2>;
- 	};
-+	tbi0: tbi-phy@1f {
-+		reg = <0x1f>;
-+		device_type = "tbi-phy";
-+	};
-+};
-+
-+&mdio1 {
- 	tbi1: tbi-phy@1f {
- 		reg = <0x1f>;
- 		device_type = "tbi-phy";
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index 2d20f60947b9..1343c86988c5 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -562,13 +562,22 @@
- 		};
- 
- 		mdio0: mdio@2d24000 {
--			compatible = "gianfar";
-+			compatible = "fsl,etsec2-mdio";
- 			device_type = "mdio";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <0x0 0x2d24000 0x0 0x4000>;
- 		};
- 
-+		mdio1: mdio@2d64000 {
-+			compatible = "fsl,etsec2-mdio";
-+			device_type = "mdio";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x2d64000 0x0 0x4000>,
-+			      <0x0 0x2d50030 0x0 0x4>;
-+		};
-+
- 		ptp_clock@2d10e00 {
- 			compatible = "fsl,etsec-ptp";
- 			reg = <0x0 0x2d10e00 0x0 0xb0>;
+ 	if (chan->hw_2d) {
+ 		if (!axi_dmac_check_len(chan, xt->sgl[0].size) ||
+-		    !axi_dmac_check_len(chan, xt->numf))
++		    xt->numf == 0)
+ 			return NULL;
+ 		if (xt->sgl[0].size + dst_icg > chan->max_length ||
+ 		    xt->sgl[0].size + src_icg > chan->max_length)
 -- 
 2.20.1
 
