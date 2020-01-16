@@ -7,101 +7,90 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01821C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 04:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3629C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 04:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC4DD2077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 04:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BBE420723
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 04:09:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LI85uRZy"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LFXdufTf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730755AbgAPEG3 (ORCPT
+        id S1730782AbgAPEJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 23:06:29 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:57878 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729048AbgAPEG2 (ORCPT
+        Wed, 15 Jan 2020 23:09:47 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:57912 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729048AbgAPEJr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 23:06:28 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G3xQ1v124597;
-        Thu, 16 Jan 2020 04:01:47 GMT
+        Wed, 15 Jan 2020 23:09:47 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G48PFC115378;
+        Thu, 16 Jan 2020 04:09:39 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
  from : references : date : in-reply-to : message-id : mime-version :
  content-type; s=corp-2019-08-05;
- bh=uKDNCB63FyMaskGVot3YarGxZwgjqh7FukgNd7alg8A=;
- b=LI85uRZyi8UFbncNHRWnlG+OHXGlk5Mcl50KED7wwNhWSv8KS838yoDQCbtqIw/CG+CQ
- 81qjagYHkmFAvfbezJ3/7ZrmnHG9wtxFs6yObz9/ps7EPtU4AbcxKfQbIkKE+u9qhBr+
- gJvzNck2qf1jaWQmEkH/8uizlS50FWHBJe0UY4ps6FeJSt0ZGcp3ssQp5OsGQ0Pb311l
- N8yFMFkvO+avJY/lZOotuMy8Mj9itZhbzsiAOd4RUSegNJ8PSh6xXWhjejmGp8CoOyRX
- SQ02dQ1Yg+UPssyrMyUJuDBHjMuohvp+acCo9kiUOFJQUs62VHely7XWsZQ642yG0Xk0 nQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2xf73yr1tg-1
+ bh=U2BJiam1MiRMZ/JXp/7NvE4tKiHG+O1DbM3WpMWeI4c=;
+ b=LFXdufTfH6kWDbrzQcU757xJsB0/F1EWA55I6HHPFx4LEWfoPvb3IFUD3Geug72Vqfq0
+ WaJG0NinEq9Pt+LvfS1tgE0OwSsCgdLhqUQ3cer/Z4PKxlDQua6iPKAfDumXSK1+Gyq4
+ 5P7kdr9iRuOLRw/71iIG2SZxRS+cchSXoknpqw6SP3adW2uJ1ZiBWRNMaddqzFfgQb1v
+ dK58efOqGGadcEUtaN/XTMt9G+IhxDPR7YournLurkX9BWJLNVBJ4tm8G/8O+3LUWUPg
+ lhWzk9lsoKp+txm2zGXFxi8TuLnOBFC/eA6xBDUO+pl5XGjakeeiOI0k7E2+sZ5lg1fB Tg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2xf73tyyyg-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 04:01:47 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G3wWa8175503;
-        Thu, 16 Jan 2020 04:01:46 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2xj61kusae-1
+        Thu, 16 Jan 2020 04:09:39 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G49ANj186069;
+        Thu, 16 Jan 2020 04:09:38 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2xhy22jf15-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 04:01:46 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00G41Z9l011886;
-        Thu, 16 Jan 2020 04:01:35 GMT
+        Thu, 16 Jan 2020 04:09:38 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00G49a2p026557;
+        Thu, 16 Jan 2020 04:09:37 GMT
 Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jan 2020 20:01:34 -0800
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Satish Kharat <satishkh@cisco.com>,
-        Sesidhar Baddela <sebaddel@cisco.com>,
-        Karan Tilak Kumar <kartilak@cisco.com>,
+        with ESMTP ; Wed, 15 Jan 2020 20:09:36 -0800
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Cc:     Michael Reed <mdr@sgi.com>,
         "James E.J. Bottomley" <jejb@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Oleksandr Natalenko <oleksandr@redhat.com>,
-        stable@vger.kernel.org, Joe Eykholt <jeykholt@cisco.com>,
-        Mike Christie <michaelc@cs.wisc.edu>,
-        Abhijeet Joglekar <abjoglek@cisco.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Colin Ian King <colin.king@canonical.com>,
         linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fnic: fix invalid stack access
+Subject: Re: [PATCH] scsi: qla1280: Fix dma firmware download, if dma address is 64bit
 From:   "Martin K. Petersen" <martin.petersen@oracle.com>
 Organization: Oracle Corporation
-References: <20200107201602.4096790-1-arnd@arndb.de>
-Date:   Wed, 15 Jan 2020 23:01:31 -0500
-In-Reply-To: <20200107201602.4096790-1-arnd@arndb.de> (Arnd Bergmann's message
-        of "Tue, 7 Jan 2020 21:15:49 +0100")
-Message-ID: <yq1lfq8nj6s.fsf@oracle.com>
+References: <20200114160936.1517-1-tbogendoerfer@suse.de>
+Date:   Wed, 15 Jan 2020 23:09:34 -0500
+In-Reply-To: <20200114160936.1517-1-tbogendoerfer@suse.de> (Thomas
+        Bogendoerfer's message of "Tue, 14 Jan 2020 17:09:36 +0100")
+Message-ID: <yq18sm8nitd.fsf@oracle.com>
 User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=920
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001160031
+ engine=8.0.1-1911140001 definitions=main-2001160032
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=971 adultscore=0
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001160031
+ definitions=main-2001160032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Arnd,
+Thomas,
 
-> gcc -O3 warns that some local variables are not properly initialized:
->
-> drivers/scsi/fnic/vnic_dev.c: In function 'fnic_dev_hang_notify':
-> drivers/scsi/fnic/vnic_dev.c:511:16: error: 'a0' is used uninitialized
-> in this function [-Werror=uninitialized] vdev->args[0] = *a0;
+> Do firmware download with 64bit LOAD_RAM command, if driver is using
+> 64bit addressing.
 
-Applied to 5.5/scsi-fixes, thanks!
+Applied to 5.6/scsi-queue, thanks!
 
 -- 
 Martin K. Petersen	Oracle Linux Engineering
