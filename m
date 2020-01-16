@@ -2,106 +2,101 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F72AC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC990C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22F7C20748
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:03:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83EDE20748
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:05:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="fsNlBtGF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729674AbgAPGD6 (ORCPT
+        id S1729966AbgAPGFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 01:03:58 -0500
-Received: from host-88-217-225-28.customer.m-online.net ([88.217.225.28]:35211
-        "EHLO mail.dev.tdt.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727026AbgAPGD6 (ORCPT
+        Thu, 16 Jan 2020 01:05:12 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:45325 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729841AbgAPGFM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 01:03:58 -0500
-Received: from mail.dev.tdt.de (localhost [IPv6:::1])
-        by mail.dev.tdt.de (Postfix) with ESMTP id 06F4320FDF;
-        Thu, 16 Jan 2020 06:03:54 +0000 (UTC)
+        Thu, 16 Jan 2020 01:05:12 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 59so18337070otp.12
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 22:05:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vKEanVLYKixbIE4jpjng52Wg/z0Mh1eAfP4hJSdIQE0=;
+        b=fsNlBtGFziQY0A8zQejjqkkTuvqiwdIiAM7NACeEOxrAaoxzDd4fUjk9pwpqAIUvXJ
+         cdDCKjUTJGaZHkHv0G5ee/JsbwsslnTNyPu9bqoswts39/75GIb/59yCbwuO1xPlgi3c
+         f+VW6u6TSpKsnTkYP5lrw9eMUS+qyf9nS8llrLCzHtqnC0A8+9WP1s1jpoFVC48zw4nR
+         NVsWjZ5qsu9jZPsaq387+XdtKQjAobHkTTamKsz9df6VShLY/jSMaIKhT//gj04wSyQB
+         dgjbIZWVcmuv6zDtMtLARK6RBcjdJGnJuT7/m4Mi0K92sfnfQrOSyoSUt8DpH3L7o5oD
+         9Oyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vKEanVLYKixbIE4jpjng52Wg/z0Mh1eAfP4hJSdIQE0=;
+        b=NG/dHOygWBbyY5hZwo6KXnUxSa9pULznSDaFf1T1YrZ1Hfr8na96wr1gbkyBMMNv8L
+         6vg+sOD8Yx0DtPdKuEgkjN6nFsjvtH+JOE0lhhq/5a7B0Pzu3Tbj0nW91uwmunsFelkJ
+         R+SFiOj3ZamiB7I7mcT/KnbcxWrR/Xy3FXgSnjbRIvsPifuTM+v8ZsaZ8yWVDh+k/dUj
+         ybSFvP8tH5mndLTl9lOEvnNJJRtuDfkR0ttNzwCpR96daBvSHp5jHO4zK2AljY9Q1PVp
+         zErhIiUxbTQydE7vKQMxz30L9dNDhib+AtB8F5NcrJzNnMdl3oMiwQj2hCaImM/ApM/c
+         llKQ==
+X-Gm-Message-State: APjAAAWfR6vuLTOdXazKGIDyZjc1DXciTdAtO4nBqBic+aOTGIts8e0F
+        cvPIJCf5RO/BEFtN9hfk5RZkPytwTNnVMmTzXmG4+w==
+X-Google-Smtp-Source: APXvYqzEy+pngv/HMRf0P3fZnf1I8EeAbKVY4SqM8e/rzz5VxvD8FVTh6UXXEgSv+bh5N1RhUnQGLNyaWJI9Xe8L7mc=
+X-Received: by 2002:a9d:68d3:: with SMTP id i19mr740541oto.71.1579154711112;
+ Wed, 15 Jan 2020 22:05:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 16 Jan 2020 07:03:53 +0100
-From:   Martin Schiller <ms@dev.tdt.de>
-To:     David Miller <davem@davemloft.net>
-Cc:     kubakici@wp.pl, khc@pm.waw.pl, linux-x25@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] wan/hdlc_x25: make lapb params configurable
-Organization: TDT AG
-In-Reply-To: <20200115.134339.199447041886048873.davem@davemloft.net>
-References: <20200114140223.22446-1-ms@dev.tdt.de>
- <20200115.134339.199447041886048873.davem@davemloft.net>
-Message-ID: <c31e38ac7cde9c753e3351209ee7687d@dev.tdt.de>
-X-Sender: ms@dev.tdt.de
-User-Agent: Roundcube Webmail/1.1.5
+References: <20200110192942.25021-1-ira.weiny@intel.com> <20200110192942.25021-2-ira.weiny@intel.com>
+ <20200115113715.GB2595@quack2.suse.cz> <20200115173834.GD8247@magnolia>
+ <20200115194512.GF23311@iweiny-DESK2.sc.intel.com> <CAPcyv4hwefzruFj02YHYiy8nOpHJFGLKksjiXoRUGpT3C2rDag@mail.gmail.com>
+ <20200115223821.GG23311@iweiny-DESK2.sc.intel.com> <20200116053935.GB8235@magnolia>
+In-Reply-To: <20200116053935.GB8235@magnolia>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 15 Jan 2020 22:05:00 -0800
+Message-ID: <CAPcyv4jDMsPj_vZwDOgPkfHLELZWqeJugKgKNVKbpiZ9th683g@mail.gmail.com>
+Subject: Re: [RFC PATCH V2 01/12] fs/stat: Define DAX statx attribute
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-15 22:43, David Miller wrote:
-> From: Martin Schiller <ms@dev.tdt.de>
-> Date: Tue, 14 Jan 2020 15:02:22 +0100
-> 
->> This enables you to configure mode (DTE/DCE), Modulo, Window, T1, T2, 
->> N2 via
->> sethdlc (which needs to be patched as well).
->> 
->> Signed-off-by: Martin Schiller <ms@dev.tdt.de>
-> 
-> I don't know how wise it is to add new ioctls to this old driver.
+On Wed, Jan 15, 2020 at 9:39 PM Darrick J. Wong <darrick.wong@oracle.com> wrote:
+[..]
+> >         attempts to minimize software cache effects for both I/O and
+> >         memory mappings of this file.  It requires a file system which
+> >         has been configured to support DAX.
+> >
+> >         DAX generally assumes all accesses are via cpu load / store
+> >         instructions which can minimize overhead for small accesses, but
+> >         may adversely affect cpu utilization for large transfers.
+> >
+> >         File I/O is done directly to/from user-space buffers and memory
+> >         mapped I/O may be performed with direct memory mappings that
+> >         bypass kernel page cache.
+> >
+> >         While the DAX property tends to result in data being transferred
+> >         synchronously, it does not give the same guarantees of
+> >         synchronous I/O where data and the necessary metadata are
+> >         transferred together.
+>
+> (I'm frankly not sure that synchronous I/O actually guarantees that the
+> metadata has hit stable storage...)
 
-As an user of this framework I can tell you that you need to be able to
-tune this parameters if it's used in an professional environment.
-
-> 
-> Also, none of these ioctls even have COMPAT handling so they will
-> never work from a 32-bit binary running on a 64-bit kernel for
-> example.
-
-How often does this constellation occur in reality? I really have no
-idea. Our software is either 32-bit or 64-bit, not a mix.
-
-> 
-> Also:
-> 
->> +static struct x25_state* state(hdlc_device *hdlc)
-> 
-> It is always "type *func" never "type* func"
-
-Ok. I will change that. I've copied that from hdlc_fr.c to keep the
-same coding style. But you are right:
-"Don't look back, always look forward." :)
-> 
->>  static int x25_open(struct net_device *dev)
->>  {
->>  	int result;
->> +	hdlc_device *hdlc = dev_to_hdlc(dev);
->> +	struct lapb_parms_struct params;
->>  	static const struct lapb_register_struct cb = {
-> 
-> Please make this reverse christmas tree ordered.
-
-OK, will do.
-
-> 
->> @@ -186,6 +217,9 @@ static struct hdlc_proto proto = {
->> 
->>  static int x25_ioctl(struct net_device *dev, struct ifreq *ifr)
->>  {
->> +	x25_hdlc_proto __user *x25_s = ifr->ifr_settings.ifs_ifsu.x25;
->> +	const size_t size = sizeof(x25_hdlc_proto);
->> +	x25_hdlc_proto new_settings;
->>  	hdlc_device *hdlc = dev_to_hdlc(dev);
->>  	int result;
-> 
-> Likewise.
-
-ditto.
-
+Oh? That text was motivated by the open(2) man page description of O_SYNC.
