@@ -2,120 +2,136 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B00EAC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0621FC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80C3120748
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAE222072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 22:26:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z+2bgoAI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="aWzpkYr+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389956AbgAPWXV (ORCPT
+        id S2389903AbgAPW0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 17:23:21 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:43562 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730215AbgAPWXU (ORCPT
+        Thu, 16 Jan 2020 17:26:08 -0500
+Received: from gateway24.websitewelcome.com ([192.185.51.35]:24805 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729319AbgAPW0I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 17:23:20 -0500
-Received: by mail-qv1-f67.google.com with SMTP id p2so9857194qvo.10;
-        Thu, 16 Jan 2020 14:23:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=oCyvl4b908HZ5JJcSmjdgvOBWBhwJ2mkB7jFnC6f1FY=;
-        b=Z+2bgoAIiCfuwDfL3sKfHeuQXY/yIYpeyXDqfGvh6AOzAOaFKpxWWH9wfjFh1GxdK2
-         l4BX4dg+eJJQsddWhrzjVp+s7L+VpIvk0vNqYU+iM2JI5a96Qgc4B6hKzZlnj75Um48B
-         Te2llVFvtQ98wn6p4KTTUMb+35O0ym1bek5benfOLucwfwOJfAQXdKw3can2NprWC+rr
-         EjiUDeeMx0RoqXOEbmaevb0IA4ODVDLq3W+dfwnbbixgdxYBkhoPzzOca77hLcUA2n0j
-         Cmdy3+L4SPsshEWohMM9PjOIttG1HH4B2FkrOeqD26bqFhrbo/xyMdCzMBcm3m3n11/8
-         4+6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=oCyvl4b908HZ5JJcSmjdgvOBWBhwJ2mkB7jFnC6f1FY=;
-        b=toqlj90yKbnUQtWZpMSR3Bv7wSpybsLri0azXT8uKxLl1abp8puhoPgcjhUeGzds7a
-         b711ZWi2cPo7/HqZNTmo51F2Nks5PbC8A39jiU7cmL1CWNw3ZhoJiEYwv2vinp5UDI6Z
-         itehWhlTK5EO4ShXIHfs7fvIzafgLkdJS02h55GhYaHAOV/y1Sl1sVd8rDrpLFK0RhEA
-         MwTvS/VxKmKu1d18aCF9dWlbBriicS7v9qLDZcPdZ/g+hJIf8rMZfaQZz3grp9T3hazi
-         AMtWWKQkvaymJc57lJYngzPhs2zGu8EVjUViNus3q6o6nYh7/jOj4urTqc34e7SCXFib
-         TE8w==
-X-Gm-Message-State: APjAAAWZFTAv4jIh0EMz4WvnDPZoUwG6HXXIxDIlSH5x7ZiPw/2Vryvq
-        Vb1jlBEFinXua/BjUY8Nsa3kg/thKmlVYiOCmGI=
-X-Google-Smtp-Source: APXvYqzVXQI2o+J0jVqrsglhF5ZDoxbegXW/Aj7QcNicrKmutX3oRkpQKEGNzgM0thXGAVyjLWwI6OSR3Q2H+0TAq9E=
-X-Received: by 2002:ad4:4e34:: with SMTP id dm20mr5012047qvb.163.1579213399484;
- Thu, 16 Jan 2020 14:23:19 -0800 (PST)
+        Thu, 16 Jan 2020 17:26:08 -0500
+X-Greylist: delayed 1358 seconds by postgrey-1.27 at vger.kernel.org; Thu, 16 Jan 2020 17:26:07 EST
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id 9D3BD1F93
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 16:03:29 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id sDEfiaO5qNwe7sDEfiBDTS; Thu, 16 Jan 2020 16:03:29 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=lJqbOVGeD356I6fIe5iirDZBONX68UGjE9KZh7u5oGg=; b=aWzpkYr+XHoNFKlaSNzO+UXLZZ
+        fuXnIZFQyXXrqcldKm/2ji1V6SAct69fFyXrBXeg7DVIefdRIQICEGlgT808cM5xUVN9B9jBvmfrP
+        PVpJxi5Q7VK/lJ9YvgzhA8U3n/K/J3wgIpFHTSo/GDamYhIFLe+2qz5OJIgoauc2/IskXvvyxsN6H
+        N4B9Ulm2locWbjIebP7r4PEqfdXrlRhdE8CpnJhIt9CihJjJY0mVxRXL9LUlKq2z6Y2P1O3j4SDPf
+        8ZLE35/7SbDuXJ9c4EYXbvOL3FlwQlFHyNmN4D9vqWgIvXfKiGnEIzTI3k/EIfvZFxFf4A3zp+lwe
+        +AXwiraA==;
+Received: from 187-162-252-62.static.axtel.net ([187.162.252.62]:44004 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1isDEe-000egY-Bn; Thu, 16 Jan 2020 16:03:28 -0600
+Date:   Thu, 16 Jan 2020 16:03:27 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] USB: serial: garmin_gps: Use flexible-array member
+Message-ID: <20200116220327.GA12537@embeddedor.com>
 MIME-Version: 1.0
-References: <157918093154.1357254.7616059374996162336.stgit@toke.dk> <157918094065.1357254.8062315384165377618.stgit@toke.dk>
-In-Reply-To: <157918094065.1357254.8062315384165377618.stgit@toke.dk>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 16 Jan 2020 14:23:08 -0800
-Message-ID: <CAEf4BzbX282u_DFRUqkzdZ91RhpFRg-dXzsGcTrzdsqc+Tb2HQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3 08/11] samples/bpf: Use consistent include
- paths for libbpf
-To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-rdma@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.252.62
+X-Source-L: No
+X-Exim-ID: 1isDEe-000egY-Bn
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-252-62.static.axtel.net (embeddedor) [187.162.252.62]:44004
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 5:28 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@redh=
-at.com> wrote:
->
-> From: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
->
-> Fix all files in samples/bpf to include libbpf header files with the bpf/
-> prefix, to be consistent with external users of the library. Also ensure
-> that all includes of exported libbpf header files (those that are exporte=
-d
-> on 'make install' of the library) use bracketed includes instead of quote=
-d.
->
-> To make sure no new files are introduced that doesn't include the bpf/
-> prefix in its include, remove tools/lib/bpf from the include path entirel=
-y,
-> and use tools/lib instead.
->
-> Fixes: 6910d7d3867a ("selftests/bpf: Ensure bpf_helper_defs.h are taken f=
-rom selftests dir")
-> Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
-> Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
-> ---
+Old code in the kernel uses 1-byte and 0-byte arrays to indicate the
+presence of a "variable length array":
 
-Acked-by: Andrii Nakryiko <andriin@fb.com>
+struct something {
+    int length;
+    u8 data[1];
+};
 
-[...]
+struct something *instance;
+
+instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
+instance->length = size;
+memcpy(instance->data, source, size);
+
+There is also 0-byte arrays. Both cases pose confusion for things like
+sizeof(), CONFIG_FORTIFY_SOURCE, etc.[1] Instead, the preferred mechanism
+to declare variable-length types such as the one above is a flexible array
+member[2] which need to be the last member of a structure and empty-sized:
+
+struct something {
+        int stuff;
+        u8 data[];
+};
+
+Also, by making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+unadvertenly introduced[3] to the codebase from now on.
+
+[1] https://github.com/KSPP/linux/issues/21
+[2] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/usb/serial/garmin_gps.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/usb/serial/garmin_gps.c b/drivers/usb/serial/garmin_gps.c
+index 633550ec3025..ffd984142171 100644
+--- a/drivers/usb/serial/garmin_gps.c
++++ b/drivers/usb/serial/garmin_gps.c
+@@ -104,7 +104,7 @@ struct garmin_packet {
+ 	int               seq;
+ 	/* the real size of the data array, always > 0 */
+ 	int               size;
+-	__u8              data[1];
++	__u8              data[];
+ };
+ 
+ /* structure used to keep the current state of the driver */
+-- 
+2.23.0
+
