@@ -2,117 +2,105 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE89FC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A71C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89C40206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:17:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nqN/bGHt"
+	by mail.kernel.org (Postfix) with ESMTP id 7FF3B206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:20:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579206006;
+	bh=oko1vr6NZIkbqblBi6ADclwFu8hYoUF6zOgs+mmCjwY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=efmBtKw9Tl0PrICe+EkNirqrZqXkQwslukxBSLs0fzaskSHI0vy9uxY7FQFVjtN6m
+	 mBnY2NTHXbpNcKvhUAb2eMfmOSjaAMQS3rFhsJWdMiOwoToAnUqqO/Uv+NuO0oUeH+
+	 UDLMsY5Ybqfuzx1iQSsFWUVIXgxscIf8LZAAYM5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730142AbgAPURH (ORCPT
+        id S1733244AbgAPUUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 15:17:07 -0500
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:38881 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727022AbgAPURH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 15:17:07 -0500
-Received: by mail-vs1-f66.google.com with SMTP id v12so13512663vsv.5
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 12:17:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZF5qzwwkyvyxMKFoOMSyyzNqONb3HROfIsi+ysNvVik=;
-        b=nqN/bGHtSGgX+TrvYBkC13nJUB3X8ukJ0klosFF2D10Zy6+y3oamxcHwM8fKEGApUq
-         ljpWCk+uAgUgTHRZ1qBolWRCI5hpR6cf37CtPTltdh0YgZvzs++wth7qnHJIp986uOBB
-         UtxOCPtMeYhDZIrkw9F7bWSMB7HrODj92xdDp0H7B5dpg/28a7guMnn4MYFhqm3AeNyl
-         0j3ofX8AEU86BvazTA4YNmuV8io7MMtpGWaEkogvIihSJVFwcARSZu5G6e+K3zeFZ3kx
-         72oIJUgsqtD/qxVLtjNU3NsUe+MHB49BJcuPel9WG6KsUZ0IewO/3FguqYguZl6qKihc
-         072g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZF5qzwwkyvyxMKFoOMSyyzNqONb3HROfIsi+ysNvVik=;
-        b=nP98eG0qIm8MlkNZ0F8S5Ut7DIml8S4ckT+qsUvm/xOfE0O171qpygTdV5EUGJpvAH
-         4llpXxslIbel8q9XurtOo76PiOTI4/eiN58KYaDTvLze0dPOfuP6ljunhU02I1UyWimI
-         pvvpFMIxQst1EzxjB/PeyZhSebuAtvw1XHUbHbvV0WkIve9MOGvVX7cvXY3te37vrF0I
-         +CjBZ/WVqhzGX+KxNGhRaoMhfVPNdUrhsrWRpVQxFe1RclnDkiJHwQv3ZmZQo2iw6s1B
-         xW0GogHM063uM9S14ajUyAgMSVXnNKnFLomAh72qxAKpssvK2AwJ+A4wG1YflOhXk2J8
-         WdxQ==
-X-Gm-Message-State: APjAAAWVngfDzPhIBTf6MbMQrJfVVaWTDaTmeB3wKcnTygZs+D+vq5S1
-        0agR38d6EdDfj6mmYoF6LQRzLw4rirqm+FpIKD0aIg==
-X-Google-Smtp-Source: APXvYqzGSnsl6edzBoVDYTYn7dSudVhqxeHJpq3vbT3Nbo0uCX4G50Cg8szwmqQoGFBA6ZgNEWLEG8Jm96Lj3l2tVXg=
-X-Received: by 2002:a67:f057:: with SMTP id q23mr3030208vsm.5.1579205825357;
- Thu, 16 Jan 2020 12:17:05 -0800 (PST)
+        Thu, 16 Jan 2020 15:20:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38550 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727022AbgAPUUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 15:20:05 -0500
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AB0C2081E
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 20:20:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579206004;
+        bh=oko1vr6NZIkbqblBi6ADclwFu8hYoUF6zOgs+mmCjwY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=L+rMfwJVUI9W+d2CoFvavrawmV6XxbnS/C5pFOW3GNaz/dDJWJPZM8duGoLOAL4lG
+         Z02NHO/8MGKmfFb7GIu6L6UBs5VQJuL2gCzfJtQIf5HIZsqZ0+yd6MnHhIphnFuyoZ
+         f3RLMs/ybk1B0MMAwdTLCraQ7qACz4TRbZO2ykR0=
+Received: by mail-wm1-f42.google.com with SMTP id q9so5124735wmj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 12:20:03 -0800 (PST)
+X-Gm-Message-State: APjAAAXIOeAdWHYffJJKftFocKyW3tv5jiwtrT9dxnVnxyQyfIPFKGj6
+        NQ3NF6GUufaPVfm8qb1H/soLO2pPPelGu7YaPzUaGA==
+X-Google-Smtp-Source: APXvYqy/LKhOLCc4c+qZpvX/KQlnVohcy3HlKPdTJR43s7e+TgAW2p8Y+rne7KnqV+o60SXTwTHEOrPWPUde8RosJLE=
+X-Received: by 2002:a05:600c:20c7:: with SMTP id y7mr794016wmm.21.1579206002474;
+ Thu, 16 Jan 2020 12:20:02 -0800 (PST)
 MIME-Version: 1.0
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20191206221351.38241-1-samitolvanen@google.com> <20191206221351.38241-14-samitolvanen@google.com>
- <20200116174742.GF21396@willie-the-truck>
-In-Reply-To: <20200116174742.GF21396@willie-the-truck>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Thu, 16 Jan 2020 12:16:53 -0800
-Message-ID: <CABCJKucQY_Qr6bZXW5TdPnDcBUd7uk8_Md5FNfO+ObNmsH3MZg@mail.gmail.com>
-Subject: Re: [PATCH v6 13/15] arm64: disable SCS for hypervisor code
-To:     Will Deacon <will@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+References: <cover.1579196675.git.christophe.leroy@c-s.fr> <1b278bc1f6859d4df734fb2cde61cf298e6e07fd.1579196675.git.christophe.leroy@c-s.fr>
+ <874kwvf9by.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <874kwvf9by.fsf@nanos.tec.linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 16 Jan 2020 12:19:50 -0800
+X-Gmail-Original-Message-ID: <CALCETrX9+PZ1h6xex2WZcSqNT7W-6R-E95jv9hLhSdAzhMCrTA@mail.gmail.com>
+Message-ID: <CALCETrX9+PZ1h6xex2WZcSqNT7W-6R-E95jv9hLhSdAzhMCrTA@mail.gmail.com>
+Subject: Re: [RFC PATCH v4 08/11] lib: vdso: allow fixed clock mode
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, nathanl@linux.ibm.com,
+        Arnd Bergmann <arnd@arndb.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        X86 ML <x86@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 9:47 AM Will Deacon <will@kernel.org> wrote:
+On Thu, Jan 16, 2020 at 12:14 PM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
-> On Fri, Dec 06, 2019 at 02:13:49PM -0800, Sami Tolvanen wrote:
-> > Filter out CC_FLAGS_SCS for code that runs at a different exception
-> > level.
-> >
-> > Suggested-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> > Reviewed-by: Kees Cook <keescook@chromium.org>
-> > Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-> > ---
-> >  arch/arm64/kvm/hyp/Makefile | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/arch/arm64/kvm/hyp/Makefile b/arch/arm64/kvm/hyp/Makefile
-> > index ea710f674cb6..17ea3da325e9 100644
-> > --- a/arch/arm64/kvm/hyp/Makefile
-> > +++ b/arch/arm64/kvm/hyp/Makefile
-> > @@ -28,3 +28,6 @@ GCOV_PROFILE        := n
-> >  KASAN_SANITIZE       := n
-> >  UBSAN_SANITIZE       := n
-> >  KCOV_INSTRUMENT      := n
-> > +
-> > +# remove the SCS flags from all objects in this directory
-> > +KBUILD_CFLAGS := $(filter-out $(CC_FLAGS_SCS), $(KBUILD_CFLAGS))
+> Christophe Leroy <christophe.leroy@c-s.fr> writes:
 >
-> Same comment as for the vDSO; can we remove the -ffixed-x18 as well?
+> Can you please adjust the prefix for future patches to lib/vdso: and
+> start the sentence after the colon with an uppercase letter?
+>
+> > On arches like POWERPC, the clock is always the timebase, it
+>
+> Please spell out architectures. Changelogs are not space constraint.
+>
+> > cannot be changed on the fly and it is always VDSO capable.
+>
+> Also this sentence does not make sense as it might suggests that
+> architectures with a fixed compile time known clocksource have something
+> named timebase. Something like this is more clear:
+>
+> Some architectures have a fixed clocksource which is known at compile
+> time and cannot be replaced or disabled at runtime, e.g. timebase on
+> PowerPC. For such cases the clock mode check in the VDSO code is
+> pointless.
+>
 
-Sure, I don't see why not. I'll change this in the next version.
+I wonder if we should use this on x86 bare-metal if we have
+sufficiently invariant TSC.  (Via static_cpu_has(), not compiled in.)
+Maybe there is no such x86 machine.
 
-Sami
+I really really want Intel or AMD to introduce machines where the TSC
+pinky-swears to count in actual nanoseconds.
+
+--Andy
