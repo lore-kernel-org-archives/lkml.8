@@ -2,126 +2,119 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E6B9C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9026FC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 659FD20748
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:24:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HJq4BLAB"
+	by mail.kernel.org (Postfix) with ESMTP id 70F7D214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:25:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbgAPLYx (ORCPT
+        id S1726559AbgAPLZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 06:24:53 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:38990 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbgAPLYx (ORCPT
+        Thu, 16 Jan 2020 06:25:24 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:35004 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbgAPLZY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 06:24:53 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00GBNbiV059917;
-        Thu, 16 Jan 2020 11:24:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : in-reply-to : message-id : references : mime-version :
- content-type; s=corp-2019-08-05;
- bh=zAnzD9q8B7Q1poIdgZ29M4dXdCIgOhZQNNwNMulmJGo=;
- b=HJq4BLABER5AKLa6UcuJVzFupzb643a105yhjDOXXllnVJBJMacvEiDygeqkrT+FxbB+
- XgL+i9xyhiBkdCxLE0LuEDswTq8jPSyBm9vQ2Rj64yXphaPkazCMpFdzB6PKuhbp5ncI
- VeFAAKyW1lJ42dnOk+pihRWsnQfaz1DILmYi9rZEik3Q0YG5irFH6X+55wpLfPlA49Kb
- XEx1fd4IM1m8nJP8yTesn/MbsiqC6UNeJtdEWcIUNpUbljgjycl9fcqJZ+VC4r8YBGeF
- BV8ai7+xLQwDrh4J8DKch11GQ973Fi14Pxo7VoBpDGcMgb2b8p+4ZFPPOUa3J0x3C3w/ 9w== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2xf73u1u6j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 11:24:42 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00GBOUhD081993;
-        Thu, 16 Jan 2020 11:24:42 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2xj1auyjc7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 11:24:37 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00GBNJGG014730;
-        Thu, 16 Jan 2020 11:23:19 GMT
-Received: from dhcp-10-175-200-122.vpn.oracle.com (/10.175.200.122)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 16 Jan 2020 03:23:18 -0800
-Date:   Thu, 16 Jan 2020 11:23:09 +0000 (GMT)
-From:   Alan Maguire <alan.maguire@oracle.com>
-X-X-Sender: alan@dhcp-10-175-200-122.vpn.oracle.com
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Thu, 16 Jan 2020 06:25:24 -0500
+Received: from ip5f5bd663.dynamic.kabel-deutschland.de ([95.91.214.99] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1is3H5-0001S8-FE; Thu, 16 Jan 2020 11:25:19 +0000
+Date:   Thu, 16 Jan 2020 12:25:18 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc:     Christian Brauner <christian@brauner.io>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alan Maguire <alan.maguire@oracle.com>
-Subject: Re: linux-next: build failure after merge of the kunit-next tree
-In-Reply-To: <20200116165703.4e04be51@canb.auug.org.au>
-Message-ID: <alpine.LRH.2.20.2001161120230.2505@dhcp-10-175-200-122.vpn.oracle.com>
-References: <20200116165703.4e04be51@canb.auug.org.au>
-User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        arcml <linux-snps-arc@lists.infradead.org>
+Subject: Re: clone3 on ARC (was Re: [PATCH v3 2/2] arch: wire-up clone3()
+ syscall)
+Message-ID: <20200116112517.53luv7qolevtqjpu@wittgenstein>
+References: <20190604160944.4058-1-christian@brauner.io>
+ <20190604160944.4058-2-christian@brauner.io>
+ <CAK8P3a0OfBpx6y4m5uWX-DUg16NoFby5ik-3xCcD+yMrw0tbEw@mail.gmail.com>
+ <20190604212930.jaaztvkent32b7d3@brauner.io>
+ <a58c8425-83a3-b64c-339a-7e94a72f4bee@synopsys.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001160098
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001160098
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <a58c8425-83a3-b64c-339a-7e94a72f4bee@synopsys.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Jan 2020, Stephen Rothwell wrote:
+On Wed, Jan 15, 2020 at 10:41:20PM +0000, Vineet Gupta wrote:
+> On 6/4/19 2:29 PM, Christian Brauner wrote:
+> > On Tue, Jun 04, 2019 at 08:40:01PM +0200, Arnd Bergmann wrote:
+> >> On Tue, Jun 4, 2019 at 6:09 PM Christian Brauner <christian@brauner.io> wrote:
+> >>>
+> >>> Wire up the clone3() call on all arches that don't require hand-rolled
+> >>> assembly.
+> >>>
+> >>> Some of the arches look like they need special assembly massaging and it is
+> >>> probably smarter if the appropriate arch maintainers would do the actual
+> >>> wiring. Arches that are wired-up are:
+> >>> - x86{_32,64}
+> >>> - arm{64}
+> >>> - xtensa
+> >>
+> >> The ones you did look good to me. I would hope that we can do all other
+> >> architectures the same way, even if they have special assembly wrappers
+> >> for the old clone(). The most interesting cases appear to be ia64, alpha,
+> >> m68k and sparc, so it would be good if their maintainers could take a
+> >> look.
+> > 
+> > Yes, agreed. They can sort this out even after this lands.
+> > 
+> >>
+> >> What do you use for testing? Would it be possible to override the
+> >> internal clone() function in glibc with an LD_PRELOAD library
+> >> to quickly test one of the other architectures for regressions?
+> > 
+> > I have a test program that is rather horrendously ugly and I compiled
+> > kernels for x86 and the arms and tested in qemu. The program basically
+> > looks like [1].
+> 
+> I just got around to fixing this for ARC (patch to follow after we sort out the
+> testing) and was trying to use the test case below for a qucik and dirty smoke
+> test (so existing toolchain lacking with headers lacking NR_clone3 or struct
+> clone_args etc). I did hack those up, but then spotted below
+> 
+> uapi/linux/sched.h
+> 
+> |    struct clone_args {
+> |	__aligned_u64 flags;
+> |	__aligned_u64 pidfd;
+> |	__aligned_u64 child_tid;
+> |	__aligned_u64 parent_tid;
+> ..
+> ..
+> 
+> Are all clone3 arg fields supposed to be 64-bit wide, even things like @child_tid,
+> @tls .... which are traditionally ARCH word wide ?
 
-> Hi all,
-> 
-> After merging the kunit-next tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
-> 
-> x86_64-linux-gnu-ld: drivers/base/test/property-entry-test.o: in function `kunit_test_suites_init':
-> property-entry-test.c:(.text+0x26): undefined reference to `kunit_run_tests'
-> x86_64-linux-gnu-ld: drivers/base/test/property-entry-test.o: in function `pe_test_reference':
-> property-entry-test.c:(.text+0x275): undefined reference to `kunit_binary_assert_format'
-> x86_64-linux-gnu-ld: property-entry-test.c:(.text+0x2c4): undefined reference to `kunit_do_assertion'
-> 
-> and lots more ...
-> 
-> Caused by commit
-> 
->   27f9d7e984d9 ("software node: introduce CONFIG_KUNIT_DRIVER_PE_TEST")
-> 
-> from the pm tree interacting with commit
-> 
->   35c57fc3f8ea ("kunit: building kunit as a module breaks allmodconfig")
-> 
-> I have disabled CONFIG_KUNIT_DRIVER_PE_TEST for today.
->
+This is just the kernel ABI we expose to userspace with the intention to
+make it easy for us to handle 32 and 64 bit. A libc like glibc is
+expected to expose a properly typed struct to userspace. The kernel
+struct kernel_clone_args has "correct" typing.
 
-Apologies again, I should have explicitly specified that
-CONFIG_KUNIT_DRIVER_PE_TEST depends on KUNIT=y; I've
-sent a patch to fix this:
-
-https://lore.kernel.org/lkml/1579173451-2439-1-git-send-email-alan.maguire@oracle.com/T/#u
-
-Thank you!
-
-Alan
- 
-> -- 
-> Cheers,
-> Stephen Rothwell
-> 
+Christian
