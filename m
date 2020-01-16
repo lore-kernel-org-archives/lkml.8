@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBF5C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E21C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B377620684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C2DD20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:29:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199352;
-	bh=RWIpyYV2IZnnvLeNB3e+att7PsbnyepJ/57t61uI6Fc=;
+	s=default; t=1579199359;
+	bh=gRRExTBOxk0GsxlIZLGBj4g129fbjoNxN9f9p6V1jf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FRU+c6m9hY+qXpKms2g12yTfC8MWcNeQ9VwSgnVJbKK5d0dwf8iU2PEU5HQ9TXeuY
-	 vOUg1HCFoC6TyAFKKRpfmiograYmj1NWEeDgh5nVgvjgab4iPFAuAPMf2Iebow9tNG
-	 YqnB8K+wDd5VKSuB/xQyg+/m29XKR1vfXT4tnNPo=
+	b=oKTlXSJgkGgWdP6tmuhaH2aOHPyPAkPBnKrqtJdxP3GMHn9vKdOciBLptBrjv/O5z
+	 2D3+7jjDwlOcFeoiEb7scYl6eK9T+Le16wmqPQ8bAQKUOD9Ab4cjZs3cXFRAZGoG5j
+	 7PxbRHaN99Dq/dAASN/id2KyPFHn5mxo31h2JzGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392200AbgAPRZ6 (ORCPT
+        id S2407063AbgAPS3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:25:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33454 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:29:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392117AbgAPRZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:25:36 -0500
+        id S2391692AbgAPRZ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:25:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10E40246CA;
-        Thu, 16 Jan 2020 17:25:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 470262081E;
+        Thu, 16 Jan 2020 17:25:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195535;
-        bh=RWIpyYV2IZnnvLeNB3e+att7PsbnyepJ/57t61uI6Fc=;
+        s=default; t=1579195557;
+        bh=gRRExTBOxk0GsxlIZLGBj4g129fbjoNxN9f9p6V1jf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=puucLYIkRxSJodtDQOtaDZNdDFDKlZ7GRzByUa1SpGWUdKed2bH4CMggYNJcD8PHb
-         z76lAxvutzAwo8oMABCqKPnYXuw3+luWyiqftdxEVsJy0i/57EHr+OfYrdz9uh3oZj
-         2z/IiPdurBryQzmmVqgdDDr1/NOWpzLehjgiZeiw=
+        b=lIw9quMUrsYu60LMElBVp9AFIOVhfzd5qKA+hmmkqFG2OPqT08eV2iOKiF2Iy6M8w
+         7XwX+RzyIFjXAsmW6Fy4rGOWjt4anyLdcspXhYPiHfYWTwuhLV7b5WqJJOl/JtrsPP
+         f81Y9/ocjBneqNobVbNXGQNoEqhWQCRI9csIClq4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        nios2-dev@lists.rocketboards.org
-Subject: [PATCH AUTOSEL 4.14 130/371] nios2: ksyms: Add missing symbol exports
-Date:   Thu, 16 Jan 2020 12:20:02 -0500
-Message-Id: <20200116172403.18149-73-sashal@kernel.org>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 145/371] arm64: dts: allwinner: a64: Add missing PIO clocks
+Date:   Thu, 16 Jan 2020 12:20:17 -0500
+Message-Id: <20200116172403.18149-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -60,65 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
 
-[ Upstream commit 0f8ed994575429d6042cf5d7ef70081c94091587 ]
+[ Upstream commit 562bf19611c000cb7219431c3cc78aa60c2b371e ]
 
-Building nios2:allmodconfig fails as follows (each symbol is only listed
-once).
+The pinctrl binding mandates that we have the three clocks fed into the PIO
+described.
 
-ERROR: "__ashldi3" [drivers/md/dm-writecache.ko] undefined!
-ERROR: "__ashrdi3" [fs/xfs/xfs.ko] undefined!
-ERROR: "__ucmpdi2" [drivers/media/i2c/adv7842.ko] undefined!
-ERROR: "__lshrdi3" [drivers/md/dm-zoned.ko] undefined!
-ERROR: "flush_icache_range" [drivers/misc/lkdtm/lkdtm.ko] undefined!
-ERROR: "empty_zero_page" [drivers/md/dm-mod.ko] undefined!
+Even though the old case is still supported for backward compatibility, we
+should update our DTs to fix this.
 
-The problem is seen with gcc 7.3.0.
-
-Export the missing symbols.
-
-Fixes: 2fc8483fdcde ("nios2: Build infrastructure")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
+Fixes: 6bc37fac30cf ("arm64: dts: add Allwinner A64 SoC .dtsi")
+Acked-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/nios2/kernel/nios2_ksyms.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/nios2/kernel/nios2_ksyms.c b/arch/nios2/kernel/nios2_ksyms.c
-index bf2f55d10a4d..4e704046a150 100644
---- a/arch/nios2/kernel/nios2_ksyms.c
-+++ b/arch/nios2/kernel/nios2_ksyms.c
-@@ -9,12 +9,20 @@
- #include <linux/export.h>
- #include <linux/string.h>
- 
-+#include <asm/cacheflush.h>
-+#include <asm/pgtable.h>
-+
- /* string functions */
- 
- EXPORT_SYMBOL(memcpy);
- EXPORT_SYMBOL(memset);
- EXPORT_SYMBOL(memmove);
- 
-+/* memory management */
-+
-+EXPORT_SYMBOL(empty_zero_page);
-+EXPORT_SYMBOL(flush_icache_range);
-+
- /*
-  * libgcc functions - functions that are used internally by the
-  * compiler...  (prototypes are not correct though, but that
-@@ -31,3 +39,7 @@ DECLARE_EXPORT(__udivsi3);
- DECLARE_EXPORT(__umoddi3);
- DECLARE_EXPORT(__umodsi3);
- DECLARE_EXPORT(__muldi3);
-+DECLARE_EXPORT(__ucmpdi2);
-+DECLARE_EXPORT(__lshrdi3);
-+DECLARE_EXPORT(__ashldi3);
-+DECLARE_EXPORT(__ashrdi3);
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 8c8db1b057df..788a6f8c5994 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -274,7 +274,8 @@
+ 			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&ccu 58>;
++			clocks = <&ccu 58>, <&osc24M>, <&rtc 0>;
++			clock-names = "apb", "hosc", "losc";
+ 			gpio-controller;
+ 			#gpio-cells = <3>;
+ 			interrupt-controller;
 -- 
 2.20.1
 
