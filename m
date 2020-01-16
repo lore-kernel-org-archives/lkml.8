@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4DBC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0FF9C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B48612064C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:45:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8D9A20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:45:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218342;
-	bh=i0+bc8psChPsL8aeaO1Qw8WqA3DPbGaJi4hMtSmorAI=;
+	s=default; t=1579218345;
+	bh=D2JDALk0Xq3IA0lFatgD2Tnhdb9kJsSbsj1r7YIGito=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yr1ej8OJJPApIjBJRGWlye1ZGYMdXOIqxlYXtCPMLHd32xVraZMOmmJu6i9vzdCXQ
-	 noo/mbNXnHZSnoq6xO+4Ywzr6cLdQubN3+KrV834LeJS2643fxiS12rtj8kBRd5Z4C
-	 J6i/KrUQQ40hjMlYVnxJo2LA1KQz582WMdI+6H2A=
+	b=MwKWqaasn7zE3T7XE+cmym4chnGTIV/6oERdlBzoUuDkvy18nXIPxlbVAFAcFhqal
+	 ywINKapFqx5Sce7KPJDBlEwfBDTCedGuHyw11nt5YwZkta8ivjVB0fM/YshjLNqJss
+	 c/TlRTdFkcuZX0wtdmXEOBe2QoRgwdOVXpW/0cys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391837AbgAPXpl (ORCPT
+        id S1732198AbgAPXWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:45:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50776 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:22:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390942AbgAPXWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:22:49 -0500
+        id S1733030AbgAPXWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:22:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7067B2072E;
-        Thu, 16 Jan 2020 23:22:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72A162072E;
+        Thu, 16 Jan 2020 23:22:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216968;
-        bh=i0+bc8psChPsL8aeaO1Qw8WqA3DPbGaJi4hMtSmorAI=;
+        s=default; t=1579216956;
+        bh=D2JDALk0Xq3IA0lFatgD2Tnhdb9kJsSbsj1r7YIGito=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I8lra9IsS41lva0u+scg77GU8IW5CMgFjblJiy4dsh5SwpjinklnJR8VZY/IxciDp
-         X/Jc2fxjgQarhONil9Qhwkf4zx1SomJievRT3BhA641+4yhxAWt2/87YKunrCq9f5e
-         ydXWPdbQ22/7NDtFPFmBfqa1Qx3hsDZvWyw+7AhQ=
+        b=sy+ZiIKDqAZHMq4pjsmUzD/unHM9HKHuyZbLUqbFvh3YXaZIe8XvRHtzfGRyb3YOm
+         WKfaUhK0LxEeoCaMz9vvnQyZwbNvKvd0wj4SY0O7l2r5AZY/jXDpCppLGyPTzrKyHa
+         bhBsiIoEraZBKItAqGsQjeScJy8uORPb/JfeN2sk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 5.4 094/203] xprtrdma: Fix completion wait during device removal
-Date:   Fri, 17 Jan 2020 00:16:51 +0100
-Message-Id: <20200116231753.886716695@linuxfoundation.org>
+        stable@vger.kernel.org, Yangyang Li <liyangyang20@huawei.com>,
+        Weihang Li <liweihang@hisilicon.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.4 073/203] RDMA/hns: Bugfix for qpc/cqc timer configuration
+Date:   Fri, 17 Jan 2020 00:16:30 +0100
+Message-Id: <20200116231750.543451509@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -59,44 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Yangyang Li <liyangyang20@huawei.com>
 
-commit 13cb886c591f341a8759f175292ddf978ef903a1 upstream.
+commit 887803db866a7a4e1817a3cb8a3eee4e9879fed2 upstream.
 
-I've found that on occasion, "rmmod <dev>" will hang while if an NFS
-is under load.
+qpc/cqc timer entry size needs one page, but currently they are fixedly
+configured to 4096, which is not appropriate in 64K page scenarios. So
+they should be modified to PAGE_SIZE.
 
-Ensure that ri_remove_done is initialized only just before the
-transport is woken up to force a close. This avoids the completion
-possibly getting initialized again while the CM event handler is
-waiting for a wake-up.
-
-Fixes: bebd031866ca ("xprtrdma: Support unplugging an HCA from under an NFS mount")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Fixes: 0e40dc2f70cd ("RDMA/hns: Add timer allocation support for hip08")
+Link: https://lore.kernel.org/r/1571908917-16220-3-git-send-email-liweihang@hisilicon.com
+Signed-off-by: Yangyang Li <liyangyang20@huawei.com>
+Signed-off-by: Weihang Li <liweihang@hisilicon.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/sunrpc/xprtrdma/verbs.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -245,6 +245,7 @@ rpcrdma_cm_event_handler(struct rdma_cm_
- 			ia->ri_id->device->name,
- 			rpcrdma_addrstr(r_xprt), rpcrdma_portstr(r_xprt));
- #endif
-+		init_completion(&ia->ri_remove_done);
- 		set_bit(RPCRDMA_IAF_REMOVING, &ia->ri_flags);
- 		ep->rep_connected = -ENODEV;
- 		xprt_force_disconnect(xprt);
-@@ -299,7 +300,6 @@ rpcrdma_create_id(struct rpcrdma_xprt *x
- 	trace_xprtrdma_conn_start(xprt);
- 
- 	init_completion(&ia->ri_done);
--	init_completion(&ia->ri_remove_done);
- 
- 	id = rdma_create_id(xprt->rx_xprt.xprt_net, rpcrdma_cm_event_handler,
- 			    xprt, RDMA_PS_TCP, IB_QPT_RC);
+--- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.h
++++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.h
+@@ -87,8 +87,8 @@
+ #define HNS_ROCE_V2_MTT_ENTRY_SZ		64
+ #define HNS_ROCE_V2_CQE_ENTRY_SIZE		32
+ #define HNS_ROCE_V2_SCCC_ENTRY_SZ		32
+-#define HNS_ROCE_V2_QPC_TIMER_ENTRY_SZ		4096
+-#define HNS_ROCE_V2_CQC_TIMER_ENTRY_SZ		4096
++#define HNS_ROCE_V2_QPC_TIMER_ENTRY_SZ		PAGE_SIZE
++#define HNS_ROCE_V2_CQC_TIMER_ENTRY_SZ		PAGE_SIZE
+ #define HNS_ROCE_V2_PAGE_SIZE_SUPPORTED		0xFFFFF000
+ #define HNS_ROCE_V2_MAX_INNER_MTPT_NUM		2
+ #define HNS_ROCE_INVALID_LKEY			0x100
 
 
