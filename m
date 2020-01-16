@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C5CC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4CFAC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEF062087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:03:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 928FE20730
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:03:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194217;
-	bh=vScYTBBcuqb6Y+lyFVKPGy/G4kDRGJd7wtV3w9HMh4Y=;
+	s=default; t=1579194222;
+	bh=J+v8LTbKNIpIwSqcGpwLTtXjKBtX7PN/R0fJXvGGMw4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QdrEjs+bl4jQ0j4ihTbI4f18Vk8lJTp8EjR70pe1XcvyVZQL7V5nqjSRX8oQI8ygq
-	 wTTy79A6heCWYZZO5GY6Uuc7mzpcAhisvL/QkczXWCTdTYQ/QYDsYM9YLYEVvajkQP
-	 inO5segKQFnnOJp2NyEV11loId19pb/sP+OPlqU8=
+	b=SpAnFf702HZydIm+yC1Wwz0BLGki9n4bxB1uc7GFXU0V9tkWJcKY4lSIwNBW+SK4x
+	 ZVsIn194+FQjlnFjKGBBDYPl714Xa8y5VaP8gc+MGIYwAu1rVBUTHnQujwTJo5hO4T
+	 UYo9QHER3mQw507IQc9dspRMPWLfBTEqdgJrzfN8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388116AbgAPRDg (ORCPT
+        id S2388537AbgAPRDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:03:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56928 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:03:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388553AbgAPRDF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:03:05 -0500
+        id S2388497AbgAPRCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:02:53 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A9762077B;
-        Thu, 16 Jan 2020 17:03:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5CB32468C;
+        Thu, 16 Jan 2020 17:02:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194185;
-        bh=vScYTBBcuqb6Y+lyFVKPGy/G4kDRGJd7wtV3w9HMh4Y=;
+        s=default; t=1579194172;
+        bh=J+v8LTbKNIpIwSqcGpwLTtXjKBtX7PN/R0fJXvGGMw4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HuxziLxI0NlCszvnUAl3OdZNaJoVI0YAfKdjDUiVVWEE0tyQBGCgP4fpa2Tamuyx4
-         IUVQFF1DdkrIgHUMlLHS6z7a83+HwqdLHADuStJf8/fbIR+eVd+Sd9zJiEN/ilTqo4
-         vgo0B3RvK1CEhRunHQQ3C78wZ2zBT4J/sf6lXtho=
+        b=YMCqx8G3/8ah2HZ1yR0dmbUe4WuThqlWuute9VCbCGvri0pdqwhZdAmQtuUROwRtR
+         +FS+wEmRDIZtFrg9OLoD31u3DowCsZjObxL0jl7fZfxY75viUqzNNy0cHIMNgTVU9L
+         /jz6lN5qkF+LE7+Ltxj2F3QssCdNPhIyw24jWqyg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 258/671] arm64: dts: allwinner: a64: Add missing PIO clocks
-Date:   Thu, 16 Jan 2020 11:52:47 -0500
-Message-Id: <20200116165940.10720-141-sashal@kernel.org>
+Cc:     Nicholas Mc Guire <hofrat@osadl.org>, Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 251/671] media: cx23885: check allocation return
+Date:   Thu, 16 Jan 2020 11:52:40 -0500
+Message-Id: <20200116165940.10720-134-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -59,38 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Ripard <maxime.ripard@bootlin.com>
+From: Nicholas Mc Guire <hofrat@osadl.org>
 
-[ Upstream commit 562bf19611c000cb7219431c3cc78aa60c2b371e ]
+[ Upstream commit a3d7f22ef34ec4206b50ee121384d5c8bebd5591 ]
 
-The pinctrl binding mandates that we have the three clocks fed into the PIO
-described.
+Checking of kmalloc() seems to have been committed - as
+cx23885_dvb_register() is checking for != 0 return, returning
+-ENOMEM should be fine here.  While at it address the coccicheck
+suggestion to move to kmemdup rather than using kmalloc+memcpy.
 
-Even though the old case is still supported for backward compatibility, we
-should update our DTs to fix this.
+Fixes: 46b21bbaa8a8 ("[media] Add support for DViCO FusionHDTV DVB-T Dual Express2")
 
-Fixes: 6bc37fac30cf ("arm64: dts: add Allwinner A64 SoC .dtsi")
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/media/pci/cx23885/cx23885-dvb.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index d3daf90a8715..7abc4ea30541 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -366,7 +366,8 @@
- 			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&ccu 58>;
-+			clocks = <&ccu 58>, <&osc24M>, <&rtc 0>;
-+			clock-names = "apb", "hosc", "losc";
- 			gpio-controller;
- 			#gpio-cells = <3>;
- 			interrupt-controller;
+diff --git a/drivers/media/pci/cx23885/cx23885-dvb.c b/drivers/media/pci/cx23885/cx23885-dvb.c
+index 7d52173073d6..bafcb3982274 100644
+--- a/drivers/media/pci/cx23885/cx23885-dvb.c
++++ b/drivers/media/pci/cx23885/cx23885-dvb.c
+@@ -1474,8 +1474,9 @@ static int dvb_register(struct cx23885_tsport *port)
+ 		if (fe0->dvb.frontend != NULL) {
+ 			struct i2c_adapter *tun_i2c;
+ 
+-			fe0->dvb.frontend->sec_priv = kmalloc(sizeof(dib7000p_ops), GFP_KERNEL);
+-			memcpy(fe0->dvb.frontend->sec_priv, &dib7000p_ops, sizeof(dib7000p_ops));
++			fe0->dvb.frontend->sec_priv = kmemdup(&dib7000p_ops, sizeof(dib7000p_ops), GFP_KERNEL);
++			if (!fe0->dvb.frontend->sec_priv)
++				return -ENOMEM;
+ 			tun_i2c = dib7000p_ops.get_i2c_master(fe0->dvb.frontend, DIBX000_I2C_INTERFACE_TUNER, 1);
+ 			if (!dvb_attach(dib0070_attach, fe0->dvb.frontend, tun_i2c, &dib7070p_dib0070_config))
+ 				return -ENODEV;
 -- 
 2.20.1
 
