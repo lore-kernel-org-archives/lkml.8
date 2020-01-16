@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9D0C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18011C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB2692471E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEF9624720
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:40:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196400;
-	bh=GXrOPGzs1i6dk8/vbBQRhdqLFf9BkLkpKVr1wvZMRy8=;
+	s=default; t=1579196405;
+	bh=ce0mhe+wPPz90EmlPolK49aw5/tiu/PWMqnNNeXBi3c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OIx2OblLuBwGVYlf2oe6vpYzH7e7xZXeF6BlW2nNjkfLhTfPRAkB/6b4qLCpVAReI
-	 vLnHfceCasyMA7SCu6eVjysby1oELr/6aE8tTI9i+mrYhilsvCp9SKf1VFuGvjqAYn
-	 w1xYl0VbjpqS/mIqtzsg+SiZrO97KoRu0Z5bxVPY=
+	b=0uMkqINhGFcjGsljFYVqsGMiKaV1JFyJKVrJGBht2m8rQJCNdF8B71Rbw1d5hk9LP
+	 CU3BFvWZMY2F3OU8TvNW1ded1u2vDHjKvXVf64OCzUsB4RYU1bruvsm4wUpn5OpzMW
+	 Nj+xaFyqfw/0fqqPuacxm1F1t8L+WhXOnxRIJoT8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729813AbgAPRj7 (ORCPT
+        id S2393580AbgAPRkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:39:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55170 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:40:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388353AbgAPRjG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:39:06 -0500
+        id S2393431AbgAPRjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:39:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AB4E246EF;
-        Thu, 16 Jan 2020 17:39:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98A4B246EF;
+        Thu, 16 Jan 2020 17:39:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196345;
-        bh=GXrOPGzs1i6dk8/vbBQRhdqLFf9BkLkpKVr1wvZMRy8=;
+        s=default; t=1579196348;
+        bh=ce0mhe+wPPz90EmlPolK49aw5/tiu/PWMqnNNeXBi3c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U+tbg7/MZK5FJqEfgdSpCPPmHt0Nh13qMJCbFzmBxJ12KDgmSHLbUO7THLvOO/HJR
-         KFYzRnhDNsR65PSvE6J6/uzCdvLrTFhIUQbUWKjmlHPx/L4EK33oWu90ZZ5HqobM/q
-         y+P+I3679eGfdLJp3DIHH8RsZOECUmidcqAImXdo=
+        b=usdN//p+qxd1Wg5RqcvybowiBYrsV7XbBoqCmX6Z3Jwh4O0mUgMSG+0lvCB6NqTLA
+         QmFV3LDE1g1fpIBM1iJPKiGKNTEmMOYHWJUupngIx0LL03qCeuwsyQtDv7febJCCmP
+         aBHKgjTGhvgQuiSmbtnBudqOK6vbTRInGxKUWxV4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Brian Masney <masneyb@onstation.org>, Pavel Machek <pavel@ucw.cz>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 141/251] backlight: lm3630a: Return 0 on success in update_status functions
-Date:   Thu, 16 Jan 2020 12:34:50 -0500
-Message-Id: <20200116173641.22137-101-sashal@kernel.org>
+Cc:     Jon Hunter <jonathanh@nvidia.com>, Vinod Koul <vkoul@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 143/251] dmaengine: tegra210-adma: Fix crash during probe
+Date:   Thu, 16 Jan 2020 12:34:52 -0500
+Message-Id: <20200116173641.22137-103-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -61,48 +59,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Masney <masneyb@onstation.org>
+From: Jon Hunter <jonathanh@nvidia.com>
 
-[ Upstream commit d3f48ec0954c6aac736ab21c34a35d7554409112 ]
+[ Upstream commit b53611fb1ce9b1786bd18205473e0c1d6bfa8934 ]
 
-lm3630a_bank_a_update_status() and lm3630a_bank_b_update_status()
-both return the brightness value if the brightness was successfully
-updated. Writing to these attributes via sysfs would cause a 'Bad
-address' error to be returned. These functions should return 0 on
-success, so let's change it to correct that error.
+Commit f33e7bb3eb92 ("dmaengine: tegra210-adma: restore channel status")
+added support to save and restore the DMA channel registers when runtime
+suspending the ADMA. This change is causing the kernel to crash when
+probing the ADMA, if the device is probed deferred when looking up the
+channel interrupts. The crash occurs because not all of the channel base
+addresses have been setup at this point and in the clean-up path of the
+probe, pm_runtime_suspend() is called invoking its callback which
+expects all the channel base addresses to be initialised.
 
-Fixes: 28e64a68a2ef ("backlight: lm3630: apply chip revision")
-Signed-off-by: Brian Masney <masneyb@onstation.org>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Although this could be fixed by simply checking for a NULL address, on
+further review of the driver it seems more appropriate that we only call
+pm_runtime_get_sync() after all the channel interrupts and base
+addresses have been configured. Therefore, fix this crash by moving the
+calls to pm_runtime_enable(), pm_runtime_get_sync() and
+tegra_adma_init() after the DMA channels have been initialised.
+
+Fixes: f33e7bb3eb92 ("dmaengine: tegra210-adma: restore channel status")
+
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/backlight/lm3630a_bl.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/dma/tegra210-adma.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
-index 60d6c2ac87aa..1771220b2437 100644
---- a/drivers/video/backlight/lm3630a_bl.c
-+++ b/drivers/video/backlight/lm3630a_bl.c
-@@ -200,7 +200,7 @@ static int lm3630a_bank_a_update_status(struct backlight_device *bl)
- 				      LM3630A_LEDA_ENABLE, LM3630A_LEDA_ENABLE);
- 	if (ret < 0)
- 		goto out_i2c_err;
--	return bl->props.brightness;
-+	return 0;
+diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+index 8c3cab463354..2d4aeba579f7 100644
+--- a/drivers/dma/tegra210-adma.c
++++ b/drivers/dma/tegra210-adma.c
+@@ -744,16 +744,6 @@ static int tegra_adma_probe(struct platform_device *pdev)
+ 		return PTR_ERR(tdma->ahub_clk);
+ 	}
  
- out_i2c_err:
- 	dev_err(pchip->dev, "i2c failed to access\n");
-@@ -277,7 +277,7 @@ static int lm3630a_bank_b_update_status(struct backlight_device *bl)
- 				      LM3630A_LEDB_ENABLE, LM3630A_LEDB_ENABLE);
- 	if (ret < 0)
- 		goto out_i2c_err;
--	return bl->props.brightness;
-+	return 0;
+-	pm_runtime_enable(&pdev->dev);
+-
+-	ret = pm_runtime_get_sync(&pdev->dev);
+-	if (ret < 0)
+-		goto rpm_disable;
+-
+-	ret = tegra_adma_init(tdma);
+-	if (ret)
+-		goto rpm_put;
+-
+ 	INIT_LIST_HEAD(&tdma->dma_dev.channels);
+ 	for (i = 0; i < tdma->nr_channels; i++) {
+ 		struct tegra_adma_chan *tdc = &tdma->channels[i];
+@@ -771,6 +761,16 @@ static int tegra_adma_probe(struct platform_device *pdev)
+ 		tdc->tdma = tdma;
+ 	}
  
- out_i2c_err:
- 	dev_err(pchip->dev, "i2c failed to access REG_CTRL\n");
++	pm_runtime_enable(&pdev->dev);
++
++	ret = pm_runtime_get_sync(&pdev->dev);
++	if (ret < 0)
++		goto rpm_disable;
++
++	ret = tegra_adma_init(tdma);
++	if (ret)
++		goto rpm_put;
++
+ 	dma_cap_set(DMA_SLAVE, tdma->dma_dev.cap_mask);
+ 	dma_cap_set(DMA_PRIVATE, tdma->dma_dev.cap_mask);
+ 	dma_cap_set(DMA_CYCLIC, tdma->dma_dev.cap_mask);
+@@ -812,13 +812,13 @@ static int tegra_adma_probe(struct platform_device *pdev)
+ 
+ dma_remove:
+ 	dma_async_device_unregister(&tdma->dma_dev);
+-irq_dispose:
+-	while (--i >= 0)
+-		irq_dispose_mapping(tdma->channels[i].irq);
+ rpm_put:
+ 	pm_runtime_put_sync(&pdev->dev);
+ rpm_disable:
+ 	pm_runtime_disable(&pdev->dev);
++irq_dispose:
++	while (--i >= 0)
++		irq_dispose_mapping(tdma->channels[i].irq);
+ 
+ 	return ret;
+ }
 -- 
 2.20.1
 
