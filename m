@@ -2,127 +2,266 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E4EC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77942C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E37620728
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:18:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gbaHBSoU"
+	by mail.kernel.org (Postfix) with ESMTP id 54FCB20728
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:18:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730470AbgAPGSU (ORCPT
+        id S1730540AbgAPGSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 01:18:20 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:44390 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgAPGSU (ORCPT
+        Thu, 16 Jan 2020 01:18:51 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:27925 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbgAPGSv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 01:18:20 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G6Df5J006639;
-        Thu, 16 Jan 2020 06:18:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=thM1DU+ci72geM1S8as2qtc2X97JclnuS2KhKwDxVtM=;
- b=gbaHBSoUq9DJ0mkHpuVLRvItOlqO/0ixqhK7g0BIV5DtMWrLd0FBvD2AWyggbML1zx/s
- 0/z5qydhFCw1y5nBlNLXx/5zy9ofMSb0MC5MVSvRHK0/34x9CtJTmbUwxyxuxqqG2+Fo
- JeAEKnd/nTvY5uGY5vYQNRI6yP9Dl42jo4X4Owgl+x5+G1LjsRjAlRet8eCkRUH4ubrC
- guvKTJrwjYBSGn2Jj7Jz8fUNWFCAPFiIPj1a3Z5JZlyUHxM4M+RwuSpQ94fe6iXJvfH2
- coalhiFLT9w8AjtlIeSDWK6+xN4+Eg2DOnnBGPbZRXISjcL/tcocRw4O9eTHHolbpaC8 3g== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2xf73u0d6f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 06:18:08 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G6DdfK038228;
-        Thu, 16 Jan 2020 06:18:07 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2xhy22qh0u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 06:18:07 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00G6I62l027636;
-        Thu, 16 Jan 2020 06:18:06 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jan 2020 22:18:06 -0800
-Date:   Wed, 15 Jan 2020 22:18:04 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [RFC PATCH V2 01/12] fs/stat: Define DAX statx attribute
-Message-ID: <20200116061804.GI8257@magnolia>
-References: <20200110192942.25021-1-ira.weiny@intel.com>
- <20200110192942.25021-2-ira.weiny@intel.com>
- <20200115113715.GB2595@quack2.suse.cz>
- <20200115173834.GD8247@magnolia>
- <20200115194512.GF23311@iweiny-DESK2.sc.intel.com>
- <CAPcyv4hwefzruFj02YHYiy8nOpHJFGLKksjiXoRUGpT3C2rDag@mail.gmail.com>
- <20200115223821.GG23311@iweiny-DESK2.sc.intel.com>
- <20200116053935.GB8235@magnolia>
- <CAPcyv4jDMsPj_vZwDOgPkfHLELZWqeJugKgKNVKbpiZ9th683g@mail.gmail.com>
+        Thu, 16 Jan 2020 01:18:51 -0500
+Received: from [10.28.39.79] (10.28.39.79) by mail-sz.amlogic.com (10.28.11.5)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 16 Jan
+ 2020 14:19:17 +0800
+Subject: Re: [PATCH v5 4/5] dt-bindings: clock: meson: add A1 peripheral clock
+ controller bindings
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20191227094606.143637-1-jian.hu@amlogic.com>
+ <20191227094606.143637-5-jian.hu@amlogic.com>
+ <1jeew7z5hv.fsf@starbuckisacylon.baylibre.com>
+From:   Jian Hu <jian.hu@amlogic.com>
+Message-ID: <6a42d334-33ec-d0de-f490-df9141b0dec4@amlogic.com>
+Date:   Thu, 16 Jan 2020 14:19:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4jDMsPj_vZwDOgPkfHLELZWqeJugKgKNVKbpiZ9th683g@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001160052
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001160052
+In-Reply-To: <1jeew7z5hv.fsf@starbuckisacylon.baylibre.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.28.39.79]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 10:05:00PM -0800, Dan Williams wrote:
-> On Wed, Jan 15, 2020 at 9:39 PM Darrick J. Wong <darrick.wong@oracle.com> wrote:
-> [..]
-> > >         attempts to minimize software cache effects for both I/O and
-> > >         memory mappings of this file.  It requires a file system which
-> > >         has been configured to support DAX.
-> > >
-> > >         DAX generally assumes all accesses are via cpu load / store
-> > >         instructions which can minimize overhead for small accesses, but
-> > >         may adversely affect cpu utilization for large transfers.
-> > >
-> > >         File I/O is done directly to/from user-space buffers and memory
-> > >         mapped I/O may be performed with direct memory mappings that
-> > >         bypass kernel page cache.
-> > >
-> > >         While the DAX property tends to result in data being transferred
-> > >         synchronously, it does not give the same guarantees of
-> > >         synchronous I/O where data and the necessary metadata are
-> > >         transferred together.
-> >
-> > (I'm frankly not sure that synchronous I/O actually guarantees that the
-> > metadata has hit stable storage...)
+
+
+On 2020/1/10 23:38, Jerome Brunet wrote:
 > 
-> Oh? That text was motivated by the open(2) man page description of O_SYNC.
-
-Eh, that's just me being cynical about software.  Yes, the O_SYNC docs
-say that data+metadata are supposed to happen; that's good enough for
-another section in the man pages. :)
-
---D
+> On Fri 27 Dec 2019 at 10:46, Jian Hu <jian.hu@amlogic.com> wrote:
+> 
+>> Add the documentation to support Amlogic A1 peripheral clock driver,
+>> and add A1 peripheral clock controller bindings.
+>>
+>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+>> ---
+>>   .../bindings/clock/amlogic,a1-clkc.yaml       | 67 +++++++++++++
+>>   include/dt-bindings/clock/a1-clkc.h           | 98 +++++++++++++++++++
+>>   2 files changed, 165 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
+>>   create mode 100644 include/dt-bindings/clock/a1-clkc.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
+>> new file mode 100644
+>> index 000000000000..a708e0e016d9
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
+>> @@ -0,0 +1,67 @@
+>> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+>> +/*
+>> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+>> + */
+> 
+> Same here ... read the doc and run the tests please.
+> 
+OK, I will verify it.
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/clock/amlogic,a1-clkc.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: Amlogic Meson A/C serials Peripheral Clock Control Unit Device Tree Bindings
+>> +
+>> +maintainers:
+>> +  - Neil Armstrong <narmstrong@baylibre.com>
+>> +  - Jerome Brunet <jbrunet@baylibre.com>
+>> +  - Jian Hu <jian.hu@jian.hu.com>
+>> +
+>> +properties:
+>> +  "#clock-cells":
+>> +    const: 1
+>> +  compatible:
+>> +    const: amlogic,a1-periphs-clkc
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    maxItems: 6
+>> +    items:
+>> +      - description: Input fixed pll div2
+>> +      - description: Input fixed pll div3
+>> +      - description: Input fixed pll div5
+>> +      - description: Input fixed pll div7
+>> +      - description: HIFI PLL
+> 
+> Why is this all caps when the rest is not ?
+OK, I will keep lower case.
+> 
+>> +      - description: Input Oscillator (usually at 24MHz)
+>> +
+>> +  clock-names:
+>> +    maxItems: 6
+>> +    items:
+>> +      - const: fclk_div2
+>> +      - const: fclk_div3
+>> +      - const: fclk_div5
+>> +      - const: fclk_div7
+>> +      - const: hifi_pll
+>> +      - const: xtal
+>> +
+>> +required:
+>> +  - "#clock-cells"
+>> +  - compatible
+>> +  - reg
+>> +  - clocks
+>> +  - clock-names
+>> +
+>> +examples:
+>> +  - |
+>> +    clkc_periphs: periphs-clock-controller {
+>> +        compatible = "amlogic,a1-periphs-clkc";
+>> +        reg = <0 0x800 0 0x104>;
+>> +        #clock-cells = <1>;
+>> +        clocks = <&clkc_pll CLKID_FCLK_DIV2>,
+>> +                <&clkc_pll CLKID_FCLK_DIV3>,
+>> +                <&clkc_pll CLKID_FCLK_DIV5>,
+>> +                <&clkc_pll CLKID_FCLK_DIV7>,
+>> +                <&clkc_pll CLKID_HIFI_PLL>,
+>> +                <&xtal>;
+>> +        clock-names = "fclk_div2", "fclk_div3", "fclk_div5",
+>> +                      "fclk_div7", "hifi_pll", "xtal";
+>> +   };
+>> diff --git a/include/dt-bindings/clock/a1-clkc.h b/include/dt-bindings/clock/a1-clkc.h
+>> new file mode 100644
+>> index 000000000000..9bb36fca86dd
+>> --- /dev/null
+>> +++ b/include/dt-bindings/clock/a1-clkc.h
+>> @@ -0,0 +1,98 @@
+>> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+>> +/*
+>> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+>> + */
+>> +
+>> +#ifndef __A1_CLKC_H
+>> +#define __A1_CLKC_H
+>> +
+>> +#define CLKID_XTAL_FIXPLL			1
+>> +#define CLKID_XTAL_USB_PHY			2
+>> +#define CLKID_XTAL_USB_CTRL			3
+>> +#define CLKID_XTAL_HIFIPLL			4
+>> +#define CLKID_XTAL_SYSPLL			5
+>> +#define CLKID_XTAL_DDS				6
+>> +#define CLKID_SYS_CLK				7
+>> +#define CLKID_CLKTREE				8
+>> +#define CLKID_RESET_CTRL			9
+>> +#define CLKID_ANALOG_CTRL			10
+>> +#define CLKID_PWR_CTRL				11
+>> +#define CLKID_PAD_CTRL				12
+>> +#define CLKID_SYS_CTRL				13
+>> +#define CLKID_TEMP_SENSOR			14
+>> +#define CLKID_AM2AXI_DIV			15
+>> +#define CLKID_SPICC_B				16
+>> +#define CLKID_SPICC_A				17
+>> +#define CLKID_CLK_MSR				18
+>> +#define CLKID_AUDIO				19
+>> +#define CLKID_JTAG_CTRL				20
+>> +#define CLKID_SARADC				21
+>> +#define CLKID_PWM_EF				22
+>> +#define CLKID_PWM_CD				23
+>> +#define CLKID_PWM_AB				24
+>> +#define CLKID_CEC				25
+>> +#define CLKID_I2C_S				26
+>> +#define CLKID_IR_CTRL				27
+>> +#define CLKID_I2C_M_D				28
+>> +#define CLKID_I2C_M_C				29
+>> +#define CLKID_I2C_M_B				30
+>> +#define CLKID_I2C_M_A				31
+>> +#define CLKID_ACODEC				32
+>> +#define CLKID_OTP				33
+>> +#define CLKID_SD_EMMC_A				34
+>> +#define CLKID_USB_PHY				35
+>> +#define CLKID_USB_CTRL				36
+>> +#define CLKID_SYS_DSPB				37
+>> +#define CLKID_SYS_DSPA				38
+>> +#define CLKID_DMA				39
+>> +#define CLKID_IRQ_CTRL				40
+>> +#define CLKID_NIC				41
+>> +#define CLKID_GIC				42
+>> +#define CLKID_UART_C				43
+>> +#define CLKID_UART_B				44
+>> +#define CLKID_UART_A				45
+>> +#define CLKID_SYS_PSRAM				46
+>> +#define CLKID_RSA				47
+>> +#define CLKID_CORESIGHT				48
+>> +#define CLKID_AM2AXI_VAD			49
+>> +#define CLKID_AUDIO_VAD				50
+>> +#define CLKID_AXI_DMC				51
+>> +#define CLKID_AXI_PSRAM				52
+>> +#define CLKID_RAMB				53
+>> +#define CLKID_RAMA				54
+>> +#define CLKID_AXI_SPIFC				55
+>> +#define CLKID_AXI_NIC				56
+>> +#define CLKID_AXI_DMA				57
+>> +#define CLKID_CPU_CTRL				58
+>> +#define CLKID_ROM				59
+>> +#define CLKID_PROC_I2C				60
+>> +#define CLKID_DSPA_SEL				61
+>> +#define CLKID_DSPB_SEL				62
+>> +#define CLKID_DSPA_EN				63
+>> +#define CLKID_DSPA_EN_NIC			64
+>> +#define CLKID_DSPB_EN				65
+>> +#define CLKID_DSPB_EN_NIC			66
+>> +#define CLKID_RTC_CLK				67
+>> +#define CLKID_CECA_32K				68
+>> +#define CLKID_CECB_32K				69
+>> +#define CLKID_24M				70
+>> +#define CLKID_12M				71
+>> +#define CLKID_FCLK_DIV2_DIVN			72
+>> +#define CLKID_GEN				73
+>> +#define CLKID_SARADC_SEL			74
+>> +#define CLKID_SARADC_CLK			75
+>> +#define CLKID_PWM_A				76
+>> +#define CLKID_PWM_B				77
+>> +#define CLKID_PWM_C				78
+>> +#define CLKID_PWM_D				79
+>> +#define CLKID_PWM_E				80
+>> +#define CLKID_PWM_F				81
+>> +#define CLKID_SPICC				82
+>> +#define CLKID_TS				83
+>> +#define CLKID_SPIFC				84
+>> +#define CLKID_USB_BUS				85
+>> +#define CLKID_SD_EMMC				86
+>> +#define CLKID_PSRAM				87
+>> +#define CLKID_DMC				88
+>> +
+>> +#endif /* __A1_CLKC_H */
+> 
+> .
+> 
