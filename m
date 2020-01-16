@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4016C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF13C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B659F2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D6CA2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:58:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201111;
-	bh=4W8VS8IETV5SxqetcRr+1EcIZttD2EodDWDUmxYf8kM=;
+	s=default; t=1579201117;
+	bh=s89gvlUNQw6c84NWlJrR+GuuM5pUVH0aoRiLuhCld9w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q8D3mFpeUb8jwU3hr4B8SBw7VSlMNSWA3NdISK9LZuB16UcsCdNPrfkmtdMuSq7TD
-	 06jCxXJIjA6kJimrayx4XE1666vBWaDuxHbNhVPwMWXJ25xGSHH9omRK6HEh4nI3ya
-	 CPxT6UpX5jdzYe8iNcUpUlu0MEqtf5HwNswT88q8=
+	b=B7Bp2WBPvKwOF3iY0Z/Spup8JIZUOtSBFG/nHglRorqlfHfy5KO7nOIIvUi/eP1iM
+	 pR4eKsG6fmdvjZqEJwb2fwf3onZlYkIeH6WfbBBBT6sbSlgsI7JoD7WJYGTz++lz4a
+	 9ePGw/ij6MCW6tFSnnnvE59FjtuIjkj24z5id6f0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388989AbgAPRGs (ORCPT
+        id S2437201AbgAPS6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:06:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36690 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:58:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388936AbgAPRGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:06:30 -0500
+        id S2388991AbgAPRGs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:06:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A96F21582;
-        Thu, 16 Jan 2020 17:06:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A29D205F4;
+        Thu, 16 Jan 2020 17:06:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194389;
-        bh=4W8VS8IETV5SxqetcRr+1EcIZttD2EodDWDUmxYf8kM=;
+        s=default; t=1579194408;
+        bh=s89gvlUNQw6c84NWlJrR+GuuM5pUVH0aoRiLuhCld9w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1gnw4XYdIAmyeUpSg3M4VAi0D51WU2VD+oZKWLxAY7zUfwL34FfHxcp5KIlTJ86Ww
-         /RsMEEKPoxitVDkjaCJvm3t7TQvd1zlsDzCKWiIyB3HAoDgBgdzNcrdLyzL9DXSKBF
-         ce0bcUXOBP+71uwtD8jVccGtbAvLz3ExeImkXr90=
+        b=jEIx+kOseOVB47/JIZ7SMnL5tNxyWEDPlOwtM/rEj+no0YcYadQOHXxdJRNqNPjyz
+         immGd0+apNs5b4pootfVm6m8GbVyuUtLxgLKLycjBvvx4EzfKVF7UBNKuEAL+7sctC
+         gD08KRV4r79/KueRqqQSk7agIFgETiwAgCsjtEmE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        Giridhar Malavali <gmalavali@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 317/671] scsi: qla2xxx: Fix error handling in qlt_alloc_qfull_cmd()
-Date:   Thu, 16 Jan 2020 11:59:15 -0500
-Message-Id: <20200116170509.12787-54-sashal@kernel.org>
+Cc:     Sameeh Jubran <sameehj@amazon.com>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 331/671] net: ena: fix: Free napi resources when ena_up() fails
+Date:   Thu, 16 Jan 2020 11:59:29 -0500
+Message-Id: <20200116170509.12787-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -61,50 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Sameeh Jubran <sameehj@amazon.com>
 
-[ Upstream commit c04466c17142d5eb566984372b9a5003d1900fe3 ]
+[ Upstream commit b287cdbd1cedfc9606682c6e02b58d00ff3a33ae ]
 
-The test "if (!cmd)" is not useful because it is guaranteed that cmd !=
-NULL.  Instead of testing the cmd pointer, rely on the tag to decide
-whether or not command allocation failed.
+ena_up() calls ena_init_napi() but does not call ena_del_napi() in
+case of failure. This causes a segmentation fault upon rmmod when
+netif_napi_del() is called. Fix this bug by calling ena_del_napi()
+before returning error from ena_up().
 
-Cc: Himanshu Madhani <hmadhani@marvell.com>
-Cc: Giridhar Malavali <gmalavali@marvell.com>
-Fixes: 33e799775593 ("qla2xxx: Add support for QFull throttling and Term Exchange retry") # v3.18.
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_target.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_netdev.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
-index bbbe1996620b..c925ca787537 100644
---- a/drivers/scsi/qla2xxx/qla_target.c
-+++ b/drivers/scsi/qla2xxx/qla_target.c
-@@ -5334,11 +5334,7 @@ qlt_alloc_qfull_cmd(struct scsi_qla_host *vha,
- 	se_sess = sess->se_sess;
+diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+index e26c195fec83..9afb19ebba58 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
++++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+@@ -1800,6 +1800,7 @@ static int ena_up(struct ena_adapter *adapter)
+ err_setup_tx:
+ 	ena_free_io_irq(adapter);
+ err_req_irq:
++	ena_del_napi(adapter);
  
- 	tag = sbitmap_queue_get(&se_sess->sess_tag_pool, &cpu);
--	if (tag < 0)
--		return;
--
--	cmd = &((struct qla_tgt_cmd *)se_sess->sess_cmd_map)[tag];
--	if (!cmd) {
-+	if (tag < 0) {
- 		ql_dbg(ql_dbg_io, vha, 0x3009,
- 			"qla_target(%d): %s: Allocation of cmd failed\n",
- 			vha->vp_idx, __func__);
-@@ -5353,6 +5349,7 @@ qlt_alloc_qfull_cmd(struct scsi_qla_host *vha,
- 		return;
- 	}
- 
-+	cmd = &((struct qla_tgt_cmd *)se_sess->sess_cmd_map)[tag];
- 	memset(cmd, 0, sizeof(struct qla_tgt_cmd));
- 
- 	qlt_incr_num_pend_cmds(vha);
+ 	return rc;
+ }
 -- 
 2.20.1
 
