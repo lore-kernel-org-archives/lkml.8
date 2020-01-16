@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C8FC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A48DC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F6B62073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF6E52077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:37:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199817;
-	bh=3BOj0VQFcmveERWLpa/tuFBG9tDDPouv+gFGtCBGxDI=;
+	s=default; t=1579199827;
+	bh=bJUm5nK+rfL/cXysbF/6l/nRR6yIxDo6UYp8z+0j554=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zo70uFipiDUDXNz9gDX1RJIHExsq21uccUEG4xQHwleBMH4++gkp4pawkX5ExnCbG
-	 FiJ5hkn/p9QCTZAjuh2Oi9sHbObCF5J9Qam6dj3Ixl7lEGR3rRtTv8j/LtpYbzlwlJ
-	 xICmVUx76pqCWSagHzlmpGh4Pcl8yrzYuoKlwQVY=
+	b=pTRMkmbawm0MkaZ/ynY+OhtrkH6dB/Lbiq/05yowwuofufdAvsIsm/srH97pUO4Qw
+	 rIxA8PozkR6FG/TC73qrcjKJu5wBppx4BWfaDVAgjCG/gQ5rnUZEAvy7BwUDHwbaP2
+	 xP/7t30j4lib9zYw/ptxkXl4VEyxDr3yHLwTdZWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436866AbgAPSg4 (ORCPT
+        id S2436875AbgAPShG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:36:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56760 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:37:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390616AbgAPRM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:12:57 -0500
+        id S2390610AbgAPRM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:12:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DF5420684;
-        Thu, 16 Jan 2020 17:12:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EE9324690;
+        Thu, 16 Jan 2020 17:12:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194777;
-        bh=3BOj0VQFcmveERWLpa/tuFBG9tDDPouv+gFGtCBGxDI=;
+        s=default; t=1579194775;
+        bh=bJUm5nK+rfL/cXysbF/6l/nRR6yIxDo6UYp8z+0j554=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wyETtSTQUpajkOfKLHtz9ixoxz01qDjHk+svPTJ+MR0jX2NUMMncjubZoQ8o02gAM
-         E3Uw9V3AlE6qTJQkAs2QDzEzZiu0A9NsrPrgpGOBimgJQPujJ1Tw5AfSj+ZNRvUCBi
-         MQ8QAgg0F0m3mQecNr5jGBUqtL9WtnCiLAQUahwE=
+        b=XP2cs0Vc79R5k9xFXmikrHzEzsRXXJJZqMjExeIH0LJtkKzQLVUAkzRpFP1cjn0f+
+         eVe0pOBqlwuxDD+O8zyvFsfn51LMIu+DgBt617DL/whIGzG3XrEbedpLtjoporfdhj
+         btxtpsIck23sU++4Gu+pZb4rwlNP92V7gxGbujsY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Karsten Graul <kgraul@linux.ibm.com>,
@@ -46,9 +46,9 @@ Cc:     Karsten Graul <kgraul@linux.ibm.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 594/671] net/smc: receive pending data after RCV_SHUTDOWN
-Date:   Thu, 16 Jan 2020 12:03:52 -0500
-Message-Id: <20200116170509.12787-331-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 593/671] net/smc: receive returns without data
+Date:   Thu, 16 Jan 2020 12:03:51 -0500
+Message-Id: <20200116170509.12787-330-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -63,16 +63,16 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Karsten Graul <kgraul@linux.ibm.com>
 
-[ Upstream commit 107529e31a87acd475ff6a0f82745821b8f70fec ]
+[ Upstream commit 882dcfe5a1785c20f45820cbe6fec4b8b647c946 ]
 
-smc_rx_recvmsg() first checks if data is available, and then if
-RCV_SHUTDOWN is set. There is a race when smc_cdc_msg_recv_action() runs
-in between these 2 checks, receives data and sets RCV_SHUTDOWN.
-In that case smc_rx_recvmsg() would return from receive without to
-process the available data.
-Fix that with a final check for data available if RCV_SHUTDOWN is set.
-Move the check for data into a function and call it twice.
-And use the existing helper smc_rx_data_available().
+smc_cdc_rxed_any_close_or_senddone() is used as an end condition for the
+receive loop. This conflicts with smc_cdc_msg_recv_action() which could
+run in parallel and set the bits checked by
+smc_cdc_rxed_any_close_or_senddone() before the receive is processed.
+In that case we could return from receive with no data, although data is
+available. The same applies to smc_rx_wait().
+Fix this by checking for RCV_SHUTDOWN only, which is set in
+smc_cdc_msg_recv_action() after the receive was actually processed.
 
 Fixes: 952310ccf2d8 ("smc: receive data from RMBE")
 Reviewed-by: Ursula Braun <ubraun@linux.ibm.com>
@@ -80,56 +80,31 @@ Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/smc/smc_rx.c | 25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
+ net/smc/smc_rx.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/net/smc/smc_rx.c b/net/smc/smc_rx.c
-index 1ee5fdbf8284..36340912df48 100644
+index bbcf0fe4ae10..1ee5fdbf8284 100644
 --- a/net/smc/smc_rx.c
 +++ b/net/smc/smc_rx.c
-@@ -262,6 +262,18 @@ static int smc_rx_recv_urg(struct smc_sock *smc, struct msghdr *msg, int len,
- 	return -EAGAIN;
- }
- 
-+static bool smc_rx_recvmsg_data_available(struct smc_sock *smc)
-+{
-+	struct smc_connection *conn = &smc->conn;
-+
-+	if (smc_rx_data_available(conn))
-+		return true;
-+	else if (conn->urg_state == SMC_URG_VALID)
-+		/* we received a single urgent Byte - skip */
-+		smc_rx_update_cons(smc, 0);
-+	return false;
-+}
-+
- /* smc_rx_recvmsg - receive data from RMBE
-  * @msg:	copy data to receive buffer
-  * @pipe:	copy data to pipe if set - indicates splice() call
-@@ -303,15 +315,18 @@ int smc_rx_recvmsg(struct smc_sock *smc, struct msghdr *msg,
- 		if (read_done >= target || (pipe && read_done))
- 			break;
- 
--		if (atomic_read(&conn->bytes_to_rcv))
-+		if (smc_rx_recvmsg_data_available(smc))
- 			goto copy;
--		else if (conn->urg_state == SMC_URG_VALID)
--			/* we received a single urgent Byte - skip */
--			smc_rx_update_cons(smc, 0);
+@@ -212,8 +212,7 @@ int smc_rx_wait(struct smc_sock *smc, long *timeo,
+ 	rc = sk_wait_event(sk, timeo,
+ 			   sk->sk_err ||
+ 			   sk->sk_shutdown & RCV_SHUTDOWN ||
+-			   fcrit(conn) ||
+-			   smc_cdc_rxed_any_close_or_senddone(conn),
++			   fcrit(conn),
+ 			   &wait);
+ 	remove_wait_queue(sk_sleep(sk), &wait);
+ 	sk_clear_bit(SOCKWQ_ASYNC_WAITDATA, sk);
+@@ -311,7 +310,6 @@ int smc_rx_recvmsg(struct smc_sock *smc, struct msghdr *msg,
+ 			smc_rx_update_cons(smc, 0);
  
  		if (sk->sk_shutdown & RCV_SHUTDOWN ||
--		    conn->local_tx_ctrl.conn_state_flags.peer_conn_abort)
-+		    conn->local_tx_ctrl.conn_state_flags.peer_conn_abort) {
-+			/* smc_cdc_msg_recv_action() could have run after
-+			 * above smc_rx_recvmsg_data_available()
-+			 */
-+			if (smc_rx_recvmsg_data_available(smc))
-+				goto copy;
+-		    smc_cdc_rxed_any_close_or_senddone(conn) ||
+ 		    conn->local_tx_ctrl.conn_state_flags.peer_conn_abort)
  			break;
-+		}
  
- 		if (read_done) {
- 			if (sk->sk_err ||
 -- 
 2.20.1
 
