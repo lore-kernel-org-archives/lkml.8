@@ -2,171 +2,92 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13103C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CC8C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC72B214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 090DD24679
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:01:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579197678;
+	bh=15bRm9h+cQCiaAoP9jzfaeQXnYCPxbpP/sKtl0VsEss=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=uxeHhLqD81QKJwiT0meIjy3Vo09Nr5uPSt6mjUdpVZDhqhemfLH/eWyuOK7UWdz4x
+	 Z3EdzcdX6cauEX4x9c8NoG3RHgkw4ZPfs89NisOhN+S7z9prmEKpKV8Tfo+GgzHZVT
+	 fxR0qaDxLJ9kcAKGtVTWf0ivXXDKt+AGcqcDisc0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394928AbgAPSBN (ORCPT
+        id S2405717AbgAPRld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:01:13 -0500
-Received: from snd00005.auone-net.jp ([111.86.247.5]:62689 "EHLO
-        dmta0002.auone-net.jp" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2394878AbgAPSBK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 13:01:10 -0500
-Received: from ppp.dion.ne.jp by dmta0002.auone-net.jp with ESMTP
-          id <20200116180107663.NIUO.69338.ppp.dion.ne.jp@dmta0002.auone-net.jp>;
-          Fri, 17 Jan 2020 03:01:07 +0900
-Date:   Fri, 17 Jan 2020 03:01:07 +0900
-From:   Kusanagi Kouichi <slash@ac.auone-net.jp>
-To:     dsterba@suse.cz
-Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] btrfs: Implement lazytime
-References: <20200114085325045.JFBE.12086.ppp.dion.ne.jp@dmta0008.auone-net.jp>
- <20200114212107.GM3929@twin.jikos.cz>
- <20200115134536820.LBFZ.46476.ppp.dion.ne.jp@dmta0009.auone-net.jp>
- <20200115163128.GT3929@twin.jikos.cz>
+        Thu, 16 Jan 2020 12:41:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58010 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2393666AbgAPRko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:40:44 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F67D2471D;
+        Thu, 16 Jan 2020 17:40:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579196443;
+        bh=15bRm9h+cQCiaAoP9jzfaeQXnYCPxbpP/sKtl0VsEss=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RwhUqHWQaIhh2b/O/bYV/DecZ6i4LuVeBMyknvhquUnVSlRIu7ignUv2FIdVhmPEE
+         YJ+jnZLK3bBiHuTqr1jPm6WwtUi0qsunP2A4yTIBK2IIxkf1QkcVXMQvNL2I080ClV
+         0NY75ZvBdvskO9lNdrkJ33F4K+5N9JC+s1j8JWJQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 206/251] of: mdio: Fix a signedness bug in of_phy_get_and_connect()
+Date:   Thu, 16 Jan 2020 12:35:55 -0500
+Message-Id: <20200116173641.22137-166-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
+References: <20200116173641.22137-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="pf9I7BMVVzbSWLtt"
-Content-Disposition: inline
-In-Reply-To: <20200115163128.GT3929@twin.jikos.cz>
-Message-Id: <20200116180107663.NIUO.69338.ppp.dion.ne.jp@dmta0002.auone-net.jp>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
---pf9I7BMVVzbSWLtt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+[ Upstream commit d7eb651212fdbafa82d485d8e76095ac3b14c193 ]
 
-On 2020-01-15 17:31:28 +0100, David Sterba wrote:
-> On Wed, Jan 15, 2020 at 10:45:36PM +0900, Kusanagi Kouichi wrote:
-> > On 2020-01-14 22:21:07 +0100, David Sterba wrote:
-> > > On Tue, Jan 14, 2020 at 05:53:24PM +0900, Kusanagi Kouichi wrote:
-> > > > I tested with xfstests and lazytime didn't cause any new failures.
-> > > 
-> > > The changelog should describe what the patch does (the 'why' part too,
-> > > but this is obvious from the subject in this case). That fstests pass
-> > > without new failures is nice but there should be a specific test for
-> > > that or instructions in the changelog how to test.
-> > 
-> > To test lazytime, I set the following variables:
-> > TEST_FS_MOUNT_OPTS="-o lazytime,space_cache=v2"
-> > MOUNT_OPTIONS="-o lazytime,space_cache=v2"
-> 
-> How did you verify that the lazy time updates were applied properly?
+The "iface" variable is an enum and in this context GCC treats it as
+an unsigned int so the error handling is never triggered.
 
-I ran the attached test.
+Fixes: b78624125304 ("of_mdio: Abstract a general interface for phy connect")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/of/of_mdio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---pf9I7BMVVzbSWLtt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="lazytime-test.diff"
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index 262281bd68fa..1e70851b1530 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -353,7 +353,7 @@ struct phy_device *of_phy_get_and_connect(struct net_device *dev,
+ 	struct phy_device *phy;
+ 
+ 	iface = of_get_phy_mode(np);
+-	if (iface < 0)
++	if ((int)iface < 0)
+ 		return NULL;
+ 
+ 	phy_np = of_parse_phandle(np, "phy-handle", 0);
+-- 
+2.20.1
 
-diff --git a/tests/generic/999 b/tests/generic/999
-new file mode 100755
-index 00000000..781b37c5
---- /dev/null
-+++ b/tests/generic/999
-@@ -0,0 +1,76 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2019 Kusanagi Kouichi.  All Rights Reserved.
-+#
-+# FS QA Test 999
-+#
-+# Test timestamp is persistent across umount.
-+#
-+seq=`basename $0`
-+seqres=$RESULT_DIR/$seq
-+echo "QA output created by $seq"
-+
-+here=`pwd`
-+tmp=/tmp/$$
-+status=1	# failure is the default!
-+trap "_cleanup; exit \$status" 0 1 2 3 15
-+
-+_cleanup()
-+{
-+	cd /
-+	rm -f $tmp.*
-+}
-+
-+# get standard environment, filters and checks
-+. ./common/rc
-+. ./common/filter
-+
-+# remove previous $seqres.full before test
-+rm -f $seqres.full
-+
-+# real QA test starts here
-+
-+# Modify as appropriate.
-+_supported_fs generic
-+_supported_os Linux
-+_require_scratch
-+
-+_scratch_mkfs > /dev/null 2>&1
-+_scratch_mount
-+
-+check_persist()
-+{
-+    ls "$SCRATCH_MNT" > /dev/null
-+    before="$(stat -c '%x %y %z' "$SCRATCH_MNT")"
-+    $XFS_IO_PROG -c "$1" "$SCRATCH_MNT"
-+    _scratch_cycle_mount strictatime
-+    after="$(stat -c '%x %y %z' "$SCRATCH_MNT")"
-+    if test "$before" != "$after"
-+    then
-+	echo "timestamp didn't persist across umount."
-+	echo "ls $1"
-+	echo "before $before"
-+	echo "after  $after"
-+	exit
-+    fi
-+}
-+
-+check_persist ''
-+check_persist fsync
-+check_persist syncfs
-+check_persist sync
-+
-+"$FSSTRESS_PROG" -d "$SCRATCH_MNT" -v $(_scale_fsstress_args -n 1000 -p 2) > "$tmp".fsstress
-+find "$SCRATCH_MNT" ! -type d -exec stat -c '%x %y %z %i %F %n' '{}' + > "$tmp".before
-+_scratch_cycle_mount
-+find "$SCRATCH_MNT" ! -type d -exec stat -c '%x %y %z %i %F %n' '{}' + > "$tmp".after
-+if ! diff -u "$tmp".before "$tmp".after
-+then
-+    echo "timestamp didn't persist across umount after fsstress."
-+    cat "$tmp".fsstress
-+    exit
-+fi
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/generic/999.out b/tests/generic/999.out
-new file mode 100644
-index 00000000..7fbc6768
---- /dev/null
-+++ b/tests/generic/999.out
-@@ -0,0 +1 @@
-+QA output created by 999
-diff --git a/tests/generic/group b/tests/generic/group
-index 6fe62505..7879eb70 100644
---- a/tests/generic/group
-+++ b/tests/generic/group
-@@ -595,3 +595,4 @@
- 590 auto prealloc preallocrw
- 591 auto quick rw pipe splice
- 592 auto quick encrypt
-+999 auto quick
-
---pf9I7BMVVzbSWLtt--
