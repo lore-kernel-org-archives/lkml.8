@@ -2,132 +2,82 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D39CC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B3DC33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52D2E207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:00:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gdJbrNwd"
+	by mail.kernel.org (Postfix) with ESMTP id 16FDB207FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:01:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbgAPQAz (ORCPT
+        id S1726908AbgAPQBo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:00:55 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38580 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbgAPQAz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:00:55 -0500
-Received: by mail-wm1-f68.google.com with SMTP id u2so4368099wmc.3;
-        Thu, 16 Jan 2020 08:00:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Qes5lqTpMZNbHD18QpVEHmgxWIqC3UwSuESKVsX72FE=;
-        b=gdJbrNwdSuD/lvrwJ+3fpsgkxvDd6PxZ5jdXHxxFu/eilWk//S1GI0gBerZequfBEj
-         326Y8S+FlQEFWKuxDy9lZQugKLnfV4JoHULipF5ws+4XsNU8Sqc6ewx62CRqFL84MGp8
-         qv9dxn5oq7nP57h2XPv18cQqQn9pkYxmxH/PvkOeVJ1s21/FwAHuZCzzH6EjlWqmQ3y6
-         vZOqeJS/0QO7EYpjKhSFkRXflmExCP3OympCZzie+J8heuKYvrlbzNpeyx3R8CdUWknm
-         gNj5I32G/uDMcheI4wyIDMWdNXeiNFuPR0jp1S49Zfa3UBnDA4NFCbqn3WIPvYWJAWQ4
-         lGBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Qes5lqTpMZNbHD18QpVEHmgxWIqC3UwSuESKVsX72FE=;
-        b=SLMPPYJVQpiDAcGQ5eayUMV6jE7o/Nsg51Hi4dPcq43v++NxXCJAI2vekK7FleSNdW
-         XtC/gWEiSKW8ZAEyXyqv3O9vMcoayBZau5ke1ibgC/Dmiy17sAp7/h1jjWwnJ6jNQiYR
-         kVbsUg8dp0C62zhW3KWSDieYm9H4bPRm2MQ0w2WwgAwgGftDtnJ6cmRonIDc/Derljsu
-         X5nGcRYQfVRDjKTga93EmBQpwb+ZteXkUz7vmFRVDhKjCIxtAkeQVsgYslIMkYemKagR
-         TsLHy1G+3uYnl11q2Mi/riu2yLZ3fkNQQGNwTyT1n2DskKoKuf6fHlhyxiI0YmARWOy1
-         Ohvg==
-X-Gm-Message-State: APjAAAVrKfbyfVT/qGQXxrC5olLM1rAnjI/xmlTNXjRSr2M/6Bg5Hm6w
-        9Ktd300IGTcS7Y/z6mwnl18=
-X-Google-Smtp-Source: APXvYqxCKtH+zs0uDEdCBM/xP9ElsKv0y4WnMKlghvorw44FNmlHzSJdTk80Pt4IhCwFHxbeFidbEQ==
-X-Received: by 2002:a7b:cf12:: with SMTP id l18mr7276001wmg.66.1579190453136;
-        Thu, 16 Jan 2020 08:00:53 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id 25sm4961535wmi.32.2020.01.16.08.00.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 08:00:52 -0800 (PST)
-Date:   Thu, 16 Jan 2020 17:00:51 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Namjae Jeon <linkinjeon@gmail.com>,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        sj1557.seo@samsung.com
-Subject: Re: [PATCH v10 09/14] exfat: add misc operations
-Message-ID: <20200116160051.adn7j7y5oshoe7qt@pali>
-References: <CAK8P3a3Vqz=T_=sFwBBPa2_Hi_dA=BwWod=L9JkLxUgi=aKNWw@mail.gmail.com>
- <CAKYAXd9_qmanQCcrdpScFWvPXuZvk4jhv7Gc=t_vRL9zqWNSjA@mail.gmail.com>
- <20200115133838.q33p5riihsinp6c4@pali>
- <CAK8P3a1ozgLYpDtveU0CtLj5fEFG8i=_QrnEAtoVFt-yC=Dc0g@mail.gmail.com>
- <20200115142428.ugsp3binf2vuiarq@pali>
- <CAK8P3a0_sotmv40qHkhE5M=PwEYLuJfX+uRFZvh9iGzhv6R6vw@mail.gmail.com>
- <20200115153943.qw35ya37ws6ftlnt@pali>
- <CAK8P3a1iYPA9MrXORiWmy1vQGoazwHs7OfPdoHLZLJDWqu9jqA@mail.gmail.com>
- <20200116101947.4szdyfwpyasv5vpe@pali>
- <20200116102307.GA16662@lst.de>
+        Thu, 16 Jan 2020 11:01:44 -0500
+Received: from mail.elvees.com ([80.90.126.250]:53823 "EHLO mail.elvees.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726189AbgAPQBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:01:44 -0500
+X-Greylist: delayed 633 seconds by postgrey-1.27 at vger.kernel.org; Thu, 16 Jan 2020 11:01:43 EST
+Received: from virgo-pc.elvees.com ([81.26.151.163])
+        (authenticated bits=0)
+        by mail.elvees.com (8.14.3/8.14.2) with ESMTP id 00GFovp7003197
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NOT);
+        Thu, 16 Jan 2020 18:50:57 +0300 (MSK)
+        (envelope-from okitain@elvees.com)
+Reply-To: okitain@elvees.com
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+From:   Olga Kitaina <okitain@elvees.com>
+Organization: ELVEES
+Subject: irqchip: Figuring out utility of hierarchy irqdomain
+Message-ID: <b27626dc-dad7-b19c-dcfd-f3668c5e5be6@elvees.com>
+Date:   Thu, 16 Jan 2020 18:50:55 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200116102307.GA16662@lst.de>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 16 January 2020 11:23:07 Christoph Hellwig wrote:
-> On Thu, Jan 16, 2020 at 11:19:47AM +0100, Pali Rohár wrote:
-> >   However, implementations should only record the value 00h for this
-> >   field when:
-> > 
-> >     1. Local date and time are actually the same as UTC, in which case
-> >        the value of the OffsetValid field shall be 1
-> > 
-> >     2. Local date and time are not known, in which case the value of the
-> >        OffsetValid field shall be 1 and implementations shall consider
-> >        UTC to be local date and time
-> 
-> Given time zones in Linux are per session I think our situation is
-> somewhat similar to 2.
+Hi, I'm looking to implement an interrupt controller (referred to here 
+as QLIC) that is based on the RISC-V PLIC (see 
+drivers/irqchip/irq-sifive-plic.c), with the difference that it's not 
+the root interrupt controller, but instead it is connected to a GIC.
 
-Seems that 2. is really similar. Ok, storing by default in UTC make
-sense, but still I'm thinking if there should be (or not) a mount option
-which override default UTC timezone.
+The features of the controller are as follows:
 
-> > > Here I would just convert to UTC, which is what we store in the
-> > > in-memory struct inode anyway.
-> > 
-> > Ok. If inode timestamp is always in UTC, we should do same thing also
-> > for exFAT.
-> 
-> > Hm... both UTC and sys_tz have positives and negatives. And I'm not
-> > sure which option is better.
-> 
-> The one big argument for always UTC is simplicity.  Always using UTC
-> kills some arcane an unusual (for Linux file systems) code, and given
-> how exfat implementations deal with the time zone on reading should
-> always interoperate fine with other implementations.
+* A cluster of DSPs serve as interrupt sources to QLIC, each DSP with 
+several interrupt lines going to QLIC.
+* Several interrupt lines (documented as TARGET_x) go from QLIC to the GIC.
+* Sources are mapped to targets by way of writing a mask of allowed 
+sources in the TARG_x_ENABLE register.
+* The source of an interrupt mapped to TARGET_x can be determined by 
+reading from register TARG_x_CC. Writing the number of the source to 
+TARG_x_CC masks the interrupt.
+* To mask all interrupts corresponding to TARGET_x, TARG_x_CC must be 
+read repeatedly, with the values written back after the source interrupt 
+is handled.
+* Source numbers start from 1, 0 is a special case in TARG_x_CC - it 
+corresponds to "no interrupt", and writing 0 to the register does nothing.
 
-Now I think that using UTC by default is the better option as sys_tz.
-Simplicity and "no surprise" (container may use UTC, but kernel has
-sys_tz in not in UTC) seems like a good arguments.
+I am not yet well-acquainted with the irq subsystem, which means I am 
+not sure what kind of APIs I need to use. This is why I have a couple of 
+questions:
+1. Do I understand correctly that using hierarchy irqdomain means that 
+the interrupt controller has to have a 1:1 mapping between inputs and 
+outputs?
+2. Is a chained handler necessary for this setup, e.g. handling 0 in 
+TARG_x_CC?
 
 -- 
-Pali Rohár
-pali.rohar@gmail.com
+Regards,
+Olga
+
