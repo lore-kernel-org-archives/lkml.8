@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E5DC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D27EC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD5B62464B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:54:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9149214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:54:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193682;
-	bh=SyAiXWfVg46pD08w1xZSzZgC3r0KM/T5sI+w/77cPaA=;
+	s=default; t=1579193686;
+	bh=6RmZS8R/qbLmC24LIgFWQHrkZAi6i9WyA++AiikMsrg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bZNjIQdoHuGDUXE+RHKUYA3mV5vbFGRvNkg+ICtoqyYEN8Pouw/1VJ5rsM75sq1Fj
-	 bSVpt76tVZeWUSriQKuIjx2MvXxdRIRiYby6bgSRzFA2pJ5JkmswJiD5/jLMUhfw83
-	 KTypiTpXpn3QS/AZeNXEdFNLphUM4iAatxoF4L5c=
+	b=Ng5/H61HspBn6xaHIt8uiMR7o4gXU2Gv6Ke7n52mSaVvDBAeojTzJtGV59YnMGPmp
+	 LNa7bYkEbKWZWbd2w+U11aETua7VJSwtdUSBBrMdYZFdhc50MuHWyLB6Cod76KYXzM
+	 IsvmoTJMr655PiMYEKWcJg5zcj8H38Qycu+fk2tA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732417AbgAPQyl (ORCPT
+        id S1732456AbgAPQyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:54:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39126 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:54:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731921AbgAPQya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:54:30 -0500
+        id S1732209AbgAPQye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:54:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDFCF20730;
-        Thu, 16 Jan 2020 16:54:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A85BB214AF;
+        Thu, 16 Jan 2020 16:54:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193669;
-        bh=SyAiXWfVg46pD08w1xZSzZgC3r0KM/T5sI+w/77cPaA=;
+        s=default; t=1579193673;
+        bh=6RmZS8R/qbLmC24LIgFWQHrkZAi6i9WyA++AiikMsrg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zqbn4MGnB+/ceJc7SACNTa2lgIP48E9HxKnFn9SeVmRnRT+4WuyyV1HdVo3ptJRK6
-         uDhfoXeLvR47HK1PjyXiAHdDcy4E8nwIgc1FIpJPh6qwMZ8FsMWt6xZ+dryaSWF4ku
-         c1rh87O2vtSbRWwrgjLsATQaG9MijQWSx8Rj3GaM=
+        b=PTcUpVKza25MiwqTSTjwhfdAkU+2RfQELH7urw2KhcLnTPaxwGu61F10l7J9TjPe9
+         Wl/FVCw9FHDZuBTU/cVOi8jZm2fofbzy9U6mqIjs4ipxFhtN7aPvtdF8pX9YOH9oVq
+         AAQuZwiUm7RFrlLPSDYt+MRuGklbpjjKp0K1gG4c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Roi Dayan <roid@mellanox.com>, Eli Britstein <elibr@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 195/205] net/mlx5e: Fix free peer_flow when refcount is 0
-Date:   Thu, 16 Jan 2020 11:42:50 -0500
-Message-Id: <20200116164300.6705-195-sashal@kernel.org>
+Cc:     Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        "J . Bruce Fields" <bfields@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 198/205] NFSD fixing possible null pointer derefering in copy offload
+Date:   Thu, 16 Jan 2020 11:42:53 -0500
+Message-Id: <20200116164300.6705-198-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -60,39 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roi Dayan <roid@mellanox.com>
+From: Olga Kornievskaia <olga.kornievskaia@gmail.com>
 
-[ Upstream commit eb252c3a24fc5856fa62140c2f8269ddce6ce4e5 ]
+[ Upstream commit 18f428d4e2f7eff162d80b2b21689496c4e82afd ]
 
-It could be neigh update flow took a refcount on peer flow so
-sometimes we cannot release peer flow even if parent flow is
-being freed now.
+Static checker revealed possible error path leading to possible
+NULL pointer dereferencing.
 
-Fixes: 5a7e5bcb663d ("net/mlx5e: Extend tc flow struct with reference counter")
-Signed-off-by: Roi Dayan <roid@mellanox.com>
-Reviewed-by: Eli Britstein <elibr@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: e0639dc5805a: ("NFSD introduce async copy feature")
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_tc.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ fs/nfsd/nfs4proc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-index 947122c68493..96711e34d248 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-@@ -1615,8 +1615,11 @@ static void __mlx5e_tc_del_fdb_peer_flow(struct mlx5e_tc_flow *flow)
- 
- 	flow_flag_clear(flow, DUP);
- 
--	mlx5e_tc_del_fdb_flow(flow->peer_flow->priv, flow->peer_flow);
--	kfree(flow->peer_flow);
-+	if (refcount_dec_and_test(&flow->peer_flow->refcnt)) {
-+		mlx5e_tc_del_fdb_flow(flow->peer_flow->priv, flow->peer_flow);
-+		kfree(flow->peer_flow);
-+	}
-+
- 	flow->peer_flow = NULL;
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 38c0aeda500e..4798667af647 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -1298,7 +1298,8 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ out:
+ 	return status;
+ out_err:
+-	cleanup_async_copy(async_copy);
++	if (async_copy)
++		cleanup_async_copy(async_copy);
+ 	goto out;
  }
  
 -- 
