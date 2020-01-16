@@ -7,58 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31379C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13494C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDA77246AC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC568246A7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:13:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194814;
-	bh=/FXCf94PdZgl717MD2fnFyovBfP7w7ngbe/Z5W2PWME=;
+	s=default; t=1579194819;
+	bh=pWEElET2TJj1Rs3U7xsrYRFMhcDQkuh7Oq+mAcenkEg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jCwt48igaaHDNS1Brb2UbuRol++1WAsUSErUJMQLLyV1lBnMdusaucyu8Zew7VoKk
-	 I8ZANCrAK6UxZYSEP8UIaWt1YwzHsFau2MjaN/NY4lgXqeJjyQkKbYL3Z6a9ufaNts
-	 gfiOttZ2pt2Lz5fFVgBt2I2F57UBH0Ev3GNGhbKo=
+	b=KIEhWGg2fhD0kKaAIn4lBOBwBcW20eBAPreE5w7pIAobPCsasWkMcy+e6GA6KaLZ7
+	 RAnZlbOTlpjf5+Rc/b2JtTXTJ2qQz5YjUuD7Udk7VSPqN3bvdif2kVj/1wIFvDyRiQ
+	 OjsKf2F46ZXcCTggSoYiy6Mz9TzT8smn1oOqfNqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390771AbgAPRNd (ORCPT
+        id S2390790AbgAPRNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:13:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58668 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:13:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390757AbgAPRNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:13:30 -0500
+        id S2390779AbgAPRNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:13:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0328246A3;
-        Thu, 16 Jan 2020 17:13:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91741246AB;
+        Thu, 16 Jan 2020 17:13:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194809;
-        bh=/FXCf94PdZgl717MD2fnFyovBfP7w7ngbe/Z5W2PWME=;
+        s=default; t=1579194816;
+        bh=pWEElET2TJj1Rs3U7xsrYRFMhcDQkuh7Oq+mAcenkEg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mLMsUg90/Owxl0TxhOzpwOUvZPPYrg/hF7II6NAPZ273fuL637MISE9tbLlgnKtKh
-         OeKp00oCqqm4bIDumin6tCBTObsYxEOpYBhsSafKfhaiLR8QVzlF36z3hNHI6Sp7YV
-         t14qM8y6+UbBKXqA/gAfbWcwXcH190+77cm343BM=
+        b=Gml7VjfNl3j+VGixfyVzgC9jeEUJtBJjncFoIJYGhkTcUdnWQCbeYWlAv0nIypTTk
+         PHfvCzSM72O+VnE/1NBz3gjv5imhF/XlpfIabVbpA8YNEIm0rkxInE0DyEL/oHrGgF
+         1hW3G6KSCv6wD5w45Iod851fcQoRLpe/Ax9QlZ5c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Adam Ford <aford173@gmail.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>, Rob Herring <robh@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 617/671] hwrng: omap3-rom - Fix missing clock by probing with device tree
-Date:   Thu, 16 Jan 2020 12:04:15 -0500
-Message-Id: <20200116170509.12787-354-sashal@kernel.org>
+Cc:     Niklas Cassel <niklas.cassel@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 622/671] PCI: dwc: Fix find_next_bit() usage
+Date:   Thu, 16 Jan 2020 12:04:20 -0500
+Message-Id: <20200116170509.12787-359-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -67,182 +62,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Niklas Cassel <niklas.cassel@linaro.org>
 
-[ Upstream commit 0c0ef9ea6f3f0d5979dc7b094b0a184c1a94716b ]
+[ Upstream commit 1137e61dcb99f7f8b54e77ed83f68b5b485a3e34 ]
 
-Commit 0ed266d7ae5e ("clk: ti: omap3: cleanup unnecessary clock aliases")
-removed old omap3 clock framework aliases but caused omap3-rom-rng to
-stop working with clock not found error.
+find_next_bit() takes a parameter of size long, and performs arithmetic
+that assumes that the argument is of size long.
 
-Based on discussions on the mailing list it was requested by Tero Kristo
-that it would be best to fix this issue by probing omap3-rom-rng using
-device tree to provide a proper clk property. The other option would be
-to add back the missing clock alias, but that does not help moving things
-forward with removing old legacy platform_data.
+Therefore we cannot pass a u32, since this will cause find_next_bit()
+to read outside the stack buffer and will produce the following print:
+BUG: KASAN: stack-out-of-bounds in find_next_bit+0x38/0xb0
 
-Let's also add a proper device tree binding and keep it together with
-the fix.
-
-Cc: devicetree@vger.kernel.org
-Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc: Adam Ford <aford173@gmail.com>
-Cc: Pali Rohár <pali.rohar@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Sebastian Reichel <sre@kernel.org>
-Cc: Tero Kristo <t-kristo@ti.com>
-Fixes: 0ed266d7ae5e ("clk: ti: omap3: cleanup unnecessary clock aliases")
-Reported-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 1b497e6493c4 ("PCI: dwc: Fix uninitialized variable in dw_handle_msi_irq()")
+Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../devicetree/bindings/rng/omap3_rom_rng.txt | 27 +++++++++++++++++++
- arch/arm/boot/dts/omap3-n900.dts              |  6 +++++
- arch/arm/mach-omap2/pdata-quirks.c            | 12 +--------
- drivers/char/hw_random/omap3-rom-rng.c        | 17 ++++++++++--
- 4 files changed, 49 insertions(+), 13 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rng/omap3_rom_rng.txt
+ drivers/pci/controller/dwc/pcie-designware-host.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/rng/omap3_rom_rng.txt b/Documentation/devicetree/bindings/rng/omap3_rom_rng.txt
-new file mode 100644
-index 000000000000..f315c9723bd2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rng/omap3_rom_rng.txt
-@@ -0,0 +1,27 @@
-+OMAP ROM RNG driver binding
-+
-+Secure SoCs may provide RNG via secure ROM calls like Nokia N900 does. The
-+implementation can depend on the SoC secure ROM used.
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be "nokia,n900-rom-rng"
-+
-+- clocks:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: reference to the the RNG interface clock
-+
-+- clock-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: must be "ick"
-+
-+Example:
-+
-+	rom_rng: rng {
-+		compatible = "nokia,n900-rom-rng";
-+		clocks = <&rng_ick>;
-+		clock-names = "ick";
-+	};
-diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
-index 182a53991c90..37785e7d1238 100644
---- a/arch/arm/boot/dts/omap3-n900.dts
-+++ b/arch/arm/boot/dts/omap3-n900.dts
-@@ -158,6 +158,12 @@
- 		pwms = <&pwm9 0 26316 0>; /* 38000 Hz */
- 	};
- 
-+	rom_rng: rng {
-+		compatible = "nokia,n900-rom-rng";
-+		clocks = <&rng_ick>;
-+		clock-names = "ick";
-+	};
-+
- 	/* controlled (enabled/disabled) directly by bcm2048 and wl1251 */
- 	vctcxo: vctcxo {
- 		compatible = "fixed-clock";
-diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
-index dae726228770..b57faa2310a2 100644
---- a/arch/arm/mach-omap2/pdata-quirks.c
-+++ b/arch/arm/mach-omap2/pdata-quirks.c
-@@ -263,14 +263,6 @@ static void __init am3517_evm_legacy_init(void)
- 	am35xx_emac_reset();
- }
- 
--static struct platform_device omap3_rom_rng_device = {
--	.name		= "omap3-rom-rng",
--	.id		= -1,
--	.dev	= {
--		.platform_data	= rx51_secure_rng_call,
--	},
--};
--
- static void __init nokia_n900_legacy_init(void)
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index b57ee79f6d69..6d4ef0101ef6 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -78,7 +78,8 @@ static struct msi_domain_info dw_pcie_msi_domain_info = {
+ irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
  {
- 	hsmmc2_internal_input_clk();
-@@ -286,9 +278,6 @@ static void __init nokia_n900_legacy_init(void)
- 			pr_warn("RX-51: Not enabling ARM errata 430973 workaround\n");
- 			pr_warn("Thumb binaries may crash randomly without this workaround\n");
- 		}
--
--		pr_info("RX-51: Registering OMAP3 HWRNG device\n");
--		platform_device_register(&omap3_rom_rng_device);
- 	}
- }
+ 	int i, pos, irq;
+-	u32 val, num_ctrls;
++	unsigned long val;
++	u32 status, num_ctrls;
+ 	irqreturn_t ret = IRQ_NONE;
  
-@@ -466,6 +455,7 @@ static struct of_dev_auxdata omap_auxdata_lookup[] = {
- 	OF_DEV_AUXDATA("ti,davinci_mdio", 0x5c030000, "davinci_mdio.0", NULL),
- 	OF_DEV_AUXDATA("ti,am3517-emac", 0x5c000000, "davinci_emac.0",
- 		       &am35xx_emac_pdata),
-+	OF_DEV_AUXDATA("nokia,n900-rom-rng", 0, NULL, rx51_secure_rng_call),
- 	/* McBSP modules with sidetone core */
- #if IS_ENABLED(CONFIG_SND_OMAP_SOC_MCBSP)
- 	OF_DEV_AUXDATA("ti,omap3-mcbsp", 0x49022000, "49022000.mcbsp", &mcbsp_pdata),
-diff --git a/drivers/char/hw_random/omap3-rom-rng.c b/drivers/char/hw_random/omap3-rom-rng.c
-index 648e39ce6bd9..8df3cad7c97a 100644
---- a/drivers/char/hw_random/omap3-rom-rng.c
-+++ b/drivers/char/hw_random/omap3-rom-rng.c
-@@ -20,6 +20,8 @@
- #include <linux/workqueue.h>
- #include <linux/clk.h>
- #include <linux/err.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
+ 	num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
+@@ -86,14 +87,14 @@ irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
+ 	for (i = 0; i < num_ctrls; i++) {
+ 		dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_STATUS +
+ 					(i * MSI_REG_CTRL_BLOCK_SIZE),
+-				    4, &val);
+-		if (!val)
++				    4, &status);
++		if (!status)
+ 			continue;
  
- #define RNG_RESET			0x01
-@@ -86,14 +88,18 @@ static int omap3_rom_rng_read(struct hwrng *rng, void *data, size_t max, bool w)
- 
- static struct hwrng omap3_rom_rng_ops = {
- 	.name		= "omap3-rom",
--	.read		= omap3_rom_rng_read,
- };
- 
- static int omap3_rom_rng_probe(struct platform_device *pdev)
- {
- 	int ret = 0;
- 
--	pr_info("initializing\n");
-+	omap3_rom_rng_ops.read = of_device_get_match_data(&pdev->dev);
-+	if (!omap3_rom_rng_ops.read) {
-+		dev_err(&pdev->dev, "missing rom code handler\n");
-+
-+		return -ENODEV;
-+	}
- 
- 	omap3_rom_rng_call = pdev->dev.platform_data;
- 	if (!omap3_rom_rng_call) {
-@@ -126,9 +132,16 @@ static int omap3_rom_rng_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id omap_rom_rng_match[] = {
-+	{ .compatible = "nokia,n900-rom-rng", .data = omap3_rom_rng_read, },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, omap_rom_rng_match);
-+
- static struct platform_driver omap3_rom_rng_driver = {
- 	.driver = {
- 		.name		= "omap3-rom-rng",
-+		.of_match_table = omap_rom_rng_match,
- 	},
- 	.probe		= omap3_rom_rng_probe,
- 	.remove		= omap3_rom_rng_remove,
+ 		ret = IRQ_HANDLED;
++		val = status;
+ 		pos = 0;
+-		while ((pos = find_next_bit((unsigned long *) &val,
+-					    MAX_MSI_IRQS_PER_CTRL,
++		while ((pos = find_next_bit(&val, MAX_MSI_IRQS_PER_CTRL,
+ 					    pos)) != MAX_MSI_IRQS_PER_CTRL) {
+ 			irq = irq_find_mapping(pp->irq_domain,
+ 					       (i * MAX_MSI_IRQS_PER_CTRL) +
 -- 
 2.20.1
 
