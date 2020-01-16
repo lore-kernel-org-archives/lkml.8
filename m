@@ -2,189 +2,140 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED1AC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F898C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC0E0208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:49:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KFR5dNqE"
+	by mail.kernel.org (Postfix) with ESMTP id 4E61E206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:50:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbgAPGtO (ORCPT
+        id S1727007AbgAPGuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 01:49:14 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:60756 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726160AbgAPGtN (ORCPT
+        Thu, 16 Jan 2020 01:50:10 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:21296 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726406AbgAPGuK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 01:49:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ZH6TbtHlgpYJkkCSitMQjjtRHf50m8KSlIQRVZB5JTw=; b=KFR5dNqEqdHKKOIfc7qGWbzvS
-        BIwY/hScLhqE91/DyGlC3IUljLSM7Ekgo2ZUJjLr1reelMqYgOjYX2Y+rtKrLr/a334tZ2ykaeE+2
-        imzQ7yKhJCOdDWXABh3yxc0/IglmXR69ah7fr1Yg37daAFgGzLNfqeuP9uSq2Lj4Nq0zWaW9DjWsA
-        VdJL8jQi1U1a09bc6ZIQvgjOcRc8nCoh8PtlM+2QzS3fvt0iPEKkw+vEZvPdM5YIhj1DavXBPB2IL
-        s99VN1HpxhSCUq5/qFu5J9GG6r0cl1mmTv60LucRlSWtzEMqfd3chYKQKYegJXx544BULvIp7QvDQ
-        QFGxkPqcA==;
-Received: from [2601:1c0:6280:3f0::ed68]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iryx6-00068M-9U; Thu, 16 Jan 2020 06:48:24 +0000
-Subject: Re: [PATCH v28 11/12] LRNG - add interface for gathering of raw
- entropy
-To:     Stephan Mueller <smueller@chronox.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-References: <6157374.ptSnyUpaCn@positron.chronox.de>
- <2048458.ADJAtTWDj8@positron.chronox.de>
- <abde84fe-2599-0db8-2bad-d2ff29a3c4f0@infradead.org>
- <9116265.6Va6cPe1zF@tauon.chronox.de>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <72a57d93-737a-c6c1-82c4-e14f73054ad5@infradead.org>
-Date:   Wed, 15 Jan 2020 22:48:20 -0800
+        Thu, 16 Jan 2020 01:50:10 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00G6mxP6023622
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 01:50:09 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xh8d5prjv-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 01:50:08 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
+        Thu, 16 Jan 2020 06:50:06 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 16 Jan 2020 06:50:03 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00G6o2tq45940990
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jan 2020 06:50:02 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 666374C040;
+        Thu, 16 Jan 2020 06:50:02 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7192A4C04A;
+        Thu, 16 Jan 2020 06:50:00 +0000 (GMT)
+Received: from [9.199.45.56] (unknown [9.199.45.56])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 16 Jan 2020 06:50:00 +0000 (GMT)
+Subject: Re: [PATCH v4 3/9] asm-generic/tlb: Avoid potential double flush
+To:     akpm@linux-foundation.org, peterz@infradead.org, will@kernel.org,
+        mpe@ellerman.id.au
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <20200116064531.483522-1-aneesh.kumar@linux.ibm.com>
+ <20200116064531.483522-4-aneesh.kumar@linux.ibm.com>
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Date:   Thu, 16 Jan 2020 12:19:59 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <9116265.6Va6cPe1zF@tauon.chronox.de>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200116064531.483522-4-aneesh.kumar@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20011606-0012-0000-0000-0000037DC2F5
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20011606-0013-0000-0000-000021B9F5CD
+Message-Id: <c12bb139-9eda-74a9-b4de-b147a88ed1b0@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-16_02:2020-01-16,2020-01-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=2
+ impostorscore=0 spamscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
+ malwarescore=0 lowpriorityscore=0 phishscore=0 mlxscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-2001160056
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/15/20 10:43 PM, Stephan Mueller wrote:
-> Am Donnerstag, 16. Januar 2020, 01:18:18 CET schrieb Randy Dunlap:
+On 1/16/20 12:15 PM, Aneesh Kumar K.V wrote:
+> From: Peter Zijlstra <peterz@infradead.org>
 > 
-> Hi Randy,
+> Aneesh reported that:
 > 
->> On 1/15/20 2:35 AM, Stephan Müller wrote:
->>> CC: "Eric W. Biederman" <ebiederm@xmission.com>
->>> CC: "Alexander E. Patrakov" <patrakov@gmail.com>
->>> CC: "Ahmed S. Darwish" <darwish.07@gmail.com>
->>> CC: "Theodore Y. Ts'o" <tytso@mit.edu>
->>> CC: Willy Tarreau <w@1wt.eu>
->>> CC: Matthew Garrett <mjg59@srcf.ucam.org>
->>> CC: Vito Caputo <vcaputo@pengaru.com>
->>> CC: Andreas Dilger <adilger.kernel@dilger.ca>
->>> CC: Jan Kara <jack@suse.cz>
->>> CC: Ray Strode <rstrode@redhat.com>
->>> CC: William Jon McCann <mccann@jhu.edu>
->>> CC: zhangjs <zachary@baishancloud.com>
->>> CC: Andy Lutomirski <luto@kernel.org>
->>> CC: Florian Weimer <fweimer@redhat.com>
->>> CC: Lennart Poettering <mzxreary@0pointer.de>
->>> CC: Nicolai Stange <nstange@suse.de>
->>> Reviewed-by: Roman Drahtmueller <draht@schaltsekun.de>
->>> Tested-by: Roman Drahtmüller <draht@schaltsekun.de>
->>> Tested-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
->>> Tested-by: Neil Horman <nhorman@redhat.com>
->>> Signed-off-by: Stephan Mueller <smueller@chronox.de>
->>> ---
->>>
->>>  drivers/char/lrng/Kconfig        |  16 ++
->>>  drivers/char/lrng/Makefile       |   1 +
->>>  drivers/char/lrng/lrng_testing.c | 271 +++++++++++++++++++++++++++++++
->>>  3 files changed, 288 insertions(+)
->>>  create mode 100644 drivers/char/lrng/lrng_testing.c
->>>
->>> diff --git a/drivers/char/lrng/lrng_testing.c
->>> b/drivers/char/lrng/lrng_testing.c new file mode 100644
->>> index 000000000000..0e287eccd622
->>> --- /dev/null
->>> +++ b/drivers/char/lrng/lrng_testing.c
->>> @@ -0,0 +1,271 @@
->>> +// SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
->>> +/*
->>> + * Linux Random Number Generator (LRNG) Raw entropy collection tool
->>> + *
->>> + * Copyright (C) 2019 - 2020, Stephan Mueller <smueller@chronox.de>
->>> + */
->>> +
->>> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->>> +
->>> +#include <linux/atomic.h>
->>> +#include <linux/bug.h>
->>> +#include <linux/debugfs.h>
->>> +#include <linux/module.h>
->>> +#include <linux/sched.h>
->>> +#include <linux/sched/signal.h>
->>> +#include <linux/slab.h>
->>> +#include <linux/string.h>
->>> +#include <linux/types.h>
->>> +#include <linux/uaccess.h>
->>> +#include <linux/workqueue.h>
->>> +#include <asm/errno.h>
->>> +
->>> +#include "lrng_internal.h"
->>> +
->>> +#define LRNG_TESTING_RINGBUFFER_SIZE	1024
->>> +#define LRNG_TESTING_RINGBUFFER_MASK	(LRNG_TESTING_RINGBUFFER_SIZE - 1)
->>> +
->>> +static u32 lrng_testing_rb[LRNG_TESTING_RINGBUFFER_SIZE];
->>> +static u32 lrng_rb_reader = 0;
->>> +static u32 lrng_rb_writer = 0;
->>> +static atomic_t lrng_testing_enabled = ATOMIC_INIT(0);
->>> +
->>> +static DECLARE_WAIT_QUEUE_HEAD(lrng_raw_read_wait);
->>> +static DEFINE_SPINLOCK(lrng_raw_lock);
->>> +
->>> +/*
->>> + * 0 ==> No boot test, gathering of runtime data allowed
->>> + * 1 ==> Boot test enabled and ready for collecting data, gathering
->>> runtime + *	 data is disabled
->>> + * 2 ==> Boot test completed and disabled, gathering of runtime data is
->>> + *	 disabled
->>> + */
->>> +static u32 boot_test = 0;
->>> +module_param(boot_test, uint, 0644);
->>> +MODULE_PARM_DESC(boot_test, "Enable gathering boot time entropy of the
->>> first" +			    " entropy events");
->>
->> One line for the string, please.
+> 	tlb_flush_mmu()
+> 	  tlb_flush_mmu_tlbonly()
+> 	    tlb_flush()			<-- #1
+> 	  tlb_flush_mmu_free()
+> 	    tlb_table_flush()
+> 	      tlb_table_invalidate()
+> 		tlb_flush_mmu_tlbonly()
+> 		  tlb_flush()		<-- #2
 > 
-> may I ask the question whether this should be done for all lines with printk 
-> statements? As checkpatch.pl will complain if you have lines larger than 80 
-> chars and complains about line-broken printk statements, I am always unsure 
-> which way to go.
+> does two TLBIs when tlb->fullmm, because __tlb_reset_range() will not
+> clear tlb->end in that case.
 > 
-> All printk statements in the patch series have line-broken printk statements.
+> Observe that any caller to __tlb_adjust_range() also sets at least one
+> of the tlb->freed_tables || tlb->cleared_p* bits, and those are
+> unconditionally cleared by __tlb_reset_range().
+> 
+> Change the condition for actually issuing TLBI to having one of those
+> bits set, as opposed to having tlb->end != 0.
+> 
 
-It's for grep-ability of the strings.
-grepping for partial strings would work as is, but then one would need to know
-what partial string to search for.
 
--- 
-~Randy
+We should possibly get this to stable too along with the first two 
+patches. I am not quiet sure if this will qualify for a stable backport. 
+Hence avoided adding Cc:stable@kernel.org
+
+
+> Reported-by: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> ---
+>   include/asm-generic/tlb.h | 7 ++++++-
+>   1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
+> index 9e22ac369d1d..b36b3bef5661 100644
+> --- a/include/asm-generic/tlb.h
+> +++ b/include/asm-generic/tlb.h
+> @@ -402,7 +402,12 @@ tlb_update_vma_flags(struct mmu_gather *tlb, struct vm_area_struct *vma) { }
+>   
+>   static inline void tlb_flush_mmu_tlbonly(struct mmu_gather *tlb)
+>   {
+> -	if (!tlb->end)
+> +	/*
+> +	 * Anything calling __tlb_adjust_range() also sets at least one of
+> +	 * these bits.
+> +	 */
+> +	if (!(tlb->freed_tables || tlb->cleared_ptes || tlb->cleared_pmds ||
+> +	      tlb->cleared_puds || tlb->cleared_p4ds))
+>   		return;
+>   
+>   	tlb_flush(tlb);
+> 
 
