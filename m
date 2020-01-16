@@ -6,72 +6,52 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D017CC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E250C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0A9E206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F38E82075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:14:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731160AbgAPKNt (ORCPT
+        id S1731276AbgAPKOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 05:13:49 -0500
-Received: from verein.lst.de ([213.95.11.211]:55181 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730518AbgAPKNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 05:13:48 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id BCCC468B20; Thu, 16 Jan 2020 11:13:44 +0100 (CET)
-Date:   Thu, 16 Jan 2020 11:13:44 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Qu Wenruo <quwenruo.btrfs@gmx.com>,
-        Andreas Dilger <adilger@dilger.ca>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-btrfs <linux-btrfs@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Problems with determining data presence by examining extents?
-Message-ID: <20200116101344.GA16435@lst.de>
-References: <20200115144839.GA30301@lst.de> <20200115133101.GA28583@lst.de> <4467.1579020509@warthog.procyon.org.uk> <00fc7691-77d5-5947-5493-5c97f262da81@gmx.com> <27181AE2-C63F-4932-A022-8B0563C72539@dilger.ca> <afa71c13-4f99-747a-54ec-579f11f066a0@gmx.com> <26093.1579098922@warthog.procyon.org.uk> <28755.1579100378@warthog.procyon.org.uk>
+        Thu, 16 Jan 2020 05:14:24 -0500
+Received: from Chamillionaire.breakpoint.cc ([193.142.43.52]:33736 "EHLO
+        Chamillionaire.breakpoint.cc" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726832AbgAPKOY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 05:14:24 -0500
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+        (envelope-from <fw@strlen.de>)
+        id 1is2AJ-00048J-GC; Thu, 16 Jan 2020 11:14:15 +0100
+Date:   Thu, 16 Jan 2020 11:14:15 +0100
+From:   Florian Westphal <fw@strlen.de>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>, coreteam@netfilter.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        syzbot <syzbot+f9d4095107fc8749c69c@syzkaller.appspotmail.com>
+Subject: Re: [PATCH] netfilter: nf_tables: fix memory leak in
+ nf_tables_parse_netdev_hooks()
+Message-ID: <20200116101415.GQ795@breakpoint.cc>
+References: <000000000000ffbba3059c3b5352@google.com>
+ <20200116100931.ot2ef4jvsw4ldye2@kili.mountain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <28755.1579100378@warthog.procyon.org.uk>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200116100931.ot2ef4jvsw4ldye2@kili.mountain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 02:59:38PM +0000, David Howells wrote:
-> Another thread could be writing to the file at the same time, but not in the
-> same block.  That's managed by netfs, most likely based on the pages and page
-> flags attached to the netfs inode being cached in this particular file[*].
-> 
-> What I was more thinking of is that SEEK_HOLE might run past the block of
-> interest and into a block that's currently being written and see a partially
-> written block.
+Dan Carpenter <dan.carpenter@oracle.com> wrote:
+> Syzbot detected a leak in nf_tables_parse_netdev_hooks().  If the hook
+> already exists, then the error handling doesn't free the newest "hook".
 
-But that's not a problem given that you know where to search.
+Thanks.
 
-> 
-> [*] For AFS, this is only true of regular files; dirs and symlinks are cached
->     as monoliths and are there entirely or not at all.
-> 
-> > > However, SEEK_HOLE doesn't help with the issue of the filesystem 'altering'
-> > > the content of the file by adding or removing blocks of zeros.
-> > 
-> > As does any other method.  If you need that fine grained control you
-> > need to track the information yourself.
-> 
-> So, basically, I can't.  Okay.  I was hoping it might be possible to add an
-> ioctl or something to tell filesystems not to do that with particular files.
-
-File systems usually pad zeroes where they have to, typically for
-sub-blocksize writes.   Disabling this would break data integrity.
+Reviewed-by: Florian Westphal <fw@strlen.de>
