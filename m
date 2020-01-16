@@ -2,154 +2,102 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01985C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93812C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0C052077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:14:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A46B2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:17:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jYfYaY1Y"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lwcdtRWL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgAPLOz (ORCPT
+        id S1726369AbgAPLRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 06:14:55 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39567 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbgAPLOz (ORCPT
+        Thu, 16 Jan 2020 06:17:10 -0500
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:45425 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbgAPLRK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 06:14:55 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y11so18718745wrt.6
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 03:14:54 -0800 (PST)
+        Thu, 16 Jan 2020 06:17:10 -0500
+Received: by mail-ua1-f66.google.com with SMTP id 59so7483672uap.12
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 03:17:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=R9Q5677Ur8luUcGkjg5jrHlKUFNub/5xyB+iK5Dfa/s=;
-        b=jYfYaY1Y6tNtnRFTCmbfc0F8+6Msw8UQArIB4KgtZVxXojOX7OKT+38UZSMgu4+9Yn
-         xClOjGo46iBLZWRmKkPkzVe+1InGWGuhMhp4teIj0Cyn7T/ZTY9sbhLxTZMYxXLrGQ9N
-         wb/RxUTh5u0pyfy0fzVGfAyQjlnEiqEkneEzPohuJlhhsKrUZ+9jw98Mgmp71i3Wozut
-         /RH/skJplLqwzHY8UvJt6m/Ifhh73fMww3qDnx1wiVsZMkC0WBEobaK4InoVVQB4T3zp
-         hm0pxGoOA/P37+fWny+NOEuiMJMjDNXK3b7zcuLaOLHAPG5xBuEaP3FWLIhrD3bkatLw
-         ql4Q==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=F7tUdno7ArtPSiaOPdMNn5wVN9V2qtibzn63/OmNwzM=;
+        b=lwcdtRWLk0imKl7E0r3n6TJW8xeDU1FBZjrxdwbB1j1Ol8VLI6md87iF6Ei32CqstB
+         iZsxa6IJPvBFh4/KZIDh7uRZ4kCTldU8Hs1BMoPEFCwDTo7QdO9PKkKKeMCczAi+zG/4
+         JZfYXGg313YN4TZwuOTHONOstMiYv8zbow0CFVohUQbrYitLoSQqIkeDcuxGp6qNSXRF
+         MSkysZR6XwblHa8eMmPSQT/qJd8xv8W9O4E2ppMNt4Lo0lJZCGfmkzvlu2IAtDMnEnbB
+         1QjcmJa6xjbZVSVMx8kwvXsDZZBH7G6592G8of/U/0t0mCjvPQm1g4udNBlpI6gURr5r
+         am4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=R9Q5677Ur8luUcGkjg5jrHlKUFNub/5xyB+iK5Dfa/s=;
-        b=ffbdSRb3i88QyBm39VfQcN3CnnckS1T0cwd3k/Tq8UuIoN10rA/DwN/AgsQiPl2qIS
-         +oQ6br+zzkxF5c1nActqkJsXV02fesTKxQKL1XHOMDTszheC7cDh4BfysOGctZgVjKou
-         6YKekzIzQEqa4augqXBcwwd6z+o+txJkvalPiC5KVbn1pcq/E8IHU2PKAs28VLZdn4oD
-         B/5FwdQdeqG/P8CnjuTsVhcPiJzOywEJOproR/WxIKBbfHqp5Dtbm9aqryX908PDxIpI
-         aPHnfT09eWvOaKQGejmIUzTzMGg+6iNqmA0+sW9Z6JIvGVYYgEDTv/0erEP0mGwQkX5r
-         i8dQ==
-X-Gm-Message-State: APjAAAUGY91v4lBYst/61X0NmzYl7quWyB9fH+j5+sYKA8Q2RgpqXC9l
-        i6QFIF3o7hzY2y13HY3CEyADOn//I6k=
-X-Google-Smtp-Source: APXvYqx0CXV5gVBMYwHmkz1J0LkphHRM8RPwbH6gJgYhylUNLOT9aC2Itcv3FJmB1fCRQ/q1PH9G2A==
-X-Received: by 2002:adf:9c8f:: with SMTP id d15mr2748995wre.390.1579173293323;
-        Thu, 16 Jan 2020 03:14:53 -0800 (PST)
-Received: from dvyukov-desk.muc.corp.google.com ([2a00:79e0:15:13:aecf:473e:300f:893f])
-        by smtp.gmail.com with ESMTPSA id w19sm3573792wmc.22.2020.01.16.03.14.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 03:14:52 -0800 (PST)
-From:   Dmitry Vyukov <dvyukov@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: [PATCH] kcov: ignore fault-inject and stacktrace
-Date:   Thu, 16 Jan 2020 12:14:49 +0100
-Message-Id: <20200116111449.217744-1-dvyukov@gmail.com>
-X-Mailer: git-send-email 2.25.0.rc1.283.g88dfdc4193-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=F7tUdno7ArtPSiaOPdMNn5wVN9V2qtibzn63/OmNwzM=;
+        b=CGrUz3plPhz+V7b2pcGZapPMpHdRpXosgmfIqf2XaUFiblipJGmtKY4F1iXI/ooofL
+         nGdO5uNKvU0rQNq9qBMSQIWNgdIbpE9jc3AU3P8b5+PYjApRbQJh9WgiSUlKCsMK7WWZ
+         nIs4nMQUx9yz5I4J4JhWJlmYfIPWnSi7l5NqYtEv6Jfe43nOT4yioK9BJJGrPvVcpran
+         g8R4ATxTabQacam43/AC/XMu9ZaXdjriChwSiSLAwe7bue2NsGm6339f8y/chG+J7KHD
+         pfr2MYfVK4jNAv53LCuY5iwrNiyd21qQgYuNX3EQ5aPrzk96anQr+dW4PqC2GGFqsIUl
+         cKLw==
+X-Gm-Message-State: APjAAAUBbiZL0vnMkX/g9wMCNnSc8JdOMQ1dNvzJUaPrz6S7KvAKHvXD
+        bgQqYiUovLwYGfuEWBnGe5LgdRHbYtDfYFwZ4imhOg==
+X-Google-Smtp-Source: APXvYqyiD7on53LJXj+IvnXLqg0ezI6WrramGC7O26YFNv+/TCtHx+KoDKnYfKLOvap+43EPQJV5R5WFI/gCOGKBRMA=
+X-Received: by 2002:ab0:20a:: with SMTP id 10mr17143795uas.19.1579173428886;
+ Thu, 16 Jan 2020 03:17:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191219145843.3823-1-jbx6244@gmail.com> <20191228093059.2817-1-jbx6244@gmail.com>
+ <20200104215524.GA28188@bogus>
+In-Reply-To: <20200104215524.GA28188@bogus>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 16 Jan 2020 12:16:32 +0100
+Message-ID: <CAPDyKFp5BvA7tKpBUh-bpn5X4xvg8b9HuMO7+fZVJEp78=ToRw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: mmc: remove identical phrase in
+ disable-wp text
+To:     Rob Herring <robh@kernel.org>
+Cc:     Johan Jonker <jbx6244@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Vyukov <dvyukov@google.com>
+On Sat, 4 Jan 2020 at 22:55, Rob Herring <robh@kernel.org> wrote:
+>
+> On Sat, 28 Dec 2019 10:30:58 +0100, Johan Jonker wrote:
+> > There are two identical phrases in the disable-wp text,
+> > so remove one of them.
+> >
+> > Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> > ---
+> >  Documentation/devicetree/bindings/mmc/mmc-controller.yaml | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> >
+>
+> Applied, thanks.
+>
+> Rob
 
-Don't instrument 3 more files that contain debugging facilities and
-produce large amounts of uninteresting coverage for every syscall.
-The following snippets are sprinkled all over the place in kcov
-traces in a debugging kernel. We already try to disable instrumentation
-of stack unwinding code and of most debug facilities. I guess we
-did not use fault-inject.c at the time, and stacktrace.c was somehow
-missed (or something has changed in kernel/configs).
-This change both speeds up kcov (kernel doesn't need to store these
-PCs, user-space doesn't need to process them) and frees trace buffer
-capacity for more useful coverage.
+Rob,
 
-should_fail
-lib/fault-inject.c:149
-fail_dump
-lib/fault-inject.c:45
+Normally I pick up the DT doc changes for mmc whenever you have acked
+them (at least more non-trivial changes). I regards to the
+mmc-controller.yaml file, I have no queued changes in my tree for this
+cycle so this should be fine in regards to conflicts.
 
-stack_trace_save
-kernel/stacktrace.c:124
-stack_trace_consume_entry
-kernel/stacktrace.c:86
-stack_trace_consume_entry
-kernel/stacktrace.c:89
-... a hundred frames skipped ...
-stack_trace_consume_entry
-kernel/stacktrace.c:93
-stack_trace_consume_entry
-kernel/stacktrace.c:86
+Going forward, do you prefer to pick the DT doc changes for mmc, or
+can I consider this as a single occasion thingy?
 
-Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andrey Konovalov <andreyknvl@google.com>
-Cc: kasan-dev@googlegroups.com
-Cc: linux-kernel@vger.kernel.org
----
- kernel/Makefile | 1 +
- lib/Makefile    | 1 +
- mm/Makefile     | 1 +
- 3 files changed, 3 insertions(+)
-
-diff --git a/kernel/Makefile b/kernel/Makefile
-index e5ffd8c002541..5d935b63f812a 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -30,6 +30,7 @@ KCSAN_SANITIZE_softirq.o = n
- # and produce insane amounts of uninteresting coverage.
- KCOV_INSTRUMENT_module.o := n
- KCOV_INSTRUMENT_extable.o := n
-+KCOV_INSTRUMENT_stacktrace.o := n
- # Don't self-instrument.
- KCOV_INSTRUMENT_kcov.o := n
- KASAN_SANITIZE_kcov.o := n
-diff --git a/lib/Makefile b/lib/Makefile
-index 004a4642938af..6cd19bb3085c5 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -16,6 +16,7 @@ KCOV_INSTRUMENT_rbtree.o := n
- KCOV_INSTRUMENT_list_debug.o := n
- KCOV_INSTRUMENT_debugobjects.o := n
- KCOV_INSTRUMENT_dynamic_debug.o := n
-+KCOV_INSTRUMENT_fault-inject.o := n
- 
- # Early boot use of cmdline, don't instrument it
- ifdef CONFIG_AMD_MEM_ENCRYPT
-diff --git a/mm/Makefile b/mm/Makefile
-index 3c53198835479..c9696f3ec8408 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -28,6 +28,7 @@ KCOV_INSTRUMENT_kmemleak.o := n
- KCOV_INSTRUMENT_memcontrol.o := n
- KCOV_INSTRUMENT_mmzone.o := n
- KCOV_INSTRUMENT_vmstat.o := n
-+KCOV_INSTRUMENT_failslab.o := n
- 
- CFLAGS_init-mm.o += $(call cc-disable-warning, override-init)
- CFLAGS_init-mm.o += $(call cc-disable-warning, initializer-overrides)
--- 
-2.25.0.rc1.283.g88dfdc4193-goog
-
+Kind regards
+Uffe
