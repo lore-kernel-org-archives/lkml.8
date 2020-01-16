@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A7BC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDBEC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E055246D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A796722522
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:18:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195120;
-	bh=i5owRwERAnOiCFmbkU+ANJ+g3C6UCYGaMA8Usv0k760=;
+	s=default; t=1579195122;
+	bh=aP/6JkpNVjX8LDKp1dySfxmf/B7jz/SY40FUFv2/GLE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EjLu3PUys14lUW3y8Oe71tlE96YwmoaUm7hRjsL8kW9uKuq1r63AFzCFccEFEd1AA
-	 dSorlk/zItA/zCJkmMDTOtoYtNrnTKbaOib0QtCwjcJ5Ro0+qRaNJfHIOE+is7w6H4
-	 UMW8PgHzfHHosqavHmSBKVPYFerVlwcih1qhhp20=
+	b=AUfpAkWlB4l629iEajMEY76AS+FbhJdig0GXmootoDI09qhM4SEAKBRkTb1kZ5EZS
+	 2kjDqJ9simtk5FL2q65ZGlUO2mJq99Xcz1lk/Gl5H5oSLo6v7Z+Zj29K1Gf4eKKEkR
+	 4Yyj9hjVPL7Q17fbzQFGjOvBW1u0XAqvBfEhJNpM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391532AbgAPRSj (ORCPT
+        id S2391541AbgAPRSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:18:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45808 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:18:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391462AbgAPRSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:18:25 -0500
+        id S2391478AbgAPRS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:18:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80F3F24653;
-        Thu, 16 Jan 2020 17:18:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A09C246BF;
+        Thu, 16 Jan 2020 17:18:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195105;
-        bh=i5owRwERAnOiCFmbkU+ANJ+g3C6UCYGaMA8Usv0k760=;
+        s=default; t=1579195109;
+        bh=aP/6JkpNVjX8LDKp1dySfxmf/B7jz/SY40FUFv2/GLE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jbkc/0O3MUDPEcbWbHLstUALC/exfc76tGPlLQg7BE9n7JHYYwvce8h2Z2HyLUPBR
-         07W0IzvymIahFHBbOYz7OliJxnWsLl2fp/2/FJDCBcMOKaiVpugmU6xTSIs9CP7/Dg
-         1XT9vhRV9sSPLtKn7fMr9PWmwDk6BdaeHhqGRRDk=
+        b=qMmquzcYxC/pQUBfVBJg7j9JVpORwLBBkAZXnfeNT77gieJmQ7wiBm0Hlij3GKZAf
+         iM+npWfUZIYM/HccAV37atNqdhsoA92JVrWEmIpViGGgFDjmE73UA8ou0hvE9i+DPB
+         Bzn8toz730zPC4kvcdFi6vXCRIpAqNJaH4A0iAqY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yangtao Li <tiny.windzz@gmail.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 048/371] clk: dove: fix refcount leak in dove_clk_init()
-Date:   Thu, 16 Jan 2020 12:11:56 -0500
-Message-Id: <20200116171719.16965-48-sashal@kernel.org>
+Cc:     Gal Pressman <galpress@amazon.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 051/371] RDMA/ocrdma: Fix out of bounds index check in query pkey
+Date:   Thu, 16 Jan 2020 12:11:59 -0500
+Message-Id: <20200116171719.16965-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116171719.16965-1-sashal@kernel.org>
 References: <20200116171719.16965-1-sashal@kernel.org>
@@ -60,45 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yangtao Li <tiny.windzz@gmail.com>
+From: Gal Pressman <galpress@amazon.com>
 
-[ Upstream commit 8d726c5128298386b907963033be93407b0c4275 ]
+[ Upstream commit b188940796c7be31c1b8c25a9a0e0842c2e7a49e ]
 
-The of_find_compatible_node() returns a node pointer with refcount
-incremented, but there is the lack of use of the of_node_put() when
-done. Add the missing of_node_put() to release the refcount.
+The pkey table size is one element, index should be tested for > 0 instead
+of > 1.
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-Reviewed-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Fixes: 8f7fc5450b64 ("clk: mvebu: dove: maintain clock init order")
-Fixes: 63b8d92c793f ("clk: add Dove PLL divider support for GPU, VMeta and AXI clocks")
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: fe2caefcdf58 ("RDMA/ocrdma: Add driver for Emulex OneConnect IBoE RDMA adapter")
+Signed-off-by: Gal Pressman <galpress@amazon.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/mvebu/dove.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/infiniband/hw/ocrdma/ocrdma_verbs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/mvebu/dove.c b/drivers/clk/mvebu/dove.c
-index 59fad9546c84..5f258c9bb68b 100644
---- a/drivers/clk/mvebu/dove.c
-+++ b/drivers/clk/mvebu/dove.c
-@@ -190,10 +190,14 @@ static void __init dove_clk_init(struct device_node *np)
+diff --git a/drivers/infiniband/hw/ocrdma/ocrdma_verbs.c b/drivers/infiniband/hw/ocrdma/ocrdma_verbs.c
+index 27d5e8d9f08d..7683d13dad3d 100644
+--- a/drivers/infiniband/hw/ocrdma/ocrdma_verbs.c
++++ b/drivers/infiniband/hw/ocrdma/ocrdma_verbs.c
+@@ -55,7 +55,7 @@
  
- 	mvebu_coreclk_setup(np, &dove_coreclks);
+ int ocrdma_query_pkey(struct ib_device *ibdev, u8 port, u16 index, u16 *pkey)
+ {
+-	if (index > 1)
++	if (index > 0)
+ 		return -EINVAL;
  
--	if (ddnp)
-+	if (ddnp) {
- 		dove_divider_clk_init(ddnp);
-+		of_node_put(ddnp);
-+	}
- 
--	if (cgnp)
-+	if (cgnp) {
- 		mvebu_clk_gating_setup(cgnp, dove_gating_desc);
-+		of_node_put(cgnp);
-+	}
- }
- CLK_OF_DECLARE(dove_clk, "marvell,dove-core-clock", dove_clk_init);
+ 	*pkey = 0xffff;
 -- 
 2.20.1
 
