@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 110E9C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CAADC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E127E206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:49:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBE01206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:49:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200566;
-	bh=YCE3P0Dt8ru4cxQvKA45tn/Skbj37sq/a/SFLEu/yZ0=;
+	s=default; t=1579200574;
+	bh=OS10Ly0yse7Nq0ijVnUrxYesgQp3yJ3HAwsBYuNPsws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Es8+3OzI7JIcSjIF34TKsz2m0WCDrKGVMiXjuh86Rv/FqRBrrgQml0mBlaQS83PFV
-	 xkVbE1cvzGOdlYlAaR6362J5WzgqqTwSt7YDisGwpEe4vAhdpMD9C2c73mf7VUTdsW
-	 77RD+AhsbWsAkhngGHZsrfDgodvNbwUSnY+wsXy8=
+	b=bvdnfxZ/fm9UElOkG7ZOXIlHpTJWscONZBlZ+8u925so6xsRV5+Yv9rCDhBAbDEjt
+	 Swtp9LN+XZ8wjHt/piVwFve0Ms34DHF9EfRYwPYZ1HeCM/Hd1mdTLTrfm64LyJeAoZ
+	 X4f8usnldqGlT4v9I+uhTHLd+iXE0FSIORjXAOZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391283AbgAPStY (ORCPT
+        id S2437035AbgAPStc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:49:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45440 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:49:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389682AbgAPRJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:09:28 -0500
+        id S2389669AbgAPRJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:09:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1029B205F4;
-        Thu, 16 Jan 2020 17:09:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CB0A24683;
+        Thu, 16 Jan 2020 17:09:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194567;
-        bh=YCE3P0Dt8ru4cxQvKA45tn/Skbj37sq/a/SFLEu/yZ0=;
+        s=default; t=1579194562;
+        bh=OS10Ly0yse7Nq0ijVnUrxYesgQp3yJ3HAwsBYuNPsws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o5Xj3Fsgn9Usm155x5HeiPYccik/Nnh75lcG6Kd74FY1s5bLWLTjW8rJakCxKoEgv
-         SVHW6Wun1DJVn+Dvfs2w8M2B63Sm1BlTDWeAuTMLb8efEdITindF0a8QDV2BsOqguB
-         EPm65d2uTjiclCrC6guD9Dj6WM31mK9i2Wb1KlfY=
+        b=dZEHcVC6fgbUD6KQcH7mOU2Lf9WaSiV8v86FHzUstfT5Owg7YmcWB7a4qfSFpwOC5
+         LWd9F4PKfetWtHhFuS0PR1PyUCTNYHOXHPZG4EaW+ANd+msFqdl04Qzd5G721z3XWY
+         pBLybq8RgGoqNhRsJRol0EONNOZkCs8Ub5bxtBOw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jouni Malinen <j@w1.fi>, Johannes Berg <johannes.berg@intel.com>,
-        Richard Weinberger <richard@nod.at>,
-        Sasha Levin <sashal@kernel.org>, linux-um@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 446/671] um: Fix IRQ controller regression on console read
-Date:   Thu, 16 Jan 2020 12:01:24 -0500
-Message-Id: <20200116170509.12787-183-sashal@kernel.org>
+Cc:     Kevin Mitchell <kevmitch@arista.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.19 442/671] iommu/amd: Make iommu_disable safer
+Date:   Thu, 16 Jan 2020 12:01:20 -0500
+Message-Id: <20200116170509.12787-179-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,119 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jouni Malinen <j@w1.fi>
+From: Kevin Mitchell <kevmitch@arista.com>
 
-[ Upstream commit bebe4681d0e7e1be2608282dc86645728bc7f623 ]
+[ Upstream commit 3ddbe913e55516d3e2165d43d4d5570761769878 ]
 
-The conversion of UML to use epoll based IRQ controller claimed that
-clone_one_chan() can safely call um_free_irq() while starting to ignore
-the delay_free_irq parameter that explicitly noted that the IRQ cannot
-be freed because this is being called from chan_interrupt(). This
-resulted in free_irq() getting called in interrupt context ("Trying to
-free IRQ 6 from IRQ context!").
+Make it safe to call iommu_disable during early init error conditions
+before mmio_base is set, but after the struct amd_iommu has been added
+to the amd_iommu_list. For example, this happens if firmware fails to
+fill in mmio_phys in the ACPI table leading to a NULL pointer
+dereference in iommu_feature_disable.
 
-Fix this by restoring previously used delay_free_irq processing.
-
-Fixes: ff6a17989c08 ("Epoll based IRQ controller")
-Signed-off-by: Jouni Malinen <j@w1.fi>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Fixes: 2c0ae1720c09c ('iommu/amd: Convert iommu initialization to state machine')
+Signed-off-by: Kevin Mitchell <kevmitch@arista.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/um/drivers/chan_kern.c | 52 +++++++++++++++++++++++++++++++------
- arch/um/kernel/irq.c        |  4 +++
- 2 files changed, 48 insertions(+), 8 deletions(-)
+ drivers/iommu/amd_iommu_init.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/um/drivers/chan_kern.c b/arch/um/drivers/chan_kern.c
-index 05588f9466c7..13ba195f9c9c 100644
---- a/arch/um/drivers/chan_kern.c
-+++ b/arch/um/drivers/chan_kern.c
-@@ -171,19 +171,55 @@ int enable_chan(struct line *line)
- 	return err;
- }
+diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
+index 1e9a5da562f0..465f28a7844c 100644
+--- a/drivers/iommu/amd_iommu_init.c
++++ b/drivers/iommu/amd_iommu_init.c
+@@ -422,6 +422,9 @@ static void iommu_enable(struct amd_iommu *iommu)
  
-+/* Items are added in IRQ context, when free_irq can't be called, and
-+ * removed in process context, when it can.
-+ * This handles interrupt sources which disappear, and which need to
-+ * be permanently disabled.  This is discovered in IRQ context, but
-+ * the freeing of the IRQ must be done later.
-+ */
-+static DEFINE_SPINLOCK(irqs_to_free_lock);
-+static LIST_HEAD(irqs_to_free);
-+
-+void free_irqs(void)
-+{
-+	struct chan *chan;
-+	LIST_HEAD(list);
-+	struct list_head *ele;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&irqs_to_free_lock, flags);
-+	list_splice_init(&irqs_to_free, &list);
-+	spin_unlock_irqrestore(&irqs_to_free_lock, flags);
-+
-+	list_for_each(ele, &list) {
-+		chan = list_entry(ele, struct chan, free_list);
-+
-+		if (chan->input && chan->enabled)
-+			um_free_irq(chan->line->driver->read_irq, chan);
-+		if (chan->output && chan->enabled)
-+			um_free_irq(chan->line->driver->write_irq, chan);
-+		chan->enabled = 0;
-+	}
-+}
-+
- static void close_one_chan(struct chan *chan, int delay_free_irq)
+ static void iommu_disable(struct amd_iommu *iommu)
  {
-+	unsigned long flags;
++	if (!iommu->mmio_base)
++		return;
 +
- 	if (!chan->opened)
- 		return;
+ 	/* Disable command buffer */
+ 	iommu_feature_disable(iommu, CONTROL_CMDBUF_EN);
  
--    /* we can safely call free now - it will be marked
--     *  as free and freed once the IRQ stopped processing
--     */
--	if (chan->input && chan->enabled)
--		um_free_irq(chan->line->driver->read_irq, chan);
--	if (chan->output && chan->enabled)
--		um_free_irq(chan->line->driver->write_irq, chan);
--	chan->enabled = 0;
-+	if (delay_free_irq) {
-+		spin_lock_irqsave(&irqs_to_free_lock, flags);
-+		list_add(&chan->free_list, &irqs_to_free);
-+		spin_unlock_irqrestore(&irqs_to_free_lock, flags);
-+	} else {
-+		if (chan->input && chan->enabled)
-+			um_free_irq(chan->line->driver->read_irq, chan);
-+		if (chan->output && chan->enabled)
-+			um_free_irq(chan->line->driver->write_irq, chan);
-+		chan->enabled = 0;
-+	}
- 	if (chan->ops->close != NULL)
- 		(*chan->ops->close)(chan->fd, chan->data);
- 
-diff --git a/arch/um/kernel/irq.c b/arch/um/kernel/irq.c
-index 6b7f3827d6e4..2753718d31b9 100644
---- a/arch/um/kernel/irq.c
-+++ b/arch/um/kernel/irq.c
-@@ -21,6 +21,8 @@
- #include <irq_user.h>
- 
- 
-+extern void free_irqs(void);
-+
- /* When epoll triggers we do not know why it did so
-  * we can also have different IRQs for read and write.
-  * This is why we keep a small irq_fd array for each fd -
-@@ -100,6 +102,8 @@ void sigio_handler(int sig, struct siginfo *unused_si, struct uml_pt_regs *regs)
- 			}
- 		}
- 	}
-+
-+	free_irqs();
- }
- 
- static int assign_epoll_events_to_irq(struct irq_entry *irq_entry)
 -- 
 2.20.1
 
