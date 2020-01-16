@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F1B1C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A39BC33CB2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 364AF214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1A9022522
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:05:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730876AbgAPDF0 (ORCPT
+        id S1730960AbgAPDF2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 22:05:26 -0500
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:59260 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730538AbgAPDFU (ORCPT
+        Wed, 15 Jan 2020 22:05:28 -0500
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:60397 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730707AbgAPDFW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 22:05:20 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TnrFONZ_1579143913;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TnrFONZ_1579143913)
+        Wed, 15 Jan 2020 22:05:22 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0TnrFiO5_1579143916;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TnrFiO5_1579143916)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 16 Jan 2020 11:05:13 +0800
+          Thu, 16 Jan 2020 11:05:16 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-mm@kvack.org, akpm@linux-foundation.org,
@@ -32,9 +32,11 @@ To:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
         khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
         yang.shi@linux.alibaba.com, willy@infradead.org,
         shakeelb@google.com, hannes@cmpxchg.org
-Subject: [PATCH v8 05/10] mm/mlock: optimize munlock_pagevec by relocking
-Date:   Thu, 16 Jan 2020 11:05:04 +0800
-Message-Id: <1579143909-156105-6-git-send-email-alex.shi@linux.alibaba.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+Subject: [PATCH v8 10/10] mm/memcg: add debug checking in lock_page_memcg
+Date:   Thu, 16 Jan 2020 11:05:09 +0800
+Message-Id: <1579143909-156105-11-git-send-email-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1579143909-156105-1-git-send-email-alex.shi@linux.alibaba.com>
 References: <1579143909-156105-1-git-send-email-alex.shi@linux.alibaba.com>
@@ -43,71 +45,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During the pagevec locking, a new page's lruvec is may same as
-previous one. Thus we could save a re-locking, and only
-change lock iff lruvec is newer.
+This extra irq disable/enable and BUG_ON checking costs 5% readtwice
+performance on a 2 socket * 26 cores * HT box. So put it into
+CONFIG_PROVE_LOCKING.
 
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
 Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: linux-kernel@vger.kernel.org
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: cgroups@vger.kernel.org
 Cc: linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org
 ---
- mm/mlock.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ mm/memcontrol.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/mm/mlock.c b/mm/mlock.c
-index 10d15f58b061..050f999eadb1 100644
---- a/mm/mlock.c
-+++ b/mm/mlock.c
-@@ -289,6 +289,7 @@ static void __munlock_pagevec(struct pagevec *pvec, struct zone *zone)
- {
- 	int i;
- 	int nr = pagevec_count(pvec);
-+	int delta_munlocked = -nr;
- 	struct pagevec pvec_putback;
- 	struct lruvec *lruvec = NULL;
- 	int pgrescued = 0;
-@@ -299,20 +300,19 @@ static void __munlock_pagevec(struct pagevec *pvec, struct zone *zone)
- 	for (i = 0; i < nr; i++) {
- 		struct page *page = pvec->pages[i];
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index a567fd868739..4ad1b4d2eb1e 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -2029,6 +2029,12 @@ struct mem_cgroup *lock_page_memcg(struct page *page)
+ 	if (unlikely(!memcg))
+ 		return NULL;
  
--		lruvec = lock_page_lruvec_irq(page);
-+		lruvec = relock_page_lruvec_irq(page, lruvec);
++#ifdef CONFIG_PROVE_LOCKING
++	local_irq_save(flags);
++	might_lock(&memcg->move_lock);
++	local_irq_restore(flags);
++#endif
++
+ 	if (atomic_read(&memcg->moving_account) <= 0)
+ 		return memcg;
  
- 		if (TestClearPageMlocked(page)) {
- 			/*
- 			 * We already have pin from follow_page_mask()
- 			 * so we can spare the get_page() here.
- 			 */
--			if (__munlock_isolate_lru_page(page, lruvec, false)) {
--				__mod_zone_page_state(zone, NR_MLOCK,  -1);
--				unlock_page_lruvec_irq(lruvec);
-+			if (__munlock_isolate_lru_page(page, lruvec, false))
- 				continue;
--			} else
-+			else
- 				__munlock_isolation_failed(page);
--		}
-+		} else
-+			delta_munlocked++;
- 
- 		/*
- 		 * We won't be munlocking this page in the next phase
-@@ -322,8 +322,10 @@ static void __munlock_pagevec(struct pagevec *pvec, struct zone *zone)
- 		 */
- 		pagevec_add(&pvec_putback, pvec->pages[i]);
- 		pvec->pages[i] = NULL;
--		unlock_page_lruvec_irq(lruvec);
- 	}
-+	__mod_zone_page_state(zone, NR_MLOCK, delta_munlocked);
-+	if (lruvec)
-+		unlock_page_lruvec_irq(lruvec);
- 
- 	/* Now we can release pins of pages that we are not munlocking */
- 	pagevec_release(&pvec_putback);
 -- 
 1.8.3.1
 
