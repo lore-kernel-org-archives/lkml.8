@@ -7,62 +7,60 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C7B8C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA89C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 263222073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67E7D2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:24:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W1/dDxsi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PMnbr0CX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407008AbgAPSYM (ORCPT
+        id S2436622AbgAPSYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:24:12 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37216 "EHLO
+        Thu, 16 Jan 2020 13:24:18 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43895 "EHLO
         mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394907AbgAPSXm (ORCPT
+        with ESMTP id S2395566AbgAPSXk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 13:23:42 -0500
-Received: by mail-wr1-f66.google.com with SMTP id w15so20222742wru.4
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 10:23:41 -0800 (PST)
+        Thu, 16 Jan 2020 13:23:40 -0500
+Received: by mail-wr1-f66.google.com with SMTP id d16so20183644wre.10
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 10:23:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=i+nTHuznqMvTI3dGvU5ZxSOz65Ev7Doc/znM40iHcH0=;
-        b=W1/dDxsiZUbkeGBjQ7x4HX/hk/Kz2N1bwsRGaJSrX+feVAXRl8qVmfZVzftpuiEXdS
-         QIQQqXJAxwTo6duBATHoMzzNliJpJVMr9O9FdiTSntlS/+IcJNFdRjUGVMY2zez/HN9P
-         MFYN2HGKSISKbG8EWU2Kfj55v01wdH5FpTwKtRk3q24sXOQACKvGQqd7TxzmJf/wWsnC
-         aNlalyu1NvdI0KsedaqyaJlIuq0By8aMRU05WSIJeDGt8xN4qjjkSCvhPOxsVccOeXYF
-         VHtz9SeAff6vqfXUn/NknfISHFXVrELuf1jRqhFaaP2gSpfrZkyhvzTM1GLxR4DL4Ljm
-         Lq4A==
+        bh=6GzX84NfDDLTeIA6gc1l7fXC6tihOLThsT86UiBLkGc=;
+        b=PMnbr0CXM4L39OIkLBv9NNcZmMeCur9LJbC9xdfDIFRLBFdhoummuP6RcyD97FN+xy
+         +rqcfydCyWRKx7GGU+vH52bQtqHrg80kf/PY1Xykkjz/DrtM/AJWGKoIfKYOZtWrWd2r
+         xZnJXDmoeqRcI93oSanvn1TnmsZtk67I5J0ZNiwTx+Xq/VDHx7HYduR5GQO+Zz+CQgW0
+         c/CvIfAYTU63cAEodPi6ZgY4VbBUL7vokyBTotbHy4dtNaU7Dtf8kh7dOzMrTUFwKJP2
+         7wChtsPoT9zdaeczEsys5XhEZ2meyBzgExwZoJr7C4FjL+HEnzstlAo396Dq9eAHSJXk
+         Xvxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=i+nTHuznqMvTI3dGvU5ZxSOz65Ev7Doc/znM40iHcH0=;
-        b=dDJZEvXbwStFbWTYkXPr7fqMr0u/GExDH2pnTCAms6rbNAe//GfDljIHYd+PyVxeCS
-         SAfni7CiNnKeRrb/NUbzKcB/10oCdWtyPJnzgn1d8GZq9mpB/J6GciIVCNyw9KSXCbyM
-         lz+OrlMPwX0sq9cTTITHwXoozChhhz+kjdFO7x8nRygzd0VC5xfjmPg+in9fXopysXb1
-         iTDNlsa0SagOgnku1GwConz/o+bEMbEc86AUE8IDdz+a2KQVJoeCIxcq9i5h0g0wgL52
-         VIrpjIuAFPguWw0ewhMaDQ++LwSeuPZgsesnOCjlGRYQyVLbQ7g2Dnfg1Sljbvwi+2hl
-         klYw==
-X-Gm-Message-State: APjAAAUGqZXRTiojwTI3f4AD/8Yy5+hNAKiT09zhzlWubJ6/LQr7c6Zq
-        0JiMf7ecbD0SCfsnTzTS4Ly2j9VVUOVVoA==
-X-Google-Smtp-Source: APXvYqwcA71lWUHCO7dpoC4BFPvrltTJoqpL6f6vaEmcN4Xopw1fcLZ5wGWTTC8fzxosiaiLevWJMg==
-X-Received: by 2002:adf:9427:: with SMTP id 36mr4691445wrq.166.1579199020417;
-        Thu, 16 Jan 2020 10:23:40 -0800 (PST)
+        bh=6GzX84NfDDLTeIA6gc1l7fXC6tihOLThsT86UiBLkGc=;
+        b=o4VcS6IYni/jtD4oV71gqRix3NQjcLuxytZ8GnBQ1k697WBQ8CpxYP8CkMdmsXOtwE
+         sRnBMQMAJkVpugO3VvXjAgCjIfqmHmBkfZHo3Zm0Jbjl/kNPBP2/CrUZdNHiBdzc9Vph
+         f/WdMsoV1ybXuJFttBwGq62T/lEZOraFnQ4+RXWR9tPGJeuc1gHM2c4rIt//1rj9U5VL
+         oBNK5hzj6CtUOLP4PT6ByMVXPDj24FWHV3ncExUNDNnnE9Jfcsy+NyyozMlIObhwSfOH
+         bITznS5YWcUqjQrYs18XqHFPDHOtELP1B/wO40QyeOXrZaCSM/kNnRUv9EiByJ2vewZn
+         v6iQ==
+X-Gm-Message-State: APjAAAVm/f5b/BhFVfS7lQtcVPCcHmJ5ogjpxhrVsnYFJdbH+0OqbKeG
+        ILWqFDLABWZ4WDowYwQh6ykA/vVKGPUgpw==
+X-Google-Smtp-Source: APXvYqwauPPd4aLhBDp5MlnHSV754ZND+e0We5OC6l83FAVvtluvfuHGtG9xSa6ZuKF4/wTrB5V3vg==
+X-Received: by 2002:adf:f1d0:: with SMTP id z16mr4510386wro.209.1579199018983;
+        Thu, 16 Jan 2020 10:23:38 -0800 (PST)
 Received: from mai.imgcgcw.net ([2a01:e34:ed2f:f020:6c63:1b50:1156:7f0f])
-        by smtp.gmail.com with ESMTPSA id b137sm1087920wme.26.2020.01.16.10.23.39
+        by smtp.gmail.com with ESMTPSA id b137sm1087920wme.26.2020.01.16.10.23.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 10:23:39 -0800 (PST)
+        Thu, 16 Jan 2020 10:23:38 -0800 (PST)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     tglx@linutronix.de
-Cc:     linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Olof Johansson <olof@lixom.net>
-Subject: [PATCH 13/17] clocksource/drivers/timer-ti-dm: Fix uninitialized pointer access
-Date:   Thu, 16 Jan 2020 19:23:00 +0100
-Message-Id: <20200116182304.4926-13-daniel.lezcano@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
+Subject: [PATCH 12/17] clocksource/drivers/timer-ti-dm: Switch to platform_get_irq
+Date:   Thu, 16 Jan 2020 19:22:59 +0100
+Message-Id: <20200116182304.4926-12-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200116182304.4926-1-daniel.lezcano@linaro.org>
 References: <74bf7170-401f-2962-ea5a-1e21431a9349@linaro.org>
@@ -72,62 +70,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Yangtao Li <tiny.windzz@gmail.com>
 
-Clean-up commit 8c82723414d5 ("clocksource/drivers/timer-ti-dm: Switch to
-platform_get_irq") caused a regression where we now try to access
-uninitialized data for timer:
+platform_get_resource(pdev, IORESOURCE_IRQ) is not recommended for
+requesting IRQ's resources, as they can be not ready yet. Using
+platform_get_irq() instead is preferred for getting IRQ even if it
+was not retrieved earlier.
 
-drivers/clocksource/timer-ti-dm.c: In function 'omap_dm_timer_probe':
-drivers/clocksource/timer-ti-dm.c:798:13: warning: 'timer' may be used
-uninitialized in this function [-Wmaybe-uninitialized]
-
-On boot we now get:
-
-Unable to handle kernel NULL pointer dereference at virtual address
-00000004
-...
-(omap_dm_timer_probe) from [<c061ac7c>] (platform_drv_probe+0x48/0x98)
-(platform_drv_probe) from [<c0618c04>] (really_probe+0x1dc/0x348)
-(really_probe) from [<c0618ef4>] (driver_probe_device+0x5c/0x160)
-
-Let's fix the issue by moving platform_get_irq to happen after timer has
-been allocated.
-
-Fixes: bc83caddf17b ("clocksource/drivers/timer-ti-dm: Switch to platform_get_irq")
-Cc: Yangtao Li <tiny.windzz@gmail.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Acked-by: Olof Johansson <olof@lixom.net>
-Acked-by: Yangtao Li <tiny.windzz@gmail.com>
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200106203700.21009-1-tony@atomide.com
+Link: https://lore.kernel.org/r/20191221173027.30716-5-tiny.windzz@gmail.com
 ---
- drivers/clocksource/timer-ti-dm.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/clocksource/timer-ti-dm.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/clocksource/timer-ti-dm.c b/drivers/clocksource/timer-ti-dm.c
-index bd16efb2740b..269a994d6a99 100644
+index aa2ede266edf..bd16efb2740b 100644
 --- a/drivers/clocksource/timer-ti-dm.c
 +++ b/drivers/clocksource/timer-ti-dm.c
-@@ -795,14 +795,14 @@ static int omap_dm_timer_probe(struct platform_device *pdev)
+@@ -780,7 +780,6 @@ static int omap_dm_timer_probe(struct platform_device *pdev)
+ {
+ 	unsigned long flags;
+ 	struct omap_dm_timer *timer;
+-	struct resource *irq;
+ 	struct device *dev = &pdev->dev;
+ 	const struct dmtimer_platform_data *pdata;
+ 	int ret;
+@@ -796,11 +795,9 @@ static int omap_dm_timer_probe(struct platform_device *pdev)
  		return -ENODEV;
  	}
  
--	timer->irq = platform_get_irq(pdev, 0);
--	if (timer->irq < 0)
--		return timer->irq;
--
- 	timer = devm_kzalloc(dev, sizeof(*timer), GFP_KERNEL);
- 	if (!timer)
- 		return  -ENOMEM;
- 
+-	irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+-	if (unlikely(!irq)) {
+-		dev_err(dev, "%s: no IRQ resource.\n", __func__);
+-		return -ENODEV;
+-	}
 +	timer->irq = platform_get_irq(pdev, 0);
 +	if (timer->irq < 0)
 +		return timer->irq;
-+
- 	timer->fclk = ERR_PTR(-ENODEV);
- 	timer->io_base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(timer->io_base))
+ 
+ 	timer = devm_kzalloc(dev, sizeof(*timer), GFP_KERNEL);
+ 	if (!timer)
+@@ -830,7 +827,6 @@ static int omap_dm_timer_probe(struct platform_device *pdev)
+ 	if (pdata)
+ 		timer->errata = pdata->timer_errata;
+ 
+-	timer->irq = irq->start;
+ 	timer->pdev = pdev;
+ 
+ 	pm_runtime_enable(dev);
 -- 
 2.17.1
 
