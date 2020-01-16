@@ -2,192 +2,137 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A81C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAACC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 052912053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:01:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BDAB2072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:01:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S1T1m6ho"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437291AbgAPTB3 (ORCPT
+        id S2388800AbgAPRFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:01:29 -0500
-Received: from mga14.intel.com ([192.55.52.115]:12875 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388807AbgAPTB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 14:01:26 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 11:01:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,327,1574150400"; 
-   d="scan'208";a="220465275"
-Received: from otc-lr-04.jf.intel.com ([10.54.39.113])
-  by fmsmga008.fm.intel.com with ESMTP; 16 Jan 2020 11:01:13 -0800
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     eranian@google.com, ak@linux.intel.com,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [RESEND PATCH V3] perf/x86: Consider pinned events for group validation
-Date:   Thu, 16 Jan 2020 11:00:25 -0800
-Message-Id: <1579201225-178031-1-git-send-email-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 16 Jan 2020 12:05:53 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:33249 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388668AbgAPRFk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:05:40 -0500
+Received: by mail-qk1-f194.google.com with SMTP id d71so19817867qkc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 09:05:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RCX1DjLcpjcGUAoMpV6YYMWCiBCtakKXdZrlVb3Tyy8=;
+        b=S1T1m6ho4sRqkMHKBW/4e5n523sCceKbTikflTeOEt4Ig55bKYwBg0WI/OOe/h9fmL
+         ia8pZQExSIupL6JVJ+sDLATnarRN9Rwp2oQ4NU2Q9aWpDTPQlzwTuiL9oSdZh9+TJny9
+         Fi0sAVNH2N7CVKMj2EGMsU/C3E5Vbwx0YOx1YEPSh+bgapvW27Cadwyn3lT6o7zFCw5Q
+         nvSRsUX03Go7jC5R4TS/y+HxUP9kruyRp+YLnoG1Hzoo8RAUmDT4avJQ+w0m+zgrH9pS
+         Xq8zuCv1XgzqPMRIwjxWDWulmtxO/jJyBGhWIlVuZyN14e3Ky5VMKrKyUxnuNsP6rs6X
+         Tqag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RCX1DjLcpjcGUAoMpV6YYMWCiBCtakKXdZrlVb3Tyy8=;
+        b=bPShq2L5UPxiw0H3L8irRnybwcda1mPmkdJTVzjNGe3zj2tX0K1fpVNQkodZ5Y0l6y
+         f0XzG65q3nWfBHDvgPAwVNUYGFAOi8aLBT2fD2ElaRWIjr+z0Zg06bBVq0qaGRfKs1/i
+         /fi5WQD8peXoJLqDN7rRHfXww2U/3eIBhdzGOlvXM6KbLNcY69BhG2kwxXPdv8gz9xWj
+         DLGUuBJNQoo7G5BvDmdo7Kl0P7p/8UcRUca8VMDzOlDPzmrXqT+qe50WRyyGND0dRVAF
+         oPO9IYtEvfLHgidmeBYPdwzjz6gTbA1IcOS3fz/YxZmbJO92zwcREQvqrmRbapPNFZ+V
+         OsWw==
+X-Gm-Message-State: APjAAAVB0Vm8dYyQdg38TsmqsD4E/zjj4x7jMEF3xb2lugoqAw3ryVMh
+        B19ESt3ignhPCeX2L8KIwvzBBQXtzTuJFuziN4EPSA==
+X-Google-Smtp-Source: APXvYqz46vfy4a+FZ+d8DiyuvxPIYvotyQdaxCP2lI9+LYlkDskGYps8wvhne0M52AdO6zohUr0N1uDXfhZxmvbRnc8=
+X-Received: by 2002:a37:5841:: with SMTP id m62mr33034639qkb.256.1579194339123;
+ Thu, 16 Jan 2020 09:05:39 -0800 (PST)
+MIME-Version: 1.0
+References: <0000000000007523a60576e80a47@google.com> <CACT4Y+b3AmVQMjPNsPHOXRZS4tNYb6Z9h5-c=1ZwZk0VR-5J5Q@mail.gmail.com>
+ <20180928070042.GF3439@hirez.programming.kicks-ass.net> <CACT4Y+YFmSmXjs5EMNRPvsR-mLYeAYKypBppYq_M_boTi8a9uQ@mail.gmail.com>
+ <CACT4Y+ZBYYUiJejNbPcZWS+aHehvkgKkTKm0gvuviXGGcirJ5g@mail.gmail.com>
+ <CACT4Y+bTGp1J9Wn=93LUObdTcWPo2JrChYKF-1v6aXmtvoQgPQ@mail.gmail.com>
+ <CAM_iQpVtcNFeEtW15z_nZoyC1Q-_pCq+UfZ4vYBB3Lb2CMm4Mg@mail.gmail.com>
+ <CACT4Y+YuM55YUT37jwRP163J7ha25cN03sZ5WqTUPkz3e43Ggw@mail.gmail.com> <CAMArcTXq=nV5kNSdWPgvpMmYXuet9gxZgmxO2JJJ7_T3vLRoRg@mail.gmail.com>
+In-Reply-To: <CAMArcTXq=nV5kNSdWPgvpMmYXuet9gxZgmxO2JJJ7_T3vLRoRg@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 16 Jan 2020 18:05:26 +0100
+Message-ID: <CACT4Y+Y5+wma84Gofcm86KvOKw2niybPBTwz8iHzYW-ndFHH8g@mail.gmail.com>
+Subject: Re: BUG: MAX_LOCKDEP_CHAINS too low!
+To:     Taehee Yoo <ap420073@gmail.com>
+Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        syzbot <syzbot+aaa6fa4949cc5d9b7b25@syzkaller.appspotmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Thu, Jan 16, 2020 at 4:33 PM Taehee Yoo <ap420073@gmail.com> wrote:
+>
+> On Thu, 16 Jan 2020 at 14:25, Dmitry Vyukov <dvyukov@google.com> wrote:
+> >
+>
+> Hi Dmitry!
+>
+> > On Wed, Jan 15, 2020 at 10:53 PM Cong Wang <xiyou.wangcong@gmail.com> wrote:
+> > > > +Taehee, Cong,
+> > > >
+> > > > In the other thread Taehee mentioned the creation of dynamic keys for
+> > > > net devices that was added recently and that they are subject to some
+> > > > limits.
+> > > > syzkaller creates lots of net devices for isolation (several dozens
+> > > > per test process, but then these can be created and destroyed
+> > > > periodically). I wonder if it's the root cause of the lockdep limits
+> > > > problems?
+> > >
+> > > Very possibly. In current code base, there are 4 lockdep keys
+> > > per netdev:
+> > >
+> > >         struct lock_class_key   qdisc_tx_busylock_key;
+> > >         struct lock_class_key   qdisc_running_key;
+> > >         struct lock_class_key   qdisc_xmit_lock_key;
+> > >         struct lock_class_key   addr_list_lock_key;
+> > >
+> > > so the number of lockdep keys is at least 4x number of network
+> > > devices.
+> >
+> > And these are not freed/reused, right? So with dynamic keys LOCKDEP
+> > inherently can't handle prolonged running, only O(1) work?
+>
+> When netdev interface is removed, these dynamic keys are removed.
+> But if so many netdev interfaces are existing concurrently
+> (more than 2000), lockdep will stop because of a lack of keys.
+> In addition, as far as I know, freeing dynamic lockdep key routine is
+> slower than creating a new dynamic lockdep key. If there are so many
+> netdev interface add/delete operations, for a while, there may be no
+> available lockdep key. At this moment, lockdep will stop.
+>
+> Thank you
+> Taehee Yoo
 
-perf stat -M metrics relies on weak groups to reject unschedulable
-groups and run them as non-groups.
-This uses the group validation code in the kernel. Unfortunately
-that code doesn't take pinned events, such as the NMI watchdog, into
-account. So some groups can pass validation, but then later still
-never schedule.
 
-For example,
+This issues mostly stalled all syzbot testing by now, these LOCKDEP
+bugs are the only bugs that are being detected...
 
- $echo 1 > /proc/sys/kernel/nmi_watchdog
- $perf stat -M Page_Walks_Utilization
-
- Performance counter stats for 'system wide':
-
-     <not counted>      itlb_misses.walk_pending
-(0.00%)
-     <not counted>      dtlb_load_misses.walk_pending
-(0.00%)
-     <not counted>      dtlb_store_misses.walk_pending
-(0.00%)
-     <not counted>      ept.walk_pending
-(0.00%)
-     <not counted>      cycles
-(0.00%)
-
-       1.176613558 seconds time elapsed
-
-Current pinned events are always scheduled first. So the new group must
-can be scheduled together with current pinned events. Otherwise, it will
-never get a chance to be scheduled later.
-The trick is to pretend the current pinned events as part of the new
-group, and insert them into the fake_cpuc.
-The simulation result will tell if they can be scheduled successfully.
-The fake_cpuc never touch event state. The current pinned events will
-not be impacted.
-Disabling interrupts to prevent the events in current CPU's cpuc going
-away and getting freed.
-
-It won't catch all possible cases that cannot be scheduled, such as
-events pinned differently on different CPUs, or complicated constraints.
-The validation is based on current environment. It doesn't help on the
-case, which first create a group and then a pinned event, either.
-But for the most common case, the NMI watchdog interacting with the
-current perf metrics, it is strong enough.
-
-After applying the patch,
-
- $echo 1 > /proc/sys/kernel/nmi_watchdog
- $ perf stat -M Page_Walks_Utilization
-
- Performance counter stats for 'system wide':
-
-         2,491,910      itlb_misses.walk_pending  #      0.0
-Page_Walks_Utilization   (79.94%)
-        13,630,942      dtlb_load_misses.walk_pending
-(80.02%)
-           207,255      dtlb_store_misses.walk_pending
-(80.04%)
-                 0      ept.walk_pending
-(80.04%)
-       236,204,924      cycles
-(79.97%)
-
-       0.901785713 seconds time elapsed
-
-Reported-by: Stephane Eranian <eranian@google.com>
-Suggested-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
-
-Changes since V3:
-- Update comments (preemption is disabled as well)
-
-The V2 still only check current CPU's cpuc. Because I think we cannot
-prevent the cpuc in other CPU without a lock. Adding a lock will
-introduce extra overhead in some critical path, e.g. context switch.
-The patch is good enough for the common case. We may leave the other
-complicated cases as they are.
-
-Changes since V1:
-- Disabling interrupts to prevent the events in current CPU's cpuc
-  going away and getting freed.
-- Update comments and description
-
- arch/x86/events/core.c | 34 +++++++++++++++++++++++++++++++++-
- 1 file changed, 33 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 43d0918..c4d9e14 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2032,9 +2032,12 @@ static int validate_event(struct perf_event *event)
-  */
- static int validate_group(struct perf_event *event)
- {
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	struct perf_event *leader = event->group_leader;
- 	struct cpu_hw_events *fake_cpuc;
--	int ret = -EINVAL, n;
-+	struct perf_event *pinned_event;
-+	int ret = -EINVAL, n, i;
-+	unsigned long flags;
- 
- 	fake_cpuc = allocate_fake_cpuc();
- 	if (IS_ERR(fake_cpuc))
-@@ -2054,9 +2057,38 @@ static int validate_group(struct perf_event *event)
- 	if (n < 0)
- 		goto out;
- 
-+	/*
-+	 * Disable interrupts and preemption to prevent the events in this
-+	 * CPU's cpuc going away and getting freed.
-+	 */
-+	local_irq_save(flags);
-+
-+	/*
-+	 * The new group must can be scheduled together with current pinned
-+	 * events. Otherwise, it will never get a chance to be scheduled later.
-+	 *
-+	 * It won't catch all possible cases that cannot schedule, such as
-+	 * events pinned on CPU1, but the validation for a new CPU1 event
-+	 * running on other CPU. However, it's good enough to handle common
-+	 * cases like the global NMI watchdog.
-+	 */
-+	for (i = 0; i < cpuc->n_events; i++) {
-+		pinned_event = cpuc->event_list[i];
-+		if (WARN_ON_ONCE(!pinned_event))
-+			continue;
-+		if (!pinned_event->attr.pinned)
-+			continue;
-+		fake_cpuc->n_events = n;
-+		n = collect_events(fake_cpuc, pinned_event, false);
-+		if (n < 0)
-+			goto irq;
-+	}
-+
- 	fake_cpuc->n_events = 0;
- 	ret = x86_pmu.schedule_events(fake_cpuc, n, NULL);
- 
-+irq:
-+	local_irq_restore(flags);
- out:
- 	free_fake_cpuc(fake_cpuc);
- 	return ret;
--- 
-2.7.4
-
+2020/01/16 15:30:47 vm-2: crash: BUG: MAX_LOCKDEP_ENTRIES too low!
+2020/01/16 15:38:28 vm-3: crash: BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!
+2020/01/16 15:39:55 vm-0: crash: BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!
+2020/01/16 15:41:19 vm-6: crash: BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!
+2020/01/16 15:41:35 vm-1: crash: BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!
+2020/01/16 15:51:16 vm-2: crash: BUG: MAX_LOCKDEP_ENTRIES too low!
+2020/01/16 15:57:52 vm-4: crash: BUG: MAX_LOCKDEP_ENTRIES too low!
+2020/01/16 16:00:57 vm-6: crash: BUG: MAX_LOCKDEP_ENTRIES too low!
+2020/01/16 16:36:35 vm-1: crash: BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!
+2020/01/16 16:37:04 vm-3: crash: BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!
