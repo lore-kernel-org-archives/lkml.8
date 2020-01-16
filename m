@@ -2,110 +2,130 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F9D3C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 121E9C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14FE2207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:13:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B98F92077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:13:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="ivJGbNrK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=cyberus-technology.de header.i=@cyberus-technology.de header.b="WyfDzBV5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgAPONO (ORCPT
+        id S1726887AbgAPONR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 09:13:14 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:40745 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbgAPONO (ORCPT
+        Thu, 16 Jan 2020 09:13:17 -0500
+Received: from www413.your-server.de ([88.198.28.140]:38972 "EHLO
+        www413.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbgAPONP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 09:13:14 -0500
-Received: by mail-qk1-f195.google.com with SMTP id c17so19173943qkg.7
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 06:13:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=520l2JLiKzJXg1t/Rg1LJ2QfApYXnB06j0gidqNWK58=;
-        b=ivJGbNrKKevBAu3KtV1zpocVU5wd/m68yl62mnYvyvPVF8IJGvJlZNp6vb/jzePu1Y
-         zf8xk9JI9hC4MEsK7uuZYFsrH+fHx1I+w4azdTlESYba+4xdP+X1qopzcrcWeiORTygz
-         SRQ5jHvSLmjJWuX81TBQvRHo3mty6NG73RXCGWstN81R647lQsi0geld8aR51csMZoYE
-         k26lxx/+qK8hSO8W6/k/oHOHdy19CbgyIzTDlz3U5sgcH+RiBy2c12LOHHlFDQQfKrSy
-         ZGE3h8J8y6BhWBt2lQSPAieLjj/vaB6ptjZE6ZZjn8AuZtLua1uRakzC1Z0wv8sLyT+C
-         d8mA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=520l2JLiKzJXg1t/Rg1LJ2QfApYXnB06j0gidqNWK58=;
-        b=n/TiSFMFJnUQmBCR7LbxjHWOY2JeyH7egnQXOFnzdZwt4xocGZ3Kj8QaQZsSSlTp5F
-         xqtP4a5oB5cB82LePCNbIUqzsXiJh3gqRbjzJZgZkBC2OL8xWR8pXeaxWs7dnNfMjv4r
-         AIyPQZz6Ut7KJ+QRH1qFBfA+YRt14palPtn/FtMuc+ZOijilXo2UvAgZGCzl9+Xk9lKp
-         1vCGxdlGATevHiyNLzBpWn8geNb6XhD6270k6bUxlBJpVVDs5E9GOJjvL/6f4jhyBuV9
-         jtShm0w8PXMJ8dBl6ys+DigEy+S4LNSkAZhfVuM3DiafHUQaxICJVlxNjdxpblJ8ReRy
-         XpYQ==
-X-Gm-Message-State: APjAAAXY/zqorQu9k5QQtbRW5dxd7v6F9fYAD+u46qtJAF6nMP96oC5y
-        8aI5SQsTFOEOnT/v6P4YZHSrMA==
-X-Google-Smtp-Source: APXvYqwaAFHzaeePD+ZLa06AK6hw8Q1AGGqMYwQg3zqKNGu2Y61JuM5obBUDEaQ/+e046D9AnzZXAg==
-X-Received: by 2002:a37:b402:: with SMTP id d2mr31920622qkf.195.1579183993212;
-        Thu, 16 Jan 2020 06:13:13 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id h34sm11371081qtc.62.2020.01.16.06.13.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 16 Jan 2020 06:13:12 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1is5tX-00040h-V7; Thu, 16 Jan 2020 10:13:11 -0400
-Date:   Thu, 16 Jan 2020 10:13:11 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH v5 1/2] mm/mmu_notifier: make interval notifier updates
- safe
-Message-ID: <20200116141311.GB10759@ziepe.ca>
-References: <20191216195733.28353-1-rcampbell@nvidia.com>
- <20191216195733.28353-2-rcampbell@nvidia.com>
- <20200109194805.GK20978@mellanox.com>
- <73225ded-c22d-33f2-ebcb-b9e9aa95266b@nvidia.com>
- <20200109232548.GO20978@mellanox.com>
- <633a3dda-d4d7-1233-b290-53d36fb8fda1@nvidia.com>
- <20200114124523.GM20978@mellanox.com>
- <c9458a81-da38-928f-d8f3-814e06674bec@nvidia.com>
+        Thu, 16 Jan 2020 09:13:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=cyberus-technology.de; s=default1911; h=Content-Transfer-Encoding:
+        MIME-Version:Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:
+        Message-ID:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=U59tM/hjwBCgD+03ck/n2U6z9Uy02xUfGBDeEOA+9LE=; b=WyfDzBV5WGLSUyUA00FBOniqR
+        a9Gq85FImZoxDN+FVmHJM5WPuqtJNqSsD7kYaZBj+s4Xmy2Moas2+2QSyFhUZRMngFEhPt126BPHs
+        VnubuCv0JkpbhMzQgHPjWcyx+EBkqC55WkOp/Qv6pUL7FEAZZj4562jJAxepMlTyXqC2tcussZZet
+        BhBpEM4nKD5cZcSXKd7aCjUGXwUQHfmhJK6MX7wyDTb0BS09cdgDXghuEgkfnX3DEkGXMvuotYy+L
+        WYPxWE6bc2Y9rg3nrk0tJ/JFR3VnBOLRGdMI3Syz1AeuJdHqHo117g4GSOBcZfk+fwb9HrLGwqvSx
+        K4ZCQ+DNA==;
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+        by www413.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <julian.stecklina@cyberus-technology.de>)
+        id 1is5tQ-0002lH-BY; Thu, 16 Jan 2020 15:13:04 +0100
+Received: from [2a02:8106:231:700:38db:ba68:aa3a:bbaa] (helo=localhost.localdomain)
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <julian.stecklina@cyberus-technology.de>)
+        id 1is5tQ-0008eN-2d; Thu, 16 Jan 2020 15:13:04 +0100
+Message-ID: <9b32e225ee680e61716e300eb1ed8387599cc0dd.camel@cyberus-technology.de>
+Subject: Re: [RFC PATCH 4/4] drm/i915/gvt: move public gvt headers out into
+ global include
+From:   Julian Stecklina <julian.stecklina@cyberus-technology.de>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     intel-gvt-dev@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        zhiyuan.lv@intel.com, hang.yuan@intel.com,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Thomas Prescher <thomas.prescher@cyberus-technology.de>
+Date:   Thu, 16 Jan 2020 15:13:01 +0100
+In-Reply-To: <20200115152215.GA3830321@kroah.com>
+References: <4079ce7c26a2d2a3c7e0828ed1ea6008d6e2c805.camel@cyberus-technology.de>
+         <20200109171357.115936-1-julian.stecklina@cyberus-technology.de>
+         <20200109171357.115936-5-julian.stecklina@cyberus-technology.de>
+         <20200115152215.GA3830321@kroah.com>
+Organization: Cyberus Technology GmbH
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c9458a81-da38-928f-d8f3-814e06674bec@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: julian.stecklina@cyberus-technology.de
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25697/Thu Jan 16 12:42:45 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 02:04:47PM -0800, Ralph Campbell wrote:
+Hi Greg, Christoph,
 
-> But I see your point if this sequence is done outside of the invalidate
-> callback. In that case, if the driver shrank the interval, an invalidate
-> callback for the right hand side could be missed before the insertion of
-> the new interval for the right hand side.
-> I'll explain this in the comments for nouveau_svmm_do_unmap() and
-> dmirror_do_unmap().
+On Wed, 2020-01-15 at 16:22 +0100, Greg KH wrote:
+> On Thu, Jan 09, 2020 at 07:13:57PM +0200, Julian Stecklina wrote:
+> > Now that the GVT interface to hypervisors does not depend on i915/GVT
+> > internals anymore, we can move the headers to the global include/.
+> > 
+> > This makes out-of-tree modules for hypervisor integration possible.
+> 
+> What kind of out-of-tree modules do you need/want for this?
 
-Yes, this is why I'm not sure this is a good API for the core to
-expose.
+The mediated virtualization support in the i915 driver needs a backend to the
+hypervisor. There is currently one backend for KVM in the tree
+(drivers/gpu/drm/i915/gvt/kvmgt.c) and at least 3 other hypervisor backends out
+of tree in various states of development that I know of. We are currently
+developing one of these.
 
-Batch manipulations is a resonable thing, but it should be forced to
-work under safe conditions, ie while holding the required 'inv_begin'
-on the interval tree, and the batching APIs should assert this
-requirement.
+> 
+> Also, as Christoph said, adding exports for functions that are not used
+> by anything within the kernel tree itself is not ok, that's not how we
+> work.
 
-Jason
+The exports are used by the KVM hypervisor backend. The patchset I sent
+basically decouples KVMGT from i915 driver internals. So personally I would
+count this as a benefit in itself.
+
+There is already an indirection in place that looks like it is intended to
+decouple the hypervisor backends from the i915 driver core: intel_gvt_ops. This
+is a struct of function pointers that the hypervisor backend uses to talk to the
+GPU mediator code.
+
+Unfortunately, this struct doesn't cover all usecases and the KVM hypervisor
+backend directly touches the i915 devices' internal state in very few places. My
+current solution was to wrap these accesses in accessor functions and
+EXPORT_SYMBOL_GPL them.
+
+If the more acceptable solution is to add more function pointers to
+intel_gvt_ops instead of exporting symbols, I'm happy to go along this route.
+
+> And why do they somehow have to be out of the tree?  We want them in the
+> tree, and so should you, as it will save you time and money if they are.
+
+I also want these hypervisor backends in the tree, but from a development
+workflow having the ability to build them as a out-of-tree modules is very
+convenient. I guess this is also true for the developers working on the other
+hypervisor backends.
+
+When I looked at the status quo in i915/gvt a couple of weeks ago, it seemed
+like it would be a win for everyone. Let me just clearly say that we have no
+intention of doing binary blob drivers. :)
+
+Thanks,
+Julian
+
+[1] 
+https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/i915/gvt/gvt.h#L555
+
