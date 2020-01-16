@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 935FEC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC9AC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6564624683
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:10:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 825B8206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:10:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194611;
-	bh=9jFjZ5bu+tsaBRyIe6orZnczu0wyPfyxbPpkonaWPQQ=;
+	s=default; t=1579194613;
+	bh=TJeYjIHhNMiZ37QzlXdwOSx5qNMJPZ9IvTSccoEPWic=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YfTRjSSMacz17PGzjaKjTYVavAyk4i6W6Jpp6uysHZYb8eIgoLhqyKh2Q+jR0X2Fs
-	 7HNLkcrRUFQhLKqYbgQwOYqlh9E+37cTb6jmCAlyQKJvs+M19qwsZ0PgBLQj4PZ7t8
-	 hS6OXYARMfBqBdolgUn/lh2ddkyuXGYwda8/g4z8=
+	b=oDz91JIEGxpxvlW9du6Yi5gkGCKylTj7DZ9sSIniUY2VID87dmWz4YAiUvvzisEMM
+	 oxo4xGMqGraeY3oYIFeIKwmK2tdGpsLulbajMXXU+W6K67Y9AYPW8vqoDeWS/uesdA
+	 yKVi6xGJ/cpphrU8uUj93sQxqQqqh1OQ7bqyWE8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389855AbgAPRKK (ORCPT
+        id S2389866AbgAPRKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:10:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47170 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:10:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389804AbgAPRKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:10:00 -0500
+        id S2389472AbgAPRKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:10:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 471F324691;
-        Thu, 16 Jan 2020 17:09:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C300E2468B;
+        Thu, 16 Jan 2020 17:10:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194600;
-        bh=9jFjZ5bu+tsaBRyIe6orZnczu0wyPfyxbPpkonaWPQQ=;
+        s=default; t=1579194602;
+        bh=TJeYjIHhNMiZ37QzlXdwOSx5qNMJPZ9IvTSccoEPWic=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LHKLR1NLahz5oNRrkeG2y20REgXpWV2mcGbBbj+LR/mRHIPiJMp5uEj1ETDauSmtF
-         IO4IynIkjg/UMOUck50BDZdt/O7Dch/+x4g9rrewg0EEyWIfapTu7SLt/l0r9GAgbL
-         jHbc8Yf9aDz9XQE+Tx9YgRNSeBTkv4Bk2cTW/00k=
+        b=A5r9ZtMD/Xkf2pkecLYcP1Folb3hWpATx/l/HKsd7OiVqpw3AbLdx/cSIrZRLergw
+         HJGFjTxvEeIbB5+rRO/iick8M0bhLlWQmONRTB+/aEK/vsqn6179JAdblOR4d854TY
+         ISipe1oP/VgOGfzTiz/hXmg/+jY1lVYhXZ0iOacU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 468/671] libertas_tf: Use correct channel range in lbtf_geo_init
-Date:   Thu, 16 Jan 2020 12:01:46 -0500
-Message-Id: <20200116170509.12787-205-sashal@kernel.org>
+Cc:     Ruslan Bilovol <ruslan.bilovol@gmail.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 470/671] usb: host: xhci-hub: fix extra endianness conversion
+Date:   Thu, 16 Jan 2020 12:01:48 -0500
+Message-Id: <20200116170509.12787-207-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,36 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Ruslan Bilovol <ruslan.bilovol@gmail.com>
 
-[ Upstream commit 2ec4ad49b98e4a14147d04f914717135eca7c8b1 ]
+[ Upstream commit 6269e4c76eacabaea0d0099200ae1a455768d208 ]
 
-It seems we should use 'range' instead of 'priv->range'
-in lbtf_geo_init(), because 'range' is the corret one
-related to current regioncode.
+Don't do extra cpu_to_le32 conversion for
+put_unaligned_le32 because it is already implemented
+in this function.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 691cdb49388b ("libertas_tf: command helper functions for libertas_tf")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes sparse error:
+xhci-hub.c:1152:44: warning: incorrect type in argument 1 (different base types)
+xhci-hub.c:1152:44:    expected unsigned int [usertype] val
+xhci-hub.c:1152:44:    got restricted __le32 [usertype]
+
+Fixes: 395f540 "xhci: support new USB 3.1 hub request to get extended port status"
+Cc: Mathias Nyman <mathias.nyman@linux.intel.com>
+Signed-off-by: Ruslan Bilovol <ruslan.bilovol@gmail.com>
+Link: https://lore.kernel.org/r/1562501839-26522-1-git-send-email-ruslan.bilovol@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/libertas_tf/cmd.c | 2 +-
+ drivers/usb/host/xhci-hub.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/marvell/libertas_tf/cmd.c b/drivers/net/wireless/marvell/libertas_tf/cmd.c
-index 909ac3685010..2b193f1257a5 100644
---- a/drivers/net/wireless/marvell/libertas_tf/cmd.c
-+++ b/drivers/net/wireless/marvell/libertas_tf/cmd.c
-@@ -69,7 +69,7 @@ static void lbtf_geo_init(struct lbtf_private *priv)
- 			break;
+diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
+index 8f180bf7561a..9772c0de59b7 100644
+--- a/drivers/usb/host/xhci-hub.c
++++ b/drivers/usb/host/xhci-hub.c
+@@ -1104,7 +1104,7 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 			}
+ 			port_li = readl(ports[wIndex]->addr + PORTLI);
+ 			status = xhci_get_ext_port_status(temp, port_li);
+-			put_unaligned_le32(cpu_to_le32(status), &buf[4]);
++			put_unaligned_le32(status, &buf[4]);
  		}
- 
--	for (ch = priv->range.start; ch < priv->range.end; ch++)
-+	for (ch = range->start; ch < range->end; ch++)
- 		priv->channels[CHAN_TO_IDX(ch)].flags = 0;
- }
- 
+ 		break;
+ 	case SetPortFeature:
 -- 
 2.20.1
 
