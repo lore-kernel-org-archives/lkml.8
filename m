@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D35C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF9BC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1D1F20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AD91217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:07:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194445;
-	bh=FyBl76UQeAz82dh9GowjxKLn307tVpqGB2q7gUGV/V8=;
+	s=default; t=1579194451;
+	bh=fto6auODjSObhV4dyVgUD2pgW/Kn8GTtAltYPsvBTbo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IiE6YUAXDu65wiBJlVkOtYp2UMtUc1BPeXyZl9M85oVtdln5xQHU/at/O82z5zTZY
-	 g0UWEXK5txHv+cPj4jr4Zk9Wj8mKBufMDA4pxf3yP3s0v5eMYjj/j8DbPOLkpus2Zx
-	 DweXhol3tfPFKUzPADIpn4GHDMdV5Kh3LmIEPXEM=
+	b=ZWxXklOI9lv7n4FajIym9hUcTyDlCXlQ6GQJcnS7CqgN+bQrDW1cwJbXEBc/sUpSr
+	 BkWDHruDe+72RrH+FiksiMso0HXMvQFniMsNoZfGWXetqWl1cu47/DdG7h4wQKiahi
+	 uDTw5kf4gjoE1TmfcBQFU1T2HvC8SlG6NYnxths0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389162AbgAPRHX (ORCPT
+        id S2388695AbgAPRHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:07:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38792 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:07:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389119AbgAPRHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:07:15 -0500
+        id S2389142AbgAPRHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:07:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3766021582;
-        Thu, 16 Jan 2020 17:07:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4473B217F4;
+        Thu, 16 Jan 2020 17:07:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194434;
-        bh=FyBl76UQeAz82dh9GowjxKLn307tVpqGB2q7gUGV/V8=;
+        s=default; t=1579194438;
+        bh=fto6auODjSObhV4dyVgUD2pgW/Kn8GTtAltYPsvBTbo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GjUaKCH/h3m/sQYDgR+rPSJNxEhwsug5b4BVQA4LdmFof7/wgqa6GqdrsW2q4/+ry
-         DQh9psbfAgO4WWujpb4hX2IPf/oqvw5xC7IMhcCWGB9F9cqjC4itCGakgsY4f5Xya+
-         I2P+67swvzDYgMD12YdeS0ev0fXi5IBPUP42X25U=
+        b=YB8+BWK4k9qbUwLF5udjoGvu+QfsLG3hOJoe+lztIxMigh52Oq+qYdOUZ6vSg0HU6
+         tQ6NaPHaiYc3e3KPvGl7nITihYsT0jh9Vht25b1Wh9VH96qo/jYkdu+tMnTdWvPwI7
+         F+JhZGdLtfnH+CZ7vO4k4//Uj0k+7qpZ7aB2WApc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Westphal <fw@strlen.de>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        bridge@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 349/671] netfilter: ebtables: CONFIG_COMPAT: reject trailing data after last rule
-Date:   Thu, 16 Jan 2020 11:59:47 -0500
-Message-Id: <20200116170509.12787-86-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 352/671] ARM: riscpc: fix lack of keyboard interrupts after irq conversion
+Date:   Thu, 16 Jan 2020 11:59:50 -0500
+Message-Id: <20200116170509.12787-89-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -62,41 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 680f6af5337c98d116e4f127cea7845339dba8da ]
+[ Upstream commit 63a0666bca9311f35017be454587f3ba903644b8 ]
 
-If userspace provides a rule blob with trailing data after last target,
-we trigger a splat, then convert ruleset to 64bit format (with trailing
-data), then pass that to do_replace_finish() which then returns -EINVAL.
+Fix lack of keyboard interrupts for RiscPC due to incorrect conversion.
 
-Erroring out right away avoids the splat plus unneeded translation and
-error unwind.
-
-Fixes: 81e675c227ec ("netfilter: ebtables: add CONFIG_COMPAT support")
-Reported-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: e8d36d5dbb6a ("ARM: kill off set_irq_flags usage")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bridge/netfilter/ebtables.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/mach-rpc/irq.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
-index 785e19afd6aa..f59230e4fc29 100644
---- a/net/bridge/netfilter/ebtables.c
-+++ b/net/bridge/netfilter/ebtables.c
-@@ -2165,7 +2165,9 @@ static int compat_copy_entries(unsigned char *data, unsigned int size_user,
- 	if (ret < 0)
- 		return ret;
+diff --git a/arch/arm/mach-rpc/irq.c b/arch/arm/mach-rpc/irq.c
+index b8a61cb11207..7f0f40178634 100644
+--- a/arch/arm/mach-rpc/irq.c
++++ b/arch/arm/mach-rpc/irq.c
+@@ -118,7 +118,7 @@ extern unsigned char rpc_default_fiq_start, rpc_default_fiq_end;
  
--	WARN_ON(size_remaining);
-+	if (size_remaining)
-+		return -EINVAL;
-+
- 	return state->buf_kern_offset;
- }
+ void __init rpc_init_irq(void)
+ {
+-	unsigned int irq, clr, set = 0;
++	unsigned int irq, clr, set;
  
+ 	iomd_writeb(0, IOMD_IRQMASKA);
+ 	iomd_writeb(0, IOMD_IRQMASKB);
+@@ -130,6 +130,7 @@ void __init rpc_init_irq(void)
+ 
+ 	for (irq = 0; irq < NR_IRQS; irq++) {
+ 		clr = IRQ_NOREQUEST;
++		set = 0;
+ 
+ 		if (irq <= 6 || (irq >= 9 && irq <= 15))
+ 			clr |= IRQ_NOPROBE;
 -- 
 2.20.1
 
