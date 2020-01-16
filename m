@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63140C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F16EDC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DA972073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C02D221582
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:06:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197961;
-	bh=9ylBcB/tQCcPvViPr7XtyStbO6ARp/VIC4GaqzyRXIU=;
+	s=default; t=1579197963;
+	bh=9jFjZ5bu+tsaBRyIe6orZnczu0wyPfyxbPpkonaWPQQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PiQEJ/PiC+YiujMm+zS/RxYvw6v5VLw2BdgnzGBRR8sjotlJWqM3w7MpqX0yxFe3Q
-	 0V2A8jW4xerhH+mMZlhFsbD23kBuYreLhgubP4maKCjafOfdXXoAmfC+uFUzX4u0RZ
-	 o9gcxgON0SZ8MNlAsTF/J1/wPaVaaXRECovtgj0Y=
+	b=ebebZqO3pMn2dDSJ8JxInI3GYK9McZ88hj/OwvPJrQtG/aMC1nWj06HmaayTIrJtN
+	 /nUDaEaOF8k6AkGo8WGltJdMYPJdbBhRJ5U7e/fc8XgIiwRThyp4yDZc2oQd5NsdGs
+	 MhslBCNgYKW5j6lA7eMxWbC2wZPzl7ryaPYoCfvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393537AbgAPRjs (ORCPT
+        id S2407064AbgAPSGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:39:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55040 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:06:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393403AbgAPRi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:38:58 -0500
+        id S2404971AbgAPRjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:39:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C952246FC;
-        Thu, 16 Jan 2020 17:38:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8509824706;
+        Thu, 16 Jan 2020 17:39:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196338;
-        bh=9ylBcB/tQCcPvViPr7XtyStbO6ARp/VIC4GaqzyRXIU=;
+        s=default; t=1579196388;
+        bh=9jFjZ5bu+tsaBRyIe6orZnczu0wyPfyxbPpkonaWPQQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a8QemdCDDqTECeBlT9ZQHvxbl7qkaYZh2lFHpRrYuNw+FjfvJhqeycWxHkVtuUy40
-         su/yrq7FEOj1G8/tXdbLpEMMTLnrMdPOtx5BZbBGaqj1TVogxc/XOJAUOoemJN6ezS
-         Om/9+OhXOoH5ZshvPAVS6JIHZpAI0DEAy+07jnBU=
+        b=n/UC/PD+orpIpFOlSSqHxfJTvAzG9zDUHto12nPaRxunG+sqFk3Me6oixcnjLRLEm
+         xdVHmQdR5/gDQ+DYYRMyN17A1obOonpqaOUeMZa/PQIDS10pkdiE+aiU1Oc5dSW+/A
+         Zy20oVmGtkXJ6dLPGZazATIBtctSZsGSkYDfLdRM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 136/251] platform/x86: alienware-wmi: printing the wrong error code
-Date:   Thu, 16 Jan 2020 12:34:45 -0500
-Message-Id: <20200116173641.22137-96-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 169/251] libertas_tf: Use correct channel range in lbtf_geo_init
+Date:   Thu, 16 Jan 2020 12:35:18 -0500
+Message-Id: <20200116173641.22137-129-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -61,34 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 6d1f8b3d75419a8659ac916a1e9543bb3513a882 ]
+[ Upstream commit 2ec4ad49b98e4a14147d04f914717135eca7c8b1 ]
 
-The "out_data" variable is uninitialized at the point.  Originally, this
-used to print "status" instead and that seems like the correct thing to
-print.
+It seems we should use 'range' instead of 'priv->range'
+in lbtf_geo_init(), because 'range' is the corret one
+related to current regioncode.
 
-Fixes: bc2ef884320b ("alienware-wmi: For WMAX HDMI method, introduce a way to query HDMI cable status")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 691cdb49388b ("libertas_tf: command helper functions for libertas_tf")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/alienware-wmi.c | 2 +-
+ drivers/net/wireless/marvell/libertas_tf/cmd.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/alienware-wmi.c b/drivers/platform/x86/alienware-wmi.c
-index fe419935041c..bee2115ecf10 100644
---- a/drivers/platform/x86/alienware-wmi.c
-+++ b/drivers/platform/x86/alienware-wmi.c
-@@ -570,7 +570,7 @@ static ssize_t show_hdmi_source(struct device *dev,
- 			return scnprintf(buf, PAGE_SIZE,
- 					 "input [gpu] unknown\n");
- 	}
--	pr_err("alienware-wmi: unknown HDMI source status: %d\n", out_data);
-+	pr_err("alienware-wmi: unknown HDMI source status: %u\n", status);
- 	return scnprintf(buf, PAGE_SIZE, "input gpu [unknown]\n");
+diff --git a/drivers/net/wireless/marvell/libertas_tf/cmd.c b/drivers/net/wireless/marvell/libertas_tf/cmd.c
+index 909ac3685010..2b193f1257a5 100644
+--- a/drivers/net/wireless/marvell/libertas_tf/cmd.c
++++ b/drivers/net/wireless/marvell/libertas_tf/cmd.c
+@@ -69,7 +69,7 @@ static void lbtf_geo_init(struct lbtf_private *priv)
+ 			break;
+ 		}
+ 
+-	for (ch = priv->range.start; ch < priv->range.end; ch++)
++	for (ch = range->start; ch < range->end; ch++)
+ 		priv->channels[CHAN_TO_IDX(ch)].flags = 0;
  }
  
 -- 
