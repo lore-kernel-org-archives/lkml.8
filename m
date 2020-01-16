@@ -2,90 +2,114 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D3FC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE5FAC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 110E5206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9143C2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:10:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579201839;
+	bh=HFqQ0W3JycSYWn+f+r/CWjUm8NUhLCFnWIxVqNKY35k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=FtqIIyIMhw0epNq5K/MrKH2Ks2QMrZSp0Mpwdz6Ff9IKqQVsJJ3Js2pRuubixN09F
+	 AALzqm4Jecxn3q2nS5YWUzGjpUUUhFzoevZ8zzlCN5RmuWEojpkqr1llrugUYFACBA
+	 uMACsnBzzAKc+Il7WQArzOPJbfpMYOvMAaOYdvC8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437537AbgAPTKg convert rfc822-to-8bit (ORCPT
+        id S2387781AbgAPRA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:10:36 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:53049 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437450AbgAPTK2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 14:10:28 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1isAX2-0007HG-TQ; Thu, 16 Jan 2020 20:10:17 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 5F3FB101226; Thu, 16 Jan 2020 20:10:16 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Waiman Long <longman@redhat.com>,
-        Robert Richter <rrichter@marvell.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v2] watchdog: Fix possible soft lockup warning at bootup
-In-Reply-To: <9ae2ee4d-7b67-50ff-e736-1d51753c5ccd@redhat.com>
-Date:   Thu, 16 Jan 2020 20:10:16 +0100
-Message-ID: <87ftgffc9z.fsf@nanos.tec.linutronix.de>
+        Thu, 16 Jan 2020 12:00:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49836 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387724AbgAPRAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:00:19 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F0F720728;
+        Thu, 16 Jan 2020 17:00:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579194019;
+        bh=HFqQ0W3JycSYWn+f+r/CWjUm8NUhLCFnWIxVqNKY35k=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=MQDKTi6LWis57Y60hNL4/T6zVlJuVHu3LGO/kKIY9Q0FbgbCx86OtbgOpe588/+f6
+         5YA6YzAY/OnnS8AkaDp2RkN4xOYZv9SeCeuSdal8FS+8bFvJSfblp3h6PffloZ07Vs
+         pW6Lb3ruCTMsGHXADZMcENbuFKaE5O54vp8GAvCU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Liu Jian <liujian56@huawei.com>,
+        Hamish Martin <hamish.martin@alliedtelesis.co.nz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 140/671] driver: uio: fix possible use-after-free in __uio_register_device
+Date:   Thu, 16 Jan 2020 11:50:49 -0500
+Message-Id: <20200116165940.10720-23-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
+References: <20200116165940.10720-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Waiman Long <longman@redhat.com> writes:
+From: Liu Jian <liujian56@huawei.com>
 
-> On 1/16/20 11:57 AM, Thomas Gleixner wrote:
->>> So your theory the MONOTONIC clock runs differently/wrongly could
->>> explain that (assuming this drives the sched clock). Though, I am
->> No. sched_clock() is separate. It uses a raw timestamp (in your case
->> from the ARM arch timer) and converts it to something which is close to
->> proper time. So my assumption was based on the printout Waiman had:
->>
->>  [ 1... ] CPU.... watchdog_fn now  170000000
->>  [ 25.. ] CPU.... watchdog_fn now 4170000000
->>
->> I assumed that now comes from ktime_get() or something like
->> that. Waiman?
->
-> I printed out the now parameter of the  __hrtimer_run_queues() call.
+[ Upstream commit 221a1f4ac12d2ab46246c160b2e00d1b1160d5d9 ]
 
-Yes. That's clock MONOTONIC.
+In uio_dev_add_attributes() error handing case, idev is used after
+device_unregister(), in which 'idev' has been released, touch idev cause
+use-after-free.
 
-> So from the timer perspective, it is losing time. For watchdog, the soft
-> expiry time is 4s. The watchdog function won't be called until the
-> timer's time advances 4s or more. That corresponds to about 24s in
-> timestamp time for that particular class of systems.
+Fixes: a93e7b331568 ("uio: Prevent device destruction while fds are open")
+Signed-off-by: Liu Jian <liujian56@huawei.com>
+Reviewed-by: Hamish Martin <hamish.martin@alliedtelesis.co.nz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/uio/uio.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Right. And assumed that the firmware call is the culprit this has an
-explanation.
+diff --git a/drivers/uio/uio.c b/drivers/uio/uio.c
+index e4b418757017..9c788748bdc6 100644
+--- a/drivers/uio/uio.c
++++ b/drivers/uio/uio.c
+@@ -943,6 +943,7 @@ int __uio_register_device(struct module *owner,
+ 		return ret;
+ 	}
+ 
++	device_initialize(&idev->dev);
+ 	idev->dev.devt = MKDEV(uio_major, idev->minor);
+ 	idev->dev.class = &uio_class;
+ 	idev->dev.parent = parent;
+@@ -953,7 +954,7 @@ int __uio_register_device(struct module *owner,
+ 	if (ret)
+ 		goto err_device_create;
+ 
+-	ret = device_register(&idev->dev);
++	ret = device_add(&idev->dev);
+ 	if (ret)
+ 		goto err_device_create;
+ 
+@@ -985,9 +986,10 @@ int __uio_register_device(struct module *owner,
+ err_request_irq:
+ 	uio_dev_del_attributes(idev);
+ err_uio_dev_add_attributes:
+-	device_unregister(&idev->dev);
++	device_del(&idev->dev);
+ err_device_create:
+ 	uio_free_minor(idev);
++	put_device(&idev->dev);
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(__uio_register_device);
+-- 
+2.20.1
 
-Could you please take sched_clock() timestamps before and after the
-firmware call which kicks the secondary CPUs into life to verify that?
-
-They should sum up to the amount of time which gets lost accross
-smp_init().
-
-Thanks,
-
-        tglx
