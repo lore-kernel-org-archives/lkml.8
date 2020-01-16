@@ -2,52 +2,51 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 417D7C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8809BC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03D5E2072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 567AD2072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:29:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217356;
-	bh=AYrrjajashVILVcw4LRRvqc3zeVs4tG/2WfuTQkxp74=;
+	s=default; t=1579217360;
+	bh=IqO6GUM5+oe/Wr6novD80hwQbjL+DQlazjx76R8wrGg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0hk3wsKolxcehrwaG5KpXWzGYlv08eKN46wpoVLZbRMCec7t4ZPA3NMkujduf9SJq
-	 sBGSUC5p3x2b+x8AS5aWOUV+d5AEoK30nHJTP6Z7sIoEAZ4SCakasRQ4mg8mv+i12z
-	 WtiapwPVjGx+l1VZwgf4ImNI2KC3y8OtgbavFRLI=
+	b=B9qdzLM9PzI0MsCgFxPooAS1tHr6V8jacnPVf50IDECnqkhy9GVWUuK1/FHlhCS5y
+	 wvYUCfVo3yVjAqY0YU6VdSTAnya18oi6njfMBjcTTtzGAuet4BQng+I3ThG2XRCjKe
+	 MqzWGzyuTiIzjkhxhiIoPFSbUP796HtvBaNfJml0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391249AbgAPX3P (ORCPT
+        id S2391240AbgAPX3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:29:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34666 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:29:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389191AbgAPX3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:29:12 -0500
+        id S2391231AbgAPX3K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:29:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A02142072E;
-        Thu, 16 Jan 2020 23:29:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3626620684;
+        Thu, 16 Jan 2020 23:29:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217352;
-        bh=AYrrjajashVILVcw4LRRvqc3zeVs4tG/2WfuTQkxp74=;
+        s=default; t=1579217349;
+        bh=IqO6GUM5+oe/Wr6novD80hwQbjL+DQlazjx76R8wrGg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RVr50ibTXadI7DbHWd2A4HsX9iWlE9YiLs8LZIVNkLbz0+rrKwS6aikUuhqsCdmPe
-         mi0tAp0aihK3jkiePaVwHNj6dDieEvOZba2PRt9iBOGNS5x1aF6/J7ti7jvnbkvu5F
-         47xSRmHHK8Xyt+9IuFK6BCtBXwDTKJTKok4mQsZw=
+        b=EEPKfTDXqf5DnxkMj9YQMphsSUF2re98NLbVjA8p/O3yrAT1j7iBUONI71IoKVLYy
+         Wj1Llg45SHuIl9M5u2LIWv1HlA4F8Z0o5l9hZikaMZf64MlV6myNHWndm9CHLF1Ez7
+         87BLFGlw1FpfXITS4Br9uosvI7GXE2lGetitvZyY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 4.19 30/84] cifs: Adjust indentation in smb2_open_file
-Date:   Fri, 17 Jan 2020 00:18:04 +0100
-Message-Id: <20200116231717.245025122@linuxfoundation.org>
+        stable@vger.kernel.org, Marian Mihailescu <mihailescu2m@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH 4.19 47/84] clk: samsung: exynos5420: Preserve CPU clocks configuration during suspend/resume
+Date:   Fri, 17 Jan 2020 00:18:21 +0100
+Message-Id: <20200116231719.355968824@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
 References: <20200116231713.087649517@linuxfoundation.org>
@@ -60,45 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Marian Mihailescu <mihailescu2m@gmail.com>
 
-commit 7935799e041ae10d380d04ea23868240f082bd11 upstream.
+commit e21be0d1d7bd7f78a77613f6bcb6965e72b22fc1 upstream.
 
-Clang warns:
+Save and restore top PLL related configuration registers for big (APLL)
+and LITTLE (KPLL) cores during suspend/resume cycle. So far, CPU clocks
+were reset to default values after suspend/resume cycle and performance
+after system resume was affected when performance governor has been selected.
 
-../fs/cifs/smb2file.c:70:3: warning: misleading indentation; statement
-is not part of the previous 'if' [-Wmisleading-indentation]
-         if (oparms->tcon->use_resilient) {
-         ^
-../fs/cifs/smb2file.c:66:2: note: previous statement is here
-        if (rc)
-        ^
-1 warning generated.
-
-This warning occurs because there is a space after the tab on this line.
-Remove it so that the indentation is consistent with the Linux kernel
-coding style and clang no longer warns.
-
-Fixes: 592fafe644bf ("Add resilienthandles mount parm")
-Link: https://github.com/ClangBuiltLinux/linux/issues/826
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Fixes: 773424326b51 ("clk: samsung: exynos5420: add more registers to restore list")
+Signed-off-by: Marian Mihailescu <mihailescu2m@gmail.com>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smb2file.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/samsung/clk-exynos5420.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/fs/cifs/smb2file.c
-+++ b/fs/cifs/smb2file.c
-@@ -67,7 +67,7 @@ smb2_open_file(const unsigned int xid, s
- 		goto out;
- 
- 
--	 if (oparms->tcon->use_resilient) {
-+	if (oparms->tcon->use_resilient) {
- 		nr_ioctl_req.Timeout = 0; /* use server default (120 seconds) */
- 		nr_ioctl_req.Reserved = 0;
- 		rc = SMB2_ioctl(xid, oparms->tcon, fid->persistent_fid,
+--- a/drivers/clk/samsung/clk-exynos5420.c
++++ b/drivers/clk/samsung/clk-exynos5420.c
+@@ -171,6 +171,8 @@ static const unsigned long exynos5x_clk_
+ 	GATE_BUS_CPU,
+ 	GATE_SCLK_CPU,
+ 	CLKOUT_CMU_CPU,
++	APLL_CON0,
++	KPLL_CON0,
+ 	CPLL_CON0,
+ 	DPLL_CON0,
+ 	EPLL_CON0,
 
 
