@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA00C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FABC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81A1424685
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B7D82467A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194577;
-	bh=PEm+bMJbk/ztRxGX3pMP4loztHjfCNeyUsny1mCgJ7c=;
+	s=default; t=1579194580;
+	bh=aFuI9s9qrYGvRS3aJIBpExQNugQRFOhhIn8THPtBKoo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OeEK925OisU4b9q4+f2lI3HDNa4H+/DVjTves1kb3rTXTO9xUVune9sxcPbikS4P1
-	 lT6qTAvDoI9V6GBtcit9plbydIP4r9AVMPeMLN8r4jBwIirC3+up5hgXevzct6bm9c
-	 HGIB7OS5WhJ3MA7BLqfS/KctC27fsMiWqvFqnH+0=
+	b=WTU1NdD+Q5BIwycp5maUQUFxfw0YUjRIyyr21BRVrIcIaidGoLURF4uOc+QSyKHAc
+	 MwEZe3dg+l/suOXBVAKPYWTJNy8XacyYnPEp54QBa26TfsioKtcneATyiFwH5BG9Gy
+	 rNBkrYnl3EPH4Yo2xKq27abLFwk8hTDWKQ/hTbUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389711AbgAPRJg (ORCPT
+        id S2389724AbgAPRJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:09:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45394 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:09:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389283AbgAPRJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:09:27 -0500
+        id S2389689AbgAPRJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:09:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCDE52467A;
-        Thu, 16 Jan 2020 17:09:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C19B24686;
+        Thu, 16 Jan 2020 17:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194566;
-        bh=PEm+bMJbk/ztRxGX3pMP4loztHjfCNeyUsny1mCgJ7c=;
+        s=default; t=1579194569;
+        bh=aFuI9s9qrYGvRS3aJIBpExQNugQRFOhhIn8THPtBKoo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DDwmW6kiU/bcq2j1fmxZohvs888Ylny+MNgxnLQNAuOVFPzCpKBeLylL4IZphC+Oi
-         Vwo1tnRDXTRYECLGlnuwzFRZVIIPZhteHeCR5vr8B0FeiDQ8KCq7GsbF/OX7NrVXtT
-         q+GbgcHgL25BzPK3yKpXpk2e6PKgILffOp3WLU68=
+        b=g6Wwm9cfTpwTEcc321Q2yGt7PJg9zR1zcxvro7wJCQCwpbYJ9CN3zB5HSdZb2u03A
+         FjsznxaEvP+2INjOWgjUZb7H7HqUPAFVtDiEYrtxyFUUUa9f9L6qXOIbwsr/ukV//t
+         ZYcIlPFZoU66wqlVewQfSOGqZG1krmDDSHk4ydcg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 445/671] xprtrdma: Fix use-after-free in rpcrdma_post_recvs
-Date:   Thu, 16 Jan 2020 12:01:23 -0500
-Message-Id: <20200116170509.12787-182-sashal@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        "Robert R . Howell" <RHowell@uwyo.edu>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 447/671] PM: ACPI/PCI: Resume all devices during hibernation
+Date:   Thu, 16 Jan 2020 12:01:25 -0500
+Message-Id: <20200116170509.12787-184-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,40 +62,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-[ Upstream commit 2d0abe36cf13fb7b577949fd1539326adddcc9bc ]
+[ Upstream commit 501debd4aa5edc755037c39ea5a8fba23b41e580 ]
 
-Dereference wr->next /before/ the memory backing wr has been
-released. This issue was found by code inspection. It is not
-expected to be a significant problem because it is in an error
-path that is almost never executed.
+Both the PCI bus type and the ACPI PM domain avoid resuming
+runtime-suspended devices with DPM_FLAG_SMART_SUSPEND set during
+hibernation (before creating the snapshot image of system memory),
+but that turns out to be a mistake.  It leads to functional issues
+and adds complexity that's hard to justify.
 
-Fixes: 7c8d9e7c8863 ("xprtrdma: Move Receive posting to ... ")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+For this reason, resume all runtime-suspended PCI devices and all
+devices in the ACPI PM domains before creating a snapshot image of
+system memory during hibernation.
+
+Fixes: 05087360fd7a (ACPI / PM: Take SMART_SUSPEND driver flag into account)
+Fixes: c4b65157aeef (PCI / PM: Take SMART_SUSPEND driver flag into account)
+Link: https://lore.kernel.org/linux-acpi/917d4399-2e22-67b1-9d54-808561f9083f@uwyo.edu/T/#maf065fe6e4974f2a9d79f332ab99dfaba635f64c
+Reported-by: Robert R. Howell <RHowell@uwyo.edu>
+Tested-by: Robert R. Howell <RHowell@uwyo.edu>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/xprtrdma/verbs.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/acpi/device_pm.c | 13 +++++++------
+ drivers/pci/pci-driver.c | 16 ++++++++--------
+ 2 files changed, 15 insertions(+), 14 deletions(-)
 
-diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index 5ddbf227e7c6..2a1d8ec7f706 100644
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -1558,10 +1558,11 @@ rpcrdma_post_recvs(struct rpcrdma_xprt *r_xprt, bool temp)
- 	rc = ib_post_recv(r_xprt->rx_ia.ri_id->qp, wr,
- 			  (const struct ib_recv_wr **)&bad_wr);
- 	if (rc) {
--		for (wr = bad_wr; wr; wr = wr->next) {
-+		for (wr = bad_wr; wr;) {
- 			struct rpcrdma_rep *rep;
+diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
+index e0927c5fd282..11b7a1632e5a 100644
+--- a/drivers/acpi/device_pm.c
++++ b/drivers/acpi/device_pm.c
+@@ -1116,13 +1116,14 @@ EXPORT_SYMBOL_GPL(acpi_subsys_resume_early);
+ int acpi_subsys_freeze(struct device *dev)
+ {
+ 	/*
+-	 * This used to be done in acpi_subsys_prepare() for all devices and
+-	 * some drivers may depend on it, so do it here.  Ideally, however,
+-	 * runtime-suspended devices should not be touched during freeze/thaw
+-	 * transitions.
++	 * Resume all runtime-suspended devices before creating a snapshot
++	 * image of system memory, because the restore kernel generally cannot
++	 * be expected to always handle them consistently and they need to be
++	 * put into the runtime-active metastate during system resume anyway,
++	 * so it is better to ensure that the state saved in the image will be
++	 * always consistent with that.
+ 	 */
+-	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND))
+-		pm_runtime_resume(dev);
++	pm_runtime_resume(dev);
  
- 			rep = container_of(wr, struct rpcrdma_rep, rr_recv_wr);
-+			wr = wr->next;
- 			rpcrdma_recv_buffer_put(rep);
- 			--count;
- 		}
+ 	return pm_generic_freeze(dev);
+ }
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index e69af9b8361d..5def4b74d54a 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -996,15 +996,15 @@ static int pci_pm_freeze(struct device *dev)
+ 	}
+ 
+ 	/*
+-	 * This used to be done in pci_pm_prepare() for all devices and some
+-	 * drivers may depend on it, so do it here.  Ideally, runtime-suspended
+-	 * devices should not be touched during freeze/thaw transitions,
+-	 * however.
++	 * Resume all runtime-suspended devices before creating a snapshot
++	 * image of system memory, because the restore kernel generally cannot
++	 * be expected to always handle them consistently and they need to be
++	 * put into the runtime-active metastate during system resume anyway,
++	 * so it is better to ensure that the state saved in the image will be
++	 * always consistent with that.
+ 	 */
+-	if (!dev_pm_smart_suspend_and_suspended(dev)) {
+-		pm_runtime_resume(dev);
+-		pci_dev->state_saved = false;
+-	}
++	pm_runtime_resume(dev);
++	pci_dev->state_saved = false;
+ 
+ 	if (pm->freeze) {
+ 		int error;
 -- 
 2.20.1
 
