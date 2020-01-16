@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2601CC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7E6C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4F2720684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA5E620684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:23:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579216989;
-	bh=NwfYSZRZH0kb1dydif8obU3YW+j3+UU9L10pLsDIZwY=;
+	s=default; t=1579216992;
+	bh=kJNnl/UzmoXOLMb8P8vtHUTkV0BMt3uFLWsw58WtJzI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XAP2Y973HxUt59O7NwtHHcSXZRvXyyirmuwmmVuar9cZYrI7JsfqUhdX2iz67Nw/z
-	 gJn4hLD+6cC5eKtdsrrf6PK3jYxaZzUOeDWXEMmCudfi4TRAD9K++SguYyEz4MVw2i
-	 F/4fZw6Q6DnquWQeWkw0Wf8LNNuiaeAHC0qq2EYE=
+	b=dcGI62J4JMNcCFKvKzoLQpwc0og3DpLDn6hIRnqu4BRxUk+/+E6MSsAqHyMGz+uec
+	 WH3HJ1gluznvU8v5oUXudn0kwmqOi3xRrPhFFCk9mclYRNEgfsoTUqYZwCONmWkJ0Q
+	 CI6oBcLJJJUpstZ22cFLcv6cD5uUWBuLNsIdltSk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730197AbgAPXXI (ORCPT
+        id S2387922AbgAPXXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:23:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51100 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:23:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731268AbgAPXXE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:23:04 -0500
+        id S2387865AbgAPXXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:23:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 488642073A;
-        Thu, 16 Jan 2020 23:23:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCD9820684;
+        Thu, 16 Jan 2020 23:23:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216983;
-        bh=NwfYSZRZH0kb1dydif8obU3YW+j3+UU9L10pLsDIZwY=;
+        s=default; t=1579216986;
+        bh=kJNnl/UzmoXOLMb8P8vtHUTkV0BMt3uFLWsw58WtJzI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=le5dEZcbTRbXzlhvnxoFWm/MHTltHZ2f0c7PBiVUSJZ6DE9vNbDHTdc7RiuUxvyK2
-         GXWNovWRWAkTZwgUroRFoC4oOhiND8Y5mRWAUfnERuxPdwUwgRy/NTrCXkBdRPMj2N
-         YvLa+htAISoSza5h8LTg/sqXnd45X/F0kS3E3EX8=
+        b=n+0AU8Q0XR3AEzml5YSuyiEVXmQw2wl8c+EkRZK/ZYoGoV0ejzXXWQB0t3dZV7r3y
+         8AlTKmVbBH1e/MPQVnoI7An8vrrvakoXfD/5gan7oWembYL52QRNI0Y7Eu58pj6WDl
+         7eHU1sxRC+kgH/mUWkzfaPNqJwsIA59bbimKTnTY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.4 100/203] crypto: arm64/aes-neonbs - add return value of skcipher_walk_done() in __xts_crypt()
-Date:   Fri, 17 Jan 2020 00:16:57 +0100
-Message-Id: <20200116231754.355010543@linuxfoundation.org>
+        stable@vger.kernel.org,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Luo Jiaxing <luojiaxing@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.4 085/203] scsi: enclosure: Fix stale device oops with hot replug
+Date:   Fri, 17 Jan 2020 00:16:42 +0100
+Message-Id: <20200116231752.791827377@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -60,35 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunfeng Ye <yeyunfeng@huawei.com>
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
 
-commit 9b537997b669c42cec67893538037e8d1c83c91c upstream.
+commit 529244bd1afc102ab164429d338d310d5d65e60d upstream.
 
-A warning is found by the static code analysis tool:
-  "Identical condition 'err', second condition is always false"
+Doing an add/remove/add on a SCSI device in an enclosure leads to an oops
+caused by poisoned values in the enclosure device list pointers.  The
+reason is because we are keeping the enclosure device across the enclosed
+device add/remove/add but the current code is doing a
+device_add/device_del/device_add on it.  This is the wrong thing to do in
+sysfs, so fix it by not doing a device_del on the enclosure device simply
+because of a hot remove of the drive in the slot.
 
-Fix this by adding return value of skcipher_walk_done().
+[mkp: added missing email addresses]
 
-Fixes: 67cfa5d3b721 ("crypto: arm64/aes-neonbs - implement ciphertext stealing for XTS")
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 43d8eb9cfd0a ("[SCSI] ses: add support for enclosure component hot removal")
+Link: https://lore.kernel.org/r/1578532892.3852.10.camel@HansenPartnership.com
+Signed-off-by: James Bottomley <James.Bottomley@HansenPartnership.com>
+Reported-by: Luo Jiaxing <luojiaxing@huawei.com>
+Tested-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/crypto/aes-neonbs-glue.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/misc/enclosure.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/arch/arm64/crypto/aes-neonbs-glue.c
-+++ b/arch/arm64/crypto/aes-neonbs-glue.c
-@@ -384,7 +384,7 @@ static int __xts_crypt(struct skcipher_r
- 			goto xts_tail;
- 
- 		kernel_neon_end();
--		skcipher_walk_done(&walk, nbytes);
-+		err = skcipher_walk_done(&walk, nbytes);
+--- a/drivers/misc/enclosure.c
++++ b/drivers/misc/enclosure.c
+@@ -406,10 +406,9 @@ int enclosure_remove_device(struct enclo
+ 		cdev = &edev->component[i];
+ 		if (cdev->dev == dev) {
+ 			enclosure_remove_links(cdev);
+-			device_del(&cdev->cdev);
+ 			put_device(dev);
+ 			cdev->dev = NULL;
+-			return device_add(&cdev->cdev);
++			return 0;
+ 		}
  	}
- 
- 	if (err || likely(!tail))
+ 	return -ENODEV;
 
 
