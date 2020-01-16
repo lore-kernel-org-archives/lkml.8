@@ -2,171 +2,127 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C32C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53ADAC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AB3A206D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 297C3206D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:26:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fKo3K68q"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SVxAUh98"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgAPQ0e (ORCPT
+        id S1726982AbgAPQ0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:26:34 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26014 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726343AbgAPQ0e (ORCPT
+        Thu, 16 Jan 2020 11:26:38 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:50940 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726088AbgAPQ0h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:26:34 -0500
+        Thu, 16 Jan 2020 11:26:37 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579191993;
+        s=mimecast20190719; t=1579191996;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=LQlxSqbAz5Gg0CkQad070bTz8F2AX6/N+P9B7+hnGDo=;
-        b=fKo3K68q54zdlfew/C5LpHN6rVj40ArTeHZSQ7mBl/cZH8h7SQhPfYmfctU/BkepHQvfdx
-        jU3l/ckmBUSRaOD5CHxf1xl40507i7B6EVuJpP1X8rB3u3PfhEuPtrqwzQ1lMTg0fkaRI9
-        xwfCjk8p0B0IgT2VZkzk1q6QPCHakrQ=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-6-0SksJhezMXOl6o633zV7og-1; Thu, 16 Jan 2020 11:26:31 -0500
-X-MC-Unique: 0SksJhezMXOl6o633zV7og-1
-Received: by mail-wr1-f71.google.com with SMTP id y7so9474317wrm.3
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 08:26:31 -0800 (PST)
+        bh=G6RNGzjUW843+AgIaDtl8qCHGuApw8Cu8ZmlHAq9RaQ=;
+        b=SVxAUh98rP5ybdTpel0kaXdzL/gJDg0alW01oJAdh5ESptSMDT0CmRPG+9qpRyE3WzQFUz
+        /9C3I9KUl+4HlDpl2j8cFZKtaAGa7cyRbPaxA7XTtDp+IWcqqLFB2SdBuKcFvcDa/tXx7U
+        99Z+eBpma+cnca64lXGOse2bD5mEazU=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-341-kX5aq_m0NJGNs9GdP1eJVQ-1; Thu, 16 Jan 2020 11:26:34 -0500
+X-MC-Unique: kX5aq_m0NJGNs9GdP1eJVQ-1
+Received: by mail-wm1-f69.google.com with SMTP id o24so695605wmh.0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 08:26:34 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=LQlxSqbAz5Gg0CkQad070bTz8F2AX6/N+P9B7+hnGDo=;
-        b=diqiyi6sFmyaH5cQ7g4qfeHWawCiJYKoFL8GG838nD6BCZr+D1fXY3au4xYS5R9TYN
-         nJCRBHx79uXqS5lYwlJJM9z2YXsbAr+4E7G3Kzy2x3TMrWZlcV628t5rdlDa0V87TgRc
-         BZUvzyoG7/16w3LlZGh5eGVy27hybPCfeq40YJhZpZa6vOpeoDfcwQA3GkpWW3AEVS3z
-         aOl81mhOQSSCUlLCxdqRg7hBgM1ivDzxS+ShnEnulTAaCEdzkMoaXakHggqMyapxMX2p
-         Ng9lN/hP2Htd5YYTxTc8gkNozzkeP3//Lf8UnQoa0eYjnFYNId9xY4h+7zNLcNQpSFPN
-         RGOQ==
-X-Gm-Message-State: APjAAAWOODjH5sIVyaey/+Usc1Fy9FWJLzLTIIXxwa03jkGSiScMAHUG
-        G5Sr04Z8P2vCK78100zlYz9oLkYM4hTcTeu0+AldMhorWU+o5pqszgZToiwTFtHkYL54vy9FVTO
-        /gD2ThWpBaD/qtbV2SRHC2Qvk
-X-Received: by 2002:a7b:c5cd:: with SMTP id n13mr6855364wmk.172.1579191990296;
-        Thu, 16 Jan 2020 08:26:30 -0800 (PST)
-X-Google-Smtp-Source: APXvYqz9EJwBuG6ODNlyZBGksf47bJ8nGES+4PVLl9IGi7RpL8xuA0/DC21LXggZnSo0PfYTMZWZmA==
-X-Received: by 2002:a7b:c5cd:: with SMTP id n13mr6855343wmk.172.1579191990037;
-        Thu, 16 Jan 2020 08:26:30 -0800 (PST)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id t12sm29701964wrs.96.2020.01.16.08.26.28
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=G6RNGzjUW843+AgIaDtl8qCHGuApw8Cu8ZmlHAq9RaQ=;
+        b=F7E30YLf2y/mfdaERfMUxlKfiPZwBWpqMM3s1dlZh3uK+g5l5EQ7XRtrDDArA4mT38
+         lqw+20mpA1ytYb6+QyagnavwJnnQMzdqkQB3gMnolq7kaKnaHFsSbLgf4KEiOenq3lc9
+         mhJ7mjbtKKqOsAPSlcbw6iUyMAO9JY1fL2YcK2bnC0FwtTxV9FZ/xXjepyUux5NOIY4t
+         y9Q1dI6EjsSDOs+ikFsXS15YekPtclV0nlPDnvyae5f/xp1PnZFPiC12MnryDyffkChR
+         Oux249pEc3g/sj8Wdr91mIz4Mnz62lJBqjEGb+KQjGqcr937nHuxWMBB9YBXrFW4CS03
+         AJJA==
+X-Gm-Message-State: APjAAAUN8LBTxNyNpEdKGHZX9rMdHK3Bz9G6v4HVRsC7bBcrwPWhuHXZ
+        fdardq3MPp/0dnKOM9aMbzQXIRMXco7Uf1/RMNdQpF1k6kj2Q0m1KJE4wKzcO/jrDTsa/OqHfhH
+        G3HDiDpQwD5QKSZq6QrowcxNW
+X-Received: by 2002:a7b:c38c:: with SMTP id s12mr179122wmj.96.1579191993842;
+        Thu, 16 Jan 2020 08:26:33 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyVNkRUOY54Y/ZYMQW77kBEaygl5YC6rGuaZPyaPFrmI7SCRCZD7H/YaLgWR5CAcTzkjJR9eg==
+X-Received: by 2002:a7b:c38c:: with SMTP id s12mr179105wmj.96.1579191993610;
+        Thu, 16 Jan 2020 08:26:33 -0800 (PST)
+Received: from steredhat (host84-49-dynamic.31-79-r.retail.telecomitalia.it. [79.31.49.84])
+        by smtp.gmail.com with ESMTPSA id p18sm5370071wmb.8.2020.01.16.08.26.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 08:26:29 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     lantianyu1986@gmail.com
-Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, sashal@kernel.org,
-        michael.h.kelley@microsoft.com
-Subject: Re: [PATCH V2] x86/Hyper-V: Balloon up according to request page number
-In-Reply-To: <20200116141600.23391-1-Tianyu.Lan@microsoft.com>
-References: <20200116141600.23391-1-Tianyu.Lan@microsoft.com>
-Date:   Thu, 16 Jan 2020 17:26:28 +0100
-Message-ID: <87tv4vgyff.fsf@vitty.brq.redhat.com>
+        Thu, 16 Jan 2020 08:26:32 -0800 (PST)
+Date:   Thu, 16 Jan 2020 17:26:30 +0100
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] io_uring: wakeup threads waiting for EPOLLOUT events
+Message-ID: <20200116162630.6r3xc55kdyyq5tvz@steredhat>
+References: <20200116134946.184711-1-sgarzare@redhat.com>
+ <2d2dda92-3c50-ee62-5ffe-0589d4c8fc0d@kernel.dk>
+ <20200116155557.mwjc7vu33xespiag@steredhat>
+ <5723453a-9326-e954-978e-910b8b495b38@kernel.dk>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5723453a-9326-e954-978e-910b8b495b38@kernel.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-lantianyu1986@gmail.com writes:
+On Thu, Jan 16, 2020 at 09:00:24AM -0700, Jens Axboe wrote:
+> On 1/16/20 8:55 AM, Stefano Garzarella wrote:
+> > On Thu, Jan 16, 2020 at 08:29:07AM -0700, Jens Axboe wrote:
+> >> On 1/16/20 6:49 AM, Stefano Garzarella wrote:
+> >>> io_uring_poll() sets EPOLLOUT flag if there is space in the
+> >>> SQ ring, then we should wakeup threads waiting for EPOLLOUT
+> >>> events when we expose the new SQ head to the userspace.
+> >>>
+> >>> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> >>> ---
+> >>>
+> >>> Do you think is better to change the name of 'cq_wait' and 'cq_fasync'?
+> >>
+> >> I honestly think it'd be better to have separate waits for in/out poll,
+> >> the below patch will introduce some unfortunate cacheline traffic
+> >> between the submitter and completer side.
+> > 
+> > Agree, make sense. I'll send a v2 with a new 'sq_wait'.
+> > 
+> > About fasync, do you think could be useful the POLL_OUT support?
+> > In this case, maybe is not simple to have two separate fasync_struct,
+> > do you have any advice?
+> 
+> The fasync should not matter, it's all in the checking of whether the sq
+> side has any sleepers. This is rarely going to be the case, so as long
+> as we can keep the check cheap, then I think we're fine.
 
-> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
->
-> Current code has assumption that balloon request memory size aligns
-> with 2MB. But actually Hyper-V doesn't guarantee such alignment. When
-> balloon driver receives non-aligned balloon request, it produces warning
-> and balloon up more memory than requested in order to keep 2MB alignment.
-> Remove the warning and balloon up memory according to actual requested
-> memory size.
->
-> Fixes: f6712238471a ("hv: hv_balloon: avoid memory leak on alloc_error of 2MB memory block")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> ---
-> Change since v2:
->     - Change logic of switching alloc_unit from 2MB to 4KB
->     in the balloon_up() to avoid redundant iteration when
->     handle non-aligned page request.
->     - Remove 2MB alignment operation and comment in balloon_up()
-> ---
->  drivers/hv/hv_balloon.c | 12 ++++--------
->  1 file changed, 4 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-> index 7f3e7ab22d5d..536807efbc35 100644
-> --- a/drivers/hv/hv_balloon.c
-> +++ b/drivers/hv/hv_balloon.c
-> @@ -1684,7 +1684,7 @@ static unsigned int alloc_balloon_pages(struct hv_dynmem_device *dm,
->  	if (num_pages < alloc_unit)
->  		return 0;
->  
-> -	for (i = 0; (i * alloc_unit) < num_pages; i++) {
-> +	for (i = 0; i < num_pages / alloc_unit; i++) {
->  		if (bl_resp->hdr.size + sizeof(union dm_mem_page_range) >
->  			HV_HYP_PAGE_SIZE)
->  			return i * alloc_unit;
-> @@ -1722,7 +1722,7 @@ static unsigned int alloc_balloon_pages(struct hv_dynmem_device *dm,
->  
->  	}
->  
-> -	return num_pages;
-> +	return i * alloc_unit;
->  }
->  
->  static void balloon_up(union dm_msg_info *msg_info)
-> @@ -1737,9 +1737,6 @@ static void balloon_up(union dm_msg_info *msg_info)
->  	long avail_pages;
->  	unsigned long floor;
->  
-> -	/* The host balloons pages in 2M granularity. */
-> -	WARN_ON_ONCE(num_pages % PAGES_IN_2M != 0);
-> -
->  	/*
->  	 * We will attempt 2M allocations. However, if we fail to
->  	 * allocate 2M chunks, we will go back to PAGE_SIZE allocations.
-> @@ -1749,14 +1746,13 @@ static void balloon_up(union dm_msg_info *msg_info)
->  	avail_pages = si_mem_available();
->  	floor = compute_balloon_floor();
->  
-> -	/* Refuse to balloon below the floor, keep the 2M granularity. */
-> +	/* Refuse to balloon below the floor. */
->  	if (avail_pages < num_pages || avail_pages - num_pages < floor) {
->  		pr_warn("Balloon request will be partially fulfilled. %s\n",
->  			avail_pages < num_pages ? "Not enough memory." :
->  			"Balloon floor reached.");
->  
->  		num_pages = avail_pages > floor ? (avail_pages - floor) : 0;
-> -		num_pages -= num_pages % PAGES_IN_2M;
->  	}
->  
->  	while (!done) {
-> @@ -1770,7 +1766,7 @@ static void balloon_up(union dm_msg_info *msg_info)
->  		num_ballooned = alloc_balloon_pages(&dm_device, num_pages,
->  						    bl_resp, alloc_unit);
->  
-> -		if (alloc_unit != 1 && num_ballooned == 0) {
-> +		if (alloc_unit != 1 && num_ballooned != num_pages) {
->  			alloc_unit = 1;
->  			continue;
->  		}
+Right.
 
-Thank you for addressing my comments on v1, this all looks good to me
-now so:
+> 
+> Since the use case is mostly single submitter, unless you're doing
+> something funky or unusual, you're not going to be needing POLLOUT ever.
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+The case that I had in mind was with kernel side polling enabled and
+a single submitter that can use epoll() to wait free slots in the SQ
+ring. (I don't have a test, maybe I can write one...)
 
--- 
-Vitaly
+> Hence I don't want to add any cost for it, I'd even advocate just doing
+> waitqueue_active() perhaps, if we can safely pull it off.
+
+I'll try!
+
+Thanks,
+Stefano
 
