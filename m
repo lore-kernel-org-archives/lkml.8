@@ -2,127 +2,157 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A28C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 141C8C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 967342474C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:44:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E273B24776
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:45:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196696;
-	bh=qmjLCbfQKX13aq2gy6zUekqoctbef1EOkzCXBZbK+zg=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=g0rnKZIEj9ZVZ8hY3Bmd0q3z9q2kioASKJcpA9x/ldqYEKjOXWrfC+VOEQrWai7YH
-	 2YCtf3rL+6fn6tw/sh3A+rF8CHZoc9kDJlL6DxDKMNqtGnwSp1gmmZFpSecVVeMDaG
-	 x8ieioIIR0VHkqJM2uIwaqTssyjLjIqLYltso7F8=
+	s=default; t=1579196702;
+	bh=c3ZG/5qWqwG2BVgKAWARfygrxw58Z6v2wDO+fEzRY00=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0FL1vVcw1NRDPjADxw8fUr2yx3CdCclHxmu2NI4IxQjTWwNG67HXozQq0PkYyghhB
+	 skPmACioPAJqbk/FW0CZnXUi4/93OI4SQrEw/mmmR05IIPS6NRw2FcZTidLZhFwJbs
+	 G8bH3YpxdLpGHnVKbIg47Jq1Gwd6kc1770p+E5DA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406008AbgAPRoz (ORCPT
+        id S2406038AbgAPRpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:44:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35516 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:45:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394176AbgAPRoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:44:30 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2405823AbgAPRoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:44:34 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B51624761;
-        Thu, 16 Jan 2020 17:44:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91D572474D;
+        Thu, 16 Jan 2020 17:44:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196670;
-        bh=qmjLCbfQKX13aq2gy6zUekqoctbef1EOkzCXBZbK+zg=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=YTGwgwmWb32UjsVSCOMqIL6CkchqelmJN8BFTIXQr4OSEpqZDt56wJ0o5qv1EAKgE
-         ksRUXljCc+Kjw3ijLCCBBrg1Ho5y4NbPDypw6sOII/drjZfXkrCX1TBH4zEBHSX/8z
-         LmGtRQ32R8dTbPRynOJaw5II7Ucp5QoHpyJIYkXU=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 851A735227B9; Thu, 16 Jan 2020 09:44:29 -0800 (PST)
-Date:   Thu, 16 Jan 2020 09:44:29 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH 1/1] rcu/tree: support kfree_bulk() interface in
- kfree_rcu()
-Message-ID: <20200116174429.GW2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191231122241.5702-1-urezki@gmail.com>
- <20200116011410.GC246464@google.com>
- <20200116024126.GS2935@paulmck-ThinkPad-P72>
- <20200116172753.GB23524@pc636>
+        s=default; t=1579196673;
+        bh=c3ZG/5qWqwG2BVgKAWARfygrxw58Z6v2wDO+fEzRY00=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fxjelLjRMTYRZ2Pze3QZYTG/EuvOxqufQzffD85IYPwSWy8j52HIt2tR8ponuSvMG
+         e5OQd1QxtJjcKjAjBANOz7J3a9QlEWrMfKm5KqebCPXU5i8UK7Jbn1qlo2aa8zST+p
+         Jd3VfwWiqZ8ZLvTOoJZp5AE2HNpubtEShs1w9hgc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        Giridhar Malavali <giridhar.malavali@qlogic.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 073/174] scsi: qla2xxx: Unregister chrdev if module initialization fails
+Date:   Thu, 16 Jan 2020 12:41:10 -0500
+Message-Id: <20200116174251.24326-73-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
+References: <20200116174251.24326-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200116172753.GB23524@pc636>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 06:27:53PM +0100, Uladzislau Rezki wrote:
-> On Wed, Jan 15, 2020 at 06:41:26PM -0800, Paul E. McKenney wrote:
-> > On Wed, Jan 15, 2020 at 08:14:10PM -0500, Joel Fernandes wrote:
-> > > On Tue, Dec 31, 2019 at 01:22:41PM +0100, Uladzislau Rezki (Sony) wrote:
-> > > > kfree_rcu() logic can be improved further by using kfree_bulk()
-> > > > interface along with "basic batching support" introduced earlier.
-> > > > 
-> > > > The are at least two advantages of using "bulk" interface:
-> > > > - in case of large number of kfree_rcu() requests kfree_bulk()
-> > > >   reduces the per-object overhead caused by calling kfree()
-> > > >   per-object.
-> > > > 
-> > > > - reduces the number of cache-misses due to "pointer chasing"
-> > > >   between objects which can be far spread between each other.
-> > > > 
-> > > > This approach defines a new kfree_rcu_bulk_data structure that
-> > > > stores pointers in an array with a specific size. Number of entries
-> > > > in that array depends on PAGE_SIZE making kfree_rcu_bulk_data
-> > > > structure to be exactly one page.
-> > > > 
-> > > > Since it deals with "block-chain" technique there is an extra
-> > > > need in dynamic allocation when a new block is required. Memory
-> > > > is allocated with GFP_NOWAIT | __GFP_NOWARN flags, i.e. that
-> > > > allows to skip direct reclaim under low memory condition to
-> > > > prevent stalling and fails silently under high memory pressure.
-> > > > 
-> > > > The "emergency path" gets maintained when a system is run out
-> > > > of memory. In that case objects are linked into regular list
-> > > > and that is it.
-> > > > 
-> > > > In order to evaluate it, the "rcuperf" was run to analyze how
-> > > > much memory is consumed and what is kfree_bulk() throughput.
-> > > > 
-> > > > Testing on the HiKey-960, arm64, 8xCPUs with below parameters:
-> > > > 
-> > > > CONFIG_SLAB=y
-> > > > kfree_loops=200000 kfree_alloc_num=1000 kfree_rcu_test=1
-> > > > 
-> > > > 102898760401 ns, loops: 200000, batches: 5822, memory footprint: 158MB
-> > > > 89947009882  ns, loops: 200000, batches: 6715, memory footprint: 115MB
-> > > > 
-> > > > rcuperf shows approximately ~12% better throughput(Total time)
-> > > > in case of using "bulk" interface. The "drain logic" or its RCU
-> > > > callback does the work faster that leads to better throughput.
-> > > 
-> > > Tested-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > 
-> > > (Vlad is going to post a v2 which fixes a debugobjects bug but that should
-> > > not have any impact on testing).
-> > 
-> > Very good!  Uladzislau, could you please add Joel's Tested-by in
-> > your next posting?
-> > 
-> I will add for sure, with the a V2 version. Also, i will update the
-> commit message by adding the results related to different slab cache
-> usage, i mean with Joel's recent patch.
+From: Bart Van Assche <bvanassche@acm.org>
 
-Sounds good, looking forward to it!
+[ Upstream commit c794d24ec9eb6658909955772e70f34bef5b5b91 ]
 
-							Thanx, Paul
+If module initialization fails after the character device has been
+registered, unregister the character device. Additionally, avoid
+duplicating error path code.
+
+Cc: Himanshu Madhani <hmadhani@marvell.com>
+Cc: Giridhar Malavali <giridhar.malavali@qlogic.com>
+Fixes: 6a03b4cd78f3 ("[SCSI] qla2xxx: Add char device to increase driver use count") # v2.6.35.
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/scsi/qla2xxx/qla_os.c | 34 +++++++++++++++++++++-------------
+ 1 file changed, 21 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index 611a127f08d8..8975baab73e5 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -5780,8 +5780,7 @@ qla2x00_module_init(void)
+ 	/* Initialize target kmem_cache and mem_pools */
+ 	ret = qlt_init();
+ 	if (ret < 0) {
+-		kmem_cache_destroy(srb_cachep);
+-		return ret;
++		goto destroy_cache;
+ 	} else if (ret > 0) {
+ 		/*
+ 		 * If initiator mode is explictly disabled by qlt_init(),
+@@ -5800,11 +5799,10 @@ qla2x00_module_init(void)
+ 	qla2xxx_transport_template =
+ 	    fc_attach_transport(&qla2xxx_transport_functions);
+ 	if (!qla2xxx_transport_template) {
+-		kmem_cache_destroy(srb_cachep);
+ 		ql_log(ql_log_fatal, NULL, 0x0002,
+ 		    "fc_attach_transport failed...Failing load!.\n");
+-		qlt_exit();
+-		return -ENODEV;
++		ret = -ENODEV;
++		goto qlt_exit;
+ 	}
+ 
+ 	apidev_major = register_chrdev(0, QLA2XXX_APIDEV, &apidev_fops);
+@@ -5816,27 +5814,37 @@ qla2x00_module_init(void)
+ 	qla2xxx_transport_vport_template =
+ 	    fc_attach_transport(&qla2xxx_transport_vport_functions);
+ 	if (!qla2xxx_transport_vport_template) {
+-		kmem_cache_destroy(srb_cachep);
+-		qlt_exit();
+-		fc_release_transport(qla2xxx_transport_template);
+ 		ql_log(ql_log_fatal, NULL, 0x0004,
+ 		    "fc_attach_transport vport failed...Failing load!.\n");
+-		return -ENODEV;
++		ret = -ENODEV;
++		goto unreg_chrdev;
+ 	}
+ 	ql_log(ql_log_info, NULL, 0x0005,
+ 	    "QLogic Fibre Channel HBA Driver: %s.\n",
+ 	    qla2x00_version_str);
+ 	ret = pci_register_driver(&qla2xxx_pci_driver);
+ 	if (ret) {
+-		kmem_cache_destroy(srb_cachep);
+-		qlt_exit();
+-		fc_release_transport(qla2xxx_transport_template);
+-		fc_release_transport(qla2xxx_transport_vport_template);
+ 		ql_log(ql_log_fatal, NULL, 0x0006,
+ 		    "pci_register_driver failed...ret=%d Failing load!.\n",
+ 		    ret);
++		goto release_vport_transport;
+ 	}
+ 	return ret;
++
++release_vport_transport:
++	fc_release_transport(qla2xxx_transport_vport_template);
++
++unreg_chrdev:
++	if (apidev_major >= 0)
++		unregister_chrdev(apidev_major, QLA2XXX_APIDEV);
++	fc_release_transport(qla2xxx_transport_template);
++
++qlt_exit:
++	qlt_exit();
++
++destroy_cache:
++	kmem_cache_destroy(srb_cachep);
++	return ret;
+ }
+ 
+ /**
+-- 
+2.20.1
+
