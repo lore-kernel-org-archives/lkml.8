@@ -2,145 +2,104 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC9AC32771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9EBC32771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBF632467E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C44D8214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:01:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IO231mF6"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XeFvjIGU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729835AbgAPDAI (ORCPT
+        id S1730242AbgAPDBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 22:00:08 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31480 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729130AbgAPDAI (ORCPT
+        Wed, 15 Jan 2020 22:01:03 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:38494 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729130AbgAPDBD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 22:00:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579143606;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QYDIddpraf1y7iH1YrZ3bXVk4InOC/gXpwyEqB+s6Kg=;
-        b=IO231mF6hW35fStU+BMazWebu3yMedee2DQz/xpNv3+NRLQ6G4jVA9+l0nlHKAxWnQGHA5
-        hM/KzC7QLcKBZUhy+dkbHDLEzQPh76h/G8OTj6wjJ/50O4fQk7AKljNbDr/a5n+yWWS7op
-        Z0CyAv6qRXGwe/ms4ejhjb2gHDD4YCA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-344-VmuSj52CP52FZ32jsTdlSA-1; Wed, 15 Jan 2020 22:00:05 -0500
-X-MC-Unique: VmuSj52CP52FZ32jsTdlSA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 66E9F107ACC7;
-        Thu, 16 Jan 2020 03:00:03 +0000 (UTC)
-Received: from x1.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 452F088898;
-        Thu, 16 Jan 2020 03:00:00 +0000 (UTC)
-Date:   Wed, 15 Jan 2020 19:59:59 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Mika =?UTF-8?B?UGVudHRpbMOk?= <mika.penttila@nextfour.com>
-Cc:     Yan Zhao <yan.y.zhao@intel.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "peterx@redhat.com" <peterx@redhat.com>
-Subject: Re: [PATCH v2 1/2] vfio: introduce vfio_dma_rw to read/write a
- range of IOVAs
-Message-ID: <20200115195959.28f33078@x1.home>
-In-Reply-To: <80cf3888-2e51-3fd7-a064-213e7ded188e@nextfour.com>
-References: <20200115034132.2753-1-yan.y.zhao@intel.com>
-        <20200115035303.12362-1-yan.y.zhao@intel.com>
-        <20200115130638.6926dd08@w520.home>
-        <80cf3888-2e51-3fd7-a064-213e7ded188e@nextfour.com>
-Organization: Red Hat
+        Wed, 15 Jan 2020 22:01:03 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G2s9po082540;
+        Thu, 16 Jan 2020 03:00:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=pYqAmex2w8tiqRFaW1jCj7M1ge+Xb9hYqrytKH/JEAk=;
+ b=XeFvjIGUPyf29kMh8ImLl2O8tLws5Dpngfve2rdjFNyrahC6qPrSwT8uP8DTIDrzVt9E
+ TdfEszW+xlQMWpnA4ymFOwYi/XayCp6Hat9P6r23Kho90QjA7bDi/1mSgAHA1fhdCkaC
+ Rf1Tyb0++XNvC7lNs4dG23GsJxSdm02oCP97k6gkturjqDOx8fBg/7r1rJb6btxniAOv
+ zCrYvaR2Uon48gIymJ+oVr7HKhB0HjibEIOTdy1VlbLkr6sskl3VMoIKmmVm9fis0k3x
+ Ylag6tlfcc/IdygHQrjwvL6sVhdNfLLL09vSeUrEZyRJ0QWm+QWptGdEYNTuXB3lE/wy fw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2xf73yqvvt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jan 2020 03:00:30 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G2sbY5151689;
+        Thu, 16 Jan 2020 03:00:29 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2xj1asnarp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jan 2020 03:00:29 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00G30QFJ026830;
+        Thu, 16 Jan 2020 03:00:27 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 15 Jan 2020 19:00:26 -0800
+To:     Stanley Chu <stanley.chu@mediatek.com>
+Cc:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>, <beanhuo@micron.com>,
+        <asutoshd@codeaurora.org>, <cang@codeaurora.org>,
+        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>
+Subject: Re: [PATCH v1 0/3] scsi: ufs: fix error history and complete device reset history
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <1578147968-30938-1-git-send-email-stanley.chu@mediatek.com>
+Date:   Wed, 15 Jan 2020 22:00:22 -0500
+In-Reply-To: <1578147968-30938-1-git-send-email-stanley.chu@mediatek.com>
+        (Stanley Chu's message of "Sat, 4 Jan 2020 22:26:05 +0800")
+Message-ID: <yq1ftggp0l5.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001160023
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001160023
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Jan 2020 02:30:52 +0000
-Mika Penttil=C3=A4 <mika.penttila@nextfour.com> wrote:
 
-> On 15.1.2020 22.06, Alex Williamson wrote:
-> > On Tue, 14 Jan 2020 22:53:03 -0500
-> > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> > =20
-> >> vfio_dma_rw will read/write a range of user space memory pointed to by
-> >> IOVA into/from a kernel buffer without pinning the user space memory.
-> >>
-> >> TODO: mark the IOVAs to user space memory dirty if they are written in
-> >> vfio_dma_rw().
-> >>
-> >> Cc: Kevin Tian <kevin.tian@intel.com>
-> >> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-> >> ---
-> >>   drivers/vfio/vfio.c             | 45 +++++++++++++++++++
-> >>   drivers/vfio/vfio_iommu_type1.c | 76 +++++++++++++++++++++++++++++++=
-++
-> >>   include/linux/vfio.h            |  5 +++
-> >>   3 files changed, 126 insertions(+)
-> >>
-> >> diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
-> >> index c8482624ca34..8bd52bc841cf 100644
-> >> --- a/drivers/vfio/vfio.c
-> >> +++ b/drivers/vfio/vfio.c
-> >> @@ -1961,6 +1961,51 @@ int vfio_unpin_pages(struct device *dev, unsign=
-ed long *user_pfn, int npage)
-> >>   }
-> >>   EXPORT_SYMBOL(vfio_unpin_pages);
-> >>  =20
-> >> +/*
-> >> + * Read/Write a range of IOVAs pointing to user space memory into/fro=
-m a kernel
-> >> + * buffer without pinning the user space memory
-> >> + * @dev [in]  : device
-> >> + * @iova [in] : base IOVA of a user space buffer
-> >> + * @data [in] : pointer to kernel buffer
-> >> + * @len [in]  : kernel buffer length
-> >> + * @write     : indicate read or write
-> >> + * Return error code on failure or 0 on success.
-> >> + */
-> >> +int vfio_dma_rw(struct device *dev, dma_addr_t iova, void *data,
-> >> +		   size_t len, bool write)
-> >> +{
-> >> +	struct vfio_container *container;
-> >> +	struct vfio_group *group;
-> >> +	struct vfio_iommu_driver *driver;
-> >> +	int ret =3D 0; =20
->=20
-> Do you know the iova given to vfio_dma_rw() is indeed a gpa and not iova=
-=20
-> from a iommu mapping? So isn't it you actually assume all the guest is=20
-> pinned,
-> like from device assignment?
->=20
-> Or who and how is the vfio mapping added before the vfio_dma_rw() ?
+Stanley,
 
-vfio only knows about IOVAs, not GPAs.  It's possible that IOVAs are
-identity mapped to the GPA space, but a VM with a vIOMMU would quickly
-break any such assumption.  Pinning is also not required.  This access
-is via the CPU, not the I/O device, so we don't require the memory to
-be pinning and it potentially won't be for a non-IOMMU backed mediated
-device.  The intention here is that via the mediation of an mdev
-device, a vendor driver would already know IOVA ranges for the device
-to access via the guest driver programming of the device.  Thanks,
+> This series targets on UFS error history fixes and feature add-on,
+>
+> 1. Fix empty check logic while outputing error history.
+> 2. Add device reset history events for vendor's implementations.
+> 3. Remove dummy word in output format.
 
-Alex
+Applied to 5.6/scsi-queue, thanks!
 
+-- 
+Martin K. Petersen	Oracle Linux Engineering
