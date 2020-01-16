@@ -6,341 +6,133 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C1EC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 04:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FC1C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 541CB20730
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 04:59:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0D9320730
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:02:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="EqouT2wd"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="R/eZmHbI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731134AbgAPE73 (ORCPT
+        id S1726329AbgAPFCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 23:59:29 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:50621 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729339AbgAPE71 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 23:59:27 -0500
-Received: by mail-pj1-f65.google.com with SMTP id r67so956688pjb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 20:59:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=z53UVTG1ULBtuQ1LxJSMm2czmwa20G9F5OXvojD1fg4=;
-        b=EqouT2wdXqN1P+58/nsi+jjWzQLgcj9AN6PZTr19+cMUQN8vJOX2b6/2cytgshraVC
-         MCw+W4Jx5RyzzuqKK1jSYSd7s5eMNO7LSeFi3Ls2ELmvP1wPt8gPodExGcnRr3ZhwNL4
-         Z1Vjo+jqVuv+tsA5Zc9mTWjAzFkl6HAQYpp58=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=z53UVTG1ULBtuQ1LxJSMm2czmwa20G9F5OXvojD1fg4=;
-        b=PDtqBe2o9yu2TGXQi42jsEYJLinJjUmG4ZNZUnmn8vnkDBJvAwOCllTQCpOB26vpZT
-         IuPpfdPILnZhbAI6/28DisaNM4kTbOHFCXu1OVbMOv7N4ek2FrxiOc5kH+lxAatzxd/t
-         27o1vLB3nKlrnY9XLMD4wy+QWLsEwiyIWFpYqhJTESZPRk9AVqPCQ34X1jZBRlCPkBiC
-         PTSK+hXEG64vSMcAQotvhSVx/xrXAmIZt2xerGMSJFu/UxUI6ZXKVuCiv7xZRA9Iomq7
-         ze/BwEWWHNYiR6wUQm3ntniZhEp71yyo8yvuTnX7zW5OB4uwF7jHmdRaCWPLrPhpEmT9
-         ehmg==
-X-Gm-Message-State: APjAAAXRL7OVDW78WrFYwGaAOPMtVLNJ95Dgn2UeBcac/zdL2WesfJD7
-        Iorqj+ZCPfIpcjlDP5MExnPLgA==
-X-Google-Smtp-Source: APXvYqwgktfuhUsaY0HteVcfjC3WijSpm6UzLF4FmlDIvzRuKy0dAkwLDNlttgNukSCAUan9c5j+sg==
-X-Received: by 2002:a17:90a:238b:: with SMTP id g11mr4528703pje.128.1579150766876;
-        Wed, 15 Jan 2020 20:59:26 -0800 (PST)
-Received: from localhost (2001-44b8-1113-6700-097c-7eed-afd4-cd15.static.ipv6.internode.on.net. [2001:44b8:1113:6700:97c:7eed:afd4:cd15])
-        by smtp.gmail.com with ESMTPSA id i9sm24055664pfk.24.2020.01.15.20.59.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 20:59:26 -0800 (PST)
-From:   Daniel Axtens <dja@axtens.net>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>
-Subject: Re: [PATCH 2/2] string.h: fix incompatibility between FORTIFY_SOURCE and KASAN
-In-Reply-To: <CACT4Y+bxh1OmV64Z-EZrYk-otW9q_fxiHnvrE_VMYj-=YAk2Bg@mail.gmail.com>
-References: <20200115063710.15796-1-dja@axtens.net> <20200115063710.15796-3-dja@axtens.net> <CACT4Y+bxh1OmV64Z-EZrYk-otW9q_fxiHnvrE_VMYj-=YAk2Bg@mail.gmail.com>
-Date:   Thu, 16 Jan 2020 15:59:22 +1100
-Message-ID: <8736cgkndh.fsf@dja-thinkpad.axtens.net>
+        Thu, 16 Jan 2020 00:02:44 -0500
+Received: from ozlabs.org ([203.11.71.1]:59861 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725768AbgAPFCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 00:02:43 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47ysWg0nWlz9sPW;
+        Thu, 16 Jan 2020 16:02:39 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1579150960;
+        bh=tcjsFmtE6rwms6qQPruMfvGEI5InVaCHB4/OPSGS+T8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=R/eZmHbITuTL8Zh8t8EDnHVIYtwWdYLbUOh8TabazN+bkU578Ncpg9PZF62He+lsK
+         X24MIwG6OQKNkOKURecrQ4oeUDCGXbWoDOVh6hWeH+1dAPn7NeqY94C/GHQA07Ab4T
+         nHUtxonLzSC8E7PrKwLp6xza3EQTq82thEu2Uq0cE/BLNzZAeOSKL42jv0g4ia1EbW
+         0qNrSwpKVweZDx6oTH2ZcIWNzXaJH9qE8uQe3IqdXZXsgTe8aMmuabvKG/Ns87/3W5
+         51hMagjPvz38pNrN4EzskidTlzV8au75HSI4NcCA8dDoNV4FyHK+Ysfs0X8n/61Q1c
+         IxJ+OHvrVj0yQ==
+Date:   Thu, 16 Jan 2020 16:02:38 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Christoph Hellwig <hch@lst.de>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Julia Lawall <Julia.Lawall@inria.fr>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: linux-next: manual merge of the generic-ioremap tree with the
+ drm-misc tree
+Message-ID: <20200116160238.6cbdc6b0@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; boundary="Sig_/i2nN6Em1mLxCXpTGTPgmt4/";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dmitry Vyukov <dvyukov@google.com> writes:
+--Sig_/i2nN6Em1mLxCXpTGTPgmt4/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> On Wed, Jan 15, 2020 at 7:37 AM Daniel Axtens <dja@axtens.net> wrote:
->>
->> The memcmp KASAN self-test fails on a kernel with both KASAN and
->> FORTIFY_SOURCE.
->>
->> When FORTIFY_SOURCE is on, a number of functions are replaced with
->> fortified versions, which attempt to check the sizes of the operands.
->> However, these functions often directly invoke __builtin_foo() once they
->> have performed the fortify check. Using __builtins may bypass KASAN
->> checks if the compiler decides to inline it's own implementation as
->> sequence of instructions, rather than emit a function call that goes out
->> to a KASAN-instrumented implementation.
->>
->> Why is only memcmp affected?
->> ============================
->>
->> Of the string and string-like functions that kasan_test tests, only memcmp
->> is replaced by an inline sequence of instructions in my testing on x86 with
->> gcc version 9.2.1 20191008 (Ubuntu 9.2.1-9ubuntu2).
->>
->> I believe this is due to compiler heuristics. For example, if I annotate
->> kmalloc calls with the alloc_size annotation (and disable some fortify
->> compile-time checking!), the compiler will replace every memset except the
->> one in kmalloc_uaf_memset with inline instructions. (I have some WIP
->> patches to add this annotation.)
->>
->> Does this affect other functions in string.h?
->> =============================================
->>
->> Yes. Anything that uses __builtin_* rather than __real_* could be
->> affected. This looks like:
->>
->>  - strncpy
->>  - strcat
->>  - strlen
->>  - strlcpy maybe, under some circumstances?
->>  - strncat under some circumstances
->>  - memset
->>  - memcpy
->>  - memmove
->>  - memcmp (as noted)
->>  - memchr
->>  - strcpy
->>
->> Whether a function call is emitted always depends on the compiler. Most
->> bugs should get caught by FORTIFY_SOURCE, but the missed memcmp test shows
->> that this is not always the case.
->>
->> Isn't FORTIFY_SOURCE disabled with KASAN?
->> ========================================-
->>
->> The string headers on all arches supporting KASAN disable fortify with
->> kasan, but only when address sanitisation is _also_ disabled. For example
->> from x86:
->>
->>  #if defined(CONFIG_KASAN) && !defined(__SANITIZE_ADDRESS__)
->>  /*
->>   * For files that are not instrumented (e.g. mm/slub.c) we
->>   * should use not instrumented version of mem* functions.
->>   */
->>  #define memcpy(dst, src, len) __memcpy(dst, src, len)
->>  #define memmove(dst, src, len) __memmove(dst, src, len)
->>  #define memset(s, c, n) __memset(s, c, n)
->>
->>  #ifndef __NO_FORTIFY
->>  #define __NO_FORTIFY /* FORTIFY_SOURCE uses __builtin_memcpy, etc. */
->>  #endif
->>
->>  #endif
->>
->> This comes from commit 6974f0c4555e ("include/linux/string.h: add the
->> option of fortified string.h functions"), and doesn't work when KASAN is
->> enabled and the file is supposed to be sanitised - as with test_kasan.c
->
-> Hi Daniel,
->
-> Thanks for addressing this. And special kudos for description detail level! :)
->
-> Phew, this layering of checking tools is a bit messy...
->
->> I'm pretty sure this is backwards: we shouldn't be using __builtin_memcpy
->> when we have a KASAN instrumented file, but we can use __builtin_* - and in
->> many cases all fortification - in files where we don't have
->> instrumentation.
->
-> I think if we use __builtin_* in a non-instrumented file, the compiler
-> can emit a call to normal mem* function which will be intercepted by
-> kasan and we will get instrumentation in a file which should not be
-> instrumented. Moreover this behavior will depend on optimization level
-> and compiler internals.
-> But as far as I see this does not affect any of the following and the
-> code change.
->
+Hi all,
 
-mmm OK - you are right, when I consider this and your other point...
+Today's linux-next merge of the generic-ioremap tree got a conflict in:
 
->>  #if !defined(__NO_FORTIFY) && defined(__OPTIMIZE__) && defined(CONFIG_FORTIFY_SOURCE)
->> +
->> +#ifdef CONFIG_KASAN
->> +extern void *__underlying_memchr(const void *p, int c, __kernel_size_t size) __RENAME(memchr);
->
->
-> arch headers do:
->
-> #if defined(CONFIG_KASAN) && !defined(__SANITIZE_ADDRESS__)
-> #define memcpy(dst, src, len) __memcpy(dst, src, len)
-> ...
->
-> to disable instrumentation. Does this still work with this change?
-> Previously they disabled fortify. What happens now? Will define of
-> memcpy to __memcpy also affect __RENAME(memcpy), so that
-> __underlying_memcpy will be an alias to __memcpy?
+  drivers/video/fbdev/s1d13xxxfb.c
 
-This is a good question. It's a really intricate set of interactions!!
+between commit:
 
-Between these two things, I think I'm going to just drop the removal of
-architecture changes, which means that fortify will continue to be
-disabled for files that disable KASAN sanitisation. It's just too
-complicated to reason through and satisfy myself that we're not going to
-get weird bugs, and the payoff is really small.
+  091be7245a03 ("fbdev: s1d13xxxfb: use resource_size")
 
->> +extern int __underlying_memcmp(const void *p, const void *q, __kernel_size_t size) __RENAME(memcmp);
->
-> All of these macros are leaking from the header file. Tomorrow we will
-> discover __underlying_memcpy uses somewhere in the wild, which will
-> not making understanding what actually happens simpler :)
-> Perhaps undef all of them at the bottom?
+from the drm-misc tree and commit:
 
-I can't stop the function definitions from leaking, but I can stop the
-defines from leaking, which means we will catch any uses outside this
-block in a FORITY_SOURCE && !KASAN build. I've fixed this for v2.
+  4bdc0d676a64 ("remove ioremap_nocache and devm_ioremap_nocache")
 
-Regards,
-Daniel
+from the generic-ioremap tree.
 
->> +extern void *__underlying_memcpy(void *p, const void *q, __kernel_size_t size) __RENAME(memcpy);
->> +extern void *__underlying_memmove(void *p, const void *q, __kernel_size_t size) __RENAME(memmove);
->> +extern void *__underlying_memset(void *p, int c, __kernel_size_t size) __RENAME(memset);
->> +extern char *__underlying_strcat(char *p, const char *q) __RENAME(strcat);
->> +extern char *__underlying_strcpy(char *p, const char *q) __RENAME(strcpy);
->> +extern __kernel_size_t __underlying_strlen(const char *p) __RENAME(strlen);
->> +extern char *__underlying_strncat(char *p, const char *q, __kernel_size_t count) __RENAME(strncat);
->> +extern char *__underlying_strncpy(char *p, const char *q, __kernel_size_t size) __RENAME(strncpy);
->> +#else
->> +#define __underlying_memchr    __builtin_memchr
->> +#define __underlying_memcmp    __builtin_memcmp
->> +#define __underlying_memcpy    __builtin_memcpy
->> +#define __underlying_memmove   __builtin_memmove
->> +#define __underlying_memset    __builtin_memset
->> +#define __underlying_strcat    __builtin_strcat
->> +#define __underlying_strcpy    __builtin_strcpy
->> +#define __underlying_strlen    __builtin_strlen
->> +#define __underlying_strncat   __builtin_strncat
->> +#define __underlying_strncpy   __builtin_strncpy
->> +#endif
->> +
->>  __FORTIFY_INLINE char *strncpy(char *p, const char *q, __kernel_size_t size)
->>  {
->>         size_t p_size = __builtin_object_size(p, 0);
->> @@ -324,14 +349,14 @@ __FORTIFY_INLINE char *strncpy(char *p, const char *q, __kernel_size_t size)
->>                 __write_overflow();
->>         if (p_size < size)
->>                 fortify_panic(__func__);
->> -       return __builtin_strncpy(p, q, size);
->> +       return __underlying_strncpy(p, q, size);
->>  }
->>
->>  __FORTIFY_INLINE char *strcat(char *p, const char *q)
->>  {
->>         size_t p_size = __builtin_object_size(p, 0);
->>         if (p_size == (size_t)-1)
->> -               return __builtin_strcat(p, q);
->> +               return __underlying_strcat(p, q);
->>         if (strlcat(p, q, p_size) >= p_size)
->>                 fortify_panic(__func__);
->>         return p;
->> @@ -345,7 +370,7 @@ __FORTIFY_INLINE __kernel_size_t strlen(const char *p)
->>         /* Work around gcc excess stack consumption issue */
->>         if (p_size == (size_t)-1 ||
->>             (__builtin_constant_p(p[p_size - 1]) && p[p_size - 1] == '\0'))
->> -               return __builtin_strlen(p);
->> +               return __underlying_strlen(p);
->>         ret = strnlen(p, p_size);
->>         if (p_size <= ret)
->>                 fortify_panic(__func__);
->> @@ -378,7 +403,7 @@ __FORTIFY_INLINE size_t strlcpy(char *p, const char *q, size_t size)
->>                         __write_overflow();
->>                 if (len >= p_size)
->>                         fortify_panic(__func__);
->> -               __builtin_memcpy(p, q, len);
->> +               __underlying_memcpy(p, q, len);
->>                 p[len] = '\0';
->>         }
->>         return ret;
->> @@ -391,12 +416,12 @@ __FORTIFY_INLINE char *strncat(char *p, const char *q, __kernel_size_t count)
->>         size_t p_size = __builtin_object_size(p, 0);
->>         size_t q_size = __builtin_object_size(q, 0);
->>         if (p_size == (size_t)-1 && q_size == (size_t)-1)
->> -               return __builtin_strncat(p, q, count);
->> +               return __underlying_strncat(p, q, count);
->>         p_len = strlen(p);
->>         copy_len = strnlen(q, count);
->>         if (p_size < p_len + copy_len + 1)
->>                 fortify_panic(__func__);
->> -       __builtin_memcpy(p + p_len, q, copy_len);
->> +       __underlying_memcpy(p + p_len, q, copy_len);
->>         p[p_len + copy_len] = '\0';
->>         return p;
->>  }
->> @@ -408,7 +433,7 @@ __FORTIFY_INLINE void *memset(void *p, int c, __kernel_size_t size)
->>                 __write_overflow();
->>         if (p_size < size)
->>                 fortify_panic(__func__);
->> -       return __builtin_memset(p, c, size);
->> +       return __underlying_memset(p, c, size);
->>  }
->>
->>  __FORTIFY_INLINE void *memcpy(void *p, const void *q, __kernel_size_t size)
->> @@ -423,7 +448,7 @@ __FORTIFY_INLINE void *memcpy(void *p, const void *q, __kernel_size_t size)
->>         }
->>         if (p_size < size || q_size < size)
->>                 fortify_panic(__func__);
->> -       return __builtin_memcpy(p, q, size);
->> +       return __underlying_memcpy(p, q, size);
->>  }
->>
->>  __FORTIFY_INLINE void *memmove(void *p, const void *q, __kernel_size_t size)
->> @@ -438,7 +463,7 @@ __FORTIFY_INLINE void *memmove(void *p, const void *q, __kernel_size_t size)
->>         }
->>         if (p_size < size || q_size < size)
->>                 fortify_panic(__func__);
->> -       return __builtin_memmove(p, q, size);
->> +       return __underlying_memmove(p, q, size);
->>  }
->>
->>  extern void *__real_memscan(void *, int, __kernel_size_t) __RENAME(memscan);
->> @@ -464,7 +489,7 @@ __FORTIFY_INLINE int memcmp(const void *p, const void *q, __kernel_size_t size)
->>         }
->>         if (p_size < size || q_size < size)
->>                 fortify_panic(__func__);
->> -       return __builtin_memcmp(p, q, size);
->> +       return __underlying_memcmp(p, q, size);
->>  }
->>
->>  __FORTIFY_INLINE void *memchr(const void *p, int c, __kernel_size_t size)
->> @@ -474,7 +499,7 @@ __FORTIFY_INLINE void *memchr(const void *p, int c, __kernel_size_t size)
->>                 __read_overflow();
->>         if (p_size < size)
->>                 fortify_panic(__func__);
->> -       return __builtin_memchr(p, c, size);
->> +       return __underlying_memchr(p, c, size);
->>  }
->>
->>  void *__real_memchr_inv(const void *s, int c, size_t n) __RENAME(memchr_inv);
->> @@ -505,7 +530,7 @@ __FORTIFY_INLINE char *strcpy(char *p, const char *q)
->>         size_t p_size = __builtin_object_size(p, 0);
->>         size_t q_size = __builtin_object_size(q, 0);
->>         if (p_size == (size_t)-1 && q_size == (size_t)-1)
->> -               return __builtin_strcpy(p, q);
->> +               return __underlying_strcpy(p, q);
->>         memcpy(p, q, strlen(q) + 1);
->>         return p;
->>  }
->> --
->> 2.20.1
->>
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/video/fbdev/s1d13xxxfb.c
+index c23defa27036,8048499e398d..000000000000
+--- a/drivers/video/fbdev/s1d13xxxfb.c
++++ b/drivers/video/fbdev/s1d13xxxfb.c
+@@@ -809,8 -809,8 +809,8 @@@ static int s1d13xxxfb_probe(struct plat
+ =20
+  	platform_set_drvdata(pdev, info);
+  	default_par =3D info->par;
+- 	default_par->regs =3D ioremap_nocache(pdev->resource[1].start,
+- 					    resource_size(&pdev->resource[1]));
++ 	default_par->regs =3D ioremap(pdev->resource[1].start,
+ -			pdev->resource[1].end - pdev->resource[1].start +1);
+++				    resource_size(&pdev->resource[1]));
+  	if (!default_par->regs) {
+  		printk(KERN_ERR PFX "unable to map registers\n");
+  		ret =3D -ENOMEM;
+@@@ -818,8 -818,9 +818,8 @@@
+  	}
+  	info->pseudo_palette =3D default_par->pseudo_palette;
+ =20
+- 	info->screen_base =3D ioremap_nocache(pdev->resource[0].start,
+- 					    resource_size(&pdev->resource[0]));
++ 	info->screen_base =3D ioremap(pdev->resource[0].start,
+ -			pdev->resource[0].end - pdev->resource[0].start +1);
+ -
+++				    resource_size(&pdev->resource[0]));
+  	if (!info->screen_base) {
+  		printk(KERN_ERR PFX "unable to map framebuffer\n");
+  		ret =3D -ENOMEM;
+
+--Sig_/i2nN6Em1mLxCXpTGTPgmt4/
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4f7m4ACgkQAVBC80lX
+0GzgUgf8DoZP7ANEwFA1gmq90A09IBorF75zwmqIymxdXpOi2T7CVq6q1yR29A95
+mXpemEXluocHJCNOqavmRW7aLHFmGI1LwxuG7axjp+GX65/AMxKS0VXi01BT8yEN
+aisQSiccDkWvrU+pZaBDpWVFSGAoyNwk/tCLcdKtKnix3pPpTfvmmZ9wJZVqeKsb
+56XAFmkLzaXY7VicldQxNslF6c4NCn19WUZ7wdcPxY01/0JhyN3Bhbe46wCLjgwX
+OGondzDPgu00D8OOAvVhvY4nixZjybjQPqVCqsjVgwRUgWxGkZK2YQ5sxHUxyXYZ
+3shGjgS1i7cNrSAsoaqXIVaWobs8Ng==
+=yLii
+-----END PGP SIGNATURE-----
+
+--Sig_/i2nN6Em1mLxCXpTGTPgmt4/--
