@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CACBC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78EECC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C69322464
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:44:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DC422072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:44:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218280;
-	bh=ldsUpBwdcBBX6zPRy6kx1Lh2h6EqBnpsrUOw2AZ4JBU=;
+	s=default; t=1579218284;
+	bh=jQT+WNioAeZDY5GTweyyOO5vpR1C6KAoTQe7/C5EF3E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MgVm8lnKbwQQ6RG7nIXmN52XmJppjYp+KANpTjLTxAnxZZRHluYj9kdMRI1gjNjrB
-	 qy2xbl2Q9tXO2+BspsaZC0+fPGNA18xJ51fkMh64KXFLZL48iJxQ5KzfzAQBF+UKZQ
-	 TW0Bf+5VGsBuQaOrZfjLFCoYI7oNYazqSSkQUHGI=
+	b=XnRwHNPBn6zUsgUu5Tf1Yiv8QKa/pQRPxAX3L/R+6H2RqRbhhtdcIgB1lnMrtXR6m
+	 iOLEQJrrJ0uLOvopL6Ea5Wq0qv3zgPelH8iNmL7Z/yZwFX0mdgtqxNPhNR61C/sZMC
+	 fK36vgvCxmuKpQN/CarQtcCEO/hahxiv/3Tw1gOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391924AbgAPXoj (ORCPT
+        id S1729308AbgAPXXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:44:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52796 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:23:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730969AbgAPXYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:24:01 -0500
+        id S1729770AbgAPXXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:23:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B42E7206D9;
-        Thu, 16 Jan 2020 23:23:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 836B020684;
+        Thu, 16 Jan 2020 23:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217040;
-        bh=ldsUpBwdcBBX6zPRy6kx1Lh2h6EqBnpsrUOw2AZ4JBU=;
+        s=default; t=1579217028;
+        bh=jQT+WNioAeZDY5GTweyyOO5vpR1C6KAoTQe7/C5EF3E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=goYJoRB5SfYMdhUvoULFovOoYG3nhFiiJuecuDhskSZeAdkj1bH0QoIL55hQs6IEK
-         54KUyeRIjnPcViMiDz5vNeRjH9w1wvpFuxCutIulKp5nL8YtU1GTTwj0LJu/6d783l
-         os0BBLpUCWH8pm3GQl+kKSE8291G+9vqBYj9zpuo=
+        b=N57H+kKTsOxkI70j9SJG/G/eal5VNOKN8WyzXljQVUBMjumSSgB4pjE1mhcBzyeZS
+         abIeMCtI3rIcXxXjZ82nzjh2zdEH4u+DaCtWTOjGGzxYsOEC3nWv7+ZtZgQebCOsis
+         9gVZ2DNSrSs4KM2rn9poDQO+wWhiGKJzF4uT/UjQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 5.4 107/203] NFSv4.x: Handle bad/dead sessions correctly in nfs41_sequence_process()
-Date:   Fri, 17 Jan 2020 00:17:04 +0100
-Message-Id: <20200116231754.887877704@linuxfoundation.org>
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.4 118/203] affs: fix a memory leak in affs_remount
+Date:   Fri, 17 Jan 2020 00:17:15 +0100
+Message-Id: <20200116231755.674843689@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -59,116 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-commit 5c441544f045e679afd6c3c6d9f7aaf5fa5f37b0 upstream.
+commit 450c3d4166837c496ebce03650c08800991f2150 upstream.
 
-If the server returns a bad or dead session error, the we don't want
-to update the session slot number, but just immediately schedule
-recovery and allow it to proceed.
+In affs_remount if data is provided it is duplicated into new_opts.  The
+allocated memory for new_opts is only released if parse_options fails.
 
-We can/should then remove handling in other places
+There's a bit of history behind new_options, originally there was
+save/replace options on the VFS layer so the 'data' passed must not
+change (thus strdup), this got cleaned up in later patches. But not
+completely.
 
-Fixes: 3453d5708b33 ("NFSv4.1: Avoid false retries when RPC calls are interrupted")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+There's no reason to do the strdup in cases where the filesystem does
+not need to reuse the 'data' again, because strsep would modify it
+directly.
+
+Fixes: c8f33d0bec99 ("affs: kstrdup() memory handling")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+[ update changelog ]
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/nfs4proc.c |   34 +++++++++++++++++++++++++---------
- 1 file changed, 25 insertions(+), 9 deletions(-)
+ fs/affs/super.c |    6 ------
+ 1 file changed, 6 deletions(-)
 
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -521,9 +521,7 @@ static int nfs4_do_handle_exception(stru
- 		case -NFS4ERR_DEADSESSION:
- 		case -NFS4ERR_SEQ_FALSE_RETRY:
- 		case -NFS4ERR_SEQ_MISORDERED:
--			dprintk("%s ERROR: %d Reset session\n", __func__,
--				errorcode);
--			nfs4_schedule_session_recovery(clp->cl_session, errorcode);
-+			/* Handled in nfs41_sequence_process() */
- 			goto wait_on_recovery;
- #endif /* defined(CONFIG_NFS_V4_1) */
- 		case -NFS4ERR_FILE_OPEN:
-@@ -782,6 +780,7 @@ static int nfs41_sequence_process(struct
- 	struct nfs4_session *session;
- 	struct nfs4_slot *slot = res->sr_slot;
- 	struct nfs_client *clp;
-+	int status;
- 	int ret = 1;
+--- a/fs/affs/super.c
++++ b/fs/affs/super.c
+@@ -561,14 +561,9 @@ affs_remount(struct super_block *sb, int
+ 	int			 root_block;
+ 	unsigned long		 mount_flags;
+ 	int			 res = 0;
+-	char			*new_opts;
+ 	char			 volume[32];
+ 	char			*prefix = NULL;
  
- 	if (slot == NULL)
-@@ -793,8 +792,13 @@ static int nfs41_sequence_process(struct
- 	session = slot->table->session;
+-	new_opts = kstrdup(data, GFP_KERNEL);
+-	if (data && !new_opts)
+-		return -ENOMEM;
+-
+ 	pr_debug("%s(flags=0x%x,opts=\"%s\")\n", __func__, *flags, data);
  
- 	trace_nfs4_sequence_done(session, res);
-+
-+	status = res->sr_status;
-+	if (task->tk_status == -NFS4ERR_DEADSESSION)
-+		status = -NFS4ERR_DEADSESSION;
-+
- 	/* Check the SEQUENCE operation status */
--	switch (res->sr_status) {
-+	switch (status) {
- 	case 0:
- 		/* Mark this sequence number as having been acked */
- 		nfs4_slot_sequence_acked(slot, slot->seq_nr);
-@@ -866,6 +870,10 @@ static int nfs41_sequence_process(struct
- 		 */
- 		slot->seq_nr = slot->seq_nr_highest_sent;
- 		goto out_retry;
-+	case -NFS4ERR_BADSESSION:
-+	case -NFS4ERR_DEADSESSION:
-+	case -NFS4ERR_CONN_NOT_BOUND_TO_SESSION:
-+		goto session_recover;
- 	default:
- 		/* Just update the slot sequence no. */
- 		slot->seq_done = 1;
-@@ -876,8 +884,10 @@ out:
- out_noaction:
- 	return ret;
- session_recover:
--	nfs4_schedule_session_recovery(session, res->sr_status);
--	goto retry_nowait;
-+	nfs4_schedule_session_recovery(session, status);
-+	dprintk("%s ERROR: %d Reset session\n", __func__, status);
-+	nfs41_sequence_free_slot(res);
-+	goto out;
- retry_new_seq:
- 	++slot->seq_nr;
- retry_nowait:
-@@ -2188,7 +2198,6 @@ static int nfs4_handle_delegation_recall
- 		case -NFS4ERR_BAD_HIGH_SLOT:
- 		case -NFS4ERR_CONN_NOT_BOUND_TO_SESSION:
- 		case -NFS4ERR_DEADSESSION:
--			nfs4_schedule_session_recovery(server->nfs_client->cl_session, err);
- 			return -EAGAIN;
- 		case -NFS4ERR_STALE_CLIENTID:
- 		case -NFS4ERR_STALE_STATEID:
-@@ -7820,6 +7829,15 @@ nfs41_same_server_scope(struct nfs41_ser
- static void
- nfs4_bind_one_conn_to_session_done(struct rpc_task *task, void *calldata)
- {
-+	struct nfs41_bind_conn_to_session_args *args = task->tk_msg.rpc_argp;
-+	struct nfs_client *clp = args->client;
-+
-+	switch (task->tk_status) {
-+	case -NFS4ERR_BADSESSION:
-+	case -NFS4ERR_DEADSESSION:
-+		nfs4_schedule_session_recovery(clp->cl_session,
-+				task->tk_status);
-+	}
- }
+ 	sync_filesystem(sb);
+@@ -579,7 +574,6 @@ affs_remount(struct super_block *sb, int
+ 			   &blocksize, &prefix, volume,
+ 			   &mount_flags)) {
+ 		kfree(prefix);
+-		kfree(new_opts);
+ 		return -EINVAL;
+ 	}
  
- static const struct rpc_call_ops nfs4_bind_one_conn_to_session_ops = {
-@@ -8867,8 +8885,6 @@ static int nfs41_reclaim_complete_handle
- 	case -NFS4ERR_BADSESSION:
- 	case -NFS4ERR_DEADSESSION:
- 	case -NFS4ERR_CONN_NOT_BOUND_TO_SESSION:
--		nfs4_schedule_session_recovery(clp->cl_session,
--				task->tk_status);
- 		break;
- 	default:
- 		nfs4_schedule_lease_recovery(clp);
 
 
