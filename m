@@ -2,168 +2,115 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA39C33CB7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B362EC33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23E172073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:36:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85CD32073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:38:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EJLTwp2Z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IIXiwZgo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgAPQgq (ORCPT
+        id S1726958AbgAPQiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:36:46 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:43618 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbgAPQgq (ORCPT
+        Thu, 16 Jan 2020 11:38:21 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:46707 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbgAPQiV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:36:46 -0500
-Received: by mail-il1-f196.google.com with SMTP id v69so18712129ili.10;
-        Thu, 16 Jan 2020 08:36:45 -0800 (PST)
+        Thu, 16 Jan 2020 11:38:21 -0500
+Received: by mail-lj1-f196.google.com with SMTP id m26so23358045ljc.13;
+        Thu, 16 Jan 2020 08:38:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F5CUZisbEmcuPSU1emkEgklMu7uKE46FRb40awhcNNw=;
-        b=EJLTwp2ZhMt6m8MIODOMxX8F0WUxZXnFllgPy0vjYRaP2a/uqLd7VgfSGrWmo8hpAJ
-         NPHIjFIJGRLr4oNAz9tf5hOsdcfuVYMnqjiTf2J4RCADCuxQW+oGSsB83s4QcMRYpoPy
-         vf1DpVdQTI/VdvN2YcvhWNwF4XaXJSfsa0NNO5bimCUjbA5cJJ6NJWxgsXS2WESS+fUM
-         XotHwzWPyWBYZMI9ssGzm7k30A7uRYYqAYpyL23ouh5EW6o0lP2Rp5LvXf14sfItRsni
-         tEMr9QVNKomtq9S+mvxD/frcA8S1mOvx2byWGDSjpzIyfdwenphPtbBOjb3rbGha0prQ
-         SK/g==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=eCcZLabUeQdma4/BEVorroq8W4egZf/HDAPymRFcBkY=;
+        b=IIXiwZgozLSY/IJmPPLGcHn8Ve+FgoEn7EaVcMqcMMeebjIZ+Vw/Hi5mXg02Vz/Uj+
+         a46bCj6F5Pvtwnz/F2fVi4cB/S+HlGcemlkqOaem7j82L4V12zZGZxSk7A3sg0rja3a8
+         sK/l9oGkVNrW2PnfHXbFOQj2aZgV+0EFo4stRtu+YnKWdESXWd5BgNHfRTeqtzjPzv5E
+         KSyNNCZQhZEYpNv8SSu/8Uv07j+T7apB+68x8Kka+HpqoZjlYedvDZmRNhaT8t+r9g/Q
+         uHmmhHpvqzV62J3zdT0RIXNb+q5NFjYx82jmdcuTedHNI/cuHtgLTWsNJF9Hk0dygwkn
+         KWeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F5CUZisbEmcuPSU1emkEgklMu7uKE46FRb40awhcNNw=;
-        b=TUp5TzhjNk+h2WOj3yUFK93LVHevOE7wKgNdfVVxRgMv0oEcQGbsYMQ9hZBUlpLZrG
-         vxiFQ1Vj1UoSwwwe/tc7+Wiza9IUVoBStit6tFdJO5hjMKkRuXiFOuAqOxJKKXpwh7YL
-         yBIK4rP1Ym+KNaGStYklazb3w6XAJQe42CT/CYofZafEPJ9MsQp/5w0TUrgJsnwcEnJP
-         GOX5RlqnuhRdc2jCqAuuI+Mq6kzptwNPuiz1RgCXv24rFo9mJyyeLOn5ZnMsFQ/S2DY4
-         y9nySAAYk+AdNn6Y4lGzvtF8mlHX+9c92fP+R4o8YyB9lH+9kJbqO7mJOR5USaQykrWx
-         UUiA==
-X-Gm-Message-State: APjAAAXImM+WtoprLs2RKOgNconYGOCvSc4MqhpuNYbmY3u88+1O0jBP
-        WoWdV076dDmui+oknjn2UdEV8A2BPZx1PxgL18+bqMGj
-X-Google-Smtp-Source: APXvYqxwMlno7wjUoiFGxFWb2n/ehu6lv/LisVmo7tUhvmCPmOwoAt13VzXh6hngJWSHaeNKOw/agO1BB94B4lZ59eo=
-X-Received: by 2002:a92:3d17:: with SMTP id k23mr4375754ila.110.1579192605275;
- Thu, 16 Jan 2020 08:36:45 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eCcZLabUeQdma4/BEVorroq8W4egZf/HDAPymRFcBkY=;
+        b=ka3vwIE4r9/bqu7uyOH5qdgz5TaQ4Ig5+Un1OC03ML0vIoM0ZhJeBpMRlDmoG1o07A
+         +fPpdx6LpWdQ7KNZwg1bmOCGPMjwjgagSF4dPEU55M4pnC4y3pdGTDfYoeUaIFEQn4Hj
+         VY6omgt/UdBqkpvY/FbmleMnDMlTdX2AmCQR4fq8qzV7pSwPyo7kHZqhrZHMVjLJPjdW
+         fYHpxGIn+++kqW+l7umfzNsP+qH/+zszY3UDsVn9V7cGyLhDhGWfWAAWQFp6UNID3QJf
+         6k34XfRkiPbgXNDpi9cRETqRSa0ebOCrZVkKOR2/JVmnSXsOqNXJKj8/TwOrK2FdL/xm
+         8dKg==
+X-Gm-Message-State: APjAAAXNL0LJUMHwQQ/uPH49BYWZJ0XKa5dXgID7Q+0Nplt1fUOalJY5
+        G3j1k7ThJmtyB+iFcH+tCVKIXnKY
+X-Google-Smtp-Source: APXvYqz+lJxd7qiwm/1Ps+yifU0qnOuTOxg4aKH59jWE+KR0fwxiDO8dW/SZzFqFZZxus4z+RfcSFQ==
+X-Received: by 2002:a2e:9708:: with SMTP id r8mr2871050lji.92.1579192698498;
+        Thu, 16 Jan 2020 08:38:18 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id t27sm11161859ljd.26.2020.01.16.08.38.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jan 2020 08:38:17 -0800 (PST)
+Subject: Re: [PATCH v5 0/8] NVIDIA Tegra I2C driver fixes and improvements
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Mikko Perttunen <cyndis@kapsi.fi>, linux-i2c@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200114013442.28448-1-digetx@gmail.com>
+ <20200115173535.GF1239@ninjato>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <ea7c484b-d8ae-48b9-84ca-db26902f4654@gmail.com>
+Date:   Thu, 16 Jan 2020 19:38:16 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <1579038243-28550-1-git-send-email-han.xu@nxp.com>
- <1579038243-28550-4-git-send-email-han.xu@nxp.com> <20200115080257.dtd4vss4uhopbvn2@pengutronix.de>
-In-Reply-To: <20200115080257.dtd4vss4uhopbvn2@pengutronix.de>
-From:   Han Xu <xhnjupt@gmail.com>
-Date:   Thu, 16 Jan 2020 10:36:33 -0600
-Message-ID: <CA+EcR23TCUU83Y7BYX5LCvGAj20+s67n+rWaGR5R9BSMHUH82A@mail.gmail.com>
-Subject: Re: [PATCH 3/6] dmaengine: mxs: add the power management functions
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     Han Xu <han.xu@nxp.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Richard Weinberger <richard@nod.at>,
-        Esben Haabendal <esben@geanix.com>,
-        linux-kernel@vger.kernel.org, vkoul@kernel.org,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>, linux-imx@nxp.com,
-        Fabio Estevam <festevam@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        dmaengine@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200115173535.GF1239@ninjato>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 2:03 AM Sascha Hauer <s.hauer@pengutronix.de> wrote:
->
-> On Wed, Jan 15, 2020 at 05:44:00AM +0800, Han Xu wrote:
-> > add the power management functions and leverage the runtime pm for
-> > system suspend/resume
-> >
-> > Signed-off-by: Han Xu <han.xu@nxp.com>
-> > ---
-> >  drivers/dma/mxs-dma.c | 97 +++++++++++++++++++++++++++++++++++++++----
-> >  1 file changed, 90 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/drivers/dma/mxs-dma.c b/drivers/dma/mxs-dma.c
-> > index b458f06f9067..251492c5ea58 100644
-> > --- a/drivers/dma/mxs-dma.c
-> > +++ b/drivers/dma/mxs-dma.c
-> > @@ -25,6 +25,7 @@
-> >  #include <linux/of_dma.h>
-> >  #include <linux/list.h>
-> >  #include <linux/dma/mxs-dma.h>
-> > +#include <linux/pm_runtime.h>
-> >
-> >  #include <asm/irq.h>
-> >
-> > @@ -39,6 +40,8 @@
-> >  #define dma_is_apbh(mxs_dma) ((mxs_dma)->type == MXS_DMA_APBH)
-> >  #define apbh_is_old(mxs_dma) ((mxs_dma)->dev_id == IMX23_DMA)
-> >
-> > +#define MXS_DMA_RPM_TIMEOUT 50 /* ms */
-> > +
-> >  #define HW_APBHX_CTRL0                               0x000
-> >  #define BM_APBH_CTRL0_APB_BURST8_EN          (1 << 29)
-> >  #define BM_APBH_CTRL0_APB_BURST_EN           (1 << 28)
-> > @@ -416,6 +419,7 @@ static int mxs_dma_alloc_chan_resources(struct dma_chan *chan)
-> >  {
-> >       struct mxs_dma_chan *mxs_chan = to_mxs_dma_chan(chan);
-> >       struct mxs_dma_engine *mxs_dma = mxs_chan->mxs_dma;
-> > +     struct device *dev = &mxs_dma->pdev->dev;
-> >       int ret;
-> >
-> >       mxs_chan->ccw = dma_alloc_coherent(mxs_dma->dma_device.dev,
-> > @@ -431,9 +435,11 @@ static int mxs_dma_alloc_chan_resources(struct dma_chan *chan)
-> >       if (ret)
-> >               goto err_irq;
-> >
-> > -     ret = clk_prepare_enable(mxs_dma->clk);
-> > -     if (ret)
-> > +     ret = pm_runtime_get_sync(dev);
-> > +     if (ret < 0) {
-> > +             dev_err(dev, "Failed to enable clock\n");
-> >               goto err_clk;
->
-> From looking at other DMA drivers I know we are in good company here,
-> but I think this is wrong. Doing pm_runtime_get_sync() in
-> alloc_chan_resources() and going to autosuspend in free_chan_resources()
-> effectively disables runtime_pm as clients normally acquire their
-> channels during driver probe and release them only in driver remove.
+15.01.2020 20:35, Wolfram Sang пишет:
+> On Tue, Jan 14, 2020 at 04:34:34AM +0300, Dmitry Osipenko wrote:
+>> Hello,
+>>
+>> This patchset adds support for atomic transfers which are required for
+>> shutting down machine properly. Secondly, a (not)suspending I2C and some
+>> other things are fixed/improved by this small series as well. Please review
+>> and apply, thanks in advance!
+>>
+>> Changelog:
+>>
+>> v5: Improved commit message of the "Support atomic transfers" patch,
+>>     thanks to Wolfram Sang.
+>>
+>>     Added explicit stable tags to these patches:
+>>
+>>       i2c: tegra: Fix suspending in active runtime PM state
+>>       i2c: tegra: Properly disable runtime PM on driver's probe error
+> 
+> Patches 1+2 applied to for-current and patches 3-8 applied to for-next,
+> thanks!
+> 
+> Checkpatch spit out some of those:
+> 
+> CHECK: Lines should not end with a '('
+> 
+> I didn't mind. We can fix it incrementally if you want to fix it.
+> 
 
-Thanks for the comments.
-That's why I moved acquire_dma_resource from the probe to
-runtime_resume in the gpmi driver, this change won't disable the
-runtime_pm function and the incremental counter always balanced.
+Thank you very much!
 
->
-> In the next patch you release the DMA channels in the GPMI nand drivers
-> runtime_suspend hook just to somehow trigger the runtime_suspend of the
-> DMA driver.
->
-> What you should do instead is to make sure the hook runtime_pm to the
-> DMA drivers activity phases, like for example the pl330 driver does.
-> Then you wouldn't have to care about manually putting the DMA driver into
-> suspend from the GPMI NAND driver.
->
-> Sascha
->
-> --
-> Pengutronix e.K.                           |                             |
-> Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
->
-> ______________________________________________________
-> Linux MTD discussion mailing list
-> http://lists.infradead.org/mailman/listinfo/linux-mtd/
-
-
-
--- 
-Sincerely,
-
-Han XU
+I was aware of those minor warnings, but couldn't instantly see how to
+fix them without making code less readable.
