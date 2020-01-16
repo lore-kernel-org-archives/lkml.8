@@ -2,192 +2,110 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E995DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED70AC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9F042072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3FF62072B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:45:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GOygiJ7K"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tYITaZrs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731160AbgAPVlK (ORCPT
+        id S2387709AbgAPVpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 16:41:10 -0500
-Received: from mail-wr1-f44.google.com ([209.85.221.44]:42034 "EHLO
-        mail-wr1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730187AbgAPVlJ (ORCPT
+        Thu, 16 Jan 2020 16:45:25 -0500
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:46986 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729388AbgAPVpW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 16:41:09 -0500
-Received: by mail-wr1-f44.google.com with SMTP id q6so20593509wro.9
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 13:41:06 -0800 (PST)
+        Thu, 16 Jan 2020 16:45:22 -0500
+Received: by mail-ua1-f67.google.com with SMTP id l6so8207927uap.13
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 13:45:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0aIJw/EJB/nlLQXs7iIn0xmTpXrtxi7CPxwm9YIYHK4=;
-        b=GOygiJ7KFkipQq0EUGjHM+N2PG+t72K/6T1+QUjZ2Pe+zQ+nKmW1ilK399XgOwP8Jw
-         jeR1YtGK6n08zt5o4PJitGjoTnZxfrdGrlYW6iAahSpTlml4Re1fbp4kDqypWDOCbomV
-         FKq/gZRmMkBSKUe6VFBEavLp9k2dN5qocjaPXdxo0qYQCWSkfLjmmFkltDICJqqXZ72f
-         P9GgqKvRS5+Ihz4jWAbKvc/mEU61hqxpASSD5FegE6aZv9TtiHldRIyIaEYfCDg1qF2A
-         McEdbX3V/aDPbWVQSGvTzknw54lsFwrT0d6lBSuAMW4QjwdHqfL9kPVFbBj7Kmwd2ZfO
-         zohA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tkSAt1Pw50rKdG/hn5morljVtZomrkNl/2z5xne6PRw=;
+        b=tYITaZrsivqfC+GdC03l8Z8h3bZpMk/AxRJZ5m3Cq3lP1GhjDNlzuzFHH0Pn2+w9Bp
+         7hq+CoXS8VEDdhnMjKVZPNodzvjOUAaKuYJ/ddFf8vOlsJnqSle+AlNiaLEcRnwKSGTP
+         5gI69wlRAJP+9qKZcEhtfjYhon9km/BJzdEnZr70+1XtamA4m5kF7Ynuucv4V82zyCFO
+         H2TlLCrfyCjDGPgKEI6sEsRnApccctQO8D2j+8EC7xolfZWg7J4pQivRrN9lRA6P8BUk
+         bMbwCjGUJxwYv2NA596Hgs8T4QOpc3vlL/TpIEXN+OH+nuTnqjTX9Bzg6hCJI8tqaUMO
+         EkDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=0aIJw/EJB/nlLQXs7iIn0xmTpXrtxi7CPxwm9YIYHK4=;
-        b=WZUQUOSlgpjNmlTOKEnU+6933JVfSc1aV2Te616DVu6F41V2nZquGFlAxg1Gau4efE
-         h/xQCZRm8KUiVZCY0zWqskOx7ITwKgTod7+zsm4Zbx8btfF01uE8NeXI0LU5bdOkrFKf
-         Bm+Z9yyZ4hOTVuSZ44Z19ys6QolSm65YYuWMkQbDPco8B7H8FUN/Eg3TQAsUwrC9pWyJ
-         tA18lm5FMSr9w3jd0MM7736p5OwIGMABpArd6ow5kLT80Wy6Wcidjf2GyTdmb5+zFp9Y
-         9gIaKWgoACoz1yL4vh0lvWi3hUwIKyNMnx+RY6uZnlfOLF2KTYZSKvTz9fryjh/9cZnd
-         k5AQ==
-X-Gm-Message-State: APjAAAUpb6iIGAGsQ2+Qgr085Ymczquu4/se3uQxQcxO9127SHs4NzfN
-        CwmDRH3QEadXqigVOtpbXw+CQ9aG3EZNDQ==
-X-Google-Smtp-Source: APXvYqzqcJ92F1npzVRU1NhwWwuYY1L1YMovLft7/PvSLw6VJrDaLLBPk/YS4s3bzYv2cuhYvsL5JA==
-X-Received: by 2002:a5d:49c7:: with SMTP id t7mr5232416wrs.369.1579210865690;
-        Thu, 16 Jan 2020 13:41:05 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:6c63:1b50:1156:7f0f? ([2a01:e34:ed2f:f020:6c63:1b50:1156:7f0f])
-        by smtp.googlemail.com with ESMTPSA id e16sm30940450wrs.73.2020.01.16.13.41.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jan 2020 13:41:05 -0800 (PST)
-Subject: Re: [PATCH v2 2/2] thermal: sprd: Add Spreadtrum thermal driver
- support
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     rui.zhang@intel.com, edubezval@gmail.com,
-        amit.kucheria@verdurent.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linaro.org>, freeman.liu@unisoc.com,
-        Chunyan Zhang <zhang.lyra@gmail.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <8d5358a67746b2aff5f6995cabd11d0d7c9e579e.1575978484.git.baolin.wang7@gmail.com>
- <dd3303a956e7dd5c065ac2b92b1dea7ee5d1df17.1575978484.git.baolin.wang7@gmail.com>
- <CADBw62o3vW_hdFwcMdQFJqx2HpNhCEHOxADQO9LztzpqCVQBpg@mail.gmail.com>
- <547d91fa-66c5-e3bb-4028-2578f070695c@linaro.org>
- <CADBw62pcYZ_GR1OrS3VG-Y1T8CYOcL4pRzTwBt6of4ZmzhhNng@mail.gmail.com>
- <CADBw62r5qBVt8LB+E5XoToB7FJJDH+exwzVqJ6+Eti-6eKtB-w@mail.gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <b59955fe-c6c4-4fde-4551-3ba09c7ac636@linaro.org>
-Date:   Thu, 16 Jan 2020 22:41:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tkSAt1Pw50rKdG/hn5morljVtZomrkNl/2z5xne6PRw=;
+        b=jPj6usQmHp72WMRhQQlPUVBhmmGJXrxd58EBi4kmr+oMXd4sdd0qVNg3t+EmZCome0
+         9yCjzu/dC1pr9seK+P8K24nx1GM2MuixW2i9KsJtZJ41FAETbVOwAFHORVJ5M8Js9Mff
+         EIsObNr1JysOJh4CkZOvDTIqE3o0kUnlJiPEd707C0M9DiHR0duf/vh9Rc0W4qTCtvFQ
+         5Lj8lSg2JJQZMrF/KxOUsio9AkfaKxvDmsL3XkRSV6HpPwcw7FaRNE83KOcLTwQsI55p
+         uvgHVpQ1yn6gvZ+aeLQ0HIDzKclVapITQnIrLuRMPieEkW4TsB/ZvGdQUdu9H3ryu1S0
+         mfMg==
+X-Gm-Message-State: APjAAAVIUXWckDuiI0CU0C5Vw7aS8keR4Av0i5Qk3BRm+5hjkkY0C83a
+        bSB9w8kluUjZBGjuRCxc+TTTqfJPafVtnXvheaz/kQ==
+X-Google-Smtp-Source: APXvYqx9xgh+f+ErpWs3BksSZ71jt7xPPMU4gWghLYUHcYc41EpoUSU/qL8aa7KJUXqJ40wX1Da/EhNZbQRobWoILhU=
+X-Received: by 2002:ab0:618a:: with SMTP id h10mr19510791uan.53.1579211120670;
+ Thu, 16 Jan 2020 13:45:20 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CADBw62r5qBVt8LB+E5XoToB7FJJDH+exwzVqJ6+Eti-6eKtB-w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191206221351.38241-1-samitolvanen@google.com> <20191206221351.38241-9-samitolvanen@google.com>
+ <20200116173950.GB21396@willie-the-truck>
+In-Reply-To: <20200116173950.GB21396@willie-the-truck>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Thu, 16 Jan 2020 13:45:09 -0800
+Message-ID: <CABCJKuduRyBBr1qZQj35nMCOLv3my22wRQXb4-i39n07qdL4Yg@mail.gmail.com>
+Subject: Re: [PATCH v6 08/15] arm64: disable function graph tracing with SCS
+To:     Will Deacon <will@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jan 16, 2020 at 9:39 AM Will Deacon <will@kernel.org> wrote:
+>
+> On Fri, Dec 06, 2019 at 02:13:44PM -0800, Sami Tolvanen wrote:
+> > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> > index b1b4476ddb83..49e5f94ff4af 100644
+> > --- a/arch/arm64/Kconfig
+> > +++ b/arch/arm64/Kconfig
+> > @@ -149,7 +149,7 @@ config ARM64
+> >       select HAVE_FTRACE_MCOUNT_RECORD
+> >       select HAVE_FUNCTION_TRACER
+> >       select HAVE_FUNCTION_ERROR_INJECTION
+> > -     select HAVE_FUNCTION_GRAPH_TRACER
+> > +     select HAVE_FUNCTION_GRAPH_TRACER if !SHADOW_CALL_STACK
+> >       select HAVE_GCC_PLUGINS
+> >       select HAVE_HW_BREAKPOINT if PERF_EVENTS
+> >       select HAVE_IRQ_TIME_ACCOUNTING
+>
+> I think this is the wrong way around, as we support the graph tracer
+> today and so I think SHADOW_CALL_STACK should depend on !GRAPH_TRACER
+> and possibly even EXPERT until this is resolved.
 
-Hi Baolin,
+Sure, sounds reasonable. I'll change this in the next version.
 
-On 16/01/2020 09:52, Baolin Wang wrote:
-> Hi Daniel,
-> 
-> On Mon, Dec 23, 2019 at 3:48 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
->>
->> Hi Daniel,
->>
->> On Mon, Dec 23, 2019 at 3:42 PM Daniel Lezcano
->> <daniel.lezcano@linaro.org> wrote:
->>>
->>>
->>> Hi Baolin,
->>>
->>> On 23/12/2019 07:31, Baolin Wang wrote:
->>>> Hi Rui and Daniel,
->>>>
->>>> On Tue, Dec 10, 2019 at 8:08 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
->>>>>
->>>>> From: Freeman Liu <freeman.liu@unisoc.com>
->>>>>
->>>>> This patch adds the support for Spreadtrum thermal sensor controller,
->>>>> which can support maximum 8 sensors.
->>>>>
->>>>> Signed-off-by: Freeman Liu <freeman.liu@unisoc.com>
->>>>> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
->>>>> ---
->>>>> Changes from v1:
->>>>>  - None.
->>>>> ---
->>>>
->>>> Any comments for this patch? Thanks.
->>>
-> 
-> Sorry for reminding you again, could you have a look about this patch
-> when you feel free? Thanks.
-
-Thanks for heads up and sorry for the delay. I began to review the
-patch, I'll send the review tomorrow.
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Sami
