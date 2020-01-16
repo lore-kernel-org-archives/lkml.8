@@ -2,187 +2,119 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 237DFC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E73C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66A3D246CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:25:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE027246CF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:25:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579195514;
+	bh=BR4bAa3sU9jTA4hgBf/kKhrT7L1DR2b3BRTZ3iHNCgU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LmYC6b9eXgoM79sUF8vsYfri/50+DUiMAlTakBX5DLstXd9TixzhhBtkdgurlKsy4
+	 xRYPkUSwK6C91OBAhTVU8P2sfxSxhrMjmX2TsTGKoU/wgIYpvEHWOeTCgIElEzFSUH
+	 rdjyR5AUmCfRU3ABNJsSqY5Vq043+ObY/PGgUxJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391893AbgAPRZJ (ORCPT
+        id S1731740AbgAPRZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:25:09 -0500
-Received: from out28-53.mail.aliyun.com ([115.124.28.53]:42456 "EHLO
-        out28-53.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391811AbgAPRYx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:24:53 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.0745429|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.19843-0.0103649-0.791205;DS=CONTINUE|ham_system_inform|0.028472-0.000402336-0.971126;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07440;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=23;RT=23;SR=0;TI=SMTPD_---.GdEQRsw_1579195452;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GdEQRsw_1579195452)
-          by smtp.aliyun-inc.com(10.147.40.2);
-          Fri, 17 Jan 2020 01:24:26 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        mips-creator-ci20-dev@googlegroups.com, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
-        mark.rutland@arm.com, syq@debian.org, ralf@linux-mips.org,
-        rick.tyliu@ingenic.com, jason@lakedaemon.net,
-        keescook@chromium.org, geert+renesas@glider.be, krzk@kernel.org,
-        paul@crapouillou.net, prasannatsmkumar@gmail.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
-        ebiederm@xmission.com, hns@goldelico.com, paul@boddie.org.uk
-Subject: [PATCH v2 4/6] MIPS: Ingenic: Add 'cpus' node for Ingenic SoCs.
-Date:   Fri, 17 Jan 2020 01:23:47 +0800
-Message-Id: <1579195429-59828-6-git-send-email-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1579195429-59828-1-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1579195429-59828-1-git-send-email-zhouyanjie@wanyeetech.com>
+        Thu, 16 Jan 2020 12:25:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60228 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391824AbgAPRY4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:24:56 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A51FE246AE;
+        Thu, 16 Jan 2020 17:24:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579195495;
+        bh=BR4bAa3sU9jTA4hgBf/kKhrT7L1DR2b3BRTZ3iHNCgU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FAWRqBduZG6ms5+eyc5GmhQd/ljzUuWYFKKyQjfvuC+sJ+Mpq+2+aI47QiICaou4h
+         czCwGaP3Vn0BAuLFE5m5TlZyesdG6giHLInyK3sS7E46JyMbXfJc8KxSIzQLnYP32S
+         lXUwxawg+/KFa6XlfYINEY1pXyYh489G7cN3sTBw=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Wen Yang <wen.yang99@zte.com.cn>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Niklas Cassel <niklas.cassel@axis.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Cyrille Pitchen <cyrille.pitchen@free-electrons.com>,
+        linux-pci@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 097/371] PCI: endpoint: functions: Use memcpy_fromio()/memcpy_toio()
+Date:   Thu, 16 Jan 2020 12:19:29 -0500
+Message-Id: <20200116172403.18149-40-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
+References: <20200116172403.18149-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add 'cpus' node to the jz4740.dtsi, jz4770.dtsi, jz4780.dtsi
-and x1000.dtsi files.
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+[ Upstream commit 726dabfde6aa35a4f1508e235ae37edbbf9fbc65 ]
+
+Functions copying from/to IO addresses should use the
+memcpy_fromio()/memcpy_toio() API rather than plain memcpy().
+
+Fix the issue detected through the sparse tool.
+
+Fixes: 349e7a85b25f ("PCI: endpoint: functions: Add an EP function to test PCI")
+Suggested-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+[lorenzo.pieralisi@arm.com: updated log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+CC: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC: Bjorn Helgaas <bhelgaas@google.com>
+CC: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+CC: Niklas Cassel <niklas.cassel@axis.com>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+CC: linux-pci@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
+ drivers/pci/endpoint/functions/pci-epf-test.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Notes:
-    v1->v2:
-    No change.
-
- arch/mips/boot/dts/ingenic/jz4740.dtsi | 14 ++++++++++++++
- arch/mips/boot/dts/ingenic/jz4770.dtsi | 15 ++++++++++++++-
- arch/mips/boot/dts/ingenic/jz4780.dtsi | 23 +++++++++++++++++++++++
- arch/mips/boot/dts/ingenic/x1000.dtsi  | 14 ++++++++++++++
- 4 files changed, 65 insertions(+), 1 deletion(-)
-
-diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-index 5accda2..9627d95 100644
---- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-@@ -6,6 +6,20 @@
- 	#size-cells = <1>;
- 	compatible = "ingenic,jz4740";
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+index f9308c2f22e6..c2541a772abc 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-test.c
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -177,7 +177,7 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
+ 		goto err_map_addr;
+ 	}
  
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "ingenic,xburst";
-+			reg = <0>;
-+
-+			clocks = <&cgu JZ4740_CLK_CCLK>;
-+			clock-names = "cpu";
-+		};
-+	};
-+
- 	cpuintc: interrupt-controller {
- 		#address-cells = <0>;
- 		#interrupt-cells = <1>;
-diff --git a/arch/mips/boot/dts/ingenic/jz4770.dtsi b/arch/mips/boot/dts/ingenic/jz4770.dtsi
-index 0bfb9ed..1b8114d 100644
---- a/arch/mips/boot/dts/ingenic/jz4770.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4770.dtsi
-@@ -1,5 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0
--
- #include <dt-bindings/clock/jz4770-cgu.h>
+-	memcpy(buf, src_addr, reg->size);
++	memcpy_fromio(buf, src_addr, reg->size);
  
- / {
-@@ -7,6 +6,20 @@
- 	#size-cells = <1>;
- 	compatible = "ingenic,jz4770";
+ 	crc32 = crc32_le(~0, buf, reg->size);
+ 	if (crc32 != reg->checksum)
+@@ -231,7 +231,7 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
+ 	get_random_bytes(buf, reg->size);
+ 	reg->checksum = crc32_le(~0, buf, reg->size);
  
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "ingenic,xburst";
-+			reg = <0>;
-+
-+			clocks = <&cgu JZ4770_CLK_CCLK>;
-+			clock-names = "cpu";
-+		};
-+	};
-+
- 	cpuintc: interrupt-controller {
- 		#address-cells = <0>;
- 		#interrupt-cells = <1>;
-diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-index f928329..93a0604 100644
---- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-@@ -7,6 +7,29 @@
- 	#size-cells = <1>;
- 	compatible = "ingenic,jz4780";
+-	memcpy(dst_addr, buf, reg->size);
++	memcpy_toio(dst_addr, buf, reg->size);
  
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "ingenic,xburst";
-+			reg = <0>;
-+
-+			clocks = <&cgu JZ4780_CLK_CPU>;
-+			clock-names = "cpu";
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "ingenic,xburst";
-+			reg = <1>;
-+
-+			clocks = <&cgu JZ4780_CLK_CORE1>;
-+			clock-names = "cpu";
-+		};
-+	};
-+
- 	cpuintc: interrupt-controller {
- 		#address-cells = <0>;
- 		#interrupt-cells = <1>;
-diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi b/arch/mips/boot/dts/ingenic/x1000.dtsi
-index 61061a4..ea54263 100644
---- a/arch/mips/boot/dts/ingenic/x1000.dtsi
-+++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
-@@ -7,6 +7,20 @@
- 	#size-cells = <1>;
- 	compatible = "ingenic,x1000", "ingenic,x1000e";
- 
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "ingenic,xburst";
-+			reg = <0>;
-+
-+			clocks = <&cgu X1000_CLK_CPU>;
-+			clock-names = "cpu";
-+		};
-+	};
-+
- 	cpuintc: interrupt-controller {
- 		#address-cells = <0>;
- 		#interrupt-cells = <1>;
+ 	/*
+ 	 * wait 1ms inorder for the write to complete. Without this delay L3
 -- 
-2.7.4
+2.20.1
 
