@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31744C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3404C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03067246C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:50:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD547246A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:50:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197012;
-	bh=GeZ9ahrBvtnGjnoLOWwGp21KkJjxM/ixIF8ZuTMK604=;
+	s=default; t=1579197014;
+	bh=A1N8eTJy0wfQbLoi57GZ4ERDw7BhnmsCr0Z6pNY66RE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PLMZ5h2kN4N4PhLh+RSqzZwte8QrHUlixuQWXdVgJGNSmsfhWp5QuoB7JUiXQT5qk
-	 Z6V9kCvzVnMDHn7Bc3mOcPy272pBNykpOj1OIbVKtVoizqM/MQLLFsjqQwOdqwcpTF
-	 U3jEbkvoR7rWnuslPDJFbU9bWbIe91bmzPxDKOw4=
+	b=WkZIpLfgQjohwuCtxvXVZMxZCB9I9RzT2J3XD5TBMxm/MYoP8htgw6EMvuUYrs6Nr
+	 OXO4V31rXuhrEpenkG2ggiVgse1TbVwgMV+As2mPXuBb4Fz1byquOxj7oKgJzWPiRw
+	 Ymxm7EqwxaFBD4ky9kTurk0m0jsXGvNUoiS8xWV0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406556AbgAPRpz (ORCPT
+        id S2394351AbgAPRuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:45:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38030 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:50:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406502AbgAPRpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:45:47 -0500
+        id S2406190AbgAPRpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:45:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FC32246CC;
-        Thu, 16 Jan 2020 17:45:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2E35246C4;
+        Thu, 16 Jan 2020 17:45:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196746;
-        bh=GeZ9ahrBvtnGjnoLOWwGp21KkJjxM/ixIF8ZuTMK604=;
+        s=default; t=1579196755;
+        bh=A1N8eTJy0wfQbLoi57GZ4ERDw7BhnmsCr0Z6pNY66RE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BSW4BpNLLRVoyEVpGmITrkcVd14CSshEow+A5ZCkqWs+Oah6XKk9+Q9RwjGRSvREf
-         4XGGdjrNnjTb5eKcOFPWeUNN3e63D2AmBA146a4jsOTyfNhtxYKFKFVME9e54Su+FP
-         FTspr9lIyORYfeOsTnWOzRwx35TNSqXRLEpakv0E=
+        b=UjMLgBrJ98s24A0Z3F9KxM5gGbQXkZe/5gz6fsOl1ofXkwMnh1ARLly4KX6gOG6ef
+         XdS6gz4sPLVPf3kvp6Wk1nJ2NcREC0hi342tTBL3FE+ZNmnhOWbK+PXRh5jfqNCyuA
+         eLOG2v2rLQqrLuHW9XwI1uj+i/oS89drXNxwDE7c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Felix Fietkau <nbd@nbd.name>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 125/174] mac80211: minstrel_ht: fix per-group max throughput rate initialization
-Date:   Thu, 16 Jan 2020 12:42:02 -0500
-Message-Id: <20200116174251.24326-125-sashal@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 130/174] x86, perf: Fix the dependency of the x86 insn decoder selftest
+Date:   Thu, 16 Jan 2020 12:42:07 -0500
+Message-Id: <20200116174251.24326-130-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -60,35 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Fietkau <nbd@nbd.name>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 56dd918ff06e3ee24d8067e93ed12b2a39e71394 ]
+[ Upstream commit 7720804a2ae46c90265a32c81c45fb6f8d2f4e8b ]
 
-The group number needs to be multiplied by the number of rates per group
-to get the full rate index
+Since x86 instruction decoder is not only for kprobes,
+it should be tested when the insn.c is compiled.
+(e.g. perf is enabled but kprobes is disabled)
 
-Fixes: 5935839ad735 ("mac80211: improve minstrel_ht rate sorting by throughput & probability")
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Link: https://lore.kernel.org/r/20190820095449.45255-1-nbd@nbd.name
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: cbe5c34c8c1f ("x86: Compile insn.c and inat.c only for KPROBES")
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/rc80211_minstrel_ht.c | 2 +-
+ arch/x86/Kconfig.debug | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/mac80211/rc80211_minstrel_ht.c b/net/mac80211/rc80211_minstrel_ht.c
-index ff3b28e7dbce..fb44f0107da1 100644
---- a/net/mac80211/rc80211_minstrel_ht.c
-+++ b/net/mac80211/rc80211_minstrel_ht.c
-@@ -546,7 +546,7 @@ minstrel_ht_update_stats(struct minstrel_priv *mp, struct minstrel_ht_sta *mi)
+diff --git a/arch/x86/Kconfig.debug b/arch/x86/Kconfig.debug
+index 2aa212fb0faf..31c191a08bb1 100644
+--- a/arch/x86/Kconfig.debug
++++ b/arch/x86/Kconfig.debug
+@@ -221,7 +221,7 @@ config HAVE_MMIOTRACE_SUPPORT
  
- 		/* (re)Initialize group rate indexes */
- 		for(j = 0; j < MAX_THR_RATES; j++)
--			tmp_group_tp_rate[j] = group;
-+			tmp_group_tp_rate[j] = MCS_GROUP_RATES * group;
- 
- 		for (i = 0; i < MCS_GROUP_RATES; i++) {
- 			if (!(mg->supported & BIT(i)))
+ config X86_DECODER_SELFTEST
+ 	bool "x86 instruction decoder selftest"
+-	depends on DEBUG_KERNEL && KPROBES
++	depends on DEBUG_KERNEL && INSTRUCTION_DECODER
+ 	depends on !COMPILE_TEST
+ 	---help---
+ 	 Perform x86 instruction decoder selftests at build time.
 -- 
 2.20.1
 
