@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3A7C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C9FC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9055246A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37EE6246A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:50:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197019;
-	bh=tHbXqPODKuv/f1Ix3yAK8rhbDEop+L2eGk+J9IV9Beg=;
+	s=default; t=1579197025;
+	bh=NH7YmaENed7733PiOVCPiTH7DV/SfeLsD2y7DmbM7Ug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gHdPADGKAX2FNn5DK44kikEmNKkip8ecWMdH10Lw1M9TeETLuVFtPmTCHrHghicpP
-	 4aRK6LBHz+Jq4DdfXtqJQJKp6gwRwkljxgo012pPKCKhS0KL8FX7lheS/YZXSeKgG8
-	 Ujaq19r6VfJ0j/FTMnKZ6LwF19RauLtJV9EAtFxQ=
+	b=IVZOftOHw7pTvFKnX6heYblsE4Dklg4QPJEWJtE8JhHKIcHHHbe77hyk/W1YgKxf2
+	 95/rQdmjw3X8LZKfyG8dEKaTAvlD/4tnRfhpvtvltanr+GxlRZq0bUCoJCCD4Q14YM
+	 egSdMaIlXCU72x+peLiw78Ewv5KuGLaTRY/UhFtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394409AbgAPRuR (ORCPT
+        id S2394415AbgAPRuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:50:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38224 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:50:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406545AbgAPRpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:45:54 -0500
+        id S2406531AbgAPRpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:45:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45991246BA;
-        Thu, 16 Jan 2020 17:45:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3717246A7;
+        Thu, 16 Jan 2020 17:45:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196753;
-        bh=tHbXqPODKuv/f1Ix3yAK8rhbDEop+L2eGk+J9IV9Beg=;
+        s=default; t=1579196751;
+        bh=NH7YmaENed7733PiOVCPiTH7DV/SfeLsD2y7DmbM7Ug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sdE1lkpHLVFiZ0eNwq/T8jsPi+Ehkvd88QfQku5YRsMq2P2qvvWbbR1nhEGsOAXsT
-         iwDUi/c9TTPrj0ZU9z9o7ccO/8p2xONHwmrJKudNq/QHpG9vaCbepHDHnNJbWDlS7u
-         XT10KZ5wS1lHt3S50EdYgSSvRmz+JLBKUlXhtoTY=
+        b=Bc35I8PM30FnKztSBDxfYPmzHG5MG1SLjU9D5o3ir8lzPupNzP2vV6NVoTUAcbcso
+         M7fWiFSFDbKSCfYZIPX6HkQD9/515vBEcjEzJkJr6Qd1ynrpWz9fp/G1xuDR3rsq6r
+         rd0wSA2ufUvxiQDi3nKlIS0BobL33Z8mckyTCBAE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tri Vo <trong@android.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 129/174] power: supply: Init device wakeup after device_add()
-Date:   Thu, 16 Jan 2020 12:42:06 -0500
-Message-Id: <20200116174251.24326-129-sashal@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        laokz <laokz@foxmail.com>, Stefani Seibold <stefani@seibold.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Greg KH <greg@kroah.com>, Kees Cook <keescook@chromium.org>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 128/174] Partially revert "kfifo: fix kfifo_alloc() and kfifo_init()"
+Date:   Thu, 16 Jan 2020 12:42:05 -0500
+Message-Id: <20200116174251.24326-128-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -65,67 +62,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <swboyd@chromium.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit 8288022284859acbcc3cf1a073a1e2692d6c2543 ]
+[ Upstream commit ab9bb6318b0967671e0c9b6537c1537d51ca4f45 ]
 
-We may want to use the device pointer in device_init_wakeup() with
-functions that expect the device to already be added with device_add().
-For example, if we were to link the device initializing wakeup to
-something in sysfs such as a class for wakeups we'll run into an error.
-It looks like this code was written with the assumption that the device
-would be added before initializing wakeup due to the order of operations
-in power_supply_unregister().
+Commit dfe2a77fd243 ("kfifo: fix kfifo_alloc() and kfifo_init()") made
+the kfifo code round the number of elements up.  That was good for
+__kfifo_alloc(), but it's actually wrong for __kfifo_init().
 
-Let's change the order of operations so we don't run into problems here.
+The difference? __kfifo_alloc() will allocate the rounded-up number of
+elements, but __kfifo_init() uses an allocation done by the caller.  We
+can't just say "use more elements than the caller allocated", and have
+to round down.
 
-Fixes: 948dcf966228 ("power_supply: Prevent suspend until power supply events are processed")
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Tri Vo <trong@android.com>
-Cc: Kalesh Singh <kaleshsingh@google.com>
-Cc: Ravi Chandra Sadineni <ravisadineni@chromium.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+The good news? All the normal cases will be using power-of-two arrays
+anyway, and most users of kfifo's don't use kfifo_init() at all, but one
+of the helper macros to declare a KFIFO that enforce the proper
+power-of-two behavior.  But it looks like at least ibmvscsis might be
+affected.
+
+The bad news? Will Deacon refers to an old thread and points points out
+that the memory ordering in kfifo's is questionable.  See
+
+  https://lore.kernel.org/lkml/20181211034032.32338-1-yuleixzhang@tencent.com/
+
+for more.
+
+Fixes: dfe2a77fd243 ("kfifo: fix kfifo_alloc() and kfifo_init()")
+Reported-by: laokz <laokz@foxmail.com>
+Cc: Stefani Seibold <stefani@seibold.net>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Greg KH <greg@kroah.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Will Deacon <will@kernel.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/power_supply_core.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ lib/kfifo.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/power/power_supply_core.c b/drivers/power/power_supply_core.c
-index b13cd074c52a..9281e42c9ed5 100644
---- a/drivers/power/power_supply_core.c
-+++ b/drivers/power/power_supply_core.c
-@@ -755,14 +755,14 @@ __power_supply_register(struct device *parent,
- 	}
+diff --git a/lib/kfifo.c b/lib/kfifo.c
+index 90ba1eb1df06..a94227c55551 100644
+--- a/lib/kfifo.c
++++ b/lib/kfifo.c
+@@ -82,7 +82,8 @@ int __kfifo_init(struct __kfifo *fifo, void *buffer,
+ {
+ 	size /= esize;
  
- 	spin_lock_init(&psy->changed_lock);
--	rc = device_init_wakeup(dev, ws);
--	if (rc)
--		goto wakeup_init_failed;
--
- 	rc = device_add(dev);
- 	if (rc)
- 		goto device_add_failed;
+-	size = roundup_pow_of_two(size);
++	if (!is_power_of_2(size))
++		size = rounddown_pow_of_two(size);
  
-+	rc = device_init_wakeup(dev, ws);
-+	if (rc)
-+		goto wakeup_init_failed;
-+
- 	rc = psy_register_thermal(psy);
- 	if (rc)
- 		goto register_thermal_failed;
-@@ -798,8 +798,8 @@ __power_supply_register(struct device *parent,
- 	psy_unregister_thermal(psy);
- register_thermal_failed:
- 	device_del(dev);
--device_add_failed:
- wakeup_init_failed:
-+device_add_failed:
- check_supplies_failed:
- dev_set_name_failed:
- 	put_device(dev);
+ 	fifo->in = 0;
+ 	fifo->out = 0;
 -- 
 2.20.1
 
