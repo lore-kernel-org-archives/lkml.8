@@ -2,255 +2,176 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FCAEC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F175C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D84872073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:18:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198701;
-	bh=M67lEIo55FH6sTajIGnCevDurU/nFr3YKiBoOg5fC1g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vO3uwleRYLwGcb77RjS4Tv+YrUjpAvZnI/4K+qlcs0zZZ5yxVjcXOHpGhVJRMj9Ca
-	 45Vuw7cINN75n8cs6m9bOeEDVKWpCEl3qGzma1iyjvx8g+d5OI1Z9XoF8ik69iHHz4
-	 275yqd1NgzgGze2I9eQrVlHxapfLdC4J9OqHPtoo=
+	by mail.kernel.org (Postfix) with ESMTP id 47CC82073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:18:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JoknkQfT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392663AbgAPR2u (ORCPT
+        id S2395393AbgAPSSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:28:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39800 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392612AbgAPR2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:28:37 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 16 Jan 2020 13:18:24 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56898 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2392810AbgAPSSU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 13:18:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579198699;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=k1/NMdNWn1AdZcspQctzd5y5I9ng1wPTgP3J0ukiT7Q=;
+        b=JoknkQfT5ucMH2NQa0ZhWlA2mndVIttjue4/80/K3AzROjMwMHYP5GWsIiAIHG2QReeYAc
+        uXlwftRIX48VeeLeAOoNUtF4blbvTdtU6iBQsdzXDeDfdmUqGi7ll0r5Cp+02QPcfs0bf7
+        yyFB/HsDPCuZI0LfxbUTR92BIS0tB8M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-14-LCMC3GR5MASKg19CERzZTw-1; Thu, 16 Jan 2020 13:18:15 -0500
+X-MC-Unique: LCMC3GR5MASKg19CERzZTw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15A84246FB;
-        Thu, 16 Jan 2020 17:28:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195716;
-        bh=M67lEIo55FH6sTajIGnCevDurU/nFr3YKiBoOg5fC1g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n7f5fqa5VQz4jOFmx8h20slZY2UDCOM6YncfP3yqdEZd25ACvYEUAOTzukgpLglqU
-         OYERCBCQJWokyKUjZoF9i4MDuJwNvkbMOXasnRD5r5T9e6lpAWc/aMMryyX4GzNIel
-         jy04mj2TKF77V4WnGyNr+AF6NM38Ye+YaF7Tcle0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Wise <pabs3@bonedaddy.net>, Jakub Wilk <jwilk@jwilk.net>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 260/371] coredump: split pipe command whitespace before expanding template
-Date:   Thu, 16 Jan 2020 12:22:12 -0500
-Message-Id: <20200116172403.18149-203-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
-References: <20200116172403.18149-1-sashal@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8A6DD800D48;
+        Thu, 16 Jan 2020 18:18:14 +0000 (UTC)
+Received: from gimli.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 444755D9C9;
+        Thu, 16 Jan 2020 18:18:14 +0000 (UTC)
+Subject: [RFC PATCH 3/3] vfio/type1: Introduce pfn_list mutex
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     yan.y.zhao@intel.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 16 Jan 2020 11:18:13 -0700
+Message-ID: <157919869385.21002.5744246004583751102.stgit@gimli.home>
+In-Reply-To: <157919849533.21002.4782774695733669879.stgit@gimli.home>
+References: <157919849533.21002.4782774695733669879.stgit@gimli.home>
+User-Agent: StGit/0.19-dirty
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Wise <pabs3@bonedaddy.net>
+We can promote external page {un}pinning to a reader lock, allowing
+concurrency since these don't change the vfio_iommu state.  We do need
+to protect the vpfn list per vfio_dma in place of that serialization
+though.
 
-[ Upstream commit 315c69261dd3fa12dbc830d4fa00d1fad98d3b03 ]
-
-Save the offsets of the start of each argument to avoid having to update
-pointers to each argument after every corename krealloc and to avoid
-having to duplicate the memory for the dump command.
-
-Executable names containing spaces were previously being expanded from
-%e or %E and then split in the middle of the filename.  This is
-incorrect behaviour since an argument list can represent arguments with
-spaces.
-
-The splitting could lead to extra arguments being passed to the core
-dump handler that it might have interpreted as options or ignored
-completely.
-
-Core dump handlers that are not aware of this Linux kernel issue will be
-using %e or %E without considering that it may be split and so they will
-be vulnerable to processes with spaces in their names breaking their
-argument list.  If their internals are otherwise well written, such as
-if they are written in shell but quote arguments, they will work better
-after this change than before.  If they are not well written, then there
-is a slight chance of breakage depending on the details of the code but
-they will already be fairly broken by the split filenames.
-
-Core dump handlers that are aware of this Linux kernel issue will be
-placing %e or %E as the last item in their core_pattern and then
-aggregating all of the remaining arguments into one, separated by
-spaces.  Alternatively they will be obtaining the filename via other
-methods.  Both of these will be compatible with the new arrangement.
-
-A side effect from this change is that unknown template types (for
-example %z) result in an empty argument to the dump handler instead of
-the argument being dropped.  This is a desired change as:
-
-It is easier for dump handlers to process empty arguments than dropped
-ones, especially if they are written in shell or don't pass each
-template item with a preceding command-line option in order to
-differentiate between individual template types.  Most core_patterns in
-the wild do not use options so they can confuse different template types
-(especially numeric ones) if an earlier one gets dropped in old kernels.
-If the kernel introduces a new template type and a core_pattern uses it,
-the core dump handler might not expect that the argument can be dropped
-in old kernels.
-
-For example, this can result in security issues when %d is dropped in
-old kernels.  This happened with the corekeeper package in Debian and
-resulted in the interface between corekeeper and Linux having to be
-rewritten to use command-line options to differentiate between template
-types.
-
-The core_pattern for most core dump handlers is written by the handler
-author who would generally not insert unknown template types so this
-change should be compatible with all the core dump handlers that exist.
-
-Link: http://lkml.kernel.org/r/20190528051142.24939-1-pabs3@bonedaddy.net
-Fixes: 74aadce98605 ("core_pattern: allow passing of arguments to user mode helper when core_pattern is a pipe")
-Signed-off-by: Paul Wise <pabs3@bonedaddy.net>
-Reported-by: Jakub Wilk <jwilk@jwilk.net> [https://bugs.debian.org/924398]
-Reported-by: Paul Wise <pabs3@bonedaddy.net> [https://lore.kernel.org/linux-fsdevel/c8b7ecb8508895bf4adb62a748e2ea2c71854597.camel@bonedaddy.net/]
-Suggested-by: Jakub Wilk <jwilk@jwilk.net>
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 ---
- fs/coredump.c | 44 +++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 39 insertions(+), 5 deletions(-)
+ drivers/vfio/vfio_iommu_type1.c |   24 +++++++++++++++++++-----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
 
-diff --git a/fs/coredump.c b/fs/coredump.c
-index 52c63d6c9143..0e5d2e447a71 100644
---- a/fs/coredump.c
-+++ b/fs/coredump.c
-@@ -7,6 +7,7 @@
- #include <linux/stat.h>
- #include <linux/fcntl.h>
- #include <linux/swap.h>
-+#include <linux/ctype.h>
- #include <linux/string.h>
- #include <linux/init.h>
- #include <linux/pagemap.h>
-@@ -187,11 +188,13 @@ static int cn_print_exe_file(struct core_name *cn)
-  * name into corename, which must have space for at least
-  * CORENAME_MAX_SIZE bytes plus one byte for the zero terminator.
-  */
--static int format_corename(struct core_name *cn, struct coredump_params *cprm)
-+static int format_corename(struct core_name *cn, struct coredump_params *cprm,
-+			   size_t **argv, int *argc)
- {
- 	const struct cred *cred = current_cred();
- 	const char *pat_ptr = core_pattern;
- 	int ispipe = (*pat_ptr == '|');
-+	bool was_space = false;
- 	int pid_in_pattern = 0;
- 	int err = 0;
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+index e78067cc74b3..ea63306c16f7 100644
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -90,6 +90,7 @@ struct vfio_dma {
+ 	bool			iommu_mapped;
+ 	bool			lock_cap;	/* capable(CAP_IPC_LOCK) */
+ 	struct task_struct	*task;
++	struct mutex		pfn_list_lock;
+ 	struct rb_root		pfn_list;	/* Ex-user pinned pfn list */
+ };
  
-@@ -201,12 +204,35 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm)
- 		return -ENOMEM;
- 	cn->corename[0] = '\0';
+@@ -539,7 +540,7 @@ static int vfio_iommu_type1_pin_pages(void *iommu_data,
+ 	if (!iommu->v2)
+ 		return -EACCES;
  
--	if (ispipe)
-+	if (ispipe) {
-+		int argvs = sizeof(core_pattern) / 2;
-+		(*argv) = kmalloc_array(argvs, sizeof(**argv), GFP_KERNEL);
-+		if (!(*argv))
-+			return -ENOMEM;
-+		(*argv)[(*argc)++] = 0;
- 		++pat_ptr;
-+	}
+-	down_write(&iommu->lock);
++	down_read(&iommu->lock);
  
- 	/* Repeat as long as we have more pattern to process and more output
- 	   space */
- 	while (*pat_ptr) {
-+		/*
-+		 * Split on spaces before doing template expansion so that
-+		 * %e and %E don't get split if they have spaces in them
-+		 */
-+		if (ispipe) {
-+			if (isspace(*pat_ptr)) {
-+				was_space = true;
-+				pat_ptr++;
-+				continue;
-+			} else if (was_space) {
-+				was_space = false;
-+				err = cn_printf(cn, "%c", '\0');
-+				if (err)
-+					return err;
-+				(*argv)[(*argc)++] = cn->used;
-+			}
+ 	/* Fail if notifier list is empty */
+ 	if (!iommu->notifier.head) {
+@@ -570,8 +571,11 @@ static int vfio_iommu_type1_pin_pages(void *iommu_data,
+ 			goto pin_unwind;
+ 		}
+ 
++		mutex_lock(&dma->pfn_list_lock);
++
+ 		vpfn = vfio_iova_get_vfio_pfn(dma, iova);
+ 		if (vpfn) {
++			mutex_unlock(&dma->pfn_list_lock);
+ 			phys_pfn[i] = vpfn->pfn;
+ 			continue;
+ 		}
+@@ -579,14 +583,19 @@ static int vfio_iommu_type1_pin_pages(void *iommu_data,
+ 		remote_vaddr = dma->vaddr + iova - dma->iova;
+ 		ret = vfio_pin_page_external(dma, remote_vaddr, &phys_pfn[i],
+ 					     do_accounting);
+-		if (ret)
++		if (ret) {
++			mutex_unlock(&dma->pfn_list_lock);
+ 			goto pin_unwind;
 +		}
- 		if (*pat_ptr != '%') {
- 			err = cn_printf(cn, "%c", *pat_ptr++);
- 		} else {
-@@ -546,6 +572,8 @@ void do_coredump(const siginfo_t *siginfo)
- 	struct cred *cred;
- 	int retval = 0;
- 	int ispipe;
-+	size_t *argv = NULL;
-+	int argc = 0;
- 	struct files_struct *displaced;
- 	/* require nonrelative corefile path and be extra careful */
- 	bool need_suid_safe = false;
-@@ -592,9 +620,10 @@ void do_coredump(const siginfo_t *siginfo)
  
- 	old_cred = override_creds(cred);
- 
--	ispipe = format_corename(&cn, &cprm);
-+	ispipe = format_corename(&cn, &cprm, &argv, &argc);
- 
- 	if (ispipe) {
-+		int argi;
- 		int dump_count;
- 		char **helper_argv;
- 		struct subprocess_info *sub_info;
-@@ -637,12 +666,16 @@ void do_coredump(const siginfo_t *siginfo)
- 			goto fail_dropcount;
+ 		ret = vfio_add_to_pfn_list(dma, iova, phys_pfn[i]);
+ 		if (ret) {
+ 			vfio_unpin_page_external(dma, iova, do_accounting);
++			mutex_unlock(&dma->pfn_list_lock);
+ 			goto pin_unwind;
  		}
++
++		mutex_unlock(&dma->pfn_list_lock);
+ 	}
  
--		helper_argv = argv_split(GFP_KERNEL, cn.corename, NULL);
-+		helper_argv = kmalloc_array(argc + 1, sizeof(*helper_argv),
-+					    GFP_KERNEL);
- 		if (!helper_argv) {
- 			printk(KERN_WARNING "%s failed to allocate memory\n",
- 			       __func__);
- 			goto fail_dropcount;
- 		}
-+		for (argi = 0; argi < argc; argi++)
-+			helper_argv[argi] = cn.corename + argv[argi];
-+		helper_argv[argi] = NULL;
+ 	ret = i;
+@@ -599,11 +608,13 @@ static int vfio_iommu_type1_pin_pages(void *iommu_data,
  
- 		retval = -ENOMEM;
- 		sub_info = call_usermodehelper_setup(helper_argv[0],
-@@ -652,7 +685,7 @@ void do_coredump(const siginfo_t *siginfo)
- 			retval = call_usermodehelper_exec(sub_info,
- 							  UMH_WAIT_EXEC);
+ 		iova = user_pfn[j] << PAGE_SHIFT;
+ 		dma = vfio_find_dma(iommu, iova, PAGE_SIZE);
++		mutex_lock(&dma->pfn_list_lock);
+ 		vfio_unpin_page_external(dma, iova, do_accounting);
++		mutex_unlock(&dma->pfn_list_lock);
+ 		phys_pfn[j] = 0;
+ 	}
+ pin_done:
+-	up_write(&iommu->lock);
++	up_read(&iommu->lock);
+ 	return ret;
+ }
  
--		argv_free(helper_argv);
-+		kfree(helper_argv);
- 		if (retval) {
- 			printk(KERN_INFO "Core dump to |%s pipe failed\n",
- 			       cn.corename);
-@@ -771,6 +804,7 @@ void do_coredump(const siginfo_t *siginfo)
- 	if (ispipe)
- 		atomic_dec(&core_dump_count);
- fail_unlock:
-+	kfree(argv);
- 	kfree(cn.corename);
- 	coredump_finish(mm, core_dumped);
- 	revert_creds(old_cred);
--- 
-2.20.1
+@@ -622,7 +633,7 @@ static int vfio_iommu_type1_unpin_pages(void *iommu_data,
+ 	if (!iommu->v2)
+ 		return -EACCES;
+ 
+-	down_write(&iommu->lock);
++	down_read(&iommu->lock);
+ 
+ 	do_accounting = !IS_IOMMU_CAP_DOMAIN_IN_CONTAINER(iommu);
+ 	for (i = 0; i < npage; i++) {
+@@ -633,11 +644,13 @@ static int vfio_iommu_type1_unpin_pages(void *iommu_data,
+ 		dma = vfio_find_dma(iommu, iova, PAGE_SIZE);
+ 		if (!dma)
+ 			goto unpin_exit;
++		mutex_lock(&dma->pfn_list_lock);
+ 		vfio_unpin_page_external(dma, iova, do_accounting);
++		mutex_unlock(&dma->pfn_list_lock);
+ 	}
+ 
+ unpin_exit:
+-	up_write(&iommu->lock);
++	up_read(&iommu->lock);
+ 	return i > npage ? npage : (i > 0 ? i : -EINVAL);
+ }
+ 
+@@ -1109,6 +1122,7 @@ static int vfio_dma_do_map(struct vfio_iommu *iommu,
+ 	dma->iova = iova;
+ 	dma->vaddr = vaddr;
+ 	dma->prot = prot;
++	mutex_init(&dma->pfn_list_lock);
+ 
+ 	/*
+ 	 * We need to be able to both add to a task's locked memory and test
 
