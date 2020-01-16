@@ -7,47 +7,55 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 384C3C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5EEC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F28024680
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8268422464
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194551;
-	bh=r0DrHgkZBvNlOmMB5tTdIcsEHUI/GUKp7GMj5WMkOfM=;
+	s=default; t=1579194553;
+	bh=GJg5Ss8w/jtXi8ZrDM5x3sy3AcMV7TgHDv0CV5c2IoM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xSW1zDCLBmPJ0JomVZJpA/L39eihAgB9q/A6jUVZRfacnEtaLF3MPy0nymQtVd2VP
-	 hekFc8TGZ1nSjr4K+fNU1l5bJFUyWAfuXK3c/3wnm8UwrbvqoJy4q5FRIIPNCsYCK3
-	 Up+FGadv7+E2kPDk1Do5/az243AFRZHX/PwgRZ68=
+	b=s+RO1ZLYe72swBV6zciuJUnqDqYcDlU+csQ7mpoTcvqodkUfMkJu0M2O4WzyNhkJP
+	 iJPP/smclKaSMDPgVXP+Dl9Uk3i0Q8GhWybRQaPcZDtj7xOMPCTT9Nykqc68i9cNFJ
+	 wPVAHLuP/lzxRwSbHVvbmpoeGGiNfA9p06N+Fzi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389614AbgAPRJK (ORCPT
+        id S2389625AbgAPRJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:09:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44170 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:09:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389592AbgAPRJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:09:05 -0500
+        id S2389610AbgAPRJJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:09:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 296CF2467A;
-        Thu, 16 Jan 2020 17:09:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B7032192A;
+        Thu, 16 Jan 2020 17:09:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194545;
-        bh=r0DrHgkZBvNlOmMB5tTdIcsEHUI/GUKp7GMj5WMkOfM=;
+        s=default; t=1579194549;
+        bh=GJg5Ss8w/jtXi8ZrDM5x3sy3AcMV7TgHDv0CV5c2IoM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zy+quaiaEaSk7R8UlFAvzkYhRBrkEXeId29QAWw9aWBCBUOoNGvkQF4eF26WFPKpQ
-         26ZPgYM0/w9Pn0NbuM76BAeYssWtHkulPT0t5y7+ChGKi4tsmdy8dSITtIv37/VTDb
-         92pQ82gvn4w7OPTGTn90oL8wDZY34YUxnJjDme8Y=
+        b=zXXs0T7CkW3xtL95/mJWNtql4aZn+HfaywEFye0AKRYuHQyBN6V3SCD+6RjSE+V3B
+         Ok05qXYxDgLH6fIGnvbz7BmWWZt6B2jkYFVuWdhnLGEdCbFZschdk1dxWjvJj4YfcV
+         A8Gm4VfHzeuLtALURN51zr8mPaS6V38u/dVPGJkc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 430/671] drm/msm/a3xx: remove TPL1 regs from snapshot
-Date:   Thu, 16 Jan 2020 12:01:08 -0500
-Message-Id: <20200116170509.12787-167-sashal@kernel.org>
+Cc:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>, acme@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, maddy@linux.vnet.ibm.com,
+        mpe@ellerman.id.au, Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 432/671] perf/ioctl: Add check for the sample_period value
+Date:   Thu, 16 Jan 2020 12:01:10 -0500
+Message-Id: <20200116170509.12787-169-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,58 +68,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 
-[ Upstream commit f47bee2ba447bebc304111c16ef1e1a73a9744dd ]
+[ Upstream commit 913a90bc5a3a06b1f04c337320e9aeee2328dd77 ]
 
-These regs are write-only, and the hw throws a hissy-fit (ie. reboots)
-when we try to read them for GPU state snapshot, in response to a GPU
-hang.  It is rather impolite when GPU recovery triggers an insta-
-reboot, so lets remove the TPL1 registers from the snapshot.
+perf_event_open() limits the sample_period to 63 bits. See:
 
-Fixes: 7198e6b03155 drm/msm: add a3xx gpu support
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+  0819b2e30ccb ("perf: Limit perf_event_attr::sample_period to 63 bits")
+
+Make ioctl() consistent with it.
+
+Also on PowerPC, negative sample_period could cause a recursive
+PMIs leading to a hang (reported when running perf-fuzzer).
+
+Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: acme@kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: maddy@linux.vnet.ibm.com
+Cc: mpe@ellerman.id.au
+Fixes: 0819b2e30ccb ("perf: Limit perf_event_attr::sample_period to 63 bits")
+Link: https://lkml.kernel.org/r/20190604042953.914-1-ravi.bangoria@linux.ibm.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/adreno/a3xx_gpu.c | 24 +++++++++++-------------
- 1 file changed, 11 insertions(+), 13 deletions(-)
+ kernel/events/core.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/adreno/a3xx_gpu.c b/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
-index 669c2d4b070d..5c068301d817 100644
---- a/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
-@@ -395,19 +395,17 @@ static const unsigned int a3xx_registers[] = {
- 	0x2200, 0x2212, 0x2214, 0x2217, 0x221a, 0x221a, 0x2240, 0x227e,
- 	0x2280, 0x228b, 0x22c0, 0x22c0, 0x22c4, 0x22ce, 0x22d0, 0x22d8,
- 	0x22df, 0x22e6, 0x22e8, 0x22e9, 0x22ec, 0x22ec, 0x22f0, 0x22f7,
--	0x22ff, 0x22ff, 0x2340, 0x2343, 0x2348, 0x2349, 0x2350, 0x2356,
--	0x2360, 0x2360, 0x2440, 0x2440, 0x2444, 0x2444, 0x2448, 0x244d,
--	0x2468, 0x2469, 0x246c, 0x246d, 0x2470, 0x2470, 0x2472, 0x2472,
--	0x2474, 0x2475, 0x2479, 0x247a, 0x24c0, 0x24d3, 0x24e4, 0x24ef,
--	0x2500, 0x2509, 0x250c, 0x250c, 0x250e, 0x250e, 0x2510, 0x2511,
--	0x2514, 0x2515, 0x25e4, 0x25e4, 0x25ea, 0x25ea, 0x25ec, 0x25ed,
--	0x25f0, 0x25f0, 0x2600, 0x2612, 0x2614, 0x2617, 0x261a, 0x261a,
--	0x2640, 0x267e, 0x2680, 0x268b, 0x26c0, 0x26c0, 0x26c4, 0x26ce,
--	0x26d0, 0x26d8, 0x26df, 0x26e6, 0x26e8, 0x26e9, 0x26ec, 0x26ec,
--	0x26f0, 0x26f7, 0x26ff, 0x26ff, 0x2740, 0x2743, 0x2748, 0x2749,
--	0x2750, 0x2756, 0x2760, 0x2760, 0x300c, 0x300e, 0x301c, 0x301d,
--	0x302a, 0x302a, 0x302c, 0x302d, 0x3030, 0x3031, 0x3034, 0x3036,
--	0x303c, 0x303c, 0x305e, 0x305f,
-+	0x22ff, 0x22ff, 0x2340, 0x2343, 0x2440, 0x2440, 0x2444, 0x2444,
-+	0x2448, 0x244d, 0x2468, 0x2469, 0x246c, 0x246d, 0x2470, 0x2470,
-+	0x2472, 0x2472, 0x2474, 0x2475, 0x2479, 0x247a, 0x24c0, 0x24d3,
-+	0x24e4, 0x24ef, 0x2500, 0x2509, 0x250c, 0x250c, 0x250e, 0x250e,
-+	0x2510, 0x2511, 0x2514, 0x2515, 0x25e4, 0x25e4, 0x25ea, 0x25ea,
-+	0x25ec, 0x25ed, 0x25f0, 0x25f0, 0x2600, 0x2612, 0x2614, 0x2617,
-+	0x261a, 0x261a, 0x2640, 0x267e, 0x2680, 0x268b, 0x26c0, 0x26c0,
-+	0x26c4, 0x26ce, 0x26d0, 0x26d8, 0x26df, 0x26e6, 0x26e8, 0x26e9,
-+	0x26ec, 0x26ec, 0x26f0, 0x26f7, 0x26ff, 0x26ff, 0x2740, 0x2743,
-+	0x300c, 0x300e, 0x301c, 0x301d, 0x302a, 0x302a, 0x302c, 0x302d,
-+	0x3030, 0x3031, 0x3034, 0x3036, 0x303c, 0x303c, 0x305e, 0x305f,
- 	~0   /* sentinel */
- };
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 751888cbed5c..16af86ab24c4 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -5012,6 +5012,9 @@ static int perf_event_period(struct perf_event *event, u64 __user *arg)
+ 	if (perf_event_check_period(event, value))
+ 		return -EINVAL;
  
++	if (!event->attr.freq && (value & (1ULL << 63)))
++		return -EINVAL;
++
+ 	event_function_call(event, __perf_event_period, &value);
+ 
+ 	return 0;
 -- 
 2.20.1
 
