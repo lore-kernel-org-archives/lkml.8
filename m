@@ -2,137 +2,156 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 884A8C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A05C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 666BC24656
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:14:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBA182467A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:14:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729470AbgAPDN7 (ORCPT
+        id S1729590AbgAPDOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 22:13:59 -0500
-Received: from mga06.intel.com ([134.134.136.31]:23725 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726513AbgAPDN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 22:13:58 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 19:13:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,324,1574150400"; 
-   d="scan'208";a="398127068"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by orsmga005.jf.intel.com with ESMTP; 15 Jan 2020 19:13:55 -0800
-Date:   Thu, 16 Jan 2020 10:53:38 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Moritz Fischer <mdf@kernel.org>, Will Deacon <will@kernel.org>,
-        mark.rutland@arm.com, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        atull@kernel.org, yilun.xu@intel.com
-Subject: Re: [PATCH v6 0/2] add performance reporting support to FPGA DFL
- drivers
-Message-ID: <20200116025338.GA15263@hao-dev>
-References: <1573622695-25607-1-git-send-email-hao.wu@intel.com>
- <20191125033412.GB890@hao-dev>
- <20191125080127.GC1809@willie-the-truck>
- <20191125080839.GA6227@hao-dev>
- <20191209024527.GA22625@hao-dev>
- <20191216010104.GA32154@yilunxu-OptiPlex-7050>
- <20200106023742.GA3980@hao-dev>
- <20200114055605.GA13574@hao-dev>
- <20200115051040.GA1389@epycbox.lan>
- <20200115081400.GA2978927@kroah.com>
+        Wed, 15 Jan 2020 22:14:11 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9627 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729241AbgAPDOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 22:14:10 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A5274A3EE302D7911BE8;
+        Thu, 16 Jan 2020 11:14:08 +0800 (CST)
+Received: from linux-ibm.site (10.175.102.37) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 16 Jan 2020 11:13:58 +0800
+From:   Xuefeng Wang <wxf.wang@hisilicon.com>
+To:     <arnd@arndb.de>, <akpm@linux-foundation.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <mark.rutland@arm.com>
+CC:     <linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-arm-kernel@lists.infradead.org>,
+        <chenzhou10@huawei.com>
+Subject: [PATCH 1/2] mm: add helpers pmdp_modify_prot_start/commit
+Date:   Thu, 16 Jan 2020 11:09:16 +0800
+Message-ID: <1579144157-7736-2-git-send-email-wxf.wang@hisilicon.com>
+X-Mailer: git-send-email 1.7.12.4
+In-Reply-To: <1579144157-7736-1-git-send-email-wxf.wang@hisilicon.com>
+References: <1579144157-7736-1-git-send-email-wxf.wang@hisilicon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200115081400.GA2978927@kroah.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
+X-Originating-IP: [10.175.102.37]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 09:14:00AM +0100, Greg KH wrote:
-> On Tue, Jan 14, 2020 at 09:10:40PM -0800, Moritz Fischer wrote:
-> > Hi Greg,
-> > 
-> > On Tue, Jan 14, 2020 at 01:56:05PM +0800, Wu Hao wrote:
-> > > On Mon, Jan 06, 2020 at 10:37:42AM +0800, Wu Hao wrote:
-> > > > On Mon, Dec 16, 2019 at 09:01:04AM +0800, Xu Yilum wrote:
-> > > > > On Mon, Dec 09, 2019 at 10:45:27AM +0800, Wu Hao wrote:
-> > > > > > On Mon, Nov 25, 2019 at 04:08:39PM +0800, Wu Hao wrote:
-> > > > > > > On Mon, Nov 25, 2019 at 08:01:28AM +0000, Will Deacon wrote:
-> > > > > > > > On Mon, Nov 25, 2019 at 11:34:12AM +0800, Wu Hao wrote:
-> > > > > > > > > Hi Will and Mark,
-> > > > > > > > > 
-> > > > > > > > > Could you please help us on review this patchset? as this patchset mainly 
-> > > > > > > > > introduced a new perf driver following the similar way as drivers/perf/*.
-> > > > > > > > 
-> > > > > > > > Why is it not under drivers/perf/, then?
-> > > > > > > 
-> > > > > > > Hi Will
-> > > > > > > 
-> > > > > > > Thanks for the quick response. This is one sub feature for DFL based FPGAs,
-> > > > > > > and we plan to put this sub feature together with others, including related
-> > > > > > > documentation. It only registers a standard perf pmu for its userspace
-> > > > > > > interfaces.
-> > > > > > > 
-> > > > > > > > 
-> > > > > > > > > This patchset has been submitted for a long time but didn't receive any
-> > > > > > > > > comment after v4. we appreciate any review comments! thanks in advance. :)
-> > > > > > > > 
-> > > > > > > > Hmm, not sure I saw the previous versions. Guessing I wasn't on cc?
-> > > > > > > 
-> > > > > > > We switched to perf API from v4, and started ccing you and Mark from v5. :)
-> > > > > > 
-> > > > > > Hi Will
-> > > > > > 
-> > > > > > Did you get a chance to look into this patchset?
-> > > > > > 
-> > > > > > Thanks
-> > > > > > Hao
-> > > > > 
-> > > > > Hi Will
-> > > > > 
-> > > > > Did you have time to look into this patchset? We have done review work
-> > > > > for FPGA part. And as a perf driver, we appreciate your comments.
-> > > > > 
-> > > > > Thanks
-> > > > > Yilun
-> > > > 
-> > > > Hi Will
-> > > > 
-> > > > Did you get a chance to look into this patchset these days? 
-> > > > 
-> > > > Actually we didn't receive any comments for a long time, if you are busy and
-> > > > don't have enough time on this, do you know if someone else could help with
-> > > > review and ack from perf driver point of view, or any other things we can do
-> > > > to speed up this? Thanks in advance! 
-> > > 
-> > > Hi Moritz
-> > > 
-> > > Looks like still no response from Will. :(
-> > > 
-> > > Do you know someone else could help?
-> > 
-> > Do you have some feedback? I'm a bit confused on what to do in such a
-> > situation, do I just take the patch if the maintainer doesn't respond
-> > for a while?
-> 
-> Resend it and say something like "please review" or the like.  With the
-> holidays and catching up from the holidays, this time of year is usually
-> very backlogged for lots of reviewers.
+Introduce helpers pmdp_modify_prot_start/commit to abstract pmdp_modify_prot
+transaction. Helpers pmdp_modify_prot_start/commit are functionally unchanged.
 
-Sure, will resend this patchset soon. Thanks!
+Signed-off-by: Xuefeng Wang <wxf.wang@hisilicon.com>
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+---
+ include/asm-generic/pgtable.h | 35 +++++++++++++++++++++++++++++++++++
+ mm/huge_memory.c              | 19 ++++++++-----------
+ 2 files changed, 43 insertions(+), 11 deletions(-)
 
-Hao
+diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
+index 798ea36a0549..e81bd58a9170 100644
+--- a/include/asm-generic/pgtable.h
++++ b/include/asm-generic/pgtable.h
+@@ -673,6 +673,41 @@ static inline void ptep_modify_prot_commit(struct vm_area_struct *vma,
+ 	__ptep_modify_prot_commit(vma, addr, ptep, pte);
+ }
+ #endif /* __HAVE_ARCH_PTEP_MODIFY_PROT_TRANSACTION */
++
++static inline pmd_t __pmdp_modify_prot_start(struct vm_area_struct *vma,
++						unsigned long addr,
++						pmd_t *pmdp)
++{
++	return pmdp_invalidate(vma, addr, pmdp);
++}
++
++static inline void __pmdp_modify_prot_commit(struct vm_area_struct *vma,
++						unsigned long addr,
++						pmd_t *pmdp, pmd_t pmd)
++{
++	set_pmd_at(vma->vm_mm, addr, pmdp, pmd);
++}
++
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
++#ifndef __HAVE_ARCH_PMDP_MODIFY_PROT_TRANSACTION
++static inline pmd_t pmdp_modify_prot_start(struct vm_area_struct *vma,
++						unsigned long addr,
++						pmd_t *pmdp)
++{
++	__pmdp_modify_prot_start(vma, addr, pmdp);
++}
++#endif /* __HAVE_ARCH_PMDP_MODIFY_PROT_TRANSACTION */
++
++/*
++ * Commit an update to a pmd.
++ */
++static inline void pmdp_modify_prot_commit(struct vm_area_struct *vma,
++						unsigned long addr,
++						pmd_t *pmdp, pmd_t old_pmd, pmd_t pmd)
++{
++	__pmdp_modify_prot_commit(vma, addr, pmdp, pmd);
++}
++#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+ #endif /* CONFIG_MMU */
+ 
+ /*
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index a88093213674..53515a3c91dd 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -1933,9 +1933,8 @@ bool move_huge_pmd(struct vm_area_struct *vma, unsigned long old_addr,
+ int change_huge_pmd(struct vm_area_struct *vma, pmd_t *pmd,
+ 		unsigned long addr, pgprot_t newprot, int prot_numa)
+ {
+-	struct mm_struct *mm = vma->vm_mm;
+ 	spinlock_t *ptl;
+-	pmd_t entry;
++	pmd_t pmdnt, oldpmd;
+ 	bool preserve_write;
+ 	int ret;
+ 
+@@ -1961,7 +1960,7 @@ int change_huge_pmd(struct vm_area_struct *vma, pmd_t *pmd,
+ 			newpmd = swp_entry_to_pmd(entry);
+ 			if (pmd_swp_soft_dirty(*pmd))
+ 				newpmd = pmd_swp_mksoft_dirty(newpmd);
+-			set_pmd_at(mm, addr, pmd, newpmd);
++			set_pmd_at(vma->vm_mm, addr, pmd, newpmd);
+ 		}
+ 		goto unlock;
+ 	}
+@@ -1995,18 +1994,16 @@ int change_huge_pmd(struct vm_area_struct *vma, pmd_t *pmd,
+ 	 *
+ 	 * The race makes MADV_DONTNEED miss the huge pmd and don't clear it
+ 	 * which may break userspace.
+-	 *
+-	 * pmdp_invalidate() is required to make sure we don't miss
+-	 * dirty/young flags set by hardware.
+ 	 */
+-	entry = pmdp_invalidate(vma, addr, pmd);
+ 
+-	entry = pmd_modify(entry, newprot);
++	oldpmd = pmdp_modify_prot_start(vma, addr, pmd);
++	pmdnt = pmd_modify(oldpmd, newprot);
+ 	if (preserve_write)
+-		entry = pmd_mk_savedwrite(entry);
++		pmdnt = pmd_mk_savedwrite(pmdnt);
++	pmdp_modify_prot_commit(vma, addr, pmd, oldpmd, pmdnt);
++
+ 	ret = HPAGE_PMD_NR;
+-	set_pmd_at(mm, addr, pmd, entry);
+-	BUG_ON(vma_is_anonymous(vma) && !preserve_write && pmd_write(entry));
++	BUG_ON(vma_is_anonymous(vma) && !preserve_write && pmd_write(pmdnt));
+ unlock:
+ 	spin_unlock(ptl);
+ 	return ret;
+-- 
+2.17.1
 
-> 
-> greg k-h
