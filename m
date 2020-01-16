@@ -2,292 +2,242 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCE3C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5EEFC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9CF220730
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:51:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B72A20730
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:56:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="DksVy+Zj"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Ezra2HVM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbgAPKv6 (ORCPT
+        id S1726220AbgAPK4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 05:51:58 -0500
-Received: from mailout3.samsung.com ([203.254.224.33]:49591 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbgAPKv5 (ORCPT
+        Thu, 16 Jan 2020 05:56:14 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:15408 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725800AbgAPK4O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 05:51:57 -0500
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200116105153epoutp03f6c379e46977e7a6401efd770761237f~qWH0dv7xL1444114441epoutp03r
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 10:51:53 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200116105153epoutp03f6c379e46977e7a6401efd770761237f~qWH0dv7xL1444114441epoutp03r
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579171913;
-        bh=4jKTl3Bzex8DaDEnew1fmoVTKniRsUIiYm3eFCAaVOM=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=DksVy+ZjRgN+i2CBFVAaA2i5FdyZX9pueWo8budZMZyIxwZ/dYgJoEscSP18y/gAB
-         i7PO1ZELyQT5BAbKm5Ixxo/iq8x8e69OkOvgZzdokV1eBRVBiCEFZeTbYWoMzoDZkr
-         bjjzoIwLdlyprjAShO2N34XdqlHxbLrp3ud/GDSk=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200116105152epcas1p1171d922c23aaf1b6d4d53cc3e51039cb~qWHzLGokf3008630086epcas1p1Y;
-        Thu, 16 Jan 2020 10:51:52 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.154]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 47z1GZ1N3MzMqYkb; Thu, 16 Jan
-        2020 10:51:50 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        DC.F4.51241.640402E5; Thu, 16 Jan 2020 19:51:50 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200116105149epcas1p36fa4867bae7d1a6f4827a8ddb4e75b35~qWHwmJCk00128201282epcas1p3Q;
-        Thu, 16 Jan 2020 10:51:49 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200116105149epsmtrp12fe68f693f0dd5f94522c369d1a64881~qWHwlS21s0649306493epsmtrp18;
-        Thu, 16 Jan 2020 10:51:49 +0000 (GMT)
-X-AuditID: b6c32a39-163ff7000001c829-48-5e2040469c43
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F8.1B.10238.540402E5; Thu, 16 Jan 2020 19:51:49 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200116105149epsmtip2dc55599c7a95d9585427015afcbc4274~qWHwVwmnW0054300543epsmtip2J;
-        Thu, 16 Jan 2020 10:51:49 +0000 (GMT)
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-To:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     leonard.crestez@nxp.com, lukasz.luba@arm.com, a.swigon@samsung.com,
-        m.szyprowski@samsung.com, enric.balletbo@collabora.com,
-        hl@rock-chips.com, digetx@gmail.com, bjorn.andersson@linaro.org,
-        jcrouse@codeaurora.org, cw00.choi@samsung.com, chanwoo@kernel.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com
-Subject: [PATCH v5] PM / devfreq: Add debugfs support with devfreq_summary
- file
-Date:   Thu, 16 Jan 2020 19:59:09 +0900
-Message-Id: <20200116105909.29281-1-cw00.choi@samsung.com>
+        Thu, 16 Jan 2020 05:56:14 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00GArDEK015410;
+        Thu, 16 Jan 2020 11:53:13 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=FJhGdmI22PlzIP0rf9aoCbEMHmoRGzoHUIfTd1NB+Ks=;
+ b=Ezra2HVMwUC9n9znb9TonHuOKEUJsV4SDn2frdUGkV2KoNpH/1QyyHziJFWEiJ8G7tJv
+ nkovaGWcA3TcFzRUvsMxM81PT5hRu/yLtxy+c/Iu4I3um8I2qIs4Tyspfa5wTPKHNQSZ
+ DTygHpKi40Y9SQ1+i5Ke5XZNcM8bARRrwF3Hu3DkpT2iecSvFg2HdcHmww7dQNfHIaMm
+ xsveDYg4ZyeiyA8iIMW+dWhYgT6E3fx8KormqVZByu5aLdm7i3dlyUmrRtjbR6u6OCVW
+ eU5djocsKhmTqZbvmG+nFEb9uaAQfzSgQJS3HgRefyBj1O/0ZdqddoeOZdvDkfRZgakI uw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xf77b8k1y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jan 2020 11:53:13 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 37F3A10002A;
+        Thu, 16 Jan 2020 11:53:11 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A6C5A2AD9ED;
+        Thu, 16 Jan 2020 11:53:11 +0100 (CET)
+Received: from localhost (10.75.127.46) by SFHDAG6NODE2.st.com (10.75.127.17)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 16 Jan 2020 11:53:11
+ +0100
+From:   Olivier Moysan <olivier.moysan@st.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <alsa-devel@alsa-project.org>,
+        <robh@kernel.org>, <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <olivier.moysan@st.com>
+Subject: [PATCH v2] ASoC: dt-bindings: stm32: convert spdfirx to json-schema
+Date:   Thu, 16 Jan 2020 11:52:44 +0100
+Message-ID: <20200116105244.13485-1-olivier.moysan@st.com>
 X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0gTcRznd7fdTml1TKtfg2xdSCSoO+fqZ2RIjThKyogIolyHHtvYk90W
-        vYjK8oWWZkSphT0xW/lgmWk1MbMsisoe1ho9xQpdWBqVvbbdov77fD+P7/f7e5C4ooZQkiab
-        i3faOAtNxEpar81RJy/JUuWqWw+Q6MXRPQDd9gUlqLL/oQQ9GR2UorMjbwDy+LsA+tp0C0fN
-        dWZ0Z9eQDNUHRqSor72WQJ/LuwE6tmu3DJ3rDsiQf2c9kTWJ9Rz1ALZvbznGtgVOAvZSdUDG
-        tjSUEOzzx5cJtjnYhrE/q30Sdq+3AbCfWxJyYteaFxh5Lp93qnhbnj3fZDNk0stW6RfrtXPV
-        TDKTgebRKhtn5TNpXXZO8hKTJXQMWrWRs7hDVA4nCHTqwgVOu9vFq4x2wZVJ8458iyPDkSJw
-        VsFtM6Tk2a3zGbU6TRsybjAbB/sOYo5htOnm2wfYDrA/qRTEkJBKh/sKPVgpiCUVVBuAvh9D
-        uFh8AnD06cVo8QXAnhe1xN9IbWehVBSuALj/+EdZWFBQowA21jBhTFBJ0PeuPxKIp+bD27+L
-        I51wyofBim/DoYIk46iVcHgkJeyRUInwwrNz0jAtD/nP97rFWTPg2abOSBRSgwT0vBqSiYIO
-        Pn15M7pQHPxwwxvllfD9vsIo3grP9HYTYrgYQK/vnlQUNNB3qgoLD8OpObCxPVWkZ8JL40dA
-        GOPURBgcK4vsAyk5LC5UiJZZsO9lABPxNHiiqCS6Agtrxq8TYbuCWg8/ja+oANOr//WvA6AB
-        TOEdgtXAC4xD+/8btYDIx0zKaAM9d7O7AEUCeoLc+CMhVyHlNgqbrV0AkjgdL+89ND1XIc/n
-        Nm/hnXa9023hhS6gDd1dJa6cnGcPfXObS89o0zQaDUpn5moZhp4q19WF+lAGzsWbed7BO//m
-        MDJGuQNkl+mC7GxLRg9R2XCxYGhSzGLlloRpZYb7z98WrS6IKeowdnQ4K2bUvB4ds46/yjqc
-        9euqv+SNN/60We836c4MVLVfSEd1yZOX3hrMHkh0bFu1SFPQv7J1e2f993mNLQN3ymze4P3U
-        NcvLJ8RDkKJ8UGp4pDa5/eu8cWlV9jHTVFoiGDkmCXcK3B8AtNABrgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNLMWRmVeSWpSXmKPExsWy7bCSvK6rg0KcwdRZchb357UyWpze/47F
-        YuKNKywW1788Z7VY/fExo8Wa24cYLX5sOMVssXFBtsXZpjfsFivufmS1uLxrDpvF594jjBYL
-        m1rYLdYeuctucbtxBZsDv8eaeWsYPS739TJ57Li7hNFj56y77B6bVnWyedy5tofNY+O7HUwe
-        f2ftZ/Ho27KK0ePzJrkArigum5TUnMyy1CJ9uwSujOeXpzEVvLWoOPHkElMD4yStLkZODgkB
-        E4k5B9pYuxi5OIQEdjNKvNy+ihkiISkx7eJRIJsDyBaWOHy4GKLmE6PEtLe7mUBq2AS0JPa/
-        uMEGYosI2EjcXXyNBaSIWeA8k0T78qmMIAlhAX+JzytXgw1lEVCV2HprLSvIUF4BK4l1J0sh
-        dslLrN5wgHkCI88CRoZVjJKpBcW56bnFhgWGeanlesWJucWleel6yfm5mxjBQayluYPx8pL4
-        Q4wCHIxKPLwZf+TihFgTy4orcw8xSnAwK4nwnpwhGyfEm5JYWZValB9fVJqTWnyIUZqDRUmc
-        92nesUghgfTEktTs1NSC1CKYLBMHp1QDIyffgRXz17nGRM/8oHDkhesKjjNN97W/FsXwT3vR
-        8rZHziw8NPPrawfFmhjemCmmXvUex1eudumb6cBbeeGNuJ+yzNEQE87/Cwpeeq+fP+XDKq/o
-        83kVHGH8nFkd7yLmnDm4sOPjjKPcmr87fJKDugqyJL6JsvVGyUktvV4YZ7JG5NKHxrTVSizF
-        GYmGWsxFxYkAFM95D14CAAA=
-X-CMS-MailID: 20200116105149epcas1p36fa4867bae7d1a6f4827a8ddb4e75b35
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200116105149epcas1p36fa4867bae7d1a6f4827a8ddb4e75b35
-References: <CGME20200116105149epcas1p36fa4867bae7d1a6f4827a8ddb4e75b35@epcas1p3.samsung.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG6NODE2.st.com
+ (10.75.127.17)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-16_03:2020-01-16,2020-01-15 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add debugfs interface to provide debugging information of devfreq device.
-It contains 'devfreq_summary' entry to show the summary of registered
-devfreq devices as following and the additional debugfs file will be added.
-- /sys/kernel/debug/devfreq/devfreq_summary
+Convert the STM32 SPDIFRX bindings to DT schema format using json-schema.
 
-[Detailed description of each field of 'devfreq_summary' debugfs file]
-- dev_name	: Device name of h/w
-- dev		: Device name made by devfreq core
-- parent_dev	: If devfreq device uses the passive governor,
-		  show parent devfreq device name. Otherwise, show 'null'.
-- governor	: Devfreq governor name
-- polling_ms	: If devfreq device uses the simple_ondemand governor,
-		  polling_ms is necessary for the period. (unit: millisecond)
-- cur_freq_Hz	: Current frequency (unit: Hz)
-- min_freq_Hz	: Minimum frequency (unit: Hz)
-- max_freq_Hz	: Maximum frequency (unit: Hz)
-
-[For example on Exynos5422-based Odroid-XU3 board]
-$ cat /sys/kernel/debug/devfreq/devfreq_summary
-dev_name                       dev        parent_dev governor        polling_ms  cur_freq_Hz  min_freq_Hz  max_freq_Hz
------------------------------- ---------- ---------- --------------- ---------- ------------ ------------ ------------
-10c20000.memory-controller     devfreq0   null       simple_ondemand          0    165000000    165000000    825000000
-soc:bus_wcore                  devfreq1   null       simple_ondemand         50    532000000     88700000    532000000
-soc:bus_noc                    devfreq2   devfreq1   passive                  0    111000000     66600000    111000000
-soc:bus_fsys_apb               devfreq3   devfreq1   passive                  0    222000000    111000000    222000000
-soc:bus_fsys                   devfreq4   devfreq1   passive                  0    200000000     75000000    200000000
-soc:bus_fsys2                  devfreq5   devfreq1   passive                  0    200000000     75000000    200000000
-soc:bus_mfc                    devfreq6   devfreq1   passive                  0    333000000     83250000    333000000
-soc:bus_gen                    devfreq7   devfreq1   passive                  0    266000000     88700000    266000000
-soc:bus_peri                   devfreq8   devfreq1   passive                  0     66600000     66600000     66600000
-soc:bus_g2d                    devfreq9   devfreq1   passive                  0    333000000     83250000    333000000
-soc:bus_g2d_acp                devfreq10  devfreq1   passive                  0    266000000     66500000    266000000
-soc:bus_jpeg                   devfreq11  devfreq1   passive                  0    300000000     75000000    300000000
-soc:bus_jpeg_apb               devfreq12  devfreq1   passive                  0    166500000     83250000    166500000
-soc:bus_disp1_fimd             devfreq13  devfreq1   passive                  0    200000000    120000000    200000000
-soc:bus_disp1                  devfreq14  devfreq1   passive                  0    300000000    120000000    300000000
-soc:bus_gscl_scaler            devfreq15  devfreq1   passive                  0    300000000    150000000    300000000
-soc:bus_mscl                   devfreq16  devfreq1   passive                  0    666000000     84000000    666000000
-
-[lkp: Reported the build error]
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
 ---
-Changes from v4:
-- Fix wrong patch description
-Changes from v3:
-- Remove the unneeded checking of return value when calling debugfs_create_dir
-- Add missing IS_ENABLED(CONFIG_DEVFREQ_GOV_PASSIVE) condition
-Changes from v2:
-- Show 'null' at 'parent_dev' field when governor of devfreq device
-  is not passive
-Changes from v1:
-- Drop the patch about 'devfreq_transitions' debugfs file
-- Modify from 'hz' to 'Hz'
-- Edit the indentation of 'devfreq_summary' when show summary
-- Exchange sequence between PTR_ERR and IS_ERR when debugfs_create_dir
+Changes in v2:
+- Add "additionalProperties: false"
+- Also change minItems to 2 for dmas property, as both DMAs are required.
+---
+ .../bindings/sound/st,stm32-spdifrx.txt       | 56 -------------
+ .../bindings/sound/st,stm32-spdifrx.yaml      | 84 +++++++++++++++++++
+ 2 files changed, 84 insertions(+), 56 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml
 
- drivers/devfreq/devfreq.c | 82 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 82 insertions(+)
-
-diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-index 89260b17598f..cceee8bc3c2f 100644
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -10,6 +10,7 @@
- #include <linux/kernel.h>
- #include <linux/kmod.h>
- #include <linux/sched.h>
-+#include <linux/debugfs.h>
- #include <linux/errno.h>
- #include <linux/err.h>
- #include <linux/init.h>
-@@ -33,6 +34,7 @@
- #define HZ_PER_KHZ	1000
- 
- static struct class *devfreq_class;
-+static struct dentry *devfreq_debugfs;
- 
- /*
-  * devfreq core provides delayed work based load monitoring helper
-@@ -1643,6 +1645,81 @@ static struct attribute *devfreq_attrs[] = {
- };
- ATTRIBUTE_GROUPS(devfreq);
- 
-+/**
-+ * devfreq_summary_show() - Show the summary of the devfreq devices
-+ * @s:		seq_file instance to show the summary of devfreq devices
-+ * @data:	not used
-+ *
-+ * Show the summary of the devfreq devices via 'devfreq_summary' debugfs file.
-+ * It helps that user can know the detailed information of the devfreq devices.
-+ *
-+ * Return 0 always because it shows the information without any data change.
-+ */
-+static int devfreq_summary_show(struct seq_file *s, void *data)
-+{
-+	struct devfreq *devfreq;
-+	struct devfreq *p_devfreq = NULL;
-+	unsigned long cur_freq, min_freq, max_freq;
-+	unsigned int polling_ms;
+diff --git a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
+deleted file mode 100644
+index 33826f2459fa..000000000000
+--- a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
++++ /dev/null
+@@ -1,56 +0,0 @@
+-STMicroelectronics STM32 S/PDIF receiver (SPDIFRX).
+-
+-The SPDIFRX peripheral, is designed to receive an S/PDIF flow compliant with
+-IEC-60958 and IEC-61937.
+-
+-Required properties:
+-  - compatible: should be "st,stm32h7-spdifrx"
+-  - reg: cpu DAI IP base address and size
+-  - clocks: must contain an entry for kclk (used as S/PDIF signal reference)
+-  - clock-names: must contain "kclk"
+-  - interrupts: cpu DAI interrupt line
+-  - dmas: DMA specifiers for audio data DMA and iec control flow DMA
+-    See STM32 DMA bindings, Documentation/devicetree/bindings/dma/stm32-dma.txt
+-  - dma-names: two dmas have to be defined, "rx" and "rx-ctrl"
+-
+-Optional properties:
+-  - resets: Reference to a reset controller asserting the SPDIFRX
+-
+-The device node should contain one 'port' child node with one child 'endpoint'
+-node, according to the bindings defined in Documentation/devicetree/bindings/
+-graph.txt.
+-
+-Example:
+-spdifrx: spdifrx@40004000 {
+-	compatible = "st,stm32h7-spdifrx";
+-	reg = <0x40004000 0x400>;
+-	clocks = <&rcc SPDIFRX_CK>;
+-	clock-names = "kclk";
+-	interrupts = <97>;
+-	dmas = <&dmamux1 2 93 0x400 0x0>,
+-	       <&dmamux1 3 94 0x400 0x0>;
+-	dma-names = "rx", "rx-ctrl";
+-	pinctrl-0 = <&spdifrx_pins>;
+-	pinctrl-names = "default";
+-
+-	spdifrx_port: port {
+-		cpu_endpoint: endpoint {
+-			remote-endpoint = <&codec_endpoint>;
+-		};
+-	};
+-};
+-
+-spdif_in: spdif-in {
+-	compatible = "linux,spdif-dir";
+-
+-	codec_port: port {
+-		codec_endpoint: endpoint {
+-			remote-endpoint = <&cpu_endpoint>;
+-		};
+-	};
+-};
+-
+-soundcard {
+-	compatible = "audio-graph-card";
+-	dais = <&spdifrx_port>;
+-};
+diff --git a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml
+new file mode 100644
+index 000000000000..e19313e7a552
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml
+@@ -0,0 +1,84 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/st,stm32-spdifrx.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	seq_printf(s, "%-30s %-10s %-10s %-15s %10s %12s %12s %12s\n",
-+			"dev_name",
-+			"dev",
-+			"parent_dev",
-+			"governor",
-+			"polling_ms",
-+			"cur_freq_Hz",
-+			"min_freq_Hz",
-+			"max_freq_Hz");
-+	seq_printf(s, "%30s %10s %10s %15s %10s %12s %12s %12s\n",
-+			"------------------------------",
-+			"----------",
-+			"----------",
-+			"---------------",
-+			"----------",
-+			"------------",
-+			"------------",
-+			"------------");
++title: STMicroelectronics STM32 S/PDIF receiver (SPDIFRX)
 +
-+	mutex_lock(&devfreq_list_lock);
++maintainers:
++  - Olivier Moysan <olivier.moysan@st.com>
 +
-+	list_for_each_entry_reverse(devfreq, &devfreq_list, node) {
-+#if IS_ENABLED(CONFIG_DEVFREQ_GOV_PASSIVE)
-+		if (!strncmp(devfreq->governor_name, DEVFREQ_GOV_PASSIVE,
-+							DEVFREQ_NAME_LEN)) {
-+			struct devfreq_passive_data *data = devfreq->data;
++description: |
++  The SPDIFRX peripheral, is designed to receive an S/PDIF flow compliant with
++  IEC-60958 and IEC-61937.
 +
-+			if (data)
-+				p_devfreq = data->parent;
-+		} else {
-+			p_devfreq = NULL;
-+		}
-+#endif
++properties:
++  compatible:
++    enum:
++      - st,stm32h7-spdifrx
 +
-+		mutex_lock(&devfreq->lock);
-+		cur_freq = devfreq->previous_freq,
-+		get_freq_range(devfreq, &min_freq, &max_freq);
-+		polling_ms = devfreq->profile->polling_ms,
-+		mutex_unlock(&devfreq->lock);
++  "#sound-dai-cells":
++    const: 0
 +
-+		seq_printf(s,
-+			"%-30s %-10s %-10s %-15s %10d %12ld %12ld %12ld\n",
-+			dev_name(devfreq->dev.parent),
-+			dev_name(&devfreq->dev),
-+			p_devfreq ? dev_name(&p_devfreq->dev) : "null",
-+			devfreq->governor_name,
-+			polling_ms,
-+			cur_freq,
-+			min_freq,
-+			max_freq);
-+	}
++  reg:
++    maxItems: 1
 +
-+	mutex_unlock(&devfreq_list_lock);
++  clocks:
++    maxItems: 1
 +
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(devfreq_summary);
++  clock-names:
++    items:
++      - const: kclk
 +
- static int __init devfreq_init(void)
- {
- 	devfreq_class = class_create(THIS_MODULE, "devfreq");
-@@ -1659,6 +1736,11 @@ static int __init devfreq_init(void)
- 	}
- 	devfreq_class->dev_groups = devfreq_groups;
- 
-+	devfreq_debugfs = debugfs_create_dir("devfreq", NULL);
-+	debugfs_create_file("devfreq_summary", 0444,
-+				devfreq_debugfs, NULL,
-+				&devfreq_summary_fops);
++  interrupts:
++    maxItems: 1
 +
- 	return 0;
- }
- subsys_initcall(devfreq_init);
++  dmas:
++    description: |
++      Two DMA channel specifiers are requested:
++      - audio data capture DMA
++      - IEC status bits capture DMA
++      See STM32 DMA bindings /bindings/dma/stm32-dma.txt.
++    minItems: 2
++    maxItems: 2
++
++  dma-names:
++    items:
++      - const: rx
++      - const: rx-ctrl
++
++  resets:
++    maxItems: 1
++
++required:
++  - compatible
++  - "#sound-dai-cells"
++  - reg
++  - clocks
++  - clock-names
++  - interrupts
++  - dmas
++  - dma-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    spdifrx: spdifrx@40004000 {
++        compatible = "st,stm32h7-spdifrx";
++        #sound-dai-cells = <0>;
++        reg = <0x40004000 0x400>;
++        clocks = <&rcc SPDIF_K>;
++        clock-names = "kclk";
++        interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
++        dmas = <&dmamux1 2 93 0x400 0x0>,
++               <&dmamux1 3 94 0x400 0x0>;
++        dma-names = "rx", "rx-ctrl";
++        pinctrl-0 = <&spdifrx_pins>;
++        pinctrl-names = "default";
++    };
++
++...
 -- 
 2.17.1
 
