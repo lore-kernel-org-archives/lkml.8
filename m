@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3405FC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6CC9C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09FC7246B2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F22824690
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:14:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194874;
-	bh=ClXA1MpHf/zfcZYYxVaGGymz8GFZcU/7v2NCprR9GjQ=;
+	s=default; t=1579194880;
+	bh=d1ot/YYV0RfF+eScit7Pv9Z4aszxjt9nvHftGYJUmFc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=czbANoeQzSlBSfqNXgOv5LK/N47NTi3Wa3FWgglYBoDubP1ebKRFg6two/1IH/Opr
-	 I8SGiMH6RXbGmfT+Jir09UeKDcWBghlL+P5x+/KNswlZtii1foYgVWUnSfEhOfVEBc
-	 63w0H1l3UmRsupd9UvGZpoqH7G0tNeUqOEODqF8g=
+	b=xM65cuQbABYX10XI4R/7ur3kOS47IzJqG1RCdNDLIgL2nEOj3RH7EgLmwvpHR+Y14
+	 gzU9eXVNq4XC6TQx9zIKigZariaqRNWnMkm3kBJJ9rspu313Abs64TZZy+OfLVL52b
+	 Bj8h7+1/c7fBdjToIdA8q2SJARlfSk9r/t+0MJ9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391013AbgAPROc (ORCPT
+        id S2391056AbgAPROj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:14:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33036 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:14:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390954AbgAPROR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:14:17 -0500
+        id S2389707AbgAPROX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:14:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56F3B2469E;
-        Thu, 16 Jan 2020 17:14:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37664246B9;
+        Thu, 16 Jan 2020 17:14:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194857;
-        bh=ClXA1MpHf/zfcZYYxVaGGymz8GFZcU/7v2NCprR9GjQ=;
+        s=default; t=1579194862;
+        bh=d1ot/YYV0RfF+eScit7Pv9Z4aszxjt9nvHftGYJUmFc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dPp5TUA7h40s0pZr+LeIrTO5ARAX/kgOGH8cCp1LBIKkN+rwjSpux3tTQcg25jtab
-         S6Fta9O/YdpxjKau7siH/CJeNdqWlYth3fV+o6we26fTgHbzzKSdLBznV1uQ40oMyA
-         I4IHiYWnAdNOttXsuRZV3nTmV1knVQfllj3tkIJo=
+        b=phnGnqLm/yrmcRDxhNGtiHRWfM2EzsCfXdI53r3O1LiXV59GfGCPKU0zx6btz5Pdp
+         cydw9xcdJGL3taiqY7UpDiDiSXLZbduFWv8IgZj+Mb+P3502sFkhxJ/qtbRwgOM180
+         CinaOgHVWotDJu9fcVnwmhHfi/2tzGmUq4L6UJc8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pan Bian <bianpan2016@163.com>,
-        Manish Rangankar <mrangankar@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 652/671] scsi: qla4xxx: fix double free bug
-Date:   Thu, 16 Jan 2020 12:04:50 -0500
-Message-Id: <20200116170509.12787-389-sashal@kernel.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>, Vinod Koul <vkoul@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 657/671] dmaengine: ti: edma: fix missed failure handling
+Date:   Thu, 16 Jan 2020 12:04:55 -0500
+Message-Id: <20200116170509.12787-394-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,38 +58,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Bian <bianpan2016@163.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 3fe3d2428b62822b7b030577cd612790bdd8c941 ]
+[ Upstream commit 340049d453682a9fe8d91fe794dd091730f4bb25 ]
 
-The variable init_fw_cb is released twice, resulting in a double free
-bug. The call to the function dma_free_coherent() before goto is removed to
-get rid of potential double free.
+When devm_kcalloc fails, it forgets to call edma_free_slot.
+Replace direct return with failure handler to fix it.
 
-Fixes: 2a49a78ed3c8 ("[SCSI] qla4xxx: added IPv6 support.")
-Link: https://lore.kernel.org/r/1572945927-27796-1-git-send-email-bianpan2016@163.com
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Acked-by: Manish Rangankar <mrangankar@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 1be5336bc7ba ("dmaengine: edma: New device tree binding")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Link: https://lore.kernel.org/r/20191118073802.28424-1-hslester96@gmail.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla4xxx/ql4_mbx.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/dma/ti/edma.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/qla4xxx/ql4_mbx.c b/drivers/scsi/qla4xxx/ql4_mbx.c
-index 5d56904687b9..c81de7732359 100644
---- a/drivers/scsi/qla4xxx/ql4_mbx.c
-+++ b/drivers/scsi/qla4xxx/ql4_mbx.c
-@@ -640,9 +640,6 @@ int qla4xxx_initialize_fw_cb(struct scsi_qla_host * ha)
+diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+index 982631d4e1f8..44158fa85973 100644
+--- a/drivers/dma/ti/edma.c
++++ b/drivers/dma/ti/edma.c
+@@ -2345,8 +2345,10 @@ static int edma_probe(struct platform_device *pdev)
  
- 	if (qla4xxx_get_ifcb(ha, &mbox_cmd[0], &mbox_sts[0], init_fw_cb_dma) !=
- 	    QLA_SUCCESS) {
--		dma_free_coherent(&ha->pdev->dev,
--				  sizeof(struct addr_ctrl_blk),
--				  init_fw_cb, init_fw_cb_dma);
- 		goto exit_init_fw_cb;
- 	}
+ 		ecc->tc_list = devm_kcalloc(dev, ecc->num_tc,
+ 					    sizeof(*ecc->tc_list), GFP_KERNEL);
+-		if (!ecc->tc_list)
+-			return -ENOMEM;
++		if (!ecc->tc_list) {
++			ret = -ENOMEM;
++			goto err_reg1;
++		}
  
+ 		for (i = 0;; i++) {
+ 			ret = of_parse_phandle_with_fixed_args(node, "ti,tptcs",
 -- 
 2.20.1
 
