@@ -2,130 +2,193 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 121E9C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6D6C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B98F92077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E916A2077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:13:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=cyberus-technology.de header.i=@cyberus-technology.de header.b="WyfDzBV5"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="Cxs0A+w7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbgAPONR (ORCPT
+        id S1726957AbgAPONt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 09:13:17 -0500
-Received: from www413.your-server.de ([88.198.28.140]:38972 "EHLO
-        www413.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbgAPONP (ORCPT
+        Thu, 16 Jan 2020 09:13:49 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:17254 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726440AbgAPONs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 09:13:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=cyberus-technology.de; s=default1911; h=Content-Transfer-Encoding:
-        MIME-Version:Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:
-        Message-ID:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=U59tM/hjwBCgD+03ck/n2U6z9Uy02xUfGBDeEOA+9LE=; b=WyfDzBV5WGLSUyUA00FBOniqR
-        a9Gq85FImZoxDN+FVmHJM5WPuqtJNqSsD7kYaZBj+s4Xmy2Moas2+2QSyFhUZRMngFEhPt126BPHs
-        VnubuCv0JkpbhMzQgHPjWcyx+EBkqC55WkOp/Qv6pUL7FEAZZj4562jJAxepMlTyXqC2tcussZZet
-        BhBpEM4nKD5cZcSXKd7aCjUGXwUQHfmhJK6MX7wyDTb0BS09cdgDXghuEgkfnX3DEkGXMvuotYy+L
-        WYPxWE6bc2Y9rg3nrk0tJ/JFR3VnBOLRGdMI3Syz1AeuJdHqHo117g4GSOBcZfk+fwb9HrLGwqvSx
-        K4ZCQ+DNA==;
-Received: from sslproxy06.your-server.de ([78.46.172.3])
-        by www413.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <julian.stecklina@cyberus-technology.de>)
-        id 1is5tQ-0002lH-BY; Thu, 16 Jan 2020 15:13:04 +0100
-Received: from [2a02:8106:231:700:38db:ba68:aa3a:bbaa] (helo=localhost.localdomain)
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <julian.stecklina@cyberus-technology.de>)
-        id 1is5tQ-0008eN-2d; Thu, 16 Jan 2020 15:13:04 +0100
-Message-ID: <9b32e225ee680e61716e300eb1ed8387599cc0dd.camel@cyberus-technology.de>
-Subject: Re: [RFC PATCH 4/4] drm/i915/gvt: move public gvt headers out into
- global include
-From:   Julian Stecklina <julian.stecklina@cyberus-technology.de>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     intel-gvt-dev@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        zhiyuan.lv@intel.com, hang.yuan@intel.com,
-        Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Thomas Prescher <thomas.prescher@cyberus-technology.de>
-Date:   Thu, 16 Jan 2020 15:13:01 +0100
-In-Reply-To: <20200115152215.GA3830321@kroah.com>
-References: <4079ce7c26a2d2a3c7e0828ed1ea6008d6e2c805.camel@cyberus-technology.de>
-         <20200109171357.115936-1-julian.stecklina@cyberus-technology.de>
-         <20200109171357.115936-5-julian.stecklina@cyberus-technology.de>
-         <20200115152215.GA3830321@kroah.com>
-Organization: Cyberus Technology GmbH
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
+        Thu, 16 Jan 2020 09:13:48 -0500
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00GECrnN021274;
+        Thu, 16 Jan 2020 09:13:44 -0500
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2169.outbound.protection.outlook.com [104.47.57.169])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2xfc59nkw0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jan 2020 09:13:44 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MvEICT1gxLbvL9unawgz7TZQnpa7lg2fJPFzr+D0kruEOZyB04wXgoe7Jgf32ivq3T7Bjr9IBTIaDhnkzt1eNiWm/dfUCfH/AxGnAbczUY7U72zpvt/YyvWPXAXe7bnvljOepLHA6ApCaNz13f/6AFu0UbmK6cSmrdW6oRcHBcdSAhcS6XIwr5CAPco9OiWEO5BAq2vtkFuiAr2y/PM0EHSjXVGKCOJa6tvEfiDj9TudOvq5RzePwVhFh2sqWyjf4toTKmZEeb+o6GgM2fXELJGRbDuFpND4I52ZEiimyUb/caT/3+5zzDI9yklI21xCUnXoCoPLg/1w4j24uumCZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X6kLiyQVqkX+/PFHOKktSq1SPk1JCOkQyYI9B2MsQGY=;
+ b=Vb0c0QysLqmeUwCc7AjIJIfDjvMFXJGlbQwN0+81dS9ylggXx1oREy+ZhgLrRyvWdcv/ROgtvpwb+j45KBRyqQpSf213T3NGGwWmWsZnipZbl+RYgg2JnQmkqo7WJjcWhLi1e4TPTrLaEKfGz5+bAV13tQwzKPmBL8J7TIMGbTIOzBTFGonbTSrInfqIoekW/aeDs3hkeHwNOSI2Qgu9bjavMNX7e+tDN2gboRdoZRR/yd8/IRAsiOLKRmHkQcDQ7zcyYpFlffcBjGEE9PBfKPRWNGTSNpVREbPotsKwk6VrOzKmrMoZ2RfJ3zHJok7yD/dbu4uUdQ9uIqZw8L23dw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.55) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X6kLiyQVqkX+/PFHOKktSq1SPk1JCOkQyYI9B2MsQGY=;
+ b=Cxs0A+w7W53qJBqHWO+nzk00RaM7YiuUJ9OLfhje1TSyWrIb2dCEZiMwHPB83c8f71E2esWdYLXtI4KnLRB1uPeDdtvVqe6llXvPlnDz6sM6NgsPkSnwaDqNeesrVmOCP1svWaLZSTTTiA+M+0WAZmgT+51XgcINfl+ftwjaXis=
+Received: from BN3PR03CA0101.namprd03.prod.outlook.com (2603:10b6:400:4::19)
+ by MWHPR03MB3310.namprd03.prod.outlook.com (2603:10b6:301:44::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.9; Thu, 16 Jan
+ 2020 14:13:40 +0000
+Received: from CY1NAM02FT059.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::208) by BN3PR03CA0101.outlook.office365.com
+ (2603:10b6:400:4::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.18 via Frontend
+ Transport; Thu, 16 Jan 2020 14:13:40 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
+Received: from nwd2mta1.analog.com (137.71.25.55) by
+ CY1NAM02FT059.mail.protection.outlook.com (10.152.74.211) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2644.19
+ via Frontend Transport; Thu, 16 Jan 2020 14:13:39 +0000
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id 00GEDQUW028079
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
+        Thu, 16 Jan 2020 06:13:26 -0800
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Thu, 16 Jan
+ 2020 06:13:36 -0800
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Thu, 16 Jan 2020 09:13:35 -0500
+Received: from saturn.ad.analog.com ([10.48.65.124])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00GEDTjW028414;
+        Thu, 16 Jan 2020 09:13:30 -0500
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <davem@davemloft.net>, <andrew@lunn.ch>, <f.fainelli@gmail.com>,
+        <hkallweit1@gmail.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v2] net: phy: adin: const-ify static data
+Date:   Thu, 16 Jan 2020 16:15:35 +0200
+Message-ID: <20200116141535.26561-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: julian.stecklina@cyberus-technology.de
-X-Virus-Scanned: Clear (ClamAV 0.101.4/25697/Thu Jan 16 12:42:45 2020)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(376002)(136003)(396003)(39860400002)(189003)(199004)(107886003)(426003)(26005)(186003)(2906002)(4326008)(5660300002)(86362001)(2616005)(8676002)(7636002)(336012)(36756003)(70586007)(246002)(7696005)(1076003)(54906003)(316002)(356004)(110136005)(966005)(478600001)(70206006)(44832011)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR03MB3310;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c637c813-e853-439d-2b50-08d79a8e4912
+X-MS-TrafficTypeDiagnostic: MWHPR03MB3310:
+X-Microsoft-Antispam-PRVS: <MWHPR03MB3310F90119ACE8ECE4257470F9360@MWHPR03MB3310.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:556;
+X-Forefront-PRVS: 02843AA9E0
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Sbh/0kIyUpmExZrSJOVMwRN5D+6dEiiDQJH7jU1iXfqT/SNLtWJYkm8ByQeDn0BqpL4oKU3YM+gqLycXghr4KvFuU02ekLHZ5DZDUibmP1k78Juv+co3ygdL8+PEzJAye+bn/AVAlZRwTYv/njrp5mD67jR0D0WqyoL7Lp/SNz+kjkf3cVeCjJfViNediwlIuUJI/FNubwaWEKdK3WbgTarJ/E2EsUHlr4YhG8erCyVO1q+nRQQzJtEwE8spzMBq49RPjXLuOVHrMr+y8pQ22Z0aijctPpdC1iCULg5RUQ+lfBV1JUBUOX/3gkCagRQGFrplmxf+vVAOgIJD9w98PDRBvT8yJ2xY2Aj7POGLcQ826h1X97Qey1lsFdo9g6gKYlHBtP/TtqkFHd94adxhpcvMOZZQig8U+I/QFR08CWKXeS+Car8GQt+HuECghVk+AR1l94XYquwxmYv3O9dpiOGOSTY5C8PB9wEisHIqTwU=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2020 14:13:39.6734
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c637c813-e853-439d-2b50-08d79a8e4912
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR03MB3310
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-16_04:2020-01-16,2020-01-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ mlxlogscore=999 malwarescore=0 suspectscore=0 bulkscore=0 clxscore=1015
+ mlxscore=0 priorityscore=1501 lowpriorityscore=0 adultscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-2001160119
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg, Christoph,
+Some bits of static data should have been made const from the start.
+This change adds the const qualifier where appropriate.
 
-On Wed, 2020-01-15 at 16:22 +0100, Greg KH wrote:
-> On Thu, Jan 09, 2020 at 07:13:57PM +0200, Julian Stecklina wrote:
-> > Now that the GVT interface to hypervisors does not depend on i915/GVT
-> > internals anymore, we can move the headers to the global include/.
-> > 
-> > This makes out-of-tree modules for hypervisor integration possible.
-> 
-> What kind of out-of-tree modules do you need/want for this?
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
 
-The mediated virtualization support in the i915 driver needs a backend to the
-hypervisor. There is currently one backend for KVM in the tree
-(drivers/gpu/drm/i915/gvt/kvmgt.c) and at least 3 other hypervisor backends out
-of tree in various states of development that I know of. We are currently
-developing one of these.
+Changelog v1 -> v2:
+* split away from series
+  https://lore.kernel.org/netdev/20200116091454.16032-1-alexandru.ardelean@analog.com/T/#t
+  https://lore.kernel.org/netdev/20200116091454.16032-1-alexandru.ardelean@analog.com/T/#m70f932056403f3d32d483557276f1fe75dcab592
+* add Andrew's Signed-off-by tag
+  https://lore.kernel.org/netdev/20200116133026.GB19046@lunn.ch/T/#u
 
-> 
-> Also, as Christoph said, adding exports for functions that are not used
-> by anything within the kernel tree itself is not ok, that's not how we
-> work.
+ drivers/net/phy/adin.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-The exports are used by the KVM hypervisor backend. The patchset I sent
-basically decouples KVMGT from i915 driver internals. So personally I would
-count this as a benefit in itself.
-
-There is already an indirection in place that looks like it is intended to
-decouple the hypervisor backends from the i915 driver core: intel_gvt_ops. This
-is a struct of function pointers that the hypervisor backend uses to talk to the
-GPU mediator code.
-
-Unfortunately, this struct doesn't cover all usecases and the KVM hypervisor
-backend directly touches the i915 devices' internal state in very few places. My
-current solution was to wrap these accesses in accessor functions and
-EXPORT_SYMBOL_GPL them.
-
-If the more acceptable solution is to add more function pointers to
-intel_gvt_ops instead of exporting symbols, I'm happy to go along this route.
-
-> And why do they somehow have to be out of the tree?  We want them in the
-> tree, and so should you, as it will save you time and money if they are.
-
-I also want these hypervisor backends in the tree, but from a development
-workflow having the ability to build them as a out-of-tree modules is very
-convenient. I guess this is also true for the developers working on the other
-hypervisor backends.
-
-When I looked at the status quo in i915/gvt a couple of weeks ago, it seemed
-like it would be a win for everyone. Let me just clearly say that we have no
-intention of doing binary blob drivers. :)
-
-Thanks,
-Julian
-
-[1] 
-https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/i915/gvt/gvt.h#L555
+diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
+index cf5a391c93e6..1dca3e883df4 100644
+--- a/drivers/net/phy/adin.c
++++ b/drivers/net/phy/adin.c
+@@ -145,7 +145,7 @@ struct adin_clause45_mmd_map {
+ 	u16 adin_regnum;
+ };
+ 
+-static struct adin_clause45_mmd_map adin_clause45_mmd_map[] = {
++static const struct adin_clause45_mmd_map adin_clause45_mmd_map[] = {
+ 	{ MDIO_MMD_PCS,	MDIO_PCS_EEE_ABLE,	ADIN1300_EEE_CAP_REG },
+ 	{ MDIO_MMD_AN,	MDIO_AN_EEE_LPABLE,	ADIN1300_EEE_LPABLE_REG },
+ 	{ MDIO_MMD_AN,	MDIO_AN_EEE_ADV,	ADIN1300_EEE_ADV_REG },
+@@ -159,7 +159,7 @@ struct adin_hw_stat {
+ 	u16 reg2;
+ };
+ 
+-static struct adin_hw_stat adin_hw_stats[] = {
++static const struct adin_hw_stat adin_hw_stats[] = {
+ 	{ "total_frames_checked_count",		0x940A, 0x940B }, /* hi + lo */
+ 	{ "length_error_frames_count",		0x940C },
+ 	{ "alignment_error_frames_count",	0x940D },
+@@ -456,7 +456,7 @@ static int adin_phy_config_intr(struct phy_device *phydev)
+ static int adin_cl45_to_adin_reg(struct phy_device *phydev, int devad,
+ 				 u16 cl45_regnum)
+ {
+-	struct adin_clause45_mmd_map *m;
++	const struct adin_clause45_mmd_map *m;
+ 	int i;
+ 
+ 	if (devad == MDIO_MMD_VEND1)
+@@ -650,7 +650,7 @@ static void adin_get_strings(struct phy_device *phydev, u8 *data)
+ }
+ 
+ static int adin_read_mmd_stat_regs(struct phy_device *phydev,
+-				   struct adin_hw_stat *stat,
++				   const struct adin_hw_stat *stat,
+ 				   u32 *val)
+ {
+ 	int ret;
+@@ -676,7 +676,7 @@ static int adin_read_mmd_stat_regs(struct phy_device *phydev,
+ 
+ static u64 adin_get_stat(struct phy_device *phydev, int i)
+ {
+-	struct adin_hw_stat *stat = &adin_hw_stats[i];
++	const struct adin_hw_stat *stat = &adin_hw_stats[i];
+ 	struct adin_priv *priv = phydev->priv;
+ 	u32 val;
+ 	int ret;
+-- 
+2.20.1
 
