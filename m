@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D2FC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C09CC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3016D20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:39:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0AD020661
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:39:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217968;
-	bh=zYyQCYQDckUrS/kpMNPDCdFrFdG67epaAPuttfXLJ8c=;
+	s=default; t=1579217976;
+	bh=Vv5RyghxI+e62Ubg8liNy/1QrWWU3ugVXiPsjGGf0Sg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j+Pw3QCBt//KwYTnwyxPLERK/JIaq8LBVzrJCicCOtGYokf+rwqggV/PFzl3axTEI
-	 I2LQFE+5e3WNeHx1rHLQKPS+rhviO7WOeoVUBvAPxoy3d5ukQ8VaAaJsFP4g+3iJlg
-	 cRIVWGhaNRVHQXyKyXoF6/VJ6LjICpKx7Ghcun2k=
+	b=ADatP/W0VYtBAwYIAWsO/M6dgL+ndixv137+GGFihl4H7O0VrLy83yoKjCyd5z8iZ
+	 0sshu7z9dbHPlwAsQjJbCYAyEsTguCHuGMg9oxZHRS+oI68j6xKsiKJVQ7FzzNJHjj
+	 aJGJEOn207K54wr9pmqGanB1/C1Le5UdxYhANtnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390933AbgAPXj1 (ORCPT
+        id S2391140AbgAPXjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:39:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32874 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:39:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391079AbgAPX2T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:28:19 -0500
+        id S2389592AbgAPX2J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:28:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E5E520684;
-        Thu, 16 Jan 2020 23:28:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 889AE20684;
+        Thu, 16 Jan 2020 23:28:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217298;
-        bh=zYyQCYQDckUrS/kpMNPDCdFrFdG67epaAPuttfXLJ8c=;
+        s=default; t=1579217289;
+        bh=Vv5RyghxI+e62Ubg8liNy/1QrWWU3ugVXiPsjGGf0Sg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kVYn9eh/mZiBb23EWX9JsJPrwIkRcbmVAndLnNEqxNqVj6mIRqsjApDk+OJcl/o6A
-         BK4M0LNC+C1ylEsFbEMKFhGdR4ccGnHB5Z8912+8BvAHqXigSbP+wEdMy0LyrbuRCx
-         dfXsHysC+c5AkqvoFeW5HBL5UTnQ9EwJW7vtv+QM=
+        b=mJveuqFK6izK21HIIp6W8pBQqmNS8zdZ9sXrEJosvS9R6fMBofS5AF13qrXt+agIg
+         Dbjk+Qaevw2jD7ivwXqSPkMK9StFzNjMMawP+vy07bTNHwCINq2kjk12wD5qPUrmJH
+         Zga2LEOg8J4b3uCDYY4NfCXiKSy1s4k6PQ5jemQ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 4.19 25/84] iommu: Remove device link to group on failure
-Date:   Fri, 17 Jan 2020 00:17:59 +0100
-Message-Id: <20200116231716.623652200@linuxfoundation.org>
+        stable@vger.kernel.org, Olivier Moysan <olivier.moysan@st.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.19 21/84] ASoC: stm32: spdifrx: fix inconsistent lock state
+Date:   Fri, 17 Jan 2020 00:17:55 +0100
+Message-Id: <20200116231716.172793007@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
 References: <20200116231713.087649517@linuxfoundation.org>
@@ -60,32 +59,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Derrick <jonathan.derrick@intel.com>
+From: Olivier Moysan <olivier.moysan@st.com>
 
-commit 7d4e6ccd1fb09dbfbc49746ca82bd5c25ad4bfe4 upstream.
+commit 2859b1784031b5709446af8f6039c467f136e67d upstream.
 
-This adds the missing teardown step that removes the device link from
-the group when the device addition fails.
+In current spdifrx driver locks may be requested as follows:
+- request lock on iec capture control, when starting synchronization.
+- request lock in interrupt context, when spdifrx stop is called
+from IRQ handler.
 
-Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-Fixes: 797a8b4d768c5 ("iommu: Handle default domain attach failure")
-Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Take lock with IRQs disabled, to avoid the possible deadlock.
+
+Lockdep report:
+[   74.278059] ================================
+[   74.282306] WARNING: inconsistent lock state
+[   74.290120] --------------------------------
+...
+[   74.314373]        CPU0
+[   74.314377]        ----
+[   74.314381]   lock(&(&spdifrx->lock)->rlock);
+[   74.314396]   <Interrupt>
+[   74.314400]     lock(&(&spdifrx->lock)->rlock);
+
+Fixes: 03e4d5d56fa5 ("ASoC: stm32: Add SPDIFRX support")
+
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Link: https://lore.kernel.org/r/20191204154333.7152-2-olivier.moysan@st.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/iommu.c |    1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/stm/stm32_spdifrx.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -650,6 +650,7 @@ err_put_group:
- 	mutex_unlock(&group->mutex);
- 	dev->iommu_group = NULL;
- 	kobject_put(group->devices_kobj);
-+	sysfs_remove_link(group->devices_kobj, device->name);
- err_free_name:
- 	kfree(device->name);
- err_remove_link:
+--- a/sound/soc/stm/stm32_spdifrx.c
++++ b/sound/soc/stm/stm32_spdifrx.c
+@@ -313,6 +313,7 @@ static void stm32_spdifrx_dma_ctrl_stop(
+ static int stm32_spdifrx_start_sync(struct stm32_spdifrx_data *spdifrx)
+ {
+ 	int cr, cr_mask, imr, ret;
++	unsigned long flags;
+ 
+ 	/* Enable IRQs */
+ 	imr = SPDIFRX_IMR_IFEIE | SPDIFRX_IMR_SYNCDIE | SPDIFRX_IMR_PERRIE;
+@@ -320,7 +321,7 @@ static int stm32_spdifrx_start_sync(stru
+ 	if (ret)
+ 		return ret;
+ 
+-	spin_lock(&spdifrx->lock);
++	spin_lock_irqsave(&spdifrx->lock, flags);
+ 
+ 	spdifrx->refcount++;
+ 
+@@ -353,7 +354,7 @@ static int stm32_spdifrx_start_sync(stru
+ 				"Failed to start synchronization\n");
+ 	}
+ 
+-	spin_unlock(&spdifrx->lock);
++	spin_unlock_irqrestore(&spdifrx->lock, flags);
+ 
+ 	return ret;
+ }
+@@ -361,11 +362,12 @@ static int stm32_spdifrx_start_sync(stru
+ static void stm32_spdifrx_stop(struct stm32_spdifrx_data *spdifrx)
+ {
+ 	int cr, cr_mask, reg;
++	unsigned long flags;
+ 
+-	spin_lock(&spdifrx->lock);
++	spin_lock_irqsave(&spdifrx->lock, flags);
+ 
+ 	if (--spdifrx->refcount) {
+-		spin_unlock(&spdifrx->lock);
++		spin_unlock_irqrestore(&spdifrx->lock, flags);
+ 		return;
+ 	}
+ 
+@@ -384,7 +386,7 @@ static void stm32_spdifrx_stop(struct st
+ 	regmap_read(spdifrx->regmap, STM32_SPDIFRX_DR, &reg);
+ 	regmap_read(spdifrx->regmap, STM32_SPDIFRX_CSR, &reg);
+ 
+-	spin_unlock(&spdifrx->lock);
++	spin_unlock_irqrestore(&spdifrx->lock, flags);
+ }
+ 
+ static int stm32_spdifrx_dma_ctrl_register(struct device *dev,
 
 
