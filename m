@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D95E9C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 163E3C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B595420663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D42AA2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:58:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201130;
-	bh=oUxuQepRUEKu++HXwriPcKSaTS7OHkGAGIHwak+Ax6g=;
+	s=default; t=1579201139;
+	bh=G7QWAhHlmc5ZheBORETdChgk5Ie7dO9owpOgebpVdNE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aeJi9bzlprsUwfjhNukhkV07Vz9HtOsohH0kJT1e8j+iFoy6BsXFSZz+UykYmGTiU
-	 gnC/XhofgQ0XKoVRvVSER/IZuyaK6NH7FiKU7JGjrVdTN7J1AUrY+1RZuI3t5i0Eok
-	 UNMCl3BYqEWEiZg7j12VOGCbESGh9qve2zrdFiwM=
+	b=YKa4LfRQv/irFnmm1u60Z4ud2eEVJ1fZ54c+7AgwS/g8jxHfio2vjreTzV7M8KWUM
+	 4DKYHuJmZ70ZZZ/PHmiz5C0XPszDf7ep4vvM9oe4M+khSW8+SYfAeAdp5LLfFeqXfb
+	 1l6hpp1iz2Ji2nflNMU/IItRlF2wri+xHngNuGbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388644AbgAPRGq (ORCPT
+        id S2437205AbgAPS65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:06:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36768 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:58:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388940AbgAPRGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:06:31 -0500
+        id S2388978AbgAPRGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:06:44 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BB8720730;
-        Thu, 16 Jan 2020 17:06:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF8FB20663;
+        Thu, 16 Jan 2020 17:06:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194390;
-        bh=oUxuQepRUEKu++HXwriPcKSaTS7OHkGAGIHwak+Ax6g=;
+        s=default; t=1579194403;
+        bh=G7QWAhHlmc5ZheBORETdChgk5Ie7dO9owpOgebpVdNE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0XCbY8I9s+R+h5p8ABvc63bdeSbDpGO66YFThwrvm1KjqL7oW0eOAeNQbWQe+EabW
-         8tcCLeGlNEWr1O6sUwXmb7qYuicwWqIdoL/017uP503orzmQXBDMbyiny+FZk7KaMb
-         d/hs2zpJLqKXLQXvj6JNARLioI8Sakl0zu2mNs8g=
+        b=1Gxyq5KwWQkhTRUYIf9Uqu1nGBnDJInMz8OT66oLc2t/mQxz9Pw2h9kTQ88bYyr9P
+         u9lalDLyWU53G6B5znefvSlTWKbjHJj+WbUNZby4RLNT2yMouj4rgI714RnKY7TsfS
+         xyXizDHM33ZnWsh6ERkmaovDbXMEjAMuuOOqPZ1I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        Giridhar Malavali <gmalavali@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 318/671] scsi: qla2xxx: Avoid that qlt_send_resp_ctio() corrupts memory
-Date:   Thu, 16 Jan 2020 11:59:16 -0500
-Message-Id: <20200116170509.12787-55-sashal@kernel.org>
+Cc:     Parav Pandit <parav@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 328/671] RDMA/rxe: Consider skb reserve space based on netdev of GID
+Date:   Thu, 16 Jan 2020 11:59:26 -0500
+Message-Id: <20200116170509.12787-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -61,53 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Parav Pandit <parav@mellanox.com>
 
-[ Upstream commit a861b49273578e255426a499842cf7f465456351 ]
+[ Upstream commit 3bf3e2b881c1412d0329ce9376dfe1518489b8fc ]
 
-The "(&ctio->u.status1.sense_data)[i]" where i >= 0 expressions in
-qlt_send_resp_ctio() are probably typos and should have been
-"(&ctio->u.status1.sense_data[4 * i])" instead. Instead of only fixing
-these typos, modify the code for storing sense data such that it becomes
-easy to read. This patch fixes a Coverity complaint about accessing an
-array outside its bounds.
+Always consider the skb reserve space based on netdevice of the GID
+attribute, regardless of vlan or non vlan netdevice.
 
-Cc: Himanshu Madhani <hmadhani@marvell.com>
-Cc: Giridhar Malavali <gmalavali@marvell.com>
-Fixes: be25152c0d9e ("qla2xxx: Improve T10-DIF/PI handling in driver.") # v4.11.
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Acked-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 43c9fc509fa5 ("rdma_rxe: make rxe work over 802.1q VLAN devices")
+Signed-off-by: Parav Pandit <parav@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_target.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/infiniband/sw/rxe/rxe_net.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
-index c925ca787537..95206e227730 100644
---- a/drivers/scsi/qla2xxx/qla_target.c
-+++ b/drivers/scsi/qla2xxx/qla_target.c
-@@ -2233,14 +2233,14 @@ void qlt_send_resp_ctio(struct qla_qpair *qpair, struct qla_tgt_cmd *cmd,
- 		ctio->u.status1.scsi_status |=
- 		    cpu_to_le16(SS_RESIDUAL_UNDER);
+diff --git a/drivers/infiniband/sw/rxe/rxe_net.c b/drivers/infiniband/sw/rxe/rxe_net.c
+index 8094cbaa54a9..54add70c22b5 100644
+--- a/drivers/infiniband/sw/rxe/rxe_net.c
++++ b/drivers/infiniband/sw/rxe/rxe_net.c
+@@ -533,8 +533,9 @@ struct sk_buff *rxe_init_packet(struct rxe_dev *rxe, struct rxe_av *av,
+ 	if (unlikely(!skb))
+ 		goto out;
  
--	/* Response code and sense key */
--	put_unaligned_le32(((0x70 << 24) | (sense_key << 8)),
--	    (&ctio->u.status1.sense_data)[0]);
-+	/* Fixed format sense data. */
-+	ctio->u.status1.sense_data[0] = 0x70;
-+	ctio->u.status1.sense_data[2] = sense_key;
- 	/* Additional sense length */
--	put_unaligned_le32(0x0a, (&ctio->u.status1.sense_data)[1]);
-+	ctio->u.status1.sense_data[7] = 0xa;
- 	/* ASC and ASCQ */
--	put_unaligned_le32(((asc << 24) | (ascq << 16)),
--	    (&ctio->u.status1.sense_data)[3]);
-+	ctio->u.status1.sense_data[12] = asc;
-+	ctio->u.status1.sense_data[13] = ascq;
+-	skb_reserve(skb, hdr_len + LL_RESERVED_SPACE(rxe->ndev));
++	skb_reserve(skb, hdr_len + LL_RESERVED_SPACE(ndev));
  
- 	/* Memory Barrier */
- 	wmb();
++	/* FIXME: hold reference to this netdev until life of this skb. */
+ 	skb->dev	= ndev;
+ 	if (av->network_type == RDMA_NETWORK_IPV4)
+ 		skb->protocol = htons(ETH_P_IP);
 -- 
 2.20.1
 
