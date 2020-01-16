@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C34C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0120AC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC8822522
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:07:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB4AB21582
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:07:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194424;
-	bh=rgGdzB4cVLt1R+ntLiKhZow3VesNrvHG1CWg4LPL2Ek=;
+	s=default; t=1579194432;
+	bh=HEfK2KpxI9JcRyxK58/DnvyfOIJxDZIR/FRlXyEiOzA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eOHNY3Rhfx95MY0xrSUXTyKAI6w97hZSduTF6EPOBvCnODg6FG04WXqmWRE+cXfkD
-	 QmnRnQQxj0kEXdeyqai35wKnpHADUdiAV1/zpdWecAe+mv/bANJtDz2IZIfiM9/A7g
-	 8rBIHaxACCEyYPbq68Pb0ZHBB0UbrEKm+Q6s4hkM=
+	b=owRbf27ZmYpc1ZQWW4yr1rbiWCg+u+8ERbNg8CIAa88tMeqkG1TuKZI1V1vd6HCdK
+	 +wgK96K+DVt8O44sgAP4ediJ7blJl/yNjNww+6ETZ5CzVV+AB2sOtHE/jQOwgmrJZu
+	 2tO8xs+4bDKNwUQHMH8KTqNnz/kpkdTqoY9W4C5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389046AbgAPRHD (ORCPT
+        id S2389106AbgAPRHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:07:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37736 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:07:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389006AbgAPRGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:06:50 -0500
+        id S2389069AbgAPRHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:07:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC6D3205F4;
-        Thu, 16 Jan 2020 17:06:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5219217F4;
+        Thu, 16 Jan 2020 17:07:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194410;
-        bh=rgGdzB4cVLt1R+ntLiKhZow3VesNrvHG1CWg4LPL2Ek=;
+        s=default; t=1579194424;
+        bh=HEfK2KpxI9JcRyxK58/DnvyfOIJxDZIR/FRlXyEiOzA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FOAunnuQD5J4gPd/0OTS2WFyD2mcHJpeYti0cxU2VmQQDJjqoFn4/sVNWIcBzyKs8
-         EwAYjSDgPG2uCS4UPpsCtG6fnRBpkhAQCx0OirKN13uv87fn6vJPUQ/7ksa6y+drHG
-         dvf9CW2Y8rlT//7Pp3PYRFbNT4Q84oPBmm6wogkM=
+        b=yokt7zvL/+Qvceze6btHtsNcO+mkUpqtXhMJxw2dsm92BoRw8GFAxSP+cYMjC2O9C
+         wNNDMm/B3+JY9vee7ztAxCcN0O22VxUHNYiNWkkhdf4FCpOR9NYTyuVS2PBmnzFoL4
+         mFo5uNxAqr/8DDUb8gl3/vx2M157FYRRSiw0DXXE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sameeh Jubran <sameehj@amazon.com>,
-        Netanel Belgazal <netanel@amazon.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 333/671] net: ena: fix ena_com_fill_hash_function() implementation
-Date:   Thu, 16 Jan 2020 11:59:31 -0500
-Message-Id: <20200116170509.12787-70-sashal@kernel.org>
+Cc:     Parav Pandit <parav@mellanox.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 342/671] vfio/mdev: Fix aborting mdev child device removal if one fails
+Date:   Thu, 16 Jan 2020 11:59:40 -0500
+Message-Id: <20200116170509.12787-79-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,33 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sameeh Jubran <sameehj@amazon.com>
+From: Parav Pandit <parav@mellanox.com>
 
-[ Upstream commit 11bd7a00c0d8ffe33d1e926f8e789b4aea787186 ]
+[ Upstream commit 6093e348a5e2475c5bb2e571346460f939998670 ]
 
-ena_com_fill_hash_function() didn't configure the rss->hash_func.
+device_for_each_child() stops executing callback function for remaining
+child devices, if callback hits an error.
+Each child mdev device is independent of each other.
+While unregistering parent device, mdev core must remove all child mdev
+devices.
+Therefore, mdev_device_remove_cb() always returns success so that
+device_for_each_child doesn't abort if one child removal hits error.
 
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Netanel Belgazal <netanel@amazon.com>
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+While at it, improve remove and unregister functions for below simplicity.
+
+There isn't need to pass forced flag pointer during mdev parent
+removal which invokes mdev_device_remove(). So simplify the flow.
+
+mdev_device_remove() is called from two paths.
+1. mdev_unregister_driver()
+     mdev_device_remove_cb()
+       mdev_device_remove()
+2. remove_store()
+     mdev_device_remove()
+
+Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
+Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+Signed-off-by: Parav Pandit <parav@mellanox.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_com.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/vfio/mdev/mdev_core.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
-index 005882c40262..92261c946e2a 100644
---- a/drivers/net/ethernet/amazon/ena/ena_com.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.c
-@@ -2093,6 +2093,7 @@ int ena_com_fill_hash_function(struct ena_com_dev *ena_dev,
- 		return -EINVAL;
- 	}
+diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+index 8cfa71230877..e052f62fdea7 100644
+--- a/drivers/vfio/mdev/mdev_core.c
++++ b/drivers/vfio/mdev/mdev_core.c
+@@ -150,10 +150,10 @@ static int mdev_device_remove_ops(struct mdev_device *mdev, bool force_remove)
  
-+	rss->hash_func = func;
- 	rc = ena_com_set_hash_function(ena_dev);
+ static int mdev_device_remove_cb(struct device *dev, void *data)
+ {
+-	if (!dev_is_mdev(dev))
+-		return 0;
++	if (dev_is_mdev(dev))
++		mdev_device_remove(dev, true);
  
- 	/* Restore the old function */
+-	return mdev_device_remove(dev, data ? *(bool *)data : true);
++	return 0;
+ }
+ 
+ /*
+@@ -241,7 +241,6 @@ EXPORT_SYMBOL(mdev_register_device);
+ void mdev_unregister_device(struct device *dev)
+ {
+ 	struct mdev_parent *parent;
+-	bool force_remove = true;
+ 
+ 	mutex_lock(&parent_list_lock);
+ 	parent = __find_parent_device(dev);
+@@ -255,8 +254,7 @@ void mdev_unregister_device(struct device *dev)
+ 	list_del(&parent->next);
+ 	class_compat_remove_link(mdev_bus_compat_class, dev, NULL);
+ 
+-	device_for_each_child(dev, (void *)&force_remove,
+-			      mdev_device_remove_cb);
++	device_for_each_child(dev, NULL, mdev_device_remove_cb);
+ 
+ 	parent_remove_sysfs_files(parent);
+ 
 -- 
 2.20.1
 
