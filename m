@@ -2,95 +2,100 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67BDFC33CB7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36813C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FD612467A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:20:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195221;
-	bh=XEBX5LKGTgkXutyRuySDGSRfdAJUs1xVRWBHLLs2zVk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CPKANP0YmWngmukhAVV3l9W8j0Xcz/v0/Vo/H6Rlb0IdZazeXIalaESnD1GoBq0Gg
-	 YGkzx5KysGERAuWI0wGNe5m+Pby3stD/nBaMA0JflRG7KCUsD2jdG3/lymJiWminVJ
-	 1OaAnVCDUg0r64ai38SFDcgUNaPmzrpfHc828HtI=
+	by mail.kernel.org (Postfix) with ESMTP id 0A52A246B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:20:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gNNdE1xq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391369AbgAPRSG (ORCPT
+        id S2391605AbgAPRUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:18:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44156 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391308AbgAPRR4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:17:56 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 820A2246B1;
-        Thu, 16 Jan 2020 17:17:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195075;
-        bh=XEBX5LKGTgkXutyRuySDGSRfdAJUs1xVRWBHLLs2zVk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NoNtHikn77I4+YKORryaXz/EaDK8Bu0TdgdyvPLqUBcCS0sW1rMk1bz2aP3wTuclP
-         nRm5JM0YsUIeIHkfdueZkuQtEdIm1yxu1d6Pcf7SGS5X2TeevB+knsXGG5H/S5IY86
-         J1pXhQ8z89QQ1yXFJlyBzaBGGECw1E3fJD9vD+CQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 026/371] pinctrl: sh-pfc: r8a7791: Remove bogus ctrl marks from qspi_data4_b group
-Date:   Thu, 16 Jan 2020 12:11:34 -0500
-Message-Id: <20200116171719.16965-26-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116171719.16965-1-sashal@kernel.org>
-References: <20200116171719.16965-1-sashal@kernel.org>
+        Thu, 16 Jan 2020 12:20:22 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:37686 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730120AbgAPRUU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:20:20 -0500
+Received: by mail-qt1-f195.google.com with SMTP id w47so19467765qtk.4;
+        Thu, 16 Jan 2020 09:20:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nYqhTNAODcj08o+Iw5Uj38+d+Gjt6QkbVMAo+P0Al6A=;
+        b=gNNdE1xqlQTNxWrzBRp0zxnswM9okuIbuVXGsb5071kCP5DyRGZA8jkE3s9/g0IhHA
+         XcsnzwSrcUYoFgiutn6CN30a6Z5udbC2+y9TxFgeQeIEvJr7TJMuD+3aY/2OH1bP/RjK
+         sT4nisMDrvL1vudi1FmxFWA4TwnZxqA+n0eLUb0nNJKqUG9BWKPu+OTBiOA1XeSATC1e
+         J1pJe2kZatd5+XplVruu4IOImldEVFF0/LQ6JZRmuZa254cgSsDv2KYAj53ufPsoTkGo
+         cgWpEswiSIQtpNx89lpA4a6bd/pfNRhccwQAieQr4LGVbwf9QsskTsG+m+zzRQeZ6fiz
+         dqkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nYqhTNAODcj08o+Iw5Uj38+d+Gjt6QkbVMAo+P0Al6A=;
+        b=ByoaL/edYtdM707Z6RruKmIiupew6h0khvU8wllppN+X/ot/6KE3p5w5R5yaMfHymm
+         pM00XzByJCsnbQ/ycBP+d4iB0J40iWRu3ljZdCeeKe/+3ywh+Oq+iQi+XykHypp/SjY2
+         /Uz+GwjTDNKej5DuGPFfMr92HhLEJPydmINnMp29zXOH9MridSEkxBG3B7ope8JiidEm
+         Ndy0W4du2Id5BbaNc0wkVV7GWXP0D3jnjGBin/vfpQnJhbkQAI696NfprqO2EDGtFeYd
+         PpKLXAg/lBR8Bl7A0eKhUghekUVHWeRadk9ptWbgxTtwIxT9K0cyZlD2HACGyCgm+iYn
+         0ucQ==
+X-Gm-Message-State: APjAAAXATZ4Ls5D5DHVEiA1jY0/t6rU0KALavBWi1Rb7M6whJOHrygl3
+        RWtkJjVvmi7Hiz/IIWxcCPGmYKDR
+X-Google-Smtp-Source: APXvYqxiWRk5q4Q98cKa8Qbh1r9gtwbt0VekwnFg0yVAUIqxde9eAnRyMN4e9IWsqI1uwB/EMhKGVA==
+X-Received: by 2002:ac8:1206:: with SMTP id x6mr3547501qti.55.1579195219103;
+        Thu, 16 Jan 2020 09:20:19 -0800 (PST)
+Received: from ?IPv6:2601:282:803:7700:5c84:fd9a:6187:58f5? ([2601:282:803:7700:5c84:fd9a:6187:58f5])
+        by smtp.googlemail.com with ESMTPSA id b40sm12099516qta.86.2020.01.16.09.20.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jan 2020 09:20:18 -0800 (PST)
+Subject: Re: [PATCH AUTOSEL 4.19 573/671] ipv6: Handle race in
+ addrconf_dad_work
+From:   David Ahern <dsahern@gmail.com>
+To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     Rajendra Dendukuri <rajendra.dendukuri@broadcom.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+References: <20200116170509.12787-1-sashal@kernel.org>
+ <20200116170509.12787-310-sashal@kernel.org>
+ <fc012e53-ccdf-5ac5-6f3f-a2ecdf25bc39@gmail.com>
+Message-ID: <630c6286-2ab4-44ab-693e-0615a2ac690b@gmail.com>
+Date:   Thu, 16 Jan 2020 10:20:16 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.3.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <fc012e53-ccdf-5ac5-6f3f-a2ecdf25bc39@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+On 1/16/20 10:18 AM, David Ahern wrote:
+> On 1/16/20 10:03 AM, Sasha Levin wrote:
+>> From: David Ahern <dsahern@gmail.com>
+>>
+>> [ Upstream commit a3ce2a21bb8969ae27917281244fa91bf5f286d7 ]
+>>
+> 
+> That commit was reverted by 8ae72cbf62d2c1879456c0c5872f958e18f53711 and
+> then replaced by 2d819d250a1393a3e725715425ab70a0e0772a71
+> 
 
-[ Upstream commit 884fa25fb6e5e63ab970d612a628313bb68f37cc ]
+BTW, the AUTOSEL algorithm should be updated to look for reverts and
+even ones that have already been nack'ed from a backport perspective.
 
-The qspi_data4_b_mux[] array contains pin marks for the clock and chip
-select pins.  The qspi_data4_b_pins[] array rightfully does not contain
-the corresponding pin numbers, as the control pins are provided by a
-separate group (qspi_ctrl_b).
-
-Fixes: 2d0c386f135e4186 ("pinctrl: sh-pfc: r8a7791: Add QSPI pin groups")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pinctrl/sh-pfc/pfc-r8a7791.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7791.c b/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
-index c01ef02d326b..8600ba82f59c 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
-@@ -3220,8 +3220,7 @@ static const unsigned int qspi_data4_b_pins[] = {
- 	RCAR_GP_PIN(6, 4),
- };
- static const unsigned int qspi_data4_b_mux[] = {
--	SPCLK_B_MARK, MOSI_IO0_B_MARK, MISO_IO1_B_MARK,
--	IO2_B_MARK, IO3_B_MARK, SSL_B_MARK,
-+	MOSI_IO0_B_MARK, MISO_IO1_B_MARK, IO2_B_MARK, IO3_B_MARK,
- };
- /* - SCIF0 ------------------------------------------------------------------ */
- static const unsigned int scif0_data_pins[] = {
--- 
-2.20.1
-
+I felt a bit of deja vu with my response and sure enough this patch was
+selected back in October and I responded then that it should not be
+backported.
