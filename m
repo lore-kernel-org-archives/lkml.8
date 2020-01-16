@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18746C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82892C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5F3824680
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 584DC205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:09:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194564;
-	bh=Ku1iZk0I5wbaIZOihCA+JS9rrQZhPd9PqqMuIKY749I=;
+	s=default; t=1579194566;
+	bh=Us2oXtdbboe0sr3+v+28oDWDxQ0tEGkRNRlLlWzXMIM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oUovTgBnPD7jf9bOJMqaCcPapxvgN6ysIvzNmEeaBkx9YCCoIeJA9buXtzG8Cy/Dr
-	 6Fj/dS2obs3jYlU65uHMzi1GI/EAndaydGQmUav5imtJbFAaeOWSUXOFr1n1n/++xv
-	 x43L2wYCrEmxJy8Wm6hfYXufCYEN2HtlbiY0psc8=
+	b=VsHJGimbNk2fcLyM+hNXYsbnBMNc1yTEUXSIn1y8MYnxdS+UrxIYPF/yXCK5VoJ7x
+	 n2o7EFTR88zo1hj4bDqmLxwirPvxHdYDW8m0VoO4o105TyUCB+pL919lYQc8gv97Pi
+	 /3wNfTn4v0NTelPFY7QZ1OkWnBD6O7jOPFRwsk84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389672AbgAPRJW (ORCPT
+        id S2389673AbgAPRJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:09:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44776 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:09:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389638AbgAPRJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:09:16 -0500
+        id S2389646AbgAPRJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:09:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE4732081E;
-        Thu, 16 Jan 2020 17:09:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FDEB205F4;
+        Thu, 16 Jan 2020 17:09:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194555;
-        bh=Ku1iZk0I5wbaIZOihCA+JS9rrQZhPd9PqqMuIKY749I=;
+        s=default; t=1579194557;
+        bh=Us2oXtdbboe0sr3+v+28oDWDxQ0tEGkRNRlLlWzXMIM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TmZmZbCs+CIPiLnZxbuJaOjcOR0C0bpbrryTg9FP0hzinmeLwFCmbhOBKZdgxrBOa
-         HyyWmIom7C9ePtZOasnlS31mX0MMnGIZnsNmFOEK1Pic+gO/TOhh5EZ4SuhKLiG6Bg
-         FKGwCQ2Q3LZprKJz90fX4ww667fgxuHnSuW2OUOo=
+        b=KjAwXYZcaI0IjcJ9iLeNmboVk2M+YaDOVs0WQY9T89RJMoZssIxvY8W8iA4+fJDfb
+         MQ/p7/kz8CHV+oIheNInIqcYbpMR18r4ZcVNUuV6pey4Ts/XCbUQuy5vYY3L5RYBlL
+         oZuvDfOfYbG07RyeCx5anifSrxIMIxhb439B9CAU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Roman Gushchin <guro@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 437/671] tools: bpftool: use correct argument in cgroup errors
-Date:   Thu, 16 Jan 2020 12:01:15 -0500
-Message-Id: <20200116170509.12787-174-sashal@kernel.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 438/671] backlight: pwm_bl: Fix heuristic to determine number of brightness levels
+Date:   Thu, 16 Jan 2020 12:01:16 -0500
+Message-Id: <20200116170509.12787-175-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -62,54 +62,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
+From: Matthias Kaehlcke <mka@chromium.org>
 
-[ Upstream commit 6c6874f401e5a0caab3b6a0663169e1fb5e930bb ]
+[ Upstream commit 73fbfc499448455f1e1c77717040e09e25f1d976 ]
 
-cgroup code tries to use argv[0] as the cgroup path,
-but if it fails uses argv[1] to report errors.
+With commit 88ba95bedb79 ("backlight: pwm_bl: Compute brightness of
+LED linearly to human eye") the number of set bits (aka hweight())
+in the PWM period is used in the heuristic to determine the number
+of brightness levels, when the brightness table isn't specified in
+the DT. The number of set bits doesn't provide a reliable clue about
+the length of the period, instead change the heuristic to:
 
-Fixes: 5ccda64d38cc ("bpftool: implement cgroup bpf operations")
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: Quentin Monnet <quentin.monnet@netronome.com>
-Acked-by: Roman Gushchin <guro@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+ nlevels = period / fls(period)
+
+Also limit the maximum number of brightness levels to 4096 to avoid
+excessively large tables.
+
+With this the number of levels increases monotonically with the PWM
+period, until the maximum of 4096 levels is reached:
+
+period (ns)    # levels
+
+100    	       16
+500	       62
+1000	       111
+5000	       416
+10000	       769
+50000	       3333
+100000	       4096
+
+Fixes: 88ba95bedb79 ("backlight: pwm_bl: Compute brightness of LED linearly to human eye")
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/bpf/bpftool/cgroup.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/video/backlight/pwm_bl.c | 24 ++++++------------------
+ 1 file changed, 6 insertions(+), 18 deletions(-)
 
-diff --git a/tools/bpf/bpftool/cgroup.c b/tools/bpf/bpftool/cgroup.c
-index ee7a9765c6b3..adbcd84818f7 100644
---- a/tools/bpf/bpftool/cgroup.c
-+++ b/tools/bpf/bpftool/cgroup.c
-@@ -164,7 +164,7 @@ static int do_show(int argc, char **argv)
+diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+index 7ddc0930e98c..3a3098d4873b 100644
+--- a/drivers/video/backlight/pwm_bl.c
++++ b/drivers/video/backlight/pwm_bl.c
+@@ -199,29 +199,17 @@ int pwm_backlight_brightness_default(struct device *dev,
+ 				     struct platform_pwm_backlight_data *data,
+ 				     unsigned int period)
+ {
+-	unsigned int counter = 0;
+-	unsigned int i, n;
++	unsigned int i;
+ 	u64 retval;
  
- 	cgroup_fd = open(argv[0], O_RDONLY);
- 	if (cgroup_fd < 0) {
--		p_err("can't open cgroup %s", argv[1]);
-+		p_err("can't open cgroup %s", argv[0]);
- 		goto exit;
- 	}
+ 	/*
+-	 * Count the number of bits needed to represent the period number. The
+-	 * number of bits is used to calculate the number of levels used for the
+-	 * brightness-levels table, the purpose of this calculation is have a
+-	 * pre-computed table with enough levels to get linear brightness
+-	 * perception. The period is divided by the number of bits so for a
+-	 * 8-bit PWM we have 255 / 8 = 32 brightness levels or for a 16-bit PWM
+-	 * we have 65535 / 16 = 4096 brightness levels.
+-	 *
+-	 * Note that this method is based on empirical testing on different
+-	 * devices with PWM of 8 and 16 bits of resolution.
++	 * Once we have 4096 levels there's little point going much higher...
++	 * neither interactive sliders nor animation benefits from having
++	 * more values in the table.
+ 	 */
+-	n = period;
+-	while (n) {
+-		counter += n % 2;
+-		n >>= 1;
+-	}
++	data->max_brightness =
++		min((int)DIV_ROUND_UP(period, fls(period)), 4096);
  
-@@ -345,7 +345,7 @@ static int do_attach(int argc, char **argv)
- 
- 	cgroup_fd = open(argv[0], O_RDONLY);
- 	if (cgroup_fd < 0) {
--		p_err("can't open cgroup %s", argv[1]);
-+		p_err("can't open cgroup %s", argv[0]);
- 		goto exit;
- 	}
- 
-@@ -403,7 +403,7 @@ static int do_detach(int argc, char **argv)
- 
- 	cgroup_fd = open(argv[0], O_RDONLY);
- 	if (cgroup_fd < 0) {
--		p_err("can't open cgroup %s", argv[1]);
-+		p_err("can't open cgroup %s", argv[0]);
- 		goto exit;
- 	}
- 
+-	data->max_brightness = DIV_ROUND_UP(period, counter);
+ 	data->levels = devm_kcalloc(dev, data->max_brightness,
+ 				    sizeof(*data->levels), GFP_KERNEL);
+ 	if (!data->levels)
 -- 
 2.20.1
 
