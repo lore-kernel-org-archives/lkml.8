@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 856A5C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F2CC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E43A206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 028A8206B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:47:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218433;
-	bh=CIYpgwu0DJgMuL2/3x+8Uiv1IJB/8q1HMWHq4U8GsC4=;
+	s=default; t=1579218436;
+	bh=WXsHBzZ5UAA2RNJv8dslmJNwg5nER0+WsBMNlfLOcgE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=woovxub9VFbrm8fgwSQbwEbFeuHeBPUPzMVuxkfW9NMHmGIhnAWeK6mF42lGXA0sw
-	 8ITO9CzFliXLebaPADhLuqGYp9etwKem8FNOW6E8vWcmOlaKGJ1yDwul+aO5O58lUZ
-	 JDwx+L4bKa6zoAI+Mw4ZcZB6qJUX/7uXyRu5UDuc=
+	b=smyrRexF/suPVOF67AJbU9iONs8s5auBwL1CkfCDYUB0cM8yxWPyLaM959Bi6zMiL
+	 NMsxkk5lBICyEzTYkYZGWSZvRHRxhPdemC9sFARveF4dmzLVYUV4BVt0rWFY1TqY6G
+	 8fqBDHb5xyBAcY4smQbLPKZmQM+B1QqV24pTsnq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392093AbgAPXrM (ORCPT
+        id S2389582AbgAPXVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:47:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48422 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:21:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387608AbgAPXVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:21:20 -0500
+        id S2390780AbgAPXVI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:21:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3521020684;
-        Thu, 16 Jan 2020 23:21:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50C442073A;
+        Thu, 16 Jan 2020 23:21:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216879;
-        bh=CIYpgwu0DJgMuL2/3x+8Uiv1IJB/8q1HMWHq4U8GsC4=;
+        s=default; t=1579216867;
+        bh=WXsHBzZ5UAA2RNJv8dslmJNwg5nER0+WsBMNlfLOcgE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X2Gm8gqH0FwapxYbAXWV6eTStnvR3sS0+0YL9vJNOXvSFEeNdMRQkE4NUmy161rBx
-         AUZ39ybmKE8wzusf1Ig6twYb9eUU1QOod66wU/U2oXO2k+yTi1FlqQVGDf02LGEf8q
-         z5eA7ag/khWP4Z+lNhJl3Y5Pah7tkrSSFTBU0bvM=
+        b=Ch1+UfSVesiGzd6XneQbhyWgn6QKZv9pzD/HjmH2MZWZQInEtrM2vlHQm9wqr7ILi
+         fP5lCEqC/xeMbuTUdKGMslXZ3VK2E2rQlot74JOAQBe55vvlrHFkTeBWOoaf8DMPkP
+         eJs1O6SW56R6BvAvXk6Fc98vsJ3JHOBoo4IPUboI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 057/203] ASoC: fsl_esai: Add spin lock to protect reset, stop and start
-Date:   Fri, 17 Jan 2020 00:16:14 +0100
-Message-Id: <20200116231748.979057805@linuxfoundation.org>
+        stable@vger.kernel.org, Alexandra Winter <wintera@linux.ibm.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 036/203] s390/qeth: vnicc Fix init to default
+Date:   Fri, 17 Jan 2020 00:15:53 +0100
+Message-Id: <20200116231747.287882624@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -60,100 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
+From: Alexandra Winter <wintera@linux.ibm.com>
 
-commit 35dac627471938eda89fa39ee4ead1f7667e0f57 upstream.
+commit d1b9ae1864fc3c000e0eb4af8482d78c63e0915a upstream.
 
-xrun may happen at the end of stream, the
-trigger->fsl_esai_trigger_stop maybe called in the middle of
-fsl_esai_hw_reset, this may cause esai in wrong state
-after stop, and there may be endless xrun interrupt.
+During vnicc_init wanted_char should be compared to cur_char and not
+to QETH_VNICC_DEFAULT. Without this patch there is no way to enforce
+the default values as desired values.
 
-This issue may also happen with trigger->fsl_esai_trigger_start.
+Note, that it is expected, that a card comes online with default values.
+This patch was tested with private card firmware.
 
-So Add spin lock to lock those functions.
-
-Fixes: 7ccafa2b3879 ("ASoC: fsl_esai: recover the channel swap after xrun")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Link: https://lore.kernel.org/r/52e92c4221a83e39a84a6cd92fc3d5479b44894c.1572252321.git.shengjiu.wang@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: caa1f0b10d18 ("s390/qeth: add VNICC enable/disable support")
+Signed-off-by: Alexandra Winter <wintera@linux.ibm.com>
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/fsl/fsl_esai.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/s390/net/qeth_l2_main.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/sound/soc/fsl/fsl_esai.c
-+++ b/sound/soc/fsl/fsl_esai.c
-@@ -33,6 +33,7 @@
-  * @fsysclk: system clock source to derive HCK, SCK and FS
-  * @spbaclk: SPBA clock (optional, depending on SoC design)
-  * @task: tasklet to handle the reset operation
-+ * @lock: spin lock between hw_reset() and trigger()
-  * @fifo_depth: depth of tx/rx FIFO
-  * @slot_width: width of each DAI slot
-  * @slots: number of slots
-@@ -56,6 +57,7 @@ struct fsl_esai {
- 	struct clk *fsysclk;
- 	struct clk *spbaclk;
- 	struct tasklet_struct task;
-+	spinlock_t lock; /* Protect hw_reset and trigger */
- 	u32 fifo_depth;
- 	u32 slot_width;
- 	u32 slots;
-@@ -676,8 +678,10 @@ static void fsl_esai_hw_reset(unsigned l
- {
- 	struct fsl_esai *esai_priv = (struct fsl_esai *)arg;
- 	bool tx = true, rx = false, enabled[2];
-+	unsigned long lock_flags;
- 	u32 tfcr, rfcr;
- 
-+	spin_lock_irqsave(&esai_priv->lock, lock_flags);
- 	/* Save the registers */
- 	regmap_read(esai_priv->regmap, REG_ESAI_TFCR, &tfcr);
- 	regmap_read(esai_priv->regmap, REG_ESAI_RFCR, &rfcr);
-@@ -715,6 +719,8 @@ static void fsl_esai_hw_reset(unsigned l
- 		fsl_esai_trigger_start(esai_priv, tx);
- 	if (enabled[rx])
- 		fsl_esai_trigger_start(esai_priv, rx);
-+
-+	spin_unlock_irqrestore(&esai_priv->lock, lock_flags);
- }
- 
- static int fsl_esai_trigger(struct snd_pcm_substream *substream, int cmd,
-@@ -722,6 +728,7 @@ static int fsl_esai_trigger(struct snd_p
- {
- 	struct fsl_esai *esai_priv = snd_soc_dai_get_drvdata(dai);
- 	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
-+	unsigned long lock_flags;
- 
- 	esai_priv->channels[tx] = substream->runtime->channels;
- 
-@@ -729,12 +736,16 @@ static int fsl_esai_trigger(struct snd_p
- 	case SNDRV_PCM_TRIGGER_START:
- 	case SNDRV_PCM_TRIGGER_RESUME:
- 	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-+		spin_lock_irqsave(&esai_priv->lock, lock_flags);
- 		fsl_esai_trigger_start(esai_priv, tx);
-+		spin_unlock_irqrestore(&esai_priv->lock, lock_flags);
- 		break;
- 	case SNDRV_PCM_TRIGGER_SUSPEND:
- 	case SNDRV_PCM_TRIGGER_STOP:
- 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-+		spin_lock_irqsave(&esai_priv->lock, lock_flags);
- 		fsl_esai_trigger_stop(esai_priv, tx);
-+		spin_unlock_irqrestore(&esai_priv->lock, lock_flags);
- 		break;
- 	default:
- 		return -EINVAL;
-@@ -1002,6 +1013,7 @@ static int fsl_esai_probe(struct platfor
- 
- 	dev_set_drvdata(&pdev->dev, esai_priv);
- 
-+	spin_lock_init(&esai_priv->lock);
- 	ret = fsl_esai_hw_init(esai_priv);
- 	if (ret)
- 		return ret;
+--- a/drivers/s390/net/qeth_l2_main.c
++++ b/drivers/s390/net/qeth_l2_main.c
+@@ -2070,7 +2070,9 @@ static void qeth_l2_vnicc_init(struct qe
+ 	/* enforce assumed default values and recover settings, if changed  */
+ 	error |= qeth_l2_vnicc_recover_timeout(card, QETH_VNICC_LEARNING,
+ 					       timeout);
+-	chars_tmp = card->options.vnicc.wanted_chars ^ QETH_VNICC_DEFAULT;
++	/* Change chars, if necessary  */
++	chars_tmp = card->options.vnicc.wanted_chars ^
++		    card->options.vnicc.cur_chars;
+ 	chars_len = sizeof(card->options.vnicc.wanted_chars) * BITS_PER_BYTE;
+ 	for_each_set_bit(i, &chars_tmp, chars_len) {
+ 		vnicc = BIT(i);
 
 
