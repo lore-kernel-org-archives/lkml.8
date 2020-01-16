@@ -2,169 +2,91 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4655C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C16CBC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99D7120684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 938FC20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:29:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579199398;
+	bh=5GoVNpGh4Dr4dxWZ8reDc8lbWUTjAQH0PijjACcg4h4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=OkecEmX7e0/552O6oRVkukg8t+GZ2Mlf6n9U94Swbqezaywk4YSHa+GHmuxOpxWiD
+	 WCKinTb7YtzxH/aON8RB2+StuiOuqhN0FgGHAAS5I2byx994D3K54VACwRD71hY7ky
+	 aOoN/kTLlCMwkFg6ZuDK9T1Wu/BWXkRgSMa0fWF4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407072AbgAPS3v (ORCPT
+        id S2407084AbgAPS35 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:29:51 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2277 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388537AbgAPS3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 13:29:48 -0500
-Received: from LHREML710-CAH.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id E89599E2EB67A39F47B4;
-        Thu, 16 Jan 2020 18:29:45 +0000 (GMT)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- LHREML710-CAH.china.huawei.com (10.201.108.33) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 16 Jan 2020 18:29:45 +0000
-Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 16 Jan
- 2020 18:29:45 +0000
-Date:   Thu, 16 Jan 2020 18:29:43 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-CC:     "Bia, Beniamin" <Beniamin.Bia@analog.com>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "biabeniamin@outlook.com" <biabeniamin@outlook.com>
-Subject: Re: [PATCH 1/3] iio: amplifiers: hmc425a: Add support for HMC425A
- step attenuator with gpio interface
-Message-ID: <20200116182943.000000de@Huawei.com>
-In-Reply-To: <5925b4f1d47306ec4376a296a1146ff024239044.camel@analog.com>
-References: <20200113141555.16117-1-beniamin.bia@analog.com>
-        <5ae63616-5749-da51-b0b2-85cdcaa948f3@metafoo.de>
-        <5925b4f1d47306ec4376a296a1146ff024239044.camel@analog.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Thu, 16 Jan 2020 13:29:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33850 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732862AbgAPRZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:25:44 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F837246A7;
+        Thu, 16 Jan 2020 17:25:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579195544;
+        bh=5GoVNpGh4Dr4dxWZ8reDc8lbWUTjAQH0PijjACcg4h4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fjaQ4x/unDPoDlpaMPXY9OtmVcznT5OwYWal+8q8I2Qx6gEROYpReqQyh3NONIN8O
+         6/twWnVtJJFPpPyEkiv5OxZXGECdIm4EOi09TU194YDlyw9Baic8QoPArs5CcUKcLq
+         SbY2wM+t4wGj4OANbRKFLVomdyFPF0s74zqTkMXs=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Axel Lin <axel.lin@ingics.com>, Keerthy <j-keerthy@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 136/371] regulator: lp87565: Fix missing register for LP87565_BUCK_0
+Date:   Thu, 16 Jan 2020 12:20:08 -0500
+Message-Id: <20200116172403.18149-79-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
+References: <20200116172403.18149-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.57]
-X-ClientProxiedBy: lhreml733-chm.china.huawei.com (10.201.108.84) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jan 2020 07:27:08 +0000
-"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
+From: Axel Lin <axel.lin@ingics.com>
 
-> On Mon, 2020-01-13 at 21:57 +0100, Lars-Peter Clausen wrote:
-> > [External]
-> > 
-> > On 1/13/20 3:15 PM, Beniamin Bia wrote:
-> > [...]  
-> > > +static int hmc425a_write(struct iio_dev *indio_dev, u32 value)
-> > > +{
-> > > +	struct hmc425a_state *st = iio_priv(indio_dev);
-> > > +	int i, *values;
-> > > +
-> > > +	values = kmalloc_array(st->chip_info->num_gpios, sizeof(int),
-> > > +			       GFP_KERNEL);
-> > > +	if (!values)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	for (i = 0; i < st->chip_info->num_gpios; i++)
-> > > +		values[i] = (value >> i) & 1;
-> > > +
-> > > +	gpiod_set_array_value_cansleep(st->gpios->ndescs, st->gpios->desc,
-> > > +				       values);  
-> > 
-> > This API got changed a while ago in upstream, see
-> > https://github.com/analogdevicesinc/linux/commit/b9762bebc6332b40c33e03dea03e30fa12d9e3ed
-> >   
-> > > +	kfree(values);
-> > > +	return 0;
-> > > +}  
-> > [...]  
-> > > +static int hmc425a_probe(struct platform_device *pdev)
-> > > +{  
-> > [...]  
-> > > +
-> > > +	platform_set_drvdata(pdev, indio_dev);  
-> > 
-> > drvdata is never accessed, no need to set it.
-> >   
-> > > +	mutex_init(&st->lock);
-> > > +
-> > > +	indio_dev->dev.parent = &pdev->dev;
-> > > +	indio_dev->name = np->name;  
-> > 
-> > I know ADI likes to do this in its non upstream drivers, but the above
-> > is not IIO ABI compliant. The name is supposed to identify the type of
-> > the device, which means for this driver should be static "hmc425a".
-> > Maybe consider adding a field to the hmc425a_chip_info for this.  
-> 
-> We've actually [recently] had a discussion about this internally regarding
-> the 'indio_dev->name'.
-> 
-> Maybe it's a good time to ask here (now).
-> A lot of our userspace stuff have been searching IIO devices via the 'name'
-> field in sysfs, which is the name assigned here.
-> That creates a problem when you have multiple devices with the same driver.
-> Which is why, one 
-> 
-> So, then some questions would be:
-> Is a searching for IIO devices [in userspace] based on IIO device-name not
-> recommended? If not, what would be? Or what would be a better idea?
-> 
-> The ABI reads [hopefully I pulled up the right field]:
-> What:           /sys/bus/iio/devices/iio:deviceX/name
-> KernelVersion:  2.6.35
-> Contact:        linux-iio@vger.kernel.org
-> Description:
->                 Description of the physical chip / device for device X.
->                 Typically a part number.
-> 
-> The text in description is a bit open to interpretation, so I can't make an
-> assessment of what is correct.
-> In case there was a discussion about this, sorry for repeating some things
-> now.
+[ Upstream commit d1a6cbdf1e597917cb642c655512d91b71a35d22 ]
 
-So I can speak to the 'intent' of that documentation.  It's meant to be the part
-number.
+LP87565_BUCK_0 is missed, fix it.
 
-Now, we have recently added
-indio_dev->label which is retrieved from generic device tree property 'label'
-to solve the problem of multiple devices of the same type (note that
-driver but different device shouldn't matter as name reflects the part number
-not the driver).  It lets you provide any name you like the DT blob.
+Fixes: f0168a9bf ("regulator: lp87565: Add support for lp87565 PMIC regulators")
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Reviewed-by: Keerthy <j-keerthy@ti.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/regulator/lp87565-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I appreciate this is a 'new' feature and so a bit of a problem for old userspace.
-
-For a long time I pushed back against this because it's easy to tell which device
-is which, just look at the parent.  I got convinced in the end that sometimes
-that answer isn't very user friendly :)
-
-Jonathan
-
-
-> 
-> 
-> >   
-> > > +	indio_dev->info = &hmc425a_info;
-> > > +	indio_dev->modes = INDIO_DIRECT_MODE;
-> > > +
-> > > +	return devm_iio_device_register(&pdev->dev, indio_dev);
-> > > +}  
-
+diff --git a/drivers/regulator/lp87565-regulator.c b/drivers/regulator/lp87565-regulator.c
+index cfdbe294fb6a..32d4e6ec2e19 100644
+--- a/drivers/regulator/lp87565-regulator.c
++++ b/drivers/regulator/lp87565-regulator.c
+@@ -188,7 +188,7 @@ static int lp87565_regulator_probe(struct platform_device *pdev)
+ 	struct lp87565 *lp87565 = dev_get_drvdata(pdev->dev.parent);
+ 	struct regulator_config config = { };
+ 	struct regulator_dev *rdev;
+-	int i, min_idx = LP87565_BUCK_1, max_idx = LP87565_BUCK_3;
++	int i, min_idx = LP87565_BUCK_0, max_idx = LP87565_BUCK_3;
+ 
+ 	platform_set_drvdata(pdev, lp87565);
+ 
+-- 
+2.20.1
 
