@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26081C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5620DC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E216A2077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A42E2077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:40:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200036;
-	bh=+Odn+h8Q5EuGZ9Q+Z9sZ/rzkiyJVGyEikcgRAqyYqME=;
+	s=default; t=1579200037;
+	bh=nkN2iBCnT8Nzt9x5Yz5qfXfAW/ndK9fwwMNcpjVbPfE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HdqK+CEZuCrlXckzqKqUcONAWOAQ8Z+qfZNTDAGYimevKYCc+o4XFfoQo8g13zWeA
-	 Y/iS0UP72yOaat5AuHys3p4WOwS71SE6DSjbkoxWS43Mhbd+ggKV/kkabl4y2PBEKs
-	 e6dzMoBMIIifIXrZ2JFAgmiesbPbzhpiUNCk3pac=
+	b=UUycryaR1feFGniYdHVqN7WvXLkSPq+B5nCX5208tJ16/YeonP+17ZjDBHJMTTlDP
+	 jv5VH+PsxUGnZqLGK34MzjxRgL95uvh1w1KgRJ2zdEjY63frq752cHIBmh7dgeIn03
+	 iDaW7pKtO3NRL2iV6ZccAyCgkbuZ73/9M4S+GzCo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436911AbgAPSk3 (ORCPT
+        id S2390387AbgAPRMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:40:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54262 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:12:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390393AbgAPRMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:12:06 -0500
+        id S2389121AbgAPRL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:11:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90E2E24692;
-        Thu, 16 Jan 2020 17:12:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E88DE24695;
+        Thu, 16 Jan 2020 17:11:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194726;
-        bh=+Odn+h8Q5EuGZ9Q+Z9sZ/rzkiyJVGyEikcgRAqyYqME=;
+        s=default; t=1579194715;
+        bh=nkN2iBCnT8Nzt9x5Yz5qfXfAW/ndK9fwwMNcpjVbPfE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PRk2nrr0TOuLHLxtQQdfnhOS2QrXnsyw18ffemNCDIRpuphC+7e/4UWrPlyyHEuJD
-         7UxNhyM6wPSTrnb6+A2ZH8a+EAytfhmKLi8d/Z42nKaIwQXCMtlYUrtfBYElwFavT/
-         jQziL5au5HxDupnRS/HhDgog5Kvng+9VeNXb/OJ8=
+        b=L2jprDbSzBeKQ9FJXz3rZBlcrtxHeBC94iwglRGLJ/11whYrj6GFrvwxQiW7fAiXz
+         9gPmzUL1CpPTpb/f52fgqghdhgwxjxwwXN7AjLsCvNrtul5QVl4avs9Gs8MyXxlxqY
+         X8GxtCDlq6vMYMZzjGFXkhUq7trV1AoWvhl7i47Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Filippo Sironi <sironi@amazon.de>, Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.19 560/671] iommu/amd: Wait for completion of IOTLB flush in attach_device
-Date:   Thu, 16 Jan 2020 12:03:18 -0500
-Message-Id: <20200116170509.12787-297-sashal@kernel.org>
+Cc:     Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sasha Levin <sashal@kernel.org>, linux-um@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 552/671] um: Fix off by one error in IRQ enumeration
+Date:   Thu, 16 Jan 2020 12:03:10 -0500
+Message-Id: <20200116170509.12787-289-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,34 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filippo Sironi <sironi@amazon.de>
+From: Anton Ivanov <anton.ivanov@cambridgegreys.com>
 
-[ Upstream commit 0b15e02f0cc4fb34a9160de7ba6db3a4013dc1b7 ]
+[ Upstream commit 09ccf0364ca3e94aba4093707ef433ea8014e2a4 ]
 
-To make sure the domain tlb flush completes before the
-function returns, explicitly wait for its completion.
+Fix an off-by-one in IRQ enumeration
 
-Signed-off-by: Filippo Sironi <sironi@amazon.de>
-Fixes: 42a49f965a8d ("amd-iommu: flush domain tlb when attaching a new device")
-[joro: Added commit message and fixes tag]
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: 49da7e64f33e ("High Performance UML Vector Network Driver")
+Reported by: Dana Johnson <djohns042@gmail.com>
+Signed-off-by: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/um/include/asm/irq.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 9991386fb700..bea19aa33758 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -2153,6 +2153,8 @@ static int attach_device(struct device *dev,
- 	 */
- 	domain_flush_tlb_pde(domain);
+diff --git a/arch/um/include/asm/irq.h b/arch/um/include/asm/irq.h
+index 49ed3e35b35a..ce7a78c3bcf2 100644
+--- a/arch/um/include/asm/irq.h
++++ b/arch/um/include/asm/irq.h
+@@ -23,7 +23,7 @@
+ #define VECTOR_BASE_IRQ		15
+ #define VECTOR_IRQ_SPACE	8
  
-+	domain_flush_complete(domain);
-+
- 	return ret;
- }
+-#define LAST_IRQ (VECTOR_IRQ_SPACE + VECTOR_BASE_IRQ)
++#define LAST_IRQ (VECTOR_IRQ_SPACE + VECTOR_BASE_IRQ - 1)
+ 
+ #else
  
 -- 
 2.20.1
