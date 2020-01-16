@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58BD7C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F11AC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AD44206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:53:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40CC9206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:53:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200787;
-	bh=dbN6Hk/xeS7pJGBNgUEA1kBcGzbGki87brQhHo3UQPM=;
+	s=default; t=1579200791;
+	bh=QpYERrgkh0whBg/uo4s9zBgACzT9vkRLbjjTrgrqeqI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jGMTzfP79k2MVLMBPDxff1j5H3Y1jTb4yJ0VBY0h3DH7WlN5QHJZ442Nnd1hh/yCZ
-	 Hz28IO2volXw9T2Z6h3vfCRNbbpN4yaXtC7/D9hl9mbYkiv7GQo14Tx+sNTje49kvD
-	 1KEQZ/AafrmCq2RrSrAc/QTb2w2yVLI99qVZkxtQ=
+	b=rgf8EaAVU7+v7kxe/+qLtH0G9OkeYyDG8AGPIZ5lJHfBtwTmhzphpRPa8rhEXF8mh
+	 NdDM71kCm8lFTn+vZy/vBylAnrieJrghBNU05kKi5c5r1qf0Gk/gKjNoXr/iaR6RiB
+	 CI1Hysk+U9gZY+oWxUIrFy9Dj+ajKqitJmyAbaWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389378AbgAPRIT (ORCPT
+        id S2437131AbgAPSxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:08:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41484 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:53:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389339AbgAPRIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:08:14 -0500
+        id S2389366AbgAPRIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:08:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD6FA21D56;
-        Thu, 16 Jan 2020 17:08:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64AC324653;
+        Thu, 16 Jan 2020 17:08:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194493;
-        bh=dbN6Hk/xeS7pJGBNgUEA1kBcGzbGki87brQhHo3UQPM=;
+        s=default; t=1579194497;
+        bh=QpYERrgkh0whBg/uo4s9zBgACzT9vkRLbjjTrgrqeqI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wkqPqmICKur3HiNo/1Y02Nb21pnAemKhRTIgSOHeTrCF4xNyQFHuh7frexjdPZRVq
-         KoYtbW5sMxXr2CSgpa6SsQJdb8ZLAJ62Ct6w4i/9VpI7K3jEJ6haAq89sX2GgDw5Ys
-         yKZxp4YQklwD63DJPjBTMGpGeXnjsaolanaIZZOs=
+        b=I3mrYiYH2o6BywU3GFH20EnQMN990kQTrDb7ctAhgwW/iyj/bnSc7GZ3SuSPqLb4p
+         33kdMV/sDKHUaOf7A+IV96ZqLK8CYXc03jYlxwlnzqgNv1nQ5I2Oi5Eiu1uN1SgaHH
+         FFkdMQyUZIDFzbsF9km7wlVuncFiLPF3JH2/wuR0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 391/671] RDMA/uverbs: check for allocation failure in uapi_add_elm()
-Date:   Thu, 16 Jan 2020 12:00:29 -0500
-Message-Id: <20200116170509.12787-128-sashal@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Markus Mayer <mmayer@broadcom.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 394/671] cpufreq: brcmstb-avs-cpufreq: Fix initial command check
+Date:   Thu, 16 Jan 2020 12:00:32 -0500
+Message-Id: <20200116170509.12787-131-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,37 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit cac2a301c02a9b178842e22df34217da7854e588 ]
+[ Upstream commit 22a26cc6a51ef73dcfeb64c50513903f6b2d53d8 ]
 
-If the kzalloc() fails then we should return ERR_PTR(-ENOMEM).  In the
-current code it's possible that the kzalloc() fails and the
-radix_tree_insert() inserts the NULL pointer successfully and we return
-the NULL "elm" pointer to the caller.  That results in a NULL pointer
-dereference.
+There is a logical error in brcm_avs_is_firmware_loaded() whereby if the
+firmware returns -EINVAL, we will be reporting this as an error. The
+comment is correct, the code was not.
 
-Fixes: 9ed3e5f44772 ("IB/uverbs: Build the specs into a radix tree at runtime")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: de322e085995 ("cpufreq: brcmstb-avs-cpufreq: AVS CPUfreq driver for Broadcom STB SoCs")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Acked-by: Markus Mayer <mmayer@broadcom.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/uverbs_uapi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/cpufreq/brcmstb-avs-cpufreq.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/core/uverbs_uapi.c b/drivers/infiniband/core/uverbs_uapi.c
-index be854628a7c6..959a3418a192 100644
---- a/drivers/infiniband/core/uverbs_uapi.c
-+++ b/drivers/infiniband/core/uverbs_uapi.c
-@@ -17,6 +17,8 @@ static void *uapi_add_elm(struct uverbs_api *uapi, u32 key, size_t alloc_size)
- 		return ERR_PTR(-EOVERFLOW);
+diff --git a/drivers/cpufreq/brcmstb-avs-cpufreq.c b/drivers/cpufreq/brcmstb-avs-cpufreq.c
+index e6f9cbe5835f..6ed53ca8aa98 100644
+--- a/drivers/cpufreq/brcmstb-avs-cpufreq.c
++++ b/drivers/cpufreq/brcmstb-avs-cpufreq.c
+@@ -446,8 +446,8 @@ static bool brcm_avs_is_firmware_loaded(struct private_data *priv)
+ 	rc = brcm_avs_get_pmap(priv, NULL);
+ 	magic = readl(priv->base + AVS_MBOX_MAGIC);
  
- 	elm = kzalloc(alloc_size, GFP_KERNEL);
-+	if (!elm)
-+		return ERR_PTR(-ENOMEM);
- 	rc = radix_tree_insert(&uapi->radix, key, elm);
- 	if (rc) {
- 		kfree(elm);
+-	return (magic == AVS_FIRMWARE_MAGIC) && (rc != -ENOTSUPP) &&
+-		(rc != -EINVAL);
++	return (magic == AVS_FIRMWARE_MAGIC) && ((rc != -ENOTSUPP) ||
++		(rc != -EINVAL));
+ }
+ 
+ static unsigned int brcm_avs_cpufreq_get(unsigned int cpu)
 -- 
 2.20.1
 
