@@ -2,95 +2,121 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB65C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 07:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8B5C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 07:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F12912075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 07:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CED62075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 07:45:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dezdbOoB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729369AbgAPHpQ (ORCPT
+        id S1729774AbgAPHpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 02:45:16 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8742 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726653AbgAPHpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 02:45:15 -0500
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A64F24145302815F6FFA;
-        Thu, 16 Jan 2020 15:45:13 +0800 (CST)
-Received: from localhost.localdomain (10.67.165.24) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 16 Jan 2020 15:45:03 +0800
-From:   Yonglong Liu <liuyonglong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linuxarm@huawei.com>, <salil.mehta@huawei.com>,
-        <jakub.kicinski@netronome.com>
-Subject: [PATCH net] net: hns: fix soft lockup when there is not enough memory
-Date:   Thu, 16 Jan 2020 15:41:17 +0800
-Message-ID: <1579160477-31030-1-git-send-email-liuyonglong@huawei.com>
-X-Mailer: git-send-email 2.8.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.165.24]
-X-CFilter-Loop: Reflected
+        Thu, 16 Jan 2020 02:45:23 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:32983 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729431AbgAPHpT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 02:45:19 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579160718; h=Message-Id: Date: Subject: To: From: Sender;
+ bh=KDa0VEnaAG+UeaaMbH1ALHaT6x5CoZqlXJwWgKgdJRo=; b=dezdbOoBR91D5WBsTqFXjgrfG5NZ83YOEv6nJFwJIXu/GWsGk+0TCwiL1Ky04eGIu0APsY5m
+ WWO9gBoE2AB7gf/Xdxij6rDxju65iNBznnCmsTnRrGnoN8DT2KZBkB24u0rgJe4QsZENRztr
+ zdP+X1qjV5aTLa6w6OC+IdcFLRQ=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e20148c.7f2429708fb8-smtp-out-n01;
+ Thu, 16 Jan 2020 07:45:16 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E57E3C447A2; Thu, 16 Jan 2020 07:45:14 +0000 (UTC)
+Received: from srichara1-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sricharan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0FE54C433CB;
+        Thu, 16 Jan 2020 07:45:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0FE54C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
+From:   Sricharan R <sricharan@codeaurora.org>
+To:     agross@kernel.org, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org,
+        robh+dt@kernel.org, sivaprak@codeaurora.org,
+        sricharan@codeaurora.org
+Subject: [PATCH V5 0/5] Add minimal boot support for IPQ6018
+Date:   Thu, 16 Jan 2020 13:14:56 +0530
+Message-Id: <1579160701-32408-1-git-send-email-sricharan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When there is not enough memory and napi_alloc_skb() return NULL,
-the HNS driver will print error message, and than try again, if
-the memory is not enough for a while, huge error message and the
-retry operation will cause soft lockup.
+The IPQ6018 is Qualcomm\u2019s 802.11ax SoC for Routers,
+Gateways and Access Points.
 
-When napi_alloc_skb() return NULL because of no memory, we can
-get a warn_alloc() call trace, so this patch deletes the error
-message. We already use polling mode to handle irq, but the
-retry operation will render the polling weight inactive, this
-patch just return budget when the rx is not completed to avoid
-dead loop.
+This series adds minimal board boot support for ipq6018-cp01 board.
 
-Fixes: 36eedfde1a36 ("net: hns: Optimize hns_nic_common_poll for better performance")
-Fixes: b5996f11ea54 ("net: add Hisilicon Network Subsystem basic ethernet support")
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns/hns_enet.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+[V5]
+ * Addressed review comments in pinctrl bindings from Rob.
+ * Ran make dt_binding_check with modified patch.
+ * Added fixed rate clocks in gcc clock controller node.
+ * Patch 4 arm64: dts: Add ipq6018 SoC and CP01 board support has build
+   dependency with,
+        https://lkml.org/lkml/2020/1/9/84
+[v4]
+ * Addressed review comments in pinctrl bindings from Rob.
+ * Ran make dt_binding_check and no issues was reported.
+ * Deleted absahu email id from patch 4, since its bouncing now.
+ * Patch 4 arm64: dts: Add ipq6018 SoC and CP01 board support has build
+   dependency with,
+	https://lkml.org/lkml/2020/1/9/84
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-index 14ab204..eb69e5c 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-@@ -565,7 +565,6 @@ static int hns_nic_poll_rx_skb(struct hns_nic_ring_data *ring_data,
- 	skb = *out_skb = napi_alloc_skb(&ring_data->napi,
- 					HNS_RX_HEAD_SIZE);
- 	if (unlikely(!skb)) {
--		netdev_err(ndev, "alloc rx skb fail\n");
- 		ring->stats.sw_err_cnt++;
- 		return -ENOMEM;
- 	}
-@@ -1056,7 +1055,6 @@ static int hns_nic_common_poll(struct napi_struct *napi, int budget)
- 		container_of(napi, struct hns_nic_ring_data, napi);
- 	struct hnae_ring *ring = ring_data->ring;
- 
--try_again:
- 	clean_complete += ring_data->poll_one(
- 				ring_data, budget - clean_complete,
- 				ring_data->ex_process);
-@@ -1066,7 +1064,7 @@ static int hns_nic_common_poll(struct napi_struct *napi, int budget)
- 			napi_complete(napi);
- 			ring->q->handle->dev->ops->toggle_ring_irq(ring, 0);
- 		} else {
--			goto try_again;
-+			return budget;
- 		}
- 	}
- 
+[V3]
+ * Removed clock driver and bindings from this patch series, and added them
+   as a different series.
+ * Removed qpic_padN from pinctrl driver.
+ * Addressed review comments in dts, and added the remaining fixed clocks their
+ * Fixed review comments in pinctrl bindings
+
+[v2]
+ * Splitted dt bindings  and driver into different patches. Added missing bindings
+   and some style changes.
+ * Added ipq6018 schema
+ * Addressed review comments for gcc clock bindings.
+ * Removed all clk critical flags, removed 1/1 factor clocks, moved to new
+   way of specifying clk parents, and addressed other review comments.
+ * Sorted nodes based on address, name, label. Removed unused clock nodes,
+   Addressed other review comments.
+
+Sricharan R (5):
+  dt-bindings: pinctrl: qcom: Add ipq6018 pinctrl bindings
+  pinctrl: qcom: Add ipq6018 pinctrl driver
+  dt-bindings: qcom: Add ipq6018 bindings
+  arm64: dts: Add ipq6018 SoC and CP01 board support
+  arm64: defconfig: Enable qcom ipq6018 clock and pinctrl
+
+ Documentation/devicetree/bindings/arm/qcom.yaml    |    8 +
+ .../bindings/pinctrl/qcom,ipq6018-pinctrl.yaml     |  174 +++
+ arch/arm64/boot/dts/qcom/Makefile                  |    1 +
+ arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts       |   30 +
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi              |  263 +++++
+ arch/arm64/configs/defconfig                       |    3 +
+ drivers/pinctrl/qcom/Kconfig                       |   10 +
+ drivers/pinctrl/qcom/Makefile                      |    1 +
+ drivers/pinctrl/qcom/pinctrl-ipq6018.c             | 1107 ++++++++++++++++++++
+ 9 files changed, 1597 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
+ create mode 100644 arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/ipq6018.dtsi
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-ipq6018.c
+
 -- 
-2.8.1
-
+1.9.1
