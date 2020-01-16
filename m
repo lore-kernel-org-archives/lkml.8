@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CADCC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0717AC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D76924696
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:11:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D299D2469D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:11:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194716;
-	bh=VpZbRTFKM0xn+6cjq7+IvuLQrY6Rt9Cnp9fdZkHXzlE=;
+	s=default; t=1579194719;
+	bh=b7J+PIPCOnyJlaPoNNjY1W5SUVeTIuhTymopR4zUOrE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w2btqWr+s9iSuiwM9E3leEtEaQEj4Hl/TYpVAju4Gn4lJK3lnMPmOVFE9v3HuZuAr
-	 P4PWILy3X9PkZ+DS5aNr2QzYtoOZC4JGSUZ1KcVlG3TlfB/ZDEMsvJWn3mm7PMybIr
-	 tzv3DJjsK9bEwsEk2IKPhnGS/Do9EiWl3h6AY7mY=
+	b=siWJNaF25EUmy6wpxtxuR4hf3eTJlLKpOPfpE+LBshS28j6YfDwxeuja+fN9HlYx3
+	 f5rNexvkGBNlCrXFXIVDIaSDjN6EM6pBMHBjRlAGyocfYGTCsQF4JJHJe1Ne6HDYM0
+	 mr0cWE/S4MhXlTIwlzg/RegyFFFiimGkHVtZPhPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390339AbgAPRLy (ORCPT
+        id S2390364AbgAPRL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:11:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53004 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:11:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731333AbgAPRLp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:11:45 -0500
+        id S2390318AbgAPRLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:11:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7259421D56;
-        Thu, 16 Jan 2020 17:11:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF4E22469F;
+        Thu, 16 Jan 2020 17:11:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194704;
-        bh=VpZbRTFKM0xn+6cjq7+IvuLQrY6Rt9Cnp9fdZkHXzlE=;
+        s=default; t=1579194710;
+        bh=b7J+PIPCOnyJlaPoNNjY1W5SUVeTIuhTymopR4zUOrE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AjGIKmFGrKiHOXc5MHkpzLw/AFs0atW4ZRp1h4cBfx9/aBP+qk6hZoH9WhjCGFAMl
-         +sKPbGV9CH5rylipwl06uUOPtwIIulIWhBljvedS7+lCOsJjjUY5GPY0XjI97dS+Ga
-         1o5R9synhO5ao6SelWRJFrL7btSU7aqQoxWCm8xc=
+        b=1ezTIBnm4W5EFU9qx9Ko+rdByuwwBXOiOf99Sn2CQY86pbfautOl4fzsVayMJS+WT
+         yS0NaAdL6P4IPKRmYvrTyur4j09iI0jJLWpi2O2ak0k59pxFC9KFGvZK9eRM24Jgbo
+         HyksPYmMAYBQ0sdar2GO0DjtHw9PHUO0HdSGKFYI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Firo Yang <firo.yang@suse.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 543/671] ixgbe: sync the first fragment unconditionally
-Date:   Thu, 16 Jan 2020 12:03:01 -0500
-Message-Id: <20200116170509.12787-280-sashal@kernel.org>
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        Wen Gong <wgong@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 548/671] ath10k: adjust skb length in ath10k_sdio_mbox_rx_packet
+Date:   Thu, 16 Jan 2020 12:03:06 -0500
+Message-Id: <20200116170509.12787-285-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -62,76 +61,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Firo Yang <firo.yang@suse.com>
+From: Nicolas Boichat <drinkcat@chromium.org>
 
-[ Upstream commit e7ba676c6188d394a0133fc4b9bcd7ee50d54b7f ]
+[ Upstream commit b7139960832eb56fa15d390a4b5c8c5739bd0d1a ]
 
-In Xen environment, if Xen-swiotlb is enabled, ixgbe driver
-could possibly allocate a page, DMA memory buffer, for the first
-fragment which is not suitable for Xen-swiotlb to do DMA operations.
-Xen-swiotlb have to internally allocate another page for doing DMA
-operations. This mechanism requires syncing the data from the internal
-page to the page which ixgbe sends to upper network stack. However,
-since commit f3213d932173 ("ixgbe: Update driver to make use of DMA
-attributes in Rx path"), the unmap operation is performed with
-DMA_ATTR_SKIP_CPU_SYNC. As a result, the sync is not performed.
-Since the sync isn't performed, the upper network stack could receive
-a incomplete network packet. By incomplete, it means the linear data
-on the first fragment(between skb->head and skb->end) is invalid. So
-we have to copy the data from the internal xen-swiotlb page to the page
-which ixgbe sends to upper network stack through the sync operation.
+When the FW bundles multiple packets, pkt->act_len may be incorrect
+as it refers to the first packet only (however, the FW will only
+bundle packets that fit into the same pkt->alloc_len).
 
-More details from Alexander Duyck:
-Specifically since we are mapping the frame with
-DMA_ATTR_SKIP_CPU_SYNC we have to unmap with that as well. As a result
-a sync is not performed on an unmap and must be done manually as we
-skipped it for the first frag. As such we need to always sync before
-possibly performing a page unmap operation.
+Before this patch, the skb length would be set (incorrectly) to
+pkt->act_len in ath10k_sdio_mbox_rx_packet, and then later manually
+adjusted in ath10k_sdio_mbox_rx_process_packet.
 
-Fixes: f3213d932173 ("ixgbe: Update driver to make use of DMA attributes in Rx path")
-Signed-off-by: Firo Yang <firo.yang@suse.com>
-Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+The first problem is that ath10k_sdio_mbox_rx_process_packet does not
+use proper skb_put commands to adjust the length (it directly changes
+skb->len), so we end up with a mismatch between skb->head + skb->tail
+and skb->data + skb->len. This is quite serious, and causes corruptions
+in the TCP stack, as the stack tries to coalesce packets, and relies
+on skb->tail being correct (that is, skb_tail_pointer must point to
+the first byte_after_ the data).
+
+Instead of re-adjusting the size in ath10k_sdio_mbox_rx_process_packet,
+this moves the code to ath10k_sdio_mbox_rx_packet, and also add a
+bounds check, as skb_put would crash the kernel if not enough space is
+available.
+
+Tested with QCA6174 SDIO with firmware
+WLAN.RMH.4.4.1-00007-QCARMSWP-1.
+
+Fixes: 8530b4e7b22bc3b ("ath10k: sdio: set skb len for all rx packets")
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Signed-off-by: Wen Gong <wgong@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ drivers/net/wireless/ath/ath10k/sdio.c | 29 +++++++++++++++++++-------
+ 1 file changed, 21 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-index de65ca1e6558..51cd58fbab69 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-@@ -1822,13 +1822,7 @@ static void ixgbe_pull_tail(struct ixgbe_ring *rx_ring,
- static void ixgbe_dma_sync_frag(struct ixgbe_ring *rx_ring,
- 				struct sk_buff *skb)
+diff --git a/drivers/net/wireless/ath/ath10k/sdio.c b/drivers/net/wireless/ath/ath10k/sdio.c
+index 686759b5613f..0ecaba824fb2 100644
+--- a/drivers/net/wireless/ath/ath10k/sdio.c
++++ b/drivers/net/wireless/ath/ath10k/sdio.c
+@@ -392,16 +392,11 @@ static int ath10k_sdio_mbox_rx_process_packet(struct ath10k *ar,
+ 	struct ath10k_htc_hdr *htc_hdr = (struct ath10k_htc_hdr *)skb->data;
+ 	bool trailer_present = htc_hdr->flags & ATH10K_HTC_FLAG_TRAILER_PRESENT;
+ 	enum ath10k_htc_ep_id eid;
+-	u16 payload_len;
+ 	u8 *trailer;
+ 	int ret;
+ 
+-	payload_len = le16_to_cpu(htc_hdr->len);
+-	skb->len = payload_len + sizeof(struct ath10k_htc_hdr);
+-
+ 	if (trailer_present) {
+-		trailer = skb->data + sizeof(*htc_hdr) +
+-			  payload_len - htc_hdr->trailer_len;
++		trailer = skb->data + skb->len - htc_hdr->trailer_len;
+ 
+ 		eid = pipe_id_to_eid(htc_hdr->eid);
+ 
+@@ -638,13 +633,31 @@ static int ath10k_sdio_mbox_rx_packet(struct ath10k *ar,
  {
--	/* if the page was released unmap it, else just sync our portion */
--	if (unlikely(IXGBE_CB(skb)->page_released)) {
--		dma_unmap_page_attrs(rx_ring->dev, IXGBE_CB(skb)->dma,
--				     ixgbe_rx_pg_size(rx_ring),
--				     DMA_FROM_DEVICE,
--				     IXGBE_RX_DMA_ATTR);
--	} else if (ring_uses_build_skb(rx_ring)) {
-+	if (ring_uses_build_skb(rx_ring)) {
- 		unsigned long offset = (unsigned long)(skb->data) & ~PAGE_MASK;
+ 	struct ath10k_sdio *ar_sdio = ath10k_sdio_priv(ar);
+ 	struct sk_buff *skb = pkt->skb;
++	struct ath10k_htc_hdr *htc_hdr;
+ 	int ret;
  
- 		dma_sync_single_range_for_cpu(rx_ring->dev,
-@@ -1845,6 +1839,14 @@ static void ixgbe_dma_sync_frag(struct ixgbe_ring *rx_ring,
- 					      skb_frag_size(frag),
- 					      DMA_FROM_DEVICE);
- 	}
+ 	ret = ath10k_sdio_readsb(ar, ar_sdio->mbox_info.htc_addr,
+ 				 skb->data, pkt->alloc_len);
++	if (ret)
++		goto out;
 +
-+	/* If the page was released, just unmap it. */
-+	if (unlikely(IXGBE_CB(skb)->page_released)) {
-+		dma_unmap_page_attrs(rx_ring->dev, IXGBE_CB(skb)->dma,
-+				     ixgbe_rx_pg_size(rx_ring),
-+				     DMA_FROM_DEVICE,
-+				     IXGBE_RX_DMA_ATTR);
++	/* Update actual length. The original length may be incorrect,
++	 * as the FW will bundle multiple packets as long as their sizes
++	 * fit within the same aligned length (pkt->alloc_len).
++	 */
++	htc_hdr = (struct ath10k_htc_hdr *)skb->data;
++	pkt->act_len = le16_to_cpu(htc_hdr->len) + sizeof(*htc_hdr);
++	if (pkt->act_len > pkt->alloc_len) {
++		ath10k_warn(ar, "rx packet too large (%zu > %zu)\n",
++			    pkt->act_len, pkt->alloc_len);
++		ret = -EMSGSIZE;
++		goto out;
 +	}
- }
++
++	skb_put(skb, pkt->act_len);
++
++out:
+ 	pkt->status = ret;
+-	if (!ret)
+-		skb_put(skb, pkt->act_len);
  
- /**
+ 	return ret;
+ }
 -- 
 2.20.1
 
