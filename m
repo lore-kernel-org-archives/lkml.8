@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7384EC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A00C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43919206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC147206B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218411;
-	bh=DpGXwf5WCT68h30EiLxwSBUtzxw2I203M5y/g0r7J7M=;
+	s=default; t=1579218416;
+	bh=KDv9/903esDZ2Zd4v1or1l8x4BzyIxvvyXJ7g4xgGB4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1ZVZtMbOUINaYZssvpfqb4m5F+LynH+bcWH2IvPKm32cjEcYHnIOjFaWmVeOY1ihQ
-	 FT4H3zLa3Ida8VZOB7y5vRrDWkmgylApor37JgPHnhBlVr4k4EChXw38qWi1qMX8Cz
-	 GjVl8wrEmMSt8RG+n1j1i7XWVAJ6947JX3lq3wmw=
+	b=aFGHI5u6zvcg5EzoYDOZQhHYy6/xHpDn8A+Vz/2QA0puw8XXi6ZqgcVf2HwzFqAHh
+	 A1kpCVCz/qMKUM85eVlj2L5IW3agaImef3wO1/4cWYl7sI2zO++BwzorLLNJvXCMsQ
+	 UI1l2Sx1+uCEA9cNKyy0AbTcU2tt2yLHwJsot2fQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392081AbgAPXqt (ORCPT
+        id S2392075AbgAPXqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:46:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49008 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:46:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388331AbgAPXVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:21:37 -0500
+        id S2390830AbgAPXV3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:21:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22146206D9;
-        Thu, 16 Jan 2020 23:21:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABFA7206D9;
+        Thu, 16 Jan 2020 23:21:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216896;
-        bh=DpGXwf5WCT68h30EiLxwSBUtzxw2I203M5y/g0r7J7M=;
+        s=default; t=1579216889;
+        bh=KDv9/903esDZ2Zd4v1or1l8x4BzyIxvvyXJ7g4xgGB4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rEaTDQ6yf4XXxMOfuXBr5JUsrWWpZdQXUzeQQ8VrkfpQEWUC0DjErLHIk/UOR+RtS
-         gzv6lv5P1C3jdCviBfAgLFxVYZMkiaZZ8NMKeUPu+tCIimid47QgxsnYDODoWJJVCp
-         dgsaE/apwYpoQTdFXu/Dm6en3u+Lqdah+EugS/wc=
+        b=vUCXoGEqzhx39krgEgOoQ5YVuTaGEyit5UhJsazSKw7Enmgyy3n2Sq1HNuRPKxsbm
+         i3s/2R1laMV3V6DrABJDku5LGm2ber6upQb0551nhF83qOLKHTyhDQjHNK24wxS444
+         ly9YPApgDGYF9k/LbvtwhpP/Wfmlv+UOxikuKHDY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Zhang <markz@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
         Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.4 064/203] RDMA/counter: Prevent QP counter manual binding in auto mode
-Date:   Fri, 17 Jan 2020 00:16:21 +0100
-Message-Id: <20200116231749.667062189@linuxfoundation.org>
+Subject: [PATCH 5.4 061/203] RDMA/hns: Prevent undefined behavior in hns_roce_set_user_sq_size()
+Date:   Fri, 17 Jan 2020 00:16:18 +0100
+Message-Id: <20200116231749.365403904@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -60,64 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Zhang <markz@mellanox.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-commit 663912a6378a34fd4f43b8d873f0c6c6322d9d0e upstream.
+commit 515f60004ed985d2b2f03659365752e0b6142986 upstream.
 
-If auto mode is configured, manual counter allocation and QP bind is not
-allowed.
+The "ucmd->log_sq_bb_count" variable is a user controlled variable in the
+0-255 range.  If we shift more than then number of bits in an int then
+it's undefined behavior (it shift wraps), and potentially the int could
+become negative.
 
-Fixes: 1bd8e0a9d0fd ("RDMA/counter: Allow manual mode configuration support")
-Link: https://lore.kernel.org/r/20190916071154.20383-3-leon@kernel.org
-Signed-off-by: Mark Zhang <markz@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Fixes: 9a4435375cd1 ("IB/hns: Add driver files for hns RoCE driver")
+Link: https://lore.kernel.org/r/20190608092514.GC28890@mwanda
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/counters.c |   12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/infiniband/hw/hns/hns_roce_qp.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/drivers/infiniband/core/counters.c
-+++ b/drivers/infiniband/core/counters.c
-@@ -466,10 +466,15 @@ static struct rdma_counter *rdma_get_cou
- int rdma_counter_bind_qpn(struct ib_device *dev, u8 port,
- 			  u32 qp_num, u32 counter_id)
- {
-+	struct rdma_port_counter *port_counter;
- 	struct rdma_counter *counter;
- 	struct ib_qp *qp;
- 	int ret;
+--- a/drivers/infiniband/hw/hns/hns_roce_qp.c
++++ b/drivers/infiniband/hw/hns/hns_roce_qp.c
+@@ -332,9 +332,8 @@ static int check_sq_size_with_integrity(
+ 	u8 max_sq_stride = ilog2(roundup_sq_stride);
  
-+	port_counter = &dev->port_data[port].port_counter;
-+	if (port_counter->mode.mode == RDMA_COUNTER_MODE_AUTO)
-+		return -EINVAL;
-+
- 	qp = rdma_counter_get_qp(dev, qp_num);
- 	if (!qp)
- 		return -ENOENT;
-@@ -506,6 +511,7 @@ err:
- int rdma_counter_bind_qpn_alloc(struct ib_device *dev, u8 port,
- 				u32 qp_num, u32 *counter_id)
- {
-+	struct rdma_port_counter *port_counter;
- 	struct rdma_counter *counter;
- 	struct ib_qp *qp;
- 	int ret;
-@@ -513,9 +519,13 @@ int rdma_counter_bind_qpn_alloc(struct i
- 	if (!rdma_is_port_valid(dev, port))
+ 	/* Sanity check SQ size before proceeding */
+-	if ((u32)(1 << ucmd->log_sq_bb_count) > hr_dev->caps.max_wqes ||
+-	     ucmd->log_sq_stride > max_sq_stride ||
+-	     ucmd->log_sq_stride < HNS_ROCE_IB_MIN_SQ_STRIDE) {
++	if (ucmd->log_sq_stride > max_sq_stride ||
++	    ucmd->log_sq_stride < HNS_ROCE_IB_MIN_SQ_STRIDE) {
+ 		ibdev_err(&hr_dev->ib_dev, "check SQ size error!\n");
  		return -EINVAL;
+ 	}
+@@ -358,13 +357,16 @@ static int hns_roce_set_user_sq_size(str
+ 	u32 max_cnt;
+ 	int ret;
  
--	if (!dev->port_data[port].port_counter.hstats)
-+	port_counter = &dev->port_data[port].port_counter;
-+	if (!port_counter->hstats)
- 		return -EOPNOTSUPP;
- 
-+	if (port_counter->mode.mode == RDMA_COUNTER_MODE_AUTO)
++	if (check_shl_overflow(1, ucmd->log_sq_bb_count, &hr_qp->sq.wqe_cnt) ||
++	    hr_qp->sq.wqe_cnt > hr_dev->caps.max_wqes)
 +		return -EINVAL;
 +
- 	qp = rdma_counter_get_qp(dev, qp_num);
- 	if (!qp)
- 		return -ENOENT;
+ 	ret = check_sq_size_with_integrity(hr_dev, cap, ucmd);
+ 	if (ret) {
+ 		ibdev_err(&hr_dev->ib_dev, "Sanity check sq size failed\n");
+ 		return ret;
+ 	}
+ 
+-	hr_qp->sq.wqe_cnt = 1 << ucmd->log_sq_bb_count;
+ 	hr_qp->sq.wqe_shift = ucmd->log_sq_stride;
+ 
+ 	max_cnt = max(1U, cap->max_send_sge);
 
 
