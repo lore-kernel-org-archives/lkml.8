@@ -2,133 +2,138 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A1DC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A735C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 450772053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:35:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DE402192A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 11:36:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="OqmFEjX+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgAPLfu (ORCPT
+        id S1726871AbgAPLgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 06:35:50 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:35139 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726406AbgAPLfu (ORCPT
+        Thu, 16 Jan 2020 06:36:31 -0500
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:37285 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726045AbgAPLga (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 06:35:50 -0500
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1is3R7-00072N-2n; Thu, 16 Jan 2020 12:35:41 +0100
-Message-ID: <d3b02f79be206a14d7810c42e08ab9e224f40ae2.camel@pengutronix.de>
-Subject: Re: [PATCH] ARM: dts: colibri-imx7: fix ethernet performance
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Igor Opanyuk <igor.opanyuk@toradex.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Thu, 16 Jan 2020 12:35:40 +0100
-In-Reply-To: <20200116101313.2524795-1-oleksandr.suvorov@toradex.com>
-References: <20200116101313.2524795-1-oleksandr.suvorov@toradex.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Thu, 16 Jan 2020 06:36:30 -0500
+Received: from [IPv6:2001:420:44c1:2577:1825:cb8:c622:6168]
+ ([IPv6:2001:420:44c1:2577:1825:cb8:c622:6168])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id s3RjiVmMbpLtbs3RnipkFi; Thu, 16 Jan 2020 12:36:26 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1579174586; bh=KJTZxvoNtyNAYS48H7dDiS3wOSGu6tHpdKtGolS4OPI=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=OqmFEjX+SXw4fZdw5rPbu3khV/FJcpL4Bd7+o6GOEnlW/YW07z/lPAq7mPWjyiPtv
+         AYUP5MM0OncNrwzMepx5Ugnw5ezFFkMpvepnJcqZbwzVZ1yG+kHAIdVNlcXh4nnBSc
+         mYGCCEzrCC5p35eI+aXC9zAZYe0U1kGzAYKil1zhgN5aXajxsSlzyheBrhR6PxkNWc
+         rHMCrWvKM0cvlFzuCkE2rPTTYm2cxmKRs4qCjKjl9FD3UelnQrjqLpjCKud2CV9IhC
+         wGwo7EKX26CHoyyfN+blfJ2aTI93NgC7Fht41so2zTrP1ZG+bQ7uoIiBljHy7LKPyB
+         OfoqCm2I/GZ5w==
+Subject: Re: [PATCH v2] media: xilinx: Use dma_request_chan() instead
+ dma_request_slave_channel()
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     mchehab@kernel.org, hyun.kwon@xilinx.com, vkoul@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org
+References: <20200110071648.15690-1-peter.ujfalusi@ti.com>
+ <20200115172822.GB7139@pendragon.ideasonboard.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <fc5e4b9b-824b-67e1-90c3-fddcdb973714@xs4all.nl>
+Date:   Thu, 16 Jan 2020 12:36:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200115172822.GB7139@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-CMAE-Envelope: MS4wfBoRekIT5H1+bZg7kDzHByl5/pJ+D4JLvao0qsUsmlMb4ajKa+B+yCUFPOxPPnYYySnRKst2gdx52ZwoXEUxy5+AKjcsOXNPdp0hBwajxKX695mXlPl1
+ Srrgquwpbli+dHKj02HgFf84PuxP3Phqt3Hmbfw/pyGEJyNEoqTT8mw6jcjlXRy3xFAFlp+xSDjlzlb60OFjX6+ZXfnNFxKg0fme9umt2mGhB3qQMSedq/9S
+ JSxo8T0b+YOJ5eA+484hQFgcU7f2TWpQiXPEZjrgreCtBMUAF/ggVPfB2pQw+TVRfyMfHiWwSomc6JHPfmbO8k74seqCwOcoSeVKPaVOnJ0tunwqMa8TV5qZ
+ +dGAjm/qTdqFC10jsYBXArs1Cz22maKjJpmLx+DkQMkHgUTHpWueisgq4u9u+2MNIXc3ZMkFt6phihwBx7UL97SiD3IF+JC9j/GRTr9HkBoS4v+tUYMBsU3r
+ eiMqsex7gUfFrXqP0xRl7TjZLiVYkvXHlOhf+y9/jl/QMmVZ44gUXN76ibLpVT0SPXNqCrbgYaKe4bzhkPdtcbXz/cWJtG9MC8TS8PEqPf8za1nKk/EXnZOB
+ 0Jg=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Do, 2020-01-16 at 10:13 +0000, Oleksandr Suvorov wrote:
-> Performance test of ethernet interface shows extremely low result:
+On 1/15/20 6:28 PM, Laurent Pinchart wrote:
+> Hi Peter,
 > 
-> === w/o fix =================
-> Connecting to host 192.168.x.x, port 5201
-> [  5] local 192.168.x.y port59020 connected to 192.168.x.x port 5201
-> ...
-> [ ID] Interval           Transfer     Bitrate         Retr
-> [  5]   0.00-10.00  sec  2.78 MBytes  2.33 Mbits/sec  337      sender
-> [  5]   0.00-10.00  sec  2.66 MBytes  2.23
-> Mbits/sec           receiver
-> =============================
+> (CC'ing Hans)
 > 
-> Adding correct settings of the mdio bus with the respective phy
-> fixes this issue.
+> Thank you for the patch.
+> 
+> On Fri, Jan 10, 2020 at 09:16:48AM +0200, Peter Ujfalusi wrote:
+>> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+>> eating up the error code.
+>>
+>> By using dma_request_chan() directly the driver can support deferred
+>> probing against DMA.
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> 
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> 
+> and taken in my tree. Hans, you asked me on IRC to review this, did you
+> plan to get it merged upstream yourself ? If so I'll drop it.
 
-So what's the actual issue being fixed here? High packet loss due to
-trying to force GBit speeds through 100MBit magnetics? So the addition
-of "max-speed = <100>;" is the real core of the fix?
+Yes, I'll take it. I have similar patches as well in my upcoming PR, so
+it makes sense to combine them.
 
-The commit log should mention this.
+Thanks for reviewing this!
 
-Regards,
-Lucas
+	Hans
 
 > 
-> === after fix ===============
-> iperf3 -c 192.168.x.x
-> Connecting to host 192.168.x.x, port 5201
-> [  5] local 192.168.x.y port 50702 connected to 192.168.x.x port 5201
-> ...
-> [ ID] Interval           Transfer     Bitrate         Retr
-> [  5]   0.00-10.00  sec   114 MBytes  95.4 Mbits/sec   56      sender
-> [  5]   0.00-10.00  sec   112 MBytes  94.1
-> Mbits/sec           receiver
-> =============================
+>> ---
+>> Hi,
+>>
+>> Changes since v1:
+>> - Fix cleanup path when DMA request failed as suggested by Laurent
+>> - Print error only in case when the error is not EPROBE_DEFER
+>>
+>>  drivers/media/platform/xilinx/xilinx-dma.c | 11 ++++++-----
+>>  1 file changed, 6 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/media/platform/xilinx/xilinx-dma.c b/drivers/media/platform/xilinx/xilinx-dma.c
+>> index b211380a11f2..3bb54a4db6a4 100644
+>> --- a/drivers/media/platform/xilinx/xilinx-dma.c
+>> +++ b/drivers/media/platform/xilinx/xilinx-dma.c
+>> @@ -725,10 +725,11 @@ int xvip_dma_init(struct xvip_composite_device *xdev, struct xvip_dma *dma,
+>>  
+>>  	/* ... and the DMA channel. */
+>>  	snprintf(name, sizeof(name), "port%u", port);
+>> -	dma->dma = dma_request_slave_channel(dma->xdev->dev, name);
+>> -	if (dma->dma == NULL) {
+>> -		dev_err(dma->xdev->dev, "no VDMA channel found\n");
+>> -		ret = -ENODEV;
+>> +	dma->dma = dma_request_chan(dma->xdev->dev, name);
+>> +	if (IS_ERR(dma->dma)) {
+>> +		ret = PTR_ERR(dma->dma);
+>> +		if (ret != -EPROBE_DEFER)
+>> +			dev_err(dma->xdev->dev, "no VDMA channel found\n");
+>>  		goto error;
+>>  	}
+>>  
+>> @@ -752,7 +753,7 @@ void xvip_dma_cleanup(struct xvip_dma *dma)
+>>  	if (video_is_registered(&dma->video))
+>>  		video_unregister_device(&dma->video);
+>>  
+>> -	if (dma->dma)
+>> +	if (!IS_ERR_OR_NULL(dma->dma))
+>>  		dma_release_channel(dma->dma);
+>>  
+>>  	media_entity_cleanup(&dma->video.entity);
 > 
-> Fixed: commit b326629f25b7 ("ARM: dts: imx7: add Toradex Colibri
->                     iMX7S/iMX7D support")
-> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-> 
-> ---
-> 
->  arch/arm/boot/dts/imx7-colibri.dtsi | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi
-> b/arch/arm/boot/dts/imx7-colibri.dtsi
-> index d05be3f0e2a7..7b6a7c124345 100644
-> --- a/arch/arm/boot/dts/imx7-colibri.dtsi
-> +++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-> @@ -115,7 +115,20 @@ &fec1 {
->  	assigned-clock-rates = <0>, <100000000>;
->  	phy-mode = "rmii";
->  	phy-supply = <&reg_LDO1>;
-> +	phy-handle = <&ethphy0>;
->  	fsl,magic-packet;
-> +
-> +	mdio {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		ethphy0: ethernet-phy@0 {
-> +			compatible = "ethernet-phy-ieee802.3-c22";
-> +			max-speed = <100>;
-> +			micrel,led-mode = <0>;
-> +			reg = <0>;
-> +		};
-> +	};
->  };
->  
->  &flexcan1 {
 
