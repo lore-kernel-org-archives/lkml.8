@@ -2,104 +2,86 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDCEC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AAC2C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDCAE206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:48:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218496;
-	bh=ckysY9VFPlutJpqEixPVARo8XPz0dfrhu8xT4lrUIk4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BwPFl5pmSGtuse6Kyst3oLTBnrA4pxeuzTA83LUcu7/Gjv5u0GVfXS8NMPK9RgUgn
-	 DfI/Hnnv2uBod+CuNbeU8R3K462FXQ262YBl3+hRUT5wyg83AjtXgPLDNk7gh1nKe9
-	 BFbo/qpscdN5CSLJVhW4pemv4EnjUF4HQXXLKzPE=
+	by mail.kernel.org (Postfix) with ESMTP id E53792073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:48:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="OImhmIjv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391971AbgAPXsP (ORCPT
+        id S2392003AbgAPXsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:48:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46320 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:48:18 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:43316 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390557AbgAPXUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:20:05 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4425420684;
-        Thu, 16 Jan 2020 23:20:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216804;
-        bh=ckysY9VFPlutJpqEixPVARo8XPz0dfrhu8xT4lrUIk4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sFXSap95MzF7ioYoHPKiRMGRSf1r/B5u6Az3bROSAQj/hyhb4OkWV+DJ2DIDfATD0
-         Hr09HOymHrNg44qhSaRiAz+TcbycW++lsydPzk0t3GlSDPLhdpd72VokYV/EEnrnzP
-         OA3SVDZFdhvJjLXrdZU0gshdu1fggNrOVNXCI0d0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 5.4 026/203] gpio: Fix error message on out-of-range GPIO in lookup table
-Date:   Fri, 17 Jan 2020 00:15:43 +0100
-Message-Id: <20200116231746.724719077@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
-References: <20200116231745.218684830@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1729858AbgAPXsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:48:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=rmXiI3vzC8bbhiQCSSQ77/Y3ycjkva4fep8g+DTRJh0=; b=OImhmIjv6TUI80mkEkVUTIAL8t
+        MvsEOzKFFnLQaVyUmOGsRM47UflQ9ZVLyQfrym0k61eMsf3Coh8TjPmYTafrANTrI86v9wpa/TCN9
+        1Hbvf0kQiHWxCFj5WtDbjAOSMrazOjJSRGdLNi+HSHV0JbGVVh2Oh+M8mQV3AUemPZSw=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1isErv-0001O9-9t; Fri, 17 Jan 2020 00:48:07 +0100
+Date:   Fri, 17 Jan 2020 00:48:07 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     netdev@vger.kernel.org, cphealy@gmail.com,
+        rmk+kernel@armlinux.org.uk, Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next v3] net: phy: Maintain MDIO device and bus
+ statistics
+Message-ID: <20200116234807.GJ19046@lunn.ch>
+References: <20200116044856.1819-1-f.fainelli@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200116044856.1819-1-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+On Wed, Jan 15, 2020 at 08:48:50PM -0800, Florian Fainelli wrote:
+> We maintain global statistics for an entire MDIO bus, as well as broken
+> down, per MDIO bus address statistics. Given that it is possible for
+> MDIO devices such as switches to access MDIO bus addresses for which
+> there is not a mdio_device instance created (therefore not a a
+> corresponding device directory in sysfs either), we also maintain
+> per-address statistics under the statistics folder. The layout looks
+> like this:
+> 
+> /sys/class/mdio_bus/../statistics/
+> 	transfers
+> 	errrors
+> 	writes
+> 	reads
+> 	transfers_<addr>
+> 	errors_<addr>
+> 	writes_<addr>
+> 	reads_<addr>
+> 
+> When a mdio_device instance is registered, a statistics/ folder is
+> created with the tranfers, errors, writes and reads attributes which
+> point to the appropriate MDIO bus statistics structure.
+> 
+> Statistics are 64-bit unsigned quantities and maintained through the
+> u64_stats_sync.h helper functions.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-commit d935bd50dd14a7714cbdba9a76435dbb56edb1ae upstream.
+Tested-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-When a GPIO offset in a lookup table is out-of-range, the printed error
-message (1) does not include the actual out-of-range value, and (2)
-contains an off-by-one error in the upper bound.
-
-Avoid user confusion by also printing the actual GPIO offset, and
-correcting the upper bound of the range.
-While at it, use "%u" for unsigned int.
-
-Sample impact:
-
-    -requested GPIO 0 is out of range [0..32] for chip e6052000.gpio
-    +requested GPIO 0 (45) is out of range [0..31] for chip e6052000.gpio
-
-Fixes: 2a3cf6a3599e9015 ("gpiolib: return -ENOENT if no GPIO mapping exists")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191127095919.4214-1-geert+renesas@glider.be
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/gpio/gpiolib.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -4328,8 +4328,9 @@ static struct gpio_desc *gpiod_find(stru
- 
- 		if (chip->ngpio <= p->chip_hwnum) {
- 			dev_err(dev,
--				"requested GPIO %d is out of range [0..%d] for chip %s\n",
--				idx, chip->ngpio, chip->label);
-+				"requested GPIO %u (%u) is out of range [0..%u] for chip %s\n",
-+				idx, p->chip_hwnum, chip->ngpio - 1,
-+				chip->label);
- 			return ERR_PTR(-EINVAL);
- 		}
- 
-
-
+    Andrew
