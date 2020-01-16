@@ -2,100 +2,109 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 616CAC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F2BC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C0FD206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:29:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202972;
-	bh=EF2kPRKsef7/I30MN62Wfrk4m74NOmj7QJ5OG9PQLdw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gyO427reIQI06zTt4xFKXowXasKwS/kh86wLevW7AoxhzJl9JKG+aKiWvX7Axc/vx
-	 5hSMvg0TieOSqg7hsPNHCBHbpHjanDevi4el3DHhRqcOmP3KkpJ02Nuq3tedYSDgCZ
-	 8ehO2cYN+5qyWf1TGcUaJt4/d9SmTudvwdhm56Zk=
+	by mail.kernel.org (Postfix) with ESMTP id A0E132073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:29:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZZa76D9C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730314AbgAPT3b (ORCPT
+        id S1730597AbgAPT3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:29:31 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44289 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729044AbgAPT3a (ORCPT
+        Thu, 16 Jan 2020 14:29:44 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:30886 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730129AbgAPT3o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 14:29:30 -0500
-Received: by mail-oi1-f193.google.com with SMTP id d62so19870152oia.11;
-        Thu, 16 Jan 2020 11:29:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=D0JIWPnsYgxjHJnE5BfoF3NZoxlKFK4Y77Nq/8y7ezs=;
-        b=lKD7rHVeXKpEarqLRd6sTLbJHu9LYw502QdJf6JXQyMXzVyejdEML/rLc1yUXEgWSK
-         WCA+Cso6kGlAaE7WpyT+drw4baOzjXmb+NavLCDwql5TJo0eu4txi7f+zUlK4ph0p52d
-         lc3SE2cKhlpEngACf2IVzjBexLL+IHmWUwKFEZku1AFmhi55wurSVVI2wjB9IUxhGDw2
-         NixdM1zdLJ4W4rFPQb4+o1IjMlWTXx5IjEellID2BMSTcMGt/wps9NXU0yFt0NV1bsSs
-         JLVeYmvHmKrzo7o3ECEWY3RwwtGQQqBMV8rYJzsydbl7znozh7cQ6xPaMAbgQ2dRYRZ+
-         pr2A==
-X-Gm-Message-State: APjAAAUAFCqzfnC8N9JJ0zdUCW+KlljsQ5pNyzXCVzE03SliNfrGbo+l
-        qnB2ZOZm4XuCn1EbWD1NFw==
-X-Google-Smtp-Source: APXvYqxKidt2yeQs5IGuNWSmZp6MzfrFSsaJkFcNm4vVcSUsA9SWbac9tU0UOLuDMJZgPTkC0llSjg==
-X-Received: by 2002:aca:b187:: with SMTP id a129mr495210oif.175.1579202969846;
-        Thu, 16 Jan 2020 11:29:29 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m3sm8028076otf.13.2020.01.16.11.29.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 11:29:29 -0800 (PST)
-Received: (nullmailer pid 2025 invoked by uid 1000);
-        Thu, 16 Jan 2020 19:29:28 -0000
-Date:   Thu, 16 Jan 2020 13:29:28 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Joakim Zhang <qiangqing.zhang@nxp.com>
-Cc:     maz@kernel.org, jason@lakedaemon.net, tglx@linutronix.de,
-        robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        fugang.duan@nxp.com, Joakim Zhang <qiangqing.zhang@nxp.com>
-Subject: Re: [PATCH V5 1/2] dt-bindings/irq: add binding for NXP INTMUX
- interrupt multiplexer
-Message-ID: <20200116192928.GA1014@bogus>
-References: <1579064664-16452-1-git-send-email-qiangqing.zhang@nxp.com>
- <1579064664-16452-2-git-send-email-qiangqing.zhang@nxp.com>
+        Thu, 16 Jan 2020 14:29:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579202983;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=XYLUC1KWAgys9j/fksF7kq8Qb7GODq8d0UQf27A4qzo=;
+        b=ZZa76D9CE868aTEJaJXTgo/+6qIoE/yLZuZF8MjSYDx/dgh0EnEQlB/Wab5b+rA/9x5Wrm
+        lkFC92atPW/ubzl/Qd+cU/2g67ZdIyYbK1wBjUHJZrbu9Ea3tB4LlXjn9dKydBheDRB8Dt
+        1lwq+1MnQXY1whxrIZipkVQ3E1qcTYw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-4-sJOwTwPEN8OLfffbnRrttQ-1; Thu, 16 Jan 2020 14:29:39 -0500
+X-MC-Unique: sJOwTwPEN8OLfffbnRrttQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CC04118A8C80;
+        Thu, 16 Jan 2020 19:29:37 +0000 (UTC)
+Received: from [10.18.17.119] (dhcp-17-119.bos.redhat.com [10.18.17.119])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C1DCE100032E;
+        Thu, 16 Jan 2020 19:29:36 +0000 (UTC)
+Subject: Re: [PATCH 0/4] livepatch/samples/selftest: Clean up show variables
+ handling
+To:     Petr Mladek <pmladek@suse.com>, Jiri Kosina <jikos@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>
+Cc:     Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Nicolai Stange <nstange@suse.de>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200116153145.2392-1-pmladek@suse.com>
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+Message-ID: <e427439b-ed65-3418-e7ca-a60e54bd5544@redhat.com>
+Date:   Thu, 16 Jan 2020 14:29:35 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1579064664-16452-2-git-send-email-qiangqing.zhang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200116153145.2392-1-pmladek@suse.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jan 2020 13:04:23 +0800, Joakim Zhang wrote:
-> This patch adds the DT bindings for the NXP INTMUX interrupt multiplexer
-> for i.MX8 family SoCs.
+On 1/16/20 10:31 AM, Petr Mladek wrote:
+> Dan Carpenter reported suspicious allocations of shadow variables
+> in the sample module, see
+> https://lkml.kernel.org/r/20200107132929.ficffmrm5ntpzcqa@kili.mountain
 > 
-> Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
-> ---
->  .../interrupt-controller/fsl,intmux.yaml      | 67 +++++++++++++++++++
->  1 file changed, 67 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,intmux.yaml
+> The code did not cause a real problem. But it was indeed misleading
+> and semantically wrong. I got confused several times when cleaning it.
+> So I decided to split the change into few steps. I hope that
+> it will help reviewers and future readers.
+> 
+> The changes of the sample module are basically the same as in the RFC.
+> In addition, there is a clean up of the module used by the selftest.
+> 
+> 
+> Petr Mladek (4):
+>    livepatch/sample: Use the right type for the leaking data pointer
+>    livepatch/selftest: Clean up shadow variable names and type
+>    livepatch/samples/selftest: Use klp_shadow_alloc() API correctly
+>    livepatch: Handle allocation failure in the sample of shadow variable
+>      API
+> 
+>   lib/livepatch/test_klp_shadow_vars.c      | 119 +++++++++++++++++-------------
+>   samples/livepatch/livepatch-shadow-fix1.c |  39 ++++++----
+>   samples/livepatch/livepatch-shadow-fix2.c |   4 +-
+>   samples/livepatch/livepatch-shadow-mod.c  |   4 +-
+>   4 files changed, 99 insertions(+), 67 deletions(-)
 > 
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Hi Petr,
 
-Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-Error: Documentation/devicetree/bindings/interrupt-controller/fsl,intmux.example.dts:20.27-28 syntax error
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/interrupt-controller/fsl,intmux.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/interrupt-controller/fsl,intmux.example.dt.yaml] Error 1
-Makefile:1263: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+These are good cleanups, thanks for the fixes and tidying up all the 
+pointer/value indirections.
 
-See https://patchwork.ozlabs.org/patch/1223172
-Please check and re-submit.
+Reviewed-by: Joe Lawrence <joe.lawrence@redhat.com>
+
+-- Joe
+
