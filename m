@@ -2,109 +2,72 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44358C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73610C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 193C62075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:54:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53F322075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:55:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729058AbgAPGyi (ORCPT
+        id S1729274AbgAPGzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 01:54:38 -0500
-Received: from mga09.intel.com ([134.134.136.24]:43921 "EHLO mga09.intel.com"
+        Thu, 16 Jan 2020 01:55:08 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:38318 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726855AbgAPGyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 01:54:37 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 22:54:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,325,1574150400"; 
-   d="scan'208";a="256949741"
-Received: from wanglin3-mobl.ccr.corp.intel.com ([10.255.31.165])
-  by fmsmga001.fm.intel.com with ESMTP; 15 Jan 2020 22:54:34 -0800
-Message-ID: <8c1a2a53c5350faa12906a104e9863371973c908.camel@intel.com>
-Subject: Re: [PATCH v1] thermal/intel: intel_pch_thermal: Add Comet Lake
- (CML) platform support
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Gayatri Kammela <gayatri.kammela@intel.com>,
-        linux-pm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, charles.d.prestopine@intel.com,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Date:   Thu, 16 Jan 2020 14:55:06 +0800
-In-Reply-To: <20191211200043.4985-1-gayatri.kammela@intel.com>
-References: <20191211200043.4985-1-gayatri.kammela@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1726410AbgAPGzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 01:55:07 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 080A6200659;
+        Thu, 16 Jan 2020 07:55:06 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 60AEC200654;
+        Thu, 16 Jan 2020 07:55:00 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A42EA402C7;
+        Thu, 16 Jan 2020 14:54:53 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        leonard.crestez@nxp.com, peng.fan@nxp.com, ping.bai@nxp.com,
+        yuehaibing@huawei.com, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] clk: imx: pll14xx: Add new frequency entries for pll1443x table
+Date:   Thu, 16 Jan 2020 14:50:49 +0800
+Message-Id: <1579157449-7602-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-12-11 at 12:00 -0800, Gayatri Kammela wrote:
-> Add Comet Lake to the list of the platforms to support
-> intel_pch_thermal
-> driver.
-> 
-> Cc: Zhang rui <rui.zhang@intel.com>
-> Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
+Add new frequency entries to pll1443x table to meet different
+display settings requirement.
 
-Acked-by: Zhang Rui <rui.zhang@intel.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ drivers/clk/imx/clk-pll14xx.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> ---
->  drivers/thermal/intel/intel_pch_thermal.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/thermal/intel/intel_pch_thermal.c
-> b/drivers/thermal/intel/intel_pch_thermal.c
-> index 4f0bb8f502e1..9356f3a7f961 100644
-> --- a/drivers/thermal/intel/intel_pch_thermal.c
-> +++ b/drivers/thermal/intel/intel_pch_thermal.c
-> @@ -23,6 +23,7 @@
->  #define PCH_THERMAL_DID_SKL_H	0xA131 /* Skylake PCH 100
-> series */
->  #define PCH_THERMAL_DID_CNL	0x9Df9 /* CNL PCH */
->  #define PCH_THERMAL_DID_CNL_H	0xA379 /* CNL-H PCH */
-> +#define PCH_THERMAL_DID_CML_H	0X06F9 /* CML-H PCH */
->  
->  /* Wildcat Point-LP  PCH Thermal registers */
->  #define WPT_TEMP	0x0000	/* Temperature */
-> @@ -272,6 +273,7 @@ enum board_ids {
->  	board_wpt,
->  	board_skl,
->  	board_cnl,
-> +	board_cml,
->  };
->  
->  static const struct board_info {
-> @@ -294,6 +296,10 @@ static const struct board_info {
->  		.name = "pch_cannonlake",
->  		.ops = &pch_dev_ops_wpt,
->  	},
-> +	[board_cml] = {
-> +		.name = "pch_cometlake",
-> +		.ops = &pch_dev_ops_wpt,
-> +	}
->  };
->  
->  static int intel_pch_thermal_probe(struct pci_dev *pdev,
-> @@ -398,6 +404,8 @@ static const struct pci_device_id
-> intel_pch_thermal_id[] = {
->  		.driver_data = board_cnl, },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCH_THERMAL_DID_CNL_H),
->  		.driver_data = board_cnl, },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCH_THERMAL_DID_CML_H),
-> +		.driver_data = board_cml, },
->  	{ 0, },
->  };
->  MODULE_DEVICE_TABLE(pci, intel_pch_thermal_id);
+diff --git a/drivers/clk/imx/clk-pll14xx.c b/drivers/clk/imx/clk-pll14xx.c
+index 5b0519a..37e311e 100644
+--- a/drivers/clk/imx/clk-pll14xx.c
++++ b/drivers/clk/imx/clk-pll14xx.c
+@@ -55,8 +55,10 @@ static const struct imx_pll14xx_rate_table imx_pll1416x_tbl[] = {
+ };
+ 
+ static const struct imx_pll14xx_rate_table imx_pll1443x_tbl[] = {
++	PLL_1443X_RATE(1039500000U, 173, 2, 1, 16384),
+ 	PLL_1443X_RATE(650000000U, 325, 3, 2, 0),
+ 	PLL_1443X_RATE(594000000U, 198, 2, 2, 0),
++	PLL_1443X_RATE(519750000U, 173, 2, 2, 16384),
+ 	PLL_1443X_RATE(393216000U, 262, 2, 3, 9437),
+ 	PLL_1443X_RATE(361267200U, 361, 3, 3, 17511),
+ };
+-- 
+2.7.4
 
