@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8568BC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF50C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F98B2176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3819D21D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:53:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193613;
-	bh=07HOz8UvqDas42y+05OFgSsqy9xaOjUJbCnbLMwnHdA=;
+	s=default; t=1579193617;
+	bh=eNmW3pak0Drwu2Uzw7tfRv/DSDXFQ0oyshwD7EuwO7Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uYvcpRBz/tKp9n7PfGgN6F3RivRdrZRPHyu2Y44TjWVw9n2gvDnuagDJJpOMpfSaX
-	 b+QYcusBC4EnHeL+ArdQolK0YPXrTbl0q3nqonlYClPir2xrB1W83y2Nj3kk5dUn+P
-	 mj8B3NALQQvmc2Yqt4yYefXdUOpzGkyqREPz3xfE=
+	b=h1cYEoo6M/YEC+YPp1Onp6TAbNDngBnjrqrCFdmLxuAQDqDNo+GfLCwbqeiiA8F5Y
+	 NBqOmDxJCWUiQwevPl1CPFW5Lqtzd5QDeRFAyy8YLiR13dF7d7kJt+cv4Peic0xDe5
+	 XfCgAxdOgq5RYbEX8sYfpOW7hMbj1bFXPPoBf114=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731033AbgAPQxc (ORCPT
+        id S1731068AbgAPQxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:53:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37274 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:53:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730917AbgAPQx0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:53:26 -0500
+        id S1730990AbgAPQxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:53:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BB1E208C3;
-        Thu, 16 Jan 2020 16:53:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 830772081E;
+        Thu, 16 Jan 2020 16:53:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193606;
-        bh=07HOz8UvqDas42y+05OFgSsqy9xaOjUJbCnbLMwnHdA=;
+        s=default; t=1579193610;
+        bh=eNmW3pak0Drwu2Uzw7tfRv/DSDXFQ0oyshwD7EuwO7Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gtHX/fh8f840sICdUQazZeLf8PqkZu05msMP2LB34XybtiddDjP1HEuljJ+qWNQjq
-         OI6vC+lUjkGjfGlfFf0Y9V7U2nszwyxR1rl2TOzyCBzWWcp06F5hgEtV0ssuc9eS4i
-         JdzPSpFPRYT9P18idjpnSRo8K9a5ry0raLiP8/cI=
+        b=a0xvzTnptSsvsGF31fqsHPknl3opuXHH4epehEz3UmVfJt5snPfCca0uSsH3XCkHP
+         VhOIhqTi9qlSGETbXLVOxuoJIg2eJa6Fkf69eWzaZKtTB3rNBHIMI6LJ/zEV3f569f
+         NoEOFeYWx8EPeIYi8Aoa08GdWoWYT3CIJBdtJWkA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 144/205] mmc: core: fix wl1251 sdio quirks
-Date:   Thu, 16 Jan 2020 11:41:59 -0500
-Message-Id: <20200116164300.6705-144-sashal@kernel.org>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 148/205] netfilter: nf_tables_offload: release flow_rule on error from commit path
+Date:   Thu, 16 Jan 2020 11:42:03 -0500
+Message-Id: <20200116164300.6705-148-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -59,41 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit 16568b4a4f0c34bd35cfadac63303c7af7812764 ]
+[ Upstream commit 23403cd8898dbc9808d3eb2f63bc1db8a340b751 ]
 
-wl1251 and wl1271 have different vendor id and device id.
-So we need to handle both with sdio quirks.
+If hardware offload commit path fails, release all flow_rule objects.
 
-Fixes: 884f38607897 ("mmc: core: move some sdio IDs out of quirks file")
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Cc: <stable@vger.kernel.org> # v4.11+
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: c9626a2cbdb2 ("netfilter: nf_tables: add hardware offload support")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/core/quirks.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+ net/netfilter/nf_tables_offload.c | 26 +++++++++++++++++++++-----
+ 1 file changed, 21 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/mmc/core/quirks.h b/drivers/mmc/core/quirks.h
-index 2d2d9ea8be4f..3dba15bccce2 100644
---- a/drivers/mmc/core/quirks.h
-+++ b/drivers/mmc/core/quirks.h
-@@ -119,7 +119,14 @@ static const struct mmc_fixup mmc_ext_csd_fixups[] = {
- 	END_FIXUP
- };
+diff --git a/net/netfilter/nf_tables_offload.c b/net/netfilter/nf_tables_offload.c
+index e743f811245f..96a64e7594a5 100644
+--- a/net/netfilter/nf_tables_offload.c
++++ b/net/netfilter/nf_tables_offload.c
+@@ -358,14 +358,14 @@ int nft_flow_rule_offload_commit(struct net *net)
+ 				continue;
  
-+
- static const struct mmc_fixup sdio_fixup_methods[] = {
-+	SDIO_FIXUP(SDIO_VENDOR_ID_TI_WL1251, SDIO_DEVICE_ID_TI_WL1251,
-+		   add_quirk, MMC_QUIRK_NONSTD_FUNC_IF),
-+
-+	SDIO_FIXUP(SDIO_VENDOR_ID_TI_WL1251, SDIO_DEVICE_ID_TI_WL1251,
-+		   add_quirk, MMC_QUIRK_DISABLE_CD),
-+
- 	SDIO_FIXUP(SDIO_VENDOR_ID_TI, SDIO_DEVICE_ID_TI_WL1271,
- 		   add_quirk, MMC_QUIRK_NONSTD_FUNC_IF),
+ 			if (trans->ctx.flags & NLM_F_REPLACE ||
+-			    !(trans->ctx.flags & NLM_F_APPEND))
+-				return -EOPNOTSUPP;
+-
++			    !(trans->ctx.flags & NLM_F_APPEND)) {
++				err = -EOPNOTSUPP;
++				break;
++			}
+ 			err = nft_flow_offload_rule(trans->ctx.chain,
+ 						    nft_trans_rule(trans),
+ 						    nft_trans_flow_rule(trans),
+ 						    FLOW_CLS_REPLACE);
+-			nft_flow_rule_destroy(nft_trans_flow_rule(trans));
+ 			break;
+ 		case NFT_MSG_DELRULE:
+ 			if (!(trans->ctx.chain->flags & NFT_CHAIN_HW_OFFLOAD))
+@@ -379,7 +379,23 @@ int nft_flow_rule_offload_commit(struct net *net)
+ 		}
  
+ 		if (err)
+-			return err;
++			break;
++	}
++
++	list_for_each_entry(trans, &net->nft.commit_list, list) {
++		if (trans->ctx.family != NFPROTO_NETDEV)
++			continue;
++
++		switch (trans->msg_type) {
++		case NFT_MSG_NEWRULE:
++			if (!(trans->ctx.chain->flags & NFT_CHAIN_HW_OFFLOAD))
++				continue;
++
++			nft_flow_rule_destroy(nft_trans_flow_rule(trans));
++			break;
++		default:
++			break;
++		}
+ 	}
+ 
+ 	return err;
 -- 
 2.20.1
 
