@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D1BC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D22FC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46C7721582
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16DAC21D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:57:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193856;
-	bh=HfjzakrVtLjTgqpXPzTXGJej62/144SRDCqaI5/iiDg=;
+	s=default; t=1579193864;
+	bh=57e9JMOh/+P+iNeORr19G0sF5KFEp/5BykYmob0hcZc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IG5ioLCgdwCja/hVOnMEoqVx3nWMlTGwhlLUyMlmorVKxt/Z6iFSBnQprXTwPH4kZ
-	 XdyyqfdFWSFPm9fHxVqdFqMWB59rxq1WzzpC/G3FcNQGQRPvKuNnGX0ApPfkrgXPwA
-	 zdlkVYCxR4KFCTwGNtlFR9OCDATaJCwMGwplFSKk=
+	b=bQMoXN+jw4AqFCQCAPMQq8EoPihJ2F66PaE++JTMYNtBTnQNGX+bm3h3Q1q1Ojt1B
+	 7Pu5qYItbz9OX3NTwLhTZo+U1VOdFPnMGHWMO7+UG/IhDtc7eNBPmA+Td/v1I5hpTD
+	 gdXGqLQjEvaaBWXdRUzPRAGsPRowBWJ+ArCBtkjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732717AbgAPQ5f (ORCPT
+        id S1729241AbgAPQ5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:57:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40570 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:57:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730131AbgAPQzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:55:22 -0500
+        id S1733228AbgAPQ53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:57:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E9D024656;
-        Thu, 16 Jan 2020 16:55:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DAF121582;
+        Thu, 16 Jan 2020 16:57:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193722;
-        bh=HfjzakrVtLjTgqpXPzTXGJej62/144SRDCqaI5/iiDg=;
+        s=default; t=1579193848;
+        bh=57e9JMOh/+P+iNeORr19G0sF5KFEp/5BykYmob0hcZc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TPVN70wSSX1IXum6a59TngPbPrc+XqatkRamkGe3/kQJvshRad4stHM7buktXzc+K
-         WIeE+ZSxcynx94Oqf8wJv2WZ9JsmWwy/SYd3Jd0C696PMazlT3VNa7ZwkhFQH8RTT4
-         HQoizE50l7XWX/7k626B0hhvnE5EjecjwJJme0aw=
+        b=VrgI9tN4WDQ70CJEca31vIbMx88cVWY4OOj4DDa38dzEWDuTeogoOeJ0adzEQUBRA
+         /+hJ9p/PdW4AOFNDj537NY6FOi7Tz5MvXj7hSbsdWFVIkCoIU0QiwP6QU8w/7WB7+n
+         BngZDAZLnrH5OIQu3LqEpqz3mZdapzxbY+OiuhSY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 016/671] signal/ia64: Use the force_sig(SIGSEGV,...) in ia64_rt_sigreturn
-Date:   Thu, 16 Jan 2020 11:44:07 -0500
-Message-Id: <20200116165502.8838-16-sashal@kernel.org>
+Cc:     Sibi Sankar <sibis@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 100/671] remoteproc: qcom: q6v5-mss: Add missing clocks for MSM8996
+Date:   Thu, 16 Jan 2020 11:45:31 -0500
+Message-Id: <20200116165502.8838-100-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -60,62 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Eric W. Biederman" <ebiederm@xmission.com>
+From: Sibi Sankar <sibis@codeaurora.org>
 
-[ Upstream commit b92adb74adde62d9a9780ff2977d63dcb21aeaa6 ]
+[ Upstream commit 80ec419c3404106c563aaf56aa6b516a59c4cdfb ]
 
-The ia64 handling of failure to return from a signal frame has been trying
-to set overlapping fields in struct siginfo since 2.3.43.  The si_code
-corresponds to the fields that were stomped (not the field that is
-actually written), so I can not imagine a piece of userspace code
-making sense of the signal frame if it looks closely.
+Proxy vote for QDSS clock and remove vote on handover interrupt
+to provide MSS PBL with access to STM hardware registers during
+boot. Add "snoc_axi" and "mnoc_axi" to the active clock list.
+Rename "gpll0_mss_clk" to "gpll0_mss" for consistency across SoCs.
 
-In practice failure to return from a signal frame is a rare event that
-almost never happens.  Someone using an alternate signal stack to
-recover and looking in detail is even more rare.  So I presume no one
-has ever noticed and reported this ia64 nonsense.
-
-Sort this out by causing ia64 to use force_sig(SIGSEGV) like other architectures.
-
-Fixes: 2.3.43
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: linux-ia64@vger.kernel.org
-Acked-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Fixes: 9f058fa2efb1 ("remoteproc: qcom: Add support for mss remoteproc on msm8996")
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/ia64/kernel/signal.c | 10 +---------
- 1 file changed, 1 insertion(+), 9 deletions(-)
+ drivers/remoteproc/qcom_q6v5_pil.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/ia64/kernel/signal.c b/arch/ia64/kernel/signal.c
-index 01fc133b2e4c..9a960829a01d 100644
---- a/arch/ia64/kernel/signal.c
-+++ b/arch/ia64/kernel/signal.c
-@@ -110,7 +110,6 @@ ia64_rt_sigreturn (struct sigscratch *scr)
- {
- 	extern char ia64_strace_leave_kernel, ia64_leave_kernel;
- 	struct sigcontext __user *sc;
--	struct siginfo si;
- 	sigset_t set;
- 	long retval;
- 
-@@ -153,14 +152,7 @@ ia64_rt_sigreturn (struct sigscratch *scr)
- 	return retval;
- 
-   give_sigsegv:
--	clear_siginfo(&si);
--	si.si_signo = SIGSEGV;
--	si.si_errno = 0;
--	si.si_code = SI_KERNEL;
--	si.si_pid = task_pid_vnr(current);
--	si.si_uid = from_kuid_munged(current_user_ns(), current_uid());
--	si.si_addr = sc;
--	force_sig_info(SIGSEGV, &si, current);
-+	force_sig(SIGSEGV, current);
- 	return retval;
- }
- 
+diff --git a/drivers/remoteproc/qcom_q6v5_pil.c b/drivers/remoteproc/qcom_q6v5_pil.c
+index 6a84b6372897..073747ba8000 100644
+--- a/drivers/remoteproc/qcom_q6v5_pil.c
++++ b/drivers/remoteproc/qcom_q6v5_pil.c
+@@ -1271,13 +1271,16 @@ static const struct rproc_hexagon_res msm8996_mss = {
+ 	.proxy_clk_names = (char*[]){
+ 			"xo",
+ 			"pnoc",
++			"qdss",
+ 			NULL
+ 	},
+ 	.active_clk_names = (char*[]){
+ 			"iface",
+ 			"bus",
+ 			"mem",
+-			"gpll0_mss_clk",
++			"gpll0_mss",
++			"snoc_axi",
++			"mnoc_axi",
+ 			NULL
+ 	},
+ 	.need_mem_protection = true,
 -- 
 2.20.1
 
