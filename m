@@ -2,98 +2,222 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 720A8C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3AEDC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:07:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EE9C2072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:07:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201671;
-	bh=Ft5R2hCR6SUenckKNbDsleKmXE+k+129qTyRdihFhVA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zadkr1kQOCWa1nAOVgPWJ1rDyQU6YBZ2xC+5+EDPGc71HYGw/VZvAzAFLRU4OTfLO
-	 f9zvZrxihY0W32RI409b0wTQ5QI3cjlq9U0QJxgmW7cOrk6H2vC4+AOLwPSCVKevr/
-	 PKsr4+ZEHDBWMIOxNTw/HhdyoByTM01KISISdXBQ=
+	by mail.kernel.org (Postfix) with ESMTP id A24342072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:07:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eMXtmtCg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726230AbgAPTHt (ORCPT
+        id S2388166AbgAPTHx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:07:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51998 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388040AbgAPRBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:01:13 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D60E2087E;
-        Thu, 16 Jan 2020 17:01:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194073;
-        bh=Ft5R2hCR6SUenckKNbDsleKmXE+k+129qTyRdihFhVA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RwUQBQvJxnUB+05EjOqnlW2O+uU+bbWmoIu7+JI+CJYjckq4HTzV7vpk3oj8X75nB
-         eQ4Q5eeXRRchLpyrPE5FrKmLCLQ1pv4tdkkmR8S4vS8yAbo8ad/aIWt5gDCL7yt64B
-         Vdi+5WTM3ipAwPQwxI8ab2LZ2IP6cdRiuvxBqbqw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
-        Tony Lindgren <tony@atomide.com>, Bin Liu <b-liu@ti.com>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 181/671] usb: phy: twl6030-usb: fix possible use-after-free on remove
-Date:   Thu, 16 Jan 2020 11:51:30 -0500
-Message-Id: <20200116165940.10720-64-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
-References: <20200116165940.10720-1-sashal@kernel.org>
+        Thu, 16 Jan 2020 14:07:53 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34548 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388029AbgAPRBM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:01:12 -0500
+Received: by mail-lj1-f194.google.com with SMTP id z22so23512927ljg.1;
+        Thu, 16 Jan 2020 09:01:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=88l0VtjSeRj4yj9KcO4Ldi0UeGaxeOpGhThJBxiypGU=;
+        b=eMXtmtCgIIH0/XFjc5PFo5qHjAdac7CgfxMWDej1J3zBtOGjCTqdPUxljged1QU/YD
+         NRYf+KFWDMx+Ie4Xx5HedjUFhqisumDOF9V201Y750IUihHre+vdvuO78WNKQgo5pHMz
+         Dr25PTaKyTwokeQuxgx9RPqdMz3MvKUboQz/Mu0vBU5jWluNgyCltbrX6BCanscVWekH
+         hoGikwL3fW9YF5OUPwxOwYc7N30Lsq4Jltay5w5vqfBdl6LcuBcPRRBDCoH1W+XjQ6ls
+         53C9RfgG+eg/Lt3CESaABuyLVFtzeNFTsn+um5ClLoTTLGPQZRJ1eKelqWDA3saLym8V
+         2LKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=88l0VtjSeRj4yj9KcO4Ldi0UeGaxeOpGhThJBxiypGU=;
+        b=dtrrwb0eGbnPXMuvW+5dWFHzv1+LW86V9+hBGgOlVKDEl4x3P2b6dKQTg4/BzlC55X
+         LG+o4sGhxtq6BHaR8ghplnA7F3055X909HfexOF0gaJX3EmZDGBX9F6lDWMlAuZ20aNo
+         BfGcnBNRqd7dt8KNbzmz1VkgT/sapnGGwU+8FqMor0+BM69+BW7BNzBr1rE7rBUY8aNr
+         Ll8J4XSCjXm9p55DdVzkWpG3GglJul4vuIQ0zZd2j7h5VOpEslBuWTo0u8g9h8qU4kmn
+         RTGKJDr3SGs94M63JamgclbeRCgFV3RttRyTHtxRIVahW5bxlyk26zyNRsfOQvpOqcfm
+         IK7A==
+X-Gm-Message-State: APjAAAXbtJR0V5npgZngkuwJu7hZyJSx9VDej49UMFQWJnN5fQCWqC0L
+        7Ea+xPr/xNOa+KvDBUu/H2puDzWT
+X-Google-Smtp-Source: APXvYqwbcZk333giDfyIBxrL1wYqMAMMIP5P3xL7wlItBAK2l4MYOBQ3UZF8w51bBN6uzeNSsk++zQ==
+X-Received: by 2002:a2e:b4f6:: with SMTP id s22mr2849041ljm.218.1579194068636;
+        Thu, 16 Jan 2020 09:01:08 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id y25sm10777983lfy.59.2020.01.16.09.01.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jan 2020 09:01:08 -0800 (PST)
+Subject: Re: [PATCH v4 10/14] dmaengine: tegra-apb: Keep clock enabled only
+ during of DMA transfer
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200112173006.29863-1-digetx@gmail.com>
+ <20200112173006.29863-11-digetx@gmail.com>
+ <5ae55a09-a1be-d93b-80f5-6ad3d712cb93@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <1555aa32-085b-4817-3c14-450c5a51339e@gmail.com>
+Date:   Thu, 16 Jan 2020 20:01:07 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+In-Reply-To: <5ae55a09-a1be-d93b-80f5-6ad3d712cb93@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Van Asbroeck <thesven73@gmail.com>
+15.01.2020 13:08, Jon Hunter пишет:
+> 
+> 
+> On 12/01/2020 17:30, Dmitry Osipenko wrote:
+>> It's a bit impractical to enable hardware's clock at the time of DMA
+>> channel's allocation because most of DMA client drivers allocate DMA
+>> channel at the time of the driver's probing and thus DMA clock is kept
+>> always-enabled in practice, defeating the whole purpose of runtime PM.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/dma/tegra20-apb-dma.c | 43 ++++++++++++++++++++++-------------
+>>  1 file changed, 27 insertions(+), 16 deletions(-)
+>>
+>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+>> index cc4a9ca20780..b9d8e57eaf54 100644
+>> --- a/drivers/dma/tegra20-apb-dma.c
+>> +++ b/drivers/dma/tegra20-apb-dma.c
+>> @@ -436,6 +436,8 @@ static void tegra_dma_stop(struct tegra_dma_channel *tdc)
+>>  		tdc_write(tdc, TEGRA_APBDMA_CHAN_STATUS, status);
+>>  	}
+>>  	tdc->busy = false;
+>> +
+>> +	pm_runtime_put(tdc->tdma->dev);
+> 
+> Is this the right place to call put? Seems that in terminate_all resume
+> is called after stop which will access the registers.
 
-[ Upstream commit 5895d311d28f2605e2f71c1a3e043ed38f3ac9d2 ]
+Indeed, there is a problem here. Looks like resume/pause should take
+get/put the RPM. I'll correct it in v5, thanks.
 
-In remove(), use cancel_delayed_work_sync() to cancel the
-delayed work. Otherwise there's a chance that this work
-will continue to run until after the device has been removed.
+>>  }
+>>  
+>>  static void tegra_dma_start(struct tegra_dma_channel *tdc,
+>> @@ -500,18 +502,25 @@ static void tegra_dma_configure_for_next(struct tegra_dma_channel *tdc,
+>>  	tegra_dma_resume(tdc);
+>>  }
+>>  
+>> -static void tdc_start_head_req(struct tegra_dma_channel *tdc)
+>> +static bool tdc_start_head_req(struct tegra_dma_channel *tdc)
+>>  {
+>>  	struct tegra_dma_sg_req *sg_req;
+>> +	int err;
+>>  
+>>  	if (list_empty(&tdc->pending_sg_req))
+>> -		return;
+>> +		return false;
+>> +
+>> +	err = pm_runtime_get_sync(tdc->tdma->dev);
+>> +	if (WARN_ON_ONCE(err < 0))
+>> +		return false;
+>>  
+>>  	sg_req = list_first_entry(&tdc->pending_sg_req, typeof(*sg_req), node);
+>>  	tegra_dma_start(tdc, sg_req);
+>>  	sg_req->configured = true;
+>>  	sg_req->words_xferred = 0;
+>>  	tdc->busy = true;
+>> +
+>> +	return true;
+>>  }
+>>  
+>>  static void tdc_configure_next_head_desc(struct tegra_dma_channel *tdc)
+>> @@ -615,6 +624,8 @@ static void handle_once_dma_done(struct tegra_dma_channel *tdc,
+>>  	}
+>>  	list_add_tail(&sgreq->node, &tdc->free_sg_req);
+>>  
+>> +	pm_runtime_put(tdc->tdma->dev);
+>> +
+>>  	/* Do not start DMA if it is going to be terminate */
+>>  	if (to_terminate || list_empty(&tdc->pending_sg_req))
+>>  		return;
+>> @@ -730,9 +741,7 @@ static void tegra_dma_issue_pending(struct dma_chan *dc)
+>>  		dev_err(tdc2dev(tdc), "No DMA request\n");
+>>  		goto end;
+>>  	}
+>> -	if (!tdc->busy) {
+>> -		tdc_start_head_req(tdc);
+>> -
+>> +	if (!tdc->busy && tdc_start_head_req(tdc)) {
+>>  		/* Continuous single mode: Configure next req */
+>>  		if (tdc->cyclic) {
+>>  			/*
+>> @@ -1280,22 +1289,15 @@ tegra_dma_prep_dma_cyclic(struct dma_chan *dc, dma_addr_t buf_addr,
+>>  static int tegra_dma_alloc_chan_resources(struct dma_chan *dc)
+>>  {
+>>  	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
+>> -	struct tegra_dma *tdma = tdc->tdma;
+>> -	int ret;
+>>  
+>>  	dma_cookie_init(&tdc->dma_chan);
+>>  
+>> -	ret = pm_runtime_get_sync(tdma->dev);
+>> -	if (ret < 0)
+>> -		return ret;
+>> -
+>>  	return 0;
+>>  }
+>>  
+>>  static void tegra_dma_free_chan_resources(struct dma_chan *dc)
+>>  {
+>>  	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
+>> -	struct tegra_dma *tdma = tdc->tdma;
+>>  	struct tegra_dma_desc *dma_desc;
+>>  	struct tegra_dma_sg_req *sg_req;
+>>  	struct list_head dma_desc_list;
+>> @@ -1328,7 +1330,6 @@ static void tegra_dma_free_chan_resources(struct dma_chan *dc)
+>>  		list_del(&sg_req->node);
+>>  		kfree(sg_req);
+>>  	}
+>> -	pm_runtime_put(tdma->dev);
+>>  
+>>  	tdc->slave_id = TEGRA_APBDMA_SLAVE_ID_INVALID;
+>>  }
+>> @@ -1428,11 +1429,16 @@ static int tegra_dma_probe(struct platform_device *pdev)
+>>  
+>>  	spin_lock_init(&tdma->global_lock);
+>>  
+>> +	ret = clk_prepare(tdma->dma_clk);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	pm_runtime_irq_safe(&pdev->dev);
+>>  	pm_runtime_enable(&pdev->dev);
+>>  	if (!pm_runtime_enabled(&pdev->dev)) {
+>>  		ret = tegra_dma_runtime_resume(&pdev->dev);
+>>  		if (ret)
+>> -			return ret;
+>> +			goto err_clk_unprepare;
+>>  	} else {
+>>  		ret = pm_runtime_get_sync(&pdev->dev);
+> 
+> There is a get here but I don't see a put in probe.
 
-This issue was detected with the help of Coccinelle.
-
-Cc: Tony Lindgren <tony@atomide.com>
-Cc: Bin Liu <b-liu@ti.com>
-Fixes: b6a619a883c3 ("usb: phy: Check initial state for twl6030")
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/usb/phy/phy-twl6030-usb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/usb/phy/phy-twl6030-usb.c b/drivers/usb/phy/phy-twl6030-usb.c
-index 183550b63faa..dade34d70419 100644
---- a/drivers/usb/phy/phy-twl6030-usb.c
-+++ b/drivers/usb/phy/phy-twl6030-usb.c
-@@ -400,7 +400,7 @@ static int twl6030_usb_remove(struct platform_device *pdev)
- {
- 	struct twl6030_usb *twl = platform_get_drvdata(pdev);
- 
--	cancel_delayed_work(&twl->get_status_work);
-+	cancel_delayed_work_sync(&twl->get_status_work);
- 	twl6030_interrupt_mask(TWL6030_USBOTG_INT_MASK,
- 		REG_INT_MSK_LINE_C);
- 	twl6030_interrupt_mask(TWL6030_USBOTG_INT_MASK,
--- 
-2.20.1
-
+Please see:
+https://elixir.bootlin.com/linux/v5.5-rc6/source/drivers/dma/tegra20-apb-dma.c#L1445
