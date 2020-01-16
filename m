@@ -2,68 +2,113 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44710C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30250C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24FF12073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11326206B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:32:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730749AbgAPJ3P (ORCPT
+        id S1730741AbgAPJcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 04:29:15 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:60325 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbgAPJ3O (ORCPT
+        Thu, 16 Jan 2020 04:32:50 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:50957 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbgAPJct (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 04:29:14 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1is1SZ-0004ke-RB; Thu, 16 Jan 2020 09:29:03 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Shuah Khan <shuah@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        linux-kselftest@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] selftests: fix spelling mistaked "chaigned" -> "chained"
-Date:   Thu, 16 Jan 2020 09:29:03 +0000
-Message-Id: <20200116092903.52690-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.24.0
+        Thu, 16 Jan 2020 04:32:49 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1is1W7-0002YM-Pv; Thu, 16 Jan 2020 10:32:44 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id E3797100C1E; Thu, 16 Jan 2020 10:32:42 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ramon Fried <rfried.dev@gmail.com>
+Cc:     hkallweit1@gmail.com, Bjorn Helgaas <bhelgaas@google.com>,
+        maz@kernel.org, lorenzo.pieralisi@arm.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: MSI irqchip configured as IRQCHIP_ONESHOT_SAFE causes spurious IRQs
+In-Reply-To: <CAGi-RUJPJ59AMZp3Wap=9zSWLmQSXVDtkbD+O6Hofizf8JWyRg@mail.gmail.com>
+References: <CAGi-RUJvqJoCXWN2YugRn=WYEk9yzt7m3OPfX_o++PmJWQ3woQ@mail.gmail.com> <87wo9ub5f6.fsf@nanos.tec.linutronix.de> <CAGi-RUK_TA+WWvXJSrsa=_Pwq0pV1ffUKOCBu5c1t8O5Xs+UJg@mail.gmail.com> <CAGi-RUJG=SB7az5FFVTzzgefn_VXUbyQX1dtBN+9gkR7MgyC6g@mail.gmail.com> <87imldbqe3.fsf@nanos.tec.linutronix.de> <CAGi-RULNwpiNGYALYRG84SOUzkvNTbgctmXoS=Luh29xDHJzYw@mail.gmail.com> <87v9pcw55q.fsf@nanos.tec.linutronix.de> <CAGi-RUJPJ59AMZp3Wap=9zSWLmQSXVDtkbD+O6Hofizf8JWyRg@mail.gmail.com>
+Date:   Thu, 16 Jan 2020 10:32:42 +0100
+Message-ID: <87pnfjwxtx.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Ramon,
 
-There is a spelling mistake in a literal string, fix it.
+Ramon Fried <rfried.dev@gmail.com> writes:
+> On Thu, Jan 16, 2020 at 3:39 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>> Ramon Fried <rfried.dev@gmail.com> writes:
+>
+> Basically, 32 MSI vectors are represented by a single GIC irq.
+> There's a status registers which every bit correspond to an MSI vector, and
+> individual MSI needs to be acked on that registers. in any case where
+> there's asserted bit the GIC IRQ level is high.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- tools/testing/selftests/openat2/resolve_test.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Which is not that bad. 
 
-diff --git a/tools/testing/selftests/openat2/resolve_test.c b/tools/testing/selftests/openat2/resolve_test.c
-index 7a94b1da8e7b..bbafad440893 100644
---- a/tools/testing/selftests/openat2/resolve_test.c
-+++ b/tools/testing/selftests/openat2/resolve_test.c
-@@ -230,7 +230,7 @@ void test_openat2_opath_tests(void)
- 		{ .name = "[in_root] garbage link to /root",
- 		  .path = "cheeky/garbageself",	.how.resolve = RESOLVE_IN_ROOT,
- 		  .out.path = "root",		.pass = true },
--		{ .name = "[in_root] chainged garbage links to /root",
-+		{ .name = "[in_root] chained garbage links to /root",
- 		  .path = "abscheeky/garbageself", .how.resolve = RESOLVE_IN_ROOT,
- 		  .out.path = "root",		.pass = true },
- 		{ .name = "[in_root] relative path to 'root'",
--- 
-2.24.0
+>> > It's configured with handle_level_irq() as the GIC is level IRQ.
+>>
+>> Which is completely bonkers. MSI has edge semantics and sharing an
+>> interrupt line for edge type interrupts is broken by design, unless the
+>> hardware which handles the incoming MSIs and forwards them to the level
+>> type interrupt line is designed properly and the driver does the right
+>> thing.
+>
+> Yes, the design of the HW is sort of broken. I concur.
 
+As you describe it, it's not that bad.
+
+>> > The ack callback acks the GIC irq.  the mask/unmask calls
+>> > pci_msi_mask_irq() / pci_msi_unmask_irq()
+>>
+>> What? How is that supposed to work with multiple MSIs?
+> Acking is per MSI vector as I described above, so it should work.
+
+No. This is the wrong approach. Lets look at the hardware:
+
+| GIC   line X |------| MSI block | <--- Messages from devices
+
+The MSI block latches the incoming message up to the point where it is
+acknowledged in the MSI block. This makes sure that the level semantics
+of the GIC are met.
+
+So from a software perspective you want to do something like this:
+
+gic_irq_handler()
+{
+   mask_ack(gic_irqX);
+
+   pending = read(msi_status);
+   for_each_bit(bit, pending) {
+       ack(msi_status, bit);  // This clears the latch in the MSI block
+       handle_irq(irqof(bit));
+   }
+   unmask(gic_irqX);
+}
+
+And that works perfectly correct without masking the MSI interrupt at
+the PCI level for a threaded handler simply because the PCI device will
+not send another interrupt until the previous one has been handled by
+the driver unless the PCI device is broken.
+
+If that's the case, then you have to work around that at the device
+driver level, not at the irq chip level, by installing a primary handler
+which quiesces the device (not the MSI part).
+
+Thanks,
+
+        tglx
