@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0029CC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D64C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDB5524703
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14CC22470A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:28:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195727;
-	bh=M6QDKkBnweTBN8PV3G31m4jegzT+8ZGFNXWqYrBwOFw=;
+	s=default; t=1579195734;
+	bh=Upsc8dUypMFUiVc2zLPLgZ8S5/S1QGnMtIRlKiGu8eQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kkud/xDMNtXJqEig/Vd2yPDAg8vGZwqb4Gk1GTiyg6JZXOMC2qtb1WveqT2TxJLGO
-	 ngaQHyPRO1f7TFw7/Rh0iI/thXUGXbOiqWSLfCmGfDDFMER24b8eq8bylwKdOPdQLO
-	 v78gL1xflUFw8gVby9Dcf8or2EjPeNlZ2aPIHugw=
+	b=W8CAPfrZzkypvCB4DS5bGCyU9Cu9QfGd0kWUKM9FCQbhtRRWrYVEsjMnjckjmlD1Y
+	 Izj0Z1JOPK/XL6Owfu1XNF2PKZKCTNLkPj5oEnR0ygmvVQdawgV42IDRtihtpIhxER
+	 QagcbzrGillX66CkRXPiNWrZSYXxA4nrKJ12PDm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392650AbgAPR2p (ORCPT
+        id S2392275AbgAPR2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:28:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39776 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:28:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392601AbgAPR2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:28:35 -0500
+        id S2392630AbgAPR2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:28:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5472246F2;
-        Thu, 16 Jan 2020 17:28:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5422324701;
+        Thu, 16 Jan 2020 17:28:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195714;
-        bh=M6QDKkBnweTBN8PV3G31m4jegzT+8ZGFNXWqYrBwOFw=;
+        s=default; t=1579195722;
+        bh=Upsc8dUypMFUiVc2zLPLgZ8S5/S1QGnMtIRlKiGu8eQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NATr0SZz9P5IAVIAWG7Mgh6PE9RSTQDZGt5qGK37P3LlKUvU51poEhap8T/Be9k/n
-         QCAEMe+aUnCZ6sWKQzy81/wIgOLoRbXusvKl/A0+2Z1Bw1g8hUhFWxouxD3C2juTD5
-         7HY2Bz+H17ZL/oA5GzHvoUbZMyf9idMysTnThlyU=
+        b=jzcYygeydtBBdaNvgnOaN7BcpUf0yJXxbyvYJO6ewccwrd+viV+somMa40q8AkQij
+         shBshPQqU7s6RDLH/dmJeW6asGpegO+RinnmViqg+C2LC4r0hxCiSQW5AcE+RL6aP+
+         zoS7RTYNX1kHQkn4Ovlmt8qIEGpAm72V0I1BazEE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 259/371] ARM: dts: stm32: add missing vdda-supply to adc on stm32h743i-eval
-Date:   Thu, 16 Jan 2020 12:22:11 -0500
-Message-Id: <20200116172403.18149-202-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
+        linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 264/371] ext4: set error return correctly when ext4_htree_store_dirent fails
+Date:   Thu, 16 Jan 2020 12:22:16 -0500
+Message-Id: <20200116172403.18149-207-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -61,34 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 493e84c5dc4d703d976b5875f5db22dae08a0782 ]
+[ Upstream commit 7a14826ede1d714f0bb56de8167c0e519041eeda ]
 
-Add missing vdda-supply required by STM32 ADC.
+Currently when the call to ext4_htree_store_dirent fails the error return
+variable 'ret' is is not being set to the error code and variable count is
+instead, hence the error code is not being returned.  Fix this by assigning
+ret to the error return code.
 
-Fixes: 090992a9ca54 ("ARM: dts: stm32: enable ADC on stm32h743i-eval
-board")
-
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+Addresses-Coverity: ("Unused value")
+Fixes: 8af0f0822797 ("ext4: fix readdir error in the case of inline_data+dir_index")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/stm32h743i-eval.dts | 1 +
- 1 file changed, 1 insertion(+)
+ fs/ext4/inline.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/stm32h743i-eval.dts b/arch/arm/boot/dts/stm32h743i-eval.dts
-index 6c07786e7ddb..0d98b2865bd7 100644
---- a/arch/arm/boot/dts/stm32h743i-eval.dts
-+++ b/arch/arm/boot/dts/stm32h743i-eval.dts
-@@ -71,6 +71,7 @@
- };
- 
- &adc_12 {
-+	vdda-supply = <&vdda>;
- 	vref-supply = <&vdda>;
- 	status = "okay";
- 	adc1: adc@0 {
+diff --git a/fs/ext4/inline.c b/fs/ext4/inline.c
+index 137c752ab985..6064bcb8572b 100644
+--- a/fs/ext4/inline.c
++++ b/fs/ext4/inline.c
+@@ -1425,7 +1425,7 @@ int htree_inlinedir_to_tree(struct file *dir_file,
+ 		err = ext4_htree_store_dirent(dir_file, hinfo->hash,
+ 					      hinfo->minor_hash, de, &tmp_str);
+ 		if (err) {
+-			count = err;
++			ret = err;
+ 			goto out;
+ 		}
+ 		count++;
 -- 
 2.20.1
 
