@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2C3C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D95E9C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 988E42053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B595420663
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:58:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201128;
-	bh=lflPgxhwfakmTwvoiX71ANfAd/cbGj8aPeWesa75Bnc=;
+	s=default; t=1579201130;
+	bh=oUxuQepRUEKu++HXwriPcKSaTS7OHkGAGIHwak+Ax6g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mq/Lvm8MgbdhlcLFCL++Yunw0Cc4SRGXeIAmo9FovQER81fj3xCNHB6BxM1dpeyFF
-	 jo2h698kwehL1wkWOPRRXK+EFKDOsbHOm8LcRyL/GB05T8ssvbL9wq28rcQ9oRPqg5
-	 SvNUK6izoPNZ27jkeAnpdq6nzbxwRjNLY649HBP4=
+	b=aeJi9bzlprsUwfjhNukhkV07Vz9HtOsohH0kJT1e8j+iFoy6BsXFSZz+UykYmGTiU
+	 gnC/XhofgQ0XKoVRvVSER/IZuyaK6NH7FiKU7JGjrVdTN7J1AUrY+1RZuI3t5i0Eok
+	 UNMCl3BYqEWEiZg7j12VOGCbESGh9qve2zrdFiwM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392171AbgAPS6r (ORCPT
+        id S2388644AbgAPRGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:58:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37478 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388971AbgAPRGq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jan 2020 12:06:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36768 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388940AbgAPRGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:06:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30CE6217F4;
-        Thu, 16 Jan 2020 17:06:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BB8720730;
+        Thu, 16 Jan 2020 17:06:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194405;
-        bh=lflPgxhwfakmTwvoiX71ANfAd/cbGj8aPeWesa75Bnc=;
+        s=default; t=1579194390;
+        bh=oUxuQepRUEKu++HXwriPcKSaTS7OHkGAGIHwak+Ax6g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N6Ah5QQ6PWuka0HqlbvnMODfHNugLvjNRBeF0uEQA2yvlZ0afmbAiP7O0pCV3yOYc
-         h2K1GfaviunJu+ynFVv8h0RhhASPzO13/2tN9JefmTEpzQpZUPACHTR//dHaOiWAW2
-         /SgIf+cZ/PeIiHL/VgSfELPkYEJcryJjPUUOxi3k=
+        b=0XCbY8I9s+R+h5p8ABvc63bdeSbDpGO66YFThwrvm1KjqL7oW0eOAeNQbWQe+EabW
+         8tcCLeGlNEWr1O6sUwXmb7qYuicwWqIdoL/017uP503orzmQXBDMbyiny+FZk7KaMb
+         d/hs2zpJLqKXLQXvj6JNARLioI8Sakl0zu2mNs8g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.19 329/671] iommu/vt-d: Make kernel parameter igfx_off work with vIOMMU
-Date:   Thu, 16 Jan 2020 11:59:27 -0500
-Message-Id: <20200116170509.12787-66-sashal@kernel.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        Giridhar Malavali <gmalavali@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 318/671] scsi: qla2xxx: Avoid that qlt_send_resp_ctio() corrupts memory
+Date:   Thu, 16 Jan 2020 11:59:16 -0500
+Message-Id: <20200116170509.12787-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -64,47 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Baolu <baolu.lu@linux.intel.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 5daab58043ee2bca861068e2595564828f3bc663 ]
+[ Upstream commit a861b49273578e255426a499842cf7f465456351 ]
 
-The kernel parameter igfx_off is used by users to disable
-DMA remapping for the Intel integrated graphic device. It
-was designed for bare metal cases where a dedicated IOMMU
-is used for graphic. This doesn't apply to virtual IOMMU
-case where an include-all IOMMU is used.  This makes the
-kernel parameter work with virtual IOMMU as well.
+The "(&ctio->u.status1.sense_data)[i]" where i >= 0 expressions in
+qlt_send_resp_ctio() are probably typos and should have been
+"(&ctio->u.status1.sense_data[4 * i])" instead. Instead of only fixing
+these typos, modify the code for storing sense data such that it becomes
+easy to read. This patch fixes a Coverity complaint about accessing an
+array outside its bounds.
 
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Suggested-by: Kevin Tian <kevin.tian@intel.com>
-Fixes: c0771df8d5297 ("intel-iommu: Export a flag indicating that the IOMMU is used for iGFX.")
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Tested-by: Zhenyu Wang <zhenyuw@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Cc: Himanshu Madhani <hmadhani@marvell.com>
+Cc: Giridhar Malavali <gmalavali@marvell.com>
+Fixes: be25152c0d9e ("qla2xxx: Improve T10-DIF/PI handling in driver.") # v4.11.
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-iommu.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_target.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index b9af2419006f..abbbc614c522 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -3387,9 +3387,12 @@ static int __init init_dmars(void)
- 		iommu_identity_mapping |= IDENTMAP_ALL;
+diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
+index c925ca787537..95206e227730 100644
+--- a/drivers/scsi/qla2xxx/qla_target.c
++++ b/drivers/scsi/qla2xxx/qla_target.c
+@@ -2233,14 +2233,14 @@ void qlt_send_resp_ctio(struct qla_qpair *qpair, struct qla_tgt_cmd *cmd,
+ 		ctio->u.status1.scsi_status |=
+ 		    cpu_to_le16(SS_RESIDUAL_UNDER);
  
- #ifdef CONFIG_INTEL_IOMMU_BROKEN_GFX_WA
--	iommu_identity_mapping |= IDENTMAP_GFX;
-+	dmar_map_gfx = 0;
- #endif
+-	/* Response code and sense key */
+-	put_unaligned_le32(((0x70 << 24) | (sense_key << 8)),
+-	    (&ctio->u.status1.sense_data)[0]);
++	/* Fixed format sense data. */
++	ctio->u.status1.sense_data[0] = 0x70;
++	ctio->u.status1.sense_data[2] = sense_key;
+ 	/* Additional sense length */
+-	put_unaligned_le32(0x0a, (&ctio->u.status1.sense_data)[1]);
++	ctio->u.status1.sense_data[7] = 0xa;
+ 	/* ASC and ASCQ */
+-	put_unaligned_le32(((asc << 24) | (ascq << 16)),
+-	    (&ctio->u.status1.sense_data)[3]);
++	ctio->u.status1.sense_data[12] = asc;
++	ctio->u.status1.sense_data[13] = ascq;
  
-+	if (!dmar_map_gfx)
-+		iommu_identity_mapping |= IDENTMAP_GFX;
-+
- 	check_tylersburg_isoch();
- 
- 	if (iommu_identity_mapping) {
+ 	/* Memory Barrier */
+ 	wmb();
 -- 
 2.20.1
 
