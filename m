@@ -2,142 +2,146 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1199C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB4B8C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97ECB2077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DE692075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:34:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="jbG0SmCk"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="1Bs13GLW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbgAPNeZ (ORCPT
+        id S1728939AbgAPNep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 08:34:25 -0500
-Received: from mail-vi1eur05on2136.outbound.protection.outlook.com ([40.107.21.136]:15052
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726362AbgAPNeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 08:34:25 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RzZVoCxfYJ2A0OPz73+Ta/3PFTYwXDJ8Pf2UUjKO2c8CBYSN0+XTJaMUpPkqyS9FO+sb3j4ychZ0+mVQtpExTXWZNyJZiLAGRWXmo52RICj42apP5eOAvLV9fYpwUVq5nZo3CWbvaWn45cJSQujJJnxpR5J6BWMdvVYnr+bVGDvsVJPMzEefJAhxzY7DA1GGExDaq3XxriNBUQyZsepX1XV7BDrJHhJu5EBhmoZuGYaR6zsBlTo9a63HqNuz+8uV7YgjfpZWDaouHAEb3y1U3PUkO4EAlYFU8xJixjlX9J57aOPTgyIH79zQm9AKL3TATjx5WtndKRsySOp/DtTLtg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mtYMwBJ3zQ4610/BNfjKw0TdmqMIdtDEpXtX1DeQgUA=;
- b=VHBQaDU0WuzceODM5MS/0Y7t+lQqO+9bNMdVO6PxBGemrd517d7w00IHoO25A6WwhwD5yGj5Jg95QGFOG4duCiMYOlF0TEK/jyyGsDOjV34By8HsVaZXuhVsL+h3UsIgBKmV0Mw6DqfOASmP1DzDlnVLc7zNBusOoeE3naN96tr5OhQR/BITlhzbdC28KYY0Gxx4I23khJtdamkCOmX+HUJvFhQP/PwsbGHPyXF6Ed/xso5SGJsUbS2nuEo44E6y0NOAQVltB7GCDSnLyPCHSkMUoOb8n3nKeChKUqy9YFbIjcNsQ5VP2FBi1yFDRU2DvnkQnP0an+3T/gvJ47Sj0g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mtYMwBJ3zQ4610/BNfjKw0TdmqMIdtDEpXtX1DeQgUA=;
- b=jbG0SmCkZ5brFjXDWsrlcptfRdxXCr9h+WDcMGPMt7LUX0ZVSkF6gzDXAjEvAC5tBqY5T2R2WmMbU/TJBEr8kL5Y+1upQs1vPKuAJvL4uG7LzLmjKrez2atg2ZHIQkC/DSkAXVz7lKKWiwwwcDRbWnJVpodBsn+Goqs2Wz/iObA=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3404.eurprd02.prod.outlook.com (52.134.68.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.13; Thu, 16 Jan 2020 13:34:20 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::cd85:a8a5:da14:db13]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::cd85:a8a5:da14:db13%7]) with mapi id 15.20.2623.017; Thu, 16 Jan 2020
- 13:34:19 +0000
-Received: from [192.168.13.3] (213.112.138.4) by HE1PR0102CA0067.eurprd01.prod.exchangelabs.com (2603:10a6:7:7d::44) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.20 via Frontend Transport; Thu, 16 Jan 2020 13:34:19 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     Luca Ceresoli <luca@lucaceresoli.net>,
-        Jean Delvare <jdelvare@suse.de>
-CC:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 26/26] docs: i2c: rename sections so the overall picture
- is clearer
-Thread-Topic: [PATCH 26/26] docs: i2c: rename sections so the overall picture
- is clearer
-Thread-Index: AQHVxGXNDNQyASjxnESfoQNX0mbuZqftG5eAgAANv4CAADEpAA==
-Date:   Thu, 16 Jan 2020 13:34:19 +0000
-Message-ID: <4a3a9917-5f20-2ad2-3fcb-5e9e252a2a3d@axentia.se>
-References: <20200105224006.10321-1-luca@lucaceresoli.net>
- <20200106074905.14438-1-luca@lucaceresoli.net>
- <20200116104907.3f2de4d0@endymion>
- <7809c0c2-1d83-cc95-b258-644ea8315f86@lucaceresoli.net>
-In-Reply-To: <7809c0c2-1d83-cc95-b258-644ea8315f86@lucaceresoli.net>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-x-originating-ip: [213.112.138.4]
-x-clientproxiedby: HE1PR0102CA0067.eurprd01.prod.exchangelabs.com
- (2603:10a6:7:7d::44) To DB3PR0202MB3434.eurprd02.prod.outlook.com
- (2603:10a6:8:5::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4d5ec4b7-6f01-4c0b-fe7c-08d79a88ca53
-x-ms-traffictypediagnostic: DB3PR0202MB3404:
-x-microsoft-antispam-prvs: <DB3PR0202MB34040C48D322085CFD449D4EBC360@DB3PR0202MB3404.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 02843AA9E0
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(39830400003)(396003)(376002)(136003)(199004)(189003)(66476007)(4326008)(5660300002)(53546011)(66446008)(8936002)(64756008)(66556008)(6486002)(2616005)(508600001)(316002)(31696002)(186003)(16526019)(86362001)(31686004)(110136005)(81166006)(956004)(81156014)(2906002)(8676002)(36756003)(54906003)(52116002)(66946007)(71200400001)(26005)(16576012);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3404;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Cu3HpU5sRsZJZ2//3BWE77bD+sgkfap3omoAa5tOz4bYYAl54SqjyTXyNiF2WKSmwwarhClmdx7YY3Kv6uUNyalAGTZ0rCNJRJ7jJQjiYlYrXW88y2BOeLaw7hmGiRPZYu91E4/mrhpLUnkfjaJHexiV62MLWQQlsk0GHFx3QMc+m1dDUD+sVFTJ1QU5JZXf2FQAnYd9+s7SiuJrTKikwPokNCD5Bp2sA3GtFgR9a0DK7ifwnu/cSQYciIos6E9CG9ws6ZK6E1D8XBG3mOQNxWpZ7Sj2tLr6BHf/EQ+6HIfdU39mxtkms0igRyvLLJgV8a8tkeEfj8VJPLuLt0Zq+4bN03iGvcgTNqcOeRY0Y/KyMKcCYifN5aGJVXxdD4Ur/gcmbXunO3AUViXbKQZpdpLRGKF8HTJ+AtdgodHE2viMm4WHR8nA7y3M2oDqdWwL
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <94D8EA0D7FA6F947B6A39B1D514FEC28@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 16 Jan 2020 08:34:45 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55475 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726871AbgAPNeo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 08:34:44 -0500
+Received: by mail-wm1-f65.google.com with SMTP id q9so3771360wmj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 05:34:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=tsG/kNWOY1oaLEfx3AisRYovgh6oCd1Sk94EaWADP1A=;
+        b=1Bs13GLWG0q2oepJBkkMKBXN55AsJyFVIq83RdE7FstgXFKYTqAM1fdoPdTjTsIfPa
+         kkqRNS1Wk8ISL8gDFtyPgSQq3Z1zlqP/Ns4yWx3XFdbmT1KYDVkIbjTpwmQdyn8QwUYs
+         M4oMN04iFRP7BThXs5qLF4c2HLvGKJ0cEONeHTkZu0ZSn4qLZi8dp0qD2+teA/o+g4Gc
+         YvKsoYRTPQgj/5F0YUO26C/UV6jOi2Z5hR/vNQdbt3TdlF6FmbWvaziQxi2xhF/7mVlL
+         8dOOGV81WYjpsLXe+f6lJa5oVU1BrICKWOs6oI6dh187EIZm8ZLKyLbcu8N0Z6GbBitP
+         nIxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=tsG/kNWOY1oaLEfx3AisRYovgh6oCd1Sk94EaWADP1A=;
+        b=di1UGotBrK56tFTe9uVTL35CJS16Pg08kwoTlMXG+A67zzRel+6jqPnrKyqrVdbJkq
+         4RjrCf5joslTeFrbR+1fok9eeH+iLPArXE9ADl7JoswrS+2YH4KXBNr0xqvSCR0eKHk2
+         EG4wnyMrVePfZ8F+5KYdXFjoScYbmOPAfW4sNzvI5sob55W45e/Ln6W65xROpql3uRBK
+         c8AOEUlIs8w+7+XQUy9Zuw3FvIlXs3PlXQwMPOWYDoYDY3fE9h3Iq5UX82Z4xYJjoUuJ
+         kH9QrTdYbNsmPA6Bytwn3cBIRPfTouccGnw+wGau+963cSiWqqd/WQpaTz4y3k55nNp4
+         vOww==
+X-Gm-Message-State: APjAAAXADNrJ0DhRMoQHOBDPV9BprD4GxjMROWuhYIUjoRUM+FCrqu/F
+        DmOcqaTjoHEOqvd/J6XBkPwQKQ==
+X-Google-Smtp-Source: APXvYqyXmfYjyCLjI7Jq4nu3MhkiOKk2tOb7dImKfGrnqC+3eVJikhsp0cBodESHkU94cTJ8uUFX7g==
+X-Received: by 2002:a05:600c:145:: with SMTP id w5mr6598741wmm.157.1579181682932;
+        Thu, 16 Jan 2020 05:34:42 -0800 (PST)
+Received: from bender.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id x14sm162559wmj.42.2020.01.16.05.34.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 05:34:42 -0800 (PST)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     mchehab@kernel.org, hans.verkuil@cisco.com
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/5] media: meson: vdec: align stride on 32 bytes
+Date:   Thu, 16 Jan 2020 14:34:33 +0100
+Message-Id: <20200116133437.2443-2-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20200116133437.2443-1-narmstrong@baylibre.com>
+References: <20200116133437.2443-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4d5ec4b7-6f01-4c0b-fe7c-08d79a88ca53
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jan 2020 13:34:19.8695
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: w2QgKR0IXhT43OZnQAs3oW3JuXmiuYjN4oN07MSDnTJcHuTAE8XeNycQXnScNRml
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3404
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAyMC0wMS0xNiAxMTozOCwgTHVjYSBDZXJlc29saSB3cm90ZToNCj4gSGkgSmVhbiwgUGV0
-ZXIsDQo+IA0KPiB0aGFua3MgYm90aCBmb3IgeW91ciByZXZpZXdzLg0KPiANCj4gT24gMTYvMDEv
-MjAgMTA6NDksIEplYW4gRGVsdmFyZSB3cm90ZToNCj4+IE9uIE1vbiwgIDYgSmFuIDIwMjAgMDg6
-NDk6MDUgKzAxMDAsIEx1Y2EgQ2VyZXNvbGkgd3JvdGU6DQo+Pj4gU29tZSBvZiB0aGUgc2VjdGlv
-biBuYW1lcyBhcmUgbm90IHZlcnkgY2xlYXIuIFJlYWRpbmcgdGhvc2UgbmFtZXMgaW4gdGhlDQo+
-Pj4gaW5kZXgucnN0IHBhZ2UgZG9lcyBub3QgaGVscCBtdWNoIGluIGdyYXNwaW5nIHdoYXQgdGhl
-IGNvbnRlbnQgaXMgc3VwcG9zZWQNCj4+PiB0byBiZS4NCj4+Pg0KPj4+IFJlbmFtZSB0aG9zZSBz
-ZWN0aW9ucyB0byBjbGFyaWZ5IHRoZWlyIGNvbnRlbnQsIGVzcGVjaWFsbHkgd2hlbiByZWFkaW5n
-DQo+Pj4gdGhlIGluZGV4IHBhZ2UuDQo+Pj4NCj4+PiBTaWduZWQtb2ZmLWJ5OiBMdWNhIENlcmVz
-b2xpIDxsdWNhQGx1Y2FjZXJlc29saS5uZXQ+DQo+Pj4gQWNrZWQtYnk6IFBldGVyIFJvc2luIDxw
-ZWRhQGF4ZW50aWEuc2U+DQo+Pj4gLS0tDQo+Pj4NCj4+PiBOb3RlOiBoZXJlIGNoZWNrcGF0Y2gg
-Y29tcGxhaW5zOg0KPj4+DQo+Pj4gICBXQVJOSU5HOiBNaXNzaW5nIG9yIG1hbGZvcm1lZCBTUERY
-LUxpY2Vuc2UtSWRlbnRpZmllciB0YWcgaW4gbGluZSAxDQo+Pj4NCj4+PiBUaGFzJ3MgYmVjYXVz
-ZSB0aG9zZSBmaWxlcyBoYXZlIG5vIGxpY2Vuc2UgbGluZS4gSSB3b3VsZCBnbGFkbHkgYWRkIGEN
-Cj4+PiBwcm9wZXIgbGljZW5zZSBsaW5lLCBidXQgd2hhdCBpdCB0aGUgY29ycmVjdCBsaWNlbnNl
-IGhlcmU/IFNob3VsZCBJIGFzayB0aGUNCj4+PiBhdXRob3JzPyBHUEx2Mi1vbmx5IGFzIHRoZSBr
-ZXJuZWwgZGVmYXVsdD8NCj4+Pg0KPj4+IEknZCBhcHByZWNpYXRlIGEgZ3VpZGFuY2UgaGVyZSwg
-dGhhbmtzIGluIGFkdmFuY2UuDQo+Pg0KPj4gSSBkb24ndCB0aGluayB3ZSBuZWVkIGEgbGljZW5z
-ZSBmb3Igc3VjaCBkb2N1bWVudGF0aW9uIGZpbGVzLCBzbyBJDQo+PiB3b3VsZCBqdXN0IGlnbm9y
-ZSBjaGVja3BhdGNoLg0KPiANCj4gVGhhdCdzIE9LIGZvciBtZS4NCj4gDQo+Pj4gZGlmZiAtLWdp
-dCBhL0RvY3VtZW50YXRpb24vaTJjL3N1bW1hcnkucnN0IGIvRG9jdW1lbnRhdGlvbi9pMmMvc3Vt
-bWFyeS5yc3QNCj4+PiBpbmRleCBmYzY5ZDk1NjdkOWQuLmFlM2JiYjlmZDhmMSAxMDA2NDQNCj4+
-PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2kyYy9zdW1tYXJ5LnJzdA0KPj4+ICsrKyBiL0RvY3VtZW50
-YXRpb24vaTJjL3N1bW1hcnkucnN0DQo+Pj4gQEAgLTEsNiArMSw2IEBADQo+Pj4gLT09PT09PT09
-PT09PT0NCj4+PiAtSTJDIGFuZCBTTUJ1cw0KPj4+IC09PT09PT09PT09PT09DQo+Pj4gKz09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PQ0KPj4+ICtJbnRyb2R1Y3Rpb25zIHRvIEkyQyBhbmQg
-U01CdXMNCj4+PiArPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQo+Pg0KPj4gSSB3b3Vs
-ZCB1c2UgIkludHJvZHVjdGlvbiIsIHNpbmd1bGFyLg0KPiANCj4gTWUgdG9vISBGaXggcXVldWVk
-IGZvciB2Mi4NCj4gDQo+IFBldGVyLCBJIGFzc3VtZSBJIGNhbiBrZWVwIHlvdXIgQWNrZWQtYnkg
-aW4gdjIgd2l0aCB0aGlzIHNtYWxsIGNoYW5nZS4NCg0KVGhhdCdzIGZpbmUuDQoNCkNoZWVycywN
-ClBldGVyDQo=
+The HEVC/VP9 aligns the plane stride on 32, so align the planes stride
+for all codecs to 32 to satisfy HEVC/VP9 decoding using the "HEVC" HW.
+
+This fixes VP9 decoding of streams with following (not limited) widths:
+- 264
+ -288
+- 350
+- 352
+- 472
+- 480
+- 528
+- 600
+- 720
+- 800
+- 848
+- 1440
+
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ drivers/staging/media/meson/vdec/vdec.c         | 10 +++++-----
+ drivers/staging/media/meson/vdec/vdec_helpers.c |  4 ++--
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/staging/media/meson/vdec/vdec.c b/drivers/staging/media/meson/vdec/vdec.c
+index 20e95b71c2d6..5514d2d259a4 100644
+--- a/drivers/staging/media/meson/vdec/vdec.c
++++ b/drivers/staging/media/meson/vdec/vdec.c
+@@ -527,20 +527,20 @@ vdec_try_fmt_common(struct amvdec_session *sess, u32 size,
+ 		memset(pfmt[1].reserved, 0, sizeof(pfmt[1].reserved));
+ 		if (pixmp->pixelformat == V4L2_PIX_FMT_NV12M) {
+ 			pfmt[0].sizeimage = output_size;
+-			pfmt[0].bytesperline = ALIGN(pixmp->width, 64);
++			pfmt[0].bytesperline = ALIGN(pixmp->width, 32);
+ 
+ 			pfmt[1].sizeimage = output_size / 2;
+-			pfmt[1].bytesperline = ALIGN(pixmp->width, 64);
++			pfmt[1].bytesperline = ALIGN(pixmp->width, 32);
+ 			pixmp->num_planes = 2;
+ 		} else if (pixmp->pixelformat == V4L2_PIX_FMT_YUV420M) {
+ 			pfmt[0].sizeimage = output_size;
+-			pfmt[0].bytesperline = ALIGN(pixmp->width, 64);
++			pfmt[0].bytesperline = ALIGN(pixmp->width, 32);
+ 
+ 			pfmt[1].sizeimage = output_size / 4;
+-			pfmt[1].bytesperline = ALIGN(pixmp->width, 64) / 2;
++			pfmt[1].bytesperline = ALIGN(pixmp->width, 32) / 2;
+ 
+ 			pfmt[2].sizeimage = output_size / 2;
+-			pfmt[2].bytesperline = ALIGN(pixmp->width, 64) / 2;
++			pfmt[2].bytesperline = ALIGN(pixmp->width, 32) / 2;
+ 			pixmp->num_planes = 3;
+ 		}
+ 	}
+diff --git a/drivers/staging/media/meson/vdec/vdec_helpers.c b/drivers/staging/media/meson/vdec/vdec_helpers.c
+index ff4333074197..fc59d8801643 100644
+--- a/drivers/staging/media/meson/vdec/vdec_helpers.c
++++ b/drivers/staging/media/meson/vdec/vdec_helpers.c
+@@ -154,8 +154,8 @@ int amvdec_set_canvases(struct amvdec_session *sess,
+ {
+ 	struct v4l2_m2m_buffer *buf;
+ 	u32 pixfmt = sess->pixfmt_cap;
+-	u32 width = ALIGN(sess->width, 64);
+-	u32 height = ALIGN(sess->height, 64);
++	u32 width = ALIGN(sess->width, 32);
++	u32 height = ALIGN(sess->height, 32);
+ 	u32 reg_cur = reg_base[0];
+ 	u32 reg_num_cur = 0;
+ 	u32 reg_base_cur = 0;
+-- 
+2.22.0
+
