@@ -2,97 +2,172 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D4EC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3020EC33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CEC620663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:45:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="gx0Q5k/v"
+	by mail.kernel.org (Postfix) with ESMTP id F1B702073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:46:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579193161;
+	bh=zrtug52BmZXPYpKd1XK968zeRSRJc2alCuFgpYu/tK0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=osmEEwjHS4mGa7bawNnh8FRqXL6HE6AEJkBxrb0KeyfHbtULV///bj498FnYCGgwA
+	 5FXnR8GwpyKlL289Gnt0QDyuHD/dOXk7MNfkazorPSuJjuq4fLL8hw3q2SaUGNwfcq
+	 76fpG7FmWnzD2+f9Kys07UlFFK2rIls7acZq726I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729691AbgAPQpy (ORCPT
+        id S1727032AbgAPQp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:45:54 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:45668 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729654AbgAPQps (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:45:48 -0500
-Received: by mail-qk1-f194.google.com with SMTP id x1so19670047qkl.12
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 08:45:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=maine.edu; s=google;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=wvt8smsg1HL/HROaSH1vcUPejygGWroBMJD9sx4u7EQ=;
-        b=gx0Q5k/vJ3zGnE2w0yfnD8HiYO/z+498mW+4yPeOc0Yx9qHVU3cchwAzkAhZWAZtQ2
-         DKvZby1uWKPceCAPp9gIUK95GtVIGDBi314APQmyR/w1SsXmzeVpor7loLQ8oP29VxGA
-         xuBQwbfPSZutI7MJpYp6sW0mvqoNQOzhWLOzU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=wvt8smsg1HL/HROaSH1vcUPejygGWroBMJD9sx4u7EQ=;
-        b=V7DOs1WdmviCMYRCGXPSd18ruh1MLbRYUFnMQwodpUHoNrVozGs1hDzMW+6u7FXIZi
-         Zam1CmC97zbF9FVi0Fzi++xm1y5LvxvmLJpgZu52SfvRK19z0Y4e9DgUKPo0Li/sgytq
-         PG66sdq4fn3OfuHRVs5Y/3DqtgveZasMh2xd7K/Wb9a2iTla0FkpWDfmCVt2XHhu7+iy
-         dZ8BTCNeUinf5KxnCTQ7xcBzSlC+7GxpT75D9pwNE59RwhCx1Q4Eu9sdu5BZCY9QsLkN
-         zoMRiH/HSPA8lcKGekJT8Gpmx0DSdQ/3WoXmbfuL/BEBh+kuC3vieWm0mYGoCiziCGoL
-         uMXw==
-X-Gm-Message-State: APjAAAUJbTDdlJJHt4F75LnNMpqj9Qigl1uuvRmlBna9nSx6NcWiW7bR
-        cDXr1BfkBRs5TTY4kU7g77py6A==
-X-Google-Smtp-Source: APXvYqxNm5u/3SanIpSyF46ty0cpiVkf7U7YOWJtvaCzMM84yx+2kbF6335YW3J2CNQkQ2x2hO3EqA==
-X-Received: by 2002:a37:7d01:: with SMTP id y1mr8317444qkc.452.1579193147715;
-        Thu, 16 Jan 2020 08:45:47 -0800 (PST)
-Received: from macbook-air (weaver.eece.maine.edu. [130.111.218.23])
-        by smtp.gmail.com with ESMTPSA id n4sm11195152qti.55.2020.01.16.08.45.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 08:45:46 -0800 (PST)
-From:   Vince Weaver <vincent.weaver@maine.edu>
-X-Google-Original-From: Vince Weaver <vince@maine.edu>
-Date:   Thu, 16 Jan 2020 11:45:45 -0500 (EST)
-X-X-Sender: vince@macbook-air
-To:     Vince Weaver <vincent.weaver@maine.edu>
-cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH] perf: correctly handle failed perf_get_aux_event() (was:
- Re: [perf] perf_event_open() sometimes returning 0)
-In-Reply-To: <alpine.DEB.2.21.2001061307460.24675@macbook-air>
-Message-ID: <alpine.DEB.2.21.2001161144590.29041@macbook-air>
-References: <alpine.DEB.2.21.2001021349390.11372@macbook-air> <alpine.DEB.2.21.2001021418590.11372@macbook-air> <20200106120338.GC9630@lakrids.cambridge.arm.com> <alpine.DEB.2.21.2001061307460.24675@macbook-air>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 16 Jan 2020 11:45:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54932 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726928AbgAPQpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:45:55 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CA4C2081E;
+        Thu, 16 Jan 2020 16:45:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579193154;
+        bh=zrtug52BmZXPYpKd1XK968zeRSRJc2alCuFgpYu/tK0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qZ80nJes95A0EtwUVl+xtYVbbnV5p9bwEE/invClvQmw2/JJzonV5epPJ7E/ChVuq
+         gte70akMowggxXPPrm387o8wwyJ2+94tANP3NvJ5FtX7SxCJuJaUCgVUWLCxPyfFNp
+         5i5xSKHhtDc4Qg60lc0CRI8QrR6BMHf/ruhDutyE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 035/205] drm/rockchip: Round up _before_ giving to the clock framework
+Date:   Thu, 16 Jan 2020 11:40:10 -0500
+Message-Id: <20200116164300.6705-35-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
+References: <20200116164300.6705-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 Jan 2020, Vince Weaver wrote:
+From: Douglas Anderson <dianders@chromium.org>
 
-> On Mon, 6 Jan 2020, Mark Rutland wrote:
-> 
-> > On Thu, Jan 02, 2020 at 02:22:47PM -0500, Vince Weaver wrote:
-> > > On Thu, 2 Jan 2020, Vince Weaver wrote:
-> > > 
-> > Vince, does the below (untested) patch work for you?
-> 
-> 
-> yes, this patch fixes things for me.
-> 
-> Tested-by: Vince Weaver <vincent.weaver@maine.edu>
-> 
+[ Upstream commit 287422a95fe28e05c1952de0472e0dfdffa6caae ]
 
-is this patch going to make it upstream?  It's a fairly major correctness 
-bug with perf_event_open().
+I'm embarassed to say that even though I've touched
+vop_crtc_mode_fixup() twice and I swear I tested it, there's still a
+stupid glaring bug in it.  Specifically, on veyron_minnie (with all
+the latest display timings) we want to be setting our pixel clock to
+66,666,666.67 Hz and we tell userspace that's what we set, but we're
+actually choosing 66,000,000 Hz.  This is confirmed by looking at the
+clock tree.
 
-Vince
+The problem is that in drm_display_mode_from_videomode() we convert
+from Hz to kHz with:
+
+  dmode->clock = vm->pixelclock / 1000;
+
+...and drm_display_mode_from_videomode() is called from panel-simple
+when we have an "override_mode" like we do on veyron_minnie.  See
+commit 123643e5c40a ("ARM: dts: rockchip: Specify
+rk3288-veyron-minnie's display timings").
+
+...so when the device tree specifies a clock of 66666667 for the panel
+then DRM translates that to 66666000.  The clock framework will always
+pick a clock that is _lower_ than the one requested, so it will refuse
+to pick 66666667 and we'll end up at 66000000.
+
+While we could try to fix drm_display_mode_from_videomode() to round
+to the nearest kHz and it would fix our problem, it wouldn't help if
+the clock we actually needed was 60,000,001 Hz.  We could
+alternatively have DRM always round up, but maybe this would break
+someone else who already baked in the assumption that DRM rounds down.
+Specifically note that clock drivers are not consistent about whether
+they round up or round down when you call clk_set_rate().  We know how
+Rockchip's clock driver works, but (for instance) you can see that on
+most Qualcomm clocks the default is clk_rcg2_ops which rounds up.
+
+Let's solve this by just adding 999 Hz before calling
+clk_round_rate().  This should be safe and work everywhere.  As
+discussed in more detail in comments in the commit, Rockchip's PLLs
+are configured in a way that there shouldn't be another PLL setting
+that is only a few kHz off so we won't get mixed up.
+
+NOTE: if this is picked to stable, it's probably easiest to first pick
+commit 527e4ca3b6d1 ("drm/rockchip: Base adjustments of the mode based
+on prev adjustments") which shouldn't hurt in stable.
+
+Fixes: b59b8de31497 ("drm/rockchip: return a true clock rate to adjusted_mode")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Sean Paul <seanpaul@chromium.org>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191003114726.v2.1.Ib233b3e706cf6317858384264d5b0ed35657456e@changeid
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 37 +++++++++++++++++++--
+ 1 file changed, 34 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+index 613404f86668..84e3decb17b1 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+@@ -1040,10 +1040,41 @@ static bool vop_crtc_mode_fixup(struct drm_crtc *crtc,
+ 				struct drm_display_mode *adjusted_mode)
+ {
+ 	struct vop *vop = to_vop(crtc);
++	unsigned long rate;
+ 
+-	adjusted_mode->clock =
+-		DIV_ROUND_UP(clk_round_rate(vop->dclk,
+-					    adjusted_mode->clock * 1000), 1000);
++	/*
++	 * Clock craziness.
++	 *
++	 * Key points:
++	 *
++	 * - DRM works in in kHz.
++	 * - Clock framework works in Hz.
++	 * - Rockchip's clock driver picks the clock rate that is the
++	 *   same _OR LOWER_ than the one requested.
++	 *
++	 * Action plan:
++	 *
++	 * 1. When DRM gives us a mode, we should add 999 Hz to it.  That way
++	 *    if the clock we need is 60000001 Hz (~60 MHz) and DRM tells us to
++	 *    make 60000 kHz then the clock framework will actually give us
++	 *    the right clock.
++	 *
++	 *    NOTE: if the PLL (maybe through a divider) could actually make
++	 *    a clock rate 999 Hz higher instead of the one we want then this
++	 *    could be a problem.  Unfortunately there's not much we can do
++	 *    since it's baked into DRM to use kHz.  It shouldn't matter in
++	 *    practice since Rockchip PLLs are controlled by tables and
++	 *    even if there is a divider in the middle I wouldn't expect PLL
++	 *    rates in the table that are just a few kHz different.
++	 *
++	 * 2. Get the clock framework to round the rate for us to tell us
++	 *    what it will actually make.
++	 *
++	 * 3. Store the rounded up rate so that we don't need to worry about
++	 *    this in the actual clk_set_rate().
++	 */
++	rate = clk_round_rate(vop->dclk, adjusted_mode->clock * 1000 + 999);
++	adjusted_mode->clock = DIV_ROUND_UP(rate, 1000);
+ 
+ 	return true;
+ }
+-- 
+2.20.1
+
