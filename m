@@ -2,135 +2,206 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D06C32771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 01:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79016C32771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 01:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C28D207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 01:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 420A8207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 01:48:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NUQfXiZb"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="VhtwsMtn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730370AbgAPBpr (ORCPT
+        id S1730380AbgAPBsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 20:45:47 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:42218 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730153AbgAPBpr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 20:45:47 -0500
-Received: by mail-lj1-f193.google.com with SMTP id y4so20751672ljj.9
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 17:45:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=U+RQyzgBTq/ON6P2+wJSZt2wyW+FlNHJHg+NSKeDmFE=;
-        b=NUQfXiZb7391JB22uSyaFTtB4xoyTOL60AdEkWdUh9rxn3xgqHIqBIQpQ9yOWzqBXs
-         62FYnY/2uSynVunTrZJ8JYuDmTz8jZF6jOn7HOVMhJX3z4m9s9bL73CXe8BKLMOz5YIl
-         XdYCgmMNvQZ4n6Byp11D9S9bCCS57BSDMynfZrfNaOJW3E2ExHmELrlRs0lQfUqAN4DL
-         dgzBx3qRnlKImZtiOQ+nKIbLa1FIbL49mGsAeLkZYfgs75BdTKc8gPPNQiPaI1v71Lyw
-         sBSAjPQWnIw+uXBomVWjbWzV4XSeoiHgMQe1nO0SmAkMDbfva4H1eLJRCVuMFArrQrPI
-         dbFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=U+RQyzgBTq/ON6P2+wJSZt2wyW+FlNHJHg+NSKeDmFE=;
-        b=fsPxyRl/HySQ/U+52Yh9zGowtzldQmW3l/jm9GqxDZLZWksifygIy+AN9PE8yD7Nvd
-         s2kVur2OkbgHnosbKfPKF0b20oT18JPPmu8sCOUxmwDsdWDy10aPn0wJ8X18EkGbQaQf
-         FYc4EKjp6A/ur3IHs9v8bB+uVJKT30baI9vGzVz6f0ETH4IO7c9tANp+80ZcmXsaDFPC
-         LN1lxc1WqeCuGJrWBjk7v0hFVFpDG4hveSN43Q0e5+aLbiHKoBhXqudts7fEpQRHrHVN
-         qbomFWbTjBIUiyQ5VWkjSVc2y64+E7URHm8KvASsikGf4wGyImOQiU22hWmnRfPyEEuR
-         kP+Q==
-X-Gm-Message-State: APjAAAVSFLdK9jbhzlX1g8lwoS8AVAV138Od2FL1XoUYtF5YrFV6OnhS
-        BD7Jxj8C9ev6YkaSrNN1Kl095Il5lqtxCwkvsPI=
-X-Google-Smtp-Source: APXvYqyS0Lev/bxVn6XJvsngSBDaCup/fvOuKS3i1TkfXUrcWrb0SPAGKurZCEgWoS1m5HQmozfoMHG2L6QpgpaGMKY=
-X-Received: by 2002:a2e:9d90:: with SMTP id c16mr669463ljj.264.1579139144680;
- Wed, 15 Jan 2020 17:45:44 -0800 (PST)
+        Wed, 15 Jan 2020 20:48:19 -0500
+Received: from mail-eopbgr60086.outbound.protection.outlook.com ([40.107.6.86]:51330
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729949AbgAPBsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 20:48:18 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aUudgm1v6tG6H3Ca7Xz9IvC9bJOdRHQZOK0uEGCJ7r6q4Wp81sPOjDA8fcn9/bmWYF9Fxh4idbHz2JFvy2ej3neUtlPN0CD23745Iu+EYHdHa+OTC6mRahRiH9CSfN/TCY8PU+ra6mqlf2FnNqaVHwLDuIGDjPcv2zsMitp1KXIWvKg9PuON2oaflOs3kkLhTKflzo2pP3d53zjJi3DOKGqRpvMyCIFlbvQzD3Bj0AmO/FKdsmLF2wOa+bBz/zJalF0mpdadIlc2tszEghWvcS2MtU9YM3/ZT0idBvi+X16bGG5fBEfzoEMx459Z5ditlEWobEoIRGWctW1pXLftxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=npi2VuDAt1RSXQOaoFeFnIFa5c22TI1F+oe/Nn35VkM=;
+ b=GcdmHh4KmvlYz5LJiMaPcTiUyB4TxjbI6Vx0szSf1iLMO8nj3Vl+lg+64jFIrBcsbPDPnrfyuLp1d/Y6FDrSrVfsZtThUAn/QC6rhO8RSa9L7uMnizqb1YwsddmVluYKqfmphhRF+rxnhsMj/5xzqv9Xhd5c/fOD+8eXhq4FmYhhkhyldbs+XyqcgFin6zQCVkJDlqxxFm+yGDO4ON98Ct+LDGM7W154Dw9650ree+C/0HldJAeT32JusS2qmMYhkd5IXzn07BUDBK1G5Qp2OShK9oF2xUsAUyghn7odJDcNbN1poZNJvnQZHuA/zndjtdssArg8q0mUYx8QeXIPQA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=npi2VuDAt1RSXQOaoFeFnIFa5c22TI1F+oe/Nn35VkM=;
+ b=VhtwsMtnU5zgN0bDCg2wausLLvYKY00Oh8kXQi1tsVsVXe0lSwUanGlrVyqn2J1OA9cGG56x6emy2mqUXAn0wk546FBU2Pm8i4AWbzjmJL0G6iTfqEDGu2OFeu+5Y/M70njq1LBrvxKjWA2t16qPIkAFdBrHcSPMmvVXRP2ZJAw=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB4770.eurprd04.prod.outlook.com (20.177.41.154) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.13; Thu, 16 Jan 2020 01:48:14 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2623.018; Thu, 16 Jan 2020
+ 01:48:14 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>
+CC:     Lucas Stach <l.stach@pengutronix.de>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Anson Huang <anson.huang@nxp.com>, Jacky Bai <ping.bai@nxp.com>
+Subject: RE: [PATCH V2 2/4] clk: imx: imx8mq: use imx8m_clk_hw_composite_core
+Thread-Topic: [PATCH V2 2/4] clk: imx: imx8mq: use imx8m_clk_hw_composite_core
+Thread-Index: AQHVx4YUjgdbWY8cjkmCWC9mUDXV2qfrmjKAgAD0nRA=
+Date:   Thu, 16 Jan 2020 01:48:14 +0000
+Message-ID: <AM0PR04MB44816FCE748476F818719E9088360@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1578640411-16991-1-git-send-email-peng.fan@nxp.com>
+ <1578640411-16991-3-git-send-email-peng.fan@nxp.com>
+ <VI1PR04MB7023981770D458F6D1FB546FEE340@VI1PR04MB7023.eurprd04.prod.outlook.com>
+ <20200115111205.GB29329@T480>
+In-Reply-To: <20200115111205.GB29329@T480>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: c73792e1-9785-4f14-ae8a-08d79a2626b0
+x-ms-traffictypediagnostic: AM0PR04MB4770:|AM0PR04MB4770:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB4770B36157D6F97C21A95A9088360@AM0PR04MB4770.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 02843AA9E0
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(39860400002)(376002)(346002)(366004)(189003)(199004)(8676002)(52536014)(6636002)(478600001)(66476007)(66556008)(64756008)(76116006)(8936002)(5660300002)(66446008)(44832011)(86362001)(66946007)(81156014)(55016002)(9686003)(81166006)(71200400001)(110136005)(54906003)(26005)(33656002)(53546011)(6506007)(4326008)(2906002)(7696005)(316002)(186003)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4770;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: kpDV00Nq64UoXLRKkY8iIrNO73DhBrEwhk6+cHdWCw5K4whJ6dMJfIGwA4VvzoRjlk7Vs5ihTQgAjoFxhmpgzwX4Tr/09Ytnpnci5+cluPPRUv0RDoqtN9xGFqmS6C87DfMXURKSacAC4Z4oz82i7okHVcM6jMNfUmBPN4OAtaJf1tX1vBhm3XjtGNJuiMzEw0ITeaZS1DM4agT5iLVUI3ln0eZ9/Pe7JHw/y3vzGRSHQhuYSPQhrqfS5bYHzXIZBZjsa0/eoE2CX+2/T4gCv2y9zrOs9WNpMkJ7GvshlL0fdQDNKjyOknEnaVXOFY88wJtf3oTLygGyqeH8p8U06f4DGkQaxLhZQLs9bi6rInDQieFqdgN7sqX+mqXB6IwBWsNYPhsEIe+VGHPhnANr7S5Tyt36kRyHgNPPwZnHqKJ9JLDBys+GL+xy163TOM+NsPL7LyLxoqosE5ElikkzlDtPqiYKRbuYO2FzJDqDc5cpLiYt8qwS17ZF4N4vs+PR
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <cover.1572437285.git.vpillai@digitalocean.com>
- <5e3cea14-28d1-bf1e-cabe-fb5b48fdeadc@linux.intel.com> <3c3c56c1-b8dc-652c-535e-74f6dcf45560@linux.intel.com>
- <CANaguZAz+mw1Oi8ecZt+JuCWbf=g5UvKrdSvAeM82Z1c+9oWAw@mail.gmail.com>
- <8f9acfb3-28e0-8d3e-08e0-77f04410cf38@linux.intel.com> <1cc62dbe-348e-affa-8740-c162e1454510@linux.intel.com>
-In-Reply-To: <1cc62dbe-348e-affa-8740-c162e1454510@linux.intel.com>
-From:   Aubrey Li <aubrey.intel@gmail.com>
-Date:   Thu, 16 Jan 2020 09:45:29 +0800
-Message-ID: <CAERHkrsaXAgE4MyE6ZehZ8cSq0bVrjc5uJnE9GwLCk4dp1hS9g@mail.gmail.com>
-Subject: Re: [RFC PATCH v4 00/19] Core scheduling v4
-To:     Tim Chen <tim.c.chen@linux.intel.com>
-Cc:     Aubrey Li <aubrey.li@linux.intel.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Dario Faggioli <dfaggioli@suse.com>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c73792e1-9785-4f14-ae8a-08d79a2626b0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jan 2020 01:48:14.3623
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: V2VcrSsLGthDt7lnZcMopJbncF65nw9W1TU9ufda0TtoAr7jHC2eMX9MAvDK7hyYYp1wdbp09IeLyV6ovTGPpA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4770
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 3:33 AM Tim Chen <tim.c.chen@linux.intel.com> wrote:
->
-> On 1/14/20 7:43 PM, Li, Aubrey wrote:
-> > On 2020/1/14 23:40, Vineeth Remanan Pillai wrote:
-> >> On Mon, Jan 13, 2020 at 8:12 PM Tim Chen <tim.c.chen@linux.intel.com> wrote:
-> >>
-> >>> I also encountered kernel panic with the v4 code when taking cpu offline or online
-> >>> when core scheduler is running.  I've refreshed the previous patch, along
-> >>> with 3 other patches to fix problems related to CPU online/offline.
-> >>>
-> >>> As a side effect of the fix, each core can now operate in core-scheduling
-> >>> mode or non core-scheduling mode, depending on how many online SMT threads it has.
-> >>>
-> >>> Vineet, are you guys planning to refresh v4 and update it to v5?  Aubrey posted
-> >>> a port to the latest kernel earlier.
-> >>>
-> >> Thanks for the updated patch Tim.
-> >>
-> >> We have been testing with v4 rebased on 5.4.8 as RC kernels had given us
-> >> trouble in the past. v5 is due soon and we are planning to release v5 when
-> >> 5.5 comes out. As of now, v5 has your crash fixes and Aubrey's changes
-> >> related to load balancing.
+> Subject: Re: [PATCH V2 2/4] clk: imx: imx8mq: use
+> imx8m_clk_hw_composite_core
+>=20
+> On Tue, Jan 14, 2020 at 04:49:20PM +0000, Leonard Crestez wrote:
+> > On 10.01.2020 09:17, Peng Fan wrote:
+> > > From: Peng Fan <peng.fan@nxp.com>
+> > >
+> > > Use imx8m_clk_hw_composite_core to simplify code.
+> > >
+> > > Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
+> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > ---
+> > >   drivers/clk/imx/clk-imx8mq.c | 19 +++++--------------
+> > >   1 file changed, 5 insertions(+), 14 deletions(-)
+> > >
+> > > diff --git a/drivers/clk/imx/clk-imx8mq.c
+> > > b/drivers/clk/imx/clk-imx8mq.c index 4c0edca1a6d0..b031183ff427
+> > > 100644
+> > > --- a/drivers/clk/imx/clk-imx8mq.c
+> > > +++ b/drivers/clk/imx/clk-imx8mq.c
+> > > @@ -403,22 +403,13 @@ static int imx8mq_clocks_probe(struct
+> > > platform_device *pdev)
+> > >
+> > >   	/* CORE */
+> > >   	hws[IMX8MQ_CLK_A53_SRC] =3D imx_clk_hw_mux2("arm_a53_src",
+> base + 0x8000, 24, 3, imx8mq_a53_sels, ARRAY_SIZE(imx8mq_a53_sels));
+> > > -	hws[IMX8MQ_CLK_M4_SRC] =3D imx_clk_hw_mux2("arm_m4_src", base
+> + 0x8080, 24, 3, imx8mq_arm_m4_sels, ARRAY_SIZE(imx8mq_arm_m4_sels));
+> > > -	hws[IMX8MQ_CLK_VPU_SRC] =3D imx_clk_hw_mux2("vpu_src", base +
+> 0x8100, 24, 3, imx8mq_vpu_sels, ARRAY_SIZE(imx8mq_vpu_sels));
+> > > -	hws[IMX8MQ_CLK_GPU_CORE_SRC] =3D
+> imx_clk_hw_mux2("gpu_core_src", base + 0x8180, 24, 3,
+> imx8mq_gpu_core_sels, ARRAY_SIZE(imx8mq_gpu_core_sels));
+> > > -	hws[IMX8MQ_CLK_GPU_SHADER_SRC] =3D
+> imx_clk_hw_mux2("gpu_shader_src", base + 0x8200, 24, 3,
+> imx8mq_gpu_shader_sels,  ARRAY_SIZE(imx8mq_gpu_shader_sels));
+> > > -
+> > >   	hws[IMX8MQ_CLK_A53_CG] =3D
+> imx_clk_hw_gate3_flags("arm_a53_cg", "arm_a53_src", base + 0x8000, 28,
+> CLK_IS_CRITICAL);
+> > > -	hws[IMX8MQ_CLK_M4_CG] =3D imx_clk_hw_gate3("arm_m4_cg",
+> "arm_m4_src", base + 0x8080, 28);
+> > > -	hws[IMX8MQ_CLK_VPU_CG] =3D imx_clk_hw_gate3("vpu_cg", "vpu_src",
+> base + 0x8100, 28);
+> > > -	hws[IMX8MQ_CLK_GPU_CORE_CG] =3D imx_clk_hw_gate3("gpu_core_cg",
+> "gpu_core_src", base + 0x8180, 28);
+> > > -	hws[IMX8MQ_CLK_GPU_SHADER_CG] =3D
+> imx_clk_hw_gate3("gpu_shader_cg", "gpu_shader_src", base + 0x8200, 28);
+> > > -
+> > >   	hws[IMX8MQ_CLK_A53_DIV] =3D
+> imx_clk_hw_divider2("arm_a53_div", "arm_a53_cg", base + 0x8000, 0, 3);
+> > > -	hws[IMX8MQ_CLK_M4_DIV] =3D imx_clk_hw_divider2("arm_m4_div",
+> "arm_m4_cg", base + 0x8080, 0, 3);
+> > > -	hws[IMX8MQ_CLK_VPU_DIV] =3D imx_clk_hw_divider2("vpu_div",
+> "vpu_cg", base + 0x8100, 0, 3);
+> > > -	hws[IMX8MQ_CLK_GPU_CORE_DIV] =3D
+> imx_clk_hw_divider2("gpu_core_div", "gpu_core_cg", base + 0x8180, 0, 3);
+> > > -	hws[IMX8MQ_CLK_GPU_SHADER_DIV] =3D
+> imx_clk_hw_divider2("gpu_shader_div", "gpu_shader_cg", base + 0x8200, 0,
+> 3);
+> > > +
+> > > +	hws[IMX8MQ_CLK_M4_DIV] =3D
+> imx8m_clk_hw_composite_core("arm_m4_div", imx8mq_arm_m4_sels, base
+> + 0x8080);
+> > > +	hws[IMX8MQ_CLK_VPU_DIV] =3D
+> imx8m_clk_hw_composite_core("vpu_div", imx8mq_vpu_sels, base +
+> 0x8100);
+> > > +	hws[IMX8MQ_CLK_GPU_CORE_DIV] =3D
+> imx8m_clk_hw_composite_core("gpu_core_div", imx8mq_gpu_core_sels,
+> base + 0x8180);
+> > > +	hws[IMX8MQ_CLK_GPU_SHADER_DIV] =3D
+> > > +imx8m_clk_hw_composite("gpu_shader_div", imx8mq_gpu_shader_sels,
+> > > +base + 0x8200);
+> > >
+> > >   	/* BUS */
+> > >   	hws[IMX8MQ_CLK_MAIN_AXI] =3D
+> > > imx8m_clk_hw_composite_critical("main_axi", imx8mq_main_axi_sels,
+> > > base + 0x8800);
 > >
-> > It turns out my load balancing related changes need to be refined.
-> > For example, we don't migrate task if the task's core cookie does not match
-> > with CPU's core cookie, but if the entire core is idle, we should allow task
-> > migration, something like the following:
+> > Collapsing _SRC _CG into _DIV is an useful simplification but it
+> > technically breaks DT compatibility rules.
 > >
-> > I plan to do this after my Chinese New Year holiday(Feb 3rd).
-> >
-> > Thanks,
-> > -Aubrey
-> >
->
-> Aubrey's attached patch should replace his previous patch
-> sched/fair: don't migrate task if cookie not match
->
-> I've also added a fix below for Aubrey's patch
-> sched/fair: find cookie matched idlest CPU.
->
-> Aubrey, can you merge this fix into that patch when you update
-> your patches?
+> > Inside imx8mq.dtsi there are clock assignments for
+> > IMX8MQ_CLK_GPU_CORE_SRC and IMX8MQ_CLK_GPU_SHADER_SRC
+> which no longer
+> > exist so those assignments don't take effect.
+>=20
+> We do not want to break existing DTBs for this case.  Patches dropped.
 
-Thanks Tim, I'll include your fix when I update my patches.
+I'll send a v3 to address the issues. Sorry.
 
--Aubrey
+Thanks,
+Peng.
+
+>=20
+> Shawn
