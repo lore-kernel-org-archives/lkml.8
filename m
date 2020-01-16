@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9517C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C5A4C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76F1B2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:45:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E585206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:45:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200355;
-	bh=ry5raxMMcK79klLj5ax/ijaAf/pwX8mblkJk85prWNU=;
+	s=default; t=1579200356;
+	bh=ul71Y/zEbW7xkWlk/aceUw/nzMusboXygjav+Ia0Llo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mkzSlgk0XtpFMTiuJVFMJgcl0dhCJEoIaqf+4EerfivHeMtYGM75nupuudqYa+8C9
-	 ctVyQDAPASPIe6zCg1qshuYO0ArBw6TsQ4+AI1+kcoRUWTvUn7vGTmfDxk+o1aqFOb
-	 Hurb2Kr2QPNIxoE1YLLuh8nrg9OoOjpzeFx+8VxQ=
+	b=flORK7ebxnWIZ2gXqMJ8vKtsazHElPVFkZhTbYH5YrSgNLKQ4pZFeyBBjusVdp6E3
+	 ilCU1rKBpuam+YWejl0Yt32XhxNxIBwyfl9oUpyyIS4XPyXfp/vu6Zs4jKpFiLvNfU
+	 VNTovvs717Ib48iHvk9mJL7aTJK6O3eJEU6wc3x0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390122AbgAPSpy (ORCPT
+        id S2389372AbgAPRKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:45:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48942 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:10:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390029AbgAPRKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:10:33 -0500
+        id S2389900AbgAPRKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:10:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 423CE2467C;
-        Thu, 16 Jan 2020 17:10:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26F5921D56;
+        Thu, 16 Jan 2020 17:10:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194633;
-        bh=ry5raxMMcK79klLj5ax/ijaAf/pwX8mblkJk85prWNU=;
+        s=default; t=1579194619;
+        bh=ul71Y/zEbW7xkWlk/aceUw/nzMusboXygjav+Ia0Llo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LXEMbRFPyRS9CDT9Z6U2eSmnNb7MMaWrKyQdys4lTvU/44dXDpXVFxauBSqcx30mL
-         YDt8wUQ/fGBwPnesDszuYTMI2uGFmmsCl0U320VRTGqDhm/f+2MSxxDlYFJ59k+Qi/
-         2Tm3nMY54Oula0lN3Fd9x0not8j/C/3CcWmS7Qw4=
+        b=KNrGCXyZOfUNa7q0ntGnXKruh+BdC5lwrn3Z4Dppf7DFZmrlfvPHnqF1yJvnQF5GL
+         FoMhaonFjL018f8lEaq9IgFu6yhwFyrK6NBJnynqzBoaFg7oku5P/jYtSQ0tw042yD
+         wU6y6lKKJuk1SJ8dcE5UG30qG1vyKNG1DX/PdpU0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.19 492/671] ASoC: wm8737: Fix copy-paste error in wm8737_snd_controls
-Date:   Thu, 16 Jan 2020 12:02:10 -0500
-Message-Id: <20200116170509.12787-229-sashal@kernel.org>
+Cc:     Steve French <stfrench@microsoft.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org
+Subject: [PATCH AUTOSEL 4.19 481/671] cifs: fix rmmod regression in cifs.ko caused by force_sig changes
+Date:   Thu, 16 Jan 2020 12:01:59 -0500
+Message-Id: <20200116170509.12787-218-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -61,39 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Steve French <stfrench@microsoft.com>
 
-[ Upstream commit 554b75bde64bcad9662530726d1483f7ef012069 ]
+[ Upstream commit 247bc9470b1eeefc7b58cdf2c39f2866ba651509 ]
 
-sound/soc/codecs/wm8737.c:112:29: warning:
- high_3d defined but not used [-Wunused-const-variable=]
+Fixes: 72abe3bcf091 ("signal/cifs: Fix cifs_put_tcp_session to call send_sig instead of force_sig")
 
-'high_3d' should be used for 3D High Cut-off.
+The global change from force_sig caused module unloading of cifs.ko
+to fail (since the cifsd process could not be killed, "rmmod cifs"
+now would always fail)
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 2a9ae13a2641 ("ASoC: Add initial WM8737 driver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20190815091920.64480-1-yuehaibing@huawei.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
+CC: Eric W. Biederman <ebiederm@xmission.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm8737.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/cifs/connect.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/codecs/wm8737.c b/sound/soc/codecs/wm8737.c
-index e9ae821e7609..568b77692f5f 100644
---- a/sound/soc/codecs/wm8737.c
-+++ b/sound/soc/codecs/wm8737.c
-@@ -170,7 +170,7 @@ SOC_DOUBLE("Polarity Invert Switch", WM8737_ADC_CONTROL, 5, 6, 1, 0),
- SOC_SINGLE("3D Switch", WM8737_3D_ENHANCE, 0, 1, 0),
- SOC_SINGLE("3D Depth", WM8737_3D_ENHANCE, 1, 15, 0),
- SOC_ENUM("3D Low Cut-off", low_3d),
--SOC_ENUM("3D High Cut-off", low_3d),
-+SOC_ENUM("3D High Cut-off", high_3d),
- SOC_SINGLE_TLV("3D ADC Volume", WM8737_3D_ENHANCE, 7, 1, 1, adc_tlv),
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index a59dcda07534..a8790bf04e95 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -970,6 +970,7 @@ cifs_demultiplex_thread(void *p)
+ 		mempool_resize(cifs_req_poolp, length + cifs_min_rcv);
  
- SOC_SINGLE("Noise Gate Switch", WM8737_NOISE_GATE, 0, 1, 0),
+ 	set_freezable();
++	allow_signal(SIGKILL);
+ 	while (server->tcpStatus != CifsExiting) {
+ 		if (try_to_freeze())
+ 			continue;
 -- 
 2.20.1
 
