@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7919C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 550AEC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBC70246B1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29958246AD
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:31:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195875;
-	bh=qlxTtlN5xuOOnTNEZfsLFK+BikNN2h6MU/dqbxNxv24=;
+	s=default; t=1579195883;
+	bh=d5Dp4/iefDU1JBWw7HWrWettcgUtKFnOxwNMP9rNjHM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LX+czeH6yTa5Jvpf9HnzGnHzOCFExh382zAu3wuob5IAfOEASq+fVQFvkOXy2XxJq
-	 hCRCfawAISb3/LvLbrK9TaTyPrT0m2kOVMgy/JoUkFTGENaoToWGAx+nIjO3SE3UmR
-	 DiPeX/5Q8b590yt51W85K+/nRq4XTOfqeBPSxXJg=
+	b=Md/QJ7ttR481HnWtyruJiS10TZ2YzIxi9gfFe2xM6gFErbu5J2EA5os81XFakXPGh
+	 RAZh9xMVel7TzHxdNCAOQab5t32e1trN2rB+iGdGSAg7GXrIk7KpnzouUVsPV+VEzs
+	 1S+7hGh/AMni347e6l7ACon9/ddGekyOzuZqpjB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404734AbgAPRbP (ORCPT
+        id S2404751AbgAPRbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:31:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44052 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:31:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404691AbgAPRbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:31:06 -0500
+        id S2404739AbgAPRbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:31:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EE44246A9;
-        Thu, 16 Jan 2020 17:31:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97DF824716;
+        Thu, 16 Jan 2020 17:31:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195865;
-        bh=qlxTtlN5xuOOnTNEZfsLFK+BikNN2h6MU/dqbxNxv24=;
+        s=default; t=1579195875;
+        bh=d5Dp4/iefDU1JBWw7HWrWettcgUtKFnOxwNMP9rNjHM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WcHiL3REflSSjWItgR9Sarr/g89EWO53GiL3tOaYkNebVkaT4LhWQzfuWAe4TJ3r8
-         SVYP6XH8VIrG84h1+9xrt1iaFfeVRouBWbu8pSNwJhw4RbS25IvdPkwS8g93X+6XqI
-         X3lAg7s3De6nj7frjfFuewSur6xUO8AXfCLagkBw=
+        b=VV8PlG/ZpCqNrH5c4N7NwUUauayMsLqdNilFbP8X1U7CNq8/81ZXsdx/5jUORi2hz
+         e6A0j5DiqAc1PY8cn8Z5zaUJfuMl6ii5iSWNbDeENVW+ulkmMWzuV45YQ8greAHc1X
+         A8ucNigPXwYPj21hbH4jWzEzBunfs0+UrRi5xfiY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 362/371] crypto: sun4i-ss - fix big endian issues
-Date:   Thu, 16 Jan 2020 12:23:54 -0500
-Message-Id: <20200116172403.18149-305-sashal@kernel.org>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 369/371] powerpc/archrandom: fix arch_get_random_seed_int()
+Date:   Thu, 16 Jan 2020 12:24:01 -0500
+Message-Id: <20200116172403.18149-312-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -60,90 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-[ Upstream commit d1d787bcebfe122a5bd443ae565696661e2e9656 ]
+[ Upstream commit b6afd1234cf93aa0d71b4be4788c47534905f0be ]
 
-When testing BigEndian kernel, the sun4i-ss was failling all crypto
-tests.
-This patch fix endian issues with it.
+Commit 01c9348c7620ec65
 
-Fixes: 6298e948215f ("crypto: sunxi-ss - Add Allwinner Security System crypto accelerator")
-Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+  powerpc: Use hardware RNG for arch_get_random_seed_* not arch_get_random_*
+
+updated arch_get_random_[int|long]() to be NOPs, and moved the hardware
+RNG backing to arch_get_random_seed_[int|long]() instead. However, it
+failed to take into account that arch_get_random_int() was implemented
+in terms of arch_get_random_long(), and so we ended up with a version
+of the former that is essentially a NOP as well.
+
+Fix this by calling arch_get_random_seed_long() from
+arch_get_random_seed_int() instead.
+
+Fixes: 01c9348c7620ec65 ("powerpc: Use hardware RNG for arch_get_random_seed_* not arch_get_random_*")
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191204115015.18015-1-ardb@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/sunxi-ss/sun4i-ss-hash.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ arch/powerpc/include/asm/archrandom.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/sunxi-ss/sun4i-ss-hash.c b/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
-index 1a724263761b..2d178e013535 100644
---- a/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
-+++ b/drivers/crypto/sunxi-ss/sun4i-ss-hash.c
-@@ -179,7 +179,7 @@ static int sun4i_hash(struct ahash_request *areq)
- 	 */
- 	unsigned int i = 0, end, fill, min_fill, nwait, nbw = 0, j = 0, todo;
- 	unsigned int in_i = 0;
--	u32 spaces, rx_cnt = SS_RX_DEFAULT, bf[32] = {0}, wb = 0, v, ivmode = 0;
-+	u32 spaces, rx_cnt = SS_RX_DEFAULT, bf[32] = {0}, v, ivmode = 0;
- 	struct sun4i_req_ctx *op = ahash_request_ctx(areq);
- 	struct crypto_ahash *tfm = crypto_ahash_reqtfm(areq);
- 	struct sun4i_tfm_ctx *tfmctx = crypto_ahash_ctx(tfm);
-@@ -188,6 +188,7 @@ static int sun4i_hash(struct ahash_request *areq)
- 	struct sg_mapping_iter mi;
- 	int in_r, err = 0;
- 	size_t copied = 0;
-+	__le32 wb = 0;
+diff --git a/arch/powerpc/include/asm/archrandom.h b/arch/powerpc/include/asm/archrandom.h
+index 9c63b596e6ce..a09595f00cab 100644
+--- a/arch/powerpc/include/asm/archrandom.h
++++ b/arch/powerpc/include/asm/archrandom.h
+@@ -28,7 +28,7 @@ static inline int arch_get_random_seed_int(unsigned int *v)
+ 	unsigned long val;
+ 	int rc;
  
- 	dev_dbg(ss->dev, "%s %s bc=%llu len=%u mode=%x wl=%u h0=%0x",
- 		__func__, crypto_tfm_alg_name(areq->base.tfm),
-@@ -399,7 +400,7 @@ static int sun4i_hash(struct ahash_request *areq)
+-	rc = arch_get_random_long(&val);
++	rc = arch_get_random_seed_long(&val);
+ 	if (rc)
+ 		*v = val;
  
- 		nbw = op->len - 4 * nwait;
- 		if (nbw) {
--			wb = *(u32 *)(op->buf + nwait * 4);
-+			wb = cpu_to_le32(*(u32 *)(op->buf + nwait * 4));
- 			wb &= GENMASK((nbw * 8) - 1, 0);
- 
- 			op->byte_count += nbw;
-@@ -408,7 +409,7 @@ static int sun4i_hash(struct ahash_request *areq)
- 
- 	/* write the remaining bytes of the nbw buffer */
- 	wb |= ((1 << 7) << (nbw * 8));
--	bf[j++] = wb;
-+	bf[j++] = le32_to_cpu(wb);
- 
- 	/*
- 	 * number of space to pad to obtain 64o minus 8(size) minus 4 (final 1)
-@@ -427,13 +428,13 @@ static int sun4i_hash(struct ahash_request *areq)
- 
- 	/* write the length of data */
- 	if (op->mode == SS_OP_SHA1) {
--		__be64 bits = cpu_to_be64(op->byte_count << 3);
--		bf[j++] = lower_32_bits(bits);
--		bf[j++] = upper_32_bits(bits);
-+		__be64 *bits = (__be64 *)&bf[j];
-+		*bits = cpu_to_be64(op->byte_count << 3);
-+		j += 2;
- 	} else {
--		__le64 bits = op->byte_count << 3;
--		bf[j++] = lower_32_bits(bits);
--		bf[j++] = upper_32_bits(bits);
-+		__le64 *bits = (__le64 *)&bf[j];
-+		*bits = cpu_to_le64(op->byte_count << 3);
-+		j += 2;
- 	}
- 	writesl(ss->base + SS_RXFIFO, bf, j);
- 
-@@ -475,7 +476,7 @@ static int sun4i_hash(struct ahash_request *areq)
- 		}
- 	} else {
- 		for (i = 0; i < 4; i++) {
--			v = readl(ss->base + SS_MD0 + i * 4);
-+			v = cpu_to_le32(readl(ss->base + SS_MD0 + i * 4));
- 			memcpy(areq->result + i * 4, &v, 4);
- 		}
- 	}
 -- 
 2.20.1
 
