@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5490DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9246C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2475B206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA4AD206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:03:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201375;
-	bh=nehLpuv8ecbZ2QZTvLTSRS74dVLre05bitNHwwtOKKM=;
+	s=default; t=1579201382;
+	bh=JJoNUAn5XTcRHAbd/GoL60h9POSWMI/lFT0ZqauAsxs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zCJ4Zyvu7+hWQCjh6vlkkN/DJwJrLT5VK8rubASVTmQ3vzow7haGlTxwXUtkhwraP
-	 7Xu+MlBEq+NZJ+o1TTuN4ot0Yy4AtHx99HFaBWMgDqklKxo3LWzWAGmVrqgki9cPvv
-	 Jc1eLd8VvCdyVMQtQGO3FOxZOZTbZyj6/rSxMGaQ=
+	b=0Hg0FKXGmD7BapLTzRV1jOqrV53g3G9b6wK2t6l4Y6HyeFe5uy8bkS0gOJDNDtanf
+	 8rtFurKgevQaOWCOa/sF57Tknkfotqa2ir+PcLGWe1OdgWXxF7BKM4Zbad0gb4ROqE
+	 oVXVY9oqQ78KYSwlJ1k+8teTqqDbB8bTYKBH2F/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388750AbgAPRFd (ORCPT
+        id S2437323AbgAPTDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:05:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33936 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:03:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388650AbgAPRFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:05:22 -0500
+        id S2387809AbgAPRFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:05:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57FD520730;
-        Thu, 16 Jan 2020 17:05:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE131207FF;
+        Thu, 16 Jan 2020 17:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194322;
-        bh=nehLpuv8ecbZ2QZTvLTSRS74dVLre05bitNHwwtOKKM=;
+        s=default; t=1579194329;
+        bh=JJoNUAn5XTcRHAbd/GoL60h9POSWMI/lFT0ZqauAsxs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z8AMhHeGETH2vAcM6qFmi5yYE6CXnkvYIN+OApnaKhG2Xe2B+rBVIKftzMWvo45YG
-         +Ax4JTRQyeDmbYx9GDEa8+6CnXgt1rqkhN4XQVB+o34BLpdp9dyWhGKPjaKQxCtQTv
-         eFumPW+g5aoCrHWa3frlff+fWXW6GsUpHJUMVywA=
+        b=HOtrOjyYhMCsayaCVl0LO8Ma6XUWggxBsR/isGZgtQ6KTcDHieZjJLWYZFryvRXR4
+         KhBVTx6KQqM4bxz1jYo6zDD45586Ekhdg4en2tRiOa5LLIkSsqcJJAw5Folt8moZNq
+         gjQllMedGH07lYdhHXarcPaZz9dsa+CKtNDEXeVY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>,
-        linux-omap@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 271/671] bus: ti-sysc: Fix sysc_unprepare() when no clocks have been allocated
-Date:   Thu, 16 Jan 2020 11:58:29 -0500
-Message-Id: <20200116170509.12787-8-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 277/671] rtc: Fix timestamp value for RTC_TIMESTAMP_BEGIN_1900
+Date:   Thu, 16 Jan 2020 11:58:35 -0500
+Message-Id: <20200116170509.12787-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -58,35 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit aaa29bb01cc4bf5a87dbdb219efba3b09f259d8e ]
+[ Upstream commit d3062d1d7415cb5a37777220357aca51a491c3d7 ]
 
-If we return early before ddata->clocks have been allocated we will get a
-NULL pointer dereference in sysc_unprepare(). Let's fix this by returning
-early when no clocks are allocated.
+Printing "mktime64(1900, 1, 1, 0, 0, 0)" gives -2208988800.
 
-Fixes: 0eecc636e5a2 ("bus: ti-sysc: Add minimal TI sysc interconnect target driver")
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fixes: 83bbc5ac63326433 ("rtc: Add useful timestamp definitions")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bus/ti-sysc.c | 3 +++
- 1 file changed, 3 insertions(+)
+ include/linux/rtc.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-index 2813f9ed57c0..54c8c8644df2 100644
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -1400,6 +1400,9 @@ static void sysc_unprepare(struct sysc *ddata)
- {
- 	int i;
+diff --git a/include/linux/rtc.h b/include/linux/rtc.h
+index 6aedc30003e7..5a34f59941fb 100644
+--- a/include/linux/rtc.h
++++ b/include/linux/rtc.h
+@@ -163,7 +163,7 @@ struct rtc_device {
+ #define to_rtc_device(d) container_of(d, struct rtc_device, dev)
  
-+	if (!ddata->clocks)
-+		return;
-+
- 	for (i = 0; i < SYSC_MAX_CLOCKS; i++) {
- 		if (!IS_ERR_OR_NULL(ddata->clocks[i]))
- 			clk_unprepare(ddata->clocks[i]);
+ /* useful timestamps */
+-#define RTC_TIMESTAMP_BEGIN_1900	-2208989361LL /* 1900-01-01 00:00:00 */
++#define RTC_TIMESTAMP_BEGIN_1900	-2208988800LL /* 1900-01-01 00:00:00 */
+ #define RTC_TIMESTAMP_BEGIN_2000	946684800LL /* 2000-01-01 00:00:00 */
+ #define RTC_TIMESTAMP_END_2099		4102444799LL /* 2099-12-31 23:59:59 */
+ 
 -- 
 2.20.1
 
