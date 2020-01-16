@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30576C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D60BC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F12F7246B4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF8A1246B9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:48:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196878;
-	bh=i3bhFYQ73fcMOFo5nCQYc4SnP63kA5+9c/wcneZEyYs=;
+	s=default; t=1579196883;
+	bh=LceMdP0lTz3aCuW0kPjDRp4oE/CQZJ5PTR4oo7v7fnA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xdIQ6Ky7jtzjffKrkPROBK8NvALtbFjMq6zuvem//zxlH1F4sHCr82Dmscp9xewpG
-	 CM8xrHW+UytLF6qynflqpHLQF+XZrW2ka4AP3JVBdItO7TwQUGlTm4QEGVUz/39a07
-	 3YET4OX9dl3C89HbNKaezxfwdW8+AAemMZR1wGnE=
+	b=vu9nCsC3JcJpctX14hQJuLKOplCbnHm4fA5y3yM1W1eSv5SUQxQlnIIEjzG3iSzwm
+	 pmj6Q2yvu2YMSC0v9fIgORQ+IwnIFu9rdj6GzWDEyuZ1nE6rVoYVFfmUZi9RP88Ygi
+	 dEo140CP1R5K/DNWXLdWI5jnYUpjO60Lfz+jVl2Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394290AbgAPRr4 (ORCPT
+        id S2394318AbgAPRsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:47:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39826 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:48:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406779AbgAPRqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:46:45 -0500
+        id S2406767AbgAPRqn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:46:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB82B246EA;
-        Thu, 16 Jan 2020 17:46:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44905246EE;
+        Thu, 16 Jan 2020 17:46:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196804;
-        bh=i3bhFYQ73fcMOFo5nCQYc4SnP63kA5+9c/wcneZEyYs=;
+        s=default; t=1579196802;
+        bh=LceMdP0lTz3aCuW0kPjDRp4oE/CQZJ5PTR4oo7v7fnA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oS3dHF+CLAQ11rzhl8gVpYW951l2zLB+xtNzGa08ZuWlmP4NfdB6HNrtN5BhAlRKi
-         d2nIElPStTG3YfqM9ILLx6X0nhXxMiVYLbGB4yU0uj3dR5vHH1FytnK9bFZ5/pOaRe
-         mSiBrtfHpNQKzwxjZ7YNz/X9xuHXYIlWiKdLlq0A=
+        b=eELqZk3imwxVstkYhmxK/f7nB1bzHCVHP/zRLoaIZGr6pG21OZtlDmDat5uvDFh+O
+         SuxYalFcQ4V9D8WIl+ZkqgrGJ/dxOIIRS0TtBlgTpHgdJsSdzUW/dy3MhdJ0vBvh2C
+         nKFfwao8Ywi4xLuqBhcDs0FkiwfULAat0bUpGD1o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephan Gerhold <stephan@gerhold.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 163/174] regulator: ab8500: Remove SYSCLKREQ from enum ab8505_regulator_id
-Date:   Thu, 16 Jan 2020 12:42:40 -0500
-Message-Id: <20200116174251.24326-163-sashal@kernel.org>
+Cc:     Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 161/174] media: exynos4-is: Fix recursive locking in isp_video_release()
+Date:   Thu, 16 Jan 2020 12:42:38 -0500
+Message-Id: <20200116174251.24326-161-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -60,41 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Seung-Woo Kim <sw0312.kim@samsung.com>
 
-[ Upstream commit 458ea3ad033fc86e291712ce50cbe60c3428cf30 ]
+[ Upstream commit 704c6c80fb471d1bb0ef0d61a94617d1d55743cd ]
 
-Those regulators are not actually supported by the AB8500 regulator
-driver. There is no ab8500_regulator_info for them and no entry in
-ab8505_regulator_match.
+>From isp_video_release(), &isp->video_lock is held and subsequent
+vb2_fop_release() tries to lock vdev->lock which is same with the
+previous one. Replace vb2_fop_release() with _vb2_fop_release() to
+fix the recursive locking.
 
-As such, they cannot be registered successfully, and looking them
-up in ab8505_regulator_match causes an out-of-bounds array read.
-
-Fixes: 547f384f33db ("regulator: ab8500: add support for ab8505")
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/r/20191106173125.14496-2-stephan@gerhold.net
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 1380f5754cb0 ("[media] videobuf2: Add missing lock held on vb2_fop_release")
+Signed-off-by: Seung-Woo Kim <sw0312.kim@samsung.com>
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/regulator/ab8500.h | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/media/platform/exynos4-is/fimc-isp-video.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/regulator/ab8500.h b/include/linux/regulator/ab8500.h
-index d8ecefaf63ca..6b8ec40af2c4 100644
---- a/include/linux/regulator/ab8500.h
-+++ b/include/linux/regulator/ab8500.h
-@@ -44,8 +44,6 @@ enum ab8505_regulator_id {
- 	AB8505_LDO_ANAMIC2,
- 	AB8505_LDO_AUX8,
- 	AB8505_LDO_ANA,
--	AB8505_SYSCLKREQ_2,
--	AB8505_SYSCLKREQ_4,
- 	AB8505_NUM_REGULATORS,
- };
+diff --git a/drivers/media/platform/exynos4-is/fimc-isp-video.c b/drivers/media/platform/exynos4-is/fimc-isp-video.c
+index 667d3720154a..4b7803cec37f 100644
+--- a/drivers/media/platform/exynos4-is/fimc-isp-video.c
++++ b/drivers/media/platform/exynos4-is/fimc-isp-video.c
+@@ -323,7 +323,7 @@ static int isp_video_release(struct file *file)
+ 		ivc->streaming = 0;
+ 	}
  
+-	vb2_fop_release(file);
++	_vb2_fop_release(file, NULL);
+ 
+ 	if (v4l2_fh_is_singular_file(file)) {
+ 		fimc_pipeline_call(&ivc->ve, close);
 -- 
 2.20.1
 
