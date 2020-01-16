@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD2BC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DBCC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 762A02077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:17:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9AD52077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:17:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202220;
-	bh=x8IBTbMc7q0xygme5mT2prwtW8teTHQaE5Z0R5c1sgQ=;
+	s=default; t=1579202230;
+	bh=IhmIzIYtYHMkpRqwuhLe6N2owPqBPXz9JzK9F0v1bPg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b0k63OSb6kgcMUMiDjtzpoyj871SH0QQjk5gmpO7RqnDEqT6xOZ+tmjwbNPtIm4Oh
-	 XH7tycTQuauV9dUmPxwtd8mmvvGucgAAKZfp4oPeDemOudy30hms2r7PGAP5at2O+S
-	 hL6m5URBmFodA/RjaakAdecY7ggdL56FUlcQ8yyY=
+	b=j5O5sYAMaHpz+ftNldFMCVnyjQSAzInHCtQNG7Ca8uAd6GMZ3zAIkn+RKzobhSF66
+	 b0nCdU49oLqUmyglPodq438nndau8hDWw1+5asYkiZXvNyX6I3pciCpyuK+TDLS4TH
+	 MK/9xDCDRCUFXSl+pB+cI9lqNqdUjVeImDprW8z4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407302AbgAPTQ7 (ORCPT
+        id S2392110AbgAPTRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:16:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41130 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:17:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733077AbgAPQzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:55:37 -0500
+        id S1731157AbgAPQze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:55:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF6652467A;
-        Thu, 16 Jan 2020 16:55:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 725B820730;
+        Thu, 16 Jan 2020 16:55:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193737;
-        bh=x8IBTbMc7q0xygme5mT2prwtW8teTHQaE5Z0R5c1sgQ=;
+        s=default; t=1579193734;
+        bh=IhmIzIYtYHMkpRqwuhLe6N2owPqBPXz9JzK9F0v1bPg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l1uokLztaLSfQlxKIWgQwwbY7h1ETRJrYGBWSfn92GmyhGw2X5LHWzPlabJIycTXm
-         Fm7OaBmQd5Y7CKoN6MJftXISn5mgwsOWB0XfsGp99pBpBDu0a1Mc8WWoxchtfpCh/i
-         4IFf1mN3G56wvLk7C+338ma0+DK4BtaQ9ZRd75E8=
+        b=Mg26bi+I+yUldOKTgvmjn7SkvKF99xjj9G91zrUYjAiiv5fgQ9A+SSWIry66G6qrf
+         FkOjPpDD1CnsnfEihI9ll1HJ09Wv/JeQnsPQyt1+DKYsrqhdkteKWD8wI6uN1Ij3bo
+         5aAV0IcrrGgAC61pt6/ASe28qJ48YXbJtCcteg9E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolas Huaman <nicolas@herochao.de>, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.19 029/671] ALSA: usb-audio: update quirk for B&W PX to remove microphone
-Date:   Thu, 16 Jan 2020 11:44:20 -0500
-Message-Id: <20200116165502.8838-29-sashal@kernel.org>
+Cc:     Tomas Winkler <tomas.winkler@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 026/671] mei: replace POLL* with EPOLL* for write queues.
+Date:   Thu, 16 Jan 2020 11:44:17 -0500
+Message-Id: <20200116165502.8838-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -58,62 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Huaman <nicolas@herochao.de>
+From: Tomas Winkler <tomas.winkler@intel.com>
 
-[ Upstream commit c369c8db15d51fa175d2ba85928f79d16af6b562 ]
+[ Upstream commit 03b2cbb6ea3c73e08fcf72d9ef8e286c4dcbd1fe ]
 
-A quirk in snd-usb-audio was added to automate setting sample rate to
-4800k and remove the previously exposed nonfunctional microphone for
-the Bowers & Wilkins PX:
-commit 240a8af929c7c57dcde28682725b29cf8474e8e5
-https://lore.kernel.org/patchwork/patch/919689/
+Looks like during merging the bulk POLL* -> EPOLL* replacement
+missed the patch
+'commit af336cabe083 ("mei: limit the number of queued writes")'
 
-However the headphones where updated shortly after that to remove the
-unintentional microphone functionality. I guess because of this the
-headphones now crash when connecting them via USB while the quirk is
-active. Dmesg:
+Fix sparse warning:
+drivers/misc/mei/main.c:602:13: warning: restricted __poll_t degrades to integer
+drivers/misc/mei/main.c:605:30: warning: invalid assignment: |=
+drivers/misc/mei/main.c:605:30:    left side has type restricted __poll_t
+drivers/misc/mei/main.c:605:30:    right side has type int
 
-snd-usb-audio: probe of 2-3:1.0 failed with error -22
-usb 2-3: 2:1: cannot get min/max values for control 2 (id 2)
-
-This patch removes the microfone and allows the headphones to connect
-and work out of the box. It is based on the current mainline kernel
- and successfully applied an tested on my machine (4.18.10.arch1-1).
-
-Fixes: 240a8af929c7 ("ALSA: usb-audio: Add a quirck for B&W PX headphones")
-Signed-off-by: Nicolas Huaman <nicolas@herochao.de>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: af336cabe083 ("mei: limit the number of queued writes")
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/quirks-table.h | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ drivers/misc/mei/main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/usb/quirks-table.h b/sound/usb/quirks-table.h
-index 65f9c4ba62ee..90d4f61cc230 100644
---- a/sound/usb/quirks-table.h
-+++ b/sound/usb/quirks-table.h
-@@ -3349,19 +3349,14 @@ AU0828_DEVICE(0x2040, 0x7270, "Hauppauge", "HVR-950Q"),
- 				.ifnum = 0,
- 				.type = QUIRK_AUDIO_STANDARD_MIXER,
- 			},
--			/* Capture */
--			{
--				.ifnum = 1,
--				.type = QUIRK_IGNORE_INTERFACE,
--			},
- 			/* Playback */
- 			{
--				.ifnum = 2,
-+				.ifnum = 1,
- 				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
- 				.data = &(const struct audioformat) {
- 					.formats = SNDRV_PCM_FMTBIT_S16_LE,
- 					.channels = 2,
--					.iface = 2,
-+					.iface = 1,
- 					.altsetting = 1,
- 					.altset_idx = 1,
- 					.attributes = UAC_EP_CS_ATTR_FILL_MAX |
+diff --git a/drivers/misc/mei/main.c b/drivers/misc/mei/main.c
+index 4d77a6ae183a..87281b3695e6 100644
+--- a/drivers/misc/mei/main.c
++++ b/drivers/misc/mei/main.c
+@@ -599,10 +599,10 @@ static __poll_t mei_poll(struct file *file, poll_table *wait)
+ 			mei_cl_read_start(cl, mei_cl_mtu(cl), file);
+ 	}
+ 
+-	if (req_events & (POLLOUT | POLLWRNORM)) {
++	if (req_events & (EPOLLOUT | EPOLLWRNORM)) {
+ 		poll_wait(file, &cl->tx_wait, wait);
+ 		if (cl->tx_cb_queued < dev->tx_queue_limit)
+-			mask |= POLLOUT | POLLWRNORM;
++			mask |= EPOLLOUT | EPOLLWRNORM;
+ 	}
+ 
+ out:
 -- 
 2.20.1
 
