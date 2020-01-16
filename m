@@ -2,78 +2,73 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0C8C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B51C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE50520661
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:23:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95CC9207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:23:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbgAPKXE (ORCPT
+        id S1726887AbgAPKXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 05:23:04 -0500
-Received: from mga12.intel.com ([192.55.52.136]:3718 "EHLO mga12.intel.com"
+        Thu, 16 Jan 2020 05:23:10 -0500
+Received: from verein.lst.de ([213.95.11.211]:55239 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726220AbgAPKXE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 05:23:04 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 02:23:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,325,1574150400"; 
-   d="scan'208";a="257781971"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 16 Jan 2020 02:23:01 -0800
-Received: by lahna (sSMTP sendmail emulation); Thu, 16 Jan 2020 12:23:00 +0200
-Date:   Thu, 16 Jan 2020 12:23:00 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Logan Gunthorpe <logang@deltatee.com>
-Subject: Re: [PATCH v2 4/4] PCI: Allow extend_bridge_window() to shrink
- resource if necessary
-Message-ID: <20200116102300.GY2838@lahna.fi.intel.com>
-References: <PSXP216MB0438DE9E25E07F3915B8E99880370@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        id S1726220AbgAPKXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 05:23:10 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 860F468B20; Thu, 16 Jan 2020 11:23:07 +0100 (CET)
+Date:   Thu, 16 Jan 2020 11:23:07 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Namjae Jeon <linkinjeon@gmail.com>,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        gregkh <gregkh@linuxfoundation.org>,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Christoph Hellwig <hch@lst.de>, sj1557.seo@samsung.com
+Subject: Re: [PATCH v10 09/14] exfat: add misc operations
+Message-ID: <20200116102307.GA16662@lst.de>
+References: <20200115082447.19520-10-namjae.jeon@samsung.com> <CAK8P3a3Vqz=T_=sFwBBPa2_Hi_dA=BwWod=L9JkLxUgi=aKNWw@mail.gmail.com> <CAKYAXd9_qmanQCcrdpScFWvPXuZvk4jhv7Gc=t_vRL9zqWNSjA@mail.gmail.com> <20200115133838.q33p5riihsinp6c4@pali> <CAK8P3a1ozgLYpDtveU0CtLj5fEFG8i=_QrnEAtoVFt-yC=Dc0g@mail.gmail.com> <20200115142428.ugsp3binf2vuiarq@pali> <CAK8P3a0_sotmv40qHkhE5M=PwEYLuJfX+uRFZvh9iGzhv6R6vw@mail.gmail.com> <20200115153943.qw35ya37ws6ftlnt@pali> <CAK8P3a1iYPA9MrXORiWmy1vQGoazwHs7OfPdoHLZLJDWqu9jqA@mail.gmail.com> <20200116101947.4szdyfwpyasv5vpe@pali>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <PSXP216MB0438DE9E25E07F3915B8E99880370@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200116101947.4szdyfwpyasv5vpe@pali>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 05:58:05PM +0000, Nicholas Johnson wrote:
-> Remove checks for resource size in extend_bridge_window(). This is
-> necessary to allow the pci_bus_distribute_available_resources() to
-> function when the kernel parameter pci=hpmemsize=nn[KMG] is used to
-> allocate resources. Because the kernel parameter sets the size of all
-> hotplug bridges to be the same, there are problems when nested hotplug
-> bridges are encountered. Fitting a downstream hotplug bridge with size X
-> and normal bridges with non-zero size Y into parent hotplug bridge with
-> size X is impossible, and hence the downstream hotplug bridge needs to
-> shrink to fit into its parent.
+On Thu, Jan 16, 2020 at 11:19:47AM +0100, Pali Rohár wrote:
+>   However, implementations should only record the value 00h for this
+>   field when:
 > 
-> Add check for if bridge is extended or shrunken and reflect that in the
-> call to pci_dbg().
+>     1. Local date and time are actually the same as UTC, in which case
+>        the value of the OffsetValid field shall be 1
 > 
-> Do not change resource size if new size is zero (if we have run out of a
-> bridge window resource) to prevent the PCI resource assignment code from
-> attempting to assign a zero-sized resource. If this happens, we are
-> running out of resource space, anyway, so not shrinking the resource
-> will not deny space for other resources. This prevents the following
-> from happening:
-> 
-> pcieport 0000:07:04.0: can't enable device: BAR 13 [io  0x1000-0x0fff] not claimed
-> 
-> Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+>     2. Local date and time are not known, in which case the value of the
+>        OffsetValid field shall be 1 and implementations shall consider
+>        UTC to be local date and time
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Given time zones in Linux are per session I think our situation is
+somewhat similar to 2.
+
+> > Here I would just convert to UTC, which is what we store in the
+> > in-memory struct inode anyway.
+> 
+> Ok. If inode timestamp is always in UTC, we should do same thing also
+> for exFAT.
+
+> Hm... both UTC and sys_tz have positives and negatives. And I'm not
+> sure which option is better.
+
+The one big argument for always UTC is simplicity.  Always using UTC
+kills some arcane an unusual (for Linux file systems) code, and given
+how exfat implementations deal with the time zone on reading should
+always interoperate fine with other implementations.
