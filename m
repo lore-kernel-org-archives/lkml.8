@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2BE9C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DC1C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E30A206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89639206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:13:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202004;
-	bh=rTDm/veJoLoQMJHrPCBBDxWNnrNUsb4DdzTNHkeOL3g=;
+	s=default; t=1579202012;
+	bh=3asVv0LkAlodZ0h3jq+2rgSq3Ucakva943Q5z9tTdW8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N2T6BDsI3z+ioc+ZDeTsLVOB6L1YMCutaL5WRrTDSUPmD/FfudDJa+FS+m5zQTTgi
-	 p9MGK3l2twD2Swdopgw5pv8WMcOyYuHbrJv1Kw2HVRWp8cEbz3MK8m7LUjjC8szDd+
-	 /ZkT1bSccW+zO4XjgrzZXrkEUi3A/EN+Q7lXF93c=
+	b=CA5wfHIQlMkX4D3/rZerbrIPnVbU4tcFrv39r/uUgGpQujoYhwONuD1Lj4jVlT1mK
+	 N0EfTDz+65ALPTb8X1JOwdFWR6OiYeIcNGlbWTUZBrfcUD5t5AT1yqc7BAcsZ+6tLb
+	 7PQKt+7Zue0BbFjDTF+KOJyS7v9NmUPjOIu6qFSk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437425AbgAPTNX (ORCPT
+        id S2437456AbgAPTNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:13:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43738 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:13:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387398AbgAPQ5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:57:00 -0500
+        id S1729146AbgAPQ47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:56:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECE2721D56;
-        Thu, 16 Jan 2020 16:56:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6A202051A;
+        Thu, 16 Jan 2020 16:56:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193819;
-        bh=rTDm/veJoLoQMJHrPCBBDxWNnrNUsb4DdzTNHkeOL3g=;
+        s=default; t=1579193818;
+        bh=3asVv0LkAlodZ0h3jq+2rgSq3Ucakva943Q5z9tTdW8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JNJ/nwXwffK5/nq8vtxUXBVk8UK/BW2J2WUgXTOxoe1N6d+qCPyKypVnpepXR1qM7
-         iCm8mL3gU6wQzuYK4qTPS3mbiHbdpdDu7ZOJ4Oy/MekDLkKRFOyIj/FbhZPWAziFrb
-         2zUejo8wDkRtwFM/nwMmYH20P8YhIWceehariz7Q=
+        b=1U6RphJfZo7nzumOEc0CTRQJFe5C5AWQCsWhnptryblc/3oBaNUBQ5wgxglDsKyIh
+         wvbU8T0C7DNlkaRT8iqnOdTggNY81HCqhEjwU5VCD+Ppl4rb0D+6ZMuYclECuXKY8g
+         pXOh6DkZrNhCeYkT3eG+S36W6STQB/DNpKu+4Bcw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Simon Horman <horms+renesas@verge.net.au>,
         Sasha Levin <sashal@kernel.org>,
         linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 079/671] pinctrl: sh-pfc: sh7734: Remove bogus IPSR10 value
-Date:   Thu, 16 Jan 2020 11:45:10 -0500
-Message-Id: <20200116165502.8838-79-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 078/671] pinctrl: sh-pfc: sh7269: Add missing PCIOR0 field
+Date:   Thu, 16 Jan 2020 11:45:09 -0500
+Message-Id: <20200116165502.8838-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -62,38 +62,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 4d374bacd7c9665179f9752a52d5d602c45d8190 ]
+[ Upstream commit 9540cbdfcd861caf67a6f0e4bb7f46d41c4aad86 ]
 
-The IP10[5:3] field in Peripheral Function Select Register 10 has a
-width of 3 bits, i.e. it allows programming one out of 8 different
-configurations.
-However, 9 values are provided instead of 8, overflowing into the
-subsequent field in the register, and thus breaking the configuration of
-the latter.
+The Port C I/O Register 0 contains 7 reserved bits, but the descriptor
+contains only dummy configuration values for 6 reserved bits, thus
+breaking the configuration of all subsequent fields in the register.
 
-Fix this by dropping a bogus zero value.
+Fix this by adding the two missing configuration values.
 
-Fixes: ac1ebc2190f575fc ("sh-pfc: Add sh7734 pinmux support")
+Fixes: f5e811f2a43117b2 ("sh-pfc: Add sh7269 pinmux support")
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-sh7734.c | 2 +-
+ drivers/pinctrl/sh-pfc/pfc-sh7269.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7734.c b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-index 05ccb27f7781..c691e5e9d9de 100644
---- a/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-@@ -2231,7 +2231,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 		FN_LCD_CL1_B, 0, 0,
- 	    /* IP10_5_3 [3] */
- 		FN_SSI_WS23, FN_VI1_5_B, FN_TX1_D, FN_HSCK0_C, FN_FALE_B,
--		FN_LCD_DON_B, 0, 0, 0,
-+		FN_LCD_DON_B, 0, 0,
- 	    /* IP10_2_0 [3] */
- 		FN_SSI_SCK23, FN_VI1_4_B, FN_RX1_D, FN_FCLE_B,
- 		FN_LCD_DATA15_B, 0, 0, 0 }
+diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7269.c b/drivers/pinctrl/sh-pfc/pfc-sh7269.c
+index a50d22bef1f4..cfdb4fc177c3 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-sh7269.c
++++ b/drivers/pinctrl/sh-pfc/pfc-sh7269.c
+@@ -2119,7 +2119,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 	},
+ 
+ 	{ PINMUX_CFG_REG("PCIOR0", 0xfffe3852, 16, 1) {
+-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
++		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 		PC8_IN, PC8_OUT,
+ 		PC7_IN, PC7_OUT,
+ 		PC6_IN, PC6_OUT,
 -- 
 2.20.1
 
