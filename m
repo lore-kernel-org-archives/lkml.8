@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E21C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37FF4C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C2DD20684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B41720684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:29:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199359;
-	bh=gRRExTBOxk0GsxlIZLGBj4g129fbjoNxN9f9p6V1jf4=;
+	s=default; t=1579199363;
+	bh=GaTkK/4xvNL6sxMd2wpZajtDaii9IKBLHXAmviFcU1w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oKTlXSJgkGgWdP6tmuhaH2aOHPyPAkPBnKrqtJdxP3GMHn9vKdOciBLptBrjv/O5z
-	 2D3+7jjDwlOcFeoiEb7scYl6eK9T+Le16wmqPQ8bAQKUOD9Ab4cjZs3cXFRAZGoG5j
-	 7PxbRHaN99Dq/dAASN/id2KyPFHn5mxo31h2JzGQ=
+	b=jFLa7puEOdKRoBl6lmp2ZQaFlNrpnunE3j5z5RgDbk/JfLG12ZMx+9dsaEX3Vk7Ql
+	 QXf2gdQjKcy055unyxBd3BacEFEqeZBp2EL8OcBrjhlBk1FjDcr/JQe3CwmEC9zfWp
+	 2LmNn1gUApMm1SpmyyGIVhtAjfJ3j7nrvxaJHVbg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407063AbgAPS3Q (ORCPT
+        id S2392191AbgAPRZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:29:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34188 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:25:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391692AbgAPRZ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:25:57 -0500
+        id S2392107AbgAPRZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:25:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 470262081E;
-        Thu, 16 Jan 2020 17:25:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8430246DD;
+        Thu, 16 Jan 2020 17:25:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195557;
-        bh=gRRExTBOxk0GsxlIZLGBj4g129fbjoNxN9f9p6V1jf4=;
+        s=default; t=1579195534;
+        bh=GaTkK/4xvNL6sxMd2wpZajtDaii9IKBLHXAmviFcU1w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lIw9quMUrsYu60LMElBVp9AFIOVhfzd5qKA+hmmkqFG2OPqT08eV2iOKiF2Iy6M8w
-         7XwX+RzyIFjXAsmW6Fy4rGOWjt4anyLdcspXhYPiHfYWTwuhLV7b5WqJJOl/JtrsPP
-         f81Y9/ocjBneqNobVbNXGQNoEqhWQCRI9csIClq4=
+        b=LGs4ybOOwm54+5yEoZAATDDWTSqBnxPs7bnxVX9lJO2cC5r7lnwOdimPhIeeayjrJ
+         bc/VgaODW8TLyqfw0M00Gf00RVETUA8Kd5mxxytce26s3o7DWUZovwz+22yEOh/VBY
+         FUhQnvdICKviONtVwNJRKA8PTZjP4JOAEcKF5MWM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 145/371] arm64: dts: allwinner: a64: Add missing PIO clocks
-Date:   Thu, 16 Jan 2020 12:20:17 -0500
-Message-Id: <20200116172403.18149-88-sashal@kernel.org>
+Cc:     Rashmica Gupta <rashmica.g@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 129/371] powerpc/mm: Check secondary hash page table
+Date:   Thu, 16 Jan 2020 12:20:01 -0500
+Message-Id: <20200116172403.18149-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -59,38 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Ripard <maxime.ripard@bootlin.com>
+From: Rashmica Gupta <rashmica.g@gmail.com>
 
-[ Upstream commit 562bf19611c000cb7219431c3cc78aa60c2b371e ]
+[ Upstream commit 790845e2f12709d273d08ea7a2af7c2593689519 ]
 
-The pinctrl binding mandates that we have the three clocks fed into the PIO
-described.
+We were always calling base_hpte_find() with primary = true,
+even when we wanted to check the secondary table.
 
-Even though the old case is still supported for backward compatibility, we
-should update our DTs to fix this.
+mpe: I broke this when refactoring Rashmica's original patch.
 
-Fixes: 6bc37fac30cf ("arm64: dts: add Allwinner A64 SoC .dtsi")
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Fixes: 1515ab932156 ("powerpc/mm: Dump hash table")
+Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/powerpc/mm/dump_hashpagetable.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 8c8db1b057df..788a6f8c5994 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -274,7 +274,8 @@
- 			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&ccu 58>;
-+			clocks = <&ccu 58>, <&osc24M>, <&rtc 0>;
-+			clock-names = "apb", "hosc", "losc";
- 			gpio-controller;
- 			#gpio-cells = <3>;
- 			interrupt-controller;
+diff --git a/arch/powerpc/mm/dump_hashpagetable.c b/arch/powerpc/mm/dump_hashpagetable.c
+index 5c4c93dcff19..f666d74f05f5 100644
+--- a/arch/powerpc/mm/dump_hashpagetable.c
++++ b/arch/powerpc/mm/dump_hashpagetable.c
+@@ -343,7 +343,7 @@ static unsigned long hpte_find(struct pg_state *st, unsigned long ea, int psize)
+ 
+ 	/* Look in secondary table */
+ 	if (slot == -1)
+-		slot = base_hpte_find(ea, psize, true, &v, &r);
++		slot = base_hpte_find(ea, psize, false, &v, &r);
+ 
+ 	/* No entry found */
+ 	if (slot == -1)
 -- 
 2.20.1
 
