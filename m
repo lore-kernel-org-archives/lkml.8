@@ -2,191 +2,80 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40567C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 222E2C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1975520684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:42:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="POCZQAy+"
+	by mail.kernel.org (Postfix) with ESMTP id F2CB720684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:43:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729184AbgAPTm2 (ORCPT
+        id S1729327AbgAPTnw convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:42:28 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38923 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727023AbgAPTm1 (ORCPT
+        Thu, 16 Jan 2020 14:43:52 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:53142 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727023AbgAPTnv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 14:42:27 -0500
-Received: by mail-pl1-f196.google.com with SMTP id g6so8777418plp.6
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 11:42:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PFk9Ww9wHyG/mGKuMkvNxlgsu1IrcTOB3b5gPJlm5Ns=;
-        b=POCZQAy+iwGnHOKPR8OvVPQsopftG4tZaYrk/pzjtQELHQG/VDMfN8I4P1LbP0KaF1
-         n6gQTY9alExU9jYzgebtFaInDr2k4FgVphM8ajj4VABjeUL4iOU/oK62hYgfkwCfqVFd
-         B0NWHdMS4BaYqTaOaJ7q+PFXvYxNzqxJTCyX7A8Qz4xfGtxwqclA5xZWHZUYvE+8TWDL
-         QxCmb4+hH85eeUk5Gy9M8tPFX003zbY2DN/OJfSvRW/2HA7oeM3FoPJqPsTuN7qf0UA0
-         ja58UNwK9DuHeQcPIPoYdyJCYlT+e9JY3uRaS8UDwHDdtxekdgG85VZNTUlTCkJnqnlP
-         0Zlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PFk9Ww9wHyG/mGKuMkvNxlgsu1IrcTOB3b5gPJlm5Ns=;
-        b=GTGdSL4O4nRewqdQ1LxiV2PxjuGYQjaVXpM1Ns236NnYFIa4JvhUvT2f5mfW11G9wZ
-         vcKBFkdwefIsNDiW8lWzZtj7qoBrWJeaOSyhzmS1936hl371twRrNBxkOKmpfNNC2t+H
-         9lHCud2WcJ76Dyeh7xh1jz+pyvzgFiNa5lcvrTHVVrC9mnN3j7KBdti69wP5w2JHOv7v
-         CotZvIpvEjwCij15RI5DVK85VInwn55Tc/eEu6I2trUhYq0ZPCIo0ovnOs1CAbZTxRv4
-         Kgz5PrxBfmH8PfDwnNWQLoVXfFWIJlpvDp66ZqeM5sww4fUhI+H+4lyeU4IxF45epjaA
-         bgiw==
-X-Gm-Message-State: APjAAAViWlZk1YhiMrKlKtYJYjTx90Kw09hJg4nqgfOclL+Uu2hylMZK
-        9mFQf1b4x1KI0VaWTZrTgxrw/A==
-X-Google-Smtp-Source: APXvYqyfzdH6AdQ3U0a7W1IHpaCVKTHGEmR9j0qB/e7Mxj7850qWW4OV8jMGqyXEMwtEaOmvHrDkOA==
-X-Received: by 2002:a17:902:b58d:: with SMTP id a13mr25541359pls.283.1579203746544;
-        Thu, 16 Jan 2020 11:42:26 -0800 (PST)
-Received: from google.com ([2620:15c:202:201:bc61:d85d:eb16:9036])
-        by smtp.gmail.com with ESMTPSA id y6sm25729361pgc.10.2020.01.16.11.42.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 11:42:25 -0800 (PST)
-Date:   Thu, 16 Jan 2020 11:42:21 -0800
-From:   Benson Leung <bleung@google.com>
-To:     Prashant Malani <pmalani@chromium.org>
-Cc:     enric.balletbo@collabora.com, groeck@chromium.org,
-        bleung@chromium.org, lee.jones@linaro.org, sre@kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v6 2/3] mfd: cros_ec: Add cros-usbpd-notify subdevice
-Message-ID: <20200116194221.GA208460@google.com>
-References: <20200114232219.93171-1-pmalani@chromium.org>
- <20200114232219.93171-2-pmalani@chromium.org>
+        Thu, 16 Jan 2020 14:43:51 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1isB3O-0008V7-83; Thu, 16 Jan 2020 20:43:42 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 87FEC101226; Thu, 16 Jan 2020 20:43:41 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
+Cc:     paul.burton@mips.com, luto@kernel.org,
+        kbuild test robot <lkp@intel.com>
+Subject: [PATCH] MIPS: vdso: Define BUILD_VDSO32 when building a 32bit kernel
+In-Reply-To: <20190830135902.20861-3-vincenzo.frascino@arm.com>
+References: <20190830135902.20861-1-vincenzo.frascino@arm.com> <20190830135902.20861-3-vincenzo.frascino@arm.com>
+Date:   Thu, 16 Jan 2020 20:43:41 +0100
+Message-ID: <87d0bjfaqa.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="7JfCtLOvnd9MIVvH"
-Content-Disposition: inline
-In-Reply-To: <20200114232219.93171-2-pmalani@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The confinement of the 32bit specific VDSO functions missed to define
+BUILD_VDSO32 when building a 32bit MIPS kernel:
 
---7JfCtLOvnd9MIVvH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+arch/mips/vdso/vgettimeofday.c: In function ‘__vdso_clock_gettime’:
+arch/mips/vdso/vgettimeofday.c:17:9: error: implicit declaration of function ‘__cvdso_clock_gettime32’
 
-Hi Prashant, Hi Lee,
+arch/mips/vdso/vgettimeofday.c: In function ‘__vdso_clock_getres’:
+arch/mips/vdso/vgettimeofday.c:39:9: error: implicit declaration of function ‘__cvdso_clock_getres_time32’
 
-On Tue, Jan 14, 2020 at 03:22:20PM -0800, Prashant Malani wrote:
-> Add the cros-usbpd-notify driver as a subdevice on platforms that
-> support the EC_FEATURE_USB_PD EC feature flag and don't have the
-> ACPI PD notification device defined.
->=20
-> This driver allows other cros-ec devices to receive PD event
-> notifications from the Chrome OS Embedded Controller (EC) via a
-> notification chain.
->=20
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+Force the define for 32bit builds in the VDSO Makefile.
 
-Reviewed-by: Benson Leung <bleung@chromium.org>
+Fixes: bf279849ad59 ("lib/vdso: Build 32 bit specific functions in the right context")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/mips/vdso/Makefile |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-
-> ---
->=20
-> Changes in v6:
-> - No changes.
->=20
-> Changes in v5:
-> - Updated the IS_ENABLED() check to check for CONFIG_OF instead of
->   !CONFIG_ACPI according to upstream comments.
->=20
-> Changes in v4:
-> - Removed #ifndef usage; instead, moved cros-usbpd-notify to a separate
->   mfd_cell and used an IS_ENABLED() check.
-> - Changed commit title and description slightly to reflect change in
->   code.
->  drivers/mfd/cros_ec_dev.c | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->=20
-> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-> index c4b977a5dd966..d0c28a4c10ad0 100644
-> --- a/drivers/mfd/cros_ec_dev.c
-> +++ b/drivers/mfd/cros_ec_dev.c
-> @@ -5,6 +5,7 @@
->   * Copyright (C) 2014 Google, Inc.
->   */
-> =20
-> +#include <linux/kconfig.h>
->  #include <linux/mfd/core.h>
->  #include <linux/mfd/cros_ec.h>
->  #include <linux/module.h>
-> @@ -87,6 +88,10 @@ static const struct mfd_cell cros_usbpd_charger_cells[=
-] =3D {
->  	{ .name =3D "cros-usbpd-logger", },
->  };
-> =20
-> +static const struct mfd_cell cros_usbpd_notify_cells[] =3D {
-> +	{ .name =3D "cros-usbpd-notify", },
-> +};
-> +
->  static const struct cros_feature_to_cells cros_subdevices[] =3D {
->  	{
->  		.id		=3D EC_FEATURE_CEC,
-> @@ -202,6 +207,23 @@ static int ec_device_probe(struct platform_device *p=
-dev)
->  		}
->  	}
-> =20
-> +	/*
-> +	 * The PD notifier driver cell is separate since it only needs to be
-> +	 * explicitly added on platforms that don't have the PD notifier ACPI
-> +	 * device entry defined.
-> +	 */
-> +	if (IS_ENABLED(CONFIG_OF)) {
-> +		if (cros_ec_check_features(ec, EC_FEATURE_USB_PD)) {
-> +			retval =3D mfd_add_hotplug_devices(ec->dev,
-> +					cros_usbpd_notify_cells,
-> +					ARRAY_SIZE(cros_usbpd_notify_cells));
-> +			if (retval)
-> +				dev_err(ec->dev,
-> +					"failed to add PD notify devices: %d\n",
-> +					retval);
-> +		}
-> +	}
-> +
->  	/*
->  	 * The following subdevices cannot be detected by sending the
->  	 * EC_FEATURE_GET_CMD to the Embedded Controller device.
-> --=20
-> 2.25.0.341.g760bfbb309-goog
->=20
-
---=20
-Benson Leung
-Staff Software Engineer
-Chrome OS Kernel
-Google Inc.
-bleung@google.com
-Chromium OS Project
-bleung@chromium.org
-
---7JfCtLOvnd9MIVvH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQQCtZK6p/AktxXfkOlzbaomhzOwwgUCXiC8nQAKCRBzbaomhzOw
-wmOVAQCmOfXEIqYrEhqII0PhhILhzQoQbL7FnSHrZAA7Glms1gD/beJW7RUQ4vJQ
-sytu0LNykPKlEOZFifYLnTyxRqm3VgM=
-=83lm
------END PGP SIGNATURE-----
-
---7JfCtLOvnd9MIVvH--
+--- a/arch/mips/vdso/Makefile
++++ b/arch/mips/vdso/Makefile
+@@ -18,6 +18,10 @@ ccflags-vdso := \
+ 	$(filter -mno-loongson-%,$(KBUILD_CFLAGS)) \
+ 	-D__VDSO__
+ 
++ifndef CONFIG_64BIT
++ccflags-vdso += -DBUILD_VDSO32
++endif
++
+ ifdef CONFIG_CC_IS_CLANG
+ ccflags-vdso += $(filter --target=%,$(KBUILD_CFLAGS))
+ endif
