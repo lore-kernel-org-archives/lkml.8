@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF25C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B8AC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E74C2217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6E73217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:01:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197681;
-	bh=PSIyekv9flrRqMwXHw8WZ9qzzBUJ70eDK3NmgkqJndE=;
+	s=default; t=1579197684;
+	bh=sgOoolRsRLW4pkiLoqF6nOV5AmgG6FrkopMUr9rx9Co=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kzGzI2gLv2FRavcVVu0wldjqJ49Ot/BizYdOAxJ1w/yfL6jReSp+FmqaUDhuKgApp
-	 x6Dgl5LZjLaStyv+0I5974yBJYEF+g4bCyJH/PEUj5rOTi4kMFFXD8cN0Eyflt0geg
-	 LQMNE8JtE0Fih4DWoFTM385eOO/LC524CT1oBKRU=
+	b=JiIUBxZYmQNvYgDH9jg1Bv6eTYOJZCsbfGZU85daYevuWh4LWoMSWhcM/ihEuDP80
+	 NmgxadVMRJQLWrquXn1foLQO22yKFds/rU4IO3tBo/Phy7PJsuSdn5HwX+ZqzgkBdU
+	 8F5bkNtIgJAVtezMNhSk6pxYJABytTwacGRlVTxg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394946AbgAPSBU (ORCPT
+        id S2394635AbgAPSAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:01:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59204 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:00:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405706AbgAPRlc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:41:32 -0500
+        id S2405799AbgAPRlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:41:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBCF72470B;
-        Thu, 16 Jan 2020 17:41:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E405E24695;
+        Thu, 16 Jan 2020 17:41:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196492;
-        bh=PSIyekv9flrRqMwXHw8WZ9qzzBUJ70eDK3NmgkqJndE=;
+        s=default; t=1579196510;
+        bh=sgOoolRsRLW4pkiLoqF6nOV5AmgG6FrkopMUr9rx9Co=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T2IaP5/qRc+7rirxqiIvrax1yZ0HHmGxgJnc/BAHl5O4LGqzjGgkrYn6uo/V1zvez
-         egX6VsI1oaERuotuAcS1P/aTjXl2WbwczpXZ5Hdbbiw18Dzf6SyJe4avQp/K4Qn8dP
-         y68kKa2RIJD4vH/f4xN7pblH58TEzB9+W4PT5FjI=
+        b=AVZ0FyDwyMvb0fDqQ/aMqhrhSSj8PNuItqlRx87z6zVMMT1o9E+YP1oUUduMvSqPA
+         nk1u4xtOclTdOyncTnAiLxXllbRGXPno4WTLfE+o5I9aFWLLkS9HMeyn8jDTWora0T
+         kJ7S0tWWiabz1fsnoIczXifIJe/kfqmBwevODtUg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 235/251] media: exynos4-is: Fix recursive locking in isp_video_release()
-Date:   Thu, 16 Jan 2020 12:36:24 -0500
-Message-Id: <20200116173641.22137-195-sashal@kernel.org>
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 249/251] arm64: dts: juno: Fix UART frequency
+Date:   Thu, 16 Jan 2020 12:36:38 -0500
+Message-Id: <20200116173641.22137-209-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -63,38 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Seung-Woo Kim <sw0312.kim@samsung.com>
+From: Andre Przywara <andre.przywara@arm.com>
 
-[ Upstream commit 704c6c80fb471d1bb0ef0d61a94617d1d55743cd ]
+[ Upstream commit 39a1a8941b27c37f79508426e27a2ec29829d66c ]
 
->From isp_video_release(), &isp->video_lock is held and subsequent
-vb2_fop_release() tries to lock vdev->lock which is same with the
-previous one. Replace vb2_fop_release() with _vb2_fop_release() to
-fix the recursive locking.
+Older versions of the Juno *SoC* TRM [1] recommended that the UART clock
+source should be 7.2738 MHz, whereas the *system* TRM [2] stated a more
+correct value of 7.3728 MHz. Somehow the wrong value managed to end up in
+our DT.
 
-Fixes: 1380f5754cb0 ("[media] videobuf2: Add missing lock held on vb2_fop_release")
-Signed-off-by: Seung-Woo Kim <sw0312.kim@samsung.com>
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Doing a prime factorisation, a modulo divide by 115200 and trying
+to buy a 7.2738 MHz crystal at your favourite electronics dealer suggest
+that the old value was actually a typo. The actual UART clock is driven
+by a PLL, configured via a parameter in some board.txt file in the
+firmware, which reads 7.37 MHz (sic!).
+
+Fix this to correct the baud rate divisor calculation on the Juno board.
+
+[1] http://infocenter.arm.com/help/topic/com.arm.doc.ddi0515b.b/DDI0515B_b_juno_arm_development_platform_soc_trm.pdf
+[2] http://infocenter.arm.com/help/topic/com.arm.doc.100113_0000_07_en/arm_versatile_express_juno_development_platform_(v2m_juno)_technical_reference_manual_100113_0000_07_en.pdf
+
+Fixes: 71f867ec130e ("arm64: Add Juno board device tree.")
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Acked-by: Liviu Dudau <liviu.dudau@arm.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/exynos4-is/fimc-isp-video.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/arm/juno-clocks.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/exynos4-is/fimc-isp-video.c b/drivers/media/platform/exynos4-is/fimc-isp-video.c
-index e00fa03ddc3e..0c0eec671d49 100644
---- a/drivers/media/platform/exynos4-is/fimc-isp-video.c
-+++ b/drivers/media/platform/exynos4-is/fimc-isp-video.c
-@@ -316,7 +316,7 @@ static int isp_video_release(struct file *file)
- 		ivc->streaming = 0;
- 	}
+diff --git a/arch/arm64/boot/dts/arm/juno-clocks.dtsi b/arch/arm64/boot/dts/arm/juno-clocks.dtsi
+index 25352ed943e6..00bcbf7688c7 100644
+--- a/arch/arm64/boot/dts/arm/juno-clocks.dtsi
++++ b/arch/arm64/boot/dts/arm/juno-clocks.dtsi
+@@ -8,10 +8,10 @@
+  */
  
--	vb2_fop_release(file);
-+	_vb2_fop_release(file, NULL);
+ 	/* SoC fixed clocks */
+-	soc_uartclk: refclk7273800hz {
++	soc_uartclk: refclk7372800hz {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+-		clock-frequency = <7273800>;
++		clock-frequency = <7372800>;
+ 		clock-output-names = "juno:uartclk";
+ 	};
  
- 	if (v4l2_fh_is_singular_file(file)) {
- 		fimc_pipeline_call(&ivc->ve, close);
 -- 
 2.20.1
 
