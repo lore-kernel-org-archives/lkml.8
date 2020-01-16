@@ -2,115 +2,83 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B14C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD04C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B16732077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAC7A2075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:53:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="d4vU60gv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgAPNxP (ORCPT
+        id S1726979AbgAPNx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 08:53:15 -0500
-Received: from mga09.intel.com ([134.134.136.24]:43661 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726084AbgAPNxO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 08:53:14 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 05:53:14 -0800
-X-IronPort-AV: E=Sophos;i="5.70,326,1574150400"; 
-   d="scan'208";a="373316388"
-Received: from dlneuman-mobl1.amr.corp.intel.com ([10.254.178.157])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 05:53:13 -0800
-Message-ID: <2a5e9df32e2df27297149a577512f6b1557de241.camel@linux.intel.com>
-Subject: Re: [PATCH] thermal: intel_pch_thermal: Add PCI ids for Lewisburg
- PCH.
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Andres Freund <andres@anarazel.de>,
-        Tushar Dave <tushar.n.dave@intel.com>,
-        Zhang Rui <rui.zhang@intel.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 16 Jan 2020 05:53:13 -0800
-In-Reply-To: <20200115184415.1726953-1-andres@anarazel.de>
-References: <20200115184415.1726953-1-andres@anarazel.de>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
+        Thu, 16 Jan 2020 08:53:56 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:52496 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbgAPNx4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 08:53:56 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00GDrti4062384;
+        Thu, 16 Jan 2020 07:53:55 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579182835;
+        bh=houlVZXRRLo1Sc+XuyxUossdsTt+aI+Fltes9OD5xW4=;
+        h=From:To:CC:Subject:Date;
+        b=d4vU60gvAPKM/Ypnw4AOaiZm6MvFP5IKRgbd1+JlIfJXTM4byXe50ESoKk/rw18D6
+         qFgpmJv7urA3yhr9qhkZzFR0/9VhRfsBIfyeHMj3H5iCY54Ua9ByAsK6EWuUkaopeI
+         Hyw31HFXql7qmWRbLVgxgbSP1IQWH0T7M4JdMxC0=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00GDrteq091801
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 16 Jan 2020 07:53:55 -0600
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 16
+ Jan 2020 07:53:55 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 16 Jan 2020 07:53:55 -0600
+Received: from sokoban.bb.dnainternet.fi (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00GDrqdS048732;
+        Thu, 16 Jan 2020 07:53:53 -0600
+From:   Tero Kristo <t-kristo@ti.com>
+To:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
+        <linux-remoteproc@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
+        <s-anna@ti.com>, <linux-omap@vger.kernel.org>
+Subject: [PATCHv5 00/14] remoteproc: updates for omap remoteproc support
+Date:   Thu, 16 Jan 2020 15:53:18 +0200
+Message-ID: <20200116135332.7819-1-t-kristo@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-01-15 at 10:44 -0800, Andres Freund wrote:
-> I noticed that I couldn't read the PCH temperature on my workstation
-> (C620 series chipset, w/ 2x Xeon Gold 5215 CPUs) directly, but had to
-> go
-> through IPMI. Looking at the data sheet, it looks to me like the
-> existing intel PCH thermal driver should work without changes for
-> Lewisburg.
-Does the temperature reading match with what you read via IPMI?
+Hi,
 
-The patch looks fine to me otherwise.
+This version addresses review comments received for v4 of the series.
+Mostly cosmetic changes, the most important changes here:
 
-Thanks,
-Srinivas
+- minor dt binding updates and any driver changes induced by this
+- reset handling fixes to avoid asserting/deasserting same reset twice,
+  this appeared to still produce some timeouts in some cases; this was
+  masked earlier but became visible with one error handling fix
 
-> 
-> I suspect there's some other PCI id's missing. But I hope somebody at
-> Intel would have an easier time figuring that out than I...
-> 
-> Signed-off-by: Andres Freund <andres@anarazel.de>
-> ---
->  drivers/thermal/intel/intel_pch_thermal.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/thermal/intel/intel_pch_thermal.c
-> b/drivers/thermal/intel/intel_pch_thermal.c
-> index 4f0bb8f502e1..1f3ff0d489ef 100644
-> --- a/drivers/thermal/intel/intel_pch_thermal.c
-> +++ b/drivers/thermal/intel/intel_pch_thermal.c
-> @@ -23,6 +23,7 @@
->  #define PCH_THERMAL_DID_SKL_H	0xA131 /* Skylake PCH 100
-> series */
->  #define PCH_THERMAL_DID_CNL	0x9Df9 /* CNL PCH */
->  #define PCH_THERMAL_DID_CNL_H	0xA379 /* CNL-H PCH */
-> +#define PCH_THERMAL_DID_LWB	0xA1B1 /* Lewisburg PCH */
->  
->  /* Wildcat Point-LP  PCH Thermal registers */
->  #define WPT_TEMP	0x0000	/* Temperature */
-> @@ -272,6 +273,7 @@ enum board_ids {
->  	board_wpt,
->  	board_skl,
->  	board_cnl,
-> +	board_lwb,
->  };
->  
->  static const struct board_info {
-> @@ -294,6 +296,10 @@ static const struct board_info {
->  		.name = "pch_cannonlake",
->  		.ops = &pch_dev_ops_wpt,
->  	},
-> +	[board_lwb] = {
-> +		.name = "pch_lewisburg",
-> +		.ops = &pch_dev_ops_wpt,
-> +	},
->  };
->  
->  static int intel_pch_thermal_probe(struct pci_dev *pdev,
-> @@ -398,6 +404,8 @@ static const struct pci_device_id
-> intel_pch_thermal_id[] = {
->  		.driver_data = board_cnl, },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCH_THERMAL_DID_CNL_H),
->  		.driver_data = board_cnl, },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCH_THERMAL_DID_LWB),
-> +		.driver_data = board_lwb, },
->  	{ 0, },
->  };
->  MODULE_DEVICE_TABLE(pci, intel_pch_thermal_id);
+All changes are listed under individual patches.
 
+-Tero
+
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
