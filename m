@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF79C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A634C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 491A42073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64B052072B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:20:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579216833;
-	bh=suplol0vP4YqzhZda6o1xonDIcyGXtBFy6UGojJUGDA=;
+	s=default; t=1579216835;
+	bh=3yWjoeEIMnBoOIZGVRv9iSKJUBempfyyrqd4UN/dPGk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WOdj68FdN4XNtU/8ehvo9tlu820C+SH14RCkBbgm7QxINVFO8zb7EjDSD/ZW2B8qC
-	 F7EK1+7yDUqflgfeQTKHzeYjC2y2sGW7QqZULsVV79u47mTNI2Xzn4beIG4GobTP05
-	 Afa2stJ9psAOdurz2wbhdAlOFwwgwr6IuXD7CEUo=
+	b=E3gR5NcTxOWk2vRMKAJSecIa6FbfnwR6TrSyXMo25TJVTTzxn4FQD+q4od8XPrjiY
+	 7x1Zj9DRG8W1vIq7yyVnmjVBDBdnFeKeqVun+klwX2xN6wml81Ubpt4ME9dSWe0ghM
+	 HXMyZjWi1vi8plvB2Vt4VUf6F9GpaclRrKAD+nxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390660AbgAPXUc (ORCPT
+        id S2390670AbgAPXUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:20:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46968 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:20:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390649AbgAPXU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:20:26 -0500
+        id S2389723AbgAPXU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:20:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F168B2072B;
-        Thu, 16 Jan 2020 23:20:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DC452073A;
+        Thu, 16 Jan 2020 23:20:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216826;
-        bh=suplol0vP4YqzhZda6o1xonDIcyGXtBFy6UGojJUGDA=;
+        s=default; t=1579216828;
+        bh=3yWjoeEIMnBoOIZGVRv9iSKJUBempfyyrqd4UN/dPGk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WM4fRQa4n/QraxVaEQTu+ze/lX3LYYhU98/MF+rX5srj97UvPJQ5U1qAiQqr12Gj+
-         cLZd283eGzGKQu1Gi3O6tcwX3JQR4HtqKqo5LoFftYE5J90rQ4D1EJmkBtS53CBCwq
-         ukXLa5EVdxuo3mtTvZFdukKLq3UOdC4rO9hH7OU8=
+        b=T90L4dTvc397uotyF516T3CBssoKKijqyZoWKLh2ZXP4DkrbBAlzxDdXmbSYpXz03
+         y4CqMFlO8hzgCgE/S03qnqFKTgmNVntN20FH0kGWqgrx7+fRN8/C/0gbPa3LEYTnwN
+         NgB9fI4veRyeUah5PZ8EBnAUlScGmAeEJUXkrxNQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Swapna Manupati <swapna.manupati@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Srinivas Neeli <srinivas.neeli@xilinx.com>,
+        stable@vger.kernel.org, Qianggui Song <qianggui.song@amlogic.com>,
         Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 5.4 018/203] gpio: zynq: Fix for bug in zynq_gpio_restore_context API
-Date:   Fri, 17 Jan 2020 00:15:35 +0100
-Message-Id: <20200116231746.271247986@linuxfoundation.org>
+Subject: [PATCH 5.4 019/203] pinctrl: meson: Fix wrong shift value when get drive-strength
+Date:   Fri, 17 Jan 2020 00:15:36 +0100
+Message-Id: <20200116231746.325188044@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -62,56 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Swapna Manupati <swapna.manupati@xilinx.com>
+From: Qianggui Song <qianggui.song@amlogic.com>
 
-commit 36f2e7207f21a83ca0054116191f119ac64583ab upstream.
+commit 35c60be220572de7d6605c4318f640d133982040 upstream.
 
-This patch writes the inverse value of Interrupt Mask Status
-register into the Interrupt Enable register in
-zynq_gpio_restore_context API to fix the bug.
+In meson_pinconf_get_drive_strength, variable bit is calculated by
+meson_calc_reg_and_bit, this value is the offset from the first pin of a
+certain bank to current pin, while Meson SoCs use two bits for each pin
+to depict drive-strength. So a left shift by 1 should be done or node
+pinconf-pins shows wrong message.
 
-Fixes: e11de4de28c0 ("gpio: zynq: Add support for suspend resume")
-Signed-off-by: Swapna Manupati <swapna.manupati@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
-Link: https://lore.kernel.org/r/1577362338-28744-2-git-send-email-srinivas.neeli@xilinx.com
+Fixes: 6ea3e3bbef37 ("pinctrl: meson: add support of drive-strength-microamp")
+
+Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
+Link: https://lore.kernel.org/r/20191226023734.9631-1-qianggui.song@amlogic.com
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpio-zynq.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/pinctrl/meson/pinctrl-meson.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/gpio/gpio-zynq.c
-+++ b/drivers/gpio/gpio-zynq.c
-@@ -681,6 +681,8 @@ static void zynq_gpio_restore_context(st
- 	unsigned int bank_num;
+--- a/drivers/pinctrl/meson/pinctrl-meson.c
++++ b/drivers/pinctrl/meson/pinctrl-meson.c
+@@ -441,6 +441,7 @@ static int meson_pinconf_get_drive_stren
+ 		return ret;
  
- 	for (bank_num = 0; bank_num < gpio->p_data->max_bank; bank_num++) {
-+		writel_relaxed(ZYNQ_GPIO_IXR_DISABLE_ALL, gpio->base_addr +
-+				ZYNQ_GPIO_INTDIS_OFFSET(bank_num));
- 		writel_relaxed(gpio->context.datalsw[bank_num],
- 			       gpio->base_addr +
- 			       ZYNQ_GPIO_DATA_LSW_OFFSET(bank_num));
-@@ -690,9 +692,6 @@ static void zynq_gpio_restore_context(st
- 		writel_relaxed(gpio->context.dirm[bank_num],
- 			       gpio->base_addr +
- 			       ZYNQ_GPIO_DIRM_OFFSET(bank_num));
--		writel_relaxed(gpio->context.int_en[bank_num],
--			       gpio->base_addr +
--			       ZYNQ_GPIO_INTEN_OFFSET(bank_num));
- 		writel_relaxed(gpio->context.int_type[bank_num],
- 			       gpio->base_addr +
- 			       ZYNQ_GPIO_INTTYPE_OFFSET(bank_num));
-@@ -702,6 +701,9 @@ static void zynq_gpio_restore_context(st
- 		writel_relaxed(gpio->context.int_any[bank_num],
- 			       gpio->base_addr +
- 			       ZYNQ_GPIO_INTANY_OFFSET(bank_num));
-+		writel_relaxed(~(gpio->context.int_en[bank_num]),
-+			       gpio->base_addr +
-+			       ZYNQ_GPIO_INTEN_OFFSET(bank_num));
- 	}
- }
+ 	meson_calc_reg_and_bit(bank, pin, REG_DS, &reg, &bit);
++	bit = bit << 1;
  
+ 	ret = regmap_read(pc->reg_ds, reg, &val);
+ 	if (ret)
 
 
