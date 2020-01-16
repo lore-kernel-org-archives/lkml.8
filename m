@@ -2,104 +2,154 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9EBC32771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB17C32771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C44D8214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:01:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XeFvjIGU"
+	by mail.kernel.org (Postfix) with ESMTP id BB84B214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:05:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730242AbgAPDBD (ORCPT
+        id S1730410AbgAPDFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 22:01:03 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:38494 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729130AbgAPDBD (ORCPT
+        Wed, 15 Jan 2020 22:05:15 -0500
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:47068 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730244AbgAPDFO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 22:01:03 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G2s9po082540;
-        Thu, 16 Jan 2020 03:00:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=pYqAmex2w8tiqRFaW1jCj7M1ge+Xb9hYqrytKH/JEAk=;
- b=XeFvjIGUPyf29kMh8ImLl2O8tLws5Dpngfve2rdjFNyrahC6qPrSwT8uP8DTIDrzVt9E
- TdfEszW+xlQMWpnA4ymFOwYi/XayCp6Hat9P6r23Kho90QjA7bDi/1mSgAHA1fhdCkaC
- Rf1Tyb0++XNvC7lNs4dG23GsJxSdm02oCP97k6gkturjqDOx8fBg/7r1rJb6btxniAOv
- zCrYvaR2Uon48gIymJ+oVr7HKhB0HjibEIOTdy1VlbLkr6sskl3VMoIKmmVm9fis0k3x
- Ylag6tlfcc/IdygHQrjwvL6sVhdNfLLL09vSeUrEZyRJ0QWm+QWptGdEYNTuXB3lE/wy fw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2xf73yqvvt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 03:00:30 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G2sbY5151689;
-        Thu, 16 Jan 2020 03:00:29 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2xj1asnarp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 03:00:29 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00G30QFJ026830;
-        Thu, 16 Jan 2020 03:00:27 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jan 2020 19:00:26 -0800
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <jejb@linux.ibm.com>, <beanhuo@micron.com>,
-        <asutoshd@codeaurora.org>, <cang@codeaurora.org>,
-        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
-        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
-        <andy.teng@mediatek.com>
-Subject: Re: [PATCH v1 0/3] scsi: ufs: fix error history and complete device reset history
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <1578147968-30938-1-git-send-email-stanley.chu@mediatek.com>
-Date:   Wed, 15 Jan 2020 22:00:22 -0500
-In-Reply-To: <1578147968-30938-1-git-send-email-stanley.chu@mediatek.com>
-        (Stanley Chu's message of "Sat, 4 Jan 2020 22:26:05 +0800")
-Message-ID: <yq1ftggp0l5.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Wed, 15 Jan 2020 22:05:14 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R461e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04455;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TnrEHFy_1579143910;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TnrEHFy_1579143910)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 16 Jan 2020 11:05:11 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
+        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
+        yang.shi@linux.alibaba.com, willy@infradead.org,
+        shakeelb@google.com, hannes@cmpxchg.org
+Subject: [PATCH v8 00/10] per lruvec lru_lock for memcg
+Date:   Thu, 16 Jan 2020 11:04:59 +0800
+Message-Id: <1579143909-156105-1-git-send-email-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001160023
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001160023
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi all,
 
-Stanley,
+This patchset move lru_lock into lruvec, give a lru_lock for each of
+lruvec, thus bring a lru_lock for each of memcg per node. So on a large
+node machine, each of memcg don't need suffer from per node pgdat->lru_lock
+waiting. They could go fast with their self lru_lock.
 
-> This series targets on UFS error history fixes and feature add-on,
->
-> 1. Fix empty check logic while outputing error history.
-> 2. Add device reset history events for vendor's implementations.
-> 3. Remove dummy word in output format.
+We introduce function lock_page_lruvec, which will lock the page's
+memcg and then memcg's lruvec->lru_lock(Thanks Johannes Weiner,
+Hugh Dickins and Konstantin Khlebnikov suggestion/reminder) to replace
+old pgdat->lru_lock.
 
-Applied to 5.6/scsi-queue, thanks!
+Following Daniel Jordan's suggestion, I run 208 'dd' with on 104
+containers on a 2s * 26cores * HT box with a modefied case:
+  https://git.kernel.org/pub/scm/linux/kernel/git/wfg/vm-scalability.git/tree/case-lru-file-readtwice
+
+With this patchset, the readtwice performance increased about 80%
+with containers. And no performance drops w/o container.
+
+Another way to guard move_account is by lru_lock instead of move_lock 
+Considering the memcg move task path:
+   mem_cgroup_move_task:
+     mem_cgroup_move_charge:
+	lru_add_drain_all();
+	atomic_inc(&mc.from->moving_account); //ask lruvec's move_lock
+	synchronize_rcu();
+	walk_parge_range: do charge_walk_ops(mem_cgroup_move_charge_pte_range):
+	   isolate_lru_page();
+	   mem_cgroup_move_account(page,)
+		spin_lock(&from->move_lock) 
+		page->mem_cgroup = to;
+		spin_unlock(&from->move_lock) 
+	   putback_lru_page(page)
+
+to guard 'page->mem_cgroup = to' by to_vec->lru_lock has the similar effect with
+move_lock. So for performance reason, both solutions are same.
+
+Thanks Hugh Dickins and Konstantin Khlebnikov, they both brought the same idea
+8 years ago.
+
+Thanks all the comments from Hugh Dickins, Konstantin Khlebnikov, Daniel Jordan, 
+Johannes Weiner, Mel Gorman, Shakeel Butt, Rong Chen, Fengguang Wu, Yun Wang etc.
+and some testing support from Intel 0days!
+
+v8,
+  a, redo lock_page_lru cleanup as Konstantin Khlebnikov suggested.
+  b, fix a bug in lruvec_memcg_debug, reported by Hugh Dickins
+
+v7,
+  a, rebase on v5.5-rc3, 
+  b, move the lock_page_lru() clean up before lock replace.
+
+v6, 
+  a, rebase on v5.5-rc2, and redo performance testing.
+  b, pick up Johanness' comments change and a lock_page_lru cleanup.
+
+v5,
+  a, locking page's memcg according JohannesW suggestion
+  b, using macro for non memcg, according to Metthew's suggestion.
+
+v4: 
+  a, fix the page->mem_cgroup dereferencing issue, thanks Johannes Weiner
+  b, remove the irqsave flags changes, thanks Metthew Wilcox
+  c, merge/split patches for better understanding and bisection purpose
+
+v3: rebase on linux-next, and fold the relock fix patch into introducing patch
+
+v2: bypass a performance regression bug and fix some function issues
+
+v1: initial version, aim testing show 5% performance increase on a 16 threads box.
+
+
+Alex Shi (9):
+  mm/vmscan: remove unnecessary lruvec adding
+  mm/memcg: fold lock_page_lru into commit_charge
+  mm/lru: replace pgdat lru_lock with lruvec lock
+  mm/lru: introduce the relock_page_lruvec function
+  mm/mlock: optimize munlock_pagevec by relocking
+  mm/swap: only change the lru_lock iff page's lruvec is different
+  mm/pgdat: remove pgdat lru_lock
+  mm/lru: add debug checking for page memcg moving
+  mm/memcg: add debug checking in lock_page_memcg
+
+Hugh Dickins (1):
+  mm/lru: revise the comments of lru_lock
+
+ Documentation/admin-guide/cgroup-v1/memcg_test.rst |  15 +--
+ Documentation/admin-guide/cgroup-v1/memory.rst     |   6 +-
+ Documentation/trace/events-kmem.rst                |   2 +-
+ Documentation/vm/unevictable-lru.rst               |  22 ++--
+ include/linux/memcontrol.h                         |  68 ++++++++++++
+ include/linux/mm_types.h                           |   2 +-
+ include/linux/mmzone.h                             |   5 +-
+ mm/compaction.c                                    |  57 ++++++----
+ mm/filemap.c                                       |   4 +-
+ mm/huge_memory.c                                   |  18 ++--
+ mm/memcontrol.c                                    | 115 ++++++++++++++-------
+ mm/mlock.c                                         |  28 ++---
+ mm/mmzone.c                                        |   1 +
+ mm/page_alloc.c                                    |   1 -
+ mm/page_idle.c                                     |   7 +-
+ mm/rmap.c                                          |   2 +-
+ mm/swap.c                                          |  75 ++++++--------
+ mm/vmscan.c                                        | 115 ++++++++++++---------
+ 18 files changed, 326 insertions(+), 217 deletions(-)
 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+1.8.3.1
+
