@@ -2,109 +2,99 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CDEC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2BCC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:24:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CAFB207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:24:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VcEOirFK"
+	by mail.kernel.org (Postfix) with ESMTP id 9B2D42073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:24:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579202652;
+	bh=r9Ny1NmrJ44xIrdA3H/UUfVyCoCXphiEt47Z1mkQlOw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mWl461USFZbBUU3dJLaPyp455eDmmo0JbHXudC4Zed7q1xKQ6ltG4+olrQXHTcKVj
+	 v9945t3OYWpJhEqAEqdjBdQmhNyqNE++DCB/1Lk+sKLlWuxz7wwfF79mnJks9A+b5F
+	 OK3dbLbOSyq9VWhB1ilwp1/B2wcM2EvL6/qPrlJw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407390AbgAPTYI (ORCPT
+        id S1730538AbgAPQwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:24:08 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44991 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729590AbgAPTYF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 14:24:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579202644;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=e8HBHJP/uq6LLcUiW9DMmgfjF72wvEE4C0oRW83XDZw=;
-        b=VcEOirFKhZ/qGMHCRLahr+bltd2l1gTxwfk5EDwDmKEoDSyWqgJEWy7o1n6L7SEvhvykxz
-        hE6uzNQaU+jZx3E9qOdEBE1+E1NV4ECevJvap0VSJnxtEuADcPMLB5NyAcL/q8EG4JOPuC
-        FWwffG4wDRPc+hjx2L9hdGdZ7pPsrdQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-246-Wpe1cMcoOoGBY_oRiv4oYg-1; Thu, 16 Jan 2020 14:24:00 -0500
-X-MC-Unique: Wpe1cMcoOoGBY_oRiv4oYg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 16 Jan 2020 11:52:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36020 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730358AbgAPQwq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:52:46 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 119012F2E;
-        Thu, 16 Jan 2020 19:23:59 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.18.25.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3BC035D9C9;
-        Thu, 16 Jan 2020 19:23:54 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id C1B6B220A24; Thu, 16 Jan 2020 14:23:53 -0500 (EST)
-Date:   Thu, 16 Jan 2020 14:23:53 -0500
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Jeff Moyer <jmoyer@redhat.com>, Jan Kara <jack@suse.cz>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        virtio-fs@redhat.com, Stefan Hajnoczi <stefanha@redhat.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 01/19] dax: remove block device dependencies
-Message-ID: <20200116192353.GD25291@redhat.com>
-References: <20200114203138.GA3145@redhat.com>
- <CAPcyv4iXKFt207Pen+E1CnqCFtC1G85fxw5EXFVx+jtykGWMXA@mail.gmail.com>
- <20200114212805.GB3145@redhat.com>
- <CAPcyv4igrs40uWuCB163PPBLqyGVaVbaNfE=kCfHRPRuvZdxQA@mail.gmail.com>
- <20200115195617.GA4133@redhat.com>
- <CAPcyv4iEoN9SnBveG7-Mhvd+wQApi1XKVnuYpyYxDybrFv_YYw@mail.gmail.com>
- <x49wo9smnqc.fsf@segfault.boston.devel.redhat.com>
- <CAPcyv4hCR9NV+2MF0iAJ5rHS2uiOgTnu=+yQRfpieDJQpQz22w@mail.gmail.com>
- <20200116183900.GC25291@redhat.com>
- <CAPcyv4irezimk8m4hysrd0rst_f0Rr+iiNxeFesqbxQnWYA2Xw@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 7899F2081E;
+        Thu, 16 Jan 2020 16:52:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579193566;
+        bh=r9Ny1NmrJ44xIrdA3H/UUfVyCoCXphiEt47Z1mkQlOw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wzejHrsSiOGr8J8DPP4jW9uOi+/u8So9rxxp9OGSrgYMnHt0mPiY/si+ZdJ+pWlcn
+         VNgBRJITlnZNnWo2eEJoHJWW5CPsp7tNShYSe2RIF2ktBcS0CpoBdF9uopCFTtZrd8
+         qYfz0Afczn4cl+CP3cOjmzS0UnKlP4D3711PHQVM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Stephan Gerhold <stephan@gerhold.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 110/205] regulator: ab8500: Remove SYSCLKREQ from enum ab8505_regulator_id
+Date:   Thu, 16 Jan 2020 11:41:25 -0500
+Message-Id: <20200116164300.6705-110-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
+References: <20200116164300.6705-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4irezimk8m4hysrd0rst_f0Rr+iiNxeFesqbxQnWYA2Xw@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 11:09:00AM -0800, Dan Williams wrote:
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[..]
-> > > True, but if kpartx + udev can make this transparent then I don't
-> > > think users lose any functionality. They just gain a device-mapper
-> > > dependency.
-> >
-> > So udev rules will trigger when a /dev/pmemX device shows up and run
-> > kpartx which in turn will create dm-linear devices and device nodes
-> > will show up in /dev/mapper/pmemXpY.
-> >
-> > IOW, /dev/pmemXpY device nodes will be gone. So if any of the scripts or
-> > systemd unit files are depenent on /dev/pmemXpY, these will still be
-> > broken out of the box and will have to be modified to use device nodes
-> > in /dev/mapper/ directory instead. Do I understand it right, Or I missed
-> > the idea completely.
-> 
-> No, I'd write the udev rule to create links from /dev/pmemXpY to the
-> /dev/mapper device, and that rule would be gated by a new pmem device
-> attribute to trigger when kpartx needs to run vs the kernel native
-> partitions.
+[ Upstream commit 458ea3ad033fc86e291712ce50cbe60c3428cf30 ]
 
-Got it. This sounds much better.
+Those regulators are not actually supported by the AB8500 regulator
+driver. There is no ab8500_regulator_info for them and no entry in
+ab8505_regulator_match.
 
-Vivek
+As such, they cannot be registered successfully, and looking them
+up in ab8505_regulator_match causes an out-of-bounds array read.
+
+Fixes: 547f384f33db ("regulator: ab8500: add support for ab8505")
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20191106173125.14496-2-stephan@gerhold.net
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/linux/regulator/ab8500.h | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/include/linux/regulator/ab8500.h b/include/linux/regulator/ab8500.h
+index 505e94a6e3e8..3ab1ddf151a2 100644
+--- a/include/linux/regulator/ab8500.h
++++ b/include/linux/regulator/ab8500.h
+@@ -42,8 +42,6 @@ enum ab8505_regulator_id {
+ 	AB8505_LDO_ANAMIC2,
+ 	AB8505_LDO_AUX8,
+ 	AB8505_LDO_ANA,
+-	AB8505_SYSCLKREQ_2,
+-	AB8505_SYSCLKREQ_4,
+ 	AB8505_NUM_REGULATORS,
+ };
+ 
+-- 
+2.20.1
 
