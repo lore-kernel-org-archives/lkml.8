@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB72C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B45C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1569E207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:22:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B43022073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:22:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202560;
-	bh=ZSxEVRSmMAAdMVZzDNhQUmTVVIl+v3iiq49YEo1QT9o=;
+	s=default; t=1579202564;
+	bh=F9CnNPMiYGhc4/q6hw9QUNtDZtY/v7pM+nnOx9qb4BY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eofnczjtq7VE9QBwAmIzcXd+QIrB+s2XlfPdeF8mQE9piJjX2yT5rEwtkAg9LEndJ
-	 yGpUUSBk+zEloFF+exqCQNwzkl2SiNhW9tXdhlFzgJNq6OJjySRrKx8hYbBfHL+ldF
-	 Wbw1XflLm/kv+gR02oglEbsuzDRWYaDurA7/Quhg=
+	b=rpntjLHse20ImY+M2picFEiqz1Z83rnRyoYiD6saKh4/PqLg+Q10fpyqbMcIl+QaQ
+	 2v1jwXWdMpN4PBLfZubXm2ZZjP5p58zRXpTNO5uwNrez7uAkerfFj8ODM4TBHl/NNt
+	 UYqgsfztSweYPabWu8Cu8elYlfrjqKxQk0vS6h8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730882AbgAPQxY (ORCPT
+        id S2404884AbgAPTWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:53:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36910 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:22:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730710AbgAPQxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:53:15 -0500
+        id S1730878AbgAPQxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:53:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1316F22464;
-        Thu, 16 Jan 2020 16:53:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 343BC2176D;
+        Thu, 16 Jan 2020 16:53:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193594;
-        bh=ZSxEVRSmMAAdMVZzDNhQUmTVVIl+v3iiq49YEo1QT9o=;
+        s=default; t=1579193603;
+        bh=F9CnNPMiYGhc4/q6hw9QUNtDZtY/v7pM+nnOx9qb4BY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kc7sez+dYG8soqToEjxoUc8ZCi4Sc6ycX8ij+bnlP3ikWKa10EgfhyycQMUaOFh0o
-         6Yeot9UcdOjM3mV4gOZU0yPgFEiBQmhGNsaBjGIpmhajSEYirhrbDahE3JRGjGRLNu
-         v119QNdxWXGoeqD7rB+xyEDXvtktXSZdsDyzsZw4=
+        b=VGAK2YEjv7J6ltKm/5XP1QQDEMUhU1/Zxg4EhcAxi9HWMZfZ/9efR5JrOP9vSnzJx
+         36NK2tHMFxE5ZIrm6Q7zkNXGaGqIcxq8OvG7b24J8S+yaoMybjXsySPzWg7ptJ6jXg
+         uXRZjN1HrPQLR1NI/YR38UdVedUwlE1SFkMVa5e8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Scott Mayhew <smayhew@redhat.com>,
-        Jamie Heilman <jamie@audible.transient.net>,
-        "J . Bruce Fields" <bfields@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 134/205] nfsd: v4 support requires CRYPTO_SHA256
-Date:   Thu, 16 Jan 2020 11:41:49 -0500
-Message-Id: <20200116164300.6705-134-sashal@kernel.org>
+Cc:     Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 142/205] iwlwifi: mvm: fix support for single antenna diversity
+Date:   Thu, 16 Jan 2020 11:41:57 -0500
+Message-Id: <20200116164300.6705-142-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -60,35 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Scott Mayhew <smayhew@redhat.com>
+From: Luca Coelho <luciano.coelho@intel.com>
 
-[ Upstream commit a2e2f2dc77a18d2b0f450fb7fcb4871c9f697822 ]
+[ Upstream commit bb99ff9baa02beb9216c86678999342197c849cc ]
 
-The new nfsdcld client tracking operations use sha256 to compute hashes
-of the kerberos principals, so make sure CRYPTO_SHA256 is enabled.
+When the single antenna diversity support was sent upstream, only some
+definitions were sent, due to a bad revert.
 
-Fixes: 6ee95d1c8991 ("nfsd: add support for upcall version 2")
-Reported-by: Jamie Heilman <jamie@audible.transient.net>
-Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Fix this by adding the actual code.
+
+Fixes: 5952e0ec3f05 ("iwlwifi: mvm: add support for single antenna diversity")
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/fw.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
-index 10cefb0c07c7..c4b1a89b8845 100644
---- a/fs/nfsd/Kconfig
-+++ b/fs/nfsd/Kconfig
-@@ -73,7 +73,7 @@ config NFSD_V4
- 	select NFSD_V3
- 	select FS_POSIX_ACL
- 	select SUNRPC_GSS
--	select CRYPTO
-+	select CRYPTO_SHA256
- 	select GRACE_PERIOD
- 	help
- 	  This option enables support in your system's NFS server for
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+index d9eb2b286438..c59cbb8cbdd7 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+@@ -514,6 +514,18 @@ static int iwl_send_phy_cfg_cmd(struct iwl_mvm *mvm)
+ 	struct iwl_phy_cfg_cmd phy_cfg_cmd;
+ 	enum iwl_ucode_type ucode_type = mvm->fwrt.cur_fw_img;
+ 
++	if (iwl_mvm_has_unified_ucode(mvm) &&
++	    !mvm->trans->cfg->tx_with_siso_diversity) {
++		return 0;
++	} else if (mvm->trans->cfg->tx_with_siso_diversity) {
++		/*
++		 * TODO: currently we don't set the antenna but letting the NIC
++		 * to decide which antenna to use. This should come from BIOS.
++		 */
++		phy_cfg_cmd.phy_cfg =
++			cpu_to_le32(FW_PHY_CFG_CHAIN_SAD_ENABLED);
++	}
++
+ 	/* Set parameters */
+ 	phy_cfg_cmd.phy_cfg = cpu_to_le32(iwl_mvm_get_phy_config(mvm));
+ 
+@@ -1344,12 +1356,12 @@ int iwl_mvm_up(struct iwl_mvm *mvm)
+ 		ret = iwl_send_phy_db_data(mvm->phy_db);
+ 		if (ret)
+ 			goto error;
+-
+-		ret = iwl_send_phy_cfg_cmd(mvm);
+-		if (ret)
+-			goto error;
+ 	}
+ 
++	ret = iwl_send_phy_cfg_cmd(mvm);
++	if (ret)
++		goto error;
++
+ 	ret = iwl_mvm_send_bt_init_conf(mvm);
+ 	if (ret)
+ 		goto error;
 -- 
 2.20.1
 
