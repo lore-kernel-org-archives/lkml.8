@@ -2,125 +2,97 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7155AC32771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F24C33CB2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50278222C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DDB322522
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:37:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Q1y7+qBr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729347AbgAPAbG (ORCPT
+        id S1729463AbgAPAh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 19:31:06 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:49671 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729110AbgAPAbG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 19:31:06 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1irt3S-0004QP-Qv; Thu, 16 Jan 2020 01:30:35 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id B7BBB10121C; Thu, 16 Jan 2020 01:30:33 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Hsin-Yi Wang <hsinyi@chromium.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Pavankumar Kondeti <pkondeti@codeaurora.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Aaro Koskinen <aaro.koskinen@nokia.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Will Deacon <will@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-csky@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v5] reboot: support offline CPUs before reboot
-In-Reply-To: <20200115063410.131692-1-hsinyi@chromium.org>
-References: <20200115063410.131692-1-hsinyi@chromium.org>
-Date:   Thu, 16 Jan 2020 01:30:33 +0100
-Message-ID: <8736cgxmxi.fsf@nanos.tec.linutronix.de>
+        Wed, 15 Jan 2020 19:37:29 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:57531 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729110AbgAPAh2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 19:37:28 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47yldd5QYKz9sR0;
+        Thu, 16 Jan 2020 11:37:25 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1579135045;
+        bh=GbTt+rKa0V2mpaEa87nv0cC/Exer67Ry1d8s0Ahz1w0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Q1y7+qBrzUIndY2aaSQNZkTDMed3sC37GDZKbSeXuzT8/r3GG5/g8JyQhfho78X38
+         3PLd3mRPcYSX/+esXQ9awFbjh+Xex9dvOL5srLf8TYA/eMkW3qZEQ2n3OClEB8MMFn
+         HCBEpL59medOPPWMIdL40Y/n801lEMItsjSwp4wUsRPIay5Sw+U4cq7O6kVvnz/kDN
+         /d54N8SI+2VNQ0gKOkDSHlK7pK1eGUD5qjQ/FSWrzmeSoue7ec66MqTmfQPrCxXWOa
+         dBA6iILQsTOtTAGdMbAVRPfwseMNb2+BNlVkoBlueE50x1YIyVaQAHgl8ry2t2/Jr/
+         +VpsuO4VzKKlg==
+Date:   Thu, 16 Jan 2020 11:37:25 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        David Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build warning after merge of the xfs tree
+Message-ID: <20200116113725.0223f18c@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/signed; boundary="Sig_/fzDzLL6F/gLixfTVWdm9Y72";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hsin-Yi Wang <hsinyi@chromium.org> writes:
+--Sig_/fzDzLL6F/gLixfTVWdm9Y72
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> Currently system reboots uses architecture specific codes (smp_send_stop)
-> to offline non reboot CPUs. Most architecture's implementation is looping
-> through all non reboot online CPUs and call ipi function to each of them. Some
-> architecture like arm64, arm, and x86... would set offline masks to cpu without
-> really offline them. This causes some race condition and kernel warning comes
-> out sometimes when system reboots.
+Hi all,
 
-'some race condition and kernel warning' is pretty useless information.
-Please describe exactly which kind of issues are caused by the current
-mechanism. Especially the race conditions are the interesting part (the
-warnings are just a consequence).
+After merging the xfs tree, today's linux-next build
+(powerpppc64_defconfig) produced this warning:
 
-> This patch adds a config ARCH_OFFLINE_CPUS_ON_REBOOT, which would
-> offline cpus in
+fs/xfs/xfs_inode.c: In function 'xfs_itruncate_extents_flags':
+fs/xfs/xfs_inode.c:1523:8: warning: unused variable 'done' [-Wunused-variab=
+le]
+ 1523 |  int   done =3D 0;
+      |        ^~~~
 
-Please read Documentation/process/submitting-patches.rst and search for
-'This patch'.
+Introduced by commit
 
-> migrate_to_reboot_cpu(). If non reboot cpus are all offlined here, the loop for
-> checking online cpus would be an empty loop.
+  4bbb04abb4ee ("xfs: truncate should remove all blocks, not just to the en=
+d of the page cache")
 
-This does not make any sense. The issues which you are trying to solve
-are going to be still there when CONFIG_HOTPLUG_CPU is disabled.
 
-> If architecture don't enable this config, or some cpus somehow fails
-> to offline, it would fallback to ipi function.
 
-This is really a half baken solution which keeps the various pointlessly
-different pseudo reboot/kexec offlining implementations around. So with
-this we have yet more code which only works depending on kernel
-configuration and has the issue of potentially not being able to offline
-a CPU. IOW this is going to fail completely in cases where a system is
-in a state which prevents regular hotplug.
+--=20
+Cheers,
+Stephen Rothwell
 
-The existing pseudo-offline functions have timeouts and eventually a
-fallback, e.g. the NMI fallback on x86. With this proposed regular
-offline solution this will just get stuck w/o a chance to force
-recovery.
+--Sig_/fzDzLL6F/gLixfTVWdm9Y72
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-While I like the idea and surely agree that the ideal solution is to
-properly shutdown the CPUs on reboot, we need to take a step back and
-look at the minimum requirements for a regular shutdown/reboot and at
-the same time have a look at the requirements for emergency shutdown and
-kexec/kcrash. Having proper information about the race conditions and
-warnings you mentioned would be a good starting point.
+-----BEGIN PGP SIGNATURE-----
 
-> Opt in this config for architectures that support CONFIG_HOTPLUG_CPU.
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4fsEUACgkQAVBC80lX
+0GySSQf8CfAFnI3m7FiUt+ghaT7pAAinT5QZxeWmF/OD3jULbGZmtvFnDIhwMLXx
+pat7wO4rb0NK46aCuDqJR5+1UpbHbG+kMofImfuFWBdkUAxDpeOjgFpg1hgZpQDq
+GFG72BD/Xp4Ggfwq64K1nvNxyD5ujzjHNYFGUeC+uExda4u8DSFBKMU0XNIcatKo
+obOkvEx7mz7IRLqhHlpRBilyoBXT5qRDRYieUYrdw827Exm/vRhKxd97TJUC3u9K
+snbiRabSQKUSKjjvbAidUWmHMylodYZp/AIB5PNGUaioCsz+4YY3l4vdWKHPmRV2
+2pfobsgBzAkh0c5ktruLnQe1c59aig==
+=BD0u
+-----END PGP SIGNATURE-----
 
-This is not opt-in. You force that on all architectures which support
-CONFIG_HOTPLUG_CPU. The way we do this normally is to provide the
-infrastructure first and then have separate patches (one per
-architecture) enabling this, which allows the architecture maintainers
-to decide individually.
-
-Thanks,
-
-        tglx
+--Sig_/fzDzLL6F/gLixfTVWdm9Y72--
