@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1405C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B05EC33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A412E207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:49:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40CF8208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193382;
-	bh=C96a+mA26VHuB+oQECQ6m+cAwSTLG2QesUhivJbn6yM=;
+	s=default; t=1579193386;
+	bh=916/oBZbFyQnQb/trEdwn873etr5gyTJUe4RmsYa2K4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u24lRfkWGZ5yG0p4MLWc+RqhRx6QHB1py5+rucSSKPhurBXBBv/uYhEIv4JxJ9vLT
-	 Rut85ztP1+TtoJAm8k7W0mcchOLU6/Pme22Y+QapT7ZcYHoLm3Y7pah+LTBK9vrEaE
-	 wQZ1glG+MjgmmdTRGIAjL5sIu80TgVQuhNM32GNc=
+	b=KIA2TLG242W8Wec9NtGtjXvfp0unB6WTgZ/uV0nkWop4PszgYYSUm0LVHd5voMIY7
+	 TrIS/BZmXZlnat/JlOs5LztVNxHkRbZf9SZn1Bp3aBp3p6QB/5RKwUQ0FOMmfFozoE
+	 f7z6NZixkpJ2DzSW5Nx9S3b7R70vnZ0CIGYlUuX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729238AbgAPQtl (ORCPT
+        id S1730390AbgAPQtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:49:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60506 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:49:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729252AbgAPQtj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:49:39 -0500
+        id S1730366AbgAPQtn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:49:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B34620663;
-        Thu, 16 Jan 2020 16:49:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2B1B20663;
+        Thu, 16 Jan 2020 16:49:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193374;
-        bh=C96a+mA26VHuB+oQECQ6m+cAwSTLG2QesUhivJbn6yM=;
+        s=default; t=1579193383;
+        bh=916/oBZbFyQnQb/trEdwn873etr5gyTJUe4RmsYa2K4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YRrPDKyx98Buj2Tbd/xhZkfzg77FKbJlUz/nHFyFzVyQGMAhlYc9LsrQbP5YGzRtn
-         Uqic8oY8M5G+qT0OUDF49hFj6t/7y3AI1LWEAi7/JoHT0B9zVxVyt+6+YWiD9NbgNt
-         f9aQl+9orEDcwjm78s1+hrs/Tds6vmrChVo1rm64=
+        b=ymcF9jSGHUXickf+FyLNjprJcWLHfmx9ryv0qqHFG6Zb+lYveckFX7dMNLJHZFsoA
+         c4sgeBaW0VqVQvo8im8m0o8nVGgNDdXTHLpIGCrdH7HVWXuYvKskuXoEB03tLdKlCj
+         38jqBuHpCgnI74/Ei1P0jBnbAf7ycvHs0fz/M1sw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tzu-En Huang <tehuang@realtek.com>,
-        Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 084/205] rtw88: fix potential read outside array boundary
-Date:   Thu, 16 Jan 2020 11:40:59 -0500
-Message-Id: <20200116164300.6705-84-sashal@kernel.org>
+Cc:     Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 086/205] RDMA/mlx5: Return proper error value
+Date:   Thu, 16 Jan 2020 11:41:01 -0500
+Message-Id: <20200116164300.6705-86-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -61,117 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tzu-En Huang <tehuang@realtek.com>
+From: Leon Romanovsky <leonro@mellanox.com>
 
-[ Upstream commit 18a0696e85fde169e0109aa61d0505b2b935b59d ]
+[ Upstream commit 546d30099ed204792083f043cd7e016de86016a3 ]
 
-The level of cckpd is from 0 to 4, and it is the index of
-array pd_lvl[] and cs_lvl[]. However, the length of both arrays
-are 4, which is smaller than the possible maximum input index.
-Enumerate cck level to make sure the max level will not be wrong
-if new level is added in future.
+Returned value from mlx5_mr_cache_alloc() is checked to be error or real
+pointer. Return proper error code instead of NULL which is not checked
+later.
 
-Fixes: 479c4ee931a6 ("rtw88: add dynamic cck pd mechanism")
-Signed-off-by: Tzu-En Huang <tehuang@realtek.com>
-Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 81713d3788d2 ("IB/mlx5: Add implicit MR support")
+Link: https://lore.kernel.org/r/20191029055721.7192-1-leon@kernel.org
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtw88/phy.c      | 17 ++++++++---------
- drivers/net/wireless/realtek/rtw88/phy.h      |  9 +++++++++
- drivers/net/wireless/realtek/rtw88/rtw8822c.c |  4 ++--
- 3 files changed, 19 insertions(+), 11 deletions(-)
+ drivers/infiniband/hw/mlx5/mr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/realtek/rtw88/phy.c b/drivers/net/wireless/realtek/rtw88/phy.c
-index d3d3f40de75e..47d199d2e7dc 100644
---- a/drivers/net/wireless/realtek/rtw88/phy.c
-+++ b/drivers/net/wireless/realtek/rtw88/phy.c
-@@ -118,7 +118,7 @@ static void rtw_phy_cck_pd_init(struct rtw_dev *rtwdev)
+diff --git a/drivers/infiniband/hw/mlx5/mr.c b/drivers/infiniband/hw/mlx5/mr.c
+index 7019c12005f4..99d563dba91b 100644
+--- a/drivers/infiniband/hw/mlx5/mr.c
++++ b/drivers/infiniband/hw/mlx5/mr.c
+@@ -428,7 +428,7 @@ struct mlx5_ib_mr *mlx5_mr_cache_alloc(struct mlx5_ib_dev *dev, int entry)
  
- 	for (i = 0; i <= RTW_CHANNEL_WIDTH_40; i++) {
- 		for (j = 0; j < RTW_RF_PATH_MAX; j++)
--			dm_info->cck_pd_lv[i][j] = 0;
-+			dm_info->cck_pd_lv[i][j] = CCK_PD_LV0;
+ 	if (entry < 0 || entry >= MAX_MR_CACHE_ENTRIES) {
+ 		mlx5_ib_err(dev, "cache entry %d is out of range\n", entry);
+-		return NULL;
++		return ERR_PTR(-EINVAL);
  	}
  
- 	dm_info->cck_fa_avg = CCK_FA_AVG_RESET;
-@@ -461,7 +461,6 @@ static void rtw_phy_dpk_track(struct rtw_dev *rtwdev)
- 		chip->ops->dpk_track(rtwdev);
- }
- 
--#define CCK_PD_LV_MAX		5
- #define CCK_PD_FA_LV1_MIN	1000
- #define CCK_PD_FA_LV0_MAX	500
- 
-@@ -471,10 +470,10 @@ static u8 rtw_phy_cck_pd_lv_unlink(struct rtw_dev *rtwdev)
- 	u32 cck_fa_avg = dm_info->cck_fa_avg;
- 
- 	if (cck_fa_avg > CCK_PD_FA_LV1_MIN)
--		return 1;
-+		return CCK_PD_LV1;
- 
- 	if (cck_fa_avg < CCK_PD_FA_LV0_MAX)
--		return 0;
-+		return CCK_PD_LV0;
- 
- 	return CCK_PD_LV_MAX;
- }
-@@ -494,15 +493,15 @@ static u8 rtw_phy_cck_pd_lv_link(struct rtw_dev *rtwdev)
- 	u32 cck_fa_avg = dm_info->cck_fa_avg;
- 
- 	if (igi > CCK_PD_IGI_LV4_VAL && rssi > CCK_PD_RSSI_LV4_VAL)
--		return 4;
-+		return CCK_PD_LV4;
- 	if (igi > CCK_PD_IGI_LV3_VAL && rssi > CCK_PD_RSSI_LV3_VAL)
--		return 3;
-+		return CCK_PD_LV3;
- 	if (igi > CCK_PD_IGI_LV2_VAL || rssi > CCK_PD_RSSI_LV2_VAL)
--		return 2;
-+		return CCK_PD_LV2;
- 	if (cck_fa_avg > CCK_PD_FA_LV1_MIN)
--		return 1;
-+		return CCK_PD_LV1;
- 	if (cck_fa_avg < CCK_PD_FA_LV0_MAX)
--		return 0;
-+		return CCK_PD_LV0;
- 
- 	return CCK_PD_LV_MAX;
- }
-diff --git a/drivers/net/wireless/realtek/rtw88/phy.h b/drivers/net/wireless/realtek/rtw88/phy.h
-index e79b084628e7..33a5eb9637c0 100644
---- a/drivers/net/wireless/realtek/rtw88/phy.h
-+++ b/drivers/net/wireless/realtek/rtw88/phy.h
-@@ -125,6 +125,15 @@ rtw_get_tx_power_params(struct rtw_dev *rtwdev, u8 path,
- 			u8 rate, u8 bw, u8 ch, u8 regd,
- 			struct rtw_power_params *pwr_param);
- 
-+enum rtw_phy_cck_pd_lv {
-+	CCK_PD_LV0,
-+	CCK_PD_LV1,
-+	CCK_PD_LV2,
-+	CCK_PD_LV3,
-+	CCK_PD_LV4,
-+	CCK_PD_LV_MAX,
-+};
-+
- #define	MASKBYTE0		0xff
- #define	MASKBYTE1		0xff00
- #define	MASKBYTE2		0xff0000
-diff --git a/drivers/net/wireless/realtek/rtw88/rtw8822c.c b/drivers/net/wireless/realtek/rtw88/rtw8822c.c
-index c2f6cd76a658..de0505a6a365 100644
---- a/drivers/net/wireless/realtek/rtw88/rtw8822c.c
-+++ b/drivers/net/wireless/realtek/rtw88/rtw8822c.c
-@@ -3168,8 +3168,8 @@ rtw8822c_phy_cck_pd_set_reg(struct rtw_dev *rtwdev,
- static void rtw8822c_phy_cck_pd_set(struct rtw_dev *rtwdev, u8 new_lvl)
- {
- 	struct rtw_dm_info *dm_info = &rtwdev->dm_info;
--	s8 pd_lvl[4] = {2, 4, 6, 8};
--	s8 cs_lvl[4] = {2, 2, 2, 4};
-+	s8 pd_lvl[CCK_PD_LV_MAX] = {0, 2, 4, 6, 8};
-+	s8 cs_lvl[CCK_PD_LV_MAX] = {0, 2, 2, 2, 4};
- 	u8 cur_lvl;
- 	u8 nrx, bw;
- 
+ 	ent = &cache->ent[entry];
 -- 
 2.20.1
 
