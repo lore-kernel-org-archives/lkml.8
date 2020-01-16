@@ -2,142 +2,278 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E715C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D487C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF3922064C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:40:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eW1quC/w"
+	by mail.kernel.org (Postfix) with ESMTP id DAC652081E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:41:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgAPFk4 (ORCPT
+        id S1726935AbgAPFlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 00:40:56 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:40230 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbgAPFk4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 00:40:56 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G5d7gu190046;
-        Thu, 16 Jan 2020 05:40:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=O2y4baYCtSNrkp+Lgi4+LG2ZXQzVmAuC/rt2XIZW9PA=;
- b=eW1quC/w9DYviZi5ANfhhCjpqQRWjXrdU0tvP336utZX/NTHPUbobP6OseGnqNPeQpAD
- DrBVEr8CIJ6jztliVgCgKymibxSWjWIF0YBA7/DCNiB0m9gHWxZYssfdkios/KQCzcg5
- ta0mE25xLLYqLYRom7L2aWtJwmHrAVIFPfDjJTC60i4ESdpWKkzOC74jlLuV+vmdxJl9
- GDecA5dcNljY0DkbhpKn1OgRl0b5VOLxnRWJ2nnQzH1YQkSIiWAzMtmZb/UsZxtgVEzJ
- GWlEdyUHWt4k6NHw5kcT1Pq3ENkk8ZujbT0kPu7BK8E8yBRRv9rRwa+7ofd5mPFgmLon 1w== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2xf73yr9nh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 05:40:45 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G5cvwP158428;
-        Thu, 16 Jan 2020 05:40:45 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2xj61kxudk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 05:40:45 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00G5egnb008491;
-        Thu, 16 Jan 2020 05:40:42 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jan 2020 21:40:42 -0800
-Date:   Wed, 15 Jan 2020 21:40:40 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [RFC PATCH V2 07/12] fs: Add locking for a dynamic inode 'mode'
-Message-ID: <20200116054040.GC8235@magnolia>
-References: <20200110192942.25021-1-ira.weiny@intel.com>
- <20200110192942.25021-8-ira.weiny@intel.com>
- <20200113221218.GM8247@magnolia>
- <20200114002005.GA29860@iweiny-DESK2.sc.intel.com>
- <20200114010322.GS8247@magnolia>
- <20200115190846.GE23311@iweiny-DESK2.sc.intel.com>
+        Thu, 16 Jan 2020 00:41:16 -0500
+Received: from mga18.intel.com ([134.134.136.126]:57962 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726082AbgAPFlP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 00:41:15 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 21:41:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,325,1574150400"; 
+   d="scan'208";a="220260012"
+Received: from unknown (HELO joy-OptiPlex-7040) ([10.239.13.16])
+  by fmsmga008.fm.intel.com with ESMTP; 15 Jan 2020 21:41:13 -0800
+Date:   Thu, 16 Jan 2020 00:32:02 -0500
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>
+Subject: Re: [PATCH v2 1/2] vfio: introduce vfio_dma_rw to read/write a range
+ of IOVAs
+Message-ID: <20200116053202.GA1759@joy-OptiPlex-7040>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20200115034132.2753-1-yan.y.zhao@intel.com>
+ <20200115035303.12362-1-yan.y.zhao@intel.com>
+ <20200115130638.6926dd08@w520.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200115190846.GE23311@iweiny-DESK2.sc.intel.com>
+In-Reply-To: <20200115130638.6926dd08@w520.home>
 User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=997
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001160047
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001160047
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 11:08:46AM -0800, Ira Weiny wrote:
-> On Mon, Jan 13, 2020 at 05:03:22PM -0800, Darrick J. Wong wrote:
-> > On Mon, Jan 13, 2020 at 04:20:05PM -0800, Ira Weiny wrote:
-> > > On Mon, Jan 13, 2020 at 02:12:18PM -0800, Darrick J. Wong wrote:
-> > > > On Fri, Jan 10, 2020 at 11:29:37AM -0800, ira.weiny@intel.com wrote:
-> > > > > From: Ira Weiny <ira.weiny@intel.com>
+On Thu, Jan 16, 2020 at 04:06:38AM +0800, Alex Williamson wrote:
+> On Tue, 14 Jan 2020 22:53:03 -0500
+> Yan Zhao <yan.y.zhao@intel.com> wrote:
 > 
-> [snip]
-> 
-> > > > > +``lock_mode``
-> > > > > +	called to prevent operations which depend on the inode's mode from
-> > > > > +        proceeding should a mode change be in progress
-> > > > 
-> > > > "Inodes can't change mode, because files do not suddenly become
-> > > > directories". ;)
-> > > 
-> > > Yea sorry.
-> > > 
-> > > > 
-> > > > Oh, you meant "lock_XXXX is called to prevent a change in the pagecache
-> > > > mode from proceeding while there are address space operations in
-> > > > progress".  So these are really more aops get and put functions...
-> > > 
-> > > At first I actually did have aops get/put functions but this is really
-> > > protecting more than the aops vector because as Christoph said there are file
-> > > operations which need to be protected not just address space operations.
-> > > 
-> > > But I agree "mode" is a bad name...  Sorry...
+> > vfio_dma_rw will read/write a range of user space memory pointed to by
+> > IOVA into/from a kernel buffer without pinning the user space memory.
 > > 
-> > inode_fops_{get,set}(), then?
+> > TODO: mark the IOVAs to user space memory dirty if they are written in
+> > vfio_dma_rw().
 > > 
-> > inode_start_fileop()
-> > inode_end_fileop() ?
+> > Cc: Kevin Tian <kevin.tian@intel.com>
+> > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> > ---
+> >  drivers/vfio/vfio.c             | 45 +++++++++++++++++++
+> >  drivers/vfio/vfio_iommu_type1.c | 76 +++++++++++++++++++++++++++++++++
+> >  include/linux/vfio.h            |  5 +++
+> >  3 files changed, 126 insertions(+)
 > > 
-> > Trying to avoid sounding foppish <COUGH>
+> > diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
+> > index c8482624ca34..8bd52bc841cf 100644
+> > --- a/drivers/vfio/vfio.c
+> > +++ b/drivers/vfio/vfio.c
+> > @@ -1961,6 +1961,51 @@ int vfio_unpin_pages(struct device *dev, unsigned long *user_pfn, int npage)
+> >  }
+> >  EXPORT_SYMBOL(vfio_unpin_pages);
+> >  
+> > +/*
+> > + * Read/Write a range of IOVAs pointing to user space memory into/from a kernel
+> > + * buffer without pinning the user space memory
+> > + * @dev [in]  : device
+> > + * @iova [in] : base IOVA of a user space buffer
+> > + * @data [in] : pointer to kernel buffer
+> > + * @len [in]  : kernel buffer length
+> > + * @write     : indicate read or write
+> > + * Return error code on failure or 0 on success.
+> > + */
+> > +int vfio_dma_rw(struct device *dev, dma_addr_t iova, void *data,
+> > +		   size_t len, bool write)
+> > +{
+> > +	struct vfio_container *container;
+> > +	struct vfio_group *group;
+> > +	struct vfio_iommu_driver *driver;
+> > +	int ret = 0;
+> > +
+> > +	if (!dev || !data || len <= 0)
+> > +		return -EINVAL;
+> > +
+> > +	group = vfio_group_get_from_dev(dev);
+> > +	if (!group)
+> > +		return -ENODEV;
+> > +
+> > +	ret = vfio_group_add_container_user(group);
+> > +	if (ret)
+> > +		goto out;
+> > +
+> > +	container = group->container;
+> > +	driver = container->iommu_driver;
+> > +
+> > +	if (likely(driver && driver->ops->dma_rw))
+> > +		ret = driver->ops->dma_rw(container->iommu_data,
+> > +					   iova, data, len, write);
+> > +	else
+> > +		ret = -ENOTTY;
+> > +
+> > +	vfio_group_try_dissolve_container(group);
+> > +out:
+> > +	vfio_group_put(group);
+> > +	return ret;
+> > +}
+> > +EXPORT_SYMBOL(vfio_dma_rw);
+> > +
+> >  static int vfio_register_iommu_notifier(struct vfio_group *group,
+> >  					unsigned long *events,
+> >  					struct notifier_block *nb)
+> > diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> > index 2ada8e6cdb88..a2d850b97ae6 100644
+> > --- a/drivers/vfio/vfio_iommu_type1.c
+> > +++ b/drivers/vfio/vfio_iommu_type1.c
+> > @@ -27,6 +27,7 @@
+> >  #include <linux/iommu.h>
+> >  #include <linux/module.h>
+> >  #include <linux/mm.h>
+> > +#include <linux/mmu_context.h>
+> >  #include <linux/rbtree.h>
+> >  #include <linux/sched/signal.h>
+> >  #include <linux/sched/mm.h>
+> > @@ -2326,6 +2327,80 @@ static int vfio_iommu_type1_unregister_notifier(void *iommu_data,
+> >  	return blocking_notifier_chain_unregister(&iommu->notifier, nb);
+> >  }
+> >  
+> > +static size_t vfio_iommu_type1_rw_dma_nopin(struct vfio_iommu *iommu,
+> > +					    dma_addr_t iova, void *data,
+> > +					    size_t count, bool write)
 > 
-> What about?
+> "_nopin"?  It might be pinned, but that's irrelevant to this interface.
+> Maybe "_chunk" as we're only trying to operate on the chunk of the whole
+> that fits within the next vfio_dma?  Also swapping rw_dma vs dma_rw,
+> pick one.
+>
+got it!
+
+> > +{
+> > +	struct mm_struct *mm;
+> > +	unsigned long vaddr;
+> > +	struct vfio_dma *dma;
+> > +	bool kthread = current->mm == NULL;
+> > +	size_t done = 0;
+> > +	size_t offset;
+> > +
+> > +	dma = vfio_find_dma(iommu, iova, 1);
+> > +	if (!dma)
+> > +		return 0;
+> > +
+> > +	if (write && !(dma->prot & IOMMU_WRITE))
+> > +		return 0;
 > 
-> inode_[un]lock_state()?
+> Good catch, but users can also designate a mapping without read
+> permissions, in which case this interface should not allow read either.
+> Thanks,
+>
+yes, will add it too. thanks :)
 
-Kinda vague -- which state?  inodes retain a lot of different state.
+Yan
 
-This locking primitive ensures that file operations pointers can't
-change while any operations are ongoing, right?
-
---D
-
-> Ira
+> > +
+> > +	mm = get_task_mm(dma->task);
+> > +
+> > +	if (!mm)
+> > +		return 0;
+> > +
+> > +	if (kthread)
+> > +		use_mm(mm);
+> > +	else if (current->mm != mm)
+> > +		goto out;
+> > +
+> > +	offset = iova - dma->iova;
+> > +
+> > +	if (count > dma->size - offset)
+> > +		count = dma->size - offset;
+> > +
+> > +	vaddr = dma->vaddr + offset;
+> > +
+> > +	if (write)
+> > +		done = __copy_to_user((void __user *)vaddr, data, count) ?
+> > +				       0 : count;
+> > +	else
+> > +		done = __copy_from_user(data, (void __user *)vaddr, count) ?
+> > +					0 : count;
+> > +
+> > +	if (kthread)
+> > +		unuse_mm(mm);
+> > +out:
+> > +	mmput(mm);
+> > +	return done;
+> > +}
+> > +
+> > +static int vfio_iommu_type1_dma_rw(void *iommu_data, dma_addr_t iova,
+> > +				   void *data, size_t count, bool write)
+> > +{
+> > +	struct vfio_iommu *iommu = iommu_data;
+> > +	int ret = 0;
+> > +	size_t done = 0;
+> > +
+> > +	mutex_lock(&iommu->lock);
+> > +	while (count > 0) {
+> > +		done = vfio_iommu_type1_rw_dma_nopin(iommu, iova, data,
+> > +						   count, write);
+> > +		if (!done) {
+> > +			ret = -EFAULT;
+> > +			break;
+> > +		}
+> > +
+> > +		count -= done;
+> > +		data += done;
+> > +		iova += done;
+> > +	}
+> > +
+> > +	mutex_unlock(&iommu->lock);
+> > +	return ret;
+> > +}
+> > +
+> >  static const struct vfio_iommu_driver_ops vfio_iommu_driver_ops_type1 = {
+> >  	.name			= "vfio-iommu-type1",
+> >  	.owner			= THIS_MODULE,
+> > @@ -2338,6 +2413,7 @@ static const struct vfio_iommu_driver_ops vfio_iommu_driver_ops_type1 = {
+> >  	.unpin_pages		= vfio_iommu_type1_unpin_pages,
+> >  	.register_notifier	= vfio_iommu_type1_register_notifier,
+> >  	.unregister_notifier	= vfio_iommu_type1_unregister_notifier,
+> > +	.dma_rw			= vfio_iommu_type1_dma_rw,
+> >  };
+> >  
+> >  static int __init vfio_iommu_type1_init(void)
+> > diff --git a/include/linux/vfio.h b/include/linux/vfio.h
+> > index e42a711a2800..962f76a2d668 100644
+> > --- a/include/linux/vfio.h
+> > +++ b/include/linux/vfio.h
+> > @@ -82,6 +82,8 @@ struct vfio_iommu_driver_ops {
+> >  					     struct notifier_block *nb);
+> >  	int		(*unregister_notifier)(void *iommu_data,
+> >  					       struct notifier_block *nb);
+> > +	int		(*dma_rw)(void *iommu_data, dma_addr_t iova,
+> > +				   void *data, size_t count, bool write);
+> >  };
+> >  
+> >  extern int vfio_register_iommu_driver(const struct vfio_iommu_driver_ops *ops);
+> > @@ -107,6 +109,9 @@ extern int vfio_pin_pages(struct device *dev, unsigned long *user_pfn,
+> >  extern int vfio_unpin_pages(struct device *dev, unsigned long *user_pfn,
+> >  			    int npage);
+> >  
+> > +extern int vfio_dma_rw(struct device *dev, dma_addr_t iova, void *data,
+> > +		       size_t len, bool write);
+> > +
+> >  /* each type has independent events */
+> >  enum vfio_notify_type {
+> >  	VFIO_IOMMU_NOTIFY = 0,
 > 
+> _______________________________________________
+> intel-gvt-dev mailing list
+> intel-gvt-dev@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/intel-gvt-dev
