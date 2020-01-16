@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D22A5C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31430C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A562B2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F178720663
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:57:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201056;
-	bh=wU6xElxbmamYvCcL2cdheUUez3EvA/zpL6bgRVJJj/Y=;
+	s=default; t=1579201065;
+	bh=lT54Jz6IqVbTJB6ip1Ulj506NaKlg1yFZwr6emZ4Zaw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sjkYc6Ca1bJoiG4am3NR27B6PICL4+hfoGecR6Woy31rmzWCb9HnxV2L1HwD7nilK
-	 rDmF9dpdQ1G5Xhx15JAfAKA+bzzaH7jS+KL9E2dRLpYTncD7DHr2UTgG/qU6177hCi
-	 jD80EPB9RHvg6i7u8YfUaxaFFcPhSWSMGD3qjyN4=
+	b=BMsNr61WfITGiYVROuZVbh0z6gh5W4uNoHNMYuYdmx9gsnB/QZk9C1s25RmXbTFki
+	 9DqRZ95aeFXpSYqFmKF6aDRPX+CNROQlo+dqWNAKl0JwszGHP1QEiZlZzm4ktP2bxJ
+	 eqaWauow3rWpWbWefHLBVOoK6sRIA6ErjIWBMQ1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407229AbgAPS5f (ORCPT
+        id S2388463AbgAPRG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:57:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38184 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:06:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388086AbgAPRHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:07:01 -0500
+        id S2388981AbgAPRGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:06:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58DCF20663;
-        Thu, 16 Jan 2020 17:06:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D7C52081E;
+        Thu, 16 Jan 2020 17:06:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194421;
-        bh=wU6xElxbmamYvCcL2cdheUUez3EvA/zpL6bgRVJJj/Y=;
+        s=default; t=1579194406;
+        bh=lT54Jz6IqVbTJB6ip1Ulj506NaKlg1yFZwr6emZ4Zaw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z5Y+/5qAQ4teATAcT0u3t9LowOJRxtE95G2rmoe6wVxdGgpNSNOpmwcyrl9FfmWVa
-         b5RI3ttCmY/m/Fed9CoNlTEvjnI4LbDLIR4WQIQEjzA3nEAaFUWaDBANXvBwJXGoZt
-         ki+cm21s2BAwVyp9Jas96Z01CHOuxZ8mAeRFrMpA=
+        b=IfOYVdBmcQJMFTKp4If34hwhBPLk8zlJq4Put5iMb8rPtKteBNs3s+IsoRVM+/l26
+         bzha4ob3UiMdqYRrueWeybvAxC1VYiFMQJTdJfDbXyMGD3NyBnrTlBlrfiTorpPhQf
+         lLy+NNay2lbAs19BKPkMQ1+KwlX32MrrB3Dazrkc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Parav Pandit <parav@mellanox.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 340/671] vfio/mdev: Avoid release parent reference during error path
-Date:   Thu, 16 Jan 2020 11:59:38 -0500
-Message-Id: <20200116170509.12787-77-sashal@kernel.org>
+Cc:     Sameeh Jubran <sameehj@amazon.com>,
+        Saeed Bshara <saeedb@amazon.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 330/671] net: ena: fix swapped parameters when calling ena_com_indirect_table_fill_entry
+Date:   Thu, 16 Jan 2020 11:59:28 -0500
+Message-Id: <20200116170509.12787-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -62,38 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+From: Sameeh Jubran <sameehj@amazon.com>
 
-[ Upstream commit 60e7f2c3fe9919cee9534b422865eed49f4efb15 ]
+[ Upstream commit 3c6eeff295f01bdf1c6c3addcb0a04c0c6c029e9 ]
 
-During mdev parent registration in mdev_register_device(),
-if parent device is duplicate, it releases the reference of existing
-parent device.
-This is incorrect. Existing parent device should not be touched.
+second parameter should be the index of the table rather than the value.
 
-Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Reviewed-by: Kirti Wankhede <kwankhede@nvidia.com>
-Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Saeed Bshara <saeedb@amazon.com>
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/mdev/mdev_core.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/amazon/ena/ena_ethtool.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-index 0212f0ee8aea..8cfa71230877 100644
---- a/drivers/vfio/mdev/mdev_core.c
-+++ b/drivers/vfio/mdev/mdev_core.c
-@@ -182,6 +182,7 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
- 	/* Check for duplicate */
- 	parent = __find_parent_device(dev);
- 	if (parent) {
-+		parent = NULL;
- 		ret = -EEXIST;
- 		goto add_dev_err;
- 	}
+diff --git a/drivers/net/ethernet/amazon/ena/ena_ethtool.c b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
+index 521607bc4393..eb9e07fa427e 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_ethtool.c
++++ b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
+@@ -695,8 +695,8 @@ static int ena_set_rxfh(struct net_device *netdev, const u32 *indir,
+ 	if (indir) {
+ 		for (i = 0; i < ENA_RX_RSS_TABLE_SIZE; i++) {
+ 			rc = ena_com_indirect_table_fill_entry(ena_dev,
+-							       ENA_IO_RXQ_IDX(indir[i]),
+-							       i);
++							       i,
++							       ENA_IO_RXQ_IDX(indir[i]));
+ 			if (unlikely(rc)) {
+ 				netif_err(adapter, drv, netdev,
+ 					  "Cannot fill indirect table (index is too large)\n");
 -- 
 2.20.1
 
