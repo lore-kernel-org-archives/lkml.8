@@ -2,117 +2,122 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD42C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8034FC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 930FB205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:51:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kv/rnQJp"
+	by mail.kernel.org (Postfix) with ESMTP id 563132081E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:51:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579193489;
+	bh=tMM4vuW8BwZlY/dsuLuN6VvJxbKVaz39QDVpoI8TcFU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=MYcV8eGUAoIckfJk31hoeprr1tU1wPEglch0noNCQaoFmBGgRPOyDaztTIGxh/+8V
+	 nFcCN53QpodBF6p4Yr2QnzLmEQqw8Cnhm0Z8AWg87x5hPLb+yKOlLKIbd/T/fpjk/o
+	 GULeFVXHiEyjslMFqcd8WVbGdQaNiG3bdwFivv3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729317AbgAPQvM (ORCPT
+        id S1729188AbgAPQv2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:51:12 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36052 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727026AbgAPQvK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:51:10 -0500
-Received: by mail-pg1-f193.google.com with SMTP id k3so10179599pgc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 08:51:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:subject:cc:to:in-reply-to:references:message-id
-         :mime-version:content-transfer-encoding;
-        bh=WX8RB1wfJCliH8/zi+tgub32ZBfKjuIQgKJ9j2z+hKk=;
-        b=kv/rnQJpRXl8xuYnke8mUPEG7MMS88JHDJvb4E6uV0XFinTRPPD5C/d39TE0W1yLGg
-         IveHIwSKvWqF8GWIAVXys0ek01P0zlslB1NhEkYuOQTobMKrpWAalExl/JFK7yyU0Yq0
-         RN4d7oM83AIzhO/LQ+k2eKOtqcDgfMqR5K2BBoTBgPPcCQKjQY1vZxVsvLeeVpRJOZmD
-         eRQROKW+eN7NWuqRF8n1g54NyVDjBhvST3om4ni5PwBSIHk02pNmz2QDJ3oaBuELwJCe
-         7fXGPGZ2gXBewewkWEIYT5M6hJVT30iUAhLwPdqGbI+xXXqAP3MBupENf9wLl5FFPuhq
-         48fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:cc:to:in-reply-to:references
-         :message-id:mime-version:content-transfer-encoding;
-        bh=WX8RB1wfJCliH8/zi+tgub32ZBfKjuIQgKJ9j2z+hKk=;
-        b=OS5h3lxLJPjfUYM0bogoBdtKJrNYmmjHBbPkmn2HuDSO08WGrH+KVsWjTop9JU37DQ
-         3pfpLoFDhhQso12Fc1w1r7MCp2nwzkvhfHTKuMShFjfyZOe9KbK+42UEwUVRXrXBiGuo
-         Osj5mF/CGugVsd7cNDcG+GQyEwisNK+K5oAlzUEb0a+/ayqv3XPKFt8tt37XFpARVag0
-         TKfLN7+olMfTwPjCwfLA+MVqv25iAwa62e5EuS20QSGXcDyH0qkTu/pkEJlnqPjpTjEy
-         JenvDsSuZlkl+8tKYdYn/OD2d48g/6wsR35Vf9ilPt0idfuoOaJmhd3EROy3jtoTJLX8
-         Vj1A==
-X-Gm-Message-State: APjAAAXfQ0fGkCBzAxhj/DurW/vaE1hdhKZIlIr1vVgBxkhY51gc9M0T
-        Y8Iu7WMyjxFqD25SuwYTR49w5w==
-X-Google-Smtp-Source: APXvYqy27Y/ZAUAQAnIzlxv1ajCi6HqFGtLCh8M57hfohNhgC3bsmthRFBrHGcYWEFQ5TfRZ98IBsQ==
-X-Received: by 2002:a65:530d:: with SMTP id m13mr40368954pgq.351.1579193469245;
-        Thu, 16 Jan 2020 08:51:09 -0800 (PST)
-Received: from localhost ([2620:0:1000:2514:7f69:cd98:a2a2:a03d])
-        by smtp.gmail.com with ESMTPSA id s1sm24561586pgv.87.2020.01.16.08.51.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 08:51:08 -0800 (PST)
-Date:   Thu, 16 Jan 2020 08:51:08 -0800 (PST)
-X-Google-Original-Date: Thu, 16 Jan 2020 08:34:33 PST (-0800)
-From:   Palmer Dabbelt <palmerdabbelt@google.com>
-X-Google-Original-From: Palmer Dabbelt <palmer@dabbelt.com>
-Subject:     Re: [PATCH v10 01/19] RISC-V: Export riscv_cpuid_to_hartid_mask() API
-CC:     Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
-        pbonzini@redhat.com, rkrcmar@redhat.com, graf@amazon.com,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@lst.de>, anup@brainfault.org,
-        kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Anup Patel <Anup.Patel@wdc.com>
-To:     Anup Patel <Anup.Patel@wdc.com>
-In-Reply-To: <20191223113443.68969-2-anup.patel@wdc.com>
-References: <20191223113443.68969-2-anup.patel@wdc.com>
-  <20191223113443.68969-1-anup.patel@wdc.com>
-Message-ID: <mhng-81eb8962-4c58-4e5b-9ee1-0e6c0afb2c00@palmerdabbelt-glaptop>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Thu, 16 Jan 2020 11:51:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34188 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728949AbgAPQv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:51:28 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FD9720663;
+        Thu, 16 Jan 2020 16:51:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579193487;
+        bh=tMM4vuW8BwZlY/dsuLuN6VvJxbKVaz39QDVpoI8TcFU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LSo42jKNlBvoOMSDQG5LXy9gDN+H4VVIOORnO1Alkvqhl5LjFPBqhVVfHtQXN8Cff
+         gwTkYtLnxenPMSCEGLghHyuMWwyT+c23phiAFtuLc0OgSfDfTwVFGq2I5hqYps4ryr
+         kaSovxIdG4lc6dIwsI+5NQeRSiP1yCQg37I6AtDs=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Bean Huo <beanhuo@micron.com>, avri.altman@wdc.com,
+        Can Guo <cang@codeaurora.org>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 089/205] scsi: ufs: delete redundant function ufshcd_def_desc_sizes()
+Date:   Thu, 16 Jan 2020 11:41:04 -0500
+Message-Id: <20200116164300.6705-89-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
+References: <20200116164300.6705-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 23 Dec 2019 03:35:19 PST (-0800), Anup Patel wrote:
-> The riscv_cpuid_to_hartid_mask() API should be exported to allow
-> building KVM RISC-V as loadable module.
->
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> ---
->  arch/riscv/kernel/smp.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
-> index eb878abcaaf8..6fc7828d41e4 100644
-> --- a/arch/riscv/kernel/smp.c
-> +++ b/arch/riscv/kernel/smp.c
-> @@ -10,6 +10,7 @@
->  
->  #include <linux/cpu.h>
->  #include <linux/interrupt.h>
-> +#include <linux/module.h>
->  #include <linux/profile.h>
->  #include <linux/smp.h>
->  #include <linux/sched.h>
-> @@ -63,6 +64,7 @@ void riscv_cpuid_to_hartid_mask(const struct cpumask *in, struct cpumask *out)
->  	for_each_cpu(cpu, in)
->  		cpumask_set_cpu(cpuid_to_hartid_map(cpu), out);
->  }
-> +EXPORT_SYMBOL_GPL(riscv_cpuid_to_hartid_mask);
->  
->  bool arch_match_cpu_phys_id(int cpu, u64 phys_id)
->  {
-> -- 
-> 2.17.1
+From: Bean Huo <beanhuo@micron.com>
 
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+[ Upstream commit 059efd847a4097c67817782d8ff65397e369e69b ]
+
+There is no need to call ufshcd_def_desc_sizes() in ufshcd_init(), since
+descriptor lengths will be checked and initialized later in
+ufshcd_init_desc_sizes().
+
+Fixes: a4b0e8a4e92b1b(scsi: ufs: Factor out ufshcd_read_desc_param)
+Link: https://lore.kernel.org/r/BN7PR08MB5684A3ACE214C3D4792CE729DB610@BN7PR08MB5684.namprd08.prod.outlook.com
+Signed-off-by: Bean Huo <beanhuo@micron.com>
+Acked-by: Avri Altman <avri.altman.wdc.com>
+Reviewed-by: Can Guo <cang@codeaurora.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/scsi/ufs/ufshcd.c | 15 +--------------
+ 1 file changed, 1 insertion(+), 14 deletions(-)
+
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 25a6a25b17a2..1e38bb967871 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -6779,23 +6779,13 @@ static void ufshcd_init_desc_sizes(struct ufs_hba *hba)
+ 		&hba->desc_size.geom_desc);
+ 	if (err)
+ 		hba->desc_size.geom_desc = QUERY_DESC_GEOMETRY_DEF_SIZE;
++
+ 	err = ufshcd_read_desc_length(hba, QUERY_DESC_IDN_HEALTH, 0,
+ 		&hba->desc_size.hlth_desc);
+ 	if (err)
+ 		hba->desc_size.hlth_desc = QUERY_DESC_HEALTH_DEF_SIZE;
+ }
+ 
+-static void ufshcd_def_desc_sizes(struct ufs_hba *hba)
+-{
+-	hba->desc_size.dev_desc = QUERY_DESC_DEVICE_DEF_SIZE;
+-	hba->desc_size.pwr_desc = QUERY_DESC_POWER_DEF_SIZE;
+-	hba->desc_size.interc_desc = QUERY_DESC_INTERCONNECT_DEF_SIZE;
+-	hba->desc_size.conf_desc = QUERY_DESC_CONFIGURATION_DEF_SIZE;
+-	hba->desc_size.unit_desc = QUERY_DESC_UNIT_DEF_SIZE;
+-	hba->desc_size.geom_desc = QUERY_DESC_GEOMETRY_DEF_SIZE;
+-	hba->desc_size.hlth_desc = QUERY_DESC_HEALTH_DEF_SIZE;
+-}
+-
+ static struct ufs_ref_clk ufs_ref_clk_freqs[] = {
+ 	{19200000, REF_CLK_FREQ_19_2_MHZ},
+ 	{26000000, REF_CLK_FREQ_26_MHZ},
+@@ -8283,9 +8273,6 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
+ 	hba->mmio_base = mmio_base;
+ 	hba->irq = irq;
+ 
+-	/* Set descriptor lengths to specification defaults */
+-	ufshcd_def_desc_sizes(hba);
+-
+ 	err = ufshcd_hba_init(hba);
+ 	if (err)
+ 		goto out_error;
+-- 
+2.20.1
+
