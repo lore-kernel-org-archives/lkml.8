@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F43C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B37CEC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 674BC2464B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85DE2214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:03:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197825;
-	bh=1L+Uh7jj68z+yjjo5rQZ/oiCiuQZRMJEugTJpqgN8wc=;
+	s=default; t=1579197830;
+	bh=VVYd60GeUMbZa4auO/I+egFzytr/8s7JdM602idEoxE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=12B0bxYpZ8eWrWXLQFFLlfdjCQRU5yPk08j0J8y42xATQP8zLr8/udGiq3StLXQLm
-	 cBXyLeZ6g0reMs6smTcNBW5VC4FT9UTYyvluBMIbdnR+v3fxBxlw1HzjpRatRT75X+
-	 LebNXXrAa+ZvLEAr56Mwai8BZV7JBQOIzxQ3rHdU=
+	b=H9Y71owj5US4DYT+LSPaLaj9Hqtmk8pIlwXkl/BfkHB3cNrTkt6IIcOAbqO5iCBq8
+	 g0Ezh4kzSThTj9K4MpRQumXzLZQBcmJRlthXHBfZ8sZqdN9u+1ZQo+FqdwZeUL0+5r
+	 Y1zGua1UHOyeWvjtwsvkUYx/MiNdqIUHVPGT2oJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393682AbgAPRkr (ORCPT
+        id S2393669AbgAPRko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:40:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56334 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:40:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393519AbgAPRjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:39:44 -0500
+        id S2393526AbgAPRjq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:39:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50D812470D;
-        Thu, 16 Jan 2020 17:39:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A845246FC;
+        Thu, 16 Jan 2020 17:39:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196384;
-        bh=1L+Uh7jj68z+yjjo5rQZ/oiCiuQZRMJEugTJpqgN8wc=;
+        s=default; t=1579196385;
+        bh=VVYd60GeUMbZa4auO/I+egFzytr/8s7JdM602idEoxE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EuDO5KvHfsdMP2hEmBHrcrnJWClJIFMoxgGoAcsXgCmJ+cxEhIngioPL0VDKyYE3T
-         MuHWzNr1CbI9K5+1nieZFaTjg7NQY315A2TALarX+lpeLSMk9i2LdGnsmP+328nb4a
-         fyu84xA/GSlc5wRFcdvNGSogCaJfrVgsuacV23kQ=
+        b=a9Eov1UsFwZbZlakxlCt1HvzxKMUHSgbPP/bIzGqQ7lmprNEisMbcCtLI/c6kqin3
+         VQlIe52j6Em9zbczg+cIWlqQ+8hQQty0HBysFLSiyFgJy8/NA8Ii/mL36zfXs+uPmx
+         irwPHiwIkLFQSVUWquCtnAv7YJvUVUi0j1NgAfhU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xi Wang <wangxi11@huawei.com>, Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 166/251] RDMA/hns: Fixs hw access invalid dma memory error
-Date:   Thu, 16 Jan 2020 12:35:15 -0500
-Message-Id: <20200116173641.22137-126-sashal@kernel.org>
+Cc:     Wen Yang <wen.yang99@zte.com.cn>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, netdev@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 167/251] net: pasemi: fix an use-after-free in pasemi_mac_phy_init()
+Date:   Thu, 16 Jan 2020 12:35:16 -0500
+Message-Id: <20200116173641.22137-127-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -58,46 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xi Wang <wangxi11@huawei.com>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-[ Upstream commit ec5bc2cc69b4fc494e04d10fc5226f6f9cf67c56 ]
+[ Upstream commit faf5577f2498cea23011b5c785ef853ded22700b ]
 
-When smmu is enable, if execute the perftest command and then use 'kill
--9' to exit, follow this operation repeatedly, the kernel will have a high
-probability to print the following smmu event:
+The phy_dn variable is still being used in of_phy_connect() after the
+of_node_put() call, which may result in use-after-free.
 
-  arm-smmu-v3 arm-smmu-v3.1.auto: event 0x10 received:
-  arm-smmu-v3 arm-smmu-v3.1.auto:  0x00007d0000000010
-  arm-smmu-v3 arm-smmu-v3.1.auto:  0x0000020900000080
-  arm-smmu-v3 arm-smmu-v3.1.auto:  0x00000000f47cf000
-  arm-smmu-v3 arm-smmu-v3.1.auto:  0x00000000f47cf000
-
-This is because the hw will periodically refresh the qpc cache until the
-next reset.
-
-This patch fixed it by removing the action that release qpc memory in the
-'hns_roce_qp_free' function.
-
-Fixes: 9a4435375cd1 ("IB/hns: Add driver files for hns RoCE driver")
-Signed-off-by: Xi Wang <wangxi11@huawei.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 1dd2d06c0459 ("net: Rework pasemi_mac driver to use of_mdio infrastructure")
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hns/hns_roce_qp.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/net/ethernet/pasemi/pasemi_mac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_qp.c b/drivers/infiniband/hw/hns/hns_roce_qp.c
-index 33cf1035030b..6f3c0ea99dd0 100644
---- a/drivers/infiniband/hw/hns/hns_roce_qp.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_qp.c
-@@ -241,7 +241,6 @@ void hns_roce_qp_free(struct hns_roce_dev *hr_dev, struct hns_roce_qp *hr_qp)
+diff --git a/drivers/net/ethernet/pasemi/pasemi_mac.c b/drivers/net/ethernet/pasemi/pasemi_mac.c
+index 2f4a837f0d6a..dcd56ac68748 100644
+--- a/drivers/net/ethernet/pasemi/pasemi_mac.c
++++ b/drivers/net/ethernet/pasemi/pasemi_mac.c
+@@ -1053,7 +1053,6 @@ static int pasemi_mac_phy_init(struct net_device *dev)
  
- 	if ((hr_qp->ibqp.qp_type) != IB_QPT_GSI) {
- 		hns_roce_table_put(hr_dev, &qp_table->irrl_table, hr_qp->qpn);
--		hns_roce_table_put(hr_dev, &qp_table->qp_table, hr_qp->qpn);
- 	}
- }
+ 	dn = pci_device_to_OF_node(mac->pdev);
+ 	phy_dn = of_parse_phandle(dn, "phy-handle", 0);
+-	of_node_put(phy_dn);
  
+ 	mac->link = 0;
+ 	mac->speed = 0;
+@@ -1062,6 +1061,7 @@ static int pasemi_mac_phy_init(struct net_device *dev)
+ 	phydev = of_phy_connect(dev, phy_dn, &pasemi_adjust_link, 0,
+ 				PHY_INTERFACE_MODE_SGMII);
+ 
++	of_node_put(phy_dn);
+ 	if (!phydev) {
+ 		printk(KERN_ERR "%s: Could not attach to phy\n", dev->name);
+ 		return -ENODEV;
 -- 
 2.20.1
 
