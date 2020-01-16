@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 109D7C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 678C5C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA90420663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:54:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4511E2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:54:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200884;
-	bh=SyGVpspHwVPxiQSr1Xp7q/vO0Wawnakxrt5Zj7aU2fE=;
+	s=default; t=1579200888;
+	bh=UdImy3XGbb6aCS0QH1nljG7T3sP7qCMYcI6nIQMmEeo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YWo7ZDxA28cA8yPlyjl/4BoulCRrF8RmzKc06fodzD8CShU0QbQH1i25Z7Yg95Grz
-	 Af6aXriDOU9cYves5AkiIOZ8vBdtAwSuqK2fVVHs3c+bPWB7h9rm2mkhbBz6z4tvR+
-	 UQIUsjprHZ0ouuvoVSU5GSVJuHC5st5IFdyC37Rs=
+	b=PlTCovRP5SJV7qTP32YKQV8BJv/rx2s1FYgnqcjlh3QJRwVKtM0hed1GE6LCvj6PG
+	 aSCZphb6nqdingX7iDAJwp0XxnXsaULMrbL1B51j4yGczXMyEfia1XtTUuWnuxjOry
+	 Key7HLqvsucVtQQcCWJ/W/uj3t5lCz5xtPbRKIrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729437AbgAPRHy (ORCPT
+        id S2437144AbgAPSyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:07:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40130 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:54:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388956AbgAPRHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:07:45 -0500
+        id S2389232AbgAPRHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:07:53 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2824220730;
-        Thu, 16 Jan 2020 17:07:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA41F21582;
+        Thu, 16 Jan 2020 17:07:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194464;
-        bh=SyGVpspHwVPxiQSr1Xp7q/vO0Wawnakxrt5Zj7aU2fE=;
+        s=default; t=1579194472;
+        bh=UdImy3XGbb6aCS0QH1nljG7T3sP7qCMYcI6nIQMmEeo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HU5tpInSKQptvWpeiHk/JdE3FlOagai812M4vUdcAhdoHX8S0gQmdjX/o1Cs6gL1s
-         KN+RsXTgWHBzOFCpjT3YF0tn3Uz3SkjyyhGfYGjaD+oYziUr5y8//Zsavxkt7fPOV4
-         rilByVirMlKY5lwoDmEgDMTIxhjUXsilFSKuLDOU=
+        b=e/psCt5JXj9N7Pmyczt3NWfSuaFqzzlvEk6v/L8RhP1SG8jj+FS9DMqMZhpmFzk9B
+         +UW7TjGvrqzFM0hZ6mA4LGpfejUtqbBYsDSPGTsroNXpY10Vf74fMiGGvshWMvshJ1
+         G4GE9j71ETPqEkJmWQnHepQe6cNg2YvtguKasmEc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Hook, Gary" <Gary.Hook@amd.com>, Gary R Hook <gary.hook@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 371/671] crypto: ccp - fix AES CFB error exposed by new test vectors
-Date:   Thu, 16 Jan 2020 12:00:09 -0500
-Message-Id: <20200116170509.12787-108-sashal@kernel.org>
+Cc:     Erwan Le Ray <erwan.leray@st.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 377/671] serial: stm32: Add support of TC bit status check
+Date:   Thu, 16 Jan 2020 12:00:15 -0500
+Message-Id: <20200116170509.12787-114-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,61 +61,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Hook, Gary" <Gary.Hook@amd.com>
+From: Erwan Le Ray <erwan.leray@st.com>
 
-[ Upstream commit c3b359d6567c0b8f413e924feb37cf025067d55a ]
+[ Upstream commit 64c32eab660386f9904bb295a104c9c425e9f8b2 ]
 
-Updated testmgr will exhibit this error message when loading the
-ccp-crypto module:
+Adds a check on the Transmission Complete bit status before closing the
+com port. Prevents the port closure before the end of the transmission.
+TC poll loop is moved from stm32_tx_dma_complete to stm32_shutdown
+routine, in order to check TC before shutdown in both dma and
+PIO tx modes.
+TC clear is added in stm32_transmit_char routine, in order to be cleared
+before transmitting in both dma and PIO tx modes.
 
-alg: skcipher: cfb-aes-ccp encryption failed with err -22 on test vector 3, cfg="in-place"
-
-Update the CCP crypto driver to correctly treat CFB as a streaming mode
-cipher (instead of block mode). Update the configuration for CFB to
-specify the block size as a single byte;
-
-Fixes: 2b789435d7f3 ('crypto: ccp - CCP AES crypto API support')
-
-Signed-off-by: Gary R Hook <gary.hook@amd.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 3489187204eb ("serial: stm32: adding dma support")
+Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/ccp/ccp-crypto-aes.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/tty/serial/stm32-usart.c | 32 +++++++++++++++-----------------
+ 1 file changed, 15 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/crypto/ccp/ccp-crypto-aes.c b/drivers/crypto/ccp/ccp-crypto-aes.c
-index 89291c15015c..3f768699332b 100644
---- a/drivers/crypto/ccp/ccp-crypto-aes.c
-+++ b/drivers/crypto/ccp/ccp-crypto-aes.c
-@@ -1,7 +1,8 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * AMD Cryptographic Coprocessor (CCP) AES crypto API support
-  *
-- * Copyright (C) 2013,2016 Advanced Micro Devices, Inc.
-+ * Copyright (C) 2013-2019 Advanced Micro Devices, Inc.
-  *
-  * Author: Tom Lendacky <thomas.lendacky@amd.com>
-  *
-@@ -79,8 +80,7 @@ static int ccp_aes_crypt(struct ablkcipher_request *req, bool encrypt)
- 		return -EINVAL;
+diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
+index 2e7757d5e5d8..d603be9669a9 100644
+--- a/drivers/tty/serial/stm32-usart.c
++++ b/drivers/tty/serial/stm32-usart.c
+@@ -290,21 +290,6 @@ static void stm32_tx_dma_complete(void *arg)
+ 	struct uart_port *port = arg;
+ 	struct stm32_port *stm32port = to_stm32_port(port);
+ 	struct stm32_usart_offsets *ofs = &stm32port->info->ofs;
+-	unsigned int isr;
+-	int ret;
+-
+-	ret = readl_relaxed_poll_timeout_atomic(port->membase + ofs->isr,
+-						isr,
+-						(isr & USART_SR_TC),
+-						10, 100000);
+-
+-	if (ret)
+-		dev_err(port->dev, "terminal count not set\n");
+-
+-	if (ofs->icr == UNDEF_REG)
+-		stm32_clr_bits(port, ofs->isr, USART_SR_TC);
+-	else
+-		stm32_set_bits(port, ofs->icr, USART_CR_TC);
  
- 	if (((ctx->u.aes.mode == CCP_AES_MODE_ECB) ||
--	     (ctx->u.aes.mode == CCP_AES_MODE_CBC) ||
--	     (ctx->u.aes.mode == CCP_AES_MODE_CFB)) &&
-+	     (ctx->u.aes.mode == CCP_AES_MODE_CBC)) &&
- 	    (req->nbytes & (AES_BLOCK_SIZE - 1)))
- 		return -EINVAL;
+ 	stm32_clr_bits(port, ofs->cr3, USART_CR3_DMAT);
+ 	stm32port->tx_dma_busy = false;
+@@ -396,7 +381,6 @@ static void stm32_transmit_chars_dma(struct uart_port *port)
+ 	/* Issue pending DMA TX requests */
+ 	dma_async_issue_pending(stm32port->tx_ch);
  
-@@ -291,7 +291,7 @@ static struct ccp_aes_def aes_algs[] = {
- 		.version	= CCP_VERSION(3, 0),
- 		.name		= "cfb(aes)",
- 		.driver_name	= "cfb-aes-ccp",
--		.blocksize	= AES_BLOCK_SIZE,
-+		.blocksize	= 1,
- 		.ivsize		= AES_BLOCK_SIZE,
- 		.alg_defaults	= &ccp_aes_defaults,
- 	},
+-	stm32_clr_bits(port, ofs->isr, USART_SR_TC);
+ 	stm32_set_bits(port, ofs->cr3, USART_CR3_DMAT);
+ 
+ 	xmit->tail = (xmit->tail + count) & (UART_XMIT_SIZE - 1);
+@@ -425,6 +409,11 @@ static void stm32_transmit_chars(struct uart_port *port)
+ 		return;
+ 	}
+ 
++	if (ofs->icr == UNDEF_REG)
++		stm32_clr_bits(port, ofs->isr, USART_SR_TC);
++	else
++		stm32_set_bits(port, ofs->icr, USART_ICR_TCCF);
++
+ 	if (stm32_port->tx_ch)
+ 		stm32_transmit_chars_dma(port);
+ 	else
+@@ -601,12 +590,21 @@ static void stm32_shutdown(struct uart_port *port)
+ 	struct stm32_port *stm32_port = to_stm32_port(port);
+ 	struct stm32_usart_offsets *ofs = &stm32_port->info->ofs;
+ 	struct stm32_usart_config *cfg = &stm32_port->info->cfg;
+-	u32 val;
++	u32 val, isr;
++	int ret;
+ 
+ 	val = USART_CR1_TXEIE | USART_CR1_RXNEIE | USART_CR1_TE | USART_CR1_RE;
+ 	val |= BIT(cfg->uart_enable_bit);
+ 	if (stm32_port->fifoen)
+ 		val |= USART_CR1_FIFOEN;
++
++	ret = readl_relaxed_poll_timeout(port->membase + ofs->isr,
++					 isr, (isr & USART_SR_TC),
++					 10, 100000);
++
++	if (ret)
++		dev_err(port->dev, "transmission complete not set\n");
++
+ 	stm32_clr_bits(port, ofs->cr1, val);
+ 
+ 	dev_pm_clear_wake_irq(port->dev);
 -- 
 2.20.1
 
