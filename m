@@ -2,194 +2,133 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 125F3C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04EE5C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3603214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:05:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579183550;
-	bh=H9ClWGTVJ5U8svsEmFEIHnfYAAJ8lYMnsBMtrjo8m1I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eGC/V+SWOzK69HMVOdwGFZlt3mNKsACAKuXyJ590wGsoUmy0OETPyVwDSuvusmzgT
-	 bZafdLV5OsWoZBij3B9DRsdpHgNYuXrBwdhD1lfF9HaauJXdDNjbRyZbU/G/dmALiR
-	 Z/WUbAJ+QU1G8QzKHM7rkFlM1COXW7pePEUQ2bF4=
+	by mail.kernel.org (Postfix) with ESMTP id C60C92077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:08:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qOx6+lzE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbgAPOFu (ORCPT
+        id S1726552AbgAPOIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 09:05:50 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37455 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbgAPOFt (ORCPT
+        Thu, 16 Jan 2020 09:08:00 -0500
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:44389 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbgAPOIA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 09:05:49 -0500
-Received: by mail-wm1-f66.google.com with SMTP id f129so3948560wmf.2
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 06:05:48 -0800 (PST)
+        Thu, 16 Jan 2020 09:08:00 -0500
+Received: by mail-ua1-f65.google.com with SMTP id c14so7654859uaq.11
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 06:07:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=wKsTzY7TBQ0hsXgCv04UaYQDo6ubwiFa9SGKia4Q60g=;
+        b=qOx6+lzEgd/NEFwd9y0NQRwKzgBJ8f0M1bs6J1SvelBNE+FUyFZzRxiltAWe9lDZ2s
+         o3xiARCuTvOyTpRMR3wI5evNffSpEn4vPejkXE0RR9YlaJpplbFwOlSH+ufe1BxKh2jS
+         587qYtZoO1GIj+eekalbtq8knupM23wBRSi132hPQduN2pGPfregX8J8AF6qiUVrcaBN
+         hTEsWQee2Ja2nBDETbGcQyCSp2gEX12uYoShnBW5y39E54t1cVhbf5B3Orp5UM4ldi6s
+         vzjGGUKZLPRsG4a/x5kpNyN1iR5hzlqJFEwLcpyG91aK02x0/PefwyeYcDKEol/4iuA0
+         P5FA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZwALC55EJePLunJ1kHrliV8F9jlgC0n9J9o4VvIiFIM=;
-        b=LBeTSF1WmzdVlRy1n6Jwjzn3Pk20usSi6wYYB0UvKVzUUitMwzY/OzhBPqiHYDuBLe
-         ZYRuQ6Z6XrzV2hXNbcXGMAAt0lvNUnJXYl+i6fwc7HKdxvX78ZqyZDG/KECuiXziR/Hi
-         L0LCGVrL+c1XmRp3hedLlRcoPquCqN626/PTuyidjLHSboD5ShypYAV2Axtc5KirsJwK
-         08GOiWfa/nXRgbaCR6Tv88wjUns8Sm1t+5rbUwfTqclqxp5QMs+g5wsOpIZ35WUOg2Cq
-         FP7eSendvazVwyXAO3NZu+xDZrwAnhJUu2OgV9qxH+CB6SkIJXR/Lop9eCGJVEIxStda
-         eUJw==
-X-Gm-Message-State: APjAAAVehky0tcX1nuwT7c5qPCVooltaFrCcCtXxxN/BjHyQ4tgqjWJ4
-        tanQtPo+IgDR6QfJHJHw9iE=
-X-Google-Smtp-Source: APXvYqzxXuC6zAOHxXzNnRm5v9JBsHVdf4kat/zEboNhrnbA9r+i5/5h4VAMcW70a2QSIn1e8D3aBA==
-X-Received: by 2002:a7b:cbd6:: with SMTP id n22mr6204156wmi.118.1579183547433;
-        Thu, 16 Jan 2020 06:05:47 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id l17sm28217436wro.77.2020.01.16.06.05.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 06:05:46 -0800 (PST)
-Date:   Thu, 16 Jan 2020 15:05:45 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Lee Schermerhorn <lee.schermerhorn@hp.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzbot <syzbot+e64a13c5369a194d67df@syzkaller.appspotmail.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, yang.shi@linux.alibaba.com
-Subject: Re: [PATCH] mm/mempolicy.c: Fix out of bounds write in
- mpol_parse_str()
-Message-ID: <20200116140545.GT19428@dhcp22.suse.cz>
-References: <d31f6069-bda7-2cdb-b770-0c9cddac7537@suse.cz>
- <CACT4Y+YF9kYEppMMg3oRkeo+OvhMS1hoKT6EqXCv1jRmA2dz3w@mail.gmail.com>
- <20200115150315.GH19428@dhcp22.suse.cz>
- <CACT4Y+Z6xW130JGcZE9X7wDCLamJA_s-STs2imnmW29SzQ-NyQ@mail.gmail.com>
- <20200115190528.GJ19428@dhcp22.suse.cz>
- <CACT4Y+b5HJW9PhjkSZ+L09YqQt08ALCtudHV4m5x5qv+xH-2Yg@mail.gmail.com>
- <20200116073922.GL19428@dhcp22.suse.cz>
- <CACT4Y+aWNQxSMSnHn6ORkBNM2wWp_K6tPxthj=_FmnyOfO5huA@mail.gmail.com>
- <20200116115123.GR19428@dhcp22.suse.cz>
- <CACT4Y+b_ybuMRJBtqFnttTv+vfNVKivUH-UmhHtuHh06tVxB_g@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=wKsTzY7TBQ0hsXgCv04UaYQDo6ubwiFa9SGKia4Q60g=;
+        b=cfpxLic+ufrmepC9EeLWL+J/hz18xNOpydeBdb9kZ6oef25IbRiHU/oMIr3fO+dhRQ
+         G67Yltjsxd1jSADPWULrJkSONDLQ+aSZXVXRXvP+4e+ROBvSrto7RM3kuwdKxf8WT3aF
+         +SY7kS+BNMOMBvspQyHoHHao2ulTOlikZsKCtUyBHtkWJIzfjOkD/sBHTtBIvu+Y9QBu
+         r8N+Nqd8sD6rMkvLweXL+aFU54t0i9BnFIrRZbOGO73PtSxmFFHmXHBicwk8jS0ubAsa
+         111BvvvJCtSrYxh8p6Yx/Up8qc8bCxeW4I+croXQdY3wOBsIHO4R4D4UI0SSXOE+EZBG
+         cNxQ==
+X-Gm-Message-State: APjAAAW8JEEUsL+FBzL/puYKBZ/xy2lVYDWNIbNnnS5G7mvKlOzzjsbD
+        wB7XkSQEsXPWU4JpI1+5lCaK5oSEP+57xDhZk5pDmg==
+X-Google-Smtp-Source: APXvYqxbll2Ts5dDaerJeqewzVDPGIJrq6RMLH8CH8DMR1HuhP81L0LKZ03MMhAA3SAgmyHo7PCfL9kcjsbqDLXRNlg=
+X-Received: by 2002:ab0:e16:: with SMTP id g22mr17201443uak.129.1579183679045;
+ Thu, 16 Jan 2020 06:07:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+b_ybuMRJBtqFnttTv+vfNVKivUH-UmhHtuHh06tVxB_g@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <f471bceaf237d582d746bd289c4c4f3639cb7b45.1577962382.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <f471bceaf237d582d746bd289c4c4f3639cb7b45.1577962382.git.mirq-linux@rere.qmqm.pl>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 16 Jan 2020 15:07:22 +0100
+Message-ID: <CAPDyKFpZWnkK7UmCZ8M4UnM05wR3MQsPrpEjOJuwkKcN2gePSg@mail.gmail.com>
+Subject: Re: [PATCH] mmc: core: limit probe clock frequency to configured f_max
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 16-01-20 13:41:39, Dmitry Vyukov wrote:
-> On Thu, Jan 16, 2020 at 12:51 PM Michal Hocko <mhocko@kernel.org> wrote:
-> >
-> > On Thu 16-01-20 11:13:09, Dmitry Vyukov wrote:
-> > > On Thu, Jan 16, 2020 at 8:39 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > [...]
-> > > > > $ grep vmalloc\( net/netfilter/*.c
-> > > > > net/netfilter/nf_tables_api.c: return kvmalloc(alloc, GFP_KERNEL);
-> > > > > net/netfilter/x_tables.c: xt[af].compat_tab = vmalloc(mem);
-> > > > > net/netfilter/x_tables.c: mem = vmalloc(len);
-> > > > > net/netfilter/x_tables.c: info = kvmalloc(sz, GFP_KERNEL_ACCOUNT);
-> > > > > net/netfilter/xt_hashlimit.c: /* FIXME: don't use vmalloc() here or
-> > > > > anywhere else -HW */
-> > > > > net/netfilter/xt_hashlimit.c: hinfo = vmalloc(struct_size(hinfo, hash, size));
-> > > > >
-> > > > > These are not bound to processes/threads as namespaces are orthogonal to tasks.
-> > > >
-> > > > I cannot really comment on those. This is for networking people to
-> > > > examine and find out whether they allow an untrusted user to runaway.
-> > >
-> > > Unless I am missing an elephant in this whole picture, kernel code
-> > > contains 20K+ unaccounted allocations and if I am not mistaken few of
-> > > them were audited and are intentionally unaccounted rather than
-> > > unaccounted just because it's the default. So if we want DoS
-> > > protection, it's really for every kernel developer/maintainer to audit
-> > > and fix these allocation sites. And since we have a unikernel, a
-> > > single unaccounted allocation may compromise the whole kernel. I
-> > > assume we would need something like GFP_UNACCOUNTED to mark audited
-> > > allocations that don't need accounting and then slowly reduce number
-> > > of allocations without both ACCOUNTED and UNACCOUNTED.
-> >
-> > This is the original approach which led to all sorts of problems and so
-> > we switched the opt-out to opt-in. Have a look at a9bb7e620efd ("memcg:
-> > only account kmem allocations marked as __GFP_ACCOUNT").
-> > Our protection will never be perfect because that would require to
-> > design the system with the protection in mind.
-> 
-> I don't mean to switch the default. I mean adding a way to distinguish
-> between reviewed and intentionally unaccounted allocation and
-> unreviewed allocation which is unaccounted just because that's the
-> default. This would allow to progress incrementally, rather than redo
-> the same work again and again.
+On Thu, 2 Jan 2020 at 11:54, Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmq=
+m.pl> wrote:
+>
+> Currently MMC core disregards host->f_max during card initialization
+> phase. Obey upper boundary for the clock frequency and skip faster
+> speeds when they are above the limit.
 
-I am not really sure this would be viable just because of the sheer
-number of allocations we have in the kernel. But I would be more than
-happy to be proven wrong ;)
+Is this a hypothetical problem or a real problem?
 
-> > > > > Somebody told me that it's not good to use GFP_ACCOUNT if the
-> > > > > allocation is not tied to the lifetime of the process. Is it still
-> > > > > true?
-> > > >
-> > > > Those are more tricky. Mostly because there is no way to reclaim the
-> > > > memory once the hard limit is hit. Even the memcg oom killer will not
-> > > > help much. So a care should be taken when adding GFP_ACCOUNT for those.
-> > > > On the other hand it would prevent an unbounded allocations at least
-> > > > so the DoS would be reduced to the hard limited memcg.
-> > >
-> > > What exactly is this care in practice?
-> > > It seems that in a148ce15375fc664ad64762c751c0c2aecb2cafe you just
-> > > added it and the allocation is not tied to the process. At least I
-> > > don't see any explanation as to why that one is safe, while accounting
-> > > other similar allocation is not...
-> >
-> > My memory is dim but AFAIR the memcg accounting was compromise between
-> > usability and the whole system stability. Really large tables could be
-> > allocated by untrusted users and that was seen as a _real_ problem. The
-> > previous solution added _some_ protection which led to regressions
-> > even for reasonable cases though. Memcg accounting was deemed as
-> > reasonable middle ground.
-> >
-> > The result is that a completely depleted memcg requires an admin
-> > intervention and the admin has to know what to do to tear it down.
-> > Kernel cannot do anything about that. And that is the trickiness I've
-> > had in mind. Listing page tables is something admins can do quite
-> > easily, right? There are many other objects which are much harder to act
-> > about. E.g. what are you going to do with tmpfs mounts? Are you going to
-> > remove them and cause potential data loss? That being said some objects
-> > really have to be limited even before they start consuming memory IMHO.
-> 
-> Interesting. But there is really no admin today, or at least nothing
-> should rely on one in any way. Either because of the scale (you have
-> thousands/millions of machines and spending human time on each of them
-> individually is not going to fly) and/or because there is nobody
-> qualified enough around (e.g. who is an admin of a median android
-> phone? and what does they know about tearing down namespaces and
-> mounts) or there is nobody interested enough (it's fun sometimes, but
-> not always)...
+>
+> Signed-off-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
+> ---
+>  drivers/mmc/core/core.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
+> index abf8f5eb0a1c..aa54d359dab7 100644
+> --- a/drivers/mmc/core/core.c
+> +++ b/drivers/mmc/core/core.c
+> @@ -2330,7 +2330,13 @@ void mmc_rescan(struct work_struct *work)
+>         }
+>
+>         for (i =3D 0; i < ARRAY_SIZE(freqs); i++) {
+> -               if (!mmc_rescan_try_freq(host, max(freqs[i], host->f_min)=
+))
+> +               unsigned int freq =3D freqs[i];
+> +               if (freq > host->f_max) {
+> +                       if (i + 1 < ARRAY_SIZE(freqs))
+> +                               continue;
+> +                       freq =3D host->f_max;
 
-If there is nobody in control then there should be a reasonably safe
-policy defined at least. This is what I mentioned earlier when saying
-that not all objects can be easily accounted. There has to be a strategy
-defined for corner cases. And user namespaces seem to really beg for
-that when you are allowed to control resources like tmpfs and others
-alike.
+This looks wrong to me. For example, what if f_max =3D 250KHz and f_min =3D=
+ 50 KHz.
 
-> but I agree that retrofitting this level of resource
-> control into a large existing complex system is close to impossible.
-> 
-> Thank a lot for bearing with me and answering my questions. I have a
-> better understanding of this now.
+Then we should try with 250KHz, then 200KHz and then 100KHz. This
+isn't what the above code does, I think.
 
-I am glad I could help.
+Instead it will try with 200KHz and then 100KHz, thus skip 250KHz.
 
-Thanks for giving some scary examples ;)
--- 
-Michal Hocko
-SUSE Labs
+Maybe we should figure out what index of freqs[] to start the loop for
+(before actually starting the loop), depending on the value of f_max -
+rather than always start at 0.
+
+> +               }
+> +               if (!mmc_rescan_try_freq(host, max(freq, host->f_min)))
+>                         break;
+>                 if (freqs[i] <=3D host->f_min)
+>                         break;
+> @@ -2344,7 +2350,7 @@ void mmc_rescan(struct work_struct *work)
+>
+>  void mmc_start_host(struct mmc_host *host)
+>  {
+> -       host->f_init =3D max(freqs[0], host->f_min);
+> +       host->f_init =3D max(min(freqs[0], host->f_max), host->f_min);
+>         host->rescan_disable =3D 0;
+>         host->ios.power_mode =3D MMC_POWER_UNDEFINED;
+>
+> --
+> 2.20.1
+>
+
+Kind regards
+Uffe
