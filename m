@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26399C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59250C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F07A8246D1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28EEF246DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:37:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196267;
-	bh=BvKZ6I96+ZQqq6bZdTpZ5iH+6iMFRJAM976U4XO9y/c=;
+	s=default; t=1579196269;
+	bh=zPjllkjADDMjcToQuZOmKmG2EBKJqnMdfjf7vbvjdaQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y2hbmJ2UsxUr1z4BTf3miBTTLOkcB4r2J2TRg0kuZNFXkKks5ncU7DmZht4moK94k
-	 ED8P0TrN7ux2Ps5p+5hyvFUKt1NzleUe2jkqMm5Aa0vTKTcmCRgNS0pr1yWhc+vW3N
-	 fnMzpMWEDo7jAFVgAUE0G5pqo/OQvA2pTDWaxl3w=
+	b=vToGHs4hoZ1Ow/vcYaDKeXwFq2yQl2EeIRJdjM+8n2XaaD0vYskft6hTCA7G1BtcC
+	 8nsKp+lq9P9XXrfdF78eSyCynUSHf4AGDzEQuF+MrhFEPuXu+k1yQov9zpsPsMtDlZ
+	 fXsshK4VvB7QDVTYjuVNt6QP5VC12NEpwqLvjGzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393200AbgAPRhp (ORCPT
+        id S2393208AbgAPRhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:37:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52700 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:37:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405355AbgAPRh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:37:26 -0500
+        id S2405362AbgAPRh1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:37:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3505246BA;
-        Thu, 16 Jan 2020 17:37:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7208246C0;
+        Thu, 16 Jan 2020 17:37:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196246;
-        bh=BvKZ6I96+ZQqq6bZdTpZ5iH+6iMFRJAM976U4XO9y/c=;
+        s=default; t=1579196247;
+        bh=zPjllkjADDMjcToQuZOmKmG2EBKJqnMdfjf7vbvjdaQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v065PX6wiVOQcl5AqsuwREPiGqljrlNdsrKJGoOP6EVaKmbd/L7mjP5JTCRosTZBS
-         dcEmRJFyHCA3YrvbF4kEPnQV2OVP638dOovyGVo433JZ1LOu0a2Ll2ReULSXW7O6Lp
-         PhdiZ0QMuDbiJ5zezXKUtiOsS5gE0upVWSClc4Pc=
+        b=jl9pK7qYPexoCAQHUofV4KWzNkJyg9MgYMAbLseb8bYzrPMrmu2ZvzQpKLEtC+gSh
+         vu5m5NrKeEUc9IKW4lWXh29bYkKcqM8fNRo+DBV019xEE0Q1O7snjvCcuQW/YQGDqq
+         U8vskVu4fI36x+qcU5eyR6jbGhwKwkXcRiW6OmQo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        John David Anglin <dave.anglin@bell.net>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 074/251] dmaengine: mv_xor: Use correct device for DMA API
-Date:   Thu, 16 Jan 2020 12:33:43 -0500
-Message-Id: <20200116173641.22137-34-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 075/251] cdc-wdm: pass return value of recover_from_urb_loss
+Date:   Thu, 16 Jan 2020 12:33:44 -0500
+Message-Id: <20200116173641.22137-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -61,51 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Murphy <robin.murphy@arm.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 3e5daee5ecf314da33a890fabaa2404244cd2a36 ]
+[ Upstream commit 0742a338f5b3446a26de551ad8273fb41b2787f2 ]
 
-Using dma_dev->dev for mappings before it's assigned with the correct
-device is unlikely to work as expected, and with future dma-direct
-changes, passing a NULL device may end up crashing entirely. I don't
-know enough about this hardware or the mv_xor_prep_dma_interrupt()
-operation to implement the appropriate error-handling logic that would
-have revealed those dma_map_single() calls failing on arm64 for as long
-as the driver has been enabled there, but moving the assignment earlier
-will at least make the current code operate as intended.
+'rv' is the correct return value, pass it upstream instead of 0
 
-Fixes: 22843545b200 ("dma: mv_xor: Add support for DMA_INTERRUPT")
-Reported-by: John David Anglin <dave.anglin@bell.net>
-Tested-by: John David Anglin <dave.anglin@bell.net>
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Tested-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: 17d80d562fd7 ("USB: autosuspend for cdc-wdm")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/mv_xor.c | 2 +-
+ drivers/usb/class/cdc-wdm.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/mv_xor.c b/drivers/dma/mv_xor.c
-index 23f75285a4d9..5d524f29c5f1 100644
---- a/drivers/dma/mv_xor.c
-+++ b/drivers/dma/mv_xor.c
-@@ -1044,6 +1044,7 @@ mv_xor_channel_add(struct mv_xor_device *xordev,
- 		mv_chan->op_in_desc = XOR_MODE_IN_DESC;
+diff --git a/drivers/usb/class/cdc-wdm.c b/drivers/usb/class/cdc-wdm.c
+index 217a479165e0..09337a973335 100644
+--- a/drivers/usb/class/cdc-wdm.c
++++ b/drivers/usb/class/cdc-wdm.c
+@@ -1098,7 +1098,7 @@ static int wdm_post_reset(struct usb_interface *intf)
+ 	rv = recover_from_urb_loss(desc);
+ 	mutex_unlock(&desc->wlock);
+ 	mutex_unlock(&desc->rlock);
+-	return 0;
++	return rv;
+ }
  
- 	dma_dev = &mv_chan->dmadev;
-+	dma_dev->dev = &pdev->dev;
- 	mv_chan->xordev = xordev;
- 
- 	/*
-@@ -1076,7 +1077,6 @@ mv_xor_channel_add(struct mv_xor_device *xordev,
- 	dma_dev->device_free_chan_resources = mv_xor_free_chan_resources;
- 	dma_dev->device_tx_status = mv_xor_status;
- 	dma_dev->device_issue_pending = mv_xor_issue_pending;
--	dma_dev->dev = &pdev->dev;
- 
- 	/* set prep routines based on capability */
- 	if (dma_has_cap(DMA_INTERRUPT, dma_dev->cap_mask))
+ static struct usb_driver wdm_driver = {
 -- 
 2.20.1
 
