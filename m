@@ -2,51 +2,51 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 873EBC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0B5C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55944206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:28:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 140AD2082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:28:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217289;
-	bh=101cqP0KzlxnkRcjGmNRCeYL9xUc37fL65nI2lSgZso=;
+	s=default; t=1579217294;
+	bh=EJ9iI+eUjvW2rcFKp3DjF2SfLtjsxCOxAXRBiIJFWj4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ci350/W/ylJFFFOcziyPrrDikMVflLQMZgT4EyeelZjUAjEcv6X0zYrhg0YCwpy++
-	 X/j8FBfxHn/wOovw6wr2wAZXwf0+RDzl61W99zRxYymIk1ZAiL7L2VFGP2/BtNH1c3
-	 ZoxZTm8awZoaa6lFzidvZ4hUVqkAYM1BNPbUPs0Q=
+	b=1cEjlnZe8fR2y/BbIVRFfoWPgg/lz50QZJsNhh5WWde+m9tbYTT1P9gWv6mGHPtcS
+	 pRFfjHdFFJ0qn0lcgdeu/QFXrNOd++X1rNVqImJiyk8r5oQnTJ9lKsXQp8GY0g9kwo
+	 NZCfo822RpSpDVw+0dfuPGG2+KqkzBctFF+s3VGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391051AbgAPX2H (ORCPT
+        id S2391068AbgAPX2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:28:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60554 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:28:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389219AbgAPX2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:28:04 -0500
+        id S2391044AbgAPX2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:28:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B840A20684;
-        Thu, 16 Jan 2020 23:28:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26FFA206D9;
+        Thu, 16 Jan 2020 23:28:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217284;
-        bh=101cqP0KzlxnkRcjGmNRCeYL9xUc37fL65nI2lSgZso=;
+        s=default; t=1579217286;
+        bh=EJ9iI+eUjvW2rcFKp3DjF2SfLtjsxCOxAXRBiIJFWj4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QkVqJtX/EYze+ZxLdWT0439N7NlwU/1PX4LtHMhhD5867fBdMRk/u4KSBZFxg0OBK
-         4NcsxW341lC+G/nvxCB0LMNIlOmogZKM/BVgAmYee4zq6wyC2wg8KEMjLWa66IFXJ6
-         V1uzimty5Dmiyd9ofgk7eviyJOQoOmF6k7MMJIxQ=
+        b=VN4mSq+eQWEZmmav9xtJ76+4iJcikjJmmf0tWjnWqsiYWRvnmmatAemObtWLE/UuZ
+         pR2qkVY4oGKZ3MO23VFxxMq5FUOjy+4Si4aCN6UbzCWny1a2vw5gK9h2fgAVovQoMo
+         c4xnb03jLMyfoYG8JrmxvqbBM708PRuj2c9BqjPE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 02/84] HID: hidraw: Fix returning EPOLLOUT from hidraw_poll
-Date:   Fri, 17 Jan 2020 00:17:36 +0100
-Message-Id: <20200116231713.508100390@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Baluta <daniel.baluta@nxp.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.19 20/84] ASoC: soc-core: Set dpcm_playback / dpcm_capture
+Date:   Fri, 17 Jan 2020 00:17:54 +0100
+Message-Id: <20200116231716.046108056@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
 References: <20200116231713.087649517@linuxfoundation.org>
@@ -59,48 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Holtmann <marcel@holtmann.org>
+From: Daniel Baluta <daniel.baluta@nxp.com>
 
-[ Upstream commit 9f3b61dc1dd7b81e99e7ed23776bb64a35f39e1a ]
+commit 218fe9b7ec7f32c10a07539365488d80af7b0084 upstream.
 
-When polling a connected /dev/hidrawX device, it is useful to get the
-EPOLLOUT when writing is possible. Since writing is possible as soon as
-the device is connected, always return it.
+When converting a normal link to a DPCM link we need
+to set dpcm_playback / dpcm_capture otherwise playback/capture
+streams will not be created resulting in errors like this:
 
-Right now EPOLLOUT is only returned when there are also input reports
-are available. This works if devices start sending reports when
-connected, but some HID devices might need an output report first before
-sending any input reports. This change will allow using EPOLLOUT here as
-well.
+[   36.039111]  sai1-wm8960-hifi: ASoC: no backend playback stream
 
-Fixes: 378b80370aa1 ("hidraw: Return EPOLLOUT from hidraw_poll")
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: a655de808cbde ("ASoC: core: Allow topology to override machine driver FE DAI link config")
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Link: https://lore.kernel.org/r/20191204151333.26625-1-daniel.baluta@nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/hid/hidraw.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/soc-core.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/hid/hidraw.c b/drivers/hid/hidraw.c
-index c75b66d58636..a025b6961896 100644
---- a/drivers/hid/hidraw.c
-+++ b/drivers/hid/hidraw.c
-@@ -260,10 +260,10 @@ static __poll_t hidraw_poll(struct file *file, poll_table *wait)
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -1921,6 +1921,8 @@ static void soc_check_tplg_fes(struct sn
  
- 	poll_wait(file, &list->hidraw->wait, wait);
- 	if (list->head != list->tail)
--		return EPOLLIN | EPOLLRDNORM | EPOLLOUT;
-+		return EPOLLIN | EPOLLRDNORM;
- 	if (!list->hidraw->exist)
- 		return EPOLLERR | EPOLLHUP;
--	return 0;
-+	return EPOLLOUT | EPOLLWRNORM;
- }
+ 			/* convert non BE into BE */
+ 			dai_link->no_pcm = 1;
++			dai_link->dpcm_playback = 1;
++			dai_link->dpcm_capture = 1;
  
- static int hidraw_open(struct inode *inode, struct file *file)
--- 
-2.20.1
-
+ 			/* override any BE fixups */
+ 			dai_link->be_hw_params_fixup =
 
 
