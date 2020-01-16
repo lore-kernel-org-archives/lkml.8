@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59BCFC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC99C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E49F24709
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:29:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D19FE246F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:29:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195760;
-	bh=gKfMirSXY4Hz5bEhg0xMWQubzmrFf7IxaE0FqOAsBck=;
+	s=default; t=1579195762;
+	bh=JYnzlzmlOi8zxfkZ3gNkyag99DW/iJIorNEPxenw/wA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WKw2VvQucTXzHpitE49w9emiSyPtzW+r0GTrIjb4L0oDdVWOEhsR2P3W/RJetY8nu
-	 uPNb6H647q88i0WWOMiNZbDNPcfi536B3Lqt+T/VzBayjZo2qXGV7qwVgAQbj93nIL
-	 TKq+hXIT6sMaiGWtm7CMUiq47jBN2bTldxaeGJLA=
+	b=uy7N4GIZC/mYBqCJ7m2aQdYI931HtiPGfdjx+P8lWpVPstNOWiQ1DcKNZauzfVaXh
+	 Crqn69++mhBKoy/xjEaYD3pPpHtzPXIQN6VU0fvGIJXgdDfg7u9lrEseMioFQt8oWC
+	 lX8NAzufp9j1FL9kYsIAWWD9nrtlwf461+zFNDsw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391422AbgAPR3S (ORCPT
+        id S2392691AbgAPR3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:29:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40904 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:29:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404293AbgAPR3L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:29:11 -0500
+        id S2404306AbgAPR3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:29:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5172246F9;
-        Thu, 16 Jan 2020 17:29:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D143724709;
+        Thu, 16 Jan 2020 17:29:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195751;
-        bh=gKfMirSXY4Hz5bEhg0xMWQubzmrFf7IxaE0FqOAsBck=;
+        s=default; t=1579195754;
+        bh=JYnzlzmlOi8zxfkZ3gNkyag99DW/iJIorNEPxenw/wA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VT/KicY4iFAk8oq9Wi5GSwO5ctgtxU4sM4qnQFq08pt199uGpq+wIGU1WBrhSK9mn
-         FmtQvSslEpylS/d6LBY/1RRrhAaukwnVH1Ntf0Il9X30DCQmaUc5vvdiHF1Wlgyd1J
-         hkJ0IJuijMdBdaLOcvRO5gHSmgRT9bbDSHiwlTIY=
+        b=GlNGfiN2Fn+WIZjKKCtnVQ0w/x390ABNcHHglx47Vmt4MIh75odRGCBBZWXABU3p0
+         OUOl+XWzuUrK3BnQ/huHJYh66gLSLNlFJRAezDlSNz73r2EdN7xPLr6tMXdz9za6KT
+         QMOeSXTRIXI+XNMxdoNrr1+WuInKqVAUu6x4Je4s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Rui Miguel Silva <rmfrfs@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, greybus-dev@lists.linaro.org,
-        devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 4.14 283/371] staging: greybus: light: fix a couple double frees
-Date:   Thu, 16 Jan 2020 12:22:35 -0500
-Message-Id: <20200116172403.18149-226-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, linux-wireless@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 285/371] bcma: fix incorrect update of BCMA_CORE_PCI_MDIO_DATA
+Date:   Thu, 16 Jan 2020 12:22:37 -0500
+Message-Id: <20200116172403.18149-228-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -61,67 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 329101244f214952606359d254ae883b7109e1a5 ]
+[ Upstream commit 420c20be08a4597404d272ae9793b642401146eb ]
 
-The problem is in gb_lights_request_handler().  If we get a request to
-change the config then we release the light with gb_lights_light_release()
-and re-allocated it.  However, if the allocation fails part way through
-then we call gb_lights_light_release() again.  This can lead to a couple
-different double frees where we haven't cleared out the original values:
+An earlier commit re-worked the setting of the bitmask and is now
+assigning v with some bit flags rather than bitwise or-ing them
+into v, consequently the earlier bit-settings of v are being lost.
+Fix this by replacing an assignment with the bitwise or instead.
 
-	gb_lights_light_v4l2_unregister(light);
-	...
-	kfree(light->channels);
-	kfree(light->name);
-
-I also made a small change to how we set "light->channels_count = 0;".
-The original code handled this part fine and did not cause a use after
-free but it was sort of complicated to read.
-
-Fixes: 2870b52bae4c ("greybus: lights: add lights implementation")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Rui Miguel Silva <rmfrfs@gmail.com>
-Link: https://lore.kernel.org/r/20190829122839.GA20116@mwanda
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Addresses-Coverity: ("Unused value")
+Fixes: 2be25cac8402 ("bcma: add constants for PCI and use them")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/greybus/light.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/bcma/driver_pci.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/greybus/light.c b/drivers/staging/greybus/light.c
-index 0f538b8c3a07..4e7575147775 100644
---- a/drivers/staging/greybus/light.c
-+++ b/drivers/staging/greybus/light.c
-@@ -1103,21 +1103,21 @@ static void gb_lights_channel_release(struct gb_channel *channel)
- static void gb_lights_light_release(struct gb_light *light)
- {
- 	int i;
--	int count;
+diff --git a/drivers/bcma/driver_pci.c b/drivers/bcma/driver_pci.c
+index f499a469e66d..12b2cc9a3fbe 100644
+--- a/drivers/bcma/driver_pci.c
++++ b/drivers/bcma/driver_pci.c
+@@ -78,7 +78,7 @@ static u16 bcma_pcie_mdio_read(struct bcma_drv_pci *pc, u16 device, u8 address)
+ 		v |= (address << BCMA_CORE_PCI_MDIODATA_REGADDR_SHF_OLD);
+ 	}
  
- 	light->ready = false;
+-	v = BCMA_CORE_PCI_MDIODATA_START;
++	v |= BCMA_CORE_PCI_MDIODATA_START;
+ 	v |= BCMA_CORE_PCI_MDIODATA_READ;
+ 	v |= BCMA_CORE_PCI_MDIODATA_TA;
  
--	count = light->channels_count;
--
- 	if (light->has_flash)
- 		gb_lights_light_v4l2_unregister(light);
-+	light->has_flash = false;
+@@ -121,7 +121,7 @@ static void bcma_pcie_mdio_write(struct bcma_drv_pci *pc, u16 device,
+ 		v |= (address << BCMA_CORE_PCI_MDIODATA_REGADDR_SHF_OLD);
+ 	}
  
--	for (i = 0; i < count; i++) {
-+	for (i = 0; i < light->channels_count; i++)
- 		gb_lights_channel_release(&light->channels[i]);
--		light->channels_count--;
--	}
-+	light->channels_count = 0;
-+
- 	kfree(light->channels);
-+	light->channels = NULL;
- 	kfree(light->name);
-+	light->name = NULL;
- }
- 
- static void gb_lights_release(struct gb_lights *glights)
+-	v = BCMA_CORE_PCI_MDIODATA_START;
++	v |= BCMA_CORE_PCI_MDIODATA_START;
+ 	v |= BCMA_CORE_PCI_MDIODATA_WRITE;
+ 	v |= BCMA_CORE_PCI_MDIODATA_TA;
+ 	v |= data;
 -- 
 2.20.1
 
