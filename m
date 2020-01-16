@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5CEC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A25F1C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C74582077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7997A207FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:04:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194254;
-	bh=DxDMkXN6W8HXA9Tv9UdkQdLIiC4v0uFN8JnUp4MuYaQ=;
+	s=default; t=1579194258;
+	bh=MQIb2TfQCnGj786/+uVtJLgMv3bGqm+yX2Xf8zS8jPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yxGiOUVDiEeKetVVPV8WisR9t1Xr6/p4FzrvSZaiccqP8kh/ro/hmVzRpiMDOubZl
-	 c0RcQ9sx+J6KNdW2qS6v8+1Isv1lXf17P6xjlnhKtHwnOpmQsUgUYE5i5cYwMetNzh
-	 HZafBTkO81eCFW17NbzECOh69LvU7ZfLK/FZtjcU=
+	b=JRneDcas7VVR2uAukW0fdxX09UWxx9tNRZsK1/+FRG6fwqWIdWv6ILnkyYWr6u8UE
+	 YvRU6eups7Lco/5aq4v7yaRMZHV9Lj8RpAxhTFcML11cyTn3Pr5jYJrrK3xAjCHXas
+	 v0UjT/Cqy55Zo6OThb0ZtIAM2gfPGq4uJ+6p1Cgg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388487AbgAPRCu (ORCPT
+        id S2388141AbgAPRER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:02:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55952 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:04:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388036AbgAPRCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:02:43 -0500
+        id S2388481AbgAPRCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:02:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04F9D207FF;
-        Thu, 16 Jan 2020 17:02:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31988207FF;
+        Thu, 16 Jan 2020 17:02:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194162;
-        bh=DxDMkXN6W8HXA9Tv9UdkQdLIiC4v0uFN8JnUp4MuYaQ=;
+        s=default; t=1579194167;
+        bh=MQIb2TfQCnGj786/+uVtJLgMv3bGqm+yX2Xf8zS8jPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c7dM815HwtyBCpR5EmbF7N7NOBhiFqdfO1RAM1lSVKMJbEtTDuYEFWoatCqzwrCZv
-         tleyxGE1W+FGV5FBaE1vuTfBtBrGo4BF/SknKzllZukF2BRluza5ntlOSVuPdVVmZ7
-         ryu1kPcT/Qu8idP3sJh3elVk1a5ilrDtf4nILMQM=
+        b=2q1yay3IUFqpIo1JvkM6UInijVXHK09e4/BR8BY/P7TDuZh41HHuHoadmDMaMnX0z
+         tK1S+g+8dBC2OpBpCJHSi1NYGphkZ2T++tCYEx9iIp7wOZYkjpNLN41bisDQ2eQJdF
+         u50Q7oi0MQuPDMB7048czD6UtnfceZeR2gb0nAIw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eli Britstein <elibr@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 243/671] net/mlx5: Fix multiple updates of steering rules in parallel
-Date:   Thu, 16 Jan 2020 11:52:32 -0500
-Message-Id: <20200116165940.10720-126-sashal@kernel.org>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 247/671] soc: amlogic: gx-socinfo: Add mask for each SoC packages
+Date:   Thu, 16 Jan 2020 11:52:36 -0500
+Message-Id: <20200116165940.10720-130-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -61,47 +61,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eli Britstein <elibr@mellanox.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-[ Upstream commit 6237634d8fcc65c9e3348382910e7cdb15084c68 ]
+[ Upstream commit dce47aed20c7de3ee2011b7a63e67f08e9dcfb5e ]
 
-There might be a condition where the fte found is not active yet. In
-this case we should not use it, but continue to search for another, or
-allocate a new one.
+When updated IDs on f842c41adc04 ("amlogic: meson-gx-socinfo: Update soc ids")
+we introduced packages ids using the full 8bit value, but in the function
+socinfo_to_package_id() the id was filtered with the 0xf0 mask.
 
-Fixes: bd71b08ec2ee ("net/mlx5: Support multiple updates of steering rules in parallel")
-Signed-off-by: Eli Britstein <elibr@mellanox.com>
-Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+While the 0xf0 mask is valid for most board, it filters out the lower
+4 bits which encodes some characteristics of the chip.
+
+This patch moves the mask into the meson_gx_package_id table to be applied
+on each package name independently and add the correct mask for some
+specific entries.
+
+An example is the S905, in the vendor code the S905 is package_id
+different from 0x20, and S905M is exactly 0x20.
+
+Another example are the The Wetek Hub & Play2 boards using a S905-H
+variant, which is the S905 SoC with some licence bits enabled.
+These licence bits are encoded in the lower 4bits, so to detect
+the -H variant, we must detect the id == 0x3 with the 0xf mask.
+
+Fixes: f842c41adc04 ("amlogic: meson-gx-socinfo: Update soc ids")
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/fs_core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/soc/amlogic/meson-gx-socinfo.c | 32 ++++++++++++++------------
+ 1 file changed, 17 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-index 82a53317285d..b16e0f45d28c 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-@@ -469,6 +469,7 @@ static void del_hw_fte(struct fs_node *node)
- 			mlx5_core_warn(dev,
- 				       "flow steering can't delete fte in index %d of flow group id %d\n",
- 				       fte->index, fg->id);
-+		node->active = 0;
- 	}
- }
+diff --git a/drivers/soc/amlogic/meson-gx-socinfo.c b/drivers/soc/amlogic/meson-gx-socinfo.c
+index 37ea0a1c24c8..1ae339f5eadb 100644
+--- a/drivers/soc/amlogic/meson-gx-socinfo.c
++++ b/drivers/soc/amlogic/meson-gx-socinfo.c
+@@ -43,20 +43,21 @@ static const struct meson_gx_package_id {
+ 	const char *name;
+ 	unsigned int major_id;
+ 	unsigned int pack_id;
++	unsigned int pack_mask;
+ } soc_packages[] = {
+-	{ "S905", 0x1f, 0 },
+-	{ "S905H", 0x1f, 0x13 },
+-	{ "S905M", 0x1f, 0x20 },
+-	{ "S905D", 0x21, 0 },
+-	{ "S905X", 0x21, 0x80 },
+-	{ "S905W", 0x21, 0xa0 },
+-	{ "S905L", 0x21, 0xc0 },
+-	{ "S905M2", 0x21, 0xe0 },
+-	{ "S912", 0x22, 0 },
+-	{ "962X", 0x24, 0x10 },
+-	{ "962E", 0x24, 0x20 },
+-	{ "A113X", 0x25, 0x37 },
+-	{ "A113D", 0x25, 0x22 },
++	{ "S905", 0x1f, 0, 0x20 }, /* pack_id != 0x20 */
++	{ "S905H", 0x1f, 0x3, 0xf }, /* pack_id & 0xf == 0x3 */
++	{ "S905M", 0x1f, 0x20, 0xf0 }, /* pack_id == 0x20 */
++	{ "S905D", 0x21, 0, 0xf0 },
++	{ "S905X", 0x21, 0x80, 0xf0 },
++	{ "S905W", 0x21, 0xa0, 0xf0 },
++	{ "S905L", 0x21, 0xc0, 0xf0 },
++	{ "S905M2", 0x21, 0xe0, 0xf0 },
++	{ "S912", 0x22, 0, 0x0 }, /* Only S912 is known for GXM */
++	{ "962X", 0x24, 0x10, 0xf0 },
++	{ "962E", 0x24, 0x20, 0xf0 },
++	{ "A113X", 0x25, 0x37, 0xff },
++	{ "A113D", 0x25, 0x22, 0xff },
+ };
  
-@@ -1597,6 +1598,11 @@ lookup_fte_locked(struct mlx5_flow_group *g,
- 		fte_tmp = NULL;
- 		goto out;
- 	}
-+	if (!fte_tmp->node.active) {
-+		tree_put_node(&fte_tmp->node);
-+		fte_tmp = NULL;
-+		goto out;
-+	}
+ static inline unsigned int socinfo_to_major(u32 socinfo)
+@@ -81,13 +82,14 @@ static inline unsigned int socinfo_to_misc(u32 socinfo)
  
- 	nested_down_write_ref_node(&fte_tmp->node, FS_LOCK_CHILD);
- out:
+ static const char *socinfo_to_package_id(u32 socinfo)
+ {
+-	unsigned int pack = socinfo_to_pack(socinfo) & 0xf0;
++	unsigned int pack = socinfo_to_pack(socinfo);
+ 	unsigned int major = socinfo_to_major(socinfo);
+ 	int i;
+ 
+ 	for (i = 0 ; i < ARRAY_SIZE(soc_packages) ; ++i) {
+ 		if (soc_packages[i].major_id == major &&
+-		    soc_packages[i].pack_id == pack)
++		    soc_packages[i].pack_id ==
++				(pack & soc_packages[i].pack_mask))
+ 			return soc_packages[i].name;
+ 	}
+ 
 -- 
 2.20.1
 
