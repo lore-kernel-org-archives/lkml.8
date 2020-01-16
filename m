@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0449C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C98E1C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C95D217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D3DC22522
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:01:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197687;
-	bh=u4Wnu6vdTq3zbpaXhgACT1ejyw+Rhxp+TLvXUrakHKw=;
+	s=default; t=1579197690;
+	bh=lgMIRPmKoi13KARQ1dGePxauG3B+flYS/UXmP+E1xdw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f61l6qrUD3DXST9EUIGFLBHQTkTAY0bGTgNvNAlG0jATWK6FcxTBZ0KMLu9DlojN3
-	 haxlqyREiHz2D4sk+Pdqv8JuG8KMMpcYB3fU6xvwlKFitVRQy/LSlGV7aVIC+BfJwI
-	 eAGP/8XY99bIH3GuDnxfoeXM/aGARZEnTaVwnBUc=
+	b=slTLuCyGGcxMAja/LDf1mPQ7LBcaiJRKI8xzJXNMDyRIqWf7VB+WJqvrbflZsqohS
+	 7vmuvOxbw9qFdoEzvqKy0JkkxhrF/JhR1q7VDY3kHZfpd0Jkm1lFcCbkOFiwr5XS47
+	 Jm+KrEgS/wdHoZqlPc90+BfARAFpz8LKZ6x2o1gM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394932AbgAPSB0 (ORCPT
+        id S2405692AbgAPRla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:01:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59664 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:41:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733225AbgAPRlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:41:49 -0500
+        id S2393653AbgAPRkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:40:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0359246AC;
-        Thu, 16 Jan 2020 17:41:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEF3B2472E;
+        Thu, 16 Jan 2020 17:40:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196508;
-        bh=u4Wnu6vdTq3zbpaXhgACT1ejyw+Rhxp+TLvXUrakHKw=;
+        s=default; t=1579196440;
+        bh=lgMIRPmKoi13KARQ1dGePxauG3B+flYS/UXmP+E1xdw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XEX2jzml1GNB5ifN02yyvYoO2ItdqDw4azpvwSR6rflW3ckpBLovwr9awVt0l+JiH
-         zLzE2+XrkWUz3Yh3GBB0i2OBBzElILWEXBrpXVr2HnHH8iDKIh+/l+6BJ/90I1vyUO
-         PNVJ3Va/CcONPqfGhQaPdjmC2NCk7Bj4GsDHqmCo=
+        b=afA499yFYPGvz/MtRRG6V9Lew7RyuUlrz2LbaRzvipNWY8sUqnzXtxkbZhKgBf//L
+         hIjSy5H5uFjPPMnOvYIdDyzHvY9xwiPSuM9/XbL7UE526Gt3UIwIQ/WdfTFqN3o3rT
+         iM8G74DJWG8sgWRHdCjpTCVf2GJjGyumtVqGFIdc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sam Bobroff <sbobroff@linux.ibm.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 248/251] drm/radeon: fix bad DMA from INTERRUPT_CNTL2
-Date:   Thu, 16 Jan 2020 12:36:37 -0500
-Message-Id: <20200116173641.22137-208-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 204/251] net: broadcom/bcmsysport: Fix signedness in bcm_sysport_probe()
+Date:   Thu, 16 Jan 2020 12:35:53 -0500
+Message-Id: <20200116173641.22137-164-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -60,75 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sam Bobroff <sbobroff@linux.ibm.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 62d91dd2851e8ae2ca552f1b090a3575a4edf759 ]
+[ Upstream commit 25a584955f020d6ec499c513923fb220f3112d2b ]
 
-The INTERRUPT_CNTL2 register expects a valid DMA address, but is
-currently set with a GPU MC address.  This can cause problems on
-systems that detect the resulting DMA read from an invalid address
-(found on a Power8 guest).
+The "priv->phy_interface" variable is an enum and in this context GCC
+will treat it as unsigned so the error handling will never be
+triggered.
 
-Instead, use the DMA address of the dummy page because it will always
-be safe.
-
-Fixes: d8f60cfc9345 ("drm/radeon/kms: Add support for interrupts on r6xx/r7xx chips (v3)")
-Fixes: 25a857fbe973 ("drm/radeon/kms: add support for interrupts on SI")
-Fixes: a59781bbe528 ("drm/radeon: add support for interrupts on CIK (v5)")
-Signed-off-by: Sam Bobroff <sbobroff@linux.ibm.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: 80105befdb4b ("net: systemport: add Broadcom SYSTEMPORT Ethernet MAC driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/radeon/cik.c  | 4 ++--
- drivers/gpu/drm/radeon/r600.c | 4 ++--
- drivers/gpu/drm/radeon/si.c   | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/broadcom/bcmsysport.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/radeon/cik.c b/drivers/gpu/drm/radeon/cik.c
-index b99f3e59011c..5fcb5869a489 100644
---- a/drivers/gpu/drm/radeon/cik.c
-+++ b/drivers/gpu/drm/radeon/cik.c
-@@ -7026,8 +7026,8 @@ static int cik_irq_init(struct radeon_device *rdev)
- 	}
+diff --git a/drivers/net/ethernet/broadcom/bcmsysport.c b/drivers/net/ethernet/broadcom/bcmsysport.c
+index 95874c10c23b..e3b41af65d18 100644
+--- a/drivers/net/ethernet/broadcom/bcmsysport.c
++++ b/drivers/net/ethernet/broadcom/bcmsysport.c
+@@ -1773,7 +1773,7 @@ static int bcm_sysport_probe(struct platform_device *pdev)
  
- 	/* setup interrupt control */
--	/* XXX this should actually be a bus address, not an MC address. same on older asics */
--	WREG32(INTERRUPT_CNTL2, rdev->ih.gpu_addr >> 8);
-+	/* set dummy read address to dummy page address */
-+	WREG32(INTERRUPT_CNTL2, rdev->dummy_page.addr >> 8);
- 	interrupt_cntl = RREG32(INTERRUPT_CNTL);
- 	/* IH_DUMMY_RD_OVERRIDE=0 - dummy read disabled with msi, enabled without msi
- 	 * IH_DUMMY_RD_OVERRIDE=1 - dummy read controlled by IH_DUMMY_RD_EN
-diff --git a/drivers/gpu/drm/radeon/r600.c b/drivers/gpu/drm/radeon/r600.c
-index f2eac6b6c46a..9569c35f8766 100644
---- a/drivers/gpu/drm/radeon/r600.c
-+++ b/drivers/gpu/drm/radeon/r600.c
-@@ -3697,8 +3697,8 @@ int r600_irq_init(struct radeon_device *rdev)
- 	}
+ 	priv->phy_interface = of_get_phy_mode(dn);
+ 	/* Default to GMII interface mode */
+-	if (priv->phy_interface < 0)
++	if ((int)priv->phy_interface < 0)
+ 		priv->phy_interface = PHY_INTERFACE_MODE_GMII;
  
- 	/* setup interrupt control */
--	/* set dummy read address to ring address */
--	WREG32(INTERRUPT_CNTL2, rdev->ih.gpu_addr >> 8);
-+	/* set dummy read address to dummy page address */
-+	WREG32(INTERRUPT_CNTL2, rdev->dummy_page.addr >> 8);
- 	interrupt_cntl = RREG32(INTERRUPT_CNTL);
- 	/* IH_DUMMY_RD_OVERRIDE=0 - dummy read disabled with msi, enabled without msi
- 	 * IH_DUMMY_RD_OVERRIDE=1 - dummy read controlled by IH_DUMMY_RD_EN
-diff --git a/drivers/gpu/drm/radeon/si.c b/drivers/gpu/drm/radeon/si.c
-index b75d809c292e..919d389869ce 100644
---- a/drivers/gpu/drm/radeon/si.c
-+++ b/drivers/gpu/drm/radeon/si.c
-@@ -6018,8 +6018,8 @@ static int si_irq_init(struct radeon_device *rdev)
- 	}
- 
- 	/* setup interrupt control */
--	/* set dummy read address to ring address */
--	WREG32(INTERRUPT_CNTL2, rdev->ih.gpu_addr >> 8);
-+	/* set dummy read address to dummy page address */
-+	WREG32(INTERRUPT_CNTL2, rdev->dummy_page.addr >> 8);
- 	interrupt_cntl = RREG32(INTERRUPT_CNTL);
- 	/* IH_DUMMY_RD_OVERRIDE=0 - dummy read disabled with msi, enabled without msi
- 	 * IH_DUMMY_RD_OVERRIDE=1 - dummy read controlled by IH_DUMMY_RD_EN
+ 	/* In the case of a fixed PHY, the DT node associated
 -- 
 2.20.1
 
