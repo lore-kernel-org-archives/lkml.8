@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A57C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8520C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21FE921582
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:46:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0BC720663
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:46:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193184;
-	bh=yK5TvpLuz4Z0jsh9P/SNatynnR9D2SS7hXVXfA471Yk=;
+	s=default; t=1579193187;
+	bh=BJzPVDELKmAeSl2nUn/TE5Mx45SNrNP52CsMOLfrdvI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ynlTFiBAeJmVClpTtbYaqAqBHA2jPax6W9d3Tn5RTTU9Q08J+0kG6Z+B6b7DbuHNl
-	 sCdMKMwgqdTTUBkg8UUVNk+Wbb0ZHw4cKRChojrmeaq7bgke8VHzE6NkFM2peBU3Dc
-	 7J+ql4XTpTQMB6XXYttnsZfm7ne+sL8LdSvjzsJU=
+	b=EX7db9xn0uALQJGhA1CV26pHCkJdwvznEpRpxJ+mzOhok570fR9Q5aqjdzzket9Hv
+	 K5gFFkN0Ezz77RLbUIFGWsOAInFwDiHcvYepPIJNkm5En7xOH8WN1WDuV5bkOcxt5m
+	 jfFmjvBS5yiwXx2erduAowmSZXLBwayE1tWcTZ6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729039AbgAPQqR (ORCPT
+        id S1729782AbgAPQq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:46:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55378 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:46:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729122AbgAPQqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:46:13 -0500
+        id S1729417AbgAPQqW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:46:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26B8720663;
-        Thu, 16 Jan 2020 16:46:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6525C20663;
+        Thu, 16 Jan 2020 16:46:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193172;
-        bh=yK5TvpLuz4Z0jsh9P/SNatynnR9D2SS7hXVXfA471Yk=;
+        s=default; t=1579193181;
+        bh=BJzPVDELKmAeSl2nUn/TE5Mx45SNrNP52CsMOLfrdvI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1dMTDHrM7I0O3nCDbslcoytZVH+ww7BpBawp5N5A/RK5Jp/6ZVCcj04D67o6MHuSJ
-         Nv+C+rRofzTdSriJ4B+N79rROQtbCLU0Vo6L+hqI1uq+oslhbijrSuTt3/+dVqzcc5
-         4bCWKzvgx2LoOkiZuSUt31LA3D3AD0PPoyGxlfSo=
+        b=Cavs+k8sGvRxb+cKjzBJKciAL1v8pnDxGdhKpZ8xsMEIS5KknHAmnG7fiS20VTFCG
+         5riteHvgmww5iW1aWbF5aiF8S0WYGANT2sjBZRDLt4XaffnaFeIhycP8/n+aZkCDCu
+         2IVwDC+4jCv8Hr22nqNqFTzPRjQJM8k7F2lI8qqs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 039/205] dmaengine: dw: platform: Mark 'hclk' clock optional
-Date:   Thu, 16 Jan 2020 11:40:14 -0500
-Message-Id: <20200116164300.6705-39-sashal@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Srinath Mannam <srinath.mannam@broadcom.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 041/205] PCI: Fix missing bridge dma_ranges resource list cleanup
+Date:   Thu, 16 Jan 2020 11:40:16 -0500
+Message-Id: <20200116164300.6705-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -60,39 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit f27c22736d133baff0ab3fdc7b015d998267d817 ]
+[ Upstream commit 7608158df3ed87a5c938c4a0b91f5b11101a9be1 ]
 
-On some platforms the clock can be fixed rate, always running one and
-there is no need to do anything with it.
+Commit e80a91ad302b ("PCI: Add dma_ranges window list") added a
+dma_ranges resource list, but failed to correctly free the list when
+devm_pci_alloc_host_bridge() is used.
 
-In order to support those platforms, switch to use optional clock.
+Only the iproc host bridge driver is using the dma_ranges list.
 
-Fixes: f8d9ddbc2851 ("dmaengine: dw: platform: Enable iDMA 32-bit on Intel Elkhart Lake")
-Depends-on: 60b8f0ddf1a9 ("clk: Add (devm_)clk_get_optional() functions")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Link: https://lore.kernel.org/r/20190924085116.83683-1-andriy.shevchenko@linux.intel.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: e80a91ad302b ("PCI: Add dma_ranges window list")
+Link: https://lore.kernel.org/r/20191008012325.25700-1-robh@kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Srinath Mannam <srinath.mannam@broadcom.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/dw/platform.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/probe.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/dma/dw/platform.c b/drivers/dma/dw/platform.c
-index c90c798e5ec3..0585d749d935 100644
---- a/drivers/dma/dw/platform.c
-+++ b/drivers/dma/dw/platform.c
-@@ -66,7 +66,7 @@ static int dw_probe(struct platform_device *pdev)
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 64ebe3e5e611..d3033873395d 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -572,6 +572,7 @@ static void devm_pci_release_host_bridge_dev(struct device *dev)
+ 		bridge->release_fn(bridge);
  
- 	data->chip = chip;
+ 	pci_free_resource_list(&bridge->windows);
++	pci_free_resource_list(&bridge->dma_ranges);
+ }
  
--	chip->clk = devm_clk_get(chip->dev, "hclk");
-+	chip->clk = devm_clk_get_optional(chip->dev, "hclk");
- 	if (IS_ERR(chip->clk))
- 		return PTR_ERR(chip->clk);
- 	err = clk_prepare_enable(chip->clk);
+ static void pci_release_host_bridge_dev(struct device *dev)
 -- 
 2.20.1
 
