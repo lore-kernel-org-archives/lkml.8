@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78EECC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B091C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC422072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:44:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40C172072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:44:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218284;
-	bh=jQT+WNioAeZDY5GTweyyOO5vpR1C6KAoTQe7/C5EF3E=;
+	s=default; t=1579218287;
+	bh=ZYX+Zfw+r6NhNQ/v3dQsd8zFyH2Ea9S8fCDau5E4rXM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XnRwHNPBn6zUsgUu5Tf1Yiv8QKa/pQRPxAX3L/R+6H2RqRbhhtdcIgB1lnMrtXR6m
-	 iOLEQJrrJ0uLOvopL6Ea5Wq0qv3zgPelH8iNmL7Z/yZwFX0mdgtqxNPhNR61C/sZMC
-	 fK36vgvCxmuKpQN/CarQtcCEO/hahxiv/3Tw1gOw=
+	b=HBZlKShzdP42ZS69hKO76Wz4O2Q2yo1Hc58B1qmjfILwU7X+sfluPSVHEQUk8mUPu
+	 AEz6Lq9nPr6aRUPprYfE0E+GpfYQylinvywSurOF0skT81Va9Sw7xnsc05DqSeP659
+	 94Hvn4KXZa9feygMd0VOWHG1BwsgsN5IkkN8i9W4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729308AbgAPXXy (ORCPT
+        id S2403896AbgAPXoq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:23:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52468 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:44:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729770AbgAPXXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:23:48 -0500
+        id S1729366AbgAPXXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:23:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 836B020684;
-        Thu, 16 Jan 2020 23:23:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AF6A2072E;
+        Thu, 16 Jan 2020 23:23:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217028;
-        bh=jQT+WNioAeZDY5GTweyyOO5vpR1C6KAoTQe7/C5EF3E=;
+        s=default; t=1579217032;
+        bh=ZYX+Zfw+r6NhNQ/v3dQsd8zFyH2Ea9S8fCDau5E4rXM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N57H+kKTsOxkI70j9SJG/G/eal5VNOKN8WyzXljQVUBMjumSSgB4pjE1mhcBzyeZS
-         abIeMCtI3rIcXxXjZ82nzjh2zdEH4u+DaCtWTOjGGzxYsOEC3nWv7+ZtZgQebCOsis
-         9gVZ2DNSrSs4KM2rn9poDQO+wWhiGKJzF4uT/UjQ=
+        b=w7fp1dsWI8BH/WDsc4nRmCHzWT+T3mjV6Qtj2BCuUkm6ibaPqJ6hgFysUu2V5NRYv
+         KepT2m1klq+YOYaD10tJc/IRp3sPbTLrbHQtYR32gowRsZRSSzNIbTve/s9e0hIACx
+         p27PCeYnl2ct4fygHp/yBHrUlYlIBPNvgMqRcXmY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 118/203] affs: fix a memory leak in affs_remount
-Date:   Fri, 17 Jan 2020 00:17:15 +0100
-Message-Id: <20200116231755.674843689@linuxfoundation.org>
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: [PATCH 5.4 104/203] NFSv2: Fix a typo in encode_sattr()
+Date:   Fri, 17 Jan 2020 00:17:01 +0100
+Message-Id: <20200116231754.657309758@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -60,56 +59,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-commit 450c3d4166837c496ebce03650c08800991f2150 upstream.
+commit ad97a995d8edff820d4238bd0dfc69f440031ae6 upstream.
 
-In affs_remount if data is provided it is duplicated into new_opts.  The
-allocated memory for new_opts is only released if parse_options fails.
+Encode the mtime correctly.
 
-There's a bit of history behind new_options, originally there was
-save/replace options on the VFS layer so the 'data' passed must not
-change (thus strdup), this got cleaned up in later patches. But not
-completely.
-
-There's no reason to do the strdup in cases where the filesystem does
-not need to reuse the 'data' again, because strsep would modify it
-directly.
-
-Fixes: c8f33d0bec99 ("affs: kstrdup() memory handling")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-[ update changelog ]
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 95582b0083883 ("vfs: change inode times to use struct timespec64")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/affs/super.c |    6 ------
- 1 file changed, 6 deletions(-)
+ fs/nfs/nfs2xdr.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/affs/super.c
-+++ b/fs/affs/super.c
-@@ -561,14 +561,9 @@ affs_remount(struct super_block *sb, int
- 	int			 root_block;
- 	unsigned long		 mount_flags;
- 	int			 res = 0;
--	char			*new_opts;
- 	char			 volume[32];
- 	char			*prefix = NULL;
- 
--	new_opts = kstrdup(data, GFP_KERNEL);
--	if (data && !new_opts)
--		return -ENOMEM;
--
- 	pr_debug("%s(flags=0x%x,opts=\"%s\")\n", __func__, *flags, data);
- 
- 	sync_filesystem(sb);
-@@ -579,7 +574,6 @@ affs_remount(struct super_block *sb, int
- 			   &blocksize, &prefix, volume,
- 			   &mount_flags)) {
- 		kfree(prefix);
--		kfree(new_opts);
- 		return -EINVAL;
- 	}
- 
+--- a/fs/nfs/nfs2xdr.c
++++ b/fs/nfs/nfs2xdr.c
+@@ -370,7 +370,7 @@ static void encode_sattr(struct xdr_stre
+ 	} else
+ 		p = xdr_time_not_set(p);
+ 	if (attr->ia_valid & ATTR_MTIME_SET) {
+-		ts = timespec64_to_timespec(attr->ia_atime);
++		ts = timespec64_to_timespec(attr->ia_mtime);
+ 		xdr_encode_time(p, &ts);
+ 	} else if (attr->ia_valid & ATTR_MTIME) {
+ 		ts = timespec64_to_timespec(attr->ia_mtime);
 
 
