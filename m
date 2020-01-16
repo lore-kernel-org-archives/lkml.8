@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C3FC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77203C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B97662073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:22:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50EF82051A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:22:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198933;
-	bh=CkuyHy+LTnuMc8iztfegljcTXrOlV57qafrOQbbVHqw=;
+	s=default; t=1579198939;
+	bh=L10BAFWsaqKz+H9Qust6p8J+BeZOj6OyfJvIyPxt81Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=umGhITia2pkDNLcg3+S/0bsJdykgl1AZqlhmWz+MYj8GdKu9bGOftdSh0/zrlvZMT
-	 RzsK7d1xU18OejB47CSzRECndy4xfzXS2DunoD9sM3/9oMNDb78jTHkAi9Npix/kjX
-	 tgy0FrR+KA4DYNaS92aL9i3LxRgXbUOOuUnlYxAg=
+	b=HOh3eIUm2epKt2UpqvVMQ79e4c1l3b6+PCMNsbHjfkvLSsktRJOMMBej4ZnqJ5Dub
+	 GIAtgisHfSQsk6zPyut3S08iVBy8g86BkDOM6seDvmUUneFcQpae0/OPnoiJF9ixv+
+	 n2qkfLunDhSIQfZQVzRz8hti2qZWi4HL0QIFbdnc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392471AbgAPR1g (ORCPT
+        id S2404317AbgAPSWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:27:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37308 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:22:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404036AbgAPR10 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:27:26 -0500
+        id S2392214AbgAPR1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:27:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15BF0246D3;
-        Thu, 16 Jan 2020 17:27:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E98D246D0;
+        Thu, 16 Jan 2020 17:27:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195645;
-        bh=CkuyHy+LTnuMc8iztfegljcTXrOlV57qafrOQbbVHqw=;
+        s=default; t=1579195653;
+        bh=L10BAFWsaqKz+H9Qust6p8J+BeZOj6OyfJvIyPxt81Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X+1wdNZBOSu2WiRKtaeospNgcm9KEh7+HpMzO/4idp9OYDJVTAu7LQ9jI+AQ/AIHu
-         PXLfBHDboLS4FlX1T1LHj2yvwx+287vulXZ2IkSDXwL+VKtR3taTNy/IFXfNMYIMWc
-         rodFJVvfIR3JHSo3+i9VWLG0PfNf/dv/PQt9td4Y=
+        b=pvjN5x3q+KhcCAsIT2b/VsfWlVvzsicV0dQttEphdg9xgE9+MXD5mH7IsRiiYYkKe
+         086oiiqo0YI/FOQwQV6B2V40WaGEuRMvir0jNJXuAG1QYh+6hMFgSMFBN87DFb6BIC
+         178YQ1vmrXtizmg3ZDKoCGy5P4B6zXIgMYzNJZ80=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 209/371] spi: spi-fsl-spi: call spi_finalize_current_message() at the end
-Date:   Thu, 16 Jan 2020 12:21:21 -0500
-Message-Id: <20200116172403.18149-152-sashal@kernel.org>
+Cc:     Erwan Le Ray <erwan.leray@st.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 215/371] serial: stm32: fix wakeup source initialization
+Date:   Thu, 16 Jan 2020 12:21:27 -0500
+Message-Id: <20200116172403.18149-158-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -59,41 +61,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Erwan Le Ray <erwan.leray@st.com>
 
-[ Upstream commit 44a042182cb1e9f7916e015c836967bf638b33c4 ]
+[ Upstream commit 5297f274e8b61ceb9676cba6649d3de9d03387ad ]
 
-spi_finalize_current_message() shall be called once all
-actions are finished, otherwise the last actions might
-step over a newly started transfer.
+Fixes dedicated_irq_wakeup issue and deactivated uart as wakeup source by
+default.
 
-Fixes: c592becbe704 ("spi: fsl-(e)spi: migrate to generic master queueing")
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 270e5a74fe4c ("serial: stm32: add wakeup mechanism")
+Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-fsl-spi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/serial/stm32-usart.c | 28 +++++++++++++++-------------
+ 1 file changed, 15 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/spi/spi-fsl-spi.c b/drivers/spi/spi-fsl-spi.c
-index 8b79e36fab21..cd784552de7f 100644
---- a/drivers/spi/spi-fsl-spi.c
-+++ b/drivers/spi/spi-fsl-spi.c
-@@ -407,7 +407,6 @@ static int fsl_spi_do_one_msg(struct spi_master *master,
- 	}
+diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
+index 2384f786b76d..f8f3f8fafd9f 100644
+--- a/drivers/tty/serial/stm32-usart.c
++++ b/drivers/tty/serial/stm32-usart.c
+@@ -447,7 +447,6 @@ static int stm32_startup(struct uart_port *port)
+ {
+ 	struct stm32_port *stm32_port = to_stm32_port(port);
+ 	struct stm32_usart_offsets *ofs = &stm32_port->info->ofs;
+-	struct stm32_usart_config *cfg = &stm32_port->info->cfg;
+ 	const char *name = to_platform_device(port->dev)->name;
+ 	u32 val;
+ 	int ret;
+@@ -458,15 +457,6 @@ static int stm32_startup(struct uart_port *port)
+ 	if (ret)
+ 		return ret;
  
- 	m->status = status;
--	spi_finalize_current_message(master);
+-	if (cfg->has_wakeup && stm32_port->wakeirq >= 0) {
+-		ret = dev_pm_set_dedicated_wake_irq(port->dev,
+-						    stm32_port->wakeirq);
+-		if (ret) {
+-			free_irq(port->irq, port);
+-			return ret;
+-		}
+-	}
+-
+ 	val = USART_CR1_RXNEIE | USART_CR1_TE | USART_CR1_RE;
+ 	if (stm32_port->fifoen)
+ 		val |= USART_CR1_FIFOEN;
+@@ -497,7 +487,6 @@ static void stm32_shutdown(struct uart_port *port)
  
- 	if (status || !cs_change) {
- 		ndelay(nsecs);
-@@ -415,6 +414,7 @@ static int fsl_spi_do_one_msg(struct spi_master *master,
- 	}
+ 	stm32_clr_bits(port, ofs->cr1, val);
  
- 	fsl_spi_setup_transfer(spi, NULL);
-+	spi_finalize_current_message(master);
- 	return 0;
+-	dev_pm_clear_wake_irq(port->dev);
+ 	free_irq(port->irq, port);
  }
+ 
+@@ -904,11 +893,18 @@ static int stm32_serial_probe(struct platform_device *pdev)
+ 		ret = device_init_wakeup(&pdev->dev, true);
+ 		if (ret)
+ 			goto err_uninit;
++
++		ret = dev_pm_set_dedicated_wake_irq(&pdev->dev,
++						    stm32port->wakeirq);
++		if (ret)
++			goto err_nowup;
++
++		device_set_wakeup_enable(&pdev->dev, false);
+ 	}
+ 
+ 	ret = uart_add_one_port(&stm32_usart_driver, &stm32port->port);
+ 	if (ret)
+-		goto err_nowup;
++		goto err_wirq;
+ 
+ 	ret = stm32_of_dma_rx_probe(stm32port, pdev);
+ 	if (ret)
+@@ -922,6 +918,10 @@ static int stm32_serial_probe(struct platform_device *pdev)
+ 
+ 	return 0;
+ 
++err_wirq:
++	if (stm32port->info->cfg.has_wakeup && stm32port->wakeirq >= 0)
++		dev_pm_clear_wake_irq(&pdev->dev);
++
+ err_nowup:
+ 	if (stm32port->info->cfg.has_wakeup && stm32port->wakeirq >= 0)
+ 		device_init_wakeup(&pdev->dev, false);
+@@ -959,8 +959,10 @@ static int stm32_serial_remove(struct platform_device *pdev)
+ 				  TX_BUF_L, stm32_port->tx_buf,
+ 				  stm32_port->tx_dma_buf);
+ 
+-	if (cfg->has_wakeup && stm32_port->wakeirq >= 0)
++	if (cfg->has_wakeup && stm32_port->wakeirq >= 0) {
++		dev_pm_clear_wake_irq(&pdev->dev);
+ 		device_init_wakeup(&pdev->dev, false);
++	}
+ 
+ 	clk_disable_unprepare(stm32_port->clk);
  
 -- 
 2.20.1
