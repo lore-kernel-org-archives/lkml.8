@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AAE8C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 584EEC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BF4D2064C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:48:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 227AE2064C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:48:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200490;
-	bh=UPItCjmuo8SP4QHmFAW1NxhRC4SPqP7urVkVKQ4r+5A=;
+	s=default; t=1579200493;
+	bh=nHsaHORAAIrn4V6ey3gogkCaLw6Zk+kGN7xxnfo8EpY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MRoJdaoq30LEuVtNIVYJRrDGUHJ5x8AZsgg7BEqapRhXCbIymcIi8lqTS4IHP4NVf
-	 tcokPhLKWqRAyGV2b0uNykiBNSoB17LgOwwHSSxA/SPOAsCeYSWJh2/Ds+4oN52eKf
-	 y7b4am7uWM8nGiERQRZR5wWfgbUenPuhiy1j+Ffk=
+	b=bubJsu2uN/UxRk7rLKYqt2Aif9kAVfLCRrCn4kv7azbmygy2EgF6kEKYoX9+7VUh3
+	 uOI5ukf95EB46k6HQK28nGLYDWtUmXVvcppwHQa9T0A3XYmXf/y74ylr/+jQDGQh35
+	 uzUESh+9CLss9sQiWlp/DWYyG42HmpNl7/pYyifY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392668AbgAPSsI (ORCPT
+        id S2389759AbgAPRJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:48:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46656 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:09:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389765AbgAPRJw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:09:52 -0500
+        id S2389714AbgAPRJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:09:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E64FB2081E;
-        Thu, 16 Jan 2020 17:09:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7789D206D9;
+        Thu, 16 Jan 2020 17:09:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194591;
-        bh=UPItCjmuo8SP4QHmFAW1NxhRC4SPqP7urVkVKQ4r+5A=;
+        s=default; t=1579194577;
+        bh=nHsaHORAAIrn4V6ey3gogkCaLw6Zk+kGN7xxnfo8EpY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cRVrXFiRwPptZ6TDJZLDKVWUB6igv8gwBavagG5brF4rhrABcVHoHaZm9pCSu/gEh
-         0udCxi1F+M9TCso/Mt4bceJ+dwHwm4oRAn95DHvpkejmKqfOBUPblu0BmXq+pYeOKt
-         b3Wn34tVMcUFiQ/Wgu0Mg32gaA8GKSGemHO6iwRY=
+        b=NTQm/SOC/E4XtKSlnWJqQ3jwdeRVcIQxkHqmQ//JU4f4HabY/KWguAtq311Ye8QQI
+         VBl+kaL4ZsNgI3QVVAawL86yxfGGPTXr3cDOEHEpXXjSQe9zPke+J3q3OGpx+NQmCU
+         xsYtHBTgMrXn3GeNFHTbFAE97iYT5PIuvFkDKfWI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Olof Johansson <olof@lixom.net>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH AUTOSEL 4.19 462/671] ARM: stm32: use "depends on" instead of "if" after prompt
-Date:   Thu, 16 Jan 2020 12:01:40 -0500
-Message-Id: <20200116170509.12787-199-sashal@kernel.org>
+Cc:     Eddie James <eajames@linux.ibm.com>, Joel Stanley <joel@jms.id.au>,
+        Alistair Popple <alistair@popple.id.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-fsi@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 452/671] fsi: sbefifo: Don't fail operations when in SBE IPL state
+Date:   Thu, 16 Jan 2020 12:01:30 -0500
+Message-Id: <20200116170509.12787-189-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -61,34 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Eddie James <eajames@linux.ibm.com>
 
-[ Upstream commit 7e8a0f10899075ac2665c78c4e49dbaf32bf3346 ]
+[ Upstream commit 7ce98fb6c53d2311b3e9faae90b1a9c1a96534db ]
 
-This appeared after the global fixups by commit e32465429490 ("ARM: use
-"depends on" for SoC configs instead of "if" after prompt"). Fix it now.
+SBE fifo operations should be allowed while the SBE is in any of the
+"IPL" states. Operations should succeed in this state.
 
-Link: https://lore.kernel.org/r/20190710051320.8738-1-yamada.masahiro@socionext.com
-Fixes: e32465429490 ("ARM: use "depends on" for SoC configs instead of "if" after prompt")
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Olof Johansson <olof@lixom.net>
+Fixes: 9f4a8a2d7f9d fsi/sbefifo: Add driver for the SBE FIFO
+Reviewed-by: Joel Stanley <joel@jms.id.au>
+Tested-by: Alistair Popple <alistair@popple.id.au>
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Link: https://lore.kernel.org/r/1561575415-3282-1-git-send-email-eajames@linux.ibm.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-stm32/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/fsi/fsi-sbefifo.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/mach-stm32/Kconfig b/arch/arm/mach-stm32/Kconfig
-index 713c068b953f..adca4368d67c 100644
---- a/arch/arm/mach-stm32/Kconfig
-+++ b/arch/arm/mach-stm32/Kconfig
-@@ -1,5 +1,6 @@
- menuconfig ARCH_STM32
--	bool "STMicroelectronics STM32 family" if ARM_SINGLE_ARMV7M || ARCH_MULTI_V7
-+	bool "STMicroelectronics STM32 family"
-+	depends on ARM_SINGLE_ARMV7M || ARCH_MULTI_V7
- 	select ARMV7M_SYSTICK if ARM_SINGLE_ARMV7M
- 	select HAVE_ARM_ARCH_TIMER if ARCH_MULTI_V7
- 	select ARM_GIC if ARCH_MULTI_V7
+diff --git a/drivers/fsi/fsi-sbefifo.c b/drivers/fsi/fsi-sbefifo.c
+index ae861342626e..9fa3959e0855 100644
+--- a/drivers/fsi/fsi-sbefifo.c
++++ b/drivers/fsi/fsi-sbefifo.c
+@@ -289,11 +289,11 @@ static int sbefifo_check_sbe_state(struct sbefifo *sbefifo)
+ 	switch ((sbm & CFAM_SBM_SBE_STATE_MASK) >> CFAM_SBM_SBE_STATE_SHIFT) {
+ 	case SBE_STATE_UNKNOWN:
+ 		return -ESHUTDOWN;
++	case SBE_STATE_DMT:
++		return -EBUSY;
+ 	case SBE_STATE_IPLING:
+ 	case SBE_STATE_ISTEP:
+ 	case SBE_STATE_MPIPL:
+-	case SBE_STATE_DMT:
+-		return -EBUSY;
+ 	case SBE_STATE_RUNTIME:
+ 	case SBE_STATE_DUMP: /* Not sure about that one */
+ 		break;
 -- 
 2.20.1
 
