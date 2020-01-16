@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7EEC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBC9C47409
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D638206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1418C2087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:32:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217561;
-	bh=ZtOLED+HzresPEo2yXdyGD4jaScfbyJgvGIZpJddPBo=;
+	s=default; t=1579217567;
+	bh=Y9zR/zTmFhs3FpnRvxKhdD2kucn2ce+WPJwdkc21DP0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xkbprxfeiCBnv5g3GlwKUD7dPf6I8g6yNB6Cxssdk5WqzDD/b5u6YqFHjsIxfBc+p
-	 elqYtNa1gX4WUwG2UhxsiVq8tuBk7jSuflCLJTFRtxVcRjaSdBBf8tVgS8cqFyUN2I
-	 vmbzn1TOrE303Q4+iteLj/Buexf+W3YWekKtbNhA=
+	b=OPlPdVyFOQXZjX7yVLe7rta+NOhTW5XvsfKCcho51mocRoPRsMLFPUgimcOhR5LZl
+	 YSEQH2NCfb2uh4WOlIgeoDAg3z1G2QScJebJALGZC4qBTIcDkSIU42jHKadgVRZvvb
+	 zV8rAPWG79xvJ+AsxnBymcycCOwvwUlnrQnqKN8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391595AbgAPXck (ORCPT
+        id S2404199AbgAPXcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:32:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41988 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:32:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391571AbgAPXcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:32:31 -0500
+        id S2403889AbgAPXch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:32:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9036D20684;
-        Thu, 16 Jan 2020 23:32:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69BAE20684;
+        Thu, 16 Jan 2020 23:32:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217551;
-        bh=ZtOLED+HzresPEo2yXdyGD4jaScfbyJgvGIZpJddPBo=;
+        s=default; t=1579217555;
+        bh=Y9zR/zTmFhs3FpnRvxKhdD2kucn2ce+WPJwdkc21DP0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EPLgUOrwaYmKSaLJPylJg8j09lO9oYdg/Cqt7j9sONZxtHvBjSv6Cxv3iX3Hc2Dd7
-         NQgfe9Z0pQizHE0Hjp11JNyJNP3wfmbBHLFeD6KflRDtgrfJIewO+IgFb5bG5VAfX3
-         AsbRFAcpx0pFZax7SBbWSiww7mhHzrbSsZtL3nEU=
+        b=kEHYBMlRiw8GFQ49CUalo+QwDmPgNciQCTFOVyp7SFVS/HcgI/Oc+FtZSeKcU14hg
+         Pby+HzIDWoHgoNfVxYcbR0RYVmT0/MyWcCd0jJjV08IVW8N/tFoJ0VOykHDaU0hlQh
+         U60jJkWRQCFT0+PK5w6h1qJFRZVpmZMDgCKYvSOw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, linux-scsi@vger.kernel.org,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, netdev@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
         Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 4.14 44/71] scsi: sd: enable compat ioctls for sed-opal
-Date:   Fri, 17 Jan 2020 00:18:42 +0100
-Message-Id: <20200116231715.862762618@linuxfoundation.org>
+Subject: [PATCH 4.14 46/71] af_unix: add compat_ioctl support
+Date:   Fri, 17 Jan 2020 00:18:44 +0100
+Message-Id: <20200116231716.118855040@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231709.377772748@linuxfoundation.org>
 References: <20200116231709.377772748@linuxfoundation.org>
@@ -63,59 +63,83 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-commit 142b2ac82e31c174936c5719fa12ae28f51a55b7 upstream.
+commit 5f6beb9e0f633f3cc845cdd67973c506372931b4 upstream.
 
-The sed_ioctl() function is written to be compatible between
-32-bit and 64-bit processes, however compat mode is only
-wired up for nvme, not for sd.
+The af_unix protocol family has a custom ioctl command (inexplicibly
+based on SIOCPROTOPRIVATE), but never had a compat_ioctl handler for
+32-bit applications.
 
-Add the missing call to sed_ioctl() in sd_compat_ioctl().
+Since all commands are compatible here, add a trivial wrapper that
+performs the compat_ptr() conversion for SIOCOUTQ/SIOCINQ.  SIOCUNIXFILE
+does not use the argument, but it doesn't hurt to also use compat_ptr()
+here.
 
-Fixes: d80210f25ff0 ("sd: add support for TCG OPAL self encrypting disks")
-Cc: linux-scsi@vger.kernel.org
-Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Fixes: ba94f3088b79 ("unix: add ioctl to open a unix socket file with O_PATH")
+Cc: netdev@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/sd.c |   14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ net/unix/af_unix.c |   19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -1697,20 +1697,30 @@ static void sd_rescan(struct device *dev
- static int sd_compat_ioctl(struct block_device *bdev, fmode_t mode,
- 			   unsigned int cmd, unsigned long arg)
- {
--	struct scsi_device *sdev = scsi_disk(bdev->bd_disk)->device;
-+	struct gendisk *disk = bdev->bd_disk;
-+	struct scsi_disk *sdkp = scsi_disk(disk);
-+	struct scsi_device *sdev = sdkp->device;
-+	void __user *p = compat_ptr(arg);
- 	int error;
- 
-+	error = scsi_verify_blk_ioctl(bdev, cmd);
-+	if (error < 0)
-+		return error;
-+
- 	error = scsi_ioctl_block_when_processing_errors(sdev, cmd,
- 			(mode & FMODE_NDELAY) != 0);
- 	if (error)
- 		return error;
-+
-+	if (is_sed_ioctl(cmd))
-+		return sed_ioctl(sdkp->opal_dev, cmd, p);
- 	       
- 	/* 
- 	 * Let the static ioctl translation table take care of it.
- 	 */
- 	if (!sdev->host->hostt->compat_ioctl)
- 		return -ENOIOCTLCMD; 
--	return sdev->host->hostt->compat_ioctl(sdev, cmd, (void __user *)arg);
-+	return sdev->host->hostt->compat_ioctl(sdev, cmd, p);
+--- a/net/unix/af_unix.c
++++ b/net/unix/af_unix.c
+@@ -644,6 +644,9 @@ static unsigned int unix_poll(struct fil
+ static unsigned int unix_dgram_poll(struct file *, struct socket *,
+ 				    poll_table *);
+ static int unix_ioctl(struct socket *, unsigned int, unsigned long);
++#ifdef CONFIG_COMPAT
++static int unix_compat_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg);
++#endif
+ static int unix_shutdown(struct socket *, int);
+ static int unix_stream_sendmsg(struct socket *, struct msghdr *, size_t);
+ static int unix_stream_recvmsg(struct socket *, struct msghdr *, size_t, int);
+@@ -685,6 +688,9 @@ static const struct proto_ops unix_strea
+ 	.getname =	unix_getname,
+ 	.poll =		unix_poll,
+ 	.ioctl =	unix_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl =	unix_compat_ioctl,
++#endif
+ 	.listen =	unix_listen,
+ 	.shutdown =	unix_shutdown,
+ 	.setsockopt =	sock_no_setsockopt,
+@@ -708,6 +714,9 @@ static const struct proto_ops unix_dgram
+ 	.getname =	unix_getname,
+ 	.poll =		unix_dgram_poll,
+ 	.ioctl =	unix_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl =	unix_compat_ioctl,
++#endif
+ 	.listen =	sock_no_listen,
+ 	.shutdown =	unix_shutdown,
+ 	.setsockopt =	sock_no_setsockopt,
+@@ -730,6 +739,9 @@ static const struct proto_ops unix_seqpa
+ 	.getname =	unix_getname,
+ 	.poll =		unix_dgram_poll,
+ 	.ioctl =	unix_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl =	unix_compat_ioctl,
++#endif
+ 	.listen =	unix_listen,
+ 	.shutdown =	unix_shutdown,
+ 	.setsockopt =	sock_no_setsockopt,
+@@ -2650,6 +2662,13 @@ static int unix_ioctl(struct socket *soc
+ 	return err;
  }
- #endif
  
++#ifdef CONFIG_COMPAT
++static int unix_compat_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
++{
++	return unix_ioctl(sock, cmd, (unsigned long)compat_ptr(arg));
++}
++#endif
++
+ static unsigned int unix_poll(struct file *file, struct socket *sock, poll_table *wait)
+ {
+ 	struct sock *sk = sock->sk;
 
 
