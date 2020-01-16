@@ -2,120 +2,102 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FBCC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3267C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D055F2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:00:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201234;
-	bh=sujWSidxGQh0FrodT21X75t2dAsJYhleL/Z93fr0TOg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PXPqf1W05WHbA77PBS1c+CTKHg5MwZQvXcepe/0knI4myM/0l/fvbmbn/r23a+Wos
-	 d0dfRDyYASvMCS4WgcHtaxxvMgPzmAj5zR2pdNQzEHzbWpS+EvQfuBgvWyFPttHVpG
-	 E1/TvJ8AS7EFkhixw4rmcSv9s7QX6SM+R5YN3Qc8=
+	by mail.kernel.org (Postfix) with ESMTP id C945E2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:00:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EpBa46mh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388881AbgAPRGO (ORCPT
+        id S2437200AbgAPTAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:06:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35766 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388823AbgAPRGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:06:04 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D982A22464;
-        Thu, 16 Jan 2020 17:06:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194363;
-        bh=sujWSidxGQh0FrodT21X75t2dAsJYhleL/Z93fr0TOg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P5pLo4XWTbVGO61eKMpQBGOIEz8Dt2wVOHmyNDkaWCYvsHPA8j4dlsU88qjsUExRO
-         YQil4kPuC/kDifcTuHLpJ9R/4MzCI4YgNqx03qsxqHsqK2AJJhmx77XsDnbr9+XGff
-         57A3DCwF5BWU3QFv5Po6HlKGYPbcuIUlkgENixBQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 299/671] platform/x86: alienware-wmi: fix kfree on potentially uninitialized pointer
-Date:   Thu, 16 Jan 2020 11:58:57 -0500
-Message-Id: <20200116170509.12787-36-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
-References: <20200116170509.12787-1-sashal@kernel.org>
+        Thu, 16 Jan 2020 14:00:41 -0500
+Received: from mail-ot1-f54.google.com ([209.85.210.54]:36968 "EHLO
+        mail-ot1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388663AbgAPTAe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 14:00:34 -0500
+Received: by mail-ot1-f54.google.com with SMTP id k14so20397691otn.4
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 11:00:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hyY7WW4dkzBjOHFiSnAhU1ifhGoPr9kB/eLuIeGz0AE=;
+        b=EpBa46mhq3trk26FcvFYoKtZjmGqAVcQNC2FqB83DK2AEwcz5ZAZRcA7G2qxqCBe2v
+         spthb+qWYr0doMCPKJgZNFYsI9vaoC8Cc6vnMZ8iuHDvJBEwav4YoPOwkfaSraMKqn1Q
+         wZFKvwIn4SGUeVqQalUpjEV+t8ebTaC4gVyt4qT1NOQjk38K2LCLNCI9ytq8C/SaNF4d
+         IPczja3VhYWvyWWQRB28Lm4Vt+YXn+G0s4fWjOzXaHehV4zOAcavIaOkWy+fq0aY84Si
+         oNrR1oPx1BKc6yKRhSsOhg/Iz6CVJUFne5JoiHzq80OqL1H3x6xL8iNFzqjNEKLpd57o
+         mP/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hyY7WW4dkzBjOHFiSnAhU1ifhGoPr9kB/eLuIeGz0AE=;
+        b=R8Lo2Zn4CRbPWWcT8nYY4DJqGCR6MjvXE1EsZ75z0NOX9cMsqVAqEV9FBuRny5v1O0
+         gC+JrY7HGM1otVOul9a2H+Cj7+KXJ83fwgDBF9RVM7NQi7p1G0jhTOr7FnNjs8niG7zL
+         lCKXYSJkr3NLVkCgGr6ZFyGAmGltydJTgqZ0EuMURtLg9IxYaEzk2rXwo2oi5WiKMzgV
+         Z3w4bW3Ci7hzbN+fRK6iAVmljqo+IRlqCnUGFKoJmefApSxcdNQ5W91J9XXmKrf8o2Z3
+         Tokmv6TJ3RPbi9Ms7JSIXAxwVcXTNpD6nW3HoW+UyLebhuC68biqmUkEsJRxzGearYiS
+         vy9A==
+X-Gm-Message-State: APjAAAX9dkt5BKjPSMeXBGSPt1bUJcv2czD+dAUlhZAummJ/0lh6jhy0
+        4ripkNUinrtMLSoS1aU1IQf4cB6vx3iLNv/vvk0sbA==
+X-Google-Smtp-Source: APXvYqzrvSvdKS//HZyQp4z4fTTVNqnffvcAgM8KAmX5p4p0X7P0vOiAdo0qA176cJ9JED9JCVoDcyalIs648b+sTEY=
+X-Received: by 2002:a9d:7410:: with SMTP id n16mr3307988otk.23.1579201233339;
+ Thu, 16 Jan 2020 11:00:33 -0800 (PST)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20200115162512.70807-1-elver@google.com> <20200116174344.GV2935@paulmck-ThinkPad-P72>
+In-Reply-To: <20200116174344.GV2935@paulmck-ThinkPad-P72>
+From:   Marco Elver <elver@google.com>
+Date:   Thu, 16 Jan 2020 20:00:22 +0100
+Message-ID: <CANpmjNP5=ZyrnueXnYJU-ZN7VUgwnG5w4GFVLja9oN1LfHFpjg@mail.gmail.com>
+Subject: Re: [PATCH -rcu v2] kcsan: Make KCSAN compatible with lockdep
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Qian Cai <cai@lca.pw>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Thu, 16 Jan 2020 at 18:43, Paul E. McKenney <paulmck@kernel.org> wrote:
+>
+> On Wed, Jan 15, 2020 at 05:25:12PM +0100, Marco Elver wrote:
+> > We must avoid any recursion into lockdep if KCSAN is enabled on
+> > utilities used by lockdep. One manifestation of this is corrupting
+> > lockdep's IRQ trace state (if TRACE_IRQFLAGS). Fix this by:
+> >
+> > 1. Using raw_local_irq{save,restore} in kcsan_setup_watchpoint().
+> > 2. Disabling lockdep in kcsan_report().
+> >
+> > Tested with:
+> >
+> >   CONFIG_LOCKDEP=y
+> >   CONFIG_DEBUG_LOCKDEP=y
+> >   CONFIG_TRACE_IRQFLAGS=y
+> >
+> > Where previously, the following warning (and variants with different
+> > stack traces) was consistently generated, with the fix introduced in
+> > this patch, the warning cannot be reproduced.
 
-[ Upstream commit 98e2630284ab741804bd0713e932e725466f2f84 ]
+Qian, thank you for testing!
 
-Currently the kfree of output.pointer can be potentially freeing
-an uninitalized pointer in the case where out_data is NULL. Fix this
-by reworking the case where out_data is not-null to perform the
-ACPI status check and also the kfree of outpoint.pointer in one block
-and hence ensuring the pointer is only freed when it has been used.
+> I added Vlad's ack and Qian's Tested-by and queued this.  Thank you all!
 
-Also replace the if (ptr != NULL) idiom with just if (ptr).
+Thank you, Paul!
 
-Fixes: ff0e9f26288d ("platform/x86: alienware-wmi: Correct a memory leak")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/alienware-wmi.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/platform/x86/alienware-wmi.c b/drivers/platform/x86/alienware-wmi.c
-index f10af5c383c5..c0d1555735cd 100644
---- a/drivers/platform/x86/alienware-wmi.c
-+++ b/drivers/platform/x86/alienware-wmi.c
-@@ -522,23 +522,22 @@ static acpi_status alienware_wmax_command(struct wmax_basic_args *in_args,
- 
- 	input.length = (acpi_size) sizeof(*in_args);
- 	input.pointer = in_args;
--	if (out_data != NULL) {
-+	if (out_data) {
- 		output.length = ACPI_ALLOCATE_BUFFER;
- 		output.pointer = NULL;
- 		status = wmi_evaluate_method(WMAX_CONTROL_GUID, 0,
- 					     command, &input, &output);
--	} else
-+		if (ACPI_SUCCESS(status)) {
-+			obj = (union acpi_object *)output.pointer;
-+			if (obj && obj->type == ACPI_TYPE_INTEGER)
-+				*out_data = (u32)obj->integer.value;
-+		}
-+		kfree(output.pointer);
-+	} else {
- 		status = wmi_evaluate_method(WMAX_CONTROL_GUID, 0,
- 					     command, &input, NULL);
--
--	if (ACPI_SUCCESS(status) && out_data != NULL) {
--		obj = (union acpi_object *)output.pointer;
--		if (obj && obj->type == ACPI_TYPE_INTEGER)
--			*out_data = (u32) obj->integer.value;
- 	}
--	kfree(output.pointer);
- 	return status;
--
- }
- 
- /*
--- 
-2.20.1
-
+-- Marco
