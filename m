@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54942C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6C4C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 256832072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:29:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07BA32072B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:29:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217347;
-	bh=+vvDOcRdhJp6OiqKi07LAjtkECQRNIemvqgQAgj+pz8=;
+	s=default; t=1579217351;
+	bh=80qMqilDKb1q7yzrUTzmSO/ts7DiRjQ2oLgmnoGIPT8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pbf9YpcmteNVoG0+Qj2UuzgTInQ1u9AdztjIBswnBui55IFMZDBSPFbn0Q6KfhDxE
-	 mGmfLmORiyJWyLuhHS131i0muerweOj+llyGIfI2WHrZ7x96jyzPMPqU0qwpJplTAS
-	 b+UbNAj6bNivJVle/KtH8/u104G33Nd5QHc4xeFo=
+	b=LMoLfaSC5UVr0ibr3ovQbdQGnaJJOMBJjlxEmEYAALmYpUM+GODMAJ67XWbDUaQ14
+	 9/XJ9+vT1LTPQ80ISTq5ihd4fNzHryjeMikoRJWfexcjCGgBP3GKPTQqmD5DXHmLZN
+	 jCUDWTJ8lPSkD/SU0GPEJbGiyupNAbg5VnqeaQA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391216AbgAPX3F (ORCPT
+        id S2391233AbgAPX3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:29:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34344 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:29:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391035AbgAPX3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:29:02 -0500
+        id S2391219AbgAPX3H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:29:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E941920684;
-        Thu, 16 Jan 2020 23:29:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC3D020684;
+        Thu, 16 Jan 2020 23:29:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217342;
-        bh=+vvDOcRdhJp6OiqKi07LAjtkECQRNIemvqgQAgj+pz8=;
+        s=default; t=1579217347;
+        bh=80qMqilDKb1q7yzrUTzmSO/ts7DiRjQ2oLgmnoGIPT8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hteXR38UXZIa5mpkxLhjL5m7atGwZxudclWxitjsXKXS7mHteMX/H9LFNtZxZrwUm
-         PY/UryKR7mLJUGGvEk9i3m2YhgAobewJnONjBg+vjquv89Bs/is88CCs0Hr3gpnLuf
-         ZJiZMZLx5b/EYNyDP0wEjiMFSissoNdbs7rlXSuE=
+        b=Ah9La1c2JIsrttyNPh0pA9/RYNlhyipZd3yVTAUeeFrT8WwUKY93Ha7eOjC8gst1x
+         I8/wqbq2rW+N1Mh4y8AvHzBJVqDT2yoLe6MZYE1RX6gQznw4wBUqlHmD0lS+XbGQbW
+         OX27+EsGHTa2eosvhdC7QLEEuD+4Dj2ylyGxcEoo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 4.19 44/84] NFSv4.x: Drop the slot if nfs4_delegreturn_prepare waits for layoutreturn
-Date:   Fri, 17 Jan 2020 00:18:18 +0100
-Message-Id: <20200116231718.983518480@linuxfoundation.org>
+        Alexander Usyskin <alexander.usyskin@intel.com>,
+        Tomas Winkler <tomas.winkler@intel.com>
+Subject: [PATCH 4.19 46/84] mei: fix modalias documentation
+Date:   Fri, 17 Jan 2020 00:18:20 +0100
+Message-Id: <20200116231719.239831741@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
 References: <20200116231713.087649517@linuxfoundation.org>
@@ -59,34 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Alexander Usyskin <alexander.usyskin@intel.com>
 
-commit 5326de9e94bedcf7366e7e7625d4deb8c1f1ca8a upstream.
+commit 73668309215285366c433489de70d31362987be9 upstream.
 
-If nfs4_delegreturn_prepare needs to wait for a layoutreturn to complete
-then make sure we drop the sequence slot if we hold it.
+mei client bus added the client protocol version to the device alias,
+but ABI documentation was not updated.
 
-Fixes: 1c5bd76d17cc ("pNFS: Enable layoutreturn operation for return-on-close")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Fixes: b26864cad1c9 (mei: bus: add client protocol version to the device alias)
+Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+Link: https://lore.kernel.org/r/20191008005735.12707-1-tomas.winkler@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/nfs4proc.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ Documentation/ABI/testing/sysfs-bus-mei |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -6103,8 +6103,10 @@ static void nfs4_delegreturn_prepare(str
+--- a/Documentation/ABI/testing/sysfs-bus-mei
++++ b/Documentation/ABI/testing/sysfs-bus-mei
+@@ -4,7 +4,7 @@ KernelVersion:	3.10
+ Contact:	Samuel Ortiz <sameo@linux.intel.com>
+ 		linux-mei@linux.intel.com
+ Description:	Stores the same MODALIAS value emitted by uevent
+-		Format: mei:<mei device name>:<device uuid>:
++		Format: mei:<mei device name>:<device uuid>:<protocol version>
  
- 	d_data = (struct nfs4_delegreturndata *)data;
- 
--	if (!d_data->lr.roc && nfs4_wait_on_layoutreturn(d_data->inode, task))
-+	if (!d_data->lr.roc && nfs4_wait_on_layoutreturn(d_data->inode, task)) {
-+		nfs4_sequence_done(task, &d_data->res.seq_res);
- 		return;
-+	}
- 
- 	lo = d_data->args.lr_args ? d_data->args.lr_args->layout : NULL;
- 	if (lo && !pnfs_layout_is_valid(lo)) {
+ What:		/sys/bus/mei/devices/.../name
+ Date:		May 2015
 
 
