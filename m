@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB33C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7242DC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A937820728
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A7192087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:01:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194060;
-	bh=dBLPW9njnuUVOoAFzsSRiHy03VMXVhY5zLhOEo4mUIA=;
+	s=default; t=1579194063;
+	bh=BIVeDkCcdsPl+1TKDpBlMJpU4E/TGWeqRij21fRbRCo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gLKKn6hDEmIwwx8tvgM/RU915lAqLwN2ZmJgSOOgJM/mrSg2CxORJtbju6jHczw3L
-	 0kblF5mMuVqflLEYPNnsfej8FRhExrlkAuOwQZOoil07Fpqnm+REqW0/mHoDY3a9sq
-	 3B8GKM31NXsgwB9SXbJoACb7mlxNiGbkEceVRy3Y=
+	b=06G2QjepPwPEpPqzzh5v5eCa4AdR0tKuVfLKCnZ09P5y4c0KFkVo+9C4LXVUEpM4L
+	 BsYmZQ8EbOOlODMd2tNWSHijeAPxN3rQs6jzVY0jNZdOVHEeZgblK1cfqVYyuou5ZR
+	 wIoNbtPWzNCYVOGQoO3of65272rYVzPNheg8pACY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732804AbgAPRA7 (ORCPT
+        id S2387980AbgAPRBC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:00:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51344 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:01:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387949AbgAPRA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:00:56 -0500
+        id S2387963AbgAPRA7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:00:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22E732073A;
-        Thu, 16 Jan 2020 17:00:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9377A2081E;
+        Thu, 16 Jan 2020 17:00:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194055;
-        bh=dBLPW9njnuUVOoAFzsSRiHy03VMXVhY5zLhOEo4mUIA=;
+        s=default; t=1579194058;
+        bh=BIVeDkCcdsPl+1TKDpBlMJpU4E/TGWeqRij21fRbRCo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BB7LVwrAb8dEGrOW4jN3LMJigL2SC/Fm8e58SG7GoRkLvEShwsETYMpWUjsAyJFFt
-         0/A3KZqxC22RnIp/sDYLdBv3hZ6V9yM/qUdoo0FkCu5zKeBlpHns/Xk3v9qSC2ivdc
-         9CCV9AonO2kLEfjdGRqwQO+jcjAmAA0qCQVZw2+w=
+        b=hPfux9AE1B9PWKB5ichcKafeFIwjHFvP27QLeg2YCV/HzyBlRPIDcz0U3L0FSLLae
+         OooTHWYZjUh7AlFLwGjsOV2L6QWVth8/v0TfzDvBn9biU9MIGxTW971tXZIru7whh0
+         h8dCKd/WFLYjJ/oEDMd14WRVeBTUi8I+6dBkR0cU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Mc Guire <hofrat@osadl.org>,
-        Corey Minyard <cminyard@mvista.com>,
-        Haiyue Wang <haiyue.wang@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        openipmi-developer@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.19 169/671] ipmi: kcs_bmc: handle devm_kasprintf() failure case
-Date:   Thu, 16 Jan 2020 11:51:18 -0500
-Message-Id: <20200116165940.10720-52-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Sasha Levin <sashal@kernel.org>, etnaviv@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+        linaro-mm-sig@lists.linaro.org
+Subject: [PATCH AUTOSEL 4.19 171/671] drm/etnaviv: potential NULL dereference
+Date:   Thu, 16 Jan 2020 11:51:20 -0500
+Message-Id: <20200116165940.10720-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -61,43 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Mc Guire <hofrat@osadl.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 42c7c6ef1e6fa5fc0425120f06f045190b1dda2d ]
+[ Upstream commit 9e05352340d3a3e68c144136db9810b26ebb88c3 ]
 
-devm_kasprintf() may return NULL if internal allocation failed so this
-assignment is not safe. Moved the error exit path and added the !NULL
-which then allows the devres manager to take care of cleanup.
+The etnaviv_gem_prime_get_sg_table() is supposed to return error
+pointers.  Otherwise it can lead to a NULL dereference when it's called
+from drm_gem_map_dma_buf().
 
-Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
-Fixes: cd2315d471f4 ("ipmi: kcs_bmc: don't change device name")
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
-Reviewed-by: Haiyue Wang <haiyue.wang@linux.intel.com>
+Fixes: 5f4a4a73f437 ("drm/etnaviv: fix gem_prime_get_sg_table to return new SG table")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Christian Gmeiner <christian.gmeiner@gmail.com>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/ipmi/kcs_bmc.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/char/ipmi/kcs_bmc.c b/drivers/char/ipmi/kcs_bmc.c
-index e6124bd548df..ed4dc3b1843e 100644
---- a/drivers/char/ipmi/kcs_bmc.c
-+++ b/drivers/char/ipmi/kcs_bmc.c
-@@ -440,12 +440,13 @@ struct kcs_bmc *kcs_bmc_alloc(struct device *dev, int sizeof_priv, u32 channel)
- 	kcs_bmc->data_in = devm_kmalloc(dev, KCS_MSG_BUFSIZ, GFP_KERNEL);
- 	kcs_bmc->data_out = devm_kmalloc(dev, KCS_MSG_BUFSIZ, GFP_KERNEL);
- 	kcs_bmc->kbuffer = devm_kmalloc(dev, KCS_MSG_BUFSIZ, GFP_KERNEL);
--	if (!kcs_bmc->data_in || !kcs_bmc->data_out || !kcs_bmc->kbuffer)
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c b/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
+index 0566171f8df2..f21529e635e3 100644
+--- a/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
+@@ -15,7 +15,7 @@ struct sg_table *etnaviv_gem_prime_get_sg_table(struct drm_gem_object *obj)
+ 	int npages = obj->size >> PAGE_SHIFT;
+ 
+ 	if (WARN_ON(!etnaviv_obj->pages))  /* should have already pinned! */
 -		return NULL;
++		return ERR_PTR(-EINVAL);
  
- 	kcs_bmc->miscdev.minor = MISC_DYNAMIC_MINOR;
- 	kcs_bmc->miscdev.name = devm_kasprintf(dev, GFP_KERNEL, "%s%u",
- 					       DEVICE_NAME, channel);
-+	if (!kcs_bmc->data_in || !kcs_bmc->data_out || !kcs_bmc->kbuffer ||
-+	    !kcs_bmc->miscdev.name)
-+		return NULL;
- 	kcs_bmc->miscdev.fops = &kcs_bmc_fops;
- 
- 	return kcs_bmc;
+ 	return drm_prime_pages_to_sg(etnaviv_obj->pages, npages);
+ }
 -- 
 2.20.1
 
