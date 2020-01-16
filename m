@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C23C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D6FC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B093424767
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED05024767
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:44:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196662;
-	bh=iIaMfE0eCNktgZoozG23i7g4jsF5SYY3Xf5XpHger3w=;
+	s=default; t=1579196667;
+	bh=uyJKMUQqyJ4b69Aj8EYY+SypBHOwemN3SEOUIXlwb5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E5e/8RwLstTpScIs4PjFJ23lvMPN3lbfvIonA2B1RQrvP4De3Bwe+JmKWBL0A8Vqi
-	 JbzOhsVP1lqsHgJTL1Tutq6IXD/mYIJoYutzwS7juzI2bReOqLGuChQys2OFIwfywE
-	 Kp4E5k6p+K6sRnv9CbxVKsZAMWiS8mHb+MeQ584s=
+	b=rEA8N/keOyKOAVDtQAoczct7jh+10CECYoylDlw+3NrS9WAUkAEgxZJyzmM0cZgfq
+	 FOA+7cGVV8yodorgxW0Mbd5kyWk6XfROyip60YEsvs+wIPkZPmRuQDZpPtfsJa/7/q
+	 hNT5x4LdI2I95ewciVWul12jUZqEzG9l2bbz4VFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394132AbgAPRoV (ORCPT
+        id S2393819AbgAPRo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:44:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34624 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:44:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405805AbgAPRoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:44:00 -0500
+        id S2394043AbgAPRoE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:44:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7686E24741;
-        Thu, 16 Jan 2020 17:43:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B976D24754;
+        Thu, 16 Jan 2020 17:44:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196640;
-        bh=iIaMfE0eCNktgZoozG23i7g4jsF5SYY3Xf5XpHger3w=;
+        s=default; t=1579196643;
+        bh=uyJKMUQqyJ4b69Aj8EYY+SypBHOwemN3SEOUIXlwb5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XKxNNt5PL4JGnR2EcBs73IVTlp3TeDf3v6sNBdvrf0b6Tlvw8nW9TtSq4mSoO3YSc
-         3peb1LCkSA4M30qcFJ7ToN9T2yfGOCX6jE07P/Xo7TQ+e5u4eRObYu1W42qj7FFVMN
-         NfN1kZK8bSEd4z6mk/24NDLlYhaeV2nnrV8MhfKE=
+        b=ap13is7MXV1lK2J/hne8Lari/H1jgNOj5PnVAm97Ba/ZDebqtkhafypdI5V5962ed
+         6IbRcuWvrAQ30qKIzFfmH6ZhKiZIQEriFz2X2ko1qEyQEBpZfQiVUrdZ8rBhU+Msye
+         GqpDVfeGNX9nAvfV7rw9WY2xRf1k5ftzyOf5qt6o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.4 052/174] clocksource/drivers/sun5i: Fail gracefully when clock rate is unavailable
-Date:   Thu, 16 Jan 2020 12:40:49 -0500
-Message-Id: <20200116174251.24326-52-sashal@kernel.org>
+Cc:     Axel Lin <axel.lin@ingics.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com
+Subject: [PATCH AUTOSEL 4.4 054/174] regulator: wm831x-dcdc: Fix list of wm831x_dcdc_ilim from mA to uA
+Date:   Thu, 16 Jan 2020 12:40:51 -0500
+Message-Id: <20200116174251.24326-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -61,55 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Axel Lin <axel.lin@ingics.com>
 
-[ Upstream commit e7e7e0d7beafebd11b0c065cd5fbc1e5759c5aab ]
+[ Upstream commit c25d47888f0fb3d836d68322d4aea2caf31a75a6 ]
 
-If the clock tree is not fully populated when the timer-sun5i init code
-is called, attempts to get the clock rate for the timer would fail and
-return 0.
+The wm831x_dcdc_ilim entries needs to be uA because it is used to compare
+with min_uA and max_uA.
+While at it also make the array const and change to use unsigned int.
 
-Make the init code for both clock events and clocksource check the
-returned clock rate and fail gracefully if the result is 0, instead of
-causing a divide by 0 exception later on.
-
-Fixes: 4a59058f0b09 ("clocksource/drivers/sun5i: Refactor the current code")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Fixes: e4ee831f949a ("regulator: Add WM831x DC-DC buck convertor support")
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clocksource/timer-sun5i.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/regulator/wm831x-dcdc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clocksource/timer-sun5i.c b/drivers/clocksource/timer-sun5i.c
-index bca9573e036a..32b2dab69fd7 100644
---- a/drivers/clocksource/timer-sun5i.c
-+++ b/drivers/clocksource/timer-sun5i.c
-@@ -201,6 +201,11 @@ static int __init sun5i_setup_clocksource(struct device_node *node,
- 	}
+diff --git a/drivers/regulator/wm831x-dcdc.c b/drivers/regulator/wm831x-dcdc.c
+index 8cbb82ceec40..fad424e20bd5 100644
+--- a/drivers/regulator/wm831x-dcdc.c
++++ b/drivers/regulator/wm831x-dcdc.c
+@@ -327,8 +327,8 @@ static int wm831x_buckv_get_voltage_sel(struct regulator_dev *rdev)
+ }
  
- 	rate = clk_get_rate(clk);
-+	if (!rate) {
-+		pr_err("Couldn't get parent clock rate\n");
-+		ret = -EINVAL;
-+		goto err_disable_clk;
-+	}
+ /* Current limit options */
+-static u16 wm831x_dcdc_ilim[] = {
+-	125, 250, 375, 500, 625, 750, 875, 1000
++static const unsigned int wm831x_dcdc_ilim[] = {
++	125000, 250000, 375000, 500000, 625000, 750000, 875000, 1000000
+ };
  
- 	cs->timer.base = base;
- 	cs->timer.clk = clk;
-@@ -274,6 +279,11 @@ static int __init sun5i_setup_clockevent(struct device_node *node, void __iomem
- 	}
- 
- 	rate = clk_get_rate(clk);
-+	if (!rate) {
-+		pr_err("Couldn't get parent clock rate\n");
-+		ret = -EINVAL;
-+		goto err_disable_clk;
-+	}
- 
- 	ce->timer.base = base;
- 	ce->timer.ticks_per_jiffy = DIV_ROUND_UP(rate, HZ);
+ static int wm831x_buckv_set_current_limit(struct regulator_dev *rdev,
 -- 
 2.20.1
 
