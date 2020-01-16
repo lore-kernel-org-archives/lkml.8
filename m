@@ -2,123 +2,133 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04AAFC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A96D8C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2B522051A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:23:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198995;
-	bh=UT/9yJA7WLAXr38wzBDo6dD4fF4s8HfezFiBEZcbVJo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NRe+d0Q+LlUve2UKRMf0vihxaXtomgQMTTX4rmonJtNQkwOSlT05K26q5VNc1Y56A
-	 U3frWHGw/S98Dosn9iU7dGnpwShfErFVnxyJL9fia+bgqnwCvMY5ENXkLvTtcBK3W0
-	 hCuG8P49Zd+BXwppm27AX+0ftlG8A5TU/TIJQtC4=
+	by mail.kernel.org (Postfix) with ESMTP id 7F911214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:23:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uM1d8VSm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436561AbgAPSXO (ORCPT
+        id S2405277AbgAPSXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:23:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37130 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392452AbgAPR1T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:27:19 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C79F1246D4;
-        Thu, 16 Jan 2020 17:27:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195639;
-        bh=UT/9yJA7WLAXr38wzBDo6dD4fF4s8HfezFiBEZcbVJo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QvPpsz6TUPwGlGkpBCy5L9SWncGjKQhNZtBmIvhwE8+n7SLtpzDJkGXjBePR4PgSX
-         79jrS71IEG1vIV5s7HFds1IqebdHbnly7S2ak88lEHbeL9IN8xQxC24sv2R/vSni3c
-         JRb6he95dfMtrMWFphe0itOKcg8XhA74JrQTNbxo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robert Richter <rrichter@marvell.com>,
-        Borislav Petkov <bp@suse.de>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 204/371] EDAC/mc: Fix edac_mc_find() in case no device is found
-Date:   Thu, 16 Jan 2020 12:21:16 -0500
-Message-Id: <20200116172403.18149-147-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
-References: <20200116172403.18149-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Thu, 16 Jan 2020 13:23:21 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45036 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404121AbgAPSXS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 13:23:18 -0500
+Received: by mail-wr1-f67.google.com with SMTP id q10so20176148wrm.11
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 10:23:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Z9F6cbFc8MWLMRVXLq32wbzz9Kc9aRwk3yX4Xas8bss=;
+        b=uM1d8VSmZZEDzRFh4G+Dl1YcFQ3A4IkT4iX5O2Q5yIdRYJ4u11XY+kKfiARvf1Dxbm
+         AxWD5RspyGhLSTapb0Bk0W9/hPr3ay3FQwLPZi2P3pX3DSdldd0SZQt46Fqe3Q6fcz8Y
+         vpxloEvz2j5siGPCupbKWMRVfEx1nPoJlS9iUsbOs7waxMYjdJGglZzahSb3M77AFPEH
+         cWgX5YUYkOkUFzKGMrm3eWmAen/c8dGL6siCHMi0g6g4zKbCLYWqASlFDaKJzp6hO3bm
+         R2mdkbSPjg/V9huALrb+01zXL8B3X9JbvoAtpp5uZQ65P2jVWbOK/AVSyRluofc+Opkc
+         uFJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Z9F6cbFc8MWLMRVXLq32wbzz9Kc9aRwk3yX4Xas8bss=;
+        b=bqVrwMDFGRyBwpHwU7AEOHj4gnaLRg9kygU8cp+ZTPyTGUlMKn3KVjlRlja+1kFmbf
+         u6x0VyvxLJ8V9HXBq6y/R5eJx67VjXhld7MbxetgoW0Ui3PQB0p3ttsykz4cNe6pkUmA
+         aseNjeONmeF7Q3ssmjg1XjHopokaEnTmhgzTsNmVXMSv/6pXWxhyjP163Ra65ULBlPw4
+         wVqrFEiCXcmfFIpv6HXHFr5oCsIewHgg4fNY27jxGv3kq9gsPISd+3GmBI2II/QlPxDL
+         HZYtkJTG0A8nRmnrQz9f3fF2z/PCGjIfyjs8ASUhMDekNAK4NM8mc6ZqclSBO2MB0Ln2
+         VY5A==
+X-Gm-Message-State: APjAAAVJBtV2st+lQPzd/KPda7ep7Iq/iYn7nRMBrhyB8upqZefxI2lx
+        h8bis2trcRDHeFRvl/mdQ/NzZQ==
+X-Google-Smtp-Source: APXvYqwoCn4hBCC+0/xS3tPJId3zBSKv5xWcoMMTaUBuT+gcV1DRDV3+D3pCf+Td4gXXKuNNsYYz3A==
+X-Received: by 2002:adf:f5cf:: with SMTP id k15mr4809753wrp.182.1579198996620;
+        Thu, 16 Jan 2020 10:23:16 -0800 (PST)
+Received: from mai.imgcgcw.net ([2a01:e34:ed2f:f020:6c63:1b50:1156:7f0f])
+        by smtp.gmail.com with ESMTPSA id b137sm1087920wme.26.2020.01.16.10.23.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 10:23:16 -0800 (PST)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     tglx@linutronix.de
+Cc:     linux-kernel@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-hyperv@vger.kernel.org (open list:Hyper-V CORE AND DRIVERS)
+Subject: [PATCH 01/17] clocksource/drivers/hyper-v: Suspend/resume Hyper-V clocksource for hibernation
+Date:   Thu, 16 Jan 2020 19:22:48 +0100
+Message-Id: <20200116182304.4926-1-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <74bf7170-401f-2962-ea5a-1e21431a9349@linaro.org>
+References: <74bf7170-401f-2962-ea5a-1e21431a9349@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Richter <rrichter@marvell.com>
+From: Dexuan Cui <decui@microsoft.com>
 
-[ Upstream commit 29a0c843973bc385918158c6976e4dbe891df969 ]
+This is needed for hibernation, e.g. when we resume the old kernel, we need
+to disable the "current" kernel's TSC page and then resume the old kernel's.
 
-The function should return NULL in case no device is found, but it
-always returns the last checked mc device from the list even if the
-index did not match. Fix that.
-
-I did some analysis why this did not raise any issues for about 3 years
-and the reason is that edac_mc_find() is mostly used to search for
-existing devices. Thus, the bug is not triggered.
-
- [ bp: Drop the if (mci->mc_idx > idx) test in favor of readability. ]
-
-Fixes: c73e8833bec5 ("EDAC, mc: Fix locking around mc_devices list")
-Signed-off-by: Robert Richter <rrichter@marvell.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Link: https://lkml.kernel.org/r/20190514104838.15065-1-rrichter@marvell.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/1574233946-48377-1-git-send-email-decui@microsoft.com
 ---
- drivers/edac/edac_mc.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+ drivers/clocksource/hyperv_timer.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-index f7fa05fee45a..329021189c38 100644
---- a/drivers/edac/edac_mc.c
-+++ b/drivers/edac/edac_mc.c
-@@ -680,22 +680,18 @@ static int del_mc_from_global_list(struct mem_ctl_info *mci)
+diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+index 287d8d58c21a..1aec08e82b7a 100644
+--- a/drivers/clocksource/hyperv_timer.c
++++ b/drivers/clocksource/hyperv_timer.c
+@@ -330,12 +330,37 @@ static u64 read_hv_sched_clock_tsc(void)
+ 	return read_hv_clock_tsc(NULL) - hv_sched_clock_offset;
+ }
  
- struct mem_ctl_info *edac_mc_find(int idx)
- {
--	struct mem_ctl_info *mci = NULL;
-+	struct mem_ctl_info *mci;
- 	struct list_head *item;
++static void suspend_hv_clock_tsc(struct clocksource *arg)
++{
++	u64 tsc_msr;
++
++	/* Disable the TSC page */
++	hv_get_reference_tsc(tsc_msr);
++	tsc_msr &= ~BIT_ULL(0);
++	hv_set_reference_tsc(tsc_msr);
++}
++
++
++static void resume_hv_clock_tsc(struct clocksource *arg)
++{
++	phys_addr_t phys_addr = virt_to_phys(&tsc_pg);
++	u64 tsc_msr;
++
++	/* Re-enable the TSC page */
++	hv_get_reference_tsc(tsc_msr);
++	tsc_msr &= GENMASK_ULL(11, 0);
++	tsc_msr |= BIT_ULL(0) | (u64)phys_addr;
++	hv_set_reference_tsc(tsc_msr);
++}
++
+ static struct clocksource hyperv_cs_tsc = {
+ 	.name	= "hyperv_clocksource_tsc_page",
+ 	.rating	= 400,
+ 	.read	= read_hv_clock_tsc,
+ 	.mask	= CLOCKSOURCE_MASK(64),
+ 	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
++	.suspend= suspend_hv_clock_tsc,
++	.resume	= resume_hv_clock_tsc,
+ };
  
- 	mutex_lock(&mem_ctls_mutex);
- 
- 	list_for_each(item, &mc_devices) {
- 		mci = list_entry(item, struct mem_ctl_info, link);
--
--		if (mci->mc_idx >= idx) {
--			if (mci->mc_idx == idx) {
--				goto unlock;
--			}
--			break;
--		}
-+		if (mci->mc_idx == idx)
-+			goto unlock;
- 	}
- 
-+	mci = NULL;
- unlock:
- 	mutex_unlock(&mem_ctls_mutex);
- 	return mci;
+ static u64 notrace read_hv_clock_msr(struct clocksource *arg)
 -- 
-2.20.1
+2.17.1
 
