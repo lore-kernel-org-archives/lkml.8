@@ -7,40 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1EAC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE94C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 780182075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA37F207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:31:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389245AbgAPVbf (ORCPT
+        id S2389059AbgAPVbN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 16:31:35 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:53582 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389037AbgAPVbN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jan 2020 16:31:13 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:53537 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728928AbgAPVbG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 16:31:06 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1isCjL-0001ZU-Bk; Thu, 16 Jan 2020 22:31:07 +0100
+        id 1isCjE-0001W0-Mp; Thu, 16 Jan 2020 22:31:00 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5A76A1C1996;
-        Thu, 16 Jan 2020 22:31:03 +0100 (CET)
-Date:   Thu, 16 Jan 2020 21:31:03 -0000
-From:   "tip-bot2 for Krzysztof Kozlowski" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4508C1C1970;
+        Thu, 16 Jan 2020 22:31:00 +0100 (CET)
+Date:   Thu, 16 Jan 2020 21:31:00 -0000
+From:   "tip-bot2 for Tony Lindgren" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] clocksource: Fix Kconfig indentation
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+Subject: [tip: timers/core] clocksource/drivers/timer-ti-dm: Fix uninitialized
+ pointer access
+Cc:     Yangtao Li <tiny.windzz@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Olof Johansson <olof@lixom.net>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191120134236.15959-1-krzk@kernel.org>
-References: <20191120134236.15959-1-krzk@kernel.org>
+In-Reply-To: <20200106203700.21009-1-tony@atomide.com>
+References: <20200106203700.21009-1-tony@atomide.com>
 MIME-Version: 1.0
-Message-ID: <157921026318.396.3072238434185037949.tip-bot2@tip-bot2>
+Message-ID: <157921026006.396.14675587072091976088.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,81 +59,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     9ca9fe69eedb483c0811a4db7cb94942edfb1404
-Gitweb:        https://git.kernel.org/tip/9ca9fe69eedb483c0811a4db7cb94942edfb1404
-Author:        Krzysztof Kozlowski <krzk@kernel.org>
-AuthorDate:    Wed, 20 Nov 2019 21:42:36 +08:00
+Commit-ID:     4341067cfc20582195f47383cf059589b2641465
+Gitweb:        https://git.kernel.org/tip/4341067cfc20582195f47383cf059589b2641465
+Author:        Tony Lindgren <tony@atomide.com>
+AuthorDate:    Mon, 06 Jan 2020 12:37:00 -08:00
 Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
-CommitterDate: Thu, 16 Jan 2020 19:06:57 +01:00
+CommitterDate: Thu, 16 Jan 2020 19:09:02 +01:00
 
-clocksource: Fix Kconfig indentation
+clocksource/drivers/timer-ti-dm: Fix uninitialized pointer access
 
-Adjust indentation from spaces to tab (+optional two spaces) as in
-coding style with command like:
-	$ sed -e 's/^        /\t/' -i */Kconfig
+Clean-up commit 8c82723414d5 ("clocksource/drivers/timer-ti-dm: Switch to
+platform_get_irq") caused a regression where we now try to access
+uninitialized data for timer:
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+drivers/clocksource/timer-ti-dm.c: In function 'omap_dm_timer_probe':
+drivers/clocksource/timer-ti-dm.c:798:13: warning: 'timer' may be used
+uninitialized in this function [-Wmaybe-uninitialized]
+
+On boot we now get:
+
+Unable to handle kernel NULL pointer dereference at virtual address
+00000004
+...
+(omap_dm_timer_probe) from [<c061ac7c>] (platform_drv_probe+0x48/0x98)
+(platform_drv_probe) from [<c0618c04>] (really_probe+0x1dc/0x348)
+(really_probe) from [<c0618ef4>] (driver_probe_device+0x5c/0x160)
+
+Let's fix the issue by moving platform_get_irq to happen after timer has
+been allocated.
+
+Fixes: bc83caddf17b ("clocksource/drivers/timer-ti-dm: Switch to platform_get_irq")
+Cc: Yangtao Li <tiny.windzz@gmail.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Acked-by: Olof Johansson <olof@lixom.net>
+Acked-by: Yangtao Li <tiny.windzz@gmail.com>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20191120134236.15959-1-krzk@kernel.org
+Link: https://lore.kernel.org/r/20200106203700.21009-1-tony@atomide.com
 ---
- drivers/clocksource/Kconfig | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/clocksource/timer-ti-dm.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index 5fdd76c..c981ff6 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -470,7 +470,7 @@ config OXNAS_RPS_TIMER
- 	  This enables support for the Oxford Semiconductor OXNAS RPS timers.
+diff --git a/drivers/clocksource/timer-ti-dm.c b/drivers/clocksource/timer-ti-dm.c
+index bd16efb..269a994 100644
+--- a/drivers/clocksource/timer-ti-dm.c
++++ b/drivers/clocksource/timer-ti-dm.c
+@@ -795,14 +795,14 @@ static int omap_dm_timer_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 	}
  
- config SYS_SUPPORTS_SH_CMT
--        bool
-+	bool
+-	timer->irq = platform_get_irq(pdev, 0);
+-	if (timer->irq < 0)
+-		return timer->irq;
+-
+ 	timer = devm_kzalloc(dev, sizeof(*timer), GFP_KERNEL);
+ 	if (!timer)
+ 		return  -ENOMEM;
  
- config MTK_TIMER
- 	bool "Mediatek timer driver" if COMPILE_TEST
-@@ -490,13 +490,13 @@ config SPRD_TIMER
- 	  Enables support for the Spreadtrum timer driver.
- 
- config SYS_SUPPORTS_SH_MTU2
--        bool
-+	bool
- 
- config SYS_SUPPORTS_SH_TMU
--        bool
-+	bool
- 
- config SYS_SUPPORTS_EM_STI
--        bool
-+	bool
- 
- config CLKSRC_JCORE_PIT
- 	bool "J-Core PIT timer driver" if COMPILE_TEST
-@@ -591,21 +591,21 @@ config CLKSRC_PXA
- 	  platforms.
- 
- config H8300_TMR8
--        bool "Clockevent timer for the H8300 platform" if COMPILE_TEST
--        depends on HAS_IOMEM
-+	bool "Clockevent timer for the H8300 platform" if COMPILE_TEST
-+	depends on HAS_IOMEM
- 	help
- 	  This enables the 8 bits timer for the H8300 platform.
- 
- config H8300_TMR16
--        bool "Clockevent timer for the H83069 platform" if COMPILE_TEST
--        depends on HAS_IOMEM
-+	bool "Clockevent timer for the H83069 platform" if COMPILE_TEST
-+	depends on HAS_IOMEM
- 	help
- 	  This enables the 16 bits timer for the H8300 platform with the
- 	  H83069 cpu.
- 
- config H8300_TPU
--        bool "Clocksource for the H8300 platform" if COMPILE_TEST
--        depends on HAS_IOMEM
-+	bool "Clocksource for the H8300 platform" if COMPILE_TEST
-+	depends on HAS_IOMEM
- 	help
- 	  This enables the clocksource for the H8300 platform with the
- 	  H8S2678 cpu.
++	timer->irq = platform_get_irq(pdev, 0);
++	if (timer->irq < 0)
++		return timer->irq;
++
+ 	timer->fclk = ERR_PTR(-ENODEV);
+ 	timer->io_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(timer->io_base))
