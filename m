@@ -2,112 +2,104 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60AE8C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C2DC33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 386422075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:54:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579190079;
-	bh=zdYQ+BhwWGpdUEVVoM1h5ruir82zwLZhHHvUKjQ8iDU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lfy9/CuD4lLDjngdZflHFO9gChj+DjT+GvxnyKB5vkI03YfxDY2OPlwAPAK5reWpV
-	 APi5xu0iTWb0vFbEUE3DHY5nQNLDz+bnlOi5/PKXMEs+lU23He40CjLpZYX6zvW2OH
-	 5hNlTNAmkJj5+/MLTrdtHN9OZ28Uny2TT5j6aYUQ=
+	by mail.kernel.org (Postfix) with ESMTP id 5BC342073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:56:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MzQ7ulmh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbgAPPyi (ORCPT
+        id S1726885AbgAPP4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 10:54:38 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39987 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbgAPPyi (ORCPT
+        Thu, 16 Jan 2020 10:56:06 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:31961 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726440AbgAPP4F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 10:54:38 -0500
-Received: by mail-wm1-f68.google.com with SMTP id t14so4324392wmi.5
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 07:54:36 -0800 (PST)
+        Thu, 16 Jan 2020 10:56:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579190164;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=59rSP/4nG5ysgfDP2nwJUgUTFNS/i6M0+YH8HiBE7YE=;
+        b=MzQ7ulmhiE7+yz0UAnyTG3LAv7hAGbDW9Hy6+U07nPNWxEgc3BRS2zN7MdTafpmLRT55g7
+        Fs3F92o3t6VwMCBqizxW7nzd5/H9Q3EaEarBO9KqL1nkR1q7qzwVy1vnQ07l9JHp/DK1G8
+        HVEYqFZs5N22dOIq0LQUvlIvyFnkbj8=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-301-_gXHYdhXOo6IgMqwpVxdnA-1; Thu, 16 Jan 2020 10:56:01 -0500
+X-MC-Unique: _gXHYdhXOo6IgMqwpVxdnA-1
+Received: by mail-wr1-f71.google.com with SMTP id t3so9345635wrm.23
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 07:56:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=h2hhG4jWcxA95LxI7Qpc36hdp7bTXlmQIH0NAyxSMOM=;
-        b=cFsCMlGbV9CxVegvID0DQ8M0tAVb+4jvB0218oBKkVmZLv0N93+qhep8tNf53Svagl
-         frVOCmGFI82r/3LF5g4VPf6rZq6CyFoNCmgkgHTqaHY010LSKN+oKMwo7/yIBfwt2Lxe
-         Wy5SzM4f8u6aqZOVbr5nDejKZHW9l4mEDUJPXx0xA2GVIwOt68kQuiJvoMQRv4LPuHeo
-         Ab8JDbKVpOKnZkXPEK8LVKfcogQvfKN1nrm8sE15U52EHKZCXNHpyCe6QwJh5QKv1/DY
-         fvnRn03d3I0tEyNoDwflevHzBjZX+7jHJajPfRjc5bwpc6T2KXC9EkXxeynVVyq84D/X
-         U2Xg==
-X-Gm-Message-State: APjAAAUqmY8TmkPGdxTK/rhBHalrANvmRKYh/MYVpy3dK22T0AoewoiS
-        ibnN1JK4Q00JCx1ZCrOSolw=
-X-Google-Smtp-Source: APXvYqwasirTn2mRHt5icpct1OzxtW+H1/bjOZhi54tv2uRe3d85H230iWIMdGxgg57kTjY/fesRKQ==
-X-Received: by 2002:a1c:44d:: with SMTP id 74mr19355wme.53.1579190075850;
-        Thu, 16 Jan 2020 07:54:35 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id r5sm29390925wrt.43.2020.01.16.07.54.34
+         :mime-version:content-disposition:in-reply-to;
+        bh=59rSP/4nG5ysgfDP2nwJUgUTFNS/i6M0+YH8HiBE7YE=;
+        b=CpP8aN80o5DHuMk6WnHsmAX2ILEA4peVAxt9VxCIUkleZTF+Mx9+jKY3xfUoAQ6gRH
+         Y7zBFGswcWh5jYPIUBmXhmhQcvWWZNJ1ArkDvTNf2OP/jv+1ELV4HcsopJ86Gtg17shV
+         j9/5kf3Q8onRHMipK2SpLKAmCXjVSVZKZP/QGUk0N2E/9u+8YH5j6GyJwfaH/fWQ8lyK
+         M7rZyG4UABShEwI5IfZP852tk5zrfjIvCeMAJ5Dgzdg7LtmgLBqkPLbf9On/kc2rj7dc
+         OwpB4QPvLMaLXG7yi97PDe7FP0z9PeJtbvkTwueCJxfPoIARuNFneUR4b8XEndyoToN1
+         0EvQ==
+X-Gm-Message-State: APjAAAUyVANJsdBNHl/1mLOOtpb9MLGY1jPJIGeRVib2ADBYMOi1aId0
+        XGjVO2ydnpUxIi+TFeovthtlZpFcZWMPw7oOv/rT0ylBAB0/HkpA4HXybabEZH8PYm8Etd/oP35
+        36ADjXYYLDkBxRa1w9as7yM+a
+X-Received: by 2002:a1c:488a:: with SMTP id v132mr4006wma.153.1579190160202;
+        Thu, 16 Jan 2020 07:56:00 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyARJugJk6ZQ7MpUK2INr7v0S3I+70oMKj69iGSMkRzx4xa29/fG8xCm60wqugTUISWTMXsWQ==
+X-Received: by 2002:a1c:488a:: with SMTP id v132mr3985wma.153.1579190159959;
+        Thu, 16 Jan 2020 07:55:59 -0800 (PST)
+Received: from steredhat (host84-49-dynamic.31-79-r.retail.telecomitalia.it. [79.31.49.84])
+        by smtp.gmail.com with ESMTPSA id n67sm5422048wmf.46.2020.01.16.07.55.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 07:54:35 -0800 (PST)
-Date:   Thu, 16 Jan 2020 16:54:34 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        pmladek@suse.com, rostedt@goodmis.org, peterz@infradead.org,
-        david@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next v3] mm/hotplug: silence a lockdep splat with
- printk()
-Message-ID: <20200116155434.GB19428@dhcp22.suse.cz>
-References: <20200115172916.16277-1-cai@lca.pw>
- <20200116142827.GU19428@dhcp22.suse.cz>
- <162DFB9F-247F-4DCA-9B69-535B9D714FBB@lca.pw>
+        Thu, 16 Jan 2020 07:55:59 -0800 (PST)
+Date:   Thu, 16 Jan 2020 16:55:57 +0100
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] io_uring: wakeup threads waiting for EPOLLOUT events
+Message-ID: <20200116155557.mwjc7vu33xespiag@steredhat>
+References: <20200116134946.184711-1-sgarzare@redhat.com>
+ <2d2dda92-3c50-ee62-5ffe-0589d4c8fc0d@kernel.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <162DFB9F-247F-4DCA-9B69-535B9D714FBB@lca.pw>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <2d2dda92-3c50-ee62-5ffe-0589d4c8fc0d@kernel.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 16-01-20 09:53:13, Qian Cai wrote:
-> 
-> 
-> > On Jan 16, 2020, at 9:28 AM, Michal Hocko <mhocko@kernel.org> wrote:
+On Thu, Jan 16, 2020 at 08:29:07AM -0700, Jens Axboe wrote:
+> On 1/16/20 6:49 AM, Stefano Garzarella wrote:
+> > io_uring_poll() sets EPOLLOUT flag if there is space in the
+> > SQ ring, then we should wakeup threads waiting for EPOLLOUT
+> > events when we expose the new SQ head to the userspace.
 > > 
-> > On Wed 15-01-20 12:29:16, Qian Cai wrote:
-> >> It is guaranteed to trigger a lockdep splat if calling printk() with
-> >> zone->lock held because there are many places (tty, console drivers,
-> >> debugobjects etc) would allocate some memory with another lock
-> >> held which is proved to be difficult to fix them all.
+> > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> > ---
 > > 
-> > I am still not happy with the above much. What would say about something
-> > like below instead?
-> > "
-> > It is not that hard to trigger lockdep splats by calling printk from
-> > under zone->lock. Most of them are false positives caused by lock chains
-> > introduced early in the boot process and they do not cause any real
-> > problems. There are some console drivers which do allocate from the
-> > printk context as well and those should be fixed. In any case false
-> > positives are not that trivial to workaround and it is far from optimal
-> > to lose lockdep functionality for something that is a non-issue.
-> > <An example of such a false positive goes here>
-> > "
+> > Do you think is better to change the name of 'cq_wait' and 'cq_fasync'?
 > 
-> I feel like I repeated myself too many times. A call trace for one lock dependency
-> is sometimes from early boot process because lockdep will save the first one it
-> encountered, but it does not mean the lock dependency will only not happen in
-> early boot. I spent some time to study those early boot call traces in the given
-> lockdep splats, and it looks to me the lock dependency is also possible after
-> the boot.
+> I honestly think it'd be better to have separate waits for in/out poll,
+> the below patch will introduce some unfortunate cacheline traffic
+> between the submitter and completer side.
 
-Then state it explicitly with an example of the trace and explanation
-that the deadlock is real. If the deadlock is real then it shouldn't be
-really terribly hard to notice even without lockdep splats which get
-disabled after the first false positive, right?
+Agree, make sense. I'll send a v2 with a new 'sq_wait'.
 
--- 
-Michal Hocko
-SUSE Labs
+About fasync, do you think could be useful the POLL_OUT support?
+In this case, maybe is not simple to have two separate fasync_struct,
+do you have any advice?
+
+Thanks,
+Stefano
+
