@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7718CC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A8DC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D8C12073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:42:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0478D2077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:42:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200126;
-	bh=osu43gUfm3EZl60KJo19B78H6kg+zt5SbEr1OSOYKg0=;
+	s=default; t=1579200138;
+	bh=DR32DR8d4K1wA9tfWglrMCeUfYTQwAn8k8OglQZW2Ew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SwRi+pwemrCyJCDlfje/Zk7uSI/wJ0BgDTVUXeFKQhigNvEgn1X+oNx54dL6D38Xw
-	 8Gv7kgKx/YqvPA10leGJyGm1VXmUo4vQpyG6QMdgB8AJm3/fGapcYdFWSEsm8yzzFG
-	 QdvWcX/E938xd17jQa3I3vc8Uj/XYh3vUIxEqphI=
+	b=WgogJOJgdwvtGJ+Ntig5HFOOSdMV9ea035AzXiV3YSRqblkPybuPaU48+PZM3D5Df
+	 JC+oa9UTn9G2iRCzoPISQkIQLXZSAZGOBa67TlLZ1u6gAwWCxaQ7goEhFI1UWBSJOg
+	 qXYiBVaAQqiZ5SNab+IkjxEzwq+1mT1o5dkEnlJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436995AbgAPSmF (ORCPT
+        id S2390369AbgAPSmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:42:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52644 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:42:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389988AbgAPRLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:11:38 -0500
+        id S2390286AbgAPRLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:11:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D799D2468B;
-        Thu, 16 Jan 2020 17:11:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2DDE24694;
+        Thu, 16 Jan 2020 17:11:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194698;
-        bh=osu43gUfm3EZl60KJo19B78H6kg+zt5SbEr1OSOYKg0=;
+        s=default; t=1579194695;
+        bh=DR32DR8d4K1wA9tfWglrMCeUfYTQwAn8k8OglQZW2Ew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S95ZgE/bQTqNmOURobylJaKJS9OWp1+YgWX2QdZ/nb5ZRvlv65shMCgDgR0KMMU5/
-         MGyekPGnM/UNhlX5GlMYxR+8Szxvfw0rBHVYWvnJXtnVUC62aWzNU+z+zgUx1HH0uy
-         nLXRw/fxLbVq6BBGEg7FZwKXibJ+ph/Yn/BIPfPk=
+        b=XijFdajCpD7HRnwjvT3UCusY80rsZ7TRGe0+wqvy/bMG0cR9nS8AfX73ydvSnxVFG
+         bm0ADqUpjF8sxuKLYiy/NCdF1qUAznAm3l0b1798aHDnuYd129QHfPjyHNs+4GlypK
+         mCt4abNYy8JHn0Q0XYc0x0zyBn8CYJ2qI14ICtkU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Govindarajulu Varadarajan <gvaradar@cisco.com>,
-        Satish Kharat <satishkh@cisco.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 538/671] scsi: fnic: fix msix interrupt allocation
-Date:   Thu, 16 Jan 2020 12:02:56 -0500
-Message-Id: <20200116170509.12787-275-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.19 536/671] f2fs: fix wrong error injection path in inc_valid_block_count()
+Date:   Thu, 16 Jan 2020 12:02:54 -0500
+Message-Id: <20200116170509.12787-273-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,45 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Govindarajulu Varadarajan <gvaradar@cisco.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 3ec24fb4c035e9cbb2f02a48640a09aa913442a2 ]
+[ Upstream commit 9ea2f0be6ceaebae1518a5f897cff2645830dd95 ]
 
-pci_alloc_irq_vectors() returns number of vectors allocated.  Fix the check
-for error condition.
+If FAULT_BLOCK type error injection is on, in inc_valid_block_count()
+we may decrease sbi->alloc_valid_block_count percpu stat count
+incorrectly, fix it.
 
-Fixes: cca678dfbad49 ("scsi: fnic: switch to pci_alloc_irq_vectors")
-Link: https://lore.kernel.org/r/20190827211340.1095-1-gvaradar@cisco.com
-Signed-off-by: Govindarajulu Varadarajan <gvaradar@cisco.com>
-Acked-by: Satish Kharat <satishkh@cisco.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 36b877af7992 ("f2fs: Keep alloc_valid_block_count in sync")
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/fnic/fnic_isr.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/f2fs/f2fs.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/fnic/fnic_isr.c b/drivers/scsi/fnic/fnic_isr.c
-index 4e3a50202e8c..d28088218c36 100644
---- a/drivers/scsi/fnic/fnic_isr.c
-+++ b/drivers/scsi/fnic/fnic_isr.c
-@@ -254,7 +254,7 @@ int fnic_set_intr_mode(struct fnic *fnic)
- 		int vecs = n + m + o + 1;
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 72d154e71bb5..6b5b685af599 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -1701,7 +1701,7 @@ static inline int inc_valid_block_count(struct f2fs_sb_info *sbi,
+ 	if (time_to_inject(sbi, FAULT_BLOCK)) {
+ 		f2fs_show_injection_info(FAULT_BLOCK);
+ 		release = *count;
+-		goto enospc;
++		goto release_quota;
+ 	}
  
- 		if (pci_alloc_irq_vectors(fnic->pdev, vecs, vecs,
--				PCI_IRQ_MSIX) < 0) {
-+				PCI_IRQ_MSIX) == vecs) {
- 			fnic->rq_count = n;
- 			fnic->raw_wq_count = m;
- 			fnic->wq_copy_count = o;
-@@ -280,7 +280,7 @@ int fnic_set_intr_mode(struct fnic *fnic)
- 	    fnic->wq_copy_count >= 1 &&
- 	    fnic->cq_count >= 3 &&
- 	    fnic->intr_count >= 1 &&
--	    pci_alloc_irq_vectors(fnic->pdev, 1, 1, PCI_IRQ_MSI) < 0) {
-+	    pci_alloc_irq_vectors(fnic->pdev, 1, 1, PCI_IRQ_MSI) == 1) {
- 		fnic->rq_count = 1;
- 		fnic->raw_wq_count = 1;
- 		fnic->wq_copy_count = 1;
+ 	/*
+@@ -1741,6 +1741,7 @@ static inline int inc_valid_block_count(struct f2fs_sb_info *sbi,
+ 
+ enospc:
+ 	percpu_counter_sub(&sbi->alloc_valid_block_count, release);
++release_quota:
+ 	dquot_release_reservation_block(inode, release);
+ 	return -ENOSPC;
+ }
 -- 
 2.20.1
 
