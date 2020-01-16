@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62914C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E60C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37BB6217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:14:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DE6D20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:14:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198474;
-	bh=SjvVj+je/HMlB1NOEWTRrKGFRifaS0pbyWGdTMOoztQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fi2KygNE89WwaEA+B1qqqwSdip5Apz91+LCWFB9VBFx+hsgRgPCVDbIE5i4VPemRO
-	 brZ2HlCvZ38Jrm5yeRKqI6nguJHmIBQEL5DU7Oe3kQCdso/DOQJedrP1ta/1a05H1z
-	 HqTZFyeXnPh1gZ3o5yAgnJBmMJa1wbo+/TvBoqbE=
+	s=default; t=1579198476;
+	bh=B/ZsMAwa+KzifNmh/6RTFArRGeR243mf0AtQcBk4VB8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=h9VKHuvG0WSWnW+onDaSiVQ1g/GalSJUfdmoCCtHzWLzr8fsgG5GTjRZkagMmJHUd
+	 zZcFpUVIQq1G0xxsowm2weuIgG0s7PoT2fqqD+VRQZ4UWzecQp0qeC0kqNk/Jxp2e7
+	 PSP+9O1YmXv+sxap6oO5c7BNWo4f1PmII6ViYuwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393038AbgAPRey (ORCPT
+        id S2393028AbgAPRev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:34:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48708 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:34:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391438AbgAPRet (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:34:49 -0500
+        id S2392946AbgAPRer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:34:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76538246B1;
-        Thu, 16 Jan 2020 17:34:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4553324683;
+        Thu, 16 Jan 2020 17:34:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196088;
-        bh=SjvVj+je/HMlB1NOEWTRrKGFRifaS0pbyWGdTMOoztQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KUeuB8R+4cQHW8/jv/nxqPkmypBJcfAx0W401dq4tPaK83L6wfjLz/9woQMJyYz7j
-         DABJW5iI5wAEVxQROQ0fm5NjJxFlXFSNZ075URx0fAuyZASAMOYSl9+xiftd/4xyQc
-         ORcT1UA1VqMHfswMYLN3+q9WbeIoU3yVk/HjIeI4=
+        s=default; t=1579196087;
+        bh=B/ZsMAwa+KzifNmh/6RTFArRGeR243mf0AtQcBk4VB8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=n+ljhUIQJ/C5cmXJq+8BgJ18ezgH7x+YTk2GBr0v6Ku7+q6t5oMIvv8AwIUa7CJvZ
+         ywovWRfl7eav1d0ZjSjOt/DuvP33Bky+R1h4hJ2AmoN4Eg/Lc9ijH0qhfOHgYBwdWa
+         X7rA5kIcjLJLtezDASY6ulm+Ikfxg+tfZpcUD7s8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Gerd Hoffmann <kraxel@redhat.com>,
+Cc:     Peter Rosin <peda@axentia.se>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.9 002/251] drm/virtio: fix bounds check in virtio_gpu_cmd_get_capset()
-Date:   Thu, 16 Jan 2020 12:30:36 -0500
-Message-Id: <20200116173445.21385-2-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.9 001/251] drm/sti: do not remove the drm_bridge that was never added
+Date:   Thu, 16 Jan 2020 12:30:35 -0500
+Message-Id: <20200116173445.21385-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116173445.21385-1-sashal@kernel.org>
-References: <20200116173445.21385-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,53 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Peter Rosin <peda@axentia.se>
 
-[ Upstream commit 09c4b49457434fa74749ad6194ef28464d9f5df9 ]
+[ Upstream commit 66e31a72dc38543b2d9d1ce267dc78ba9beebcfd ]
 
-This doesn't affect runtime because in the current code "idx" is always
-valid.
+Removing the drm_bridge_remove call should avoid a NULL dereference
+during list processing in drm_bridge_remove if the error path is ever
+taken.
 
-First, we read from "vgdev->capsets[idx].max_size" before checking
-whether "idx" is within bounds.  And secondly the bounds check is off by
-one so we could end up reading one element beyond the end of the
-vgdev->capsets[] array.
+The more natural approach would perhaps be to add a drm_bridge_add,
+but there are several other bridges that never call drm_bridge_add.
+Just removing the drm_bridge_remove is the easier fix.
 
-Fixes: 62fb7a5e1096 ("virtio-gpu: add 3d/virgl support")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: http://patchwork.freedesktop.org/patch/msgid/20180704094250.m7sgvvzg3dhcvv3h@kili.mountain
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Fixes: 84601dbdea36 ("drm: sti: rework init sequence")
+Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Signed-off-by: Peter Rosin <peda@axentia.se>
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20180806061910.29914-2-peda@axentia.se
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/virtio/virtgpu_vq.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/sti/sti_hda.c  | 1 -
+ drivers/gpu/drm/sti/sti_hdmi.c | 1 -
+ 2 files changed, 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-index a1b3ea1ccb65..772a5a3b0ce1 100644
---- a/drivers/gpu/drm/virtio/virtgpu_vq.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-@@ -681,11 +681,11 @@ int virtio_gpu_cmd_get_capset(struct virtio_gpu_device *vgdev,
- {
- 	struct virtio_gpu_get_capset *cmd_p;
- 	struct virtio_gpu_vbuffer *vbuf;
--	int max_size = vgdev->capsets[idx].max_size;
-+	int max_size;
- 	struct virtio_gpu_drv_cap_cache *cache_ent;
- 	void *resp_buf;
+diff --git a/drivers/gpu/drm/sti/sti_hda.c b/drivers/gpu/drm/sti/sti_hda.c
+index e7c243f70870..08808e3701de 100644
+--- a/drivers/gpu/drm/sti/sti_hda.c
++++ b/drivers/gpu/drm/sti/sti_hda.c
+@@ -740,7 +740,6 @@ static int sti_hda_bind(struct device *dev, struct device *master, void *data)
+ 	return 0;
  
--	if (idx > vgdev->num_capsets)
-+	if (idx >= vgdev->num_capsets)
- 		return -EINVAL;
+ err_sysfs:
+-	drm_bridge_remove(bridge);
+ 	return -EINVAL;
+ }
  
- 	if (version > vgdev->capsets[idx].max_version)
-@@ -695,6 +695,7 @@ int virtio_gpu_cmd_get_capset(struct virtio_gpu_device *vgdev,
- 	if (!cache_ent)
- 		return -ENOMEM;
+diff --git a/drivers/gpu/drm/sti/sti_hdmi.c b/drivers/gpu/drm/sti/sti_hdmi.c
+index 376b0763c874..a5412a6fbeca 100644
+--- a/drivers/gpu/drm/sti/sti_hdmi.c
++++ b/drivers/gpu/drm/sti/sti_hdmi.c
+@@ -1352,7 +1352,6 @@ static int sti_hdmi_bind(struct device *dev, struct device *master, void *data)
+ 	return 0;
  
-+	max_size = vgdev->capsets[idx].max_size;
- 	cache_ent->caps_cache = kmalloc(max_size, GFP_KERNEL);
- 	if (!cache_ent->caps_cache) {
- 		kfree(cache_ent);
+ err_sysfs:
+-	drm_bridge_remove(bridge);
+ 	hdmi->drm_connector = NULL;
+ 	return -EINVAL;
+ }
 -- 
 2.20.1
 
