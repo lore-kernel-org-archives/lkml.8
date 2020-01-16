@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C43C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75039C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44F02206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46B19205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 10:51:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uoxVEeYA"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="u4ARFZp4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbgAPKvF (ORCPT
+        id S1728884AbgAPKvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 05:51:05 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:44864 "EHLO
+        Thu, 16 Jan 2020 05:51:10 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:44882 "EHLO
         lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726991AbgAPKvC (ORCPT
+        with ESMTP id S1726187AbgAPKvD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 05:51:02 -0500
+        Thu, 16 Jan 2020 05:51:03 -0500
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00GAos1g050227;
-        Thu, 16 Jan 2020 04:50:54 -0600
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00GAolLC050198;
+        Thu, 16 Jan 2020 04:50:47 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579171854;
-        bh=F/6rZF0jUMlr7gIRfUkDAUALSigMHNZOuD8A7HSCWE4=;
+        s=ti-com-17Q1; t=1579171848;
+        bh=4g/35Gsgc1IREjTOLyGG4YbzvNoV+ijmSZyUxwM03Z0=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=uoxVEeYA2qSxOJsBA7915BJV97xELyJFZg+oDsysUAxx/JWHvGwhz4E6DI0DMqiXW
-         4sxutxWJ6hC8pingqqA7PoqjSN/cO4G1nIioOEwkBUJfdRUvKNQ7c7S6mMKzZF/ltN
-         UY3PuqG74GnuqqJE2Lsm6ATau5pkiyic9ysjvFrk=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00GAos2B088364
+        b=u4ARFZp4e1m8hyy7+T81vvJexrQf9YQWzX1RjMvXCHzaQR61mN65wQzGx8xn5tTR5
+         ytIGyDpE9bhT8RWHLdRZlYiSxuCWujv7LKFsp1gOgy9PrvstHFLssOy8xSbwNFnG/9
+         prBF01SyuUqBFs9MuaqGy7XZi/M8RKW1FZZ8C8RU=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00GAolb5088306
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 16 Jan 2020 04:50:54 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 16
- Jan 2020 04:50:54 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
+        Thu, 16 Jan 2020 04:50:47 -0600
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE109.ent.ti.com
  (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 16
+ Jan 2020 04:50:47 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 16 Jan 2020 04:50:54 -0600
+ Frontend Transport; Thu, 16 Jan 2020 04:50:47 -0600
 Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00GAoRdZ000589;
-        Thu, 16 Jan 2020 04:50:51 -0600
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00GAoRdX000589;
+        Thu, 16 Jan 2020 04:50:44 -0600
 From:   Faiz Abbas <faiz_abbas@ti.com>
 To:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-mmc@vger.kernel.org>
 CC:     <adrian.hunter@intel.com>, <kishon@ti.com>, <mark.rutland@arm.com>,
         <robh+dt@kernel.org>, <ulf.hansson@linaro.org>,
         <faiz_abbas@ti.com>, <tony@atomide.com>
-Subject: [PATCH v5 07/10] mmc: sdhci-omap: Disable data timeout interrupt during erase
-Date:   Thu, 16 Jan 2020 16:21:51 +0530
-Message-ID: <20200116105154.7685-8-faiz_abbas@ti.com>
+Subject: [PATCH v5 05/10] mmc: sdhci: Convert sdhci_set_timeout_irq() to non-static
+Date:   Thu, 16 Jan 2020 16:21:49 +0530
+Message-ID: <20200116105154.7685-6-faiz_abbas@ti.com>
 X-Mailer: git-send-email 2.19.2
 In-Reply-To: <20200116105154.7685-1-faiz_abbas@ti.com>
 References: <20200116105154.7685-1-faiz_abbas@ti.com>
@@ -69,50 +69,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Disable data timeout interrupt during an erase operation.
+Export sdhci_set_timeout_irq() so that it is accessible from platform drivers.
 
 Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
 Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- drivers/mmc/host/sdhci-omap.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/mmc/host/sdhci.c | 3 ++-
+ drivers/mmc/host/sdhci.h | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
-index 84d85aa743da..1f05c8e98d62 100644
---- a/drivers/mmc/host/sdhci-omap.c
-+++ b/drivers/mmc/host/sdhci-omap.c
-@@ -7,6 +7,7 @@
-  */
- 
- #include <linux/delay.h>
-+#include <linux/mmc/mmc.h>
- #include <linux/mmc/slot-gpio.h>
- #include <linux/module.h>
- #include <linux/of.h>
-@@ -827,6 +828,15 @@ static u32 sdhci_omap_irq(struct sdhci_host *host, u32 intmask)
- 	return intmask;
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 4d48129de5e4..37561333fda4 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -993,7 +993,7 @@ static void sdhci_set_transfer_irqs(struct sdhci_host *host)
+ 	sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
  }
  
-+static void sdhci_omap_set_timeout(struct sdhci_host *host,
-+				   struct mmc_command *cmd)
-+{
-+	if (cmd->opcode == MMC_ERASE)
-+		sdhci_set_data_timeout_irq(host, false);
-+
-+	__sdhci_set_timeout(host, cmd);
-+}
-+
- static struct sdhci_ops sdhci_omap_ops = {
- 	.set_clock = sdhci_omap_set_clock,
- 	.set_power = sdhci_omap_set_power,
-@@ -838,6 +848,7 @@ static struct sdhci_ops sdhci_omap_ops = {
- 	.reset = sdhci_omap_reset,
- 	.set_uhs_signaling = sdhci_omap_set_uhs_signaling,
- 	.irq = sdhci_omap_irq,
-+	.set_timeout = sdhci_omap_set_timeout,
- };
+-static void sdhci_set_data_timeout_irq(struct sdhci_host *host, bool enable)
++void sdhci_set_data_timeout_irq(struct sdhci_host *host, bool enable)
+ {
+ 	if (enable)
+ 		host->ier |= SDHCI_INT_DATA_TIMEOUT;
+@@ -1002,6 +1002,7 @@ static void sdhci_set_data_timeout_irq(struct sdhci_host *host, bool enable)
+ 	sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
+ 	sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
+ }
++EXPORT_SYMBOL_GPL(sdhci_set_data_timeout_irq);
  
- static int sdhci_omap_set_capabilities(struct sdhci_omap_host *omap_host)
+ static void sdhci_set_timeout(struct sdhci_host *host, struct mmc_command *cmd)
+ {
+diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+index 3166b3ecef89..928c6f35fcad 100644
+--- a/drivers/mmc/host/sdhci.h
++++ b/drivers/mmc/host/sdhci.h
+@@ -803,5 +803,6 @@ void sdhci_reset_tuning(struct sdhci_host *host);
+ void sdhci_send_tuning(struct sdhci_host *host, u32 opcode);
+ void sdhci_abort_tuning(struct sdhci_host *host, u32 opcode);
+ void sdhci_switch_external_dma(struct sdhci_host *host, bool en);
++void sdhci_set_data_timeout_irq(struct sdhci_host *host, bool enable);
+ 
+ #endif /* __SDHCI_HW_H */
 -- 
 2.19.2
 
