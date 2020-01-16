@@ -2,58 +2,56 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 586DCC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF2EC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28F1920661
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B88DD20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:36:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217764;
-	bh=FFqAA6SNsYplqYslGXzhazbin7/n7h1wWcwSQB08lDQ=;
+	s=default; t=1579217766;
+	bh=kAOaVjnWMYC/RpKKbmuTL0WR4dJhxwrxKVKAogktUJ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T1EkGy5RWNDGM7THL6GyRtUkGs5iIGCAK+vbDSzzCC+8X1cBvDco3zE30GJW6XHcs
-	 KSSslzFG2i11LT/Dt1sKM4To+yrzST9rb+/g73+GevY5L6EKq13vxep8xTU9N6e4Yw
-	 B5lKozCJB6D/Ct4JGf6ZVUV71W9b9OCmxZJxv2Xk=
+	b=kUyaOS3Q1WNPk2SWs0hbZpcaXTF7LtNsrY7ZCJvpCZZV3Zpugcz6uTYR/4zvhCorC
+	 ufqa4Zcm5wbEhMC7++SC6t9iigBY5WqJz3wyD43gOC4zCzGowFxDLgz3v3vcW24IVy
+	 koXFkivv3J1nb76kk6ZGJwzXTezEJaP5IAjk3lSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404223AbgAPXgC (ORCPT
+        id S2391548AbgAPXby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:36:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40818 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:31:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404084AbgAPXb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:31:57 -0500
+        id S2403989AbgAPXaa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:30:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 828DC214AF;
-        Thu, 16 Jan 2020 23:31:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C77220684;
+        Thu, 16 Jan 2020 23:30:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217517;
-        bh=FFqAA6SNsYplqYslGXzhazbin7/n7h1wWcwSQB08lDQ=;
+        s=default; t=1579217429;
+        bh=kAOaVjnWMYC/RpKKbmuTL0WR4dJhxwrxKVKAogktUJ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kT6ZzoFOYnRPq/FdxN3ljVh1nCOo5KPB4FNshO/5o2j6bdvvT/OcnC0rC53iWOKUY
-         xxqh2kyYg9etbsZ59nGQw/aPnBoG2p9+OC9NezWkQuUKstFoMKRQNIoM1QKZKx6tGS
-         o5AF/7I3qRpxLlEffzg5+FxvRdX/TDJ5nJin/JG8=
+        b=IWJd1ifoBSXf0XPrptx/XFKOuxAmU4hvVSEtvN9Mie4DYahIgM9shjciwMoy09m/b
+         JU/vBqOK3Mf6K9/EXrFeZE+JWdNwKravHX2q+PW8x8N+jBqpQtx1wesgIkd8ZEXOt2
+         hT8/jiwmOEDTJwgrspagaVraOrtwACpMd5KEHCj4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hanjun Guo <hanjun.guo@linaro.org>,
-        Lei Li <lious.lilei@hisilicon.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.14 09/71] arm64: Enforce BBM for huge IO/VMAP mappings
-Date:   Fri, 17 Jan 2020 00:18:07 +0100
-Message-Id: <20200116231710.759661967@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 79/84] drm/arm/mali: make malidp_mw_connector_helper_funcs static
+Date:   Fri, 17 Jan 2020 00:18:53 +0100
+Message-Id: <20200116231722.790733579@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200116231709.377772748@linuxfoundation.org>
-References: <20200116231709.377772748@linuxfoundation.org>
+In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
+References: <20200116231713.087649517@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,56 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will.deacon@arm.com>
+From: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
 
-commit 15122ee2c515a253b0c66a3e618bc7ebe35105eb upstream.
+[ Upstream commit ac2917b01992c098b8d4e6837115e3ca347fdd90 ]
 
-ioremap_page_range doesn't honour break-before-make and attempts to put
-down huge mappings (using p*d_set_huge) over the top of pre-existing
-table entries. This leads to us leaking page table memory and also gives
-rise to TLB conflicts and spurious aborts, which have been seen in
-practice on Cortex-A75.
+The malidp_mw_connector_helper_funcs is not referenced by name
+outside of the file it is in, so make it static to avoid the
+following warning:
 
-Until this has been resolved, refuse to put block mappings when the
-existing entry is found to be present.
+drivers/gpu/drm/arm/malidp_mw.c:59:41: warning: symbol 'malidp_mw_connector_helper_funcs' was not declared. Should it be static?
 
-Fixes: 324420bf91f60 ("arm64: add support for ioremap() block mappings")
-Reported-by: Hanjun Guo <hanjun.guo@linaro.org>
-Reported-by: Lei Li <lious.lilei@hisilicon.com>
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
+Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191217115309.2133503-1-ben.dooks@codethink.co.uk
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/mm/mmu.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/gpu/drm/arm/malidp_mw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -917,6 +917,11 @@ int pud_set_huge(pud_t *pudp, phys_addr_
- {
- 	pgprot_t sect_prot = __pgprot(PUD_TYPE_SECT |
- 					pgprot_val(mk_sect_prot(prot)));
-+
-+	/* ioremap_page_range doesn't honour BBM */
-+	if (pud_present(READ_ONCE(*pudp)))
-+		return 0;
-+
- 	BUG_ON(phys & ~PUD_MASK);
- 	set_pud(pudp, pfn_pud(__phys_to_pfn(phys), sect_prot));
- 	return 1;
-@@ -926,6 +931,11 @@ int pmd_set_huge(pmd_t *pmdp, phys_addr_
- {
- 	pgprot_t sect_prot = __pgprot(PMD_TYPE_SECT |
- 					pgprot_val(mk_sect_prot(prot)));
-+
-+	/* ioremap_page_range doesn't honour BBM */
-+	if (pmd_present(READ_ONCE(*pmdp)))
-+		return 0;
-+
- 	BUG_ON(phys & ~PMD_MASK);
- 	set_pmd(pmdp, pfn_pmd(__phys_to_pfn(phys), sect_prot));
- 	return 1;
+diff --git a/drivers/gpu/drm/arm/malidp_mw.c b/drivers/gpu/drm/arm/malidp_mw.c
+index 91472e5e0c8b..7266d3c8b8f4 100644
+--- a/drivers/gpu/drm/arm/malidp_mw.c
++++ b/drivers/gpu/drm/arm/malidp_mw.c
+@@ -55,7 +55,7 @@ malidp_mw_connector_mode_valid(struct drm_connector *connector,
+ 	return MODE_OK;
+ }
+ 
+-const struct drm_connector_helper_funcs malidp_mw_connector_helper_funcs = {
++static const struct drm_connector_helper_funcs malidp_mw_connector_helper_funcs = {
+ 	.get_modes = malidp_mw_connector_get_modes,
+ 	.mode_valid = malidp_mw_connector_mode_valid,
+ };
+-- 
+2.20.1
+
 
 
