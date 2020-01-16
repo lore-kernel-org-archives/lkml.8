@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E171CC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B75A9C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD6B020728
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CAF92075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194955;
-	bh=CLw4gHOlzKBi2xPBIjgsxQE+QMGm79q1jYQOrUriOKw=;
+	s=default; t=1579194959;
+	bh=IsIQlCAKLjxmjSdijTYiULQA7efHkUvHXQUo4paPNIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BQ475SAVU5tOS/EHdn3S7mKwHYx63UKlb9EDGptr9GOFILCw+rdOETiFpxJqYdgPV
-	 yQosfGC8mny3OcwTbmPiuyY/oFUpRnlSWR2CCd0Lr7UBOD5zsy2BzwnHqGQAceXHLh
-	 U3Ihz4BntzPSO+QBGPyJmaVXuGL2OKZrNKPGnOe4=
+	b=p4k6rWcbPPmdOfwk6kNdyMQQDMaIY4JyyBkkwCoE38IxWk6FmEm4sFtIj0/+xhqPU
+	 FErqqH3wBIob+SkvIa8l/hh4CO3dV5RF+yl2q86vdKL2zfMCw/fVNVvSIpv3hxSRaw
+	 9bfyjQGFbDnUUUCF05i1fyOGEq1Ltu4C3j3cL7OI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387976AbgAPRO3 (ORCPT
+        id S2390788AbgAPRP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:14:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32842 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:15:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390337AbgAPRON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:14:13 -0500
+        id S2390990AbgAPRO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:14:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8998C246B0;
-        Thu, 16 Jan 2020 17:14:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1787D246B2;
+        Thu, 16 Jan 2020 17:14:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194853;
-        bh=CLw4gHOlzKBi2xPBIjgsxQE+QMGm79q1jYQOrUriOKw=;
+        s=default; t=1579194866;
+        bh=IsIQlCAKLjxmjSdijTYiULQA7efHkUvHXQUo4paPNIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sUISP019mid0IRN2r3mZ5GFvkt98KFbLiChtrnr0zZmcJkADeihqAmfI63E9Ab63X
-         jnJ46OZSRdMMKHlrLqqEf4GvAj8CgPWm7r2nZce3wsFYG4qrBsJxL9MDPPYah6WXQ0
-         0o/vJLCxWqsSR5rOGVxWr7jI+4jtouaA36+eJGWo=
+        b=APcXt/Ybt9vx0AZ6GR+pcLWY9EmHXEq7Cg0fUjrsMCdPqI0hphTUubhMr+ypS9j+V
+         S6N3gIk04wlHzKBfwWtLqWa1BGJdIocPU1alZSaZv51GyQalwqGOBGs5XF4A46uFBH
+         tnYHSD8XIeW75onmiiFZ0I2RCqcnMJr4uKZfh+5I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 649/671] affs: fix a memory leak in affs_remount
-Date:   Thu, 16 Jan 2020 12:04:47 -0500
-Message-Id: <20200116170509.12787-386-sashal@kernel.org>
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 660/671] arm64: dts: juno: Fix UART frequency
+Date:   Thu, 16 Jan 2020 12:04:58 -0500
+Message-Id: <20200116170509.12787-397-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,57 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Andre Przywara <andre.przywara@arm.com>
 
-[ Upstream commit 450c3d4166837c496ebce03650c08800991f2150 ]
+[ Upstream commit 39a1a8941b27c37f79508426e27a2ec29829d66c ]
 
-In affs_remount if data is provided it is duplicated into new_opts.  The
-allocated memory for new_opts is only released if parse_options fails.
+Older versions of the Juno *SoC* TRM [1] recommended that the UART clock
+source should be 7.2738 MHz, whereas the *system* TRM [2] stated a more
+correct value of 7.3728 MHz. Somehow the wrong value managed to end up in
+our DT.
 
-There's a bit of history behind new_options, originally there was
-save/replace options on the VFS layer so the 'data' passed must not
-change (thus strdup), this got cleaned up in later patches. But not
-completely.
+Doing a prime factorisation, a modulo divide by 115200 and trying
+to buy a 7.2738 MHz crystal at your favourite electronics dealer suggest
+that the old value was actually a typo. The actual UART clock is driven
+by a PLL, configured via a parameter in some board.txt file in the
+firmware, which reads 7.37 MHz (sic!).
 
-There's no reason to do the strdup in cases where the filesystem does
-not need to reuse the 'data' again, because strsep would modify it
-directly.
+Fix this to correct the baud rate divisor calculation on the Juno board.
 
-Fixes: c8f33d0bec99 ("affs: kstrdup() memory handling")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-[ update changelog ]
-Signed-off-by: David Sterba <dsterba@suse.com>
+[1] http://infocenter.arm.com/help/topic/com.arm.doc.ddi0515b.b/DDI0515B_b_juno_arm_development_platform_soc_trm.pdf
+[2] http://infocenter.arm.com/help/topic/com.arm.doc.100113_0000_07_en/arm_versatile_express_juno_development_platform_(v2m_juno)_technical_reference_manual_100113_0000_07_en.pdf
+
+Fixes: 71f867ec130e ("arm64: Add Juno board device tree.")
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Acked-by: Liviu Dudau <liviu.dudau@arm.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/affs/super.c | 6 ------
- 1 file changed, 6 deletions(-)
+ arch/arm64/boot/dts/arm/juno-clocks.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/affs/super.c b/fs/affs/super.c
-index d1ad11a8a4a5..b6ce0c36029b 100644
---- a/fs/affs/super.c
-+++ b/fs/affs/super.c
-@@ -561,14 +561,9 @@ affs_remount(struct super_block *sb, int *flags, char *data)
- 	int			 root_block;
- 	unsigned long		 mount_flags;
- 	int			 res = 0;
--	char			*new_opts;
- 	char			 volume[32];
- 	char			*prefix = NULL;
- 
--	new_opts = kstrdup(data, GFP_KERNEL);
--	if (data && !new_opts)
--		return -ENOMEM;
--
- 	pr_debug("%s(flags=0x%x,opts=\"%s\")\n", __func__, *flags, data);
- 
- 	sync_filesystem(sb);
-@@ -579,7 +574,6 @@ affs_remount(struct super_block *sb, int *flags, char *data)
- 			   &blocksize, &prefix, volume,
- 			   &mount_flags)) {
- 		kfree(prefix);
--		kfree(new_opts);
- 		return -EINVAL;
- 	}
+diff --git a/arch/arm64/boot/dts/arm/juno-clocks.dtsi b/arch/arm64/boot/dts/arm/juno-clocks.dtsi
+index e5e265dfa902..2870b5eeb198 100644
+--- a/arch/arm64/boot/dts/arm/juno-clocks.dtsi
++++ b/arch/arm64/boot/dts/arm/juno-clocks.dtsi
+@@ -8,10 +8,10 @@
+  */
+ / {
+ 	/* SoC fixed clocks */
+-	soc_uartclk: refclk7273800hz {
++	soc_uartclk: refclk7372800hz {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+-		clock-frequency = <7273800>;
++		clock-frequency = <7372800>;
+ 		clock-output-names = "juno:uartclk";
+ 	};
  
 -- 
 2.20.1
