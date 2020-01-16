@@ -2,306 +2,145 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F15DC32771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 02:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC9AC32771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10F632467E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 02:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBF632467E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:00:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IO231mF6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730255AbgAPCza (ORCPT
+        id S1729835AbgAPDAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 21:55:30 -0500
-Received: from mga07.intel.com ([134.134.136.100]:36521 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730190AbgAPCz1 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 21:55:27 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 18:55:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,324,1574150400"; 
-   d="scan'208";a="218371857"
-Received: from kbl.sh.intel.com ([10.239.159.24])
-  by orsmga008.jf.intel.com with ESMTP; 15 Jan 2020 18:55:24 -0800
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v4 3/4] perf util: Flexible to set block info output formats
-Date:   Thu, 16 Jan 2020 03:29:03 +0800
-Message-Id: <20200115192904.16798-3-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200115192904.16798-1-yao.jin@linux.intel.com>
-References: <20200115192904.16798-1-yao.jin@linux.intel.com>
+        Wed, 15 Jan 2020 22:00:08 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31480 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729130AbgAPDAI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 22:00:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579143606;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QYDIddpraf1y7iH1YrZ3bXVk4InOC/gXpwyEqB+s6Kg=;
+        b=IO231mF6hW35fStU+BMazWebu3yMedee2DQz/xpNv3+NRLQ6G4jVA9+l0nlHKAxWnQGHA5
+        hM/KzC7QLcKBZUhy+dkbHDLEzQPh76h/G8OTj6wjJ/50O4fQk7AKljNbDr/a5n+yWWS7op
+        Z0CyAv6qRXGwe/ms4ejhjb2gHDD4YCA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-344-VmuSj52CP52FZ32jsTdlSA-1; Wed, 15 Jan 2020 22:00:05 -0500
+X-MC-Unique: VmuSj52CP52FZ32jsTdlSA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 66E9F107ACC7;
+        Thu, 16 Jan 2020 03:00:03 +0000 (UTC)
+Received: from x1.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 452F088898;
+        Thu, 16 Jan 2020 03:00:00 +0000 (UTC)
+Date:   Wed, 15 Jan 2020 19:59:59 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Mika =?UTF-8?B?UGVudHRpbMOk?= <mika.penttila@nextfour.com>
+Cc:     Yan Zhao <yan.y.zhao@intel.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>,
+        "peterx@redhat.com" <peterx@redhat.com>
+Subject: Re: [PATCH v2 1/2] vfio: introduce vfio_dma_rw to read/write a
+ range of IOVAs
+Message-ID: <20200115195959.28f33078@x1.home>
+In-Reply-To: <80cf3888-2e51-3fd7-a064-213e7ded188e@nextfour.com>
+References: <20200115034132.2753-1-yan.y.zhao@intel.com>
+        <20200115035303.12362-1-yan.y.zhao@intel.com>
+        <20200115130638.6926dd08@w520.home>
+        <80cf3888-2e51-3fd7-a064-213e7ded188e@nextfour.com>
+Organization: Red Hat
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently we use a predefined array to set the
-block info output formats, it's fixed and inflexible.
+On Thu, 16 Jan 2020 02:30:52 +0000
+Mika Penttil=C3=A4 <mika.penttila@nextfour.com> wrote:
 
-This patch adds two parameters "block_hpps" and "nr_hpps"
-in block_info__create_report and other static functions,
-in order to let user decide which columns to report and
-with specified report ordering. It should be more flexible.
+> On 15.1.2020 22.06, Alex Williamson wrote:
+> > On Tue, 14 Jan 2020 22:53:03 -0500
+> > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > =20
+> >> vfio_dma_rw will read/write a range of user space memory pointed to by
+> >> IOVA into/from a kernel buffer without pinning the user space memory.
+> >>
+> >> TODO: mark the IOVAs to user space memory dirty if they are written in
+> >> vfio_dma_rw().
+> >>
+> >> Cc: Kevin Tian <kevin.tian@intel.com>
+> >> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> >> ---
+> >>   drivers/vfio/vfio.c             | 45 +++++++++++++++++++
+> >>   drivers/vfio/vfio_iommu_type1.c | 76 +++++++++++++++++++++++++++++++=
+++
+> >>   include/linux/vfio.h            |  5 +++
+> >>   3 files changed, 126 insertions(+)
+> >>
+> >> diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
+> >> index c8482624ca34..8bd52bc841cf 100644
+> >> --- a/drivers/vfio/vfio.c
+> >> +++ b/drivers/vfio/vfio.c
+> >> @@ -1961,6 +1961,51 @@ int vfio_unpin_pages(struct device *dev, unsign=
+ed long *user_pfn, int npage)
+> >>   }
+> >>   EXPORT_SYMBOL(vfio_unpin_pages);
+> >>  =20
+> >> +/*
+> >> + * Read/Write a range of IOVAs pointing to user space memory into/fro=
+m a kernel
+> >> + * buffer without pinning the user space memory
+> >> + * @dev [in]  : device
+> >> + * @iova [in] : base IOVA of a user space buffer
+> >> + * @data [in] : pointer to kernel buffer
+> >> + * @len [in]  : kernel buffer length
+> >> + * @write     : indicate read or write
+> >> + * Return error code on failure or 0 on success.
+> >> + */
+> >> +int vfio_dma_rw(struct device *dev, dma_addr_t iova, void *data,
+> >> +		   size_t len, bool write)
+> >> +{
+> >> +	struct vfio_container *container;
+> >> +	struct vfio_group *group;
+> >> +	struct vfio_iommu_driver *driver;
+> >> +	int ret =3D 0; =20
+>=20
+> Do you know the iova given to vfio_dma_rw() is indeed a gpa and not iova=
+=20
+> from a iommu mapping? So isn't it you actually assume all the guest is=20
+> pinned,
+> like from device assignment?
+>=20
+> Or who and how is the vfio mapping added before the vfio_dma_rw() ?
 
-Buffers will be allocated to contain the new fmts, of course,
-we need to release them before perf exits.
+vfio only knows about IOVAs, not GPAs.  It's possible that IOVAs are
+identity mapped to the GPA space, but a VM with a vIOMMU would quickly
+break any such assumption.  Pinning is also not required.  This access
+is via the CPU, not the I/O device, so we don't require the memory to
+be pinning and it potentially won't be for a non-IOMMU backed mediated
+device.  The intention here is that via the mediation of an mdev
+device, a vendor driver would already know IOVA ranges for the device
+to access via the guest driver programming of the device.  Thanks,
 
- v4:
- ---
- Keep fmts in struct block_report as an array, instead of
- allocaing it. That's we don't need the release code.
-
- v3:
- ---
- No change.
-
- v2:
- ---
- New patch created in v2.
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
----
- tools/perf/builtin-report.c  | 25 ++++++++++++---
- tools/perf/util/block-info.c | 60 ++++++++++++++++++++++++++----------
- tools/perf/util/block-info.h | 10 ++++--
- 3 files changed, 71 insertions(+), 24 deletions(-)
-
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index de988589d99b..81ae1f862d11 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -104,6 +104,7 @@ struct report {
- 	bool			symbol_ipc;
- 	bool			total_cycles_mode;
- 	struct block_report	*block_reports;
-+	int			nr_block_reports;
- };
- 
- static int report__config(const char *var, const char *value, void *cb)
-@@ -503,7 +504,7 @@ static int perf_evlist__tui_block_hists_browse(struct evlist *evlist,
- 		ret = report__browse_block_hists(&rep->block_reports[i++].hist,
- 						 rep->min_percent, pos,
- 						 &rep->session->header.env,
--						 &rep->annotation_opts);
-+						 &rep->annotation_opts, true);
- 		if (ret != 0)
- 			return ret;
- 	}
-@@ -536,7 +537,7 @@ static int perf_evlist__tty_browse_hists(struct evlist *evlist,
- 		if (rep->total_cycles_mode) {
- 			report__browse_block_hists(&rep->block_reports[i++].hist,
- 						   rep->min_percent, pos,
--						   NULL, NULL);
-+						   NULL, NULL, true);
- 			continue;
- 		}
- 
-@@ -966,8 +967,19 @@ static int __cmd_report(struct report *rep)
- 	report__output_resort(rep);
- 
- 	if (rep->total_cycles_mode) {
-+		int block_hpps[6] = {
-+			PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT,
-+			PERF_HPP_REPORT__BLOCK_LBR_CYCLES,
-+			PERF_HPP_REPORT__BLOCK_CYCLES_PCT,
-+			PERF_HPP_REPORT__BLOCK_AVG_CYCLES,
-+			PERF_HPP_REPORT__BLOCK_RANGE,
-+			PERF_HPP_REPORT__BLOCK_DSO,
-+		};
-+
- 		rep->block_reports = block_info__create_report(session->evlist,
--							       rep->total_cycles);
-+							       rep->total_cycles,
-+							       block_hpps, 6,
-+							       &rep->nr_block_reports);
- 		if (!rep->block_reports)
- 			return -1;
- 	}
-@@ -1543,8 +1555,11 @@ int cmd_report(int argc, const char **argv)
- 		zfree(&report.ptime_range);
- 	}
- 
--	if (report.block_reports)
--		zfree(&report.block_reports);
-+	if (report.block_reports) {
-+		block_info__free_report(report.block_reports,
-+					report.nr_block_reports);
-+		report.block_reports = NULL;
-+	}
- 
- 	zstd_fini(&(session->zstd_data));
- 	perf_session__delete(session);
-diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
-index 2d0929aa0a65..266b2ba3ccad 100644
---- a/tools/perf/util/block-info.c
-+++ b/tools/perf/util/block-info.c
-@@ -376,33 +376,41 @@ static void hpp_register(struct block_fmt *block_fmt, int idx,
- }
- 
- static void register_block_columns(struct perf_hpp_list *hpp_list,
--				   struct block_fmt *block_fmts)
-+				   struct block_fmt *block_fmts,
-+				   int *block_hpps, int nr_hpps)
- {
--	for (int i = 0; i < PERF_HPP_REPORT__BLOCK_MAX_INDEX; i++)
--		hpp_register(&block_fmts[i], i, hpp_list);
-+	for (int i = 0; i < nr_hpps; i++)
-+		hpp_register(&block_fmts[i], block_hpps[i], hpp_list);
- }
- 
--static void init_block_hist(struct block_hist *bh, struct block_fmt *block_fmts)
-+static void init_block_hist(struct block_hist *bh, struct block_fmt *block_fmts,
-+			    int *block_hpps, int nr_hpps)
- {
- 	__hists__init(&bh->block_hists, &bh->block_list);
- 	perf_hpp_list__init(&bh->block_list);
- 	bh->block_list.nr_header_lines = 1;
- 
--	register_block_columns(&bh->block_list, block_fmts);
-+	register_block_columns(&bh->block_list, block_fmts,
-+			       block_hpps, nr_hpps);
- 
--	perf_hpp_list__register_sort_field(&bh->block_list,
--		&block_fmts[PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT].fmt);
-+	/* Sort by the first fmt */
-+	perf_hpp_list__register_sort_field(&bh->block_list, &block_fmts[0].fmt);
- }
- 
--static void process_block_report(struct hists *hists,
--				 struct block_report *block_report,
--				 u64 total_cycles)
-+static int process_block_report(struct hists *hists,
-+				struct block_report *block_report,
-+				u64 total_cycles, int *block_hpps,
-+				int nr_hpps)
- {
- 	struct rb_node *next = rb_first_cached(&hists->entries);
- 	struct block_hist *bh = &block_report->hist;
- 	struct hist_entry *he;
- 
--	init_block_hist(bh, block_report->fmts);
-+	if (nr_hpps > PERF_HPP_REPORT__BLOCK_MAX_INDEX)
-+		return -1;
-+
-+	block_report->nr_fmts = nr_hpps;
-+	init_block_hist(bh, block_report->fmts, block_hpps, nr_hpps);
- 
- 	while (next) {
- 		he = rb_entry(next, struct hist_entry, rb_node);
-@@ -411,16 +419,19 @@ static void process_block_report(struct hists *hists,
- 		next = rb_next(&he->rb_node);
- 	}
- 
--	for (int i = 0; i < PERF_HPP_REPORT__BLOCK_MAX_INDEX; i++) {
-+	for (int i = 0; i < nr_hpps; i++) {
- 		block_report->fmts[i].total_cycles = total_cycles;
- 		block_report->fmts[i].block_cycles = block_report->cycles;
- 	}
- 
- 	hists__output_resort(&bh->block_hists, NULL);
-+	return 0;
- }
- 
- struct block_report *block_info__create_report(struct evlist *evlist,
--					       u64 total_cycles)
-+					       u64 total_cycles,
-+					       int *block_hpps, int nr_hpps,
-+					       int *nr_reps)
- {
- 	struct block_report *block_reports;
- 	int nr_hists = evlist->core.nr_entries, i = 0;
-@@ -433,16 +444,27 @@ struct block_report *block_info__create_report(struct evlist *evlist,
- 	evlist__for_each_entry(evlist, pos) {
- 		struct hists *hists = evsel__hists(pos);
- 
--		process_block_report(hists, &block_reports[i], total_cycles);
-+		process_block_report(hists, &block_reports[i], total_cycles,
-+				     block_hpps, nr_hpps);
- 		i++;
- 	}
- 
-+	*nr_reps = nr_hists;
- 	return block_reports;
- }
- 
-+void block_info__free_report(struct block_report *reps, int nr_reps)
-+{
-+	for (int i = 0; i < nr_reps; i++)
-+		hists__delete_entries(&reps[i].hist.block_hists);
-+
-+	free(reps);
-+}
-+
- int report__browse_block_hists(struct block_hist *bh, float min_percent,
- 			       struct evsel *evsel, struct perf_env *env,
--			       struct annotation_options *annotation_opts)
-+			       struct annotation_options *annotation_opts,
-+			       bool release)
- {
- 	int ret;
- 
-@@ -451,13 +473,17 @@ int report__browse_block_hists(struct block_hist *bh, float min_percent,
- 		symbol_conf.report_individual_block = true;
- 		hists__fprintf(&bh->block_hists, true, 0, 0, min_percent,
- 			       stdout, true);
--		hists__delete_entries(&bh->block_hists);
-+		if (release)
-+			hists__delete_entries(&bh->block_hists);
-+
- 		return 0;
- 	case 1:
- 		symbol_conf.report_individual_block = true;
- 		ret = block_hists_tui_browse(bh, evsel, min_percent,
- 					     env, annotation_opts);
--		hists__delete_entries(&bh->block_hists);
-+		if (release)
-+			hists__delete_entries(&bh->block_hists);
-+
- 		return ret;
- 	default:
- 		return -1;
-diff --git a/tools/perf/util/block-info.h b/tools/perf/util/block-info.h
-index bfa22c59195d..77a19e83d146 100644
---- a/tools/perf/util/block-info.h
-+++ b/tools/perf/util/block-info.h
-@@ -45,6 +45,7 @@ struct block_report {
- 	struct block_hist	hist;
- 	u64			cycles;
- 	struct block_fmt	fmts[PERF_HPP_REPORT__BLOCK_MAX_INDEX];
-+	int			nr_fmts;
- };
- 
- struct block_hist;
-@@ -68,11 +69,16 @@ int block_info__process_sym(struct hist_entry *he, struct block_hist *bh,
- 			    u64 *block_cycles_aggr, u64 total_cycles);
- 
- struct block_report *block_info__create_report(struct evlist *evlist,
--					       u64 total_cycles);
-+					       u64 total_cycles,
-+					       int *block_hpps, int nr_hpps,
-+					       int *nr_reps);
-+
-+void block_info__free_report(struct block_report *reps, int nr_reps);
- 
- int report__browse_block_hists(struct block_hist *bh, float min_percent,
- 			       struct evsel *evsel, struct perf_env *env,
--			       struct annotation_options *annotation_opts);
-+			       struct annotation_options *annotation_opts,
-+			       bool release);
- 
- float block_info__total_cycles_percent(struct hist_entry *he);
- 
--- 
-2.17.1
+Alex
 
