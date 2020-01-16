@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83CB9C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B3FC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4355924656
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:57:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFB0824684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:57:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193820;
-	bh=0JjqsHQF+v6lqic0Hv75qSHw8WQM8B6vzqVxnEFjj8c=;
+	s=default; t=1579193826;
+	bh=PfQMiGR9EeuM30iGR1FkAL4KQGxNESmN0FOpdtWAy3s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uL5KZwmw07psHxnNycGQ5lRbJk9K4PV/XWzYvRTdJsfGYEinhX4M24saJcK3raYfx
-	 Nb2kqbumwlgs87PDaPvxfeRppUcXl8mmTQw75CUW/xhISsWMZygxHfq++/MrSct+Ta
-	 1csFIC1VTIKD9VHZf3Pjf2G64u4YjfxrR+67UfSk=
+	b=xojkbf+kP5PFaQJncmTG2xTeatZ/O313rN8f8sJeZigVYvPfMG7vOCjl64I4MvZik
+	 2C+fXSW5BOJNZKyN7G78wmCZbVnKBplkiVA51VYWT5muxMvEL1MJB769DUUlxeviM1
+	 otytX/h1WM2Re6UbBi/oiLynVZxrX5RlxSWJRpfw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732560AbgAPQ47 (ORCPT
+        id S2387424AbgAPQ5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:56:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43514 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:57:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733299AbgAPQ4z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:56:55 -0500
+        id S1729252AbgAPQ5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:57:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EE312051A;
-        Thu, 16 Jan 2020 16:56:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 347742467C;
+        Thu, 16 Jan 2020 16:57:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193814;
-        bh=0JjqsHQF+v6lqic0Hv75qSHw8WQM8B6vzqVxnEFjj8c=;
+        s=default; t=1579193821;
+        bh=PfQMiGR9EeuM30iGR1FkAL4KQGxNESmN0FOpdtWAy3s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dgp44EMxBvRrn6e9QFnnIi+R4dCDR/Xl7EuEPBWY9Mqooz0KvK+aehJmiKLDFn4TN
-         O1RbyGR3+jPxm+0BsRgx4EuUuckLLy64go5vlC3/2QnuD36SbeUtbSRV+w+oqUp11T
-         K4ZXV6bVt038a6tEaeqknMqnkUxDNw7Q4/AoqUJ0=
+        b=gtFiP3fDKs7RehezhbXWXGaJiv6EOTgxtzc/jj13Hkyer054qZiG3X8LW7GBF0J/0
+         ACbIgHf/m7VP3erwMwSngCp1kDkZ1tjTKH/rvmi4jGAvjK+VHF81ya2LSjJVC/fKX4
+         dzmnx5kfjXvhvqyZdjbwBi2yN2fhFdyLOhRfIiNg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 075/671] pinctrl: sh-pfc: r8a77980: Add missing MOD_SEL0 field
-Date:   Thu, 16 Jan 2020 11:45:06 -0500
-Message-Id: <20200116165502.8838-75-sashal@kernel.org>
+Cc:     Huazhong Tan <tanhuazhong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 080/671] net: hns3: fix error handling int the hns3_get_vector_ring_chain
+Date:   Thu, 16 Jan 2020 11:45:11 -0500
+Message-Id: <20200116165502.8838-80-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -60,35 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Huazhong Tan <tanhuazhong@huawei.com>
 
-[ Upstream commit b0f77269f6bba385f1f4dce44e7756cf8fbc0176 ]
+[ Upstream commit cda69d244585bc4497d3bb878c22fe2b6ad647c1 ]
 
-The Module Select Register 0 contains 20 (= 5 x 4) reserved bits, and 12
-single-bit fields, but the variable field descriptor lacks a field of 4
-reserved bits.
+When hns3_get_vector_ring_chain() failed in the
+hns3_nic_init_vector_data(), it should do the error handling instead
+of return directly.
 
-Fixes: f59125248a691dfe ("pinctrl: sh-pfc: Add R8A77980 PFC support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Also, cur_chain should be freed instead of chain and head->next should
+be set to NULL in error handling of hns3_get_vector_ring_chain.
+
+This patch fixes them.
+
+Fixes: 73b907a083b8 ("net: hns3: bugfix for buffer not free problem during resetting")
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-r8a77980.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77980.c b/drivers/pinctrl/sh-pfc/pfc-r8a77980.c
-index 3f6967331f64..81a710bb8555 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a77980.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a77980.c
-@@ -2751,7 +2751,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- #define F_(x, y)	x,
- #define FM(x)		FN_##x,
- 	{ PINMUX_CFG_REG_VAR("MOD_SEL0", 0xe6060500, 32,
--			     4, 4, 4, 4,
-+			     4, 4, 4, 4, 4,
- 			     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1) {
- 		/* RESERVED 31, 30, 29, 28 */
- 		0, 0, 0, 0, 0, 0, 0, 0,	0, 0, 0, 0, 0, 0, 0, 0,
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 9df807ec8c84..10fa7f5df57e 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -2605,9 +2605,10 @@ static int hns3_get_vector_ring_chain(struct hns3_enet_tqp_vector *tqp_vector,
+ 	cur_chain = head->next;
+ 	while (cur_chain) {
+ 		chain = cur_chain->next;
+-		devm_kfree(&pdev->dev, chain);
++		devm_kfree(&pdev->dev, cur_chain);
+ 		cur_chain = chain;
+ 	}
++	head->next = NULL;
+ 
+ 	return -ENOMEM;
+ }
+@@ -2679,7 +2680,7 @@ static int hns3_nic_init_vector_data(struct hns3_nic_priv *priv)
+ 		ret = hns3_get_vector_ring_chain(tqp_vector,
+ 						 &vector_ring_chain);
+ 		if (ret)
+-			return ret;
++			goto map_ring_fail;
+ 
+ 		ret = h->ae_algo->ops->map_ring_to_vector(h,
+ 			tqp_vector->vector_irq, &vector_ring_chain);
 -- 
 2.20.1
 
