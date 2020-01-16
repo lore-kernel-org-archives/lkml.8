@@ -2,137 +2,580 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A26C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C736AC33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E93B2077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:09:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A1552077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:09:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pBqZa7n0"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="YrCjIFki"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgAPOJV (ORCPT
+        id S1728899AbgAPOJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 09:09:21 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:50622 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726832AbgAPOJR (ORCPT
+        Thu, 16 Jan 2020 09:09:31 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:46543 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726925AbgAPOJT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 09:09:17 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200116140915euoutp01b6a61f5b94216753943790eef9243af7~qY0I5luMv0568405684euoutp01C
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 14:09:15 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200116140915euoutp01b6a61f5b94216753943790eef9243af7~qY0I5luMv0568405684euoutp01C
+        Thu, 16 Jan 2020 09:09:19 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200116140917euoutp02959146d241971284055a1bdf93fb7e0b~qY0KcrecO0753207532euoutp02h
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 14:09:17 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200116140917euoutp02959146d241971284055a1bdf93fb7e0b~qY0KcrecO0753207532euoutp02h
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579183755;
-        bh=69xJ+NJNadV7CrxpklCC1bU+SrtNBIUwyuB6JcFUzKg=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=pBqZa7n0P/QI7rrAVLr+/EWjSzc27JzUOOMAuzfHvNzUhvcYTTDcYrmt1zjmfDCTI
-         ZlJ8oAf5MtUUOn7WV4siC27ZIGb8HP6gLYMCT2a96Coq9Gprgf4kof8JE9mODeNZju
-         3rwpP0L75B+BsPifwQG9GIEzW0pnSy6i6DTmsLyw=
+        s=mail20170921; t=1579183757;
+        bh=UjI7pq402iq5pI3T/IpsVyHBFogV/jA6cdkYrAOJUDo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YrCjIFkiTE8whvokbTpIh794KDQwmjpK6EFfPRvaRegwdGzHUfJZLpmiJy8FIVFgm
+         UMRjjW3lAjtG6Wr7MXieJ7haD5PgZbcbWXbw5Z/zWz10XIMhHWx5qbkgtfT1EkBiwn
+         wFOjO1u9AX+EnhCS5tj2RDkr+4p9uU9zf19BAIeE=
 Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200116140915eucas1p1ce402d249818a74e542d46edd3bbfc43~qY0Ioo23_0528405284eucas1p1q;
-        Thu, 16 Jan 2020 14:09:15 +0000 (GMT)
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200116140916eucas1p202c94aa1429b4ae8a0d1ffa67dd9916c~qY0KPxfkq1059310593eucas1p2t;
+        Thu, 16 Jan 2020 14:09:16 +0000 (GMT)
 Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id CD.ED.60698.B8E602E5; Thu, 16
-        Jan 2020 14:09:15 +0000 (GMT)
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id C1.FD.60698.C8E602E5; Thu, 16
+        Jan 2020 14:09:16 +0000 (GMT)
 Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
         eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200116140914eucas1p1a62794ad40589e818614176ea8e817ff~qY0IXBpYY1316013160eucas1p1P;
-        Thu, 16 Jan 2020 14:09:14 +0000 (GMT)
+        20200116140916eucas1p112ff962e85e6feb4dbc2ff65443ef1ce~qY0JwVXu30480504805eucas1p18;
+        Thu, 16 Jan 2020 14:09:16 +0000 (GMT)
 Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
         eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200116140914eusmtrp230bddac5d1bb8bd58cccd32652088fb0~qY0IWbTYr0998609986eusmtrp2O;
-        Thu, 16 Jan 2020 14:09:14 +0000 (GMT)
-X-AuditID: cbfec7f5-a0fff7000001ed1a-a6-5e206e8b58bb
+        20200116140916eusmtrp26285d011ced2952841245f69eea2ace3~qY0Jvylh50965509655eusmtrp2G;
+        Thu, 16 Jan 2020 14:09:16 +0000 (GMT)
+X-AuditID: cbfec7f5-a0fff7000001ed1a-ae-5e206e8ccefd
 Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 18.FF.08375.A8E602E5; Thu, 16
-        Jan 2020 14:09:14 +0000 (GMT)
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id AA.FF.08375.C8E602E5; Thu, 16
+        Jan 2020 14:09:16 +0000 (GMT)
 Received: from AMDC3058.digital.local (unknown [106.120.51.71]) by
         eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200116140914eusmtip14959d6d6b1b6d26f0aaf3a5e0380de4a~qY0H-Aj3x0112701127eusmtip1D;
-        Thu, 16 Jan 2020 14:09:14 +0000 (GMT)
+        20200116140916eusmtip1c274cd474e09869132dc019be1338c43~qY0Jb-Pzk0665806658eusmtip1Z;
+        Thu, 16 Jan 2020 14:09:15 +0000 (GMT)
 From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 To:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
 Cc:     Andrzej Hajda <a.hajda@samsung.com>, b.zolnierkie@samsung.com
-Subject: [PATCH 0/6] video: fbdev: controlfb: small cleanup
-Date:   Thu, 16 Jan 2020 15:08:54 +0100
-Message-Id: <20200116140900.26363-1-b.zolnierkie@samsung.com>
+Subject: [PATCH 5/6] video: fbdev: controlfb: remove function prototypes
+ part #2
+Date:   Thu, 16 Jan 2020 15:08:59 +0100
+Message-Id: <20200116140900.26363-6-b.zolnierkie@samsung.com>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200116140900.26363-1-b.zolnierkie@samsung.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupkleLIzCtJLcpLzFFi42LZduzned3uPIU4g0+L2CxurTvHarFxxnpW
-        iytf37NZnOj7wGpxedccNgdWj/vdx5k8+rasYvT4vEkugDmKyyYlNSezLLVI3y6BK+N8yymm
-        gldsFWfPdTE2MB5j7WLk4JAQMJHYPSWgi5GLQ0hgBaPEynMtbBDOF0aJozdXMEM4nxklPiy4
-        wdjFyAnWMWPFZSaIxHJGibk/etnhWl5/ms0GUsUmYCUxsX0VWIeIQILEiukzGEH2MQs4SjT3
-        84GEhQWsJR4fXwxWwiKgKjH5xRtmEJtXwFZi18d5TBDL5CW2fvvEChEXlDg58wkLiM0MFG/e
-        OhvsOgmB22wSH7b8YoVocJFoarjKDmELS7w6vgXKlpH4v3M+E0TDOkaJvx0voLq3M0osn/yP
-        DaLKWuLOuV9sEJdqSqzfpQ8JJEeJp0/CIUw+iRtvBSFu4JOYtG06M0SYV6KjTQhihprEhmUb
-        2GC2du1cyQxhe0g8/vEH7BohgViJszu+M09gVJiF5LNZSD6bhXDCAkbmVYziqaXFuempxcZ5
-        qeV6xYm5xaV56XrJ+bmbGIEJ5PS/4193MO77k3SIUYCDUYmH90OIQpwQa2JZcWXuIUYJDmYl
-        Ed6TM2TjhHhTEiurUovy44tKc1KLDzFKc7AoifMaL3oZKySQnliSmp2aWpBaBJNl4uCUamB0
-        4V+d+ulvuLHz05ikyoy/HFt887+IN8/2uaz1x7c14f7EsoI1H8wnJ9uEL5V3+b3HzFPDqH7F
-        2eIVuyxqPzy8/+7V6wDtvp6qlY+UJS4ecr2ttkEzarGtY5IhVx2L1PWvsx0X3pRSKVgdG5Jd
-        lryTfanPm9fnL6wLCfSfsM907qS0g1XnQl2VWIozEg21mIuKEwFnnnATHAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrALMWRmVeSWpSXmKPExsVy+t/xu7pdeQpxBg+/61ncWneO1WLjjPWs
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgleLIzCtJLcpLzFFi42LZduzned2ePIU4g+NfdS1urTvHarFxxnpW
+        iytf37NZnOj7wGpxedccNgdWj/vdx5k8+rasYvT4vEkugDmKyyYlNSezLLVI3y6BK+Nvx3PW
+        ghfpFT9fXmduYJwR3MXIwSEhYCKx9a5HFyMXh5DACkaJE0ufs0A4Xxgldn5fxdzFyAnkfGaU
+        eD2LG8QGafgz8zcbRNFyRomJt08zwXUcaGhnAqliE7CSmNi+ihHEFhFIkFgxfQYjyDpmAUeJ
+        5n4+kLCwQJBE2/5N7CA2i4CqROeJXjCbV8BWYvevV+wQy+Qltn77xApicwrYScw7dY8RokZQ
+        4uTMJywgNjNQTfPW2cwgN0gIfGeTuHavlwmi2UXiY888RghbWOLV8S1QQ2Uk/u+czwTRsI5R
+        4m/HC6ju7YwSyyf/Y4Oospa4c+4XG8TVmhLrd+lDhB0lnv8+zQgJOz6JG28FIY7gk5i0bToz
+        RJhXoqNNCKJaTWLDsg1sMGu7dq6EKvGQ6PtoPYFRcRaSb2Yh+WYWwtoFjMyrGMVTS4tz01OL
+        jfNSy/WKE3OLS/PS9ZLzczcxAtPH6X/Hv+5g3Pcn6RCjAAejEg/vhxCFOCHWxLLiytxDjBIc
+        zEoivCdnyMYJ8aYkVlalFuXHF5XmpBYfYpTmYFES5zVe9DJWSCA9sSQ1OzW1ILUIJsvEwSnV
+        wFiVet31esRu+6gZgvwXNoh1XRI5+2NZb0bBnlyB0slvfffNadf/JPbY7PW3iWFSym2HLfSn
+        L7HfcqXQQu5QxoLF2s7XfCdU/kw8NOV7VojsNIkDb4p3apdL/yqxKj3h/9fe3vX9jrUK6r5T
+        LBhPt8Uy+x2T+KB9WS+gu6Dz9IMo02RG82cxW5VYijMSDbWYi4oTAcuZFWUbAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrGLMWRmVeSWpSXmKPExsVy+t/xu7o9eQpxBrMuCVrcWneO1WLjjPWs
         Fle+vmezONH3gdXi8q45bA6sHve7jzN59G1ZxejxeZNcAHOUnk1RfmlJqkJGfnGJrVK0oYWR
-        nqGlhZ6RiaWeobF5rJWRqZK+nU1Kak5mWWqRvl2CXsb5llNMBa/YKs6e62JsYDzG2sXIySEh
-        YCIxY8Vlpi5GLg4hgaWMEosv7WTuYuQASshIHF9fBlEjLPHnWhcbRM0nRonWaTcYQRJsAlYS
-        E9tXgdkiAkkSnQ0nmUFsZgFniVm3HjGB2MIC1hKPjy8Gq2ERUJWY/OINWA2vgK3Ero/zmCAW
-        yEts/faJFSIuKHFy5hMWiDnyEs1bZzNPYOSbhSQ1C0lqASPTKkaR1NLi3PTcYkO94sTc4tK8
-        dL3k/NxNjMDQ3Xbs5+YdjJc2Bh9iFOBgVOLhnRGkECfEmlhWXJl7iFGCg1lJhPfkDNk4Id6U
-        xMqq1KL8+KLSnNTiQ4ymQMdOZJYSTc4HxlVeSbyhqaG5haWhubG5sZmFkjhvh8DBGCGB9MSS
-        1OzU1ILUIpg+Jg5OqQbGrit5Qld1X1jqP9P3+C9/ImDWnIyIEmWu0p2fF4rfeVGkH7996VXh
-        wNRDy+zKt51r7m+6Z113I8f1euiSwONBTT+O/HzsV2HpeOz6tmliuos/6fnm8//sS/y37e2T
-        8+5B/Hq812PCq+qkP4Xl3J2tMEnvz/G9abLTNI4wHuicPEXqXOdyg+kzlViKMxINtZiLihMB
-        AQf//nMCAAA=
-X-CMS-MailID: 20200116140914eucas1p1a62794ad40589e818614176ea8e817ff
+        nqGlhZ6RiaWeobF5rJWRqZK+nU1Kak5mWWqRvl2CXsbfjuesBS/SK36+vM7cwDgjuIuRk0NC
+        wETiz8zfbF2MXBxCAksZJT4+PsDYxcgBlJCROL6+DKJGWOLPtS6omk+MEnN7NrKDJNgErCQm
+        tq9iBLFFBJIkOhtOMoPYzALOErNuPWICmSMsECBx/DcLSJhFQFWi80QvWCuvgK3E7l+v2CHm
+        y0ts/faJFcTmFLCTmHfqHtgJQkA1h6ZJQZQLSpyc+YQFYrq8RPPW2cwTGAVmIUnNQpJawMi0
+        ilEktbQ4Nz232FCvODG3uDQvXS85P3cTIzDMtx37uXkH46WNwYcYBTgYlXh4ZwQpxAmxJpYV
+        V+YeYpTgYFYS4T05QzZOiDclsbIqtSg/vqg0J7X4EKMp0A8TmaVEk/OBMZhXEm9oamhuYWlo
+        bmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoFRrnxD/JWoi3NufrNWmPBr55RbO+78
+        2nrsz96AuJssErvflkx7rLnIJXpFee4O26/7drS9nHHpkrDjvnL32OmP4lU/Bsw5uIxH3F9Z
+        waYqiLvowNPoxfqMtq+mLNw7RXPyycC05V8fzk0Wdfijuen5CdvqgN0lf8wnWmUqzpU8fvuN
+        66uV60QiNiqxFGckGmoxFxUnAgCzPc7UiQIAAA==
+X-CMS-MailID: 20200116140916eucas1p112ff962e85e6feb4dbc2ff65443ef1ce
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200116140914eucas1p1a62794ad40589e818614176ea8e817ff
+X-RootMTR: 20200116140916eucas1p112ff962e85e6feb4dbc2ff65443ef1ce
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20200116140914eucas1p1a62794ad40589e818614176ea8e817ff
-References: <CGME20200116140914eucas1p1a62794ad40589e818614176ea8e817ff@eucas1p1.samsung.com>
+X-CMS-RootMailID: 20200116140916eucas1p112ff962e85e6feb4dbc2ff65443ef1ce
+References: <20200116140900.26363-1-b.zolnierkie@samsung.com>
+        <CGME20200116140916eucas1p112ff962e85e6feb4dbc2ff65443ef1ce@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Reorder code a bit and then remove no longer needed function
+prototypes.
 
-Small cleanup for controlfb driver:
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+---
+ drivers/video/fbdev/controlfb.c | 410 +++++++++++++++-----------------
+ 1 file changed, 198 insertions(+), 212 deletions(-)
 
-- fix sparse warnings
-- remove not working module support
-- add COMPILE_TEST support
-- remove redundant function prototypes
-
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
-
-
-Bartlomiej Zolnierkiewicz (6):
-  video: fbdev: controlfb: fix sparse warning about using incorrect type
-  video: fbdev: controlfb: remove obsolete module support
-  video: fbdev: controlfb: add COMPILE_TEST support
-  video: fbdev: controlfb: remove function prototypes part #1
-  video: fbdev: controlfb: remove function prototypes part #2
-  video: fbdev: controlfb: remove function prototypes part #3
-
- drivers/video/fbdev/Kconfig     |   2 +-
- drivers/video/fbdev/controlfb.c | 810 +++++++++++++++-----------------
- 2 files changed, 383 insertions(+), 429 deletions(-)
-
+diff --git a/drivers/video/fbdev/controlfb.c b/drivers/video/fbdev/controlfb.c
+index 32ee6e4b5db4..4012ecf72d47 100644
+--- a/drivers/video/fbdev/controlfb.c
++++ b/drivers/video/fbdev/controlfb.c
+@@ -131,20 +131,12 @@ struct fb_info_control {
+ 
+ /******************** Prototypes for internal functions **********************/
+ 
+-static void set_control_clock(unsigned char *params);
+-static int init_control(struct fb_info_control *p);
+ static void control_set_hardware(struct fb_info_control *p,
+ 	struct fb_par_control *par);
+-static int control_of_init(struct device_node *dp);
+-static void find_vram_size(struct fb_info_control *p);
+-static int read_control_sense(struct fb_info_control *p);
+-static int calc_clock_params(unsigned long clk, unsigned char *param);
+ static int control_var_to_par(struct fb_var_screeninfo *var,
+ 	struct fb_par_control *par, const struct fb_info *fb_info);
+ static inline void control_par_to_var(struct fb_par_control *par,
+ 	struct fb_var_screeninfo *var);
+-static void control_init_info(struct fb_info *info, struct fb_info_control *p);
+-static void control_cleanup(void);
+ 
+ 
+ /************************** Internal variables *******************************/
+@@ -360,77 +352,6 @@ static void set_control_clock(unsigned char *params)
+ #endif	
+ }
+ 
+-
+-/*
+- * finish off the driver initialization and register
+- */
+-static int __init init_control(struct fb_info_control *p)
+-{
+-	int full, sense, vmode, cmode, vyres;
+-	struct fb_var_screeninfo var;
+-	int rc;
+-	
+-	printk(KERN_INFO "controlfb: ");
+-
+-	full = p->total_vram == 0x400000;
+-
+-	/* Try to pick a video mode out of NVRAM if we have one. */
+-	cmode = default_cmode;
+-	if (IS_REACHABLE(CONFIG_NVRAM) && cmode == CMODE_NVRAM)
+-		cmode = nvram_read_byte(NV_CMODE);
+-	if (cmode < CMODE_8 || cmode > CMODE_32)
+-		cmode = CMODE_8;
+-
+-	vmode = default_vmode;
+-	if (IS_REACHABLE(CONFIG_NVRAM) && vmode == VMODE_NVRAM)
+-		vmode = nvram_read_byte(NV_VMODE);
+-	if (vmode < 1 || vmode > VMODE_MAX ||
+-	    control_mac_modes[vmode - 1].m[full] < cmode) {
+-		sense = read_control_sense(p);
+-		printk(KERN_CONT "Monitor sense value = 0x%x, ", sense);
+-		vmode = mac_map_monitor_sense(sense);
+-		if (control_mac_modes[vmode - 1].m[full] < 0)
+-			vmode = VMODE_640_480_60;
+-		cmode = min(cmode, control_mac_modes[vmode - 1].m[full]);
+-	}
+-
+-	/* Initialize info structure */
+-	control_init_info(&p->info, p);
+-
+-	/* Setup default var */
+-	if (mac_vmode_to_var(vmode, cmode, &var) < 0) {
+-		/* This shouldn't happen! */
+-		printk("mac_vmode_to_var(%d, %d,) failed\n", vmode, cmode);
+-try_again:
+-		vmode = VMODE_640_480_60;
+-		cmode = CMODE_8;
+-		if (mac_vmode_to_var(vmode, cmode, &var) < 0) {
+-			printk(KERN_ERR "controlfb: mac_vmode_to_var() failed\n");
+-			return -ENXIO;
+-		}
+-		printk(KERN_INFO "controlfb: ");
+-	}
+-	printk("using video mode %d and color mode %d.\n", vmode, cmode);
+-
+-	vyres = (p->total_vram - CTRLFB_OFF) / (var.xres << cmode);
+-	if (vyres > var.yres)
+-		var.yres_virtual = vyres;
+-
+-	/* Apply default var */
+-	var.activate = FB_ACTIVATE_NOW;
+-	rc = fb_set_var(&p->info, &var);
+-	if (rc && (vmode != VMODE_640_480_60 || cmode != CMODE_8))
+-		goto try_again;
+-
+-	/* Register with fbdev layer */
+-	if (register_framebuffer(&p->info) < 0)
+-		return -ENXIO;
+-
+-	fb_info(&p->info, "control display adapter\n");
+-
+-	return 0;
+-}
+-
+ #define RADACAL_WRITE(a,d) \
+ 	out_8(&p->cmap_regs->addr, (a)); \
+ 	out_8(&p->cmap_regs->dat,   (d))
+@@ -492,67 +413,6 @@ static void control_set_hardware(struct fb_info_control *p, struct fb_par_contro
+ #endif /* CONFIG_BOOTX_TEXT */
+ }
+ 
+-
+-/*
+- * Parse user specified options (`video=controlfb:')
+- */
+-static void __init control_setup(char *options)
+-{
+-	char *this_opt;
+-
+-	if (!options || !*options)
+-		return;
+-
+-	while ((this_opt = strsep(&options, ",")) != NULL) {
+-		if (!strncmp(this_opt, "vmode:", 6)) {
+-			int vmode = simple_strtoul(this_opt+6, NULL, 0);
+-			if (vmode > 0 && vmode <= VMODE_MAX &&
+-			    control_mac_modes[vmode - 1].m[1] >= 0)
+-				default_vmode = vmode;
+-		} else if (!strncmp(this_opt, "cmode:", 6)) {
+-			int depth = simple_strtoul(this_opt+6, NULL, 0);
+-			switch (depth) {
+-			 case CMODE_8:
+-			 case CMODE_16:
+-			 case CMODE_32:
+-			 	default_cmode = depth;
+-			 	break;
+-			 case 8:
+-				default_cmode = CMODE_8;
+-				break;
+-			 case 15:
+-			 case 16:
+-				default_cmode = CMODE_16;
+-				break;
+-			 case 24:
+-			 case 32:
+-				default_cmode = CMODE_32;
+-				break;
+-			}
+-		}
+-	}
+-}
+-
+-static int __init control_init(void)
+-{
+-	struct device_node *dp;
+-	char *option = NULL;
+-	int ret = -ENXIO;
+-
+-	if (fb_get_options("controlfb", &option))
+-		return -ENODEV;
+-	control_setup(option);
+-
+-	dp = of_find_node_by_name(NULL, "control");
+-	if (dp && !control_of_init(dp))
+-		ret = 0;
+-	of_node_put(dp);
+-
+-	return ret;
+-}
+-
+-device_initcall(control_init);
+-
+ /* Work out which banks of VRAM we have installed. */
+ /* danj: I guess the card just ignores writes to nonexistant VRAM... */
+ 
+@@ -629,78 +489,6 @@ static void __init find_vram_size(struct fb_info_control *p)
+ 			(bank1 + bank2) << 1, bank1 << 1, bank2 << 1);
+ }
+ 
+-
+-/*
+- * find "control" and initialize
+- */
+-static int __init control_of_init(struct device_node *dp)
+-{
+-	struct fb_info_control	*p;
+-	struct resource		fb_res, reg_res;
+-
+-	if (control_fb) {
+-		printk(KERN_ERR "controlfb: only one control is supported\n");
+-		return -ENXIO;
+-	}
+-
+-	if (of_pci_address_to_resource(dp, 2, &fb_res) ||
+-	    of_pci_address_to_resource(dp, 1, &reg_res)) {
+-		printk(KERN_ERR "can't get 2 addresses for control\n");
+-		return -ENXIO;
+-	}
+-	p = kzalloc(sizeof(*p), GFP_KERNEL);
+-	if (!p)
+-		return -ENOMEM;
+-	control_fb = p;	/* save it for cleanups */
+-
+-	/* Map in frame buffer and registers */
+-	p->fb_orig_base = fb_res.start;
+-	p->fb_orig_size = resource_size(&fb_res);
+-	/* use the big-endian aperture (??) */
+-	p->frame_buffer_phys = fb_res.start + 0x800000;
+-	p->control_regs_phys = reg_res.start;
+-	p->control_regs_size = resource_size(&reg_res);
+-
+-	if (!p->fb_orig_base ||
+-	    !request_mem_region(p->fb_orig_base,p->fb_orig_size,"controlfb")) {
+-		p->fb_orig_base = 0;
+-		goto error_out;
+-	}
+-	/* map at most 8MB for the frame buffer */
+-	p->frame_buffer = ioremap_wt(p->frame_buffer_phys, 0x800000);
+-
+-	if (!p->control_regs_phys ||
+-	    !request_mem_region(p->control_regs_phys, p->control_regs_size,
+-	    "controlfb regs")) {
+-		p->control_regs_phys = 0;
+-		goto error_out;
+-	}
+-	p->control_regs = ioremap(p->control_regs_phys, p->control_regs_size);
+-
+-	p->cmap_regs_phys = 0xf301b000;	 /* XXX not in prom? */
+-	if (!request_mem_region(p->cmap_regs_phys, 0x1000, "controlfb cmap")) {
+-		p->cmap_regs_phys = 0;
+-		goto error_out;
+-	}
+-	p->cmap_regs = ioremap(p->cmap_regs_phys, 0x1000);
+-
+-	if (!p->cmap_regs || !p->control_regs || !p->frame_buffer)
+-		goto error_out;
+-
+-	find_vram_size(p);
+-	if (!p->total_vram)
+-		goto error_out;
+-
+-	if (init_control(p) < 0)
+-		goto error_out;
+-
+-	return 0;
+-
+-error_out:
+-	control_cleanup();
+-	return -ENXIO;
+-}
+-
+ /*
+  * Get the monitor sense value.
+  * Note that this can be called before calibrate_delay,
+@@ -1025,6 +813,115 @@ static void __init control_init_info(struct fb_info *info, struct fb_info_contro
+         info->fix.accel = FB_ACCEL_NONE;
+ }
+ 
++/*
++ * Parse user specified options (`video=controlfb:')
++ */
++static void __init control_setup(char *options)
++{
++	char *this_opt;
++
++	if (!options || !*options)
++		return;
++
++	while ((this_opt = strsep(&options, ",")) != NULL) {
++		if (!strncmp(this_opt, "vmode:", 6)) {
++			int vmode = simple_strtoul(this_opt+6, NULL, 0);
++			if (vmode > 0 && vmode <= VMODE_MAX &&
++			    control_mac_modes[vmode - 1].m[1] >= 0)
++				default_vmode = vmode;
++		} else if (!strncmp(this_opt, "cmode:", 6)) {
++			int depth = simple_strtoul(this_opt+6, NULL, 0);
++			switch (depth) {
++			 case CMODE_8:
++			 case CMODE_16:
++			 case CMODE_32:
++			 	default_cmode = depth;
++			 	break;
++			 case 8:
++				default_cmode = CMODE_8;
++				break;
++			 case 15:
++			 case 16:
++				default_cmode = CMODE_16;
++				break;
++			 case 24:
++			 case 32:
++				default_cmode = CMODE_32;
++				break;
++			}
++		}
++	}
++}
++
++/*
++ * finish off the driver initialization and register
++ */
++static int __init init_control(struct fb_info_control *p)
++{
++	int full, sense, vmode, cmode, vyres;
++	struct fb_var_screeninfo var;
++	int rc;
++	
++	printk(KERN_INFO "controlfb: ");
++
++	full = p->total_vram == 0x400000;
++
++	/* Try to pick a video mode out of NVRAM if we have one. */
++	cmode = default_cmode;
++	if (IS_REACHABLE(CONFIG_NVRAM) && cmode == CMODE_NVRAM)
++		cmode = nvram_read_byte(NV_CMODE);
++	if (cmode < CMODE_8 || cmode > CMODE_32)
++		cmode = CMODE_8;
++
++	vmode = default_vmode;
++	if (IS_REACHABLE(CONFIG_NVRAM) && vmode == VMODE_NVRAM)
++		vmode = nvram_read_byte(NV_VMODE);
++	if (vmode < 1 || vmode > VMODE_MAX ||
++	    control_mac_modes[vmode - 1].m[full] < cmode) {
++		sense = read_control_sense(p);
++		printk(KERN_CONT "Monitor sense value = 0x%x, ", sense);
++		vmode = mac_map_monitor_sense(sense);
++		if (control_mac_modes[vmode - 1].m[full] < 0)
++			vmode = VMODE_640_480_60;
++		cmode = min(cmode, control_mac_modes[vmode - 1].m[full]);
++	}
++
++	/* Initialize info structure */
++	control_init_info(&p->info, p);
++
++	/* Setup default var */
++	if (mac_vmode_to_var(vmode, cmode, &var) < 0) {
++		/* This shouldn't happen! */
++		printk("mac_vmode_to_var(%d, %d,) failed\n", vmode, cmode);
++try_again:
++		vmode = VMODE_640_480_60;
++		cmode = CMODE_8;
++		if (mac_vmode_to_var(vmode, cmode, &var) < 0) {
++			printk(KERN_ERR "controlfb: mac_vmode_to_var() failed\n");
++			return -ENXIO;
++		}
++		printk(KERN_INFO "controlfb: ");
++	}
++	printk("using video mode %d and color mode %d.\n", vmode, cmode);
++
++	vyres = (p->total_vram - CTRLFB_OFF) / (var.xres << cmode);
++	if (vyres > var.yres)
++		var.yres_virtual = vyres;
++
++	/* Apply default var */
++	var.activate = FB_ACTIVATE_NOW;
++	rc = fb_set_var(&p->info, &var);
++	if (rc && (vmode != VMODE_640_480_60 || cmode != CMODE_8))
++		goto try_again;
++
++	/* Register with fbdev layer */
++	if (register_framebuffer(&p->info) < 0)
++		return -ENXIO;
++
++	fb_info(&p->info, "control display adapter\n");
++
++	return 0;
++}
+ 
+ static void control_cleanup(void)
+ {
+@@ -1051,4 +948,93 @@ static void control_cleanup(void)
+ 	kfree(p);
+ }
+ 
++/*
++ * find "control" and initialize
++ */
++static int __init control_of_init(struct device_node *dp)
++{
++	struct fb_info_control	*p;
++	struct resource		fb_res, reg_res;
++
++	if (control_fb) {
++		printk(KERN_ERR "controlfb: only one control is supported\n");
++		return -ENXIO;
++	}
++
++	if (of_pci_address_to_resource(dp, 2, &fb_res) ||
++	    of_pci_address_to_resource(dp, 1, &reg_res)) {
++		printk(KERN_ERR "can't get 2 addresses for control\n");
++		return -ENXIO;
++	}
++	p = kzalloc(sizeof(*p), GFP_KERNEL);
++	if (!p)
++		return -ENOMEM;
++	control_fb = p;	/* save it for cleanups */
++
++	/* Map in frame buffer and registers */
++	p->fb_orig_base = fb_res.start;
++	p->fb_orig_size = resource_size(&fb_res);
++	/* use the big-endian aperture (??) */
++	p->frame_buffer_phys = fb_res.start + 0x800000;
++	p->control_regs_phys = reg_res.start;
++	p->control_regs_size = resource_size(&reg_res);
++
++	if (!p->fb_orig_base ||
++	    !request_mem_region(p->fb_orig_base,p->fb_orig_size,"controlfb")) {
++		p->fb_orig_base = 0;
++		goto error_out;
++	}
++	/* map at most 8MB for the frame buffer */
++	p->frame_buffer = ioremap_wt(p->frame_buffer_phys, 0x800000);
++
++	if (!p->control_regs_phys ||
++	    !request_mem_region(p->control_regs_phys, p->control_regs_size,
++	    "controlfb regs")) {
++		p->control_regs_phys = 0;
++		goto error_out;
++	}
++	p->control_regs = ioremap(p->control_regs_phys, p->control_regs_size);
++
++	p->cmap_regs_phys = 0xf301b000;	 /* XXX not in prom? */
++	if (!request_mem_region(p->cmap_regs_phys, 0x1000, "controlfb cmap")) {
++		p->cmap_regs_phys = 0;
++		goto error_out;
++	}
++	p->cmap_regs = ioremap(p->cmap_regs_phys, 0x1000);
++
++	if (!p->cmap_regs || !p->control_regs || !p->frame_buffer)
++		goto error_out;
++
++	find_vram_size(p);
++	if (!p->total_vram)
++		goto error_out;
++
++	if (init_control(p) < 0)
++		goto error_out;
++
++	return 0;
++
++error_out:
++	control_cleanup();
++	return -ENXIO;
++}
++
++static int __init control_init(void)
++{
++	struct device_node *dp;
++	char *option = NULL;
++	int ret = -ENXIO;
+ 
++	if (fb_get_options("controlfb", &option))
++		return -ENODEV;
++	control_setup(option);
++
++	dp = of_find_node_by_name(NULL, "control");
++	if (dp && !control_of_init(dp))
++		ret = 0;
++	of_node_put(dp);
++
++	return ret;
++}
++
++device_initcall(control_init);
 -- 
 2.24.1
 
