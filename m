@@ -2,98 +2,88 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B56C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 08:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA24FC33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 08:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 334312073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 08:51:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cEP6hLoU"
+	by mail.kernel.org (Postfix) with ESMTP id B944C2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 08:51:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731368AbgAPIvG (ORCPT
+        id S1731450AbgAPIvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 03:51:06 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:38994 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727009AbgAPIvG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 03:51:06 -0500
-Received: by mail-qk1-f195.google.com with SMTP id c16so18409876qko.6
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 00:51:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+h6b4jmAptddyium2DNixs0SA2T98LtobyUWbV5HXPk=;
-        b=cEP6hLoUDDCAQBbgMAbebWuqtACfXmf5wW6edBHv09T3etgbPPYT/FdGhKb04CfIYU
-         eQl6wKYdaiyUSbMCjmVFc2sQ3VaVkFjJAzX5Q6ZWRo+sVD5xVrkJj5pKd6WoN56aXMLR
-         8+YivdWqZ/smqzObp0Cx4087TduAqWhuSEwthMEvTgzXx6MlYIbUmXXs3YmWCV6Y89IU
-         uksCLAXvgz8IFZgAwYu45bqeb0xsyiLRzzBCZsHuUHIpGUAYM1ELyO+bAEFsqp51TL+3
-         0h3rNZjwJY3pPVJLSqVen1k6gw2/GZe199PQYah6mYAE/rwQ/jAOammuh9USA8qAw80l
-         ifeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+h6b4jmAptddyium2DNixs0SA2T98LtobyUWbV5HXPk=;
-        b=YLvFsy2q+E1FB4NzZO9fn85ARdPR2RpfiWxQJz+ndi6MRtF8LRVqi49pgwQl4laa97
-         G8dW/eu7VJB6F0bW4SU9R0m/zc2m0ZJ3d1s/0dBfgZUzdm+dd99anjFTrhiFmFlmzRYe
-         tqFnskwGtBE/AQ7C9BxRWpx5jwKTlwTaUTtaf/7rvoZ/DA7flFgAxLPWzlBjG9BuqQAB
-         tBQzc0Kc68dp9D7rogDMqNPDwHziwJOW+Eb2KF0r55TetTpXP2VxJ7qYyHD8thMpWbw2
-         wV/sMBXGfLisqYcxnwsoysB623brWDXnG1g0UjlKyPY7H/GnR+2950XIduPaFUxxw9Lm
-         +aWA==
-X-Gm-Message-State: APjAAAU7/4s4BX13zPkOxqpzcc6XVlokyUNMwIqG9GUQvTXTcxb1Mzb1
-        oI2z+WQ/aCCcgJlKaV4ErVutoVN2SPfS8hVX04pnDQ==
-X-Google-Smtp-Source: APXvYqwVV+ZjH+7ImSbUTopEXLagRm1XNqLA9lSgvbh2sUqBYEr6rH2tk6Xs0k3/Bz6og7jZ66aco8yKXf4tMGtExgQ=
-X-Received: by 2002:ae9:eb48:: with SMTP id b69mr31096328qkg.43.1579164664973;
- Thu, 16 Jan 2020 00:51:04 -0800 (PST)
+        Thu, 16 Jan 2020 03:51:11 -0500
+Received: from szxga01-in.huawei.com ([45.249.212.187]:2927 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731326AbgAPIvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 03:51:07 -0500
+Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id DA255764A2E338198254;
+        Thu, 16 Jan 2020 16:51:03 +0800 (CST)
+Received: from dggeme713-chm.china.huawei.com (10.1.199.109) by
+ DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 16 Jan 2020 16:51:03 +0800
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ dggeme713-chm.china.huawei.com (10.1.199.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Thu, 16 Jan 2020 16:51:03 +0800
+Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
+ dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
+ Thu, 16 Jan 2020 16:51:03 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     Haiwei Li <lihaiwei.kernel@gmail.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>
+CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH] KVM: Adding 'else' to reduce checking.
+Thread-Topic: [PATCH] KVM: Adding 'else' to reduce checking.
+Thread-Index: AdXMSW9HbPEI3mwRZ0ulzm8GsLwwxQ==
+Date:   Thu, 16 Jan 2020 08:51:02 +0000
+Message-ID: <c889c5a718514fdbbc386c696a237e6e@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.173.221.158]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200115182816.33892-1-trishalfonso@google.com>
-In-Reply-To: <20200115182816.33892-1-trishalfonso@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 16 Jan 2020 09:50:53 +0100
-Message-ID: <CACT4Y+aLYjJmGHPGN=vRTv9LUxC1uxR1CkP_rrY0958cpQaqhg@mail.gmail.com>
-Subject: Re: [RFC PATCH] UML: add support for KASAN under x86_64
-To:     Patricia Alfonso <trishalfonso@google.com>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        anton.ivanov@cambridgegreys.com,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        David Gow <davidgow@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        linux-um@lists.infradead.org,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 7:28 PM Patricia Alfonso
-<trishalfonso@google.com> wrote:
->
-> Make KASAN run on User Mode Linux on x86_64.
-> diff --git a/arch/um/kernel/Makefile b/arch/um/kernel/Makefile
-> index 5aa882011e04..f783a7dd863c 100644
-> --- a/arch/um/kernel/Makefile
-> +++ b/arch/um/kernel/Makefile
-> @@ -8,6 +8,9 @@
->  # kernel.
->  KCOV_INSTRUMENT                := n
->
-> +# Do not instrument on main.o
-
-It's always good to explain why. Otherwise it will be stuck there
-forever because nobody really knows why and if they will break
-something by removing it.
-This comment is also somewhat confusing. We don't instrument the whole
-dir, not just main.c? Should we ignore just this single file as
-comment says?
-
-> +KASAN_SANITIZE := n
-> +
+SGk6DQpIYWl3ZWkgTGkgPGxpaGFpd2VpLmtlcm5lbEBnbWFpbC5jb20+IHdyaXRlczoNCj4gRnJv
+bSA0ZTE5NDM2Njc5YTk3ZTNjZWU3M2I0YWU2MTNmZjkxNTgwYzcyMWQyIE1vbiBTZXAgMTcgMDA6
+MDA6MDAgMjAwMQ0KPiBGcm9tOiBIYWl3ZWkgTGkgPGxpaGFpd2VpQHRlbmNlbnQuY29tPg0KPiBE
+YXRlOiBUaHUsIDE2IEphbiAyMDIwIDEzOjUxOjAzICswODAwDQo+IFN1YmplY3Q6IFtQQVRDSF0g
+QWRkaW5nICdlbHNlJyB0byByZWR1Y2UgY2hlY2tpbmcuDQo+DQo+IFRoZXNlIHR3byBjb25kaXRp
+b25zIGFyZSBpbiBjb25mbGljdCwgYWRkaW5nICdlbHNlJyB0byByZWR1Y2UgY2hlY2tpbmcuDQo+
+DQo+IFNpZ25lZC1vZmYtYnk6IEhhaXdlaSBMaSA8bGloYWl3ZWlAdGVuY2VudC5jb20+DQo+IC0t
+LQ0KPiAgIGFyY2gveDg2L2t2bS9sYXBpYy5jIHwgMiArLQ0KPiAgIDEgZmlsZSBjaGFuZ2VkLCAx
+IGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPg0KPiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYv
+a3ZtL2xhcGljLmMgYi9hcmNoL3g4Ni9rdm0vbGFwaWMuYyBpbmRleCA2Nzk2OTJiLi5lZjU4MDJm
+IDEwMDY0NA0KPiAtLS0gYS9hcmNoL3g4Ni9rdm0vbGFwaWMuYw0KPiArKysgYi9hcmNoL3g4Ni9r
+dm0vbGFwaWMuYw0KPiBAQCAtMTU3Myw3ICsxNTczLDcgQEAgc3RhdGljIHZvaWQNCj4ga3ZtX2Fw
+aWNfaW5qZWN0X3BlbmRpbmdfdGltZXJfaXJxcyhzdHJ1Y3Qga3ZtX2xhcGljICphcGljKQ0KPiAg
+ICAgICAgICBrdm1fYXBpY19sb2NhbF9kZWxpdmVyKGFwaWMsIEFQSUNfTFZUVCk7DQo+ICAgICAg
+ICAgIGlmIChhcGljX2x2dHRfdHNjZGVhZGxpbmUoYXBpYykpDQo+ICAgICAgICAgICAgICAgICAg
+a3RpbWVyLT50c2NkZWFkbGluZSA9IDA7DQo+IC0gICAgICAgaWYgKGFwaWNfbHZ0dF9vbmVzaG90
+KGFwaWMpKSB7DQo+ICsgICAgICAgZWxzZSBpZiAoYXBpY19sdnR0X29uZXNob3QoYXBpYykpIHsN
+Cj4gICAgICAgICAgICAgICAgICBrdGltZXItPnRzY2RlYWRsaW5lID0gMDsNCj4gICAgICAgICAg
+ICAgICAgICBrdGltZXItPnRhcmdldF9leHBpcmF0aW9uID0gMDsNCj4gICAgICAgICAgfQ0KDQpF
+eGNlcHQgZm9yIHRoZSBjb2Rpbmcgc3R5bGUgZmlndXJlZCBvdXQgYnkgVml0YWx5LCB0aGlzIHBh
+dGNoIGxvb2tzIGZpbmUgZm9yIG1lLiBTbzoNCg0KUmV2aWV3ZWQtYnk6IE1pYW9oZSBMaW4gPGxp
+bm1pYW9oZUBodWF3ZWkuY29tPg0K
