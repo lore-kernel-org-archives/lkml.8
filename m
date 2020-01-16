@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B4CDC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BDBEC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C98C206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:15:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40E16206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:15:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202132;
-	bh=11vJ2iWscb0SmhSkKOQ1oeGWlh/TRBOPjsCEkWOXJB4=;
+	s=default; t=1579202139;
+	bh=jPadxU3bIAKq2rzDSYyu4zF/hz9uIqRi/y4LlM9n1g0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uCVQBlIdihbHqjLvGgdnDTVq1+N5fRMi2PKkwEmEtziMtU1Yzr6B9mH3+F016BkkV
-	 6n+dPboKgWwudB6Y0HPBBER1b4InFqH7NVUBp7sDd4Z9BT/IcwFAntuOy4kYTYEnty
-	 VLwsGJEhY22z57Woh91+NOsg/hMEYd9vzDaKMlzg=
+	b=0ens5bj0/tiH9JimQfYDVTQqG9HY03q2jpb7GB2ylu9bEr5ZPhzAJ+Xg3OFTDSiei
+	 TQ7vjgEnDrUdCwC3OvpFvKaMVwwaWzoYO0U4CSYFcD980O9QysQpKDhhj4BGD/H4CV
+	 A2cIHsU6Vdekp969D9yE0oQzUG6f/Kpaa6ozK9c8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437551AbgAPTPZ (ORCPT
+        id S2437669AbgAPTPh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:15:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41844 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:15:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726896AbgAPQ4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:56:00 -0500
+        id S1733115AbgAPQzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:55:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05C9322464;
-        Thu, 16 Jan 2020 16:55:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA1EE2467E;
+        Thu, 16 Jan 2020 16:55:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193758;
-        bh=11vJ2iWscb0SmhSkKOQ1oeGWlh/TRBOPjsCEkWOXJB4=;
+        s=default; t=1579193755;
+        bh=jPadxU3bIAKq2rzDSYyu4zF/hz9uIqRi/y4LlM9n1g0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xRqA+u4gJgbMOFpLGvJJMtrOsfbsIyejsDP8NAB7Zp+ADfpkSM2wAhZuEHFuZRO9x
-         tVgqWDl+0WxBrUoPOcHxvXgHxl7+38NgWra6w8Co+PseLLH2N/ImWdDlhzSyWGyP+q
-         n593+VT3XK7PQiGibph65LtmoOqhZs37jkr0KkHo=
+        b=mMu7F657d7LPT29+n0CAqHT2sstpq86xYDms34bo8KcUAbg+Glq0QAsOxPIzvnhnc
+         3X0CmOY+Tk3wG2z2/TCPW+5phjjtRvBq7kAsF+P70ZvbenVxZ1IM1vQo32B9lj6EJ2
+         G81bWeEj/5FbKvd+W4v7ECnUMbJlxW0aOs1ZlYLM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
-        patches@opensource.cirrus.com
-Subject: [PATCH AUTOSEL 4.19 046/671] ASoC: wm97xx: fix uninitialized regmap pointer problem
-Date:   Thu, 16 Jan 2020 11:44:37 -0500
-Message-Id: <20200116165502.8838-46-sashal@kernel.org>
+Cc:     Petr Machata <petrm@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 043/671] mlxsw: reg: QEEC: Add minimum shaper fields
+Date:   Thu, 16 Jan 2020 11:44:34 -0500
+Message-Id: <20200116165502.8838-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -59,175 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Petr Machata <petrm@mellanox.com>
 
-[ Upstream commit 576ce4075bfa0f03e0e91a89eecc539b3b828b08 ]
+[ Upstream commit 8b931821aa04823e2e5df0ae93937baabbd23286 ]
 
-gcc notices that without either the ac97 bus or the pdata, we never
-initialize the regmap pointer, which leads to an uninitialized variable
-access:
+Add QEEC.mise (minimum shaper enable) and QEEC.min_shaper_rate to enable
+configuration of minimum shaper.
 
-sound/soc/codecs/wm9712.c: In function 'wm9712_soc_probe':
-sound/soc/codecs/wm9712.c:666:2: error: 'regmap' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+Increase the QEEC length to 0x20 as well: that's the length that the
+register has had for a long time now, but with the configurations that
+mlxsw typically exercises, the firmware tolerated 0x1C-sized packets.
+With mise=true however, FW rejects packets unless they have the full
+required length.
 
-Since that configuration is invalid, it's better to return an error
-here. I tried to avoid adding complexity to the conditions, and turned
-the #ifdef into a regular if(IS_ENABLED()) check for readability.
-This in turn requires moving some header file declarations out of
-an #ifdef.
-
-The same code is used in three drivers, all of which I'm changing
-the same way.
-
-Fixes: 2ed1a8e0ce8d ("ASoC: wm9712: add ac97 new bus support")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: b9b7cee40579 ("mlxsw: reg: Add QoS ETS Element Configuration register")
+Signed-off-by: Petr Machata <petrm@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/sound/soc.h       |  2 +-
- sound/soc/codecs/wm9705.c | 10 ++++------
- sound/soc/codecs/wm9712.c | 10 ++++------
- sound/soc/codecs/wm9713.c | 10 ++++------
- 4 files changed, 13 insertions(+), 19 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/reg.h | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
-diff --git a/include/sound/soc.h b/include/sound/soc.h
-index 41cec42fb456..88aa48e5485f 100644
---- a/include/sound/soc.h
-+++ b/include/sound/soc.h
-@@ -548,12 +548,12 @@ static inline void snd_soc_jack_free_gpios(struct snd_soc_jack *jack, int count,
- }
- #endif
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/reg.h b/drivers/net/ethernet/mellanox/mlxsw/reg.h
+index aee58b3892f2..c9895876a231 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/reg.h
++++ b/drivers/net/ethernet/mellanox/mlxsw/reg.h
+@@ -3215,7 +3215,7 @@ static inline void mlxsw_reg_qtct_pack(char *payload, u8 local_port,
+  * Configures the ETS elements.
+  */
+ #define MLXSW_REG_QEEC_ID 0x400D
+-#define MLXSW_REG_QEEC_LEN 0x1C
++#define MLXSW_REG_QEEC_LEN 0x20
  
--#ifdef CONFIG_SND_SOC_AC97_BUS
- struct snd_ac97 *snd_soc_alloc_ac97_component(struct snd_soc_component *component);
- struct snd_ac97 *snd_soc_new_ac97_component(struct snd_soc_component *component,
- 	unsigned int id, unsigned int id_mask);
- void snd_soc_free_ac97_component(struct snd_ac97 *ac97);
+ MLXSW_REG_DEFINE(qeec, MLXSW_REG_QEEC_ID, MLXSW_REG_QEEC_LEN);
  
-+#ifdef CONFIG_SND_SOC_AC97_BUS
- int snd_soc_set_ac97_ops(struct snd_ac97_bus_ops *ops);
- int snd_soc_set_ac97_ops_of_reset(struct snd_ac97_bus_ops *ops,
- 		struct platform_device *pdev);
-diff --git a/sound/soc/codecs/wm9705.c b/sound/soc/codecs/wm9705.c
-index ccdf088461b7..54c306707c02 100644
---- a/sound/soc/codecs/wm9705.c
-+++ b/sound/soc/codecs/wm9705.c
-@@ -325,8 +325,7 @@ static int wm9705_soc_probe(struct snd_soc_component *component)
- 	if (wm9705->mfd_pdata) {
- 		wm9705->ac97 = wm9705->mfd_pdata->ac97;
- 		regmap = wm9705->mfd_pdata->regmap;
--	} else {
--#ifdef CONFIG_SND_SOC_AC97_BUS
-+	} else if (IS_ENABLED(CONFIG_SND_SOC_AC97_BUS)) {
- 		wm9705->ac97 = snd_soc_new_ac97_component(component, WM9705_VENDOR_ID,
- 						      WM9705_VENDOR_ID_MASK);
- 		if (IS_ERR(wm9705->ac97)) {
-@@ -339,7 +338,8 @@ static int wm9705_soc_probe(struct snd_soc_component *component)
- 			snd_soc_free_ac97_component(wm9705->ac97);
- 			return PTR_ERR(regmap);
- 		}
--#endif
-+	} else {
-+		return -ENXIO;
- 	}
+@@ -3257,6 +3257,15 @@ MLXSW_ITEM32(reg, qeec, element_index, 0x04, 0, 8);
+  */
+ MLXSW_ITEM32(reg, qeec, next_element_index, 0x08, 0, 8);
  
- 	snd_soc_component_set_drvdata(component, wm9705->ac97);
-@@ -350,14 +350,12 @@ static int wm9705_soc_probe(struct snd_soc_component *component)
++/* reg_qeec_mise
++ * Min shaper configuration enable. Enables configuration of the min
++ * shaper on this ETS element
++ * 0 - Disable
++ * 1 - Enable
++ * Access: RW
++ */
++MLXSW_ITEM32(reg, qeec, mise, 0x0C, 31, 1);
++
+ enum {
+ 	MLXSW_REG_QEEC_BYTES_MODE,
+ 	MLXSW_REG_QEEC_PACKETS_MODE,
+@@ -3273,6 +3282,17 @@ enum {
+  */
+ MLXSW_ITEM32(reg, qeec, pb, 0x0C, 28, 1);
  
- static void wm9705_soc_remove(struct snd_soc_component *component)
- {
--#ifdef CONFIG_SND_SOC_AC97_BUS
- 	struct wm9705_priv *wm9705 = snd_soc_component_get_drvdata(component);
- 
--	if (!wm9705->mfd_pdata) {
-+	if (IS_ENABLED(CONFIG_SND_SOC_AC97_BUS) && !wm9705->mfd_pdata) {
- 		snd_soc_component_exit_regmap(component);
- 		snd_soc_free_ac97_component(wm9705->ac97);
- 	}
--#endif
- }
- 
- static const struct snd_soc_component_driver soc_component_dev_wm9705 = {
-diff --git a/sound/soc/codecs/wm9712.c b/sound/soc/codecs/wm9712.c
-index e873baa9e778..01949eaba4fd 100644
---- a/sound/soc/codecs/wm9712.c
-+++ b/sound/soc/codecs/wm9712.c
-@@ -642,8 +642,7 @@ static int wm9712_soc_probe(struct snd_soc_component *component)
- 	if (wm9712->mfd_pdata) {
- 		wm9712->ac97 = wm9712->mfd_pdata->ac97;
- 		regmap = wm9712->mfd_pdata->regmap;
--	} else {
--#ifdef CONFIG_SND_SOC_AC97_BUS
-+	} else if (IS_ENABLED(CONFIG_SND_SOC_AC97_BUS)) {
- 		int ret;
- 
- 		wm9712->ac97 = snd_soc_new_ac97_component(component, WM9712_VENDOR_ID,
-@@ -660,7 +659,8 @@ static int wm9712_soc_probe(struct snd_soc_component *component)
- 			snd_soc_free_ac97_component(wm9712->ac97);
- 			return PTR_ERR(regmap);
- 		}
--#endif
-+	} else {
-+		return -ENXIO;
- 	}
- 
- 	snd_soc_component_init_regmap(component, regmap);
-@@ -673,14 +673,12 @@ static int wm9712_soc_probe(struct snd_soc_component *component)
- 
- static void wm9712_soc_remove(struct snd_soc_component *component)
- {
--#ifdef CONFIG_SND_SOC_AC97_BUS
- 	struct wm9712_priv *wm9712 = snd_soc_component_get_drvdata(component);
- 
--	if (!wm9712->mfd_pdata) {
-+	if (IS_ENABLED(CONFIG_SND_SOC_AC97_BUS) && !wm9712->mfd_pdata) {
- 		snd_soc_component_exit_regmap(component);
- 		snd_soc_free_ac97_component(wm9712->ac97);
- 	}
--#endif
- }
- 
- static const struct snd_soc_component_driver soc_component_dev_wm9712 = {
-diff --git a/sound/soc/codecs/wm9713.c b/sound/soc/codecs/wm9713.c
-index 643863bb32e0..5a2fdf4f69bf 100644
---- a/sound/soc/codecs/wm9713.c
-+++ b/sound/soc/codecs/wm9713.c
-@@ -1214,8 +1214,7 @@ static int wm9713_soc_probe(struct snd_soc_component *component)
- 	if (wm9713->mfd_pdata) {
- 		wm9713->ac97 = wm9713->mfd_pdata->ac97;
- 		regmap = wm9713->mfd_pdata->regmap;
--	} else {
--#ifdef CONFIG_SND_SOC_AC97_BUS
-+	} else if (IS_ENABLED(CONFIG_SND_SOC_AC97_BUS)) {
- 		wm9713->ac97 = snd_soc_new_ac97_component(component, WM9713_VENDOR_ID,
- 						      WM9713_VENDOR_ID_MASK);
- 		if (IS_ERR(wm9713->ac97))
-@@ -1225,7 +1224,8 @@ static int wm9713_soc_probe(struct snd_soc_component *component)
- 			snd_soc_free_ac97_component(wm9713->ac97);
- 			return PTR_ERR(regmap);
- 		}
--#endif
-+	} else {
-+		return -ENXIO;
- 	}
- 
- 	snd_soc_component_init_regmap(component, regmap);
-@@ -1238,14 +1238,12 @@ static int wm9713_soc_probe(struct snd_soc_component *component)
- 
- static void wm9713_soc_remove(struct snd_soc_component *component)
- {
--#ifdef CONFIG_SND_SOC_AC97_BUS
- 	struct wm9713_priv *wm9713 = snd_soc_component_get_drvdata(component);
- 
--	if (!wm9713->mfd_pdata) {
-+	if (IS_ENABLED(CONFIG_SND_SOC_AC97_BUS) && !wm9713->mfd_pdata) {
- 		snd_soc_component_exit_regmap(component);
- 		snd_soc_free_ac97_component(wm9713->ac97);
- 	}
--#endif
- }
- 
- static const struct snd_soc_component_driver soc_component_dev_wm9713 = {
++/* The smallest permitted min shaper rate. */
++#define MLXSW_REG_QEEC_MIS_MIN	200000		/* Kbps */
++
++/* reg_qeec_min_shaper_rate
++ * Min shaper information rate.
++ * For CPU port, can only be configured for port hierarchy.
++ * When in bytes mode, value is specified in units of 1000bps.
++ * Access: RW
++ */
++MLXSW_ITEM32(reg, qeec, min_shaper_rate, 0x0C, 0, 28);
++
+ /* reg_qeec_mase
+  * Max shaper configuration enable. Enables configuration of the max
+  * shaper on this ETS element.
 -- 
 2.20.1
 
