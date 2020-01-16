@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 334CAC33CB7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B58C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3F4A2471F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFCAA24731
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:40:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196417;
-	bh=ygK505ucu28K+j2DmCyX0sygillEdeqRWh+0QpfzkLI=;
+	s=default; t=1579196420;
+	bh=wy+NbcQAXSejU44rpycmfVfRkajCdzO8KkL0ZZiogy8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xMOm35tFQ3EwNFJ4V1l4fXmSZK9YeTGX93O5yhE9vmSQM6EU2CAEO6oxYnhiCINsh
-	 m3mkwIOETVQaOwaxSEr/dNwaleHg1JGr1crzgwNMzKZMBv5glS3vvJXcz5M8ZK8amy
-	 fLelCGnmHHrbEeYvWEqGpzPygHhB6efkOYFKf3Fc=
+	b=abUQM0Ubs3bUi7Q6wMqhPS+VJ26NaXzCFrarxR1AuG+dk0kbN/foxnGSPF1XUJV+z
+	 kMPzbDufVzeI6yWwh9MZ6KtTU8efhATKKlOpw/AXcH4rD/9A5kwSR8hk/DBKmVXAIJ
+	 uLtBFhEERXjQOk2lGxl0sm3Bt4JQKS67aaM7gg7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405124AbgAPRkQ (ORCPT
+        id S2393611AbgAPRkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:40:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55560 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:40:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729819AbgAPRjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:39:19 -0500
+        id S2388491AbgAPRjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:39:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02B71246EC;
-        Thu, 16 Jan 2020 17:39:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51F8F24706;
+        Thu, 16 Jan 2020 17:39:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196359;
-        bh=ygK505ucu28K+j2DmCyX0sygillEdeqRWh+0QpfzkLI=;
+        s=default; t=1579196362;
+        bh=wy+NbcQAXSejU44rpycmfVfRkajCdzO8KkL0ZZiogy8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gX1AtvSxRuJEJdJHWnOI3FzsFkNmTvQvfowTvAJ52WEYVgjbZg6csg5DWSXFbJCSe
-         lKkGEwQ8Flk7AFvo4YHMGZLHZCZLn+p2VvhPfjUWo0Z+ZUV9gYdMmjppCNktFOF/M2
-         ZgJLCrll/wC5i5ehqPVIg6NjQE4m67pxgxgx7ETs=
+        b=P3nHjC0fKxWzRLVa+E7FUevI/LddLrsfXV/Q8ESXZ7R71pRfHhaer50he5xUCdEh4
+         MK5zuUZRkwHO/O31MidAoezeSVaIXb5lwQr75aX58+xJtwzFLN/Gg80q84CU9vB7EB
+         DsKg589JeuD1TqMyHXbHbw1VJ1EAx8tJA+mtR3Mg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-wpan@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 150/251] inet: frags: call inet_frags_fini() after unregister_pernet_subsys()
-Date:   Thu, 16 Jan 2020 12:34:59 -0500
-Message-Id: <20200116173641.22137-110-sashal@kernel.org>
+Cc:     Nathan Lynch <nathanl@linux.ibm.com>,
+        "Gautham R . Shenoy" <ego@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.9 152/251] powerpc/cacheinfo: add cacheinfo_teardown, cacheinfo_rebuild
+Date:   Thu, 16 Jan 2020 12:35:01 -0500
+Message-Id: <20200116173641.22137-112-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -60,54 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Nathan Lynch <nathanl@linux.ibm.com>
 
-[ Upstream commit ae7352d384a552d8c799c242e74a934809990a71 ]
+[ Upstream commit d4aa219a074a5abaf95a756b9f0d190b5c03a945 ]
 
-Both IPv6 and 6lowpan are calling inet_frags_fini() too soon.
+Allow external callers to force the cacheinfo code to release all its
+references to cache nodes, e.g. before processing device tree updates
+post-migration, and to rebuild the hierarchy afterward.
 
-inet_frags_fini() is dismantling a kmem_cache, that might be needed
-later when unregister_pernet_subsys() eventually has to remove
-frags queues from hash tables and free them.
+CPU online/offline must be blocked by callers; enforce this.
 
-This fixes potential use-after-free, and is a prereq for the following patch.
-
-Fixes: d4ad4d22e7ac ("inet: frags: use kmem_cache for inet_frag_queue")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 410bccf97881 ("powerpc/pseries: Partition migration in the kernel")
+Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
+Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ieee802154/6lowpan/reassembly.c | 2 +-
- net/ipv6/reassembly.c               | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/kernel/cacheinfo.c | 21 +++++++++++++++++++++
+ arch/powerpc/kernel/cacheinfo.h |  4 ++++
+ 2 files changed, 25 insertions(+)
 
-diff --git a/net/ieee802154/6lowpan/reassembly.c b/net/ieee802154/6lowpan/reassembly.c
-index c01df341b5f6..5936bfafb1c4 100644
---- a/net/ieee802154/6lowpan/reassembly.c
-+++ b/net/ieee802154/6lowpan/reassembly.c
-@@ -633,7 +633,7 @@ int __init lowpan_net_frag_init(void)
- 
- void lowpan_net_frag_exit(void)
- {
--	inet_frags_fini(&lowpan_frags);
- 	lowpan_frags_sysctl_unregister();
- 	unregister_pernet_subsys(&lowpan_frags_ops);
-+	inet_frags_fini(&lowpan_frags);
+diff --git a/arch/powerpc/kernel/cacheinfo.c b/arch/powerpc/kernel/cacheinfo.c
+index c641983bbdd6..0122d5ce0637 100644
+--- a/arch/powerpc/kernel/cacheinfo.c
++++ b/arch/powerpc/kernel/cacheinfo.c
+@@ -867,4 +867,25 @@ void cacheinfo_cpu_offline(unsigned int cpu_id)
+ 	if (cache)
+ 		cache_cpu_clear(cache, cpu_id);
  }
-diff --git a/net/ipv6/reassembly.c b/net/ipv6/reassembly.c
-index 4aed9c45a91a..3f488555999e 100644
---- a/net/ipv6/reassembly.c
-+++ b/net/ipv6/reassembly.c
-@@ -592,8 +592,8 @@ int __init ipv6_frag_init(void)
++
++void cacheinfo_teardown(void)
++{
++	unsigned int cpu;
++
++	lockdep_assert_cpus_held();
++
++	for_each_online_cpu(cpu)
++		cacheinfo_cpu_offline(cpu);
++}
++
++void cacheinfo_rebuild(void)
++{
++	unsigned int cpu;
++
++	lockdep_assert_cpus_held();
++
++	for_each_online_cpu(cpu)
++		cacheinfo_cpu_online(cpu);
++}
++
+ #endif /* (CONFIG_PPC_PSERIES && CONFIG_SUSPEND) || CONFIG_HOTPLUG_CPU */
+diff --git a/arch/powerpc/kernel/cacheinfo.h b/arch/powerpc/kernel/cacheinfo.h
+index a7b74d36acd7..2cdee87a482c 100644
+--- a/arch/powerpc/kernel/cacheinfo.h
++++ b/arch/powerpc/kernel/cacheinfo.h
+@@ -5,4 +5,8 @@
+ extern void cacheinfo_cpu_online(unsigned int cpu_id);
+ extern void cacheinfo_cpu_offline(unsigned int cpu_id);
  
- void ipv6_frag_exit(void)
- {
--	inet_frags_fini(&ip6_frags);
- 	ip6_frags_sysctl_unregister();
- 	unregister_pernet_subsys(&ip6_frags_ops);
- 	inet6_del_protocol(&frag_protocol, IPPROTO_FRAGMENT);
-+	inet_frags_fini(&ip6_frags);
- }
++/* Allow migration/suspend to tear down and rebuild the hierarchy. */
++extern void cacheinfo_teardown(void);
++extern void cacheinfo_rebuild(void);
++
+ #endif /* _PPC_CACHEINFO_H */
 -- 
 2.20.1
 
