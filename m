@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 012D7C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBEEC33CB7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF265217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:01:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70A312192A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197708;
-	bh=kzHgwvVlvZywOl9IOGR6exySXwCFl52/8X1gpdv0k8g=;
+	s=default; t=1579197717;
+	bh=JYnzlzmlOi8zxfkZ3gNkyag99DW/iJIorNEPxenw/wA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RbVCcIh3Md5fU2rZJzfQfdKWpH3SzxQudZNnrad2uyhr1Xd3mSr4QKKIdQsKy6QSd
-	 DvZuEeahcBtv5u4UWGO9tnnc60wjLb5nvAhS7bTvj6HJR+MUZS+QxGz9xfRgsNLVav
-	 2RroDC3TwPnh5BHKvZvN0VUVtCDZbQuj/d4x+c+0=
+	b=jo0xws4MED1MhdgUzvL2m1pAwRWtIu8s5TD8BpBdzl7HLOKYMN2z1a7MorNcx66Oc
+	 Mj6ZM0Spyxdn7etbad0boym2bkOVHZmWYu6Su9KZ2dK98xwReF4aFgnTUIxZoKAUwX
+	 urWReoJr6hNNqj9n5T1DPXJKsNslUbHXrppGZByM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393782AbgAPRlX (ORCPT
+        id S2393763AbgAPRlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:41:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57818 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:41:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390595AbgAPRkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:40:35 -0500
+        id S2393631AbgAPRk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:40:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95EA324713;
-        Thu, 16 Jan 2020 17:40:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29C5824706;
+        Thu, 16 Jan 2020 17:40:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196434;
-        bh=kzHgwvVlvZywOl9IOGR6exySXwCFl52/8X1gpdv0k8g=;
+        s=default; t=1579196426;
+        bh=JYnzlzmlOi8zxfkZ3gNkyag99DW/iJIorNEPxenw/wA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1TgLuxCKZRqZ9xgzlbTf0s5fsKSYao68p5ak3wB5t9hkrTa3y4zlJ/hS8oxr3JQp4
-         ybL837SFpz5/8rovCkJZXvhIToOm0DYO7uyCwY09bYBDfToe+7f+NyY6giz1ls6IJq
-         5hgs54OedlPdX9aDnliH8uJOCFFRklDmv5OL+VZ0=
+        b=OTm/JWrayqGvdPmtLyHS4MK+ir6W1ltpGy3Zmm7HQPsSpY1HYxhLb5uQ81t9MqCND
+         GaADprurAwCDhEWpuK2oEGZLIX0jjYwXtMYgzNQNGyx5VvXzW2+w1+mb/jqvSvCHI0
+         cGmmpvn/YdU/JndxiMBaYYRopk8nOStJJvtbhZpI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mao Wenan <maowenan@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 200/251] net: sonic: replace dev_kfree_skb in sonic_send_packet
-Date:   Thu, 16 Jan 2020 12:35:49 -0500
-Message-Id: <20200116173641.22137-160-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, linux-wireless@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 194/251] bcma: fix incorrect update of BCMA_CORE_PCI_MDIO_DATA
+Date:   Thu, 16 Jan 2020 12:35:43 -0500
+Message-Id: <20200116173641.22137-154-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -59,35 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <maowenan@huawei.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 49f6c90bf6805948b597eabb499e500a47cf24be ]
+[ Upstream commit 420c20be08a4597404d272ae9793b642401146eb ]
 
-sonic_send_packet will be processed in irq or non-irq
-context, so it would better use dev_kfree_skb_any
-instead of dev_kfree_skb.
+An earlier commit re-worked the setting of the bitmask and is now
+assigning v with some bit flags rather than bitwise or-ing them
+into v, consequently the earlier bit-settings of v are being lost.
+Fix this by replacing an assignment with the bitwise or instead.
 
-Fixes: d9fb9f384292 ("*sonic/natsemi/ns83829: Move the National Semi-conductor drivers")
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Addresses-Coverity: ("Unused value")
+Fixes: 2be25cac8402 ("bcma: add constants for PCI and use them")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/natsemi/sonic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/bcma/driver_pci.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
-index 11f472fd5d47..a051dddcbd76 100644
---- a/drivers/net/ethernet/natsemi/sonic.c
-+++ b/drivers/net/ethernet/natsemi/sonic.c
-@@ -222,7 +222,7 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
- 	laddr = dma_map_single(lp->device, skb->data, length, DMA_TO_DEVICE);
- 	if (!laddr) {
- 		pr_err_ratelimited("%s: failed to map tx DMA buffer.\n", dev->name);
--		dev_kfree_skb(skb);
-+		dev_kfree_skb_any(skb);
- 		return NETDEV_TX_OK;
+diff --git a/drivers/bcma/driver_pci.c b/drivers/bcma/driver_pci.c
+index f499a469e66d..12b2cc9a3fbe 100644
+--- a/drivers/bcma/driver_pci.c
++++ b/drivers/bcma/driver_pci.c
+@@ -78,7 +78,7 @@ static u16 bcma_pcie_mdio_read(struct bcma_drv_pci *pc, u16 device, u8 address)
+ 		v |= (address << BCMA_CORE_PCI_MDIODATA_REGADDR_SHF_OLD);
  	}
  
+-	v = BCMA_CORE_PCI_MDIODATA_START;
++	v |= BCMA_CORE_PCI_MDIODATA_START;
+ 	v |= BCMA_CORE_PCI_MDIODATA_READ;
+ 	v |= BCMA_CORE_PCI_MDIODATA_TA;
+ 
+@@ -121,7 +121,7 @@ static void bcma_pcie_mdio_write(struct bcma_drv_pci *pc, u16 device,
+ 		v |= (address << BCMA_CORE_PCI_MDIODATA_REGADDR_SHF_OLD);
+ 	}
+ 
+-	v = BCMA_CORE_PCI_MDIODATA_START;
++	v |= BCMA_CORE_PCI_MDIODATA_START;
+ 	v |= BCMA_CORE_PCI_MDIODATA_WRITE;
+ 	v |= BCMA_CORE_PCI_MDIODATA_TA;
+ 	v |= data;
 -- 
 2.20.1
 
