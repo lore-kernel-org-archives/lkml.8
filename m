@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF1CC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0513C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D807E207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:44:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3E3B207FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:45:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193093;
-	bh=rPeM6Exb/bpIFHgVOdXerZts0pPNjw0Ql01DxSFrg7I=;
+	s=default; t=1579193102;
+	bh=RQF1PiCG7acveFNY9DlVnizY1ykU/sDhUTklWAECA98=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nFpuwfsaGKAyrLna8myMLqJjj5YI1gWFyvd9i76TOHzra8qTdAj2BCOfYmMSenNbW
-	 vzfqva5Z9/exoxX0c2kBUUNtgFbq5hAnj6YRM1V0qVtYame7rZhr2g2VMSKN3Zf02f
-	 FDJTp2BMd/3ws5DWmkGOApnNtQwhG7mQ4dnO9QbA=
+	b=F9OM5qjZKAaxP0ta4SqCRAu/IRYG6KwCWi0xu1wpF56pnQpvGEO52McbU4ZfT6w4J
+	 7Kl1RfOeXk51DGHJ0mvnSq286JDrooZ56eBciscaPxnu7X8mwHMt89yZQsqtqkJSE/
+	 Qos9aCfsCwX1zoNm9OYa7OEz7snmfnoCJU8inot0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729469AbgAPQow (ORCPT
+        id S1729516AbgAPQpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:44:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53202 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:45:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729429AbgAPQou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:44:50 -0500
+        id S1729033AbgAPQo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:44:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B63B2081E;
-        Thu, 16 Jan 2020 16:44:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3F11207FF;
+        Thu, 16 Jan 2020 16:44:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193089;
-        bh=rPeM6Exb/bpIFHgVOdXerZts0pPNjw0Ql01DxSFrg7I=;
+        s=default; t=1579193098;
+        bh=RQF1PiCG7acveFNY9DlVnizY1ykU/sDhUTklWAECA98=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sjqq1DLiSm2Fsv9uQuWaZd2gm3FAvLoKkRjbhziRVUMlgvSfNHz3ymxwu3Eg4Mdu+
-         tuOLNqUCii/LqYXK/saDUiw5mEhLferePlYx/C1aR76xhgilBiSqIAc2IPeTVgSB8J
-         G0pl25FJg9PB8fiBRG8cfkReJi+pGRRvUJawn6Qg=
+        b=LBU+8vbTjYVq5Onb+sbj4PhL8vdZbWlbuBUaZw17awrH8DWt/abxdz3Hv4PQsIPPj
+         ga8LpdLxj3pi7KmQo9xbdLOa6AMtWpqgUTI2zLJYkCecNVU8Gn/nQFhXky++Oo8Z6r
+         jOL8ngyJ48B+843LyjD7ri536MK5oWzqD8oSteLU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 022/205] rtw88: fix beaconing mode rsvd_page memory violation issue
-Date:   Thu, 16 Jan 2020 11:39:57 -0500
-Message-Id: <20200116164300.6705-22-sashal@kernel.org>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 024/205] crypto: algif_skcipher - Use chunksize instead of blocksize
+Date:   Thu, 16 Jan 2020 11:39:59 -0500
+Message-Id: <20200116164300.6705-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -60,132 +59,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yan-Hsuan Chuang <yhchuang@realtek.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-[ Upstream commit c3594559f49c601d410dee4b767c3536a5535bfd ]
+[ Upstream commit 5b0fe9552336338acb52756daf65dd7a4eeca73f ]
 
-When downloading the reserved page, the first page always contains
-a beacon for the firmware to reference. For non-beaconing modes such
-as station mode, also put a blank skb with length=1.
+When algif_skcipher does a partial operation it always process data
+that is a multiple of blocksize.  However, for algorithms such as
+CTR this is wrong because even though it can process any number of
+bytes overall, the partial block must come at the very end and not
+in the middle.
 
-And for the beaconing modes, driver will get a real beacon with a
-length approximate to the page size. But as the beacon is always put
-at the first page, it does not need a tx_desc, because the TX path
-will generate one when TXing the reserved page to the hardware. So we
-could allocate a buffer with a size smaller than the reserved page,
-when using memcpy() to copy the content of reserved page to the buffer,
-the over-sized reserved page will violate the kernel memory.
+This is exactly what chunksize is meant to describe so this patch
+changes blocksize to chunksize.
 
-To fix it, add the tx_desc before memcpy() the reserved packets to
-the buffer, then we can get SKBs with correct length when counting
-the pages in total. And for page 0, count the extra tx_desc_sz that
-the TX path will generate. This way, the first beacon that allocated
-without tx_desc can be counted with the extra tx_desc_sz to get
-actual pages it requires.
-
-Fixes: e3037485c68e ("rtw88: new Realtek 802.11ac driver")
-Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 8ff590903d5f ("crypto: algif_skcipher - User-space...")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtw88/fw.c | 52 ++++++++++++++++++++-----
- 1 file changed, 43 insertions(+), 9 deletions(-)
+ crypto/algif_skcipher.c            |  2 +-
+ include/crypto/internal/skcipher.h | 30 ------------------------------
+ include/crypto/skcipher.h          | 30 ++++++++++++++++++++++++++++++
+ 3 files changed, 31 insertions(+), 31 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtw88/fw.c b/drivers/net/wireless/realtek/rtw88/fw.c
-index b082e2cc95f5..35dbdb3c4f1e 100644
---- a/drivers/net/wireless/realtek/rtw88/fw.c
-+++ b/drivers/net/wireless/realtek/rtw88/fw.c
-@@ -498,9 +498,6 @@ static void rtw_rsvd_page_list_to_buf(struct rtw_dev *rtwdev, u8 page_size,
- {
- 	struct sk_buff *skb = rsvd_pkt->skb;
+diff --git a/crypto/algif_skcipher.c b/crypto/algif_skcipher.c
+index c1601edd70e3..e2c8ab408bed 100644
+--- a/crypto/algif_skcipher.c
++++ b/crypto/algif_skcipher.c
+@@ -56,7 +56,7 @@ static int _skcipher_recvmsg(struct socket *sock, struct msghdr *msg,
+ 	struct alg_sock *pask = alg_sk(psk);
+ 	struct af_alg_ctx *ctx = ask->private;
+ 	struct crypto_skcipher *tfm = pask->private;
+-	unsigned int bs = crypto_skcipher_blocksize(tfm);
++	unsigned int bs = crypto_skcipher_chunksize(tfm);
+ 	struct af_alg_async_req *areq;
+ 	int err = 0;
+ 	size_t len = 0;
+diff --git a/include/crypto/internal/skcipher.h b/include/crypto/internal/skcipher.h
+index 734b6f7081b8..3175dfeaed2c 100644
+--- a/include/crypto/internal/skcipher.h
++++ b/include/crypto/internal/skcipher.h
+@@ -205,19 +205,6 @@ static inline unsigned int crypto_skcipher_alg_max_keysize(
+ 	return alg->max_keysize;
+ }
  
--	if (rsvd_pkt->add_txdesc)
--		rtw_fill_rsvd_page_desc(rtwdev, skb);
+-static inline unsigned int crypto_skcipher_alg_chunksize(
+-	struct skcipher_alg *alg)
+-{
+-	if ((alg->base.cra_flags & CRYPTO_ALG_TYPE_MASK) ==
+-	    CRYPTO_ALG_TYPE_BLKCIPHER)
+-		return alg->base.cra_blocksize;
 -
- 	if (page >= 1)
- 		memcpy(buf + page_margin + page_size * (page - 1),
- 		       skb->data, skb->len);
-@@ -625,16 +622,37 @@ static u8 *rtw_build_rsvd_page(struct rtw_dev *rtwdev,
- 	list_for_each_entry(rsvd_pkt, &rtwdev->rsvd_page_list, list) {
- 		iter = rtw_get_rsvd_page_skb(hw, vif, rsvd_pkt->type);
- 		if (!iter) {
--			rtw_err(rtwdev, "fail to build rsvd packet\n");
-+			rtw_err(rtwdev, "failed to build rsvd packet\n");
- 			goto release_skb;
- 		}
+-	if (alg->base.cra_ablkcipher.encrypt)
+-		return alg->base.cra_blocksize;
+-
+-	return alg->chunksize;
+-}
+-
+ static inline unsigned int crypto_skcipher_alg_walksize(
+ 	struct skcipher_alg *alg)
+ {
+@@ -231,23 +218,6 @@ static inline unsigned int crypto_skcipher_alg_walksize(
+ 	return alg->walksize;
+ }
+ 
+-/**
+- * crypto_skcipher_chunksize() - obtain chunk size
+- * @tfm: cipher handle
+- *
+- * The block size is set to one for ciphers such as CTR.  However,
+- * you still need to provide incremental updates in multiples of
+- * the underlying block size as the IV does not have sub-block
+- * granularity.  This is known in this API as the chunk size.
+- *
+- * Return: chunk size in bytes
+- */
+-static inline unsigned int crypto_skcipher_chunksize(
+-	struct crypto_skcipher *tfm)
+-{
+-	return crypto_skcipher_alg_chunksize(crypto_skcipher_alg(tfm));
+-}
+-
+ /**
+  * crypto_skcipher_walksize() - obtain walk size
+  * @tfm: cipher handle
+diff --git a/include/crypto/skcipher.h b/include/crypto/skcipher.h
+index 37c164234d97..aada87916918 100644
+--- a/include/crypto/skcipher.h
++++ b/include/crypto/skcipher.h
+@@ -304,6 +304,36 @@ static inline unsigned int crypto_skcipher_blocksize(
+ 	return crypto_tfm_alg_blocksize(crypto_skcipher_tfm(tfm));
+ }
+ 
++static inline unsigned int crypto_skcipher_alg_chunksize(
++	struct skcipher_alg *alg)
++{
++	if ((alg->base.cra_flags & CRYPTO_ALG_TYPE_MASK) ==
++	    CRYPTO_ALG_TYPE_BLKCIPHER)
++		return alg->base.cra_blocksize;
 +
-+		/* Fill the tx_desc for the rsvd pkt that requires one.
-+		 * And iter->len will be added with size of tx_desc_sz.
-+		 */
-+		if (rsvd_pkt->add_txdesc)
-+			rtw_fill_rsvd_page_desc(rtwdev, iter);
++	if (alg->base.cra_ablkcipher.encrypt)
++		return alg->base.cra_blocksize;
 +
- 		rsvd_pkt->skb = iter;
- 		rsvd_pkt->page = total_page;
--		if (rsvd_pkt->add_txdesc)
++	return alg->chunksize;
++}
 +
-+		/* Reserved page is downloaded via TX path, and TX path will
-+		 * generate a tx_desc at the header to describe length of
-+		 * the buffer. If we are not counting page numbers with the
-+		 * size of tx_desc added at the first rsvd_pkt (usually a
-+		 * beacon, firmware default refer to the first page as the
-+		 * content of beacon), we could generate a buffer which size
-+		 * is smaller than the actual size of the whole rsvd_page
-+		 */
-+		if (total_page == 0) {
-+			if (rsvd_pkt->type != RSVD_BEACON) {
-+				rtw_err(rtwdev, "first page should be a beacon\n");
-+				goto release_skb;
-+			}
- 			total_page += rtw_len_to_page(iter->len + tx_desc_sz,
- 						      page_size);
--		else
-+		} else {
- 			total_page += rtw_len_to_page(iter->len, page_size);
-+		}
- 	}
- 
- 	if (total_page > rtwdev->fifo.rsvd_drv_pg_num) {
-@@ -647,13 +665,24 @@ static u8 *rtw_build_rsvd_page(struct rtw_dev *rtwdev,
- 	if (!buf)
- 		goto release_skb;
- 
-+	/* Copy the content of each rsvd_pkt to the buf, and they should
-+	 * be aligned to the pages.
-+	 *
-+	 * Note that the first rsvd_pkt is a beacon no matter what vif->type.
-+	 * And that rsvd_pkt does not require tx_desc because when it goes
-+	 * through TX path, the TX path will generate one for it.
-+	 */
- 	list_for_each_entry(rsvd_pkt, &rtwdev->rsvd_page_list, list) {
- 		rtw_rsvd_page_list_to_buf(rtwdev, page_size, page_margin,
- 					  page, buf, rsvd_pkt);
--		page += rtw_len_to_page(rsvd_pkt->skb->len, page_size);
--	}
--	list_for_each_entry(rsvd_pkt, &rtwdev->rsvd_page_list, list)
-+		if (page == 0)
-+			page += rtw_len_to_page(rsvd_pkt->skb->len +
-+						tx_desc_sz, page_size);
-+		else
-+			page += rtw_len_to_page(rsvd_pkt->skb->len, page_size);
++/**
++ * crypto_skcipher_chunksize() - obtain chunk size
++ * @tfm: cipher handle
++ *
++ * The block size is set to one for ciphers such as CTR.  However,
++ * you still need to provide incremental updates in multiples of
++ * the underlying block size as the IV does not have sub-block
++ * granularity.  This is known in this API as the chunk size.
++ *
++ * Return: chunk size in bytes
++ */
++static inline unsigned int crypto_skcipher_chunksize(
++	struct crypto_skcipher *tfm)
++{
++	return crypto_skcipher_alg_chunksize(crypto_skcipher_alg(tfm));
++}
 +
- 		kfree_skb(rsvd_pkt->skb);
-+	}
- 
- 	return buf;
- 
-@@ -706,6 +735,11 @@ int rtw_fw_download_rsvd_page(struct rtw_dev *rtwdev, struct ieee80211_vif *vif)
- 		goto free;
- 	}
- 
-+	/* The last thing is to download the *ONLY* beacon again, because
-+	 * the previous tx_desc is to describe the total rsvd page. Download
-+	 * the beacon again to replace the TX desc header, and we will get
-+	 * a correct tx_desc for the beacon in the rsvd page.
-+	 */
- 	ret = rtw_download_beacon(rtwdev, vif);
- 	if (ret) {
- 		rtw_err(rtwdev, "failed to download beacon\n");
+ static inline unsigned int crypto_sync_skcipher_blocksize(
+ 	struct crypto_sync_skcipher *tfm)
+ {
 -- 
 2.20.1
 
