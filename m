@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6B8C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFB0C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:52:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 908412077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ACE92077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:52:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197172;
-	bh=q3G5YY3fMhDkuXe1bh7UJCOxHJAMsJjBSjbcp3rQKfE=;
+	s=default; t=1579197177;
+	bh=toTgmiI4hSwzDMFAAKNj0Km93inH4SEVtN/A21b5UVU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UK4JwZS9NsaD7H56Tct4ZlsX+H2BTQT6pWGtCInQeiqaWIddyIhrfK0FU4vqzXPy7
-	 FyXhOtJFWE05HIlPwebnKbhQJNDM9Rgv5YRCm32nFtEq4/F1GTxROf83Q6mQTjloty
-	 dM5+PY7W8veEC/G3Pye3dWNIe7EN+JVI5cedBtig=
+	b=msMyKN8+ULSg3+zZWpt1/LkkhCO2q4nXfAsMwRiMQagCnSCuQVDFXt8/xhxZP8oHZ
+	 HGePsUYBCwKj6e8E9zM4K5nxwb6uV/ngmyqgmSaX1sYKxTl9vHHKvXDwBPCHX8jkB0
+	 cnt/gZrlWCvHyGDbDaHiPiJEUHQhfl5ODttOUjBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406124AbgAPRpN (ORCPT
+        id S2406257AbgAPRw4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:45:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35868 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:52:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405948AbgAPRop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:44:45 -0500
+        id S2406115AbgAPRpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:45:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BF7124748;
-        Thu, 16 Jan 2020 17:44:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DB6C24773;
+        Thu, 16 Jan 2020 17:45:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196685;
-        bh=q3G5YY3fMhDkuXe1bh7UJCOxHJAMsJjBSjbcp3rQKfE=;
+        s=default; t=1579196711;
+        bh=toTgmiI4hSwzDMFAAKNj0Km93inH4SEVtN/A21b5UVU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GPrDQ4z22kg1A57bC8JiAUQBNk5lAJfmVF25QotewojDDUQhaey4JglNZ8PGVsxSq
-         OGlSqr86JWSjYP/QeJ9d8f2ZDT4gwzlvcH2JBkyVINUAS2PuC41RICIjFTpZe0kUxK
-         ++M9IbEJ6AlGdrodr9z6jemJqwLdLiHxZIlwJIQo=
+        b=Dj7NjDNhhBzxkapd1vEa4/kBqKanPLCfhJTkZiEJNHWDB+aUQXtrT9NaTfHwluGUn
+         cwKJkFJLXGg1AgPxiIN4JHF45pwBZn1N4w+TWdyHAP6VDnS94lwbWhWCnv1rk1eJJj
+         Gh8fxugwm39BVd30IGJQ/eM/bsE4la9rjGpmM6Us=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Willem de Bruijn <willemb@google.com>,
-        David Laight <David.Laight@aculab.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 082/174] packet: in recvmsg msg_name return at least sizeof sockaddr_ll
-Date:   Thu, 16 Jan 2020 12:41:19 -0500
-Message-Id: <20200116174251.24326-82-sashal@kernel.org>
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.4 101/174] drm/msm/mdp5: Fix mdp5_cfg_init error return
+Date:   Thu, 16 Jan 2020 12:41:38 -0500
+Message-Id: <20200116174251.24326-101-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -60,67 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-[ Upstream commit b2cf86e1563e33a14a1c69b3e508d15dc12f804c ]
+[ Upstream commit fc19cbb785d7bbd1a1af26229b5240a3ab332744 ]
 
-Packet send checks that msg_name is at least sizeof sockaddr_ll.
-Packet recv must return at least this length, so that its output
-can be passed unmodified to packet send.
+If mdp5_cfg_init fails because of an unknown major version, a null pointer
+dereference occurs.  This is because the caller of init expects error
+pointers, but init returns NULL on error.  Fix this by returning the
+expected values on error.
 
-This ceased to be true since adding support for lladdr longer than
-sll_addr. Since, the return value uses true address length.
-
-Always return at least sizeof sockaddr_ll, even if address length
-is shorter. Zero the padding bytes.
-
-Change v1->v2: do not overwrite zeroed padding again. use copy_len.
-
-Fixes: 0fb375fb9b93 ("[AF_PACKET]: Allow for > 8 byte hardware addresses.")
-Suggested-by: David Laight <David.Laight@aculab.com>
-Signed-off-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 2e362e1772b8 (drm/msm/mdp5: introduce mdp5_cfg module)
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/packet/af_packet.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-index 8b277658905f..9de7e3e6edd3 100644
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -3309,20 +3309,29 @@ static int packet_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
- 	sock_recv_ts_and_drops(msg, sk, skb);
+diff --git a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c
+index bb1225aa2f75..89305ad3cde2 100644
+--- a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c
++++ b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_cfg.c
+@@ -547,7 +547,7 @@ struct mdp5_cfg_handler *mdp5_cfg_init(struct mdp5_kms *mdp5_kms,
+ 	if (cfg_handler)
+ 		mdp5_cfg_destroy(cfg_handler);
  
- 	if (msg->msg_name) {
-+		int copy_len;
-+
- 		/* If the address length field is there to be filled
- 		 * in, we fill it in now.
- 		 */
- 		if (sock->type == SOCK_PACKET) {
- 			__sockaddr_check_size(sizeof(struct sockaddr_pkt));
- 			msg->msg_namelen = sizeof(struct sockaddr_pkt);
-+			copy_len = msg->msg_namelen;
- 		} else {
- 			struct sockaddr_ll *sll = &PACKET_SKB_CB(skb)->sa.ll;
+-	return NULL;
++	return ERR_PTR(ret);
+ }
  
- 			msg->msg_namelen = sll->sll_halen +
- 				offsetof(struct sockaddr_ll, sll_addr);
-+			copy_len = msg->msg_namelen;
-+			if (msg->msg_namelen < sizeof(struct sockaddr_ll)) {
-+				memset(msg->msg_name +
-+				       offsetof(struct sockaddr_ll, sll_addr),
-+				       0, sizeof(sll->sll_addr));
-+				msg->msg_namelen = sizeof(struct sockaddr_ll);
-+			}
- 		}
--		memcpy(msg->msg_name, &PACKET_SKB_CB(skb)->sa,
--		       msg->msg_namelen);
-+		memcpy(msg->msg_name, &PACKET_SKB_CB(skb)->sa, copy_len);
- 	}
- 
- 	if (pkt_sk(sk)->auxdata) {
+ static struct mdp5_cfg_platform *mdp5_get_config(struct platform_device *dev)
 -- 
 2.20.1
 
