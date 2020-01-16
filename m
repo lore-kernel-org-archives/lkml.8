@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F08C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC73DC33CB8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 270192072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:37:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84DBD20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:37:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217867;
-	bh=5KDrKj1M5O3zZvLmsVdi7oVZ6QM5dpT4Ve2OnYrKyCM=;
+	s=default; t=1579217873;
+	bh=2WNeRsDryRBzpXQN44EbufOyKvzcVAspZ6zfgL6yVVw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pwwNMluIdICd3A2569RZqF2XVuLUDgkfnTKnweeEfOgzx0beVkZwTzaOebV8wW7KV
-	 8p5ZGnEweNdW0xfunTPuQSdZ1/7kWFs+eyzwbs6R5cgwhesElrxr9g8HJyW5PPu+dm
-	 1kB/kMaMjOBaYB+Wep1yHVezVpvRHEqgNUJeqAF8=
+	b=m5w0bvD2/ZfQDDrHMat5qoHxN2KUxCs6CtU2wARX70WqSAWdz7gNgJsZyZTfYlKl/
+	 bOFyRTXeEibxqQWcY3WVL+h3uid8pW1n9eYGaoZE+bja0vFUrg5P4793YZWOh53V7s
+	 barcrVboBdm4njB3I16aA6sziYci9JxKZjB+QI8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404287AbgAPXhq (ORCPT
+        id S2391389AbgAPXaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:37:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38022 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:30:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404167AbgAPXap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:30:45 -0500
+        id S2403750AbgAPX3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:29:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6B2520661;
-        Thu, 16 Jan 2020 23:30:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEAB12072B;
+        Thu, 16 Jan 2020 23:29:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217444;
-        bh=5KDrKj1M5O3zZvLmsVdi7oVZ6QM5dpT4Ve2OnYrKyCM=;
+        s=default; t=1579217391;
+        bh=2WNeRsDryRBzpXQN44EbufOyKvzcVAspZ6zfgL6yVVw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HVPKpkNFbTqtiX48r/7FJN7kxndlIKOnX37P023baeKxDna174jRWe2M/6GGX6R36
-         8tP3IihG2vt9jKopY7ud8Wn/+WLyzQpASFWWPfzqpEaEcJ3EhL5do9zHZEPZih1LFw
-         0EZoZ0RK3o/Rj7D9fIQSj9efyjrqk5ZFFm3x+M84=
+        b=iVUvR4rxX9J18mq0RvWSmKzpmm19jhT36IUZO0OR3Ev2eMviRqGcu4eynIOLsyuyy
+         j6U0rChSmZiscnnJUQr9u6A3AHoKxhCHqd52rsiRZmbkF/bv2U2mtDGZKxIfmKatcj
+         fWuGro8gfANf2kQDleYSSf5t94CWEfxyhp1Aa4/c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.19 60/84] media: ov6650: Fix some format attributes not under control
-Date:   Fri, 17 Jan 2020 00:18:34 +0100
-Message-Id: <20200116231720.781108135@linuxfoundation.org>
+        stable@vger.kernel.org,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Luo Jiaxing <luojiaxing@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 37/84] scsi: enclosure: Fix stale device oops with hot replug
+Date:   Fri, 17 Jan 2020 00:18:11 +0100
+Message-Id: <20200116231718.132769637@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
 References: <20200116231713.087649517@linuxfoundation.org>
@@ -60,128 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
 
-commit 1c6a2b63095154bbf9e8f38d79487a728331bf65 upstream.
+commit 529244bd1afc102ab164429d338d310d5d65e60d upstream.
 
-User arguments passed to .get/set_fmt() pad operation callbacks may
-contain unsupported values.  The driver takes control over frame size
-and pixel code as well as colorspace and field attributes but has never
-cared for remainig format attributes, i.e., ycbcr_enc, quantization
-and xfer_func, introduced by commit 11ff030c7365 ("[media]
-v4l2-mediabus: improve colorspace support").  Fix it.
+Doing an add/remove/add on a SCSI device in an enclosure leads to an oops
+caused by poisoned values in the enclosure device list pointers.  The
+reason is because we are keeping the enclosure device across the enclosed
+device add/remove/add but the current code is doing a
+device_add/device_del/device_add on it.  This is the wrong thing to do in
+sysfs, so fix it by not doing a device_del on the enclosure device simply
+because of a hot remove of the drive in the slot.
 
-Set up a static v4l2_mbus_framefmt structure with attributes
-initialized to reasonable defaults and use it for updating content of
-user provided arguments.  In case of V4L2_SUBDEV_FORMAT_ACTIVE,
-postpone frame size update, now performed from inside ov6650_s_fmt()
-helper, util the user argument is first updated in ov6650_set_fmt() with
-default frame format content.  For V4L2_SUBDEV_FORMAT_TRY, don't copy
-all attributes to pad config, only those handled by the driver, then
-fill the response with the default frame format updated with resulting
-pad config format code and frame size.
+[mkp: added missing email addresses]
 
-Fixes: 11ff030c7365 ("[media] v4l2-mediabus: improve colorspace support")
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 43d8eb9cfd0a ("[SCSI] ses: add support for enclosure component hot removal")
+Link: https://lore.kernel.org/r/1578532892.3852.10.camel@HansenPartnership.com
+Signed-off-by: James Bottomley <James.Bottomley@HansenPartnership.com>
+Reported-by: Luo Jiaxing <luojiaxing@huawei.com>
+Tested-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/i2c/ov6650.c |   51 ++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 39 insertions(+), 12 deletions(-)
+ drivers/misc/enclosure.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/media/i2c/ov6650.c
-+++ b/drivers/media/i2c/ov6650.c
-@@ -215,6 +215,17 @@ static u32 ov6650_codes[] = {
- 	MEDIA_BUS_FMT_Y8_1X8,
- };
- 
-+static const struct v4l2_mbus_framefmt ov6650_def_fmt = {
-+	.width		= W_CIF,
-+	.height		= H_CIF,
-+	.code		= MEDIA_BUS_FMT_SBGGR8_1X8,
-+	.colorspace	= V4L2_COLORSPACE_SRGB,
-+	.field		= V4L2_FIELD_NONE,
-+	.ycbcr_enc	= V4L2_YCBCR_ENC_DEFAULT,
-+	.quantization	= V4L2_QUANTIZATION_DEFAULT,
-+	.xfer_func	= V4L2_XFER_FUNC_DEFAULT,
-+};
-+
- /* read a register */
- static int ov6650_reg_read(struct i2c_client *client, u8 reg, u8 *val)
- {
-@@ -516,11 +527,13 @@ static int ov6650_get_fmt(struct v4l2_su
- 	if (format->pad)
- 		return -EINVAL;
- 
-+	/* initialize response with default media bus frame format */
-+	*mf = ov6650_def_fmt;
-+
-+	/* update media bus format code and frame size */
- 	mf->width	= priv->rect.width >> priv->half_scale;
- 	mf->height	= priv->rect.height >> priv->half_scale;
- 	mf->code	= priv->code;
--	mf->colorspace	= V4L2_COLORSPACE_SRGB;
--	mf->field	= V4L2_FIELD_NONE;
- 
- 	return 0;
- }
-@@ -659,10 +672,6 @@ static int ov6650_s_fmt(struct v4l2_subd
- 	if (!ret)
- 		priv->code = code;
- 
--	if (!ret) {
--		mf->width = priv->rect.width >> half_scale;
--		mf->height = priv->rect.height >> half_scale;
--	}
- 	return ret;
- }
- 
-@@ -681,9 +690,6 @@ static int ov6650_set_fmt(struct v4l2_su
- 		v4l_bound_align_image(&mf->width, 2, W_CIF, 1,
- 				&mf->height, 2, H_CIF, 1, 0);
- 
--	mf->field = V4L2_FIELD_NONE;
--	mf->colorspace = V4L2_COLORSPACE_SRGB;
--
- 	switch (mf->code) {
- 	case MEDIA_BUS_FMT_Y10_1X10:
- 		mf->code = MEDIA_BUS_FMT_Y8_1X8;
-@@ -701,10 +707,31 @@ static int ov6650_set_fmt(struct v4l2_su
- 		break;
+--- a/drivers/misc/enclosure.c
++++ b/drivers/misc/enclosure.c
+@@ -419,10 +419,9 @@ int enclosure_remove_device(struct enclo
+ 		cdev = &edev->component[i];
+ 		if (cdev->dev == dev) {
+ 			enclosure_remove_links(cdev);
+-			device_del(&cdev->cdev);
+ 			put_device(dev);
+ 			cdev->dev = NULL;
+-			return device_add(&cdev->cdev);
++			return 0;
+ 		}
  	}
- 
--	if (format->which == V4L2_SUBDEV_FORMAT_ACTIVE)
--		return ov6650_s_fmt(sd, mf);
--	cfg->try_fmt = *mf;
-+	if (format->which == V4L2_SUBDEV_FORMAT_TRY) {
-+		/* store media bus format code and frame size in pad config */
-+		cfg->try_fmt.width = mf->width;
-+		cfg->try_fmt.height = mf->height;
-+		cfg->try_fmt.code = mf->code;
-+
-+		/* return default mbus frame format updated with pad config */
-+		*mf = ov6650_def_fmt;
-+		mf->width = cfg->try_fmt.width;
-+		mf->height = cfg->try_fmt.height;
-+		mf->code = cfg->try_fmt.code;
-+
-+	} else {
-+		/* apply new media bus format code and frame size */
-+		int ret = ov6650_s_fmt(sd, mf);
- 
-+		if (ret)
-+			return ret;
-+
-+		/* return default format updated with active size and code */
-+		*mf = ov6650_def_fmt;
-+		mf->width = priv->rect.width >> priv->half_scale;
-+		mf->height = priv->rect.height >> priv->half_scale;
-+		mf->code = priv->code;
-+	}
- 	return 0;
- }
- 
+ 	return -ENODEV;
 
 
