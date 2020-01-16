@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 116DAC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2F5C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D36662469A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D64D2469D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:13:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194780;
-	bh=qHi2vZGa6HHGYoZ1i6Hkv1WKq6nGxUsjxOfHRbuQpXE=;
+	s=default; t=1579194784;
+	bh=7CqdlXnpRC8VgYjYKE5c2Wwwrus8yUPi3smsv4lDifA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V9EjVEJRtRZFqm643PIz/txR5zmYVp/RHfqbludWNb8l5x3fHW2Jdcc5y2p+b7YF7
-	 aIJpq4f9C4FyXxJrbaVLa9dEe6X07dYQFDiNpQs0XZOtSH9+bECqta19w3DER5Xf+F
-	 3y5fB1v2bwjyDzd9jVOqaprXh6HVmEq8mUzDJdkg=
+	b=pvjlZNskekGgelkewTJSghSHmDk89htm70yV1hO96mMG8RwUpsJV368oC4MNlSgbK
+	 FL03tXuSodLuDHOVYHamuX3EQneyxCUt8OmPz1TIcGVbhDFyuHNBFdkslzOTihBzpN
+	 EN9dGyFbmOn8UCLplMqTf7U/jBhsanBupJCv75l4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390261AbgAPRM7 (ORCPT
+        id S2390637AbgAPRND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:12:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56580 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:13:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730687AbgAPRMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:12:54 -0500
+        id S1729368AbgAPRNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:13:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AC432469D;
-        Thu, 16 Jan 2020 17:12:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A7F824696;
+        Thu, 16 Jan 2020 17:12:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194774;
-        bh=qHi2vZGa6HHGYoZ1i6Hkv1WKq6nGxUsjxOfHRbuQpXE=;
+        s=default; t=1579194779;
+        bh=7CqdlXnpRC8VgYjYKE5c2Wwwrus8yUPi3smsv4lDifA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TiQfD4NtX8IjeXOyUmL6+ojscaPMXL9ONukUv9DhRWi6LDYXs2G3qqsguQzqEpJHo
-         qBBoQKaINwbsriPVk+6XzLDlHad3431TfJ9rnobzuqvfprWzJ6n2HRU0RjKNEEyYlE
-         sFaHNUnWk5oM4Dmwge+Xr4BKyc7o4X2KNQb4nSMc=
+        b=xZHF415o0x0X/Sjgn89J+n/1QelroR4yTrf5z2V242KfWgk+YdrSbnkA7XdBM0WwC
+         nG1hmGYypiXJ35J2z5apV3zHsdZO8XJHISQSbMlqE69f9Xv++8ce674C7JyFtjyIxz
+         ELR3U8yHKnwVYZa2rc99yj+PC4wuPEq0Isg4vLJI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 592/671] USB: usb-skeleton: fix use-after-free after driver unbind
-Date:   Thu, 16 Jan 2020 12:03:50 -0500
-Message-Id: <20200116170509.12787-329-sashal@kernel.org>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 596/671] vhost/test: stop device before reset
+Date:   Thu, 16 Jan 2020 12:03:54 -0500
+Message-Id: <20200116170509.12787-333-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,35 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: "Michael S. Tsirkin" <mst@redhat.com>
 
-[ Upstream commit 6353001852776e7eeaab4da78922d4c6f2b076af ]
+[ Upstream commit 245cdd9fbd396483d501db83047116e2530f245f ]
 
-The driver failed to stop its read URB on disconnect, something which
-could lead to a use-after-free in the completion handler after driver
-unbind in case the character device has been closed.
+When device stop was moved out of reset, test device wasn't updated to
+stop before reset, this resulted in a use after free.  Fix by invoking
+stop appropriately.
 
-Fixes: e7389cc9a7ff ("USB: skel_read really sucks royally")
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191009170944.30057-3-johan@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: b211616d7125 ("vhost: move -net specific code out")
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/usb-skeleton.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/vhost/test.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/usb/usb-skeleton.c b/drivers/usb/usb-skeleton.c
-index e0cf11f798c5..2e99da45ce0b 100644
---- a/drivers/usb/usb-skeleton.c
-+++ b/drivers/usb/usb-skeleton.c
-@@ -573,6 +573,7 @@ static void skel_disconnect(struct usb_interface *interface)
- 	dev->disconnected = 1;
- 	mutex_unlock(&dev->io_mutex);
+diff --git a/drivers/vhost/test.c b/drivers/vhost/test.c
+index a9be2d8e98df..55090d9f9de0 100644
+--- a/drivers/vhost/test.c
++++ b/drivers/vhost/test.c
+@@ -162,6 +162,7 @@ static int vhost_test_release(struct inode *inode, struct file *f)
  
-+	usb_kill_urb(dev->bulk_in_urb);
- 	usb_kill_anchored_urbs(&dev->submitted);
- 
- 	/* decrement our usage count */
+ 	vhost_test_stop(n, &private);
+ 	vhost_test_flush(n);
++	vhost_dev_stop(&n->dev);
+ 	vhost_dev_cleanup(&n->dev);
+ 	/* We do an extra flush before freeing memory,
+ 	 * since jobs can re-queue themselves. */
+@@ -238,6 +239,7 @@ static long vhost_test_reset_owner(struct vhost_test *n)
+ 	}
+ 	vhost_test_stop(n, &priv);
+ 	vhost_test_flush(n);
++	vhost_dev_stop(&n->dev);
+ 	vhost_dev_reset_owner(&n->dev, umem);
+ done:
+ 	mutex_unlock(&n->dev.mutex);
 -- 
 2.20.1
 
