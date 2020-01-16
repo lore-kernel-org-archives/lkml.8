@@ -2,98 +2,78 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43467C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F2ABC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16D2B2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:34:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199671;
-	bh=4KwJYEY4NLAQPKKbonyJb+ZFRqThbJv4RYUN1FP+KZk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=adlg5c7dj+AyIKJ4st+CyKQ7IWdoRgZksPbvVEOgO8hpcmyhqWovx71co7j1qOP7J
-	 qlEvAy6N7MsguRckil0TjbZpoQerNdGyR9ucrlgSRiarFtlAiHSFFTl3FPhJMZSHFs
-	 jgJobODeHWfoonZESm0Hr9ToIfxBg5VoTrGdn2AM=
+	by mail.kernel.org (Postfix) with ESMTP id 03353206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:34:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388461AbgAPSe2 (ORCPT
+        id S1733292AbgAPSec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:34:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59456 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391788AbgAPRYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 13:34:32 -0500
+Received: from out28-219.mail.aliyun.com ([115.124.28.219]:42644 "EHLO
+        out28-219.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391658AbgAPRYh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jan 2020 12:24:37 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CB1A24692;
-        Thu, 16 Jan 2020 17:24:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195476;
-        bh=4KwJYEY4NLAQPKKbonyJb+ZFRqThbJv4RYUN1FP+KZk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vMW+fLDkOYWCA3vxstjUZP5sVsEoDMuoqREuIoccfdAmx14z+VAzgQJDRDmJ2m6Cn
-         YbidRyEZT5tvOWU6Djpew6nCABPDvK5BXI2Kx6YfEOO2g4d+AgyY9cBlELjwecUUVd
-         ELUL+Fau4TeQYKkKbnQnRAYcAR4Giyzeq0WixJk0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 082/371] rtc: ds1672: fix unintended sign extension
-Date:   Thu, 16 Jan 2020 12:19:14 -0500
-Message-Id: <20200116172403.18149-25-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
-References: <20200116172403.18149-1-sashal@kernel.org>
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2859474|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0287538-0.00116862-0.970078;DS=CONTINUE|ham_regular_dialog|0.0102448-0.000467264-0.989288;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03302;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=23;RT=23;SR=0;TI=SMTPD_---.GdEQRsw_1579195452;
+Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GdEQRsw_1579195452)
+          by smtp.aliyun-inc.com(10.147.40.2);
+          Fri, 17 Jan 2020 01:24:29 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        mips-creator-ci20-dev@googlegroups.com, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
+        mark.rutland@arm.com, syq@debian.org, ralf@linux-mips.org,
+        rick.tyliu@ingenic.com, jason@lakedaemon.net,
+        keescook@chromium.org, geert+renesas@glider.be, krzk@kernel.org,
+        paul@crapouillou.net, prasannatsmkumar@gmail.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
+        ebiederm@xmission.com, hns@goldelico.com, paul@boddie.org.uk
+Subject: [PATCH v2 6/6] MIPS: CI20: Update defconfig to support SMP.
+Date:   Fri, 17 Jan 2020 01:23:49 +0800
+Message-Id: <1579195429-59828-8-git-send-email-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1579195429-59828-1-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1579195429-59828-1-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Add "CONFIG_SMP=y" and "CONFIG_NR_CPUS=2" to support SMP.
 
-[ Upstream commit f0c04c276739ed8acbb41b4868e942a55b128dca ]
-
-Shifting a u8 by 24 will cause the value to be promoted to an integer. If
-the top bit of the u8 is set then the following conversion to an unsigned
-long will sign extend the value causing the upper 32 bits to be set in
-the result.
-
-Fix this by casting the u8 value to an unsigned long before the shift.
-
-Detected by CoverityScan, CID#138801 ("Unintended sign extension")
-
-Fixes: edf1aaa31fc5 ("[PATCH] RTC subsystem: DS1672 driver")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
 ---
- drivers/rtc/rtc-ds1672.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/rtc/rtc-ds1672.c b/drivers/rtc/rtc-ds1672.c
-index 9caaccccaa57..b1ebca099b0d 100644
---- a/drivers/rtc/rtc-ds1672.c
-+++ b/drivers/rtc/rtc-ds1672.c
-@@ -58,7 +58,8 @@ static int ds1672_get_datetime(struct i2c_client *client, struct rtc_time *tm)
- 		"%s: raw read data - counters=%02x,%02x,%02x,%02x\n",
- 		__func__, buf[0], buf[1], buf[2], buf[3]);
- 
--	time = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
-+	time = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
-+	       (buf[1] << 8) | buf[0];
- 
- 	rtc_time_to_tm(time, tm);
- 
+Notes:
+    v1->v2:
+    No change.
+
+ arch/mips/configs/ci20_defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/mips/configs/ci20_defconfig b/arch/mips/configs/ci20_defconfig
+index be41df2..3aadb2e 100644
+--- a/arch/mips/configs/ci20_defconfig
++++ b/arch/mips/configs/ci20_defconfig
+@@ -1,3 +1,5 @@
++CONFIG_SMP=y
++CONFIG_NR_CPUS=2
+ # CONFIG_LOCALVERSION_AUTO is not set
+ CONFIG_KERNEL_XZ=y
+ CONFIG_SYSVIPC=y
 -- 
-2.20.1
+2.7.4
 
