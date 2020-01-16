@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA1D0C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D12AC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A69724694
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 497B824694
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:35:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196156;
-	bh=t5URcK600Li5/kEvwIlodEPbK0NFjbo9iqcdWokoL/4=;
+	s=default; t=1579196159;
+	bh=Ucn8wY/JZHuVarAwycS6nlLU8YL4UGUMTYH7W9ni4Hk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ny95lQlLSHmNOYxpO+XQpRcdnDQUAS6I6qNfQ5Tl0mBCg+6Mg7Y5krjN538EH3Y0u
-	 P/vUAuhBAxYYtOtkUh3TfnQNvtNwUJnWzKivaXf49mToZPLYODkQFjTjlNiFM0ZPLM
-	 zBhI/lwwGormGFRL5vpiktNnop0GlgsonzZPHY50=
+	b=Bwtgc/NKIe8aWxUPEpqsNtz/N5Fm6/utKHi111HnsG6iE/C5eMsJOWp41Sbv9mXUT
+	 JNx1Qg5T11+ybmfWrwaMLXEblC0t3O/0De2pdzp7x8lu9Yf+4WOzCNvP0Q7x2ZHkDY
+	 OtcgBwGx6OB7JgJdY6x2h5lkAbkE3VzWke2OWmts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405161AbgAPRff (ORCPT
+        id S1729557AbgAPRf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:35:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49550 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:35:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404922AbgAPRfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:35:17 -0500
+        id S2405163AbgAPRfg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:35:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D2DF246A9;
-        Thu, 16 Jan 2020 17:35:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28D1B24727;
+        Thu, 16 Jan 2020 17:35:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196117;
-        bh=t5URcK600Li5/kEvwIlodEPbK0NFjbo9iqcdWokoL/4=;
+        s=default; t=1579196136;
+        bh=Ucn8wY/JZHuVarAwycS6nlLU8YL4UGUMTYH7W9ni4Hk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0CzFKKoHrzGkY0g4515InR8V8ojNI6IaonuF66SlLIN5mHfant23ZPZXPVzn5Wj3Q
-         nwwyIhAy/NSH9rYe0cRVMAMYCMUn+z3grHqNSwW5iVH85uGbMjf56xPS5fmX3s+68r
-         ft5+unulR+Vha9RmHoZn/HvmqMeNYGTjxQI/npQU=
+        b=yN2dPpWh14BJMGp6fMSl02ppTlyQpPb95boVIvepLmGbHwzIq4Qlw2Ypj1ftggI3G
+         3czmCsvtxTT6lqQueoVY6sGLGVlsNHX+uHayNrE2ZLHgMIJP/3TBS5i3VBRtxpsmeP
+         AGttoXwmlRQwoU63GvLpZQlPxKCGHcAjS+HM1Uwg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yangtao Li <tiny.windzz@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 025/251] clk: qoriq: fix refcount leak in clockgen_init()
-Date:   Thu, 16 Jan 2020 12:30:59 -0500
-Message-Id: <20200116173445.21385-25-sashal@kernel.org>
+Cc:     Gal Pressman <galpress@amazon.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 038/251] RDMA/qedr: Fix out of bounds index check in query pkey
+Date:   Thu, 16 Jan 2020 12:31:12 -0500
+Message-Id: <20200116173445.21385-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173445.21385-1-sashal@kernel.org>
 References: <20200116173445.21385-1-sashal@kernel.org>
@@ -59,34 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yangtao Li <tiny.windzz@gmail.com>
+From: Gal Pressman <galpress@amazon.com>
 
-[ Upstream commit 70af6c5b5270e8101f318c4b69cc98a726edfab9 ]
+[ Upstream commit dbe30dae487e1a232158c24b432d45281c2805b7 ]
 
-The of_find_compatible_node() returns a node pointer with refcount
-incremented, but there is the lack of use of the of_node_put() when
-done. Add the missing of_node_put() to release the refcount.
+The pkey table size is QEDR_ROCE_PKEY_TABLE_LEN, index should be tested
+for >= QEDR_ROCE_PKEY_TABLE_LEN instead of > QEDR_ROCE_PKEY_TABLE_LEN.
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-Fixes: 0dfc86b3173f ("clk: qoriq: Move chip-specific knowledge into driver")
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: a7efd7773e31 ("qedr: Add support for PD,PKEY and CQ verbs")
+Signed-off-by: Gal Pressman <galpress@amazon.com>
+Acked-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk-qoriq.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/infiniband/hw/qedr/verbs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c
-index cdce49f6476a..65876ff6df41 100644
---- a/drivers/clk/clk-qoriq.c
-+++ b/drivers/clk/clk-qoriq.c
-@@ -1245,6 +1245,7 @@ static void __init clockgen_init(struct device_node *np)
- 				pr_err("%s: Couldn't map %s regs\n", __func__,
- 				       guts->full_name);
- 			}
-+			of_node_put(guts);
- 		}
+diff --git a/drivers/infiniband/hw/qedr/verbs.c b/drivers/infiniband/hw/qedr/verbs.c
+index cd0408c2b376..7603a1641c7d 100644
+--- a/drivers/infiniband/hw/qedr/verbs.c
++++ b/drivers/infiniband/hw/qedr/verbs.c
+@@ -54,7 +54,7 @@
  
- 	}
+ int qedr_query_pkey(struct ib_device *ibdev, u8 port, u16 index, u16 *pkey)
+ {
+-	if (index > QEDR_ROCE_PKEY_TABLE_LEN)
++	if (index >= QEDR_ROCE_PKEY_TABLE_LEN)
+ 		return -EINVAL;
+ 
+ 	*pkey = QEDR_ROCE_PKEY_DEFAULT;
 -- 
 2.20.1
 
