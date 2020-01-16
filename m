@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9926AC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AAE8C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BD872064C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:47:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BF4D2064C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:48:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200479;
-	bh=JgMkyUhH4t2GbX7FRMf4kH4L4nAw3+A3O18bvu3gdf0=;
+	s=default; t=1579200490;
+	bh=UPItCjmuo8SP4QHmFAW1NxhRC4SPqP7urVkVKQ4r+5A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fNBD/aF8/KFkjslWW7RP3aeBnOHpORoJUfzLbFChnqSIeknVOanMgX8ex31y0CIQn
-	 fdLngpcqgY18VIsLphqJl6VTU6pQQmwBiVAu56JwVnX9+vCuXTjl3YfBOaZjedaozh
-	 W1TjPpqKAA5zjRMCq20mMoRqfa2fFv25h7SK5eZI=
+	b=MRoJdaoq30LEuVtNIVYJRrDGUHJ5x8AZsgg7BEqapRhXCbIymcIi8lqTS4IHP4NVf
+	 tcokPhLKWqRAyGV2b0uNykiBNSoB17LgOwwHSSxA/SPOAsCeYSWJh2/Ds+4oN52eKf
+	 y7b4am7uWM8nGiERQRZR5wWfgbUenPuhiy1j+Ffk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729416AbgAPSr6 (ORCPT
+        id S2392668AbgAPSsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:47:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46820 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:48:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389777AbgAPRJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:09:55 -0500
+        id S2389765AbgAPRJw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:09:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7D6724687;
-        Thu, 16 Jan 2020 17:09:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E64FB2081E;
+        Thu, 16 Jan 2020 17:09:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194594;
-        bh=JgMkyUhH4t2GbX7FRMf4kH4L4nAw3+A3O18bvu3gdf0=;
+        s=default; t=1579194591;
+        bh=UPItCjmuo8SP4QHmFAW1NxhRC4SPqP7urVkVKQ4r+5A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IGBPZkdsxgGgL+tD4YQtAQew6jwp8aM591BNz6QH6kH8LQ8yYpPrwwj4+P06zwTzT
-         gWPHxpHpjGw8V+TXS+FH53W1H4V0y/Tct3/2FPtOmzSNpFCtbC5Ih4HQE5d8qnPKEA
-         AI/ne8p0e+TO2gVVO6ecznqL7F597F1iVNv+jsrY=
+        b=cRVrXFiRwPptZ6TDJZLDKVWUB6igv8gwBavagG5brF4rhrABcVHoHaZm9pCSu/gEh
+         0udCxi1F+M9TCso/Mt4bceJ+dwHwm4oRAn95DHvpkejmKqfOBUPblu0BmXq+pYeOKt
+         b3Wn34tVMcUFiQ/Wgu0Mg32gaA8GKSGemHO6iwRY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 464/671] xfrm interface: ifname may be wrong in logs
-Date:   Thu, 16 Jan 2020 12:01:42 -0500
-Message-Id: <20200116170509.12787-201-sashal@kernel.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Olof Johansson <olof@lixom.net>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: [PATCH AUTOSEL 4.19 462/671] ARM: stm32: use "depends on" instead of "if" after prompt
+Date:   Thu, 16 Jan 2020 12:01:40 -0500
+Message-Id: <20200116170509.12787-199-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,70 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit e0aaa332e6a97dae57ad59cdb19e21f83c3d081c ]
+[ Upstream commit 7e8a0f10899075ac2665c78c4e49dbaf32bf3346 ]
 
-The ifname is copied when the interface is created, but is never updated
-later. In fact, this property is used only in one error message, where the
-netdevice pointer is available, thus let's use it.
+This appeared after the global fixups by commit e32465429490 ("ARM: use
+"depends on" for SoC configs instead of "if" after prompt"). Fix it now.
 
-Fixes: f203b76d7809 ("xfrm: Add virtual xfrm interfaces")
-Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Link: https://lore.kernel.org/r/20190710051320.8738-1-yamada.masahiro@socionext.com
+Fixes: e32465429490 ("ARM: use "depends on" for SoC configs instead of "if" after prompt")
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/xfrm.h        |  1 -
- net/xfrm/xfrm_interface.c | 10 +---------
- 2 files changed, 1 insertion(+), 10 deletions(-)
+ arch/arm/mach-stm32/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/net/xfrm.h b/include/net/xfrm.h
-index fb9b19a3b749..48dc1ce2170d 100644
---- a/include/net/xfrm.h
-+++ b/include/net/xfrm.h
-@@ -1054,7 +1054,6 @@ static inline void xfrm_dst_destroy(struct xfrm_dst *xdst)
- void xfrm_dst_ifdown(struct dst_entry *dst, struct net_device *dev);
- 
- struct xfrm_if_parms {
--	char name[IFNAMSIZ];	/* name of XFRM device */
- 	int link;		/* ifindex of underlying L2 interface */
- 	u32 if_id;		/* interface identifyer */
- };
-diff --git a/net/xfrm/xfrm_interface.c b/net/xfrm/xfrm_interface.c
-index d6a3cdf7885c..4ee512622e93 100644
---- a/net/xfrm/xfrm_interface.c
-+++ b/net/xfrm/xfrm_interface.c
-@@ -145,8 +145,6 @@ static int xfrmi_create(struct net_device *dev)
- 	if (err < 0)
- 		goto out;
- 
--	strcpy(xi->p.name, dev->name);
--
- 	dev_hold(dev);
- 	xfrmi_link(xfrmn, xi);
- 
-@@ -293,7 +291,7 @@ xfrmi_xmit2(struct sk_buff *skb, struct net_device *dev, struct flowi *fl)
- 	if (tdev == dev) {
- 		stats->collisions++;
- 		net_warn_ratelimited("%s: Local routing loop detected!\n",
--				     xi->p.name);
-+				     dev->name);
- 		goto tx_err_dst_release;
- 	}
- 
-@@ -648,12 +646,6 @@ static int xfrmi_newlink(struct net *src_net, struct net_device *dev,
- 	int err;
- 
- 	xfrmi_netlink_parms(data, &p);
--
--	if (!tb[IFLA_IFNAME])
--		return -EINVAL;
--
--	nla_strlcpy(p.name, tb[IFLA_IFNAME], IFNAMSIZ);
--
- 	xi = xfrmi_locate(net, &p);
- 	if (xi)
- 		return -EEXIST;
+diff --git a/arch/arm/mach-stm32/Kconfig b/arch/arm/mach-stm32/Kconfig
+index 713c068b953f..adca4368d67c 100644
+--- a/arch/arm/mach-stm32/Kconfig
++++ b/arch/arm/mach-stm32/Kconfig
+@@ -1,5 +1,6 @@
+ menuconfig ARCH_STM32
+-	bool "STMicroelectronics STM32 family" if ARM_SINGLE_ARMV7M || ARCH_MULTI_V7
++	bool "STMicroelectronics STM32 family"
++	depends on ARM_SINGLE_ARMV7M || ARCH_MULTI_V7
+ 	select ARMV7M_SYSTICK if ARM_SINGLE_ARMV7M
+ 	select HAVE_ARM_ARCH_TIMER if ARCH_MULTI_V7
+ 	select ARM_GIC if ARCH_MULTI_V7
 -- 
 2.20.1
 
