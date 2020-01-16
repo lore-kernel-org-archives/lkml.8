@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA91DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4175C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89CC7246C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:47:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EF31246B4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:47:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196857;
-	bh=66Uh4hQFwl8UL/i/f+/bSnuAUf2QPxZlPm6iSXIho1Y=;
+	s=default; t=1579196867;
+	bh=GmnhYdlbJEODduFCW6pICP0mSICZeGeGjoCYVkwW6CA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nRbVdyEvR1UoTBaZ3T4AsdJiGXbk16USn/KKLlch5+Pf+4k0IAAGhV5mDsO136gFg
-	 vPJlpptwYWXSRcdoQCuxOnyGJbSLTqDS6xjsBomVNJCi+zRIlYgLUHFyqO/uuKrPht
-	 q9nsXBNy8DNAA/c7y21U6LpZQ+BFJ8ZQg3oADzO4=
+	b=rzlpQgiDnQVDsuqeLMEz9612bM0kXbduXHzICq7XClnsA562CKI2cqU/xgsDDTLEo
+	 qjJnUpZsE6ZNaU1HtWxIvf6n/1T6flmscex4DXW5eEg4816IdagZXnUNVmBC/2G6A+
+	 E3ZE9cND3TOmz8FpaUO+mqtrqFLm/IIhHzgQm42I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406897AbgAPRrg (ORCPT
+        id S2394275AbgAPRrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:47:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39964 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:47:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406808AbgAPRqu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:46:50 -0500
+        id S2406070AbgAPRqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:46:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07B6D246DA;
-        Thu, 16 Jan 2020 17:46:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EAB4246DA;
+        Thu, 16 Jan 2020 17:46:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196809;
-        bh=66Uh4hQFwl8UL/i/f+/bSnuAUf2QPxZlPm6iSXIho1Y=;
+        s=default; t=1579196806;
+        bh=GmnhYdlbJEODduFCW6pICP0mSICZeGeGjoCYVkwW6CA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RzCV72sltKkh3ya4ObWRa8XSMHbCRI4Tq4LX6w5x1mS2qC54hXcIrzckAqPd/2c8T
-         j5DbCLdsgBSF/O4LNiihH3mcE3P3Qkju+AR0r3ejtVAvCniXEdE/2VjlhhPKn+UuuC
-         vHoKAw/6TJvyu0wFxepW5e9abSNpc01n4WajDLxI=
+        b=YJZy8EPwpYrxlSSBSSXdHMjS1WWQMMVcb4eO6EZgvGWBNpY63h6vteO96Xe4kLGqP
+         ukQlWwI9KGzhhadfSzwvEy5SOTfyib2HexQhjY9qMCpEn+3PAfxgdAknVunl+W50wn
+         +9fAv54usWTI2pafzxuraS4LsE4t/yDTza6sFuuY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kars de Jong <jongk@linux-m68k.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 167/174] rtc: msm6242: Fix reading of 10-hour digit
-Date:   Thu, 16 Jan 2020 12:42:44 -0500
-Message-Id: <20200116174251.24326-167-sashal@kernel.org>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 164/174] packet: fix data-race in fanout_flow_is_huge()
+Date:   Thu, 16 Jan 2020 12:42:41 -0500
+Message-Id: <20200116174251.24326-164-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -60,42 +60,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kars de Jong <jongk@linux-m68k.org>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit e34494c8df0cd96fc432efae121db3212c46ae48 ]
+[ Upstream commit b756ad928d98e5ef0b74af7546a6a31a8dadde00 ]
 
-The driver was reading the wrong register as the 10-hour digit due to
-a misplaced ')'. It was in fact reading the 1-second digit register due
-to this bug.
+KCSAN reported the following data-race [1]
 
-Also remove the use of a magic number for the hour mask and use the define
-for it which was already present.
+Adding a couple of READ_ONCE()/WRITE_ONCE() should silence it.
 
-Fixes: 4f9b9bba1dd1 ("rtc: Add an RTC driver for the Oki MSM6242")
-Tested-by: Kars de Jong <jongk@linux-m68k.org>
-Signed-off-by: Kars de Jong <jongk@linux-m68k.org>
-Link: https://lore.kernel.org/r/20191116110548.8562-1-jongk@linux-m68k.org
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Since the report hinted about multiple cpus using the history
+concurrently, I added a test avoiding writing on it if the
+victim slot already contains the desired value.
+
+[1]
+
+BUG: KCSAN: data-race in fanout_demux_rollover / fanout_demux_rollover
+
+read to 0xffff8880b01786cc of 4 bytes by task 18921 on cpu 1:
+ fanout_flow_is_huge net/packet/af_packet.c:1303 [inline]
+ fanout_demux_rollover+0x33e/0x3f0 net/packet/af_packet.c:1353
+ packet_rcv_fanout+0x34e/0x490 net/packet/af_packet.c:1453
+ deliver_skb net/core/dev.c:1888 [inline]
+ dev_queue_xmit_nit+0x15b/0x540 net/core/dev.c:1958
+ xmit_one net/core/dev.c:3195 [inline]
+ dev_hard_start_xmit+0x3f5/0x430 net/core/dev.c:3215
+ __dev_queue_xmit+0x14ab/0x1b40 net/core/dev.c:3792
+ dev_queue_xmit+0x21/0x30 net/core/dev.c:3825
+ neigh_direct_output+0x1f/0x30 net/core/neighbour.c:1530
+ neigh_output include/net/neighbour.h:511 [inline]
+ ip6_finish_output2+0x7a2/0xec0 net/ipv6/ip6_output.c:116
+ __ip6_finish_output net/ipv6/ip6_output.c:142 [inline]
+ __ip6_finish_output+0x2d7/0x330 net/ipv6/ip6_output.c:127
+ ip6_finish_output+0x41/0x160 net/ipv6/ip6_output.c:152
+ NF_HOOK_COND include/linux/netfilter.h:294 [inline]
+ ip6_output+0xf2/0x280 net/ipv6/ip6_output.c:175
+ dst_output include/net/dst.h:436 [inline]
+ ip6_local_out+0x74/0x90 net/ipv6/output_core.c:179
+ ip6_send_skb+0x53/0x110 net/ipv6/ip6_output.c:1795
+ udp_v6_send_skb.isra.0+0x3ec/0xa70 net/ipv6/udp.c:1173
+ udpv6_sendmsg+0x1906/0x1c20 net/ipv6/udp.c:1471
+ inet6_sendmsg+0x6d/0x90 net/ipv6/af_inet6.c:576
+ sock_sendmsg_nosec net/socket.c:637 [inline]
+ sock_sendmsg+0x9f/0xc0 net/socket.c:657
+ ___sys_sendmsg+0x2b7/0x5d0 net/socket.c:2311
+ __sys_sendmmsg+0x123/0x350 net/socket.c:2413
+ __do_sys_sendmmsg net/socket.c:2442 [inline]
+ __se_sys_sendmmsg net/socket.c:2439 [inline]
+ __x64_sys_sendmmsg+0x64/0x80 net/socket.c:2439
+ do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+write to 0xffff8880b01786cc of 4 bytes by task 18922 on cpu 0:
+ fanout_flow_is_huge net/packet/af_packet.c:1306 [inline]
+ fanout_demux_rollover+0x3a4/0x3f0 net/packet/af_packet.c:1353
+ packet_rcv_fanout+0x34e/0x490 net/packet/af_packet.c:1453
+ deliver_skb net/core/dev.c:1888 [inline]
+ dev_queue_xmit_nit+0x15b/0x540 net/core/dev.c:1958
+ xmit_one net/core/dev.c:3195 [inline]
+ dev_hard_start_xmit+0x3f5/0x430 net/core/dev.c:3215
+ __dev_queue_xmit+0x14ab/0x1b40 net/core/dev.c:3792
+ dev_queue_xmit+0x21/0x30 net/core/dev.c:3825
+ neigh_direct_output+0x1f/0x30 net/core/neighbour.c:1530
+ neigh_output include/net/neighbour.h:511 [inline]
+ ip6_finish_output2+0x7a2/0xec0 net/ipv6/ip6_output.c:116
+ __ip6_finish_output net/ipv6/ip6_output.c:142 [inline]
+ __ip6_finish_output+0x2d7/0x330 net/ipv6/ip6_output.c:127
+ ip6_finish_output+0x41/0x160 net/ipv6/ip6_output.c:152
+ NF_HOOK_COND include/linux/netfilter.h:294 [inline]
+ ip6_output+0xf2/0x280 net/ipv6/ip6_output.c:175
+ dst_output include/net/dst.h:436 [inline]
+ ip6_local_out+0x74/0x90 net/ipv6/output_core.c:179
+ ip6_send_skb+0x53/0x110 net/ipv6/ip6_output.c:1795
+ udp_v6_send_skb.isra.0+0x3ec/0xa70 net/ipv6/udp.c:1173
+ udpv6_sendmsg+0x1906/0x1c20 net/ipv6/udp.c:1471
+ inet6_sendmsg+0x6d/0x90 net/ipv6/af_inet6.c:576
+ sock_sendmsg_nosec net/socket.c:637 [inline]
+ sock_sendmsg+0x9f/0xc0 net/socket.c:657
+ ___sys_sendmsg+0x2b7/0x5d0 net/socket.c:2311
+ __sys_sendmmsg+0x123/0x350 net/socket.c:2413
+ __do_sys_sendmmsg net/socket.c:2442 [inline]
+ __se_sys_sendmmsg net/socket.c:2439 [inline]
+ __x64_sys_sendmmsg+0x64/0x80 net/socket.c:2439
+ do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 0 PID: 18922 Comm: syz-executor.3 Not tainted 5.4.0-rc6+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+
+Fixes: 3b3a5b0aab5b ("packet: rollover huge flows before small flows")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Willem de Bruijn <willemb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-msm6242.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/packet/af_packet.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/rtc/rtc-msm6242.c b/drivers/rtc/rtc-msm6242.c
-index c1c5c4e3b3b4..c981301efbe5 100644
---- a/drivers/rtc/rtc-msm6242.c
-+++ b/drivers/rtc/rtc-msm6242.c
-@@ -132,7 +132,8 @@ static int msm6242_read_time(struct device *dev, struct rtc_time *tm)
- 		      msm6242_read(priv, MSM6242_SECOND1);
- 	tm->tm_min  = msm6242_read(priv, MSM6242_MINUTE10) * 10 +
- 		      msm6242_read(priv, MSM6242_MINUTE1);
--	tm->tm_hour = (msm6242_read(priv, MSM6242_HOUR10 & 3)) * 10 +
-+	tm->tm_hour = (msm6242_read(priv, MSM6242_HOUR10) &
-+		       MSM6242_HOUR10_HR_MASK) * 10 +
- 		      msm6242_read(priv, MSM6242_HOUR1);
- 	tm->tm_mday = msm6242_read(priv, MSM6242_DAY10) * 10 +
- 		      msm6242_read(priv, MSM6242_DAY1);
+diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+index 9de7e3e6edd3..eac6f7eea7b5 100644
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -1332,15 +1332,21 @@ static void packet_sock_destruct(struct sock *sk)
+ 
+ static bool fanout_flow_is_huge(struct packet_sock *po, struct sk_buff *skb)
+ {
+-	u32 rxhash;
++	u32 *history = po->rollover->history;
++	u32 victim, rxhash;
+ 	int i, count = 0;
+ 
+ 	rxhash = skb_get_hash(skb);
+ 	for (i = 0; i < ROLLOVER_HLEN; i++)
+-		if (po->rollover->history[i] == rxhash)
++		if (READ_ONCE(history[i]) == rxhash)
+ 			count++;
+ 
+-	po->rollover->history[prandom_u32() % ROLLOVER_HLEN] = rxhash;
++	victim = prandom_u32() % ROLLOVER_HLEN;
++
++	/* Avoid dirtying the cache line if possible */
++	if (READ_ONCE(history[victim]) != rxhash)
++		WRITE_ONCE(history[victim], rxhash);
++
+ 	return count > (ROLLOVER_HLEN >> 1);
+ }
+ 
 -- 
 2.20.1
 
