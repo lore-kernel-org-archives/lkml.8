@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FAA1C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15643C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:02:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CF70214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8E27214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:02:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197763;
-	bh=mlxYd5cszeChQ7P+G40T2hUzaO7kh5hQ4w884GddtDQ=;
+	s=default; t=1579197772;
+	bh=SceM7aifQ7GJa345if7ZC3x+Pkfqo/xKT7DD+rgLG2E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wQ5rzb/L44vzMYMd6cg9uxabC9Tfix11ba9DJZqYglkxnf3iMncdiIz16uZGIGQF4
-	 wSXh5+fl8YzoQ5XRlAwRwWEdpqeNpgaYPCZOXygJdams8Py215CcshNCSNVzyYsrNV
-	 72USM/m2s1CPIQ0vtcdz5xJBdjAmFg+muvR9Ay4g=
+	b=EyXvffN5I5bWRdsAAeJNU83ZN4/rttCXpeoNnoMSpZiAF+rXSHchlcFBtaTh/Fh5B
+	 xNAZN7TLbOOPcoUtoRt5i3yLszUu5m4iWM0EpOwfWhmoFLmwT2a3lZnNXqQjQydJG4
+	 8StrfDCZe84efZgTe7vUHVGk1TVlGfqE0oYmdV+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405797AbgAPSCm (ORCPT
+        id S2405945AbgAPSCu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:02:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58534 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:02:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405083AbgAPRlF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:41:05 -0500
+        id S2405504AbgAPRlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:41:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23EA42467C;
-        Thu, 16 Jan 2020 17:41:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0952D20684;
+        Thu, 16 Jan 2020 17:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196464;
-        bh=mlxYd5cszeChQ7P+G40T2hUzaO7kh5hQ4w884GddtDQ=;
+        s=default; t=1579196462;
+        bh=SceM7aifQ7GJa345if7ZC3x+Pkfqo/xKT7DD+rgLG2E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dlQzgEDzAxErlmX5rckjbCh1oqCCO6TtwIutbt5BH72z1FN8HlXQzl4GZiCf2kLEY
-         pgSVD79NwHBIYBbRa975zQUoi7VPFWwBW19lJt5Q/YFqOdzoeqxHeT0ZzTJ6mPhH/2
-         oHpYPE2d/IJXMl5LyqKBgBLTPnBJlQRh7H95E1sE=
+        b=A7TvwuVyQEFBZ6BME2ldiTxJ8WERrgSgWvaUqVLqclOHhf1VsghfJyYDk5VXOHTp8
+         gxIqNoP0QSwzjhegackFbrYjyOvKHxDHw7Q1rA2Ge/u/7HYnzOX2CwSyGd50148WU5
+         2qsxW9RWYYg9ERbr8yAj2IUt6b8NAjcLqZQ0HYlU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Hai Li <hali@codeaurora.org>, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, Sean Paul <seanpaul@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 217/251] drm/msm/dsi: Implement reset correctly
-Date:   Thu, 16 Jan 2020 12:36:06 -0500
-Message-Id: <20200116173641.22137-177-sashal@kernel.org>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 216/251] USB: usb-skeleton: fix use-after-free after driver unbind
+Date:   Thu, 16 Jan 2020 12:36:05 -0500
+Message-Id: <20200116173641.22137-176-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -61,71 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit 78e31c42261779a01bc73472d0f65f15378e9de3 ]
+[ Upstream commit 6353001852776e7eeaab4da78922d4c6f2b076af ]
 
-On msm8998, vblank timeouts are observed because the DSI controller is not
-reset properly, which ends up stalling the MDP.  This is because the reset
-logic is not correct per the hardware documentation.
+The driver failed to stop its read URB on disconnect, something which
+could lead to a use-after-free in the completion handler after driver
+unbind in case the character device has been closed.
 
-The documentation states that after asserting reset, software should wait
-some time (no indication of how long), or poll the status register until it
-returns 0 before deasserting reset.
-
-wmb() is insufficient for this purpose since it just ensures ordering, not
-timing between writes.  Since asserting and deasserting reset occurs on the
-same register, ordering is already guaranteed by the architecture, making
-the wmb extraneous.
-
-Since we would define a timeout for polling the status register to avoid a
-possible infinite loop, lets just use a static delay of 20 ms, since 16.666
-ms is the time available to process one frame at 60 fps.
-
-Fixes: a689554ba6ed ("drm/msm: Initial add DSI connector support")
-Cc: Hai Li <hali@codeaurora.org>
-Cc: Rob Clark <robdclark@gmail.com>
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Reviewed-by: Sean Paul <sean@poorly.run>
-[seanpaul renamed RESET_DELAY to DSI_RESET_TOGGLE_DELAY_MS]
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191011133939.16551-1-jeffrey.l.hugo@gmail.com
+Fixes: e7389cc9a7ff ("USB: skel_read really sucks royally")
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191009170944.30057-3-johan@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/dsi/dsi_host.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/usb/usb-skeleton.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
-index 6f240021705b..e49b414c012c 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_host.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
-@@ -33,6 +33,8 @@
- #include "sfpb.xml.h"
- #include "dsi_cfg.h"
+diff --git a/drivers/usb/usb-skeleton.c b/drivers/usb/usb-skeleton.c
+index f24374486623..1e6146f70cc7 100644
+--- a/drivers/usb/usb-skeleton.c
++++ b/drivers/usb/usb-skeleton.c
+@@ -584,6 +584,7 @@ static void skel_disconnect(struct usb_interface *interface)
+ 	dev->disconnected = 1;
+ 	mutex_unlock(&dev->io_mutex);
  
-+#define DSI_RESET_TOGGLE_DELAY_MS 20
-+
- static int dsi_get_version(const void __iomem *base, u32 *major, u32 *minor)
- {
- 	u32 ver;
-@@ -909,7 +911,7 @@ static void dsi_sw_reset(struct msm_dsi_host *msm_host)
- 	wmb(); /* clocks need to be enabled before reset */
++	usb_kill_urb(dev->bulk_in_urb);
+ 	usb_kill_anchored_urbs(&dev->submitted);
  
- 	dsi_write(msm_host, REG_DSI_RESET, 1);
--	wmb(); /* make sure reset happen */
-+	msleep(DSI_RESET_TOGGLE_DELAY_MS); /* make sure reset happen */
- 	dsi_write(msm_host, REG_DSI_RESET, 0);
- }
- 
-@@ -1288,7 +1290,7 @@ static void dsi_sw_reset_restore(struct msm_dsi_host *msm_host)
- 
- 	/* dsi controller can only be reset while clocks are running */
- 	dsi_write(msm_host, REG_DSI_RESET, 1);
--	wmb();	/* make sure reset happen */
-+	msleep(DSI_RESET_TOGGLE_DELAY_MS); /* make sure reset happen */
- 	dsi_write(msm_host, REG_DSI_RESET, 0);
- 	wmb();	/* controller out of reset */
- 	dsi_write(msm_host, REG_DSI_CTRL, data0);
+ 	/* decrement our usage count */
 -- 
 2.20.1
 
