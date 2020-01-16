@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0475C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A575C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA50A2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:41:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EE612072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:41:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218076;
-	bh=heSSPlgUmAbexyzw0wI8y/0NCsNoYvE9fmtUfYhOM7E=;
+	s=default; t=1579218082;
+	bh=NbGATb5s7hBwbGFwF2RTukJhnBKMnGwdp/jYrhC7C2A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B61Y0rwT4gUGwpMxAmjG9LOvxfd6TE3H12k2g8NREZbQMSMW6YaOtt138ody4LZyO
-	 l9dqvxMzmo7WMeXc3dSgvUJBfj4ov2jt6G+EOVZDDj/WaY9DiwgfDSGs7hOdW6+YaW
-	 CVbGUzsdxTvaYEtppMjY396f49Lkvxg1Jx48bul8=
+	b=jdU4WhRIsFJ4Zy/NAP2w8kj3JiG87El02+9N4+fI3joE+e/JwdMe12lMvQKQr5Ymz
+	 edODWjdxM+G2p2KFtVy3JiEbMFoPk5W2rn1pepHGUFD8B51JKssuI5pcjiOUYLSmpj
+	 QOAnclIDnkp4N0sZPzqRVNhPv0/cgD+IHFevzVLQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391835AbgAPXlP (ORCPT
+        id S2388821AbgAPXlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:41:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59254 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:41:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390123AbgAPX10 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:27:26 -0500
+        id S2390086AbgAPX1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:27:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D7D820684;
-        Thu, 16 Jan 2020 23:27:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DA342467C;
+        Thu, 16 Jan 2020 23:27:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217245;
-        bh=heSSPlgUmAbexyzw0wI8y/0NCsNoYvE9fmtUfYhOM7E=;
+        s=default; t=1579217243;
+        bh=NbGATb5s7hBwbGFwF2RTukJhnBKMnGwdp/jYrhC7C2A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HDbDU895p/OJXsMEePtaTRNGMP0MLA+HvNX4qC4E4aMmwtfnsy15tlF7GkcyA0spR
-         7hPKWIs0if8tzWuiWyofzzLg4y2+l4CqnS5x3nHRVyErHkoOtcOj2sQOk96cxXqS9p
-         ApaCS5fFq9Mw8+y9t39tUi/aJzaV9U8ucfgyr35E=
+        b=o2iOc9GSpwTqSctHKhGjhISth5LICwQwzJHwLHvFS3XoUOLH5NTcPatBQ99qDi92V
+         pcmZL4nLhnHWmpvXw8+m0GTwA+LZwV246mARLmoRAsjfxvydyMvH9CI6B+pEkWpUT9
+         sdqwSzaNJXCqxypgjgH/WrFbobfUgTEHJL/1Jnqg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Sasha Levin <sashal@kernel.org>,
-        John Garry <john.garry@huawei.com>
-Subject: [PATCH 5.4 189/203] tomoyo: Suppress RCU warning at list_for_each_entry_rcu().
-Date:   Fri, 17 Jan 2020 00:18:26 +0100
-Message-Id: <20200116231800.796145213@linuxfoundation.org>
+        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Paul Burton <paulburton@kernel.org>,
+        mips-creator-ci20-dev@googlegroups.com,
+        letux-kernel@openphoenux.org, linux-mips@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 188/203] mips: Fix gettimeofday() in the vdso library
+Date:   Fri, 17 Jan 2020 00:18:25 +0100
+Message-Id: <20200116231800.725512501@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -61,172 +63,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+From: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-[ Upstream commit 6bd5ce6089b561f5392460bfb654dea89356ab1b ]
+[ Upstream commit 7d2aa4bb90f5f6f1b8de8848c26042403f2d7bf9 ]
 
-John Garry has reported that allmodconfig kernel on arm64 causes flood of
-"RCU-list traversed in non-reader section!!" warning. I don't know what
-change caused this warning, but this warning is safe because TOMOYO uses
-SRCU lock instead. Let's suppress this warning by explicitly telling that
-the caller is holding SRCU lock.
+The libc provides a discovery mechanism for vDSO library and its
+symbols. When a symbol is not exposed by the vDSOs the libc falls back
+on the system calls.
 
-Reported-and-tested-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+With the introduction of the unified vDSO library on mips this behavior
+is not honored anymore by the kernel in the case of gettimeofday().
+
+The issue has been noticed and reported due to a dhclient failure on the
+CI20 board:
+
+root@letux:~# dhclient
+../../../../lib/isc/unix/time.c:200: Operation not permitted
+root@letux:~#
+
+Restore the original behavior fixing gettimeofday() in the vDSO library.
+
+Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
+Tested-by: H. Nikolaus Schaller <hns@goldelico.com> # CI20 with JZ4780
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: mips-creator-ci20-dev@googlegroups.com
+Cc: letux-kernel@openphoenux.org
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/tomoyo/common.c |  9 ++++++---
- security/tomoyo/domain.c | 15 ++++++++++-----
- security/tomoyo/group.c  |  9 ++++++---
- security/tomoyo/util.c   |  6 ++++--
- 4 files changed, 26 insertions(+), 13 deletions(-)
+ arch/mips/include/asm/vdso/gettimeofday.h | 13 -------------
+ arch/mips/vdso/vgettimeofday.c            | 20 ++++++++++++++++++++
+ 2 files changed, 20 insertions(+), 13 deletions(-)
 
-diff --git a/security/tomoyo/common.c b/security/tomoyo/common.c
-index dd3d5942e669..c36bafbcd77e 100644
---- a/security/tomoyo/common.c
-+++ b/security/tomoyo/common.c
-@@ -951,7 +951,8 @@ static bool tomoyo_manager(void)
- 	exe = tomoyo_get_exe();
- 	if (!exe)
- 		return false;
--	list_for_each_entry_rcu(ptr, &tomoyo_kernel_namespace.policy_list[TOMOYO_ID_MANAGER], head.list) {
-+	list_for_each_entry_rcu(ptr, &tomoyo_kernel_namespace.policy_list[TOMOYO_ID_MANAGER], head.list,
-+				srcu_read_lock_held(&tomoyo_ss)) {
- 		if (!ptr->head.is_deleted &&
- 		    (!tomoyo_pathcmp(domainname, ptr->manager) ||
- 		     !strcmp(exe, ptr->manager->name))) {
-@@ -1095,7 +1096,8 @@ static int tomoyo_delete_domain(char *domainname)
- 	if (mutex_lock_interruptible(&tomoyo_policy_lock))
- 		return -EINTR;
- 	/* Is there an active domain? */
--	list_for_each_entry_rcu(domain, &tomoyo_domain_list, list) {
-+	list_for_each_entry_rcu(domain, &tomoyo_domain_list, list,
-+				srcu_read_lock_held(&tomoyo_ss)) {
- 		/* Never delete tomoyo_kernel_domain */
- 		if (domain == &tomoyo_kernel_domain)
- 			continue;
-@@ -2778,7 +2780,8 @@ void tomoyo_check_profile(void)
+diff --git a/arch/mips/include/asm/vdso/gettimeofday.h b/arch/mips/include/asm/vdso/gettimeofday.h
+index b08825531e9f..0ae9b4cbc153 100644
+--- a/arch/mips/include/asm/vdso/gettimeofday.h
++++ b/arch/mips/include/asm/vdso/gettimeofday.h
+@@ -26,8 +26,6 @@
  
- 	tomoyo_policy_loaded = true;
- 	pr_info("TOMOYO: 2.6.0\n");
--	list_for_each_entry_rcu(domain, &tomoyo_domain_list, list) {
-+	list_for_each_entry_rcu(domain, &tomoyo_domain_list, list,
-+				srcu_read_lock_held(&tomoyo_ss)) {
- 		const u8 profile = domain->profile;
- 		struct tomoyo_policy_namespace *ns = domain->ns;
+ #define __VDSO_USE_SYSCALL		ULLONG_MAX
  
-diff --git a/security/tomoyo/domain.c b/security/tomoyo/domain.c
-index 8526a0a74023..7869d6a9980b 100644
---- a/security/tomoyo/domain.c
-+++ b/security/tomoyo/domain.c
-@@ -41,7 +41,8 @@ int tomoyo_update_policy(struct tomoyo_acl_head *new_entry, const int size,
+-#ifdef CONFIG_MIPS_CLOCK_VSYSCALL
+-
+ static __always_inline long gettimeofday_fallback(
+ 				struct __kernel_old_timeval *_tv,
+ 				struct timezone *_tz)
+@@ -48,17 +46,6 @@ static __always_inline long gettimeofday_fallback(
+ 	return error ? -ret : ret;
+ }
  
- 	if (mutex_lock_interruptible(&tomoyo_policy_lock))
- 		return -ENOMEM;
--	list_for_each_entry_rcu(entry, list, list) {
-+	list_for_each_entry_rcu(entry, list, list,
-+				srcu_read_lock_held(&tomoyo_ss)) {
- 		if (entry->is_deleted == TOMOYO_GC_IN_PROGRESS)
- 			continue;
- 		if (!check_duplicate(entry, new_entry))
-@@ -119,7 +120,8 @@ int tomoyo_update_domain(struct tomoyo_acl_info *new_entry, const int size,
- 	}
- 	if (mutex_lock_interruptible(&tomoyo_policy_lock))
- 		goto out;
--	list_for_each_entry_rcu(entry, list, list) {
-+	list_for_each_entry_rcu(entry, list, list,
-+				srcu_read_lock_held(&tomoyo_ss)) {
- 		if (entry->is_deleted == TOMOYO_GC_IN_PROGRESS)
- 			continue;
- 		if (!tomoyo_same_acl_head(entry, new_entry) ||
-@@ -166,7 +168,8 @@ void tomoyo_check_acl(struct tomoyo_request_info *r,
- 	u16 i = 0;
+-#else
+-
+-static __always_inline long gettimeofday_fallback(
+-				struct __kernel_old_timeval *_tv,
+-				struct timezone *_tz)
+-{
+-	return -1;
+-}
+-
+-#endif
+-
+ static __always_inline long clock_gettime_fallback(
+ 					clockid_t _clkid,
+ 					struct __kernel_timespec *_ts)
+diff --git a/arch/mips/vdso/vgettimeofday.c b/arch/mips/vdso/vgettimeofday.c
+index 6ebdc37c89fc..6b83b6376a4b 100644
+--- a/arch/mips/vdso/vgettimeofday.c
++++ b/arch/mips/vdso/vgettimeofday.c
+@@ -17,12 +17,22 @@ int __vdso_clock_gettime(clockid_t clock,
+ 	return __cvdso_clock_gettime32(clock, ts);
+ }
  
- retry:
--	list_for_each_entry_rcu(ptr, list, list) {
-+	list_for_each_entry_rcu(ptr, list, list,
-+				srcu_read_lock_held(&tomoyo_ss)) {
- 		if (ptr->is_deleted || ptr->type != r->param_type)
- 			continue;
- 		if (!check_entry(r, ptr))
-@@ -298,7 +301,8 @@ static inline bool tomoyo_scan_transition
++#ifdef CONFIG_MIPS_CLOCK_VSYSCALL
++
++/*
++ * This is behind the ifdef so that we don't provide the symbol when there's no
++ * possibility of there being a usable clocksource, because there's nothing we
++ * can do without it. When libc fails the symbol lookup it should fall back on
++ * the standard syscall path.
++ */
+ int __vdso_gettimeofday(struct __kernel_old_timeval *tv,
+ 			struct timezone *tz)
  {
- 	const struct tomoyo_transition_control *ptr;
+ 	return __cvdso_gettimeofday(tv, tz);
+ }
  
--	list_for_each_entry_rcu(ptr, list, head.list) {
-+	list_for_each_entry_rcu(ptr, list, head.list,
-+				srcu_read_lock_held(&tomoyo_ss)) {
- 		if (ptr->head.is_deleted || ptr->type != type)
- 			continue;
- 		if (ptr->domainname) {
-@@ -735,7 +739,8 @@ retry:
- 
- 		/* Check 'aggregator' directive. */
- 		candidate = &exename;
--		list_for_each_entry_rcu(ptr, list, head.list) {
-+		list_for_each_entry_rcu(ptr, list, head.list,
-+					srcu_read_lock_held(&tomoyo_ss)) {
- 			if (ptr->head.is_deleted ||
- 			    !tomoyo_path_matches_pattern(&exename,
- 							 ptr->original_name))
-diff --git a/security/tomoyo/group.c b/security/tomoyo/group.c
-index a37c7dc66e44..1cecdd797597 100644
---- a/security/tomoyo/group.c
-+++ b/security/tomoyo/group.c
-@@ -133,7 +133,8 @@ tomoyo_path_matches_group(const struct tomoyo_path_info *pathname,
++#endif /* CONFIG_MIPS_CLOCK_VSYSCALL */
++
+ int __vdso_clock_getres(clockid_t clock_id,
+ 			struct old_timespec32 *res)
  {
- 	struct tomoyo_path_group *member;
+@@ -43,12 +53,22 @@ int __vdso_clock_gettime(clockid_t clock,
+ 	return __cvdso_clock_gettime(clock, ts);
+ }
  
--	list_for_each_entry_rcu(member, &group->member_list, head.list) {
-+	list_for_each_entry_rcu(member, &group->member_list, head.list,
-+				srcu_read_lock_held(&tomoyo_ss)) {
- 		if (member->head.is_deleted)
- 			continue;
- 		if (!tomoyo_path_matches_pattern(pathname, member->member_name))
-@@ -161,7 +162,8 @@ bool tomoyo_number_matches_group(const unsigned long min,
- 	struct tomoyo_number_group *member;
- 	bool matched = false;
++#ifdef CONFIG_MIPS_CLOCK_VSYSCALL
++
++/*
++ * This is behind the ifdef so that we don't provide the symbol when there's no
++ * possibility of there being a usable clocksource, because there's nothing we
++ * can do without it. When libc fails the symbol lookup it should fall back on
++ * the standard syscall path.
++ */
+ int __vdso_gettimeofday(struct __kernel_old_timeval *tv,
+ 			struct timezone *tz)
+ {
+ 	return __cvdso_gettimeofday(tv, tz);
+ }
  
--	list_for_each_entry_rcu(member, &group->member_list, head.list) {
-+	list_for_each_entry_rcu(member, &group->member_list, head.list,
-+				srcu_read_lock_held(&tomoyo_ss)) {
- 		if (member->head.is_deleted)
- 			continue;
- 		if (min > member->number.values[1] ||
-@@ -191,7 +193,8 @@ bool tomoyo_address_matches_group(const bool is_ipv6, const __be32 *address,
- 	bool matched = false;
- 	const u8 size = is_ipv6 ? 16 : 4;
- 
--	list_for_each_entry_rcu(member, &group->member_list, head.list) {
-+	list_for_each_entry_rcu(member, &group->member_list, head.list,
-+				srcu_read_lock_held(&tomoyo_ss)) {
- 		if (member->head.is_deleted)
- 			continue;
- 		if (member->address.is_ipv6 != is_ipv6)
-diff --git a/security/tomoyo/util.c b/security/tomoyo/util.c
-index 52752e1a84ed..eba0b3395851 100644
---- a/security/tomoyo/util.c
-+++ b/security/tomoyo/util.c
-@@ -594,7 +594,8 @@ struct tomoyo_domain_info *tomoyo_find_domain(const char *domainname)
- 
- 	name.name = domainname;
- 	tomoyo_fill_path_info(&name);
--	list_for_each_entry_rcu(domain, &tomoyo_domain_list, list) {
-+	list_for_each_entry_rcu(domain, &tomoyo_domain_list, list,
-+				srcu_read_lock_held(&tomoyo_ss)) {
- 		if (!domain->is_deleted &&
- 		    !tomoyo_pathcmp(&name, domain->domainname))
- 			return domain;
-@@ -1028,7 +1029,8 @@ bool tomoyo_domain_quota_is_ok(struct tomoyo_request_info *r)
- 		return false;
- 	if (!domain)
- 		return true;
--	list_for_each_entry_rcu(ptr, &domain->acl_info_list, list) {
-+	list_for_each_entry_rcu(ptr, &domain->acl_info_list, list,
-+				srcu_read_lock_held(&tomoyo_ss)) {
- 		u16 perm;
- 		u8 i;
- 
++#endif /* CONFIG_MIPS_CLOCK_VSYSCALL */
++
+ int __vdso_clock_getres(clockid_t clock_id,
+ 			struct __kernel_timespec *res)
+ {
 -- 
 2.20.1
 
