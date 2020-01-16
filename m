@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E931C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECAD0C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:56:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E089D24680
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:55:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF63224656
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:56:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193760;
-	bh=LHmIffoarcO4UGzeOXpDU+X/XkVbG5AvRE/bVGXREaI=;
+	s=default; t=1579193762;
+	bh=GvVhxyid/xTcOoRUgor5PfjdDI/SM2qk5G0sLRGQlQE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=unbeZ/v8TBbsPo7223dfTVSSOwYr/v9vTb4/A1B7XzM94smE4e8ZwfoEC5snhF1LS
-	 cmupy1tC7+Eg3aGPc0ad0qyB48VIqP83aZqGleALp+HxQhGRBeSRkbDWnUVl+yRR1X
-	 /9upS2Rc4Se5KZfzuoXk92KDqXL0+0P5cYrTh02E=
+	b=OU0fpozHXCMlWbCXHXY04g1vJBjp1MpCaDOLQ9G0yeXvPIpwgPAfsea0WAsE6mTNa
+	 N9ENlbS0iDOaYirsF/mq4MekO/R/+8AV6RASeTlPJdmdodK5kCYv/vVB1phZLqZaxM
+	 VYyqAFe/wfG5SHC8RcCzufAeUZ96uK5wBh0Skg9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733137AbgAPQz7 (ORCPT
+        id S1731117AbgAPQ4B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:55:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41224 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:56:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726896AbgAPQzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:55:40 -0500
+        id S1733095AbgAPQzw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:55:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D4DE214AF;
-        Thu, 16 Jan 2020 16:55:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3041322525;
+        Thu, 16 Jan 2020 16:55:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193739;
-        bh=LHmIffoarcO4UGzeOXpDU+X/XkVbG5AvRE/bVGXREaI=;
+        s=default; t=1579193751;
+        bh=GvVhxyid/xTcOoRUgor5PfjdDI/SM2qk5G0sLRGQlQE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vk1VFZd/wreID4VxEmxWG7v1NubeBw4+DkDRJaqeroHBy4rtHtkJcAELN8HjDN+Hn
-         VcJohB08AVoll4Kg4AURlij3F36jJPxwH4cZxlyZL6rdZvutiQOCyq9DZ9PbuvAJcO
-         M7ZD2yCFe6l+MbJcAc1lbl/FffE/dZELbRu1Lpoo=
+        b=vL+IIm1syc9uBVwLwaoYA94SjNFXutGbGP+AsnFLmuyu4XMI4mI+Ea+qrzxW+fN6+
+         Yrrs3C6QDOiWElu1dZ1LBKmd8qeZxKqzyxLUfCj+aOckDzAS6VF6yLHQth1rPkhNsN
+         9OjXApHYBfduX0uM3meh8bVjVqKzt9zs1bwS5DUY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Spencer E. Olson" <olsonse@umich.edu>,
-        Ian Abbott <abbotti@mev.co.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 4.19 031/671] staging: comedi: ni_mio_common: protect register write overflow
-Date:   Thu, 16 Jan 2020 11:44:22 -0500
-Message-Id: <20200116165502.8838-31-sashal@kernel.org>
+Cc:     Masahisa Kojima <masahisa.kojima@linaro.org>,
+        Yoshitoyo Osaki <osaki.yoshitoyo@socionext.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 040/671] net: socionext: Add dummy PHY register read in phy_write()
+Date:   Thu, 16 Jan 2020 11:44:31 -0500
+Message-Id: <20200116165502.8838-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -60,88 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Spencer E. Olson" <olsonse@umich.edu>
+From: Masahisa Kojima <masahisa.kojima@linaro.org>
 
-[ Upstream commit 1cbca5852d6c16e85a21487a15d211195aacd4a1 ]
+[ Upstream commit a3241a91de6429051a211b5ce04d6946157caec7 ]
 
-Fixes two problems introduced as early as
-commit 03aef4b6dc12  ("Staging: comedi: add ni_mio_common code"):
-(1) Ensures that the last four bits of NISTC_RTSI_TRIGB_OUT_REG register is
-    not unduly overwritten on e-series devices.  On e-series devices, the
-    first three of the last four bits are reserved.  The last bit defines
-    the output selection of the RGOUT0 pin, otherwise known as
-    RTSI_Sub_Selection.  For m-series devices, these last four bits are
-    indeed used as the output selection of the RTSI7 pin (and the
-    RTSI_Sub_Selection bit for the RGOUT0 pin is moved to the
-    RTSI_Trig_Direction register.
-(2) Allows all 4 RTSI_BRD lines to be treated as valid sources for RTSI
-    lines.
+There is a compatibility issue between RTL8211E implemented
+in Developerbox and netsec ethernet controller IP.
 
-This patch also cleans up the ni_get_rtsi_routing command for readability.
+Our MDIO controller stops MDC clock right after the write
+access, but RTL8211E expects MDC clock must be kept toggling
+for several clock cycle with MDIO high before entering
+the IDLE state. Without keeping clock after write access,
+write access is not correctly handled and register is not
+updated.
 
-Fixes: 03aef4b6dc12  ("Staging: comedi: add ni_mio_common code")
-Signed-off-by: Spencer E. Olson <olsonse@umich.edu>
-Reviewed-by: Ian Abbott <abbotti@mev.co.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To meet this requirement, netsec driver needs to issue dummy
+read(e.g. read PHYID1(offset 0x2) register) right after write
+access, to keep MDC clock.
+
+We think this compatibility issue is a problem specific to
+our MDIO controller and RTL8211E.
+
+Fixes: 533dd11a12f6 ("net: socionext: Add Synquacer NetSec driver")
+Signed-off-by: Masahisa Kojima <masahisa.kojima@linaro.org>
+Signed-off-by: Yoshitoyo Osaki <osaki.yoshitoyo@socionext.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../staging/comedi/drivers/ni_mio_common.c    | 24 +++++++++++++------
- 1 file changed, 17 insertions(+), 7 deletions(-)
+ drivers/net/ethernet/socionext/netsec.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/comedi/drivers/ni_mio_common.c b/drivers/staging/comedi/drivers/ni_mio_common.c
-index d799b1b55de3..747518c29542 100644
---- a/drivers/staging/comedi/drivers/ni_mio_common.c
-+++ b/drivers/staging/comedi/drivers/ni_mio_common.c
-@@ -4984,7 +4984,10 @@ static int ni_valid_rtsi_output_source(struct comedi_device *dev,
- 	case NI_RTSI_OUTPUT_G_SRC0:
- 	case NI_RTSI_OUTPUT_G_GATE0:
- 	case NI_RTSI_OUTPUT_RGOUT0:
--	case NI_RTSI_OUTPUT_RTSI_BRD_0:
-+	case NI_RTSI_OUTPUT_RTSI_BRD(0):
-+	case NI_RTSI_OUTPUT_RTSI_BRD(1):
-+	case NI_RTSI_OUTPUT_RTSI_BRD(2):
-+	case NI_RTSI_OUTPUT_RTSI_BRD(3):
- 		return 1;
- 	case NI_RTSI_OUTPUT_RTSI_OSC:
- 		return (devpriv->is_m_series) ? 1 : 0;
-@@ -5005,11 +5008,18 @@ static int ni_set_rtsi_routing(struct comedi_device *dev,
- 		devpriv->rtsi_trig_a_output_reg |= NISTC_RTSI_TRIG(chan, src);
- 		ni_stc_writew(dev, devpriv->rtsi_trig_a_output_reg,
- 			      NISTC_RTSI_TRIGA_OUT_REG);
--	} else if (chan < 8) {
-+	} else if (chan < NISTC_RTSI_TRIG_NUM_CHAN(devpriv->is_m_series)) {
- 		devpriv->rtsi_trig_b_output_reg &= ~NISTC_RTSI_TRIG_MASK(chan);
- 		devpriv->rtsi_trig_b_output_reg |= NISTC_RTSI_TRIG(chan, src);
- 		ni_stc_writew(dev, devpriv->rtsi_trig_b_output_reg,
- 			      NISTC_RTSI_TRIGB_OUT_REG);
-+	} else if (chan != NISTC_RTSI_TRIG_OLD_CLK_CHAN) {
-+		/* probably should never reach this, since the
-+		 * ni_valid_rtsi_output_source above errors out if chan is too
-+		 * high
-+		 */
-+		dev_err(dev->class_dev, "%s: unknown rtsi channel\n", __func__);
-+		return -EINVAL;
- 	}
- 	return 2;
- }
-@@ -5025,12 +5035,12 @@ static unsigned int ni_get_rtsi_routing(struct comedi_device *dev,
- 	} else if (chan < NISTC_RTSI_TRIG_NUM_CHAN(devpriv->is_m_series)) {
- 		return NISTC_RTSI_TRIG_TO_SRC(chan,
- 					      devpriv->rtsi_trig_b_output_reg);
--	} else {
--		if (chan == NISTC_RTSI_TRIG_OLD_CLK_CHAN)
--			return NI_RTSI_OUTPUT_RTSI_OSC;
--		dev_err(dev->class_dev, "bug! should never get here?\n");
--		return 0;
-+	} else if (chan == NISTC_RTSI_TRIG_OLD_CLK_CHAN) {
-+		return NI_RTSI_OUTPUT_RTSI_OSC;
- 	}
-+
-+	dev_err(dev->class_dev, "%s: unknown rtsi channel\n", __func__);
-+	return -EINVAL;
+diff --git a/drivers/net/ethernet/socionext/netsec.c b/drivers/net/ethernet/socionext/netsec.c
+index 28d582c18afb..d9d0d03e4ce7 100644
+--- a/drivers/net/ethernet/socionext/netsec.c
++++ b/drivers/net/ethernet/socionext/netsec.c
+@@ -432,9 +432,12 @@ static int netsec_mac_update_to_phy_state(struct netsec_priv *priv)
+ 	return 0;
  }
  
- static int ni_rtsi_insn_config(struct comedi_device *dev,
++static int netsec_phy_read(struct mii_bus *bus, int phy_addr, int reg_addr);
++
+ static int netsec_phy_write(struct mii_bus *bus,
+ 			    int phy_addr, int reg, u16 val)
+ {
++	int status;
+ 	struct netsec_priv *priv = bus->priv;
+ 
+ 	if (netsec_mac_write(priv, GMAC_REG_GDR, val))
+@@ -447,8 +450,19 @@ static int netsec_phy_write(struct mii_bus *bus,
+ 			      GMAC_REG_SHIFT_CR_GAR)))
+ 		return -ETIMEDOUT;
+ 
+-	return netsec_mac_wait_while_busy(priv, GMAC_REG_GAR,
+-					  NETSEC_GMAC_GAR_REG_GB);
++	status = netsec_mac_wait_while_busy(priv, GMAC_REG_GAR,
++					    NETSEC_GMAC_GAR_REG_GB);
++
++	/* Developerbox implements RTL8211E PHY and there is
++	 * a compatibility problem with F_GMAC4.
++	 * RTL8211E expects MDC clock must be kept toggling for several
++	 * clock cycle with MDIO high before entering the IDLE state.
++	 * To meet this requirement, netsec driver needs to issue dummy
++	 * read(e.g. read PHYID1(offset 0x2) register) right after write.
++	 */
++	netsec_phy_read(bus, phy_addr, MII_PHYSID1);
++
++	return status;
+ }
+ 
+ static int netsec_phy_read(struct mii_bus *bus, int phy_addr, int reg_addr)
 -- 
 2.20.1
 
