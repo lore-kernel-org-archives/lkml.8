@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A00C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB247C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 724FB21582
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:53:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3D35214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:53:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193598;
-	bh=Tnd+SAke6nIVxhIP5axtAjn7GdI/o/v7fMl1nJaRVNs=;
+	s=default; t=1579193606;
+	bh=drBKSQal6Kqb4KQB0xgWPDgk84pgJ9f9Sw1WHZ+o6NY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lTpdCqq6Idl7m4q92uhlGOSi63Z7beEcy1Bt7LWcEu1Vro0G8YZ6RwRYg41FoYDa5
-	 UGre64OTLj6Aeht2S3218NtYxLXnUQW6CqKt+1v8VaMBcSyVwoud7RXVy4mNsVZ627
-	 lVnceyAEkrFqMJVNeQZkqxhAwMf7uvMFoqzqpNRo=
+	b=L2tEHjpTRN4zqBW7Vi01aQ3DT2bXxwnRuqsz+xAMevQrrvzkhYE/ctIvO3azZ0ZAS
+	 I9ySRWBnLGpENYqAp6TX/22wm7lt7zuIcQi2aEoBO9HPrmQmM7Z2zs2zISu5UjZERM
+	 51+JURHKygH0VUd1k4Je4YWOKvyr+3WkKt8NUwps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729860AbgAPQxR (ORCPT
+        id S1730914AbgAPQx0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:53:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36574 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:53:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730639AbgAPQxE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:53:04 -0500
+        id S1730724AbgAPQxR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:53:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 332462073A;
-        Thu, 16 Jan 2020 16:53:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69D8324679;
+        Thu, 16 Jan 2020 16:53:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193584;
-        bh=Tnd+SAke6nIVxhIP5axtAjn7GdI/o/v7fMl1nJaRVNs=;
+        s=default; t=1579193597;
+        bh=drBKSQal6Kqb4KQB0xgWPDgk84pgJ9f9Sw1WHZ+o6NY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mgcd8RxBJumX0/yNtan2KKToa+Lrfl/tOOjQYGWHifF89aakOk49IPTxeFH26ywZw
-         02jZjsYiA/gFwk1/DqCmPOU5oq7iC0fzlmzgUb+Z1jScL1p8DYqRne8BxfwW5jUFrz
-         I0q9tWpXx4KD4QoRxzhZzv3311/GStToFFHveLCE=
+        b=RNOfFfRdK0XtR/5z+Nhr6f42+JRa2Yy6dkZzrJQvJBNaQKXPmmXZ+VaLSkkmtY4J2
+         S0jim98y6SF2R1jxae4QN5/8vs11uPAfKgv6BoPZBu1I+fp2kE8u/I3B1e9Wb9mN0v
+         nlWpl8dZaALevsEX/xaRGA8MpB+IrWwHOd64r/0M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jonas Karlman <jonas@kwiboo.se>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 5.4 125/205] media: hantro: Set H264 FIELDPIC_FLAG_E flag correctly
-Date:   Thu, 16 Jan 2020 11:41:40 -0500
-Message-Id: <20200116164300.6705-125-sashal@kernel.org>
+Cc:     Xiang Chen <chenxiang66@hisilicon.com>,
+        John Garry <john.garry@huawei.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 136/205] scsi: hisi_sas: Return directly if init hardware failed
+Date:   Thu, 16 Jan 2020 11:41:51 -0500
+Message-Id: <20200116164300.6705-136-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -62,39 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonas Karlman <jonas@kwiboo.se>
+From: Xiang Chen <chenxiang66@hisilicon.com>
 
-[ Upstream commit a2cbf80a842add9663522bf898cf13cb2ac4e423 ]
+[ Upstream commit 547fde8b5a1923050f388caae4f76613b5a620e0 ]
 
-The FIELDPIC_FLAG_E bit should be set when field_pic_flag exists in stream,
-it is currently set based on field_pic_flag of current frame.
-The PIC_FIELDMODE_E bit is correctly set based on the field_pic_flag.
+Need to return directly if init hardware failed.
 
-Fix this by setting the FIELDPIC_FLAG_E bit when frame_mbs_only is not set.
-
-Fixes: dea0a82f3d22 ("media: hantro: Add support for H264 decoding on G1")
-Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Fixes: 73a4925d154c ("scsi: hisi_sas: Update all the registers after suspend and resume")
+Link: https://lore.kernel.org/r/1573551059-107873-3-git-send-email-john.garry@huawei.com
+Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/hantro/hantro_g1_h264_dec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/staging/media/hantro/hantro_g1_h264_dec.c b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
-index 636bf972adcf..5f29b7a836db 100644
---- a/drivers/staging/media/hantro/hantro_g1_h264_dec.c
-+++ b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
-@@ -63,7 +63,7 @@ static void set_params(struct hantro_ctx *ctx)
- 	/* always use the matrix sent from userspace */
- 	reg |= G1_REG_DEC_CTRL2_TYPE1_QUANT_E;
- 
--	if (slices[0].flags &  V4L2_H264_SLICE_FLAG_FIELD_PIC)
-+	if (!(sps->flags & V4L2_H264_SPS_FLAG_FRAME_MBS_ONLY))
- 		reg |= G1_REG_DEC_CTRL2_FIELDPIC_FLAG_E;
- 	vdpu_write_relaxed(vpu, reg, G1_REG_DEC_CTRL2);
- 
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+index c4f76d7c29db..723f51c822af 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+@@ -3423,6 +3423,7 @@ static int hisi_sas_v3_resume(struct pci_dev *pdev)
+ 	if (rc) {
+ 		scsi_remove_host(shost);
+ 		pci_disable_device(pdev);
++		return rc;
+ 	}
+ 	hisi_hba->hw->phys_init(hisi_hba);
+ 	sas_resume_ha(sha);
 -- 
 2.20.1
 
