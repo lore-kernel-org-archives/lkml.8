@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81843C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC896C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51F2E20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD77820663
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218365;
-	bh=+u79EGEWU7tG3I/iN79MCTPpFJk0xtRQEd8Du1GoO2M=;
+	s=default; t=1579218370;
+	bh=wHSHb/MDBqahkrdh6IvxEuw+l7mYeRaaQEPep9xZhdw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ukLfpGpw0ohje98u1B/LSYIFNEY5qH3SoMb6aqXHWWZ8iskHvCcfUqxJHBK/4FdDf
-	 I0iqXqnAO0imwTD9+Ui2yIJjdzl27J4tTgx5YnLAuxWXevjMJI+5bS89sWNeZzZTl+
-	 RU2KOt2tVCriRG9GU9BZx/3CYsp7vudRL1GFDTJ0=
+	b=LcwXspbCS3+K126aTZYGA5xdv1ItjpbGWmCy4pdmOUL0T1vDeO05s5y3Lx8Y6B0Gr
+	 34Sla3Kusr4dut4QdZxNPHJCd7pV0mtqViHzCKvPt0WjuweprGJSrohlz7doP5Yprl
+	 C6s9ZApyK+bnmMWPRwPPJ1XoeHfcnQW174YUOcr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391953AbgAPXqD (ORCPT
+        id S1730106AbgAPXqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:46:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50316 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:46:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389145AbgAPXW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:22:27 -0500
+        id S2387782AbgAPXWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:22:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E22B2072E;
-        Thu, 16 Jan 2020 23:22:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5702C2073A;
+        Thu, 16 Jan 2020 23:22:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216947;
-        bh=+u79EGEWU7tG3I/iN79MCTPpFJk0xtRQEd8Du1GoO2M=;
+        s=default; t=1579216939;
+        bh=wHSHb/MDBqahkrdh6IvxEuw+l7mYeRaaQEPep9xZhdw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YN0DkP0ddflbcXo9rP5NiPYIyGJSQbNBx5bdre+4Vm9Jkg7+iS/X1If/FamD+GCX/
-         660HVghCAjtUvwXLt0YvG/nIC4Lu5oM7ALYeEk91c89JddQT7liTYgTmTcWbBunMar
-         84DntYInnDVFxZ55TWVVH4kKqM6gNvSyrdh1iBOI=
+        b=Z9cbGZw+LM7M+oMuBbbd68Z+b5Odof7ujVoOPkEADDLSOTI83bVryXgiEzoYWBUpQ
+         sBQDea9Poihj5l8Inxv1lgJJpXX7SEZallpNWsaSM57NKDJklo6fUgO44Paj6Ojitn
+         /hlkfUDRnOV6a9rHq6GRWAqroorTJ25ue+wtUjuY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 5.4 069/203] xprtrdma: Connection becomes unstable after a reconnect
-Date:   Fri, 17 Jan 2020 00:16:26 +0100
-Message-Id: <20200116231750.164006120@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 082/203] afs: Fix use-after-loss-of-ref
+Date:   Fri, 17 Jan 2020 00:16:39 +0100
+Message-Id: <20200116231752.179454016@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -59,89 +60,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: David Howells <dhowells@redhat.com>
 
-commit a31b2f939219dd9bffdf01a45bd91f209f8cc369 upstream.
+commit 40a708bd622b78582ae3d280de29b09b50bd04c0 upstream.
 
-This is because xprt_request_get_cong() is allowing more than one
-RPC Call to be transmitted before the first Receive on the new
-connection. The first Receive fills the Receive Queue based on the
-server's credit grant. Before that Receive, there is only a single
-Receive WR posted because the client doesn't know the server's
-credit grant.
+afs_lookup() has a tracepoint to indicate the outcome of
+d_splice_alias(), passing it the inode to retrieve the fid from.
+However, the function gave up its ref on that inode when it called
+d_splice_alias(), which may have failed and dropped the inode.
 
-Solution is to clear rq_cong on all outstanding rpc_rqsts when the
-the cwnd is reset. This is because an RPC/RDMA credit is good for
-one connection instance only.
+Fix this by caching the fid.
 
-Fixes: 75891f502f5f ("SUNRPC: Support for congestion control ... ")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Fixes: 80548b03991f ("afs: Add more tracepoints")
+Reported-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/sunrpc/xprtrdma/transport.c |    3 +++
- net/sunrpc/xprtrdma/verbs.c     |   22 ++++++++++++++++++++++
- 2 files changed, 25 insertions(+)
+ fs/afs/dir.c               |   12 +++++++-----
+ include/trace/events/afs.h |   12 +++---------
+ 2 files changed, 10 insertions(+), 14 deletions(-)
 
---- a/net/sunrpc/xprtrdma/transport.c
-+++ b/net/sunrpc/xprtrdma/transport.c
-@@ -428,8 +428,11 @@ void xprt_rdma_close(struct rpc_xprt *xp
- 	/* Prepare @xprt for the next connection by reinitializing
- 	 * its credit grant to one (see RFC 8166, Section 3.3.3).
- 	 */
-+	spin_lock(&xprt->transport_lock);
- 	r_xprt->rx_buf.rb_credits = 1;
-+	xprt->cong = 0;
- 	xprt->cwnd = RPC_CWNDSHIFT;
-+	spin_unlock(&xprt->transport_lock);
- 
- out:
- 	xprt->reestablish_timeout = 0;
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -75,6 +75,7 @@
-  * internal functions
-  */
- static void rpcrdma_sendctx_put_locked(struct rpcrdma_sendctx *sc);
-+static void rpcrdma_reqs_reset(struct rpcrdma_xprt *r_xprt);
- static void rpcrdma_reps_destroy(struct rpcrdma_buffer *buf);
- static void rpcrdma_mrs_create(struct rpcrdma_xprt *r_xprt);
- static void rpcrdma_mrs_destroy(struct rpcrdma_buffer *buf);
-@@ -780,6 +781,7 @@ rpcrdma_ep_disconnect(struct rpcrdma_ep
- 	trace_xprtrdma_disconnect(r_xprt, rc);
- 
- 	rpcrdma_xprt_drain(r_xprt);
-+	rpcrdma_reqs_reset(r_xprt);
- }
- 
- /* Fixed-size circular FIFO queue. This implementation is wait-free and
-@@ -1042,6 +1044,26 @@ out1:
- 	return NULL;
- }
- 
-+/**
-+ * rpcrdma_reqs_reset - Reset all reqs owned by a transport
-+ * @r_xprt: controlling transport instance
-+ *
-+ * ASSUMPTION: the rb_allreqs list is stable for the duration,
-+ * and thus can be walked without holding rb_lock. Eg. the
-+ * caller is holding the transport send lock to exclude
-+ * device removal or disconnection.
-+ */
-+static void rpcrdma_reqs_reset(struct rpcrdma_xprt *r_xprt)
-+{
-+	struct rpcrdma_buffer *buf = &r_xprt->rx_buf;
-+	struct rpcrdma_req *req;
-+
-+	list_for_each_entry(req, &buf->rb_allreqs, rl_all) {
-+		/* Credits are valid only for one connection */
-+		req->rl_slot.rq_cong = 0;
-+	}
-+}
-+
- static struct rpcrdma_rep *rpcrdma_rep_create(struct rpcrdma_xprt *r_xprt,
- 					      bool temp)
+--- a/fs/afs/dir.c
++++ b/fs/afs/dir.c
+@@ -908,6 +908,7 @@ static struct dentry *afs_lookup(struct
+ 				 unsigned int flags)
  {
+ 	struct afs_vnode *dvnode = AFS_FS_I(dir);
++	struct afs_fid fid = {};
+ 	struct inode *inode;
+ 	struct dentry *d;
+ 	struct key *key;
+@@ -957,15 +958,16 @@ static struct dentry *afs_lookup(struct
+ 		dentry->d_fsdata =
+ 			(void *)(unsigned long)dvnode->status.data_version;
+ 	}
++
++	if (!IS_ERR_OR_NULL(inode))
++		fid = AFS_FS_I(inode)->fid;
++
+ 	d = d_splice_alias(inode, dentry);
+ 	if (!IS_ERR_OR_NULL(d)) {
+ 		d->d_fsdata = dentry->d_fsdata;
+-		trace_afs_lookup(dvnode, &d->d_name,
+-				 inode ? AFS_FS_I(inode) : NULL);
++		trace_afs_lookup(dvnode, &d->d_name, &fid);
+ 	} else {
+-		trace_afs_lookup(dvnode, &dentry->d_name,
+-				 IS_ERR_OR_NULL(inode) ? NULL
+-				 : AFS_FS_I(inode));
++		trace_afs_lookup(dvnode, &dentry->d_name, &fid);
+ 	}
+ 	return d;
+ }
+--- a/include/trace/events/afs.h
++++ b/include/trace/events/afs.h
+@@ -915,9 +915,9 @@ TRACE_EVENT(afs_call_state,
+ 
+ TRACE_EVENT(afs_lookup,
+ 	    TP_PROTO(struct afs_vnode *dvnode, const struct qstr *name,
+-		     struct afs_vnode *vnode),
++		     struct afs_fid *fid),
+ 
+-	    TP_ARGS(dvnode, name, vnode),
++	    TP_ARGS(dvnode, name, fid),
+ 
+ 	    TP_STRUCT__entry(
+ 		    __field_struct(struct afs_fid,	dfid		)
+@@ -928,13 +928,7 @@ TRACE_EVENT(afs_lookup,
+ 	    TP_fast_assign(
+ 		    int __len = min_t(int, name->len, 23);
+ 		    __entry->dfid = dvnode->fid;
+-		    if (vnode) {
+-			    __entry->fid = vnode->fid;
+-		    } else {
+-			    __entry->fid.vid = 0;
+-			    __entry->fid.vnode = 0;
+-			    __entry->fid.unique = 0;
+-		    }
++		    __entry->fid = *fid;
+ 		    memcpy(__entry->name, name->name, __len);
+ 		    __entry->name[__len] = 0;
+ 			   ),
 
 
