@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5E6C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB3CC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0650246B4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:49:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2A012468D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:49:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196981;
-	bh=h18oKnj8xTlOYDI1iH5PKIWAzLyL2+c5srHxbW1Mq/E=;
+	s=default; t=1579196985;
+	bh=SkswhNMWRdcaeSocgMGmhwvlU47KjHFhf6aXYz5t+A8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QrZAW5XSmmOSRlCP2n/G/sJEzBBWJoqpun8bZxfkQ7YJE8+yFQQZXxLq7hEohOtVr
-	 EoXbbtt9//SeYDBgbEQnCURDWN2nC2GSULDlUbuvXh/MyuKusntw2foIJcwiMKl8kj
-	 kTZDWZnZxab8ZEvHK49RAwidkESS6O9lNkecBgdE=
+	b=QfYh8yxbKEmBbGGGxAV47r8B9WH+3vQQhPWyE24Qc9IdjgfXy8EKvuCRrN3TtgkaX
+	 w8u49VHC2YvQdCnsiZfg9FzJnhG86gEB9D5cRBz0XplQvXTkJ72ZK0vjL40nw7UzEa
+	 FdF9lE6rgGAsgTBT7eE4D1t7vRAYgks5kj8pi9Jw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394284AbgAPRtj (ORCPT
+        id S2406670AbgAPRto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:49:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38578 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:49:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394212AbgAPRqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:46:06 -0500
+        id S2394201AbgAPRqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:46:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FDB3246DA;
-        Thu, 16 Jan 2020 17:46:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2453C246D5;
+        Thu, 16 Jan 2020 17:46:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196766;
-        bh=h18oKnj8xTlOYDI1iH5PKIWAzLyL2+c5srHxbW1Mq/E=;
+        s=default; t=1579196763;
+        bh=SkswhNMWRdcaeSocgMGmhwvlU47KjHFhf6aXYz5t+A8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PU7nTW9n81L2WSm1ajeDJGhO8BtvQbOWwOYImx5ed/NI770eRzRDR0yQbQH4O1MMn
-         jxxdRkspg2fM52/nOroeH9KITSj5iM1l6a2jazY2uOFrA1W20cCyKoo18QbEK1qwC8
-         3a5IzA6/zQ86orOgBAR/FTZkeAVGKCgcKKFDhdIs=
+        b=zl3SmxNomkNA+fE2CopOTSy+reOpe0dToSqrHWCzddRZYbcekwLqa+Im9jG2FMezm
+         cLt8AVpJZmf3Q8f6mEkcOUJkwbGg82HkkH42iwCpBXrUc4L7lBxIkhj393vUtwy9qs
+         lxnmxUJickkJ6+yoKxNF/5kxK4QPjDx5tidCgC5k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Filippo Sironi <sironi@amazon.de>, Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.4 139/174] iommu/amd: Wait for completion of IOTLB flush in attach_device
-Date:   Thu, 16 Jan 2020 12:42:16 -0500
-Message-Id: <20200116174251.24326-139-sashal@kernel.org>
+Cc:     Mao Wenan <maowenan@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 137/174] net: sonic: replace dev_kfree_skb in sonic_send_packet
+Date:   Thu, 16 Jan 2020 12:42:14 -0500
+Message-Id: <20200116174251.24326-137-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -59,34 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filippo Sironi <sironi@amazon.de>
+From: Mao Wenan <maowenan@huawei.com>
 
-[ Upstream commit 0b15e02f0cc4fb34a9160de7ba6db3a4013dc1b7 ]
+[ Upstream commit 49f6c90bf6805948b597eabb499e500a47cf24be ]
 
-To make sure the domain tlb flush completes before the
-function returns, explicitly wait for its completion.
+sonic_send_packet will be processed in irq or non-irq
+context, so it would better use dev_kfree_skb_any
+instead of dev_kfree_skb.
 
-Signed-off-by: Filippo Sironi <sironi@amazon.de>
-Fixes: 42a49f965a8d ("amd-iommu: flush domain tlb when attaching a new device")
-[joro: Added commit message and fixes tag]
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: d9fb9f384292 ("*sonic/natsemi/ns83829: Move the National Semi-conductor drivers")
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/natsemi/sonic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 0ad8b7c78a43..66a406e87e11 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -2184,6 +2184,8 @@ static int attach_device(struct device *dev,
- 	 */
- 	domain_flush_tlb_pde(domain);
- 
-+	domain_flush_complete(domain);
-+
- 	return ret;
- }
+diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
+index b5f1f4ea9d4a..667900578249 100644
+--- a/drivers/net/ethernet/natsemi/sonic.c
++++ b/drivers/net/ethernet/natsemi/sonic.c
+@@ -222,7 +222,7 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
+ 	laddr = dma_map_single(lp->device, skb->data, length, DMA_TO_DEVICE);
+ 	if (!laddr) {
+ 		pr_err_ratelimited("%s: failed to map tx DMA buffer.\n", dev->name);
+-		dev_kfree_skb(skb);
++		dev_kfree_skb_any(skb);
+ 		return NETDEV_TX_OK;
+ 	}
  
 -- 
 2.20.1
