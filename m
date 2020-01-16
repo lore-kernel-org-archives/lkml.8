@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 079F3C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7EEC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C624420684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:32:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D638206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:32:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217558;
-	bh=f96ZAgfD7z4kX6S1UyNF8i0p7VlaogHIyeGDEhekY8M=;
+	s=default; t=1579217561;
+	bh=ZtOLED+HzresPEo2yXdyGD4jaScfbyJgvGIZpJddPBo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OS5SPguGlLQip2mpnwrMZw2S7NSsN0L/uKPc0cjPTYpRkTz/a/7lbAguQKHTgZ0fO
-	 M5jVmCpNeMrIJppJofiLC/E3ZWtGOzvXviwTVrS1jFmSV4b2GrTOMtl4DZeBl09UXC
-	 0eIdw7B56EPUcNxG39tozeJRixcZL8tQ1x7VZeXw=
+	b=xkbprxfeiCBnv5g3GlwKUD7dPf6I8g6yNB6Cxssdk5WqzDD/b5u6YqFHjsIxfBc+p
+	 elqYtNa1gX4WUwG2UhxsiVq8tuBk7jSuflCLJTFRtxVcRjaSdBBf8tVgS8cqFyUN2I
+	 vmbzn1TOrE303Q4+iteLj/Buexf+W3YWekKtbNhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403883AbgAPXci (ORCPT
+        id S2391595AbgAPXck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:32:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41928 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:32:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404089AbgAPXc3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:32:29 -0500
+        id S2391571AbgAPXcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:32:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DF5F206D9;
-        Thu, 16 Jan 2020 23:32:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9036D20684;
+        Thu, 16 Jan 2020 23:32:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217548;
-        bh=f96ZAgfD7z4kX6S1UyNF8i0p7VlaogHIyeGDEhekY8M=;
+        s=default; t=1579217551;
+        bh=ZtOLED+HzresPEo2yXdyGD4jaScfbyJgvGIZpJddPBo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q3PuFaSPWFqxsRLyRQyUBk2i4IUbUMvytO1YbNCZ1MfNB7ORb08iOfHlzN4u+K/Jm
-         QCkpdfi6u8occE4LxAOjmbUeFIMKJNTCnlUiHVlQtG04dLrg75iv+Et+hG7y0dFvqp
-         X7JpQOAws3umUVOsbVwYb4L9DML5Lttg0RHNuRXw=
+        b=EPLgUOrwaYmKSaLJPylJg8j09lO9oYdg/Cqt7j9sONZxtHvBjSv6Cxv3iX3Hc2Dd7
+         NQgfe9Z0pQizHE0Hjp11JNyJNP3wfmbBHLFeD6KflRDtgrfJIewO+IgFb5bG5VAfX3
+         AsbRFAcpx0pFZax7SBbWSiww7mhHzrbSsZtL3nEU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 4.14 26/71] gpio: Fix error message on out-of-range GPIO in lookup table
-Date:   Fri, 17 Jan 2020 00:18:24 +0100
-Message-Id: <20200116231713.266491730@linuxfoundation.org>
+        stable@vger.kernel.org, linux-scsi@vger.kernel.org,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 4.14 44/71] scsi: sd: enable compat ioctls for sed-opal
+Date:   Fri, 17 Jan 2020 00:18:42 +0100
+Message-Id: <20200116231715.862762618@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231709.377772748@linuxfoundation.org>
 References: <20200116231709.377772748@linuxfoundation.org>
@@ -60,46 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit d935bd50dd14a7714cbdba9a76435dbb56edb1ae upstream.
+commit 142b2ac82e31c174936c5719fa12ae28f51a55b7 upstream.
 
-When a GPIO offset in a lookup table is out-of-range, the printed error
-message (1) does not include the actual out-of-range value, and (2)
-contains an off-by-one error in the upper bound.
+The sed_ioctl() function is written to be compatible between
+32-bit and 64-bit processes, however compat mode is only
+wired up for nvme, not for sd.
 
-Avoid user confusion by also printing the actual GPIO offset, and
-correcting the upper bound of the range.
-While at it, use "%u" for unsigned int.
+Add the missing call to sed_ioctl() in sd_compat_ioctl().
 
-Sample impact:
-
-    -requested GPIO 0 is out of range [0..32] for chip e6052000.gpio
-    +requested GPIO 0 (45) is out of range [0..31] for chip e6052000.gpio
-
-Fixes: 2a3cf6a3599e9015 ("gpiolib: return -ENOENT if no GPIO mapping exists")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191127095919.4214-1-geert+renesas@glider.be
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: d80210f25ff0 ("sd: add support for TCG OPAL self encrypting disks")
+Cc: linux-scsi@vger.kernel.org
+Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpiolib.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/scsi/sd.c |   14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -3167,8 +3167,9 @@ static struct gpio_desc *gpiod_find(stru
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -1697,20 +1697,30 @@ static void sd_rescan(struct device *dev
+ static int sd_compat_ioctl(struct block_device *bdev, fmode_t mode,
+ 			   unsigned int cmd, unsigned long arg)
+ {
+-	struct scsi_device *sdev = scsi_disk(bdev->bd_disk)->device;
++	struct gendisk *disk = bdev->bd_disk;
++	struct scsi_disk *sdkp = scsi_disk(disk);
++	struct scsi_device *sdev = sdkp->device;
++	void __user *p = compat_ptr(arg);
+ 	int error;
  
- 		if (chip->ngpio <= p->chip_hwnum) {
- 			dev_err(dev,
--				"requested GPIO %d is out of range [0..%d] for chip %s\n",
--				idx, chip->ngpio, chip->label);
-+				"requested GPIO %u (%u) is out of range [0..%u] for chip %s\n",
-+				idx, p->chip_hwnum, chip->ngpio - 1,
-+				chip->label);
- 			return ERR_PTR(-EINVAL);
- 		}
++	error = scsi_verify_blk_ioctl(bdev, cmd);
++	if (error < 0)
++		return error;
++
+ 	error = scsi_ioctl_block_when_processing_errors(sdev, cmd,
+ 			(mode & FMODE_NDELAY) != 0);
+ 	if (error)
+ 		return error;
++
++	if (is_sed_ioctl(cmd))
++		return sed_ioctl(sdkp->opal_dev, cmd, p);
+ 	       
+ 	/* 
+ 	 * Let the static ioctl translation table take care of it.
+ 	 */
+ 	if (!sdev->host->hostt->compat_ioctl)
+ 		return -ENOIOCTLCMD; 
+-	return sdev->host->hostt->compat_ioctl(sdev, cmd, (void __user *)arg);
++	return sdev->host->hostt->compat_ioctl(sdev, cmd, p);
+ }
+ #endif
  
 
 
