@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6BDC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87642C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EB57246DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DC90246B4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:47:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196820;
-	bh=LImxpWH48XUcJ4jqv/KOtICIueN+UYO/dlffxiNMlSE=;
+	s=default; t=1579196823;
+	bh=sgOoolRsRLW4pkiLoqF6nOV5AmgG6FrkopMUr9rx9Co=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k28ERnKo2+xvsi6sTE0KoghxFkgwHMUGXq61yMPD3DBnRt56eqaOr1ZeHMChhfYG+
-	 PiDys0xRiZ6cGEZxrs0qmziMawcA3yX1UZQZjiFaSosp1iNKTkv1FeGma613oJd1l7
-	 l0Y0YRckxbVU8hHDbus9wIGzocKoM1rwQsHpZjio=
+	b=rDFh3pkdwTudNuSSfKqQKjzbvUMoeWKE3w+heMi5XzVRUydTPH0oVVOzTWdRM1/Jn
+	 pjETnBHmac5q1P/M5wTNjc7OWJvlYeVdqJuX3/i/hF0jioXB9o7FL4N6KZHwVkWt4N
+	 uUnJ4lrGs0ZN0HpRPZjVOrmW2a3tbc0e8xuADesA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406851AbgAPRq6 (ORCPT
+        id S2406867AbgAPRrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:46:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40152 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:47:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406837AbgAPRq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:46:56 -0500
+        id S2406849AbgAPRq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:46:58 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63914246EA;
-        Thu, 16 Jan 2020 17:46:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 199C4246B4;
+        Thu, 16 Jan 2020 17:46:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196815;
-        bh=LImxpWH48XUcJ4jqv/KOtICIueN+UYO/dlffxiNMlSE=;
+        s=default; t=1579196818;
+        bh=sgOoolRsRLW4pkiLoqF6nOV5AmgG6FrkopMUr9rx9Co=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bXlMOMwEQ1NwobqIdbxXlraAqXcOVqAPz5nnUGuFC01Cxaj2qA2DhEWkAtyzyauTy
-         YBp4vjjLNU1QqgRAHCn6UO7JvTOee7ANVPm1YxWi8XKdMbqTfqxbTxMOI4Wyq6YE3c
-         kBR64HNl61JvZMWucHGMg9omz51sv2V+pXrJBODY=
+        b=w4VxprzXG/WNk5RZUe3kH+jrFaf8PC3DF/4xhUebXipGKO9a0etkRf7XVmj0FCFr3
+         NcJTJ3/bP03e71RWNYl1O7+0tCgZTHAoNjwlsyaL4uq14tWgPFIALb75SvjQi2MvFJ
+         qilX860Bpzotg6M1pi44nAb1hc+8DdDn9erDbiqw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>, Vinod Koul <vkoul@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 171/174] dmaengine: ti: edma: fix missed failure handling
-Date:   Thu, 16 Jan 2020 12:42:48 -0500
-Message-Id: <20200116174251.24326-171-sashal@kernel.org>
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 173/174] arm64: dts: juno: Fix UART frequency
+Date:   Thu, 16 Jan 2020 12:42:50 -0500
+Message-Id: <20200116174251.24326-173-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -58,39 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Andre Przywara <andre.przywara@arm.com>
 
-[ Upstream commit 340049d453682a9fe8d91fe794dd091730f4bb25 ]
+[ Upstream commit 39a1a8941b27c37f79508426e27a2ec29829d66c ]
 
-When devm_kcalloc fails, it forgets to call edma_free_slot.
-Replace direct return with failure handler to fix it.
+Older versions of the Juno *SoC* TRM [1] recommended that the UART clock
+source should be 7.2738 MHz, whereas the *system* TRM [2] stated a more
+correct value of 7.3728 MHz. Somehow the wrong value managed to end up in
+our DT.
 
-Fixes: 1be5336bc7ba ("dmaengine: edma: New device tree binding")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Link: https://lore.kernel.org/r/20191118073802.28424-1-hslester96@gmail.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Doing a prime factorisation, a modulo divide by 115200 and trying
+to buy a 7.2738 MHz crystal at your favourite electronics dealer suggest
+that the old value was actually a typo. The actual UART clock is driven
+by a PLL, configured via a parameter in some board.txt file in the
+firmware, which reads 7.37 MHz (sic!).
+
+Fix this to correct the baud rate divisor calculation on the Juno board.
+
+[1] http://infocenter.arm.com/help/topic/com.arm.doc.ddi0515b.b/DDI0515B_b_juno_arm_development_platform_soc_trm.pdf
+[2] http://infocenter.arm.com/help/topic/com.arm.doc.100113_0000_07_en/arm_versatile_express_juno_development_platform_(v2m_juno)_technical_reference_manual_100113_0000_07_en.pdf
+
+Fixes: 71f867ec130e ("arm64: Add Juno board device tree.")
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Acked-by: Liviu Dudau <liviu.dudau@arm.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/edma.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/arm/juno-clocks.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/edma.c b/drivers/dma/edma.c
-index e508c8c5f3fd..17521fcf226f 100644
---- a/drivers/dma/edma.c
-+++ b/drivers/dma/edma.c
-@@ -2288,8 +2288,10 @@ static int edma_probe(struct platform_device *pdev)
+diff --git a/arch/arm64/boot/dts/arm/juno-clocks.dtsi b/arch/arm64/boot/dts/arm/juno-clocks.dtsi
+index 25352ed943e6..00bcbf7688c7 100644
+--- a/arch/arm64/boot/dts/arm/juno-clocks.dtsi
++++ b/arch/arm64/boot/dts/arm/juno-clocks.dtsi
+@@ -8,10 +8,10 @@
+  */
  
- 		ecc->tc_list = devm_kcalloc(dev, ecc->num_tc,
- 					    sizeof(*ecc->tc_list), GFP_KERNEL);
--		if (!ecc->tc_list)
--			return -ENOMEM;
-+		if (!ecc->tc_list) {
-+			ret = -ENOMEM;
-+			goto err_reg1;
-+		}
+ 	/* SoC fixed clocks */
+-	soc_uartclk: refclk7273800hz {
++	soc_uartclk: refclk7372800hz {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+-		clock-frequency = <7273800>;
++		clock-frequency = <7372800>;
+ 		clock-output-names = "juno:uartclk";
+ 	};
  
- 		for (i = 0;; i++) {
- 			ret = of_parse_phandle_with_fixed_args(node, "ti,tptcs",
 -- 
 2.20.1
 
