@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFEDCC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:56:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 826D3C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BCC32467C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:56:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5070F24673
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:56:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193770;
-	bh=X79rzYzl0CGVEHjHZO35ngZdsCssfXKCX3ovAMNH6I4=;
+	s=default; t=1579193777;
+	bh=c2hNHnL4TNS07Aetuk3vCqWMT2ZbIifbwtjjzl9FM2c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NiDkrmglXmY7fgivxi2b2rHiDwAsqo6Skz1gTZgBGuqySQhjCoj291iI386pbbOFO
-	 t1/jFxj/OepDdJ9DydSs/zpzVvb2Wcv/96M9l/sJ860F9HwWb0cr42PIqmpj7LP+CA
-	 PjLnyGqy4g/vZq9OT5lbJMOccSD6NFXV5NLOs7/c=
+	b=pj4vKvkI3sUdIstvA5l+TvppK2XNPwYIIAqhVC3xVh/SlDqZSiL/5DgFQUCx3HIcK
+	 EJomHYfTADBKDcq+YcnRLE35zCjBVann/4WAVuLV7xyQiNBb+VU3BKcMbGvyImOof7
+	 9VRh0pl0w+iE4AZcQ0UNz3I9rzTxASJkCfuSiJY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729955AbgAPQ4J (ORCPT
+        id S1729274AbgAPQ4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:56:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41770 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:56:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733125AbgAPQz6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:55:58 -0500
+        id S1733153AbgAPQ4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:56:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE8B621D56;
-        Thu, 16 Jan 2020 16:55:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2B9324656;
+        Thu, 16 Jan 2020 16:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193757;
-        bh=X79rzYzl0CGVEHjHZO35ngZdsCssfXKCX3ovAMNH6I4=;
+        s=default; t=1579193765;
+        bh=c2hNHnL4TNS07Aetuk3vCqWMT2ZbIifbwtjjzl9FM2c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ib2muongwwCbuj72kEMjjnWeZZzr7hTbT7oO8QBIAa3FyXCqsFYOWhU0bvA5ZOsiO
-         +vWaWZhucogwK47kLU4vasT+3pxyZNOIXmMf8u/0Y8SHc1yDGGvB8OPWV9XwUbo2P4
-         CjTKJwdw6zDIVOD15TF0r5sJ2nrJRGXtBxRu7flA=
+        b=1C8lG9D62BdViRON1E6J6XNHGF7VYJwOQ7Do9kbTUu/fSpkY6E2IzaOdgJJ2vGLyn
+         BNllSazXEy77aYWt3SMEXCnvV/5pH9KMotgsepQF+SKYfu6DPJevoGBZ2kgcee3w6W
+         aGYf5JA0qTJRCoI5xz4dFPbA/1XrSXjCm2bzytFo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>,
-        linux-ntb@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 045/671] NTB: ntb_hw_idt: replace IS_ERR_OR_NULL with regular NULL checks
-Date:   Thu, 16 Jan 2020 11:44:36 -0500
-Message-Id: <20200116165502.8838-45-sashal@kernel.org>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 050/671] pinctrl: meson-gxl: remove invalid GPIOX tsin_a pins
+Date:   Thu, 16 Jan 2020 11:44:41 -0500
+Message-Id: <20200116165502.8838-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -59,52 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-[ Upstream commit 1b7619828d0c341612f58683e73f279c37e70bbc ]
+[ Upstream commit d801064cb871806e6843738ecad38993646f53f7 ]
 
-Both devm_kcalloc() and devm_kzalloc() return NULL on error. They
-never return error pointers.
+The GPIOX tsin_a pins wrongly uses the SDCard pinctrl bits, this
+patch completely removes these pins entries until we find out what
+are the correct bits and registers to be used instead.
 
-The use of IS_ERR_OR_NULL is currently applied to the wrong
-context.
-
-Fix this by replacing IS_ERR_OR_NULL with regular NULL checks.
-
-Fixes: bf2a952d31d2 ("NTB: Add IDT 89HPESxNTx PCIe-switches support")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: Jon Mason <jdmason@kudzu.us>
+Fixes: 5a6ae9b80139 ("pinctrl: meson-gxl: add tsin_a pins")
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ntb/hw/idt/ntb_hw_idt.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/pinctrl/meson/pinctrl-meson-gxl.c | 12 ++----------
+ 1 file changed, 2 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/ntb/hw/idt/ntb_hw_idt.c b/drivers/ntb/hw/idt/ntb_hw_idt.c
-index dbe72f116017..a67ef23e81bc 100644
---- a/drivers/ntb/hw/idt/ntb_hw_idt.c
-+++ b/drivers/ntb/hw/idt/ntb_hw_idt.c
-@@ -1105,9 +1105,9 @@ static struct idt_mw_cfg *idt_scan_mws(struct idt_ntb_dev *ndev, int port,
- 	}
+diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxl.c b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
+index 158f618f1695..0c0a5018102b 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson-gxl.c
++++ b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
+@@ -239,13 +239,9 @@ static const unsigned int eth_link_led_pins[]	= { GPIOZ_14 };
+ static const unsigned int eth_act_led_pins[]	= { GPIOZ_15 };
  
- 	/* Allocate memory for memory window descriptors */
--	ret_mws = devm_kcalloc(&ndev->ntb.pdev->dev, *mw_cnt,
--				sizeof(*ret_mws), GFP_KERNEL);
--	if (IS_ERR_OR_NULL(ret_mws))
-+	ret_mws = devm_kcalloc(&ndev->ntb.pdev->dev, *mw_cnt, sizeof(*ret_mws),
-+			       GFP_KERNEL);
-+	if (!ret_mws)
- 		return ERR_PTR(-ENOMEM);
+ static const unsigned int tsin_a_d0_pins[]	= { GPIODV_0 };
+-static const unsigned int tsin_a_d0_x_pins[]	= { GPIOX_10 };
+ static const unsigned int tsin_a_clk_pins[]	= { GPIODV_8 };
+-static const unsigned int tsin_a_clk_x_pins[]	= { GPIOX_11 };
+ static const unsigned int tsin_a_sop_pins[]	= { GPIODV_9 };
+-static const unsigned int tsin_a_sop_x_pins[]	= { GPIOX_8 };
+ static const unsigned int tsin_a_d_valid_pins[] = { GPIODV_10 };
+-static const unsigned int tsin_a_d_valid_x_pins[] = { GPIOX_9 };
+ static const unsigned int tsin_a_fail_pins[]	= { GPIODV_11 };
+ static const unsigned int tsin_a_dp_pins[] = {
+ 	GPIODV_1, GPIODV_2, GPIODV_3, GPIODV_4, GPIODV_5, GPIODV_6, GPIODV_7,
+@@ -432,10 +428,6 @@ static struct meson_pmx_group meson_gxl_periphs_groups[] = {
+ 	GROUP(spi_miso,		5,	2),
+ 	GROUP(spi_ss0,		5,	1),
+ 	GROUP(spi_sclk,		5,	0),
+-	GROUP(tsin_a_sop_x,	6,	3),
+-	GROUP(tsin_a_d_valid_x,	6,	2),
+-	GROUP(tsin_a_d0_x,	6,	1),
+-	GROUP(tsin_a_clk_x,	6,	0),
  
- 	/* Copy the info of detected memory windows */
-@@ -2390,7 +2390,7 @@ static struct idt_ntb_dev *idt_create_dev(struct pci_dev *pdev,
+ 	/* Bank Z */
+ 	GROUP(eth_mdio,		4,	23),
+@@ -698,8 +690,8 @@ static const char * const eth_led_groups[] = {
+ };
  
- 	/* Allocate memory for the IDT PCIe-device descriptor */
- 	ndev = devm_kzalloc(&pdev->dev, sizeof(*ndev), GFP_KERNEL);
--	if (IS_ERR_OR_NULL(ndev)) {
-+	if (!ndev) {
- 		dev_err(&pdev->dev, "Memory allocation failed for descriptor");
- 		return ERR_PTR(-ENOMEM);
- 	}
+ static const char * const tsin_a_groups[] = {
+-	"tsin_a_clk", "tsin_a_clk_x", "tsin_a_sop", "tsin_a_sop_x",
+-	"tsin_a_d_valid", "tsin_a_d_valid_x", "tsin_a_d0", "tsin_a_d0_x",
++	"tsin_a_clk", "tsin_a_sop",
++	"tsin_a_d_valid", "tsin_a_d0",
+ 	"tsin_a_dp", "tsin_a_fail",
+ };
+ 
 -- 
 2.20.1
 
