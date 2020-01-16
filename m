@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D67C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C19C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D5CF2051A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:21:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E41E20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:21:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198902;
-	bh=MVuQihC75yyeoF/lahCObJDjcs4ywXW3oeFo6Zh6GIE=;
+	s=default; t=1579198906;
+	bh=xj46LUX8pWHd9qD70lWYOaExu6TVlptWMRSBikZc2YQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x6okWZwJxZZehSRNgJIb0q2RRwCXFwDUwk62RKDXwZi3XOUTubFR6Btpaoy6OYhK5
-	 N7IGODl2CoB4wMWjHPBegFKAKWHJJT++2S8rdNtNzTsK/etsCLQZEb9gnJMwoIN/Jh
-	 65CLQWqJgboq3qSghsoX4XLv+U1Krz0+3ens0WF8=
+	b=U+Bll1jaTI3/r2c90c2f/8v0/rIdNCQm1u+EeerJz7ZqPmKfSBribUsQwFspDWECk
+	 bvE7AT/0L6K4zgLlIyvgPM0WOacVJBwTetf6x24oaKlX4AqdO9exdJR0URprZ+PXTI
+	 MDa4Lz1nW7UJzCt/qM3ABSHlen8tWfIqh59eEZBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392071AbgAPR1q (ORCPT
+        id S2404253AbgAPSVo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:27:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37608 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:21:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390821AbgAPR1h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:27:37 -0500
+        id S2392509AbgAPR1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:27:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4AEC246DC;
-        Thu, 16 Jan 2020 17:27:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFAE6246E6;
+        Thu, 16 Jan 2020 17:27:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195656;
-        bh=MVuQihC75yyeoF/lahCObJDjcs4ywXW3oeFo6Zh6GIE=;
+        s=default; t=1579195664;
+        bh=xj46LUX8pWHd9qD70lWYOaExu6TVlptWMRSBikZc2YQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2reit09ulDujz+8GyMgmEtoVYMj1UmcJzVBX03UtFapvWVnR4sWzaHgDVmptG3w1R
-         wJ06mD6ndxoswhRhctL108pJl8VN7XFWR0h+IMQWJ+YC3ioRW+Sr3BWJl8FGEjGxn+
-         yWqAkvNIR//7Govug0KXDod1lx2IlDo2sahsXvQY=
+        b=ztPIExW0hqpj2QFTEbSRhzRI0sev9kMXE5wusLOGRboF5LYmoseSi2kDSc8ynlKhn
+         XIeRExPOYlX2eZeEDm9kfNvL1yELa0BV2SqKS8uMm9vBmCrwebXpYEGaouyuDt6949
+         Is/ZRCk7KIAkjcvHOiZRnRh5WJyqUt7kNu0bel98=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 217/371] PCI: PM: Avoid possible suspend-to-idle issue
-Date:   Thu, 16 Jan 2020 12:21:29 -0500
-Message-Id: <20200116172403.18149-160-sashal@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Markus Mayer <mmayer@broadcom.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 223/371] cpufreq: brcmstb-avs-cpufreq: Fix types for voltage/frequency
+Date:   Thu, 16 Jan 2020 12:21:35 -0500
+Message-Id: <20200116172403.18149-166-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -60,87 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit d491f2b75237ef37d8867830ab7fad8d9659e853 ]
+[ Upstream commit 4c5681fcc684c762b09435de3e82ffeee7769d21 ]
 
-If a PCI driver leaves the device handled by it in D0 and calls
-pci_save_state() on the device in its ->suspend() or ->suspend_late()
-callback, it can expect the device to stay in D0 over the whole
-s2idle cycle.  However, that may not be the case if there is a
-spurious wakeup while the system is suspended, because in that case
-pci_pm_suspend_noirq() will run again after pci_pm_resume_noirq()
-which calls pci_restore_state(), via pci_pm_default_resume_early(),
-so state_saved is cleared and the second iteration of
-pci_pm_suspend_noirq() will invoke pci_prepare_to_sleep() which
-may change the power state of the device.
+What we read back from the register is going to be capped at 32-bits,
+and cpufreq_freq_table.frequency is an unsigned int. Avoid any possible
+value truncation by using the appropriate return value.
 
-To avoid that, add a new internal flag, skip_bus_pm, that will be set
-by pci_pm_suspend_noirq() when it runs for the first time during the
-given system suspend-resume cycle if the state of the device has
-been saved already and the device is still in D0.  Setting that flag
-will cause the next iterations of pci_pm_suspend_noirq() to set
-state_saved for pci_pm_resume_noirq(), so that it always restores the
-device state from the originally saved data, and avoid calling
-pci_prepare_to_sleep() for the device.
-
-Fixes: 33e4f80ee69b ("ACPI / PM: Ignore spurious SCI wakeups from suspend-to-idle")
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Keith Busch <keith.busch@intel.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Fixes: de322e085995 ("cpufreq: brcmstb-avs-cpufreq: AVS CPUfreq driver for Broadcom STB SoCs")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Acked-by: Markus Mayer <mmayer@broadcom.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci-driver.c | 17 ++++++++++++++++-
- include/linux/pci.h      |  1 +
- 2 files changed, 17 insertions(+), 1 deletion(-)
+ drivers/cpufreq/brcmstb-avs-cpufreq.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 522e59274b5d..1589a147c536 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -728,6 +728,8 @@ static int pci_pm_suspend(struct device *dev)
- 	struct pci_dev *pci_dev = to_pci_dev(dev);
- 	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
+diff --git a/drivers/cpufreq/brcmstb-avs-cpufreq.c b/drivers/cpufreq/brcmstb-avs-cpufreq.c
+index bae319037658..39c462711eae 100644
+--- a/drivers/cpufreq/brcmstb-avs-cpufreq.c
++++ b/drivers/cpufreq/brcmstb-avs-cpufreq.c
+@@ -468,12 +468,12 @@ static int brcm_avs_set_pstate(struct private_data *priv, unsigned int pstate)
+ 	return __issue_avs_command(priv, AVS_CMD_SET_PSTATE, true, args);
+ }
  
-+	pci_dev->skip_bus_pm = false;
-+
- 	if (pci_has_legacy_pm_support(pci_dev))
- 		return pci_legacy_suspend(dev, PMSG_SUSPEND);
+-static unsigned long brcm_avs_get_voltage(void __iomem *base)
++static u32 brcm_avs_get_voltage(void __iomem *base)
+ {
+ 	return readl(base + AVS_MBOX_VOLTAGE1);
+ }
  
-@@ -801,7 +803,20 @@ static int pci_pm_suspend_noirq(struct device *dev)
- 		}
- 	}
+-static unsigned long brcm_avs_get_frequency(void __iomem *base)
++static u32 brcm_avs_get_frequency(void __iomem *base)
+ {
+ 	return readl(base + AVS_MBOX_FREQUENCY) * 1000;	/* in kHz */
+ }
+@@ -973,14 +973,14 @@ static ssize_t show_brcm_avs_voltage(struct cpufreq_policy *policy, char *buf)
+ {
+ 	struct private_data *priv = policy->driver_data;
  
--	if (!pci_dev->state_saved) {
-+	if (pci_dev->skip_bus_pm) {
-+		/*
-+		 * The function is running for the second time in a row without
-+		 * going through full resume, which is possible only during
-+		 * suspend-to-idle in a spurious wakeup case.  Moreover, the
-+		 * device was originally left in D0, so its power state should
-+		 * not be changed here and the device register values saved
-+		 * originally should be restored on resume again.
-+		 */
-+		pci_dev->state_saved = true;
-+	} else if (pci_dev->state_saved) {
-+		if (pci_dev->current_state == PCI_D0)
-+			pci_dev->skip_bus_pm = true;
-+	} else {
- 		pci_save_state(pci_dev);
- 		if (pci_power_manageable(pci_dev))
- 			pci_prepare_to_sleep(pci_dev);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 59f4d10568c6..430f3c335446 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -346,6 +346,7 @@ struct pci_dev {
- 						   D3cold, not set for devices
- 						   powered on/off by the
- 						   corresponding bridge */
-+	unsigned int	skip_bus_pm:1;	/* Internal: Skip bus-level PM */
- 	unsigned int	ignore_hotplug:1;	/* Ignore hotplug events */
- 	unsigned int	hotplug_user_indicators:1; /* SlotCtl indicators
- 						      controlled exclusively by
+-	return sprintf(buf, "0x%08lx\n", brcm_avs_get_voltage(priv->base));
++	return sprintf(buf, "0x%08x\n", brcm_avs_get_voltage(priv->base));
+ }
+ 
+ static ssize_t show_brcm_avs_frequency(struct cpufreq_policy *policy, char *buf)
+ {
+ 	struct private_data *priv = policy->driver_data;
+ 
+-	return sprintf(buf, "0x%08lx\n", brcm_avs_get_frequency(priv->base));
++	return sprintf(buf, "0x%08x\n", brcm_avs_get_frequency(priv->base));
+ }
+ 
+ cpufreq_freq_attr_ro(brcm_avs_pstate);
 -- 
 2.20.1
 
