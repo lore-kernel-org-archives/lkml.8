@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46875C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9C8C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14FE42473E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99FA12472C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:30:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195837;
-	bh=8Flq+0IPg2YLkKNvbKUs/GHrA0VMXFzGii5N095zoIc=;
+	s=default; t=1579195842;
+	bh=dnaNne4GSkC2Muvq5tt3Y2IwM3WltMgeSzV1DPWsPyU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VFbTyn7rlRNJrk0F8yFEb2LzXkMNa0ZkB0uxB1M5XREVyomLI5QsJU0yU7vFuxuVy
-	 Qt5z8BA2XlVmlhpl33i71g0r9xuzA12sUSSSWEwgNsM5UhXLK+u39z0SxEFkoFJgoL
-	 kj9Wa7nAJA1owWSLTNEbC7v36OgMImAF0yy1NDz8=
+	b=WzuetOZ8sWkrJ9m8oL7KlX0MiuBEG1sBy6Xlh+98gNqgpX65yrZk00FIB4rAbesNS
+	 e6zuNerAZac3LMSsWGF3hg7Ui/eeLpUigd7ZjK7yudPxU1y5FXC6yw6owHV3uzNFgw
+	 LPV6zm5R+tfuXRk2IH45DYhWuyuF50Pppx7PoCsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404463AbgAPRaa (ORCPT
+        id S2390892AbgAPRal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:30:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43088 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:30:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404450AbgAPRa2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:30:28 -0500
+        id S2404595AbgAPRah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:30:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 410E124731;
-        Thu, 16 Jan 2020 17:30:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4983424713;
+        Thu, 16 Jan 2020 17:30:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195828;
-        bh=8Flq+0IPg2YLkKNvbKUs/GHrA0VMXFzGii5N095zoIc=;
+        s=default; t=1579195837;
+        bh=dnaNne4GSkC2Muvq5tt3Y2IwM3WltMgeSzV1DPWsPyU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fu9MXidAD7N6NUyaU/AFMByMzDvJebnid4Lw3Jspjhs0VjrKl/7VFEZnU3iHFVJ4B
-         B8vGnjNmu2PivP5CYQRUgXptuVIFD3el5ZEhQEoQ0CatsDMN3BluhczqEZPJxyT/hu
-         zM4e0CNLrY/JKI3Osafb4lBUwyhsCaz2ra+vp1NE=
+        b=2AdEGaycO9zflI/JBer8zuCGcfng3tC4WBHuiOmnqXyeZ04CwPzw4i3iKcU/iXR//
+         O0bC+k2BY1gHfMpyhXaXGhFpM8Nf3aDE3mh/9ktQU0qTKxs15KQJLDFSB4fbfSdSlO
+         0lDHhkgppM1ibToQRtW5E9QsZFDv+V25jmex9DVk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 335/371] arm64: dts: meson-gxl-s905x-khadas-vim: fix gpio-keys-polled node
-Date:   Thu, 16 Jan 2020 12:23:27 -0500
-Message-Id: <20200116172403.18149-278-sashal@kernel.org>
+Cc:     Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 341/371] RDMA/mlx5: Return proper error value
+Date:   Thu, 16 Jan 2020 12:23:33 -0500
+Message-Id: <20200116172403.18149-284-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -61,42 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Hewitt <christianshewitt@gmail.com>
+From: Leon Romanovsky <leonro@mellanox.com>
 
-[ Upstream commit d5f6fa904ecbadbb8e9fa6302b0fc165bec0559a ]
+[ Upstream commit 546d30099ed204792083f043cd7e016de86016a3 ]
 
-Fix DTC warnings:
+Returned value from mlx5_mr_cache_alloc() is checked to be error or real
+pointer. Return proper error code instead of NULL which is not checked
+later.
 
-arch/arm/dts/meson-gxl-s905x-khadas-vim.dtb: Warning (avoid_unnecessary_addr_size):
-   /gpio-keys-polled: unnecessary #address-cells/#size-cells
-      without "ranges" or child "reg" property
-
-Fixes: e15d2774b8c0 ("ARM64: dts: meson-gxl: add support for the Khadas VIM board")
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Fixes: 81713d3788d2 ("IB/mlx5: Add implicit MR support")
+Link: https://lore.kernel.org/r/20191029055721.7192-1-leon@kernel.org
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/infiniband/hw/mlx5/mr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
-index fb5db5f33e8c..ce4a116382bf 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
-@@ -33,11 +33,9 @@
+diff --git a/drivers/infiniband/hw/mlx5/mr.c b/drivers/infiniband/hw/mlx5/mr.c
+index cfddca850cb4..fb45bfa4f845 100644
+--- a/drivers/infiniband/hw/mlx5/mr.c
++++ b/drivers/infiniband/hw/mlx5/mr.c
+@@ -460,7 +460,7 @@ struct mlx5_ib_mr *mlx5_mr_cache_alloc(struct mlx5_ib_dev *dev, int entry)
  
- 	gpio-keys-polled {
- 		compatible = "gpio-keys-polled";
--		#address-cells = <1>;
--		#size-cells = <0>;
- 		poll-interval = <100>;
+ 	if (entry < 0 || entry >= MAX_MR_CACHE_ENTRIES) {
+ 		mlx5_ib_err(dev, "cache entry %d is out of range\n", entry);
+-		return NULL;
++		return ERR_PTR(-EINVAL);
+ 	}
  
--		button@0 {
-+		power-button {
- 			label = "power";
- 			linux,code = <KEY_POWER>;
- 			gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_LOW>;
+ 	ent = &cache->ent[entry];
 -- 
 2.20.1
 
