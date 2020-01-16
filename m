@@ -2,344 +2,264 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E9DC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A62FC33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A48CB207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:27:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 287B12081E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:27:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="ign8iS51"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E7ohzpua"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729099AbgAPN1r (ORCPT
+        id S1729121AbgAPN1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 08:27:47 -0500
-Received: from mail-dm6nam11on2051.outbound.protection.outlook.com ([40.107.223.51]:32096
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729005AbgAPN1o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 08:27:44 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Slzr86z6jmf8GeVCVPUkWCLMviP9k/VDOtDn9JqaCiOmRUo+f6J2KNxrsAAqirug2W6KEf+2kL94oIW0hkXTMjNDNwMSmEdqudHYRa2vqtt0YLH7iegqKkaxx6a9C8uuWEMWY50xaFZRYwbSvb8H5dR2ajOY/aK50L44YBH3YfThdNlfAQjuiXP3pdRSq+vq8EzWG9gm5XPes246R3S54eqO702fYrD6eYtsk7214dq4a0D5xzhKLzZKBI8EM6/q4688T4IpAAjp2L45yWny2WvxoyOvnNFZ2PA0dH8Cbc/qSJbRevCjAaunuZK7vTt3e7MIO+vBULImq+Bsloa+dw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CrM3hFaA94ZGR0dieQwlPgTi+iGbq0J/YGjqs8/a0Zc=;
- b=QAXo1ENKpCNMWJMYRpLwQUL9ofyUrxzWwNDM8qDNG6NCS/WIBzm6qGMOztDiI5zDolBsRs+vkX3FiD47zakC2NI+GPGI6iGAdC2RpbPmbvfOjA9xOmax6E5GqYYmDrm+XrzrLlIcIzfYA2bhqR5q72Qb+Ch64FrExB+4d16nro6knMNkpLy7gLSLnM7+3lsyzUkltVwmY3Ybrswms6z1IQ0zXwHtZp60stfuH+iX4KHKWKR3yuhc5zbXVWSzAFSR/iL+55NJQiVwuIiBD0Umez8POh8lZNBFYMd3ztUlgOvLwCCGFHVGsVsqbj/yCsBMnTc4MK2B3pygVteKhvNprw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CrM3hFaA94ZGR0dieQwlPgTi+iGbq0J/YGjqs8/a0Zc=;
- b=ign8iS51m+hIIkMlEcTvlMSMo6fW+cpm7GQUG++0ATM2Jge0OeQLP2kgYE5cGHJj7S4E0RNwtq38izntDXaK7Fl845yJ0SJIb1l0HnQWNLUazt/wknr7d1kmrrACS5vVhTcGjnCMuvmbbV5TWOl40/Qxzi/HKpNl+2duGhP2NOQ=
-Received: from BYAPR02CA0058.namprd02.prod.outlook.com (2603:10b6:a03:54::35)
- by BN7PR02MB4179.namprd02.prod.outlook.com (2603:10b6:406:f5::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.10; Thu, 16 Jan
- 2020 13:27:40 +0000
-Received: from SN1NAM02FT048.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::201) by BYAPR02CA0058.outlook.office365.com
- (2603:10b6:a03:54::35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.15 via Frontend
- Transport; Thu, 16 Jan 2020 13:27:40 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT048.mail.protection.outlook.com (10.152.72.202) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2644.19
- via Frontend Transport; Thu, 16 Jan 2020 13:27:39 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1is5BT-0005wN-07; Thu, 16 Jan 2020 05:27:39 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1is5BN-0001FY-SJ; Thu, 16 Jan 2020 05:27:33 -0800
-Received: from xsj-pvapsmtp01 (xsj-smtp.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 00GDRKRR016392;
-        Thu, 16 Jan 2020 05:27:21 -0800
-Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1is5BA-00018J-Bu; Thu, 16 Jan 2020 05:27:20 -0800
-From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
-To:     linux@roeck-us.net, michal.simek@xilinx.com,
-        shubhrajyoti.datta@xilinx.com, sgoud@xilinx.com
-Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        git@xilinx.com
-Subject: [PATCH 7/9] watchdog: of_xilinx_wdt: Add Versal support
-Date:   Thu, 16 Jan 2020 18:56:55 +0530
-Message-Id: <1579181217-31127-8-git-send-email-srinivas.neeli@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1579181217-31127-1-git-send-email-srinivas.neeli@xilinx.com>
-References: <1579181217-31127-1-git-send-email-srinivas.neeli@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(396003)(39860400002)(346002)(189003)(199004)(81156014)(44832011)(6666004)(8676002)(356004)(5660300002)(4326008)(336012)(478600001)(70206006)(2906002)(107886003)(9786002)(36756003)(6636002)(316002)(70586007)(186003)(426003)(26005)(8936002)(81166006)(2616005)(7696005);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR02MB4179;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+        Thu, 16 Jan 2020 08:27:51 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32439 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729031AbgAPN1q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 08:27:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579181264;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=XuvIyltLM6t6CmNPpq0TOwT0hr9nkt4psYwYZFChnPA=;
+        b=E7ohzpuaS4uwpTWdieFtbV+wFNSjQFTotYXSgjt0izm1XC0t/uA6WJtow/zpognqgbmRFV
+        86gun9CW64xPS1PmC4LwPv+SXm3NgI/KWe9Z/9D8g19/oCpxprIRoDw1YSqHrMiMzlm0fr
+        9A8X7wOayXoN3gornQrPVtDlh8omwB8=
+Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
+ [209.85.208.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-344-Zq6oMIWTPV6EJSJZ4BCsow-1; Thu, 16 Jan 2020 08:27:43 -0500
+X-MC-Unique: Zq6oMIWTPV6EJSJZ4BCsow-1
+Received: by mail-lj1-f200.google.com with SMTP id b15so5143868ljp.7
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 05:27:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=XuvIyltLM6t6CmNPpq0TOwT0hr9nkt4psYwYZFChnPA=;
+        b=TlQpUDYJAy2eKSQ1H2zCZJJHbKAGFGFuVYaBWApMHbqP/RVDhXj5YL1+qZXEIFtvTP
+         aL+F6HtzAAutCYR26ZBBHcSQ56jog6h88C0pMNeC40Q7QSTi4SJ2anmgrjFR3BKyw9KF
+         34a9buuM05tQ0hQA5ylC5pA3ZyauRrTOR41ksJ6nORyjVAGahJfzkgTy3KYV8yJOmBbI
+         vBZrlA6UoKemKrAsCU3cvt4rrsmGCgRIaT+xmXJ9PqPWgfLkhsCDntEod3FQmCTQCsYI
+         AHdcd6mAOKHsI4kjMrws4vqb6NYSyrgpJsTUTNE+NQjhFAgZH3JIl9Y8jY3JuwKVBQaN
+         0mNw==
+X-Gm-Message-State: APjAAAXE9qJFSjBi+ZQOZca0PhQ1D1FVj3DGDuJySpwMv/6dQa2s4/xr
+        CyEIXGFFrzHyJUEQ1KCSA+zcYJENQOTNZTjVFz1XmwlWBTj2zJI/lJ/13U/rq5CWzpTX/4+R4t5
+        +7c2esM3PhswYNSNrE0wHpHzq
+X-Received: by 2002:a2e:7e05:: with SMTP id z5mr2143918ljc.99.1579181262219;
+        Thu, 16 Jan 2020 05:27:42 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwV2vEACriaMxMYq1+Yurp2SBRFnsPX7bITYsC6orHg17S25R+Ekjo1mt4jcs0IEhr7VeKwYg==
+X-Received: by 2002:a2e:7e05:: with SMTP id z5mr2143893ljc.99.1579181261819;
+        Thu, 16 Jan 2020 05:27:41 -0800 (PST)
+Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
+        by smtp.gmail.com with ESMTPSA id g27sm10722135lfj.49.2020.01.16.05.27.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 05:27:41 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id E326A1804D7; Thu, 16 Jan 2020 14:22:21 +0100 (CET)
+Subject: [PATCH bpf-next v3 09/11] selftests: Remove tools/lib/bpf from
+ include path
+From:   =?utf-8?q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Alexei Starovoitov <ast@kernel.org>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Date:   Thu, 16 Jan 2020 14:22:21 +0100
+Message-ID: <157918094179.1357254.14428494370073273452.stgit@toke.dk>
+In-Reply-To: <157918093154.1357254.7616059374996162336.stgit@toke.dk>
+References: <157918093154.1357254.7616059374996162336.stgit@toke.dk>
+User-Agent: StGit/0.21
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9b2b73de-f8f3-4092-edc3-08d79a87dbd0
-X-MS-TrafficTypeDiagnostic: BN7PR02MB4179:
-X-Microsoft-Antispam-PRVS: <BN7PR02MB417938FB81F6CE39ED95152BAF360@BN7PR02MB4179.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-Forefront-PRVS: 02843AA9E0
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: XLjpS9YlsIgO3o2Kw4R1CQZXUADZ/zTy03vdAgu2vkQqOgLcopQSg4mQuPMVGjYuyzNSkVwhVtft1eJTFbX32zGSqzy1evz2/Lvvh2xFovx+tC39MTgVxgKsT41W8p8LgYt+CjDXkICBF/tfrhkqXGVirJs3//F//uVyPDZkLp6RwKJOLD4zVuhCPGicoJFdlOMRCYUg3GMVxli3jqtEOfzBriwLiRhsSSm2HJqZVg3+U7dtP0mcuDV3vKZKrQEvosaAJhMz4kFdgT/0uy9sWYFdvVmUdhpgyXV891OEU5UT1CT+ulgKxPcCBuKDG5CkKLWwDUf8vccS/wjWYIrzoaI+xET83Z2Kk0CE7UuK9mnNq+3rNbD4Gqr8PpCt+TuG3yvlC+SaKYoJo7UWO82fAg6LwH1mQTQlPWK3yX80I3t/9EkONMgCdMS4oJhHLJc3
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2020 13:27:39.3898
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9b2b73de-f8f3-4092-edc3-08d79a87dbd0
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR02MB4179
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Goud <srinivas.goud@xilinx.com>
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-Versal watchdog driver uses generic watchdog mode.
-Generic watchdog contains closed and open window of equal timeout.
-Generic watchdog will generate reset signal if it is not explicitly
-refreshed in second window.
+To make sure no new files are introduced that doesn't include the bpf/
+prefix in its #include, remove tools/lib/bpf from the include path
+entirely.
 
-Signed-off-by: Srinivas Goud <srinivas.goud@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
+Instead, we introduce a new header files directory under the scratch tools/
+dir, and add a rule to run the 'install_headers' rule from libbpf to have a
+full set of consistent libbpf headers in $(OUTPUT)/tools/include/bpf, and
+then use $(OUTPUT)/tools/include as the include path for selftests.
+
+For consistency we also make sure we put all the scratch build files from
+other bpftool and libbpf into tools/build/, so everything stays within
+selftests/.
+
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
 ---
- drivers/watchdog/of_xilinx_wdt.c | 150 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 149 insertions(+), 1 deletion(-)
+ tools/testing/selftests/bpf/.gitignore |    1 +
+ tools/testing/selftests/bpf/Makefile   |   50 +++++++++++++++++++-------------
+ 2 files changed, 31 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/watchdog/of_xilinx_wdt.c b/drivers/watchdog/of_xilinx_wdt.c
-index 3b93b60f1a00..d2c389d9eaa7 100644
---- a/drivers/watchdog/of_xilinx_wdt.c
-+++ b/drivers/watchdog/of_xilinx_wdt.c
-@@ -2,7 +2,7 @@
- /*
-  * Watchdog Device Driver for Xilinx axi/xps_timebase_wdt
-  *
-- * (C) Copyright 2013 - 2014 Xilinx, Inc.
-+ * (C) Copyright 2013 - 2020 Xilinx, Inc.
-  * (C) Copyright 2011 (Alejandro Cabrera <aldaya@gmail.com>)
-  */
+diff --git a/tools/testing/selftests/bpf/.gitignore b/tools/testing/selftests/bpf/.gitignore
+index 1d14e3ab70be..849be9990ad2 100644
+--- a/tools/testing/selftests/bpf/.gitignore
++++ b/tools/testing/selftests/bpf/.gitignore
+@@ -40,3 +40,4 @@ test_cpp
+ /bpf_gcc
+ /tools
+ bpf_helper_defs.h
++/include/bpf
+diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
+index 1fd7da49bd56..c3fa695bb028 100644
+--- a/tools/testing/selftests/bpf/Makefile
++++ b/tools/testing/selftests/bpf/Makefile
+@@ -20,8 +20,8 @@ CLANG		?= clang
+ LLC		?= llc
+ LLVM_OBJCOPY	?= llvm-objcopy
+ BPF_GCC		?= $(shell command -v bpf-gcc;)
+-CFLAGS += -g -Wall -O2 $(GENFLAGS) -I$(CURDIR) -I$(APIDIR) -I$(LIBDIR)  \
+-	  -I$(BPFDIR) -I$(GENDIR) -I$(TOOLSINCDIR)			\
++CFLAGS += -g -Wall -O2 $(GENFLAGS) -I$(CURDIR) -I$(APIDIR)		 \
++	  -I$(INCLUDE_DIR) -I$(GENDIR) -I$(LIBDIR) -I$(TOOLSINCDIR)	\
+ 	  -Dbpf_prog_load=bpf_prog_test_load				\
+ 	  -Dbpf_load_program=bpf_test_load_program
+ LDLIBS += -lcap -lelf -lz -lrt -lpthread
+@@ -97,11 +97,15 @@ OVERRIDE_TARGETS := 1
+ override define CLEAN
+ 	$(call msg,CLEAN)
+ 	$(RM) -r $(TEST_GEN_PROGS) $(TEST_GEN_PROGS_EXTENDED) $(TEST_GEN_FILES) $(EXTRA_CLEAN)
+-	$(MAKE) -C $(BPFDIR) OUTPUT=$(OUTPUT)/ clean
+ endef
  
-@@ -18,10 +18,19 @@
- #include <linux/of_device.h>
- #include <linux/of_address.h>
+ include ../lib.mk
  
-+#define XWT_WWDT_MIN_TIMEOUT		1
-+#define XWT_WWDT_MAX_TIMEOUT		80
++SCRATCH_DIR := $(OUTPUT)/tools
++BUILD_DIR := $(SCRATCH_DIR)/build
++INCLUDE_DIR := $(SCRATCH_DIR)/include
++INCLUDE_BPF := $(INCLUDE_DIR)/bpf/bpf.h
 +
- /* Register offsets for the Wdt device */
- #define XWT_TWCSR0_OFFSET   0x0 /* Control/Status Register0 */
- #define XWT_TWCSR1_OFFSET   0x4 /* Control/Status Register1 */
- #define XWT_TBR_OFFSET      0x8 /* Timebase Register Offset */
-+#define XWT_WWREF_OFFSET	0x1000 /* Refresh Register */
-+#define XWT_WWCSR_OFFSET	0x2000 /* Control/Status Register */
-+#define XWT_WWOFF_OFFSET	0x2008 /* Offset Register */
-+#define XWT_WWCMP0_OFFSET	0x2010 /* Compare Value Register0 */
-+#define XWT_WWCMP1_OFFSET	0x2014 /* Compare Value Register1 */
-+#define XWT_WWWRST_OFFSET	0x2FD0 /* Warm Reset Register */
+ # Define simple and short `make test_progs`, `make test_sysctl`, etc targets
+ # to build individual tests.
+ # NOTE: Semicolon at the end is critical to override lib.mk's default static
+@@ -120,7 +124,7 @@ $(OUTPUT)/urandom_read: urandom_read.c
+ 	$(call msg,BINARY,,$@)
+ 	$(CC) -o $@ $< -Wl,--build-id
  
- /* Control/Status Register Masks  */
- #define XWT_CSR0_WRS_MASK	BIT(3) /* Reset status */
-@@ -31,6 +40,15 @@
- /* Control/Status Register 0/1 bits  */
- #define XWT_CSRX_EWDT2_MASK	BIT(0) /* Enable bit 2 */
+-$(OUTPUT)/test_stub.o: test_stub.c
++$(OUTPUT)/test_stub.o: test_stub.c $(INCLUDE_BPF)
+ 	$(call msg,CC,,$@)
+ 	$(CC) -c $(CFLAGS) -o $@ $<
  
-+/* Refresh Register Masks */
-+#define XWT_WWREF_GWRR_MASK	BIT(0) /* Refresh and start new period */
-+
-+/* Generic Control/Status Register Masks  */
-+#define XWT_WWCSR_GWEN_MASK	BIT(0) /* Enable Bit */
-+
-+/* Warm Reset Register Masks */
-+#define XWT_WWRST_GWWRR_MASK	BIT(0) /* Warm Reset Register */
-+
- /* SelfTest constants */
- #define XWT_MAX_SELFTEST_LOOP_COUNT 0x00010000
- #define XWT_TIMER_FAILED            0xFFFFFFFF
-@@ -41,9 +59,11 @@
-  * enum xwdt_ip_type - WDT IP type.
-  *
-  * @XWDT_WDT: Soft wdt ip.
-+ * @XWDT_WWDT: Window wdt ip.
-  */
- enum xwdt_ip_type {
- 	XWDT_WDT = 0,
-+	XWDT_WWDT,
- };
+@@ -129,7 +133,7 @@ $(OUTPUT)/runqslower: force
+ 	$(Q)$(MAKE) $(submake_extras) -C $(TOOLSDIR)/bpf/runqslower	      \
+ 		    OUTPUT=$(CURDIR)/tools/ VMLINUX_BTF=$(abspath ../../../../vmlinux)
  
- struct xwdt_devtype_data {
-@@ -145,6 +165,126 @@ static const struct watchdog_ops xilinx_wdt_ops = {
- 	.ping = xilinx_wdt_keepalive,
- };
+-BPFOBJ := $(OUTPUT)/libbpf.a
++BPFOBJ := $(BUILD_DIR)/libbpf/libbpf.a
  
-+static int xilinx_wwdt_start(struct watchdog_device *wdd)
-+{
-+	int ret;
-+	u32 control_status_reg;
-+	u64 count;
-+	struct xwdt_device *xdev = watchdog_get_drvdata(wdd);
-+	struct watchdog_device *xilinx_wdt_wdd = &xdev->xilinx_wdt_wdd;
-+
-+	unsigned long clock_f = clk_get_rate(xdev->clk);
-+
-+	/* Calculate timeout count */
-+	count = wdd->timeout * clock_f;
-+	ret  = clk_enable(xdev->clk);
-+	if (ret) {
-+		dev_err(wdd->parent, "Failed to enable clock\n");
-+		return ret;
-+	}
-+
-+	spin_lock(&xdev->spinlock);
-+
-+	/*
-+	 * Timeout count is half as there are two windows
-+	 * first window overflow is ignored (interrupt),
-+	 * reset is only generated at second window overflow
-+	 */
-+	count = count >> 1;
-+
-+	/* Disable the generic watchdog timer */
-+	control_status_reg = ioread32(xdev->base + XWT_WWCSR_OFFSET);
-+	control_status_reg &= ~(XWT_WWCSR_GWEN_MASK);
-+	iowrite32(control_status_reg, xdev->base + XWT_WWCSR_OFFSET);
-+
-+	/* Set compare and offset registers for generic watchdog timeout */
-+	iowrite32((u32)count, xdev->base + XWT_WWCMP0_OFFSET);
-+	iowrite32((u32)0, xdev->base + XWT_WWCMP1_OFFSET);
-+	iowrite32((u32)count, xdev->base + XWT_WWOFF_OFFSET);
-+
-+	/* Enable the generic watchdog timer */
-+	control_status_reg = ioread32(xdev->base + XWT_WWCSR_OFFSET);
-+	control_status_reg |= (XWT_WWCSR_GWEN_MASK);
-+	iowrite32(control_status_reg, xdev->base + XWT_WWCSR_OFFSET);
-+
-+	spin_unlock(&xdev->spinlock);
-+
-+	dev_dbg(xilinx_wdt_wdd->parent, "Watchdog Started!\n");
-+
-+	return 0;
-+}
-+
-+static int xilinx_wwdt_stop(struct watchdog_device *wdd)
-+{
-+	u32 control_status_reg;
-+	struct xwdt_device *xdev = watchdog_get_drvdata(wdd);
-+	struct watchdog_device *xilinx_wdt_wdd = &xdev->xilinx_wdt_wdd;
-+
-+	spin_lock(&xdev->spinlock);
-+
-+	/* Disable the generic watchdog timer */
-+	control_status_reg = ioread32(xdev->base + XWT_WWCSR_OFFSET);
-+	control_status_reg &= ~(XWT_WWCSR_GWEN_MASK);
-+	iowrite32(control_status_reg, xdev->base + XWT_WWCSR_OFFSET);
-+
-+	spin_unlock(&xdev->spinlock);
-+
-+	clk_disable(xdev->clk);
-+
-+	dev_dbg(xilinx_wdt_wdd->parent, "Watchdog Stopped!\n");
-+
-+	return 0;
-+}
-+
-+static int xilinx_wwdt_keepalive(struct watchdog_device *wdd)
-+{
-+	struct xwdt_device *xdev = watchdog_get_drvdata(wdd);
-+
-+	spin_lock(&xdev->spinlock);
-+
-+	iowrite32(XWT_WWREF_GWRR_MASK, xdev->base + XWT_WWREF_OFFSET);
-+
-+	spin_unlock(&xdev->spinlock);
-+
-+	return 0;
-+}
-+
-+static int xilinx_wwdt_set_timeout(struct watchdog_device *wdd,
-+				   unsigned int new_time)
-+{
-+	struct xwdt_device *xdev = watchdog_get_drvdata(wdd);
-+	struct watchdog_device *xilinx_wdt_wdd = &xdev->xilinx_wdt_wdd;
-+
-+	if (new_time < XWT_WWDT_MIN_TIMEOUT ||
-+	    new_time > XWT_WWDT_MAX_TIMEOUT) {
-+		dev_warn(xilinx_wdt_wdd->parent,
-+			 "timeout value must be %d<=x<=%d, using %d\n",
-+				XWT_WWDT_MIN_TIMEOUT,
-+				XWT_WWDT_MAX_TIMEOUT, new_time);
-+		return -EINVAL;
-+	}
-+
-+	wdd->timeout = new_time;
-+
-+	return xilinx_wwdt_start(wdd);
-+}
-+
-+static const struct watchdog_info xilinx_wwdt_ident = {
-+	.options =  WDIOF_MAGICCLOSE |
-+		WDIOF_KEEPALIVEPING |
-+		WDIOF_SETTIMEOUT,
-+	.firmware_version =	1,
-+	.identity = "xlnx_wwdt watchdog",
-+};
-+
-+static const struct watchdog_ops xilinx_wwdt_ops = {
-+	.owner = THIS_MODULE,
-+	.start = xilinx_wwdt_start,
-+	.stop = xilinx_wwdt_stop,
-+	.ping = xilinx_wwdt_keepalive,
-+	.set_timeout = xilinx_wwdt_set_timeout,
-+};
-+
- static u32 xwdt_selftest(struct xwdt_device *xdev)
- {
- 	int i;
-@@ -181,11 +321,19 @@ static const struct xwdt_devtype_data xwdt_wdt_data = {
- 	.xwdt_ops = &xilinx_wdt_ops,
- };
+ $(TEST_GEN_PROGS) $(TEST_GEN_PROGS_EXTENDED): $(OUTPUT)/test_stub.o $(BPFOBJ)
  
-+static const struct xwdt_devtype_data xwdt_wwdt_data = {
-+	.wdttype = XWDT_WWDT,
-+	.xwdt_info = &xilinx_wwdt_ident,
-+	.xwdt_ops = &xilinx_wwdt_ops,
-+};
+@@ -155,17 +159,23 @@ force:
+ DEFAULT_BPFTOOL := $(OUTPUT)/tools/sbin/bpftool
+ BPFTOOL ?= $(DEFAULT_BPFTOOL)
+ 
+-$(DEFAULT_BPFTOOL): force
+-	$(Q)$(MAKE) $(submake_extras)  -C $(BPFTOOLDIR)			      \
++$(BUILD_DIR)/libbpf $(BUILD_DIR)/bpftool $(INCLUDE_DIR):
++	$(call msg,MKDIR,,$@)
++	mkdir -p $@
 +
- static const struct of_device_id xwdt_of_match[] = {
- 	{ .compatible = "xlnx,xps-timebase-wdt-1.00.a",
- 		.data = &xwdt_wdt_data },
- 	{ .compatible = "xlnx,xps-timebase-wdt-1.01.a",
- 		.data = &xwdt_wdt_data },
-+	{ .compatible = "xlnx,versal-wwdt-1.0",
-+		.data = &xwdt_wwdt_data },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, xwdt_of_match);
--- 
-2.7.4
++$(DEFAULT_BPFTOOL): force $(BUILD_DIR)/bpftool
++	$(Q)$(MAKE) $(submake_extras)  -C $(BPFTOOLDIR)		\
++		    OUTPUT=$(BUILD_DIR)/bpftool/			\
+ 		    prefix= DESTDIR=$(OUTPUT)/tools/ install
+ 
+-$(BPFOBJ): force
+-	$(Q)$(MAKE) $(submake_extras) -C $(BPFDIR) OUTPUT=$(OUTPUT)/
++$(BPFOBJ): force $(BUILD_DIR)/libbpf
++	$(Q)$(MAKE) $(submake_extras) -C $(BPFDIR) \
++		OUTPUT=$(BUILD_DIR)/libbpf/
+ 
+-BPF_HELPERS := $(OUTPUT)/bpf_helper_defs.h $(wildcard $(BPFDIR)/bpf_*.h)
+-$(OUTPUT)/bpf_helper_defs.h: $(BPFOBJ)
+-	$(Q)$(MAKE) $(submake_extras) -C $(BPFDIR)			      \
+-		    OUTPUT=$(OUTPUT)/ $(OUTPUT)/bpf_helper_defs.h
++BPF_HELPERS := $(wildcard $(BPFDIR)/bpf_*.h) $(INCLUDE_BPF)
++$(INCLUDE_BPF): force $(BPFOBJ)
++	$(Q)$(MAKE) $(submake_extras) -C $(BPFDIR) install_headers \
++		OUTPUT=$(BUILD_DIR)/libbpf/ DESTDIR=$(SCRATCH_DIR) prefix=
+ 
+ # Get Clang's default includes on this system, as opposed to those seen by
+ # '-target bpf'. This fixes "missing" files on some architectures/distros,
+@@ -185,8 +195,8 @@ MENDIAN=$(if $(IS_LITTLE_ENDIAN),-mlittle-endian,-mbig-endian)
+ 
+ CLANG_SYS_INCLUDES = $(call get_sys_includes,$(CLANG))
+ BPF_CFLAGS = -g -D__TARGET_ARCH_$(SRCARCH) $(MENDIAN) 			\
+-	     -I$(OUTPUT) -I$(CURDIR) -I$(CURDIR)/include/uapi		\
+-	     -I$(APIDIR) -I$(LIBDIR) -I$(BPFDIR) -I$(abspath $(OUTPUT)/../usr/include)
++	     -I$(INCLUDE_DIR) -I$(CURDIR) -I$(CURDIR)/include/uapi	\
++	     -I$(APIDIR) -I$(abspath $(OUTPUT)/../usr/include)
+ 
+ CLANG_CFLAGS = $(CLANG_SYS_INCLUDES) \
+ 	       -Wno-compare-distinct-pointer-types
+@@ -306,7 +316,7 @@ $(TRUNNER_TEST_OBJS): $(TRUNNER_OUTPUT)/%.test.o:			\
+ 		      $(TRUNNER_EXTRA_HDRS)				\
+ 		      $(TRUNNER_BPF_OBJS)				\
+ 		      $(TRUNNER_BPF_SKELS)				\
+-		      $$(BPFOBJ) | $(TRUNNER_OUTPUT)
++		      $$(BPFOBJ) $$(INCLUDE_BPF) | $(TRUNNER_OUTPUT)
+ 	$$(call msg,TEST-OBJ,$(TRUNNER_BINARY),$$@)
+ 	cd $$(@D) && $$(CC) $$(CFLAGS) -c $(CURDIR)/$$< $$(LDLIBS) -o $$(@F)
+ 
+@@ -314,7 +324,7 @@ $(TRUNNER_EXTRA_OBJS): $(TRUNNER_OUTPUT)/%.o:				\
+ 		       %.c						\
+ 		       $(TRUNNER_EXTRA_HDRS)				\
+ 		       $(TRUNNER_TESTS_HDR)				\
+-		       $$(BPFOBJ) | $(TRUNNER_OUTPUT)
++		       $$(BPFOBJ) $$(INCLUDE_BPF) | $(TRUNNER_OUTPUT)
+ 	$$(call msg,EXT-OBJ,$(TRUNNER_BINARY),$$@)
+ 	$$(CC) $$(CFLAGS) -c $$< $$(LDLIBS) -o $$@
+ 
+@@ -326,7 +336,7 @@ ifneq ($2,)
+ endif
+ 
+ $(OUTPUT)/$(TRUNNER_BINARY): $(TRUNNER_TEST_OBJS)			\
+-			     $(TRUNNER_EXTRA_OBJS) $$(BPFOBJ)		\
++			     $(TRUNNER_EXTRA_OBJS) $$(BPFOBJ) $$(INCLUDE_BPF)		\
+ 			     | $(TRUNNER_BINARY)-extras
+ 	$$(call msg,BINARY,,$$@)
+ 	$$(CC) $$(CFLAGS) $$(filter %.a %.o,$$^) $$(LDLIBS) -o $$@
+@@ -388,7 +398,7 @@ $(OUTPUT)/test_cpp: test_cpp.cpp $(OUTPUT)/test_core_extern.skel.h $(BPFOBJ)
+ 	$(call msg,CXX,,$@)
+ 	$(CXX) $(CFLAGS) $^ $(LDLIBS) -o $@
+ 
+-EXTRA_CLEAN := $(TEST_CUSTOM_PROGS)					\
++EXTRA_CLEAN := $(TEST_CUSTOM_PROGS) $(SCRATCH_DIR)			\
+ 	prog_tests/tests.h map_tests/tests.h verifier/tests.h		\
+ 	feature								\
+-	$(addprefix $(OUTPUT)/,*.o *.skel.h no_alu32 bpf_gcc tools)
++	$(addprefix $(OUTPUT)/,*.o *.skel.h no_alu32 bpf_gcc)
 
