@@ -2,145 +2,146 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9E9C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E12AFC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58643206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:33:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199624;
-	bh=/7Jt2WKsId0mWZYHVt27b4RtZaiSQACvRaQAiKA8aTM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jq0eRnn0Q/dpab7jbQ9ycC8xxEmBuHuK3KYbm8395o+a6oyYzuBNgQbspWf/0C/m9
-	 kUwsr2JWTygxglJ+ee7nBfz4S7Orv29ROXPb3r7KZyLbGEnyLdkljku6nO8HEDitKE
-	 pHVRPKDIRMdTd0GtmcITyUOyNLYio5BEEnRppy+k=
+	by mail.kernel.org (Postfix) with ESMTP id B7EE1206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:33:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XJinJ0kC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391810AbgAPRYt (ORCPT
+        id S2436783AbgAPSdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:24:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59648 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403767AbgAPRYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:24:42 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 16 Jan 2020 13:33:53 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52515 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2403807AbgAPRYq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:24:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579195485;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=L1usH87y9Hi/ZiYHMXoHuhdmW1E/8d47ArLsZBDzX7o=;
+        b=XJinJ0kCHyHfEdMKr9DwZZk5Js+UaAI/mIyiqZFM7u+NaTHK0Gp9c8GYI/bKEw3ftfisH4
+        Tomc0I9edkmGHe3lL1XoUx7YOn42wgRqabaQzsWz/zHet9DZabRo/JzqNrEqwHAkkMYLqw
+        MmMwUVWa3qCol1gNEMzhsOG0tFeEthQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-206-dO0yLECUNPe09s1O855Low-1; Thu, 16 Jan 2020 12:24:44 -0500
+X-MC-Unique: dO0yLECUNPe09s1O855Low-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07453246AE;
-        Thu, 16 Jan 2020 17:24:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195481;
-        bh=/7Jt2WKsId0mWZYHVt27b4RtZaiSQACvRaQAiKA8aTM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qbbMc+dSe2wbkXq/ruUN/wX4Vquaa6g7VorsRkwXkBt6Y/vPmvPSrTgrTw6e759AK
-         c1kUMQ426ymQmbEnhnGYiRpaEreFUI/7pEa59tea5lB45OvRw466nTBqZMUjlomR8U
-         i9kKQkDuV0bi5PREO4+Dy/exoTluFsfoYZjT24Aw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 086/371] rtc: 88pm860x: fix unintended sign extension
-Date:   Thu, 16 Jan 2020 12:19:18 -0500
-Message-Id: <20200116172403.18149-29-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
-References: <20200116172403.18149-1-sashal@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 397941137843;
+        Thu, 16 Jan 2020 17:24:42 +0000 (UTC)
+Received: from steredhat.redhat.com (ovpn-117-242.ams2.redhat.com [10.36.117.242])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id ACF8C5C28F;
+        Thu, 16 Jan 2020 17:24:30 +0000 (UTC)
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     davem@davemloft.net, netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Jorgen Hansen <jhansen@vmware.com>,
+        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-hyperv@vger.kernel.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH net-next 0/3] vsock: support network namespace
+Date:   Thu, 16 Jan 2020 18:24:25 +0100
+Message-Id: <20200116172428.311437-1-sgarzare@redhat.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+RFC -> v1:
+ * added 'netns' module param to vsock.ko to enable the
+   network namespace support (disabled by default)
+ * added 'vsock_net_eq()' to check the "net" assigned to a socket
+   only when 'netns' support is enabled
 
-[ Upstream commit dc9e47160626cdb58d5c39a4f43dcfdb27a5c004 ]
+RFC: https://patchwork.ozlabs.org/cover/1202235/
 
-Shifting a u8 by 24 will cause the value to be promoted to an integer. If
-the top bit of the u8 is set then the following conversion to an unsigned
-long will sign extend the value causing the upper 32 bits to be set in
-the result.
+Now that we have multi-transport upstream, I started to take a look to
+support network namespace in vsock.
 
-Fix this by casting the u8 value to an unsigned long before the shift.
+As we partially discussed in the multi-transport proposal [1], it could
+be nice to support network namespace in vsock to reach the following
+goals:
+- isolate host applications from guest applications using the same ports
+  with CID_ANY
+- assign the same CID of VMs running in different network namespaces
+- partition VMs between VMMs or at finer granularity
 
-Detected by CoverityScan, CID#144925-144928 ("Unintended sign extension")
+This new feature is disabled by default, because it changes vsock's
+behavior with network namespaces and could break existing applications.
+It can be enabled with the new 'netns' module parameter of vsock.ko.
 
-Fixes: 008b30408c40 ("mfd: Add rtc support to 88pm860x")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/rtc/rtc-88pm860x.c | 21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+This implementation provides the following behavior:
+- packets received from the host (received by G2H transports) are
+  assigned to the default netns (init_net)
+- packets received from the guest (received by H2G - vhost-vsock) are
+  assigned to the netns of the process that opens /dev/vhost-vsock
+  (usually the VMM, qemu in my tests, opens the /dev/vhost-vsock)
+    - for vmci I need some suggestions, because I don't know how to do
+      and test the same in the vmci driver, for now vmci uses the
+      init_net
+- loopback packets are exchanged only in the same netns
 
-diff --git a/drivers/rtc/rtc-88pm860x.c b/drivers/rtc/rtc-88pm860x.c
-index 166faae3a59c..7d3e5168fcef 100644
---- a/drivers/rtc/rtc-88pm860x.c
-+++ b/drivers/rtc/rtc-88pm860x.c
-@@ -115,11 +115,13 @@ static int pm860x_rtc_read_time(struct device *dev, struct rtc_time *tm)
- 	pm860x_page_bulk_read(info->i2c, REG0_ADDR, 8, buf);
- 	dev_dbg(info->dev, "%x-%x-%x-%x-%x-%x-%x-%x\n", buf[0], buf[1],
- 		buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
--	base = (buf[1] << 24) | (buf[3] << 16) | (buf[5] << 8) | buf[7];
-+	base = ((unsigned long)buf[1] << 24) | (buf[3] << 16) |
-+		(buf[5] << 8) | buf[7];
- 
- 	/* load 32-bit read-only counter */
- 	pm860x_bulk_read(info->i2c, PM8607_RTC_COUNTER1, 4, buf);
--	data = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
-+	data = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
-+		(buf[1] << 8) | buf[0];
- 	ticks = base + data;
- 	dev_dbg(info->dev, "get base:0x%lx, RO count:0x%lx, ticks:0x%lx\n",
- 		base, data, ticks);
-@@ -145,7 +147,8 @@ static int pm860x_rtc_set_time(struct device *dev, struct rtc_time *tm)
- 
- 	/* load 32-bit read-only counter */
- 	pm860x_bulk_read(info->i2c, PM8607_RTC_COUNTER1, 4, buf);
--	data = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
-+	data = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
-+		(buf[1] << 8) | buf[0];
- 	base = ticks - data;
- 	dev_dbg(info->dev, "set base:0x%lx, RO count:0x%lx, ticks:0x%lx\n",
- 		base, data, ticks);
-@@ -170,10 +173,12 @@ static int pm860x_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
- 	pm860x_page_bulk_read(info->i2c, REG0_ADDR, 8, buf);
- 	dev_dbg(info->dev, "%x-%x-%x-%x-%x-%x-%x-%x\n", buf[0], buf[1],
- 		buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
--	base = (buf[1] << 24) | (buf[3] << 16) | (buf[5] << 8) | buf[7];
-+	base = ((unsigned long)buf[1] << 24) | (buf[3] << 16) |
-+		(buf[5] << 8) | buf[7];
- 
- 	pm860x_bulk_read(info->i2c, PM8607_RTC_EXPIRE1, 4, buf);
--	data = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
-+	data = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
-+		(buf[1] << 8) | buf[0];
- 	ticks = base + data;
- 	dev_dbg(info->dev, "get base:0x%lx, RO count:0x%lx, ticks:0x%lx\n",
- 		base, data, ticks);
-@@ -198,11 +203,13 @@ static int pm860x_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
- 	pm860x_page_bulk_read(info->i2c, REG0_ADDR, 8, buf);
- 	dev_dbg(info->dev, "%x-%x-%x-%x-%x-%x-%x-%x\n", buf[0], buf[1],
- 		buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
--	base = (buf[1] << 24) | (buf[3] << 16) | (buf[5] << 8) | buf[7];
-+	base = ((unsigned long)buf[1] << 24) | (buf[3] << 16) |
-+		(buf[5] << 8) | buf[7];
- 
- 	/* load 32-bit read-only counter */
- 	pm860x_bulk_read(info->i2c, PM8607_RTC_COUNTER1, 4, buf);
--	data = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
-+	data = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
-+		(buf[1] << 8) | buf[0];
- 	ticks = base + data;
- 	dev_dbg(info->dev, "get base:0x%lx, RO count:0x%lx, ticks:0x%lx\n",
- 		base, data, ticks);
--- 
-2.20.1
+I tested the series in this way:
+l0_host$ qemu-system-x86_64 -m 4G -M accel=3Dkvm -smp 4 \
+            -drive file=3D/tmp/vsockvm0.img,if=3Dvirtio --nographic \
+            -device vhost-vsock-pci,guest-cid=3D3
+
+l1_vm$ echo 1 > /sys/module/vsock/parameters/netns
+
+l1_vm$ ip netns add ns1
+l1_vm$ ip netns add ns2
+ # same CID on different netns
+l1_vm$ ip netns exec ns1 qemu-system-x86_64 -m 1G -M accel=3Dkvm -smp 2 \
+            -drive file=3D/tmp/vsockvm1.img,if=3Dvirtio --nographic \
+            -device vhost-vsock-pci,guest-cid=3D4
+l1_vm$ ip netns exec ns2 qemu-system-x86_64 -m 1G -M accel=3Dkvm -smp 2 \
+            -drive file=3D/tmp/vsockvm2.img,if=3Dvirtio --nographic \
+            -device vhost-vsock-pci,guest-cid=3D4
+
+ # all iperf3 listen on CID_ANY and port 5201, but in different netns
+l1_vm$ ./iperf3 --vsock -s # connection from l0 or guests started
+                           # on default netns (init_net)
+l1_vm$ ip netns exec ns1 ./iperf3 --vsock -s
+l1_vm$ ip netns exec ns1 ./iperf3 --vsock -s
+
+l0_host$ ./iperf3 --vsock -c 3
+l2_vm1$ ./iperf3 --vsock -c 2
+l2_vm2$ ./iperf3 --vsock -c 2
+
+[1] https://www.spinics.net/lists/netdev/msg575792.html
+
+Stefano Garzarella (3):
+  vsock: add network namespace support
+  vsock/virtio_transport_common: handle netns of received packets
+  vhost/vsock: use netns of process that opens the vhost-vsock device
+
+ drivers/vhost/vsock.c                   | 29 ++++++++++++-----
+ include/linux/virtio_vsock.h            |  2 ++
+ include/net/af_vsock.h                  |  7 +++--
+ net/vmw_vsock/af_vsock.c                | 41 +++++++++++++++++++------
+ net/vmw_vsock/hyperv_transport.c        |  5 +--
+ net/vmw_vsock/virtio_transport.c        |  2 ++
+ net/vmw_vsock/virtio_transport_common.c | 12 ++++++--
+ net/vmw_vsock/vmci_transport.c          |  5 +--
+ 8 files changed, 78 insertions(+), 25 deletions(-)
+
+--=20
+2.24.1
 
