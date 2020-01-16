@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A653BC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 025ABC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78FE624681
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:58:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9C8C2464B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:58:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197480;
-	bh=nmFAhrHtoLLCzhzFImZuzpAFjoAw2xKjA7eVQFApg7Y=;
+	s=default; t=1579197483;
+	bh=4vp6+qYTLEpYWbaUySrr+/hC5VNQsimUjNPYH+qNsso=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tXMarEAGXGfmHioYyfXN0iQMuYQGUbqqgs+buy1saneKpec9wX0pQP3mzfta/3EjM
-	 nw2uhqtQTVHHFHkH1Q4nadbqEDjG0nBcvJnCXVf2m18ipsTMTS8y4nJSpZ6e9nhJRQ
-	 5ytAGb+zA/JJW8FXHrQ0SIXHLsLpN4xdPrx6CH6M=
+	b=RQRcwjNZfEjBcuJqE+4rYqDVtihDPx0n3cP29H04q4ELnNSKkv+i0rogIF8HOus31
+	 tN7NLFzkHmUtU3eOmQI5BeVL66XFC+h4PS335BGRqlFzTlAV56AXM5l1/9EbQS8O15
+	 5fuc3NMcfliclCZORLueEZVEnartUOvGVg6pz8VQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406392AbgAPR57 (ORCPT
+        id S2406020AbgAPR6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:57:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33252 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:58:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393901AbgAPRnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:43:16 -0500
+        id S2393908AbgAPRnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:43:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E625E24718;
-        Thu, 16 Jan 2020 17:43:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 295D02472F;
+        Thu, 16 Jan 2020 17:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196595;
-        bh=nmFAhrHtoLLCzhzFImZuzpAFjoAw2xKjA7eVQFApg7Y=;
+        s=default; t=1579196596;
+        bh=4vp6+qYTLEpYWbaUySrr+/hC5VNQsimUjNPYH+qNsso=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jvE0jLg5Ccg2j5/77+L/umqdoNb8pAgHYkYSW9WAyA1h6Cgcp7t8hXlL4/Vjhay0Z
-         RJoJFhKhM7odA8z1sqIkbPFRA2Ls4F0PuDdAujKq0/l7wIzuZCRtxoUfJC4+u12Tgy
-         OcPHEcZSGhBa5NUa8D2ZZ5OyLi78c/NNXtlCzgJw=
+        b=buFQ3PRz64/uD8wxK26rMNAUVicZm0aNDzK7tXrgJMaqA7yS7hKRuy/jyxy1PmwGj
+         HgDMudpDoHNBC58gvE1xs/RN0pkjdKHNBzVAsKjqdbRbTiq1TstatlzsjCexJoAg4q
+         HNNii6nGMXkvDIhEvbom8uXEFySqctkCOsVeuzmQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 018/174] Input: nomadik-ske-keypad - fix a loop timeout test
-Date:   Thu, 16 Jan 2020 12:40:15 -0500
-Message-Id: <20200116174251.24326-18-sashal@kernel.org>
+Cc:     Yangtao Li <tiny.windzz@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 019/174] clk: highbank: fix refcount leak in hb_clk_init()
+Date:   Thu, 16 Jan 2020 12:40:16 -0500
+Message-Id: <20200116174251.24326-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -59,33 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Yangtao Li <tiny.windzz@gmail.com>
 
-[ Upstream commit 4d8f727b83bcd6702c2d210330872c9122d2d360 ]
+[ Upstream commit 5eb8ba90958de1285120dae5d3a5d2b1a360b3b4 ]
 
-The loop exits with "timeout" set to -1 not to 0.
+The of_find_compatible_node() returns a node pointer with refcount
+incremented, but there is the lack of use of the of_node_put() when
+done. Add the missing of_node_put() to release the refcount.
 
-Fixes: 1158f0f16224 ("Input: add support for Nomadik SKE keypad controller")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+Fixes: 26cae166cff9 ("ARM: highbank: remove custom .init_time hook")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/keyboard/nomadik-ske-keypad.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/clk-highbank.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/input/keyboard/nomadik-ske-keypad.c b/drivers/input/keyboard/nomadik-ske-keypad.c
-index 8567ee47761e..ae3b04557074 100644
---- a/drivers/input/keyboard/nomadik-ske-keypad.c
-+++ b/drivers/input/keyboard/nomadik-ske-keypad.c
-@@ -100,7 +100,7 @@ static int __init ske_keypad_chip_init(struct ske_keypad *keypad)
- 	while ((readl(keypad->reg_base + SKE_RIS) != 0x00000000) && timeout--)
- 		cpu_relax();
+diff --git a/drivers/clk/clk-highbank.c b/drivers/clk/clk-highbank.c
+index be3a21abb185..4105066b428c 100644
+--- a/drivers/clk/clk-highbank.c
++++ b/drivers/clk/clk-highbank.c
+@@ -294,6 +294,7 @@ static __init struct clk *hb_clk_init(struct device_node *node, const struct clk
+ 	/* Map system registers */
+ 	srnp = of_find_compatible_node(NULL, NULL, "calxeda,hb-sregs");
+ 	hb_clk->reg = of_iomap(srnp, 0);
++	of_node_put(srnp);
+ 	BUG_ON(!hb_clk->reg);
+ 	hb_clk->reg += reg;
  
--	if (!timeout)
-+	if (timeout == -1)
- 		return -EINVAL;
- 
- 	/*
 -- 
 2.20.1
 
