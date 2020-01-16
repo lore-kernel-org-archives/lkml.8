@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C81A0C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB78EC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66E56246B0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA92F24690
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:12:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194750;
-	bh=kJDSH6qspOXmPpENhFtEh6iF87PxDG6eFgEJbsH73fE=;
+	s=default; t=1579194753;
+	bh=9RRM21TpFO1zLQGDOGv9yE1E4wQDHYSISBgZrBTvCls=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OrFWSOvnul12w7Rc9T1NkCRAmP88YuYzYlBqB7FWRW28savbKj4m1bb6AobEOSeJh
-	 aX1y9TA7mZMwOeVrf4JFK6+618RSZi4OZEpFJ8yQEY2fYXiKiY25IVxzpBU9+GgykJ
-	 9hzvliXdFRlRB0hIu4AVBhqH7Cc7hQdAMbH1fRjs=
+	b=KCHR4KCrS3PQmodqXFWXLPUp74WAklfdtZry1JMiycL8FijDmCjGepOxY4JBr+x2Y
+	 85PghepJPAGM9sSLKYQ/8Dn6Ed5LSxAOO+tqMdOzuYn++P9cmVXFWaHYbN7rhHunsT
+	 v6OseJTLnGWNs5o3YeBsKjdaTtlN69/JvCrx5ndY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390494AbgAPRM3 (ORCPT
+        id S2390516AbgAPRMc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:12:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55164 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:12:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390473AbgAPRM0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:12:26 -0500
+        id S2390473AbgAPRMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:12:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C8C324690;
-        Thu, 16 Jan 2020 17:12:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D1A220684;
+        Thu, 16 Jan 2020 17:12:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194746;
-        bh=kJDSH6qspOXmPpENhFtEh6iF87PxDG6eFgEJbsH73fE=;
+        s=default; t=1579194750;
+        bh=9RRM21TpFO1zLQGDOGv9yE1E4wQDHYSISBgZrBTvCls=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JZH9jzOt8LMnQ6fqsL53+BeTQ0ZXzKE50ONE75ExOmry7df/a82sFuQzBHilVj5mq
-         We26ybxVcGlAbnUEJBpe1s4LIPl5F0o4S+ClbYUTNQ5uWKrtplNZrmjyzZXfW6n7Nh
-         YuYEYrSodT3aWIGabFjkJcRirLp8Mode66yaWrzw=
+        b=DEndlQMdbPZcUt0rUUt8MobfLP61/PzKGw5JCTB/oXkyk/lC51FOf85xodR9bfq7+
+         caOe37xIb4d9e/8dpV3XYkTnq/8dmzX8n2TB8senv5eFyodhxMyBrNHdDZBr8aPLA/
+         SP3RADgeVsYeVrAjYL2zpNruCu8KmgqVRXyJYiVA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 575/671] net: stmmac: gmac4+: Not all Unicast addresses may be available
-Date:   Thu, 16 Jan 2020 12:03:33 -0500
-Message-Id: <20200116170509.12787-312-sashal@kernel.org>
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 578/671] mac80211: accept deauth frames in IBSS mode
+Date:   Thu, 16 Jan 2020 12:03:36 -0500
+Message-Id: <20200116170509.12787-315-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -61,34 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jose Abreu <Jose.Abreu@synopsys.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 25683bab09a70542b9f8e3e28f79b3369e56701f ]
+[ Upstream commit 95697f9907bfe3eab0ef20265a766b22e27dde64 ]
 
-Some setups may not have all Unicast addresses filters available. Check
-the number of available filters before trying to setup it.
+We can process deauth frames and all, but we drop them very
+early in the RX path today - this could never have worked.
 
-Fixes: 477286b53f55 ("stmmac: add GMAC4 core support")
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 2cc59e784b54 ("mac80211: reply to AUTH with DEAUTH if sta allocation fails in IBSS")
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Link: https://lore.kernel.org/r/20191004123706.15768-2-luca@coelho.fi
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/mac80211/rx.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index 48cf5e2b2441..bc8871e7351f 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -443,7 +443,7 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
- 	}
- 
- 	/* Handle multiple unicast addresses */
--	if (netdev_uc_count(dev) > GMAC_MAX_PERFECT_ADDRESSES) {
-+	if (netdev_uc_count(dev) > hw->unicast_filter_entries) {
- 		/* Switch to promiscuous mode if more than 128 addrs
- 		 * are required
- 		 */
+diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
+index b12f23c996f4..02d0b22d0114 100644
+--- a/net/mac80211/rx.c
++++ b/net/mac80211/rx.c
+@@ -3391,9 +3391,18 @@ ieee80211_rx_h_mgmt(struct ieee80211_rx_data *rx)
+ 	case cpu_to_le16(IEEE80211_STYPE_PROBE_RESP):
+ 		/* process for all: mesh, mlme, ibss */
+ 		break;
++	case cpu_to_le16(IEEE80211_STYPE_DEAUTH):
++		if (is_multicast_ether_addr(mgmt->da) &&
++		    !is_broadcast_ether_addr(mgmt->da))
++			return RX_DROP_MONITOR;
++
++		/* process only for station/IBSS */
++		if (sdata->vif.type != NL80211_IFTYPE_STATION &&
++		    sdata->vif.type != NL80211_IFTYPE_ADHOC)
++			return RX_DROP_MONITOR;
++		break;
+ 	case cpu_to_le16(IEEE80211_STYPE_ASSOC_RESP):
+ 	case cpu_to_le16(IEEE80211_STYPE_REASSOC_RESP):
+-	case cpu_to_le16(IEEE80211_STYPE_DEAUTH):
+ 	case cpu_to_le16(IEEE80211_STYPE_DISASSOC):
+ 		if (is_multicast_ether_addr(mgmt->da) &&
+ 		    !is_broadcast_ether_addr(mgmt->da))
 -- 
 2.20.1
 
