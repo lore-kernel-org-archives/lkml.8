@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B1DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34DCC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF9AC20684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95D7A20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:21:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195292;
-	bh=eSzMcQYi0nGtxL8imlw/3iEIcs2mG+60LHYeDMeYRa0=;
+	s=default; t=1579195296;
+	bh=BH+UMe8kz/i8Qjt0xEQMMAUh1+STexvodu+9TBUe6fA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t+za2hP5R+XZQqYTmk8Qb9o/GymKps6MVIrcA1GQ7tAYPq112EcS7BwphxMQ96P2U
-	 wCjJkmeaf3bpmBtC8/Fks9Us4nBWxmjpTJbJODDLRfL6VTcTN32xwUtyMIpPk10onO
-	 rEB9Le5iatIUKfZrIznU8TXj+xq6ZBF4EBMdDGHI=
+	b=H6T+vBuyyN9G5H7rgPSFD8JP22AHFKq/IkbK99JnZQj7uglxFA374otM5o5yxUDx/
+	 c0ZG9bFENmncEZ9fb+2ChixQiYHnSnZ7Pzcm05GBWH3oQxqgDrI3y4P2nBklTKbwR5
+	 OqFlwZw988+de1F2cr/xjD5F3S0IpRXiY79/2eDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391634AbgAPRVb (ORCPT
+        id S2391162AbgAPRRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:21:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43340 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:17:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391252AbgAPRRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:17:41 -0500
+        id S2391226AbgAPRRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:17:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4798024693;
-        Thu, 16 Jan 2020 17:17:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27CF52464B;
+        Thu, 16 Jan 2020 17:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195061;
-        bh=eSzMcQYi0nGtxL8imlw/3iEIcs2mG+60LHYeDMeYRa0=;
+        s=default; t=1579195052;
+        bh=BH+UMe8kz/i8Qjt0xEQMMAUh1+STexvodu+9TBUe6fA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uiwISQ4MEDPX688wOcgA/9H45nx/K6YwiKUYnNm7Wi0R4bHnwN8qs9+3Uv1MBiwYg
-         PTgFlDynSYl9wF+KzlNZs/jxK3ItEjRsHmvrWw6jZFHle4zeoR1Sigq/ijtZvKhlAx
-         +k1rUpmGVhVbNLpJSwRlrFEVhtdIyUGLvG/fl2hg=
+        b=N/Gxr7a4KaZbT7BICppLGu5Exdfv2faV7tf4R2IxTHggHPLCH00i6niCq5ex99xOL
+         DHuvxjF1nIAe8oQ1nBI/4cndV2P1vE3SuiJ5FOh/bkt2bUAKKPvdBuo/iUVbcp/yH6
+         H/Nbg1VNMtfaLaYtlbWulERXirDZABafLbUv1IWw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Jon Mason <jdmason@kudzu.us>, Sasha Levin <sashal@kernel.org>,
-        linux-ntb@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 016/371] NTB: ntb_hw_idt: replace IS_ERR_OR_NULL with regular NULL checks
-Date:   Thu, 16 Jan 2020 12:11:24 -0500
-Message-Id: <20200116171719.16965-16-sashal@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 009/371] regulator: fixed: Default enable high on DT regulators
+Date:   Thu, 16 Jan 2020 12:11:17 -0500
+Message-Id: <20200116171719.16965-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116171719.16965-1-sashal@kernel.org>
 References: <20200116171719.16965-1-sashal@kernel.org>
@@ -59,52 +63,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit 1b7619828d0c341612f58683e73f279c37e70bbc ]
+[ Upstream commit 28be5f15df2ee6882b0a122693159c96a28203c7 ]
 
-Both devm_kcalloc() and devm_kzalloc() return NULL on error. They
-never return error pointers.
+commit efdfeb079cc3
+("regulator: fixed: Convert to use GPIO descriptor only")
+switched to use gpiod_get() to look up the regulator from the
+gpiolib core whether that is device tree or boardfile.
 
-The use of IS_ERR_OR_NULL is currently applied to the wrong
-context.
+This meant that we activate the code in
+a603a2b8d86e ("gpio: of: Add special quirk to parse regulator flags")
+which means the descriptors coming from the device tree already
+have the right inversion and open drain semantics set up from
+the gpiolib core.
 
-Fix this by replacing IS_ERR_OR_NULL with regular NULL checks.
+As the fixed regulator was inspected again we got the
+inverted inversion and things broke.
 
-Fixes: bf2a952d31d2 ("NTB: Add IDT 89HPESxNTx PCIe-switches support")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: Jon Mason <jdmason@kudzu.us>
+Fix it by ignoring the config in the device tree for now: the
+later patches in the series will push all inversion handling
+over to the gpiolib core and set it up properly in the
+boardfiles for legacy devices, but I did not finish that
+for this kernel cycle.
+
+Fixes: commit efdfeb079cc3 ("regulator: fixed: Convert to use GPIO descriptor only")
+Reported-by: Leonard Crestez <leonard.crestez@nxp.com>
+Reported-by: Fabio Estevam <festevam@gmail.com>
+Reported-by: John Stultz <john.stultz@linaro.org>
+Reported-by: Anders Roxell <anders.roxell@linaro.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Tested-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ntb/hw/idt/ntb_hw_idt.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/regulator/fixed.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/ntb/hw/idt/ntb_hw_idt.c b/drivers/ntb/hw/idt/ntb_hw_idt.c
-index d44d7ef38fe8..b68e2cad74cc 100644
---- a/drivers/ntb/hw/idt/ntb_hw_idt.c
-+++ b/drivers/ntb/hw/idt/ntb_hw_idt.c
-@@ -1105,9 +1105,9 @@ static struct idt_mw_cfg *idt_scan_mws(struct idt_ntb_dev *ndev, int port,
- 	}
+diff --git a/drivers/regulator/fixed.c b/drivers/regulator/fixed.c
+index 988a7472c2ab..d68ff65a5adc 100644
+--- a/drivers/regulator/fixed.c
++++ b/drivers/regulator/fixed.c
+@@ -84,9 +84,14 @@ of_get_fixed_voltage_config(struct device *dev,
  
- 	/* Allocate memory for memory window descriptors */
--	ret_mws = devm_kcalloc(&ndev->ntb.pdev->dev, *mw_cnt,
--				sizeof(*ret_mws), GFP_KERNEL);
--	if (IS_ERR_OR_NULL(ret_mws))
-+	ret_mws = devm_kcalloc(&ndev->ntb.pdev->dev, *mw_cnt, sizeof(*ret_mws),
-+			       GFP_KERNEL);
-+	if (!ret_mws)
- 		return ERR_PTR(-ENOMEM);
+ 	of_property_read_u32(np, "startup-delay-us", &config->startup_delay);
  
- 	/* Copy the info of detected memory windows */
-@@ -2393,7 +2393,7 @@ static struct idt_ntb_dev *idt_create_dev(struct pci_dev *pdev,
+-	config->enable_high = of_property_read_bool(np, "enable-active-high");
+-	config->gpio_is_open_drain = of_property_read_bool(np,
+-							   "gpio-open-drain");
++	/*
++	 * FIXME: we pulled active low/high and open drain handling into
++	 * gpiolib so it will be handled there. Delete this in the second
++	 * step when we also remove the custom inversion handling for all
++	 * legacy boardfiles.
++	 */
++	config->enable_high = 1;
++	config->gpio_is_open_drain = 0;
  
- 	/* Allocate memory for the IDT PCIe-device descriptor */
- 	ndev = devm_kzalloc(&pdev->dev, sizeof(*ndev), GFP_KERNEL);
--	if (IS_ERR_OR_NULL(ndev)) {
-+	if (!ndev) {
- 		dev_err(&pdev->dev, "Memory allocation failed for descriptor");
- 		return ERR_PTR(-ENOMEM);
- 	}
+ 	if (of_find_property(np, "vin-supply", NULL))
+ 		config->input_supply = "vin";
 -- 
 2.20.1
 
