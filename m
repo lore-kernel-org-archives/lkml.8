@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C5A4C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AC0C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E585206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:45:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA8862064C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:46:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200356;
-	bh=ul71Y/zEbW7xkWlk/aceUw/nzMusboXygjav+Ia0Llo=;
+	s=default; t=1579200365;
+	bh=1/ASeynZUsqLzaSrvpUafd5MSqbFUwvfVuXSWvidvbQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=flORK7ebxnWIZ2gXqMJ8vKtsazHElPVFkZhTbYH5YrSgNLKQ4pZFeyBBjusVdp6E3
-	 ilCU1rKBpuam+YWejl0Yt32XhxNxIBwyfl9oUpyyIS4XPyXfp/vu6Zs4jKpFiLvNfU
-	 VNTovvs717Ib48iHvk9mJL7aTJK6O3eJEU6wc3x0=
+	b=dHnczFoOrBh4V5JR4nVK4b+PHWlB4yoZQkByad6alq1TR/fQ2hHULVvx3yaE9Tkqk
+	 GmzTpZrppPrQHM9HeUoTW9dLiAbSbqi66QWceAkBaHJcc1VCJv+AgFDPdG9ltpeYbc
+	 e8601yIJP8U2QsJeixcQ2tt7UnHfE6dosdm8Kyww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389372AbgAPRKc (ORCPT
+        id S2391165AbgAPSqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:10:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48210 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:46:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389900AbgAPRKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:10:20 -0500
+        id S2389591AbgAPRKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:10:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26F5921D56;
-        Thu, 16 Jan 2020 17:10:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E262124684;
+        Thu, 16 Jan 2020 17:10:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194619;
-        bh=ul71Y/zEbW7xkWlk/aceUw/nzMusboXygjav+Ia0Llo=;
+        s=default; t=1579194629;
+        bh=1/ASeynZUsqLzaSrvpUafd5MSqbFUwvfVuXSWvidvbQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KNrGCXyZOfUNa7q0ntGnXKruh+BdC5lwrn3Z4Dppf7DFZmrlfvPHnqF1yJvnQF5GL
-         FoMhaonFjL018f8lEaq9IgFu6yhwFyrK6NBJnynqzBoaFg7oku5P/jYtSQ0tw042yD
-         wU6y6lKKJuk1SJ8dcE5UG30qG1vyKNG1DX/PdpU0=
+        b=iyBFDEHXj3K07bs1OxzWXxyJqK7vlB/S9jwBqjV3IbjSYXAPW9xVq+NMiSkObDlo1
+         s/LYCQn8scvxbWAx54fhhQ5GGa5nR77SURi+2m7AGHVVhEUWEBoviZKDn/L21LXJ5F
+         Eb/FjtT1ozur9CLuoRgoxXYqXZyrADwZX/hgjnpA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steve French <stfrench@microsoft.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org
-Subject: [PATCH AUTOSEL 4.19 481/671] cifs: fix rmmod regression in cifs.ko caused by force_sig changes
-Date:   Thu, 16 Jan 2020 12:01:59 -0500
-Message-Id: <20200116170509.12787-218-sashal@kernel.org>
+Cc:     Xi Wang <wangxi11@huawei.com>, Doug Ledford <dledford@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 489/671] RDMA/hns: bugfix for slab-out-of-bounds when loading hip08 driver
+Date:   Thu, 16 Jan 2020 12:02:07 -0500
+Message-Id: <20200116170509.12787-226-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -61,36 +58,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve French <stfrench@microsoft.com>
+From: Xi Wang <wangxi11@huawei.com>
 
-[ Upstream commit 247bc9470b1eeefc7b58cdf2c39f2866ba651509 ]
+[ Upstream commit bf8c02f961c89e5ccae5987b7ab28f5592a35101 ]
 
-Fixes: 72abe3bcf091 ("signal/cifs: Fix cifs_put_tcp_session to call send_sig instead of force_sig")
+kasan will report a BUG when run command 'insmod hns_roce_hw_v2.ko', the
+calltrace is as follows:
 
-The global change from force_sig caused module unloading of cifs.ko
-to fail (since the cifsd process could not be killed, "rmmod cifs"
-now would always fail)
+==================================================================
+BUG: KASAN: slab-out-of-bounds in hns_roce_v2_init_eq_table+0x1324/0x1948
+[hns_roce_hw_v2]
+Read of size 8 at addr ffff8020e7a10608 by task insmod/256
 
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
-CC: Eric W. Biederman <ebiederm@xmission.com>
+CPU: 0 PID: 256 Comm: insmod Tainted: G           O      5.2.0-rc4 #1
+Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI RC0
+Call trace:
+dump_backtrace+0x0/0x1e8
+show_stack+0x14/0x20
+dump_stack+0xc4/0xfc
+print_address_description+0x60/0x270
+__kasan_report+0x164/0x1b8
+kasan_report+0xc/0x18
+__asan_load8+0x84/0xa8
+hns_roce_v2_init_eq_table+0x1324/0x1948 [hns_roce_hw_v2]
+hns_roce_init+0xf8/0xfe0 [hns_roce]
+__hns_roce_hw_v2_init_instance+0x284/0x330 [hns_roce_hw_v2]
+hns_roce_hw_v2_init_instance+0xd0/0x1b8 [hns_roce_hw_v2]
+hclge_init_roce_client_instance+0x180/0x310 [hclge]
+hclge_init_client_instance+0xcc/0x508 [hclge]
+hnae3_init_client_instance.part.3+0x3c/0x80 [hnae3]
+hnae3_register_client+0x134/0x1a8 [hnae3]
+hns_roce_hw_v2_init+0x14/0x10000 [hns_roce_hw_v2]
+do_one_initcall+0x9c/0x3e0
+do_init_module+0xd4/0x2d8
+load_module+0x3284/0x3690
+__se_sys_init_module+0x274/0x308
+__arm64_sys_init_module+0x40/0x50
+el0_svc_handler+0xbc/0x210
+el0_svc+0x8/0xc
+
+Allocated by task 256:
+__kasan_kmalloc.isra.0+0xd0/0x180
+kasan_kmalloc+0xc/0x18
+__kmalloc+0x16c/0x328
+hns_roce_v2_init_eq_table+0x764/0x1948 [hns_roce_hw_v2]
+hns_roce_init+0xf8/0xfe0 [hns_roce]
+__hns_roce_hw_v2_init_instance+0x284/0x330 [hns_roce_hw_v2]
+hns_roce_hw_v2_init_instance+0xd0/0x1b8 [hns_roce_hw_v2]
+hclge_init_roce_client_instance+0x180/0x310 [hclge]
+hclge_init_client_instance+0xcc/0x508 [hclge]
+hnae3_init_client_instance.part.3+0x3c/0x80 [hnae3]
+hnae3_register_client+0x134/0x1a8 [hnae3]
+hns_roce_hw_v2_init+0x14/0x10000 [hns_roce_hw_v2]
+do_one_initcall+0x9c/0x3e0
+do_init_module+0xd4/0x2d8
+load_module+0x3284/0x3690
+__se_sys_init_module+0x274/0x308
+__arm64_sys_init_module+0x40/0x50
+el0_svc_handler+0xbc/0x210
+el0_svc+0x8/0xc
+
+Freed by task 0:
+(stack is not available)
+
+The buggy address belongs to the object at ffff8020e7a10600
+which belongs to the cache kmalloc-128 of size 128
+The buggy address is located 8 bytes inside of
+128-byte region [ffff8020e7a10600, ffff8020e7a10680)
+The buggy address belongs to the page:
+page:ffff7fe00839e840 refcount:1 mapcount:0 mapping:ffff802340020200 index:0x0
+flags: 0x5fffe00000000200(slab)
+raw: 5fffe00000000200 dead000000000100 dead000000000200 ffff802340020200
+raw: 0000000000000000 0000000081000100 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ffff8020e7a10500: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+ffff8020e7a10580: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff8020e7a10600: 00 fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+^
+ffff8020e7a10680: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ffff8020e7a10700: 00 fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+==================================================================
+Disabling lock debugging due to kernel taint
+
+Fixes: a5073d6054f7 ("RDMA/hns: Add eq support of hip08")
+
+Signed-off-by: Xi Wang <wangxi11@huawei.com>
+Link: https://lore.kernel.org/r/1565343666-73193-7-git-send-email-oulijun@huawei.com
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index a59dcda07534..a8790bf04e95 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -970,6 +970,7 @@ cifs_demultiplex_thread(void *p)
- 		mempool_resize(cifs_req_poolp, length + cifs_min_rcv);
+diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+index 7021444f18b4..417de7ac0d5e 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
++++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+@@ -4833,7 +4833,8 @@ static int hns_roce_mhop_alloc_eq(struct hns_roce_dev *hr_dev,
+ 				break;
+ 		}
+ 		eq->cur_eqe_ba = eq->buf_dma[0];
+-		eq->nxt_eqe_ba = eq->buf_dma[1];
++		if (ba_num > 1)
++			eq->nxt_eqe_ba = eq->buf_dma[1];
  
- 	set_freezable();
-+	allow_signal(SIGKILL);
- 	while (server->tcpStatus != CifsExiting) {
- 		if (try_to_freeze())
- 			continue;
+ 	} else if (mhop_num == 2) {
+ 		/* alloc L1 BT and buf */
+@@ -4875,7 +4876,8 @@ static int hns_roce_mhop_alloc_eq(struct hns_roce_dev *hr_dev,
+ 				break;
+ 		}
+ 		eq->cur_eqe_ba = eq->buf_dma[0];
+-		eq->nxt_eqe_ba = eq->buf_dma[1];
++		if (ba_num > 1)
++			eq->nxt_eqe_ba = eq->buf_dma[1];
+ 	}
+ 
+ 	eq->l0_last_num = i + 1;
 -- 
 2.20.1
 
