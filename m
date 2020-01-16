@@ -2,83 +2,158 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64249C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4AC8C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37C762073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:39:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 745DE20748
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:39:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579217993;
+	bh=/rnnCLUtsDSujem08bDuUV6hvzEqVGJfSuKukWLi4i0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=v/9aatt0jCZfhy3yWltTXwt3onw65mCXNV97BUgXlb0Noz4ONKnjsOPZEdUTgOdrH
+	 RyP30rImzXMTqigTzVAyF4pc3ihoOdp2W41CkVgZ7826aL7iNeoOPAQU/EsqQrGL7B
+	 HmmjfEoaGq7sLI35F1yXtrvNeQW6AmS1X7IWf8BI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390338AbgAPX1s (ORCPT
+        id S2388188AbgAPXjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 16 Jan 2020 18:39:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59924 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389646AbgAPX1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jan 2020 18:27:48 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:42951 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390324AbgAPX1o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:27:44 -0500
-Received: from 79.184.255.90.ipv4.supernova.orange.pl (79.184.255.90) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.320)
- id 4b8442e69dabda39; Fri, 17 Jan 2020 00:27:41 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the kunit-next tree
-Date:   Fri, 17 Jan 2020 00:27:41 +0100
-Message-ID: <1721306.C5hDvk6sIF@kreacher>
-In-Reply-To: <alpine.LRH.2.20.2001161120230.2505@dhcp-10-175-200-122.vpn.oracle.com>
-References: <20200116165703.4e04be51@canb.auug.org.au> <alpine.LRH.2.20.2001161120230.2505@dhcp-10-175-200-122.vpn.oracle.com>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD1B0206D9;
+        Thu, 16 Jan 2020 23:27:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579217267;
+        bh=/rnnCLUtsDSujem08bDuUV6hvzEqVGJfSuKukWLi4i0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zGjfxbpq7XAAGOtTfMHlJrQhprF7xD1urt0/KVuB1U9wVxVsqIRRFx4Sw0LmEdez7
+         l9DKOYxuHhOMn36XimbDrpeQH6XuISNZSGtsGhzAO0xcB8N9/hSxr2ZD/kaErzAyEs
+         wZEmsSb38ch5aPBJzxy2SAhtQVddmmMQAO6G+o7k=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 4.19 13/84] iwlwifi: pcie: fix memory leaks in iwl_pcie_ctxt_info_gen3_init
+Date:   Fri, 17 Jan 2020 00:17:47 +0100
+Message-Id: <20200116231715.177276544@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
+References: <20200116231713.087649517@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, January 16, 2020 12:23:09 PM CET Alan Maguire wrote:
-> On Thu, 16 Jan 2020, Stephen Rothwell wrote:
-> 
-> > Hi all,
-> > 
-> > After merging the kunit-next tree, today's linux-next build (x86_64
-> > allmodconfig) failed like this:
-> > 
-> > x86_64-linux-gnu-ld: drivers/base/test/property-entry-test.o: in function `kunit_test_suites_init':
-> > property-entry-test.c:(.text+0x26): undefined reference to `kunit_run_tests'
-> > x86_64-linux-gnu-ld: drivers/base/test/property-entry-test.o: in function `pe_test_reference':
-> > property-entry-test.c:(.text+0x275): undefined reference to `kunit_binary_assert_format'
-> > x86_64-linux-gnu-ld: property-entry-test.c:(.text+0x2c4): undefined reference to `kunit_do_assertion'
-> > 
-> > and lots more ...
-> > 
-> > Caused by commit
-> > 
-> >   27f9d7e984d9 ("software node: introduce CONFIG_KUNIT_DRIVER_PE_TEST")
-> > 
-> > from the pm tree interacting with commit
-> > 
-> >   35c57fc3f8ea ("kunit: building kunit as a module breaks allmodconfig")
-> > 
-> > I have disabled CONFIG_KUNIT_DRIVER_PE_TEST for today.
-> >
-> 
-> Apologies again, I should have explicitly specified that
-> CONFIG_KUNIT_DRIVER_PE_TEST depends on KUNIT=y; I've
-> sent a patch to fix this:
-> 
-> https://lore.kernel.org/lkml/1579173451-2439-1-git-send-email-alan.maguire@oracle.com/T/#u
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-I have folded this into the original patch and remerged the linux-next branch.
+commit 0f4f199443faca715523b0659aa536251d8b978f upstream.
 
-Thanks!
+In iwl_pcie_ctxt_info_gen3_init there are cases that the allocated dma
+memory is leaked in case of error.
 
+DMA memories prph_scratch, prph_info, and ctxt_info_gen3 are allocated
+and initialized to be later assigned to trans_pcie. But in any error case
+before such assignment the allocated memories should be released.
+
+First of such error cases happens when iwl_pcie_init_fw_sec fails.
+Current implementation correctly releases prph_scratch. But in two
+sunsequent error cases where dma_alloc_coherent may fail, such
+releases are missing.
+
+This commit adds release for prph_scratch when allocation for
+prph_info fails, and adds releases for prph_scratch and prph_info when
+allocation for ctxt_info_gen3 fails.
+
+Fixes: 2ee824026288 ("iwlwifi: pcie: support context information for 22560 devices")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info-gen3.c |   36 ++++++++++-----
+ 1 file changed, 25 insertions(+), 11 deletions(-)
+
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info-gen3.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info-gen3.c
+@@ -102,13 +102,9 @@ int iwl_pcie_ctxt_info_gen3_init(struct
+ 
+ 	/* allocate ucode sections in dram and set addresses */
+ 	ret = iwl_pcie_init_fw_sec(trans, fw, &prph_scratch->dram);
+-	if (ret) {
+-		dma_free_coherent(trans->dev,
+-				  sizeof(*prph_scratch),
+-				  prph_scratch,
+-				  trans_pcie->prph_scratch_dma_addr);
+-		return ret;
+-	}
++	if (ret)
++		goto err_free_prph_scratch;
++
+ 
+ 	/* Allocate prph information
+ 	 * currently we don't assign to the prph info anything, but it would get
+@@ -116,16 +112,20 @@ int iwl_pcie_ctxt_info_gen3_init(struct
+ 	prph_info = dma_alloc_coherent(trans->dev, sizeof(*prph_info),
+ 				       &trans_pcie->prph_info_dma_addr,
+ 				       GFP_KERNEL);
+-	if (!prph_info)
+-		return -ENOMEM;
++	if (!prph_info) {
++		ret = -ENOMEM;
++		goto err_free_prph_scratch;
++	}
+ 
+ 	/* Allocate context info */
+ 	ctxt_info_gen3 = dma_alloc_coherent(trans->dev,
+ 					    sizeof(*ctxt_info_gen3),
+ 					    &trans_pcie->ctxt_info_dma_addr,
+ 					    GFP_KERNEL);
+-	if (!ctxt_info_gen3)
+-		return -ENOMEM;
++	if (!ctxt_info_gen3) {
++		ret = -ENOMEM;
++		goto err_free_prph_info;
++	}
+ 
+ 	ctxt_info_gen3->prph_info_base_addr =
+ 		cpu_to_le64(trans_pcie->prph_info_dma_addr);
+@@ -176,6 +176,20 @@ int iwl_pcie_ctxt_info_gen3_init(struct
+ 	iwl_set_bit(trans, CSR_GP_CNTRL, CSR_AUTO_FUNC_INIT);
+ 
+ 	return 0;
++
++err_free_prph_info:
++	dma_free_coherent(trans->dev,
++			  sizeof(*prph_info),
++			prph_info,
++			trans_pcie->prph_info_dma_addr);
++
++err_free_prph_scratch:
++	dma_free_coherent(trans->dev,
++			  sizeof(*prph_scratch),
++			prph_scratch,
++			trans_pcie->prph_scratch_dma_addr);
++	return ret;
++
+ }
+ 
+ void iwl_pcie_ctxt_info_gen3_free(struct iwl_trans *trans)
 
 
