@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE53C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4939DC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CE95214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:22:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2208217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:22:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195350;
-	bh=ndOS0f4Dtb1ODMTqk6eVUDdez0LhtfKzKRVYAhh27OU=;
+	s=default; t=1579195356;
+	bh=QGsiU+u5Ni+a2mgblIM6INl9p21+IYQkMFGB7cMcRf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZvCILiyw56HU9EFzqCytx3y44fBQInHI2/jmC01gfKIwnPl7R3wlCS1a9Q13cJUen
-	 xtFjOGCCWpQqhh8+WYDGgflCweVEcjbJSTEgL59QoeiZgcLuyuDwQRb7woPqfrLs8p
-	 vkF1kyGnZYme2J6avPgcliiyc1oplQ67HJeHPn2Y=
+	b=1utLcUmT+fE+buwL6AaruOWJRj693dEuFOGJQrhMpwlocttjmVOmT2wddqLZvymf2
+	 BSngVbQnVmW6P573WPtYmS/gn5vq1peeInSKZ4sRJaWcROylgtcSf5et4r+yjaPOWi
+	 nXM6xqIO7P2rKtxiWmAwCdX+7u/uxkPYhcDWsXy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391339AbgAPRWZ (ORCPT
+        id S2391642AbgAPRWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:22:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58982 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:22:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733197AbgAPRNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:13:35 -0500
+        id S2390764AbgAPRNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:13:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14A16246AF;
-        Thu, 16 Jan 2020 17:13:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F145F246AA;
+        Thu, 16 Jan 2020 17:13:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194815;
-        bh=ndOS0f4Dtb1ODMTqk6eVUDdez0LhtfKzKRVYAhh27OU=;
+        s=default; t=1579194811;
+        bh=QGsiU+u5Ni+a2mgblIM6INl9p21+IYQkMFGB7cMcRf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eSZ4ys/iSvhKhx4jwv5ZwHy4yLgWuUQV20tb1Vv2dyMzMfilqVjdAoNMkLZHGtJ7O
-         EPa3DCFje15QHQrXBfXBZkZK+qka0yMFLj/DTlfLVOgYsCj+Sq7e+StakX6dlRSXtV
-         NMrxldOIaNjq/hSN/5wTp1pJnRS9q+DZF2/+zDvo=
+        b=fjUq/BIw48N8Yk1Zk4rxe0/4rOSqDZ72IySqsRLbibKe6B4sUC/3Mv4h6wVvRhPJc
+         qc84L3cvNV5ctaRb4bvOlzFCTZd2APwy+ocnmPME/YyZneAgSyX8q3wFsnh6wT8LT0
+         gtDLdbRjUbLYnzoQ39/vFJP5Hi7Eyb/k6rDNjd3I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Loic Poulain <loic.poulain@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 621/671] arm64: dts: apq8096-db820c: Increase load on l21 for SDCARD
-Date:   Thu, 16 Jan 2020 12:04:19 -0500
-Message-Id: <20200116170509.12787-358-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 618/671] pinctl: ti: iodelay: fix error checking on pinctrl_count_index_with_args call
+Date:   Thu, 16 Jan 2020 12:04:16 -0500
+Message-Id: <20200116170509.12787-355-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,37 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Loic Poulain <loic.poulain@linaro.org>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit e38161bd325ea541ef2f258d8e28281077dde524 ]
+[ Upstream commit 5ff8aca906f3a7a7db79fad92f2a4401107ef50d ]
 
-In the same way as for msm8974-hammerhead, l21 load, used for SDCARD
-VMMC, needs to be increased in order to prevent any voltage drop issues
-(due to limited current) happening with some SDCARDS or during specific
-operations (e.g. write).
+The call to pinctrl_count_index_with_args checks for a -EINVAL return
+however this function calls pinctrl_get_list_and_count and this can
+return -ENOENT. Rather than check for a specific error, fix this by
+checking for any error return to catch the -ENOENT case.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Fixes: 660a9763c6a9 (arm64: dts: qcom: db820c: Add pm8994 regulator node)
-Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Addresses-Coverity: ("Improper use of negative")
+Fixes: 003910ebc83b ("pinctrl: Introduce TI IOdelay configuration driver")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Link: https://lore.kernel.org/r/20190920122030.14340-1-colin.king@canonical.com
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pinctrl/ti/pinctrl-ti-iodelay.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-index 0ef90c6554a9..9b41d77aa39b 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -580,6 +580,8 @@
- 				l21 {
- 					regulator-min-microvolt = <2950000>;
- 					regulator-max-microvolt = <2950000>;
-+					regulator-allow-set-load;
-+					regulator-system-load = <200000>;
- 				};
- 				l22 {
- 					regulator-min-microvolt = <3300000>;
+diff --git a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
+index 8782c348ebe9..4eda888b4d04 100644
+--- a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
++++ b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
+@@ -496,7 +496,7 @@ static int ti_iodelay_dt_node_to_map(struct pinctrl_dev *pctldev,
+ 		return -EINVAL;
+ 
+ 	rows = pinctrl_count_index_with_args(np, name);
+-	if (rows == -EINVAL)
++	if (rows < 0)
+ 		return rows;
+ 
+ 	*map = devm_kzalloc(iod->dev, sizeof(**map), GFP_KERNEL);
 -- 
 2.20.1
 
