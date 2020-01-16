@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3020EC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA65C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1B702073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:46:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61D1F2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:46:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193161;
-	bh=zrtug52BmZXPYpKd1XK968zeRSRJc2alCuFgpYu/tK0=;
+	s=default; t=1579193166;
+	bh=n/jvbSX+FOK8nICkSkn2yXG7e58RQCtU2NcV+14PgJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=osmEEwjHS4mGa7bawNnh8FRqXL6HE6AEJkBxrb0KeyfHbtULV///bj498FnYCGgwA
-	 5FXnR8GwpyKlL289Gnt0QDyuHD/dOXk7MNfkazorPSuJjuq4fLL8hw3q2SaUGNwfcq
-	 76fpG7FmWnzD2+f9Kys07UlFFK2rIls7acZq726I=
+	b=lBp9b5GXJ3BMvoVM7YRphBAJ7HcAd457WyGwZ6DRlM3B6U7qop4wTKFs9DclZ6tKG
+	 v/GNvClLbV9mBDHdQyFpXgCJxVitW7MW1du4BTly8MgEr0bdB/GbIn0GsaOjav6a+z
+	 xsmEyEiJqMiMzNnqu1531EORL8FevppxqUSviKUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbgAPQp7 (ORCPT
+        id S1729721AbgAPQqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:45:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54932 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:46:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726928AbgAPQpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:45:55 -0500
+        id S1729701AbgAPQp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:45:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CA4C2081E;
-        Thu, 16 Jan 2020 16:45:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B984C20663;
+        Thu, 16 Jan 2020 16:45:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193154;
-        bh=zrtug52BmZXPYpKd1XK968zeRSRJc2alCuFgpYu/tK0=;
+        s=default; t=1579193159;
+        bh=n/jvbSX+FOK8nICkSkn2yXG7e58RQCtU2NcV+14PgJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qZ80nJes95A0EtwUVl+xtYVbbnV5p9bwEE/invClvQmw2/JJzonV5epPJ7E/ChVuq
-         gte70akMowggxXPPrm387o8wwyJ2+94tANP3NvJ5FtX7SxCJuJaUCgVUWLCxPyfFNp
-         5i5xSKHhtDc4Qg60lc0CRI8QrR6BMHf/ruhDutyE=
+        b=mzSIvl+pZ1brJHOhUxnfV9+qYExAu1yz7vWLoMP2pTs8YPKuFXQMgJn7mLpc/u0Ag
+         +5yJacBuR7xMWEpsji11UjPBD3v9Nq5rtccTwERal89XUUy8QCA9chXazbQAQkS7pH
+         wI9dMbab/LJRjlVxMrGPpZfCqEEFcQZFVmKOawRI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 035/205] drm/rockchip: Round up _before_ giving to the clock framework
-Date:   Thu, 16 Jan 2020 11:40:10 -0500
-Message-Id: <20200116164300.6705-35-sashal@kernel.org>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 036/205] media: v4l: cadence: Fix how unsued lanes are handled in 'csi2rx_start()'
+Date:   Thu, 16 Jan 2020 11:40:11 -0500
+Message-Id: <20200116164300.6705-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -62,112 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 287422a95fe28e05c1952de0472e0dfdffa6caae ]
+[ Upstream commit 2eca8e4c1df4864b937752c3aa2f7925114f4806 ]
 
-I'm embarassed to say that even though I've touched
-vop_crtc_mode_fixup() twice and I swear I tested it, there's still a
-stupid glaring bug in it.  Specifically, on veyron_minnie (with all
-the latest display timings) we want to be setting our pixel clock to
-66,666,666.67 Hz and we tell userspace that's what we set, but we're
-actually choosing 66,000,000 Hz.  This is confirmed by looking at the
-clock tree.
+The 2nd parameter of 'find_first_zero_bit()' is a number of bits, not of
+bytes. So use 'csi2rx->max_lanes' instead of 'sizeof(lanes_used)'.
 
-The problem is that in drm_display_mode_from_videomode() we convert
-from Hz to kHz with:
-
-  dmode->clock = vm->pixelclock / 1000;
-
-...and drm_display_mode_from_videomode() is called from panel-simple
-when we have an "override_mode" like we do on veyron_minnie.  See
-commit 123643e5c40a ("ARM: dts: rockchip: Specify
-rk3288-veyron-minnie's display timings").
-
-...so when the device tree specifies a clock of 66666667 for the panel
-then DRM translates that to 66666000.  The clock framework will always
-pick a clock that is _lower_ than the one requested, so it will refuse
-to pick 66666667 and we'll end up at 66000000.
-
-While we could try to fix drm_display_mode_from_videomode() to round
-to the nearest kHz and it would fix our problem, it wouldn't help if
-the clock we actually needed was 60,000,001 Hz.  We could
-alternatively have DRM always round up, but maybe this would break
-someone else who already baked in the assumption that DRM rounds down.
-Specifically note that clock drivers are not consistent about whether
-they round up or round down when you call clk_set_rate().  We know how
-Rockchip's clock driver works, but (for instance) you can see that on
-most Qualcomm clocks the default is clk_rcg2_ops which rounds up.
-
-Let's solve this by just adding 999 Hz before calling
-clk_round_rate().  This should be safe and work everywhere.  As
-discussed in more detail in comments in the commit, Rockchip's PLLs
-are configured in a way that there shouldn't be another PLL setting
-that is only a few kHz off so we won't get mixed up.
-
-NOTE: if this is picked to stable, it's probably easiest to first pick
-commit 527e4ca3b6d1 ("drm/rockchip: Base adjustments of the mode based
-on prev adjustments") which shouldn't hurt in stable.
-
-Fixes: b59b8de31497 ("drm/rockchip: return a true clock rate to adjusted_mode")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Sean Paul <seanpaul@chromium.org>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191003114726.v2.1.Ib233b3e706cf6317858384264d5b0ed35657456e@changeid
+Fixes: 1fc3b37f34f6 ("media: v4l: cadence: Add Cadence MIPI-CSI2 RX driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 37 +++++++++++++++++++--
- 1 file changed, 34 insertions(+), 3 deletions(-)
+ drivers/media/platform/cadence/cdns-csi2rx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-index 613404f86668..84e3decb17b1 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-@@ -1040,10 +1040,41 @@ static bool vop_crtc_mode_fixup(struct drm_crtc *crtc,
- 				struct drm_display_mode *adjusted_mode)
- {
- 	struct vop *vop = to_vop(crtc);
-+	unsigned long rate;
- 
--	adjusted_mode->clock =
--		DIV_ROUND_UP(clk_round_rate(vop->dclk,
--					    adjusted_mode->clock * 1000), 1000);
-+	/*
-+	 * Clock craziness.
-+	 *
-+	 * Key points:
-+	 *
-+	 * - DRM works in in kHz.
-+	 * - Clock framework works in Hz.
-+	 * - Rockchip's clock driver picks the clock rate that is the
-+	 *   same _OR LOWER_ than the one requested.
-+	 *
-+	 * Action plan:
-+	 *
-+	 * 1. When DRM gives us a mode, we should add 999 Hz to it.  That way
-+	 *    if the clock we need is 60000001 Hz (~60 MHz) and DRM tells us to
-+	 *    make 60000 kHz then the clock framework will actually give us
-+	 *    the right clock.
-+	 *
-+	 *    NOTE: if the PLL (maybe through a divider) could actually make
-+	 *    a clock rate 999 Hz higher instead of the one we want then this
-+	 *    could be a problem.  Unfortunately there's not much we can do
-+	 *    since it's baked into DRM to use kHz.  It shouldn't matter in
-+	 *    practice since Rockchip PLLs are controlled by tables and
-+	 *    even if there is a divider in the middle I wouldn't expect PLL
-+	 *    rates in the table that are just a few kHz different.
-+	 *
-+	 * 2. Get the clock framework to round the rate for us to tell us
-+	 *    what it will actually make.
-+	 *
-+	 * 3. Store the rounded up rate so that we don't need to worry about
-+	 *    this in the actual clk_set_rate().
-+	 */
-+	rate = clk_round_rate(vop->dclk, adjusted_mode->clock * 1000 + 999);
-+	adjusted_mode->clock = DIV_ROUND_UP(rate, 1000);
- 
- 	return true;
- }
+diff --git a/drivers/media/platform/cadence/cdns-csi2rx.c b/drivers/media/platform/cadence/cdns-csi2rx.c
+index 31ace114eda1..be9ec59774d6 100644
+--- a/drivers/media/platform/cadence/cdns-csi2rx.c
++++ b/drivers/media/platform/cadence/cdns-csi2rx.c
+@@ -129,7 +129,7 @@ static int csi2rx_start(struct csi2rx_priv *csi2rx)
+ 	 */
+ 	for (i = csi2rx->num_lanes; i < csi2rx->max_lanes; i++) {
+ 		unsigned int idx = find_first_zero_bit(&lanes_used,
+-						       sizeof(lanes_used));
++						       csi2rx->max_lanes);
+ 		set_bit(idx, &lanes_used);
+ 		reg |= CSI2RX_STATIC_CFG_DLANE_MAP(i, i + 1);
+ 	}
 -- 
 2.20.1
 
