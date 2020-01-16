@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B75A9C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B994C33CB7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CAF92075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4249D20728
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194959;
-	bh=IsIQlCAKLjxmjSdijTYiULQA7efHkUvHXQUo4paPNIs=;
+	s=default; t=1579194963;
+	bh=DQki7PZzjNa4opcLggjE1aYk8b+80ED2ncPPxwBq4zs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p4k6rWcbPPmdOfwk6kNdyMQQDMaIY4JyyBkkwCoE38IxWk6FmEm4sFtIj0/+xhqPU
-	 FErqqH3wBIob+SkvIa8l/hh4CO3dV5RF+yl2q86vdKL2zfMCw/fVNVvSIpv3hxSRaw
-	 9bfyjQGFbDnUUUCF05i1fyOGEq1Ltu4C3j3cL7OI=
+	b=TsRR7B59vaInlJC5iGq69/fmmFhbpgLr8wNcU+KCNK4wJPs+6YayzNoZqJlJxZOhY
+	 xdiHdjQdBif+OzYEmGd/GVKjjowbaQBdA3CbtJM4fyv4VytKvWZCMZP1d9VSEjuB91
+	 aKFLSF0ygnRtroK/5J6yQIQQbEfaI6wy31BIDD5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390788AbgAPRP6 (ORCPT
+        id S1730697AbgAPROW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:15:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33560 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:14:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390990AbgAPRO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:14:27 -0500
+        id S2390934AbgAPROK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:14:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1787D246B2;
-        Thu, 16 Jan 2020 17:14:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FB89246B0;
+        Thu, 16 Jan 2020 17:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194866;
-        bh=IsIQlCAKLjxmjSdijTYiULQA7efHkUvHXQUo4paPNIs=;
+        s=default; t=1579194850;
+        bh=DQki7PZzjNa4opcLggjE1aYk8b+80ED2ncPPxwBq4zs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=APcXt/Ybt9vx0AZ6GR+pcLWY9EmHXEq7Cg0fUjrsMCdPqI0hphTUubhMr+ypS9j+V
-         S6N3gIk04wlHzKBfwWtLqWa1BGJdIocPU1alZSaZv51GyQalwqGOBGs5XF4A46uFBH
-         tnYHSD8XIeW75onmiiFZ0I2RCqcnMJr4uKZfh+5I=
+        b=d/PVO3XykfUaSCP/m/jJC0wO4F+52DSBhkJxtQgUTtbFhOyksQcJW6Kz9UERP4Bgj
+         xazc9D7V65Yb5hTsZll84O21Mv6yK9SyS+GxOuZuzJ6ruzAksObYgOXce7jgxIJVxm
+         QunwNB/0ouxsfVloD1gikSq/DKYgqL4sHx4+ThiM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andre Przywara <andre.przywara@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 660/671] arm64: dts: juno: Fix UART frequency
-Date:   Thu, 16 Jan 2020 12:04:58 -0500
-Message-Id: <20200116170509.12787-397-sashal@kernel.org>
+Cc:     Peng Fan <peng.fan@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 646/671] tty: serial: pch_uart: correct usage of dma_unmap_sg
+Date:   Thu, 16 Jan 2020 12:04:44 -0500
+Message-Id: <20200116170509.12787-383-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -61,52 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andre Przywara <andre.przywara@arm.com>
+From: Peng Fan <peng.fan@nxp.com>
 
-[ Upstream commit 39a1a8941b27c37f79508426e27a2ec29829d66c ]
+[ Upstream commit 74887542fdcc92ad06a48c0cca17cdf09fc8aa00 ]
 
-Older versions of the Juno *SoC* TRM [1] recommended that the UART clock
-source should be 7.2738 MHz, whereas the *system* TRM [2] stated a more
-correct value of 7.3728 MHz. Somehow the wrong value managed to end up in
-our DT.
+Per Documentation/DMA-API-HOWTO.txt,
+To unmap a scatterlist, just call:
+	dma_unmap_sg(dev, sglist, nents, direction);
 
-Doing a prime factorisation, a modulo divide by 115200 and trying
-to buy a 7.2738 MHz crystal at your favourite electronics dealer suggest
-that the old value was actually a typo. The actual UART clock is driven
-by a PLL, configured via a parameter in some board.txt file in the
-firmware, which reads 7.37 MHz (sic!).
+.. note::
 
-Fix this to correct the baud rate divisor calculation on the Juno board.
+	The 'nents' argument to the dma_unmap_sg call must be
+	the _same_ one you passed into the dma_map_sg call,
+	it should _NOT_ be the 'count' value _returned_ from the
+	dma_map_sg call.
 
-[1] http://infocenter.arm.com/help/topic/com.arm.doc.ddi0515b.b/DDI0515B_b_juno_arm_development_platform_soc_trm.pdf
-[2] http://infocenter.arm.com/help/topic/com.arm.doc.100113_0000_07_en/arm_versatile_express_juno_development_platform_(v2m_juno)_technical_reference_manual_100113_0000_07_en.pdf
+However in the driver, priv->nent is directly assigned with value
+returned from dma_map_sg, and dma_unmap_sg use priv->nent for unmap,
+this breaks the API usage.
 
-Fixes: 71f867ec130e ("arm64: Add Juno board device tree.")
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Acked-by: Liviu Dudau <liviu.dudau@arm.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+So introduce a new entry orig_nent to remember 'nents'.
+
+Fixes: da3564ee027e ("pch_uart: add multi-scatter processing")
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Link: https://lore.kernel.org/r/1573623259-6339-1-git-send-email-peng.fan@nxp.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/arm/juno-clocks.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/tty/serial/pch_uart.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/arm/juno-clocks.dtsi b/arch/arm64/boot/dts/arm/juno-clocks.dtsi
-index e5e265dfa902..2870b5eeb198 100644
---- a/arch/arm64/boot/dts/arm/juno-clocks.dtsi
-+++ b/arch/arm64/boot/dts/arm/juno-clocks.dtsi
-@@ -8,10 +8,10 @@
-  */
- / {
- 	/* SoC fixed clocks */
--	soc_uartclk: refclk7273800hz {
-+	soc_uartclk: refclk7372800hz {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
--		clock-frequency = <7273800>;
-+		clock-frequency = <7372800>;
- 		clock-output-names = "juno:uartclk";
- 	};
+diff --git a/drivers/tty/serial/pch_uart.c b/drivers/tty/serial/pch_uart.c
+index cb85002a10d8..3245cdbf9116 100644
+--- a/drivers/tty/serial/pch_uart.c
++++ b/drivers/tty/serial/pch_uart.c
+@@ -235,6 +235,7 @@ struct eg20t_port {
+ 	struct dma_chan			*chan_rx;
+ 	struct scatterlist		*sg_tx_p;
+ 	int				nent;
++	int				orig_nent;
+ 	struct scatterlist		sg_rx;
+ 	int				tx_dma_use;
+ 	void				*rx_buf_virt;
+@@ -789,9 +790,10 @@ static void pch_dma_tx_complete(void *arg)
+ 	}
+ 	xmit->tail &= UART_XMIT_SIZE - 1;
+ 	async_tx_ack(priv->desc_tx);
+-	dma_unmap_sg(port->dev, sg, priv->nent, DMA_TO_DEVICE);
++	dma_unmap_sg(port->dev, sg, priv->orig_nent, DMA_TO_DEVICE);
+ 	priv->tx_dma_use = 0;
+ 	priv->nent = 0;
++	priv->orig_nent = 0;
+ 	kfree(priv->sg_tx_p);
+ 	pch_uart_hal_enable_interrupt(priv, PCH_UART_HAL_TX_INT);
+ }
+@@ -1015,6 +1017,7 @@ static unsigned int dma_handle_tx(struct eg20t_port *priv)
+ 		dev_err(priv->port.dev, "%s:dma_map_sg Failed\n", __func__);
+ 		return 0;
+ 	}
++	priv->orig_nent = num;
+ 	priv->nent = nent;
  
+ 	for (i = 0; i < nent; i++, sg++) {
 -- 
 2.20.1
 
