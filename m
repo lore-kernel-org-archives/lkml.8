@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 391CDC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FD2C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D5032075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AF232073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:15:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202156;
-	bh=BH+UMe8kz/i8Qjt0xEQMMAUh1+STexvodu+9TBUe6fA=;
+	s=default; t=1579202159;
+	bh=3NByrXuXSyoPe6ZyQRibnoFzk53sfcBbC68pP99LweI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oRZ/mYzqqZ8Xf/K9N9VgvLnwWcjXtUQWXXD73CnL1fLhG/QbypFGgwPmspwjdoQ+2
-	 Mba9abF/bKGJQ3roOtUzjKprIVPIgR8kSi8bfZkf67KJnusyDmF639jEYUwzggAeQC
-	 tTF337FWZSGqhNKjDjI/N5QBG2hVZiT1stCMtoVY=
+	b=nNPgJTp7kKa2EEGT7RgT4f7aNazvGKr6hnHRBiw9VuxQ6hwP0/KeXvpRlpAMUOFGX
+	 Ik3ojAOM21U9DTZxJL5M36kbsxra2fe2sHd0+LUdV/tELYWnM3vWnLZG7Hi7xYVnYl
+	 wzcAAYfkVFoRPFv/tbz2zzmjchoFs31Ehccy0Yow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729134AbgAPQzu (ORCPT
+        id S2437581AbgAPTP5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:55:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40888 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:15:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732974AbgAPQzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:55:33 -0500
+        id S1732375AbgAPQzu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:55:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1765C214AF;
-        Thu, 16 Jan 2020 16:55:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C360521D56;
+        Thu, 16 Jan 2020 16:55:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193733;
-        bh=BH+UMe8kz/i8Qjt0xEQMMAUh1+STexvodu+9TBUe6fA=;
+        s=default; t=1579193749;
+        bh=3NByrXuXSyoPe6ZyQRibnoFzk53sfcBbC68pP99LweI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sF+NTYVZm0HYVsSaGEt5m99QqXbI2LAYPy62ljfyhZoCTCk8gJPFI3tVZP6FrdxSw
-         E37AA8fgDb/+dfPzxbciIpnjgvBBUhsJ1/EzqcP00wTR3kDD0ukDe8tv/TI4rbwhah
-         cxYWgQJFhytsXAqFXwNgt5C3aPW6mqNbiqVI0Ed4=
+        b=D60dxBqXNBT50pIdNepRcA5oiDmHX9VuPiJvSRpCy/zU+wuKfF7hAyL3QiAyz/Om0
+         S6kNBWzZBMAceJzWzVI+4IosvcZkXaodAjoKPLNYvYEz1kXE5llhB+seHqbrc9gicU
+         95NvEY0ONh5OlNfTOaNER9N1yrlUsrwliV2tPf30=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 025/671] regulator: fixed: Default enable high on DT regulators
-Date:   Thu, 16 Jan 2020 11:44:16 -0500
-Message-Id: <20200116165502.8838-25-sashal@kernel.org>
+Cc:     Jon Maloy <jon.maloy@ericsson.com>,
+        Tuong Lien Tong <tuong.t.lien@dektech.com.au>,
+        Ying Xue <ying.xue@windriver.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.19 039/671] tipc: eliminate message disordering during binding table update
+Date:   Thu, 16 Jan 2020 11:44:30 -0500
+Message-Id: <20200116165502.8838-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -63,65 +62,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Jon Maloy <jon.maloy@ericsson.com>
 
-[ Upstream commit 28be5f15df2ee6882b0a122693159c96a28203c7 ]
+[ Upstream commit 988f3f1603d4650409db5334355cbf7b13ef50c3 ]
 
-commit efdfeb079cc3
-("regulator: fixed: Convert to use GPIO descriptor only")
-switched to use gpiod_get() to look up the regulator from the
-gpiolib core whether that is device tree or boardfile.
+We have seen the following race scenario:
+1) named_distribute() builds a "bulk" message, containing a PUBLISH
+   item for a certain publication. This is based on the contents of
+   the binding tables's 'cluster_scope' list.
+2) tipc_named_withdraw() removes the same publication from the list,
+   bulds a WITHDRAW message and distributes it to all cluster nodes.
+3) tipc_named_node_up(), which was calling named_distribute(), sends
+   out the bulk message built under 1)
+4) The WITHDRAW message arrives at the just detected node, finds
+   no corresponding publication, and is dropped.
+5) The PUBLISH item arrives at the same node, is added to its binding
+   table, and remains there forever.
 
-This meant that we activate the code in
-a603a2b8d86e ("gpio: of: Add special quirk to parse regulator flags")
-which means the descriptors coming from the device tree already
-have the right inversion and open drain semantics set up from
-the gpiolib core.
+This arrival disordering was earlier taken care of by the backlog queue,
+originally added for a different purpose, which was removed in the
+commit referred to below, but we now need a different solution.
+In this commit, we replace the rcu lock protecting the 'cluster_scope'
+list with a regular RW lock which comprises even the sending of the
+bulk message. This both guarantees both the list integrity and the
+message sending order. We will later add a commit which cleans up
+this code further.
 
-As the fixed regulator was inspected again we got the
-inverted inversion and things broke.
+Note that this commit needs recently added commit d3092b2efca1 ("tipc:
+fix unsafe rcu locking when accessing publication list") to apply
+cleanly.
 
-Fix it by ignoring the config in the device tree for now: the
-later patches in the series will push all inversion handling
-over to the gpiolib core and set it up properly in the
-boardfiles for legacy devices, but I did not finish that
-for this kernel cycle.
-
-Fixes: commit efdfeb079cc3 ("regulator: fixed: Convert to use GPIO descriptor only")
-Reported-by: Leonard Crestez <leonard.crestez@nxp.com>
-Reported-by: Fabio Estevam <festevam@gmail.com>
-Reported-by: John Stultz <john.stultz@linaro.org>
-Reported-by: Anders Roxell <anders.roxell@linaro.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Tested-by: John Stultz <john.stultz@linaro.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 37922ea4a310 ("tipc: permit overlapping service ranges in name table")
+Reported-by: Tuong Lien Tong <tuong.t.lien@dektech.com.au>
+Acked-by: Ying Xue <ying.xue@windriver.com>
+Signed-off-by: Jon Maloy <jon.maloy@ericsson.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/fixed.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ net/tipc/name_distr.c | 18 ++++++++++--------
+ net/tipc/name_table.c |  1 +
+ net/tipc/name_table.h |  1 +
+ 3 files changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/regulator/fixed.c b/drivers/regulator/fixed.c
-index 988a7472c2ab..d68ff65a5adc 100644
---- a/drivers/regulator/fixed.c
-+++ b/drivers/regulator/fixed.c
-@@ -84,9 +84,14 @@ of_get_fixed_voltage_config(struct device *dev,
+diff --git a/net/tipc/name_distr.c b/net/tipc/name_distr.c
+index e0a3dd424d8c..836e629e8f4a 100644
+--- a/net/tipc/name_distr.c
++++ b/net/tipc/name_distr.c
+@@ -94,8 +94,9 @@ struct sk_buff *tipc_named_publish(struct net *net, struct publication *publ)
+ 		list_add_tail_rcu(&publ->binding_node, &nt->node_scope);
+ 		return NULL;
+ 	}
+-	list_add_tail_rcu(&publ->binding_node, &nt->cluster_scope);
+-
++	write_lock_bh(&nt->cluster_scope_lock);
++	list_add_tail(&publ->binding_node, &nt->cluster_scope);
++	write_unlock_bh(&nt->cluster_scope_lock);
+ 	skb = named_prepare_buf(net, PUBLICATION, ITEM_SIZE, 0);
+ 	if (!skb) {
+ 		pr_warn("Publication distribution failure\n");
+@@ -112,11 +113,13 @@ struct sk_buff *tipc_named_publish(struct net *net, struct publication *publ)
+  */
+ struct sk_buff *tipc_named_withdraw(struct net *net, struct publication *publ)
+ {
++	struct name_table *nt = tipc_name_table(net);
+ 	struct sk_buff *buf;
+ 	struct distr_item *item;
  
- 	of_property_read_u32(np, "startup-delay-us", &config->startup_delay);
+-	list_del_rcu(&publ->binding_node);
+-
++	write_lock_bh(&nt->cluster_scope_lock);
++	list_del(&publ->binding_node);
++	write_unlock_bh(&nt->cluster_scope_lock);
+ 	if (publ->scope == TIPC_NODE_SCOPE)
+ 		return NULL;
  
--	config->enable_high = of_property_read_bool(np, "enable-active-high");
--	config->gpio_is_open_drain = of_property_read_bool(np,
--							   "gpio-open-drain");
-+	/*
-+	 * FIXME: we pulled active low/high and open drain handling into
-+	 * gpiolib so it will be handled there. Delete this in the second
-+	 * step when we also remove the custom inversion handling for all
-+	 * legacy boardfiles.
-+	 */
-+	config->enable_high = 1;
-+	config->gpio_is_open_drain = 0;
+@@ -147,7 +150,7 @@ static void named_distribute(struct net *net, struct sk_buff_head *list,
+ 			ITEM_SIZE) * ITEM_SIZE;
+ 	u32 msg_rem = msg_dsz;
  
- 	if (of_find_property(np, "vin-supply", NULL))
- 		config->input_supply = "vin";
+-	list_for_each_entry_rcu(publ, pls, binding_node) {
++	list_for_each_entry(publ, pls, binding_node) {
+ 		/* Prepare next buffer: */
+ 		if (!skb) {
+ 			skb = named_prepare_buf(net, PUBLICATION, msg_rem,
+@@ -189,11 +192,10 @@ void tipc_named_node_up(struct net *net, u32 dnode)
+ 
+ 	__skb_queue_head_init(&head);
+ 
+-	rcu_read_lock();
++	read_lock_bh(&nt->cluster_scope_lock);
+ 	named_distribute(net, &head, dnode, &nt->cluster_scope);
+-	rcu_read_unlock();
+-
+ 	tipc_node_xmit(net, &head, dnode, 0);
++	read_unlock_bh(&nt->cluster_scope_lock);
+ }
+ 
+ /**
+diff --git a/net/tipc/name_table.c b/net/tipc/name_table.c
+index d72985ca1d55..89993afe0fbd 100644
+--- a/net/tipc/name_table.c
++++ b/net/tipc/name_table.c
+@@ -744,6 +744,7 @@ int tipc_nametbl_init(struct net *net)
+ 
+ 	INIT_LIST_HEAD(&nt->node_scope);
+ 	INIT_LIST_HEAD(&nt->cluster_scope);
++	rwlock_init(&nt->cluster_scope_lock);
+ 	tn->nametbl = nt;
+ 	spin_lock_init(&tn->nametbl_lock);
+ 	return 0;
+diff --git a/net/tipc/name_table.h b/net/tipc/name_table.h
+index 892bd750b85f..f79066334cc8 100644
+--- a/net/tipc/name_table.h
++++ b/net/tipc/name_table.h
+@@ -100,6 +100,7 @@ struct name_table {
+ 	struct hlist_head services[TIPC_NAMETBL_SIZE];
+ 	struct list_head node_scope;
+ 	struct list_head cluster_scope;
++	rwlock_t cluster_scope_lock;
+ 	u32 local_publ_count;
+ };
+ 
 -- 
 2.20.1
 
