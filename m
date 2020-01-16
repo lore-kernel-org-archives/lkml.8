@@ -2,110 +2,127 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,PI_IMPORTANCE_HIGH,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC08C33CB7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C355C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62EC92077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB2D72075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:30:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="GfTRpKom"
+	dkim=pass (1024-bit key) header.d=NETORGFT5553569.onmicrosoft.com header.i=@NETORGFT5553569.onmicrosoft.com header.b="IWzFzTuh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730733AbgAPG0p (ORCPT
+        id S1726827AbgAPGau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 01:26:45 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:53713 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730712AbgAPG0o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 01:26:44 -0500
-Received: by mail-pj1-f67.google.com with SMTP id n96so1049907pjc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 22:26:44 -0800 (PST)
+        Thu, 16 Jan 2020 01:30:50 -0500
+Received: from mail-ma1ind01hn2106.outbound.protection.outlook.com ([52.103.200.106]:6215
+        "EHLO IND01-MA1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725973AbgAPGat (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 01:30:49 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NpsN7TnnbygZM8RirA0jC6kq7qvN8ildWUToZ3pPQxa4i2231cDQLaG0WGOcNEhFX+ZyiXTBdwG7dP/WSbMdJa3djHkWRmms4FqpmMH0m6UWELLECNXqEXZTYnAKEWo0fGAIy31w4cZpAoFg5GSwL61nC3Af3VmIKDX3Hon7OcNCKBTiDR6Xz+Z2WT77s/STKTUMWwsCZ7A30sMa3J+MIpCPSJU2ysOvhihOTY8/iwkj+Z9dyf48iU1hUQ9aacPhHTHwis0E9A2gb2b7Pja2exDms9nysQGVPe2gmbevEBdQ5kGr2dnktWWqwZvkgtSuG20rjM/fmr4wU3qKGtc7Dg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nIlcsXQe2P1VV6AprxUr872/iLpmI6OLNSAMzZ5u+7c=;
+ b=IG9OhAfnrUqvdKTEgy1zUgDHnmGzRrfzfk8fNkCBg2LWebYZYYruE7A8XM9Vl1OibAZgew853BQ/pUnE1SXxTPfVrv+4cqio5FMMS1y6NN1kspUV79jM1I/SF30XIcEQ4KupDrnfzGJxaDksMzuj+5EiQE6b44JTOD6OwhH54EX58RTHDuB0rY1CQZR94iRudrE2NneFO0G7X0L++FpDAOQeH/jilQ3Y1ps+5VuLJtrL3D38fGoQI5D3Hr4dUzN3YsUC5xDpaZ7YmsLDd3gxIAF4t+cGIHpeIoPvmpBSEEXoUABCW5NpyQtYOlOdX7PkanQ7qT+Uyu77B33KDObzQg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oceanedata.com; dmarc=pass action=none
+ header.from=oceanedata.com; dkim=pass header.d=oceanedata.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=SI5glm9tTBFJlI56hJYs/doyA7zUbu5YUKwxBp+hpYY=;
-        b=GfTRpKom0tPQq8D4aXQyI2foQczp9UuJXSAyw66CT6hkWQrJmpym0PT6cvNRyGY8Uk
-         0VvHyXu1/QQxb3+Jjk5FQ//6OW1fSF4+GEXglW8TGLZKjd4szY+kf1EU0mFv2H1ywD7M
-         VbwSiZQaQuyCsyymCLbnA4sRvShcMEGUaENZ4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=SI5glm9tTBFJlI56hJYs/doyA7zUbu5YUKwxBp+hpYY=;
-        b=h7+xPtvlc8A5Uuyjw+l+cyJVnnMABs8FWwYmJzisCcMyT/fEajYpCDKVCv43HTg68s
-         vFLTyx9aI/mEj0Pu2HoumID1qY3Sgu7bZuGpIVUMDS/6UCq3g6of3g+IkLqXFRA/9k6X
-         zGDGveg7yXzxDj7o05fG44m0ORa7Ql3LtiZUJdvJegYwzrLk6APkwTa96SDe/SlxXgWV
-         9DFQqiKasXf//hvTogWSSxNobiSSieLtmn0vxCU+SDIQm66bq596ndtQRgXbpI5/b6VQ
-         QWCraLUNrZH2zGHDbWfHFAVp9sXuP+qhE60JKynGsWwzWZiCGFkOooKpIqujyvjQJ84N
-         UUZw==
-X-Gm-Message-State: APjAAAXHqwH37x7XoIt8I74wCLEXvUAPOcfYO9G1cbhEd1vR8AWwY1oh
-        3eSFhtfPHLjUN4/og3JagfgvemQN4hw=
-X-Google-Smtp-Source: APXvYqyt2Oz5lp6I4QYJC6msD4qYWnWAGuSCIA+DMfGiAHr8tDPwjSQJBDVs1A0BbM5XvepejAB4uQ==
-X-Received: by 2002:a17:902:6b8c:: with SMTP id p12mr29998912plk.290.1579156003508;
-        Wed, 15 Jan 2020 22:26:43 -0800 (PST)
-Received: from localhost (2001-44b8-1113-6700-097c-7eed-afd4-cd15.static.ipv6.internode.on.net. [2001:44b8:1113:6700:97c:7eed:afd4:cd15])
-        by smtp.gmail.com with ESMTPSA id r3sm24681158pfg.145.2020.01.15.22.26.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 22:26:42 -0800 (PST)
-From:   Daniel Axtens <dja@axtens.net>
-To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        kasan-dev@googlegroups.com
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, x86@kernel.org, dvyukov@google.com,
-        christophe.leroy@c-s.fr, Daniel Axtens <dja@axtens.net>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>
-Subject: [PATCH v2 3/3] kasan: initialise array in kasan_memcmp test
-Date:   Thu, 16 Jan 2020 17:26:25 +1100
-Message-Id: <20200116062625.32692-4-dja@axtens.net>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116062625.32692-1-dja@axtens.net>
-References: <20200116062625.32692-1-dja@axtens.net>
+ d=NETORGFT5553569.onmicrosoft.com;
+ s=selector1-NETORGFT5553569-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nIlcsXQe2P1VV6AprxUr872/iLpmI6OLNSAMzZ5u+7c=;
+ b=IWzFzTuhkMwdxSPNcLf5kIbg8KqInELOAuVAZhxh2ta70Fv/NJVquSXDjVgz/AmVMOde6GeHeFVh1Ao2bW+t7diHfWQ0y/rrqJrTf+YQXN3iOp9NEOwuQm3ZnWNJYS42qSLLmDDb0CMiqEb9jDeDuYY4TejbP8nizaQlcW147WQ=
+Received: from BMXPR01MB3894.INDPRD01.PROD.OUTLOOK.COM (20.179.243.10) by
+ BMXPR01MB3800.INDPRD01.PROD.OUTLOOK.COM (10.255.157.77) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.9; Thu, 16 Jan 2020 06:30:45 +0000
+Received: from BMXPR01MB3894.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::d960:ff9d:e6e4:2c1]) by BMXPR01MB3894.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::d960:ff9d:e6e4:2c1%5]) with mapi id 15.20.2644.015; Thu, 16 Jan 2020
+ 06:30:45 +0000
+Received: from DESKTOPMPN5UI4 (106.51.17.50) by MAXPR01CA0091.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:49::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.20 via Frontend Transport; Thu, 16 Jan 2020 06:30:44 +0000
+From:   Mary Smith <mary.smith@oceanedata.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Leads On Embedded World  2020
+Thread-Topic: Leads On Embedded World  2020
+Thread-Index: AdXMNnp/Prpn2F8zTbiFMhQ6tOX+JQ==
+Importance: high
+X-Priority: 1
+Date:   Thu, 16 Jan 2020 06:30:45 +0000
+Message-ID: <!&!AAAAAAAAAAAYAAAAAAAAAPfxu8Y9lMVAhLaSR/F6sVHCgAAAEAAAAKuY8NYSOGRDkEGiewT8y/EBAAAAAA==@oceanedata.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MAXPR01CA0091.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:49::33) To BMXPR01MB3894.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:61::10)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mary.smith@oceanedata.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: Microsoft Outlook 15.0
+x-originating-ip: [106.51.17.50]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 00a49c9e-a038-4393-abbd-08d79a4d9e0e
+x-ms-traffictypediagnostic: BMXPR01MB3800:
+x-microsoft-antispam-prvs: <BMXPR01MB3800382AF1AA9BC57DBA5A5FE4360@BMXPR01MB3800.INDPRD01.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 02843AA9E0
+x-forefront-antispam-report: SFV:SPM;SFS:(10019020)(376002)(346002)(136003)(366004)(396003)(39830400003)(189003)(199004)(36756003)(4744005)(6916009)(508600001)(956004)(2616005)(5660300002)(2906002)(6486002)(316002)(86362001)(71200400001)(186003)(16526019)(81166006)(26005)(1006002)(66946007)(81156014)(8936002)(55236004)(44832011)(8676002)(66446008)(64756008)(66556008)(66476007)(6496006)(52116002)(32030200002);DIR:OUT;SFP:1501;SCL:5;SRVR:BMXPR01MB3800;H:BMXPR01MB3894.INDPRD01.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: oceanedata.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: vUGPjd6LWuVhATsPoK5XKI+N7tsPK0l6uhyKHCkX1GmJODQ3O2Nua+0BpaeFPkVE9E+6LZ4D69V83bu8JCdjKduTqxzzEklGCKiYcNAmQXx3BanqnN8tnpY3k6H9fQPRSTDreuji8PWw+yRlBAAOov9oLY2gKPi+6Yh4RgCL6V64O3/W5RdJNM5mV8dMF27Eyi5+iItTHx8oMWp9HBf8UDy3QU0tzKziennkc0goGVP8Ue9wL90OJ6WSlFm7LGLOYkrZddWPctyVETQwi4pvLaot5kuWmS1SqjOXqn64S+nDG/XAXQu2XLZ0LwcZ09MwHdkM7f4c0c6xtGkDyBmZFTVoz8s1CLU07KJnACePJYglMm6g2usP3++1uNzqAkYUUZL3Fs96m/iNIJ2PcFa1Ycr/I7k51TNYR6b6sWhC86bISXOUBT3ovHnrBjJUg733oRTgbmEThH5nAaX60FDb6PH4WEUovUZeF9wqoVyG1NSozGY1r3vXYrxxrAVFyn2HgCL9j7+5V0LERc9xT5jypFZ5BrZfbhXdjNymmZ+Pa1kzZRE8I8sdctVl6VRTeaWEuA4/f2dIslpv6AjisIOLGqF4p43yVjm4Z4gdMyiaTGOszZ70EdXstjZoA5yL9Dceuy134z8USN93i66lijUDO6NFRM6P0QHvDdS5G+J+pHk9u4uKiDdDfJVn/2hoyod3luh9/YMGYsx1O8Z08RpfVPgqMxFkFyI+djU/nM7x5HRlkgxu0qku/LhqPa2/mQbFBjq3AQM6hpyQy7AfsI/gsw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <771B740DB8F3BD498D5DAEE93D21A2BD@INDPRD01.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: oceanedata.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 00a49c9e-a038-4393-abbd-08d79a4d9e0e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jan 2020 06:30:45.2294
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 03cbc421-e565-4cc8-bf1c-64e35a1b9e25
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: boLRO+IVMTokLeIAk/XSws0IwIxsqaYdBze7n6j0MUKiTbxMDlh05CmgcPXhqHeKEhVJwX+QctzeTvBI9iiG2/AlhkakCCz4fBCKygCyMgM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BMXPR01MB3800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-memcmp may bail out before accessing all the memory if the buffers
-contain differing bytes. kasan_memcmp calls memcmp with a stack array.
-Stack variables are not necessarily initialised (in the absence of a
-compiler plugin, at least). Sometimes this causes the memcpy to bail
-early thus fail to trigger kasan.
+Hi,
+=20
+I wanted to reach out you if there is any need of Email list of Embedded
+World 2020 Attendees?
 
-Make sure the array initialised to zero in the code.
+Industry verticals: Electronic Systems, Embedded Technology, Embedded
+Systems, E-mobility and Distributed Intelligence
 
-No other test is dependent on the contents of an array on the stack.
+Each record in the list contains - Contact Name, Job Title, Company/Busines=
+s
+Name, Complete Mailing Details, email, Tel/Fax Number, Website/URL etc.
 
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Signed-off-by: Daniel Axtens <dja@axtens.net>
----
- lib/test_kasan.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+If you are interested, please let me know your thoughts, so that I can send
+you the counts, samples and discounted pricing for your review.=20
 
-diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-index a130d75b9385..519b0f259e97 100644
---- a/lib/test_kasan.c
-+++ b/lib/test_kasan.c
-@@ -619,7 +619,7 @@ static noinline void __init kasan_memcmp(void)
- {
- 	char *ptr;
- 	size_t size = 24;
--	int arr[9];
-+	int arr[9] = {};
- 
- 	pr_info("out-of-bounds in memcmp\n");
- 	ptr = kmalloc(size, GFP_KERNEL | __GFP_ZERO);
--- 
-2.20.1
+Looking forward to hear from you.
+=20
+Best Regards,
+Mary Smith
+Senior Marketing Executive
+
+We can also provide - Industry Specific List | Title Specific List |
+Technology User List and many more.
+
+If you do not wish to receive future emails from us, please reply as
+"Remove" in subject line
 
