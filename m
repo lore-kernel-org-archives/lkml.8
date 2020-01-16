@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B81C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8FDAC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D5812072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8653920661
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:49:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200586;
-	bh=Kqk6fl6f5LB8HMHeUsBnSkg3ZQMA6NTi9LKibYodp1M=;
+	s=default; t=1579200592;
+	bh=yMXuyAR6PqJcgBeraLWWJOmAPLzea7zZyDI8rS7zrO4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tPSo7f7gJRbcOqi0Yv44j/IINvPdLfMA1yE9J7fI6T8DvPf9Ebovd3sHy6UeAAQSi
-	 UNJuPuXUO5nV/WTkxTEcIezMQ4k2dN3OkVQTmNdv2gHj1Hn5kmDrFP3bqqhD62piDh
-	 Hy5AyqMbR0Y3csKOLgsPw4t2at0gZSXlw9jfuOvE=
+	b=nbk0V0Xex/RvP3eaLUvlbhZ38xk+EWVul2ixxrS6Ntr6RBKwxL62NpjUtEbiAU5wT
+	 KfyzYpxg5dq5QhFaHHw2t4aMbqIa+GKcN11OOq5cHUYKy6NQyQB1/GFSQIB8uxVEHl
+	 XIWu+GxXWSY4N+AG2psXws6/dtgHNnaizkG50g80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389663AbgAPRJU (ORCPT
+        id S2436497AbgAPStu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:09:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44708 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:49:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389635AbgAPRJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:09:15 -0500
+        id S2389658AbgAPRJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:09:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7217021D56;
-        Thu, 16 Jan 2020 17:09:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A94F24680;
+        Thu, 16 Jan 2020 17:09:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194554;
-        bh=Kqk6fl6f5LB8HMHeUsBnSkg3ZQMA6NTi9LKibYodp1M=;
+        s=default; t=1579194559;
+        bh=yMXuyAR6PqJcgBeraLWWJOmAPLzea7zZyDI8rS7zrO4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aAbdnb4yE2Pz6f4szPh27+ZCQM3txynKywa5dHxd4APcz1TkUBqdNhSkB5jVRe4Xj
-         8N1w6Y1OjTlcePvhA6SrNNvVampeozlxJvWZvCcKkr/X3o06kOdJS9kCBp7zeeYWTz
-         C6mQanpOAnMcFsrUCISIAO866Ab3mVCQ7U0Y9lFo=
+        b=LD1fP+9u1hWLSQlKqy6FljGXmaV4nmQNUoKPtJWhKTzMcWxWgGzTlqQzLIY1YGLJY
+         qlU/F/yt4tFQ/UVKPj0IFZZUNZObm4jyuXcrnsBBq6KoUG/5X1dZgFOJYmufb3LlAK
+         ec1ZlFFgq6L07Hzu7Q6H80ApXFDpkvsDDscRPfUM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bryan O'Donoghue <pure.logic@nexus-software.ie>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 436/671] nvmem: imx-ocotp: Change TIMING calculation to u-boot algorithm
-Date:   Thu, 16 Jan 2020 12:01:14 -0500
-Message-Id: <20200116170509.12787-173-sashal@kernel.org>
+Cc:     Michael Chan <michael.chan@broadcom.com>,
+        Somasundaram Krishnasamy <somasundaram.krishnasamy@oracle.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 440/671] bnxt_en: Fix ethtool selftest crash under error conditions.
+Date:   Thu, 16 Jan 2020 12:01:18 -0500
+Message-Id: <20200116170509.12787-177-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -62,97 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bryan O'Donoghue <pure.logic@nexus-software.ie>
+From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit 159dbaf57b2f4f67ecb59b2c87d071e45ed41d7e ]
+[ Upstream commit d27e2ca1166aefd54d9c48fb6647dee8115a5dfc ]
 
-The RELAX field of the OCOTP block is turning out as a zero on i.MX8MM.
-This messes up the subsequent re-load of the fuse shadow registers.
+After ethtool loopback packet tests, we re-open the nic for the next
+IRQ test.  If the open fails, we must not proceed with the IRQ test
+or we will crash with NULL pointer dereference.  Fix it by checking
+the bnxt_open_nic() return code before proceeding.
 
-After some discussion with people @ NXP its clear we have missed a trick
-here in Linux.
-
-The OCOTP fuse programming time has a physical minimum 'burn time' that is
-not related to the ipg_clk.
-
-We need to define the RELAX, STROBE_READ and STROBE_PROG fields in terms of
-desired timings to allow for the burn-in to safely complete. Right now only
-the RELAX field is calculated in terms of an absolute time and we are
-ending up with a value of zero.
-
-This patch inherits the u-boot timings for the OCOTP_TIMING calculation on
-the i.MX6 and i.MX8. Those timings are known to work and critically specify
-values such as STROBE_PROG as a minimum timing.
-
-Fixes: 0642bac7da42 ("nvmem: imx-ocotp: add write support")
-
-Signed-off-by: Bryan O'Donoghue <pure.logic@nexus-software.ie>
-Suggested-by: Leonard Crestez <leonard.crestez@nxp.com>
-Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: Somasundaram Krishnasamy <somasundaram.krishnasamy@oracle.com>
+Fixes: 67fea463fd87 ("bnxt_en: Add interrupt test to ethtool -t selftest.")
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvmem/imx-ocotp.c | 36 ++++++++++++++++++++++++++++++++----
- 1 file changed, 32 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
-index 04421a73f74a..09281aca86c2 100644
---- a/drivers/nvmem/imx-ocotp.c
-+++ b/drivers/nvmem/imx-ocotp.c
-@@ -50,7 +50,9 @@
- #define IMX_OCOTP_BM_CTRL_ERROR		0x00000200
- #define IMX_OCOTP_BM_CTRL_REL_SHADOWS	0x00000400
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+index 0a409ba4012a..dc63d269f01d 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+@@ -2600,7 +2600,7 @@ static void bnxt_self_test(struct net_device *dev, struct ethtool_test *etest,
+ 	bool offline = false;
+ 	u8 test_results = 0;
+ 	u8 test_mask = 0;
+-	int rc, i;
++	int rc = 0, i;
  
--#define DEF_RELAX			20	/* > 16.5ns */
-+#define TIMING_STROBE_PROG_US		10	/* Min time to blow a fuse */
-+#define TIMING_STROBE_READ_NS		37	/* Min time before read */
-+#define TIMING_RELAX_NS			17
- #define DEF_FSOURCE			1001	/* > 1000 ns */
- #define DEF_STROBE_PROG			10000	/* IPG clocks */
- #define IMX_OCOTP_WR_UNLOCK		0x3E770000
-@@ -182,12 +184,38 @@ static void imx_ocotp_set_imx6_timing(struct ocotp_priv *priv)
- 	 * fields with timing values to match the current frequency of the
- 	 * ipg_clk. OTP writes will work at maximum bus frequencies as long
- 	 * as the HW_OCOTP_TIMING parameters are set correctly.
-+	 *
-+	 * Note: there are minimum timings required to ensure an OTP fuse burns
-+	 * correctly that are independent of the ipg_clk. Those values are not
-+	 * formally documented anywhere however, working from the minimum
-+	 * timings given in u-boot we can say:
-+	 *
-+	 * - Minimum STROBE_PROG time is 10 microseconds. Intuitively 10
-+	 *   microseconds feels about right as representative of a minimum time
-+	 *   to physically burn out a fuse.
-+	 *
-+	 * - Minimum STROBE_READ i.e. the time to wait post OTP fuse burn before
-+	 *   performing another read is 37 nanoseconds
-+	 *
-+	 * - Minimum RELAX timing is 17 nanoseconds. This final RELAX minimum
-+	 *   timing is not entirely clear the documentation says "This
-+	 *   count value specifies the time to add to all default timing
-+	 *   parameters other than the Tpgm and Trd. It is given in number
-+	 *   of ipg_clk periods." where Tpgm and Trd refer to STROBE_PROG
-+	 *   and STROBE_READ respectively. What the other timing parameters
-+	 *   are though, is not specified. Experience shows a zero RELAX
-+	 *   value will mess up a re-load of the shadow registers post OTP
-+	 *   burn.
- 	 */
- 	clk_rate = clk_get_rate(priv->clk);
- 
--	relax = clk_rate / (1000000000 / DEF_RELAX) - 1;
--	strobe_prog = clk_rate / (1000000000 / 10000) + 2 * (DEF_RELAX + 1) - 1;
--	strobe_read = clk_rate / (1000000000 / 40) + 2 * (DEF_RELAX + 1) - 1;
-+	relax = DIV_ROUND_UP(clk_rate * TIMING_RELAX_NS, 1000000000) - 1;
-+	strobe_read = DIV_ROUND_UP(clk_rate * TIMING_STROBE_READ_NS,
-+				   1000000000);
-+	strobe_read += 2 * (relax + 1) - 1;
-+	strobe_prog = DIV_ROUND_CLOSEST(clk_rate * TIMING_STROBE_PROG_US,
-+					1000000);
-+	strobe_prog += 2 * (relax + 1) - 1;
- 
- 	timing = readl(priv->base + IMX_OCOTP_ADDR_TIMING) & 0x0FC00000;
- 	timing |= strobe_prog & 0x00000FFF;
+ 	if (!bp->num_tests || !BNXT_SINGLE_PF(bp))
+ 		return;
+@@ -2671,9 +2671,9 @@ static void bnxt_self_test(struct net_device *dev, struct ethtool_test *etest,
+ 		}
+ 		bnxt_hwrm_phy_loopback(bp, false, false);
+ 		bnxt_half_close_nic(bp);
+-		bnxt_open_nic(bp, false, true);
++		rc = bnxt_open_nic(bp, false, true);
+ 	}
+-	if (bnxt_test_irq(bp)) {
++	if (rc || bnxt_test_irq(bp)) {
+ 		buf[BNXT_IRQ_TEST_IDX] = 1;
+ 		etest->flags |= ETH_TEST_FL_FAILED;
+ 	}
 -- 
 2.20.1
 
