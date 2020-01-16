@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F10FC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2F7C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B855B24695
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:41:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C74D424695
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:42:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196519;
-	bh=uCIp6mD10XteebAJ2I2AXoP9KgVklKyDJoPbZYmlV6I=;
+	s=default; t=1579196521;
+	bh=m0dvd1MzdvUnaVm0wWphhZlsI4OTLffO8VdX+34Wx+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mGvFCRDUs+SsC+g+N4qqNiH9zjS2B09gQ+uZt7vuqMz7LqClSBlgZ40sqrTmr5OGh
-	 k46y6un8k3vS7mIEvkbzbsxzPNyaqOWE9Au0Dmlw/CkpA15t9o3YtGcoFljOcn5XET
-	 48WwbdaO2g470CwwomkBvknSLLB2O2KMq6ZyLHEg=
+	b=SQIV0U63qqBgPN1QTVAnAUD2grqBeunP4GXPHsZHeCY/ZKL6FM+dv0VxNxoacvhK3
+	 0XKFHBodCLkWFuriISf/VaBQfeddb6O3L8hC2Meycez+MSL3qJfmqapjqfkP3Busmk
+	 ohFNMzUIhxZM4SV5PZK4Fy2UK1aMguuvnZPtqk8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393757AbgAPRl5 (ORCPT
+        id S2393797AbgAPRmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:41:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58836 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:42:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388438AbgAPRlQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:41:16 -0500
+        id S2405627AbgAPRlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:41:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEB202467C;
-        Thu, 16 Jan 2020 17:41:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97D61246A1;
+        Thu, 16 Jan 2020 17:41:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196476;
-        bh=uCIp6mD10XteebAJ2I2AXoP9KgVklKyDJoPbZYmlV6I=;
+        s=default; t=1579196478;
+        bh=m0dvd1MzdvUnaVm0wWphhZlsI4OTLffO8VdX+34Wx+8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e0l4BfVvRGzZLA6Cp597VU4/vUFgtFonh9FF0XvAtC9o7ZfTSDAi/5eg5q2KzMxTI
-         5m9PUQ/OPw+uF6ahLrnWw+/hLM4asMkKHsCoR8/+/SVFbW9PXjFeoF8lp5nnGOGiOy
-         hsxYif7O34qtmDdeeBs2UfSjJwvMXD/rehJFKgr4=
+        b=iWcWoqIkpXIk4yE/FXikMUa1+gsWvFNATvud9z9gcftvDZ6slIMjmhbS9mrVV7Yr9
+         1C1anh3vi3xuk/nCY86dytuLouRggn6k7GVZtO+2U0e7eUMRdSKt04UFkaxFt2TAfC
+         vyzxqxUCoSNqLITAQtwdpguoXUEtMsKvaUl4FWhI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
-        Jakub Kicinski <kubakici@wp.pl>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 224/251] mt7601u: fix bbp version check in mt7601u_wait_bbp_ready
-Date:   Thu, 16 Jan 2020 12:36:13 -0500
-Message-Id: <20200116173641.22137-184-sashal@kernel.org>
+Cc:     Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 226/251] media: ov6650: Fix some format attributes not under control
+Date:   Thu, 16 Jan 2020 12:36:15 -0500
+Message-Id: <20200116173641.22137-186-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -63,39 +60,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 
-[ Upstream commit 15e14f76f85f4f0eab3b8146e1cd3c58ce272823 ]
+[ Upstream commit 1c6a2b63095154bbf9e8f38d79487a728331bf65 ]
 
-Fix bbp ready check in mt7601u_wait_bbp_ready. The issue is reported by
-coverity with the following error:
+User arguments passed to .get/set_fmt() pad operation callbacks may
+contain unsupported values.  The driver takes control over frame size
+and pixel code as well as colorspace and field attributes but has never
+cared for remainig format attributes, i.e., ycbcr_enc, quantization
+and xfer_func, introduced by commit 11ff030c7365 ("[media]
+v4l2-mediabus: improve colorspace support").  Fix it.
 
-Logical vs. bitwise operator
-The expression's value does not depend on the operands; inadvertent use
-of the wrong operator is a likely logic error.
+Set up a static v4l2_mbus_framefmt structure with attributes
+initialized to reasonable defaults and use it for updating content of
+user provided arguments.  In case of V4L2_SUBDEV_FORMAT_ACTIVE,
+postpone frame size update, now performed from inside ov6650_s_fmt()
+helper, util the user argument is first updated in ov6650_set_fmt() with
+default frame format content.  For V4L2_SUBDEV_FORMAT_TRY, don't copy
+all attributes to pad config, only those handled by the driver, then
+fill the response with the default frame format updated with resulting
+pad config format code and frame size.
 
-Addresses-Coverity-ID: 1309441 ("Logical vs. bitwise operator")
-Fixes: c869f77d6abb ("add mt7601u driver")
-Acked-by: Jakub Kicinski <kubakici@wp.pl>
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Fixes: 11ff030c7365 ("[media] v4l2-mediabus: improve colorspace support")
+Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt7601u/phy.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/i2c/soc_camera/ov6650.c | 51 ++++++++++++++++++++-------
+ 1 file changed, 39 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt7601u/phy.c b/drivers/net/wireless/mediatek/mt7601u/phy.c
-index ca09a5d4305e..71a47459bf8a 100644
---- a/drivers/net/wireless/mediatek/mt7601u/phy.c
-+++ b/drivers/net/wireless/mediatek/mt7601u/phy.c
-@@ -221,7 +221,7 @@ int mt7601u_wait_bbp_ready(struct mt7601u_dev *dev)
+diff --git a/drivers/media/i2c/soc_camera/ov6650.c b/drivers/media/i2c/soc_camera/ov6650.c
+index e9271ad9ee4c..3b118d45d433 100644
+--- a/drivers/media/i2c/soc_camera/ov6650.c
++++ b/drivers/media/i2c/soc_camera/ov6650.c
+@@ -215,6 +215,17 @@ static u32 ov6650_codes[] = {
+ 	MEDIA_BUS_FMT_Y8_1X8,
+ };
  
- 	do {
- 		val = mt7601u_bbp_rr(dev, MT_BBP_REG_VERSION);
--		if (val && ~val)
-+		if (val && val != 0xff)
- 			break;
- 	} while (--i);
++static const struct v4l2_mbus_framefmt ov6650_def_fmt = {
++	.width		= W_CIF,
++	.height		= H_CIF,
++	.code		= MEDIA_BUS_FMT_SBGGR8_1X8,
++	.colorspace	= V4L2_COLORSPACE_SRGB,
++	.field		= V4L2_FIELD_NONE,
++	.ycbcr_enc	= V4L2_YCBCR_ENC_DEFAULT,
++	.quantization	= V4L2_QUANTIZATION_DEFAULT,
++	.xfer_func	= V4L2_XFER_FUNC_DEFAULT,
++};
++
+ /* read a register */
+ static int ov6650_reg_read(struct i2c_client *client, u8 reg, u8 *val)
+ {
+@@ -511,11 +522,13 @@ static int ov6650_get_fmt(struct v4l2_subdev *sd,
+ 	if (format->pad)
+ 		return -EINVAL;
+ 
++	/* initialize response with default media bus frame format */
++	*mf = ov6650_def_fmt;
++
++	/* update media bus format code and frame size */
+ 	mf->width	= priv->rect.width >> priv->half_scale;
+ 	mf->height	= priv->rect.height >> priv->half_scale;
+ 	mf->code	= priv->code;
+-	mf->colorspace	= V4L2_COLORSPACE_SRGB;
+-	mf->field	= V4L2_FIELD_NONE;
+ 
+ 	return 0;
+ }
+@@ -678,10 +691,6 @@ static int ov6650_s_fmt(struct v4l2_subdev *sd, struct v4l2_mbus_framefmt *mf)
+ 	if (!ret)
+ 		priv->code = code;
+ 
+-	if (!ret) {
+-		mf->width = priv->rect.width >> half_scale;
+-		mf->height = priv->rect.height >> half_scale;
+-	}
+ 	return ret;
+ }
+ 
+@@ -700,9 +709,6 @@ static int ov6650_set_fmt(struct v4l2_subdev *sd,
+ 		v4l_bound_align_image(&mf->width, 2, W_CIF, 1,
+ 				&mf->height, 2, H_CIF, 1, 0);
+ 
+-	mf->field = V4L2_FIELD_NONE;
+-	mf->colorspace = V4L2_COLORSPACE_SRGB;
+-
+ 	switch (mf->code) {
+ 	case MEDIA_BUS_FMT_Y10_1X10:
+ 		mf->code = MEDIA_BUS_FMT_Y8_1X8;
+@@ -718,10 +724,31 @@ static int ov6650_set_fmt(struct v4l2_subdev *sd,
+ 		break;
+ 	}
+ 
+-	if (format->which == V4L2_SUBDEV_FORMAT_ACTIVE)
+-		return ov6650_s_fmt(sd, mf);
+-	cfg->try_fmt = *mf;
++	if (format->which == V4L2_SUBDEV_FORMAT_TRY) {
++		/* store media bus format code and frame size in pad config */
++		cfg->try_fmt.width = mf->width;
++		cfg->try_fmt.height = mf->height;
++		cfg->try_fmt.code = mf->code;
+ 
++		/* return default mbus frame format updated with pad config */
++		*mf = ov6650_def_fmt;
++		mf->width = cfg->try_fmt.width;
++		mf->height = cfg->try_fmt.height;
++		mf->code = cfg->try_fmt.code;
++
++	} else {
++		/* apply new media bus format code and frame size */
++		int ret = ov6650_s_fmt(sd, mf);
++
++		if (ret)
++			return ret;
++
++		/* return default format updated with active size and code */
++		*mf = ov6650_def_fmt;
++		mf->width = priv->rect.width >> priv->half_scale;
++		mf->height = priv->rect.height >> priv->half_scale;
++		mf->code = priv->code;
++	}
+ 	return 0;
+ }
  
 -- 
 2.20.1
