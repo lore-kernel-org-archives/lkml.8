@@ -2,68 +2,75 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12937C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 07:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 522B9C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 07:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE6DF206D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 07:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28FE4206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 07:29:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730795AbgAPH25 (ORCPT
+        id S1730853AbgAPH3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 02:28:57 -0500
-Received: from helcar.hmeau.com ([216.24.177.18]:39920 "EHLO deadmen.hmeau.com"
+        Thu, 16 Jan 2020 02:29:11 -0500
+Received: from helcar.hmeau.com ([216.24.177.18]:39946 "EHLO deadmen.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729431AbgAPH24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 02:28:56 -0500
+        id S1729431AbgAPH3L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 02:29:11 -0500
 Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
         by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1irzaA-0005XF-Nt; Thu, 16 Jan 2020 15:28:46 +0800
+        id 1irzaV-0005Z8-M0; Thu, 16 Jan 2020 15:29:07 +0800
 Received: from herbert by gondobar with local (Exim 4.89)
         (envelope-from <herbert@gondor.apana.org.au>)
-        id 1irza8-0000ma-LU; Thu, 16 Jan 2020 15:28:44 +0800
-Date:   Thu, 16 Jan 2020 15:28:44 +0800
+        id 1irzaS-0000nI-Hs; Thu, 16 Jan 2020 15:29:04 +0800
+Date:   Thu, 16 Jan 2020 15:29:04 +0800
 From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] crypto: caam - add support for i.MX8M Nano
-Message-ID: <20200116072844.5n6o47fnio7q534v@gondor.apana.org.au>
-References: <20200106200154.30643-1-horia.geanta@nxp.com>
+To:     Rijo Thomas <Rijo-john.Thomas@amd.com>
+Cc:     Jens Wiklander <jens.wiklander@linaro.org>,
+        Gary R Hook <gary.hook@amd.com>, tee-dev@lists.linaro.org,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        Nimesh Easow <Nimesh.Easow@amd.com>,
+        Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH 0/5] amdtee: Address bug report
+Message-ID: <20200116072904.o65qfy3atn66ruxi@gondor.apana.org.au>
+References: <cover.1578572591.git.Rijo-john.Thomas@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200106200154.30643-1-horia.geanta@nxp.com>
+In-Reply-To: <cover.1578572591.git.Rijo-john.Thomas@amd.com>
 User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 06, 2020 at 10:01:53PM +0200, Horia Geantă wrote:
-> Add support for the crypto engine used in i.mx8mn (i.MX 8M "Nano"),
-> which is very similar to the one used in i.mx8mq, i.mx8mm.
+On Thu, Jan 09, 2020 at 06:23:17PM +0530, Rijo Thomas wrote:
+> This patch series addresses the bug report submitted by Dan Carpenter.
 > 
-> Since the clocks are identical for all members of i.MX 8M family,
-> simplify the SoC <--> clock array mapping table.
+> Link: https://lists.linaro.org/pipermail/tee-dev/2020-January/001417.html
 > 
-> Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
-> ---
->  drivers/crypto/caam/ctrl.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> Since, these patches are based on cryptodev-2.6 tree, I have included
+> linux-crypto list as well.
+> 
+> This patch series does not fix the static checker warning reported due
+> to incorrect use of IS_ERR. Colin Ian King has submitted a fix for this
+> issue. Link: https://lkml.org/lkml/2020/1/8/88
+> 
+> Rijo Thomas (5):
+>   tee: amdtee: remove unused variable initialization
+>   tee: amdtee: print error message if tee not present
+>   tee: amdtee: skip tee_device_unregister if tee_device_alloc fails
+>   tee: amdtee: rename err label to err_device_unregister
+>   tee: amdtee: remove redundant NULL check for pool
+> 
+>  drivers/tee/amdtee/call.c | 14 +++++++-------
+>  drivers/tee/amdtee/core.c | 32 +++++++++++++++++---------------
+>  2 files changed, 24 insertions(+), 22 deletions(-)
 
-Patch applied.  Thanks.
+All applied.  Thanks.
 -- 
 Email: Herbert Xu <herbert@gondor.apana.org.au>
 Home Page: http://gondor.apana.org.au/~herbert/
