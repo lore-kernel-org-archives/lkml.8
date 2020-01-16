@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29AF7C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E50C7C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:44:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED0632072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA5312064C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:44:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218273;
-	bh=2qbbaDHWTrJc27fMCU/6Faxa3TAE21QTICCAgawihQc=;
+	s=default; t=1579218276;
+	bh=zxMwx2OtgXRt1znZy60Yrg+tBGsBd59R2bQKe67uDE4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r+Md5WYwg0lv2Ao1PWL1OrqIkeYk44WINlJ5rYuOI8sLKhIRAR7dQInJ9t/4ohuuJ
-	 2WmdI6wSymEHBpP+L7ucrAjfLQoXiLbTPvEGC3VGf3qv17urkhIf4NOBkd2HPD7ZhX
-	 L+K1UT0A+FL9KldrPA+TF2xaSYVYwmYHpzpT0j/8=
+	b=I5fvoOWu10u28H6W7ka9lVo/eFX2gGUWlMGvLAfVVVW1P+lcl/cj5XQxAy+G7IX84
+	 5m7BwoNyriPQdhbS7qVpnIcXG7fU96ykZ3paKU1tZ6inWMHG7G6K/9Pg/pyawUZzyu
+	 YAIFDk/LXZXHcCEwRt/3RPRPsIq7ZM0n5BHADTbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390006AbgAPXob (ORCPT
+        id S1733063AbgAPXYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:44:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52958 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:24:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729710AbgAPXYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:24:08 -0500
+        id S1729794AbgAPXX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:23:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05AFA206D9;
-        Thu, 16 Jan 2020 23:24:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC201206D9;
+        Thu, 16 Jan 2020 23:23:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217047;
-        bh=2qbbaDHWTrJc27fMCU/6Faxa3TAE21QTICCAgawihQc=;
+        s=default; t=1579217035;
+        bh=zxMwx2OtgXRt1znZy60Yrg+tBGsBd59R2bQKe67uDE4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DHZ+5SLQKAs42yz8xnxIEMimMPBcPVQ/tE106Y1vMWtrg0mHg4JatUtc9TJj7jkor
-         vl0mS4sQix/faCj7Dq4Xk8r2se/zyFGQ4se52acchHGGvfxOh6jmfFJPh9w97XdEhX
-         bLFzqLF0rEjuHL58NBnusEZkaPfUSiKzE9+pso/I=
+        b=CPxCudQ8sbjoRp1c9qRHf9ORESqhCcA70eyZJrYJhms6EvLSb0Y5X3Ueh7IWr08ry
+         xbch6Xx0vNddMqi37h746pDJvab/+62KoRYdMt2AtJtMkQkClBgBTJranqOEl9iUb2
+         CTTH7pKkJRDFpMIrBNVRuOdkynuYWCln5rbsllvw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.4 110/203] iio: imu: adis16480: assign bias value only if operation succeeded
-Date:   Fri, 17 Jan 2020 00:17:07 +0100
-Message-Id: <20200116231755.105466750@linuxfoundation.org>
+        Jamie Heilman <jamie@audible.transient.net>,
+        Scott Mayhew <smayhew@redhat.com>,
+        "J. Bruce Fields" <bfields@redhat.com>
+Subject: [PATCH 5.4 105/203] nfsd: Fix cld_net->cn_tfm initialization
+Date:   Fri, 17 Jan 2020 00:17:02 +0100
+Message-Id: <20200116231754.736665919@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -60,45 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+From: Scott Mayhew <smayhew@redhat.com>
 
-commit 9b742763d9d4195e823ae6ece760c9ed0500c1dc upstream.
+commit 18b9a895e652979b70f9c20565394a69354dfebc upstream.
 
-This was found only after the whole thing with the inline functions, but
-the compiler actually found something. The value of the `bias` (in
-adis16480_get_calibbias()) should only be set if the read operation was
-successful.
+Don't assign an error pointer to cld_net->cn_tfm, otherwise an oops will
+occur in nfsd4_remove_cld_pipe().
 
-No actual known problem occurs as users of this function all
-ultimately check the return value.  Hence probably not stable material.
+Also, move the initialization of cld_net->cn_tfm so that it occurs after
+the check to see if nfsdcld is running.  This is necessary because
+nfsd4_client_tracking_init() looks for -ETIMEDOUT to determine whether
+to use the "old" nfsdcld tracking ops.
 
-Fixes: 2f3abe6cbb6c9 ("iio:imu: Add support for the ADIS16480 and similar IMUs")
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: 6ee95d1c8991 ("nfsd: add support for upcall version 2")
+Reported-by: Jamie Heilman <jamie@audible.transient.net>
+Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/imu/adis16480.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/nfsd/nfs4recover.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
---- a/drivers/iio/imu/adis16480.c
-+++ b/drivers/iio/imu/adis16480.c
-@@ -454,12 +454,14 @@ static int adis16480_get_calibbias(struc
- 	case IIO_MAGN:
- 	case IIO_PRESSURE:
- 		ret = adis_read_reg_16(&st->adis, reg, &val16);
--		*bias = sign_extend32(val16, 15);
-+		if (ret == 0)
-+			*bias = sign_extend32(val16, 15);
- 		break;
- 	case IIO_ANGL_VEL:
- 	case IIO_ACCEL:
- 		ret = adis_read_reg_32(&st->adis, reg, &val32);
--		*bias = sign_extend32(val32, 31);
-+		if (ret == 0)
-+			*bias = sign_extend32(val32, 31);
- 		break;
- 	default:
- 			ret = -EINVAL;
+--- a/fs/nfsd/nfs4recover.c
++++ b/fs/nfsd/nfs4recover.c
+@@ -1578,6 +1578,7 @@ nfsd4_cld_tracking_init(struct net *net)
+ 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+ 	bool running;
+ 	int retries = 10;
++	struct crypto_shash *tfm;
+ 
+ 	status = nfs4_cld_state_init(net);
+ 	if (status)
+@@ -1586,11 +1587,6 @@ nfsd4_cld_tracking_init(struct net *net)
+ 	status = __nfsd4_init_cld_pipe(net);
+ 	if (status)
+ 		goto err_shutdown;
+-	nn->cld_net->cn_tfm = crypto_alloc_shash("sha256", 0, 0);
+-	if (IS_ERR(nn->cld_net->cn_tfm)) {
+-		status = PTR_ERR(nn->cld_net->cn_tfm);
+-		goto err_remove;
+-	}
+ 
+ 	/*
+ 	 * rpc pipe upcalls take 30 seconds to time out, so we don't want to
+@@ -1607,6 +1603,12 @@ nfsd4_cld_tracking_init(struct net *net)
+ 		status = -ETIMEDOUT;
+ 		goto err_remove;
+ 	}
++	tfm = crypto_alloc_shash("sha256", 0, 0);
++	if (IS_ERR(tfm)) {
++		status = PTR_ERR(tfm);
++		goto err_remove;
++	}
++	nn->cld_net->cn_tfm = tfm;
+ 
+ 	status = nfsd4_cld_get_version(nn);
+ 	if (status == -EOPNOTSUPP)
 
 
