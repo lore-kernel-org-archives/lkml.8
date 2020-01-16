@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11597C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB32BC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDFFD20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AD832053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:55:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200948;
-	bh=9ffIg72vfAL9XOeRGbQvUSJeUprb7SNydkmcRf2SO2o=;
+	s=default; t=1579200957;
+	bh=9e5byxJIih88ju7Q5B5t6AA+zLK+ZzuP/KEvyl4o2mQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v+qWwpzThABMp4g4lQPjVW+Ar9EdJJwMeJxsXoyGGrf1ss9Uw5R5vsSYnafTxcnOw
-	 0E4PpbuIy0AIuVR7GudRPZDE6vQbnF1ldR4BB/aGmMqbQhhKZ9qvgWeb95uRB5yggh
-	 pTFiAGPNzZLY+q0Hjlk2KoFMJB1EX0sk7feVI2mc=
+	b=HciwGP7VZao4qBftVuGiF5oeWrH5d5Vk9wbXiKORgAfT+nNt3GO8idb9I+huyCktP
+	 gwslrHrHDJV6POUpvrcMBYKnOV2fP9fnDK+J7QOB61Ew3E6PlMFLIoDlvrqGzJU2za
+	 tY2cXyY94JMgkSxnmCu4CI3wsLZgfKgWiexPM90o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389594AbgAPSzr (ORCPT
+        id S2407313AbgAPSzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:55:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39646 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:55:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729950AbgAPRHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:07:32 -0500
+        id S2389187AbgAPRHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:07:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8897821582;
-        Thu, 16 Jan 2020 17:07:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69DD32081E;
+        Thu, 16 Jan 2020 17:07:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194452;
-        bh=9ffIg72vfAL9XOeRGbQvUSJeUprb7SNydkmcRf2SO2o=;
+        s=default; t=1579194450;
+        bh=9e5byxJIih88ju7Q5B5t6AA+zLK+ZzuP/KEvyl4o2mQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0XcO2XazkZ77b+AhN+4jzVvtfR5ZJ4h3cWJh9X/76aBXYTLBtCfQgGb50/lHAgomB
-         vyRVb24VOqQtTSGa+uRFDyrXjJ6BhlNrHslsjHE0NaK0G07r9MeyB9r/uuB+YrUFPF
-         HywCBsxzMjrk4YJMFUKqJQJlLV+UDpPcj+S492LA=
+        b=NjAHG8TUPKQ6ek3lDq8+EyVOwHb8G3C1NKEMFCaqib7D7MfUgpKrsgpglIxBYmBpS
+         AYnTmMshOI9F2E4FJYUGpMVX+pv1G4ij+p+iMuGraHMzv/XIDdFpNmTvWav3MDp3i8
+         NPM88Drkm274Yc5ag0McSrO/UrRqeM3qcad4tM78=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     David Howells <dhowells@redhat.com>,
         Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 362/671] afs: Fix lock-wait/callback-break double locking
-Date:   Thu, 16 Jan 2020 12:00:00 -0500
-Message-Id: <20200116170509.12787-99-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 360/671] afs: Fix key leak in afs_release() and afs_evict_inode()
+Date:   Thu, 16 Jan 2020 11:59:58 -0500
+Message-Id: <20200116170509.12787-97-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,60 +60,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit c7226e407b6065d3bda8bd9dc627663d2c505ea3 ]
+[ Upstream commit a1b879eefc2b34cd3f17187ef6fc1cf3960e9518 ]
 
-__afs_break_callback() holds vnode->lock around its call of
-afs_lock_may_be_available() - which also takes that lock.
+Fix afs_release() to go through the cleanup part of the function if
+FMODE_WRITE is set rather than exiting through vfs_fsync() (which skips the
+cleanup).  The cleanup involves discarding the refs on the key used for
+file ops and the writeback key record.
 
-Fix this by not taking the lock in __afs_break_callback().
+Also fix afs_evict_inode() to clean up any left over wb keys attached to
+the inode/vnode when it is removed.
 
-Also, there's no point checking the granted_locks and pending_locks queues;
-it's sufficient to check lock_state, so move that check out of
-afs_lock_may_be_available() into __afs_break_callback() to replace the
-queue checks.
-
-Fixes: e8d6c554126b ("AFS: implement file locking")
+Fixes: 5a8132761609 ("afs: Do better accretion of small writes on newly created content")
 Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/callback.c | 8 +-------
- fs/afs/flock.c    | 3 ---
- 2 files changed, 1 insertion(+), 10 deletions(-)
+ fs/afs/file.c  | 7 ++++---
+ fs/afs/inode.c | 1 +
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/fs/afs/callback.c b/fs/afs/callback.c
-index 4ad701250299..97283b04fa6f 100644
---- a/fs/afs/callback.c
-+++ b/fs/afs/callback.c
-@@ -221,14 +221,8 @@ void afs_break_callback(struct afs_vnode *vnode)
- 		vnode->cb_break++;
- 		afs_clear_permits(vnode);
- 
--		spin_lock(&vnode->lock);
--
--		_debug("break callback");
--
--		if (list_empty(&vnode->granted_locks) &&
--		    !list_empty(&vnode->pending_locks))
-+		if (vnode->lock_state == AFS_VNODE_LOCK_WAITING_FOR_CB)
- 			afs_lock_may_be_available(vnode);
--		spin_unlock(&vnode->lock);
- 	}
- 
- 	write_sequnlock(&vnode->cb_lock);
-diff --git a/fs/afs/flock.c b/fs/afs/flock.c
-index 075fe7f94810..457ce62e5c0f 100644
---- a/fs/afs/flock.c
-+++ b/fs/afs/flock.c
-@@ -39,9 +39,6 @@ void afs_lock_may_be_available(struct afs_vnode *vnode)
+diff --git a/fs/afs/file.c b/fs/afs/file.c
+index 843d3b970b84..0bd78df6a64e 100644
+--- a/fs/afs/file.c
++++ b/fs/afs/file.c
+@@ -169,11 +169,12 @@ int afs_release(struct inode *inode, struct file *file)
  {
- 	_enter("{%x:%u}", vnode->fid.vid, vnode->fid.vnode);
+ 	struct afs_vnode *vnode = AFS_FS_I(inode);
+ 	struct afs_file *af = file->private_data;
++	int ret = 0;
  
--	if (vnode->lock_state != AFS_VNODE_LOCK_WAITING_FOR_CB)
--		return;
--
- 	spin_lock(&vnode->lock);
- 	if (vnode->lock_state == AFS_VNODE_LOCK_WAITING_FOR_CB)
- 		afs_next_locker(vnode, 0);
+ 	_enter("{%x:%u},", vnode->fid.vid, vnode->fid.vnode);
+ 
+ 	if ((file->f_mode & FMODE_WRITE))
+-		return vfs_fsync(file, 0);
++		ret = vfs_fsync(file, 0);
+ 
+ 	file->private_data = NULL;
+ 	if (af->wb)
+@@ -181,8 +182,8 @@ int afs_release(struct inode *inode, struct file *file)
+ 	key_put(af->key);
+ 	kfree(af);
+ 	afs_prune_wb_keys(vnode);
+-	_leave(" = 0");
+-	return 0;
++	_leave(" = %d", ret);
++	return ret;
+ }
+ 
+ /*
+diff --git a/fs/afs/inode.c b/fs/afs/inode.c
+index 0726e40db0f8..718fab2f151a 100644
+--- a/fs/afs/inode.c
++++ b/fs/afs/inode.c
+@@ -541,6 +541,7 @@ void afs_evict_inode(struct inode *inode)
+ 	}
+ #endif
+ 
++	afs_prune_wb_keys(vnode);
+ 	afs_put_permits(rcu_access_pointer(vnode->permit_cache));
+ 	key_put(vnode->lock_key);
+ 	vnode->lock_key = NULL;
 -- 
 2.20.1
 
