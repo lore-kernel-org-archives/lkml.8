@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2FCEC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE3DC33CB7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E4A42192A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:06:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D33832072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:06:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201593;
-	bh=KT9eY9teyu9DbO7QxqE4c0V0TOwHiCWLRLe30T59hJU=;
+	s=default; t=1579201601;
+	bh=IVGWB140nrt+GHipb+qYIHmKcToavEP9uvo3bLo7vEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pxbeWGRmuA/myNDmlww21T4mEZJHNI6qQ7I5ukvVNSTDS5CfyV02+0iyPRrID0S4c
-	 RVMRt8ImNySuWfQGAz5mg9tbZPS+tipwDCj1pANTWBnUWjW0N6+p3yTVvD9ajmcrXt
-	 ekgiIq7Sf9C1yHho3L7LQBVMqbkvKGGpRbz3OiRM=
+	b=PDbDGm8kfiK0+Tjg0zPAEY7rPR9oxcNVKiPIjTFp4QvfW4hGomNa3vadIc1o01o+a
+	 1p+cLkqPzDNROpdduA+9wDKoKZZRQ23yXlpOWB4EBqdnS3Adj7ZNgcXy9GQ8uYNmCd
+	 9rIKa0iMpDNhPWBznJAV1T5bcLQ8k382h/Kwz0YU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437357AbgAPTGc (ORCPT
+        id S2388107AbgAPRBd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:06:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52894 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:01:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729199AbgAPRBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:01:36 -0500
+        id S2388094AbgAPRB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:01:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 058B621582;
-        Thu, 16 Jan 2020 17:01:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 454C021D56;
+        Thu, 16 Jan 2020 17:01:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194095;
-        bh=KT9eY9teyu9DbO7QxqE4c0V0TOwHiCWLRLe30T59hJU=;
+        s=default; t=1579194086;
+        bh=IVGWB140nrt+GHipb+qYIHmKcToavEP9uvo3bLo7vEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bIpl0DJZfnCD5/jbaWkYTL+eu/qfx7CuLMbMpuluyAgRPb631oSF93FUwJDJ/clgJ
-         32ompYu8bqFxuo9JxYT5Up0WO8QE+s8mZgTU0aKB1/3oIbC/PJ+kKJ5YVz5f6Y87s0
-         yaxN1h+4J2geJqQDxRtlHS9lniLopRh0LTRoQilo=
+        b=Hr9M3MbiaK4mF2ZfL1i6Vhj9NbZcWtIZgsQ3UMcnHut1AwecU4Ob+XfjeoNTwe1y7
+         ZjW+3sJxcSbclQZ/4vDQG53PIXj646ae2jP1td4ixpM+OGGHcetPmRMHTf7IwJx1f7
+         2PYiRnzci3YTXwco36n/NOh0KUd7JaWGLc2NqIoc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Axel Lin <axel.lin@ingics.com>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 197/671] regulator: pv88060: Fix array out-of-bounds access
-Date:   Thu, 16 Jan 2020 11:51:46 -0500
-Message-Id: <20200116165940.10720-80-sashal@kernel.org>
+Cc:     Vadim Pasternak <vadimp@mellanox.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 190/671] hwmon: (pmbus/tps53679) Fix driver info initialization in probe routine
+Date:   Thu, 16 Jan 2020 11:51:39 -0500
+Message-Id: <20200116165940.10720-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -58,34 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Axel Lin <axel.lin@ingics.com>
+From: Vadim Pasternak <vadimp@mellanox.com>
 
-[ Upstream commit 7cd415f875591bc66c5ecb49bf84ef97e80d7b0e ]
+[ Upstream commit ff066653aeed8ee2d4dadb1e35774dd91ecbb19f ]
 
-Fix off-by-one while iterating current_limits array.
-The valid index should be 0 ~ n_current_limits -1.
+Fix tps53679_probe() by using dynamically allocated "pmbus_driver_info"
+structure instead of static. Usage of static structures causes
+overwritten of the field "vrm_version", in case the system is equipped
+with several tps53679 devices with the different "vrm_version".
+In such case the last probed device overwrites this field for all
+others.
 
-Fixes: f307a7e9b7af ("regulator: pv88060: new regulator driver")
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 610526527a13 ("hwmon: (pmbus) Add support for Texas Instruments tps53679 device")
+Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/pv88060-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hwmon/pmbus/tps53679.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/pv88060-regulator.c b/drivers/regulator/pv88060-regulator.c
-index a9446056435f..1f2d8180506b 100644
---- a/drivers/regulator/pv88060-regulator.c
-+++ b/drivers/regulator/pv88060-regulator.c
-@@ -135,7 +135,7 @@ static int pv88060_set_current_limit(struct regulator_dev *rdev, int min,
- 	int i;
+diff --git a/drivers/hwmon/pmbus/tps53679.c b/drivers/hwmon/pmbus/tps53679.c
+index 85b515cd9df0..2bc352c5357f 100644
+--- a/drivers/hwmon/pmbus/tps53679.c
++++ b/drivers/hwmon/pmbus/tps53679.c
+@@ -80,7 +80,14 @@ static struct pmbus_driver_info tps53679_info = {
+ static int tps53679_probe(struct i2c_client *client,
+ 			  const struct i2c_device_id *id)
+ {
+-	return pmbus_do_probe(client, id, &tps53679_info);
++	struct pmbus_driver_info *info;
++
++	info = devm_kmemdup(&client->dev, &tps53679_info, sizeof(*info),
++			    GFP_KERNEL);
++	if (!info)
++		return -ENOMEM;
++
++	return pmbus_do_probe(client, id, info);
+ }
  
- 	/* search for closest to maximum */
--	for (i = info->n_current_limits; i >= 0; i--) {
-+	for (i = info->n_current_limits - 1; i >= 0; i--) {
- 		if (min <= info->current_limits[i]
- 			&& max >= info->current_limits[i]) {
- 			return regmap_update_bits(rdev->regmap,
+ static const struct i2c_device_id tps53679_id[] = {
 -- 
 2.20.1
 
