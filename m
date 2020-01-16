@@ -2,133 +2,95 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE8FC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50379C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:14:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 444F520684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:14:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198480;
-	bh=YjIDkagu2Kjrfvvq4dv7nIQnTBUOitovsfwiIT4GZvg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JNh1os71F+r10d3o01sgzpusI/JIw76WY2S/IIDVFk5a1IF0PcPi+V1PQpe0bOGQy
-	 ctM+auaP/eEUSDSJ1WDb6e5YiryPCA0GWAt1Y/jPL0w9nqct8zaLZZ67MlgHNq/+LO
-	 +MEYKOEa9hgOw8+nlWdTGNeCmBJ/g7FnWWxgGc+M=
+	by mail.kernel.org (Postfix) with ESMTP id 2CB9520684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:14:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jhtLpi9W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395383AbgAPSOi (ORCPT
+        id S2395390AbgAPSOm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:14:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48758 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393027AbgAPRev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:34:51 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA93524683;
-        Thu, 16 Jan 2020 17:34:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196090;
-        bh=YjIDkagu2Kjrfvvq4dv7nIQnTBUOitovsfwiIT4GZvg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XBTcagQys3ANPmkJrob8WnAabBr+O71Ug0vrXOuo9GL5dkJTSPce1E1veC2ENwH5g
-         Zopj38gnQzE6qHVQYRynJyXHkYKSvelqqs0+XdgA3THeaAAVsa3IiR+hY4IKQujHKn
-         mTgM2sxswvpWtYByh0RvxiMRTdGh0QkgcsLE3FF4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhu Yanjun <yanjun.zhu@oracle.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 004/251] IB/rxe: replace kvfree with vfree
-Date:   Thu, 16 Jan 2020 12:30:38 -0500
-Message-Id: <20200116173445.21385-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116173445.21385-1-sashal@kernel.org>
-References: <20200116173445.21385-1-sashal@kernel.org>
+        Thu, 16 Jan 2020 13:14:42 -0500
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:43202 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2395373AbgAPSOg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 13:14:36 -0500
+Received: by mail-ua1-f68.google.com with SMTP id o42so7957170uad.10
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 10:14:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=t4/SSgF43F8oOB5ed/Mu+sVQAJxuMOrgg0eXAd3RvzI=;
+        b=jhtLpi9WlDS+egj1OpzohuuS9pQgMd5pKXv8LVi9TmM1esvDD/PbLI6+bFwE6vYUwl
+         YbwYAIPyLL2iLWWFZ4ytb5/fY8kOXcb6A2/+9FD7Gi+C+JXHa3WLLW4PAc3A1LG6fGUB
+         fcGO38CrloQAqONKKE9kyts4coCH7PcaZdcHpdbxmqab0w+fwQS/lEgAZr4mVDvHpJYZ
+         zSX2xCdkYeoNMT4FCcjJ3ScoEaWXWSt7GQBFRFwgocvBKdk4BkZaxg5rW15RDuLSco8V
+         obn4/UfOsChIVw5BO4a6LT+gT/AarmEyS+XJlpk0+EheBerIjl/hOt6iDgKZdetSZVhc
+         J+nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=t4/SSgF43F8oOB5ed/Mu+sVQAJxuMOrgg0eXAd3RvzI=;
+        b=QRdxgyuTe0s/y4LtfObxyaIyp8rJWRQl0SRSg3rv9NUL7peD2nCergVLcs7XyskU1Y
+         Ah0A2a0LR37kYeMyfejgUY9mZ5AcPlGS7dxQUyYdhXqBHy7wsvAaF5kyJnrDma23Wa2F
+         KjhdLWV189qJxeJKimDpKPGhdjfhLGal5Zc9p1nMwFvDYU26vU3EQVRrqrKFauolX+C9
+         9LU+R2+TzZwEx20CNvHMAOLM+iDg1/CAlGv1a4D4/o3k5GQacHBVwZv1rfLEjYGfbXXO
+         svNoav03zqKEjejFQQHaf2lRvtC3m0XcTJepYozx5FRSq/GubxH4vF/kvinpCOXXIACH
+         4X7Q==
+X-Gm-Message-State: APjAAAXfm0VHggWtjGnBrtDWLWY40efwIgKMAIV4n4xeDlbTHW4amgD8
+        wbz6xKlFiiH382oJ0z+ciEn7BAkI5pQAlKHJApZwug==
+X-Google-Smtp-Source: APXvYqxIIWRmLZKLxckIhAMKbhmdzDCTkxbmnPMWtT8X50l5n92iMdw1uWSvaleMeLdpwMB55APzs6jyZJod3pJATys=
+X-Received: by 2002:ab0:422:: with SMTP id 31mr20481306uav.98.1579198475361;
+ Thu, 16 Jan 2020 10:14:35 -0800 (PST)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191206221351.38241-1-samitolvanen@google.com> <20191206221351.38241-13-samitolvanen@google.com>
+ <20200116174648.GE21396@willie-the-truck>
+In-Reply-To: <20200116174648.GE21396@willie-the-truck>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Thu, 16 Jan 2020 10:14:24 -0800
+Message-ID: <CABCJKucWusLEaLyq=Dv5pWjxcUX7Q9dL=fSstwNK4eJ_6k33=w@mail.gmail.com>
+Subject: Re: [PATCH v6 12/15] arm64: vdso: disable Shadow Call Stack
+To:     Will Deacon <will@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhu Yanjun <yanjun.zhu@oracle.com>
+On Thu, Jan 16, 2020 at 9:46 AM Will Deacon <will@kernel.org> wrote:
+> Should we be removing -ffixed-x18 too, or does that not propagate here
+> anyway?
 
-[ Upstream commit 721ad7e643f7002efa398838693f90284ea216d1 ]
+No, we shouldn't touch -ffixed-x18 here. The vDSO is always built with
+x18 reserved since commit 98cd3c3f83fbb ("arm64: vdso: Build vDSO with
+-ffixed-x18").
 
-The buf is allocated by vmalloc_user in the function rxe_queue_init.
-So it is better to free it by vfree.
-
-Fixes: 8700e3e7c485 ("Soft RoCE driver")
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Zhu Yanjun <yanjun.zhu@oracle.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/infiniband/sw/rxe/rxe_cq.c | 4 ++--
- drivers/infiniband/sw/rxe/rxe_qp.c | 5 +++--
- 2 files changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/infiniband/sw/rxe/rxe_cq.c b/drivers/infiniband/sw/rxe/rxe_cq.c
-index e5e6a5e7dee9..5ac88412f1ff 100644
---- a/drivers/infiniband/sw/rxe/rxe_cq.c
-+++ b/drivers/infiniband/sw/rxe/rxe_cq.c
-@@ -30,7 +30,7 @@
-  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-  * SOFTWARE.
-  */
--
-+#include <linux/vmalloc.h>
- #include "rxe.h"
- #include "rxe_loc.h"
- #include "rxe_queue.h"
-@@ -89,7 +89,7 @@ int rxe_cq_from_init(struct rxe_dev *rxe, struct rxe_cq *cq, int cqe,
- 	err = do_mmap_info(rxe, udata, false, context, cq->queue->buf,
- 			   cq->queue->buf_size, &cq->queue->ip);
- 	if (err) {
--		kvfree(cq->queue->buf);
-+		vfree(cq->queue->buf);
- 		kfree(cq->queue);
- 		return err;
- 	}
-diff --git a/drivers/infiniband/sw/rxe/rxe_qp.c b/drivers/infiniband/sw/rxe/rxe_qp.c
-index 44b2108253bd..d6672127808b 100644
---- a/drivers/infiniband/sw/rxe/rxe_qp.c
-+++ b/drivers/infiniband/sw/rxe/rxe_qp.c
-@@ -34,6 +34,7 @@
- #include <linux/skbuff.h>
- #include <linux/delay.h>
- #include <linux/sched.h>
-+#include <linux/vmalloc.h>
- 
- #include "rxe.h"
- #include "rxe_loc.h"
-@@ -255,7 +256,7 @@ static int rxe_qp_init_req(struct rxe_dev *rxe, struct rxe_qp *qp,
- 			   qp->sq.queue->buf_size, &qp->sq.queue->ip);
- 
- 	if (err) {
--		kvfree(qp->sq.queue->buf);
-+		vfree(qp->sq.queue->buf);
- 		kfree(qp->sq.queue);
- 		return err;
- 	}
-@@ -312,7 +313,7 @@ static int rxe_qp_init_resp(struct rxe_dev *rxe, struct rxe_qp *qp,
- 				   qp->rq.queue->buf_size,
- 				   &qp->rq.queue->ip);
- 		if (err) {
--			kvfree(qp->rq.queue->buf);
-+			vfree(qp->rq.queue->buf);
- 			kfree(qp->rq.queue);
- 			return err;
- 		}
--- 
-2.20.1
-
+Sami
