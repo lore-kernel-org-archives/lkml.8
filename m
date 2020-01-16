@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C96C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65287C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 977DB20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 336A520663
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193411;
-	bh=3jsVj/McEaAvS2LkEimj1NvVy+s2I+eLlxgU0gAOrLc=;
+	s=default; t=1579193418;
+	bh=01ET8Gg7lfZIhp7HRE9ih7YqKpGc66ZmobZq3MFHQ+4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g3SZSna3PUaOrM775oofJBz0+9CZQ2zsX1qdx3jSkv8G05CId9OSmUArCVZ6OqVeK
-	 K+f82yzBUJSs62NJgj+xkWiUkytTOPAQqX0onAj8nEFJ3nBuAgZIRChh81SzGjcPOf
-	 WPLTeSpfQku15usWqiZnMmwqeH8A5g4C89p+owKg=
+	b=lB+qnzBzchPIgSmVnuNGnW6HwwzY0dDPj7J/Wv678+nveqxSN5o233+EdOjQS0ESq
+	 H89J2MZWCwZQZg5KR0dqn+CRtS5v0zaKBQb0jV4WtKGxa1u8uh17GXHdns7gO5yKPd
+	 f01sXL2mHEzcAQvqpZagCt6kBlY5tHsq99ZGWv38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729593AbgAPQr4 (ORCPT
+        id S1729314AbgAPQuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:47:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57952 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:50:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729406AbgAPQrx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:47:53 -0500
+        id S1729710AbgAPQrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:47:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A7382073A;
-        Thu, 16 Jan 2020 16:47:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F21D214AF;
+        Thu, 16 Jan 2020 16:47:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193273;
-        bh=3jsVj/McEaAvS2LkEimj1NvVy+s2I+eLlxgU0gAOrLc=;
+        s=default; t=1579193266;
+        bh=01ET8Gg7lfZIhp7HRE9ih7YqKpGc66ZmobZq3MFHQ+4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q2BIQR026hRGjHkfnNRVVMbVm58nLqeUxTHvyBW+mV8worC92PfOzdm+UPW/pVrvi
-         QxcR9JmCUbgyaeLuSL9dDnFjuwzOMdeBmjSXfIcsS879miwHtlDPPLEBRvvJT1EAPo
-         5mzJBAwCpWXBclhBU42n7IzaZzfcUlBQqg7Yebqw=
+        b=jMQRVr3amkEVSQtT6CM7WfuvAuvmZkdhY/2PYTraeu65qPB7Zm5zgAiXZXyv+RVku
+         9UNvv4ktMFKmFTMdB+1LAAHqnugBcKEZ2FvviuiVk/MB98cQddj1Gf/ssfX8klVVBv
+         eXJSmUV9cIAONI4eDTKhkaLJQYm9My0ote2ejVnw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiang Chen <chenxiang66@hisilicon.com>,
-        John Garry <john.garry@huawei.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 062/205] scsi: hisi_sas: Don't create debugfs dump folder twice
-Date:   Thu, 16 Jan 2020 11:40:37 -0500
-Message-Id: <20200116164300.6705-62-sashal@kernel.org>
+Cc:     Thierry Reding <treding@nvidia.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 060/205] drm/tegra: Fix ordering of cleanup code
+Date:   Thu, 16 Jan 2020 11:40:35 -0500
+Message-Id: <20200116164300.6705-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -60,43 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiang Chen <chenxiang66@hisilicon.com>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit 35160421b63d4753a72e9f72ebcdd9d6f88f84b9 ]
+[ Upstream commit 051172e8c1ceef8749f19faacc1d3bef65d20d8d ]
 
-Due to a merge error, we attempt to create 2x debugfs dump folders, which
-fails:
-[  861.101914] debugfs: Directory 'dump' with parent '0000:74:02.0'
-already present!
+Commit Fixes: b9f8b09ce256 ("drm/tegra: Setup shared IOMMU domain after
+initialization") changed the initialization order of the IOMMU related
+bits but didn't update the cleanup path accordingly. This asymmetry can
+cause failures during error recovery.
 
-This breaks the dump function.
-
-To fix, remove the superfluous attempt to create the folder.
-
-Fixes: 7ec7082c57ec ("scsi: hisi_sas: Add hisi_sas_debugfs_alloc() to centralise allocation")
-Link: https://lore.kernel.org/r/1571926105-74636-2-git-send-email-john.garry@huawei.com
-Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: b9f8b09ce256 ("drm/tegra: Setup shared IOMMU domain after initialization")
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Tested-by: Dmitry Osipenko <digetx@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/hisi_sas/hisi_sas_main.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/gpu/drm/tegra/drm.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index 633effb09c9c..849335d76cf6 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -3719,9 +3719,6 @@ static int hisi_sas_debugfs_alloc(struct hisi_hba *hisi_hba)
- 	int p, c, d;
- 	size_t sz;
- 
--	hisi_hba->debugfs_dump_dentry =
--			debugfs_create_dir("dump", hisi_hba->debugfs_dir);
+diff --git a/drivers/gpu/drm/tegra/drm.c b/drivers/gpu/drm/tegra/drm.c
+index 6fb7d74ff553..bc7cc32140f8 100644
+--- a/drivers/gpu/drm/tegra/drm.c
++++ b/drivers/gpu/drm/tegra/drm.c
+@@ -201,19 +201,19 @@ static int tegra_drm_load(struct drm_device *drm, unsigned long flags)
+ 	if (tegra->hub)
+ 		tegra_display_hub_cleanup(tegra->hub);
+ device:
+-	host1x_device_exit(device);
+-fbdev:
+-	drm_kms_helper_poll_fini(drm);
+-	tegra_drm_fb_free(drm);
+-config:
+-	drm_mode_config_cleanup(drm);
 -
- 	sz = hw->debugfs_reg_array[DEBUGFS_GLOBAL]->count * 4;
- 	hisi_hba->debugfs_regs[DEBUGFS_GLOBAL] =
- 				devm_kmalloc(dev, sz, GFP_KERNEL);
+ 	if (tegra->domain) {
+ 		mutex_destroy(&tegra->mm_lock);
+ 		drm_mm_takedown(&tegra->mm);
+ 		put_iova_domain(&tegra->carveout.domain);
+ 		iova_cache_put();
+ 	}
++
++	host1x_device_exit(device);
++fbdev:
++	drm_kms_helper_poll_fini(drm);
++	tegra_drm_fb_free(drm);
++config:
++	drm_mode_config_cleanup(drm);
+ domain:
+ 	if (tegra->domain)
+ 		iommu_domain_free(tegra->domain);
 -- 
 2.20.1
 
