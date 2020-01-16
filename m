@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD275C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 395F0C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94C60246C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 080B3246C8
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:26:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195573;
-	bh=G8UREBtqLrwfcsnU9csVUBr9dyhZpuNyboAPEC2841A=;
+	s=default; t=1579195578;
+	bh=BbhYBKR4UIhlaNuwGxzS3sKtVv2MUrrSn2DNGZG68xs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EKMen2OGJkCIBLDRkwaZ7JQEr+2MhuZBh449E6l4+UHjh5I7KryK6gqECqfvFFy6h
-	 WbZgYNT6JoxRWe+W91TB2Klkn1nChRy8fHI6Np1/0ftIOcAjGf9CawQ8vcV3jNNmh1
-	 Bv5zWaHaTbGZT1Me9Zpwj0vB75qbD64xhlrceipk=
+	b=jSSQRsa+6ZncWwSbyRWt/nbmS461dDWv1G2ryynKdaiQCTm8ysvFO/FoPHZkZSX7Q
+	 w8/RSdrKZcOqOaMoB1F8B2H8weKTZQF1c9SSyEyM6xi2duseMs6uzBnFagfEfTLzmR
+	 0T6wxNMRVX1u5GhZA+beNwU/bzXL6NjxA4WknxyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403872AbgAPR0N (ORCPT
+        id S2392279AbgAPR0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:26:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34112 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:26:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392086AbgAPRZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:25:53 -0500
+        id S2392221AbgAPR0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:26:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DE2124653;
-        Thu, 16 Jan 2020 17:25:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80B5724653;
+        Thu, 16 Jan 2020 17:26:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195552;
-        bh=G8UREBtqLrwfcsnU9csVUBr9dyhZpuNyboAPEC2841A=;
+        s=default; t=1579195562;
+        bh=BbhYBKR4UIhlaNuwGxzS3sKtVv2MUrrSn2DNGZG68xs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uhvpTdGWJOjWojU3GHOjQebV0jaiIdosNYOxw7ODZDhHK0fKJwjxQJOMl8v7ML3kX
-         jqbGwcirDgKo9b0RLGRuNuhTZznnoaElBElOn0H+KMF9f1ShO2MsTWNv2DmM2B+hK7
-         HwummTy9PlMQXFRnBcE/WAFbGgZ/60wj5Pw3i2IQ=
+        b=yjSHlOAJrt/qrYnI0l/EJ/lq2RdODbczZ14s9t6g3oQQG+jPGupg2yeOLiVzTyr6K
+         DLBWQXSkxOq12ikK2TkqU6Naej3pzJdF6pU2UtpoP1Xc1zRyB6Bgxai79BKrgcHR7h
+         lxuVPVcKSEpG8KvZqDW5FGudmsL2yicnhD2jBHxU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jon Maloy <jon.maloy@ericsson.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 143/371] tipc: tipc clang warning
-Date:   Thu, 16 Jan 2020 12:20:15 -0500
-Message-Id: <20200116172403.18149-86-sashal@kernel.org>
+Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 149/371] spi: tegra114: clear packed bit for unpacked mode
+Date:   Thu, 16 Jan 2020 12:20:21 -0500
+Message-Id: <20200116172403.18149-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -62,67 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Maloy <jon.maloy@ericsson.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-[ Upstream commit 737889efe9713a0f20a75fd0de952841d9275e6b ]
+[ Upstream commit 7b3d10cdf54b8bc1dc0da21faed9789ac4da3684 ]
 
-When checking the code with clang -Wsometimes-uninitialized we get the
-following warning:
+Fixes: Clear packed bit when not using packed mode.
 
-if (!tipc_link_is_establishing(l)) {
-    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-net/tipc/node.c:847:46: note: uninitialized use occurs here
-      tipc_bearer_xmit(n->net, bearer_id, &xmitq, maddr);
+Packed bit is not cleared when not using packed mode. This results
+in transfer timeouts for the unpacked mode transfers followed by the
+packed mode transfers.
 
-net/tipc/node.c:831:2: note: remove the 'if' if its condition is always
-true
-if (!tipc_link_is_establishing(l)) {
-    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-net/tipc/node.c:821:31: note: initialize the variable 'maddr' to silence
-this warning
-struct tipc_media_addr *maddr;
-
-We fix this by initializing 'maddr' to NULL. For the matter of clarity,
-we also test if 'xmitq' is non-empty before we use it and 'maddr'
-further down in the  function. It will never happen that 'xmitq' is non-
-empty at the same time as 'maddr' is NULL, so this is a sufficient test.
-
-Fixes: 598411d70f85 ("tipc: make resetting of links non-atomic")
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Jon Maloy <jon.maloy@ericsson.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/tipc/node.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/spi/spi-tegra114.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/tipc/node.c b/net/tipc/node.c
-index 42e9bdcc4bb6..82f8f69f4d6b 100644
---- a/net/tipc/node.c
-+++ b/net/tipc/node.c
-@@ -688,10 +688,10 @@ static void __tipc_node_link_down(struct tipc_node *n, int *bearer_id,
- static void tipc_node_link_down(struct tipc_node *n, int bearer_id, bool delete)
- {
- 	struct tipc_link_entry *le = &n->links[bearer_id];
-+	struct tipc_media_addr *maddr = NULL;
- 	struct tipc_link *l = le->link;
--	struct tipc_media_addr *maddr;
--	struct sk_buff_head xmitq;
- 	int old_bearer_id = bearer_id;
-+	struct sk_buff_head xmitq;
+diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
+index 2ad04796ef29..3a6b202dfffe 100644
+--- a/drivers/spi/spi-tegra114.c
++++ b/drivers/spi/spi-tegra114.c
+@@ -730,6 +730,8 @@ static int tegra_spi_start_transfer_one(struct spi_device *spi,
  
- 	if (!l)
- 		return;
-@@ -713,7 +713,8 @@ static void tipc_node_link_down(struct tipc_node *n, int bearer_id, bool delete)
- 	tipc_node_write_unlock(n);
- 	if (delete)
- 		tipc_mon_remove_peer(n->net, n->addr, old_bearer_id);
--	tipc_bearer_xmit(n->net, bearer_id, &xmitq, maddr);
-+	if (!skb_queue_empty(&xmitq))
-+		tipc_bearer_xmit(n->net, bearer_id, &xmitq, maddr);
- 	tipc_sk_rcv(n->net, &le->inputq);
- }
+ 	if (tspi->is_packed)
+ 		command1 |= SPI_PACKED;
++	else
++		command1 &= ~SPI_PACKED;
  
+ 	command1 &= ~(SPI_CS_SEL_MASK | SPI_TX_EN | SPI_RX_EN);
+ 	tspi->cur_direction = 0;
 -- 
 2.20.1
 
