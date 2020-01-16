@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DBCC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B1B9C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:17:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9AD52077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:17:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AC952077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:17:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202230;
-	bh=IhmIzIYtYHMkpRqwuhLe6N2owPqBPXz9JzK9F0v1bPg=;
+	s=default; t=1579202240;
+	bh=aX7ifRBNjLV4P2WSjgKpSySenyZPKe/92qia74ikSpM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j5O5sYAMaHpz+ftNldFMCVnyjQSAzInHCtQNG7Ca8uAd6GMZ3zAIkn+RKzobhSF66
-	 b0nCdU49oLqUmyglPodq438nndau8hDWw1+5asYkiZXvNyX6I3pciCpyuK+TDLS4TH
-	 MK/9xDCDRCUFXSl+pB+cI9lqNqdUjVeImDprW8z4=
+	b=uGNBBqBcI3+OMu5KVs7jyHOJt3/tlF7IJDQqDRNA2Ypn6BV16KjOu7jAOTZikFGwJ
+	 lR30xIzuEHt8n6XpjcPYQ/k7fUg481dKwnwW+tYWFIFA15wUyf/LoFp1DKXZb3SP3h
+	 j9RpJicYz/zWBJ0bTE2h5+heY/BQE4STk7YHXRm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392110AbgAPTRJ (ORCPT
+        id S2437634AbgAPTRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:17:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40958 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:17:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731157AbgAPQze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:55:34 -0500
+        id S1732955AbgAPQz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:55:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 725B820730;
-        Thu, 16 Jan 2020 16:55:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99BD420730;
+        Thu, 16 Jan 2020 16:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193734;
-        bh=IhmIzIYtYHMkpRqwuhLe6N2owPqBPXz9JzK9F0v1bPg=;
+        s=default; t=1579193729;
+        bh=aX7ifRBNjLV4P2WSjgKpSySenyZPKe/92qia74ikSpM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mg26bi+I+yUldOKTgvmjn7SkvKF99xjj9G91zrUYjAiiv5fgQ9A+SSWIry66G6qrf
-         FkOjPpDD1CnsnfEihI9ll1HJ09Wv/JeQnsPQyt1+DKYsrqhdkteKWD8wI6uN1Ij3bo
-         5aAV0IcrrGgAC61pt6/ASe28qJ48YXbJtCcteg9E=
+        b=REESr598VvRipbs6BUyv2+jkx4T+ZuYc7TQap51G9srO4pj5GzjEVjLDxdjk5iXFM
+         cpqAtuOFaTzrUoO7Np85+BvyoqOlbeKJRajm7Cw47EGAxuFXTcZ4S+0mbySHC12hTI
+         xbipoPb+Ne3cRV0zezS+kVAC2e6sCV83eww7JvVA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tomas Winkler <tomas.winkler@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 026/671] mei: replace POLL* with EPOLL* for write queues.
-Date:   Thu, 16 Jan 2020 11:44:17 -0500
-Message-Id: <20200116165502.8838-26-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 022/671] usb: dwc3: add EXTCON dependency for qcom
+Date:   Thu, 16 Jan 2020 11:44:13 -0500
+Message-Id: <20200116165502.8838-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -59,45 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomas Winkler <tomas.winkler@intel.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 03b2cbb6ea3c73e08fcf72d9ef8e286c4dcbd1fe ]
+[ Upstream commit 3def4031b3e3fbb524cbd01555b057a6cef0d5e6 ]
 
-Looks like during merging the bulk POLL* -> EPOLL* replacement
-missed the patch
-'commit af336cabe083 ("mei: limit the number of queued writes")'
+Like the omap back-end, we get a link error with CONFIG_EXTCON=m
+when building the qcom back-end into the kernel:
 
-Fix sparse warning:
-drivers/misc/mei/main.c:602:13: warning: restricted __poll_t degrades to integer
-drivers/misc/mei/main.c:605:30: warning: invalid assignment: |=
-drivers/misc/mei/main.c:605:30:    left side has type restricted __poll_t
-drivers/misc/mei/main.c:605:30:    right side has type int
+drivers/usb/dwc3/dwc3-qcom.o: In function `dwc3_qcom_probe':
+dwc3-qcom.c:(.text+0x13dc): undefined reference to `extcon_get_edev_by_phandle'
+dwc3-qcom.c:(.text+0x1b18): undefined reference to `devm_extcon_register_notifier'
+dwc3-qcom.c:(.text+0x1b9c): undefined reference to `extcon_get_state'
 
-Fixes: af336cabe083 ("mei: limit the number of queued writes")
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Do the same thing as OMAP and add an explicit dependency on
+EXTCON.
+
+Fixes: a4333c3a6ba9 ("usb: dwc3: Add Qualcomm DWC3 glue driver")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/mei/main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/dwc3/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/misc/mei/main.c b/drivers/misc/mei/main.c
-index 4d77a6ae183a..87281b3695e6 100644
---- a/drivers/misc/mei/main.c
-+++ b/drivers/misc/mei/main.c
-@@ -599,10 +599,10 @@ static __poll_t mei_poll(struct file *file, poll_table *wait)
- 			mei_cl_read_start(cl, mei_cl_mtu(cl), file);
- 	}
+diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+index 518ead12458d..1a0404fda596 100644
+--- a/drivers/usb/dwc3/Kconfig
++++ b/drivers/usb/dwc3/Kconfig
+@@ -113,7 +113,7 @@ config USB_DWC3_ST
  
--	if (req_events & (POLLOUT | POLLWRNORM)) {
-+	if (req_events & (EPOLLOUT | EPOLLWRNORM)) {
- 		poll_wait(file, &cl->tx_wait, wait);
- 		if (cl->tx_cb_queued < dev->tx_queue_limit)
--			mask |= POLLOUT | POLLWRNORM;
-+			mask |= EPOLLOUT | EPOLLWRNORM;
- 	}
- 
- out:
+ config USB_DWC3_QCOM
+ 	tristate "Qualcomm Platform"
+-	depends on ARCH_QCOM || COMPILE_TEST
++	depends on EXTCON && (ARCH_QCOM || COMPILE_TEST)
+ 	depends on OF
+ 	default USB_DWC3
+ 	help
 -- 
 2.20.1
 
