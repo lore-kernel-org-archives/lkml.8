@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E7BC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79CDCC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC05320730
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FA182077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:03:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194226;
-	bh=ItdymbY3cxx7Vs0Ay9YoFG4jc2dykjPUgdGqWPKckIA=;
+	s=default; t=1579194236;
+	bh=7xz+vLnFw4XjnRLafaQcO0K8hzVM1v1QHQw2s1h9R3w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D6Zj9NbB7tG0tLAKBX3TcP7sQO2H37pXXD1OyHTn79Ey59PHLK/XQ7F82zGYu27pH
-	 TyN79CAZrhtZDl1pv0//ncB/5KXsr1jqxri7sGllTu6XHUkfzUXZBZqW2zjQgCnJlX
-	 Qt4R0s785LL1mgKD8XdGFyfpdymvs+yID3DGVc0M=
+	b=BeFBCv1SqSFg1nUjoohulXO0qb18X6DSuKQlpy9+UVQwSdrl8YlrVC0aPjcCYs1zf
+	 fJ/+u1CpgcAvna65X/oYs25z4g84OMQITZa2qVSE+ue0pMTllYzvg5yahazOFS2vvb
+	 k67JKRA5UkO+VRY496yY0dK/vZ4Sf2U7RC1Om4GQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388586AbgAPRDp (ORCPT
+        id S2388291AbgAPRDz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:03:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56644 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:03:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388527AbgAPRC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:02:59 -0500
+        id S2388024AbgAPRC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:02:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CFA524653;
-        Thu, 16 Jan 2020 17:02:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66F9C24653;
+        Thu, 16 Jan 2020 17:02:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194179;
-        bh=ItdymbY3cxx7Vs0Ay9YoFG4jc2dykjPUgdGqWPKckIA=;
+        s=default; t=1579194175;
+        bh=7xz+vLnFw4XjnRLafaQcO0K8hzVM1v1QHQw2s1h9R3w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MszLItXwG5L0GcAFmi1cAG2mKR4F4y9oB5UFKd0Vsi4wqx1EG1GS6nye0284HIzYP
-         vm70YvLAEBH4USxRqvmpiGvdEgR32jCWD8nZWuqISO1M7x4ZxTlm2atHE96cg3Y0hp
-         z5g/bJFsClZ2kHUVbF/FjhichybVdN9FeDPqUY4U=
+        b=qKz9uwGZgwfXW1zZw1M1kT0RzuyUwj6yYdLXGx5lUr4o/sYPSnrZy016LSdpoOEvF
+         casriQ2qURnN0gZfRmYaPHZOgkgBb1PRQLYP1wPnkoJB73WzMJ8bx3uw0MB0wAL1FH
+         xnfyn478eq3vstIeASNMdS9yWEWbXjeC2LKUxM1M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jon Maloy <jon.maloy@ericsson.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net,
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
         clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 255/671] tipc: tipc clang warning
-Date:   Thu, 16 Jan 2020 11:52:44 -0500
-Message-Id: <20200116165940.10720-138-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 253/671] crypto: ccree - reduce kernel stack usage with clang
+Date:   Thu, 16 Jan 2020 11:52:42 -0500
+Message-Id: <20200116165940.10720-136-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -62,67 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Maloy <jon.maloy@ericsson.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 737889efe9713a0f20a75fd0de952841d9275e6b ]
+[ Upstream commit 5db46ac29a6797541943d3c4081821747e342732 ]
 
-When checking the code with clang -Wsometimes-uninitialized we get the
-following warning:
+Building with clang for a 32-bit architecture runs over the stack
+frame limit in the setkey function:
 
-if (!tipc_link_is_establishing(l)) {
-    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-net/tipc/node.c:847:46: note: uninitialized use occurs here
-      tipc_bearer_xmit(n->net, bearer_id, &xmitq, maddr);
+drivers/crypto/ccree/cc_cipher.c:318:12: error: stack frame size of 1152 bytes in function 'cc_cipher_setkey' [-Werror,-Wframe-larger-than=]
 
-net/tipc/node.c:831:2: note: remove the 'if' if its condition is always
-true
-if (!tipc_link_is_establishing(l)) {
-    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-net/tipc/node.c:821:31: note: initialize the variable 'maddr' to silence
-this warning
-struct tipc_media_addr *maddr;
+The problem is that there are two large variables: the temporary
+'tmp' array and the SHASH_DESC_ON_STACK() declaration. Moving
+the first into the block in which it is used reduces the
+total frame size to 768 bytes, which seems more reasonable
+and is under the warning limit.
 
-We fix this by initializing 'maddr' to NULL. For the matter of clarity,
-we also test if 'xmitq' is non-empty before we use it and 'maddr'
-further down in the  function. It will never happen that 'xmitq' is non-
-empty at the same time as 'maddr' is NULL, so this is a sufficient test.
-
-Fixes: 598411d70f85 ("tipc: make resetting of links non-atomic")
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Jon Maloy <jon.maloy@ericsson.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 63ee04c8b491 ("crypto: ccree - add skcipher support")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-By: Gilad Ben-Yossef <gilad@benyossef.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/tipc/node.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/crypto/ccree/cc_cipher.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/tipc/node.c b/net/tipc/node.c
-index 32556f480a60..e67ffd194927 100644
---- a/net/tipc/node.c
-+++ b/net/tipc/node.c
-@@ -810,10 +810,10 @@ static void __tipc_node_link_down(struct tipc_node *n, int *bearer_id,
- static void tipc_node_link_down(struct tipc_node *n, int bearer_id, bool delete)
- {
- 	struct tipc_link_entry *le = &n->links[bearer_id];
-+	struct tipc_media_addr *maddr = NULL;
- 	struct tipc_link *l = le->link;
--	struct tipc_media_addr *maddr;
--	struct sk_buff_head xmitq;
- 	int old_bearer_id = bearer_id;
-+	struct sk_buff_head xmitq;
- 
- 	if (!l)
- 		return;
-@@ -835,7 +835,8 @@ static void tipc_node_link_down(struct tipc_node *n, int bearer_id, bool delete)
- 	tipc_node_write_unlock(n);
- 	if (delete)
- 		tipc_mon_remove_peer(n->net, n->addr, old_bearer_id);
--	tipc_bearer_xmit(n->net, bearer_id, &xmitq, maddr);
-+	if (!skb_queue_empty(&xmitq))
-+		tipc_bearer_xmit(n->net, bearer_id, &xmitq, maddr);
- 	tipc_sk_rcv(n->net, &le->inputq);
- }
- 
+diff --git a/drivers/crypto/ccree/cc_cipher.c b/drivers/crypto/ccree/cc_cipher.c
+index 54a39164aab8..28a5b8b38fa2 100644
+--- a/drivers/crypto/ccree/cc_cipher.c
++++ b/drivers/crypto/ccree/cc_cipher.c
+@@ -306,7 +306,6 @@ static int cc_cipher_setkey(struct crypto_skcipher *sktfm, const u8 *key,
+ 	struct crypto_tfm *tfm = crypto_skcipher_tfm(sktfm);
+ 	struct cc_cipher_ctx *ctx_p = crypto_tfm_ctx(tfm);
+ 	struct device *dev = drvdata_to_dev(ctx_p->drvdata);
+-	u32 tmp[DES3_EDE_EXPKEY_WORDS];
+ 	struct cc_crypto_alg *cc_alg =
+ 			container_of(tfm->__crt_alg, struct cc_crypto_alg,
+ 				     skcipher_alg.base);
+@@ -332,6 +331,7 @@ static int cc_cipher_setkey(struct crypto_skcipher *sktfm, const u8 *key,
+ 	 * HW does the expansion on its own.
+ 	 */
+ 	if (ctx_p->flow_mode == S_DIN_to_DES) {
++		u32 tmp[DES3_EDE_EXPKEY_WORDS];
+ 		if (keylen == DES3_EDE_KEY_SIZE &&
+ 		    __des3_ede_setkey(tmp, &tfm->crt_flags, key,
+ 				      DES3_EDE_KEY_SIZE)) {
 -- 
 2.20.1
 
