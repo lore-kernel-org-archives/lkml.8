@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC896C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 541FDC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD77820663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19667206B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:46:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218370;
-	bh=wHSHb/MDBqahkrdh6IvxEuw+l7mYeRaaQEPep9xZhdw=;
+	s=default; t=1579218376;
+	bh=tSTT7czsVqE67MSHd+OyLSOcwk2po/pfGgxNVwE0rG4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LcwXspbCS3+K126aTZYGA5xdv1ItjpbGWmCy4pdmOUL0T1vDeO05s5y3Lx8Y6B0Gr
-	 34Sla3Kusr4dut4QdZxNPHJCd7pV0mtqViHzCKvPt0WjuweprGJSrohlz7doP5Yprl
-	 C6s9ZApyK+bnmMWPRwPPJ1XoeHfcnQW174YUOcr8=
+	b=RVm5mq69i2vWJnjSx18qdC90xkqGZ8UcDv7bpJCjOT6/D+7jdpmkQiC45IW0gQfhQ
+	 Wa1UjfKQKANadkvpeDvbzXM/IaDqFtnFeQBBp+uEKn+RQpTQDNW3vpHzOYXA8fChPV
+	 Ylbw/2pp1mAST1c6pMDBrTIQd2dEuQQCdrCPh6Ug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730106AbgAPXqJ (ORCPT
+        id S2391993AbgAPXqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:46:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50122 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:46:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387782AbgAPXWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:22:20 -0500
+        id S2390905AbgAPXWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:22:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5702C2073A;
-        Thu, 16 Jan 2020 23:22:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11D3C2073A;
+        Thu, 16 Jan 2020 23:22:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216939;
-        bh=wHSHb/MDBqahkrdh6IvxEuw+l7mYeRaaQEPep9xZhdw=;
+        s=default; t=1579216932;
+        bh=tSTT7czsVqE67MSHd+OyLSOcwk2po/pfGgxNVwE0rG4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z9cbGZw+LM7M+oMuBbbd68Z+b5Odof7ujVoOPkEADDLSOTI83bVryXgiEzoYWBUpQ
-         sBQDea9Poihj5l8Inxv1lgJJpXX7SEZallpNWsaSM57NKDJklo6fUgO44Paj6Ojitn
-         /hlkfUDRnOV6a9rHq6GRWAqroorTJ25ue+wtUjuY=
+        b=PHYzm8UNtl16EINndx6QYrZms6VX6R1sCpJgbhRPUiCT7q2KFzMECmlVQ59JaQD2e
+         PN48xhELSsBDgBVvFF0z/cPYohnA9aQcQItCqcsQ5favOj5jA8EGZfi0ONe9aIHyqM
+         +R84ruSgTs2EcN2WythxYxMjKibIEPdDAYqdOTwc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 082/203] afs: Fix use-after-loss-of-ref
-Date:   Fri, 17 Jan 2020 00:16:39 +0100
-Message-Id: <20200116231752.179454016@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 079/203] bpf: skmsg, fix potential psock NULL pointer dereference
+Date:   Fri, 17 Jan 2020 00:16:36 +0100
+Message-Id: <20200116231751.508994827@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -60,88 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: John Fastabend <john.fastabend@gmail.com>
 
-commit 40a708bd622b78582ae3d280de29b09b50bd04c0 upstream.
+commit 8163999db445021f2651a8a47b5632483e8722ea upstream.
 
-afs_lookup() has a tracepoint to indicate the outcome of
-d_splice_alias(), passing it the inode to retrieve the fid from.
-However, the function gave up its ref on that inode when it called
-d_splice_alias(), which may have failed and dropped the inode.
+Report from Dan Carpenter,
 
-Fix this by caching the fid.
+ net/core/skmsg.c:792 sk_psock_write_space()
+ error: we previously assumed 'psock' could be null (see line 790)
 
-Fixes: 80548b03991f ("afs: Add more tracepoints")
-Reported-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+ net/core/skmsg.c
+   789 psock = sk_psock(sk);
+   790 if (likely(psock && sk_psock_test_state(psock, SK_PSOCK_TX_ENABLED)))
+ Check for NULL
+   791 schedule_work(&psock->work);
+   792 write_space = psock->saved_write_space;
+                     ^^^^^^^^^^^^^^^^^^^^^^^^
+   793          rcu_read_unlock();
+   794          write_space(sk);
+
+Ensure psock dereference on line 792 only occurs if psock is not null.
+
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 604326b41a6f ("bpf, sockmap: convert to generic sk_msg interface")
+Signed-off-by: John Fastabend <john.fastabend@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/afs/dir.c               |   12 +++++++-----
- include/trace/events/afs.h |   12 +++---------
- 2 files changed, 10 insertions(+), 14 deletions(-)
+ net/core/skmsg.c |   13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
---- a/fs/afs/dir.c
-+++ b/fs/afs/dir.c
-@@ -908,6 +908,7 @@ static struct dentry *afs_lookup(struct
- 				 unsigned int flags)
+--- a/net/core/skmsg.c
++++ b/net/core/skmsg.c
+@@ -793,15 +793,18 @@ static void sk_psock_strp_data_ready(str
+ static void sk_psock_write_space(struct sock *sk)
  {
- 	struct afs_vnode *dvnode = AFS_FS_I(dir);
-+	struct afs_fid fid = {};
- 	struct inode *inode;
- 	struct dentry *d;
- 	struct key *key;
-@@ -957,15 +958,16 @@ static struct dentry *afs_lookup(struct
- 		dentry->d_fsdata =
- 			(void *)(unsigned long)dvnode->status.data_version;
- 	}
-+
-+	if (!IS_ERR_OR_NULL(inode))
-+		fid = AFS_FS_I(inode)->fid;
-+
- 	d = d_splice_alias(inode, dentry);
- 	if (!IS_ERR_OR_NULL(d)) {
- 		d->d_fsdata = dentry->d_fsdata;
--		trace_afs_lookup(dvnode, &d->d_name,
--				 inode ? AFS_FS_I(inode) : NULL);
-+		trace_afs_lookup(dvnode, &d->d_name, &fid);
- 	} else {
--		trace_afs_lookup(dvnode, &dentry->d_name,
--				 IS_ERR_OR_NULL(inode) ? NULL
--				 : AFS_FS_I(inode));
-+		trace_afs_lookup(dvnode, &dentry->d_name, &fid);
- 	}
- 	return d;
+ 	struct sk_psock *psock;
+-	void (*write_space)(struct sock *sk);
++	void (*write_space)(struct sock *sk) = NULL;
+ 
+ 	rcu_read_lock();
+ 	psock = sk_psock(sk);
+-	if (likely(psock && sk_psock_test_state(psock, SK_PSOCK_TX_ENABLED)))
+-		schedule_work(&psock->work);
+-	write_space = psock->saved_write_space;
++	if (likely(psock)) {
++		if (sk_psock_test_state(psock, SK_PSOCK_TX_ENABLED))
++			schedule_work(&psock->work);
++		write_space = psock->saved_write_space;
++	}
+ 	rcu_read_unlock();
+-	write_space(sk);
++	if (write_space)
++		write_space(sk);
  }
---- a/include/trace/events/afs.h
-+++ b/include/trace/events/afs.h
-@@ -915,9 +915,9 @@ TRACE_EVENT(afs_call_state,
  
- TRACE_EVENT(afs_lookup,
- 	    TP_PROTO(struct afs_vnode *dvnode, const struct qstr *name,
--		     struct afs_vnode *vnode),
-+		     struct afs_fid *fid),
- 
--	    TP_ARGS(dvnode, name, vnode),
-+	    TP_ARGS(dvnode, name, fid),
- 
- 	    TP_STRUCT__entry(
- 		    __field_struct(struct afs_fid,	dfid		)
-@@ -928,13 +928,7 @@ TRACE_EVENT(afs_lookup,
- 	    TP_fast_assign(
- 		    int __len = min_t(int, name->len, 23);
- 		    __entry->dfid = dvnode->fid;
--		    if (vnode) {
--			    __entry->fid = vnode->fid;
--		    } else {
--			    __entry->fid.vid = 0;
--			    __entry->fid.vnode = 0;
--			    __entry->fid.unique = 0;
--		    }
-+		    __entry->fid = *fid;
- 		    memcpy(__entry->name, name->name, __len);
- 		    __entry->name[__len] = 0;
- 			   ),
+ int sk_psock_init_strp(struct sock *sk, struct sk_psock *psock)
 
 
