@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CBEC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD24C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B602C2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:11:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0D872073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:11:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198298;
-	bh=QrbJSSFGZoHv8Kamr1uDkgCuY3Gp7yodECR1MkQoYUE=;
+	s=default; t=1579198303;
+	bh=kRST8YbOWgOCAkrrsvEVjtUC26+1pzchNnWP+K27Axk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N1nzkIbiV+k0EXZqhXdBDxP3iV8Tz8nBWuQeQvb9RDWK9cdsvNktvEBkUnQNI4v+1
-	 FauUmHVMOGjAgJ4bTijv49/jZeSp1qtfxV128qW+dCF7Gtp9oPmay7mHz56DXDyhej
-	 Am850epftrKvUWB932SEezLElAmrRVZMw9+BvR4k=
+	b=UzaN25j4/KhcDgQhmS/fKhguBf7Vmz4+hLFSG751KWWJ6jpRDYCg4PC9gpT7GPxSP
+	 OHaa92RARlWuhIQxfCdVvotPcbc1auxeTNj5NTilCDO4ZwZDZQgzXMeZ5f8l9x/Ful
+	 3198XzTJnvaTGf8rbrRsijaYzQxzMfp41Sfgib0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405374AbgAPRh3 (ORCPT
+        id S2395236AbgAPSLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:37:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52502 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:11:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405332AbgAPRhV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:37:21 -0500
+        id S2405368AbgAPRh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:37:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C5CA246AD;
-        Thu, 16 Jan 2020 17:37:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C11FD246C8;
+        Thu, 16 Jan 2020 17:37:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196240;
-        bh=QrbJSSFGZoHv8Kamr1uDkgCuY3Gp7yodECR1MkQoYUE=;
+        s=default; t=1579196248;
+        bh=kRST8YbOWgOCAkrrsvEVjtUC26+1pzchNnWP+K27Axk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=chkNu0AwsCxlDZaggyuODNp2g5mQ595K678IEpslIEmTAVN7eS73PWyNXKj+to6j4
-         gs7A8VaMBGtORmuuTw+U0gwvTfBvBPy0eG2ohmtsrZzjgPhdSY5Bqqfr2UGE/Ta/jS
-         VgxpN6Wa7WiWLrLWom4Evcs6BbRkgCQxg50fuECo=
+        b=e6DZb1c0I6jIMZsUCimAOYCw/S0h4II5WtYJwQ6Yipxic3Z9/jXJTRhzC3m1QENZS
+         dLMHj+Zp77SBcJSdyxD0cBF4TpcfeZsanFEb5tEnZwXZqkOSOFfz/0V3NlZXtE9yB7
+         D6e1IE02eSIEVWI0Ad/3Eay/mPKp8EMqqtNo94Ss=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
-        Tony Lindgren <tony@atomide.com>, Bin Liu <b-liu@ti.com>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 070/251] usb: phy: twl6030-usb: fix possible use-after-free on remove
-Date:   Thu, 16 Jan 2020 12:33:39 -0500
-Message-Id: <20200116173641.22137-30-sashal@kernel.org>
+Cc:     Axel Lin <axel.lin@ingics.com>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 076/251] regulator: pv88060: Fix array out-of-bounds access
+Date:   Thu, 16 Jan 2020 12:33:45 -0500
+Message-Id: <20200116173641.22137-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -61,39 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Van Asbroeck <thesven73@gmail.com>
+From: Axel Lin <axel.lin@ingics.com>
 
-[ Upstream commit 5895d311d28f2605e2f71c1a3e043ed38f3ac9d2 ]
+[ Upstream commit 7cd415f875591bc66c5ecb49bf84ef97e80d7b0e ]
 
-In remove(), use cancel_delayed_work_sync() to cancel the
-delayed work. Otherwise there's a chance that this work
-will continue to run until after the device has been removed.
+Fix off-by-one while iterating current_limits array.
+The valid index should be 0 ~ n_current_limits -1.
 
-This issue was detected with the help of Coccinelle.
-
-Cc: Tony Lindgren <tony@atomide.com>
-Cc: Bin Liu <b-liu@ti.com>
-Fixes: b6a619a883c3 ("usb: phy: Check initial state for twl6030")
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Fixes: f307a7e9b7af ("regulator: pv88060: new regulator driver")
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/phy/phy-twl6030-usb.c | 2 +-
+ drivers/regulator/pv88060-regulator.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/phy/phy-twl6030-usb.c b/drivers/usb/phy/phy-twl6030-usb.c
-index a72e8d670adc..cf0b67433ac9 100644
---- a/drivers/usb/phy/phy-twl6030-usb.c
-+++ b/drivers/usb/phy/phy-twl6030-usb.c
-@@ -422,7 +422,7 @@ static int twl6030_usb_remove(struct platform_device *pdev)
- {
- 	struct twl6030_usb *twl = platform_get_drvdata(pdev);
+diff --git a/drivers/regulator/pv88060-regulator.c b/drivers/regulator/pv88060-regulator.c
+index 6c4afc73ecac..d229245d2b5e 100644
+--- a/drivers/regulator/pv88060-regulator.c
++++ b/drivers/regulator/pv88060-regulator.c
+@@ -135,7 +135,7 @@ static int pv88060_set_current_limit(struct regulator_dev *rdev, int min,
+ 	int i;
  
--	cancel_delayed_work(&twl->get_status_work);
-+	cancel_delayed_work_sync(&twl->get_status_work);
- 	twl6030_interrupt_mask(TWL6030_USBOTG_INT_MASK,
- 		REG_INT_MSK_LINE_C);
- 	twl6030_interrupt_mask(TWL6030_USBOTG_INT_MASK,
+ 	/* search for closest to maximum */
+-	for (i = info->n_current_limits; i >= 0; i--) {
++	for (i = info->n_current_limits - 1; i >= 0; i--) {
+ 		if (min <= info->current_limits[i]
+ 			&& max >= info->current_limits[i]) {
+ 			return regmap_update_bits(rdev->regmap,
 -- 
 2.20.1
 
