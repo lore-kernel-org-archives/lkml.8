@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 691F9C33CB7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3BEEC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42DB220663
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B09E62053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:57:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201046;
-	bh=Pu9dJaZJd8nd4avcmPPb+omB7XnZY5NhPXDcWF2ftdQ=;
+	s=default; t=1579201051;
+	bh=hBuBI2R1N9tqyEoCpNH88R2pYUVEAJ7+0Sj6SoGPYp0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qlDRGxepxq6kInkqe9rvdGRtO61uQD8mxFH6NfpQ1Lps8tQuPawb9gDPiOXFq3jrc
-	 pvGTSK8MqvxD8f0ljaDnZ4kkPUraEARQEPYv2yjd8IEheipI/qzz8fFwuZbGE9PFft
-	 G688J9tgwylgPpPWgzxQN/1s+DfZxn8EFFPe/OZA=
+	b=aNZ+Ahnf2O9MEdCZwpCib6ruTrM25B3qXX5hSUZF87mA82cYAUYJ/nD4UqupVSIPB
+	 sUnY67Ul9koh0+o6RPaQ2rjrY8r1FPbmS02/6aqvQyPYmdVUDlLNKdybk1yFpJ10Lr
+	 eLW6RtzHaFLD0z0y/WARfNqtYwo6a/HwxM3LCh1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407213AbgAPS5Y (ORCPT
+        id S2389193AbgAPRHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:57:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38394 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:07:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389071AbgAPRHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:07:06 -0500
+        id S2389169AbgAPRH1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:07:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75C8B2468C;
-        Thu, 16 Jan 2020 17:07:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 015F12081E;
+        Thu, 16 Jan 2020 17:07:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194425;
-        bh=Pu9dJaZJd8nd4avcmPPb+omB7XnZY5NhPXDcWF2ftdQ=;
+        s=default; t=1579194446;
+        bh=hBuBI2R1N9tqyEoCpNH88R2pYUVEAJ7+0Sj6SoGPYp0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UV5TZThtwItgaVhJW17n0ejqPmeHSeMlV37bSHsaJlD7hqPflabtp56YWw740YwCT
-         A13cAgSJL/r2ejlVj3bPwfkY1m8Tphdl6RGW0gu304KFWfCGgq1oCoHKR6PdwdRLjH
-         dbU+Uk7HtdkFUyOTt5lzK9md9+j+rUIiAL6lAwfA=
+        b=Ic5kAoWMYAX4kbzHpbFz5s0TvBiRKN7gC7mkXTflkmLNIYCKvWAPg4Fzte5MRqTyz
+         jlpzPW1v/2oiXShTIEzGVjZSHzy6EnVNQH7ne7qwa/ut8AjArxNw6vfB9fnxWx7NGZ
+         FZCcQG2NF2cPKlzk8BiEp2swTVViGH7UXNL4CuAo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Guillaume Nault <gnault@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 343/671] l2tp: Fix possible NULL pointer dereference
-Date:   Thu, 16 Jan 2020 11:59:41 -0500
-Message-Id: <20200116170509.12787-80-sashal@kernel.org>
+Cc:     Jiada Wang <jiada_wang@mentor.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 357/671] thermal: rcar_gen3_thermal: fix interrupt type
+Date:   Thu, 16 Jan 2020 11:59:55 -0500
+Message-Id: <20200116170509.12787-94-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,90 +61,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Jiada Wang <jiada_wang@mentor.com>
 
-[ Upstream commit 638a3a1e349ddf5b82f222ff5cb3b4f266e7c278 ]
+[ Upstream commit 2c0928c9e004589dc9e7672c40a38d6c4ca12701 ]
 
-BUG: unable to handle kernel NULL pointer dereference at 0000000000000128
-PGD 0 P4D 0
-Oops: 0000 [#1
-CPU: 0 PID: 5697 Comm: modprobe Tainted: G        W         5.1.0-rc7+ #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
-RIP: 0010:__lock_acquire+0x53/0x10b0
-Code: 8b 1c 25 40 5e 01 00 4c 8b 6d 10 45 85 e4 0f 84 bd 06 00 00 44 8b 1d 7c d2 09 02 49 89 fe 41 89 d2 45 85 db 0f 84 47 02 00 00 <48> 81 3f a0 05 70 83 b8 00 00 00 00 44 0f 44 c0 83 fe 01 0f 86 3a
-RSP: 0018:ffffc90001c07a28 EFLAGS: 00010002
-RAX: 0000000000000000 RBX: ffff88822f038440 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000128
-RBP: ffffc90001c07a88 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000001 R12: 0000000000000001
-R13: 0000000000000000 R14: 0000000000000128 R15: 0000000000000000
-FS:  00007fead0811540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000128 CR3: 00000002310da000 CR4: 00000000000006f0
-Call Trace:
- ? __lock_acquire+0x24e/0x10b0
- lock_acquire+0xdf/0x230
- ? flush_workqueue+0x71/0x530
- flush_workqueue+0x97/0x530
- ? flush_workqueue+0x71/0x530
- l2tp_exit_net+0x170/0x2b0 [l2tp_core
- ? l2tp_exit_net+0x93/0x2b0 [l2tp_core
- ops_exit_list.isra.6+0x36/0x60
- unregister_pernet_operations+0xb8/0x110
- unregister_pernet_device+0x25/0x40
- l2tp_init+0x55/0x1000 [l2tp_core
- ? 0xffffffffa018d000
- do_one_initcall+0x6c/0x3cc
- ? do_init_module+0x22/0x1f1
- ? rcu_read_lock_sched_held+0x97/0xb0
- ? kmem_cache_alloc_trace+0x325/0x3b0
- do_init_module+0x5b/0x1f1
- load_module+0x1db1/0x2690
- ? m_show+0x1d0/0x1d0
- __do_sys_finit_module+0xc5/0xd0
- __x64_sys_finit_module+0x15/0x20
- do_syscall_64+0x6b/0x1d0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x7fead031a839
-Code: 00 f3 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 1f f6 2c 00 f7 d8 64 89 01 48
-RSP: 002b:00007ffe8d9acca8 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-RAX: ffffffffffffffda RBX: 0000560078398b80 RCX: 00007fead031a839
-RDX: 0000000000000000 RSI: 000056007659dc2e RDI: 0000000000000003
-RBP: 000056007659dc2e R08: 0000000000000000 R09: 0000560078398b80
-R10: 0000000000000003 R11: 0000000000000246 R12: 0000000000000000
-R13: 00005600783a04a0 R14: 0000000000040000 R15: 0000560078398b80
-Modules linked in: l2tp_core(+) e1000 ip_tables ipv6 [last unloaded: l2tp_core
-CR2: 0000000000000128
----[ end trace 8322b2b8bf83f8e1
+Currently IRQF_SHARED type interrupt line is allocated, but it
+is not appropriate, as the interrupt line isn't shared between
+different devices, instead IRQF_ONESHOT is the proper type.
 
-If alloc_workqueue fails in l2tp_init, l2tp_net_ops
-is unregistered on failure path. Then l2tp_exit_net
-is called which will flush NULL workqueue, this patch
-add a NULL check to fix it.
+By changing interrupt type to IRQF_ONESHOT, now irq handler is
+no longer needed, as clear of interrupt status can be done in
+threaded interrupt context.
 
-Fixes: 67e04c29ec0d ("l2tp: unregister l2tp_net_ops on failure path")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Guillaume Nault <gnault@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Because IRQF_ONESHOT type interrupt line is kept disabled until
+the threaded handler has been run, so there is no need to protect
+read/write of REG_GEN3_IRQSTR with lock.
+
+Fixes: 7d4b269776ec6 ("enable hardware interrupts for trip points")
+Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Tested-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/l2tp/l2tp_core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/thermal/rcar_gen3_thermal.c | 38 +++++------------------------
+ 1 file changed, 6 insertions(+), 32 deletions(-)
 
-diff --git a/net/l2tp/l2tp_core.c b/net/l2tp/l2tp_core.c
-index 52b5a2797c0c..e4dec03a19fe 100644
---- a/net/l2tp/l2tp_core.c
-+++ b/net/l2tp/l2tp_core.c
-@@ -1735,7 +1735,8 @@ static __net_exit void l2tp_exit_net(struct net *net)
+diff --git a/drivers/thermal/rcar_gen3_thermal.c b/drivers/thermal/rcar_gen3_thermal.c
+index 704c8ad045bb..8f553453dd7f 100644
+--- a/drivers/thermal/rcar_gen3_thermal.c
++++ b/drivers/thermal/rcar_gen3_thermal.c
+@@ -14,7 +14,6 @@
+ #include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+-#include <linux/spinlock.h>
+ #include <linux/sys_soc.h>
+ #include <linux/thermal.h>
+ 
+@@ -81,7 +80,6 @@ struct rcar_gen3_thermal_tsc {
+ struct rcar_gen3_thermal_priv {
+ 	struct rcar_gen3_thermal_tsc *tscs[TSC_MAX_NUM];
+ 	unsigned int num_tscs;
+-	spinlock_t lock; /* Protect interrupts on and off */
+ 	void (*thermal_init)(struct rcar_gen3_thermal_tsc *tsc);
+ };
+ 
+@@ -231,38 +229,16 @@ static irqreturn_t rcar_gen3_thermal_irq(int irq, void *data)
+ {
+ 	struct rcar_gen3_thermal_priv *priv = data;
+ 	u32 status;
+-	int i, ret = IRQ_HANDLED;
++	int i;
+ 
+-	spin_lock(&priv->lock);
+ 	for (i = 0; i < priv->num_tscs; i++) {
+ 		status = rcar_gen3_thermal_read(priv->tscs[i], REG_GEN3_IRQSTR);
+ 		rcar_gen3_thermal_write(priv->tscs[i], REG_GEN3_IRQSTR, 0);
+ 		if (status)
+-			ret = IRQ_WAKE_THREAD;
++			thermal_zone_device_update(priv->tscs[i]->zone,
++						   THERMAL_EVENT_UNSPECIFIED);
  	}
- 	rcu_read_unlock_bh();
  
--	flush_workqueue(l2tp_wq);
-+	if (l2tp_wq)
-+		flush_workqueue(l2tp_wq);
- 	rcu_barrier();
+-	if (ret == IRQ_WAKE_THREAD)
+-		rcar_thermal_irq_set(priv, false);
+-
+-	spin_unlock(&priv->lock);
+-
+-	return ret;
+-}
+-
+-static irqreturn_t rcar_gen3_thermal_irq_thread(int irq, void *data)
+-{
+-	struct rcar_gen3_thermal_priv *priv = data;
+-	unsigned long flags;
+-	int i;
+-
+-	for (i = 0; i < priv->num_tscs; i++)
+-		thermal_zone_device_update(priv->tscs[i]->zone,
+-					   THERMAL_EVENT_UNSPECIFIED);
+-
+-	spin_lock_irqsave(&priv->lock, flags);
+-	rcar_thermal_irq_set(priv, true);
+-	spin_unlock_irqrestore(&priv->lock, flags);
+-
+ 	return IRQ_HANDLED;
+ }
  
- 	for (hash = 0; hash < L2TP_HASH_SIZE_2; hash++)
+@@ -364,8 +340,6 @@ static int rcar_gen3_thermal_probe(struct platform_device *pdev)
+ 	if (soc_device_match(r8a7795es1))
+ 		priv->thermal_init = rcar_gen3_thermal_init_r8a7795es1;
+ 
+-	spin_lock_init(&priv->lock);
+-
+ 	platform_set_drvdata(pdev, priv);
+ 
+ 	/*
+@@ -383,9 +357,9 @@ static int rcar_gen3_thermal_probe(struct platform_device *pdev)
+ 		if (!irqname)
+ 			return -ENOMEM;
+ 
+-		ret = devm_request_threaded_irq(dev, irq, rcar_gen3_thermal_irq,
+-						rcar_gen3_thermal_irq_thread,
+-						IRQF_SHARED, irqname, priv);
++		ret = devm_request_threaded_irq(dev, irq, NULL,
++						rcar_gen3_thermal_irq,
++						IRQF_ONESHOT, irqname, priv);
+ 		if (ret)
+ 			return ret;
+ 	}
 -- 
 2.20.1
 
