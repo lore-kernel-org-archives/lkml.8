@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 521D4C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7345C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FAEF20684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:20:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB6D920730
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:20:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198836;
-	bh=C7reEqdrP/IDmvRXJv9RU4BxtYGkVoA9w/EuMhuUhTk=;
+	s=default; t=1579198840;
+	bh=eGfSmaZhPTJNhVvCHpO8Z9PmUArk9uxu9PZFZhOuafQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QSrXSTrlT4Zi6If2mf9zYduBm0qFTI8BJXJYkmVOXJ6cMeSANOCSlKEk2Ve9hhfrB
-	 buada6ouIJZJAQRjt3tcGAPTPYy+L8lOPw5WzJaJvTbclpIAiJ79qrZXYz3y9w+Usd
-	 zPpOz/Oy8L77Ie6g9JxHBKeHatzooNqdyXlNCoFg=
+	b=g15fer6o4vQLz/voqclLEpD1TpH1VoEqe76af+bJE3DvSQvPc+uCRWn7xevK4NW+c
+	 RNwPnKw+C8q6lefcsjStJf7iBxcyI2yVVp8AFRMcau3RSrBKSemtZeWFZ2Xs+7GsXo
+	 SdE3oxkRy3TPD+jQXCTJ3BjnOb8ZNw5yd58glegA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392546AbgAPR2B (ORCPT
+        id S2403955AbgAPSUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:28:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38226 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:20:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392091AbgAPR1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:27:53 -0500
+        id S2392548AbgAPR2D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:28:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E38C9246E6;
-        Thu, 16 Jan 2020 17:27:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D9BC246D9;
+        Thu, 16 Jan 2020 17:28:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195672;
-        bh=C7reEqdrP/IDmvRXJv9RU4BxtYGkVoA9w/EuMhuUhTk=;
+        s=default; t=1579195682;
+        bh=eGfSmaZhPTJNhVvCHpO8Z9PmUArk9uxu9PZFZhOuafQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VbAjDtMWt/ubbjuGjumWa+fSQviJNnPDDx0Pwg8AR8b8MQsQ7PC2BevslxNOTSCwu
-         O8pUb21VnbmKVxqGm+SlsPrBW7EHdSNE8lVArrv28dtGxNAB4bcEvK3wHLJiNdlqQa
-         /d1nWc1ikncxS58gj2Gt2R5+x8ydFxs6dh6fbvz4=
+        b=RVS2WNlSAKY2G8giMvHpNtWSzPSQVXOLs7eZHVAIOdkSqBtVdN1wF34VS6tvB7zp/
+         gawmHP3Waph/Njb+/I5V+qRBAlJwi5zQs0QgorG2jKG6WaqZMaqnb4AoF+jjOgENFc
+         86m6PRtCaoSOXZlfEPfUj+MkJwgLpJsQal59ug0g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Lynch <nathanl@linux.ibm.com>,
-        "Gautham R . Shenoy" <ego@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.14 229/371] powerpc/pseries/mobility: rebuild cacheinfo hierarchy post-migration
-Date:   Thu, 16 Jan 2020 12:21:41 -0500
-Message-Id: <20200116172403.18149-172-sashal@kernel.org>
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 236/371] drm/msm/a3xx: remove TPL1 regs from snapshot
+Date:   Thu, 16 Jan 2020 12:21:48 -0500
+Message-Id: <20200116172403.18149-179-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -60,79 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Lynch <nathanl@linux.ibm.com>
+From: Rob Clark <robdclark@chromium.org>
 
-[ Upstream commit e610a466d16a086e321f0bd421e2fc75cff28605 ]
+[ Upstream commit f47bee2ba447bebc304111c16ef1e1a73a9744dd ]
 
-It's common for the platform to replace the cache device nodes after a
-migration. Since the cacheinfo code is never informed about this, it
-never drops its references to the source system's cache nodes, causing
-it to wind up in an inconsistent state resulting in warnings and oopses
-as soon as CPU online/offline occurs after the migration, e.g.
+These regs are write-only, and the hw throws a hissy-fit (ie. reboots)
+when we try to read them for GPU state snapshot, in response to a GPU
+hang.  It is rather impolite when GPU recovery triggers an insta-
+reboot, so lets remove the TPL1 registers from the snapshot.
 
-  cache for /cpus/l3-cache@3113(Unified) refers to cache for /cpus/l2-cache@200d(Unified)
-  WARNING: CPU: 15 PID: 86 at arch/powerpc/kernel/cacheinfo.c:176 release_cache+0x1bc/0x1d0
-  [...]
-  NIP release_cache+0x1bc/0x1d0
-  LR  release_cache+0x1b8/0x1d0
-  Call Trace:
-    release_cache+0x1b8/0x1d0 (unreliable)
-    cacheinfo_cpu_offline+0x1c4/0x2c0
-    unregister_cpu_online+0x1b8/0x260
-    cpuhp_invoke_callback+0x114/0xf40
-    cpuhp_thread_fun+0x270/0x310
-    smpboot_thread_fn+0x2c8/0x390
-    kthread+0x1b8/0x1c0
-    ret_from_kernel_thread+0x5c/0x68
-
-Using device tree notifiers won't work since we want to rebuild the
-hierarchy only after all the removals and additions have occurred and
-the device tree is in a consistent state. Call cacheinfo_teardown()
-before processing device tree updates, and rebuild the hierarchy
-afterward.
-
-Fixes: 410bccf97881 ("powerpc/pseries: Partition migration in the kernel")
-Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
-Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Fixes: 7198e6b03155 drm/msm: add a3xx gpu support
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/mobility.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/gpu/drm/msm/adreno/a3xx_gpu.c | 24 +++++++++++-------------
+ 1 file changed, 11 insertions(+), 13 deletions(-)
 
-diff --git a/arch/powerpc/platforms/pseries/mobility.c b/arch/powerpc/platforms/pseries/mobility.c
-index 9739a055e5f7..2d3668acb6ef 100644
---- a/arch/powerpc/platforms/pseries/mobility.c
-+++ b/arch/powerpc/platforms/pseries/mobility.c
-@@ -23,6 +23,7 @@
- #include <asm/machdep.h>
- #include <asm/rtas.h>
- #include "pseries.h"
-+#include "../../kernel/cacheinfo.h"
+diff --git a/drivers/gpu/drm/msm/adreno/a3xx_gpu.c b/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
+index 7791313405b5..c8671b1578c6 100644
+--- a/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
+@@ -394,19 +394,17 @@ static const unsigned int a3xx_registers[] = {
+ 	0x2200, 0x2212, 0x2214, 0x2217, 0x221a, 0x221a, 0x2240, 0x227e,
+ 	0x2280, 0x228b, 0x22c0, 0x22c0, 0x22c4, 0x22ce, 0x22d0, 0x22d8,
+ 	0x22df, 0x22e6, 0x22e8, 0x22e9, 0x22ec, 0x22ec, 0x22f0, 0x22f7,
+-	0x22ff, 0x22ff, 0x2340, 0x2343, 0x2348, 0x2349, 0x2350, 0x2356,
+-	0x2360, 0x2360, 0x2440, 0x2440, 0x2444, 0x2444, 0x2448, 0x244d,
+-	0x2468, 0x2469, 0x246c, 0x246d, 0x2470, 0x2470, 0x2472, 0x2472,
+-	0x2474, 0x2475, 0x2479, 0x247a, 0x24c0, 0x24d3, 0x24e4, 0x24ef,
+-	0x2500, 0x2509, 0x250c, 0x250c, 0x250e, 0x250e, 0x2510, 0x2511,
+-	0x2514, 0x2515, 0x25e4, 0x25e4, 0x25ea, 0x25ea, 0x25ec, 0x25ed,
+-	0x25f0, 0x25f0, 0x2600, 0x2612, 0x2614, 0x2617, 0x261a, 0x261a,
+-	0x2640, 0x267e, 0x2680, 0x268b, 0x26c0, 0x26c0, 0x26c4, 0x26ce,
+-	0x26d0, 0x26d8, 0x26df, 0x26e6, 0x26e8, 0x26e9, 0x26ec, 0x26ec,
+-	0x26f0, 0x26f7, 0x26ff, 0x26ff, 0x2740, 0x2743, 0x2748, 0x2749,
+-	0x2750, 0x2756, 0x2760, 0x2760, 0x300c, 0x300e, 0x301c, 0x301d,
+-	0x302a, 0x302a, 0x302c, 0x302d, 0x3030, 0x3031, 0x3034, 0x3036,
+-	0x303c, 0x303c, 0x305e, 0x305f,
++	0x22ff, 0x22ff, 0x2340, 0x2343, 0x2440, 0x2440, 0x2444, 0x2444,
++	0x2448, 0x244d, 0x2468, 0x2469, 0x246c, 0x246d, 0x2470, 0x2470,
++	0x2472, 0x2472, 0x2474, 0x2475, 0x2479, 0x247a, 0x24c0, 0x24d3,
++	0x24e4, 0x24ef, 0x2500, 0x2509, 0x250c, 0x250c, 0x250e, 0x250e,
++	0x2510, 0x2511, 0x2514, 0x2515, 0x25e4, 0x25e4, 0x25ea, 0x25ea,
++	0x25ec, 0x25ed, 0x25f0, 0x25f0, 0x2600, 0x2612, 0x2614, 0x2617,
++	0x261a, 0x261a, 0x2640, 0x267e, 0x2680, 0x268b, 0x26c0, 0x26c0,
++	0x26c4, 0x26ce, 0x26d0, 0x26d8, 0x26df, 0x26e6, 0x26e8, 0x26e9,
++	0x26ec, 0x26ec, 0x26f0, 0x26f7, 0x26ff, 0x26ff, 0x2740, 0x2743,
++	0x300c, 0x300e, 0x301c, 0x301d, 0x302a, 0x302a, 0x302c, 0x302d,
++	0x3030, 0x3031, 0x3034, 0x3036, 0x303c, 0x303c, 0x305e, 0x305f,
+ 	~0   /* sentinel */
+ };
  
- static struct kobject *mobility_kobj;
- 
-@@ -359,11 +360,20 @@ void post_mobility_fixup(void)
- 	 */
- 	cpus_read_lock();
- 
-+	/*
-+	 * It's common for the destination firmware to replace cache
-+	 * nodes.  Release all of the cacheinfo hierarchy's references
-+	 * before updating the device tree.
-+	 */
-+	cacheinfo_teardown();
-+
- 	rc = pseries_devicetree_update(MIGRATION_SCOPE);
- 	if (rc)
- 		printk(KERN_ERR "Post-mobility device tree update "
- 			"failed: %d\n", rc);
- 
-+	cacheinfo_rebuild();
-+
- 	cpus_read_unlock();
- 
- 	/* Possibly switch to a new RFI flush type */
 -- 
 2.20.1
 
