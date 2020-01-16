@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FD2C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 542BEC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC872051A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 272B02051A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:16:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195015;
-	bh=QFwPIGYW7jqbTdUHd0X1/G46FyHGNJE8eX12vRwYplU=;
+	s=default; t=1579195019;
+	bh=Uc8ca9AD02USo6YyogNUXPtsgC0fZNG6CSuWH9YoxfQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mi5TNYorn8bwB4a1k+ppPaO3nmxtcvo1a8dfHCuAmlWa9TOujD2k56Ul9Co+4l7Ep
-	 1Tt+kf6IvjLDKvLsVakJfe62x87SEok0nEzCzVMdPLlRvFGCGs34LvvE5nWe18Ey1x
-	 tgFrdLlx9B5HkLZ5Va7kW4QAWXWKB7Y7jsCjM8Ow=
+	b=zbIfz0zVlS6m0xRDo0txtiNaa0lg9EXyb9lyats3gDvO/BQHK73lQfSthdjcRh5cF
+	 ohRarDQfN9onzgkETJ727nz/0e+glfpbe3CW41O9mXZf5/bmT17nwqBDSJgEYtP8kP
+	 lGQMKGkr1P9fKKDgHxcNH+kMSI3QDFOLjjGIzF9I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391129AbgAPRQy (ORCPT
+        id S2390896AbgAPROA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:16:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60438 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:14:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390904AbgAPROB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:14:01 -0500
+        id S2390219AbgAPRNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:13:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F1522469F;
-        Thu, 16 Jan 2020 17:14:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9305120684;
+        Thu, 16 Jan 2020 17:13:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194841;
-        bh=QFwPIGYW7jqbTdUHd0X1/G46FyHGNJE8eX12vRwYplU=;
+        s=default; t=1579194828;
+        bh=Uc8ca9AD02USo6YyogNUXPtsgC0fZNG6CSuWH9YoxfQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lMxqmjVU/4EW5t0dMOS2Vs5ovOoFPMKs93vNP7afFqQ8gziQvn7oT84Xz9o/pww+t
-         WbmuQobw+zxTlusflu7ZkIET7aDqh2MQiQPUZ9TH+JAq+GXCOkfwW0G5Pojr76/LSI
-         u1RZ0I6TcdlZSKmiBKQ69Rwi6eYXWjV29PPHuYFg=
+        b=LAXISYVR0sKaHalVFFcQxTWlzExHp+319S6UKebem6lWIvtzdSnYP1Ft3jF6Pyo76
+         c+7qOiGAW8zHv7TU0R7fPPQ+PEo2oNqg93cUnzD3dSlfJeisusfdq3rEgP6TYtGCWS
+         4snnW2UIjWm4rSvcapqAQ1AevROb5bn1KjaxwEZg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 640/671] rtc: brcmstb-waketimer: add missed clk_disable_unprepare
-Date:   Thu, 16 Jan 2020 12:04:38 -0500
-Message-Id: <20200116170509.12787-377-sashal@kernel.org>
+Cc:     Madalin Bucur <madalin.bucur@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 631/671] dpaa_eth: avoid timestamp read on error paths
+Date:   Thu, 16 Jan 2020 12:04:29 -0500
+Message-Id: <20200116170509.12787-368-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -61,35 +59,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Madalin Bucur <madalin.bucur@nxp.com>
 
-[ Upstream commit 94303f8930ed78aea0f189b703c9d79fff9555d7 ]
+[ Upstream commit 9a4f4f3a894ff4487f5597b7aabba9432b238292 ]
 
-This driver forgets to disable and unprepare clock when remove.
-Add a call to clk_disable_unprepare to fix it.
+The dpaa_cleanup_tx_fd() function is called by the frame transmit
+confirmation callback but also on several error paths. This function
+is reading the transmit timestamp value. Avoid reading an invalid
+timestamp value on the error paths.
 
-Fixes: c4f07ecee22e ("rtc: brcmstb-waketimer: Add Broadcom STB wake-timer")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Link: https://lore.kernel.org/r/20191105160043.20018-1-hslester96@gmail.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fixes: 4664856e9ca2 ("dpaa_eth: add support for hardware timestamping")
+Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-brcmstb-waketimer.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/freescale/dpaa/dpaa_eth.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/rtc/rtc-brcmstb-waketimer.c b/drivers/rtc/rtc-brcmstb-waketimer.c
-index f4010a75f2be..1abc8397850a 100644
---- a/drivers/rtc/rtc-brcmstb-waketimer.c
-+++ b/drivers/rtc/rtc-brcmstb-waketimer.c
-@@ -287,6 +287,7 @@ static int brcmstb_waketmr_remove(struct platform_device *pdev)
- 	struct brcmstb_waketmr *timer = dev_get_drvdata(&pdev->dev);
+diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+index 3cd62a71ddea..d7736c9c6339 100644
+--- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
++++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+@@ -1600,13 +1600,15 @@ static int dpaa_eth_refill_bpools(struct dpaa_priv *priv)
+  * Skb freeing is not handled here.
+  *
+  * This function may be called on error paths in the Tx function, so guard
+- * against cases when not all fd relevant fields were filled in.
++ * against cases when not all fd relevant fields were filled in. To avoid
++ * reading the invalid transmission timestamp for the error paths set ts to
++ * false.
+  *
+  * Return the skb backpointer, since for S/G frames the buffer containing it
+  * gets freed here.
+  */
+ static struct sk_buff *dpaa_cleanup_tx_fd(const struct dpaa_priv *priv,
+-					  const struct qm_fd *fd)
++					  const struct qm_fd *fd, bool ts)
+ {
+ 	const enum dma_data_direction dma_dir = DMA_TO_DEVICE;
+ 	struct device *dev = priv->net_dev->dev.parent;
+@@ -1648,7 +1650,8 @@ static struct sk_buff *dpaa_cleanup_tx_fd(const struct dpaa_priv *priv,
+ 	}
  
- 	unregister_reboot_notifier(&timer->reboot_notifier);
-+	clk_disable_unprepare(timer->clk);
+ 	/* DMA unmapping is required before accessing the HW provided info */
+-	if (priv->tx_tstamp && skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) {
++	if (ts && priv->tx_tstamp &&
++	    skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) {
+ 		memset(&shhwtstamps, 0, sizeof(shhwtstamps));
  
- 	return 0;
+ 		if (!fman_port_get_tstamp(priv->mac_dev->port[TX], (void *)skbh,
+@@ -2118,7 +2121,7 @@ dpaa_start_xmit(struct sk_buff *skb, struct net_device *net_dev)
+ 	if (likely(dpaa_xmit(priv, percpu_stats, queue_mapping, &fd) == 0))
+ 		return NETDEV_TX_OK;
+ 
+-	dpaa_cleanup_tx_fd(priv, &fd);
++	dpaa_cleanup_tx_fd(priv, &fd, false);
+ skb_to_fd_failed:
+ enomem:
+ 	percpu_stats->tx_errors++;
+@@ -2164,7 +2167,7 @@ static void dpaa_tx_error(struct net_device *net_dev,
+ 
+ 	percpu_priv->stats.tx_errors++;
+ 
+-	skb = dpaa_cleanup_tx_fd(priv, fd);
++	skb = dpaa_cleanup_tx_fd(priv, fd, false);
+ 	dev_kfree_skb(skb);
  }
+ 
+@@ -2205,7 +2208,7 @@ static void dpaa_tx_conf(struct net_device *net_dev,
+ 
+ 	percpu_priv->tx_confirm++;
+ 
+-	skb = dpaa_cleanup_tx_fd(priv, fd);
++	skb = dpaa_cleanup_tx_fd(priv, fd, true);
+ 
+ 	consume_skb(skb);
+ }
+@@ -2435,7 +2438,7 @@ static void egress_ern(struct qman_portal *portal,
+ 	percpu_priv->stats.tx_fifo_errors++;
+ 	count_ern(percpu_priv, msg);
+ 
+-	skb = dpaa_cleanup_tx_fd(priv, fd);
++	skb = dpaa_cleanup_tx_fd(priv, fd, false);
+ 	dev_kfree_skb_any(skb);
+ }
+ 
 -- 
 2.20.1
 
