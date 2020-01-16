@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B091C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC12EC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40C172072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:44:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7737E2072B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:44:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218287;
-	bh=ZYX+Zfw+r6NhNQ/v3dQsd8zFyH2Ea9S8fCDau5E4rXM=;
+	s=default; t=1579218292;
+	bh=RaIv+XEgZLtzNRzIDMIJ555wufoJzqan9BfDFdy6l1g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HBZlKShzdP42ZS69hKO76Wz4O2Q2yo1Hc58B1qmjfILwU7X+sfluPSVHEQUk8mUPu
-	 AEz6Lq9nPr6aRUPprYfE0E+GpfYQylinvywSurOF0skT81Va9Sw7xnsc05DqSeP659
-	 94Hvn4KXZa9feygMd0VOWHG1BwsgsN5IkkN8i9W4=
+	b=rO9BJvC19hISbHiJ75/tIWV0tlgB3D6br20EqP66lb36OtCYqByjZNXuwXKqivRkp
+	 Lcp3QW51SpYZ7gNRGuJlzMPCJuV/W8mZWQHjbFHPnFJpYi9EXEJ8XoMlt0bNKVy6J1
+	 GYmypbkQSHtvmOqx3O+zP0c63dOJHqxk+akkPFQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403896AbgAPXoq (ORCPT
+        id S1733301AbgAPXov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:44:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52616 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:44:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729366AbgAPXXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:23:53 -0500
+        id S1730219AbgAPXXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:23:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AF6A2072E;
-        Thu, 16 Jan 2020 23:23:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E4022072B;
+        Thu, 16 Jan 2020 23:23:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217032;
-        bh=ZYX+Zfw+r6NhNQ/v3dQsd8zFyH2Ea9S8fCDau5E4rXM=;
+        s=default; t=1579217025;
+        bh=RaIv+XEgZLtzNRzIDMIJ555wufoJzqan9BfDFdy6l1g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w7fp1dsWI8BH/WDsc4nRmCHzWT+T3mjV6Qtj2BCuUkm6ibaPqJ6hgFysUu2V5NRYv
-         KepT2m1klq+YOYaD10tJc/IRp3sPbTLrbHQtYR32gowRsZRSSzNIbTve/s9e0hIACx
-         p27PCeYnl2ct4fygHp/yBHrUlYlIBPNvgMqRcXmY=
+        b=PX6StUS3MkG5IZYaT9MfneqxY8HejQJU2//nizVij3OOWixVvxjrY32Ny6YDlGlRn
+         +MqC1gqZFf0z2xcBCCiajyHV14C47z2V8/hw8kQ+2zFMGrn1aQShCvH4EfLpH4dUpn
+         3w6lJTnjIb1qQ5QIau+qK4DGtnmhrDUmT7u2zTJc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 5.4 104/203] NFSv2: Fix a typo in encode_sattr()
-Date:   Fri, 17 Jan 2020 00:17:01 +0100
-Message-Id: <20200116231754.657309758@linuxfoundation.org>
+        stable@vger.kernel.org, Amitkumar Karwar <amitkarwar@gmail.com>,
+        Siva Rebbagondla <siva8118@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Denis Efremov <efremov@linux.com>
+Subject: [PATCH 5.4 117/203] rsi: fix potential null dereference in rsi_probe()
+Date:   Fri, 17 Jan 2020 00:17:14 +0100
+Message-Id: <20200116231755.604943633@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -59,30 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Denis Efremov <efremov@linux.com>
 
-commit ad97a995d8edff820d4238bd0dfc69f440031ae6 upstream.
+commit f170d44bc4ec2feae5f6206980e7ae7fbf0432a0 upstream.
 
-Encode the mtime correctly.
+The id pointer can be NULL in rsi_probe(). It is checked everywhere except
+for the else branch in the idProduct condition. The patch adds NULL check
+before the id dereference in the rsi_dbg() call.
 
-Fixes: 95582b0083883 ("vfs: change inode times to use struct timespec64")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Fixes: 54fdb318c111 ("rsi: add new device model for 9116")
+Cc: Amitkumar Karwar <amitkarwar@gmail.com>
+Cc: Siva Rebbagondla <siva8118@gmail.com>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Denis Efremov <efremov@linux.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/nfs2xdr.c |    2 +-
+ drivers/net/wireless/rsi/rsi_91x_usb.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/nfs/nfs2xdr.c
-+++ b/fs/nfs/nfs2xdr.c
-@@ -370,7 +370,7 @@ static void encode_sattr(struct xdr_stre
- 	} else
- 		p = xdr_time_not_set(p);
- 	if (attr->ia_valid & ATTR_MTIME_SET) {
--		ts = timespec64_to_timespec(attr->ia_atime);
-+		ts = timespec64_to_timespec(attr->ia_mtime);
- 		xdr_encode_time(p, &ts);
- 	} else if (attr->ia_valid & ATTR_MTIME) {
- 		ts = timespec64_to_timespec(attr->ia_mtime);
+--- a/drivers/net/wireless/rsi/rsi_91x_usb.c
++++ b/drivers/net/wireless/rsi/rsi_91x_usb.c
+@@ -793,7 +793,7 @@ static int rsi_probe(struct usb_interfac
+ 		adapter->device_model = RSI_DEV_9116;
+ 	} else {
+ 		rsi_dbg(ERR_ZONE, "%s: Unsupported RSI device id 0x%x\n",
+-			__func__, id->idProduct);
++			__func__, id ? id->idProduct : 0x0);
+ 		goto err1;
+ 	}
+ 
 
 
