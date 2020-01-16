@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C9BC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53310C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F75C24683
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:32:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20A6B24683
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:32:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195950;
-	bh=sVAcU0U1Afdh1SDicf+4JPZiogWd5Q+c2pf+MC5Fx5o=;
+	s=default; t=1579195953;
+	bh=lwLN0xRkX1H8Bly7kbgX/9MuY2Uy2rVI2ah3PGt62qQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J3uYbEaQ4+OCrBxBjvxPKBDNOD22YVUl8EMhFyrjanTYmryASeBJy6Cv4M5pD0LYn
-	 L4mz9SSITSJ6KfP/yOPeshKKOpn009CeNT5AoAdJrZ1BEs0neHWUxtnhZZWCz6FRo+
-	 qRW8tKsbmOzHAPTodJtwzRyZtgnJDSmc9lBNlraQ=
+	b=aT3PCOHxM1R4qWaupso90KSfnNHiL1BIYpfZh0pgJDlMLd+vHkYeKcv+EzIlR8WY+
+	 RCaEfcTthcAM9G+4Q4+Kz2pPtqEydEBJWGb+C1j8W2wPxnyQjizXcoDMDxVbnFeDJp
+	 DI0A2+6FMBkOf6r7pM7jxtexTXLjj8ime0rv9Ncg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404653AbgAPRbA (ORCPT
+        id S2404671AbgAPRcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:31:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43794 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:32:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404637AbgAPRaz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:30:55 -0500
+        id S2404649AbgAPRa7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:30:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55B60246A9;
-        Thu, 16 Jan 2020 17:30:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E107C246AE;
+        Thu, 16 Jan 2020 17:30:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195855;
-        bh=sVAcU0U1Afdh1SDicf+4JPZiogWd5Q+c2pf+MC5Fx5o=;
+        s=default; t=1579195858;
+        bh=lwLN0xRkX1H8Bly7kbgX/9MuY2Uy2rVI2ah3PGt62qQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m+gSBUJ86q8OS1Z0GRrqcj+4gbIpoDDGVAlexJX3OC4CxBjy4ckJ+kW2mFLdjpLrt
-         36nYAaOVJqttLiTvHFxsrH5GN25TkCrRsxU3n8lAonGud/JweSf1aeSKfl5nJly8vx
-         bxc6ZHp/ixWjSPV37SQpBoQyE0hNHwDI/DzRbH3k=
+        b=fmpp3SpOtn+XpYaVrpBqcpRRqecngApQHgyjd7+lrC/942QcjtC/x8btV3UQOOD9h
+         ab1G0oQHxrJYNiENlGp3dvtKjT5MY67XqvnqCBJZh5XO/kSzLLg8octstCScJNdjT6
+         nd7O2tu8hGw1y3jY4BhHObN4VX94qpYvAySZSdIQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 354/371] mmc: core: fix wl1251 sdio quirks
-Date:   Thu, 16 Jan 2020 12:23:46 -0500
-Message-Id: <20200116172403.18149-297-sashal@kernel.org>
+Cc:     Pan Bian <bianpan2016@163.com>,
+        Manish Rangankar <mrangankar@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 357/371] scsi: qla4xxx: fix double free bug
+Date:   Thu, 16 Jan 2020 12:23:49 -0500
+Message-Id: <20200116172403.18149-300-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -59,40 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
+From: Pan Bian <bianpan2016@163.com>
 
-[ Upstream commit 16568b4a4f0c34bd35cfadac63303c7af7812764 ]
+[ Upstream commit 3fe3d2428b62822b7b030577cd612790bdd8c941 ]
 
-wl1251 and wl1271 have different vendor id and device id.
-So we need to handle both with sdio quirks.
+The variable init_fw_cb is released twice, resulting in a double free
+bug. The call to the function dma_free_coherent() before goto is removed to
+get rid of potential double free.
 
-Fixes: 884f38607897 ("mmc: core: move some sdio IDs out of quirks file")
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Cc: <stable@vger.kernel.org> # v4.11+
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: 2a49a78ed3c8 ("[SCSI] qla4xxx: added IPv6 support.")
+Link: https://lore.kernel.org/r/1572945927-27796-1-git-send-email-bianpan2016@163.com
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Acked-by: Manish Rangankar <mrangankar@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/core/quirks.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/scsi/qla4xxx/ql4_mbx.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/mmc/core/quirks.h b/drivers/mmc/core/quirks.h
-index 5153577754f0..09897abb79ed 100644
---- a/drivers/mmc/core/quirks.h
-+++ b/drivers/mmc/core/quirks.h
-@@ -119,7 +119,14 @@ static const struct mmc_fixup mmc_ext_csd_fixups[] = {
- 	END_FIXUP
- };
+diff --git a/drivers/scsi/qla4xxx/ql4_mbx.c b/drivers/scsi/qla4xxx/ql4_mbx.c
+index 1da04f323d38..c402fc583da3 100644
+--- a/drivers/scsi/qla4xxx/ql4_mbx.c
++++ b/drivers/scsi/qla4xxx/ql4_mbx.c
+@@ -641,9 +641,6 @@ int qla4xxx_initialize_fw_cb(struct scsi_qla_host * ha)
  
-+
- static const struct mmc_fixup sdio_fixup_methods[] = {
-+	SDIO_FIXUP(SDIO_VENDOR_ID_TI_WL1251, SDIO_DEVICE_ID_TI_WL1251,
-+		   add_quirk, MMC_QUIRK_NONSTD_FUNC_IF),
-+
-+	SDIO_FIXUP(SDIO_VENDOR_ID_TI_WL1251, SDIO_DEVICE_ID_TI_WL1251,
-+		   add_quirk, MMC_QUIRK_DISABLE_CD),
-+
- 	SDIO_FIXUP(SDIO_VENDOR_ID_TI, SDIO_DEVICE_ID_TI_WL1271,
- 		   add_quirk, MMC_QUIRK_NONSTD_FUNC_IF),
+ 	if (qla4xxx_get_ifcb(ha, &mbox_cmd[0], &mbox_sts[0], init_fw_cb_dma) !=
+ 	    QLA_SUCCESS) {
+-		dma_free_coherent(&ha->pdev->dev,
+-				  sizeof(struct addr_ctrl_blk),
+-				  init_fw_cb, init_fw_cb_dma);
+ 		goto exit_init_fw_cb;
+ 	}
  
 -- 
 2.20.1
