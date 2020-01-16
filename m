@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3ACDC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F75C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1D272073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9CAE2087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:22:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579216929;
-	bh=5bcddGU/Va4SZO+m0ROMNEmaa/9dzkcl53QDbDcLyJQ=;
+	s=default; t=1579216935;
+	bh=V2J9YfWSVeAVG7GVUmiIj3FqxophZV4LyMA8bfFylx4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jF10TsJMXfhDbzs8Rsqr0kP99uTZbI0XbJXkEsd2hh6w4H322y7M1nMF8i1LMgg4x
-	 ozE/MTobIZafcfS/lfg4uGE3msqjLlgGwYQ332bKw//c1qe5iBMFD3NqgVQFtr7MS3
-	 QV3tGZTge5C4N6uLxJxf6CiBbUgBosPcl0ln1qfA=
+	b=MoPjTNavuhfccQ8nWZoMTlQ14GRgLhf1aOH+yEyCt0ZOe3iIHgoQfZOBvA54/prZP
+	 U9vDmheqpnbnU/6n6AvqxF0Sh0h7ZEDb8j4B9MQpTyERLXGmSE0GFRHwPuzy70uHbZ
+	 DdX/gxcG6AQAVpApwmqZra6Lv4xCIoFt8iPRCmZw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389595AbgAPXWI (ORCPT
+        id S2390906AbgAPXWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:22:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49712 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:22:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731091AbgAPXWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:22:01 -0500
+        id S2390894AbgAPXWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:22:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E78D8206D9;
-        Thu, 16 Jan 2020 23:21:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAB44206D9;
+        Thu, 16 Jan 2020 23:22:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216920;
-        bh=5bcddGU/Va4SZO+m0ROMNEmaa/9dzkcl53QDbDcLyJQ=;
+        s=default; t=1579216925;
+        bh=V2J9YfWSVeAVG7GVUmiIj3FqxophZV4LyMA8bfFylx4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v915p1OIvnBe/EIq+mvM8PUwpv7xudOeDkWpx5++0kCHAibKotTwfIDRKcEc85Uen
-         zb559z8MFBTkDMUvyWRsuOlWl/MLGYNXjR9+xBt0pENnhOSBJnoWUXWpzZWyKiMNwl
-         vMGzyeTLl67YV7SzOBDp7lWwEiG86oSiLq9JbCp0=
+        b=J+Aa1uEGVZw8IVKzPlNj40rXhZLgiHmicJaTFakGkpV5MTGw3AH3cI9pW5Nlzv0RN
+         ZQ4wOwtMxjTSe0wwQstEqJQGnyK+rGrQyvgAEUi+vYM/8jlyvUj0yyF5Bh9mbWWvPC
+         pNWp/kTrLKGbjLhx8cMFAkSje545PaiEMq9rMzTI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
+        Honggang Li <honli@redhat.com>,
         Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.4 066/203] RDMA/hns: Fix build error again
-Date:   Fri, 17 Jan 2020 00:16:23 +0100
-Message-Id: <20200116231749.868494985@linuxfoundation.org>
+Subject: [PATCH 5.4 076/203] RDMA/srpt: Report the SCSI residual to the initiator
+Date:   Fri, 17 Jan 2020 00:16:33 +0100
+Message-Id: <20200116231750.951965385@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -59,94 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Bart Van Assche <bvanassche@acm.org>
 
-commit d5b60e26e86a463ca83bb5ec502dda6ea685159e upstream.
+commit e88982ad1bb12db699de96fbc07096359ef6176c upstream.
 
-This is not the first attempt to fix building random configurations,
-unfortunately the attempt in commit a07fc0bb483e ("RDMA/hns: Fix build
-error") caused a new problem when CONFIG_INFINIBAND_HNS_HIP06=m and
-CONFIG_INFINIBAND_HNS_HIP08=y:
+The code added by this patch is similar to the code that already exists in
+ibmvscsis_determine_resid(). This patch has been tested by running the
+following command:
 
-drivers/infiniband/hw/hns/hns_roce_main.o:(.rodata+0xe60): undefined reference to `__this_module'
+strace sg_raw -r 1k /dev/sdb 12 00 00 00 60 00 -o inquiry.bin |&
+    grep resid=
 
-Revert commits a07fc0bb483e ("RDMA/hns: Fix build error") and
-a3e2d4c7e766 ("RDMA/hns: remove obsolete Kconfig comment") to get back to
-the previous state, then fix the issues described there differently, by
-adding more specific dependencies: INFINIBAND_HNS can now only be built-in
-if at least one of HNS or HNS3 are built-in, and the individual back-ends
-are only available if that code is reachable from the main driver.
-
-Fixes: a07fc0bb483e ("RDMA/hns: Fix build error")
-Fixes: a3e2d4c7e766 ("RDMA/hns: remove obsolete Kconfig comment")
-Fixes: dd74282df573 ("RDMA/hns: Initialize the PCI device for hip08 RoCE")
-Fixes: 08805fdbeb2d ("RDMA/hns: Split hw v1 driver from hns roce driver")
-Link: https://lore.kernel.org/r/20191007211826.3361202-1-arnd@arndb.de
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20191105214632.183302-1-bvanassche@acm.org
+Fixes: a42d985bd5b2 ("ib_srpt: Initial SRP Target merge for v3.3-rc1")
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Acked-by: Honggang Li <honli@redhat.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/hns/Kconfig  |   17 ++++++++++++++---
- drivers/infiniband/hw/hns/Makefile |    8 ++++++--
- 2 files changed, 20 insertions(+), 5 deletions(-)
+ drivers/infiniband/ulp/srpt/ib_srpt.c |   24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
---- a/drivers/infiniband/hw/hns/Kconfig
-+++ b/drivers/infiniband/hw/hns/Kconfig
-@@ -1,23 +1,34 @@
- # SPDX-License-Identifier: GPL-2.0-only
- config INFINIBAND_HNS
--	bool "HNS RoCE Driver"
-+	tristate "HNS RoCE Driver"
- 	depends on NET_VENDOR_HISILICON
- 	depends on ARM64 || (COMPILE_TEST && 64BIT)
-+	depends on (HNS_DSAF && HNS_ENET) || HNS3
- 	---help---
- 	  This is a RoCE/RDMA driver for the Hisilicon RoCE engine. The engine
- 	  is used in Hisilicon Hip06 and more further ICT SoC based on
- 	  platform device.
+--- a/drivers/infiniband/ulp/srpt/ib_srpt.c
++++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
+@@ -1364,9 +1364,11 @@ static int srpt_build_cmd_rsp(struct srp
+ 			      struct srpt_send_ioctx *ioctx, u64 tag,
+ 			      int status)
+ {
++	struct se_cmd *cmd = &ioctx->cmd;
+ 	struct srp_rsp *srp_rsp;
+ 	const u8 *sense_data;
+ 	int sense_data_len, max_sense_len;
++	u32 resid = cmd->residual_count;
  
-+	  To compile HIP06 or HIP08 driver as module, choose M here.
+ 	/*
+ 	 * The lowest bit of all SAM-3 status codes is zero (see also
+@@ -1388,6 +1390,28 @@ static int srpt_build_cmd_rsp(struct srp
+ 	srp_rsp->tag = tag;
+ 	srp_rsp->status = status;
+ 
++	if (cmd->se_cmd_flags & SCF_UNDERFLOW_BIT) {
++		if (cmd->data_direction == DMA_TO_DEVICE) {
++			/* residual data from an underflow write */
++			srp_rsp->flags = SRP_RSP_FLAG_DOUNDER;
++			srp_rsp->data_out_res_cnt = cpu_to_be32(resid);
++		} else if (cmd->data_direction == DMA_FROM_DEVICE) {
++			/* residual data from an underflow read */
++			srp_rsp->flags = SRP_RSP_FLAG_DIUNDER;
++			srp_rsp->data_in_res_cnt = cpu_to_be32(resid);
++		}
++	} else if (cmd->se_cmd_flags & SCF_OVERFLOW_BIT) {
++		if (cmd->data_direction == DMA_TO_DEVICE) {
++			/* residual data from an overflow write */
++			srp_rsp->flags = SRP_RSP_FLAG_DOOVER;
++			srp_rsp->data_out_res_cnt = cpu_to_be32(resid);
++		} else if (cmd->data_direction == DMA_FROM_DEVICE) {
++			/* residual data from an overflow read */
++			srp_rsp->flags = SRP_RSP_FLAG_DIOVER;
++			srp_rsp->data_in_res_cnt = cpu_to_be32(resid);
++		}
++	}
 +
- config INFINIBAND_HNS_HIP06
--	tristate "Hisilicon Hip06 Family RoCE support"
-+	bool "Hisilicon Hip06 Family RoCE support"
- 	depends on INFINIBAND_HNS && HNS && HNS_DSAF && HNS_ENET
-+	depends on INFINIBAND_HNS=m || (HNS_DSAF=y && HNS_ENET=y)
- 	---help---
- 	  RoCE driver support for Hisilicon RoCE engine in Hisilicon Hip06 and
- 	  Hip07 SoC. These RoCE engines are platform devices.
- 
-+	  To compile this driver, choose Y here: if INFINIBAND_HNS is m, this
-+	  module will be called hns-roce-hw-v1
-+
- config INFINIBAND_HNS_HIP08
--	tristate "Hisilicon Hip08 Family RoCE support"
-+	bool "Hisilicon Hip08 Family RoCE support"
- 	depends on INFINIBAND_HNS && PCI && HNS3
-+	depends on INFINIBAND_HNS=m || HNS3=y
- 	---help---
- 	  RoCE driver support for Hisilicon RoCE engine in Hisilicon Hip08 SoC.
- 	  The RoCE engine is a PCI device.
-+
-+	  To compile this driver, choose Y here: if INFINIBAND_HNS is m, this
-+	  module will be called hns-roce-hw-v2.
---- a/drivers/infiniband/hw/hns/Makefile
-+++ b/drivers/infiniband/hw/hns/Makefile
-@@ -9,8 +9,12 @@ hns-roce-objs := hns_roce_main.o hns_roc
- 	hns_roce_ah.o hns_roce_hem.o hns_roce_mr.o hns_roce_qp.o \
- 	hns_roce_cq.o hns_roce_alloc.o hns_roce_db.o hns_roce_srq.o hns_roce_restrack.o
- 
-+ifdef CONFIG_INFINIBAND_HNS_HIP06
- hns-roce-hw-v1-objs := hns_roce_hw_v1.o $(hns-roce-objs)
--obj-$(CONFIG_INFINIBAND_HNS_HIP06) += hns-roce-hw-v1.o
-+obj-$(CONFIG_INFINIBAND_HNS) += hns-roce-hw-v1.o
-+endif
- 
-+ifdef CONFIG_INFINIBAND_HNS_HIP08
- hns-roce-hw-v2-objs := hns_roce_hw_v2.o hns_roce_hw_v2_dfx.o $(hns-roce-objs)
--obj-$(CONFIG_INFINIBAND_HNS_HIP08) += hns-roce-hw-v2.o
-+obj-$(CONFIG_INFINIBAND_HNS) += hns-roce-hw-v2.o
-+endif
+ 	if (sense_data_len) {
+ 		BUILD_BUG_ON(MIN_MAX_RSP_SIZE <= sizeof(*srp_rsp));
+ 		max_sense_len = ch->max_ti_iu_len - sizeof(*srp_rsp);
 
 
