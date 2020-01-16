@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26747C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F20C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED3932072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:44:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AECCE2072B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:45:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218299;
-	bh=7XkkFiByh7e8tI6otoiNQUWOwsrLM1DR+5pw5Gn0nEU=;
+	s=default; t=1579218310;
+	bh=L7Azx0j8baqSXd4yPjBniGnmFyiKXO6reJH8SF9bPKM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WhP57K5C95GaLbdytqEGVDSbbF1WSt7B4WMiSppjcG5d87mR8mNU98dMN+lQPx263
-	 pQ6KLvyDfD8gquLGXU8k4BM62q0b3Cn7uA4r9ZjWbOrrJYBmO+/AQmyAio+B9raR38
-	 h0y+Uqfbu5924JmsX5tyZuj/LHSYkOrri0weOSag=
+	b=sX0GOTYcavQbZY+4POpYkcggnjRLs9waQXCAgP8G+iusSVKD5lKz7/OPmtHTRmqaA
+	 aZ/2/QKPjapSYm2ptT9x029Vq7I26nXuSJ6EHDxMovS1szgnTrWl9+usZCoYibDnLg
+	 WOneg/cYxxCv3jqKPIPbNZjlKJNeTr5S9mTBF9+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404006AbgAPXo6 (ORCPT
+        id S2391697AbgAPXpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:44:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52128 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:45:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731489AbgAPXXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:23:38 -0500
+        id S2391008AbgAPXXV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:23:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C795B2176D;
-        Thu, 16 Jan 2020 23:23:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70E002077C;
+        Thu, 16 Jan 2020 23:23:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217018;
-        bh=7XkkFiByh7e8tI6otoiNQUWOwsrLM1DR+5pw5Gn0nEU=;
+        s=default; t=1579217000;
+        bh=L7Azx0j8baqSXd4yPjBniGnmFyiKXO6reJH8SF9bPKM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X/7YMH2Q/Rs7ffqgRLLCtttka3hxiopVxmKSqpH4cJOY76ggEPtVDn3LxkjuMqI4+
-         PuLWF3rXH/pE7AYkdyxQvKPuwurIRHGE8EzXajmbr9nCFlM+zOzWWF0Xy+FIXEmAuN
-         OeRZsDr6gQ33jGPMm4he+euu3j4wIr8L2HQvyVOM=
+        b=nd7EoW6uCZGjGpfz59IG8ZC1f8eqbumDoB/arC3MBGHA5VCRijO6ttdWDAQoPmQKt
+         no0XSNbMvojodzYNUXlVzZz7zO8rtfbgq9m8FR20OplAUN20W8K+6EBnQDkkxoknps
+         t+CqqelIc5Py3RCPkG4XBwVgxAZYUhV8huCT773U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH 5.4 114/203] clk: Fix memory leak in clk_unregister()
-Date:   Fri, 17 Jan 2020 00:17:11 +0100
-Message-Id: <20200116231755.394698166@linuxfoundation.org>
+        stable@vger.kernel.org, Vadim Pasternak <vadimp@mellanox.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 5.4 091/203] Documentation/ABI: Fix documentation inconsistency for mlxreg-io sysfs interfaces
+Date:   Fri, 17 Jan 2020 00:16:48 +0100
+Message-Id: <20200116231753.639849272@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -61,56 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: Vadim Pasternak <vadimp@mellanox.com>
 
-commit 8247470772beb38822f226c99a2ed8c195f6b438 upstream.
+commit f4094826779dcafe7087e80850513b923eeefdeb upstream.
 
-Memory allocated in alloc_clk() for 'struct clk' and
-'const char *con_id' while invoking clk_register() is never freed
-in clk_unregister(), resulting in kmemleak showing the following
-backtrace.
+Fix attribute name from "jtag_enable", which described twice to
+"cpld3_version", which is expected to be instead of second appearance
+of "jtag_enable".
 
-  backtrace:
-    [<00000000546f5dd0>] kmem_cache_alloc+0x18c/0x270
-    [<0000000073a32862>] alloc_clk+0x30/0x70
-    [<0000000082942480>] __clk_register+0xc8/0x760
-    [<000000005c859fca>] devm_clk_register+0x54/0xb0
-    [<00000000868834a8>] 0xffff800008c60950
-    [<00000000d5a80534>] platform_drv_probe+0x50/0xa0
-    [<000000001b3889fc>] really_probe+0x108/0x348
-    [<00000000953fa60a>] driver_probe_device+0x58/0x100
-    [<0000000008acc17c>] device_driver_attach+0x6c/0x90
-    [<0000000022813df3>] __driver_attach+0x84/0xc8
-    [<00000000448d5443>] bus_for_each_dev+0x74/0xc8
-    [<00000000294aa93f>] driver_attach+0x20/0x28
-    [<00000000e5e52626>] bus_add_driver+0x148/0x1f0
-    [<000000001de21efc>] driver_register+0x60/0x110
-    [<00000000af07c068>] __platform_driver_register+0x40/0x48
-    [<0000000060fa80ee>] 0xffff800008c66020
-
-Fix it here.
-
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Link: https://lkml.kernel.org/r/20191022071153.21118-1-kishon@ti.com
-Fixes: 1df4046a93e0 ("clk: Combine __clk_get() and __clk_create_clk()")
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: 2752e34442b5 ("Documentation/ABI: Add new attribute for mlxreg-io sysfs interfaces")
+Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clk/clk.c |    1 +
- 1 file changed, 1 insertion(+)
+ Documentation/ABI/stable/sysfs-driver-mlxreg-io |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -3886,6 +3886,7 @@ void clk_unregister(struct clk *clk)
- 					__func__, clk->core->name);
+--- a/Documentation/ABI/stable/sysfs-driver-mlxreg-io
++++ b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
+@@ -29,13 +29,13 @@ Description:	This file shows the system
  
- 	kref_put(&clk->core->ref, __clk_release);
-+	free_clk(clk);
- unlock:
- 	clk_prepare_unlock();
- }
+ 		The files are read only.
+ 
+-What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/jtag_enable
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/cpld3_version
+ 
+ Date:		November 2018
+ KernelVersion:	5.0
+ Contact:	Vadim Pasternak <vadimpmellanox.com>
+ Description:	These files show with which CPLD versions have been burned
+-		on LED board.
++		on LED or Gearbox board.
+ 
+ 		The files are read only.
+ 
 
 
