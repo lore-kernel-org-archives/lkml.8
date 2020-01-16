@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2A6C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39ABEC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10A6220730
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:01:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C1F12467C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:01:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194088;
-	bh=hyqnidKUhr5IO7828ua1HHV6ukySUvw9Gad4wTAK1DE=;
+	s=default; t=1579194091;
+	bh=Ax2ffis9kznwGy7kUOrBcp+PGfdjZDSEq2lQ9R9XU+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M68566qJBFf0h4lg/e7qxBSrHldwYr3uOZ7rR7OCz5qq7OH1x/JaFE2H3MfCJ8dz3
-	 J9YQfMEmyzURhQt5B1YrctOEgConhcaRQX3kDvMVEtHGAITJ3Oo5otmZBfuAVZPRID
-	 Z65idwzICXkAMzyz/BNYjNBa8zy4XE0MmcJvBaRU=
+	b=jU+gauJ7F1fY0tFzBhVp+XAlj7RoQ4Tzn+PrHgNbzik86oLYkbgZHSjKYnhXGfw2D
+	 Y01W/B3to2WOKYnDEuf/evR3Omy7FLgyFHMUhP7kEDlUfiK21NjaBNg+5gTvy7gSsr
+	 jJ87Urn74E8avnuqZwCS07/Dtzkkx31Ilir2mqrg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387494AbgAPRB1 (ORCPT
+        id S1729252AbgAPRB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:01:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52370 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:01:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388078AbgAPRBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:01:22 -0500
+        id S2388082AbgAPRBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:01:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35AE520730;
-        Thu, 16 Jan 2020 17:01:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2881E2464B;
+        Thu, 16 Jan 2020 17:01:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194082;
-        bh=hyqnidKUhr5IO7828ua1HHV6ukySUvw9Gad4wTAK1DE=;
+        s=default; t=1579194084;
+        bh=Ax2ffis9kznwGy7kUOrBcp+PGfdjZDSEq2lQ9R9XU+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zggOnGeCZI/EA26jG4oEv6sh3FOEnUmDJdbScRBHtN81CbU0F7jAhANQARL5d0hSU
-         +ZJC6X6/o00Eu/RuspxeEGruweQl0VKLA+mkCA1DzmI27VpDhNI28YFv7XCBsyH/vp
-         6C1oqoQU9pH/YW2cVmemwzQ6BGPk7wNsKLKCFJa0=
+        b=H7IoOYfGweEINme15bYodpm3de8r4Us2ScfK6Op5BO/0uPdcD33tvjLx9PqFVXYct
+         rr3td3PhP8EY7aRUMkxY8XVccZmEAXMsn5jd4gH5nK2MNY+AjWQvJ5RLqIht3bppAQ
+         Evratd6lc/hqvQCKTQFg55YceygLb1OPGOmEqrzk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
-        Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 187/671] mt76: usb: fix possible memory leak in mt76u_buf_free
-Date:   Thu, 16 Jan 2020 11:51:36 -0500
-Message-Id: <20200116165940.10720-70-sashal@kernel.org>
+Cc:     Eric Auger <eric.auger@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 189/671] vfio_pci: Enable memory accesses before calling pci_map_rom
+Date:   Thu, 16 Jan 2020 11:51:38 -0500
+Message-Id: <20200116165940.10720-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -61,63 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+From: Eric Auger <eric.auger@redhat.com>
 
-[ Upstream commit cb83585e1121bd6d6c039cf09fa32380bf8b6258 ]
+[ Upstream commit 0cfd027be1d6def4a462cdc180c055143af24069 ]
 
-Move q->ndesc initialization before the for loop in mt76u_alloc_rx
-since otherwise allocated urbs will not be freed in mt76u_buf_free
-Double-check scatterlist pointer in mt76u_buf_free
+pci_map_rom/pci_get_rom_size() performs memory access in the ROM.
+In case the Memory Space accesses were disabled, readw() is likely
+to trigger a synchronous external abort on some platforms.
 
-Fixes: b40b15e1521f ("mt76: add usb support to mt76 layer")
-Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+In case memory accesses were disabled, re-enable them before the
+call and disable them back again just after.
+
+Fixes: 89e1f7d4c66d ("vfio: Add PCI device driver")
+Signed-off-by: Eric Auger <eric.auger@redhat.com>
+Suggested-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt76/usb.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/vfio/pci/vfio_pci.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/usb.c b/drivers/net/wireless/mediatek/mt76/usb.c
-index 8d40e92fb6f2..dcf927de65f3 100644
---- a/drivers/net/wireless/mediatek/mt76/usb.c
-+++ b/drivers/net/wireless/mediatek/mt76/usb.c
-@@ -273,10 +273,16 @@ EXPORT_SYMBOL_GPL(mt76u_buf_alloc);
- void mt76u_buf_free(struct mt76u_buf *buf)
- {
- 	struct urb *urb = buf->urb;
-+	struct scatterlist *sg;
- 	int i;
+diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+index 0a6eb53e79fb..66783a37f450 100644
+--- a/drivers/vfio/pci/vfio_pci.c
++++ b/drivers/vfio/pci/vfio_pci.c
+@@ -696,6 +696,7 @@ static long vfio_pci_ioctl(void *device_data,
+ 		{
+ 			void __iomem *io;
+ 			size_t size;
++			u16 orig_cmd;
  
--	for (i = 0; i < urb->num_sgs; i++)
--		skb_free_frag(sg_virt(&urb->sg[i]));
-+	for (i = 0; i < urb->num_sgs; i++) {
-+		sg = &urb->sg[i];
-+		if (!sg)
-+			continue;
+ 			info.offset = VFIO_PCI_INDEX_TO_OFFSET(info.index);
+ 			info.flags = 0;
+@@ -711,15 +712,23 @@ static long vfio_pci_ioctl(void *device_data,
+ 					break;
+ 			}
+ 
+-			/* Is it really there? */
++			/*
++			 * Is it really there?  Enable memory decode for
++			 * implicit access in pci_map_rom().
++			 */
++			pci_read_config_word(pdev, PCI_COMMAND, &orig_cmd);
++			pci_write_config_word(pdev, PCI_COMMAND,
++					      orig_cmd | PCI_COMMAND_MEMORY);
 +
-+		skb_free_frag(sg_virt(sg));
-+	}
- 	usb_free_urb(buf->urb);
- }
- EXPORT_SYMBOL_GPL(mt76u_buf_free);
-@@ -478,7 +484,8 @@ static int mt76u_alloc_rx(struct mt76_dev *dev)
- 		nsgs = 1;
- 	}
+ 			io = pci_map_rom(pdev, &size);
+-			if (!io || !size) {
++			if (io) {
++				info.flags = VFIO_REGION_INFO_FLAG_READ;
++				pci_unmap_rom(pdev, io);
++			} else {
+ 				info.size = 0;
+-				break;
+ 			}
+-			pci_unmap_rom(pdev, io);
  
--	for (i = 0; i < MT_NUM_RX_ENTRIES; i++) {
-+	q->ndesc = MT_NUM_RX_ENTRIES;
-+	for (i = 0; i < q->ndesc; i++) {
- 		err = mt76u_buf_alloc(dev, &q->entry[i].ubuf,
- 				      nsgs, q->buf_size,
- 				      SKB_WITH_OVERHEAD(q->buf_size),
-@@ -486,7 +493,6 @@ static int mt76u_alloc_rx(struct mt76_dev *dev)
- 		if (err < 0)
- 			return err;
- 	}
--	q->ndesc = MT_NUM_RX_ENTRIES;
- 
- 	return mt76u_submit_rx_buffers(dev);
- }
+-			info.flags = VFIO_REGION_INFO_FLAG_READ;
++			pci_write_config_word(pdev, PCI_COMMAND, orig_cmd);
+ 			break;
+ 		}
+ 		case VFIO_PCI_VGA_REGION_INDEX:
 -- 
 2.20.1
 
