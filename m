@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6DDDC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 956D6C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9472220684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 720E820684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:27:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199260;
-	bh=LZXc39akRF9TdNnhbcpEkxTJJQMlUphOrcUB7D1NdQs=;
+	s=default; t=1579199266;
+	bh=chxuGPSSD0ms+/h/e6pFkWAn+aAbUvWVhkD97Sy/NwE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YOZ5Tqgq5bwuM8TabKY2Aq0YICtLyykOPGLerHz6O9wLCeSVfoMK/nyfY17GPRQh1
-	 n0nVINuOiU4ge0w7EbOyKJXhpq1qzysap2XWvndM/F2/jfRLmTwJR7bcbP7wcKaHay
-	 04NI7ubErSknZXh1q0tepNTER6yzI5qhVEdHRiws=
+	b=WP9+Z0lbQEnK8acf7ycLGw2KQlsaJqqh1+hQUpVlfidPyMp7fSGnjIrDmNidt69NY
+	 hukfxsgzUJDtehbijOccbeokose89Ccp2+AwytS4RS1Yzi8poHwNoaZ2n1Pa2DmcTr
+	 HJ/6VZLfrV5BY5xCaTThBPWlBOCeWw4v60OAbzOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436725AbgAPS1j (ORCPT
+        id S2403927AbgAPR0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:27:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35106 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:26:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403939AbgAPR0Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:26:24 -0500
+        id S2390251AbgAPR0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:26:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 852282468D;
-        Thu, 16 Jan 2020 17:26:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84E83246BB;
+        Thu, 16 Jan 2020 17:26:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195583;
-        bh=LZXc39akRF9TdNnhbcpEkxTJJQMlUphOrcUB7D1NdQs=;
+        s=default; t=1579195575;
+        bh=chxuGPSSD0ms+/h/e6pFkWAn+aAbUvWVhkD97Sy/NwE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M2x6KDzbf+eVzWZvIv0b0FqOaaW5Mltl0OT/5on2wELfSwZcg6INJJM8lktY3YKwJ
-         EttyjM5tNZxYMqwOli9MtlYaZLFoQdKtoCCjZvVdswwT2HFq75krbXFheHasWLPadI
-         tmC6PlCEUPb+edC5+L+Lo65j1/85LywJCWVehc2g=
+        b=eLWKWvWMLS5BhVuPQkAZ+5N5fgVL0P8pYZjXJDrw44EQpRmycIOxRGdSIdw6J+Qw+
+         NWrBOO9TDonpg1X4voqLuC6Hfhzv0QnRSe/8cN4N0fG7HwfKVyybnY5wfLNY892UKu
+         4ZhyvoeM53meoDrPeqlHkxoZ+WEPuGKoG4DRG+ow=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jie Liu <liujie165@huawei.com>, Qiang Ning <ningqiang1@huawei.com>,
-        Zhiqiang Liu <liuzhiqiang26@huawei.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.14 164/371] tipc: set sysctl_tipc_rmem and named_timeout right range
-Date:   Thu, 16 Jan 2020 12:20:36 -0500
-Message-Id: <20200116172403.18149-107-sashal@kernel.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        Giridhar Malavali <giridhar.malavali@qlogic.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 158/371] scsi: qla2xxx: Unregister chrdev if module initialization fails
+Date:   Thu, 16 Jan 2020 12:20:30 -0500
+Message-Id: <20200116172403.18149-101-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -62,58 +61,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jie Liu <liujie165@huawei.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 4bcd4ec1017205644a2697bccbc3b5143f522f5f ]
+[ Upstream commit c794d24ec9eb6658909955772e70f34bef5b5b91 ]
 
-We find that sysctl_tipc_rmem and named_timeout do not have the right minimum
-setting. sysctl_tipc_rmem should be larger than zero, like sysctl_tcp_rmem.
-And named_timeout as a timeout setting should be not less than zero.
+If module initialization fails after the character device has been
+registered, unregister the character device. Additionally, avoid
+duplicating error path code.
 
-Fixes: cc79dd1ba9c10 ("tipc: change socket buffer overflow control to respect sk_rcvbuf")
-Fixes: a5325ae5b8bff ("tipc: add name distributor resiliency queue")
-Signed-off-by: Jie Liu <liujie165@huawei.com>
-Reported-by: Qiang Ning <ningqiang1@huawei.com>
-Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Reviewed-by: Miaohe Lin <linmiaohe@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Himanshu Madhani <hmadhani@marvell.com>
+Cc: Giridhar Malavali <giridhar.malavali@qlogic.com>
+Fixes: 6a03b4cd78f3 ("[SCSI] qla2xxx: Add char device to increase driver use count") # v2.6.35.
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/tipc/sysctl.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/scsi/qla2xxx/qla_os.c | 34 +++++++++++++++++++++-------------
+ 1 file changed, 21 insertions(+), 13 deletions(-)
 
-diff --git a/net/tipc/sysctl.c b/net/tipc/sysctl.c
-index 1a779b1e8510..40f6d82083d7 100644
---- a/net/tipc/sysctl.c
-+++ b/net/tipc/sysctl.c
-@@ -37,6 +37,8 @@
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index 5617bb18c233..5f9d4dbc4a98 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -6714,8 +6714,7 @@ qla2x00_module_init(void)
+ 	/* Initialize target kmem_cache and mem_pools */
+ 	ret = qlt_init();
+ 	if (ret < 0) {
+-		kmem_cache_destroy(srb_cachep);
+-		return ret;
++		goto destroy_cache;
+ 	} else if (ret > 0) {
+ 		/*
+ 		 * If initiator mode is explictly disabled by qlt_init(),
+@@ -6736,11 +6735,10 @@ qla2x00_module_init(void)
+ 	qla2xxx_transport_template =
+ 	    fc_attach_transport(&qla2xxx_transport_functions);
+ 	if (!qla2xxx_transport_template) {
+-		kmem_cache_destroy(srb_cachep);
+ 		ql_log(ql_log_fatal, NULL, 0x0002,
+ 		    "fc_attach_transport failed...Failing load!.\n");
+-		qlt_exit();
+-		return -ENODEV;
++		ret = -ENODEV;
++		goto qlt_exit;
+ 	}
  
- #include <linux/sysctl.h>
+ 	apidev_major = register_chrdev(0, QLA2XXX_APIDEV, &apidev_fops);
+@@ -6752,27 +6750,37 @@ qla2x00_module_init(void)
+ 	qla2xxx_transport_vport_template =
+ 	    fc_attach_transport(&qla2xxx_transport_vport_functions);
+ 	if (!qla2xxx_transport_vport_template) {
+-		kmem_cache_destroy(srb_cachep);
+-		qlt_exit();
+-		fc_release_transport(qla2xxx_transport_template);
+ 		ql_log(ql_log_fatal, NULL, 0x0004,
+ 		    "fc_attach_transport vport failed...Failing load!.\n");
+-		return -ENODEV;
++		ret = -ENODEV;
++		goto unreg_chrdev;
+ 	}
+ 	ql_log(ql_log_info, NULL, 0x0005,
+ 	    "QLogic Fibre Channel HBA Driver: %s.\n",
+ 	    qla2x00_version_str);
+ 	ret = pci_register_driver(&qla2xxx_pci_driver);
+ 	if (ret) {
+-		kmem_cache_destroy(srb_cachep);
+-		qlt_exit();
+-		fc_release_transport(qla2xxx_transport_template);
+-		fc_release_transport(qla2xxx_transport_vport_template);
+ 		ql_log(ql_log_fatal, NULL, 0x0006,
+ 		    "pci_register_driver failed...ret=%d Failing load!.\n",
+ 		    ret);
++		goto release_vport_transport;
+ 	}
+ 	return ret;
++
++release_vport_transport:
++	fc_release_transport(qla2xxx_transport_vport_template);
++
++unreg_chrdev:
++	if (apidev_major >= 0)
++		unregister_chrdev(apidev_major, QLA2XXX_APIDEV);
++	fc_release_transport(qla2xxx_transport_template);
++
++qlt_exit:
++	qlt_exit();
++
++destroy_cache:
++	kmem_cache_destroy(srb_cachep);
++	return ret;
+ }
  
-+static int zero;
-+static int one = 1;
- static struct ctl_table_header *tipc_ctl_hdr;
- 
- static struct ctl_table tipc_table[] = {
-@@ -45,14 +47,16 @@ static struct ctl_table tipc_table[] = {
- 		.data		= &sysctl_tipc_rmem,
- 		.maxlen		= sizeof(sysctl_tipc_rmem),
- 		.mode		= 0644,
--		.proc_handler	= proc_dointvec,
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1         = &one,
- 	},
- 	{
- 		.procname	= "named_timeout",
- 		.data		= &sysctl_tipc_named_timeout,
- 		.maxlen		= sizeof(sysctl_tipc_named_timeout),
- 		.mode		= 0644,
--		.proc_handler	= proc_dointvec,
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1         = &zero,
- 	},
- 	{}
- };
+ /**
 -- 
 2.20.1
 
