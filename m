@@ -2,104 +2,95 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E075C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB13C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0179120684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:22:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C6C620684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:22:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579198967;
+	bh=IyVJUUC11dLAa8QrMgvrk1esYZLPoNn9NBnYfWYJU3E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DadGTr6LEYgN2y2/mQnBg1ZkzI2EACsIx5Xbu0R+0KcWylYW0DMVWTXb+DJo23RsW
+	 ZjM1I1TBom+dpDadp05i1+K2ICRLUg5Ks2l/n44gCTd3QCIcTMudmZ5Igq3tUlE4Mt
+	 TOlyiFxjgYyZjBrFv0bEzHrX0M5maZphQ/2asWUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395535AbgAPSWl convert rfc822-to-8bit (ORCPT
+        id S2404040AbgAPR10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:22:41 -0500
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:35717 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390359AbgAPSW2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 13:22:28 -0500
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 52FC1C0005;
-        Thu, 16 Jan 2020 18:22:23 +0000 (UTC)
-Date:   Thu, 16 Jan 2020 19:22:21 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     zdhays@gmail.com
-Cc:     zhays@lexmark.com, Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Piotr Sroka <piotrs@cadence.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] mtd: rawnand: micron: don't error out if internal
- ECC is set
-Message-ID: <20200116192221.49986c13@xps13>
-In-Reply-To: <20200110162503.7185-1-zdhays@gmail.com>
-References: <20200110162503.7185-1-zdhays@gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 16 Jan 2020 12:27:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36902 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392438AbgAPR1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:27:15 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1424246E4;
+        Thu, 16 Jan 2020 17:27:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579195634;
+        bh=IyVJUUC11dLAa8QrMgvrk1esYZLPoNn9NBnYfWYJU3E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hWC/8f6jJxMzRiewypC+dKDJ8UBiL3JHgDqwI53Qp5jSnecCKBkPT4GLQIoRC5ETH
+         E2996D4XYaAh5T8tbeeOVx8gHZ3u3+qC5ngc+8VnI2CSx9vgmmtjCfajCXI5m/pwCP
+         0n5Piv8nf7d74QLUMDWq/cfpJlOjnYbUrSk4+aWQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>,
+        kgdb-bugreport@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.14 201/371] kdb: do a sanity check on the cpu in kdb_per_cpu()
+Date:   Thu, 16 Jan 2020 12:21:13 -0500
+Message-Id: <20200116172403.18149-144-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
+References: <20200116172403.18149-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zak,
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-zdhays@gmail.com wrote on Fri, 10 Jan 2020 11:25:01 -0500:
+[ Upstream commit b586627e10f57ee3aa8f0cfab0d6f7dc4ae63760 ]
 
-> From: Zak Hays <zdhays@gmail.com>
-> 
-> Recent changes to the driver require use of on-die correction if
-> the internal ECC enable bit is set. On some Micron parts, this bit
-> is enabled by default and there is no method for disabling it.
-> 
-> This is a false assumption though as that bit being enabled does not
-> necessarily mean that the on-die ECC *has* to be used. It has been
-> verified with a Micron FAE that other methods of error correction are
-> still valid even if this bit is set.
-> 
-> HW ECC offers generally higher performance than on-die so it is
-> preferred in some situations. This also allows multiple NAND parts to
-> be supported on the same PCB as some parts may not support on-die
-> error correction.
-> 
-> With that in mind, only throw a warning that the on-die bit is set
-> and allow the init to continue.
+The "whichcpu" comes from argv[3].  The cpu_online() macro looks up the
+cpu in a bitmap of online cpus, but if the value is too high then it
+could read beyond the end of the bitmap and possibly Oops.
 
-I don't think I can take this patch as-is. We must find a reliable way
-to discriminate Micron parts features. If we cannot (I think we can't
-before of the endless list of bugs they have introduced without
-documenting them), the best way is to build a static table.
+Fixes: 5d5314d6795f ("kdb: core for kgdb back end (1 of 2)")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/debug/kdb/kdb_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> Signed-off-by: Zak Hays <zdhays@gmail.com>
-> ---
->  drivers/mtd/nand/raw/nand_micron.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/mtd/nand/raw/nand_micron.c b/drivers/mtd/nand/raw/nand_micron.c
-> index 56654030ec7f..ec40c76443be 100644
-> --- a/drivers/mtd/nand/raw/nand_micron.c
-> +++ b/drivers/mtd/nand/raw/nand_micron.c
-> @@ -455,9 +455,7 @@ static int micron_nand_init(struct nand_chip *chip)
->  
->  	if (ondie == MICRON_ON_DIE_MANDATORY &&
->  	    chip->ecc.mode != NAND_ECC_ON_DIE) {
-> -		pr_err("On-die ECC forcefully enabled, not supported\n");
-> -		ret = -EINVAL;
-> -		goto err_free_manuf_data;
-> +		pr_warn("WARNING: On-die ECC forcefully enabled, use caution with other methods\n");
->  	}
->  
->  	if (chip->ecc.mode == NAND_ECC_ON_DIE) {
+diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
+index 993db6b2348e..15d902daeef6 100644
+--- a/kernel/debug/kdb/kdb_main.c
++++ b/kernel/debug/kdb/kdb_main.c
+@@ -2634,7 +2634,7 @@ static int kdb_per_cpu(int argc, const char **argv)
+ 		diag = kdbgetularg(argv[3], &whichcpu);
+ 		if (diag)
+ 			return diag;
+-		if (!cpu_online(whichcpu)) {
++		if (whichcpu >= nr_cpu_ids || !cpu_online(whichcpu)) {
+ 			kdb_printf("cpu %ld is not online\n", whichcpu);
+ 			return KDB_BADCPUNUM;
+ 		}
+-- 
+2.20.1
 
-Thanks,
-Miquèl
