@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E215C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22155C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70D5D214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF809214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:00:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197647;
-	bh=KANMXqY2ympshQ9I2mDY5g00urWBmk6k715DSTjsi58=;
+	s=default; t=1579197650;
+	bh=66Uh4hQFwl8UL/i/f+/bSnuAUf2QPxZlPm6iSXIho1Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w68HxD7mG6rVC/1dYoVmM4dy9HW/2+Wfuq/tWzrtRYrFV5Tenz5yMN8EvY1H+lXC9
-	 PeZQncZlCH14rhE3GNIfTpsiyi5q2HLS0MC92A0t1ZUYzt7gnFzTJ7CGy295uiOScQ
-	 QnhPrLfGM1+5qKaAE/P1rfdDb8JVWOFiXTuf1Gh8=
+	b=i9qIOzWiJMx6/dGYjt3GrNSe2jMHh+7T14jJZB2M45TVNiU3SHuMMIKsPnhYz0KTl
+	 tXt6psCVJ+ifoIfpm7A5MtgMyC+KMFWi6wBrIg+I7g6zmhSpbCb9drMvyyXwP668aU
+	 sI5/y4qv/InKC6cB+kMnYNeeGW7atJgQOFYfniDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394794AbgAPSAq (ORCPT
+        id S2394821AbgAPSAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:00:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59434 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:00:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391606AbgAPRlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:41:42 -0500
+        id S2405768AbgAPRll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:41:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB412246A4;
-        Thu, 16 Jan 2020 17:41:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A20524695;
+        Thu, 16 Jan 2020 17:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196501;
-        bh=KANMXqY2ympshQ9I2mDY5g00urWBmk6k715DSTjsi58=;
+        s=default; t=1579196500;
+        bh=66Uh4hQFwl8UL/i/f+/bSnuAUf2QPxZlPm6iSXIho1Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zxgph0ETulLmkEZJ3vFHaJtOVLwYL47vEEDIFoQI4JZ+o5LkHPNHfESB42kK9fZvZ
-         ofckfshlNyd+/tLawRh6SxdZxa2va9876W0/B3oPyCO48bNm5tKHqkej1aIQy026b9
-         3N0LlfGAs/sQ0sS8LYsehItkNsk3SjD+I7WuBN/4=
+        b=V97JIN6P8o84+RSqS9SbRQBYtCojBbLueZy2s3wBsZZDpXrBxnO+s0r9rVhikezya
+         ssCDrHLyndQkseZ56bKjo65S6KJI9x8FnZ66ObnjgbZkA8iH6u/UFljqTZUi9w0UNA
+         48TK6lqyDEWKwEz1rIfxbiz7IoQnWNi4KAmevb8I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pan Bian <bianpan2016@163.com>,
-        Manish Rangankar <mrangankar@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 243/251] scsi: qla4xxx: fix double free bug
-Date:   Thu, 16 Jan 2020 12:36:32 -0500
-Message-Id: <20200116173641.22137-203-sashal@kernel.org>
+Cc:     Kars de Jong <jongk@linux-m68k.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 242/251] rtc: msm6242: Fix reading of 10-hour digit
+Date:   Thu, 16 Jan 2020 12:36:31 -0500
+Message-Id: <20200116173641.22137-202-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -60,38 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Bian <bianpan2016@163.com>
+From: Kars de Jong <jongk@linux-m68k.org>
 
-[ Upstream commit 3fe3d2428b62822b7b030577cd612790bdd8c941 ]
+[ Upstream commit e34494c8df0cd96fc432efae121db3212c46ae48 ]
 
-The variable init_fw_cb is released twice, resulting in a double free
-bug. The call to the function dma_free_coherent() before goto is removed to
-get rid of potential double free.
+The driver was reading the wrong register as the 10-hour digit due to
+a misplaced ')'. It was in fact reading the 1-second digit register due
+to this bug.
 
-Fixes: 2a49a78ed3c8 ("[SCSI] qla4xxx: added IPv6 support.")
-Link: https://lore.kernel.org/r/1572945927-27796-1-git-send-email-bianpan2016@163.com
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Acked-by: Manish Rangankar <mrangankar@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Also remove the use of a magic number for the hour mask and use the define
+for it which was already present.
+
+Fixes: 4f9b9bba1dd1 ("rtc: Add an RTC driver for the Oki MSM6242")
+Tested-by: Kars de Jong <jongk@linux-m68k.org>
+Signed-off-by: Kars de Jong <jongk@linux-m68k.org>
+Link: https://lore.kernel.org/r/20191116110548.8562-1-jongk@linux-m68k.org
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla4xxx/ql4_mbx.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/rtc/rtc-msm6242.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla4xxx/ql4_mbx.c b/drivers/scsi/qla4xxx/ql4_mbx.c
-index c291fdff1b33..ea3b77ba12a2 100644
---- a/drivers/scsi/qla4xxx/ql4_mbx.c
-+++ b/drivers/scsi/qla4xxx/ql4_mbx.c
-@@ -641,9 +641,6 @@ int qla4xxx_initialize_fw_cb(struct scsi_qla_host * ha)
- 
- 	if (qla4xxx_get_ifcb(ha, &mbox_cmd[0], &mbox_sts[0], init_fw_cb_dma) !=
- 	    QLA_SUCCESS) {
--		dma_free_coherent(&ha->pdev->dev,
--				  sizeof(struct addr_ctrl_blk),
--				  init_fw_cb, init_fw_cb_dma);
- 		goto exit_init_fw_cb;
- 	}
- 
+diff --git a/drivers/rtc/rtc-msm6242.c b/drivers/rtc/rtc-msm6242.c
+index c1c5c4e3b3b4..c981301efbe5 100644
+--- a/drivers/rtc/rtc-msm6242.c
++++ b/drivers/rtc/rtc-msm6242.c
+@@ -132,7 +132,8 @@ static int msm6242_read_time(struct device *dev, struct rtc_time *tm)
+ 		      msm6242_read(priv, MSM6242_SECOND1);
+ 	tm->tm_min  = msm6242_read(priv, MSM6242_MINUTE10) * 10 +
+ 		      msm6242_read(priv, MSM6242_MINUTE1);
+-	tm->tm_hour = (msm6242_read(priv, MSM6242_HOUR10 & 3)) * 10 +
++	tm->tm_hour = (msm6242_read(priv, MSM6242_HOUR10) &
++		       MSM6242_HOUR10_HR_MASK) * 10 +
+ 		      msm6242_read(priv, MSM6242_HOUR1);
+ 	tm->tm_mday = msm6242_read(priv, MSM6242_DAY10) * 10 +
+ 		      msm6242_read(priv, MSM6242_DAY1);
 -- 
 2.20.1
 
