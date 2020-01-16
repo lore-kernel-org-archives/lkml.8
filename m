@@ -2,95 +2,159 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8166FC33CB8
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CEDC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7362469A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:58:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197503;
-	bh=whdOAzkZ7cuZFTVBZdY5jWzriOTT7wc/agyeedXMFuk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zwOOUh7n1r0YcEM9cbgQtnBdfYOWegA0SlSse8DQn826YLAooqpQNOu4dqLg4ad5m
-	 laspMXMNquQkKQ6WdY/3d4Xl0PMbB23Hi7R9wh+7HqbNH5ENLeQp6XTqBKA9eELOVq
-	 H8GTSHPqBjsO6QhD3HoW2G9v5/SXoMp1vo9e2EiA=
+	by mail.kernel.org (Postfix) with ESMTP id 5E723246A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:58:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="PU7eTaOI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405871AbgAPRnL (ORCPT
+        id S2394627AbgAPR6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:43:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33030 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:58:31 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:50290 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393867AbgAPRnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:43:07 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 115B524695;
-        Thu, 16 Jan 2020 17:43:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196586;
-        bh=whdOAzkZ7cuZFTVBZdY5jWzriOTT7wc/agyeedXMFuk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yaw8JlBXoYnqqO+OfYweNxNtqAqL6KggI/GfGtjYqThwNmSK4EdZBX61w94hmc+Ht
-         9Cs2iXDEb90xmijVLONZRcnE+Zt+/gep6YZoY+u9Yy4LMtLup2xqeMk2y162JqQhON
-         Ve8gf/aYpJfkeb6i9EZjxEn/RN8XgUu92Q1e6Py4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 011/174] pinctrl: sh-pfc: r8a7791: Remove bogus ctrl marks from qspi_data4_b group
-Date:   Thu, 16 Jan 2020 12:40:08 -0500
-Message-Id: <20200116174251.24326-11-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
-References: <20200116174251.24326-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        id S2393889AbgAPR61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:58:27 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 47zBkl4Rxnz9v0MT;
+        Thu, 16 Jan 2020 18:58:23 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=PU7eTaOI; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id SjVALX4P8BV2; Thu, 16 Jan 2020 18:58:23 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47zBkl379cz9v0MQ;
+        Thu, 16 Jan 2020 18:58:23 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1579197503; bh=UUBKk15KITQNNRJp5evVzKMcsza8d4oSE6jeKhRMcDE=;
+        h=From:Subject:To:Cc:Date:From;
+        b=PU7eTaOIhtqxVjMZbHoIHKjqp9r3ETp1+1A3ditRGh62MKQuHKKpA1ukHm+n4/PQ8
+         KC/rDW+iuJ+YJeQ+75hFrx42zs79+bFb+B+mlB6Spffdcew/8JaUUYE+lQ+28d9Voa
+         cGAdfy+u4wFjdM2xKEN8a7q76RRkglF0nFieQvTc=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 187F68B82D;
+        Thu, 16 Jan 2020 18:58:25 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id Q42v6gYwsPbp; Thu, 16 Jan 2020 18:58:24 +0100 (CET)
+Received: from po14934vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8EC048B82C;
+        Thu, 16 Jan 2020 18:58:24 +0100 (CET)
+Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 3689964A35; Thu, 16 Jan 2020 17:58:24 +0000 (UTC)
+Message-Id: <cover.1579196675.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [RFC PATCH v4 00/11] powerpc: switch VDSO to C implementation.
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, nathanl@linux.ibm.com,
+        arnd@arndb.de, tglx@linutronix.de, vincenzo.frascino@arm.com,
+        luto@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        x86@kernel.org
+Date:   Thu, 16 Jan 2020 17:58:24 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+This is a fourth tentative to switch powerpc VDSO to generic C implementation.
 
-[ Upstream commit 884fa25fb6e5e63ab970d612a628313bb68f37cc ]
+This version should work on PPC64 (untested). VDSO32 for PPC64 is
+impossible to build and has been de-activated, because the powerpc
+ASM header files for C are not prepared to build 32 bits code with CONFIG_PPC64.
 
-The qspi_data4_b_mux[] array contains pin marks for the clock and chip
-select pins.  The qspi_data4_b_pins[] array rightfully does not contain
-the corresponding pin numbers, as the control pins are provided by a
-separate group (qspi_ctrl_b).
+powerpc is a bit special for VDSO as well as system calls in the
+way that it requires setting CR SO bit which cannot be done in C.
+Therefore, entry/exit and fallback need to be performed in ASM.
 
-Fixes: 2d0c386f135e4186 ("pinctrl: sh-pfc: r8a7791: Add QSPI pin groups")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pinctrl/sh-pfc/pfc-r8a7791.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Note that on previous patches, a buggy version of vdsotest was used which was
+underestimating the time in gettimeofday compared to clock-get... functions.
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7791.c b/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
-index 42ffa8708abc..4fbd6d806719 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
-@@ -3059,8 +3059,7 @@ static const unsigned int qspi_data4_b_pins[] = {
- 	RCAR_GP_PIN(6, 4),
- };
- static const unsigned int qspi_data4_b_mux[] = {
--	SPCLK_B_MARK, MOSI_IO0_B_MARK, MISO_IO1_B_MARK,
--	IO2_B_MARK, IO3_B_MARK, SSL_B_MARK,
-+	MOSI_IO0_B_MARK, MISO_IO1_B_MARK, IO2_B_MARK, IO3_B_MARK,
- };
- /* - SCIF0 ------------------------------------------------------------------ */
- static const unsigned int scif0_data_pins[] = {
+This series applies on a merge of powerpc/merge and tip/timers/core branches,
+series "lib/vdso: Bugfix and consolidation"
+(https://lore.kernel.org/patchwork/project/lkml/list/?series=425784)
+applied after the above merge.
+
+On a powerpc8xx, with current powerpc/32 ASM VDSO:
+
+gettimeofday:    vdso: 907 nsec/call
+clock-getres-realtime:    vdso: 484 nsec/call
+clock-gettime-realtime:    vdso: 899 nsec/call
+
+The first patch adds VDSO generic C support without any changes to common code.
+Performance is as follows:
+
+gettimeofday:    vdso: 1211 nsec/call
+clock-getres-realtime:    vdso: 722 nsec/call
+clock-gettime-realtime:    vdso: 1216 nsec/call
+
+Then a few changes in the common code have allowed performance improvement. At
+the end of the series we have:
+
+gettimeofday:    vdso: 974 nsec/call
+clock-getres-realtime:    vdso: 545 nsec/call
+clock-gettime-realtime:    vdso: 941 nsec/call
+
+The final result is rather close to pure ASM VDSO:
+* 7% more on gettimeofday (9 cycles)
+* 5% more on clock-gettime-realtime (6 cycles)
+* 12% more on clock-getres-realtime (8 cycles)
+
+Due to the unavoidable ASM trampoline, we won't get much closer but that should be
+acceptable for a port from ASM to a generic C code (here, 1 cycle is about 7,5 ns)
+
+Christophe Leroy (11):
+  powerpc/64: Don't provide time functions in compat VDSO32
+  powerpc/vdso: Switch VDSO to generic C implementation.
+  lib: vdso: only read hrtimer_res when needed in __cvdso_clock_getres()
+  powerpc/vdso: simplify __get_datapage()
+  lib: vdso: allow arches to provide vdso data pointer
+  powerpc/vdso: provide inline alternative to __get_datapage()
+  powerpc/vdso: provide vdso data pointer from the ASM caller.
+  lib: vdso: allow fixed clock mode
+  powerpc/vdso: override __arch_vdso_capable()
+  lib: vdso: Allow arches to override the ns shift operation
+  powerpc/32: provide vdso_shift_ns()
+
+ arch/powerpc/Kconfig                         |   2 +
+ arch/powerpc/include/asm/clocksource.h       |   6 +
+ arch/powerpc/include/asm/vdso/gettimeofday.h | 117 ++++++++++++
+ arch/powerpc/include/asm/vdso/vsyscall.h     |  25 +++
+ arch/powerpc/include/asm/vdso_datapage.h     |  52 +++---
+ arch/powerpc/kernel/asm-offsets.c            |  46 +----
+ arch/powerpc/kernel/time.c                   |  91 +---------
+ arch/powerpc/kernel/vdso.c                   |  58 ++----
+ arch/powerpc/kernel/vdso32/Makefile          |  27 ++-
+ arch/powerpc/kernel/vdso32/datapage.S        |  10 +-
+ arch/powerpc/kernel/vdso32/gettimeofday.S    | 258 ++++-----------------------
+ arch/powerpc/kernel/vdso32/vdso32.lds.S      |   9 +-
+ arch/powerpc/kernel/vdso32/vgettimeofday.c   |  29 +++
+ arch/powerpc/kernel/vdso64/Makefile          |  23 ++-
+ arch/powerpc/kernel/vdso64/datapage.S        |  13 +-
+ arch/powerpc/kernel/vdso64/gettimeofday.S    | 257 ++++----------------------
+ arch/powerpc/kernel/vdso64/vdso64.lds.S      |   7 +-
+ arch/powerpc/kernel/vdso64/vgettimeofday.c   |  29 +++
+ lib/vdso/gettimeofday.c                      | 107 ++++++++---
+ 19 files changed, 457 insertions(+), 709 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/clocksource.h
+ create mode 100644 arch/powerpc/include/asm/vdso/gettimeofday.h
+ create mode 100644 arch/powerpc/include/asm/vdso/vsyscall.h
+ create mode 100644 arch/powerpc/kernel/vdso32/vgettimeofday.c
+ create mode 100644 arch/powerpc/kernel/vdso64/vgettimeofday.c
+
 -- 
-2.20.1
+2.13.3
 
