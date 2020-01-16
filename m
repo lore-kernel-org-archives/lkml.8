@@ -2,324 +2,103 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE300C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E64CC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 735C12469A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="dNaSZZMd"
+	by mail.kernel.org (Postfix) with ESMTP id E22ED2469A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579197562;
+	bh=SVw0ObCnLl4OAQavnwGenLfit+59tPYtH11edjeOHYY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DM7m76o6KLfhffm+VS+ukLfRcESK0hbr8eGJ2M9qSyMDr7ozhbo9AeUeBGpeZxUWA
+	 Bc49Ckhs3E8DQYBwfENw2EqqrYJ/xpgUIU3Gf9/aXO+pBN4r3S0aRerzixn98RSVfl
+	 jdB8QOUpn3YcVeKZtPHIxrhee4CITgOY+DEvRAwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394736AbgAPR7K (ORCPT
+        id S1726936AbgAPR63 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:59:10 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:35137 "EHLO pegase1.c-s.fr"
+        Thu, 16 Jan 2020 12:58:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394626AbgAPR6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:58:32 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 47zBkr5cnDz9v0MZ;
-        Thu, 16 Jan 2020 18:58:28 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=dNaSZZMd; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id lxkM1Q1uavb5; Thu, 16 Jan 2020 18:58:28 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47zBkr4TBWz9v0MW;
-        Thu, 16 Jan 2020 18:58:28 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1579197508; bh=EIMY8bcz3Kggh/rQrqzeXyhyN/ypWY7RKWhqCLsPPhA=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=dNaSZZMdsamn13Og26ImXHhnMXZdk5xDJEwGe0Qg3xduFHMhE6M/X+Di8nhsSKKX4
-         HdAfyTZOaOfDdpTxR5inPMloOibW2IRXPtXKGXlYeNPiDyXTePWEWEys0c6oFRrqOH
-         n7yQ4+FXQc/UDS1YW3Yjr6EWcgwPLiPsG0yRjQtY=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E0C1D8B831;
-        Thu, 16 Jan 2020 18:58:29 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id xCQEXJ4grRuA; Thu, 16 Jan 2020 18:58:29 +0100 (CET)
-Received: from po14934vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9F0D58B82E;
-        Thu, 16 Jan 2020 18:58:28 +0100 (CET)
-Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 786CA64A33; Thu, 16 Jan 2020 17:58:28 +0000 (UTC)
-Message-Id: <634e654d8204ce12f688c655aee1dd0f75905ffb.1579196675.git.christophe.leroy@c-s.fr>
-In-Reply-To: <cover.1579196675.git.christophe.leroy@c-s.fr>
-References: <cover.1579196675.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [RFC PATCH v4 04/11] powerpc/vdso: simplify __get_datapage()
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, nathanl@linux.ibm.com,
-        arnd@arndb.de, tglx@linutronix.de, vincenzo.frascino@arm.com,
-        luto@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        x86@kernel.org
-Date:   Thu, 16 Jan 2020 17:58:28 +0000 (UTC)
+        id S2393874AbgAPRnI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:43:08 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BE0524736;
+        Thu, 16 Jan 2020 17:43:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579196588;
+        bh=SVw0ObCnLl4OAQavnwGenLfit+59tPYtH11edjeOHYY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=j5xCe77mPnOkjUviZVScaKfJ4IEp6Gu2PdQgg5Wp/gElbtH70bJkZPH92rsTIxLCg
+         aJlKLOWI3NC3YCO/zb3w+bNvKuNS4hCn3YebpcGaGbknxQsJx/3GlOURuktwcf7nr8
+         raUPaeSTQKVvLCNNZXhaTMWxUOrNJXjt/1CjCh9M=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 012/174] pinctrl: sh-pfc: r8a7791: Remove bogus marks from vin1_b_data18 group
+Date:   Thu, 16 Jan 2020 12:40:09 -0500
+Message-Id: <20200116174251.24326-12-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
+References: <20200116174251.24326-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The VDSO datapage and the text pages are always located immediately
-next to each other, so it can be hardcoded without an indirection
-through __kernel_datapage_offset
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-In order to ease things, move the data page in front like other
-arches, that way there is no need to know the size of the library
-to locate the data page.
+[ Upstream commit 0d6256cb880166a4111bebce35790019e56b6e1b ]
 
-Before:
-clock-getres-realtime-coarse:    vdso: 714 nsec/call
-clock-gettime-realtime-coarse:    vdso: 792 nsec/call
-clock-gettime-realtime:    vdso: 1243 nsec/call
+The vin1_b_data18_mux[] arrays contains pin marks for the 2 LSB bits of
+the color components.  The vin1_b_data18_pins[] array rightfully does
+not include the corresponding pin numbers, as RGB18 is subset of RGB24,
+containing only the 6 MSB bits of each component.
 
-After:
-clock-getres-realtime-coarse:    vdso: 699 nsec/call
-clock-gettime-realtime-coarse:    vdso: 784 nsec/call
-clock-gettime-realtime:    vdso: 1231 nsec/call
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Fixes: 8e32c9671f84acd8 ("pinctrl: sh-pfc: r8a7791: Add VIN pins")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/vdso.c              | 53 +++++----------------------------
- arch/powerpc/kernel/vdso32/datapage.S   | 10 +++----
- arch/powerpc/kernel/vdso32/vdso32.lds.S |  7 ++---
- arch/powerpc/kernel/vdso64/datapage.S   | 10 +++----
- arch/powerpc/kernel/vdso64/vdso64.lds.S |  7 ++---
- 5 files changed, 19 insertions(+), 68 deletions(-)
+ drivers/pinctrl/sh-pfc/pfc-r8a7791.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/arch/powerpc/kernel/vdso.c b/arch/powerpc/kernel/vdso.c
-index 16a44bffe698..c093d90a222a 100644
---- a/arch/powerpc/kernel/vdso.c
-+++ b/arch/powerpc/kernel/vdso.c
-@@ -191,7 +191,7 @@ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
- 	 * install_special_mapping or the perf counter mmap tracking code
- 	 * will fail to recognise it as a vDSO (since arch_vma_name fails).
- 	 */
--	current->mm->context.vdso_base = vdso_base;
-+	current->mm->context.vdso_base = vdso_base + PAGE_SIZE;
- 
- 	/*
- 	 * our vma flags don't have VM_WRITE so by default, the process isn't
-@@ -488,42 +488,6 @@ static __init void vdso_setup_trampolines(struct lib32_elfinfo *v32,
- 	vdso32_rt_sigtramp = find_function32(v32, "__kernel_sigtramp_rt32");
- }
- 
--static __init int vdso_fixup_datapage(struct lib32_elfinfo *v32,
--				       struct lib64_elfinfo *v64)
--{
--#ifdef CONFIG_VDSO32
--	Elf32_Sym *sym32;
--#endif
--#ifdef CONFIG_PPC64
--	Elf64_Sym *sym64;
--
--       	sym64 = find_symbol64(v64, "__kernel_datapage_offset");
--	if (sym64 == NULL) {
--		printk(KERN_ERR "vDSO64: Can't find symbol "
--		       "__kernel_datapage_offset !\n");
--		return -1;
--	}
--	*((int *)(vdso64_kbase + sym64->st_value - VDSO64_LBASE)) =
--		(vdso64_pages << PAGE_SHIFT) -
--		(sym64->st_value - VDSO64_LBASE);
--#endif /* CONFIG_PPC64 */
--
--#ifdef CONFIG_VDSO32
--	sym32 = find_symbol32(v32, "__kernel_datapage_offset");
--	if (sym32 == NULL) {
--		printk(KERN_ERR "vDSO32: Can't find symbol "
--		       "__kernel_datapage_offset !\n");
--		return -1;
--	}
--	*((int *)(vdso32_kbase + (sym32->st_value - VDSO32_LBASE))) =
--		(vdso32_pages << PAGE_SHIFT) -
--		(sym32->st_value - VDSO32_LBASE);
--#endif
--
--	return 0;
--}
--
--
- static __init int vdso_fixup_features(struct lib32_elfinfo *v32,
- 				      struct lib64_elfinfo *v64)
- {
-@@ -624,9 +588,6 @@ static __init int vdso_setup(void)
- 	if (vdso_do_find_sections(&v32, &v64))
- 		return -1;
- 
--	if (vdso_fixup_datapage(&v32, &v64))
--		return -1;
--
- 	if (vdso_fixup_features(&v32, &v64))
- 		return -1;
- 
-@@ -771,26 +732,26 @@ static int __init vdso_init(void)
- 	vdso32_pagelist = kcalloc(vdso32_pages + 2, sizeof(struct page *),
- 				  GFP_KERNEL);
- 	BUG_ON(vdso32_pagelist == NULL);
-+	vdso32_pagelist[0] = virt_to_page(vdso_data);
- 	for (i = 0; i < vdso32_pages; i++) {
- 		struct page *pg = virt_to_page(vdso32_kbase + i*PAGE_SIZE);
- 		get_page(pg);
--		vdso32_pagelist[i] = pg;
-+		vdso32_pagelist[i + 1] = pg;
- 	}
--	vdso32_pagelist[i++] = virt_to_page(vdso_data);
--	vdso32_pagelist[i] = NULL;
-+	vdso32_pagelist[i + 1] = NULL;
- #endif
- 
- #ifdef CONFIG_PPC64
- 	vdso64_pagelist = kcalloc(vdso64_pages + 2, sizeof(struct page *),
- 				  GFP_KERNEL);
- 	BUG_ON(vdso64_pagelist == NULL);
-+	vdso64_pagelist[0] = virt_to_page(vdso_data);
- 	for (i = 0; i < vdso64_pages; i++) {
- 		struct page *pg = virt_to_page(vdso64_kbase + i*PAGE_SIZE);
- 		get_page(pg);
--		vdso64_pagelist[i] = pg;
-+		vdso64_pagelist[i + 1] = pg;
- 	}
--	vdso64_pagelist[i++] = virt_to_page(vdso_data);
--	vdso64_pagelist[i] = NULL;
-+	vdso64_pagelist[i + 1] = NULL;
- #endif /* CONFIG_PPC64 */
- 
- 	get_page(virt_to_page(vdso_data));
-diff --git a/arch/powerpc/kernel/vdso32/datapage.S b/arch/powerpc/kernel/vdso32/datapage.S
-index 6c7401bd284e..d839aa1a4f01 100644
---- a/arch/powerpc/kernel/vdso32/datapage.S
-+++ b/arch/powerpc/kernel/vdso32/datapage.S
-@@ -12,9 +12,6 @@
- #include <asm/vdso.h>
- 
- 	.text
--	.global	__kernel_datapage_offset;
--__kernel_datapage_offset:
--	.long	0
- 
- V_FUNCTION_BEGIN(__get_datapage)
-   .cfi_startproc
-@@ -31,10 +28,11 @@ V_FUNCTION_BEGIN(__get_datapage)
- data_page_branch:
- 	mflr	r3
- 	mtlr	r0
--	addi	r3, r3, __kernel_datapage_offset-data_page_branch
--	lwz	r0,0(r3)
-+#if CONFIG_PPC_PAGE_SHIFT > 14
-+	addis	r3, r3, (_vdso_datapage - data_page_branch)@ha
-+#endif
-+	addi	r3, r3, (_vdso_datapage - data_page_branch)@l
-   .cfi_restore lr
--	add	r3,r0,r3
- 	blr
-   .cfi_endproc
- V_FUNCTION_END(__get_datapage)
-diff --git a/arch/powerpc/kernel/vdso32/vdso32.lds.S b/arch/powerpc/kernel/vdso32/vdso32.lds.S
-index 9400b182e163..f09c2354bd21 100644
---- a/arch/powerpc/kernel/vdso32/vdso32.lds.S
-+++ b/arch/powerpc/kernel/vdso32/vdso32.lds.S
-@@ -4,6 +4,7 @@
-  * library
-  */
- #include <asm/vdso.h>
-+#include <asm/page.h>
- 
- #ifdef __LITTLE_ENDIAN__
- OUTPUT_FORMAT("elf32-powerpcle", "elf32-powerpcle", "elf32-powerpcle")
-@@ -15,6 +16,7 @@ ENTRY(_start)
- 
- SECTIONS
- {
-+	PROVIDE(_vdso_datapage = . - PAGE_SIZE);
- 	. = VDSO32_LBASE + SIZEOF_HEADERS;
- 
- 	.hash          	: { *(.hash) }			:text
-@@ -138,11 +140,6 @@ VERSION
- {
- 	VDSO_VERSION_STRING {
- 	global:
--		/*
--		 * Has to be there for the kernel to find
--		 */
--		__kernel_datapage_offset;
--
- 		__kernel_get_syscall_map;
- #if defined(CONFIG_PPC32) && !defined(CONFIG_PPC_BOOK3S_601)
- 		__kernel_gettimeofday;
-diff --git a/arch/powerpc/kernel/vdso64/datapage.S b/arch/powerpc/kernel/vdso64/datapage.S
-index 4808ce9eeb3d..8c41e1a93980 100644
---- a/arch/powerpc/kernel/vdso64/datapage.S
-+++ b/arch/powerpc/kernel/vdso64/datapage.S
-@@ -12,9 +12,6 @@
- #include <asm/vdso.h>
- 
- 	.text
--.global	__kernel_datapage_offset;
--__kernel_datapage_offset:
--	.long	0
- 
- _GLOBAL(__get_datapage)
-   .cfi_startproc
-@@ -31,10 +28,11 @@ _GLOBAL(__get_datapage)
- data_page_branch:
- 	mflr	r3
- 	mtlr	r0
--	addi	r3, r3, __kernel_datapage_offset-data_page_branch
--	lwz	r0,0(r3)
-+#if CONFIG_PPC_PAGE_SHIFT > 14
-+	addis	r3, r3, (_vdso_datapage - data_page_branch)@ha
-+#endif
-+	addi	r3, r3, (_vdso_datapage - data_page_branch)@l
-   .cfi_restore lr
--	add	r3,r0,r3
- 	blr
-   .cfi_endproc
- 
-diff --git a/arch/powerpc/kernel/vdso64/vdso64.lds.S b/arch/powerpc/kernel/vdso64/vdso64.lds.S
-index 256fb9720298..f58c7e2e9cbd 100644
---- a/arch/powerpc/kernel/vdso64/vdso64.lds.S
-+++ b/arch/powerpc/kernel/vdso64/vdso64.lds.S
-@@ -4,6 +4,7 @@
-  * library
-  */
- #include <asm/vdso.h>
-+#include <asm/page.h>
- 
- #ifdef __LITTLE_ENDIAN__
- OUTPUT_FORMAT("elf64-powerpcle", "elf64-powerpcle", "elf64-powerpcle")
-@@ -15,6 +16,7 @@ ENTRY(_start)
- 
- SECTIONS
- {
-+	PROVIDE(_vdso_datapage = . - PAGE_SIZE);
- 	. = VDSO64_LBASE + SIZEOF_HEADERS;
- 
- 	.hash		: { *(.hash) }			:text
-@@ -138,11 +140,6 @@ VERSION
- {
- 	VDSO_VERSION_STRING {
- 	global:
--		/*
--		 * Has to be there for the kernel to find
--		 */
--		__kernel_datapage_offset;
--
- 		__kernel_get_syscall_map;
- 		__kernel_gettimeofday;
- 		__kernel_clock_gettime;
+diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7791.c b/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
+index 4fbd6d806719..f94e34e7f0b0 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a7791.c
+@@ -4170,17 +4170,14 @@ static const unsigned int vin1_b_data18_pins[] = {
+ };
+ static const unsigned int vin1_b_data18_mux[] = {
+ 	/* B */
+-	VI1_DATA0_B_MARK, VI1_DATA1_B_MARK,
+ 	VI1_DATA2_B_MARK, VI1_DATA3_B_MARK,
+ 	VI1_DATA4_B_MARK, VI1_DATA5_B_MARK,
+ 	VI1_DATA6_B_MARK, VI1_DATA7_B_MARK,
+ 	/* G */
+-	VI1_G0_B_MARK, VI1_G1_B_MARK,
+ 	VI1_G2_B_MARK, VI1_G3_B_MARK,
+ 	VI1_G4_B_MARK, VI1_G5_B_MARK,
+ 	VI1_G6_B_MARK, VI1_G7_B_MARK,
+ 	/* R */
+-	VI1_R0_B_MARK, VI1_R1_B_MARK,
+ 	VI1_R2_B_MARK, VI1_R3_B_MARK,
+ 	VI1_R4_B_MARK, VI1_R5_B_MARK,
+ 	VI1_R6_B_MARK, VI1_R7_B_MARK,
 -- 
-2.13.3
+2.20.1
 
