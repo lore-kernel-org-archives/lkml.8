@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5749CC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FF7C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B95B24690
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4693A24692
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:12:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194734;
-	bh=kTIb/Y3XzjF2+VFSAC+cj2XncnKLjgkHWIlny1KaSHw=;
+	s=default; t=1579194742;
+	bh=CNP4GJpsBIHh4vJGmtfmNioN6lx+c2VhX/+kISUAlag=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rncAE7BcPJsTFJPuBic2nS/4lCqdh4YoBiBF/1PnMxVcTM77hWpi7B3gzcAnKxpPm
-	 7i4j3CNpnl7T7JI1n4ovztL9p9ymLY/UwtGASk8do0uKt06CMQoW9HcUAD3a+Q4WYz
-	 R3TwqeJypWDyYjt//X5KyfDpFhKqjUgWuFdqWOD4=
+	b=r1ESCc+EArsWp23asVQK8CjSWupcz+fhioCI2Y7dJV7d1wykjY+1CFl55fySejDL5
+	 kYzkcdglltEf0R1sOm45idiA3m9fVblkQYE9SEupf/FTf2ra3llNHQtu27/vJ3Ys9c
+	 bnO7IOaWLXs0KzFo8sPql56hmeB2liQ8Ht11aSZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730216AbgAPRMN (ORCPT
+        id S2388856AbgAPRMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:12:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53962 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:12:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390372AbgAPRMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:12:01 -0500
+        id S2390417AbgAPRMO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:12:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23F422469F;
-        Thu, 16 Jan 2020 17:12:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9CFC24692;
+        Thu, 16 Jan 2020 17:12:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194720;
-        bh=kTIb/Y3XzjF2+VFSAC+cj2XncnKLjgkHWIlny1KaSHw=;
+        s=default; t=1579194733;
+        bh=CNP4GJpsBIHh4vJGmtfmNioN6lx+c2VhX/+kISUAlag=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N7fgVBB4TvCyDj3tAVaJw0xpWMf1UalDkcTkfz29sq3PcXkPyju2iTIhhDxucr+Gg
-         1jgn0t1we2VzqrJqgHbRQfb1mlwrD5Nj3fTxoFioTEOXhRf2iPpkAeoq1sE0s5Cr3J
-         Xo8YCWr+zvay25H0cgKFdBg6nQCjWxzAxzD4+HMc=
+        b=js0ZwNzlodUfZ3BeNkc2Kh3VgX7A76UAsSMUto46pqIhGUzyFLoBrEvM0Qxo3gsKy
+         gYAKRgOTpi2IMgR0MWeqM7RejPdOmnSYwPjCneaRYGJWz48JI73PKcQGM4wqXoZjET
+         UsgXNAi3c9+jr2v5wmsuALP0dI2VDUwBQnokUQOs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 556/671] clk: actions: Fix factor clk struct member access
-Date:   Thu, 16 Jan 2020 12:03:14 -0500
-Message-Id: <20200116170509.12787-293-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 566/671] net: socionext: Fix a signedness bug in ave_probe()
+Date:   Thu, 16 Jan 2020 12:03:24 -0500
+Message-Id: <20200116170509.12787-303-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,61 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit ed309bfb4812e8b31a3eb877e157b8028a49e50c ]
+[ Upstream commit 7f9e88e6ef8c971f2c638b5ff7044c59b5d0f58d ]
 
-Since the helper "owl_factor_helper_round_rate" is shared between factor
-and composite clocks, using the factor clk specific helper function
-like "hw_to_owl_factor" to access its members will create issues when
-called from composite clk specific code. Hence, pass the "factor_hw"
-struct pointer directly instead of fetching it using factor clk specific
-helpers.
+The "phy_mode" variable is an enum and in this context GCC treats it as
+an unsigned int so the error handling is never triggered.
 
-This issue has been observed when a composite clock like "sd0_clk" tried
-to call "owl_factor_helper_round_rate" resulting in pointer dereferencing
-error.
-
-While we are at it, let's rename the "clk_val_best" function to
-"owl_clk_val_best" since this is an owl SoCs specific helper.
-
-Fixes: 4bb78fc9744a ("clk: actions: Add factor clock support")
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-Link: https://lkml.kernel.org/r/20190916154546.24982-2-manivannan.sadhasivam@linaro.org
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: 4c270b55a5af ("net: ethernet: socionext: add AVE ethernet driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/actions/owl-factor.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/socionext/sni_ave.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/actions/owl-factor.c b/drivers/clk/actions/owl-factor.c
-index 317d4a9e112e..f15e2621fa18 100644
---- a/drivers/clk/actions/owl-factor.c
-+++ b/drivers/clk/actions/owl-factor.c
-@@ -64,11 +64,10 @@ static unsigned int _get_table_val(const struct clk_factor_table *table,
- 	return val;
- }
+diff --git a/drivers/net/ethernet/socionext/sni_ave.c b/drivers/net/ethernet/socionext/sni_ave.c
+index 09d25b87cf7c..c309accc6797 100644
+--- a/drivers/net/ethernet/socionext/sni_ave.c
++++ b/drivers/net/ethernet/socionext/sni_ave.c
+@@ -1575,7 +1575,7 @@ static int ave_probe(struct platform_device *pdev)
  
--static int clk_val_best(struct clk_hw *hw, unsigned long rate,
-+static int owl_clk_val_best(const struct owl_factor_hw *factor_hw,
-+			struct clk_hw *hw, unsigned long rate,
- 			unsigned long *best_parent_rate)
- {
--	struct owl_factor *factor = hw_to_owl_factor(hw);
--	struct owl_factor_hw *factor_hw = &factor->factor_hw;
- 	const struct clk_factor_table *clkt = factor_hw->table;
- 	unsigned long parent_rate, try_parent_rate, best = 0, cur_rate;
- 	unsigned long parent_rate_saved = *best_parent_rate;
-@@ -126,7 +125,7 @@ long owl_factor_helper_round_rate(struct owl_clk_common *common,
- 	const struct clk_factor_table *clkt = factor_hw->table;
- 	unsigned int val, mul = 0, div = 1;
- 
--	val = clk_val_best(&common->hw, rate, parent_rate);
-+	val = owl_clk_val_best(factor_hw, &common->hw, rate, parent_rate);
- 	_get_table_div_mul(clkt, val, &mul, &div);
- 
- 	return *parent_rate * mul / div;
+ 	np = dev->of_node;
+ 	phy_mode = of_get_phy_mode(np);
+-	if (phy_mode < 0) {
++	if ((int)phy_mode < 0) {
+ 		dev_err(dev, "phy-mode not found\n");
+ 		return -EINVAL;
+ 	}
 -- 
 2.20.1
 
