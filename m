@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7FEC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A8ACC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F9A4246A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D943C246A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:31:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195857;
-	bh=mhqsMtrf4am2dqZbTwA1W0jCaYn2ewriEyEupyszVCs=;
+	s=default; t=1579195864;
+	bh=NkQJpbQLmFzUDR0gv3W7vd3nGVEUM5f4U1VgpmwXYgQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sekgUe3ECCLLu6JGMH2fMw7JDvRtVCwBJ36B7y07KBF0Gpy6bjUF5G3bGfggmCVNX
-	 6nsFt17e7Q5VLuz3XqCHrOtScq/l9e/Ye67mEbyRxZK2WWdbE8Knr/ANO+Cb6kvSeR
-	 i67ihIjAivxQgl8yLNnQKNt4ckTdks+ppjZNlNV8=
+	b=ihG6vlKmK7/QxDJYL70ahAKfU/gB/n7EhLUP27qdwizBqC6fGQBSNiFeP5iFirYNL
+	 1FKsgLSjensKy9eaqAcLiCbwG5rIu5da/FJRjJtXZoyHae3iNMIiNtsTfTtg5Wqwc+
+	 pMI0Vce0DexGgzeAxnh7I2ymU62J+sm85ib8ZDrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404638AbgAPRaz (ORCPT
+        id S2404675AbgAPRbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:30:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43716 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:31:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404631AbgAPRaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:30:52 -0500
+        id S2387859AbgAPRa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:30:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D10C2246A1;
-        Thu, 16 Jan 2020 17:30:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72D3E20728;
+        Thu, 16 Jan 2020 17:30:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195851;
-        bh=mhqsMtrf4am2dqZbTwA1W0jCaYn2ewriEyEupyszVCs=;
+        s=default; t=1579195856;
+        bh=NkQJpbQLmFzUDR0gv3W7vd3nGVEUM5f4U1VgpmwXYgQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fYZYPT1JyWgVwHhSX7V7FYrTzKjEnKA+duKaG9N8z1fVSQ95rkh7TDbiUt9+Xiu1K
-         w0d8Bni34Jsww5l9qQADu2ExNCK912G9wJhnqO+UrbfCruYv2ukuVTTEtrkMEpvy+i
-         5Rz1tQ59bnsfrDzQbId3LlfT0nHgN0IhSzkA5m3c=
+        b=MMGK53+QCPCj9Tr5bqyp1liL1sFfy9n07J21nPY27IN+shP6wklFR7jwzXh2D6U18
+         6HHTfVPOdR7vnNU5MnXuTsfz8mKmfIW3CygYc/a+u+0TfOPYQDcjsWuc3u7ErO08+K
+         B5o9sSQZSEB1b/SqtVeIvQlIj+bWemiFuOWj4mfI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peng Fan <peng.fan@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 351/371] tty: serial: imx: use the sg count from dma_map_sg
-Date:   Thu, 16 Jan 2020 12:23:43 -0500
-Message-Id: <20200116172403.18149-294-sashal@kernel.org>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 355/371] affs: fix a memory leak in affs_remount
+Date:   Thu, 16 Jan 2020 12:23:47 -0500
+Message-Id: <20200116172403.18149-298-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -60,36 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 596fd8dffb745afcebc0ec6968e17fe29f02044c ]
+[ Upstream commit 450c3d4166837c496ebce03650c08800991f2150 ]
 
-The dmaengine_prep_slave_sg needs to use sg count returned
-by dma_map_sg, not use sport->dma_tx_nents, because the return
-value of dma_map_sg is not always same with "nents".
+In affs_remount if data is provided it is duplicated into new_opts.  The
+allocated memory for new_opts is only released if parse_options fails.
 
-Fixes: b4cdc8f61beb ("serial: imx: add DMA support for imx6q")
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
-Link: https://lore.kernel.org/r/1573108875-26530-1-git-send-email-peng.fan@nxp.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+There's a bit of history behind new_options, originally there was
+save/replace options on the VFS layer so the 'data' passed must not
+change (thus strdup), this got cleaned up in later patches. But not
+completely.
+
+There's no reason to do the strdup in cases where the filesystem does
+not need to reuse the 'data' again, because strsep would modify it
+directly.
+
+Fixes: c8f33d0bec99 ("affs: kstrdup() memory handling")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+[ update changelog ]
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/imx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/affs/super.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
-index aae68230fb7b..a81a5be0cf7a 100644
---- a/drivers/tty/serial/imx.c
-+++ b/drivers/tty/serial/imx.c
-@@ -542,7 +542,7 @@ static void imx_dma_tx(struct imx_port *sport)
- 		dev_err(dev, "DMA mapping error for TX.\n");
- 		return;
+diff --git a/fs/affs/super.c b/fs/affs/super.c
+index 884bedab7266..789a1c7db5d8 100644
+--- a/fs/affs/super.c
++++ b/fs/affs/super.c
+@@ -559,14 +559,9 @@ affs_remount(struct super_block *sb, int *flags, char *data)
+ 	int			 root_block;
+ 	unsigned long		 mount_flags;
+ 	int			 res = 0;
+-	char			*new_opts;
+ 	char			 volume[32];
+ 	char			*prefix = NULL;
+ 
+-	new_opts = kstrdup(data, GFP_KERNEL);
+-	if (data && !new_opts)
+-		return -ENOMEM;
+-
+ 	pr_debug("%s(flags=0x%x,opts=\"%s\")\n", __func__, *flags, data);
+ 
+ 	sync_filesystem(sb);
+@@ -577,7 +572,6 @@ affs_remount(struct super_block *sb, int *flags, char *data)
+ 			   &blocksize, &prefix, volume,
+ 			   &mount_flags)) {
+ 		kfree(prefix);
+-		kfree(new_opts);
+ 		return -EINVAL;
  	}
--	desc = dmaengine_prep_slave_sg(chan, sgl, sport->dma_tx_nents,
-+	desc = dmaengine_prep_slave_sg(chan, sgl, ret,
- 					DMA_MEM_TO_DEV, DMA_PREP_INTERRUPT);
- 	if (!desc) {
- 		dma_unmap_sg(dev, sgl, sport->dma_tx_nents,
+ 
 -- 
 2.20.1
 
