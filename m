@@ -4,55 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B98CC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 121D8C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0015621582
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:50:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D36FB20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:50:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193422;
-	bh=UvBSdpWu94Cr/vu/swFwEY05gb5S7dZpvtQ4ZH8wg9Q=;
+	s=default; t=1579193433;
+	bh=TxwKOVFcE2pzmB8eSzLGTN684D6ahhL2WTGB0irJpMc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gzaLb/NRTRlxJ+p+dhH8qSxFqKlN0MwTFifbVpCo5g823JJQu+KPWc+zEA0OSCwMN
-	 WZ8vRUVFNa6bwBJwGHYHVJc9dE57MbErFmwnwlbbxmcAeDTzhoIXIgEIi7FO9PsuOa
-	 UeAtNXTeGgBa8bW8AKnMveMnHYhaD29s0nnYCr2A=
+	b=uprlT0v2OgeDG7PTn0V/i3bHBJ1uOZj6QnacqI0JFbZ6kP0NYaPyXBsTkcPPpr2a9
+	 z8fJ6pKBxMGN8tfJ5/N1X6zAmghqlJR/N/UBpFd60T9s9xGwjnn3W/0EFqHQpSEtgW
+	 hTjH190P9uYu+UvFsR8LkRVcotiX7FVyR2aGfX98=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729431AbgAPQrq (ORCPT
+        id S1729684AbgAPQrb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:47:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57588 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:47:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729613AbgAPQrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:47:41 -0500
+        id S1729464AbgAPQrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:47:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC83821582;
-        Thu, 16 Jan 2020 16:47:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24CA32073A;
+        Thu, 16 Jan 2020 16:47:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193261;
-        bh=UvBSdpWu94Cr/vu/swFwEY05gb5S7dZpvtQ4ZH8wg9Q=;
+        s=default; t=1579193244;
+        bh=TxwKOVFcE2pzmB8eSzLGTN684D6ahhL2WTGB0irJpMc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gp3hh562FFufViCb7wQkEBNZAnn6v/3KTBRiBUX95XSgFlpQVNY+5hsDUc18mUdIH
-         gHtvhmjw43U4v6uKRieq0RqujkcW2LzYvkGqZQvjaNwda0z+W8HHmfe2DPdsNAefSK
-         MCi2ZtsF42iV/AoD6dyqzKNIbujVw4V8neZ1HbFs=
+        b=PzMZa/1uCMHSCpC8q61Q87mU/WI8XW++I8IRZK8R6OG6M/fjAnHH1DtNvJ7RhNO77
+         YUZCPYnFwehTxKJeHrLefpglJ9eVT9fn98CPCzcXf7p1qRaMX+YqCU314Eli8w3H/z
+         /HNCLxLp8g8mIAeLtTBjpSYVdTPSFJ253T+i254I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
-Subject: [PATCH AUTOSEL 5.4 058/205] xprtrdma: Connection becomes unstable after a reconnect
-Date:   Thu, 16 Jan 2020 11:40:33 -0500
-Message-Id: <20200116164300.6705-58-sashal@kernel.org>
+Cc:     Ondrej Jirman <megous@megous.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 053/205] pwm: sun4i: Fix incorrect calculation of duty_cycle/period
+Date:   Thu, 16 Jan 2020 11:40:28 -0500
+Message-Id: <20200116164300.6705-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,93 +63,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Ondrej Jirman <megous@megous.com>
 
-[ Upstream commit a31b2f939219dd9bffdf01a45bd91f209f8cc369 ]
+[ Upstream commit 50cc7e3e4f26e3bf5ed74a8d061195c4d2161b8b ]
 
-This is because xprt_request_get_cong() is allowing more than one
-RPC Call to be transmitted before the first Receive on the new
-connection. The first Receive fills the Receive Queue based on the
-server's credit grant. Before that Receive, there is only a single
-Receive WR posted because the client doesn't know the server's
-credit grant.
+Since 5.4-rc1, pwm_apply_state calls ->get_state after ->apply
+if available, and this revealed an issue with integer precision
+when calculating duty_cycle and period for the currently set
+state in ->get_state callback.
 
-Solution is to clear rq_cong on all outstanding rpc_rqsts when the
-the cwnd is reset. This is because an RPC/RDMA credit is good for
-one connection instance only.
+This issue manifested in broken backlight on several Allwinner
+based devices.
 
-Fixes: 75891f502f5f ("SUNRPC: Support for congestion control ... ")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Previously this worked, because ->apply updated the passed state
+directly.
+
+Fixes: deb9c462f4e53 ("pwm: sun4i: Don't update the state for the caller of pwm_apply_state")
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/xprtrdma/transport.c |  3 +++
- net/sunrpc/xprtrdma/verbs.c     | 22 ++++++++++++++++++++++
- 2 files changed, 25 insertions(+)
+ drivers/pwm/pwm-sun4i.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
-index 160558b4135e..c67d465dc062 100644
---- a/net/sunrpc/xprtrdma/transport.c
-+++ b/net/sunrpc/xprtrdma/transport.c
-@@ -428,8 +428,11 @@ void xprt_rdma_close(struct rpc_xprt *xprt)
- 	/* Prepare @xprt for the next connection by reinitializing
- 	 * its credit grant to one (see RFC 8166, Section 3.3.3).
- 	 */
-+	spin_lock(&xprt->transport_lock);
- 	r_xprt->rx_buf.rb_credits = 1;
-+	xprt->cong = 0;
- 	xprt->cwnd = RPC_CWNDSHIFT;
-+	spin_unlock(&xprt->transport_lock);
+diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+index 6f5840a1a82d..05273725a9ff 100644
+--- a/drivers/pwm/pwm-sun4i.c
++++ b/drivers/pwm/pwm-sun4i.c
+@@ -137,10 +137,10 @@ static void sun4i_pwm_get_state(struct pwm_chip *chip,
  
- out:
- 	xprt->reestablish_timeout = 0;
-diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index 3a907537e2cf..f4b136504e96 100644
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -75,6 +75,7 @@
-  * internal functions
-  */
- static void rpcrdma_sendctx_put_locked(struct rpcrdma_sendctx *sc);
-+static void rpcrdma_reqs_reset(struct rpcrdma_xprt *r_xprt);
- static void rpcrdma_reps_destroy(struct rpcrdma_buffer *buf);
- static void rpcrdma_mrs_create(struct rpcrdma_xprt *r_xprt);
- static void rpcrdma_mrs_destroy(struct rpcrdma_buffer *buf);
-@@ -780,6 +781,7 @@ rpcrdma_ep_disconnect(struct rpcrdma_ep *ep, struct rpcrdma_ia *ia)
- 	trace_xprtrdma_disconnect(r_xprt, rc);
+ 	val = sun4i_pwm_readl(sun4i_pwm, PWM_CH_PRD(pwm->hwpwm));
  
- 	rpcrdma_xprt_drain(r_xprt);
-+	rpcrdma_reqs_reset(r_xprt);
+-	tmp = prescaler * NSEC_PER_SEC * PWM_REG_DTY(val);
++	tmp = (u64)prescaler * NSEC_PER_SEC * PWM_REG_DTY(val);
+ 	state->duty_cycle = DIV_ROUND_CLOSEST_ULL(tmp, clk_rate);
+ 
+-	tmp = prescaler * NSEC_PER_SEC * PWM_REG_PRD(val);
++	tmp = (u64)prescaler * NSEC_PER_SEC * PWM_REG_PRD(val);
+ 	state->period = DIV_ROUND_CLOSEST_ULL(tmp, clk_rate);
  }
  
- /* Fixed-size circular FIFO queue. This implementation is wait-free and
-@@ -1042,6 +1044,26 @@ struct rpcrdma_req *rpcrdma_req_create(struct rpcrdma_xprt *r_xprt, size_t size,
- 	return NULL;
- }
- 
-+/**
-+ * rpcrdma_reqs_reset - Reset all reqs owned by a transport
-+ * @r_xprt: controlling transport instance
-+ *
-+ * ASSUMPTION: the rb_allreqs list is stable for the duration,
-+ * and thus can be walked without holding rb_lock. Eg. the
-+ * caller is holding the transport send lock to exclude
-+ * device removal or disconnection.
-+ */
-+static void rpcrdma_reqs_reset(struct rpcrdma_xprt *r_xprt)
-+{
-+	struct rpcrdma_buffer *buf = &r_xprt->rx_buf;
-+	struct rpcrdma_req *req;
-+
-+	list_for_each_entry(req, &buf->rb_allreqs, rl_all) {
-+		/* Credits are valid only for one connection */
-+		req->rl_slot.rq_cong = 0;
-+	}
-+}
-+
- static struct rpcrdma_rep *rpcrdma_rep_create(struct rpcrdma_xprt *r_xprt,
- 					      bool temp)
- {
 -- 
 2.20.1
 
