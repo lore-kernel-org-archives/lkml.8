@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E37E0C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63EE1C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2A642072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E2672072B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:33:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217604;
-	bh=hNUI5rCXY/JGwB+H+BOV4HGykXp69tf62roWzp9ofdo=;
+	s=default; t=1579217607;
+	bh=IeJ6EBQprC0bGfzJZS49TcDe89b6mYMbG0kfwUyY/q4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HVSi8/hFSLddmK05y+4aI5+Q9GuQR+75/t/XgL0fZONswVQjjv42akQLG2FCKTRdV
-	 CWKTOQpIT3F9a/XKug72eqXQdYJoSDXWZUzOlkIvnkf8cK0SiBVFgoZXf4PxbaSWR1
-	 Z9m25EzAQDh0aA1bjpX+9l1bONTxgoiSK1oNJun0=
+	b=WsStp/FsOjczjoIdpOnDtWSefG1XzFI+dQsjdVKqFKpF4VbQwXsnnxtIAvvqk2GLR
+	 5GYi3ZZAMS6QFitpMNF79EAuZZ1MAw3q3O4UPxwojiAtnx8l71dVrnlQML7nMv9BcS
+	 GPmwjbjj9StRnYwK5X97gwDGw5VWOZRP1b483qkY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404335AbgAPXdY (ORCPT
+        id S2404348AbgAPXd0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:33:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43596 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:33:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404329AbgAPXdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:33:21 -0500
+        id S2404336AbgAPXdX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:33:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F8252072B;
-        Thu, 16 Jan 2020 23:33:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B4712072E;
+        Thu, 16 Jan 2020 23:33:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217600;
-        bh=hNUI5rCXY/JGwB+H+BOV4HGykXp69tf62roWzp9ofdo=;
+        s=default; t=1579217603;
+        bh=IeJ6EBQprC0bGfzJZS49TcDe89b6mYMbG0kfwUyY/q4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uX7Mj7BYkZxS0uQ3rUz4GSCLul+QTkTP5CGF5mkmCCRVS30JXWfWxew4EkBl3Rhwq
-         FdxXYVXZB97CR7bj8SeAxxAY8MG+mJkOY693Mnvz+lBTLTB98M0wMTAWwwuHJ6lqFQ
-         /hdNTdOl/HDaPK0AvTXYmH3pYBXIfTQeflKD1cIM=
+        b=dooK7kpQka9QqUOAJk7XGZhfIGDvjU6f6GqTfohJyYR77MLkswCOkJSYEs826UW4o
+         ef6/cVyTahhfgtHCbwGEJ91txe9jKGeaLijJqxSf1d1GV6MRHG+KH+jPCJJF4tRXuE
+         TouR3ranM3fDz9FW+zPKI4wQNSKvw55FvroFSaKM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vladimir Kondratiev <vladimir.kondratiev@intel.com>,
+        stable@vger.kernel.org, Jouni Hogander <jouni.hogander@unikie.com>,
         Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 65/71] mips: cacheinfo: report shared CPU map
-Date:   Fri, 17 Jan 2020 00:19:03 +0100
-Message-Id: <20200116231718.415567488@linuxfoundation.org>
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 66/71] MIPS: Prevent link failure with kcov instrumentation
+Date:   Fri, 17 Jan 2020 00:19:04 +0100
+Message-Id: <20200116231718.535344089@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231709.377772748@linuxfoundation.org>
 References: <20200116231709.377772748@linuxfoundation.org>
@@ -63,81 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Kondratiev <vladimir.kondratiev@intel.com>
+From: Jouni Hogander <jouni.hogander@unikie.com>
 
-[ Upstream commit 3b1313eb32c499d46dc4c3e896d19d9564c879c4 ]
+[ Upstream commit a4a3893114a41e365274d5fab5d9ff5acc235ff0 ]
 
-Report L1 caches as shared per core; L2 - per cluster.
+__sanitizer_cov_trace_pc() is not linked in and causing link
+failure if KCOV_INSTRUMENT is enabled. Fix this by disabling
+instrumentation for compressed image.
 
-This fixes "perf" that went crazy if shared_cpu_map attribute not
-reported on sysfs, in form of
-
-/sys/devices/system/cpu/cpu*/cache/index*/shared_cpu_list
-/sys/devices/system/cpu/cpu*/cache/index*/shared_cpu_map
-
-Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@intel.com>
+Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
 Signed-off-by: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
+Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/cacheinfo.c | 27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+ arch/mips/boot/compressed/Makefile | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/mips/kernel/cacheinfo.c b/arch/mips/kernel/cacheinfo.c
-index 428ef2189203..3ea95568ece4 100644
---- a/arch/mips/kernel/cacheinfo.c
-+++ b/arch/mips/kernel/cacheinfo.c
-@@ -61,6 +61,25 @@ static int __init_cache_level(unsigned int cpu)
- 	return 0;
- }
+diff --git a/arch/mips/boot/compressed/Makefile b/arch/mips/boot/compressed/Makefile
+index 331b9e0a8072..baa34e4deb78 100644
+--- a/arch/mips/boot/compressed/Makefile
++++ b/arch/mips/boot/compressed/Makefile
+@@ -29,6 +29,9 @@ KBUILD_AFLAGS := $(KBUILD_AFLAGS) -D__ASSEMBLY__ \
+ 	-DBOOT_HEAP_SIZE=$(BOOT_HEAP_SIZE) \
+ 	-DKERNEL_ENTRY=$(VMLINUX_ENTRY_ADDRESS)
  
-+static void fill_cpumask_siblings(int cpu, cpumask_t *cpu_map)
-+{
-+	int cpu1;
++# Prevents link failures: __sanitizer_cov_trace_pc() is not linked in.
++KCOV_INSTRUMENT		:= n
 +
-+	for_each_possible_cpu(cpu1)
-+		if (cpus_are_siblings(cpu, cpu1))
-+			cpumask_set_cpu(cpu1, cpu_map);
-+}
-+
-+static void fill_cpumask_cluster(int cpu, cpumask_t *cpu_map)
-+{
-+	int cpu1;
-+	int cluster = cpu_cluster(&cpu_data[cpu]);
-+
-+	for_each_possible_cpu(cpu1)
-+		if (cpu_cluster(&cpu_data[cpu1]) == cluster)
-+			cpumask_set_cpu(cpu1, cpu_map);
-+}
-+
- static int __populate_cache_leaves(unsigned int cpu)
- {
- 	struct cpuinfo_mips *c = &current_cpu_data;
-@@ -68,14 +87,20 @@ static int __populate_cache_leaves(unsigned int cpu)
- 	struct cacheinfo *this_leaf = this_cpu_ci->info_list;
+ # decompressor objects (linked with vmlinuz)
+ vmlinuzobjs-y := $(obj)/head.o $(obj)/decompress.o $(obj)/string.o
  
- 	if (c->icache.waysize) {
-+		/* L1 caches are per core */
-+		fill_cpumask_siblings(cpu, &this_leaf->shared_cpu_map);
- 		populate_cache(dcache, this_leaf, 1, CACHE_TYPE_DATA);
-+		fill_cpumask_siblings(cpu, &this_leaf->shared_cpu_map);
- 		populate_cache(icache, this_leaf, 1, CACHE_TYPE_INST);
- 	} else {
- 		populate_cache(dcache, this_leaf, 1, CACHE_TYPE_UNIFIED);
- 	}
- 
--	if (c->scache.waysize)
-+	if (c->scache.waysize) {
-+		/* L2 cache is per cluster */
-+		fill_cpumask_cluster(cpu, &this_leaf->shared_cpu_map);
- 		populate_cache(scache, this_leaf, 2, CACHE_TYPE_UNIFIED);
-+	}
- 
- 	if (c->tcache.waysize)
- 		populate_cache(tcache, this_leaf, 3, CACHE_TYPE_UNIFIED);
 -- 
 2.20.1
 
