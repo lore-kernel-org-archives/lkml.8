@@ -2,93 +2,122 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B36C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A533C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99D542053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:59:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201155;
-	bh=Idwdf9oYrNJnx5TDr3DzrtEpAiY/RJkENvQhosI7ETE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W7QqMRYxG0NWjtYrOHKjNTNRFn6DtaTrOcvRN/qkAqDsyGQjoMLPT9xJ1h0cV5DMS
-	 aKrNnR2GR0BrSY1Zq7i8SRW7/xvNWzFfbI9cQ/Zqq2sQ+IgFpQfwW4/Fb434kPm6Os
-	 LsgJnkxMcOH2PVNu6o0hZA15h6af7Sfi3FYISIm8=
+	by mail.kernel.org (Postfix) with ESMTP id 54C26206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:59:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FPGCKqX8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388950AbgAPRGh (ORCPT
+        id S2404442AbgAPS7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:06:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36412 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388920AbgAPRGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:06:22 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 119C3214AF;
-        Thu, 16 Jan 2020 17:06:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194381;
-        bh=Idwdf9oYrNJnx5TDr3DzrtEpAiY/RJkENvQhosI7ETE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CJd8+FHwyrcbzO1a3Ajv4PySqwwEAhe+xq4hctAyuJL8uR4/Z4pDVNzxMgQ521QR9
-         rzNCKxYPJmb4l4fA3v9FVyVp8zYvW7AA1+xoox0t2CmIm2+P+Sd3rmMc9OkZmAFo5F
-         QiVRnwooj/tSgz1i0FEAUWFy4jw6WYsHflYrjznw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trondmy@gmail.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 312/671] NFS: Don't interrupt file writeout due to fatal errors
-Date:   Thu, 16 Jan 2020 11:59:10 -0500
-Message-Id: <20200116170509.12787-49-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
-References: <20200116170509.12787-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Thu, 16 Jan 2020 13:59:22 -0500
+Received: from mail-wr1-f47.google.com ([209.85.221.47]:39397 "EHLO
+        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388966AbgAPS7P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 13:59:15 -0500
+Received: by mail-wr1-f47.google.com with SMTP id y11so20278849wrt.6;
+        Thu, 16 Jan 2020 10:59:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=2DWGq5gFkTQz9Z549OauU3Snuf7YD40/bBF5v2Ql2zI=;
+        b=FPGCKqX8kIQmBKqhTOE7gZhpo0QuSqWtC+dsBEgOG4E7mC53Z+oSsmnmea0gX5KtBa
+         x13xSnB5MFoQRcweDldi6GH/tXwG13MC70BJ99ln5HLxKodLzQtFRtGEF+BRKTTp38vC
+         D2+p7XWDwpMH9ow/nXhBj+agKPHm6eAxYFOheFPbageZxC5nn4M+YkjlROPwkwcjjxKW
+         la3wIBzi8kfv9ZgxXqmeq0fFxAG1Dr+iJjDuzppPEH8MD43TcYBbIBruUTItQ92hj9LJ
+         fVfigSkyjIoezbBZ3l372/nK0FTMFpdqG90aERrWS4U86uy2FreCmFsS9E0pd6W9RZXV
+         GeJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2DWGq5gFkTQz9Z549OauU3Snuf7YD40/bBF5v2Ql2zI=;
+        b=ffmGQO8D+Crg7hP+3El5oN73ZkSDP90FsEgbgaKmOvPA/uNL61rfmcpHaR9sK+9PdW
+         3lLVHg4hv7DoS+1kqK3Bvq0XWyQEc/rGAlkI08HEegnj1B9rS3AQ3MCSUUowrKjKJg0K
+         iqETcPn3mlwXq3W1KCZ71BgFSxoYgBgXeG7cAW2MTXv+z1vcZPGfMOUW61w9oHmDI0h5
+         uoqWXGo5zOW1jAgGtEoJHTh5VEUcBssyk5jDAWDol33xm5UID+1tM80xYliDiAFucAAi
+         wRGAtOrTl/fKBncfwsV4EEJQFlrvIiz8SpCSvkQXXzLQQSmphkcyEL8tRsQhSxc1WRR1
+         9H1Q==
+X-Gm-Message-State: APjAAAWc0n6Akm1Df2Nerqv218E/IrWszqg9qssBbkNKOUVp5OqAEPD8
+        qxSm6eloNAurYtMAFZMwcto=
+X-Google-Smtp-Source: APXvYqzYjPgwGGI5+FIdKtuP92i9axf1hPbcu9ABihedq39Srwjpw3NK58jyqgqVSEltCvdwE6yY/A==
+X-Received: by 2002:adf:ebd0:: with SMTP id v16mr4863743wrn.146.1579201153435;
+        Thu, 16 Jan 2020 10:59:13 -0800 (PST)
+Received: from felia.fritz.box ([2001:16b8:2dbe:4a00:e092:254d:41ed:2e49])
+        by smtp.gmail.com with ESMTPSA id f207sm974443wme.9.2020.01.16.10.59.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 10:59:13 -0800 (PST)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Micah Morton <mortonm@chromium.org>
+Cc:     Joe Perches <joe@perches.com>,
+        linux-security-module@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH RESEND] MAINTAINERS: fix style in SAFESETID SECURITY MODULE
+Date:   Thu, 16 Jan 2020 19:58:44 +0100
+Message-Id: <20200116185844.11201-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+Commit fc5b34a35458 ("Add entry in MAINTAINERS file for SafeSetID LSM")
+slips in some formatting with spaces instead of tabs, which
+./scripts/checkpatch.pl -f MAINTAINERS complains about:
 
-[ Upstream commit 14bebe3c90b326d2a0df78aed5e9de090c71d878 ]
+  WARNING: MAINTAINERS entries use one tab after TYPE:
+  #14394: FILE: MAINTAINERS:14394:
+  +M:     Micah Morton <mortonm@chromium.org>
 
-When flushing out dirty pages, the fact that we may hit fatal errors
-is not a reason to stop writeback. Those errors are reported through
-fsync(), not through the flush mechanism.
+  WARNING: MAINTAINERS entries use one tab after TYPE:
+  #14395: FILE: MAINTAINERS:14395:
+  +S:     Supported
 
-Fixes: a6598813a4c5b ("NFS: Don't write back further requests if there...")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  WARNING: MAINTAINERS entries use one tab after TYPE:
+  #14396: FILE: MAINTAINERS:14396:
+  +F:     security/safesetid/
+
+  WARNING: MAINTAINERS entries use one tab after TYPE:
+  #14397: FILE: MAINTAINERS:14397:
+  +F:     Documentation/admin-guide/LSM/SafeSetID.rst
+
+Fixes: fc5b34a35458 ("Add entry in MAINTAINERS file for SafeSetID LSM")
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 ---
- fs/nfs/write.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+applies cleanly on v5.5-rc6 and next-20200116
+Micah, please pick this patch.
 
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index 117ffd90419e..e27637fa0f79 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -646,7 +646,7 @@ static int nfs_page_async_flush(struct nfs_pageio_descriptor *pgio,
- 	return ret;
- out_launder:
- 	nfs_write_error_remove_page(req);
--	return ret;
-+	return 0;
- }
+ MAINTAINERS | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a66cb722c675..d2aa9db61ab6 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14415,10 +14415,10 @@ F:	drivers/media/pci/saa7146/
+ F:	include/media/drv-intf/saa7146*
  
- static int nfs_do_writepage(struct page *page, struct writeback_control *wbc,
+ SAFESETID SECURITY MODULE
+-M:     Micah Morton <mortonm@chromium.org>
+-S:     Supported
+-F:     security/safesetid/
+-F:     Documentation/admin-guide/LSM/SafeSetID.rst
++M:	Micah Morton <mortonm@chromium.org>
++S:	Supported
++F:	security/safesetid/
++F:	Documentation/admin-guide/LSM/SafeSetID.rst
+ 
+ SAMSUNG AUDIO (ASoC) DRIVERS
+ M:	Krzysztof Kozlowski <krzk@kernel.org>
 -- 
-2.20.1
+2.17.1
 
