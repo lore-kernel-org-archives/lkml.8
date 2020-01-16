@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD4EC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE83C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BE692073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:44:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A44B0206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:44:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200293;
-	bh=QhRsUq9msnENjXA9Ib0cZ115aEFwzDmLlcwdVXqiUkY=;
+	s=default; t=1579200299;
+	bh=tA3GxtibskflyMCJ9nDoF9nv8bgFxzueSpZL7trjodY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cZklwRAGvH+mde55VzoEmhlWlTawWFDk7XahAwan3UY/LVnDdXuv+X//4/OXAczRx
-	 Ym3xXjCuDkYyYcQ+4djLbBScj30KT+ZJ9I+qM3yC0fx0vpdVX/11oYmmneiS6Nn11j
-	 mCfvF4yKE5JxKp9IBkfJ86lQilVJwq7jBhqickaY=
+	b=DWDL6nsuz+tuqjLqbIOKoPWhZxF2O8DHJl3z/C2qo11C6zWR4ivyH8TQk/No0YW95
+	 x/1HfooQIkCUMhAuZTieuh5q2vIaJdj8bfwbs8siUKliAFhLHZ57QnT5vHLSOsh7CU
+	 FcteCHLlnSd/jH5CrkEwg1Q9JOcuyq5lejC7KhrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388864AbgAPRKq (ORCPT
+        id S2390113AbgAPSo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:10:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48806 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:44:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389017AbgAPRKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:10:31 -0500
+        id S2389681AbgAPRKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:10:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00CAB24683;
-        Thu, 16 Jan 2020 17:10:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 662672468B;
+        Thu, 16 Jan 2020 17:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194630;
-        bh=QhRsUq9msnENjXA9Ib0cZ115aEFwzDmLlcwdVXqiUkY=;
+        s=default; t=1579194646;
+        bh=tA3GxtibskflyMCJ9nDoF9nv8bgFxzueSpZL7trjodY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rZKb/mhg8C+6V+WNufOg4CeBXr1/rUtXmue4R+oECb8rU/kzvsO/raj7U0rFsKhma
-         NJwGChr6V2em1Imu3TozB2su14csAuRuOnpbUD73taKXQ1IH1iqqqRJUC9kREzB6/M
-         PA9wkxgWQeS8U2m/vBqPrJ6+Dcozk0YtmJhLA2Tg=
+        b=jRlcmkPlLYpRuoL50u8/pAq+/vygvOQu1gtc/cEU+/ZPFU7pPwzJSh6SdNKpxLe09
+         7EWx649/KIZ/pnBKoA+rlO8qOeh+tsYLQnG1mFP+NIjYi1+MY6iLqo8SXBnhIaZk5w
+         EBxKc83rcwaqYf1GqNtVQEkA580vYuUArUqM/qnI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.19 490/671] ASoC: es8328: Fix copy-paste error in es8328_right_line_controls
-Date:   Thu, 16 Jan 2020 12:02:08 -0500
-Message-Id: <20200116170509.12787-227-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Tom Evans <tom.evans@motec.com.au>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 502/671] rtc: rv3029: revert error handling patch to rv3029_eeprom_write()
+Date:   Thu, 16 Jan 2020 12:02:20 -0500
+Message-Id: <20200116170509.12787-239-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,35 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 630742c296341a8cfe00dfd941392025ba8dd4e8 ]
+[ Upstream commit a6f26606ddd03c5eab8b2132f1bfaa768c06158f ]
 
-It seems 'es8328_rline_enum' should be used
-in es8328_right_line_controls
+My error handling "cleanup" was totally wrong.  Both the "err" and "ret"
+variables are required.  The "err" variable holds the error codes for
+rv3029_eeprom_enter/exit() and the "ret" variable holds the error codes
+for if actual write fails.  In my patch if the write failed, the
+function probably still returned success.
 
-Fixes: 567e4f98922c ("ASoC: add es8328 codec driver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lore.kernel.org/r/20190815092300.68712-1-yuehaibing@huawei.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reported-by: Tom Evans <tom.evans@motec.com.au>
+Fixes: 97f5b0379c38 ("rtc: rv3029: Clean up error handling in rv3029_eeprom_write()")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/r/20190817065604.GB29951@mwanda
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/es8328.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/rtc/rtc-rv3029c2.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/sound/soc/codecs/es8328.c b/sound/soc/codecs/es8328.c
-index e9fc2fd97d2f..3afa163f7652 100644
---- a/sound/soc/codecs/es8328.c
-+++ b/sound/soc/codecs/es8328.c
-@@ -231,7 +231,7 @@ static const struct soc_enum es8328_rline_enum =
- 			      ARRAY_SIZE(es8328_line_texts),
- 			      es8328_line_texts);
- static const struct snd_kcontrol_new es8328_right_line_controls =
--	SOC_DAPM_ENUM("Route", es8328_lline_enum);
-+	SOC_DAPM_ENUM("Route", es8328_rline_enum);
+diff --git a/drivers/rtc/rtc-rv3029c2.c b/drivers/rtc/rtc-rv3029c2.c
+index 3d6174eb32f6..cfe3aece51d1 100644
+--- a/drivers/rtc/rtc-rv3029c2.c
++++ b/drivers/rtc/rtc-rv3029c2.c
+@@ -282,13 +282,13 @@ static int rv3029_eeprom_read(struct device *dev, u8 reg,
+ static int rv3029_eeprom_write(struct device *dev, u8 reg,
+ 			       u8 const buf[], size_t len)
+ {
+-	int ret;
++	int ret, err;
+ 	size_t i;
+ 	u8 tmp;
  
- /* Left Mixer */
- static const struct snd_kcontrol_new es8328_left_mixer_controls[] = {
+-	ret = rv3029_eeprom_enter(dev);
+-	if (ret < 0)
+-		return ret;
++	err = rv3029_eeprom_enter(dev);
++	if (err < 0)
++		return err;
+ 
+ 	for (i = 0; i < len; i++, reg++) {
+ 		ret = rv3029_read_regs(dev, reg, &tmp, 1);
+@@ -304,11 +304,11 @@ static int rv3029_eeprom_write(struct device *dev, u8 reg,
+ 			break;
+ 	}
+ 
+-	ret = rv3029_eeprom_exit(dev);
+-	if (ret < 0)
+-		return ret;
++	err = rv3029_eeprom_exit(dev);
++	if (err < 0)
++		return err;
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static int rv3029_eeprom_update_bits(struct device *dev,
 -- 
 2.20.1
 
