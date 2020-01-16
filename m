@@ -2,81 +2,113 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F04E7C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1794C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0E6320748
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:03:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9214920748
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:03:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jl3n9t2/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729472AbgAPGDC (ORCPT
+        id S1729590AbgAPGDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 01:03:02 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71]:39439 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727026AbgAPGDB (ORCPT
+        Thu, 16 Jan 2020 01:03:15 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:51715 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727026AbgAPGDP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 01:03:01 -0500
-Received: by mail-io1-f71.google.com with SMTP id w22so7195544ior.6
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 22:03:01 -0800 (PST)
+        Thu, 16 Jan 2020 01:03:15 -0500
+Received: by mail-pj1-f67.google.com with SMTP id d15so1024902pjw.1;
+        Wed, 15 Jan 2020 22:03:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=dPqB30Bque1a9xdQca0yHVUONu8Rkkk23AZbtBFoqN0=;
+        b=Jl3n9t2/YTDOuYoiVgGPHFsJsyZ3+fU3dIIf8t9Iwil/iQtRl6iU+ydPdNETEDxZXQ
+         S0mZAwv2gG7bTooBUzPiH+qTTdpUAwmAJEOL8weqbTj9F50Bh1AmkwTQ6uFurcp5Ewzc
+         NIKhfnXGn/p2m+FAs59d+4f+Un+V0WomKNDHt2aRbOvGUNwHS3kMo6+4z9dmTCjroJ50
+         knbv2fpyA2lYn4IU3OKYMd+Qz9FkwPzCVyruxkfHGZxTgRKux5R17NfoSdBJx4yEcuki
+         f8UDl7GSNPArYDNtaK4T4XIyePvR49+MOIAspG1jsChLqP7rEOMZUVzCRXmvTGpDzC1M
+         xYfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=l8bygRXo9H61q/xTgsjVCR2mIDWLRv2gXicQnyi0I1Y=;
-        b=KHHf0uCaGHRx4hC/5Maq2tNULuAxHA0DukW70AqMu5B/hW3fhGbQvx2d4bDAmFv4MR
-         uBERDRHp64HRxRGxPrcVXfY1hXjgCIjL8EL0KSfoOofMRYpUryAdLpCOxl0hmtNrjeJH
-         5pPr3GwITS7BHDdJOrgWkkyB7Te3z4OhO6kXiJVtJe0FcipRqoAvoEh19S71CXqJjtat
-         IROyu3nsKsomx8M7afd6lyCO2NFJZHKSWHxkhHRo01kuOIT8aSdEFNX51s1C8ddUS7Pb
-         3fgnI3ULIpzx/S18+P6bNp0LbcMPKJowF4nw0plCp848mdJYTBVUcIXBFTw7A/Hh3oLf
-         eKWw==
-X-Gm-Message-State: APjAAAUKuO5Y+8X4FYkfVINz3xgWgszmDtV+Iqji7bqvUARmOqAMW7UT
-        kSYz7Vm4HPYyfEDM6MoTVCjjN3BOaonA500b9M1Fryc8izcJ
-X-Google-Smtp-Source: APXvYqyE5UypONJc+dmBaDsn10ba1W1VIkt9suVws575jhjE72sLjeZaHsFFX7HXfIFYuVXUR87AMCJI8zBfRLZmt8GGKLBO81wQ
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=dPqB30Bque1a9xdQca0yHVUONu8Rkkk23AZbtBFoqN0=;
+        b=RZWh6WrnvRLxGDJ7zFaLlg70O8+1WloBnI+erZxwVhYZGYDAiBoHySS6FlscQGROSj
+         h7loU8yAnFtxbgbEEKzTkGlzc93V+Wl7i6LN0fvNa46b2neh7J7SDNLa386RIr8sYZeb
+         KsykIYsuKIymb87fa0GhO+JC7jH+uULa9a/zinaTty/+VJmbJNpyez2+9yPbDSIJ80/K
+         3+09zcr3B/QQzQ/rmGYmr5P6+wIOkucJ/VogdreYqRKbqA5crx4oh2iykwDyOpcmQBTB
+         zzrP5ipA6OnNpwGOCsgRy/rHJ1d5SdRpNbjBxHGdQbgva+GTlfaniiQQpceHQR19iQ9D
+         tg7Q==
+X-Gm-Message-State: APjAAAX3XC4+joGzzpHVTorzfjWr84QOdxjlSyDdMAXCCwkiX4wgtQn1
+        IPyun4s9Km7t9UNOW9qq/g==
+X-Google-Smtp-Source: APXvYqz3LduDxHDVbF5g2WN3h6iZ3dA8WNbXYcZfN0VJe6IA8uAo9nRsS6DW76p0g3x2WMGQiak9lg==
+X-Received: by 2002:a17:90a:b30b:: with SMTP id d11mr4723790pjr.22.1579154594426;
+        Wed, 15 Jan 2020 22:03:14 -0800 (PST)
+Received: from [127.0.0.1] ([103.7.29.9])
+        by smtp.gmail.com with ESMTPSA id q6sm23636677pfh.127.2020.01.15.22.03.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jan 2020 22:03:13 -0800 (PST)
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Cc:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>, bp@alien8.de,
+        "hpa@zytor.com" <hpa@zytor.com>
+From:   Haiwei Li <lihaiwei.kernel@gmail.com>
+Subject: [PATCH] KVM: Adding 'else' to reduce checking.
+Message-ID: <2a1a3b72-acc5-4977-5621-439aac53f243@gmail.com>
+Date:   Thu, 16 Jan 2020 14:03:04 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.3.1
 MIME-Version: 1.0
-X-Received: by 2002:a92:d8d0:: with SMTP id l16mr2094256ilo.43.1579154580939;
- Wed, 15 Jan 2020 22:03:00 -0800 (PST)
-Date:   Wed, 15 Jan 2020 22:03:00 -0800
-In-Reply-To: <000000000000bc757e059c36db18@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d7aad9059c3b93b7@google.com>
-Subject: Re: BUG: corrupted list in nft_obj_del
-From:   syzbot <syzbot+6ca99af7e70e298bd09d@syzkaller.appspotmail.com>
-To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
-        kadlec@blackhole.kfki.hu, kadlec@netfilter.org,
-        kuznet@ms2.inr.ac.ru, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        pablo@netfilter.org, syzkaller-bugs@googlegroups.com,
-        yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+ From 4e19436679a97e3cee73b4ae613ff91580c721d2 Mon Sep 17 00:00:00 2001
+From: Haiwei Li <lihaiwei@tencent.com>
+Date: Thu, 16 Jan 2020 13:51:03 +0800
+Subject: [PATCH] Adding 'else' to reduce checking.
 
-commit 20651cefd25ffa77a15cab5853b175a6dc975ec2
-Author: Florian Westphal <fw@strlen.de>
-Date:   Tue Jan 9 13:30:48 2018 +0000
+These two conditions are in conflict, adding 'else' to reduce checking.
 
-     netfilter: x_tables: unbreak module auto loading
+Signed-off-by: Haiwei Li <lihaiwei@tencent.com>
+---
+  arch/x86/kvm/lapic.c | 2 +-
+  1 file changed, 1 insertion(+), 1 deletion(-)
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1073a33ee00000
-start commit:   8b792f84 Merge branch 'mlxsw-Various-fixes'
-git tree:       net
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1273a33ee00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1473a33ee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7e89bd00623fe71e
-dashboard link: https://syzkaller.appspot.com/bug?extid=6ca99af7e70e298bd09d
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=168b95e1e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10f29b3ee00000
-
-Reported-by: syzbot+6ca99af7e70e298bd09d@syzkaller.appspotmail.com
-Fixes: 20651cefd25f ("netfilter: x_tables: unbreak module auto loading")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index 679692b..ef5802f 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -1573,7 +1573,7 @@ static void 
+kvm_apic_inject_pending_timer_irqs(struct kvm_lapic *apic)
+         kvm_apic_local_deliver(apic, APIC_LVTT);
+         if (apic_lvtt_tscdeadline(apic))
+                 ktimer->tscdeadline = 0;
+-       if (apic_lvtt_oneshot(apic)) {
++       else if (apic_lvtt_oneshot(apic)) {
+                 ktimer->tscdeadline = 0;
+                 ktimer->target_expiration = 0;
+         }
+--
+1.8.3.1
