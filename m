@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A8DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D08C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 762FF21582
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69AAA2082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:27:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217238;
-	bh=qWOkWTZDvoUQZWOJhFV2LbB6L4U3PuOYfjsuKkBo8X0=;
+	s=default; t=1579217241;
+	bh=YY2vsOhOD5tx230oh8e2361TtBk7nItWViDntducFIg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DxO6w7ZGm6JKVU1//lccnnV+XDmfQ1dNVBSUf0qUib9r/2qDolIj0NeVszSq2F4+R
-	 1/spB5K6rr1M1XF6pEOkjBaaMg0up5Qept1ftWk6JvmDOf12SI91paUaGEN0tptBUE
-	 SSbleV6qBn+YrKxNm+7XsgMrpWtcdyQQn65hfLSI=
+	b=biDlTh6D0NC8LelgkfzU/QiK694RsNc2Xtes5HnuvhQhZFONyapJfWxJP0xoS6C+C
+	 R7Zkb28OSxkU0vH+D/6jmkLfoUe6mSEj9c1FvvZ0JHCAQQd4LmjFhzy9ODXpp1OJ1l
+	 eXGtdr07NOFWUXwXwswnLZBBm3EdqAoScJrwARsc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390045AbgAPX1R (ORCPT
+        id S2389297AbgAPX1T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:27:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58172 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:27:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387585AbgAPX1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:27:00 -0500
+        id S2389786AbgAPX1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:27:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2FDD20684;
-        Thu, 16 Jan 2020 23:26:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCA6B20684;
+        Thu, 16 Jan 2020 23:27:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217219;
-        bh=qWOkWTZDvoUQZWOJhFV2LbB6L4U3PuOYfjsuKkBo8X0=;
+        s=default; t=1579217224;
+        bh=YY2vsOhOD5tx230oh8e2361TtBk7nItWViDntducFIg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ftn84ud6IdNM0LygXEcMgvsobP19oyW15lmM71sRwcXMBkrlhKtBBWbDsUCu6TU++
-         DeFYOVhwmWbXtmHYSoeY3TBSytmsbnpb1FSROmdGG3kpkROm2cZvMW7aIM3LQC3QWz
-         7bNVFlmz1UjfKn9rQT9xcIpHmdfZbxjLWgyTJrvY=
+        b=EcQPEDwOEQ7i2KoOiLEHsIeD0Z1v4n5Ks/Kx4NAefbhlaz6+ciBtVG/NppoVzh+5K
+         u+STGlyWkWggy1lDBZSo897TSlEm+WMgGHQMrvHzyiPgiklCdPFI9Kg0yccpPCUH0W
+         fIrFsfLo8cWFsqR9ZufYRQX2zF5hF6Yq6BS4LCA0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Alexander Barabash <alexander.barabash@dell.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 197/203] ioat: ioat_alloc_ring() failure handling.
-Date:   Fri, 17 Jan 2020 00:18:34 +0100
-Message-Id: <20200116231801.362880214@linuxfoundation.org>
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Bingbu Cao <bingbu.cao@intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 199/203] media: intel-ipu3: Align struct ipu3_uapi_awb_fr_config_s to 32 bytes
+Date:   Fri, 17 Jan 2020 00:18:36 +0100
+Message-Id: <20200116231801.506393848@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -61,43 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander.Barabash@dell.com <Alexander.Barabash@dell.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-[ Upstream commit b0b5ce1010ffc50015eaec72b0028aaae3f526bb ]
+[ Upstream commit ce644cf3fa06504c2c71ab1b794160d54aaccbc0 ]
 
-If dma_alloc_coherent() returns NULL in ioat_alloc_ring(), ring
-allocation must not proceed.
+A struct that needs to be aligned to 32 bytes has a size of 28. Increase
+the size to 32.
 
-Until now, if the first call to dma_alloc_coherent() in
-ioat_alloc_ring() returned NULL, the processing could proceed, failing
-with NULL-pointer dereferencing further down the line.
+This makes elements of arrays of this struct aligned to 32 as well, and
+other structs where members are aligned to 32 mixing
+ipu3_uapi_awb_fr_config_s as well as other types.
 
-Signed-off-by: Alexander Barabash <alexander.barabash@dell.com>
-Acked-by: Dave Jiang <dave.jiang@intel.com>
-Link: https://lore.kernel.org/r/75e9c0e84c3345d693c606c64f8b9ab5@x13pwhopdag1307.AMER.DELL.COM
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: commit dca5ef2aa1e6 ("media: staging/intel-ipu3: remove the unnecessary compiler flags")
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Tested-by: Bingbu Cao <bingbu.cao@intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/ioat/dma.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/staging/media/ipu3/include/intel-ipu3.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
-index 1a422a8b43cf..18c011e57592 100644
---- a/drivers/dma/ioat/dma.c
-+++ b/drivers/dma/ioat/dma.c
-@@ -377,10 +377,11 @@ ioat_alloc_ring(struct dma_chan *c, int order, gfp_t flags)
+diff --git a/drivers/staging/media/ipu3/include/intel-ipu3.h b/drivers/staging/media/ipu3/include/intel-ipu3.h
+index c7cd27efac8a..0b1cb9f9cbd1 100644
+--- a/drivers/staging/media/ipu3/include/intel-ipu3.h
++++ b/drivers/staging/media/ipu3/include/intel-ipu3.h
+@@ -449,7 +449,7 @@ struct ipu3_uapi_awb_fr_config_s {
+ 	__u16 reserved1;
+ 	__u32 bayer_sign;
+ 	__u8 bayer_nf;
+-	__u8 reserved2[3];
++	__u8 reserved2[7];
+ } __attribute__((aligned(32))) __packed;
  
- 		descs->virt = dma_alloc_coherent(to_dev(ioat_chan),
- 						 SZ_2M, &descs->hw, flags);
--		if (!descs->virt && (i > 0)) {
-+		if (!descs->virt) {
- 			int idx;
- 
- 			for (idx = 0; idx < i; idx++) {
-+				descs = &ioat_chan->descs[idx];
- 				dma_free_coherent(to_dev(ioat_chan), SZ_2M,
- 						  descs->virt, descs->hw);
- 				descs->virt = NULL;
+ /**
 -- 
 2.20.1
 
