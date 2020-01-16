@@ -2,190 +2,109 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30396C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CDEC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09CE2207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:24:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202641;
-	bh=VTtE4Rn0eBatFxxgtwL7q8hKMpcItccYKxQo+yzmRow=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IpIXMQolGvwW6MzXgaHDAdDaCEatsqH/CtKi9VuNptiMUMGzgUweeB4JnHBvbZsBO
-	 TtKiBeODdVPqwqKmLaqhDujmRc4v4AtiUP/r9U9lCmEzgeVlYDixRmW4WHVxSOr2cb
-	 Nu9Cn2jZqz7svqKe65SY3X1nUK9n6K94c4+OhlvA=
+	by mail.kernel.org (Postfix) with ESMTP id 6CAFB207FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:24:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VcEOirFK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407382AbgAPTYA (ORCPT
+        id S2407390AbgAPTYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:24:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36372 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729590AbgAPQw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:52:59 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 16 Jan 2020 14:24:08 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44991 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729590AbgAPTYF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 14:24:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579202644;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=e8HBHJP/uq6LLcUiW9DMmgfjF72wvEE4C0oRW83XDZw=;
+        b=VcEOirFKhZ/qGMHCRLahr+bltd2l1gTxwfk5EDwDmKEoDSyWqgJEWy7o1n6L7SEvhvykxz
+        hE6uzNQaU+jZx3E9qOdEBE1+E1NV4ECevJvap0VSJnxtEuADcPMLB5NyAcL/q8EG4JOPuC
+        FWwffG4wDRPc+hjx2L9hdGdZ7pPsrdQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-246-Wpe1cMcoOoGBY_oRiv4oYg-1; Thu, 16 Jan 2020 14:24:00 -0500
+X-MC-Unique: Wpe1cMcoOoGBY_oRiv4oYg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9CDD22464;
-        Thu, 16 Jan 2020 16:52:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193578;
-        bh=VTtE4Rn0eBatFxxgtwL7q8hKMpcItccYKxQo+yzmRow=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SWEZNtyOSD1XJ31MswRz1zukg721fEmERTCVyxCj0VWrVfLHf8yykAtsK00Sbizy6
-         9uudMB5VPK5LHWNuB2eQC8p4ckgPs9uXSEpjOAdhK4yod5craiDH6SM4FTsCC8c9ev
-         wnGk2zKP/cp7asxPoWwRYMA8SvCv/JjtbYrJyG/Q=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 121/205] packet: fix data-race in fanout_flow_is_huge()
-Date:   Thu, 16 Jan 2020 11:41:36 -0500
-Message-Id: <20200116164300.6705-121-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
-References: <20200116164300.6705-1-sashal@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 119012F2E;
+        Thu, 16 Jan 2020 19:23:59 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3BC035D9C9;
+        Thu, 16 Jan 2020 19:23:54 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id C1B6B220A24; Thu, 16 Jan 2020 14:23:53 -0500 (EST)
+Date:   Thu, 16 Jan 2020 14:23:53 -0500
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Jeff Moyer <jmoyer@redhat.com>, Jan Kara <jack@suse.cz>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        virtio-fs@redhat.com, Stefan Hajnoczi <stefanha@redhat.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 01/19] dax: remove block device dependencies
+Message-ID: <20200116192353.GD25291@redhat.com>
+References: <20200114203138.GA3145@redhat.com>
+ <CAPcyv4iXKFt207Pen+E1CnqCFtC1G85fxw5EXFVx+jtykGWMXA@mail.gmail.com>
+ <20200114212805.GB3145@redhat.com>
+ <CAPcyv4igrs40uWuCB163PPBLqyGVaVbaNfE=kCfHRPRuvZdxQA@mail.gmail.com>
+ <20200115195617.GA4133@redhat.com>
+ <CAPcyv4iEoN9SnBveG7-Mhvd+wQApi1XKVnuYpyYxDybrFv_YYw@mail.gmail.com>
+ <x49wo9smnqc.fsf@segfault.boston.devel.redhat.com>
+ <CAPcyv4hCR9NV+2MF0iAJ5rHS2uiOgTnu=+yQRfpieDJQpQz22w@mail.gmail.com>
+ <20200116183900.GC25291@redhat.com>
+ <CAPcyv4irezimk8m4hysrd0rst_f0Rr+iiNxeFesqbxQnWYA2Xw@mail.gmail.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4irezimk8m4hysrd0rst_f0Rr+iiNxeFesqbxQnWYA2Xw@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+On Thu, Jan 16, 2020 at 11:09:00AM -0800, Dan Williams wrote:
 
-[ Upstream commit b756ad928d98e5ef0b74af7546a6a31a8dadde00 ]
+[..]
+> > > True, but if kpartx + udev can make this transparent then I don't
+> > > think users lose any functionality. They just gain a device-mapper
+> > > dependency.
+> >
+> > So udev rules will trigger when a /dev/pmemX device shows up and run
+> > kpartx which in turn will create dm-linear devices and device nodes
+> > will show up in /dev/mapper/pmemXpY.
+> >
+> > IOW, /dev/pmemXpY device nodes will be gone. So if any of the scripts or
+> > systemd unit files are depenent on /dev/pmemXpY, these will still be
+> > broken out of the box and will have to be modified to use device nodes
+> > in /dev/mapper/ directory instead. Do I understand it right, Or I missed
+> > the idea completely.
+> 
+> No, I'd write the udev rule to create links from /dev/pmemXpY to the
+> /dev/mapper device, and that rule would be gated by a new pmem device
+> attribute to trigger when kpartx needs to run vs the kernel native
+> partitions.
 
-KCSAN reported the following data-race [1]
+Got it. This sounds much better.
 
-Adding a couple of READ_ONCE()/WRITE_ONCE() should silence it.
-
-Since the report hinted about multiple cpus using the history
-concurrently, I added a test avoiding writing on it if the
-victim slot already contains the desired value.
-
-[1]
-
-BUG: KCSAN: data-race in fanout_demux_rollover / fanout_demux_rollover
-
-read to 0xffff8880b01786cc of 4 bytes by task 18921 on cpu 1:
- fanout_flow_is_huge net/packet/af_packet.c:1303 [inline]
- fanout_demux_rollover+0x33e/0x3f0 net/packet/af_packet.c:1353
- packet_rcv_fanout+0x34e/0x490 net/packet/af_packet.c:1453
- deliver_skb net/core/dev.c:1888 [inline]
- dev_queue_xmit_nit+0x15b/0x540 net/core/dev.c:1958
- xmit_one net/core/dev.c:3195 [inline]
- dev_hard_start_xmit+0x3f5/0x430 net/core/dev.c:3215
- __dev_queue_xmit+0x14ab/0x1b40 net/core/dev.c:3792
- dev_queue_xmit+0x21/0x30 net/core/dev.c:3825
- neigh_direct_output+0x1f/0x30 net/core/neighbour.c:1530
- neigh_output include/net/neighbour.h:511 [inline]
- ip6_finish_output2+0x7a2/0xec0 net/ipv6/ip6_output.c:116
- __ip6_finish_output net/ipv6/ip6_output.c:142 [inline]
- __ip6_finish_output+0x2d7/0x330 net/ipv6/ip6_output.c:127
- ip6_finish_output+0x41/0x160 net/ipv6/ip6_output.c:152
- NF_HOOK_COND include/linux/netfilter.h:294 [inline]
- ip6_output+0xf2/0x280 net/ipv6/ip6_output.c:175
- dst_output include/net/dst.h:436 [inline]
- ip6_local_out+0x74/0x90 net/ipv6/output_core.c:179
- ip6_send_skb+0x53/0x110 net/ipv6/ip6_output.c:1795
- udp_v6_send_skb.isra.0+0x3ec/0xa70 net/ipv6/udp.c:1173
- udpv6_sendmsg+0x1906/0x1c20 net/ipv6/udp.c:1471
- inet6_sendmsg+0x6d/0x90 net/ipv6/af_inet6.c:576
- sock_sendmsg_nosec net/socket.c:637 [inline]
- sock_sendmsg+0x9f/0xc0 net/socket.c:657
- ___sys_sendmsg+0x2b7/0x5d0 net/socket.c:2311
- __sys_sendmmsg+0x123/0x350 net/socket.c:2413
- __do_sys_sendmmsg net/socket.c:2442 [inline]
- __se_sys_sendmmsg net/socket.c:2439 [inline]
- __x64_sys_sendmmsg+0x64/0x80 net/socket.c:2439
- do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-write to 0xffff8880b01786cc of 4 bytes by task 18922 on cpu 0:
- fanout_flow_is_huge net/packet/af_packet.c:1306 [inline]
- fanout_demux_rollover+0x3a4/0x3f0 net/packet/af_packet.c:1353
- packet_rcv_fanout+0x34e/0x490 net/packet/af_packet.c:1453
- deliver_skb net/core/dev.c:1888 [inline]
- dev_queue_xmit_nit+0x15b/0x540 net/core/dev.c:1958
- xmit_one net/core/dev.c:3195 [inline]
- dev_hard_start_xmit+0x3f5/0x430 net/core/dev.c:3215
- __dev_queue_xmit+0x14ab/0x1b40 net/core/dev.c:3792
- dev_queue_xmit+0x21/0x30 net/core/dev.c:3825
- neigh_direct_output+0x1f/0x30 net/core/neighbour.c:1530
- neigh_output include/net/neighbour.h:511 [inline]
- ip6_finish_output2+0x7a2/0xec0 net/ipv6/ip6_output.c:116
- __ip6_finish_output net/ipv6/ip6_output.c:142 [inline]
- __ip6_finish_output+0x2d7/0x330 net/ipv6/ip6_output.c:127
- ip6_finish_output+0x41/0x160 net/ipv6/ip6_output.c:152
- NF_HOOK_COND include/linux/netfilter.h:294 [inline]
- ip6_output+0xf2/0x280 net/ipv6/ip6_output.c:175
- dst_output include/net/dst.h:436 [inline]
- ip6_local_out+0x74/0x90 net/ipv6/output_core.c:179
- ip6_send_skb+0x53/0x110 net/ipv6/ip6_output.c:1795
- udp_v6_send_skb.isra.0+0x3ec/0xa70 net/ipv6/udp.c:1173
- udpv6_sendmsg+0x1906/0x1c20 net/ipv6/udp.c:1471
- inet6_sendmsg+0x6d/0x90 net/ipv6/af_inet6.c:576
- sock_sendmsg_nosec net/socket.c:637 [inline]
- sock_sendmsg+0x9f/0xc0 net/socket.c:657
- ___sys_sendmsg+0x2b7/0x5d0 net/socket.c:2311
- __sys_sendmmsg+0x123/0x350 net/socket.c:2413
- __do_sys_sendmmsg net/socket.c:2442 [inline]
- __se_sys_sendmmsg net/socket.c:2439 [inline]
- __x64_sys_sendmmsg+0x64/0x80 net/socket.c:2439
- do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 PID: 18922 Comm: syz-executor.3 Not tainted 5.4.0-rc6+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-
-Fixes: 3b3a5b0aab5b ("packet: rollover huge flows before small flows")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/packet/af_packet.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-index 529d4ce945db..118cd66b7516 100644
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -1296,15 +1296,21 @@ static void packet_sock_destruct(struct sock *sk)
- 
- static bool fanout_flow_is_huge(struct packet_sock *po, struct sk_buff *skb)
- {
--	u32 rxhash;
-+	u32 *history = po->rollover->history;
-+	u32 victim, rxhash;
- 	int i, count = 0;
- 
- 	rxhash = skb_get_hash(skb);
- 	for (i = 0; i < ROLLOVER_HLEN; i++)
--		if (po->rollover->history[i] == rxhash)
-+		if (READ_ONCE(history[i]) == rxhash)
- 			count++;
- 
--	po->rollover->history[prandom_u32() % ROLLOVER_HLEN] = rxhash;
-+	victim = prandom_u32() % ROLLOVER_HLEN;
-+
-+	/* Avoid dirtying the cache line if possible */
-+	if (READ_ONCE(history[victim]) != rxhash)
-+		WRITE_ONCE(history[victim], rxhash);
-+
- 	return count > (ROLLOVER_HLEN >> 1);
- }
- 
--- 
-2.20.1
+Vivek
 
