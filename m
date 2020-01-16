@@ -2,133 +2,125 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6567FC32771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B8B0C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42C412465A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8E1124656
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:13:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="qD2RbvB8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731078AbgAPDFy (ORCPT
+        id S1729203AbgAPDNs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 22:05:54 -0500
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:39356 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730343AbgAPDFO (ORCPT
+        Wed, 15 Jan 2020 22:13:48 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:39480 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726513AbgAPDNr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 22:05:14 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0TnrJfUT_1579143911;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TnrJfUT_1579143911)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 16 Jan 2020 11:05:11 +0800
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, willy@infradead.org,
-        shakeelb@google.com, hannes@cmpxchg.org
-Cc:     yun.wang@linux.alibaba.com
-Subject: [PATCH v8 01/10] mm/vmscan: remove unnecessary lruvec adding
-Date:   Thu, 16 Jan 2020 11:05:00 +0800
-Message-Id: <1579143909-156105-2-git-send-email-alex.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1579143909-156105-1-git-send-email-alex.shi@linux.alibaba.com>
-References: <1579143909-156105-1-git-send-email-alex.shi@linux.alibaba.com>
+        Wed, 15 Jan 2020 22:13:47 -0500
+Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 9AB842008710;
+        Wed, 15 Jan 2020 19:13:46 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9AB842008710
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1579144426;
+        bh=V3Ds4RpgBxSwsUsJpJvIRuEhKzlSSaeueHPFqpvVuyQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=qD2RbvB8PrVXz8ZIup03tpVcqZ62lIeoP3YA0CMdl0d9DH2DnPWS0bBCUb2UJf/og
+         Rjg68tIQ5D7iriC25H5esuK0XaJqqpnexBjF9STs/C23xVPy2NrWGui6KxvftZNT5O
+         HnWCdb6vRAfxxivGnlGemmfBxQ/sD3YCyzq3habU=
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+To:     zohar@linux.ibm.com, dvyukov@google.com,
+        James.Bottomley@HansenPartnership.com, arnd@arndb.de,
+        linux-integrity@vger.kernel.org
+Cc:     dhowells@redhat.com, sashal@kernel.org,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org
+Subject: [PATCH] IMA: inconsistent lock state in ima_process_queued_keys
+Date:   Wed, 15 Jan 2020 19:13:42 -0800
+Message-Id: <20200116031342.3418-1-nramas@linux.microsoft.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We don't have to add a freeable page into lru and then remove from it.
-This change saves a couple of actions and makes the moving more clear.
+ima_queued_keys() is called from a non-interrupt context, but
+ima_process_queued_keys() may be called from both an interrupt
+context (ima_timer_handler) and non-interrupt context
+(ima_update_policy). Since the spinlock named ima_keys_lock is used
+in both ima_queued_keys() and ima_process_queued_keys(),
+irq version of the spinlock macros, spin_lock_irqsave() and
+spin_unlock_irqrestore(), should be used[1].
 
-The SetPageLRU needs to be kept here for list intergrity.
-Otherwise:
- #0 mave_pages_to_lru              #1 release_pages
-                                   if (put_page_testzero())
- if !put_page_testzero
-                                     !PageLRU //skip lru_lock
-                                       list_add(&page->lru,);
-   list_add(&page->lru,) //corrupt
+This patch fixes the "inconsistent lock state" issue caused by
+using the non-irq version of the spinlock macros in ima_queue_key()
+and ima_process_queued_keys().
 
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: yun.wang@linux.alibaba.com
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
+[1] Documentation/locking/spinlocks.rst
+
+Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Reported-by: syzbot <syzbot+a4a503d7f37292ae1664@syzkaller.appspotmail.com>
+Suggested-by: Dmitry Vyukov <dvyukov@google.com>
+Fixes: 8f5d2d06f217 ("IMA: Defined timer to free queued keys")
+Fixes: 9fb38e76b5f1 ("IMA: Define workqueue for early boot key measurements")
 ---
- mm/vmscan.c | 32 +++++++++++++++++++++-----------
- 1 file changed, 21 insertions(+), 11 deletions(-)
+ security/integrity/ima/ima_asymmetric_keys.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 572fb17c6273..a270d32bdb94 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1852,26 +1852,29 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
- 	while (!list_empty(list)) {
- 		page = lru_to_page(list);
- 		VM_BUG_ON_PAGE(PageLRU(page), page);
-+		list_del(&page->lru);
- 		if (unlikely(!page_evictable(page))) {
--			list_del(&page->lru);
- 			spin_unlock_irq(&pgdat->lru_lock);
- 			putback_lru_page(page);
- 			spin_lock_irq(&pgdat->lru_lock);
- 			continue;
- 		}
--		lruvec = mem_cgroup_page_lruvec(page, pgdat);
+diff --git a/security/integrity/ima/ima_asymmetric_keys.c b/security/integrity/ima/ima_asymmetric_keys.c
+index 61e478f9e819..381f51708e7b 100644
+--- a/security/integrity/ima/ima_asymmetric_keys.c
++++ b/security/integrity/ima/ima_asymmetric_keys.c
+@@ -103,17 +103,18 @@ static bool ima_queue_key(struct key *keyring, const void *payload,
+ {
+ 	bool queued = false;
+ 	struct ima_key_entry *entry;
++	unsigned long flags;
  
-+		/*
-+		 * The SetPageLRU needs to be kept here for list intergrity.
-+		 * Otherwise:
-+		 *   #0 mave_pages_to_lru              #1 release_pages
-+		 *   				       if (put_page_testzero())
-+		 *   if !put_page_testzero
-+		 *				         !PageLRU //skip lru_lock
-+		 *                                         list_add(&page->lru,);
-+		 *     list_add(&page->lru,) //corrupt
-+		 */
- 		SetPageLRU(page);
--		lru = page_lru(page);
--
--		nr_pages = hpage_nr_pages(page);
--		update_lru_size(lruvec, lru, page_zonenum(page), nr_pages);
--		list_move(&page->lru, &lruvec->lists[lru]);
+ 	entry = ima_alloc_key_entry(keyring, payload, payload_len);
+ 	if (!entry)
+ 		return false;
  
--		if (put_page_testzero(page)) {
-+		if (unlikely(put_page_testzero(page))) {
- 			__ClearPageLRU(page);
- 			__ClearPageActive(page);
--			del_page_from_lru_list(page, lruvec, lru);
- 
- 			if (unlikely(PageCompound(page))) {
- 				spin_unlock_irq(&pgdat->lru_lock);
-@@ -1879,9 +1882,16 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
- 				spin_lock_irq(&pgdat->lru_lock);
- 			} else
- 				list_add(&page->lru, &pages_to_free);
--		} else {
--			nr_moved += nr_pages;
-+			continue;
- 		}
-+
-+		lruvec = mem_cgroup_page_lruvec(page, pgdat);
-+		lru = page_lru(page);
-+		nr_pages = hpage_nr_pages(page);
-+
-+		update_lru_size(lruvec, lru, page_zonenum(page), nr_pages);
-+		list_add(&page->lru, &lruvec->lists[lru]);
-+		nr_moved += nr_pages;
+-	spin_lock(&ima_keys_lock);
++	spin_lock_irqsave(&ima_keys_lock, flags);
+ 	if (!ima_process_keys) {
+ 		list_add_tail(&entry->list, &ima_keys);
+ 		queued = true;
  	}
+-	spin_unlock(&ima_keys_lock);
++	spin_unlock_irqrestore(&ima_keys_lock, flags);
  
- 	/*
+ 	if (!queued)
+ 		ima_free_key_entry(entry);
+@@ -131,6 +132,7 @@ void ima_process_queued_keys(void)
+ {
+ 	struct ima_key_entry *entry, *tmp;
+ 	bool process = false;
++	unsigned long flags;
+ 
+ 	if (ima_process_keys)
+ 		return;
+@@ -141,12 +143,12 @@ void ima_process_queued_keys(void)
+ 	 * First one setting the ima_process_keys flag to true will
+ 	 * process the queued keys.
+ 	 */
+-	spin_lock(&ima_keys_lock);
++	spin_lock_irqsave(&ima_keys_lock, flags);
+ 	if (!ima_process_keys) {
+ 		ima_process_keys = true;
+ 		process = true;
+ 	}
+-	spin_unlock(&ima_keys_lock);
++	spin_unlock_irqrestore(&ima_keys_lock, flags);
+ 
+ 	if (!process)
+ 		return;
 -- 
-1.8.3.1
+2.17.1
 
