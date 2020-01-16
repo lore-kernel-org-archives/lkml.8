@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 680CAC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2438C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28E2A2064C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:35:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92A0A24694
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:35:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196143;
-	bh=ylVJds/P9o73SzI4s7sAWE/o6yIInOgsdjpWigBNx3o=;
+	s=default; t=1579196149;
+	bh=yYjslUzdQq5c4r2jXilrCHJJ5+e34/2YaR56bnYZSbM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S7SrO6Wlzlv8M5Gkwds9sKV7c7rOxZNaN5QuJEwKqwwwkhnq8eu77UAq9oMFEXLky
-	 PCEDfECjztX3yoIof+7a+2sbwo0QVm/Nf41hVRrvn/5fr9lGgDXyBTZL+GTMNzJWqS
-	 7WyVYzt3CaYLWrYP8KAAgCN8PqTd2n0klQzx/cJM=
+	b=hP4OYVS24cPWTTOPaRqiyAvKXisTqujjcTwkP6VmpbAfMxdZWXFj0djQ+iEj3VC3V
+	 XuHv/yPf+Om1+vei1+ZqJ/y+GhV95T9qBCeXq+dbCKU2r/qhcAb+3n63VObzDqjLrJ
+	 qgG1D0PImFiaPJVdPBhrS7m3X/CihUANDvz2oN9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404991AbgAPRfl (ORCPT
+        id S2393092AbgAPRfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:35:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49918 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:35:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405145AbgAPRfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:35:34 -0500
+        id S2405175AbgAPRfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:35:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3858F246A9;
-        Thu, 16 Jan 2020 17:35:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B33F524713;
+        Thu, 16 Jan 2020 17:35:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196133;
-        bh=ylVJds/P9o73SzI4s7sAWE/o6yIInOgsdjpWigBNx3o=;
+        s=default; t=1579196137;
+        bh=yYjslUzdQq5c4r2jXilrCHJJ5+e34/2YaR56bnYZSbM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hL5MsKMiGF8bjnQWkENdaw+hR2biPfFQ+nHesPPaTVM+gvqaAS/qtjpJU0zJhTxuS
-         OiuKePPXv9RkyyvnK8mv1GOeRejhWqaBAHpv8JHkZ5b+Cl2w53Yq6cBn3GybnRt9gz
-         //Iv3f8TBATIuC2pklhHLGT/yLdH2j/IFrz1bIHY=
+        b=JNFCoOx3gimaLILzzwwQnqCP/ObIMzZaqbLQ8mfIJP3AkfltIc5e9n9RYg3458sOA
+         DfhYaNQAL58mqbKofD8ArGLPLS5C2didkCPhKx9i1ROy4iA3e9bTqz4FvL5xqz7PxT
+         nuMw6DoLcXNBV8kjxUkcgo84GJLtMTSnSgqIbF18=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gal Pressman <galpress@amazon.com>,
-        Parvi Kaustubhi <pkaustub@cisco.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 036/251] IB/usnic: Fix out of bounds index check in query pkey
-Date:   Thu, 16 Jan 2020 12:31:10 -0500
-Message-Id: <20200116173445.21385-36-sashal@kernel.org>
+Cc:     Loic Poulain <loic.poulain@linaro.org>,
+        Manabu Igusa <migusa@arrowjapan.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 039/251] arm64: dts: apq8016-sbc: Increase load on l11 for SDCARD
+Date:   Thu, 16 Jan 2020 12:31:13 -0500
+Message-Id: <20200116173445.21385-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173445.21385-1-sashal@kernel.org>
 References: <20200116173445.21385-1-sashal@kernel.org>
@@ -60,35 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gal Pressman <galpress@amazon.com>
+From: Loic Poulain <loic.poulain@linaro.org>
 
-[ Upstream commit 4959d5da5737dd804255c75b8cea0a2929ce279a ]
+[ Upstream commit af61bef513ba179559e56908b8c465e587bc3890 ]
 
-The pkey table size is one element, index should be tested for > 0 instead
-of > 1.
+In the same way as for msm8974-hammerhead, l11 load, used for SDCARD
+VMMC, needs to be increased in order to prevent any voltage drop issues
+(due to limited current) happening with some SDCARDS or during specific
+operations (e.g. write).
 
-Fixes: e3cf00d0a87f ("IB/usnic: Add Cisco VIC low-level hardware driver")
-Signed-off-by: Gal Pressman <galpress@amazon.com>
-Acked-by: Parvi Kaustubhi <pkaustub@cisco.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Tested on Dragonboard-410c and DART-SD410 boards.
+
+Fixes: 4c7d53d16d77 (arm64: dts: apq8016-sbc: add regulators support)
+Reported-by: Manabu Igusa <migusa@arrowjapan.com>
+Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/usnic/usnic_ib_verbs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/infiniband/hw/usnic/usnic_ib_verbs.c b/drivers/infiniband/hw/usnic/usnic_ib_verbs.c
-index a5bfbba6bbac..cacb720f44a0 100644
---- a/drivers/infiniband/hw/usnic/usnic_ib_verbs.c
-+++ b/drivers/infiniband/hw/usnic/usnic_ib_verbs.c
-@@ -425,7 +425,7 @@ int usnic_ib_query_gid(struct ib_device *ibdev, u8 port, int index,
- int usnic_ib_query_pkey(struct ib_device *ibdev, u8 port, u16 index,
- 				u16 *pkey)
- {
--	if (index > 1)
-+	if (index > 0)
- 		return -EINVAL;
+diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+index 601be6127628..948efff7d830 100644
+--- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+@@ -355,6 +355,8 @@
+ 	l11 {
+ 		regulator-min-microvolt = <1750000>;
+ 		regulator-max-microvolt = <3337000>;
++		regulator-allow-set-load;
++		regulator-system-load = <200000>;
+ 	};
  
- 	*pkey = 0xffff;
+ 	l12 {
 -- 
 2.20.1
 
