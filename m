@@ -2,49 +2,74 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2850C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A15FC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB0C62465A
+	by mail.kernel.org (Postfix) with ESMTP id D643424656
 	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:46:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eqtMMn49"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730343AbgAPDqF (ORCPT
+        id S1730396AbgAPDqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 22:46:05 -0500
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:52832 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728905AbgAPDqF (ORCPT
+        Wed, 15 Jan 2020 22:46:22 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:42470 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728905AbgAPDqW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 22:46:05 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TnrK-DZ_1579146361;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TnrK-DZ_1579146361)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 16 Jan 2020 11:46:02 +0800
-Subject: Re: [PATCH] sched/cputime: remove irqtime_account_idle_ticks
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-References: <1579144650-161327-1-git-send-email-alex.shi@linux.alibaba.com>
-Message-ID: <5c95e93d-c44c-b19e-62c0-b7c45c60e9e0@linux.alibaba.com>
-Date:   Thu, 16 Jan 2020 11:44:28 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.3.1
+        Wed, 15 Jan 2020 22:46:22 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00G3juIX021895;
+        Wed, 15 Jan 2020 21:45:56 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579146356;
+        bh=EAWGUw6to/ESZc5OA1jCfqePdQbF3GCc4CH5c+/LZxA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=eqtMMn49R9eTZdfJSOooXajiu+NjqJ2hOmHJkBxI6BbyuGOHzDIHSo8lsef8nxmRW
+         qWhquAZ2TdTHObKlbQs4W44NG+O7SlI47dfu7NMBJNf6TlgfRw3NKGQAY0S2G8ppq1
+         N5p5hOtnHbN2C/ALAm4eeeg4sOe9PydW6XISbnKA=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00G3juBY022009
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 15 Jan 2020 21:45:56 -0600
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 15
+ Jan 2020 21:45:55 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 15 Jan 2020 21:45:55 -0600
+Received: from [10.24.69.174] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00G3jpIZ039244;
+        Wed, 15 Jan 2020 21:45:52 -0600
+Subject: Re: [PATCH] clocksource: timer-ti-dm: Fix regression
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Tony Lindgren <tony@atomide.com>
+CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        open list <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Yangtao Li <tiny.windzz@gmail.com>
+References: <20200106203700.21009-1-tony@atomide.com>
+ <CA+G9fYvRNiFK54oiGt9hYP=RTfazf2E7rmnnkwP+ELMUYtJ7bQ@mail.gmail.com>
+From:   Keerthy <j-keerthy@ti.com>
+Message-ID: <3d6da16f-45e6-5acd-021c-bc87da99cdec@ti.com>
+Date:   Thu, 16 Jan 2020 09:16:09 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <1579144650-161327-1-git-send-email-alex.shi@linux.alibaba.com>
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <CA+G9fYvRNiFK54oiGt9hYP=RTfazf2E7rmnnkwP+ELMUYtJ7bQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -52,56 +77,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-ÔÚ 2020/1/16 ÉÏÎç11:17, Alex Shi Ð´µÀ:
-> irqtime_account_idle_ticks just add longer call path w/o enough meaning.
-> We don't bother remove this function to simply code and reduce a
-> bit object size of kernel.
-
-Sorry, above commit log need to revise as following:
-
-irqtime_account_idle_ticks just add longer call path w/o enough meaning.
-We'd better to remove this function to simply code and reduce a bit object
-size of kernel.
-
+On 11/01/20 11:58 am, Naresh Kamboju wrote:
+> On Tue, 7 Jan 2020 at 02:07, Tony Lindgren <tony@atomide.com> wrote:
+>>
+>> Clean-up commit 8c82723414d5 ("clocksource/drivers/timer-ti-dm: Switch to
+>> platform_get_irq") caused a regression where we now try to access
+>> uninitialized data for timer:
+>>
+>> drivers/clocksource/timer-ti-dm.c: In function 'omap_dm_timer_probe':
+>> drivers/clocksource/timer-ti-dm.c:798:13: warning: 'timer' may be used
+>> uninitialized in this function [-Wmaybe-uninitialized]
+>>
+>> On boot we now get:
+>>
+>> Unable to handle kernel NULL pointer dereference at virtual address
+>> 00000004
+>> ...
+>> (omap_dm_timer_probe) from [<c061ac7c>] (platform_drv_probe+0x48/0x98)
+>> (platform_drv_probe) from [<c0618c04>] (really_probe+0x1dc/0x348)
+>> (really_probe) from [<c0618ef4>] (driver_probe_device+0x5c/0x160)
+>>
+>> Let's fix the issue by moving platform_get_irq to happen after timer has
+>> been allocated.
+>>
+>> Fixes: 8c82723414d5 ("clocksource/drivers/timer-ti-dm: Switch to platform_get_irq")
 > 
-> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> Cc: Ingo Molnar <mingo@redhat.com> 
-> Cc: Peter Zijlstra <peterz@infradead.org> 
-> Cc: Juri Lelli <juri.lelli@redhat.com> 
-> Cc: Vincent Guittot <vincent.guittot@linaro.org> 
-> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com> 
-> Cc: Steven Rostedt <rostedt@goodmis.org> 
-> Cc: Ben Segall <bsegall@google.com> 
-> Cc: Mel Gorman <mgorman@suse.de> 
-> Cc: linux-kernel@vger.kernel.org 
-> ---
->  kernel/sched/cputime.c | 7 +------
->  1 file changed, 1 insertion(+), 6 deletions(-)
+> Thanks for fixing this issue.
+> I have noticed arm BeagleBoard-X15 boot failed on linux next tree
+> (5.5.0-rc5-next-20200110).
 > 
-> diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
-> index cff3e656566d..17640d145e44 100644
-> --- a/kernel/sched/cputime.c
-> +++ b/kernel/sched/cputime.c
-> @@ -390,12 +390,7 @@ static void irqtime_account_process_tick(struct task_struct *p, int user_tick,
->  	}
->  }
->  
-> -static void irqtime_account_idle_ticks(int ticks)
-> -{
-> -	irqtime_account_process_tick(current, 0, ticks);
-> -}
->  #else /* CONFIG_IRQ_TIME_ACCOUNTING */
-> -static inline void irqtime_account_idle_ticks(int ticks) { }
->  static inline void irqtime_account_process_tick(struct task_struct *p, int user_tick,
->  						int nr_ticks) { }
->  #endif /* CONFIG_IRQ_TIME_ACCOUNTING */
-> @@ -505,7 +500,7 @@ void account_idle_ticks(unsigned long ticks)
->  	u64 cputime, steal;
->  
->  	if (sched_clock_irqtime) {
-> -		irqtime_account_idle_ticks(ticks);
-> +		irqtime_account_process_tick(current, 0, ticks);
->  		return;
->  	}
->  
+> [    6.157822] 8<--- cut here ---
+> [    6.160911] Unable to handle kernel NULL pointer dereference at
+> virtual address 00000004
+> [    6.169120] pgd = 25d83e32
+> [    6.171903] [00000004] *pgd=80000080204003, *pmd=00000000
+> [    6.177358] Internal error: Oops: a06 [#1] SMP ARM
+> [    6.182179] Modules linked in:
+> [    6.185260] CPU: 0 PID: 1 Comm: swapper/0 Not tainted
+> 5.5.0-rc5-next-20200110 #1
+> [    6.192694] Hardware name: Generic DRA74X (Flattened Device Tree)
+> [    6.198832] PC is at omap_dm_timer_probe+0x48/0x310
+
+Tony/Daniel,
+
+This is still not in linux-next. Any idea when this will be pushed to 
+linux-next branch?
+
+- Keerthy
+> 
+> - Naresh
 > 
