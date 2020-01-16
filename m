@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FCB1C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD68C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD9B6206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:12:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DAD8206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:12:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201964;
-	bh=QrGStWXLRGtV0dW5HjUA+rWs8Ry45kt+M4hNFi79nmg=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=JJCLzQ2U9rGgVN9IlG7Uq+euHJByVyGJfOrz5DbCZc3rtUS7aZSKO+zftmhxzCEYE
-	 HOv9uPd7+JUd6rnM8l8/bssSTEdOGJBY2IrRpHnW3ZFZrE+bc8rSbJJUqot/dAjnrk
-	 DmazQqVOwLv7jx1hBYRyt/or6wp7iZqhkWbutNyg=
+	s=default; t=1579201967;
+	bh=HPKnGGuPdxpm1YbEAfCX474VeF75CT7FyJ7NfTa04Nc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=v/BKXqIr9GJ+XPx0c5Kiho4Qks/TIdC6lNoQluRv5J+cKwxrokrN7Yys4SJx+HKMg
+	 yKbdG5qNyqIomY+iSjCX5yMwwPVU+dFQ2eL0IQRjh/YiPceR7WlcS5SqKYCkhFiDKG
+	 0QZW7HGopijvrVhuvot4ihzsx4HYDv/fTRuVAeuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387571AbgAPQ7s (ORCPT
+        id S2437409AbgAPTMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:59:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48816 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:12:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387553AbgAPQ7p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:59:45 -0500
+        id S2387580AbgAPQ7t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:59:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA4DC20728;
-        Thu, 16 Jan 2020 16:59:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D23EB24687;
+        Thu, 16 Jan 2020 16:59:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193985;
-        bh=QrGStWXLRGtV0dW5HjUA+rWs8Ry45kt+M4hNFi79nmg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Xy/mm0BNHP9Htuc7RNiB+ZzO3p+iCwHUTN6fRVkrV+oOmse717QfVXdihMvBwiG6h
-         t5lK0rs0JUWGQPLAm1sJjozmSL7ZSj2WEwWT8+Uz02IY2jz8LVg/8ITbjU/1D16sx1
-         U+aif0Nwi7GE8RlE85kK7VLT9sNH2OMVUlZu02Uk=
+        s=default; t=1579193989;
+        bh=HPKnGGuPdxpm1YbEAfCX474VeF75CT7FyJ7NfTa04Nc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HVAPIdxUX57YDhaJcs/Hz3I9gTTLb7x1KZ3vkVciG5ial6ei4nrpjCien3MyioAap
+         B3wYruFYNNUFAlhXno/1sgZnOF7LbaUZBP4X/NXg+kAVdFOtgn2POewtzGCY0zFmvg
+         FMaKUUf7Pn92a5A7NHImxDVp0MbKN3T65El5b9qM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 118/671] media: s5p-jpeg: Correct step and max values for V4L2_CID_JPEG_RESTART_INTERVAL
-Date:   Thu, 16 Jan 2020 11:50:27 -0500
-Message-Id: <20200116165940.10720-1-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 120/671] crypto: brcm - Fix some set-but-not-used warning
+Date:   Thu, 16 Jan 2020 11:50:29 -0500
+Message-Id: <20200116165940.10720-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
+References: <20200116165940.10720-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,42 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 19c624c6b29e244c418f8b44a711cbf5e82e3cd4 ]
+[ Upstream commit 707d0cf8f7cff6dfee9197002859912310532c4f ]
 
-This commit corrects max and step values for v4l2 control for
-V4L2_CID_JPEG_RESTART_INTERVAL. Max should be 0xffff and step should be 1.
-It was found by using v4l2-compliance tool and checking result of
-VIDIOC_QUERY_EXT_CTRL/QUERYMENU test.
-Previously it was complaining that step was bigger than difference
-between max and min.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Fixes: 15f4bc3b1f42 ("[media] s5p-jpeg: Add JPEG controls support")
+drivers/crypto/bcm/cipher.c: In function 'handle_ahash_req':
+drivers/crypto/bcm/cipher.c:720:15: warning:
+ variable 'chunk_start' set but not used [-Wunused-but-set-variable]
 
-Signed-off-by: Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Reviewed-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+drivers/crypto/bcm/cipher.c: In function 'spu_rx_callback':
+drivers/crypto/bcm/cipher.c:1679:31: warning:
+ variable 'areq' set but not used [-Wunused-but-set-variable]
+
+drivers/crypto/bcm/cipher.c:1678:22: warning:
+ variable 'ctx' set but not used [-Wunused-but-set-variable]
+
+Fixes: 9d12ba86f818 ("crypto: brcm - Add Broadcom SPU driver")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/s5p-jpeg/jpeg-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/bcm/cipher.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/media/platform/s5p-jpeg/jpeg-core.c b/drivers/media/platform/s5p-jpeg/jpeg-core.c
-index 350afaa29a62..fa7c42cf4b4e 100644
---- a/drivers/media/platform/s5p-jpeg/jpeg-core.c
-+++ b/drivers/media/platform/s5p-jpeg/jpeg-core.c
-@@ -2005,7 +2005,7 @@ static int s5p_jpeg_controls_create(struct s5p_jpeg_ctx *ctx)
+diff --git a/drivers/crypto/bcm/cipher.c b/drivers/crypto/bcm/cipher.c
+index 49c0097fa474..0b1fc5664b1d 100644
+--- a/drivers/crypto/bcm/cipher.c
++++ b/drivers/crypto/bcm/cipher.c
+@@ -717,7 +717,7 @@ static int handle_ahash_req(struct iproc_reqctx_s *rctx)
+ 	 */
+ 	unsigned int new_data_len;
  
- 		v4l2_ctrl_new_std(&ctx->ctrl_handler, &s5p_jpeg_ctrl_ops,
- 				  V4L2_CID_JPEG_RESTART_INTERVAL,
--				  0, 3, 0xffff, 0);
-+				  0, 0xffff, 1, 0);
- 		if (ctx->jpeg->variant->version == SJPEG_S5P)
- 			mask = ~0x06; /* 422, 420 */
+-	unsigned int chunk_start = 0;
++	unsigned int __maybe_unused chunk_start = 0;
+ 	u32 db_size;	 /* Length of data field, incl gcm and hash padding */
+ 	int pad_len = 0; /* total pad len, including gcm, hash, stat padding */
+ 	u32 data_pad_len = 0;	/* length of GCM/CCM padding */
+@@ -1675,8 +1675,6 @@ static void spu_rx_callback(struct mbox_client *cl, void *msg)
+ 	struct spu_hw *spu = &iproc_priv.spu;
+ 	struct brcm_message *mssg = msg;
+ 	struct iproc_reqctx_s *rctx;
+-	struct iproc_ctx_s *ctx;
+-	struct crypto_async_request *areq;
+ 	int err = 0;
+ 
+ 	rctx = mssg->ctx;
+@@ -1686,8 +1684,6 @@ static void spu_rx_callback(struct mbox_client *cl, void *msg)
+ 		err = -EFAULT;
+ 		goto cb_finish;
  	}
+-	areq = rctx->parent;
+-	ctx = rctx->ctx;
+ 
+ 	/* process the SPU status */
+ 	err = spu->spu_status_process(rctx->msg_buf.rx_stat);
 -- 
 2.20.1
 
