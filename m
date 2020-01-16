@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EAC7C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09623C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAC7622522
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:18:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C63F122522
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:18:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195126;
-	bh=sWpa2y8fHyk6ekBEo3VUHiD0FLbIa44FyJCC4qslH4c=;
+	s=default; t=1579195129;
+	bh=KPnjpl96N2d7rCs0uOIvKJYlAl/Kz6G527NiVyU+Zlg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZHJOyjG4Tr0LQu+Z55gSvAhv0uM9Uv4T+AtVUj6l/OtkoOUVJ6R0Uk15nrFLCDQtG
-	 V3ay4IS3zi3UqeWojjohAPC/HDLSaSExiw9KrhE9ss9OJwclyA+cMu3G4byKcPoFP0
-	 uycKAqxR9U9VGjDBR+C8pJZf6CluU+zyIFlDfKbc=
+	b=vZo7w+od2rAveEBLQqMJROIIVYTgIH7d/SRR0h0tXeDnhKWNb9yozIYDUQ22dlgBC
+	 QVnohoncS98XKmuj2zznWXdCzcO5CgBBc1Uv0BRrdrjy+NyTZgxHx6YwpMkopOWMT0
+	 ALMevX19mErRY5p2dFeOumBY9RQ6wHAH8Xh151fk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391556AbgAPRSp (ORCPT
+        id S2403760AbgAPRSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:18:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46320 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:18:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391500AbgAPRSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:18:34 -0500
+        id S2391515AbgAPRSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:18:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55CED246B1;
-        Thu, 16 Jan 2020 17:18:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71418246B1;
+        Thu, 16 Jan 2020 17:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195113;
-        bh=sWpa2y8fHyk6ekBEo3VUHiD0FLbIa44FyJCC4qslH4c=;
+        s=default; t=1579195116;
+        bh=KPnjpl96N2d7rCs0uOIvKJYlAl/Kz6G527NiVyU+Zlg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ABxzw8WGyP/1vjT4tMxq33Kq8BE6X1Z4NEeotdy5sFcqRrCdr6Q8Cb3F/PFavSAO3
-         aIfIgo8EPy4s6d5svL2AhoBD7CMd+uL6BxSQnxTChfLeTGFPTG3ceohYjBxSEGTygS
-         KVmGUypB77kL1hccKphXrDZx9SSDtAll1TfJW390=
+        b=AUVs8Kr5pijvoV+Sz2eqpm7DraNWkDrU7Cj7Dp1fBKV+1/kV+rBhVAQPF7GYhPZR7
+         0UWsSYYDaWmdRI2BI4MuyIe5/JqVn3M7ffnqTAvb32WhHRvl9aeDX0EEO4SV0R26kV
+         CrFYg5Tq42AH2ygLzoZx1lOIn9LSpGMSzfK/PT1E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Loic Poulain <loic.poulain@linaro.org>,
-        Manabu Igusa <migusa@arrowjapan.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 054/371] arm64: dts: apq8016-sbc: Increase load on l11 for SDCARD
-Date:   Thu, 16 Jan 2020 12:12:02 -0500
-Message-Id: <20200116171719.16965-54-sashal@kernel.org>
+Cc:     Raju Rangoju <rajur@chelsio.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 056/371] RDMA/iw_cxgb4: Fix the unchecked ep dereference
+Date:   Thu, 16 Jan 2020 12:12:04 -0500
+Message-Id: <20200116171719.16965-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116171719.16965-1-sashal@kernel.org>
 References: <20200116171719.16965-1-sashal@kernel.org>
@@ -62,40 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Loic Poulain <loic.poulain@linaro.org>
+From: Raju Rangoju <rajur@chelsio.com>
 
-[ Upstream commit af61bef513ba179559e56908b8c465e587bc3890 ]
+[ Upstream commit 3352976c892301fd576a2e9ff0ac7337b2e2ca48 ]
 
-In the same way as for msm8974-hammerhead, l11 load, used for SDCARD
-VMMC, needs to be increased in order to prevent any voltage drop issues
-(due to limited current) happening with some SDCARDS or during specific
-operations (e.g. write).
+The patch 944661dd97f4: "RDMA/iw_cxgb4: atomically lookup ep and get a
+reference" from May 6, 2016, leads to the following Smatch complaint:
 
-Tested on Dragonboard-410c and DART-SD410 boards.
+    drivers/infiniband/hw/cxgb4/cm.c:2953 terminate()
+    error: we previously assumed 'ep' could be null (see line 2945)
 
-Fixes: 4c7d53d16d77 (arm64: dts: apq8016-sbc: add regulators support)
-Reported-by: Manabu Igusa <migusa@arrowjapan.com>
-Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Andy Gross <andy.gross@linaro.org>
+Fixes: 944661dd97f4 ("RDMA/iw_cxgb4: atomically lookup ep and get a reference")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Raju Rangoju <rajur@chelsio.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/infiniband/hw/cxgb4/cm.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-index b6b44fdf7fac..c1028b47edde 100644
---- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-@@ -458,6 +458,8 @@
- 	l11 {
- 		regulator-min-microvolt = <1750000>;
- 		regulator-max-microvolt = <3337000>;
-+		regulator-allow-set-load;
-+		regulator-system-load = <200000>;
- 	};
+diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
+index bb36cdf82a8d..3668cc71b47e 100644
+--- a/drivers/infiniband/hw/cxgb4/cm.c
++++ b/drivers/infiniband/hw/cxgb4/cm.c
+@@ -2923,15 +2923,18 @@ static int terminate(struct c4iw_dev *dev, struct sk_buff *skb)
+ 	ep = get_ep_from_tid(dev, tid);
+ 	BUG_ON(!ep);
  
- 	l12 {
+-	if (ep && ep->com.qp) {
+-		pr_warn("TERM received tid %u qpid %u\n",
+-			tid, ep->com.qp->wq.sq.qid);
+-		attrs.next_state = C4IW_QP_STATE_TERMINATE;
+-		c4iw_modify_qp(ep->com.qp->rhp, ep->com.qp,
+-			       C4IW_QP_ATTR_NEXT_STATE, &attrs, 1);
++	if (ep) {
++		if (ep->com.qp) {
++			pr_warn("TERM received tid %u qpid %u\n", tid,
++				ep->com.qp->wq.sq.qid);
++			attrs.next_state = C4IW_QP_STATE_TERMINATE;
++			c4iw_modify_qp(ep->com.qp->rhp, ep->com.qp,
++				       C4IW_QP_ATTR_NEXT_STATE, &attrs, 1);
++		}
++
++		c4iw_put_ep(&ep->com);
+ 	} else
+ 		pr_warn("TERM received tid %u no ep/qp\n", tid);
+-	c4iw_put_ep(&ep->com);
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
