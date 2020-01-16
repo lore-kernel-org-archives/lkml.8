@@ -2,100 +2,135 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 147E1C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E6FC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF95B2082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:21:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579206074;
-	bh=OJ3J83vIabY7xpZcvf2DhJwhjwaTMS+skFpIApuBtEg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jbpJAbmLuKzgrH7Hqx8WiNSd/GIpOfLdSrQ5sGgOUJZvqrzUai0+n1YNYeqXTNvSR
-	 EGPCWgLuCPIx1/A/OXv7v5kPrmsQ3STyAi0Ibkip5hrenFPx6G9yaRFtSMt7cbnJ+v
-	 4z+ve+8oGwadTEuM9J9u8drQeiovPs/wFRtgxLhE=
+	by mail.kernel.org (Postfix) with ESMTP id A5BF3206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:22:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="m843Bre0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387655AbgAPUVN (ORCPT
+        id S2387701AbgAPUV7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 15:21:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39338 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727022AbgAPUVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 15:21:13 -0500
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B58EA2082F
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 20:21:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579206073;
-        bh=OJ3J83vIabY7xpZcvf2DhJwhjwaTMS+skFpIApuBtEg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JwJh0aadu+1koOsCzuKbeJgCqbsIVa6wXIh8eamq0w+FvzAqXxq1gzv8bKewX5JJr
-         0LAd9SvjVMiaRKM5KNjw31n84OCJ2j4cgsYpXVB0SkUt2m3i7hsGJGrA4rHRu2s8jX
-         GTY3J7+SCPPk/KJcvWhkGBpCaGlX6oQ/4joEhUUo=
-Received: by mail-wr1-f44.google.com with SMTP id d16so20506123wre.10
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 12:21:12 -0800 (PST)
-X-Gm-Message-State: APjAAAWCP7BiP1MwRFUdcd4rHYMhSWc2TdBmAqr1dwkzABUzJDXsOieU
-        1JI1iU0b5/IcmpYVAvkzk27jA3H37AiM6x0UaDqJ9w==
-X-Google-Smtp-Source: APXvYqyJFUWBWMkFpVuosDSd8/lQDbzy6zF5xwHRHcZ1pdoSXL/YmNp4uOFO1NJDoLptUYmOV9mv1qxrQ7fzMgsykOE=
-X-Received: by 2002:adf:8041:: with SMTP id 59mr4939370wrk.257.1579206071239;
- Thu, 16 Jan 2020 12:21:11 -0800 (PST)
+        Thu, 16 Jan 2020 15:21:59 -0500
+Received: from mail-eopbgr80054.outbound.protection.outlook.com ([40.107.8.54]:61249
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727022AbgAPUV7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 15:21:59 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JLCr3tQeqmO4H6sckgm/nrIzGjYtcKHaEwyF+cia7NAmLZtq3o5eMN+dwM4FwjJayUyRSkD7lLiKUAaduBThxdMYaG/3uYm7x3AedyOgZjC9iYfSisK3RJGND8oOJmY9lWPOFcL4diy/+g5ts2qon1wP+/Cwhg8wO87qKJ+/BANuGoAYZgSMKHK6be0ophQqVZCvdPSucJ1zzDzcXyn1nXhYXTxE3Xpbp9apETG1FpGhFNTr7kkCwkGWCo65Fh7eed9EydjYFSs6VO6llnQZ+LDOlb7jyIRhmK4XS5cFtsq6GlUZXSvq9Oevn2RHmqQcmWmIAPEZInsgjho5kweOew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GpkfEskVOZdeXATBRaW56BGB86QEhceibZ9l+k2ap1A=;
+ b=YaJQQHLXkGfIIQcWLJtKSfDCOtEARz5fq7RwRAef7/fLXAwQ0W26sCOkgKzG7cK/GUf2K480NTCYrfRB0u8xMNE1qPHC9d+1htLNQy+/1NYs+uuiJkHxZxhM2fs+D16aLobYa23lTtY+iXAyRWY185QACqPb3Y3upmUgTSJ2RAo5mx6qDeIDolT+Re+4VWgym4n8kGNJL6l0MT2WQuZ2ycN44CfhBXNSso5Zgu+J6BzYB2WLOjouBHt3e4Gef0ogdsJj5S1ZyUPMJW7WHgTMpRISH0mZMfWYbWQtQtDOefs1C7dE2i6+oCdUNvFHfeCz98SCDCFebc4ZH03PCA58pA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GpkfEskVOZdeXATBRaW56BGB86QEhceibZ9l+k2ap1A=;
+ b=m843Bre0F83QGtg/HMtHr76yNubZepzA3hW0Yz+DWln+iOZwKbO+5imr6DjjYptvNtLGvYhd7sy4Dql0bVtL8nibqUtgS6jESESXpSRrO+aGzoX+xOkSMPtGb3ThjEdkS55qO3zX9ZYEzNqGgP6Ha4RuhblR3JbQCl7kOYEO0mA=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
+ VI1PR05MB4624.eurprd05.prod.outlook.com (20.176.7.153) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.18; Thu, 16 Jan 2020 20:21:55 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1c00:7925:d5c6:d60d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1c00:7925:d5c6:d60d%7]) with mapi id 15.20.2644.015; Thu, 16 Jan 2020
+ 20:21:55 +0000
+Received: from mlx.ziepe.ca (142.68.57.212) by BL0PR02CA0025.namprd02.prod.outlook.com (2603:10b6:207:3c::38) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.13 via Frontend Transport; Thu, 16 Jan 2020 20:21:55 +0000
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1isBeJ-0001J6-KZ; Thu, 16 Jan 2020 16:21:51 -0400
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+CC:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ben Skeggs <bskeggs@redhat.com>, Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH v6 5/6] nouveau: use new mmu interval notifiers
+Thread-Topic: [PATCH v6 5/6] nouveau: use new mmu interval notifiers
+Thread-Index: AQHVymNqjXzbt52uukWssUL4CQa1/qfqIESAgAIr9ICAASsGAIAAR6gAgAABf4A=
+Date:   Thu, 16 Jan 2020 20:21:55 +0000
+Message-ID: <20200116202151.GS20978@mellanox.com>
+References: <20200113224703.5917-1-rcampbell@nvidia.com>
+ <20200113224703.5917-6-rcampbell@nvidia.com>
+ <20200114125957.GO20978@mellanox.com>
+ <5845f50e-8bc0-8068-ee21-4f910beb1255@nvidia.com>
+ <20200116160002.GL20978@mellanox.com>
+ <01adb7dd-589e-2cde-4fa9-68baa44c0976@nvidia.com>
+In-Reply-To: <01adb7dd-589e-2cde-4fa9-68baa44c0976@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BL0PR02CA0025.namprd02.prod.outlook.com
+ (2603:10b6:207:3c::38) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [142.68.57.212]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 65f98c01-af34-4ec0-40e2-08d79ac1badc
+x-ms-traffictypediagnostic: VI1PR05MB4624:
+x-microsoft-antispam-prvs: <VI1PR05MB4624B48B705C514E6CAEB395CF360@VI1PR05MB4624.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 02843AA9E0
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(376002)(136003)(346002)(396003)(199004)(189003)(2906002)(52116002)(66556008)(2616005)(7416002)(86362001)(966005)(508600001)(1076003)(33656002)(26005)(6916009)(186003)(5660300002)(81166006)(8676002)(4326008)(81156014)(4744005)(9786002)(36756003)(9746002)(66476007)(316002)(66446008)(64756008)(66946007)(8936002)(71200400001)(54906003)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4624;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: eq3QmYdwbJoRstxm5GiBJeI0xr04HS8KQT2TpDZpiQJEWaMViovPclAyqdXBT0skwHAnhdmzv9v2h64KAkhsUDNBCravLdeXe9Z6K8r7Qr/3dbRQf22+WZ9YoCYy5IrL6X9yXbqDmuUVMf0ZIUzVd+YpUDJ0MNwKpBkXM2xHDdT/CUXR15Kx/GiiLaFHs5aypm7DykGAYsi7OuJwaesRAkBPEif+S+icNYXtKwJ9p+ygI/fjFaHBaVNfRxZUUl1J0j336QBR/GxpZ4ylBP8Q9POKNk0UnAiIk6FgHSnd9+a3pQPtTmiooSwhw2SpyMK/kI7+jTZuyr1uA6ckVFYWBGgxV3CNEg0DB4rrRn/pdT9xNtCicskh7QxZpfkdH5eJjuo9fYsjtJI9fjyuQYekJ3qqhb5RrUE4pK9q0AdirWiBNUgvdmpZg2UlxgV7cZzFMtOyJUOEhpZ85eFZJZ8bJj63RKQazX35MZWbf15GWIAQH8YuWnD7Meqtx9qoX04WiL8LPqAXrcAC0q6GXT4Md9SrpTIB/FSgVzO1wqbADmTohLkNNcMQpJCAfYllDW1i
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <44E2456FEB759847AAF542E9DDA6A620@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <cover.1579196675.git.christophe.leroy@c-s.fr> <c8ce9baaef0dc7273e4bcc31f353b17b655113d1.1579196675.git.christophe.leroy@c-s.fr>
- <CALCETrWJcB9=MuSw5yx6arcb_np=E=awTyLRSi=r8BJySf_aXw@mail.gmail.com> <877e1rfa40.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <877e1rfa40.fsf@nanos.tec.linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 16 Jan 2020 12:20:59 -0800
-X-Gmail-Original-Message-ID: <CALCETrX5B0SEJN2WG7rzuzbGhWa_dEwVVpMu6deXof3H+K_LdQ@mail.gmail.com>
-Message-ID: <CALCETrX5B0SEJN2WG7rzuzbGhWa_dEwVVpMu6deXof3H+K_LdQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v4 10/11] lib: vdso: Allow arches to override the ns
- shift operation
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, nathanl@linux.ibm.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        X86 ML <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 65f98c01-af34-4ec0-40e2-08d79ac1badc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jan 2020 20:21:55.2265
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: q0vwmZpR647i/FTRBaf6kCMKC7l89kXi+1hZA79sgPcd2QnfLxj6eEKAKVt+ykR1pgN4AuistmaCNT6/08Q6tg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4624
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 11:57 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Andy Lutomirski <luto@kernel.org> writes:
-> > On Thu, Jan 16, 2020 at 9:58 AM Christophe Leroy
-> >
-> > Would mul_u64_u64_shr() be a good alternative?  Could we adjust it to
-> > assume the shift is less than 32?  That function exists to benefit
-> > 32-bit arches.
->
-> We'd want mul_u64_u32_shr() for this. The rules for mult and shift are:
->
+On Thu, Jan 16, 2020 at 12:16:30PM -0800, Ralph Campbell wrote:
+> Can you point me to the latest ODP code? Seems like my understanding is
+> quite off.
 
-That's what I meant to type...
+https://elixir.bootlin.com/linux/v5.5-rc6/source/drivers/infiniband/hw/mlx5=
+/odp.c
 
->      1 <= mult <= U32_MAX
->
->      1 <= shift <= 32
->
-> If we want to enforce a shift < 32 we need to limit that conditionally
-> in the calculation/registration function.
->
-> Thanks,
->
->         tglx
->
+Look for the word 'implicit'
+
+mlx5_ib_invalidate_range() releases the interval_notifier when there are
+no populated shadow PTEs in its leaf
+
+pagefault_implicit_mr() creates an interval_notifier that covers the
+level in the page table that needs population. Notice it just uses an
+unlocked xa_load to find the page table level.
+
+The locking is pretty tricky as it relies on RCU, but the fault flow
+is fairly lightweight.
+
+Jason
