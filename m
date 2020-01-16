@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A533FC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 390F9C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B31A214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1D7E217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:22:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195320;
-	bh=eCsheN5nJfhPWN/zVSO0BJvoRocn6ZHygXATnnbqHTk=;
+	s=default; t=1579195332;
+	bh=ZX2bpvZYOjuzUCJ/rjoslHMaOQedF5tQius/FVqByV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GnV0Lwae8+g1fy8b3DLPIVPRk7ew05zMWj+JmScB9HjKxUKx0OcjDS1nHcFpkEoZ9
-	 RYdTDn58Tkyv6boA3sNUZrReeEAMGKmXwOiUV1X3EkLVL1GqxpneYdwvQIRaAke0bH
-	 savnIfgsMQvDF6Q5C2LrYb7z/l7C2xlDaojAz0sk=
+	b=PiieI+6UvvZWZDwWNM7QSsItn1bNg2kxqbeGyGBOIQX5bLobRjYldIllnEn2JKlzx
+	 lFkz7gjcxGU535wUytIZ2AfbCREpgIMJ9dAKOeNbgdRhPTGNrEgWY1xjkvojKMahNs
+	 i6JCWeMu0A+ebwF/CEr/UaZqLzu5pmiDm6gtHKVU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391615AbgAPRVy (ORCPT
+        id S2391628AbgAPRWL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:21:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42586 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:22:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391206AbgAPRR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:17:27 -0500
+        id S2390816AbgAPRNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:13:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D76EC20730;
-        Thu, 16 Jan 2020 17:17:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45F9E246A7;
+        Thu, 16 Jan 2020 17:13:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195046;
-        bh=eCsheN5nJfhPWN/zVSO0BJvoRocn6ZHygXATnnbqHTk=;
+        s=default; t=1579194824;
+        bh=ZX2bpvZYOjuzUCJ/rjoslHMaOQedF5tQius/FVqByV4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cpDI7WqCM3WwGcXzA6HnGt+Rz2xuCmpz33NCOijxGirWt/lnK38fz+Cps93f+wMjh
-         1ksDZNxZOoh5HbyfpVKFVwRBrpiVzRJhlvEzIK/q5mz2pHmdc28FfxhYk6WZbXi1Fk
-         U0+sTfj60bq/o4iTS2NNtqIFHE+aE/F0UIPw5MOQ=
+        b=GIegZBh9N4fr/1Sal4V6zQw7iUKY/A4U+sk3huph3Z4HS8ykQov8xtSoWP6yFoW0V
+         zF+xEn9uxc10+YgRCdVMuTM4KCCc8CeSC/xTYe1ShJLJNrAez5iCHjf5P/GfKCo6wY
+         q+9Qi9GBHMvkaLpyT+jQJW1wEAN0z2dje28Yk2g8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jitendra Bhivare <jitendra.bhivare@broadcom.com>,
-        Ray Jui <ray.jui@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andy Gospodarek <gospo@broadcom.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 005/371] PCI: iproc: Remove PAXC slot check to allow VF support
-Date:   Thu, 16 Jan 2020 12:11:13 -0500
-Message-Id: <20200116171719.16965-5-sashal@kernel.org>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Bill Baker <bill.baker@oracle.com>,
+        Simo Sorce <simo@redhat.com>,
+        "J . Bruce Fields" <bfields@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 628/671] SUNRPC: Fix svcauth_gss_proxy_init()
+Date:   Thu, 16 Jan 2020 12:04:26 -0500
+Message-Id: <20200116170509.12787-365-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116171719.16965-1-sashal@kernel.org>
-References: <20200116171719.16965-1-sashal@kernel.org>
+In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
+References: <20200116170509.12787-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,43 +62,169 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jitendra Bhivare <jitendra.bhivare@broadcom.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit 4da6b4480766e5bc9c4d7bc14bf1d0939a1a5fa7 ]
+[ Upstream commit 5866efa8cbfbadf3905072798e96652faf02dbe8 ]
 
-Fix previous incorrect logic that limits PAXC slot number to zero only.
-In order for SRIOV/VF to work, we need to allow the slot number to be
-greater than zero.
+gss_read_proxy_verf() assumes things about the XDR buffer containing
+the RPC Call that are not true for buffers generated by
+svc_rdma_recv().
 
-Fixes: 46560388c476c ("PCI: iproc: Allow multiple devices except on PAXC")
-Signed-off-by: Jitendra Bhivare <jitendra.bhivare@broadcom.com>
-Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Andy Gospodarek <gospo@broadcom.com>
+RDMA's buffers look more like what the upper layer generates for
+sending: head is a kmalloc'd buffer; it does not point to a page
+whose contents are contiguous with the first page in the buffers'
+page array. The result is that ACCEPT_SEC_CONTEXT via RPC/RDMA has
+stopped working on Linux NFS servers that use gssproxy.
+
+This does not affect clients that use only TCP to send their
+ACCEPT_SEC_CONTEXT operation (that's all Linux clients). Other
+clients, like Solaris NFS clients, send ACCEPT_SEC_CONTEXT on the
+same transport as they send all other NFS operations. Such clients
+can send ACCEPT_SEC_CONTEXT via RPC/RDMA.
+
+I thought I had found every direct reference in the server RPC code
+to the rqstp->rq_pages field.
+
+Bug found at the 2019 Westford NFS bake-a-thon.
+
+Fixes: 3316f0631139 ("svcrdma: Persistently allocate and DMA- ... ")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Tested-by: Bill Baker <bill.baker@oracle.com>
+Reviewed-by: Simo Sorce <simo@redhat.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/host/pcie-iproc.c | 8 --------
- 1 file changed, 8 deletions(-)
+ net/sunrpc/auth_gss/svcauth_gss.c | 84 +++++++++++++++++++++++--------
+ 1 file changed, 63 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/pci/host/pcie-iproc.c b/drivers/pci/host/pcie-iproc.c
-index c0ecc9f35667..8f8dac0155d6 100644
---- a/drivers/pci/host/pcie-iproc.c
-+++ b/drivers/pci/host/pcie-iproc.c
-@@ -573,14 +573,6 @@ static void __iomem *iproc_pcie_map_cfg_bus(struct iproc_pcie *pcie,
- 			return (pcie->base + offset);
- 	}
- 
--	/*
--	 * PAXC is connected to an internally emulated EP within the SoC.  It
--	 * allows only one device.
--	 */
--	if (pcie->ep_is_internal)
--		if (slot > 0)
--			return NULL;
--
- 	return iproc_pcie_map_ep_cfg_reg(pcie, busno, slot, fn, where);
+diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
+index 1a65f88d021a..24c7a1e2bd34 100644
+--- a/net/sunrpc/auth_gss/svcauth_gss.c
++++ b/net/sunrpc/auth_gss/svcauth_gss.c
+@@ -1054,24 +1054,32 @@ gss_read_verf(struct rpc_gss_wire_cred *gc,
+ 	return 0;
  }
  
+-/* Ok this is really heavily depending on a set of semantics in
+- * how rqstp is set up by svc_recv and pages laid down by the
+- * server when reading a request. We are basically guaranteed that
+- * the token lays all down linearly across a set of pages, starting
+- * at iov_base in rq_arg.head[0] which happens to be the first of a
+- * set of pages stored in rq_pages[].
+- * rq_arg.head[0].iov_base will provide us the page_base to pass
+- * to the upcall.
+- */
+-static inline int
+-gss_read_proxy_verf(struct svc_rqst *rqstp,
+-		    struct rpc_gss_wire_cred *gc, __be32 *authp,
+-		    struct xdr_netobj *in_handle,
+-		    struct gssp_in_token *in_token)
++static void gss_free_in_token_pages(struct gssp_in_token *in_token)
+ {
+-	struct kvec *argv = &rqstp->rq_arg.head[0];
+ 	u32 inlen;
+-	int res;
++	int i;
++
++	i = 0;
++	inlen = in_token->page_len;
++	while (inlen) {
++		if (in_token->pages[i])
++			put_page(in_token->pages[i]);
++		inlen -= inlen > PAGE_SIZE ? PAGE_SIZE : inlen;
++	}
++
++	kfree(in_token->pages);
++	in_token->pages = NULL;
++}
++
++static int gss_read_proxy_verf(struct svc_rqst *rqstp,
++			       struct rpc_gss_wire_cred *gc, __be32 *authp,
++			       struct xdr_netobj *in_handle,
++			       struct gssp_in_token *in_token)
++{
++	struct kvec *argv = &rqstp->rq_arg.head[0];
++	unsigned int page_base, length;
++	int pages, i, res;
++	size_t inlen;
+ 
+ 	res = gss_read_common_verf(gc, argv, authp, in_handle);
+ 	if (res)
+@@ -1081,10 +1089,36 @@ gss_read_proxy_verf(struct svc_rqst *rqstp,
+ 	if (inlen > (argv->iov_len + rqstp->rq_arg.page_len))
+ 		return SVC_DENIED;
+ 
+-	in_token->pages = rqstp->rq_pages;
+-	in_token->page_base = (ulong)argv->iov_base & ~PAGE_MASK;
++	pages = DIV_ROUND_UP(inlen, PAGE_SIZE);
++	in_token->pages = kcalloc(pages, sizeof(struct page *), GFP_KERNEL);
++	if (!in_token->pages)
++		return SVC_DENIED;
++	in_token->page_base = 0;
+ 	in_token->page_len = inlen;
++	for (i = 0; i < pages; i++) {
++		in_token->pages[i] = alloc_page(GFP_KERNEL);
++		if (!in_token->pages[i]) {
++			gss_free_in_token_pages(in_token);
++			return SVC_DENIED;
++		}
++	}
+ 
++	length = min_t(unsigned int, inlen, argv->iov_len);
++	memcpy(page_address(in_token->pages[0]), argv->iov_base, length);
++	inlen -= length;
++
++	i = 1;
++	page_base = rqstp->rq_arg.page_base;
++	while (inlen) {
++		length = min_t(unsigned int, inlen, PAGE_SIZE);
++		memcpy(page_address(in_token->pages[i]),
++		       page_address(rqstp->rq_arg.pages[i]) + page_base,
++		       length);
++
++		inlen -= length;
++		page_base = 0;
++		i++;
++	}
+ 	return 0;
+ }
+ 
+@@ -1259,8 +1293,11 @@ static int svcauth_gss_proxy_init(struct svc_rqst *rqstp,
+ 		break;
+ 	case GSS_S_COMPLETE:
+ 		status = gss_proxy_save_rsc(sn->rsc_cache, &ud, &handle);
+-		if (status)
++		if (status) {
++			pr_info("%s: gss_proxy_save_rsc failed (%d)\n",
++				__func__, status);
+ 			goto out;
++		}
+ 		cli_handle.data = (u8 *)&handle;
+ 		cli_handle.len = sizeof(handle);
+ 		break;
+@@ -1271,15 +1308,20 @@ static int svcauth_gss_proxy_init(struct svc_rqst *rqstp,
+ 
+ 	/* Got an answer to the upcall; use it: */
+ 	if (gss_write_init_verf(sn->rsc_cache, rqstp,
+-				&cli_handle, &ud.major_status))
++				&cli_handle, &ud.major_status)) {
++		pr_info("%s: gss_write_init_verf failed\n", __func__);
+ 		goto out;
++	}
+ 	if (gss_write_resv(resv, PAGE_SIZE,
+ 			   &cli_handle, &ud.out_token,
+-			   ud.major_status, ud.minor_status))
++			   ud.major_status, ud.minor_status)) {
++		pr_info("%s: gss_write_resv failed\n", __func__);
+ 		goto out;
++	}
+ 
+ 	ret = SVC_COMPLETE;
+ out:
++	gss_free_in_token_pages(&ud.in_token);
+ 	gssp_free_upcall_data(&ud);
+ 	return ret;
+ }
 -- 
 2.20.1
 
