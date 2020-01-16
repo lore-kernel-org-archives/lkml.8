@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1AACC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3524C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91E2620684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:22:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 939BA2087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:23:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579216975;
-	bh=3oRBICP9LGTX4WZJ2m1pX3TqhBaRwmsSoXD/shiVEPc=;
+	s=default; t=1579216981;
+	bh=v8+13b+Cd3htjOzD6R3jjLzCKwM/GVsqPfNVfB7J7WU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OT5UqyA374j4n8Ynj65JFhz07jnV0mFQf9GRBU747HlHH1P9jQO364q4BytoxG6at
-	 Kl6Gtakq6JqQeNx+4NgLdxABAfPQp5CzRSe/ZVq3BW5pn2xO6hjKkrkIvI6ZFSrhFD
-	 DxgWtoyfNKBAFAZNApO/g6Qynuoqid/nLLiyI8m4=
+	b=E8XjCXJEpFj7W62UpRgfPU9sWoPvDdKngWa19Vxb98VOeoOwypua1n7KbeJcU2EUe
+	 1kBaSW2b3SaYKHxnXX6Gxxd1gwZhdALD3+7z85RryzgkQWk8eW+9IicKF7aDfsmlth
+	 7O79JgQXdiDi9PYA+3Hzz/IipGkgkJfxwikkSU3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390957AbgAPXWy (ORCPT
+        id S2390971AbgAPXW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:22:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50740 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:22:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390934AbgAPXWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:22:47 -0500
+        id S2388757AbgAPXW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:22:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 135DF20684;
-        Thu, 16 Jan 2020 23:22:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C650D20684;
+        Thu, 16 Jan 2020 23:22:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216966;
-        bh=3oRBICP9LGTX4WZJ2m1pX3TqhBaRwmsSoXD/shiVEPc=;
+        s=default; t=1579216976;
+        bh=v8+13b+Cd3htjOzD6R3jjLzCKwM/GVsqPfNVfB7J7WU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j6FeXBPjb/rlBS7Q7QTHHYyJo6O3zXyA+LfHjm/8T7GlDo8RA7KQyM2BOoWUNYFDW
-         kjSdtUdLuil7HA0LtucVe03y6mYOafLki55zOQoKbZ3vaHUacIANtDFrz53NELRqI/
-         K4/yl7piqKwd3wVxrlkRq4MdG6keSCMr2bc6FGe8=
+        b=laT5Ri9rkOO5RiJNoetBQasnz4bh6M72e83FCHBr/MtaAQebmWLyqeIIqX1gsUNCo
+         Ulb4BWnRH9M2bnkcGy+uUunSu4q9I/DVpzuX/Uohp+xunnA21YiHgCTaU0Dec2gt0u
+         435apyKnpFEop9zH+QT64hE/KVr2J95l/b3lPe8M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 5.4 093/203] xprtrdma: Fix create_qp crash on device unload
-Date:   Fri, 17 Jan 2020 00:16:50 +0100
-Message-Id: <20200116231753.806565095@linuxfoundation.org>
+        stable@vger.kernel.org, Can Guo <cang@codeaurora.org>,
+        Avri Altman <avri.altman@wdc.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.4 097/203] scsi: ufs: Give an unique ID to each ufs-bsg
+Date:   Fri, 17 Jan 2020 00:16:54 +0100
+Message-Id: <20200116231754.124146489@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -59,69 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Can Guo <cang@codeaurora.org>
 
-commit b32b9ed493f938e191f790a0991d20b18b38c35b upstream.
+commit 8c850a0296004409e7bcb9464712fb2807da656a upstream.
 
-On device re-insertion, the RDMA device driver crashes trying to set
-up a new QP:
+Considering there can be multiple UFS hosts in SoC, give each ufs-bsg an
+unique ID by appending the scsi host number to its device name.
 
-Nov 27 16:32:06 manet kernel: BUG: kernel NULL pointer dereference, address: 00000000000001c0
-Nov 27 16:32:06 manet kernel: #PF: supervisor write access in kernel mode
-Nov 27 16:32:06 manet kernel: #PF: error_code(0x0002) - not-present page
-Nov 27 16:32:06 manet kernel: PGD 0 P4D 0
-Nov 27 16:32:06 manet kernel: Oops: 0002 [#1] SMP
-Nov 27 16:32:06 manet kernel: CPU: 1 PID: 345 Comm: kworker/u28:0 Tainted: G        W         5.4.0 #852
-Nov 27 16:32:06 manet kernel: Hardware name: Supermicro SYS-6028R-T/X10DRi, BIOS 1.1a 10/16/2015
-Nov 27 16:32:06 manet kernel: Workqueue: xprtiod xprt_rdma_connect_worker [rpcrdma]
-Nov 27 16:32:06 manet kernel: RIP: 0010:atomic_try_cmpxchg+0x2/0x12
-Nov 27 16:32:06 manet kernel: Code: ff ff 48 8b 04 24 5a c3 c6 07 00 0f 1f 40 00 c3 31 c0 48 81 ff 08 09 68 81 72 0c 31 c0 48 81 ff 83 0c 68 81 0f 92 c0 c3 8b 06 <f0> 0f b1 17 0f 94 c2 84 d2 75 02 89 06 88 d0 c3 53 ba 01 00 00 00
-Nov 27 16:32:06 manet kernel: RSP: 0018:ffffc900035abbf0 EFLAGS: 00010046
-Nov 27 16:32:06 manet kernel: RAX: 0000000000000000 RBX: 00000000000001c0 RCX: 0000000000000000
-Nov 27 16:32:06 manet kernel: RDX: 0000000000000001 RSI: ffffc900035abbfc RDI: 00000000000001c0
-Nov 27 16:32:06 manet kernel: RBP: ffffc900035abde0 R08: 000000000000000e R09: ffffffffffffc000
-Nov 27 16:32:06 manet kernel: R10: 0000000000000000 R11: 000000000002e800 R12: ffff88886169d9f8
-Nov 27 16:32:06 manet kernel: R13: ffff88886169d9f4 R14: 0000000000000246 R15: 0000000000000000
-Nov 27 16:32:06 manet kernel: FS:  0000000000000000(0000) GS:ffff88846fa40000(0000) knlGS:0000000000000000
-Nov 27 16:32:06 manet kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-Nov 27 16:32:06 manet kernel: CR2: 00000000000001c0 CR3: 0000000002009006 CR4: 00000000001606e0
-Nov 27 16:32:06 manet kernel: Call Trace:
-Nov 27 16:32:06 manet kernel: do_raw_spin_lock+0x2f/0x5a
-Nov 27 16:32:06 manet kernel: create_qp_common.isra.47+0x856/0xadf [mlx4_ib]
-Nov 27 16:32:06 manet kernel: ? slab_post_alloc_hook.isra.60+0xa/0x1a
-Nov 27 16:32:06 manet kernel: ? __kmalloc+0x125/0x139
-Nov 27 16:32:06 manet kernel: mlx4_ib_create_qp+0x57f/0x972 [mlx4_ib]
-
-The fix is to copy the qp_init_attr struct that was just created by
-rpcrdma_ep_create() instead of using the one from the previous
-connection instance.
-
-Fixes: 98ef77d1aaa7 ("xprtrdma: Send Queue size grows after a reconnect")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Link: https://lore.kernel.org/r/0101016eca8dc9d7-d24468d3-04d2-4ef3-a906-abe8b8cbcd3d-000000@us-west-2.amazonses.com
+Fixes: df032bf27a41 ("scsi: ufs: Add a bsg endpoint that supports UPIUs")
+Signed-off-by: Can Guo <cang@codeaurora.org>
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/sunrpc/xprtrdma/verbs.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/scsi/ufs/ufs_bsg.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -607,6 +607,7 @@ static int rpcrdma_ep_recreate_xprt(stru
- 				    struct ib_qp_init_attr *qp_init_attr)
- {
- 	struct rpcrdma_ia *ia = &r_xprt->rx_ia;
-+	struct rpcrdma_ep *ep = &r_xprt->rx_ep;
- 	int rc, err;
+--- a/drivers/scsi/ufs/ufs_bsg.c
++++ b/drivers/scsi/ufs/ufs_bsg.c
+@@ -202,7 +202,7 @@ int ufs_bsg_probe(struct ufs_hba *hba)
+ 	bsg_dev->parent = get_device(parent);
+ 	bsg_dev->release = ufs_bsg_node_release;
  
- 	trace_xprtrdma_reinsert(r_xprt);
-@@ -621,6 +622,7 @@ static int rpcrdma_ep_recreate_xprt(stru
- 		pr_err("rpcrdma: rpcrdma_ep_create returned %d\n", err);
- 		goto out2;
- 	}
-+	memcpy(qp_init_attr, &ep->rep_attr, sizeof(*qp_init_attr));
+-	dev_set_name(bsg_dev, "ufs-bsg");
++	dev_set_name(bsg_dev, "ufs-bsg%u", shost->host_no);
  
- 	rc = -ENETUNREACH;
- 	err = rdma_create_qp(ia->ri_id, ia->ri_pd, qp_init_attr);
+ 	ret = device_add(bsg_dev);
+ 	if (ret)
 
 
