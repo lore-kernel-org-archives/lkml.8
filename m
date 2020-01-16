@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB06C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 720A8C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E41A22072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:07:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EE9C2072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:07:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201666;
-	bh=Z/6Je7W6tQDJpYaxxR+scce6bDJ+iS9rauUEIqMWV8w=;
+	s=default; t=1579201671;
+	bh=Ft5R2hCR6SUenckKNbDsleKmXE+k+129qTyRdihFhVA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K6Lc9yu5XAl6kcv3V6Q+VTojKEy5U3fMFEUG+0HggQazQmVsU6hSAkLgAa66Glcuq
-	 U2u7/iqJ3eulZkGwIWn98t6QZeuyTSNy684XpQduo4t3l1/t5u1B5ppKv8K7Mmo/YJ
-	 DsJ6m9pTUKfkRUToT3x9dgdgYrzvkYhFjT8rvImo=
+	b=zadkr1kQOCWa1nAOVgPWJ1rDyQU6YBZ2xC+5+EDPGc71HYGw/VZvAzAFLRU4OTfLO
+	 f9zvZrxihY0W32RI409b0wTQ5QI3cjlq9U0QJxgmW7cOrk6H2vC4+AOLwPSCVKevr/
+	 PKsr4+ZEHDBWMIOxNTw/HhdyoByTM01KISISdXBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388041AbgAPRBO (ORCPT
+        id S1726230AbgAPTHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:01:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51782 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:07:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388005AbgAPRBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:01:07 -0500
+        id S2388040AbgAPRBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:01:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B3BD20730;
-        Thu, 16 Jan 2020 17:01:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D60E2087E;
+        Thu, 16 Jan 2020 17:01:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194066;
-        bh=Z/6Je7W6tQDJpYaxxR+scce6bDJ+iS9rauUEIqMWV8w=;
+        s=default; t=1579194073;
+        bh=Ft5R2hCR6SUenckKNbDsleKmXE+k+129qTyRdihFhVA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bECPDVjFJVAvfEd2NXV5FNxW/DDw07T70MN0ZEpXED+pDrtB2a8pgx3X0h1X/5z+F
-         SLLX9zRLPihoRr2OnKpRKN6/lM61V5OCMRz7Zjq/LJWZE8YGl5p/zfAnJWniICmTcf
-         UL0Q7XtROrWX3MT03i5Gsto0o3hQU7amEr54AE8A=
+        b=RwUQBQvJxnUB+05EjOqnlW2O+uU+bbWmoIu7+JI+CJYjckq4HTzV7vpk3oj8X75nB
+         eQ4Q5eeXRRchLpyrPE5FrKmLCLQ1pv4tdkkmR8S4vS8yAbo8ad/aIWt5gDCL7yt64B
+         Vdi+5WTM3ipAwPQwxI8ab2LZ2IP6cdRiuvxBqbqw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 177/671] pinctrl: sh-pfc: sh73a0: Fix fsic_spdif pin groups
-Date:   Thu, 16 Jan 2020 11:51:26 -0500
-Message-Id: <20200116165940.10720-60-sashal@kernel.org>
+Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
+        Tony Lindgren <tony@atomide.com>, Bin Liu <b-liu@ti.com>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 181/671] usb: phy: twl6030-usb: fix possible use-after-free on remove
+Date:   Thu, 16 Jan 2020 11:51:30 -0500
+Message-Id: <20200116165940.10720-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -60,35 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Sven Van Asbroeck <thesven73@gmail.com>
 
-[ Upstream commit 0e6e448bdcf896d001a289a6112a704542d51516 ]
+[ Upstream commit 5895d311d28f2605e2f71c1a3e043ed38f3ac9d2 ]
 
-There are two pin groups for the FSIC SPDIF signal, but the FSIC pin
-group array lists only one, and it refers to a nonexistent group.
+In remove(), use cancel_delayed_work_sync() to cancel the
+delayed work. Otherwise there's a chance that this work
+will continue to run until after the device has been removed.
 
-Fixes: 2ecd4154c906b7d6 ("sh-pfc: sh73a0: Add FSI pin groups and functions")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+This issue was detected with the help of Coccinelle.
+
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Bin Liu <b-liu@ti.com>
+Fixes: b6a619a883c3 ("usb: phy: Check initial state for twl6030")
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-sh73a0.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/usb/phy/phy-twl6030-usb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-sh73a0.c b/drivers/pinctrl/sh-pfc/pfc-sh73a0.c
-index f8fbedb46585..6dca760f9f28 100644
---- a/drivers/pinctrl/sh-pfc/pfc-sh73a0.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-sh73a0.c
-@@ -3367,7 +3367,8 @@ static const char * const fsic_groups[] = {
- 	"fsic_sclk_out",
- 	"fsic_data_in",
- 	"fsic_data_out",
--	"fsic_spdif",
-+	"fsic_spdif_0",
-+	"fsic_spdif_1",
- };
+diff --git a/drivers/usb/phy/phy-twl6030-usb.c b/drivers/usb/phy/phy-twl6030-usb.c
+index 183550b63faa..dade34d70419 100644
+--- a/drivers/usb/phy/phy-twl6030-usb.c
++++ b/drivers/usb/phy/phy-twl6030-usb.c
+@@ -400,7 +400,7 @@ static int twl6030_usb_remove(struct platform_device *pdev)
+ {
+ 	struct twl6030_usb *twl = platform_get_drvdata(pdev);
  
- static const char * const fsid_groups[] = {
+-	cancel_delayed_work(&twl->get_status_work);
++	cancel_delayed_work_sync(&twl->get_status_work);
+ 	twl6030_interrupt_mask(TWL6030_USBOTG_INT_MASK,
+ 		REG_INT_MSK_LINE_C);
+ 	twl6030_interrupt_mask(TWL6030_USBOTG_INT_MASK,
 -- 
 2.20.1
 
