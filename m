@@ -2,107 +2,103 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68606C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C95DC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 384EE2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:12:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201931;
-	bh=1Fec6hCpa53F8ruqlYEmIEx/ZjvkbUKr0KeKcqP+Fu8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lZcoZRmN4P2/89Zctz38zUfdDGKwaEug7NszeLaBIaI5ZBEv5EGBjpIbxApwCKfLw
-	 blQDAYKJJpr1WMWJc/Ua3B0glqJztyU8RoZRqskJFulo3FQ5seQMvjnBYUlTrTex4G
-	 0wxVBCdZW0Ez6uiIvHAfxsJsIaggkvFjMQdZ2hBo=
+	by mail.kernel.org (Postfix) with ESMTP id 35DD12073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:12:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387653AbgAPTMK (ORCPT
+        id S2437378AbgAPTMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:12:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49392 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:12:17 -0500
+Received: from mga05.intel.com ([192.55.52.43]:25859 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387645AbgAPRAD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:00:03 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8839E2467E;
-        Thu, 16 Jan 2020 17:00:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194002;
-        bh=1Fec6hCpa53F8ruqlYEmIEx/ZjvkbUKr0KeKcqP+Fu8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SxhkU2UJMNPexjTmPOTh6ljNtrlR+bnDOLzJItraAi9fl4FSfiiSfxzjHV+LAjika
-         E2CnBlJo3lexncx2aRKF8KV+u+GMCfXU65nCQ4T1Ajn4FYQ2e0dtFUwMLg0c5FkWl+
-         XBTnYDisv3NBeJnirEJrpLUkqAS+ZitgfZNq0MSw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Huazhong Tan <tanhuazhong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 129/671] net: hns3: fix bug of ethtool_ops.get_channels for VF
-Date:   Thu, 16 Jan 2020 11:50:38 -0500
-Message-Id: <20200116165940.10720-12-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
-References: <20200116165940.10720-1-sashal@kernel.org>
+        id S2387645AbgAPTML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 14:12:11 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 11:12:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,327,1574150400"; 
+   d="scan'208";a="424162125"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga005.fm.intel.com with ESMTP; 16 Jan 2020 11:12:11 -0800
+Date:   Thu, 16 Jan 2020 11:12:10 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jan Kara <jack@suse.cz>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [RFC PATCH V2 08/12] fs/xfs: Add lock/unlock mode to xfs
+Message-ID: <20200116191210.GG24522@iweiny-DESK2.sc.intel.com>
+References: <20200110192942.25021-1-ira.weiny@intel.com>
+ <20200110192942.25021-9-ira.weiny@intel.com>
+ <20200116092446.GA8446@quack2.suse.cz>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200116092446.GA8446@quack2.suse.cz>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huazhong Tan <tanhuazhong@huawei.com>
+On Thu, Jan 16, 2020 at 10:24:46AM +0100, Jan Kara wrote:
+> On Fri 10-01-20 11:29:38, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > XFS requires regular files to be locked while changing to/from DAX mode.
+> > 
+> > Define a new DAX lock type and implement the [un]lock_mode() inode
+> > operation callbacks.
+> > 
+> > We define a new XFS_DAX_* lock type to carry the lock through the
+> > transaction because we don't want to use IOLOCK as that would cause
+> > performance issues with locking of the inode itself.
+> > 
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> ...
+> > diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
+> > index 492e53992fa9..693ca66bd89b 100644
+> > --- a/fs/xfs/xfs_inode.h
+> > +++ b/fs/xfs/xfs_inode.h
+> > @@ -67,6 +67,9 @@ typedef struct xfs_inode {
+> >  	spinlock_t		i_ioend_lock;
+> >  	struct work_struct	i_ioend_work;
+> >  	struct list_head	i_ioend_list;
+> > +
+> > +	/* protect changing the mode to/from DAX */
+> > +	struct percpu_rw_semaphore i_dax_sem;
+> >  } xfs_inode_t;
+> 
+> This adds overhead of ~32k per inode for typical distro kernel.
 
-[ Upstream commit 8be7362186bd5ccb5f6f72be49751ad2778e2636 ]
+Wow!
 
-The current code returns the number of all queues that can be used and
-the number of queues that have been allocated, which is incorrect.
-What should be returned is the number of queues allocated for each enabled
-TC and the number of queues that can be allocated.
+> That's not
+> going to fly.
 
-This patch fixes it.
+Probably not...
 
-Fixes: 849e46077689 ("net: hns3: add ethtool_ops.get_channels support for VF")
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+> That's why ext4 has similar kind of lock in the superblock
+> shared by all inodes. For read side it does not matter because that's
+> per-cpu and shared lock. For write side we don't care as changing inode
+> access mode should be rare.
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-index 67db19709dea..fd5375b5991b 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-@@ -1957,7 +1957,8 @@ static u32 hclgevf_get_max_channels(struct hclgevf_dev *hdev)
- 	struct hnae3_handle *nic = &hdev->nic;
- 	struct hnae3_knic_private_info *kinfo = &nic->kinfo;
- 
--	return min_t(u32, hdev->rss_size_max * kinfo->num_tc, hdev->num_tqps);
-+	return min_t(u32, hdev->rss_size_max,
-+		     hdev->num_tqps / kinfo->num_tc);
- }
- 
- /**
-@@ -1978,7 +1979,7 @@ static void hclgevf_get_channels(struct hnae3_handle *handle,
- 	ch->max_combined = hclgevf_get_max_channels(hdev);
- 	ch->other_count = 0;
- 	ch->max_other = 0;
--	ch->combined_count = hdev->num_tqps;
-+	ch->combined_count = handle->kinfo.rss_size;
- }
- 
- static void hclgevf_get_tqps_and_rss_info(struct hnae3_handle *handle,
--- 
-2.20.1
+Sounds reasonable to me.  I'll convert it.
+
+Thanks for pointing this out, that would have been bad indeed.
+Ira
 
