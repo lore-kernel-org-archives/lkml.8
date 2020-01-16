@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 397B3C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E0F3C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 156982073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:55:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DADC2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:55:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197329;
-	bh=7Ib8Ng+ghXxuvkABsdz66tKXJ5t4d1VzFvS70GhBrfI=;
+	s=default; t=1579197334;
+	bh=PkaWdYxqxdWMRUsmEVtqI7yY+n4bIU56XI/NRCZjYLc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v03HmtwLI/4QXABy836q8sHNHKKerc908eQGviX6MiiBBAqJRIeahBm4m21D1A+7x
-	 gO1Jdzf1ZTmnPhjsUtO6EFOv9KzBL3NHy+cGaa+8wXNlwnkyTHBRVrEUFwAcV72/2T
-	 QO5yBbQTNLgKzAFd0pL+M1Wz/85q3va1wnxUYzH4=
+	b=Qewau1j0n9C9E0oZFNpgTqefusJhrI43mPnmbhiYBXoIweW+AFogakUo/dX0KKGS9
+	 wz0MP4PL9mam38pUjab9cpif9K92eYPmmtDfx8MEYd0yxQ7MDoircJafieAvJ4aJ+W
+	 8L7k3VlNlzO+xGVoao79ul0HE2TYoPiHBAAkKDbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394155AbgAPRoY (ORCPT
+        id S2394444AbgAPRzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:44:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34702 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:55:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405894AbgAPRoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:44:02 -0500
+        id S2394112AbgAPRoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:44:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF5CC24744;
-        Thu, 16 Jan 2020 17:44:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12CEC2475E;
+        Thu, 16 Jan 2020 17:44:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196642;
-        bh=7Ib8Ng+ghXxuvkABsdz66tKXJ5t4d1VzFvS70GhBrfI=;
+        s=default; t=1579196655;
+        bh=PkaWdYxqxdWMRUsmEVtqI7yY+n4bIU56XI/NRCZjYLc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1NuWSwpdeOShvs5QGtSSvgL4P4XL0GLnRdX1u/p3Ith6TU4VaKZUlwwyltTzyfkJj
-         bhqCyUVOWGYJQHejbQzs1QkIKUvGCQGoE48bxLoX+kU/1vHaiUgi7NrCLbfmZM//LJ
-         27fD96f5Q9wsmD5u2i4J6WPhp6/6k/S1uApVu7Mo=
+        b=Z2Yv6oGDu/73qL1wVyB2YgBOUSu9qrutu64Xugk+hjVJwpVzclGdqHX9VW4/w89Wt
+         /6eYqcj7fEWC4PdL8kzdTW3lVf7CvCoKeoNdzBAnHyZmpR9mHyCYlUE0H5qQ4bfSM2
+         wkrgCqUCOcQekad6of2OQNfiUBrPGoLMnMAKtNuQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Nicolas Pitre <nico@linaro.org>,
-        Anand Moon <linux.amoon@gmail.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 053/174] ARM: 8847/1: pm: fix HYP/SVC mode mismatch when MCPM is used
-Date:   Thu, 16 Jan 2020 12:40:50 -0500
-Message-Id: <20200116174251.24326-53-sashal@kernel.org>
+Cc:     Nicholas Mc Guire <hofrat@osadl.org>, Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 062/174] media: cx23885: check allocation return
+Date:   Thu, 16 Jan 2020 12:40:59 -0500
+Message-Id: <20200116174251.24326-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -62,95 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Nicholas Mc Guire <hofrat@osadl.org>
 
-[ Upstream commit ca70ea43f80c98582f5ffbbd1e6f4da2742da0c4 ]
+[ Upstream commit a3d7f22ef34ec4206b50ee121384d5c8bebd5591 ]
 
-MCPM does a soft reset of the CPUs and uses common cpu_resume() routine to
-perform low-level platform initialization. This results in a try to install
-HYP stubs for the second time for each CPU and results in false HYP/SVC
-mode mismatch detection. The HYP stubs are already installed at the
-beginning of the kernel initialization on the boot CPU (head.S) or in the
-secondary_startup() for other CPUs. To fix this issue MCPM code should use
-a cpu_resume() routine without HYP stubs installation.
+Checking of kmalloc() seems to have been committed - as
+cx23885_dvb_register() is checking for != 0 return, returning
+-ENOMEM should be fine here.  While at it address the coccicheck
+suggestion to move to kmemdup rather than using kmalloc+memcpy.
 
-This change fixes HYP/SVC mode mismatch on Samsung Exynos5422-based Odroid
-XU3/XU4/HC1 boards.
+Fixes: 46b21bbaa8a8 ("[media] Add support for DViCO FusionHDTV DVB-T Dual Express2")
 
-Fixes: 3721924c8154 ("ARM: 8081/1: MCPM: provide infrastructure to allow for MCPM loopback")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Acked-by: Nicolas Pitre <nico@linaro.org>
-Tested-by: Anand Moon <linux.amoon@gmail.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/common/mcpm_entry.c   |  2 +-
- arch/arm/include/asm/suspend.h |  1 +
- arch/arm/kernel/sleep.S        | 12 ++++++++++++
- 3 files changed, 14 insertions(+), 1 deletion(-)
+ drivers/media/pci/cx23885/cx23885-dvb.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/common/mcpm_entry.c b/arch/arm/common/mcpm_entry.c
-index a923524d1040..8617323eb273 100644
---- a/arch/arm/common/mcpm_entry.c
-+++ b/arch/arm/common/mcpm_entry.c
-@@ -379,7 +379,7 @@ static int __init nocache_trampoline(unsigned long _arg)
- 	unsigned int cluster = MPIDR_AFFINITY_LEVEL(mpidr, 1);
- 	phys_reset_t phys_reset;
+diff --git a/drivers/media/pci/cx23885/cx23885-dvb.c b/drivers/media/pci/cx23885/cx23885-dvb.c
+index e543cbbf2ec4..8fe78b8b1c25 100644
+--- a/drivers/media/pci/cx23885/cx23885-dvb.c
++++ b/drivers/media/pci/cx23885/cx23885-dvb.c
+@@ -1452,8 +1452,9 @@ static int dvb_register(struct cx23885_tsport *port)
+ 		if (fe0->dvb.frontend != NULL) {
+ 			struct i2c_adapter *tun_i2c;
  
--	mcpm_set_entry_vector(cpu, cluster, cpu_resume);
-+	mcpm_set_entry_vector(cpu, cluster, cpu_resume_no_hyp);
- 	setup_mm_for_reboot();
- 
- 	__mcpm_cpu_going_down(cpu, cluster);
-diff --git a/arch/arm/include/asm/suspend.h b/arch/arm/include/asm/suspend.h
-index 6c7182f32cef..e6c2f426f8c8 100644
---- a/arch/arm/include/asm/suspend.h
-+++ b/arch/arm/include/asm/suspend.h
-@@ -7,6 +7,7 @@ struct sleep_save_sp {
- };
- 
- extern void cpu_resume(void);
-+extern void cpu_resume_no_hyp(void);
- extern void cpu_resume_arm(void);
- extern int cpu_suspend(unsigned long, int (*)(unsigned long));
- 
-diff --git a/arch/arm/kernel/sleep.S b/arch/arm/kernel/sleep.S
-index 0f6c1000582c..c8569390e7e7 100644
---- a/arch/arm/kernel/sleep.S
-+++ b/arch/arm/kernel/sleep.S
-@@ -119,6 +119,14 @@ ENDPROC(cpu_resume_after_mmu)
- 	.text
- 	.align
- 
-+#ifdef CONFIG_MCPM
-+	.arm
-+THUMB(	.thumb			)
-+ENTRY(cpu_resume_no_hyp)
-+ARM_BE8(setend be)			@ ensure we are in BE mode
-+	b	no_hyp
-+#endif
-+
- #ifdef CONFIG_MMU
- 	.arm
- ENTRY(cpu_resume_arm)
-@@ -134,6 +142,7 @@ ARM_BE8(setend be)			@ ensure we are in BE mode
- 	bl	__hyp_stub_install_secondary
- #endif
- 	safe_svcmode_maskall r1
-+no_hyp:
- 	mov	r1, #0
- 	ALT_SMP(mrc p15, 0, r0, c0, c0, 5)
- 	ALT_UP_B(1f)
-@@ -162,6 +171,9 @@ ENDPROC(cpu_resume)
- 
- #ifdef CONFIG_MMU
- ENDPROC(cpu_resume_arm)
-+#endif
-+#ifdef CONFIG_MCPM
-+ENDPROC(cpu_resume_no_hyp)
- #endif
- 
- 	.align 2
+-			fe0->dvb.frontend->sec_priv = kmalloc(sizeof(dib7000p_ops), GFP_KERNEL);
+-			memcpy(fe0->dvb.frontend->sec_priv, &dib7000p_ops, sizeof(dib7000p_ops));
++			fe0->dvb.frontend->sec_priv = kmemdup(&dib7000p_ops, sizeof(dib7000p_ops), GFP_KERNEL);
++			if (!fe0->dvb.frontend->sec_priv)
++				return -ENOMEM;
+ 			tun_i2c = dib7000p_ops.get_i2c_master(fe0->dvb.frontend, DIBX000_I2C_INTERFACE_TUNER, 1);
+ 			if (!dvb_attach(dib0070_attach, fe0->dvb.frontend, tun_i2c, &dib7070p_dib0070_config))
+ 				return -ENODEV;
 -- 
 2.20.1
 
