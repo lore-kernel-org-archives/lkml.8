@@ -2,129 +2,126 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A96ACC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1934FC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8661621D56
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:30:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199441;
-	bh=USVgftlGwiLXXi5/H+/NWK1w91iAaWxgSLPLjyHHRn8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RD4ehjcoooxsyDQbuVS4VTtr7tCfV0qEm7tdiF8BGh0wjuHB85/Vina8tstSmhvhW
-	 YC5a9+gOvpg+AUVcPl6XABLbD9VTxbKfoD3KgsmeSSBMCLsHTTZ8lYDgpvA4EnhoRM
-	 vyNWUuA81dwWvM3fk9xWnWY/+y/TPORztMw1mKm8=
+	by mail.kernel.org (Postfix) with ESMTP id E96C520684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:30:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BcoFKpG0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407116AbgAPSai (ORCPT
+        id S2395163AbgAPSaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:30:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33316 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391990AbgAPRZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:25:31 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CB47246DC;
-        Thu, 16 Jan 2020 17:25:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195531;
-        bh=USVgftlGwiLXXi5/H+/NWK1w91iAaWxgSLPLjyHHRn8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iCtmNUd5wmY/ESVpu5SoLK8QS0X2M3wZDf+x0Wd3rpdSxw5HqC6Hkyv386Gotn4We
-         RKCdYzOyI/vyghcKf4ZYdgGEskN+8Qu6J0ESAfygW36C0iAOfgWdOMUh+RbGSAkxem
-         ro5i/+LFyQnBTsSCPV4+Q7DtXObX4ZFl/UFSCGnk=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 126/371] netfilter: nft_set_hash: fix lookups with fixed size hash on big endian
-Date:   Thu, 16 Jan 2020 12:19:58 -0500
-Message-Id: <20200116172403.18149-69-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
-References: <20200116172403.18149-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Thu, 16 Jan 2020 13:30:46 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:37188 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388586AbgAPSan (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 13:30:43 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00GI9Bg5056514;
+        Thu, 16 Jan 2020 18:30:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
+ bh=W/xYyZuMQPUL8LywibdGc89gLisK7pTjwntsImkArLA=;
+ b=BcoFKpG0AhmSGp9T+AI8JFScG9IIIytr2ntC33jVBVN4NeBq5TLiaFnK3DUe2/Rmhkdy
+ bHwYJhQshTIdEDpYDX7XpNieDotmeBjXBHBYKKpbfk5HcNUWuzzaJVYZqyxnVQesrfyx
+ uJVl5Zt901JcaDsmM2CIXfGp5uDZX4BmsryjCQc9bBJYgJaJBENrq6GJYV29MrX1s5j5
+ 0bGerW/fjc2dbebgEoqV2R8vi3pJA8wGaYEkalF7SsHmqdL8WssBaRbWPv8v2wY8dfRT
+ cexNqUHvIQTlA/7pjteT+IWOL9b+Tc41rKXlAowbX0FdoMDOnZNF4tbw41HrxLUFdLAW Dg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2xf74sm9ev-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jan 2020 18:30:31 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00GI9OLa124401;
+        Thu, 16 Jan 2020 18:30:31 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3020.oracle.com with ESMTP id 2xj1ptje0p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 16 Jan 2020 18:30:31 +0000
+Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id 00GIU9f0190457;
+        Thu, 16 Jan 2020 18:30:31 GMT
+Received: from ca-dev107.us.oracle.com (ca-dev107.us.oracle.com [10.129.135.36])
+        by userp3020.oracle.com with ESMTP id 2xj1ptjdxt-3;
+        Thu, 16 Jan 2020 18:30:31 +0000
+From:   rao Shoaib <rao.shoaib@oracle.com>
+To:     linux-rdma@vger.kernel.org
+Cc:     jgg@ziepe.ca, monis@mellanox.com, dledford@redhat.com,
+        sean.hefty@intel.com, hal.rosenstock@gmail.com,
+        linux-kernel@vger.kernel.org, Rao Shoaib <rao.shoaib@oracle.com>
+Subject: [PATCH v4 2/2] RDMA/rxe: SGE buffer and max_inline data must have same size
+Date:   Thu, 16 Jan 2020 10:30:12 -0800
+Message-Id: <1579199412-15741-3-git-send-email-rao.shoaib@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1579199412-15741-1-git-send-email-rao.shoaib@oracle.com>
+References: <1579199412-15741-1-git-send-email-rao.shoaib@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9502 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001160147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Rao Shoaib <rao.shoaib@oracle.com>
 
-[ Upstream commit 3b02b0adc242a72b5e46019b6a9e4f84823592f6 ]
+SGE buffer size and max_inline data should be same. Maximum of the two
+values requested is used.
 
-Call jhash_1word() for the 4-bytes key case from the insertion and
-deactivation path, otherwise big endian arch set lookups fail.
-
-Fixes: 446a8268b7f5 ("netfilter: nft_set_hash: add lookup variant for fixed size hashtable")
-Reported-by: Florian Westphal <fw@strlen.de>
-Tested-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Rao Shoaib <rao.shoaib@oracle.com>
 ---
- net/netfilter/nft_set_hash.c | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+ drivers/infiniband/sw/rxe/rxe_qp.c | 28 ++++++++++++++++------------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
 
-diff --git a/net/netfilter/nft_set_hash.c b/net/netfilter/nft_set_hash.c
-index 33aa2ac3a62e..73f8f99b1193 100644
---- a/net/netfilter/nft_set_hash.c
-+++ b/net/netfilter/nft_set_hash.c
-@@ -442,6 +442,23 @@ static bool nft_hash_lookup_fast(const struct net *net,
- 	return false;
- }
+diff --git a/drivers/infiniband/sw/rxe/rxe_qp.c b/drivers/infiniband/sw/rxe/rxe_qp.c
+index e2c6d1c..d29d1a8 100644
+--- a/drivers/infiniband/sw/rxe/rxe_qp.c
++++ b/drivers/infiniband/sw/rxe/rxe_qp.c
+@@ -238,18 +238,22 @@ static int rxe_qp_init_req(struct rxe_dev *rxe, struct rxe_qp *qp,
+ 	qp->src_port = RXE_ROCE_V2_SPORT +
+ 		(hash_32_generic(qp_num(qp), 14) & 0x3fff);
  
-+static u32 nft_jhash(const struct nft_set *set, const struct nft_hash *priv,
-+		     const struct nft_set_ext *ext)
-+{
-+	const struct nft_data *key = nft_set_ext_key(ext);
-+	u32 hash, k1;
+-	qp->sq.max_wr		= init->cap.max_send_wr;
+-	qp->sq.max_sge		= init->cap.max_send_sge;
+-	qp->sq.max_inline	= init->cap.max_inline_data;
+-
+-	wqe_size = max_t(int, sizeof(struct rxe_send_wqe) +
+-			 qp->sq.max_sge * sizeof(struct ib_sge),
+-			 sizeof(struct rxe_send_wqe) +
+-			 qp->sq.max_inline);
+-
+-	qp->sq.queue = rxe_queue_init(rxe,
+-				      &qp->sq.max_wr,
+-				      wqe_size);
++	/* values for max_send_sge and max_inline_data have already been
++	 * checked in rxe_qp_chk_cap() to make sure they are within limits.
++	 */
++	wqe_size = max_t(int, init->cap.max_send_sge * sizeof(struct ib_sge),
++			 init->cap.max_inline_data);
++	qp->sq.max_sge = wqe_size/sizeof(struct ib_sge);
++	qp->sq.max_inline = wqe_size;
++	init->cap.max_inline_data = qp->sq.max_inline;
++	init->cap.max_send_sge = qp->sq.max_sge;
 +
-+	if (set->klen == 4) {
-+		k1 = *(u32 *)key;
-+		hash = jhash_1word(k1, priv->seed);
-+	} else {
-+		hash = jhash(key, set->klen, priv->seed);
-+	}
-+	hash = reciprocal_scale(hash, priv->buckets);
++	wqe_size += sizeof(struct rxe_send_wqe);
 +
-+	return hash;
-+}
++	qp->sq.max_wr = init->cap.max_send_wr;
 +
- static int nft_hash_insert(const struct net *net, const struct nft_set *set,
- 			   const struct nft_set_elem *elem,
- 			   struct nft_set_ext **ext)
-@@ -451,8 +468,7 @@ static int nft_hash_insert(const struct net *net, const struct nft_set *set,
- 	u8 genmask = nft_genmask_next(net);
- 	u32 hash;
++	qp->sq.queue = rxe_queue_init(rxe, &qp->sq.max_wr, wqe_size);
++
+ 	if (!qp->sq.queue)
+ 		return -ENOMEM;
  
--	hash = jhash(nft_set_ext_key(&this->ext), set->klen, priv->seed);
--	hash = reciprocal_scale(hash, priv->buckets);
-+	hash = nft_jhash(set, priv, &this->ext);
- 	hlist_for_each_entry(he, &priv->table[hash], node) {
- 		if (!memcmp(nft_set_ext_key(&this->ext),
- 			    nft_set_ext_key(&he->ext), set->klen) &&
-@@ -491,8 +507,7 @@ static void *nft_hash_deactivate(const struct net *net,
- 	u8 genmask = nft_genmask_next(net);
- 	u32 hash;
- 
--	hash = jhash(nft_set_ext_key(&this->ext), set->klen, priv->seed);
--	hash = reciprocal_scale(hash, priv->buckets);
-+	hash = nft_jhash(set, priv, &this->ext);
- 	hlist_for_each_entry(he, &priv->table[hash], node) {
- 		if (!memcmp(nft_set_ext_key(&this->ext), &elem->key.val,
- 			    set->klen) ||
 -- 
-2.20.1
+1.8.3.1
 
