@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E03D7C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E6BC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB9872072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15DA12072B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:44:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218248;
-	bh=+WiKHkloAlLpAzCZp4UZ8FL8lS55nC7i7zkYhXgF1Do=;
+	s=default; t=1579218256;
+	bh=5jCLxx3Rwe6TZPOs6dpI1oxqJLHtu7QOJCkhfkEuc64=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=flaiIRZ2WHUxKWM3ZzSQNmaxVPRzhWh05djYNlF+jSmboLZaxQL3imIcpB2JPUK5L
-	 E/hPJMRrCIQEhmSeXz+LgcINrkmoJXIH42SAfsXB+V7GNCRoSMsyOqYxo2kEWLag5T
-	 hkJ0geUA+F7xkKgpopnp6b2CDsTxOr2OPYIixdAU=
+	b=Zsiza/BGzLCDfo2LKpEMK5BSkMnjUl5cJk+appvcKbKkdH/UQq6W7l2B74VrZ1sTC
+	 lsC1Um4C1bUiyeU+uTN7sOLAr9x8PdTQ0x3Gj7QgvZsATv0/w83Ga4z27h7A2oEdss
+	 WxDpqT2cjO9riSF/RhXdRR+tzmRrRlxx0yA4ioS8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387541AbgAPXYY (ORCPT
+        id S1733201AbgAPXYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:24:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53288 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:24:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733295AbgAPXYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:24:20 -0500
+        id S1730066AbgAPXYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:24:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D5DD2075B;
-        Thu, 16 Jan 2020 23:24:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BDFD2072E;
+        Thu, 16 Jan 2020 23:24:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217059;
-        bh=+WiKHkloAlLpAzCZp4UZ8FL8lS55nC7i7zkYhXgF1Do=;
+        s=default; t=1579217054;
+        bh=5jCLxx3Rwe6TZPOs6dpI1oxqJLHtu7QOJCkhfkEuc64=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E6I7baYOxq1ZZQRzf/HSvm14CcSLuVGAmF+0vzQLjqT8+SeW63bq9K1VXmxcK6Im9
-         eo8intES3qn8IW26piXa0AJQpmLS+93KQjFrndATsBLDUPBnnE8d0pGNMOPCKZuyq+
-         GCAzH/yvRyljJhcxQoJmSXRTaldmYvqU6Vs06/9g=
+        b=DnNiYe5rISY8YEavO/RMvJH2NTr05h9dj9VE5Hjn6fND0TbBlOgGbVtAXPvdLgGTl
+         qpDBR5SG4EH/aFJHl8Mxlkzg8WgLsjYPaUhJkVE3jNeKXJcxQN6TyR7sgrR0Zlsjm/
+         Ih5MB0jvOnlhd98PrWovMCWwJjnlZYojaAxeMX98=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
         Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 5.4 131/203] compat_ioctl: handle SIOCOUTQNSD
-Date:   Fri, 17 Jan 2020 00:17:28 +0100
-Message-Id: <20200116231756.593290101@linuxfoundation.org>
+Subject: [PATCH 5.4 129/203] gfs2: add compat_ioctl support
+Date:   Fri, 17 Jan 2020 00:17:26 +0100
+Message-Id: <20200116231756.453956408@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -62,32 +62,96 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-commit 9d7bf41fafa5b5ddd4c13eb39446b0045f0a8167 upstream.
+commit 8d0980704842e8a68df2c3164c1c165e5c7ebc08 upstream.
 
-Unlike the normal SIOCOUTQ, SIOCOUTQNSD was never handled in compat
-mode. Add it to the common socket compat handler along with similar
-ones.
+Out of the four ioctl commands supported on gfs2, only FITRIM
+works in compat mode.
 
-Fixes: 2f4e1b397097 ("tcp: ioctl type SIOCOUTQNSD returns amount of data not sent")
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: netdev@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>
+Add a proper handler based on the ext4 implementation.
+
+Fixes: 6ddc5c3ddf25 ("gfs2: getlabel support")
+Reviewed-by: Bob Peterson <rpeterso@redhat.com>
+Cc: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/socket.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/gfs2/file.c |   30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
---- a/net/socket.c
-+++ b/net/socket.c
-@@ -3532,6 +3532,7 @@ static int compat_sock_ioctl_trans(struc
- 	case SIOCSARP:
- 	case SIOCGARP:
- 	case SIOCDARP:
-+	case SIOCOUTQNSD:
- 	case SIOCATMARK:
- 		return sock_do_ioctl(net, sock, cmd, arg);
- 	}
+--- a/fs/gfs2/file.c
++++ b/fs/gfs2/file.c
+@@ -6,6 +6,7 @@
+ 
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
++#include <linux/compat.h>
+ #include <linux/completion.h>
+ #include <linux/buffer_head.h>
+ #include <linux/pagemap.h>
+@@ -354,6 +355,31 @@ static long gfs2_ioctl(struct file *filp
+ 	return -ENOTTY;
+ }
+ 
++#ifdef CONFIG_COMPAT
++static long gfs2_compat_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
++{
++	switch(cmd) {
++	/* These are just misnamed, they actually get/put from/to user an int */
++	case FS_IOC32_GETFLAGS:
++		cmd = FS_IOC_GETFLAGS;
++		break;
++	case FS_IOC32_SETFLAGS:
++		cmd = FS_IOC_SETFLAGS;
++		break;
++	/* Keep this list in sync with gfs2_ioctl */
++	case FITRIM:
++	case FS_IOC_GETFSLABEL:
++		break;
++	default:
++		return -ENOIOCTLCMD;
++	}
++
++	return gfs2_ioctl(filp, cmd, (unsigned long)compat_ptr(arg));
++}
++#else
++#define gfs2_compat_ioctl NULL
++#endif
++
+ /**
+  * gfs2_size_hint - Give a hint to the size of a write request
+  * @filep: The struct file
+@@ -1294,6 +1320,7 @@ const struct file_operations gfs2_file_f
+ 	.write_iter	= gfs2_file_write_iter,
+ 	.iopoll		= iomap_dio_iopoll,
+ 	.unlocked_ioctl	= gfs2_ioctl,
++	.compat_ioctl	= gfs2_compat_ioctl,
+ 	.mmap		= gfs2_mmap,
+ 	.open		= gfs2_open,
+ 	.release	= gfs2_release,
+@@ -1309,6 +1336,7 @@ const struct file_operations gfs2_file_f
+ const struct file_operations gfs2_dir_fops = {
+ 	.iterate_shared	= gfs2_readdir,
+ 	.unlocked_ioctl	= gfs2_ioctl,
++	.compat_ioctl	= gfs2_compat_ioctl,
+ 	.open		= gfs2_open,
+ 	.release	= gfs2_release,
+ 	.fsync		= gfs2_fsync,
+@@ -1325,6 +1353,7 @@ const struct file_operations gfs2_file_f
+ 	.write_iter	= gfs2_file_write_iter,
+ 	.iopoll		= iomap_dio_iopoll,
+ 	.unlocked_ioctl	= gfs2_ioctl,
++	.compat_ioctl	= gfs2_compat_ioctl,
+ 	.mmap		= gfs2_mmap,
+ 	.open		= gfs2_open,
+ 	.release	= gfs2_release,
+@@ -1338,6 +1367,7 @@ const struct file_operations gfs2_file_f
+ const struct file_operations gfs2_dir_fops_nolock = {
+ 	.iterate_shared	= gfs2_readdir,
+ 	.unlocked_ioctl	= gfs2_ioctl,
++	.compat_ioctl	= gfs2_compat_ioctl,
+ 	.open		= gfs2_open,
+ 	.release	= gfs2_release,
+ 	.fsync		= gfs2_fsync,
 
 
