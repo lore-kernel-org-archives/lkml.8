@@ -2,202 +2,109 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B433C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44358C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 713C82075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:53:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="qfXAg265"
+	by mail.kernel.org (Postfix) with ESMTP id 193C62075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 06:54:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbgAPGxs (ORCPT
+        id S1729058AbgAPGyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 01:53:48 -0500
-Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.103]:27466 "EHLO
-        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbgAPGxs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 01:53:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1579157624;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=o5xwiAYEunaq1Wn+OTS2S5TGrVi+xaFCy9lwbPmVfik=;
-        b=qfXAg265DpMvaE96fyIqinffZuvFJp3hJuTEiF6FIg3PNhjEcg+BZRaZDxzQh77JWr
-        4F/bIgX0u5Mic2eQKWheFWAUrDrLwpV3StcW71sR4oYRMKuvNuz/q17FKJBTeGxsgcPF
-        qTRGTk5njR9G/i7qCeG9buBRt16t4AGD7cCJ3Ir1jLBJQouooqzlrcOFm2BntIbzKjXu
-        JQYO8s+EkkVnb7mdVwiMd13/SCrKzN8Mqeqhl2zh+LSAFKqjFHceJRR4IMQ8kVAXg8bz
-        32jOdIvcaYade8NE7AEO3EnZXYPqK3wXklMsdl8IzO/OQc4z1UO2xs4Nd1v4piDhe+0u
-        kflA==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPZJPScHivh"
-X-RZG-CLASS-ID: mo00
-Received: from tauon.chronox.de
-        by smtp.strato.de (RZmta 46.1.4 DYNA|AUTH)
-        with ESMTPSA id u04585w0G6qcaAW
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Thu, 16 Jan 2020 07:52:38 +0100 (CET)
-From:   Stephan Mueller <smueller@chronox.de>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH v28 11/12] LRNG - add interface for gathering of raw entropy
-Date:   Thu, 16 Jan 2020 07:52:38 +0100
-Message-ID: <5678860.LzzLIogE2D@tauon.chronox.de>
-In-Reply-To: <72a57d93-737a-c6c1-82c4-e14f73054ad5@infradead.org>
-References: <6157374.ptSnyUpaCn@positron.chronox.de> <9116265.6Va6cPe1zF@tauon.chronox.de> <72a57d93-737a-c6c1-82c4-e14f73054ad5@infradead.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+        Thu, 16 Jan 2020 01:54:38 -0500
+Received: from mga09.intel.com ([134.134.136.24]:43921 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726855AbgAPGyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 01:54:37 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 22:54:37 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,325,1574150400"; 
+   d="scan'208";a="256949741"
+Received: from wanglin3-mobl.ccr.corp.intel.com ([10.255.31.165])
+  by fmsmga001.fm.intel.com with ESMTP; 15 Jan 2020 22:54:34 -0800
+Message-ID: <8c1a2a53c5350faa12906a104e9863371973c908.camel@intel.com>
+Subject: Re: [PATCH v1] thermal/intel: intel_pch_thermal: Add Comet Lake
+ (CML) platform support
+From:   Zhang Rui <rui.zhang@intel.com>
+To:     Gayatri Kammela <gayatri.kammela@intel.com>,
+        linux-pm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, daniel.lezcano@linaro.org,
+        amit.kucheria@verdurent.com, charles.d.prestopine@intel.com,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Date:   Thu, 16 Jan 2020 14:55:06 +0800
+In-Reply-To: <20191211200043.4985-1-gayatri.kammela@intel.com>
+References: <20191211200043.4985-1-gayatri.kammela@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Donnerstag, 16. Januar 2020, 07:48:20 CET schrieb Randy Dunlap:
+On Wed, 2019-12-11 at 12:00 -0800, Gayatri Kammela wrote:
+> Add Comet Lake to the list of the platforms to support
+> intel_pch_thermal
+> driver.
+> 
+> Cc: Zhang rui <rui.zhang@intel.com>
+> Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
 
-Hi Randy,
+Acked-by: Zhang Rui <rui.zhang@intel.com>
 
-> On 1/15/20 10:43 PM, Stephan Mueller wrote:
-> > Am Donnerstag, 16. Januar 2020, 01:18:18 CET schrieb Randy Dunlap:
-> >=20
-> > Hi Randy,
-> >=20
-> >> On 1/15/20 2:35 AM, Stephan M=FCller wrote:
-> >>> CC: "Eric W. Biederman" <ebiederm@xmission.com>
-> >>> CC: "Alexander E. Patrakov" <patrakov@gmail.com>
-> >>> CC: "Ahmed S. Darwish" <darwish.07@gmail.com>
-> >>> CC: "Theodore Y. Ts'o" <tytso@mit.edu>
-> >>> CC: Willy Tarreau <w@1wt.eu>
-> >>> CC: Matthew Garrett <mjg59@srcf.ucam.org>
-> >>> CC: Vito Caputo <vcaputo@pengaru.com>
-> >>> CC: Andreas Dilger <adilger.kernel@dilger.ca>
-> >>> CC: Jan Kara <jack@suse.cz>
-> >>> CC: Ray Strode <rstrode@redhat.com>
-> >>> CC: William Jon McCann <mccann@jhu.edu>
-> >>> CC: zhangjs <zachary@baishancloud.com>
-> >>> CC: Andy Lutomirski <luto@kernel.org>
-> >>> CC: Florian Weimer <fweimer@redhat.com>
-> >>> CC: Lennart Poettering <mzxreary@0pointer.de>
-> >>> CC: Nicolai Stange <nstange@suse.de>
-> >>> Reviewed-by: Roman Drahtmueller <draht@schaltsekun.de>
-> >>> Tested-by: Roman Drahtm=FCller <draht@schaltsekun.de>
-> >>> Tested-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
-> >>> Tested-by: Neil Horman <nhorman@redhat.com>
-> >>> Signed-off-by: Stephan Mueller <smueller@chronox.de>
-> >>> ---
-> >>>=20
-> >>>  drivers/char/lrng/Kconfig        |  16 ++
-> >>>  drivers/char/lrng/Makefile       |   1 +
-> >>>  drivers/char/lrng/lrng_testing.c | 271 +++++++++++++++++++++++++++++=
-++
-> >>>  3 files changed, 288 insertions(+)
-> >>>  create mode 100644 drivers/char/lrng/lrng_testing.c
-> >>>=20
-> >>> diff --git a/drivers/char/lrng/lrng_testing.c
-> >>> b/drivers/char/lrng/lrng_testing.c new file mode 100644
-> >>> index 000000000000..0e287eccd622
-> >>> --- /dev/null
-> >>> +++ b/drivers/char/lrng/lrng_testing.c
-> >>> @@ -0,0 +1,271 @@
-> >>> +// SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-> >>> +/*
-> >>> + * Linux Random Number Generator (LRNG) Raw entropy collection tool
-> >>> + *
-> >>> + * Copyright (C) 2019 - 2020, Stephan Mueller <smueller@chronox.de>
-> >>> + */
-> >>> +
-> >>> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> >>> +
-> >>> +#include <linux/atomic.h>
-> >>> +#include <linux/bug.h>
-> >>> +#include <linux/debugfs.h>
-> >>> +#include <linux/module.h>
-> >>> +#include <linux/sched.h>
-> >>> +#include <linux/sched/signal.h>
-> >>> +#include <linux/slab.h>
-> >>> +#include <linux/string.h>
-> >>> +#include <linux/types.h>
-> >>> +#include <linux/uaccess.h>
-> >>> +#include <linux/workqueue.h>
-> >>> +#include <asm/errno.h>
-> >>> +
-> >>> +#include "lrng_internal.h"
-> >>> +
-> >>> +#define LRNG_TESTING_RINGBUFFER_SIZE	1024
-> >>> +#define LRNG_TESTING_RINGBUFFER_MASK=09
-(LRNG_TESTING_RINGBUFFER_SIZE - 1)
-> >>> +
-> >>> +static u32 lrng_testing_rb[LRNG_TESTING_RINGBUFFER_SIZE];
-> >>> +static u32 lrng_rb_reader =3D 0;
-> >>> +static u32 lrng_rb_writer =3D 0;
-> >>> +static atomic_t lrng_testing_enabled =3D ATOMIC_INIT(0);
-> >>> +
-> >>> +static DECLARE_WAIT_QUEUE_HEAD(lrng_raw_read_wait);
-> >>> +static DEFINE_SPINLOCK(lrng_raw_lock);
-> >>> +
-> >>> +/*
-> >>> + * 0 =3D=3D> No boot test, gathering of runtime data allowed
-> >>> + * 1 =3D=3D> Boot test enabled and ready for collecting data, gather=
-ing
-> >>> runtime + *	 data is disabled
-> >>> + * 2 =3D=3D> Boot test completed and disabled, gathering of runtime =
-data is
-> >>> + *	 disabled
-> >>> + */
-> >>> +static u32 boot_test =3D 0;
-> >>> +module_param(boot_test, uint, 0644);
-> >>> +MODULE_PARM_DESC(boot_test, "Enable gathering boot time entropy of t=
-he
-> >>> first" +			    " entropy events");
-> >>=20
-> >> One line for the string, please.
-> >=20
-> > may I ask the question whether this should be done for all lines with
-> > printk statements? As checkpatch.pl will complain if you have lines
-> > larger than 80 chars and complains about line-broken printk statements,=
- I
-> > am always unsure which way to go.
-> >=20
-> > All printk statements in the patch series have line-broken printk
-> > statements.
-> It's for grep-ability of the strings.
-> grepping for partial strings would work as is, but then one would need to
-> know what partial string to search for.
-
-Ok, I am changing all these strings to one-liners even though checkpatch.pl=
-=20
-will complain.
-
-Thank you.
-
-Ciao
-Stephan
-
+> ---
+>  drivers/thermal/intel/intel_pch_thermal.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/thermal/intel/intel_pch_thermal.c
+> b/drivers/thermal/intel/intel_pch_thermal.c
+> index 4f0bb8f502e1..9356f3a7f961 100644
+> --- a/drivers/thermal/intel/intel_pch_thermal.c
+> +++ b/drivers/thermal/intel/intel_pch_thermal.c
+> @@ -23,6 +23,7 @@
+>  #define PCH_THERMAL_DID_SKL_H	0xA131 /* Skylake PCH 100
+> series */
+>  #define PCH_THERMAL_DID_CNL	0x9Df9 /* CNL PCH */
+>  #define PCH_THERMAL_DID_CNL_H	0xA379 /* CNL-H PCH */
+> +#define PCH_THERMAL_DID_CML_H	0X06F9 /* CML-H PCH */
+>  
+>  /* Wildcat Point-LP  PCH Thermal registers */
+>  #define WPT_TEMP	0x0000	/* Temperature */
+> @@ -272,6 +273,7 @@ enum board_ids {
+>  	board_wpt,
+>  	board_skl,
+>  	board_cnl,
+> +	board_cml,
+>  };
+>  
+>  static const struct board_info {
+> @@ -294,6 +296,10 @@ static const struct board_info {
+>  		.name = "pch_cannonlake",
+>  		.ops = &pch_dev_ops_wpt,
+>  	},
+> +	[board_cml] = {
+> +		.name = "pch_cometlake",
+> +		.ops = &pch_dev_ops_wpt,
+> +	}
+>  };
+>  
+>  static int intel_pch_thermal_probe(struct pci_dev *pdev,
+> @@ -398,6 +404,8 @@ static const struct pci_device_id
+> intel_pch_thermal_id[] = {
+>  		.driver_data = board_cnl, },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCH_THERMAL_DID_CNL_H),
+>  		.driver_data = board_cnl, },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCH_THERMAL_DID_CML_H),
+> +		.driver_data = board_cml, },
+>  	{ 0, },
+>  };
+>  MODULE_DEVICE_TABLE(pci, intel_pch_thermal_id);
 
