@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2BD2C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0679C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 856072051A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:25:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7501F2051A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:25:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199109;
-	bh=k/giQLTQHP1E1fL/X5OrnR5YwPGCnPWgGQwz2XUq7mA=;
+	s=default; t=1579199111;
+	bh=hPdpzb2Hw4A3ySqBPZNJLG7GDoLkemO8rz+yCgpALys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pnvkZq6zeLoO/3lc0r/ivgEOsnb0ybsnXANpGDSky3bUPvVA6T68LvnbGpzSnVZyk
-	 Gd3kVnMuF3WyOrDNGpbNZRjjY8xsIJOaU/Q77o4WJF0P3AKIT/hYmvATfScKKlntS6
-	 EEInnhQzrvD9o3rz5730pNSrmiVIPtQqNdcrjzF8=
+	b=Ilh6/srrgkZliPp7GgAKUm0m5Bhcxpvy/CV8lRZJ+9xImMAiE5BxMWeoaXtv7HSYC
+	 bYMdGOZwVpjv+3rlm3y4Jw1m7QRvC32HNIApcnZNYPhvSm0rl0yZM6ybuoPOdbozOI
+	 Oe9fQl4qhvrKMnL8Z3PVlaZdUKaYUpfkgpW6SAlY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392391AbgAPR1D (ORCPT
+        id S2436651AbgAPSZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:27:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36140 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:25:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392343AbgAPR0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:26:55 -0500
+        id S2392397AbgAPR1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:27:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9607246D4;
-        Thu, 16 Jan 2020 17:26:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47168246D4;
+        Thu, 16 Jan 2020 17:27:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195614;
-        bh=k/giQLTQHP1E1fL/X5OrnR5YwPGCnPWgGQwz2XUq7mA=;
+        s=default; t=1579195625;
+        bh=hPdpzb2Hw4A3ySqBPZNJLG7GDoLkemO8rz+yCgpALys=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T/OVRGSbb2t4OHUE+SbV9ZQo8KjxysCDZhO8IH81xGtQtyqcuGDX4qiBz4dE81qvJ
-         bV8owEcCZ2fAXhTN1vk5t0mz14jv6OWY3WqawCfryoz4lzQqa9WQ6oK/QoWls5vbAq
-         b30+PxUCpvQHHI73LZrUVYfAIGE/1jomSVkdTKhE=
+        b=CHa2k5HCNA8/RUWuQyu2mzH3lizmkRGfQDEe0wtNIBfBWYhYnnIZ7zn4EhM9VYkI7
+         sLvSUcZGy4wo8aJAgwFuOQN/Bo+kaNoh7jKWgPyZVA+2MWmUpIQw+VAlmbMcj1FloV
+         Da3V4UjVx7ZkA0n2pSy3fdS/4blemgoo2wRj01KU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pan Bian <bianpan2016@163.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 187/371] mmc: core: fix possible use after free of host
-Date:   Thu, 16 Jan 2020 12:20:59 -0500
-Message-Id: <20200116172403.18149-130-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 195/371] platform/x86: alienware-wmi: printing the wrong error code
+Date:   Thu, 16 Jan 2020 12:21:07 -0500
+Message-Id: <20200116172403.18149-138-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -59,37 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Bian <bianpan2016@163.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 8e1943af2986db42bee2b8dddf49a36cdb2e9219 ]
+[ Upstream commit 6d1f8b3d75419a8659ac916a1e9543bb3513a882 ]
 
-In the function mmc_alloc_host, the function put_device is called to
-release allocated resources when mmc_gpio_alloc fails. Finally, the
-function pointed by host->class_dev.class->dev_release (i.e.,
-mmc_host_classdev_release) is used to release resources including the
-host structure. However, after put_device, host is used and released
-again. Resulting in a use-after-free bug.
+The "out_data" variable is uninitialized at the point.  Originally, this
+used to print "status" instead and that seems like the correct thing to
+print.
 
-Fixes: 1ed217194488 ("mmc: core: fix error path in mmc_host_alloc")
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: bc2ef884320b ("alienware-wmi: For WMAX HDMI method, introduce a way to query HDMI cable status")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/core/host.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/platform/x86/alienware-wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-index ad88deb2e8f3..3740fb0052a4 100644
---- a/drivers/mmc/core/host.c
-+++ b/drivers/mmc/core/host.c
-@@ -376,8 +376,6 @@ struct mmc_host *mmc_alloc_host(int extra, struct device *dev)
- 
- 	if (mmc_gpio_alloc(host)) {
- 		put_device(&host->class_dev);
--		ida_simple_remove(&mmc_host_ida, host->index);
--		kfree(host);
- 		return NULL;
+diff --git a/drivers/platform/x86/alienware-wmi.c b/drivers/platform/x86/alienware-wmi.c
+index cbd84e2e3bd4..2c82188f8486 100644
+--- a/drivers/platform/x86/alienware-wmi.c
++++ b/drivers/platform/x86/alienware-wmi.c
+@@ -570,7 +570,7 @@ static ssize_t show_hdmi_source(struct device *dev,
+ 			return scnprintf(buf, PAGE_SIZE,
+ 					 "input [gpu] unknown\n");
  	}
+-	pr_err("alienware-wmi: unknown HDMI source status: %d\n", out_data);
++	pr_err("alienware-wmi: unknown HDMI source status: %u\n", status);
+ 	return scnprintf(buf, PAGE_SIZE, "input gpu [unknown]\n");
+ }
  
 -- 
 2.20.1
