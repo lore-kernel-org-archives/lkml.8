@@ -2,60 +2,64 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 899C4C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C86CC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B6D12087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5672A2087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:32:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217524;
-	bh=uk26Je1JebfBch9yNEDF84kYvcYTlH1CZ/ZpZ9BNG2g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DUm9+qd8w3M1+eMJDT6UnwQHuY2LXH4IHTd9q6+/4BR/YM/2qG4IGTBk/zs4j/5Zu
-	 tmV4RVH1SVERX5tkBaADCNcp2X3lH8FZD6E1ZraQaPH4hMbyWOai+eCRok/F1XrsmQ
-	 q50TPjqf17D99F66VZqa47jWs95fWkrss3G5O7Lw=
+	s=default; t=1579217529;
+	bh=cYWwDF7dBLiHZgLHs3YuWip0DQaIQ1SstguXpuyGjjI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=AciSWCprpBZi37KcAhtvsNmDKLIVSz2OwdYlrrO59hm7gJWrirG14xpvD6D53qWtg
+	 Q1CYAnJN9cRN7YlW56LZHGtN0sOlSj8Yfe43qy5X5DZJvHUpavw4Aza5dqmcr2oSjd
+	 bV40zX7ob+roJ4WwdW/2Vpl81gqIy6M4ubTFwe2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391559AbgAPXcD (ORCPT
+        id S2403975AbgAPXcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:32:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40704 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:32:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391544AbgAPXbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:31:53 -0500
+        id S2404170AbgAPXcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:32:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2BB022522;
-        Thu, 16 Jan 2020 23:31:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC94F20748;
+        Thu, 16 Jan 2020 23:31:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217512;
-        bh=uk26Je1JebfBch9yNEDF84kYvcYTlH1CZ/ZpZ9BNG2g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jHCKvL7UQlqWcUf1TzONVbyvhBmplGnXNqwlTZYoiyewJ3LBF2JbiY4W9uYUJqGvw
-         Ey7VhLU7Tm0ij9Bp2d3OpMofLbJSB9uaGuOuFgy8eY3PHMFezqIcDgcdHWDFbnCwaO
-         5hjw0JAj0RFqjkJgQ62KJFTaiFMJ6tjiJ0G3Neqg=
+        s=default; t=1579217519;
+        bh=cYWwDF7dBLiHZgLHs3YuWip0DQaIQ1SstguXpuyGjjI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=0HUnPifl855s3cj8nZp1OgbxSvwoj7WOW1lJPFpNOHobX2wqxEEh+7AamdCYX5VUO
+         rfhv9Wbela/iylLInm4CnYVSxr+OnzfKSdbUaRG7QJjk1bQ4jaX2/GdUfXFAURkS3+
+         VChDos0hIVuYq6CJjl6dmK1pU19++IlGkFJKr3tY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Bob Picco <bob.picco@oracle.com>,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.14 07/71] arm64: dont open code page table entry creation
-Date:   Fri, 17 Jan 2020 00:18:05 +0100
-Message-Id: <20200116231710.452938295@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.14 00/71] 4.14.166-stable review
+Date:   Fri, 17 Jan 2020 00:17:58 +0100
+Message-Id: <20200116231709.377772748@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200116231709.377772748@linuxfoundation.org>
-References: <20200116231709.377772748@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.166-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.14.166-rc1
+X-KernelTest-Deadline: 2020-01-18T23:17+00:00
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -63,118 +67,320 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kristina Martsenko <kristina.martsenko@arm.com>
+This is the start of the stable review cycle for the 4.14.166 release.
+There are 71 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-commit 193383043f14a398393dc18bae8380f7fe665ec3 upstream.
+Responses should be made by Sat, 18 Jan 2020 23:16:00 +0000.
+Anything received after that time might be too late.
 
-Instead of open coding the generation of page table entries, use the
-macros/functions that exist for this - pfn_p*d and p*d_populate. Most
-code in the kernel already uses these macros, this patch tries to fix
-up the few places that don't. This is useful for the next patch in this
-series, which needs to change the page table entry logic, and it's
-better to have that logic in one place.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.166-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+and the diffstat can be found below.
 
-The KVM extended ID map is special, since we're creating a level above
-CONFIG_PGTABLE_LEVELS and the required function isn't available. Leave
-it as is and add a comment to explain it. (The normal kernel ID map code
-doesn't need this change because its page tables are created in assembly
-(__create_page_tables)).
+thanks,
 
-Tested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
-Tested-by: Bob Picco <bob.picco@oracle.com>
-Reviewed-by: Bob Picco <bob.picco@oracle.com>
-Signed-off-by: Kristina Martsenko <kristina.martsenko@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/arm64/include/asm/kvm_mmu.h |    5 +++++
- arch/arm64/include/asm/pgtable.h |    1 +
- arch/arm64/kernel/hibernate.c    |    3 +--
- arch/arm64/mm/mmu.c              |   14 +++++++++-----
- 4 files changed, 16 insertions(+), 7 deletions(-)
+greg k-h
 
---- a/arch/arm64/include/asm/kvm_mmu.h
-+++ b/arch/arm64/include/asm/kvm_mmu.h
-@@ -296,6 +296,11 @@ static inline bool __kvm_cpu_uses_extend
- 	return __cpu_uses_extended_idmap();
- }
- 
-+/*
-+ * Can't use pgd_populate here, because the extended idmap adds an extra level
-+ * above CONFIG_PGTABLE_LEVELS (which is 2 or 3 if we're using the extended
-+ * idmap), and pgd_populate is only available if CONFIG_PGTABLE_LEVELS = 4.
-+ */
- static inline void __kvm_extend_hypmap(pgd_t *boot_hyp_pgd,
- 				       pgd_t *hyp_pgd,
- 				       pgd_t *merged_hyp_pgd,
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -343,6 +343,7 @@ static inline int pmd_protnone(pmd_t pmd
- 
- #define pud_write(pud)		pte_write(pud_pte(pud))
- #define pud_pfn(pud)		(((pud_val(pud) & PUD_MASK) & PHYS_MASK) >> PAGE_SHIFT)
-+#define pfn_pud(pfn,prot)	(__pud(((phys_addr_t)(pfn) << PAGE_SHIFT) | pgprot_val(prot)))
- 
- #define set_pmd_at(mm, addr, pmdp, pmd)	set_pte_at(mm, addr, (pte_t *)pmdp, pmd_pte(pmd))
- 
---- a/arch/arm64/kernel/hibernate.c
-+++ b/arch/arm64/kernel/hibernate.c
-@@ -246,8 +246,7 @@ static int create_safe_exec_page(void *s
- 	}
- 
- 	pte = pte_offset_kernel(pmd, dst_addr);
--	set_pte(pte, __pte(virt_to_phys((void *)dst) |
--			 pgprot_val(PAGE_KERNEL_EXEC)));
-+	set_pte(pte, pfn_pte(virt_to_pfn(dst), PAGE_KERNEL_EXEC));
- 
- 	/*
- 	 * Load our new page tables. A strict BBM approach requires that we
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -605,8 +605,8 @@ static void __init map_kernel(pgd_t *pgd
- 		 * entry instead.
- 		 */
- 		BUG_ON(!IS_ENABLED(CONFIG_ARM64_16K_PAGES));
--		set_pud(pud_set_fixmap_offset(pgd, FIXADDR_START),
--			__pud(__pa_symbol(bm_pmd) | PUD_TYPE_TABLE));
-+		pud_populate(&init_mm, pud_set_fixmap_offset(pgd, FIXADDR_START),
-+			     lm_alias(bm_pmd));
- 		pud_clear_fixmap();
- 	} else {
- 		BUG();
-@@ -721,7 +721,7 @@ int __meminit vmemmap_populate(unsigned
- 			if (!p)
- 				return -ENOMEM;
- 
--			set_pmd(pmd, __pmd(__pa(p) | PROT_SECT_NORMAL));
-+			pmd_set_huge(pmd, __pa(p), __pgprot(PROT_SECT_NORMAL));
- 		} else
- 			vmemmap_verify((pte_t *)pmd, node, addr, next);
- 	} while (addr = next, addr != end);
-@@ -915,15 +915,19 @@ int __init arch_ioremap_pmd_supported(vo
- 
- int pud_set_huge(pud_t *pud, phys_addr_t phys, pgprot_t prot)
- {
-+	pgprot_t sect_prot = __pgprot(PUD_TYPE_SECT |
-+					pgprot_val(mk_sect_prot(prot)));
- 	BUG_ON(phys & ~PUD_MASK);
--	set_pud(pud, __pud(phys | PUD_TYPE_SECT | pgprot_val(mk_sect_prot(prot))));
-+	set_pud(pud, pfn_pud(__phys_to_pfn(phys), sect_prot));
- 	return 1;
- }
- 
- int pmd_set_huge(pmd_t *pmd, phys_addr_t phys, pgprot_t prot)
- {
-+	pgprot_t sect_prot = __pgprot(PMD_TYPE_SECT |
-+					pgprot_val(mk_sect_prot(prot)));
- 	BUG_ON(phys & ~PMD_MASK);
--	set_pmd(pmd, __pmd(phys | PMD_TYPE_SECT | pgprot_val(mk_sect_prot(prot))));
-+	set_pmd(pmd, pfn_pmd(__phys_to_pfn(phys), sect_prot));
- 	return 1;
- }
- 
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.14.166-rc1
+
+Kai Li <li.kai4@h3c.com>
+    ocfs2: call journal flush to mark journal as empty after journal recovery when mount
+
+Nick Desaulniers <ndesaulniers@google.com>
+    hexagon: work around compiler crash
+
+Nick Desaulniers <ndesaulniers@google.com>
+    hexagon: parenthesize registers in asm predicates
+
+Alexander.Barabash@dell.com <Alexander.Barabash@dell.com>
+    ioat: ioat_alloc_ring() failure handling.
+
+John Stultz <john.stultz@linaro.org>
+    dmaengine: k3dma: Avoid null pointer traversal
+
+Jouni Hogander <jouni.hogander@unikie.com>
+    MIPS: Prevent link failure with kcov instrumentation
+
+Vladimir Kondratiev <vladimir.kondratiev@intel.com>
+    mips: cacheinfo: report shared CPU map
+
+Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+    rseq/selftests: Turn off timeout setting
+
+Varun Prakash <varun@chelsio.com>
+    scsi: libcxgbi: fix NULL pointer dereference in cxgbi_device_destroy()
+
+Johnson CH Chen (陳昭勳) <JohnsonCH.Chen@moxa.com>
+    gpio: mpc8xxx: Add platform device to gpiochip->parent
+
+Kars de Jong <jongk@linux-m68k.org>
+    rtc: msm6242: Fix reading of 10-hour digit
+
+Chao Yu <yuchao0@huawei.com>
+    f2fs: fix potential overflow
+
+Nathan Chancellor <natechancellor@gmail.com>
+    rtlwifi: Remove unnecessary NULL check in rtl_regd_init
+
+Mans Rullgard <mans@mansr.com>
+    spi: atmel: fix handling of cs_change set on non-last xfer
+
+Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+    mtd: spi-nor: fix silent truncation in spi_nor_read_raw()
+
+Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+    mtd: spi-nor: fix silent truncation in spi_nor_read()
+
+Seung-Woo Kim <sw0312.kim@samsung.com>
+    media: exynos4-is: Fix recursive locking in isp_video_release()
+
+Janusz Krzysztofik <jmkrzyszt@gmail.com>
+    media: ov6650: Fix .get_fmt() V4L2_SUBDEV_FORMAT_TRY support
+
+Janusz Krzysztofik <jmkrzyszt@gmail.com>
+    media: ov6650: Fix some format attributes not under control
+
+Janusz Krzysztofik <jmkrzyszt@gmail.com>
+    media: ov6650: Fix incorrect use of JPEG colorspace
+
+Peng Fan <peng.fan@nxp.com>
+    tty: serial: pch_uart: correct usage of dma_unmap_sg
+
+Peng Fan <peng.fan@nxp.com>
+    tty: serial: imx: use the sg count from dma_map_sg
+
+Oliver O'Halloran <oohall@gmail.com>
+    powerpc/powernv: Disable native PCIe port management
+
+Bjorn Helgaas <bhelgaas@google.com>
+    PCI/PTM: Remove spurious "d" from granularity message
+
+Arnd Bergmann <arnd@arndb.de>
+    compat_ioctl: handle SIOCOUTQNSD
+
+Arnd Bergmann <arnd@arndb.de>
+    af_unix: add compat_ioctl support
+
+Loic Poulain <loic.poulain@linaro.org>
+    arm64: dts: apq8096-db820c: Increase load on l21 for SDCARD
+
+Arnd Bergmann <arnd@arndb.de>
+    scsi: sd: enable compat ioctls for sed-opal
+
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+    pinctrl: lewisburg: Update pin list according to v1.1v6
+
+Colin Ian King <colin.king@canonical.com>
+    pinctl: ti: iodelay: fix error checking on pinctrl_count_index_with_args call
+
+Marian Mihailescu <mihailescu2m@gmail.com>
+    clk: samsung: exynos5420: Preserve CPU clocks configuration during suspend/resume
+
+Alexander Usyskin <alexander.usyskin@intel.com>
+    mei: fix modalias documentation
+
+Alexandru Ardelean <alexandru.ardelean@analog.com>
+    iio: imu: adis16480: assign bias value only if operation succeeded
+
+Trond Myklebust <trond.myklebust@hammerspace.com>
+    NFSv4.x: Drop the slot if nfs4_delegreturn_prepare waits for layoutreturn
+
+Chuck Lever <chuck.lever@oracle.com>
+    xprtrdma: Fix completion wait during device removal
+
+Jian-Hong Pan <jian-hong@endlessm.com>
+    platform/x86: asus-wmi: Fix keyboard brightness cannot be set to 0
+
+Xiang Chen <chenxiang66@hisilicon.com>
+    scsi: sd: Clear sdkp->protection_type if disk is reformatted without PI
+
+James Bottomley <James.Bottomley@HansenPartnership.com>
+    scsi: enclosure: Fix stale device oops with hot replug
+
+Dirk Mueller <dmueller@suse.com>
+    arm64: Check for errata before evaluating cpu features
+
+Mark Rutland <mark.rutland@arm.com>
+    arm64: add sentinel to kpti_safe_list
+
+Bart Van Assche <bvanassche@acm.org>
+    RDMA/srpt: Report the SCSI residual to the initiator
+
+Leon Romanovsky <leonro@mellanox.com>
+    RDMA/mlx5: Return proper error value
+
+Goldwyn Rodrigues <rgoldwyn@suse.com>
+    btrfs: simplify inode locking for RWF_NOWAIT
+
+Nathan Chancellor <natechancellor@gmail.com>
+    cifs: Adjust indentation in smb2_open_file
+
+Taehee Yoo <ap420073@gmail.com>
+    hsr: reset network header when supervision frame is created
+
+Geert Uytterhoeven <geert+renesas@glider.be>
+    gpio: Fix error message on out-of-range GPIO in lookup table
+
+Jon Derrick <jonathan.derrick@intel.com>
+    iommu: Remove device link to group on failure
+
+Swapna Manupati <swapna.manupati@xilinx.com>
+    gpio: zynq: Fix for bug in zynq_gpio_restore_context API
+
+Olivier Moysan <olivier.moysan@st.com>
+    ASoC: stm32: spdifrx: fix race condition in irq handler
+
+Olivier Moysan <olivier.moysan@st.com>
+    ASoC: stm32: spdifrx: fix inconsistent lock state
+
+Selvin Xavier <selvin.xavier@broadcom.com>
+    RDMA/bnxt_re: Fix Send Work Entry state check while polling completions
+
+Ran Bi <ran.bi@mediatek.com>
+    rtc: mt6397: fix alarm register overwrite
+
+Tyler Hicks <tyhicks@canonical.com>
+    drm/i915: Fix use-after-free when destroying GEM context
+
+YueHaibing <yuehaibing@huawei.com>
+    dccp: Fix memleak in __feat_register_sp
+
+Navid Emamdoost <navid.emamdoost@gmail.com>
+    iwlwifi: dbg_ini: fix memory leak in alloc_sgtable
+
+Navid Emamdoost <navid.emamdoost@gmail.com>
+    wimax: i2400: Fix memory leak in i2400m_op_rfkill_sw_toggle
+
+Navid Emamdoost <navid.emamdoost@gmail.com>
+    wimax: i2400: fix memory leak
+
+ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+    cifs: Fix lease buffer length error
+
+Vandana BN <bnvandana@gmail.com>
+    media: usb:zr364xx:Fix KASAN:null-ptr-deref Read in zr364xx_vidioc_querycap
+
+Jouni Malinen <jouni@codeaurora.org>
+    mac80211: Do not send Layer 2 Update frame before authorization
+
+Dedy Lansky <dlansky@codeaurora.org>
+    cfg80211/mac80211: make ieee80211_send_layer2_update a public function
+
+Laura Abbott <labbott@redhat.com>
+    arm64: Make sure permission updates happen for pmd/pud
+
+Will Deacon <will.deacon@arm.com>
+    arm64: Enforce BBM for huge IO/VMAP mappings
+
+Ben Hutchings <ben.hutchings@codethink.co.uk>
+    arm64: mm: Change page table pointer name in p[md]_set_huge()
+
+Kristina Martsenko <kristina.martsenko@arm.com>
+    arm64: don't open code page table entry creation
+
+Sanjay Konduri <sanjay.konduri@redpinesignals.com>
+    rsi: add fix for crash during assertions
+
+Arnd Bergmann <arnd@arndb.de>
+    fs/select: avoid clang stack usage warning
+
+Arnd Bergmann <arnd@arndb.de>
+    ethtool: reduce stack usage with clang
+
+Jiri Kosina <jkosina@suse.cz>
+    HID: hidraw, uhid: Always report EPOLLOUT
+
+Marcel Holtmann <marcel@holtmann.org>
+    HID: hidraw: Fix returning EPOLLOUT from hidraw_poll
+
+Fabian Henneke <fabian.henneke@gmail.com>
+    hidraw: Return EPOLLOUT from hidraw_poll
+
+
+-------------
+
+Diffstat:
+
+ Documentation/ABI/testing/sysfs-bus-mei            |   2 +-
+ Makefile                                           |   4 +-
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi       |   2 +
+ arch/arm64/include/asm/kvm_mmu.h                   |   5 +
+ arch/arm64/include/asm/pgtable.h                   |   1 +
+ arch/arm64/kernel/cpufeature.c                     |   5 +-
+ arch/arm64/kernel/hibernate.c                      |   3 +-
+ arch/arm64/mm/mmu.c                                |  32 +++-
+ arch/hexagon/include/asm/atomic.h                  |   8 +-
+ arch/hexagon/include/asm/bitops.h                  |   8 +-
+ arch/hexagon/include/asm/cmpxchg.h                 |   2 +-
+ arch/hexagon/include/asm/futex.h                   |   6 +-
+ arch/hexagon/include/asm/spinlock.h                |  20 +--
+ arch/hexagon/kernel/stacktrace.c                   |   4 +-
+ arch/hexagon/kernel/vm_entry.S                     |   2 +-
+ arch/mips/boot/compressed/Makefile                 |   3 +
+ arch/mips/kernel/cacheinfo.c                       |  27 +++-
+ arch/powerpc/platforms/powernv/pci.c               |  17 ++
+ drivers/clk/samsung/clk-exynos5420.c               |   2 +
+ drivers/dma/ioat/dma.c                             |   3 +-
+ drivers/dma/k3dma.c                                |  12 +-
+ drivers/gpio/gpio-mpc8xxx.c                        |   1 +
+ drivers/gpio/gpio-zynq.c                           |   8 +-
+ drivers/gpio/gpiolib.c                             |   5 +-
+ drivers/gpu/drm/i915/i915_gem_context.c            |  13 +-
+ drivers/hid/hidraw.c                               |   7 +-
+ drivers/hid/uhid.c                                 |   5 +-
+ drivers/iio/imu/adis16480.c                        |   6 +-
+ drivers/infiniband/hw/bnxt_re/qplib_fp.c           |  12 +-
+ drivers/infiniband/hw/mlx5/mr.c                    |   2 +-
+ drivers/infiniband/ulp/srpt/ib_srpt.c              |  24 +++
+ drivers/iommu/iommu.c                              |   1 +
+ drivers/media/i2c/ov6650.c                         |  72 ++++++---
+ drivers/media/platform/exynos4-is/fimc-isp-video.c |   2 +-
+ drivers/media/usb/zr364xx/zr364xx.c                |   3 +-
+ drivers/misc/enclosure.c                           |   3 +-
+ drivers/mtd/spi-nor/spi-nor.c                      |   4 +-
+ drivers/net/wimax/i2400m/op-rfkill.c               |   1 +
+ drivers/net/wireless/intel/iwlwifi/fw/dbg.c        |   1 +
+ drivers/net/wireless/realtek/rtlwifi/regd.c        |   2 +-
+ drivers/net/wireless/rsi/rsi_91x_mac80211.c        |   1 +
+ drivers/pci/pcie/ptm.c                             |   2 +-
+ drivers/pinctrl/intel/pinctrl-lewisburg.c          | 171 +++++++++++----------
+ drivers/pinctrl/ti/pinctrl-ti-iodelay.c            |   2 +-
+ drivers/platform/x86/asus-wmi.c                    |   8 +-
+ drivers/rtc/rtc-msm6242.c                          |   3 +-
+ drivers/rtc/rtc-mt6397.c                           |  47 ++++--
+ drivers/scsi/cxgbi/libcxgbi.c                      |   3 +-
+ drivers/scsi/sd.c                                  |  18 ++-
+ drivers/spi/spi-atmel.c                            |  10 +-
+ drivers/tty/serial/imx.c                           |   2 +-
+ drivers/tty/serial/pch_uart.c                      |   5 +-
+ fs/btrfs/file.c                                    |   5 +-
+ fs/cifs/smb2file.c                                 |   2 +-
+ fs/cifs/smb2pdu.c                                  |   1 +
+ fs/f2fs/data.c                                     |   2 +-
+ fs/f2fs/file.c                                     |   2 +-
+ fs/nfs/nfs4proc.c                                  |   4 +-
+ fs/ocfs2/journal.c                                 |   8 +
+ include/linux/poll.h                               |   4 +
+ include/net/cfg80211.h                             |  11 ++
+ net/core/ethtool.c                                 |  16 +-
+ net/dccp/feat.c                                    |   7 +-
+ net/hsr/hsr_device.c                               |   2 +
+ net/mac80211/cfg.c                                 |  58 +------
+ net/mac80211/sta_info.c                            |   4 +
+ net/socket.c                                       |   1 +
+ net/sunrpc/xprtrdma/verbs.c                        |   2 +-
+ net/unix/af_unix.c                                 |  19 +++
+ net/wireless/util.c                                |  45 ++++++
+ sound/soc/stm/stm32_spdifrx.c                      |  36 +++--
+ tools/testing/selftests/rseq/settings              |   1 +
+ 72 files changed, 540 insertions(+), 302 deletions(-)
 
 
