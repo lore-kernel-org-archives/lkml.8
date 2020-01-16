@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C60EC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B88C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B56621582
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:02:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FFD42075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:02:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201337;
-	bh=A6Z7jOfd+OQTDKe1kq58OeNgsQqWUkVXWSp8srLhlIk=;
+	s=default; t=1579201339;
+	bh=jhZBndIEXfFfqNHQqvIk54IIrJOpLd4mLt31hke5ZfQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N6dgGWXk+2D1E+ZBh6ydKSZgb8KyogNnIEWuXAn0ghNv4qwiT5bKDkPM5Kig3jrdy
-	 Ssynkw842KypYAqPV6J59Sos0J/P2MjbD+7GKL/qYjxtdFTzpHEsLZrS8AYm69eUEn
-	 /W83ePV2TG3CcJZa2hCYCcIDIwpOjc4aXVTwbewk=
+	b=qXSeNx/N3hoSYuic9UIyLmQSZOkv93kYGBBR4bLhE/Zs+t88TuHQE5y555ife4882
+	 u6Nu5R8YbSwEfIFD8lt7c7fdEUxCYGX7uHu/xd+by/IODRnRCQKj/rHtAXwbMZWh2l
+	 Szp0rkGjxc9dcxG74jFtw8V7yDgmiQF+DPFjau/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388686AbgAPRFm (ORCPT
+        id S2388779AbgAPRFj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:05:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34246 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:05:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388720AbgAPRF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:05:29 -0500
+        id S2388668AbgAPRF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:05:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A03E72077B;
-        Thu, 16 Jan 2020 17:05:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CE0F20728;
+        Thu, 16 Jan 2020 17:05:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194328;
-        bh=A6Z7jOfd+OQTDKe1kq58OeNgsQqWUkVXWSp8srLhlIk=;
+        s=default; t=1579194326;
+        bh=jhZBndIEXfFfqNHQqvIk54IIrJOpLd4mLt31hke5ZfQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PzlqwGPB7jsNwvb30iPS+PEdmVSY0tLg/JxV9pvMNgpx6XGtj3oghgDvRhWfrNjM5
-         Auxk6GyzZ9E9+KTK0in3e3IhMghzUv3NKXEVqfzaWIEfVeoxOKT1ctIMNqkUubWl41
-         FeUX6Cox+5sET37hnvmBFRppgQh2NUSQJxR+RMRA=
+        b=pQvC+2KN0yDUYgXDRpUSjUxHmSJAJQmVHpLgOrTu8AXQSjJ8/XlLlMJV46xeZo9Yb
+         yOolaBniftDebZvAI06AlLIQP7yzLK6qr9M6+Rroq64gBTXiZfuqERwNOYaG/ixG7N
+         5j8Ej9hceVsoJrvvMY/CeTnqhV3Q4RLmFqBG6zgQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matteo Croce <mcroce@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
+Cc:     Martin Sperl <kernel@martin.sperl.org>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 276/671] arm64/vdso: don't leak kernel addresses
-Date:   Thu, 16 Jan 2020 11:58:34 -0500
-Message-Id: <20200116170509.12787-13-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 274/671] spi: bcm2835aux: fix driver to not allow 65535 (=-1) cs-gpios
+Date:   Thu, 16 Jan 2020 11:58:32 -0500
+Message-Id: <20200116170509.12787-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -61,39 +63,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matteo Croce <mcroce@redhat.com>
+From: Martin Sperl <kernel@martin.sperl.org>
 
-[ Upstream commit 0f1bf7e39822476b2f921435cf990f67a61f5f92 ]
+[ Upstream commit 509c583620e9053e43d611bf1614fc3d3abafa96 ]
 
-Since commit ad67b74d2469d9b8 ("printk: hash addresses printed with %p"),
-two obfuscated kernel pointer are printed at every boot:
+The original driver by default defines num_chipselects as -1.
+This actually allicates an array of 65535 entries in
+of_spi_register_master.
 
-    vdso: 2 pages (1 code @ (____ptrval____), 1 data @ (____ptrval____))
+There is a side-effect for buggy device trees that (contrary to
+dt-binding documentation) have no cs-gpio defined.
 
-Remove the the print completely, as it's useless without the addresses.
+This mode was never supported by the driver due to limitations
+of native cs and additional code complexity and is explicitly
+not stated to be implemented.
 
-Fixes: ad67b74d2469d9b8 ("printk: hash addresses printed with %p")
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+To keep backwards compatibility with such buggy DTs we limit
+the number of chip_selects to 1, as for all practical purposes
+it is only ever realistic to use a single chip select in
+native cs mode without negative side-effects.
+
+Fixes: 1ea29b39f4c812ec ("spi: bcm2835aux: add bcm2835 auxiliary spi device...")
+Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/vdso.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/spi/spi-bcm2835aux.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/vdso.c b/arch/arm64/kernel/vdso.c
-index ec0bb588d755..42b7082029e1 100644
---- a/arch/arm64/kernel/vdso.c
-+++ b/arch/arm64/kernel/vdso.c
-@@ -146,8 +146,6 @@ static int __init vdso_init(void)
- 	}
- 
- 	vdso_pages = (vdso_end - vdso_start) >> PAGE_SHIFT;
--	pr_info("vdso: %ld pages (%ld code @ %p, %ld data @ %p)\n",
--		vdso_pages + 1, vdso_pages, vdso_start, 1L, vdso_data);
- 
- 	/* Allocate the vDSO pagelist, plus a page for the data. */
- 	vdso_pagelist = kcalloc(vdso_pages + 1, sizeof(struct page *),
+diff --git a/drivers/spi/spi-bcm2835aux.c b/drivers/spi/spi-bcm2835aux.c
+index 12c1fa5b06c5..c63ed402cf86 100644
+--- a/drivers/spi/spi-bcm2835aux.c
++++ b/drivers/spi/spi-bcm2835aux.c
+@@ -416,7 +416,18 @@ static int bcm2835aux_spi_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, master);
+ 	master->mode_bits = (SPI_CPOL | SPI_CS_HIGH | SPI_NO_CS);
+ 	master->bits_per_word_mask = SPI_BPW_MASK(8);
+-	master->num_chipselect = -1;
++	/* even though the driver never officially supported native CS
++	 * allow a single native CS for legacy DT support purposes when
++	 * no cs-gpio is configured.
++	 * Known limitations for native cs are:
++	 * * multiple chip-selects: cs0-cs2 are all simultaniously asserted
++	 *     whenever there is a transfer -  this even includes SPI_NO_CS
++	 * * SPI_CS_HIGH: is ignores - cs are always asserted low
++	 * * cs_change: cs is deasserted after each spi_transfer
++	 * * cs_delay_usec: cs is always deasserted one SCK cycle after
++	 *     a spi_transfer
++	 */
++	master->num_chipselect = 1;
+ 	master->transfer_one = bcm2835aux_spi_transfer_one;
+ 	master->handle_err = bcm2835aux_spi_handle_err;
+ 	master->prepare_message = bcm2835aux_spi_prepare_message;
 -- 
 2.20.1
 
