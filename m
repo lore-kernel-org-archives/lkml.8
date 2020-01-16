@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF860C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A501DC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA6222464B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70B0F2464B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197584;
-	bh=I38BuDNMH14T7GQ3q5xPGT7ZyCnqr7u0ouIc6qPgPX4=;
+	s=default; t=1579197588;
+	bh=lqrIGMuhw2YUdZMNtbC+hPhbBIxoi+KdmiQHRp4jedg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ek6/KA8p3vOpWVSx6daYOF3Y0DYvxF8qKrpBugIDfCrC0kt14oQQpzzv8yoVxFGwF
-	 /H7P7CXjZ3T2R+QjLrIOASg0eOeRolO+LOxuhAMMiTwuMsT/mxtT2Qua81QDklNF6J
-	 ilh92z5C6BwJI9gr0F2PlU0bvOEjLltlfpsFlME4=
+	b=MPfIZjKC7a/0VA+lyKybAi74zuPp7pOPOsw8lBIW6CSEEpL2sJIQjIkVz5w2vj1Ot
+	 AsoM/tXCuPr6RqtAUsDWvGrjY91FEnedWTuAz7AkGSzmwuFrolPtwSBGLOzQDy1s6P
+	 JEC3V4ZjaAwJtodGjGfFUSNanqM2mZ1d9lHKblCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394761AbgAPR7o (ORCPT
+        id S2388275AbgAPRm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:59:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32840 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:42:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393837AbgAPRnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:43:00 -0500
+        id S2405739AbgAPRlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:41:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C46FC246AA;
-        Thu, 16 Jan 2020 17:42:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5D7124724;
+        Thu, 16 Jan 2020 17:41:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196578;
-        bh=I38BuDNMH14T7GQ3q5xPGT7ZyCnqr7u0ouIc6qPgPX4=;
+        s=default; t=1579196495;
+        bh=lqrIGMuhw2YUdZMNtbC+hPhbBIxoi+KdmiQHRp4jedg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PLhQrDn2Lia0O6E+F6VbR3EDVygOAxilOG/WqbVVW6gz4aF0XpBV+PPSvGSbBPcIh
-         eCCbKBJl3VMlF1pDdwRD/IWFLMoZ4+qZIt2F4uNSC25cQI8op5ID8YX2w1lhoztUnC
-         +P8gZTlqzEuROi/5zZqteYCyXI1Q5I3SYCLr6iOc=
+        b=g9jQsq3oUg98Ms9bAlSSyZT8Oq914S6Dp5Rsba9Mj4AlRb7UahjKvqGg0XBM4lTGg
+         wMngyNGbV6QeCxY4CTD7B3lXS/qRFrQVUqKGChcN/ktmZUwFQludX9U216hVHtfrWB
+         uBekmljBfm07mk1b6tZpu5w59sN8/x9dqgWg6RVE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Spencer E. Olson" <olsonse@umich.edu>,
-        Ian Abbott <abbotti@mev.co.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 4.4 005/174] staging: comedi: ni_mio_common: protect register write overflow
-Date:   Thu, 16 Jan 2020 12:40:02 -0500
-Message-Id: <20200116174251.24326-5-sashal@kernel.org>
+Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.9 238/251] f2fs: fix potential overflow
+Date:   Thu, 16 Jan 2020 12:36:27 -0500
+Message-Id: <20200116173641.22137-198-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
-References: <20200116174251.24326-1-sashal@kernel.org>
+In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
+References: <20200116173641.22137-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,88 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Spencer E. Olson" <olsonse@umich.edu>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 1cbca5852d6c16e85a21487a15d211195aacd4a1 ]
+[ Upstream commit a9af3fdcc4258af406879eca63d82e9d6baa892e ]
 
-Fixes two problems introduced as early as
-commit 03aef4b6dc12  ("Staging: comedi: add ni_mio_common code"):
-(1) Ensures that the last four bits of NISTC_RTSI_TRIGB_OUT_REG register is
-    not unduly overwritten on e-series devices.  On e-series devices, the
-    first three of the last four bits are reserved.  The last bit defines
-    the output selection of the RGOUT0 pin, otherwise known as
-    RTSI_Sub_Selection.  For m-series devices, these last four bits are
-    indeed used as the output selection of the RTSI7 pin (and the
-    RTSI_Sub_Selection bit for the RGOUT0 pin is moved to the
-    RTSI_Trig_Direction register.
-(2) Allows all 4 RTSI_BRD lines to be treated as valid sources for RTSI
-    lines.
+In build_sit_entries(), if valid_blocks in SIT block is smaller than
+valid_blocks in journal, for below calculation:
 
-This patch also cleans up the ni_get_rtsi_routing command for readability.
+sbi->discard_blks += old_valid_blocks - se->valid_blocks;
 
-Fixes: 03aef4b6dc12  ("Staging: comedi: add ni_mio_common code")
-Signed-off-by: Spencer E. Olson <olsonse@umich.edu>
-Reviewed-by: Ian Abbott <abbotti@mev.co.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+There will be two times potential overflow:
+- old_valid_blocks - se->valid_blocks will overflow, and be a very
+large number.
+- sbi->discard_blks += result will overflow again, comes out a correct
+result accidently.
+
+Anyway, it should be fixed.
+
+Fixes: d600af236da5 ("f2fs: avoid unneeded loop in build_sit_entries")
+Fixes: 1f43e2ad7bff ("f2fs: introduce CP_TRIMMED_FLAG to avoid unneeded discard")
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../staging/comedi/drivers/ni_mio_common.c    | 24 +++++++++++++------
- 1 file changed, 17 insertions(+), 7 deletions(-)
+ fs/f2fs/data.c | 2 +-
+ fs/f2fs/file.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/comedi/drivers/ni_mio_common.c b/drivers/staging/comedi/drivers/ni_mio_common.c
-index 619c989c5f37..d682907c146a 100644
---- a/drivers/staging/comedi/drivers/ni_mio_common.c
-+++ b/drivers/staging/comedi/drivers/ni_mio_common.c
-@@ -4809,7 +4809,10 @@ static int ni_valid_rtsi_output_source(struct comedi_device *dev,
- 	case NI_RTSI_OUTPUT_G_SRC0:
- 	case NI_RTSI_OUTPUT_G_GATE0:
- 	case NI_RTSI_OUTPUT_RGOUT0:
--	case NI_RTSI_OUTPUT_RTSI_BRD_0:
-+	case NI_RTSI_OUTPUT_RTSI_BRD(0):
-+	case NI_RTSI_OUTPUT_RTSI_BRD(1):
-+	case NI_RTSI_OUTPUT_RTSI_BRD(2):
-+	case NI_RTSI_OUTPUT_RTSI_BRD(3):
- 		return 1;
- 	case NI_RTSI_OUTPUT_RTSI_OSC:
- 		return (devpriv->is_m_series) ? 1 : 0;
-@@ -4830,11 +4833,18 @@ static int ni_set_rtsi_routing(struct comedi_device *dev,
- 		devpriv->rtsi_trig_a_output_reg |= NISTC_RTSI_TRIG(chan, src);
- 		ni_stc_writew(dev, devpriv->rtsi_trig_a_output_reg,
- 			      NISTC_RTSI_TRIGA_OUT_REG);
--	} else if (chan < 8) {
-+	} else if (chan < NISTC_RTSI_TRIG_NUM_CHAN(devpriv->is_m_series)) {
- 		devpriv->rtsi_trig_b_output_reg &= ~NISTC_RTSI_TRIG_MASK(chan);
- 		devpriv->rtsi_trig_b_output_reg |= NISTC_RTSI_TRIG(chan, src);
- 		ni_stc_writew(dev, devpriv->rtsi_trig_b_output_reg,
- 			      NISTC_RTSI_TRIGB_OUT_REG);
-+	} else if (chan != NISTC_RTSI_TRIG_OLD_CLK_CHAN) {
-+		/* probably should never reach this, since the
-+		 * ni_valid_rtsi_output_source above errors out if chan is too
-+		 * high
-+		 */
-+		dev_err(dev->class_dev, "%s: unknown rtsi channel\n", __func__);
-+		return -EINVAL;
- 	}
- 	return 2;
- }
-@@ -4849,12 +4859,12 @@ static unsigned ni_get_rtsi_routing(struct comedi_device *dev, unsigned chan)
- 	} else if (chan < NISTC_RTSI_TRIG_NUM_CHAN(devpriv->is_m_series)) {
- 		return NISTC_RTSI_TRIG_TO_SRC(chan,
- 					      devpriv->rtsi_trig_b_output_reg);
--	} else {
--		if (chan == NISTC_RTSI_TRIG_OLD_CLK_CHAN)
--			return NI_RTSI_OUTPUT_RTSI_OSC;
--		dev_err(dev->class_dev, "bug! should never get here?\n");
--		return 0;
-+	} else if (chan == NISTC_RTSI_TRIG_OLD_CLK_CHAN) {
-+		return NI_RTSI_OUTPUT_RTSI_OSC;
- 	}
-+
-+	dev_err(dev->class_dev, "%s: unknown rtsi channel\n", __func__);
-+	return -EINVAL;
- }
- 
- static int ni_rtsi_insn_config(struct comedi_device *dev,
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 0206c8c20784..b2cccd4083b8 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -1267,7 +1267,7 @@ static int f2fs_write_data_page(struct page *page,
+ 	loff_t i_size = i_size_read(inode);
+ 	const pgoff_t end_index = ((unsigned long long) i_size)
+ 							>> PAGE_SHIFT;
+-	loff_t psize = (page->index + 1) << PAGE_SHIFT;
++	loff_t psize = (loff_t)(page->index + 1) << PAGE_SHIFT;
+ 	unsigned offset = 0;
+ 	bool need_balance_fs = false;
+ 	int err = 0;
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index f46ac1651bd5..e3c438c8b8ce 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -980,7 +980,7 @@ static int __clone_blkaddrs(struct inode *src_inode, struct inode *dst_inode,
+ 				}
+ 				dn.ofs_in_node++;
+ 				i++;
+-				new_size = (dst + i) << PAGE_SHIFT;
++				new_size = (loff_t)(dst + i) << PAGE_SHIFT;
+ 				if (dst_inode->i_size < new_size)
+ 					f2fs_i_size_write(dst_inode, new_size);
+ 			} while (--ilen && (do_replace[i] || blkaddr[i] == NULL_ADDR));
 -- 
 2.20.1
 
