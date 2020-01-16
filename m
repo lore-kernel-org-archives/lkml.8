@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DEC1C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C54C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A586246FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56990246F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:39:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196337;
-	bh=8CbT8TZ2iRcbrH7EgaNzFCMgeHLem/RyTXHo5n0sxLw=;
+	s=default; t=1579196344;
+	bh=mwhEdmkbM4fEVCkSGlL/oVNz+TJTmE1F+zNFLP58JAo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I9mOWbcmDGVfo47JpbkaBEE3S6ZE9xaOlBQgpT/xc8rWkkTqLwt4Ad2cQcPqtIehU
-	 tkYxJPxNMoDNlAV8PSP4HVceDloz7PMHZBDjm6hIA+4RiqvGO2Hbu8tihmVPS/wr0Y
-	 5lDN9QKje44owXhrQ6rpPkTsRueEI4CV74aAS9TQ=
+	b=opCUGOKxI/OYjo5jpyQqeKqjvzfKr67CBO4zcFAM7IYuKLUPDRGu9SAeL8yuuzDL3
+	 7AZ9DbyJHivvJ6CqsHaGGtdZ8rjiqcFXEyukLca2ct7HAloF6Y4Nm4tXyjqYoOzWaV
+	 SLTwOi1kGNqTZzi9eV9qa1fYG89sPtTwKslXNRhM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393399AbgAPRi4 (ORCPT
+        id S2393416AbgAPRjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:38:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54054 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:39:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393312AbgAPRiR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:38:17 -0500
+        id S2404926AbgAPRiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:38:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62796246E1;
-        Thu, 16 Jan 2020 17:38:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C175246C3;
+        Thu, 16 Jan 2020 17:38:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196296;
-        bh=8CbT8TZ2iRcbrH7EgaNzFCMgeHLem/RyTXHo5n0sxLw=;
+        s=default; t=1579196300;
+        bh=mwhEdmkbM4fEVCkSGlL/oVNz+TJTmE1F+zNFLP58JAo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V2Tf5TkiJ0FnqbMbbS9n0KcS+3USROhPoQt6mjgQHintaVFOeShAOto3F+Z924QBT
-         lcWckQkDGgdyoA4uHj/A47FUClToHsQjaSq9Qj43fM1HTqkZGQa5GOW5r0koh6NJrT
-         c730auiLwA27/HiG3fCilkKdkWSnlIMbV55YKB9E=
+        b=ZPvTlbZZ/syx30DLB0QTbO024K8h+0dPPeTi/TcOryEqfXkSJeX3R5QB/tGqOqu7D
+         wZ6wCXSCoh2T3VD52KPBblfB1756sqyabhdEyeBCfVKtL6L3sd+LeWm8w0YqzhY+fU
+         KiANTn5rviG/xFiHVTj9b5oRjgBWPusLz1tnEkwg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, dccp@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 109/251] dccp: Fix memleak in __feat_register_sp
-Date:   Thu, 16 Jan 2020 12:34:18 -0500
-Message-Id: <20200116173641.22137-69-sashal@kernel.org>
+Cc:     Martin Sperl <kernel@martin.sperl.org>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 111/251] spi: bcm2835aux: fix driver to not allow 65535 (=-1) cs-gpios
+Date:   Thu, 16 Jan 2020 12:34:20 -0500
+Message-Id: <20200116173641.22137-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -61,41 +63,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Martin Sperl <kernel@martin.sperl.org>
 
-[ Upstream commit 1d3ff0950e2b40dc861b1739029649d03f591820 ]
+[ Upstream commit 509c583620e9053e43d611bf1614fc3d3abafa96 ]
 
-If dccp_feat_push_change fails, we forget free the mem
-which is alloced by kmemdup in dccp_feat_clone_sp_val.
+The original driver by default defines num_chipselects as -1.
+This actually allicates an array of 65535 entries in
+of_spi_register_master.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: e8ef967a54f4 ("dccp: Registration routines for changing feature values")
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+There is a side-effect for buggy device trees that (contrary to
+dt-binding documentation) have no cs-gpio defined.
+
+This mode was never supported by the driver due to limitations
+of native cs and additional code complexity and is explicitly
+not stated to be implemented.
+
+To keep backwards compatibility with such buggy DTs we limit
+the number of chip_selects to 1, as for all practical purposes
+it is only ever realistic to use a single chip select in
+native cs mode without negative side-effects.
+
+Fixes: 1ea29b39f4c812ec ("spi: bcm2835aux: add bcm2835 auxiliary spi device...")
+Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/dccp/feat.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/spi/spi-bcm2835aux.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/net/dccp/feat.c b/net/dccp/feat.c
-index f227f002c73d..db87d9f58019 100644
---- a/net/dccp/feat.c
-+++ b/net/dccp/feat.c
-@@ -738,7 +738,12 @@ static int __feat_register_sp(struct list_head *fn, u8 feat, u8 is_local,
- 	if (dccp_feat_clone_sp_val(&fval, sp_val, sp_len))
- 		return -ENOMEM;
- 
--	return dccp_feat_push_change(fn, feat, is_local, mandatory, &fval);
-+	if (dccp_feat_push_change(fn, feat, is_local, mandatory, &fval)) {
-+		kfree(fval.sp.vec);
-+		return -ENOMEM;
-+	}
-+
-+	return 0;
- }
- 
- /**
+diff --git a/drivers/spi/spi-bcm2835aux.c b/drivers/spi/spi-bcm2835aux.c
+index 5c89bbb05441..e075712c501e 100644
+--- a/drivers/spi/spi-bcm2835aux.c
++++ b/drivers/spi/spi-bcm2835aux.c
+@@ -416,7 +416,18 @@ static int bcm2835aux_spi_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, master);
+ 	master->mode_bits = (SPI_CPOL | SPI_CS_HIGH | SPI_NO_CS);
+ 	master->bits_per_word_mask = SPI_BPW_MASK(8);
+-	master->num_chipselect = -1;
++	/* even though the driver never officially supported native CS
++	 * allow a single native CS for legacy DT support purposes when
++	 * no cs-gpio is configured.
++	 * Known limitations for native cs are:
++	 * * multiple chip-selects: cs0-cs2 are all simultaniously asserted
++	 *     whenever there is a transfer -  this even includes SPI_NO_CS
++	 * * SPI_CS_HIGH: is ignores - cs are always asserted low
++	 * * cs_change: cs is deasserted after each spi_transfer
++	 * * cs_delay_usec: cs is always deasserted one SCK cycle after
++	 *     a spi_transfer
++	 */
++	master->num_chipselect = 1;
+ 	master->transfer_one = bcm2835aux_spi_transfer_one;
+ 	master->handle_err = bcm2835aux_spi_handle_err;
+ 	master->prepare_message = bcm2835aux_spi_prepare_message;
 -- 
 2.20.1
 
