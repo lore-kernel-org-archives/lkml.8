@@ -2,136 +2,137 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA89EC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA9AC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 882DE20730
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:16:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198582;
-	bh=ouDOGODEY/dNR0K0ljr0NFswmyk7CBZsCorqDZUqP4Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fa58rP44KlmwyLjGsQgEt8jftdAhlfu9m47+bium1uMyrB3gW8VhbGuSEbPbxPxAI
-	 VTrS5jMEYICdnYihjRmw60IYzFcQe5jEFb0stkoLq1eA0Hp80m5s3DCKNjwZ14uYbB
-	 s92mDd5FsLlkYuVPICmVIhN43+3tNVCpTmxkyG0g=
+	by mail.kernel.org (Postfix) with ESMTP id 5FE0420730
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:16:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405349AbgAPSQV (ORCPT
+        id S2391131AbgAPSQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:16:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41338 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392722AbgAPR32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:29:28 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5F1824719;
-        Thu, 16 Jan 2020 17:29:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195767;
-        bh=ouDOGODEY/dNR0K0ljr0NFswmyk7CBZsCorqDZUqP4Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BRnW+1i0yfpCl2JLc3/e5K8GCfirPWT7KScok1/hOHAOUEEYBCLyDFM+meUFjofsa
-         0huc4akveKPD1GaxA006yqafipXTAs1oY0zphdPjAAzroLGNUaQjn76caca9pwszwp
-         /VMDFRORL0Ktz8GFykbVWSmlNsaz+C5IG9VhR8hQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Firo Yang <firo.yang@suse.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 295/371] ixgbe: sync the first fragment unconditionally
-Date:   Thu, 16 Jan 2020 12:22:47 -0500
-Message-Id: <20200116172403.18149-238-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
-References: <20200116172403.18149-1-sashal@kernel.org>
+        Thu, 16 Jan 2020 13:16:26 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2275 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2405344AbgAPSQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 13:16:23 -0500
+Received: from lhreml701-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id EF11B2307849F84166D6;
+        Thu, 16 Jan 2020 18:16:19 +0000 (GMT)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ lhreml701-cah.china.huawei.com (10.201.108.42) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 16 Jan 2020 18:16:19 +0000
+Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 16 Jan
+ 2020 18:16:19 +0000
+Date:   Thu, 16 Jan 2020 18:16:18 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Sasha Levin <sashal@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        Brian Masney <masneyb@onstation.org>,
+        <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH AUTOSEL 4.19 482/671] iio: tsl2772: Use
+ devm_add_action_or_reset for tsl2772_chip_off
+Message-ID: <20200116181618.000063c2@Huawei.com>
+In-Reply-To: <20200116170509.12787-219-sashal@kernel.org>
+References: <20200116170509.12787-1-sashal@kernel.org>
+        <20200116170509.12787-219-sashal@kernel.org>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.57]
+X-ClientProxiedBy: lhreml733-chm.china.huawei.com (10.201.108.84) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Firo Yang <firo.yang@suse.com>
+On Thu, 16 Jan 2020 12:02:00 -0500
+Sasha Levin <sashal@kernel.org> wrote:
 
-[ Upstream commit e7ba676c6188d394a0133fc4b9bcd7ee50d54b7f ]
+> From: Chuhong Yuan <hslester96@gmail.com>
+> 
+> [ Upstream commit 338084135aeddb103624a6841972fb8588295cc6 ]
+> 
+> Use devm_add_action_or_reset to call tsl2772_chip_off
+> when the device is removed.
+> This also fixes the issue that the chip is turned off
+> before the device is unregistered.
+> 
+> Not marked for stable as fairly hard to hit the bug and
+> this is in the middle of a set making other cleanups
+> to the driver.  Hence will probably need explicit backporting.
 
-In Xen environment, if Xen-swiotlb is enabled, ixgbe driver
-could possibly allocate a page, DMA memory buffer, for the first
-fragment which is not suitable for Xen-swiotlb to do DMA operations.
-Xen-swiotlb have to internally allocate another page for doing DMA
-operations. This mechanism requires syncing the data from the internal
-page to the page which ixgbe sends to upper network stack. However,
-since commit f3213d932173 ("ixgbe: Update driver to make use of DMA
-attributes in Rx path"), the unmap operation is performed with
-DMA_ATTR_SKIP_CPU_SYNC. As a result, the sync is not performed.
-Since the sync isn't performed, the upper network stack could receive
-a incomplete network packet. By incomplete, it means the linear data
-on the first fragment(between skb->head and skb->end) is invalid. So
-we have to copy the data from the internal xen-swiotlb page to the page
-which ixgbe sends to upper network stack through the sync operation.
+Guess I was wrong and it does go on cleanly.  I took a quick
+look at current 4.19 driver and looks like it's fine on it's
+own.
 
-More details from Alexander Duyck:
-Specifically since we are mapping the frame with
-DMA_ATTR_SKIP_CPU_SYNC we have to unmap with that as well. As a result
-a sync is not performed on an unmap and must be done manually as we
-skipped it for the first frag. As such we need to always sync before
-possibly performing a page unmap operation.
+We need to be careful with this one in general though.
 
-Fixes: f3213d932173 ("ixgbe: Update driver to make use of DMA attributes in Rx path")
-Signed-off-by: Firo Yang <firo.yang@suse.com>
-Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> for 4.19
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-index 0edfd199937d..e4c1e6345edd 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-@@ -1871,13 +1871,7 @@ static void ixgbe_pull_tail(struct ixgbe_ring *rx_ring,
- static void ixgbe_dma_sync_frag(struct ixgbe_ring *rx_ring,
- 				struct sk_buff *skb)
- {
--	/* if the page was released unmap it, else just sync our portion */
--	if (unlikely(IXGBE_CB(skb)->page_released)) {
--		dma_unmap_page_attrs(rx_ring->dev, IXGBE_CB(skb)->dma,
--				     ixgbe_rx_pg_size(rx_ring),
--				     DMA_FROM_DEVICE,
--				     IXGBE_RX_DMA_ATTR);
--	} else if (ring_uses_build_skb(rx_ring)) {
-+	if (ring_uses_build_skb(rx_ring)) {
- 		unsigned long offset = (unsigned long)(skb->data) & ~PAGE_MASK;
- 
- 		dma_sync_single_range_for_cpu(rx_ring->dev,
-@@ -1894,6 +1888,14 @@ static void ixgbe_dma_sync_frag(struct ixgbe_ring *rx_ring,
- 					      skb_frag_size(frag),
- 					      DMA_FROM_DEVICE);
- 	}
-+
-+	/* If the page was released, just unmap it. */
-+	if (unlikely(IXGBE_CB(skb)->page_released)) {
-+		dma_unmap_page_attrs(rx_ring->dev, IXGBE_CB(skb)->dma,
-+				     ixgbe_rx_pg_size(rx_ring),
-+				     DMA_FROM_DEVICE,
-+				     IXGBE_RX_DMA_ATTR);
-+	}
- }
- 
- /**
--- 
-2.20.1
+> 
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> Fixes: c06c4d793584 ("staging: iio: tsl2x7x/tsl2772: move out of staging")
+> Reviewed-by: Brian Masney <masneyb@onstation.org>
+> Tested-by: Brian Masney <masneyb@onstation.org>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/iio/light/tsl2772.c | 16 +++++++++++++---
+>  1 file changed, 13 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iio/light/tsl2772.c b/drivers/iio/light/tsl2772.c
+> index df5b2a0da96c..f2e308c6d6d7 100644
+> --- a/drivers/iio/light/tsl2772.c
+> +++ b/drivers/iio/light/tsl2772.c
+> @@ -716,6 +716,13 @@ static int tsl2772_chip_off(struct iio_dev *indio_dev)
+>  	return tsl2772_write_control_reg(chip, 0x00);
+>  }
+>  
+> +static void tsl2772_chip_off_action(void *data)
+> +{
+> +	struct iio_dev *indio_dev = data;
+> +
+> +	tsl2772_chip_off(indio_dev);
+> +}
+> +
+>  /**
+>   * tsl2772_invoke_change - power cycle the device to implement the user
+>   *                         parameters
+> @@ -1711,9 +1718,14 @@ static int tsl2772_probe(struct i2c_client *clientp,
+>  	if (ret < 0)
+>  		return ret;
+>  
+> +	ret = devm_add_action_or_reset(&clientp->dev,
+> +					tsl2772_chip_off_action,
+> +					indio_dev);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>  	ret = iio_device_register(indio_dev);
+>  	if (ret) {
+> -		tsl2772_chip_off(indio_dev);
+>  		dev_err(&clientp->dev,
+>  			"%s: iio registration failed\n", __func__);
+>  		return ret;
+> @@ -1740,8 +1752,6 @@ static int tsl2772_remove(struct i2c_client *client)
+>  {
+>  	struct iio_dev *indio_dev = i2c_get_clientdata(client);
+>  
+> -	tsl2772_chip_off(indio_dev);
+> -
+>  	iio_device_unregister(indio_dev);
+>  
+>  	return 0;
+
 
