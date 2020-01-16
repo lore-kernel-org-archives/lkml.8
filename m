@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23278C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50048C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E966C24693
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2913820684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:13:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198421;
-	bh=tdBSwxxCeitoPSZ6ScJGChgxmx8QvubbLNKi1Z1+VLQ=;
+	s=default; t=1579198426;
+	bh=zmFdBmJB8ZV55rg0xml0npPBzNLSKdUnNgt23cN+QR4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o2p2nfV7EYAOTU9xpEps5fc0h4nV+bpz7CPWbGPh5kPPNiPFs927QrQ5ut9cbuwKJ
-	 W5TZhS15rCvpdYxWiFPi/3ns1sYWRdvP9K298OCmZrrcbZYBdlKTiHyWLIUO1n7pxr
-	 n2YeKzsu7g24S/HsE2qdZcm0EUUDJ/DwSn+gErx8=
+	b=B/ft/5uxKI8g1/7n52L9f6waCsb/lgwg8mGIm428Cr3HzD3CrN+9xFOKmapmbdg2B
+	 ZQA2tvo4LSIqaeWu8ShUnKakM9UxBNOXoxZJW0O5vnjR+7AVyTF+lP8xWxAk+LSDZm
+	 ml4poiSPZFCtqZbEHf7Eq3efY3P3Io69dbkcsyXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405196AbgAPRgt (ORCPT
+        id S2395271AbgAPSNp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:36:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51640 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:13:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405114AbgAPRgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:36:46 -0500
+        id S2405133AbgAPRgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:36:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4BCD246B7;
-        Thu, 16 Jan 2020 17:36:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86E23246B9;
+        Thu, 16 Jan 2020 17:36:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196206;
-        bh=tdBSwxxCeitoPSZ6ScJGChgxmx8QvubbLNKi1Z1+VLQ=;
+        s=default; t=1579196207;
+        bh=zmFdBmJB8ZV55rg0xml0npPBzNLSKdUnNgt23cN+QR4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1J2WK9Wpn4tiGkOnvwmbOtY9vvj/P80fWOTw7c6V8S3kteToX0GLgdFYrX3QUDKiv
-         xUgjhWJcqa201SuZAZFxAC0r+JlLIBdt3pj7Sa4oDSUc4TTWtfBuOdqOHprPzibiDQ
-         BApSyJvMGDmR2CymAwsJN/3Rb9xC9T8ELlCqljc0=
+        b=hsMqoz4budMMXUAz+gfQXp4tdFaJDpGSwpsAj8gou16KeojMPrQrJqmdEI+8+Jvan
+         DnAXAKSKdyJmuHgHr6IX/j1QB1HEmtCGKU3OPPaoG0u3rM56lRGmSAHwqi0gSLK1TN
+         SYRQ5JqomyuTg49VIyPjm/bKSQdiRDNqQg9hHgfo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Agner <stefan@agner.ch>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 043/251] ASoC: imx-sgtl5000: put of nodes if finding codec fails
-Date:   Thu, 16 Jan 2020 12:33:12 -0500
-Message-Id: <20200116173641.22137-3-sashal@kernel.org>
+Cc:     Israel Rukshin <israelr@mellanox.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 044/251] IB/iser: Pass the correct number of entries for dma mapped SGL
+Date:   Thu, 16 Jan 2020 12:33:13 -0500
+Message-Id: <20200116173641.22137-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -63,38 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Agner <stefan@agner.ch>
+From: Israel Rukshin <israelr@mellanox.com>
 
-[ Upstream commit d9866572486802bc598a3e8576a5231378d190de ]
+[ Upstream commit 57b26497fabe1b9379b59fbc7e35e608e114df16 ]
 
-Make sure to properly put the of node in case finding the codec
-fails.
+ib_dma_map_sg() augments the SGL into a 'dma mapped SGL'. This process may
+change the number of entries and the lengths of each entry.
 
-Fixes: 81e8e4926167 ("ASoC: fsl: add sgtl5000 clock support for imx-sgtl5000")
-Signed-off-by: Stefan Agner <stefan@agner.ch>
-Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Code that touches dma_address is iterating over the 'dma mapped SGL' and
+must use dma_nents which returned from ib_dma_map_sg().
+
+ib_sg_to_pages() and ib_map_mr_sg() are using dma_address so they must use
+dma_nents.
+
+Fixes: 39405885005a ("IB/iser: Port to new fast registration API")
+Fixes: bfe066e256d5 ("IB/iser: Reuse ib_sg_to_pages")
+Signed-off-by: Israel Rukshin <israelr@mellanox.com>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
+Acked-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/imx-sgtl5000.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/infiniband/ulp/iser/iser_memory.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/sound/soc/fsl/imx-sgtl5000.c b/sound/soc/fsl/imx-sgtl5000.c
-index 8e525f7ac08d..3d99a8579c99 100644
---- a/sound/soc/fsl/imx-sgtl5000.c
-+++ b/sound/soc/fsl/imx-sgtl5000.c
-@@ -119,7 +119,8 @@ static int imx_sgtl5000_probe(struct platform_device *pdev)
- 	codec_dev = of_find_i2c_device_by_node(codec_np);
- 	if (!codec_dev) {
- 		dev_err(&pdev->dev, "failed to find codec platform device\n");
--		return -EPROBE_DEFER;
-+		ret = -EPROBE_DEFER;
-+		goto fail;
+diff --git a/drivers/infiniband/ulp/iser/iser_memory.c b/drivers/infiniband/ulp/iser/iser_memory.c
+index 9c3e9ab53a41..759c2fe033e7 100644
+--- a/drivers/infiniband/ulp/iser/iser_memory.c
++++ b/drivers/infiniband/ulp/iser/iser_memory.c
+@@ -240,8 +240,8 @@ int iser_fast_reg_fmr(struct iscsi_iser_task *iser_task,
+ 	page_vec->npages = 0;
+ 	page_vec->fake_mr.page_size = SIZE_4K;
+ 	plen = ib_sg_to_pages(&page_vec->fake_mr, mem->sg,
+-			      mem->size, NULL, iser_set_page);
+-	if (unlikely(plen < mem->size)) {
++			      mem->dma_nents, NULL, iser_set_page);
++	if (unlikely(plen < mem->dma_nents)) {
+ 		iser_err("page vec too short to hold this SG\n");
+ 		iser_data_buf_dump(mem, device->ib_device);
+ 		iser_dump_page_vec(page_vec);
+@@ -450,10 +450,10 @@ static int iser_fast_reg_mr(struct iscsi_iser_task *iser_task,
+ 
+ 	ib_update_fast_reg_key(mr, ib_inc_rkey(mr->rkey));
+ 
+-	n = ib_map_mr_sg(mr, mem->sg, mem->size, NULL, SIZE_4K);
+-	if (unlikely(n != mem->size)) {
++	n = ib_map_mr_sg(mr, mem->sg, mem->dma_nents, NULL, SIZE_4K);
++	if (unlikely(n != mem->dma_nents)) {
+ 		iser_err("failed to map sg (%d/%d)\n",
+-			 n, mem->size);
++			 n, mem->dma_nents);
+ 		return n < 0 ? n : -EINVAL;
  	}
  
- 	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
 -- 
 2.20.1
 
