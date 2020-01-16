@@ -2,98 +2,132 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C104C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0A1C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E4792077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15EBF2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:16:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579202200;
+	bh=2xRJRWDQlQ6lgY7clO/7aQlHd9NaMYeMsWsqynNKo3s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ugt6JCG6hvUisQtCvGjJD9Fbsc5balWVryd0iiAnleoxhB2ELhcOkYsEd/E228O6i
+	 lwQqR0NPEy/KNyUqolqbyJ45cGeYMl0mi2PDWCxHSJ3+R3+vyvFPejHYuxtlDs+l7e
+	 cITNCmLp27SDP+o53DtXDCJdsbPnHOc2KkCLIr+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407298AbgAPTQg (ORCPT
+        id S1732825AbgAPQzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:16:36 -0500
-Received: from mga11.intel.com ([192.55.52.93]:50650 "EHLO mga11.intel.com"
+        Thu, 16 Jan 2020 11:55:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733204AbgAPTQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 14:16:33 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 11:16:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,327,1574150400"; 
-   d="scan'208";a="373426824"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
-  by orsmga004.jf.intel.com with ESMTP; 16 Jan 2020 11:16:32 -0800
-Date:   Thu, 16 Jan 2020 11:16:32 -0800
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Jari Ruusu <jari.ruusu@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Fenghua Yu <fenghua.yu@intel.com>, johannes.berg@intel.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: Fix built-in early-load Intel microcode alignment
-Message-ID: <20200116191632.GB117689@otc-nc-03>
-References: <CACMCwJLJCA2iXS0QMKKAWQv252oUcmfsNvwDNP5+4Z_9VB-rTg@mail.gmail.com>
- <5C216684-6FDF-41B5-9F51-89DC295F6DDC@amacapital.net>
- <CACMCwJLogOH-nG7QEMzrXK-iJPOdzCrL05y0a6yAbtPsfdRjsQ@mail.gmail.com>
- <CAHk-=wiqPHc=BzSYO4N=awucq0td3s9VuBkct=m-B_xZVCgzBg@mail.gmail.com>
- <CACMCwJL+kdkJRfRhG6bt_ojU0UeipqxVL3vwS3ETqVEjnWL1ew@mail.gmail.com>
+        id S1729368AbgAPQz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:55:28 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 492852176D;
+        Thu, 16 Jan 2020 16:55:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579193727;
+        bh=2xRJRWDQlQ6lgY7clO/7aQlHd9NaMYeMsWsqynNKo3s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cknxyQGl+PdMwEB1PSUAey06jw/z+vNIrTqFiLzOs/KFFIql5aE3fsVcbwIq7LmN2
+         CgK+c1pJfYKpV9TovmA1hO69Tj7AfwXWhXXkucZ3ZMd/aXCDZzYZF4YnZq0N9SHoYp
+         6r2DE/e6f4i05lXxx15QiNdFvCyv6roDPdYDb0Xs=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Alex Estrin <alex.estrin@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        "Michael J . Ruhl" <michael.j.ruhl@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 020/671] IB/hfi1: Add mtu check for operational data VLs
+Date:   Thu, 16 Jan 2020 11:44:11 -0500
+Message-Id: <20200116165502.8838-20-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
+References: <20200116165502.8838-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACMCwJL+kdkJRfRhG6bt_ojU0UeipqxVL3vwS3ETqVEjnWL1ew@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jari
+From: Alex Estrin <alex.estrin@intel.com>
 
-Sorry for the delay, just returned after a long vacation. 
+[ Upstream commit eb50130964e8c1379f37c3d3bab33a411ec62e98 ]
 
-On Thu, Jan 16, 2020 at 08:55:52AM +0200, Jari Ruusu wrote:
-> On 1/15/20, Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> > However, the most likely cause is that you have a borderline dodgy
-> > system, and the microcode update then just triggers a pre-existing
-> > problem.
-> 
-> For that particular processor model, there appears to be microcode
-> updates for four steppings: 9 10 11 and 12. My model is stepping
-> 9, so it appears to be early commercially sold version of that
-> model. Probably more problems on it than on later steppings.
+Since Virtual Lanes BCT credits and MTU are set through separate MADs, we
+have to ensure both are valid, and data VLs are ready for transmission
+before we allow port transition to Armed state.
 
-I don't suspect the alignment issue during microcode load to trigger
-any hangs after couple days. Its only used to copy to some internal store.
-So once the ucode is loaded and if you look at /proc/cpuinfo and it reflects
-the latest microcode you are past the alignment issue. I suspect its
-something else.
+Fixes: 5e2d6764a729 ("IB/hfi1: Verify port data VLs credits on transition to Armed")
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Signed-off-by: Alex Estrin <alex.estrin@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/infiniband/hw/hfi1/chip.c | 26 ++++++++++++++++++++++----
+ 1 file changed, 22 insertions(+), 4 deletions(-)
 
-Can you please also document the OEM, BIOS versions, and also both the
-old and new microcode versions after the update.
+diff --git a/drivers/infiniband/hw/hfi1/chip.c b/drivers/infiniband/hw/hfi1/chip.c
+index 6b8935361133..b09a4b1cf397 100644
+--- a/drivers/infiniband/hw/hfi1/chip.c
++++ b/drivers/infiniband/hw/hfi1/chip.c
+@@ -10580,12 +10580,29 @@ void set_link_down_reason(struct hfi1_pportdata *ppd, u8 lcl_reason,
+ 	}
+ }
+ 
+-/*
+- * Verify if BCT for data VLs is non-zero.
++/**
++ * data_vls_operational() - Verify if data VL BCT credits and MTU
++ *			    are both set.
++ * @ppd: pointer to hfi1_pportdata structure
++ *
++ * Return: true - Ok, false -otherwise.
+  */
+ static inline bool data_vls_operational(struct hfi1_pportdata *ppd)
+ {
+-	return !!ppd->actual_vls_operational;
++	int i;
++	u64 reg;
++
++	if (!ppd->actual_vls_operational)
++		return false;
++
++	for (i = 0; i < ppd->vls_supported; i++) {
++		reg = read_csr(ppd->dd, SEND_CM_CREDIT_VL + (8 * i));
++		if ((reg && !ppd->dd->vld[i].mtu) ||
++		    (!reg && ppd->dd->vld[i].mtu))
++			return false;
++	}
++
++	return true;
+ }
+ 
+ /*
+@@ -10698,7 +10715,8 @@ int set_link_state(struct hfi1_pportdata *ppd, u32 state)
+ 
+ 		if (!data_vls_operational(ppd)) {
+ 			dd_dev_err(dd,
+-				   "%s: data VLs not operational\n", __func__);
++				   "%s: Invalid data VL credits or mtu\n",
++				   __func__);
+ 			ret = -EINVAL;
+ 			break;
+ 		}
+-- 
+2.20.1
 
-Would suggest logging the hang issue in public github for microcode issues.
-This would let the product folks look at them.
-
-https://github.com/intel/Intel-Linux-Processor-Microcode-Data-Files
-
-> 
-> > But it might be worth it if the intel people could check up with their
-> > microcode people on this anyway - if there is _one_ report of "my
-> > system locks up with newer ucode", that's one thing. But if Jari isn't
-> > alone...
-> 
-
-Cheers,
-Ashok
