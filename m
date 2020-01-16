@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D27EC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 677B2C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9149214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:54:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34C4B205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:54:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193686;
-	bh=6RmZS8R/qbLmC24LIgFWQHrkZAi6i9WyA++AiikMsrg=;
+	s=default; t=1579193689;
+	bh=dahKvLZdNJjC4GxaMJR7cqCS8Yq9xqQmKrKzt7UrVV0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ng5/H61HspBn6xaHIt8uiMR7o4gXU2Gv6Ke7n52mSaVvDBAeojTzJtGV59YnMGPmp
-	 LNa7bYkEbKWZWbd2w+U11aETua7VJSwtdUSBBrMdYZFdhc50MuHWyLB6Cod76KYXzM
-	 IsvmoTJMr655PiMYEKWcJg5zcj8H38Qycu+fk2tA=
+	b=q7aU+C0SQZ68eFj9oGin6bycBUCMeI2NcMA8DfayjJCn/rxWxXubBlRO6trBAC8lN
+	 89kJ7dg00+wvBhAxO9Ycbq98P+GBvnXr8NS2K24LJOeFch4EFHk/3ATtUac55OOfdW
+	 nY3uBGtvQa2MvqDzCyhBGnwDZNwNsih76QTbPZ8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732456AbgAPQyp (ORCPT
+        id S1732493AbgAPQys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:54:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39178 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:54:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732209AbgAPQye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:54:34 -0500
+        id S1732274AbgAPQyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:54:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A85BB214AF;
-        Thu, 16 Jan 2020 16:54:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF57A2192A;
+        Thu, 16 Jan 2020 16:54:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193673;
-        bh=6RmZS8R/qbLmC24LIgFWQHrkZAi6i9WyA++AiikMsrg=;
+        s=default; t=1579193675;
+        bh=dahKvLZdNJjC4GxaMJR7cqCS8Yq9xqQmKrKzt7UrVV0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PTcUpVKza25MiwqTSTjwhfdAkU+2RfQELH7urw2KhcLnTPaxwGu61F10l7J9TjPe9
-         Wl/FVCw9FHDZuBTU/cVOi8jZm2fofbzy9U6mqIjs4ipxFhtN7aPvtdF8pX9YOH9oVq
-         AAQuZwiUm7RFrlLPSDYt+MRuGklbpjjKp0K1gG4c=
+        b=ObwTGaUlXFQQc6iLBcKZvsPzwB7H0PM4bLYQi6KAK+adn7RCEu4FNG9bsArW+QWTr
+         7nfFwXRH4xZ9YW5YHKXdxfGZLp3Uh7LO4BWlZuHzmaIVqcY26qEVK2sx1yR/pEadXz
+         6aKgIAPIfbn++x96Y0L1Qw4rsenvp7P9ejE9mraQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Olga Kornievskaia <olga.kornievskaia@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        "J . Bruce Fields" <bfields@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 198/205] NFSD fixing possible null pointer derefering in copy offload
-Date:   Thu, 16 Jan 2020 11:42:53 -0500
-Message-Id: <20200116164300.6705-198-sashal@kernel.org>
+Cc:     Can Guo <cang@codeaurora.org>, Avri Altman <avri.altman@wdc.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 200/205] scsi: ufs: Give an unique ID to each ufs-bsg
+Date:   Thu, 16 Jan 2020 11:42:55 -0500
+Message-Id: <20200116164300.6705-200-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -61,36 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olga Kornievskaia <olga.kornievskaia@gmail.com>
+From: Can Guo <cang@codeaurora.org>
 
-[ Upstream commit 18f428d4e2f7eff162d80b2b21689496c4e82afd ]
+[ Upstream commit 8c850a0296004409e7bcb9464712fb2807da656a ]
 
-Static checker revealed possible error path leading to possible
-NULL pointer dereferencing.
+Considering there can be multiple UFS hosts in SoC, give each ufs-bsg an
+unique ID by appending the scsi host number to its device name.
 
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Fixes: e0639dc5805a: ("NFSD introduce async copy feature")
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Link: https://lore.kernel.org/r/0101016eca8dc9d7-d24468d3-04d2-4ef3-a906-abe8b8cbcd3d-000000@us-west-2.amazonses.com
+Fixes: df032bf27a41 ("scsi: ufs: Add a bsg endpoint that supports UPIUs")
+Signed-off-by: Can Guo <cang@codeaurora.org>
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfs4proc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/ufs/ufs_bsg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 38c0aeda500e..4798667af647 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -1298,7 +1298,8 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- out:
- 	return status;
- out_err:
--	cleanup_async_copy(async_copy);
-+	if (async_copy)
-+		cleanup_async_copy(async_copy);
- 	goto out;
- }
+diff --git a/drivers/scsi/ufs/ufs_bsg.c b/drivers/scsi/ufs/ufs_bsg.c
+index dc2f6d2b46ed..d2197a31abe5 100644
+--- a/drivers/scsi/ufs/ufs_bsg.c
++++ b/drivers/scsi/ufs/ufs_bsg.c
+@@ -202,7 +202,7 @@ int ufs_bsg_probe(struct ufs_hba *hba)
+ 	bsg_dev->parent = get_device(parent);
+ 	bsg_dev->release = ufs_bsg_node_release;
  
+-	dev_set_name(bsg_dev, "ufs-bsg");
++	dev_set_name(bsg_dev, "ufs-bsg%u", shost->host_no);
+ 
+ 	ret = device_add(bsg_dev);
+ 	if (ret)
 -- 
 2.20.1
 
