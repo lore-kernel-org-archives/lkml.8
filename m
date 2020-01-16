@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B49AC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7718CC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F18A62073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:41:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D8C12073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:42:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200117;
-	bh=2JHxflA3BEtDI5QcLJ6LyPWNK5cwoOxsgiMg5wbwaxM=;
+	s=default; t=1579200126;
+	bh=osu43gUfm3EZl60KJo19B78H6kg+zt5SbEr1OSOYKg0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BH2pk0Ampj9oj0I8pffPvXFO/kY/J0OuEqq1ui/v7C6mrusuvFYtl2lRH6I/T8YMs
-	 B9H6gOdpet6IxoBgL7g0VUHwTwwgeF0XB3DvtunFbc7+N90uWGjTiDgN0IyLbDPaaG
-	 IeFuqgU2sxdeAeYkJjsfXZmxDNCRgJHA/Pb4vMMw=
+	b=SwRi+pwemrCyJCDlfje/Zk7uSI/wJ0BgDTVUXeFKQhigNvEgn1X+oNx54dL6D38Xw
+	 8Gv7kgKx/YqvPA10leGJyGm1VXmUo4vQpyG6QMdgB8AJm3/fGapcYdFWSEsm8yzzFG
+	 QdvWcX/E938xd17jQa3I3vc8Uj/XYh3vUIxEqphI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407219AbgAPSlz (ORCPT
+        id S2436995AbgAPSmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:41:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52934 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:42:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390300AbgAPRLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:11:43 -0500
+        id S2389988AbgAPRLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:11:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 470A32468B;
-        Thu, 16 Jan 2020 17:11:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D799D2468B;
+        Thu, 16 Jan 2020 17:11:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194703;
-        bh=2JHxflA3BEtDI5QcLJ6LyPWNK5cwoOxsgiMg5wbwaxM=;
+        s=default; t=1579194698;
+        bh=osu43gUfm3EZl60KJo19B78H6kg+zt5SbEr1OSOYKg0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PCi6FKUKKaAsKHoo7mH5bgCCIikBmlX1/KDDI12AkN85zWJpVv1sJ53MOG0HlxoB6
-         QpN6L8xU/Omid01rM7eswkBzPpoVeF3bFq9w5JPvLx8XQgJ5Qms/n/1tScOqK6QiBQ
-         Ms6bUgi7qLQv4D3Et/thJWzZ76fpPef9azh3GsSk=
+        b=S95ZgE/bQTqNmOURobylJaKJS9OWp1+YgWX2QdZ/nb5ZRvlv65shMCgDgR0KMMU5/
+         MGyekPGnM/UNhlX5GlMYxR+8Szxvfw0rBHVYWvnJXtnVUC62aWzNU+z+zgUx1HH0uy
+         nLXRw/fxLbVq6BBGEg7FZwKXibJ+ph/Yn/BIPfPk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Omar Sandoval <osandov@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 542/671] btrfs: use correct count in btrfs_file_write_iter()
-Date:   Thu, 16 Jan 2020 12:03:00 -0500
-Message-Id: <20200116170509.12787-279-sashal@kernel.org>
+Cc:     Govindarajulu Varadarajan <gvaradar@cisco.com>,
+        Satish Kharat <satishkh@cisco.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 538/671] scsi: fnic: fix msix interrupt allocation
+Date:   Thu, 16 Jan 2020 12:02:56 -0500
+Message-Id: <20200116170509.12787-275-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,53 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Omar Sandoval <osandov@fb.com>
+From: Govindarajulu Varadarajan <gvaradar@cisco.com>
 
-[ Upstream commit c09767a8960ca0500fb636bf73686723337debf4 ]
+[ Upstream commit 3ec24fb4c035e9cbb2f02a48640a09aa913442a2 ]
 
-generic_write_checks() may modify iov_iter_count(), so we must get the
-count after the call, not before. Using the wrong one has a couple of
-consequences:
+pci_alloc_irq_vectors() returns number of vectors allocated.  Fix the check
+for error condition.
 
-1. We check a longer range in check_can_nocow() for nowait than we're
-   actually writing.
-2. We create extra hole extent maps in btrfs_cont_expand(). As far as I
-   can tell, this is harmless, but I might be missing something.
-
-These issues are pretty minor, but let's fix it before something more
-important trips on it.
-
-Fixes: edf064e7c6fe ("btrfs: nowait aio support")
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Omar Sandoval <osandov@fb.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: cca678dfbad49 ("scsi: fnic: switch to pci_alloc_irq_vectors")
+Link: https://lore.kernel.org/r/20190827211340.1095-1-gvaradar@cisco.com
+Signed-off-by: Govindarajulu Varadarajan <gvaradar@cisco.com>
+Acked-by: Satish Kharat <satishkh@cisco.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/file.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/fnic/fnic_isr.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
-index d9d90f0b66d2..f4a7dac76356 100644
---- a/fs/btrfs/file.c
-+++ b/fs/btrfs/file.c
-@@ -1895,7 +1895,7 @@ static ssize_t btrfs_file_write_iter(struct kiocb *iocb,
- 	bool sync = (file->f_flags & O_DSYNC) || IS_SYNC(file->f_mapping->host);
- 	ssize_t err;
- 	loff_t pos;
--	size_t count = iov_iter_count(from);
-+	size_t count;
- 	loff_t oldsize;
- 	int clean_page = 0;
+diff --git a/drivers/scsi/fnic/fnic_isr.c b/drivers/scsi/fnic/fnic_isr.c
+index 4e3a50202e8c..d28088218c36 100644
+--- a/drivers/scsi/fnic/fnic_isr.c
++++ b/drivers/scsi/fnic/fnic_isr.c
+@@ -254,7 +254,7 @@ int fnic_set_intr_mode(struct fnic *fnic)
+ 		int vecs = n + m + o + 1;
  
-@@ -1916,6 +1916,7 @@ static ssize_t btrfs_file_write_iter(struct kiocb *iocb,
- 	}
- 
- 	pos = iocb->ki_pos;
-+	count = iov_iter_count(from);
- 	if (iocb->ki_flags & IOCB_NOWAIT) {
- 		/*
- 		 * We will allocate space in case nodatacow is not set,
+ 		if (pci_alloc_irq_vectors(fnic->pdev, vecs, vecs,
+-				PCI_IRQ_MSIX) < 0) {
++				PCI_IRQ_MSIX) == vecs) {
+ 			fnic->rq_count = n;
+ 			fnic->raw_wq_count = m;
+ 			fnic->wq_copy_count = o;
+@@ -280,7 +280,7 @@ int fnic_set_intr_mode(struct fnic *fnic)
+ 	    fnic->wq_copy_count >= 1 &&
+ 	    fnic->cq_count >= 3 &&
+ 	    fnic->intr_count >= 1 &&
+-	    pci_alloc_irq_vectors(fnic->pdev, 1, 1, PCI_IRQ_MSI) < 0) {
++	    pci_alloc_irq_vectors(fnic->pdev, 1, 1, PCI_IRQ_MSI) == 1) {
+ 		fnic->rq_count = 1;
+ 		fnic->raw_wq_count = 1;
+ 		fnic->wq_copy_count = 1;
 -- 
 2.20.1
 
