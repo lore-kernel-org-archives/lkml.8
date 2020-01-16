@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3719C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 323F1C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95E8924686
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 031F32051A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:55:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193755;
-	bh=pe9gi9seQl7hcW9P43+6bjO+7AKVzu18za24nVIwzT4=;
+	s=default; t=1579193758;
+	bh=3qkvYVxuHANPIG+yw+3YGj7uuh+zg48E4PUamF3Heb8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hSnTsx82TpdpJM/2oucWUhFvFEkEC1egrFjs1XWoqUnqEjQzKkYMdstlWlsJ/OSyL
-	 THq44zZym5wiNKf3A8CbOhoegFAU1QNh4HKLYd0c2i6+UjT4s3T3it9r5zBVs8c9wm
-	 YJFt79E5eZ3O7jXvRGjgzbWQSbAJtt89NBe36VXw=
+	b=Fg0+BZ9foyMAmDzAn1K3Uy2qfey0xN0kEtjEGyZEhsQlFpujJBp9CLBLFAH06LVlE
+	 NeCAW0+ZREyTIAkvIMnCmbl0ZZaqfMIS+3gwX3ivdx2EA0jq0Qmg7Oeq5vziFjcOd9
+	 sAilLKMwgndlA81uGbNElEo5AEZMjH+fCInn1mQA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733113AbgAPQzy (ORCPT
+        id S1730387AbgAPQz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:55:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41046 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:55:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733073AbgAPQzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:55:37 -0500
+        id S1733085AbgAPQzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:55:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A787D214AF;
-        Thu, 16 Jan 2020 16:55:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DACE0205F4;
+        Thu, 16 Jan 2020 16:55:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193736;
-        bh=pe9gi9seQl7hcW9P43+6bjO+7AKVzu18za24nVIwzT4=;
+        s=default; t=1579193738;
+        bh=3qkvYVxuHANPIG+yw+3YGj7uuh+zg48E4PUamF3Heb8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iCvTdUf1f5/rwoQlS+84xfCo1D18fieMfjhijJJGVWcW6Jd8cM1thiWv0a200kPam
-         /ZX9vAXXf+wbHUklEjNL5sBygk2y46e6yCFjTayhb0YO1uWxRYXk7ooyhp8sXGvIh2
-         fC33AezEgTMba1UG0pPtKvL/92QhId7PeJ4vlQTA=
+        b=sFpwu5A49rabtlMvEyWo5+GQmvYHWd6WXgANGK18sihVSncSImCxAKi1PFY6RhKS0
+         bYUM+Hw4dxN44ICbeu6xm1vOX7XdhighmFyH3HRGBymG9tDvb96MIJ/dbbvLZ92qlD
+         fzmPZTceS9LEcxsMrTxq6Sn45Y1yug8pSwBFwcwM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 028/671] of: Fix property name in of_node_get_device_type
-Date:   Thu, 16 Jan 2020 11:44:19 -0500
-Message-Id: <20200116165502.8838-28-sashal@kernel.org>
+Cc:     Naftali Goldstein <naftali.goldstein@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 030/671] iwlwifi: nvm: get num of hw addresses from firmware
+Date:   Thu, 16 Jan 2020 11:44:21 -0500
+Message-Id: <20200116165502.8838-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -59,36 +60,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Naftali Goldstein <naftali.goldstein@intel.com>
 
-[ Upstream commit 5d5a0ab1a7918fce5ca5c0fb1871a3e2000f85de ]
+[ Upstream commit e7eeee08434873c2f781dc1afaa42b03a014b95d ]
 
-Commit 0413bedabc88 ("of: Add device_type access helper functions")
-added a new helper not yet used in preparation for some treewide clean
-up of accesses to 'device_type' properties. Unfortunately, there's an
-error and 'type' was used for the property name. Fix this.
+With NICs that don't read the NVM directly and instead rely on getting
+the relevant data from the firmware, the number of reserved MAC
+addresses was not added to the API. This caused the driver to assume
+there is only one address which results in all interfaces getting the
+same address. Update the API to fix this.
 
-Fixes: 0413bedabc88 ("of: Add device_type access helper functions")
-Cc: Frank Rowand <frowand.list@gmail.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
+While at it, fix-up the comments with firmware api names to actually
+match what we have in the firmware.
+
+Fixes: e9e1ba3dbf00 ("iwlwifi: mvm: support getting nvm data from firmware")
+Signed-off-by: Naftali Goldstein <naftali.goldstein@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/of.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../net/wireless/intel/iwlwifi/fw/api/nvm-reg.h    | 14 +++++++-------
+ drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c | 10 +++++++++-
+ 2 files changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index d5a863c1ee39..dac0201eacef 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -1001,7 +1001,7 @@ static inline struct device_node *of_find_matching_node(
+diff --git a/drivers/net/wireless/intel/iwlwifi/fw/api/nvm-reg.h b/drivers/net/wireless/intel/iwlwifi/fw/api/nvm-reg.h
+index 6c5338364794..d22c1eefba6a 100644
+--- a/drivers/net/wireless/intel/iwlwifi/fw/api/nvm-reg.h
++++ b/drivers/net/wireless/intel/iwlwifi/fw/api/nvm-reg.h
+@@ -165,7 +165,7 @@ struct iwl_nvm_access_resp {
+  */
+ struct iwl_nvm_get_info {
+ 	__le32 reserved;
+-} __packed; /* GRP_REGULATORY_NVM_GET_INFO_CMD_S_VER_1 */
++} __packed; /* REGULATORY_NVM_GET_INFO_CMD_API_S_VER_1 */
  
- static inline const char *of_node_get_device_type(const struct device_node *np)
- {
--	return of_get_property(np, "type", NULL);
-+	return of_get_property(np, "device_type", NULL);
- }
+ /**
+  * enum iwl_nvm_info_general_flags - flags in NVM_GET_INFO resp
+@@ -180,14 +180,14 @@ enum iwl_nvm_info_general_flags {
+  * @flags: bit 0: 1 - empty, 0 - non-empty
+  * @nvm_version: nvm version
+  * @board_type: board type
+- * @reserved: reserved
++ * @n_hw_addrs: number of reserved MAC addresses
+  */
+ struct iwl_nvm_get_info_general {
+ 	__le32 flags;
+ 	__le16 nvm_version;
+ 	u8 board_type;
+-	u8 reserved;
+-} __packed; /* GRP_REGULATORY_NVM_GET_INFO_GENERAL_S_VER_1 */
++	u8 n_hw_addrs;
++} __packed; /* REGULATORY_NVM_GET_INFO_GENERAL_S_VER_2 */
  
- static inline bool of_node_is_type(const struct device_node *np, const char *type)
+ /**
+  * enum iwl_nvm_mac_sku_flags - flags in &iwl_nvm_get_info_sku
+@@ -231,7 +231,7 @@ struct iwl_nvm_get_info_sku {
+ struct iwl_nvm_get_info_phy {
+ 	__le32 tx_chains;
+ 	__le32 rx_chains;
+-} __packed; /* GRP_REGULATORY_NVM_GET_INFO_PHY_SKU_SECTION_S_VER_1 */
++} __packed; /* REGULATORY_NVM_GET_INFO_PHY_SKU_SECTION_S_VER_1 */
+ 
+ #define IWL_NUM_CHANNELS (51)
+ 
+@@ -245,7 +245,7 @@ struct iwl_nvm_get_info_regulatory {
+ 	__le32 lar_enabled;
+ 	__le16 channel_profile[IWL_NUM_CHANNELS];
+ 	__le16 reserved;
+-} __packed; /* GRP_REGULATORY_NVM_GET_INFO_REGULATORY_S_VER_1 */
++} __packed; /* REGULATORY_NVM_GET_INFO_REGULATORY_S_VER_1 */
+ 
+ /**
+  * struct iwl_nvm_get_info_rsp - response to get NVM data
+@@ -259,7 +259,7 @@ struct iwl_nvm_get_info_rsp {
+ 	struct iwl_nvm_get_info_sku mac_sku;
+ 	struct iwl_nvm_get_info_phy phy_sku;
+ 	struct iwl_nvm_get_info_regulatory regulatory;
+-} __packed; /* GRP_REGULATORY_NVM_GET_INFO_CMD_RSP_S_VER_2 */
++} __packed; /* REGULATORY_NVM_GET_INFO_RSP_API_S_VER_3 */
+ 
+ /**
+  * struct iwl_nvm_access_complete_cmd - NVM_ACCESS commands are completed
+diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c b/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c
+index 73969dbeb5c5..b850cca9853c 100644
+--- a/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c
++++ b/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c
+@@ -1315,6 +1315,7 @@ struct iwl_nvm_data *iwl_get_nvm(struct iwl_trans *trans,
+ 	bool lar_fw_supported = !iwlwifi_mod_params.lar_disable &&
+ 				fw_has_capa(&fw->ucode_capa,
+ 					    IWL_UCODE_TLV_CAPA_LAR_SUPPORT);
++	bool empty_otp;
+ 	u32 mac_flags;
+ 	u32 sbands_flags = 0;
+ 
+@@ -1330,7 +1331,9 @@ struct iwl_nvm_data *iwl_get_nvm(struct iwl_trans *trans,
+ 	}
+ 
+ 	rsp = (void *)hcmd.resp_pkt->data;
+-	if (le32_to_cpu(rsp->general.flags) & NVM_GENERAL_FLAGS_EMPTY_OTP)
++	empty_otp = !!(le32_to_cpu(rsp->general.flags) &
++		       NVM_GENERAL_FLAGS_EMPTY_OTP);
++	if (empty_otp)
+ 		IWL_INFO(trans, "OTP is empty\n");
+ 
+ 	nvm = kzalloc(sizeof(*nvm) +
+@@ -1354,6 +1357,11 @@ struct iwl_nvm_data *iwl_get_nvm(struct iwl_trans *trans,
+ 
+ 	/* Initialize general data */
+ 	nvm->nvm_version = le16_to_cpu(rsp->general.nvm_version);
++	nvm->n_hw_addrs = rsp->general.n_hw_addrs;
++	if (nvm->n_hw_addrs == 0)
++		IWL_WARN(trans,
++			 "Firmware declares no reserved mac addresses. OTP is empty: %d\n",
++			 empty_otp);
+ 
+ 	/* Initialize MAC sku data */
+ 	mac_flags = le32_to_cpu(rsp->mac_sku.mac_sku_flags);
 -- 
 2.20.1
 
