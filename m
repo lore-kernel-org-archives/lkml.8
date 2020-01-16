@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBF1C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75938C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8384206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:48:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47C402064C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:48:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218483;
-	bh=Wm62BUT+vMuMnI0P9WkNov+yr3SAdiRPTc7piLuoO0I=;
+	s=default; t=1579218489;
+	bh=rpdbu4Jen9+5y4bcylnIVxaxVx/B/5xUdOd/zh/AEZE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uewudyq6JVZFE4uuiQJy7f01opR1adJyItjPZ2duI/IfzhW/dlmKs3Ry+vAVYlhkF
-	 TdY+GuhcEfPzkTKDnOiqh+yHYIcZyq6zssxWW+h92wRKY4uky5tgy7R0UUT/JMOzaD
-	 MEfyQjNaKjaWvGAtvnRtWJWUzwV5tt7Dsady2k2M=
+	b=TdPcQe+Qb05YuTdlWdgTsW7L7RW/j4DkQvD1qsB21jF5fG7VGE+nWGdc0hSuYUqGv
+	 2h4q7To8vqiHbPBXfYpkOsxVxRjtTa6pWS1FVbC14hcO1FL9lntbJl8D08yQM9plyA
+	 1Qyk6r0smu0+qcTcrNka6510p7m+0tiR9TBu5paY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390625AbgAPXsD (ORCPT
+        id S2390632AbgAPXsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:48:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46856 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:48:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389714AbgAPXUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:20:22 -0500
+        id S2390582AbgAPXUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:20:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E56A2072B;
-        Thu, 16 Jan 2020 23:20:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 957162077C;
+        Thu, 16 Jan 2020 23:20:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216821;
-        bh=Wm62BUT+vMuMnI0P9WkNov+yr3SAdiRPTc7piLuoO0I=;
+        s=default; t=1579216812;
+        bh=rpdbu4Jen9+5y4bcylnIVxaxVx/B/5xUdOd/zh/AEZE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vQfhrPMo1DQ5a5hUITmRESMB6VlSy1lQ6yU3GHTTsXdSVY6B4uJRH/ZTxZ2Gw5tvx
-         y+bLRCi0aANeT4QU9JkuGRW5RL1h/sf8nFcgKM8zNVgH+1jyVLZWymhpJHMiDPfuk9
-         gvjQt0E4fzABiuLvpJwv4SpV3xScjUQ7Xh6yPtR8=
+        b=aJdsVQYFYygoWtbfiRDRjnjMsuL2qTCoyIg7wY5f+KyMuWwRShG/iC6A6YJblsUsB
+         s5QhhruJBaqjCJXOKpDx0eboJd+PMfN9IVTCn4mceCjDUp2dBEpzHubjhc170IpeuM
+         +Al1dzwPytiv7qAP7LIGE0dRDKako0gqduie+Yf0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Baluta <daniel.baluta@nxp.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        stable@vger.kernel.org, Olivier Moysan <olivier.moysan@st.com>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 016/203] ASoC: SOF: imx8: Fix dsp_box offset
-Date:   Fri, 17 Jan 2020 00:15:33 +0100
-Message-Id: <20200116231746.164130836@linuxfoundation.org>
+Subject: [PATCH 5.4 012/203] ASoC: stm32: spdifrx: fix race condition in irq handler
+Date:   Fri, 17 Jan 2020 00:15:29 +0100
+Message-Id: <20200116231745.944702043@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -60,60 +59,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Baluta <daniel.baluta@nxp.com>
+From: Olivier Moysan <olivier.moysan@st.com>
 
-commit dcf08d0f8f09081b16f69071dd55d51d5e964e84 upstream.
+commit 86e1956af4c863d653136fd6e5694adf2054dbaa upstream.
 
-dsp_box is used to keep DSP initiated messages. The value of dsp_offset
-is set by the DSP with the first message, so we need a way to bootstrap
-it in order to get the first message.
+When snd_pcm_stop() is called in interrupt routine,
+substream context may have already been released.
+Add protection on substream context.
 
-We do this by setting the correct default dsp_box offset which on i.MX8
-is not zero.
+Fixes: 03e4d5d56fa5 ("ASoC: stm32: Add SPDIFRX support")
 
-Very interesting is why it has worked until now.
-
-On i.MX8, DSP communicates with ARM core using a shared SDRAM memory
-area. Actually, there are two shared areas:
-	* SDRAM0 - starting at 0x92400000, size 0x800000
-	* SDRAM1 - starting at 0x92C00000, size 0x800000
-
-SDRAM0 keeps the data sections, starting with .rodata. By chance
-fw_ready structure was placed at the beginning of .rodata.
-
-dsp_box_base is defined as SDRAM0 + dsp_box_offset and it is placed
-at the beginning of SDRAM1 (dsp_box_offset should be 0x800000). But
-because it is zero initialized by default it points to SDRAM0 where
-by chance the fw_ready was placed in the SOF firmware.
-
-Anyhow, SOF commit 7466bee378dd811b ("clk: make freq arrays constant")
-fw_ready is no longer at the beginning of SDRAM0 and everything shows
-how lucky we were until now.
-
-Fix this by properly setting the default dsp_box offset.
-
-Fixes: 202acc565a1f050 ("ASoC: SOF: imx: Add i.MX8 HW support")
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20191220170531.10423-1-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Link: https://lore.kernel.org/r/20191204154333.7152-3-olivier.moysan@st.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/sof/imx/imx8.c |    3 +++
- 1 file changed, 3 insertions(+)
+ sound/soc/stm/stm32_spdifrx.c |   24 +++++++++++++++++++-----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
 
---- a/sound/soc/sof/imx/imx8.c
-+++ b/sound/soc/sof/imx/imx8.c
-@@ -304,6 +304,9 @@ static int imx8_probe(struct snd_sof_dev
+--- a/sound/soc/stm/stm32_spdifrx.c
++++ b/sound/soc/stm/stm32_spdifrx.c
+@@ -220,6 +220,7 @@
+  * @slave_config: dma slave channel runtime config pointer
+  * @phys_addr: SPDIFRX registers physical base address
+  * @lock: synchronization enabling lock
++ * @irq_lock: prevent race condition with IRQ on stream state
+  * @cs: channel status buffer
+  * @ub: user data buffer
+  * @irq: SPDIFRX interrupt line
+@@ -240,6 +241,7 @@ struct stm32_spdifrx_data {
+ 	struct dma_slave_config slave_config;
+ 	dma_addr_t phys_addr;
+ 	spinlock_t lock;  /* Sync enabling lock */
++	spinlock_t irq_lock; /* Prevent race condition on stream state */
+ 	unsigned char cs[SPDIFRX_CS_BYTES_NB];
+ 	unsigned char ub[SPDIFRX_UB_BYTES_NB];
+ 	int irq;
+@@ -665,7 +667,6 @@ static const struct regmap_config stm32_
+ static irqreturn_t stm32_spdifrx_isr(int irq, void *devid)
+ {
+ 	struct stm32_spdifrx_data *spdifrx = (struct stm32_spdifrx_data *)devid;
+-	struct snd_pcm_substream *substream = spdifrx->substream;
+ 	struct platform_device *pdev = spdifrx->pdev;
+ 	unsigned int cr, mask, sr, imr;
+ 	unsigned int flags;
+@@ -733,14 +734,19 @@ static irqreturn_t stm32_spdifrx_isr(int
+ 		regmap_update_bits(spdifrx->regmap, STM32_SPDIFRX_CR,
+ 				   SPDIFRX_CR_SPDIFEN_MASK, cr);
+ 
+-		if (substream)
+-			snd_pcm_stop(substream, SNDRV_PCM_STATE_DISCONNECTED);
++		spin_lock(&spdifrx->irq_lock);
++		if (spdifrx->substream)
++			snd_pcm_stop(spdifrx->substream,
++				     SNDRV_PCM_STATE_DISCONNECTED);
++		spin_unlock(&spdifrx->irq_lock);
+ 
+ 		return IRQ_HANDLED;
  	}
- 	sdev->mailbox_bar = SOF_FW_BLK_TYPE_SRAM;
  
-+	/* set default mailbox offset for FW ready message */
-+	sdev->dsp_box.offset = MBOX_OFFSET;
+-	if (err_xrun && substream)
+-		snd_pcm_stop_xrun(substream);
++	spin_lock(&spdifrx->irq_lock);
++	if (err_xrun && spdifrx->substream)
++		snd_pcm_stop_xrun(spdifrx->substream);
++	spin_unlock(&spdifrx->irq_lock);
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -749,9 +755,12 @@ static int stm32_spdifrx_startup(struct
+ 				 struct snd_soc_dai *cpu_dai)
+ {
+ 	struct stm32_spdifrx_data *spdifrx = snd_soc_dai_get_drvdata(cpu_dai);
++	unsigned long flags;
+ 	int ret;
+ 
++	spin_lock_irqsave(&spdifrx->irq_lock, flags);
+ 	spdifrx->substream = substream;
++	spin_unlock_irqrestore(&spdifrx->irq_lock, flags);
+ 
+ 	ret = clk_prepare_enable(spdifrx->kclk);
+ 	if (ret)
+@@ -827,8 +836,12 @@ static void stm32_spdifrx_shutdown(struc
+ 				   struct snd_soc_dai *cpu_dai)
+ {
+ 	struct stm32_spdifrx_data *spdifrx = snd_soc_dai_get_drvdata(cpu_dai);
++	unsigned long flags;
+ 
++	spin_lock_irqsave(&spdifrx->irq_lock, flags);
+ 	spdifrx->substream = NULL;
++	spin_unlock_irqrestore(&spdifrx->irq_lock, flags);
 +
- 	return 0;
+ 	clk_disable_unprepare(spdifrx->kclk);
+ }
  
- exit_pdev_unregister:
+@@ -932,6 +945,7 @@ static int stm32_spdifrx_probe(struct pl
+ 	spdifrx->pdev = pdev;
+ 	init_completion(&spdifrx->cs_completion);
+ 	spin_lock_init(&spdifrx->lock);
++	spin_lock_init(&spdifrx->irq_lock);
+ 
+ 	platform_set_drvdata(pdev, spdifrx);
+ 
 
 
