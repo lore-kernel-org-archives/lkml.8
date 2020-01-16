@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4AB0C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1CC4C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7679A2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:19:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD2D2207FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:19:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202363;
-	bh=1Y83ZRy4JQGM0BUTA/qOSFth1ukzvcOryxz+QvYzsxE=;
+	s=default; t=1579202366;
+	bh=hzYUfnj+TvROFTnB8URu/LAAbLUAone1jW+IXrnDv94=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=corLVBni98iIbIAfG9Xhn9w/m7rTN3VgxtV6xmuZ2wG+qiczWNkl/M1F4IVJf8ZIS
-	 BzLzAgS7UyOIaPf27Qs1abq/gjPm8ejNE7uvLimQDVl2Twgi6QlmMkfOYtwCZbFN8P
-	 uD+SgDtfQHr6NYyoba8R2dvk5iCcIbzY+evIQoX0=
+	b=dRdDkI7taVh0Cs0nP0FXc5PnM7YSwtp3ctO43uqefzYP0A/Y4AtFfmnp+niMDHGZu
+	 h9Cla/zKYL0EwjEpXbBFPvgHXVNEz4chyZgn5ODgJZF+kcizsk0yPrkmIzqSOCnLIv
+	 wk9iJdof5onQjkA7TgqnMVQxSdhXXxnAajE36eAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728899AbgAPTTW (ORCPT
+        id S1729281AbgAPQyV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:19:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38904 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:54:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729347AbgAPQyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:54:22 -0500
+        id S1731575AbgAPQyK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:54:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5658D22525;
-        Thu, 16 Jan 2020 16:54:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5014D24656;
+        Thu, 16 Jan 2020 16:54:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193662;
-        bh=1Y83ZRy4JQGM0BUTA/qOSFth1ukzvcOryxz+QvYzsxE=;
+        s=default; t=1579193649;
+        bh=hzYUfnj+TvROFTnB8URu/LAAbLUAone1jW+IXrnDv94=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BGDPjtpQlr5FysV9vC0FzVLcxEwxmczDi9JeRBt6N69hq/Qiq5aXn8AiU+EBMNSvd
-         6Z9sNTuPjB+funRi5cpppEnQCQ1i/Ai4wHxejfH/CF3BXQn0Fc59qdKQRie/pXUvJJ
-         Db9LxnkqRKvsYCvu+Q5F/Pg37SBvPvLsMIMIhgQo=
+        b=rIm7q0EPYvltQ9rP4MnkrxPYwItgW1IYaE4oKqRxy+XbwPl/rGMvMGgmzE2WPg0pn
+         9b2H//x6DMAviMPLRPUUMKCGNU0o2rATwOZAwrQSB0KleGoFeViD0bBnHSzsrUKXxO
+         zmg5pZ+IIBBFuagU+URstqkuNz1JaDLdJcq/c2Zc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Lexi Shao <shaolexi@huawei.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.4 189/205] powerpc/kasan: Fix boot failure with RELOCATABLE && FSL_BOOKE
-Date:   Thu, 16 Jan 2020 11:42:44 -0500
-Message-Id: <20200116164300.6705-189-sashal@kernel.org>
+Cc:     Stanislav Fomichev <sdf@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 179/205] bpf: Support pre-2.25-binutils objcopy for vmlinux BTF
+Date:   Thu, 16 Jan 2020 11:42:34 -0500
+Message-Id: <20200116164300.6705-179-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -60,52 +62,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Stanislav Fomichev <sdf@google.com>
 
-[ Upstream commit 71eb40fc53371bc247c8066ae76ad9e22ae1e18d ]
+[ Upstream commit da5fb18225b49b97bb37c51bcbbb2990a507c364 ]
 
-When enabling CONFIG_RELOCATABLE and CONFIG_KASAN on FSL_BOOKE,
-the kernel doesn't boot.
+If vmlinux BTF generation fails, but CONFIG_DEBUG_INFO_BTF is set,
+.BTF section of vmlinux is empty and kernel will prohibit
+BPF loading and return "in-kernel BTF is malformed".
 
-relocate_init() requires KASAN early shadow area to be set up because
-it needs access to the device tree through generic functions.
+--dump-section argument to binutils' objcopy was added in version 2.25.
+When using pre-2.25 binutils, BTF generation silently fails. Convert
+to --only-section which is present on pre-2.25 binutils.
 
-Call kasan_early_init() before calling relocate_init()
+Documentation/process/changes.rst states that binutils 2.21+
+is supported, not sure those standards apply to BPF subsystem.
 
-Reported-by: Lexi Shao <shaolexi@huawei.com>
-Fixes: 2edb16efc899 ("powerpc/32: Add KASAN support")
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/b58426f1664a4b344ff696d18cacf3b3e8962111.1575036985.git.christophe.leroy@c-s.fr
+v2:
+* exit and print an error if gen_btf fails (John Fastabend)
+
+v3:
+* resend with Andrii's Acked-by/Tested-by tags
+
+Fixes: 341dfcf8d78ea ("btf: expose BTF info through sysfs")
+Signed-off-by: Stanislav Fomichev <sdf@google.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Tested-by: Andrii Nakryiko <andriin@fb.com>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Link: https://lore.kernel.org/bpf/20191127161410.57327-1-sdf@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/head_fsl_booke.S | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ scripts/link-vmlinux.sh | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/head_fsl_booke.S b/arch/powerpc/kernel/head_fsl_booke.S
-index adf0505dbe02..519d49547e2f 100644
---- a/arch/powerpc/kernel/head_fsl_booke.S
-+++ b/arch/powerpc/kernel/head_fsl_booke.S
-@@ -238,6 +238,9 @@ set_ivor:
+diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+index 06495379fcd8..2998ddb323e3 100755
+--- a/scripts/link-vmlinux.sh
++++ b/scripts/link-vmlinux.sh
+@@ -127,7 +127,8 @@ gen_btf()
+ 		cut -d, -f1 | cut -d' ' -f2)
+ 	bin_format=$(LANG=C ${OBJDUMP} -f ${1} | grep 'file format' | \
+ 		awk '{print $4}')
+-	${OBJCOPY} --dump-section .BTF=.btf.vmlinux.bin ${1} 2>/dev/null
++	${OBJCOPY} --set-section-flags .BTF=alloc -O binary \
++		--only-section=.BTF ${1} .btf.vmlinux.bin 2>/dev/null
+ 	${OBJCOPY} -I binary -O ${bin_format} -B ${bin_arch} \
+ 		--rename-section .data=.BTF .btf.vmlinux.bin ${2}
+ }
+@@ -253,6 +254,10 @@ btf_vmlinux_bin_o=""
+ if [ -n "${CONFIG_DEBUG_INFO_BTF}" ]; then
+ 	if gen_btf .tmp_vmlinux.btf .btf.vmlinux.bin.o ; then
+ 		btf_vmlinux_bin_o=.btf.vmlinux.bin.o
++	else
++		echo >&2 "Failed to generate BTF for vmlinux"
++		echo >&2 "Try to disable CONFIG_DEBUG_INFO_BTF"
++		exit 1
+ 	fi
+ fi
  
- 	bl	early_init
- 
-+#ifdef CONFIG_KASAN
-+	bl	kasan_early_init
-+#endif
- #ifdef CONFIG_RELOCATABLE
- 	mr	r3,r30
- 	mr	r4,r31
-@@ -264,9 +267,6 @@ set_ivor:
- /*
-  * Decide what sort of machine this is and initialize the MMU.
-  */
--#ifdef CONFIG_KASAN
--	bl	kasan_early_init
--#endif
- 	mr	r3,r30
- 	mr	r4,r31
- 	bl	machine_init
 -- 
 2.20.1
 
