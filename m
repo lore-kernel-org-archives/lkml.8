@@ -7,54 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F737C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D07D4C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DBA620684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:35:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 934AF20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:35:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217747;
-	bh=0Sj61wdwXAjuc7aRI9NN2NGUCyBAc+0Yv3dWyujHqAQ=;
+	s=default; t=1579217753;
+	bh=W54AnkGIJIgsZh2Pxr/0CVORRm1R1GgPocZUQvvRSVc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HQm3Ukv1HiShajzPh9k2Y189N/3JXL1OBrtFsN2XnFjx7qnJ+qPpKIICE39garGGm
-	 pxQde6S6iwtXH1SJj9Yo7Z/lG/mHM3es+MRaA5fkMxHOxRi9IhmPv9NZA6hK02AyZS
-	 Zvh1iLFLaOcWTR3asGdzC5evspXvJXlpynuGF7ys=
+	b=zsCCwkzRqakCzPw11ZYrpV0lPOlU7EhBTB/Cr/fgOUhjk6Qum/2dDP695W0q+1aDt
+	 +zeIrPh6a1RDe13DS700NvPWaiIsuYQbB+Owoy1d67oPrFxE+AlwW1+1Sg2GktFJKC
+	 j1I80SBk1nsQfwJC07vUjeILkwVo/p00fQrLDHZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404187AbgAPXcD (ORCPT
+        id S2391701AbgAPXfw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:32:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40478 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:35:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388848AbgAPXbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:31:47 -0500
+        id S2404184AbgAPXcC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:32:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E645D20684;
-        Thu, 16 Jan 2020 23:31:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EEEA2087E;
+        Thu, 16 Jan 2020 23:32:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217507;
-        bh=0Sj61wdwXAjuc7aRI9NN2NGUCyBAc+0Yv3dWyujHqAQ=;
+        s=default; t=1579217521;
+        bh=W54AnkGIJIgsZh2Pxr/0CVORRm1R1GgPocZUQvvRSVc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fmuncUzdfk+EMBB5i5jweIaJXZjqpa2c8vTqx4Qhn54iLeApvoG0hXd+KiJlEIG6X
-         CmLZtOP7n+w1S5tgbYKSNxykZQAoH/YK1Jry8ynH/TW+L5sAZ6yGXyPaNGg5weJnx/
-         WVpEQlapUOkESSpNYkfvVVidXJsOrg86/mWJ1vkE=
+        b=AFKM1+w08w0aUVFgwjJq1bhdfaL6MhgFfsiVUarEri72yUyKepZir31So/pnuwvLX
+         4Dx/K1xpzfVnfp898eRHzKn5Pt8uOy3SLL8UiHqz2rOGdAKimKGcTNo8WeukBR4a9c
+         C3sQJb6mOnkZ/1doscynHOKXVCcZ3ZMHkTrC63AM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Andi Kleen <ak@linux.intel.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@lst.de>,
-        Eric Dumazet <edumazet@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miles Chen <miles.chen@mediatek.com>
-Subject: [PATCH 4.14 05/71] fs/select: avoid clang stack usage warning
-Date:   Fri, 17 Jan 2020 00:18:03 +0100
-Message-Id: <20200116231710.184490597@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 4.14 25/71] iommu: Remove device link to group on failure
+Date:   Fri, 17 Jan 2020 00:18:23 +0100
+Message-Id: <20200116231713.077962349@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231709.377772748@linuxfoundation.org>
 References: <20200116231709.377772748@linuxfoundation.org>
@@ -67,54 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Jon Derrick <jonathan.derrick@intel.com>
 
-commit ad312f95d41c9de19313c51e388c4984451c010f upstream.
+commit 7d4e6ccd1fb09dbfbc49746ca82bd5c25ad4bfe4 upstream.
 
-The select() implementation is carefully tuned to put a sensible amount
-of data on the stack for holding a copy of the user space fd_set, but
-not too large to risk overflowing the kernel stack.
+This adds the missing teardown step that removes the device link from
+the group when the device addition fails.
 
-When building a 32-bit kernel with clang, we need a little more space
-than with gcc, which often triggers a warning:
-
-  fs/select.c:619:5: error: stack frame size of 1048 bytes in function 'core_sys_select' [-Werror,-Wframe-larger-than=]
-  int core_sys_select(int n, fd_set __user *inp, fd_set __user *outp,
-
-I experimentally found that for 32-bit ARM, reducing the maximum stack
-usage by 64 bytes keeps us reliably under the warning limit again.
-
-Link: http://lkml.kernel.org/r/20190307090146.1874906-1-arnd@arndb.de
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+Fixes: 797a8b4d768c5 ("iommu: Handle default domain attach failure")
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/poll.h |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/iommu/iommu.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/include/linux/poll.h
-+++ b/include/linux/poll.h
-@@ -15,7 +15,11 @@
- extern struct ctl_table epoll_table[]; /* for sysctl */
- /* ~832 bytes of stack space used max in sys_select/sys_poll before allocating
-    additional memory. */
-+#ifdef __clang__
-+#define MAX_STACK_ALLOC 768
-+#else
- #define MAX_STACK_ALLOC 832
-+#endif
- #define FRONTEND_STACK_ALLOC	256
- #define SELECT_STACK_ALLOC	FRONTEND_STACK_ALLOC
- #define POLL_STACK_ALLOC	FRONTEND_STACK_ALLOC
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -613,6 +613,7 @@ err_put_group:
+ 	mutex_unlock(&group->mutex);
+ 	dev->iommu_group = NULL;
+ 	kobject_put(group->devices_kobj);
++	sysfs_remove_link(group->devices_kobj, device->name);
+ err_free_name:
+ 	kfree(device->name);
+ err_remove_link:
 
 
