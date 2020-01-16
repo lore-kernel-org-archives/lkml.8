@@ -2,109 +2,126 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F2BC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE444C33CB7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0E132073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:29:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZZa76D9C"
+	by mail.kernel.org (Postfix) with ESMTP id AE01D207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:31:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579203095;
+	bh=cYq521Xb+o395bShj6QpiHteLl9zlelJoUUI3lPWNUI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0yIWSbhA00/zy+1DSGt7+OmlPuPgt4gDKIzlpyH+xoBD1HCRGsxPQ4QqHvb5TKz+g
+	 eDKbU2rqGtS0XlVCQe7uHR1LmOUF9gVSCBiqWxQ/BQCG/bUs8KxlXPBcnLx5zGcmGJ
+	 7VqTnnbbnH+2zW13Q/XQiYotlj4bRkomYsTY/TK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730597AbgAPT3o (ORCPT
+        id S1730700AbgAPTbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:29:44 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:30886 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730129AbgAPT3o (ORCPT
+        Thu, 16 Jan 2020 14:31:34 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40278 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729010AbgAPTbe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 14:29:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579202983;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XYLUC1KWAgys9j/fksF7kq8Qb7GODq8d0UQf27A4qzo=;
-        b=ZZa76D9CE868aTEJaJXTgo/+6qIoE/yLZuZF8MjSYDx/dgh0EnEQlB/Wab5b+rA/9x5Wrm
-        lkFC92atPW/ubzl/Qd+cU/2g67ZdIyYbK1wBjUHJZrbu9Ea3tB4LlXjn9dKydBheDRB8Dt
-        1lwq+1MnQXY1whxrIZipkVQ3E1qcTYw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-4-sJOwTwPEN8OLfffbnRrttQ-1; Thu, 16 Jan 2020 14:29:39 -0500
-X-MC-Unique: sJOwTwPEN8OLfffbnRrttQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CC04118A8C80;
-        Thu, 16 Jan 2020 19:29:37 +0000 (UTC)
-Received: from [10.18.17.119] (dhcp-17-119.bos.redhat.com [10.18.17.119])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C1DCE100032E;
-        Thu, 16 Jan 2020 19:29:36 +0000 (UTC)
-Subject: Re: [PATCH 0/4] livepatch/samples/selftest: Clean up show variables
- handling
-To:     Petr Mladek <pmladek@suse.com>, Jiri Kosina <jikos@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>
-Cc:     Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200116153145.2392-1-pmladek@suse.com>
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-Message-ID: <e427439b-ed65-3418-e7ca-a60e54bd5544@redhat.com>
-Date:   Thu, 16 Jan 2020 14:29:35 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 16 Jan 2020 14:31:34 -0500
+Received: by mail-ot1-f65.google.com with SMTP id w21so20427414otj.7;
+        Thu, 16 Jan 2020 11:31:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PlRiaY/Cg3ejfSAUDDuZd3aB1y/ppEi3jqWY+7TrCNo=;
+        b=n3iQwp4Iox7coZPy6YWCIymRKalXOQx2WSwJTYWdDWDEZVWx0qlBwv6FgcX0to5MVz
+         D4AAXOIumHeUHvBnWPdTLGGVHoU5sEH2E2mUo+2w4LsQ/kA6dgaGP349WXokqLMvn7hZ
+         ZOd57fudaY1fnTOptWyl4cenMu1kwGP1xvb9ulllJzYA1FJq6uTk8+yvYrWl6klsQ/Ht
+         us91nLCWoF3OwulWPeZf2rodsOoPagkHHtrGJuThjew0UKMC4EGi+2CPGd9l9S0ILd65
+         NewOh2xG8+ZqJiW2HQFe870bIvkzc67jFlkLx3pJFLBraO0Ekc6yEwf98xTKrYgdon8o
+         VqOQ==
+X-Gm-Message-State: APjAAAVOemnUeYIIoU+7KeF3vHf0rfQoyYVeePK40y0Y1gN1bmV+L3yT
+        9Rl9eFdKetDSiBXjf4fDzQ==
+X-Google-Smtp-Source: APXvYqy6E9T0byX756tK96Hg0t5Fuinh4r76yE+g1o4eRVmW1Hizyadv81FqET3Qo3ogkxT9Rgt/FA==
+X-Received: by 2002:a9d:6181:: with SMTP id g1mr3450824otk.104.1579203093287;
+        Thu, 16 Jan 2020 11:31:33 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id q13sm8034721otc.5.2020.01.16.11.31.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 11:31:32 -0800 (PST)
+Received: (nullmailer pid 5311 invoked by uid 1000);
+        Thu, 16 Jan 2020 19:31:30 -0000
+Date:   Thu, 16 Jan 2020 13:31:30 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
+        bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org,
+        Sriharsha Allenki <sallenki@codeaurora.org>,
+        Anu Ramanathan <anur@codeaurora.org>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>,
+        devicetree@vger.kernel.org,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Subject: Re: [PATCH 02/19] dt-bindings: phy: Add Qualcomm Synopsys Hi-Speed
+ USB PHY binding
+Message-ID: <20200116193130.GA2483@bogus>
+References: <20200115141333.1222676-1-bryan.odonoghue@linaro.org>
+ <20200115141333.1222676-3-bryan.odonoghue@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200116153145.2392-1-pmladek@suse.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200115141333.1222676-3-bryan.odonoghue@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/16/20 10:31 AM, Petr Mladek wrote:
-> Dan Carpenter reported suspicious allocations of shadow variables
-> in the sample module, see
-> https://lkml.kernel.org/r/20200107132929.ficffmrm5ntpzcqa@kili.mountain
+On Wed, 15 Jan 2020 14:13:16 +0000, Bryan O'Donoghue wrote:
+> From: Sriharsha Allenki <sallenki@codeaurora.org>
 > 
-> The code did not cause a real problem. But it was indeed misleading
-> and semantically wrong. I got confused several times when cleaning it.
-> So I decided to split the change into few steps. I hope that
-> it will help reviewers and future readers.
+> Adds bindings for QCS404 USB PHY supporting Low-Speed, Full-Speed and
+> Hi-Speed USB connectivity on Qualcomm chipsets.
 > 
-> The changes of the sample module are basically the same as in the RFC.
-> In addition, there is a clean up of the module used by the selftest.
+> [bod: Converted to YAML. Changed name dropping snps component]
 > 
-> 
-> Petr Mladek (4):
->    livepatch/sample: Use the right type for the leaking data pointer
->    livepatch/selftest: Clean up shadow variable names and type
->    livepatch/samples/selftest: Use klp_shadow_alloc() API correctly
->    livepatch: Handle allocation failure in the sample of shadow variable
->      API
-> 
->   lib/livepatch/test_klp_shadow_vars.c      | 119 +++++++++++++++++-------------
->   samples/livepatch/livepatch-shadow-fix1.c |  39 ++++++----
->   samples/livepatch/livepatch-shadow-fix2.c |   4 +-
->   samples/livepatch/livepatch-shadow-mod.c  |   4 +-
->   4 files changed, 99 insertions(+), 67 deletions(-)
+> Signed-off-by: Sriharsha Allenki <sallenki@codeaurora.org>
+> Signed-off-by: Anu Ramanathan <anur@codeaurora.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> ---
+>  .../bindings/phy/qcom,qcs404-usb-hs.yaml      | 78 +++++++++++++++++++
+>  1 file changed, 78 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,qcs404-usb-hs.yaml
 > 
 
-Hi Petr,
+My bot found errors running 'make dt_binding_check' on your patch:
 
-These are good cleanups, thanks for the fixes and tidying up all the 
-pointer/value indirections.
+warning: no schema found in file: Documentation/devicetree/bindings/phy/qcom,qcs404-usb-hs.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/qcom,qcs404-usb-hs.yaml: ignoring, error parsing file
+Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+Documentation/devicetree/bindings/phy/qcom,qcs404-usb-hs.yaml:  while scanning for the next token
+found character that cannot start any token
+  in "<unicode string>", line 64, column 1
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/phy/qcom,qcs404-usb-hs.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/phy/qcom,qcs404-usb-hs.example.dts] Error 1
+Makefile:1263: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-Reviewed-by: Joe Lawrence <joe.lawrence@redhat.com>
-
--- Joe
-
+See https://patchwork.ozlabs.org/patch/1223565
+Please check and re-submit.
