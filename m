@@ -2,96 +2,239 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 479EDC32771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 02:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F396C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 02:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19BE1222C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 02:33:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="RqbHK8Vo"
+	by mail.kernel.org (Postfix) with ESMTP id 0D45F2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 02:38:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579142281;
+	bh=vacKQWKRT4moqnpN5dBJ+7DYc1ik3c3rNIubWECBtk0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=f4dgv+ZBVEEJMf/Q3EGrdvcubw91uHWPVPBZmV0Jlt6draVdEXWjskmwQU16kzhxB
+	 b1VFm++bYx1TvtSGOzI4Yp1CvPmb0SIU8U+anC9qYJf8YgpOaZkKjM+YoDhpnvZxmn
+	 11ktits999JtXwl7NaUrwTes1jOv4Thtdz8NNvcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729442AbgAPCc7 (ORCPT
+        id S1729503AbgAPCiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 21:32:59 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:34215 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729043AbgAPCc7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 21:32:59 -0500
-Received: by mail-io1-f66.google.com with SMTP id z193so20097269iof.1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 18:32:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=ZMxDPPtpfyDr16DAViPOjphNjCxUKCyR951nmWvnX+0=;
-        b=RqbHK8VoNCXEI+hIdHVL/MC88sR1q4OPTXukFJTkCL/S7mLSBkvaWjPbEO2L6KiNFE
-         FhJusyzBBdV6kQ+a+YlTrvqU1YKNRBO4mhi1ULYHYxGkptEAQoBXJsH3mv+FHZHbmjUA
-         lwLqyjkVstTa24clYlsBGKvyucNtx5Vu6wGV8j+2BRaOcMvQaU0kKYIPj29mQIn+/36R
-         0NiXjAbEOA0a3MXvPd8ZyKRp5YExsJTzMX6AD+vrtGPu2uRtZKQQS4IIkgAk7HSgJtC8
-         tVDjeI9PNc+AZ/kdpwMMxAEqhSUELgnJcgLO+//z3PFC0Cx1sEcLfqiWo4CIiUoIzZFy
-         uz5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=ZMxDPPtpfyDr16DAViPOjphNjCxUKCyR951nmWvnX+0=;
-        b=aqWvt4PDqDxLUDYVgUOSlWLSJSFwW0XKX9xorftxM86i2S1RDdUoqyVK7Tgz79KQaO
-         oqCRyB6+AViPWbaY3Qm3Y2mBWV+M9sDUT0x2eBLvPy480j3UX1QtInhk9+o4mnLDMBP/
-         sEs2+jx0eYrxPl8U7K7A/bk30nMeQQopp9Hha3aZXrxEGfoqq4acFAYH1jJDtsj+idqO
-         W7z4MtV1e1NYARKltBLbaDWOPWzHCcrcSyk1zbQ8//WYBDX36bdK/PIvJQdOD7aKgrI0
-         xA0K8++NKqr9LtMUhv20h2ewOEe0jlIecj+PB9rATpAY2PbGKae5SoKamhLKx2Kiga+q
-         P/pw==
-X-Gm-Message-State: APjAAAVoL8ociPyJpcwkZGojhaC1iNk0XrQnpCC1INTkLqkwIGmnA8E3
-        axH8Ch4Q851hMtjAHpP+KP/VEA==
-X-Google-Smtp-Source: APXvYqyh+g2Hzupz8itLKiU78z1Ffu3lm87KUi123IE5FELOjy2k517AvOgTd2cAPDjAJzP0F4bC4Q==
-X-Received: by 2002:a6b:e004:: with SMTP id z4mr24598779iog.235.1579141978190;
-        Wed, 15 Jan 2020 18:32:58 -0800 (PST)
-Received: from localhost ([64.62.168.194])
-        by smtp.gmail.com with ESMTPSA id z15sm6458956ill.20.2020.01.15.18.32.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 18:32:57 -0800 (PST)
-Date:   Wed, 15 Jan 2020 18:32:55 -0800 (PST)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Greentime Hu <greentime.hu@sifive.com>, anup@brainfault.org
-cc:     green.hu@gmail.com, greentime@kernel.org, palmer@dabbelt.com,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        schwab@suse.de
-Subject: Re: [PATCH v4] riscv: make sure the cores stay looping in
- .Lsecondary_park
-In-Reply-To: <20200115065436.7702-1-greentime.hu@sifive.com>
-Message-ID: <alpine.DEB.2.21.9999.2001151832001.98477@viisi.sifive.com>
-References: <20200115065436.7702-1-greentime.hu@sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
-MIME-Version: 1.0
+        Wed, 15 Jan 2020 21:38:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47878 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729043AbgAPCiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 21:38:00 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 387642084D;
+        Thu, 16 Jan 2020 02:37:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579142278;
+        bh=vacKQWKRT4moqnpN5dBJ+7DYc1ik3c3rNIubWECBtk0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=M2Q9yLy6x27d7jJZuSYEBlI+q0wkTmQEqP63PDJo10kpXcDEzV3TVjfxJk9SO+itl
+         +wvAkQ9xGY4ugd6YxhnH/n4raklHRTb7R4U7analnjp42m2yZXoTEG0iAIklfrFL+B
+         lYEH1ailn+5v3RlWf+JWDQIymazllURnCDeLnrNU=
+Date:   Thu, 16 Jan 2020 11:37:49 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jaswinder.singh@linaro.org
+Subject: Re: [BUGFIX PATCH] selftests: Fix pthread link option
+Message-Id: <20200116113749.3a815c124dce18028d3d7f8a@kernel.org>
+In-Reply-To: <157907976750.14189.12829891067375600434.stgit@devnote2>
+References: <157907976750.14189.12829891067375600434.stgit@devnote2>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jan 2020, Greentime Hu wrote:
+On Wed, 15 Jan 2020 18:16:07 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-> The code in secondary_park is currently placed in the .init section. The
-> kernel reclaims and clears this code when it finishes booting. That
-> causes the cores parked in it to go to somewhere unpredictable, so we
-> move this function out of init to make sure the cores stay looping there.
+> To support pthread correctly, it is better to use -pthread
+> instead of -lpthread.
+
+Oops, this should be refined, since LDLIBS will not be
+passed when compiling. -pthread is complier option but
+-lpthread is linker option.
+
+Thank you,
+
 > 
-> The instruction bgeu a0, t0, .Lsecondary_park may have "a relocation
-> truncated to fit" issue during linking time. It is because that sections
-> are too far to jump. Let's use tail to jump to the .Lsecondary_park.
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> ---
+>  tools/testing/selftests/bpf/Makefile               |    2 +-
+>  tools/testing/selftests/membarrier/Makefile        |    2 +-
+>  tools/testing/selftests/mqueue/Makefile            |    2 +-
+>  tools/testing/selftests/net/Makefile               |    4 ++--
+>  .../testing/selftests/powerpc/benchmarks/Makefile  |    4 ++--
+>  tools/testing/selftests/powerpc/dscr/Makefile      |    2 +-
+>  tools/testing/selftests/powerpc/mm/Makefile        |    2 +-
+>  tools/testing/selftests/rseq/Makefile              |    2 +-
+>  tools/testing/selftests/rtc/Makefile               |    2 +-
+>  tools/testing/selftests/seccomp/Makefile           |    2 +-
+>  tools/testing/selftests/timers/Makefile            |    2 +-
+>  tools/testing/selftests/vm/Makefile                |    2 +-
+>  12 files changed, 14 insertions(+), 14 deletions(-)
 > 
-> Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+> diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
+> index e2fd6f8d579c..419f58c53d12 100644
+> --- a/tools/testing/selftests/bpf/Makefile
+> +++ b/tools/testing/selftests/bpf/Makefile
+> @@ -22,7 +22,7 @@ CFLAGS += -g -Wall -O2 $(GENFLAGS) -I$(APIDIR) -I$(LIBDIR) -I$(BPFDIR)	\
+>  	  -I$(GENDIR) -I$(TOOLSDIR) -I$(CURDIR)				\
+>  	  -Dbpf_prog_load=bpf_prog_test_load				\
+>  	  -Dbpf_load_program=bpf_test_load_program
+> -LDLIBS += -lcap -lelf -lrt -lpthread
+> +LDLIBS += -lcap -lelf -lrt -pthread
+>  
+>  # Order correspond to 'make run_tests' order
+>  TEST_GEN_PROGS = test_verifier test_tag test_maps test_lru_map test_lpm_map test_progs \
+> diff --git a/tools/testing/selftests/membarrier/Makefile b/tools/testing/selftests/membarrier/Makefile
+> index 34d1c81a2324..19d657d966e3 100644
+> --- a/tools/testing/selftests/membarrier/Makefile
+> +++ b/tools/testing/selftests/membarrier/Makefile
+> @@ -1,6 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  CFLAGS += -g -I../../../../usr/include/
+> -LDLIBS += -lpthread
+> +LDLIBS += -pthread
+>  
+>  TEST_GEN_PROGS := membarrier_test_single_thread \
+>  		membarrier_test_multi_thread
+> diff --git a/tools/testing/selftests/mqueue/Makefile b/tools/testing/selftests/mqueue/Makefile
+> index 8a58055fc1f5..9986b778b8b3 100644
+> --- a/tools/testing/selftests/mqueue/Makefile
+> +++ b/tools/testing/selftests/mqueue/Makefile
+> @@ -1,6 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  CFLAGS += -O2
+> -LDLIBS = -lrt -lpthread -lpopt
+> +LDLIBS = -lrt -pthread -lpopt
+>  
+>  TEST_GEN_PROGS := mq_open_tests mq_perf_tests
+>  
+> diff --git a/tools/testing/selftests/net/Makefile b/tools/testing/selftests/net/Makefile
+> index a8e04d665b69..6ad8571bb0ed 100644
+> --- a/tools/testing/selftests/net/Makefile
+> +++ b/tools/testing/selftests/net/Makefile
+> @@ -25,5 +25,5 @@ KSFT_KHDR_INSTALL := 1
+>  include ../lib.mk
+>  
+>  $(OUTPUT)/reuseport_bpf_numa: LDLIBS += -lnuma
+> -$(OUTPUT)/tcp_mmap: LDFLAGS += -lpthread
+> -$(OUTPUT)/tcp_inq: LDFLAGS += -lpthread
+> +$(OUTPUT)/tcp_mmap: LDFLAGS += -pthread
+> +$(OUTPUT)/tcp_inq: LDFLAGS += -pthread
+> diff --git a/tools/testing/selftests/powerpc/benchmarks/Makefile b/tools/testing/selftests/powerpc/benchmarks/Makefile
+> index d40300a65b42..0d7c82d520ce 100644
+> --- a/tools/testing/selftests/powerpc/benchmarks/Makefile
+> +++ b/tools/testing/selftests/powerpc/benchmarks/Makefile
+> @@ -11,8 +11,8 @@ $(TEST_GEN_PROGS): ../harness.c
+>  
+>  $(OUTPUT)/context_switch: ../utils.c
+>  $(OUTPUT)/context_switch: CFLAGS += -maltivec -mvsx -mabi=altivec
+> -$(OUTPUT)/context_switch: LDLIBS += -lpthread
+> +$(OUTPUT)/context_switch: LDLIBS += -pthread
+>  
+> -$(OUTPUT)/fork: LDLIBS += -lpthread
+> +$(OUTPUT)/fork: LDLIBS += -pthread
+>  
+>  $(OUTPUT)/exec_target: CFLAGS += -static -nostartfiles
+> diff --git a/tools/testing/selftests/powerpc/dscr/Makefile b/tools/testing/selftests/powerpc/dscr/Makefile
+> index 5df476364b4d..90c744592d1b 100644
+> --- a/tools/testing/selftests/powerpc/dscr/Makefile
+> +++ b/tools/testing/selftests/powerpc/dscr/Makefile
+> @@ -6,6 +6,6 @@ TEST_GEN_PROGS := dscr_default_test dscr_explicit_test dscr_user_test	\
+>  top_srcdir = ../../../../..
+>  include ../../lib.mk
+>  
+> -$(OUTPUT)/dscr_default_test: LDLIBS += -lpthread
+> +$(OUTPUT)/dscr_default_test: LDLIBS += -pthread
+>  
+>  $(TEST_GEN_PROGS): ../harness.c
+> diff --git a/tools/testing/selftests/powerpc/mm/Makefile b/tools/testing/selftests/powerpc/mm/Makefile
+> index ed1565809d2b..4cda9b0b3dd4 100644
+> --- a/tools/testing/selftests/powerpc/mm/Makefile
+> +++ b/tools/testing/selftests/powerpc/mm/Makefile
+> @@ -20,4 +20,4 @@ $(OUTPUT)/large_vm_fork_separation: CFLAGS += -m64
+>  $(OUTPUT)/tempfile:
+>  	dd if=/dev/zero of=$@ bs=64k count=1
+>  
+> -$(OUTPUT)/tlbie_test: LDLIBS += -lpthread
+> +$(OUTPUT)/tlbie_test: LDLIBS += -pthread
+> diff --git a/tools/testing/selftests/rseq/Makefile b/tools/testing/selftests/rseq/Makefile
+> index d6469535630a..3a17f5b74b9c 100644
+> --- a/tools/testing/selftests/rseq/Makefile
+> +++ b/tools/testing/selftests/rseq/Makefile
+> @@ -6,7 +6,7 @@ endif
+>  
+>  CFLAGS += -O2 -Wall -g -I./ -I../../../../usr/include/ -L./ -Wl,-rpath=./ \
+>  	  $(CLANG_FLAGS)
+> -LDLIBS += -lpthread
+> +LDLIBS += -pthread
+>  
+>  # Own dependencies because we only want to build against 1st prerequisite, but
+>  # still track changes to header files and depend on shared object.
+> diff --git a/tools/testing/selftests/rtc/Makefile b/tools/testing/selftests/rtc/Makefile
+> index de9c8566672a..d075ecfbe846 100644
+> --- a/tools/testing/selftests/rtc/Makefile
+> +++ b/tools/testing/selftests/rtc/Makefile
+> @@ -1,6 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  CFLAGS += -O3 -Wl,-no-as-needed -Wall
+> -LDFLAGS += -lrt -lpthread -lm
+> +LDFLAGS += -lrt -pthread -lm
+>  
+>  TEST_GEN_PROGS = rtctest
+>  
+> diff --git a/tools/testing/selftests/seccomp/Makefile b/tools/testing/selftests/seccomp/Makefile
+> index 1760b3e39730..3e35159f709a 100644
+> --- a/tools/testing/selftests/seccomp/Makefile
+> +++ b/tools/testing/selftests/seccomp/Makefile
+> @@ -9,7 +9,7 @@ BINARIES := seccomp_bpf seccomp_benchmark
+>  CFLAGS += -Wl,-no-as-needed -Wall
+>  
+>  seccomp_bpf: seccomp_bpf.c ../kselftest_harness.h
+> -	$(CC) $(CFLAGS) $(LDFLAGS) $< -lpthread -o $@
+> +	$(CC) $(CFLAGS) $(LDFLAGS) $< -pthread -o $@
+>  
+>  TEST_PROGS += $(BINARIES)
+>  EXTRA_CLEAN := $(BINARIES)
+> diff --git a/tools/testing/selftests/timers/Makefile b/tools/testing/selftests/timers/Makefile
+> index 7656c7ce79d9..70461befa338 100644
+> --- a/tools/testing/selftests/timers/Makefile
+> +++ b/tools/testing/selftests/timers/Makefile
+> @@ -1,6 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  CFLAGS += -O3 -Wl,-no-as-needed -Wall
+> -LDLIBS += -lrt -lpthread -lm
+> +LDLIBS += -lrt -pthread -lm
+>  
+>  # these are all "safe" tests that don't modify
+>  # system time or require escalated privileges
+> diff --git a/tools/testing/selftests/vm/Makefile b/tools/testing/selftests/vm/Makefile
+> index 7f9a8a8c31da..afb35febd7b6 100644
+> --- a/tools/testing/selftests/vm/Makefile
+> +++ b/tools/testing/selftests/vm/Makefile
+> @@ -31,6 +31,6 @@ TEST_FILES := test_vmalloc.sh
+>  KSFT_KHDR_INSTALL := 1
+>  include ../lib.mk
+>  
+> -$(OUTPUT)/userfaultfd: LDLIBS += -lpthread
+> +$(OUTPUT)/userfaultfd: LDLIBS += -pthread
+>  
+>  $(OUTPUT)/mlock-random-test: LDLIBS += -lcap
+> 
 
-Thanks, queued for v5.5-rc.  Anup's Reviewed-by: has been dropped since 
-the patch changed significantly - Anup, if you are still happy with it, 
-please reply with another Reviewed-by:.  Thanks,
 
-
-- Paul
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
