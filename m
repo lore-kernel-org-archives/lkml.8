@@ -2,200 +2,167 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE41C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE27C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1FC120661
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:48:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E01A2075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:48:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FICHmaE1"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XSTC4G45"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731638AbgAPJsg (ORCPT
+        id S1731727AbgAPJsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 04:48:36 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50719 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726827AbgAPJsf (ORCPT
+        Thu, 16 Jan 2020 04:48:52 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38176 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731641AbgAPJsw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 04:48:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579168114;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=jQUfRvThpvCpmExVhDXPSctOGTZhMUj3J1KVohZFS0U=;
-        b=FICHmaE1tkP5fY72HeY8dDMrn7CzlPvIJxTW8+p6QQr8QoMjEzwgxywDUYbVuQDB6a+cJG
-        RGxoHD7QbXVja1uJj/1i6Xz0HZeU1vky/rdMRscPtTC+hsE2ekRmqVpaeLniBGffYZEmwW
-        adK6yeWwx2JldDsRfVytmsWXu4QuqrM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-323-fRAPxkJKN5KLUUn6k_w3xQ-1; Thu, 16 Jan 2020 04:48:32 -0500
-X-MC-Unique: fRAPxkJKN5KLUUn6k_w3xQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 259D8107ACC5;
-        Thu, 16 Jan 2020 09:48:31 +0000 (UTC)
-Received: from localhost (ovpn-8-20.pek2.redhat.com [10.72.8.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3955784333;
-        Thu, 16 Jan 2020 09:48:22 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ming Lei <ming.lei@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Peter Xu <peterx@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH] sched/isolation: isolate from handling managed interrupt
-Date:   Thu, 16 Jan 2020 17:48:06 +0800
-Message-Id: <20200116094806.25372-1-ming.lei@redhat.com>
+        Thu, 16 Jan 2020 04:48:52 -0500
+Received: by mail-wm1-f67.google.com with SMTP id u2so3043401wmc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 01:48:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LH+XrqReIfRgU82O3Uxy47xLMM1NN02QbLWpEzJl64k=;
+        b=XSTC4G45i2KY2VECMQBVxcynL+G1wTpS1DEjUTU5GdN3XHZoIb8QNu3ctMZl+m3oZq
+         KQBa/H6+of6DvCvmHVN08joDcrKj0sjO6B50pUn3ZpfUeCKIiPBNW/oiELwY9WVWChhS
+         CkbLZMg2ozn21B4B0mVdf/Q9lM1TFsR6kdxjM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LH+XrqReIfRgU82O3Uxy47xLMM1NN02QbLWpEzJl64k=;
+        b=VufUSRTY1EhT84xzyoMNSgbgfGvOWwuJ/N86nM79UyXQjN0o2v9lQoyuKuKijaLPxm
+         FTp5SNWRlDzSZy+lclFYRd7MSqG2UT8F53I2GESb/qVmfAyrxYSq31+jrqPBdioEzjox
+         pMet7GZsEgaeO2p5jeJaKu5di+Ydb3zNHm0Tk1oPfw6TAxU2S2WauvMTOw1gQcYQxTzn
+         7IW9vDQEDDuW6HUgk1LisrPTQ0lvtsjVnAZ3vWYl7CfxrT2rkDMqSOjU1JbHYtRSOuzW
+         ri/y7XLdLuSsgV2vjY0wMfx+L6Vlio4kt+LbKi+9QGFaSlg+ImYk/i8oKSe59Xd8B/dm
+         TIFA==
+X-Gm-Message-State: APjAAAU4Z/nTFpHVLL9FD2V664a6ldCG/8y+cfaYsAavP25sePvC5XCY
+        Jg7CzFk7LYO1pgH8cYEDSFjAog==
+X-Google-Smtp-Source: APXvYqza1vQikaGW57yGEhXWkQtRB3uIQEg4D5GJNhg1DcYuCMqU06L2smeOxp61LJqkGb5TBIN+rQ==
+X-Received: by 2002:a7b:cfc9:: with SMTP id f9mr5350932wmm.1.1579168130015;
+        Thu, 16 Jan 2020 01:48:50 -0800 (PST)
+Received: from google.com ([2a00:79e0:42:204:8a21:ba0c:bb42:75ec])
+        by smtp.gmail.com with ESMTPSA id i16sm4023441wmb.36.2020.01.16.01.48.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 01:48:49 -0800 (PST)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Thu, 16 Jan 2020 10:48:47 +0100
+To:     Stephen Smalley <sds@tycho.nsa.gov>
+Cc:     KP Singh <kpsingh@chromium.org>, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
+Subject: Re: [PATCH bpf-next v2 04/10] bpf: lsm: Add mutable hooks list for
+ the BPF LSM
+Message-ID: <20200116094847.GB240584@google.com>
+References: <20200115171333.28811-1-kpsingh@chromium.org>
+ <20200115171333.28811-5-kpsingh@chromium.org>
+ <cd1d9d9f-1b68-8d2c-118a-334e4c71eb57@tycho.nsa.gov>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cd1d9d9f-1b68-8d2c-118a-334e4c71eb57@tycho.nsa.gov>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Userspace can't change managed interrupt's affinity via /proc interface,
-however application often requires the specified isolated CPUs not
-disturbed by interrupts.
+On 15-Jan 12:30, Stephen Smalley wrote:
+> On 1/15/20 12:13 PM, KP Singh wrote:
+> > From: KP Singh <kpsingh@google.com>
+> > 
+> > - The list of hooks registered by an LSM is currently immutable as they
+> >    are declared with __lsm_ro_after_init and they are attached to a
+> >    security_hook_heads struct.
+> > - For the BPF LSM we need to de/register the hooks at runtime. Making
+> >    the existing security_hook_heads mutable broadens an
+> >    attack vector, so a separate security_hook_heads is added for only
+> >    those that ~must~ be mutable.
+> > - These mutable hooks are run only after all the static hooks have
+> >    successfully executed.
+> > 
+> > This is based on the ideas discussed in:
+> > 
+> >    https://lore.kernel.org/lkml/20180408065916.GA2832@ircssh-2.c.rugged-nimbus-611.internal
+> > 
+> > Signed-off-by: KP Singh <kpsingh@google.com>
+> > ---
+> [...]
+> > diff --git a/security/security.c b/security/security.c
+> > index cd2d18d2d279..4a2eb4c089b2 100644
+> > --- a/security/security.c
+> > +++ b/security/security.c
+> > @@ -652,20 +653,21 @@ static void __init lsm_early_task(struct task_struct *task)
+> >   								\
+> >   		hlist_for_each_entry(P, &security_hook_heads.FUNC, list) \
+> >   			P->hook.FUNC(__VA_ARGS__);		\
+> > +		CALL_BPF_LSM_VOID_HOOKS(FUNC, __VA_ARGS__);	\
+> >   	} while (0)
+> > -#define call_int_hook(FUNC, IRC, ...) ({			\
+> > -	int RC = IRC;						\
+> > -	do {							\
+> > -		struct security_hook_list *P;			\
+> > -								\
+> > +#define call_int_hook(FUNC, IRC, ...) ({				\
+> > +	int RC = IRC;							\
+> > +	do {								\
+> > +		struct security_hook_list *P;				\
+> >   		hlist_for_each_entry(P, &security_hook_heads.FUNC, list) { \
+> > -			RC = P->hook.FUNC(__VA_ARGS__);		\
+> > -			if (RC != 0)				\
+> > -				break;				\
+> > -		}						\
+> > -	} while (0);						\
+> > -	RC;							\
+> > +			RC = P->hook.FUNC(__VA_ARGS__);			\
+> > +			if (RC != 0)					\
+> > +				break;					\
+> > +		}							\
+> > +		RC = CALL_BPF_LSM_INT_HOOKS(RC, FUNC, __VA_ARGS__);	\
+> 
+> Let's not clobber the return code from the other LSMs with the bpf one.
 
-Add sub-parameter 'managed_irq' for 'isolcpus', so that we can isolate
-from handling managed interrupt.
+Good catch and thanks for pointing it out. Should be fixed in v3.
 
-Not select isolated CPU as effective CPU if the interupt affinity include=
-s
-at least one housekeeping CPU. This way guarantees that isolated CPUs won=
-'t
-be interrupted by managed irq if IO isn't submitted from any isolated CPU=
-.
+- KP
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Peter Xu <peterx@redhat.com>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
- .../admin-guide/kernel-parameters.txt         |  9 ++++++++
- include/linux/sched/isolation.h               |  1 +
- kernel/irq/manage.c                           | 22 ++++++++++++++++++-
- kernel/sched/isolation.c                      |  6 +++++
- 4 files changed, 37 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentat=
-ion/admin-guide/kernel-parameters.txt
-index ade4e6ec23e0..e0f18ac866d4 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1933,6 +1933,15 @@
- 			  <cpu number> begins at 0 and the maximum value is
- 			  "number of CPUs in system - 1".
-=20
-+			managed_irq
-+			  Isolate from handling managed interrupt. Userspace can't
-+			  change managed interrupt's affinity via /proc interface,
-+			  however application often requires the specified isolated
-+			  CPUs not disturbed by interrupts. This way guarantees that
-+			  isolated CPU won't be interrupted if IO isn't submitted
-+			  from isolated CPU when managed interrupt is used by IO
-+			  drivers.
-+
- 			The format of <cpu-list> is described above.
-=20
-=20
-diff --git a/include/linux/sched/isolation.h b/include/linux/sched/isolat=
-ion.h
-index 6c8512d3be88..0fbcbacd1b29 100644
---- a/include/linux/sched/isolation.h
-+++ b/include/linux/sched/isolation.h
-@@ -13,6 +13,7 @@ enum hk_flags {
- 	HK_FLAG_TICK		=3D (1 << 4),
- 	HK_FLAG_DOMAIN		=3D (1 << 5),
- 	HK_FLAG_WQ		=3D (1 << 6),
-+	HK_FLAG_MANAGED_IRQ	=3D (1 << 7),
- };
-=20
- #ifdef CONFIG_CPU_ISOLATION
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index 1753486b440c..9cc972d28d3c 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -20,6 +20,7 @@
- #include <linux/sched/task.h>
- #include <uapi/linux/sched/types.h>
- #include <linux/task_work.h>
-+#include <linux/sched/isolation.h>
-=20
- #include "internals.h"
-=20
-@@ -212,12 +213,29 @@ int irq_do_set_affinity(struct irq_data *data, cons=
-t struct cpumask *mask,
- {
- 	struct irq_desc *desc =3D irq_data_to_desc(data);
- 	struct irq_chip *chip =3D irq_data_get_irq_chip(data);
-+	const struct cpumask *housekeeping_mask =3D
-+		housekeeping_cpumask(HK_FLAG_MANAGED_IRQ);
- 	int ret;
-+	cpumask_var_t tmp_mask =3D (struct cpumask *)mask;
-=20
- 	if (!chip || !chip->irq_set_affinity)
- 		return -EINVAL;
-=20
--	ret =3D chip->irq_set_affinity(data, mask, force);
-+	zalloc_cpumask_var(&tmp_mask, GFP_ATOMIC);
-+
-+	/*
-+	 * Userspace can't change managed irq's affinity, make sure that
-+	 * isolated CPU won't be selected as the effective CPU if this
-+	 * irq's affinity includes at least one housekeeping CPU.
-+	 *
-+	 * This way guarantees that isolated CPU won't be interrupted if
-+	 * IO isn't submitted from isolated CPU.
-+	 */
-+	if (irqd_affinity_is_managed(data) && tmp_mask &&
-+			cpumask_intersects(mask, housekeeping_mask))
-+		cpumask_and(tmp_mask, mask, housekeeping_mask);
-+
-+	ret =3D chip->irq_set_affinity(data, tmp_mask, force);
- 	switch (ret) {
- 	case IRQ_SET_MASK_OK:
- 	case IRQ_SET_MASK_OK_DONE:
-@@ -229,6 +247,8 @@ int irq_do_set_affinity(struct irq_data *data, const =
-struct cpumask *mask,
- 		ret =3D 0;
- 	}
-=20
-+	free_cpumask_var(tmp_mask);
-+
- 	return ret;
- }
-=20
-diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-index 9fcb2a695a41..008d6ac2342b 100644
---- a/kernel/sched/isolation.c
-+++ b/kernel/sched/isolation.c
-@@ -163,6 +163,12 @@ static int __init housekeeping_isolcpus_setup(char *=
-str)
- 			continue;
- 		}
-=20
-+		if (!strncmp(str, "managed_irq,", 12)) {
-+			str +=3D 12;
-+			flags |=3D HK_FLAG_MANAGED_IRQ;
-+			continue;
-+		}
-+
- 		pr_warn("isolcpus: Error, unknown flag\n");
- 		return 0;
- 	}
---=20
-2.20.1
-
+> 
+> > +	} while (0);							\
+> > +	RC;								\
+> >   })
+> >   /* Security operations */
+> > 
+> 
