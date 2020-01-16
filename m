@@ -2,105 +2,59 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CC7C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21569C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37ED22073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:59:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uvRrgWRu"
+	by mail.kernel.org (Postfix) with ESMTP id F12F42073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:59:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgAPM7Z (ORCPT
+        id S1727003AbgAPM7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 07:59:25 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:39765 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726688AbgAPM7V (ORCPT
+        Thu, 16 Jan 2020 07:59:30 -0500
+Received: from s3.sipsolutions.net ([144.76.43.62]:55164 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726688AbgAPM71 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 07:59:21 -0500
-Received: by mail-ed1-f68.google.com with SMTP id t17so18825612eds.6;
-        Thu, 16 Jan 2020 04:59:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=JU7gxEFwqK+Oxre///Ayp0+fP1f8xI82V+ZomELLvp4=;
-        b=uvRrgWRu7I86qKQ0Eh/qfeUUD9OLgTi++Ou/RhfFmXQjCXrOX8QDv22J1TqxwM/Wlp
-         niVoBjPZRgj8tNLCdLAJpQ2iVfWF/llODq/ZeOrv/cfXCwIIVUzHhsSEkBDS2K475/ho
-         9TSVe8mCOB8Bidp0Pvt3wJFnPSbjdSxSQqjN6Li313HIOOxImQy8pP3waJdKs8htJSG9
-         DnaoqS9TYiv7GxyqD4tDYM3AU9Tmh2oTBFtJ6w4VdfznHWqX0czUlLtCBaw1MHjijrfg
-         Ta3EB3PL6V0llGOgmQrSDOysAnbQJmkKVHXkKOQcFSBRTlDCg2hP7NPFVH8KPPlWJLds
-         IqTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=JU7gxEFwqK+Oxre///Ayp0+fP1f8xI82V+ZomELLvp4=;
-        b=DoVPCpQal6hg7tyOXz9ROX2D9plM6l//1BGWX5HQnuUjeCFmwt0GH3Ry18Q/o7biDg
-         QrgdCq7LdF8lK6MUMEawHc37FuaO6H7K+wBhKqaI8RfwGPbu2kZFvHmIPOAofKDvFHzi
-         5gHE6HRgRgUXxFOq9yQYCf0LkFNZZGlJGxXq9MySB1xFfzCveBBG859mUqJWxZd1oCFK
-         8iDkidGmw0QNqfvJUHVU5aGzwFYHQdWIGx7REsoZrU2FkQ6rh4Y3jMTtueqIUB/WuDOT
-         ZjN5ALKUjggckgtmtF4kbdtZYTscmB8NL5IpAt94zi+e7v0yPU6/aiDXphS2kWTFgMCp
-         MNlA==
-X-Gm-Message-State: APjAAAWaBOTv7gY18TphmUQoI04kJQItdRaZPNbdCzzM3SOVhD6kZLf+
-        mqzJJthP6ezx5P9lz4Ltcm8dA9lo
-X-Google-Smtp-Source: APXvYqyfBsE5jck3bw/VdTRhjo4kKjLHjrj51wfpyyBP+3PS7KhsSZxgaEYUA5oUGV8GEx8FoPdYIg==
-X-Received: by 2002:a17:906:86d7:: with SMTP id j23mr2843204ejy.89.1579179559263;
-        Thu, 16 Jan 2020 04:59:19 -0800 (PST)
-Received: from jwang-Latitude-5491.fritz.box ([2001:16b8:4956:1800:d464:b0ea:3ef4:abbb])
-        by smtp.gmail.com with ESMTPSA id b13sm697289ejl.5.2020.01.16.04.59.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 04:59:18 -0800 (PST)
-From:   Jack Wang <jinpuwang@gmail.com>
-To:     linux-block@vger.kernel.org, linux-rdma@vger.kernel.org
-Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
-        bvanassche@acm.org, leon@kernel.org, dledford@redhat.com,
-        jgg@ziepe.ca, danil.kipnis@cloud.ionos.com,
-        jinpu.wang@cloud.ionos.com, rpenyaev@suse.de,
-        Roman Pen <roman.penyaev@profitbricks.com>,
+        Thu, 16 Jan 2020 07:59:27 -0500
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.93)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1is4jz-00C8Ha-5U; Thu, 16 Jan 2020 13:59:15 +0100
+Message-ID: <d9e0af66e2d8cb26ef595e1a2133f55567f4b5e0.camel@sipsolutions.net>
+Subject: Re: [PATCH -next] mac80111: fix build error without
+ CONFIG_ATH11K_DEBUGFS
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Chen Zhou <chenzhou10@huawei.com>, davem@davemloft.net
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v7 01/25] sysfs: export sysfs_remove_file_self()
-Date:   Thu, 16 Jan 2020 13:58:51 +0100
-Message-Id: <20200116125915.14815-2-jinpuwang@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200116125915.14815-1-jinpuwang@gmail.com>
-References: <20200116125915.14815-1-jinpuwang@gmail.com>
+Date:   Thu, 16 Jan 2020 13:59:13 +0100
+In-Reply-To: <20200116125155.166749-1-chenzhou10@huawei.com>
+References: <20200116125155.166749-1-chenzhou10@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Wang <jinpu.wang@cloud.ionos.com>
+On Thu, 2020-01-16 at 20:51 +0800, Chen Zhou wrote:
+> If CONFIG_ATH11K_DEBUGFS is n, build fails:
+> 
+> drivers/net/wireless/ath/ath11k/debugfs_sta.c: In function ath11k_dbg_sta_open_htt_peer_stats:
+> drivers/net/wireless/ath/ath11k/debugfs_sta.c:416:4: error: struct ath11k has no member named debug
+>   ar->debug.htt_stats.stats_req = stats_req;
+>       ^~
+> and many more similar messages.
+> 
+> Select ATH11K_DEBUGFS under config MAC80211_DEBUGFS to fix this.
 
-Function is going to be used in transport over RDMA module
-in subsequent patches, so export it to GPL modules.
+Heh, no. You need to find a way in ath11 to fix this.
 
-Signed-off-by: Roman Pen <roman.penyaev@profitbricks.com>
-Acked-by: Tejun Heo <tj@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-[jwang: extend the commit message]
-Signed-off-by: Jack Wang <jinpu.wang@cloud.ionos.com>
----
- fs/sysfs/file.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
-index 130fc6fbcc03..1ff4672d7746 100644
---- a/fs/sysfs/file.c
-+++ b/fs/sysfs/file.c
-@@ -492,6 +492,7 @@ bool sysfs_remove_file_self(struct kobject *kobj, const struct attribute *attr)
- 	kernfs_put(kn);
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(sysfs_remove_file_self);
- 
- void sysfs_remove_files(struct kobject *kobj, const struct attribute * const *ptr)
- {
--- 
-2.17.1
+johannes
 
