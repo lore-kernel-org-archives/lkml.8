@@ -2,94 +2,97 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D5CC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A17B3C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 673512073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:54:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wRgJjSBf"
+	by mail.kernel.org (Postfix) with ESMTP id 6E9B32073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:54:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579197253;
+	bh=SdRVim0Vj/KNpASzwZRjnWoFpu17oNX69dqvLIkzFMs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=klhmNjcJO2DsF5Lq8W+V7IqyCMXlb82JzzYF8NFYgK0YW0ApFtIkpQx+WRe84CdFP
+	 PwOcW630J9AdNNOClpY/On2VcHjHfjwRhtyvqsXL89xno3Nv7e85ARqa7sbd2N7NDb
+	 t/xHKS2Vp7tEj/a5A6RVWm6pO0OVjxO8uYpusMlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394470AbgAPRyE (ORCPT
+        id S2406217AbgAPRyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:54:04 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:49994 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394450AbgAPRxo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:53:44 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00GHreoJ007619;
-        Thu, 16 Jan 2020 11:53:40 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579197220;
-        bh=iaXTo2WLoSeG9gSntibFwuA1dkUbJiAzx2kVpo1emsw=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=wRgJjSBf9g9pu+pI93Qu74RVO7ZWg6+U99QhTXu7WYHzB0ZkRyaxNcZcz32uwhia0
-         eG/R+g+Vq8uSQ2J+F8m8ucKG9OUo/Lo9NbavQpPyVDZ5MF6Gs//bd2sYUqlm3bj7gO
-         3233fTGt/MqBikg5buGXVtgabrQv2vJEqfiTSUYc=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00GHre8F128703
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 16 Jan 2020 11:53:40 -0600
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 16
- Jan 2020 11:53:40 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 16 Jan 2020 11:53:40 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00GHre4S002991;
-        Thu, 16 Jan 2020 11:53:40 -0600
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <sebastian.reichel@collabora.com>
-CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v4 1/4] power: supply: core: Update sysfs-class-power ABI document
-Date:   Thu, 16 Jan 2020 11:50:36 -0600
-Message-ID: <20200116175039.1317-2-dmurphy@ti.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200116175039.1317-1-dmurphy@ti.com>
-References: <20200116175039.1317-1-dmurphy@ti.com>
+        Thu, 16 Jan 2020 12:54:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36250 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406012AbgAPRo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:44:57 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A90D42476A;
+        Thu, 16 Jan 2020 17:44:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579196696;
+        bh=SdRVim0Vj/KNpASzwZRjnWoFpu17oNX69dqvLIkzFMs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=L2GI+muUGD5xFwZzSzXSqOBkwA+PjwU+H9V3xopMbLf8FW55rs/9Dyoh3BmLLUoVY
+         hHKcFIasQArhG+drnLb4n2Zp8Ihxefspe/hdoUyS0xIv+l/fGB+FlzzrVU8jZMRhMG
+         2Y3jQIR50HdOalNWjxI2Jt0e8LDXEFbbWMPhq4p0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.4 090/174] ARM: riscpc: fix lack of keyboard interrupts after irq conversion
+Date:   Thu, 16 Jan 2020 12:41:27 -0500
+Message-Id: <20200116174251.24326-90-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
+References: <20200116174251.24326-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the "Over Current" string to /sys/class/power_supply/<supply_name>/health
-description.
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-Fixes: e3e83cc601e57 ("power: supply: core: Add POWER_SUPPLY_HEALTH_OVERCURRENT constant")
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
+[ Upstream commit 63a0666bca9311f35017be454587f3ba903644b8 ]
+
+Fix lack of keyboard interrupts for RiscPC due to incorrect conversion.
+
+Fixes: e8d36d5dbb6a ("ARM: kill off set_irq_flags usage")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/ABI/testing/sysfs-class-power | 3 ++-
+ arch/arm/mach-rpc/irq.c | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-index 27edc06e2495..bf3b48f022dc 100644
---- a/Documentation/ABI/testing/sysfs-class-power
-+++ b/Documentation/ABI/testing/sysfs-class-power
-@@ -189,7 +189,8 @@ Description:
- 		Access: Read
- 		Valid values: "Unknown", "Good", "Overheat", "Dead",
- 			      "Over voltage", "Unspecified failure", "Cold",
--			      "Watchdog timer expire", "Safety timer expire"
-+			      "Watchdog timer expire", "Safety timer expire",
-+			      "Over current"
+diff --git a/arch/arm/mach-rpc/irq.c b/arch/arm/mach-rpc/irq.c
+index 66502e6207fe..fce7fecbd8fa 100644
+--- a/arch/arm/mach-rpc/irq.c
++++ b/arch/arm/mach-rpc/irq.c
+@@ -117,7 +117,7 @@ extern unsigned char rpc_default_fiq_start, rpc_default_fiq_end;
  
- What:		/sys/class/power_supply/<supply_name>/precharge_current
- Date:		June 2017
+ void __init rpc_init_irq(void)
+ {
+-	unsigned int irq, clr, set = 0;
++	unsigned int irq, clr, set;
+ 
+ 	iomd_writeb(0, IOMD_IRQMASKA);
+ 	iomd_writeb(0, IOMD_IRQMASKB);
+@@ -129,6 +129,7 @@ void __init rpc_init_irq(void)
+ 
+ 	for (irq = 0; irq < NR_IRQS; irq++) {
+ 		clr = IRQ_NOREQUEST;
++		set = 0;
+ 
+ 		if (irq <= 6 || (irq >= 9 && irq <= 15))
+ 			clr |= IRQ_NOPROBE;
 -- 
-2.25.0
+2.20.1
 
