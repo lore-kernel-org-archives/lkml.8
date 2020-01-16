@@ -2,60 +2,61 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B60DBC32771
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 01:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE647C33CB2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 01:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 849552084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 01:24:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6BF72084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 01:24:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Necsxt4U"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JhPSOz2w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729420AbgAPBYV (ORCPT
+        id S1729566AbgAPBYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 20:24:21 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44530 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729019AbgAPBYV (ORCPT
+        Wed, 15 Jan 2020 20:24:24 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37231 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729423AbgAPBYW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 20:24:21 -0500
-Received: by mail-pg1-f196.google.com with SMTP id x7so9029401pgl.11
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 17:24:20 -0800 (PST)
+        Wed, 15 Jan 2020 20:24:22 -0500
+Received: by mail-pf1-f193.google.com with SMTP id p14so9377770pfn.4
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 17:24:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ztBntqcbRDpikloUpN2F0KWZjGouqnztxdMWfXHrneU=;
-        b=Necsxt4UM069dJn7UjGMxHP4B4Sb0ubZNcm+nTrWn7TXh6RK8XLGxhuR6iy+4r9KvX
-         HtSp4KGSa43ZdYKf5GtwMSyGz/DsjpqSBBps9cJKtCKviSO7uwPrv9LibT7DWL71ALGF
-         w4jbfha23PQIwPGtO/NJIuyW3VbmoDRbPfxSU=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ZQ9IDbK60uG/o5/jdnQdHcQ/z86svExWfXh/mgZ1IxQ=;
+        b=JhPSOz2wy2KhqjLTwWd8bW+JKPDmGoVaXZP9oCcHd+fHg7HRI5E0s/u1yyGLOTIDEc
+         pQubh4QYxk4DaYwTIbZQmMYaVhzfwFLnt4CexaUDEESG8dkMiNuviq4wxMtA1wZFoiEP
+         VsfAOc8Ltn/vQiAHFNJJYhhj9y21futDud5MY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ztBntqcbRDpikloUpN2F0KWZjGouqnztxdMWfXHrneU=;
-        b=gB3P71WTyzCg0ow6WIezPAo9Ru7oOUshE1C6Y5IApM9Y3dToWe1d7A0xfFzqn8hGB1
-         FhTHAWQJCx4M9Xm+kLnMW5K6+Nyps3HllR1lMiElPae3garI6pUmaP3d7SyzTKk5Lani
-         J2EcV58crLZ6FeYf7T/V4KQu1mJmf4MPCd6rH8s7Z7ZuITFaEwhhlEH26CobKssYLoXx
-         kaWsPfQINB4VDUvmi8mCXpVYI/APSq9OLeoFmHM0Xt6YtcaASUrpRDLxaYfCXdYT0Vco
-         4ZPmvt71hd+AHk8icBGbPSsqB+lPmA6K7nlAghnzpieyb7WQy9NVojD0xTuBZOHt1wye
-         7qXQ==
-X-Gm-Message-State: APjAAAVhDKm2H+g/dRV/+92sxvO85UWPCM9JdNg2A5Om8GaBXGIlLfSr
-        L31IJDSMxsbN6OuHv0kClSpWYQ==
-X-Google-Smtp-Source: APXvYqyEY91Ps4j5Unu6q/04cKkVouK2+nDVdzN3lDLdlCCZsHk9TuTlpS854xybBZZK2RoncaRauQ==
-X-Received: by 2002:a63:7843:: with SMTP id t64mr36298336pgc.144.1579137860501;
-        Wed, 15 Jan 2020 17:24:20 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ZQ9IDbK60uG/o5/jdnQdHcQ/z86svExWfXh/mgZ1IxQ=;
+        b=cEJ36UVGgBBO8fGzwPz41wukUvvEbaaHNV2tELnor2HbPfoSnSCOWMRw21qC4I/mRC
+         rr2bC/rbGqyoneV1PhHwA68pbI4o6duRnLdmm1zruY7H0OEVJeZSqgUQq7r/Vj77B7X3
+         KF31eroPu1rCHURLaLiQKYRaG+BZEY/OJZU15AT2EP9Tw2ucce6GofbTHW6jZuCgj6wn
+         n2hAVW4IF0HWzpFKC0mfAxfw+3u0n+yUwnlleLpFtV8BAgssr6gqTON5Kz2nWgx9LnnU
+         DdIpXvszsfOXAYV4R+7vBJMVxTvLkmGK9mV+dP3DqLYqsuQDi6SoiHA4UubOsniyta6o
+         cXPQ==
+X-Gm-Message-State: APjAAAUIltN3NJMnmVUZFKFP4HUeNFAm/0S5iSx33vzr1du/gX+Z09ZY
+        bv6zEidIrUefgcFPu2Ts/NNoVw==
+X-Google-Smtp-Source: APXvYqxz8Jx6t6Okpu/J7+9lMYElG9PJli4chhVh8tEjNqkJmp7Gs0nQdkFUotLWKGIUhIG1GowFyw==
+X-Received: by 2002:a63:201d:: with SMTP id g29mr37572832pgg.427.1579137862140;
+        Wed, 15 Jan 2020 17:24:22 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 144sm24408406pfc.124.2020.01.15.17.24.17
+        by smtp.gmail.com with ESMTPSA id q21sm22396012pff.105.2020.01.15.17.24.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 15 Jan 2020 17:24:18 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Kees Cook <keescook@chromium.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
         Andrey Ryabinin <aryabinin@virtuozzo.com>,
         Elena Petrova <lenaptr@google.com>,
         Alexander Potapenko <glider@google.com>,
@@ -66,10 +67,12 @@ Cc:     Kees Cook <keescook@chromium.org>,
         kasan-dev@googlegroups.com, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
         syzkaller@googlegroups.com
-Subject: [PATCH v3 0/6] ubsan: Split out bounds checker
-Date:   Wed, 15 Jan 2020 17:23:15 -0800
-Message-Id: <20200116012321.26254-1-keescook@chromium.org>
+Subject: [PATCH v3 3/6] lkdtm/bugs: Add arithmetic overflow and array bounds checks
+Date:   Wed, 15 Jan 2020 17:23:18 -0800
+Message-Id: <20200116012321.26254-4-keescook@chromium.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116012321.26254-1-keescook@chromium.org>
+References: <20200116012321.26254-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,40 +80,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This splits out the bounds checker so it can be individually used. This
-is expected to be enabled in Android and hopefully for syzbot. Includes
-LKDTM tests for behavioral corner-cases (beyond just the bounds checker),
-and adjusts ubsan and kasan slightly for correct panic handling.
+Adds LKDTM tests for arithmetic overflow (both signed and unsigned),
+as well as array bounds checking.
 
--Kees
-
-v3:
- - use UBSAN menuconfig (will)
- - clean up ubsan report titles (dvyukov)
- - fix ubsan/kasan "panic" handling
- - add Acks
-v2: https://lore.kernel.org/lkml/20191121181519.28637-1-keescook@chromium.org
-v1: https://lore.kernel.org/lkml/20191120010636.27368-1-keescook@chromium.org
-
-
-Kees Cook (6):
-  ubsan: Add trap instrumentation option
-  ubsan: Split "bounds" checker from other options
-  lkdtm/bugs: Add arithmetic overflow and array bounds checks
-  ubsan: Check panic_on_warn
-  kasan: Unset panic_on_warn before calling panic()
-  ubsan: Include bug type in report header
-
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Acked-by: Dmitry Vyukov <dvyukov@google.com>
+---
  drivers/misc/lkdtm/bugs.c  | 75 ++++++++++++++++++++++++++++++++++++++
  drivers/misc/lkdtm/core.c  |  3 ++
  drivers/misc/lkdtm/lkdtm.h |  3 ++
- lib/Kconfig.ubsan          | 49 +++++++++++++++++++++----
- lib/Makefile               |  2 +
- lib/ubsan.c                | 47 +++++++++++++-----------
- mm/kasan/report.c          | 10 ++++-
- scripts/Makefile.ubsan     | 16 ++++++--
- 8 files changed, 172 insertions(+), 33 deletions(-)
+ 3 files changed, 81 insertions(+)
 
+diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
+index a4fdad04809a..aeee2b1c7663 100644
+--- a/drivers/misc/lkdtm/bugs.c
++++ b/drivers/misc/lkdtm/bugs.c
+@@ -11,6 +11,7 @@
+ #include <linux/sched/signal.h>
+ #include <linux/sched/task_stack.h>
+ #include <linux/uaccess.h>
++#include <linux/slab.h>
+ 
+ #ifdef CONFIG_X86_32
+ #include <asm/desc.h>
+@@ -175,6 +176,80 @@ void lkdtm_HUNG_TASK(void)
+ 	schedule();
+ }
+ 
++volatile unsigned int huge = INT_MAX - 2;
++volatile unsigned int ignored;
++
++void lkdtm_OVERFLOW_SIGNED(void)
++{
++	int value;
++
++	value = huge;
++	pr_info("Normal signed addition ...\n");
++	value += 1;
++	ignored = value;
++
++	pr_info("Overflowing signed addition ...\n");
++	value += 4;
++	ignored = value;
++}
++
++
++void lkdtm_OVERFLOW_UNSIGNED(void)
++{
++	unsigned int value;
++
++	value = huge;
++	pr_info("Normal unsigned addition ...\n");
++	value += 1;
++	ignored = value;
++
++	pr_info("Overflowing unsigned addition ...\n");
++	value += 4;
++	ignored = value;
++}
++
++/* Intentially using old-style flex array definition of 1 byte. */
++struct array_bounds_flex_array {
++	int one;
++	int two;
++	char data[1];
++};
++
++struct array_bounds {
++	int one;
++	int two;
++	char data[8];
++	int three;
++};
++
++void lkdtm_ARRAY_BOUNDS(void)
++{
++	struct array_bounds_flex_array *not_checked;
++	struct array_bounds *checked;
++	volatile int i;
++
++	not_checked = kmalloc(sizeof(*not_checked) * 2, GFP_KERNEL);
++	checked = kmalloc(sizeof(*checked) * 2, GFP_KERNEL);
++
++	pr_info("Array access within bounds ...\n");
++	/* For both, touch all bytes in the actual member size. */
++	for (i = 0; i < sizeof(checked->data); i++)
++		checked->data[i] = 'A';
++	/*
++	 * For the uninstrumented flex array member, also touch 1 byte
++	 * beyond to verify it is correctly uninstrumented.
++	 */
++	for (i = 0; i < sizeof(not_checked->data) + 1; i++)
++		not_checked->data[i] = 'A';
++
++	pr_info("Array access beyond bounds ...\n");
++	for (i = 0; i < sizeof(checked->data) + 1; i++)
++		checked->data[i] = 'B';
++
++	kfree(not_checked);
++	kfree(checked);
++}
++
+ void lkdtm_CORRUPT_LIST_ADD(void)
+ {
+ 	/*
+diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
+index ee0d6e721441..2e04719b503c 100644
+--- a/drivers/misc/lkdtm/core.c
++++ b/drivers/misc/lkdtm/core.c
+@@ -129,6 +129,9 @@ static const struct crashtype crashtypes[] = {
+ 	CRASHTYPE(HARDLOCKUP),
+ 	CRASHTYPE(SPINLOCKUP),
+ 	CRASHTYPE(HUNG_TASK),
++	CRASHTYPE(OVERFLOW_SIGNED),
++	CRASHTYPE(OVERFLOW_UNSIGNED),
++	CRASHTYPE(ARRAY_BOUNDS),
+ 	CRASHTYPE(EXEC_DATA),
+ 	CRASHTYPE(EXEC_STACK),
+ 	CRASHTYPE(EXEC_KMALLOC),
+diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
+index c56d23e37643..8391081c6f13 100644
+--- a/drivers/misc/lkdtm/lkdtm.h
++++ b/drivers/misc/lkdtm/lkdtm.h
+@@ -22,6 +22,9 @@ void lkdtm_SOFTLOCKUP(void);
+ void lkdtm_HARDLOCKUP(void);
+ void lkdtm_SPINLOCKUP(void);
+ void lkdtm_HUNG_TASK(void);
++void lkdtm_OVERFLOW_SIGNED(void);
++void lkdtm_OVERFLOW_UNSIGNED(void);
++void lkdtm_ARRAY_BOUNDS(void);
+ void lkdtm_CORRUPT_LIST_ADD(void);
+ void lkdtm_CORRUPT_LIST_DEL(void);
+ void lkdtm_CORRUPT_USER_DS(void);
 -- 
 2.20.1
 
