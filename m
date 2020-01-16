@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B27AC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD275C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69CC7246BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94C60246C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:26:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195570;
-	bh=9lFcSaXVFg63NRWGeDrv05C73dAUr2huwxo00KwwHQs=;
+	s=default; t=1579195573;
+	bh=G8UREBtqLrwfcsnU9csVUBr9dyhZpuNyboAPEC2841A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2R/bJa3nTbLG0KeYiwZ+vFx4pTEB6M0AN1fp89uExcFvErbMwyJhVkkGNRkMb0+yX
-	 c/rx+oiznJBqFQVmSEK6M5wxilp+TKLbEoZJgAJt55O0zNI4GyGPt3oXz+NFTeh9AB
-	 jiG9XD3fAZNBT1zLlF8Iv2iaoC5VpdlyxT3ixXec=
+	b=EKMen2OGJkCIBLDRkwaZ7JQEr+2MhuZBh449E6l4+UHjh5I7KryK6gqECqfvFFy6h
+	 WbZgYNT6JoxRWe+W91TB2Klkn1nChRy8fHI6Np1/0ftIOcAjGf9CawQ8vcV3jNNmh1
+	 Bv5zWaHaTbGZT1Me9Zpwj0vB75qbD64xhlrceipk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392251AbgAPR0J (ORCPT
+        id S2403872AbgAPR0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:26:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34020 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:26:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392024AbgAPRZt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:25:49 -0500
+        id S2392086AbgAPRZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:25:53 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 230E5207E0;
-        Thu, 16 Jan 2020 17:25:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DE2124653;
+        Thu, 16 Jan 2020 17:25:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195548;
-        bh=9lFcSaXVFg63NRWGeDrv05C73dAUr2huwxo00KwwHQs=;
+        s=default; t=1579195552;
+        bh=G8UREBtqLrwfcsnU9csVUBr9dyhZpuNyboAPEC2841A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ILoDX4Cuu/pnA2naHsUkAcgcDBs54TbdKsGGqcjNbUDpw2Bk9rIzUniGp/6SxRi9u
-         5lXa/vnya0akNVBqm+31XiWPGk6uRmJxxodtRda07NlaYs5TmxLsfj0+9TUvtwaZSQ
-         RfFKsJ1fieg9pnQ+N6qhm7pDcEy2pNMBTMWZojsU=
+        b=uhvpTdGWJOjWojU3GHOjQebV0jaiIdosNYOxw7ODZDhHK0fKJwjxQJOMl8v7ML3kX
+         jqbGwcirDgKo9b0RLGRuNuhTZznnoaElBElOn0H+KMF9f1ShO2MsTWNv2DmM2B+hK7
+         HwummTy9PlMQXFRnBcE/WAFbGgZ/60wj5Pw3i2IQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Mc Guire <hofrat@osadl.org>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 140/371] media: cx23885: check allocation return
-Date:   Thu, 16 Jan 2020 12:20:12 -0500
-Message-Id: <20200116172403.18149-83-sashal@kernel.org>
+Cc:     Jon Maloy <jon.maloy@ericsson.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.14 143/371] tipc: tipc clang warning
+Date:   Thu, 16 Jan 2020 12:20:15 -0500
+Message-Id: <20200116172403.18149-86-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -59,41 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Mc Guire <hofrat@osadl.org>
+From: Jon Maloy <jon.maloy@ericsson.com>
 
-[ Upstream commit a3d7f22ef34ec4206b50ee121384d5c8bebd5591 ]
+[ Upstream commit 737889efe9713a0f20a75fd0de952841d9275e6b ]
 
-Checking of kmalloc() seems to have been committed - as
-cx23885_dvb_register() is checking for != 0 return, returning
--ENOMEM should be fine here.  While at it address the coccicheck
-suggestion to move to kmemdup rather than using kmalloc+memcpy.
+When checking the code with clang -Wsometimes-uninitialized we get the
+following warning:
 
-Fixes: 46b21bbaa8a8 ("[media] Add support for DViCO FusionHDTV DVB-T Dual Express2")
+if (!tipc_link_is_establishing(l)) {
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+net/tipc/node.c:847:46: note: uninitialized use occurs here
+      tipc_bearer_xmit(n->net, bearer_id, &xmitq, maddr);
 
-Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+net/tipc/node.c:831:2: note: remove the 'if' if its condition is always
+true
+if (!tipc_link_is_establishing(l)) {
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+net/tipc/node.c:821:31: note: initialize the variable 'maddr' to silence
+this warning
+struct tipc_media_addr *maddr;
+
+We fix this by initializing 'maddr' to NULL. For the matter of clarity,
+we also test if 'xmitq' is non-empty before we use it and 'maddr'
+further down in the  function. It will never happen that 'xmitq' is non-
+empty at the same time as 'maddr' is NULL, so this is a sufficient test.
+
+Fixes: 598411d70f85 ("tipc: make resetting of links non-atomic")
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Jon Maloy <jon.maloy@ericsson.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/cx23885/cx23885-dvb.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/tipc/node.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/pci/cx23885/cx23885-dvb.c b/drivers/media/pci/cx23885/cx23885-dvb.c
-index e795ddeb7fe2..60f122edaefb 100644
---- a/drivers/media/pci/cx23885/cx23885-dvb.c
-+++ b/drivers/media/pci/cx23885/cx23885-dvb.c
-@@ -1460,8 +1460,9 @@ static int dvb_register(struct cx23885_tsport *port)
- 		if (fe0->dvb.frontend != NULL) {
- 			struct i2c_adapter *tun_i2c;
+diff --git a/net/tipc/node.c b/net/tipc/node.c
+index 42e9bdcc4bb6..82f8f69f4d6b 100644
+--- a/net/tipc/node.c
++++ b/net/tipc/node.c
+@@ -688,10 +688,10 @@ static void __tipc_node_link_down(struct tipc_node *n, int *bearer_id,
+ static void tipc_node_link_down(struct tipc_node *n, int bearer_id, bool delete)
+ {
+ 	struct tipc_link_entry *le = &n->links[bearer_id];
++	struct tipc_media_addr *maddr = NULL;
+ 	struct tipc_link *l = le->link;
+-	struct tipc_media_addr *maddr;
+-	struct sk_buff_head xmitq;
+ 	int old_bearer_id = bearer_id;
++	struct sk_buff_head xmitq;
  
--			fe0->dvb.frontend->sec_priv = kmalloc(sizeof(dib7000p_ops), GFP_KERNEL);
--			memcpy(fe0->dvb.frontend->sec_priv, &dib7000p_ops, sizeof(dib7000p_ops));
-+			fe0->dvb.frontend->sec_priv = kmemdup(&dib7000p_ops, sizeof(dib7000p_ops), GFP_KERNEL);
-+			if (!fe0->dvb.frontend->sec_priv)
-+				return -ENOMEM;
- 			tun_i2c = dib7000p_ops.get_i2c_master(fe0->dvb.frontend, DIBX000_I2C_INTERFACE_TUNER, 1);
- 			if (!dvb_attach(dib0070_attach, fe0->dvb.frontend, tun_i2c, &dib7070p_dib0070_config))
- 				return -ENODEV;
+ 	if (!l)
+ 		return;
+@@ -713,7 +713,8 @@ static void tipc_node_link_down(struct tipc_node *n, int bearer_id, bool delete)
+ 	tipc_node_write_unlock(n);
+ 	if (delete)
+ 		tipc_mon_remove_peer(n->net, n->addr, old_bearer_id);
+-	tipc_bearer_xmit(n->net, bearer_id, &xmitq, maddr);
++	if (!skb_queue_empty(&xmitq))
++		tipc_bearer_xmit(n->net, bearer_id, &xmitq, maddr);
+ 	tipc_sk_rcv(n->net, &le->inputq);
+ }
+ 
 -- 
 2.20.1
 
