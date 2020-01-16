@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE93BC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 846DBC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C02922072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 572792072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:28:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217283;
-	bh=KeMuUU1uohJ1StY+/CmAWDNzajPxBmntrU56E74dvHo=;
+	s=default; t=1579217286;
+	bh=k1xW4E0PnhvTwxAb+0h6nrBd+l2dC40n2yHqfbRZWxQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fmhwtDvsRFx68CBvX8QvobfPZWqECi0s6y/g/W3TiLRbLkH2KZ89xok+dfYp6c7Y3
-	 Bu/lL39Mv34ZCzXeAVGXdIe9wqpAelcIyAX96s0AsF2MPa3PA8QypDZLzOL+jquqJ9
-	 5GlKfVj0IgCDW76xCS5cTcglljhEkxULQpXoM5Nc=
+	b=1KMGtt3nSv5SjQcH9tGcQOTMXHt91G0mm9E9X+g8lyZQnZtodORJQ9JDB28ICAX3v
+	 BR6C4mzbu3/msBjpTz43Ii8inKDnwlaV3liTP3DdGsT5FmVsY0I1i2m4tWkwo3IZef
+	 cKXVUqzESK7Li7lI/r/gNxAqeexD0jdk7JES/cBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390583AbgAPX2C (ORCPT
+        id S1729777AbgAPX2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:28:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60308 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:28:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390379AbgAPX17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:27:59 -0500
+        id S2390442AbgAPX2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:28:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 837A4206D9;
-        Thu, 16 Jan 2020 23:27:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EDBD206D9;
+        Thu, 16 Jan 2020 23:28:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217277;
-        bh=KeMuUU1uohJ1StY+/CmAWDNzajPxBmntrU56E74dvHo=;
+        s=default; t=1579217281;
+        bh=k1xW4E0PnhvTwxAb+0h6nrBd+l2dC40n2yHqfbRZWxQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j4qzHjHiu8PyMahtfkYQ4FNGO6p3LBfOM/2h6iUzKAD7HObvu06yjPoF4lfVgxgsj
-         D2ZZVQ94s4LCX5cU0rIfhgN1oW161bfKaVgHiwuCkuAiDX9msaDbR5j/MqPTQiyZoF
-         E7dWGup6Kq1GH/jifN83fsielta4sSbXjUqOD9K8=
+        b=hu++GIFJpeqw7/ROD8e+b3aFVj1zdW0okcFd002EvL+GwXXgZIm/H4jrtnEgI9Zsv
+         Mb/C963L56DxiYDWatOWFteNFyZmijwd2SZuLPz2xqlCIeN+X4qyKMIGsBWx4hPhI8
+         pVQ3U2UTV/0Lsk5K2g19dygawtz3SfnRz2OD2p24=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ran Bi <ran.bi@mediatek.com>,
-        Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 4.19 17/84] rtc: mt6397: fix alarm register overwrite
-Date:   Fri, 17 Jan 2020 00:17:51 +0100
-Message-Id: <20200116231715.667078333@linuxfoundation.org>
+        stable@vger.kernel.org, Selvin Xavier <selvin.xavier@broadcom.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.19 19/84] RDMA/bnxt_re: Fix Send Work Entry state check while polling completions
+Date:   Fri, 17 Jan 2020 00:17:53 +0100
+Message-Id: <20200116231715.935439547@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
 References: <20200116231713.087649517@linuxfoundation.org>
@@ -60,103 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ran Bi <ran.bi@mediatek.com>
+From: Selvin Xavier <selvin.xavier@broadcom.com>
 
-commit 653997eeecef95c3ead4fba1b2d27e6a5854d6cd upstream.
+commit c5275723580922e5f3264f96751337661a153c7d upstream.
 
-Alarm registers high byte was reserved for other functions.
-This add mask in alarm registers operation functions.
-This also fix error condition in interrupt handler.
+Some adapters need a fence Work Entry to handle retransmission.  Currently
+the driver checks for this condition, only if the Send queue entry is
+signalled. Implement the condition check, irrespective of the signalled
+state of the Work queue entries
 
-Fixes: fc2979118f3f ("rtc: mediatek: Add MT6397 RTC driver")
+Failure to add the fence can result in access to memory that is already
+marked as completed, triggering data corruption, transmission failure,
+IOMMU failures, etc.
 
-Signed-off-by: Ran Bi <ran.bi@mediatek.com>
-Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Link: https://lore.kernel.org/r/1576057435-3561-6-git-send-email-hsin-hsiung.wang@mediatek.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fixes: 9152e0b722b2 ("RDMA/bnxt_re: HW workarounds for handling specific conditions")
+Link: https://lore.kernel.org/r/1574671174-5064-3-git-send-email-selvin.xavier@broadcom.com
+Signed-off-by: Selvin Xavier <selvin.xavier@broadcom.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/rtc/rtc-mt6397.c |   47 +++++++++++++++++++++++++++++++++--------------
- 1 file changed, 33 insertions(+), 14 deletions(-)
+ drivers/infiniband/hw/bnxt_re/qplib_fp.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/drivers/rtc/rtc-mt6397.c
-+++ b/drivers/rtc/rtc-mt6397.c
-@@ -55,6 +55,14 @@
- 
- #define RTC_AL_SEC		0x0018
- 
-+#define RTC_AL_SEC_MASK		0x003f
-+#define RTC_AL_MIN_MASK		0x003f
-+#define RTC_AL_HOU_MASK		0x001f
-+#define RTC_AL_DOM_MASK		0x001f
-+#define RTC_AL_DOW_MASK		0x0007
-+#define RTC_AL_MTH_MASK		0x000f
-+#define RTC_AL_YEA_MASK		0x007f
-+
- #define RTC_PDN2		0x002e
- #define RTC_PDN2_PWRON_ALARM	BIT(4)
- 
-@@ -111,7 +119,7 @@ static irqreturn_t mtk_rtc_irq_handler_t
- 		irqen = irqsta & ~RTC_IRQ_EN_AL;
- 		mutex_lock(&rtc->lock);
- 		if (regmap_write(rtc->regmap, rtc->addr_base + RTC_IRQ_EN,
--				 irqen) < 0)
-+				 irqen) == 0)
- 			mtk_rtc_write_trigger(rtc);
- 		mutex_unlock(&rtc->lock);
- 
-@@ -233,12 +241,12 @@ static int mtk_rtc_read_alarm(struct dev
- 	alm->pending = !!(pdn2 & RTC_PDN2_PWRON_ALARM);
- 	mutex_unlock(&rtc->lock);
- 
--	tm->tm_sec = data[RTC_OFFSET_SEC];
--	tm->tm_min = data[RTC_OFFSET_MIN];
--	tm->tm_hour = data[RTC_OFFSET_HOUR];
--	tm->tm_mday = data[RTC_OFFSET_DOM];
--	tm->tm_mon = data[RTC_OFFSET_MTH];
--	tm->tm_year = data[RTC_OFFSET_YEAR];
-+	tm->tm_sec = data[RTC_OFFSET_SEC] & RTC_AL_SEC_MASK;
-+	tm->tm_min = data[RTC_OFFSET_MIN] & RTC_AL_MIN_MASK;
-+	tm->tm_hour = data[RTC_OFFSET_HOUR] & RTC_AL_HOU_MASK;
-+	tm->tm_mday = data[RTC_OFFSET_DOM] & RTC_AL_DOM_MASK;
-+	tm->tm_mon = data[RTC_OFFSET_MTH] & RTC_AL_MTH_MASK;
-+	tm->tm_year = data[RTC_OFFSET_YEAR] & RTC_AL_YEA_MASK;
- 
- 	tm->tm_year += RTC_MIN_YEAR_OFFSET;
- 	tm->tm_mon--;
-@@ -259,14 +267,25 @@ static int mtk_rtc_set_alarm(struct devi
- 	tm->tm_year -= RTC_MIN_YEAR_OFFSET;
- 	tm->tm_mon++;
- 
--	data[RTC_OFFSET_SEC] = tm->tm_sec;
--	data[RTC_OFFSET_MIN] = tm->tm_min;
--	data[RTC_OFFSET_HOUR] = tm->tm_hour;
--	data[RTC_OFFSET_DOM] = tm->tm_mday;
--	data[RTC_OFFSET_MTH] = tm->tm_mon;
--	data[RTC_OFFSET_YEAR] = tm->tm_year;
--
- 	mutex_lock(&rtc->lock);
-+	ret = regmap_bulk_read(rtc->regmap, rtc->addr_base + RTC_AL_SEC,
-+			       data, RTC_OFFSET_COUNT);
-+	if (ret < 0)
-+		goto exit;
-+
-+	data[RTC_OFFSET_SEC] = ((data[RTC_OFFSET_SEC] & ~(RTC_AL_SEC_MASK)) |
-+				(tm->tm_sec & RTC_AL_SEC_MASK));
-+	data[RTC_OFFSET_MIN] = ((data[RTC_OFFSET_MIN] & ~(RTC_AL_MIN_MASK)) |
-+				(tm->tm_min & RTC_AL_MIN_MASK));
-+	data[RTC_OFFSET_HOUR] = ((data[RTC_OFFSET_HOUR] & ~(RTC_AL_HOU_MASK)) |
-+				(tm->tm_hour & RTC_AL_HOU_MASK));
-+	data[RTC_OFFSET_DOM] = ((data[RTC_OFFSET_DOM] & ~(RTC_AL_DOM_MASK)) |
-+				(tm->tm_mday & RTC_AL_DOM_MASK));
-+	data[RTC_OFFSET_MTH] = ((data[RTC_OFFSET_MTH] & ~(RTC_AL_MTH_MASK)) |
-+				(tm->tm_mon & RTC_AL_MTH_MASK));
-+	data[RTC_OFFSET_YEAR] = ((data[RTC_OFFSET_YEAR] & ~(RTC_AL_YEA_MASK)) |
-+				(tm->tm_year & RTC_AL_YEA_MASK));
-+
- 	if (alm->enabled) {
- 		ret = regmap_bulk_write(rtc->regmap,
- 					rtc->addr_base + RTC_AL_SEC,
+--- a/drivers/infiniband/hw/bnxt_re/qplib_fp.c
++++ b/drivers/infiniband/hw/bnxt_re/qplib_fp.c
+@@ -2273,13 +2273,13 @@ static int bnxt_qplib_cq_process_req(str
+ 			/* Add qp to flush list of the CQ */
+ 			bnxt_qplib_add_flush_qp(qp);
+ 		} else {
++			/* Before we complete, do WA 9060 */
++			if (do_wa9060(qp, cq, cq_cons, sw_sq_cons,
++				      cqe_sq_cons)) {
++				*lib_qp = qp;
++				goto out;
++			}
+ 			if (swq->flags & SQ_SEND_FLAGS_SIGNAL_COMP) {
+-				/* Before we complete, do WA 9060 */
+-				if (do_wa9060(qp, cq, cq_cons, sw_sq_cons,
+-					      cqe_sq_cons)) {
+-					*lib_qp = qp;
+-					goto out;
+-				}
+ 				cqe->status = CQ_REQ_STATUS_OK;
+ 				cqe++;
+ 				(*budget)--;
 
 
