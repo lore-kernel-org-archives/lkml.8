@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CFF7C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E66C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63E3820661
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AE06207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:21:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202496;
-	bh=mUz6qZrJgnd1j+6KAws1RtLn1Uq8ghUFLn08Z1tBoys=;
+	s=default; t=1579202511;
+	bh=oY7XO9Dk74wIYR+ZjzfKL3yXu+cjNaRxvkmpqouDKL0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rPcGqMtEjTbpbH+eKqUPQPmWqDhX97MgqUKi9wdXHhN38kYUXVInu01XKKTPQN4c3
-	 ST+TDuiOAgZMDAmgRxGFpiToSjmEnyk4F7gymqxsxoEqQhgNKKH6gAzLy+kYT5pMgM
-	 wVB+WzCD9XDGpgh6cVJMQSzMu769rYnqOj5esotE=
+	b=jquVuZr4VL7LO0Jql9DIrY8yxwTxi6DyvBXxVGBg6rt55hbQkZ2PwH2lIBOSuEcMh
+	 Vnx23flDliNqDknKeZXcrUjCKwv0VQcVXL108GmLAQ40GFzz+igt6zNuaDVXMbtmeD
+	 nyeitYLtPPJp5z0ZfBmxKsI1tdwzPXFmSEp8YqVQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731512AbgAPTVf (ORCPT
+        id S2392466AbgAPTVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:21:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38204 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:21:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729164AbgAPQx7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:53:59 -0500
+        id S1731108AbgAPQxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:53:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 500DC2464B;
-        Thu, 16 Jan 2020 16:53:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67F0C22522;
+        Thu, 16 Jan 2020 16:53:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193639;
-        bh=mUz6qZrJgnd1j+6KAws1RtLn1Uq8ghUFLn08Z1tBoys=;
+        s=default; t=1579193621;
+        bh=oY7XO9Dk74wIYR+ZjzfKL3yXu+cjNaRxvkmpqouDKL0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hVdeG6VHL4BSWLPGmSA0CUNj+AK2ctgOFfijsHNfdmV6QSa8NahQQ6aEeZKQ0F8D3
-         0hFZMPEgVIOhQ4vmhglyuSNh1qmmmkoAPiIImCvRLcWTNSnpcXmcWMRVQm0uPZdImF
-         w0H4Igg2ABAAdVdLeO29/iq4/iJS8MWi0WmSjm3s=
+        b=oKSq/oljSixu/OCqzzFLW8rDp8pV8hDkOmrf+kaUc7WMUfILkSHAya6UgLutIOaHv
+         zLgEPkuQF8fG0/zB9J4YfeDw/5ZNOOBApgMI3ihBYFQ8xEUJARtg3xT2wX53VKINrE
+         WIdELMrjq8Xg/KVqSY9W6Hjc+AokycuLlAsoP1GA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 171/205] ice: fix stack leakage
-Date:   Thu, 16 Jan 2020 11:42:26 -0500
-Message-Id: <20200116164300.6705-171-sashal@kernel.org>
+Cc:     Pan Bian <bianpan2016@163.com>,
+        Manish Rangankar <mrangankar@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 156/205] scsi: qla4xxx: fix double free bug
+Date:   Thu, 16 Jan 2020 11:42:11 -0500
+Message-Id: <20200116164300.6705-156-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -61,46 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jesse Brandeburg <jesse.brandeburg@intel.com>
+From: Pan Bian <bianpan2016@163.com>
 
-[ Upstream commit 949375de945f7042df2b6488228a1a2b36e69f35 ]
+[ Upstream commit 3fe3d2428b62822b7b030577cd612790bdd8c941 ]
 
-In the case of an invalid virtchannel request the driver
-would return uninitialized data to the VF from the PF stack
-which is a bug.  Fix by initializing the stack variable
-earlier in the function before any return paths can be taken.
+The variable init_fw_cb is released twice, resulting in a double free
+bug. The call to the function dma_free_coherent() before goto is removed to
+get rid of potential double free.
 
-Fixes: 1071a8358a28 ("ice: Implement virtchnl commands for AVF support")
-Signed-off-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Fixes: 2a49a78ed3c8 ("[SCSI] qla4xxx: added IPv6 support.")
+Link: https://lore.kernel.org/r/1572945927-27796-1-git-send-email-bianpan2016@163.com
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Acked-by: Manish Rangankar <mrangankar@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/scsi/qla4xxx/ql4_mbx.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c b/drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c
-index c0637a0cbfe8..e92a00a61755 100644
---- a/drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c
-+++ b/drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c
-@@ -1873,8 +1873,8 @@ static int ice_vc_get_stats_msg(struct ice_vf *vf, u8 *msg)
- 	enum virtchnl_status_code v_ret = VIRTCHNL_STATUS_SUCCESS;
- 	struct virtchnl_queue_select *vqs =
- 		(struct virtchnl_queue_select *)msg;
-+	struct ice_eth_stats stats = { 0 };
- 	struct ice_pf *pf = vf->pf;
--	struct ice_eth_stats stats;
- 	struct ice_vsi *vsi;
+diff --git a/drivers/scsi/qla4xxx/ql4_mbx.c b/drivers/scsi/qla4xxx/ql4_mbx.c
+index dac9a7013208..02636b4785c5 100644
+--- a/drivers/scsi/qla4xxx/ql4_mbx.c
++++ b/drivers/scsi/qla4xxx/ql4_mbx.c
+@@ -640,9 +640,6 @@ int qla4xxx_initialize_fw_cb(struct scsi_qla_host * ha)
  
- 	if (!test_bit(ICE_VF_STATE_ACTIVE, vf->vf_states)) {
-@@ -1893,7 +1893,6 @@ static int ice_vc_get_stats_msg(struct ice_vf *vf, u8 *msg)
- 		goto error_param;
+ 	if (qla4xxx_get_ifcb(ha, &mbox_cmd[0], &mbox_sts[0], init_fw_cb_dma) !=
+ 	    QLA_SUCCESS) {
+-		dma_free_coherent(&ha->pdev->dev,
+-				  sizeof(struct addr_ctrl_blk),
+-				  init_fw_cb, init_fw_cb_dma);
+ 		goto exit_init_fw_cb;
  	}
  
--	memset(&stats, 0, sizeof(struct ice_eth_stats));
- 	ice_update_eth_stats(vsi);
- 
- 	stats = vsi->eth_stats;
 -- 
 2.20.1
 
