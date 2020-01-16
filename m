@@ -2,133 +2,89 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88895C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C5E8C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:27:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58A9B246DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:27:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195633;
-	bh=HEfK2KpxI9JcRyxK58/DnvyfOIJxDZIR/FRlXyEiOzA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w5dwxSR4qBVqI8UbfCvkIcpimoBYvDfjmu2pvCTFvQBRB2VhEsCvX+8QT/FcbU51q
-	 Rm+Ejh1jV/0Ebwn7IlM7muCcXYUaTY5imkHrglXznDncBbymxVm434sxEYRaLH99Wo
-	 WtVhV0Dtb+b1xh8leE6KMOEdeaBbFVfsnMF+lVsA=
+	by mail.kernel.org (Postfix) with ESMTP id 4A558246DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:27:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="f2RCFwWZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391724AbgAPR1M (ORCPT
+        id S2392434AbgAPR1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:27:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36366 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392321AbgAPR1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:27:00 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F419246D4;
-        Thu, 16 Jan 2020 17:26:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195619;
-        bh=HEfK2KpxI9JcRyxK58/DnvyfOIJxDZIR/FRlXyEiOzA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M+wcKfGfHxIpgRUcx6UgklASu+0dSS1r6y7UE9XUsOiB1JA3uG92WyL9USu8kDTpE
-         zHKB6ptp9Pyhw/lRe/6N3ZePXitdfXR2yaDH3IXjID3pK7n9cfZvCTSUrkf6nfdxys
-         WH7s5WDXkjbgvQwZM3eYIJkZADPtl7Hn3ELmW9S4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Parav Pandit <parav@mellanox.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 191/371] vfio/mdev: Fix aborting mdev child device removal if one fails
-Date:   Thu, 16 Jan 2020 12:21:03 -0500
-Message-Id: <20200116172403.18149-134-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
-References: <20200116172403.18149-1-sashal@kernel.org>
+        Thu, 16 Jan 2020 12:27:14 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:43271 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392379AbgAPR1C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:27:02 -0500
+Received: by mail-qv1-f66.google.com with SMTP id p2so9398958qvo.10
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 09:27:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Paj9ZIyLKDeb3eXWIMYy+oZ8ADw3i4uQICVjpw67tFk=;
+        b=f2RCFwWZ11DI7in6/E+nFTYJ/u5RhRB+ZcKR2iC205+oCb21iMfwSFsEqOJN3H8VsI
+         QW3pUdOZLXChDAAUgzZgtfQI8uccUzbiveaULWwIGSd4S67ncfmjez1twkBLg761dJ8L
+         7GPnTtbkKaT4bKXm8l+TgIgRZbbSxG+nb1dBpwzThrY+rvMw63iVaHyQ7wZf7wWjn8/O
+         Z1zPbfaxyCtckJQLr6sU8kaAn9f5kyHg8C607d1QBUoB9E315ZuqrBB2rhElPX6mFtw2
+         ETButUBNGsuL5LQactvYsfc6mC+it7K5eh6Qy3PAKfi7J1X0BJwbktPM2/RUrZLNeCBZ
+         EseQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Paj9ZIyLKDeb3eXWIMYy+oZ8ADw3i4uQICVjpw67tFk=;
+        b=kHzIOZ8rYtN+3I23UhY65YDpgdMxqHx+SkhFUNG5IgvmJY7CzLrnkq0ZWdHSkU30Vz
+         gxuwYC/guH840hJAZGx+4BpvwqqtE+wCQRPDyk2F6SfTE+h5bnCJHYwRS0SEpTM+YIVl
+         KQplDZw4VQVXZh2Wa15Ug+P3rud5owDwWo8BCZIB/bbwPUDWpPp1W5M+6s/W4C+32QhP
+         oxsUNdXaLxo95c7xlmMx1tG+QAqPy95pYUcjajEj7S1miVQckPUUaMUt4EGSbchkTvpf
+         i2rD8/v/Q9NRST+KfHyEGGPERd2fen/8tI1pSyrgC26YoHsxHKAYd375BAg5/AUvJpl9
+         qeiA==
+X-Gm-Message-State: APjAAAWzj6N7Pb4wj1RRluvTKmxX+e9g5Ri85TmP4PWB9A9w2e6PY6r8
+        Y9MlxjCFggKxksR4qEE7L3vM0A==
+X-Google-Smtp-Source: APXvYqzZRxHopdpa2Nb71ImNjP3ATvX/yf9c6C1U8lHIp75fJqIsHlTarzIHRf/cnIUmt/WlGlhBYA==
+X-Received: by 2002:ad4:5586:: with SMTP id e6mr3710258qvx.92.1579195620917;
+        Thu, 16 Jan 2020 09:27:00 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::ae73])
+        by smtp.gmail.com with ESMTPSA id v7sm11862980qtk.89.2020.01.16.09.26.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 09:26:59 -0800 (PST)
+Date:   Thu, 16 Jan 2020 12:26:59 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH v2 5/6] mm: memcg/slab: cache page number in
+ memcg_(un)charge_slab()
+Message-ID: <20200116172659.GE57074@cmpxchg.org>
+References: <20200109202659.752357-1-guro@fb.com>
+ <20200109202659.752357-6-guro@fb.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200109202659.752357-6-guro@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+On Thu, Jan 09, 2020 at 12:26:58PM -0800, Roman Gushchin wrote:
+> There are many places in memcg_charge_slab() and memcg_uncharge_slab()
+> which are calculating the number of pages to charge, css references to
+> grab etc depending on the order of the slab page.
+> 
+> Let's simplify the code by calculating it once and caching in the
+> local variable.
+> 
+> Signed-off-by: Roman Gushchin <guro@fb.com>
 
-[ Upstream commit 6093e348a5e2475c5bb2e571346460f939998670 ]
-
-device_for_each_child() stops executing callback function for remaining
-child devices, if callback hits an error.
-Each child mdev device is independent of each other.
-While unregistering parent device, mdev core must remove all child mdev
-devices.
-Therefore, mdev_device_remove_cb() always returns success so that
-device_for_each_child doesn't abort if one child removal hits error.
-
-While at it, improve remove and unregister functions for below simplicity.
-
-There isn't need to pass forced flag pointer during mdev parent
-removal which invokes mdev_device_remove(). So simplify the flow.
-
-mdev_device_remove() is called from two paths.
-1. mdev_unregister_driver()
-     mdev_device_remove_cb()
-       mdev_device_remove()
-2. remove_store()
-     mdev_device_remove()
-
-Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
-Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/vfio/mdev/mdev_core.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-index 8cfa71230877..e052f62fdea7 100644
---- a/drivers/vfio/mdev/mdev_core.c
-+++ b/drivers/vfio/mdev/mdev_core.c
-@@ -150,10 +150,10 @@ static int mdev_device_remove_ops(struct mdev_device *mdev, bool force_remove)
- 
- static int mdev_device_remove_cb(struct device *dev, void *data)
- {
--	if (!dev_is_mdev(dev))
--		return 0;
-+	if (dev_is_mdev(dev))
-+		mdev_device_remove(dev, true);
- 
--	return mdev_device_remove(dev, data ? *(bool *)data : true);
-+	return 0;
- }
- 
- /*
-@@ -241,7 +241,6 @@ EXPORT_SYMBOL(mdev_register_device);
- void mdev_unregister_device(struct device *dev)
- {
- 	struct mdev_parent *parent;
--	bool force_remove = true;
- 
- 	mutex_lock(&parent_list_lock);
- 	parent = __find_parent_device(dev);
-@@ -255,8 +254,7 @@ void mdev_unregister_device(struct device *dev)
- 	list_del(&parent->next);
- 	class_compat_remove_link(mdev_bus_compat_class, dev, NULL);
- 
--	device_for_each_child(dev, (void *)&force_remove,
--			      mdev_device_remove_cb);
-+	device_for_each_child(dev, NULL, mdev_device_remove_cb);
- 
- 	parent_remove_sysfs_files(parent);
- 
--- 
-2.20.1
-
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
