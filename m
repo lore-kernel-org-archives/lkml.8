@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C34DCC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CB7C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95D7A20684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADB4720684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:21:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195296;
-	bh=BH+UMe8kz/i8Qjt0xEQMMAUh1+STexvodu+9TBUe6fA=;
+	s=default; t=1579195299;
+	bh=mrqyG+s5KkU79YeSwsbvGa5llda5DIJSBZQHAAEAfXM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H6T+vBuyyN9G5H7rgPSFD8JP22AHFKq/IkbK99JnZQj7uglxFA374otM5o5yxUDx/
-	 c0ZG9bFENmncEZ9fb+2ChixQiYHnSnZ7Pzcm05GBWH3oQxqgDrI3y4P2nBklTKbwR5
-	 OqFlwZw988+de1F2cr/xjD5F3S0IpRXiY79/2eDI=
+	b=qxsx4MknCETlbrlw3/zilwsaONMd5AwsIB2++AgMCoBrc/cUuQAS4cyTUNkLJYpRq
+	 okrB3IWF36+DG2vUmO0ogHqsa1DAX8Fe/1ILsDtSpY1Si+zTyr1cXhO16JRWegdS00
+	 5WFiHXLq8rnt7Jao+P8cU6/McpG63qu3oZfu+ZBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391162AbgAPRRk (ORCPT
+        id S2391126AbgAPRRh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:17:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42902 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:17:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391226AbgAPRRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:17:33 -0500
+        id S1730182AbgAPRR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:17:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27CF52464B;
-        Thu, 16 Jan 2020 17:17:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BFD424687;
+        Thu, 16 Jan 2020 17:17:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195052;
-        bh=BH+UMe8kz/i8Qjt0xEQMMAUh1+STexvodu+9TBUe6fA=;
+        s=default; t=1579195048;
+        bh=mrqyG+s5KkU79YeSwsbvGa5llda5DIJSBZQHAAEAfXM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N/Gxr7a4KaZbT7BICppLGu5Exdfv2faV7tf4R2IxTHggHPLCH00i6niCq5ex99xOL
-         DHuvxjF1nIAe8oQ1nBI/4cndV2P1vE3SuiJ5FOh/bkt2bUAKKPvdBuo/iUVbcp/yH6
-         H/Nbg1VNMtfaLaYtlbWulERXirDZABafLbUv1IWw=
+        b=gri+YUbMHmrrWGG0PpnQrCWTR9VCp9aNDhFoK9fCIGIlG25CBc4W7s+yi0B6n4EmW
+         LTOz6R708xpzjd12QUiWD2yfR4Nt+tqJrZQdlIWlj08I9rrE2J35TDWk/R8EtG3EGY
+         vj3iepamFEFRb7EVtSNqeeeLHGpGyq5C+/g3jUUQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 009/371] regulator: fixed: Default enable high on DT regulators
-Date:   Thu, 16 Jan 2020 12:11:17 -0500
-Message-Id: <20200116171719.16965-9-sashal@kernel.org>
+Cc:     John Garry <john.garry@huawei.com>,
+        Xinliang Liu <z.liuxinliang@hisilicon.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 006/371] drm/hisilicon: hibmc: Don't overwrite fb helper surface depth
+Date:   Thu, 16 Jan 2020 12:11:14 -0500
+Message-Id: <20200116171719.16965-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116171719.16965-1-sashal@kernel.org>
 References: <20200116171719.16965-1-sashal@kernel.org>
@@ -63,65 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: John Garry <john.garry@huawei.com>
 
-[ Upstream commit 28be5f15df2ee6882b0a122693159c96a28203c7 ]
+[ Upstream commit 0ff9f49646353ce31312411e7e7bd2281492a40e ]
 
-commit efdfeb079cc3
-("regulator: fixed: Convert to use GPIO descriptor only")
-switched to use gpiod_get() to look up the regulator from the
-gpiolib core whether that is device tree or boardfile.
+Currently the driver overwrites the surface depth provided by the fb
+helper to give an invalid bpp/surface depth combination.
 
-This meant that we activate the code in
-a603a2b8d86e ("gpio: of: Add special quirk to parse regulator flags")
-which means the descriptors coming from the device tree already
-have the right inversion and open drain semantics set up from
-the gpiolib core.
+This has been exposed by commit 70109354fed2 ("drm: Reject unknown legacy
+bpp and depth for drm_mode_addfb ioctl"), which now causes the driver to
+fail to probe.
 
-As the fixed regulator was inspected again we got the
-inverted inversion and things broke.
+Fix by not overwriting the surface depth.
 
-Fix it by ignoring the config in the device tree for now: the
-later patches in the series will push all inversion handling
-over to the gpiolib core and set it up properly in the
-boardfiles for legacy devices, but I did not finish that
-for this kernel cycle.
-
-Fixes: commit efdfeb079cc3 ("regulator: fixed: Convert to use GPIO descriptor only")
-Reported-by: Leonard Crestez <leonard.crestez@nxp.com>
-Reported-by: Fabio Estevam <festevam@gmail.com>
-Reported-by: John Stultz <john.stultz@linaro.org>
-Reported-by: Anders Roxell <anders.roxell@linaro.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Tested-by: John Stultz <john.stultz@linaro.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: d1667b86795a ("drm/hisilicon/hibmc: Add support for frame buffer")
+Signed-off-by: John Garry <john.garry@huawei.com>
+Reviewed-by: Xinliang Liu <z.liuxinliang@hisilicon.com>
+Signed-off-by: Xinliang Liu <z.liuxinliang@hisilicon.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/fixed.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_fbdev.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/regulator/fixed.c b/drivers/regulator/fixed.c
-index 988a7472c2ab..d68ff65a5adc 100644
---- a/drivers/regulator/fixed.c
-+++ b/drivers/regulator/fixed.c
-@@ -84,9 +84,14 @@ of_get_fixed_voltage_config(struct device *dev,
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_fbdev.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_fbdev.c
+index 8bd29075ae4e..edcca1761500 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_fbdev.c
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_fbdev.c
+@@ -71,7 +71,6 @@ static int hibmc_drm_fb_create(struct drm_fb_helper *helper,
+ 	DRM_DEBUG_DRIVER("surface width(%d), height(%d) and bpp(%d)\n",
+ 			 sizes->surface_width, sizes->surface_height,
+ 			 sizes->surface_bpp);
+-	sizes->surface_depth = 32;
  
- 	of_property_read_u32(np, "startup-delay-us", &config->startup_delay);
+ 	bytes_per_pixel = DIV_ROUND_UP(sizes->surface_bpp, 8);
  
--	config->enable_high = of_property_read_bool(np, "enable-active-high");
--	config->gpio_is_open_drain = of_property_read_bool(np,
--							   "gpio-open-drain");
-+	/*
-+	 * FIXME: we pulled active low/high and open drain handling into
-+	 * gpiolib so it will be handled there. Delete this in the second
-+	 * step when we also remove the custom inversion handling for all
-+	 * legacy boardfiles.
-+	 */
-+	config->enable_high = 1;
-+	config->gpio_is_open_drain = 0;
- 
- 	if (of_find_property(np, "vin-supply", NULL))
- 		config->input_supply = "vin";
 -- 
 2.20.1
 
