@@ -4,55 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D32C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E06B7C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAA462072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B146F2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:37:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217843;
-	bh=SKk62hgPbXoCxXpnUj5XJblGn1m21tA2Mh2HExM3X9s=;
+	s=default; t=1579217847;
+	bh=n5UV06eCvqp6knZf+rIRFbRYasH0bjrd4NAyhXkKu3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ru2HOMGIoYeZhbDjp6tetE1FuNcpvuEH9lvzrbphB8lY4kxrUriT0gpXKAt8Zbk+v
-	 +ebO7YkGXnpUIDBXToYwKTSAGxYd2hbyNL/f7fPSQqXe5XTP4FYx3NUjYlBKN6RaTO
-	 qXO44iWyud48f2Vomojy9WOexE0bnDMw1ly99Hs8=
+	b=qXJ8ExKJtSkgVEPAHrsFShZYD1gQ9NVIimf5IGlij5iy/pORnpcH0MbTrkEQLT9EK
+	 gQCsFFVulwDQy8cgdd1p7V18kY/TRllLCWdMUfr05dmi/RWTorCJk9z4K0PDjqQ5qV
+	 YdugsneV4c1Um6Wh2UNZf5DkYZtYbK5dM5a2yrvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404510AbgAPXhW (ORCPT
+        id S2404524AbgAPXh0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:37:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38808 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:37:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391107AbgAPXbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:31:06 -0500
+        id S2391451AbgAPXa7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:30:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A244D20661;
-        Thu, 16 Jan 2020 23:31:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63FEA20748;
+        Thu, 16 Jan 2020 23:30:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217466;
-        bh=SKk62hgPbXoCxXpnUj5XJblGn1m21tA2Mh2HExM3X9s=;
+        s=default; t=1579217458;
+        bh=n5UV06eCvqp6knZf+rIRFbRYasH0bjrd4NAyhXkKu3A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XphB3qtSsmBFkb1WzBv3254QJ8WsHNSVtJSM7auPuSUZqoLBXlUeJ2+4APbKhC/tt
-         XnB59XPDBrmEeaPn9ULoKmkpaZ+hyMJuo2dUIHYjzsOjx05x2WxWwawF7Uv7jms70v
-         3YaIEFwr76vEwiqiLjf8vbHNbDoDGCqmkK/QfED8=
+        b=FhEGYAXR41BusBGLff41y1RA4RHlUTXjQ7Ofcrqg6HgAUjkLGZkZFbeGta3/qde64
+         5v0KaGjsP8xeAK/FIZkeA6TAQAR97ObWbFUALBT0YgE87fHuYl01DFUt0ZsnENC0WX
+         FrxVgeIsYlBJIDDWcwO4wOT2R1OMAatg4/sskPnM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Peter Robinson <pbrobinson@gmail.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.14 10/71] arm64: Make sure permission updates happen for pmd/pud
-Date:   Fri, 17 Jan 2020 00:18:08 +0100
-Message-Id: <20200116231710.926122766@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>
+Subject: [PATCH 4.19 66/84] mtd: spi-nor: fix silent truncation in spi_nor_read()
+Date:   Fri, 17 Jan 2020 00:18:40 +0100
+Message-Id: <20200116231721.367559730@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200116231709.377772748@linuxfoundation.org>
-References: <20200116231709.377772748@linuxfoundation.org>
+In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
+References: <20200116231713.087649517@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,72 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laura Abbott <labbott@redhat.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-commit 82034c23fcbc2389c73d97737f61fa2dd6526413 upstream.
+commit a719a75a7761e4139dd099330d9fe3589d844f9b upstream.
 
-Commit 15122ee2c515 ("arm64: Enforce BBM for huge IO/VMAP mappings")
-disallowed block mappings for ioremap since that code does not honor
-break-before-make. The same APIs are also used for permission updating
-though and the extra checks prevent the permission updates from happening,
-even though this should be permitted. This results in read-only permissions
-not being fully applied. Visibly, this can occasionaly be seen as a failure
-on the built in rodata test when the test data ends up in a section or
-as an odd RW gap on the page table dump. Fix this by using
-pgattr_change_is_safe instead of p*d_present for determining if the
-change is permitted.
+spi_nor_read() assigns the result of 'ssize_t spi_nor_read_data()'
+to the 'int ret' variable, while 'ssize_t' is a 64-bit type and *int*
+is a 32-bit type on the 64-bit machines. This silent truncation isn't
+really valid, so fix up the variable's type.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Tested-by: Peter Robinson <pbrobinson@gmail.com>
-Reported-by: Peter Robinson <pbrobinson@gmail.com>
-Fixes: 15122ee2c515 ("arm64: Enforce BBM for huge IO/VMAP mappings")
-Signed-off-by: Laura Abbott <labbott@redhat.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Fixes: 59451e1233bd ("mtd: spi-nor: change return value of read/write")
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/arm64/mm/mmu.c |   16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
 
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -917,13 +917,15 @@ int pud_set_huge(pud_t *pudp, phys_addr_
+---
+ drivers/mtd/spi-nor/spi-nor.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/mtd/spi-nor/spi-nor.c
++++ b/drivers/mtd/spi-nor/spi-nor.c
+@@ -1294,7 +1294,7 @@ static int spi_nor_read(struct mtd_info
+ 			size_t *retlen, u_char *buf)
  {
- 	pgprot_t sect_prot = __pgprot(PUD_TYPE_SECT |
- 					pgprot_val(mk_sect_prot(prot)));
-+	pud_t new_pud = pfn_pud(__phys_to_pfn(phys), sect_prot);
+ 	struct spi_nor *nor = mtd_to_spi_nor(mtd);
+-	int ret;
++	ssize_t ret;
  
--	/* ioremap_page_range doesn't honour BBM */
--	if (pud_present(READ_ONCE(*pudp)))
-+	/* Only allow permission changes for now */
-+	if (!pgattr_change_is_safe(READ_ONCE(pud_val(*pudp)),
-+				   pud_val(new_pud)))
- 		return 0;
- 
- 	BUG_ON(phys & ~PUD_MASK);
--	set_pud(pudp, pfn_pud(__phys_to_pfn(phys), sect_prot));
-+	set_pud(pudp, new_pud);
- 	return 1;
- }
- 
-@@ -931,13 +933,15 @@ int pmd_set_huge(pmd_t *pmdp, phys_addr_
- {
- 	pgprot_t sect_prot = __pgprot(PMD_TYPE_SECT |
- 					pgprot_val(mk_sect_prot(prot)));
-+	pmd_t new_pmd = pfn_pmd(__phys_to_pfn(phys), sect_prot);
- 
--	/* ioremap_page_range doesn't honour BBM */
--	if (pmd_present(READ_ONCE(*pmdp)))
-+	/* Only allow permission changes for now */
-+	if (!pgattr_change_is_safe(READ_ONCE(pmd_val(*pmdp)),
-+				   pmd_val(new_pmd)))
- 		return 0;
- 
- 	BUG_ON(phys & ~PMD_MASK);
--	set_pmd(pmdp, pfn_pmd(__phys_to_pfn(phys), sect_prot));
-+	set_pmd(pmdp, new_pmd);
- 	return 1;
- }
+ 	dev_dbg(nor->dev, "from 0x%08x, len %zd\n", (u32)from, len);
  
 
 
