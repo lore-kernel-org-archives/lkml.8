@@ -2,152 +2,101 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CCBC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9559FC33CB2
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A64EA2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D50B2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:24:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cMgX6n3a"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YJBkhnue"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729102AbgAPDXJ (ORCPT
+        id S1729566AbgAPDYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 22:23:09 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:51451 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726552AbgAPDXI (ORCPT
+        Wed, 15 Jan 2020 22:24:40 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:53924 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbgAPDYk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 22:23:08 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579144987; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=i6cUUbHdFxmyxXtrww4Y2pJJyGUa7lN7JxrT7wp+jjg=; b=cMgX6n3aAIDhKAlY020Eix88hr5aDJyd01WIx7SpyeODUW8ZsZxf98c5QqCs4UVrUYX2ksYG
- PlXvWn+cpFmfpUnYqJTfGgYkKLByz3ZACpq+9u5UwS2oJWEhIdZ+8UcT98lX+cEaKh5FAGwK
- OZPLbpyjcXPu9ufpEXlLLR/UXkA=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e1fd71a.7f48c320cc00-smtp-out-n03;
- Thu, 16 Jan 2020 03:23:06 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DA8BFC43383; Thu, 16 Jan 2020 03:23:06 +0000 (UTC)
-Received: from rocky-Inspiron-7590.qca.qualcomm.com (unknown [180.166.53.21])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rjliao)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DDB28C433A2;
-        Thu, 16 Jan 2020 03:23:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DDB28C433A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rjliao@codeaurora.org
-From:   Rocky Liao <rjliao@codeaurora.org>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bgodavar@codeaurora.org, hemantg@codeaurora.org,
-        Rocky Liao <rjliao@codeaurora.org>
-Subject: [PATCH v5] Bluetooth: hci_qca: Enable power off/on support during hci down/up for QCA Rome
-Date:   Thu, 16 Jan 2020 11:22:54 +0800
-Message-Id: <20200116032254.20549-1-rjliao@codeaurora.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191225060317.5258-1-rjliao@codeaurora.org>
-References: <20191225060317.5258-1-rjliao@codeaurora.org>
+        Wed, 15 Jan 2020 22:24:40 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G3DudA080521;
+        Thu, 16 Jan 2020 03:24:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=QrxvPbffJUGUOyHbYVqA0XbXQBPLyN1MOfRE3ofpSqE=;
+ b=YJBkhnuetFcADbYmdE9J+x0uM7uSbl//6PT2F6e0KpyTx1kTb6kTTgrzP8zHm8F+tp5L
+ EOo48Ikj3bKoYdZcYptgABuv7EYKbeNDhg4C4fyDl2dcQC9avuySp436vxH0exWmuDLb
+ pES/cURk+q8Tf0P28NIMZe+oYfxA2HMLyciEnEjDjDlavqwyYRr48fQ2VdNmXs4DgUR4
+ eyuKEaJagrFpiqw3VOFlyMtAIUp4uTqy/O6eCZ0+qX06z7FxERUaF7ywjj/lt0SIyyQh
+ pfpoeWnXyd2nhpy4MMDApmva/IlRYm4doL2/JZkmImYEPozukeLD2VslQsC3YvBj4Hxc 9g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2xf73tyvj8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jan 2020 03:24:12 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G3EZ5G106041;
+        Thu, 16 Jan 2020 03:24:12 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2xj61ktkmf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jan 2020 03:24:12 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00G3OAK4024011;
+        Thu, 16 Jan 2020 03:24:10 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 15 Jan 2020 19:24:10 -0800
+To:     Stanley Chu <stanley.chu@mediatek.com>
+Cc:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>, <beanhuo@micron.com>,
+        <asutoshd@codeaurora.org>, <cang@codeaurora.org>,
+        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>
+Subject: Re: [PATCH v3 0/2] scsi: ufs: pass device information to apply_dev_quirks
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <1578726707-6596-1-git-send-email-stanley.chu@mediatek.com>
+Date:   Wed, 15 Jan 2020 22:24:06 -0500
+In-Reply-To: <1578726707-6596-1-git-send-email-stanley.chu@mediatek.com>
+        (Stanley Chu's message of "Sat, 11 Jan 2020 15:11:45 +0800")
+Message-ID: <yq136cgozhl.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001160026
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001160026
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch registers hdev->shutdown() callback and also sets
-HCI_QUIRK_NON_PERSISTENT_SETUP for QCA Rome. It will power-off the BT chip
-during hci down and power-on/initialize the chip again during hci up. As
-wcn399x already enabled this, this patch also removed the callback register
-and QUIRK setting in qca_setup() for wcn399x and uniformly do this in the
-probe() routine.
 
-Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
----
+Stanley,
 
-Changes in v2: None
-Changes in v3:
-  -moved the quirk and callback register to probe()
-Changes in v4:
-  -rebased the patch with latest code
-  -moved the quirk and callback register to probe() for wcn399x
-  -updated commit message
-Changed in v5:
-  -removed the "out" label and return err when fails
+> Currently UFS driver has "global" device quirk scheme to allow driver
+> applying special handling for certain UFS devive models.
 
- drivers/bluetooth/hci_qca.c | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+Applied to 5.6/scsi-queue, thanks!
 
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index 1139142e8eed..d6e0c99ee5eb 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -1569,12 +1569,7 @@ static int qca_setup(struct hci_uart *hu)
- 		return ret;
- 
- 	if (qca_is_wcn399x(soc_type)) {
--		/* Enable NON_PERSISTENT_SETUP QUIRK to ensure to execute
--		 * setup for every hci up.
--		 */
--		set_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks);
- 		set_bit(HCI_QUIRK_USE_BDADDR_PROPERTY, &hdev->quirks);
--		hu->hdev->shutdown = qca_power_off;
- 
- 		ret = qca_read_soc_version(hdev, &soc_ver, soc_type);
- 		if (ret)
-@@ -1813,6 +1808,7 @@ static int qca_init_regulators(struct qca_power *qca,
- static int qca_serdev_probe(struct serdev_device *serdev)
- {
- 	struct qca_serdev *qcadev;
-+	struct hci_dev *hdev;
- 	const struct qca_vreg_data *data;
- 	int err;
- 
-@@ -1838,7 +1834,7 @@ static int qca_serdev_probe(struct serdev_device *serdev)
- 					  data->num_vregs);
- 		if (err) {
- 			BT_ERR("Failed to init regulators:%d", err);
--			goto out;
-+			return err;
- 		}
- 
- 		qcadev->bt_power->vregs_on = false;
-@@ -1851,7 +1847,7 @@ static int qca_serdev_probe(struct serdev_device *serdev)
- 		err = hci_uart_register_device(&qcadev->serdev_hu, &qca_proto);
- 		if (err) {
- 			BT_ERR("wcn3990 serdev registration failed");
--			goto out;
-+			return err;
- 		}
- 	} else {
- 		qcadev->btsoc_type = QCA_ROME;
-@@ -1877,12 +1873,18 @@ static int qca_serdev_probe(struct serdev_device *serdev)
- 			return err;
- 
- 		err = hci_uart_register_device(&qcadev->serdev_hu, &qca_proto);
--		if (err)
-+		if (err) {
-+			BT_ERR("Rome serdev registration failed");
- 			clk_disable_unprepare(qcadev->susclk);
-+			return err;
-+		}
- 	}
- 
--out:	return err;
-+	hdev = qcadev->serdev_hu.hdev;
-+	set_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks);
-+	hdev->shutdown = qca_power_off;
- 
-+	return 0;
- }
- 
- static void qca_serdev_remove(struct serdev_device *serdev)
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
+Martin K. Petersen	Oracle Linux Engineering
