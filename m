@@ -2,101 +2,102 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1134C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B78E7C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B07452053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:47:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200458;
-	bh=N6NL80NyMEmBK1Ck48h21G8o7JDmrLH68BcMhLlv+3k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r4aYiYG2il4sFAD5Fzb3AHouYdCbJ5huQY3hn+Em6GNOydPkncy8Foo2iwbgy7gqG
-	 bTLGP/9KwkUkpiH1Em+CNd0hV2zz1t88v/OYaOppL7IWubRnuTr8FS32bHh5vIuhaw
-	 cV18jhGbdbhy7OCFIBEfV+kQP4ZN3M6SCDLWDCiQ=
+	by mail.kernel.org (Postfix) with ESMTP id 90457206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:47:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391841AbgAPSrg (ORCPT
+        id S2392366AbgAPSrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:47:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49022 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:47:42 -0500
+Received: from mga07.intel.com ([134.134.136.100]:63927 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389305AbgAPRKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:10:35 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94F4424686;
-        Thu, 16 Jan 2020 17:10:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194634;
-        bh=N6NL80NyMEmBK1Ck48h21G8o7JDmrLH68BcMhLlv+3k=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OcA/O+C5FUYSxPjqn10/dlByLCN99g2uh1Vk/5Obf5FfqPqSF37rjTO2f9yFoSVX+
-         tk1iJ4HhwDM3cGqden4F5JBleKHCRfWMytKTmxkzd71wKipGR3eLEQL3eNPLEX3JjM
-         6DF0hhz4D63KGuZ77nEzqdbfkmvYIzucJZ+oSNJY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gerd Rausch <gerd.rausch@oracle.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com
-Subject: [PATCH AUTOSEL 4.19 493/671] net/rds: Add a few missing rds_stat_names entries
-Date:   Thu, 16 Jan 2020 12:02:11 -0500
-Message-Id: <20200116170509.12787-230-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
-References: <20200116170509.12787-1-sashal@kernel.org>
+        id S2391802AbgAPSrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 13:47:37 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 10:47:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,327,1574150400"; 
+   d="scan'208";a="218640226"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga008.jf.intel.com with ESMTP; 16 Jan 2020 10:47:34 -0800
+Date:   Thu, 16 Jan 2020 10:47:34 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jan Kara <jack@suse.cz>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [RFC PATCH V2 05/12] fs: remove unneeded IS_DAX() check
+Message-ID: <20200116184733.GD24522@iweiny-DESK2.sc.intel.com>
+References: <20200110192942.25021-1-ira.weiny@intel.com>
+ <20200110192942.25021-6-ira.weiny@intel.com>
+ <20200116093807.GB8446@quack2.suse.cz>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200116093807.GB8446@quack2.suse.cz>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gerd Rausch <gerd.rausch@oracle.com>
+On Thu, Jan 16, 2020 at 10:38:07AM +0100, Jan Kara wrote:
+> On Fri 10-01-20 11:29:35, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > The IS_DAX() check in io_is_direct() causes a race between changing the
+> > DAX mode and creating the iocb flags.
+> > 
+> > Remove the check because DAX now emulates the page cache API and
+> > therefore it does not matter if the file mode is DAX or not when the
+> > iocb flags are created.
+> > 
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
+> The patch looks good to me. You can add:
+> 
+> Reviewed-by: Jan Kara <jack@suse.cz>
 
-[ Upstream commit 55c70ca00c982fbc0df4c4d3e31747fb73f4ddb5 ]
+Thanks,
+Ira
 
-In a previous commit, fields were added to "struct rds_statistics"
-but array "rds_stat_names" was not updated accordingly.
-
-Please note the inconsistent naming of the string representations
-that is done in the name of compatibility
-with the Oracle internal code-base.
-
-s_recv_bytes_added_to_socket     -> "recv_bytes_added_to_sock"
-s_recv_bytes_removed_from_socket -> "recv_bytes_freed_fromsock"
-
-Fixes: 192a798f5299 ("RDS: add stat for socket recv memory usage")
-Signed-off-by: Gerd Rausch <gerd.rausch@oracle.com>
-Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/rds/stats.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/net/rds/stats.c b/net/rds/stats.c
-index 73be187d389e..6bbab4d74c4f 100644
---- a/net/rds/stats.c
-+++ b/net/rds/stats.c
-@@ -76,6 +76,8 @@ static const char *const rds_stat_names[] = {
- 	"cong_update_received",
- 	"cong_send_error",
- 	"cong_send_blocked",
-+	"recv_bytes_added_to_sock",
-+	"recv_bytes_freed_fromsock",
- };
- 
- void rds_stats_info_copy(struct rds_info_iterator *iter,
--- 
-2.20.1
-
+> 
+> 								Honza
+> 
+> > ---
+> >  include/linux/fs.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/include/linux/fs.h b/include/linux/fs.h
+> > index d7584bcef5d3..e11989502eac 100644
+> > --- a/include/linux/fs.h
+> > +++ b/include/linux/fs.h
+> > @@ -3365,7 +3365,7 @@ extern int file_update_time(struct file *file);
+> >  
+> >  static inline bool io_is_direct(struct file *filp)
+> >  {
+> > -	return (filp->f_flags & O_DIRECT) || IS_DAX(filp->f_mapping->host);
+> > +	return (filp->f_flags & O_DIRECT);
+> >  }
+> >  
+> >  static inline bool vma_is_dax(struct vm_area_struct *vma)
+> > -- 
+> > 2.21.0
+> > 
+> -- 
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
