@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60140C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A8E3C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BDEA2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61FA624699
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:56:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197395;
-	bh=rO9MRv8YhSyyoMyG5psAWUEUdC5BhENMela2iZyySFM=;
+	s=default; t=1579197398;
+	bh=EsOFQ6AR3Udi8fHehBcmn+Mp+kyo+XV+cNAgevfSMpo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UjMw+LtdwVSz0ey4RF3vLT/KkQUMP+Ea0NEgvOXlJZug1mZkSFzWBkbCsr/cNQO0F
-	 CiSb3QlXhRHy9gKUJfyBDgReuzvPHkCtZ4dN6MlRu04fs0VpWz+Nf/O0at/GijfeZC
-	 oy2Dw4Qo6uOkNrcI9oL0Uw0DKclrGvoCL6l2YgNs=
+	b=mBiAN5g8SvrGz6HHqp1B4uZ09WZX3BX1aqSeokCQ/yrSRd3ShBgCIdcWnuwXEk1tU
+	 WUb2/0djNDOHOKr0uLpKCxVjFv9WwgeuP3eweRFytkRDWs9/E46bqL+Nr0RQagAvOf
+	 8lrFipaxyWZ5DnVbfxLGc2Mh91jFGlX8wRIoEKQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406294AbgAPR4d (ORCPT
+        id S2406759AbgAPR4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:56:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34420 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:56:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394018AbgAPRnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:43:53 -0500
+        id S2394016AbgAPRnw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:43:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B0F62469C;
-        Thu, 16 Jan 2020 17:43:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 171B524730;
+        Thu, 16 Jan 2020 17:43:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196633;
-        bh=rO9MRv8YhSyyoMyG5psAWUEUdC5BhENMela2iZyySFM=;
+        s=default; t=1579196632;
+        bh=EsOFQ6AR3Udi8fHehBcmn+Mp+kyo+XV+cNAgevfSMpo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OdW3audGyD4SAepaIpUtVm8seXjSXCMX7pRabt5ri8HWERWHErCHAYXtt43f1+UHK
-         BaZHmN7K0D0rYkA3bt4AuvSX3eaklx2h3JNJwi1K6tCZWTMJIa3nK5qfwntQZ2OnH+
-         Ab2wu9dWGZmFdheMM7Fqf8TwtnJZgQ2sfJ/1fs7c=
+        b=P9MeyV8BIva7G8TguXK+h2HGW3XWtRk6i5yL12svV/jEAAL1hU/eq9tqZ48zVUxJr
+         Px8wqRqF+xnqe2LEVzkdxmfzbMnKJS5PV6xMb1XwkcUtso4a1Ne5z6N4rufYJRNOHS
+         2lkF8E+zViWbkQQx5MIe5zNY4FB0IDCeaSo0CyOU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Auger <eric.auger@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 046/174] vfio_pci: Enable memory accesses before calling pci_map_rom
-Date:   Thu, 16 Jan 2020 12:40:43 -0500
-Message-Id: <20200116174251.24326-46-sashal@kernel.org>
+Cc:     Ming Lei <ming.lei@redhat.com>, Omar Sandoval <osandov@fb.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 045/174] block: don't use bio->bi_vcnt to figure out segment number
+Date:   Thu, 16 Jan 2020 12:40:42 -0500
+Message-Id: <20200116174251.24326-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -59,67 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Auger <eric.auger@redhat.com>
+From: Ming Lei <ming.lei@redhat.com>
 
-[ Upstream commit 0cfd027be1d6def4a462cdc180c055143af24069 ]
+[ Upstream commit 1a67356e9a4829da2935dd338630a550c59c8489 ]
 
-pci_map_rom/pci_get_rom_size() performs memory access in the ROM.
-In case the Memory Space accesses were disabled, readw() is likely
-to trigger a synchronous external abort on some platforms.
+It is wrong to use bio->bi_vcnt to figure out how many segments
+there are in the bio even though CLONED flag isn't set on this bio,
+because this bio may be splitted or advanced.
 
-In case memory accesses were disabled, re-enable them before the
-call and disable them back again just after.
+So always use bio_segments() in blk_recount_segments(), and it shouldn't
+cause any performance loss now because the physical segment number is figured
+out in blk_queue_split() and BIO_SEG_VALID is set meantime since
+bdced438acd83ad83a6c ("block: setup bi_phys_segments after splitting").
 
-Fixes: 89e1f7d4c66d ("vfio: Add PCI device driver")
-Signed-off-by: Eric Auger <eric.auger@redhat.com>
-Suggested-by: Alex Williamson <alex.williamson@redhat.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Reviewed-by: Omar Sandoval <osandov@fb.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Fixes: 76d8137a3113 ("blk-merge: recaculate segment if it isn't less than max segments")
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/pci/vfio_pci.c | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ block/blk-merge.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-index 4b62eb3b5923..7a82735d5308 100644
---- a/drivers/vfio/pci/vfio_pci.c
-+++ b/drivers/vfio/pci/vfio_pci.c
-@@ -496,6 +496,7 @@ static long vfio_pci_ioctl(void *device_data,
- 		{
- 			void __iomem *io;
- 			size_t size;
-+			u16 orig_cmd;
+diff --git a/block/blk-merge.c b/block/blk-merge.c
+index 7225511cf0b4..b8f1eaeeaac2 100644
+--- a/block/blk-merge.c
++++ b/block/blk-merge.c
+@@ -296,13 +296,7 @@ void blk_recalc_rq_segments(struct request *rq)
  
- 			info.offset = VFIO_PCI_INDEX_TO_OFFSET(info.index);
- 			info.flags = 0;
-@@ -505,15 +506,23 @@ static long vfio_pci_ioctl(void *device_data,
- 			if (!info.size)
- 				break;
+ void blk_recount_segments(struct request_queue *q, struct bio *bio)
+ {
+-	unsigned short seg_cnt;
+-
+-	/* estimate segment number by bi_vcnt for non-cloned bio */
+-	if (bio_flagged(bio, BIO_CLONED))
+-		seg_cnt = bio_segments(bio);
+-	else
+-		seg_cnt = bio->bi_vcnt;
++	unsigned short seg_cnt = bio_segments(bio);
  
--			/* Is it really there? */
-+			/*
-+			 * Is it really there?  Enable memory decode for
-+			 * implicit access in pci_map_rom().
-+			 */
-+			pci_read_config_word(pdev, PCI_COMMAND, &orig_cmd);
-+			pci_write_config_word(pdev, PCI_COMMAND,
-+					      orig_cmd | PCI_COMMAND_MEMORY);
-+
- 			io = pci_map_rom(pdev, &size);
--			if (!io || !size) {
-+			if (io) {
-+				info.flags = VFIO_REGION_INFO_FLAG_READ;
-+				pci_unmap_rom(pdev, io);
-+			} else {
- 				info.size = 0;
--				break;
- 			}
--			pci_unmap_rom(pdev, io);
- 
--			info.flags = VFIO_REGION_INFO_FLAG_READ;
-+			pci_write_config_word(pdev, PCI_COMMAND, orig_cmd);
- 			break;
- 		}
- 		case VFIO_PCI_VGA_REGION_INDEX:
+ 	if (test_bit(QUEUE_FLAG_NO_SG_MERGE, &q->queue_flags) &&
+ 			(seg_cnt < queue_max_segments(q)))
 -- 
 2.20.1
 
