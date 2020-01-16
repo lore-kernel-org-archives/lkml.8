@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4886EC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD0CC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FB3D24679
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2784124653
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:05:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194330;
-	bh=16/TjW9/N+uyZPKuikoEcgHQpFFVOuw4+1BYmkmFwyo=;
+	s=default; t=1579194339;
+	bh=9Rn4GRxm6QBiuv9AcsOIb6ehnEHzVQPYhQyM2Vj24mQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r17eH+P2Zk8G+7IvEk/J3eY23truh9r4sCOIC+IjHDm1SHEvbpKmzHz9qngWcRzID
-	 dnkUc8lQpMZkApN1Tw7vO+rfwZ43gfaTzxpdRfZdLfVMsq3nEKoQUEnE1IM6+1Y3hL
-	 7CDxAJ9ENKxcre9EptEd3hwtNwV1ZeixZ5byVKEw=
+	b=ff9If3RSkiLhn6bTygVsdmE+khm5gY3GDuDPkJlb/e7gjTm3julwPO58fcPT2BCgC
+	 gRUEa0Vp8FZKSteGTeX3a8OwyQwYN1XZCMYXlSWNjLLYU35WYji5Uuf51NXVMxaSf1
+	 z/h3bkgR7WxPOluxb/7K37yuU7fsV6R0bure/jSY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388671AbgAPRF0 (ORCPT
+        id S2388771AbgAPRFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:05:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33786 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:05:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388644AbgAPRFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:05:19 -0500
+        id S2388656AbgAPRFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:05:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3719524684;
-        Thu, 16 Jan 2020 17:05:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA9AC20730;
+        Thu, 16 Jan 2020 17:05:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194319;
-        bh=16/TjW9/N+uyZPKuikoEcgHQpFFVOuw4+1BYmkmFwyo=;
+        s=default; t=1579194324;
+        bh=9Rn4GRxm6QBiuv9AcsOIb6ehnEHzVQPYhQyM2Vj24mQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fJBLc62KIb6T1nkUl2y/DOq+YpUOYxayvDwS2zu7iW5eeyCDIfamoVQD38H4l3wf0
-         CfUfyKTabJT5qS2FRFr3S8elQcavNtc1dO3feYGylyZU2mNQKP8VIGqtA3HURoedAa
-         seB2spSI94of0UbofTFj6vehiHn4KtEdC3tY/AWA=
+        b=x1rUvPM7F7zTHEUjFprHnEUz+CEpcrsu0TvVtab3+Bi1EO0j5+/VtVE0kAFw2QSHJ
+         ph7Q9WUeZyJHELT3a1j1du7dJHdp9TeFNHfNc0GsHb41JY99FCLUasd8J9teaY/0n5
+         BdZqwqDkjCHfasLBNkz86/YeQnVtMejeT/IzIHsM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 269/671] spi: tegra114: flush fifos
-Date:   Thu, 16 Jan 2020 11:58:27 -0500
-Message-Id: <20200116170509.12787-6-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Li Yang <leoyang.li@nxp.com>, Sasha Levin <sashal@kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 273/671] soc/fsl/qe: Fix an error code in qe_pin_request()
+Date:   Thu, 16 Jan 2020 11:58:31 -0500
+Message-Id: <20200116170509.12787-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,105 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit c4fc9e5b28ff787e35137c2cc13316bb11d7657b ]
+[ Upstream commit 5674a92ca4b7e5a6a19231edd10298d30324cd27 ]
 
-Fixes: Flush TX and RX FIFOs before start of new transfer and on FIFO
-overflow or underrun errors.
+We forgot to set "err" on this error path.
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 1a2d397a6eb5 ("gpio/powerpc: Eliminate duplication of of_get_named_gpio_flags()")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Li Yang <leoyang.li@nxp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-tegra114.c | 39 +++++++++++++++++++++++++++++---------
- 1 file changed, 30 insertions(+), 9 deletions(-)
+ drivers/soc/fsl/qe/gpio.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
-index b1b726673f85..5114b8008472 100644
---- a/drivers/spi/spi-tegra114.c
-+++ b/drivers/spi/spi-tegra114.c
-@@ -499,22 +499,37 @@ static int tegra_spi_start_rx_dma(struct tegra_spi_data *tspi, int len)
- 	return 0;
- }
+diff --git a/drivers/soc/fsl/qe/gpio.c b/drivers/soc/fsl/qe/gpio.c
+index 819bed0f5667..51b3a47b5a55 100644
+--- a/drivers/soc/fsl/qe/gpio.c
++++ b/drivers/soc/fsl/qe/gpio.c
+@@ -179,8 +179,10 @@ struct qe_pin *qe_pin_request(struct device_node *np, int index)
+ 	if (err < 0)
+ 		goto err0;
+ 	gc = gpio_to_chip(err);
+-	if (WARN_ON(!gc))
++	if (WARN_ON(!gc)) {
++		err = -ENODEV;
+ 		goto err0;
++	}
  
--static int tegra_spi_start_dma_based_transfer(
--		struct tegra_spi_data *tspi, struct spi_transfer *t)
-+static int tegra_spi_flush_fifos(struct tegra_spi_data *tspi)
- {
--	u32 val;
--	unsigned int len;
--	int ret = 0;
-+	unsigned long timeout = jiffies + HZ;
- 	u32 status;
- 
--	/* Make sure that Rx and Tx fifo are empty */
- 	status = tegra_spi_readl(tspi, SPI_FIFO_STATUS);
- 	if ((status & SPI_FIFO_EMPTY) != SPI_FIFO_EMPTY) {
--		dev_err(tspi->dev, "Rx/Tx fifo are not empty status 0x%08x\n",
--			(unsigned)status);
--		return -EIO;
-+		status |= SPI_RX_FIFO_FLUSH | SPI_TX_FIFO_FLUSH;
-+		tegra_spi_writel(tspi, status, SPI_FIFO_STATUS);
-+		while ((status & SPI_FIFO_EMPTY) != SPI_FIFO_EMPTY) {
-+			status = tegra_spi_readl(tspi, SPI_FIFO_STATUS);
-+			if (time_after(jiffies, timeout)) {
-+				dev_err(tspi->dev,
-+					"timeout waiting for fifo flush\n");
-+				return -EIO;
-+			}
-+
-+			udelay(1);
-+		}
- 	}
- 
-+	return 0;
-+}
-+
-+static int tegra_spi_start_dma_based_transfer(
-+		struct tegra_spi_data *tspi, struct spi_transfer *t)
-+{
-+	u32 val;
-+	unsigned int len;
-+	int ret = 0;
-+
- 	val = SPI_DMA_BLK_SET(tspi->curr_dma_words - 1);
- 	tegra_spi_writel(tspi, val, SPI_DMA_BLK);
- 
-@@ -779,6 +794,9 @@ static int tegra_spi_start_transfer_one(struct spi_device *spi,
- 	dev_dbg(tspi->dev, "The def 0x%x and written 0x%x\n",
- 		tspi->def_command1_reg, (unsigned)command1);
- 
-+	ret = tegra_spi_flush_fifos(tspi);
-+	if (ret < 0)
-+		return ret;
- 	if (total_fifo_words > SPI_FIFO_DEPTH)
- 		ret = tegra_spi_start_dma_based_transfer(tspi, t);
- 	else
-@@ -876,6 +894,7 @@ static int tegra_spi_transfer_one_message(struct spi_master *master,
- 			    (tspi->cur_direction & DATA_DIR_RX))
- 				dmaengine_terminate_all(tspi->rx_dma_chan);
- 			ret = -EIO;
-+			tegra_spi_flush_fifos(tspi);
- 			reset_control_assert(tspi->rst);
- 			udelay(2);
- 			reset_control_deassert(tspi->rst);
-@@ -929,6 +948,7 @@ static irqreturn_t handle_cpu_based_xfer(struct tegra_spi_data *tspi)
- 			tspi->status_reg);
- 		dev_err(tspi->dev, "CpuXfer 0x%08x:0x%08x\n",
- 			tspi->command1_reg, tspi->dma_control_reg);
-+		tegra_spi_flush_fifos(tspi);
- 		reset_control_assert(tspi->rst);
- 		udelay(2);
- 		reset_control_deassert(tspi->rst);
-@@ -1001,6 +1021,7 @@ static irqreturn_t handle_dma_based_xfer(struct tegra_spi_data *tspi)
- 			tspi->status_reg);
- 		dev_err(tspi->dev, "DmaXfer 0x%08x:0x%08x\n",
- 			tspi->command1_reg, tspi->dma_control_reg);
-+		tegra_spi_flush_fifos(tspi);
- 		reset_control_assert(tspi->rst);
- 		udelay(2);
- 		reset_control_deassert(tspi->rst);
+ 	if (!of_device_is_compatible(gc->of_node, "fsl,mpc8323-qe-pario-bank")) {
+ 		pr_debug("%s: tried to get a non-qe pin\n", __func__);
 -- 
 2.20.1
 
