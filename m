@@ -2,176 +2,136 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B60AAC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E46CC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 837452081E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:18:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 360652467C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:19:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lw2cBnfc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TiyKo5kq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731508AbgAPASw (ORCPT
+        id S1731498AbgAPATz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 19:18:52 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:54636 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbgAPASw (ORCPT
+        Wed, 15 Jan 2020 19:19:55 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35042 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbgAPATz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 19:18:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=L3ioD26th/wm3eYc9K20nMrNLwYjuFwfcgehlyvc/ZQ=; b=lw2cBnfcr+3/zPcRgsnl8XSH/
-        M9BdQMP/WUuSwuchi1Rzm6YnFogsDEV9PmMWTDjuslrYYQ1XjtTQS1/Ttr1/ZpyT3JWmEBmllBGVK
-        x+zCeMSrKT31Fa1r/CccUbbcG9xYnYrBhUvaNY/UnYiM+YDgzqWI+d0wdWfutfxc7PY2czlbLUwi2
-        Kc9jTaP3y9hDIXCcQJ3INyMsadrR+mT6RPotuTDuv7NaCuXyWxV0PSkIjLs2HkGBaxdsIirDVaO9n
-        Vi8CnsKp2OBGGGe3/4W3STsjrQnVnHGlNp9HSsuk1sh1JeLzUQ7SV6ixcC8PhV0pWxTZGJPCpvcbK
-        aSKgBrVVg==;
-Received: from [2601:1c0:6280:3f0::ed68]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1irsrc-0003q7-KU; Thu, 16 Jan 2020 00:18:20 +0000
-Subject: Re: [PATCH v28 11/12] LRNG - add interface for gathering of raw
- entropy
-To:     =?UTF-8?Q?Stephan_M=c3=bcller?= <smueller@chronox.de>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-References: <6157374.ptSnyUpaCn@positron.chronox.de>
- <2641155.iNH938UiKq@positron.chronox.de>
- <5951792.lmNsirYsPE@positron.chronox.de>
- <2048458.ADJAtTWDj8@positron.chronox.de>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <abde84fe-2599-0db8-2bad-d2ff29a3c4f0@infradead.org>
-Date:   Wed, 15 Jan 2020 16:18:18 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 15 Jan 2020 19:19:55 -0500
+Received: by mail-ot1-f68.google.com with SMTP id i15so17816703oto.2;
+        Wed, 15 Jan 2020 16:19:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZU5z0jv6vLkxXNqNasAO0rHibPY0RtWLbOjVbo8j9bM=;
+        b=TiyKo5kq22lrMJu+TfM0cyJlBOcyXACcTmJNkYuhgZ6+Ej74UPkEnUpcj1QtU+iMFE
+         VlOLQhgiB+TqW56ap5Fng7PYwiawZMMrV/Kkgr7T82kfs77IQq6UTORND7mzW52UTH33
+         G58aS2m4xyePIcAasMj7yNJopsaKoonFKtJvjYlLCjuU4PMhE90P3CDlGiCWfzfnOc+k
+         xgqAINXlRj/6yCySZCHefcEy31T32+QYxDjKCNckgyq+Dv712FD9vHVXkYJIOXwF4MG/
+         ZVqD63CBkiwbKDW0Qr+HzJiDsj0RUD4PGrHQY/b9t+HWteju8J7/tDsIgVAGyDw6Y0Pz
+         ip6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZU5z0jv6vLkxXNqNasAO0rHibPY0RtWLbOjVbo8j9bM=;
+        b=dSuGSNwbdTAQaT82t/W7v2yYnFPPDwvwIWAUqToqd1eEIQgDwnKkzI3zTw/JODKwj6
+         qfIQRnpWHJIW4k0ti7Dd4+MGbtTM4ujSOa7YGpd8PaqBhjGQkNzTcqCN1V+LbE5bmLld
+         wTQWX8bKlVBCf+XGY6nj6ToG3RpQKcs+v4L98xAWqKHnwM2+frbZBWrx8ChBrTY6Lakd
+         J4EPrpjRgPtJWyeNLp69Auuu+wMmiZ7j1AqX7H5gQ1H6kCwD7xjmkZakBkOgKmOiXFJU
+         vWwR4xlamH14+ZORFVbAxbYEbwtzSsTArTjEgbV5q05/9Et/KWccows/mmXZI9jFHhK1
+         O+oQ==
+X-Gm-Message-State: APjAAAUXpFjlWkoaFTPO7u6fAcah08KWjBfsnrPZrtDpwm2Vms7vuv06
+        B2Q3xzS2RhEOK1PGnbYaMw3plyxv7CyObBP8COc=
+X-Google-Smtp-Source: APXvYqwEp+kpYgUagYAHFYU2YX8f9iDBexiTW7nUmnFZ6PPZk5G/o3uJkrK9AOZImf30kqPO5pYY4z5BycnOYnfOpaI=
+X-Received: by 2002:a9d:7090:: with SMTP id l16mr4854274otj.187.1579133994535;
+ Wed, 15 Jan 2020 16:19:54 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <2048458.ADJAtTWDj8@positron.chronox.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <CAGi-RUJvqJoCXWN2YugRn=WYEk9yzt7m3OPfX_o++PmJWQ3woQ@mail.gmail.com>
+ <87wo9ub5f6.fsf@nanos.tec.linutronix.de> <CAGi-RUK_TA+WWvXJSrsa=_Pwq0pV1ffUKOCBu5c1t8O5Xs+UJg@mail.gmail.com>
+ <CAGi-RUJG=SB7az5FFVTzzgefn_VXUbyQX1dtBN+9gkR7MgyC6g@mail.gmail.com> <87imldbqe3.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87imldbqe3.fsf@nanos.tec.linutronix.de>
+From:   Ramon Fried <rfried.dev@gmail.com>
+Date:   Thu, 16 Jan 2020 02:19:43 +0200
+Message-ID: <CAGi-RULNwpiNGYALYRG84SOUzkvNTbgctmXoS=Luh29xDHJzYw@mail.gmail.com>
+Subject: Re: MSI irqchip configured as IRQCHIP_ONESHOT_SAFE causes spurious IRQs
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     hkallweit1@gmail.com, Bjorn Helgaas <bhelgaas@google.com>,
+        maz@kernel.org, lorenzo.pieralisi@arm.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/15/20 2:35 AM, Stephan Müller wrote:
+On Wed, Jan 15, 2020 at 12:54 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Ramon Fried <rfried.dev@gmail.com> writes:
+> > On Tue, Jan 14, 2020 at 11:38 PM Ramon Fried <rfried.dev@gmail.com> wrote:
+> >> On Tue, Jan 14, 2020 at 2:15 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >> > Ramon Fried <rfried.dev@gmail.com> writes:
+> >> > > Besides the side effect of that, I don't really understand the logic
+> >> > > of not masking the MSI until the threaded handler is complete,
+> >> > > especially when there's no HW handler and only threaded handler.
+> >> >
+> >> > What's wrong with having another interrupt firing while the threaded
+> >> > handler is running? Nothing, really. It actually can be desired because
+> >> > the threaded handler is allowed to sleep.
+> >> >
+> >> What do you mean, isn't it the purpose IRQ masking ?  Interrupt
+> >> coalescing is done to mitigate these IRQ's, these HW interrupts just
+> >> consume CPU cycles and don't do anything useful (scheduling an
+> >> already scheduled thread).
+>
+> Again, that depends on your POV. It's a perfectly valid scenario to have
+> another HW irq coming in preventing the thread to go to sleep and just
+> run for another cycle. So no, masking is not necessarily required and
+> the semantics of MSI is edge type, so the hardware should not fire
+> another interrupt _before_ the threaded handler actually took care of
+> the initial one.
+>
+> > Additionally, in this case there isn't even an HW IRQ handler, it's
+> > passed as NULL in the request IRQ function in this scenario.
+>
+> This is completely irrelevant. The primary hardware IRQ handler is
+> provided by the core code in this case.
+>
+You're right.
 
-> 
-> CC: "Eric W. Biederman" <ebiederm@xmission.com>
-> CC: "Alexander E. Patrakov" <patrakov@gmail.com>
-> CC: "Ahmed S. Darwish" <darwish.07@gmail.com>
-> CC: "Theodore Y. Ts'o" <tytso@mit.edu>
-> CC: Willy Tarreau <w@1wt.eu>
-> CC: Matthew Garrett <mjg59@srcf.ucam.org>
-> CC: Vito Caputo <vcaputo@pengaru.com>
-> CC: Andreas Dilger <adilger.kernel@dilger.ca>
-> CC: Jan Kara <jack@suse.cz>
-> CC: Ray Strode <rstrode@redhat.com>
-> CC: William Jon McCann <mccann@jhu.edu>
-> CC: zhangjs <zachary@baishancloud.com>
-> CC: Andy Lutomirski <luto@kernel.org>
-> CC: Florian Weimer <fweimer@redhat.com>
-> CC: Lennart Poettering <mzxreary@0pointer.de>
-> CC: Nicolai Stange <nstange@suse.de>
-> Reviewed-by: Roman Drahtmueller <draht@schaltsekun.de>
-> Tested-by: Roman Drahtmüller <draht@schaltsekun.de>
-> Tested-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
-> Tested-by: Neil Horman <nhorman@redhat.com>
-> Signed-off-by: Stephan Mueller <smueller@chronox.de>
-> ---
->  drivers/char/lrng/Kconfig        |  16 ++
->  drivers/char/lrng/Makefile       |   1 +
->  drivers/char/lrng/lrng_testing.c | 271 +++++++++++++++++++++++++++++++
->  3 files changed, 288 insertions(+)
->  create mode 100644 drivers/char/lrng/lrng_testing.c
-> 
+> Due to the semantics of MSI this is perfectly fine and aside of your
+> problem this has worked perfectly fine so far and it's an actual
+> performance win because it avoid fiddling with the MSI mask which is
+> slow.
+>
+fiddling with MSI masks is a configuration space write, which is
+non-posted, so it does come with a price.
+The question is if a test was ever conducted to see the it's better
+than spurious IRQ's.
 
-> diff --git a/drivers/char/lrng/lrng_testing.c b/drivers/char/lrng/lrng_testing.c
-> new file mode 100644
-> index 000000000000..0e287eccd622
-> --- /dev/null
-> +++ b/drivers/char/lrng/lrng_testing.c
-> @@ -0,0 +1,271 @@
-> +// SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-> +/*
-> + * Linux Random Number Generator (LRNG) Raw entropy collection tool
-> + *
-> + * Copyright (C) 2019 - 2020, Stephan Mueller <smueller@chronox.de>
-> + */
-> +
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +
-> +#include <linux/atomic.h>
-> +#include <linux/bug.h>
-> +#include <linux/debugfs.h>
-> +#include <linux/module.h>
-> +#include <linux/sched.h>
-> +#include <linux/sched/signal.h>
-> +#include <linux/slab.h>
-> +#include <linux/string.h>
-> +#include <linux/types.h>
-> +#include <linux/uaccess.h>
-> +#include <linux/workqueue.h>
-> +#include <asm/errno.h>
-> +
-> +#include "lrng_internal.h"
-> +
-> +#define LRNG_TESTING_RINGBUFFER_SIZE	1024
-> +#define LRNG_TESTING_RINGBUFFER_MASK	(LRNG_TESTING_RINGBUFFER_SIZE - 1)
-> +
-> +static u32 lrng_testing_rb[LRNG_TESTING_RINGBUFFER_SIZE];
-> +static u32 lrng_rb_reader = 0;
-> +static u32 lrng_rb_writer = 0;
-> +static atomic_t lrng_testing_enabled = ATOMIC_INIT(0);
-> +
-> +static DECLARE_WAIT_QUEUE_HEAD(lrng_raw_read_wait);
-> +static DEFINE_SPINLOCK(lrng_raw_lock);
-> +
-> +/*
-> + * 0 ==> No boot test, gathering of runtime data allowed
-> + * 1 ==> Boot test enabled and ready for collecting data, gathering runtime
-> + *	 data is disabled
-> + * 2 ==> Boot test completed and disabled, gathering of runtime data is
-> + *	 disabled
-> + */
-> +static u32 boot_test = 0;
-> +module_param(boot_test, uint, 0644);
-> +MODULE_PARM_DESC(boot_test, "Enable gathering boot time entropy of the first"
-> +			    " entropy events");
+> You still have not told which driver/hardware is affected by this. Can
+> you please provide that information so we can finally look at the actual
+> hardware/driver combo?
+>
+Sure,
+I'm writing an MSI IRQ controller, it's basically a MIPS GIC interrupt
+line which several MSI are multiplexed on it.
+It's configured with handle_level_irq() as the GIC is level IRQ.
 
-One line for the string, please.
+The ack callback acks the GIC irq.
+the mask/unmask calls pci_msi_mask_irq() / pci_msi_unmask_irq()
 
-
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Thanks,
+Ramon.
+> Either the driver is broken or the hardware does not comply with the MSI
+> spec.
+>
+> Thanks,
+>
+>         tglx
