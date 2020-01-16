@@ -2,60 +2,52 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 780EAC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F8C3C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5033124702
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6781024702
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:29:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195750;
-	bh=D1hglT0VmcDmTpb/u5xfn01OYM5eyCOUNzL/09zR85k=;
+	s=default; t=1579195752;
+	bh=JgI2roxLOmy0H3SjGoq12s9tb2vfddbZ6GGbCTxrDAA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u3fYmjTLpr1P41cHHnN3lXu2f6cOEk9xgx0hBZV7Ws0n5xanCOv/v8klNTrzicp8R
-	 y2zWudhwWHSPeYLgz0iXCPOLAQZWAVY1xdcrluVLtu12loFNVHbR4eDz2qVVb+RuEB
-	 Wui65w6y178RtNzPgYJ2mb8kfD2KmmTLgG6cyPvc=
+	b=t6JtO+++Danz4JhIROhTUuyvdTOJbfjibwnDTpYT2ddupIJM9ofPBEx5s4KsXQ1Xh
+	 A5kHn+XL0juHJx8wkUPq1DMLgpmXOBG+T2RwivrXtavuUAtMu1RNTmuNSDxm1OUdWg
+	 PZ7gUL5zB4ETO3bbMVmf/L6Cg3e7YnOsx0/UwENg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404287AbgAPR3J (ORCPT
+        id S2404298AbgAPR3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:29:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40514 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:29:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404247AbgAPR3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:29:02 -0500
+        id S2404263AbgAPR3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:29:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4F9B246F1;
-        Thu, 16 Jan 2020 17:28:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82202246F3;
+        Thu, 16 Jan 2020 17:29:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195740;
-        bh=D1hglT0VmcDmTpb/u5xfn01OYM5eyCOUNzL/09zR85k=;
+        s=default; t=1579195743;
+        bh=JgI2roxLOmy0H3SjGoq12s9tb2vfddbZ6GGbCTxrDAA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1J+3+xwp5G9Z4sVk1aHFprms34FBMqymKCVnkfZ+l5reH1kkN+iek9O5F9FBUtCZy
-         xf1ncNJraXUC2XXCeIDPrOtyb1xk8PSKVCez8HjJ8YhfdHie1TFi5Xm8CgdbQETpE3
-         C/zd7F3KavxA/K8u94d7h90jBQ/8ck4Jk6N1q84A=
+        b=1mI+dsYFfgN4N3Oh4xmu2ySFgDww628yTsk86ViSRpFa6Bn4tjrPAvmgHLkCxEXbG
+         NOktxlKDjaCsUd/IpED1swOyjP7EES5f8E/rzNw3KignRzDfRDjPY9cfGtCku8I+/w
+         Sb6vT0rswbx/X/Tl/VXCV0XwqdoJsqconeEDgAU0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>,
-        Paul Burton <paul.burton@mips.com>, ralf@linux-mips.org,
-        jhogan@kernel.org, "Maciej W . Rozycki" <macro@linux-mips.org>,
-        Hassan Naveed <hnaveed@wavecomp.com>,
-        Stephen Kitt <steve@sk2.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, linux-mips@vger.kernel.org,
-        clang-built-linux@googlegroups.com, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 276/371] mips: avoid explicit UB in assignment of mips_io_port_base
-Date:   Thu, 16 Jan 2020 12:22:28 -0500
-Message-Id: <20200116172403.18149-219-sashal@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Chuansheng Liu <chuansheng.liu@intel.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-ide@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 278/371] ahci: Do not export local variable ahci_em_messages
+Date:   Thu, 16 Jan 2020 12:22:30 -0500
+Message-Id: <20200116172403.18149-221-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -68,101 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Desaulniers <ndesaulniers@google.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 12051b318bc3ce5b42d6d786191008284b067d83 ]
+[ Upstream commit 60fc35f327e0a9e60b955c0f3c3ed623608d1baa ]
 
-The code in question is modifying a variable declared const through
-pointer manipulation.  Such code is explicitly undefined behavior, and
-is the lone issue preventing malta_defconfig from booting when built
-with Clang:
+The commit ed08d40cdec4
+  ("ahci: Changing two module params with static and __read_mostly")
+moved ahci_em_messages to be static while missing the fact of exporting it.
 
-If an attempt is made to modify an object defined with a const-qualified
-type through use of an lvalue with non-const-qualified type, the
-behavior is undefined.
+WARNING: "ahci_em_messages" [vmlinux] is a static EXPORT_SYMBOL_GPL
 
-LLVM is removing such assignments. A simple fix is to not declare
-variables const that you plan on modifying.  Limiting the scope would be
-a better method of preventing unwanted writes to such a variable.
+Drop export for the local variable ahci_em_messages.
 
-Further, the code in question mentions "compiler bugs" without any links
-to bug reports, so it is difficult to know if the issue is resolved in
-GCC. The patch was authored in 2006, which would have been GCC 4.0.3 or
-4.1.1. The minimal supported version of GCC in the Linux kernel is
-currently 4.6.
-
-For what its worth, there was UB before the commit in question, it just
-added a barrier and got lucky IRT codegen. I don't think there's any
-actual compiler bugs related, just runtime bugs due to UB.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/610
-Fixes: 966f4406d903 ("[MIPS] Work around bad code generation for <asm/io.h>.")
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Debugged-by: Nathan Chancellor <natechancellor@gmail.com>
-Suggested-by: Eli Friedman <efriedma@quicinc.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: ralf@linux-mips.org
-Cc: jhogan@kernel.org
-Cc: Maciej W. Rozycki <macro@linux-mips.org>
-Cc: Hassan Naveed <hnaveed@wavecomp.com>
-Cc: Stephen Kitt <steve@sk2.org>
-Cc: Serge Semin <fancer.lancer@gmail.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: clang-built-linux@googlegroups.com
+Fixes: ed08d40cdec4 ("ahci: Changing two module params with static and __read_mostly")
+Cc: Chuansheng Liu <chuansheng.liu@intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/include/asm/io.h | 14 ++------------
- arch/mips/kernel/setup.c   |  2 +-
- 2 files changed, 3 insertions(+), 13 deletions(-)
+ drivers/ata/libahci.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
-index 57b34257be2b..98eb15b0524c 100644
---- a/arch/mips/include/asm/io.h
-+++ b/arch/mips/include/asm/io.h
-@@ -60,21 +60,11 @@
-  * instruction, so the lower 16 bits must be zero.  Should be true on
-  * on any sane architecture; generic code does not use this assumption.
-  */
--extern const unsigned long mips_io_port_base;
-+extern unsigned long mips_io_port_base;
+diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
+index cda9a0b5bdaa..7473ff46de66 100644
+--- a/drivers/ata/libahci.c
++++ b/drivers/ata/libahci.c
+@@ -191,7 +191,6 @@ struct ata_port_operations ahci_pmp_retry_srst_ops = {
+ EXPORT_SYMBOL_GPL(ahci_pmp_retry_srst_ops);
  
--/*
-- * Gcc will generate code to load the value of mips_io_port_base after each
-- * function call which may be fairly wasteful in some cases.  So we don't
-- * play quite by the book.  We tell gcc mips_io_port_base is a long variable
-- * which solves the code generation issue.  Now we need to violate the
-- * aliasing rules a little to make initialization possible and finally we
-- * will need the barrier() to fight side effects of the aliasing chat.
-- * This trickery will eventually collapse under gcc's optimizer.  Oh well.
-- */
- static inline void set_io_port_base(unsigned long base)
- {
--	* (unsigned long *) &mips_io_port_base = base;
--	barrier();
-+	mips_io_port_base = base;
- }
- 
- /*
-diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index 795caa763da3..05ed4ed411c7 100644
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -75,7 +75,7 @@ static char __initdata builtin_cmdline[COMMAND_LINE_SIZE] = CONFIG_CMDLINE;
-  * mips_io_port_base is the begin of the address space to which x86 style
-  * I/O ports are mapped.
-  */
--const unsigned long mips_io_port_base = -1;
-+unsigned long mips_io_port_base = -1;
- EXPORT_SYMBOL(mips_io_port_base);
- 
- static struct resource code_resource = { .name = "Kernel code", };
+ static bool ahci_em_messages __read_mostly = true;
+-EXPORT_SYMBOL_GPL(ahci_em_messages);
+ module_param(ahci_em_messages, bool, 0444);
+ /* add other LED protocol types when they become supported */
+ MODULE_PARM_DESC(ahci_em_messages,
 -- 
 2.20.1
 
