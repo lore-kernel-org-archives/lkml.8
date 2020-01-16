@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09042C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8D4C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D39A021D56
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A0DD24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:57:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193828;
-	bh=2gclll6tXzZYKD51RuoVXGdBGIw4/bnVeEiILD7SeRY=;
+	s=default; t=1579193832;
+	bh=8tl6avoclmnYqs2n1VijeIdE5boQXiaiZbXvYV5dn8w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xIz40zE/ZbqpeU0jJh/HlRQnaL6XKMJJA/+j4ydTEFXqBHhdlWZ5ELLpJGMUCsNFL
-	 /UOy6W3BHUZgxbs1itgJuGHTWXbkAl8R/ytm4LnImOzaKzeeOxp3/XkIHzsIbl93G9
-	 RR9610p73m9u7Wbx+FsP3E6eB3r7LsPBETLtU6s0=
+	b=JHQYRTYRKY+0xK9C1B75vBg4VuoiTfF/+pCmt4S8+ORjUAKCN+w0lHu+16UY+/z/z
+	 x9HE+kFf4reMIXhAL5xTmoSSKOuEhsIyE7scfVx53iQkvQu8aiVmAVV8wMakRa4g9O
+	 hq2gG5M0SuV3HpUPdpPyw5Xf/4zOnblhtiWPQdSk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387434AbgAPQ5I (ORCPT
+        id S2387447AbgAPQ5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:57:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43834 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:57:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387407AbgAPQ5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:57:03 -0500
+        id S2387423AbgAPQ5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:57:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 752A32051A;
-        Thu, 16 Jan 2020 16:57:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30A752467D;
+        Thu, 16 Jan 2020 16:57:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193822;
-        bh=2gclll6tXzZYKD51RuoVXGdBGIw4/bnVeEiILD7SeRY=;
+        s=default; t=1579193825;
+        bh=8tl6avoclmnYqs2n1VijeIdE5boQXiaiZbXvYV5dn8w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V5RgCB2dce/jW5FJy7yoH8VuN2aFPNsOpwCtnT11ecK4bUmeOW4sAGicS8ozIACKd
-         vHdQ/UBiJlSEP5DatATOWRAs5mx62pDWteNagkkU4NN8Cjtw/FV5KGbN1pPjwX0kuY
-         M2Nkclvqf2Qi/OJWT5zfM5RxZTiIkb5hCtMi4Gt8=
+        b=BUaNaNp6UviBnSe/WcATossOGVTVyHgrhuVNCgXOdjqRDcSkWqP0gPi53CmoFMgPj
+         fBx5NF7S10QtSCDOakYk9CyOsdKEvWSsQKHOmHM+GovcRDmr3SWGyy172DiOcwRbPd
+         5d6lrGZnP8t/tLWHiThAO6cDRrVQjYWe0ApvaEPU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Petr Machata <petrm@mellanox.com>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 081/671] vxlan: changelink: Fix handling of default remotes
-Date:   Thu, 16 Jan 2020 11:45:12 -0500
-Message-Id: <20200116165502.8838-81-sashal@kernel.org>
+Cc:     Rik van Riel <riel@surriel.com>, Roman Gushchin <guro@fb.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 083/671] fork,memcg: fix crash in free_thread_stack on memcg charge fail
+Date:   Thu, 16 Jan 2020 11:45:14 -0500
+Message-Id: <20200116165502.8838-83-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -60,92 +64,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Machata <petrm@mellanox.com>
+From: Rik van Riel <riel@surriel.com>
 
-[ Upstream commit ce5e098f7a10b4bf8e948c12fa350320c5c3afad ]
+[ Upstream commit 5eed6f1dff87bfb5e545935def3843edf42800f2 ]
 
-Default remotes are stored as FDB entries with an Ethernet address of
-00:00:00:00:00:00. When a request is made to change a remote address of
-a VXLAN device, vxlan_changelink() first deletes the existing default
-remote, and then creates a new FDB entry.
+Commit 9b6f7e163cd0 ("mm: rework memcg kernel stack accounting") will
+result in fork failing if allocating a kernel stack for a task in
+dup_task_struct exceeds the kernel memory allowance for that cgroup.
 
-This works well as long as the list of default remotes matches exactly
-the configuration of a VXLAN remote address. Thus when the VXLAN device
-has a remote of X, there should be exactly one default remote FDB entry
-X. If the VXLAN device has no remote address, there should be no such
-entry.
+Unfortunately, it also results in a crash.
 
-Besides using "ip link set", it is possible to manipulate the list of
-default remotes by using the "bridge fdb". It is therefore easy to break
-the above condition. Under such circumstances, the __vxlan_fdb_delete()
-call doesn't delete the FDB entry itself, but just one remote. The
-following vxlan_fdb_create() then creates a new FDB entry, leading to a
-situation where two entries exist for the address 00:00:00:00:00:00,
-each with a different subset of default remotes.
+This is due to the code jumping to free_stack and calling
+free_thread_stack when the memcg kernel stack charge fails, but without
+tsk->stack pointing at the freshly allocated stack.
 
-An even more obvious breakage rooted in the same cause can be observed
-when a remote address is configured for a VXLAN device that did not have
-one before. In that case vxlan_changelink() doesn't remove any remote,
-and just creates a new FDB entry for the new address:
+This in turn results in the vfree_atomic in free_thread_stack oopsing
+with a backtrace like this:
 
-$ ip link add name vx up type vxlan id 2000 dstport 4789
-$ bridge fdb ap dev vx 00:00:00:00:00:00 dst 192.0.2.20 self permanent
-$ bridge fdb ap dev vx 00:00:00:00:00:00 dst 192.0.2.30 self permanent
-$ ip link set dev vx type vxlan remote 192.0.2.30
-$ bridge fdb sh dev vx | grep 00:00:00:00:00:00
-00:00:00:00:00:00 dst 192.0.2.30 self permanent <- new entry, 1 rdst
-00:00:00:00:00:00 dst 192.0.2.20 self permanent <- orig. entry, 2 rdsts
-00:00:00:00:00:00 dst 192.0.2.30 self permanent
+#5 [ffffc900244efc88] die at ffffffff8101f0ab
+ #6 [ffffc900244efcb8] do_general_protection at ffffffff8101cb86
+ #7 [ffffc900244efce0] general_protection at ffffffff818ff082
+    [exception RIP: llist_add_batch+7]
+    RIP: ffffffff8150d487  RSP: ffffc900244efd98  RFLAGS: 00010282
+    RAX: 0000000000000000  RBX: ffff88085ef55980  RCX: 0000000000000000
+    RDX: ffff88085ef55980  RSI: 343834343531203a  RDI: 343834343531203a
+    RBP: ffffc900244efd98   R8: 0000000000000001   R9: ffff8808578c3600
+    R10: 0000000000000000  R11: 0000000000000001  R12: ffff88029f6c21c0
+    R13: 0000000000000286  R14: ffff880147759b00  R15: 0000000000000000
+    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
+ #8 [ffffc900244efda0] vfree_atomic at ffffffff811df2c7
+ #9 [ffffc900244efdb8] copy_process at ffffffff81086e37
+#10 [ffffc900244efe98] _do_fork at ffffffff810884e0
+#11 [ffffc900244eff10] sys_vfork at ffffffff810887ff
+#12 [ffffc900244eff20] do_syscall_64 at ffffffff81002a43
+    RIP: 000000000049b948  RSP: 00007ffcdb307830  RFLAGS: 00000246
+    RAX: ffffffffffffffda  RBX: 0000000000896030  RCX: 000000000049b948
+    RDX: 0000000000000000  RSI: 00007ffcdb307790  RDI: 00000000005d7421
+    RBP: 000000000067370f   R8: 00007ffcdb3077b0   R9: 000000000001ed00
+    R10: 0000000000000008  R11: 0000000000000246  R12: 0000000000000040
+    R13: 000000000000000f  R14: 0000000000000000  R15: 000000000088d018
+    ORIG_RAX: 000000000000003a  CS: 0033  SS: 002b
 
-To fix this, instead of calling vxlan_fdb_create() directly, defer to
-vxlan_fdb_update(). That has logic to handle the duplicates properly.
-Additionally, it also handles notifications, so drop that call from
-changelink as well.
+The simplest fix is to assign tsk->stack right where it is allocated.
 
-Fixes: 0241b836732f ("vxlan: fix default fdb entry netlink notify ordering during netdev create")
-Signed-off-by: Petr Machata <petrm@mellanox.com>
-Acked-by: Roopa Prabhu <roopa@cumulusnetworks.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: http://lkml.kernel.org/r/20181214231726.7ee4843c@imladris.surriel.com
+Fixes: 9b6f7e163cd0 ("mm: rework memcg kernel stack accounting")
+Signed-off-by: Rik van Riel <riel@surriel.com>
+Acked-by: Roman Gushchin <guro@fb.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Shakeel Butt <shakeelb@google.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/vxlan.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ kernel/fork.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
-index 613f36681853..df88981e796a 100644
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -3496,7 +3496,6 @@ static int vxlan_changelink(struct net_device *dev, struct nlattr *tb[],
- 	struct vxlan_rdst *dst = &vxlan->default_dst;
- 	struct vxlan_rdst old_dst;
- 	struct vxlan_config conf;
--	struct vxlan_fdb *f = NULL;
- 	int err;
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 8cb5cd7c97e1..5718c5decc55 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -230,8 +230,10 @@ static unsigned long *alloc_thread_stack_node(struct task_struct *tsk, int node)
+ 	 * free_thread_stack() can be called in interrupt context,
+ 	 * so cache the vm_struct.
+ 	 */
+-	if (stack)
++	if (stack) {
+ 		tsk->stack_vm_area = find_vm_area(stack);
++		tsk->stack = stack;
++	}
+ 	return stack;
+ #else
+ 	struct page *page = alloc_pages_node(node, THREADINFO_GFP,
+@@ -268,7 +270,10 @@ static struct kmem_cache *thread_stack_cache;
+ static unsigned long *alloc_thread_stack_node(struct task_struct *tsk,
+ 						  int node)
+ {
+-	return kmem_cache_alloc_node(thread_stack_cache, THREADINFO_GFP, node);
++	unsigned long *stack;
++	stack = kmem_cache_alloc_node(thread_stack_cache, THREADINFO_GFP, node);
++	tsk->stack = stack;
++	return stack;
+ }
  
- 	err = vxlan_nl2conf(tb, data,
-@@ -3522,19 +3521,19 @@ static int vxlan_changelink(struct net_device *dev, struct nlattr *tb[],
- 					   old_dst.remote_ifindex, 0);
- 
- 		if (!vxlan_addr_any(&dst->remote_ip)) {
--			err = vxlan_fdb_create(vxlan, all_zeros_mac,
-+			err = vxlan_fdb_update(vxlan, all_zeros_mac,
- 					       &dst->remote_ip,
- 					       NUD_REACHABLE | NUD_PERMANENT,
-+					       NLM_F_APPEND | NLM_F_CREATE,
- 					       vxlan->cfg.dst_port,
- 					       dst->remote_vni,
- 					       dst->remote_vni,
- 					       dst->remote_ifindex,
--					       NTF_SELF, &f);
-+					       NTF_SELF);
- 			if (err) {
- 				spin_unlock_bh(&vxlan->hash_lock);
- 				return err;
- 			}
--			vxlan_fdb_notify(vxlan, f, first_remote_rtnl(f), RTM_NEWNEIGH);
- 		}
- 		spin_unlock_bh(&vxlan->hash_lock);
- 	}
+ static void free_thread_stack(struct task_struct *tsk)
 -- 
 2.20.1
 
