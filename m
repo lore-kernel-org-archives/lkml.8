@@ -2,106 +2,90 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D70DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDC2C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB1AA2176D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:14:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198460;
-	bh=Vs31waamsWD7SzIS5H+rhqQTbCNe4meiHZm1NTT59go=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oGJxs8YvcRaS4MNR/L6gB/zOgpFeu6coKJrshTtNAr2/YFDQuAo6nJ9ILL0fUnaaZ
-	 cGOaFeEwdlLZq6UgwlEV4ZoM0JrddIzp20iF7t01TIsDIzcK9IMdQRJeW4VYmW4qku
-	 IyqB9loNiu1/WfR3IyYSh6Jmi71AHrEy8KEHyzAY=
+	by mail.kernel.org (Postfix) with ESMTP id DB9F520684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:14:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393052AbgAPRe4 (ORCPT
+        id S2395354AbgAPSOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:34:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48722 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393020AbgAPRet (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:34:49 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C3E3246A1;
-        Thu, 16 Jan 2020 17:34:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196089;
-        bh=Vs31waamsWD7SzIS5H+rhqQTbCNe4meiHZm1NTT59go=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S2uJWTaurT3WeFUk1cXpm8Fwk4rkNyTHsaf2rYvKk83XOaBkCmNdT2doIh5DSn53n
-         OAzFLwv1GDDxDoWZGkSpStmUkvnuyX5sPKFdppE3VQ7BUc4qJjrVEGocrEWYcTpTJg
-         uEESO6eSE/0F0CZJreap8Ua136z24jSaf5RvOkNU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anders Roxell <anders.roxell@linaro.org>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.9 003/251] ALSA: hda: fix unused variable warning
-Date:   Thu, 16 Jan 2020 12:30:37 -0500
-Message-Id: <20200116173445.21385-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116173445.21385-1-sashal@kernel.org>
-References: <20200116173445.21385-1-sashal@kernel.org>
+        Thu, 16 Jan 2020 13:14:21 -0500
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:52395 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390873AbgAPRe5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:34:57 -0500
+X-Originating-IP: 90.65.102.129
+Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 99D0DC0006;
+        Thu, 16 Jan 2020 17:34:55 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH 2/2] ARM: dts: at91: at91sam9n12: switch to new sckc bindings
+Date:   Thu, 16 Jan 2020 18:34:53 +0100
+Message-Id: <20200116173453.427267-2-alexandre.belloni@bootlin.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200116173453.427267-1-alexandre.belloni@bootlin.com>
+References: <20200116173453.427267-1-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anders Roxell <anders.roxell@linaro.org>
+Remove the child nodes of the sckc as they are not necessary anymore.
 
-[ Upstream commit 5b03006d5c58ddd31caf542eef4d0269bcf265b3 ]
-
-When CONFIG_X86=n function azx_snoop doesn't use the variable chip it
-only returns true.
-
-sound/pci/hda/hda_intel.c: In function ‘dma_alloc_pages’:
-sound/pci/hda/hda_intel.c:2002:14: warning: unused variable ‘chip’ [-Wunused-variable]
-  struct azx *chip = bus_to_azx(bus);
-              ^~~~
-
-Create a inline function of azx_snoop.
-
-Fixes: a41d122449be ("ALSA: hda - Embed bus into controller object")
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- sound/pci/hda/hda_controller.h | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/at91sam9n12.dtsi | 23 +++--------------------
+ 1 file changed, 3 insertions(+), 20 deletions(-)
 
-diff --git a/sound/pci/hda/hda_controller.h b/sound/pci/hda/hda_controller.h
-index b83feecf1e40..8f9386998270 100644
---- a/sound/pci/hda/hda_controller.h
-+++ b/sound/pci/hda/hda_controller.h
-@@ -171,11 +171,10 @@ struct azx {
- #define azx_bus(chip)	(&(chip)->bus.core)
- #define bus_to_azx(_bus)	container_of(_bus, struct azx, bus.core)
+diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
+index d6eacb2e3792..3a3e3e05fa13 100644
+--- a/arch/arm/boot/dts/at91sam9n12.dtsi
++++ b/arch/arm/boot/dts/at91sam9n12.dtsi
+@@ -409,28 +409,11 @@ pit: timer@fffffe30 {
+ 				clocks = <&mck>;
+ 			};
  
--#ifdef CONFIG_X86
--#define azx_snoop(chip)		((chip)->snoop)
--#else
--#define azx_snoop(chip)		true
--#endif
-+static inline bool azx_snoop(struct azx *chip)
-+{
-+	return !IS_ENABLED(CONFIG_X86) || chip->snoop;
-+}
+-			sckc@fffffe50 {
++			clk32k: sckc@fffffe50 {
+ 				compatible = "atmel,at91sam9x5-sckc";
+ 				reg = <0xfffffe50 0x4>;
+-
+-				slow_osc: slow_osc {
+-					compatible = "atmel,at91sam9x5-clk-slow-osc";
+-					#clock-cells = <0>;
+-					clocks = <&slow_xtal>;
+-				};
+-
+-				slow_rc_osc: slow_rc_osc {
+-					compatible = "atmel,at91sam9x5-clk-slow-rc-osc";
+-					#clock-cells = <0>;
+-					clock-frequency = <32768>;
+-					clock-accuracy = <50000000>;
+-				};
+-
+-				clk32k: slck {
+-					compatible = "atmel,at91sam9x5-clk-slow";
+-					#clock-cells = <0>;
+-					clocks = <&slow_rc_osc>, <&slow_osc>;
+-				};
++				clocks = <&slow_xtal>;
++				#clock-cells = <0>;
+ 			};
  
- /*
-  * macros for easy use
+ 			mmc0: mmc@f0008000 {
 -- 
-2.20.1
+2.24.1
 
