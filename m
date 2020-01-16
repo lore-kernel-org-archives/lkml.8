@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2890C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2944EC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 977512471F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:30:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA1642471F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:30:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195803;
-	bh=xZ5RhA1HhqXuwpTnact15uPNMrHUpyZVOTfPrcrCdRs=;
+	s=default; t=1579195807;
+	bh=v3livdS8vM+rdbLAzBYFHtfZ/IqjRpEO2jwm4V2eyJU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yirSRzQnG86DmpEP7xI5oP0VBvEu0MAJs39/vaeARhpkgekwm6l90VxG2BMTZwmRX
-	 eqavb4PTaxk3CsczazbRefub39mnJtTW8lULh+hx2gIOktoLxl7vEnNzhcz/KX4hwL
-	 AelPqyC9t600lOpmyd64DQ4LUJxBtplNRFI/FJCs=
+	b=QT/7YwBoj11CPqabwbfW7W+vyIsZigo2D5VG0PVpTv446qRlv2WcIoFYybwygM7zj
+	 Hh8u6XGzJapRp2pJ366vvwM1kRRFdOZnDULysBO6fGVOOut8B0pIt7gcsgOTCLwlUI
+	 MnB0cD3x3N4Pj8h2bSruwc6qNG9euxQDlg9TDpM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392939AbgAPRaC (ORCPT
+        id S2392963AbgAPRaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:30:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42122 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:30:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392903AbgAPRaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:30:01 -0500
+        id S2392903AbgAPRaD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:30:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1D27246FB;
-        Thu, 16 Jan 2020 17:29:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBC9724718;
+        Thu, 16 Jan 2020 17:30:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195800;
-        bh=xZ5RhA1HhqXuwpTnact15uPNMrHUpyZVOTfPrcrCdRs=;
+        s=default; t=1579195802;
+        bh=v3livdS8vM+rdbLAzBYFHtfZ/IqjRpEO2jwm4V2eyJU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WjbyOZoVjOGle4KFWeRb99xZC88IhQ/krS7DHHTdCAvgOqQYA6MBWIpwkVH97qMAb
-         VmqRKL0S5VqA27IAOzEXyAqHSHNlyVZUU/vxTfzRrOJ8RkNuwX8kgL9l+7lxv6awOP
-         NWVY1OpfqwZe2fGAEueC0IoIhjFzd0ArcXnXllko=
+        b=hQUhy9HxB5HkhqjgWKOVNDiGZWgGtnDH0/86nuxlR67HeAi8LK+nfsE7uKKRfju4J
+         pCVv9O0fPKDojhJpcMwk5jrz2Q8wBCOa8qwN42SerC49NxZ4vsbevjOcryT8nOc8ef
+         MP/0QdhyIizO4qVD7B3TaILVMQf12C0cyLYEVZXs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
+Cc:     YueHaibing <yuehaibing@huawei.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 315/371] llc: fix sk_buff refcounting in llc_conn_state_process()
-Date:   Thu, 16 Jan 2020 12:23:07 -0500
-Message-Id: <20200116172403.18149-258-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 317/371] act_mirred: Fix mirred_init_module error handling
+Date:   Thu, 16 Jan 2020 12:23:09 -0500
+Message-Id: <20200116172403.18149-260-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -59,123 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 36453c852816f19947ca482a595dffdd2efa4965 ]
+[ Upstream commit 11c9a7d38af524217efb7a176ad322b97ac2f163 ]
 
-If llc_conn_state_process() sees that llc_conn_service() put the skb on
-a list, it will drop one fewer references to it.  This is wrong because
-the current behavior is that llc_conn_service() never consumes a
-reference to the skb.
+If tcf_register_action failed, mirred_device_notifier
+should be unregistered.
 
-The code also makes the number of skb references being dropped
-conditional on which of ind_prim and cfm_prim are nonzero, yet neither
-of these affects how many references are *acquired*.  So there is extra
-code that tries to fix this up by sometimes taking another reference.
-
-Remove the unnecessary/broken refcounting logic and instead just add an
-skb_get() before the only two places where an extra reference is
-actually consumed.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+Fixes: 3b87956ea645 ("net sched: fix race in mirred device removal")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/llc/llc_conn.c | 33 ++++++---------------------------
- 1 file changed, 6 insertions(+), 27 deletions(-)
+ net/sched/act_mirred.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/net/llc/llc_conn.c b/net/llc/llc_conn.c
-index 7340f23e16de..7fbc682aff04 100644
---- a/net/llc/llc_conn.c
-+++ b/net/llc/llc_conn.c
-@@ -64,12 +64,6 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 	struct llc_sock *llc = llc_sk(skb->sk);
- 	struct llc_conn_state_ev *ev = llc_conn_ev(skb);
+diff --git a/net/sched/act_mirred.c b/net/sched/act_mirred.c
+index 529bb064c4a4..dcfaa4f9c7c5 100644
+--- a/net/sched/act_mirred.c
++++ b/net/sched/act_mirred.c
+@@ -371,7 +371,11 @@ static int __init mirred_init_module(void)
+ 		return err;
  
--	/*
--	 * We have to hold the skb, because llc_conn_service will kfree it in
--	 * the sending path and we need to look at the skb->cb, where we encode
--	 * llc_conn_state_ev.
--	 */
--	skb_get(skb);
- 	ev->ind_prim = ev->cfm_prim = 0;
- 	/*
- 	 * Send event to state machine
-@@ -77,21 +71,12 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 	rc = llc_conn_service(skb->sk, skb);
- 	if (unlikely(rc != 0)) {
- 		printk(KERN_ERR "%s: llc_conn_service failed\n", __func__);
--		goto out_kfree_skb;
--	}
--
--	if (unlikely(!ev->ind_prim && !ev->cfm_prim)) {
--		/* indicate or confirm not required */
--		if (!skb->next)
--			goto out_kfree_skb;
- 		goto out_skb_put;
- 	}
+ 	pr_info("Mirror/redirect action on\n");
+-	return tcf_register_action(&act_mirred_ops, &mirred_net_ops);
++	err = tcf_register_action(&act_mirred_ops, &mirred_net_ops);
++	if (err)
++		unregister_netdevice_notifier(&mirred_device_notifier);
++
++	return err;
+ }
  
--	if (unlikely(ev->ind_prim && ev->cfm_prim)) /* Paranoia */
--		skb_get(skb);
--
- 	switch (ev->ind_prim) {
- 	case LLC_DATA_PRIM:
-+		skb_get(skb);
- 		llc_save_primitive(sk, skb, LLC_DATA_PRIM);
- 		if (unlikely(sock_queue_rcv_skb(sk, skb))) {
- 			/*
-@@ -108,6 +93,7 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 		 * skb->sk pointing to the newly created struct sock in
- 		 * llc_conn_handler. -acme
- 		 */
-+		skb_get(skb);
- 		skb_queue_tail(&sk->sk_receive_queue, skb);
- 		sk->sk_state_change(sk);
- 		break;
-@@ -123,7 +109,6 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 				sk->sk_state_change(sk);
- 			}
- 		}
--		kfree_skb(skb);
- 		sock_put(sk);
- 		break;
- 	case LLC_RESET_PRIM:
-@@ -132,14 +117,11 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 		 * RESET is not being notified to upper layers for now
- 		 */
- 		printk(KERN_INFO "%s: received a reset ind!\n", __func__);
--		kfree_skb(skb);
- 		break;
- 	default:
--		if (ev->ind_prim) {
-+		if (ev->ind_prim)
- 			printk(KERN_INFO "%s: received unknown %d prim!\n",
- 				__func__, ev->ind_prim);
--			kfree_skb(skb);
--		}
- 		/* No indication */
- 		break;
- 	}
-@@ -181,15 +163,12 @@ int llc_conn_state_process(struct sock *sk, struct sk_buff *skb)
- 		printk(KERN_INFO "%s: received a reset conf!\n", __func__);
- 		break;
- 	default:
--		if (ev->cfm_prim) {
-+		if (ev->cfm_prim)
- 			printk(KERN_INFO "%s: received unknown %d prim!\n",
- 					__func__, ev->cfm_prim);
--			break;
--		}
--		goto out_skb_put; /* No confirmation */
-+		/* No confirmation */
-+		break;
- 	}
--out_kfree_skb:
--	kfree_skb(skb);
- out_skb_put:
- 	kfree_skb(skb);
- 	return rc;
+ static void __exit mirred_cleanup_module(void)
 -- 
 2.20.1
 
