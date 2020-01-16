@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F5CC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 835FBC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D56324687
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B91120730
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194939;
-	bh=/2xFaNxLa7K50Z785BV0wVYEyuwasJCRGTuj3dfdc2s=;
+	s=default; t=1579194944;
+	bh=d5Dp4/iefDU1JBWw7HWrWettcgUtKFnOxwNMP9rNjHM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lJ76qJIH8PNw+3mzPjc+2zoUzg2o4zFBUejECqX9b88T34tWIzfXa1ywVzpmlPzOC
-	 TwEOjVggxk/3mzmaOq1YE10ZUzbpgRpeF7+08sDJpTs6EhVsJ0zdj/YCmFvXxyqqHw
-	 uBaYV8pPF2iBaLJykiXE5rMiqcMeXpLZl3dmLYuM=
+	b=rmRY9ef4jjv2h+15OqLFwF+g1eiXTW6A4iTyzux1IFe8aOxCwn1OkPvhRSqKNBBHj
+	 ZjxNfVGnvmxsyFm4cbqRiqfZKlxW76eTx2/gVUxwNC94GQT/BS+u/+TqgWYMoAPFkL
+	 tRCUBUl2s9pMDJVy06/3smAJD2lj+9bpXOGnslAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391029AbgAPROf (ORCPT
+        id S2390459AbgAPRPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:14:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33138 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:15:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390962AbgAPROU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:14:20 -0500
+        id S2391022AbgAPROf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:14:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D677246AF;
-        Thu, 16 Jan 2020 17:14:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECCD62469E;
+        Thu, 16 Jan 2020 17:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194859;
-        bh=/2xFaNxLa7K50Z785BV0wVYEyuwasJCRGTuj3dfdc2s=;
+        s=default; t=1579194874;
+        bh=d5Dp4/iefDU1JBWw7HWrWettcgUtKFnOxwNMP9rNjHM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T7w8pQeJmlq+dr+hcya24HDCQoaa4itAaZ1885nbHGQXIniSmfPI9+3qp6RChugo9
-         AsPIorMJA0H8734JpgmcfSkIEjz32Z7umDxNvwuiSNv2bgvFJ+fnXW0+attPC1+k3U
-         wdUQ9b6Oi2JJyeiF/LyXc0wkWrqqFdRPE1EXJjLs=
+        b=MXAe6AatTXthx/xCkM+CZKCvplCWom6eL1J91/qKJ3Qm37ICbHTfNsEzL9DMKQ6+E
+         J71jrJLdt7fP3F6R0RVsPQv6aYMwwsh34991euEGgBZGvG9EVopKmEjt8BU9/zu1uC
+         C2WK/txN9aKVcM5a2LFuoReA8RZvIkozeXsYWTHg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Christoph Hellwig <hch@lst.de>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 654/671] scsi: target: core: Fix a pr_debug() argument
-Date:   Thu, 16 Jan 2020 12:04:52 -0500
-Message-Id: <20200116170509.12787-391-sashal@kernel.org>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 665/671] powerpc/archrandom: fix arch_get_random_seed_int()
+Date:   Thu, 16 Jan 2020 12:05:03 -0500
+Message-Id: <20200116170509.12787-402-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -61,35 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-[ Upstream commit c941e0d172605731de9b4628bd4146d35cf2e7d6 ]
+[ Upstream commit b6afd1234cf93aa0d71b4be4788c47534905f0be ]
 
-Print the string for which conversion failed instead of printing the
-function name twice.
+Commit 01c9348c7620ec65
 
-Fixes: 2650d71e244f ("target: move transport ID handling to the core")
-Cc: Christoph Hellwig <hch@lst.de>
-Link: https://lore.kernel.org/r/20191107215525.64415-1-bvanassche@acm.org
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+  powerpc: Use hardware RNG for arch_get_random_seed_* not arch_get_random_*
+
+updated arch_get_random_[int|long]() to be NOPs, and moved the hardware
+RNG backing to arch_get_random_seed_[int|long]() instead. However, it
+failed to take into account that arch_get_random_int() was implemented
+in terms of arch_get_random_long(), and so we ended up with a version
+of the former that is essentially a NOP as well.
+
+Fix this by calling arch_get_random_seed_long() from
+arch_get_random_seed_int() instead.
+
+Fixes: 01c9348c7620ec65 ("powerpc: Use hardware RNG for arch_get_random_seed_* not arch_get_random_*")
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191204115015.18015-1-ardb@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/target_core_fabric_lib.c | 2 +-
+ arch/powerpc/include/asm/archrandom.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/target/target_core_fabric_lib.c b/drivers/target/target_core_fabric_lib.c
-index 71a80257a052..10fae26b44ad 100644
---- a/drivers/target/target_core_fabric_lib.c
-+++ b/drivers/target/target_core_fabric_lib.c
-@@ -131,7 +131,7 @@ static int srp_get_pr_transport_id(
- 	memset(buf + 8, 0, leading_zero_bytes);
- 	rc = hex2bin(buf + 8 + leading_zero_bytes, p, count);
- 	if (rc < 0) {
--		pr_debug("hex2bin failed for %s: %d\n", __func__, rc);
-+		pr_debug("hex2bin failed for %s: %d\n", p, rc);
- 		return rc;
- 	}
+diff --git a/arch/powerpc/include/asm/archrandom.h b/arch/powerpc/include/asm/archrandom.h
+index 9c63b596e6ce..a09595f00cab 100644
+--- a/arch/powerpc/include/asm/archrandom.h
++++ b/arch/powerpc/include/asm/archrandom.h
+@@ -28,7 +28,7 @@ static inline int arch_get_random_seed_int(unsigned int *v)
+ 	unsigned long val;
+ 	int rc;
+ 
+-	rc = arch_get_random_long(&val);
++	rc = arch_get_random_seed_long(&val);
+ 	if (rc)
+ 		*v = val;
  
 -- 
 2.20.1
