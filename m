@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49280C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 874CFC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14592246B2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53F2B246C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:18:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195095;
-	bh=gy4N+1wZV5eV3/+8RCugN+8K0/4YRGCghnyX+ih/VPg=;
+	s=default; t=1579195100;
+	bh=nmFAhrHtoLLCzhzFImZuzpAFjoAw2xKjA7eVQFApg7Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SPP9DyW6jiMsedKpgmaebPRk9gh6RC7LXWYfAQKJMyF2RLa787GVrgFWfJQ4WseBO
-	 vLeEYlKb/+Qsk3mRHJS/WiwRDecxrV5YGXa76cb7IDhrLXWISNZ6Er02kONHHSSJ0l
-	 fVOJZ9Xvi9ABcx35C0s/b7UD3B4lTKDTQwdiI9xk=
+	b=G2odxqrucMF2zmcsiePyVOWN1TDBZy9v4BQ7R0rb9cSPpxmeEHFVpKoGq4Fjc9h0v
+	 bDCUhpFF992USHLK26/iTxExQwK0Jic6QEusTKWoxgYLyl2AHSf2vX9eC5hgpa0aPg
+	 3grB/4HULhEkShIuq0AabIUgsCm6SH4hIbGt/HeQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391381AbgAPRSO (ORCPT
+        id S2391441AbgAPRST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:18:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44488 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:18:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391337AbgAPRSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:18:01 -0500
+        id S2391323AbgAPRSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:18:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F8A2246B9;
-        Thu, 16 Jan 2020 17:18:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D43F2246B1;
+        Thu, 16 Jan 2020 17:18:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195081;
-        bh=gy4N+1wZV5eV3/+8RCugN+8K0/4YRGCghnyX+ih/VPg=;
+        s=default; t=1579195087;
+        bh=nmFAhrHtoLLCzhzFImZuzpAFjoAw2xKjA7eVQFApg7Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fZ/LSUqiADGKXCZhPvGaEN85W93jhFajTHMXdRPgRQRR2+JgNyEsuyl+BXj3pKLwF
-         ClY4VXxfiYZjXlaOQhfezP29qGatK3LTQpMTi37BCBXK6nZfhy/epfiH3qmcvFU0nZ
-         FtcWcFqhoXoHGOoBvgLJ10/mgFE58Au0UxnkU8F4=
+        b=AaH0vZrlXiaROd6SXyJQGFOtKvvQLDJOJmFyUvcf2XD87mNLHnuuBcJhqmx0S3SiS
+         DTOWz6h9n2uLgoDVYuD+hk7/B08utiwrUfFmEcDxqRycpHZbunOlKE3foT4BWprv2p
+         BIuaoF3oxKo/d9MtcNNFzx/S5UPpHbEOs+6roaIA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 030/371] pinctrl: sh-pfc: sh7734: Add missing IPSR11 field
-Date:   Thu, 16 Jan 2020 12:11:38 -0500
-Message-Id: <20200116171719.16965-30-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 035/371] Input: nomadik-ske-keypad - fix a loop timeout test
+Date:   Thu, 16 Jan 2020 12:11:43 -0500
+Message-Id: <20200116171719.16965-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116171719.16965-1-sashal@kernel.org>
 References: <20200116171719.16965-1-sashal@kernel.org>
@@ -60,35 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 94482af7055e1ffa211c1135256b85590ebcac99 ]
+[ Upstream commit 4d8f727b83bcd6702c2d210330872c9122d2d360 ]
 
-The Peripheral Function Select Register 11 contains 3 reserved bits and
-15 variable-width fields, but the variable field descriptor does not
-contain the 3-bit field IP11[25:23].
+The loop exits with "timeout" set to -1 not to 0.
 
-Fixes: 856cb4bb337ee504 ("sh: Add support pinmux for SH7734")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Fixes: 1158f0f16224 ("Input: add support for Nomadik SKE keypad controller")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-sh7734.c | 2 +-
+ drivers/input/keyboard/nomadik-ske-keypad.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7734.c b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-index 3eccc9b3ca84..05ccb27f7781 100644
---- a/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-@@ -2237,7 +2237,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 		FN_LCD_DATA15_B, 0, 0, 0 }
- 	},
- 	{ PINMUX_CFG_REG_VAR("IPSR11", 0xFFFC0048, 32,
--			3, 1, 2, 2, 2, 3, 3, 1, 2, 3, 3, 1, 1, 1, 1) {
-+			3, 1, 2, 3, 2, 2, 3, 3, 1, 2, 3, 3, 1, 1, 1, 1) {
- 	    /* IP11_31_29 [3] */
- 	    0, 0, 0, 0, 0, 0, 0, 0,
- 	    /* IP11_28 [1] */
+diff --git a/drivers/input/keyboard/nomadik-ske-keypad.c b/drivers/input/keyboard/nomadik-ske-keypad.c
+index 8567ee47761e..ae3b04557074 100644
+--- a/drivers/input/keyboard/nomadik-ske-keypad.c
++++ b/drivers/input/keyboard/nomadik-ske-keypad.c
+@@ -100,7 +100,7 @@ static int __init ske_keypad_chip_init(struct ske_keypad *keypad)
+ 	while ((readl(keypad->reg_base + SKE_RIS) != 0x00000000) && timeout--)
+ 		cpu_relax();
+ 
+-	if (!timeout)
++	if (timeout == -1)
+ 		return -EINVAL;
+ 
+ 	/*
 -- 
 2.20.1
 
