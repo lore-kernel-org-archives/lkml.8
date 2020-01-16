@@ -2,158 +2,103 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4AC8C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F63FC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 745DE20748
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:39:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217993;
-	bh=/rnnCLUtsDSujem08bDuUV6hvzEqVGJfSuKukWLi4i0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v/9aatt0jCZfhy3yWltTXwt3onw65mCXNV97BUgXlb0Noz4ONKnjsOPZEdUTgOdrH
-	 RyP30rImzXMTqigTzVAyF4pc3ihoOdp2W41CkVgZ7826aL7iNeoOPAQU/EsqQrGL7B
-	 HmmjfEoaGq7sLI35F1yXtrvNeQW6AmS1X7IWf8BI=
+	by mail.kernel.org (Postfix) with ESMTP id 725192072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:39:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="YPQzpgi+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388188AbgAPXjw (ORCPT
+        id S2391585AbgAPXj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:39:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59924 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:39:56 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:36242 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389646AbgAPX1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:27:48 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S2391259AbgAPXjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:39:53 -0500
+Received: from zn.tnic (p200300EC2F0B23005181490C10C27842.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:2300:5181:490c:10c2:7842])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD1B0206D9;
-        Thu, 16 Jan 2020 23:27:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217267;
-        bh=/rnnCLUtsDSujem08bDuUV6hvzEqVGJfSuKukWLi4i0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zGjfxbpq7XAAGOtTfMHlJrQhprF7xD1urt0/KVuB1U9wVxVsqIRRFx4Sw0LmEdez7
-         l9DKOYxuHhOMn36XimbDrpeQH6XuISNZSGtsGhzAO0xcB8N9/hSxr2ZD/kaErzAyEs
-         wZEmsSb38ch5aPBJzxy2SAhtQVddmmMQAO6G+o7k=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.19 13/84] iwlwifi: pcie: fix memory leaks in iwl_pcie_ctxt_info_gen3_init
-Date:   Fri, 17 Jan 2020 00:17:47 +0100
-Message-Id: <20200116231715.177276544@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
-References: <20200116231713.087649517@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 604831EC0391;
+        Fri, 17 Jan 2020 00:39:51 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1579217991;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=XdVmCwBwt//oBCkhqjb8tTmVc8IASboW33NxVb/IAfY=;
+        b=YPQzpgi+jN4kZUdorP3ZJjH+er8RY33Mgz3mEO1/YW2ZWPSDNgpTJlvsWjrCMAitTl9XT/
+        S0Sq0petU47LCGnEwBKNo3nt10UVJmhSlpFpqCG/VG6kxtes4xbGlY6i3y5+6I8hMtx03k
+        7U+lqdV/g+LomdBjPT+bN37wjTKpVAY=
+Date:   Fri, 17 Jan 2020 00:39:39 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Shiping Ji <shiping.linux@gmail.com>
+Cc:     James Morse <james.morse@arm.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        sashal@kernel.org, hangl@microsoft.com,
+        Lei Wang <lewan@microsoft.com>, ruizhao@microsoft.com,
+        shji@microsoft.com, Scott Branden <scott.branden@broadcom.com>,
+        Yuqing Shen <yuqing.shen@broadcom.com>, ray.jui@broadcom.com,
+        wangglei@gmail.com
+Subject: Re: [PATCH v9 1/2] dt-bindings: edac: arm-dmc520.txt
+Message-ID: <20200116233939.GI27148@zn.tnic>
+References: <4fbf026a-4878-cd65-55f7-7d992782b331@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <4fbf026a-4878-cd65-55f7-7d992782b331@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+On Wed, Jan 15, 2020 at 06:32:27AM -0800, Shiping Ji wrote:
+> This is the device tree bindings for new EDAC driver dmc520_edac.c.
+> 
+> Signed-off-by: Shiping Ji <shiping.linux@gmail.com>
+> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
+> Reviewed-by: James Morse <james.morse@arm.com>
 
-commit 0f4f199443faca715523b0659aa536251d8b978f upstream.
+So for this patch, v2 had Rui Zhao as an author:
 
-In iwl_pcie_ctxt_info_gen3_init there are cases that the allocated dma
-memory is leaked in case of error.
+https://lkml.kernel.org/r/BN7PR08MB5572B3388B2D7DC8F6C7F285AE4C0@BN7PR08MB5572.namprd08.prod.outlook.com
 
-DMA memories prph_scratch, prph_info, and ctxt_info_gen3 are allocated
-and initialized to be later assigned to trans_pcie. But in any error case
-before such assignment the allocated memories should be released.
+v3 got Lei as an author:
 
-First of such error cases happens when iwl_pcie_init_fw_sec fails.
-Current implementation correctly releases prph_scratch. But in two
-sunsequent error cases where dma_alloc_coherent may fail, such
-releases are missing.
+https://lkml.kernel.org/r/CY1PR0401MB1244062C1738B09D6100F202860A0@CY1PR0401MB1244.namprd04.prod.outlook.com
 
-This commit adds release for prph_scratch when allocation for
-prph_info fails, and adds releases for prph_scratch and prph_info when
-allocation for ctxt_info_gen3 fails.
+and now it is you.
 
-Fixes: 2ee824026288 ("iwlwifi: pcie: support context information for 22560 devices")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info-gen3.c |   36 ++++++++++-----
- 1 file changed, 25 insertions(+), 11 deletions(-)
+So when you send next time, think about who's going to be the author.
 
---- a/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info-gen3.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info-gen3.c
-@@ -102,13 +102,9 @@ int iwl_pcie_ctxt_info_gen3_init(struct
- 
- 	/* allocate ucode sections in dram and set addresses */
- 	ret = iwl_pcie_init_fw_sec(trans, fw, &prph_scratch->dram);
--	if (ret) {
--		dma_free_coherent(trans->dev,
--				  sizeof(*prph_scratch),
--				  prph_scratch,
--				  trans_pcie->prph_scratch_dma_addr);
--		return ret;
--	}
-+	if (ret)
-+		goto err_free_prph_scratch;
-+
- 
- 	/* Allocate prph information
- 	 * currently we don't assign to the prph info anything, but it would get
-@@ -116,16 +112,20 @@ int iwl_pcie_ctxt_info_gen3_init(struct
- 	prph_info = dma_alloc_coherent(trans->dev, sizeof(*prph_info),
- 				       &trans_pcie->prph_info_dma_addr,
- 				       GFP_KERNEL);
--	if (!prph_info)
--		return -ENOMEM;
-+	if (!prph_info) {
-+		ret = -ENOMEM;
-+		goto err_free_prph_scratch;
-+	}
- 
- 	/* Allocate context info */
- 	ctxt_info_gen3 = dma_alloc_coherent(trans->dev,
- 					    sizeof(*ctxt_info_gen3),
- 					    &trans_pcie->ctxt_info_dma_addr,
- 					    GFP_KERNEL);
--	if (!ctxt_info_gen3)
--		return -ENOMEM;
-+	if (!ctxt_info_gen3) {
-+		ret = -ENOMEM;
-+		goto err_free_prph_info;
-+	}
- 
- 	ctxt_info_gen3->prph_info_base_addr =
- 		cpu_to_le64(trans_pcie->prph_info_dma_addr);
-@@ -176,6 +176,20 @@ int iwl_pcie_ctxt_info_gen3_init(struct
- 	iwl_set_bit(trans, CSR_GP_CNTRL, CSR_AUTO_FUNC_INIT);
- 
- 	return 0;
-+
-+err_free_prph_info:
-+	dma_free_coherent(trans->dev,
-+			  sizeof(*prph_info),
-+			prph_info,
-+			trans_pcie->prph_info_dma_addr);
-+
-+err_free_prph_scratch:
-+	dma_free_coherent(trans->dev,
-+			  sizeof(*prph_scratch),
-+			prph_scratch,
-+			trans_pcie->prph_scratch_dma_addr);
-+	return ret;
-+
- }
- 
- void iwl_pcie_ctxt_info_gen3_free(struct iwl_trans *trans)
+> +     line numbers. The valid interrupt names are the followings:
 
+WARNING: 'followings' may be misspelled - perhaps 'following'?
+#51: FILE: Documentation/devicetree/bindings/edac/arm-dmc520.txt:10:
++     line numbers. The valid interrupt names are the followings:
 
+Please integrate scripts/checkpatch.pl into your patch creation
+workflow. Some of the warnings/errors *actually* make sense.
+
+Also, this patch throws this other checkpatch warning:
+
+WARNING: DT bindings should be in DT schema format. See: Documentation/devicetree/writing-schema.rst
+
+but since Rob reviewed it, I'm going to assume checkpatch is wrong here.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
