@@ -7,66 +7,66 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B04C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B5EC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 098A3217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C4C320684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:24:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RKc8ugzO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kZSr6tlx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436613AbgAPSX6 (ORCPT
+        id S2392552AbgAPSYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:23:58 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37685 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404275AbgAPSXu (ORCPT
+        Thu, 16 Jan 2020 13:24:04 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44042 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436590AbgAPSXo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 13:23:50 -0500
-Received: by mail-wm1-f68.google.com with SMTP id f129so4860623wmf.2
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 10:23:48 -0800 (PST)
+        Thu, 16 Jan 2020 13:23:44 -0500
+Received: by mail-wr1-f67.google.com with SMTP id q10so20177383wrm.11
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 10:23:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=pVwlqM68NaLq0oW83NYHHXkFWXShBvMo0oSKnK8wMuo=;
-        b=RKc8ugzOjzsjjVfFnB1IDrwwop0QPgA1IVze1YUH5uR4ScFD634GD24lcW0+dnMNHj
-         L1b6kQFNZQ3CQGjv0YZVklOZLjnNZzSqURkcJOSGjHKauYCp3ytva5IMyBYzMhLCmnBY
-         KgvDqgH8x2hWCvj+00eLhQmy/ulUwLU7JHlm917qV6FcwX92/7myhl98nbQdTXjCH09r
-         qTFGYJFqVDV9B8f4rjTrXYybFFat/rSIgQcUuAinYvvAY5gaeb5B2mhhJlfLlqkzdl7m
-         orzscL0pv9Xs6pkgsP2wBhuTj6zm6CVK4rTgrUFBS1m+PwVU3WEJMAyx2BZeexZNXR5J
-         JjcA==
+        bh=jVFQAPxxxKh7BrL4PuCJstmTo/0eDvZwSXWF/c8o6TQ=;
+        b=kZSr6tlxSDSMnhpEyb/7zL0zkHF/eQHJsSEZIjt4kMNTn7yeMUkfCQpBlCmhqiVs0L
+         kaQsclQziov1CuI4PtdACm3Stz1bhl1yRQ9gXYmGBaTuV3kAw3+mqueisvUv5m6jYlRM
+         TOznzUPgDAw/04lwlnAJ8Un+fydTco+kDdceRwDBWYW/kfHaJzDRyHAaRE8hPZUg/aWv
+         Abj21FQ1ZpKllu317NhyxkQ124z8T0IygtlzAfjl8QEhVndCYngUlMc06TDR38ePDr1y
+         rg9o7NOx8WEKf247RbRlmP/oskQ5yjD8QEy82KwbWIDJldVzkKQ1wPXiZL477W9kNEdh
+         TLYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=pVwlqM68NaLq0oW83NYHHXkFWXShBvMo0oSKnK8wMuo=;
-        b=emrhRe9dZ0ub0WeYmkbmPI6sEuYf03XF+vtGwRRjrh2hQHTw1w2dhHYfX4q80TM9yU
-         cmdzvIEdl2w6micmlgysLmUQJv+GsfHmQE9Fcv6zUjlQol9UnGtS6Xg5P9Tjr+9MIYpq
-         aLkx6uwKPu8KA/FMuvBr6U9BiBHHcCZrP3msdQFaTKmJLE9CdK6sgNMq+UVznSKvI7ja
-         2YxLexgoq8NHAz/kxfpXyjyADjFOT9czpUneVeiYyMY0oh8aWD3d8sBuZk2ccollRJzs
-         GyaGyUxRRNei9cLk1Qm2U/H1+erZS1frmBPTPFh77c8Z6CWB5+JE+LXypCWlIsElsMpu
-         szWQ==
-X-Gm-Message-State: APjAAAWezmN2naNeCl+AfoBq0bjezcWBkJfpBj/PVTTYqZoyAfW82lgs
-        Hd4yStR/0552OlJK5mSKteypSw==
-X-Google-Smtp-Source: APXvYqzgmn1aYDt825s41tAgYAKaz3HwAeFgJJc9DZ9GCouYy0HrqiVB9wuMBSlJc58M07r/x1p+gw==
-X-Received: by 2002:a1c:dc85:: with SMTP id t127mr399860wmg.16.1579199027961;
-        Thu, 16 Jan 2020 10:23:47 -0800 (PST)
+        bh=jVFQAPxxxKh7BrL4PuCJstmTo/0eDvZwSXWF/c8o6TQ=;
+        b=nU7nJGzMLrA0PLYJgo2MbdADvCZHrBIy8OFMzkZnYVW+3Ij9a0poybNICb4hRd6yi/
+         EKJ/q+BDdpYiWYPL8UDTMD964BFSS3hbQmB1gKMTaOP5d8FKrS7sr6qv3uUM8ZCfuXrA
+         X/x44+kRZBvEmwHdXlhWA6Tarme1Vlscqw9btP4MNZRyNhIeIMbX24UWh8eiDwBNVo3v
+         RjrABLqbf3XGl/7jGKmIBbyTfAsQMsfCsLR04TIoCyBLDQvgxsnZP9wcKCOdStdLk4RM
+         z++6S8T5nLj9mMKDN1ajMnr++X/Q9lWqIqF7Vhq2q+Q00J+uALoOKNOVtOL5SQ7gfYlD
+         PyXw==
+X-Gm-Message-State: APjAAAUiosBPSWgqZyOv1hdk3yyjT4cbBZkOv7KxX4/8aTuifAm6dMz4
+        LdbVT7ac1F1uuAnuq8aZzzXTRg==
+X-Google-Smtp-Source: APXvYqxYBVzqX3/EddcHNcmwFI/IL+L51NjyXmq8HQM5xvfKCgh/wFpBEMU1Qnog3sNzqLpphKL6Lw==
+X-Received: by 2002:adf:ef0b:: with SMTP id e11mr4719536wro.128.1579199022086;
+        Thu, 16 Jan 2020 10:23:42 -0800 (PST)
 Received: from mai.imgcgcw.net ([2a01:e34:ed2f:f020:6c63:1b50:1156:7f0f])
-        by smtp.gmail.com with ESMTPSA id b137sm1087920wme.26.2020.01.16.10.23.46
+        by smtp.gmail.com with ESMTPSA id b137sm1087920wme.26.2020.01.16.10.23.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 10:23:47 -0800 (PST)
+        Thu, 16 Jan 2020 10:23:41 -0800 (PST)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     tglx@linutronix.de
 Cc:     linux-kernel@vger.kernel.org,
-        Andrea Parri <parri.andrea@gmail.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-hyperv@vger.kernel.org (open list:Hyper-V CORE AND DRIVERS)
-Subject: [PATCH 17/17] clocksource/drivers/hyper-v: Set TSC clocksource as default w/ InvariantTSC
-Date:   Thu, 16 Jan 2020 19:23:04 +0100
-Message-Id: <20200116182304.4926-17-daniel.lezcano@linaro.org>
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/SAMSUNG EXYNOS
+        ARM ARCHITECTURES),
+        linux-samsung-soc@vger.kernel.org (moderated list:ARM/SAMSUNG EXYNOS
+        ARM ARCHITECTURES)
+Subject: [PATCH 14/17] clocksource/drivers/exynos_mct: Rename Exynos to lowercase
+Date:   Thu, 16 Jan 2020 19:23:01 +0100
+Message-Id: <20200116182304.4926-14-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200116182304.4926-1-daniel.lezcano@linaro.org>
 References: <74bf7170-401f-2962-ea5a-1e21431a9349@linaro.org>
@@ -76,61 +76,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Parri <parri.andrea@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-Change the Hyper-V clocksource ratings to 250, below the TSC clocksource
-rating of 300.  In configurations where Hyper-V offers an InvariantTSC,
-the TSC is not marked "unstable", so the TSC clocksource is available
-and preferred.  With the higher rating, it will be the default.  On
-older hardware and Hyper-V versions, the TSC is marked "unstable", so no
-TSC clocksource is created and the selected Hyper-V clocksource will be
-the default.
+Fix up inconsistent usage of upper and lowercase letters in "Exynos"
+name.
 
-Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+"EXYNOS" is not an abbreviation but a regular trademarked name.
+Therefore it should be written with lowercase letters starting with
+capital letter.
+
+The lowercase "Exynos" name is promoted by its manufacturer Samsung
+Electronics Co., Ltd., in advertisement materials and on website.
+
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200109160650.16150-3-parri.andrea@gmail.com
+Link: https://lore.kernel.org/r/20200104152107.11407-12-krzk@kernel.org
 ---
- drivers/clocksource/hyperv_timer.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/clocksource/exynos_mct.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-index 42748adccc98..9d808d595ca8 100644
---- a/drivers/clocksource/hyperv_timer.c
-+++ b/drivers/clocksource/hyperv_timer.c
-@@ -302,6 +302,14 @@ EXPORT_SYMBOL_GPL(hv_stimer_global_cleanup);
-  * the other that uses the TSC reference page feature as defined in the
-  * TLFS.  The MSR version is for compatibility with old versions of
-  * Hyper-V and 32-bit x86.  The TSC reference page version is preferred.
-+ *
-+ * The Hyper-V clocksource ratings of 250 are chosen to be below the
-+ * TSC clocksource rating of 300.  In configurations where Hyper-V offers
-+ * an InvariantTSC, the TSC is not marked "unstable", so the TSC clocksource
-+ * is available and preferred.  With the higher rating, it will be the
-+ * default.  On older hardware and Hyper-V versions, the TSC is marked
-+ * "unstable", so no TSC clocksource is created and the selected Hyper-V
-+ * clocksource will be the default.
-  */
+diff --git a/drivers/clocksource/exynos_mct.c b/drivers/clocksource/exynos_mct.c
+index 74cb299f5089..a267fe31ef13 100644
+--- a/drivers/clocksource/exynos_mct.c
++++ b/drivers/clocksource/exynos_mct.c
+@@ -4,7 +4,7 @@
+  * Copyright (c) 2011 Samsung Electronics Co., Ltd.
+  *		http://www.samsung.com
+  *
+- * EXYNOS4 MCT(Multi-Core Timer) support
++ * Exynos4 MCT(Multi-Core Timer) support
+ */
  
- u64 (*hv_read_reference_counter)(void);
-@@ -363,7 +371,7 @@ static void resume_hv_clock_tsc(struct clocksource *arg)
- 
- static struct clocksource hyperv_cs_tsc = {
- 	.name	= "hyperv_clocksource_tsc_page",
--	.rating	= 400,
-+	.rating	= 250,
- 	.read	= read_hv_clock_tsc_cs,
- 	.mask	= CLOCKSOURCE_MASK(64),
- 	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
-@@ -395,7 +403,7 @@ static u64 read_hv_sched_clock_msr(void)
- 
- static struct clocksource hyperv_cs_msr = {
- 	.name	= "hyperv_clocksource_msr",
--	.rating	= 400,
-+	.rating	= 250,
- 	.read	= read_hv_clock_msr_cs,
- 	.mask	= CLOCKSOURCE_MASK(64),
- 	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
+ #include <linux/interrupt.h>
 -- 
 2.17.1
 
