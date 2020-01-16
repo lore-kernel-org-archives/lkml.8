@@ -7,166 +7,181 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2327C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4506C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8E482075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 919F7207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:42:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="kykSK39w"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cfV4eWn5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgAPOmo (ORCPT
+        id S1726923AbgAPOmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 09:42:44 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:34828 "EHLO
+        Thu, 16 Jan 2020 09:42:47 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:34843 "EHLO
         mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726566AbgAPOmn (ORCPT
+        with ESMTP id S1726885AbgAPOmo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 09:42:43 -0500
+        Thu, 16 Jan 2020 09:42:44 -0500
 Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200116144242euoutp01ec7beaa353b3a73196c0b81b63ca510d~qZRV7tqxo0131101311euoutp01I
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 14:42:42 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200116144242euoutp01ec7beaa353b3a73196c0b81b63ca510d~qZRV7tqxo0131101311euoutp01I
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200116144243euoutp01376af56c6b26f94a94022d6044df29b2~qZRXJxJu00097800978euoutp01c
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 14:42:43 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200116144243euoutp01376af56c6b26f94a94022d6044df29b2~qZRXJxJu00097800978euoutp01c
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579185762;
-        bh=CXr3GrbWvOph9Y8HeGsYAdfWBQr4CaRWt2qdsDKZRyE=;
+        s=mail20170921; t=1579185763;
+        bh=Lium7TTZwjTEPgh49ryz56emZXTsJeqKBjeesI4GlDs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kykSK39wDCXtzSpJpUgzg1i+mkumA4/eDfKje60DOH6eWVAg0A0qSpbnLF3RRoXWd
-         s/Qu8AeNzD5AgHSUwg9db2hnjy5kCCvB9EG4NPVlthdtGxfkfAdolgJcYQmm+NmqGA
-         jYErHK2ljdb+6hWMMj2qMnFg7Cb0QNgplzwIoAJ8=
+        b=cfV4eWn5jVqqt/+Sd+GHNeeWVJw7BSg+dJfIXFNhPyW1QXBZWY1zPv96PJxl+4JD/
+         DwxvfN6Nu6Fsqv2wM+B8ynXpxe602kBOXZ+BQjuEtykT74pAul+WhwnO/qwTuB48X9
+         838aq6cgNnfPlEKdMAnK9CwwwxK8d/zzmWIVSFfc=
 Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
         eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200116144242eucas1p1d3567a2def247298ca22477d7914468a~qZRVtb-Q41363913639eucas1p1T;
-        Thu, 16 Jan 2020 14:42:42 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id F6.F2.60679.166702E5; Thu, 16
-        Jan 2020 14:42:41 +0000 (GMT)
+        20200116144243eucas1p1c137e737a96f07880a7c80a3c09ff20a~qZRW7VUje0497404974eucas1p1E;
+        Thu, 16 Jan 2020 14:42:43 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 68.F2.60679.366702E5; Thu, 16
+        Jan 2020 14:42:43 +0000 (GMT)
 Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
         eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200116144241eucas1p18dcf099873015e955d71d90712bbe9e0~qZRVZ6AHk0497304973eucas1p1G;
-        Thu, 16 Jan 2020 14:42:41 +0000 (GMT)
+        20200116144242eucas1p1b66d8ca0d111f140c48b80c5064ca4ff~qZRWhbFD40497404974eucas1p1D;
+        Thu, 16 Jan 2020 14:42:42 +0000 (GMT)
 Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
         eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200116144241eusmtrp137959cff65a2af54c977c33027387ca1~qZRVZIe-m0584505845eusmtrp1U;
-        Thu, 16 Jan 2020 14:42:41 +0000 (GMT)
-X-AuditID: cbfec7f4-0e5ff7000001ed07-40-5e207661c6d3
+        20200116144242eusmtrp13d1f7f04c02b7845a9b11ee6195b4f44~qZRWgrfuS0584505845eusmtrp1Z;
+        Thu, 16 Jan 2020 14:42:42 +0000 (GMT)
+X-AuditID: cbfec7f4-0e5ff7000001ed07-46-5e20766382e1
 Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id A9.E4.07950.166702E5; Thu, 16
-        Jan 2020 14:42:41 +0000 (GMT)
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 8A.E4.07950.266702E5; Thu, 16
+        Jan 2020 14:42:42 +0000 (GMT)
 Received: from AMDC3555.digital.local (unknown [106.120.51.67]) by
         eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200116144241eusmtip2b3eb3262f81e594c643ca8124a5ed374~qZRU1_EwE2382523825eusmtip2Y;
-        Thu, 16 Jan 2020 14:42:41 +0000 (GMT)
+        20200116144242eusmtip2bc90f6c9b952b9436eed055b20fd4699~qZRV4a8Ie2554125541eusmtip2e;
+        Thu, 16 Jan 2020 14:42:42 +0000 (GMT)
 From:   =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@samsung.com>
 To:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-samsung-soc@vger.kernel.org
 Cc:     =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@samsung.com>,
         georgi.djakov@linaro.org, cw00.choi@samsung.com,
         b.zolnierkie@samsung.com, m.szyprowski@samsung.com, krzk@kernel.org
-Subject: [PATCH v4 1/3] interconnect: Export of_icc_get_from_provider()
-Date:   Thu, 16 Jan 2020 15:42:00 +0100
-Message-Id: <20200116144202.12116-2-a.swigon@samsung.com>
+Subject: [PATCH v4 3/3] interconnect: Allow inter-provider pairs to be
+ configured
+Date:   Thu, 16 Jan 2020 15:42:02 +0100
+Message-Id: <20200116144202.12116-4-a.swigon@samsung.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200116144202.12116-1-a.swigon@samsung.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMKsWRmVeSWpSXmKPExsWy7djPc7qJZQpxBmd3WFvcn9fKaLFxxnpW
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLKsWRmVeSWpSXmKPExsWy7djP87rJZQpxBh/ui1jcn9fKaLFxxnpW
         i+tfnrNaTN+7ic3i/PkN7BaXd81hs/jce4TRYsb5fUwWa4/cZXfg9Ni0qpPN4861PWwefVtW
-        MXp83iQXwBLFZZOSmpNZllqkb5fAlXFr0Rf2gq0CFauWHGZvYGzi62Lk5JAQMJHon9vO3MXI
-        xSEksIJRovfmARYI5wujxPYNF6Ccz4wSL3vvssO0PNr4DiqxnFHiw/51jHAtd09NZAapYhNw
-        lJg09QFYh4hAvMTHbf/AOpgFdjJKHPn7hwkkISzgLvHsDMRYFgFVif0fJrOA2LwClhI/T11k
-        glgnL7F6wwGgoRwcnAJWEp8fq0KUCEqcnPkErJwZqKR562ywJyQE1rFLnNvTwwbR6yLx8uVV
-        KFtY4tXxLVAvyEicntzDAmEXSzzdeZ8VormBUWLTsiPMEAlriTvnfrGBLGYW0JRYv0sfIuwo
-        8fTETbCwhACfxI23ghA38ElM2jadGSLMK9HRJgRhKknsmgkNagmJptXXoGZ7SMz/vZd9AqPi
-        LCTPzELyzCyEtQsYmVcxiqeWFuempxYb5aWW6xUn5haX5qXrJefnbmIEJp3T/45/2cG460/S
-        IUYBDkYlHt4ZQQpxQqyJZcWVuYcYJTiYlUR4T86QjRPiTUmsrEotyo8vKs1JLT7EKM3BoiTO
-        a7zoZayQQHpiSWp2ampBahFMlomDU6qBcfpKMcaT93ql0kTPt/+54F3QY5LpfOexg9HhREYL
-        6w6HM99d1gpfMeP/tpxj9+sjlwu6cr7X5C3pFQwuyHjawv5x0+Rvoou//g5xMcjWFp1lb9DC
-        kmewd9O+B9LslyZMjru/6OSU1NiZfPcDpB9cEsoNvvy+6bBw4/ud0/qYI+eequD/VHYlQYml
-        OCPRUIu5qDgRANcwnb02AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBIsWRmVeSWpSXmKPExsVy+t/xe7qJZQpxBmduqlrcn9fKaLFxxnpW
+        MXp83iQXwBLFZZOSmpNZllqkb5fAlTHl4W7mgkMiFQ+mLWZqYDwp0MXIwSEhYCKxbKpEFyMn
+        h5DACkaJ5jv5XYxcQPYXRom9e2YyQTifGSUmLuxmhmmYe8QcIr6cUWLX6rNMcB0X729lBBnF
+        JuAoMWnqA3YQW0QgXuLjtn8sIEXMAjsZJY78/cMEMklYIFii9YIYSA2LgKrEnsVHwHp5BSwl
+        dk1vAuuVEJCXWL3hANhiTgEric+PVSFKBCVOznzCAmIzA5U0b53NDDJeQmAdu8S3hmagBDuQ
+        4yKxPgJiirDEq+NboCbKSJye3MMCYRdLPN15nxWitYFRYtOyI8wQCWuJO+d+sYGsZRbQlFi/
+        Sx8i7Cixb+t6Fkgw8EnceCsIcQGfxKRt06GhwyvR0SYEYSpJ7JrJB9EoIdG0+hrUbA+J9wc7
+        2SYwKs5C8sosJK/MQli7gJF5FaN4amlxbnpqsVFearlecWJucWleul5yfu4mRmCiOf3v+Jcd
+        jLv+JB1iFOBgVOLhnRGkECfEmlhWXJl7iFGCg1lJhPfkDNk4Id6UxMqq1KL8+KLSnNTiQ4zS
+        HCxK4rzGi17GCgmkJ5akZqemFqQWwWSZODilGhhlHeNFLKotv9T9XMIYcSerPsp8vrCc172n
+        6z799lR+0dvPpuzxb3Py4xWOs6SEdsXddP9016vCXMLl49ycA+enrQt8Gv1xWvyFcGNT7d9M
+        3u8/9JvuzDjcO6eyQUnLY88bx4lb5Y9su8t75em1Uy++zkr2fn2a++v9B4eL5l/J8alW+X8x
+        ZrGlEktxRqKhFnNRcSIA+8imlzADAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOIsWRmVeSWpSXmKPExsVy+t/xe7pJZQpxBt9/G1vcn9fKaLFxxnpW
         i+tfnrNaTN+7ic3i/PkN7BaXd81hs/jce4TRYsb5fUwWa4/cZXfg9Ni0qpPN4861PWwefVtW
         MXp83iQXwBKlZ1OUX1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwea2VkqqRvZ5OSmpNZllqk
-        b5egl3Fr0Rf2gq0CFauWHGZvYGzi62Lk5JAQMJF4tPEdSxcjF4eQwFJGiYVHzrFDJCQkPq6/
-        wQphC0v8udbFBlH0iVHix6/HTCAJNgFHiUlTH4A1iAgkStx69JgZpIhZYD+jxMs7bWwgCWEB
-        d4lnZ+6CFbEIqErs/zCZBcTmFbCU+HnqIhPEBnmJ1RsOADVzcHAKWEl8fqwKEhYCKrm9sZsV
-        olxQ4uTMJywgJcwC6hLr5wmBhJmBOpu3zmaewCg4C0nVLISqWUiqFjAyr2IUSS0tzk3PLTbS
-        K07MLS7NS9dLzs/dxAiMpW3Hfm7Zwdj1LvgQowAHoxIP74wghTgh1sSy4srcQ4wSHMxKIrwn
-        Z8jGCfGmJFZWpRblxxeV5qQWH2I0BfpsIrOUaHI+MM7zSuINTQ3NLSwNzY3Njc0slMR5OwQO
-        xggJpCeWpGanphakFsH0MXFwSjUwutcavy241yqYpr/2WaTcpQYd9rwLwjd/ZW5337bDcd77
-        4yd3b0u/dXKqwQL9OXPOLha7ImvBwixsmnrANVV+ab2J6+v6gIbcgyqRCzsPzO54ZVv++mRM
-        CMvHOn6X8LqC/tRZD1ek90k+eNxhtEMg5MqxwyyS649YJCWsvuLIUn74U7SupZqyEktxRqKh
-        FnNRcSIAv2xK1bsCAAA=
-X-CMS-MailID: 20200116144241eucas1p18dcf099873015e955d71d90712bbe9e0
+        b5eglzHl4W7mgkMiFQ+mLWZqYDwp0MXIwSEhYCIx94h5FyMXh5DAUkaJySv3s3UxcgLFJSQ+
+        rr/BCmELS/y51sUGUfSJUeL9/vNgCTYBR4lJUx+wg9giAokStx49ZgYpYhbYzyjx8k4b2CRh
+        gUCJzTsPgtksAqoSexYfYQSxeQUsJXZNb2KH2CAvsXrDAWaQizgFrCQ+P1YFCQsBldze2M0K
+        US4ocXLmExaQEmYBdYn184RAwsxAnc1bZzNPYBSchaRqFkLVLCRVCxiZVzGKpJYW56bnFhvp
+        FSfmFpfmpesl5+duYgRG0rZjP7fsYOx6F3yIUYCDUYmHd0aQQpwQa2JZcWXuIUYJDmYlEd6T
+        M2TjhHhTEiurUovy44tKc1KLDzGaAn02kVlKNDkfGOV5JfGGpobmFpaG5sbmxmYWSuK8HQIH
+        Y4QE0hNLUrNTUwtSi2D6mDg4pRoYI3d2/E7Ya91760jclcqwSfxrvNYVpYoKZEXmR98tLU/U
+        /nTSVneBjdyMxbnMOVqx1ybdsPUuiW+NvNY047e8qK935aQH8x+bFB+R51Z+/n3vUZek6QZt
+        nwR2PzyaoHX+ZET+/TOhGnY7bq7cuzeq6ATPPK3JK6oinmzKvcTR3r6zcs1eJ6UVSizFGYmG
+        WsxFxYkALfUZGboCAAA=
+X-CMS-MailID: 20200116144242eucas1p1b66d8ca0d111f140c48b80c5064ca4ff
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200116144241eucas1p18dcf099873015e955d71d90712bbe9e0
+X-RootMTR: 20200116144242eucas1p1b66d8ca0d111f140c48b80c5064ca4ff
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20200116144241eucas1p18dcf099873015e955d71d90712bbe9e0
+X-CMS-RootMailID: 20200116144242eucas1p1b66d8ca0d111f140c48b80c5064ca4ff
 References: <20200116144202.12116-1-a.swigon@samsung.com>
-        <CGME20200116144241eucas1p18dcf099873015e955d71d90712bbe9e0@eucas1p1.samsung.com>
+        <CGME20200116144242eucas1p1b66d8ca0d111f140c48b80c5064ca4ff@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch makes the above function public (for use in exynos-bus devfreq
-driver).
+This patch adds support for a new boolean 'inter_set' field in struct
+icc_provider. Setting it to 'true' enables calling '->set' for
+inter-provider node pairs. All existing users of the interconnect
+framework allocate this structure with kzalloc, and are therefore
+unaffected by this change.
+
+This makes it easier for hierarchies like exynos-bus, where every bus
+is probed separately and registers a separate interconnect provider, to
+model constraints between buses (or between buses and DMC, handled by
+two separate drivers in case of Exynos5422).
 
 Signed-off-by: Artur Świgoń <a.swigon@samsung.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 ---
- drivers/interconnect/core.c           | 3 ++-
- include/linux/interconnect-provider.h | 6 ++++++
- 2 files changed, 8 insertions(+), 1 deletion(-)
+ drivers/interconnect/core.c           | 11 +++++------
+ include/linux/interconnect-provider.h |  2 ++
+ 2 files changed, 7 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-index f277e467156f..0be1764d3528 100644
+index 5ea270af5ff4..caa9e35f06a3 100644
 --- a/drivers/interconnect/core.c
 +++ b/drivers/interconnect/core.c
-@@ -330,7 +330,7 @@ EXPORT_SYMBOL_GPL(of_icc_xlate_onecell);
-  * Returns a valid pointer to struct icc_node on success or ERR_PTR()
-  * on failure.
-  */
--static struct icc_node *of_icc_get_from_provider(struct of_phandle_args *spec)
-+struct icc_node *of_icc_get_from_provider(struct of_phandle_args *spec)
+@@ -259,23 +259,22 @@ static int aggregate_requests(struct icc_node *node)
+ static int apply_constraints(struct icc_path *path)
  {
- 	struct icc_node *node = ERR_PTR(-EPROBE_DEFER);
- 	struct icc_provider *provider;
-@@ -349,6 +349,7 @@ static struct icc_node *of_icc_get_from_provider(struct of_phandle_args *spec)
+ 	struct icc_node *next, *prev = NULL;
++	struct icc_provider *p;
+ 	int ret = -EINVAL;
+ 	int i;
  
- 	return node;
- }
-+EXPORT_SYMBOL_GPL(of_icc_get_from_provider);
+ 	for (i = 0; i < path->num_nodes; i++) {
+ 		next = path->reqs[i].node;
++		p = next->provider;
  
- /**
-  * of_icc_get() - get a path handle from a DT node based on name
+-		/*
+-		 * Both endpoints should be valid master-slave pairs of the
+-		 * same interconnect provider that will be configured.
+-		 */
+-		if (!prev || next->provider != prev->provider) {
++		/* both endpoints should be valid master-slave pairs */
++		if (!prev || (p != prev->provider && !p->inter_set)) {
+ 			prev = next;
+ 			continue;
+ 		}
+ 
+ 		/* set the constraints */
+-		ret = next->provider->set(prev, next);
++		ret = p->set(prev, next);
+ 		if (ret)
+ 			goto out;
+ 
 diff --git a/include/linux/interconnect-provider.h b/include/linux/interconnect-provider.h
-index 0c494534b4d3..cc965b8fab53 100644
+index cc965b8fab53..b6ae0ee686c5 100644
 --- a/include/linux/interconnect-provider.h
 +++ b/include/linux/interconnect-provider.h
-@@ -103,6 +103,7 @@ void icc_node_del(struct icc_node *node);
- int icc_nodes_remove(struct icc_provider *provider);
- int icc_provider_add(struct icc_provider *provider);
- int icc_provider_del(struct icc_provider *provider);
-+struct icc_node *of_icc_get_from_provider(struct of_phandle_args *spec);
+@@ -41,6 +41,7 @@ struct icc_node *of_icc_xlate_onecell(struct of_phandle_args *spec,
+  * @xlate: provider-specific callback for mapping nodes from phandle arguments
+  * @dev: the device this interconnect provider belongs to
+  * @users: count of active users
++ * @inter_set: whether inter-provider pairs will be configured with @set
+  * @data: pointer to private data
+  */
+ struct icc_provider {
+@@ -53,6 +54,7 @@ struct icc_provider {
+ 	struct icc_node* (*xlate)(struct of_phandle_args *spec, void *data);
+ 	struct device		*dev;
+ 	int			users;
++	bool			inter_set;
+ 	void			*data;
+ };
  
- #else
- 
-@@ -154,6 +155,11 @@ static inline int icc_provider_del(struct icc_provider *provider)
- 	return -ENOTSUPP;
- }
- 
-+struct icc_node *of_icc_get_from_provider(struct of_phandle_args *spec)
-+{
-+	return ERR_PTR(-ENOTSUPP);
-+}
-+
- #endif /* CONFIG_INTERCONNECT */
- 
- #endif /* __LINUX_INTERCONNECT_PROVIDER_H */
 -- 
 2.17.1
 
