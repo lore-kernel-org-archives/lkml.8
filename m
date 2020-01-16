@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D96F8C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 595DFC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A354620684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:26:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FC1220684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:26:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217161;
-	bh=77/Gy00sz07sYUnF0AlWCXpY0U9NWEAYrzKzK1mqUzg=;
+	s=default; t=1579217170;
+	bh=DxL97Mube6rfLAuMouuyK1bFCfxxgK8KTNyr1qECnpY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UYcdjReKSezvXrL7BQ6G5bh18+jkBW5SvyZ/PA1HUIAGJDpzg4y3ht82XEPLs/J1Q
-	 rF/zRJMZkPTsqmTFn+eNyAoNDNvAaHy8SL8JOIeQ3RNm1mIM66XVgcwlyTLpG/GVgv
-	 R6b+80jfMXL8V+43Sp8zvPYkcnOat4WWLK5pa4sY=
+	b=zV6CIs6HrjFcveNpdBazp+aIRdYhKuEGBMTw5FOB9lhjJE4tVlbWtCPcjnZ/iKNSK
+	 TpFK44SLF9wAl7V/1DCDc7rr1ATYWg3xbyJpDFcPWepZLd92NFvs4W6/FfFJMMCmNY
+	 H1oDnhlpuWuC9t3n7iGbwoZ1Hp/cQyYVgJjxDx3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733107AbgAPX0A (ORCPT
+        id S1733310AbgAPX0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:26:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55432 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:26:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731718AbgAPXZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:25:40 -0500
+        id S1733168AbgAPXZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:25:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3635920684;
-        Thu, 16 Jan 2020 23:25:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 116FA20684;
+        Thu, 16 Jan 2020 23:25:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217139;
-        bh=77/Gy00sz07sYUnF0AlWCXpY0U9NWEAYrzKzK1mqUzg=;
+        s=default; t=1579217144;
+        bh=DxL97Mube6rfLAuMouuyK1bFCfxxgK8KTNyr1qECnpY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zHOG7bcNHcSp34XnlNTdeiu9EhcKbjrL51y5XPjPER9NX3nf7egatDjfG5j48MA56
-         R2cA2+sdU7ttTOsVOw3sfUmB7EOCUvRLgLzoRhGn2Lgv9vkcfL7U/34y5CB77PgmkL
-         2nwfBSRjKdFZvkAVuEd9OGmrN6GbrV809RLXHIP8=
+        b=jJ/q9Xgsjqz27KVmVkJhmKDTUGtv6gkw3YQZznru2Nxf2/NxeiBBr9qUXCQlMihCW
+         DyqlKUF4Coc14rx3RsEMR9mgH9bjG6SMFDykWrvnk2+7SL9hOz+u34U1oG+qnXpHbF
+         OSDkxxRhPsf7YSnBtLJbJtZ6LSv+q5IKCjaYB1jM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hewenliang <hewenliang4@huawei.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 5.4 137/203] tools: PCI: Fix fd leakage
-Date:   Fri, 17 Jan 2020 00:17:34 +0100
-Message-Id: <20200116231757.024280725@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>
+Subject: [PATCH 5.4 166/203] mtd: spi-nor: fix silent truncation in spi_nor_read()
+Date:   Fri, 17 Jan 2020 00:18:03 +0100
+Message-Id: <20200116231759.152183681@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -60,31 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hewenliang <hewenliang4@huawei.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-commit 3c379a59b4795d7279d38c623e74b9790345a32b upstream.
+commit a719a75a7761e4139dd099330d9fe3589d844f9b upstream.
 
-We should close fd before the return of run_test.
+spi_nor_read() assigns the result of 'ssize_t spi_nor_read_data()'
+to the 'int ret' variable, while 'ssize_t' is a 64-bit type and *int*
+is a 32-bit type on the 64-bit machines. This silent truncation isn't
+really valid, so fix up the variable's type.
 
-Fixes: 3f2ed8134834 ("tools: PCI: Add a userspace tool to test PCI endpoint")
-Signed-off-by: Hewenliang <hewenliang4@huawei.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+Fixes: 59451e1233bd ("mtd: spi-nor: change return value of read/write")
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/pci/pcitest.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/mtd/spi-nor/spi-nor.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/tools/pci/pcitest.c
-+++ b/tools/pci/pcitest.c
-@@ -129,6 +129,7 @@ static int run_test(struct pci_test *tes
- 	}
+--- a/drivers/mtd/spi-nor/spi-nor.c
++++ b/drivers/mtd/spi-nor/spi-nor.c
+@@ -2544,7 +2544,7 @@ static int spi_nor_read(struct mtd_info
+ 			size_t *retlen, u_char *buf)
+ {
+ 	struct spi_nor *nor = mtd_to_spi_nor(mtd);
+-	int ret;
++	ssize_t ret;
  
- 	fflush(stdout);
-+	close(fd);
- 	return (ret < 0) ? ret : 1 - ret; /* return 0 if test succeeded */
- }
+ 	dev_dbg(nor->dev, "from 0x%08x, len %zd\n", (u32)from, len);
  
 
 
