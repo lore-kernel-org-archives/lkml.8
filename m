@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1567FC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B00C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4B4224685
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7503F2467E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:11:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194654;
-	bh=2/wvCZSZdoE3p4fHJ4Le/4J8A/f3Y1RdJ0mrcMPZnps=;
+	s=default; t=1579194661;
+	bh=8pmzowCdGMNdlrVuisE8cxbRdFU+AF3IhU1RZb79fXs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ce+lC0NNQcAELWjEz8y55AdH79mlxYK4c5MmT67SfpJvTBRMr5jTKuIYB3EdVQlDC
-	 fJRLPZ5H6RTP2SfgwRGHVKS1jbxlm6ALY8wHSl1jAlBd3ld0vXC7ppQf2o7BNTn07E
-	 6zt64FL3TompE7aQqwIoJqz1Ea22j8QCBV6Vl8GQ=
+	b=rwNvkQ8A+73tEtBH9qdK08OvNkb/wTH6Ar+djI8FfXORDClJ8QVXsHjLOApfk3Pb6
+	 exwCXkk6PVYqIiURYSUe8e4UUevSaBxMK4/8+SVWRgmbgf/xabdqzCIATOgAQuoK4H
+	 v5i8f5vCYoywBBjUL3xEJt8JmBEc2kj4GLcpHUJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390084AbgAPRKx (ORCPT
+        id S2390128AbgAPRLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:10:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49790 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:11:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390020AbgAPRKr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:10:47 -0500
+        id S2390096AbgAPRK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:10:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9926D24681;
-        Thu, 16 Jan 2020 17:10:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5338A20684;
+        Thu, 16 Jan 2020 17:10:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194647;
-        bh=2/wvCZSZdoE3p4fHJ4Le/4J8A/f3Y1RdJ0mrcMPZnps=;
+        s=default; t=1579194657;
+        bh=8pmzowCdGMNdlrVuisE8cxbRdFU+AF3IhU1RZb79fXs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i8Ew2o6bqnYROGkqZ9XLXOR0bgDstcBXS2HKB9aCvUGTSQqWVEaXb78D5qL/riqn6
-         r6dvdaJhes0yYpIKpzHwofa0YH9k77krLP+swiyCOhZOBGrURPiETLUn9ZXXbgbTe4
-         gfoeY2R9mM5kYyUd+pz2dakQ9+xdKGVapzPaTOPU=
+        b=R6DGo0TfYnHDMguMkacizVMRDWtJsZY/9KZalJIHL/uvtV2gsAwH2flLt3xwvoL5/
+         +4LnV07EZM5htYrALAaAholzMU7qYEIN5EAbdeUUeTUevPtuoShHLMtsf1jwG0kDoG
+         pUJNYHnkN+7SX6sh93tI2MYFsUPxTz/X41F2wmuA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Felix Fietkau <nbd@nbd.name>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 503/671] mac80211: minstrel_ht: fix per-group max throughput rate initialization
-Date:   Thu, 16 Jan 2020 12:02:21 -0500
-Message-Id: <20200116170509.12787-240-sashal@kernel.org>
+Cc:     Markus Elfring <elfring@users.sourceforge.net>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 509/671] media: em28xx: Fix exception handling in em28xx_alloc_urbs()
+Date:   Thu, 16 Jan 2020 12:02:27 -0500
+Message-Id: <20200116170509.12787-246-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -60,35 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Fietkau <nbd@nbd.name>
+From: Markus Elfring <elfring@users.sourceforge.net>
 
-[ Upstream commit 56dd918ff06e3ee24d8067e93ed12b2a39e71394 ]
+[ Upstream commit ecbce48f1ff2442371ebcd12ec0ecddb431fbd72 ]
 
-The group number needs to be multiplied by the number of rates per group
-to get the full rate index
+A null pointer would be passed to a call of the function "kfree" directly
+after a call of the function "kcalloc" failed at one place.
+Pass the data structure member "urb" instead for which memory
+was allocated before (so that this resource will be properly cleaned up).
 
-Fixes: 5935839ad735 ("mac80211: improve minstrel_ht rate sorting by throughput & probability")
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Link: https://lore.kernel.org/r/20190820095449.45255-1-nbd@nbd.name
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+This issue was detected by using the Coccinelle software.
+
+Fixes: d571b592c6206d33731f41aa710fa0f69ac8611b ("media: em28xx: don't use coherent buffer for DMA transfers")
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/rc80211_minstrel_ht.c | 2 +-
+ drivers/media/usb/em28xx/em28xx-core.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/mac80211/rc80211_minstrel_ht.c b/net/mac80211/rc80211_minstrel_ht.c
-index 3d5520776655..0b60e330c115 100644
---- a/net/mac80211/rc80211_minstrel_ht.c
-+++ b/net/mac80211/rc80211_minstrel_ht.c
-@@ -529,7 +529,7 @@ minstrel_ht_update_stats(struct minstrel_priv *mp, struct minstrel_ht_sta *mi)
+diff --git a/drivers/media/usb/em28xx/em28xx-core.c b/drivers/media/usb/em28xx/em28xx-core.c
+index 5657f8710ca6..69445c8e38e2 100644
+--- a/drivers/media/usb/em28xx/em28xx-core.c
++++ b/drivers/media/usb/em28xx/em28xx-core.c
+@@ -930,7 +930,7 @@ int em28xx_alloc_urbs(struct em28xx *dev, enum em28xx_mode mode, int xfer_bulk,
  
- 		/* (re)Initialize group rate indexes */
- 		for(j = 0; j < MAX_THR_RATES; j++)
--			tmp_group_tp_rate[j] = group;
-+			tmp_group_tp_rate[j] = MCS_GROUP_RATES * group;
+ 	usb_bufs->buf = kcalloc(num_bufs, sizeof(void *), GFP_KERNEL);
+ 	if (!usb_bufs->buf) {
+-		kfree(usb_bufs->buf);
++		kfree(usb_bufs->urb);
+ 		return -ENOMEM;
+ 	}
  
- 		for (i = 0; i < MCS_GROUP_RATES; i++) {
- 			if (!(mi->supported[group] & BIT(i)))
 -- 
 2.20.1
 
