@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 956D6C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C24C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 720E820684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 657C420684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199266;
-	bh=chxuGPSSD0ms+/h/e6pFkWAn+aAbUvWVhkD97Sy/NwE=;
+	s=default; t=1579199269;
+	bh=gcsQ/jelRrCDzaLIk50T1cu009GKPZc2u/wmwW5DYqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WP9+Z0lbQEnK8acf7ycLGw2KQlsaJqqh1+hQUpVlfidPyMp7fSGnjIrDmNidt69NY
-	 hukfxsgzUJDtehbijOccbeokose89Ccp2+AwytS4RS1Yzi8poHwNoaZ2n1Pa2DmcTr
-	 HJ/6VZLfrV5BY5xCaTThBPWlBOCeWw4v60OAbzOA=
+	b=dRJ/wcjIamVeKpE2YHZOgn6xdHdcIUP5NBWL+YHmpnzBApnQll6Xj3nG96NVbU3FI
+	 M7YoEfFJTVpn6ZPNeIjqPfr8AJsjUDTgab7l/wQyoji8cZF9mJcd8/CKvRnKnUn68u
+	 N+yyHJmZ1KPhNWjS8+Hc+thbtf+hKRINrNX7B/C4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403927AbgAPR0W (ORCPT
+        id S2403913AbgAPR0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:26:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34842 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:26:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390251AbgAPR0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:26:16 -0500
+        id S2392250AbgAPR0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:26:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84E83246BB;
-        Thu, 16 Jan 2020 17:26:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A40320730;
+        Thu, 16 Jan 2020 17:26:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195575;
-        bh=chxuGPSSD0ms+/h/e6pFkWAn+aAbUvWVhkD97Sy/NwE=;
+        s=default; t=1579195568;
+        bh=gcsQ/jelRrCDzaLIk50T1cu009GKPZc2u/wmwW5DYqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eLWKWvWMLS5BhVuPQkAZ+5N5fgVL0P8pYZjXJDrw44EQpRmycIOxRGdSIdw6J+Qw+
-         NWrBOO9TDonpg1X4voqLuC6Hfhzv0QnRSe/8cN4N0fG7HwfKVyybnY5wfLNY892UKu
-         4ZhyvoeM53meoDrPeqlHkxoZ+WEPuGKoG4DRG+ow=
+        b=gkRQVD5gr66h6+/utVDQESsoQDI5ryR8OTu1MGKAB/oZeoU40dcB5vyTI21m5JIL3
+         F1Tw/3Ldhl7vF7LBOtvs6qU8FT6OvDSsglzCSekV+yJ1WJlf5cHYP1qD6Pn3YMWfzp
+         ZPkyqSnx5EzfZq8sjoMyjiJVlHQ9qdzmzgKOtH8k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        Giridhar Malavali <giridhar.malavali@qlogic.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 158/371] scsi: qla2xxx: Unregister chrdev if module initialization fails
-Date:   Thu, 16 Jan 2020 12:20:30 -0500
-Message-Id: <20200116172403.18149-101-sashal@kernel.org>
+Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+Subject: [PATCH AUTOSEL 4.14 153/371] spi: tegra114: configure dma burst size to fifo trig level
+Date:   Thu, 16 Jan 2020 12:20:25 -0500
+Message-Id: <20200116172403.18149-96-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -61,98 +61,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-[ Upstream commit c794d24ec9eb6658909955772e70f34bef5b5b91 ]
+[ Upstream commit f4ce428c41fb22e3ed55496dded94df44cb920fa ]
 
-If module initialization fails after the character device has been
-registered, unregister the character device. Additionally, avoid
-duplicating error path code.
+Fixes: Configure DMA burst size to be same as SPI TX/RX trigger levels
+to avoid mismatch.
 
-Cc: Himanshu Madhani <hmadhani@marvell.com>
-Cc: Giridhar Malavali <giridhar.malavali@qlogic.com>
-Fixes: 6a03b4cd78f3 ("[SCSI] qla2xxx: Add char device to increase driver use count") # v2.6.35.
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+SPI FIFO trigger levels are calculated based on the transfer length.
+So this patch moves DMA slave configuration to happen before start
+of DMAs.
+
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_os.c | 34 +++++++++++++++++++++-------------
- 1 file changed, 21 insertions(+), 13 deletions(-)
+ drivers/spi/spi-tegra114.c | 52 ++++++++++++++++++++++----------------
+ 1 file changed, 30 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index 5617bb18c233..5f9d4dbc4a98 100644
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -6714,8 +6714,7 @@ qla2x00_module_init(void)
- 	/* Initialize target kmem_cache and mem_pools */
- 	ret = qlt_init();
- 	if (ret < 0) {
--		kmem_cache_destroy(srb_cachep);
--		return ret;
-+		goto destroy_cache;
- 	} else if (ret > 0) {
- 		/*
- 		 * If initiator mode is explictly disabled by qlt_init(),
-@@ -6736,11 +6735,10 @@ qla2x00_module_init(void)
- 	qla2xxx_transport_template =
- 	    fc_attach_transport(&qla2xxx_transport_functions);
- 	if (!qla2xxx_transport_template) {
--		kmem_cache_destroy(srb_cachep);
- 		ql_log(ql_log_fatal, NULL, 0x0002,
- 		    "fc_attach_transport failed...Failing load!.\n");
--		qlt_exit();
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto qlt_exit;
+diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
+index 18dfbd57c61f..84ff0c507f0b 100644
+--- a/drivers/spi/spi-tegra114.c
++++ b/drivers/spi/spi-tegra114.c
+@@ -529,6 +529,8 @@ static int tegra_spi_start_dma_based_transfer(
+ 	u32 val;
+ 	unsigned int len;
+ 	int ret = 0;
++	u8 dma_burst;
++	struct dma_slave_config dma_sconfig = {0};
+ 
+ 	val = SPI_DMA_BLK_SET(tspi->curr_dma_words - 1);
+ 	tegra_spi_writel(tspi, val, SPI_DMA_BLK);
+@@ -540,12 +542,16 @@ static int tegra_spi_start_dma_based_transfer(
+ 		len = tspi->curr_dma_words * 4;
+ 
+ 	/* Set attention level based on length of transfer */
+-	if (len & 0xF)
++	if (len & 0xF) {
+ 		val |= SPI_TX_TRIG_1 | SPI_RX_TRIG_1;
+-	else if (((len) >> 4) & 0x1)
++		dma_burst = 1;
++	} else if (((len) >> 4) & 0x1) {
+ 		val |= SPI_TX_TRIG_4 | SPI_RX_TRIG_4;
+-	else
++		dma_burst = 4;
++	} else {
+ 		val |= SPI_TX_TRIG_8 | SPI_RX_TRIG_8;
++		dma_burst = 8;
++	}
+ 
+ 	if (tspi->cur_direction & DATA_DIR_TX)
+ 		val |= SPI_IE_TX;
+@@ -556,7 +562,18 @@ static int tegra_spi_start_dma_based_transfer(
+ 	tegra_spi_writel(tspi, val, SPI_DMA_CTL);
+ 	tspi->dma_control_reg = val;
+ 
++	dma_sconfig.device_fc = true;
+ 	if (tspi->cur_direction & DATA_DIR_TX) {
++		dma_sconfig.dst_addr = tspi->phys + SPI_TX_FIFO;
++		dma_sconfig.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
++		dma_sconfig.dst_maxburst = dma_burst;
++		ret = dmaengine_slave_config(tspi->tx_dma_chan, &dma_sconfig);
++		if (ret < 0) {
++			dev_err(tspi->dev,
++				"DMA slave config failed: %d\n", ret);
++			return ret;
++		}
++
+ 		tegra_spi_copy_client_txbuf_to_spi_txbuf(tspi, t);
+ 		ret = tegra_spi_start_tx_dma(tspi, len);
+ 		if (ret < 0) {
+@@ -567,6 +584,16 @@ static int tegra_spi_start_dma_based_transfer(
  	}
  
- 	apidev_major = register_chrdev(0, QLA2XXX_APIDEV, &apidev_fops);
-@@ -6752,27 +6750,37 @@ qla2x00_module_init(void)
- 	qla2xxx_transport_vport_template =
- 	    fc_attach_transport(&qla2xxx_transport_vport_functions);
- 	if (!qla2xxx_transport_vport_template) {
--		kmem_cache_destroy(srb_cachep);
--		qlt_exit();
--		fc_release_transport(qla2xxx_transport_template);
- 		ql_log(ql_log_fatal, NULL, 0x0004,
- 		    "fc_attach_transport vport failed...Failing load!.\n");
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto unreg_chrdev;
+ 	if (tspi->cur_direction & DATA_DIR_RX) {
++		dma_sconfig.src_addr = tspi->phys + SPI_RX_FIFO;
++		dma_sconfig.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
++		dma_sconfig.src_maxburst = dma_burst;
++		ret = dmaengine_slave_config(tspi->rx_dma_chan, &dma_sconfig);
++		if (ret < 0) {
++			dev_err(tspi->dev,
++				"DMA slave config failed: %d\n", ret);
++			return ret;
++		}
++
+ 		/* Make the dma buffer to read by dma */
+ 		dma_sync_single_for_device(tspi->dev, tspi->rx_dma_phys,
+ 				tspi->dma_buf_size, DMA_FROM_DEVICE);
+@@ -626,7 +653,6 @@ static int tegra_spi_init_dma_param(struct tegra_spi_data *tspi,
+ 	u32 *dma_buf;
+ 	dma_addr_t dma_phys;
+ 	int ret;
+-	struct dma_slave_config dma_sconfig;
+ 
+ 	dma_chan = dma_request_slave_channel_reason(tspi->dev,
+ 					dma_to_memory ? "rx" : "tx");
+@@ -646,19 +672,6 @@ static int tegra_spi_init_dma_param(struct tegra_spi_data *tspi,
+ 		return -ENOMEM;
  	}
- 	ql_log(ql_log_info, NULL, 0x0005,
- 	    "QLogic Fibre Channel HBA Driver: %s.\n",
- 	    qla2x00_version_str);
- 	ret = pci_register_driver(&qla2xxx_pci_driver);
- 	if (ret) {
--		kmem_cache_destroy(srb_cachep);
--		qlt_exit();
--		fc_release_transport(qla2xxx_transport_template);
--		fc_release_transport(qla2xxx_transport_vport_template);
- 		ql_log(ql_log_fatal, NULL, 0x0006,
- 		    "pci_register_driver failed...ret=%d Failing load!.\n",
- 		    ret);
-+		goto release_vport_transport;
+ 
+-	if (dma_to_memory) {
+-		dma_sconfig.src_addr = tspi->phys + SPI_RX_FIFO;
+-		dma_sconfig.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+-		dma_sconfig.src_maxburst = 0;
+-	} else {
+-		dma_sconfig.dst_addr = tspi->phys + SPI_TX_FIFO;
+-		dma_sconfig.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+-		dma_sconfig.dst_maxburst = 0;
+-	}
+-
+-	ret = dmaengine_slave_config(dma_chan, &dma_sconfig);
+-	if (ret)
+-		goto scrub;
+ 	if (dma_to_memory) {
+ 		tspi->rx_dma_chan = dma_chan;
+ 		tspi->rx_dma_buf = dma_buf;
+@@ -669,11 +682,6 @@ static int tegra_spi_init_dma_param(struct tegra_spi_data *tspi,
+ 		tspi->tx_dma_phys = dma_phys;
  	}
- 	return ret;
-+
-+release_vport_transport:
-+	fc_release_transport(qla2xxx_transport_vport_template);
-+
-+unreg_chrdev:
-+	if (apidev_major >= 0)
-+		unregister_chrdev(apidev_major, QLA2XXX_APIDEV);
-+	fc_release_transport(qla2xxx_transport_template);
-+
-+qlt_exit:
-+	qlt_exit();
-+
-+destroy_cache:
-+	kmem_cache_destroy(srb_cachep);
-+	return ret;
+ 	return 0;
+-
+-scrub:
+-	dma_free_coherent(tspi->dev, tspi->dma_buf_size, dma_buf, dma_phys);
+-	dma_release_channel(dma_chan);
+-	return ret;
  }
  
- /**
+ static void tegra_spi_deinit_dma_param(struct tegra_spi_data *tspi,
 -- 
 2.20.1
 
