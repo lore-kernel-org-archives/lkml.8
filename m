@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3503C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A35C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEE2724702
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:38:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31F73246C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:38:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196317;
-	bh=Er9b+hegv+QekdwOFBDM4vu7+PTEEUZ/66FnFh24PYQ=;
+	s=default; t=1579196324;
+	bh=OC0v1Ey/y2swb0pz3B0+DItv1oq/ZPq+bHZoidnUPFQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=giUyqVWmhmZVXd+7pbDgTNZM1FId5a6cIEQi8YDdYSj9x8nBmSQgXvWIAiGstNrZG
-	 CMD0CO6OW2QwvbnFTBktbejOYP0cbh67/PzvbKizz7F7wIvTZNuqvmwHMCZyR6z+Jg
-	 SK4hlT7TUkGzKusZSSDFqNh3+/RIu1YW/gxGrHwk=
+	b=dRIwrZn56mR8cetJRFlQ4S+7dZIJ+Q9FJ0ojhLyk1siZWvlW3SORIi/NDdnoYRcf9
+	 C8c8YTEOR2ieZH9YD7PZHjX2mpy89G8oLgBUuv4kL6fCsuZDChz9xhcGim1zv3pJbo
+	 KBWQjbrRZc9GJkOnjrxDcTXGmV68R+v7F6vaEkhw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405070AbgAPRig (ORCPT
+        id S2390298AbgAPRim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:38:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53574 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:38:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388572AbgAPRh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:37:56 -0500
+        id S2393285AbgAPRiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:38:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4012246E1;
-        Thu, 16 Jan 2020 17:37:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BE63246C0;
+        Thu, 16 Jan 2020 17:38:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196275;
-        bh=Er9b+hegv+QekdwOFBDM4vu7+PTEEUZ/66FnFh24PYQ=;
+        s=default; t=1579196289;
+        bh=OC0v1Ey/y2swb0pz3B0+DItv1oq/ZPq+bHZoidnUPFQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cJu4ewnJLHGQupC3fV7PAxuYF9CBhEYKxUS32JXK+cIVS1PCl2oXA9XokisyWU1+1
-         TFOGEuBSgFAXikQXd9pp9ocGiQ4KwEya+OeVlLPr1yeOkJndRT7pEHbdHUyvoaVKo3
-         B4zRVLOWBAmK54F0tfuKPuy4dmj8u3Mozaeidnl0=
+        b=QmXTBJfUnYvw5VPfl3MfmxcvItQIZ0YxF1PXhxvpkMDKMv6EBfdILDYYvWzaQoCJO
+         ZspmcgSUKbqAdHc15lbBIz2Qk5+F0/oQgsjvPGF64RNGwPwqZ7fKteL9V3RwVPngKf
+         W8gZ66yWx/CBor2gtqkXQYex7L2Isi/gsq8BTb9E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 096/251] media: ivtv: update *pos correctly in ivtv_read_pos()
-Date:   Thu, 16 Jan 2020 12:34:05 -0500
-Message-Id: <20200116173641.22137-56-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>, Paul Walmsley <paul@pwsan.com>,
+        Tero Kristo <t-kristo@ti.com>, Sasha Levin <sashal@kernel.org>,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 104/251] ARM: OMAP2+: Fix potentially uninitialized return value for _setup_reset()
+Date:   Thu, 16 Jan 2020 12:34:13 -0500
+Message-Id: <20200116173641.22137-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -60,35 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit f8e579f3ca0973daef263f513da5edff520a6c0d ]
+[ Upstream commit 7f0d078667a494466991aa7133f49594f32ff6a2 ]
 
-We had intended to update *pos, but the current code is a no-op.
+Commit 747834ab8347 ("ARM: OMAP2+: hwmod: revise hardreset behavior") made
+the call to _enable() conditional based on no oh->rst_lines_cnt. This
+caused the return value to be potentially uninitialized. Curiously we see
+no compiler warnings for this, probably as this gets inlined.
 
-Fixes: 1a0adaf37c30 ("V4L/DVB (5345): ivtv driver for Conexant cx23416/cx23415 MPEG encoder/decoder")
+We call _setup_reset() from _setup() and only _setup_postsetup() if the
+return value is zero. Currently the return value can be uninitialized for
+cases where oh->rst_lines_cnt is set and HWMOD_INIT_NO_RESET is not set.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 747834ab8347 ("ARM: OMAP2+: hwmod: revise hardreset behavior")
+Cc: Paul Walmsley <paul@pwsan.com>
+Cc: Tero Kristo <t-kristo@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/ivtv/ivtv-fileops.c | 2 +-
+ arch/arm/mach-omap2/omap_hwmod.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/pci/ivtv/ivtv-fileops.c b/drivers/media/pci/ivtv/ivtv-fileops.c
-index c9bd018e53de..e2b19c3eaa87 100644
---- a/drivers/media/pci/ivtv/ivtv-fileops.c
-+++ b/drivers/media/pci/ivtv/ivtv-fileops.c
-@@ -420,7 +420,7 @@ static ssize_t ivtv_read_pos(struct ivtv_stream *s, char __user *ubuf, size_t co
+diff --git a/arch/arm/mach-omap2/omap_hwmod.c b/arch/arm/mach-omap2/omap_hwmod.c
+index bfc74954540c..9421b78f869d 100644
+--- a/arch/arm/mach-omap2/omap_hwmod.c
++++ b/arch/arm/mach-omap2/omap_hwmod.c
+@@ -2588,7 +2588,7 @@ static void _setup_iclk_autoidle(struct omap_hwmod *oh)
+  */
+ static int _setup_reset(struct omap_hwmod *oh)
+ {
+-	int r;
++	int r = 0;
  
- 	IVTV_DEBUG_HI_FILE("read %zd from %s, got %zd\n", count, s->name, rc);
- 	if (rc > 0)
--		pos += rc;
-+		*pos += rc;
- 	return rc;
- }
- 
+ 	if (oh->_state != _HWMOD_STATE_INITIALIZED)
+ 		return -EINVAL;
 -- 
 2.20.1
 
