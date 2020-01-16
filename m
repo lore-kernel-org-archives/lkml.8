@@ -2,112 +2,107 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E842CC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D51FC33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA8902077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A22F3207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:29:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EFNn2y6n"
+	dkim=permerror (0-bit key) header.d=uniroma2.it header.i=@uniroma2.it header.b="A6E+hu/I";
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=uniroma2.it header.i=@uniroma2.it header.b="hBmptfq6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbgAPN2c (ORCPT
+        id S1726988AbgAPN3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 08:28:32 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39262 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbgAPN2c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 08:28:32 -0500
-Received: by mail-wr1-f66.google.com with SMTP id y11so19145771wrt.6
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 05:28:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=egNm5hnStcEuGVyvsQ7QZ8Yg17G8I6nyWH7ckz/t1Rk=;
-        b=EFNn2y6nU9mQc8EDxHTqfCAETdJttg+EGro1+6+YW/Fx+iKOW24CBqkjna6DZwx6Pn
-         vOWfbc8QYhHnxGCxXRYTW4kXs5+C5pCkl4HmssJDK0nGvCnfnllndxMTgZb+saWysjrV
-         TA99+RRlQ6W00cuCNaEUg8KYDHPvmQPZiq2EvmKSugBF3tc3EtnsEI5yVumK95dlojta
-         zRgeQ0x4DCojeNbg5hXtP4WTX1VS3XZ5V05HPJbH99wU7/+QFB6l9OBAFWDhWRFt3Fgk
-         BUUr2DOlftoQrN0Xm3rORMbmajk6yXWp388osUMms7hHBzUe+YYqH1afQ5H8J/v87b/O
-         AfCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=egNm5hnStcEuGVyvsQ7QZ8Yg17G8I6nyWH7ckz/t1Rk=;
-        b=lW8TGs1I6/7Plf9ubn8Sjmpx67duOlZjB4CRIh6/UQzeBj1GyUghg4sTldiaMpClcg
-         O5waxJcxdShqpLCOTmbs9dYmZAMN1L71ltLb6cjUT525NN4Kim1m1cX5CZmHw629dtFP
-         2ZcoXIgwG18butaqKVPuNmBFzRkkf53pHQwI+2qhuzxIC/wFUBdXaBdkwVylg2S1DwRq
-         xFA/rlQTw0+WNnu8mPQ2rUy8Y0kJ3THxC6XPGyUGWaI+OxTHp7mnZimUKZFOR6QhdAhn
-         133HVJtTtDY72twRV6jTScnEds7vlID2nY8P3gqccN1xqVojMT3mqXGJu+sAmFly7LP+
-         wyXQ==
-X-Gm-Message-State: APjAAAVpeTcVaN6Yh4vqcd3JVWPOFOw7I1WYX5pu5eW7OpDGuYvpm8Dq
-        BZZA6JpmZZPsEbf0vs8cjsLFdLhWpIE=
-X-Google-Smtp-Source: APXvYqxdKSEagkiplHcxJxhokSNkM8KIwX2aZaSVa2IuPpU0i/S2qMSA6AjTrb5/Vr63bg0Wdh+1/w==
-X-Received: by 2002:adf:e984:: with SMTP id h4mr3279869wrm.275.1579181310583;
-        Thu, 16 Jan 2020 05:28:30 -0800 (PST)
-Received: from dell ([2.27.35.221])
-        by smtp.gmail.com with ESMTPSA id d10sm30112220wrw.64.2020.01.16.05.28.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 05:28:30 -0800 (PST)
-Date:   Thu, 16 Jan 2020 13:28:48 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Prashant Malani <pmalani@chromium.org>
-Cc:     enric.balletbo@collabora.com, groeck@chromium.org,
-        bleung@chromium.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/2] mfd: cros_ec: Add cros-usbpd-notify subdevice
-Message-ID: <20200116132848.GM325@dell>
-References: <20200114031056.44502-1-pmalani@chromium.org>
- <20200114031056.44502-2-pmalani@chromium.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200114031056.44502-2-pmalani@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 16 Jan 2020 08:29:06 -0500
+Received: from smtp.uniroma2.it ([160.80.6.23]:58437 "EHLO smtp.uniroma2.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726329AbgAPN3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 08:29:06 -0500
+Received: from smtpauth-2019-1.uniroma2.it (smtpauth.uniroma2.it [160.80.5.46])
+        by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with ESMTP id 00GDSVjZ012263;
+        Thu, 16 Jan 2020 14:28:38 +0100
+Received: from lubuntu-18.04 (unknown [160.80.103.126])
+        by smtpauth-2019-1.uniroma2.it (Postfix) with ESMTPSA id 6DAC91228FA;
+        Thu, 16 Jan 2020 14:28:39 +0100 (CET)
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=uniroma2.it;
+        s=ed201904; t=1579181319; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZHTCZ5Bl2oiJKvZCPiMq8xHmMGX8S9jJ3dLQloshk84=;
+        b=A6E+hu/IZDC2rwHm6q+wVBcC4dgBk7RLIZMYRBt0PDSJqLIZrOClAtHbjd4TXyisD7ai3p
+        sOygKbL4coDbD2BQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniroma2.it; s=rsa201904;
+        t=1579181319; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZHTCZ5Bl2oiJKvZCPiMq8xHmMGX8S9jJ3dLQloshk84=;
+        b=hBmptfq6vu+k4pvcWPYsxuorIEYNYeKc04e+cwsrcpdCcnBNJUhdiIYUawlxtBo77i9OyT
+        zCt6E0Fj5aLu/vczyhAWhhFMBrP6uv9VFfSaAQ2WexxwcqxjYU5berh6sMlqglohZ6OO2M
+        giwnYH/NFXH6DA5PzVRwPyOl1Wg2SoHgALx6lcPbflzoDmN82nHskSM5fStBEQCtx9KwDg
+        VCnm6ixWr5tUw6SBHvAwEvEA/tAskCNVbJEYAk1Bh7XujK2UDXQrA8tylvxFU1fwflv6el
+        O+GIqpyfNkP+SFUZyXLyJvQ3q942Jx8peDc1AV6gp0fFP7AYNNY79YX4seUE9Q==
+Date:   Thu, 16 Jan 2020 14:28:39 +0100
+From:   Andrea Mayer <andrea.mayer@uniroma2.it>
+To:     Sabrina Dubroca <sd@queasysnail.net>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Petr Machata <petrm@mellanox.com>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Taehee Yoo <ap420073@gmail.com>,
+        Litao jiao <jiaolitao@raisecom.com>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Lungaroni <paolo.lungaroni@cnit.it>
+Subject: Re: [net] vxlan: fix vxlan6_get_route() adding a call to
+ xfrm_lookup_route()
+Message-Id: <20200116142839.98b04af5d16f8ec3ed209288@uniroma2.it>
+In-Reply-To: <20200115211621.GA573446@bistromath.localdomain>
+References: <20200115192231.3005-1-andrea.mayer@uniroma2.it>
+        <20200115211621.GA573446@bistromath.localdomain>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.100.0 at smtp-2015
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Jan 2020, Prashant Malani wrote:
+On Wed, 15 Jan 2020 22:16:21 +0100
+Sabrina Dubroca <sd@queasysnail.net> wrote:
 
-> Add the cros-usbpd-notify driver as a subdevice on platforms that
-> support the EC_FEATURE_USB_PD EC feature flag and don't have the
-> ACPI PD notification device defined.
+> 2020-01-15, 20:22:31 +0100, Andrea Mayer wrote:
+> > currently IPSEC cannot be used to encrypt/decrypt IPv6 vxlan traffic.
+> > The problem is that the vxlan module uses the vxlan6_get_route()
+> > function to find out the route for transmitting an IPv6 packet, which in
+> > turn uses ip6_dst_lookup() available in ip6_output.c.
+> > Unfortunately ip6_dst_lookup() does not perform any xfrm route lookup,
+> > so the xfrm framework cannot be used with vxlan6.
 > 
-> This driver allows other cros-ec devices to receive PD event
-> notifications from the Chrome OS Embedded Controller (EC) via a
-> notification chain.
+> That's not the case anymore, since commit 6c8991f41546 ("net:
+> ipv6_stub: use ip6_dst_lookup_flow instead of ip6_dst_lookup").
 > 
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> ---
+> Can you retest on the latest net tree?
 > 
-> Changes in v5:
-> - Updated the IS_ENABLED() check to check for CONFIG_OF instead of
->   !CONFIG_ACPI according to upstream comments.
+> Thanks.
 > 
-> Changes in v4:
-> - Removed #ifndef usage; instead, moved cros-usbpd-notify to a separate
->   mfd_cell and used an IS_ENABLED() check.
-> - Changed commit title and description slightly to reflect change in
->   code.
+> -- 
+> Sabrina
 > 
->  drivers/mfd/cros_ec_dev.c | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
 
-Looks okay to me, but I would like more Chromium reviews please.
+Hi Sabrina,
+thanks for sharing the fix.
+Sorry, my net tree was a bit outdated. I will retest with the fix and let you know.
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Andrea Mayer <andrea.mayer@uniroma2.it>
