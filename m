@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B1DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75BAEC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 642FC2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 459902073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:10:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198205;
-	bh=7aLUV/g52m7e9KvwN151imfLZFO56mEPatkTBzlxJew=;
+	s=default; t=1579198208;
+	bh=7+YWIhcNEOIuEvafzelpdtdaQmB3T7mH9FS6SgZ5Xwc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H31Tr2qE1A0xlLmNu5n+oCIalpuqEBlNvTjgo2sUpngbrR90nurQdbE5nWf8Xdk3r
-	 QLtmpsfeMWtu9rq0qQyPF47DoavgzTlZnUZYVHdU+TFMyVmegKs5/oylM0JszmPFJD
-	 xYoT++f//OYgK4hsSKAYZrN4PYC1+kOw1jpETvcM=
+	b=apGuRr5KxV9QIwFZxHuIYaUSaE/m7nroexGftUZ48wCQCDQYYirmgpgfc86Yl3BJ0
+	 DWntw5TwDKaACU2JbRMMSev4sxt58uAdSCEQQ6XWbTwZdPynhPmTV2f5lQMnidl3NM
+	 3l/WZnfe8C9ndyBDRpxxiaHzYwrZ5dBJvOnseySI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393256AbgAPRiC (ORCPT
+        id S2395117AbgAPSKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:38:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52946 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:10:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405398AbgAPRhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:37:34 -0500
+        id S2393257AbgAPRiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:38:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65C47246C3;
-        Thu, 16 Jan 2020 17:37:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16442246E1;
+        Thu, 16 Jan 2020 17:38:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196253;
-        bh=7aLUV/g52m7e9KvwN151imfLZFO56mEPatkTBzlxJew=;
+        s=default; t=1579196282;
+        bh=7+YWIhcNEOIuEvafzelpdtdaQmB3T7mH9FS6SgZ5Xwc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NfhmHNut/gzpdegu5a68vX7jQrLqM6KJ2kfK0FKIha6WSlk4t2PeTvTjH5jd5nWfu
-         qe2S4GI+so6pF2CQfTHr50Un3GWrqNtyOQcHXc22kS17E4XOxmrpqQJRijGhGCNOzM
-         e5WphU2J3L67MW/zeiLkIlYa/Krk0tx3tQG36fp8=
+        b=O/d64gK5v2WKJbgxIaFy1BPXslJbGot4HbTbWNRtotopsZTIOrubWFjQRVLoZUlab
+         1ZDP142S+C+CA2qCsz+xeUrTYCXalzagDjQoPaC8oCQyTE4JWgwZVi89OOyqVq+Syy
+         UVD7TfYjYKt+G2kOS8qJc7xxnStG5GKPmfLUb88A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Dave Kleikamp <dave.kleikamp@oracle.com>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 080/251] drm/nouveau/bios/ramcfg: fix missing parentheses when calculating RON
-Date:   Thu, 16 Jan 2020 12:33:49 -0500
-Message-Id: <20200116173641.22137-40-sashal@kernel.org>
+        jfs-discussion@lists.sourceforge.net,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.9 101/251] jfs: fix bogus variable self-initialization
+Date:   Thu, 16 Jan 2020 12:34:10 -0500
+Message-Id: <20200116173641.22137-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -60,41 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 13649101a25c53c87f4ab98a076dfe61f3636ab1 ]
+[ Upstream commit a5fdd713d256887b5f012608701149fa939e5645 ]
 
-Currently, the expression for calculating RON is always going to result
-in zero no matter the value of ram->mr[1] because the ! operator has
-higher precedence than the shift >> operator.  I believe the missing
-parentheses around the expression before appying the ! operator will
-result in the desired result.
+A statement was originally added in 2006 to shut up a gcc warning,
+now but now clang warns about it:
 
-[ Note, not tested ]
+fs/jfs/jfs_txnmgr.c:1932:15: error: variable 'pxd' is uninitialized when used within its own initialization
+      [-Werror,-Wuninitialized]
+                pxd_t pxd = pxd;        /* truncated extent of xad */
+                      ~~~   ^~~
 
-Detected by CoveritScan, CID#1324005 ("Operands don't affect result")
+Modern versions of gcc are fine without the silly assignment, so just
+drop it. Tested with gcc-4.6 (released 2011), 4.7, 4.8, and 4.9.
 
-Fixes: c25bf7b6155c ("drm/nouveau/bios/ramcfg: Separate out RON pull value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Fixes: c9e3ad6021e5 ("JFS: Get rid of "may be used uninitialized" warnings")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Dave Kleikamp <dave.kleikamp@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/subdev/fb/gddr3.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/jfs/jfs_txnmgr.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/fb/gddr3.c b/drivers/gpu/drm/nouveau/nvkm/subdev/fb/gddr3.c
-index 60ece0a8a2e1..1d2d6bae73cd 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/fb/gddr3.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/fb/gddr3.c
-@@ -87,7 +87,7 @@ nvkm_gddr3_calc(struct nvkm_ram *ram)
- 		WR  = (ram->next->bios.timing[2] & 0x007f0000) >> 16;
- 		/* XXX: Get these values from the VBIOS instead */
- 		DLL = !(ram->mr[1] & 0x1);
--		RON = !(ram->mr[1] & 0x300) >> 8;
-+		RON = !((ram->mr[1] & 0x300) >> 8);
- 		break;
- 	default:
- 		return -ENOSYS;
+diff --git a/fs/jfs/jfs_txnmgr.c b/fs/jfs/jfs_txnmgr.c
+index 4d973524c887..224ef034004b 100644
+--- a/fs/jfs/jfs_txnmgr.c
++++ b/fs/jfs/jfs_txnmgr.c
+@@ -1928,8 +1928,7 @@ static void xtLog(struct jfs_log * log, struct tblock * tblk, struct lrd * lrd,
+ 	 * header ?
+ 	 */
+ 	if (tlck->type & tlckTRUNCATE) {
+-		/* This odd declaration suppresses a bogus gcc warning */
+-		pxd_t pxd = pxd;	/* truncated extent of xad */
++		pxd_t pxd;	/* truncated extent of xad */
+ 		int twm;
+ 
+ 		/*
 -- 
 2.20.1
 
