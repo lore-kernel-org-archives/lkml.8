@@ -2,223 +2,244 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD32C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5CE4C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1504A2072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A018C207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 15:22:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="cS9r9RiN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728890AbgAPPWJ (ORCPT
+        id S1728939AbgAPPWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 10:22:09 -0500
-Received: from mga17.intel.com ([192.55.52.151]:48230 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726527AbgAPPWJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 10:22:09 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 07:22:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,326,1574150400"; 
-   d="scan'208";a="305882826"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 16 Jan 2020 07:22:06 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1is6yD-000364-O7; Thu, 16 Jan 2020 23:22:05 +0800
-Date:   Thu, 16 Jan 2020 23:21:35 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     kbuild-all@lists.01.org, arnd@arndb.de,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        jassisinghbrar@gmail.com, cristian.marussi@arm.com,
-        peng.fan@nxp.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH V2] firmware: arm_scmi: Make scmi core independent of
- transport type
-Message-ID: <202001162201.1Pv3qXxS%lkp@intel.com>
-References: <3f5567ec928e20963d729350e6d674c4acb0c7a0.1578648530.git.viresh.kumar@linaro.org>
+        Thu, 16 Jan 2020 10:22:17 -0500
+Received: from mail-vi1eur05on2042.outbound.protection.outlook.com ([40.107.21.42]:43217
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726371AbgAPPWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 10:22:17 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=d6mCaLfU0wivgp8sKJANYROLtNpfswyW4i4fhxR+11BJAckQhMZzcz1g6ysf5nkUDaN5yy2MVJVw1TujiuWtKFYxK+JDakOBbG9Etbr9ZN5DUta9m4a+a9VfYRvLqEOTf4SSX1xOgTv2IzFaTzglvKVPYTjxI7UKblOU9Yg7WBXkWBY94ayVZ/PywqvFQMMSwT7ldjJLQ6F7x9ikCIjC9J1x2bI2tywncHWC21Iq+p5hYcMzq3r6ccj4LFGBXbERc/CuU+zbTE53YiDUYGkWkMos6d5WtunzcBPEjsz0C4LDUtgx+4UpDqigwY69jwV3ChjQtrWIEwd3OTfvHY7Fvg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HUrxsts3paAh+K7ZNfpj6JIHdNvRmGe7stdH5seGYr0=;
+ b=Yk/iwmMV/cuDmFVIZQ4aUXsj1OWvOrSkh9LFAxDYOAgrutHnBLOYRYQn699enuTNiVzw3fAXSuFm1lNXNPwZIppo8aD+PVW/OC8NENkeyEG5IcNZr6rdZpKzefFCslG/Naurvx4x5MqUqSeeCaFSxBZTJuWBYMq+Bkeiru/pJKfK+zwO0bSOi2vjkupjQe1cj/XHRsCZujr26A8PvZk3HnA25iuP52KTFz272f+WLkAT+GQBTkXL1nJocOyzibXduclC/Iyk4Rqrv6ae0CkR3riGVEuIBeve1jFZkV1g+agRhFE1pCzOB709ckSVmrxhgaFF+xTZKvAyZldUdzAuJg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HUrxsts3paAh+K7ZNfpj6JIHdNvRmGe7stdH5seGYr0=;
+ b=cS9r9RiNBcwrwITnqko156U1SljxmV8eWkIMg5WKyNM5fQE7yD0H27YaJIIj9uKB8HTo5/M4hULDtqdPSAd8ODihJdY3rXz/35jxZqlpGDuONH/BM4XNmT5Dkghi+cUU0mIkhcd6B1lCVno02DfK8nICFYZB2r+t1ZF+bx0IgOw=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
+ VI1PR05MB4672.eurprd05.prod.outlook.com (20.176.7.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.18; Thu, 16 Jan 2020 15:22:13 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1c00:7925:d5c6:d60d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1c00:7925:d5c6:d60d%7]) with mapi id 15.20.2644.015; Thu, 16 Jan 2020
+ 15:22:13 +0000
+Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR14CA0018.namprd14.prod.outlook.com (2603:10b6:208:23e::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.20 via Frontend Transport; Thu, 16 Jan 2020 15:22:12 +0000
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1is6yH-0005cJ-Kf; Thu, 16 Jan 2020 11:22:09 -0400
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Jason Wang <jasowang@redhat.com>
+CC:     "mst@redhat.com" <mst@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "tiwei.bie@intel.com" <tiwei.bie@intel.com>,
+        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
+        "cunming.liang@intel.com" <cunming.liang@intel.com>,
+        "zhihong.wang@intel.com" <zhihong.wang@intel.com>,
+        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
+        "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
+        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
+        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
+        "eperezma@redhat.com" <eperezma@redhat.com>,
+        "lulu@redhat.com" <lulu@redhat.com>,
+        Parav Pandit <parav@mellanox.com>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>,
+        "stefanha@redhat.com" <stefanha@redhat.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "aadam@redhat.com" <aadam@redhat.com>,
+        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Shahaf Shuler <shahafs@mellanox.com>,
+        "hanand@xilinx.com" <hanand@xilinx.com>,
+        "mhabets@solarflare.com" <mhabets@solarflare.com>
+Subject: Re: [PATCH 3/5] vDPA: introduce vDPA bus
+Thread-Topic: [PATCH 3/5] vDPA: introduce vDPA bus
+Thread-Index: AQHVzGqUgTlkW8H4N0+zRVK4Lh0XAKftaJqA
+Date:   Thu, 16 Jan 2020 15:22:12 +0000
+Message-ID: <20200116152209.GH20978@mellanox.com>
+References: <20200116124231.20253-1-jasowang@redhat.com>
+ <20200116124231.20253-4-jasowang@redhat.com>
+In-Reply-To: <20200116124231.20253-4-jasowang@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MN2PR14CA0018.namprd14.prod.outlook.com
+ (2603:10b6:208:23e::23) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [142.68.57.212]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 2bb7f725-6a53-4627-299e-08d79a97dc78
+x-ms-traffictypediagnostic: VI1PR05MB4672:|VI1PR05MB4672:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR05MB467220B344972E3D56BF53E7CF360@VI1PR05MB4672.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 02843AA9E0
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(39860400002)(346002)(136003)(366004)(199004)(189003)(86362001)(66446008)(54906003)(66946007)(5660300002)(9746002)(4326008)(316002)(66556008)(33656002)(64756008)(36756003)(71200400001)(2616005)(8936002)(26005)(81166006)(6666004)(81156014)(186003)(6916009)(1076003)(2906002)(52116002)(7416002)(9786002)(478600001)(8676002)(66476007)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4672;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: LEZjD8mBedcmyZdfu5ZK7O9nmIyyuBfEipKziYJM/lEt5t4g7qhdHvoRR2sl8NykjWPuCAXtTEHuid9B+JewKFsvwEt6/UARk/UWq0XFaqo8O0Up5F2q065mJcW/2fxUMoK2ugxGCdMkGGY7AlHWrKA7zsuStl6S5lDAoAFzlZpgpEg7HnNUOTZD2w0hTiXS9Qfuhtid35ORyBfgiQuTEnEJsM8MYYGCLCVdS5bvIjL+TE4VuR7wunqwLWO+vCnkVI0RFQZYNeu8Su/trlMSIcr+ll/UYtOXL5pssT8wyEiTW611VpeFF+ExwNtjKTqaTL5If2vhDRUcxtXDQwU+O/ekwDJwvtRGAa7Zi32UL/2gzkSL98LRcz9g2+5aZ7s6SUA4WqcMyN9u5iuYx4gSf2oyirVmimvMTiVvF6hiO/MJoKK38pXWiMMMkxh8onhrCpcP1+63d9G+bYDH//UfgT/vDq8FbyBXdqcvk9dtJzbkEtfn8jGbDqIhqXW+PUf4
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <20CB0C9B575F27429AFD01BABED3A9C5@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3f5567ec928e20963d729350e6d674c4acb0c7a0.1578648530.git.viresh.kumar@linaro.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2bb7f725-6a53-4627-299e-08d79a97dc78
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jan 2020 15:22:12.8434
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6xt20MfOs+vFPWMh78+DoIVCiHSlKInLIUkS7D+osczidBCZDm/xCiLEzBKaxDm+CqhF3EWDZ1pUiXQlbYQmJw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4672
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Viresh,
+On Thu, Jan 16, 2020 at 08:42:29PM +0800, Jason Wang wrote:
+> vDPA device is a device that uses a datapath which complies with the
+> virtio specifications with vendor specific control path. vDPA devices
+> can be both physically located on the hardware or emulated by
+> software. vDPA hardware devices are usually implemented through PCIE
+> with the following types:
+>=20
+> - PF (Physical Function) - A single Physical Function
+> - VF (Virtual Function) - Device that supports single root I/O
+>   virtualization (SR-IOV). Its Virtual Function (VF) represents a
+>   virtualized instance of the device that can be assigned to different
+>   partitions
 
-I love your patch! Perhaps something to improve:
+> - VDEV (Virtual Device) - With technologies such as Intel Scalable
+>   IOV, a virtual device composed by host OS utilizing one or more
+>   ADIs.
+> - SF (Sub function) - Vendor specific interface to slice the Physical
+>   Function to multiple sub functions that can be assigned to different
+>   partitions as virtual devices.
 
-[auto build test WARNING on linux/master]
-[also build test WARNING on linus/master v5.5-rc6]
-[cannot apply to arm-soc/for-next next-20200115]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+I really hope we don't end up with two different ways to spell this
+same thing.
 
-url:    https://github.com/0day-ci/linux/commits/Viresh-Kumar/firmware-arm_scmi-Make-scmi-core-independent-of-transport-type/20200111-034851
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 1522d9da40bdfe502c91163e6d769332897201fa
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-130-g1a803e7a-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+> @@ -0,0 +1,2 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +obj-$(CONFIG_VDPA) +=3D vdpa.o
+> diff --git a/drivers/virtio/vdpa/vdpa.c b/drivers/virtio/vdpa/vdpa.c
+> new file mode 100644
+> index 000000000000..2b0e4a9f105d
+> +++ b/drivers/virtio/vdpa/vdpa.c
+> @@ -0,0 +1,141 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * vDPA bus.
+> + *
+> + * Copyright (c) 2019, Red Hat. All rights reserved.
+> + *     Author: Jason Wang <jasowang@redhat.com>
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
+2020 tests days
 
+> + *
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/idr.h>
+> +#include <linux/vdpa.h>
+> +
+> +#define MOD_VERSION  "0.1"
 
-sparse warnings: (new ones prefixed by >>)
+I think module versions are discouraged these days
 
->> drivers/firmware/arm_scmi/driver.c:166:37: sparse: sparse: incorrect type in argument 1 (different address spaces)
->> drivers/firmware/arm_scmi/driver.c:166:37: sparse:    expected void [noderef] <asn:2> *
->> drivers/firmware/arm_scmi/driver.c:166:37: sparse:    got unsigned char *
-   drivers/firmware/arm_scmi/driver.c:168:24: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/firmware/arm_scmi/driver.c:168:24: sparse:    expected void [noderef] <asn:2> *
->> drivers/firmware/arm_scmi/driver.c:168:24: sparse:    got restricted __le32 *
-   drivers/firmware/arm_scmi/driver.c:168:24: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/firmware/arm_scmi/driver.c:168:24: sparse:    expected void [noderef] <asn:2> *
->> drivers/firmware/arm_scmi/driver.c:168:24: sparse:    got restricted __le32 *
-   drivers/firmware/arm_scmi/driver.c:168:24: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/firmware/arm_scmi/driver.c:168:24: sparse:    expected void [noderef] <asn:2> *
->> drivers/firmware/arm_scmi/driver.c:168:24: sparse:    got restricted __le32 *
-   drivers/firmware/arm_scmi/driver.c:168:24: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/firmware/arm_scmi/driver.c:168:24: sparse:    expected void [noderef] <asn:2> *
->> drivers/firmware/arm_scmi/driver.c:168:24: sparse:    got restricted __le32 *
-   drivers/firmware/arm_scmi/driver.c:168:24: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/firmware/arm_scmi/driver.c:168:24: sparse:    expected void [noderef] <asn:2> *
->> drivers/firmware/arm_scmi/driver.c:168:24: sparse:    got restricted __le32 *
-   drivers/firmware/arm_scmi/driver.c:168:24: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/firmware/arm_scmi/driver.c:168:24: sparse:    expected void [noderef] <asn:2> *
->> drivers/firmware/arm_scmi/driver.c:168:24: sparse:    got restricted __le32 *
-   drivers/firmware/arm_scmi/driver.c:171:54: sparse: sparse: incorrect type in argument 2 (different address spaces)
->> drivers/firmware/arm_scmi/driver.c:171:54: sparse:    expected void const volatile [noderef] <asn:2> *
-   drivers/firmware/arm_scmi/driver.c:171:54: sparse:    got unsigned char *
-   drivers/firmware/arm_scmi/driver.c:220:9: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/firmware/arm_scmi/driver.c:220:9: sparse:    expected void [noderef] <asn:2> *
-   drivers/firmware/arm_scmi/driver.c:220:9: sparse:    got restricted __le32 *
-   drivers/firmware/arm_scmi/driver.c:220:9: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/firmware/arm_scmi/driver.c:220:9: sparse:    expected void [noderef] <asn:2> *
-   drivers/firmware/arm_scmi/driver.c:220:9: sparse:    got restricted __le32 *
-   drivers/firmware/arm_scmi/driver.c:223:25: sparse: sparse: incorrect type in argument 2 (different address spaces)
-   drivers/firmware/arm_scmi/driver.c:223:25: sparse:    expected void [noderef] <asn:2> *
-   drivers/firmware/arm_scmi/driver.c:223:25: sparse:    got restricted __le32 *
-   drivers/firmware/arm_scmi/driver.c:225:20: sparse: sparse: incorrect type in argument 2 (different address spaces)
-   drivers/firmware/arm_scmi/driver.c:225:20: sparse:    expected void [noderef] <asn:2> *
-   drivers/firmware/arm_scmi/driver.c:225:20: sparse:    got restricted __le32 *
-   drivers/firmware/arm_scmi/driver.c:226:57: sparse: sparse: incorrect type in argument 2 (different address spaces)
-   drivers/firmware/arm_scmi/driver.c:226:57: sparse:    expected void [noderef] <asn:2> *
-   drivers/firmware/arm_scmi/driver.c:226:57: sparse:    got restricted __le32 *
-   drivers/firmware/arm_scmi/driver.c:227:47: sparse: sparse: incorrect type in argument 2 (different address spaces)
-   drivers/firmware/arm_scmi/driver.c:227:47: sparse:    expected void [noderef] <asn:2> *
-   drivers/firmware/arm_scmi/driver.c:227:47: sparse:    got restricted __le32 *
-   drivers/firmware/arm_scmi/driver.c:229:29: sparse: sparse: incorrect type in argument 1 (different address spaces)
->> drivers/firmware/arm_scmi/driver.c:229:29: sparse:    expected void volatile [noderef] <asn:2> *
-   drivers/firmware/arm_scmi/driver.c:229:29: sparse:    got unsigned char *
-   drivers/firmware/arm_scmi/driver.c:321:29: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/firmware/arm_scmi/driver.c:321:29: sparse:    expected void [noderef] <asn:2> *
-   drivers/firmware/arm_scmi/driver.c:321:29: sparse:    got restricted __le32 *
-   drivers/firmware/arm_scmi/driver.c:363:23: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/firmware/arm_scmi/driver.c:363:23: sparse:    expected void [noderef] <asn:2> *
-   drivers/firmware/arm_scmi/driver.c:363:23: sparse:    got restricted __le32 *
-   drivers/firmware/arm_scmi/driver.c:363:23: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/firmware/arm_scmi/driver.c:363:23: sparse:    expected void [noderef] <asn:2> *
-   drivers/firmware/arm_scmi/driver.c:363:23: sparse:    got restricted __le32 *
-   drivers/firmware/arm_scmi/driver.c:368:26: sparse: sparse: incorrect type in argument 1 (different address spaces)
-   drivers/firmware/arm_scmi/driver.c:368:26: sparse:    expected void [noderef] <asn:2> *
-   drivers/firmware/arm_scmi/driver.c:368:26: sparse:    got restricted __le32 *
->> drivers/firmware/arm_scmi/driver.c:707:24: sparse: sparse: incorrect type in assignment (different address spaces)
->> drivers/firmware/arm_scmi/driver.c:707:24: sparse:    expected void *payload
->> drivers/firmware/arm_scmi/driver.c:707:24: sparse:    got void [noderef] <asn:2> *
+> +#define MOD_DESC     "vDPA bus"
+> +#define MOD_AUTHOR   "Jason Wang <jasowang@redhat.com>"
+> +#define MOD_LICENSE  "GPL v2"
+> +
+> +static DEFINE_IDA(vdpa_index_ida);
+> +
+> +struct device *vdpa_get_parent(struct vdpa_device *vdpa)
+> +{
+> +	return vdpa->dev.parent;
+> +}
+> +EXPORT_SYMBOL(vdpa_get_parent);
+> +
+> +void vdpa_set_parent(struct vdpa_device *vdpa, struct device *parent)
+> +{
+> +	vdpa->dev.parent =3D parent;
+> +}
+> +EXPORT_SYMBOL(vdpa_set_parent);
+> +
+> +struct vdpa_device *dev_to_vdpa(struct device *_dev)
+> +{
+> +	return container_of(_dev, struct vdpa_device, dev);
+> +}
+> +EXPORT_SYMBOL_GPL(dev_to_vdpa);
+> +
+> +struct device *vdpa_to_dev(struct vdpa_device *vdpa)
+> +{
+> +	return &vdpa->dev;
+> +}
+> +EXPORT_SYMBOL_GPL(vdpa_to_dev);
 
-vim +166 drivers/firmware/arm_scmi/driver.c
+Why these trivial assessors? Seems unnecessary, or should at least be
+static inlines in a header
 
-aa4f886f3893f8 Sudeep Holla 2017-03-28  162  
-aa4f886f3893f8 Sudeep Holla 2017-03-28  163  static void scmi_fetch_response(struct scmi_xfer *xfer,
-800abc7f2fa85c Viresh Kumar 2020-01-10  164  				struct scmi_shared_mem *mem)
-aa4f886f3893f8 Sudeep Holla 2017-03-28  165  {
-aa4f886f3893f8 Sudeep Holla 2017-03-28 @166  	xfer->hdr.status = ioread32(mem->msg_payload);
-c29a628976b39e Sudeep Holla 2019-07-08  167  	/* Skip the length of header and status in payload area i.e 8 bytes */
-aa4f886f3893f8 Sudeep Holla 2017-03-28 @168  	xfer->rx.len = min_t(size_t, xfer->rx.len, ioread32(&mem->length) - 8);
-aa4f886f3893f8 Sudeep Holla 2017-03-28  169  
-aa4f886f3893f8 Sudeep Holla 2017-03-28  170  	/* Take a copy to the rx buffer.. */
-aa4f886f3893f8 Sudeep Holla 2017-03-28 @171  	memcpy_fromio(xfer->rx.buf, mem->msg_payload + 4, xfer->rx.len);
-aa4f886f3893f8 Sudeep Holla 2017-03-28  172  }
-aa4f886f3893f8 Sudeep Holla 2017-03-28  173  
-aa4f886f3893f8 Sudeep Holla 2017-03-28  174  /**
-aa4f886f3893f8 Sudeep Holla 2017-03-28  175   * pack_scmi_header() - packs and returns 32-bit header
-aa4f886f3893f8 Sudeep Holla 2017-03-28  176   *
-aa4f886f3893f8 Sudeep Holla 2017-03-28  177   * @hdr: pointer to header containing all the information on message id,
-aa4f886f3893f8 Sudeep Holla 2017-03-28  178   *	protocol id and sequence id.
-1baf47c2e5c946 Sudeep Holla 2018-05-09  179   *
-5b65af8f60f580 Sudeep Holla 2019-07-08  180   * Return: 32-bit packed message header to be sent to the platform.
-aa4f886f3893f8 Sudeep Holla 2017-03-28  181   */
-aa4f886f3893f8 Sudeep Holla 2017-03-28  182  static inline u32 pack_scmi_header(struct scmi_msg_hdr *hdr)
-aa4f886f3893f8 Sudeep Holla 2017-03-28  183  {
-354b2e36d7dea9 Sudeep Holla 2018-05-09  184  	return FIELD_PREP(MSG_ID_MASK, hdr->id) |
-354b2e36d7dea9 Sudeep Holla 2018-05-09  185  		FIELD_PREP(MSG_TOKEN_ID_MASK, hdr->seq) |
-354b2e36d7dea9 Sudeep Holla 2018-05-09  186  		FIELD_PREP(MSG_PROTOCOL_ID_MASK, hdr->protocol_id);
-aa4f886f3893f8 Sudeep Holla 2017-03-28  187  }
-aa4f886f3893f8 Sudeep Holla 2017-03-28  188  
-22d1f76109f74b Sudeep Holla 2019-07-08  189  /**
-22d1f76109f74b Sudeep Holla 2019-07-08  190   * unpack_scmi_header() - unpacks and records message and protocol id
-22d1f76109f74b Sudeep Holla 2019-07-08  191   *
-22d1f76109f74b Sudeep Holla 2019-07-08  192   * @msg_hdr: 32-bit packed message header sent from the platform
-22d1f76109f74b Sudeep Holla 2019-07-08  193   * @hdr: pointer to header to fetch message and protocol id.
-22d1f76109f74b Sudeep Holla 2019-07-08  194   */
-22d1f76109f74b Sudeep Holla 2019-07-08  195  static inline void unpack_scmi_header(u32 msg_hdr, struct scmi_msg_hdr *hdr)
-22d1f76109f74b Sudeep Holla 2019-07-08  196  {
-22d1f76109f74b Sudeep Holla 2019-07-08  197  	hdr->id = MSG_XTRACT_ID(msg_hdr);
-22d1f76109f74b Sudeep Holla 2019-07-08  198  	hdr->protocol_id = MSG_XTRACT_PROT_ID(msg_hdr);
-22d1f76109f74b Sudeep Holla 2019-07-08  199  }
-22d1f76109f74b Sudeep Holla 2019-07-08  200  
-aa4f886f3893f8 Sudeep Holla 2017-03-28  201  /**
-800abc7f2fa85c Viresh Kumar 2020-01-10  202   * scmi_tx_prepare() - callback to prepare for the transfer
-aa4f886f3893f8 Sudeep Holla 2017-03-28  203   *
-800abc7f2fa85c Viresh Kumar 2020-01-10  204   * @cinfo: SCMI channel info
-800abc7f2fa85c Viresh Kumar 2020-01-10  205   * @t: transfer message
-aa4f886f3893f8 Sudeep Holla 2017-03-28  206   *
-aa4f886f3893f8 Sudeep Holla 2017-03-28  207   * This function prepares the shared memory which contains the header and the
-aa4f886f3893f8 Sudeep Holla 2017-03-28  208   * payload.
-aa4f886f3893f8 Sudeep Holla 2017-03-28  209   */
-800abc7f2fa85c Viresh Kumar 2020-01-10  210  void scmi_tx_prepare(struct scmi_chan_info *cinfo, struct scmi_xfer *t)
-aa4f886f3893f8 Sudeep Holla 2017-03-28  211  {
-800abc7f2fa85c Viresh Kumar 2020-01-10  212  	struct scmi_shared_mem *mem = cinfo->payload;
-aa4f886f3893f8 Sudeep Holla 2017-03-28  213  
-9dc34d635c67e5 Sudeep Holla 2019-07-08  214  	/*
-9dc34d635c67e5 Sudeep Holla 2019-07-08  215  	 * Ideally channel must be free by now unless OS timeout last
-9dc34d635c67e5 Sudeep Holla 2019-07-08  216  	 * request and platform continued to process the same, wait
-9dc34d635c67e5 Sudeep Holla 2019-07-08  217  	 * until it releases the shared memory, otherwise we may endup
-9dc34d635c67e5 Sudeep Holla 2019-07-08  218  	 * overwriting its response with new message payload or vice-versa
-9dc34d635c67e5 Sudeep Holla 2019-07-08  219  	 */
-9dc34d635c67e5 Sudeep Holla 2019-07-08  220  	spin_until_cond(ioread32(&mem->channel_status) &
-9dc34d635c67e5 Sudeep Holla 2019-07-08  221  			SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE);
-aa4f886f3893f8 Sudeep Holla 2017-03-28  222  	/* Mark channel busy + clear error */
-aa4f886f3893f8 Sudeep Holla 2017-03-28  223  	iowrite32(0x0, &mem->channel_status);
-aa4f886f3893f8 Sudeep Holla 2017-03-28  224  	iowrite32(t->hdr.poll_completion ? 0 : SCMI_SHMEM_FLAG_INTR_ENABLED,
-aa4f886f3893f8 Sudeep Holla 2017-03-28  225  		  &mem->flags);
-aa4f886f3893f8 Sudeep Holla 2017-03-28  226  	iowrite32(sizeof(mem->msg_header) + t->tx.len, &mem->length);
-aa4f886f3893f8 Sudeep Holla 2017-03-28  227  	iowrite32(pack_scmi_header(&t->hdr), &mem->msg_header);
-aa4f886f3893f8 Sudeep Holla 2017-03-28  228  	if (t->tx.buf)
-aa4f886f3893f8 Sudeep Holla 2017-03-28 @229  		memcpy_toio(mem->msg_payload, t->tx.buf, t->tx.len);
-aa4f886f3893f8 Sudeep Holla 2017-03-28  230  }
-aa4f886f3893f8 Sudeep Holla 2017-03-28  231  
+> +int register_vdpa_device(struct vdpa_device *vdpa)
+> +{
 
-:::::: The code at line 166 was first introduced by commit
-:::::: aa4f886f3893f88146e8e02fd1e9c5c9e43cbcc1 firmware: arm_scmi: add basic driver infrastructure for SCMI
+Usually we want to see symbols consistently prefixed with vdpa_*, is
+there a reason why register/unregister are swapped?
 
-:::::: TO: Sudeep Holla <sudeep.holla@arm.com>
-:::::: CC: Sudeep Holla <sudeep.holla@arm.com>
+> +	int err;
+> +
+> +	if (!vdpa_get_parent(vdpa))
+> +		return -EINVAL;
+> +
+> +	if (!vdpa->config)
+> +		return -EINVAL;
+> +
+> +	err =3D ida_simple_get(&vdpa_index_ida, 0, 0, GFP_KERNEL);
+> +	if (err < 0)
+> +		return -EFAULT;
+> +
+> +	vdpa->dev.bus =3D &vdpa_bus;
+> +	device_initialize(&vdpa->dev);
 
----
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+IMHO device_initialize should not be called inside something called
+register, toooften we find out that the caller drivers need the device
+to be initialized earlier, ie to use the kref, or something.
+
+I find the best flow is to have some init function that does the
+device_initialize and sets the device_name that the driver can call
+early.
+
+Shouldn't there be a device/driver matching process of some kind?
+
+Jason
