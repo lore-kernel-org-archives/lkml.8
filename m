@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 382D3C33CB7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B689EC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:57:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 069372467C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E5672468B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:57:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193835;
-	bh=pkx0yXIJGjk4uDyY2N8qEi31EmVtnwYkT0qbkPSW844=;
+	s=default; t=1579193837;
+	bh=LHdU43H2Tr//VSt9UKxgsbBuqAgJVBpuTORBTKsdp9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VWV+y03BPJM4E46yo0JuqORfYY//lqYyJkovf7G/3zndVqxhnjXZT2GgDUvUzfpv/
-	 W4pYATlglFpcVHdZE/Byxucx/z+tnVYdWTSMYAeClH2z+qO1rvz7oZfbHmkxyQQbwH
-	 pK+UDP1PVvrqZ2gCyhN0bJu4H5udzhBcujt0LF/4=
+	b=M/rHV42lol81zu4KSVSpJX1yxp0llekJH4mtUuW0njcSthzTF5Tkt/N4cwGz1eH76
+	 H9Eez1cdne7Y5xUZR2dt0GtpKyBZgBZUfI78Vo1YwTgA1kFoDgi+gGdhCeCg2SrulX
+	 aHUyVmxbQunSpPW+m7sOQYFG01k0/cTKVAXziJ5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387458AbgAPQ5O (ORCPT
+        id S1733176AbgAPQ5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:57:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43924 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:57:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732567AbgAPQ5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:57:07 -0500
+        id S2387439AbgAPQ5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:57:09 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C335D2467E;
-        Thu, 16 Jan 2020 16:57:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70EDD24681;
+        Thu, 16 Jan 2020 16:57:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193826;
-        bh=pkx0yXIJGjk4uDyY2N8qEi31EmVtnwYkT0qbkPSW844=;
+        s=default; t=1579193829;
+        bh=LHdU43H2Tr//VSt9UKxgsbBuqAgJVBpuTORBTKsdp9s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xZbLbV2Z5t8P2z3tFmpfwdCp+fqY1cYUQSGrQFwGgVX8pgXxbXQ+0nPwrWgd2jJj/
-         gtqOLDnCNUR086UnAw40NeSZovwxz6sZb6y67x/MfaPjILFjLOwxc7oNCjVYaaOUa0
-         MvQBOsKPH7Soj5wG8vag7nYhr0Dri/epvZWJzVGU=
+        b=c6NjOXpz3bgeZ39SuGvh4B2YgOHXQSLCeaRBr04QGtSUTDnrdh+USRivJ0LQhJeDq
+         BEDgk6HZedaQBB5XucWkD/MqOE2raslXe56MqCZrRAArdTqIWCGqkl/FF4+LCADyuI
+         n+V1ep+KI028/ZIqfiexUvz69QfeGpfyx9tgXJRI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Yangtao Li <tiny.windzz@gmail.com>,
         Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 084/671] clk: highbank: fix refcount leak in hb_clk_init()
-Date:   Thu, 16 Jan 2020 11:45:15 -0500
-Message-Id: <20200116165502.8838-84-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 086/671] clk: ti: fix refcount leak in ti_dt_clocks_register()
+Date:   Thu, 16 Jan 2020 11:45:17 -0500
+Message-Id: <20200116165502.8838-86-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -61,31 +62,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yangtao Li <tiny.windzz@gmail.com>
 
-[ Upstream commit 5eb8ba90958de1285120dae5d3a5d2b1a360b3b4 ]
+[ Upstream commit 2274d8001fbb5e1942fbcab5ad2eb15553b09ed2 ]
 
 The of_find_compatible_node() returns a node pointer with refcount
 incremented, but there is the lack of use of the of_node_put() when
 done. Add the missing of_node_put() to release the refcount.
 
 Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-Fixes: 26cae166cff9 ("ARM: highbank: remove custom .init_time hook")
+Fixes: 5b385a45e001 ("clk: ti: add support for clkctrl aliases")
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk-highbank.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clk/ti/clk.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/clk-highbank.c b/drivers/clk/clk-highbank.c
-index 727ed8e1bb72..8e4581004695 100644
---- a/drivers/clk/clk-highbank.c
-+++ b/drivers/clk/clk-highbank.c
-@@ -293,6 +293,7 @@ static __init struct clk *hb_clk_init(struct device_node *node, const struct clk
- 	/* Map system registers */
- 	srnp = of_find_compatible_node(NULL, NULL, "calxeda,hb-sregs");
- 	hb_clk->reg = of_iomap(srnp, 0);
-+	of_node_put(srnp);
- 	BUG_ON(!hb_clk->reg);
- 	hb_clk->reg += reg;
+diff --git a/drivers/clk/ti/clk.c b/drivers/clk/ti/clk.c
+index 27e0979b3158..0cc87c6ae91c 100644
+--- a/drivers/clk/ti/clk.c
++++ b/drivers/clk/ti/clk.c
+@@ -188,9 +188,13 @@ void __init ti_dt_clocks_register(struct ti_dt_clk oclks[])
+ 			clkdev_add(&c->lk);
+ 		} else {
+ 			if (num_args && !has_clkctrl_data) {
+-				if (of_find_compatible_node(NULL, NULL,
+-							    "ti,clkctrl")) {
++				struct device_node *np;
++
++				np = of_find_compatible_node(NULL, NULL,
++							     "ti,clkctrl");
++				if (np) {
+ 					has_clkctrl_data = true;
++					of_node_put(np);
+ 				} else {
+ 					clkctrl_nodes_missing = true;
  
 -- 
 2.20.1
