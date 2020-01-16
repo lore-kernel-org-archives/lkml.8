@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 124EFC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDBAC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6B08206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 318B8206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:55:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200941;
-	bh=2rpy/MMMrn6+0nPuWAz83Vpo/mL3rkWiZmO0V/DJzLU=;
+	s=default; t=1579200944;
+	bh=P6tLADLspSSeMaFKOgqI3Hqx8n+Ij3phNyn87HCQQao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xiw3EVBeLAswn+qOQeJ1dv86IIzz1wj4O7u3mOvdGr5wde93vspuLUT/6o+XzOLZh
-	 0QjO7RR8FsFviamwQ8Bc/yLPQsPpy7H8VuKc4sw9bEegksCNnrtGTtOhLfJ4JFqizR
-	 KvghAsYxljeWtYxPO6cWIKYJusB3btm6dNNQ33hU=
+	b=Q+SmA2Eny/QWzkgAOTmFsdK80HAcMkRI0Tk/aBXIxfXifX/Z8Jfects/JahbEz6L2
+	 PT2W2QyimcFkLYtOnKH7ZQc/1cNFFCtzBWVJ38Q0A+2YHL0rgXdNM72/cOFFaBjDW5
+	 LGWJ3RUAHaBD28T5555nTQ5OlLiJzjDTnWuCezzg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388716AbgAPRHe (ORCPT
+        id S2388701AbgAPRHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:07:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34204 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:07:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388691AbgAPRF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:05:27 -0500
+        id S2389109AbgAPRHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:07:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85F3D2087E;
-        Thu, 16 Jan 2020 17:05:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44BF921D56;
+        Thu, 16 Jan 2020 17:07:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194327;
-        bh=2rpy/MMMrn6+0nPuWAz83Vpo/mL3rkWiZmO0V/DJzLU=;
+        s=default; t=1579194440;
+        bh=P6tLADLspSSeMaFKOgqI3Hqx8n+Ij3phNyn87HCQQao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kG9O+YWIRmv+3gx+YVhUqsd/GVpBSZhg+RDoL1dglH9+OafK61gBiTaKM+lqHwQQA
-         ROhzvS1/zRwDyCi+/Z5kTgD4V81qSJpw3twIqy915XGoYBUduJIvRvzHgIkZuJqLtT
-         LPp79en7GBiU1ewtZYavS6to/ih6lcTVQPGhr73w=
+        b=2YRz/gR7h2547YagzxoOavDCvZrB9jcY9L/uK8YIYVF/mYR56ENf9yrRet1EQUwlq
+         liyy+9sf1VOIEp70+nfOVsJWXbx23DqcmnNPn249eZDAtvY6RgA7ccTY2Xpo+swcsv
+         4UBV8DTt/d1+YGCi5li2XqAZgONoxBt6ywrkPIfg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 275/671] drm/fb-helper: generic: Call drm_client_add() after setup is done
-Date:   Thu, 16 Jan 2020 11:58:33 -0500
-Message-Id: <20200116170509.12787-12-sashal@kernel.org>
+Cc:     Jiong Wang <jiong.wang@netronome.com>,
+        Oleksandr Natalenko <oleksandr@natalenko.name>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, oss-drivers@netronome.com
+Subject: [PATCH AUTOSEL 4.19 353/671] nfp: bpf: fix static check error through tightening shift amount adjustment
+Date:   Thu, 16 Jan 2020 11:59:51 -0500
+Message-Id: <20200116170509.12787-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -61,47 +64,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Noralf Trønnes <noralf@tronnes.org>
+From: Jiong Wang <jiong.wang@netronome.com>
 
-[ Upstream commit 6e3f17ee73f7e3c2ef0e2c8fd8624b2ece8ef2c9 ]
+[ Upstream commit 69e168ebdcfcb87ce7252d4857d570f99996fa27 ]
 
-Hotplug can happen while drm_fbdev_generic_setup() is running so move
-drm_client_add() call after setup is done to avoid
-drm_fbdev_client_hotplug() running in two threads at the same time.
+NFP shift instruction has something special. If shift direction is left
+then shift amount of 1 to 31 is specified as 32 minus the amount to shift.
 
-Fixes: 9060d7f49376 ("drm/fb-helper: Finish the generic fbdev emulation")
-Cc: stable@vger.kernel.org
-Reported-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190401141358.25309-1-noralf@tronnes.org
+But no need to do this for indirect shift which has shift amount be 0. Even
+after we do this subtraction, shift amount 0 will be turned into 32 which
+will eventually be encoded the same as 0 because only low 5 bits are
+encoded, but shift amount be 32 will fail the FIELD_PREP check done later
+on shift mask (0x1f), due to 32 is out of mask range. Such error has been
+observed when compiling nfp/bpf/jit.c using gcc 8.3 + O3.
+
+This issue has started when indirect shift support added after which the
+incoming shift amount to __emit_shf could be 0, therefore it is at that
+time shift amount adjustment inside __emit_shf should have been tightened.
+
+Fixes: 991f5b3651f6 ("nfp: bpf: support logic indirect shifts (BPF_[L|R]SH | BPF_X)")
+Reported-by: Oleksandr Natalenko <oleksandr@natalenko.name>
+Reported-by: Pablo Cascón <pablo.cascon@netronome.com
+Reviewed-by: Quentin Monnet <quentin.monnet@netronome.com>
+Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Jiong Wang <jiong.wang@netronome.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_fb_helper.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/netronome/nfp/bpf/jit.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_fb_helper.c b/drivers/gpu/drm/drm_fb_helper.c
-index 1c87ad6667e7..da9a381d6b57 100644
---- a/drivers/gpu/drm/drm_fb_helper.c
-+++ b/drivers/gpu/drm/drm_fb_helper.c
-@@ -3257,8 +3257,6 @@ int drm_fbdev_generic_setup(struct drm_device *dev, unsigned int preferred_bpp)
- 		return ret;
+diff --git a/drivers/net/ethernet/netronome/nfp/bpf/jit.c b/drivers/net/ethernet/netronome/nfp/bpf/jit.c
+index 4e18d95e548f..c3ce0fb47a0f 100644
+--- a/drivers/net/ethernet/netronome/nfp/bpf/jit.c
++++ b/drivers/net/ethernet/netronome/nfp/bpf/jit.c
+@@ -326,7 +326,18 @@ __emit_shf(struct nfp_prog *nfp_prog, u16 dst, enum alu_dst_ab dst_ab,
+ 		return;
  	}
  
--	drm_client_add(&fb_helper->client);
--
- 	if (!preferred_bpp)
- 		preferred_bpp = dev->mode_config.preferred_depth;
- 	if (!preferred_bpp)
-@@ -3267,6 +3265,8 @@ int drm_fbdev_generic_setup(struct drm_device *dev, unsigned int preferred_bpp)
+-	if (sc == SHF_SC_L_SHF)
++	/* NFP shift instruction has something special. If shift direction is
++	 * left then shift amount of 1 to 31 is specified as 32 minus the amount
++	 * to shift.
++	 *
++	 * But no need to do this for indirect shift which has shift amount be
++	 * 0. Even after we do this subtraction, shift amount 0 will be turned
++	 * into 32 which will eventually be encoded the same as 0 because only
++	 * low 5 bits are encoded, but shift amount be 32 will fail the
++	 * FIELD_PREP check done later on shift mask (0x1f), due to 32 is out of
++	 * mask range.
++	 */
++	if (sc == SHF_SC_L_SHF && shift)
+ 		shift = 32 - shift;
  
- 	drm_fbdev_client_hotplug(&fb_helper->client);
- 
-+	drm_client_add(&fb_helper->client);
-+
- 	return 0;
- }
- EXPORT_SYMBOL(drm_fbdev_generic_setup);
+ 	insn = OP_SHF_BASE |
 -- 
 2.20.1
 
