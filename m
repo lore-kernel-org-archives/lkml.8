@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E92F4C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDCC3C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE5012064C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:42:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 894B02072B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:42:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218147;
-	bh=kX37GmXtMftvg79iJNrFFU0voest/XQlIMKKYxjKyew=;
+	s=default; t=1579218150;
+	bh=3gmjdTaVUXoSoGNgiGnKtLI5R2KJxvEfY/3ptwXubSw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZLU+1fTmvcXIPfN9bqkLWNuR6Svn3Aa+/xBobm0ZPYOnQJZk5K98ShvE23ZOAC1yq
-	 yD8tNgrHhVTqMDd4IrD4DycqDsoZLMZ9kCJJp96C8jq+qCm6YKif15AbI9A7rFMLTU
-	 XlJfx4BrL2MycCN4c4mjJo76TzADX0dGggQhtJ6k=
+	b=wEXeagTR44xGLagflDJ759YGnFSPV9PnH21FYVo1qyyYn2yJNub24zglRh4/9A76K
+	 YSU8CbhmkT41pEhCLAnj6YwNNER6Zj5cj0JWYXknczJcQoGxXkMrX4xKWdRzA6rUf/
+	 Ul7GNF8T98XSEFbqSX+4FSTgUCLyT8/9Opb37FGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390502AbgAPXm0 (ORCPT
+        id S2391879AbgAPXm3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:42:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57576 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:42:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389546AbgAPX0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:26:42 -0500
+        id S1729414AbgAPX0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:26:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 006D32072E;
-        Thu, 16 Jan 2020 23:26:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93D0920684;
+        Thu, 16 Jan 2020 23:26:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217202;
-        bh=kX37GmXtMftvg79iJNrFFU0voest/XQlIMKKYxjKyew=;
+        s=default; t=1579217200;
+        bh=3gmjdTaVUXoSoGNgiGnKtLI5R2KJxvEfY/3ptwXubSw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VIe2GhJ0wQhOqlk1P/gR0FQkK4EoATZuf6umEDng9Ur/O2nr3zzlzhXZIkpe+CTvr
-         jFGwj3j5ulVC8Jpa5xaK6rAwm6XJ/5ujSds9ryZei8RrVD5r6sI8CGJHV1MC0rhbxo
-         PV3TYQD1N1phlmSAbcSFEyPXIgvPoqEK/VprTdr4=
+        b=vd3/qxNo4DXqBp1N8odiO342AgKBy417suU9disaPqELo3bFWLyjdFn7w8aoyvCqD
+         NeCf2qhjnp1Zcwz0KSdY8B/PFQYdyFnMqlYARmbdtYmOgAIdXgQHFeqCiJMfHdX2x5
+         GAA5XvEdObOuj3k2oxU2oCX17HZvJyvdivrG6BuE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Huanpeng Xin <huanpeng.xin@unisoc.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 165/203] spi: sprd: Fix the incorrect SPI register
-Date:   Fri, 17 Jan 2020 00:18:02 +0100
-Message-Id: <20200116231759.082586236@linuxfoundation.org>
+        stable@vger.kernel.org, Zhihao Cheng <chengzhihao1@huawei.com>,
+        "zhangyi (F)" <yi.zhang@huawei.com>,
+        Richard Weinberger <richard@nod.at>
+Subject: [PATCH 5.4 164/203] ubifs: do_kill_orphans: Fix a memory leak bug
+Date:   Fri, 17 Jan 2020 00:18:01 +0100
+Message-Id: <20200116231759.013280402@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -60,34 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huanpeng Xin <huanpeng.xin@unisoc.com>
+From: Zhihao Cheng <chengzhihao1@huawei.com>
 
-commit 5e9c5236b7b86779b53b762f7e66240c3f18314b upstream.
+commit 10256f000932f12596dc043cf880ecf488a32510 upstream.
 
-The original code used an incorrect SPI register to initialize the SPI
-controller in sprd_spi_init_hw(), thus fix it.
+If there are more than one valid snod on the sleb->nodes list,
+do_kill_orphans will malloc ino more than once without releasing
+previous ino's memory. Finally, it will trigger memory leak.
 
-Fixes: e7d973a31c24 ("spi: sprd: Add SPI driver for Spreadtrum SC9860")
-Signed-off-by: Huanpeng Xin <huanpeng.xin@unisoc.com>
-Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
-Link: https://lore.kernel.org/r/b4f7f89ec0fdc595335687bfbd9f962213bc4a1d.1575443510.git.baolin.wang7@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: ee1438ce5dc4 ("ubifs: Check link count of inodes when...")
+Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/spi/spi-sprd.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ubifs/orphan.c |   17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
---- a/drivers/spi/spi-sprd.c
-+++ b/drivers/spi/spi-sprd.c
-@@ -674,7 +674,7 @@ static void sprd_spi_init_hw(struct sprd
- 	u16 word_delay, interval;
- 	u32 val;
+--- a/fs/ubifs/orphan.c
++++ b/fs/ubifs/orphan.c
+@@ -631,12 +631,17 @@ static int do_kill_orphans(struct ubifs_
+ 	ino_t inum;
+ 	int i, n, err, first = 1;
  
--	val = readl_relaxed(ss->base + SPRD_SPI_CTL7);
-+	val = readl_relaxed(ss->base + SPRD_SPI_CTL0);
- 	val &= ~(SPRD_SPI_SCK_REV | SPRD_SPI_NG_TX | SPRD_SPI_NG_RX);
- 	/* Set default chip selection, clock phase and clock polarity */
- 	val |= ss->hw_mode & SPI_CPHA ? SPRD_SPI_NG_RX : SPRD_SPI_NG_TX;
++	ino = kmalloc(UBIFS_MAX_INO_NODE_SZ, GFP_NOFS);
++	if (!ino)
++		return -ENOMEM;
++
+ 	list_for_each_entry(snod, &sleb->nodes, list) {
+ 		if (snod->type != UBIFS_ORPH_NODE) {
+ 			ubifs_err(c, "invalid node type %d in orphan area at %d:%d",
+ 				  snod->type, sleb->lnum, snod->offs);
+ 			ubifs_dump_node(c, snod->node);
+-			return -EINVAL;
++			err = -EINVAL;
++			goto out_free;
+ 		}
+ 
+ 		orph = snod->node;
+@@ -663,20 +668,18 @@ static int do_kill_orphans(struct ubifs_
+ 				ubifs_err(c, "out of order commit number %llu in orphan node at %d:%d",
+ 					  cmt_no, sleb->lnum, snod->offs);
+ 				ubifs_dump_node(c, snod->node);
+-				return -EINVAL;
++				err = -EINVAL;
++				goto out_free;
+ 			}
+ 			dbg_rcvry("out of date LEB %d", sleb->lnum);
+ 			*outofdate = 1;
+-			return 0;
++			err = 0;
++			goto out_free;
+ 		}
+ 
+ 		if (first)
+ 			first = 0;
+ 
+-		ino = kmalloc(UBIFS_MAX_INO_NODE_SZ, GFP_NOFS);
+-		if (!ino)
+-			return -ENOMEM;
+-
+ 		n = (le32_to_cpu(orph->ch.len) - UBIFS_ORPH_NODE_SZ) >> 3;
+ 		for (i = 0; i < n; i++) {
+ 			union ubifs_key key1, key2;
 
 
