@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 409ABC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A93C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16F7E20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 242672077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:22:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202576;
-	bh=N/YR52bu4YthFVAa+5FgcQ9s5xNLJKWMWEoOcKzJk1I=;
+	s=default; t=1579202578;
+	bh=NbCpVGtI8d6CdI6OvixVfZhojY75tA9jR5b/KGp4u8g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x/N16K0iZk27zFJroo1U6NbMYBRp0OFrP8h1foR5s0IqsK6HVKRvLRZabmJpWqWUd
-	 3oizyXh3FnhI5XyP+i6wkTUsFN//KxdQjA4vQNFGsC5toI39ef/31+i9T6MYP6Prv0
-	 JfqE3GWRAWNYdVEWlbKgh2WuIkbdl7EML/w30wG0=
+	b=YmPNnPX9gQRkPw/bseJ9EVEYxfx9IB0LGgVQKlhvPRRmabz8uv4CIg1AsxlPBW9+u
+	 +YqE/7oJq1lMDZklfKXiUlgKry78coZVZI0uA1BQ4OzFLbgGfO+Khx8gcfu4NFBlMD
+	 8xp8IBW1yyIutibATXfSA5liB5vkfYE5CoBCAg9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437745AbgAPTWy (ORCPT
+        id S1730820AbgAPQxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:22:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37204 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730785AbgAPQxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jan 2020 11:53:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36844 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730694AbgAPQxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:53:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 180C721582;
-        Thu, 16 Jan 2020 16:53:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA3E321582;
+        Thu, 16 Jan 2020 16:53:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193601;
-        bh=N/YR52bu4YthFVAa+5FgcQ9s5xNLJKWMWEoOcKzJk1I=;
+        s=default; t=1579193592;
+        bh=NbCpVGtI8d6CdI6OvixVfZhojY75tA9jR5b/KGp4u8g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G2pwyp/HQWyer/lVeItJwC/TINEI4T5Cd9QPyTaamsKkesN3WXv6L36+yMzQPktAy
-         q2Ee9wR654qwsgw1CJ6T0aFNNlFxxME0EgUhbx42FlL+1jk4BVzNEblWGaFVQnM9qK
-         RN6n1kB5w55b7FCaCK9/00bO0MC32hV9OMpUVFB8=
+        b=rSdJis2gpgTI2CZXtPIbjplJGo3ulVExtCt7NPOML1itdm0WMOCyHGY4cjRIGvhDl
+         +WyL3sQKyxqee1/BHf3AnpZcvw+vRNfBg6vS1bXjW1WJfbdobQQ1rMpeHomzDmqXeQ
+         uYYT6yPAr1bUTTmIQO1/BjeWwXSPcw2K/wMWJPsw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 140/205] NFSv4.x: Handle bad/dead sessions correctly in nfs41_sequence_process()
-Date:   Thu, 16 Jan 2020 11:41:55 -0500
-Message-Id: <20200116164300.6705-140-sashal@kernel.org>
+Cc:     Hewenliang <hewenliang4@huawei.com>, Tejun Heo <tj@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 132/205] kselftests: cgroup: Avoid the reuse of fd after it is deallocated
+Date:   Thu, 16 Jan 2020 11:41:47 -0500
+Message-Id: <20200116164300.6705-132-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -58,118 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Hewenliang <hewenliang4@huawei.com>
 
-[ Upstream commit 5c441544f045e679afd6c3c6d9f7aaf5fa5f37b0 ]
+[ Upstream commit d671fa6393d6788fc65555d4643b71cb3a361f36 ]
 
-If the server returns a bad or dead session error, the we don't want
-to update the session slot number, but just immediately schedule
-recovery and allow it to proceed.
+It is necessary to set fd to -1 when inotify_add_watch() fails in
+cg_prepare_for_wait. Otherwise the fd which has been closed in
+cg_prepare_for_wait may be misused in other functions such as
+cg_enter_and_wait_for_frozen and cg_freeze_wait.
 
-We can/should then remove handling in other places
-
-Fixes: 3453d5708b33 ("NFSv4.1: Avoid false retries when RPC calls are interrupted")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Fixes: 5313bfe425c8 ("selftests: cgroup: add freezer controller self-tests")
+Signed-off-by: Hewenliang <hewenliang4@huawei.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4proc.c | 34 +++++++++++++++++++++++++---------
- 1 file changed, 25 insertions(+), 9 deletions(-)
+ tools/testing/selftests/cgroup/test_freezer.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index caacf5e7f5e1..a591aaf31071 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -521,9 +521,7 @@ static int nfs4_do_handle_exception(struct nfs_server *server,
- 		case -NFS4ERR_DEADSESSION:
- 		case -NFS4ERR_SEQ_FALSE_RETRY:
- 		case -NFS4ERR_SEQ_MISORDERED:
--			dprintk("%s ERROR: %d Reset session\n", __func__,
--				errorcode);
--			nfs4_schedule_session_recovery(clp->cl_session, errorcode);
-+			/* Handled in nfs41_sequence_process() */
- 			goto wait_on_recovery;
- #endif /* defined(CONFIG_NFS_V4_1) */
- 		case -NFS4ERR_FILE_OPEN:
-@@ -782,6 +780,7 @@ static int nfs41_sequence_process(struct rpc_task *task,
- 	struct nfs4_session *session;
- 	struct nfs4_slot *slot = res->sr_slot;
- 	struct nfs_client *clp;
-+	int status;
- 	int ret = 1;
+diff --git a/tools/testing/selftests/cgroup/test_freezer.c b/tools/testing/selftests/cgroup/test_freezer.c
+index 0fc1b6d4b0f9..62a27ab3c2f3 100644
+--- a/tools/testing/selftests/cgroup/test_freezer.c
++++ b/tools/testing/selftests/cgroup/test_freezer.c
+@@ -72,6 +72,7 @@ static int cg_prepare_for_wait(const char *cgroup)
+ 	if (ret == -1) {
+ 		debug("Error: inotify_add_watch() failed\n");
+ 		close(fd);
++		fd = -1;
+ 	}
  
- 	if (slot == NULL)
-@@ -793,8 +792,13 @@ static int nfs41_sequence_process(struct rpc_task *task,
- 	session = slot->table->session;
- 
- 	trace_nfs4_sequence_done(session, res);
-+
-+	status = res->sr_status;
-+	if (task->tk_status == -NFS4ERR_DEADSESSION)
-+		status = -NFS4ERR_DEADSESSION;
-+
- 	/* Check the SEQUENCE operation status */
--	switch (res->sr_status) {
-+	switch (status) {
- 	case 0:
- 		/* Mark this sequence number as having been acked */
- 		nfs4_slot_sequence_acked(slot, slot->seq_nr);
-@@ -866,6 +870,10 @@ static int nfs41_sequence_process(struct rpc_task *task,
- 		 */
- 		slot->seq_nr = slot->seq_nr_highest_sent;
- 		goto out_retry;
-+	case -NFS4ERR_BADSESSION:
-+	case -NFS4ERR_DEADSESSION:
-+	case -NFS4ERR_CONN_NOT_BOUND_TO_SESSION:
-+		goto session_recover;
- 	default:
- 		/* Just update the slot sequence no. */
- 		slot->seq_done = 1;
-@@ -876,8 +884,10 @@ static int nfs41_sequence_process(struct rpc_task *task,
- out_noaction:
- 	return ret;
- session_recover:
--	nfs4_schedule_session_recovery(session, res->sr_status);
--	goto retry_nowait;
-+	nfs4_schedule_session_recovery(session, status);
-+	dprintk("%s ERROR: %d Reset session\n", __func__, status);
-+	nfs41_sequence_free_slot(res);
-+	goto out;
- retry_new_seq:
- 	++slot->seq_nr;
- retry_nowait:
-@@ -2188,7 +2198,6 @@ static int nfs4_handle_delegation_recall_error(struct nfs_server *server, struct
- 		case -NFS4ERR_BAD_HIGH_SLOT:
- 		case -NFS4ERR_CONN_NOT_BOUND_TO_SESSION:
- 		case -NFS4ERR_DEADSESSION:
--			nfs4_schedule_session_recovery(server->nfs_client->cl_session, err);
- 			return -EAGAIN;
- 		case -NFS4ERR_STALE_CLIENTID:
- 		case -NFS4ERR_STALE_STATEID:
-@@ -7820,6 +7829,15 @@ nfs41_same_server_scope(struct nfs41_server_scope *a,
- static void
- nfs4_bind_one_conn_to_session_done(struct rpc_task *task, void *calldata)
- {
-+	struct nfs41_bind_conn_to_session_args *args = task->tk_msg.rpc_argp;
-+	struct nfs_client *clp = args->client;
-+
-+	switch (task->tk_status) {
-+	case -NFS4ERR_BADSESSION:
-+	case -NFS4ERR_DEADSESSION:
-+		nfs4_schedule_session_recovery(clp->cl_session,
-+				task->tk_status);
-+	}
- }
- 
- static const struct rpc_call_ops nfs4_bind_one_conn_to_session_ops = {
-@@ -8867,8 +8885,6 @@ static int nfs41_reclaim_complete_handle_errors(struct rpc_task *task, struct nf
- 	case -NFS4ERR_BADSESSION:
- 	case -NFS4ERR_DEADSESSION:
- 	case -NFS4ERR_CONN_NOT_BOUND_TO_SESSION:
--		nfs4_schedule_session_recovery(clp->cl_session,
--				task->tk_status);
- 		break;
- 	default:
- 		nfs4_schedule_lease_recovery(clp);
+ 	return fd;
 -- 
 2.20.1
 
