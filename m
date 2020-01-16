@@ -2,174 +2,211 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9711CC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1587DC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EC1C214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:05:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197947;
-	bh=aiSaP5lUXFc8+CWZRQ6GqqhVxMN+V6cg5bnGo3IhH30=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SDjfSMQ0P/e1IXzGNTN3XFARPw8uJmP61y71eNI96nrKqY5dyvrpx0gttHs2nQFy+
-	 sY5qBv5OG0HwYbrX4Nzhn9+7IeoE/DFjeTv6fq7KTevfO2p/fPLsXXsC4hMnhHLilw
-	 XmPOjDFkMRH6V7oxZ6xdZcP15yuDvhjpal0Kfh5c=
+	by mail.kernel.org (Postfix) with ESMTP id E35282073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:05:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394923AbgAPSFq (ORCPT
+        id S2407015AbgAPSFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:05:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56550 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:05:54 -0500
+Received: from mga02.intel.com ([134.134.136.20]:57386 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393543AbgAPRjw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:39:52 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2BE324721;
-        Thu, 16 Jan 2020 17:39:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196392;
-        bh=aiSaP5lUXFc8+CWZRQ6GqqhVxMN+V6cg5bnGo3IhH30=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PshMJ7cP55Z88iammIhAldGkzOPSYriIgUyqRUs3POhUcALLEdtVyOhiZl/VeQZGe
-         zdycj7/V5GOAKZG8cWuuANqn/FNf8ehwdoiL6PmOoQYkCdGUgzXa1OyJtXK5fywV/v
-         mczDBUi5jxnF3N0CNArF6dHKfBBE++bEZJde/YLs=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.9 172/251] mic: avoid statically declaring a 'struct device'.
-Date:   Thu, 16 Jan 2020 12:35:21 -0500
-Message-Id: <20200116173641.22137-132-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
-References: <20200116173641.22137-1-sashal@kernel.org>
+        id S2404981AbgAPRju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:39:50 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 09:39:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,327,1574150400"; 
+   d="scan'208";a="214162921"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 16 Jan 2020 09:39:49 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1is97U-0005KR-HA; Fri, 17 Jan 2020 01:39:48 +0800
+Date:   Fri, 17 Jan 2020 01:38:51 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:timers/core] BUILD SUCCESS
+ 5167c506d62dd9ffab73eba23c79b0a8845c9fe1
+Message-ID: <5e209fab.EUeNSFspWp8E2PjZ%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  timers/core
+branch HEAD: 5167c506d62dd9ffab73eba23c79b0a8845c9fe1  tick/common: Touch watchdog in tick_unfreeze() on all CPUs
 
-[ Upstream commit bc83f79bd2119230888fb8574639d5a51b38f903 ]
+elapsed time: 609m
 
-Generally, declaring a platform device as a static variable is
-a bad idea and can cause all kinds of problems, in particular
-with the DMA configuration and lifetime rules.
+configs tested: 148
+configs skipped: 0
 
-A specific problem we hit here is from a bug in clang that warns
-about certain (otherwise valid) macros when used in static variables:
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-drivers/misc/mic/card/mic_x100.c:285:27: warning: shift count >= width of type [-Wshift-count-overflow]
-static u64 mic_dma_mask = DMA_BIT_MASK(64);
-                          ^~~~~~~~~~~~~~~~
-include/linux/dma-mapping.h:141:54: note: expanded from macro 'DMA_BIT_MASK'
- #define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
-                                                     ^ ~~~
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+um                                  defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+alpha                               defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+x86_64               randconfig-c001-20200116
+x86_64               randconfig-c002-20200116
+x86_64               randconfig-c003-20200116
+i386                 randconfig-c001-20200116
+i386                 randconfig-c002-20200116
+i386                 randconfig-c003-20200116
+parisc                            allnoconfig
+parisc                            allyesonfig
+parisc                         b180_defconfig
+parisc                        c3000_defconfig
+parisc                              defconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+m68k                       m5475evb_defconfig
+m68k                          multi_defconfig
+m68k                           sun3_defconfig
+alpha                randconfig-a001-20200116
+m68k                 randconfig-a001-20200116
+mips                 randconfig-a001-20200116
+nds32                randconfig-a001-20200116
+parisc               randconfig-a001-20200116
+riscv                randconfig-a001-20200116
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                               rhel-7.6
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+x86_64               randconfig-a001-20200116
+x86_64               randconfig-a002-20200116
+x86_64               randconfig-a003-20200116
+i386                 randconfig-a001-20200116
+i386                 randconfig-a002-20200116
+i386                 randconfig-a003-20200116
+ia64                                defconfig
+i386                             alldefconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+x86_64               randconfig-d001-20200116
+x86_64               randconfig-d002-20200116
+x86_64               randconfig-d003-20200116
+i386                 randconfig-d001-20200116
+i386                 randconfig-d002-20200116
+i386                 randconfig-d003-20200116
+arc                  randconfig-a001-20200116
+arm                  randconfig-a001-20200116
+arm64                randconfig-a001-20200116
+ia64                 randconfig-a001-20200116
+powerpc              randconfig-a001-20200116
+sparc                randconfig-a001-20200116
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+arc                  randconfig-a001-20200117
+arm                  randconfig-a001-20200117
+arm64                randconfig-a001-20200117
+ia64                 randconfig-a001-20200117
+powerpc              randconfig-a001-20200117
+sparc                randconfig-a001-20200117
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+x86_64               randconfig-d001-20200117
+x86_64               randconfig-d002-20200117
+x86_64               randconfig-d003-20200117
+i386                 randconfig-d001-20200117
+i386                 randconfig-d002-20200117
+i386                 randconfig-d003-20200117
+x86_64               randconfig-b001-20200116
+x86_64               randconfig-b002-20200116
+x86_64               randconfig-b003-20200116
+i386                 randconfig-b001-20200116
+i386                 randconfig-b002-20200116
+i386                 randconfig-b003-20200116
+x86_64               randconfig-e001-20200116
+x86_64               randconfig-e002-20200116
+x86_64               randconfig-e003-20200116
+i386                 randconfig-e001-20200116
+i386                 randconfig-e002-20200116
+i386                 randconfig-e003-20200116
 
-A slightly better way here is to create the platform device dynamically
-and set the dma mask in the probe function.
-This avoids the warning and some other problems, but is still not ideal
-because the device creation should really be separated from the driver,
-and the fact that the device has no parent means we have to force
-the dma mask rather than having it set up from the bus that the device
-is actually on.
-
-Fixes: dd8d8d44df64 ("misc: mic: MIC card driver specific changes to enable SCIF")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20190712092426.872625-1-arnd@arndb.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/mic/card/mic_x100.c | 28 ++++++++++++----------------
- 1 file changed, 12 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/misc/mic/card/mic_x100.c b/drivers/misc/mic/card/mic_x100.c
-index b9f0710ffa6b..4007adc666f3 100644
---- a/drivers/misc/mic/card/mic_x100.c
-+++ b/drivers/misc/mic/card/mic_x100.c
-@@ -249,6 +249,9 @@ static int __init mic_probe(struct platform_device *pdev)
- 	mdrv->dev = &pdev->dev;
- 	snprintf(mdrv->name, sizeof(mic_driver_name), mic_driver_name);
- 
-+	/* FIXME: use dma_set_mask_and_coherent() and check result */
-+	dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
-+
- 	mdev->mmio.pa = MIC_X100_MMIO_BASE;
- 	mdev->mmio.len = MIC_X100_MMIO_LEN;
- 	mdev->mmio.va = devm_ioremap(&pdev->dev, MIC_X100_MMIO_BASE,
-@@ -294,18 +297,6 @@ static void mic_platform_shutdown(struct platform_device *pdev)
- 	mic_remove(pdev);
- }
- 
--static u64 mic_dma_mask = DMA_BIT_MASK(64);
--
--static struct platform_device mic_platform_dev = {
--	.name = mic_driver_name,
--	.id   = 0,
--	.num_resources = 0,
--	.dev = {
--		.dma_mask = &mic_dma_mask,
--		.coherent_dma_mask = DMA_BIT_MASK(64),
--	},
--};
--
- static struct platform_driver __refdata mic_platform_driver = {
- 	.probe = mic_probe,
- 	.remove = mic_remove,
-@@ -315,6 +306,8 @@ static struct platform_driver __refdata mic_platform_driver = {
- 	},
- };
- 
-+static struct platform_device *mic_platform_dev;
-+
- static int __init mic_init(void)
- {
- 	int ret;
-@@ -328,9 +321,12 @@ static int __init mic_init(void)
- 
- 	request_module("mic_x100_dma");
- 	mic_init_card_debugfs();
--	ret = platform_device_register(&mic_platform_dev);
-+
-+	mic_platform_dev = platform_device_register_simple(mic_driver_name,
-+							   0, NULL, 0);
-+	ret = PTR_ERR_OR_ZERO(mic_platform_dev);
- 	if (ret) {
--		pr_err("platform_device_register ret %d\n", ret);
-+		pr_err("platform_device_register_full ret %d\n", ret);
- 		goto cleanup_debugfs;
- 	}
- 	ret = platform_driver_register(&mic_platform_driver);
-@@ -341,7 +337,7 @@ static int __init mic_init(void)
- 	return ret;
- 
- device_unregister:
--	platform_device_unregister(&mic_platform_dev);
-+	platform_device_unregister(mic_platform_dev);
- cleanup_debugfs:
- 	mic_exit_card_debugfs();
- done:
-@@ -351,7 +347,7 @@ static int __init mic_init(void)
- static void __exit mic_exit(void)
- {
- 	platform_driver_unregister(&mic_platform_driver);
--	platform_device_unregister(&mic_platform_dev);
-+	platform_device_unregister(mic_platform_dev);
- 	mic_exit_card_debugfs();
- }
- 
--- 
-2.20.1
-
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
