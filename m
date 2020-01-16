@@ -2,115 +2,104 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E778DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76543C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8CE22073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:42:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=anarazel.de header.i=@anarazel.de header.b="FeT3Zq8G";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OGQecjOu"
+	by mail.kernel.org (Postfix) with ESMTP id 438482077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:43:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579200196;
+	bh=kXYFtzZ7Jo9HiBRkiyJef9DuaeLL7xEDvE6uQnuvpK0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=B05pKOFiK81jbiVJcuVk+ZrZ+SLI82x/P/DeyOAMxxklrrzt+6vBtyx+3wiuya/i7
+	 oD0nTi3XDeJeszkxClZStoBuX9MCUVkjRt32tpSEPHXWaO7yVXDmyaRIkcIvuB3UWx
+	 C2oxYsbV8PXiCiGLX1z5Wepv4fijKisn8oV/apcA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437016AbgAPSm6 (ORCPT
+        id S2437025AbgAPSnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:42:58 -0500
-Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:44557 "EHLO
-        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388922AbgAPSmx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 13:42:53 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.west.internal (Postfix) with ESMTP id 8D4E6513;
-        Thu, 16 Jan 2020 13:42:52 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Thu, 16 Jan 2020 13:42:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=/7fhTR1f92cLpIrCbJ+2OWqkhpv
-        1kl/VUQPVVPmZgEc=; b=FeT3Zq8GQ8qzz7uwZ61cvMkHaF09X3eo/FpFVoHqOD3
-        fD2mUOt9ZN1aIwAIlALjLeieBa4NJV38bhYqf5lHt8/P6R0YWsGiFcsCGp8bjSUR
-        S5i+v2OLYpL3wN994Aa6eLnpfnxUUyTbZUvbUxqjSpfIq2LN8SjA06t3Aeurr63g
-        DFh3EId6sc4pd3ofGp0hCm2iQuuNFaFlTuOgifAF1YWmWiy9SJpZUZ4uCL+LTFOX
-        eJi4VkmRq21YTtPj0kWerE278gG75nGVd7DUOonrl86y4ie2zd97oESJkTDNTbbx
-        ZKDLTeMCZqgrvK4sgURIYvh0qyZLvgJjbQD3n62OZ1Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=/7fhTR
-        1f92cLpIrCbJ+2OWqkhpv1kl/VUQPVVPmZgEc=; b=OGQecjOuzXXqPotapCj+I4
-        hCuvcE20Lyo2NHyxVzMaaw5u6fApAawM44/CZ8My+gEWIpAs+A1W7yTbIl7stc4U
-        ISwGutrvWf/fY6Wmt+BLTxJ1+sYJIxqNYL8oYFngXv80cCUmI4Kgyktp6E0jpCpR
-        la10h+G6XmMbRRwLVVdI+K608MXDXZR1CuY72vVELP2tkdq2bnqgTQFu+9eyv4ml
-        TWU4fhudiNebOAXbnIIuo3/9sIsJT7wmpFBg//qGKmdnYKIMlN5gZmtAGuVO2V8U
-        L/HMsBy9jcqt7dhf/7FTqH8wbhGNS9Se5wRDTTxSRZlT7FmI2E9/H6+Ubg5IZw1w
-        ==
-X-ME-Sender: <xms:q64gXs06QPv33nJkcPtUk0Ur3ju3En2cj8wJxS3uN-QreHvl4-Pwrg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrtdehgdduudegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetnhgurhgv
-    shcuhfhrvghunhguuceorghnughrvghssegrnhgrrhgriigvlhdruggvqeenucfkphepie
-    ejrdduiedtrddvudejrddvhedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgv
-    shesrghnrghrrgiivghlrdguvgenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:q64gXtDAe7wB3ahvp589SNBrCT9khM1atZVGja4paJJTGI7rV0GEXQ>
-    <xmx:q64gXukD8ZZnxNDb3j7CjbDibL3L_2233B4CJth2LKaOHbZep9jdOA>
-    <xmx:q64gXmokCmoSG3Z4Djh47-T19UppDuXU2so7VC1b9R8rhdFOalZlKw>
-    <xmx:rK4gXuY4u1yVTdjBmqiSUv6UekfymvvUZDtRPdiw9i8O_zgjZHdeEw>
-Received: from intern.anarazel.de (c-67-160-217-250.hsd1.ca.comcast.net [67.160.217.250])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A8DE13060840;
-        Thu, 16 Jan 2020 13:42:51 -0500 (EST)
-Date:   Thu, 16 Jan 2020 10:42:50 -0800
-From:   Andres Freund <andres@anarazel.de>
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     Tushar Dave <tushar.n.dave@intel.com>,
-        Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] thermal: intel_pch_thermal: Add PCI ids for Lewisburg
- PCH.
-Message-ID: <20200116184250.qlvc3ilx2b42czqk@alap3.anarazel.de>
-References: <20200115184415.1726953-1-andres@anarazel.de>
- <2a5e9df32e2df27297149a577512f6b1557de241.camel@linux.intel.com>
+        Thu, 16 Jan 2020 13:43:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51638 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390208AbgAPRLS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:11:18 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56DF424684;
+        Thu, 16 Jan 2020 17:11:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579194678;
+        bh=kXYFtzZ7Jo9HiBRkiyJef9DuaeLL7xEDvE6uQnuvpK0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1CHIzVyiS3g9wXhrOnz0XXX+ufeSspC+TZjJqPhvqNKlrThro5t4gKG2oNuruoBdj
+         TA7O6aXIhqQ4Q07StB7F8JlqOeA4iQUqHt/hKbxkshRL8Nm+JO4VXd/AGTVZeueljf
+         C37WBbIwpUFBc/via7G31XT9I6TbgB+RXb6BUFdM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 524/671] netfilter: ctnetlink: honor IPS_OFFLOAD flag
+Date:   Thu, 16 Jan 2020 12:02:42 -0500
+Message-Id: <20200116170509.12787-261-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
+References: <20200116170509.12787-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2a5e9df32e2df27297149a577512f6b1557de241.camel@linux.intel.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-On 2020-01-16 05:53:13 -0800, Srinivas Pandruvada wrote:
-> On Wed, 2020-01-15 at 10:44 -0800, Andres Freund wrote:
-> > I noticed that I couldn't read the PCH temperature on my workstation
-> > (C620 series chipset, w/ 2x Xeon Gold 5215 CPUs) directly, but had to
-> > go
-> > through IPMI. Looking at the data sheet, it looks to me like the
-> > existing intel PCH thermal driver should work without changes for
-> > Lewisburg.
-> Does the temperature reading match with what you read via IPMI?
+[ Upstream commit b067fa009c884401d23846251031c1f14d8a9c77 ]
 
-It does:
+If this flag is set, timeout and state are irrelevant to userspace.
 
-root@awork3:~# ipmitool sdr|grep ^PCH
-PCH Temp         | 58 degrees C      | ok
+Fixes: 90964016e5d3 ("netfilter: nf_conntrack: add IPS_OFFLOAD status bit")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/netfilter/nf_conntrack_netlink.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-andres@awork3:~$ cat /sys/class/thermal/thermal_zone0/type
-pch_lewisburg
-andres@awork3:~$ cat /sys/class/thermal/thermal_zone0/temp
-58000
+diff --git a/net/netfilter/nf_conntrack_netlink.c b/net/netfilter/nf_conntrack_netlink.c
+index 7ba9ea55816a..31fa94064a62 100644
+--- a/net/netfilter/nf_conntrack_netlink.c
++++ b/net/netfilter/nf_conntrack_netlink.c
+@@ -555,10 +555,8 @@ ctnetlink_fill_info(struct sk_buff *skb, u32 portid, u32 seq, u32 type,
+ 		goto nla_put_failure;
+ 
+ 	if (ctnetlink_dump_status(skb, ct) < 0 ||
+-	    ctnetlink_dump_timeout(skb, ct) < 0 ||
+ 	    ctnetlink_dump_acct(skb, ct, type) < 0 ||
+ 	    ctnetlink_dump_timestamp(skb, ct) < 0 ||
+-	    ctnetlink_dump_protoinfo(skb, ct) < 0 ||
+ 	    ctnetlink_dump_helpinfo(skb, ct) < 0 ||
+ 	    ctnetlink_dump_mark(skb, ct) < 0 ||
+ 	    ctnetlink_dump_secctx(skb, ct) < 0 ||
+@@ -570,6 +568,11 @@ ctnetlink_fill_info(struct sk_buff *skb, u32 portid, u32 seq, u32 type,
+ 	    ctnetlink_dump_ct_synproxy(skb, ct) < 0)
+ 		goto nla_put_failure;
+ 
++	if (!test_bit(IPS_OFFLOAD_BIT, &ct->status) &&
++	    (ctnetlink_dump_timeout(skb, ct) < 0 ||
++	     ctnetlink_dump_protoinfo(skb, ct) < 0))
++		goto nla_put_failure;
++
+ 	nlmsg_end(skb, nlh);
+ 	return skb->len;
+ 
+-- 
+2.20.1
 
-And if I generate some load, it rises for both:
-root@awork3:~# ipmitool sdr|grep ^PCH
-PCH Temp         | 60 degrees C      | ok
-andres@awork3:~$ cat /sys/class/thermal/thermal_zone0/temp
-60000
-
-Regards,
-
-Andres
