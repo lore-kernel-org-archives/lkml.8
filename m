@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A27D0C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1140AC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7598E246A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2E2E24693
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:15:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194913;
-	bh=rrhEdS2kNqQJmlV3Thq14xN8wxbM2iGtBl9NJUCf7u4=;
+	s=default; t=1579194915;
+	bh=neRMrMZOSpRAzPxFlLtbh0wI0c2ycl3m/dsT9nRIn9Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iklNYWtkBFGrz0PPEoxV/BBhRe70m6j3Srx1f4fo3vuN744zJjCaXsMPM3q2SCEzY
-	 CCVA0dh81Lod4eXzdNiklx7D5YzM9HcCtPCERvOFpvb21vbBb2RiMKBW7wKMYCEs1J
-	 USRWPjx9aWGWby6lQni3QDM69e+2PHzVt6tgX9Bk=
+	b=ul8yp193ms4kCudwO+w/2qqa4XDaRU3v7bWsRTznjRlU3+FZB8FImFIaDAbQ7r36c
+	 ZKPP2MZWYzJS/ZMHS2x0uySn6PZJDmDKlclOQN/mSCl3e3Qu4dL6kjuMCEetiHXdLW
+	 wP8DscMvMLHoar48tXWJecXvTP6hOTdpSH6mDEqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391124AbgAPRPF (ORCPT
+        id S2390520AbgAPRPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:15:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34382 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:15:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391067AbgAPROm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:14:42 -0500
+        id S2391065AbgAPROl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:14:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E58BA24690;
-        Thu, 16 Jan 2020 17:14:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 802A5246AC;
+        Thu, 16 Jan 2020 17:14:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194881;
-        bh=rrhEdS2kNqQJmlV3Thq14xN8wxbM2iGtBl9NJUCf7u4=;
+        s=default; t=1579194880;
+        bh=neRMrMZOSpRAzPxFlLtbh0wI0c2ycl3m/dsT9nRIn9Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h0zos+81pQSw5ZbCtZwpHeusU6qIwyRJLsNImJLc70bLNQoZV209RcQHhpOMU5PXi
-         paeIGCYrgbsfAaZU0tHjoATPFmcsZ9cxno08b25PeuieE6DHxDUay1WnZvlqz2Dugs
-         /VGSlzQg7qb7yMvRXVtg53UHlZBHN93Op2k/CEDg=
+        b=JhZObM5vuV337AmsGa30ZeZc4LnYLTQGVxth5AlnydRajIuq6EXrYhv5JM5+Whe4y
+         gMaUaM3Fros7vZ0WzojLyvZGF3SUbGtQMOlpw03kPJCWFzcFJ6N9dyYb25SqMjntPE
+         pk0HMHfuV4JZHbnzlT4urOiy8FgAIG5dfY19rl48=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 670/671] serial: stm32: fix clearing interrupt error flags
-Date:   Thu, 16 Jan 2020 12:05:08 -0500
-Message-Id: <20200116170509.12787-407-sashal@kernel.org>
+Cc:     Max Gurtovoy <maxg@mellanox.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Israel Rukshin <israelr@mellanox.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 669/671] IB/iser: Fix dma_nents type definition
+Date:   Thu, 16 Jan 2020 12:05:07 -0500
+Message-Id: <20200116170509.12787-406-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -61,50 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
+From: Max Gurtovoy <maxg@mellanox.com>
 
-[ Upstream commit 1250ed7114a977cdc2a67a0c09d6cdda63970eb9 ]
+[ Upstream commit c1545f1a200f4adc4ef8dd534bf33e2f1aa22c2f ]
 
-The interrupt clear flag register is a "write 1 to clear" register.
-So, only writing ones allows to clear flags:
-- Replace buggy stm32_clr_bits() by a simple write to clear error flags
-- Replace useless read/modify/write stm32_set_bits() routine by a
-  simple write to clear TC (transfer complete) flag.
+The retured value from ib_dma_map_sg saved in dma_nents variable. To avoid
+future mismatch between types, define dma_nents as an integer instead of
+unsigned.
 
-Fixes: 4f01d833fdcd ("serial: stm32: fix rx error handling")
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1574323849-1909-1-git-send-email-fabrice.gasnier@st.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 57b26497fabe ("IB/iser: Pass the correct number of entries for dma mapped SGL")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Israel Rukshin <israelr@mellanox.com>
+Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
+Acked-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/stm32-usart.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/infiniband/ulp/iser/iscsi_iser.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
-index d096e552176c..bce4ac1787ad 100644
---- a/drivers/tty/serial/stm32-usart.c
-+++ b/drivers/tty/serial/stm32-usart.c
-@@ -239,8 +239,8 @@ static void stm32_receive_chars(struct uart_port *port, bool threaded)
- 		 * cleared by the sequence [read SR - read DR].
- 		 */
- 		if ((sr & USART_SR_ERR_MASK) && ofs->icr != UNDEF_REG)
--			stm32_clr_bits(port, ofs->icr, USART_ICR_ORECF |
--				       USART_ICR_PECF | USART_ICR_FECF);
-+			writel_relaxed(sr & USART_SR_ERR_MASK,
-+				       port->membase + ofs->icr);
+diff --git a/drivers/infiniband/ulp/iser/iscsi_iser.h b/drivers/infiniband/ulp/iser/iscsi_iser.h
+index 120b40829560..a7aeaa0c6fbc 100644
+--- a/drivers/infiniband/ulp/iser/iscsi_iser.h
++++ b/drivers/infiniband/ulp/iser/iscsi_iser.h
+@@ -197,7 +197,7 @@ struct iser_data_buf {
+ 	struct scatterlist *sg;
+ 	int                size;
+ 	unsigned long      data_len;
+-	unsigned int       dma_nents;
++	int                dma_nents;
+ };
  
- 		c = stm32_get_char(port, &sr, &stm32_port->last_res);
- 		port->icount.rx++;
-@@ -409,7 +409,7 @@ static void stm32_transmit_chars(struct uart_port *port)
- 	if (ofs->icr == UNDEF_REG)
- 		stm32_clr_bits(port, ofs->isr, USART_SR_TC);
- 	else
--		stm32_set_bits(port, ofs->icr, USART_ICR_TCCF);
-+		writel_relaxed(USART_ICR_TCCF, port->membase + ofs->icr);
- 
- 	if (stm32_port->tx_ch)
- 		stm32_transmit_chars_dma(port);
+ /* fwd declarations */
 -- 
 2.20.1
 
