@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB99C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D55F5C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DE832073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:57:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8B152073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:57:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197441;
-	bh=3fo/lw0ekBXGcW1nkoAipEkQ75aRje11EdBC8E7xhbk=;
+	s=default; t=1579197445;
+	bh=DI0up3VzezDDIKsG4D199kCRKYrjSjd5s1svpSFc9eM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oNHe3XoEk5mdAKg9XJmQ5dJNHyyc/pcjUUTyr4pjuiHlJ8qAdHvNr3vUkpn2+7jhA
-	 M5hfScGUoWbSKnOcz1dbYA5rrstRCIY8mMRXtgKkc0cMDi04cOh2Aket0FhH7IRA8P
-	 sLuOioW+/b7st5WWtMNigxTFUq8vi4JiIsG+VUCk=
+	b=2NIDhUIGzGkq+34b+6fUBLQDPm/EuwfyzQqjDJddvsDShs2NpxkECxtu7MvPZPbFm
+	 fnzSE/s1X+GwL9aTBwH40J4fMu6jHTN2DFjB4B4C1GlfJzyMPMOzCNH/lifzPvzU9g
+	 F11EkpW4iLRhPlUxn0YFM1cMksOCllrvZC7EtH6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394587AbgAPR5U (ORCPT
+        id S2393923AbgAPRn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:57:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33698 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:43:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393944AbgAPRne (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:43:34 -0500
+        id S2393898AbgAPRnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:43:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2C2E24718;
-        Thu, 16 Jan 2020 17:43:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73F6B2469C;
+        Thu, 16 Jan 2020 17:43:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196613;
-        bh=3fo/lw0ekBXGcW1nkoAipEkQ75aRje11EdBC8E7xhbk=;
+        s=default; t=1579196594;
+        bh=DI0up3VzezDDIKsG4D199kCRKYrjSjd5s1svpSFc9eM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=flVnbg6GoBmsVVTdV59sChMEOROC2N6Co1+hhqJwSYr4wd/Z725hLO0W/eqXbg3AW
-         TUsyZvMNq/aA9UCrhm8T2kpoeXqTwk+RXqmqhrfo+fBvjROocpzqaTA2xvpAlCqTG2
-         Mfp0rZC/QJTIxlIasIu2gCa2Szh0jQA/Ek53TFXQ=
+        b=K+0tCMgVFlQB9NCpBxw9b07jtm1QMwzx1luqS0VqrtjPxaYpVym+PdvojqdRKLGf5
+         9IhXt6QmHxemxsc07YMDrfvi4SNUgDF6z1H0edzdqMKzBY6SSz7OhTUJJwDkPfB/uB
+         yuSVZ4zqQTPD70TULTem5zXL2gdYo8NLLeXn3vY4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
         Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 032/174] media: s5p-jpeg: Correct step and max values for V4L2_CID_JPEG_RESTART_INTERVAL
-Date:   Thu, 16 Jan 2020 12:40:29 -0500
-Message-Id: <20200116174251.24326-32-sashal@kernel.org>
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 017/174] pinctrl: sh-pfc: sh7734: Remove bogus IPSR10 value
+Date:   Thu, 16 Jan 2020 12:40:14 -0500
+Message-Id: <20200116174251.24326-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -63,42 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 19c624c6b29e244c418f8b44a711cbf5e82e3cd4 ]
+[ Upstream commit 4d374bacd7c9665179f9752a52d5d602c45d8190 ]
 
-This commit corrects max and step values for v4l2 control for
-V4L2_CID_JPEG_RESTART_INTERVAL. Max should be 0xffff and step should be 1.
-It was found by using v4l2-compliance tool and checking result of
-VIDIOC_QUERY_EXT_CTRL/QUERYMENU test.
-Previously it was complaining that step was bigger than difference
-between max and min.
+The IP10[5:3] field in Peripheral Function Select Register 10 has a
+width of 3 bits, i.e. it allows programming one out of 8 different
+configurations.
+However, 9 values are provided instead of 8, overflowing into the
+subsequent field in the register, and thus breaking the configuration of
+the latter.
 
-Fixes: 15f4bc3b1f42 ("[media] s5p-jpeg: Add JPEG controls support")
+Fix this by dropping a bogus zero value.
 
-Signed-off-by: Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Reviewed-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: ac1ebc2190f575fc ("sh-pfc: Add sh7734 pinmux support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/s5p-jpeg/jpeg-core.c | 2 +-
+ drivers/pinctrl/sh-pfc/pfc-sh7734.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/s5p-jpeg/jpeg-core.c b/drivers/media/platform/s5p-jpeg/jpeg-core.c
-index 0d981bbf38bc..255f70999ee8 100644
---- a/drivers/media/platform/s5p-jpeg/jpeg-core.c
-+++ b/drivers/media/platform/s5p-jpeg/jpeg-core.c
-@@ -1952,7 +1952,7 @@ static int s5p_jpeg_controls_create(struct s5p_jpeg_ctx *ctx)
- 
- 		v4l2_ctrl_new_std(&ctx->ctrl_handler, &s5p_jpeg_ctrl_ops,
- 				  V4L2_CID_JPEG_RESTART_INTERVAL,
--				  0, 3, 0xffff, 0);
-+				  0, 0xffff, 1, 0);
- 		if (ctx->jpeg->variant->version == SJPEG_S5P)
- 			mask = ~0x06; /* 422, 420 */
- 	}
+diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7734.c b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
+index a0835306f76e..ce543f3c39b2 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-sh7734.c
++++ b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
+@@ -2236,7 +2236,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		FN_LCD_CL1_B, 0, 0,
+ 	    /* IP10_5_3 [3] */
+ 		FN_SSI_WS23, FN_VI1_5_B, FN_TX1_D, FN_HSCK0_C, FN_FALE_B,
+-		FN_LCD_DON_B, 0, 0, 0,
++		FN_LCD_DON_B, 0, 0,
+ 	    /* IP10_2_0 [3] */
+ 		FN_SSI_SCK23, FN_VI1_4_B, FN_RX1_D, FN_FCLE_B,
+ 		FN_LCD_DATA15_B, 0, 0, 0 }
 -- 
 2.20.1
 
