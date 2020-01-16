@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C24C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E57C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 657C420684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E29720684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:28:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199269;
-	bh=gcsQ/jelRrCDzaLIk50T1cu009GKPZc2u/wmwW5DYqw=;
+	s=default; t=1579199280;
+	bh=HpIIZp1yoRpW/vNSf2WHB2RqPVIHxumI94d/MYXUbi0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dRJ/wcjIamVeKpE2YHZOgn6xdHdcIUP5NBWL+YHmpnzBApnQll6Xj3nG96NVbU3FI
-	 M7YoEfFJTVpn6ZPNeIjqPfr8AJsjUDTgab7l/wQyoji8cZF9mJcd8/CKvRnKnUn68u
-	 N+yyHJmZ1KPhNWjS8+Hc+thbtf+hKRINrNX7B/C4=
+	b=GHrrjf5LEs57+7wIaCLpxs4ZYlXTgxQRFePdUtISzEOVTDESpGwG3zNp/ZBxbOcsZ
+	 fDWv4KvaOGrPN/7KtTl7QvUR9mfKDoVWLrticgsyu/KAIhpIenS3AUcGVPkRcporWe
+	 qkkESxgqd6/MtOjrK7PSn53eJocBMRnu6ccLtwqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403913AbgAPR0V (ORCPT
+        id S2403899AbgAPR0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:26:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34560 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:26:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392250AbgAPR0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:26:09 -0500
+        id S2392209AbgAPR0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:26:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A40320730;
-        Thu, 16 Jan 2020 17:26:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1D3C246AF;
+        Thu, 16 Jan 2020 17:25:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195568;
-        bh=gcsQ/jelRrCDzaLIk50T1cu009GKPZc2u/wmwW5DYqw=;
+        s=default; t=1579195559;
+        bh=HpIIZp1yoRpW/vNSf2WHB2RqPVIHxumI94d/MYXUbi0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gkRQVD5gr66h6+/utVDQESsoQDI5ryR8OTu1MGKAB/oZeoU40dcB5vyTI21m5JIL3
-         F1Tw/3Ldhl7vF7LBOtvs6qU8FT6OvDSsglzCSekV+yJ1WJlf5cHYP1qD6Pn3YMWfzp
-         ZPkyqSnx5EzfZq8sjoMyjiJVlHQ9qdzmzgKOtH8k=
+        b=mfXxWskc5QfI8A1D4SXyTGPicppQobC1GE+Oe0Epq5Y/vWvmyPVd39dpqFhbQKkn0
+         Yfe7mOxMmfbmWv97G6uvrT6j9VQDFAihqXrVs5NUQVMxgRNAK5vt2JJvy8nWAYSKkv
+         +si4D2LPVps/xRnZeiIAKrcme2DrRRMoJ1DDmswo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
-Subject: [PATCH AUTOSEL 4.14 153/371] spi: tegra114: configure dma burst size to fifo trig level
-Date:   Thu, 16 Jan 2020 12:20:25 -0500
-Message-Id: <20200116172403.18149-96-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.14 147/371] media: davinci-isif: avoid uninitialized variable use
+Date:   Thu, 16 Jan 2020 12:20:19 -0500
+Message-Id: <20200116172403.18149-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -61,133 +63,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit f4ce428c41fb22e3ed55496dded94df44cb920fa ]
+[ Upstream commit 0e633f97162c1c74c68e2eb20bbd9259dce87cd9 ]
 
-Fixes: Configure DMA burst size to be same as SPI TX/RX trigger levels
-to avoid mismatch.
+clang warns about a possible variable use that gcc never
+complained about:
 
-SPI FIFO trigger levels are calculated based on the transfer length.
-So this patch moves DMA slave configuration to happen before start
-of DMAs.
+drivers/media/platform/davinci/isif.c:982:32: error: variable 'frame_size' is uninitialized when used here
+      [-Werror,-Wuninitialized]
+                dm365_vpss_set_pg_frame_size(frame_size);
+                                             ^~~~~~~~~~
+drivers/media/platform/davinci/isif.c:887:2: note: variable 'frame_size' is declared here
+        struct vpss_pg_frame_size frame_size;
+        ^
+1 error generated.
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+There is no initialization for this variable at all, and there
+has never been one in the mainline kernel, so we really should
+not put that stack data into an mmio register.
+
+On the other hand, I suspect that gcc checks the condition
+more closely and notices that the global
+isif_cfg.bayer.config_params.test_pat_gen flag is initialized
+to zero and never written to from any code path, so anything
+depending on it can be eliminated.
+
+To shut up the clang warning, just remove the dead code manually,
+it has probably never been used because any attempt to do so
+would have resulted in undefined behavior.
+
+Fixes: 63e3ab142fa3 ("V4L/DVB: V4L - vpfe capture - source for ISIF driver on DM365")
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Lad Prabhakar <prabhakar.csengg@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-tegra114.c | 52 ++++++++++++++++++++++----------------
- 1 file changed, 30 insertions(+), 22 deletions(-)
+ drivers/media/platform/davinci/isif.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
-index 18dfbd57c61f..84ff0c507f0b 100644
---- a/drivers/spi/spi-tegra114.c
-+++ b/drivers/spi/spi-tegra114.c
-@@ -529,6 +529,8 @@ static int tegra_spi_start_dma_based_transfer(
- 	u32 val;
- 	unsigned int len;
- 	int ret = 0;
-+	u8 dma_burst;
-+	struct dma_slave_config dma_sconfig = {0};
+diff --git a/drivers/media/platform/davinci/isif.c b/drivers/media/platform/davinci/isif.c
+index 90d0f13283ae..12065ad1ac45 100644
+--- a/drivers/media/platform/davinci/isif.c
++++ b/drivers/media/platform/davinci/isif.c
+@@ -886,9 +886,7 @@ static int isif_set_hw_if_params(struct vpfe_hw_if_param *params)
+ static int isif_config_ycbcr(void)
+ {
+ 	struct isif_ycbcr_config *params = &isif_cfg.ycbcr;
+-	struct vpss_pg_frame_size frame_size;
+ 	u32 modeset = 0, ccdcfg = 0;
+-	struct vpss_sync_pol sync;
  
- 	val = SPI_DMA_BLK_SET(tspi->curr_dma_words - 1);
- 	tegra_spi_writel(tspi, val, SPI_DMA_BLK);
-@@ -540,12 +542,16 @@ static int tegra_spi_start_dma_based_transfer(
- 		len = tspi->curr_dma_words * 4;
+ 	dev_dbg(isif_cfg.dev, "\nStarting isif_config_ycbcr...");
  
- 	/* Set attention level based on length of transfer */
--	if (len & 0xF)
-+	if (len & 0xF) {
- 		val |= SPI_TX_TRIG_1 | SPI_RX_TRIG_1;
--	else if (((len) >> 4) & 0x1)
-+		dma_burst = 1;
-+	} else if (((len) >> 4) & 0x1) {
- 		val |= SPI_TX_TRIG_4 | SPI_RX_TRIG_4;
--	else
-+		dma_burst = 4;
-+	} else {
- 		val |= SPI_TX_TRIG_8 | SPI_RX_TRIG_8;
-+		dma_burst = 8;
-+	}
+@@ -976,13 +974,6 @@ static int isif_config_ycbcr(void)
+ 		/* two fields are interleaved in memory */
+ 		regw(0x00000249, SDOFST);
  
- 	if (tspi->cur_direction & DATA_DIR_TX)
- 		val |= SPI_IE_TX;
-@@ -556,7 +562,18 @@ static int tegra_spi_start_dma_based_transfer(
- 	tegra_spi_writel(tspi, val, SPI_DMA_CTL);
- 	tspi->dma_control_reg = val;
- 
-+	dma_sconfig.device_fc = true;
- 	if (tspi->cur_direction & DATA_DIR_TX) {
-+		dma_sconfig.dst_addr = tspi->phys + SPI_TX_FIFO;
-+		dma_sconfig.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-+		dma_sconfig.dst_maxburst = dma_burst;
-+		ret = dmaengine_slave_config(tspi->tx_dma_chan, &dma_sconfig);
-+		if (ret < 0) {
-+			dev_err(tspi->dev,
-+				"DMA slave config failed: %d\n", ret);
-+			return ret;
-+		}
-+
- 		tegra_spi_copy_client_txbuf_to_spi_txbuf(tspi, t);
- 		ret = tegra_spi_start_tx_dma(tspi, len);
- 		if (ret < 0) {
-@@ -567,6 +584,16 @@ static int tegra_spi_start_dma_based_transfer(
- 	}
- 
- 	if (tspi->cur_direction & DATA_DIR_RX) {
-+		dma_sconfig.src_addr = tspi->phys + SPI_RX_FIFO;
-+		dma_sconfig.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-+		dma_sconfig.src_maxburst = dma_burst;
-+		ret = dmaengine_slave_config(tspi->rx_dma_chan, &dma_sconfig);
-+		if (ret < 0) {
-+			dev_err(tspi->dev,
-+				"DMA slave config failed: %d\n", ret);
-+			return ret;
-+		}
-+
- 		/* Make the dma buffer to read by dma */
- 		dma_sync_single_for_device(tspi->dev, tspi->rx_dma_phys,
- 				tspi->dma_buf_size, DMA_FROM_DEVICE);
-@@ -626,7 +653,6 @@ static int tegra_spi_init_dma_param(struct tegra_spi_data *tspi,
- 	u32 *dma_buf;
- 	dma_addr_t dma_phys;
- 	int ret;
--	struct dma_slave_config dma_sconfig;
- 
- 	dma_chan = dma_request_slave_channel_reason(tspi->dev,
- 					dma_to_memory ? "rx" : "tx");
-@@ -646,19 +672,6 @@ static int tegra_spi_init_dma_param(struct tegra_spi_data *tspi,
- 		return -ENOMEM;
- 	}
- 
--	if (dma_to_memory) {
--		dma_sconfig.src_addr = tspi->phys + SPI_RX_FIFO;
--		dma_sconfig.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
--		dma_sconfig.src_maxburst = 0;
--	} else {
--		dma_sconfig.dst_addr = tspi->phys + SPI_TX_FIFO;
--		dma_sconfig.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
--		dma_sconfig.dst_maxburst = 0;
+-	/* Setup test pattern if enabled */
+-	if (isif_cfg.bayer.config_params.test_pat_gen) {
+-		sync.ccdpg_hdpol = params->hd_pol;
+-		sync.ccdpg_vdpol = params->vd_pol;
+-		dm365_vpss_set_sync_pol(sync);
+-		dm365_vpss_set_pg_frame_size(frame_size);
 -	}
--
--	ret = dmaengine_slave_config(dma_chan, &dma_sconfig);
--	if (ret)
--		goto scrub;
- 	if (dma_to_memory) {
- 		tspi->rx_dma_chan = dma_chan;
- 		tspi->rx_dma_buf = dma_buf;
-@@ -669,11 +682,6 @@ static int tegra_spi_init_dma_param(struct tegra_spi_data *tspi,
- 		tspi->tx_dma_phys = dma_phys;
- 	}
  	return 0;
--
--scrub:
--	dma_free_coherent(tspi->dev, tspi->dma_buf_size, dma_buf, dma_phys);
--	dma_release_channel(dma_chan);
--	return ret;
  }
  
- static void tegra_spi_deinit_dma_param(struct tegra_spi_data *tspi,
 -- 
 2.20.1
 
