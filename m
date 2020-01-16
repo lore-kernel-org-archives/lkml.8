@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8426C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3454AC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B6CB2469A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03FE52469F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:59:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197568;
-	bh=utfuyT7Q1uu5mYJ/DtQc89mIDpbRAUZTdQut8wJD7ww=;
+	s=default; t=1579197571;
+	bh=oxvTDftx1tbTSMTc3Vnyd0GHi7VxIP1tUq0pbm11jsQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jZ7z7stLax3as6U3ff78MDDW2vuuC4pBESexZOj5x8OgYrFn0CAdHW2Pr9xXA/lBs
-	 /AhrJd9CbJL89KIFHJ2kNCeRBKDbtWMWOCjkrJiUdmSt4PQozvahrpWNTDjdfYSTGa
-	 gUQZ6vLawOdL2zfTZbqcqg9o7ArnFD7M33TThVtY=
+	b=LaML2VgGAT0uOk4T41ZOq1nh0tDdlV3LO93SIbd0Kosgj/0rC/1v3vQ7rpLuPDssK
+	 ySBWX/+PWj6cJH1EWxmzFwZfl/++oCooLCh3CnlzUBQgB2k1vUnxq6vt6PdxVlqO8o
+	 LpEGZmMe9epauhlPlD6yYkw67PsgoA/QhBa2FZNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394746AbgAPR71 (ORCPT
+        id S2393846AbgAPRnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:59:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32952 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:43:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393858AbgAPRnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:43:04 -0500
+        id S2405594AbgAPRmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:42:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5CDE246A4;
-        Thu, 16 Jan 2020 17:43:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3765F24695;
+        Thu, 16 Jan 2020 17:42:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196584;
-        bh=utfuyT7Q1uu5mYJ/DtQc89mIDpbRAUZTdQut8wJD7ww=;
+        s=default; t=1579196574;
+        bh=oxvTDftx1tbTSMTc3Vnyd0GHi7VxIP1tUq0pbm11jsQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ye4r8z98krycA8u09qwM9cadxSKgFSvcvDMsWDN83gLybJpdgomv4VJrDy9Rw+rW/
-         J5inFyaMP9upYrL2zNHUW37eJipUXoXfEaN/5xh+0aB3+XjuR+OSZlBI1CQDte9DXN
-         jhn9bagxCYE4jyTHH26oQQj/L06GXEMTKwzO3TjE=
+        b=BqchPcY/xWG2pCQgYSh6auRvtV1xV2vuhlIi1iSvm27UsnfKCIE5qTvfUP8slE+k7
+         qUAy7zNqAAs+m9T60H7JuLdQXHYhWx5OSvv97lDtdlIax5zWl3CEVA0dHmBwwAG1tF
+         zsfM4/vusQFYtY52Y0gFkTlDm07SzJrR/Y2d1zB0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 009/174] pinctrl: sh-pfc: r8a7740: Add missing REF125CK pin to gether_gmii group
-Date:   Thu, 16 Jan 2020 12:40:06 -0500
-Message-Id: <20200116174251.24326-9-sashal@kernel.org>
+Cc:     Anders Roxell <anders.roxell@linaro.org>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.4 002/174] ALSA: hda: fix unused variable warning
+Date:   Thu, 16 Jan 2020 12:39:59 -0500
+Message-Id: <20200116174251.24326-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,34 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Anders Roxell <anders.roxell@linaro.org>
 
-[ Upstream commit 1ebc589a7786f17f97b9e87b44e0fb4d0290d8f8 ]
+[ Upstream commit 5b03006d5c58ddd31caf542eef4d0269bcf265b3 ]
 
-The gether_gmii_mux[] array contains the REF125CK pin mark, but the
-gether_gmii_pins[] array lacks the corresponding pin number.
+When CONFIG_X86=n function azx_snoop doesn't use the variable chip it
+only returns true.
 
-Fixes: bae11d30d0cafdc5 ("sh-pfc: r8a7740: Add GETHER pin groups and functions")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+sound/pci/hda/hda_intel.c: In function ‘dma_alloc_pages’:
+sound/pci/hda/hda_intel.c:2002:14: warning: unused variable ‘chip’ [-Wunused-variable]
+  struct azx *chip = bus_to_azx(bus);
+              ^~~~
+
+Create a inline function of azx_snoop.
+
+Fixes: a41d122449be ("ALSA: hda - Embed bus into controller object")
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-r8a7740.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/hda_controller.h | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7740.c b/drivers/pinctrl/sh-pfc/pfc-r8a7740.c
-index 279e9dd442e4..aa7c346dff6d 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a7740.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a7740.c
-@@ -1983,7 +1983,7 @@ static const unsigned int gether_gmii_pins[] = {
- 	 */
- 	185, 186, 187, 188, 189, 190, 191, 192, 174, 161, 204,
- 	171, 170, 169, 168, 167, 166, 173, 172, 176, 184, 183, 203,
--	205, 163, 206, 207,
-+	205, 163, 206, 207, 158,
- };
- static const unsigned int gether_gmii_mux[] = {
- 	ET_ERXD0_MARK, ET_ERXD1_MARK, ET_ERXD2_MARK, ET_ERXD3_MARK,
+diff --git a/sound/pci/hda/hda_controller.h b/sound/pci/hda/hda_controller.h
+index 55ec4470f6b6..499873d29cc1 100644
+--- a/sound/pci/hda/hda_controller.h
++++ b/sound/pci/hda/hda_controller.h
+@@ -164,11 +164,10 @@ struct azx {
+ #define azx_bus(chip)	(&(chip)->bus.core)
+ #define bus_to_azx(_bus)	container_of(_bus, struct azx, bus.core)
+ 
+-#ifdef CONFIG_X86
+-#define azx_snoop(chip)		((chip)->snoop)
+-#else
+-#define azx_snoop(chip)		true
+-#endif
++static inline bool azx_snoop(struct azx *chip)
++{
++	return !IS_ENABLED(CONFIG_X86) || chip->snoop;
++}
+ 
+ /*
+  * macros for easy use
 -- 
 2.20.1
 
