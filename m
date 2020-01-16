@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B84DC33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC03C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5EFF2077C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C36752077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:23:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202587;
-	bh=N6JuZ2CxlaOk3rspUQn06Nrk7z5PKvi27FvuiS/CLXs=;
+	s=default; t=1579202592;
+	bh=mEQ/YlD3A4QQywGbZn/iryMQxyRD6r1oKnXwOfcjIB0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=giR5Us/aYdaChcbx5jzHNyHK6MGVUgxIYK55//2Sc8UvQkm2DI/5/wbnKPr3y6OOY
-	 yYE8UCQBBtArnqPd+UHh+k26a/wToikKwr+3uVYZdso2wGbLp7QSsXU+yllrAjFO1I
-	 gYAB+QPFZ5ZpKLa2RRe1nB6p8mGEBtxxEj+YOzBc=
+	b=G0UaukfbaKd9vI5WwBVh43dC+0p2f6vrXE7rXt5fVWOgC9oege2ZUgHzmslA3+9uo
+	 8Oe0QO4jyEPcHlJHwo39uK0A8Y5Kodbrhk50PoaM+hka8F6RcHaKvlRN6AsyzNWRZm
+	 nsxpAtqcDYdYSVDUtTF+vbWm+ZaHmJx4L8dnHLV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730747AbgAPQxT (ORCPT
+        id S2437757AbgAPTXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:53:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36636 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:23:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730654AbgAPQxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:53:06 -0500
+        id S1730742AbgAPQxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:53:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AFE92467C;
-        Thu, 16 Jan 2020 16:53:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F84820730;
+        Thu, 16 Jan 2020 16:53:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193585;
-        bh=N6JuZ2CxlaOk3rspUQn06Nrk7z5PKvi27FvuiS/CLXs=;
+        s=default; t=1579193598;
+        bh=mEQ/YlD3A4QQywGbZn/iryMQxyRD6r1oKnXwOfcjIB0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tNpGD/iLjrQIkzjw4HTH/noLTex7axDai0t2yV0iJdJcVY/KOVxXUkOkmxI7Bl86f
-         DGQnYo+qGSwie1wII9eu9W+uLJMuR1k+++Yus1cphqbx9D9SSRhq5jrECQ5huv5A8e
-         0v3IHTzN+X9lAe+Cs70rIaY2BgFFPfbJ/GQBeuFY=
+        b=XS08i3O7QuV3zGhxVSh54U5qxJ631PAJg8uDo96MCIn1qO/TW8LladCJzm5r5i97t
+         ZkXezyuQ/4ZI0YuW2qCZRfpZAbtj570oY3zIg6/YCdlz2Idq/TxoZkkcgFn9Hcre9h
+         uMnFSIOfRelXEkuos6gW3UlrnowNh1DTmi0vv88w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Chris Chiu <chiu@endlessm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 126/205] mfd: intel-lpss: Add default I2C device properties for Gemini Lake
-Date:   Thu, 16 Jan 2020 11:41:41 -0500
-Message-Id: <20200116164300.6705-126-sashal@kernel.org>
+Cc:     Hoang Le <hoang.h.le@dektech.com.au>,
+        Jon Maloy <jon.maloy@ericsson.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.4 137/205] tipc: update mon's self addr when node addr generated
+Date:   Thu, 16 Jan 2020 11:41:52 -0500
+Message-Id: <20200116164300.6705-137-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -61,73 +61,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+From: Hoang Le <hoang.h.le@dektech.com.au>
 
-[ Upstream commit 3f31bc67e4dc6a555341dffefe328ddd58e8b431 ]
+[ Upstream commit 46cb01eeeb86fca6afe24dda1167b0cb95424e29 ]
 
-It turned out Intel Gemini Lake doesn't use the same I2C timing
-parameters as Broxton.
+In commit 25b0b9c4e835 ("tipc: handle collisions of 32-bit node address
+hash values"), the 32-bit node address only generated after one second
+trial period expired. However the self's addr in struct tipc_monitor do
+not update according to node address generated. This lead to it is
+always zero as initial value. As result, sorting algorithm using this
+value does not work as expected, neither neighbor monitoring framework.
 
-I got confirmation from the Windows team that Gemini Lake systems should
-use updated timing parameters that differ from those used in Broxton
-based systems.
+In this commit, we add a fix to update self's addr when 32-bit node
+address generated.
 
-Fixes: f80e78aa11ad ("mfd: intel-lpss: Add Intel Gemini Lake PCI IDs")
-Tested-by: Chris Chiu <chiu@endlessm.com>
-Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Fixes: 25b0b9c4e835 ("tipc: handle collisions of 32-bit node address hash values")
+Acked-by: Jon Maloy <jon.maloy@ericsson.com>
+Signed-off-by: Hoang Le <hoang.h.le@dektech.com.au>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/intel-lpss-pci.c | 28 ++++++++++++++++++++--------
- 1 file changed, 20 insertions(+), 8 deletions(-)
+ net/tipc/monitor.c | 15 +++++++++++++++
+ net/tipc/monitor.h |  1 +
+ net/tipc/net.c     |  2 ++
+ 3 files changed, 18 insertions(+)
 
-diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
-index 9355db29d2f9..1767f30a1676 100644
---- a/drivers/mfd/intel-lpss-pci.c
-+++ b/drivers/mfd/intel-lpss-pci.c
-@@ -122,6 +122,18 @@ static const struct intel_lpss_platform_info apl_i2c_info = {
- 	.properties = apl_i2c_properties,
- };
+diff --git a/net/tipc/monitor.c b/net/tipc/monitor.c
+index 6a6eae88442f..58708b4c7719 100644
+--- a/net/tipc/monitor.c
++++ b/net/tipc/monitor.c
+@@ -665,6 +665,21 @@ void tipc_mon_delete(struct net *net, int bearer_id)
+ 	kfree(mon);
+ }
  
-+static struct property_entry glk_i2c_properties[] = {
-+	PROPERTY_ENTRY_U32("i2c-sda-hold-time-ns", 313),
-+	PROPERTY_ENTRY_U32("i2c-sda-falling-time-ns", 171),
-+	PROPERTY_ENTRY_U32("i2c-scl-falling-time-ns", 290),
-+	{ },
-+};
++void tipc_mon_reinit_self(struct net *net)
++{
++	struct tipc_monitor *mon;
++	int bearer_id;
 +
-+static const struct intel_lpss_platform_info glk_i2c_info = {
-+	.clk_rate = 133000000,
-+	.properties = glk_i2c_properties,
-+};
++	for (bearer_id = 0; bearer_id < MAX_BEARERS; bearer_id++) {
++		mon = tipc_monitor(net, bearer_id);
++		if (!mon)
++			continue;
++		write_lock_bh(&mon->lock);
++		mon->self->addr = tipc_own_addr(net);
++		write_unlock_bh(&mon->lock);
++	}
++}
 +
- static const struct intel_lpss_platform_info cnl_i2c_info = {
- 	.clk_rate = 216000000,
- 	.properties = spt_i2c_properties,
-@@ -174,14 +186,14 @@ static const struct pci_device_id intel_lpss_pci_ids[] = {
- 	{ PCI_VDEVICE(INTEL, 0x1ac6), (kernel_ulong_t)&bxt_info },
- 	{ PCI_VDEVICE(INTEL, 0x1aee), (kernel_ulong_t)&bxt_uart_info },
- 	/* GLK */
--	{ PCI_VDEVICE(INTEL, 0x31ac), (kernel_ulong_t)&bxt_i2c_info },
--	{ PCI_VDEVICE(INTEL, 0x31ae), (kernel_ulong_t)&bxt_i2c_info },
--	{ PCI_VDEVICE(INTEL, 0x31b0), (kernel_ulong_t)&bxt_i2c_info },
--	{ PCI_VDEVICE(INTEL, 0x31b2), (kernel_ulong_t)&bxt_i2c_info },
--	{ PCI_VDEVICE(INTEL, 0x31b4), (kernel_ulong_t)&bxt_i2c_info },
--	{ PCI_VDEVICE(INTEL, 0x31b6), (kernel_ulong_t)&bxt_i2c_info },
--	{ PCI_VDEVICE(INTEL, 0x31b8), (kernel_ulong_t)&bxt_i2c_info },
--	{ PCI_VDEVICE(INTEL, 0x31ba), (kernel_ulong_t)&bxt_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x31ac), (kernel_ulong_t)&glk_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x31ae), (kernel_ulong_t)&glk_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x31b0), (kernel_ulong_t)&glk_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x31b2), (kernel_ulong_t)&glk_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x31b4), (kernel_ulong_t)&glk_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x31b6), (kernel_ulong_t)&glk_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x31b8), (kernel_ulong_t)&glk_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x31ba), (kernel_ulong_t)&glk_i2c_info },
- 	{ PCI_VDEVICE(INTEL, 0x31bc), (kernel_ulong_t)&bxt_uart_info },
- 	{ PCI_VDEVICE(INTEL, 0x31be), (kernel_ulong_t)&bxt_uart_info },
- 	{ PCI_VDEVICE(INTEL, 0x31c0), (kernel_ulong_t)&bxt_uart_info },
+ int tipc_nl_monitor_set_threshold(struct net *net, u32 cluster_size)
+ {
+ 	struct tipc_net *tn = tipc_net(net);
+diff --git a/net/tipc/monitor.h b/net/tipc/monitor.h
+index 2a21b93e0d04..ed63d2e650b0 100644
+--- a/net/tipc/monitor.h
++++ b/net/tipc/monitor.h
+@@ -77,6 +77,7 @@ int __tipc_nl_add_monitor(struct net *net, struct tipc_nl_msg *msg,
+ 			  u32 bearer_id);
+ int tipc_nl_add_monitor_peer(struct net *net, struct tipc_nl_msg *msg,
+ 			     u32 bearer_id, u32 *prev_node);
++void tipc_mon_reinit_self(struct net *net);
+ 
+ extern const int tipc_max_domain_size;
+ #endif
+diff --git a/net/tipc/net.c b/net/tipc/net.c
+index 85707c185360..2de3cec9929d 100644
+--- a/net/tipc/net.c
++++ b/net/tipc/net.c
+@@ -42,6 +42,7 @@
+ #include "node.h"
+ #include "bcast.h"
+ #include "netlink.h"
++#include "monitor.h"
+ 
+ /*
+  * The TIPC locking policy is designed to ensure a very fine locking
+@@ -136,6 +137,7 @@ static void tipc_net_finalize(struct net *net, u32 addr)
+ 	tipc_set_node_addr(net, addr);
+ 	tipc_named_reinit(net);
+ 	tipc_sk_reinit(net);
++	tipc_mon_reinit_self(net);
+ 	tipc_nametbl_publish(net, TIPC_CFG_SRV, addr, addr,
+ 			     TIPC_CLUSTER_SCOPE, 0, addr);
+ }
 -- 
 2.20.1
 
