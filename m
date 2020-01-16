@@ -2,88 +2,94 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E760C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D61C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F04F207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:38:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91DD02075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 14:40:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GEQ6E77x"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RcUfr3hU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgAPOid (ORCPT
+        id S1726714AbgAPOkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 09:38:33 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49859 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726084AbgAPOic (ORCPT
+        Thu, 16 Jan 2020 09:40:20 -0500
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:33941 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbgAPOkT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 09:38:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579185511;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ywzTMlHkadj5tzI8BE77qjkKOHJ7vdRzglAKCzUZs+o=;
-        b=GEQ6E77x3rFTDaMokOFVNOuIrZQszpzIDd3yojJb5bTneIfX+VXn4pps+AHqCJDxKsh8d1
-        2IDQG30EpXPuGIH2gm4dPwuuzBBViFZ03wKkpN+rfQRjiHK33l9qTf/RjbwGuA1z88e2bp
-        J4UXYakCWqY+aripZIVnQwxcRCum4kI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-146-kj7OR4WFOwisucsD14FLEQ-1; Thu, 16 Jan 2020 09:38:27 -0500
-X-MC-Unique: kj7OR4WFOwisucsD14FLEQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A6185800D48;
-        Thu, 16 Jan 2020 14:38:25 +0000 (UTC)
-Received: from treble (ovpn-121-224.rdu2.redhat.com [10.10.121.224])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4825E8889C;
-        Thu, 16 Jan 2020 14:38:24 +0000 (UTC)
-Date:   Thu, 16 Jan 2020 08:38:22 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Tony Luck <tony.luck@intel.com>,
-        Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org,
-        Neelima Krishnan <neelima.krishnan@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH] x86/cpu: Update cached HLE state on write to
- TSX_CTRL_CPUID_CLEAR
-Message-ID: <20200116143822.ffunlqsboxkvsv4x@treble>
-References: <2529b99546294c893dfa1c89e2b3e46da3369a59.1578685425.git.pawan.kumar.gupta@linux.intel.com>
+        Thu, 16 Jan 2020 09:40:19 -0500
+Received: by mail-vs1-f68.google.com with SMTP id g15so12810644vsf.1
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 06:40:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lVQO80ZmgaLsK5SVdN1FDX2hyqLJhElGwfGo54txvt4=;
+        b=RcUfr3hUI71dMs9AL+OXED+c49u8UCiFdwxEvywYPAAVapfhnCCvTjFeVRG6syC2J+
+         sNK8jVmCRUXOeE9kJj3O+Sbcf97Tb76OD5OIirSobYnj6KQlMk2ho+gCGoJH+RmjYAwY
+         i/OUl3HrKUHXC34sg85oKI3sXRMVQjufqKzsawO/o1SI1vEs5VSLmNEFAJF4vUJLn/Qf
+         DgXCWLdvBwYVCzBC4MoY3gcfYPmAZNFAX6oyhSvcQOiIJU3sSCZ77+wcw+ugP7EP8wf6
+         pB3k81JBuWOAIl+eLfkI67UTi3j5cWIRq2AgIto+7Mhdhf84KDjP3Ab005lMdYZuQPyu
+         fLCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lVQO80ZmgaLsK5SVdN1FDX2hyqLJhElGwfGo54txvt4=;
+        b=PKXPIFTEn6mqJgVbeaJvjwApk0mWdMUTdqgXLd9BcAD/ofwlRutC5EeIZwSKUgjPBb
+         yDsvRVsjf5T6ZFL5jawupNhxthO2/IW94ISjonkGwo4mRjVBk/hzmiSApH9vDBAc9XLb
+         4DtIFdHNOL2qzWZShVAsicYVz6z6SPkPRRzMPhh2w1vWYKN+CR47188KoG1dEBepspOY
+         6ZkRsqqjNrl3cNnsdXDdG4UsG3D9HNmMwvo3eZOqDdfdXOzEG5aTTZBjDdm1IcFLLkFO
+         jsxC17CVpYvCNyadWcQDK8wLYHXERmdxUcwqjbIQVe6IkgNJVCV4IT0bRfENvaurgwp6
+         FdYA==
+X-Gm-Message-State: APjAAAUXB0gkfeX9jV7RM2M1L8Kpz8/g6scBWGn4L+iMVCpqH4r3tqMN
+        cLVBwi9uppH/Jdyiu7j50A3TMdTnq/Vt/+pwmqIwyw==
+X-Google-Smtp-Source: APXvYqz/74oGF530TxKb4QKLNFX7XwlPMg1LAiIfTjE49UAVZ23Wq0kjUgscpGUJBPBJMHgRJCnhpMHEreQKOQzRO48=
+X-Received: by 2002:a67:6282:: with SMTP id w124mr1648211vsb.191.1579185618552;
+ Thu, 16 Jan 2020 06:40:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <2529b99546294c893dfa1c89e2b3e46da3369a59.1578685425.git.pawan.kumar.gupta@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <1577172735-18869-1-git-send-email-zhengbin13@huawei.com>
+In-Reply-To: <1577172735-18869-1-git-send-email-zhengbin13@huawei.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 16 Jan 2020 15:39:42 +0100
+Message-ID: <CAPDyKFr++v905hz7+DweJNwa5K=yK8AJA=N2KhV6b62QXbdAtw@mail.gmail.com>
+Subject: Re: [PATCH 0/6] mmc: use true,false for bool variable
+To:     zhengbin <zhengbin13@huawei.com>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 02:50:54PM -0800, Pawan Gupta wrote:
-> /proc/cpuinfo currently reports Hardware Lock Elision (HLE) feature to
-> be present on boot cpu even if it was disabled during the bootup. This
-> is because cpuinfo_x86->x86_capability HLE bit is not updated after TSX
-> state is changed via a new MSR IA32_TSX_CTRL.
-> 
-> Update the cached HLE bit also since it is expected to change after an
-> update to CPUID_CLEAR bit in MSR IA32_TSX_CTRL.
-> 
-> Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-> Tested-by: Neelima Krishnan <neelima.krishnan@intel.com>
-> Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+On Tue, 24 Dec 2019 at 08:25, zhengbin <zhengbin13@huawei.com> wrote:
+>
+> zhengbin (6):
+>   mmc: core: use true,false for bool variable
+>   mmc: sdhci-tegra: use true,false for bool variable
+>   mmc: sdhci-msm: use true,false for bool variable
+>   mmc: omap_hsmmc: use true,false for bool variable
+>   mmc: davinci: use true,false for bool variable
+>   mmc: owl: use true,false for bool variable
+>
+>  drivers/mmc/core/core.c        | 2 +-
+>  drivers/mmc/host/davinci_mmc.c | 6 +++---
+>  drivers/mmc/host/omap_hsmmc.c  | 6 +++---
+>  drivers/mmc/host/owl-mmc.c     | 4 ++--
+>  drivers/mmc/host/sdhci-msm.c   | 4 ++--
+>  drivers/mmc/host/sdhci-tegra.c | 2 +-
+>  6 files changed, 12 insertions(+), 12 deletions(-)
+>
+> --
+> 2.7.4
+>
 
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+This is silly, it doesn't improve anything. So, no thanks!
 
--- 
-Josh
-
+Kind regards
+Uffe
