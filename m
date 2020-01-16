@@ -2,153 +2,185 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B583C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C1A5C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 689BA2075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:27:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="FWdb8OyD"
+	by mail.kernel.org (Postfix) with ESMTP id 1F6632077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 13:27:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgAPN1W (ORCPT
+        id S1726951AbgAPN1Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 08:27:22 -0500
-Received: from mail-dm6nam10on2067.outbound.protection.outlook.com ([40.107.93.67]:13366
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        Thu, 16 Jan 2020 08:27:25 -0500
+Received: from mail.loongson.cn ([114.242.206.163]:42992 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726329AbgAPN1W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 08:27:22 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=liFzYMe39aQ428JHsfeR79hE50VP4CmHY31EMPNbaWUlPH1+b1oCZkfyXrV/Wq3ovuz1djndpIwnFeZXjDx36b/CjtjwRQjxHcfx71qQAaywJq1/3/B85LwSxx6IilytmGur7bF5tSH1+DDMy05LEIbPylLxt7xRmK5m/qCu7jq42aGIHGz3moiIIQK6V1fWRPvq4DWOFURAJD1gyyscCEOtvPvs1ygJnQWW0PSxpUt8pEnlkwEdkus78EhPANYXQiz6aeHnme0VOuS6E9F+KZj4xj4yvf1Of7zamIvd2QkIdr+jJ6pSKB0xzo/RpicRxKrDjW+1LEfsNHyjx1g7rg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aNPqEFkMSI7zbLxHQRO2idHizwtQ/8djBsSNlbSvwOw=;
- b=ELeMtTgyIJ9nvAEJ9FronIUlOAFL5WRFu8ktf66LNSdqUNd5iSFDs+S6zr7iU3Ez5m2Yn+d21wdtMIHcDI50OCRz8I9fnqH1yXwxmLVxqAX9pYm42fST4HaV2VrwOWVbQeORqUb5IR+YMGJK1KyBOvPFzZyAvqQEPd/McXQJ1qrQQ51qxbdaiL+LA1MZCOlUf4i8D5CiACcm6i6y6PyA4xm7pYyprpwKeSuzMHmxV4aqK14LK+e58gjHKlK8W0maVw+jj8/smIPJADrgLf8SAhizIvYYZ9bzq1iE0QUJWxMAxkCmjvvYrf/tzTbIWCTHAjsY3cWqNUjDnxOuvzOq5Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aNPqEFkMSI7zbLxHQRO2idHizwtQ/8djBsSNlbSvwOw=;
- b=FWdb8OyDfvIwUGnU7ODYIlJtZ+t8gyEx7K+FIfb5RWymmIGXpVqbzoYd7WS7ziMwWoS3cNtDrptQFeQizpAq0wulvtMiOm8OW7Ke5IdEArCyyWoVaBWJKWE7DvLywUAp1KVO3E3h8SVt1U0otyptcFS3cNce7VL479N2zqs8xII=
-Received: from SN4PR0201CA0066.namprd02.prod.outlook.com
- (2603:10b6:803:20::28) by BY5PR02MB6019.namprd02.prod.outlook.com
- (2603:10b6:a03:1b0::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.18; Thu, 16 Jan
- 2020 13:27:19 +0000
-Received: from CY1NAM02FT062.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::201) by SN4PR0201CA0066.outlook.office365.com
- (2603:10b6:803:20::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.21 via Frontend
- Transport; Thu, 16 Jan 2020 13:27:19 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT062.mail.protection.outlook.com (10.152.75.60) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2644.19
- via Frontend Transport; Thu, 16 Jan 2020 13:27:18 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1is5B8-0005vB-3E; Thu, 16 Jan 2020 05:27:18 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1is5B2-0001BU-Va; Thu, 16 Jan 2020 05:27:13 -0800
-Received: from xsj-pvapsmtp01 (mail.xilinx.com [149.199.38.66] (may be forged))
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 00GDR629015657;
-        Thu, 16 Jan 2020 05:27:06 -0800
-Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1is5Aw-00018J-8V; Thu, 16 Jan 2020 05:27:06 -0800
-From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
-To:     linux@roeck-us.net, michal.simek@xilinx.com,
-        shubhrajyoti.datta@xilinx.com, sgoud@xilinx.com
-Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        git@xilinx.com
-Subject: [PATCH 2/9] watchdog: of_xilinx_wdt: Used BIT macro
-Date:   Thu, 16 Jan 2020 18:56:50 +0530
-Message-Id: <1579181217-31127-3-git-send-email-srinivas.neeli@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1579181217-31127-1-git-send-email-srinivas.neeli@xilinx.com>
-References: <1579181217-31127-1-git-send-email-srinivas.neeli@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(136003)(39860400002)(396003)(199004)(189003)(316002)(8676002)(8936002)(478600001)(81166006)(44832011)(26005)(6666004)(186003)(7696005)(36756003)(81156014)(356004)(70586007)(336012)(5660300002)(6636002)(70206006)(107886003)(9786002)(2906002)(4326008)(2616005)(426003)(42866002);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR02MB6019;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6200dfeb-fe37-4b0d-5b90-08d79a87cf5f
-X-MS-TrafficTypeDiagnostic: BY5PR02MB6019:
-X-Microsoft-Antispam-PRVS: <BY5PR02MB6019A994F313BE99F0DAC329AF360@BY5PR02MB6019.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:324;
-X-Forefront-PRVS: 02843AA9E0
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: mPbaHs4EqTAR9Hu3516MTYOeMgyY/jPNlzDddD11Xh82N1qnVQrwvP8TLPR3qm/R3YVWYVjLW8kD4SzBHzVkct/0hjF8XRujb31v13o4CjoxndJDIOBh5HZb1adegnDc5e8Z55YGSY9qiIXzYpUKgZQnVaoUN+/J8i3ozgI+08MqhjnHPqmrkW8Npj7ylSFX1jRNAdMqPlc878gkNr9VfBTag5mpuMQCZmfqwZNOtkUbzu64O79L3h5/Si/R6jSWfEtLJY0hsB3xq72cN4Hz3sFR9HalgUpXkbYH3OwhGwqbjQ0vFef7zUqa7GNHIs7CMF44P6jLBRiYbt9J/BOwxTiaKn1qEpeqnUjpWzKNyN6xFqKfQznnsGO1pgzpAngwYREgp0j2aGMccKI2PukMPSKU1044bOJAyphJx0w1cGEaWxUepKybcMmQTMPbkAmuq6fMT1QGNoa2Y4h72hqmMYhVruJRcqWz41i+DzU2rJA=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2020 13:27:18.5329
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6200dfeb-fe37-4b0d-5b90-08d79a87cf5f
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6019
+        id S1726378AbgAPN1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 08:27:23 -0500
+Received: from linux.loongson.cn (unknown [10.20.41.119])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxv92vZCBes+wFAA--.20S2;
+        Thu, 16 Jan 2020 21:27:11 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Jean Delvare <jdelvare@suse.com>
+Cc:     Huacai Chen <chenhc@lemote.com>,
+        Xuefeng Li <lixuefeng@loongson.cn>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Yinglu Yang <yangyinglu@loongson.cn>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: [PATCH v2,RESEND] MIPS: Scan the DMI system information
+Date:   Thu, 16 Jan 2020 21:26:05 +0800
+Message-Id: <1579181165-2493-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9Dxv92vZCBes+wFAA--.20S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxCr4xAw4rtFy7Zw45AF17GFg_yoWrCFy7pF
+        4DC3Z5tr4DGF17G3yfAa4xur13Zan3Wry5KFyj9347ZasxX34xJrs7GwsxAryUAr4kKa40
+        93WagF45KFZFvaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkS14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE-syl42xK
+        82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGw
+        C20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48J
+        MIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMI
+        IF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY
+        6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUOGQDUUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Goud <srinivas.goud@xilinx.com>
+Enable DMI scanning on the MIPS architecture, this setups DMI identifiers
+(dmi_system_id) for printing it out on task dumps and prepares DIMM entry
+information (dmi_memdev_info) from the SMBIOS table. With this patch, the
+driver can easily match various of mainboards.
 
-Used BIT macro instead of mask value.
+In the SMBIOS reference specification, the table anchor string "_SM_" is
+present in the address range 0xF0000 to 0xFFFFF on a 16-byte boundary,
+but there exists a special case for Loongson platform, when call function
+dmi_early_remap, it should specify the start address to 0xFFFE000 due to
+it is reserved for SMBIOS and can be normally access in the BIOS.
 
-Signed-off-by: Srinivas Goud <srinivas.goud@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+This patch works fine on the Loongson 3A3000 platform which belongs to
+MIPS architecture and has no influence on the other architectures such
+as x86 and ARM.
+
+Co-developed-by: Yinglu Yang <yangyinglu@loongson.cn>
+Signed-off-by: Yinglu Yang <yangyinglu@loongson.cn>
+[jiaxun.yang@flygoat.com: Refine definitions and Kconfig]
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Reviewed-by: Huacai Chen <chenhc@lemote.com>
 ---
- drivers/watchdog/of_xilinx_wdt.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/watchdog/of_xilinx_wdt.c b/drivers/watchdog/of_xilinx_wdt.c
-index 00549164b3d7..0d7df2370db7 100644
---- a/drivers/watchdog/of_xilinx_wdt.c
-+++ b/drivers/watchdog/of_xilinx_wdt.c
-@@ -24,12 +24,12 @@
- #define XWT_TBR_OFFSET      0x8 /* Timebase Register Offset */
+v2:
+  - add SMBIOS_ENTRY_POINT_SCAN_START suggested by Jean
+  - refine definitions and Kconfig by Jiaxun
+
+ arch/mips/Kconfig           | 10 ++++++++++
+ arch/mips/include/asm/dmi.h | 20 ++++++++++++++++++++
+ arch/mips/kernel/setup.c    |  2 ++
+ drivers/firmware/dmi_scan.c |  6 +++++-
+ 4 files changed, 37 insertions(+), 1 deletion(-)
+ create mode 100644 arch/mips/include/asm/dmi.h
+
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 4b83507..c097f78 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -2773,6 +2773,16 @@ config HW_PERF_EVENTS
+ 	  Enable hardware performance counter support for perf events. If
+ 	  disabled, perf events will use software events only.
  
- /* Control/Status Register Masks  */
--#define XWT_CSR0_WRS_MASK   0x00000008 /* Reset status */
--#define XWT_CSR0_WDS_MASK   0x00000004 /* Timer state  */
--#define XWT_CSR0_EWDT1_MASK 0x00000002 /* Enable bit 1 */
-+#define XWT_CSR0_WRS_MASK	BIT(3) /* Reset status */
-+#define XWT_CSR0_WDS_MASK	BIT(2) /* Timer state  */
-+#define XWT_CSR0_EWDT1_MASK	BIT(1) /* Enable bit 1 */
++config DMI
++	default y if MACH_LOONGSON64
++	select DMI_SCAN_MACHINE_NON_EFI_FALLBACK
++	bool "Enable DMI scanning"
++	help
++	  Enabled scanning of DMI to identify machine quirks. Say Y
++	  here unless you have verified that your setup is not
++	  affected by entries in the DMI blacklist. Required by PNP
++	  BIOS code.
++
+ config SMP
+ 	bool "Multi-Processing support"
+ 	depends on SYS_SUPPORTS_SMP
+diff --git a/arch/mips/include/asm/dmi.h b/arch/mips/include/asm/dmi.h
+new file mode 100644
+index 0000000..27415a2
+--- /dev/null
++++ b/arch/mips/include/asm/dmi.h
+@@ -0,0 +1,20 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_DMI_H
++#define _ASM_DMI_H
++
++#include <linux/io.h>
++#include <linux/memblock.h>
++
++#define dmi_early_remap(x, l)		ioremap_cache(x, l)
++#define dmi_early_unmap(x, l)		iounmap(x)
++#define dmi_remap(x, l)			ioremap_cache(x, l)
++#define dmi_unmap(x)			iounmap(x)
++
++/* MIPS initialize DMI scan before SLAB is ready, so we use memblock here */
++#define dmi_alloc(l)			memblock_alloc_low(l, PAGE_SIZE)
++
++#if defined(CONFIG_MACH_LOONGSON64)
++#define SMBIOS_ENTRY_POINT_SCAN_START	0xFFFE000
++#endif
++
++#endif /* _ASM_DMI_H */
+diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+index 701f4bc..d9bd841 100644
+--- a/arch/mips/kernel/setup.c
++++ b/arch/mips/kernel/setup.c
+@@ -28,6 +28,7 @@
+ #include <linux/decompress/generic.h>
+ #include <linux/of_fdt.h>
+ #include <linux/of_reserved_mem.h>
++#include <linux/dmi.h>
  
- /* Control/Status Register 0/1 bits  */
--#define XWT_CSRX_EWDT2_MASK 0x00000001 /* Enable bit 2 */
-+#define XWT_CSRX_EWDT2_MASK	BIT(0) /* Enable bit 2 */
+ #include <asm/addrspace.h>
+ #include <asm/bootinfo.h>
+@@ -800,6 +801,7 @@ void __init setup_arch(char **cmdline_p)
+ #endif
  
- /* SelfTest constants */
- #define XWT_MAX_SELFTEST_LOOP_COUNT 0x00010000
+ 	arch_mem_init(cmdline_p);
++	dmi_setup();
+ 
+ 	resource_init();
+ 	plat_smp_setup();
+diff --git a/drivers/firmware/dmi_scan.c b/drivers/firmware/dmi_scan.c
+index 2045566..f59163c 100644
+--- a/drivers/firmware/dmi_scan.c
++++ b/drivers/firmware/dmi_scan.c
+@@ -11,6 +11,10 @@
+ #include <asm/dmi.h>
+ #include <asm/unaligned.h>
+ 
++#ifndef SMBIOS_ENTRY_POINT_SCAN_START
++#define SMBIOS_ENTRY_POINT_SCAN_START 0xF0000
++#endif
++
+ struct kobject *dmi_kobj;
+ EXPORT_SYMBOL_GPL(dmi_kobj);
+ 
+@@ -663,7 +667,7 @@ static void __init dmi_scan_machine(void)
+ 			return;
+ 		}
+ 	} else if (IS_ENABLED(CONFIG_DMI_SCAN_MACHINE_NON_EFI_FALLBACK)) {
+-		p = dmi_early_remap(0xF0000, 0x10000);
++		p = dmi_early_remap(SMBIOS_ENTRY_POINT_SCAN_START, 0x10000);
+ 		if (p == NULL)
+ 			goto error;
+ 
 -- 
-2.7.4
+2.1.0
 
