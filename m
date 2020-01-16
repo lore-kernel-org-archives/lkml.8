@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE171C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30851C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D3392053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:56:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09A0F2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:56:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200989;
-	bh=TSISONchIBp+xUE//FmsdxZpc75nor4ucgWf7/wmpMc=;
+	s=default; t=1579200997;
+	bh=N5ERwiDvrEhKjqvi4Vr6Ok+XCMKgXxIGwQY4H36gUX0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ih6f2HfjnffZSm12p5L57B0pXmgZ58ug0Zo1YRiTKYxH7OYZcTeIcfp6L8J7X8OTc
-	 9gxR4UZk6RZy90LF/qaXauXhql9whkc4f5GcLmYMGBqQtfV9C1HLe48A3s3SkP+lGl
-	 sLsAA1b8kVS2F1EXNYnORV7R+5dbZPrPqoSBr45E=
+	b=Z+0572vVoPv5W35lrm+kj3YlQiyVMu6VNqcFPR03yHfMX6Qk6zHlG8QsstuwzElwP
+	 WJ8nT+fimUfsjBD18MqLEEWFelrfReffpbdxxmbx4V3qOenKdUiYJGN8yUCxT9Obyv
+	 0zhLCZEHSwxzJeKEfNgNve9sobEdpdkPTcnHoTAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437198AbgAPS42 (ORCPT
+        id S2389130AbgAPRHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:56:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39078 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:07:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389154AbgAPRHW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:07:22 -0500
+        id S2389089AbgAPRHK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:07:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 034C221582;
-        Thu, 16 Jan 2020 17:07:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E20A1217F4;
+        Thu, 16 Jan 2020 17:07:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194441;
-        bh=TSISONchIBp+xUE//FmsdxZpc75nor4ucgWf7/wmpMc=;
+        s=default; t=1579194430;
+        bh=N5ERwiDvrEhKjqvi4Vr6Ok+XCMKgXxIGwQY4H36gUX0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=clTf8MrixZ5TXXMHP0UqKd99eoONUgE/FGhvnj/O9WdrlMtHw/XQnZKDfMLCV1s/A
-         oCqebzgvPu265XEcVdmIzDikwACm4iYZ49JsQEYW1fAwRswy7TcE7YeBHIJ6Tx5XfG
-         VrloP2s4vGeMg0heKB1LZ8IJEqQM9F7R+LH2mM+w=
+        b=zU3b24f7I/qJ8SvqTqQtygrPDhdT0zsAD5YGYbh/W0GP0qJzI5xnsYUJKiLXII8yV
+         UcVoHxLBhYP0Cnv+zhR264As5opZ9M+z7ej7Jh3F+gpctWR88MuzcXQ6tiS/mG0PfX
+         MD+77eiWt8LPwTMMI5mWYlVVws8szT2bc7J8tvlQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>,
-        kgdb-bugreport@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.19 354/671] kdb: do a sanity check on the cpu in kdb_per_cpu()
-Date:   Thu, 16 Jan 2020 11:59:52 -0500
-Message-Id: <20200116170509.12787-91-sashal@kernel.org>
+        "Lad Prabhakar" <prabhakar.csengg@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 346/671] media: davinci/vpbe: array underflow in vpbe_enum_outputs()
+Date:   Thu, 16 Jan 2020 11:59:44 -0500
+Message-Id: <20200116170509.12787-83-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -63,34 +63,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit b586627e10f57ee3aa8f0cfab0d6f7dc4ae63760 ]
+[ Upstream commit b72845ee5577b227131b1fef23f9d9a296621d7b ]
 
-The "whichcpu" comes from argv[3].  The cpu_online() macro looks up the
-cpu in a bitmap of online cpus, but if the value is too high then it
-could read beyond the end of the bitmap and possibly Oops.
+In vpbe_enum_outputs() we check if (temp_index >= cfg->num_outputs) but
+the problem is that "temp_index" can be negative.  This patch changes
+the types to unsigned to address this array underflow bug.
 
-Fixes: 5d5314d6795f ("kdb: core for kgdb back end (1 of 2)")
+Fixes: 66715cdc3224 ("[media] davinci vpbe: VPBE display driver")
+
 Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+Acked-by: "Lad Prabhakar" <prabhakar.csengg@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/debug/kdb/kdb_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/davinci/vpbe.c | 2 +-
+ include/media/davinci/vpbe.h          | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
-index f338d23b112b..dc6bf35e7884 100644
---- a/kernel/debug/kdb/kdb_main.c
-+++ b/kernel/debug/kdb/kdb_main.c
-@@ -2604,7 +2604,7 @@ static int kdb_per_cpu(int argc, const char **argv)
- 		diag = kdbgetularg(argv[3], &whichcpu);
- 		if (diag)
- 			return diag;
--		if (!cpu_online(whichcpu)) {
-+		if (whichcpu >= nr_cpu_ids || !cpu_online(whichcpu)) {
- 			kdb_printf("cpu %ld is not online\n", whichcpu);
- 			return KDB_BADCPUNUM;
- 		}
+diff --git a/drivers/media/platform/davinci/vpbe.c b/drivers/media/platform/davinci/vpbe.c
+index df1ae6b5c854..e45e062f4442 100644
+--- a/drivers/media/platform/davinci/vpbe.c
++++ b/drivers/media/platform/davinci/vpbe.c
+@@ -126,7 +126,7 @@ static int vpbe_enum_outputs(struct vpbe_device *vpbe_dev,
+ 			     struct v4l2_output *output)
+ {
+ 	struct vpbe_config *cfg = vpbe_dev->cfg;
+-	int temp_index = output->index;
++	unsigned int temp_index = output->index;
+ 
+ 	if (temp_index >= cfg->num_outputs)
+ 		return -EINVAL;
+diff --git a/include/media/davinci/vpbe.h b/include/media/davinci/vpbe.h
+index 79a566d7defd..180a05e91497 100644
+--- a/include/media/davinci/vpbe.h
++++ b/include/media/davinci/vpbe.h
+@@ -92,7 +92,7 @@ struct vpbe_config {
+ 	struct encoder_config_info *ext_encoders;
+ 	/* amplifier information goes here */
+ 	struct amp_config_info *amp;
+-	int num_outputs;
++	unsigned int num_outputs;
+ 	/* Order is venc outputs followed by LCD and then external encoders */
+ 	struct vpbe_output *outputs;
+ };
 -- 
 2.20.1
 
