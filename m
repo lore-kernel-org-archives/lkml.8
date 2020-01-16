@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2685C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A22DCC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B04532051A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:25:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 800542051A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:25:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199115;
-	bh=g2pj0gi9Ui3WUZYUpszQBhEQoL3MST3QvZu9kt67wxU=;
+	s=default; t=1579199123;
+	bh=WRXefOo+8hZzby06GsbLrJkQRjYso2UiKOhhFeLie5w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J36NwpgK8OSYtIkYgFL2vneJ+oBwRv0Vk+aRn9FE3mgf8+b3Ou4djCG0HtoJwKJfk
-	 YEV/Iz4XmutekAWiI3VvNpG4Lz+hQc8lGGRy/+gBTnapqxzskxay/5rPzP/vpTnSnG
-	 vFrbdz1F3AGEos3+JtQw3vRBOw0/156CMUplhcQI=
+	b=XippdbAxEHLl5FpF8dVvDG08QNkR6+fuRsm2Wcw+Nemjkzey9koNsqKQoPxXIwo8+
+	 Fo5eeXvddjPHHetP+UGKbo1us8C4Pww3OAjRECxVJEeCeqMQlYlzrPcf5L6LBZrX7u
+	 0Toms1POA2jST5gSnCnOdkpyMT5sX2PcxIKZmM5I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436658AbgAPSZO (ORCPT
+        id S2407069AbgAPSZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:25:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36462 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:25:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392384AbgAPR1D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:27:03 -0500
+        id S2392378AbgAPR1B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:27:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 649C1246D5;
-        Thu, 16 Jan 2020 17:27:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36BDB246D9;
+        Thu, 16 Jan 2020 17:27:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195622;
-        bh=g2pj0gi9Ui3WUZYUpszQBhEQoL3MST3QvZu9kt67wxU=;
+        s=default; t=1579195621;
+        bh=WRXefOo+8hZzby06GsbLrJkQRjYso2UiKOhhFeLie5w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=er5rndEdXXH+NEYeuKoalZfr9rAIuDojICj8jd4P+lblFECNMP7dbM9U/JrLjcb5t
-         dMGrmn6Qvhk39OaQCc0W2OBAERPoVD6FIypyyNejU1Akn+GMU2vPYvCh1QOEvxArp3
-         hlkTekS8q+fUOaS2jLAFkMwrFTFuzGn/LhcQxOnY=
+        b=BEbzCGsB8E8EZyWjGxZ1BgIb4kviDF84F3UsLOiWgvF84vIRFWQnYcFWls/Z4c3Gs
+         QYblo6hjrJzmGqWmXA7bFvwYOtUiR/oht+pR5lxfjn8XSsTYDm4AIygeg1YEGmOdJe
+         5+Gq4D23/TXy9/Ei0ZhZdBZH4ji191FsJVzGkVWk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 193/371] media: omap_vout: potential buffer overflow in vidioc_dqbuf()
-Date:   Thu, 16 Jan 2020 12:21:05 -0500
-Message-Id: <20200116172403.18149-136-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Guillaume Nault <gnault@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 192/371] l2tp: Fix possible NULL pointer dereference
+Date:   Thu, 16 Jan 2020 12:21:04 -0500
+Message-Id: <20200116172403.18149-135-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -60,66 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit dd6e2a981bfe83aa4a493143fd8cf1edcda6c091 ]
+[ Upstream commit 638a3a1e349ddf5b82f222ff5cb3b4f266e7c278 ]
 
-The "b->index" is a u32 the comes from the user in the ioctl.  It hasn't
-been checked.  We aren't supposed to use it but we're instead supposed
-to use the value that gets written to it when we call videobuf_dqbuf().
+BUG: unable to handle kernel NULL pointer dereference at 0000000000000128
+PGD 0 P4D 0
+Oops: 0000 [#1
+CPU: 0 PID: 5697 Comm: modprobe Tainted: G        W         5.1.0-rc7+ #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
+RIP: 0010:__lock_acquire+0x53/0x10b0
+Code: 8b 1c 25 40 5e 01 00 4c 8b 6d 10 45 85 e4 0f 84 bd 06 00 00 44 8b 1d 7c d2 09 02 49 89 fe 41 89 d2 45 85 db 0f 84 47 02 00 00 <48> 81 3f a0 05 70 83 b8 00 00 00 00 44 0f 44 c0 83 fe 01 0f 86 3a
+RSP: 0018:ffffc90001c07a28 EFLAGS: 00010002
+RAX: 0000000000000000 RBX: ffff88822f038440 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000128
+RBP: ffffc90001c07a88 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000001 R12: 0000000000000001
+R13: 0000000000000000 R14: 0000000000000128 R15: 0000000000000000
+FS:  00007fead0811540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000128 CR3: 00000002310da000 CR4: 00000000000006f0
+Call Trace:
+ ? __lock_acquire+0x24e/0x10b0
+ lock_acquire+0xdf/0x230
+ ? flush_workqueue+0x71/0x530
+ flush_workqueue+0x97/0x530
+ ? flush_workqueue+0x71/0x530
+ l2tp_exit_net+0x170/0x2b0 [l2tp_core
+ ? l2tp_exit_net+0x93/0x2b0 [l2tp_core
+ ops_exit_list.isra.6+0x36/0x60
+ unregister_pernet_operations+0xb8/0x110
+ unregister_pernet_device+0x25/0x40
+ l2tp_init+0x55/0x1000 [l2tp_core
+ ? 0xffffffffa018d000
+ do_one_initcall+0x6c/0x3cc
+ ? do_init_module+0x22/0x1f1
+ ? rcu_read_lock_sched_held+0x97/0xb0
+ ? kmem_cache_alloc_trace+0x325/0x3b0
+ do_init_module+0x5b/0x1f1
+ load_module+0x1db1/0x2690
+ ? m_show+0x1d0/0x1d0
+ __do_sys_finit_module+0xc5/0xd0
+ __x64_sys_finit_module+0x15/0x20
+ do_syscall_64+0x6b/0x1d0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x7fead031a839
+Code: 00 f3 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 1f f6 2c 00 f7 d8 64 89 01 48
+RSP: 002b:00007ffe8d9acca8 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+RAX: ffffffffffffffda RBX: 0000560078398b80 RCX: 00007fead031a839
+RDX: 0000000000000000 RSI: 000056007659dc2e RDI: 0000000000000003
+RBP: 000056007659dc2e R08: 0000000000000000 R09: 0000560078398b80
+R10: 0000000000000003 R11: 0000000000000246 R12: 0000000000000000
+R13: 00005600783a04a0 R14: 0000000000040000 R15: 0000560078398b80
+Modules linked in: l2tp_core(+) e1000 ip_tables ipv6 [last unloaded: l2tp_core
+CR2: 0000000000000128
+---[ end trace 8322b2b8bf83f8e1
 
-The videobuf_dqbuf() first memsets it to zero and then re-initializes it
-inside the videobuf_status() function.  It's this final value which we
-want.
+If alloc_workqueue fails in l2tp_init, l2tp_net_ops
+is unregistered on failure path. Then l2tp_exit_net
+is called which will flush NULL workqueue, this patch
+add a NULL check to fix it.
 
-Hans Verkuil pointed out that we need to check the return from
-videobuf_dqbuf().  I ended up doing a little cleanup related to that as
-well.
-
-Fixes: 72915e851da9 ("[media] V4L2: OMAP: VOUT: dma map and unmap v4l2 buffers in qbuf and dqbuf")
-
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 67e04c29ec0d ("l2tp: unregister l2tp_net_ops on failure path")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Guillaume Nault <gnault@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/omap/omap_vout.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+ net/l2tp/l2tp_core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/omap/omap_vout.c b/drivers/media/platform/omap/omap_vout.c
-index 4d29860d27b4..18604b608ab2 100644
---- a/drivers/media/platform/omap/omap_vout.c
-+++ b/drivers/media/platform/omap/omap_vout.c
-@@ -1527,23 +1527,20 @@ static int vidioc_dqbuf(struct file *file, void *fh, struct v4l2_buffer *b)
- 	unsigned long size;
- 	struct videobuf_buffer *vb;
+diff --git a/net/l2tp/l2tp_core.c b/net/l2tp/l2tp_core.c
+index e494f04819e9..b9be0360ab94 100644
+--- a/net/l2tp/l2tp_core.c
++++ b/net/l2tp/l2tp_core.c
+@@ -1892,7 +1892,8 @@ static __net_exit void l2tp_exit_net(struct net *net)
+ 	}
+ 	rcu_read_unlock_bh();
  
--	vb = q->bufs[b->index];
--
- 	if (!vout->streaming)
- 		return -EINVAL;
- 
--	if (file->f_flags & O_NONBLOCK)
--		/* Call videobuf_dqbuf for non blocking mode */
--		ret = videobuf_dqbuf(q, (struct v4l2_buffer *)b, 1);
--	else
--		/* Call videobuf_dqbuf for  blocking mode */
--		ret = videobuf_dqbuf(q, (struct v4l2_buffer *)b, 0);
-+	ret = videobuf_dqbuf(q, b, !!(file->f_flags & O_NONBLOCK));
-+	if (ret)
-+		return ret;
-+
-+	vb = q->bufs[b->index];
- 
- 	addr = (unsigned long) vout->buf_phy_addr[vb->i];
- 	size = (unsigned long) vb->size;
- 	dma_unmap_single(vout->vid_dev->v4l2_dev.dev,  addr,
- 				size, DMA_TO_DEVICE);
--	return ret;
-+	return 0;
+-	flush_workqueue(l2tp_wq);
++	if (l2tp_wq)
++		flush_workqueue(l2tp_wq);
+ 	rcu_barrier();
  }
  
- static int vidioc_streamon(struct file *file, void *fh, enum v4l2_buf_type i)
 -- 
 2.20.1
 
