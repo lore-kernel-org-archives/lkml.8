@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14700C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1AEC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E427E2072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45DA32053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:47:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200428;
-	bh=wU/9PA9pxNxoDXJ6lPoMf6WRbdEvS/5kHPeCbNbXJpU=;
+	s=default; t=1579200441;
+	bh=FINBDgGxQZbcqA4X9XndsxbGXsfjMsgfE1CmU8g/PQk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m+c196GI20F2zKBj9PplH5LHny6QbCUK7YnZdIY1JkMHJKVwJ6JRu13J2ced40l1e
-	 ZGDg4B+vGfRhmeS74JkHdQPNO6AuKuD6prTEVyRd91WRV7W9FUM9BHveny4bBcrwp5
-	 LIJ40/bEtWDpZS+YKUOSK/bpB34gyORQBBH+EuTM=
+	b=esd/e8lSZOSH+EdGFVQygGOgC5vEjogsI8bzJxietNGZqNGaTyB/JSdJ8Kq5saGfx
+	 RxlamnfKoyTh811UagmjQo89gc8VzHXgsgXTSA9WON/ImBIZYs7JNec5mSh4N6bslJ
+	 LcNXNXSkawouY/xr1o7rUNnu0wsBx66DaO12fCV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390234AbgAPSrB (ORCPT
+        id S2390421AbgAPSrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:47:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47482 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:47:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389500AbgAPRKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:10:07 -0500
+        id S2389812AbgAPRKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:10:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4CA421D56;
-        Thu, 16 Jan 2020 17:10:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9848924687;
+        Thu, 16 Jan 2020 17:10:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194606;
-        bh=wU/9PA9pxNxoDXJ6lPoMf6WRbdEvS/5kHPeCbNbXJpU=;
+        s=default; t=1579194601;
+        bh=FINBDgGxQZbcqA4X9XndsxbGXsfjMsgfE1CmU8g/PQk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Udc/0xE3JIM3ClVuUv9QbPHM28YROX7lJIfKv0t6ewZOrDvht12GVzs20NulucF4
-         qhMSbGjuibYyd9LpS5ZmmK+aMClnW80RM+qsRJ+LpuN5EzDKXasQN3uLsyhkZVa+GQ
-         dQms/hX7ucDTMM9fTUvFNFcn/jBNLPqzrUgsW/7w=
+        b=kCv0lB1L7Rxwd7rNpqopi3CF11faDd2LtnrHcxss6U8gnWuVJuCw0TqHX9/3viq4E
+         Smg/OaHiew16RWCRGOEkF5aOen5V4ahwbONdjsSqcdoBNqZBpRCgsv9FwU+4NiEpdJ
+         zwNBtP7vgcpN6uhFKz3CZ+FtYcQMN3b60LGmgejc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 473/671] x86/kgbd: Use NMI_VECTOR not APIC_DM_NMI
-Date:   Thu, 16 Jan 2020 12:01:51 -0500
-Message-Id: <20200116170509.12787-210-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 469/671] qed: reduce maximum stack frame size
+Date:   Thu, 16 Jan 2020 12:01:47 -0500
+Message-Id: <20200116170509.12787-206-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,39 +60,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 2591bc4e8d70b4e1330d327fb7e3921f4e070a51 ]
+[ Upstream commit 7c116e02a4a7575c8c62bfd2106e3e3ec8fb99dc ]
 
-apic->send_IPI_allbutself() takes a vector number as argument.
+clang warns about an overly large stack frame in one function
+when it decides to inline all __qed_get_vport_*() functions into
+__qed_get_vport_stats():
 
-APIC_DM_NMI is clearly not a vector number. It's defined to 0x400 which is
-outside the vector space.
+drivers/net/ethernet/qlogic/qed/qed_l2.c:1889:13: error: stack frame size of 1128 bytes in function '_qed_get_vport_stats' [-Werror,-Wframe-larger-than=]
 
-Use NMI_VECTOR instead as that's what it is intended to be.
+Use a noinline_for_stack annotation to prevent clang from inlining
+these, which keeps the maximum stack usage at around half of that
+in the worst case, similar to what we get with gcc.
 
-Fixes: 82da3ff89dc2 ("x86: kgdb support")
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190722105218.855189979@linutronix.de
+Fixes: 86622ee75312 ("qed: Move statistics to L2 code")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/kgdb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/qlogic/qed/qed_l2.c | 34 +++++++++++-------------
+ 1 file changed, 15 insertions(+), 19 deletions(-)
 
-diff --git a/arch/x86/kernel/kgdb.c b/arch/x86/kernel/kgdb.c
-index 8e36f249646e..904e18bb38c5 100644
---- a/arch/x86/kernel/kgdb.c
-+++ b/arch/x86/kernel/kgdb.c
-@@ -438,7 +438,7 @@ static void kgdb_disable_hw_debug(struct pt_regs *regs)
-  */
- void kgdb_roundup_cpus(unsigned long flags)
- {
--	apic->send_IPI_allbutself(APIC_DM_NMI);
-+	apic->send_IPI_allbutself(NMI_VECTOR);
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_l2.c b/drivers/net/ethernet/qlogic/qed/qed_l2.c
+index 64ac95ca4df2..d921b991dbdb 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_l2.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_l2.c
+@@ -1631,10 +1631,9 @@ static void __qed_get_vport_pstats_addrlen(struct qed_hwfn *p_hwfn,
+ 	}
  }
- #endif
  
+-static void __qed_get_vport_pstats(struct qed_hwfn *p_hwfn,
+-				   struct qed_ptt *p_ptt,
+-				   struct qed_eth_stats *p_stats,
+-				   u16 statistics_bin)
++static noinline_for_stack void
++__qed_get_vport_pstats(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt,
++		       struct qed_eth_stats *p_stats, u16 statistics_bin)
+ {
+ 	struct eth_pstorm_per_queue_stat pstats;
+ 	u32 pstats_addr = 0, pstats_len = 0;
+@@ -1661,10 +1660,9 @@ static void __qed_get_vport_pstats(struct qed_hwfn *p_hwfn,
+ 	    HILO_64_REGPAIR(pstats.error_drop_pkts);
+ }
+ 
+-static void __qed_get_vport_tstats(struct qed_hwfn *p_hwfn,
+-				   struct qed_ptt *p_ptt,
+-				   struct qed_eth_stats *p_stats,
+-				   u16 statistics_bin)
++static noinline_for_stack void
++__qed_get_vport_tstats(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt,
++		       struct qed_eth_stats *p_stats, u16 statistics_bin)
+ {
+ 	struct tstorm_per_port_stat tstats;
+ 	u32 tstats_addr, tstats_len;
+@@ -1709,10 +1707,9 @@ static void __qed_get_vport_ustats_addrlen(struct qed_hwfn *p_hwfn,
+ 	}
+ }
+ 
+-static void __qed_get_vport_ustats(struct qed_hwfn *p_hwfn,
+-				   struct qed_ptt *p_ptt,
+-				   struct qed_eth_stats *p_stats,
+-				   u16 statistics_bin)
++static noinline_for_stack
++void __qed_get_vport_ustats(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt,
++			    struct qed_eth_stats *p_stats, u16 statistics_bin)
+ {
+ 	struct eth_ustorm_per_queue_stat ustats;
+ 	u32 ustats_addr = 0, ustats_len = 0;
+@@ -1751,10 +1748,9 @@ static void __qed_get_vport_mstats_addrlen(struct qed_hwfn *p_hwfn,
+ 	}
+ }
+ 
+-static void __qed_get_vport_mstats(struct qed_hwfn *p_hwfn,
+-				   struct qed_ptt *p_ptt,
+-				   struct qed_eth_stats *p_stats,
+-				   u16 statistics_bin)
++static noinline_for_stack void
++__qed_get_vport_mstats(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt,
++		       struct qed_eth_stats *p_stats, u16 statistics_bin)
+ {
+ 	struct eth_mstorm_per_queue_stat mstats;
+ 	u32 mstats_addr = 0, mstats_len = 0;
+@@ -1780,9 +1776,9 @@ static void __qed_get_vport_mstats(struct qed_hwfn *p_hwfn,
+ 	    HILO_64_REGPAIR(mstats.tpa_coalesced_bytes);
+ }
+ 
+-static void __qed_get_vport_port_stats(struct qed_hwfn *p_hwfn,
+-				       struct qed_ptt *p_ptt,
+-				       struct qed_eth_stats *p_stats)
++static noinline_for_stack void
++__qed_get_vport_port_stats(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt,
++			   struct qed_eth_stats *p_stats)
+ {
+ 	struct qed_eth_stats_common *p_common = &p_stats->common;
+ 	struct port_stats port_stats;
 -- 
 2.20.1
 
