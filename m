@@ -2,51 +2,52 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 475D1C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92980C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1460720661
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:36:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62D1B20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:36:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217780;
-	bh=r3CjGXlTky99boRzd8VktX2hXmeXhqpzLTfCpBadJw0=;
+	s=default; t=1579217783;
+	bh=1T1BEJXMUaQIjkV3UeDue1Z4USjqdymjd8/QHn0k+H4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j8ZjDdq/QoG45Dt5JkJxrPfmypwCZjbYyMztlO1E2fFCWFJhTRIWjVwKxg7s3oyQn
-	 IuWLoM/9k3kNKRT5biG16z4fp9R5+OftNGsCfo/eDHRVgXRx8HqMukEqj3qftZw2pm
-	 MVwq//OyMrUalNl17yKlQ5ZGl5yw2nysHihPus3E=
+	b=BAEAa4ubVR2segCRe+6ezgrJpwL/1uCc5Wx6TcgIJ+GDIQ/n5CUJ7TW4QaCHoMFJI
+	 4P5dwaeJYJRzDota/y7Aiby9fZ/1sWahyvSWr3srVz4tpKnxYSk+MIBsSGIIlYP3UT
+	 xmdlfGFFzt/Gs6hPTn3dB9LBWcJzdwJTMRqQtI0M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404302AbgAPXgT (ORCPT
+        id S2404362AbgAPXgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:36:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40206 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:36:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732981AbgAPXbk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:31:40 -0500
+        id S2391209AbgAPXbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:31:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB608206D9;
-        Thu, 16 Jan 2020 23:31:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1908B20684;
+        Thu, 16 Jan 2020 23:31:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217500;
-        bh=r3CjGXlTky99boRzd8VktX2hXmeXhqpzLTfCpBadJw0=;
+        s=default; t=1579217502;
+        bh=1T1BEJXMUaQIjkV3UeDue1Z4USjqdymjd8/QHn0k+H4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RGjRAi6OFx+nzeQ8/wamB72hjvJd421KYQ1K4LV7jVa1xPGHy54PoDoh365zhJeet
-         OuKu4ctwTFAhhqgpkB5QlkFTkip4KqOiDybN2kzYlek84Ftlvdzi+E2OKiSdZw5y9E
-         92s0aytcHYAeE5d6vptiDF3X1uc1X3VGzz/nzIyo=
+        b=l8j7yk4ogjO/TfL/vk5x/KuXYYeaChTyTeeG8b5yAcclEIbbIhFPCn6PkfKCsmJXA
+         fzum8K0/0qDcx2XNbRtAO0NeSboEd1xAvdd+eamaf2nFlkUYgwoPdmzxMUMEf1tnQ1
+         RPi7lQ9GBNXnM+tnNCV0cz44aNGR3wNefqeKlcY4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olivier Moysan <olivier.moysan@st.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.14 23/71] ASoC: stm32: spdifrx: fix race condition in irq handler
-Date:   Fri, 17 Jan 2020 00:18:21 +0100
-Message-Id: <20200116231712.748003784@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 03/71] HID: hidraw, uhid: Always report EPOLLOUT
+Date:   Fri, 17 Jan 2020 00:18:01 +0100
+Message-Id: <20200116231709.908406156@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231709.377772748@linuxfoundation.org>
 References: <20200116231709.377772748@linuxfoundation.org>
@@ -59,108 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olivier Moysan <olivier.moysan@st.com>
+From: Jiri Kosina <jkosina@suse.cz>
 
-commit 86e1956af4c863d653136fd6e5694adf2054dbaa upstream.
+[ Upstream commit 9e635c2851df6caee651e589fbf937b637973c91 ]
 
-When snd_pcm_stop() is called in interrupt routine,
-substream context may have already been released.
-Add protection on substream context.
+hidraw and uhid device nodes are always available for writing so we should
+always report EPOLLOUT and EPOLLWRNORM bits, not only in the cases when
+there is nothing to read.
 
-Fixes: 03e4d5d56fa5 ("ASoC: stm32: Add SPDIFRX support")
-
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-Link: https://lore.kernel.org/r/20191204154333.7152-3-olivier.moysan@st.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: be54e7461ffdc ("HID: uhid: Fix returning EPOLLOUT from uhid_char_poll")
+Fixes: 9f3b61dc1dd7b ("HID: hidraw: Fix returning EPOLLOUT from hidraw_poll")
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/stm/stm32_spdifrx.c |   24 +++++++++++++++++++-----
- 1 file changed, 19 insertions(+), 5 deletions(-)
+ drivers/hid/hidraw.c | 7 ++++---
+ drivers/hid/uhid.c   | 5 +++--
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
---- a/sound/soc/stm/stm32_spdifrx.c
-+++ b/sound/soc/stm/stm32_spdifrx.c
-@@ -213,6 +213,7 @@
-  * @slave_config: dma slave channel runtime config pointer
-  * @phys_addr: SPDIFRX registers physical base address
-  * @lock: synchronization enabling lock
-+ * @irq_lock: prevent race condition with IRQ on stream state
-  * @cs: channel status buffer
-  * @ub: user data buffer
-  * @irq: SPDIFRX interrupt line
-@@ -233,6 +234,7 @@ struct stm32_spdifrx_data {
- 	struct dma_slave_config slave_config;
- 	dma_addr_t phys_addr;
- 	spinlock_t lock;  /* Sync enabling lock */
-+	spinlock_t irq_lock; /* Prevent race condition on stream state */
- 	unsigned char cs[SPDIFRX_CS_BYTES_NB];
- 	unsigned char ub[SPDIFRX_UB_BYTES_NB];
- 	int irq;
-@@ -646,7 +648,6 @@ static const struct regmap_config stm32_
- static irqreturn_t stm32_spdifrx_isr(int irq, void *devid)
+diff --git a/drivers/hid/hidraw.c b/drivers/hid/hidraw.c
+index 1abf5008def0..5243c4120819 100644
+--- a/drivers/hid/hidraw.c
++++ b/drivers/hid/hidraw.c
+@@ -257,13 +257,14 @@ out:
+ static unsigned int hidraw_poll(struct file *file, poll_table *wait)
  {
- 	struct stm32_spdifrx_data *spdifrx = (struct stm32_spdifrx_data *)devid;
--	struct snd_pcm_substream *substream = spdifrx->substream;
- 	struct platform_device *pdev = spdifrx->pdev;
- 	unsigned int cr, mask, sr, imr;
- 	unsigned int flags;
-@@ -714,14 +715,19 @@ static irqreturn_t stm32_spdifrx_isr(int
- 		regmap_update_bits(spdifrx->regmap, STM32_SPDIFRX_CR,
- 				   SPDIFRX_CR_SPDIFEN_MASK, cr);
+ 	struct hidraw_list *list = file->private_data;
++	unsigned int mask = POLLOUT | POLLWRNORM; /* hidraw is always writable */
  
--		if (substream)
--			snd_pcm_stop(substream, SNDRV_PCM_STATE_DISCONNECTED);
-+		spin_lock(&spdifrx->irq_lock);
-+		if (spdifrx->substream)
-+			snd_pcm_stop(spdifrx->substream,
-+				     SNDRV_PCM_STATE_DISCONNECTED);
-+		spin_unlock(&spdifrx->irq_lock);
- 
- 		return IRQ_HANDLED;
- 	}
- 
--	if (err_xrun && substream)
--		snd_pcm_stop_xrun(substream);
-+	spin_lock(&spdifrx->irq_lock);
-+	if (err_xrun && spdifrx->substream)
-+		snd_pcm_stop_xrun(spdifrx->substream);
-+	spin_unlock(&spdifrx->irq_lock);
- 
- 	return IRQ_HANDLED;
- }
-@@ -730,9 +736,12 @@ static int stm32_spdifrx_startup(struct
- 				 struct snd_soc_dai *cpu_dai)
- {
- 	struct stm32_spdifrx_data *spdifrx = snd_soc_dai_get_drvdata(cpu_dai);
-+	unsigned long flags;
- 	int ret;
- 
-+	spin_lock_irqsave(&spdifrx->irq_lock, flags);
- 	spdifrx->substream = substream;
-+	spin_unlock_irqrestore(&spdifrx->irq_lock, flags);
- 
- 	ret = clk_prepare_enable(spdifrx->kclk);
- 	if (ret)
-@@ -804,8 +813,12 @@ static void stm32_spdifrx_shutdown(struc
- 				   struct snd_soc_dai *cpu_dai)
- {
- 	struct stm32_spdifrx_data *spdifrx = snd_soc_dai_get_drvdata(cpu_dai);
-+	unsigned long flags;
- 
-+	spin_lock_irqsave(&spdifrx->irq_lock, flags);
- 	spdifrx->substream = NULL;
-+	spin_unlock_irqrestore(&spdifrx->irq_lock, flags);
-+
- 	clk_disable_unprepare(spdifrx->kclk);
+ 	poll_wait(file, &list->hidraw->wait, wait);
+ 	if (list->head != list->tail)
+-		return POLLIN | POLLRDNORM;
++		mask |= POLLIN | POLLRDNORM;
+ 	if (!list->hidraw->exist)
+-		return POLLERR | POLLHUP;
+-	return POLLOUT | POLLWRNORM;
++		mask |= POLLERR | POLLHUP;
++	return mask;
  }
  
-@@ -910,6 +923,7 @@ static int stm32_spdifrx_probe(struct pl
- 	spdifrx->pdev = pdev;
- 	init_completion(&spdifrx->cs_completion);
- 	spin_lock_init(&spdifrx->lock);
-+	spin_lock_init(&spdifrx->irq_lock);
+ static int hidraw_open(struct inode *inode, struct file *file)
+diff --git a/drivers/hid/uhid.c b/drivers/hid/uhid.c
+index e63b761f600a..c749f449c7cb 100644
+--- a/drivers/hid/uhid.c
++++ b/drivers/hid/uhid.c
+@@ -769,13 +769,14 @@ unlock:
+ static unsigned int uhid_char_poll(struct file *file, poll_table *wait)
+ {
+ 	struct uhid_device *uhid = file->private_data;
++	unsigned int mask = POLLOUT | POLLWRNORM; /* uhid is always writable */
  
- 	platform_set_drvdata(pdev, spdifrx);
+ 	poll_wait(file, &uhid->waitq, wait);
  
+ 	if (uhid->head != uhid->tail)
+-		return POLLIN | POLLRDNORM;
++		mask |= POLLIN | POLLRDNORM;
+ 
+-	return EPOLLOUT | EPOLLWRNORM;
++	return mask;
+ }
+ 
+ static const struct file_operations uhid_fops = {
+-- 
+2.20.1
+
 
 
