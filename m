@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C5EC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31DF0C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B6A82064C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:47:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3C7E206B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:48:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218479;
-	bh=fXiYfFCIwIIUg6LPoG3LFBYLLvM/DDDTgYBvUbxygTI=;
+	s=default; t=1579218482;
+	bh=A69Yjn+0hqvyqX8LOalUa/LcXZPSxXGdX21+SlYfcgg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EeIIQ1ynWkYHjDohyG9LTMVSgqrredchn3bNMkCbr6BnghCv3k7fmo6llJdE+JYXK
-	 HmvXscllOZU9A0fdyxgN4HrCOsrrDbhSBoC8x9h+MLQaUSiJVvmRQiK2PIkgaLAej7
-	 gS7mZnPWrYMXEaQBqZNdJvn6+K0CsLchzRudwcdo=
+	b=XOqy9ygeHdVFA3nyUzvqYGhDEt/1t9qniz0A2pGk0pgW7uE5GV28wtq1S+5ilm4sZ
+	 xhMXE94g6FIGPbHCYo0nnxJMrSElbFE6879ueGzzxrGcd+gZwsex/8gOPp7gs8dDkV
+	 255axE+WjaiJkN+GkItmZzJ18knkZQwZr/8OsMm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390630AbgAPXUX (ORCPT
+        id S2389182AbgAPXUV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:20:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46664 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:20:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390589AbgAPXUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:20:15 -0500
+        id S2390575AbgAPXUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:20:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02DD820684;
-        Thu, 16 Jan 2020 23:20:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3200A20684;
+        Thu, 16 Jan 2020 23:20:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216814;
-        bh=fXiYfFCIwIIUg6LPoG3LFBYLLvM/DDDTgYBvUbxygTI=;
+        s=default; t=1579216809;
+        bh=A69Yjn+0hqvyqX8LOalUa/LcXZPSxXGdX21+SlYfcgg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h+QJNazTMIgaoe2QkzxPr5PChRly6QszQhfLlK121+V3uODWH5vk1Ft2xEzsc+7t7
-         Qq6L7FodPY6uDbQhw2LektYN/JNR5bL5fUGeqV1WcqH92NSwlpiM5C9LYBtO5UC2un
-         Y6Rv4dIKBd6SwTW3gg6r/u/mmSjmKKBcq9mnGuUY=
+        b=f/FSa+3+sZ4uK+QYip0gVhT8a5wKtO/1tVVB/u83d2CIC3f/R7oOfVQfCQGvo384+
+         6FGy/fH/XDwxa3b4+oYoa6etZ12s7COOMq8ADNeGhVIWPxHyOwov2IgwjXJndoNExg
+         G/7CeLN8BAzIIngrdumr1cMFiQwYTQPdA9kTGy0Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olivier Moysan <olivier.moysan@st.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 013/203] ASoC: stm32: spdifrx: fix input pin state management
-Date:   Fri, 17 Jan 2020 00:15:30 +0100
-Message-Id: <20200116231745.999662191@linuxfoundation.org>
+        stable@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>
+Subject: [PATCH 5.4 028/203] PCI: amlogic: Fix probed clock names
+Date:   Fri, 17 Jan 2020 00:15:45 +0100
+Message-Id: <20200116231746.838687863@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -59,57 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olivier Moysan <olivier.moysan@st.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-commit 3b7658679d88b5628939f9bdc8e613f79cd821f9 upstream.
+commit eacaf7dcf08eb062a1059c6c115fa3fced3374ae upstream.
 
-Changing input state in iec capture control is not safe,
-as the pin state may be changed concurrently by ASoC
-framework.
-Remove pin state handling in iec capture control.
+Fix the clock names used in the probe function according
+to the bindings.
 
-Note: This introduces a restriction on capture control,
-when pin sleep state is defined in device tree. In this case
-channel status can be captured only when an audio stream
-capture is active.
-
-Fixes: f68c2a682d44 ("ASoC: stm32: spdifrx: add power management")
-
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-Link: https://lore.kernel.org/r/20191204154333.7152-4-olivier.moysan@st.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 9c0ef6d34fdb ("PCI: amlogic: Add the Amlogic Meson PCIe controller driver")
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/stm/stm32_spdifrx.c |    4 ----
- 1 file changed, 4 deletions(-)
+ drivers/pci/controller/dwc/pci-meson.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/sound/soc/stm/stm32_spdifrx.c
-+++ b/sound/soc/stm/stm32_spdifrx.c
-@@ -12,7 +12,6 @@
- #include <linux/delay.h>
- #include <linux/module.h>
- #include <linux/of_platform.h>
--#include <linux/pinctrl/consumer.h>
- #include <linux/regmap.h>
- #include <linux/reset.h>
+--- a/drivers/pci/controller/dwc/pci-meson.c
++++ b/drivers/pci/controller/dwc/pci-meson.c
+@@ -250,15 +250,15 @@ static int meson_pcie_probe_clocks(struc
+ 	if (IS_ERR(res->port_clk))
+ 		return PTR_ERR(res->port_clk);
  
-@@ -482,8 +481,6 @@ static int stm32_spdifrx_get_ctrl_data(s
- 	memset(spdifrx->cs, 0, SPDIFRX_CS_BYTES_NB);
- 	memset(spdifrx->ub, 0, SPDIFRX_UB_BYTES_NB);
+-	res->mipi_gate = meson_pcie_probe_clock(dev, "pcie_mipi_en", 0);
++	res->mipi_gate = meson_pcie_probe_clock(dev, "mipi", 0);
+ 	if (IS_ERR(res->mipi_gate))
+ 		return PTR_ERR(res->mipi_gate);
  
--	pinctrl_pm_select_default_state(&spdifrx->pdev->dev);
--
- 	ret = stm32_spdifrx_dma_ctrl_start(spdifrx);
- 	if (ret < 0)
- 		return ret;
-@@ -515,7 +512,6 @@ static int stm32_spdifrx_get_ctrl_data(s
+-	res->general_clk = meson_pcie_probe_clock(dev, "pcie_general", 0);
++	res->general_clk = meson_pcie_probe_clock(dev, "general", 0);
+ 	if (IS_ERR(res->general_clk))
+ 		return PTR_ERR(res->general_clk);
  
- end:
- 	clk_disable_unprepare(spdifrx->kclk);
--	pinctrl_pm_select_sleep_state(&spdifrx->pdev->dev);
+-	res->clk = meson_pcie_probe_clock(dev, "pcie", 0);
++	res->clk = meson_pcie_probe_clock(dev, "pclk", 0);
+ 	if (IS_ERR(res->clk))
+ 		return PTR_ERR(res->clk);
  
- 	return ret;
- }
 
 
