@@ -2,100 +2,111 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53413C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C96C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 280DD20661
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:40:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218015;
-	bh=v2FokBu7CpE1c9BJ9W6832AKTtSktqysahYvauF6zKk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=chRBI+ykrOSpZ5smYSpBFttgUmg+yGLvUSa4fc9sj8vXXbfzj7dmGJVud7nflVPKJ
-	 5G8AhKN9ojuOI+rVlB5quytWL5Esuq5iujdc731zhvX1MAqe79RATmq+kwU/g65EBe
-	 l+yPWhilQDMcjAprojog/5hF5KA7NNaTKi9hrWFw=
+	by mail.kernel.org (Postfix) with ESMTP id 7532E20661
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:40:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="isUQiE+G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390247AbgAPX1d (ORCPT
+        id S2391780AbgAPXkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:27:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55070 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391059AbgAPXZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:25:25 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 16 Jan 2020 18:40:19 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:19956 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2391680AbgAPXkO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:40:14 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579218014; h=References: In-Reply-To: Message-Id: Date:
+ Subject: To: From: Sender;
+ bh=LDZlibC7V5vrLNV2qPZ0WAjcYgQQq7dFFZfd1WhDPq8=; b=isUQiE+G+ceSWGsGfr06wWw8WKTGhfoaMCZqYRYchrDSxD8tJO9XQpH7OSDR3dHxdy+R5ndo
+ WUFGdUYcvQmsv9qR3Z2nZagFtespikxNkRqxrBJn5UlKvFf0Nil6NneHdr1qJQI8fqWbMksj
+ +u+3LPgaiR1Z5oaCN0sDWU9N+60=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e20f45c.7faae9450e30-smtp-out-n02;
+ Thu, 16 Jan 2020 23:40:12 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7F1DDC433CB; Thu, 16 Jan 2020 23:40:12 +0000 (UTC)
+Received: from vgutta-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8D232072B;
-        Thu, 16 Jan 2020 23:25:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217125;
-        bh=v2FokBu7CpE1c9BJ9W6832AKTtSktqysahYvauF6zKk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eAbeqtqPoIeVn+76QruIz4IhFbigNJ1MvDiq+xCOpUniyRgvfZykTM9RL1UQ1aBxC
-         BygbDJ+M5ugkp7Y+OPcULkM1XoMQYcYgV6wxNp0ZGoesBIl5FdjCWFOVoSceyVKFDk
-         9ohg7Sk1EABKLa0KVav0pVC2q03VCm57NU9FaNN0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        linux-mips@vger.kernel.org
-Subject: [PATCH 5.4 141/203] MIPS: Loongson: Fix return value of loongson_hwmon_init
-Date:   Fri, 17 Jan 2020 00:17:38 +0100
-Message-Id: <20200116231757.315916675@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
-References: <20200116231745.218684830@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        (Authenticated sender: vgutta)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DC1DAC447A1;
+        Thu, 16 Jan 2020 23:40:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DC1DAC447A1
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vnkgutta@codeaurora.org
+From:   Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, vinod.koul@linaro.org,
+        psodagud@codeaurora.org, tsoni@codeaurora.org,
+        jshriram@codeaurora.org, tdas@codeaurora.org,
+        vnkgutta@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/7] dt-bindings: clock: Add RPMHCC bindings for SM8250
+Date:   Thu, 16 Jan 2020 15:39:48 -0800
+Message-Id: <1579217994-22219-2-git-send-email-vnkgutta@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1579217994-22219-1-git-send-email-vnkgutta@codeaurora.org>
+References: <1579217994-22219-1-git-send-email-vnkgutta@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+From: Taniya Das <tdas@codeaurora.org>
 
-commit dece3c2a320b0a6d891da6ff774ab763969b6860 upstream.
+Add bindings and update documentation for clock rpmh driver on SM8250.
 
-When call function hwmon_device_register failed, use the actual
-return value instead of always -ENOMEM.
-
-Fixes: 64f09aa967e1 ("MIPS: Loongson-3: Add CPU Hwmon platform driver")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: Huacai Chen <chenhc@lemote.com>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Taniya Das <tdas@codeaurora.org>
+Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
 ---
- drivers/platform/mips/cpu_hwmon.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml | 1 +
+ include/dt-bindings/clock/qcom,rpmh.h                    | 4 +++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/platform/mips/cpu_hwmon.c
-+++ b/drivers/platform/mips/cpu_hwmon.c
-@@ -161,7 +161,7 @@ static int __init loongson_hwmon_init(vo
+diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml b/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
+index 94e2f14..21398d1 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
++++ b/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
+@@ -20,6 +20,7 @@ properties:
+       - qcom,sc7180-rpmh-clk
+       - qcom,sdm845-rpmh-clk
+       - qcom,sm8150-rpmh-clk
++      - qcom,sm8250-rpmh-clk
  
- 	cpu_hwmon_dev = hwmon_device_register(NULL);
- 	if (IS_ERR(cpu_hwmon_dev)) {
--		ret = -ENOMEM;
-+		ret = PTR_ERR(cpu_hwmon_dev);
- 		pr_err("hwmon_device_register fail!\n");
- 		goto fail_hwmon_device_register;
- 	}
-
-
+   clocks:
+     maxItems: 1
+diff --git a/include/dt-bindings/clock/qcom,rpmh.h b/include/dt-bindings/clock/qcom,rpmh.h
+index edcab3f..2e6c54e 100644
+--- a/include/dt-bindings/clock/qcom,rpmh.h
++++ b/include/dt-bindings/clock/qcom,rpmh.h
+@@ -1,5 +1,5 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+-/* Copyright (c) 2018, The Linux Foundation. All rights reserved. */
++/* Copyright (c) 2018, 2020, The Linux Foundation. All rights reserved. */
+ 
+ 
+ #ifndef _DT_BINDINGS_CLK_MSM_RPMH_H
+@@ -19,5 +19,7 @@
+ #define RPMH_RF_CLK3				10
+ #define RPMH_RF_CLK3_A				11
+ #define RPMH_IPA_CLK				12
++#define RPMH_LN_BB_CLK1				13
++#define RPMH_LN_BB_CLK1_A			14
+ 
+ #endif
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
