@@ -2,83 +2,121 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7845C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 972F4C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B12142072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:31:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 719CC206D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:32:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579203157;
+	bh=wZfYl2ZWQ/le+LcqR+1cLbDIruCCJspbeg10x67F7gw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hqWdS+GOTOrLnMvNCGlY5/Ug1gCt0WsDAtHBvU2NmOnHKuMhfODvjyuLYVd7DhOxf
+	 TcHNHqEJ7/CVXyIYFjkBk24y+stwFVFhf7QCmbif+Jt/r72I/JRXzi3nVKDwy2+qn0
+	 sLTST/l+xA4S9t896XWuRoi3M22+MIFvLlkrMaeg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730937AbgAPTbn (ORCPT
+        id S1732412AbgAPTcg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:31:43 -0500
-Received: from mga01.intel.com ([192.55.52.88]:13285 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730712AbgAPTbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 14:31:42 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 11:31:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,327,1574150400"; 
-   d="scan'208";a="373431363"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga004.jf.intel.com with ESMTP; 16 Jan 2020 11:31:41 -0800
-Date:   Thu, 16 Jan 2020 11:42:23 -0800
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     "Moger, Babu" <Babu.Moger@amd.com>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, Shuah Khan <shuah@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v9 00/13] selftests/resctrl: Add resctrl selftest
-Message-ID: <20200116194222.GB51626@romley-ivt3.sc.intel.com>
-References: <1576535207-2417-1-git-send-email-fenghua.yu@intel.com>
- <7aacc3e8-4072-c6b9-5d0f-f687a40ad315@amd.com>
- <CY4PR12MB1574ACDEE30CDCD8113CECA795390@CY4PR12MB1574.namprd12.prod.outlook.com>
- <20200115211749.GA51626@romley-ivt3.sc.intel.com>
- <87k15sxu3k.fsf@nanos.tec.linutronix.de>
+        Thu, 16 Jan 2020 14:32:36 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:46527 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729010AbgAPTcg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 14:32:36 -0500
+Received: by mail-ot1-f67.google.com with SMTP id r9so20455882otp.13;
+        Thu, 16 Jan 2020 11:32:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RxlCLhbJ67g6d1Lku8kWlZFcusZ3prtEclwXhvs0VlY=;
+        b=tAnVKUpgHckYnGCCnQWqILjEdY0RI6BOO9IJNLf4J6r64Tiyv1gMcP3dLdxnmAyrgw
+         IhbBgjuQfoOUsh4EbdGYeZWnNKqrIhijx7VUQtpmPJOECJPZz1x22dJMJQiWDy0ikm/0
+         7tq5JAFrwCYv+zbIiLs3ZAyOEdvMKPxzhkfC3Ok6qoPy3nofuBGMOTyfXszB0SYeV7Pn
+         DUV1hnqS6ikgyKSCy0UzFNuFvIV4oQT/Rzj6H6MpXnRN7ObR2ECmLg8Zt0lcuQch/JN6
+         7OKsEytWDpNhYAQ6UBC2qQU8ya2n4gpMK9EO/3Db6sFWkR2o5VO8iUjlPTIDU4/tys33
+         fFsg==
+X-Gm-Message-State: APjAAAXF3QRGqkKhC8cz9MSCVWRWjGor7Lk+lAylDyM2mcBWOsPo2THW
+        mW/KD+4x3+5P4GrqGWuARg==
+X-Google-Smtp-Source: APXvYqyxmgpxwTv05e9N4FFkdBsR/fQwNWrywFKB3CnoSsw+nSs2rDzXaBnZeNuZ8C1h8ax5pKA9vQ==
+X-Received: by 2002:a9d:7090:: with SMTP id l16mr3443912otj.187.1579203154757;
+        Thu, 16 Jan 2020 11:32:34 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 101sm8049386otj.55.2020.01.16.11.32.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 11:32:34 -0800 (PST)
+Received: (nullmailer pid 6992 invoked by uid 1000);
+        Thu, 16 Jan 2020 19:32:33 -0000
+Date:   Thu, 16 Jan 2020 13:32:33 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
+        bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Subject: Re: [PATCH 04/19] dt-bindings: Add Qualcomm USB SuperSpeed PHY
+ bindings
+Message-ID: <20200116193233.GA5583@bogus>
+References: <20200115141333.1222676-1-bryan.odonoghue@linaro.org>
+ <20200115141333.1222676-5-bryan.odonoghue@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87k15sxu3k.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200115141333.1222676-5-bryan.odonoghue@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 10:55:43PM +0100, Thomas Gleixner wrote:
-> Fenghua Yu <fenghua.yu@intel.com> writes:
-> >
-> > Hi, Boris, Thomas, Ingo, et al,
-> >
-> > Any comment on this patch set?
+On Wed, 15 Jan 2020 14:13:18 +0000, Bryan O'Donoghue wrote:
+> From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 > 
-> No objections from my side, but you forgot to CC the relevant
-> maintainer/mailinglist for tools/testing/selftests/. CC'ed now.
+> Binding description for Qualcomm's Synopsys 1.0.0 SuperSpeed phy
+> controller embedded in QCS404.
+> 
+> Based on Sriharsha Allenki's <sallenki@codeaurora.org> original
+> definitions.
+> 
+> [bod: converted to yaml format]
+> 
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> ---
+>  .../devicetree/bindings/qcom,usb-ss.yaml      | 74 +++++++++++++++++++
+>  1 file changed, 74 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/qcom,usb-ss.yaml
+> 
 
-Thank you for your comments, Thomas!
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Hi, Shuah,
+warning: no schema found in file: Documentation/devicetree/bindings/qcom,usb-ss.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/qcom,usb-ss.yaml: ignoring, error parsing file
+Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+Documentation/devicetree/bindings/qcom,usb-ss.yaml:  while scanning a plain scalar
+  in "<unicode string>", line 61, column 11
+found a tab character that violates indentation
+  in "<unicode string>", line 62, column 1
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/qcom,usb-ss.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/qcom,usb-ss.example.dts] Error 1
+Makefile:1263: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-Do you want me to resend the v9 resctrl selftest patches to you and
-linux-kselftest?
-
-This repository has the v9 patches:
-git://github.com/fyu1/linux resctrl_selftest
-
-Thanks.
-
--Fenghua
+See https://patchwork.ozlabs.org/patch/1223564
+Please check and re-submit.
