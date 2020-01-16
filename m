@@ -2,53 +2,50 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF087C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9A2C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD57821582
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51E082081E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:02:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194123;
-	bh=mj3HslSb1a5eU9nWcmhRgwdvOAOv8VDJJFtg0QffIwc=;
+	s=default; t=1579194127;
+	bh=tTcpS4fMweFGPuF73zO73l//c04F/MWl1fevjg/SfZ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b2eD69JL4k5njrXznXI6rurWUODB3X7ZnJ6dZ6Z6XEoWPY7ZvF6o2YJSxBO8bMh4g
-	 q4fLWSUn3EIFMop+nJpqCKZqSDpcFICNMN8gjjH01bDsct0v+d7veyP+UbIwBNWIJH
-	 D5VK7ERuy3Ya5+RUBPczkpG3cN32qxuujtbROJ9c=
+	b=p0LYNPlZVtsfesG/khAsTwCNcIGEldHq+Aw9Czaji6rEpC3dDe5uinmE0NM+uC9XA
+	 jJ6CXhpOjywQAVMpBRnjIq3idD67NhTUPgQ9q40SNm5eyJm/DYJou2VIK61ZMp39MB
+	 g4vgUjjryF40yi59wX5qizXIOx0bXXFJygxxj5Xs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388245AbgAPRCC (ORCPT
+        id S2388267AbgAPRCG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:02:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53730 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:02:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387862AbgAPRBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:01:54 -0500
+        id S2388175AbgAPRB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:01:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A736207FF;
-        Thu, 16 Jan 2020 17:01:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3ACC82081E;
+        Thu, 16 Jan 2020 17:01:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194113;
-        bh=mj3HslSb1a5eU9nWcmhRgwdvOAOv8VDJJFtg0QffIwc=;
+        s=default; t=1579194116;
+        bh=tTcpS4fMweFGPuF73zO73l//c04F/MWl1fevjg/SfZ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fe7OK/c5wdkbYM1XiWYj2W+Plp7dIN660SmjMxlXLpvLhwXiJ+lvZBDjfFHUJbYz+
-         uzNjIH5ih//4VFE5A2/2rlOqXTQStiMSW3lVJEt3tA26W6quvxTl7xPng2lcerWqnY
-         pqH0UP2xWtYAd/pZ4njIX22p/FH/K4kVLOvrd06c=
+        b=VeHfksrCWMzIkoMH6oLELtmrt/KmIiYfL5duZEVAPSHTKkFy3nqeFpbqtZnFBgXQk
+         y4tZ3N7Av84QyqSS/T/HhXkm+u7zaI0xJ73nb+OB0Blzva02Tcv7AxUv0rov2Lsn8L
+         HnEg8HNJGdiYeNm+mb/7kYhRgqR0zXBGDnvW1lCE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nicholas Mc Guire <hofrat@osadl.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 209/671] staging: rtlwifi: Use proper enum for return in halmac_parse_psd_data_88xx
-Date:   Thu, 16 Jan 2020 11:51:58 -0500
-Message-Id: <20200116165940.10720-92-sashal@kernel.org>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 211/671] NFS: Fix a soft lockup in the delegation recovery code
+Date:   Thu, 16 Jan 2020 11:52:00 -0500
+Message-Id: <20200116165940.10720-94-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -61,46 +58,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit e8edc32d70a4e09160835792eb5d1af71a0eec14 ]
+[ Upstream commit 6f9449be53f3ce383caed797708b332ede8d952c ]
 
-Clang warns:
+Fix a soft lockup when NFS client delegation recovery is attempted
+but the inode is in the process of being freed. When the
+igrab(inode) call fails, and we have to restart the recovery process,
+we need to ensure that we won't attempt to recover the same delegation
+again.
 
-drivers/staging/rtlwifi/halmac/halmac_88xx/halmac_func_88xx.c:2472:11:
-warning: implicit conversion from enumeration type 'enum
-halmac_cmd_process_status' to different enumeration type 'enum
-halmac_ret_status' [-Wenum-conversion]
-                        return HALMAC_CMD_PROCESS_ERROR;
-                        ~~~~~~ ^~~~~~~~~~~~~~~~~~~~~~~~
-1 warning generated.
-
-Fix this by using the proper enum for allocation failures,
-HALMAC_RET_MALLOC_FAIL, which is used in the rest of this file.
-
-Fixes: e4b08e16b7d9 ("staging: r8822be: check kzalloc return or bail")
-Link: https://github.com/ClangBuiltLinux/linux/issues/375
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nicholas Mc Guire <hofrat@osadl.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 45870d6909d5a ("NFSv4.1: Test delegation stateids when server...")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/rtlwifi/halmac/halmac_88xx/halmac_func_88xx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/delegation.c | 20 ++++++++++++--------
+ fs/nfs/delegation.h |  1 +
+ 2 files changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/staging/rtlwifi/halmac/halmac_88xx/halmac_func_88xx.c b/drivers/staging/rtlwifi/halmac/halmac_88xx/halmac_func_88xx.c
-index ec742da030db..ddbeff8224ab 100644
---- a/drivers/staging/rtlwifi/halmac/halmac_88xx/halmac_func_88xx.c
-+++ b/drivers/staging/rtlwifi/halmac/halmac_88xx/halmac_func_88xx.c
-@@ -2469,7 +2469,7 @@ halmac_parse_psd_data_88xx(struct halmac_adapter *halmac_adapter, u8 *c2h_buf,
- 	if (!psd_set->data) {
- 		psd_set->data = kzalloc(psd_set->data_size, GFP_KERNEL);
- 		if (!psd_set->data)
--			return HALMAC_CMD_PROCESS_ERROR;
-+			return HALMAC_RET_MALLOC_FAIL;
- 	}
+diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
+index 74ff459b75ef..b0c0c2fc2fba 100644
+--- a/fs/nfs/delegation.c
++++ b/fs/nfs/delegation.c
+@@ -240,6 +240,8 @@ static struct inode *nfs_delegation_grab_inode(struct nfs_delegation *delegation
+ 	spin_lock(&delegation->lock);
+ 	if (delegation->inode != NULL)
+ 		inode = igrab(delegation->inode);
++	if (!inode)
++		set_bit(NFS_DELEGATION_INODE_FREEING, &delegation->flags);
+ 	spin_unlock(&delegation->lock);
+ 	return inode;
+ }
+@@ -955,10 +957,11 @@ void nfs_delegation_reap_unclaimed(struct nfs_client *clp)
+ 	list_for_each_entry_rcu(server, &clp->cl_superblocks, client_link) {
+ 		list_for_each_entry_rcu(delegation, &server->delegations,
+ 								super_list) {
+-			if (test_bit(NFS_DELEGATION_RETURNING,
+-						&delegation->flags))
+-				continue;
+-			if (test_bit(NFS_DELEGATION_NEED_RECLAIM,
++			if (test_bit(NFS_DELEGATION_INODE_FREEING,
++						&delegation->flags) ||
++			    test_bit(NFS_DELEGATION_RETURNING,
++						&delegation->flags) ||
++			    test_bit(NFS_DELEGATION_NEED_RECLAIM,
+ 						&delegation->flags) == 0)
+ 				continue;
+ 			if (!nfs_sb_active(server->super))
+@@ -1064,10 +1067,11 @@ void nfs_reap_expired_delegations(struct nfs_client *clp)
+ 	list_for_each_entry_rcu(server, &clp->cl_superblocks, client_link) {
+ 		list_for_each_entry_rcu(delegation, &server->delegations,
+ 								super_list) {
+-			if (test_bit(NFS_DELEGATION_RETURNING,
+-						&delegation->flags))
+-				continue;
+-			if (test_bit(NFS_DELEGATION_TEST_EXPIRED,
++			if (test_bit(NFS_DELEGATION_INODE_FREEING,
++						&delegation->flags) ||
++			    test_bit(NFS_DELEGATION_RETURNING,
++						&delegation->flags) ||
++			    test_bit(NFS_DELEGATION_TEST_EXPIRED,
+ 						&delegation->flags) == 0)
+ 				continue;
+ 			if (!nfs_sb_active(server->super))
+diff --git a/fs/nfs/delegation.h b/fs/nfs/delegation.h
+index dd0f3eed3890..f09b153ac82f 100644
+--- a/fs/nfs/delegation.h
++++ b/fs/nfs/delegation.h
+@@ -34,6 +34,7 @@ enum {
+ 	NFS_DELEGATION_RETURNING,
+ 	NFS_DELEGATION_REVOKED,
+ 	NFS_DELEGATION_TEST_EXPIRED,
++	NFS_DELEGATION_INODE_FREEING,
+ };
  
- 	if (segment_id == 0)
+ int nfs_inode_set_delegation(struct inode *inode, struct rpc_cred *cred,
 -- 
 2.20.1
 
