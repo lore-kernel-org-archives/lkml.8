@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D251FC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 578F9C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:02:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E71320730
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E38B21582
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:02:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194151;
-	bh=Vu2GNXNXW2Lq/MQh8E+8TwQcdIpv8XQTS4u624FWLZc=;
+	s=default; t=1579194154;
+	bh=Bqung/CFGAAzncMdZ5Rf7tz3HPZrtQ1OIkm3NCvqIwQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IOA2Wijr2t0NKR6L0iKsC9q+jwq7HIUJizNOyAL0keGhQLJIxc5KO23qa12iRvr7z
-	 1wCPVCeeEOCPlz0m+fQPJC4aFwBW2WbPNq54DdVmK7/C3D91YFtA+vOxFz1t9Zmi0z
-	 FfZ9oWk8HOjSqzNVwJPykUHWqdmTfdcG+5dWPNUo=
+	b=TymZRtPx/oxUsy4N01C+hp7dizx25ensEeZ09FMVb81YZrlse9Uu2XbxCJx3/ZtEr
+	 4VxhmY6yoyYrLlNR9Dm5bT7PIw2SEeXYKHLaggXahMihqsYE7/2/tmfpxjPccOeqWX
+	 Q8HDmJ6uq6cNi+Kqq2gct4YJ8vKDkdqCqPu3iY/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388398AbgAPRCb (ORCPT
+        id S2388411AbgAPRCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:02:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54840 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:02:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387586AbgAPRCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:02:19 -0500
+        id S2387466AbgAPRCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:02:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58602207FF;
-        Thu, 16 Jan 2020 17:02:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F41702077B;
+        Thu, 16 Jan 2020 17:02:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194138;
-        bh=Vu2GNXNXW2Lq/MQh8E+8TwQcdIpv8XQTS4u624FWLZc=;
+        s=default; t=1579194140;
+        bh=Bqung/CFGAAzncMdZ5Rf7tz3HPZrtQ1OIkm3NCvqIwQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FxBSnMVbvfzR5aZU1SCkSeKgHAXr3o858HbgnA9z7RXBur/p5TPGlAklUqoj2aZni
-         xA4qZGpX+DSJQHyIzJ3Q83Q1IBUTASqib4tLb1aWuYvMwzOEDmr8aqqaQ3LDHrWfWY
-         uknYH1I3kzcw4YZzUkyKaNTL5RGc845aZ+Dsvj1Y=
+        b=JJ4vwbqDCC79kmnI+ss70m73rKckdjk69hvEmh8v7fl0Kr+ygqnuKUWYtOml2g9aG
+         nOkhja0UiV5OOaDKHnABDWRXZTj/3NysBFhiQCShh3/JlSuup53fBzRuW8eI2sNSUx
+         1xO+WwAHHzRwbxtDWwJCxicS9FSOuDfPmZiv1I00=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 226/671] netfilter: nft_set_hash: bogus element self comparison from deactivation path
-Date:   Thu, 16 Jan 2020 11:52:15 -0500
-Message-Id: <20200116165940.10720-109-sashal@kernel.org>
+Cc:     Eli Britstein <elibr@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 227/671] net: sched: act_csum: Fix csum calc for tagged packets
+Date:   Thu, 16 Jan 2020 11:52:16 -0500
+Message-Id: <20200116165940.10720-110-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -61,35 +59,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Eli Britstein <elibr@mellanox.com>
 
-[ Upstream commit a01cbae57ec29b161d42ee1caa4ffffda5d519c2 ]
+[ Upstream commit 2ecba2d1e45b24620a7c3df9531895cf68d5dec6 ]
 
-Use the element from the loop iteration, not the same element we want to
-deactivate otherwise this branch always evaluates true.
+The csum calculation is different for IPv4/6. For VLAN packets,
+tc_skb_protocol returns the VLAN protocol rather than the packet's one
+(e.g. IPv4/6), so csum is not calculated. Furthermore, VLAN may not be
+stripped so csum is not calculated in this case too. Calculate the
+csum for those cases.
 
-Fixes: 6c03ae210ce3 ("netfilter: nft_set_hash: add non-resizable hashtable implementation")
-Reported-by: Florian Westphal <fw@strlen.de>
-Tested-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: d8b9605d2697 ("net: sched: fix skb->protocol use in case of accelerated vlan path")
+Signed-off-by: Eli Britstein <elibr@mellanox.com>
+Signed-off-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_set_hash.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sched/act_csum.c | 31 +++++++++++++++++++++++++++++--
+ 1 file changed, 29 insertions(+), 2 deletions(-)
 
-diff --git a/net/netfilter/nft_set_hash.c b/net/netfilter/nft_set_hash.c
-index 8dde4bfe8b8a..05118e03c3e4 100644
---- a/net/netfilter/nft_set_hash.c
-+++ b/net/netfilter/nft_set_hash.c
-@@ -555,7 +555,7 @@ static void *nft_hash_deactivate(const struct net *net,
+diff --git a/net/sched/act_csum.c b/net/sched/act_csum.c
+index 1e269441065a..9ecbf8edcf39 100644
+--- a/net/sched/act_csum.c
++++ b/net/sched/act_csum.c
+@@ -560,8 +560,11 @@ static int tcf_csum_act(struct sk_buff *skb, const struct tc_action *a,
+ 			struct tcf_result *res)
+ {
+ 	struct tcf_csum *p = to_tcf_csum(a);
++	bool orig_vlan_tag_present = false;
++	unsigned int vlan_hdr_count = 0;
+ 	struct tcf_csum_params *params;
+ 	u32 update_flags;
++	__be16 protocol;
+ 	int action;
  
- 	hash = nft_jhash(set, priv, &this->ext);
- 	hlist_for_each_entry(he, &priv->table[hash], node) {
--		if (!memcmp(nft_set_ext_key(&this->ext), &elem->key.val,
-+		if (!memcmp(nft_set_ext_key(&he->ext), &elem->key.val,
- 			    set->klen) &&
- 		    nft_set_elem_active(&he->ext, genmask)) {
- 			nft_set_elem_change_active(net, set, &he->ext);
+ 	params = rcu_dereference_bh(p->params);
+@@ -574,7 +577,9 @@ static int tcf_csum_act(struct sk_buff *skb, const struct tc_action *a,
+ 		goto drop;
+ 
+ 	update_flags = params->update_flags;
+-	switch (tc_skb_protocol(skb)) {
++	protocol = tc_skb_protocol(skb);
++again:
++	switch (protocol) {
+ 	case cpu_to_be16(ETH_P_IP):
+ 		if (!tcf_csum_ipv4(skb, update_flags))
+ 			goto drop;
+@@ -583,13 +588,35 @@ static int tcf_csum_act(struct sk_buff *skb, const struct tc_action *a,
+ 		if (!tcf_csum_ipv6(skb, update_flags))
+ 			goto drop;
+ 		break;
++	case cpu_to_be16(ETH_P_8021AD): /* fall through */
++	case cpu_to_be16(ETH_P_8021Q):
++		if (skb_vlan_tag_present(skb) && !orig_vlan_tag_present) {
++			protocol = skb->protocol;
++			orig_vlan_tag_present = true;
++		} else {
++			struct vlan_hdr *vlan = (struct vlan_hdr *)skb->data;
++
++			protocol = vlan->h_vlan_encapsulated_proto;
++			skb_pull(skb, VLAN_HLEN);
++			skb_reset_network_header(skb);
++			vlan_hdr_count++;
++		}
++		goto again;
++	}
++
++out:
++	/* Restore the skb for the pulled VLAN tags */
++	while (vlan_hdr_count--) {
++		skb_push(skb, VLAN_HLEN);
++		skb_reset_network_header(skb);
+ 	}
+ 
+ 	return action;
+ 
+ drop:
+ 	qstats_drop_inc(this_cpu_ptr(p->common.cpu_qstats));
+-	return TC_ACT_SHOT;
++	action = TC_ACT_SHOT;
++	goto out;
+ }
+ 
+ static int tcf_csum_dump(struct sk_buff *skb, struct tc_action *a, int bind,
 -- 
 2.20.1
 
