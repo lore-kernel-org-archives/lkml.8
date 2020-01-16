@@ -2,133 +2,190 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UPPERCASE_50_75 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 862B8C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 02:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A3EC32771
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 02:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D9D522522
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 02:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE44F2084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 02:49:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fZC0gpoW"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="leyAg/8D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730123AbgAPCoZ (ORCPT
+        id S1729206AbgAPCtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 21:44:25 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42371 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726552AbgAPCoZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 21:44:25 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 66so18035135otd.9;
-        Wed, 15 Jan 2020 18:44:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=a4pKcw/2BK8WWEeubF0Q2A9y+I7yO16zCFaw5GtTcg8=;
-        b=fZC0gpoWyib170KL5rP2oTpwxhcZZLQjhtxaZDNij1MDAPULVU14doVOJGK46LsTp/
-         1UQ7oBb7UEPQZih68kAds0Z483kZkk83bDJ+1yb80YqLdqbau1lHyjCZPhCj9b21rTYK
-         CnSWETNaJ8saaWFDaDezzX8keTnxM+Y1ZpTQcHh8PeQarkHYigNoPEwpCrwPCdp4HDxe
-         biZrYKEbssNNmDoJnS7A8QQxhitW3VOnDf39hK/mam6xb2W7Otyq9mmMqwyyXemNdBgJ
-         TB8ujQyqQLPnB42CvGQ2DOj/065LULoN9BNElsMkpE54uTVX9derTW4Cd2G2psbxP0y+
-         F1Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=a4pKcw/2BK8WWEeubF0Q2A9y+I7yO16zCFaw5GtTcg8=;
-        b=b5+gxGpbs/B47aLCqsEnOGOQCvWVjFJI/TVIcIS5V07CDkBOWtii4sr2fEP/VGQ4pN
-         CsYqKMi2LfmR2PRTAhTvLTC+F+HPQ3MT+R5p+M6kgiujFhp6Ith4Txonr9cQH4zaZNos
-         W2jG+l7KT7VJYN4E2h1mWo43Rogmaq/ZNLdEzVyGNHqnSkkHsSwyRoovosSNi4Yhsk5p
-         hqW8iHBW+UqdQGJbUCa1j9QTmzElUVMBNgoZUO7scdosct3juduheRoAq9vp/ixEcmYM
-         BqU4MGzD0mJhHvoKE2lY6a1SZcx9Tax3lDx7Rkgnx0++KX7h0nYD3wtZPBeNAE+Vo1SK
-         772w==
-X-Gm-Message-State: APjAAAWePj9p2y56lQMmJalMcTC7BNInZcdFWpFwoBfQSkg3/6ZN7+5W
-        23wFYLJFLxjv+dNcg5FxBjuKxrgXS9s=
-X-Google-Smtp-Source: APXvYqyMzjUqnYZhbCuI8vmeXgY3MMiWg+xL/yMGpoTUZvlOw9zo4fFc9iQ7oLgje0urhCYDbdTXmw==
-X-Received: by 2002:a9d:5888:: with SMTP id x8mr285541otg.361.1579142664039;
-        Wed, 15 Jan 2020 18:44:24 -0800 (PST)
-Received: from nukespec.gtech ([2601:2c1:8501:182d::6fe])
-        by smtp.gmail.com with ESMTPSA id c12sm7357959otp.9.2020.01.15.18.44.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jan 2020 18:44:23 -0800 (PST)
-Subject: Re: Issues with "PCI/LINK: Report degraded links via link bandwidth
- notification"
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
-        Keith Busch <keith.busch@intel.com>
-Cc:     Jan Vesely <jano.vesely@gmail.com>, Lukas Wunner <lukas@wunner.de>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Austin Bolen <austin_bolen@dell.com>,
-        Shyam Iyer <Shyam_Iyer@dell.com>,
-        Sinan Kaya <okaya@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200115221008.GA191037@google.com>
-From:   Alex G <mr.nuke.me@gmail.com>
-Message-ID: <967fb44c-b1cd-875c-2354-b6ad0b8ae6d7@gmail.com>
-Date:   Wed, 15 Jan 2020 20:44:21 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Wed, 15 Jan 2020 21:49:06 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:38455 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726552AbgAPCtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 21:49:06 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47ypYS49Njz9sR0;
+        Thu, 16 Jan 2020 13:49:00 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1579142943;
+        bh=pOkguxtakW7odgcyaEbAn/6knPxLxlPQVmo68XZDtCo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=leyAg/8DW7ay+aNLPmZjNSzU286S50440mIwwQJEyVWhqed7pedb+12yFfHF5ho2o
+         +AbAov3T/Vqc0bMnVyUFDc4ohXQBOQUXFnWHWkMqT4akhDwj3WLIY6WaegZ1Cbc/uP
+         KUaE1bwtaEbZLzj3ziARkZHOethZ6qM6mQdK5XpxbpRNJiuIOtuOxP7M3nnhy6Fqrj
+         n60/9zxPDQwY1XtlJyzvgTuMDTVyKkt6OwGckDRfnQJKsJXOjscSoRazT4oipfAL8d
+         1VJx07TQc7lNKmfP2geeWdylS+nQpL8h9RC6fusnwPMqxdRL0H/s+UiFNDVRV/xU8T
+         TKaHBPkHlooZQ==
+Date:   Thu, 16 Jan 2020 13:48:59 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?UTF-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        KVM <kvm@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: linux-next: manual merge of the kvm tree with the tip tree
+Message-ID: <20200116134859.36d203de@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200115221008.GA191037@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/NtwKBjK.BWs6ckv++FgVmkE";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+--Sig_/NtwKBjK.BWs6ckv++FgVmkE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I'm no longer working on this, so my memory may not be up to speed. If 
-the endpoint is causing the bandwidth change, then we should get an 
-_autonomous_ link management interrupt instead. I don't think we report 
-those, and that shouldn't spam the logs
+Hi all,
 
-If it's not a (non-autonomous) link management interrupt, then something 
-is causing the downstream port to do funny things. I don't think ASPM is 
-supposed to be causing this.
+Today's linux-next merge of the kvm tree got a conflict in:
 
-Do we know what's causing these swings?
+  arch/x86/include/asm/vmx.h
 
-For now, I suggest a boot-time parameter to disable link speed reporting 
-instead of a compile time option.
+between commit:
 
-Alex
+  b39033f504a7 ("KVM: VMX: Use VMX_FEATURE_* flags to define VMCS control b=
+its")
 
-On 1/15/20 4:10 PM, Bjorn Helgaas wrote:
-> I think we have a problem with link bandwidth change notifications
-> (see https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pcie/bw_notification.c).
-> 
-> Here's a recent bug report where Jan reported "_tons_" of these
-> notifications on an nvme device:
-> https://bugzilla.kernel.org/show_bug.cgi?id=206197
-> 
-> There was similar discussion involving GPU drivers at
-> https://lore.kernel.org/r/20190429185611.121751-2-helgaas@kernel.org
-> 
-> The current solution is the CONFIG_PCIE_BW config option, which
-> disables the messages completely.  That option defaults to "off" (no
-> messages), but even so, I think it's a little problematic.
-> 
-> Users are not really in a position to figure out whether it's safe to
-> enable.  All they can do is experiment and see whether it works with
-> their current mix of devices and drivers.
-> 
-> I don't think it's currently useful for distros because it's a
-> compile-time switch, and distros cannot predict what system configs
-> will be used, so I don't think they can enable it.
-> 
-> Does anybody have proposals for making it smarter about distinguishing
-> real problems from intentional power management, or maybe interfaces
-> drivers could use to tell us when we should ignore bandwidth changes?
-> 
-> Bjorn
-> 
+from the tip tree and commits:
+
+  9dadc2f918df ("KVM: VMX: Rename INTERRUPT_PENDING to INTERRUPT_WINDOW")
+  4e2a0bc56ad1 ("KVM: VMX: Rename NMI_PENDING to NMI_WINDOW")
+  5e3d394fdd9e ("KVM: VMX: Fix the spelling of CPU_BASED_USE_TSC_OFFSETTING=
+")
+
+from the kvm tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/x86/include/asm/vmx.h
+index 9fbba31be825,d716fe938fc0..000000000000
+--- a/arch/x86/include/asm/vmx.h
++++ b/arch/x86/include/asm/vmx.h
+@@@ -22,27 -19,27 +22,27 @@@
+  /*
+   * Definitions of Primary Processor-Based VM-Execution Controls.
+   */
+- #define CPU_BASED_VIRTUAL_INTR_PENDING          VMCS_CONTROL_BIT(VIRTUAL_=
+INTR_PENDING)
+- #define CPU_BASED_USE_TSC_OFFSETING             VMCS_CONTROL_BIT(TSC_OFFS=
+ETTING)
+ -#define CPU_BASED_INTR_WINDOW_EXITING           0x00000004
+ -#define CPU_BASED_USE_TSC_OFFSETTING            0x00000008
+ -#define CPU_BASED_HLT_EXITING                   0x00000080
+ -#define CPU_BASED_INVLPG_EXITING                0x00000200
+ -#define CPU_BASED_MWAIT_EXITING                 0x00000400
+ -#define CPU_BASED_RDPMC_EXITING                 0x00000800
+ -#define CPU_BASED_RDTSC_EXITING                 0x00001000
+ -#define CPU_BASED_CR3_LOAD_EXITING		0x00008000
+ -#define CPU_BASED_CR3_STORE_EXITING		0x00010000
+ -#define CPU_BASED_CR8_LOAD_EXITING              0x00080000
+ -#define CPU_BASED_CR8_STORE_EXITING             0x00100000
+ -#define CPU_BASED_TPR_SHADOW                    0x00200000
+ -#define CPU_BASED_NMI_WINDOW_EXITING		0x00400000
+ -#define CPU_BASED_MOV_DR_EXITING                0x00800000
+ -#define CPU_BASED_UNCOND_IO_EXITING             0x01000000
+ -#define CPU_BASED_USE_IO_BITMAPS                0x02000000
+ -#define CPU_BASED_MONITOR_TRAP_FLAG             0x08000000
+ -#define CPU_BASED_USE_MSR_BITMAPS               0x10000000
+ -#define CPU_BASED_MONITOR_EXITING               0x20000000
+ -#define CPU_BASED_PAUSE_EXITING                 0x40000000
+ -#define CPU_BASED_ACTIVATE_SECONDARY_CONTROLS   0x80000000
+++#define CPU_BASED_INTR_WINDOW_EXITING           VMCS_CONTROL_BIT(VIRTUAL_=
+INTR_PENDING)
+++#define CPU_BASED_USE_TSC_OFFSETTING            VMCS_CONTROL_BIT(TSC_OFFS=
+ETTING)
+ +#define CPU_BASED_HLT_EXITING                   VMCS_CONTROL_BIT(HLT_EXIT=
+ING)
+ +#define CPU_BASED_INVLPG_EXITING                VMCS_CONTROL_BIT(INVLPG_E=
+XITING)
+ +#define CPU_BASED_MWAIT_EXITING                 VMCS_CONTROL_BIT(MWAIT_EX=
+ITING)
+ +#define CPU_BASED_RDPMC_EXITING                 VMCS_CONTROL_BIT(RDPMC_EX=
+ITING)
+ +#define CPU_BASED_RDTSC_EXITING                 VMCS_CONTROL_BIT(RDTSC_EX=
+ITING)
+ +#define CPU_BASED_CR3_LOAD_EXITING		VMCS_CONTROL_BIT(CR3_LOAD_EXITING)
+ +#define CPU_BASED_CR3_STORE_EXITING		VMCS_CONTROL_BIT(CR3_STORE_EXITING)
+ +#define CPU_BASED_CR8_LOAD_EXITING              VMCS_CONTROL_BIT(CR8_LOAD=
+_EXITING)
+ +#define CPU_BASED_CR8_STORE_EXITING             VMCS_CONTROL_BIT(CR8_STOR=
+E_EXITING)
+ +#define CPU_BASED_TPR_SHADOW                    VMCS_CONTROL_BIT(VIRTUAL_=
+TPR)
+- #define CPU_BASED_VIRTUAL_NMI_PENDING		VMCS_CONTROL_BIT(VIRTUAL_NMI_PENDI=
+NG)
+++#define CPU_BASED_NMI_WINDOW_EXITING		VMCS_CONTROL_BIT(VIRTUAL_NMI_PENDIN=
+G)
+ +#define CPU_BASED_MOV_DR_EXITING                VMCS_CONTROL_BIT(MOV_DR_E=
+XITING)
+ +#define CPU_BASED_UNCOND_IO_EXITING             VMCS_CONTROL_BIT(UNCOND_I=
+O_EXITING)
+ +#define CPU_BASED_USE_IO_BITMAPS                VMCS_CONTROL_BIT(USE_IO_B=
+ITMAPS)
+ +#define CPU_BASED_MONITOR_TRAP_FLAG             VMCS_CONTROL_BIT(MONITOR_=
+TRAP_FLAG)
+ +#define CPU_BASED_USE_MSR_BITMAPS               VMCS_CONTROL_BIT(USE_MSR_=
+BITMAPS)
+ +#define CPU_BASED_MONITOR_EXITING               VMCS_CONTROL_BIT(MONITOR_=
+EXITING)
+ +#define CPU_BASED_PAUSE_EXITING                 VMCS_CONTROL_BIT(PAUSE_EX=
+ITING)
+ +#define CPU_BASED_ACTIVATE_SECONDARY_CONTROLS   VMCS_CONTROL_BIT(SEC_CONT=
+ROLS)
+ =20
+  #define CPU_BASED_ALWAYSON_WITHOUT_TRUE_MSR	0x0401e172
+ =20
+
+--Sig_/NtwKBjK.BWs6ckv++FgVmkE
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4fzxsACgkQAVBC80lX
+0GxBewf/SkwUpGnobAk1as6az5NdudN61GnARdOiac3VXERb9UtgT6t7LvsvTo7z
+SSHn4fPIOUMooEmsk0f22E6b4QPUYDmqUpWqUerUquQps9wtink5qvo7+Dae8fKO
+g9tZucPQkjknE7Sgyojt9w0V34qEVWlFhrT+dT5m/cbsB8RHgS3Llv1QenYg3gL0
+C+C3h4DiY/0WDMkQebZOIXCH7gbRz3CoJgFNwxzYjyz+z68tlurmv1YviwjIweKt
+znaPCQuYk7yvBAZ3Ayit1p9wMWLkiG7j1OzlrKbIXMnY95WToXEHwhMZ7E1RkF4Y
+EzgldM8Uu1rLa/8paq79OPd9xYVLfQ==
+=fFyn
+-----END PGP SIGNATURE-----
+
+--Sig_/NtwKBjK.BWs6ckv++FgVmkE--
