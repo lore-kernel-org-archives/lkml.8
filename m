@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B0DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8234C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9063422522
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:07:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1DC7217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:07:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198034;
-	bh=UNs+FSMFE5y+swkCJ1aDB112pLnvBCrA4j+3vrVOtCc=;
+	s=default; t=1579198038;
+	bh=IP02OrS0oqRKKzPOtb089VRTRAzmnUzERC6g3EaicoQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SfXm1uNxRmUL9XJ7EKsOH8eANBpNjrzKlWgAlWOVrsKJK/pS3aRWAbCtHTIYv2HWv
-	 TNwTMe4sGIcoMOqpfnpt4YWTeAY30CN2iTGNyspHepMq7E86gUeCHhsiFUx9qXKsdE
-	 zW7kqoMy7hLtuujX2OwQrPvH8IQ4n7DzzW476F+w=
+	b=eiJsnAmEovedLjxOxDy6ew5FVLI/eL+Td5EUCri1WK4tHgtNPLngaJbBL93mHTNBE
+	 PIdNb9WGsPo8pxWx/VR4AtdgNiQ7iI4eqXn6pXPFgQRTehNjulOfLnoGsu/FzMjesz
+	 SInXnM+qHZ+7EK2uZ3wwaLpCg/y52nNSPDujYAvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407134AbgAPSHN (ORCPT
+        id S1732381AbgAPRjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:07:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55388 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:39:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388465AbgAPRjN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:39:13 -0500
+        id S2405019AbgAPRi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:38:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15CD72470B;
-        Thu, 16 Jan 2020 17:39:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 688A8246B1;
+        Thu, 16 Jan 2020 17:38:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196353;
-        bh=UNs+FSMFE5y+swkCJ1aDB112pLnvBCrA4j+3vrVOtCc=;
+        s=default; t=1579196306;
+        bh=IP02OrS0oqRKKzPOtb089VRTRAzmnUzERC6g3EaicoQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gZNXl/mTbICGnk57ECMmoa+e89YNPWSo69iXneV793Fkq9LHrj48vQI2AW+iOMYhZ
-         N8dcshzCQweula9DxQELodtl2LKRZO95cuMAXZRIsu9qiXuAJjKGCytM1P9AfnFDwi
-         KRngyNJmxOBHXWPDTBTECTaYzVgnB9R7WDRf913A=
+        b=ePTVqTQqhGxoMCyVJDub5h8Qpxem6PmpU2HiqUeqHfojAcPxAoWgI6CguwNlu1TGi
+         7w5Vcyy5gczGtiUSbUrg1uu65Tb5L6mSQrHzlEZScQwVKK76MogsHTOYKzsfnYb+en
+         2nC44tBPgvvN4xn5/KGT8fbpxp/CCMXYhSyWSqBM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Erwan Le Ray <erwan.leray@st.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 146/251] serial: stm32: fix transmit_chars when tx is stopped
-Date:   Thu, 16 Jan 2020 12:34:55 -0500
-Message-Id: <20200116173641.22137-106-sashal@kernel.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 115/251] hwmon: (w83627hf) Use request_muxed_region for Super-IO accesses
+Date:   Thu, 16 Jan 2020 12:34:24 -0500
+Message-Id: <20200116173641.22137-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -61,50 +58,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erwan Le Ray <erwan.leray@st.com>
+From: Guenter Roeck <linux@roeck-us.net>
 
-[ Upstream commit b83b957c91f68e53f0dc596e129e8305761f2a32 ]
+[ Upstream commit e95fd518d05bfc087da6fcdea4900a57cfb083bd ]
 
-Disables the tx irq  when the transmission is ended and updates stop_tx
-conditions for code cleanup.
+Super-IO accesses may fail on a system with no or unmapped LPC bus.
 
-Fixes: 48a6092fb41f ("serial: stm32-usart: Add STM32 USART Driver")
-Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Also, other drivers may attempt to access the LPC bus at the same time,
+resulting in undefined behavior.
+
+Use request_muxed_region() to ensure that IO access on the requested
+address space is supported, and to ensure that access by multiple drivers
+is synchronized.
+
+Fixes: b72656dbc491 ("hwmon: (w83627hf) Stop using globals for I/O port numbers")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/stm32-usart.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ drivers/hwmon/w83627hf.c | 42 +++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 37 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
-index 033856287ca2..ea8b591dd46f 100644
---- a/drivers/tty/serial/stm32-usart.c
-+++ b/drivers/tty/serial/stm32-usart.c
-@@ -293,13 +293,8 @@ static void stm32_transmit_chars(struct uart_port *port)
- 		return;
- 	}
- 
--	if (uart_tx_stopped(port)) {
--		stm32_stop_tx(port);
--		return;
--	}
--
--	if (uart_circ_empty(xmit)) {
--		stm32_stop_tx(port);
-+	if (uart_circ_empty(xmit) || uart_tx_stopped(port)) {
-+		stm32_clr_bits(port, ofs->cr1, USART_CR1_TXEIE);
- 		return;
- 	}
- 
-@@ -312,7 +307,7 @@ static void stm32_transmit_chars(struct uart_port *port)
- 		uart_write_wakeup(port);
- 
- 	if (uart_circ_empty(xmit))
--		stm32_stop_tx(port);
-+		stm32_clr_bits(port, ofs->cr1, USART_CR1_TXEIE);
+diff --git a/drivers/hwmon/w83627hf.c b/drivers/hwmon/w83627hf.c
+index 721295b9a051..43c0f89cefdf 100644
+--- a/drivers/hwmon/w83627hf.c
++++ b/drivers/hwmon/w83627hf.c
+@@ -130,17 +130,23 @@ superio_select(struct w83627hf_sio_data *sio, int ld)
+ 	outb(ld,  sio->sioaddr + 1);
  }
  
- static irqreturn_t stm32_interrupt(int irq, void *ptr)
+-static inline void
++static inline int
+ superio_enter(struct w83627hf_sio_data *sio)
+ {
++	if (!request_muxed_region(sio->sioaddr, 2, DRVNAME))
++		return -EBUSY;
++
+ 	outb(0x87, sio->sioaddr);
+ 	outb(0x87, sio->sioaddr);
++
++	return 0;
+ }
+ 
+ static inline void
+ superio_exit(struct w83627hf_sio_data *sio)
+ {
+ 	outb(0xAA, sio->sioaddr);
++	release_region(sio->sioaddr, 2);
+ }
+ 
+ #define W627_DEVID 0x52
+@@ -1275,7 +1281,7 @@ static DEVICE_ATTR(name, S_IRUGO, show_name, NULL);
+ static int __init w83627hf_find(int sioaddr, unsigned short *addr,
+ 				struct w83627hf_sio_data *sio_data)
+ {
+-	int err = -ENODEV;
++	int err;
+ 	u16 val;
+ 
+ 	static __initconst char *const names[] = {
+@@ -1287,7 +1293,11 @@ static int __init w83627hf_find(int sioaddr, unsigned short *addr,
+ 	};
+ 
+ 	sio_data->sioaddr = sioaddr;
+-	superio_enter(sio_data);
++	err = superio_enter(sio_data);
++	if (err)
++		return err;
++
++	err = -ENODEV;
+ 	val = force_id ? force_id : superio_inb(sio_data, DEVID);
+ 	switch (val) {
+ 	case W627_DEVID:
+@@ -1641,9 +1651,21 @@ static int w83627thf_read_gpio5(struct platform_device *pdev)
+ 	struct w83627hf_sio_data *sio_data = dev_get_platdata(&pdev->dev);
+ 	int res = 0xff, sel;
+ 
+-	superio_enter(sio_data);
++	if (superio_enter(sio_data)) {
++		/*
++		 * Some other driver reserved the address space for itself.
++		 * We don't want to fail driver instantiation because of that,
++		 * so display a warning and keep going.
++		 */
++		dev_warn(&pdev->dev,
++			 "Can not read VID data: Failed to enable SuperIO access\n");
++		return res;
++	}
++
+ 	superio_select(sio_data, W83627HF_LD_GPIO5);
+ 
++	res = 0xff;
++
+ 	/* Make sure these GPIO pins are enabled */
+ 	if (!(superio_inb(sio_data, W83627THF_GPIO5_EN) & (1<<3))) {
+ 		dev_dbg(&pdev->dev, "GPIO5 disabled, no VID function\n");
+@@ -1674,7 +1696,17 @@ static int w83687thf_read_vid(struct platform_device *pdev)
+ 	struct w83627hf_sio_data *sio_data = dev_get_platdata(&pdev->dev);
+ 	int res = 0xff;
+ 
+-	superio_enter(sio_data);
++	if (superio_enter(sio_data)) {
++		/*
++		 * Some other driver reserved the address space for itself.
++		 * We don't want to fail driver instantiation because of that,
++		 * so display a warning and keep going.
++		 */
++		dev_warn(&pdev->dev,
++			 "Can not read VID data: Failed to enable SuperIO access\n");
++		return res;
++	}
++
+ 	superio_select(sio_data, W83627HF_LD_HWM);
+ 
+ 	/* Make sure these GPIO pins are enabled */
 -- 
 2.20.1
 
