@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A17C33CB7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D70DC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84BB320684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB1AA2176D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:14:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198455;
-	bh=p2vl7Mx/wmMj0nieC4rH/c5NL1D20ti+nnLoi7u/yHQ=;
+	s=default; t=1579198460;
+	bh=Vs31waamsWD7SzIS5H+rhqQTbCNe4meiHZm1NTT59go=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OFonKGMQc4JaGPqcdDnnvKRMdUKFSxkaI7sQmYShOQ76zijJgqvr56RxORkZ3TJ4z
-	 MDadJCijaTgpFZEdOpxDVsbbE3pzXc562lkXq4hm3L7e/rP9hGS9oP9wje0urai3cC
-	 H7NkO629m9zx4UbXlYAF8DdgndpbXZRswCZD/rjA=
+	b=oGJxs8YvcRaS4MNR/L6gB/zOgpFeu6coKJrshTtNAr2/YFDQuAo6nJ9ILL0fUnaaZ
+	 cGOaFeEwdlLZq6UgwlEV4ZoM0JrddIzp20iF7t01TIsDIzcK9IMdQRJeW4VYmW4qku
+	 IyqB9loNiu1/WfR3IyYSh6Jmi71AHrEy8KEHyzAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395349AbgAPSOO (ORCPT
+        id S2393052AbgAPRe4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:14:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48994 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:34:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393057AbgAPRe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:34:58 -0500
+        id S2393020AbgAPRet (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:34:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89C83246A9;
-        Thu, 16 Jan 2020 17:34:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C3E3246A1;
+        Thu, 16 Jan 2020 17:34:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196097;
-        bh=p2vl7Mx/wmMj0nieC4rH/c5NL1D20ti+nnLoi7u/yHQ=;
+        s=default; t=1579196089;
+        bh=Vs31waamsWD7SzIS5H+rhqQTbCNe4meiHZm1NTT59go=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O4MHospsljrHB6mDidwfuT3TLliebgnrSIm2pXdwNRLK4nxkVO3bi1rGfeHgFUWDR
-         likxh3nn/h9PLsr9e6mPBC0CPdl0d7ZRqh1x1eg3InUCrc8vxl2NKfZh/RV4Puk9nU
-         syUVJguG0X+uJCZ0UzeW9Xn36mHPMuikx15CQins=
+        b=S2uJWTaurT3WeFUk1cXpm8Fwk4rkNyTHsaf2rYvKk83XOaBkCmNdT2doIh5DSn53n
+         OAzFLwv1GDDxDoWZGkSpStmUkvnuyX5sPKFdppE3VQ7BUc4qJjrVEGocrEWYcTpTJg
+         uEESO6eSE/0F0CZJreap8Ua136z24jSaf5RvOkNU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Petr Machata <petrm@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 009/251] mlxsw: reg: QEEC: Add minimum shaper fields
-Date:   Thu, 16 Jan 2020 12:30:43 -0500
-Message-Id: <20200116173445.21385-9-sashal@kernel.org>
+Cc:     Anders Roxell <anders.roxell@linaro.org>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.9 003/251] ALSA: hda: fix unused variable warning
+Date:   Thu, 16 Jan 2020 12:30:37 -0500
+Message-Id: <20200116173445.21385-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173445.21385-1-sashal@kernel.org>
 References: <20200116173445.21385-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,75 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Machata <petrm@mellanox.com>
+From: Anders Roxell <anders.roxell@linaro.org>
 
-[ Upstream commit 8b931821aa04823e2e5df0ae93937baabbd23286 ]
+[ Upstream commit 5b03006d5c58ddd31caf542eef4d0269bcf265b3 ]
 
-Add QEEC.mise (minimum shaper enable) and QEEC.min_shaper_rate to enable
-configuration of minimum shaper.
+When CONFIG_X86=n function azx_snoop doesn't use the variable chip it
+only returns true.
 
-Increase the QEEC length to 0x20 as well: that's the length that the
-register has had for a long time now, but with the configurations that
-mlxsw typically exercises, the firmware tolerated 0x1C-sized packets.
-With mise=true however, FW rejects packets unless they have the full
-required length.
+sound/pci/hda/hda_intel.c: In function ‘dma_alloc_pages’:
+sound/pci/hda/hda_intel.c:2002:14: warning: unused variable ‘chip’ [-Wunused-variable]
+  struct azx *chip = bus_to_azx(bus);
+              ^~~~
 
-Fixes: b9b7cee40579 ("mlxsw: reg: Add QoS ETS Element Configuration register")
-Signed-off-by: Petr Machata <petrm@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Create a inline function of azx_snoop.
+
+Fixes: a41d122449be ("ALSA: hda - Embed bus into controller object")
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/reg.h | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ sound/pci/hda/hda_controller.h | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/reg.h b/drivers/net/ethernet/mellanox/mlxsw/reg.h
-index b2a745b579fd..fdc69218c8ca 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/reg.h
-+++ b/drivers/net/ethernet/mellanox/mlxsw/reg.h
-@@ -1873,7 +1873,7 @@ static inline void mlxsw_reg_qtct_pack(char *payload, u8 local_port,
-  * Configures the ETS elements.
-  */
- #define MLXSW_REG_QEEC_ID 0x400D
--#define MLXSW_REG_QEEC_LEN 0x1C
-+#define MLXSW_REG_QEEC_LEN 0x20
+diff --git a/sound/pci/hda/hda_controller.h b/sound/pci/hda/hda_controller.h
+index b83feecf1e40..8f9386998270 100644
+--- a/sound/pci/hda/hda_controller.h
++++ b/sound/pci/hda/hda_controller.h
+@@ -171,11 +171,10 @@ struct azx {
+ #define azx_bus(chip)	(&(chip)->bus.core)
+ #define bus_to_azx(_bus)	container_of(_bus, struct azx, bus.core)
  
- static const struct mlxsw_reg_info mlxsw_reg_qeec = {
- 	.id = MLXSW_REG_QEEC_ID,
-@@ -1918,6 +1918,15 @@ MLXSW_ITEM32(reg, qeec, element_index, 0x04, 0, 8);
-  */
- MLXSW_ITEM32(reg, qeec, next_element_index, 0x08, 0, 8);
+-#ifdef CONFIG_X86
+-#define azx_snoop(chip)		((chip)->snoop)
+-#else
+-#define azx_snoop(chip)		true
+-#endif
++static inline bool azx_snoop(struct azx *chip)
++{
++	return !IS_ENABLED(CONFIG_X86) || chip->snoop;
++}
  
-+/* reg_qeec_mise
-+ * Min shaper configuration enable. Enables configuration of the min
-+ * shaper on this ETS element
-+ * 0 - Disable
-+ * 1 - Enable
-+ * Access: RW
-+ */
-+MLXSW_ITEM32(reg, qeec, mise, 0x0C, 31, 1);
-+
- enum {
- 	MLXSW_REG_QEEC_BYTES_MODE,
- 	MLXSW_REG_QEEC_PACKETS_MODE,
-@@ -1934,6 +1943,17 @@ enum {
-  */
- MLXSW_ITEM32(reg, qeec, pb, 0x0C, 28, 1);
- 
-+/* The smallest permitted min shaper rate. */
-+#define MLXSW_REG_QEEC_MIS_MIN	200000		/* Kbps */
-+
-+/* reg_qeec_min_shaper_rate
-+ * Min shaper information rate.
-+ * For CPU port, can only be configured for port hierarchy.
-+ * When in bytes mode, value is specified in units of 1000bps.
-+ * Access: RW
-+ */
-+MLXSW_ITEM32(reg, qeec, min_shaper_rate, 0x0C, 0, 28);
-+
- /* reg_qeec_mase
-  * Max shaper configuration enable. Enables configuration of the max
-  * shaper on this ETS element.
+ /*
+  * macros for easy use
 -- 
 2.20.1
 
