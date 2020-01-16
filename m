@@ -2,247 +2,384 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C86A5C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C7BAC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 01:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92B0424656
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 00:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 539B322522
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 01:14:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="ZPeO/qK4"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="hjd60ti0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729900AbgAPA5w (ORCPT
+        id S1729180AbgAPBON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 19:57:52 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:33349 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726310AbgAPA5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 19:57:52 -0500
-Received: by ozlabs.org (Postfix, from userid 1007)
-        id 47ym581jzNz9sR0; Thu, 16 Jan 2020 11:57:48 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-        d=gibson.dropbear.id.au; s=201602; t=1579136268;
-        bh=NFWvXfvHC7UESUpRUwyZiWw9YmMUD96laMG2kvm+8QA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZPeO/qK4XhPI8W819KTOvE+cwkwGFXZK4tJT8MyspF3I/AB1QWDzu4z25p+iMtF/S
-         m0rwJw5FHXlbWQUiXE5EfCQuDDhNkY0vnsrXqqdm+DwlKOLkZTHPhha5u2IUT+I4rZ
-         dgMbeYHBGonofYnUPAFRMZltYelNKcHTNbmsnHX0=
-Date:   Thu, 16 Jan 2020 10:57:41 +1000
-From:   David Gibson <david@gibson.dropbear.id.au>
-To:     Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     robh+dt@kernel.org, Frank Rowand <frowand.list@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>, sjg@chromium.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, devicetree-compiler@vger.kernel.org
-Subject: Re: [RFC PATCH 1/3] dtc: Add dtb build information option
-Message-ID: <20200116005741.GB54439@umbus>
-References: <20200113181625.3130-1-alexandre.torgue@st.com>
- <20200113181625.3130-2-alexandre.torgue@st.com>
+        Wed, 15 Jan 2020 20:14:13 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35363 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbgAPBON (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 20:14:13 -0500
+Received: by mail-pl1-f195.google.com with SMTP id g6so7605422plt.2
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 17:14:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EIPzTGXgt0b2KsdT5+8NfDM27wAq3dacOy5E2SHm7CU=;
+        b=hjd60ti0T1XgqLNsXYvCyqGSIJE43kWhZS1um57CKMqBIis1MlILWYu8AOAdecLq3C
+         P0STBPZJuprti7qVCJ3o49b+f9HujKHmX6uNxKxtjYgkwjBpN9e0Jfo22KPSQ6NF+uYC
+         1LNqZJVE00yJzCmEtQYdKA/xiwkPtvWHvcQ34=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EIPzTGXgt0b2KsdT5+8NfDM27wAq3dacOy5E2SHm7CU=;
+        b=OBGfaMiE74mAW/vM6243jwInAo94WpA1evjN2bnOIWsL2tRQYJPODHpjctQypxUGaQ
+         EajevegNg87QIdsaf2b5htczTP6SbE7HP1ceZsrpqEk7VWZI4s6USksBsGr4Zrp60eGD
+         t+CZN/oHh7lnZIID4RMI0TBmK4CoKpEFjZqOaWsNt9e/v+YJsEQMK8uV/f55zXmbjQ/l
+         NLjX0GPLS3Lb3XZqdKEmTF8yc826eNJOcbZQDrWF4PeeBr8DN5XJxMXLqaJk3L+NNnOH
+         +GYekg5Lsdjs4iIWlo4pirCqY6ES1vHwNWKWNMYN2kBBJ9yD5PXZEYaHTNeqWR8GVxJv
+         0a4w==
+X-Gm-Message-State: APjAAAUAvp6kmQq/5ldCp8RjHp4lBTYnwpcCayK2mEhzCdsWcGo1XpPu
+        MqBJoKibQfLAP5ZiPXbR9DCVtw==
+X-Google-Smtp-Source: APXvYqxWhvcJDmEfpklxoydZOR/XfGw65Mv8/A7RQGlp2oSNhtVW/9cShBodQGWxaav8eZg9xeSRtQ==
+X-Received: by 2002:a17:90a:fb4f:: with SMTP id iq15mr3546521pjb.86.1579137252096;
+        Wed, 15 Jan 2020 17:14:12 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id v8sm22738914pff.151.2020.01.15.17.14.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 17:14:11 -0800 (PST)
+Date:   Wed, 15 Jan 2020 20:14:10 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        RCU <rcu@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH 1/1] rcu/tree: support kfree_bulk() interface in
+ kfree_rcu()
+Message-ID: <20200116011410.GC246464@google.com>
+References: <20191231122241.5702-1-urezki@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gj572EiMnwbLXET9"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200113181625.3130-2-alexandre.torgue@st.com>
+In-Reply-To: <20191231122241.5702-1-urezki@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Dec 31, 2019 at 01:22:41PM +0100, Uladzislau Rezki (Sony) wrote:
+> kfree_rcu() logic can be improved further by using kfree_bulk()
+> interface along with "basic batching support" introduced earlier.
+> 
+> The are at least two advantages of using "bulk" interface:
+> - in case of large number of kfree_rcu() requests kfree_bulk()
+>   reduces the per-object overhead caused by calling kfree()
+>   per-object.
+> 
+> - reduces the number of cache-misses due to "pointer chasing"
+>   between objects which can be far spread between each other.
+> 
+> This approach defines a new kfree_rcu_bulk_data structure that
+> stores pointers in an array with a specific size. Number of entries
+> in that array depends on PAGE_SIZE making kfree_rcu_bulk_data
+> structure to be exactly one page.
+> 
+> Since it deals with "block-chain" technique there is an extra
+> need in dynamic allocation when a new block is required. Memory
+> is allocated with GFP_NOWAIT | __GFP_NOWARN flags, i.e. that
+> allows to skip direct reclaim under low memory condition to
+> prevent stalling and fails silently under high memory pressure.
+> 
+> The "emergency path" gets maintained when a system is run out
+> of memory. In that case objects are linked into regular list
+> and that is it.
+> 
+> In order to evaluate it, the "rcuperf" was run to analyze how
+> much memory is consumed and what is kfree_bulk() throughput.
+> 
+> Testing on the HiKey-960, arm64, 8xCPUs with below parameters:
+> 
+> CONFIG_SLAB=y
+> kfree_loops=200000 kfree_alloc_num=1000 kfree_rcu_test=1
+> 
+> 102898760401 ns, loops: 200000, batches: 5822, memory footprint: 158MB
+> 89947009882  ns, loops: 200000, batches: 6715, memory footprint: 115MB
+> 
+> rcuperf shows approximately ~12% better throughput(Total time)
+> in case of using "bulk" interface. The "drain logic" or its RCU
+> callback does the work faster that leads to better throughput.
 
---gj572EiMnwbLXET9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Tested-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-On Mon, Jan 13, 2020 at 07:16:23PM +0100, Alexandre Torgue wrote:
-> This commit adds the possibility to add build information for a DTB.
-> Build information can be: build date, DTS version, "who built the DTB"
-> (same kind of information that we get in Linux with the Linux banner).
->=20
-> To do this, an extra option "-B" using an information file as argument
-> has been added. If this option is used, input device tree is appended with
-> a new string property "Build-info". This property is built with informati=
-on
-> found in information file given as argument. This file has to be generated
-> by user and shouldn't exceed 256 bytes.
->=20
-> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+(Vlad is going to post a v2 which fixes a debugobjects bug but that should
+not have any impact on testing).
 
-At the very least, this patch of the series will need to be sent to
-upstream dtc first.
+thanks,
 
-I'm also not terribly clear on what you're trying to accomplish here,
-and why it's useful.
+ - Joel
 
-Since you're doing this specifically for use with dtbs built in the
-kernel build, could you just use a:
-	Build-info =3D /incbin/ "build-info.txt";
-in each of the in-kernel .dts files?
 
-Altough you probably shouldn't use "Build-info" since it doesn't match
-device tree property naming conventions.  My suggestion would be
-"linux,build-info".
 
-> diff --git a/scripts/dtc/dtc.c b/scripts/dtc/dtc.c
-> index bdb3f5945699..294828bac20b 100644
-> --- a/scripts/dtc/dtc.c
-> +++ b/scripts/dtc/dtc.c
-> @@ -18,6 +18,7 @@ int padsize;		/* Additional padding to blob */
->  int alignsize;		/* Additional padding to blob accroding to the alignsize=
- */
->  int phandle_format =3D PHANDLE_EPAPR;	/* Use linux,phandle or phandle pr=
-operties */
->  int generate_symbols;	/* enable symbols & fixup support */
-> +int generate_build_info;	/* Add build information: time, source version =
-=2E.. */
->  int generate_fixups;		/* suppress generation of fixups on symbol support=
- */
->  int auto_label_aliases;		/* auto generate labels -> aliases */
->  int annotate;		/* Level of annotation: 1 for input source location
-> @@ -45,9 +46,42 @@ static void fill_fullpaths(struct node *tree, const ch=
-ar *prefix)
->  		fill_fullpaths(child, tree->fullpath);
+> 
+> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> ---
+>  kernel/rcu/tree.c | 154 ++++++++++++++++++++++++++++++++++++++--------
+>  1 file changed, 130 insertions(+), 24 deletions(-)
+> 
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index 48fba2257748..4ee5c737558b 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -2754,22 +2754,45 @@ EXPORT_SYMBOL_GPL(call_rcu);
+>  #define KFREE_DRAIN_JIFFIES (HZ / 50)
+>  #define KFREE_N_BATCHES 2
+>  
+> +/*
+> + * This macro defines how many entries the "records" array
+> + * will contain. It is based on the fact that the size of
+> + * kfree_rcu_bulk_data structure becomes exactly one page.
+> + */
+> +#define KFREE_BULK_MAX_ENTR ((PAGE_SIZE / sizeof(void *)) - 2)
+> +
+> +/**
+> + * struct kfree_rcu_bulk_data - single block to store kfree_rcu() pointers
+> + * @nr_records: Number of active pointers in the array
+> + * @records: Array of the kfree_rcu() pointers
+> + * @next: Next bulk object in the block chain
+> + */
+> +struct kfree_rcu_bulk_data {
+> +	unsigned long nr_records;
+> +	void *records[KFREE_BULK_MAX_ENTR];
+> +	struct kfree_rcu_bulk_data *next;
+> +};
+> +
+>  /**
+>   * struct kfree_rcu_cpu_work - single batch of kfree_rcu() requests
+>   * @rcu_work: Let queue_rcu_work() invoke workqueue handler after grace period
+>   * @head_free: List of kfree_rcu() objects waiting for a grace period
+> + * @bhead_free: Bulk-List of kfree_rcu() objects waiting for a grace period
+>   * @krcp: Pointer to @kfree_rcu_cpu structure
+>   */
+>  
+>  struct kfree_rcu_cpu_work {
+>  	struct rcu_work rcu_work;
+>  	struct rcu_head *head_free;
+> +	struct kfree_rcu_bulk_data *bhead_free;
+>  	struct kfree_rcu_cpu *krcp;
+>  };
+>  
+>  /**
+>   * struct kfree_rcu_cpu - batch up kfree_rcu() requests for RCU grace period
+>   * @head: List of kfree_rcu() objects not yet waiting for a grace period
+> + * @bhead: Bulk-List of kfree_rcu() objects not yet waiting for a grace period
+> + * @bcached: Keeps at most one object for later reuse when build chain blocks
+>   * @krw_arr: Array of batches of kfree_rcu() objects waiting for a grace period
+>   * @lock: Synchronize access to this structure
+>   * @monitor_work: Promote @head to @head_free after KFREE_DRAIN_JIFFIES
+> @@ -2783,6 +2806,8 @@ struct kfree_rcu_cpu_work {
+>   */
+>  struct kfree_rcu_cpu {
+>  	struct rcu_head *head;
+> +	struct kfree_rcu_bulk_data *bhead;
+> +	struct kfree_rcu_bulk_data *bcached;
+>  	struct kfree_rcu_cpu_work krw_arr[KFREE_N_BATCHES];
+>  	spinlock_t lock;
+>  	struct delayed_work monitor_work;
+> @@ -2800,6 +2825,7 @@ static void kfree_rcu_work(struct work_struct *work)
+>  {
+>  	unsigned long flags;
+>  	struct rcu_head *head, *next;
+> +	struct kfree_rcu_bulk_data *bhead, *bnext;
+>  	struct kfree_rcu_cpu *krcp;
+>  	struct kfree_rcu_cpu_work *krwp;
+>  
+> @@ -2809,22 +2835,39 @@ static void kfree_rcu_work(struct work_struct *work)
+>  	spin_lock_irqsave(&krcp->lock, flags);
+>  	head = krwp->head_free;
+>  	krwp->head_free = NULL;
+> +	bhead = krwp->bhead_free;
+> +	krwp->bhead_free = NULL;
+>  	spin_unlock_irqrestore(&krcp->lock, flags);
+>  
+> -	// List "head" is now private, so traverse locklessly.
+> +	/* List "bhead" is now private, so traverse locklessly. */
+> +	for (; bhead; bhead = bnext) {
+> +		bnext = bhead->next;
+> +
+> +		rcu_lock_acquire(&rcu_callback_map);
+> +		kfree_bulk(bhead->nr_records, bhead->records);
+> +		rcu_lock_release(&rcu_callback_map);
+> +
+> +		if (cmpxchg(&krcp->bcached, NULL, bhead))
+> +			free_page((unsigned long) bhead);
+> +
+> +		cond_resched_tasks_rcu_qs();
+> +	}
+> +
+> +	/*
+> +	 * Emergency case only. It can happen under low memory
+> +	 * condition when an allocation gets failed, so the "bulk"
+> +	 * path can not be temporary maintained.
+> +	 */
+>  	for (; head; head = next) {
+>  		unsigned long offset = (unsigned long)head->func;
+>  
+>  		next = head->next;
+> -		// Potentially optimize with kfree_bulk in future.
+>  		debug_rcu_head_unqueue(head);
+>  		rcu_lock_acquire(&rcu_callback_map);
+>  		trace_rcu_invoke_kfree_callback(rcu_state.name, head, offset);
+>  
+> -		if (!WARN_ON_ONCE(!__is_kfree_rcu_offset(offset))) {
+> -			/* Could be optimized with kfree_bulk() in future. */
+> +		if (!WARN_ON_ONCE(!__is_kfree_rcu_offset(offset)))
+>  			kfree((void *)head - offset);
+> -		}
+>  
+>  		rcu_lock_release(&rcu_callback_map);
+>  		cond_resched_tasks_rcu_qs();
+> @@ -2839,26 +2882,45 @@ static void kfree_rcu_work(struct work_struct *work)
+>   */
+>  static inline bool queue_kfree_rcu_work(struct kfree_rcu_cpu *krcp)
+>  {
+> +	struct kfree_rcu_cpu_work *krwp;
+> +	bool queued = false;
+>  	int i;
+> -	struct kfree_rcu_cpu_work *krwp = NULL;
+>  
+>  	lockdep_assert_held(&krcp->lock);
+> -	for (i = 0; i < KFREE_N_BATCHES; i++)
+> -		if (!krcp->krw_arr[i].head_free) {
+> -			krwp = &(krcp->krw_arr[i]);
+> -			break;
+> -		}
+>  
+> -	// If a previous RCU batch is in progress, we cannot immediately
+> -	// queue another one, so return false to tell caller to retry.
+> -	if (!krwp)
+> -		return false;
+> +	for (i = 0; i < KFREE_N_BATCHES; i++) {
+> +		krwp = &(krcp->krw_arr[i]);
+>  
+> -	krwp->head_free = krcp->head;
+> -	krcp->head = NULL;
+> -	INIT_RCU_WORK(&krwp->rcu_work, kfree_rcu_work);
+> -	queue_rcu_work(system_wq, &krwp->rcu_work);
+> -	return true;
+> +		/*
+> +		 * Try to detach bhead or head and attach it over any
+> +		 * available corresponding free channel. It can be that
+> +		 * a previous RCU batch is in progress, it means that
+> +		 * immediately to queue another one is not possible so
+> +		 * return false to tell caller to retry.
+> +		 */
+> +		if ((krcp->bhead && !krwp->bhead_free) ||
+> +				(krcp->head && !krwp->head_free)) {
+> +			if (!krwp->bhead_free) {
+> +				krwp->bhead_free = krcp->bhead;
+> +				krcp->bhead = NULL;
+> +			}
+> +
+> +			if (!krwp->head_free) {
+> +				krwp->head_free = krcp->head;
+> +				krcp->head = NULL;
+> +			}
+> +
+> +			/*
+> +			 * The work can already be queued. If so, it means that
+> +			 * within a short time, second, either head or bhead has
+> +			 * been detached as well.
+> +			 */
+> +			queue_rcu_work(system_wq, &krwp->rcu_work);
+> +			queued = true;
+> +		}
+> +	}
+> +
+> +	return queued;
 >  }
-> =20
-> +static void fill_build_info(struct node *tree, const char *fname)
+>  
+>  static inline void kfree_rcu_drain_unlock(struct kfree_rcu_cpu *krcp,
+> @@ -2895,6 +2957,39 @@ static void kfree_rcu_monitor(struct work_struct *work)
+>  		spin_unlock_irqrestore(&krcp->lock, flags);
+>  }
+>  
+> +static inline bool
+> +kfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
 > +{
-> +	struct data d =3D empty_data;
-> +	char *tmp;
-> +	FILE *f;
-> +	int len;
+> +	struct kfree_rcu_bulk_data *bnode;
 > +
-> +	tmp =3D xmalloc(sizeof(char) * 256);
+> +	if (unlikely(!krcp->initialized))
+> +		return false;
 > +
-> +	f =3D fopen(fname, "r");
-> +	if (!f) {
-> +		printf("Can't open file %s\n", fname);
-> +		return;
+> +	lockdep_assert_held(&krcp->lock);
+> +
+> +	/* Check if a new block is required. */
+> +	if (!krcp->bhead ||
+> +			krcp->bhead->nr_records == KFREE_BULK_MAX_ENTR) {
+> +		bnode = xchg(&krcp->bcached, NULL);
+> +		if (!bnode)
+> +			bnode = (struct kfree_rcu_bulk_data *)
+> +				__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
+> +
+> +		/* No cache or an allocation got failed. */
+> +		if (unlikely(!bnode))
+> +			return false;
+> +
+> +		/* Initialize the new block. */
+> +		bnode->nr_records = 0;
+> +		bnode->next = krcp->bhead;
+> +		krcp->bhead = bnode;
 > +	}
 > +
-> +	len =3D fread(tmp, sizeof(char), 256, f);
-> +	if (!len) {
-> +		printf("Can't read file %s\n", fname);
-> +		fclose(f);
-> +		free(tmp);
-> +	}
-> +	fclose(f);
-
-You have no useful error reporting if the file is larger than the limit.
-
-> +
-> +	tmp[len - 1] =3D '\0';
-> +
-> +	d =3D data_add_marker(d, TYPE_STRING, tmp);
-> +	d =3D data_append_data(d, tmp, len);
-
-You can essentially do this better with data_copy_file().
-
-> +
-> +	add_property(tree, build_property("Build-info", d, NULL));
-> +
-> +	free(tmp);
+> +	/* Finally insert. */
+> +	krcp->bhead->records[krcp->bhead->nr_records++] = ptr;
+> +	return true;
 > +}
 > +
->  /* Usage related data. */
->  static const char usage_synopsis[] =3D "dtc [options] <input file>";
-> -static const char usage_short_opts[] =3D "qI:O:o:V:d:R:S:p:a:fb:i:H:sW:E=
-:@AThv";
-> +static const char usage_short_opts[] =3D "qI:O:o:V:d:R:S:p:a:fb:i:H:sW:E=
-:@AT:B:hv";
->  static struct option const usage_long_opts[] =3D {
->  	{"quiet",            no_argument, NULL, 'q'},
->  	{"in-format",         a_argument, NULL, 'I'},
-> @@ -69,6 +103,7 @@ static struct option const usage_long_opts[] =3D {
->  	{"symbols",	     no_argument, NULL, '@'},
->  	{"auto-alias",       no_argument, NULL, 'A'},
->  	{"annotate",         no_argument, NULL, 'T'},
-> +	{"build-info",	      a_argument, NULL, 'B'},
->  	{"help",             no_argument, NULL, 'h'},
->  	{"version",          no_argument, NULL, 'v'},
->  	{NULL,               no_argument, NULL, 0x0},
-> @@ -106,6 +141,7 @@ static const char * const usage_opts_help[] =3D {
->  	"\n\tEnable generation of symbols",
->  	"\n\tEnable auto-alias of labels",
->  	"\n\tAnnotate output .dts with input source file and line (-T -T for mo=
-re details)",
-> +	"\n\tAdd build information (date, version, ...) in the blob",
->  	"\n\tPrint this help and exit",
->  	"\n\tPrint version and exit",
->  	NULL,
-> @@ -164,6 +200,7 @@ int main(int argc, char *argv[])
->  	const char *outform =3D NULL;
->  	const char *outname =3D "-";
->  	const char *depname =3D NULL;
-> +	const char *version =3D NULL;
->  	bool force =3D false, sort =3D false;
->  	const char *arg;
->  	int opt;
-> @@ -256,9 +293,12 @@ int main(int argc, char *argv[])
->  		case 'T':
->  			annotate++;
->  			break;
-> -
->  		case 'h':
->  			usage(NULL);
-> +		case 'B':
-> +			version =3D optarg;
-> +			generate_build_info =3D 1;
-> +			break;
->  		default:
->  			usage("unknown option");
->  		}
-> @@ -296,14 +336,17 @@ int main(int argc, char *argv[])
+>  /*
+>   * Queue a request for lazy invocation of kfree() after a grace period.
+>   *
+> @@ -2926,9 +3021,17 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+>  			  __func__, head);
+>  		goto unlock_return;
 >  	}
->  	if (annotate && (!streq(inform, "dts") || !streq(outform, "dts")))
->  		die("--annotate requires -I dts -O dts\n");
-> -	if (streq(inform, "dts"))
-> +	if (streq(inform, "dts")) {
->  		dti =3D dt_from_source(arg);
-> -	else if (streq(inform, "fs"))
-> +		if (generate_build_info)
-> +			fill_build_info(dti->dt, version);
-> +	} else if (streq(inform, "fs")) {
->  		dti =3D dt_from_fs(arg);
-> -	else if(streq(inform, "dtb"))
-> +	} else if (streq(inform, "dtb")) {
->  		dti =3D dt_from_blob(arg);
-> -	else
-> +	} else {
->  		die("Unknown input format \"%s\"\n", inform);
+> -	head->func = func;
+> -	head->next = krcp->head;
+> -	krcp->head = head;
+> +
+> +	/*
+> +	 * Under high memory pressure GFP_NOWAIT can fail,
+> +	 * in that case the emergency path is maintained.
+> +	 */
+> +	if (unlikely(!kfree_call_rcu_add_ptr_to_bulk(krcp,
+> +			(void *) head - (unsigned long) func))) {
+> +		head->func = func;
+> +		head->next = krcp->head;
+> +		krcp->head = head;
 > +	}
-> =20
->  	dti->outname =3D outname;
-> =20
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---gj572EiMnwbLXET9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl4ftQIACgkQbDjKyiDZ
-s5KzNhAA4xu6t0uG6xcZ/G1wNX3HVW1UGJ7aleePRrxOTUFMG3568GE/Cnbj3RmG
-Y8Is7j9vRJb53GgE4EFPxgneVXzKviAXP7R8cy8AEBzM3esnmleq8WC3bUCQY4AC
-mVHpsRk1GuAjYdsoXF+k1CSA5agjt5RUlsv/pNFPFfISKck1AuYz+yLt24INAzZH
-yH+aJMohYZbGq6PYZUPtK/CHZEo7KFP+YdMq214JU4P/zrMc0tQ+auuYDwVBwBBP
-7WsuO/agnc+wklSlhjdGXFj48X2ALThqxJzYwYZSPXA0waWngdqDOvHVaufw454K
-CMm0ISit01OEszGWN6Mh7HZmco2b3w4rrN3Gxvg/BChGBkBEkZw8VqetVHWiEIPi
-JgjaB3FZQ4vkdOGZQ38OO/gcfkSYn9n9Aq8pVg1YhHcggL3jHqEbRXOe9TK1tU8B
-QzDbrpYdfGpctnR2aO9bY3znUNNZ4F4UGObX5JBSHR7TnFed2mxC4SN/j/8wRlE4
-gH3BhM+4Kbjy9C6q9fcSb+6AaJrg5yTzeJLLiyvdVIhaF0iGNeydE1F9GjdnOhwr
-bhSaaBqB97qsAszfuN+Moxr4BrVuZePxl+oEy/QdOt+U4MB1cSLQxGl9xlz+J53d
-V5PF3y2VyfcJrX7I28GY2sGpu2ocWPsXP+7to/G/lxZargPS5/0=
-=4txu
------END PGP SIGNATURE-----
-
---gj572EiMnwbLXET9--
+>  
+>  	// Set timer to drain after KFREE_DRAIN_JIFFIES.
+>  	if (rcu_scheduler_active == RCU_SCHEDULER_RUNNING &&
+> @@ -3834,8 +3937,11 @@ static void __init kfree_rcu_batch_init(void)
+>  		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
+>  
+>  		spin_lock_init(&krcp->lock);
+> -		for (i = 0; i < KFREE_N_BATCHES; i++)
+> +		for (i = 0; i < KFREE_N_BATCHES; i++) {
+> +			INIT_RCU_WORK(&krcp->krw_arr[i].rcu_work, kfree_rcu_work);
+>  			krcp->krw_arr[i].krcp = krcp;
+> +		}
+> +
+>  		INIT_DELAYED_WORK(&krcp->monitor_work, kfree_rcu_monitor);
+>  		krcp->initialized = true;
+>  	}
+> -- 
+> 2.20.1
+> 
