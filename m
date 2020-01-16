@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 542BEC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD693C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 272B02051A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:16:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A9F220728
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:17:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195019;
-	bh=Uc8ca9AD02USo6YyogNUXPtsgC0fZNG6CSuWH9YoxfQ=;
+	s=default; t=1579195027;
+	bh=0YFaWcb15ye1CrXZgnwX8z1XFUDrX3MGS2VAo9jXphY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zbIfz0zVlS6m0xRDo0txtiNaa0lg9EXyb9lyats3gDvO/BQHK73lQfSthdjcRh5cF
-	 ohRarDQfN9onzgkETJ727nz/0e+glfpbe3CW41O9mXZf5/bmT17nwqBDSJgEYtP8kP
-	 lGQMKGkr1P9fKKDgHxcNH+kMSI3QDFOLjjGIzF9I=
+	b=qWxAgscukQ+e+YxK58ASRimvOtVoekTyIWd7TpoD2lHF9kVV4b/Mammtg4NCd4F+b
+	 xuNonEIapdHe+FdPKbtc3M46BvlCZIrrdQcTCf9vT1b/ewFjeEPJY44Kj919qL7dGu
+	 8xmsmG4DGNEmwmLm3jIcZsd+JlAn8VsGsGvIl6sc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390896AbgAPROA (ORCPT
+        id S2390466AbgAPRN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:14:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59764 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:13:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390219AbgAPRNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:13:49 -0500
+        id S2390818AbgAPRNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:13:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9305120684;
-        Thu, 16 Jan 2020 17:13:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB3AF246A5;
+        Thu, 16 Jan 2020 17:13:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194828;
-        bh=Uc8ca9AD02USo6YyogNUXPtsgC0fZNG6CSuWH9YoxfQ=;
+        s=default; t=1579194825;
+        bh=0YFaWcb15ye1CrXZgnwX8z1XFUDrX3MGS2VAo9jXphY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LAXISYVR0sKaHalVFFcQxTWlzExHp+319S6UKebem6lWIvtzdSnYP1Ft3jF6Pyo76
-         c+7qOiGAW8zHv7TU0R7fPPQ+PEo2oNqg93cUnzD3dSlfJeisusfdq3rEgP6TYtGCWS
-         4snnW2UIjWm4rSvcapqAQ1AevROb5bn1KjaxwEZg=
+        b=u86rZRpTkpCHd66AgrPZwZUw9zqD0dlCkmjJbt47euW5tD+nF08pYxbOSZeq19OEA
+         +8bBBSY1ZwQMpihol0qF8PsUxs3eJYlmH5Sk35bJACjPcB7JZB+7ibYMENP/p9fwnq
+         48MfaJD35OAsTkBzhwpmcEmVEy9qCuzu9Egbat9c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Madalin Bucur <madalin.bucur@nxp.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 631/671] dpaa_eth: avoid timestamp read on error paths
-Date:   Thu, 16 Jan 2020 12:04:29 -0500
-Message-Id: <20200116170509.12787-368-sashal@kernel.org>
+Cc:     Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 629/671] RDMA/mlx5: Return proper error value
+Date:   Thu, 16 Jan 2020 12:04:27 -0500
+Message-Id: <20200116170509.12787-366-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,91 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madalin Bucur <madalin.bucur@nxp.com>
+From: Leon Romanovsky <leonro@mellanox.com>
 
-[ Upstream commit 9a4f4f3a894ff4487f5597b7aabba9432b238292 ]
+[ Upstream commit 546d30099ed204792083f043cd7e016de86016a3 ]
 
-The dpaa_cleanup_tx_fd() function is called by the frame transmit
-confirmation callback but also on several error paths. This function
-is reading the transmit timestamp value. Avoid reading an invalid
-timestamp value on the error paths.
+Returned value from mlx5_mr_cache_alloc() is checked to be error or real
+pointer. Return proper error code instead of NULL which is not checked
+later.
 
-Fixes: 4664856e9ca2 ("dpaa_eth: add support for hardware timestamping")
-Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 81713d3788d2 ("IB/mlx5: Add implicit MR support")
+Link: https://lore.kernel.org/r/20191029055721.7192-1-leon@kernel.org
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/dpaa/dpaa_eth.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ drivers/infiniband/hw/mlx5/mr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-index 3cd62a71ddea..d7736c9c6339 100644
---- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-@@ -1600,13 +1600,15 @@ static int dpaa_eth_refill_bpools(struct dpaa_priv *priv)
-  * Skb freeing is not handled here.
-  *
-  * This function may be called on error paths in the Tx function, so guard
-- * against cases when not all fd relevant fields were filled in.
-+ * against cases when not all fd relevant fields were filled in. To avoid
-+ * reading the invalid transmission timestamp for the error paths set ts to
-+ * false.
-  *
-  * Return the skb backpointer, since for S/G frames the buffer containing it
-  * gets freed here.
-  */
- static struct sk_buff *dpaa_cleanup_tx_fd(const struct dpaa_priv *priv,
--					  const struct qm_fd *fd)
-+					  const struct qm_fd *fd, bool ts)
- {
- 	const enum dma_data_direction dma_dir = DMA_TO_DEVICE;
- 	struct device *dev = priv->net_dev->dev.parent;
-@@ -1648,7 +1650,8 @@ static struct sk_buff *dpaa_cleanup_tx_fd(const struct dpaa_priv *priv,
+diff --git a/drivers/infiniband/hw/mlx5/mr.c b/drivers/infiniband/hw/mlx5/mr.c
+index bd1fdadf7ba0..18fd9aa6510f 100644
+--- a/drivers/infiniband/hw/mlx5/mr.c
++++ b/drivers/infiniband/hw/mlx5/mr.c
+@@ -457,7 +457,7 @@ struct mlx5_ib_mr *mlx5_mr_cache_alloc(struct mlx5_ib_dev *dev, int entry)
+ 
+ 	if (entry < 0 || entry >= MAX_MR_CACHE_ENTRIES) {
+ 		mlx5_ib_err(dev, "cache entry %d is out of range\n", entry);
+-		return NULL;
++		return ERR_PTR(-EINVAL);
  	}
  
- 	/* DMA unmapping is required before accessing the HW provided info */
--	if (priv->tx_tstamp && skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) {
-+	if (ts && priv->tx_tstamp &&
-+	    skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) {
- 		memset(&shhwtstamps, 0, sizeof(shhwtstamps));
- 
- 		if (!fman_port_get_tstamp(priv->mac_dev->port[TX], (void *)skbh,
-@@ -2118,7 +2121,7 @@ dpaa_start_xmit(struct sk_buff *skb, struct net_device *net_dev)
- 	if (likely(dpaa_xmit(priv, percpu_stats, queue_mapping, &fd) == 0))
- 		return NETDEV_TX_OK;
- 
--	dpaa_cleanup_tx_fd(priv, &fd);
-+	dpaa_cleanup_tx_fd(priv, &fd, false);
- skb_to_fd_failed:
- enomem:
- 	percpu_stats->tx_errors++;
-@@ -2164,7 +2167,7 @@ static void dpaa_tx_error(struct net_device *net_dev,
- 
- 	percpu_priv->stats.tx_errors++;
- 
--	skb = dpaa_cleanup_tx_fd(priv, fd);
-+	skb = dpaa_cleanup_tx_fd(priv, fd, false);
- 	dev_kfree_skb(skb);
- }
- 
-@@ -2205,7 +2208,7 @@ static void dpaa_tx_conf(struct net_device *net_dev,
- 
- 	percpu_priv->tx_confirm++;
- 
--	skb = dpaa_cleanup_tx_fd(priv, fd);
-+	skb = dpaa_cleanup_tx_fd(priv, fd, true);
- 
- 	consume_skb(skb);
- }
-@@ -2435,7 +2438,7 @@ static void egress_ern(struct qman_portal *portal,
- 	percpu_priv->stats.tx_fifo_errors++;
- 	count_ern(percpu_priv, msg);
- 
--	skb = dpaa_cleanup_tx_fd(priv, fd);
-+	skb = dpaa_cleanup_tx_fd(priv, fd, false);
- 	dev_kfree_skb_any(skb);
- }
- 
+ 	ent = &cache->ent[entry];
 -- 
 2.20.1
 
