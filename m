@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9660C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D80C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 940032073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:15:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ADC2206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:15:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202109;
-	bh=XoiEwqxvpeLhk9E4C1EKhmXW0UDLXNfpdqqjLrAjmdE=;
+	s=default; t=1579202116;
+	bh=hr+B5uQ0PdzcKcQdS7HasGDltOnY59pKbIhtGDmGYoE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aFhj/2FgbaGQuHiD6ca90MSfoY9rwB5vUBYlcsTjE8+6PoPTCzvC+YAYlJa8SOh2U
-	 G6T+UccIDopQfkdq4Mc9UIZTihV4rE9rCnmi0xmJeb37Yv6a7UaYck5rVauF3iAlfD
-	 bK2OLQMHxHh1YjgFE3uYu/OqVHnyCDEYmUE7r7JY=
+	b=fANczndBM2GQbGHJmZPkiBOOfkUiGlnkZNdh2POgPVOH/1E35npB7Jmr0cb2/qEoI
+	 PSZhziMM7E4y1hgYucvLiL2hZlFUxctKCUeseFRHE4D+si2CW5LJBa9G7Q1/JhwABF
+	 +OkRD3y3xf8X72ZYCtO4BRPTYmZ34CUrIte7XkDE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732554AbgAPQ4M (ORCPT
+        id S1733152AbgAPQ4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:56:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41928 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:56:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730591AbgAPQ4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:56:00 -0500
+        id S1732543AbgAPQzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:55:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E47024686;
-        Thu, 16 Jan 2020 16:55:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2E9722464;
+        Thu, 16 Jan 2020 16:55:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193760;
-        bh=XoiEwqxvpeLhk9E4C1EKhmXW0UDLXNfpdqqjLrAjmdE=;
+        s=default; t=1579193753;
+        bh=hr+B5uQ0PdzcKcQdS7HasGDltOnY59pKbIhtGDmGYoE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ejLHpXwp46YTrKpYv/kYM6YxKZ2l725kFcD6gJMLEba3p2P4FK7dJBZzpCCr0gVN9
-         pf4o+uv6MnCERgAEeJqPBuqGzy6tRAkE/K/mPvw3y71LjgHElAKgROMwEs4RP5m8Ln
-         ObGPGHVwXWrjK+djzAHqjK7531B9rQRSixPw+XEk=
+        b=T+IN2WLbDfh4y/fPykt4Q3Xn2OeWSE7ZbLu17brSEZjDTxPkvu9xEVqryu/9hATAo
+         N9+do2MqzVumVTkV4ACUB0TBTYileXXtgkoeG60Rm4wPECD8Go0/AC5LiNkvOvuqhI
+         ojbC9muqpnNFgpdfF3MHJuW09R5aDI+cW+mYaT74=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Phil Elwell <phil@raspberrypi.org>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 047/671] ARM: dts: bcm283x: Correct mailbox register sizes
-Date:   Thu, 16 Jan 2020 11:44:38 -0500
-Message-Id: <20200116165502.8838-47-sashal@kernel.org>
+Cc:     Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 042/671] net: hns3: add error handler for hns3_nic_init_vector_data()
+Date:   Thu, 16 Jan 2020 11:44:33 -0500
+Message-Id: <20200116165502.8838-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -62,35 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phil Elwell <phil@raspberrypi.org>
+From: Huazhong Tan <tanhuazhong@huawei.com>
 
-[ Upstream commit 227fa865061470a568858baa404a508f6c030fe4 ]
+[ Upstream commit ece4bf46e98c9f3775a488f3932a531508d3b1a2 ]
 
-The size field in a Device Tree "reg" property is encoded in bytes, not
-words.
+When hns3_nic_init_vector_data() fails to map ring to vector,
+it should cancel the netif_napi_add() that has been successfully
+done and then exits.
 
-Fixes: 614fa22119d6 ("ARM: dts: bcm2835: Add VCHIQ node to the Raspberry Pi boards. (v3)")
-Signed-off-by: Phil Elwell <phil@raspberrypi.org>
-Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+Fixes: 76ad4f0ee747 ("net: hns3: Add support of HNS3 Ethernet Driver for hip08 SoC")
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/bcm2835-rpi.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-index cb2d6d78a7fb..c481eab1bd7c 100644
---- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
-+++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-@@ -32,7 +32,7 @@
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 1aaf6e2a3b39..9df807ec8c84 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -2642,7 +2642,7 @@ static int hns3_nic_init_vector_data(struct hns3_nic_priv *priv)
+ 	struct hnae3_handle *h = priv->ae_handle;
+ 	struct hns3_enet_tqp_vector *tqp_vector;
+ 	int ret = 0;
+-	u16 i;
++	int i;
  
- 		mailbox@7e00b840 {
- 			compatible = "brcm,bcm2835-vchiq";
--			reg = <0x7e00b840 0xf>;
-+			reg = <0x7e00b840 0x3c>;
- 			interrupts = <0 2>;
- 		};
- 	};
+ 	for (i = 0; i < priv->vector_num; i++) {
+ 		tqp_vector = &priv->tqp_vector[i];
+@@ -2687,13 +2687,19 @@ static int hns3_nic_init_vector_data(struct hns3_nic_priv *priv)
+ 		hns3_free_vector_ring_chain(tqp_vector, &vector_ring_chain);
+ 
+ 		if (ret)
+-			return ret;
++			goto map_ring_fail;
+ 
+ 		netif_napi_add(priv->netdev, &tqp_vector->napi,
+ 			       hns3_nic_common_poll, NAPI_POLL_WEIGHT);
+ 	}
+ 
+ 	return 0;
++
++map_ring_fail:
++	while (i--)
++		netif_napi_del(&priv->tqp_vector[i].napi);
++
++	return ret;
+ }
+ 
+ static int hns3_nic_alloc_vector_data(struct hns3_nic_priv *priv)
 -- 
 2.20.1
 
