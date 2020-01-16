@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 972D7C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A041AC33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 655F7214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D1392073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 16:47:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193224;
-	bh=soEda4LnwxwIeFkNICBfyvXmeA/EOSoybIFXUCSfTdk=;
+	s=default; t=1579193228;
+	bh=dAs/zNG/m+VHy0DYPM6tcOxHAC0qIG1JB0YFDX/OnZw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zOyWkwuubTnvji77w4Kx50YQaUAL/170PVoWAooYlvKMejsVTzWtdWZje60Og7x4Z
-	 8PLZHF5TyKA4jL1fjqhdt6FoGqripxe6wBDJMYAZyfG5h9NjKG0QQ59RMpXw6932rI
-	 me6YqIUb8np5QmlcprMAd0+JsaS/gEVK8QAJILZs=
+	b=N0gaF/3eOScaENz/XhE/lPC1LYSIiM+fIkfvJWVmL0qVxHyXgGBt32Myi8aJbjX6/
+	 szJkFb4eTxJqFjuGCl/He1Cg9xK97rv15suifMT8MeeLS5hZy3f4ZoNkKTatN6h1hZ
+	 VTKcqz1dHDKvizTUA0LGoaFmBGN0GsQ6cmzLOTa4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729486AbgAPQrD (ORCPT
+        id S1729370AbgAPQrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:47:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56516 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:47:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729547AbgAPQq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:46:59 -0500
+        id S1729547AbgAPQrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:47:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1F81214AF;
-        Thu, 16 Jan 2020 16:46:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7EBE207FF;
+        Thu, 16 Jan 2020 16:46:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193218;
-        bh=soEda4LnwxwIeFkNICBfyvXmeA/EOSoybIFXUCSfTdk=;
+        s=default; t=1579193223;
+        bh=dAs/zNG/m+VHy0DYPM6tcOxHAC0qIG1JB0YFDX/OnZw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2lNxzOBxZ+h2GzGRm03Y5FhXSwC46k2i48rWeKuzRLyWbEdTY4C7ER2s+QmbqopEL
-         HycMD/QgG9KvIgZDJvlvtNCzMYj/f0u03Uro5/gIhk4JHrFe5kTEfQHBBkF4x/ej4O
-         XV4Em4ZwAt94IQBATbHCI4WyPecKx6Z088DYNKYQ=
+        b=jLyrxKrUf6JvIKh67lmBcPTEKw/NvUZPci1U67WINGt4UbDmDTDiYPuXH/OcWIixm
+         YG+9WY0Y3g2qNtAW4UNjHGe2ei1fMk0RsGQVqLSB2KjVnelOTcKzJD0WUb/pqkW+Cf
+         dveCKyON+GdWJXN48yCkOjkyRatbKTVRKEhAG6TY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Ulrich Hecht <uli+renesas@fpond.eu>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 048/205] drm: rcar_lvds: Fix color mismatches on R-Car H2 ES2.0 and later
-Date:   Thu, 16 Jan 2020 11:40:23 -0500
-Message-Id: <20200116164300.6705-48-sashal@kernel.org>
+Cc:     Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 049/205] net: netsec: Correct dma sync for XDP_TX frames
+Date:   Thu, 16 Jan 2020 11:40:24 -0500
+Message-Id: <20200116164300.6705-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -62,101 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
 
-[ Upstream commit 3986457110a054466bf02f9c4a85aa2bba96177b ]
+[ Upstream commit d9496f3ecfe4823c1e12aecbcc29220147fa012c ]
 
-Commit 5cca30ebe089be23 ("drm/rcar-du: Add LVDS_LANES quirk") states
-that LVDS lanes 1 and 3 are inverted on R-Car H2 ES1 only, and that the
-problem has been fixed in newer revisions.
+bpf_xdp_adjust_head() can change the frame boundaries. Account for the
+potential shift properly by calculating the new offset before
+syncing the buffer to the device for XDP_TX
 
-However, the code didn't take into account the actual hardware revision,
-thus applying the quirk also on newer hardware revisions, causing green
-color reversals.
-
-Fix this by applying the quirk when running on R-Car H2 ES1.x only.
-
-Reported-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Fixes: 5cca30ebe089be23 ("drm/rcar-du: Add LVDS_LANES quirk")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
-Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Fixes: ba2b232108d3 ("net: netsec: add XDP support")
+Signed-off-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/rcar-du/rcar_lvds.c | 28 +++++++++++++++++++++-------
- 1 file changed, 21 insertions(+), 7 deletions(-)
+ drivers/net/ethernet/socionext/netsec.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-index 3fc7e6899cab..50c11a7f0467 100644
---- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-@@ -16,6 +16,7 @@
- #include <linux/of_graph.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
-+#include <linux/sys_soc.h>
+diff --git a/drivers/net/ethernet/socionext/netsec.c b/drivers/net/ethernet/socionext/netsec.c
+index f9e6744d8fd6..41ddd8fff2a7 100644
+--- a/drivers/net/ethernet/socionext/netsec.c
++++ b/drivers/net/ethernet/socionext/netsec.c
+@@ -847,8 +847,8 @@ static u32 netsec_xdp_queue_one(struct netsec_priv *priv,
+ 		enum dma_data_direction dma_dir =
+ 			page_pool_get_dma_dir(rx_ring->page_pool);
  
- #include <drm/drm_atomic.h>
- #include <drm/drm_atomic_helper.h>
-@@ -842,8 +843,23 @@ static int rcar_lvds_get_clocks(struct rcar_lvds *lvds)
- 	return 0;
- }
- 
-+static const struct rcar_lvds_device_info rcar_lvds_r8a7790es1_info = {
-+	.gen = 2,
-+	.quirks = RCAR_LVDS_QUIRK_LANES,
-+	.pll_setup = rcar_lvds_pll_setup_gen2,
-+};
-+
-+static const struct soc_device_attribute lvds_quirk_matches[] = {
-+	{
-+		.soc_id = "r8a7790", .revision = "ES1.*",
-+		.data = &rcar_lvds_r8a7790es1_info,
-+	},
-+	{ /* sentinel */ }
-+};
-+
- static int rcar_lvds_probe(struct platform_device *pdev)
- {
-+	const struct soc_device_attribute *attr;
- 	struct rcar_lvds *lvds;
- 	struct resource *mem;
- 	int ret;
-@@ -857,6 +873,10 @@ static int rcar_lvds_probe(struct platform_device *pdev)
- 	lvds->dev = &pdev->dev;
- 	lvds->info = of_device_get_match_data(&pdev->dev);
- 
-+	attr = soc_device_match(lvds_quirk_matches);
-+	if (attr)
-+		lvds->info = attr->data;
-+
- 	ret = rcar_lvds_parse_dt(lvds);
- 	if (ret < 0)
- 		return ret;
-@@ -893,12 +913,6 @@ static const struct rcar_lvds_device_info rcar_lvds_gen2_info = {
- 	.pll_setup = rcar_lvds_pll_setup_gen2,
- };
- 
--static const struct rcar_lvds_device_info rcar_lvds_r8a7790_info = {
--	.gen = 2,
--	.quirks = RCAR_LVDS_QUIRK_LANES,
--	.pll_setup = rcar_lvds_pll_setup_gen2,
--};
--
- static const struct rcar_lvds_device_info rcar_lvds_gen3_info = {
- 	.gen = 3,
- 	.quirks = RCAR_LVDS_QUIRK_PWD,
-@@ -930,7 +944,7 @@ static const struct of_device_id rcar_lvds_of_table[] = {
- 	{ .compatible = "renesas,r8a7744-lvds", .data = &rcar_lvds_gen2_info },
- 	{ .compatible = "renesas,r8a774a1-lvds", .data = &rcar_lvds_gen3_info },
- 	{ .compatible = "renesas,r8a774c0-lvds", .data = &rcar_lvds_r8a77990_info },
--	{ .compatible = "renesas,r8a7790-lvds", .data = &rcar_lvds_r8a7790_info },
-+	{ .compatible = "renesas,r8a7790-lvds", .data = &rcar_lvds_gen2_info },
- 	{ .compatible = "renesas,r8a7791-lvds", .data = &rcar_lvds_gen2_info },
- 	{ .compatible = "renesas,r8a7793-lvds", .data = &rcar_lvds_gen2_info },
- 	{ .compatible = "renesas,r8a7795-lvds", .data = &rcar_lvds_gen3_info },
+-		dma_handle = page_pool_get_dma_addr(page) +
+-			NETSEC_RXBUF_HEADROOM;
++		dma_handle = page_pool_get_dma_addr(page) + xdpf->headroom +
++			sizeof(*xdpf);
+ 		dma_sync_single_for_device(priv->dev, dma_handle, xdpf->len,
+ 					   dma_dir);
+ 		tx_desc.buf_type = TYPE_NETSEC_XDP_TX;
 -- 
 2.20.1
 
