@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 893E5C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 549B9C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5379420684
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:21:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AE2120684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:21:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195303;
-	bh=GNZp0UeonDfLmB9+iQmd4E5uDQXciC8j7pjaO1xySas=;
+	s=default; t=1579195308;
+	bh=N6Y8PkCQnIedDcnf0oyyx/ToavtI/AovlyPF64X9BKo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qeYQyoRBkoPh8+m2kKNlxT+NFAwsJxvvH6NpXrRgDJUNhlfcgx6uzOQ8yXUhKPznn
-	 EPPqib1yViCkVF16bXyU8CnRn8Sx4TjEKY3bdbAXVcgnziA6ZgPlaWnJgXiSuc/b2X
-	 qps5/hbd45/V3fD1hUN0qoS/F221w9q3i+afpoiE=
+	b=HM3CUMTU00SQg12e8pdNaMF93ugQyQZiwOKSA7JWZGqMjmIuksI/lcu/LpRjjzM0p
+	 Mm66weWdPgGhe527QkUT3NZMMj2ie7FqY/gOTZzXZOL+uvi1ZzjaZzLyt15dy5QnIf
+	 hYfBosersMyNo1qxiMTBrq3ir7mxvLEDOe9GZanE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391648AbgAPRVm (ORCPT
+        id S2391229AbgAPRRd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:21:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43194 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:17:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730357AbgAPRRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:17:38 -0500
+        id S2391134AbgAPRR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:17:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79AB92087E;
-        Thu, 16 Jan 2020 17:17:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 842472081E;
+        Thu, 16 Jan 2020 17:17:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195058;
-        bh=GNZp0UeonDfLmB9+iQmd4E5uDQXciC8j7pjaO1xySas=;
+        s=default; t=1579195049;
+        bh=N6Y8PkCQnIedDcnf0oyyx/ToavtI/AovlyPF64X9BKo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=udtg47BXvtViavBBOQy4uzZkOc/y8vK/EcCoMmP9Si3Tul8SGtBduSTxshYhMRYc+
-         IbHiIhvZCPSgEOskbEXReYFJWgNMBVRxCFD/qdgP4Jpbml4ettlz8BGqNe5ud3kwbn
-         E3sQgZUGia9WvsfLPbPHOx3q4/McpqYgnBAu9A8k=
+        b=BlSv6jhYmhw/enHhdU5eawmTD3QAoqx8k9uASJHKN5JgeAqR0UmrR4sp5X1l8Xlgv
+         iVkPVyDk2fhyrbpEf+vlwq0KOSpKqKwlxOVNaR1YAg2IDSxc7Rlp2b+DPIhI/84oQa
+         bTG2OomkqhI2ND2bWW3YnrpPAs925m6HRIXqNSQE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Giulio Benetti <giulio.benetti@micronovasrl.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 014/371] drm/sun4i: hdmi: Fix double flag assignation
-Date:   Thu, 16 Jan 2020 12:11:22 -0500
-Message-Id: <20200116171719.16965-14-sashal@kernel.org>
+Cc:     Zhu Yanjun <yanjun.zhu@oracle.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 007/371] IB/rxe: replace kvfree with vfree
+Date:   Thu, 16 Jan 2020 12:11:15 -0500
+Message-Id: <20200116171719.16965-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116171719.16965-1-sashal@kernel.org>
 References: <20200116171719.16965-1-sashal@kernel.org>
@@ -62,40 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Ripard <maxime.ripard@bootlin.com>
+From: Zhu Yanjun <yanjun.zhu@oracle.com>
 
-[ Upstream commit 1e0ff648940e603cab6c52cf3723017d30d78f30 ]
+[ Upstream commit 721ad7e643f7002efa398838693f90284ea216d1 ]
 
-The is_double flag is a boolean currently assigned to the value of the d
-variable, that is either 1 or 2. It means that this is_double variable is
-always set to true, even though the initial intent was to have it set to
-true when d is 2.
+The buf is allocated by vmalloc_user in the function rxe_queue_init.
+So it is better to free it by vfree.
 
-Fix this.
-
-Fixes: 9c5681011a0c ("drm/sun4i: Add HDMI support")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Reviewed-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20181021163446.29135-2-maxime.ripard@bootlin.com
+Fixes: 8700e3e7c485 ("Soft RoCE driver")
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Zhu Yanjun <yanjun.zhu@oracle.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/sw/rxe/rxe_cq.c | 4 ++--
+ drivers/infiniband/sw/rxe/rxe_qp.c | 5 +++--
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c
-index 5cf2527bffc8..d7a8fea94557 100644
---- a/drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_tmds_clk.c
-@@ -50,7 +50,7 @@ static unsigned long sun4i_tmds_calc_divider(unsigned long rate,
- 			    (rate - tmp_rate) < (rate - best_rate)) {
- 				best_rate = tmp_rate;
- 				best_m = m;
--				is_double = d;
-+				is_double = (d == 2) ? true : false;
- 			}
- 		}
+diff --git a/drivers/infiniband/sw/rxe/rxe_cq.c b/drivers/infiniband/sw/rxe/rxe_cq.c
+index c4aabf78dc90..f6e036ded046 100644
+--- a/drivers/infiniband/sw/rxe/rxe_cq.c
++++ b/drivers/infiniband/sw/rxe/rxe_cq.c
+@@ -30,7 +30,7 @@
+  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  * SOFTWARE.
+  */
+-
++#include <linux/vmalloc.h>
+ #include "rxe.h"
+ #include "rxe_loc.h"
+ #include "rxe_queue.h"
+@@ -97,7 +97,7 @@ int rxe_cq_from_init(struct rxe_dev *rxe, struct rxe_cq *cq, int cqe,
+ 	err = do_mmap_info(rxe, udata, false, context, cq->queue->buf,
+ 			   cq->queue->buf_size, &cq->queue->ip);
+ 	if (err) {
+-		kvfree(cq->queue->buf);
++		vfree(cq->queue->buf);
+ 		kfree(cq->queue);
+ 		return err;
  	}
+diff --git a/drivers/infiniband/sw/rxe/rxe_qp.c b/drivers/infiniband/sw/rxe/rxe_qp.c
+index aeea994b04c4..25055a68a2c0 100644
+--- a/drivers/infiniband/sw/rxe/rxe_qp.c
++++ b/drivers/infiniband/sw/rxe/rxe_qp.c
+@@ -34,6 +34,7 @@
+ #include <linux/skbuff.h>
+ #include <linux/delay.h>
+ #include <linux/sched.h>
++#include <linux/vmalloc.h>
+ 
+ #include "rxe.h"
+ #include "rxe_loc.h"
+@@ -255,7 +256,7 @@ static int rxe_qp_init_req(struct rxe_dev *rxe, struct rxe_qp *qp,
+ 			   qp->sq.queue->buf_size, &qp->sq.queue->ip);
+ 
+ 	if (err) {
+-		kvfree(qp->sq.queue->buf);
++		vfree(qp->sq.queue->buf);
+ 		kfree(qp->sq.queue);
+ 		return err;
+ 	}
+@@ -308,7 +309,7 @@ static int rxe_qp_init_resp(struct rxe_dev *rxe, struct rxe_qp *qp,
+ 				   qp->rq.queue->buf_size,
+ 				   &qp->rq.queue->ip);
+ 		if (err) {
+-			kvfree(qp->rq.queue->buf);
++			vfree(qp->rq.queue->buf);
+ 			kfree(qp->rq.queue);
+ 			return err;
+ 		}
 -- 
 2.20.1
 
