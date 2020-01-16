@@ -2,43 +2,66 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B56C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF74FC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52D092064C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 872C620730
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 20:04:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="L8r7l1WJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730497AbgAPUCy (ORCPT
+        id S1731399AbgAPUEU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 15:02:54 -0500
-Received: from mga03.intel.com ([134.134.136.65]:36832 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729439AbgAPUCu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 15:02:50 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 12:02:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,327,1574150400"; 
-   d="scan'208";a="424177757"
-Received: from ssp-jcv-cdi286.jf.intel.com ([10.54.39.33])
-  by fmsmga005.fm.intel.com with ESMTP; 16 Jan 2020 12:02:49 -0800
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org
-Cc:     like.xu@linux.intel.com, ak@linux.intel.com,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 2/2] perf/x86/intel/uncore: Remove PCIe3 unit for SNR
-Date:   Thu, 16 Jan 2020 12:02:10 -0800
-Message-Id: <20200116200210.18937-2-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200116200210.18937-1-kan.liang@linux.intel.com>
-References: <20200116200210.18937-1-kan.liang@linux.intel.com>
+        Thu, 16 Jan 2020 15:04:20 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:29395 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729093AbgAPUET (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 15:04:19 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1579205059; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=apdXuTfZcHlEYeNh8TJF/fU4oRiIjL2uFkcnXyZVlPM=; b=L8r7l1WJuffhe92y+rr1lwJ3EibkH5VHzi+OaP961vLt2OFgkjNNwE5K8MOSlnGLU6NBduMA
+ 1/fV1REJl7td/hSMeFaOwhkqlopd4kXMlMTiwd0+S1Hqqv0Sk1DHnBjVUg3SLL4kJ5vmB+5Z
+ LXsXgase0xDTw2aSdYaDXd6Qooc=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e20c1be.7f94b50166c0-smtp-out-n01;
+ Thu, 16 Jan 2020 20:04:14 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 333BDC4479F; Thu, 16 Jan 2020 20:04:13 +0000 (UTC)
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5CAE2C43383;
+        Thu, 16 Jan 2020 20:04:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5CAE2C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Douglas Anderson <dianders@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCHv2] arm64: Add KRYO{3,4}XX CPU cores to spectre-v2 safe list
+Date:   Fri, 17 Jan 2020 01:33:53 +0530
+Message-Id: <7a8c9a5a39d9d95b9bfca1de3b1f63489d3a4d2d.1579203281.git.saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -46,78 +69,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+KRYO3XX silver CPU cores and KRYO4XX silver, gold CPU cores
+are not affected by Spectre variant 2. Add them to spectre_v2
+safe list to correct ARM_SMCCC_ARCH_WORKAROUND_1 warning and
+vulnerability sysfs value.
 
-The PCIe Root Port driver for CPU Complex PCIe Root Ports are not
-loaded on SNR.
-
-The device ID for SNR PCIe3 unit is used by both uncore driver and the
-PCIe Root Port driver. If uncore driver is loaded, the PCIe Root Port
-driver never be probed.
-
-Remove the PCIe3 unit for SNR for now. The support for PCIe3 unit will
-be added later separately.
-
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 ---
- arch/x86/events/intel/uncore_snbep.c | 24 ------------------------
- 1 file changed, 24 deletions(-)
+Changes since v1:
+ - Dropped QCOM_CPU_PART_KRYO_4XX_GOLD as CSV2 is set
+---
+ arch/arm64/include/asm/cputype.h | 4 ++++
+ arch/arm64/kernel/cpu_errata.c   | 2 ++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index 011644802ce7..ad20220af303 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -369,11 +369,6 @@
- #define SNR_M2M_PCI_PMON_BOX_CTL		0x438
- #define SNR_M2M_PCI_PMON_UMASK_EXT		0xff
+diff --git a/arch/arm64/include/asm/cputype.h b/arch/arm64/include/asm/cputype.h
+index aca07c2f6e6e..a87a93f67671 100644
+--- a/arch/arm64/include/asm/cputype.h
++++ b/arch/arm64/include/asm/cputype.h
+@@ -85,6 +85,8 @@
+ #define QCOM_CPU_PART_FALKOR_V1		0x800
+ #define QCOM_CPU_PART_FALKOR		0xC00
+ #define QCOM_CPU_PART_KRYO		0x200
++#define QCOM_CPU_PART_KRYO_3XX_SILVER	0x803
++#define QCOM_CPU_PART_KRYO_4XX_SILVER	0x805
  
--/* SNR PCIE3 */
--#define SNR_PCIE3_PCI_PMON_CTL0			0x508
--#define SNR_PCIE3_PCI_PMON_CTR0			0x4e8
--#define SNR_PCIE3_PCI_PMON_BOX_CTL		0x4e4
--
- /* SNR IMC */
- #define SNR_IMC_MMIO_PMON_FIXED_CTL		0x54
- #define SNR_IMC_MMIO_PMON_FIXED_CTR		0x38
-@@ -4328,27 +4323,12 @@ static struct intel_uncore_type snr_uncore_m2m = {
- 	.format_group	= &snr_m2m_uncore_format_group,
- };
- 
--static struct intel_uncore_type snr_uncore_pcie3 = {
--	.name		= "pcie3",
--	.num_counters	= 4,
--	.num_boxes	= 1,
--	.perf_ctr_bits	= 48,
--	.perf_ctr	= SNR_PCIE3_PCI_PMON_CTR0,
--	.event_ctl	= SNR_PCIE3_PCI_PMON_CTL0,
--	.event_mask	= SNBEP_PMON_RAW_EVENT_MASK,
--	.box_ctl	= SNR_PCIE3_PCI_PMON_BOX_CTL,
--	.ops		= &ivbep_uncore_pci_ops,
--	.format_group	= &ivbep_uncore_format_group,
--};
--
- enum {
- 	SNR_PCI_UNCORE_M2M,
--	SNR_PCI_UNCORE_PCIE3,
- };
- 
- static struct intel_uncore_type *snr_pci_uncores[] = {
- 	[SNR_PCI_UNCORE_M2M]		= &snr_uncore_m2m,
--	[SNR_PCI_UNCORE_PCIE3]		= &snr_uncore_pcie3,
- 	NULL,
- };
- 
-@@ -4357,10 +4337,6 @@ static const struct pci_device_id snr_uncore_pci_ids[] = {
- 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x344a),
- 		.driver_data = UNCORE_PCI_DEV_FULL_DATA(12, 0, SNR_PCI_UNCORE_M2M, 0),
- 	},
--	{ /* PCIe3 */
--		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x334a),
--		.driver_data = UNCORE_PCI_DEV_FULL_DATA(4, 0, SNR_PCI_UNCORE_PCIE3, 0),
--	},
- 	{ /* end: all zeroes */ }
+ #define NVIDIA_CPU_PART_DENVER		0x003
+ #define NVIDIA_CPU_PART_CARMEL		0x004
+@@ -111,6 +113,8 @@
+ #define MIDR_QCOM_FALKOR_V1 MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_FALKOR_V1)
+ #define MIDR_QCOM_FALKOR MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_FALKOR)
+ #define MIDR_QCOM_KRYO MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_KRYO)
++#define MIDR_QCOM_KRYO_3XX_SILVER MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_KRYO_3XX_SILVER)
++#define MIDR_QCOM_KRYO_4XX_SILVER MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_KRYO_4XX_SILVER)
+ #define MIDR_NVIDIA_DENVER MIDR_CPU_MODEL(ARM_CPU_IMP_NVIDIA, NVIDIA_CPU_PART_DENVER)
+ #define MIDR_NVIDIA_CARMEL MIDR_CPU_MODEL(ARM_CPU_IMP_NVIDIA, NVIDIA_CPU_PART_CARMEL)
+ #define MIDR_FUJITSU_A64FX MIDR_CPU_MODEL(ARM_CPU_IMP_FUJITSU, FUJITSU_CPU_PART_A64FX)
+diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
+index 85f4bec22f6d..d661c7d0e6e2 100644
+--- a/arch/arm64/kernel/cpu_errata.c
++++ b/arch/arm64/kernel/cpu_errata.c
+@@ -548,6 +548,8 @@ static const struct midr_range spectre_v2_safe_list[] = {
+ 	MIDR_ALL_VERSIONS(MIDR_CORTEX_A55),
+ 	MIDR_ALL_VERSIONS(MIDR_BRAHMA_B53),
+ 	MIDR_ALL_VERSIONS(MIDR_HISI_TSV110),
++	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_3XX_SILVER),
++	MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_4XX_SILVER),
+ 	{ /* sentinel */ }
  };
  
 -- 
-2.21.1
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
