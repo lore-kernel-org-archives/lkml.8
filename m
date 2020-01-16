@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5302C33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 857A7C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA5A22072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:38:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54A802072B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:38:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217891;
-	bh=KGDcDbAGyfFPVnBKXB4mUdrlWdRDNcL4M6TEXQLB4eg=;
+	s=default; t=1579217896;
+	bh=86nBZVaHnBRLBTkGYNdIAFfTNKAAdd3MdRDuW/6K5J8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cqdshmqDIVR6M5nARPIffrLZaWYkKr020CcAANDzCLAVwWntsEHeGhtjSKeX1W9uh
-	 R3jrrhPVbmT0JFbtE0HeXb6rP312CZ1LXHMKNajZA9S/O8/g1yepbpMqWm1nLh8ri6
-	 nqsRLeqI9iqTVugpwy2QUe6BO++uGSJrKYI2PA40=
+	b=N/LzwuG/SkB7xKClnm5muoo8Q1mD68v7Og1yqpfWOniC8GHm/X6qFt7Ugjlm0WtDu
+	 PXWDzJSZx+6qmlcM+WRoogwc/PJzb6TRr1iRZBORQDU+r7/QAwp3c1rDSZcDwPbcjJ
+	 sf+VJ74pbKzrqeVL7QmYyLQNs4wtOFatUfeRgy20=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391327AbgAPX3m (ORCPT
+        id S2403956AbgAPXiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:29:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35446 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:38:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391305AbgAPX3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:29:37 -0500
+        id S2391299AbgAPX3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:29:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0555920748;
-        Thu, 16 Jan 2020 23:29:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94E482073A;
+        Thu, 16 Jan 2020 23:29:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217376;
-        bh=KGDcDbAGyfFPVnBKXB4mUdrlWdRDNcL4M6TEXQLB4eg=;
+        s=default; t=1579217374;
+        bh=86nBZVaHnBRLBTkGYNdIAFfTNKAAdd3MdRDuW/6K5J8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=opHpqAupR0jO+1ozatLWkcLHWetf6Z520TkjvgNKVARQlyAmI9+auPmb0ROqnuLRc
-         mHKSUqG9t2/rwbm3QzAKOqjWhpAlLaGMQZgInBf4ZTavrbK8aHgy6s0co3TAhymVS0
-         A4GwAdGA/qMHNgRJfKHCImcfBYMdQQ+bIaOWRmaM=
+        b=tYlz+pgKDbJW5xK9nGHUUXRilJz72ipLXtIirEwjehiBhc9Cy9Nl1dcEAPLCKN+4I
+         8zdYQKrJKlbtb74pe3ypkxGyk71NNMDLLDUQf550H8BQFRTo59q0BZgX7F1TwhfOU8
+         /MC4gQ1ypvwesKeyc0x09Q6Y7r/uohfFxyIUyCYE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Carsten Jacobi <jacobi@de.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Jonathan Billings <jsbillings@jsbillings.org>,
-        Todd DeSantis <atd@us.ibm.com>
-Subject: [PATCH 4.19 31/84] afs: Fix missing cell comparison in afs_test_super()
-Date:   Fri, 17 Jan 2020 00:18:05 +0100
-Message-Id: <20200116231717.380111014@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver OHalloran <oohall@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.19 56/84] powerpc/powernv: Disable native PCIe port management
+Date:   Fri, 17 Jan 2020 00:18:30 +0100
+Message-Id: <20200116231720.383903951@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
 References: <20200116231713.087649517@linuxfoundation.org>
@@ -62,65 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Oliver O'Halloran <oohall@gmail.com>
 
-commit 106bc79843c3c6f4f00753d1f46e54e815f99377 upstream.
+commit 9d72dcef891030545f39ad386a30cf91df517fb2 upstream.
 
-Fix missing cell comparison in afs_test_super().  Without this, any pair
-volumes that have the same volume ID will share a superblock, no matter the
-cell, unless they're in different network namespaces.
+On PowerNV the PCIe topology is (currently) managed by the powernv platform
+code in Linux in cooperation with the platform firmware. Linux's native
+PCIe port service drivers operate independently of both and this can cause
+problems.
 
-Normally, most users will only deal with a single cell and so they won't
-see this.  Even if they do look into a second cell, they won't see a
-problem unless they happen to hit a volume with the same ID as one they've
-already got mounted.
+The main issue is that the portbus driver will conflict with the platform
+specific hotplug driver (pnv_php) over ownership of the MSI used to notify
+the host when a hotplug event occurs. The portbus driver claims this MSI on
+behalf of the individual port services because the same interrupt is used
+for hotplug events, PMEs (on root ports), and link bandwidth change
+notifications. The portbus driver will always claim the interrupt even if
+the individual port service drivers, such as pciehp, are compiled out.
 
-Before the patch:
+The second, bigger, problem is that the hotplug port service driver
+fundamentally does not work on PowerNV. The platform assumes that all
+PCI devices have a corresponding arch-specific handle derived from the DT
+node for the device (pci_dn) and without one the platform will not allow
+a PCI device to be enabled. This problem is largely due to historical
+baggage, but it can't be resolved without significant re-factoring of the
+platform PCI support.
 
-    # ls /afs/grand.central.org/archive
-    linuxdev/  mailman/  moin/  mysql/  pipermail/  stage/  twiki/
-    # ls /afs/kth.se/
-    linuxdev/  mailman/  moin/  mysql/  pipermail/  stage/  twiki/
-    # cat /proc/mounts | grep afs
-    none /afs afs rw,relatime,dyn,autocell 0 0
-    #grand.central.org:root.cell /afs/grand.central.org afs ro,relatime 0 0
-    #grand.central.org:root.archive /afs/grand.central.org/archive afs ro,relatime 0 0
-    #grand.central.org:root.archive /afs/kth.se afs ro,relatime 0 0
+We can fix these problems in the interim by setting the
+"pcie_ports_disabled" flag during platform initialisation. The flag
+indicates the platform owns the PCIe ports which stops the portbus driver
+from being registered.
 
-After the patch:
+This does have the side effect of disabling all port services drivers
+that is: AER, PME, BW notifications, hotplug, and DPC. However, this is
+not a huge disadvantage on PowerNV since these services are either unused
+or handled through other means.
 
-    # ls /afs/grand.central.org/archive
-    linuxdev/  mailman/  moin/  mysql/  pipermail/  stage/  twiki/
-    # ls /afs/kth.se/
-    admin/        common/  install/  OldFiles/  service/  system/
-    bakrestores/  home/    misc/     pkg/       src/      wsadmin/
-    # cat /proc/mounts | grep afs
-    none /afs afs rw,relatime,dyn,autocell 0 0
-    #grand.central.org:root.cell /afs/grand.central.org afs ro,relatime 0 0
-    #grand.central.org:root.archive /afs/grand.central.org/archive afs ro,relatime 0 0
-    #kth.se:root.cell /afs/kth.se afs ro,relatime 0 0
-
-Fixes: ^1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: Carsten Jacobi <jacobi@de.ibm.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
-Tested-by: Jonathan Billings <jsbillings@jsbillings.org>
-cc: Todd DeSantis <atd@us.ibm.com>
+Fixes: 66725152fb9f ("PCI/hotplug: PowerPC PowerNV PCI hotplug driver")
+Signed-off-by: Oliver O'Halloran <oohall@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191118065553.30362-1-oohall@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/afs/super.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/powerpc/platforms/powernv/pci.c |   17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
---- a/fs/afs/super.c
-+++ b/fs/afs/super.c
-@@ -356,6 +356,7 @@ static int afs_test_super(struct super_b
- 	return (as->net_ns == as1->net_ns &&
- 		as->volume &&
- 		as->volume->vid == as1->volume->vid &&
-+		as->cell == as1->cell &&
- 		!as->dyn_root);
- }
+--- a/arch/powerpc/platforms/powernv/pci.c
++++ b/arch/powerpc/platforms/powernv/pci.c
+@@ -1095,6 +1095,23 @@ void __init pnv_pci_init(void)
+ 	if (!firmware_has_feature(FW_FEATURE_OPAL))
+ 		return;
  
++#ifdef CONFIG_PCIEPORTBUS
++	/*
++	 * On PowerNV PCIe devices are (currently) managed in cooperation
++	 * with firmware. This isn't *strictly* required, but there's enough
++	 * assumptions baked into both firmware and the platform code that
++	 * it's unwise to allow the portbus services to be used.
++	 *
++	 * We need to fix this eventually, but for now set this flag to disable
++	 * the portbus driver. The AER service isn't required since that AER
++	 * events are handled via EEH. The pciehp hotplug driver can't work
++	 * without kernel changes (and portbus binding breaks pnv_php). The
++	 * other services also require some thinking about how we're going
++	 * to integrate them.
++	 */
++	pcie_ports_disabled = true;
++#endif
++
+ 	/* Look for IODA IO-Hubs. */
+ 	for_each_compatible_node(np, NULL, "ibm,ioda-hub") {
+ 		pnv_pci_init_ioda_hub(np);
 
 
