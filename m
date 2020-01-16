@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E44C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EAE8C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4B742081E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:37:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 413422073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:37:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579199849;
-	bh=0tf7ycelAdvsqxIAW/LQpLuzSb4Rkln2Jb86A9uToFg=;
+	s=default; t=1579199859;
+	bh=PAz7ZqudbFdxvDWTEGwpjpQR1rAd4t4vy1yzy9d5A40=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2KR8ep64DSCUkm5Kpn1QMnS5IrpIfR07eTZ2Rl+ZXKqHqiyUwTmiELrDDyO/cl+rh
-	 QSPZF4ubAGX9uBMzfrk3a2/WRJ0K3jTP/f28XMBoCXt9jCpS38rh4fCcloggJAPSy3
-	 FbFKaM0lXGnTi2f1qRKksJ8uZuRz/vo7iCoKUb/o=
+	b=lO6SW/VxSTqB1VgVOk7CJiDFc0pQl1SySm9UBGQBGpqJpu1IworTGFZNl4PSpcKl0
+	 0lfSXdpzZkB5RysW+6uZQqS/papUTVmw+49pafYnjWH56hmx4OwdOLrkntxyNhY2Ce
+	 b8E7ov0qjK35VCz6fPja2k206CUZNvKzPMDL0uGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436890AbgAPSh3 (ORCPT
+        id S2405079AbgAPShi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:37:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58742 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:37:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391657AbgAPRYW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:24:22 -0500
+        id S2390566AbgAPRMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:12:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A98992469F;
-        Thu, 16 Jan 2020 17:24:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D72BB20684;
+        Thu, 16 Jan 2020 17:12:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195462;
-        bh=0tf7ycelAdvsqxIAW/LQpLuzSb4Rkln2Jb86A9uToFg=;
+        s=default; t=1579194767;
+        bh=PAz7ZqudbFdxvDWTEGwpjpQR1rAd4t4vy1yzy9d5A40=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WM4YhO0ky/16gDmtV1Kn+53aLvSlTtIym1dvcDCRXUbn5CXSsqetL78hJb03MMf4d
-         gt+qSAYe6rvkhnqToBxGw+QshisCXX/oVxuk2JKhj+voS5BiyvHbyuwCrho9rjoxG0
-         FPBAr0rB6oXXYhKSn5TlJ6YVHHA7uJlfp1APuRws=
+        b=WUo1qm1s0PREpKIxvHFoN7rzAMcJxTujMkfBJqmhfhdGmCmdmvaVv6s4WyYM9FOO6
+         11s5uGh8MyjyjBA/NHlpNNY9vuHxc+kpTBwSm60zxYbM+LzqnPb6LKxrlsQdgBklrU
+         Aeh5PnpKPYVv9QwWqzy9cTBcxpo6kqOhoXMNUK3M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 070/371] tty: ipwireless: Fix potential NULL pointer dereference
-Date:   Thu, 16 Jan 2020 12:19:02 -0500
-Message-Id: <20200116172403.18149-13-sashal@kernel.org>
+Cc:     Alexandra Winter <wintera@linux.ibm.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 587/671] s390/qeth: Fix initialization of vnicc cmd masks during set online
+Date:   Thu, 16 Jan 2020 12:03:45 -0500
+Message-Id: <20200116170509.12787-324-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
-References: <20200116172403.18149-1-sashal@kernel.org>
+In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
+References: <20200116170509.12787-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,34 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Alexandra Winter <wintera@linux.ibm.com>
 
-[ Upstream commit 7dd50e205b3348dc7784efbdf85723551de64a25 ]
+[ Upstream commit be40a86c319706f90caca144343c64743c32b953 ]
 
-There is a potential NULL pointer dereference in case
-alloc_ctrl_packet() fails and returns NULL.
+Without this patch, a command bit in the supported commands mask is only
+ever set to unsupported during set online. If a command is ever marked as
+unsupported (e.g. because of error during qeth_l2_vnicc_query_cmds),
+subsequent successful initialization (offline/online) would not bring it
+back.
 
-Fixes: 099dc4fb6265 ("ipwireless: driver for PC Card 3G/UMTS modem")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: caa1f0b10d18 ("s390/qeth: add VNICC enable/disable support")
+Signed-off-by: Alexandra Winter <wintera@linux.ibm.com>
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/ipwireless/hardware.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/s390/net/qeth_l2_main.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/tty/ipwireless/hardware.c b/drivers/tty/ipwireless/hardware.c
-index a6b8240af6cd..960e9375a1a9 100644
---- a/drivers/tty/ipwireless/hardware.c
-+++ b/drivers/tty/ipwireless/hardware.c
-@@ -1516,6 +1516,8 @@ static void ipw_send_setup_packet(struct ipw_hardware *hw)
- 			sizeof(struct ipw_setup_get_version_query_packet),
- 			ADDR_SETUP_PROT, TL_PROTOCOLID_SETUP,
- 			TL_SETUP_SIGNO_GET_VERSION_QRY);
-+	if (!ver_packet)
-+		return;
- 	ver_packet->header.length = sizeof(struct tl_setup_get_version_qry);
- 
- 	/*
+diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
+index cf3b15ebcf75..f86465da2422 100644
+--- a/drivers/s390/net/qeth_l2_main.c
++++ b/drivers/s390/net/qeth_l2_main.c
+@@ -2359,11 +2359,15 @@ static void qeth_l2_vnicc_init(struct qeth_card *card)
+ 			sup_cmds = 0;
+ 			error = true;
+ 		}
+-		if (!(sup_cmds & IPA_VNICC_SET_TIMEOUT) ||
+-		    !(sup_cmds & IPA_VNICC_GET_TIMEOUT))
++		if ((sup_cmds & IPA_VNICC_SET_TIMEOUT) &&
++		    (sup_cmds & IPA_VNICC_GET_TIMEOUT))
++			card->options.vnicc.getset_timeout_sup |= vnicc;
++		else
+ 			card->options.vnicc.getset_timeout_sup &= ~vnicc;
+-		if (!(sup_cmds & IPA_VNICC_ENABLE) ||
+-		    !(sup_cmds & IPA_VNICC_DISABLE))
++		if ((sup_cmds & IPA_VNICC_ENABLE) &&
++		    (sup_cmds & IPA_VNICC_DISABLE))
++			card->options.vnicc.set_char_sup |= vnicc;
++		else
+ 			card->options.vnicc.set_char_sup &= ~vnicc;
+ 	}
+ 	/* enforce assumed default values and recover settings, if changed  */
 -- 
 2.20.1
 
