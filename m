@@ -2,82 +2,100 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90837C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CF6C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C77824695
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 224B5208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:14:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579198468;
+	bh=5SFjfnnlGX9OravrgxsRQnyQQhbFT+ySXxAv4R06kdM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=FkMKZPZsBrJCWJNyn1O2rpCCEYDVy4QNawQ140oGXCrxEw+1BfuF/vmwqbroGSeOV
+	 mHZYgjrg2LcdANZTQ9KtByZ1AXkEAJ2Mxq6YQqbPlSnc40qnkb9H48EhoJJO2MRs3z
+	 8mwkZ6LlMaPq+vJmzreQ1o7oLgwKGkwrKGmhs+yw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395363AbgAPSOY (ORCPT
+        id S2395372AbgAPSO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:14:24 -0500
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:36825 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393049AbgAPRe5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:34:57 -0500
-X-Originating-IP: 90.65.102.129
-Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 0900B2000B;
+        Thu, 16 Jan 2020 13:14:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48924 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2393050AbgAPRe4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:34:56 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F19B246CC;
         Thu, 16 Jan 2020 17:34:54 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 1/2] ARM: dts: at91: at91sam9n12: properly order shdwc node
-Date:   Thu, 16 Jan 2020 18:34:52 +0100
-Message-Id: <20200116173453.427267-1-alexandre.belloni@bootlin.com>
-X-Mailer: git-send-email 2.24.1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579196096;
+        bh=5SFjfnnlGX9OravrgxsRQnyQQhbFT+ySXxAv4R06kdM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Qhw2WEuhvPks/bWva2i0V9lrQiy5iKjM9ztgVkkpwvRSupsN+2tzgd60c1BEWIw1K
+         jU3FQYNciSxj33mDR9whUomQLs2iX2/U3MOWU5AXZ/CEiYJmAtZFj+aa6s0ixzwrRZ
+         KnsNdZXqRLfF4W+oBUeZWydU7hBjkBalNQwlwZ9w=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 008/251] pwm: lpss: Release runtime-pm reference from the driver's remove callback
+Date:   Thu, 16 Jan 2020 12:30:42 -0500
+Message-Id: <20200116173445.21385-8-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116173445.21385-1-sashal@kernel.org>
+References: <20200116173445.21385-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The shdwc node is not at is correct place, order it properly
+From: Hans de Goede <hdegoede@redhat.com>
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+[ Upstream commit 42885551cedb45961879d2fc3dc3c4dc545cc23e ]
+
+For each pwm output which gets enabled through pwm_lpss_apply(), we do a
+pm_runtime_get_sync().
+
+This commit adds pm_runtime_put() calls to pwm_lpss_remove() to balance
+these when the driver gets removed with some of the outputs still enabled.
+
+Fixes: f080be27d7d9 ("pwm: lpss: Add support for runtime PM")
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/at91sam9n12.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/pwm/pwm-lpss.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
-index ea675174432e..d6eacb2e3792 100644
---- a/arch/arm/boot/dts/at91sam9n12.dtsi
-+++ b/arch/arm/boot/dts/at91sam9n12.dtsi
-@@ -396,6 +396,12 @@ rstc@fffffe00 {
- 				clocks = <&clk32k>;
- 			};
+diff --git a/drivers/pwm/pwm-lpss.c b/drivers/pwm/pwm-lpss.c
+index 5208b3f80ad8..239003807c08 100644
+--- a/drivers/pwm/pwm-lpss.c
++++ b/drivers/pwm/pwm-lpss.c
+@@ -205,6 +205,12 @@ EXPORT_SYMBOL_GPL(pwm_lpss_probe);
  
-+			shdwc@fffffe10 {
-+				compatible = "atmel,at91sam9x5-shdwc";
-+				reg = <0xfffffe10 0x10>;
-+				clocks = <&clk32k>;
-+			};
+ int pwm_lpss_remove(struct pwm_lpss_chip *lpwm)
+ {
++	int i;
 +
- 			pit: timer@fffffe30 {
- 				compatible = "atmel,at91sam9260-pit";
- 				reg = <0xfffffe30 0xf>;
-@@ -403,12 +409,6 @@ pit: timer@fffffe30 {
- 				clocks = <&mck>;
- 			};
- 
--			shdwc@fffffe10 {
--				compatible = "atmel,at91sam9x5-shdwc";
--				reg = <0xfffffe10 0x10>;
--				clocks = <&clk32k>;
--			};
--
- 			sckc@fffffe50 {
- 				compatible = "atmel,at91sam9x5-sckc";
- 				reg = <0xfffffe50 0x4>;
++	for (i = 0; i < lpwm->info->npwm; i++) {
++		if (pwm_is_enabled(&lpwm->chip.pwms[i]))
++			pm_runtime_put(lpwm->chip.dev);
++	}
+ 	return pwmchip_remove(&lpwm->chip);
+ }
+ EXPORT_SYMBOL_GPL(pwm_lpss_remove);
 -- 
-2.24.1
+2.20.1
 
