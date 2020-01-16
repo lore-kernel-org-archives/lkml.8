@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE69C33CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15CA3C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABC2724683
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E28CD24683
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:32:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195970;
-	bh=6ToXo0U8rBrgbvu3xP30vvqRqWu7VCADypBze9Uf9o4=;
+	s=default; t=1579195973;
+	bh=qcru4aRwq+RKr/Q1qem7rS2ddqdmUsEEB9RsAYs/FVg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0f1F9bM2F0XRobqzpLqEuN4sRPegMZZX/uL3kbv0qGDZ28TH7sML5Oi416FkhE/Nf
-	 fr6no2cdbN5URyjd9cfItV0RtUhuzQApe5GWe/VF24xNzYuHjZkZrtS1KlnC9/lc1i
-	 YSlOnwZPdMWFe1kAHThuhz3JMzBb4zQG8UZcM9sA=
+	b=zJ7PABzFzAafxhSOW/C7eSFdkJzn8FUmkFN1ikahWwHcg7HJ38ECmxmn5WbOcvWt0
+	 iwHv3dstz1TYZLDohV4LHLVlGUkSs+LcK6NN6W3+hyyYS2HBT4QU4OG6O6asaCNNA+
+	 2I6m7OmxefZTSltKBxdNQjpy6Vcuu2kgW2LHobx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404479AbgAPRav (ORCPT
+        id S2404624AbgAPRas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:30:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43654 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404491AbgAPRas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jan 2020 12:30:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43604 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392992AbgAPRap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:30:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD87E20728;
-        Thu, 16 Jan 2020 17:30:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D17D24690;
+        Thu, 16 Jan 2020 17:30:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195847;
-        bh=6ToXo0U8rBrgbvu3xP30vvqRqWu7VCADypBze9Uf9o4=;
+        s=default; t=1579195845;
+        bh=qcru4aRwq+RKr/Q1qem7rS2ddqdmUsEEB9RsAYs/FVg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sbjsbkn6enfDlNX+M1NIt8dyCvcIgvwun4qoGkDzlOVpHoVCMVc/RcaR13eU5G1cQ
-         X34giu429kOKqnDkrLr1TcO0ZHjNVYljaVAAT3EJHizJkSKEWNfL2sjiAH6g2v8PpO
-         QVN8Up9Iy3i8m5FLIc5iFUlYyQvWOCXnOT1Fvnk8=
+        b=pnv8ms7q7fV7zwau8bzIU/9eqAAiSzW129/QYekH9lDZnFsdBXObVkJXsPOj5L0u2
+         X/3A7PD97M3ydmORFlbEDrsDXzmGzr4aqVLVZeXweZw1PwdZ1GPXmVj+MtZtjG4pw3
+         3XQm5PGieYpB6aE/SvhnUqshd+oQJQDPwm8/mLIc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.14 348/371] f2fs: fix potential overflow
-Date:   Thu, 16 Jan 2020 12:23:40 -0500
-Message-Id: <20200116172403.18149-291-sashal@kernel.org>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 346/371] net: neigh: use long type to store jiffies delta
+Date:   Thu, 16 Jan 2020 12:23:38 -0500
+Message-Id: <20200116172403.18149-289-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -59,59 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit a9af3fdcc4258af406879eca63d82e9d6baa892e ]
+[ Upstream commit 9d027e3a83f39b819e908e4e09084277a2e45e95 ]
 
-In build_sit_entries(), if valid_blocks in SIT block is smaller than
-valid_blocks in journal, for below calculation:
+A difference of two unsigned long needs long storage.
 
-sbi->discard_blks += old_valid_blocks - se->valid_blocks;
-
-There will be two times potential overflow:
-- old_valid_blocks - se->valid_blocks will overflow, and be a very
-large number.
-- sbi->discard_blks += result will overflow again, comes out a correct
-result accidently.
-
-Anyway, it should be fixed.
-
-Fixes: d600af236da5 ("f2fs: avoid unneeded loop in build_sit_entries")
-Fixes: 1f43e2ad7bff ("f2fs: introduce CP_TRIMMED_FLAG to avoid unneeded discard")
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: c7fb64db001f ("[NETLINK]: Neighbour table configuration and statistics via rtnetlink")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/data.c | 2 +-
- fs/f2fs/file.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ net/core/neighbour.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index ac3fa4bbed2d..afe7dcfff036 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -1512,7 +1512,7 @@ static int __write_data_page(struct page *page, bool *submitted,
- 	loff_t i_size = i_size_read(inode);
- 	const pgoff_t end_index = ((unsigned long long) i_size)
- 							>> PAGE_SHIFT;
--	loff_t psize = (page->index + 1) << PAGE_SHIFT;
-+	loff_t psize = (loff_t)(page->index + 1) << PAGE_SHIFT;
- 	unsigned offset = 0;
- 	bool need_balance_fs = false;
- 	int err = 0;
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index a90173b856f6..d98acc20a38a 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -1059,7 +1059,7 @@ static int __clone_blkaddrs(struct inode *src_inode, struct inode *dst_inode,
- 				}
- 				dn.ofs_in_node++;
- 				i++;
--				new_size = (dst + i) << PAGE_SHIFT;
-+				new_size = (loff_t)(dst + i) << PAGE_SHIFT;
- 				if (dst_inode->i_size < new_size)
- 					f2fs_i_size_write(dst_inode, new_size);
- 			} while (--ilen && (do_replace[i] || blkaddr[i] == NULL_ADDR));
+diff --git a/net/core/neighbour.c b/net/core/neighbour.c
+index 16ac50b1b9a7..567e431813e5 100644
+--- a/net/core/neighbour.c
++++ b/net/core/neighbour.c
+@@ -1877,8 +1877,8 @@ static int neightbl_fill_info(struct sk_buff *skb, struct neigh_table *tbl,
+ 		goto nla_put_failure;
+ 	{
+ 		unsigned long now = jiffies;
+-		unsigned int flush_delta = now - tbl->last_flush;
+-		unsigned int rand_delta = now - tbl->last_rand;
++		long flush_delta = now - tbl->last_flush;
++		long rand_delta = now - tbl->last_rand;
+ 		struct neigh_hash_table *nht;
+ 		struct ndt_config ndc = {
+ 			.ndtc_key_len		= tbl->key_len,
 -- 
 2.20.1
 
