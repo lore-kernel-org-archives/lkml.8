@@ -7,42 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62623C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1EAC33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F33A2075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:31:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 780182075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 21:31:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388758AbgAPVbd (ORCPT
+        id S2389245AbgAPVbf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 16:31:33 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:53585 "EHLO
+        Thu, 16 Jan 2020 16:31:35 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:53582 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389044AbgAPVbO (ORCPT
+        with ESMTP id S2389037AbgAPVbN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 16:31:14 -0500
+        Thu, 16 Jan 2020 16:31:13 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1isCjL-0001YA-Ka; Thu, 16 Jan 2020 22:31:07 +0100
+        id 1isCjL-0001ZU-Bk; Thu, 16 Jan 2020 22:31:07 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 141B71C1970;
-        Thu, 16 Jan 2020 22:31:02 +0100 (CET)
-Date:   Thu, 16 Jan 2020 21:31:01 -0000
-From:   "tip-bot2 for Rajan Vaja" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5A76A1C1996;
+        Thu, 16 Jan 2020 22:31:03 +0100 (CET)
+Date:   Thu, 16 Jan 2020 21:31:03 -0000
+From:   "tip-bot2 for Krzysztof Kozlowski" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] clocksource/drivers/cadence-ttc: Use ttc driver as
- platform driver
-Cc:     Rajan Vaja <rajan.vaja@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
+Subject: [tip: timers/core] clocksource: Fix Kconfig indentation
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <1573122988-18399-1-git-send-email-rajan.vaja@xilinx.com>
-References: <1573122988-18399-1-git-send-email-rajan.vaja@xilinx.com>
+In-Reply-To: <20191120134236.15959-1-krzk@kernel.org>
+References: <20191120134236.15959-1-krzk@kernel.org>
 MIME-Version: 1.0
-Message-ID: <157921026187.396.13367165250949261182.tip-bot2@tip-bot2>
+Message-ID: <157921026318.396.3072238434185037949.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,84 +56,81 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     f5ac896b6a23eb46681cdbef440c1d991b04e519
-Gitweb:        https://git.kernel.org/tip/f5ac896b6a23eb46681cdbef440c1d991b04e519
-Author:        Rajan Vaja <rajan.vaja@xilinx.com>
-AuthorDate:    Thu, 07 Nov 2019 02:36:28 -08:00
+Commit-ID:     9ca9fe69eedb483c0811a4db7cb94942edfb1404
+Gitweb:        https://git.kernel.org/tip/9ca9fe69eedb483c0811a4db7cb94942edfb1404
+Author:        Krzysztof Kozlowski <krzk@kernel.org>
+AuthorDate:    Wed, 20 Nov 2019 21:42:36 +08:00
 Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
 CommitterDate: Thu, 16 Jan 2020 19:06:57 +01:00
 
-clocksource/drivers/cadence-ttc: Use ttc driver as platform driver
+clocksource: Fix Kconfig indentation
 
-Currently TTC driver is TIMER_OF_DECLARE type driver. Because of
-that, TTC driver may be initialized before other clock drivers. If
-TTC driver is dependent on that clock driver then initialization of
-TTC driver will failed.
+Adjust indentation from spaces to tab (+optional two spaces) as in
+coding style with command like:
+	$ sed -e 's/^        /\t/' -i */Kconfig
 
-So use TTC driver as platform driver instead of using
-TIMER_OF_DECLARE.
-
-Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
-Tested-by: Michal Simek <michal.simek@xilinx.com>
-Acked-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/1573122988-18399-1-git-send-email-rajan.vaja@xilinx.com
+Link: https://lore.kernel.org/r/20191120134236.15959-1-krzk@kernel.org
 ---
- drivers/clocksource/timer-cadence-ttc.c | 26 ++++++++++++++++--------
- 1 file changed, 18 insertions(+), 8 deletions(-)
+ drivers/clocksource/Kconfig | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/clocksource/timer-cadence-ttc.c b/drivers/clocksource/timer-cadence-ttc.c
-index 88fe2e9..38858e1 100644
---- a/drivers/clocksource/timer-cadence-ttc.c
-+++ b/drivers/clocksource/timer-cadence-ttc.c
-@@ -15,6 +15,8 @@
- #include <linux/of_irq.h>
- #include <linux/slab.h>
- #include <linux/sched_clock.h>
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index 5fdd76c..c981ff6 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -470,7 +470,7 @@ config OXNAS_RPS_TIMER
+ 	  This enables support for the Oxford Semiconductor OXNAS RPS timers.
  
- /*
-  * This driver configures the 2 16/32-bit count-up timers as follows:
-@@ -464,13 +466,7 @@ static int __init ttc_setup_clockevent(struct clk *clk,
- 	return 0;
- }
+ config SYS_SUPPORTS_SH_CMT
+-        bool
++	bool
  
--/**
-- * ttc_timer_init - Initialize the timer
-- *
-- * Initializes the timer hardware and register the clock source and clock event
-- * timers with Linux kernal timer framework
-- */
--static int __init ttc_timer_init(struct device_node *timer)
-+static int __init ttc_timer_probe(struct platform_device *pdev)
- {
- 	unsigned int irq;
- 	void __iomem *timer_baseaddr;
-@@ -478,6 +474,7 @@ static int __init ttc_timer_init(struct device_node *timer)
- 	static int initialized;
- 	int clksel, ret;
- 	u32 timer_width = 16;
-+	struct device_node *timer = pdev->dev.of_node;
+ config MTK_TIMER
+ 	bool "Mediatek timer driver" if COMPILE_TEST
+@@ -490,13 +490,13 @@ config SPRD_TIMER
+ 	  Enables support for the Spreadtrum timer driver.
  
- 	if (initialized)
- 		return 0;
-@@ -532,4 +529,17 @@ static int __init ttc_timer_init(struct device_node *timer)
- 	return 0;
- }
+ config SYS_SUPPORTS_SH_MTU2
+-        bool
++	bool
  
--TIMER_OF_DECLARE(ttc, "cdns,ttc", ttc_timer_init);
-+static const struct of_device_id ttc_timer_of_match[] = {
-+	{.compatible = "cdns,ttc"},
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, ttc_timer_of_match);
-+
-+static struct platform_driver ttc_timer_driver = {
-+	.driver = {
-+		.name	= "cdns_ttc_timer",
-+		.of_match_table = ttc_timer_of_match,
-+	},
-+};
-+builtin_platform_driver_probe(ttc_timer_driver, ttc_timer_probe);
+ config SYS_SUPPORTS_SH_TMU
+-        bool
++	bool
+ 
+ config SYS_SUPPORTS_EM_STI
+-        bool
++	bool
+ 
+ config CLKSRC_JCORE_PIT
+ 	bool "J-Core PIT timer driver" if COMPILE_TEST
+@@ -591,21 +591,21 @@ config CLKSRC_PXA
+ 	  platforms.
+ 
+ config H8300_TMR8
+-        bool "Clockevent timer for the H8300 platform" if COMPILE_TEST
+-        depends on HAS_IOMEM
++	bool "Clockevent timer for the H8300 platform" if COMPILE_TEST
++	depends on HAS_IOMEM
+ 	help
+ 	  This enables the 8 bits timer for the H8300 platform.
+ 
+ config H8300_TMR16
+-        bool "Clockevent timer for the H83069 platform" if COMPILE_TEST
+-        depends on HAS_IOMEM
++	bool "Clockevent timer for the H83069 platform" if COMPILE_TEST
++	depends on HAS_IOMEM
+ 	help
+ 	  This enables the 16 bits timer for the H8300 platform with the
+ 	  H83069 cpu.
+ 
+ config H8300_TPU
+-        bool "Clocksource for the H8300 platform" if COMPILE_TEST
+-        depends on HAS_IOMEM
++	bool "Clocksource for the H8300 platform" if COMPILE_TEST
++	depends on HAS_IOMEM
+ 	help
+ 	  This enables the clocksource for the H8300 platform with the
+ 	  H8S2678 cpu.
