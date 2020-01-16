@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EA0C33CB7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D223C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EC032081E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D38E82077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:00:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194053;
-	bh=ITu0OrjqUNi+vDw5iSbQfx+KL7W0/cTHMQM8sZPugLg=;
+	s=default; t=1579194057;
+	bh=QQWqVAEri1pk9I3os33sFghXp+ug+wRaDpcOfmO9Jjk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tN4O3yEuemfsJCclNXDaPZwT7YENqxxK4kdG8Fvh8f9tPwcWQoBJcRebN5aFIFLQe
-	 yoSCX2QrIWftUJ6cZHijqkh7w/QzDhMhWnpqrRA44FLGR9pJn7rI/RIijR1L8A8TlQ
-	 M+oFHla4bRKIHxuaCGZdWSXMr6h6XSaTCeihp8Bc=
+	b=vnQoYLj0McLvU+0sGLL6c7rUY1vWYTCv7hf1bfhXN++Yt0OgEXIO3626Dsu1HZFdf
+	 +n4H7hak66PnJesksWTaplDYyom4dRsmDabAVrXhkivzFTmr7tc7mwcsjYLog5YtQB
+	 UHYtjKAOD6p9jzqL6pHrzRt3iL6Kv2E7uu3yaRf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387939AbgAPRAw (ORCPT
+        id S2387955AbgAPRA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:00:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50752 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:00:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387850AbgAPRAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:00:44 -0500
+        id S2387857AbgAPRAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:00:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 616A22468D;
-        Thu, 16 Jan 2020 17:00:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 444312073A;
+        Thu, 16 Jan 2020 17:00:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194044;
-        bh=ITu0OrjqUNi+vDw5iSbQfx+KL7W0/cTHMQM8sZPugLg=;
+        s=default; t=1579194048;
+        bh=QQWqVAEri1pk9I3os33sFghXp+ug+wRaDpcOfmO9Jjk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j3ERuU/AvwZiVopxI/+woGTTsOnl6GXPnCqBlZvZztCLw/Ashy4+Lx34TtXL8NqGj
-         xpqzbvqNXKhhp5aFo+BKB1I1C3+ydMcfBzn6NR6KsIw9EnYNgGvB1irodehTjCI+zX
-         xpy1qZykNqRGhH2yxFQzfY/iSaTFem3v0MXPYUhs=
+        b=iMuU4ppsIJeRlv/sGBqnr9zz3qFTFymVqVKYJB5E9SAsNUSn9wluwBAB2IpZwssvx
+         sQmPfQwZpEmDy3k5OcUJVtDTUm+nfkO+c30+2mToKVm4vE1WNVA55ElUkK432MVkTG
+         wkhOuR6Hcec8fxEtGNJaGZkH9CnPxSPZVxF/iDW0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Moritz Fischer <mdf@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 160/671] net: phy: fixed_phy: Fix fixed_phy not checking GPIO
-Date:   Thu, 16 Jan 2020 11:51:09 -0500
-Message-Id: <20200116165940.10720-43-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 163/671] rtc: 88pm860x: fix unintended sign extension
+Date:   Thu, 16 Jan 2020 11:51:12 -0500
+Message-Id: <20200116165940.10720-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -59,44 +59,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Moritz Fischer <mdf@kernel.org>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 8f289805616e81f7c1690931aa8a586c76f4fa88 ]
+[ Upstream commit dc9e47160626cdb58d5c39a4f43dcfdb27a5c004 ]
 
-Fix fixed_phy not checking GPIO if no link_update callback
-is registered.
+Shifting a u8 by 24 will cause the value to be promoted to an integer. If
+the top bit of the u8 is set then the following conversion to an unsigned
+long will sign extend the value causing the upper 32 bits to be set in
+the result.
 
-In the original version all users registered a link_update
-callback so the issue was masked.
+Fix this by casting the u8 value to an unsigned long before the shift.
 
-Fixes: a5597008dbc2 ("phy: fixed_phy: Add gpio to determine link up/down.")
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Moritz Fischer <mdf@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Detected by CoverityScan, CID#144925-144928 ("Unintended sign extension")
+
+Fixes: 008b30408c40 ("mfd: Add rtc support to 88pm860x")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/fixed_phy.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/rtc/rtc-88pm860x.c | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/phy/fixed_phy.c b/drivers/net/phy/fixed_phy.c
-index 67b260877f30..59820164502e 100644
---- a/drivers/net/phy/fixed_phy.c
-+++ b/drivers/net/phy/fixed_phy.c
-@@ -67,11 +67,11 @@ static int fixed_mdio_read(struct mii_bus *bus, int phy_addr, int reg_num)
- 			do {
- 				s = read_seqcount_begin(&fp->seqcount);
- 				/* Issue callback if user registered it. */
--				if (fp->link_update) {
-+				if (fp->link_update)
- 					fp->link_update(fp->phydev->attached_dev,
- 							&fp->status);
--					fixed_phy_update(fp);
--				}
-+				/* Check the GPIO for change in status */
-+				fixed_phy_update(fp);
- 				state = fp->status;
- 			} while (read_seqcount_retry(&fp->seqcount, s));
+diff --git a/drivers/rtc/rtc-88pm860x.c b/drivers/rtc/rtc-88pm860x.c
+index fbcf13bbbd8d..73697e4b18a9 100644
+--- a/drivers/rtc/rtc-88pm860x.c
++++ b/drivers/rtc/rtc-88pm860x.c
+@@ -115,11 +115,13 @@ static int pm860x_rtc_read_time(struct device *dev, struct rtc_time *tm)
+ 	pm860x_page_bulk_read(info->i2c, REG0_ADDR, 8, buf);
+ 	dev_dbg(info->dev, "%x-%x-%x-%x-%x-%x-%x-%x\n", buf[0], buf[1],
+ 		buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
+-	base = (buf[1] << 24) | (buf[3] << 16) | (buf[5] << 8) | buf[7];
++	base = ((unsigned long)buf[1] << 24) | (buf[3] << 16) |
++		(buf[5] << 8) | buf[7];
  
+ 	/* load 32-bit read-only counter */
+ 	pm860x_bulk_read(info->i2c, PM8607_RTC_COUNTER1, 4, buf);
+-	data = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
++	data = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
++		(buf[1] << 8) | buf[0];
+ 	ticks = base + data;
+ 	dev_dbg(info->dev, "get base:0x%lx, RO count:0x%lx, ticks:0x%lx\n",
+ 		base, data, ticks);
+@@ -145,7 +147,8 @@ static int pm860x_rtc_set_time(struct device *dev, struct rtc_time *tm)
+ 
+ 	/* load 32-bit read-only counter */
+ 	pm860x_bulk_read(info->i2c, PM8607_RTC_COUNTER1, 4, buf);
+-	data = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
++	data = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
++		(buf[1] << 8) | buf[0];
+ 	base = ticks - data;
+ 	dev_dbg(info->dev, "set base:0x%lx, RO count:0x%lx, ticks:0x%lx\n",
+ 		base, data, ticks);
+@@ -170,10 +173,12 @@ static int pm860x_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
+ 	pm860x_page_bulk_read(info->i2c, REG0_ADDR, 8, buf);
+ 	dev_dbg(info->dev, "%x-%x-%x-%x-%x-%x-%x-%x\n", buf[0], buf[1],
+ 		buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
+-	base = (buf[1] << 24) | (buf[3] << 16) | (buf[5] << 8) | buf[7];
++	base = ((unsigned long)buf[1] << 24) | (buf[3] << 16) |
++		(buf[5] << 8) | buf[7];
+ 
+ 	pm860x_bulk_read(info->i2c, PM8607_RTC_EXPIRE1, 4, buf);
+-	data = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
++	data = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
++		(buf[1] << 8) | buf[0];
+ 	ticks = base + data;
+ 	dev_dbg(info->dev, "get base:0x%lx, RO count:0x%lx, ticks:0x%lx\n",
+ 		base, data, ticks);
+@@ -198,11 +203,13 @@ static int pm860x_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
+ 	pm860x_page_bulk_read(info->i2c, REG0_ADDR, 8, buf);
+ 	dev_dbg(info->dev, "%x-%x-%x-%x-%x-%x-%x-%x\n", buf[0], buf[1],
+ 		buf[2], buf[3], buf[4], buf[5], buf[6], buf[7]);
+-	base = (buf[1] << 24) | (buf[3] << 16) | (buf[5] << 8) | buf[7];
++	base = ((unsigned long)buf[1] << 24) | (buf[3] << 16) |
++		(buf[5] << 8) | buf[7];
+ 
+ 	/* load 32-bit read-only counter */
+ 	pm860x_bulk_read(info->i2c, PM8607_RTC_COUNTER1, 4, buf);
+-	data = (buf[3] << 24) | (buf[2] << 16) | (buf[1] << 8) | buf[0];
++	data = ((unsigned long)buf[3] << 24) | (buf[2] << 16) |
++		(buf[1] << 8) | buf[0];
+ 	ticks = base + data;
+ 	dev_dbg(info->dev, "get base:0x%lx, RO count:0x%lx, ticks:0x%lx\n",
+ 		base, data, ticks);
 -- 
 2.20.1
 
