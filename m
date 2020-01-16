@@ -2,99 +2,124 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 542DFC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 08:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C899C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 08:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2700D2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 08:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 352C02073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 08:41:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ag+LGri+"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="kk6g4iGb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731229AbgAPIi3 (ORCPT
+        id S1731272AbgAPIlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 03:38:29 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55376 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727003AbgAPIi2 (ORCPT
+        Thu, 16 Jan 2020 03:41:15 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:17519 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727009AbgAPIlP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 03:38:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579163908;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=IXtSmPS0i6Qsp99yh//fgz82ZG06+bv6j5QX91/2YyA=;
-        b=ag+LGri+lLDYHUGNGUm4wSWQJdFTAdE4g4qUEil9toltT9/7wvsi53c2tALoTTIpfYkjEf
-        3YF1c5Q1Sf6NddRW6p1ZiCJrMD4BSVGnF6b+OMJlJUGUlE59mg8X8aeLvHOq4h5lOUBlBu
-        83Q8X9JnP177K96yJOXlkUSIVv+8JY0=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-72-fv8lU_O8PFCebhCmS2oC-w-1; Thu, 16 Jan 2020 03:38:27 -0500
-X-MC-Unique: fv8lU_O8PFCebhCmS2oC-w-1
-Received: by mail-wm1-f69.google.com with SMTP id l11so2097545wmi.0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 00:38:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IXtSmPS0i6Qsp99yh//fgz82ZG06+bv6j5QX91/2YyA=;
-        b=kYXxem6xGfJ3AgokdbUh2fTFyShoV0NPt4kqNlKaHf6fhwJDBl5hzs5oAyj5jW+R82
-         iTeuualDRRcmlxCieu1FadoCU32kUuZQyZIM2NsbR9Mk8gr9fXC8JYl9Kzu+CyMTfrPr
-         AfU+H8UvDQ5u3PJMS7Ok95uxUXZqHAJIi5FoeJMSVUqM14nIQ+VqXtJVdH87bZ3bROcU
-         3X9aoPXU8xlfWeqkgzhJh5ZTBLyqyMkMpc6+OUG5mWRniCzrfV+dbDOzKodKuVXsSV3n
-         bicppcNErMDUFOM+DnA/B9fAWypDq4X7KavFaON3g2T1HC/FMfz5c8Tv8NwBhD6nXoWc
-         plng==
-X-Gm-Message-State: APjAAAUOXfnHCqtijpsW6r1t5b1mHjjYH9IAp5CKYwBD0d2ewFYceOYS
-        AJKdR8OW5Qkz/VZ9kAX+bilnTXI6se0NPD8pAydfIpgbj3NLlRVjbpVTC+HQJgIVPueUaM2ZByu
-        SnW+47I+z4e6broduoUJmDMO8
-X-Received: by 2002:a05:6000:118d:: with SMTP id g13mr2102069wrx.141.1579163905495;
-        Thu, 16 Jan 2020 00:38:25 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwGO77Z98jPmNC+6Lx21D2RFFW5UOBHp3rIpKkBmINzKtpHw/Lyr1d04DYLp7eI2k9wrDOeaA==
-X-Received: by 2002:a05:6000:118d:: with SMTP id g13mr2102044wrx.141.1579163905272;
-        Thu, 16 Jan 2020 00:38:25 -0800 (PST)
-Received: from redhat.com (bzq-79-179-85-180.red.bezeqint.net. [79.179.85.180])
-        by smtp.gmail.com with ESMTPSA id y139sm2277799wmd.24.2020.01.16.00.38.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 00:38:24 -0800 (PST)
-Date:   Thu, 16 Jan 2020 03:38:21 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Kevin <kevin.tian@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Lei Cao <lei.cao@stratus.com>
-Subject: Re: [PATCH v3 12/21] KVM: X86: Implement ring-based dirty memory
- tracking
-Message-ID: <20200116033725-mutt-send-email-mst@kernel.org>
-References: <20200109145729.32898-1-peterx@redhat.com>
- <20200109145729.32898-13-peterx@redhat.com>
+        Thu, 16 Jan 2020 03:41:15 -0500
+X-UUID: 98a1ffaac5b04842b2e9094fe4b03bb8-20200116
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=tTAYhyV1yO1eGfYT9UX2vuD8lvcZaEL8mGmAAGdJsuQ=;
+        b=kk6g4iGbbeHRKbyQIY9b/5wh+CTLoS7BQGWBbPYDCwc7fy/YMeoX1csBUuSkyopBBwpNRFSaHe6jRx+e/OwwNgtI1KpJGOth80OPRTA1GrHT/7UtyuJaxcWNLbxdXv6sVJkYrD8iapIfv/BIzLEyAKAl/HiYwZMNL2EVNnqtaes=;
+X-UUID: 98a1ffaac5b04842b2e9094fe4b03bb8-20200116
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <gtk_ruiwang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 543665243; Thu, 16 Jan 2020 16:41:12 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 16 Jan 2020 16:40:43 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 16 Jan 2020 16:40:20 +0800
+From:   <gtk_ruiwang@mediatek.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tomasz Figa <tfiga@chromium.org>
+CC:     Tiffany Lin <tiffany.lin@mediatek.com>,
+        Longfei Wang <longfei.wang@mediatek.com>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        Maoguang Meng <maoguang.meng@mediatek.com>,
+        <gtk_ruiwang@mediatek.com>, <linux-media@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <srv_heupstream@mediatek.com>
+Subject: [PATCH][v2] media: mtk-vcodec: reset segment data then trig decoder
+Date:   Thu, 16 Jan 2020 16:41:02 +0800
+Message-ID: <20200116084102.5079-1-gtk_ruiwang@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200109145729.32898-13-peterx@redhat.com>
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 09:57:20AM -0500, Peter Xu wrote:
-> +	/* If to map any writable page within dirty ring, fail it */
-> +	if ((kvm_page_in_dirty_ring(vcpu->kvm, vma->vm_pgoff) ||
-> +	     kvm_page_in_dirty_ring(vcpu->kvm, vma->vm_pgoff + pages - 1)) &&
-> +	    vma->vm_flags & VM_WRITE)
-> +		return -EINVAL;
-
-Worth thinking about other flags. Do we want to force VM_SHARED?
-Disable VM_EXEC?
+RnJvbTogZ3RrX3J1aXdhbmcgPGd0a19ydWl3YW5nQG1lZGlhdGVrLmNvbT4NCg0KVlA5IGJpdHN0
+cmVhbSBzcGVjaWZpY2F0aW9uIGluZGljYXRlIHNlZ21lbnQgZGF0YSBzaG91bGQgcmVzZXQgdG8N
+CmRlZmF1bHQgd2hlbiBtZWV0IGtleSBmcmFtZXMsIGludHJhIG9ubHkgZnJhbWVzIG9yIGVuYWJs
+ZSBlcnJvcg0KcmVzaWxpZW5jZSBtb2RlLiBTbyBtZW1zZXQgc2VnbWVudGF0aW9uIG1hcCBidWZm
+ZXIgYmVmb3JlIGV2ZXJ5DQpkZWNvZGUgcHJvY2VzcyBpcyBub3QgYXBwcm9wcmlhdGUuDQoNClJl
+c2V0IHNlZ21lbnQgZGF0YSBvbmx5IHdoZW4gbmVlZGVkLCB0aGVuIHN0YXJ0IGRlY29kZXIgaGFy
+ZHdhcmUNCg0KU2lnbmVkLW9mZi1ieTogUnVpIFdhbmcgPGd0a19ydWl3YW5nQG1lZGlhdGVrLmNv
+bT4NCi0tLQ0KQ2hhbmdlZCBpbiB2MjoNCi0gYWRkIGJpdDMmYml0NCBmb3Iga2VybmVsIGFuZCB2
+cHUtZmlybXdhcmUgY29tcGF0aWJpbGl0eSANCi0tLQ0KIC4uLi9wbGF0Zm9ybS9tdGstdmNvZGVj
+L3ZkZWMvdmRlY192cDlfaWYuYyAgICB8IDI5ICsrKysrKysrKysrKysrKystLS0NCiAxIGZpbGUg
+Y2hhbmdlZCwgMjUgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZjb2RlYy92ZGVjL3ZkZWNfdnA5X2lmLmMgYi9k
+cml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay12Y29kZWMvdmRlYy92ZGVjX3ZwOV9pZi5jDQppbmRl
+eCAyNGMxZjBiZjIxNDcuLjA4M2FlY2EyODhmNiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvbWVkaWEv
+cGxhdGZvcm0vbXRrLXZjb2RlYy92ZGVjL3ZkZWNfdnA5X2lmLmMNCisrKyBiL2RyaXZlcnMvbWVk
+aWEvcGxhdGZvcm0vbXRrLXZjb2RlYy92ZGVjL3ZkZWNfdnA5X2lmLmMNCkBAIC0xMTAsNyArMTEw
+LDExIEBAIHN0cnVjdCB2cDlfc2ZfcmVmX2ZiIHsNCiAgKiBAYnVmX2xlbl9zel9jIDogc2l6ZSB1
+c2VkIHRvIHN0b3JlIGNiY3IgcGxhbmUgdWZvIGluZm8gKEFQLVIsIFZQVS1XKQ0KIA0KICAqIEBw
+cm9maWxlIDogcHJvZmlsZSBzcGFyc2VkIGZyb20gdnB1IChBUC1SLCBWUFUtVykNCi0gKiBAc2hv
+d19mcmFtZSA6IGRpc3BsYXkgdGhpcyBmcmFtZSBvciBub3QgKEFQLVIsIFZQVS1XKQ0KKyAqIEBz
+aG93X2ZyYW1lIDogW0JJVCgwKV0gZGlzcGxheSB0aGlzIGZyYW1lIG9yIG5vdCAoQVAtUiwgVlBV
+LVcpDQorICoJW0JJVCgxKV0gcmVzZXQgc2VnbWVudCBkYXRhIG9yIG5vdCAoQVAtUiwgVlBVLVcp
+DQorICoJW0JJVCgyKV0gdHJpZyBkZWNvZGVyIGhhcmR3YXJlIG9yIG5vdCAoQVAtUiwgVlBVLVcp
+DQorICoJW0JJVCgzKV0gbm90aWZ5IFZQVSBzZXQgZGVjb2RlciBiZWhhdmlvciAoQVAtVywgVlBV
+LVIpDQorICoJW0JJVCg0KV0gZG8gbm90IHJlc2V0IHNlZ21lbnQgZGF0YSBiZWZvcmUgZXZlcnkg
+ZnJhbWUgKEFQLVIsIFZQVS1XKQ0KICAqIEBzaG93X2V4aXN0aW5nX2ZyYW1lIDogaW5mb3JtIHRo
+aXMgZnJhbWUgaXMgc2hvdyBleGlzdGluZyBmcmFtZQ0KICAqCShBUC1SLCBWUFUtVykNCiAgKiBA
+ZnJtX3RvX3Nob3dfaWR4IDogaW5kZXggdG8gc2hvdyBmcmFtZSAoQVAtUiwgVlBVLVcpDQpAQCAt
+NDk0LDEyICs0OTgsMTIgQEAgc3RhdGljIHZvaWQgdnA5X3N3YXBfZnJtX2J1ZnMoc3RydWN0IHZk
+ZWNfdnA5X2luc3QgKmluc3QpDQogCQkJCQlmcm1fdG9fc2hvdy0+ZmItPmJhc2VfeS5zaXplKTsN
+CiAJCX0NCiAJCWlmICghdnA5X2lzX3NmX3JlZl9mYihpbnN0LCBpbnN0LT5jdXJfZmIpKSB7DQot
+CQkJaWYgKHZzaS0+c2hvd19mcmFtZSkNCisJCQlpZiAodnNpLT5zaG93X2ZyYW1lICYgQklUKDAp
+KQ0KIAkJCQl2cDlfYWRkX3RvX2ZiX2Rpc3BfbGlzdChpbnN0LCBpbnN0LT5jdXJfZmIpOw0KIAkJ
+fQ0KIAl9IGVsc2Ugew0KIAkJaWYgKCF2cDlfaXNfc2ZfcmVmX2ZiKGluc3QsIGluc3QtPmN1cl9m
+YikpIHsNCi0JCQlpZiAodnNpLT5zaG93X2ZyYW1lKQ0KKwkJCWlmICh2c2ktPnNob3dfZnJhbWUg
+JiBCSVQoMCkpDQogCQkJCXZwOV9hZGRfdG9fZmJfZGlzcF9saXN0KGluc3QsIGZybV90b19zaG93
+LT5mYik7DQogCQl9DQogCX0NCkBAIC04MDAsNiArODA0LDkgQEAgc3RhdGljIGludCB2ZGVjX3Zw
+OV9pbml0KHN0cnVjdCBtdGtfdmNvZGVjX2N0eCAqY3R4KQ0KIAl9DQogDQogCWluc3QtPnZzaSA9
+IChzdHJ1Y3QgdmRlY192cDlfdnNpICopaW5zdC0+dnB1LnZzaTsNCisNCisJaW5zdC0+dnNpLT5z
+aG93X2ZyYW1lIHw9IEJJVCgzKTsNCisNCiAJaW5pdF9hbGxfZmJfbGlzdHMoaW5zdCk7DQogDQog
+CWN0eC0+ZHJ2X2hhbmRsZSA9IGluc3Q7DQpAQCAtODcwLDEzICs4NzcsMjcgQEAgc3RhdGljIGlu
+dCB2ZGVjX3ZwOV9kZWNvZGUodm9pZCAqaF92ZGVjLCBzdHJ1Y3QgbXRrX3Zjb2RlY19tZW0gKmJz
+LA0KIAkJCQkJdnNpLT5zZl9mcm1fc3pbaWR4XSk7DQogCQkJfQ0KIAkJfQ0KLQkJbWVtc2V0KGlu
+c3QtPnNlZ19pZF9idWYudmEsIDAsIGluc3QtPnNlZ19pZF9idWYuc2l6ZSk7DQorDQorCQlpZiAo
+ISh2c2ktPnNob3dfZnJhbWUgJiBCSVQoNCkpKQ0KKwkJCW1lbXNldChpbnN0LT5zZWdfaWRfYnVm
+LnZhLCAwLCBpbnN0LT5zZWdfaWRfYnVmLnNpemUpOw0KKw0KIAkJcmV0ID0gdnB1X2RlY19zdGFy
+dCgmaW5zdC0+dnB1LCBkYXRhLCAzKTsNCiAJCWlmIChyZXQpIHsNCiAJCQltdGtfdmNvZGVjX2Vy
+cihpbnN0LCAidnB1X2RlY19zdGFydCBmYWlsZWQiKTsNCiAJCQlnb3RvIERFQ09ERV9FUlJPUjsN
+CiAJCX0NCiANCisJCWlmICh2c2ktPnNob3dfZnJhbWUgJiBCSVQoMSkpIHsNCisJCQltZW1zZXQo
+aW5zdC0+c2VnX2lkX2J1Zi52YSwgMCwgaW5zdC0+c2VnX2lkX2J1Zi5zaXplKTsNCisNCisJCQlp
+ZiAodnNpLT5zaG93X2ZyYW1lICYgQklUKDIpKSB7DQorCQkJCWlmICh2cHVfZGVjX3N0YXJ0KCZp
+bnN0LT52cHUsIE5VTEwsIDApKSB7DQorCQkJCQltdGtfdmNvZGVjX2VycihpbnN0LCAidnB1IHRy
+aWcgZGVjb2RlciBmYWlsZWQiKTsNCisJCQkJCWdvdG8gREVDT0RFX0VSUk9SOw0KKwkJCQl9DQor
+CQkJfQ0KKwkJfQ0KKw0KIAkJcmV0ID0gdmFsaWRhdGVfdnNpX2FycmF5X2luZGV4ZXMoaW5zdCwg
+dnNpKTsNCiAJCWlmIChyZXQpIHsNCiAJCQltdGtfdmNvZGVjX2VycihpbnN0LCAiSW52YWxpZCB2
+YWx1ZXMgZnJvbSBWUFUuIik7DQotLSANCjIuMTguMA0K
 
