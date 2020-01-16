@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A575C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E70C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EE612072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:41:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AD092072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:41:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579218082;
-	bh=NbGATb5s7hBwbGFwF2RTukJhnBKMnGwdp/jYrhC7C2A=;
+	s=default; t=1579218087;
+	bh=Jas9M4NC9WttapCSqzQTQUihydt2rWA4eNC4cFlbr/U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jdU4WhRIsFJ4Zy/NAP2w8kj3JiG87El02+9N4+fI3joE+e/JwdMe12lMvQKQr5Ymz
-	 edODWjdxM+G2p2KFtVy3JiEbMFoPk5W2rn1pepHGUFD8B51JKssuI5pcjiOUYLSmpj
-	 QOAnclIDnkp4N0sZPzqRVNhPv0/cgD+IHFevzVLQ=
+	b=cAggmz9cuEzygVebzIDRwClsFYg7iUPML4PIr8zRhahRDTTbORNc4FTolz5nvwJRI
+	 dXJ2CnvfNOBKQn1Uh5tsW5cc4y6o9DusnAbrYUCf18DYb0Uq86Quq4+EMLM7aw+BQ6
+	 o4Q+XQ9e8mG/LUVw7u/Aqb+0m344AOzk7yTp/fP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388821AbgAPXlV (ORCPT
+        id S2391862AbgAPXl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:41:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59150 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:41:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390086AbgAPX1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:27:24 -0500
+        id S2388327AbgAPX1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:27:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DA342467C;
-        Thu, 16 Jan 2020 23:27:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C32B2072E;
+        Thu, 16 Jan 2020 23:27:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217243;
-        bh=NbGATb5s7hBwbGFwF2RTukJhnBKMnGwdp/jYrhC7C2A=;
+        s=default; t=1579217240;
+        bh=Jas9M4NC9WttapCSqzQTQUihydt2rWA4eNC4cFlbr/U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o2iOc9GSpwTqSctHKhGjhISth5LICwQwzJHwLHvFS3XoUOLH5NTcPatBQ99qDi92V
-         pcmZL4nLhnHWmpvXw8+m0GTwA+LZwV246mARLmoRAsjfxvydyMvH9CI6B+pEkWpUT9
-         sdqwSzaNJXCqxypgjgH/WrFbobfUgTEHJL/1Jnqg=
+        b=E6dG6kMPEferV7By1oYWzHYBKqkqpknzGd0KlmkVzqgK0Ir0BcaGS6lh1BNngwYdI
+         cSUFFW+J4XkgHCjmAb8wdq5UpmVBPKdNMdwCq59yTOE2+xztyZi2H3wq+6fkH+s/IY
+         IKCfk0Hb9cE9O7zo0eW5VMC+ZprYbqcSo8zpnHgk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        stable@vger.kernel.org,
+        Vladimir Kondratiev <vladimir.kondratiev@intel.com>,
         Paul Burton <paulburton@kernel.org>,
-        mips-creator-ci20-dev@googlegroups.com,
-        letux-kernel@openphoenux.org, linux-mips@vger.kernel.org,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 188/203] mips: Fix gettimeofday() in the vdso library
-Date:   Fri, 17 Jan 2020 00:18:25 +0100
-Message-Id: <20200116231800.725512501@linuxfoundation.org>
+Subject: [PATCH 5.4 187/203] mips: cacheinfo: report shared CPU map
+Date:   Fri, 17 Jan 2020 00:18:24 +0100
+Message-Id: <20200116231800.650807790@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -63,121 +63,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+From: Vladimir Kondratiev <vladimir.kondratiev@intel.com>
 
-[ Upstream commit 7d2aa4bb90f5f6f1b8de8848c26042403f2d7bf9 ]
+[ Upstream commit 3b1313eb32c499d46dc4c3e896d19d9564c879c4 ]
 
-The libc provides a discovery mechanism for vDSO library and its
-symbols. When a symbol is not exposed by the vDSOs the libc falls back
-on the system calls.
+Report L1 caches as shared per core; L2 - per cluster.
 
-With the introduction of the unified vDSO library on mips this behavior
-is not honored anymore by the kernel in the case of gettimeofday().
+This fixes "perf" that went crazy if shared_cpu_map attribute not
+reported on sysfs, in form of
 
-The issue has been noticed and reported due to a dhclient failure on the
-CI20 board:
+/sys/devices/system/cpu/cpu*/cache/index*/shared_cpu_list
+/sys/devices/system/cpu/cpu*/cache/index*/shared_cpu_map
 
-root@letux:~# dhclient
-../../../../lib/isc/unix/time.c:200: Operation not permitted
-root@letux:~#
-
-Restore the original behavior fixing gettimeofday() in the vDSO library.
-
-Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
-Tested-by: H. Nikolaus Schaller <hns@goldelico.com> # CI20 with JZ4780
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@intel.com>
 Signed-off-by: Paul Burton <paulburton@kernel.org>
-Cc: mips-creator-ci20-dev@googlegroups.com
-Cc: letux-kernel@openphoenux.org
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
 Cc: linux-mips@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/include/asm/vdso/gettimeofday.h | 13 -------------
- arch/mips/vdso/vgettimeofday.c            | 20 ++++++++++++++++++++
- 2 files changed, 20 insertions(+), 13 deletions(-)
+ arch/mips/kernel/cacheinfo.c | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/include/asm/vdso/gettimeofday.h b/arch/mips/include/asm/vdso/gettimeofday.h
-index b08825531e9f..0ae9b4cbc153 100644
---- a/arch/mips/include/asm/vdso/gettimeofday.h
-+++ b/arch/mips/include/asm/vdso/gettimeofday.h
-@@ -26,8 +26,6 @@
- 
- #define __VDSO_USE_SYSCALL		ULLONG_MAX
- 
--#ifdef CONFIG_MIPS_CLOCK_VSYSCALL
--
- static __always_inline long gettimeofday_fallback(
- 				struct __kernel_old_timeval *_tv,
- 				struct timezone *_tz)
-@@ -48,17 +46,6 @@ static __always_inline long gettimeofday_fallback(
- 	return error ? -ret : ret;
+diff --git a/arch/mips/kernel/cacheinfo.c b/arch/mips/kernel/cacheinfo.c
+index f777e44653d5..47312c529410 100644
+--- a/arch/mips/kernel/cacheinfo.c
++++ b/arch/mips/kernel/cacheinfo.c
+@@ -50,6 +50,25 @@ static int __init_cache_level(unsigned int cpu)
+ 	return 0;
  }
  
--#else
--
--static __always_inline long gettimeofday_fallback(
--				struct __kernel_old_timeval *_tv,
--				struct timezone *_tz)
--{
--	return -1;
--}
--
--#endif
--
- static __always_inline long clock_gettime_fallback(
- 					clockid_t _clkid,
- 					struct __kernel_timespec *_ts)
-diff --git a/arch/mips/vdso/vgettimeofday.c b/arch/mips/vdso/vgettimeofday.c
-index 6ebdc37c89fc..6b83b6376a4b 100644
---- a/arch/mips/vdso/vgettimeofday.c
-+++ b/arch/mips/vdso/vgettimeofday.c
-@@ -17,12 +17,22 @@ int __vdso_clock_gettime(clockid_t clock,
- 	return __cvdso_clock_gettime32(clock, ts);
- }
- 
-+#ifdef CONFIG_MIPS_CLOCK_VSYSCALL
++static void fill_cpumask_siblings(int cpu, cpumask_t *cpu_map)
++{
++	int cpu1;
 +
-+/*
-+ * This is behind the ifdef so that we don't provide the symbol when there's no
-+ * possibility of there being a usable clocksource, because there's nothing we
-+ * can do without it. When libc fails the symbol lookup it should fall back on
-+ * the standard syscall path.
-+ */
- int __vdso_gettimeofday(struct __kernel_old_timeval *tv,
- 			struct timezone *tz)
- {
- 	return __cvdso_gettimeofday(tv, tz);
- }
- 
-+#endif /* CONFIG_MIPS_CLOCK_VSYSCALL */
++	for_each_possible_cpu(cpu1)
++		if (cpus_are_siblings(cpu, cpu1))
++			cpumask_set_cpu(cpu1, cpu_map);
++}
 +
- int __vdso_clock_getres(clockid_t clock_id,
- 			struct old_timespec32 *res)
- {
-@@ -43,12 +53,22 @@ int __vdso_clock_gettime(clockid_t clock,
- 	return __cvdso_clock_gettime(clock, ts);
- }
- 
-+#ifdef CONFIG_MIPS_CLOCK_VSYSCALL
++static void fill_cpumask_cluster(int cpu, cpumask_t *cpu_map)
++{
++	int cpu1;
++	int cluster = cpu_cluster(&cpu_data[cpu]);
 +
-+/*
-+ * This is behind the ifdef so that we don't provide the symbol when there's no
-+ * possibility of there being a usable clocksource, because there's nothing we
-+ * can do without it. When libc fails the symbol lookup it should fall back on
-+ * the standard syscall path.
-+ */
- int __vdso_gettimeofday(struct __kernel_old_timeval *tv,
- 			struct timezone *tz)
- {
- 	return __cvdso_gettimeofday(tv, tz);
- }
- 
-+#endif /* CONFIG_MIPS_CLOCK_VSYSCALL */
++	for_each_possible_cpu(cpu1)
++		if (cpu_cluster(&cpu_data[cpu1]) == cluster)
++			cpumask_set_cpu(cpu1, cpu_map);
++}
 +
- int __vdso_clock_getres(clockid_t clock_id,
- 			struct __kernel_timespec *res)
+ static int __populate_cache_leaves(unsigned int cpu)
  {
+ 	struct cpuinfo_mips *c = &current_cpu_data;
+@@ -57,14 +76,20 @@ static int __populate_cache_leaves(unsigned int cpu)
+ 	struct cacheinfo *this_leaf = this_cpu_ci->info_list;
+ 
+ 	if (c->icache.waysize) {
++		/* L1 caches are per core */
++		fill_cpumask_siblings(cpu, &this_leaf->shared_cpu_map);
+ 		populate_cache(dcache, this_leaf, 1, CACHE_TYPE_DATA);
++		fill_cpumask_siblings(cpu, &this_leaf->shared_cpu_map);
+ 		populate_cache(icache, this_leaf, 1, CACHE_TYPE_INST);
+ 	} else {
+ 		populate_cache(dcache, this_leaf, 1, CACHE_TYPE_UNIFIED);
+ 	}
+ 
+-	if (c->scache.waysize)
++	if (c->scache.waysize) {
++		/* L2 cache is per cluster */
++		fill_cpumask_cluster(cpu, &this_leaf->shared_cpu_map);
+ 		populate_cache(scache, this_leaf, 2, CACHE_TYPE_UNIFIED);
++	}
+ 
+ 	if (c->tcache.waysize)
+ 		populate_cache(tcache, this_leaf, 3, CACHE_TYPE_UNIFIED);
 -- 
 2.20.1
 
