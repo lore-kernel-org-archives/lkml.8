@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2555C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9B5C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:33:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 810852072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D94A20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:33:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217627;
-	bh=XtUxArYcFeUdl5X81sZByu8VjAPzL60+UBOOD1iDiAc=;
+	s=default; t=1579217632;
+	bh=Of7jH9dzjJ+n0x/GVK21C8mrksr3D2a+CNZuaImdXXE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C5YrdjgqF9AkqfjcNSf7+GPKNNVLbmjWvSsqhanZF1PyU87+rjbDuuYrW4HLrIgb9
-	 MZLETI/Vh7SQHHgJsJ0WoI3OOOE7/fmrebRy1vId3VInfGq0bbgfEfQEvsAutodV6a
-	 9/QUuPxUAReqo4W70RVWD2SAraTdeCt15Yr87Rh4=
+	b=QgkG3erg3lvf/foOnJTubsapOEzIwRT9RLbsQlII/6owj/4RkkCMM+IVWz7zx+V7+
+	 fgzOZgpbSNHTGLaAT293WnOulm8sZ+VHsP/0FizMD5ZPjMPUQVCC0fo+3f7r5NZGYd
+	 TIq79PP4vUQio065gDM8LiL43oV2B5oSRp4xuzMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404430AbgAPXdq (ORCPT
+        id S2404445AbgAPXdv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:33:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44400 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:33:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404414AbgAPXdm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:33:42 -0500
+        id S2404407AbgAPXdp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:33:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0CB820684;
-        Thu, 16 Jan 2020 23:33:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25F7F20661;
+        Thu, 16 Jan 2020 23:33:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217622;
-        bh=XtUxArYcFeUdl5X81sZByu8VjAPzL60+UBOOD1iDiAc=;
+        s=default; t=1579217624;
+        bh=Of7jH9dzjJ+n0x/GVK21C8mrksr3D2a+CNZuaImdXXE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xULWM72h+ENBOCFJBw9nX+u9j/ekymrgoxSfmaAIRIEBVagwGiW0cn25cRd9oSuXA
-         CTmgpzXgPFESKDg1C16QoelU0imcQ0EovlfSxxZzBo6FJ/nVTMZeNMkpR4UNRNusYB
-         YfBFVB2hObbSOLcPvpLiL3ffaKuwatuT4CkM+pMc=
+        b=aWCr/GaC2Xil+/a3U7HCQquF/hyg41ufcgXrZX/YYAZ1J1K7R0VvpiZQ2DZMtjMeb
+         6A+i0aoH79GQYIMDYl9pQOx2Bp5t0xMKOx93IbA6RyXbyq4dwd9QeudOaum41mCwbq
+         xqghs9LC6vTYAszP02IhW3kxGo6zTWnbM99L3onQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>
-Subject: [PATCH 4.14 57/71] mtd: spi-nor: fix silent truncation in spi_nor_read_raw()
-Date:   Fri, 17 Jan 2020 00:18:55 +0100
-Message-Id: <20200116231717.409223087@linuxfoundation.org>
+        stable@vger.kernel.org, Mans Rullgard <mans@mansr.com>,
+        Nicolas Ferre <nicolas.ferre@atmel.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.14 58/71] spi: atmel: fix handling of cs_change set on non-last xfer
+Date:   Fri, 17 Jan 2020 00:18:56 +0100
+Message-Id: <20200116231717.550684125@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231709.377772748@linuxfoundation.org>
 References: <20200116231709.377772748@linuxfoundation.org>
@@ -60,34 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+From: Mans Rullgard <mans@mansr.com>
 
-commit 3d63ee5deb466fd66ed6ffb164a87ce36425cf36 upstream.
+commit fed8d8c7a6dc2a76d7764842853d81c770b0788e upstream.
 
-spi_nor_read_raw() assigns the result of 'ssize_t spi_nor_read_data()'
-to the 'int ret' variable, while 'ssize_t' is a 64-bit type and *int*
-is a 32-bit type on the 64-bit machines. This silent truncation isn't
-really valid, so fix up the variable's type.
+The driver does the wrong thing when cs_change is set on a non-last
+xfer in a message.  When cs_change is set, the driver deactivates the
+CS and leaves it off until a later xfer again has cs_change set whereas
+it should be briefly toggling CS off and on again.
 
-Fixes: f384b352cbf0 ("mtd: spi-nor: parse Serial Flash Discoverable Parameters (SFDP) tables")
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+This patch brings the behaviour of the driver back in line with the
+documentation and common sense.  The delay of 10 us is the same as is
+used by the default spi_transfer_one_message() function in spi.c.
+[gregory: rebased on for-5.5 from spi tree]
+Fixes: 8090d6d1a415 ("spi: atmel: Refactor spi-atmel to use SPI framework queue")
+Signed-off-by: Mans Rullgard <mans@mansr.com>
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Link: https://lore.kernel.org/r/20191018153504.4249-1-gregory.clement@bootlin.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/spi-nor/spi-nor.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-atmel.c |   10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -1445,7 +1445,7 @@ static int macronix_quad_enable(struct s
-  */
- static int write_sr_cr(struct spi_nor *nor, u8 *sr_cr)
- {
--	int ret;
-+	ssize_t ret;
+--- a/drivers/spi/spi-atmel.c
++++ b/drivers/spi/spi-atmel.c
+@@ -301,7 +301,6 @@ struct atmel_spi {
+ 	bool			use_cs_gpios;
  
- 	write_enable(nor);
+ 	bool			keep_cs;
+-	bool			cs_active;
  
+ 	u32			fifo_size;
+ };
+@@ -1338,11 +1337,9 @@ static int atmel_spi_one_transfer(struct
+ 				 &msg->transfers)) {
+ 			as->keep_cs = true;
+ 		} else {
+-			as->cs_active = !as->cs_active;
+-			if (as->cs_active)
+-				cs_activate(as, msg->spi);
+-			else
+-				cs_deactivate(as, msg->spi);
++			cs_deactivate(as, msg->spi);
++			udelay(10);
++			cs_activate(as, msg->spi);
+ 		}
+ 	}
+ 
+@@ -1365,7 +1362,6 @@ static int atmel_spi_transfer_one_messag
+ 	atmel_spi_lock(as);
+ 	cs_activate(as, spi);
+ 
+-	as->cs_active = true;
+ 	as->keep_cs = false;
+ 
+ 	msg->status = 0;
 
 
