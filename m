@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D966EC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C054C33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B32822073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:15:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7475E20684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:15:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198517;
-	bh=dD48XLursiYa//ePhMcMMl4C1MPrYkYGKY8FF/TExg4=;
+	s=default; t=1579198535;
+	bh=+MuCIbyR++NZWrbz6ckxm4mC9ZSU2sDaXve+JGekCIU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XQB4EkEQITPWdOgJoM7imdF5G+Xmpp7IMypv1NDchfvFjx0K95mKy9GX3JQ55lTOu
-	 1kwuyzYPRvQngwEO2XVMPKkGVGdDtorc6Gu4w8uI06X+dgtJFcAz1KyHkOugcQ2OCS
-	 mDXdUnhEBq8y7C1DwIttHXwqO/7Z9hJyMrZG4yfY=
+	b=TkpYRAfm0rGX1S242VQTfCEvvbczaPt36DgA6I4/3g1URMqa1kKicEwpB0oHu3MGf
+	 4qhMBPPh1Po40KcYv5tbUPbEa+w1Gsjnis9gDWmgkESgxY4NAPkR+W4Sf50idp3+g2
+	 PI8qRFKEEOGqS0Y9OKZX54z3HGZSXUIQ/rwFxAtU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436467AbgAPSPQ (ORCPT
+        id S2392829AbgAPR3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:15:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41878 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:29:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392871AbgAPR3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:29:49 -0500
+        id S2392779AbgAPR3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:29:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F4F02470D;
-        Thu, 16 Jan 2020 17:29:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84FD9246FB;
+        Thu, 16 Jan 2020 17:29:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195789;
-        bh=dD48XLursiYa//ePhMcMMl4C1MPrYkYGKY8FF/TExg4=;
+        s=default; t=1579195778;
+        bh=+MuCIbyR++NZWrbz6ckxm4mC9ZSU2sDaXve+JGekCIU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DZmlqdvZVywIM7sIbFoRHeGTLSb+2RoS2daKQPJozSJd4kcncmMqZI75C7Ai22UPS
-         hnejJmjatu9KlG75dB3oxCkeAw+LBQ+IlL2LIovdM0raEqdxElIlcL3UWEZnTH4w20
-         8zapg/LofbksdntflHMRsS04fjS4q39N6fBo77Xw=
+        b=lPx7U92spo0r4WZKJZkoJ9OJQnZCH2ExYlyqGwZffAtowtbUeuXpqYf6WAfv/wcp+
+         D3MxAYQU9rdfZKOYnLfEMVIpTtjLqG4Gs7gR1VXwCrtN+dQzWy4ckQOEEyDY8YKKFZ
+         mQ8QimK124zGze1wadJN1fg9wL6DYjO3edIEcdAM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 311/371] nvme: retain split access workaround for capability reads
-Date:   Thu, 16 Jan 2020 12:23:03 -0500
-Message-Id: <20200116172403.18149-254-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Igor Russkikh <igor.russkikh@aquantia.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 303/371] net: aquantia: Fix aq_vec_isr_legacy() return value
+Date:   Thu, 16 Jan 2020 12:22:55 -0500
+Message-Id: <20200116172403.18149-246-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -59,55 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 3a8ecc935efabdad106b5e06d07b150c394b4465 ]
+[ Upstream commit 31aefe14bc9f56566041303d733fda511d3a1c3e ]
 
-Commit 7fd8930f26be4
+The irqreturn_t type is an enum or an unsigned int in GCC.  That
+creates to problems because it can't detect if the
+self->aq_hw_ops->hw_irq_read() call fails and at the end the function
+always returns IRQ_HANDLED.
 
-  "nvme: add a common helper to read Identify Controller data"
+drivers/net/ethernet/aquantia/atlantic/aq_vec.c:316 aq_vec_isr_legacy() warn: unsigned 'err' is never less than zero.
+drivers/net/ethernet/aquantia/atlantic/aq_vec.c:329 aq_vec_isr_legacy() warn: always true condition '(err >= 0) => (0-u32max >= 0)'
 
-has re-introduced an issue that we have attempted to work around in the
-past, in commit a310acd7a7ea ("NVMe: use split lo_hi_{read,write}q").
-
-The problem is that some PCIe NVMe controllers do not implement 64-bit
-outbound accesses correctly, which is why the commit above switched
-to using lo_hi_[read|write]q for all 64-bit BAR accesses occuring in
-the code.
-
-In the mean time, the NVMe subsystem has been refactored, and now calls
-into the PCIe support layer for NVMe via a .reg_read64() method, which
-fails to use lo_hi_readq(), and thus reintroduces the problem that the
-workaround above aimed to address.
-
-Given that, at the moment, .reg_read64() is only used to read the
-capability register [which is known to tolerate split reads], let's
-switch .reg_read64() to lo_hi_readq() as well.
-
-This fixes a boot issue on some ARM boxes with NVMe behind a Synopsys
-DesignWare PCIe host controller.
-
-Fixes: 7fd8930f26be4 ("nvme: add a common helper to read Identify Controller data")
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Fixes: 970a2e9864b0 ("net: ethernet: aquantia: Vector operations")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Igor Russkikh <igor.russkikh@aquantia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/aquantia/atlantic/aq_vec.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index cd11cced3678..3788c053a0b1 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -2274,7 +2274,7 @@ static int nvme_pci_reg_write32(struct nvme_ctrl *ctrl, u32 off, u32 val)
- 
- static int nvme_pci_reg_read64(struct nvme_ctrl *ctrl, u32 off, u64 *val)
+diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_vec.c b/drivers/net/ethernet/aquantia/atlantic/aq_vec.c
+index 5fecc9a099ef..bb2894a333f2 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_vec.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_vec.c
+@@ -310,15 +310,13 @@ irqreturn_t aq_vec_isr_legacy(int irq, void *private)
  {
--	*val = readq(to_nvme_dev(ctrl)->bar + off);
-+	*val = lo_hi_readq(to_nvme_dev(ctrl)->bar + off);
- 	return 0;
+ 	struct aq_vec_s *self = private;
+ 	u64 irq_mask = 0U;
+-	irqreturn_t err = 0;
++	int err;
+ 
+-	if (!self) {
+-		err = -EINVAL;
+-		goto err_exit;
+-	}
++	if (!self)
++		return IRQ_NONE;
+ 	err = self->aq_hw_ops->hw_irq_read(self->aq_hw, &irq_mask);
+ 	if (err < 0)
+-		goto err_exit;
++		return IRQ_NONE;
+ 
+ 	if (irq_mask) {
+ 		self->aq_hw_ops->hw_irq_disable(self->aq_hw,
+@@ -326,11 +324,10 @@ irqreturn_t aq_vec_isr_legacy(int irq, void *private)
+ 		napi_schedule(&self->napi);
+ 	} else {
+ 		self->aq_hw_ops->hw_irq_enable(self->aq_hw, 1U);
+-		err = IRQ_NONE;
++		return IRQ_NONE;
+ 	}
+ 
+-err_exit:
+-	return err >= 0 ? IRQ_HANDLED : IRQ_NONE;
++	return IRQ_HANDLED;
  }
  
+ cpumask_t *aq_vec_get_affinity_mask(struct aq_vec_s *self)
 -- 
 2.20.1
 
