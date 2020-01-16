@@ -2,101 +2,128 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9559FC33CB2
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A8DC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D50B2084D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:24:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YJBkhnue"
+	by mail.kernel.org (Postfix) with ESMTP id CF6462084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 03:29:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729566AbgAPDYk (ORCPT
+        id S1729346AbgAPD3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 22:24:40 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:53924 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbgAPDYk (ORCPT
+        Wed, 15 Jan 2020 22:29:04 -0500
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:53451 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726587AbgAPD3D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 22:24:40 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G3DudA080521;
-        Thu, 16 Jan 2020 03:24:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=QrxvPbffJUGUOyHbYVqA0XbXQBPLyN1MOfRE3ofpSqE=;
- b=YJBkhnuetFcADbYmdE9J+x0uM7uSbl//6PT2F6e0KpyTx1kTb6kTTgrzP8zHm8F+tp5L
- EOo48Ikj3bKoYdZcYptgABuv7EYKbeNDhg4C4fyDl2dcQC9avuySp436vxH0exWmuDLb
- pES/cURk+q8Tf0P28NIMZe+oYfxA2HMLyciEnEjDjDlavqwyYRr48fQ2VdNmXs4DgUR4
- eyuKEaJagrFpiqw3VOFlyMtAIUp4uTqy/O6eCZ0+qX06z7FxERUaF7ywjj/lt0SIyyQh
- pfpoeWnXyd2nhpy4MMDApmva/IlRYm4doL2/JZkmImYEPozukeLD2VslQsC3YvBj4Hxc 9g== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2xf73tyvj8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 03:24:12 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00G3EZ5G106041;
-        Thu, 16 Jan 2020 03:24:12 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2xj61ktkmf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 03:24:12 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00G3OAK4024011;
-        Thu, 16 Jan 2020 03:24:10 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jan 2020 19:24:10 -0800
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <jejb@linux.ibm.com>, <beanhuo@micron.com>,
-        <asutoshd@codeaurora.org>, <cang@codeaurora.org>,
-        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
-        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
-        <andy.teng@mediatek.com>
-Subject: Re: [PATCH v3 0/2] scsi: ufs: pass device information to apply_dev_quirks
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <1578726707-6596-1-git-send-email-stanley.chu@mediatek.com>
-Date:   Wed, 15 Jan 2020 22:24:06 -0500
-In-Reply-To: <1578726707-6596-1-git-send-email-stanley.chu@mediatek.com>
-        (Stanley Chu's message of "Sat, 11 Jan 2020 15:11:45 +0800")
-Message-ID: <yq136cgozhl.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001160026
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001160026
+        Wed, 15 Jan 2020 22:29:03 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04452;MF=zhangliguang@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0TnrNuc._1579145331;
+Received: from localhost(mailfrom:zhangliguang@linux.alibaba.com fp:SMTPD_---0TnrNuc._1579145331)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 16 Jan 2020 11:29:00 +0800
+From:   luanshi <zhangliguang@linux.alibaba.com>
+To:     james.morse@arm.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [V2 1/3] firmware: arm_sdei: fix possible deadlock
+Date:   Thu, 16 Jan 2020 11:28:49 +0800
+Message-Id: <1579145331-78633-1-git-send-email-zhangliguang@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+We call sdei_reregister_event() with sdei_list_lock held but
+_sdei_event_register() and sdei_event_destroy() also acquires
+sdei_list_lock thus creating A-A deadlock.
 
-Stanley,
+Fixes: da351827240e ("firmware: arm_sdei: Add support for CPU and system
+power states")
 
-> Currently UFS driver has "global" device quirk scheme to allow driver
-> applying special handling for certain UFS devive models.
+Signed-off-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
+---
+ drivers/firmware/arm_sdei.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-Applied to 5.6/scsi-queue, thanks!
-
+diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
+index a479023..37e9bf0 100644
+--- a/drivers/firmware/arm_sdei.c
++++ b/drivers/firmware/arm_sdei.c
+@@ -45,8 +45,11 @@ static asmlinkage void (*sdei_firmware_call)(unsigned long function_id,
+ static unsigned long sdei_entry_point;
+ 
+ struct sdei_event {
+-	/* These three are protected by the sdei_list_lock */
++	/* protected by the sdei_list_lock */
+ 	struct list_head	list;
++
++	spinlock_t		sdei_event_lock;
++	/* These two are protected by the sdei_event_lock */
+ 	bool			reregister;
+ 	bool			reenable;
+ 
+@@ -214,6 +217,7 @@ static struct sdei_event *sdei_event_create(u32 event_num,
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	INIT_LIST_HEAD(&event->list);
++	spin_lock_init(&event->sdei_event_lock);
+ 	event->event_num = event_num;
+ 
+ 	err = sdei_api_event_get_info(event_num, SDEI_EVENT_INFO_EV_PRIORITY,
+@@ -412,9 +416,9 @@ int sdei_event_enable(u32 event_num)
+ 		return -ENOENT;
+ 	}
+ 
+-	spin_lock(&sdei_list_lock);
++	spin_lock(&event->sdei_event_lock);
+ 	event->reenable = true;
+-	spin_unlock(&sdei_list_lock);
++	spin_unlock(&event->sdei_event_lock);
+ 
+ 	if (event->type == SDEI_EVENT_TYPE_SHARED)
+ 		err = sdei_api_event_enable(event->event_num);
+@@ -491,10 +495,10 @@ static int _sdei_event_unregister(struct sdei_event *event)
+ {
+ 	lockdep_assert_held(&sdei_events_lock);
+ 
+-	spin_lock(&sdei_list_lock);
++	spin_lock(&event->sdei_event_lock);
+ 	event->reregister = false;
+ 	event->reenable = false;
+-	spin_unlock(&sdei_list_lock);
++	spin_unlock(&event->sdei_event_lock);
+ 
+ 	if (event->type == SDEI_EVENT_TYPE_SHARED)
+ 		return sdei_api_event_unregister(event->event_num);
+@@ -585,9 +589,9 @@ static int _sdei_event_register(struct sdei_event *event)
+ 
+ 	lockdep_assert_held(&sdei_events_lock);
+ 
+-	spin_lock(&sdei_list_lock);
++	spin_lock(&event->sdei_event_lock);
+ 	event->reregister = true;
+-	spin_unlock(&sdei_list_lock);
++	spin_unlock(&event->sdei_event_lock);
+ 
+ 	if (event->type == SDEI_EVENT_TYPE_SHARED)
+ 		return sdei_api_event_register(event->event_num,
+@@ -598,10 +602,10 @@ static int _sdei_event_register(struct sdei_event *event)
+ 
+ 	err = sdei_do_cross_call(_local_event_register, event);
+ 	if (err) {
+-		spin_lock(&sdei_list_lock);
++		spin_lock(&event->sdei_event_lock);
+ 		event->reregister = false;
+ 		event->reenable = false;
+-		spin_unlock(&sdei_list_lock);
++		spin_unlock(&event->sdei_event_lock);
+ 
+ 		sdei_do_cross_call(_local_event_unregister, event);
+ 	}
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+1.8.3.1
+
