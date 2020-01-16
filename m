@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6F9C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1AACC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E52202072E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91E2620684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:22:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579216973;
-	bh=a5YYx2ZQyypM/51X9oNyFaPwgNPW3b4jNytdJ17wumg=;
+	s=default; t=1579216975;
+	bh=3oRBICP9LGTX4WZJ2m1pX3TqhBaRwmsSoXD/shiVEPc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CM43MyzAunzVbA5uk4eU5wkPWNyWtpjX4SbN5m8DrLnhth7wkhO/JzbeVXu/rs6XA
-	 xVerVt+/t6/ozxl9v2kYGY7uaRijZ0cYGFJoJsjFlY2Se9HLtvs6VkzuTyJW++yGN1
-	 Xzo7pl93z2GkDhLHKp4ql81F0DV8oeGXfCSjtli4=
+	b=OT5UqyA374j4n8Ynj65JFhz07jnV0mFQf9GRBU747HlHH1P9jQO364q4BytoxG6at
+	 Kl6Gtakq6JqQeNx+4NgLdxABAfPQp5CzRSe/ZVq3BW5pn2xO6hjKkrkIvI6ZFSrhFD
+	 DxgWtoyfNKBAFAZNApO/g6Qynuoqid/nLLiyI8m4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390948AbgAPXWv (ORCPT
+        id S2390957AbgAPXWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:22:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50636 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:22:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729157AbgAPXWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:22:42 -0500
+        id S2390934AbgAPXWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:22:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4691E20684;
-        Thu, 16 Jan 2020 23:22:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 135DF20684;
+        Thu, 16 Jan 2020 23:22:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579216961;
-        bh=a5YYx2ZQyypM/51X9oNyFaPwgNPW3b4jNytdJ17wumg=;
+        s=default; t=1579216966;
+        bh=3oRBICP9LGTX4WZJ2m1pX3TqhBaRwmsSoXD/shiVEPc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rpGgf2Tb23lIU8SdMnUnbTH6sxa+3kX+UJQxLB93Muds0OW/EHzvLnKV3+86/UWbr
-         cUD7niGZeS+4u6WTFiKDXCc82YWWBFMo4gAZktD8mWQaKKSkNAFCTYwgDgiH63gpBR
-         suR6NtMdMIQaKRi4MlpxA8uGkD+2C3Y7cKYdHdrA=
+        b=j6FeXBPjb/rlBS7Q7QTHHYyJo6O3zXyA+LfHjm/8T7GlDo8RA7KQyM2BOoWUNYFDW
+         kjSdtUdLuil7HA0LtucVe03y6mYOafLki55zOQoKbZ3vaHUacIANtDFrz53NELRqI/
+         K4/yl7piqKwd3wVxrlkRq4MdG6keSCMr2bc6FGe8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.4 065/203] RDMA/siw: Fix port number endianness in a debug message
-Date:   Fri, 17 Jan 2020 00:16:22 +0100
-Message-Id: <20200116231749.774888260@linuxfoundation.org>
+        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Subject: [PATCH 5.4 093/203] xprtrdma: Fix create_qp crash on device unload
+Date:   Fri, 17 Jan 2020 00:16:50 +0100
+Message-Id: <20200116231753.806565095@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -60,41 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-commit 050dbddf249eee3e936b5734c30b2e1b427efdc3 upstream.
+commit b32b9ed493f938e191f790a0991d20b18b38c35b upstream.
 
-sin_port and sin6_port are big endian member variables. Convert these port
-numbers into CPU endianness before printing.
+On device re-insertion, the RDMA device driver crashes trying to set
+up a new QP:
 
-Link: https://lore.kernel.org/r/20190930231707.48259-5-bvanassche@acm.org
-Fixes: 6c52fdc244b5 ("rdma/siw: connection management")
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Bernard Metzler <bmt@zurich.ibm.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Nov 27 16:32:06 manet kernel: BUG: kernel NULL pointer dereference, address: 00000000000001c0
+Nov 27 16:32:06 manet kernel: #PF: supervisor write access in kernel mode
+Nov 27 16:32:06 manet kernel: #PF: error_code(0x0002) - not-present page
+Nov 27 16:32:06 manet kernel: PGD 0 P4D 0
+Nov 27 16:32:06 manet kernel: Oops: 0002 [#1] SMP
+Nov 27 16:32:06 manet kernel: CPU: 1 PID: 345 Comm: kworker/u28:0 Tainted: G        W         5.4.0 #852
+Nov 27 16:32:06 manet kernel: Hardware name: Supermicro SYS-6028R-T/X10DRi, BIOS 1.1a 10/16/2015
+Nov 27 16:32:06 manet kernel: Workqueue: xprtiod xprt_rdma_connect_worker [rpcrdma]
+Nov 27 16:32:06 manet kernel: RIP: 0010:atomic_try_cmpxchg+0x2/0x12
+Nov 27 16:32:06 manet kernel: Code: ff ff 48 8b 04 24 5a c3 c6 07 00 0f 1f 40 00 c3 31 c0 48 81 ff 08 09 68 81 72 0c 31 c0 48 81 ff 83 0c 68 81 0f 92 c0 c3 8b 06 <f0> 0f b1 17 0f 94 c2 84 d2 75 02 89 06 88 d0 c3 53 ba 01 00 00 00
+Nov 27 16:32:06 manet kernel: RSP: 0018:ffffc900035abbf0 EFLAGS: 00010046
+Nov 27 16:32:06 manet kernel: RAX: 0000000000000000 RBX: 00000000000001c0 RCX: 0000000000000000
+Nov 27 16:32:06 manet kernel: RDX: 0000000000000001 RSI: ffffc900035abbfc RDI: 00000000000001c0
+Nov 27 16:32:06 manet kernel: RBP: ffffc900035abde0 R08: 000000000000000e R09: ffffffffffffc000
+Nov 27 16:32:06 manet kernel: R10: 0000000000000000 R11: 000000000002e800 R12: ffff88886169d9f8
+Nov 27 16:32:06 manet kernel: R13: ffff88886169d9f4 R14: 0000000000000246 R15: 0000000000000000
+Nov 27 16:32:06 manet kernel: FS:  0000000000000000(0000) GS:ffff88846fa40000(0000) knlGS:0000000000000000
+Nov 27 16:32:06 manet kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+Nov 27 16:32:06 manet kernel: CR2: 00000000000001c0 CR3: 0000000002009006 CR4: 00000000001606e0
+Nov 27 16:32:06 manet kernel: Call Trace:
+Nov 27 16:32:06 manet kernel: do_raw_spin_lock+0x2f/0x5a
+Nov 27 16:32:06 manet kernel: create_qp_common.isra.47+0x856/0xadf [mlx4_ib]
+Nov 27 16:32:06 manet kernel: ? slab_post_alloc_hook.isra.60+0xa/0x1a
+Nov 27 16:32:06 manet kernel: ? __kmalloc+0x125/0x139
+Nov 27 16:32:06 manet kernel: mlx4_ib_create_qp+0x57f/0x972 [mlx4_ib]
+
+The fix is to copy the qp_init_attr struct that was just created by
+rpcrdma_ep_create() instead of using the one from the previous
+connection instance.
+
+Fixes: 98ef77d1aaa7 ("xprtrdma: Send Queue size grows after a reconnect")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/sw/siw/siw_cm.c |    9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ net/sunrpc/xprtrdma/verbs.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/infiniband/sw/siw/siw_cm.c
-+++ b/drivers/infiniband/sw/siw/siw_cm.c
-@@ -1867,14 +1867,7 @@ static int siw_listen_address(struct iw_
- 	list_add_tail(&cep->listenq, (struct list_head *)id->provider_data);
- 	cep->state = SIW_EPSTATE_LISTENING;
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -607,6 +607,7 @@ static int rpcrdma_ep_recreate_xprt(stru
+ 				    struct ib_qp_init_attr *qp_init_attr)
+ {
+ 	struct rpcrdma_ia *ia = &r_xprt->rx_ia;
++	struct rpcrdma_ep *ep = &r_xprt->rx_ep;
+ 	int rc, err;
  
--	if (addr_family == AF_INET)
--		siw_dbg(id->device, "Listen at laddr %pI4 %u\n",
--			&(((struct sockaddr_in *)laddr)->sin_addr),
--			((struct sockaddr_in *)laddr)->sin_port);
--	else
--		siw_dbg(id->device, "Listen at laddr %pI6 %u\n",
--			&(((struct sockaddr_in6 *)laddr)->sin6_addr),
--			((struct sockaddr_in6 *)laddr)->sin6_port);
-+	siw_dbg(id->device, "Listen at laddr %pISp\n", laddr);
+ 	trace_xprtrdma_reinsert(r_xprt);
+@@ -621,6 +622,7 @@ static int rpcrdma_ep_recreate_xprt(stru
+ 		pr_err("rpcrdma: rpcrdma_ep_create returned %d\n", err);
+ 		goto out2;
+ 	}
++	memcpy(qp_init_attr, &ep->rep_attr, sizeof(*qp_init_attr));
  
- 	return 0;
- 
+ 	rc = -ENETUNREACH;
+ 	err = rdma_create_qp(ia->ri_id, ia->ri_pd, qp_init_attr);
 
 
