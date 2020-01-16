@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30851C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 322B8C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09A0F2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:56:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F00F72053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:56:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200997;
-	bh=N5ERwiDvrEhKjqvi4Vr6Ok+XCMKgXxIGwQY4H36gUX0=;
+	s=default; t=1579201008;
+	bh=6thWP7j/k1pgl9Cw4eqJkOw8u52jLWNsZu9rydc9Gn4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z+0572vVoPv5W35lrm+kj3YlQiyVMu6VNqcFPR03yHfMX6Qk6zHlG8QsstuwzElwP
-	 WJ8nT+fimUfsjBD18MqLEEWFelrfReffpbdxxmbx4V3qOenKdUiYJGN8yUCxT9Obyv
-	 0zhLCZEHSwxzJeKEfNgNve9sobEdpdkPTcnHoTAk=
+	b=dooog+EOIcNWPIX0rkLuQjQRAFaOuhtpGWCR7LSan5WAsMUS8JmznxaNQrms4ZmmB
+	 p5EMedE8reNRh3LxS+SvgtNSS2ZCJFMI3rCC4WHtrMhbcm7UUDVvJnU2ZQa/THed4v
+	 lyPFGEy/lLpFgSFtSXAjN2NfNDfDzoHJUWMeD3hc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389130AbgAPRHR (ORCPT
+        id S2403916AbgAPS4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:07:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38604 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:56:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389089AbgAPRHK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:07:10 -0500
+        id S2389103AbgAPRHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:07:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E20A1217F4;
-        Thu, 16 Jan 2020 17:07:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75F12205F4;
+        Thu, 16 Jan 2020 17:07:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194430;
-        bh=N5ERwiDvrEhKjqvi4Vr6Ok+XCMKgXxIGwQY4H36gUX0=;
+        s=default; t=1579194431;
+        bh=6thWP7j/k1pgl9Cw4eqJkOw8u52jLWNsZu9rydc9Gn4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zU3b24f7I/qJ8SvqTqQtygrPDhdT0zsAD5YGYbh/W0GP0qJzI5xnsYUJKiLXII8yV
-         UcVoHxLBhYP0Cnv+zhR264As5opZ9M+z7ej7Jh3F+gpctWR88MuzcXQ6tiS/mG0PfX
-         MD+77eiWt8LPwTMMI5mWYlVVws8szT2bc7J8tvlQ=
+        b=k5RT2mClGd/6z/GTu62kyIXiErbZZyIrh/4t2An2VtW+Y0SYTYzUW8WBiGqNnYLMo
+         QywuQ7pAaZLv0tyej3lkFXskmA2jktQD3GiJysUhSRY3oqeH7jWtg0QUQ/FxWU0jZh
+         CRXpN1r8Bm9luG2p0kgo3q3Zvmj9nsf3TXnmpLfo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        "Lad Prabhakar" <prabhakar.csengg@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 346/671] media: davinci/vpbe: array underflow in vpbe_enum_outputs()
-Date:   Thu, 16 Jan 2020 11:59:44 -0500
-Message-Id: <20200116170509.12787-83-sashal@kernel.org>
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 347/671] platform/x86: alienware-wmi: printing the wrong error code
+Date:   Thu, 16 Jan 2020 11:59:45 -0500
+Message-Id: <20200116170509.12787-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -63,50 +63,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit b72845ee5577b227131b1fef23f9d9a296621d7b ]
+[ Upstream commit 6d1f8b3d75419a8659ac916a1e9543bb3513a882 ]
 
-In vpbe_enum_outputs() we check if (temp_index >= cfg->num_outputs) but
-the problem is that "temp_index" can be negative.  This patch changes
-the types to unsigned to address this array underflow bug.
+The "out_data" variable is uninitialized at the point.  Originally, this
+used to print "status" instead and that seems like the correct thing to
+print.
 
-Fixes: 66715cdc3224 ("[media] davinci vpbe: VPBE display driver")
-
+Fixes: bc2ef884320b ("alienware-wmi: For WMAX HDMI method, introduce a way to query HDMI cable status")
 Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: "Lad Prabhakar" <prabhakar.csengg@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/davinci/vpbe.c | 2 +-
- include/media/davinci/vpbe.h          | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/platform/x86/alienware-wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/davinci/vpbe.c b/drivers/media/platform/davinci/vpbe.c
-index df1ae6b5c854..e45e062f4442 100644
---- a/drivers/media/platform/davinci/vpbe.c
-+++ b/drivers/media/platform/davinci/vpbe.c
-@@ -126,7 +126,7 @@ static int vpbe_enum_outputs(struct vpbe_device *vpbe_dev,
- 			     struct v4l2_output *output)
- {
- 	struct vpbe_config *cfg = vpbe_dev->cfg;
--	int temp_index = output->index;
-+	unsigned int temp_index = output->index;
+diff --git a/drivers/platform/x86/alienware-wmi.c b/drivers/platform/x86/alienware-wmi.c
+index c0d1555735cd..83fd7677af24 100644
+--- a/drivers/platform/x86/alienware-wmi.c
++++ b/drivers/platform/x86/alienware-wmi.c
+@@ -587,7 +587,7 @@ static ssize_t show_hdmi_source(struct device *dev,
+ 			return scnprintf(buf, PAGE_SIZE,
+ 					 "input [gpu] unknown\n");
+ 	}
+-	pr_err("alienware-wmi: unknown HDMI source status: %d\n", out_data);
++	pr_err("alienware-wmi: unknown HDMI source status: %u\n", status);
+ 	return scnprintf(buf, PAGE_SIZE, "input gpu [unknown]\n");
+ }
  
- 	if (temp_index >= cfg->num_outputs)
- 		return -EINVAL;
-diff --git a/include/media/davinci/vpbe.h b/include/media/davinci/vpbe.h
-index 79a566d7defd..180a05e91497 100644
---- a/include/media/davinci/vpbe.h
-+++ b/include/media/davinci/vpbe.h
-@@ -92,7 +92,7 @@ struct vpbe_config {
- 	struct encoder_config_info *ext_encoders;
- 	/* amplifier information goes here */
- 	struct amp_config_info *amp;
--	int num_outputs;
-+	unsigned int num_outputs;
- 	/* Order is venc outputs followed by LCD and then external encoders */
- 	struct vpbe_output *outputs;
- };
 -- 
 2.20.1
 
