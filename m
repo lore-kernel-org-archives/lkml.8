@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED844C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E933FC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA9B124687
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFF4C24681
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:11:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194697;
-	bh=no52/3ZbBlS+WUGpTZ80/4fIwoJ8eEU+z3lXxNEXLtI=;
+	s=default; t=1579194700;
+	bh=KOLbhxaodayYM2csLNYym7rLN3GPpuwOd0/ucyao8HY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tnXtcl5mVNNf8KZlDCfU0NE4DZjlYG8AkdTzADpBgBSnbLxHyylVhC9pUvXNr4cG1
-	 vgJMok5HCo4844V5o2+iV2sesA1HlEAiHvkEpUM9I3I/qTqYdTEg3U9+yxCXwktetk
-	 /jMrIjDlzWTrnypdlBombaHVU6rrsQHQG7PHpa8Q=
+	b=VBqwrcPQAe39Gm9MipMcp8fsqho2s+M7rBmMhPgMDZSJlpaUJhJ5knpoxyoVb1Omq
+	 3xCSGh2b3jy8w/7rGNUXqinqjDZrodwyatsDXCTopYlp/Qql+jJ3aRyBEVtXT6RFCw
+	 r2Tv+Dle4Kx0D7Qm5uEchqcJz0SwjEwZ/4ggCFiI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390295AbgAPRLh (ORCPT
+        id S2389879AbgAPRLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:11:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52234 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:11:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390245AbgAPRLa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:11:30 -0500
+        id S2390253AbgAPRLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:11:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C134E24687;
-        Thu, 16 Jan 2020 17:11:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 371BB24684;
+        Thu, 16 Jan 2020 17:11:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194689;
-        bh=no52/3ZbBlS+WUGpTZ80/4fIwoJ8eEU+z3lXxNEXLtI=;
+        s=default; t=1579194691;
+        bh=KOLbhxaodayYM2csLNYym7rLN3GPpuwOd0/ucyao8HY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a47zNemmlwHGEzKqUQwFaYNaFMQA9RcmLQonYmnhCk4glPtuHjSHSbXiIWzLvTKZ/
-         Xy5JiF6+WZTk2mXoxMNlYO5FnL/EF8C5TmR23F9ZpZCTkjDKFtbDZmpEzZJ1KPRkCo
-         sQv1KgzQIw7XKvPTxpXj5K2tHBTpuX/ortUZPzi0=
+        b=BlamzF+Ov2eCrIoiyVoTwnOMOHBILYpPwD91sKefsMmF6lHjtzElOnZSbDeeHgzjw
+         fhYa2/n5ymlJHnSbXdzEXTczsbnLdaqFjZSd+HVV4lowH1xxdF+knZC+0qSYeb/907
+         nT0IKBtWL0DbtUKW7lHcKI3A4KjjYoXeFezGW6bA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mao Wenan <maowenan@huawei.com>,
+Cc:     Jian Shen <shenjian15@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 532/671] net: sonic: return NETDEV_TX_OK if failed to map buffer
-Date:   Thu, 16 Jan 2020 12:02:50 -0500
-Message-Id: <20200116170509.12787-269-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 533/671] net: hns3: fix error VF index when setting VLAN offload
+Date:   Thu, 16 Jan 2020 12:02:51 -0500
+Message-Id: <20200116170509.12787-270-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,40 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <maowenan@huawei.com>
+From: Jian Shen <shenjian15@huawei.com>
 
-[ Upstream commit 6e1cdedcf0362fed3aedfe051d46bd7ee2a85fe1 ]
+[ Upstream commit d9c0f2756a33833b2653f7a3612814fa5f52a568 ]
 
-NETDEV_TX_BUSY really should only be used by drivers that call
-netif_tx_stop_queue() at the wrong moment. If dma_map_single() is
-failed to map tx DMA buffer, it might trigger an infinite loop.
-This patch use NETDEV_TX_OK instead of NETDEV_TX_BUSY, and change
-printk to pr_err_ratelimited.
+In original codes, the VF index used incorrectly in function
+hclge_set_vlan_rx_offload_cfg() and hclge_set_vlan_rx_offload_cfg().
+When VF id is greater than 8, for example 9, it will set the
+same bit with VF id 1.
 
-Fixes: d9fb9f384292 ("*sonic/natsemi/ns83829: Move the National Semi-conductor drivers")
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
+This patch fixes it by using  vport->vport_id % HCLGE_VF_NUM_PER_CMD /
+HCLGE_VF_NUM_PER_BYTE as the array index, instead of vport->vport_id /
+HCLGE_VF_NUM_PER_CMD.
+
+Fixes: 052ece6dc19c ("net: hns3: add ethtool related offload command")
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/natsemi/sonic.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
-index c805dcbebd02..be36f7117d48 100644
---- a/drivers/net/ethernet/natsemi/sonic.c
-+++ b/drivers/net/ethernet/natsemi/sonic.c
-@@ -231,9 +231,9 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 4b9f898a1620..d575dd9a329d 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -4833,6 +4833,7 @@ static int hclge_set_vlan_tx_offload_cfg(struct hclge_vport *vport)
+ 	struct hclge_vport_vtag_tx_cfg_cmd *req;
+ 	struct hclge_dev *hdev = vport->back;
+ 	struct hclge_desc desc;
++	u16 bmap_index;
+ 	int status;
  
- 	laddr = dma_map_single(lp->device, skb->data, length, DMA_TO_DEVICE);
- 	if (!laddr) {
--		printk(KERN_ERR "%s: failed to map tx DMA buffer.\n", dev->name);
-+		pr_err_ratelimited("%s: failed to map tx DMA buffer.\n", dev->name);
- 		dev_kfree_skb(skb);
--		return NETDEV_TX_BUSY;
-+		return NETDEV_TX_OK;
- 	}
+ 	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_VLAN_PORT_TX_CFG, false);
+@@ -4855,8 +4856,10 @@ static int hclge_set_vlan_tx_offload_cfg(struct hclge_vport *vport)
+ 	hnae3_set_bit(req->vport_vlan_cfg, HCLGE_CFG_NIC_ROCE_SEL_B, 0);
  
- 	sonic_tda_put(dev, entry, SONIC_TD_STATUS, 0);       /* clear status */
+ 	req->vf_offset = vport->vport_id / HCLGE_VF_NUM_PER_CMD;
+-	req->vf_bitmap[req->vf_offset] =
+-		1 << (vport->vport_id % HCLGE_VF_NUM_PER_BYTE);
++	bmap_index = vport->vport_id % HCLGE_VF_NUM_PER_CMD /
++			HCLGE_VF_NUM_PER_BYTE;
++	req->vf_bitmap[bmap_index] =
++		1U << (vport->vport_id % HCLGE_VF_NUM_PER_BYTE);
+ 
+ 	status = hclge_cmd_send(&hdev->hw, &desc, 1);
+ 	if (status)
+@@ -4873,6 +4876,7 @@ static int hclge_set_vlan_rx_offload_cfg(struct hclge_vport *vport)
+ 	struct hclge_vport_vtag_rx_cfg_cmd *req;
+ 	struct hclge_dev *hdev = vport->back;
+ 	struct hclge_desc desc;
++	u16 bmap_index;
+ 	int status;
+ 
+ 	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_VLAN_PORT_RX_CFG, false);
+@@ -4888,8 +4892,10 @@ static int hclge_set_vlan_rx_offload_cfg(struct hclge_vport *vport)
+ 		      vcfg->vlan2_vlan_prionly ? 1 : 0);
+ 
+ 	req->vf_offset = vport->vport_id / HCLGE_VF_NUM_PER_CMD;
+-	req->vf_bitmap[req->vf_offset] =
+-		1 << (vport->vport_id % HCLGE_VF_NUM_PER_BYTE);
++	bmap_index = vport->vport_id % HCLGE_VF_NUM_PER_CMD /
++			HCLGE_VF_NUM_PER_BYTE;
++	req->vf_bitmap[bmap_index] =
++		1U << (vport->vport_id % HCLGE_VF_NUM_PER_BYTE);
+ 
+ 	status = hclge_cmd_send(&hdev->hw, &desc, 1);
+ 	if (status)
 -- 
 2.20.1
 
