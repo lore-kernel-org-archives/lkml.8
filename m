@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC951C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A399C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81995206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52183206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:04:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201489;
-	bh=NJQiPJIrKiaImODSr+PXyi/+dgALKKFxvN4AZd4v/Ng=;
+	s=default; t=1579201494;
+	bh=nShCqT2uvYfQBzQLZCUGFnVXfb9CFk7xefGo0uh3A2Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uGqNZzVRPJoqU+re7UB6K8pL/o/pRzJLztehmnoBVOZAumyouhliq9hi7k4kgXUCm
-	 6fBvPuL/seDWMLcjWn8y5AVlWvo3Yw4nSvJio3e66NZ1u6wTZ82A+Q5WNyUzh3YgHM
-	 0Jc+5Zwrxgle42WmavBD3qiXQgkuUwk7T/nIu6QQ=
+	b=BdrTru442O8vwygntOsrfr2vY9jQzQcIBz+rnPMzCzvxnDGbjceZPJBoax8BxTMYQ
+	 0mr237qXM/33rxrdNLQkFg11ZYC5a2zourSkebWJKutWUBsCkyUWXylckH/jM3D4Fx
+	 dOHVSb+bXP5keZkv+1Epcn5hik/WacPeI9xBCmu4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388286AbgAPRCK (ORCPT
+        id S2388790AbgAPTEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:02:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53970 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:04:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388231AbgAPRCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:02:01 -0500
+        id S2388283AbgAPRCK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:02:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 631A72073A;
-        Thu, 16 Jan 2020 17:01:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB0B2207FF;
+        Thu, 16 Jan 2020 17:02:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194119;
-        bh=NJQiPJIrKiaImODSr+PXyi/+dgALKKFxvN4AZd4v/Ng=;
+        s=default; t=1579194129;
+        bh=nShCqT2uvYfQBzQLZCUGFnVXfb9CFk7xefGo0uh3A2Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UdI9QO85pZIxT47joEI+dnZeyU8s8YCT+uzJhR884OdMZBOlc0uwVKUkfw+UldYDV
-         9qR6gV6L+kv+yMy85M5/JxRo9cZI1SMFFE2gXln/sF95enbCWX76CeAOGRmI1HDJnz
-         OzqMC+4AJMuFLT1JQdDjiFuWkDcAXF2RI74uBB/0=
+        b=m2u66MctmG3vlkfqllM4gRs3jr5Il8eowdhYQNFo5o9OY2dnuGnIokpb14BJ6y82v
+         xpn99iyb76MKup5tGViEtaTOYmnzXiBxNVtzU8J/txyhgrT7zmHVOP+HZFpAxJ0/h6
+         nKVA77PL9+Jy2MM0aCMbaKz9jgF2c2i5lq1jQRLs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Nicolas Pitre <nico@linaro.org>,
+        Anand Moon <linux.amoon@gmail.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 213/671] perf, pt, coresight: Fix address filters for vmas with non-zero offset
-Date:   Thu, 16 Jan 2020 11:52:02 -0500
-Message-Id: <20200116165940.10720-96-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 220/671] ARM: 8847/1: pm: fix HYP/SVC mode mismatch when MCPM is used
+Date:   Thu, 16 Jan 2020 11:52:09 -0500
+Message-Id: <20200116165940.10720-103-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -64,295 +62,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit c60f83b813e5b25ccd5de7e8c8925c31b3aebcc1 ]
+[ Upstream commit ca70ea43f80c98582f5ffbbd1e6f4da2742da0c4 ]
 
-Currently, the address range calculation for file-based filters works as
-long as the vma that maps the matching part of the object file starts
-from offset zero into the file (vm_pgoff==0). Otherwise, the resulting
-filter range would be off by vm_pgoff pages. Another related problem is
-that in case of a partially matching vma, that is, a vma that matches
-part of a filter region, the filter range size wouldn't be adjusted.
+MCPM does a soft reset of the CPUs and uses common cpu_resume() routine to
+perform low-level platform initialization. This results in a try to install
+HYP stubs for the second time for each CPU and results in false HYP/SVC
+mode mismatch detection. The HYP stubs are already installed at the
+beginning of the kernel initialization on the boot CPU (head.S) or in the
+secondary_startup() for other CPUs. To fix this issue MCPM code should use
+a cpu_resume() routine without HYP stubs installation.
 
-Fix the arithmetics around address filter range calculations, taking
-into account vma offset, so that the entire calculation is done before
-the filter configuration is passed to the PMU drivers instead of having
-those drivers do the final bit of arithmetics.
+This change fixes HYP/SVC mode mismatch on Samsung Exynos5422-based Odroid
+XU3/XU4/HC1 boards.
 
-Based on the patch by Adrian Hunter <adrian.hunter.intel.com>.
-
-Reported-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Tested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Acked-by: Peter Zijlstra <peterz@infradead.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Fixes: 375637bc5249 ("perf/core: Introduce address range filtering")
-Link: http://lkml.kernel.org/r/20190215115655.63469-3-alexander.shishkin@linux.intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 3721924c8154 ("ARM: 8081/1: MCPM: provide infrastructure to allow for MCPM loopback")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Acked-by: Nicolas Pitre <nico@linaro.org>
+Tested-by: Anand Moon <linux.amoon@gmail.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/intel/pt.c                    |  9 ++-
- .../hwtracing/coresight/coresight-etm-perf.c  |  7 +-
- include/linux/perf_event.h                    |  7 +-
- kernel/events/core.c                          | 81 +++++++++++--------
- 4 files changed, 62 insertions(+), 42 deletions(-)
+ arch/arm/common/mcpm_entry.c   |  2 +-
+ arch/arm/include/asm/suspend.h |  1 +
+ arch/arm/kernel/sleep.S        | 12 ++++++++++++
+ 3 files changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
-index 8f4c98fdd03c..f03100bc5fd1 100644
---- a/arch/x86/events/intel/pt.c
-+++ b/arch/x86/events/intel/pt.c
-@@ -1213,7 +1213,8 @@ static int pt_event_addr_filters_validate(struct list_head *filters)
- static void pt_event_addr_filters_sync(struct perf_event *event)
- {
- 	struct perf_addr_filters_head *head = perf_event_addr_filters(event);
--	unsigned long msr_a, msr_b, *offs = event->addr_filters_offs;
-+	unsigned long msr_a, msr_b;
-+	struct perf_addr_filter_range *fr = event->addr_filter_ranges;
- 	struct pt_filters *filters = event->hw.addr_filters;
- 	struct perf_addr_filter *filter;
- 	int range = 0;
-@@ -1222,12 +1223,12 @@ static void pt_event_addr_filters_sync(struct perf_event *event)
- 		return;
+diff --git a/arch/arm/common/mcpm_entry.c b/arch/arm/common/mcpm_entry.c
+index ad574d20415c..1b1b82b37ce0 100644
+--- a/arch/arm/common/mcpm_entry.c
++++ b/arch/arm/common/mcpm_entry.c
+@@ -381,7 +381,7 @@ static int __init nocache_trampoline(unsigned long _arg)
+ 	unsigned int cluster = MPIDR_AFFINITY_LEVEL(mpidr, 1);
+ 	phys_reset_t phys_reset;
  
- 	list_for_each_entry(filter, &head->list, entry) {
--		if (filter->path.dentry && !offs[range]) {
-+		if (filter->path.dentry && !fr[range].start) {
- 			msr_a = msr_b = 0;
- 		} else {
- 			/* apply the offset */
--			msr_a = filter->offset + offs[range];
--			msr_b = filter->size + msr_a - 1;
-+			msr_a = fr[range].start;
-+			msr_b = msr_a + fr[range].size - 1;
- 		}
+-	mcpm_set_entry_vector(cpu, cluster, cpu_resume);
++	mcpm_set_entry_vector(cpu, cluster, cpu_resume_no_hyp);
+ 	setup_mm_for_reboot();
  
- 		filters->filter[range].msr_a  = msr_a;
-diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-index c3c645201514..567f46ca2599 100644
---- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-+++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-@@ -437,15 +437,16 @@ static int etm_addr_filters_validate(struct list_head *filters)
- static void etm_addr_filters_sync(struct perf_event *event)
- {
- 	struct perf_addr_filters_head *head = perf_event_addr_filters(event);
--	unsigned long start, stop, *offs = event->addr_filters_offs;
-+	unsigned long start, stop;
-+	struct perf_addr_filter_range *fr = event->addr_filter_ranges;
- 	struct etm_filters *filters = event->hw.addr_filters;
- 	struct etm_filter *etm_filter;
- 	struct perf_addr_filter *filter;
- 	int i = 0;
- 
- 	list_for_each_entry(filter, &head->list, entry) {
--		start = filter->offset + offs[i];
--		stop = start + filter->size;
-+		start = fr[i].start;
-+		stop = start + fr[i].size;
- 		etm_filter = &filters->etm_filter[i];
- 
- 		switch (filter->action) {
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index b22bc81f3669..d8b4d31acd18 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -494,6 +494,11 @@ struct perf_addr_filters_head {
- 	unsigned int		nr_file_filters;
+ 	__mcpm_cpu_going_down(cpu, cluster);
+diff --git a/arch/arm/include/asm/suspend.h b/arch/arm/include/asm/suspend.h
+index 452bbdcbcc83..506314265c6f 100644
+--- a/arch/arm/include/asm/suspend.h
++++ b/arch/arm/include/asm/suspend.h
+@@ -10,6 +10,7 @@ struct sleep_save_sp {
  };
  
-+struct perf_addr_filter_range {
-+	unsigned long		start;
-+	unsigned long		size;
-+};
+ extern void cpu_resume(void);
++extern void cpu_resume_no_hyp(void);
+ extern void cpu_resume_arm(void);
+ extern int cpu_suspend(unsigned long, int (*)(unsigned long));
+ 
+diff --git a/arch/arm/kernel/sleep.S b/arch/arm/kernel/sleep.S
+index a8257fc9cf2a..5dc8b80bb693 100644
+--- a/arch/arm/kernel/sleep.S
++++ b/arch/arm/kernel/sleep.S
+@@ -120,6 +120,14 @@ ENDPROC(cpu_resume_after_mmu)
+ 	.text
+ 	.align
+ 
++#ifdef CONFIG_MCPM
++	.arm
++THUMB(	.thumb			)
++ENTRY(cpu_resume_no_hyp)
++ARM_BE8(setend be)			@ ensure we are in BE mode
++	b	no_hyp
++#endif
 +
- /**
-  * enum perf_event_state - the states of an event:
-  */
-@@ -670,7 +675,7 @@ struct perf_event {
- 	/* address range filters */
- 	struct perf_addr_filters_head	addr_filters;
- 	/* vma address array for file-based filders */
--	unsigned long			*addr_filters_offs;
-+	struct perf_addr_filter_range	*addr_filter_ranges;
- 	unsigned long			addr_filters_gen;
+ #ifdef CONFIG_MMU
+ 	.arm
+ ENTRY(cpu_resume_arm)
+@@ -135,6 +143,7 @@ ARM_BE8(setend be)			@ ensure we are in BE mode
+ 	bl	__hyp_stub_install_secondary
+ #endif
+ 	safe_svcmode_maskall r1
++no_hyp:
+ 	mov	r1, #0
+ 	ALT_SMP(mrc p15, 0, r0, c0, c0, 5)
+ 	ALT_UP_B(1f)
+@@ -163,6 +172,9 @@ ENDPROC(cpu_resume)
  
- 	void (*destroy)(struct perf_event *);
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 9a5559f5938a..4eef2d42d05c 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2804,7 +2804,7 @@ static int perf_event_stop(struct perf_event *event, int restart)
-  *
-  * (p1) when userspace mappings change as a result of (1) or (2) or (3) below,
-  *      we update the addresses of corresponding vmas in
-- *	event::addr_filters_offs array and bump the event::addr_filters_gen;
-+ *	event::addr_filter_ranges array and bump the event::addr_filters_gen;
-  * (p2) when an event is scheduled in (pmu::add), it calls
-  *      perf_event_addr_filters_sync() which calls pmu::addr_filters_sync()
-  *      if the generation has changed since the previous call.
-@@ -4448,7 +4448,7 @@ static void _free_event(struct perf_event *event)
+ #ifdef CONFIG_MMU
+ ENDPROC(cpu_resume_arm)
++#endif
++#ifdef CONFIG_MCPM
++ENDPROC(cpu_resume_no_hyp)
+ #endif
  
- 	perf_event_free_bpf_prog(event);
- 	perf_addr_filters_splice(event, NULL);
--	kfree(event->addr_filters_offs);
-+	kfree(event->addr_filter_ranges);
- 
- 	if (event->destroy)
- 		event->destroy(event);
-@@ -6743,7 +6743,8 @@ static void perf_event_addr_filters_exec(struct perf_event *event, void *data)
- 	raw_spin_lock_irqsave(&ifh->lock, flags);
- 	list_for_each_entry(filter, &ifh->list, entry) {
- 		if (filter->path.dentry) {
--			event->addr_filters_offs[count] = 0;
-+			event->addr_filter_ranges[count].start = 0;
-+			event->addr_filter_ranges[count].size = 0;
- 			restart++;
- 		}
- 
-@@ -7425,28 +7426,47 @@ static bool perf_addr_filter_match(struct perf_addr_filter *filter,
- 	return true;
- }
- 
-+static bool perf_addr_filter_vma_adjust(struct perf_addr_filter *filter,
-+					struct vm_area_struct *vma,
-+					struct perf_addr_filter_range *fr)
-+{
-+	unsigned long vma_size = vma->vm_end - vma->vm_start;
-+	unsigned long off = vma->vm_pgoff << PAGE_SHIFT;
-+	struct file *file = vma->vm_file;
-+
-+	if (!perf_addr_filter_match(filter, file, off, vma_size))
-+		return false;
-+
-+	if (filter->offset < off) {
-+		fr->start = vma->vm_start;
-+		fr->size = min(vma_size, filter->size - (off - filter->offset));
-+	} else {
-+		fr->start = vma->vm_start + filter->offset - off;
-+		fr->size = min(vma->vm_end - fr->start, filter->size);
-+	}
-+
-+	return true;
-+}
-+
- static void __perf_addr_filters_adjust(struct perf_event *event, void *data)
- {
- 	struct perf_addr_filters_head *ifh = perf_event_addr_filters(event);
- 	struct vm_area_struct *vma = data;
--	unsigned long off = vma->vm_pgoff << PAGE_SHIFT, flags;
--	struct file *file = vma->vm_file;
- 	struct perf_addr_filter *filter;
- 	unsigned int restart = 0, count = 0;
-+	unsigned long flags;
- 
- 	if (!has_addr_filter(event))
- 		return;
- 
--	if (!file)
-+	if (!vma->vm_file)
- 		return;
- 
- 	raw_spin_lock_irqsave(&ifh->lock, flags);
- 	list_for_each_entry(filter, &ifh->list, entry) {
--		if (perf_addr_filter_match(filter, file, off,
--					     vma->vm_end - vma->vm_start)) {
--			event->addr_filters_offs[count] = vma->vm_start;
-+		if (perf_addr_filter_vma_adjust(filter, vma,
-+						&event->addr_filter_ranges[count]))
- 			restart++;
--		}
- 
- 		count++;
- 	}
-@@ -8806,26 +8826,19 @@ static void perf_addr_filters_splice(struct perf_event *event,
-  * @filter; if so, adjust filter's address range.
-  * Called with mm::mmap_sem down for reading.
-  */
--static unsigned long perf_addr_filter_apply(struct perf_addr_filter *filter,
--					    struct mm_struct *mm)
-+static void perf_addr_filter_apply(struct perf_addr_filter *filter,
-+				   struct mm_struct *mm,
-+				   struct perf_addr_filter_range *fr)
- {
- 	struct vm_area_struct *vma;
- 
- 	for (vma = mm->mmap; vma; vma = vma->vm_next) {
--		struct file *file = vma->vm_file;
--		unsigned long off = vma->vm_pgoff << PAGE_SHIFT;
--		unsigned long vma_size = vma->vm_end - vma->vm_start;
--
--		if (!file)
-+		if (!vma->vm_file)
- 			continue;
- 
--		if (!perf_addr_filter_match(filter, file, off, vma_size))
--			continue;
--
--		return vma->vm_start;
-+		if (perf_addr_filter_vma_adjust(filter, vma, fr))
-+			return;
- 	}
--
--	return 0;
- }
- 
- /*
-@@ -8859,15 +8872,15 @@ static void perf_event_addr_filters_apply(struct perf_event *event)
- 
- 	raw_spin_lock_irqsave(&ifh->lock, flags);
- 	list_for_each_entry(filter, &ifh->list, entry) {
--		event->addr_filters_offs[count] = 0;
-+		event->addr_filter_ranges[count].start = 0;
-+		event->addr_filter_ranges[count].size = 0;
- 
- 		/*
- 		 * Adjust base offset if the filter is associated to a binary
- 		 * that needs to be mapped:
- 		 */
- 		if (filter->path.dentry)
--			event->addr_filters_offs[count] =
--				perf_addr_filter_apply(filter, mm);
-+			perf_addr_filter_apply(filter, mm, &event->addr_filter_ranges[count]);
- 
- 		count++;
- 	}
-@@ -10129,10 +10142,10 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
- 		goto err_pmu;
- 
- 	if (has_addr_filter(event)) {
--		event->addr_filters_offs = kcalloc(pmu->nr_addr_filters,
--						   sizeof(unsigned long),
--						   GFP_KERNEL);
--		if (!event->addr_filters_offs) {
-+		event->addr_filter_ranges = kcalloc(pmu->nr_addr_filters,
-+						    sizeof(struct perf_addr_filter_range),
-+						    GFP_KERNEL);
-+		if (!event->addr_filter_ranges) {
- 			err = -ENOMEM;
- 			goto err_per_task;
- 		}
-@@ -10145,9 +10158,9 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
- 			struct perf_addr_filters_head *ifh = perf_event_addr_filters(event);
- 
- 			raw_spin_lock_irq(&ifh->lock);
--			memcpy(event->addr_filters_offs,
--			       event->parent->addr_filters_offs,
--			       pmu->nr_addr_filters * sizeof(unsigned long));
-+			memcpy(event->addr_filter_ranges,
-+			       event->parent->addr_filter_ranges,
-+			       pmu->nr_addr_filters * sizeof(struct perf_addr_filter_range));
- 			raw_spin_unlock_irq(&ifh->lock);
- 		}
- 
-@@ -10169,7 +10182,7 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
- 	return event;
- 
- err_addr_filters:
--	kfree(event->addr_filters_offs);
-+	kfree(event->addr_filter_ranges);
- 
- err_per_task:
- 	exclusive_event_destroy(event);
+ 	.align 2
 -- 
 2.20.1
 
