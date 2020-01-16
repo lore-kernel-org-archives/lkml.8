@@ -2,156 +2,129 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2489CC33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 276DEC33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04F35206D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 058242064C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 12:48:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbgAPMre (ORCPT
+        id S1726897AbgAPMsU convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 07:47:34 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9641 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726369AbgAPMq5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 07:46:57 -0500
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A6F3513CA90D6CF3A638;
-        Thu, 16 Jan 2020 20:46:54 +0800 (CST)
-Received: from DESKTOP-1NISPDV.china.huawei.com (10.173.221.248) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 16 Jan 2020 20:46:47 +0800
-From:   Zengruan Ye <yezengruan@huawei.com>
-To:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>,
-        <virtualization@lists.linux-foundation.org>
-CC:     <yezengruan@huawei.com>, <maz@kernel.org>, <james.morse@arm.com>,
-        <linux@armlinux.org.uk>, <suzuki.poulose@arm.com>,
-        <julien.thierry.kdev@gmail.com>, <catalin.marinas@arm.com>,
-        <mark.rutland@arm.com>, <will@kernel.org>, <steven.price@arm.com>,
-        <daniel.lezcano@linaro.org>, <wanghaibin.wang@huawei.com>,
-        <peterz@infradead.org>, <longman@redhat.com>
-Subject: [PATCH v3 3/8] arm/arm64: KVM: Advertise KVM UID to guests via SMCCC
-Date:   Thu, 16 Jan 2020 20:46:21 +0800
-Message-ID: <20200116124626.1155-4-yezengruan@huawei.com>
-X-Mailer: git-send-email 2.23.0.windows.1
-In-Reply-To: <20200116124626.1155-1-yezengruan@huawei.com>
-References: <20200116124626.1155-1-yezengruan@huawei.com>
+        Thu, 16 Jan 2020 07:48:20 -0500
+Received: from mga18.intel.com ([134.134.136.126]:46442 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726082AbgAPMsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 07:48:19 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 04:48:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,326,1574150400"; 
+   d="scan'208";a="257343252"
+Received: from fmsmsx104.amr.corp.intel.com ([10.18.124.202])
+  by fmsmga002.fm.intel.com with ESMTP; 16 Jan 2020 04:48:18 -0800
+Received: from fmsmsx154.amr.corp.intel.com (10.18.116.70) by
+ fmsmsx104.amr.corp.intel.com (10.18.124.202) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 16 Jan 2020 04:48:18 -0800
+Received: from shsmsx152.ccr.corp.intel.com (10.239.6.52) by
+ FMSMSX154.amr.corp.intel.com (10.18.116.70) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 16 Jan 2020 04:48:18 -0800
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.197]) by
+ SHSMSX152.ccr.corp.intel.com ([169.254.6.203]) with mapi id 14.03.0439.000;
+ Thu, 16 Jan 2020 20:48:16 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>
+Subject: RE: [PATCH v4 04/12] vfio_pci: make common functions be extern
+Thread-Topic: [PATCH v4 04/12] vfio_pci: make common functions be extern
+Thread-Index: AQHVxVT1ZgpJigc+lU2otv7lw0J4t6frE/6AgAI3QTA=
+Date:   Thu, 16 Jan 2020 12:48:16 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C25743A183F99@SHSMSX104.ccr.corp.intel.com>
+References: <1578398509-26453-1-git-send-email-yi.l.liu@intel.com>
+        <1578398509-26453-5-git-send-email-yi.l.liu@intel.com>
+ <20200115115605.2014c01f.cohuck@redhat.com>
+In-Reply-To: <20200115115605.2014c01f.cohuck@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNWNkMjEyMmQtOGE4Ni00ZjdkLWI5NjctODE4OTc3OTBhZTJiIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiRElpZ1wvd3NqRnVibzY4NnluZCt3WmgrWm0xbjBBakpsdE9qcEtXdXROVzY5WndjdXdCWHJXSGdcL1JwOVVabjNGIn0=
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.173.221.248]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+> From: Cornelia Huck [mailto:cohuck@redhat.com]
+> Sent: Wednesday, January 15, 2020 6:56 PM
+> To: Liu, Yi L <yi.l.liu@intel.com>
+> Subject: Re: [PATCH v4 04/12] vfio_pci: make common functions be extern
+> 
+> On Tue,  7 Jan 2020 20:01:41 +0800
+> Liu Yi L <yi.l.liu@intel.com> wrote:
+> 
+> > This patch makes the common functions (module agnostic functions) in
+> > vfio_pci.c to be extern. So that such functions could be moved to a
+> > common source file.
+> >
+> > *) vfio_pci_set_vga_decode
+> > *) vfio_pci_probe_power_state
+> > *) vfio_pci_set_power_state
+> > *) vfio_pci_enable
+> > *) vfio_pci_disable
+> > *) vfio_pci_refresh_config
+> > *) vfio_pci_register_dev_region
+> > *) vfio_pci_ioctl
+> > *) vfio_pci_read
+> > *) vfio_pci_write
+> > *) vfio_pci_mmap
+> > *) vfio_pci_request
+> > *) vfio_pci_err_handlers
+> > *) vfio_pci_reflck_attach
+> > *) vfio_pci_reflck_put
+> > *) vfio_pci_fill_ids
+> 
+> I find it a bit hard to understand what "module agnostic functions" are supposed to
+> be. The functions you want to move seem to be some "basic"
+> functions that can be shared between normal vfio-pci and vfio-mdev-pci... maybe
+> talk about "functions that provide basic vfio functionality for pci devices" and also
+> mention the mdev part?
+> 
+> [My rationale behind complaining about the commit messages is that if I look at this
+> change in a year from now, I want to be able to know why and to what end that
+> change was made.]
 
-We can advertise ourselves to guests as KVM and provide a basic features
-bitmap for discoverability of future hypervisor services.
+Right, agreed with your comments. I'll change the commit message accordingly
+per your suggestion.
 
-Signed-off-by: Will Deacon <will@kernel.org>
-[yezengruan@huawei.com: rebased]
----
- virt/kvm/arm/hypercalls.c | 37 ++++++++++++++++++++++++-------------
- 1 file changed, 24 insertions(+), 13 deletions(-)
+Thanks,
+Yi Liu
 
-diff --git a/virt/kvm/arm/hypercalls.c b/virt/kvm/arm/hypercalls.c
-index 550dfa3e53cd..bdbab9ef6d2d 100644
---- a/virt/kvm/arm/hypercalls.c
-+++ b/virt/kvm/arm/hypercalls.c
-@@ -12,26 +12,28 @@
- int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
- {
- 	u32 func_id = smccc_get_function(vcpu);
--	long val = SMCCC_RET_NOT_SUPPORTED;
--	u32 feature;
-+	long val[4] = {};
-+	u32 option;
- 	gpa_t gpa;
- 
-+	val[0] = SMCCC_RET_NOT_SUPPORTED;
-+
- 	switch (func_id) {
- 	case ARM_SMCCC_VERSION_FUNC_ID:
--		val = ARM_SMCCC_VERSION_1_1;
-+		val[0] = ARM_SMCCC_VERSION_1_1;
- 		break;
- 	case ARM_SMCCC_ARCH_FEATURES_FUNC_ID:
--		feature = smccc_get_arg1(vcpu);
--		switch (feature) {
-+		option = smccc_get_arg1(vcpu);
-+		switch (option) {
- 		case ARM_SMCCC_ARCH_WORKAROUND_1:
- 			switch (kvm_arm_harden_branch_predictor()) {
- 			case KVM_BP_HARDEN_UNKNOWN:
- 				break;
- 			case KVM_BP_HARDEN_WA_NEEDED:
--				val = SMCCC_RET_SUCCESS;
-+				val[0] = SMCCC_RET_SUCCESS;
- 				break;
- 			case KVM_BP_HARDEN_NOT_REQUIRED:
--				val = SMCCC_RET_NOT_REQUIRED;
-+				val[0] = SMCCC_RET_NOT_REQUIRED;
- 				break;
- 			}
- 			break;
-@@ -41,31 +43,40 @@ int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)
- 			case KVM_SSBD_UNKNOWN:
- 				break;
- 			case KVM_SSBD_KERNEL:
--				val = SMCCC_RET_SUCCESS;
-+				val[0] = SMCCC_RET_SUCCESS;
- 				break;
- 			case KVM_SSBD_FORCE_ENABLE:
- 			case KVM_SSBD_MITIGATED:
--				val = SMCCC_RET_NOT_REQUIRED;
-+				val[0] = SMCCC_RET_NOT_REQUIRED;
- 				break;
- 			}
- 			break;
- 		case ARM_SMCCC_HV_PV_TIME_FEATURES:
--			val = SMCCC_RET_SUCCESS;
-+			val[0] = SMCCC_RET_SUCCESS;
- 			break;
- 		}
- 		break;
- 	case ARM_SMCCC_HV_PV_TIME_FEATURES:
--		val = kvm_hypercall_pv_features(vcpu);
-+		val[0] = kvm_hypercall_pv_features(vcpu);
- 		break;
- 	case ARM_SMCCC_HV_PV_TIME_ST:
- 		gpa = kvm_init_stolen_time(vcpu);
- 		if (gpa != GPA_INVALID)
--			val = gpa;
-+			val[0] = gpa;
-+		break;
-+	case ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID:
-+		val[0] = ARM_SMCCC_VENDOR_HYP_UID_KVM_REG_0;
-+		val[1] = ARM_SMCCC_VENDOR_HYP_UID_KVM_REG_1;
-+		val[2] = ARM_SMCCC_VENDOR_HYP_UID_KVM_REG_2;
-+		val[3] = ARM_SMCCC_VENDOR_HYP_UID_KVM_REG_3;
-+		break;
-+	case ARM_SMCCC_VENDOR_HYP_KVM_FEATURES_FUNC_ID:
-+		val[0] = BIT(ARM_SMCCC_KVM_FUNC_FEATURES);
- 		break;
- 	default:
- 		return kvm_psci_call(vcpu);
- 	}
- 
--	smccc_set_retval(vcpu, val, 0, 0, 0);
-+	smccc_set_retval(vcpu, val[0], val[1], val[2], val[3]);
- 	return 1;
- }
--- 
-2.19.1
-
+> >
+> > Cc: Kevin Tian <kevin.tian@intel.com>
+> > Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > ---
+> >  drivers/vfio/pci/vfio_pci.c         | 30 +++++++++++++-----------------
+> >  drivers/vfio/pci/vfio_pci_private.h | 15 +++++++++++++++
+> >  2 files changed, 28 insertions(+), 17 deletions(-)
 
