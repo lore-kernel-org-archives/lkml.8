@@ -2,54 +2,60 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30836C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31898C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 010EF2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:44:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 058D72073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:44:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200247;
-	bh=ENH9qJZ2wnMw/iROLzTDu5Co9VYRibguqz45d7YFmBw=;
+	s=default; t=1579200253;
+	bh=odziI9yQ1/r+MOSZC+bk4hQhBJnZAFnQo3/fMMks6ZE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oiriaa4jwYIgISojj/8CnfIT5c4Apx/iKhozin9My8Aa8pqfsMO8DXKVq2T5gE7tl
-	 dG2eqzeTTpGbOMF8i3MDwEFQeJdufmmQnYXFDcbyVWwE7fqKV2IutHkX1yb09Z8The
-	 SL3p/+adqOAgIaR+0uL6vLNTLMzuavMe290J1vlY=
+	b=GL4mKc03MlPSOh7G+SAMO5py2x4HWYeLl4760ZnES2Xe5NCoc4A3IwHJQNZ2vvBbt
+	 Ly0hDpJhUlF4eo5prXsJCvh7bmxuSLLuOdS4ZchuSHITPx4cjQ6VmaygRaosOuIVxT
+	 8j/DfR6Wj8MSIEib67HenrvOarRey1eZ+K3TV3t8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388509AbgAPSoF (ORCPT
+        id S2390120AbgAPRK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:44:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50784 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:10:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388664AbgAPRLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:11:04 -0500
+        id S2390090AbgAPRK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:10:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B3B12469A;
-        Thu, 16 Jan 2020 17:11:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0E0B2468C;
+        Thu, 16 Jan 2020 17:10:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194663;
-        bh=ENH9qJZ2wnMw/iROLzTDu5Co9VYRibguqz45d7YFmBw=;
+        s=default; t=1579194655;
+        bh=odziI9yQ1/r+MOSZC+bk4hQhBJnZAFnQo3/fMMks6ZE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WUxbT6O22URtmKqJbdn/n/rV8WwTAYrlOT9iPhrGailAS2qMdRbL4wyl1eTP6FhrK
-         U/rOLw9cc5g6lCxtUOdF92BLd/x/yGI6AZpsnUdTHsXOKrgmN8tb+13LWXWMLhzU8r
-         iQmn1UTPIOJtGKECArMkYof/j+m4CSN/HSic3W2c=
+        b=g0fpha4zcqvRi0dy2X33hCffzcMP+S4+bft3lRAoUMV0DWjisllG+rwysjC8ujU1a
+         yALTT+5e4aKWBKkkFac7E+EipjQeqKz9rVnXW/jt79y1jfOYi5gqbKCaJ3cWUVVUvg
+         QGXUPYXwWO3ZFEo3GQH/bZrIvSKXjgh+TM1Co1tQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        laokz <laokz@foxmail.com>, Stefani Seibold <stefani@seibold.net>,
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>,
+        Paul Burton <paul.burton@mips.com>, ralf@linux-mips.org,
+        jhogan@kernel.org, "Maciej W . Rozycki" <macro@linux-mips.org>,
+        Hassan Naveed <hnaveed@wavecomp.com>,
+        Stephen Kitt <steve@sk2.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Greg KH <greg@kroah.com>, Kees Cook <keescook@chromium.org>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 513/671] Partially revert "kfifo: fix kfifo_alloc() and kfifo_init()"
-Date:   Thu, 16 Jan 2020 12:02:31 -0500
-Message-Id: <20200116170509.12787-250-sashal@kernel.org>
+        Michal Hocko <mhocko@suse.com>, linux-mips@vger.kernel.org,
+        clang-built-linux@googlegroups.com, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 508/671] mips: avoid explicit UB in assignment of mips_io_port_base
+Date:   Thu, 16 Jan 2020 12:02:26 -0500
+Message-Id: <20200116170509.12787-245-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -62,60 +68,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Nick Desaulniers <ndesaulniers@google.com>
 
-[ Upstream commit ab9bb6318b0967671e0c9b6537c1537d51ca4f45 ]
+[ Upstream commit 12051b318bc3ce5b42d6d786191008284b067d83 ]
 
-Commit dfe2a77fd243 ("kfifo: fix kfifo_alloc() and kfifo_init()") made
-the kfifo code round the number of elements up.  That was good for
-__kfifo_alloc(), but it's actually wrong for __kfifo_init().
+The code in question is modifying a variable declared const through
+pointer manipulation.  Such code is explicitly undefined behavior, and
+is the lone issue preventing malta_defconfig from booting when built
+with Clang:
 
-The difference? __kfifo_alloc() will allocate the rounded-up number of
-elements, but __kfifo_init() uses an allocation done by the caller.  We
-can't just say "use more elements than the caller allocated", and have
-to round down.
+If an attempt is made to modify an object defined with a const-qualified
+type through use of an lvalue with non-const-qualified type, the
+behavior is undefined.
 
-The good news? All the normal cases will be using power-of-two arrays
-anyway, and most users of kfifo's don't use kfifo_init() at all, but one
-of the helper macros to declare a KFIFO that enforce the proper
-power-of-two behavior.  But it looks like at least ibmvscsis might be
-affected.
+LLVM is removing such assignments. A simple fix is to not declare
+variables const that you plan on modifying.  Limiting the scope would be
+a better method of preventing unwanted writes to such a variable.
 
-The bad news? Will Deacon refers to an old thread and points points out
-that the memory ordering in kfifo's is questionable.  See
+Further, the code in question mentions "compiler bugs" without any links
+to bug reports, so it is difficult to know if the issue is resolved in
+GCC. The patch was authored in 2006, which would have been GCC 4.0.3 or
+4.1.1. The minimal supported version of GCC in the Linux kernel is
+currently 4.6.
 
-  https://lore.kernel.org/lkml/20181211034032.32338-1-yuleixzhang@tencent.com/
+For what its worth, there was UB before the commit in question, it just
+added a barrier and got lucky IRT codegen. I don't think there's any
+actual compiler bugs related, just runtime bugs due to UB.
 
-for more.
-
-Fixes: dfe2a77fd243 ("kfifo: fix kfifo_alloc() and kfifo_init()")
-Reported-by: laokz <laokz@foxmail.com>
-Cc: Stefani Seibold <stefani@seibold.net>
+Link: https://github.com/ClangBuiltLinux/linux/issues/610
+Fixes: 966f4406d903 ("[MIPS] Work around bad code generation for <asm/io.h>.")
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+Debugged-by: Nathan Chancellor <natechancellor@gmail.com>
+Suggested-by: Eli Friedman <efriedma@quicinc.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: ralf@linux-mips.org
+Cc: jhogan@kernel.org
+Cc: Maciej W. Rozycki <macro@linux-mips.org>
+Cc: Hassan Naveed <hnaveed@wavecomp.com>
+Cc: Stephen Kitt <steve@sk2.org>
+Cc: Serge Semin <fancer.lancer@gmail.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Greg KH <greg@kroah.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Will Deacon <will@kernel.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: clang-built-linux@googlegroups.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/kfifo.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/mips/include/asm/io.h | 14 ++------------
+ arch/mips/kernel/setup.c   |  2 +-
+ 2 files changed, 3 insertions(+), 13 deletions(-)
 
-diff --git a/lib/kfifo.c b/lib/kfifo.c
-index 015656aa8182..6320ab91e343 100644
---- a/lib/kfifo.c
-+++ b/lib/kfifo.c
-@@ -82,7 +82,8 @@ int __kfifo_init(struct __kfifo *fifo, void *buffer,
+diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
+index 54c730aed327..df1eaa365279 100644
+--- a/arch/mips/include/asm/io.h
++++ b/arch/mips/include/asm/io.h
+@@ -62,21 +62,11 @@
+  * instruction, so the lower 16 bits must be zero.  Should be true on
+  * on any sane architecture; generic code does not use this assumption.
+  */
+-extern const unsigned long mips_io_port_base;
++extern unsigned long mips_io_port_base;
+ 
+-/*
+- * Gcc will generate code to load the value of mips_io_port_base after each
+- * function call which may be fairly wasteful in some cases.  So we don't
+- * play quite by the book.  We tell gcc mips_io_port_base is a long variable
+- * which solves the code generation issue.  Now we need to violate the
+- * aliasing rules a little to make initialization possible and finally we
+- * will need the barrier() to fight side effects of the aliasing chat.
+- * This trickery will eventually collapse under gcc's optimizer.  Oh well.
+- */
+ static inline void set_io_port_base(unsigned long base)
  {
- 	size /= esize;
+-	* (unsigned long *) &mips_io_port_base = base;
+-	barrier();
++	mips_io_port_base = base;
+ }
  
--	size = roundup_pow_of_two(size);
-+	if (!is_power_of_2(size))
-+		size = rounddown_pow_of_two(size);
+ /*
+diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+index 8aaaa42f91ed..e87c98b8a72c 100644
+--- a/arch/mips/kernel/setup.c
++++ b/arch/mips/kernel/setup.c
+@@ -76,7 +76,7 @@ static char __initdata builtin_cmdline[COMMAND_LINE_SIZE] = CONFIG_CMDLINE;
+  * mips_io_port_base is the begin of the address space to which x86 style
+  * I/O ports are mapped.
+  */
+-const unsigned long mips_io_port_base = -1;
++unsigned long mips_io_port_base = -1;
+ EXPORT_SYMBOL(mips_io_port_base);
  
- 	fifo->in = 0;
- 	fifo->out = 0;
+ static struct resource code_resource = { .name = "Kernel code", };
 -- 
 2.20.1
 
