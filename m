@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C04F2C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA254C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C11C2075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:24:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D34E2075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:24:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217053;
-	bh=llcbE1wcQpude3dpR8hju5BDyHfnYm//qk0xuoLs8uk=;
+	s=default; t=1579217057;
+	bh=FVn4zUt7llDl0T0xy9sh+uhMK+Vwnl6z/3Aqm9O7aA4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AIyi250At0HQzgr8so3ZUO5i+Olrf/O4epYjGz5DybIRNUXtYd080V9dmfyetmVIE
-	 ym8ZYREK6SGlsu3M4K+YG999JMdyXi152I9t9HK6FLt4i07W+zgiFOvkizc0aVt7IY
-	 WDAt7uNcXaOKpriyE45irK5caPk0evcFLL45c+D0=
+	b=wYkSB2Sjb9LubyO4RBQlPXsLVhoQxCmiyw1iqkstJWUci+NL9nwv56IjF7TfmEpRq
+	 zyJYcJTkHIJUzHI7PYnFddxvtZiM/KT5KjVqhbwE56mfJ4V6tOGlGf/KisBnpUiswm
+	 nvArNSd9LBeHUAZ4ddm5UV81Dk8T65/2GceJWdEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730989AbgAPXYM (ORCPT
+        id S1730951AbgAPXYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:24:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52854 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:24:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730701AbgAPXYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:24:03 -0500
+        id S1729652AbgAPXYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:24:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26383206D9;
-        Thu, 16 Jan 2020 23:24:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7F8B20748;
+        Thu, 16 Jan 2020 23:24:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217042;
-        bh=llcbE1wcQpude3dpR8hju5BDyHfnYm//qk0xuoLs8uk=;
+        s=default; t=1579217052;
+        bh=FVn4zUt7llDl0T0xy9sh+uhMK+Vwnl6z/3Aqm9O7aA4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j1lQG5leIO8vKbxEu1tEL5ItnICkqKlr8ACoXscCveavOrsUHQ0RUzRsf2yqSwuvo
-         ioE+LCC+Un95GmJw6dnnevvd6lOlyDRgD/ylPn2BnYxrBKvoHeHaF5yYiXQA5XSB7k
-         2AAOKVo3iel5DatwpopgCRFvmkLj9ff+mD5LzY0Y=
+        b=DkvKvBZECF2JUdE5MZiXSDcdHSKuJXGCn/oaV98vaYQyiwwgkmXO2Ezzoo+ksYTPY
+         /8XgZ8pbFmUpxOhKO6c3AICKWHG/21JbpZwcIDH926B1SoqKtxI9JDm+iotO+Iw/lH
+         Ch19twdafR7m6TTBZsloBBI2PMr4lIzdD0CPV6xQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 5.4 108/203] NFSv4.x: Drop the slot if nfs4_delegreturn_prepare waits for layoutreturn
-Date:   Fri, 17 Jan 2020 00:17:05 +0100
-Message-Id: <20200116231754.960143265@linuxfoundation.org>
+        stable@vger.kernel.org, Keiya Nobuta <nobuta.keiya@fujitsu.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 5.4 120/203] pinctrl: sh-pfc: Fix PINMUX_IPSR_PHYS() to set GPSR
+Date:   Fri, 17 Jan 2020 00:17:17 +0100
+Message-Id: <20200116231755.814753241@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -59,34 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Keiya Nobuta <nobuta.keiya@fujitsu.com>
 
-commit 5326de9e94bedcf7366e7e7625d4deb8c1f1ca8a upstream.
+commit d30710b8cce3a581c170d69002e311cc18ed47d3 upstream.
 
-If nfs4_delegreturn_prepare needs to wait for a layoutreturn to complete
-then make sure we drop the sequence slot if we hold it.
+This patch allows PINMUX_IPSR_PHYS() to set bits in GPSR.
+When assigning function to pin, GPSR should be set to peripheral
+function.
+For example when using SCL3, GPSR2 bit7 (PWM1_A pin) should be set to
+peripheral function.
 
-Fixes: 1c5bd76d17cc ("pNFS: Enable layoutreturn operation for return-on-close")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Keiya Nobuta <nobuta.keiya@fujitsu.com>
+Link: https://lore.kernel.org/r/20191008060112.29819-1-nobuta.keiya@fujitsu.com
+Fixes: 50d1ba1764b3e00a ("pinctrl: sh-pfc: Add physical pin multiplexing helper macros")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/nfs4proc.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/pinctrl/sh-pfc/sh_pfc.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -6252,8 +6252,10 @@ static void nfs4_delegreturn_prepare(str
+--- a/drivers/pinctrl/sh-pfc/sh_pfc.h
++++ b/drivers/pinctrl/sh-pfc/sh_pfc.h
+@@ -422,12 +422,12 @@ extern const struct sh_pfc_soc_info shx3
+ /*
+  * Describe a pinmux configuration in which a pin is physically multiplexed
+  * with other pins.
+- *   - ipsr: IPSR field (unused, for documentation purposes only)
++ *   - ipsr: IPSR field
+  *   - fn: Function name
+  *   - psel: Physical multiplexing selector
+  */
+ #define PINMUX_IPSR_PHYS(ipsr, fn, psel) \
+-	PINMUX_DATA(fn##_MARK, FN_##psel)
++	PINMUX_DATA(fn##_MARK, FN_##psel, FN_##ipsr)
  
- 	d_data = (struct nfs4_delegreturndata *)data;
- 
--	if (!d_data->lr.roc && nfs4_wait_on_layoutreturn(d_data->inode, task))
-+	if (!d_data->lr.roc && nfs4_wait_on_layoutreturn(d_data->inode, task)) {
-+		nfs4_sequence_done(task, &d_data->res.seq_res);
- 		return;
-+	}
- 
- 	lo = d_data->args.lr_args ? d_data->args.lr_args->layout : NULL;
- 	if (lo && !pnfs_layout_is_valid(lo)) {
+ /*
+  * Describe a pinmux configuration for a single-function pin with GPIO
 
 
