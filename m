@@ -2,137 +2,75 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC297C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07353C33CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89B6D217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:21:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="LMueDRVN"
+	by mail.kernel.org (Postfix) with ESMTP id D7E042075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 09:22:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730071AbgAPJVV (ORCPT
+        id S1730511AbgAPJWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 04:21:21 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:35560 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726684AbgAPJVV (ORCPT
+        Thu, 16 Jan 2020 04:22:09 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:60139 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726684AbgAPJWI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 04:21:21 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00G9CnvH019865;
-        Thu, 16 Jan 2020 10:21:03 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=oXdqzOpECkceymNrXiBm0gzyy2jK6pABw4YC8ToVezU=;
- b=LMueDRVNZKKBRk7fSc5+0a3lqbIPoJPBRTNrEgkh4C1ln5yOoQPN+tqH2sPOEu2EGXX7
- lRHlD9VVCTqquV6qsTeLW3QbpLkk2UxWKBtLOtZ2L1iqzSFXSZvyLsRFVdujE7J08L5I
- tQdLg9dbTxjs8mWkym5Y3Nqo49WhML66pez9GPL0cqdNSuAcDBLqMV6La8GbLAtfI+/u
- aTgHKn+fe5ebXVHPS5+8jOPZNnkwQMVzuEhX8r/ruGCpD5DbAV6KLFigrnZo9gN+CMta
- 20YLGfb5MbuGarnghgi6Uxqje3JdGYOU8rDJ8dU+cPokjeAKr3gPWWM43LnU2KxCHwXI yg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xf7jpr5pd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jan 2020 10:21:03 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DF267100034;
-        Thu, 16 Jan 2020 10:20:58 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CB8B62A900B;
-        Thu, 16 Jan 2020 10:20:58 +0100 (CET)
-Received: from lmecxl0923.lme.st.com (10.75.127.46) by SFHDAG6NODE1.st.com
- (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 Jan
- 2020 10:20:58 +0100
-Subject: Re: [PATCH 5/9] dt-bindings: mmc: mmci: add delay block base register
- for sdmmc
-To:     Rob Herring <robh@kernel.org>
-CC:     Ulf Hansson <ulf.hansson@linaro.org>,
-        <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20200110134823.14882-1-ludovic.barre@st.com>
- <20200110134823.14882-6-ludovic.barre@st.com> <20200115145645.GA599@bogus>
-From:   Ludovic BARRE <ludovic.barre@st.com>
-Message-ID: <2ce63f11-8b0c-8261-63fa-cd19e874c537@st.com>
-Date:   Thu, 16 Jan 2020 10:20:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Thu, 16 Jan 2020 04:22:08 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1is1Lq-000436-T3; Thu, 16 Jan 2020 09:22:07 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] tools: bootconfig: fix spelling mistake "faile" -> "failed"
+Date:   Thu, 16 Jan 2020 09:22:06 +0000
+Message-Id: <20200116092206.52192-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <20200115145645.GA599@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: fr
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-16_02:2020-01-16,2020-01-15 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob
+From: Colin Ian King <colin.king@canonical.com>
 
-Le 1/15/20 à 3:56 PM, Rob Herring a écrit :
-> On Fri, Jan 10, 2020 at 02:48:19PM +0100, Ludovic Barre wrote:
->> To support the sdr104 mode, the sdmmc variant has a
->> hardware delay block to manage the clock phase when sampling
->> data received by the card.
->>
->> This patch adds a second base register (optional) for
->> sdmmc delay block.
->>
->> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
->> ---
->>   Documentation/devicetree/bindings/mmc/mmci.txt | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/mmc/mmci.txt b/Documentation/devicetree/bindings/mmc/mmci.txt
->> index 6d3c626e017d..4ec921e4bf34 100644
->> --- a/Documentation/devicetree/bindings/mmc/mmci.txt
->> +++ b/Documentation/devicetree/bindings/mmc/mmci.txt
->> @@ -28,6 +28,8 @@ specific for ux500 variant:
->>   - st,sig-pin-fbclk       : feedback clock signal pin used.
->>   
->>   specific for sdmmc variant:
->> +- reg			 : a second base register may be defined if a delay
->> +                           block is present and used for tuning.
-> 
-> Which compatibles have a 2nd reg entry?
+There are two spelling mistakes in printf statements, fix these.
 
-In fact, mmci driver is ARM Amba driver (arm,primecell) and has only one
-compatible "arm,pl18x".
-The variants are identified by primecell-periphid property
-(discovered at runtime with HW block register or defined by
-device tree property "arm,primecell-periphid").
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ tools/bootconfig/main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-The defaults "arm,pl18x" variants have only one base register,
-but the SDMMC need a second base register for these
-delay block registers.
+diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
+index b8f174fd2a0a..91c9a5c0c499 100644
+--- a/tools/bootconfig/main.c
++++ b/tools/bootconfig/main.c
+@@ -140,7 +140,7 @@ int load_xbc_from_initrd(int fd, char **buf)
+ 		return 0;
+ 
+ 	if (lseek(fd, -8, SEEK_END) < 0) {
+-		printf("Faile to lseek: %d\n", -errno);
++		printf("Failed to lseek: %d\n", -errno);
+ 		return -errno;
+ 	}
+ 
+@@ -155,7 +155,7 @@ int load_xbc_from_initrd(int fd, char **buf)
+ 		return 0;
+ 
+ 	if (lseek(fd, stat.st_size - 8 - size, SEEK_SET) < 0) {
+-		printf("Faile to lseek: %d\n", -errno);
++		printf("Failed to lseek: %d\n", -errno);
+ 		return -errno;
+ 	}
+ 
+-- 
+2.24.0
 
-example of sdmmc node:
-	sdmmc1: sdmmc@58005000 {
-		compatible = "arm,pl18x", "arm,primecell";
-		arm,primecell-periphid = <0x00253180>;
-		reg = <0x58005000 0x1000>, <0x58006000 0x1000>;
-	};
-
-what do you advise?
-
-> 
->>   - st,sig-dir             : signal direction polarity used for cmd, dat0 dat123.
->>   - st,neg-edge            : data & command phase relation, generated on
->>                              sd clock falling edge.
->> -- 
->> 2.17.1
->>
