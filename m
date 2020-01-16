@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F27C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D96F8C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B13B2072B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A354620684
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 23:26:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579217157;
-	bh=f5K9Qz9G83MgDNny780J8X4HB03TXt8kgb7x4eSj1JU=;
+	s=default; t=1579217161;
+	bh=77/Gy00sz07sYUnF0AlWCXpY0U9NWEAYrzKzK1mqUzg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WnRefctyFB7/Ag/q8cFFCmhdidb208nRCkzeo9tDYA0eYDPBrtZLkoxi2ADc+t19I
-	 RoaWkpElBEQRo4kMoeN8KK1OXpVnc0f+FjFClI67oboPMh2PWQC2HbvfcA7qncyI39
-	 iY01NSOTYPuZXSTQ+CMbX8HuVhscfU7vbjzncs+g=
+	b=UYcdjReKSezvXrL7BQ6G5bh18+jkBW5SvyZ/PA1HUIAGJDpzg4y3ht82XEPLs/J1Q
+	 rF/zRJMZkPTsqmTFn+eNyAoNDNvAaHy8SL8JOIeQ3RNm1mIM66XVgcwlyTLpG/GVgv
+	 R6b+80jfMXL8V+43Sp8zvPYkcnOat4WWLK5pa4sY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389316AbgAPXZ4 (ORCPT
+        id S1733107AbgAPX0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:25:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55386 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 18:26:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388212AbgAPXZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:25:37 -0500
+        id S1731718AbgAPXZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:25:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDF7820684;
-        Thu, 16 Jan 2020 23:25:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3635920684;
+        Thu, 16 Jan 2020 23:25:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579217137;
-        bh=f5K9Qz9G83MgDNny780J8X4HB03TXt8kgb7x4eSj1JU=;
+        s=default; t=1579217139;
+        bh=77/Gy00sz07sYUnF0AlWCXpY0U9NWEAYrzKzK1mqUzg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yz31yV3sF+s2khjVmqh+6WUG9gqdcx7WCTZkJMYwZa+M3AYvrYRrDEJksZkRO1nzp
-         Jc4wPbmigrzH/z8IUBneeRnb0lGGm2WYlPTRhs/GMxEwrPHvatlCmmgV05WOP502Z4
-         J8UOvGlUK+TFxEGH2gRSqydcUgl6c/33xvSeiLTY=
+        b=zHOG7bcNHcSp34XnlNTdeiu9EhcKbjrL51y5XPjPER9NX3nf7egatDjfG5j48MA56
+         R2cA2+sdU7ttTOsVOw3sfUmB7EOCUvRLgLzoRhGn2Lgv9vkcfL7U/34y5CB77PgmkL
+         2nwfBSRjKdFZvkAVuEd9OGmrN6GbrV809RLXHIP8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 5.4 146/203] media: ov6650: Fix incorrect use of JPEG colorspace
-Date:   Fri, 17 Jan 2020 00:17:43 +0100
-Message-Id: <20200116231757.695720616@linuxfoundation.org>
+        stable@vger.kernel.org, Hewenliang <hewenliang4@huawei.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 5.4 137/203] tools: PCI: Fix fd leakage
+Date:   Fri, 17 Jan 2020 00:17:34 +0100
+Message-Id: <20200116231757.024280725@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
 References: <20200116231745.218684830@linuxfoundation.org>
@@ -60,94 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+From: Hewenliang <hewenliang4@huawei.com>
 
-commit 12500731895ef09afc5b66b86b76c0884fb9c7bf upstream.
+commit 3c379a59b4795d7279d38c623e74b9790345a32b upstream.
 
-Since its initial submission, the driver selects V4L2_COLORSPACE_JPEG
-for supported formats other than V4L2_MBUS_FMT_SBGGR8_1X8.  According
-to v4l2-compliance test program, V4L2_COLORSPACE_JPEG applies
-exclusively to V4L2_PIX_FMT_JPEG.  Since the sensor does not support
-JPEG format, fix it to always select V4L2_COLORSPACE_SRGB.
+We should close fd before the return of run_test.
 
-Fixes: 2f6e2404799a ("[media] SoC Camera: add driver for OV6650 sensor")
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 3f2ed8134834 ("tools: PCI: Add a userspace tool to test PCI endpoint")
+Signed-off-by: Hewenliang <hewenliang4@huawei.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/i2c/ov6650.c |   13 ++-----------
- 1 file changed, 2 insertions(+), 11 deletions(-)
+ tools/pci/pcitest.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/media/i2c/ov6650.c
-+++ b/drivers/media/i2c/ov6650.c
-@@ -201,7 +201,6 @@ struct ov6650 {
- 	unsigned long		pclk_max;	/* from resolution and format */
- 	struct v4l2_fract	tpf;		/* as requested with s_frame_interval */
- 	u32 code;
--	enum v4l2_colorspace	colorspace;
- };
- 
- 
-@@ -517,7 +516,7 @@ static int ov6650_get_fmt(struct v4l2_su
- 	mf->width	= priv->rect.width >> priv->half_scale;
- 	mf->height	= priv->rect.height >> priv->half_scale;
- 	mf->code	= priv->code;
--	mf->colorspace	= priv->colorspace;
-+	mf->colorspace	= V4L2_COLORSPACE_SRGB;
- 	mf->field	= V4L2_FIELD_NONE;
- 
- 	return 0;
-@@ -624,11 +623,6 @@ static int ov6650_s_fmt(struct v4l2_subd
- 		priv->pclk_max = 8000000;
+--- a/tools/pci/pcitest.c
++++ b/tools/pci/pcitest.c
+@@ -129,6 +129,7 @@ static int run_test(struct pci_test *tes
  	}
  
--	if (code == MEDIA_BUS_FMT_SBGGR8_1X8)
--		priv->colorspace = V4L2_COLORSPACE_SRGB;
--	else if (code != 0)
--		priv->colorspace = V4L2_COLORSPACE_JPEG;
--
- 	if (half_scale) {
- 		dev_dbg(&client->dev, "max resolution: QCIF\n");
- 		coma_set |= COMA_QCIF;
-@@ -663,7 +657,6 @@ static int ov6650_s_fmt(struct v4l2_subd
- 		priv->code = code;
+ 	fflush(stdout);
++	close(fd);
+ 	return (ret < 0) ? ret : 1 - ret; /* return 0 if test succeeded */
+ }
  
- 	if (!ret) {
--		mf->colorspace	= priv->colorspace;
- 		mf->width = priv->rect.width >> half_scale;
- 		mf->height = priv->rect.height >> half_scale;
- 	}
-@@ -686,6 +679,7 @@ static int ov6650_set_fmt(struct v4l2_su
- 				&mf->height, 2, H_CIF, 1, 0);
- 
- 	mf->field = V4L2_FIELD_NONE;
-+	mf->colorspace = V4L2_COLORSPACE_SRGB;
- 
- 	switch (mf->code) {
- 	case MEDIA_BUS_FMT_Y10_1X10:
-@@ -696,13 +690,11 @@ static int ov6650_set_fmt(struct v4l2_su
- 	case MEDIA_BUS_FMT_YUYV8_2X8:
- 	case MEDIA_BUS_FMT_VYUY8_2X8:
- 	case MEDIA_BUS_FMT_UYVY8_2X8:
--		mf->colorspace = V4L2_COLORSPACE_JPEG;
- 		break;
- 	default:
- 		mf->code = MEDIA_BUS_FMT_SBGGR8_1X8;
- 		/* fall through */
- 	case MEDIA_BUS_FMT_SBGGR8_1X8:
--		mf->colorspace = V4L2_COLORSPACE_SRGB;
- 		break;
- 	}
- 
-@@ -1008,7 +1000,6 @@ static int ov6650_probe(struct i2c_clien
- 	priv->rect.height = H_CIF;
- 	priv->half_scale  = false;
- 	priv->code	  = MEDIA_BUS_FMT_YUYV8_2X8;
--	priv->colorspace  = V4L2_COLORSPACE_JPEG;
- 
- 	/* Hardware default frame interval */
- 	priv->tpf.numerator   = GET_CLKRC_DIV(DEF_CLKRC);
 
 
