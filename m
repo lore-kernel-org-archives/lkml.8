@@ -2,211 +2,159 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1587DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7101DC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E35282073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:05:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E9A62073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 18:05:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579197957;
+	bh=IZzp67DvSMYz/mYJtZFaQojq3mSE991PWm9I9K89Y64=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2NASfpUWcBbXoqnDM8pu76a/eeAtHva6Xn57vIZDbwJLe/pKfGp4sD+LHFDrvtuer
+	 6HXQPkzDb7+ZLBIq3HGg+N79Kg83zAYStzsaaMl6VGOpOes/4bTOej1IddcTv8Deyv
+	 8pPwcNiSTdiKpqmh4MdjvL3IpdBIfV2AZGImltXo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407015AbgAPSFy (ORCPT
+        id S2406981AbgAPSFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:05:54 -0500
-Received: from mga02.intel.com ([134.134.136.20]:57386 "EHLO mga02.intel.com"
+        Thu, 16 Jan 2020 13:05:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404981AbgAPRju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2404977AbgAPRju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 Jan 2020 12:39:50 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 09:39:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,327,1574150400"; 
-   d="scan'208";a="214162921"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 16 Jan 2020 09:39:49 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1is97U-0005KR-HA; Fri, 17 Jan 2020 01:39:48 +0800
-Date:   Fri, 17 Jan 2020 01:38:51 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:timers/core] BUILD SUCCESS
- 5167c506d62dd9ffab73eba23c79b0a8845c9fe1
-Message-ID: <5e209fab.EUeNSFspWp8E2PjZ%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 338FD24708;
+        Thu, 16 Jan 2020 17:39:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579196390;
+        bh=IZzp67DvSMYz/mYJtZFaQojq3mSE991PWm9I9K89Y64=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FHZrIiVAjcdnhuDRGnKhfftb+3oB1vozdxtkT28vry5bL+GPsPE5yKMOuWX9xVxek
+         bc/08UEXHH1413gpDdCaIx1qiAoE2recKYoVVS5PdK2ETtOOnkl1cjetacu/s7nz3K
+         bHKlWrPkgVv32Qh45mhVqGgB9+o1tAnSIUu53zqs=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.9 170/251] qed: reduce maximum stack frame size
+Date:   Thu, 16 Jan 2020 12:35:19 -0500
+Message-Id: <20200116173641.22137-130-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
+References: <20200116173641.22137-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  timers/core
-branch HEAD: 5167c506d62dd9ffab73eba23c79b0a8845c9fe1  tick/common: Touch watchdog in tick_unfreeze() on all CPUs
+From: Arnd Bergmann <arnd@arndb.de>
 
-elapsed time: 609m
+[ Upstream commit 7c116e02a4a7575c8c62bfd2106e3e3ec8fb99dc ]
 
-configs tested: 148
-configs skipped: 0
+clang warns about an overly large stack frame in one function
+when it decides to inline all __qed_get_vport_*() functions into
+__qed_get_vport_stats():
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+drivers/net/ethernet/qlogic/qed/qed_l2.c:1889:13: error: stack frame size of 1128 bytes in function '_qed_get_vport_stats' [-Werror,-Wframe-larger-than=]
 
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-um                                  defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-x86_64               randconfig-c001-20200116
-x86_64               randconfig-c002-20200116
-x86_64               randconfig-c003-20200116
-i386                 randconfig-c001-20200116
-i386                 randconfig-c002-20200116
-i386                 randconfig-c003-20200116
-parisc                            allnoconfig
-parisc                            allyesonfig
-parisc                         b180_defconfig
-parisc                        c3000_defconfig
-parisc                              defconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-alpha                randconfig-a001-20200116
-m68k                 randconfig-a001-20200116
-mips                 randconfig-a001-20200116
-nds32                randconfig-a001-20200116
-parisc               randconfig-a001-20200116
-riscv                randconfig-a001-20200116
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                               rhel-7.6
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-x86_64               randconfig-a001-20200116
-x86_64               randconfig-a002-20200116
-x86_64               randconfig-a003-20200116
-i386                 randconfig-a001-20200116
-i386                 randconfig-a002-20200116
-i386                 randconfig-a003-20200116
-ia64                                defconfig
-i386                             alldefconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-x86_64               randconfig-d001-20200116
-x86_64               randconfig-d002-20200116
-x86_64               randconfig-d003-20200116
-i386                 randconfig-d001-20200116
-i386                 randconfig-d002-20200116
-i386                 randconfig-d003-20200116
-arc                  randconfig-a001-20200116
-arm                  randconfig-a001-20200116
-arm64                randconfig-a001-20200116
-ia64                 randconfig-a001-20200116
-powerpc              randconfig-a001-20200116
-sparc                randconfig-a001-20200116
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-arc                  randconfig-a001-20200117
-arm                  randconfig-a001-20200117
-arm64                randconfig-a001-20200117
-ia64                 randconfig-a001-20200117
-powerpc              randconfig-a001-20200117
-sparc                randconfig-a001-20200117
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-x86_64               randconfig-d001-20200117
-x86_64               randconfig-d002-20200117
-x86_64               randconfig-d003-20200117
-i386                 randconfig-d001-20200117
-i386                 randconfig-d002-20200117
-i386                 randconfig-d003-20200117
-x86_64               randconfig-b001-20200116
-x86_64               randconfig-b002-20200116
-x86_64               randconfig-b003-20200116
-i386                 randconfig-b001-20200116
-i386                 randconfig-b002-20200116
-i386                 randconfig-b003-20200116
-x86_64               randconfig-e001-20200116
-x86_64               randconfig-e002-20200116
-x86_64               randconfig-e003-20200116
-i386                 randconfig-e001-20200116
-i386                 randconfig-e002-20200116
-i386                 randconfig-e003-20200116
+Use a noinline_for_stack annotation to prevent clang from inlining
+these, which keeps the maximum stack usage at around half of that
+in the worst case, similar to what we get with gcc.
 
+Fixes: 86622ee75312 ("qed: Move statistics to L2 code")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+ drivers/net/ethernet/qlogic/qed/qed_l2.c | 34 +++++++++++-------------
+ 1 file changed, 15 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_l2.c b/drivers/net/ethernet/qlogic/qed/qed_l2.c
+index 715776e2cfe5..2d198f6ee21d 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_l2.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_l2.c
+@@ -1328,10 +1328,9 @@ static void __qed_get_vport_pstats_addrlen(struct qed_hwfn *p_hwfn,
+ 	}
+ }
+ 
+-static void __qed_get_vport_pstats(struct qed_hwfn *p_hwfn,
+-				   struct qed_ptt *p_ptt,
+-				   struct qed_eth_stats *p_stats,
+-				   u16 statistics_bin)
++static noinline_for_stack void
++__qed_get_vport_pstats(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt,
++		       struct qed_eth_stats *p_stats, u16 statistics_bin)
+ {
+ 	struct eth_pstorm_per_queue_stat pstats;
+ 	u32 pstats_addr = 0, pstats_len = 0;
+@@ -1351,10 +1350,9 @@ static void __qed_get_vport_pstats(struct qed_hwfn *p_hwfn,
+ 	p_stats->tx_err_drop_pkts += HILO_64_REGPAIR(pstats.error_drop_pkts);
+ }
+ 
+-static void __qed_get_vport_tstats(struct qed_hwfn *p_hwfn,
+-				   struct qed_ptt *p_ptt,
+-				   struct qed_eth_stats *p_stats,
+-				   u16 statistics_bin)
++static noinline_for_stack void
++__qed_get_vport_tstats(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt,
++		       struct qed_eth_stats *p_stats, u16 statistics_bin)
+ {
+ 	struct tstorm_per_port_stat tstats;
+ 	u32 tstats_addr, tstats_len;
+@@ -1397,10 +1395,9 @@ static void __qed_get_vport_ustats_addrlen(struct qed_hwfn *p_hwfn,
+ 	}
+ }
+ 
+-static void __qed_get_vport_ustats(struct qed_hwfn *p_hwfn,
+-				   struct qed_ptt *p_ptt,
+-				   struct qed_eth_stats *p_stats,
+-				   u16 statistics_bin)
++static noinline_for_stack
++void __qed_get_vport_ustats(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt,
++			    struct qed_eth_stats *p_stats, u16 statistics_bin)
+ {
+ 	struct eth_ustorm_per_queue_stat ustats;
+ 	u32 ustats_addr = 0, ustats_len = 0;
+@@ -1436,10 +1433,9 @@ static void __qed_get_vport_mstats_addrlen(struct qed_hwfn *p_hwfn,
+ 	}
+ }
+ 
+-static void __qed_get_vport_mstats(struct qed_hwfn *p_hwfn,
+-				   struct qed_ptt *p_ptt,
+-				   struct qed_eth_stats *p_stats,
+-				   u16 statistics_bin)
++static noinline_for_stack void
++__qed_get_vport_mstats(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt,
++		       struct qed_eth_stats *p_stats, u16 statistics_bin)
+ {
+ 	struct eth_mstorm_per_queue_stat mstats;
+ 	u32 mstats_addr = 0, mstats_len = 0;
+@@ -1463,9 +1459,9 @@ static void __qed_get_vport_mstats(struct qed_hwfn *p_hwfn,
+ 		HILO_64_REGPAIR(mstats.tpa_coalesced_bytes);
+ }
+ 
+-static void __qed_get_vport_port_stats(struct qed_hwfn *p_hwfn,
+-				       struct qed_ptt *p_ptt,
+-				       struct qed_eth_stats *p_stats)
++static noinline_for_stack void
++__qed_get_vport_port_stats(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt,
++			   struct qed_eth_stats *p_stats)
+ {
+ 	struct port_stats port_stats;
+ 	int j;
+-- 
+2.20.1
+
