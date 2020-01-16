@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1FBC33CB6
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E1AC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4208F2073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:54:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 547C62077C
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:54:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197287;
-	bh=LZXc39akRF9TdNnhbcpEkxTJJQMlUphOrcUB7D1NdQs=;
+	s=default; t=1579197295;
+	bh=RWIpyYV2IZnnvLeNB3e+att7PsbnyepJ/57t61uI6Fc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hdsINu/1pI1GPMURTFXbztqnnvXzLFZJNUzldINzckb8ZKbFD/wPzGYWsnMXdIzPl
-	 WUeL4RY5dgsIjqCzj/UmdITjRYNAr2XRV8/pc+8ZUHv4zSAzgKsfnI8g2CoE5eUTxg
-	 QNSb1Z7eyqi17buq44UiEah+uSooHJtoLjMK5Ihg=
+	b=kqLg6BX3OesPdxlEypGkTnOgOmL8HoGtHwxg8AlAuPoP8liBLnv7Goh6NqTTkbgMS
+	 nup2pRKV1aC/i4NmiRNYs0Z5Q2nDCUo041NLgR407dQFqbWsxGJvmiX9HayDtqFYQP
+	 c1fMGNtgDMOA+wMwVYiFvlCjKQbGiiHc2Lh9EgQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406403AbgAPRyp (ORCPT
+        id S2394152AbgAPRo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:54:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35688 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:44:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405908AbgAPRoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:44:38 -0500
+        id S2394055AbgAPRoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:44:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 603462476A;
-        Thu, 16 Jan 2020 17:44:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3661E24752;
+        Thu, 16 Jan 2020 17:44:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196677;
-        bh=LZXc39akRF9TdNnhbcpEkxTJJQMlUphOrcUB7D1NdQs=;
+        s=default; t=1579196645;
+        bh=RWIpyYV2IZnnvLeNB3e+att7PsbnyepJ/57t61uI6Fc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tKIx5JIgN+xkrHb6wi8jrqlAIhlaGXZl4wLCfp/juESJ7/6wETHXIM9hDYhZNCHaS
-         5b66R/U5Os3jSnX2JNN91YQJuE4WEN+VUUSSVavStBhaCEpShVmKKGdvP5QzVb1bTc
-         WMenUtb49PvHa4cmeuGgoLdJxuaqflIQUy1YvQHQ=
+        b=q/6paLlbH8beQcXrL8Fslp60q4TD6b+p744NDC/GoZYDk3SIbRmmqAvL9N5gxSTQF
+         SwIqWDBOSmoHrWYe72brGQ6DXAohET9V4UsOphG3bYDlDLtI+8g4+EjnAeKTpC4vZH
+         1+XKuqc3LzFVg8C2faNl8TestjGFZor/7TAFUDaY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jie Liu <liujie165@huawei.com>, Qiang Ning <ningqiang1@huawei.com>,
-        Zhiqiang Liu <liuzhiqiang26@huawei.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.4 076/174] tipc: set sysctl_tipc_rmem and named_timeout right range
-Date:   Thu, 16 Jan 2020 12:41:13 -0500
-Message-Id: <20200116174251.24326-76-sashal@kernel.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        nios2-dev@lists.rocketboards.org
+Subject: [PATCH AUTOSEL 4.4 055/174] nios2: ksyms: Add missing symbol exports
+Date:   Thu, 16 Jan 2020 12:40:52 -0500
+Message-Id: <20200116174251.24326-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -62,58 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jie Liu <liujie165@huawei.com>
+From: Guenter Roeck <linux@roeck-us.net>
 
-[ Upstream commit 4bcd4ec1017205644a2697bccbc3b5143f522f5f ]
+[ Upstream commit 0f8ed994575429d6042cf5d7ef70081c94091587 ]
 
-We find that sysctl_tipc_rmem and named_timeout do not have the right minimum
-setting. sysctl_tipc_rmem should be larger than zero, like sysctl_tcp_rmem.
-And named_timeout as a timeout setting should be not less than zero.
+Building nios2:allmodconfig fails as follows (each symbol is only listed
+once).
 
-Fixes: cc79dd1ba9c10 ("tipc: change socket buffer overflow control to respect sk_rcvbuf")
-Fixes: a5325ae5b8bff ("tipc: add name distributor resiliency queue")
-Signed-off-by: Jie Liu <liujie165@huawei.com>
-Reported-by: Qiang Ning <ningqiang1@huawei.com>
-Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Reviewed-by: Miaohe Lin <linmiaohe@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+ERROR: "__ashldi3" [drivers/md/dm-writecache.ko] undefined!
+ERROR: "__ashrdi3" [fs/xfs/xfs.ko] undefined!
+ERROR: "__ucmpdi2" [drivers/media/i2c/adv7842.ko] undefined!
+ERROR: "__lshrdi3" [drivers/md/dm-zoned.ko] undefined!
+ERROR: "flush_icache_range" [drivers/misc/lkdtm/lkdtm.ko] undefined!
+ERROR: "empty_zero_page" [drivers/md/dm-mod.ko] undefined!
+
+The problem is seen with gcc 7.3.0.
+
+Export the missing symbols.
+
+Fixes: 2fc8483fdcde ("nios2: Build infrastructure")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/tipc/sysctl.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/nios2/kernel/nios2_ksyms.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/net/tipc/sysctl.c b/net/tipc/sysctl.c
-index 1a779b1e8510..40f6d82083d7 100644
---- a/net/tipc/sysctl.c
-+++ b/net/tipc/sysctl.c
-@@ -37,6 +37,8 @@
+diff --git a/arch/nios2/kernel/nios2_ksyms.c b/arch/nios2/kernel/nios2_ksyms.c
+index bf2f55d10a4d..4e704046a150 100644
+--- a/arch/nios2/kernel/nios2_ksyms.c
++++ b/arch/nios2/kernel/nios2_ksyms.c
+@@ -9,12 +9,20 @@
+ #include <linux/export.h>
+ #include <linux/string.h>
  
- #include <linux/sysctl.h>
++#include <asm/cacheflush.h>
++#include <asm/pgtable.h>
++
+ /* string functions */
  
-+static int zero;
-+static int one = 1;
- static struct ctl_table_header *tipc_ctl_hdr;
+ EXPORT_SYMBOL(memcpy);
+ EXPORT_SYMBOL(memset);
+ EXPORT_SYMBOL(memmove);
  
- static struct ctl_table tipc_table[] = {
-@@ -45,14 +47,16 @@ static struct ctl_table tipc_table[] = {
- 		.data		= &sysctl_tipc_rmem,
- 		.maxlen		= sizeof(sysctl_tipc_rmem),
- 		.mode		= 0644,
--		.proc_handler	= proc_dointvec,
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1         = &one,
- 	},
- 	{
- 		.procname	= "named_timeout",
- 		.data		= &sysctl_tipc_named_timeout,
- 		.maxlen		= sizeof(sysctl_tipc_named_timeout),
- 		.mode		= 0644,
--		.proc_handler	= proc_dointvec,
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1         = &zero,
- 	},
- 	{}
- };
++/* memory management */
++
++EXPORT_SYMBOL(empty_zero_page);
++EXPORT_SYMBOL(flush_icache_range);
++
+ /*
+  * libgcc functions - functions that are used internally by the
+  * compiler...  (prototypes are not correct though, but that
+@@ -31,3 +39,7 @@ DECLARE_EXPORT(__udivsi3);
+ DECLARE_EXPORT(__umoddi3);
+ DECLARE_EXPORT(__umodsi3);
+ DECLARE_EXPORT(__muldi3);
++DECLARE_EXPORT(__ucmpdi2);
++DECLARE_EXPORT(__lshrdi3);
++DECLARE_EXPORT(__ashldi3);
++DECLARE_EXPORT(__ashrdi3);
 -- 
 2.20.1
 
