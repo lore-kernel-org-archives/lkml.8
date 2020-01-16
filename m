@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15CD5C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F48CC33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7D122073A
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DD8F2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 19:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202679;
-	bh=oVEpUpIzVKUCnt2/4jdogUGDwyi7Ehjqtc97o16UCeo=;
+	s=default; t=1579202688;
+	bh=6L36wDLqi7f4RDjvHJuzkxVG81vOLAgZTMzqyjsy0yc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B3gyy5sXDjaAm9/YcjhQXECP5l7Wh5gDAAMiA49QostpWdDN+81YbX3hCeIPTMYh+
-	 e3BQ1hhD2vzhy6Ncco0vAexK0lICGjuKemJ3E3j5+teZyGZE/KM7fnHcpDSDb5D3op
-	 escci+RPmN7oIyWmX5+j8/FTkgD3rjjKfNY8+tqA=
+	b=OV8ip01n79s1IWrkzMa9vp8GqprKX3CIufo8riU2AW+UyHEI8LgB+bd+hYhRdYxfA
+	 9+5PsrstsVIh8S+6qe1AyqS382afhX/57sxgKx/cVv1XRUz2KqMFczjrmzl0QEnuU8
+	 aK/z8P+6lzFrApvxIt7H0G6tEnthSwggiZ24E3F0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729143AbgAPTYh (ORCPT
+        id S2407415AbgAPTYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:24:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36066 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:24:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729546AbgAPQwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:52:47 -0500
+        id S1730320AbgAPQwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:52:44 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86B8622522;
-        Thu, 16 Jan 2020 16:52:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03A4621582;
+        Thu, 16 Jan 2020 16:52:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193567;
-        bh=oVEpUpIzVKUCnt2/4jdogUGDwyi7Ehjqtc97o16UCeo=;
+        s=default; t=1579193563;
+        bh=6L36wDLqi7f4RDjvHJuzkxVG81vOLAgZTMzqyjsy0yc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QZREzzWsnHLYydb4OlYFa7rBCaondM2Om07Mf9ggfNavhHDyYDQOKdvPFsyzsibyP
-         ZeZuqL3il8TuzU1Errx1kJr00YT5GdWGxmtHnyZgmwWGAgUZB38WoYtgFFksi5BMx7
-         VxrsXyFseq/uGd3o+eLOQqtk18q+hy8wk4gQDuvM=
+        b=IXMQDTuIsaOvMdVYL9jvznZ9IYpNazq0OGgK+GAgyetwrTeAjtj24XnlBIa+5+A/f
+         gBUqnWyu06Obg3+aRLXTJq4jj4ftRR3ii0PQlTRz3KTGwSDjut58tV/6dEbMC8jQR9
+         xfswbuJsNj8erqsu0w6cj3oOJYDczSlLRBwAj9aY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+Cc:     Hoang Le <hoang.h.le@dektech.com.au>,
+        Jon Maloy <jon.maloy@ericsson.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 111/205] libbpf: Fix memory leak/double free issue
-Date:   Thu, 16 Jan 2020 11:41:26 -0500
-Message-Id: <20200116164300.6705-111-sashal@kernel.org>
+        tipc-discussion@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.4 108/205] tipc: reduce sensitive to retransmit failures
+Date:   Thu, 16 Jan 2020 11:41:23 -0500
+Message-Id: <20200116164300.6705-108-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -60,43 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Hoang Le <hoang.h.le@dektech.com.au>
 
-[ Upstream commit 3dc5e059821376974177cc801d377e3fcdac6712 ]
+[ Upstream commit 426071f1f3995d7e9603246bffdcbf344cd31719 ]
 
-Coverity scan against Github libbpf code found the issue of not freeing memory and
-leaving already freed memory still referenced from bpf_program. Fix it by
-re-assigning successfully reallocated memory sooner.
+With huge cluster (e.g >200nodes), the amount of that flow:
+gap -> retransmit packet -> acked will take time in case of STATE_MSG
+dropped/delayed because a lot of traffic. This lead to 1.5 sec tolerance
+value criteria made link easy failure around 2nd, 3rd of failed
+retransmission attempts.
 
-Fixes: 2993e0515bb4 ("tools/bpf: add support to read .BTF.ext sections")
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/20191107020855.3834758-2-andriin@fb.com
+Instead of re-introduced criteria of 99 faled retransmissions to fix the
+issue, we increase failure detection timer to ten times tolerance value.
+
+Fixes: 77cf8edbc0e7 ("tipc: simplify stale link failure criteria")
+Acked-by: Jon Maloy <jon.maloy@ericsson.com>
+Signed-off-by: Hoang Le <hoang.h.le@dektech.com.au>
+Acked-by: Jon
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/libbpf.c | 2 +-
+ net/tipc/link.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index a267cd0c0ce2..d98838c5820c 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -3220,6 +3220,7 @@ bpf_program__reloc_text(struct bpf_program *prog, struct bpf_object *obj,
- 			pr_warning("oom in prog realloc\n");
- 			return -ENOMEM;
- 		}
-+		prog->insns = new_insn;
+diff --git a/net/tipc/link.c b/net/tipc/link.c
+index 999eab592de8..a9d8a81e80cf 100644
+--- a/net/tipc/link.c
++++ b/net/tipc/link.c
+@@ -1084,7 +1084,7 @@ static bool link_retransmit_failure(struct tipc_link *l, struct tipc_link *r,
+ 		return false;
  
- 		if (obj->btf_ext) {
- 			err = bpf_program_reloc_btf_ext(prog, obj,
-@@ -3231,7 +3232,6 @@ bpf_program__reloc_text(struct bpf_program *prog, struct bpf_object *obj,
+ 	if (!time_after(jiffies, TIPC_SKB_CB(skb)->retr_stamp +
+-			msecs_to_jiffies(r->tolerance)))
++			msecs_to_jiffies(r->tolerance * 10)))
+ 		return false;
  
- 		memcpy(new_insn + prog->insns_cnt, text->insns,
- 		       text->insns_cnt * sizeof(*insn));
--		prog->insns = new_insn;
- 		prog->main_prog_cnt = prog->insns_cnt;
- 		prog->insns_cnt = new_cnt;
- 		pr_debug("added %zd insn from %s to prog %s\n",
+ 	hdr = buf_msg(skb);
 -- 
 2.20.1
 
