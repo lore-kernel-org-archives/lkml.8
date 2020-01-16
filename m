@@ -2,782 +2,359 @@ Return-Path: <SRS0=CsDi=3F=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48DF8C33CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2636CC33CB6
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE6822081E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB5912176D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 05:47:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sj3sxrLY"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v1YrVzVa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726933AbgAPFqp (ORCPT
+        id S1726979AbgAPFr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 00:46:45 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:38856 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbgAPFqo (ORCPT
+        Thu, 16 Jan 2020 00:47:26 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:42669 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbgAPFr0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 00:46:44 -0500
-Received: by mail-pg1-f196.google.com with SMTP id a33so9327411pgm.5
-        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 21:46:44 -0800 (PST)
+        Thu, 16 Jan 2020 00:47:26 -0500
+Received: by mail-qv1-f66.google.com with SMTP id dc14so8538249qvb.9
+        for <linux-kernel@vger.kernel.org>; Wed, 15 Jan 2020 21:47:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=lw8L9cyK+5YydSgWCB88DiA0pS8ghO6UdLDzTrQjL94=;
-        b=sj3sxrLYXU6Byh8WoHoW1qfk482ADlqMzcpaJagwduSYnPcEVn0DAZyioYVTJwf6Db
-         JMWodHVPYkHi6CMAqH941IuZPeU6L+TGvT2w0ZMy0vIWRbGVaPwFSGGXpD4PzBVrVYZd
-         hNaarxaNzyGJGSllOW0m5vqrOSgW/Enq93VflhiDuf4qi2/utmCsLxcVclTIcA+9wMqh
-         C1K8fBmtlNBhexVwBPPrm8zVU74Pf2EDRJwjwGuTSAkkytIrABNsYLStpeolTIMjB5IB
-         4wEjQSS7dT+p8M+l9PkMARgI4wpNvGm1fgXtrX6cDeODycy2BP6llRsRvZwv6iMrfU2w
-         mLDA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wF6ZZgDVBcb52vVymB/toV0bmt4NnNtZaybtThqWt40=;
+        b=v1YrVzVa4Zzjsgt637Qe0HM6Xn41Q5W2zqxf4mPJEuTp0l1nAvwlKClLpyb5D/CBcA
+         8NCAJE9CN/BSq4o/6otLEVFLNn9Bhn6ahFXO57tw38Yd1Ol85l53AncNwRbWSbKytAC1
+         uxVMWaex3MEIE2fTigcGKmU4OdZdIEhQrQYFxj3cpfHIYfGZzYFF3oGMO4+7NPyjoD67
+         tu+MSoyCGprhj6/AwDcn7g3/d+efCc70b0hW8KULyvS93wdW+fZMerU5Er5tyg7XKZwi
+         n0uTkfRjwjV0ZP9YD0HggMrhXw0By1p7gEzuCBdhjBQK3ulxD5qAqwhjwLq5d4sR1qLt
+         L3Ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=lw8L9cyK+5YydSgWCB88DiA0pS8ghO6UdLDzTrQjL94=;
-        b=YZCFCSNfODo+j6rCDZo52yBt7EZhLLojPNvnrkMQuRTW1xhiK3ErVXd8SSl8cYiRIM
-         ULv6KBOp5XglwMQswa6WIkIHYKVrfR9ueKAE3c6KnvIbeaHlux25Fx3U9llJPkewhY9p
-         1Q2HyS6UIHZz7ktXwN2/e64Mn1XQQaqg2GV0rWxyVRbY4zGSsZmkb7UIcZa2ReYSBv4w
-         6sbg7yMyQK8VPsfUmVe6lq8x/HaSKIm4vbnvoLC3RPtPAsTeBlZIPwCsaPHrVP+VlMF3
-         Yk1pdyIr6+itE3FJSvpbsEr+/fwCQfQGyEkkNo1JJCr/jI2Y6OkWq98RWvtcgkj0Hs+w
-         uMDA==
-X-Gm-Message-State: APjAAAVa5sXuMcBe7kSaDqjrVyXlyzpW6HO5p2JKLOcFKbJZQKmN8fK2
-        Xa7/OXyHJAQgFE6Rxt+izGI=
-X-Google-Smtp-Source: APXvYqyPJTiQjkqb6V+qtRsA3IQ5fO6Ob61jwDK9uKLNbqGJbQqefsurvwjz9S7AdGaWx9CFnA/qTA==
-X-Received: by 2002:a63:5114:: with SMTP id f20mr36749350pgb.321.1579153603499;
-        Wed, 15 Jan 2020 21:46:43 -0800 (PST)
-Received: from localhost.localdomain ([101.12.40.97])
-        by smtp.gmail.com with ESMTPSA id 68sm22490276pge.14.2020.01.15.21.46.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 15 Jan 2020 21:46:43 -0800 (PST)
-From:   Jeff Chang <richtek.jeff.chang@gmail.com>
-To:     lgirdwood@gmail.com
-Cc:     broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
-        matthias.bgg@gmail.com, alsa-devel@alsa-project.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        jeff_chang@richtek.com, richtek.jeff.chang@gmail.com
-Subject: [PATCH v7] ASoC: Add MediaTek MT6660 Speaker Amp Driver
-Date:   Thu, 16 Jan 2020 13:46:37 +0800
-Message-Id: <1579153597-23286-1-git-send-email-richtek.jeff.chang@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wF6ZZgDVBcb52vVymB/toV0bmt4NnNtZaybtThqWt40=;
+        b=Aq0v9hDrYixTHHAQlW6wWptQ5xgGRlHxyAc1VegMGKwTWiDetESc9ukwEhHYVxcHs7
+         CuWLcaqRUEzUZVbCh1L6EdKQOhkI9n+zhbIkppno0MJnNSLFb4DIFPKKkhAbKmbwrFBt
+         qhWxWLu3Ip7Fkk4wN9waL4N/CYrcjM/iaPTAHAAxOgbq09qORFp3p1YOBDoCceiO5nYE
+         mbcBrOax1tt70yQqDTGSpi0jklGlzryGNvoqv5n7Vslig935K90AljEV0V4doTo4b1Lb
+         O3ZUMtaHIGgx5LZ9kQjlF/SZ8/+XEsB4rKlAFC4ljjUQC6kUoRUb4CA5CDouMzlXooI+
+         sxzA==
+X-Gm-Message-State: APjAAAXaScv3K11jiaYISsr7EK9AtTLMljd+X7WqFHprgP2jp4c9SSfc
+        vux0IhQpVEaulAZ/7qRI1jFijSMukO7VZkLpwo620w==
+X-Google-Smtp-Source: APXvYqxEwEwdGaOISrJ5MbJbhuMgu3oBOqwYp04LFOpjVtmcydWOGxsmFZzklEs59N7lf80jKFMdYKn24xtY22LLf08=
+X-Received: by 2002:a0c:c351:: with SMTP id j17mr1025368qvi.80.1579153644733;
+ Wed, 15 Jan 2020 21:47:24 -0800 (PST)
+MIME-Version: 1.0
+References: <20200115063710.15796-1-dja@axtens.net> <20200115063710.15796-3-dja@axtens.net>
+ <CACT4Y+bxh1OmV64Z-EZrYk-otW9q_fxiHnvrE_VMYj-=YAk2Bg@mail.gmail.com> <8736cgkndh.fsf@dja-thinkpad.axtens.net>
+In-Reply-To: <8736cgkndh.fsf@dja-thinkpad.axtens.net>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 16 Jan 2020 06:47:13 +0100
+Message-ID: <CACT4Y+Z7Fs1tzaECX_oT5VX05vPAehnfsR-m6P2uVtDACm7w8w@mail.gmail.com>
+Subject: Re: [PATCH 2/2] string.h: fix incompatibility between FORTIFY_SOURCE
+ and KASAN
+To:     Daniel Axtens <dja@axtens.net>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Chang <jeff_chang@richtek.com>
+On Thu, Jan 16, 2020 at 5:59 AM Daniel Axtens <dja@axtens.net> wrote:
+>
+> Dmitry Vyukov <dvyukov@google.com> writes:
+>
+> > On Wed, Jan 15, 2020 at 7:37 AM Daniel Axtens <dja@axtens.net> wrote:
+> >>
+> >> The memcmp KASAN self-test fails on a kernel with both KASAN and
+> >> FORTIFY_SOURCE.
+> >>
+> >> When FORTIFY_SOURCE is on, a number of functions are replaced with
+> >> fortified versions, which attempt to check the sizes of the operands.
+> >> However, these functions often directly invoke __builtin_foo() once they
+> >> have performed the fortify check. Using __builtins may bypass KASAN
+> >> checks if the compiler decides to inline it's own implementation as
+> >> sequence of instructions, rather than emit a function call that goes out
+> >> to a KASAN-instrumented implementation.
+> >>
+> >> Why is only memcmp affected?
+> >> ============================
+> >>
+> >> Of the string and string-like functions that kasan_test tests, only memcmp
+> >> is replaced by an inline sequence of instructions in my testing on x86 with
+> >> gcc version 9.2.1 20191008 (Ubuntu 9.2.1-9ubuntu2).
+> >>
+> >> I believe this is due to compiler heuristics. For example, if I annotate
+> >> kmalloc calls with the alloc_size annotation (and disable some fortify
+> >> compile-time checking!), the compiler will replace every memset except the
+> >> one in kmalloc_uaf_memset with inline instructions. (I have some WIP
+> >> patches to add this annotation.)
+> >>
+> >> Does this affect other functions in string.h?
+> >> =============================================
+> >>
+> >> Yes. Anything that uses __builtin_* rather than __real_* could be
+> >> affected. This looks like:
+> >>
+> >>  - strncpy
+> >>  - strcat
+> >>  - strlen
+> >>  - strlcpy maybe, under some circumstances?
+> >>  - strncat under some circumstances
+> >>  - memset
+> >>  - memcpy
+> >>  - memmove
+> >>  - memcmp (as noted)
+> >>  - memchr
+> >>  - strcpy
+> >>
+> >> Whether a function call is emitted always depends on the compiler. Most
+> >> bugs should get caught by FORTIFY_SOURCE, but the missed memcmp test shows
+> >> that this is not always the case.
+> >>
+> >> Isn't FORTIFY_SOURCE disabled with KASAN?
+> >> ========================================-
+> >>
+> >> The string headers on all arches supporting KASAN disable fortify with
+> >> kasan, but only when address sanitisation is _also_ disabled. For example
+> >> from x86:
+> >>
+> >>  #if defined(CONFIG_KASAN) && !defined(__SANITIZE_ADDRESS__)
+> >>  /*
+> >>   * For files that are not instrumented (e.g. mm/slub.c) we
+> >>   * should use not instrumented version of mem* functions.
+> >>   */
+> >>  #define memcpy(dst, src, len) __memcpy(dst, src, len)
+> >>  #define memmove(dst, src, len) __memmove(dst, src, len)
+> >>  #define memset(s, c, n) __memset(s, c, n)
+> >>
+> >>  #ifndef __NO_FORTIFY
+> >>  #define __NO_FORTIFY /* FORTIFY_SOURCE uses __builtin_memcpy, etc. */
+> >>  #endif
+> >>
+> >>  #endif
+> >>
+> >> This comes from commit 6974f0c4555e ("include/linux/string.h: add the
+> >> option of fortified string.h functions"), and doesn't work when KASAN is
+> >> enabled and the file is supposed to be sanitised - as with test_kasan.c
+> >
+> > Hi Daniel,
+> >
+> > Thanks for addressing this. And special kudos for description detail level! :)
+> >
+> > Phew, this layering of checking tools is a bit messy...
+> >
+> >> I'm pretty sure this is backwards: we shouldn't be using __builtin_memcpy
+> >> when we have a KASAN instrumented file, but we can use __builtin_* - and in
+> >> many cases all fortification - in files where we don't have
+> >> instrumentation.
+> >
+> > I think if we use __builtin_* in a non-instrumented file, the compiler
+> > can emit a call to normal mem* function which will be intercepted by
+> > kasan and we will get instrumentation in a file which should not be
+> > instrumented. Moreover this behavior will depend on optimization level
+> > and compiler internals.
+> > But as far as I see this does not affect any of the following and the
+> > code change.
+> >
+>
+> mmm OK - you are right, when I consider this and your other point...
+>
+> >>  #if !defined(__NO_FORTIFY) && defined(__OPTIMIZE__) && defined(CONFIG_FORTIFY_SOURCE)
+> >> +
+> >> +#ifdef CONFIG_KASAN
+> >> +extern void *__underlying_memchr(const void *p, int c, __kernel_size_t size) __RENAME(memchr);
+> >
+> >
+> > arch headers do:
+> >
+> > #if defined(CONFIG_KASAN) && !defined(__SANITIZE_ADDRESS__)
+> > #define memcpy(dst, src, len) __memcpy(dst, src, len)
+> > ...
+> >
+> > to disable instrumentation. Does this still work with this change?
+> > Previously they disabled fortify. What happens now? Will define of
+> > memcpy to __memcpy also affect __RENAME(memcpy), so that
+> > __underlying_memcpy will be an alias to __memcpy?
+>
+> This is a good question. It's a really intricate set of interactions!!
+>
+> Between these two things, I think I'm going to just drop the removal of
+> architecture changes, which means that fortify will continue to be
+> disabled for files that disable KASAN sanitisation. It's just too
+> complicated to reason through and satisfy myself that we're not going to
+> get weird bugs, and the payoff is really small.
 
-The MT6660 is a boosted BTL class-D amplifier with V/I sensing.
-A built-in DC-DC step-up converter is used to provide efficient
-power for class-D amplifier with multi-level class-G operation.
-The digital audio interface supports I2S, left-justified,
-right-justified, TDM and DSP A/B format for audio in with a data
-out used for chip information like voltage sense and current
-sense, which are able to be monitored via DATAO through proper
+Sounds good to me. We don't need to solve all of the world 's problems
+at once :)
 
-Signed-off-by: Jeff Chang <jeff_chang@richtek.com>
----
- sound/soc/codecs/Kconfig  |  10 +
- sound/soc/codecs/Makefile |   2 +
- sound/soc/codecs/mt6660.c | 509 ++++++++++++++++++++++++++++++++++++++++++++++
- sound/soc/codecs/mt6660.h |  77 +++++++
- 4 files changed, 598 insertions(+)
- create mode 100644 sound/soc/codecs/mt6660.c
- create mode 100644 sound/soc/codecs/mt6660.h
+> >> +extern int __underlying_memcmp(const void *p, const void *q, __kernel_size_t size) __RENAME(memcmp);
+> >
+> > All of these macros are leaking from the header file. Tomorrow we will
+> > discover __underlying_memcpy uses somewhere in the wild, which will
+> > not making understanding what actually happens simpler :)
+> > Perhaps undef all of them at the bottom?
+>
+> I can't stop the function definitions from leaking, but I can stop the
+> defines from leaking, which means we will catch any uses outside this
+> block in a FORITY_SOURCE && !KASAN build. I've fixed this for v2.
 
+I think it's good enough and a good practice to undef local macros.
 
-changelogs between v7 & v6
-	- remove blank line.
-	- remove unused structure
-	- use regmap instead of raw access.
-
-changelogs between v6 & v5
-        - remove parse DT and apply function about Chip INIT SETTING.
-        - remove DT binding Documentation.
-
-changelogs between v5 & v4
-        - remove redundant initialization.
-        - use packed structures.
-        - remove useless switch case.
-        - take care of memory allocation failures.
-
-changelogs between v4 & v3
-        - remove unnecessary kcontrols.
-        - modify copy right header.
-        - use dev_dbg instead of dev_info.
-        - add necessary debug message.
-        - add DT binding documentation.
-        - add space before } at every table.
-
-changelogs between v3 & v2
-
-        - modify MT6660 Kconfig, remove unnecessary selection.
-        - remove my own debug io interface. use standard regmap for debugging.
-        - remove regmap volatile ops, we do not use cache.
-        - remove component io read/write function, use snd_soc_component_init_regmap.
-        - remove init setting write code. Using parsing dts to set them.
-        - remove unnecessary pr_info log message.
-        - remove mt6660_component_put_volsw. Using snd_soc_get_volsw.
-
-
-
-
-
-
-
-
-
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index 229cc89..2f627cf 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -122,6 +122,7 @@ config SND_SOC_ALL_CODECS
- 	select SND_SOC_ML26124 if I2C
- 	select SND_SOC_MT6351 if MTK_PMIC_WRAP
- 	select SND_SOC_MT6358 if MTK_PMIC_WRAP
-+	select SND_SOC_MT6660 if I2C
- 	select SND_SOC_NAU8540 if I2C
- 	select SND_SOC_NAU8810 if I2C
- 	select SND_SOC_NAU8822 if I2C
-@@ -1465,6 +1466,15 @@ config SND_SOC_MT6358
- 	  Enable support for the platform which uses MT6358 as
- 	  external codec device.
- 
-+config SND_SOC_MT6660
-+	tristate "Mediatek MT6660 Speaker Amplifier"
-+	depends on I2C
-+	help
-+	  MediaTek MT6660 is a smart power amplifier which contain
-+	  speaker protection, multi-band DRC, equalizer functions.
-+	  Select N if you don't have MT6660 on board.
-+	  Select M to build this as module.
-+
- config SND_SOC_NAU8540
-        tristate "Nuvoton Technology Corporation NAU85L40 CODEC"
-        depends on I2C
-diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
-index c498373..2b6814c 100644
---- a/sound/soc/codecs/Makefile
-+++ b/sound/soc/codecs/Makefile
-@@ -119,6 +119,7 @@ snd-soc-msm8916-analog-objs := msm8916-wcd-analog.o
- snd-soc-msm8916-digital-objs := msm8916-wcd-digital.o
- snd-soc-mt6351-objs := mt6351.o
- snd-soc-mt6358-objs := mt6358.o
-+snd-soc-mt6660-objs := mt6660.o
- snd-soc-nau8540-objs := nau8540.o
- snd-soc-nau8810-objs := nau8810.o
- snd-soc-nau8822-objs := nau8822.o
-@@ -403,6 +404,7 @@ obj-$(CONFIG_SND_SOC_MSM8916_WCD_ANALOG) +=snd-soc-msm8916-analog.o
- obj-$(CONFIG_SND_SOC_MSM8916_WCD_DIGITAL) +=snd-soc-msm8916-digital.o
- obj-$(CONFIG_SND_SOC_MT6351)	+= snd-soc-mt6351.o
- obj-$(CONFIG_SND_SOC_MT6358)	+= snd-soc-mt6358.o
-+obj-$(CONFIG_SND_SOC_MT6660)	+= snd-soc-mt6660.o
- obj-$(CONFIG_SND_SOC_NAU8540)   += snd-soc-nau8540.o
- obj-$(CONFIG_SND_SOC_NAU8810)   += snd-soc-nau8810.o
- obj-$(CONFIG_SND_SOC_NAU8822)   += snd-soc-nau8822.o
-diff --git a/sound/soc/codecs/mt6660.c b/sound/soc/codecs/mt6660.c
-new file mode 100644
-index 0000000..a36c416
---- /dev/null
-+++ b/sound/soc/codecs/mt6660.c
-@@ -0,0 +1,509 @@
-+// SPDX-License-Identifier: GPL-2.0 //
-+
-+// Copyright (c) 2019 MediaTek Inc.
-+
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/version.h>
-+#include <linux/err.h>
-+#include <linux/i2c.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/delay.h>
-+#include <linux/debugfs.h>
-+#include <sound/soc.h>
-+#include <sound/tlv.h>
-+#include <sound/pcm_params.h>
-+
-+#include "mt6660.h"
-+
-+struct reg_size_table {
-+	u32 addr;
-+	u8 size;
-+};
-+
-+static const struct reg_size_table mt6660_reg_size_table[] = {
-+	{ MT6660_REG_HPF1_COEF, 4 },
-+	{ MT6660_REG_HPF2_COEF, 4 },
-+	{ MT6660_REG_TDM_CFG3, 2 },
-+	{ MT6660_REG_RESV17, 2 },
-+	{ MT6660_REG_RESV23, 2 },
-+	{ MT6660_REG_SIGMAX, 2 },
-+	{ MT6660_REG_DEVID, 2 },
-+	{ MT6660_REG_HCLIP_CTRL, 2 },
-+	{ MT6660_REG_DA_GAIN, 2 },
-+};
-+
-+static int mt6660_get_reg_size(uint32_t addr)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(mt6660_reg_size_table); i++) {
-+		if (mt6660_reg_size_table[i].addr == addr)
-+			return mt6660_reg_size_table[i].size;
-+	}
-+	return 1;
-+}
-+
-+static int mt6660_reg_write(void *context, unsigned int reg, unsigned int val)
-+{
-+	struct mt6660_chip *chip = context;
-+	int size = mt6660_get_reg_size(reg);
-+	u8 reg_data[4];
-+	int i, ret;
-+
-+	for (i = 0; i < size; i++)
-+		reg_data[size - i - 1] = (val >> (8 * i)) & 0xff;
-+
-+	ret = i2c_smbus_write_i2c_block_data(chip->i2c, reg, size, reg_data);
-+	return ret;
-+}
-+
-+static int mt6660_reg_read(void *context, unsigned int reg, unsigned int *val)
-+{
-+	struct mt6660_chip *chip = context;
-+	int size = mt6660_get_reg_size(reg);
-+	int i, ret;
-+	u8 data[4];
-+	u32 reg_data = 0;
-+
-+	ret = i2c_smbus_read_i2c_block_data(chip->i2c, reg, size, data);
-+	if (ret < 0)
-+		return ret;
-+	for (i = 0; i < size; i++) {
-+		reg_data <<= 8;
-+		reg_data |= data[i];
-+	}
-+	*val = reg_data;
-+	return 0;
-+}
-+
-+static const struct regmap_config mt6660_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 32,
-+	.reg_write = mt6660_reg_write,
-+	.reg_read = mt6660_reg_read,
-+};
-+
-+static int mt6660_codec_dac_event(struct snd_soc_dapm_widget *w,
-+	struct snd_kcontrol *kcontrol, int event)
-+{
-+	if (event == SND_SOC_DAPM_POST_PMU)
-+		usleep_range(1000, 1100);
-+	return 0;
-+}
-+
-+static int mt6660_codec_classd_event(struct snd_soc_dapm_widget *w,
-+	struct snd_kcontrol *kcontrol, int event)
-+{
-+	struct snd_soc_component *component =
-+		snd_soc_dapm_to_component(w->dapm);
-+	int ret;
-+
-+	switch (event) {
-+	case SND_SOC_DAPM_PRE_PMU:
-+		dev_dbg(component->dev,
-+			"%s: before classd turn on\n", __func__);
-+		/* config to adaptive mode */
-+		ret = snd_soc_component_update_bits(component,
-+			MT6660_REG_BST_CTRL, 0x03, 0x03);
-+		if (ret < 0) {
-+			dev_err(component->dev, "config mode adaptive fail\n");
-+			return ret;
-+		}
-+		break;
-+	case SND_SOC_DAPM_POST_PMU:
-+		/* voltage sensing enable */
-+		ret = snd_soc_component_update_bits(component,
-+			MT6660_REG_RESV7, 0x04, 0x04);
-+		if (ret < 0) {
-+			dev_err(component->dev,
-+				"enable voltage sensing fail\n");
-+			return ret;
-+		}
-+		dev_dbg(component->dev, "Amp on\n");
-+		break;
-+	case SND_SOC_DAPM_PRE_PMD:
-+		dev_dbg(component->dev, "Amp off\n");
-+		/* voltage sensing disable */
-+		ret = snd_soc_component_update_bits(component,
-+			MT6660_REG_RESV7, 0x04, 0x00);
-+		if (ret < 0) {
-+			dev_err(component->dev,
-+				"disable voltage sensing fail\n");
-+			return ret;
-+		}
-+		/* pop-noise improvement 1 */
-+		ret = snd_soc_component_update_bits(component,
-+			MT6660_REG_RESV10, 0x10, 0x10);
-+		if (ret < 0) {
-+			dev_err(component->dev,
-+				"pop-noise improvement 1 fail\n");
-+			return ret;
-+		}
-+		break;
-+	case SND_SOC_DAPM_POST_PMD:
-+		dev_dbg(component->dev,
-+			"%s: after classd turn off\n", __func__);
-+		/* pop-noise improvement 2 */
-+		ret = snd_soc_component_update_bits(component,
-+			MT6660_REG_RESV10, 0x10, 0x00);
-+		if (ret < 0) {
-+			dev_err(component->dev,
-+				"pop-noise improvement 2 fail\n");
-+			return ret;
-+		}
-+		/* config to off mode */
-+		ret = snd_soc_component_update_bits(component,
-+			MT6660_REG_BST_CTRL, 0x03, 0x00);
-+		if (ret < 0) {
-+			dev_err(component->dev, "config mode off fail\n");
-+			return ret;
-+		}
-+		break;
-+	}
-+	return 0;
-+}
-+
-+static const struct snd_soc_dapm_widget mt6660_component_dapm_widgets[] = {
-+	SND_SOC_DAPM_DAC_E("DAC", NULL, MT6660_REG_PLL_CFG1,
-+		0, 1, mt6660_codec_dac_event, SND_SOC_DAPM_POST_PMU),
-+	SND_SOC_DAPM_ADC("VI ADC", NULL, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_PGA("PGA", SND_SOC_NOPM, 0, 0, NULL, 0),
-+	SND_SOC_DAPM_OUT_DRV_E("ClassD", MT6660_REG_SYSTEM_CTRL, 2, 0,
-+			       NULL, 0, mt6660_codec_classd_event,
-+			       SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU |
-+			       SND_SOC_DAPM_PRE_PMD | SND_SOC_DAPM_POST_PMD),
-+	SND_SOC_DAPM_OUTPUT("OUTP"),
-+	SND_SOC_DAPM_OUTPUT("OUTN"),
-+};
-+
-+static const struct snd_soc_dapm_route mt6660_component_dapm_routes[] = {
-+	{ "DAC", NULL, "aif_playback" },
-+	{ "PGA", NULL, "DAC" },
-+	{ "ClassD", NULL, "PGA" },
-+	{ "OUTP", NULL, "ClassD" },
-+	{ "OUTN", NULL, "ClassD" },
-+	{ "VI ADC", NULL, "ClassD" },
-+	{ "aif_capture", NULL, "VI ADC" },
-+};
-+
-+static int mt6660_component_get_volsw(struct snd_kcontrol *kcontrol,
-+				  struct snd_ctl_elem_value *ucontrol)
-+{
-+	struct snd_soc_component *component =
-+		snd_soc_kcontrol_component(kcontrol);
-+	struct mt6660_chip *chip = (struct mt6660_chip *)
-+		snd_soc_component_get_drvdata(component);
-+
-+	ucontrol->value.integer.value[0] = chip->chip_rev & 0x0f;
-+	return 0;
-+}
-+
-+static const DECLARE_TLV_DB_SCALE(vol_ctl_tlv, -1155, 5, 0);
-+
-+static const struct snd_kcontrol_new mt6660_component_snd_controls[] = {
-+	SOC_SINGLE_TLV("Digital Volume", MT6660_REG_VOL_CTRL, 0, 255,
-+			   1, vol_ctl_tlv),
-+	SOC_SINGLE("Hard Clip Switch", MT6660_REG_HCLIP_CTRL, 8, 1, 0),
-+	SOC_SINGLE("Clip Switch", MT6660_REG_SPS_CTRL, 0, 1, 0),
-+	SOC_SINGLE("Boost Mode", MT6660_REG_BST_CTRL, 0, 3, 0),
-+	SOC_SINGLE("DRE Switch", MT6660_REG_DRE_CTRL, 0, 1, 0),
-+	SOC_SINGLE("DC Protect Switch",	MT6660_REG_DC_PROTECT_CTRL, 3, 1, 0),
-+	SOC_SINGLE("Data Output Left Channel Selection",
-+		   MT6660_REG_DATAO_SEL, 3, 7, 0),
-+	SOC_SINGLE("Data Output Right Channel Selection",
-+		   MT6660_REG_DATAO_SEL, 0, 7, 0),
-+	SOC_SINGLE_EXT("T0 SEL", MT6660_REG_CALI_T0, 0, 7, 0,
-+		       snd_soc_get_volsw, NULL),
-+	SOC_SINGLE_EXT("Chip Rev", MT6660_REG_DEVID, 8, 15, 0,
-+		       mt6660_component_get_volsw, NULL),
-+};
-+
-+static int _mt6660_chip_power_on(struct mt6660_chip *chip, int on_off)
-+{
-+	return regmap_write_bits(chip->regmap, MT6660_REG_SYSTEM_CTRL,
-+				 0x01, on_off ? 0x00 : 0x01);
-+}
-+
-+static int mt6660_component_probe(struct snd_soc_component *component)
-+{
-+	struct mt6660_chip *chip = snd_soc_component_get_drvdata(component);
-+
-+	dev_dbg(component->dev, "%s\n", __func__);
-+	snd_soc_component_init_regmap(component, chip->regmap);
-+
-+	return 0;
-+}
-+
-+static void mt6660_component_remove(struct snd_soc_component *component)
-+{
-+	dev_dbg(component->dev, "%s\n", __func__);
-+	snd_soc_component_exit_regmap(component);
-+}
-+
-+static const struct snd_soc_component_driver mt6660_component_driver = {
-+	.probe = mt6660_component_probe,
-+	.remove = mt6660_component_remove,
-+
-+	.controls = mt6660_component_snd_controls,
-+	.num_controls = ARRAY_SIZE(mt6660_component_snd_controls),
-+	.dapm_widgets = mt6660_component_dapm_widgets,
-+	.num_dapm_widgets = ARRAY_SIZE(mt6660_component_dapm_widgets),
-+	.dapm_routes = mt6660_component_dapm_routes,
-+	.num_dapm_routes = ARRAY_SIZE(mt6660_component_dapm_routes),
-+
-+	.idle_bias_on = false, /* idle_bias_off = true */
-+};
-+
-+static int mt6660_component_aif_hw_params(struct snd_pcm_substream *substream,
-+	struct snd_pcm_hw_params *hw_params, struct snd_soc_dai *dai)
-+{
-+	int word_len = params_physical_width(hw_params);
-+	int aud_bit = params_width(hw_params);
-+	u16 reg_data = 0;
-+	int ret;
-+
-+	dev_dbg(dai->dev, "%s: ++\n", __func__);
-+	dev_dbg(dai->dev, "format: 0x%08x\n", params_format(hw_params));
-+	dev_dbg(dai->dev, "rate: 0x%08x\n", params_rate(hw_params));
-+	dev_dbg(dai->dev, "word_len: %d, aud_bit: %d\n", word_len, aud_bit);
-+	if (word_len > 32 || word_len < 16) {
-+		dev_err(dai->dev, "not supported word length\n");
-+		return -ENOTSUPP;
-+	}
-+	switch (aud_bit) {
-+	case 16:
-+		reg_data = 3;
-+		break;
-+	case 18:
-+		reg_data = 2;
-+		break;
-+	case 20:
-+		reg_data = 1;
-+		break;
-+	case 24:
-+	case 32:
-+		reg_data = 0;
-+		break;
-+	default:
-+		return -ENOTSUPP;
-+	}
-+	ret = snd_soc_component_update_bits(dai->component,
-+		MT6660_REG_SERIAL_CFG1, 0xc0, (reg_data << 6));
-+	if (ret < 0) {
-+		dev_err(dai->dev, "config aud bit fail\n");
-+		return ret;
-+	}
-+	ret = snd_soc_component_update_bits(dai->component,
-+		MT6660_REG_TDM_CFG3, 0x3f0, word_len << 4);
-+	if (ret < 0) {
-+		dev_err(dai->dev, "config word len fail\n");
-+		return ret;
-+	}
-+	dev_dbg(dai->dev, "%s: --\n", __func__);
-+	return 0;
-+}
-+
-+static const struct snd_soc_dai_ops mt6660_component_aif_ops = {
-+	.hw_params = mt6660_component_aif_hw_params,
-+};
-+
-+#define STUB_RATES	SNDRV_PCM_RATE_8000_192000
-+#define STUB_FORMATS	(SNDRV_PCM_FMTBIT_S16_LE | \
-+			SNDRV_PCM_FMTBIT_U16_LE | \
-+			SNDRV_PCM_FMTBIT_S24_LE | \
-+			SNDRV_PCM_FMTBIT_U24_LE | \
-+			SNDRV_PCM_FMTBIT_S32_LE | \
-+			SNDRV_PCM_FMTBIT_U32_LE)
-+
-+static struct snd_soc_dai_driver mt6660_codec_dai = {
-+	.name = "mt6660-aif",
-+	.playback = {
-+		.stream_name	= "aif_playback",
-+		.channels_min	= 1,
-+		.channels_max	= 2,
-+		.rates		= STUB_RATES,
-+		.formats	= STUB_FORMATS,
-+	},
-+	.capture = {
-+		.stream_name	= "aif_capture",
-+		.channels_min	= 1,
-+		.channels_max	= 2,
-+		.rates = STUB_RATES,
-+		.formats = STUB_FORMATS,
-+	},
-+	/* dai properties */
-+	.symmetric_rates = 1,
-+	.symmetric_channels = 1,
-+	.symmetric_samplebits = 1,
-+	/* dai operations */
-+	.ops = &mt6660_component_aif_ops,
-+};
-+
-+static int _mt6660_chip_id_check(struct mt6660_chip *chip)
-+{
-+	int ret;
-+	unsigned int val;
-+
-+	ret = regmap_read(chip->regmap, MT6660_REG_DEVID, &val);
-+	if (ret < 0)
-+		return ret;
-+	val &= 0x0ff0;
-+	if (val != 0x00e0 && val != 0x01e0) {
-+		dev_err(chip->dev, "%s id(%x) not match\n", __func__, val);
-+		return -ENODEV;
-+	}
-+	return 0;
-+}
-+
-+static int _mt6660_chip_sw_reset(struct mt6660_chip *chip)
-+{
-+	int ret;
-+
-+	/* turn on main pll first, then trigger reset */
-+	ret = regmap_write(chip->regmap, MT6660_REG_SYSTEM_CTRL, 0x00);
-+	if (ret < 0)
-+		return ret;
-+	ret = regmap_write(chip->regmap, MT6660_REG_SYSTEM_CTRL, 0x80);
-+	if (ret < 0)
-+		return ret;
-+	msleep(30);
-+	return 0;
-+}
-+
-+static int _mt6660_read_chip_revision(struct mt6660_chip *chip)
-+{
-+	int ret;
-+	unsigned int val;
-+
-+	ret = regmap_read(chip->regmap, MT6660_REG_DEVID, &val);
-+	if (ret < 0) {
-+		dev_err(chip->dev, "get chip revision fail\n");
-+		return ret;
-+	}
-+	chip->chip_rev = val&0xff;
-+	dev_info(chip->dev, "%s chip_rev = %x\n", __func__, chip->chip_rev);
-+	return 0;
-+}
-+
-+static int mt6660_i2c_probe(struct i2c_client *client,
-+			    const struct i2c_device_id *id)
-+{
-+	struct mt6660_chip *chip = NULL;
-+	int ret;
-+
-+	dev_dbg(&client->dev, "%s\n", __func__);
-+	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
-+	if (!chip)
-+		return -ENOMEM;
-+	chip->i2c = client;
-+	chip->dev = &client->dev;
-+	mutex_init(&chip->io_lock);
-+	i2c_set_clientdata(client, chip);
-+
-+	chip->regmap = devm_regmap_init(&client->dev,
-+		NULL, chip, &mt6660_regmap_config);
-+	if (IS_ERR(chip->regmap)) {
-+		ret = PTR_ERR(chip->regmap);
-+		dev_err(&client->dev, "failed to initialise regmap: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* chip reset first */
-+	ret = _mt6660_chip_sw_reset(chip);
-+	if (ret < 0) {
-+		dev_err(chip->dev, "chip reset fail\n");
-+		goto probe_fail;
-+	}
-+	/* chip power on */
-+	ret = _mt6660_chip_power_on(chip, 1);
-+	if (ret < 0) {
-+		dev_err(chip->dev, "chip power on 2 fail\n");
-+		goto probe_fail;
-+	}
-+	/* chip devid check */
-+	ret = _mt6660_chip_id_check(chip);
-+	if (ret < 0) {
-+		dev_err(chip->dev, "chip id check fail\n");
-+		goto probe_fail;
-+	}
-+	/* chip revision get */
-+	ret = _mt6660_read_chip_revision(chip);
-+	if (ret < 0) {
-+		dev_err(chip->dev, "read chip revision fail\n");
-+		goto probe_fail;
-+	}
-+	pm_runtime_set_active(chip->dev);
-+	pm_runtime_enable(chip->dev);
-+
-+	ret = devm_snd_soc_register_component(chip->dev,
-+					       &mt6660_component_driver,
-+					       &mt6660_codec_dai, 1);
-+	return ret;
-+probe_fail:
-+	_mt6660_chip_power_on(chip, 0);
-+	mutex_destroy(&chip->io_lock);
-+	return ret;
-+}
-+
-+static int mt6660_i2c_remove(struct i2c_client *client)
-+{
-+	struct mt6660_chip *chip = i2c_get_clientdata(client);
-+
-+	pm_runtime_disable(chip->dev);
-+	pm_runtime_set_suspended(chip->dev);
-+	mutex_destroy(&chip->io_lock);
-+	return 0;
-+}
-+
-+static int __maybe_unused mt6660_i2c_runtime_suspend(struct device *dev)
-+{
-+	struct mt6660_chip *chip = dev_get_drvdata(dev);
-+
-+	dev_dbg(dev, "enter low power mode\n");
-+	return regmap_update_bits(chip->regmap,
-+		MT6660_REG_SYSTEM_CTRL, 0x01, 0x01);
-+}
-+
-+static int __maybe_unused mt6660_i2c_runtime_resume(struct device *dev)
-+{
-+	struct mt6660_chip *chip = dev_get_drvdata(dev);
-+
-+	dev_dbg(dev, "exit low power mode\n");
-+	return regmap_update_bits(chip->regmap,
-+		MT6660_REG_SYSTEM_CTRL, 0x01, 0x00);
-+}
-+
-+static const struct dev_pm_ops mt6660_dev_pm_ops = {
-+	SET_RUNTIME_PM_OPS(mt6660_i2c_runtime_suspend,
-+			   mt6660_i2c_runtime_resume, NULL)
-+};
-+
-+static const struct of_device_id __maybe_unused mt6660_of_id[] = {
-+	{ .compatible = "mediatek,mt6660",},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, mt6660_of_id);
-+
-+static const struct i2c_device_id mt6660_i2c_id[] = {
-+	{"mt6660", 0 },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(i2c, mt6660_i2c_id);
-+
-+static struct i2c_driver mt6660_i2c_driver = {
-+	.driver = {
-+		.name = "mt6660",
-+		.of_match_table = of_match_ptr(mt6660_of_id),
-+		.pm = &mt6660_dev_pm_ops,
-+	},
-+	.probe = mt6660_i2c_probe,
-+	.remove = mt6660_i2c_remove,
-+	.id_table = mt6660_i2c_id,
-+};
-+module_i2c_driver(mt6660_i2c_driver);
-+
-+MODULE_AUTHOR("Jeff Chang <jeff_chang@richtek.com>");
-+MODULE_DESCRIPTION("MT6660 SPKAMP Driver");
-+MODULE_LICENSE("GPL");
-+MODULE_VERSION("1.0.7_G");
-diff --git a/sound/soc/codecs/mt6660.h b/sound/soc/codecs/mt6660.h
-new file mode 100644
-index 0000000..054a3c5
---- /dev/null
-+++ b/sound/soc/codecs/mt6660.h
-@@ -0,0 +1,77 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2019 MediaTek Inc.
-+ */
-+
-+#ifndef __SND_SOC_MT6660_H
-+#define __SND_SOC_MT6660_H
-+
-+#include <linux/mutex.h>
-+#include <linux/regmap.h>
-+
-+#pragma pack(push, 1)
-+struct mt6660_platform_data {
-+	u8 init_setting_num;
-+	u32 *init_setting_addr;
-+	u32 *init_setting_mask;
-+	u32 *init_setting_val;
-+};
-+
-+struct mt6660_chip {
-+	struct i2c_client *i2c;
-+	struct device *dev;
-+	struct platform_device *param_dev;
-+	struct mt6660_platform_data plat_data;
-+	struct mutex io_lock;
-+	struct regmap *regmap;
-+	u16 chip_rev;
-+};
-+#pragma pack(pop)
-+
-+#define MT6660_REG_DEVID		(0x00)
-+#define MT6660_REG_SYSTEM_CTRL		(0x03)
-+#define MT6660_REG_IRQ_STATUS1		(0x05)
-+#define MT6660_REG_ADDA_CLOCK		(0x07)
-+#define MT6660_REG_SERIAL_CFG1		(0x10)
-+#define MT6660_REG_DATAO_SEL		(0x12)
-+#define MT6660_REG_TDM_CFG3		(0x15)
-+#define MT6660_REG_HPF_CTRL		(0x18)
-+#define MT6660_REG_HPF1_COEF		(0x1A)
-+#define MT6660_REG_HPF2_COEF		(0x1B)
-+#define MT6660_REG_PATH_BYPASS		(0x1E)
-+#define MT6660_REG_WDT_CTRL		(0x20)
-+#define MT6660_REG_HCLIP_CTRL		(0x24)
-+#define MT6660_REG_VOL_CTRL		(0x29)
-+#define MT6660_REG_SPS_CTRL		(0x30)
-+#define MT6660_REG_SIGMAX		(0x33)
-+#define MT6660_REG_CALI_T0		(0x3F)
-+#define MT6660_REG_BST_CTRL		(0x40)
-+#define MT6660_REG_PROTECTION_CFG	(0x46)
-+#define MT6660_REG_DA_GAIN		(0x4c)
-+#define MT6660_REG_AUDIO_IN2_SEL	(0x50)
-+#define MT6660_REG_SIG_GAIN		(0x51)
-+#define MT6660_REG_PLL_CFG1		(0x60)
-+#define MT6660_REG_DRE_CTRL		(0x68)
-+#define MT6660_REG_DRE_THDMODE		(0x69)
-+#define MT6660_REG_DRE_CORASE		(0x6B)
-+#define MT6660_REG_PWM_CTRL		(0x70)
-+#define MT6660_REG_DC_PROTECT_CTRL	(0x74)
-+#define MT6660_REG_ADC_USB_MODE		(0x7c)
-+#define MT6660_REG_INTERNAL_CFG		(0x88)
-+#define MT6660_REG_RESV0		(0x98)
-+#define MT6660_REG_RESV1		(0x99)
-+#define MT6660_REG_RESV2		(0x9A)
-+#define MT6660_REG_RESV3		(0x9B)
-+#define MT6660_REG_RESV6		(0xA2)
-+#define MT6660_REG_RESV7		(0xA3)
-+#define MT6660_REG_RESV10		(0xB0)
-+#define MT6660_REG_RESV11		(0xB1)
-+#define MT6660_REG_RESV16		(0xB6)
-+#define MT6660_REG_RESV17		(0xB7)
-+#define MT6660_REG_RESV19		(0xB9)
-+#define MT6660_REG_RESV21		(0xBB)
-+#define MT6660_REG_RESV23		(0xBD)
-+#define MT6660_REG_RESV31		(0xD3)
-+#define MT6660_REG_RESV40		(0xE0)
-+
-+#endif /* __SND_SOC_MT6660_H */
--- 
-2.7.4
-
+> Regards,
+> Daniel
+>
+> >> +extern void *__underlying_memcpy(void *p, const void *q, __kernel_size_t size) __RENAME(memcpy);
+> >> +extern void *__underlying_memmove(void *p, const void *q, __kernel_size_t size) __RENAME(memmove);
+> >> +extern void *__underlying_memset(void *p, int c, __kernel_size_t size) __RENAME(memset);
+> >> +extern char *__underlying_strcat(char *p, const char *q) __RENAME(strcat);
+> >> +extern char *__underlying_strcpy(char *p, const char *q) __RENAME(strcpy);
+> >> +extern __kernel_size_t __underlying_strlen(const char *p) __RENAME(strlen);
+> >> +extern char *__underlying_strncat(char *p, const char *q, __kernel_size_t count) __RENAME(strncat);
+> >> +extern char *__underlying_strncpy(char *p, const char *q, __kernel_size_t size) __RENAME(strncpy);
+> >> +#else
+> >> +#define __underlying_memchr    __builtin_memchr
+> >> +#define __underlying_memcmp    __builtin_memcmp
+> >> +#define __underlying_memcpy    __builtin_memcpy
+> >> +#define __underlying_memmove   __builtin_memmove
+> >> +#define __underlying_memset    __builtin_memset
+> >> +#define __underlying_strcat    __builtin_strcat
+> >> +#define __underlying_strcpy    __builtin_strcpy
+> >> +#define __underlying_strlen    __builtin_strlen
+> >> +#define __underlying_strncat   __builtin_strncat
+> >> +#define __underlying_strncpy   __builtin_strncpy
+> >> +#endif
+> >> +
+> >>  __FORTIFY_INLINE char *strncpy(char *p, const char *q, __kernel_size_t size)
+> >>  {
+> >>         size_t p_size = __builtin_object_size(p, 0);
+> >> @@ -324,14 +349,14 @@ __FORTIFY_INLINE char *strncpy(char *p, const char *q, __kernel_size_t size)
+> >>                 __write_overflow();
+> >>         if (p_size < size)
+> >>                 fortify_panic(__func__);
+> >> -       return __builtin_strncpy(p, q, size);
+> >> +       return __underlying_strncpy(p, q, size);
+> >>  }
+> >>
+> >>  __FORTIFY_INLINE char *strcat(char *p, const char *q)
+> >>  {
+> >>         size_t p_size = __builtin_object_size(p, 0);
+> >>         if (p_size == (size_t)-1)
+> >> -               return __builtin_strcat(p, q);
+> >> +               return __underlying_strcat(p, q);
+> >>         if (strlcat(p, q, p_size) >= p_size)
+> >>                 fortify_panic(__func__);
+> >>         return p;
+> >> @@ -345,7 +370,7 @@ __FORTIFY_INLINE __kernel_size_t strlen(const char *p)
+> >>         /* Work around gcc excess stack consumption issue */
+> >>         if (p_size == (size_t)-1 ||
+> >>             (__builtin_constant_p(p[p_size - 1]) && p[p_size - 1] == '\0'))
+> >> -               return __builtin_strlen(p);
+> >> +               return __underlying_strlen(p);
+> >>         ret = strnlen(p, p_size);
+> >>         if (p_size <= ret)
+> >>                 fortify_panic(__func__);
+> >> @@ -378,7 +403,7 @@ __FORTIFY_INLINE size_t strlcpy(char *p, const char *q, size_t size)
+> >>                         __write_overflow();
+> >>                 if (len >= p_size)
+> >>                         fortify_panic(__func__);
+> >> -               __builtin_memcpy(p, q, len);
+> >> +               __underlying_memcpy(p, q, len);
+> >>                 p[len] = '\0';
+> >>         }
+> >>         return ret;
+> >> @@ -391,12 +416,12 @@ __FORTIFY_INLINE char *strncat(char *p, const char *q, __kernel_size_t count)
+> >>         size_t p_size = __builtin_object_size(p, 0);
+> >>         size_t q_size = __builtin_object_size(q, 0);
+> >>         if (p_size == (size_t)-1 && q_size == (size_t)-1)
+> >> -               return __builtin_strncat(p, q, count);
+> >> +               return __underlying_strncat(p, q, count);
+> >>         p_len = strlen(p);
+> >>         copy_len = strnlen(q, count);
+> >>         if (p_size < p_len + copy_len + 1)
+> >>                 fortify_panic(__func__);
+> >> -       __builtin_memcpy(p + p_len, q, copy_len);
+> >> +       __underlying_memcpy(p + p_len, q, copy_len);
+> >>         p[p_len + copy_len] = '\0';
+> >>         return p;
+> >>  }
+> >> @@ -408,7 +433,7 @@ __FORTIFY_INLINE void *memset(void *p, int c, __kernel_size_t size)
+> >>                 __write_overflow();
+> >>         if (p_size < size)
+> >>                 fortify_panic(__func__);
+> >> -       return __builtin_memset(p, c, size);
+> >> +       return __underlying_memset(p, c, size);
+> >>  }
+> >>
+> >>  __FORTIFY_INLINE void *memcpy(void *p, const void *q, __kernel_size_t size)
+> >> @@ -423,7 +448,7 @@ __FORTIFY_INLINE void *memcpy(void *p, const void *q, __kernel_size_t size)
+> >>         }
+> >>         if (p_size < size || q_size < size)
+> >>                 fortify_panic(__func__);
+> >> -       return __builtin_memcpy(p, q, size);
+> >> +       return __underlying_memcpy(p, q, size);
+> >>  }
+> >>
+> >>  __FORTIFY_INLINE void *memmove(void *p, const void *q, __kernel_size_t size)
+> >> @@ -438,7 +463,7 @@ __FORTIFY_INLINE void *memmove(void *p, const void *q, __kernel_size_t size)
+> >>         }
+> >>         if (p_size < size || q_size < size)
+> >>                 fortify_panic(__func__);
+> >> -       return __builtin_memmove(p, q, size);
+> >> +       return __underlying_memmove(p, q, size);
+> >>  }
+> >>
+> >>  extern void *__real_memscan(void *, int, __kernel_size_t) __RENAME(memscan);
+> >> @@ -464,7 +489,7 @@ __FORTIFY_INLINE int memcmp(const void *p, const void *q, __kernel_size_t size)
+> >>         }
+> >>         if (p_size < size || q_size < size)
+> >>                 fortify_panic(__func__);
+> >> -       return __builtin_memcmp(p, q, size);
+> >> +       return __underlying_memcmp(p, q, size);
+> >>  }
+> >>
+> >>  __FORTIFY_INLINE void *memchr(const void *p, int c, __kernel_size_t size)
+> >> @@ -474,7 +499,7 @@ __FORTIFY_INLINE void *memchr(const void *p, int c, __kernel_size_t size)
+> >>                 __read_overflow();
+> >>         if (p_size < size)
+> >>                 fortify_panic(__func__);
+> >> -       return __builtin_memchr(p, c, size);
+> >> +       return __underlying_memchr(p, c, size);
+> >>  }
+> >>
+> >>  void *__real_memchr_inv(const void *s, int c, size_t n) __RENAME(memchr_inv);
+> >> @@ -505,7 +530,7 @@ __FORTIFY_INLINE char *strcpy(char *p, const char *q)
+> >>         size_t p_size = __builtin_object_size(p, 0);
+> >>         size_t q_size = __builtin_object_size(q, 0);
+> >>         if (p_size == (size_t)-1 && q_size == (size_t)-1)
+> >> -               return __builtin_strcpy(p, q);
+> >> +               return __underlying_strcpy(p, q);
+> >>         memcpy(p, q, strlen(q) + 1);
+> >>         return p;
+> >>  }
+> >> --
+> >> 2.20.1
+> >>
+>
+> --
+> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/8736cgkndh.fsf%40dja-thinkpad.axtens.net.
