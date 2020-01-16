@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B91C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F9F8C33CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C09F624681
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40E7424692
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:51:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579197058;
-	bh=qjYkpND32u9aQivqtQnD4k0lO66RNjiDMygAnBJqu78=;
+	s=default; t=1579197060;
+	bh=VpysHlMNeAQuSTtuAMo5Vv9qefu8VwtHAnO9zZEkQh0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V2iN607wUzbdqN//i+KVbCM3hLpknQkJQcc2ZxBEfdmf4vPgkIvziYiY9KqDeCjQz
-	 muefqWRjtrcArIZF3//XQN8lShrN95aTHHvjq4OpmnomAm4FObF9V+kEWj3w/lg4iW
-	 NutbGouidM9zMUg1ehLmRxC6K4W7cKtVDzzc6d1E=
+	b=qOzsvmr3HkBF+xfynRO01OCA7xMXF9ll+QYxSRUQ80voNwg39su47/cH55kjYut/9
+	 8hpH70x3j5VGi41H98QeqtTwrmugSD+vd9lOuBrJ2hv/0ujWjKwl28vxSiOVSvviUR
+	 30dV5s08c9L4rQQrxHtlSKl09EiWopQNE9z38PD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406682AbgAPRu5 (ORCPT
+        id S2406476AbgAPRpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:50:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37402 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:45:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405851AbgAPRpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:45:35 -0500
+        id S2405892AbgAPRpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:45:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 088AA24779;
-        Thu, 16 Jan 2020 17:45:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2703924781;
+        Thu, 16 Jan 2020 17:45:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196734;
-        bh=qjYkpND32u9aQivqtQnD4k0lO66RNjiDMygAnBJqu78=;
+        s=default; t=1579196724;
+        bh=VpysHlMNeAQuSTtuAMo5Vv9qefu8VwtHAnO9zZEkQh0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e9CtNL/YXtcVPGLSE2EKDxHozSgcj+CgEDwVFM5TTGIrU3gwokOOK4Rr286vmdzb3
-         RLPLMfflDqsOer64ElDil/BVugSBQPJC8tuiY6pjber1Gy6Jl1DU04DVDeW1fmCGFy
-         KsTOpOrqbc2WUtwmiajP1lieN88ND0FSCsamHCOE=
+        b=fwdIQOE7iJ0tmKPApA3Mrz5PLjlcNN9GaSAzuXIQsg3jxrDVs9phD7G9zUkA4+gTL
+         b9rHRE+eKvk4O29+R9021MXj8ClFzvyLk12+q7U8O58KlkfYddWUCHp/p+TYCMLQPj
+         pO4wHcGHyogK0mKP0wotKE86vcKQffTTo2U04wUY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steve French <stfrench@microsoft.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org
-Subject: [PATCH AUTOSEL 4.4 117/174] cifs: fix rmmod regression in cifs.ko caused by force_sig changes
-Date:   Thu, 16 Jan 2020 12:41:54 -0500
-Message-Id: <20200116174251.24326-117-sashal@kernel.org>
+Cc:     Wen Yang <wen.yang99@zte.com.cn>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, netdev@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 109/174] net: pasemi: fix an use-after-free in pasemi_mac_phy_init()
+Date:   Thu, 16 Jan 2020 12:41:46 -0500
+Message-Id: <20200116174251.24326-109-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
 References: <20200116174251.24326-1-sashal@kernel.org>
@@ -61,36 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve French <stfrench@microsoft.com>
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-[ Upstream commit 247bc9470b1eeefc7b58cdf2c39f2866ba651509 ]
+[ Upstream commit faf5577f2498cea23011b5c785ef853ded22700b ]
 
-Fixes: 72abe3bcf091 ("signal/cifs: Fix cifs_put_tcp_session to call send_sig instead of force_sig")
+The phy_dn variable is still being used in of_phy_connect() after the
+of_node_put() call, which may result in use-after-free.
 
-The global change from force_sig caused module unloading of cifs.ko
-to fail (since the cifsd process could not be killed, "rmmod cifs"
-now would always fail)
-
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
-CC: Eric W. Biederman <ebiederm@xmission.com>
+Fixes: 1dd2d06c0459 ("net: Rework pasemi_mac driver to use of_mdio infrastructure")
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/pasemi/pasemi_mac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index b608ce741444..f44281a5eb9f 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -939,6 +939,7 @@ cifs_demultiplex_thread(void *p)
- 		mempool_resize(cifs_req_poolp, length + cifs_min_rcv);
+diff --git a/drivers/net/ethernet/pasemi/pasemi_mac.c b/drivers/net/ethernet/pasemi/pasemi_mac.c
+index 57a6e6cd74fc..48106953cf64 100644
+--- a/drivers/net/ethernet/pasemi/pasemi_mac.c
++++ b/drivers/net/ethernet/pasemi/pasemi_mac.c
+@@ -1091,7 +1091,6 @@ static int pasemi_mac_phy_init(struct net_device *dev)
  
- 	set_freezable();
-+	allow_signal(SIGKILL);
- 	while (server->tcpStatus != CifsExiting) {
- 		if (try_to_freeze())
- 			continue;
+ 	dn = pci_device_to_OF_node(mac->pdev);
+ 	phy_dn = of_parse_phandle(dn, "phy-handle", 0);
+-	of_node_put(phy_dn);
+ 
+ 	mac->link = 0;
+ 	mac->speed = 0;
+@@ -1100,6 +1099,7 @@ static int pasemi_mac_phy_init(struct net_device *dev)
+ 	phydev = of_phy_connect(dev, phy_dn, &pasemi_adjust_link, 0,
+ 				PHY_INTERFACE_MODE_SGMII);
+ 
++	of_node_put(phy_dn);
+ 	if (!phydev) {
+ 		printk(KERN_ERR "%s: Could not attach to phy\n", dev->name);
+ 		return -ENODEV;
 -- 
 2.20.1
 
