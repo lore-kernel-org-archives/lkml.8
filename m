@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 395A1C33CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C098C33CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E1B324683
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5172524724
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 Jan 2020 17:31:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195889;
-	bh=rNEdYtx4AyblOlb0zrQkR8wIdxh7NLZf6zh2ptUtJ2E=;
+	s=default; t=1579195895;
+	bh=5ppPyUoZj93D1NH4PD1olqQR8A4S937YORs68MOu7eA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gggYcpTi40mfW1y6aud6NEycR6Ph/ru6pQdJgaQ72PVvo032i0FE7x/hk96vWAQCR
-	 PqJItEy7CpW+vUAkR3xO6fJwPRJi30nJ5t2nsoMYeWFPILevd1BFQWRARqKBrj5m4M
-	 QRVTSeGsnRDR9o/2Uu3py96BQqUlcQt2gwgiWqRo=
+	b=jA1RBbkRNslV9pXuY7k4egqCwpIFt06niYFE88+MW+1drO2Hcehhr5Ar8TlbJxFMg
+	 QdEHtEQOYgOcXBsCxdw7hip+HJrmHoAgoYPKvizKi1F7jHdHE/VTgRwQiuY3dcWZf3
+	 HdLeHBaY1E072ctmnuQrDJxV1aP3Pe1X3aL6YFNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404593AbgAPRb1 (ORCPT
+        id S2404781AbgAPRbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:31:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44472 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:31:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404713AbgAPRbT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:31:19 -0500
+        id S2404485AbgAPRac (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:30:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C64FC246CC;
-        Thu, 16 Jan 2020 17:31:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1981E24718;
+        Thu, 16 Jan 2020 17:30:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195878;
-        bh=rNEdYtx4AyblOlb0zrQkR8wIdxh7NLZf6zh2ptUtJ2E=;
+        s=default; t=1579195831;
+        bh=5ppPyUoZj93D1NH4PD1olqQR8A4S937YORs68MOu7eA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xsW8TlTIiezsK3Zkn0iXsaLfL4kOnc7io+STR0hFNuU3JWwPEjWyB6hqSxCmsxmuC
-         +BDHtiuuNvUglHOp0oNAOlASL5g4KvKyJIG0Lf8BFv3zoS3gvCOk+yTnvDPW9zKoAk
-         vW9RXcizy7lm46ydgFwdenp4kEMepYiAWU0Fv0Mc=
+        b=mMNhIcimMLVIy6x5FkIajRqogI9A+acay1MlPFyuX599chQnS4Fhg7KWzHw93VYtt
+         WKs9fR+9N8nwbLb6hhdYTzyA0BCeFnPlmisr1M3cx54dfFa8nXVUwM/O/t+VP7U9YN
+         Apkx5piVw0mb95rx7M3LDwANiAGa9yRwV6iXnZug=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
+Cc:     Mans Rullgard <mans@mansr.com>,
+        Nicolas Ferre <nicolas.ferre@atmel.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 371/371] serial: stm32: fix clearing interrupt error flags
-Date:   Thu, 16 Jan 2020 12:24:03 -0500
-Message-Id: <20200116172403.18149-314-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 337/371] spi: atmel: fix handling of cs_change set on non-last xfer
+Date:   Thu, 16 Jan 2020 12:23:29 -0500
+Message-Id: <20200116172403.18149-280-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -61,50 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
+From: Mans Rullgard <mans@mansr.com>
 
-[ Upstream commit 1250ed7114a977cdc2a67a0c09d6cdda63970eb9 ]
+[ Upstream commit fed8d8c7a6dc2a76d7764842853d81c770b0788e ]
 
-The interrupt clear flag register is a "write 1 to clear" register.
-So, only writing ones allows to clear flags:
-- Replace buggy stm32_clr_bits() by a simple write to clear error flags
-- Replace useless read/modify/write stm32_set_bits() routine by a
-  simple write to clear TC (transfer complete) flag.
+The driver does the wrong thing when cs_change is set on a non-last
+xfer in a message.  When cs_change is set, the driver deactivates the
+CS and leaves it off until a later xfer again has cs_change set whereas
+it should be briefly toggling CS off and on again.
 
-Fixes: 4f01d833fdcd ("serial: stm32: fix rx error handling")
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1574323849-1909-1-git-send-email-fabrice.gasnier@st.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This patch brings the behaviour of the driver back in line with the
+documentation and common sense.  The delay of 10 us is the same as is
+used by the default spi_transfer_one_message() function in spi.c.
+[gregory: rebased on for-5.5 from spi tree]
+Fixes: 8090d6d1a415 ("spi: atmel: Refactor spi-atmel to use SPI framework queue")
+Signed-off-by: Mans Rullgard <mans@mansr.com>
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Link: https://lore.kernel.org/r/20191018153504.4249-1-gregory.clement@bootlin.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/stm32-usart.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/spi/spi-atmel.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
-index f8f3f8fafd9f..1e854e1851fb 100644
---- a/drivers/tty/serial/stm32-usart.c
-+++ b/drivers/tty/serial/stm32-usart.c
-@@ -132,8 +132,8 @@ static void stm32_receive_chars(struct uart_port *port, bool threaded)
- 		 * cleared by the sequence [read SR - read DR].
- 		 */
- 		if ((sr & USART_SR_ERR_MASK) && ofs->icr != UNDEF_REG)
--			stm32_clr_bits(port, ofs->icr, USART_ICR_ORECF |
--				       USART_ICR_PECF | USART_ICR_FECF);
-+			writel_relaxed(sr & USART_SR_ERR_MASK,
-+				       port->membase + ofs->icr);
+diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
+index d19331b66222..7b739c449227 100644
+--- a/drivers/spi/spi-atmel.c
++++ b/drivers/spi/spi-atmel.c
+@@ -301,7 +301,6 @@ struct atmel_spi {
+ 	bool			use_cs_gpios;
  
- 		c = stm32_get_char(port, &sr, &stm32_port->last_res);
- 		port->icount.rx++;
-@@ -302,7 +302,7 @@ static void stm32_transmit_chars(struct uart_port *port)
- 	if (ofs->icr == UNDEF_REG)
- 		stm32_clr_bits(port, ofs->isr, USART_SR_TC);
- 	else
--		stm32_set_bits(port, ofs->icr, USART_ICR_TCCF);
-+		writel_relaxed(USART_ICR_TCCF, port->membase + ofs->icr);
+ 	bool			keep_cs;
+-	bool			cs_active;
  
- 	if (stm32_port->tx_ch)
- 		stm32_transmit_chars_dma(port);
+ 	u32			fifo_size;
+ };
+@@ -1338,11 +1337,9 @@ static int atmel_spi_one_transfer(struct spi_master *master,
+ 				 &msg->transfers)) {
+ 			as->keep_cs = true;
+ 		} else {
+-			as->cs_active = !as->cs_active;
+-			if (as->cs_active)
+-				cs_activate(as, msg->spi);
+-			else
+-				cs_deactivate(as, msg->spi);
++			cs_deactivate(as, msg->spi);
++			udelay(10);
++			cs_activate(as, msg->spi);
+ 		}
+ 	}
+ 
+@@ -1365,7 +1362,6 @@ static int atmel_spi_transfer_one_message(struct spi_master *master,
+ 	atmel_spi_lock(as);
+ 	cs_activate(as, spi);
+ 
+-	as->cs_active = true;
+ 	as->keep_cs = false;
+ 
+ 	msg->status = 0;
 -- 
 2.20.1
 
