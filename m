@@ -2,148 +2,116 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 063DBC33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4654C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBE3F2176D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:47:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88DCC2083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:48:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jQRQTldy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729252AbgAQSr3 (ORCPT
+        id S1729424AbgAQSs0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 13:47:29 -0500
-Received: from mga14.intel.com ([192.55.52.115]:41380 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727115AbgAQSr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 13:47:29 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 10:47:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,331,1574150400"; 
-   d="scan'208";a="274464501"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 17 Jan 2020 10:47:25 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1isWeU-0008uh-G9; Sat, 18 Jan 2020 02:47:26 +0800
-Date:   Sat, 18 Jan 2020 02:46:48 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:perf/core] BUILD SUCCESS
- 5738891229a25e9e678122a843cbf0466a456d0c
-Message-ID: <5e220118.Jq+VZQNrWv+LPVgz%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Fri, 17 Jan 2020 13:48:26 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34127 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726897AbgAQSs0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 13:48:26 -0500
+Received: by mail-pg1-f195.google.com with SMTP id r11so12093282pgf.1;
+        Fri, 17 Jan 2020 10:48:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uf2grPri+Pk70ySyorIWRt3xOE6amIrsICg9f4UOiek=;
+        b=jQRQTldyPxOJDIzuGEiFZ7SbwJbDbJJZIZJtShG+tPkycNQT1BrpN5BPde5niFnHKu
+         qCTwnSpXS7gL1IRfmnw6K2RtOQCqhGRHemIr4uGyUTmKeXqLJ2qgo40JAhrYjRce3u5u
+         6HwQyNb8ABAznP5xHcoxVfEeVq+3YY0WIuQSxZNF1Olw7PQwFGzecFHc4JZgDjULHNrt
+         dv2LrSbKaxXlqUAS9bBlBqGVxrhcA7sqfD806e/OpXBG0K2Dt43ABqD51Y0Ffe2Oi5WM
+         s7hZ9w9FtGIDpELVVJ74Rf2jQYkhep+KLV4mvfiANFL5c5UhVB6x6+rBvJrbogB9Bct8
+         TDBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uf2grPri+Pk70ySyorIWRt3xOE6amIrsICg9f4UOiek=;
+        b=PXBmw1XeVYMcVFsTcZ9QvYAuXBT6yGMgvwxpfGFq3rZSgGVSKdHt+UsuI7+oRp7ftD
+         aEnJaS+REEcMoho/s18Lp1yNDF08PZgG6TyYsHKvrUnmdPtwX3XKbRU0UBXHXYAMhGxz
+         VRXbIiW8uOEtrY02hMdSbIGRqAhIOKSrnNLkKj/wd+VqXQj5QeF5SMQaKkXIncgkgf/p
+         VS2rSBF5KstTz6Uyb/adfHpXRlcRQLocs4Y9NfNYEk+mrEXbQSq9p0T4XBpGThGAvfho
+         cpr++wsdH6vLgzXMzbQ7IWCtBImgJoRJnW4MaazSNzIQYNHoFPNYlZKAyEuJkN6/aQzJ
+         T3jg==
+X-Gm-Message-State: APjAAAXJx6JEDBSRQGSGcbtOYGVhc1Oxj88rWlIRgK46ZtgsrBFU8wAU
+        oT2tWv0AaGAMYb1eAr3kqWc=
+X-Google-Smtp-Source: APXvYqyvXwmbIo2pROIrbwWIUHlo1UI2+KfXA/vCZHjGuwWa9d4r5hP8/q1nJyTRTwffia3TMmlJ5w==
+X-Received: by 2002:aa7:9816:: with SMTP id e22mr4382433pfl.229.1579286905813;
+        Fri, 17 Jan 2020 10:48:25 -0800 (PST)
+Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id v15sm8304050pju.15.2020.01.17.10.48.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jan 2020 10:48:25 -0800 (PST)
+Subject: Re: [PATCH] net: optimize cmpxchg in ip_idents_reserve
+To:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jinyuqi@huawei.com,
+        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, edumazet@google.com,
+        guoyang2@huawei.com, Will Deacon <will@kernel.org>
+References: <1579058620-26684-1-git-send-email-zhangshaokun@hisilicon.com>
+ <20200116.042722.153124126288244814.davem@davemloft.net>
+ <930faaff-4d18-452d-2e44-ef05b65dc858@gmail.com>
+ <1b3aaddf-22f5-1846-90f1-42e68583c1e4@gmail.com>
+ <430496fc-9f26-8cb4-91d8-505fda9af230@hisilicon.com>
+ <20200117123253.GC14879@hirez.programming.kicks-ass.net>
+ <7e6c6202-24bb-a532-adde-d53dd6fb14c3@gmail.com>
+ <20200117180324.GA2623847@rani.riverdale.lan>
+ <94573cea-a833-9b48-6581-8cc5cdd19b89@gmail.com>
+ <20200117183800.GA2649345@rani.riverdale.lan>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <45224c36-9941-aae5-aca4-e2c8e3723355@gmail.com>
+Date:   Fri, 17 Jan 2020 10:48:19 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200117183800.GA2649345@rani.riverdale.lan>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  perf/core
-branch HEAD: 5738891229a25e9e678122a843cbf0466a456d0c  perf/x86/amd: Add support for Large Increment per Cycle Events
 
-elapsed time: 301m
 
-configs tested: 85
-configs skipped: 105
+On 1/17/20 10:38 AM, Arvind Sankar wrote:
+> On Fri, Jan 17, 2020 at 10:16:45AM -0800, Eric Dumazet wrote:
+>> Wasńt it the case back in 2016 already for linux-4.8 ?
+>>
+>> What will prevent someone to send another report to netdev/lkml ?
+>>
+>>  -fno-strict-overflow support is not a prereq for CONFIG_UBSAN.
+>>
+>> Fact that we kept in lib/ubsan.c and lib/test_ubsan.c code for 
+>> test_ubsan_add_overflow() and test_ubsan_sub_overflow() is disturbing.
+>>
+> 
+> No, it was bumped in 2018 in commit cafa0010cd51 ("Raise the minimum
+> required gcc version to 4.6"). That raised it from 3.2 -> 4.6.
+> 
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+This seems good to me, for gcc at least.
 
-csky                 randconfig-a001-20200118
-openrisc             randconfig-a001-20200118
-s390                 randconfig-a001-20200118
-sh                   randconfig-a001-20200118
-xtensa               randconfig-a001-20200118
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                              fedora-25
-x86_64                                  kexec
-parisc                            allnoconfig
-parisc                            allyesonfig
-parisc                         b180_defconfig
-parisc                        c3000_defconfig
-parisc                              defconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-arc                  randconfig-a001-20200118
-arm                  randconfig-a001-20200118
-arm64                randconfig-a001-20200118
-ia64                 randconfig-a001-20200118
-powerpc              randconfig-a001-20200118
-sparc                randconfig-a001-20200118
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-csky                 randconfig-a001-20200117
-openrisc             randconfig-a001-20200117
-s390                 randconfig-a001-20200117
-sh                   randconfig-a001-20200117
-xtensa               randconfig-a001-20200117
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-um                                  defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-i386                             alldefconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-x86_64               randconfig-c001-20200118
-x86_64               randconfig-c002-20200118
-x86_64               randconfig-c003-20200118
-i386                 randconfig-c001-20200118
-i386                 randconfig-c002-20200118
-i386                 randconfig-c003-20200118
+Maybe it is time to enfore -fno-strict-overflow in KBUILD_CFLAGS 
+instead of making it conditional.
 
----
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+Thanks.
