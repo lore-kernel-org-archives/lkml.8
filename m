@@ -2,170 +2,340 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA282C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 06:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB903C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 06:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C531E20730
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 06:45:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B76992072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 06:45:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="SQawDGAI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729134AbgAQGpL (ORCPT
+        id S1729143AbgAQGpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 01:45:11 -0500
-Received: from mail-il1-f199.google.com ([209.85.166.199]:48886 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727115AbgAQGpL (ORCPT
+        Fri, 17 Jan 2020 01:45:44 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52491 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726726AbgAQGpn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 01:45:11 -0500
-Received: by mail-il1-f199.google.com with SMTP id u14so18043878ilq.15
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 22:45:10 -0800 (PST)
+        Fri, 17 Jan 2020 01:45:43 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p9so6277202wmc.2
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 22:45:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kT8tPUK6L9PWUiDm45+TRBWNAtdOjta2epvvVWDmezc=;
+        b=SQawDGAIAEIs1WOeVH1PHqR1VSCqOB2JGqvm8JqWCTXIEJYs+XDb3yQ1CoB4z6K4Oo
+         hC+0oUX1Z9XPJTxiasveFeoF80IUp/DLBkcMLp5iVPLnr/Q4ssVFwDeMDb3Qlua/eCAl
+         /d+R2/V4skTQPhkRUms2glAGzO7b1kv4YptoN+uE/sOzeNAnM6HGUSy77sTdcE0mzHFW
+         nzrtI9qA5fAzW7Aof36k4JPJOwZEmz++tFsedySP1b6/NufnUdkqRZo6osv187KK6+67
+         sW7Hp6SkoZ5punhiVxEs2CEauJLEjYe8s3mDvzLUaOD23g+D7yh0ELSo7D4Kuw1SO6cb
+         AD/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=ALoOrIWozL+7PLCcGhdyW5y50eCbmJ6yl03zW3710zk=;
-        b=pfGtirgmlaDUkg74tKhKq7Brc861KQ+akvCynHwF6QZijOkW51naHuPoBOd7n0YKUD
-         ESY1tE0AL8ppvtSM7Go23glx0IoFpYhKGptv0pieim7+VLYa383jX3E7ATPWbkr46SD3
-         rHl7xrt89NDxO1cQCm3hiPJ0WMPpVnSBBA2ae7CH25UITprODHYZWMLIECW+L0wAO+p1
-         qYx6gxaL9ATCHjOkv9Em0QVkss3q+a4Nj8QVDtw0msxL5pubxkTUeeTRm2d6oQouWVQd
-         4N9XGLrWxn4aQv5Xa7ryRYjB+zryKGoe8edlDplkun8knANFYrU7bM9GiY0L6fKOPQsU
-         e6Ug==
-X-Gm-Message-State: APjAAAXaIbCYFvSYg/7ILKMa0C16rUXip8OdKTUOcVezwLpqIM5TfIJQ
-        U3vHkyurD8U2YclFS39Hg+5Ppk7siIC2el0qEcZLqXcaougT
-X-Google-Smtp-Source: APXvYqx7cLsfbkr4tyHg0yBuh+Y7mfDrXeXDvyvI806pApG8VLr6QRUQBtIB1yUYwA6ZJYsma6GMsTQKy8JR2FZqPF/P2HbYS2Ht
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kT8tPUK6L9PWUiDm45+TRBWNAtdOjta2epvvVWDmezc=;
+        b=aj+W1obO+Ah3w765Jk9+woQmGlrV2rReoVoqvgv7a7md94KEWSVAb4s2zJDj8PAOs2
+         cmHBBf4qbG6ELKgjnP9XGiIqDKts9WYMqFGObBeCaHuganRqSD35W92S7Xahpxhxb3La
+         m4YyMTPfi0b5soaxpOcOHlqGj/sBqkIqlgbm1SGgZoX2Gw1zMt3OGsun0tpraFwJeSHw
+         mxVPekPrIn5BcBcriMyGJH1m3Bu+GruFmnk+V6LYuCz/VfL3/d6fztWbYFohn0WeXG+p
+         bCgE+bJTeVb94wYTwGFdNWrt8UwN26OU0+DWqjugSjH5MGsbq6J7Dv0x5YLGtT9LmNMz
+         xWBw==
+X-Gm-Message-State: APjAAAUJEELTWPUB4LJ4xjl2BVvITI87kGPnfXGFf8LL0ZlMUJX/5blb
+        c1XeM6vhzPRPFkG7eXhp5gV6fCYEW7vNx7Gm4TsTww==
+X-Google-Smtp-Source: APXvYqzm7mbKYpIzCReRqg4cthTMWToH3MI9+VF8y4RoSICRSnCExf7Y/HnStY9c+nfE2sTYD5et+fdqX9huvxTQqXs=
+X-Received: by 2002:a05:600c:10cd:: with SMTP id l13mr2971942wmd.102.1579243539254;
+ Thu, 16 Jan 2020 22:45:39 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a02:2a08:: with SMTP id w8mr32302555jaw.86.1579243509817;
- Thu, 16 Jan 2020 22:45:09 -0800 (PST)
-Date:   Thu, 16 Jan 2020 22:45:09 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006aa78f059c5048c1@google.com>
-Subject: KASAN: use-after-free Read in __locks_wake_up_blocks
-From:   syzbot <syzbot+922689db06e57b69c240@syzkaller.appspotmail.com>
-To:     bfields@fieldses.org, jlayton@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20191223113443.68969-1-anup.patel@wdc.com> <20191223113443.68969-3-anup.patel@wdc.com>
+ <mhng-24b22694-82f4-467b-b6a9-0fb2e186d3f2@palmerdabbelt-glaptop>
+In-Reply-To: <mhng-24b22694-82f4-467b-b6a9-0fb2e186d3f2@palmerdabbelt-glaptop>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Fri, 17 Jan 2020 12:15:28 +0530
+Message-ID: <CAAhSdy1MxVMm+7kxD3zE--_tzLk-pA0NOe_C54n6vbB4YxxrrQ@mail.gmail.com>
+Subject: Re: [PATCH v10 02/19] RISC-V: Add bitmap reprensenting ISA features
+ common across CPUs
+To:     Palmer Dabbelt <palmerdabbelt@google.com>
+Cc:     Anup Patel <Anup.Patel@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim K <rkrcmar@redhat.com>, Alexander Graf <graf@amazon.com>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@lst.de>,
+        KVM General <kvm@vger.kernel.org>,
+        kvm-riscv@lists.infradead.org,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, Jan 17, 2020 at 1:21 AM Palmer Dabbelt <palmerdabbelt@google.com> wrote:
+>
+> On Mon, 23 Dec 2019 03:35:26 PST (-0800), Anup Patel wrote:
+> > This patch adds riscv_isa bitmap which represents Host ISA features
+> > common across all Host CPUs. The riscv_isa is not same as elf_hwcap
+> > because elf_hwcap will only have ISA features relevant for user-space
+> > apps whereas riscv_isa will have ISA features relevant to both kernel
+> > and user-space apps.
+> >
+> > One of the use-case for riscv_isa bitmap is in KVM hypervisor where
+> > we will use it to do following operations:
+> >
+> > 1. Check whether hypervisor extension is available
+> > 2. Find ISA features that need to be virtualized (e.g. floating
+> >    point support, vector extension, etc.)
+> >
+> > Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > Reviewed-by: Alexander Graf <graf@amazon.com>
+> > ---
+> >  arch/riscv/include/asm/hwcap.h | 22 +++++++++
+> >  arch/riscv/kernel/cpufeature.c | 83 ++++++++++++++++++++++++++++++++--
+> >  2 files changed, 102 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
+> > index 1bb0cd04aec3..5589c012e004 100644
+> > --- a/arch/riscv/include/asm/hwcap.h
+> > +++ b/arch/riscv/include/asm/hwcap.h
+> > @@ -8,6 +8,7 @@
+> >  #ifndef _ASM_RISCV_HWCAP_H
+> >  #define _ASM_RISCV_HWCAP_H
+> >
+> > +#include <linux/bits.h>
+> >  #include <uapi/asm/hwcap.h>
+> >
+> >  #ifndef __ASSEMBLY__
+> > @@ -22,6 +23,27 @@ enum {
+> >  };
+> >
+> >  extern unsigned long elf_hwcap;
+> > +
+> > +#define RISCV_ISA_EXT_a              ('a' - 'a')
+> > +#define RISCV_ISA_EXT_c              ('c' - 'a')
+> > +#define RISCV_ISA_EXT_d              ('d' - 'a')
+> > +#define RISCV_ISA_EXT_f              ('f' - 'a')
+> > +#define RISCV_ISA_EXT_h              ('h' - 'a')
+> > +#define RISCV_ISA_EXT_i              ('i' - 'a')
+> > +#define RISCV_ISA_EXT_m              ('m' - 'a')
+> > +#define RISCV_ISA_EXT_s              ('s' - 'a')
+> > +#define RISCV_ISA_EXT_u              ('u' - 'a')
+>
+> Unfortunately the ISA doesn't really work this way any more: the single-letter
+> extensions are just aliases for longer extension strings, each of which
+> represents a single instruction.  I know we're saddled with some ABI that looks
+> this way, but I really don't want to add new code that depends on these defunct
+> assumptions -- there isn't that much in Linux right now, but there's a lot in
+> the FSF toolchain and getting that all out is going to be a long project.
 
-syzbot found the following crash on:
+Yes, I am aware of this.
 
-HEAD commit:    f5ae2ea6 Fix built-in early-load Intel microcode alignment
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12c103aee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d9290aeb7e6cf1c4
-dashboard link: https://syzkaller.appspot.com/bug?extid=922689db06e57b69c240
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Paul had raised similar concerns so we are using bitmap to tackle this
 
-Unfortunately, I don't have any reproducer for this crash yet.
+For example:
+BIT['h' - 'a'] represents whether 'h' extension is present or not
+In future, when we have incremental hxyz change in 'h' extension
+we will assign some bitpostion Bhxyz for this and BIT[Bhxyz]
+will represent whether 'hxyz' is present or not.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+922689db06e57b69c240@syzkaller.appspotmail.com
+>
+> > +
+> > +#define RISCV_ISA_EXT_MAX    256
+>
+> Why so big?  It looks like the rest of the code just touches the first word,
+> and most of that is explicit.
 
-==================================================================
-BUG: KASAN: use-after-free in __wake_up_common+0x5d7/0x610  
-kernel/sched/wait.c:81
-Read of size 8 at addr ffff88808e074888 by task syz-executor.0/20572
+Please see previous comment.
 
-CPU: 1 PID: 20572 Comm: syz-executor.0 Not tainted 5.5.0-rc6-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
-  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
-  kasan_report+0x12/0x20 mm/kasan/common.c:639
-  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
-  __wake_up_common+0x5d7/0x610 kernel/sched/wait.c:81
-  __wake_up_common_lock+0xea/0x150 kernel/sched/wait.c:123
-  __wake_up+0xe/0x10 kernel/sched/wait.c:142
-  __locks_wake_up_blocks+0x120/0x180 fs/locks.c:742
-  locks_delete_block+0x73/0xf0 fs/locks.c:773
-  flock_lock_inode_wait fs/locks.c:2143 [inline]
-  locks_lock_inode_wait+0x16b/0x3f0 fs/locks.c:2162
-  locks_lock_file_wait include/linux/fs.h:1328 [inline]
-  __do_sys_flock fs/locks.c:2225 [inline]
-  __se_sys_flock fs/locks.c:2188 [inline]
-  __x64_sys_flock+0x30c/0x370 fs/locks.c:2188
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45aff9
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fb6469d4c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000049
-RAX: ffffffffffffffda RBX: 00007fb6469d56d4 RCX: 000000000045aff9
-RDX: 0000000000000000 RSI: 0000000000000002 RDI: 0000000000000004
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 00000000000000c6 R14: 00000000004c1bff R15: 000000000075bf2c
+Here 256 is a ballpark size of bitmap. If you have any preferences then
+I can change to that value. I am sure this value will change in the future.
 
-Allocated by task 20575:
-  save_stack+0x23/0x90 mm/kasan/common.c:72
-  set_track mm/kasan/common.c:80 [inline]
-  __kasan_kmalloc mm/kasan/common.c:513 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:486
-  kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:521
-  slab_post_alloc_hook mm/slab.h:584 [inline]
-  slab_alloc mm/slab.c:3320 [inline]
-  kmem_cache_alloc+0x121/0x710 mm/slab.c:3484
-  kmem_cache_zalloc include/linux/slab.h:660 [inline]
-  locks_alloc_lock+0x1d/0x1d0 fs/locks.c:346
-  flock_make_lock+0x241/0x2b0 fs/locks.c:487
-  __do_sys_flock fs/locks.c:2207 [inline]
-  __se_sys_flock fs/locks.c:2188 [inline]
-  __x64_sys_flock+0xd5/0x370 fs/locks.c:2188
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>
+> > +
+> > +unsigned long riscv_isa_extension_base(const unsigned long *isa_bitmap);
+> > +
+> > +#define riscv_isa_extension_mask(ext) BIT_MASK(RISCV_ISA_EXT_##ext)
+> > +
+> > +bool __riscv_isa_extension_available(const unsigned long *isa_bitmap, int bit);
+> > +#define riscv_isa_extension_available(isa_bitmap, ext)       \
+> > +     __riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_##ext)
+> > +
+> >  #endif
+> >
+> >  #endif /* _ASM_RISCV_HWCAP_H */
+> > diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+> > index 0b40705567b7..e172a2322b34 100644
+> > --- a/arch/riscv/kernel/cpufeature.c
+> > +++ b/arch/riscv/kernel/cpufeature.c
+> > @@ -6,6 +6,7 @@
+> >   * Copyright (C) 2017 SiFive
+> >   */
+> >
+> > +#include <linux/bitmap.h>
+> >  #include <linux/of.h>
+> >  #include <asm/processor.h>
+> >  #include <asm/hwcap.h>
+> > @@ -13,15 +14,57 @@
+> >  #include <asm/switch_to.h>
+> >
+> >  unsigned long elf_hwcap __read_mostly;
+> > +
+> > +/* Host ISA bitmap */
+> > +static DECLARE_BITMAP(riscv_isa, RISCV_ISA_EXT_MAX) __read_mostly;
+> > +
+> >  #ifdef CONFIG_FPU
+> >  bool has_fpu __read_mostly;
+> >  #endif
+> >
+> > +/**
+> > + * riscv_isa_extension_base() - Get base extension word
+> > + *
+> > + * @isa_bitmap: ISA bitmap to use
+> > + * Return: base extension word as unsigned long value
+> > + *
+> > + * NOTE: If isa_bitmap is NULL then Host ISA bitmap will be used.
+> > + */
+> > +unsigned long riscv_isa_extension_base(const unsigned long *isa_bitmap)
+> > +{
+> > +     if (!isa_bitmap)
+> > +             return riscv_isa[0];
+> > +     return isa_bitmap[0];
+> > +}
+> > +EXPORT_SYMBOL_GPL(riscv_isa_extension_base);
+>
+> This isn't used, which makes it hard to review.  Can you please split out the
+> changes that don't depend on the V extension to come out of draft?  That would
+> make it easier to take some of the code early, which lets us keep around less
+> diff.
 
-Freed by task 20575:
-  save_stack+0x23/0x90 mm/kasan/common.c:72
-  set_track mm/kasan/common.c:80 [inline]
-  kasan_set_free_info mm/kasan/common.c:335 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:474
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:483
-  __cache_free mm/slab.c:3426 [inline]
-  kmem_cache_free+0x86/0x320 mm/slab.c:3694
-  locks_free_lock fs/locks.c:383 [inline]
-  __do_sys_flock fs/locks.c:2228 [inline]
-  __se_sys_flock fs/locks.c:2188 [inline]
-  __x64_sys_flock+0x23b/0x370 fs/locks.c:2188
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+This is used by KVM RISC-V patches hence it is part of KVM RISC-V series.
 
-The buggy address belongs to the object at ffff88808e0747f0
-  which belongs to the cache file_lock_cache of size 264
-The buggy address is located 152 bytes inside of
-  264-byte region [ffff88808e0747f0, ffff88808e0748f8)
-The buggy address belongs to the page:
-page:ffffea0002381d00 refcount:1 mapcount:0 mapping:ffff8880a9932700  
-index:0xffff88808e074a80
-raw: 00fffe0000000200 ffffea00025f86c8 ffffea0002585ac8 ffff8880a9932700
-raw: ffff88808e074a80 ffff88808e074040 000000010000000a 0000000000000000
-page dumped because: kasan: bad access detected
+>
+> > +
+> > +/**
+> > + * __riscv_isa_extension_available() - Check whether given extension
+> > + * is available or not
+> > + *
+> > + * @isa_bitmap: ISA bitmap to use
+> > + * @bit: bit position of the desired extension
+> > + * Return: true or false
+> > + *
+> > + * NOTE: If isa_bitmap is NULL then Host ISA bitmap will be used.
+> > + */
+> > +bool __riscv_isa_extension_available(const unsigned long *isa_bitmap, int bit)
+> > +{
+> > +     const unsigned long *bmap = (isa_bitmap) ? isa_bitmap : riscv_isa;
+> > +
+> > +     if (bit >= RISCV_ISA_EXT_MAX)
+> > +             return false;
+> > +
+> > +     return test_bit(bit, bmap) ? true : false;
+> > +}
+> > +EXPORT_SYMBOL_GPL(__riscv_isa_extension_available);
+> > +
+> >  void riscv_fill_hwcap(void)
+> >  {
+> >       struct device_node *node;
+> >       const char *isa;
+> > -     size_t i;
+> > +     char print_str[BITS_PER_LONG + 1];
+> > +     size_t i, j, isa_len;
+> >       static unsigned long isa2hwcap[256] = {0};
+> >
+> >       isa2hwcap['i'] = isa2hwcap['I'] = COMPAT_HWCAP_ISA_I;
+> > @@ -33,8 +76,11 @@ void riscv_fill_hwcap(void)
+> >
+> >       elf_hwcap = 0;
+> >
+> > +     bitmap_zero(riscv_isa, RISCV_ISA_EXT_MAX);
+> > +
+> >       for_each_of_cpu_node(node) {
+> >               unsigned long this_hwcap = 0;
+> > +             unsigned long this_isa = 0;
+> >
+> >               if (riscv_of_processor_hartid(node) < 0)
+> >                       continue;
+> > @@ -42,8 +88,24 @@ void riscv_fill_hwcap(void)
+> >               if (riscv_read_check_isa(node, &isa) < 0)
+> >                       continue;
+> >
+> > -             for (i = 0; i < strlen(isa); ++i)
+> > +             i = 0;
+> > +             isa_len = strlen(isa);
+> > +#if IS_ENABLED(CONFIG_32BIT)
+> > +             if (!strncmp(isa, "rv32", 4))
+> > +                     i += 4;
+> > +#elif IS_ENABLED(CONFIG_64BIT)
+> > +             if (!strncmp(isa, "rv64", 4))
+> > +                     i += 4;
+>
+> We shouldn't be accepting arbitrary inputs and attempting to correct them, just
+> enforce that an actual ISA string is provided and check it against what the
+> kernel can support.
 
-Memory state around the buggy address:
-  ffff88808e074780: 00 00 00 00 00 00 fc fc fc fc fc fc fc fc fb fb
-  ffff88808e074800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff88808e074880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fc
-                       ^
-  ffff88808e074900: fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb fb
-  ffff88808e074980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+I agree that ISA string parsing is not perfect and will improve over time but
+ISA bitmap should have all the features set as provided via CPU DT nodes.
 
+We allow KVM RISC-V initialization to proceed only when 'H' extension is
+supported.
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> > +#endif
+> > +             for (; i < isa_len; ++i) {
+> >                       this_hwcap |= isa2hwcap[(unsigned char)(isa[i])];
+> > +                     /*
+> > +                      * TODO: X, Y and Z extension parsing for Host ISA
+> > +                      * bitmap will be added in-future.
+> > +                      */
+> > +                     if ('a' <= isa[i] && isa[i] < 'x')
+> > +                             this_isa |= (1UL << (isa[i] - 'a'));
+> > +             }
+> >
+> >               /*
+> >                * All "okay" hart should have same isa. Set HWCAP based on
+> > @@ -54,6 +116,11 @@ void riscv_fill_hwcap(void)
+> >                       elf_hwcap &= this_hwcap;
+> >               else
+> >                       elf_hwcap = this_hwcap;
+> > +
+> > +             if (riscv_isa[0])
+> > +                     riscv_isa[0] &= this_isa;
+> > +             else
+> > +                     riscv_isa[0] = this_isa;
+> >       }
+> >
+> >       /* We don't support systems with F but without D, so mask those out
+> > @@ -63,7 +130,17 @@ void riscv_fill_hwcap(void)
+> >               elf_hwcap &= ~COMPAT_HWCAP_ISA_F;
+> >       }
+> >
+> > -     pr_info("elf_hwcap is 0x%lx\n", elf_hwcap);
+> > +     memset(print_str, 0, sizeof(print_str));
+> > +     for (i = 0, j = 0; i < BITS_PER_LONG; i++)
+> > +             if (riscv_isa[0] & BIT_MASK(i))
+> > +                     print_str[j++] = (char)('a' + i);
+> > +     pr_info("riscv: ISA extensions %s\n", print_str);
+> > +
+> > +     memset(print_str, 0, sizeof(print_str));
+> > +     for (i = 0, j = 0; i < BITS_PER_LONG; i++)
+> > +             if (elf_hwcap & BIT_MASK(i))
+> > +                     print_str[j++] = (char)('a' + i);
+> > +     pr_info("riscv: ELF capabilities %s\n", print_str);
+> >
+> >  #ifdef CONFIG_FPU
+> >       if (elf_hwcap & (COMPAT_HWCAP_ISA_F | COMPAT_HWCAP_ISA_D))
+> > --
+> > 2.17.1
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Regards,
+Anup
