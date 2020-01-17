@@ -2,107 +2,119 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E2AC33CB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 168F6C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1886520684
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:53:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD8752087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:57:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iMrhQwjW"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="KvEFe/oP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733254AbgAQAxj (ORCPT
+        id S2387418AbgAQA5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 19:53:39 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:38461 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729937AbgAQAxj (ORCPT
+        Thu, 16 Jan 2020 19:57:10 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39533 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733306AbgAQA5J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 19:53:39 -0500
-Received: by mail-lj1-f196.google.com with SMTP id w1so24671371ljh.5;
-        Thu, 16 Jan 2020 16:53:37 -0800 (PST)
+        Thu, 16 Jan 2020 19:57:09 -0500
+Received: by mail-io1-f67.google.com with SMTP id c16so24092360ioh.6
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 16:57:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nRLDsV5J+qkOKcJynurEZXps9+tP4i1Xe6Phm4XOTR4=;
-        b=iMrhQwjWDdPKI17qs9lOaGZLJHmZhyiEvzn82Awp6aaTvIDjibKrQqROs7KVHLnDkj
-         +BKr4D8ciYkZh9eGI5EnwF/l6gKa4Kn9exonPDrEe7bOJC/gvh852Epnk4F06U9Kf4i1
-         8D2+59treVJTUWw81qtv/A2G88pYtJ541Y5Q7HT0QynigJoxeKacAoHWW1Ft6+89FEDq
-         4P9BOc9TYT0iT/eWH9sc2GmkMt7ILDI0bbioHQP4ey4JaJZt84+cvOdC0otA2Chgrey2
-         26AtZH/WryNmwS8wzeVaneTrmAx2wEHk8wnSfvGRZ5zq1bVHCz3TYJ9E1VVI6DA0eUsi
-         ALBA==
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qxvKFjNlmm2YdNSGQw/t2H4ugTVLAvz4laRQaFal8lM=;
+        b=KvEFe/oPSc/2vbeoAoO8Cv0bwwOn3KLVCs/6kRN3PwcgZSGV+n/Wrb6aVEmAOMogOn
+         h4pA9N57WVBjf7QbLbPqFcTaMsjUi3/A+t+S4/iE/ZhV3vIpsdqKP3hgGTIfZOeMn6Zj
+         oB3j6VcpKGXeOZ/wQRITOkn/RxiSiCIbeoTcYaERKW2EZulydgGpr5xyrQq2vPGIJjXH
+         +YG4ZkqYnyLGXbu+khhWczvpAHPjL7jdDj2oAsP0aKA+OhXfoaXlcWDtvn51snQ+Yauu
+         4q/7+cEgg2hJEV4Da8Cs0O17uRRNO5ZQrlm7uZz3RC/I3f4ZsMnIoYe5xJfBJ/xHhOpP
+         MalA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nRLDsV5J+qkOKcJynurEZXps9+tP4i1Xe6Phm4XOTR4=;
-        b=k+pGvdG/CqfJz6DaffjZADKSIdT/+BUJQaU0Bry5QvcgEfOxlkEaQt2/WQbSFGI0Ko
-         SSUXhXv/XaA1mtIbrvdM1bOmUHqumWcx0nvtSoaYfnIqC7vOOhz0MTHT4sG2YHaR+Tei
-         kffe/XP18QEBjpNaF7wRpO3NPN0iDCTC2jsVDbuHU7OOxpsd6/ez9IXfjRM8uHzrDOs0
-         kckh7stUDPFWM4lWXNyRlFCOK8i6B5MvsFVQGIkS9Z9JFVqapjEwtfIoukgIXdGf4yPT
-         8Bv7eyVS7S10gtKwWmBk2Epu5fnJlDas0tTUweF7u7Zuwggh65VxfNVmUrQZ5A8cB3Ma
-         S0IQ==
-X-Gm-Message-State: APjAAAUfCxthHzDjAfORVtLHF+R/+X4/uD5p0RxvQ1JhLevMFUeMPLuB
-        pA1NK0aW6h7MdwXFEYntr1KwGJBd
-X-Google-Smtp-Source: APXvYqy6N5uWsJX2pC47nHo5QlrWFFY2e2OPd/lAApVB9k1YS6UkqwsiTsIaBBoYfOU+3tzo+xOurQ==
-X-Received: by 2002:a2e:9b12:: with SMTP id u18mr4119536lji.274.1579222417031;
-        Thu, 16 Jan 2020 16:53:37 -0800 (PST)
-Received: from localhost.localdomain ([109.126.145.157])
-        by smtp.gmail.com with ESMTPSA id r26sm11174346lfm.82.2020.01.16.16.53.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 16:53:36 -0800 (PST)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] io_uring: remove extra check in __io_commit_cqring
-Date:   Fri, 17 Jan 2020 03:52:46 +0300
-Message-Id: <0d023acc096d63db454927590a5aca07deeac1cf.1579222330.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qxvKFjNlmm2YdNSGQw/t2H4ugTVLAvz4laRQaFal8lM=;
+        b=JEDY2/DlOYm5g3/UvS3qleRsKA5sakpA7MXi32qxOhFuXK7P6Sl30fTXxEtGPjAH6x
+         /B0GBT6Trpgsa5bjo+sjw5v2950YuIRY4jYUDCQNR8iLbZ8wI7mr221zCO0QhMs2piRa
+         iYcBuGSNPAEIYbNES3ZhbiDpNA//K28B/JoF1ocsfFZigiQlF1q5U58P/q8XWYKjySMO
+         9nm5jGgT3xGoWsOU66mmgUOX+fpjUs54Q6SnsdEETbPn8DQIJxOuRtztHVVcNwtjxh7L
+         WaxKSfpWYK2MLkLxM2S4P0CIAZoHAsCHBXaZLmnabrPre4+FMtUdQMKmv3heOen1fr6b
+         xWSg==
+X-Gm-Message-State: APjAAAVr8DzCovnKVrIK73CsYgV4psJdi2Z0BlI4Qk4zXZE/WxsB6YJN
+        T/p1ce6keBe3CC1RC+uwuPdP0+EaF7WepBP6kYNeqQ==
+X-Google-Smtp-Source: APXvYqyu4SPZDC4zObU6mM2JzTlSxF5CffLtlPXclG31ycWTRt+tto82A8i6lJJF1bygD3jkMFbplVRmLMMnnOilohQ=
+X-Received: by 2002:a02:ca10:: with SMTP id i16mr1119516jak.10.1579222628788;
+ Thu, 16 Jan 2020 16:57:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200110063755.19804-1-zhang.lyra@gmail.com> <20200110063755.19804-3-zhang.lyra@gmail.com>
+ <CAOesGMjNkVpTOhSrLUKjNZnKFk55DTgg29QzVBEFVh3Z=Ra+cQ@mail.gmail.com> <CAAfSe-tx+S_tc1y0c5wobQy2xygNr01b3LOqQ4FQtHoDNhHNeA@mail.gmail.com>
+In-Reply-To: <CAAfSe-tx+S_tc1y0c5wobQy2xygNr01b3LOqQ4FQtHoDNhHNeA@mail.gmail.com>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Thu, 16 Jan 2020 16:56:57 -0800
+Message-ID: <CAOesGMhNxkyAYMeHSRAuxzR51-5eHZ278LLVYe-3jaS7EKa-jw@mail.gmail.com>
+Subject: Re: [PATCH v6 2/2] arm64: dts: Add Unisoc's SC9863A SoC support
+To:     Chunyan Zhang <zhang.lyra@gmail.com>
+Cc:     SoC Team <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__io_commit_cqring() is almost always called when there is a change in
-the rings, so the check is rather pessimising.
+On Sun, Jan 12, 2020 at 5:44 PM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+>
+> On Sat, 11 Jan 2020 at 01:41, Olof Johansson <olof@lixom.net> wrote:
+> >
+> > Hi,
+> >
+> > On Thu, Jan 9, 2020 at 10:38 PM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+> > >
+> > > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> > >
+> > > Add basic DT to support Unisoc's SC9863A, with this patch,
+> > > the board sp9863a-1h10 can run into console.
+> > >
+> > > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> >
+> > You reposting a patch that we have already applied, and there's also
+> > no changelog for it in the description.
+>
+> Oh, I have to explain a bit.
+>
+> I was expecting an email which inform me that the patch was got merged.
+> That's the reason I resent this patchset.
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io_uring.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+Ah, yes -- me too. This was a combination of two things:
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index f9709a3a673c..ea91f4d92fc0 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -859,14 +859,12 @@ static void __io_commit_cqring(struct io_ring_ctx *ctx)
- {
- 	struct io_rings *rings = ctx->rings;
- 
--	if (ctx->cached_cq_tail != READ_ONCE(rings->cq.tail)) {
--		/* order cqe stores with ring update */
--		smp_store_release(&rings->cq.tail, ctx->cached_cq_tail);
-+	/* order cqe stores with ring update */
-+	smp_store_release(&rings->cq.tail, ctx->cached_cq_tail);
- 
--		if (wq_has_sleeper(&ctx->cq_wait)) {
--			wake_up_interruptible(&ctx->cq_wait);
--			kill_fasync(&ctx->cq_fasync, SIGIO, POLL_IN);
--		}
-+	if (wq_has_sleeper(&ctx->cq_wait)) {
-+		wake_up_interruptible(&ctx->cq_wait);
-+		kill_fasync(&ctx->cq_fasync, SIGIO, POLL_IN);
- 	}
- }
- 
--- 
-2.24.0
+1) The patch was originally sent to arm@kernel.org, not soc@kernel.org
+2) I bounced it to there to apply it using PatchWork
 
+... but, it seems that the bot won't reply to patches that have been
+bounced, only those who were originally sent there.
+
+In this case, I should have made a manual reply -- I've gotten too
+used to the bot and relied on it doing it.
+
+> About the changelog, this new patchset actually had a cover-letter[1]
+> in which I documented a little changes (which was not important now).
+
+Not sure why, but I seem to have missed it. Maybe because it was 3
+patches on v5, and I didn't notice that one was now a cover letter.
+Anyway, all good.
+
+I'll also apply 1/2 shortly.
+
+
+-Olof
