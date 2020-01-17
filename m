@@ -2,116 +2,120 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD9BC33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 19:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49518C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 19:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC1732082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 19:34:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 237382082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 19:34:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TT8zNjpu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729668AbgAQTeu (ORCPT
+        id S1729708AbgAQTew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 17 Jan 2020 14:34:52 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:46427 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729674AbgAQTeu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 17 Jan 2020 14:34:50 -0500
-Received: from mga18.intel.com ([134.134.136.126]:18185 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726897AbgAQTeh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 14:34:37 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 11:30:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,331,1574150400"; 
-   d="scan'208";a="274474192"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by FMSMGA003.fm.intel.com with ESMTP; 17 Jan 2020 11:30:53 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Derek Yerger <derek@djy.llc>,
-        kernel@najdan.com, Thomas Lambertz <mail@thomaslambertz.de>,
-        Rik van Riel <riel@surriel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Borislav Petkov <bp@suse.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v2 1/4] KVM: x86: Handle TIF_NEED_FPU_LOAD in kvm_{load,put}_guest_fpu()
-Date:   Fri, 17 Jan 2020 11:30:49 -0800
-Message-Id: <20200117193052.1339-2-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200117193052.1339-1-sean.j.christopherson@intel.com>
-References: <20200117193052.1339-1-sean.j.christopherson@intel.com>
+Received: by mail-oi1-f193.google.com with SMTP id 13so23171662oij.13
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 11:34:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wnbjoT0j5ag9BS3W7d99gmYHDerGz9fZIduxI8d9DlM=;
+        b=TT8zNjpuzdDlDWtxUF3ROPfakHa88TVeTCCzR5vCXgxUY7gnjtDdV908bvnyE5y4oV
+         QU36Uh70B8zBcLbEC5WsV9OQuSgknaM4MnZ+6jDRyDTKzq1HngpAdAAs3mElPkgX1Ngs
+         w8RxWNVZZmLjGd/pbBFQ57NF0JHpuxd7a1wSLqAAJwqSwurny5s+HaCNXAxlSd2TrGbE
+         I0HJnlRsjj6jLQu5Cu7qeoUYEz1c4KM83fzEb63Qt4ALXNdDhAqG60fYhmckugqonIpN
+         Q31HLAuMmqxdrdOBjnJmAuE2XH93asNdBTd9rXjxonqLYa1bomCyyydoau0rPmn4pocx
+         0aNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wnbjoT0j5ag9BS3W7d99gmYHDerGz9fZIduxI8d9DlM=;
+        b=G7Y5yeFPTMlAKdAgjhLO0uC3Ko0DNf+H8dFqrMjvUIjjqrnI0Z2l6fmXP3pBm+gpz3
+         Eul0aTa1MRd5edQFji93vU6ZwCSNqL8rT/801M7gVhI4V6yTiLx4AtBbZNZBw7G514X/
+         xq/KAVjucTIBJEuv8LRHEuRofnEyHqJdUpmIIkEzSgEKWR2CrBcAGZkqLP6zr/YoHu8c
+         KzOCB+F+8qjDZduXhxTfy/pbQ6GFqDT6yoshoN8vBgokYKVkvs37fjuxdbsDj36Kuqom
+         mG3cEouXS8B98znnorWcNYJyJ2o3KRU8VP1T9v9K+wYee1gM7n1yx25sTFOk7UFUkEp/
+         layQ==
+X-Gm-Message-State: APjAAAXjff752BU2wqsD7S4hrg0VDRLvecJN3TzN2AxJIzsOX2Cq2o2X
+        3xXqhE8VZzjTcUoMFmKpnh/Iv51F1StbIH5lkjDTUw==
+X-Google-Smtp-Source: APXvYqxLvi0jqyJq4c6XDMG40T2xm371zP61sFys+Wn5Kv1PErBnDGHtInooR+MBkC+FWhdeiq5hF2mMsauFR8qAt28=
+X-Received: by 2002:aca:ed57:: with SMTP id l84mr4713560oih.8.1579289689665;
+ Fri, 17 Jan 2020 11:34:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200115012651.228058-1-almasrymina@google.com>
+ <20200115012651.228058-2-almasrymina@google.com> <7e1d2c5f-3b07-4d16-9e1b-bd89d25e7fb3@oracle.com>
+In-Reply-To: <7e1d2c5f-3b07-4d16-9e1b-bd89d25e7fb3@oracle.com>
+From:   Mina Almasry <almasrymina@google.com>
+Date:   Fri, 17 Jan 2020 11:34:38 -0800
+Message-ID: <CAHS8izMRrOOMV3v3gEuFHcX-YfQ5YOywGFu+K4-9zMXrAGFYbQ@mail.gmail.com>
+Subject: Re: [PATCH v10 2/8] hugetlb_cgroup: add interface for charge/uncharge
+ hugetlb reservations
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>, shuah <shuah@kernel.org>,
+        Greg Thelen <gthelen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org,
+        Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Handle TIF_NEED_FPU_LOAD similar to how fpu__copy() handles the flag
-when duplicating FPU state to a new task struct.  TIF_NEED_FPU_LOAD can
-be set any time control is transferred out of KVM, be it voluntarily,
-e.g. if I/O is triggered during a KVM call to get_user_pages, or
-involuntarily, e.g. if softirq runs after an IRQ occurs.  Therefore,
-KVM must account for TIF_NEED_FPU_LOAD whenever it is (potentially)
-accessing CPU FPU state.
+On Fri, Jan 17, 2020 at 11:26 AM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+>
+> On 1/14/20 5:26 PM, Mina Almasry wrote:
+> > Augments hugetlb_cgroup_charge_cgroup to be able to charge hugetlb
+> > usage or hugetlb reservation counter.
+> >
+> > Adds a new interface to uncharge a hugetlb_cgroup counter via
+> > hugetlb_cgroup_uncharge_counter.
+> >
+> > Integrates the counter with hugetlb_cgroup, via hugetlb_cgroup_init,
+> > hugetlb_cgroup_have_usage, and hugetlb_cgroup_css_offline.
+> >
+> > Signed-off-by: Mina Almasry <almasrymina@google.com>
+> >
+> > ---
+> >
+> > Changes in v10:
+> > - Added missing VM_BUG_ON
+>
+> Thanks for addressing my comments.
+> I see that patch 8 was updated to address David's comments.  I will also
+> review patch 8 later.
+>
+> I am again requesting that someone with more cgroup experience comment on
+> this patch.  I do not have enough experience to determine if the code to
+> not reparent/zombie cgroup is correct.
+>
 
-Fixes: 5f409e20b7945 ("x86/fpu: Defer FPU state load until return to userspace")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/x86.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+Thank you very much for your continued reviews and I'm sorry I'm
+having so much trouble getting anyone with cgroup experience to look
+deeply into this. My guess is that it's not very active feature and
+the patchseries is long and complex so folks are not interested.
+Nevertheless I'm continually poking David and Shakeel and they will
+hopefully continue to look into this.
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index cf917139de6b..0bbf0110bef7 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -8471,12 +8471,26 @@ static int complete_emulated_mmio(struct kvm_vcpu *vcpu)
- 	return 0;
- }
- 
-+static void kvm_save_current_fpu(struct fpu *fpu)
-+{
-+	/*
-+	 * If the target FPU state is not resident in the CPU registers, just
-+	 * memcpy() from current, else save CPU state directly to the target.
-+	 */
-+	if (test_thread_flag(TIF_NEED_FPU_LOAD))
-+		memcpy(&fpu->state, &current->thread.fpu.state,
-+		       fpu_kernel_xstate_size);
-+	else
-+		copy_fpregs_to_fpstate(fpu);
-+}
-+
- /* Swap (qemu) user FPU context for the guest FPU context. */
- static void kvm_load_guest_fpu(struct kvm_vcpu *vcpu)
- {
- 	fpregs_lock();
- 
--	copy_fpregs_to_fpstate(vcpu->arch.user_fpu);
-+	kvm_save_current_fpu(vcpu->arch.user_fpu);
-+
- 	/* PKRU is separately restored in kvm_x86_ops->run.  */
- 	__copy_kernel_to_fpregs(&vcpu->arch.guest_fpu->state,
- 				~XFEATURE_MASK_PKRU);
-@@ -8492,7 +8506,8 @@ static void kvm_put_guest_fpu(struct kvm_vcpu *vcpu)
- {
- 	fpregs_lock();
- 
--	copy_fpregs_to_fpstate(vcpu->arch.guest_fpu);
-+	kvm_save_current_fpu(vcpu->arch.guest_fpu);
-+
- 	copy_kernel_to_fpregs(&vcpu->arch.user_fpu->state);
- 
- 	fpregs_mark_activate();
--- 
-2.24.1
+FWIW, I have a test for repartenting/counting zombies and the tests at
+least don't uncover any problems.
 
+> For now,
+> Acked-by: Mike Kravetz <mike.kravetz@oracle.com>
+> while waiting for cgroup comments.
+>
+> --
+> Mike Kravetz
