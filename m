@@ -2,83 +2,111 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 474C7C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9F6C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A3EC214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:54:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579280051;
-	bh=FY97BvRPdZSU2bIodwF411p0zZgZzBz9rfMfxvBV0Po=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=y9BbENsnsjYMWRyGb+Tq1E8JkxbZrLqzGzXI5nDj78h39GopqU2LznSf8i6bPAk7K
-	 0yz4XIYYZ2ZqglQ4luioWpSC0851rlGJLMGr4yhyh5iY3KuUXk6iMit+uhaZ6BePIv
-	 5qdFsSy+AONH9ANR3SPNrp1VrXWunCs49e90nob8=
+	by mail.kernel.org (Postfix) with ESMTP id 22D6F214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:54:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ju3I1Jfs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729246AbgAQQyK (ORCPT
+        id S1729288AbgAQQyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 11:54:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55494 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726761AbgAQQyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 11:54:08 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E707E2072B;
-        Fri, 17 Jan 2020 16:54:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579280048;
-        bh=FY97BvRPdZSU2bIodwF411p0zZgZzBz9rfMfxvBV0Po=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=h/bI+vGEPuRESvXvSwPWfqllyNprA4S2VpVi05U+yn/41OeA6M8TqCcjjGvANG2T6
-         qKcr4mkabYVo+s7BEgvHEJaAM3nXhf4dcUU61v2p7+/vbrThg6BIJKWysCwmLgYxbJ
-         BZeZqz5mUOjt05bV5SwjEkcqRFNXcpvA24WMsDrs=
-Date:   Fri, 17 Jan 2020 17:54:06 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     roman.sudarikov@linux.intel.com, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        eranian@google.com, bgregg@netflix.com, kan.liang@linux.intel.com,
-        alexander.antonov@intel.com
-Subject: Re: [PATCH v4 2/2] perf =?iso-8859-1?Q?x86?=
- =?iso-8859-1?Q?=3A_Exposing_an_Uncore_unit_to_PMON_for_Intel_Xeon?=
- =?iso-8859-1?Q?=AE?= server platform
-Message-ID: <20200117165406.GA1937954@kroah.com>
-References: <20200117133759.5729-1-roman.sudarikov@linux.intel.com>
- <20200117133759.5729-3-roman.sudarikov@linux.intel.com>
- <20200117141944.GC1856891@kroah.com>
- <20200117162357.GK302770@tassilo.jf.intel.com>
+        Fri, 17 Jan 2020 11:54:16 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:35498 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729247AbgAQQyO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 11:54:14 -0500
+Received: by mail-io1-f65.google.com with SMTP id h8so26751267iob.2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 08:54:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=uFIUVKsz4aPMvzp5H7zdGJcmUXpH7dHc5gmMJqmLGlg=;
+        b=Ju3I1Jfs9dGT84Iy5fhqRFLUVMNJ2DaIdE+XAgBGJVq2WI7cBhYBPlKCVOfqs4VjMZ
+         5ICq/oE45Eg7QmU2ztU/ugOzLpOvQ2sTLgH4W6CEG5igTtgl1kKoVhX3J3f1sfZ7fO+I
+         JlYaxN8NlIaKixzCZBXnSUCbPBdtD6QReoBvllPp/KtRlRs4nS+7Hm4udEoIrUm8C0m7
+         Bv5BGlkrns50GvcaB7Bf+XmCIptl1fNUe3m5b7HoaXRW5F86S/8vnDbb3AuiE2juhPi+
+         5AJL6a9LVL5rapntmvKmiWEqM1aM55VyhUm/u1S9BHEP0VaaVuXAx4M5wkLazCr15Z/M
+         67ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=uFIUVKsz4aPMvzp5H7zdGJcmUXpH7dHc5gmMJqmLGlg=;
+        b=PImLmAKfeFuihsnK6AKQLgbBgq7mPNEyg1WSO6pbHxb/ZZs1Vvh1q41qrqzNJ7tBDU
+         wle/eoMMssX0r6UACGnRfeZp7YdHMbRbQL2ySN+mwfQ4WUEaSV6beGAdhzo0/ubY4yhy
+         L8snOBdprZjD3LocvZdCtN6k21D2swoJ/Tm6mBfDx/pWxSPvBiqe5hpU7UMjUQ4BQUq/
+         uzYu3bxLL6DMttusckrz/RDpxxPgT0nAIkwYax0y8BwJwXxtiZR9Pb6hw2ypHim2dYH9
+         Py1Nj4CDahrFf4+jo2xKJdbMwSeXRmOZazdQ4suLJvtzHjPlTXgHI6wMyulIoAXyeCsc
+         R0dw==
+X-Gm-Message-State: APjAAAUx+6yNoBLvjL5877yCQaKSNhqzIr0LwHWN9KhbzV+s62I8KyR8
+        gAdA5nUK2HYlGDwdvssAfl2PGg==
+X-Google-Smtp-Source: APXvYqyb7lB/rV1ivpPHirD+5CsQ4f/jRvFS49kUJduVxa9UCt1nkgGP/tUwxXBNpRlOKcvyPaLpjg==
+X-Received: by 2002:a5e:9748:: with SMTP id h8mr23496836ioq.121.1579280053465;
+        Fri, 17 Jan 2020 08:54:13 -0800 (PST)
+Received: from alago.cortijodelrio.net (CableLink-189-219-74-147.Hosts.InterCable.net. [189.219.74.147])
+        by smtp.googlemail.com with ESMTPSA id f16sm8120662ilq.16.2020.01.17.08.54.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2020 08:54:12 -0800 (PST)
+From:   =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>
+To:     shuah@kernel.org
+Cc:     =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        linux-kselftest@vger.kernel.org (open list:KERNEL SELFTEST FRAMEWORK),
+        netdev@vger.kernel.org (open list:BPF (Safe dynamic programs and tools)),
+        bpf@vger.kernel.org (open list:BPF (Safe dynamic programs and tools)),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 3/3] selftests/bpf: Build urandom_read with LDFLAGS and LDLIBS
+Date:   Fri, 17 Jan 2020 10:53:28 -0600
+Message-Id: <20200117165330.17015-3-daniel.diaz@linaro.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200117165330.17015-1-daniel.diaz@linaro.org>
+References: <20200117165330.17015-1-daniel.diaz@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200117162357.GK302770@tassilo.jf.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 08:23:57AM -0800, Andi Kleen wrote:
-> > I thought I was nice and gentle last time and said that this was a
-> > really bad idea and you would fix it up.  That didn't happen, so I am
-> > being explicit here, THIS IS NOT AN ACCEPTABLE FILE OUTPUT FOR A SYSFS
-> > FILE.
-> 
-> Could you suggest how such a 1:N mapping should be expressed instead in
-> sysfs?
+During cross-compilation, it was discovered that LDFLAGS and
+LDLIBS were not being used while building binaries, leading
+to defaults which were not necessarily correct.
 
-I have yet to figure out what it is you all are trying to express here
-given a lack of Documentation/ABI/ file :)
+OpenEmbedded reported this kind of problem:
+  ERROR: QA Issue: No GNU_HASH in the ELF binary [...], didn't pass LDFLAGS?
 
-But again, sysfs is ONE VALUE PER FILE.  You have a list of items here,
-that is bounded only by the number of devices in the system at the
-moment.  That number will go up in time, as we all know.  So this is
-just not going to work at all as-is.
+Signed-off-by: Daniel Díaz <daniel.diaz@linaro.org>
+---
+ tools/testing/selftests/bpf/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-greg k-h
+diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
+index e2fd6f8d579c..f1740113d5dc 100644
+--- a/tools/testing/selftests/bpf/Makefile
++++ b/tools/testing/selftests/bpf/Makefile
+@@ -88,7 +88,7 @@ $(notdir $(TEST_GEN_PROGS)						\
+ 	 $(TEST_CUSTOM_PROGS)): %: $(OUTPUT)/% ;
+ 
+ $(OUTPUT)/urandom_read: urandom_read.c
+-	$(CC) -o $@ $< -Wl,--build-id
++	$(CC) $(LDFLAGS) -o $@ $< $(LDLIBS) -Wl,--build-id
+ 
+ $(OUTPUT)/test_stub.o: test_stub.c
+ 	$(CC) -c $(CFLAGS) -o $@ $<
+-- 
+2.20.1
+
