@@ -2,260 +2,127 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACC2C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D981FC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 232C6214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:38:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADA552072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:39:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="1+vrAV7y"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UuxGtcgm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbgAQPio (ORCPT
+        id S1729052AbgAQPju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 10:38:44 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:44667 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728831AbgAQPin (ORCPT
+        Fri, 17 Jan 2020 10:39:50 -0500
+Received: from mail-lj1-f174.google.com ([209.85.208.174]:43492 "EHLO
+        mail-lj1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728816AbgAQPju (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 10:38:43 -0500
-Received: by mail-lf1-f67.google.com with SMTP id v201so18655016lfa.11
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 07:38:42 -0800 (PST)
+        Fri, 17 Jan 2020 10:39:50 -0500
+Received: by mail-lj1-f174.google.com with SMTP id a13so26892543ljm.10
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 07:39:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5CjcNzOgQBmyIcnlhVOCHh9LmCSADzB4xHyoB2q1Vjs=;
-        b=1+vrAV7y4/yxDZYqJkvlHyCZRpYBgGdFyxJ7KIeKbpHtoUPDOyPX6e7BIM7zwU4DLL
-         0EM5K9CR2K6Im20ZKgF3p8ZeRE4e83kp+T4XK2JgU3GSOqJok0G8UfPYz3hNQaunRGVr
-         MfEDAbb74mdg+cUIdfYnA/gHmah0ng091NQv3qNjxB4tir/aLyyRHdqkg1qNfMMv/5af
-         ZWfu7kcfP8Vu3FPEFUh5Y8bPghSo/bgWGg9OihgLXVvh7uLAghuBEhYcCgDKoE50EINe
-         xUpPhsJ41KiezPUpHha861faGDxWqLfPdKcK5VpstLgrSvF2edmeSkakgXNRFIMoTvGJ
-         4anQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2xCbY7FMjigCuairfD/dpXsbJlPPArVKVur2HZKJ7k0=;
+        b=UuxGtcgm6BCvBPiWvO1GG+7oNqXBg2s+2147Kp4KqV2HhGf89imdR5FCUnaD9G/6SJ
+         QocrHDvPtK2hr75tl8+OHTkxy3CiUUhylgxz2Q4S8RSFbxJmlfZDgZBPORtCmOm37V7X
+         QBkwGhNgybYSheAPtQ6KtmJsaUw1aW4nJptzpYM2JQ7f31/ZK7gg4/xo8C2AlYScMboL
+         itP6Im4K0WjEuwD9FVmx/yGpR41pMnbyMssW6eg8Wj+An41l0fsEy9S62k10R1j4cXXZ
+         vzgOfJcXT2u3VDHEgBEm+EMo732oUkmokhWyTNRn1qcoyVJlQEFD+jW9xNIV1ChH5LU/
+         nTjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5CjcNzOgQBmyIcnlhVOCHh9LmCSADzB4xHyoB2q1Vjs=;
-        b=TAbeehtx5VTtqdZQPezcD+BlrO5+8MpNFmWSGRoEz278cxh5OZKoQYu4bUA1zRQgH+
-         2dOwq4IdXVzXipBgyEsAaLs7kkXVcFb8xRCRi1zNbh41mTv6f4YAEL2yJgbD0EudF9I6
-         SZA6Wxnk6TGTVKQuVmpfGPRiH+tsQnniBQiUaX7Fw4mbXivVVLPH3g76Vf8MVVLSJDuP
-         cEZVcftgLl9INzFjLFd6U2/7Ni54z5PAI+hXGck4s8Qj5DOT0IQCQ50tEFV/hnVVZAvf
-         tkbRA3p2IMqB9E5tyc07KhofCHLCR3LE5Qmi3pUky2yokiWgYOA39R6FCuu+4ubXUCaU
-         qx5w==
-X-Gm-Message-State: APjAAAUttj3TJIqMnIBv2PB58E9xba+qCNrzsKOrLFuS0bZcOhmJoiLc
-        skSnIJB5oO7np8Gyb/uP08VJWg==
-X-Google-Smtp-Source: APXvYqxeLCT+DVj/bGz04HP9ZT+9/kuBFxjk65y0imKgWabVrU4gDpiUO1q9DXMYRGZMlCOv/mu48Q==
-X-Received: by 2002:ac2:5310:: with SMTP id c16mr5840165lfh.102.1579275521366;
-        Fri, 17 Jan 2020 07:38:41 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id h19sm12546149ljl.57.2020.01.17.07.38.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 07:38:40 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id A58C1100CFF; Fri, 17 Jan 2020 18:38:39 +0300 (+03)
-Date:   Fri, 17 Jan 2020 18:38:39 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     David Rientjes <rientjes@google.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Wei Yang <richardw.yang@linux.intel.com>, hannes@cmpxchg.org,
-        vdavydov.dev@gmail.com, akpm@linux-foundation.org,
-        kirill.shutemov@linux.intel.com, yang.shi@linux.alibaba.com,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, alexander.duyck@gmail.com,
-        stable@vger.kernel.org
-Subject: Re: [Patch v3] mm: thp: grab the lock before manipulation defer list
-Message-ID: <20200117153839.pcnfomzuaha3dafh@box>
-References: <20200116013100.7679-1-richardw.yang@linux.intel.com>
- <0bb34c4a-97c7-0b3c-cf43-8af6cf9c4396@virtuozzo.com>
- <alpine.DEB.2.21.2001161357240.109233@chino.kir.corp.google.com>
- <20200117091002.GM19428@dhcp22.suse.cz>
- <alpine.DEB.2.21.2001170125350.20618@chino.kir.corp.google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2xCbY7FMjigCuairfD/dpXsbJlPPArVKVur2HZKJ7k0=;
+        b=IAYaNMNEE/AIIv2p0QDZ7FUz9pNmvTlORYqIyC0ym6UDy/HKNHQepnCjKQPMqJqy3f
+         Kf3NwOR1F1c46YfbRqT907UdtqVsdLEMn4Kfqj0gJwe4yzJbef5eBJ1gjpwLeh4c1XkJ
+         vg/j/VDnLDGHncVLDCWOB62S7wkwGo/7IKSJ8IT1XXCRkts1KrYc0QNIU74zP5FIbmxp
+         JdlrvaoRozPaFOqEbtjSV3JtV2vBEhVsE0b61ua3Nk+6GBTsZOuM7jkJZ5O0P2HMtteI
+         zad+V/f5xpvCfswBEJQLgndzzG+A/wnDlHBEnD8tQY1L1zWP7F/w8rRV8zrS28imEvPD
+         cE6Q==
+X-Gm-Message-State: APjAAAVSG0ch4wTrKcuD8ggln1XaWqNSjywwx4QCcJfI1Jmzaye0g89P
+        K6bch895nTVIx7K7FJqDf9R20w+9MgdbgMAS4F/0qA==
+X-Google-Smtp-Source: APXvYqwFnpRW8+KeFOIlvnEzdT6nqsdTwYFc+Bs6CuC5ct5UMHSh2Kp9Lj/GX9ZPQa+vXgbyCS1z23PnIzxCZuJevO0=
+X-Received: by 2002:a2e:88c5:: with SMTP id a5mr5957930ljk.201.1579275588343;
+ Fri, 17 Jan 2020 07:39:48 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2001170125350.20618@chino.kir.corp.google.com>
-User-Agent: NeoMutt/20180716
+References: <1579031859-18692-1-git-send-email-thara.gopinath@linaro.org>
+ <1579031859-18692-5-git-send-email-thara.gopinath@linaro.org>
+ <20200116151502.GQ2827@hirez.programming.kicks-ass.net> <CAKfTPtA-M_APhGzwADhuwABzW_M5YKjm_ONGzQjFNRoJ+qYBmg@mail.gmail.com>
+ <20200117145544.GE14879@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200117145544.GE14879@hirez.programming.kicks-ass.net>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Fri, 17 Jan 2020 16:39:37 +0100
+Message-ID: <CAKfTPtAzgNAV5c_sTycSocmi8Y4oGGT5rDNSYmgL3tCjZ1RAQw@mail.gmail.com>
+Subject: Re: [Patch v8 4/7] sched/fair: Enable periodic update of average
+ thermal pressure
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thara Gopinath <thara.gopinath@linaro.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Ionela Voinescu <ionela.voinescu@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Quentin Perret <qperret@google.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        viresh kumar <viresh.kumar@linaro.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Amit Kachhap <amit.kachhap@gmail.com>,
+        Javi Merino <javi.merino@kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 01:31:50AM -0800, David Rientjes wrote:
-> On Fri, 17 Jan 2020, Michal Hocko wrote:
-> 
-> > On Thu 16-01-20 14:01:59, David Rientjes wrote:
-> > > On Thu, 16 Jan 2020, Kirill Tkhai wrote:
-> > > 
-> > > > > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> > > > > index c5b5f74cfd4d..6450bbe394e2 100644
-> > > > > --- a/mm/memcontrol.c
-> > > > > +++ b/mm/memcontrol.c
-> > > > > @@ -5360,10 +5360,12 @@ static int mem_cgroup_move_account(struct page *page,
-> > > > >  	}
-> > > > >  
-> > > > >  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> > > > > -	if (compound && !list_empty(page_deferred_list(page))) {
-> > > > > +	if (compound) {
-> > > > >  		spin_lock(&from->deferred_split_queue.split_queue_lock);
-> > > > > -		list_del_init(page_deferred_list(page));
-> > > > > -		from->deferred_split_queue.split_queue_len--;
-> > > > > +		if (!list_empty(page_deferred_list(page))) {
-> > > > > +			list_del_init(page_deferred_list(page));
-> > > > > +			from->deferred_split_queue.split_queue_len--;
-> > > > > +		}
-> > > > >  		spin_unlock(&from->deferred_split_queue.split_queue_lock);
-> > > > >  	}
-> > > > >  #endif
-> > > > > @@ -5377,11 +5379,13 @@ static int mem_cgroup_move_account(struct page *page,
-> > > > >  	page->mem_cgroup = to;
-> > > > >  
-> > > > >  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> > > > > -	if (compound && list_empty(page_deferred_list(page))) {
-> > > > > +	if (compound) {
-> > > > >  		spin_lock(&to->deferred_split_queue.split_queue_lock);
-> > > > > -		list_add_tail(page_deferred_list(page),
-> > > > > -			      &to->deferred_split_queue.split_queue);
-> > > > > -		to->deferred_split_queue.split_queue_len++;
-> > > > > +		if (list_empty(page_deferred_list(page))) {
-> > > > > +			list_add_tail(page_deferred_list(page),
-> > > > > +				      &to->deferred_split_queue.split_queue);
-> > > > > +			to->deferred_split_queue.split_queue_len++;
-> > > > > +		}
-> > > > >  		spin_unlock(&to->deferred_split_queue.split_queue_lock);
-> > > > >  	}
-> > > > >  #endif
-> > > > 
-> > > > The patch looks OK for me. But there is another question. I forget, why we unconditionally
-> > > > add a page with empty deferred list to deferred_split_queue. Shouldn't we also check that
-> > > > it was initially in the list? Something like:
-> > > > 
-> > > > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> > > > index d4394ae4e5be..0be0136adaa6 100644
-> > > > --- a/mm/memcontrol.c
-> > > > +++ b/mm/memcontrol.c
-> > > > @@ -5289,6 +5289,7 @@ static int mem_cgroup_move_account(struct page *page,
-> > > >  	struct pglist_data *pgdat;
-> > > >  	unsigned long flags;
-> > > >  	unsigned int nr_pages = compound ? hpage_nr_pages(page) : 1;
-> > > > +	bool split = false;
-> > > >  	int ret;
-> > > >  	bool anon;
-> > > >  
-> > > > @@ -5346,6 +5347,7 @@ static int mem_cgroup_move_account(struct page *page,
-> > > >  		if (!list_empty(page_deferred_list(page))) {
-> > > >  			list_del_init(page_deferred_list(page));
-> > > >  			from->deferred_split_queue.split_queue_len--;
-> > > > +			split = true;
-> > > >  		}
-> > > >  		spin_unlock(&from->deferred_split_queue.split_queue_lock);
-> > > >  	}
-> > > > @@ -5360,7 +5362,7 @@ static int mem_cgroup_move_account(struct page *page,
-> > > >  	page->mem_cgroup = to;
-> > > >  
-> > > >  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> > > > -	if (compound) {
-> > > > +	if (compound && split) {
-> > > >  		spin_lock(&to->deferred_split_queue.split_queue_lock);
-> > > >  		if (list_empty(page_deferred_list(page))) {
-> > > >  			list_add_tail(page_deferred_list(page),
-> > > > 
-> > > 
-> > > I think that's a good point, especially considering that the current code 
-> > > appears to unconditionally place any compound page on the deferred split 
-> > > queue of the destination memcg.  The correct list that it should appear 
-> > > on, I believe, depends on whether the pmd has been split for the process 
-> > > being moved: note the MC_TARGET_PAGE caveat in 
-> > > mem_cgroup_move_charge_pte_range() that does not move the charge for 
-> > > compound pages with split pmds.  So when mem_cgroup_move_account() is 
-> > > called with compound == true, we're moving the charge of the entire 
-> > > compound page: why would it appear on that memcg's deferred split queue?
-> > 
-> > I believe Kirill asked how do we know that the page should be actually
-> > added to the deferred list just from the list_empty check. In other
-> > words what if the page hasn't been split at all?
-> > 
-> 
-> Right, and I don't think that it necessarily is and the second 
-> conditional in Wei's patch will always succeed unless we have raced.  That 
-> patch is for a lock concern but I think Kirill's question has uncovered 
-> something more interesting.
-> 
-> Kirill S would definitely be best to answer Kirill T's question, but from 
-> my understanding when mem_cgroup_move_account() is called with 
-> compound == true that we always have an intact pmd (we never migrate 
-> partial page charges for pages on the deferred split queue with the 
-> current charge migration implementation) and thus the underlying page is 
-> not eligible to be split and shouldn't be on the deferred split queue.
-> 
-> In other words, a page being on the deferred split queue for a memcg 
-> should only happen when it is charged to that memcg.  (This wasn't the 
-> case when we only had per-node split queues.)  I think that's currently 
-> broken in mem_cgroup_move_account() before Wei's patch.
+On Fri, 17 Jan 2020 at 15:55, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Fri, Jan 17, 2020 at 02:22:51PM +0100, Vincent Guittot wrote:
+> > On Thu, 16 Jan 2020 at 16:15, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> > >
+> > > That there indentation trainwreck is a reason to rename the function.
+> > >
+> > >         decayed = update_rt_rq_load_avg(now, rq, curr_class == &rt_sched_class) |
+> > >                   update_dl_rq_load_avg(now, rq, curr_class == &dl_sched_class) |
+> > >                   update_thermal_load_avg(rq_clock_task(rq), rq, thermal_pressure) |
+> > >                   update_irq_load_avg(rq, 0);
+> > >
+> > > Is much better.
+> > >
+> > > But now that you made me look at that, I noticed it's using a different
+> > > clock -- it is _NOT_ using now/rq_clock_pelt(), which means it'll not be
+> > > in sync with the other averages.
+> > >
+> > > Is there a good reason for that?
+> >
+> > We don't need to apply frequency and cpu capacity invariance on the
+> > thermal capping signal which is  what rq_clock_pelt does
+>
+> Hmm, I suppose that is true, and that really could've done with a
+> comment. Now clock_pelt is sort-of in sync with clock_task, but won't it
+> still give weird artifacts by having it on a slightly different basis?
 
-Right. It's broken indeed.
+No we should not. Weird artifacts happens when we
+add/subtract/propagate signals between each other and then apply pelt
+algorithm on the results. In the case of thermal signal, we only add
+it to others to update cpu_capacity but pelt algo is then not applied
+on it. The error because of some signals being at segment boundaries
+whereas others are not, is limited to 2% and doesn't accumulate over
+time.
 
-We are dealing with anon page here. And it cannot be on deferred list as
-long as it's mapped with PMD. We cannot get compound == true &&
-!list_empty() on the (first) enter to the function. Any PMD-mapped page
-will be put onto deferred by the function. This is wrong.
+>
+> Anyway, looking at this, would it make sense to remove the @now argument
+> from update_*_load_avg()? All those functions already take @rq, and
+> rq_clock_*() are fairly trivial inlines.
 
-The fix is not obvious.
-
-This comment got in mem_cgroup_move_charge_pte_range() my attention:
-
-			/*
-			 * We can have a part of the split pmd here. Moving it
-			 * can be done but it would be too convoluted so simply
-			 * ignore such a partial THP and keep it in original
-			 * memcg. There should be somebody mapping the head.
-			 */
-
-That's exactly the case we care about: PTE-mapped THP that has to be split
-under load. We don't move charge of them between memcgs and therefore we
-should not move the page to different memcg.
-
-I guess this will do the trick :P
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index c5b5f74cfd4d..e87ee4c10f6e 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -5359,14 +5359,6 @@ static int mem_cgroup_move_account(struct page *page,
- 		__mod_lruvec_state(to_vec, NR_WRITEBACK, nr_pages);
- 	}
- 
--#ifdef CONFIG_TRANSPARENT_HUGEPAGE
--	if (compound && !list_empty(page_deferred_list(page))) {
--		spin_lock(&from->deferred_split_queue.split_queue_lock);
--		list_del_init(page_deferred_list(page));
--		from->deferred_split_queue.split_queue_len--;
--		spin_unlock(&from->deferred_split_queue.split_queue_lock);
--	}
--#endif
- 	/*
- 	 * It is safe to change page->mem_cgroup here because the page
- 	 * is referenced, charged, and isolated - we can't race with
-@@ -5376,16 +5368,6 @@ static int mem_cgroup_move_account(struct page *page,
- 	/* caller should have done css_get */
- 	page->mem_cgroup = to;
- 
--#ifdef CONFIG_TRANSPARENT_HUGEPAGE
--	if (compound && list_empty(page_deferred_list(page))) {
--		spin_lock(&to->deferred_split_queue.split_queue_lock);
--		list_add_tail(page_deferred_list(page),
--			      &to->deferred_split_queue.split_queue);
--		to->deferred_split_queue.split_queue_len++;
--		spin_unlock(&to->deferred_split_queue.split_queue_lock);
--	}
--#endif
--
- 	spin_unlock_irqrestore(&from->move_lock, flags);
- 
- 	ret = 0;
--- 
- Kirill A. Shutemov
+TBH I was thinking of doing the opposite for update_irq_load_avg which
+hides the clock that is used for irq_avg. This helps to easily
+identify which signals use the exact same clock and can be mixed to
+create a new pelt signal and which can't
