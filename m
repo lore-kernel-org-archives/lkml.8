@@ -2,189 +2,120 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDCCDC33CB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 776DCC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A30892082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5202D2192A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:31:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TU26B/fi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbgAQSa0 (ORCPT
+        id S1729154AbgAQSbU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 13:30:26 -0500
-Received: from asavdk3.altibox.net ([109.247.116.14]:36558 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726897AbgAQSa0 (ORCPT
+        Fri, 17 Jan 2020 13:31:20 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:55236 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726897AbgAQSbU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 13:30:26 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 8300420026;
-        Fri, 17 Jan 2020 19:30:20 +0100 (CET)
-Date:   Fri, 17 Jan 2020 19:30:19 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>,
-        stonea168@163.com, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, cawa.cheng@mediatek.com,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com
-Subject: Re: [PATCH v9 1/5] dt-bindings: display: panel: Add boe tv101wum-n16
- panel bindings
-Message-ID: <20200117183019.GA14298@ravnborg.org>
-References: <20200116021511.22675-1-jitao.shi@mediatek.com>
- <20200116021511.22675-2-jitao.shi@mediatek.com>
- <20200117180817.GA17294@ravnborg.org>
+        Fri, 17 Jan 2020 13:31:20 -0500
+Received: by mail-pj1-f65.google.com with SMTP id kx11so3509656pjb.4;
+        Fri, 17 Jan 2020 10:31:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8I536fgsZI1/zevVyUJAawaRzvWEK86euedntV25fzo=;
+        b=TU26B/fi+c45Ik85BE26c4cduIA5MPcBVhtczQDSk8MA+5XfAwrcK/Nycl4djR5xfo
+         +ywLdtk7ooCoZqLfFMElnAhBbJAxZ5lWTRjMHyilDY4buULBGysf5kJjqyuMZNEmSqjq
+         L0RotQJQBFAhlUIWfsC2VS+qwmMaeQrix0tyv+4XsLFg449r+OcXx/cbKVaSAt5AQjCv
+         7DUpyi9S1cekgRBBlA1fMTlSDHHvv2Al+J1YC5jvEckkTKzSs+rMGBzwgYkzX2e4YO7N
+         QcRtVdHpCerXDyNxqQBKv7tjMt/ZBRP+b5mv4VvBV2SDl3aPCYyxigk69nViAUmaEITk
+         9F5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8I536fgsZI1/zevVyUJAawaRzvWEK86euedntV25fzo=;
+        b=LjTkxRT3kbk01GLZTsqlttjLNtkyYnf+rDnzwSnJ2ckO7+udpWuC82xes4j0C/3Gyq
+         2xm2lK8P5/6xLYcQU+e0EN0B1r0pSmOpVHV9vLil7UiZNySPgdGhfHmhVSYV60L4ZiSO
+         7DrBLhqzIG0VcVIRhmtLUbCpNBWYWmXnCPupurkiiuqhwoE15TW+V68JGR90WoUz9dFb
+         k9+xosn0ckqeKlw3LX6FU+yM92jU01zQYw3LzLt/fYaVUPUnwhuwGGgFngdBhAqoVBAB
+         7AEnAnrOELZD6vrYG8VIruG1jVp5/2h14geYEv6uyeHPbukWKkV3ljZH9iS29Ivebo+l
+         +zbw==
+X-Gm-Message-State: APjAAAUlF/8YYdj2g+VPt0ZzT+leiCSHmFN8tQCK0Q68ev2ncbCBVAxX
+        03WVms0Gva/2nYVh/MP63tc=
+X-Google-Smtp-Source: APXvYqwQNLBotUtvThCp2G5pHQ8X9Ogb0cXYW6p5Yq8vsBdWs6t5kI2rZC/ismEXobuIx42s8mdKfA==
+X-Received: by 2002:a17:90a:2763:: with SMTP id o90mr7048740pje.110.1579285879585;
+        Fri, 17 Jan 2020 10:31:19 -0800 (PST)
+Received: from ?IPv6:2001:4898:d8:28:a811:24b6:1823:a6d9? ([2001:4898:80e8:2:2827:24b6:1823:a6d9])
+        by smtp.gmail.com with ESMTPSA id j8sm29771828pfe.182.2020.01.17.10.31.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jan 2020 10:31:19 -0800 (PST)
+Subject: Re: [PATCH v9 2/2] EDAC: add EDAC driver for DMC520
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     James Morse <james.morse@arm.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        sashal@kernel.org, hangl@microsoft.com,
+        Lei Wang <lewan@microsoft.com>, shji@microsoft.com,
+        ruizhao@microsoft.com, Scott Branden <scott.branden@broadcom.com>,
+        Yuqing Shen <yuqing.shen@broadcom.com>, ray.jui@broadcom.com,
+        wangglei@gmail.com
+References: <6a462190-0af2-094a-daa8-f480d54a1fbf@gmail.com>
+ <20200117001843.GJ27148@zn.tnic>
+From:   Shiping Ji <shiping.linux@gmail.com>
+Message-ID: <d5989a4c-8173-2f03-7d20-6fdd32d19591@gmail.com>
+Date:   Fri, 17 Jan 2020 10:31:18 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200117180817.GA17294@ravnborg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
-        a=mpaa-ttXAAAA:8 a=gEfo2CItAAAA:8 a=pGLkceISAAAA:8 a=VwQbUJbxAAAA:8
-        a=e5mUnYsNAAAA:8 a=EqPL98zj1DO2ifNQ5WsA:9 a=jVGOFjz3VEg0wm82:21
-        a=U5ioJVc0Wqf7HXB5:21 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
-        a=6heAxKwa5pAsJatQ0mat:22 a=sptkURWiP4Gy88Gu7hUp:22
-        a=AjGcO6oz07-iQ99wixmX:22 a=Vxmtnl_E_bksehYqCbjh:22
+In-Reply-To: <20200117001843.GJ27148@zn.tnic>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jitao.
+On 1/16/2020 4:18 PM, Borislav Petkov wrote:
 
-On Fri, Jan 17, 2020 at 07:08:17PM +0100, Sam Ravnborg wrote:
-> Hi Jitao.
+>> +/* The EDAC driver private data */
+>> +struct dmc520_edac {
+>> +	void __iomem *reg_base;
+>> +	spinlock_t ecc_lock;
 > 
-> Looks good, much better than the individual files.
-> Rob Herring is still listed as maintainer which I questioned in last
-> feedback.
+> What does that spinlock protect? Also, its name is not very optimal.
+
+This is to protect concurrent writes to the mci->error_desc as suggested by James when reviewing the patch v3.
+ 
+>> +	reg_offset_low = is_ce ? REG_OFFSET_DRAM_ECC_ERRC_INT_INFO_31_00 :
+>> +				 REG_OFFSET_DRAM_ECC_ERRD_INT_INFO_31_00;
+>> +	reg_offset_high = is_ce ? REG_OFFSET_DRAM_ECC_ERRC_INT_INFO_63_32 :
+>> +				  REG_OFFSET_DRAM_ECC_ERRD_INT_INFO_63_32;
 > 
-> With this resolved (kept only if Rob confirms), this is
-> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> Those define names could be shorter.
 
-Rob confirmed on irc that he is not a dedicated reviewer of this
-binding. And furhtermore that it was OK I committed trivial panel
-bindings.
-Dropepd Rob and applied to drm-misc-next.
-
-	Sam
-
+I'm trying to find a good scheme to make them shorter, at the moment they are named according to the TRM.
+ 
+>> +		if (irq >= 0) {
+>> +			ret = devm_request_irq(&pdev->dev, irq,
+>> +							dmc520_isr, IRQF_SHARED,
+>> +							dev_name(&pdev->dev), mci);
 > 
-> On Thu, Jan 16, 2020 at 10:15:07AM +0800, Jitao Shi wrote:
-> > Add documentation for "boe,tv101wum-n16", "auo,kd101n80-45na",
-> > "boe,tv101wum-n53" and "auo,b101uan08.3" panels.
-> > 
-> > Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> > Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> > ---
-> >  .../display/panel/boe,tv101wum-nl6.yaml       | 81 +++++++++++++++++++
-> >  1 file changed, 81 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
-> > new file mode 100644
-> > index 000000000000..cc4e058f5eee
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
-> > @@ -0,0 +1,81 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/display/panel/boe,tv101wum-nl6.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: BOE TV101WUM-NL6 DSI Display Panel
-> > +
-> > +maintainers:
-> > +  - Thierry Reding <thierry.reding@gmail.com>
-> > +  - Sam Ravnborg <sam@ravnborg.org>
-> > +  - Rob Herring <robh+dt@kernel.org>
-> > +
-> > +allOf:
-> > +  - $ref: panel-common.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +        # BOE TV101WUM-NL6 10.1" WUXGA TFT LCD panel
-> > +      - boe,tv101wum-nl6
-> > +        # AUO KD101N80-45NA 10.1" WUXGA TFT LCD panel
-> > +      - auo,kd101n80-45na
-> > +        # BOE TV101WUM-N53 10.1" WUXGA TFT LCD panel
-> > +      - boe,tv101wum-n53
-> > +        # AUO B101UAN08.3 10.1" WUXGA TFT LCD panel
-> > +      - auo,b101uan08.3
-> > +
-> > +  reg:
-> > +    description: the virtual channel number of a DSI peripheral
-> > +
-> > +  enable-gpios:
-> > +    description: a GPIO spec for the enable pin
-> > +
-> > +  pp1800-supply:
-> > +    description: core voltage supply
-> > +
-> > +  avdd-supply:
-> > +    description: phandle of the regulator that provides positive voltage
-> > +
-> > +  avee-supply:
-> > +    description: phandle of the regulator that provides negative voltage
-> > +
-> > +  backlight:
-> > +    description: phandle of the backlight device attached to the panel
-> > +
-> > +  port: true
-> > +
-> > +required:
-> > + - compatible
-> > + - reg
-> > + - enable-gpios
-> > + - pp1800-supply
-> > + - avdd-supply
-> > + - avee-supply
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    dsi {
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +        panel@0 {
-> > +            compatible = "boe,tv101wum-nl6";
-> > +            reg = <0>;
-> > +            enable-gpios = <&pio 45 0>;
-> > +            avdd-supply = <&ppvarn_lcd>;
-> > +            avee-supply = <&ppvarp_lcd>;
-> > +            pp1800-supply = <&pp1800_lcd>;
-> > +            backlight = <&backlight_lcd0>;
-> > +            status = "okay";
-> > +            port {
-> > +                panel_in: endpoint {
-> > +                    remote-endpoint = <&dsi_out>;
-> > +                };
-> > +            };
-> > +        };
-> > +    };
-> > +
-> > +...
-> > -- 
-> > 2.21.0
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> Align arguments on the opening brace.
+
+I'm not sure how this can be done perfectly with tabs only :)
+
+All other comments have been addressed in the next patch, many thanks!
+
+-- 
+Best regards,
+Shiping Ji
