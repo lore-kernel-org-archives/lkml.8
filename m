@@ -2,79 +2,127 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA14C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 431AFC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AA0C24653
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:13:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2101124653
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:13:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728765AbgAQKNL (ORCPT
+        id S1727285AbgAQKNg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 05:13:11 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:48816 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbgAQKNI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 05:13:08 -0500
-Received: from localhost (82-95-191-104.ip.xs4all.nl [82.95.191.104])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 90F9C155C314E;
-        Fri, 17 Jan 2020 02:13:05 -0800 (PST)
-Date:   Fri, 17 Jan 2020 02:13:03 -0800 (PST)
-Message-Id: <20200117.021303.345472263852340147.davem@davemloft.net>
-To:     f.fainelli@gmail.com
-Cc:     netdev@vger.kernel.org, cphealy@gmail.com,
-        rmk+kernel@armlinux.org.uk, andrew@lunn.ch, hkallweit1@gmail.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v3] net: phy: Maintain MDIO device and bus
- statistics
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200116044856.1819-1-f.fainelli@gmail.com>
-References: <20200116044856.1819-1-f.fainelli@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Fri, 17 Jan 2020 05:13:36 -0500
+Received: from relay.sw.ru ([185.231.240.75]:51224 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726220AbgAQKNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 05:13:36 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1isOcs-0006AZ-Kl; Fri, 17 Jan 2020 13:13:14 +0300
+Subject: Re: [PATCH v2 4/5] mm/madvise: allow KSM hints for remote API
+To:     Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+        linux-api@vger.kernel.org, oleksandr@redhat.com,
+        Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>, christian.brauner@ubuntu.com,
+        sjpark@amazon.de, Minchan Kim <minchan@google.com>
+References: <20200116235953.163318-1-minchan@kernel.org>
+ <20200116235953.163318-5-minchan@kernel.org>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <37338e14-5a55-1926-b6c1-5f98b6a6fdb5@virtuozzo.com>
+Date:   Fri, 17 Jan 2020 13:13:14 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200116235953.163318-5-minchan@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 17 Jan 2020 02:13:07 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
-Date: Wed, 15 Jan 2020 20:48:50 -0800
+On 17.01.2020 02:59, Minchan Kim wrote:
+> From: Oleksandr Natalenko <oleksandr@redhat.com>
+> 
+> It all began with the fact that KSM works only on memory that is marked
+> by madvise(). And the only way to get around that is to either:
+> 
+>   * use LD_PRELOAD; or
+>   * patch the kernel with something like UKSM or PKSM.
+> 
+> (i skip ptrace can of worms here intentionally)
+> 
+> To overcome this restriction, lets employ a new remote madvise API. This
+> can be used by some small userspace helper daemon that will do auto-KSM
+> job for us.
+> 
+> I think of two major consumers of remote KSM hints:
+> 
+>   * hosts, that run containers, especially similar ones and especially in
+>     a trusted environment, sharing the same runtime like Node.js;
+> 
+>   * heavy applications, that can be run in multiple instances, not
+>     limited to opensource ones like Firefox, but also those that cannot be
+>     modified since they are binary-only and, maybe, statically linked.
+> 
+> Speaking of statistics, more numbers can be found in the very first
+> submission, that is related to this one [1]. For my current setup with
+> two Firefox instances I get 100 to 200 MiB saved for the second instance
+> depending on the amount of tabs.
+> 
+> 1 FF instance with 15 tabs:
+> 
+>    $ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
+>    410
+> 
+> 2 FF instances, second one has 12 tabs (all the tabs are different):
+> 
+>    $ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
+>    592
+> 
+> At the very moment I do not have specific numbers for containerised
+> workload, but those should be comparable in case the containers share
+> similar/same runtime.
+> 
+> [1] https://lore.kernel.org/patchwork/patch/1012142/
+> 
+> Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
+> Signed-off-by: Minchan Kim <minchan@google.com>
+> ---
+>  mm/madvise.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/mm/madvise.c b/mm/madvise.c
+> index 84cffd0900f1..89557998d287 100644
+> --- a/mm/madvise.c
+> +++ b/mm/madvise.c
+> @@ -1000,6 +1000,8 @@ process_madvise_behavior_valid(int behavior)
+>  	switch (behavior) {
+>  	case MADV_COLD:
+>  	case MADV_PAGEOUT:
+> +	case MADV_MERGEABLE:
+> +	case MADV_UNMERGEABLE:
+>  		return true;
+>  	default:
+>  		return false;
 
-> We maintain global statistics for an entire MDIO bus, as well as broken
-> down, per MDIO bus address statistics. Given that it is possible for
-> MDIO devices such as switches to access MDIO bus addresses for which
-> there is not a mdio_device instance created (therefore not a a
-> corresponding device directory in sysfs either), we also maintain
-> per-address statistics under the statistics folder. The layout looks
-> like this:
-> 
-> /sys/class/mdio_bus/../statistics/
-> 	transfers
-> 	errrors
-> 	writes
-> 	reads
-> 	transfers_<addr>
-> 	errors_<addr>
-> 	writes_<addr>
-> 	reads_<addr>
-> 
-> When a mdio_device instance is registered, a statistics/ folder is
-> created with the tranfers, errors, writes and reads attributes which
-> point to the appropriate MDIO bus statistics structure.
-> 
-> Statistics are 64-bit unsigned quantities and maintained through the
-> u64_stats_sync.h helper functions.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Remote madvise on KSM parameters should be OK.
 
-Applied, thanks Florian.
+One thing is madvise_behavior_valid() places MADV_MERGEABLE/UNMERGEABLE
+in #ifdef brackes, so -EINVAL is returned by madvise() syscall if KSM
+is not enabled. Here we should follow the same way for symmetry.
