@@ -2,259 +2,253 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA912C33CAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 03:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F50FC33CAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 03:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BBFD206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 03:00:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA1B9206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 03:03:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="Zih8JThE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gS9JXooK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389186AbgAQDAx (ORCPT
+        id S2389213AbgAQDDh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 22:00:53 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45430 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389072AbgAQDAx (ORCPT
+        Thu, 16 Jan 2020 22:03:37 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46396 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388507AbgAQDDg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 22:00:53 -0500
-Received: by mail-lj1-f195.google.com with SMTP id j26so24846450ljc.12
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 19:00:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=HryF0usTtZp2gFg2eq59o17S0qqTz/KJKOS371wsBMs=;
-        b=Zih8JThEp0fTCaA//HvuxRgK7a0lL1TTiBuKX4yDZtnYgTIhTj28lnQhty+vs5W9JJ
-         w9ODzcyBiGX0g3DWa8r8Zl1vuqTV4uW9KX2FS6COESkIn57OBcriyuUmPG7+LJylPYHI
-         HsQCVCeaywpzsPB8MhPWsUzI8PdLejUwc258vVEW1P62Bm3ZCfLd+Llbu6coMvrCCkGz
-         2x7dXwrrgwJ1bO8ZiTqkLWdRzAYbdborkatm+rsx0qOxBhD5U7E5b82R+d9bNZmhej4l
-         VIIFZ7HixQ1uWTLMTwIG5nK9Aq5juo2ORzkCzHJzwBbKRbrlk+MMVc6XAknV9RbLg2Wu
-         t9IA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=HryF0usTtZp2gFg2eq59o17S0qqTz/KJKOS371wsBMs=;
-        b=qLOsNbYi2WVHDTbJwD8mF4gkCUAU4YHF7pojWrzzRq7pUf34vDVt/CDUFD2uEfCHFX
-         RVWSoWfyda07uPMp+EYi3Y2gnS3yEM7bkB2TItZSc9As01HCBT1prShCLJmHHNK6JesU
-         2oQC0OdS+P2TTN+I+O8qi8tLDkYP2gTNJgkxn4Rm7XDHEcGNc4TDzNIJDVmbXHxZuSCU
-         +n9EUXBxZCRDMXkr+qRwOqgHUT1scGW9btRP8dGxBLipN1Ln+npMsqiUK5vgut13PL1T
-         FzVgWBLYbMxQQdruzvE8lRls2X8DZglSsCzHgUAkNQ4YIjB1rjoib/v67asvY634eybj
-         +qCQ==
-X-Gm-Message-State: APjAAAViZX5NykTURMhdk6zm8+YrRMhB0+Wk6zt/3xJ5fAixBravkemX
-        ItDpmrje2V5JaEDwait1RUekYA==
-X-Google-Smtp-Source: APXvYqw2hwTwWHAdrmowqh/nOKzARYTu/fVsFiQXCiY6bdE6DnOVbZ0KHX3+uJUSZxR6elJs5SHNuw==
-X-Received: by 2002:a2e:9cd8:: with SMTP id g24mr4146941ljj.243.1579230050458;
-        Thu, 16 Jan 2020 19:00:50 -0800 (PST)
-Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
-        by smtp.gmail.com with ESMTPSA id z7sm11639182lji.30.2020.01.16.19.00.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 16 Jan 2020 19:00:48 -0800 (PST)
-Date:   Thu, 16 Jan 2020 19:00:40 -0800
-From:   Olof Johansson <olof@lixom.net>
-To:     torvalds@linux-foundation.org
-Cc:     olof@lixom.net, arm@kernel.org, soc@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] ARM: SoC fixes
-Message-ID: <20200117030040.5m3qqibo5kn6x3le@localhost>
+        Thu, 16 Jan 2020 22:03:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579230215;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZHZAudpQ7YKqVHyEOwRamq1WK1H7U3kwvTz/1r/Y/lU=;
+        b=gS9JXooKQ6njC2mjiEuvDFSMpDEY8KWgPGd3A9B8iufRriaQpYCxyme6ZYZ9PvzOLL9N5K
+        y4e2pe8lmZq8dXjIBZOERel0Yi89Xl0+Do7K16Jo9Hq77/qRC4arTsTQ6wQG9i/KwTVppi
+        sd2CQEISWNkqCu2TP6XkFf/zeffRPW0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-275-CkGX8257OWK3y6RbnjmjLQ-1; Thu, 16 Jan 2020 22:03:33 -0500
+X-MC-Unique: CkGX8257OWK3y6RbnjmjLQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2E08FDBA3;
+        Fri, 17 Jan 2020 03:03:30 +0000 (UTC)
+Received: from [10.72.12.168] (ovpn-12-168.pek2.redhat.com [10.72.12.168])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8EA4E19C5B;
+        Fri, 17 Jan 2020 03:03:14 +0000 (UTC)
+Subject: Re: [PATCH 3/5] vDPA: introduce vDPA bus
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     "mst@redhat.com" <mst@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "tiwei.bie@intel.com" <tiwei.bie@intel.com>,
+        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
+        "cunming.liang@intel.com" <cunming.liang@intel.com>,
+        "zhihong.wang@intel.com" <zhihong.wang@intel.com>,
+        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
+        "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
+        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
+        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
+        "eperezma@redhat.com" <eperezma@redhat.com>,
+        "lulu@redhat.com" <lulu@redhat.com>,
+        Parav Pandit <parav@mellanox.com>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>,
+        "stefanha@redhat.com" <stefanha@redhat.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "aadam@redhat.com" <aadam@redhat.com>,
+        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Shahaf Shuler <shahafs@mellanox.com>,
+        "hanand@xilinx.com" <hanand@xilinx.com>,
+        "mhabets@solarflare.com" <mhabets@solarflare.com>
+References: <20200116124231.20253-1-jasowang@redhat.com>
+ <20200116124231.20253-4-jasowang@redhat.com>
+ <20200116152209.GH20978@mellanox.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <03cfbcc2-fef0-c9d8-0b08-798b2a293b8c@redhat.com>
+Date:   Fri, 17 Jan 2020 11:03:12 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20200116152209.GH20978@mellanox.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
 
-The following changes since commit ea200dec51285c82655e50ddb774fdb6b97e784d:
+On 2020/1/16 =E4=B8=8B=E5=8D=8811:22, Jason Gunthorpe wrote:
+> On Thu, Jan 16, 2020 at 08:42:29PM +0800, Jason Wang wrote:
+>> vDPA device is a device that uses a datapath which complies with the
+>> virtio specifications with vendor specific control path. vDPA devices
+>> can be both physically located on the hardware or emulated by
+>> software. vDPA hardware devices are usually implemented through PCIE
+>> with the following types:
+>>
+>> - PF (Physical Function) - A single Physical Function
+>> - VF (Virtual Function) - Device that supports single root I/O
+>>    virtualization (SR-IOV). Its Virtual Function (VF) represents a
+>>    virtualized instance of the device that can be assigned to differen=
+t
+>>    partitions
+>> - VDEV (Virtual Device) - With technologies such as Intel Scalable
+>>    IOV, a virtual device composed by host OS utilizing one or more
+>>    ADIs.
+>> - SF (Sub function) - Vendor specific interface to slice the Physical
+>>    Function to multiple sub functions that can be assigned to differen=
+t
+>>    partitions as virtual devices.
+> I really hope we don't end up with two different ways to spell this
+> same thing.
 
-  Merge tag 'armsoc-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc (2019-12-16 16:43:07 -0800)
 
-are available in the Git repository at:
+I think you meant ADI vs SF. It looks to me that ADI is limited to the=20
+scope of scalable IOV but SF not.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-fixes
 
-for you to fetch changes up to 70db729fe1b30af89e798d16c1045846753e5448:
+>
+>> @@ -0,0 +1,2 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +obj-$(CONFIG_VDPA) +=3D vdpa.o
+>> diff --git a/drivers/virtio/vdpa/vdpa.c b/drivers/virtio/vdpa/vdpa.c
+>> new file mode 100644
+>> index 000000000000..2b0e4a9f105d
+>> +++ b/drivers/virtio/vdpa/vdpa.c
+>> @@ -0,0 +1,141 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * vDPA bus.
+>> + *
+>> + * Copyright (c) 2019, Red Hat. All rights reserved.
+>> + *     Author: Jason Wang <jasowang@redhat.com>
+> 2020 tests days
 
-  MAINTAINERS: Add myself as the co-maintainer for Actions Semi platforms (2020-01-16 15:49:19 -0800)
 
-----------------------------------------------------------------
-ARM: SoC fixes
+Will fix.
 
-I've been sitting on these longer than I meant, so the patch count is
-a bit higher than ideal for this part of the release. There's also some
-reverts of double-applied patches that brings the diffstat up a bit.
 
-With that said, the biggest changes are:
+>
+>> + *
+>> + */
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/idr.h>
+>> +#include <linux/vdpa.h>
+>> +
+>> +#define MOD_VERSION  "0.1"
+> I think module versions are discouraged these days
 
- - Revert of duplicate i2c device addition on two Aspeed (BMC) Devicetrees.
- - Move of two device nodes that got applied to the wrong part of the
-   tree on ASpeed G6.
- - Regulator fix for Beaglebone X15 (adding 12/5V supplies)
- - Use interrupts for keys on Amlogic SM1 to avoid missed polls
 
-In addition to that, there is a collection of smaller DT fixes:
+Will remove.
 
- - Power supply assignment fixes for i.MX6
- - Fix of interrupt line for magnetometer on i.MX8 Librem5 devkit
- - Build fixlets (selects) for davinci/omap2+
- - More interrupt number fixes for Stratix10, Amlogic SM1, etc.
- - ... and more similar fixes across different platforms
 
-And some non-DT stuff:
+>
+>> +#define MOD_DESC     "vDPA bus"
+>> +#define MOD_AUTHOR   "Jason Wang <jasowang@redhat.com>"
+>> +#define MOD_LICENSE  "GPL v2"
+>> +
+>> +static DEFINE_IDA(vdpa_index_ida);
+>> +
+>> +struct device *vdpa_get_parent(struct vdpa_device *vdpa)
+>> +{
+>> +	return vdpa->dev.parent;
+>> +}
+>> +EXPORT_SYMBOL(vdpa_get_parent);
+>> +
+>> +void vdpa_set_parent(struct vdpa_device *vdpa, struct device *parent)
+>> +{
+>> +	vdpa->dev.parent =3D parent;
+>> +}
+>> +EXPORT_SYMBOL(vdpa_set_parent);
+>> +
+>> +struct vdpa_device *dev_to_vdpa(struct device *_dev)
+>> +{
+>> +	return container_of(_dev, struct vdpa_device, dev);
+>> +}
+>> +EXPORT_SYMBOL_GPL(dev_to_vdpa);
+>> +
+>> +struct device *vdpa_to_dev(struct vdpa_device *vdpa)
+>> +{
+>> +	return &vdpa->dev;
+>> +}
+>> +EXPORT_SYMBOL_GPL(vdpa_to_dev);
+> Why these trivial assessors? Seems unnecessary, or should at least be
+> static inlines in a header
 
- - optee fix to register multiple shared pages properly
- - Clock calculation fixes for MMP3
- - Clock fixes for OMAP as well
 
-----------------------------------------------------------------
-Adam Ford (1):
-      arm64: dts: imx8mm: Change SDMA1 ahb clock for imx8mm
+Will fix.
 
-Alexandre Belloni (1):
-      ARM: dts: imx6q-dhcom: fix rtc compatible
 
-Angus Ainslie (Purism) (1):
-      arm64: dts: imx8mq-librem5-devkit: use correct interrupt for the magnetometer
+>
+>> +int register_vdpa_device(struct vdpa_device *vdpa)
+>> +{
+> Usually we want to see symbols consistently prefixed with vdpa_*, is
+> there a reason why register/unregister are swapped?
 
-Anson Huang (4):
-      ARM: dts: imx6qdl-sabresd: Remove incorrect power supply assignment
-      ARM: dts: imx6sx-sdb: Remove incorrect power supply assignment
-      ARM: dts: imx6sl-evk: Remove incorrect power supply assignment
-      ARM: dts: imx6sll-evk: Remove incorrect power supply assignment
 
-Arnd Bergmann (2):
-      ARM: davinci: select CONFIG_RESET_CONTROLLER
-      ARM: omap2plus: select RESET_CONTROLLER
+I follow the name from virtio. I will switch to vdpa_*.
 
-Brandon Wyman (1):
-      ARM: dts: aspeed: rainier: Fix fan fault and presence
 
-Dave Gerlach (1):
-      soc: ti: wkup_m3_ipc: Fix race condition with rproc_boot
+>
+>> +	int err;
+>> +
+>> +	if (!vdpa_get_parent(vdpa))
+>> +		return -EINVAL;
+>> +
+>> +	if (!vdpa->config)
+>> +		return -EINVAL;
+>> +
+>> +	err =3D ida_simple_get(&vdpa_index_ida, 0, 0, GFP_KERNEL);
+>> +	if (err < 0)
+>> +		return -EFAULT;
+>> +
+>> +	vdpa->dev.bus =3D &vdpa_bus;
+>> +	device_initialize(&vdpa->dev);
+> IMHO device_initialize should not be called inside something called
+> register, toooften we find out that the caller drivers need the device
+> to be initialized earlier, ie to use the kref, or something.
+>
+> I find the best flow is to have some init function that does the
+> device_initialize and sets the device_name that the driver can call
+> early.
 
-Dinh Nguyen (1):
-      arm64: dts: agilex/stratix10: fix pmu interrupt numbers
 
-Guillaume La Roque (1):
-      arm64: dts: meson-sm1-sei610: add gpio bluetooth interrupt
+Ok, will do.
 
-Jagan Teki (1):
-      ARM: dts: imx6q-icore-mipi: Use 1.5 version of i.Core MX6DL
 
-Joel Stanley (5):
-      ARM: dts: aspeed-g6: Fix FSI master location
-      ARM: dts: aspeed: tacoma: Fix fsi master node
-      ARM: dts: aspeed: tacoma: Remove duplicate i2c busses
-      ARM: dts: aspeed: tacoma: Remove duplicate flash nodes
-      ARM: dts: aspeed: rainier: Remove duplicate i2c busses
+>
+> Shouldn't there be a device/driver matching process of some kind?
 
-Kevin Hilman (1):
-      arm64: dts: meson-sm1-sei610: gpio-keys: switch to IRQs
 
-Kishon Vijay Abraham I (3):
-      ARM: dts: am57xx-beagle-x15/am57xx-idk: Remove "gpios" for  endpoint dt nodes
-      ARM: dts: am571x-idk: Fix gpios property to have the correct  gpio number
-      ARM: dts: beagle-x15-common: Model 5V0 regulator
+The question is what do we want do match here.
 
-Lubomir Rintel (3):
-      ARM: mmp: do not divide the clock rate
-      clk: mmp2: Fix the order of timer mux parents
-      ARM: dts: mmp3: Fix the TWSI ranges
+1) "virtio" vs "vhost", I implemented matching method for this in mdev=20
+series, but it looks unnecessary for vDPA device driver to know about=20
+this. Anyway we can use sysfs driver bind/unbind to switch drivers
+2) virtio device id and vendor id. I'm not sure we need this consider=20
+the two drivers so far (virtio/vhost) are all bus drivers.
 
-Manivannan Sadhasivam (1):
-      MAINTAINERS: Add myself as the co-maintainer for Actions Semi platforms
+Thanks
 
-Marcel Ziswiler (1):
-      ARM: dts: imx7: Fix Toradex Colibri iMX7S 256MB NAND flash support
 
-Marek Szyprowski (1):
-      ARM: dts: sun8i: a83t: Correct USB3503 GPIOs polarity
+>
+> Jason
+>
 
-Marek Vasut (1):
-      ARM: dts: imx6q-dhcom: Fix SGTL5000 VDDIO regulator connection
-
-Martin Blumenstingl (4):
-      ARM: dts: meson8: fix the size of the PMU registers
-      soc: amlogic: meson-ee-pwrc: propagate PD provider registration errors
-      soc: amlogic: meson-ee-pwrc: propagate errors from pm_genpd_init()
-      dt-bindings: reset: meson8b: fix duplicate reset IDs
-
-Olof Johansson (8):
-      Merge tag 'socfpga_dts_fix_for_v5.5' of git://git.kernel.org/.../dinguyen/linux into arm/fixes
-      Merge tag 'tee-optee-fix-for-5.5' of git://git.linaro.org:/people/jens.wiklander/linux-tee into arm/fixes
-      Merge tag 'omap-for-v5.5/fixes-rc5' of git://git.kernel.org/.../tmlind/linux-omap into arm/fixes
-      Merge tag 'aspeed-5.5-devicetree-fixes' of git://git.kernel.org/.../joel/aspeed into arm/fixes
-      Merge tag 'amlogic-fixes' of https://git.kernel.org/.../khilman/linux-amlogic into arm/fixes
-      Merge tag 'imx-fixes-5.5-2' of git://git.kernel.org/.../shawnguo/linux into arm/fixes
-      Merge tag 'sunxi-fixes-for-5.5' of https://git.kernel.org/.../sunxi/linux into arm/fixes
-      Merge tag 'v5.5-rockchip-dtsfixes' of git://git.kernel.org/.../mmind/linux-rockchip into arm/fixes
-
-Peng Fan (1):
-      ARM: dts: imx7ulp: fix reg of cpu node
-
-Robin Murphy (1):
-      arm64: dts: rockchip: Fix IR on Beelink A1
-
-Stefan Mavrodiev (2):
-      arm64: dts: allwinner: a64: olinuxino: Fix eMMC supply regulator
-      arm64: dts: allwinner: a64: olinuxino: Fix SDIO supply regulator
-
-Sumit Garg (1):
-      optee: Fix multi page dynamic shm pool alloc
-
-Tony Lindgren (2):
-      ARM: OMAP2+: Fix ti_sysc_find_one_clockdomain to check for to_clk_hw_omap
-      bus: ti-sysc: Fix iterating over clocks
-
-Yinbo Zhu (1):
-      arm64: dts: ls1028a: fix endian setting for dcfg
-
- MAINTAINERS                                        |   2 +-
- arch/arm/boot/dts/am571x-idk.dts                   |   6 +-
- arch/arm/boot/dts/am572x-idk-common.dtsi           |   4 -
- arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi    |  25 +-
- arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts       | 369 +------------------
- arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts        | 403 +--------------------
- arch/arm/boot/dts/aspeed-g6.dtsi                   |  39 +-
- arch/arm/boot/dts/imx6dl-icore-mipi.dts            |   2 +-
- arch/arm/boot/dts/imx6q-dhcom-pdk2.dts             |   2 +-
- arch/arm/boot/dts/imx6q-dhcom-som.dtsi             |   2 +-
- arch/arm/boot/dts/imx6qdl-sabresd.dtsi             |   4 -
- arch/arm/boot/dts/imx6sl-evk.dts                   |   4 -
- arch/arm/boot/dts/imx6sll-evk.dts                  |   4 -
- arch/arm/boot/dts/imx6sx-sdb-reva.dts              |   4 -
- arch/arm/boot/dts/imx6sx-sdb.dts                   |   4 -
- arch/arm/boot/dts/imx7s-colibri.dtsi               |   4 +
- arch/arm/boot/dts/imx7ulp.dtsi                     |   4 +-
- arch/arm/boot/dts/meson8.dtsi                      |   2 +-
- arch/arm/boot/dts/mmp3.dtsi                        |  12 +-
- arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts   |   2 +-
- arch/arm/mach-davinci/Kconfig                      |   1 +
- arch/arm/mach-mmp/time.c                           |   2 +-
- arch/arm/mach-omap2/Kconfig                        |   3 +-
- arch/arm/mach-omap2/pdata-quirks.c                 |   6 +-
- .../dts/allwinner/sun50i-a64-olinuxino-emmc.dts    |   2 +-
- .../boot/dts/allwinner/sun50i-a64-olinuxino.dts    |   2 +-
- arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  |   8 +-
- arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts   |  28 +-
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi     |   2 +-
- arch/arm64/boot/dts/freescale/imx8mm.dtsi          |   2 +-
- .../boot/dts/freescale/imx8mq-librem5-devkit.dts   |   2 +-
- arch/arm64/boot/dts/intel/socfpga_agilex.dtsi      |   8 +-
- arch/arm64/boot/dts/rockchip/rk3328-a1.dts         |   3 +-
- drivers/bus/ti-sysc.c                              |  10 +-
- drivers/clk/mmp/clk-of-mmp2.c                      |   2 +-
- drivers/soc/amlogic/meson-ee-pwrc.c                |  24 +-
- drivers/soc/ti/wkup_m3_ipc.c                       |   4 +-
- drivers/tee/optee/shm_pool.c                       |  15 +-
- include/dt-bindings/reset/amlogic,meson8b-reset.h  |   6 +-
- 39 files changed, 159 insertions(+), 869 deletions(-)
