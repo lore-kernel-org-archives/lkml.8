@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE62C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B784C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0504520728
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C5652073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:38:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728935AbgAQNiK (ORCPT
+        id S1729117AbgAQNiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 08:38:10 -0500
+        Fri, 17 Jan 2020 08:38:14 -0500
 Received: from mga02.intel.com ([134.134.136.20]:44152 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726974AbgAQNiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 08:38:09 -0500
+        id S1726974AbgAQNiO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 08:38:14 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 05:38:08 -0800
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 05:38:13 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,330,1574150400"; 
-   d="scan'208";a="373653195"
+   d="scan'208";a="373653222"
 Received: from nntpdsd52-183.inn.intel.com ([10.125.52.183])
-  by orsmga004.jf.intel.com with ESMTP; 17 Jan 2020 05:38:04 -0800
+  by orsmga004.jf.intel.com with ESMTP; 17 Jan 2020 05:38:09 -0800
 From:   roman.sudarikov@linux.intel.com
 To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
@@ -36,9 +36,9 @@ To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         bgregg@netflix.com, ak@linux.intel.com, kan.liang@linux.intel.com,
         gregkh@linuxfoundation.org
 Cc:     alexander.antonov@intel.com, roman.sudarikov@linux.intel.com
-Subject: [PATCH v4 1/2] perf x86: Infrastructure for exposing an Uncore unit to PMON mapping
-Date:   Fri, 17 Jan 2020 16:37:58 +0300
-Message-Id: <20200117133759.5729-2-roman.sudarikov@linux.intel.com>
+Subject: [PATCH v4 2/2] =?UTF-8?q?perf=20x86:=20Exposing=20an=20Uncore=20u?= =?UTF-8?q?nit=20to=20PMON=20for=20Intel=20Xeon=C2=AE=20server=20platform?=
+Date:   Fri, 17 Jan 2020 16:37:59 +0300
+Message-Id: <20200117133759.5729-3-roman.sudarikov@linux.intel.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20200117133759.5729-1-roman.sudarikov@linux.intel.com>
 References: <20200117133759.5729-1-roman.sudarikov@linux.intel.com>
@@ -52,154 +52,224 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Roman Sudarikov <roman.sudarikov@linux.intel.com>
 
-Intel® Xeon® Scalable processor family (code name Skylake-SP) makes
-significant changes in the integrated I/O (IIO) architecture. The new
-solution introduces IIO stacks which are responsible for managing traffic
-between the PCIe domain and the Mesh domain. Each IIO stack has its own
-PMON block and can handle either DMI port, x16 PCIe root port, MCP-Link
-or various built-in accelerators. IIO PMON blocks allow concurrent
-monitoring of I/O flows up to 4 x4 bifurcation within each IIO stack.
+Current version supports a server line starting Intel® Xeon® Processor
+Scalable Family and introduces mapping for IIO Uncore units only.
+Other units can be added on demand.
 
-Software is supposed to program required perf counters within each IIO
-stack and gather performance data. The tricky thing here is that IIO PMON
-reports data per IIO stack but users have no idea what IIO stacks are -
-they only know devices which are connected to the platform.
+IIO stack to PMON mapping is exposed through:
+    /sys/devices/uncore_iio_<pmu_idx>/mapping
+    in the following format: domain:bus
 
-Understanding IIO stack concept to find which IIO stack that particular
-IO device is connected to, or to identify an IIO PMON block to program
-for monitoring specific IIO stack assumes a lot of implicit knowledge
-about given Intel server platform architecture.
+For example, on a 4-die Intel Xeon® server platform:
+    $ cat /sys/devices/uncore_iio_0/mapping
+    0000:00,0000:40,0000:80,0000:c0
 
-Usage example:
-    /sys/devices/uncore_<type>_<pmu_idx>/mapping
-
-Each Uncore unit type, by its nature, can be mapped to its own context,
-for example:
-1. CHA - each uncore_cha_<pmu_idx> is assigned to manage a distinct slice
-   of LLC capacity;
-2. UPI - each uncore_upi_<pmu_idx> is assigned to manage one link of Intel
-   UPI Subsystem;
-3. IIO - each uncore_iio_<pmu_idx> is assigned to manage one stack of the
-   IIO module;
-4. IMC - each uncore_imc_<pmu_idx> is assigned to manage one channel of
-   Memory Controller.
-
-Implementation details:
-Two callbacks added to struct intel_uncore_type to discover and map Uncore
-units to PMONs:
-    int (*get_topology)(struct intel_uncore_type *type, int max_dies)
-    int (*set_mapping)(struct intel_uncore_type *type, int max_dies)
-
-Details of IIO Uncore unit mapping to IIO PMON:
-Each IIO stack is either DMI port, x16 PCIe root port, MCP-Link or various
-built-in accelerators. For Uncore IIO Unit type, the mapping file
-holds bus numbers of devices, which can be monitored by that IIO PMON block
-on each die.
+Which means:
+IIO PMON block 0 on die 0 belongs to IIO stack on bus 0x00, domain 0x0000
+IIO PMON block 0 on die 1 belongs to IIO stack on bus 0x40, domain 0x0000
+IIO PMON block 0 on die 2 belongs to IIO stack on bus 0x80, domain 0x0000
+IIO PMON block 0 on die 3 belongs to IIO stack on bus 0xc0, domain 0x0000
 
 Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 Co-developed-by: Alexander Antonov <alexander.antonov@intel.com>
 Signed-off-by: Alexander Antonov <alexander.antonov@intel.com>
 Signed-off-by: Roman Sudarikov <roman.sudarikov@linux.intel.com>
 ---
- arch/x86/events/intel/uncore.c | 46 ++++++++++++++++++++++++++++++++++
- arch/x86/events/intel/uncore.h |  6 +++++
- 2 files changed, 52 insertions(+)
+ arch/x86/events/intel/uncore_snbep.c | 160 +++++++++++++++++++++++++++
+ 1 file changed, 160 insertions(+)
 
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index 86467f85c383..55201bfde2c8 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -825,6 +825,44 @@ static const struct attribute_group uncore_pmu_attr_group = {
- 	.attrs = uncore_pmu_attrs,
+diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+index b10a5ec79e48..813009b48a0f 100644
+--- a/arch/x86/events/intel/uncore_snbep.c
++++ b/arch/x86/events/intel/uncore_snbep.c
+@@ -273,6 +273,30 @@
+ #define SKX_CPUNODEID			0xc0
+ #define SKX_GIDNIDMAP			0xd4
+ 
++/*
++ * The CPU_BUS_NUMBER MSR returns the values of the respective CPUBUSNO CSR
++ * that BIOS programmed. MSR has package scope.
++ * |  Bit  |  Default  |  Description
++ * | [63]  |    00h    | VALID - When set, indicates the CPU bus
++ *                       numbers have been initialized. (RO)
++ * |[62:48]|    ---    | Reserved
++ * |[47:40]|    00h    | BUS_NUM_5 — Return the bus number BIOS assigned
++ *                       CPUBUSNO(5). (RO)
++ * |[39:32]|    00h    | BUS_NUM_4 — Return the bus number BIOS assigned
++ *                       CPUBUSNO(4). (RO)
++ * |[31:24]|    00h    | BUS_NUM_3 — Return the bus number BIOS assigned
++ *                       CPUBUSNO(3). (RO)
++ * |[23:16]|    00h    | BUS_NUM_2 — Return the bus number BIOS assigned
++ *                       CPUBUSNO(2). (RO)
++ * |[15:8] |    00h    | BUS_NUM_1 — Return the bus number BIOS assigned
++ *                       CPUBUSNO(1). (RO)
++ * | [7:0] |    00h    | BUS_NUM_0 — Return the bus number BIOS assigned
++ *                       CPUBUSNO(0). (RO)
++ */
++#define SKX_MSR_CPU_BUS_NUMBER		0x300
++#define SKX_MSR_CPU_BUS_VALID_BIT	(1ULL << 63)
++#define BUS_NUM_STRIDE			8
++
+ /* SKX CHA */
+ #define SKX_CHA_MSR_PMON_BOX_FILTER_TID		(0x1ffULL << 0)
+ #define SKX_CHA_MSR_PMON_BOX_FILTER_LINK	(0xfULL << 9)
+@@ -3580,6 +3604,9 @@ static struct intel_uncore_ops skx_uncore_iio_ops = {
+ 	.read_counter		= uncore_msr_read_counter,
  };
  
-+static ssize_t mapping_show(struct device *dev,
-+				struct device_attribute *attr, char *buf)
++static int skx_iio_get_topology(struct intel_uncore_type *type, int max_dies);
++static int skx_iio_set_mapping(struct intel_uncore_type *type, int max_dies);
++
+ static struct intel_uncore_type skx_uncore_iio = {
+ 	.name			= "iio",
+ 	.num_counters		= 4,
+@@ -3594,6 +3621,8 @@ static struct intel_uncore_type skx_uncore_iio = {
+ 	.constraints		= skx_uncore_iio_constraints,
+ 	.ops			= &skx_uncore_iio_ops,
+ 	.format_group		= &skx_uncore_iio_format_group,
++	.get_topology		= skx_iio_get_topology,
++	.set_mapping		= skx_iio_set_mapping,
+ };
+ 
+ enum perf_uncore_iio_freerunning_type_id {
+@@ -3780,6 +3809,137 @@ static int skx_count_chabox(void)
+ 	return hweight32(val);
+ }
+ 
++static inline int skx_msr_cpu_bus_read(int cpu, u64 *topology)
 +{
-+	struct intel_uncore_pmu *pmu = dev_get_drvdata(dev);
++	u64 msr_value;
 +
-+	return snprintf(buf, PAGE_SIZE - 1, "%s\n", pmu->mapping);
-+}
-+static DEVICE_ATTR_RO(mapping);
++	if (rdmsrl_on_cpu(cpu, SKX_MSR_CPU_BUS_NUMBER, &msr_value) ||
++			!(msr_value & SKX_MSR_CPU_BUS_VALID_BIT))
++		return -ENXIO;
 +
-+static struct attribute *mapping_attrs[] = {
-+	&dev_attr_mapping.attr,
-+	NULL,
-+};
++	*topology = msr_value;
 +
-+static struct attribute_group mapping_group = {
-+	.attrs = mapping_attrs,
-+};
-+
-+static umode_t
-+not_visible(struct kobject *kobj, struct attribute *attr, int i)
-+{
 +	return 0;
 +}
 +
-+static const struct attribute_group *attr_update[] = {
-+	&mapping_group,
-+	NULL,
-+};
-+
-+static void uncore_platform_mapping(struct intel_uncore_type *t)
++static int skx_iio_get_topology(struct intel_uncore_type *type, int max_dies)
 +{
-+	if (t->get_topology && t->set_mapping &&
-+	    !t->get_topology(t, max_dies) && !t->set_mapping(t, max_dies))
-+		mapping_group.is_visible = NULL;
-+	else
-+		mapping_group.is_visible = not_visible;
++	int ret, cpu, die, current_die;
++	struct pci_bus *bus = NULL;
++
++	/*
++	 * Verified single-segment environments only; disabled for multiple
++	 * segment topologies for now.
++	 */
++	while ((bus = pci_find_next_bus(bus)) && !pci_domain_nr(bus))
++		;
++	if (bus)
++		return -EPERM;
++
++	type->topology = kcalloc(max_dies, sizeof(u64), GFP_KERNEL);
++	if (!type->topology)
++		return -ENOMEM;
++
++	/*
++	 * Using cpus_read_lock() to ensure cpu is not going down between
++	 * looking at cpu_online_mask.
++	 */
++	cpus_read_lock();
++	/* Invalid value to start loop.*/
++	current_die = -1;
++	for_each_online_cpu(cpu) {
++		die = topology_logical_die_id(cpu);
++		if (current_die == die)
++			continue;
++		ret = skx_msr_cpu_bus_read(cpu, &type->topology[die]);
++		if (ret) {
++			kfree(type->topology);
++			break;
++		}
++		current_die = die;
++	}
++	cpus_read_unlock();
++
++	return ret;
 +}
 +
- static int uncore_pmu_register(struct intel_uncore_pmu *pmu)
- {
- 	int ret;
-@@ -849,6 +887,8 @@ static int uncore_pmu_register(struct intel_uncore_pmu *pmu)
- 		pmu->pmu.attr_groups = pmu->type->attr_groups;
- 	}
- 
-+	pmu->pmu.attr_update = attr_update;
++static inline u8 skx_iio_stack_bus(struct intel_uncore_pmu *pmu, int die)
++{
++	return pmu->type->topology[die] >> (pmu->pmu_idx * BUS_NUM_STRIDE);
++}
 +
- 	if (pmu->type->num_boxes == 1) {
- 		if (strlen(pmu->type->name) > 0)
- 			sprintf(pmu->name, "uncore_%s", pmu->type->name);
-@@ -859,6 +899,12 @@ static int uncore_pmu_register(struct intel_uncore_pmu *pmu)
- 			pmu->pmu_idx);
- 	}
- 
++static int skx_iio_set_box_mapping(struct intel_uncore_pmu *pmu, int max_dies)
++{
++	char *buf;
++	int die = 0;
++	/* Length of template "%04x:%02x," without null character. */
++	const int template_len = 8;
++
 +	/*
-+	 * Exposing mapping of Uncore units to corresponding Uncore PMUs
-+	 * through /sys/devices/uncore_<type>_<idx>/mapping
++	 * Root bus 0x00 is valid only for die 0 AND pmu_idx = 0.
++	 * Set "0" platform mapping for PMUs which have zero stack bus and
++	 * non-zero index.
 +	 */
-+	uncore_platform_mapping(pmu->type);
++	if (!skx_iio_stack_bus(pmu, die) && pmu->pmu_idx) {
++		pmu->mapping = kzalloc(2, GFP_KERNEL);
++		if (!pmu->mapping)
++			return -ENOMEM;
++		sprintf(pmu->mapping, "0");
++		return 0;
++	}
 +
- 	ret = perf_pmu_register(&pmu->pmu, pmu->name, -1);
- 	if (!ret)
- 		pmu->registered = true;
-diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index bbfdaa720b45..1b3891302f6d 100644
---- a/arch/x86/events/intel/uncore.h
-+++ b/arch/x86/events/intel/uncore.h
-@@ -73,6 +73,11 @@ struct intel_uncore_type {
- 	struct freerunning_counters *freerunning;
- 	const struct attribute_group *attr_groups[4];
- 	struct pmu *pmu; /* for custom pmu ops */
-+	u64 *topology;
-+	/* finding Uncore units */
-+	int (*get_topology)(struct intel_uncore_type *type, int max_dies);
-+	/* mapping Uncore units to PMON ranges */
-+	int (*set_mapping)(struct intel_uncore_type *type, int max_dies);
- };
- 
- #define pmu_group attr_groups[0]
-@@ -99,6 +104,7 @@ struct intel_uncore_pmu {
- 	int				pmu_idx;
- 	int				func_id;
- 	bool				registered;
-+	char				*mapping;
- 	atomic_t			activeboxes;
- 	struct intel_uncore_type	*type;
- 	struct intel_uncore_box		**boxes;
++	pmu->mapping = kzalloc(max_dies * template_len + 1, GFP_KERNEL);
++	if (!pmu->mapping)
++		return -ENOMEM;
++
++	buf = pmu->mapping;
++	for (; die < max_dies; die++) {
++		buf += snprintf(buf, template_len + 1, "%04x:%02x,", 0,
++				skx_iio_stack_bus(pmu, die));
++	}
++
++	*(--buf) = '\0';
++
++	return 0;
++}
++
++static int skx_iio_set_mapping(struct intel_uncore_type *type, int max_dies)
++{
++	/*
++	 * Each IIO stack (PCIe root port) has its own IIO PMON block, so each
++	 * "mapping" holds bus number(s) of PCIe root port(s), which can
++	 * be monitored by that IIO PMON block.
++	 *
++	 * For example, on 4-die Xeon platform with up to 6 IIO stacks per die
++	 * and, therefore, 6 IIO PMON blocks per die, the "mapping"
++	 * of IIO PMON block 0 holds "0000:00,0000:40,0000:80,0000:c0":
++	 *
++	 * $ cat /sys/devices/uncore_iio_0/mapping
++	 * 0000:00,0000:40,0000:80,0000:c0
++	 *
++	 * Which means:
++	 * IIO PMON 0 on die 0 belongs to PCIe RP on bus 0x00, domain 0x0000
++	 * IIO PMON 0 on die 1 belongs to PCIe RP on bus 0x40, domain 0x0000
++	 * IIO PMON 0 on die 2 belongs to PCIe RP on bus 0x80, domain 0x0000
++	 * IIO PMON 0 on die 3 belongs to PCIe RP on bus 0xc0, domain 0x0000
++	 */
++
++	int ret;
++	struct intel_uncore_pmu *pmu = type->pmus;
++
++	for (; pmu - type->pmus < type->num_boxes; pmu++) {
++		ret = skx_iio_set_box_mapping(pmu, max_dies);
++		if (ret) {
++			for (; pmu->pmu_idx > 0; --pmu)
++				kfree(pmu->mapping);
++			break;
++		}
++	}
++
++	kfree(type->topology);
++	return ret;
++}
++
+ void skx_uncore_cpu_init(void)
+ {
+ 	skx_uncore_chabox.num_boxes = skx_count_chabox();
 -- 
 2.19.1
 
