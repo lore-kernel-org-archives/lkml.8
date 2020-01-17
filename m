@@ -2,132 +2,153 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C005CC33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DD1C33CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96D942083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:37:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579297043;
-	bh=TiUl3vxXPrNJYv+C72Doz3QU6XZr+ECnyQ786ta6B3I=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=e3eGsS0mzBuhKZWoi+NSfKV2mD29HwISl7r7fjqhMSoZDQeWhHXXyx2Yecn5usiTh
-	 k7xCneDnfRWWGp8NSZloEMsaPuGdNLZSEq/auX/9I2TQ2oOmjZ2ZG2IKffmUAQyPZa
-	 6KSgIh/T61eOmaMgZvC9NC5m5gYxz0+v58Z0Qig0=
+	by mail.kernel.org (Postfix) with ESMTP id AA74C2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:42:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hrp+gp+g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729268AbgAQVhX (ORCPT
+        id S1729061AbgAQVm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 16:37:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47108 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726587AbgAQVhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 16:37:22 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE15E2082F;
-        Fri, 17 Jan 2020 21:37:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579297041;
-        bh=TiUl3vxXPrNJYv+C72Doz3QU6XZr+ECnyQ786ta6B3I=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=w5Lx6yN8dKagG9+c5LzhGGokKJw3jF60UexVamEmOSX0jurdofNjO/fIg3toe9RF+
-         TQneVsmnUQ7RQWkSnqt0TB9pKaUhVGCMlJ3cb+avgCZoDC1nlXShtZ6XTuA/+3IwHO
-         cW38C2rFeBmuyzzS8KTeSlZ/dcayIi7nCoZkGMgk=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 8BE0635228BF; Fri, 17 Jan 2020 13:37:21 -0800 (PST)
-Date:   Fri, 17 Jan 2020 13:37:21 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH 1/1] rcu/tree: support kfree_bulk() interface in
- kfree_rcu()
-Message-ID: <20200117213721.GN2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191231122241.5702-1-urezki@gmail.com>
- <20200113190315.GA12543@paulmck-ThinkPad-P72>
- <20200114164937.GA50403@google.com>
- <20200115131446.GA18417@pc636>
- <20200115225350.GA246464@google.com>
- <20200117175217.GA23622@pc636>
- <20200117185732.GH246464@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200117185732.GH246464@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Fri, 17 Jan 2020 16:42:56 -0500
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:56262 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727033AbgAQVmz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 16:42:55 -0500
+Received: by mail-pg1-f201.google.com with SMTP id v30so15101476pga.22
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 13:42:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=yBEf4c2Y/V+ZNwnYQzLFCcZKpZySQQ5dJ9X0QGzY9eo=;
+        b=hrp+gp+g8aB/jpumGkpuc5F5wkzC/eegSUgKsuaP5vuBUKLF33qoqqM2MafIuVh9s1
+         jI2A1GYFMvU+zXn/tCLnmGXTqm3p0Gd4ZJGvWkGqgwBJx9K3w5rosKRTKFkLyeVpf7r7
+         WFGq/cvvGa0UIt89Z8qEnh4tUigSQ7k5T7oowlnUjWNYSj1q2cLitkSLMyMd0jkKCkAD
+         anxNB8ZROhRvpyrX/Yj82zl81n9GScBR9YTXGVMqHu3OoPibEEExYkK8+hQXWp7bAWgy
+         5hmPB7B0i/vXCHN1gPjV6lJhuK5oImOVpW8qPq4w+BW8SnU9RkZI5NRwJt35MaEoucrI
+         kOSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=yBEf4c2Y/V+ZNwnYQzLFCcZKpZySQQ5dJ9X0QGzY9eo=;
+        b=a1IwpwugomzRxEKv4AVCypfrhK0ccRckFDj9d82cS701Bs/083WPMKooRW4fqgo4QJ
+         LIcPbQolAnQGKe1v90kvzu1vBqB0aZrsoChnenhplCV+ErGoB2GW/BcosVAeApU9STeh
+         +fICO706QwUO0DQAd0sE2bxrsN8lw+RsoJfDaMRzwysA9z0lNBdzkuGe7MLyuxLH9ZX2
+         uMXCGDYuS4i5ugDI+3N1njg6hKFnncKR8uNgtGncn1mISz3MniyT26clc06DD9D7o5a3
+         gixHku2TpUmVhIlGgV/b4XiQ98jpQZnKfSt9/KqpRe9o5zLnAEksMDOXumuiNOj3ospj
+         E6sw==
+X-Gm-Message-State: APjAAAULIsA5uTl+6Vqv+FBFrFRBcqif83tXbCxukpSSrpCK20iYS7ai
+        fO46kEyRsoT6IYSHP9znERslFGgZ7og=
+X-Google-Smtp-Source: APXvYqx/thRfotMiEcNYQU3muvCEizuxjwfQx4bfJuDJBpTmZngE9VJym447R2DaU34FJTWJBfRydBLRlJY=
+X-Received: by 2002:a63:ff20:: with SMTP id k32mr45963088pgi.448.1579297374588;
+ Fri, 17 Jan 2020 13:42:54 -0800 (PST)
+Date:   Fri, 17 Jan 2020 13:42:37 -0800
+Message-Id: <20200117214246.235591-1-drosen@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+Subject: [PATCH v3 0/9] Support for Casefolding and Encryption
+From:   Daniel Rosenberg <drosen@google.com>
+To:     "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Eric Biggers <ebiggers@kernel.org>,
+        linux-fscrypt@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        kernel-team@android.com, Daniel Rosenberg <drosen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 01:57:32PM -0500, Joel Fernandes wrote:
-> On Fri, Jan 17, 2020 at 06:52:17PM +0100, Uladzislau Rezki wrote:
-> > > > > > But rcuperf uses a single block size, which turns into kfree_bulk() using
-> > > > > > a single slab, which results in good locality of reference.  So I have to
-> > > > > 
-> > > > > You meant a "single cache" category when you say "single slab"? Just to
-> > > > > mention, the number of slabs (in a single cache) when a large number of
-> > > > > objects are allocated is more than 1 (not single). With current rcuperf, I
-> > > > > see 100s of slabs (each slab being one page) in the kmalloc-32 cache. Each
-> > > > > slab contains around 128 objects of type kfree_rcu (24 byte object aligned to
-> > > > > 32-byte slab object).
-> > > > > 
-> > > > I think that is about using different slab caches to break locality. It
-> > > > makes sense, IMHO, because usually the system make use of different slabs,
-> > > > because of different object sizes. From the other hand i guess there are
-> > > > test cases when only one slab gets used.
-> > > 
-> > > I was wondering about "locality". A cache can be split into many slabs. Only
-> > > the data on a page is local (contiguous). If there are a large number of
-> > > objects, then it goes to a new slab (on the same cache). At least on the
-> > > kmalloc slabs, there is only 1 slab per page. So for example, if on
-> > > kmalloc-32 slab, there are more than 128 objects, then it goes to a different
-> > > slab / page. So how is there still locality?
-> > > 
-> > Hmm.. On a high level:
-> > 
-> > one slab cache manages a specific object size, i.e. the slab memory consists of
-> > contiguous pages(when increased probably not) of memory(4096 bytes or so) divided
-> > into equal object size. For example when kmalloc() gets called, the appropriate
-> > cache size(slab that serves only specific size) is selected and an object assigned
-> > from it is returned.
-> > 
-> > But that is theory and i have not deeply analyzed how the SLAB works internally,
-> > so i can be wrong :)
-> > 
-> > You mentioned 128 objects per one slab in the kmalloc-32 slab-cache. But all of
-> > them follows each other, i mean it is sequential and is like regular array. In
-> 
-> Yes, for these 128 objects it is sequential. But the next 128 could be on
-> some other page is what I was saying  And we are allocating 10s of 1000s of
-> objects in this test.  (I believe pages are sequential only per slab and not
-> for a different slab within same cache).
-> 
-> > that sense freeing can be beneficial because when an access is done to any object
-> > whole CPU cache-line is fetched(if it was not before), usually it is 64K.
-> 
-> You mean size of the whole L1 cache right? cachelines are in the order of bytes.
-> 
-> > That is what i meant "locality". In order to "break it" i meant to allocate from
-> > different slabs to see how kfree_slub() behaves in that sense, what is more real
-> > scenario and workload, i think.
-> 
-> Ok, agreed.
-> (BTW I do agree your patch is beneficial, just wanted to get the slab
-> discussion right).
+These patches are all on top of fscrypt's developement branch
 
-Thank you both!
+Ext4 and F2FS currently both support casefolding and encryption, but not at
+the same time. These patches aim to rectify that.
 
-Then I should be looking for an updated version of the patch with an upgraded
-commit log?  Or is there more investigation/testing/review in process?
+Since directory names are stored case preserved, we cannot just take the hash
+of the ciphertext. Instead we use the siphash of the casefolded name. With this
+we no longer have a direct path from an encrypted name to the hash without the
+key. To deal with this, fscrypt now always includes the hash in the name it
+presents when the key is not present. There is a pre-existing bug where you can
+change parts of the hash and still match the name so long as the disruption to
+the hash does not happen to affect lookup on that filesystem. I'm not sure how
+to fix that without making ext4 lookups slower in the more common case.
 
-							Thanx, Paul
+I moved the identical dcache operations for ext4 and f2fs into the VFS, as any
+filesystem that uses casefolding will need the same code. This will also allow
+further optimizations to that path, although my current changes don't take
+advantage of that yet.
+
+For Ext4, this also means that we need to store the hash on disk. We only do so
+for encrypted and casefolded directories to avoid on disk format changes.
+Previously encryption and casefolding could not live on the same filesystem,
+and we're relaxing that requirement. F2fs is a bit more straightforward since
+it already stores hashes on disk.
+
+I've updated the related tools with just enough to enable the feature. I still
+need to adjust ext4's fsck's, although without access to the keys,
+neither fsck will be able to verify the hashes of casefolded and encrypted names.
+
+v3 changes:
+fscrypt patch only creates hash key if it will be needed.
+Rebased on top of fscrypt branch, reconstified match functions in ext4/f2fs
+
+v2 changes:
+fscrypt moved to separate thread to rebase on fscrypt dev branch
+addressed feedback, plus some minor fixes
+
+
+Daniel Rosenberg (9):
+  fscrypt: Add siphash and hash key for policy v2
+  fscrypt: Don't allow v1 policies with casefolding
+  fscrypt: Change format of no-key token
+  fscrypt: Only create hash key when needed
+  vfs: Fold casefolding into vfs
+  f2fs: Handle casefolding with Encryption
+  ext4: Use struct super_blocks' casefold data
+  ext4: Hande casefolding with encryption
+  ext4: Optimize match for casefolded encrypted dirs
+
+ Documentation/filesystems/ext4/directory.rst |  27 ++
+ fs/crypto/Kconfig                            |   1 +
+ fs/crypto/fname.c                            | 232 ++++++++++---
+ fs/crypto/fscrypt_private.h                  |   9 +
+ fs/crypto/keysetup.c                         |  35 +-
+ fs/crypto/policy.c                           |  53 +++
+ fs/dcache.c                                  |  28 ++
+ fs/ext4/dir.c                                |  75 +----
+ fs/ext4/ext4.h                               |  85 +++--
+ fs/ext4/hash.c                               |  26 +-
+ fs/ext4/ialloc.c                             |   5 +-
+ fs/ext4/inline.c                             |  41 +--
+ fs/ext4/namei.c                              | 324 ++++++++++++-------
+ fs/ext4/super.c                              |  21 +-
+ fs/f2fs/dir.c                                | 112 +++----
+ fs/f2fs/f2fs.h                               |  12 +-
+ fs/f2fs/hash.c                               |  25 +-
+ fs/f2fs/inline.c                             |   9 +-
+ fs/f2fs/super.c                              |  17 +-
+ fs/f2fs/sysfs.c                              |   8 +-
+ fs/inode.c                                   |   3 +-
+ fs/namei.c                                   |  41 ++-
+ include/linux/fs.h                           |  10 +
+ include/linux/fscrypt.h                      |  95 ++----
+ include/linux/unicode.h                      |  14 +
+ 25 files changed, 835 insertions(+), 473 deletions(-)
+
+-- 
+2.25.0.341.g760bfbb309-goog
+
