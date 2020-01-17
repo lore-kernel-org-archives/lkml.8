@@ -2,185 +2,88 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A83BFC33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC9AC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F6512087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:11:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0527B2072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:11:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="wCrbuGec"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RSMVzOWH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729138AbgAQPLu (ORCPT
+        id S1729158AbgAQPLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 10:11:50 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:26656 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728512AbgAQPLu (ORCPT
+        Fri, 17 Jan 2020 10:11:54 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:34568 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729140AbgAQPLx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 10:11:50 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00HF8JSd015901;
-        Fri, 17 Jan 2020 16:11:27 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=I8opKmRhMDLAX/mwhQ7AJgFOCzwL3KGOMdzGP4ujidg=;
- b=wCrbuGeczxC3de1GP6W+MhgMjgAh4vsgu1qfa5pY4T7/v4LHaEelC6zFwxKnpLkiIg/F
- SmfAVdF60putnZTPOeYRwYh6gIBE1mRukwqINvxM917nx14ab7VSLuz+T0QPY/ayjhoo
- q0dVM6cxJgJo3sOzdD6TlzRw2b9R5y1DRVCkPMMfVWh0JX54HEna6v5IBQ+r+PV0w2z6
- KbkTg+5k2D8eqedcplq56DGIiWQ4mK95AlmJ3rDyHvgRWvxlpkismGxbYlcw7yfxFuSj
- vccCCC6vTQM2Csntll4M6OP7Lz9ASoFstKmz4eR3DBRo4xCcHNhH7rZg5Ve4ellVa+ut kw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xk0rkc4q6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 Jan 2020 16:11:27 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CCAA210002A;
-        Fri, 17 Jan 2020 16:11:20 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B33E92C38AE;
-        Fri, 17 Jan 2020 16:11:20 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.44) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 17 Jan
- 2020 16:11:20 +0100
-Subject: Re: [RFC PATCH 1/3] dtc: Add dtb build information option
-To:     Rob Herring <robh+dt@kernel.org>,
-        David Gibson <david@gibson.dropbear.id.au>
-CC:     Frank Rowand <frowand.list@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Simon Glass <sjg@chromium.org>, <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Devicetree Compiler <devicetree-compiler@vger.kernel.org>,
-        Steve McIntyre <steve.mcintyre@linaro.org>
-References: <20200113181625.3130-1-alexandre.torgue@st.com>
- <20200113181625.3130-2-alexandre.torgue@st.com>
- <20200116005741.GB54439@umbus> <d2594b79-a45d-dcac-3642-90016a1408b8@st.com>
- <20200117090937.GU54439@umbus>
- <CAL_JsqKTsX9efYDMjGahFDxj0cEfzozeNrY1Nq1bECzgOZGqdQ@mail.gmail.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <c78545d9-cd91-9b18-2b85-07ce5f87ca04@st.com>
-Date:   Fri, 17 Jan 2020 16:11:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 17 Jan 2020 10:11:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=6XkN9OOxlWNG+NnNqQFZrrwnqRAB2I/Nrd6IFwG7+RY=; b=RSMVzOWHXhbXk5ybQd1Ac8U8n
+        mr0pOzNXDL8GNif+bLGGz7kTu4dfR9Y1ATuXasz97lbZ1uSNU6Q58wCj9hxLDKAuMt2FE0HikFYZG
+        yyGJwwGolFaHsIqxQOF7T2DRetuhzhzVGLPxzN6E8XC/2Oyy8RiIf8AiH90jcTM5ZXFUUaV9KpiM/
+        Ua1abFQGKzfocrNi/931/DqM8YWzhPVSZh6QsfT6FaaW5JP44iTAfBwj0eV1UURyCU/CbQ7uJFDLC
+        QyNDoFvCbEAAkPyfLJghZPnoXNvSz+LOsiKqvwObJHceNoJbQgkY7sykpk8cmUEh8TR/jvPQgPRmi
+        I0q0iEddQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1isTHZ-0006sX-K9; Fri, 17 Jan 2020 15:11:33 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 143B3300F4B;
+        Fri, 17 Jan 2020 16:09:54 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 492602020D8FC; Fri, 17 Jan 2020 16:11:31 +0100 (CET)
+Date:   Fri, 17 Jan 2020 16:11:31 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Mel Gorman <mgorman@techsingularity.net>,
+        Phil Auld <pauld@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Parth Shah <parth@linux.ibm.com>,
+        Rik van Riel <riel@surriel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] sched, fair: Allow a small load imbalance between low
+ utilisation SD_NUMA domains v4
+Message-ID: <20200117151131.GG14879@hirez.programming.kicks-ass.net>
+References: <20200114101319.GO3466@techsingularity.net>
+ <CAKfTPtC7zuvWym8tSxXx6d+FhiSsedrS5sRZZagR5B7pXgZewA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqKTsX9efYDMjGahFDxj0cEfzozeNrY1Nq1bECzgOZGqdQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-17_03:2020-01-16,2020-01-17 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKfTPtC7zuvWym8tSxXx6d+FhiSsedrS5sRZZagR5B7pXgZewA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David, Rob,
+On Fri, Jan 17, 2020 at 04:09:33PM +0100, Vincent Guittot wrote:
+> On Tue, 14 Jan 2020 at 11:13, Mel Gorman <mgorman@techsingularity.net> wrote:
 
-On 1/17/20 3:43 PM, Rob Herring wrote:
-> On Fri, Jan 17, 2020 at 6:26 AM David Gibson
-> <david@gibson.dropbear.id.au> wrote:
->>
->> On Thu, Jan 16, 2020 at 09:58:23AM +0100, Alexandre Torgue wrote:
->>> Hi David
->>>
->>> On 1/16/20 1:57 AM, David Gibson wrote:
->>>> On Mon, Jan 13, 2020 at 07:16:23PM +0100, Alexandre Torgue wrote:
->>>>> This commit adds the possibility to add build information for a DTB.
->>>>> Build information can be: build date, DTS version, "who built the DTB"
->>>>> (same kind of information that we get in Linux with the Linux banner).
->>>>>
->>>>> To do this, an extra option "-B" using an information file as argument
->>>>> has been added. If this option is used, input device tree is appended with
->>>>> a new string property "Build-info". This property is built with information
->>>>> found in information file given as argument. This file has to be generated
->>>>> by user and shouldn't exceed 256 bytes.
->>>>>
->>>>> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
->>>>
->>>> At the very least, this patch of the series will need to be sent to
->>>> upstream dtc first.
->>>
->>> Ok sorry. I thought that sending all the series would give more
->>> information.
->>
->> That's fair enough, but in order to merge, you'll need to post against
->> upstream dtc.
-
-ok
-
->>
->>>> I'm also not terribly clear on what you're trying to accomplish here,
->>>> and why it's useful.
->>>
->>> Let's take Kernel boot at example (but could be extend to other DTB "users"
->>> like U-Boot). When Linux kernel booting we get a log that gives useful
->>> information about kernel image: source version, build date, people who built
->>> the kernel image, compiler version. This information is useful for debug and
->>> support. The aim is to get same kind of information but for the DTB.
->>>
->>>> Since you're doing this specifically for use with dtbs built in the
->>>> kernel build, could you just use a:
->>>>      Build-info = /incbin/ "build-info.txt";
->>>> in each of the in-kernel .dts files?
->>>
->>> My first idea was to not modify all existing .dts files. Adding an extra
->>> option in dtc is (for me) the softer way to do it. I mean, compile
->>> information should come through compiler without modify .dts files outside
->>> from dtc. In this way it will be easy to everybody using dtc (inside our
->>> outside Linux tree) to add dtb build info (even if they don't how to write a
->>> dts file).
->>
->> But you're not really having this information coming from the
->> compiler.  Instead you're adding a compiler option that just force
->> includes another file into the generated tree, and it's up to your
->> build scripts to put something useful into that file.
->>
->> I don't really see that as preferable to modifying the .dts files.
-
-I agree. I took example on kernel version info. It doesn't come from gcc 
-but from auto-generated file. I thought it was the easier way to 
-process. But I understand your concerns. As it is not generated by dtc 
-itself, dtc should not be modified.
-
->>
->> I also dislike the fact that the option as proposed is much more
->> general than the name suggests, but also very similar too, but much
->> more specific than the existing /incbin/ option.
->>
->> What might be better would be to have a dtc option which force appends
->> an extra .dts to the mail .dts compiled.  You can then put an overlay
->> template in that file, something like:
->>
->> &{/} {
->>          linux,build-info = /incbin/ "build-info.txt;
->> }
+> > In general, the patch simply seeks to avoid unnecessary cross-node
+> > migrations in the basic case where imbalances are very small.  For low
+> > utilisation communicating workloads, this patch generally behaves better
+> > with less NUMA balancing activity. For high utilisation, there is no
+> > change in behaviour.
+> >
+> > Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
 > 
-> I like this suggestion either as an include another dts file or an
-> overlay. The latter could be useful as a way to maintain current dtb
-> files while splitting the source files into base and overlay dts
-> files.
+> Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
 
-First suggestion will imply to modify an huge part of dts file (not a 
-big modification but a lot :)).
-Second one (dtbo) sounds good. In this case this dtso will be created 
-from build-info.txt and applied when dtb is built. So no impacts on 
-current dts file. I'm right ?
-
-Alex
-
-> 
-> But no, let's not prepend this with 'linux'. It's not a property
-> specific for Linux to consume.
-> 
-> Rob
-> 
+Thanks all!
