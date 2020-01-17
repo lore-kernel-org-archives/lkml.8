@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A30C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41204C33CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2B0F2087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:04:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18EF221582
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:04:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729429AbgAQPEx (ORCPT
+        id S1729447AbgAQPE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 10:04:53 -0500
-Received: from mx2.suse.de ([195.135.220.15]:46352 "EHLO mx2.suse.de"
+        Fri, 17 Jan 2020 10:04:57 -0500
+Received: from mx2.suse.de ([195.135.220.15]:46214 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729126AbgAQPEA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729015AbgAQPEA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 17 Jan 2020 10:04:00 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 8698EBBB1;
-        Fri, 17 Jan 2020 15:03:59 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id D3646BB99;
+        Fri, 17 Jan 2020 15:03:57 +0000 (UTC)
 From:   Petr Mladek <pmladek@suse.com>
 To:     Jiri Kosina <jikos@kernel.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -32,9 +32,9 @@ Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
         Nicolai Stange <nstange@suse.de>,
         live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
         Petr Mladek <pmladek@suse.com>
-Subject: [POC 12/23] livepatch: Automatically remove livepatch module when the object is freed
-Date:   Fri, 17 Jan 2020 16:03:12 +0100
-Message-Id: <20200117150323.21801-13-pmladek@suse.com>
+Subject: [POC 08/23] livepatch: Automatically load livepatch module when the patch module is loaded
+Date:   Fri, 17 Jan 2020 16:03:08 +0100
+Message-Id: <20200117150323.21801-9-pmladek@suse.com>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20200117150323.21801-1-pmladek@suse.com>
 References: <20200117150323.21801-1-pmladek@suse.com>
@@ -43,95 +43,187 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make it easy to deal with the split livepatch modules. Remove the livepatch
-modules that livepatched modules when they are no longer used.
+The klp_module_coming() callback is called from the module loader when
+any module is being loaded. It allows to load the related livepatch modules
+in MODULE_COMMING state before mod->init() is called. It prevents the module
+from loading when the livepatching fails from any reason.
 
-It must be done from workqueue context to avoid deadlocks.
+klp_module_coming() originally did several tasks: livepatch-specific
+reallocations, registered ftrace handlers, and called object callbacks
+when any defined.
 
-It must not be done when klp_add_module() fails because is called from
-the livepatch module init callback. The module will not load at
-all in this case.
+All the mentioned tasks were moved into by klp_add_object() that is
+called in mod->init() of livepatch modules that are livepatching
+other modules.
+
+Instead, klp_module_coming() has to load the needed livepatch module(s).
+This functionality is already used in the kernel.
+
+It is solved by two tricks:
+
+1. The list is searched repeatedly from the beginning. The already
+   loaded objects are skipped. One object is handled in each
+   iteration.
+
+   This solves the problem when a livepatch is removed or added
+   in the meantime. Especially, it prevents a crash when
+   the given struct klp_patch disappeared from the list in
+   the meantime.
+
+   The object will get removed automatically when the livepatch
+   gets removed.
+
+   There might be an attempt to load the module twice: via
+   the coming notifier and via klp_enable_livepatch(). It is
+   already handled in the module loader code. Both call will
+   either succeed or fail the same way.
+
+2. There might be a false error when the livepatch gets removed
+   in the meantime. It is solved by double checking the existence.
+
+   It does not solve the situation when the livepatch is removed
+   and loaded again in the meantime. It will be solved by a separate
+   patch. Anyway, it is not much realistic scenario.
 
 Signed-off-by: Petr Mladek <pmladek@suse.com>
 ---
- include/linux/livepatch.h |  4 ++++
- kernel/livepatch/core.c   | 19 ++++++++++++++++++-
- 2 files changed, 22 insertions(+), 1 deletion(-)
+ kernel/livepatch/core.c                            | 81 ++++++++++++++++++++--
+ .../testing/selftests/livepatch/test-callbacks.sh  |  1 +
+ 2 files changed, 77 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/livepatch.h b/include/linux/livepatch.h
-index e021e512b207..4afb7f3a5a36 100644
---- a/include/linux/livepatch.h
-+++ b/include/linux/livepatch.h
-@@ -115,6 +115,8 @@ struct klp_callbacks {
-  * @dynamic:    temporary object for nop functions; dynamically allocated
-  * @patched:	the object's funcs have been added to the klp_ops list
-  * @forced:	was involved in a forced transition
-+ * @add_err:	failed to add the object when loading the livepatch module
-+ * @remove_work: remove module from workqueue-context
-  */
- struct klp_object {
- 	/* external */
-@@ -131,6 +133,8 @@ struct klp_object {
- 	bool dynamic;
- 	bool patched;
- 	bool forced;
-+	bool add_err;
-+	struct work_struct remove_work;
- };
- 
- /**
 diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-index 2f15ff360676..6c51b194da57 100644
+index bb851f916182..34e3ee2be7ef 100644
 --- a/kernel/livepatch/core.c
 +++ b/kernel/livepatch/core.c
-@@ -556,8 +556,14 @@ static void klp_kobj_release_object(struct kobject *kobj)
- 		return;
- 	}
+@@ -8,6 +8,7 @@
  
--	if (klp_is_module(obj) && !obj->forced)
-+	if (obj->forced || !klp_is_module(obj))
-+		return;
-+
-+	/* Must not explicitely remove module when adding failed. */
-+	if (obj->add_err)
- 		module_put(obj->mod);
-+	else
-+		schedule_work(&obj->remove_work);
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
++#include <linux/kmod.h>
+ #include <linux/module.h>
+ #include <linux/kernel.h>
+ #include <linux/mutex.h>
+@@ -100,6 +101,24 @@ static struct klp_patch *klp_find_patch(const char *patch_name)
+ 	return NULL;
  }
  
- static struct kobj_type klp_ktype_object = {
-@@ -677,6 +683,14 @@ static void klp_free_patch_finish(struct klp_patch *patch)
- 		module_put(patch->obj->mod);
- }
- 
-+static void klp_remove_module_work_fn(struct work_struct *work)
++/*
++ * Search whether livepatch for a module is loaded.
++ * Do not use for "vmlinux" that is always loaded.
++ * Must be called under klp_mutex.
++ */
++static bool klp_is_object_loaded(struct klp_patch *patch,
++				 char *object_name)
 +{
-+	struct klp_object *obj =
-+		container_of(work, struct klp_object, remove_work);
++	struct klp_object *obj;
 +
-+	module_put_and_delete(obj->mod);
++	klp_for_each_object(patch, obj) {
++		if (obj->name && !strcmp(object_name, obj->name))
++			return true;
++	}
++
++	return false;
 +}
 +
- /*
-  * The livepatch might be freed from sysfs interface created by the patch.
-  * This work allows to wait until the interface is destroyed in a separate
-@@ -835,6 +849,8 @@ static int klp_init_object_early(struct klp_patch *patch,
- 	kobject_init(&obj->kobj, &klp_ktype_object);
- 	list_add_tail(&obj->node, &patch->obj_list);
- 	obj->forced = false;
-+	obj->add_err = false;
-+	INIT_WORK(&obj->remove_work, klp_remove_module_work_fn);
- 
- 	klp_for_each_func_static(obj, func) {
- 		klp_init_func_early(obj, func);
-@@ -1063,6 +1079,7 @@ int klp_add_object(struct klp_object *obj)
+ struct klp_find_arg {
+ 	const char *objname;
+ 	const char *name;
+@@ -1082,6 +1101,19 @@ static int __klp_disable_patch(struct klp_patch *patch)
  	return 0;
+ }
  
- err_free:
-+	obj->add_err = true;
- 	klp_free_object(obj, false);
- err:
++static int klp_try_load_object(const char *patch_name, const char *obj_name)
++{
++	int ret;
++
++	ret = request_module("%s__%s", patch_name, obj_name);
++	if (ret) {
++		pr_info("Module load failed: %s__%s\n", patch_name, obj_name);
++		return ret;
++	}
++
++	return 0;
++}
++
+ static int __klp_enable_patch(struct klp_patch *patch)
+ {
+ 	struct klp_object *obj;
+@@ -1290,19 +1322,58 @@ static void klp_cleanup_module_patches_limited(struct module *mod,
+ 
+ int klp_module_coming(struct module *mod)
+ {
++	char patch_name[MODULE_NAME_LEN];
++	struct klp_patch *patch;
++	int ret = 0;
++
+ 	if (WARN_ON(mod->state != MODULE_STATE_COMING))
+ 		return -EINVAL;
+ 
+ 	mutex_lock(&klp_mutex);
++restart:
++	klp_for_each_patch(patch) {
++		if (!klp_is_object_name_supported(patch, mod->name))
++			continue;
++
++		if (klp_is_object_loaded(patch, mod->name))
++			continue;
++
++		strncpy(patch_name, patch->obj->patch_name, sizeof(patch_name));
++		mutex_unlock(&klp_mutex);
++
++		ret = klp_try_load_object(patch_name, mod->name);
++		/*
++		 * The load might have failed because the patch has
++		 * been removed in the meantime. In this case, the
++		 * error might be ignored.
++		 *
++		 * FIXME: It is not fully proof. The patch might have be
++		 * unloaded and loaded again in the mean time.
++		 */
++		mutex_lock(&klp_mutex);
++		if (ret) {
++			patch = klp_find_patch(patch_name);
++			if (patch)
++				goto err;
++			ret = 0;
++		}
++
++		/*
++		 * The list of patches might have been manipulated
++		 * in the meantime.
++		 */
++		goto restart;
++	}
++
  	/*
+-	 * Each module has to know that klp_module_coming()
+-	 * has been called. We never know what module will
+-	 * get patched by a new patch.
++	 * All enabled livepatches are loaded now. From this point, any newly
++	 * enabled livepatch is responsible for loading the related livepatch
++	 * module in klp_enable_patch().
+ 	 */
+ 	mod->klp_alive = true;
++err:
+ 	mutex_unlock(&klp_mutex);
+-
+-	return 0;
++	return ret;
+ }
+ 
+ void klp_module_going(struct module *mod)
+diff --git a/tools/testing/selftests/livepatch/test-callbacks.sh b/tools/testing/selftests/livepatch/test-callbacks.sh
+index ccaed35d0901..39a4f35e5f8e 100755
+--- a/tools/testing/selftests/livepatch/test-callbacks.sh
++++ b/tools/testing/selftests/livepatch/test-callbacks.sh
+@@ -330,6 +330,7 @@ livepatch: applying patch '$MOD_LIVEPATCH' to loading module '$MOD_TARGET'
+ $MOD_LIVEPATCH: pre_patch_callback: $MOD_TARGET -> [MODULE_STATE_COMING] Full formed, running module_init
+ livepatch: pre-patch callback failed for object '$MOD_TARGET'
+ livepatch: patch '$MOD_LIVEPATCH' failed for module '$MOD_TARGET', refusing to load module '$MOD_TARGET'
++livepatch: Module load failed: ${MOD_LIVEPATCH}__${MOD_TARGET}
+ modprobe: ERROR: could not insert '$MOD_TARGET': No such device
+ % echo 0 > /sys/kernel/livepatch/$MOD_LIVEPATCH/enabled
+ livepatch: '$MOD_LIVEPATCH': initializing unpatching transition
 -- 
 2.16.4
 
