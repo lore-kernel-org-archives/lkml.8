@@ -2,490 +2,192 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09183C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 06:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA9EC33CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 06:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA2872082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 06:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D13520842
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 06:10:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Z78oRWjZ"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="lZ41PadG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgAQGKR (ORCPT
+        id S1728927AbgAQGKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 01:10:17 -0500
-Received: from mail-eopbgr80048.outbound.protection.outlook.com ([40.107.8.48]:51598
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727691AbgAQGKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 01:10:16 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hWSWLhbRC2gL+PpiR1bNAVInib7QP8ErigSN3CU+IBaeLRqTBL8OCvz7ed1AdTBnXaTkvPMT9K84TTAsNT4GsEXMtWECKdtxtWDzFhanp0Fhu2yOCWTgD5tJTd4RB2N9B/qD4tnl0UTO6ec59Lrc2KFfjRKsYL5vnvwZukq3nKYg6BSfBPFmJo2vHiW6l9AhbDhRAZgGV2yJPn96OoHhQ30YM2Vx/93qiESPcl8wW6Ej2OL9Hyr7EMH33l7QpNfQs2BpyVm0xjL2IdbCPSzY0laxfNHbGNyqf2ztVr1w/9a3J9DJ2sgvnagq9iUbejFm3TWH4yzFqkoIkdjFMYrrOQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jlY53Yn/Ho4ilcrQ8kBH8ZVk4goSizXwLeZVRx56HmY=;
- b=f18go0HcnXZIgtEJm4COqD9C35SSoCiFnU53CBJNOE+34mrXd5h4kpLqlEpVEeeY01hoEhksjEkkI36LpH7UOu4ZDc0YN0c0Ev6rVOhrXFUFimTwoHfzyqT1TGc/6B/Fmsy9oprZmBi9ZXNQ2fNnuO+WyF+14YxQIsDNRM+YJNYHFXtwWwfdc1O2+9GA4uIBbTDzi4OAFGm3fMUTdZbnUrFiR+ABSU4HRS5OWWERYD78MhDMHz2wXhS5704MZGOMPyDta4Z24LrH4MtGmfUC+rYEOZMW/ErTOKiH1Qyes/+55G4qDwEbFF2fzOYa789Pt4n0ZaSLlkuNH0I885C7mw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jlY53Yn/Ho4ilcrQ8kBH8ZVk4goSizXwLeZVRx56HmY=;
- b=Z78oRWjZ2WcrkzkRa1SZ6uaPKoXG1Ce7x8KZ15zW0HOMUy85DL+1S68p0Vbv2Lhlo/OIIzuoxCl4AyhPKXq22LNyvGdENYY0rRZT33RjVB+2O6Qt5nVwGmBMyYdBnr1t/QXFvZmreutCLuoVBumccCZGyjWCTFDqlp+D5xGxWlQ=
-Received: from DB7PR04MB4618.eurprd04.prod.outlook.com (52.135.139.151) by
- DB7PR04MB4841.eurprd04.prod.outlook.com (20.176.232.219) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.20; Fri, 17 Jan 2020 06:10:10 +0000
-Received: from DB7PR04MB4618.eurprd04.prod.outlook.com
- ([fe80::5cb4:81c8:1618:5ca]) by DB7PR04MB4618.eurprd04.prod.outlook.com
- ([fe80::5cb4:81c8:1618:5ca%7]) with mapi id 15.20.2644.023; Fri, 17 Jan 2020
- 06:10:10 +0000
-Received: from localhost.localdomain (119.31.174.71) by SG2PR01CA0102.apcprd01.prod.exchangelabs.com (2603:1096:3:15::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.19 via Frontend Transport; Fri, 17 Jan 2020 06:10:05 +0000
-From:   Joakim Zhang <qiangqing.zhang@nxp.com>
-To:     "maz@kernel.org" <maz@kernel.org>,
-        "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "robh@kernel.org" <robh@kernel.org>
-CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>, Andy Duan <fugang.duan@nxp.com>
-Subject: [PATCH V6 2/2] drivers/irqchip: add NXP INTMUX interrupt multiplexer
- support
-Thread-Topic: [PATCH V6 2/2] drivers/irqchip: add NXP INTMUX interrupt
- multiplexer support
-Thread-Index: AQHVzPzFrIfh9Ea/kUOGD3qp7dRI6Q==
-Date:   Fri, 17 Jan 2020 06:10:10 +0000
-Message-ID: <20200117060653.27485-3-qiangqing.zhang@nxp.com>
-References: <20200117060653.27485-1-qiangqing.zhang@nxp.com>
-In-Reply-To: <20200117060653.27485-1-qiangqing.zhang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.17.1
-x-clientproxiedby: SG2PR01CA0102.apcprd01.prod.exchangelabs.com
- (2603:1096:3:15::28) To DB7PR04MB4618.eurprd04.prod.outlook.com
- (2603:10a6:5:38::23)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=qiangqing.zhang@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: bb8294ba-a0e8-465f-f723-08d79b13e822
-x-ms-traffictypediagnostic: DB7PR04MB4841:|DB7PR04MB4841:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB48418D66B9211C59611E91F7E6310@DB7PR04MB4841.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3968;
-x-forefront-prvs: 0285201563
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(396003)(366004)(376002)(136003)(199004)(189003)(1076003)(5660300002)(66446008)(6506007)(8676002)(478600001)(81156014)(81166006)(6512007)(6666004)(16526019)(186003)(2906002)(36756003)(86362001)(26005)(316002)(110136005)(54906003)(8936002)(6486002)(66946007)(71200400001)(64756008)(4326008)(7416002)(66556008)(66476007)(69590400006)(2616005)(956004)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4841;H:DB7PR04MB4618.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: WIVi3rSepEIMWEmpu5MX9syIKLYh8z41I/k2o68WC6C6emgcc8Nu9kmtfmDHMerG6Mcjr5VojiNmyp1R9vuZSc5K/jc6mvXpgNlnEgBgO0NKQHJa3mrvTJ95iffXVK3R3/21m1mQQg6SHdFCscZJ2XUwUNA7CGSCJpH3R3RKMGPzwaykrvclsJxx2peRUxV2OiRuWo5i70kyri96TiGOuRf6bZMaFI2QcY615iBCj580UuOpZONxb9x0cvNT8NHbfc2FJm8jPTV5use33BDba81NTm3Q/axNmxMTmQL5EcE8MH+vwPVDqD84abNnGR9Ov0GtS/Aq0T8zENaz8TWCqvQhIt/B5se8ZOxqDofJtwgIwyZUzA42EV6jIbmgHn7ka8jfLNd+Kd/1gYuLv1TfD6KL3zY79CORe2DQO96gJOcHQ45LF2SzmmJs3tLFVsylPnPdXmobt+ESuM3mQ6Z79sgx+FhXw+Pl4Vo3vaGo0wIUOe7JgdgzeXdOhw8/E5qJ
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bb8294ba-a0e8-465f-f723-08d79b13e822
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jan 2020 06:10:10.0682
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NeggG3ata/PUNYiLoaK+jSqTbrmPr1SE8UQf9LyZSs9mpbcXyw3qBkM7ETT6ffEdGCqitgRb1NuwVmlDa4wEBw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4841
+        Fri, 17 Jan 2020 01:10:46 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:35310 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726896AbgAQGKp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 01:10:45 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200117061044euoutp01ac8bd22ad2a24b175faa429a6ede0da7~ql7nnoI1u2286022860euoutp01D
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 06:10:44 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200117061044euoutp01ac8bd22ad2a24b175faa429a6ede0da7~ql7nnoI1u2286022860euoutp01D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1579241444;
+        bh=Z9fFgcC2NnU134JInpRdOeaMJ6lEBQzGoW5uJcvMW/U=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=lZ41PadGlYGqApUjwlgpAoL85dsAVu8cZqohL2AMAJuoIj01UqafdsiJ/oPfAL3VV
+         rDGVKZ8dZvLurv6vJUJgR7Up22+6Rg77cDwMY0QkM7GqbQHDBXA+byYjRBes1QbIEz
+         6xcULKJoX618oxUmb0iCkR0SbYwB9HQD1eFqvVus=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200117061043eucas1p2c09d4396ff10f6dbc79c96f34208c712~ql7nORAld0919209192eucas1p2M;
+        Fri, 17 Jan 2020 06:10:43 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id A0.00.60679.3EF412E5; Fri, 17
+        Jan 2020 06:10:43 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200117061043eucas1p1783321b0e0c1447350bed76aa13e06db~ql7mr71v80895908959eucas1p1k;
+        Fri, 17 Jan 2020 06:10:43 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200117061043eusmtrp2e53fd1060d6415ffaf5ffed2443b11fc~ql7mrVnCk3019830198eusmtrp2V;
+        Fri, 17 Jan 2020 06:10:43 +0000 (GMT)
+X-AuditID: cbfec7f4-0e5ff7000001ed07-31-5e214fe37512
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 28.9D.07950.2EF412E5; Fri, 17
+        Jan 2020 06:10:42 +0000 (GMT)
+Received: from AMDC3555 (unknown [106.120.51.67]) by eusmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200117061042eusmtip15f3a7df5ef6055c40f4eb694d69c48d4~ql7mRvz8q3055330553eusmtip1Q;
+        Fri, 17 Jan 2020 06:10:42 +0000 (GMT)
+Message-ID: <7037771c6aaa7b72a41e33c621d4e0c6db7758ca.camel@samsung.com>
+Subject: Re: [PATCH v4 0/3] interconnect: Support Samsung Exynos use-case
+From:   Artur =?UTF-8?Q?=C5=9Awigo=C5=84?= <a.swigon@samsung.com>
+To:     Chanwoo Choi <cw00.choi@samsung.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc:     georgi.djakov@linaro.org, b.zolnierkie@samsung.com,
+        m.szyprowski@samsung.com, krzk@kernel.org
+Date:   Fri, 17 Jan 2020 07:10:41 +0100
+In-Reply-To: <95ac808c-aacf-8ca8-94a7-98bbdb37b39d@samsung.com>
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNKsWRmVeSWpSXmKPExsWy7djPc7qP/RXjDB4tVbbYOGM9q8X1L89Z
+        Labv3cRmcf78BnaLy7vmsFl87j3CaDHj/D4mi7VH7rI7cHhsWtXJ5nHn2h42j74tqxg9Pm+S
+        C2CJ4rJJSc3JLEst0rdL4Mro/7KJteC0RMWh3ZeZGhj3C3cxcnJICJhInD/2iqmLkYtDSGAF
+        o0TT2jPMEM4XRokP99ZAOZ8ZJc7/XsUO03LkVhM7RGI5o8SR089YQRJCAs8YJfpviIDYvAIe
+        Ejt/L2MEsYUFPCW+/7vABmKzCdhLnL39DWyfiEAro0TvqydgU5kFkiW2zr3IAmKzCKhKdK77
+        DxbnBGp4vOw4I8RmHYm3p/qAajiAFghK/N0hDNEqL9G8dTbYpRICy9glJt85AnWpi8SDf4+Y
+        IGxhiVfHt0DFZST+75wPFS+WeLrzPitEcwOjxKZlR5ghEtYSd879YgNZxiygKbF+lz6IKSHg
+        KLF9XRCEySdx460gxAl8EpO2TWeGCPNKdLQJQZhKErtm8kGMk5BoWn0NarSHxJ4bi1kmMCrO
+        QnhlFpJXZiEsXcDIvIpRPLW0ODc9tdgoL7Vcrzgxt7g0L10vOT93EyMwyZz+d/zLDsZdf5IO
+        MQpwMCrx8M4IUogTYk0sK67MPcQowcGsJMJ7coZsnBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXFe
+        40UvY4UE0hNLUrNTUwtSi2CyTBycUg2MmyNnFJtfPR1QJjZVwOig/PHVM4qCdz8/3j7vQWjR
+        9IAF4ooP7r1hXZr5zPjXxOa4Hjmro3u7pDZ75DDaWp9fcUk8wyZslarsZpnTK7sP87q8t0vZ
+        qh1t2beW9dty3udPz04IuLLiXPaR19Khh5tf9U6a8iTyZk286HzeY9o3Z+s/X39061Y5DyWW
+        4oxEQy3mouJEACh8WeQuAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCIsWRmVeSWpSXmKPExsVy+t/xu7qP/BXjDE48tLHYOGM9q8X1L89Z
+        Labv3cRmcf78BnaLy7vmsFl87j3CaDHj/D4mi7VH7rI7cHhsWtXJ5nHn2h42j74tqxg9Pm+S
+        C2CJ0rMpyi8tSVXIyC8usVWKNrQw0jO0tNAzMrHUMzQ2j7UyMlXSt7NJSc3JLEst0rdL0Mvo
+        /7KJteC0RMWh3ZeZGhj3C3cxcnJICJhIHLnVxN7FyMUhJLCUUaL7zCFGiISExMf1N1ghbGGJ
+        P9e62CCKnjBKPJw4HSzBK+AhsfP3MrAGYQFPie//LrCB2GwC9hJnb39jArFFBNoYJU5u0gKx
+        mQVSJO72zGIGsVkEVCU61/1nB7E5geofLzvOCLHgOKPEop1XmCAaNCVat/9mh7hCR+LtqT6W
+        LkYOoMWCEn93CEOUyEs0b53NPIFRcBaSjlkIVbOQVC1gZF7FKJJaWpybnltspFecmFtcmpeu
+        l5yfu4kRGEPbjv3csoOx613wIUYBDkYlHt4ZQQpxQqyJZcWVuYcYJTiYlUR4T86QjRPiTUms
+        rEotyo8vKs1JLT7EaAr0z0RmKdHkfGB855XEG5oamltYGpobmxubWSiJ83YIHIwREkhPLEnN
+        Tk0tSC2C6WPi4JRqYDzxc4f6N05hdZ9sbeWtB88/Oma5+Nnlq+orJ9xc+qb3Zaiv65yknB9p
+        7g+C5r2wClNq0k+WFTUQOrfh7G9G1/8GCmznPneclbwc3nRHbuLdNba7RVYen71MeVZhTt3p
+        89P6N6XJ1d83ZRM782+/yG69oP3y1pczrzs/nfGIQ2aCQC1Lzmuec7xKLMUZiYZazEXFiQBB
+        xFQltwIAAA==
+X-CMS-MailID: 20200117061043eucas1p1783321b0e0c1447350bed76aa13e06db
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200116144241eucas1p226c1d7fc2fad5bd1b9fb6d0fb1b22bff
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200116144241eucas1p226c1d7fc2fad5bd1b9fb6d0fb1b22bff
+References: <CGME20200116144241eucas1p226c1d7fc2fad5bd1b9fb6d0fb1b22bff@eucas1p2.samsung.com>
+        <20200116144202.12116-1-a.swigon@samsung.com>
+        <95ac808c-aacf-8ca8-94a7-98bbdb37b39d@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Interrupt Multiplexer (INTMUX) expands the number of peripherals
-that can interrupt the core:
-* The INTMUX has 8 channels that are assigned to 8 NVIC interrupt slots.
-* Each INTMUX channel can receive up to 32 interrupt sources and has 1
-  interrupt output.
-* The INTMUX routes the interrupt sources to the interrupt outputs.
+Hi Chanwoo,
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
----
- drivers/irqchip/Kconfig          |   6 +
- drivers/irqchip/Makefile         |   1 +
- drivers/irqchip/irq-imx-intmux.c | 309 +++++++++++++++++++++++++++++++
- 3 files changed, 316 insertions(+)
- create mode 100644 drivers/irqchip/irq-imx-intmux.c
+On Fri, 2020-01-17 at 14:31 +0900, Chanwoo Choi wrote:
+> Hi Artur,
+> 
+> I'm concerned about that make it the separate series
+> without use-case like exynos-bus, exynos-drm.
+> If this series is applied to v5.6, it doesn't make
+> the problem and the patches for exynos-bus/exynos-drm
+> will be reviewed and then merged on later kernel version.
+> 
+> But, if not, the interconnect, exynos-bus and exynos-drm
+> patches should be merged into the same kernel version,
+> it must require the immutable branch among interconnect,
+> devfreq and exynos-drm. I think that you need to consider
+> it between different subsystems.
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index ba152954324b..7e2b1e9d0b45 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -457,6 +457,12 @@ config IMX_IRQSTEER
- 	help
- 	  Support for the i.MX IRQSTEER interrupt multiplexer/remapper.
-=20
-+config IMX_INTMUX
-+	def_bool y if ARCH_MXC
-+	select IRQ_DOMAIN
-+	help
-+	  Support for the i.MX INTMUX interrupt multiplexer.
-+
- config LS1X_IRQ
- 	bool "Loongson-1 Interrupt Controller"
- 	depends on MACH_LOONGSON32
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index e806dda690ea..af976a79d1fb 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -100,6 +100,7 @@ obj-$(CONFIG_CSKY_MPINTC)		+=3D irq-csky-mpintc.o
- obj-$(CONFIG_CSKY_APB_INTC)		+=3D irq-csky-apb-intc.o
- obj-$(CONFIG_SIFIVE_PLIC)		+=3D irq-sifive-plic.o
- obj-$(CONFIG_IMX_IRQSTEER)		+=3D irq-imx-irqsteer.o
-+obj-$(CONFIG_IMX_INTMUX)		+=3D irq-imx-intmux.o
- obj-$(CONFIG_MADERA_IRQ)		+=3D irq-madera.o
- obj-$(CONFIG_LS1X_IRQ)			+=3D irq-ls1x.o
- obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+=3D irq-ti-sci-intr.o
-diff --git a/drivers/irqchip/irq-imx-intmux.c b/drivers/irqchip/irq-imx-int=
-mux.c
-new file mode 100644
-index 000000000000..c27577c81126
---- /dev/null
-+++ b/drivers/irqchip/irq-imx-intmux.c
-@@ -0,0 +1,309 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright 2017 NXP
-+
-+/*                     INTMUX Block Diagram
-+ *
-+ *                               ________________
-+ * interrupt source #  0  +---->|                |
-+ *                        |     |                |
-+ * interrupt source #  1  +++-->|                |
-+ *            ...         | |   |   channel # 0  |--------->interrupt out =
-# 0
-+ *            ...         | |   |                |
-+ *            ...         | |   |                |
-+ * interrupt source # X-1 +++-->|________________|
-+ *                        | | |
-+ *                        | | |
-+ *                        | | |  ________________
-+ *                        +---->|                |
-+ *                        | | | |                |
-+ *                        | +-->|                |
-+ *                        | | | |   channel # 1  |--------->interrupt out =
-# 1
-+ *                        | | +>|                |
-+ *                        | | | |                |
-+ *                        | | | |________________|
-+ *                        | | |
-+ *                        | | |
-+ *                        | | |       ...
-+ *                        | | |       ...
-+ *                        | | |
-+ *                        | | |  ________________
-+ *                        +---->|                |
-+ *                          | | |                |
-+ *                          +-->|                |
-+ *                            | |   channel # N  |--------->interrupt out =
-# N
-+ *                            +>|                |
-+ *                              |                |
-+ *                              |________________|
-+ *
-+ *
-+ * N: Interrupt Channel Instance Number (N=3D7)
-+ * X: Interrupt Source Number for each channel (X=3D32)
-+ *
-+ * The INTMUX interrupt multiplexer has 8 channels, each channel receives =
-32
-+ * interrupt sources and generates 1 interrupt output.
-+ *
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/kernel.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_platform.h>
-+#include <linux/spinlock.h>
-+
-+#define CHANIER(n)	(0x10 + (0x40 * n))
-+#define CHANIPR(n)	(0x20 + (0x40 * n))
-+
-+#define CHAN_MAX_NUM		0x8
-+
-+struct intmux_irqchip_data {
-+	int			chanidx;
-+	int			irq;
-+	struct irq_domain	*domain;
-+};
-+
-+struct intmux_data {
-+	raw_spinlock_t			lock;
-+	void __iomem			*regs;
-+	struct clk			*ipg_clk;
-+	int				channum;
-+	struct intmux_irqchip_data	irqchip_data[];
-+};
-+
-+static void imx_intmux_irq_mask(struct irq_data *d)
-+{
-+	struct intmux_irqchip_data *irqchip_data =3D d->chip_data;
-+	int idx =3D irqchip_data->chanidx;
-+	struct intmux_data *data =3D container_of(irqchip_data, struct intmux_dat=
-a,
-+						irqchip_data[idx]);
-+	unsigned long flags;
-+	void __iomem *reg;
-+	u32 val;
-+
-+	raw_spin_lock_irqsave(&data->lock, flags);
-+	reg =3D data->regs + CHANIER(idx);
-+	val =3D readl_relaxed(reg);
-+	/* disable the interrupt source of this channel */
-+	val &=3D ~BIT(d->hwirq);
-+	writel_relaxed(val, reg);
-+	raw_spin_unlock_irqrestore(&data->lock, flags);
-+}
-+
-+static void imx_intmux_irq_unmask(struct irq_data *d)
-+{
-+	struct intmux_irqchip_data *irqchip_data =3D d->chip_data;
-+	int idx =3D irqchip_data->chanidx;
-+	struct intmux_data *data =3D container_of(irqchip_data, struct intmux_dat=
-a,
-+						irqchip_data[idx]);
-+	unsigned long flags;
-+	void __iomem *reg;
-+	u32 val;
-+
-+	raw_spin_lock_irqsave(&data->lock, flags);
-+	reg =3D data->regs + CHANIER(idx);
-+	val =3D readl_relaxed(reg);
-+	/* enable the interrupt source of this channel */
-+	val |=3D BIT(d->hwirq);
-+	writel_relaxed(val, reg);
-+	raw_spin_unlock_irqrestore(&data->lock, flags);
-+}
-+
-+static struct irq_chip imx_intmux_irq_chip =3D {
-+	.name		=3D "intmux",
-+	.irq_mask	=3D imx_intmux_irq_mask,
-+	.irq_unmask	=3D imx_intmux_irq_unmask,
-+};
-+
-+static int imx_intmux_irq_map(struct irq_domain *h, unsigned int irq,
-+			      irq_hw_number_t hwirq)
-+{
-+	irq_set_chip_data(irq, h->host_data);
-+	irq_set_chip_and_handler(irq, &imx_intmux_irq_chip, handle_level_irq);
-+
-+	return 0;
-+}
-+
-+static int imx_intmux_irq_xlate(struct irq_domain *d, struct device_node *=
-node,
-+				const u32 *intspec, unsigned int intsize,
-+				unsigned long *out_hwirq, unsigned int *out_type)
-+{
-+	struct intmux_irqchip_data *irqchip_data =3D d->host_data;
-+	int idx =3D irqchip_data->chanidx;
-+	struct intmux_data *data =3D container_of(irqchip_data, struct intmux_dat=
-a,
-+						irqchip_data[idx]);
-+
-+	/*
-+	 * two cells needed in interrupt specifier:
-+	 * the 1st cell: hw interrupt number
-+	 * the 2nd cell: channel index
-+	 */
-+	if (WARN_ON(intsize !=3D 2))
-+		return -EINVAL;
-+
-+	if (WARN_ON(intspec[1] >=3D data->channum))
-+		return -EINVAL;
-+
-+	*out_hwirq =3D intspec[0];
-+	*out_type =3D IRQ_TYPE_LEVEL_HIGH;
-+
-+	return 0;
-+}
-+
-+static int imx_intmux_irq_select(struct irq_domain *d, struct irq_fwspec *=
-fwspec,
-+				 enum irq_domain_bus_token bus_token)
-+{
-+	struct intmux_irqchip_data *irqchip_data =3D d->host_data;
-+
-+	/* Not for us */
-+	if (fwspec->fwnode !=3D d->fwnode)
-+		return false;
-+
-+	return irqchip_data->chanidx =3D=3D fwspec->param[1];
-+}
-+
-+static const struct irq_domain_ops imx_intmux_domain_ops =3D {
-+	.map		=3D imx_intmux_irq_map,
-+	.xlate		=3D imx_intmux_irq_xlate,
-+	.select		=3D imx_intmux_irq_select,
-+};
-+
-+static void imx_intmux_irq_handler(struct irq_desc *desc)
-+{
-+	struct intmux_irqchip_data *irqchip_data =3D irq_desc_get_handler_data(de=
-sc);
-+	int idx =3D irqchip_data->chanidx;
-+	struct intmux_data *data =3D container_of(irqchip_data, struct intmux_dat=
-a,
-+						irqchip_data[idx]);
-+	unsigned long irqstat;
-+	int pos, virq;
-+
-+	chained_irq_enter(irq_desc_get_chip(desc), desc);
-+
-+	/* read the interrupt source pending status of this channel */
-+	irqstat =3D readl_relaxed(data->regs + CHANIPR(idx));
-+
-+	for_each_set_bit(pos, &irqstat, 32) {
-+		virq =3D irq_find_mapping(irqchip_data->domain, pos);
-+		if (virq)
-+			generic_handle_irq(virq);
-+	}
-+
-+	chained_irq_exit(irq_desc_get_chip(desc), desc);
-+}
-+
-+static int imx_intmux_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np =3D pdev->dev.of_node;
-+	struct irq_domain *domain;
-+	struct intmux_data *data;
-+	int channum;
-+	int i, ret;
-+
-+	channum =3D platform_irq_count(pdev);
-+	if (channum =3D=3D -EPROBE_DEFER) {
-+		return -EPROBE_DEFER;
-+	} else if (channum > CHAN_MAX_NUM) {
-+		dev_err(&pdev->dev, "supports up to %d multiplex channels\n",
-+			CHAN_MAX_NUM);
-+		return -EINVAL;
-+	}
-+
-+	data =3D devm_kzalloc(&pdev->dev, sizeof(*data) +
-+			    channum * sizeof(data->irqchip_data[0]), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->regs =3D devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(data->regs)) {
-+		dev_err(&pdev->dev, "failed to initialize reg\n");
-+		return PTR_ERR(data->regs);
-+	}
-+
-+	data->ipg_clk =3D devm_clk_get(&pdev->dev, "ipg");
-+	if (IS_ERR(data->ipg_clk)) {
-+		ret =3D PTR_ERR(data->ipg_clk);
-+		if (ret !=3D -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "failed to get ipg clk: %d\n", ret);
-+		return ret;
-+	}
-+
-+	data->channum =3D channum;
-+	raw_spin_lock_init(&data->lock);
-+
-+	ret =3D clk_prepare_enable(data->ipg_clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to enable ipg clk: %d\n", ret);
-+		return ret;
-+	}
-+
-+	for (i =3D 0; i < channum; i++) {
-+		data->irqchip_data[i].chanidx =3D i;
-+
-+		data->irqchip_data[i].irq =3D irq_of_parse_and_map(np, i);
-+		if (data->irqchip_data[i].irq <=3D 0) {
-+			ret =3D -EINVAL;
-+			dev_err(&pdev->dev, "failed to get irq\n");
-+			goto out;
-+		}
-+
-+		domain =3D irq_domain_add_linear(np, 32, &imx_intmux_domain_ops,
-+					       &data->irqchip_data[i]);
-+		if (!domain) {
-+			ret =3D -ENOMEM;
-+			dev_err(&pdev->dev, "failed to create IRQ domain\n");
-+			goto out;
-+		}
-+		data->irqchip_data[i].domain =3D domain;
-+
-+		/* disable all interrupt sources of this channel firstly */
-+		writel_relaxed(0, data->regs + CHANIER(i));
-+
-+		irq_set_chained_handler_and_data(data->irqchip_data[i].irq,
-+						 imx_intmux_irq_handler,
-+						 &data->irqchip_data[i]);
-+	}
-+
-+	platform_set_drvdata(pdev, data);
-+
-+	return 0;
-+out:
-+	clk_disable_unprepare(data->ipg_clk);
-+	return ret;
-+}
-+
-+static int imx_intmux_remove(struct platform_device *pdev)
-+{
-+	struct intmux_data *data =3D platform_get_drvdata(pdev);
-+	int i;
-+
-+	for (i =3D 0; i < data->channum; i++) {
-+		/* disable all interrupt sources of this channel */
-+		writel_relaxed(0, data->regs + CHANIER(i));
-+
-+		irq_set_chained_handler_and_data(data->irqchip_data[i].irq,
-+						 NULL, NULL);
-+
-+		irq_domain_remove(data->irqchip_data[i].domain);
-+	}
-+
-+	clk_disable_unprepare(data->ipg_clk);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id imx_intmux_id[] =3D {
-+	{ .compatible =3D "fsl,imx-intmux", },
-+	{ /* sentinel */ },
-+};
-+
-+static struct platform_driver imx_intmux_driver =3D {
-+	.driver =3D {
-+		.name =3D "imx-intmux",
-+		.of_match_table =3D imx_intmux_id,
-+	},
-+	.probe =3D imx_intmux_probe,
-+	.remove =3D imx_intmux_remove,
-+};
-+builtin_platform_driver(imx_intmux_driver);
---=20
-2.17.1
+Thanks for the feedback. Due to the fact that the RFC depends
+on the proposed changes to the interconnect framework, I need
+to ensure that these three patches come first.
+
+If there is any disagreement over any of these three patches,
+the rest of the RFC might need to be modified. In such case,
+I will update the RFC and send the rest of v4 patches (for
+exynos-bus, exynos-mixer, and probably also exynos5-dmc).
+
+> On 1/16/20 11:41 PM, Artur Świgoń wrote:
+> > Previously posted as a part of a larger RFC: [1].
+> > 
+> > The Exynos SoC family relies on the devfreq driver for frequency
+> > scaling. However, a way to programmatically enforce QoS contraints
+> > (i.e., minimum frequency) is desired. A solution which uses the
+> > interconnect framework to ensure QoS is currently being developed[1].
+> > 
+> > The exynos-bus hierarchy is composed of multiple buses which are probed
+> > separately. Sometimes the DMC is even handled by a different driver.
+> > Since the exynos-bus driver is generic and supports multiple differing
+> > bus hierarchies, IDs for nodes (i.e. buses) are assigned dynamically. Due
+> > to the unspecified relative probing order, every bus registers its own
+> > interconnect provider.
+> > 
+> > Rationale for each patch in this series:
+> > * Patch 01 (exporting of_icc_get_from_provider()) makes it easy to
+> >   retrieve the parent node from the DT (cf. patch 05 in [1]).
+> > * Patch 02 (allowing #interconnect-cells = <0>) allows to remove dummy
+> >   node IDs from the DT.
+> > * Patch 03 (allowing inter-provider node pairs) is necessary to make
+> >   such multi-provider hierarchy work. A new approach implemented in v3
+> >   ensures not to break any existing drivers.
+> > 
+> > ---
+> > Changes since v3 (to patches in this series):
+> > * Improve commit messages.
+> > 
+> > ---
+> > Artur Świgoń
+> > Samsung R&D Institute Poland
+> > Samsung Electronics
+> > 
+> > ---
+> > References:
+> > [1] https://patchwork.kernel.org/patch/11305287/
+> > 
+> > Artur Świgoń (3):
+> >   interconnect: Export of_icc_get_from_provider()
+> >   interconnect: Relax requirement in of_icc_get_from_provider()
+> >   interconnect: Allow inter-provider pairs to be configured
+> > 
+> >  drivers/interconnect/core.c           | 16 ++++++++--------
+> >  include/linux/interconnect-provider.h |  8 ++++++++
+> >  2 files changed, 16 insertions(+), 8 deletions(-)
+> > 
+> 
+> 
+-- 
+Artur Świgoń
+Samsung R&D Institute Poland
+Samsung Electronics
+
 
