@@ -2,124 +2,124 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70535C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBCDC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C12B2064C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 345252072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:51:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579279900;
+	bh=iyYQNSR5fhGeuW5cKqX/JchIMbOEEsCgPajoa3HCsvE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iOaWcbK9vSX3KWFkz7CMwLXzJUztrTuLW0aNt4nrAOwL5s6wtacTm0c3zAG10Ywg3
+	 e7Gb377v8Ue86aLxMv8hFV7M7vzHyolyrCLs0uIbHpa610d8+U896ZdoqlPiKQkARx
+	 iMRYSt+Cs3Lx/1/qBLJL6xjJWKckpWP+fBu6QWc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728982AbgAQQuj (ORCPT
+        id S1728982AbgAQQvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 11:50:39 -0500
-Received: from mx2.suse.de ([195.135.220.15]:54064 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726554AbgAQQuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 11:50:39 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 33D23AFDC;
-        Fri, 17 Jan 2020 16:50:34 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 21DA6DA871; Fri, 17 Jan 2020 17:50:20 +0100 (CET)
-Date:   Fri, 17 Jan 2020 17:50:19 +0100
-From:   David Sterba <dsterba@suse.cz>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     David Sterba <dsterba@suse.cz>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Btrfs <linux-btrfs@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: linux-next: Tree for Dec 6 (objtool, lots in btrfs)
-Message-ID: <20200117165019.GM3929@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Btrfs <linux-btrfs@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-References: <c751bc1a-505c-5050-3c4c-c83be81b4e48@infradead.org>
- <20191212184725.db3ost7rcopotr5u@treble>
- <b9b0c81b-0ca8-dfb7-958f-cd58a449b6fb@infradead.org>
- <ba2a7a9b-933b-d4e4-8970-85b6c1291fca@infradead.org>
- <20191213235054.6k2lcnwa63r26zwi@treble>
- <c6a33c21-3e71-ac98-cc95-db008764917c@infradead.org>
- <20191214054515.ougsr5ykhl3vvy57@treble>
- <20191217152954.GH3929@suse.cz>
- <20200110194622.GS3929@twin.jikos.cz>
- <20200117152805.ncy3z34imzpchg7m@treble>
+        Fri, 17 Jan 2020 11:51:39 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:37769 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726559AbgAQQvj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 11:51:39 -0500
+Received: by mail-ed1-f66.google.com with SMTP id cy15so22896006edb.4;
+        Fri, 17 Jan 2020 08:51:37 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=96LG0GPidFH54SiCM0XDiVcbAovvK6mGYnlDshgyFRk=;
+        b=ZACNq0PBZx1aF+u30AEqD6OLmz3Cgnz4hm6rVpXBMoY62n1XVOMuvGT/SsmI3TeYQj
+         3b/N6T4ayIBXyp7kf1Uv341uIrU47z8OMkqQ/dkxkwqNFY5LI6yFOPBD/BjeBCu7K2X1
+         7Bf6FzbWsuPG7RfbJ5T6RfKSYYfUl+7zadkw0u15kAXS4p6zFmpHbB5McW4BK3mOpg/t
+         THikL7n5kZmSV8VxtCDg6eDu5H4y7UWCW4WDyl6srkGI3iT2vGN9kW4NFXKZAzf+GHH+
+         kSiOL0Mfr8sidjdeTp3EnDCZ1VA8D8A2145tL8/IVxtV6ojRnabbmg5oHFKew626nI7f
+         iWXw==
+X-Gm-Message-State: APjAAAV8vq1RBRhqTM0Bd52IdDA3cPX4RiBS3B+BXMQFLjxFPgAs7wir
+        E6AH4nFtSMBkq0AkZvUnqwM=
+X-Google-Smtp-Source: APXvYqyaZsIauOpq1X0POCeTjXRUEXNVExY8r79MwcWm5a05h47iWdsrJnU/Lpd7ANMzUquKS+XFLQ==
+X-Received: by 2002:a17:906:2db1:: with SMTP id g17mr8848463eji.240.1579279897085;
+        Fri, 17 Jan 2020 08:51:37 -0800 (PST)
+Received: from pi3 ([194.230.155.229])
+        by smtp.googlemail.com with ESMTPSA id z22sm1015705edq.79.2020.01.17.08.51.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2020 08:51:36 -0800 (PST)
+Date:   Fri, 17 Jan 2020 17:51:33 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Scott Mayhew <smayhew@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2] nfs: Return EINVAL rather than ERANGE for mount parse
+ errors
+Message-ID: <20200117165133.GA5762@pi3>
+References: <464519.1579276102@warthog.procyon.org.uk>
+ <20200117144055.GB3215@pi3>
+ <CAJKOXPeCVwZfBsCVbc9RQUGi0UfWQw0uFamPiQasiO8fSthFsQ@mail.gmail.com>
+ <433863.1579270803@warthog.procyon.org.uk>
+ <465149.1579276509@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200117152805.ncy3z34imzpchg7m@treble>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <465149.1579276509@warthog.procyon.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 09:28:05AM -0600, Josh Poimboeuf wrote:
-> On Fri, Jan 10, 2020 at 08:46:22PM +0100, David Sterba wrote:
-> > On Tue, Dec 17, 2019 at 04:29:54PM +0100, David Sterba wrote:
-> > > Separating the definitions by #ifdef looks ok, I'd rather do separate
-> > > definitions of ASSERT too, to avoid the ternary operator. I'll send the
-> > > patch.
-> > 
-> > Subject: [PATCH] btrfs: separate definition of assertion failure handlers
-> > 
-> > There's a report where objtool detects unreachable instructions, eg.:
-> > 
-> >   fs/btrfs/ctree.o: warning: objtool: btrfs_search_slot()+0x2d4: unreachable instruction
-> > 
-> > This seems to be a false positive due to compiler version. The cause is
-> > in the ASSERT macro implementation that does the conditional check as
-> > IS_DEFINED(CONFIG_BTRFS_ASSERT) and not an #ifdef.
-> > 
-> > To avoid that, use the ifdefs directly.
-> > 
-> > CC: Josh Poimboeuf <jpoimboe@redhat.com>
-> > Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> > Signed-off-by: David Sterba <dsterba@suse.com>
-> > ---
-> >  fs/btrfs/ctree.h | 20 ++++++++++++--------
-> >  1 file changed, 12 insertions(+), 8 deletions(-)
+On Fri, Jan 17, 2020 at 03:55:09PM +0000, David Howells wrote:
+> commit b9423c912b770e5b9e4228d90da92b6a69693d8e
+> Author: David Howells <dhowells@redhat.com>
+> Date:   Fri Jan 17 15:37:46 2020 +0000
 > 
-> This looks quite similar to my patch, would you mind giving me
-> attribution?
-
-So Co-developed-by: or "based on patch from Josh", or something else?
-
-> > diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
-> > index 569931dd0ce5..f90b82050d2d 100644
-> > --- a/fs/btrfs/ctree.h
-> > +++ b/fs/btrfs/ctree.h
-> > @@ -3157,17 +3157,21 @@ do {								\
-> >  	rcu_read_unlock();					\
-> >  } while (0)
-> >  
-> > -__cold
-> > -static inline void assfail(const char *expr, const char *file, int line)
-> > +#ifdef CONFIG_BTRFS_ASSERT
-> > +__cold __noreturn
-> > +static inline void assertfail(const char *expr, const char *file, int line)
-> >  {
-> > -	if (IS_ENABLED(CONFIG_BTRFS_ASSERT)) {
-> > -		pr_err("assertion failed: %s, in %s:%d\n", expr, file, line);
-> > -		BUG();
-> > -	}
-> > +	pr_err("assertion failed: %s, in %s:%d\n", expr, file, line);
-> > +	BUG();
+>     nfs: Return EINVAL rather than ERANGE for mount parse errors
+>     
+>     Return EINVAL rather than ERANGE for mount parse errors as the userspace
+>     mount command doesn't necessarily understand what to do with anything other
+>     than EINVAL.
+>     
+>     The old code returned -ERANGE as an intermediate error that then get
+>     converted to -EINVAL, whereas the new code returns -ERANGE.
+>     
+>     This was induced by passing minorversion=1 to a v4 mount where
+>     CONFIG_NFS_V4_1 was disabled in the kernel build.
+>     
+>     Fixes: 68f65ef40e1e ("NFS: Convert mount option parsing to use functionality from fs_parser.h")
+>     Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
+>     Signed-off-by: David Howells <dhowells@redhat.com>
 > 
-> assertfail() is definitely better than "assfail", but shouldn't you
-> update the callers so it doesn't break the build?
+> diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+> index 429315c011ae..74508ed9aeec 100644
+> --- a/fs/nfs/fs_context.c
+> +++ b/fs/nfs/fs_context.c
+> @@ -769,8 +769,7 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
+>  out_invalid_address:
+>  	return nfs_invalf(fc, "NFS: Bad IP address specified");
+>  out_of_bounds:
+> -	nfs_invalf(fc, "NFS: Value for '%s' out of range", param->key);
+> -	return -ERANGE;
+> +	return nfs_invalf(fc, "NFS: Value for '%s' out of range", param->key);
+>  }
+>  
+>  /*
 
-I don't understand what you mean, the helper is not called directly (and
-build does not fail with or without CONFIG_BTRFS_ASSERT), but always as
-ASSERT, so I don't see what needs to be updated.
+Yes, the boards boots up, thanks!
+
+Tested-by: Krzysztof Kozlowski <krzk@kernel.org>
+
+I did not run extensive tests but few boots show also 2-3 seconds faster
+mount of NFS root (faster switch from initramfs to proper user-space
+from NFS).
+
+Best regards,
+Krzysztof
+
