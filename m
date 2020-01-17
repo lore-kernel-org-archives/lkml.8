@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6030DC33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0232DC33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33D542467D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4E972467D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:43:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729437AbgAQRnO (ORCPT
+        id S1729787AbgAQRnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 12:43:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40012 "EHLO mail.kernel.org"
+        Fri, 17 Jan 2020 12:43:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729022AbgAQRla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729112AbgAQRla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 17 Jan 2020 12:41:30 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC20722522;
-        Fri, 17 Jan 2020 17:41:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20BDF24653;
+        Fri, 17 Jan 2020 17:41:30 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1isVce-000QQC-KQ; Fri, 17 Jan 2020 12:41:28 -0500
-Message-Id: <20200117174128.500939543@goodmis.org>
+        id 1isVcf-000QRl-1k; Fri, 17 Jan 2020 12:41:29 -0500
+Message-Id: <20200117174128.933104514@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Fri, 17 Jan 2020 12:41:19 -0500
+Date:   Fri, 17 Jan 2020 12:41:22 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org,
         linux-rt-users <linux-rt-users@vger.kernel.org>
@@ -39,10 +39,8 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         John Kacur <jkacur@redhat.com>,
         Julia Cartwright <julia@ni.com>,
         Daniel Wagner <wagi@monom.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Julien Grall <julien.grall@arm.com>
-Subject: [PATCH RT 08/32] hrtimer: Use READ_ONCE to access timer->base in
- hrimer_grab_expiry_lock()
+        Tom Zanussi <zanussi@kernel.org>
+Subject: [PATCH RT 11/32] hrtimer: Add a missing bracket and hide `migration_base on !SMP
 References: <20200117174111.282847363@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -56,40 +54,73 @@ If anyone has any objections, please let me know.
 
 ------------------
 
-From: Julien Grall <julien.grall@arm.com>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-[ Upstream commit 2c8fdbe7ef0ad06c1a326886c5954e117b5657d6 ]
+[ Upstream commit 47b6de0b7f22c28b40275aeede3993d807668c3b ]
 
-The update to timer->base is protected by the base->cpu_base->lock().
-However, hrtimer_grab_expirty_lock() does not access it with the lock.
+[ Upstream commit 5d2295f3a93b04986d069ebeaf5b07725f9096c1 ]
 
-So it would theorically be possible to have timer->base changed under
-our feet. We need to prevent the compiler to refetch timer->base so the
-check and the access is performed on the same base.
+The recent change to avoid taking the expiry lock when a timer is currently
+migrated missed to add a bracket at the end of the if statement leading to
+compile errors.  Since that commit the variable `migration_base' is always
+used but it is only available on SMP configuration thus leading to another
+compile error.  The changelog says "The timer base and base->cpu_base
+cannot be NULL in the code path", so it is safe to limit this check to SMP
+configurations only.
 
-Other access of timer->base are either done with a lock or protected
-with READ_ONCE(). So use READ_ONCE() in hrtimer_grab_expirty_lock().
+Add the missing bracket to the if statement and hide `migration_base'
+behind CONFIG_SMP bars.
 
-Signed-off-by: Julien Grall <julien.grall@arm.com>
+[ tglx: Mark the functions inline ... ]
+
+Fixes: 68b2c8c1e4210 ("hrtimer: Don't take expiry_lock when timer is currently migrated")
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190904145527.eah7z56ntwobqm6j@linutronix.de
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+[bigeasy: port back to RT]
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- kernel/time/hrtimer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/time/hrtimer.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index 94d97eae0a46..d6026c170c2d 100644
+index 1a5167c68310..e54a95de8b79 100644
 --- a/kernel/time/hrtimer.c
 +++ b/kernel/time/hrtimer.c
-@@ -941,7 +941,7 @@ EXPORT_SYMBOL_GPL(hrtimer_forward);
+@@ -150,6 +150,11 @@ static struct hrtimer_cpu_base migration_cpu_base = {
  
- void hrtimer_grab_expiry_lock(const struct hrtimer *timer)
+ #define migration_base	migration_cpu_base.clock_base[0]
+ 
++static inline bool is_migration_base(struct hrtimer_clock_base *base)
++{
++	return base == &migration_base;
++}
++
+ /*
+  * We are using hashed locking: holding per_cpu(hrtimer_bases)[n].lock
+  * means that all timers which are tied to this base via timer->base are
+@@ -274,6 +279,11 @@ switch_hrtimer_base(struct hrtimer *timer, struct hrtimer_clock_base *base,
+ 
+ #else /* CONFIG_SMP */
+ 
++static inline bool is_migration_base(struct hrtimer_clock_base *base)
++{
++	return false;
++}
++
+ static inline struct hrtimer_clock_base *
+ lock_hrtimer_base(const struct hrtimer *timer, unsigned long *flags)
  {
--	struct hrtimer_clock_base *base = timer->base;
-+	struct hrtimer_clock_base *base = READ_ONCE(timer->base);
+@@ -943,7 +953,7 @@ void hrtimer_grab_expiry_lock(const struct hrtimer *timer)
+ {
+ 	struct hrtimer_clock_base *base = READ_ONCE(timer->base);
  
- 	if (base && base->cpu_base) {
+-	if (timer->is_soft && base != &migration_base) {
++	if (timer->is_soft && is_migration_base(base)) {
  		spin_lock(&base->cpu_base->softirq_expiry_lock);
+ 		spin_unlock(&base->cpu_base->softirq_expiry_lock);
+ 	}
 -- 
 2.24.1
 
