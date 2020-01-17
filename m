@@ -2,88 +2,112 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC9AC33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0584DC33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0527B2072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:11:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDEFC2072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:12:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RSMVzOWH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ExrQy03a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729158AbgAQPLy (ORCPT
+        id S1729050AbgAQPMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 10:11:54 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:34568 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729140AbgAQPLx (ORCPT
+        Fri, 17 Jan 2020 10:12:48 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:40345 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728739AbgAQPMr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 10:11:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=6XkN9OOxlWNG+NnNqQFZrrwnqRAB2I/Nrd6IFwG7+RY=; b=RSMVzOWHXhbXk5ybQd1Ac8U8n
-        mr0pOzNXDL8GNif+bLGGz7kTu4dfR9Y1ATuXasz97lbZ1uSNU6Q58wCj9hxLDKAuMt2FE0HikFYZG
-        yyGJwwGolFaHsIqxQOF7T2DRetuhzhzVGLPxzN6E8XC/2Oyy8RiIf8AiH90jcTM5ZXFUUaV9KpiM/
-        Ua1abFQGKzfocrNi/931/DqM8YWzhPVSZh6QsfT6FaaW5JP44iTAfBwj0eV1UURyCU/CbQ7uJFDLC
-        QyNDoFvCbEAAkPyfLJghZPnoXNvSz+LOsiKqvwObJHceNoJbQgkY7sykpk8cmUEh8TR/jvPQgPRmi
-        I0q0iEddQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1isTHZ-0006sX-K9; Fri, 17 Jan 2020 15:11:33 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 143B3300F4B;
-        Fri, 17 Jan 2020 16:09:54 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 492602020D8FC; Fri, 17 Jan 2020 16:11:31 +0100 (CET)
-Date:   Fri, 17 Jan 2020 16:11:31 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Mel Gorman <mgorman@techsingularity.net>,
-        Phil Auld <pauld@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Parth Shah <parth@linux.ibm.com>,
-        Rik van Riel <riel@surriel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] sched, fair: Allow a small load imbalance between low
- utilisation SD_NUMA domains v4
-Message-ID: <20200117151131.GG14879@hirez.programming.kicks-ass.net>
-References: <20200114101319.GO3466@techsingularity.net>
- <CAKfTPtC7zuvWym8tSxXx6d+FhiSsedrS5sRZZagR5B7pXgZewA@mail.gmail.com>
+        Fri, 17 Jan 2020 10:12:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579273965;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=fMvdkxieshf5qMjWzbe24xoi8/IPuS4Clb2g2FTl2C0=;
+        b=ExrQy03aVacZicLDVAEg+YPyZqSw0F8cNaDFGPPWWcL9pvAvLv60PZnfQhgbs3vPTRpvwx
+        +IU/AOeje4x16TiURg9n1bXUd98SzfC9dhRvsCffHPDIOiQj5xYwhKw0clgRh60T+Gw2ZK
+        qZZhEP3VQpqL4wtb7GT25mIYvRq3btw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-344-EvqXYFZrOwil26R6rgB_qw-1; Fri, 17 Jan 2020 10:12:42 -0500
+X-MC-Unique: EvqXYFZrOwil26R6rgB_qw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BB0301800D4F;
+        Fri, 17 Jan 2020 15:12:40 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-49.rdu2.redhat.com [10.10.120.49])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1274B81201;
+        Fri, 17 Jan 2020 15:12:38 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200117144055.GB3215@pi3>
+References: <20200117144055.GB3215@pi3> <CAJKOXPeCVwZfBsCVbc9RQUGi0UfWQw0uFamPiQasiO8fSthFsQ@mail.gmail.com> <433863.1579270803@warthog.procyon.org.uk>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     dhowells@redhat.com,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Scott Mayhew <smayhew@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [BISECT BUG] NFS v4 root not working after 6d972518b821 ("NFS: Add fs_context support.")
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtC7zuvWym8tSxXx6d+FhiSsedrS5sRZZagR5B7pXgZewA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <461539.1579273958.1@warthog.procyon.org.uk>
+Date:   Fri, 17 Jan 2020 15:12:38 +0000
+Message-ID: <461540.1579273958@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 04:09:33PM +0100, Vincent Guittot wrote:
-> On Tue, 14 Jan 2020 at 11:13, Mel Gorman <mgorman@techsingularity.net> wrote:
+Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-> > In general, the patch simply seeks to avoid unnecessary cross-node
-> > migrations in the basic case where imbalances are very small.  For low
-> > utilisation communicating workloads, this patch generally behaves better
-> > with less NUMA balancing activity. For high utilisation, there is no
-> > change in behaviour.
-> >
-> > Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-> 
-> Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+> mount.nfs4 -o vers=4,nolock 192.168.1.10:/srv/nfs/odroidhc1 /new_root
 
-Thanks all!
+Okay, it looks like the mount command makes two attempts at mounting.
+Firstly, it does this:
+
+> [   22.938314] NFSOP 'source=192.168.1.10:/srv/nfs/odroidhc1'
+> [   22.942638] NFSOP 'nolock=(null)'
+> [   22.945772] NFSOP 'vers=4.2'
+> [   22.948660] NFSOP 'addr=192.168.1.10'
+> [   22.952350] NFSOP 'clientaddr=192.168.1.12'
+> [   22.956831] NFS4: Couldn't follow remote path
+
+Which accepts the "vers=4.2" parameter as there's no check that that is
+actually valid given the configuration, but then fails later.  Secondly, it
+does this:
+
+> [   22.971001] NFSOP 'source=192.168.1.10:/srv/nfs/odroidhc1'
+> [   22.975217] NFSOP 'nolock=(null)'
+> [   22.978444] NFSOP 'vers=4'
+> [   22.981265] NFSOP 'minorversion=1'
+> [   22.984513] NFS: Value for 'minorversion' out of range
+> mount.nfs4: Numerical result out of range
+
+which fails because of the minorversion=1 specification, where the kernel
+config didn't enable NFS_V4_1.
+
+It looks like it ought to have failed prior to these patches in the same way:
+
+		case Opt_minorversion:
+			if (nfs_get_option_ul(args, &option))
+				goto out_invalid_value;
+			if (option > NFS4_MAX_MINOR_VERSION)
+				goto out_invalid_value;
+			mnt->minorversion = option;
+			break;
+
+David
+
