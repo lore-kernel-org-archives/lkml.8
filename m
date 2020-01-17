@@ -2,111 +2,124 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A40CEC33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CF6C33CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79A2C2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:46:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579257976;
-	bh=2e9+N0hqL/50u6+X//maOUo2iUMLlVxVXjZBsTZFcCg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=W+fzqJd0MEpKmqtPoOYOFioFEimD4sXd/tcDzPZ2S7Z5TTb//+8XmDCs/n1APMymR
-	 MAzmSOrCRpVOTn4RHO3XMz6MnO+1+sgnJgXvkTGLfi5z0THuyuYEOx7nqpNMo5FaDN
-	 KHGgLPPPAQoX0L8NUNIu7KhMtaaFyutyM6KniyR8=
+	by mail.kernel.org (Postfix) with ESMTP id E4AEC2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:48:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbgAQKqP (ORCPT
+        id S1728813AbgAQKsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 05:46:15 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:44420 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgAQKqP (ORCPT
+        Fri, 17 Jan 2020 05:48:16 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:42832 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726553AbgAQKsP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 05:46:15 -0500
-Received: by mail-lf1-f66.google.com with SMTP id v201so17957652lfa.11;
-        Fri, 17 Jan 2020 02:46:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8jgHsmJwPHMIlC0HcDCT8ZD+TRcaXxlZELNYlF3LKZY=;
-        b=pj0drvNwtZsKmxGu1XWnkVg0SV0yMeEnYeOdHirOL0/qsgDrfMEfbrLRDqNfQG8M2Z
-         rySvklceeBcLvLdtczBvdxRcve4zX0M7WG1NLrG04tcQfwIWMuGewrCB9QW6qpbJkfOn
-         SRyUNc/h9jePw+Wbp7EyDoCludOEGNAbIy/CYlZb2D/SYm/AWtoI/MEaWpRXrGELk6Ow
-         QxEDt01C/rDD2NvvvHSoVweL3pF7xxhdsDAtjgl3/xlb1JWN+YHt4SrbXPHqJC3xVX9C
-         2C8RdhSzTwByO1tk4vudDXHPl+m70bOL/jIn3xxyN8Y7pKctZAm8mpwhDZuVIRsr4w8r
-         RFVg==
-X-Gm-Message-State: APjAAAX0KJekWh6GI3OIRzCHZ+Cl0NN519WXd8WwrM5UCrJYaKJZ3kbp
-        Rdoou/u9zOXjPqhsD+UeD23veozw
-X-Google-Smtp-Source: APXvYqxi/K6htkK284Rv6M81KJynrrAskgHoyO/TVif8r0RPYjT4Zw4f1JU7qDM5J4LbQ3cBAca4gQ==
-X-Received: by 2002:a19:7015:: with SMTP id h21mr4988560lfc.68.1579257973228;
-        Fri, 17 Jan 2020 02:46:13 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id t10sm12066002lji.61.2020.01.17.02.46.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 02:46:12 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1isP8m-0001ib-2d; Fri, 17 Jan 2020 11:46:12 +0100
-Date:   Fri, 17 Jan 2020 11:46:12 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] USB: serial: garmin_gps: Use flexible-array member
-Message-ID: <20200117104612.GT2301@localhost>
-References: <20200116220327.GA12537@embeddedor.com>
+        Fri, 17 Jan 2020 05:48:15 -0500
+X-AuditID: c0a8fbf4-199ff70000001fa6-80-5e2190ed649b
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 09.2B.08102.DE0912E5; Fri, 17 Jan 2020 11:48:13 +0100 (CET)
+Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0439.000; Fri, 17 Jan 2020 11:48:08 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "lee.jones@linaro.org" <lee.jones@linaro.org>
+CC:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "broonie@kernel.org" <broonie@kernel.org>
+Subject: Re: [PATCH v10 00/13] Support ROHM BD71828 PMIC
+Thread-Topic: [PATCH v10 00/13] Support ROHM BD71828 PMIC
+Thread-Index: AQHVzRi5yTX4egnFhE+K8HvJn6t48qfuly8AgAAFDwA=
+Date:   Fri, 17 Jan 2020 10:48:07 +0000
+Message-ID: <9785531484b32da487a6016f5c32bf2e9bc45985.camel@fi.rohmeurope.com>
+References: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
+         <20200117103000.GG15507@dell>
+In-Reply-To: <20200117103000.GG15507@dell>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <35BA07293542E7478D19B7C2046172B3@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200116220327.GA12537@embeddedor.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Tb0wTZxjPe3e9e6nUvFQqr2y6cNnm6jKRZCbvDC5kA3PL4rJlnzaz4jne
+        0U5o4VoMOj8wI2HWubHMxqxp0TBAQpnaMjLXYTAMHCvRpcofjRYtoBtuasyQDiWwO06FT/e7
+        5/fv+fC8kDUn+WzocHqo4pTLRN7InW19FH7lTn2ObUP8b0Sa4kMCqbvbIpCpYIwjvuQET472
+        XjCQgwM/GsjVzlMcuf6gD5DpwS8Ycnj2OEPufzlqIB1HZwG5FA3wpPOfE4CcCw3ypHkkzpBA
+        cz9H4rEikoj18aT2TK9A5obDXIFFam9oB9K9y7WC1ND+mfSzPyFIkbYDvHRtuIuXfrv8EyMd
+        aZhhpNZQSpD+jax51/jhsvwdsmfX+45SZ+7r25fZfdE4VzFhqb7n6wY1IGDxgjSI0av4nPe4
+        4AVGaEZDAP96s43Xf/oBPnL+IfACCHmUj71XBM2QifJwU/9NTtOwqAnib2OjQCNWIIJbQsO8
+        LnoNj39+Eeh4E56PDCzMOfQC/qHjz4UgE3oHz/wysKAxI4rDU3cW5mloHb4xHec0DNBqfKDm
+        LqNhFmXhyK2UQd8a4aauP1gdW/Dk+NzjuYjPzCQ5bWcWWfHJaK5uLcCB2TCn4xx8+GDy8QoZ
+        +PfvJrh6sNK/pMG/6PYvcfuXuP1L3MeAoQ3gctlRVip7aN56hVatV1z2cvXzsas8AvSTmToN
+        5nve6gEMBD1gFWREiymza7XNvHyHq2S3XXbbi5WqMuruARiyYqYpcSjHZjaVyLv3UMX1hHoG
+        cmKWaW3ym4/MSOvaSWkFVZ6wz0IoYtPQV6oxQ6GltPoTR5lnkWZgmhZuzM50U2cJVeQqj71Y
+        u49it3ogGpWu9jq+1nrdFXK5OtWtMfAyrJ8MNrKwN9jcyJo5p8tJs7NMNftVKdKk9irn06Lb
+        IAsCcYUJaEHp6rt5mnNbrWDUivo312gVHnmRyq4BlXvfyPhr1wfv1Q0weM+YP3Di+fkXCyNp
+        Hb6G7jAYD0bHbvW9PRblbNP5LutzdJ+zszF1qKuocMvZl8R0X0t3ImdwrXVqa+Hyk8GK7pHK
+        /yZSI9us5oLUlsGtlZ8+uiBc33yjaC40mdtKa8WNYkgwgrqErUUYjbSe/35jtfUBFTm3Xc5b
+        xypu+X/mwo329AMAAA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 04:03:27PM -0600, Gustavo A. R. Silva wrote:
-> Old code in the kernel uses 1-byte and 0-byte arrays to indicate the
-> presence of a "variable length array":
-> 
-> struct something {
->     int length;
->     u8 data[1];
-> };
-> 
-> struct something *instance;
-> 
-> instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
-> instance->length = size;
-> memcpy(instance->data, source, size);
-> 
-> There is also 0-byte arrays. Both cases pose confusion for things like
-> sizeof(), CONFIG_FORTIFY_SOURCE, etc.[1] Instead, the preferred mechanism
-> to declare variable-length types such as the one above is a flexible array
-> member[2] which need to be the last member of a structure and empty-sized:
-> 
-> struct something {
->         int stuff;
->         u8 data[];
-> };
-> 
-> Also, by making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> unadvertenly introduced[3] to the codebase from now on.
-> 
-> [1] https://github.com/KSPP/linux/issues/21
-> [2] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-
-Applied, thanks.
-
-Johan
+DQpPbiBGcmksIDIwMjAtMDEtMTcgYXQgMTA6MzAgKzAwMDAsIExlZSBKb25lcyB3cm90ZToNCj4g
+T24gRnJpLCAxNyBKYW4gMjAyMCwgTWF0dGkgVmFpdHRpbmVuIHdyb3RlOg0KPiANCj4gPiBQYXRj
+aCBzZXJpZXMgaW50cm9kdWNpbmcgc3VwcG9ydCBmb3IgUk9ITSBCRDcxODI4IFBNSUMNCj4gPiAN
+Cj4gPiBST0hNIEJENzE4MjggaXMgYSBwb3dlciBtYW5hZ2VtZW50IElDIGNvbnRhaW5pbmcgNyBi
+dWNrcyBhbmQgNw0KPiA+IExET3MuIEFsbA0KPiA+IHJlZ3VsYXRvcnMgY2FuIGJlIGNvbnRyb2xs
+ZWQgaW5kaXZpZHVhbGx5IHZpYSBJMkMuIEJ1Y2tzIDEsMiw2IGFuZA0KPiA+IDcgY2FuIGFsc28g
+YmUgYXNzaWduZWQgdG8gYSAicmVndWxhdG9yIGdyb3VwIiBjb250cm9sbGVkIGJ5IHJ1bi0NCj4g
+PiBsZXZlbHMuDQo+ID4gRWcuIFJ1biBsZXZlbCBzcGVjaWZpYyB2b2x0YWdlcyBhbmQgZW5hYmxl
+L2Rpc2FibGUgc3RhdHVzZXMgZm9yDQo+ID4gZWFjaCBvZg0KPiA+IHRoZXNlIGJ1Y2tzIGNhbiBi
+ZSBzZXQgdmlhIHJlZ2lzdGVyIGludGVyZmFjZS4gVGhlIGJ1Y2sgcnVuLWxldmVsDQo+ID4gZ3Jv
+dXANCj4gPiBhc3NpZ25tZW50IChzZWxlY3Rpb24gaWYgYnVjayBpcyB0byBiZSBjb250cm9sbGVk
+IGluZGl2aWR1YWxseSBvcg0KPiA+IHZpYQ0KPiA+IHJ1bi1sZXZlbHMpIGNhbiBiZSBjaGFuZ2Vk
+IGF0IHJ1bi10aW1lIHZpYSBJMkMuDQo+ID4gDQo+ID4gVGhpcyBwYXRjaCBzZXJpZXMgYnJpbmdz
+IG9ubHkgdGhlIGJhc2ljIHN1cHBvcnQgZm9yIGNvbnRyb2xsaW5nDQo+ID4gcmVndWxhdG9ycyBp
+bmRpdmlkdWFsbHkgdmlhIEkyQy4NCj4gPiANCj4gPiBJbiBhZGRpdGlvbiB0byB0aGUgYnVja3Mg
+YW5kIExET3MgdGhlcmUgYXJlOg0KPiA+IA0KPiA+IC0gVGhlIHVzdWFsIGNsayBnYXRlDQo+ID4g
+LSA0IElPIHBpbnMgKG1vc3RseSB1c2FibGUgYXMgR1BPIG9yIHRpZWQgdG8gc3BlY2lmaWMgcHVy
+cG9zZSkNCj4gPiAtIHBvd2VyIGJ1dHRvbiBzdXBwb3J0DQo+ID4gLSBSVEMNCj4gPiAtIHR3byBM
+RURzDQo+ID4gLSBiYXR0ZXJ5IGNoYXJnZXINCj4gPiAtIEhBTEwgc2Vuc29yIGlucHV0DQo+ID4g
+DQo+ID4gVGhpcyBwYXRjaCBzZXJpZXMgYWRkcyBzdXBwb3J0IHRvIHJlZ3VsYXRvcnMsIGNsaywg
+UlRDLCBHUElPcyBhbmQNCj4gPiBMRURzLg0KPiA+IA0KPiA+IFBvd2VyLXN1cHBseSBkcml2ZXIg
+Zm9yIGNoYXJnZXIgaXMgbm90IGluY2x1ZGVkIGluIHRoaXMgc2VyaWVzLg0KPiA+IA0KPiA+IFRo
+ZSBzZXJpZXMgYWxzbyBhZGRzIExFRCBEVC1ub2RlIGxvb2t1cCBiYXNlZCBvbiBub2RlIG5hbWUg
+b3IgZ2l2ZW4NCj4gPiBwcm9wZXJ0eSBuYW1lL3ZhbHVlIHBhaXIgaW4gTEVEIGNvcmUuIEl0IGFs
+c28gYWRkcyBnZW5lcmljIGRlZmF1bHQtDQo+ID4gc3RhdGUNCj4gPiBhbmQgZGVmYXVsdC10cmln
+Z2VyIHByb3BlcnR5IGhhbmRsaW5nIHRvIExFRCBjb3JlLiBGb2xsb3ctdXANCj4gPiBwYXRjaGVz
+DQo+ID4gc2ltcGxpZnlpbmcgZmV3IG90aGVyIExFRCBkcml2ZXJzIHNob3VsZCBmb2xsb3cuDQo+
+ID4gDQo+ID4gQ2hhbmdlbG9nIHYxMDoNCj4gPiAgIC0gU3BsaXQgUlRDIHBhdGNoIHRvIGEgQkQ3
+MDUyOCBmaXggKHdoaWNoIGhvcGVmdWxseSBnb2VzIHRvIDUuNCkNCj4gPiBhbmQgdG8NCj4gPiAg
+ICAgQkQ3MTgyOCBzdXBwb3J0DQo+IA0KPiBTdGlsbCBtaXNzaW5nIExFRCBBY2tzLg0KPiANCg0K
+WWVwLiBJIGtub3cuIEkgaGF2ZW4ndCBoZWFyZCBmcm9tIFBhdmVsIHJlY2VudGx5IGFuZCB0aGUg
+cGF0Y2ggMTINCmRlZmluaXRlbHkgcmVxdWlyZXMgaGlzIGFjay4gQ2FuIHlvdSB0YWtlIHRoZSBv
+dGhlciBwYXRjaGVzIGluIGFuZA0KbGVhdmUgMTIgYW5kIDEzIG91dCBmb3Igbm93PyBJIGNhbiBj
+b250aW51ZSB3b3JrIG9uIExFRHMgd2l0aCBQYXZlbCBidXQNCkkgd291bGQgcmVhbGx5IGxpa2Ug
+dG8gaGF2ZSB0aGUgcmVndWxhdG9ycyB3b3JraW5nIGFuZCBCRDcwNTI4IFJUQw0KZml4ZWQgaW4g
+bmV4dCByZWxlYXNlLi4uDQoNCkJyLA0KCU1hdHRpIFZhaXR0aW5lbg0K
