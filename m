@@ -2,120 +2,185 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49518C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 19:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE87C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 19:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 237382082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 19:34:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TT8zNjpu"
+	by mail.kernel.org (Postfix) with ESMTP id D17182082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 19:34:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729708AbgAQTew (ORCPT
+        id S1729650AbgAQTet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 14:34:52 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:46427 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729674AbgAQTeu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 14:34:50 -0500
-Received: by mail-oi1-f193.google.com with SMTP id 13so23171662oij.13
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 11:34:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wnbjoT0j5ag9BS3W7d99gmYHDerGz9fZIduxI8d9DlM=;
-        b=TT8zNjpuzdDlDWtxUF3ROPfakHa88TVeTCCzR5vCXgxUY7gnjtDdV908bvnyE5y4oV
-         QU36Uh70B8zBcLbEC5WsV9OQuSgknaM4MnZ+6jDRyDTKzq1HngpAdAAs3mElPkgX1Ngs
-         w8RxWNVZZmLjGd/pbBFQ57NF0JHpuxd7a1wSLqAAJwqSwurny5s+HaCNXAxlSd2TrGbE
-         I0HJnlRsjj6jLQu5Cu7qeoUYEz1c4KM83fzEb63Qt4ALXNdDhAqG60fYhmckugqonIpN
-         Q31HLAuMmqxdrdOBjnJmAuE2XH93asNdBTd9rXjxonqLYa1bomCyyydoau0rPmn4pocx
-         0aNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wnbjoT0j5ag9BS3W7d99gmYHDerGz9fZIduxI8d9DlM=;
-        b=G7Y5yeFPTMlAKdAgjhLO0uC3Ko0DNf+H8dFqrMjvUIjjqrnI0Z2l6fmXP3pBm+gpz3
-         Eul0aTa1MRd5edQFji93vU6ZwCSNqL8rT/801M7gVhI4V6yTiLx4AtBbZNZBw7G514X/
-         xq/KAVjucTIBJEuv8LRHEuRofnEyHqJdUpmIIkEzSgEKWR2CrBcAGZkqLP6zr/YoHu8c
-         KzOCB+F+8qjDZduXhxTfy/pbQ6GFqDT6yoshoN8vBgokYKVkvs37fjuxdbsDj36Kuqom
-         mG3cEouXS8B98znnorWcNYJyJ2o3KRU8VP1T9v9K+wYee1gM7n1yx25sTFOk7UFUkEp/
-         layQ==
-X-Gm-Message-State: APjAAAXjff752BU2wqsD7S4hrg0VDRLvecJN3TzN2AxJIzsOX2Cq2o2X
-        3xXqhE8VZzjTcUoMFmKpnh/Iv51F1StbIH5lkjDTUw==
-X-Google-Smtp-Source: APXvYqxLvi0jqyJq4c6XDMG40T2xm371zP61sFys+Wn5Kv1PErBnDGHtInooR+MBkC+FWhdeiq5hF2mMsauFR8qAt28=
-X-Received: by 2002:aca:ed57:: with SMTP id l84mr4713560oih.8.1579289689665;
- Fri, 17 Jan 2020 11:34:49 -0800 (PST)
+        Fri, 17 Jan 2020 14:34:49 -0500
+Received: from mga18.intel.com ([134.134.136.126]:18188 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729557AbgAQTei (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 14:34:38 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 11:30:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,331,1574150400"; 
+   d="scan'208";a="274474203"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
+  by FMSMGA003.fm.intel.com with ESMTP; 17 Jan 2020 11:30:54 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Derek Yerger <derek@djy.llc>,
+        kernel@najdan.com, Thomas Lambertz <mail@thomaslambertz.de>,
+        Rik van Riel <riel@surriel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Borislav Petkov <bp@suse.de>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v2 3/4] KVM: x86: Revert "KVM: X86: Fix fpu state crash in kvm guest"
+Date:   Fri, 17 Jan 2020 11:30:51 -0800
+Message-Id: <20200117193052.1339-4-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200117193052.1339-1-sean.j.christopherson@intel.com>
+References: <20200117193052.1339-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-References: <20200115012651.228058-1-almasrymina@google.com>
- <20200115012651.228058-2-almasrymina@google.com> <7e1d2c5f-3b07-4d16-9e1b-bd89d25e7fb3@oracle.com>
-In-Reply-To: <7e1d2c5f-3b07-4d16-9e1b-bd89d25e7fb3@oracle.com>
-From:   Mina Almasry <almasrymina@google.com>
-Date:   Fri, 17 Jan 2020 11:34:38 -0800
-Message-ID: <CAHS8izMRrOOMV3v3gEuFHcX-YfQ5YOywGFu+K4-9zMXrAGFYbQ@mail.gmail.com>
-Subject: Re: [PATCH v10 2/8] hugetlb_cgroup: add interface for charge/uncharge
- hugetlb reservations
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeelb@google.com>, shuah <shuah@kernel.org>,
-        Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org,
-        Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 11:26 AM Mike Kravetz <mike.kravetz@oracle.com> wrote:
->
-> On 1/14/20 5:26 PM, Mina Almasry wrote:
-> > Augments hugetlb_cgroup_charge_cgroup to be able to charge hugetlb
-> > usage or hugetlb reservation counter.
-> >
-> > Adds a new interface to uncharge a hugetlb_cgroup counter via
-> > hugetlb_cgroup_uncharge_counter.
-> >
-> > Integrates the counter with hugetlb_cgroup, via hugetlb_cgroup_init,
-> > hugetlb_cgroup_have_usage, and hugetlb_cgroup_css_offline.
-> >
-> > Signed-off-by: Mina Almasry <almasrymina@google.com>
-> >
-> > ---
-> >
-> > Changes in v10:
-> > - Added missing VM_BUG_ON
->
-> Thanks for addressing my comments.
-> I see that patch 8 was updated to address David's comments.  I will also
-> review patch 8 later.
->
-> I am again requesting that someone with more cgroup experience comment on
-> this patch.  I do not have enough experience to determine if the code to
-> not reparent/zombie cgroup is correct.
->
+Reload the current thread's FPU state, which contains the guest's FPU
+state, to the CPU registers if necessary during vcpu_enter_guest().
+TIF_NEED_FPU_LOAD can be set any time control is transferred out of KVM,
+e.g. if I/O is triggered during a KVM call to get_user_pages() or if a
+softirq occurs while KVM is scheduled in.
 
-Thank you very much for your continued reviews and I'm sorry I'm
-having so much trouble getting anyone with cgroup experience to look
-deeply into this. My guess is that it's not very active feature and
-the patchseries is long and complex so folks are not interested.
-Nevertheless I'm continually poking David and Shakeel and they will
-hopefully continue to look into this.
+Moving the handling of TIF_NEED_FPU_LOAD from vcpu_enter_guest() to
+kvm_arch_vcpu_load(), effectively kvm_sched_in(), papered over a bug
+where kvm_put_guest_fpu() failed to account for TIF_NEED_FPU_LOAD.  The
+easiest way to the kvm_put_guest_fpu() bug was to run with involuntary
+preemption enable, thus handling TIF_NEED_FPU_LOAD during kvm_sched_in()
+made the bug go away.  But, removing the handling in vcpu_enter_guest()
+exposed KVM to the rare case of a softirq triggering kernel_fpu_begin()
+between vcpu_load() and vcpu_enter_guest().
 
-FWIW, I have a test for repartenting/counting zombies and the tests at
-least don't uncover any problems.
+Now that kvm_{load,put}_guest_fpu() correctly handle TIF_NEED_FPU_LOAD,
+revert the commit to both restore the vcpu_enter_guest() behavior and
+eliminate the superfluous switch_fpu_return() in kvm_arch_vcpu_load().
 
-> For now,
-> Acked-by: Mike Kravetz <mike.kravetz@oracle.com>
-> while waiting for cgroup comments.
->
-> --
-> Mike Kravetz
+Note, leaving the handling in kvm_arch_vcpu_load() isn't wrong per se,
+but it is unnecessary, and most critically, makes it extremely difficult
+to find bugs such as the kvm_put_guest_fpu() issue due to shrinking the
+window where a softirq can corrupt state.
+
+A sample trace triggered by warning if TIF_NEED_FPU_LOAD is set while
+vcpu state is loaded:
+
+ <IRQ>
+  gcmaes_crypt_by_sg.constprop.12+0x26e/0x660
+  ? 0xffffffffc024547d
+  ? __qdisc_run+0x83/0x510
+  ? __dev_queue_xmit+0x45e/0x990
+  ? ip_finish_output2+0x1a8/0x570
+  ? fib4_rule_action+0x61/0x70
+  ? fib4_rule_action+0x70/0x70
+  ? fib_rules_lookup+0x13f/0x1c0
+  ? helper_rfc4106_decrypt+0x82/0xa0
+  ? crypto_aead_decrypt+0x40/0x70
+  ? crypto_aead_decrypt+0x40/0x70
+  ? crypto_aead_decrypt+0x40/0x70
+  ? esp_output_tail+0x8f4/0xa5a [esp4]
+  ? skb_ext_add+0xd3/0x170
+  ? xfrm_input+0x7a6/0x12c0
+  ? xfrm4_rcv_encap+0xae/0xd0
+  ? xfrm4_transport_finish+0x200/0x200
+  ? udp_queue_rcv_one_skb+0x1ba/0x460
+  ? udp_unicast_rcv_skb.isra.63+0x72/0x90
+  ? __udp4_lib_rcv+0x51b/0xb00
+  ? ip_protocol_deliver_rcu+0xd2/0x1c0
+  ? ip_local_deliver_finish+0x44/0x50
+  ? ip_local_deliver+0xe0/0xf0
+  ? ip_protocol_deliver_rcu+0x1c0/0x1c0
+  ? ip_rcv+0xbc/0xd0
+  ? ip_rcv_finish_core.isra.19+0x380/0x380
+  ? __netif_receive_skb_one_core+0x7e/0x90
+  ? netif_receive_skb_internal+0x3d/0xb0
+  ? napi_gro_receive+0xed/0x150
+  ? 0xffffffffc0243c77
+  ? net_rx_action+0x149/0x3b0
+  ? __do_softirq+0xe4/0x2f8
+  ? handle_irq_event_percpu+0x6a/0x80
+  ? irq_exit+0xe6/0xf0
+  ? do_IRQ+0x7f/0xd0
+  ? common_interrupt+0xf/0xf
+  </IRQ>
+  ? irq_entries_start+0x20/0x660
+  ? vmx_get_interrupt_shadow+0x2f0/0x710 [kvm_intel]
+  ? kvm_set_msr_common+0xfc7/0x2380 [kvm]
+  ? recalibrate_cpu_khz+0x10/0x10
+  ? ktime_get+0x3a/0xa0
+  ? kvm_arch_vcpu_ioctl_run+0x107/0x560 [kvm]
+  ? kvm_init+0x6bf/0xd00 [kvm]
+  ? __seccomp_filter+0x7a/0x680
+  ? do_vfs_ioctl+0xa4/0x630
+  ? security_file_ioctl+0x32/0x50
+  ? ksys_ioctl+0x60/0x90
+  ? __x64_sys_ioctl+0x16/0x20
+  ? do_syscall_64+0x5f/0x1a0
+  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
+---[ end trace 9564a1ccad733a90 ]---
+
+This reverts commit e751732486eb3f159089a64d1901992b1357e7cc.
+
+Fixes: e751732486eb3 ("KVM: X86: Fix fpu state crash in kvm guest")
+Reported-by: Derek Yerger <derek@djy.llc>
+Reported-by: kernel@najdan.com
+Cc: Wanpeng Li <wanpengli@tencent.com>
+Cc: Thomas Lambertz <mail@thomaslambertz.de>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/kvm/x86.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 0bbf0110bef7..815c93cf551b 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -3458,10 +3458,6 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+ 
+ 	kvm_x86_ops->vcpu_load(vcpu, cpu);
+ 
+-	fpregs_assert_state_consistent();
+-	if (test_thread_flag(TIF_NEED_FPU_LOAD))
+-		switch_fpu_return();
+-
+ 	/* Apply any externally detected TSC adjustments (due to suspend) */
+ 	if (unlikely(vcpu->arch.tsc_offset_adjustment)) {
+ 		adjust_tsc_offset_host(vcpu, vcpu->arch.tsc_offset_adjustment);
+@@ -8198,8 +8194,9 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 	trace_kvm_entry(vcpu->vcpu_id);
+ 	guest_enter_irqoff();
+ 
+-	/* The preempt notifier should have taken care of the FPU already.  */
+-	WARN_ON_ONCE(test_thread_flag(TIF_NEED_FPU_LOAD));
++	fpregs_assert_state_consistent();
++	if (test_thread_flag(TIF_NEED_FPU_LOAD))
++		switch_fpu_return();
+ 
+ 	if (unlikely(vcpu->arch.switch_db_regs)) {
+ 		set_debugreg(0, 7);
+-- 
+2.24.1
+
