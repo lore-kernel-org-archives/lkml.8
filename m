@@ -6,68 +6,92 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F70C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49712C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E100A2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:05:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 226A52082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:08:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbgAQLFi (ORCPT
+        id S1726864AbgAQLIc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 06:05:38 -0500
-Received: from mx2.suse.de ([195.135.220.15]:36412 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726343AbgAQLFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 06:05:37 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 7FF90ADE7;
-        Fri, 17 Jan 2020 11:05:36 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 0C1241E0D53; Fri, 17 Jan 2020 12:05:36 +0100 (CET)
-Date:   Fri, 17 Jan 2020 12:05:36 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     "yukuai (C)" <yukuai3@huawei.com>
-Cc:     Jan Kara <jack@suse.cz>, hch@infradead.org,
-        darrick.wong@oracle.com, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        houtao1@huawei.com, zhengbin13@huawei.com, yi.zhang@huawei.com
-Subject: Re: [RFC] iomap: fix race between readahead and direct write
-Message-ID: <20200117110536.GE17141@quack2.suse.cz>
-References: <20200116063601.39201-1-yukuai3@huawei.com>
- <20200116153206.GF8446@quack2.suse.cz>
- <ce4bc2f3-a23e-f6ba-0ef1-66231cd1057d@huawei.com>
+        Fri, 17 Jan 2020 06:08:32 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:41620 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726343AbgAQLIc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 06:08:32 -0500
+Received: from ip5f5bd679.dynamic.kabel-deutschland.de ([95.91.214.121] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1isPUL-00072P-GF; Fri, 17 Jan 2020 11:08:29 +0000
+Date:   Fri, 17 Jan 2020 12:08:28 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Oleg Nesterov <oleg@redhat.com>, stable@vger.kernel.org,
+        Serge Hallyn <serge@hallyn.com>, Eric Paris <eparis@redhat.com>
+Subject: Re: [REVIEW PATCH v2] ptrace: reintroduce usage of subjective
+ credentials in ptrace_has_cap()
+Message-ID: <20200117110827.g7n42assgyvcfzaz@wittgenstein>
+References: <20200116224518.30598-1-christian.brauner@ubuntu.com>
+ <202001161753.27427AD@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ce4bc2f3-a23e-f6ba-0ef1-66231cd1057d@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <202001161753.27427AD@keescook>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 17-01-20 17:39:03, yukuai (C) wrote:
-> On 2020/1/16 23:32, Jan Kara wrote:
-> > Thanks for the report and the patch. But the data integrity when mixing
-> > buffered and direct IO like this is best effort only. We definitely do not
-> > want to sacrifice performance of common cases or code complexity to make
-> > cases like this work reliably.
-> 
-> In the patch, the only thing that is diffrent is that iomap_begin() will
-> be called for each page. However, it seems the performance in sequential
-> read didn't get worse. Is there a specific case that the performance
-> will get worse?
+On Thu, Jan 16, 2020 at 06:29:26PM -0800, Kees Cook wrote:
+> On Thu, Jan 16, 2020 at 11:45:18PM +0100, Christian Brauner wrote:
+> > As one example where this might be particularly problematic, Jann pointed
+> > out that in combination with the upcoming IORING_OP_OPENAT feature, this
+> > bug might allow unprivileged users to bypass the capability checks while
+> > asynchronously opening files like /proc/*/mem, because the capability
+> > checks for this would be performed against kernel credentials.
 
-Well, one of the big points of iomap infrastructure is that you call
-filesystem once to give you large extent instead of calling it to provide
-allocation for each page separately. The additional CPU overhead will be
-visible if you push the machine hard enough. So IMHO the overhead just is
-not worth it for a corner-case like you presented. But that's just my
-opinion, Darrick and Christoph are definitive arbiters here...
+To follow up on this part of your mail. No, afaict, it's not
+aboutwinning a race. It's way simpler...
+When io uring creates a new kernel context it records the subjective
+credentials of the caller:
 
-								Honza
+	ctx = io_ring_ctx_alloc(p);
+	if (!ctx) {
+		if (account_mem)
+			io_unaccount_mem(user, ring_pages(p->sq_entries,
+								p->cq_entries));
+		free_uid(user);
+		return -ENOMEM;
+	}
+	ctx->compat = in_compat_syscall();
+	ctx->account_mem = account_mem;
+	ctx->user = user;
+------> ctx->creds = get_current_cred(); <------
 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Later on, when it starts to do work it creates a kernel thread:
+
+			ctx->sqo_thread = kthread_create_on_cpu(io_sq_thread,
+							ctx, cpu,
+							"io_uring-sq");
+		} else {
+			ctx->sqo_thread = kthread_create(io_sq_thread, ctx,
+							"io_uring-sq");
+		}
+
+and registers io_sq_thread as "callback". The callback io_sq_thread()
+runs __with kernel creds__. To prevent this from becoming an issue
+io_sq_thread() will override the __subjective credentials__ with the
+callers credentials:
+
+	old_cred = override_creds(ctx->creds);
+
+But ptrace_has_cap() currently looks at __task_cred(current) aka
+__real_cred__. This means once IORING_OP_OPENAT and IORING_OP_OPENAT2
+lands in v5.5-rc6 it is more or less trivial for an unprivileged user to
+bypass ptrace_may_access().
+
+Christian
