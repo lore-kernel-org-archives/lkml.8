@@ -2,243 +2,102 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F88C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 20:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63163C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 20:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60ABD2072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 20:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37E8A2083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 20:54:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="f5+CECfN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tkFfa4iF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729838AbgAQUx5 (ORCPT
+        id S1729847AbgAQUy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 15:53:57 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:35571 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727519AbgAQUx5 (ORCPT
+        Fri, 17 Jan 2020 15:54:56 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:37097 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727519AbgAQUyz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 15:53:57 -0500
-Received: by mail-io1-f66.google.com with SMTP id h8so27497019iob.2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 12:53:56 -0800 (PST)
+        Fri, 17 Jan 2020 15:54:55 -0500
+Received: by mail-oi1-f196.google.com with SMTP id z64so23440217oia.4
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 12:54:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=oNt+9e1+N0Nir29x2cxpgj6OiqmSw8nDn++ZOimwebw=;
-        b=f5+CECfNxRDqBkhiBRl7/RSsdXNjujlP9awhHaeLiXsdZz44CvxyHB9bAuhvaOCnRp
-         063jBvxW8Zw854TYyVl9KU4tYMLbCrI++0hOfmqrHdOJKwl3lkW0+3k50RmXaLPmj+DP
-         Y3L4YZae+kqAEzeSAMVO1xl9SjjIg+KWkxrQJJJNXdAyTRA/4AUcms48ywjPRm21MU6P
-         KiGaLrUedV7ry3YgMS+CMxl5zh6uKePa7J/2VWSPFB9emxUzeRp2SF/T+ouewB17m3z4
-         Taj/ZKx9eb3JO6wVW5DFVtlPlUIT3ZTqxoJIyuUfasmNEQccZn8fDmJ1hXa2jq/EK1Fk
-         CcTw==
+        bh=EpP4mR6++ym0+clDqbbYwXk+no5QrN1xJrvrHjjjmE0=;
+        b=tkFfa4iFAd+jroP8t34rOqeszZpg427nMtkcpusKGMgHGjCefWrryEVOMtujEljy5/
+         8qBfL2I8nyxfFuvhe/AtgEqDVAn0fOBwJzcjvISKvZpsWdqQOMYAy4KFak70JS1HnX0k
+         elDvn2zKcpoEAm/I3kWJUSLN2S9YnOUpZQzhBdlIP5T1rJ8K6heSdC74uqdp4dLrYHh/
+         E+GO6qgTMLJmm4mkIcxWxuGKdiD6gBbOfb/+2Eo2iBSTeGy1m/7p986Xh/aVF3TEfiyy
+         Sr9KhWjSN6L+WeraAo09KnX44N7Jyvu7HM4PrYeh5dpGq3AvahTuDNE49oZkOyTC4C/w
+         06aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=oNt+9e1+N0Nir29x2cxpgj6OiqmSw8nDn++ZOimwebw=;
-        b=mAw7RAtFyYTZ56H1mKycKf0khgXDEr6lJpNfnC/+9MxmvTjhGGt+Kct3tzYcINA/5l
-         b6C7+6LWnDJderOAFYyBUUoiQoDjrixpErVJKG/og5QB1dKY5yJnGGoZL54+uEhuBJrs
-         UcIlUS++Z14KsZ+ccdaa3Dqm5enJPbiKVifireAbm+uOvOo92kQzfT61+WY+Mfsj9bJD
-         zk9DtcZxAC5oxwyS5qDEOGuFT2Q0tT8gv8TGXmQwsBPXrS23IPjRicjz4lATgiGib9vZ
-         zgJpIOBuT/lqT2ScO3wnodytNTSlL0Ie4xo5c/MngwTY0U32pLU5/0V6w3Gzbid6PmY2
-         hrMg==
-X-Gm-Message-State: APjAAAXzV3JxkBdciQ5ihPk9oTJ0qJcugb6xWbIZS88Rmsl6rajCmkCf
-        cV/MJ3y+WxPpXypMbCECb7kljHAa1yhGYw1IyMaPUQ==
-X-Google-Smtp-Source: APXvYqw/EodL9Vbb/8s+i3a5TvqhfSt6jTGuBM8otrNtjI8l4ZJr1aTfkZvuMtxGPK5hg2bbZj8hVHilfIDagbT0f2g=
-X-Received: by 2002:a02:864b:: with SMTP id e69mr34342785jai.83.1579294436246;
- Fri, 17 Jan 2020 12:53:56 -0800 (PST)
+        bh=EpP4mR6++ym0+clDqbbYwXk+no5QrN1xJrvrHjjjmE0=;
+        b=r/Wm8YTHtkGg3mAf+6L0g/sfa00RgMucrq2At70LWZQkGGhhVlxVHNlANK1ZnqXFfh
+         ORJryvofMzz/4dLUSWRNCoLvTmzkfWK0EHzZzKPV+JH/1W0x72abho9VFqug9cApj1OX
+         Sj0uxoYSF+0wo6JGY0xcXdpSnAoAmcmlZeW7T+x1THWMf7F1GPb5zftrVcBO1Fm7mNAz
+         K4RuVNR7mdOBrG5gAgKKBfmlHmZwmFa0zp4hnq3zimzzqz7BMizIUd6H4Xd2/rx2T4qe
+         j7u+z2CRqbXLRv5R7yQrIwXSogD8yvG6rePSCfNQUZ3aPJjifjy56qVdRJRztrxaaHPc
+         RgGQ==
+X-Gm-Message-State: APjAAAXuEaGmQC8A/Ucypn/AJZjwVNJIG7jEr5KPnbeLmFY4oTK5mgZ0
+        2+sfFfy//1K9iak1AMTy6/t/aJ5nifHkHGJb7wClOw==
+X-Google-Smtp-Source: APXvYqyzdxUUBvm+6osC1RRrqdzxgenbyaoz4CMFFZqjH6owgPtbnJZKARkwMewNMJ70ydOGsHL3POvx59nMEwed01M=
+X-Received: by 2002:aca:3cd7:: with SMTP id j206mr4978548oia.142.1579294494766;
+ Fri, 17 Jan 2020 12:54:54 -0800 (PST)
 MIME-Version: 1.0
-References: <20200117205149.97262-1-lyude@redhat.com>
-In-Reply-To: <20200117205149.97262-1-lyude@redhat.com>
-From:   Sean Paul <sean@poorly.run>
-Date:   Fri, 17 Jan 2020 15:53:20 -0500
-Message-ID: <CAMavQK+QSbf++fEPu9WfyGR2+2QrbRN_x1f40Sz6kjw4wUP5vg@mail.gmail.com>
-Subject: Re: [PATCH] Revert "drm/dp_mst: Remove VCPI while disabling topology mgr"
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Wayne Lin <Wayne.Lin@amd.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200117203609.3146239-1-guro@fb.com>
+In-Reply-To: <20200117203609.3146239-1-guro@fb.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Fri, 17 Jan 2020 12:54:43 -0800
+Message-ID: <CALvZod4opj-eMYmeK0KaOmFvbQV75ZgP=vAEu_x5MFdswDwSBA@mail.gmail.com>
+Subject: Re: [PATCH] mm: memcg/slab: introduce mem_cgroup_from_obj()
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>,
+        Yafang Shao <laoar.shao@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 3:51 PM Lyude Paul <lyude@redhat.com> wrote:
+On Fri, Jan 17, 2020 at 12:36 PM Roman Gushchin <guro@fb.com> wrote:
 >
-> This reverts commit 64e62bdf04ab8529f45ed0a85122c703035dec3a.
+> Sometimes we need to get a memcg pointer from a charged kernel object.
+> The right way to get it depends on whether it's a proper slab object
+> or it's backed by raw pages (e.g. it's a vmalloc alloction). In the
+> first case the kmem_cache->memcg_params.memcg indirection should be
+> used; in other cases it's just page->mem_cgroup.
 >
-> This commit ends up causing some lockdep splats due to trying to grab the
-> payload lock while holding the mgr's lock:
+> To simplify this task and hide the implementation details let's
+> introduce a mem_cgroup_from_obj() helper, which takes a pointer
+> to any kernel object and returns a valid memcg pointer or NULL.
 >
-> [   54.010099]
-> [   54.011765] ======================================================
-> [   54.018670] WARNING: possible circular locking dependency detected
-> [   54.025577] 5.5.0-rc6-02274-g77381c23ee63 #47 Not tainted
-> [   54.031610] ------------------------------------------------------
-> [   54.038516] kworker/1:6/1040 is trying to acquire lock:
-> [   54.044354] ffff888272af3228 (&mgr->payload_lock){+.+.}, at:
-> drm_dp_mst_topology_mgr_set_mst+0x218/0x2e4
-> [   54.054957]
-> [   54.054957] but task is already holding lock:
-> [   54.061473] ffff888272af3060 (&mgr->lock){+.+.}, at:
-> drm_dp_mst_topology_mgr_set_mst+0x3c/0x2e4
-> [   54.071193]
-> [   54.071193] which lock already depends on the new lock.
-> [   54.071193]
-> [   54.080334]
-> [   54.080334] the existing dependency chain (in reverse order) is:
-> [   54.088697]
-> [   54.088697] -> #1 (&mgr->lock){+.+.}:
-> [   54.094440]        __mutex_lock+0xc3/0x498
-> [   54.099015]        drm_dp_mst_topology_get_port_validated+0x25/0x80
-> [   54.106018]        drm_dp_update_payload_part1+0xa2/0x2e2
-> [   54.112051]        intel_mst_pre_enable_dp+0x144/0x18f
-> [   54.117791]        intel_encoders_pre_enable+0x63/0x70
-> [   54.123532]        hsw_crtc_enable+0xa1/0x722
-> [   54.128396]        intel_update_crtc+0x50/0x194
-> [   54.133455]        skl_commit_modeset_enables+0x40c/0x540
-> [   54.139485]        intel_atomic_commit_tail+0x5f7/0x130d
-> [   54.145418]        intel_atomic_commit+0x2c8/0x2d8
-> [   54.150770]        drm_atomic_helper_set_config+0x5a/0x70
-> [   54.156801]        drm_mode_setcrtc+0x2ab/0x833
-> [   54.161862]        drm_ioctl+0x2e5/0x424
-> [   54.166242]        vfs_ioctl+0x21/0x2f
-> [   54.170426]        do_vfs_ioctl+0x5fb/0x61e
-> [   54.175096]        ksys_ioctl+0x55/0x75
-> [   54.179377]        __x64_sys_ioctl+0x1a/0x1e
-> [   54.184146]        do_syscall_64+0x5c/0x6d
-> [   54.188721]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> [   54.194946]
-> [   54.194946] -> #0 (&mgr->payload_lock){+.+.}:
-> [   54.201463]
-> [   54.201463] other info that might help us debug this:
-> [   54.201463]
-> [   54.210410]  Possible unsafe locking scenario:
-> [   54.210410]
-> [   54.217025]        CPU0                    CPU1
-> [   54.222082]        ----                    ----
-> [   54.227138]   lock(&mgr->lock);
-> [   54.230643]                                lock(&mgr->payload_lock);
-> [   54.237742]                                lock(&mgr->lock);
-> [   54.244062]   lock(&mgr->payload_lock);
-> [   54.248346]
-> [   54.248346]  *** DEADLOCK ***
-> [   54.248346]
-> [   54.254959] 7 locks held by kworker/1:6/1040:
-> [   54.259822]  #0: ffff888275c4f528 ((wq_completion)events){+.+.},
-> at: worker_thread+0x455/0x6e2
-> [   54.269451]  #1: ffffc9000119beb0
-> ((work_completion)(&(&dev_priv->hotplug.hotplug_work)->work)){+.+.},
-> at: worker_thread+0x455/0x6e2
-> [   54.282768]  #2: ffff888272a403f0 (&dev->mode_config.mutex){+.+.},
-> at: i915_hotplug_work_func+0x4b/0x2be
-> [   54.293368]  #3: ffffffff824fc6c0 (drm_connector_list_iter){.+.+},
-> at: i915_hotplug_work_func+0x17e/0x2be
-> [   54.304061]  #4: ffffc9000119bc58 (crtc_ww_class_acquire){+.+.},
-> at: drm_helper_probe_detect_ctx+0x40/0xfd
-> [   54.314855]  #5: ffff888272a40470 (crtc_ww_class_mutex){+.+.}, at:
-> drm_modeset_lock+0x74/0xe2
-> [   54.324385]  #6: ffff888272af3060 (&mgr->lock){+.+.}, at:
-> drm_dp_mst_topology_mgr_set_mst+0x3c/0x2e4
-> [   54.334597]
-> [   54.334597] stack backtrace:
-> [   54.339464] CPU: 1 PID: 1040 Comm: kworker/1:6 Not tainted
-> 5.5.0-rc6-02274-g77381c23ee63 #47
-> [   54.348893] Hardware name: Google Fizz/Fizz, BIOS
-> Google_Fizz.10139.39.0 01/04/2018
-> [   54.357451] Workqueue: events i915_hotplug_work_func
-> [   54.362995] Call Trace:
-> [   54.365724]  dump_stack+0x71/0x9c
-> [   54.369427]  check_noncircular+0x91/0xbc
-> [   54.373809]  ? __lock_acquire+0xc9e/0xf66
-> [   54.378286]  ? __lock_acquire+0xc9e/0xf66
-> [   54.382763]  ? lock_acquire+0x175/0x1ac
-> [   54.387048]  ? drm_dp_mst_topology_mgr_set_mst+0x218/0x2e4
-> [   54.393177]  ? __mutex_lock+0xc3/0x498
-> [   54.397362]  ? drm_dp_mst_topology_mgr_set_mst+0x218/0x2e4
-> [   54.403492]  ? drm_dp_mst_topology_mgr_set_mst+0x218/0x2e4
-> [   54.409620]  ? drm_dp_dpcd_access+0xd9/0x101
-> [   54.414390]  ? drm_dp_mst_topology_mgr_set_mst+0x218/0x2e4
-> [   54.420517]  ? drm_dp_mst_topology_mgr_set_mst+0x218/0x2e4
-> [   54.426645]  ? intel_digital_port_connected+0x34d/0x35c
-> [   54.432482]  ? intel_dp_detect+0x227/0x44e
-> [   54.437056]  ? ww_mutex_lock+0x49/0x9a
-> [   54.441242]  ? drm_helper_probe_detect_ctx+0x75/0xfd
-> [   54.446789]  ? intel_encoder_hotplug+0x4b/0x97
-> [   54.451752]  ? intel_ddi_hotplug+0x61/0x2e0
-> [   54.456423]  ? mark_held_locks+0x53/0x68
-> [   54.460803]  ? _raw_spin_unlock_irqrestore+0x3a/0x51
-> [   54.466347]  ? lockdep_hardirqs_on+0x187/0x1a4
-> [   54.471310]  ? drm_connector_list_iter_next+0x89/0x9a
-> [   54.476953]  ? i915_hotplug_work_func+0x206/0x2be
-> [   54.482208]  ? worker_thread+0x4d5/0x6e2
-> [   54.486587]  ? worker_thread+0x455/0x6e2
-> [   54.490966]  ? queue_work_on+0x64/0x64
-> [   54.495151]  ? kthread+0x1e9/0x1f1
-> [   54.498946]  ? queue_work_on+0x64/0x64
-> [   54.503130]  ? kthread_unpark+0x5e/0x5e
-> [   54.507413]  ? ret_from_fork+0x3a/0x50
+> Passing a kernel address rather than a pointer to a page will allow
+> to use this helper for per-object (rather than per-page) tracked
+> objects in the future.
 >
-> The proper fix for this is probably cleanup the VCPI allocations when we're
-> enabling the topology, or on the first payload allocation. For now though,
-> let's just revert.
+> The caller is still responsible to ensure that the returned memcg
+> isn't going away underneath: take the rcu read lock, cgroup mutex etc;
+> depending on the context.
 >
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> Fixes: 64e62bdf04ab ("drm/dp_mst: Remove VCPI while disabling topology mgr")
-> Cc: Sean Paul <sean@poorly.run>
+> mem_cgroup_from_kmem() defined in mm/list_lru.c is now obsolete
+> and can be removed.
+>
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Acked-by: Yafang Shao <laoar.shao@gmail.com>
 
-Reviewed-by: Sean Paul <sean@poorly.run>
-
-> Cc: Wayne Lin <Wayne.Lin@amd.com>
-> ---
->  drivers/gpu/drm/drm_dp_mst_topology.c | 13 -------------
->  1 file changed, 13 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-> index 4b74193b89ce..0c585f2bbb69 100644
-> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
-> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-> @@ -3481,7 +3481,6 @@ static int drm_dp_get_vc_payload_bw(u8 dp_link_bw, u8  dp_link_count)
->  int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool mst_state)
->  {
->         int ret = 0;
-> -       int i = 0;
->         struct drm_dp_mst_branch *mstb = NULL;
->
->         mutex_lock(&mgr->lock);
-> @@ -3542,22 +3541,10 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
->                 /* this can fail if the device is gone */
->                 drm_dp_dpcd_writeb(mgr->aux, DP_MSTM_CTRL, 0);
->                 ret = 0;
-> -               mutex_lock(&mgr->payload_lock);
->                 memset(mgr->payloads, 0, mgr->max_payloads * sizeof(struct drm_dp_payload));
->                 mgr->payload_mask = 0;
->                 set_bit(0, &mgr->payload_mask);
-> -               for (i = 0; i < mgr->max_payloads; i++) {
-> -                       struct drm_dp_vcpi *vcpi = mgr->proposed_vcpis[i];
-> -
-> -                       if (vcpi) {
-> -                               vcpi->vcpi = 0;
-> -                               vcpi->num_slots = 0;
-> -                       }
-> -                       mgr->proposed_vcpis[i] = NULL;
-> -               }
->                 mgr->vcpi_mask = 0;
-> -               mutex_unlock(&mgr->payload_lock);
-> -
->                 mgr->payload_id_table_cleared = false;
->         }
->
-> --
-> 2.24.1
->
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
