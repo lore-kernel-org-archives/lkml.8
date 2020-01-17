@@ -2,105 +2,121 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0783C33CB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5052EC33CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B80C72082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:14:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579295664;
-	bh=OS7yVO2N6BDDdHCe/tuw7AF3sNjZ1YfY9NXe0Sml+nc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=G0X2h86sTlmPv0h768ize4/iwUkgSuOaUxOtKid2XOF2HNHxl30tdDAfaDlqO9bQE
-	 y2wXEFmMKPwE1Y9duA4DcYL1VzzGgCiLN2CxTs34z1R+yAlWcc9x1yDllNokt3zHBw
-	 xV7v58TwuedRJVoj15uyNmIjAqdXpssMekSOvanA=
+	by mail.kernel.org (Postfix) with ESMTP id 2397720748
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:15:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BSQILfuB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbgAQVOY (ORCPT
+        id S1726999AbgAQVPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 16:14:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33226 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726587AbgAQVOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 16:14:23 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7190820748;
-        Fri, 17 Jan 2020 21:14:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579295662;
-        bh=OS7yVO2N6BDDdHCe/tuw7AF3sNjZ1YfY9NXe0Sml+nc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Y74wESVeAfeNLVHeRVBf/+nfKeyMgbscXlK4eJ6NVy4KMvwkUF9e04+4DegV98Oje
-         aiw2NOlFvwFSeT2VOWw/h53pmLOJY9Bjlcd6UBajXgFwSqxMlib/fQf/RqnFDkZNCs
-         ZNjGlyPzHp4FqcL3o0hvZ/80ZByIBTYbrP3t0350=
-Date:   Fri, 17 Jan 2020 22:14:19 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Topi Miettinen <toiwoton@gmail.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] firmware_loader: load files from the mount namespace of
- init
-Message-ID: <20200117211419.GA2042215@kroah.com>
-References: <bb46ebae-4746-90d9-ec5b-fce4c9328c86@gmail.com>
+        Fri, 17 Jan 2020 16:15:07 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37441 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbgAQVPH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 16:15:07 -0500
+Received: by mail-pl1-f195.google.com with SMTP id c23so10353443plz.4
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 13:15:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=hDjGeeleL+HbTBakSqxyCbAUHlP2+qcu6KumLAPqXUU=;
+        b=BSQILfuBRSQobvuJiAwCAtFsCtM5EZ3Yjz+WXkxV3tDNF5BEcRY5ml8/FNx+XC8r/U
+         6vyAvm4ctOfcS7xDBhoVpynWvqR8/3HjleemRToNRjKjCR6ms8QKn+6An++QgXP1j8uX
+         in1mTw1za0l9RIg4JeYi2tH7UWttIWEWUb1og=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hDjGeeleL+HbTBakSqxyCbAUHlP2+qcu6KumLAPqXUU=;
+        b=L3PsN9vnDKmQb/3RoMFm4pXZE4o1T0cPESULPc/8f2TRuBSrVYte/5gNBgKCAnA5TV
+         0mjrmEOmeEE7cMIf5knrGg5VU41WRWrcf8QZfhSg+yIPn3d47k+FMXIfucl3Iz5LQRsu
+         M33JqGEQMscluc9jlybZM/x3Sh5ebDp6oU52Jhny/jPndTqJuQfiZfgdq0811/6dycU6
+         PQAWp1PrOYXZdES+iGZBLorwgkUyTEb4blnfR/co75k41o0hSqUE11Xh0U/ZzXSVGIje
+         gIR4hRqgyuLpoO10xX4Dk6nRxqAeMwRPPG9H/EkBtp7DkpkY67n5IvAfnGqZDyq7ehAv
+         NUEA==
+X-Gm-Message-State: APjAAAU4NmbFN6bjPnvsrweeyZyfAf9uKzGfo+qu9EfTZ4BibdJm0eLD
+        wcWrpimLDXziomCi2dJoD5WIKw==
+X-Google-Smtp-Source: APXvYqxj2qC2Kag4Dy81hHsTvTzPaCLiACq64wPFUzQ1WtYhCxyGXVujZhSdp9ocQqLQzPqwwuoxLg==
+X-Received: by 2002:a17:90a:c705:: with SMTP id o5mr8049276pjt.67.1579295706568;
+        Fri, 17 Jan 2020 13:15:06 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a23sm32043042pfg.82.2020.01.17.13.15.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2020 13:15:05 -0800 (PST)
+Date:   Fri, 17 Jan 2020 13:15:04 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-kernel@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Oleg Nesterov <oleg@redhat.com>, stable@vger.kernel.org,
+        Serge Hallyn <serge@hallyn.com>, Eric Paris <eparis@redhat.com>
+Subject: Re: [PATCH v3] ptrace: reintroduce usage of subjective credentials
+ in ptrace_has_cap()
+Message-ID: <202001171310.A74535C0@keescook>
+References: <20200117105717.29803-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bb46ebae-4746-90d9-ec5b-fce4c9328c86@gmail.com>
+In-Reply-To: <20200117105717.29803-1-christian.brauner@ubuntu.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 08:36:13PM +0200, Topi Miettinen wrote:
-> Hi,
-> 
-> I have an experimental setup where almost every possible system service
-> (even early startup ones) runs in separate namespace, using a dedicated,
-> minimal file system. In process of minimizing the contents of the file
-> systems with regards to modules and firmware files, I noticed that in my
-> system, the firmware files are loaded from three different mount namespaces,
-> those of systemd-udevd, init and systemd-networkd. The logic of the source
-> namespace is not very clear, it seems to depend on the driver, but the
-> namespace of the current process is used.
-> 
-> So, this patch tries to make things a bit clearer and changes the loading of
-> firmware files only from the mount namespace of init. This may also improve
-> security, though I think that using firmware files as attack vector could be
-> too impractical anyway.
+On Fri, Jan 17, 2020 at 11:57:18AM +0100, Christian Brauner wrote:
+> -static int ptrace_has_cap(struct user_namespace *ns, unsigned int mode)
+> +static int ptrace_has_cap(const struct cred *cred, struct user_namespace *ns,
+> +			  unsigned int mode)
+>  {
+> -	if (mode & PTRACE_MODE_NOAUDIT)
+> -		return has_ns_capability_noaudit(current, ns, CAP_SYS_PTRACE);
+> -	else
+> -		return has_ns_capability(current, ns, CAP_SYS_PTRACE);
+> +	return security_capable(cred, ns, CAP_SYS_PTRACE,
+> +				(mode & PTRACE_MODE_NOAUDIT) ? CAP_OPT_NOAUDIT :
+> +							       CAP_OPT_NONE);
+>  }
 
-I like this, but:
+Eek, no. I think this inverts the check.
 
-> Later, it might make sense to make the mount namespace configurable, for
-> example with a new file in
-> /proc/sys/kernel/firmware_config/. That would allow a dedicated file system
-> only for firmware files and those need not be present anywhere else. This
-> configurability would make more sense if made also for kernel modules and
-> /sbin/modprobe. Modules are already loaded from init namespace
-> (usermodehelper uses kthreadd namespace) except when directly loaded by
-> systemd-udevd.
+Before:
+bool has_ns_capability(struct task_struct *t,
+                       struct user_namespace *ns, int cap)
+{
+	...
+        ret = security_capable(__task_cred(t), ns, cap, CAP_OPT_NONE);
+	...
+        return (ret == 0);
+}
 
-I think you answered your question of why firmware is loaded from the
-namespace of systemd-udevd at times, it happens due to a module being
-asked to be loaded which then called out and asked for firmware as part
-of its probe process.
+static int ptrace_has_cap(struct user_namespace *ns, unsigned int mode)
+{
+	...
+                return has_ns_capability(current, ns, CAP_SYS_PTRACE);
+}
 
-Now saying that the firmware load namespace is going to be tied always
-to the modprobe namespace is problematic, as we can't guarantee that
-will always happen for all bus and driver types.
+After:
+static int ptrace_has_cap(const struct cred *cred, struct user_namespace *ns,
+                       unsigned int mode)
+{
+	return security_capable(cred, ns, CAP_SYS_PTRACE,
+				(mode & PTRACE_MODE_NOAUDIT) ? CAP_OPT_NOAUDIT :
+							       CAP_OPT_NONE);
+}
 
-So resetting this all back to the init namespace seems to make sense to
-me, and odds are it will not break anything.
+Note lack of "== 0" on the security_capable() return value, but it's
+needed. To avoid confusion, I think ptrace_has_cap() should likely
+return bool too.
 
-But, as you are adding a new firmware feature, any chance you can write
-an additional test to the firmware self-tests so that we can verify that
-this really is working the way you are saying it does, so we can trust
-it and verify it doesn't break in the future?
+-Kees
 
-thanks,
-
-greg k-h
+-- 
+Kees Cook
