@@ -2,138 +2,293 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB5AC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB6A3C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:21:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75984214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:17:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 653932073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:21:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="LNsct4Uo"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U0aGtYJT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729121AbgAQPRb (ORCPT
+        id S1729064AbgAQPVc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 10:17:31 -0500
-Received: from mail-dm6nam11on2128.outbound.protection.outlook.com ([40.107.223.128]:7649
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728739AbgAQPRb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 10:17:31 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lcfeAfNjR5Nb0zjVpQEFo1GwVso90WW+CXivcmMI3/FruBxpnwiLw9+sBLcYEKdWxzZk07IiG4K3WFcjvUMhUzeb/VnMfvzya4gK0VvTB0UMRJrQo0vIA5KZwu1cK40QHIweSKobBK0nHS8Dz6IpcSlnbO92zKX00R5em/KRyV2727UoahYs1W3VlSNaTZF5PoMG/fFia5HEUqU9sGNDAcx237X9I0ac2Hrl0Xvp/8zBme4JCCytRnwl36vUvZUFoSRVQ5J3G2yXbMUY1sZ+yhUKC27oLXTkePzIKOFW9yLIB0/Roa1B25D3HBkSlAZrJ7LrIYcuhwL8wvkWS4sJ+w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sPEESz0h4GAJfXfw6KBxyuiW4NE561uUlacL3M6Ieow=;
- b=EpS2tHSNRflg0Bft97nYz+cvuAY35bwjGwbvBAHX67UmfGAcd1oOaAEmmVOvo5p9P8aeuZIKjqiKZSk9ULpT8AvPgJiGJL2sCC3jb0S+yOr55aA2gg61+anDF+JP9xcW0HhheLBSu+TREtCRQrpzDDvBuigvqyDpXmSVYNLCZX/Hc8ailneLEeU0eLg4HUIBmiWohDbbKen8e41k5TdezcL9e60Cv9J2Zih2YfwshrAReW8SgsLC8kdyBwjs8gKhVO/jLFEDffVDEPwHzXIT5RCDhtPVjmZXJfd/yK1bK5SY8omLUEQgwWJ3b0sybcgehdZ/9j739Nz1+2t6NGDC2Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sPEESz0h4GAJfXfw6KBxyuiW4NE561uUlacL3M6Ieow=;
- b=LNsct4UoydeePSMU9GPxDiqKjRs61MjJSdZvoY+g5lEGIF3d0+G8lNUhWzuo769Bq/O2OIWa8tuhEWkZ/Notv2mKJ4mBnSaX9RYAFcCZIYDAgT3GG6wtsSn7jI+q1wZyHC7hqbDRq4S237wVJevpM5o3CByKtpzmQKcNru3vLEQ=
-Received: from DM5PR1301MB2108.namprd13.prod.outlook.com (10.174.186.34) by
- DM5PR1301MB2012.namprd13.prod.outlook.com (10.174.184.141) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.15; Fri, 17 Jan 2020 15:17:28 +0000
-Received: from DM5PR1301MB2108.namprd13.prod.outlook.com
- ([fe80::2d32:cf4b:1b58:16ce]) by DM5PR1301MB2108.namprd13.prod.outlook.com
- ([fe80::2d32:cf4b:1b58:16ce%7]) with mapi id 15.20.2644.023; Fri, 17 Jan 2020
- 15:17:28 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "dhowells@redhat.com" <dhowells@redhat.com>,
-        "krzk@kernel.org" <krzk@kernel.org>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "smayhew@redhat.com" <smayhew@redhat.com>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>
-Subject: Re: [BISECT BUG] NFS v4 root not working after 6d972518b821 ("NFS:
- Add fs_context support.")
-Thread-Topic: [BISECT BUG] NFS v4 root not working after 6d972518b821 ("NFS:
- Add fs_context support.")
-Thread-Index: AQHVzGDcRnNYGCrUqUi6gbIzdqfifqfu6amAgAAF1ICAAAjdAIAAAViA
-Date:   Fri, 17 Jan 2020 15:17:28 +0000
-Message-ID: <b31b09abeea4982e038b0e66e45889bb2c9df750.camel@hammerspace.com>
-References: <20200117144055.GB3215@pi3>
-         <CAJKOXPeCVwZfBsCVbc9RQUGi0UfWQw0uFamPiQasiO8fSthFsQ@mail.gmail.com>
-         <433863.1579270803@warthog.procyon.org.uk>
-         <461540.1579273958@warthog.procyon.org.uk>
-In-Reply-To: <461540.1579273958@warthog.procyon.org.uk>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [68.40.189.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b9e87eb7-71b3-4ef0-49be-08d79b605dc4
-x-ms-traffictypediagnostic: DM5PR1301MB2012:
-x-microsoft-antispam-prvs: <DM5PR1301MB2012FE4CA92886A70EE3C963B8310@DM5PR1301MB2012.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0285201563
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39830400003)(136003)(366004)(346002)(396003)(376002)(199004)(189003)(71200400001)(316002)(26005)(2906002)(36756003)(110136005)(54906003)(86362001)(5660300002)(6506007)(6512007)(2616005)(4326008)(8676002)(76116006)(91956017)(66946007)(8936002)(66446008)(64756008)(66556008)(66476007)(478600001)(186003)(6486002)(81156014)(81166006);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR1301MB2012;H:DM5PR1301MB2108.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: XtaC9J2vDVRMvge+ffAgc+oA/+wqkLbF3zqcn+KBfRW186dVyDEM6EGqAAHP8WDZJ87ys6yqVloKLVwLPsZxKKEiqhGpKRgBLWmI1RAC/lc0XSZS9YI7zTMOVGUfS6Fx1HECTfQjl/sbyIkDKTLHlHnJD3HojCAGTpF2GV28afVK522AblgtY5HK8DgvUtl8//UyH0lkq3Wuc/hSzhnGxDsmi17O4+gcVxM744KrYLuEvf/scFfZm0f1xsgTR+5wNLOHgjmlI9t3P0Bgnr0Qyybtmip1xTZQ4yNG/2F1IY9X7yj9ou4oXVZK0dqrD/iiLNCiQc+6uh5oFDJt8ahvKDlapJpt3R6tpgJ/IIrz0eizw2CCX6mL0o/UCB6wScEjO9ZOC6RXkC4Yb0moX7KnrE4bu7aQeaEPtCBnlvBfJjfdSzonRMbdzU3dY9+fYzOd
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <33D5DEF522EFBC48B0D33AEB6DBDA338@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 17 Jan 2020 10:21:32 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:54873 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728977AbgAQPVc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 10:21:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579274490;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=6/9lAUkuiZqC3Ci1FTQxJP6Mx45izXnTVNIDF3XwjgM=;
+        b=U0aGtYJTGSMgfrsHfCbum5/OoLhG+/PEGJTX4615gaCyQocNu5SY4riBFxS9vyiMhBlxUu
+        mQJiNYoIMp+U0bUlm7Z3Rq9h49olDDTfeDaO2PD1EOhNyVwWojsXBRIyYESVN3butFk0LK
+        hsJwWYy7CHX9e8RHkmpYe4V946LLH4g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-159-S1Ay0LiVOlKJvLl3w4QJ3g-1; Fri, 17 Jan 2020 10:21:26 -0500
+X-MC-Unique: S1Ay0LiVOlKJvLl3w4QJ3g-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 716BE100550E;
+        Fri, 17 Jan 2020 15:21:24 +0000 (UTC)
+Received: from pauld.bos.csb (dhcp-17-51.bos.redhat.com [10.18.17.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D3E9681201;
+        Fri, 17 Jan 2020 15:21:22 +0000 (UTC)
+Date:   Fri, 17 Jan 2020 10:21:21 -0500
+From:   Phil Auld <pauld@redhat.com>
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Parth Shah <parth@linux.ibm.com>,
+        Rik van Riel <riel@surriel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] sched, fair: Allow a small load imbalance between low
+ utilisation SD_NUMA domains v4
+Message-ID: <20200117152120.GG6339@pauld.bos.csb>
+References: <20200114101319.GO3466@techsingularity.net>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b9e87eb7-71b3-4ef0-49be-08d79b605dc4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jan 2020 15:17:28.7016
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Xb/wOXihpR+MGQlPcJNmoLxjKaY+T5vnrrxsYYSeFlY86m7I0BFhvZk5QRRhjWfxuSvNhxEAYsJzxx1j6IZZVA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1301MB2012
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200114101319.GO3466@techsingularity.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTAxLTE3IGF0IDE1OjEyICswMDAwLCBEYXZpZCBIb3dlbGxzIHdyb3RlOg0K
-PiBLcnp5c3p0b2YgS296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+IHdyb3RlOg0KPiANCj4gPiBt
-b3VudC5uZnM0IC1vIHZlcnM9NCxub2xvY2sgMTkyLjE2OC4xLjEwOi9zcnYvbmZzL29kcm9pZGhj
-MQ0KPiA+IC9uZXdfcm9vdA0KPiANCj4gT2theSwgaXQgbG9va3MgbGlrZSB0aGUgbW91bnQgY29t
-bWFuZCBtYWtlcyB0d28gYXR0ZW1wdHMgYXQgbW91bnRpbmcuDQo+IEZpcnN0bHksIGl0IGRvZXMg
-dGhpczoNCj4gDQo+ID4gWyAgIDIyLjkzODMxNF0gTkZTT1AgJ3NvdXJjZT0xOTIuMTY4LjEuMTA6
-L3Nydi9uZnMvb2Ryb2lkaGMxJw0KPiA+IFsgICAyMi45NDI2MzhdIE5GU09QICdub2xvY2s9KG51
-bGwpJw0KPiA+IFsgICAyMi45NDU3NzJdIE5GU09QICd2ZXJzPTQuMicNCj4gPiBbICAgMjIuOTQ4
-NjYwXSBORlNPUCAnYWRkcj0xOTIuMTY4LjEuMTAnDQo+ID4gWyAgIDIyLjk1MjM1MF0gTkZTT1Ag
-J2NsaWVudGFkZHI9MTkyLjE2OC4xLjEyJw0KPiA+IFsgICAyMi45NTY4MzFdIE5GUzQ6IENvdWxk
-bid0IGZvbGxvdyByZW1vdGUgcGF0aA0KPiANCj4gV2hpY2ggYWNjZXB0cyB0aGUgInZlcnM9NC4y
-IiBwYXJhbWV0ZXIgYXMgdGhlcmUncyBubyBjaGVjayB0aGF0IHRoYXQNCj4gaXMNCj4gYWN0dWFs
-bHkgdmFsaWQgZ2l2ZW4gdGhlIGNvbmZpZ3VyYXRpb24sIGJ1dCB0aGVuIGZhaWxzDQo+IGxhdGVy
-LiAgU2Vjb25kbHksIGl0DQo+IGRvZXMgdGhpczoNCj4gDQo+ID4gWyAgIDIyLjk3MTAwMV0gTkZT
-T1AgJ3NvdXJjZT0xOTIuMTY4LjEuMTA6L3Nydi9uZnMvb2Ryb2lkaGMxJw0KPiA+IFsgICAyMi45
-NzUyMTddIE5GU09QICdub2xvY2s9KG51bGwpJw0KPiA+IFsgICAyMi45Nzg0NDRdIE5GU09QICd2
-ZXJzPTQnDQo+ID4gWyAgIDIyLjk4MTI2NV0gTkZTT1AgJ21pbm9ydmVyc2lvbj0xJw0KPiA+IFsg
-ICAyMi45ODQ1MTNdIE5GUzogVmFsdWUgZm9yICdtaW5vcnZlcnNpb24nIG91dCBvZiByYW5nZQ0K
-PiA+IG1vdW50Lm5mczQ6IE51bWVyaWNhbCByZXN1bHQgb3V0IG9mIHJhbmdlDQo+IA0KPiB3aGlj
-aCBmYWlscyBiZWNhdXNlIG9mIHRoZSBtaW5vcnZlcnNpb249MSBzcGVjaWZpY2F0aW9uLCB3aGVy
-ZSB0aGUNCj4ga2VybmVsDQo+IGNvbmZpZyBkaWRuJ3QgZW5hYmxlIE5GU19WNF8xLg0KPiANCj4g
-SXQgbG9va3MgbGlrZSBpdCBvdWdodCB0byBoYXZlIGZhaWxlZCBwcmlvciB0byB0aGVzZSBwYXRj
-aGVzIGluIHRoZQ0KPiBzYW1lIHdheToNCj4gDQo+IAkJY2FzZSBPcHRfbWlub3J2ZXJzaW9uOg0K
-PiAJCQlpZiAobmZzX2dldF9vcHRpb25fdWwoYXJncywgJm9wdGlvbikpDQo+IAkJCQlnb3RvIG91
-dF9pbnZhbGlkX3ZhbHVlOw0KPiAJCQlpZiAob3B0aW9uID4gTkZTNF9NQVhfTUlOT1JfVkVSU0lP
-TikNCj4gCQkJCWdvdG8gb3V0X2ludmFsaWRfdmFsdWU7DQo+IAkJCW1udC0+bWlub3J2ZXJzaW9u
-ID0gb3B0aW9uOw0KPiAJCQlicmVhazsNCj4gDQoNCkl0IGxvb2tzIGxpa2Ugc29tZW9uZSBjaGFu
-Z2VkIHRoZSByZXR1cm4gdmFsdWUgZnJvbSB0aGUgb2xkIEVJTlZBTCB0bw0Kc29tZXRoaW5nIGVs
-c2U/IFRoZSAiTnVtZXJpY2FsIHJlc3VsdCBvdXQgb2YgcmFuZ2UiIG1lc3NhZ2UgYWJvdmUNCnN1
-Z2dlc3RzIGl0IGhhcyBiZWVuIGNoYW5nZWQgdG8gRU9WRVJGTE9XLCB3aGljaCBwcm9iYWJseSBp
-cyBub3QNCnN1cHBvcnRlZCBieSAnbW91bnQnLg0KDQotLSANClRyb25kIE15a2xlYnVzdA0KTGlu
-dXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhh
-bW1lcnNwYWNlLmNvbQ0KDQoNCg==
+On Tue, Jan 14, 2020 at 10:13:20AM +0000 Mel Gorman wrote:
+> Changelog since V3
+> o Allow a fixed imbalance a basic comparison with 2 tasks. This turned out to
+>   be as good or better than allowing an imbalance based on the group weight
+>   without worrying about potential spillover of the lower scheduler domains.
+> 
+> Changelog since V2
+> o Only allow a small imbalance when utilisation is low to address reports that
+>   higher utilisation workloads were hitting corner cases.
+> 
+> Changelog since V1
+> o Alter code flow 						vincent.guittot
+> o Use idle CPUs for comparison instead of sum_nr_running	vincent.guittot
+> o Note that the division is still in place. Without it and taking
+>   imbalance_adj into account before the cutoff, two NUMA domains
+>   do not converage as being equally balanced when the number of
+>   busy tasks equals the size of one domain (50% of the sum).
+> 
+> The CPU load balancer balances between different domains to spread load
+> and strives to have equal balance everywhere. Communicating tasks can
+> migrate so they are topologically close to each other but these decisions
+> are independent. On a lightly loaded NUMA machine, two communicating tasks
+> pulled together at wakeup time can be pushed apart by the load balancer.
+> In isolation, the load balancer decision is fine but it ignores the tasks
+> data locality and the wakeup/LB paths continually conflict. NUMA balancing
+> is also a factor but it also simply conflicts with the load balancer.
+> 
+> This patch allows a fixed degree of imbalance of two tasks to exist
+> between NUMA domains regardless of utilisation levels. In many cases,
+> this prevents communicating tasks being pulled apart. It was evaluated
+> whether the imbalance should be scaled to the domain size. However, no
+> additional benefit was measured across a range of workloads and machines
+> and scaling adds the risk that lower domains have to be rebalanced. While
+> this could change again in the future, such a change should specify the
+> use case and benefit.
+> 
+> The most obvious impact is on netperf TCP_STREAM -- two simple
+> communicating tasks with some softirq offload depending on the
+> transmission rate.
+> 
+> 2-socket Haswell machine 48 core, HT enabled
+> netperf-tcp -- mmtests config config-network-netperf-unbound
+>                        	      baseline              lbnuma-v3
+> Hmean     64         568.73 (   0.00%)      577.56 *   1.55%*
+> Hmean     128       1089.98 (   0.00%)     1128.06 *   3.49%*
+> Hmean     256       2061.72 (   0.00%)     2104.39 *   2.07%*
+> Hmean     1024      7254.27 (   0.00%)     7557.52 *   4.18%*
+> Hmean     2048     11729.20 (   0.00%)    13350.67 *  13.82%*
+> Hmean     3312     15309.08 (   0.00%)    18058.95 *  17.96%*
+> Hmean     4096     17338.75 (   0.00%)    20483.66 *  18.14%*
+> Hmean     8192     25047.12 (   0.00%)    27806.84 *  11.02%*
+> Hmean     16384    27359.55 (   0.00%)    33071.88 *  20.88%*
+> Stddev    64           2.16 (   0.00%)        2.02 (   6.53%)
+> Stddev    128          2.31 (   0.00%)        2.19 (   5.05%)
+> Stddev    256         11.88 (   0.00%)        3.22 (  72.88%)
+> Stddev    1024        23.68 (   0.00%)        7.24 (  69.43%)
+> Stddev    2048        79.46 (   0.00%)       71.49 (  10.03%)
+> Stddev    3312        26.71 (   0.00%)       57.80 (-116.41%)
+> Stddev    4096       185.57 (   0.00%)       96.15 (  48.19%)
+> Stddev    8192       245.80 (   0.00%)      100.73 (  59.02%)
+> Stddev    16384      207.31 (   0.00%)      141.65 (  31.67%)
+> 
+> In this case, there was a sizable improvement to performance and
+> a general reduction in variance. However, this is not univeral.
+> For most machines, the impact was roughly a 3% performance gain.
+> 
+> Ops NUMA base-page range updates       19796.00         292.00
+> Ops NUMA PTE updates                   19796.00         292.00
+> Ops NUMA PMD updates                       0.00           0.00
+> Ops NUMA hint faults                   16113.00         143.00
+> Ops NUMA hint local faults %            8407.00         142.00
+> Ops NUMA hint local percent               52.18          99.30
+> Ops NUMA pages migrated                 4244.00           1.00
+> 
+> Without the patch, only 52.18% of sampled accesses are local.  In an
+> earlier changelog, 100% of sampled accesses are local and indeed on
+> most machines, this was still the case. In this specific case, the
+> local sampled rates was 99.3% but note the "base-page range updates"
+> and "PTE updates".  The activity with the patch is negligible as were
+> the number of faults. The small number of pages migrated were related to
+> shared libraries.  A 2-socket Broadwell showed better results on average
+> but are not presented for brevity as the performance was similar except
+> it showed 100% of the sampled NUMA hints were local. The patch holds up
+> for a 4-socket Haswell, an AMD EPYC and AMD Epyc 2 machine.
+> 
+> For dbench, the impact depends on the filesystem used and the number of
+> clients. On XFS, there is little difference as the clients typically
+> communicate with workqueues which have a separate class of scheduler
+> problem at the moment. For ext4, performance is generally better,
+> particularly for small numbers of clients as NUMA balancing activity is
+> negligible with the patch applied.
+> 
+> A more interesting example is the Facebook schbench which uses a
+> number of messaging threads to communicate with worker threads. In this
+> configuration, one messaging thread is used per NUMA node and the number of
+> worker threads is varied. The 50, 75, 90, 95, 99, 99.5 and 99.9 percentiles
+> for response latency is then reported.
+> 
+> Lat 50.00th-qrtle-1        44.00 (   0.00%)       37.00 (  15.91%)
+> Lat 75.00th-qrtle-1        53.00 (   0.00%)       41.00 (  22.64%)
+> Lat 90.00th-qrtle-1        57.00 (   0.00%)       42.00 (  26.32%)
+> Lat 95.00th-qrtle-1        63.00 (   0.00%)       43.00 (  31.75%)
+> Lat 99.00th-qrtle-1        76.00 (   0.00%)       51.00 (  32.89%)
+> Lat 99.50th-qrtle-1        89.00 (   0.00%)       52.00 (  41.57%)
+> Lat 99.90th-qrtle-1        98.00 (   0.00%)       55.00 (  43.88%)
+> Lat 50.00th-qrtle-2        42.00 (   0.00%)       42.00 (   0.00%)
+> Lat 75.00th-qrtle-2        48.00 (   0.00%)       47.00 (   2.08%)
+> Lat 90.00th-qrtle-2        53.00 (   0.00%)       52.00 (   1.89%)
+> Lat 95.00th-qrtle-2        55.00 (   0.00%)       53.00 (   3.64%)
+> Lat 99.00th-qrtle-2        62.00 (   0.00%)       60.00 (   3.23%)
+> Lat 99.50th-qrtle-2        63.00 (   0.00%)       63.00 (   0.00%)
+> Lat 99.90th-qrtle-2        68.00 (   0.00%)       66.00 (   2.94%
+> 
+> For higher worker threads, the differences become negligible but it's
+> interesting to note the difference in wakeup latency at low utilisation
+> and mpstat confirms that activity was almost all on one node until
+> the number of worker threads increase.
+> 
+> Hackbench generally showed neutral results across a range of machines.
+> This is different to earlier versions of the patch which allowed imbalances
+> for higher degrees of utilisation. perf bench pipe showed negligible
+> differences in overall performance as the differences are very close to
+> the noise.
+> 
+> An earlier prototype of the patch showed major regressions for NAS C-class
+> when running with only half of the available CPUs -- 20-30% performance
+> hits were measured at the time. With this version of the patch, the impact
+> is negligible with small gains/losses within the noise measured. This is
+> because the number of threads far exceeds the small imbalance the aptch
+> cares about. Similarly, there were report of regressions for the autonuma
+> benchmark against earlier versions but again, normal load balancing now
+> applies for that workload.
+> 
+> In general, the patch simply seeks to avoid unnecessary cross-node
+> migrations in the basic case where imbalances are very small.  For low
+> utilisation communicating workloads, this patch generally behaves better
+> with less NUMA balancing activity. For high utilisation, there is no
+> change in behaviour.
+> 
+> Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+> ---
+>  kernel/sched/fair.c | 41 +++++++++++++++++++++++++++++------------
+>  1 file changed, 29 insertions(+), 12 deletions(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index ba749f579714..ade7a8dca5e4 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -8648,10 +8648,6 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
+>  	/*
+>  	 * Try to use spare capacity of local group without overloading it or
+>  	 * emptying busiest.
+> -	 * XXX Spreading tasks across NUMA nodes is not always the best policy
+> -	 * and special care should be taken for SD_NUMA domain level before
+> -	 * spreading the tasks. For now, load_balance() fully relies on
+> -	 * NUMA_BALANCING and fbq_classify_group/rq to override the decision.
+>  	 */
+>  	if (local->group_type == group_has_spare) {
+>  		if (busiest->group_type > group_fully_busy) {
+> @@ -8691,16 +8687,37 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
+>  			env->migration_type = migrate_task;
+>  			lsub_positive(&nr_diff, local->sum_nr_running);
+>  			env->imbalance = nr_diff >> 1;
+> -			return;
+> -		}
+> +		} else {
+>  
+> -		/*
+> -		 * If there is no overload, we just want to even the number of
+> -		 * idle cpus.
+> -		 */
+> -		env->migration_type = migrate_task;
+> -		env->imbalance = max_t(long, 0, (local->idle_cpus -
+> +			/*
+> +			 * If there is no overload, we just want to even the number of
+> +			 * idle cpus.
+> +			 */
+> +			env->migration_type = migrate_task;
+> +			env->imbalance = max_t(long, 0, (local->idle_cpus -
+>  						 busiest->idle_cpus) >> 1);
+> +		}
+> +
+> +		/* Consider allowing a small imbalance between NUMA groups */
+> +		if (env->sd->flags & SD_NUMA) {
+> +			unsigned int imbalance_min;
+> +
+> +			/*
+> +			 * Compute an allowed imbalance based on a simple
+> +			 * pair of communicating tasks that should remain
+> +			 * local and ignore them.
+> +			 *
+> +			 * NOTE: Generally this would have been based on
+> +			 * the domain size and this was evaluated. However,
+> +			 * the benefit is similar across a range of workloads
+> +			 * and machines but scaling by the domain size adds
+> +			 * the risk that lower domains have to be rebalanced.
+> +			 */
+> +			imbalance_min = 2;
+> +			if (busiest->sum_nr_running <= imbalance_min)
+> +				env->imbalance = 0;
+> +		}
+> +
+>  		return;
+>  	}
+>  
+> 
+
+Works for me. I like this simlified version.
+
+Acked-by: Phil Auld <pauld@redhat.com>
+
+  and/or
+
+Tested-by: Phil Auld <pauld@redhat.com>
+
+
+-- 
+
