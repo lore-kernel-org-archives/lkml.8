@@ -2,136 +2,147 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 339C5C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53464C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B0BF2083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:24:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25B77206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:24:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="SHDcYYIc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fBfVQH3N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbgAQRYb (ORCPT
+        id S1728900AbgAQRYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 12:24:31 -0500
-Received: from mail-bn7nam10on2114.outbound.protection.outlook.com ([40.107.92.114]:6080
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726603AbgAQRYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 12:24:30 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=frnuG48LlBhLXHY4LoLOvifgu6y7yXto91fLwu2q54NoI+PU3J/qEGOYS1IPEduuANOqrmsCpzVz5grjJUT6GmRwbfwtE5lUI/XFiCT6viqSosj9Bb2mlwQ3qdjg7mOnpgTEmT5YKVP8/kX3C/eRlgAqjmXZqMttrf7LvRt4KAZ2SzY/sDKaLaX+vPDHOVhWZ+nfc9hmNsFKHGsGFWBAeXNXYQkwI6tHkHTnLz/CZcZHKjDUyxt+OLN/kTdGZhNSDj5Iy5eCF2w2jR+d/8iOENcnO5VCsrPPIdwhPJmqwKkb0psxjJHCCsqq89oPfC43Eco8JVVqtuaS1Kn+FV3q4g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4W5bpHMFtKh9x6qJNtYLkj8yngGfj7cSpL9RMpqkRGo=;
- b=AmvXL80UtKkTgNaNbqKCME2o3YbB+p2FoJyrEaaWoZVkcCF1zJJH6EqCI72m0zIW77OkssXcVgsYZ6wypp0lenBJaQFK6omZK8//wHLv5OBE12xfO0Mmv11vRTzhlxgicRN5TeMV3aqEGjD0ehW1s2zSokYlQS2ZM3VPo6hQ2llB4d8+a8UmjsgMccR3ilTG/xeExlF0C2ExiWjJ19rdfoXe3i8rkuNlWMqm5edZEDNai3rcR3Ln06OR0czEorw1f7hQ/fn46AwUr4V8jewJJkxxdXaYKJ8pKvx167BlLYGj0vCT9xJRhTdlXPSkmal0xMlDe82EfFSvC5kUxidM5Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4W5bpHMFtKh9x6qJNtYLkj8yngGfj7cSpL9RMpqkRGo=;
- b=SHDcYYIc9k9XXqKnm4ewxpEp9a2v7QsdK2slWoSHe9WgkOozXPob7c+wckfMygAthLxaOtaeFXasNAA6ME/jALUQ2KvHx58kZtRGbyvcIC3aaxgTJ5bcBnrAhDp7M2qMYqdm4VQf+UQRbkmnwSk+edOEb6tVJJKJrgwSOPX85Rs=
-Received: from DM5PR1301MB2108.namprd13.prod.outlook.com (10.174.186.34) by
- DM5PR1301MB2057.namprd13.prod.outlook.com (10.174.182.24) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.6; Fri, 17 Jan 2020 17:24:26 +0000
-Received: from DM5PR1301MB2108.namprd13.prod.outlook.com
- ([fe80::2d32:cf4b:1b58:16ce]) by DM5PR1301MB2108.namprd13.prod.outlook.com
- ([fe80::2d32:cf4b:1b58:16ce%7]) with mapi id 15.20.2644.023; Fri, 17 Jan 2020
- 17:24:26 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "rmilkowski@gmail.com" <rmilkowski@gmail.com>
-CC:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-Subject: Re: [PATCH v2] NFSv4: try lease recovery on NFS4ERR_EXPIRED
-Thread-Topic: [PATCH v2] NFSv4: try lease recovery on NFS4ERR_EXPIRED
-Thread-Index: AdXGbKgtqm1QJU8yQtKfQBn7K7s7ZQG5DpoAAAKE7AA=
-Date:   Fri, 17 Jan 2020 17:24:26 +0000
-Message-ID: <962370db9ae3ba5a17ba390afe7f9de6cea571d4.camel@hammerspace.com>
-References: <115c01d5c66d$5dcd7ae0$196870a0$@gmail.com>
-         <041101d5cd50$e398d720$aaca8560$@gmail.com>
-In-Reply-To: <041101d5cd50$e398d720$aaca8560$@gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [68.40.189.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0875d8c8-cd4f-4ded-f0cc-08d79b721a26
-x-ms-traffictypediagnostic: DM5PR1301MB2057:
-x-microsoft-antispam-prvs: <DM5PR1301MB2057077C040FFCA929380B52B8310@DM5PR1301MB2057.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0285201563
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(376002)(39830400003)(346002)(136003)(199004)(189003)(478600001)(6512007)(36756003)(186003)(6486002)(8936002)(8676002)(54906003)(110136005)(81156014)(81166006)(2906002)(66946007)(91956017)(26005)(4326008)(76116006)(6506007)(53546011)(66476007)(71200400001)(64756008)(66556008)(5660300002)(66446008)(316002)(86362001)(2616005);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR1301MB2057;H:DM5PR1301MB2108.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3eS47LRlZumfQDi9eCLkepJSS1XUgxEkviFNCBT/4SsuJi7ovYqragR9TSvz1ygWs3ttPN1JIVjBO1WzQtdSy4ibdeJ74s69Yfhty4o7fvYYIgC4iprkwEyLZRyloDtV0po/7AMf70uFDAG+JX5XMkP0o8XpYDrdzXWgnW2aY2F6UfmmCQSJN0lXgwCLKsJyn10IWVnk8tc+8r3uwFogIxJTMfeM387naFEUCBWtfAo02MrhkmKkP86QBo0Za4jIA7YOGSCBdT0tzsFdBh1k2K/RpFlVPefq1ZLMSqevFLjFj4OF6QejlHEXwR4h1SU9Y/LjViM2QY8P+j8WulXGi6B+JzecANrKPw18E6JwUFdit6POKRI557gVud0mXqKwyq2/DDCvEWxnT5B12YQbeWbSmcQ2CKZ4UnQyENcyH+EelI/zqQOn0ECM5NenRkCd
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2374AB5434DB7545BFA655E0F5C6D271@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 17 Jan 2020 12:24:55 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:54986 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726603AbgAQRYy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 12:24:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579281894;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9xJSRhNfq8Tr3ojPfxyB93atGe8xjio+WX3BHwdtb3E=;
+        b=fBfVQH3NTGthNIG5ljm1qBQ7yORU3jsNmq1M4QoJYscnbw0LaxGnRXLeVxa1iUtSF3jJe5
+        mRffyAdG4v+b0HKvPgjAacz/poimYp6KaEToetcc4cRa/Vf+aVfZHhozybwuK9GCF8oavQ
+        T50cDKBPuDjk1H3Al+oZvCl7ilPYLuQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-374-ancvZ7HdO96rWud3lYvvqg-1; Fri, 17 Jan 2020 12:24:50 -0500
+X-MC-Unique: ancvZ7HdO96rWud3lYvvqg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5196A800D41;
+        Fri, 17 Jan 2020 17:24:48 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0E45A7DB34;
+        Fri, 17 Jan 2020 17:24:48 +0000 (UTC)
+Received: from zmail17.collab.prod.int.phx2.redhat.com (zmail17.collab.prod.int.phx2.redhat.com [10.5.83.19])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 9262787092;
+        Fri, 17 Jan 2020 17:24:47 +0000 (UTC)
+Date:   Fri, 17 Jan 2020 12:24:47 -0500 (EST)
+From:   Jan Stancek <jstancek@redhat.com>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>, tytso@mit.edu,
+        adilger@dilger.ca
+Cc:     LTP List <ltp@lists.linux.it>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org, chrubis <chrubis@suse.cz>,
+        linux-ext4@vger.kernel.org
+Message-ID: <1555311261.2497849.1579281887353.JavaMail.zimbra@redhat.com>
+In-Reply-To: <CA+G9fYuBdcZvE6VPm9i2=F0mK5u3j6Z+RHbFBQ1zh9qbN_4kaw@mail.gmail.com>
+References: <CA+G9fYuBdcZvE6VPm9i2=F0mK5u3j6Z+RHbFBQ1zh9qbN_4kaw@mail.gmail.com>
+Subject: Re: LTP: statx06: FAIL: Birth time < before time
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0875d8c8-cd4f-4ded-f0cc-08d79b721a26
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jan 2020 17:24:26.2161
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: UiR1BAcQy16yWXZUtWvI2eSKcKgbZHz9dX1tLJ4cy9SHdxp9+Lna1ax1BoDPyEjZY3WtO9xaj+tTSoYgQ+RSDQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1301MB2057
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.43.17.25, 10.4.195.23]
+Thread-Topic: statx06: FAIL: Birth time < before time
+Thread-Index: BGRUuw3BMnr+jewWkQoEmCDnUAKxyQ==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTAxLTE3IGF0IDE2OjEyICswMDAwLCBSb2JlcnQgTWlsa293c2tpIHdyb3Rl
-Og0KPiBBbnlvbmUgcGxlYXNlPw0KPiANCj4gDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0t
-DQo+IEZyb206IFJvYmVydCBNaWxrb3dza2kgPHJtaWxrb3dza2lAZ21haWwuY29tPiANCj4gU2Vu
-dDogMDggSmFudWFyeSAyMDIwIDIxOjQ4DQo+IFRvOiBsaW51eC1uZnNAdmdlci5rZXJuZWwub3Jn
-DQo+IENjOiAnVHJvbmQgTXlrbGVidXN0JyA8dHJvbmRteUBoYW1tZXJzcGFjZS5jb20+OyAnQ2h1
-Y2sgTGV2ZXInDQo+IDxjaHVjay5sZXZlckBvcmFjbGUuY29tPjsgJ0FubmEgU2NodW1ha2VyJyA8
-YW5uYS5zY2h1bWFrZXJAbmV0YXBwLmNvbQ0KPiA+Ow0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJu
-ZWwub3JnDQo+IFN1YmplY3Q6IFtQQVRDSCB2Ml0gTkZTdjQ6IHRyeSBsZWFzZSByZWNvdmVyeSBv
-biBORlM0RVJSX0VYUElSRUQNCj4gDQo+IEZyb206IFJvYmVydCBNaWxrb3dza2kgPHJtaWxrb3dz
-a2lAZ21haWwuY29tPg0KPiANCj4gQ3VycmVudGx5LCBpZiBhbiBuZnMgc2VydmVyIHJldHVybnMg
-TkZTNEVSUl9FWFBJUkVEIHRvIG9wZW4oKSwgZXRjLg0KPiB3ZSByZXR1cm4gRUlPIHRvIGFwcGxp
-Y2F0aW9ucyB3aXRob3V0IGV2ZW4gdHJ5aW5nIHRvIHJlY292ZXIuDQo+IA0KPiBGaXhlczogMjcy
-Mjg5YTNkZjcyICgiTkZTdjQ6IG5mczRfZG9faGFuZGxlX2V4Y2VwdGlvbigpIGhhbmRsZQ0KPiBy
-ZXZva2UvZXhwaXJ5DQo+IG9mIGEgc2luZ2xlIHN0YXRlaWQiKQ0KPiBTaWduZWQtb2ZmLWJ5OiBS
-b2JlcnQgTWlsa293c2tpIDxybWlsa293c2tpQGdtYWlsLmNvbT4NCj4gLS0tDQo+ICBmcy9uZnMv
-bmZzNHByb2MuYyB8IDQgKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKQ0K
-PiANCj4gZGlmZiAtLWdpdCBhL2ZzL25mcy9uZnM0cHJvYy5jIGIvZnMvbmZzL25mczRwcm9jLmMg
-aW5kZXgNCj4gNzZkMzcxNi4uMjQ3ODQwNQ0KPiAxMDA2NDQNCj4gLS0tIGEvZnMvbmZzL25mczRw
-cm9jLmMNCj4gKysrIGIvZnMvbmZzL25mczRwcm9jLmMNCj4gQEAgLTQ4MSw2ICs0ODEsMTAgQEAg
-c3RhdGljIGludCBuZnM0X2RvX2hhbmRsZV9leGNlcHRpb24oc3RydWN0DQo+IG5mc19zZXJ2ZXIN
-Cj4gKnNlcnZlciwNCj4gIAkJCQkJCXN0YXRlaWQpOw0KPiAgCQkJCWdvdG8gd2FpdF9vbl9yZWNv
-dmVyeTsNCj4gIAkJCX0NCj4gKwkJCWlmIChzdGF0ZSA9PSBOVUxMKSB7DQo+ICsJCQkJbmZzNF9z
-Y2hlZHVsZV9sZWFzZV9yZWNvdmVyeShjbHApOw0KPiArCQkJCWdvdG8gd2FpdF9vbl9yZWNvdmVy
-eTsNCj4gKwkJCX0NCj4gIAkJCS8qIEZhbGwgdGhyb3VnaCAqLw0KPiAgCQljYXNlIC1ORlM0RVJS
-X09QRU5NT0RFOg0KPiAgCQkJaWYgKGlub2RlKSB7DQo+IC0tDQo+IDEuOC4zLjENCj4gDQo+IA0K
-DQpEb2VzIHRoaXMgYXBwbHkgdG8gYW55IGNhc2Ugb3RoZXIgdGhhbiBORlM0RVJSX0VYUElSRUQg
-aW4gdGhlIHNwZWNpZmljDQpjYXNlIG9mIG5mczRfZG9fb3BlbigpPyBJIGNhbid0IHNlZSB0aGF0
-IGl0IGRvZXMuIEl0IGxvb2tzIHRvIG1lIGFzIGlmDQp0aGUgb3BlbiByZWNvdmVyeSByb3V0aW5l
-cyBhbHJlYWR5IGhhdmUgdGhlaXIgb3duIGhhbmRsaW5nIG9mIHRoaXMNCmNhc2UuDQoNCklmIHNv
-LCB3aHkgbm90IGp1c3QgYWRkIGl0IGFzIGEgc3BlY2lhbCBjYXNlIGluIHRoZSBuZnM0X2RvX29w
-ZW4oKQ0KZXJyb3IgaGFuZGxpbmc/IE90aGVyd2lzZSB0aGlzIHBhdGNoIHdpbGwgZW5kIHVwIG92
-ZXJyaWRpbmcgb3RoZXINCmdlbmVyaWMgY2FzZXMgd2hlcmUgd2UgaGF2ZSBhbiBpbm9kZSwgYnV0
-IG5vIG9wZW4gc3RhdGUuDQoNCk5vdGUgdGhhdCBfbmZzNF9kb19vcGVuKCkgYWxyZWFkeSB3YWl0
-cyBmb3IgbGVhc2UgcmVjb3ZlcnksIHNvIHdlIG9ubHkNCm5lZWQgdGhlIGNhbGwgdG8gbmZzX3Nj
-aGVkdWxlX2xlYXNlX3JlY292ZXJ5KCkuDQoNCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpMaW51eCBO
-RlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFtbWVy
-c3BhY2UuY29tDQoNCg0K
+
+
+----- Original Message -----
+> LTP syscalls statx06 test case getting failed from linux next 20200115
+> tag onwards on all x86_64, i386, arm and arm64 devices
+> 
+> Test output:
+> statx06.c:152: FAIL: Birth time < before time
+
+[CC Theo & linux-ext4]
+
+It's returning '0' in stx_btime for STATX_ALL or STATX_BTIME.
+
+Looking at changes, I suspect:
+  commit 927353987d503b24e1813245563cde0c6167af6e
+  Author: Theodore Ts'o <tytso@mit.edu>
+  Date:   Thu Nov 28 22:26:51 2019 -0500
+    ext4: avoid fetching btime in ext4_getattr() unless requested
+
+and that perhaps it should be instead...
+
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index c8355f022e6e..6d76eb6d2e7f 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -5398,7 +5398,7 @@ int ext4_getattr(const struct path *path, struct kstat *stat,
+        struct ext4_inode_info *ei = EXT4_I(inode);
+        unsigned int flags;
+
+-       if ((query_flags & STATX_BTIME) &&
++       if ((request_mask & STATX_BTIME) &&
+            EXT4_FITS_IN_INODE(raw_inode, ei, i_crtime)) {
+                stat->result_mask |= STATX_BTIME;
+                stat->btime.tv_sec = ei->i_crtime.tv_sec;
+
+That allows test to pass again.
+
+> statx06.c:156: PASS: Modified time Passed
+> statx06.c:156: PASS: Access time Passed
+> statx06.c:156: PASS: Change time Passed
+> 
+> strace output snippet:
+> [pid   498] clock_getres(CLOCK_REALTIME_COARSE, {tv_sec=0, tv_nsec=1000000})
+> = 0
+> [pid   498] nanosleep({tv_sec=0, tv_nsec=1000000}, NULL) = 0
+> [pid   498] openat(AT_FDCWD, \"mount_ext/test_file.txt\",
+> O_RDWR|O_CREAT, 0666) = 3
+> [pid   498] clock_getres(CLOCK_REALTIME_COARSE, {tv_sec=0, tv_nsec=1000000})
+> = 0
+> [pid   498] nanosleep({tv_sec=0, tv_nsec=1000000}, NULL) = 0
+> [pid   498] statx(AT_FDCWD, \"mount_ext/test_file.txt\",
+> AT_STATX_SYNC_AS_STAT, STATX_ALL, {stx_mask=STATX_BASIC_STATS,
+> stx_attributes=0, stx_mode=S_IFREG|0644, stx_size=0, ...}) = 0
+> [pid   498] write(2, \"statx06.c:152: \33[1;31mFAIL: \33[0m\"...,
+> 57statx06.c:152: [1;31mFAIL: [0mBirth time < before time
+> ) = 57
+> 
+> Full test log link,
+> https://lkft.validation.linaro.org/scheduler/job/1107634#L2276
+> 
+> Test results comparison link,
+> https://qa-reports.linaro.org/lkft/linux-next-oe/tests/ltp-syscalls-tests/statx06
+> 
+> Test case link,
+> https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/syscalls/statx/statx06.c
+> 
+> --
+> Linaro LKFT
+> https://lkft.linaro.org
+> 
+> 
+
