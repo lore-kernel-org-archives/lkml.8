@@ -2,95 +2,87 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4AAC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE57C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9B95214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:05:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0880F2083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:05:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579277114;
-	bh=lDKQ2AQPRq4K4hFm0dMBjmiFhOE9RKHqe9cSg8y0tww=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1dkuoDE5mYng1cW4ojiX2cAoyUl61vfiQDO+mwN8H/vuw+m8lhrP0mYCEqG5ZasOj
-	 7m6+1Bjn+FKYCNwTgsPtPJE/LR3ZaoF9E54CoM0cs5Urq2yzrDo9f1CWo599i44h8x
-	 ucJvCIHNFyzOa3QFuMaYFHC5HGknKny0ba7vuTv4=
+	s=default; t=1579277127;
+	bh=x7JuI1E9wvqitbssRJlpjo1FyMOuFppcS76BVDnU0Fw=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=yk8bHJv0MBCMDBcSCbZl0x7AJwpXnt2l5senkPJXcRV8y+lMf9MYk56hmZrG794bL
+	 2FKBgW+yEynvqxUsDNdGJzDUpnMCZRtZu3mhaYwI0mmt+GcI021bwxA0zipG9oLMCq
+	 pN08IRHoR3J6rHurKxsdP8YeNBCsO4Pi1tTwD8Bw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729262AbgAQQFO (ORCPT
+        id S1729276AbgAQQF0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 11:05:14 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45813 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727043AbgAQQFN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 11:05:13 -0500
-Received: by mail-ot1-f68.google.com with SMTP id 59so22924956otp.12;
-        Fri, 17 Jan 2020 08:05:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=09pIPN9VJnVoMEohnpzoMe9Wz3LLI11Byu6hcubzbxA=;
-        b=d5g16M1UuIpwgKHug1N93pZ7b1hkNbDydtqoLq08kh6roLqWPapMXqeuV2sIS0w0oF
-         8RLj8qlxx8hojKuB6d9+4Ea+8F5U0+Bfkf10BHtw7VdKDZwqw+QS3+wdw4Hueh5gvYE2
-         Aw6/raAl+qW28Nu7XjR7mg4jEHLR4H0gY9lumxcBHp2aW1bOMaP2WhrzxUx9OhnWvhG/
-         39gNsohdd2+OoyCv5KDS6FqjwZbNTuwKJvk76hVlwjQEU8SnU5TmigfXzcs42fJQEtje
-         At8D3Qh0XfKpELJefKiGI5rlvyImmaIKndiB9GM0tMwdFL/FmwRdj5GGbkvOH+93aPza
-         ZxAg==
-X-Gm-Message-State: APjAAAWPfdBbvFmnzaIadZkQ8jEJX5C3MMS2Wq/3ww+1jZ7RhbyENdHI
-        //nEFgMWK+rsHqfGUdJaMA==
-X-Google-Smtp-Source: APXvYqzQt3oAnIJ07HK2ThTZ7fZk/cAWmEqZh1TV2aFPYhVvNicW/VMaIbgMHihgXroZfWA+uWkxRg==
-X-Received: by 2002:a9d:811:: with SMTP id 17mr6752321oty.369.1579277112497;
-        Fri, 17 Jan 2020 08:05:12 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n17sm8969227otq.46.2020.01.17.08.05.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 08:05:11 -0800 (PST)
-Received: (nullmailer pid 17750 invoked by uid 1000);
-        Fri, 17 Jan 2020 16:05:10 -0000
-Date:   Fri, 17 Jan 2020 10:05:10 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Remi Pommarel <repk@triplefau.lt>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Yue Wang <yue.wang@Amlogic.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>
-Subject: Re: [PATCH v5 3/7] dt-bindings: PCI: meson: Update PCIE bindings
- documentation
-Message-ID: <20200117160510.GA17695@bogus>
-References: <20200116111850.23690-1-repk@triplefau.lt>
- <20200116111850.23690-4-repk@triplefau.lt>
+        Fri, 17 Jan 2020 11:05:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46552 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727043AbgAQQF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 11:05:26 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A77B2064C;
+        Fri, 17 Jan 2020 16:05:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579277125;
+        bh=x7JuI1E9wvqitbssRJlpjo1FyMOuFppcS76BVDnU0Fw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=x+RZocghEOCxn6x7gzZJyIx3svF7CLvQ14RSl/TL+ZpXLS2OZNcFnILQL2scr1sCd
+         WquuDCE76pR3Etml5R3SY669ZOc4jIHKVrFxRTiuIBvbwh+mtT38vIHTx9rEpk/uKk
+         kyA/4EIraIEFArWm6j+/7A/Gr7WfiOoJbbSwPTWI=
+Subject: Re: [PATCH 5.4 000/203] 5.4.13-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200116231745.218684830@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <456d28d9-1a50-5445-bfaf-9d87bfeb185f@kernel.org>
+Date:   Fri, 17 Jan 2020 09:05:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200116111850.23690-4-repk@triplefau.lt>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Jan 2020 12:18:46 +0100, Remi Pommarel wrote:
-> Now that a new PHYs has been introduced for AXG SoC family, update
-> dt bindings documentation.
+On 1/16/20 4:15 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.13 release.
+> There are 203 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Please note that this breaks backward compatibility but as not a single
-> devicetree uses that yet that seems ok.
+> Responses should be made by Sat, 18 Jan 2020 23:16:00 +0000.
+> Anything received after that time might be too late.
 > 
-> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> ---
->  .../bindings/pci/amlogic,meson-pcie.txt       | 22 ++++++++-----------
->  1 file changed, 9 insertions(+), 13 deletions(-)
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.13-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Compiled and booted on my test system. No dmesg regressions.
+
+thanks,
+-- Shuah
