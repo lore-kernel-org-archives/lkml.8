@@ -2,109 +2,158 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8840C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 04:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE699C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 04:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BE5920730
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 04:24:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cIVbgfHF"
+	by mail.kernel.org (Postfix) with ESMTP id 8A9DD20842
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 04:26:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579235179;
+	bh=sNetLEyfDPRRuML0NIpfa9qER9/y0UxaFx7na4fO55o=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=yB7B9p2D6BFaAuCNo9Ep2aJHuU8x8vrRjJtPULQ3Av3NXUH5LK31qqtCreb+1/7D/
+	 5UeJnRFPWKsp4aszuapUFGvWYkDvm2+dapLyLUdFpIdEZHh78RMGlUpKIL2ICVUrIF
+	 BXkR359Li094e0PTl++ohnRsZvS3vyAmfeNzLdo8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729747AbgAQEYN (ORCPT
+        id S1729890AbgAQE0S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 23:24:13 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:51344 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726566AbgAQEYN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 23:24:13 -0500
-Received: by mail-pj1-f67.google.com with SMTP id d15so2583414pjw.1;
-        Thu, 16 Jan 2020 20:24:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=ANpzFmgjjuaZgNEEBDm5PaG+F+Suwy/uIclI0OaRnP4=;
-        b=cIVbgfHFRatkQnOmtGISxJXOYHYBnXKXuk/8gi0JxX7/6LqD7P28IGHSgERryqKAp3
-         qR4KGBZ2DCGcmtX+wZMFcOIuyjoxC2zW2YUI4XlgN+ao4SvFQXmcrv09ev3cGvkFj47s
-         q5RiJCo5xsqJ9Lf2XQEoaXMXFyJ4nKsj7/lQNoX/tkhFnTLE0kqF7wzs2Wmo9Ox5jhgJ
-         uiYY/5jaadyzv5m64cGex4Rc33tZ6Cl+oQWe0T2P7lmJnQogFAKZluEcG/0sP6gZu1J9
-         X9ZMQepYdPVTNRcTyR9mWXpoPukvLzVaAeuopMyYLoHgnJEv/OfYNVnfWtLtAFrEgnLA
-         LWDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=ANpzFmgjjuaZgNEEBDm5PaG+F+Suwy/uIclI0OaRnP4=;
-        b=eCFW+pTG3wHAnVrnLfA8wDnaArkXK0dixsjfRPp/Etr0AfnAAvVJ+E4hXDN8IoAnYO
-         SzGr60YNKPBmEhFelPPeXDPoE+ovTpKwnM9jyHWpNKjPVzLNCe9pqjhrUsPChojF7UCZ
-         YqMxtXxThj4DRjUWGFSujLAUBADAumYRduEZw238bBeqIZ/dfLg3I936BfugJ+rhbOIo
-         GdrQLCSo0NNTt3vv1IvKZxa9MMBVmQQJCBIka9CxJRKNjJbUtxuNwFgDDSbGB6IpAOGk
-         Ozcf6xGtBredW6jtSvGnKMkJTYXz6LY3n/iQUk6qaqB5G+ikTroJSpf5gV21GT8CCwvp
-         qgAA==
-X-Gm-Message-State: APjAAAUPqvD9nEXZslvwiILJJ+dySYdB1QcpyEKRpbCP4Q6wGfn1UExW
-        5RFdMXnaZZ/OG/b5stIlEH4=
-X-Google-Smtp-Source: APXvYqwE05jpaDTRqD3BU1fHu6zE7cC/ZX1k2DsUR0/fW/MOvfolBW34Hl0kZoAtkbRKjImpQRTWzQ==
-X-Received: by 2002:a17:902:b48e:: with SMTP id y14mr36241040plr.260.1579235052436;
-        Thu, 16 Jan 2020 20:24:12 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id j125sm26799062pfg.160.2020.01.16.20.24.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 20:24:11 -0800 (PST)
-Date:   Thu, 16 Jan 2020 20:24:09 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Input <linux-input@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH] input: max77650-onkey: add of_match table
-Message-ID: <20200117042409.GE47797@dtor-ws>
-References: <20191210100753.11090-1-brgl@bgdev.pl>
- <20200110182841.GT8314@dtor-ws>
- <CAMRc=Mcu-oNC009JLkNSDrKjg_ygb63ZTnrmu+8NwNZrOVsEZQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mcu-oNC009JLkNSDrKjg_ygb63ZTnrmu+8NwNZrOVsEZQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 16 Jan 2020 23:26:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41278 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726566AbgAQE0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 23:26:18 -0500
+Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D14620748;
+        Fri, 17 Jan 2020 04:26:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579235177;
+        bh=sNetLEyfDPRRuML0NIpfa9qER9/y0UxaFx7na4fO55o=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=rMEx8bsc/4AtbauemogLDvALm4D8Ac1B3FedkSrrOA8fykacy/zzBXR2Xwy10vQwQ
+         G/oOovc/lwHGyM5ET08+DGwOeow7T0qyj5fkpYzZIF1fd/GW5TOmRXKH3yD4GWVDJ6
+         Qt7IauzcUTw2QtSEUdWfVf1loVWNSPRl6z3dAVbI=
+Message-ID: <1579235176.2474.5.camel@kernel.org>
+Subject: Re: Unresolved reference for histogram variable
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Date:   Thu, 16 Jan 2020 22:26:16 -0600
+In-Reply-To: <20200116165658.4e8d15fb@gandalf.local.home>
+References: <20200116154216.58ca08eb@gandalf.local.home>
+         <20200116165658.4e8d15fb@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.1-1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 11, 2020 at 11:22:55AM +0100, Bartosz Golaszewski wrote:
-> pt., 10 sty 2020 o 19:28 Dmitry Torokhov <dmitry.torokhov@gmail.com> napisał(a):
-> >
-> > On Tue, Dec 10, 2019 at 11:07:53AM +0100, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > >
-> > > We need the of_match table if we want to use the compatible string in
-> > > the pmic's child node and get the onkey driver loaded automatically.
-> >
-> > Do we really need of_match table or adding
-> >
-> 
-> Not really. Technically not anyway but we merged bindings that define
-> it (at the time I didn't know any better) and seems we're stuck with
-> it. Please see the discussion below a similar patch for regulator
-> subsystem[1].
-> 
-> > MODULE_ALIAS("platform:max77650-onkey");
-> >
-> 
-> This is already in there, but if someone defines the compatible in the
-> device tree as per bindings, the module won't be loaded despite the
-> MODULE_ALIAS() definition.
+Hi Steve,
 
-I see. Applied, thank you.
+On Thu, 2020-01-16 at 16:56 -0500, Steven Rostedt wrote:
+> On Thu, 16 Jan 2020 15:42:16 -0500
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > in parse_expr():
+> > 
+> > 	operand1->read_once = true;
+> > 	operand2->read_once = true;
+> > 
+> > Why is that?
+> > 
+> > This means that any variable used in an expression can not be use
+> > later
+> > on.
+> > 
+> > Or should the variable be detected that it is used multiple times
+> > in
+> > the expression, and have the parser detect this, and just reuse the
+> > same variable multiple times?
+> 
+> This patch seems to fix the problem, and lets us reuse the same
+> variable multiple times.
 
--- 
-Dmitry
+It works for me too, and seems like it should be a good fix for the
+problem.  The size and is_signed might be the overkill you're referring
+to, but I'd like to spend time tomorrow verifying that and doing some
+testing to make sure.
+
+Thanks,
+
+Tom
+
+> 
+> -- Steve
+> 
+> diff --git a/kernel/trace/trace_events_hist.c
+> b/kernel/trace/trace_events_hist.c
+> index 117a1202a6b9..b7f944735a4a 100644
+> --- a/kernel/trace/trace_events_hist.c
+> +++ b/kernel/trace/trace_events_hist.c
+> @@ -116,6 +116,7 @@ struct hist_field {
+>  	struct ftrace_event_field	*field;
+>  	unsigned long			flags;
+>  	hist_field_fn_t			fn;
+> +	unsigned int			ref;
+>  	unsigned int			size;
+>  	unsigned int			offset;
+>  	unsigned int                    is_signed;
+> @@ -2432,8 +2433,16 @@ static int contains_operator(char *str)
+>  	return field_op;
+>  }
+>  
+> +static void get_hist_field(struct hist_field *hist_field)
+> +{
+> +	hist_field->ref++;
+> +}
+> +
+>  static void __destroy_hist_field(struct hist_field *hist_field)
+>  {
+> +	if (--hist_field->ref > 1)
+> +		return;
+> +
+>  	kfree(hist_field->var.name);
+>  	kfree(hist_field->name);
+>  	kfree(hist_field->type);
+> @@ -2475,6 +2484,8 @@ static struct hist_field
+> *create_hist_field(struct hist_trigger_data *hist_data,
+>  	if (!hist_field)
+>  		return NULL;
+>  
+> +	hist_field->ref = 1;
+> +
+>  	hist_field->hist_data = hist_data;
+>  
+>  	if (flags & HIST_FIELD_FL_EXPR || flags &
+> HIST_FIELD_FL_ALIAS)
+> @@ -2670,6 +2681,19 @@ static struct hist_field
+> *create_var_ref(struct hist_trigger_data *hist_data,
+>  {
+>  	unsigned long flags = HIST_FIELD_FL_VAR_REF;
+>  	struct hist_field *ref_field;
+> +	int i;
+> +
+> +	for (i = 0; i < hist_data->n_var_refs; i++) {
+> +		ref_field = hist_data->var_refs[i];
+> +		/* Maybe this is overkill? */
+> +		if (ref_field->var.idx == var_field->var.idx &&
+> +		    ref_field->var.hist_data == var_field->hist_data 
+> &&
+> +		    ref_field->size == var_field->size &&
+> +		    ref_field->is_signed == var_field->is_signed) {
+> +			get_hist_field(ref_field);
+> +			return ref_field;
+> +		}
+> +	}
+>  
+>  	ref_field = create_hist_field(var_field->hist_data, NULL,
+> flags, NULL);
+>  	if (ref_field) {
