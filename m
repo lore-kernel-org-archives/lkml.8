@@ -2,109 +2,96 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDFC5C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F49C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 965282083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10C982087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:19:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579270788;
+	bh=1UnnLVeZLQ92n1ChKZKfzqxzORKBkvv2IdXh/d6Tjtw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=v5mUFgBxUSI4dmoT8W6dsJc6EeLN8GMj99T0Lwtshz96eYMDGMDnsTYVv+6ZsdnGh
+	 idxu9D56j/EugNt6Yfn5JdW/rV9VPnhhrHH7q8ZYmqYks8Z+KtJoFfvTmcI8l+BpNk
+	 Wv2OBU1zMhaUQszXuPSmB4fJn687mrKYNmZeEcYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728680AbgAQOTi convert rfc822-to-8bit (ORCPT
+        id S1728780AbgAQOTr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 09:19:38 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:50295 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726957AbgAQOTi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 09:19:38 -0500
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1isSTF-0006eE-5w; Fri, 17 Jan 2020 15:19:33 +0100
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1isSTE-0007Jv-BR; Fri, 17 Jan 2020 15:19:32 +0100
-Message-ID: <e839f09ce459cb374184ac1871db6e0be24f2418.camel@pengutronix.de>
-Subject: Re: [PATCH 1/4] remoteproc: qcom: q6v5-mss: Use
- regmap_read_poll_timeout
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Sibi Sankar <sibis@codeaurora.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org
-Cc:     ohad@wizery.com, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        agross@kernel.org
-Date:   Fri, 17 Jan 2020 15:19:32 +0100
-In-Reply-To: <20200117135130.3605-2-sibis@codeaurora.org>
-References: <20200117135130.3605-1-sibis@codeaurora.org>
-         <20200117135130.3605-2-sibis@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        Fri, 17 Jan 2020 09:19:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45636 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726903AbgAQOTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 09:19:46 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F16222083E;
+        Fri, 17 Jan 2020 14:19:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579270786;
+        bh=1UnnLVeZLQ92n1ChKZKfzqxzORKBkvv2IdXh/d6Tjtw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=V+JU9uifUr2pX71XOyHKwMwqhUHm15/TeXVe5lmGSBQDEKcGI4TdOV0kZAk6dCYZP
+         Sg1ZpVsOAHmBZGyZKmiFplF0fHf3M/uvaH8IKqwiqkg5mMMGnWFCx10jp4mrczdBUT
+         6WQWU/M9+xVedGO4KY55CKe/wt7mtWsNd7/kEHSs=
+Date:   Fri, 17 Jan 2020 15:19:44 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     roman.sudarikov@linux.intel.com
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org, eranian@google.com,
+        bgregg@netflix.com, ak@linux.intel.com, kan.liang@linux.intel.com,
+        alexander.antonov@intel.com
+Subject: Re: [PATCH v4 2/2] perf =?iso-8859-1?Q?x86?=
+ =?iso-8859-1?Q?=3A_Exposing_an_Uncore_unit_to_PMON_for_Intel_Xeon?=
+ =?iso-8859-1?Q?=AE?= server platform
+Message-ID: <20200117141944.GC1856891@kroah.com>
+References: <20200117133759.5729-1-roman.sudarikov@linux.intel.com>
+ <20200117133759.5729-3-roman.sudarikov@linux.intel.com>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200117133759.5729-3-roman.sudarikov@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-01-17 at 19:21 +0530, Sibi Sankar wrote:
-> Replace the loop for HALT_ACK detection with regmap_read_poll_timeout.
+On Fri, Jan 17, 2020 at 04:37:59PM +0300, roman.sudarikov@linux.intel.com wrote:
+> From: Roman Sudarikov <roman.sudarikov@linux.intel.com>
 > 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  drivers/remoteproc/qcom_q6v5_mss.c | 16 ++++++----------
->  1 file changed, 6 insertions(+), 10 deletions(-)
+> Current version supports a server line starting Intel® Xeon® Processor
+> Scalable Family and introduces mapping for IIO Uncore units only.
+> Other units can be added on demand.
 > 
-> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-> index 51f451311f5fc..f20b39c6ff0ed 100644
-> --- a/drivers/remoteproc/qcom_q6v5_mss.c
-> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
-> @@ -73,6 +73,7 @@
->  #define NAV_AXI_IDLE_BIT		BIT(2)
->  
->  #define HALT_ACK_TIMEOUT_MS		100
-> +#define NAV_HALT_ACK_TIMEOUT_US		200
->  
->  /* QDSP6SS_RESET */
->  #define Q6SS_STOP_CORE			BIT(0)
-> @@ -746,7 +747,6 @@ static void q6v5proc_halt_nav_axi_port(struct q6v5 *qproc,
->  				       struct regmap *halt_map,
->  				       u32 offset)
->  {
-> -	unsigned long timeout;
->  	unsigned int val;
->  	int ret;
->  
-> @@ -760,15 +760,11 @@ static void q6v5proc_halt_nav_axi_port(struct q6v5 *qproc,
->  			   NAV_AXI_HALTREQ_BIT);
->  
->  	/* Wait for halt ack*/
-> -	timeout = jiffies + msecs_to_jiffies(HALT_ACK_TIMEOUT_MS);
-> -	for (;;) {
-> -		ret = regmap_read(halt_map, offset, &val);
-> -		if (ret || (val & NAV_AXI_HALTACK_BIT) ||
-> -		    time_after(jiffies, timeout))
-> -			break;
-> -
-> -		udelay(5);
-> -	}
-> +	ret = regmap_read_poll_timeout(halt_map, offset, val,
-> +				       (val & NAV_AXI_HALTACK_BIT),
-> +				       5, NAV_HALT_ACK_TIMEOUT_US);
-> +	if (ret)
-> +		dev_err(qproc->dev, "nav halt ack timeout\n");
->  
->  	ret = regmap_read(halt_map, offset, &val);
->  	if (ret || !(val & NAV_AXI_IDLE_BIT))
+> IIO stack to PMON mapping is exposed through:
+>     /sys/devices/uncore_iio_<pmu_idx>/mapping
+>     in the following format: domain:bus
+> 
+> For example, on a 4-die Intel Xeon® server platform:
+>     $ cat /sys/devices/uncore_iio_0/mapping
+>     0000:00,0000:40,0000:80,0000:c0
 
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Again, horrible format, why do we have to parse this in userspace like
+this?  Who will use this file?  What do they really need?
 
-regards
-Philipp
+And what happens when you have too many "dies" in a system and you
+overflow the sysfs file?  We have already seen this happen for other
+sysfs files that assumed "oh, we will never have that many
+cpus/leds/whatever in a system at one time" and now they have to go do
+horrid hacks to get around the PAGE_SIZE limitation of sysfs files.
+
+DO NOT DO THIS!
+
+I thought I was nice and gentle last time and said that this was a
+really bad idea and you would fix it up.  That didn't happen, so I am
+being explicit here, THIS IS NOT AN ACCEPTABLE FILE OUTPUT FOR A SYSFS
+FILE.
+
+greg k-h
