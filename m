@@ -2,89 +2,116 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44474C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC5A1C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23AE52467D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADA412087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:10:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729469AbgAQKK2 (ORCPT
+        id S1729475AbgAQKKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 05:10:28 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55349 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728731AbgAQKIs (ORCPT
+        Fri, 17 Jan 2020 05:10:32 -0500
+Received: from mout.kundenserver.de ([217.72.192.73]:51849 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729211AbgAQKK3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 05:08:48 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1isOYR-0005Ou-6R; Fri, 17 Jan 2020 11:08:39 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DC4591C19CE;
-        Fri, 17 Jan 2020 11:08:38 +0100 (CET)
-Date:   Fri, 17 Jan 2020 10:08:38 -0000
-From:   "tip-bot2 for Harry Pan" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/x86/intel/rapl: Add Comet Lake support
-Cc:     Harry Pan <harry.pan@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191227171944.1.Id6f3ab98474d7d1dba5b95390b24e0a67368d364@changeid>
-References: <20191227171944.1.Id6f3ab98474d7d1dba5b95390b24e0a67368d364@changeid>
+        Fri, 17 Jan 2020 05:10:29 -0500
+Received: from mail-qt1-f179.google.com ([209.85.160.179]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1Mo7if-1jPZsX3TI3-00papY; Fri, 17 Jan 2020 11:10:27 +0100
+Received: by mail-qt1-f179.google.com with SMTP id w8so6929852qts.11;
+        Fri, 17 Jan 2020 02:10:26 -0800 (PST)
+X-Gm-Message-State: APjAAAUEDzsZQi9ARRL4u2fVW9n7pv71gxBBz7zQFldLOUe+9rwitPKI
+        y2LXShZzdxt1zNksoOxbOwYUoHYVgj34QmX8Xsk=
+X-Google-Smtp-Source: APXvYqwJseIcLf52SoCo+jtyEMNWCmLScJZGo/aM/tEE3YgOeqebesjzIckzh3dwWAmCE7mLdstmifhUAdg/ilxjg+0=
+X-Received: by 2002:ac8:768d:: with SMTP id g13mr6672928qtr.7.1579255825449;
+ Fri, 17 Jan 2020 02:10:25 -0800 (PST)
 MIME-Version: 1.0
-Message-ID: <157925571867.396.7017475440138207762.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <cover.1579248206.git.michal.simek@xilinx.com> <0274919c5e3b134df19d943f99cb7e84e5135ccd.1579248206.git.michal.simek@xilinx.com>
+In-Reply-To: <0274919c5e3b134df19d943f99cb7e84e5135ccd.1579248206.git.michal.simek@xilinx.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 17 Jan 2020 11:10:09 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a3bfO9EdL6o4+yY5BCw0pc1ANYocVjyohmG34jcjLiWpA@mail.gmail.com>
+Message-ID: <CAK8P3a3bfO9EdL6o4+yY5BCw0pc1ANYocVjyohmG34jcjLiWpA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] asm-generic: Make dma-contiguous.h a mandatory
+ include/asm header
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michal Simek <monstr@monstr.eu>, git@xilinx.com,
+        Christoph Hellwig <hch@lst.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-riscv@lists.infradead.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Guo Ren <guoren@kernel.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Wesley Terpstra <wesley@sifive.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        linux-xtensa@linux-xtensa.org, "H. Peter Anvin" <hpa@zytor.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Chris Zankel <chris@zankel.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        James Hogan <jhogan@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:NoA6lR5asYNCyYKhe9jWMGVyZrcIPwFSmU/9i+MCsvjD7l/q+0E
+ xamkGFPsa8WqWcpoTbKLa0HTFaxvsRDU3Yg1Tjs5VjPvEa0YzXlOTtB3H+HkUQLhOK18FNM
+ T7d7QrUxg40WjYU29hDjIqfDeU8vaco2MiUSREKxtCEILK7r8Ok0/re0d55j9UMA+dbmPdd
+ Q5ORnP1qoOhIYkN4s6C9Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:moewDwzL1zY=:Og/pj7BHnPsRu+8o/xR4jd
+ /5FTFityP5vYdrAZ8u4f+NKv6rFWAXiKCGvUNOrKPS+uozyMXVzFVn9mn0BNuk49R4sTcvGiV
+ /3mU1R1HdB6XM0NufLzKsZrh0bOP0zuW69QDX6Jf3/888gGK83uWEwGF/h0j5Sq6Fq9ieEunq
+ rnRa+FNRnArnru6lWAqxwFLeodgnvUTEje6C2luxM/rv31CP97nI76r/sNggx0LoD25sgb+wk
+ B4fXK4r6rHxmJpsUAB4TFHFVkBQ35xEtPP1HvFhDh9jiHrI8kn86LUg/TDDRub1/uVZ7zCklw
+ FDS90rkhZDfEgOXuXMmplYuydxFxZ5J5rn5dd83zA6L3Mjgy2FG6ES8eKWzao4YVmB9Wduf7P
+ xT9wsLcqqiDWbnzXGf4zKotbSRmzPh5Fv++MirVf8JMCdAzbBT0boZwPJ6iWrfkU/YCcUH7pG
+ WeE0UXuRO3RVbgnexVPjLzBKZyX6YPi3extl0jEV7d8yqASmv/Kl5Qf4/pnLN02wxwhhDjRSo
+ LfvutuyEY11++msvCeKnQeitTSrwLo+R/VB6KHb8Ji1Zlk79m51hBudGDrxCvGbngglFlj1/5
+ Aj3Kb7UwL+cXDLCuBCzC7JgcoIMS3ojk07wwIA4kF8iAyNKRU1CwXQK9oLVpyUY3ueqglKHkM
+ 4gWKEIE7xrnrIqcQYwa5Q3CQNWVMakSQo08oLy0UxUEp3jPx86yTFLpOurDppOZ+TUgS5z6t5
+ TN+j9px/tXMV5B/LPPgcBZfaFFBxvYLBGZtBgt/V/CIQhXpE+NReitfu1neyJdDTkzpFVQzzK
+ ZLa+TVfzc5R8QNK8838TmlIcv70M4a/zkgtTMAfBbxA24lD4vyG0JIDnIcKdsI+MjZabomZMp
+ X8KXQN2N5yTRNHF73S3w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/core branch of tip:
+On Fri, Jan 17, 2020 at 9:03 AM Michal Simek <michal.simek@xilinx.com> wrote:
+>
+> dma-continuguous.h is generic for all architectures except arm32 which has
+> its own version.
+>
+> Similar change was done for msi.h by commit a1b39bae16a6
+> ("asm-generic: Make msi.h a mandatory include/asm header")
+>
+> Suggested-by: Christoph Hellwig <hch@infradead.org>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> ---
+>
+> Changes in v2:
+> - New patch suggested by Christoph
 
-Commit-ID:     1e0f17724a74c8e94a5235bee7397987b424893f
-Gitweb:        https://git.kernel.org/tip/1e0f17724a74c8e94a5235bee7397987b424893f
-Author:        Harry Pan <harry.pan@intel.com>
-AuthorDate:    Fri, 27 Dec 2019 17:19:46 +08:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Fri, 17 Jan 2020 10:19:25 +01:00
-
-perf/x86/intel/rapl: Add Comet Lake support
-
-Comet Lake supports the same RAPL counters like Kaby Lake and Skylake.
-After this, on CML machine the energy counters appear in perf list.
-
-Signed-off-by: Harry Pan <harry.pan@intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20191227171944.1.Id6f3ab98474d7d1dba5b95390b24e0a67368d364@changeid
----
- arch/x86/events/intel/rapl.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/x86/events/intel/rapl.c b/arch/x86/events/intel/rapl.c
-index 5053a40..0991312 100644
---- a/arch/x86/events/intel/rapl.c
-+++ b/arch/x86/events/intel/rapl.c
-@@ -741,6 +741,8 @@ static const struct x86_cpu_id rapl_model_match[] __initconst = {
- 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ATOM_GOLDMONT_PLUS,	model_hsw),
- 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ICELAKE_L,		model_skl),
- 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ICELAKE,		model_skl),
-+	X86_RAPL_MODEL_MATCH(INTEL_FAM6_COMETLAKE_L,		model_skl),
-+	X86_RAPL_MODEL_MATCH(INTEL_FAM6_COMETLAKE,		model_skl),
- 	{},
- };
- 
+Acked-by: Arnd Bergmann <arnd@arndb.de>
