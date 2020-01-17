@@ -2,106 +2,107 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CC7C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 05:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E32C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 05:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6FC520661
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 05:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A207F2072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 05:32:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DgKVSt/p"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="b1VqxNml"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgAQFat (ORCPT
+        id S1726778AbgAQFc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 00:30:49 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:43786 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbgAQFas (ORCPT
+        Fri, 17 Jan 2020 00:32:57 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:55150 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725834AbgAQFc5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 00:30:48 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00H5SsBd157673;
-        Fri, 17 Jan 2020 05:30:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
- bh=aWiEefB1h7tIO6YvK1XsMNLlgppTykwjcM4m1HSnw1I=;
- b=DgKVSt/pr20CKdnnBYvE1aCz2BMU7Nmny7cEtKsz4ovsgY72aQtktRNGEdgj+2FU3rry
- +s0kEyLBFG2cSTQ3k7q/7gLGqMQ08HNXgPI6+Vj02Am+dA4VdTKFxnBgXd0HrWpyGgqt
- Q10GTx+H7rll7S7Qw22UoMq1nGblOqVk1tUkGwKgYKRRDPVjTEbLZz71CL/LhKa/74al
- ygtyWkXrtx2HbH26kmL/RvCdO+CEU9Hl4+KGOCosqsuPYtDz0sL1qQC1x7WokG1JHAtt
- 7MI6Vwf5GRodxp3Rm8CZd8vOMfPJEZFCYLI0oMGVR2Yt95T+RAAeWf/UojJkKSH8K+FC ow== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2xf74spkau-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Jan 2020 05:30:17 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00H5TPuk075883;
-        Fri, 17 Jan 2020 05:30:17 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2xk24ec533-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Jan 2020 05:30:17 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00H5UGq1003447;
-        Fri, 17 Jan 2020 05:30:16 GMT
-Received: from kili.mountain (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 16 Jan 2020 21:30:15 -0800
-Date:   Fri, 17 Jan 2020 08:30:07 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH] tracing/boot: Fix an IS_ERR() vs NULL bug
-Message-ID: <20200117053007.5h2juv272pokqhtq@kili.mountain>
+        Fri, 17 Jan 2020 00:32:57 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00H5WuWm114765;
+        Thu, 16 Jan 2020 23:32:56 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579239176;
+        bh=Ws2WtoCm7DGHYFLkEAhjOgMut0ka+e3bXSjse0r0CFM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=b1VqxNmlC0FZzdhCnbVCWtz4suThfQliLrk41b2p0mJrXJeJvEiOH5ZFQg0taTk5C
+         et4CI1cKlFHBOUKqz8APvFKBqiNgx0lnkhloEybFcLZnX3/NFMXx4sIwtHpsCsvgQT
+         Vmn7rIZgCJzd1fpGVnn035G+06941Xjjot0aLjlU=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00H5WtnW121300
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 16 Jan 2020 23:32:55 -0600
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 16
+ Jan 2020 23:32:55 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 16 Jan 2020 23:32:55 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00H5WqDH067616;
+        Thu, 16 Jan 2020 23:32:54 -0600
+Subject: Re: [GIT PULL] PHY: For 5.6
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>
+References: <20200116110515.20480-1-kishon@ti.com>
+ <20200116195524.GA1096827@kroah.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <c6b3e4fe-38ae-4c62-e54a-c56804338b0e@ti.com>
+Date:   Fri, 17 Jan 2020 11:05:04 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9502 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001170042
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9502 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001170042
+In-Reply-To: <20200116195524.GA1096827@kroah.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The trace_array_get_by_name() function doesn't return error pointers,
-it returns NULL on error.
+Hi Greg,
 
-Fixes: 4f712a4d04a4 ("tracing/boot: Add instance node support")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- kernel/trace/trace_boot.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 17/01/20 1:25 AM, Greg Kroah-Hartman wrote:
+> On Thu, Jan 16, 2020 at 04:35:15PM +0530, Kishon Vijay Abraham I wrote:
+>> Hi Greg,
+>>
+>> Please find the pull request for 5.6 merge window below.
+>>
+>> PHY core now creates a device link between PHY consumer and PHY
+>> provider required for suspend/resume ordering and also adds support
+>> for DisplayPort controller to pass configuration parameters to PHY.
+>>
+>> It includes new PHY drivers for TI's J721E SoC (PCIe and USB), eMMC
+>> PHY driver for Intel's LGM SoC and USB PHY driver for Broadcom
+>> SoC.
+>>
+>> For the detailed list of changes, please see the tag message below.
+>> All these changes have been in linux -next for a while now.
+>> Consider merging this for the next merge window and let me know if I
+>> have to change something.
+> 
+> I got the following warning, which linux-next should also reported:
+> Commit: 56b337ef505d ("phy: ti: j721e-wiz: Fix return value check in wiz_probe()")
+> 	Fixes tag: Fixes: b46f531313a4 ("phy: ti: j721e-wiz: Add support for WIZ module present in TI J721E SoC")
+> 	Has these problem(s):
+> 	        - Target SHA1 does not exist
+> 
+> Maybe I am merging into the wrong tree?
+> 
+> Anyway, I'll take this, hopefully that id shows up somewhere :)
 
-diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
-index fa9603dc6469..cd541ac1cbc1 100644
---- a/kernel/trace/trace_boot.c
-+++ b/kernel/trace/trace_boot.c
-@@ -322,7 +322,7 @@ trace_boot_init_instances(struct xbc_node *node)
- 			continue;
- 
- 		tr = trace_array_get_by_name(p);
--		if (IS_ERR(tr)) {
-+		if (!tr) {
- 			pr_err("Failed to get trace instance %s\n", p);
- 			continue;
- 		}
--- 
-2.11.0
+Looks like this is a real issue as I might have not updated the commit
+ID in Fixes tag after a rebase. Not sure why linux-next didn't report
+this. Anyways I'll fix that up and send a new Pull Request.
 
+Thanks
+Kishon
