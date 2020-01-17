@@ -2,104 +2,158 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70528C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6126C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F1F120661
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:45:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="drX53zdM"
+	by mail.kernel.org (Postfix) with ESMTP id 929202072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:46:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbgAQNpI (ORCPT
+        id S1728794AbgAQNqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 08:45:08 -0500
-Received: from mail-wm1-f43.google.com ([209.85.128.43]:39331 "EHLO
-        mail-wm1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726885AbgAQNpH (ORCPT
+        Fri, 17 Jan 2020 08:46:14 -0500
+Received: from mail-io1-f69.google.com ([209.85.166.69]:35442 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726903AbgAQNqN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 08:45:07 -0500
-Received: by mail-wm1-f43.google.com with SMTP id 20so7679036wmj.4
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 05:45:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JwGNcsaOwsdIGiFLCGnm5OvJExu3K0oz+leXPxDq+dM=;
-        b=drX53zdMo95yuNUFI0I80VLnpmJtKrMRgWPQQYp7UeRCAVhfMHHoQ4YwFYzOINerTn
-         6r3OHhDnw9QpzzY6Z3hnM07NKQ18wcEMc55XmbOmdfI7p8zXtfIILcYNG9e/APANB8+i
-         J4z83lkMz/0RxBatK4dpsjZbKM3vNt4hk+FoL4OreMPD7xxjc4yJlPlDMvCrc8NZN5Je
-         TFf4j+93CwOPoH4Hznj0BORQmmu+Z3yGHJMc/0FeyZKooxDGSuKQcXdVCo75MqyrPO64
-         EeMUi504XvJTJ8W/grBBzu/WdKG/pLeDHbwJUdAGy1+S3+lnlT77TqUxh2rZtypjQ3+g
-         G/pA==
+        Fri, 17 Jan 2020 08:46:13 -0500
+Received: by mail-io1-f69.google.com with SMTP id x10so15077119iob.2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 05:46:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JwGNcsaOwsdIGiFLCGnm5OvJExu3K0oz+leXPxDq+dM=;
-        b=X7z0fssn5aKXAP+VpP+g7j7EQKq6J8oF2JWW3UVzXXDxQmIBYpO9DBQ1kExL4s1Pwb
-         SzIuKoFItFPX1YFcNR0mh2OILW0xSP8DtEKtu4sNOxk8zjgJ81nXlbT3zgdcosK6YcLK
-         B3Hb8q2wPKCSrts2OBMhVT26P68QBFBVOkNmaVV6enKPCaOyotfO0bhPOGkev1vvWnN8
-         gLHlzWwpDQvduu62UDdakMN6TkpJfT4XI/qB8t1qjf3f/A4l3r973mszA29zeyYNCfkr
-         /9KckjLnZsNqY++4EU8kT/bcTdpnxE1nRIfZRj166ARm86j0ddg2/S2QAxTRjxFe2LcH
-         WGTA==
-X-Gm-Message-State: APjAAAVROB6LohYv3ZufkBsgCgJGziYp4r2+2ymCsm9sIdMcNxzmoD7C
-        UeNhLG9X7juD+OLtqqGKA3LCUQ==
-X-Google-Smtp-Source: APXvYqxK24GB+JQs5elRO7cgGfHabNkPefr7EPhZ06YGAC8Ffup6LXwkJYMhSvc7TeG6Bpn68+3ysw==
-X-Received: by 2002:a05:600c:251:: with SMTP id 17mr4652620wmj.88.1579268705289;
-        Fri, 17 Jan 2020 05:45:05 -0800 (PST)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id z187sm10126098wme.16.2020.01.17.05.45.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 05:45:04 -0800 (PST)
-Date:   Fri, 17 Jan 2020 13:45:01 +0000
-From:   Quentin Perret <qperret@google.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Thara Gopinath <thara.gopinath@linaro.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Ionela Voinescu <ionela.voinescu@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        viresh kumar <viresh.kumar@linaro.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Amit Kachhap <amit.kachhap@gmail.com>,
-        Javi Merino <javi.merino@kernel.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Android Kernel Team <kernel-team@android.com>
-Subject: Re: [Patch v8 4/7] sched/fair: Enable periodic update of average
- thermal pressure
-Message-ID: <20200117134501.GA19008@google.com>
-References: <1579031859-18692-1-git-send-email-thara.gopinath@linaro.org>
- <1579031859-18692-5-git-send-email-thara.gopinath@linaro.org>
- <20200116151502.GQ2827@hirez.programming.kicks-ass.net>
- <20200117114045.GA219309@google.com>
- <20200117123103.GB14879@hirez.programming.kicks-ass.net>
- <CAKfTPtALUU7SRmyU=u6-fxa8dkNWFrxE59JfYh+TmiDCqf0Kqg@mail.gmail.com>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=6yTFvZSIUTFje0iuJnrv+aFaKQQ7ngAb+Df8VB7qUuE=;
+        b=oShl69RvXR7BHoOGJPKhpHOsaSSLm8sVrOBbhhIfFbsanCGUK8g8Hu1OmR/u34VOTE
+         x1XtOOCQpSadtQ6Mt3ds+xoKEiRjrbHEPmz4se3Ztm6ZZp0KUxu1Q1uYCZYDPmwsCev5
+         JYV19E7WVchxveT0TVPe7avWJnBdnQKltt3jN6UQIZ7QeWjGurS+i5FwR0ufL45CBBn8
+         fHGMEuzwbKYWaDIVj+XGbtip5p3kh+/Z00x2ET3NUgqcXZdF2aWiDpoukrsV/7Kebbnt
+         SIABD5MBE/a1xox9Cuvgozsci5PdixOZtOYK0nmgdaLYpKywUROUMYB2t9achI+9pIsu
+         Kccw==
+X-Gm-Message-State: APjAAAU9LJ5rZH7lB5MTLA24b4iIDjq3hPw2syOFetUUctrc0rRqWGwp
+        mlCJHkAtP+pSer64dwyOjE3IXZiJmcXqNZSOcet2ZjK369Cw
+X-Google-Smtp-Source: APXvYqxGuic3bOydwwi/re48vM4+4utcWXYqsSf8/oQciD92zM4NBaFfeVipZ8ahJOjxWMX5uvXia/u/ukkMhiS7X6s2W7BrGeRv
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtALUU7SRmyU=u6-fxa8dkNWFrxE59JfYh+TmiDCqf0Kqg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a5e:dd03:: with SMTP id t3mr30554369iop.128.1579268772517;
+ Fri, 17 Jan 2020 05:46:12 -0800 (PST)
+Date:   Fri, 17 Jan 2020 05:46:12 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000030dddb059c562a3f@google.com>
+Subject: general protection fault in can_rx_register
+From:   syzbot <syzbot+c3ea30e1e2485573f953@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, dev.kurt@vandijck-laurijssen.be,
+        linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mkl@pengutronix.de, netdev@vger.kernel.org,
+        o.rempel@pengutronix.de, socketcan@hartkopp.net,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 17 Jan 2020 at 14:17:36 (+0100), Vincent Guittot wrote:
-> On Fri, 17 Jan 2020 at 13:31, Peter Zijlstra <peterz@infradead.org> wrote:
-> > Sure, but we should still track the thermals unconditionally, even if
-> > only CFS consumes it.
-> 
-> I agree, tracking thermal pressure should happen even if no cfs task are running
+Hello,
 
-Bah, I got confused with cpu_capacity update stuff. This is for the PELT
-signal, so +1 this should be updated unconditionally.
+syzbot found the following crash on:
 
-Thanks,
-Quentin
+HEAD commit:    f5ae2ea6 Fix built-in early-load Intel microcode alignment
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1033df15e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cfbb8fa33f49f9f3
+dashboard link: https://syzkaller.appspot.com/bug?extid=c3ea30e1e2485573f953
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/  
+c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13204f15e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=138f5db9e00000
+
+The bug was bisected to:
+
+commit 9868b5d44f3df9dd75247acd23dddff0a42f79be
+Author: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
+Date:   Mon Oct 8 09:48:33 2018 +0000
+
+     can: introduce CAN_REQUIRED_SIZE macro
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=129bfdb9e00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=119bfdb9e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=169bfdb9e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+c3ea30e1e2485573f953@syzkaller.appspotmail.com
+Fixes: 9868b5d44f3d ("can: introduce CAN_REQUIRED_SIZE macro")
+
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 9593 Comm: syz-executor302 Not tainted 5.5.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:hlist_add_head_rcu include/linux/rculist.h:528 [inline]
+RIP: 0010:can_rx_register+0x43b/0x600 net/can/af_can.c:476
+Code: 48 89 d8 48 c1 e8 03 42 80 3c 28 00 74 08 48 89 df e8 89 22 8a fa 4c  
+89 33 4d 89 e5 49 c1 ed 03 48 b8 00 00 00 00 00 fc ff df <41> 80 7c 05 00  
+00 74 08 4c 89 e7 e8 c5 21 8a fa 4d 8b 34 24 4c 89
+RSP: 0018:ffffc90003e27d00 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: ffff8880a77336c8 RCX: ffff88809306a100
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a77336c0
+RBP: ffffc90003e27d58 R08: ffffffff87289cd6 R09: fffff520007c4f94
+R10: fffff520007c4f94 R11: 0000000000000000 R12: 0000000000000008
+R13: 0000000000000001 R14: ffff88809fbcf000 R15: ffff8880a7733690
+FS:  00007fb132f26700(0000) GS:ffff8880aec00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000178f590 CR3: 00000000996d6000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  raw_enable_filters net/can/raw.c:189 [inline]
+  raw_enable_allfilters net/can/raw.c:255 [inline]
+  raw_bind+0x326/0x1230 net/can/raw.c:428
+  __sys_bind+0x2bd/0x3a0 net/socket.c:1649
+  __do_sys_bind net/socket.c:1660 [inline]
+  __se_sys_bind net/socket.c:1658 [inline]
+  __x64_sys_bind+0x7a/0x90 net/socket.c:1658
+  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x446ba9
+Code: e8 0c e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 5b 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fb132f25d98 EFLAGS: 00000246 ORIG_RAX: 0000000000000031
+RAX: ffffffffffffffda RBX: 00000000006dbc88 RCX: 0000000000446ba9
+RDX: 0000000000000008 RSI: 0000000020000180 RDI: 0000000000000003
+RBP: 00000000006dbc80 R08: 00007fb132f26700 R09: 0000000000000000
+R10: 00007fb132f26700 R11: 0000000000000246 R12: 00000000006dbc8c
+R13: 0000000000000000 R14: 0000000000000000 R15: 068500100000003c
+Modules linked in:
+---[ end trace 0dedabb13ca8e7d7 ]---
+RIP: 0010:hlist_add_head_rcu include/linux/rculist.h:528 [inline]
+RIP: 0010:can_rx_register+0x43b/0x600 net/can/af_can.c:476
+Code: 48 89 d8 48 c1 e8 03 42 80 3c 28 00 74 08 48 89 df e8 89 22 8a fa 4c  
+89 33 4d 89 e5 49 c1 ed 03 48 b8 00 00 00 00 00 fc ff df <41> 80 7c 05 00  
+00 74 08 4c 89 e7 e8 c5 21 8a fa 4d 8b 34 24 4c 89
+RSP: 0018:ffffc90003e27d00 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: ffff8880a77336c8 RCX: ffff88809306a100
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a77336c0
+RBP: ffffc90003e27d58 R08: ffffffff87289cd6 R09: fffff520007c4f94
+R10: fffff520007c4f94 R11: 0000000000000000 R12: 0000000000000008
+R13: 0000000000000001 R14: ffff88809fbcf000 R15: ffff8880a7733690
+FS:  00007fb132f26700(0000) GS:ffff8880aec00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000178f590 CR3: 00000000996d6000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
