@@ -2,89 +2,77 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8999BC33CAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 02:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0A4C33CAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 02:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 570602077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 02:45:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579229125;
-	bh=dKyqaaGGcB1MEqXs9BPg8uYw+xt+15onKXbpCmYtg4Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fzs0Cu9+Iy1+8pAg9eiQbXfQMpmfVLelZNtmpL9qvFlDOCcRc0XkBxK7gUCgmZhli
-	 YzfHt7iv5VqqeiUX9+J5Wi/zXxqU8BpQ3AyVHRGYbZaMHfJeu8cTxTAdDsmm8X6mMy
-	 xY/hsaSz+1WI+h66BU6qnQYUAAdOQvj6fBRTLJUE=
+	by mail.kernel.org (Postfix) with ESMTP id ACA032072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 02:46:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387682AbgAQCpY (ORCPT
+        id S2388043AbgAQCqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 21:45:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36574 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729067AbgAQCpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 21:45:23 -0500
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C4F920730;
-        Fri, 17 Jan 2020 02:45:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579229123;
-        bh=dKyqaaGGcB1MEqXs9BPg8uYw+xt+15onKXbpCmYtg4Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AexsPH/wskCzkb4pS2nT3LvFZB4U5CmfvO1tbOlwAmfd1Rs1rv3bPekfFJAR5fOPa
-         Au3WHsZFYfHiNbNL6NdkHnXQrtTALNMarDKuHPbl1Js/orf59bNMpKaiNiW+B4WdMw
-         K/sVKwM5KdYMz2jVOfnearTXlAGR34ko/ivRC6H8=
-Date:   Thu, 16 Jan 2020 21:45:22 -0500
-From:   Sasha Levin <sashal@kernel.org>
-To:     David Ahern <dsahern@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Rajendra Dendukuri <rajendra.dendukuri@broadcom.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.19 573/671] ipv6: Handle race in
- addrconf_dad_work
-Message-ID: <20200117024522.GN1706@sasha-vm>
-References: <20200116170509.12787-1-sashal@kernel.org>
- <20200116170509.12787-310-sashal@kernel.org>
- <fc012e53-ccdf-5ac5-6f3f-a2ecdf25bc39@gmail.com>
- <630c6286-2ab4-44ab-693e-0615a2ac690b@gmail.com>
+        Thu, 16 Jan 2020 21:46:32 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51846 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729067AbgAQCqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 21:46:32 -0500
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id BFB68DD483A01EE48DB4;
+        Fri, 17 Jan 2020 10:46:29 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 17 Jan 2020 10:46:22 +0800
+From:   Wei Yongjun <weiyongjun1@huawei.com>
+To:     Bard Liao <bardliao@realtek.com>,
+        Oder Chiou <oder_chiou@realtek.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Jack Yu <jack.yu@realtek.com>
+CC:     Wei Yongjun <weiyongjun1@huawei.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+Subject: [PATCH -next] ASoC: rt715: fix return value check in rt715_sdw_probe()
+Date:   Fri, 17 Jan 2020 02:41:49 +0000
+Message-ID: <20200117024149.75515-1-weiyongjun1@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <630c6286-2ab4-44ab-693e-0615a2ac690b@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 10:20:16AM -0700, David Ahern wrote:
->On 1/16/20 10:18 AM, David Ahern wrote:
->> On 1/16/20 10:03 AM, Sasha Levin wrote:
->>> From: David Ahern <dsahern@gmail.com>
->>>
->>> [ Upstream commit a3ce2a21bb8969ae27917281244fa91bf5f286d7 ]
->>>
->>
->> That commit was reverted by 8ae72cbf62d2c1879456c0c5872f958e18f53711 and
->> then replaced by 2d819d250a1393a3e725715425ab70a0e0772a71
->>
->
->BTW, the AUTOSEL algorithm should be updated to look for reverts and
->even ones that have already been nack'ed from a backport perspective.
->
->I felt a bit of deja vu with my response and sure enough this patch was
->selected back in October and I responded then that it should not be
->backported.
+In case of error, the function devm_regmap_init() returns ERR_PTR() and
+never returns NULL. The NULL test in the return value check should be
+replaced with IS_ERR().
 
-Sorry about this David. This series is a result of an experimental work
-I did rather than the regular AUTOSEL workflow, so it ended up
-accidentally bubbling a few commits that were previously rejected.
+Fixes: d1ede0641b05 ("ASoC: rt715: add RT715 codec driver")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+---
+ sound/soc/codecs/rt715-sdw.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
--- 
-Thanks,
-Sasha
+diff --git a/sound/soc/codecs/rt715-sdw.c b/sound/soc/codecs/rt715-sdw.c
+index 18868e4ae6e8..6d892c44c522 100644
+--- a/sound/soc/codecs/rt715-sdw.c
++++ b/sound/soc/codecs/rt715-sdw.c
+@@ -535,8 +535,8 @@ static int rt715_sdw_probe(struct sdw_slave *slave,
+ 
+ 	regmap = devm_regmap_init(&slave->dev, NULL, &slave->dev,
+ 		&rt715_regmap);
+-	if (!regmap)
+-		return -EINVAL;
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
+ 
+ 	rt715_init(&slave->dev, sdw_regmap, regmap, slave);
+
+
+
