@@ -2,83 +2,206 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC65C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E6AC33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18190206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7A79206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:32:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="WwRUF9vK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="maUgKAXX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbgAQNab (ORCPT
+        id S1727007AbgAQNcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 08:30:31 -0500
-Received: from mail-qk1-f176.google.com ([209.85.222.176]:43257 "EHLO
-        mail-qk1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726861AbgAQNab (ORCPT
+        Fri, 17 Jan 2020 08:32:20 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:37157 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbgAQNcT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 08:30:31 -0500
-Received: by mail-qk1-f176.google.com with SMTP id t129so22622098qke.10
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 05:30:30 -0800 (PST)
+        Fri, 17 Jan 2020 08:32:19 -0500
+Received: by mail-ot1-f65.google.com with SMTP id k14so22547253otn.4;
+        Fri, 17 Jan 2020 05:32:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=U4/RhVLZS3DfSJ3cg9+WjUoTzOlLIbTI9zPCVAjn1nY=;
-        b=WwRUF9vKt/5s/PIHYqrzuoQMr2a8YirD708F+kCBoHzuyHxGQbvciWODf9JXNvicud
-         fqkP5IagKLSw36fHs65g0Fuc+OBpucXWd0khkY0AI6jOJOaB2wCwCz+Fem2Dxod2uAOF
-         7DqLsEJ0gJGCKrTJ1dZ5pI5Z+1GLrrAKe1wYPDFdTrrQDKYdNeRC8Udk9m0cvmXuhZoH
-         gitDSWd2DQbEKfWmn+/wi5caB9h9sCIjcwUX5lfPy+BRMxU+eA9KRNN0i8RazrzcxYAj
-         SgGSUMOXtda41CAn75tZhLeh2/If/6LK07j7rx65Jk9ahagGfAX1JfzmuLeHrI2//Zs+
-         UyLg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tK6yTRQuQj1ysf+qFmwzb4MAE8WBgbRY6Jdv8kjUY2Y=;
+        b=maUgKAXXE+taK+/FHrWhtUoZX7XUCYsZw0K5IE8OZDGUiW/6pd15Jv2omxt3VtQyag
+         iOl3zKq9lztaI9ZJv4xIe/pn0GhHDj9Dmn5NOHsLBxOpIrJb6ua4j3TZrSDMNNUefTnb
+         z48nz9TzA8adjfzBmCz9aUDvE1TY9y1iMZywduQNmrVZLQO7UC/Ll0g+6wn1z0LXgQtu
+         b0qIY51XVrgGj0N7WSgoiCe4FZ46tFDz0oGXClJ8qXYUI4t5hwI2bsrpfmxSi62GNMec
+         mZDH+AgjAOBDw1gqyi3njlW3tgrcXP7IdXUKCGHB7BxlvCbKQDkXlNw7M53PtxVeVXVz
+         Y7fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=U4/RhVLZS3DfSJ3cg9+WjUoTzOlLIbTI9zPCVAjn1nY=;
-        b=uMI68xPs0A6//SezN68pFH08C/JjSzneeSNF0TTKPUvm265V7FbHpVS9qVWev6++7S
-         Pjet3hzkCOtdMdx7pg4Yvk9+55RxXBpYtKLuXUygb/Q7R9uLKuyZ4L+i5BrTyH232DuZ
-         YNL+ltU68w2+hxx7dBtUT1Sde5zcyWe2rp4gYBuJneb7eSqhpmB7jPXMuKeWKSXtngy9
-         EBkOYb8S0bGNxZjIa0vCbbKTNOYhfuJfqRDHhPjBbaS+pRgcHqrZNWNSE6NHtQHQ7C/B
-         vEDysZKAmbk+7rZ2Xxta67UIPJn4hFMWcDuircAFUsAgrTXg+grj0M5kkE6uFUORPFJM
-         QZDg==
-X-Gm-Message-State: APjAAAWvOBfcaCqASaOBP5Fnm0Ialt1cpg0BtwnhrYvOHOCALkeKXq1h
-        FZDMceKYfLh/d1k+xEhFIKHPGxevzHSNjw==
-X-Google-Smtp-Source: APXvYqylfHOqkWU3ftpd4sx7sBeSiuzylqb2aIYlnoIXhgDLdJTrg4fN/JqIAWiMZCi38UjMkMiwVQ==
-X-Received: by 2002:a37:7005:: with SMTP id l5mr36899936qkc.334.1579267828641;
-        Fri, 17 Jan 2020 05:30:28 -0800 (PST)
-Received: from ?IPv6:2600:1000:b029:6649:b819:fcc3:734e:5994? ([2600:1000:b029:6649:b819:fcc3:734e:5994])
-        by smtp.gmail.com with ESMTPSA id v4sm12909646qtd.24.2020.01.17.05.30.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jan 2020 05:30:26 -0800 (PST)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH -next v4] mm/hotplug: silence a lockdep splat with printk()
-Date:   Fri, 17 Jan 2020 08:30:24 -0500
-Message-Id: <D58FE32E-C5D9-4812-BCD8-BB3E6C4A7C55@lca.pw>
-References: <6f924bf7-835b-0176-1b12-aff4f1f4be0e@redhat.com>
-Cc:     akpm@linux-foundation.org, mhocko@kernel.org,
-        sergey.senozhatsky.work@gmail.com, pmladek@suse.com,
-        rostedt@goodmis.org, peterz@infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@suse.com>
-In-Reply-To: <6f924bf7-835b-0176-1b12-aff4f1f4be0e@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-X-Mailer: iPhone Mail (17C54)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tK6yTRQuQj1ysf+qFmwzb4MAE8WBgbRY6Jdv8kjUY2Y=;
+        b=eCu8UnMC0PMzYXxG4B6v0WwK4qdfviyPdAdE8p5ldvG1mFHpNwcFgnyO0MhbutCKoW
+         8zzU4TOh2rEkOCf7Nwx8E/NaDr2/9qyOwu+s8+YYoS2h8k74gGiEVFNpmZI8jnRsh4Vg
+         WYW9XkdoyphlvaSj7a/VEYgtUaV93Yn9KXIqM2qN81++eis7st1QVXVXlYVkTLpV1njJ
+         IVq+fYhGZJF+Ha8/JZ8YdOvdn9RuSRJVBxd+QrZb7SVW1k6HWh90py9WE4fL7u8pbxlf
+         YpoqoBDKzvh6Sfcip+eR84ccCCRcjnCfw8TrDgn22dkM6PwbRlpUX+LK2KFZ6jyYrUGo
+         uGYw==
+X-Gm-Message-State: APjAAAVng/XC4Q/oK7FLl/DHLXMb4mS7cVVJCu6uwfh6Fo6cKyg75iHE
+        NTcBdUW7Yng9cmUUVgCFiNI640ueYweADnHzzjU=
+X-Google-Smtp-Source: APXvYqw6raVtIYUn0e2R2apGYNS0K5IlDIscXZnfcTgAW1uPVcThOhTQoqPbOF5LsgXFVoadJCwyWmJYirZWAA1hhSE=
+X-Received: by 2002:a9d:5c8a:: with SMTP id a10mr5702494oti.95.1579267938333;
+ Fri, 17 Jan 2020 05:32:18 -0800 (PST)
+MIME-Version: 1.0
+References: <CAGi-RUJvqJoCXWN2YugRn=WYEk9yzt7m3OPfX_o++PmJWQ3woQ@mail.gmail.com>
+ <87wo9ub5f6.fsf@nanos.tec.linutronix.de> <CAGi-RUK_TA+WWvXJSrsa=_Pwq0pV1ffUKOCBu5c1t8O5Xs+UJg@mail.gmail.com>
+ <CAGi-RUJG=SB7az5FFVTzzgefn_VXUbyQX1dtBN+9gkR7MgyC6g@mail.gmail.com>
+ <87imldbqe3.fsf@nanos.tec.linutronix.de> <CAGi-RULNwpiNGYALYRG84SOUzkvNTbgctmXoS=Luh29xDHJzYw@mail.gmail.com>
+ <87v9pcw55q.fsf@nanos.tec.linutronix.de> <CAGi-RUJPJ59AMZp3Wap=9zSWLmQSXVDtkbD+O6Hofizf8JWyRg@mail.gmail.com>
+ <87pnfjwxtx.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87pnfjwxtx.fsf@nanos.tec.linutronix.de>
+From:   Ramon Fried <rfried.dev@gmail.com>
+Date:   Fri, 17 Jan 2020 15:32:07 +0200
+Message-ID: <CAGi-RUJtqdLtFBVMxL8TOQ3LGRqqrV4Ge7Fu9mTyDoQVYxtA5g@mail.gmail.com>
+Subject: Re: MSI irqchip configured as IRQCHIP_ONESHOT_SAFE causes spurious IRQs
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     hkallweit1@gmail.com, Bjorn Helgaas <bhelgaas@google.com>,
+        maz@kernel.org, lorenzo.pieralisi@arm.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Thomas,
+Thanks a lot for the detailed answer.
 
+> > Basically, 32 MSI vectors are represented by a single GIC irq.
+> > There's a status registers which every bit correspond to an MSI vector, and
+> > individual MSI needs to be acked on that registers. in any case where
+> > there's asserted bit the GIC IRQ level is high.
+>
+> Which is not that bad.
+>
+> >> > It's configured with handle_level_irq() as the GIC is level IRQ.
+> >>
+> >> Which is completely bonkers. MSI has edge semantics and sharing an
+> >> interrupt line for edge type interrupts is broken by design, unless the
+> >> hardware which handles the incoming MSIs and forwards them to the level
+> >> type interrupt line is designed properly and the driver does the right
+> >> thing.
+> >
+> > Yes, the design of the HW is sort of broken. I concur.
+>
+> As you describe it, it's not that bad.
+>
+> >> > The ack callback acks the GIC irq.  the mask/unmask calls
+> >> > pci_msi_mask_irq() / pci_msi_unmask_irq()
+> >>
+> >> What? How is that supposed to work with multiple MSIs?
+> > Acking is per MSI vector as I described above, so it should work.
+>
+> No. This is the wrong approach. Lets look at the hardware:
+>
+> | GIC   line X |------| MSI block | <--- Messages from devices
+>
+> The MSI block latches the incoming message up to the point where it is
+> acknowledged in the MSI block. This makes sure that the level semantics
+> of the GIC are met.
+>
+> So from a software perspective you want to do something like this:
+>
+> gic_irq_handler()
+> {
+>    mask_ack(gic_irqX);
+>
+>    pending = read(msi_status);
+>    for_each_bit(bit, pending) {
+>        ack(msi_status, bit);  // This clears the latch in the MSI block
+>        handle_irq(irqof(bit));
+>    }
+>    unmask(gic_irqX);
+> }
+>
+> And that works perfectly correct without masking the MSI interrupt at
+> the PCI level for a threaded handler simply because the PCI device will
+> not send another interrupt until the previous one has been handled by
+> the driver unless the PCI device is broken.
+I'm missing something here, isn't this implementation blocks IRQ's only during
+the HW handler and not during the threaded handler ? (Assuming that I selected
+handle_level_irq() as the default handler)
 
-> On Jan 17, 2020, at 7:53 AM, David Hildenbrand <david@redhat.com> wrote:
-> 
-> Can't we just use the zone_idx() stored in the memmap instead?
+Actually my implementation current implementation is very similar to what
+you just described:
 
-I am having a hard time to guess what that means. Care to elaborate?
+static void eq_msi_isr(struct irq_desc *desc)
+{
+        struct irq_chip *chip = irq_desc_get_chip(desc);
+        struct eq_msi *msi;
+        u16 status;
+        unsigned long bitmap;
+        u32 bit;
+        u32 virq;
+
+        chained_irq_enter(chip, desc);
+        msi = irq_desc_get_handler_data(desc);
+
+        while ((status = readw(msi->gcsr_regs_base + LINK_GCSR5_OFFSET)
+                & MSI_IRQ_REQ) != 0) {
+                pr_debug("MSI: %x\n", status >> 12);
+
+                bitmap = status >> 12;
+                for_each_set_bit(bit, &bitmap, msi->num_of_vectors) {
+                        virq = irq_find_mapping(msi->inner_domain, bit);
+                        if (virq) {
+                                generic_handle_irq(virq);
+                        } else {
+                                pr_err("unexpected MSI\n");
+                                handle_bad_irq(desc);
+                        }
+                }
+        }
+        chained_irq_exit(chip, desc);
+}
+
+Additionally the domain allocation is defined like:
+static int eq_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+                                 unsigned int nr_irqs, void *args)
+{
+        struct eq_msi *msi = domain->host_data;
+        unsigned long bit;
+        u32 mask;
+
+        /* We only allow 32 MSI per device */
+        WARN_ON(nr_irqs > 32);
+        if (nr_irqs > 32)
+                return -ENOSPC;
+
+        bit = find_first_zero_bit(msi->used, msi->num_of_vectors);
+        if (bit >= msi->num_of_vectors)
+                return -ENOSPC;
+
+        set_bit(bit, msi->used);
+
+        mask = readw(msi->gcsr_regs_base + LINK_GCSR6_OFFSET);
+        mask |= BIT(bit) << 12;
+        writew(mask, msi->gcsr_regs_base + LINK_GCSR6_OFFSET);
+
+        irq_domain_set_info(domain, virq, bit, &eq_msi_bottom_irq_chip,
+                            domain->host_data, handle_level_irq,
+                            NULL, NULL);
+
+        pr_debug("Enabling MSI irq: %lu\n", bit);
+
+        return 0;
+}
+
+>
+> If that's the case, then you have to work around that at the device
+> driver level, not at the irq chip level, by installing a primary handler
+> which quiesces the device (not the MSI part).
+>
+> Thanks,
+>
+>         tglx
