@@ -2,129 +2,163 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8DAAC33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C75B9C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 842912072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:25:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FA6C217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:26:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="TKh3IrbQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728587AbgAQMZ2 (ORCPT
+        id S1727162AbgAQM0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 07:25:28 -0500
-Received: from mout.kundenserver.de ([217.72.192.75]:37055 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726917AbgAQMZ2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 07:25:28 -0500
-Received: from mail-qt1-f179.google.com ([209.85.160.179]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MWzbr-1j7c350Z3p-00XJui; Fri, 17 Jan 2020 13:25:26 +0100
-Received: by mail-qt1-f179.google.com with SMTP id c24so10803933qtp.5;
-        Fri, 17 Jan 2020 04:25:25 -0800 (PST)
-X-Gm-Message-State: APjAAAWyaVFUwC5jlUfW53w8lKga2KoOlHdbgK8Uvhppn6zesp0lu21m
-        rN8GSRZgEuAZaL6v1gOCjlUa1M3Hh+a8jYb9sBc=
-X-Google-Smtp-Source: APXvYqwqCzWv/ekQUEFKtBDinI/LcXB9oWkR28qFdPoljphngkJVa3HxtAlT8kKFFOKWjYiGgHg5a4mRNSgW5hf1vUA=
-X-Received: by 2002:ac8:47d3:: with SMTP id d19mr7117054qtr.142.1579263924900;
- Fri, 17 Jan 2020 04:25:24 -0800 (PST)
+        Fri, 17 Jan 2020 07:26:50 -0500
+Received: from ozlabs.org ([203.11.71.1]:48903 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726812AbgAQM0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 07:26:49 -0500
+Received: by ozlabs.org (Postfix, from userid 1007)
+        id 47zgKd6pB0z9sRR; Fri, 17 Jan 2020 23:26:45 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+        d=gibson.dropbear.id.au; s=201602; t=1579264005;
+        bh=kurz+DTGyHKCLIvcZzXDHOZM5UqyeQHKPspRA/gpp50=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TKh3IrbQ1yepznLeAk1CcT3rhzHe3vmWKwn5CHGDbZGSnZjOTHAcU9RLfsarsrxcI
+         XfLCeX1zS2KhCU3GeA29/mdbe6L1IRTa8TPIubPcGpbTjFZkAV1EncUmATkK/PoSYI
+         ks4QUlFQDk+0W6JDU6EZ5mFNC2Q6DQgx3ZaNAevI=
+Date:   Fri, 17 Jan 2020 19:09:37 +1000
+From:   David Gibson <david@gibson.dropbear.id.au>
+To:     Alexandre Torgue <alexandre.torgue@st.com>
+Cc:     robh+dt@kernel.org, Frank Rowand <frowand.list@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>, sjg@chromium.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, devicetree-compiler@vger.kernel.org,
+        Steve McIntyre <steve.mcintyre@linaro.org>
+Subject: Re: [RFC PATCH 1/3] dtc: Add dtb build information option
+Message-ID: <20200117090937.GU54439@umbus>
+References: <20200113181625.3130-1-alexandre.torgue@st.com>
+ <20200113181625.3130-2-alexandre.torgue@st.com>
+ <20200116005741.GB54439@umbus>
+ <d2594b79-a45d-dcac-3642-90016a1408b8@st.com>
 MIME-Version: 1.0
-References: <20200115165749.145649-1-elver@google.com> <CAK8P3a3b=SviUkQw7ZXZF85gS1JO8kzh2HOns5zXoEJGz-+JiQ@mail.gmail.com>
- <CANpmjNOpTYnF3ssqrE_s+=UA-2MpfzzdrXoyaifb3A55_mc0uA@mail.gmail.com>
- <CAK8P3a3WywSsahH2vtZ_EOYTWE44YdN+Pj6G8nt_zrL3sckdwQ@mail.gmail.com> <CANpmjNMk2HbuvmN1RaZ=8OV+tx9qZwKyRySONDRQar6RCGM1SA@mail.gmail.com>
-In-Reply-To: <CANpmjNMk2HbuvmN1RaZ=8OV+tx9qZwKyRySONDRQar6RCGM1SA@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 17 Jan 2020 13:25:08 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a066Knr-KC2v4M8Dr1phr0Gbb2KeZZLQ7Ana0fkrgPDPg@mail.gmail.com>
-Message-ID: <CAK8P3a066Knr-KC2v4M8Dr1phr0Gbb2KeZZLQ7Ana0fkrgPDPg@mail.gmail.com>
-Subject: Re: [PATCH -rcu] asm-generic, kcsan: Add KCSAN instrumentation for bitops
-To:     Marco Elver <elver@google.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        christophe leroy <christophe.leroy@c-s.fr>,
-        Daniel Axtens <dja@axtens.net>,
-        linux-arch <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:BjvcfnJXNixwEFNEYwkAPuoYZO1yKIZ6+zO3O5pD8DBedJuN2zp
- 2SCMTsFDi2yWr5pRYLEWvYCQ1qlmM2GEVld4rFlruaRYyoo1uV+ojxGtMsSaF7iDAZxfeZC
- gz4O3ryNAyywBE9gdeobFaEa8Q94oiplOzJKO9y8uVokMW3ERhRDut3U7O21Sy1a0vgaBOe
- uCrCZkfAF6+Xiz79dqXfQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:PaLNvZoTouE=:9XtH0rnAaNZeZK2j1cP5BF
- kjDaDm4S6x9OHMSZkOkJ379ncvmgEIlKnThnpd5m3b71AVJkhn7hRjpco7eMO7E4FYv875C2M
- AWsRjzhfx9UvWLbcgi5DTUU1iGxQEB4Jpgw02n8yD7/TQYFtqwUiLNE/ec9zTHnAjHn1FWSQK
- TWmOqaxhQ0vOcMOCxvCUyBu1CGdAMmF43xLK/rIvcIY7Rx4Pp5uJWoNp27bdgiAQObo/xrcH3
- gPItH+kdOg031rzeLVK0dZwtju8C0ZpYoo51pSAb00GjdW/ESWZMAQ91xewQZPNUXyHeEBAAy
- WIx2288bvNqGETXTqNHO6tOGmR90wRww4ohrZkCnD+mLs7MQ08kqRBTuFtJdkzvouig/VIE8i
- oNs6gIoLpVmsvHfloKe6KhITdgiJgLiwvcb3PhE7DnEoxxpTiiOMcMvfmu1Ubw1hSxNW7BRI7
- VqIqQywbA1GCikYWh1NV77aRckpEWmeRa0EhJha3nlkdzChOtDEi2EYQ8kLfxKvGcOBdiWuCK
- EtL3KWG9emdLNyFhUGAxC/WfuoLklQ0ocCDvs2UPXmzIseWwfYhdcnRwR3q9yXNHEYIgN6mky
- gydikyoVbacD6Dd+pgJCf9KP7TYYyq/xQhEwXPs+WG6dyFvx6FeIYx2eVDZdurkaa0GztCX91
- Qt8WsM5V76UJ3oDeSOPhu2SSJQ/KhP8JcKtmOOaooUxneXCz/xcl7EOIn5iS8lo6h7pxpCHL3
- 8KgC0P+P21zS/RSgdG6vM+IOEVpMQ0ibrQIwGwd0FKoCmulgvShxSw/LfoEpBKwTPdFXTOuzH
- T7RNVORRjaWU6vVuUBFKhh1Bv8sHHONKFE4DNdjCpZU6lEN15+hMTunekVBQ2t/WjFBaOO6b+
- hr45UtFhNiw3AbKQ83ag==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="E75mJrUy8lRi9cGN"
+Content-Disposition: inline
+In-Reply-To: <d2594b79-a45d-dcac-3642-90016a1408b8@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 9:50 PM Marco Elver <elver@google.com> wrote:
-> On Wed, 15 Jan 2020 at 20:55, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Wed, Jan 15, 2020 at 8:51 PM Marco Elver <elver@google.com> wrote:
-> > > On Wed, 15 Jan 2020 at 20:27, Arnd Bergmann <arnd@arndb.de> wrote:
-> > Are there any that really just want kasan_check_write() but not one
-> > of the kcsan checks?
->
-> If I understood correctly, this suggestion would amount to introducing
-> a new header, e.g. 'ksan-checks.h', that provides unified generic
-> checks. For completeness, we will also need to consider reads. Since
-> KCSAN provides 4 check variants ({read,write} x {plain,atomic}), we
-> will need 4 generic check variants.
 
-Yes, that was the idea.
+--E75mJrUy8lRi9cGN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> I certainly do not feel comfortable blindly introducing kcsan_checks
-> in all places where we have kasan_checks, but it may be worthwhile
-> adding this infrastructure and starting with atomic-instrumented and
-> bitops-instrumented wrappers. The other locations you list above would
-> need to be evaluated on a case-by-case basis to check if we want to
-> report data races for those accesses.
+On Thu, Jan 16, 2020 at 09:58:23AM +0100, Alexandre Torgue wrote:
+> Hi David
+>=20
+> On 1/16/20 1:57 AM, David Gibson wrote:
+> > On Mon, Jan 13, 2020 at 07:16:23PM +0100, Alexandre Torgue wrote:
+> > > This commit adds the possibility to add build information for a DTB.
+> > > Build information can be: build date, DTS version, "who built the DTB"
+> > > (same kind of information that we get in Linux with the Linux banner).
+> > >=20
+> > > To do this, an extra option "-B" using an information file as argument
+> > > has been added. If this option is used, input device tree is appended=
+ with
+> > > a new string property "Build-info". This property is built with infor=
+mation
+> > > found in information file given as argument. This file has to be gene=
+rated
+> > > by user and shouldn't exceed 256 bytes.
+> > >=20
+> > > Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+> >=20
+> > At the very least, this patch of the series will need to be sent to
+> > upstream dtc first.
+>=20
+> Ok sorry. I thought that sending all the series would give more
+> information.
 
-I think the main question to answer is whether it is more likely to go
-wrong because we are missing checks when one caller accidentally
-only has one but not the other, or whether they go wrong because
-we accidentally check both when we should only be checking one.
+That's fair enough, but in order to merge, you'll need to post against
+upstream dtc.
 
-My guess would be that the first one is more likely to happen, but
-the second one is more likely to cause problems when it happens.
+> > I'm also not terribly clear on what you're trying to accomplish here,
+> > and why it's useful.
+>=20
+> Let's take Kernel boot at example (but could be extend to other DTB "user=
+s"
+> like U-Boot). When Linux kernel booting we get a log that gives useful
+> information about kernel image: source version, build date, people who bu=
+ilt
+> the kernel image, compiler version. This information is useful for debug =
+and
+> support. The aim is to get same kind of information but for the DTB.
+>=20
+> > Since you're doing this specifically for use with dtbs built in the
+> > kernel build, could you just use a:
+> > 	Build-info =3D /incbin/ "build-info.txt";
+> > in each of the in-kernel .dts files?
+>=20
+> My first idea was to not modify all existing .dts files. Adding an extra
+> option in dtc is (for me) the softer way to do it. I mean, compile
+> information should come through compiler without modify .dts files outside
+> from dtc. In this way it will be easy to everybody using dtc (inside our
+> outside Linux tree) to add dtb build info (even if they don't how to writ=
+e a
+> dts file).
 
-> As a minor data point, {READ,WRITE}_ONCE in compiler.h currently only
-> has kcsan_checks and not kasan_checks.
+But you're not really having this information coming from the
+compiler.  Instead you're adding a compiler option that just force
+includes another file into the generated tree, and it's up to your
+build scripts to put something useful into that file.
 
-Right. This is because we want an explicit "atomic" check for kcsan
-but we want to have the function inlined for kasan, right?
+I don't really see that as preferable to modifying the .dts files.
 
-> My personal preference would be to keep the various checks explicit,
-> clearly opting into either KCSAN and/or KASAN. Since I do not think
-> it's obvious if we want both for the existing and potentially new
-> locations (in future), the potential for error by blindly using a
-> generic 'ksan_check' appears worse than potentially adding a dozen
-> lines or so.
->
-> Let me know if you'd like to proceed with 'ksan-checks.h'.
+I also dislike the fact that the option as proposed is much more
+general than the name suggests, but also very similar too, but much
+more specific than the existing /incbin/ option.
 
-Could you have a look at the files I listed and see if there are any
-other examples that probably a different set of checks between the
-two, besides the READ_ONCE() example?
+What might be better would be to have a dtc option which force appends
+an extra .dts to the mail .dts compiled.  You can then put an overlay
+template in that file, something like:
 
-If you can't find any, I would prefer having the simpler interface
-with just one set of annotations.
+&{/} {
+	linux,build-info =3D /incbin/ "build-info.txt;
+}
 
-     Arnd
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--E75mJrUy8lRi9cGN
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl4hec4ACgkQbDjKyiDZ
+s5JBkBAAqIBfwpRffu5P/FrP1ByZCpvCoDk8mmoWaN0k75RnPYkHuEoyj3NkVzv4
+mpJ0+e5m8yGrrMollgWKrUT3qojPVUYuu/ztkx9nspAa5M2pFiM4P1dLt4n/CVoA
+qdw/cHhCI1yQ4ws22P5mcw+rdJBegrdJgJNr14VqAy8uZsU8ANoNkmVIkAZO78kY
+41Og23xr20h2UDj4is4aUwKRs5n9eSDFv8DWruoQQxgXUkaGlAsJKeCLfRkmuJ81
+UnHq6Zkil0ueCvTJSmekz6dV29ius+uoAKZFWp6qMzUmVe4+amR3y1M0dLYXZjhU
+SkeudGQVEakWnnQ/3YXKD170eRnbBEFD/d0V377Ns6BOApI+YD77KRyMKw+fMoGB
+pK0HAxHf/rFIGke5H+dRJ+yGikPFKUuCuEvBoOB1/nAtj6aSR/HXqzGed0RQUvc5
+D6kvvILwsLry55n4IDsmI+AUzTvRJwcOTmQ47BGAKmwoNaJbNoO55uXzpR5euSjG
++yQKirwMsQKXSM3HOx6D+nHpMKxBxPCN0m8s1+5/mJeFvrL3II3jouko+tDsx84A
+7rbEEmBil4ggTtv5LOPJCX6v2Ps8WbsWfiOAkP3JqlT+RaGKA8kOo7VrwLoZWprj
+NmCxLe1tG5MP8UM7NJvbf0dMoV5/pdfYEp1AiSH5dhAgsunnGas=
+=HQxc
+-----END PGP SIGNATURE-----
+
+--E75mJrUy8lRi9cGN--
