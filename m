@@ -2,104 +2,134 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1AFC33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 03:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E66C6C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 04:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30397206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 03:59:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C72A720728
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 04:00:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730009AbgAQD7x (ORCPT
+        id S1730107AbgAQEAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 22:59:53 -0500
-Received: from mga01.intel.com ([192.55.52.88]:38286 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726378AbgAQD7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 22:59:53 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 19:59:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,328,1574150400"; 
-   d="scan'208";a="257652981"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by fmsmga002.fm.intel.com with ESMTP; 16 Jan 2020 19:59:52 -0800
-Date:   Fri, 17 Jan 2020 11:39:34 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     will@kernel.org
-Cc:     mdf@kernel.org, mark.rutland@arm.com, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        atull@kernel.org, gregkh@linuxfoundation.org
-Subject: Re: [RESEND Patch v6 0/2] add performance reporting support to FPGA
- DFL drivers
-Message-ID: <20200117033934.GA23536@hao-dev>
-References: <1579230628-22243-1-git-send-email-hao.wu@intel.com>
+        Thu, 16 Jan 2020 23:00:15 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36387 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbgAQEAN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 23:00:13 -0500
+Received: by mail-pg1-f193.google.com with SMTP id k3so11000187pgc.3;
+        Thu, 16 Jan 2020 20:00:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=j/gmt+S+U5biY49eR+qUY302EUGG1032iY8t1Ue0P1s=;
+        b=SjDjmIptcOzs3J32TQ2+idVc5baQvUVKjWwx/vINIdyY+ETBRl9/yyElOuiPGzwMME
+         JLJ9QG0vQu0+4tgUAoBmlu+JZXKyB0taGZJuf2HWcjNUH8JAnvK1true3bwuRZsHBym7
+         OM3fxA9YleS0FoSQJdq6RCnUKTtlkEtns884vsZZ1lOeZQI5vGakkKjIo2Trv3av0oTg
+         qUiOicfmquxA1z7ITO27HYChrBppf6+BtisMKK0jFoYjX5cXs+cMDs6kPb3M3C2TH5XG
+         oKe1dRks/dVN9Kpz2wRTYXwKCpQjT8UwGXkKosHKum6b1ixm630tpYuuBTDncKiZ5tCg
+         09uw==
+X-Gm-Message-State: APjAAAVcFnnf8P6sld5eezfeJ2S15vR45ItdQwFOawDAznuO3Sf34z9e
+        nogBdJlzeKpGr0S2LrQqASLV4a6Wl50=
+X-Google-Smtp-Source: APXvYqzojzQMzN/4c4rIhB+N1ix9vQkiluNoIBRoleUyxoTu7MgidTGKioWDjBx1jvV8QJgO04VrqA==
+X-Received: by 2002:a63:ce4b:: with SMTP id r11mr44165950pgi.419.1579233612897;
+        Thu, 16 Jan 2020 20:00:12 -0800 (PST)
+Received: from ?IPv6:2601:647:4000:d7:8dfb:7edd:e01b:b201? ([2601:647:4000:d7:8dfb:7edd:e01b:b201])
+        by smtp.gmail.com with ESMTPSA id u26sm26061663pfn.46.2020.01.16.20.00.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jan 2020 20:00:12 -0800 (PST)
+Subject: Re: [PATCH v2 6/9] scsi: ufs: Delete is_init_prefetch from struct
+ ufs_hba
+To:     Bean Huo <huobean@gmail.com>, alim.akhtar@samsung.com,
+        avri.altman@wdc.com, asutoshd@codeaurora.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, stanley.chu@mediatek.com,
+        beanhuo@micron.com, tomas.winkler@intel.com, cang@codeaurora.org
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200116215914.16015-1-huobean@gmail.com>
+ <20200116215914.16015-7-huobean@gmail.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <125ff67c-bcd5-69e7-2ec8-203b805c246b@acm.org>
+Date:   Thu, 16 Jan 2020 20:00:10 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1579230628-22243-1-git-send-email-hao.wu@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200116215914.16015-7-huobean@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will
+On 2020-01-16 13:59, Bean Huo wrote:
+> From: Bean Huo <beanhuo@micron.com>
+> 
+> Without variable is_init_prefetch, the current logic can guarantee
+> ufshcd_init_icc_levels() will execute only once, delete it now.
+> 
+> Signed-off-by: Bean Huo <beanhuo@micron.com>
+> ---
+>  drivers/scsi/ufs/ufshcd.c | 5 +----
+>  drivers/scsi/ufs/ufshcd.h | 2 --
+>  2 files changed, 1 insertion(+), 6 deletions(-)
+> 
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index 44b7c0a44b8d..31b6e2a7c166 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -6967,8 +6967,7 @@ static int ufs_lu_add(struct ufs_hba *hba)
+>  {
+>  	int ret;
+>  
+> -	if (!hba->is_init_prefetch)
+> -		ufshcd_init_icc_levels(hba);
+> +	ufshcd_init_icc_levels(hba);
+>  
+>  	/* Add required well known logical units to scsi mid layer */
+>  	ret = ufshcd_scsi_add_wlus(hba);
+> @@ -6994,8 +6993,6 @@ static int ufs_lu_add(struct ufs_hba *hba)
+>  	scsi_scan_host(hba->host);
+>  	pm_runtime_put_sync(hba->dev);
+>  
+> -	if (!hba->is_init_prefetch)
+> -		hba->is_init_prefetch = true;
+>  out:
+>  	return ret;
+>  }
 
-I resend this patch per suggestion from Greg.
+The current code calls ufshcd_init_icc_levels() once per HBA. This patch
+changes that into one call per LUN. It seems like the patch description
+contradicts the code I see above.
 
-Actually this is one important feature for users, but was blocked by
-code review for quite a long time (no comments since last November).
+Thanks,
 
-We really need your help on code review from perf, please help us..
-
-Many Thanks!
-
-Hao
-
-On Fri, Jan 17, 2020 at 11:10:26AM +0800, Wu Hao wrote:
-> Hi all,
-> 
-> This patchset adds performance reporting support for FPGA DFL drivers. It
-> introduces one pmu to expose userspace interfaces via standard perf API.
-> User could use standard perf tool to access perf events exposed via pmu.
-> 
-> This patchset is generated based on latest fpga/for-next branch.
-> 
-> Main changes from v5:
->  - use dev_ext_attribute instead of fme_perf_event_attr.
->  - use is_visible function to decide which events to expose per
->    hardware capability, and add event_init checking for all events.
-> 
-> Main changes from v4:
->  - rebase and clean up.
->  - update Kconfig for PERF_EVENTS dependency.
-> 
-> Main changes from v3:
->  - add more descriptions in doc, including how to use perf tool for these
->    hardware counters. (patch #1)
->  - use standard perf API instead of sysfs entries. (patch #2)
-> 
-> Wu Hao (1):
->   fpga: dfl: fme: add performance reporting support
-> 
-> Xu Yilun (1):
->   Documentation: fpga: dfl: add description for performance reporting
->     support
-> 
->  Documentation/fpga/dfl.rst  |  83 ++++
->  drivers/fpga/Makefile       |   1 +
->  drivers/fpga/dfl-fme-main.c |   4 +
->  drivers/fpga/dfl-fme-perf.c | 943 ++++++++++++++++++++++++++++++++++++++++++++
->  drivers/fpga/dfl-fme.h      |   2 +
->  drivers/fpga/dfl.h          |   2 +
->  6 files changed, 1035 insertions(+)
->  create mode 100644 drivers/fpga/dfl-fme-perf.c
-> 
-> -- 
-> 1.8.3.1
+Bart.
