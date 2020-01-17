@@ -2,106 +2,174 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8470C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA82C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3DEC2072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:03:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ltw0xlbb"
+	by mail.kernel.org (Postfix) with ESMTP id DC89220748
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:08:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729011AbgAQSDa (ORCPT
+        id S1728901AbgAQSI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 13:03:30 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:40338 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726603AbgAQSD3 (ORCPT
+        Fri, 17 Jan 2020 13:08:26 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:35258 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726603AbgAQSIZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 13:03:29 -0500
-Received: by mail-qk1-f195.google.com with SMTP id c17so23517156qkg.7;
-        Fri, 17 Jan 2020 10:03:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xU4VBanglVPXt7ngdr39qz422X3JP6/qDcudzGbwI4E=;
-        b=Ltw0xlbbDd3T6Yq0dSVi4aqLfuk0vFTBHazMFWMSYU8yiqLSSuA0lDb/1xen40XcH0
-         cqOv83k0WRiJqxXhwTJPNZJkmtgbduF1fYpW6H/8PtCLXjM+7SJ3caItDskt8EN0ZIN6
-         o5/tHmOftvWd7Cg+FIC69Yv6fjIhe8VcLA3qiRgRqODaq2oSW5Ef5wqb3iMP52WeZLqI
-         iAzHGocaNXnRyhho0iERF5Clxmxr418Q/nESOJft0SqV4aShORm8SZj1/l5JkfOVHZZc
-         mw1FYoYKH6FBNiq3vB/Nbizzo2k3wbWBjv0DGXIp1yICX6k9/A7nUW4UxvrzcNh0cR5p
-         ilUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xU4VBanglVPXt7ngdr39qz422X3JP6/qDcudzGbwI4E=;
-        b=An6DJfFAcPoL/RlurF2u8FrMJ9u8xCSg6w8V4ggqRxLICijPI1KtZ0Y0eCQUV5Wbf0
-         hvAeBG2iJ2uor1+n9UpXuYV41VapI9zoe+3j+RB2wvEthDOa7KTT9xfQqrUx+3RJQ8T/
-         58dStQDUB32OnooZhBrB83oYxNBYwNtYt2ydfjv1Y0PmyIcwpQK0REpAGKU12b1LEGga
-         m/8uXQQgyiSt8DEAbh2J9UI6Asy1F6Tx9IsRqDuMNhDSFKqDgXCJ1G+/LyGc21BRT90F
-         Os93JIjETf+dARxcmCzCce/VNwvETC1n9zHBXMVMXcV9Ha6ba/FP9DJqxCH0LceVe9M0
-         awqA==
-X-Gm-Message-State: APjAAAU4EVp4pYMygrIKfBd22a0hqk5czRuADFtFYc9unk6iPcvXMEM2
-        O9aoePs82Cyp30eKKBsDnBM=
-X-Google-Smtp-Source: APXvYqyCPiG09VXkOIjOy2jkrRHpRdY7DZQqsAECIdmiP32K/o24L2Khmyz3qUwMqv7EC7M+coGglw==
-X-Received: by 2002:a37:664d:: with SMTP id a74mr39032122qkc.4.1579284208522;
-        Fri, 17 Jan 2020 10:03:28 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id q35sm13523418qta.19.2020.01.17.10.03.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 10:03:28 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Fri, 17 Jan 2020 13:03:26 -0500
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jinyuqi@huawei.com,
-        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, edumazet@google.com,
-        guoyang2@huawei.com, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH] net: optimize cmpxchg in ip_idents_reserve
-Message-ID: <20200117180324.GA2623847@rani.riverdale.lan>
-References: <1579058620-26684-1-git-send-email-zhangshaokun@hisilicon.com>
- <20200116.042722.153124126288244814.davem@davemloft.net>
- <930faaff-4d18-452d-2e44-ef05b65dc858@gmail.com>
- <1b3aaddf-22f5-1846-90f1-42e68583c1e4@gmail.com>
- <430496fc-9f26-8cb4-91d8-505fda9af230@hisilicon.com>
- <20200117123253.GC14879@hirez.programming.kicks-ass.net>
- <7e6c6202-24bb-a532-adde-d53dd6fb14c3@gmail.com>
+        Fri, 17 Jan 2020 13:08:25 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 549452002C;
+        Fri, 17 Jan 2020 19:08:18 +0100 (CET)
+Date:   Fri, 17 Jan 2020 19:08:17 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        srv_heupstream@mediatek.com, stonea168@163.com,
+        cawa.cheng@mediatek.com, linux-mediatek@lists.infradead.org,
+        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com
+Subject: Re: [PATCH v9 1/5] dt-bindings: display: panel: Add boe tv101wum-n16
+ panel bindings
+Message-ID: <20200117180817.GA17294@ravnborg.org>
+References: <20200116021511.22675-1-jitao.shi@mediatek.com>
+ <20200116021511.22675-2-jitao.shi@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7e6c6202-24bb-a532-adde-d53dd6fb14c3@gmail.com>
+In-Reply-To: <20200116021511.22675-2-jitao.shi@mediatek.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
+        a=mpaa-ttXAAAA:8 a=gEfo2CItAAAA:8 a=pGLkceISAAAA:8 a=VwQbUJbxAAAA:8
+        a=e5mUnYsNAAAA:8 a=bHLQw6FTChaek29_IE4A:9 a=GUAa75DiEQyea0yL:21
+        a=icJfZ08v17ktqyR2:21 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=6heAxKwa5pAsJatQ0mat:22 a=sptkURWiP4Gy88Gu7hUp:22
+        a=AjGcO6oz07-iQ99wixmX:22 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 08:35:07AM -0800, Eric Dumazet wrote:
-> 
-> 
-> On 1/17/20 4:32 AM, Peter Zijlstra wrote:
-> 
-> > 
-> > That's crazy, just accept that UBSAN is taking bonghits and ignore it.
-> > Use atomic_add_return() unconditionally.
-> > 
-> 
-> Yes, we might simply add a comment so that people do not bug us if
-> their compiler is too old.
-> 
-> /* If UBSAN reports an error there, please make sure your compiler
->  * supports -fno-strict-overflow before reporting it.
->  */
-> return atomic_add_return(segs + delta, p_id) - segs;
-> 
+Hi Jitao.
 
-Do we need that comment any more? The flag was apparently introduced in
-gcc-4.2 and we only support 4.6+ anyway?
+Looks good, much better than the individual files.
+Rob Herring is still listed as maintainer which I questioned in last
+feedback.
+
+With this resolved (kept only if Rob confirms), this is
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+
+On Thu, Jan 16, 2020 at 10:15:07AM +0800, Jitao Shi wrote:
+> Add documentation for "boe,tv101wum-n16", "auo,kd101n80-45na",
+> "boe,tv101wum-n53" and "auo,b101uan08.3" panels.
+> 
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> ---
+>  .../display/panel/boe,tv101wum-nl6.yaml       | 81 +++++++++++++++++++
+>  1 file changed, 81 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
+> new file mode 100644
+> index 000000000000..cc4e058f5eee
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
+> @@ -0,0 +1,81 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/panel/boe,tv101wum-nl6.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: BOE TV101WUM-NL6 DSI Display Panel
+> +
+> +maintainers:
+> +  - Thierry Reding <thierry.reding@gmail.com>
+> +  - Sam Ravnborg <sam@ravnborg.org>
+> +  - Rob Herring <robh+dt@kernel.org>
+> +
+> +allOf:
+> +  - $ref: panel-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +        # BOE TV101WUM-NL6 10.1" WUXGA TFT LCD panel
+> +      - boe,tv101wum-nl6
+> +        # AUO KD101N80-45NA 10.1" WUXGA TFT LCD panel
+> +      - auo,kd101n80-45na
+> +        # BOE TV101WUM-N53 10.1" WUXGA TFT LCD panel
+> +      - boe,tv101wum-n53
+> +        # AUO B101UAN08.3 10.1" WUXGA TFT LCD panel
+> +      - auo,b101uan08.3
+> +
+> +  reg:
+> +    description: the virtual channel number of a DSI peripheral
+> +
+> +  enable-gpios:
+> +    description: a GPIO spec for the enable pin
+> +
+> +  pp1800-supply:
+> +    description: core voltage supply
+> +
+> +  avdd-supply:
+> +    description: phandle of the regulator that provides positive voltage
+> +
+> +  avee-supply:
+> +    description: phandle of the regulator that provides negative voltage
+> +
+> +  backlight:
+> +    description: phandle of the backlight device attached to the panel
+> +
+> +  port: true
+> +
+> +required:
+> + - compatible
+> + - reg
+> + - enable-gpios
+> + - pp1800-supply
+> + - avdd-supply
+> + - avee-supply
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    dsi {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        panel@0 {
+> +            compatible = "boe,tv101wum-nl6";
+> +            reg = <0>;
+> +            enable-gpios = <&pio 45 0>;
+> +            avdd-supply = <&ppvarn_lcd>;
+> +            avee-supply = <&ppvarp_lcd>;
+> +            pp1800-supply = <&pp1800_lcd>;
+> +            backlight = <&backlight_lcd0>;
+> +            status = "okay";
+> +            port {
+> +                panel_in: endpoint {
+> +                    remote-endpoint = <&dsi_out>;
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +...
+> -- 
+> 2.21.0
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
