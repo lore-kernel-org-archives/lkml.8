@@ -4,25 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC078C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E2EC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 993DC2083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82A3124681
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:04:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729347AbgAQPEd (ORCPT
+        id S1729148AbgAQPEB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 10:04:33 -0500
-Received: from mx2.suse.de ([195.135.220.15]:46416 "EHLO mx2.suse.de"
+        Fri, 17 Jan 2020 10:04:01 -0500
+Received: from mx2.suse.de ([195.135.220.15]:46104 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729130AbgAQPEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 10:04:02 -0500
+        id S1729064AbgAQPD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 10:03:58 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 040D5BBB2;
-        Fri, 17 Jan 2020 15:04:00 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 2879BAD00;
+        Fri, 17 Jan 2020 15:03:56 +0000 (UTC)
 From:   Petr Mladek <pmladek@suse.com>
 To:     Jiri Kosina <jikos@kernel.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -32,9 +32,9 @@ Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
         Nicolai Stange <nstange@suse.de>,
         live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
         Petr Mladek <pmladek@suse.com>
-Subject: [POC 13/23] livepatch: Remove livepatch module when the livepatched module is unloaded
-Date:   Fri, 17 Jan 2020 16:03:13 +0100
-Message-Id: <20200117150323.21801-14-pmladek@suse.com>
+Subject: [POC 04/23] livepatch: Prevent loading livepatch sub-module unintentionally.
+Date:   Fri, 17 Jan 2020 16:03:04 +0100
+Message-Id: <20200117150323.21801-5-pmladek@suse.com>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20200117150323.21801-1-pmladek@suse.com>
 References: <20200117150323.21801-1-pmladek@suse.com>
@@ -43,143 +43,142 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-klp_module_going() does very similar things as before splitting
-the livepatches. Especially, it unpatches the related code, calls
-the callbacks, unlinks the structures from the linked lists.
+Livepatch is split into several modules. The main module is for livepatching
+vmlinux. The rest is for livepatching other modules.
 
-It does not have to clean up the structure because the entire livepatch
-module is going to be freed and removed.
+Only the livepatch module for vmlinux can be loaded by users. Others are
+loaded automatically when the related module is or gets loaded.
+
+Users might try to load any livepatch module. It must be allowed
+only when the related livepatch module for vmlinux and the livepatched
+module are loaded.
+
+Also it is important to check that obj->name is listed in patch->obj_names.
+Otherwise this module would not be loaded automatically. And it would
+lead into inconsistent behavier. Anyway, the missing name means a mistake
+somewhere and must be reported.
+
+klp_add_object() is taking over the job done by klp_module_coming().
+The error message is taken from there so that selftests do not need
+to get updated.
 
 Signed-off-by: Petr Mladek <pmladek@suse.com>
 ---
- kernel/livepatch/core.c | 84 ++++++++++++++++++-------------------------------
- 1 file changed, 31 insertions(+), 53 deletions(-)
+ kernel/livepatch/core.c | 78 ++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 77 insertions(+), 1 deletion(-)
 
 diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-index 6c51b194da57..73462b66f63f 100644
+index ec7ffc7db3a7..e2c7dc6c2d5f 100644
 --- a/kernel/livepatch/core.c
 +++ b/kernel/livepatch/core.c
-@@ -599,21 +599,6 @@ static void __klp_free_funcs(struct klp_object *obj, bool nops_only)
- 	}
+@@ -88,6 +88,18 @@ static struct klp_object *klp_find_object(struct klp_patch *patch,
+ 	return NULL;
  }
  
--/* Clean up when a patched object is unloaded */
--static void klp_free_object_loaded(struct klp_object *obj)
--{
--	struct klp_func *func;
--
--	obj->mod = NULL;
--
--	klp_for_each_func(obj, func) {
--		func->old_func = NULL;
--
--		if (func->nop)
--			func->new_func = NULL;
--	}
--}
--
- static void klp_free_object(struct klp_object *obj, bool nops_only)
- {
- 	__klp_free_funcs(obj, nops_only);
-@@ -909,6 +894,24 @@ static int klp_init_patch(struct klp_patch *patch)
- 	return 0;
- }
- 
-+static void klp_remove_object(struct klp_object *obj)
++static struct klp_patch *klp_find_patch(const char *patch_name)
 +{
-+	struct klp_patch *patch =
-+		container_of(obj->kobj.parent, struct klp_patch, kobj);
++	struct klp_patch *patch;
 +
-+	if (patch != klp_transition_patch)
-+		klp_pre_unpatch_callback(obj);
++	klp_for_each_patch(patch) {
++		if (!strcmp(patch->obj->patch_name, patch_name))
++			return patch;
++	}
 +
-+	pr_notice("reverting patch '%s' on unloading module '%s'\n",
-+		  patch->obj->patch_name, obj->name);
-+
-+	klp_unpatch_object(obj);
-+
-+	klp_post_unpatch_callback(obj);
-+
-+	klp_free_object(obj, false);
++	return NULL;
 +}
 +
- static int klp_check_module_name(struct klp_object *obj, bool is_module)
- {
- 	char mod_name[MODULE_NAME_LEN];
-@@ -1313,40 +1316,6 @@ void klp_discard_nops(struct klp_patch *new_patch)
- 	klp_free_objects_dynamic(klp_transition_patch);
+ struct klp_find_arg {
+ 	const char *objname;
+ 	const char *name;
+@@ -920,15 +932,79 @@ static int klp_check_object(struct klp_object *obj, bool is_module)
+ 	return klp_check_module_name(obj, is_module);
  }
  
--/*
-- * Remove parts of patches that touch a given kernel module. The list of
-- * patches processed might be limited. When limit is NULL, all patches
-- * will be handled.
-- */
--static void klp_cleanup_module_patches_limited(struct module *mod,
--					       struct klp_patch *limit)
--{
--	struct klp_patch *patch;
--	struct klp_object *obj;
--
--	klp_for_each_patch(patch) {
--		if (patch == limit)
--			break;
--
--		klp_for_each_object(patch, obj) {
--			if (!klp_is_module(obj) || strcmp(obj->name, mod->name))
--				continue;
--
--			if (patch != klp_transition_patch)
--				klp_pre_unpatch_callback(obj);
--
--			pr_notice("reverting patch '%s' on unloading module '%s'\n",
--				  patch->obj->patch_name, obj->name);
--			klp_unpatch_object(obj);
--
--			klp_post_unpatch_callback(obj);
--
--			klp_free_object_loaded(obj);
--			break;
--		}
--	}
--}
--
- int klp_module_coming(struct module *mod)
- {
- 	char patch_name[MODULE_NAME_LEN];
-@@ -1404,19 +1373,28 @@ int klp_module_coming(struct module *mod)
- 
- void klp_module_going(struct module *mod)
++static bool klp_is_object_name_supported(struct klp_patch *patch,
++					 const char *name)
++{
++	int i;
++
++	for (i = 0; patch->obj_names[i]; i++) {
++		if (!strcmp(name, patch->obj_names[i]))
++			return true;
++	}
++
++	return false;
++}
++
++/* Must be called under klp_mutex */
++static bool klp_is_object_compatible(struct klp_patch *patch,
++				     struct klp_object *obj)
++{
++	struct module *patched_mod;
++
++	if (!klp_is_object_name_supported(patch, obj->name)) {
++		pr_err("Livepatch (%s) is not supposed to livepatch the module: %s\n",
++		       obj->patch_name, obj->name);
++		return false;
++	}
++
++	mutex_lock(&module_mutex);
++	patched_mod = find_module(obj->name);
++	mutex_unlock(&module_mutex);
++
++	if (!patched_mod) {
++		pr_err("Livepatched module is not loaded: %s\n", obj->name);
++		return false;
++	}
++
++	return true;
++}
++
+ int klp_add_object(struct klp_object *obj)
  {
 +	struct klp_patch *patch;
-+	struct klp_object *obj, *tmp_obj;
+ 	int ret;
+ 
+ 	ret = klp_check_object(obj, true);
+ 	if (ret)
+ 		return ret;
+ 
++	mutex_lock(&klp_mutex);
 +
- 	if (WARN_ON(mod->state != MODULE_STATE_GOING &&
- 		    mod->state != MODULE_STATE_COMING))
- 		return;
- 
- 	mutex_lock(&klp_mutex);
- 	/*
--	 * Each module has to know that klp_module_going()
--	 * has been called. We never know what module will
--	 * get patched by a new patch.
-+	 * All already enabled livepatches for this module as going to be
-+	 * removed now. From this point, klp_enable_patch() must not load
-+	 * any new livepatch modules for this module.
- 	 */
- 	mod->klp_alive = false;
- 
--	klp_cleanup_module_patches_limited(mod, NULL);
-+	klp_for_each_patch(patch) {
-+		klp_for_each_object_safe(patch, obj, tmp_obj) {
-+			if (obj->name && !strcmp(obj->name, mod->name)) {
-+				klp_remove_object(obj);
-+			}
-+		}
++	patch = klp_find_patch(obj->patch_name);
++	if (!patch) {
++		pr_err("Can't load livepatch (%s) for module when the livepatch (%s) for vmcore is not loaded\n",
++		       obj->mod->name, obj->patch_name);
++		ret = -EINVAL;
++		goto err;
 +	}
- 
- 	mutex_unlock(&klp_mutex);
++
++	if (!klp_is_object_compatible(patch, obj)) {
++		ret = -EINVAL;
++		goto err;
++	}
++
++	mutex_unlock(&klp_mutex);
+ 	return 0;
++
++err:
++	/*
++	 * If a patch is unsuccessfully applied, return
++	 * error to the module loader.
++	 */
++	pr_warn("patch '%s' failed for module '%s', refusing to load module '%s'\n",
++		patch->obj->patch_name, obj->name, obj->name);
++	mutex_unlock(&klp_mutex);
++	return ret;
  }
+ EXPORT_SYMBOL_GPL(klp_add_object);
+ 
+@@ -1033,7 +1109,7 @@ int klp_enable_patch(struct klp_patch *patch)
+ {
+ 	int ret;
+ 
+-	if (!patch || !patch->obj)
++	if (!patch || !patch->obj || !patch->obj_names)
+ 		return -EINVAL;
+ 
+ 	ret = klp_check_object(patch->obj, false);
 -- 
 2.16.4
 
