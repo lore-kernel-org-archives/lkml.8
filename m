@@ -2,107 +2,102 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 855D9C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE34AC33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16D112073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:17:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="pnkROUmJ"
+	by mail.kernel.org (Postfix) with ESMTP id B57C121582
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:18:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579277911;
+	bh=ocjmWtDqYdcdpUAejOH5VD2hJd8psDKhPo37YZ0fw4Q=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=iU4kmueQRD7eBd0bFQP0qLAb18vhZlDYcWw6LbSHaQMdAl0wveK00a1Dh7RDKB6gL
+	 OuXdbWqDKQWk27k3/1uQKuKgATisXPSxBJRwThU5KRh6QZkCKCkz2tuaufCobUv1pR
+	 InKNATWT5rZRLh0zab1P/RWp+xSrT4L9Lt+zkWzc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729121AbgAQQRe (ORCPT
+        id S1729165AbgAQQSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 11:17:34 -0500
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:54632 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729014AbgAQQRd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 11:17:33 -0500
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 00HGHP4j010840
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jan 2020 01:17:25 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 00HGHP4j010840
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1579277845;
-        bh=I3ut7fRPhrMVRpNLHqwLkp4DT8+R+lRU1N1ykqfVyVM=;
-        h=From:Date:Subject:To:Cc:From;
-        b=pnkROUmJt/MX4GjaBlKa/emow39nhrsPKAn3pGbnMt4fvsxMIuUAtFMTLUWn2T47M
-         QUdeEHRdoyNavCWqEIhyY2QP1ELygS8k2NElSAEwAyoNnpZDqFN6LxKltGXZ3KJAb0
-         bjFPUx/J5gC2GRxmP9QLTRjyvQ5YgPtThl7P1Jx67Wky26hYFkagoQPCVP/YfISLRV
-         OgHzoWnDV5d8t23lukaKz8s1B5BQJQQRPxcQdL7suzbeT+l3oh3Xs+XmONRWH9FeEh
-         zyrgMdzCR2Qr29krv33sQbn26EykZFx95LWqo5WkJjd2MmQIIwKRHOAGJ6hOUGtkpM
-         0J0HKsrG+fLtw==
-X-Nifty-SrcIP: [209.85.221.170]
-Received: by mail-vk1-f170.google.com with SMTP id y184so6769207vkc.11
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 08:17:25 -0800 (PST)
-X-Gm-Message-State: APjAAAVPe40ALiq4Upkj8kqqyxakHV4MOsizYpmDxzlR9/cbmwC1ynMr
-        /fuwdZqIFvnyFNA8cAxaZ9hyk8GZO4PzVylzrHA=
-X-Google-Smtp-Source: APXvYqxHSvowQPk4UTnHnWLjFJjpHtO78N8FWGDQXqpkhwKdrjrCbTgyX27LLY6X4gDjRNNR9AcXazktPpwapFpPbRw=
-X-Received: by 2002:a1f:72c3:: with SMTP id n186mr23949934vkc.12.1579277844236;
- Fri, 17 Jan 2020 08:17:24 -0800 (PST)
+        Fri, 17 Jan 2020 11:18:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58102 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727043AbgAQQSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 11:18:30 -0500
+Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E411B2073A;
+        Fri, 17 Jan 2020 16:18:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579277910;
+        bh=ocjmWtDqYdcdpUAejOH5VD2hJd8psDKhPo37YZ0fw4Q=;
+        h=From:To:Cc:Subject:Date:From;
+        b=I5q5gdX8mA2JqDHmCTtuKiwd5h99Y3mNgEzwqV2n2Fu/BiQIJCGNNQLFZWXeiENrk
+         w/VTwzkRtKsKAI8FqhZRuTuQaHS1Njlt3SzOPliHHKdJh67CCewYkHBO19muK4O0eC
+         jHvSmijUUfe2K51zVQfdLp7L9dfF7gBJZKCqUIRk=
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-kbuild@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH v2] kconfig: fix documentation typos
+Date:   Fri, 17 Jan 2020 10:18:22 -0600
+Message-Id: <20200117161822.106635-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 MIME-Version: 1.0
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 18 Jan 2020 01:16:48 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASSVYHunCn154ktOVDm=MOe+jhEq8Xc8g0JAtCjjJRHwQ@mail.gmail.com>
-Message-ID: <CAK7LNASSVYHunCn154ktOVDm=MOe+jhEq8Xc8g0JAtCjjJRHwQ@mail.gmail.com>
-Subject: [GIT PULL] ARM: dts: uniphier: UniPhier DT updates for v5.6
-To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd, Olof,
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-Here are UniPhier DT (32bit) updates for the v5.6 merge window.
-Please pull!
+Fix a couple typos in kconfig-language documentation.
 
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ Documentation/kbuild/kconfig-language.rst | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
-
-  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-uniphier.git
-tags/uniphier-dt-v5.6
-
-for you to fetch changes up to 37f3e0096f716b06338a4771633b32b8e2a36f7f:
-
-  ARM: dts: uniphier: add reset-names to NAND controller node
-(2020-01-18 00:56:09 +0900)
-
-----------------------------------------------------------------
-UniPhier ARM SoC DT updates for v5.6
-
-- Add pinmux nodes for I2C ch5, ch6
-
-- Add reset-names to NAND controller node
-
-----------------------------------------------------------------
-Masahiro Yamada (2):
-      ARM: dts: uniphier: add pinmux nodes for I2C ch5, ch6
-      ARM: dts: uniphier: add reset-names to NAND controller node
-
- arch/arm/boot/dts/uniphier-ld4.dtsi     |  3 ++-
- arch/arm/boot/dts/uniphier-pinctrl.dtsi | 10 ++++++++++
- arch/arm/boot/dts/uniphier-pro4.dtsi    |  3 ++-
- arch/arm/boot/dts/uniphier-pro5.dtsi    |  3 ++-
- arch/arm/boot/dts/uniphier-pxs2.dtsi    |  3 ++-
- arch/arm/boot/dts/uniphier-sld8.dtsi    |  3 ++-
- 6 files changed, 20 insertions(+), 5 deletions(-)
-
-
+diff --git a/Documentation/kbuild/kconfig-language.rst b/Documentation/kbuild/kconfig-language.rst
+index 74bef19f69f0..0148ae82446e 100644
+--- a/Documentation/kbuild/kconfig-language.rst
++++ b/Documentation/kbuild/kconfig-language.rst
+@@ -594,7 +594,8 @@ The two different resolutions for b) can be tested in the sample Kconfig file
+ Documentation/kbuild/Kconfig.recursion-issue-02.
+ 
+ Below is a list of examples of prior fixes for these types of recursive issues;
+-all errors appear to involve one or more select's and one or more "depends on".
++all errors appear to involve one or more "select" statements and one or more
++"depends on".
+ 
+ ============    ===================================
+ commit          fix
+@@ -656,7 +657,7 @@ the use of the xconfig configurator [1]_. Work should be done to confirm if
+ the deduced semantics matches our intended Kconfig design goals.
+ 
+ Having well defined semantics can be useful for tools for practical
+-evaluation of depenencies, for instance one such use known case was work to
++evaluation of dependencies, for instance one such case was work to
+ express in boolean abstraction of the inferred semantics of Kconfig to
+ translate Kconfig logic into boolean formulas and run a SAT solver on this to
+ find dead code / features (always inactive), 114 dead features were found in
+@@ -683,7 +684,7 @@ abstraction the inferred semantics of Kconfig to translate Kconfig logic into
+ boolean formulas and run a SAT solver on it [5]_. Another known related project
+ is CADOS [6]_ (former VAMOS [7]_) and the tools, mainly undertaker [8]_, which
+ has been introduced first with [9]_.  The basic concept of undertaker is to
+-exract variability models from Kconfig, and put them together with a
++extract variability models from Kconfig and put them together with a
+ propositional formula extracted from CPP #ifdefs and build-rules into a SAT
+ solver in order to find dead code, dead files, and dead symbols. If using a SAT
+ solver is desirable on Kconfig one approach would be to evaluate repurposing
 -- 
-Best Regards
-Masahiro Yamada
+2.25.0.341.g760bfbb309-goog
+
