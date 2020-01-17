@@ -2,165 +2,110 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B3FC33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 07:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BD0C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 07:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D68E20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 07:44:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="mW6lK9ue"
+	by mail.kernel.org (Postfix) with ESMTP id 232D820728
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 07:44:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729325AbgAQHoK (ORCPT
+        id S1729377AbgAQHoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 02:44:10 -0500
-Received: from mail-dm6nam11on2089.outbound.protection.outlook.com ([40.107.223.89]:60705
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727804AbgAQHoJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 02:44:09 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Hn/GXslAc/iyvvOXk1DFl6FX+mp42fXmtHQbwK+BiCia+2ztuIdpC/SCeG8wp1wgADQy9zKTWwk88j64I6bEaKcSfMoVXuiBGYkgklYP32Ewl5syPk5cwCemcumFc4v1Slbe9vuAAn8XKN6X5hxlPUiIr8ATssCslMnSnfmAixbdzZMIKftLLgdh4jr/nqoZRO2dfaoVQH8dcDNE1pg1R+KnmUPRA+DSgf103f05J2SWBy8qsBttgrDSg+VRDbGpXMeWo3Z8MxwtAG6p7lk8xNdMHm2YC6XgA/GiHoU3dmoXvToz96wE47fpCYiI9/FENFG3nMweR79BtgbxJx9wKw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yY7dT9Uu4EIpwCcoMVNkJiqk6krljwcG6BPRo9t5UC4=;
- b=nCPrludUZhAqOWdsJaqakflSgAm4pW86Mk3sz1LRYrn7osbkO1FlyocCNq2pycApPIMiN2CKajNSoubXpZo6eYVTCS3oEbxaJ3vGvukZ4YYK/nwj1lQ/B/Q41T+ynJ/sQfpiNdRA6NVovTuypnJYkHTMsUUgWXUqECH2zL+I9NhPDbJoCu9MBDFXFwnpOGBjIbY3lotPJwIUibR14A5jpf6xcgNVnfPJ8zdEiIXPeFx8mTRLtOjrK6QCZnAi3JFMswR51ErHPjIY0C32HOw/BFo5cMnNsxYuKMTp7ndivtGMJGdb464RZ7nYMPIy2W8av2njHKe/JHvgMsJRlqTslw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
- dkim=pass header.d=sifive.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yY7dT9Uu4EIpwCcoMVNkJiqk6krljwcG6BPRo9t5UC4=;
- b=mW6lK9uejF2pz0n6Q+WOGYkT53ZmV7XpGj9PgP7aWJqNsMXOTzs1NsdqfMaBlI5eD9XaG6wKZJkd+YKPO6Thz4aUEE5yZDoEqavTolHQQr3lKvtPZggBOj5D+y4K6AmmeZLeFP0iwEj27lHaWffjXehZw7Xyk2Nju7RAQg6R+NY=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=yash.shah@sifive.com; 
-Received: from CH2PR13MB3368.namprd13.prod.outlook.com (52.132.246.90) by
- CH2PR13MB3765.namprd13.prod.outlook.com (20.180.15.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.6; Fri, 17 Jan 2020 07:44:08 +0000
-Received: from CH2PR13MB3368.namprd13.prod.outlook.com
- ([fe80::eccb:16ac:e897:85d5]) by CH2PR13MB3368.namprd13.prod.outlook.com
- ([fe80::eccb:16ac:e897:85d5%3]) with mapi id 15.20.2644.021; Fri, 17 Jan 2020
- 07:44:08 +0000
-From:   Yash Shah <yash.shah@sifive.com>
-To:     paul.walmsley@sifive.com, palmer@dabbelt.com
-Cc:     aou@eecs.berkeley.edu, allison@lohutok.net,
-        alexios.zavras@intel.com, gregkh@linuxfoundation.org,
-        tglx@linutronix.de, bp@suse.de, anup@brainfault.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        sachin.ghadi@sifive.com, Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH v4 1/2] riscv: cacheinfo: Implement cache_get_priv_group with a generic ops structure
-Date:   Fri, 17 Jan 2020 13:13:37 +0530
-Message-Id: <1579247018-6720-2-git-send-email-yash.shah@sifive.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1579247018-6720-1-git-send-email-yash.shah@sifive.com>
-References: <1579247018-6720-1-git-send-email-yash.shah@sifive.com>
-Content-Type: text/plain
-X-ClientProxiedBy: BM1PR0101CA0056.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:19::18) To CH2PR13MB3368.namprd13.prod.outlook.com
- (2603:10b6:610:2c::26)
+        Fri, 17 Jan 2020 02:44:15 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:59754 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729327AbgAQHoO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 02:44:14 -0500
+X-AuditID: c0a8fbf4-199ff70000001fa6-6c-5e2165cdaac1
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 84.C9.08102.DC5612E5; Fri, 17 Jan 2020 08:44:13 +0100 (CET)
+Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0439.000; Fri, 17 Jan 2020 08:44:08 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>
+CC:     "sashal@kernel.org" <sashal@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH] mfd: bd70528: Fix hour register mask
+Thread-Topic: [PATCH] mfd: bd70528: Fix hour register mask
+Thread-Index: AQHVy33u6ExLp0ReyUCqWPc5BSkWM6fubBCA
+Date:   Fri, 17 Jan 2020 07:44:07 +0000
+Message-ID: <83e8e1ecc40a58e2e6d1960bbb41c8dcfe730ce1.camel@fi.rohmeurope.com>
+References: <20200115082933.GA29117@localhost.localdomain>
+In-Reply-To: <20200115082933.GA29117@localhost.localdomain>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <28783269C4A7F84E9972F95229914477@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Received: from dhananjayk-PowerEdge-R620.open-silicon.com (114.143.65.226) by BM1PR0101CA0056.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:19::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2644.19 via Frontend Transport; Fri, 17 Jan 2020 07:44:04 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [114.143.65.226]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 77398771-fe30-42b8-2c80-08d79b2108ca
-X-MS-TrafficTypeDiagnostic: CH2PR13MB3765:
-X-LD-Processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <CH2PR13MB3765F002E5F7321D3EE1F5BB8C310@CH2PR13MB3765.namprd13.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-Forefront-PRVS: 0285201563
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(346002)(136003)(39850400004)(366004)(396003)(376002)(189003)(199004)(6512007)(2616005)(107886003)(316002)(956004)(5660300002)(52116002)(36756003)(16526019)(1006002)(6666004)(26005)(66476007)(66946007)(66556008)(186003)(6486002)(86362001)(8936002)(6506007)(44832011)(8676002)(81156014)(81166006)(4326008)(478600001)(7416002)(2906002)(41533002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3765;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: sifive.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: QczVaYO2FIVaPbRRINN0oxy1XhfhN5JYMejIbDTkKDCZTW0vtOnifvUSNX4kYe1YAO+NXSbLeYRIko1q2XAVqw8C/x6wNoI6SVCcOb9+bi3ISji3KGs48weK10fVdtqOS02pmTrRjTsUHRrCCAFmIN/Nm0aEtlNDAvyHxD5hWtrsYdCEt0x3rAJGuzgP8CoPPsIsVJdVRjIZaloGcQlD4w95pP4bHmLC4zDFOxN2UvLEpeeyFCPHtrhrRZiQw3AvByo4klc0c6NqIgFr7mFpyOycPlRaUwS7wadPHav2PjpUOWZoN7gTxdUWjnGUYqUQM8bhuZb1qDq1DPWxrN6NLFL9tZWbveMNX6nzayeia4sX56HmiV7RfZTGcD9tU4iM2Xu7a9vkgHRvR9d1y9cy3EUlHbuFNtd164ssgjLZZy/QPU32Tv4TtNRdRnw794dICC7z8DkmyGKikoqy0FjJrBaSHMVThHhNky9iKYn2OTI=
-X-OriginatorOrg: sifive.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 77398771-fe30-42b8-2c80-08d79b2108ca
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2020 07:44:08.1557
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ywxWHEW4GKCSgyWSsVW1wo0p7C91cjGap/iPI1QeSZLzp2i0Mvi9wdu7OpIv9GAEIO0hU3bd7qj9KO2P3DPBYQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3765
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUgTYRzn2d1uj86Tc073tFT0IMIi34haZWEUNAkk6FuRdrrLmXuR2yzN
+        Dy38UFqalVQurSwNlYG4gaj5ElKmkr2gLuxtiVlpZqQtqUy72+XLp/vd//f2h+cPMYWNUMMs
+        k5XlTIyBJvzxB3V/mjYNsFGpcV3lhObs9D2ZpvBuI6HxeB8BzWBbJaGprO3FNU6Hm0gitDcd
+        BdpW+1uZ1tlQRGjfuNsJbVeVQ6addUYcIA7JE9MZ64mDWZmm2F1H5fpPTyZlOTUor3C0XGoD
+        Q6pi4AcRtRm5+mdAMfCHCmoYoM/jLwnxpxegidJOrBhASFCJqHhEJkAltQ01vQgSJBhVJUHz
+        pRUSISiYn7sWOnxYSW1Hr6bf4yJOQLd+t0gFjFPr0LWOOSBgkkpBlZ5an0bB613VLt/cj9qB
+        vs9O+fSACkdFtmlfJkapkPPjnFRcmkI17c8wEYegibGF/3MadfwaxYU9MSoaNbbFijAJ/W3m
+        xJQoVH5+VCZuEIT6Kj7gZSDUvqrAvmK2r5jtq8z2VebbQNoAkJHJMmQyVjY+hmNzYziz3sh/
+        MsxGJxBf9EcLWOxO7gYSCLrBGiihQ0hle3iqIjDdrMvXMxZ9GpdrYC3dAEGMVpJ913mO1DH5
+        p1jOvESthTitItePXjqioISubJbNYbklNgxCGpEFGVGpiiCOzWTzjmUZrCu0BPoJ4f5qpYU1
+        6ViOybXq04TjSLPw1yFQAXxvvI63k5YcxshPRWs/2AjLJqruYPBhVe0dTIGbzCZWrSJnBSkl
+        SPW5puWiSaCCgA4mKf5+FQH8WS/nTPIVEr6ibE+EUGFlVii1DTSzkap3BkfTvNvVOlB3scQb
+        mVqTNzfeT/tf8Yt7mpB0eNBz8mrgzBlQ0pPhddA6j83l1NUbB/dWtN44ngcNQa0/OyP3uy+b
+        pxIfD7efe346LGXMsLv+W1Jys/y+tUddXfT1S6i9oTNteGgxfGvjvpkpecXrC9H5iyUj2VPe
+        LTtp3KJn4jdgnIX5B+b30Q+TAwAA
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement cache_get_priv_group() that will make use of a generic ops
-structure to return a private attribute group for custom cache info.
-
-Using riscv_set_cacheinfo_ops() users can hook their own custom function
-to return the private attribute group for cacheinfo. In future we can
-add more ops to this generic ops structure for SOC specific cacheinfo.
-
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
-Reviewed-by: Anup Patel <anup@brainfault.org>
----
- arch/riscv/include/asm/cacheinfo.h | 15 +++++++++++++++
- arch/riscv/kernel/cacheinfo.c      | 17 +++++++++++++++++
- 2 files changed, 32 insertions(+)
- create mode 100644 arch/riscv/include/asm/cacheinfo.h
-
-diff --git a/arch/riscv/include/asm/cacheinfo.h b/arch/riscv/include/asm/cacheinfo.h
-new file mode 100644
-index 0000000..5d9662e
---- /dev/null
-+++ b/arch/riscv/include/asm/cacheinfo.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef _ASM_RISCV_CACHEINFO_H
-+#define _ASM_RISCV_CACHEINFO_H
-+
-+#include <linux/cacheinfo.h>
-+
-+struct riscv_cacheinfo_ops {
-+	const struct attribute_group * (*get_priv_group)(struct cacheinfo
-+							*this_leaf);
-+};
-+
-+void riscv_set_cacheinfo_ops(struct riscv_cacheinfo_ops *ops);
-+
-+#endif /* _ASM_RISCV_CACHEINFO_H */
-diff --git a/arch/riscv/kernel/cacheinfo.c b/arch/riscv/kernel/cacheinfo.c
-index 4c90c07..bd0f122 100644
---- a/arch/riscv/kernel/cacheinfo.c
-+++ b/arch/riscv/kernel/cacheinfo.c
-@@ -7,6 +7,23 @@
- #include <linux/cpu.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <asm/cacheinfo.h>
-+
-+static struct riscv_cacheinfo_ops *rv_cache_ops;
-+
-+void riscv_set_cacheinfo_ops(struct riscv_cacheinfo_ops *ops)
-+{
-+	rv_cache_ops = ops;
-+}
-+EXPORT_SYMBOL_GPL(riscv_set_cacheinfo_ops);
-+
-+const struct attribute_group *
-+cache_get_priv_group(struct cacheinfo *this_leaf)
-+{
-+	if (rv_cache_ops && rv_cache_ops->get_priv_group)
-+		return rv_cache_ops->get_priv_group(this_leaf);
-+	return NULL;
-+}
- 
- static void ci_leaf_init(struct cacheinfo *this_leaf,
- 			 struct device_node *node,
--- 
-2.7.4
-
+SGVsbG8gTGVlLCBBbGV4YW5kcmUsIEdyZWcgJiBTYXNoYQ0KDQpPbiBXZWQsIDIwMjAtMDEtMTUg
+YXQgMTA6MjkgKzAyMDAsIE1hdHRpIFZhaXR0aW5lbiB3cm90ZToNCj4gV2hlbiBSVEMgaXMgdXNl
+ZCBpbiAyNEggbW9kZSAoYW5kIGl0IGlzIGJ5IHRoaXMgZHJpdmVyKSB0aGUgbWF4aW11bQ0KPiBo
+b3VyIHZhbHVlIGlzIDI0IGluIEJDRC4gVGhpcyBvY2N1cGllcyBiaXRzIFs1OjBdIC0gd2hpY2gg
+bWVhbnMNCj4gY29ycmVjdCBtYXNrIGZvciBIT1VSIHJlZ2lzdGVyIGlzIDB4M2Ygbm90IDB4MWYu
+IEZpeCB0aGUgbWFzaw0KPiANCj4gRml4ZXM6IDMyYTRhNGViZjc2OCAoInJ0YzogYmQ3MDUyODog
+SW5pdGlhbCBzdXBwb3J0IGZvciBST0hNIGJkNzA1MjgNCj4gUlRDIikNCj4gU2lnbmVkLW9mZi1i
+eTogTWF0dGkgVmFpdHRpbmVuIDxtYXR0aS52YWl0dGluZW5AZmkucm9obWV1cm9wZS5jb20+DQo+
+IEFja2VkLWJ5OiBBbGV4YW5kcmUgQmVsbG9uaSA8YWxleGFuZHJlLmJlbGxvbmlAYm9vdGxpbi5j
+b20+DQo+IC0tLQ0KPiANCj4gSSBqdXN0IG5vdGljZWQgdGhpcyB3YXMgbmV2ZXIgYXBwbGllZC4g
+SSdkIGxpa2UgdG8gZ2V0IHRoaXMgaW4gYXMNCj4gd2UgY3VycmVudGx5IGhhdmUgYmQ3MDUyOCBS
+VEMgbm90IHdvcmtpbmcgaW4gZmV3IGV4aXRpbmcgcmVsZWFzZXMuDQo+IChPciBpdCB3b3JrcyBh
+cyBsb25nIGFzIHRpbWUgaXMgbm90IHNldCBhdCB0aGUgZXZlbmluZyA6LykNCj4gDQo+IEkgdGhp
+bmsgdGhpcyBvbmNlIHdhcyBpbiBSVEMgdHJlZSBidXQgd2FzIGRyb3BwZWQgYXMgTGVlIG1lbnRp
+b25lZA0KPiB0aGlzDQo+IGJlbG9uZ3MgdG8gTUZELiBUaHVzIEkgZGFyZWQgdG8gYWRkIHRoZSBB
+bGV4YW5kcmUncyBhY2tlZC1ieSAtIHBsZWFzZQ0KPiBsZXQgbWUga25vdyBpZiB0aGlzIGlzIG5v
+dCBPay4NCj4gDQo+IExlZSwgY2FuIHlvdSBwbGVhc2UgcHVsbCB0aGlzIGluIHNvIHRoYXQgd2Ug
+Z2V0IHRoZSBmaXgNCj4gaW4tdHJlZT8gSSBndWVzcyB0aGUgZml4ZXMgdGFnIGhlbHBzIHRoaXMg
+dG8gYmUgaW5jbHVkZWQgaW4gc29tZQ0KPiBleGlzdGluZyBicmFuY2hlcy4NCg0KQWN0dWFsbHkg
+LSBJIGRvbid0IGtub3cgaWYgYXBwbHlpbmcgdGhpcyBpbiBNRkQgaXMgZ29vZCBpZGVhLiBUaGUN
+CkJENzE4Mjggc3VwcG9ydCBzZXJpZXMNCg0KKA0KaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGtt
+bC9jb3Zlci4xNTc5MDc4NjgxLmdpdC5tYXR0aS52YWl0dGluZW5AZmkucm9obWV1cm9wZS5jb20v
+DQopDQoNCndpbGwgZml4IHRoaXMgd2hlbiBhcHBsaWVkIChhbmQgY29uZmxpY3Qgd2l0aCB0aGlz
+IGlmIGJvdGggYXJlDQphcHBsaWVkKS4gSSB3b3VsZCBsaWtlIHRvIGdldCB0aGlzIGZpeCBpbiA1
+LjQgdGhvdWdoIC0gYnV0IEkgZG9uJ3QNCnRoaW5rIHRoZSBCRDcxODI4IHNlcmllcyBzaG91bGQg
+YmUgaW4gNS40Lg0KDQpJcyBpdCBwb3NzaWJsZSB0byBnZXQgdGhpcyBpbiA1LjQgc3RhYmxlIC0g
+d2hpbGUgbGVhdmluZyB0aGlzIG91dCBvZg0KY3VycmVudCBNRkQgdHJlZSBhbmQgYXBwbHlpbmcg
+dGhlIEJENzE4Mjggc2VyaWVzIHRvIE1GRD8NCg0KPiANCj4gIGluY2x1ZGUvbGludXgvbWZkL3Jv
+aG0tYmQ3MDUyOC5oIHwgMiArLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAx
+IGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9tZmQvcm9obS1i
+ZDcwNTI4LmgNCj4gYi9pbmNsdWRlL2xpbnV4L21mZC9yb2htLWJkNzA1MjguaA0KPiBpbmRleCAx
+MDEzZTYwYzViMjUuLmIwMTA5ZWU2ZGFlMiAxMDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9saW51eC9t
+ZmQvcm9obS1iZDcwNTI4LmgNCj4gKysrIGIvaW5jbHVkZS9saW51eC9tZmQvcm9obS1iZDcwNTI4
+LmgNCj4gQEAgLTMxNyw3ICszMTcsNyBAQCBlbnVtIHsNCj4gICNkZWZpbmUgQkQ3MDUyOF9NQVNL
+X1JUQ19NSU5VVEUJCTB4N2YNCj4gICNkZWZpbmUgQkQ3MDUyOF9NQVNLX1JUQ19IT1VSXzI0SAkw
+eDgwDQo+ICAjZGVmaW5lIEJENzA1MjhfTUFTS19SVENfSE9VUl9QTQkweDIwDQo+IC0jZGVmaW5l
+IEJENzA1MjhfTUFTS19SVENfSE9VUgkJMHgxZg0KPiArI2RlZmluZSBCRDcwNTI4X01BU0tfUlRD
+X0hPVVIJCTB4M2YNCj4gICNkZWZpbmUgQkQ3MDUyOF9NQVNLX1JUQ19EQVkJCTB4M2YNCj4gICNk
+ZWZpbmUgQkQ3MDUyOF9NQVNLX1JUQ19XRUVLCQkweDA3DQo+ICAjZGVmaW5lIEJENzA1MjhfTUFT
+S19SVENfTU9OVEgJCTB4MWYNCj4gLS0gDQo+IDIuMjEuMA0KPiANCj4gDQoNCg==
