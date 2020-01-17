@@ -2,86 +2,171 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0998BC33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC20C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4DEF2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:40:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="evk1J7dh"
+	by mail.kernel.org (Postfix) with ESMTP id D4A4B2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:45:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579265137;
+	bh=52weG7mBhiLrAZ4hQCT4ua9dMLjf94HUuSpVb7mHV88=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=tIMWAb2HiSmL78pH7cugrCMnhxzTx5axOH7LAJZDANEJZMzmN7d1mMU3xYd5qc63/
+	 8ykVf6bFnjmIUIK2bygK2IYwwzbWmgNfjSbC/Zmlt0gxzJNSHIuZFnWi+3ktZ0QxYU
+	 DNqEvxPZOn+LNfsgJybNI7HulR4Ju6NfbgQqe00Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbgAQMkS (ORCPT
+        id S1726688AbgAQMph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 07:40:18 -0500
-Received: from mail-qv1-f50.google.com ([209.85.219.50]:46614 "EHLO
-        mail-qv1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbgAQMkS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 07:40:18 -0500
-Received: by mail-qv1-f50.google.com with SMTP id u1so10600462qvk.13
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 04:40:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=EEYzszKyIEcUSg4iqz8XJMBTQPM568jpucE6cSO2l/U=;
-        b=evk1J7dhPrnQM4qt0qwrFduRec8uyXznMMQKil6cinRTO+JJTAVXMKaw1qJD+PVHa+
-         i0pyYtX/WQ0OAB4STCEQt1JODVxRHLTKAGzwICxbI1wNie5+GmxI17yhpYjwG5WqSXQ8
-         1zMeF/2IWWaNZK3jy/j2lFzH6KrCqxWGE0W1AesqhYadj4/E8yrhHVXrJTnKyD5CcOft
-         PZ01dFELmQNzLRj/poE5bk9etGYpcDM8/qKg3rLKfb7cdWavl+qWSwxfI34zSfyWz9eQ
-         Mrb8VWqOHSF9wbGufmywdzwvENLE82rVcDH2NxzWbXSooyfIe0tOQhUdfCwD07B1TKuP
-         HcgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=EEYzszKyIEcUSg4iqz8XJMBTQPM568jpucE6cSO2l/U=;
-        b=oQCSMje5BPu8vUNqQendesBNQ0/yyloiL9awO2E2ad9HTIdiWOthg/hxPeXisQFh9D
-         PY6WDh2oDEvnNgun9OC2DX4MpBFO5OqniSBRHdF1p7yU4f5HsAvWHl6UNAK2ldtmaLFV
-         8icjL+wZjZdKz8p279EbsjpIJE0AC7VAMBx2KpKcLkd/bzMuob/FAQs2R76mIuJ2QQF0
-         ayUwGaGpuH3xtN+ov/AdnVWhOwv6x8TKfI8tAEbWRLhTSDD1Hh80lvM1dqQrHGqw2uDQ
-         2dM+dRaWcYiiEK3vKyI/SLuvUR9CL6vLUWeIQUbpHLSSYS65tHjJO3jQkyqyeZh/0o28
-         bhnA==
-X-Gm-Message-State: APjAAAWYa2f2KvlVu2NOcms4EbU6GD/V2/SEy5IvakWocUEZIaJPUHJv
-        mFw+rmBDlUFeIpOe838ueCzCDEsw3yfu8Q==
-X-Google-Smtp-Source: APXvYqxaTaQTCBWUWSYM2ZkSOqMtEhsiGrDIXketYgP5z6ddSb2DBWc9zQGscIbC9h1BTeB0CKoq+Q==
-X-Received: by 2002:ad4:50d2:: with SMTP id e18mr7622075qvq.9.1579264817318;
-        Fri, 17 Jan 2020 04:40:17 -0800 (PST)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id e2sm11582651qkl.3.2020.01.17.04.40.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jan 2020 04:40:16 -0800 (PST)
+        Fri, 17 Jan 2020 07:45:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55344 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726409AbgAQMpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 07:45:36 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BB2620730;
+        Fri, 17 Jan 2020 12:45:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579265135;
+        bh=52weG7mBhiLrAZ4hQCT4ua9dMLjf94HUuSpVb7mHV88=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=kzusg6VG5yderSNBUkZ/BHF1JljB4S4kBxcgq0DEjVZmhYx+eN43nAsl4J0jWqSoW
+         fDuxyLxFC++iv8beFTJZTWvEEPE1i6e2c+RIrdyLr1nyPly3D01T+QhiczsWgDKsfj
+         lNq95wnJg3KeYiJKK4TL7GZh/RaItUa8HwkA+VAA=
+Date:   Fri, 17 Jan 2020 12:45:30 +0000
+From:   Will Deacon <will@kernel.org>
+To:     AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>, robh+dt@kernel.org,
+        frowand.list@gmail.com, Bhupesh Sharma <bhsharma@redhat.com>,
+        kexec mailing list <kexec@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v4 2/2] arm64: kexec_file: add crash dump support
+Message-ID: <20200117124529.GD8199@willie-the-truck>
+References: <20191216021247.24950-3-takahiro.akashi@linaro.org>
+ <20200108174839.GB21242@willie-the-truck>
+ <20200109004654.GA28530@linaro.org>
+ <20200109083254.GA7280@willie-the-truck>
+ <20200110160549.GA25437@willie-the-truck>
+ <CA+CK2bAy-vfoz3kgUjZB74Hrobgu-a8H4pv6RbA_tbq++NWz5g@mail.gmail.com>
+ <20200113112105.GB2337@willie-the-truck>
+ <20200114053825.GC28530@linaro.org>
+ <20200116180857.GA22420@willie-the-truck>
+ <20200117063832.GQ28530@linaro.org>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH -next v4] mm/hotplug: silence a lockdep splat with printk()
-Date:   Fri, 17 Jan 2020 07:40:15 -0500
-Message-Id: <6BED7E12-CC3B-4AED-ACC8-F3533D3F3C70@lca.pw>
-References: <d7068679-e28a-98a9-f5b8-49ea47f7c092@redhat.com>
-Cc:     akpm@linux-foundation.org, mhocko@kernel.org,
-        sergey.senozhatsky.work@gmail.com, pmladek@suse.com,
-        rostedt@goodmis.org, peterz@infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@suse.com>
-In-Reply-To: <d7068679-e28a-98a9-f5b8-49ea47f7c092@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-X-Mailer: iPhone Mail (17C54)
+Content-Disposition: inline
+In-Reply-To: <20200117063832.GQ28530@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jan 17, 2020 at 03:38:33PM +0900, AKASHI Takahiro wrote:
+> On Thu, Jan 16, 2020 at 06:08:58PM +0000, Will Deacon wrote:
+> > On Tue, Jan 14, 2020 at 02:38:26PM +0900, AKASHI Takahiro wrote:
+> > > On Mon, Jan 13, 2020 at 11:21:06AM +0000, Will Deacon wrote:
+> > > > On Fri, Jan 10, 2020 at 11:19:16AM -0500, Pavel Tatashin wrote:
+> > > > > On Fri, Jan 10, 2020 at 11:05 AM Will Deacon <will@kernel.org> wrote:
+> > > > > > On Thu, Jan 09, 2020 at 08:32:54AM +0000, Will Deacon wrote:
+> > > > > > > On Thu, Jan 09, 2020 at 09:46:55AM +0900, AKASHI Takahiro wrote:
+> > > > > > > > On Wed, Jan 08, 2020 at 05:48:39PM +0000, Will Deacon wrote:
+> > > > > > > > > On Mon, Dec 16, 2019 at 11:12:47AM +0900, AKASHI Takahiro wrote:
+> > > > > > > > > > diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+> > > > > > > > > > index 12a561a54128..d24b527e8c00 100644
+> > > > > > > > > > --- a/arch/arm64/include/asm/kexec.h
+> > > > > > > > > > +++ b/arch/arm64/include/asm/kexec.h
+> > > > > > > > > > @@ -96,6 +96,10 @@ static inline void crash_post_resume(void) {}
+> > > > > > > > > >  struct kimage_arch {
+> > > > > > > > > >         void *dtb;
+> > > > > > > > > >         unsigned long dtb_mem;
+> > > > > > > > > > +       /* Core ELF header buffer */
+> > > > > > > > > > +       void *elf_headers;
+> > > > > > > > > > +       unsigned long elf_headers_mem;
+> > > > > > > > > > +       unsigned long elf_headers_sz;
+> > > > > > > > > >  };
+> > > > > > > > >
+> > > > > > > > > This conflicts with the cleanup work from Pavel. Please can you check my
+> > > > > > > > > resolution? [1]
+> > > > > > > >
+> > > > > > > > I don't know why we need to change a type of dtb_mem,
+> > > > > > > > otherwise it looks good.
+> > > > > > > >
+> > > > > > > > (I also assume that you notice that kimage_arch is of no use for kexec.)
+> > > > > > >
+> > > > > > > Yes, that's why I'd like the resolution checked. If you reckon it's cleaner
+> > > > > > > to drop Pavel's patch altogether in light of your changes, we can do that
+> > > > > > > instead.
+> > > > > > >
+> > > > > > > Thoughts?
+> > > > > >
+> > > > > > Well, I've reverted the cleanup patch so please shout if you'd prefer
+> > > > > > something else.
+> > > > > 
+> > > > > As I understand, the only concern was the type change for dtb_mem.
+> > > > > This was one of the review comments for my patch
+> > > > > https://lore.kernel.org/lkml/20191204155938.2279686-21-pasha.tatashin@soleen.com/
+> > > > > 
+> > > > > (I believe it was from Marc Zyngier), I add a number of new fields,
+> > > > > and they all should be phys_addr_t, this is why I change dtb_mem to
+> > > > > phys_addr_t to be consistent.
+> > > > 
+> > > > Sure, but I've only queued the first part of your series and that cleanup
+> > > > patch doesn't make a lot of sense when applied against Akashi's work. I'm
+> > > > happy to take stuff on top if you both agree to it, but having half of the
+> > > > struct use unsigned long and the other half use phys_addr_t is messy.
+> > > 
+> > > Logically, whether dtb_mem is a "unsigned long" or phys_addr_t doesn't
+> > > matter unless the kernel is compiled under LLP64.
+> > > As far as the existing kexec code, either generic or arm64-specific,
+> > > is concerned, however, "unsigned long is widely used as a physical address
+> > > (For example, see kexec_buf definition) over the code.
+> > > 
+> > > (Oops, reboot_code_buffer_phys is a phys_addr_t :)
+> > > 
+> > > So as long as my kexec_file (and associated kdump) patch comes first
+> > > before Pavel's, I'd like to keep using "unsigned long".
+> > > Then, you can change "unsigned long" to phys_addr_t in your patch
+> > > for whatever reason it is.
+> > > 
+> > > Please note that, if you want to do that, it would be better to modify
+> > > not only kimage_arch but also all the occurrences of "unsigned long"
+> > > to phys_addr_t for maintaining the integrity.
+> > > 
+> > > In addition, in my kexec_file kdump code, I still believe that
+> > > "#ifdef CONFIG_KEXEC_FILE" should stay before the definition of
+> > > kimage_arch as kimage_arch is of no use for normal kexec code.
+> > > 
+> > > Again,
+> > > "#ifdef" statement may be moved forward once additional fields be
+> > > added later by Pavel's patch, say, "[PATCH v8 15/25] arm64: kexec:
+> > > move relocation function setup" for any reason.
+> > > 
+> > > I believe that this way gives us a logical and consistent view of
+> > > history of changes.
+> > > Make sense?
+> > 
+> > This is a bit much to stick in a merge commit, so I'll stick with the revert
+> > for now and you can send patches on top if you want it changed.
+> 
+> Are you asking me or Pavel? And on top of which branch?
 
+I'm not asking anything ;p
 
-> On Jan 17, 2020, at 3:51 AM, David Hildenbrand <david@redhat.com> wrote:
->=20
-> -> you are accessing the pageblock without the zone lock. It could
-> change to "isolate" again in the meantime if I am not wrong!
+But by "you" I mean both of you (the joys of ambiguous English). In other
+words, I've reverted the patch [1], but I'm happy to take other patches on
+top providing that you both agree with each other on what you want to do.
 
-Since we are just dumping the state for debugging, it should be fine to acce=
-pt a bit inaccuracy here due to racing. I could put a bit comments over ther=
-e.=
+Will
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/commit/?h=for-next/kexec/cleanup&id=1595fe299eb5a664c754eaf48bc178c0d664e1cf
