@@ -2,100 +2,171 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DBC4C33CAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 01:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B987DC33CAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 01:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAD6A206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 01:46:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579225593;
-	bh=kF0McEzzIna+OlNxDDvv0BFj+tanfJPabCZ9hgpDZTw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=SxssnwFf1f+dBnaGj/Zs8T+v9IJJsHpVR+FfEd3jgy8eH5HwtMhToy1Yckcu9HW/I
-	 Y85/K0gyVgV3pXZcM6JeIAHZjUO/IJJjbIF5h1kWXJaIPZ2FC7MGvKINzNlWiPxDdk
-	 8q7dwWxPHsMIhu/kFpFDUW6b6vcIq2DjPvG9uL5A=
+	by mail.kernel.org (Postfix) with ESMTP id 8E6D02075B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 01:46:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iY2seqg1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388076AbgAQBqc (ORCPT
+        id S2388438AbgAQBqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 20:46:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39162 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726741AbgAQBq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 20:46:28 -0500
-Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38BFA2075B;
-        Fri, 17 Jan 2020 01:46:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579225587;
-        bh=kF0McEzzIna+OlNxDDvv0BFj+tanfJPabCZ9hgpDZTw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YLuQ4iN8bF+tZrRX09LQTvkHEz92ULIHS5nIyWSwrfb4VbMtXxH/Oe5XZvuePIEYo
-         sF47+mV/+zMy6nfyYfcd5nDd1MXB36Ni+9+XvwIfqY6iK0mnRcIs4F6WqZkN0XwLIK
-         SBIuF6vqcLWRDG/ZIbepRDIL+/bqD5sHlh96ZRAA=
-Date:   Thu, 16 Jan 2020 17:46:26 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc:     peterz@infradead.org, will@kernel.org, mpe@ellerman.id.au,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v4 3/9] asm-generic/tlb: Avoid potential double flush
-Message-Id: <20200116174626.0244f71bbff64eee6c7faa1d@linux-foundation.org>
-In-Reply-To: <c12bb139-9eda-74a9-b4de-b147a88ed1b0@linux.ibm.com>
-References: <20200116064531.483522-1-aneesh.kumar@linux.ibm.com>
-        <20200116064531.483522-4-aneesh.kumar@linux.ibm.com>
-        <c12bb139-9eda-74a9-b4de-b147a88ed1b0@linux.ibm.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 16 Jan 2020 20:46:45 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:42117 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726741AbgAQBqp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 20:46:45 -0500
+Received: by mail-ed1-f67.google.com with SMTP id e10so20781876edv.9;
+        Thu, 16 Jan 2020 17:46:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sOb/SV2XPZ+MT9Y0830giiJE0Po7TMwJifwEW5Nm80w=;
+        b=iY2seqg1UJtFEnTHYs/aw9KqnM4pWWmmei5HcKqQ7jfMVSyKbbYuuBelmmYaPC7Yj1
+         xqVRmK3XG+UOgyTtnf1utiQEBnO+xnnC9mKhhz+qL8WRRcBtplgIg0jqvpLTaXfzC9Jk
+         5J0bzj+CbKfe3snr72xuFPU58h+S4dtLOmsYLY6tUhDASAZUcJpWPBhKW82YAgYwntgH
+         E0kjwPvAcAN37S408KgBOtCxvD40LqgUVmCSbPOBTyI+pKQazXETSmvysBW0LLzVuGoX
+         lzh6LfbkxgFkH4OXIefpbLx8dOLmNIPeXSLcwpMelcB12pazS/h8uu0rAiAH0erAa7Yc
+         Jxtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sOb/SV2XPZ+MT9Y0830giiJE0Po7TMwJifwEW5Nm80w=;
+        b=A2poryVuYZKN7gNP/bub778mZURg+giMqodU1daEuU4aqdpZ6Zd5f+/0jHgNTRvulj
+         aOOnzIfg9OtxSKZqqufI22Jr+a1sjabEwpsrbOGgy7GkEGFcaMv7C91Vnm4vcC+wa4x6
+         5gyqGqeKSyIXczh5N7MXS8595AIllQMilckyPNq8v5BdNdGA3hH9C0lixM83u3ZLmjgl
+         Sh8xQpYgVX3HP10viFS5V5ZQdkfDVBMz72Ug32LXDaBNc1SyD9s7WJXX+ioZptcxrJd6
+         S1zVVkH9goqg1UjNS6w/FumKbqDP7xz8+xDngMA7PiTVpuhEk0OU7kfOjCy0SOmDYlng
+         1mRg==
+X-Gm-Message-State: APjAAAVFCXRPKEDSHg4zoLwsaKVOYP/Bex3HAuerkYAzCtCnajGvay4J
+        krZInqw8CFbaadqDDBo1tpn1qwAW
+X-Google-Smtp-Source: APXvYqzuBW2dDJYcsyuUBvZcd4tLyHSvrb0OY0P0K/KzBqbWqs3xChHAsXjJpOWpw30Ow+5E5Blg0A==
+X-Received: by 2002:a05:6402:282:: with SMTP id l2mr1382890edv.187.1579225603122;
+        Thu, 16 Jan 2020 17:46:43 -0800 (PST)
+Received: from localhost.localdomain ([109.126.145.157])
+        by smtp.gmail.com with ESMTPSA id bm18sm932370edb.97.2020.01.16.17.46.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 17:46:42 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] io_uring: hide uring_fd in ctx
+Date:   Fri, 17 Jan 2020 04:45:59 +0300
+Message-Id: <2aefced4902f33f2b70aaedc32bc8d60a20efd7a.1579225489.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Jan 2020 12:19:59 +0530 "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com> wrote:
+req->ring_fd and req->ring_file are used only during the prep stage
+during submission, which is is protected by mutex. There is no need
+to store them per-request, place them in ctx.
 
-> On 1/16/20 12:15 PM, Aneesh Kumar K.V wrote:
-> > From: Peter Zijlstra <peterz@infradead.org>
-> > 
-> > Aneesh reported that:
-> > 
-> > 	tlb_flush_mmu()
-> > 	  tlb_flush_mmu_tlbonly()
-> > 	    tlb_flush()			<-- #1
-> > 	  tlb_flush_mmu_free()
-> > 	    tlb_table_flush()
-> > 	      tlb_table_invalidate()
-> > 		tlb_flush_mmu_tlbonly()
-> > 		  tlb_flush()		<-- #2
-> > 
-> > does two TLBIs when tlb->fullmm, because __tlb_reset_range() will not
-> > clear tlb->end in that case.
-> > 
-> > Observe that any caller to __tlb_adjust_range() also sets at least one
-> > of the tlb->freed_tables || tlb->cleared_p* bits, and those are
-> > unconditionally cleared by __tlb_reset_range().
-> > 
-> > Change the condition for actually issuing TLBI to having one of those
-> > bits set, as opposed to having tlb->end != 0.
-> > 
-> 
-> 
-> We should possibly get this to stable too along with the first two 
-> patches. I am not quiet sure if this will qualify for a stable backport. 
-> Hence avoided adding Cc:stable@kernel.org
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+---
+ fs/io_uring.c | 27 ++++++++++++---------------
+ 1 file changed, 12 insertions(+), 15 deletions(-)
 
-I'm not seeing any description of the user-visible runtime effects. 
-Always needed, especially for -stable, please.
-
-It appears to be a small performance benefit?  If that benefit was
-"large" and measurements were presented then that would be something
-we might wish to backport.
-
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 2ace3f1962ff..9ee01c7422cb 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -251,6 +251,8 @@ struct io_ring_ctx {
+ 	 */
+ 	struct fixed_file_data	*file_data;
+ 	unsigned		nr_user_files;
++	int 			ring_fd;
++	struct file 		*ring_file;
+ 
+ 	/* if used, fixed mapped user buffers */
+ 	unsigned		nr_user_bufs;
+@@ -475,15 +477,10 @@ struct io_kiocb {
+ 	};
+ 
+ 	struct io_async_ctx		*io;
+-	union {
+-		/*
+-		 * ring_file is only used in the submission path, and
+-		 * llist_node is only used for poll deferred completions
+-		 */
+-		struct file		*ring_file;
+-		struct llist_node	llist_node;
+-	};
+-	int				ring_fd;
++	/*
++	 * llist_node is only used for poll deferred completions
++	 */
++	struct llist_node		llist_node;
+ 	bool				has_user;
+ 	bool				in_async;
+ 	bool				needs_fixed_file;
+@@ -1139,7 +1136,6 @@ static struct io_kiocb *io_get_req(struct io_ring_ctx *ctx,
+ 
+ got_it:
+ 	req->io = NULL;
+-	req->ring_file = NULL;
+ 	req->file = NULL;
+ 	req->ctx = ctx;
+ 	req->flags = 0;
+@@ -2721,7 +2717,7 @@ static int io_close_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ 
+ 	req->close.fd = READ_ONCE(sqe->fd);
+ 	if (req->file->f_op == &io_uring_fops ||
+-	    req->close.fd == req->ring_fd)
++	    req->close.fd == req->ctx->ring_fd)
+ 		return -EBADF;
+ 
+ 	return 0;
+@@ -4382,7 +4378,7 @@ static int io_grab_files(struct io_kiocb *req)
+ 	int ret = -EBADF;
+ 	struct io_ring_ctx *ctx = req->ctx;
+ 
+-	if (!req->ring_file)
++	if (!ctx->ring_file)
+ 		return -EBADF;
+ 
+ 	rcu_read_lock();
+@@ -4393,7 +4389,7 @@ static int io_grab_files(struct io_kiocb *req)
+ 	 * the fd has changed since we started down this path, and disallow
+ 	 * this operation if it has.
+ 	 */
+-	if (fcheck(req->ring_fd) == req->ring_file) {
++	if (fcheck(ctx->ring_fd) == ctx->ring_file) {
+ 		list_add(&req->inflight_entry, &ctx->inflight_list);
+ 		req->flags |= REQ_F_INFLIGHT;
+ 		req->work.files = current->files;
+@@ -4765,6 +4761,9 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
+ 		statep = &state;
+ 	}
+ 
++	ctx->ring_fd = ring_fd;
++	ctx->ring_file = ring_file;
++
+ 	for (i = 0; i < nr; i++) {
+ 		const struct io_uring_sqe *sqe;
+ 		struct io_kiocb *req;
+@@ -4797,8 +4796,6 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
+ 			}
+ 		}
+ 
+-		req->ring_file = ring_file;
+-		req->ring_fd = ring_fd;
+ 		req->has_user = *mm != NULL;
+ 		req->in_async = async;
+ 		req->needs_fixed_file = async;
+-- 
+2.24.0
 
