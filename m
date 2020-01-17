@@ -2,114 +2,120 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C63C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B67BFC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27EF820748
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:35:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B9Cfde4g"
+	by mail.kernel.org (Postfix) with ESMTP id 955CA2087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:35:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729137AbgAQJfb (ORCPT
+        id S1729158AbgAQJfd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 04:35:31 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53525 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726942AbgAQJf1 (ORCPT
+        Fri, 17 Jan 2020 04:35:33 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:45586 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729112AbgAQJfb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 04:35:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579253726;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=iQlUMs2/NB7cEZJ9F2n+VZER0LwIUDsqhwlPBsX2bmw=;
-        b=B9Cfde4gzTBsdtkibDNpilv8NK5/5s7ihOY+EWegKbAHdS53Ilacv+zKiCQt91+EKIBMh6
-        hWrDK+WbVOXjHX3s6QPbhgKO0+jiGrM1WAdeBcn+1IMkYW6g8dmodLbPJyNCDuffCTyE1+
-        6gTJTasP8vCYu6BR1IICpAHnWksUkMk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-204-OA_vQTWxNEqASHBKkg99Eg-1; Fri, 17 Jan 2020 04:35:25 -0500
-X-MC-Unique: OA_vQTWxNEqASHBKkg99Eg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 52861800D48;
-        Fri, 17 Jan 2020 09:35:18 +0000 (UTC)
-Received: from [10.72.12.168] (ovpn-12-168.pek2.redhat.com [10.72.12.168])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DEBED10016EB;
-        Fri, 17 Jan 2020 09:35:01 +0000 (UTC)
-Subject: Re: [PATCH 5/5] vdpasim: vDPA device simulator
-To:     Randy Dunlap <rdunlap@infradead.org>, mst@redhat.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Cc:     tiwei.bie@intel.com, jgg@mellanox.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, lingshan.zhu@intel.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        kevin.tian@intel.com, stefanha@redhat.com, hch@infradead.org,
-        aadam@redhat.com, jakub.kicinski@netronome.com, jiri@mellanox.com,
-        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com
-References: <20200116124231.20253-1-jasowang@redhat.com>
- <20200116124231.20253-6-jasowang@redhat.com>
- <55d84df0-803a-a81f-b49f-2d6fe8f78b96@infradead.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <8d6ef81e-b42a-9a89-0857-f2732526a1af@redhat.com>
-Date:   Fri, 17 Jan 2020 17:35:00 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 17 Jan 2020 04:35:31 -0500
+Received: by mail-lj1-f194.google.com with SMTP id j26so25739884ljc.12;
+        Fri, 17 Jan 2020 01:35:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5G2Jq7cbJnlKXxoPCsYd5FlCl6CmO0LfS0famLwy+MA=;
+        b=OXZnbhceFUtkIk5RPlkoOO9iGcK+cRbOUwD72tiw0b8sM03TSxrLZTHYRRmwr+u/Ct
+         N8MpTvjJbMJc0gk0wiF0eYVv331zWVQbNyu5p6zVdg7hTGZTQKGR8lKiXGKGPJYZ0+ye
+         iFvY2js/p+9CkNjo8NMlOTAUGGv6KAeZZfUPxe+wiMh5dUgAbYFqHmGE5Rc1s14qA40B
+         xYDKQpW5fRt/hHehig7YLGYC4m49EyqbYzUUhnNTNRBoUusD/2Xy9aZJNY7Fr9/QTd9z
+         DSxfkvOaMlVPJn6pvL/y3OXwjJ6g0NKaDF+QcnRokuv8uY2g52T39X8hZugX8/fWqf0u
+         jfxQ==
+X-Gm-Message-State: APjAAAWctWskF7pWcZVrcMeLDRtsQ1fn7ORCRpKVts+6qI3s0VhQcyRd
+        XTi/sC0Wg9mDIdGe4P2lEiI=
+X-Google-Smtp-Source: APXvYqyW9iF5U3kuzBTOFPyGfBQUJdXZ11kB9kyWNtyZllb8G0RZOSBw3lT3Wu5hYOqBamnmGmxcCg==
+X-Received: by 2002:a2e:b4cf:: with SMTP id r15mr4655513ljm.52.1579253728938;
+        Fri, 17 Jan 2020 01:35:28 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id z5sm12108551lji.40.2020.01.17.01.35.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2020 01:35:28 -0800 (PST)
+Date:   Fri, 17 Jan 2020 11:35:21 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: [PATCH v10 04/13] mfd: bd718x7: Add compatible for BD71850
+Message-ID: <9771850fe04040c30ff3668fcba7002f7f0681fd.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-In-Reply-To: <55d84df0-803a-a81f-b49f-2d6fe8f78b96@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+ROHM BD71850 PMIC is almost identical to BD71847. Main difference is some
+initial voltage values for regulators. The BD71850 can be handled by
+BD71847 driver but adding own compatible makes it clearer for one who
+creates the DT for board containing this PMIC and allows SW to be
+differentiating PMICs if needed.
 
-On 2020/1/17 =E4=B8=8B=E5=8D=8812:12, Randy Dunlap wrote:
-> On 1/16/20 4:42 AM, Jason Wang wrote:
->> diff --git a/drivers/virtio/vdpa/Kconfig b/drivers/virtio/vdpa/Kconfig
->> index 3032727b4d98..12ec25d48423 100644
->> --- a/drivers/virtio/vdpa/Kconfig
->> +++ b/drivers/virtio/vdpa/Kconfig
->> @@ -7,3 +7,20 @@ config VDPA
->>             datapath which complies with virtio specifications with
->>             vendor specific control path.
->>  =20
->> +menuconfig VDPA_MENU
->> +	bool "VDPA drivers"
->> +	default n
->> +
->> +if VDPA_MENU
->> +
->> +config VDPA_SIM
->> +	tristate "vDPA device simulator"
->> +        select VDPA
->> +        default n
->> +        help
->> +          vDPA networking device simulator which loop TX traffic back
-> 	                                            loops
->
->> +          to RX. This device is used for testing, prototyping and
->> +          development of vDPA.
->> +
->> +endif # VDPA_MENU
-> Most lines above use spaces for indentation, while they should use
-> tab + 2 spaces.
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+---
+no changes since v9
+
+ drivers/mfd/rohm-bd718x7.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/mfd/rohm-bd718x7.c b/drivers/mfd/rohm-bd718x7.c
+index bb86ec829079..c32c1b6c98fa 100644
+--- a/drivers/mfd/rohm-bd718x7.c
++++ b/drivers/mfd/rohm-bd718x7.c
+@@ -213,6 +213,10 @@ static const struct of_device_id bd718xx_of_match[] = {
+ 		.compatible = "rohm,bd71847",
+ 		.data = (void *)ROHM_CHIP_TYPE_BD71847,
+ 	},
++	{
++		.compatible = "rohm,bd71850",
++		.data = (void *)ROHM_CHIP_TYPE_BD71847,
++	},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, bd718xx_of_match);
+-- 
+2.21.0
 
 
-Right, will fix.
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
-Thanks
-
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
