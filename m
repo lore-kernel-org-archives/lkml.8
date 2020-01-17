@@ -2,209 +2,68 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABE7C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86365C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D36432082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:59:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a7F+4Nza"
+	by mail.kernel.org (Postfix) with ESMTP id 63AAD22464
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:59:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729273AbgAQJ72 (ORCPT
+        id S1729017AbgAQJ75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 04:59:28 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33105 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbgAQJ6W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 04:58:22 -0500
-Received: by mail-wr1-f65.google.com with SMTP id b6so22087169wrq.0
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 01:58:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jckVpy+7MLaoCGpB18Y5CDbGaFI7k6lN9q4aC94sn/w=;
-        b=a7F+4NzaG6nErX9ZFsm8pI50tYua1LxgJ05Mid/gl91bgJv9k2cZUC4HWmck1C5Gk1
-         SclLphlGq6kgHE0LY/FT7BCZgshPB+umWygv/bMdEboZ90rsmeOfEynEEdZWo4WAQd45
-         3DJaLic6/Ocjjw27DmcBoa4wylG2EJpWMh6ysUpzEq54OyKZdCmb+tV+117gt2KjQTiC
-         7g7b0VNvSkvv5WF7peAlIxwHcFgJjpHoeU6t8g0AR78gcmWEuLAJjzIjaUOJVxpK2/N6
-         rhYPUnE6dcjba/K7YSzMryn/z50xvMSmcWfTJvSvCkpXRcQKkcH969T1K1GdufkzSulg
-         OpBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jckVpy+7MLaoCGpB18Y5CDbGaFI7k6lN9q4aC94sn/w=;
-        b=dla1LMRcD8wNRFhYQi29T4YiSjGLVvrE+OnQVAIMgNMNjE1ah/3cFIfOGixcJMQJns
-         RLFn68NN+jmYjChHu61G78MTkGcVroFCF4IDS1OISDOZu+gsgqUbeF0EgmDxagAy2LY8
-         8PGhKtV/UAQgVS1H+EcEE5nduWy036lolwC2EfOJnKvolMrXXzGq43RYByL/8/la7sRB
-         PgSshkMt9g9WswyOOKLGQa9aJvB6ki45RAcfhIH9+VQrtee9RtycUXiCqPaCLEKXJlDM
-         s7G0SVMvYmcrKHZGrUFFFZlDBGRrwtCZ2AB6/a1KOKCsDQEK45sqXNhoDL9FXkqvCzr8
-         mrUA==
-X-Gm-Message-State: APjAAAVeJC5NiZvBY2I6e9cp6g6Brx9oFMxT9FG5SISEz1lNwuPscnP+
-        g3BYWEBjl7HMexFzvcPcZnpQ5Q==
-X-Google-Smtp-Source: APXvYqzIiC3YI/2B2zzYl/B5TRecNos/ii4Q8Q2wDhIo4FTTeo69JCuhMTeHUgPq6e6kpqfq1ZvO9Q==
-X-Received: by 2002:adf:bc87:: with SMTP id g7mr2181235wrh.121.1579255100900;
-        Fri, 17 Jan 2020 01:58:20 -0800 (PST)
-Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id r62sm9967007wma.32.2020.01.17.01.58.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 17 Jan 2020 01:58:20 -0800 (PST)
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 02/12] interconnect: qcom: Use the new common helper for node removal
-Date:   Fri, 17 Jan 2020 11:58:06 +0200
-Message-Id: <20200117095816.23575-3-georgi.djakov@linaro.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200117095816.23575-1-georgi.djakov@linaro.org>
-References: <20200117095816.23575-1-georgi.djakov@linaro.org>
+        Fri, 17 Jan 2020 04:59:57 -0500
+Received: from 8bytes.org ([81.169.241.247]:60102 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727011AbgAQJ75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 04:59:57 -0500
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id AA481327; Fri, 17 Jan 2020 10:59:55 +0100 (CET)
+Date:   Fri, 17 Jan 2020 10:59:54 +0100
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     ashok.raj@intel.com, jacob.jun.pan@intel.com, kevin.tian@intel.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] iommu/vt-d: Remove unnecessary WARN_ON_ONCE()
+Message-ID: <20200117095953.GB15760@8bytes.org>
+References: <20200116015236.4458-1-baolu.lu@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200116015236.4458-1-baolu.lu@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a new helper function for removing all nodes. Let's use it instead
-of duplicating the code.
+On Thu, Jan 16, 2020 at 09:52:36AM +0800, Lu Baolu wrote:
+> Address field in device TLB invalidation descriptor is qualified
+> by the S field. If S field is zero, a single page at page address
+> specified by address [63:12] is requested to be invalidated. If S
+> field is set, the least significant bit in the address field with
+> value 0b (say bit N) indicates the invalidation address range. The
+> spec doesn't require the address [N - 1, 0] to be cleared, hence
+> remove the unnecessary WARN_ON_ONCE().
+> 
+> Otherwise, the caller might set "mask = MAX_AGAW_PFN_WIDTH" in order
+> to invalidating all the cached mappings on an endpoint, and below
+> overflow error will be triggered.
+> 
+> [...]
+> UBSAN: Undefined behaviour in drivers/iommu/dmar.c:1354:3
+> shift exponent 64 is too large for 64-bit type 'long long unsigned int'
+> [...]
+> 
+> Reported-and-tested-by: Frank <fgndev@posteo.de>
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
- drivers/interconnect/qcom/msm8974.c | 17 ++++-------------
- drivers/interconnect/qcom/qcs404.c  | 17 ++++-------------
- drivers/interconnect/qcom/sdm845.c  | 16 +++-------------
- 3 files changed, 11 insertions(+), 39 deletions(-)
+Does this need a Fixes and/or stable tag?
 
-diff --git a/drivers/interconnect/qcom/msm8974.c b/drivers/interconnect/qcom/msm8974.c
-index bf8bd1aee358..e669a1f726d2 100644
---- a/drivers/interconnect/qcom/msm8974.c
-+++ b/drivers/interconnect/qcom/msm8974.c
-@@ -652,7 +652,7 @@ static int msm8974_icc_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct icc_onecell_data *data;
- 	struct icc_provider *provider;
--	struct icc_node *node, *tmp;
-+	struct icc_node *node;
- 	size_t num_nodes, i;
- 	int ret;
- 
-@@ -732,10 +732,7 @@ static int msm8974_icc_probe(struct platform_device *pdev)
- 	return 0;
- 
- err_del_icc:
--	list_for_each_entry_safe(node, tmp, &provider->nodes, node_list) {
--		icc_node_del(node);
--		icc_node_destroy(node->id);
--	}
-+	icc_nodes_remove(provider);
- 	icc_provider_del(provider);
- 
- err_disable_clks:
-@@ -747,16 +744,10 @@ static int msm8974_icc_probe(struct platform_device *pdev)
- static int msm8974_icc_remove(struct platform_device *pdev)
- {
- 	struct msm8974_icc_provider *qp = platform_get_drvdata(pdev);
--	struct icc_provider *provider = &qp->provider;
--	struct icc_node *n, *tmp;
- 
--	list_for_each_entry_safe(n, tmp, &provider->nodes, node_list) {
--		icc_node_del(n);
--		icc_node_destroy(n->id);
--	}
-+	icc_nodes_remove(&qp->provider);
- 	clk_bulk_disable_unprepare(qp->num_clks, qp->bus_clks);
--
--	return icc_provider_del(provider);
-+	return icc_provider_del(&qp->provider);
- }
- 
- static const struct of_device_id msm8974_noc_of_match[] = {
-diff --git a/drivers/interconnect/qcom/qcs404.c b/drivers/interconnect/qcom/qcs404.c
-index 8e0735a87040..c8eb1276cce8 100644
---- a/drivers/interconnect/qcom/qcs404.c
-+++ b/drivers/interconnect/qcom/qcs404.c
-@@ -414,7 +414,7 @@ static int qnoc_probe(struct platform_device *pdev)
- 	struct icc_provider *provider;
- 	struct qcom_icc_node **qnodes;
- 	struct qcom_icc_provider *qp;
--	struct icc_node *node, *tmp;
-+	struct icc_node *node;
- 	size_t num_nodes, i;
- 	int ret;
- 
-@@ -494,10 +494,7 @@ static int qnoc_probe(struct platform_device *pdev)
- 
- 	return 0;
- err:
--	list_for_each_entry_safe(node, tmp, &provider->nodes, node_list) {
--		icc_node_del(node);
--		icc_node_destroy(node->id);
--	}
-+	icc_nodes_remove(provider);
- 	clk_bulk_disable_unprepare(qp->num_clks, qp->bus_clks);
- 	icc_provider_del(provider);
- 
-@@ -507,16 +504,10 @@ static int qnoc_probe(struct platform_device *pdev)
- static int qnoc_remove(struct platform_device *pdev)
- {
- 	struct qcom_icc_provider *qp = platform_get_drvdata(pdev);
--	struct icc_provider *provider = &qp->provider;
--	struct icc_node *n, *tmp;
- 
--	list_for_each_entry_safe(n, tmp, &provider->nodes, node_list) {
--		icc_node_del(n);
--		icc_node_destroy(n->id);
--	}
-+	icc_nodes_remove(&qp->provider);
- 	clk_bulk_disable_unprepare(qp->num_clks, qp->bus_clks);
--
--	return icc_provider_del(provider);
-+	return icc_provider_del(&qp->provider);
- }
- 
- static const struct of_device_id qcs404_noc_of_match[] = {
-diff --git a/drivers/interconnect/qcom/sdm845.c b/drivers/interconnect/qcom/sdm845.c
-index 387267ee9648..f078cf0fce56 100644
---- a/drivers/interconnect/qcom/sdm845.c
-+++ b/drivers/interconnect/qcom/sdm845.c
-@@ -855,11 +855,7 @@ static int qnoc_probe(struct platform_device *pdev)
- 
- 	return ret;
- err:
--	list_for_each_entry(node, &provider->nodes, node_list) {
--		icc_node_del(node);
--		icc_node_destroy(node->id);
--	}
--
-+	icc_nodes_remove(provider);
- 	icc_provider_del(provider);
- 	return ret;
- }
-@@ -867,15 +863,9 @@ static int qnoc_probe(struct platform_device *pdev)
- static int qnoc_remove(struct platform_device *pdev)
- {
- 	struct qcom_icc_provider *qp = platform_get_drvdata(pdev);
--	struct icc_provider *provider = &qp->provider;
--	struct icc_node *n, *tmp;
--
--	list_for_each_entry_safe(n, tmp, &provider->nodes, node_list) {
--		icc_node_del(n);
--		icc_node_destroy(n->id);
--	}
- 
--	return icc_provider_del(provider);
-+	icc_nodes_remove(&qp->provider);
-+	return icc_provider_del(&qp->provider);
- }
- 
- static const struct of_device_id qnoc_of_match[] = {
+
+Regards,
+
+	Joerg
+
