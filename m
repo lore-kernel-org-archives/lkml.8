@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C49E0C33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8C9C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DCD920748
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:12:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC9C62082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:12:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729352AbgAQSMc (ORCPT
+        id S1729462AbgAQSMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 13:12:32 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:52141 "EHLO
+        Fri, 17 Jan 2020 13:12:52 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:52137 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729255AbgAQSM3 (ORCPT
+        with ESMTP id S1729252AbgAQSM3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 17 Jan 2020 13:12:29 -0500
 Received: from ip5f5bd679.dynamic.kabel-deutschland.de ([95.91.214.121] helo=localhost.localdomain)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <christian.brauner@ubuntu.com>)
-        id 1isW6c-0005Yu-Qe; Fri, 17 Jan 2020 18:12:26 +0000
+        id 1isW6b-0005Yu-Pt; Fri, 17 Jan 2020 18:12:25 +0000
 From:   Christian Brauner <christian.brauner@ubuntu.com>
 To:     linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
         Tejun Heo <tj@kernel.org>
 Cc:     Oleg Nesterov <oleg@redhat.com>,
         Christian Brauner <christian.brauner@ubuntu.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Li Zefan <lizefan@huawei.com>, cgroups@vger.kernel.org
-Subject: [PATCH v4 3/6] cgroup: refactor fork helpers
-Date:   Fri, 17 Jan 2020 19:12:16 +0100
-Message-Id: <20200117181219.14542-4-christian.brauner@ubuntu.com>
+        Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org
+Subject: [PATCH v4 1/6] cgroup: unify attach permission checking
+Date:   Fri, 17 Jan 2020 19:12:14 +0100
+Message-Id: <20200117181219.14542-2-christian.brauner@ubuntu.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200117181219.14542-1-christian.brauner@ubuntu.com>
 References: <20200117181219.14542-1-christian.brauner@ubuntu.com>
@@ -45,219 +45,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This refactors the fork helpers so they can be easily modified in the
-next patches. The patch just passes in the parent task_struct and moves
-the cgroup threadgroup rwsem grab and release into the helpers. The
-don't need to be directly exposed in fork.c.
+The core codepaths to check whether a process can be attached to a
+cgroup are the same for threads and thread-group leaders. Only a small
+piece of code verifying that source and destination cgroup are in the
+same domain differentiates the thread permission checking from
+thread-group leader permission checking.
+Since cgroup_migrate_vet_dst() only matters cgroup2 - it is a noop on
+cgroup1 - we can move it out of cgroup_attach_task().
+All checks can now be consolidated into a new helper
+cgroup_attach_permissions() callable from both cgroup_procs_write() and
+cgroup_threads_write().
 
 Cc: Tejun Heo <tj@kernel.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
 Cc: Li Zefan <lizefan@huawei.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
 Cc: cgroups@vger.kernel.org
 Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 ---
 /* v1 */
-patch not present
+Link: https://lore.kernel.org/r/20191218173516.7875-2-christian.brauner@ubuntu.com
 
 /* v2 */
-patch not present
+Link: https://lore.kernel.org/r/20191223061504.28716-2-christian.brauner@ubuntu.com
+- Christian Brauner <christian.brauner@ubuntu.com>:
+  - Fix return value of cgroup_attach_permissions. It used to return 0
+    when it should've returned -EOPNOTSUPP.
+  - Fix call to cgroup_attach_permissions() in cgroup_procs_write(). It
+    accidently specified that a thread was moved causing an additional
+    check for domain-group equality to be executed that is not needed.
 
 /* v3 */
-Link: https://lore.kernel.org/r/20200117002143.15559-4-christian.brauner@ubuntu.com
-patch introduced
-- Tejun Heo <tj@kernel.org>:
-  - split into separate commmit
+Link: https://lore.kernel.org/r/20200117002143.15559-2-christian.brauner@ubuntu.com
+unchanged
 
 /* v4 */
 unchanged
 ---
- include/linux/cgroup.h | 18 +++++++++-----
- kernel/cgroup/cgroup.c | 56 ++++++++++++++++++++++++++----------------
- kernel/fork.c          | 12 +++------
- 3 files changed, 51 insertions(+), 35 deletions(-)
+ kernel/cgroup/cgroup.c | 46 +++++++++++++++++++++++++++++-------------
+ 1 file changed, 32 insertions(+), 14 deletions(-)
 
-diff --git a/include/linux/cgroup.h b/include/linux/cgroup.h
-index d7ddebd0cdec..5349465bfac1 100644
---- a/include/linux/cgroup.h
-+++ b/include/linux/cgroup.h
-@@ -121,9 +121,12 @@ int proc_cgroup_show(struct seq_file *m, struct pid_namespace *ns,
- 		     struct pid *pid, struct task_struct *tsk);
- 
- void cgroup_fork(struct task_struct *p);
--extern int cgroup_can_fork(struct task_struct *p);
--extern void cgroup_cancel_fork(struct task_struct *p);
--extern void cgroup_post_fork(struct task_struct *p);
-+extern int cgroup_can_fork(struct task_struct *parent,
-+			   struct task_struct *child);
-+extern void cgroup_cancel_fork(struct task_struct *parent,
-+			       struct task_struct *child);
-+extern void cgroup_post_fork(struct task_struct *parent,
-+			     struct task_struct *child);
- void cgroup_exit(struct task_struct *p);
- void cgroup_release(struct task_struct *p);
- void cgroup_free(struct task_struct *p);
-@@ -707,9 +710,12 @@ static inline int cgroupstats_build(struct cgroupstats *stats,
- 				    struct dentry *dentry) { return -EINVAL; }
- 
- static inline void cgroup_fork(struct task_struct *p) {}
--static inline int cgroup_can_fork(struct task_struct *p) { return 0; }
--static inline void cgroup_cancel_fork(struct task_struct *p) {}
--static inline void cgroup_post_fork(struct task_struct *p) {}
-+static inline int cgroup_can_fork(struct task_struct *parent,
-+				  struct task_struct *child) { return 0; }
-+static inline void cgroup_cancel_fork(struct task_struct *parent,
-+			       struct task_struct *child) {};
-+static inline void cgroup_post_fork(struct task_struct *parent,
-+				    struct task_struct *child) {};
- static inline void cgroup_exit(struct task_struct *p) {}
- static inline void cgroup_release(struct task_struct *p) {}
- static inline void cgroup_free(struct task_struct *p) {}
 diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index f05efc2677c8..49d8cf087e10 100644
+index 735af8f15f95..ad1f9fea5c14 100644
 --- a/kernel/cgroup/cgroup.c
 +++ b/kernel/cgroup/cgroup.c
-@@ -5902,17 +5902,22 @@ static struct cgroup *cgroup_get_from_file(struct file *f)
- 
- /**
-  * cgroup_can_fork - called on a new task before the process is exposed
-- * @child: the task in question.
-+ * @parent: the parent process of @child
-+ * @child: the child process of @parent
-+ * @kargs: the arguments passed to create the child process
-  *
-- * This calls the subsystem can_fork() callbacks. If the can_fork() callback
-- * returns an error, the fork aborts with that error code. This allows for
-- * a cgroup subsystem to conditionally allow or deny new forks.
-+ * This calls the subsystem can_fork() callbacks. If the cgroup_can_fork()
-+ * callback returns an error, the fork aborts with that error code. This
-+ * allows for a cgroup subsystem to conditionally allow or deny new forks.
-  */
--int cgroup_can_fork(struct task_struct *child)
-+int cgroup_can_fork(struct task_struct *parent, struct task_struct *child)
-+	__acquires(&cgroup_threadgroup_rwsem) __releases(&cgroup_threadgroup_rwsem)
+@@ -2719,11 +2719,7 @@ int cgroup_attach_task(struct cgroup *dst_cgrp, struct task_struct *leader,
  {
- 	struct cgroup_subsys *ss;
- 	int i, j, ret;
+ 	DEFINE_CGROUP_MGCTX(mgctx);
+ 	struct task_struct *task;
+-	int ret;
+-
+-	ret = cgroup_migrate_vet_dst(dst_cgrp);
+-	if (ret)
+-		return ret;
++	int ret = 0;
  
-+	cgroup_threadgroup_change_begin(parent);
-+
- 	do_each_subsys_mask(ss, i, have_canfork_callback) {
- 		ret = ss->can_fork(child);
- 		if (ret)
-@@ -5929,17 +5934,22 @@ int cgroup_can_fork(struct task_struct *child)
- 			ss->cancel_fork(child);
- 	}
- 
-+	cgroup_threadgroup_change_end(parent);
-+
- 	return ret;
+ 	/* look up all src csets */
+ 	spin_lock_irq(&css_set_lock);
+@@ -4690,6 +4686,33 @@ static int cgroup_procs_write_permission(struct cgroup *src_cgrp,
+ 	return 0;
  }
  
- /**
-- * cgroup_cancel_fork - called if a fork failed after cgroup_can_fork()
-- * @child: the task in question
-- *
-- * This calls the cancel_fork() callbacks if a fork failed *after*
-- * cgroup_can_fork() succeded.
-- */
--void cgroup_cancel_fork(struct task_struct *child)
-+  * cgroup_cancel_fork - called if a fork failed after cgroup_can_fork()
-+  * @parent: the parent process of @child
-+  * @child: the child process of @parent
-+  * @kargs: the arguments passed to create the child process
-+  *
-+  * This calls the cancel_fork() callbacks if a fork failed *after*
-+  * cgroup_can_fork() succeded.
-+  */
-+void cgroup_cancel_fork(struct task_struct *parent, struct task_struct *child)
-+	__releases(&cgroup_threadgroup_rwsem)
- {
- 	struct cgroup_subsys *ss;
- 	int i;
-@@ -5947,19 +5957,21 @@ void cgroup_cancel_fork(struct task_struct *child)
- 	for_each_subsys(ss, i)
- 		if (ss->cancel_fork)
- 			ss->cancel_fork(child);
++static inline bool cgroup_same_domain(const struct cgroup *src_cgrp,
++				      const struct cgroup *dst_cgrp)
++{
++	return src_cgrp->dom_cgrp == dst_cgrp->dom_cgrp;
++}
 +
-+	cgroup_threadgroup_change_end(parent);
- }
- 
- /**
-- * cgroup_post_fork - called on a new task after adding it to the task list
-- * @child: the task in question
-- *
-- * Adds the task to the list running through its css_set if necessary and
-- * call the subsystem fork() callbacks.  Has to be after the task is
-- * visible on the task list in case we race with the first call to
-- * cgroup_task_iter_start() - to guarantee that the new task ends up on its
-- * list.
-+ * cgroup_post_fork - finalize cgroup setup for the child process
-+ * @parent: the parent process of @child
-+ * @child: the child process of @parent
-+ * @kargs: the arguments passed to create the child process
-+ *
-+ * Attach the child process to its css_set calling the subsystem fork()
-+ * callbacks.
-  */
--void cgroup_post_fork(struct task_struct *child)
-+void cgroup_post_fork(struct task_struct *parent, struct task_struct *child)
-+	__releases(&cgroup_threadgroup_rwsem)
- {
- 	struct cgroup_subsys *ss;
- 	struct css_set *cset;
-@@ -6002,6 +6014,8 @@ void cgroup_post_fork(struct task_struct *child)
- 	do_each_subsys_mask(ss, i, have_fork_callback) {
- 		ss->fork(child);
- 	} while_each_subsys_mask();
++static int cgroup_attach_permissions(struct cgroup *src_cgrp,
++				     struct cgroup *dst_cgrp,
++				     struct super_block *sb, bool thread)
++{
++	int ret = 0;
 +
-+	cgroup_threadgroup_change_end(parent);
- }
++	ret = cgroup_procs_write_permission(src_cgrp, dst_cgrp, sb);
++	if (ret)
++		return ret;
++
++	ret = cgroup_migrate_vet_dst(dst_cgrp);
++	if (ret)
++		return ret;
++
++	if (thread &&
++	    !cgroup_same_domain(src_cgrp->dom_cgrp, dst_cgrp->dom_cgrp))
++		ret = -EOPNOTSUPP;
++
++	return ret;
++}
++
+ static ssize_t cgroup_procs_write(struct kernfs_open_file *of,
+ 				  char *buf, size_t nbytes, loff_t off)
+ {
+@@ -4712,8 +4735,8 @@ static ssize_t cgroup_procs_write(struct kernfs_open_file *of,
+ 	src_cgrp = task_cgroup_from_root(task, &cgrp_dfl_root);
+ 	spin_unlock_irq(&css_set_lock);
  
- /**
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 080809560072..c76758dbd594 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -2165,16 +2165,15 @@ static __latent_entropy struct task_struct *copy_process(
- 	INIT_LIST_HEAD(&p->thread_group);
- 	p->task_works = NULL;
+-	ret = cgroup_procs_write_permission(src_cgrp, dst_cgrp,
+-					    of->file->f_path.dentry->d_sb);
++	ret = cgroup_attach_permissions(src_cgrp, dst_cgrp,
++					of->file->f_path.dentry->d_sb, false);
+ 	if (ret)
+ 		goto out_finish;
  
--	cgroup_threadgroup_change_begin(current);
- 	/*
- 	 * Ensure that the cgroup subsystem policies allow the new process to be
- 	 * forked. It should be noted the the new process's css_set can be changed
- 	 * between here and cgroup_post_fork() if an organisation operation is in
- 	 * progress.
- 	 */
--	retval = cgroup_can_fork(p);
-+	retval = cgroup_can_fork(current, p);
- 	if (retval)
--		goto bad_fork_cgroup_threadgroup_change_end;
-+		goto bad_fork_put_pidfd;
+@@ -4757,16 +4780,11 @@ static ssize_t cgroup_threads_write(struct kernfs_open_file *of,
+ 	spin_unlock_irq(&css_set_lock);
  
- 	/*
- 	 * From this point on we must avoid any synchronous user-space
-@@ -2279,8 +2278,7 @@ static __latent_entropy struct task_struct *copy_process(
- 	write_unlock_irq(&tasklist_lock);
+ 	/* thread migrations follow the cgroup.procs delegation rule */
+-	ret = cgroup_procs_write_permission(src_cgrp, dst_cgrp,
+-					    of->file->f_path.dentry->d_sb);
++	ret = cgroup_attach_permissions(src_cgrp, dst_cgrp,
++					of->file->f_path.dentry->d_sb, true);
+ 	if (ret)
+ 		goto out_finish;
  
- 	proc_fork_connector(p);
--	cgroup_post_fork(p);
--	cgroup_threadgroup_change_end(current);
-+	cgroup_post_fork(current, p);
- 	perf_event_fork(p);
+-	/* and must be contained in the same domain */
+-	ret = -EOPNOTSUPP;
+-	if (src_cgrp->dom_cgrp != dst_cgrp->dom_cgrp)
+-		goto out_finish;
+-
+ 	ret = cgroup_attach_task(dst_cgrp, task, false);
  
- 	trace_task_newtask(p, clone_flags);
-@@ -2291,9 +2289,7 @@ static __latent_entropy struct task_struct *copy_process(
- bad_fork_cancel_cgroup:
- 	spin_unlock(&current->sighand->siglock);
- 	write_unlock_irq(&tasklist_lock);
--	cgroup_cancel_fork(p);
--bad_fork_cgroup_threadgroup_change_end:
--	cgroup_threadgroup_change_end(current);
-+	cgroup_cancel_fork(current, p);
- bad_fork_put_pidfd:
- 	if (clone_flags & CLONE_PIDFD) {
- 		fput(pidfile);
+ out_finish:
 -- 
 2.25.0
 
