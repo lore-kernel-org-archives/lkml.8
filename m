@@ -2,70 +2,112 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF82C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8C3C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82D892083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:05:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579269905;
-	bh=y04g8Y4MEnLLitmvnhpe7B5JwNWD6+j+7MPe8rGyiK8=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=TDfne4b+JSs/vrcB7tzZBbnpzWLzM5QaOjFK3SxTNVlj2vOLYu7uh/j1ApvT7uBHr
-	 gihh8cbOyB3ZD+kZOP354N/mBecURtfpwHqzNNFGRRpyNJWzUE2Dcz/uOaXTLgHDQc
-	 KvfHsJUt3V06n0ZoKkZ73RRg/JGrs8G9j8vBu3xw=
+	by mail.kernel.org (Postfix) with ESMTP id 94A782082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:05:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="irAG46LM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727580AbgAQOFE (ORCPT
+        id S1728909AbgAQOFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 09:05:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47528 "EHLO mail.kernel.org"
+        Fri, 17 Jan 2020 09:05:15 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:59685 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726587AbgAQOFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 09:05:04 -0500
-Subject: Re: [GIT PULL] gpio fixes for v5.5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579269903;
-        bh=y04g8Y4MEnLLitmvnhpe7B5JwNWD6+j+7MPe8rGyiK8=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=DCv684DTOHI02penZ1dPhUdE8i1Jr1w8F1G2OfOQCnIZWQcsgJB4gRt61YmV9kVuJ
-         TACa+6SHY0OPk3b65bYDPPJK38Aexl7tDLAXAZ4EsyJ08zNhlN9Rc5E7YKccrTAjTe
-         gl9Ydj925kulko2FnclDBY7zYIFTUgJXik7GUTjU=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CACRpkdatPeRrqDzb7ynELvRD_TUfjAc3XCYPKmE5BrQdFXakiQ@mail.gmail.com>
-References: <CACRpkdatPeRrqDzb7ynELvRD_TUfjAc3XCYPKmE5BrQdFXakiQ@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CACRpkdatPeRrqDzb7ynELvRD_TUfjAc3XCYPKmE5BrQdFXakiQ@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
- tags/gpio-v5.5-4
-X-PR-Tracked-Commit-Id: a564ac35d60564dd5b509e32afdc04e7aafee40e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 13b2668d6fc95dcecd11e4f86f47be24fda7da1f
-Message-Id: <157926990376.9623.15557688693663282462.pr-tracker-bot@kernel.org>
-Date:   Fri, 17 Jan 2020 14:05:03 +0000
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Kevin Hao <haokexin@gmail.com>
+        id S1726885AbgAQOFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 09:05:14 -0500
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 47zjWD35x8zJv;
+        Fri, 17 Jan 2020 15:05:12 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1579269912; bh=+231y6ZND1a+e2pV2RjuPIKlHeV8kdbhF4SiUXm8rhU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=irAG46LM2InaZHcAyXRu9G+As+Fh2rYWHaa6Cbpan7O8jRKys93znY1oUhRGu7AmH
+         nWLbHEAF03BEAqfct1gIq0n19iV5RNCemQfA8mmQraFXMumlS2mmIgv9P/uMFZJ1BX
+         E7lS/Dn9pOOU8dENCMoFmzIApbx26sw0nohy8acGU3fVcUbmQL3r1zGXAWUKmRu/ft
+         rF07OppKyWGr6tw/S4Q9aFX0Wcvtu9/ffwgnOUWvz15czk9/4m+Rb8F4iLcAd+herx
+         DJiHFnloh3c547VWNaTksBxo/fZYSRJgkmvlKVTzp0Bi5F4MszOZL4g2XfL9MzAw5k
+         FhVhLGTLkoJow==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.101.4 at mail
+Date:   Fri, 17 Jan 2020 15:05:11 +0100
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mmc: core: limit probe clock frequency to configured
+ f_max
+Message-ID: <20200117140511.GC26135@qmqm.qmqm.pl>
+References: <f471bceaf237d582d746bd289c4c4f3639cb7b45.1577962382.git.mirq-linux@rere.qmqm.pl>
+ <CAPDyKFpZWnkK7UmCZ8M4UnM05wR3MQsPrpEjOJuwkKcN2gePSg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPDyKFpZWnkK7UmCZ8M4UnM05wR3MQsPrpEjOJuwkKcN2gePSg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 17 Jan 2020 08:57:27 +0100:
+On Thu, Jan 16, 2020 at 03:07:22PM +0100, Ulf Hansson wrote:
+> On Thu, 2 Jan 2020 at 11:54, Micha³ Miros³aw <mirq-linux@rere.qmqm.pl> wrote:
+> >
+> > Currently MMC core disregards host->f_max during card initialization
+> > phase. Obey upper boundary for the clock frequency and skip faster
+> > speeds when they are above the limit.
+> 
+> Is this a hypothetical problem or a real problem?
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git tags/gpio-v5.5-4
+This is a problem on noisy or broken boards or cards - so needed for
+debugging such a combination. I wouldn't expect this is required for
+normal devices.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/13b2668d6fc95dcecd11e4f86f47be24fda7da1f
+> > Signed-off-by: Micha³ Miros³aw <mirq-linux@rere.qmqm.pl>
+> > ---
+> >  drivers/mmc/core/core.c | 10 ++++++++--
+> >  1 file changed, 8 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
+> > index abf8f5eb0a1c..aa54d359dab7 100644
+> > --- a/drivers/mmc/core/core.c
+> > +++ b/drivers/mmc/core/core.c
+> > @@ -2330,7 +2330,13 @@ void mmc_rescan(struct work_struct *work)
+> >         }
+> >
+> >         for (i = 0; i < ARRAY_SIZE(freqs); i++) {
+> > -               if (!mmc_rescan_try_freq(host, max(freqs[i], host->f_min)))
+> > +               unsigned int freq = freqs[i];
+> > +               if (freq > host->f_max) {
+> > +                       if (i + 1 < ARRAY_SIZE(freqs))
+> > +                               continue;
+> > +                       freq = host->f_max;
+> 
+> This looks wrong to me. For example, what if f_max = 250KHz and f_min = 50 KHz.
+> 
+> Then we should try with 250KHz, then 200KHz and then 100KHz. This
+> isn't what the above code does, I think.
+> 
+> Instead it will try with 200KHz and then 100KHz, thus skip 250KHz.
+> 
+> Maybe we should figure out what index of freqs[] to start the loop for
+> (before actually starting the loop), depending on the value of f_max -
+> rather than always start at 0.
 
-Thank you!
+Yes, it will skip higher frequencies. I didn't view it a problem,
+because the new code guarantees at least one frequency will be tried.
+The eMMC standard specifies only max init frequency (400kHz), so all we
+should try is something less whatever works.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+SD spec specifies minimal frequency (100kHz), but I wouldn't expect
+this to be enforced nor required to be anywhere.
+
+Best Regards
+Micha³ Miros³aw
