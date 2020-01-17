@@ -2,34 +2,34 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E7CEC3F68F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BCB2C33C9E
 	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:41:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10188246A8
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28D5A246A7
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:41:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729370AbgAQRlm (ORCPT
+        id S1729416AbgAQRlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 12:41:42 -0500
+        Fri, 17 Jan 2020 12:41:47 -0500
 Received: from mail.kernel.org ([198.145.29.99]:40012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729174AbgAQRlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 12:41:31 -0500
+        id S1729287AbgAQRld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 12:41:33 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 035542465A;
-        Fri, 17 Jan 2020 17:41:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5953424696;
+        Fri, 17 Jan 2020 17:41:33 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1isVcf-000QUL-TE; Fri, 17 Jan 2020 12:41:29 -0500
-Message-Id: <20200117174129.785425698@goodmis.org>
+        id 1isVci-000Qcb-9R; Fri, 17 Jan 2020 12:41:32 -0500
+Message-Id: <20200117174132.175284420@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Fri, 17 Jan 2020 12:41:27 -0500
+Date:   Fri, 17 Jan 2020 12:41:43 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org,
         linux-rt-users <linux-rt-users@vger.kernel.org>
@@ -39,8 +39,8 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         John Kacur <jkacur@redhat.com>,
         Julia Cartwright <julia@ni.com>,
         Daniel Wagner <wagi@monom.org>,
-        Tom Zanussi <zanussi@kernel.org>, Scott Wood <swood@redhat.com>
-Subject: [PATCH RT 16/32] sched: migrate disable: Protect cpus_ptr with lock
+        Tom Zanussi <zanussi@kernel.org>
+Subject: [PATCH RT 32/32] Linux 4.19.94-rt39-rc1
 References: <20200117174111.282847363@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -54,46 +54,19 @@ If anyone has any objections, please let me know.
 
 ------------------
 
-From: Scott Wood <swood@redhat.com>
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-[ Upstream commit 27ee52a891ed2c7e2e2c8332ccae0de7c2674b09 ]
-
-Various places assume that cpus_ptr is protected by rq/pi locks,
-so don't change it before grabbing those locks.
-
-Signed-off-by: Scott Wood <swood@redhat.com>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/sched/core.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ localversion-rt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index a29f33e776d0..d9a3f88508ee 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -7250,9 +7250,8 @@ migrate_disable_update_cpus_allowed(struct task_struct *p)
- 	struct rq *rq;
- 	struct rq_flags rf;
- 
--	p->cpus_ptr = cpumask_of(smp_processor_id());
--
- 	rq = task_rq_lock(p, &rf);
-+	p->cpus_ptr = cpumask_of(smp_processor_id());
- 	update_nr_migratory(p, -1);
- 	p->nr_cpus_allowed = 1;
- 	task_rq_unlock(rq, p, &rf);
-@@ -7264,9 +7263,8 @@ migrate_enable_update_cpus_allowed(struct task_struct *p)
- 	struct rq *rq;
- 	struct rq_flags rf;
- 
--	p->cpus_ptr = &p->cpus_mask;
--
- 	rq = task_rq_lock(p, &rf);
-+	p->cpus_ptr = &p->cpus_mask;
- 	p->nr_cpus_allowed = cpumask_weight(&p->cpus_mask);
- 	update_nr_migratory(p, 1);
- 	task_rq_unlock(rq, p, &rf);
+diff --git a/localversion-rt b/localversion-rt
+index 49bae8d6aa67..03dd0b091a29 100644
+--- a/localversion-rt
++++ b/localversion-rt
+@@ -1 +1 @@
+--rt38
++-rt39-rc1
 -- 
 2.24.1
 
