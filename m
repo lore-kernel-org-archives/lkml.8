@@ -2,120 +2,78 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B67BFC33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E17CFC33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 955CA2087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:35:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B97B820748
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:36:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729158AbgAQJfd (ORCPT
+        id S1726999AbgAQJgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 04:35:33 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45586 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729112AbgAQJfb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 04:35:31 -0500
-Received: by mail-lj1-f194.google.com with SMTP id j26so25739884ljc.12;
-        Fri, 17 Jan 2020 01:35:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5G2Jq7cbJnlKXxoPCsYd5FlCl6CmO0LfS0famLwy+MA=;
-        b=OXZnbhceFUtkIk5RPlkoOO9iGcK+cRbOUwD72tiw0b8sM03TSxrLZTHYRRmwr+u/Ct
-         N8MpTvjJbMJc0gk0wiF0eYVv331zWVQbNyu5p6zVdg7hTGZTQKGR8lKiXGKGPJYZ0+ye
-         iFvY2js/p+9CkNjo8NMlOTAUGGv6KAeZZfUPxe+wiMh5dUgAbYFqHmGE5Rc1s14qA40B
-         xYDKQpW5fRt/hHehig7YLGYC4m49EyqbYzUUhnNTNRBoUusD/2Xy9aZJNY7Fr9/QTd9z
-         DSxfkvOaMlVPJn6pvL/y3OXwjJ6g0NKaDF+QcnRokuv8uY2g52T39X8hZugX8/fWqf0u
-         jfxQ==
-X-Gm-Message-State: APjAAAWctWskF7pWcZVrcMeLDRtsQ1fn7ORCRpKVts+6qI3s0VhQcyRd
-        XTi/sC0Wg9mDIdGe4P2lEiI=
-X-Google-Smtp-Source: APXvYqyW9iF5U3kuzBTOFPyGfBQUJdXZ11kB9kyWNtyZllb8G0RZOSBw3lT3Wu5hYOqBamnmGmxcCg==
-X-Received: by 2002:a2e:b4cf:: with SMTP id r15mr4655513ljm.52.1579253728938;
-        Fri, 17 Jan 2020 01:35:28 -0800 (PST)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id z5sm12108551lji.40.2020.01.17.01.35.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 01:35:28 -0800 (PST)
-Date:   Fri, 17 Jan 2020 11:35:21 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: [PATCH v10 04/13] mfd: bd718x7: Add compatible for BD71850
-Message-ID: <9771850fe04040c30ff3668fcba7002f7f0681fd.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
+        Fri, 17 Jan 2020 04:36:15 -0500
+Received: from mga11.intel.com ([192.55.52.93]:4096 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726631AbgAQJgO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 04:36:14 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 01:27:12 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,329,1574150400"; 
+   d="scan'208";a="218852465"
+Received: from jsakkine-mobl1.fi.intel.com ([10.237.66.138])
+  by orsmga008.jf.intel.com with ESMTP; 17 Jan 2020 01:27:10 -0800
+Message-ID: <814543e26623f13481254d63cceb673a3b40531a.camel@linux.intel.com>
+Subject: Re: [PATCH] tpm: Update mailing list contact information in
+ sysfs-class-tpm
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Jerry Snitselaar <jsnitsel@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-integrity@vger.kernel.org
+Date:   Fri, 17 Jan 2020 11:27:09 +0200
+In-Reply-To: <20200113142319.r2gfnmw254owobue@cantor>
+References: <20191025193628.31004-1-jsnitsel@redhat.com>
+         <20191028205338.GI8279@linux.intel.com>
+         <20200113142319.r2gfnmw254owobue@cantor>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ROHM BD71850 PMIC is almost identical to BD71847. Main difference is some
-initial voltage values for regulators. The BD71850 can be handled by
-BD71847 driver but adding own compatible makes it clearer for one who
-creates the DT for board containing this PMIC and allows SW to be
-differentiating PMICs if needed.
+On Mon, 2020-01-13 at 07:23 -0700, Jerry Snitselaar wrote:
+> On Mon Oct 28 19, Jarkko Sakkinen wrote:
+> > On Fri, Oct 25, 2019 at 12:36:28PM -0700, Jerry Snitselaar wrote:
+> > > All of the entries in Documentation/ABI/stable/sysfs-class-tpm
+> > > point to the old tpmdd-devel mailing list. This patch
+> > > updates the entries to point to linux-intergrity.
+> > > 
+> > > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > > Cc: Peter Huewe <peterhuewe@gmx.de>
+> > > Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> > > Cc: linux-integrity@vger.kernel.org
+> > > Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+> > 
+> > Acked-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > 
+> > /Jarkko
+> 
+> Hi Jarkko,
+> 
+> Should we put this into 5.6 as well?
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
----
-no changes since v9
+Yes.
 
- drivers/mfd/rohm-bd718x7.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Thanks, I'll create a PR over the weekend.
 
-diff --git a/drivers/mfd/rohm-bd718x7.c b/drivers/mfd/rohm-bd718x7.c
-index bb86ec829079..c32c1b6c98fa 100644
---- a/drivers/mfd/rohm-bd718x7.c
-+++ b/drivers/mfd/rohm-bd718x7.c
-@@ -213,6 +213,10 @@ static const struct of_device_id bd718xx_of_match[] = {
- 		.compatible = "rohm,bd71847",
- 		.data = (void *)ROHM_CHIP_TYPE_BD71847,
- 	},
-+	{
-+		.compatible = "rohm,bd71850",
-+		.data = (void *)ROHM_CHIP_TYPE_BD71847,
-+	},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, bd718xx_of_match);
--- 
-2.21.0
+/Jarkko
 
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
