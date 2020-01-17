@@ -2,94 +2,110 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FB6C33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 04:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3C9C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 04:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3000E2072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 04:44:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C7452072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 04:44:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oatErtAN"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZC2DR7zH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729861AbgAQEoI (ORCPT
+        id S1730151AbgAQEo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 23:44:08 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:44600 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbgAQEoH (ORCPT
+        Thu, 16 Jan 2020 23:44:56 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:35594 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726370AbgAQEo4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 23:44:07 -0500
-Received: by mail-ot1-f67.google.com with SMTP id h9so21470928otj.11;
-        Thu, 16 Jan 2020 20:44:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OdUWGX2M44tSJxq5HwG1zjlZE4dOmKxmhrCev3Miwp8=;
-        b=oatErtAN9cujlGfvxd67rW2u2R6rptLrE6wQw6K3mNaZTjpKcA4rbeoQYE6SoEKm5F
-         qblp13XkNiWSpaYKjK9ihugs5wd2QcMpxBMaBVItSIwaVXQLV66puyeqV9xzGAzNx7H7
-         in4okX31UY4ETYs3WlMX8amPulzy1uReNkdx3PJUqrUVPRE5UGfoimXD2TCQgaF4CTd7
-         PABdOdJ5wt7D3LNOpaU1640xCpDx44gA0tIo2TX2vs7qjfOslMbByc9mLMDqtLFIU7SO
-         6L+tOeQ57OhIbUVd5pby4jnHuyId9BdjkQxqUNkLE4ANQ4gwJawj26ucX4/eLhefR4mb
-         3Tlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OdUWGX2M44tSJxq5HwG1zjlZE4dOmKxmhrCev3Miwp8=;
-        b=em6bWssylOp4kjOf3fmqJ4QBXnPAIWm4XJNTTW7jQbZQnXefEZW5wkLRpPKPz8q2n8
-         mzjLBrAhqNkcHQU/gKdJp6P9lhlDdSjwr3aH9CGz5RRSdTxNZU/kCYOq31cVNOQX5uX0
-         vvcIXLSJR5OOlvgjjUPkv+l09uchPTJlLOZanIrX1hv4XzTxSP4qP6l7WheEC5YJEwOj
-         mgPBwBTV2pOtnlEX42Dwb5XUzkQufwbih2rmN0uy+GG8RF1kWED8xGC6RYHgr42jWVsp
-         uztdznyYn0cyHOYbfBICWolF6J4BpNrnpy6KUjMIhKX3n+xHLPjKAl3zdK3qAo3lHZva
-         oG4g==
-X-Gm-Message-State: APjAAAWH0+8OdXAZvgeuPdXqeaCAnYcPyZDWVN5Emu8XWRQ0iIVV7Tpq
-        zmnBIszHTR6qhhYQWvqF6kaLjecQ3u7HbBUwvj3qWU+Ra7M=
-X-Google-Smtp-Source: APXvYqwVjaXTDchluzQRQuOOm8EBIYP0UCLXeZm5JMVd9PzBDfHiGQPPJL+p2blHDaI2Qm4bojUXdGTy5ru/ivogIXc=
-X-Received: by 2002:a9d:da2:: with SMTP id 31mr4737846ots.319.1579236246676;
- Thu, 16 Jan 2020 20:44:06 -0800 (PST)
+        Thu, 16 Jan 2020 23:44:56 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00H4cu8W123496;
+        Fri, 17 Jan 2020 04:44:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=kei4/bh5MHiyU6Xb1JUCnPX298eNmKPXG3KGKMXdG2U=;
+ b=ZC2DR7zHE/Z6E+kKSHYV3aSz6EfolElzN6YKOI3lzNNWoYFc68PweWCZP3oRkdx/PWs5
+ OZDL2668kyrUWwbwYlPjPgfHZEJH2URlqPu9I9DgNgyKEE0BQC2OdtwtNdF1ynOFzgq/
+ 4rbO+lthATkTFLpGdrHzmcZIWeewh8PEuinjRY/6kJK5tggZ7Wn493rwrbNfbyIoiM5s
+ AzVbIZJleoS8BkcbraIAkLqlRO2EV8QmnsoL54gu+xB/odbZYFIv4yIzKYBusIWx1L5c
+ JbaZmY9F5eZbQFmHDTtDLm5HALVxWOeo/2GxQf0gD+JWQjn8nTvnHH1XvkZt+TLfVnI0 vQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2xf74spexn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Jan 2020 04:44:49 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00H4d1Ss050604;
+        Fri, 17 Jan 2020 04:44:48 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2xjxm85c5w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Jan 2020 04:44:48 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00H4il8S027494;
+        Fri, 17 Jan 2020 04:44:47 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 16 Jan 2020 20:44:47 -0800
+Date:   Fri, 17 Jan 2020 07:46:30 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Simon Schwartz <kern.simon@theschwartz.xyz>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] driver core: platform: fix u32 greater or equal to
+ zero comparison
+Message-ID: <20200117044629.GC19765@kadam>
+References: <20200116175758.88396-1-colin.king@canonical.com>
+ <20200117044216.GC21151@kadam>
 MIME-Version: 1.0
-References: <20200116213625.GA9294@embeddedor.com>
-In-Reply-To: <20200116213625.GA9294@embeddedor.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Thu, 16 Jan 2020 20:43:55 -0800
-Message-ID: <CAM_iQpXi6JAOK7bWMazvOEwa=S4U3=5L5cqwKST9FKFfr+GkzQ@mail.gmail.com>
-Subject: Re: [PATCH net-next] net: sched: cls_u32: Use flexible-array member
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Jamal Hadi Salim <jhs@mojatatu.com>, Jiri Pirko <jiri@resnulli.us>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200117044216.GC21151@kadam>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9502 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=477
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001170035
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9502 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=537 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001170035
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 1:36 PM Gustavo A. R. Silva
-<gustavo@embeddedor.com> wrote:
->
-> Old code in the kernel uses 1-byte and 0-byte arrays to indicate the
-> presence of a "variable length array":
->
-> struct something {
->     int length;
->     u8 data[1];
-> };
->
-> struct something *instance;
->
-> instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
-> instance->length = size;
-> memcpy(instance->data, source, size);
+On Fri, Jan 17, 2020 at 07:42:16AM +0300, Dan Carpenter wrote:
+> On Thu, Jan 16, 2020 at 05:57:58PM +0000, Colin King wrote:
+> > From: Colin Ian King <colin.king@canonical.com>
+> > 
+> > Currently the check that a u32 variable i is >= 0 is always true because
+> > the unsigned variable will never be negative, causing the loop to run
+> > forever.  Fix this by changing the pre-decrement check to a zero check on
+> > i followed by a decrement of i.
+> > 
+> > Addresses-Coverity: ("Unsigned compared against 0")
+> > Fixes: 39cc539f90d0 ("driver core: platform: Prevent resouce overflow from causing infinite loops")
+> 
+> A better fix would be to revert this patch.  It doesn't fix a real bug.
+> The ->num_resources is typically under 5.  It's not going to overflow
+> INT_MAX any time soon.  There are "architectures with smaller ints."
 
-Hmm, your patch is not correct, for u32 it is length+1, so you have
-to allocate size+1 after you switch to zero-length array.
+I left out a word.  There are *no* "architectures with smaller ints."...
 
-Take a look at u32_walk() if you have any doubt.
+I mean there used to be systems with 16 bit int but that was before I
+was born.  You could never run linux on them.
 
-Thanks.
+regards,
+dan carpenter
+
