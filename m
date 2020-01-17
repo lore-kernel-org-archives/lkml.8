@@ -2,117 +2,144 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36663C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 23:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 295F2C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 23:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1492422464
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 23:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0E7521D56
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 23:45:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="gYMCiMCk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730333AbgAQXi3 (ORCPT
+        id S1730302AbgAQXpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 18:38:29 -0500
-Received: from mga14.intel.com ([192.55.52.115]:62782 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730117AbgAQXi3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 18:38:29 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 15:38:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,332,1574150400"; 
-   d="scan'208";a="249407880"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga004.fm.intel.com with ESMTP; 17 Jan 2020 15:38:26 -0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
-        akpm@linux-foundation.org, ktkhai@virtuozzo.com,
-        kirill.shutemov@linux.intel.com, yang.shi@linux.alibaba.com
-Cc:     cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, alexander.duyck@gmail.com,
-        rientjes@google.com, Wei Yang <richardw.yang@linux.intel.com>,
-        stable@vger.kernel.org
-Subject: [Patch v4] mm: thp: remove the defer list related code since this will not happen
-Date:   Sat, 18 Jan 2020 07:38:36 +0800
-Message-Id: <20200117233836.3434-1-richardw.yang@linux.intel.com>
+        Fri, 17 Jan 2020 18:45:13 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:16830 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730184AbgAQXpN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 18:45:13 -0500
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00HNSNUf017480
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 15:45:11 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=Sok7U8dg0bqgNO0xZwUMVKyUbAR6McyeiedSKBbUSf0=;
+ b=gYMCiMCkEkailKk2vKOemzTki7hd38dnEXrDKcefj1t2pyrP8g8uZAqIjytsh8TF944M
+ VpcQhn2lBR/J92Flw1rW9xONlweP9PpMwmm43YLuKUaNIq/pMjovy7ZJbzcpeH+gMU6B
+ E4SeSiv86MLXG8bT4priMAbYbtLhr75hD7o= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 2xk0rpn9av-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 15:45:11 -0800
+Received: from intmgw001.06.prn3.facebook.com (2620:10d:c085:208::11) by
+ mail.thefacebook.com (2620:10d:c085:11d::5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 17 Jan 2020 15:45:11 -0800
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id 1F6F662E3453; Fri, 17 Jan 2020 15:45:06 -0800 (PST)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <linux-kernel@vger.kernel.org>
+CC:     <kernel-team@fb.com>, Song Liu <songliubraving@fb.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH] perf/core: fix mlock accounting in perf_mmap()
+Date:   Fri, 17 Jan 2020 15:45:03 -0800
+Message-ID: <20200117234503.1324050-1-songliubraving@fb.com>
 X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-17_05:2020-01-16,2020-01-17 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0
+ lowpriorityscore=0 bulkscore=0 spamscore=0 priorityscore=1501
+ clxscore=1015 impostorscore=0 malwarescore=0 adultscore=0 mlxlogscore=937
+ mlxscore=0 suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001170178
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If compound is true, this means it is a PMD mapped THP. Which implies
-the page is not linked to any defer list. So the first code chunk will
-not be executed.
+sysctl_perf_event_mlock and user->locked_vm can change value
+independently, so we can't guarantee:
 
-Also with this reason, it would not be proper to add this page to a
-defer list. So the second code chunk is not correct.
+    user->locked_vm <= user_lock_limit
 
-Based on this, we should remove the defer list related code.
+When user->locked_vm is larger than user_lock_limit, we cannot simply
+update extra and user_extra as:
 
-Fixes: 87eaceb3faa5 ("mm: thp: make deferred split shrinker memcg aware")
+    extra = user_locked - user_lock_limit;
+    user_extra -= extra;
 
-Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
-Suggested-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: <stable@vger.kernel.org>    [5.4+]
+Otherwise, user_extra will be negative. In extreme cases, this may lead to
+negative user->locked_vm (until this perf-mmap is closed), which break
+locked_vm badly.
 
+Fix this with two separate conditions, which make sure user_extra is
+always positive.
+
+Fixes: c4b75479741c ("perf/core: Make the mlock accounting simple again")
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
 ---
-v4:
-  * finally we identified the related code is not necessary and not
-    correct, just remove it
-  * thanks to Kirill T first spot some problem
-v3:
-  * remove all review/ack tag since rewrite the changelog
-  * use deferred_split_huge_page as the example of race
-  * add cc stable 5.4+ tag as suggested by David Rientjes
+ kernel/events/core.c | 28 ++++++++++++++++++++++++----
+ 1 file changed, 24 insertions(+), 4 deletions(-)
 
-v2:
-  * move check on compound outside suggested by Alexander
-  * an example of the race condition, suggested by Michal
----
- mm/memcontrol.c | 18 ------------------
- 1 file changed, 18 deletions(-)
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 6c83cf4ed970..27c231bf4565 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -5340,14 +5340,6 @@ static int mem_cgroup_move_account(struct page *page,
- 		__mod_lruvec_state(to_vec, NR_WRITEBACK, nr_pages);
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index a1f8bde19b56..89acdd1574ef 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -5920,11 +5920,31 @@ static int perf_mmap(struct file *file, struct vm_area_struct *vma)
+ 
+ 	if (user_locked > user_lock_limit) {
+ 		/*
+-		 * charge locked_vm until it hits user_lock_limit;
+-		 * charge the rest from pinned_vm
++		 * sysctl_perf_event_mlock and user->locked_vm can change
++		 * value independently, so we can't guarantee:
++		 *
++		 *    user->locked_vm <= user_lock_limit
++		 *
++		 * We need be careful to make sure user_extra >=0.
++		 *
++		 * Using "user_locked - user_extra" to avoid calling
++		 * atomic_long_read() again.
+ 		 */
+-		extra = user_locked - user_lock_limit;
+-		user_extra -= extra;
++		if (user_locked - user_extra >= user_lock_limit) {
++			/*
++			 * already used all user_locked_limit, charge all
++			 * to pinned_vm
++			 */
++			extra = user_extra;
++			user_extra = 0;
++		} else {
++			/*
++			 * charge locked_vm until it hits user_lock_limit;
++			 * charge the rest from pinned_vm
++			 */
++			extra = user_locked - user_lock_limit;
++			user_extra -= extra;
++		}
  	}
  
--#ifdef CONFIG_TRANSPARENT_HUGEPAGE
--	if (compound && !list_empty(page_deferred_list(page))) {
--		spin_lock(&from->deferred_split_queue.split_queue_lock);
--		list_del_init(page_deferred_list(page));
--		from->deferred_split_queue.split_queue_len--;
--		spin_unlock(&from->deferred_split_queue.split_queue_lock);
--	}
--#endif
- 	/*
- 	 * It is safe to change page->mem_cgroup here because the page
- 	 * is referenced, charged, and isolated - we can't race with
-@@ -5357,16 +5349,6 @@ static int mem_cgroup_move_account(struct page *page,
- 	/* caller should have done css_get */
- 	page->mem_cgroup = to;
- 
--#ifdef CONFIG_TRANSPARENT_HUGEPAGE
--	if (compound && list_empty(page_deferred_list(page))) {
--		spin_lock(&to->deferred_split_queue.split_queue_lock);
--		list_add_tail(page_deferred_list(page),
--			      &to->deferred_split_queue.split_queue);
--		to->deferred_split_queue.split_queue_len++;
--		spin_unlock(&to->deferred_split_queue.split_queue_lock);
--	}
--#endif
--
- 	spin_unlock_irqrestore(&from->move_lock, flags);
- 
- 	ret = 0;
+ 	lock_limit = rlimit(RLIMIT_MEMLOCK);
 -- 
 2.17.1
 
