@@ -2,185 +2,242 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE87C33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 19:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2252C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 19:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D17182082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 19:34:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5C9F2083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 19:42:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="R4a7Kkhp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729650AbgAQTet (ORCPT
+        id S1729534AbgAQTmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 14:34:49 -0500
-Received: from mga18.intel.com ([134.134.136.126]:18188 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729557AbgAQTei (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 14:34:38 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 11:30:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,331,1574150400"; 
-   d="scan'208";a="274474203"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by FMSMGA003.fm.intel.com with ESMTP; 17 Jan 2020 11:30:54 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Derek Yerger <derek@djy.llc>,
-        kernel@najdan.com, Thomas Lambertz <mail@thomaslambertz.de>,
-        Rik van Riel <riel@surriel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Borislav Petkov <bp@suse.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v2 3/4] KVM: x86: Revert "KVM: X86: Fix fpu state crash in kvm guest"
-Date:   Fri, 17 Jan 2020 11:30:51 -0800
-Message-Id: <20200117193052.1339-4-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200117193052.1339-1-sean.j.christopherson@intel.com>
-References: <20200117193052.1339-1-sean.j.christopherson@intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 17 Jan 2020 14:42:35 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:35120 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727519AbgAQTmf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 14:42:35 -0500
+Received: by mail-qk1-f194.google.com with SMTP id z76so23861863qka.2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 11:42:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Ye5PEji8Lgk+2HK8XuoofHoKU/zw+6IcqrRfWMDcXsA=;
+        b=R4a7KkhpxKG2u4gFSisO74w8LfwHYRat/WpvDdyj2oMT3EFfpLna9/LhRToKNfnOKO
+         FOOGRvVdugmQZL8pTmrKw7C/kKY2TW6lQonQJ2Br1zQXv3OSUFM+FKgPpRRN80Epbmk1
+         mLz6hI0t/d0YpzianpWAoyaxAFkomd935paPz2kLaXK3x8QEv8GmQ7C9r8cAwAkEVbGJ
+         w1QhCdaR67LRaXAbvY9v8ZkQB0CGPWFWNLGYNl+Y+/ky1xbH84KpZq77nGBRKsoN3KmI
+         MnrspkpYSmcq082/h8d9/o2A/PjYjduzPZVbD3aoB91scCnc3OYBrJ8Jwbt9idjnTkvF
+         bt7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Ye5PEji8Lgk+2HK8XuoofHoKU/zw+6IcqrRfWMDcXsA=;
+        b=EFUjg+eTdYhpjSCkfwwcMUuqG+EqQYzSvmFZFg6E4QuYtFgpaMlf7B1HpDd3gf0IC5
+         IINWnEbceZb9VuzVIq8LVBm1FjJVSX5x8ANBtI7P3iKgCuDTWMS6W9y1LQ0gGmt/bJVq
+         fBGlQrTeJ/IKhyIVNwHpl/HOvkshb9RiJluc9cDirqEy3e2OpVIkb/aM2gQ/Q11VV18I
+         CXwgK4U8eAjB9k33SibCt+VY/DUIsbMin4M/414LR2LB/cBd/Ko/3JvsCpiWSzOouyeX
+         9E0c3g9LF6LLf9spguuSJdrY8D3U20dFPPPlOVKJUuWm+VA7kLZAvMLf/eazoBIiSIc0
+         3Jog==
+X-Gm-Message-State: APjAAAVa5q0UI+m/GqCR9LhQUio+/QsAxOTRVge6jIpZVxU9bBFxCJyd
+        Ef9Y224R09nT4YUui0BucMWcdg==
+X-Google-Smtp-Source: APXvYqwSBcRUIb0XSF+TonuquGNqUOqr3lpe0eX2whLYDESj9Kjje059D4yf4ox2EQy7aqDnbLzkfA==
+X-Received: by 2002:a37:ea09:: with SMTP id t9mr39996237qkj.151.1579290154109;
+        Fri, 17 Jan 2020 11:42:34 -0800 (PST)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id c6sm12009610qka.111.2020.01.17.11.42.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 Jan 2020 11:42:33 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
+Subject: Re: [PATCH -next v4] mm/hotplug: silence a lockdep splat with
+ printk()
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <06AE045D-F167-406B-A78B-CAE246058C9D@redhat.com>
+Date:   Fri, 17 Jan 2020 14:42:32 -0500
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        pmladek@suse.com, rostedt@goodmis.org, peterz@infradead.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <9E07384A-0C7F-4462-852F-B5A386AC10EB@lca.pw>
+References: <00155F33-17C6-4051-A8F9-CCD9414F400D@lca.pw>
+ <06AE045D-F167-406B-A78B-CAE246058C9D@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+X-Mailer: Apple Mail (2.3608.40.2.2.4)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reload the current thread's FPU state, which contains the guest's FPU
-state, to the CPU registers if necessary during vcpu_enter_guest().
-TIF_NEED_FPU_LOAD can be set any time control is transferred out of KVM,
-e.g. if I/O is triggered during a KVM call to get_user_pages() or if a
-softirq occurs while KVM is scheduled in.
 
-Moving the handling of TIF_NEED_FPU_LOAD from vcpu_enter_guest() to
-kvm_arch_vcpu_load(), effectively kvm_sched_in(), papered over a bug
-where kvm_put_guest_fpu() failed to account for TIF_NEED_FPU_LOAD.  The
-easiest way to the kvm_put_guest_fpu() bug was to run with involuntary
-preemption enable, thus handling TIF_NEED_FPU_LOAD during kvm_sched_in()
-made the bug go away.  But, removing the handling in vcpu_enter_guest()
-exposed KVM to the rare case of a softirq triggering kernel_fpu_begin()
-between vcpu_load() and vcpu_enter_guest().
 
-Now that kvm_{load,put}_guest_fpu() correctly handle TIF_NEED_FPU_LOAD,
-revert the commit to both restore the vcpu_enter_guest() behavior and
-eliminate the superfluous switch_fpu_return() in kvm_arch_vcpu_load().
+> On Jan 17, 2020, at 2:15 PM, David Hildenbrand <david@redhat.com> =
+wrote:
+>=20
+>=20
+>=20
+>> Am 17.01.2020 um 19:49 schrieb Qian Cai <cai@lca.pw>:
+>>=20
+>> =EF=BB=BF
+>>=20
+>>> On Jan 17, 2020, at 10:46 AM, Michal Hocko <mhocko@kernel.org> =
+wrote:
+>>>=20
+>>>> On Fri 17-01-20 10:05:12, Qian Cai wrote:
+>>>>=20
+>>>>=20
+>>>>> On Jan 17, 2020, at 9:39 AM, Michal Hocko <mhocko@kernel.org> =
+wrote:
+>>>>>=20
+>>>>> Thanks a lot. Having it in a separate patch would be great.
+>>>>=20
+>>>> I was thinking about removing that WARN together in this v5 patch,
+>>>> so there is less churn to touch the same function again. However, I
+>>>> am fine either way, so just shout out if you feel strongly towards =
+a
+>>>> separate patch.
+>>>=20
+>>> I hope you meant moving rather than removing ;). The warning is =
+useful
+>>> because we shouldn't see unmovable pages in the movable zone. And a
+>>> separate patch makes more sense because the justification is =
+slightly
+>>> different. We do not want to have a way for userspace to trigger the
+>>> warning from userspace - even though it shouldn't be possible, but
+>>> still. Only the offlining path should complain.
+>>=20
+>> Something like this?
+>>=20
+>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+>> index 621716a25639..32c854851e1f 100644
+>> --- a/mm/page_alloc.c
+>> +++ b/mm/page_alloc.c
+>> @@ -8307,7 +8307,6 @@ struct page *has_unmovable_pages(struct zone =
+*zone, struct page *page,
+>>       }
+>>       return NULL;
+>> unmovable:
+>> -       WARN_ON_ONCE(zone_idx(zone) =3D=3D ZONE_MOVABLE);
+>>       return pfn_to_page(pfn + iter);
+>> }
+>>=20
+>> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+>> index e70586523ca3..08571b515d9f 100644
+>> --- a/mm/page_isolation.c
+>> +++ b/mm/page_isolation.c
+>> @@ -54,9 +54,11 @@ static int set_migratetype_isolate(struct page =
+*page, int migratetype, int isol_
+>>=20
+>> out:
+>>       spin_unlock_irqrestore(&zone->lock, flags);
+>> +
+>>       if (!ret)
+>>               drain_all_pages(zone);
+>>       else if ((isol_flags & REPORT_FAILURE) && unmovable)
+>=20
+> We have a dedicated flag for the offlining part.
 
-Note, leaving the handling in kvm_arch_vcpu_load() isn't wrong per se,
-but it is unnecessary, and most critically, makes it extremely difficult
-to find bugs such as the kvm_put_guest_fpu() issue due to shrinking the
-window where a softirq can corrupt state.
+This should do the trick then,
 
-A sample trace triggered by warning if TIF_NEED_FPU_LOAD is set while
-vcpu state is loaded:
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 621716a25639..4bb3e503cb9e 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -8231,7 +8231,7 @@ struct page *has_unmovable_pages(struct zone =
+*zone, struct page *page,
+                if (is_migrate_cma(migratetype))
+                        return NULL;
+=20
+-               goto unmovable;
++               return page;
+        }
+=20
+        for (; iter < pageblock_nr_pages; iter++) {
+@@ -8241,7 +8241,7 @@ struct page *has_unmovable_pages(struct zone =
+*zone, struct page *page,
+                page =3D pfn_to_page(pfn + iter);
+=20
+                if (PageReserved(page))
+-                       goto unmovable;
++                       return page;
+=20
+                /*
+                 * If the zone is movable and we have ruled out all =
+reserved
+@@ -8303,12 +8303,9 @@ struct page *has_unmovable_pages(struct zone =
+*zone, struct page *page,
+                 * is set to both of a memory hole page and a _used_ =
+kernel
+                 * page at boot.
+                 */
+-               goto unmovable;
++               return pfn_to_page(pfn + iter);
+        }
+        return NULL;
+-unmovable:
+-       WARN_ON_ONCE(zone_idx(zone) =3D=3D ZONE_MOVABLE);
+-       return pfn_to_page(pfn + iter);
+ }
+=20
+ #ifdef CONFIG_CONTIG_ALLOC
+diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+index e70586523ca3..e140eaa901b2 100644
+--- a/mm/page_isolation.c
++++ b/mm/page_isolation.c
+@@ -54,14 +54,20 @@ static int set_migratetype_isolate(struct page =
+*page, int migratetype, int isol_
+=20
+ out:
+        spin_unlock_irqrestore(&zone->lock, flags);
+-       if (!ret)
++
++       if (!ret) {
+                drain_all_pages(zone);
+-       else if ((isol_flags & REPORT_FAILURE) && unmovable)
+-               /*
+-                * printk() with zone->lock held will guarantee to =
+trigger a
+-                * lockdep splat, so defer it here.
+-                */
+-               dump_page(unmovable, "unmovable page");
++       } else {
++               if (isol_flags & MEMORY_OFFLINE)
++                       WARN_ON_ONCE(zone_idx(zone) =3D=3D =
+ZONE_MOVABLE);
++
++               if ((isol_flags & REPORT_FAILURE) && unmovable)
++                       /*
++                        * printk() with zone->lock held will likely =
+trigger a
++                        * lockdep splat, so defer it here.
++                        */
++                       dump_page(unmovable, "unmovable page");
++       }
+=20
+        return ret;
+ }
 
- <IRQ>
-  gcmaes_crypt_by_sg.constprop.12+0x26e/0x660
-  ? 0xffffffffc024547d
-  ? __qdisc_run+0x83/0x510
-  ? __dev_queue_xmit+0x45e/0x990
-  ? ip_finish_output2+0x1a8/0x570
-  ? fib4_rule_action+0x61/0x70
-  ? fib4_rule_action+0x70/0x70
-  ? fib_rules_lookup+0x13f/0x1c0
-  ? helper_rfc4106_decrypt+0x82/0xa0
-  ? crypto_aead_decrypt+0x40/0x70
-  ? crypto_aead_decrypt+0x40/0x70
-  ? crypto_aead_decrypt+0x40/0x70
-  ? esp_output_tail+0x8f4/0xa5a [esp4]
-  ? skb_ext_add+0xd3/0x170
-  ? xfrm_input+0x7a6/0x12c0
-  ? xfrm4_rcv_encap+0xae/0xd0
-  ? xfrm4_transport_finish+0x200/0x200
-  ? udp_queue_rcv_one_skb+0x1ba/0x460
-  ? udp_unicast_rcv_skb.isra.63+0x72/0x90
-  ? __udp4_lib_rcv+0x51b/0xb00
-  ? ip_protocol_deliver_rcu+0xd2/0x1c0
-  ? ip_local_deliver_finish+0x44/0x50
-  ? ip_local_deliver+0xe0/0xf0
-  ? ip_protocol_deliver_rcu+0x1c0/0x1c0
-  ? ip_rcv+0xbc/0xd0
-  ? ip_rcv_finish_core.isra.19+0x380/0x380
-  ? __netif_receive_skb_one_core+0x7e/0x90
-  ? netif_receive_skb_internal+0x3d/0xb0
-  ? napi_gro_receive+0xed/0x150
-  ? 0xffffffffc0243c77
-  ? net_rx_action+0x149/0x3b0
-  ? __do_softirq+0xe4/0x2f8
-  ? handle_irq_event_percpu+0x6a/0x80
-  ? irq_exit+0xe6/0xf0
-  ? do_IRQ+0x7f/0xd0
-  ? common_interrupt+0xf/0xf
-  </IRQ>
-  ? irq_entries_start+0x20/0x660
-  ? vmx_get_interrupt_shadow+0x2f0/0x710 [kvm_intel]
-  ? kvm_set_msr_common+0xfc7/0x2380 [kvm]
-  ? recalibrate_cpu_khz+0x10/0x10
-  ? ktime_get+0x3a/0xa0
-  ? kvm_arch_vcpu_ioctl_run+0x107/0x560 [kvm]
-  ? kvm_init+0x6bf/0xd00 [kvm]
-  ? __seccomp_filter+0x7a/0x680
-  ? do_vfs_ioctl+0xa4/0x630
-  ? security_file_ioctl+0x32/0x50
-  ? ksys_ioctl+0x60/0x90
-  ? __x64_sys_ioctl+0x16/0x20
-  ? do_syscall_64+0x5f/0x1a0
-  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
----[ end trace 9564a1ccad733a90 ]---
-
-This reverts commit e751732486eb3f159089a64d1901992b1357e7cc.
-
-Fixes: e751732486eb3 ("KVM: X86: Fix fpu state crash in kvm guest")
-Reported-by: Derek Yerger <derek@djy.llc>
-Reported-by: kernel@najdan.com
-Cc: Wanpeng Li <wanpengli@tencent.com>
-Cc: Thomas Lambertz <mail@thomaslambertz.de>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/x86.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 0bbf0110bef7..815c93cf551b 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -3458,10 +3458,6 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
- 
- 	kvm_x86_ops->vcpu_load(vcpu, cpu);
- 
--	fpregs_assert_state_consistent();
--	if (test_thread_flag(TIF_NEED_FPU_LOAD))
--		switch_fpu_return();
--
- 	/* Apply any externally detected TSC adjustments (due to suspend) */
- 	if (unlikely(vcpu->arch.tsc_offset_adjustment)) {
- 		adjust_tsc_offset_host(vcpu, vcpu->arch.tsc_offset_adjustment);
-@@ -8198,8 +8194,9 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 	trace_kvm_entry(vcpu->vcpu_id);
- 	guest_enter_irqoff();
- 
--	/* The preempt notifier should have taken care of the FPU already.  */
--	WARN_ON_ONCE(test_thread_flag(TIF_NEED_FPU_LOAD));
-+	fpregs_assert_state_consistent();
-+	if (test_thread_flag(TIF_NEED_FPU_LOAD))
-+		switch_fpu_return();
- 
- 	if (unlikely(vcpu->arch.switch_db_regs)) {
- 		set_debugreg(0, 7);
--- 
-2.24.1
+>=20
+>> +               WARN_ON_ONCE(zone_idx(zone) =3D=3D ZONE_MOVABLE);
+>>               /*
+>>                * printk() with zone->lock held will guarantee to =
+trigger a
+>>                * lockdep splat, so defer it here.
+>>=20
+>=20
+> So, are we fine with unmovable data ending up in ZONE_MOVABLE as long =
+as we can offline it?=20
+>=20
+> This might make my life in virtio-mem a little easier (I can unplug =
+chunks falling into ZONE_MOVABLE).
 
