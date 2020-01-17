@@ -2,178 +2,137 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 139D6C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:34:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2A5C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAFBE2072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:34:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72EF42083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:34:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BbEl2ga7"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WVIk9WZ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728826AbgAQMeH (ORCPT
+        id S1728831AbgAQMe4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 07:34:07 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57329 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726991AbgAQMeG (ORCPT
+        Fri, 17 Jan 2020 07:34:56 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:36374 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727009AbgAQMe4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 07:34:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579264445;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=n6noiswpldg3fHomtpJXeotHAxwJmLIHoQgf83pfhEE=;
-        b=BbEl2ga7E79fTmOKwavNOOnQphc30p+5fxW4HSC2AYJex16MuQASo7MqJ0WlvVGWHPpZ1H
-        DFqp5OcLxV2Qga5SnmwjAzV8sCnOuEVB2UbrHJfLhTrT/5vjv4y1N/O0SeIdLURn7ZN02/
-        c+SJi+d6iBykgJHBSXuowKt1OKEhifc=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-204-mXKpx-TiOIKZ3Al0tTub0A-1; Fri, 17 Jan 2020 07:34:04 -0500
-X-MC-Unique: mXKpx-TiOIKZ3Al0tTub0A-1
-Received: by mail-wr1-f71.google.com with SMTP id v17so10428161wrm.17
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 04:34:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=n6noiswpldg3fHomtpJXeotHAxwJmLIHoQgf83pfhEE=;
-        b=sZ+dk9ZN/RzIsuspsJmNrZWaLMCnJFh2tUBUPuru9iH3zdcohaC6RLPzJJFpXt+A4F
-         AHaYML+bFTYH+qlFQoYr1KkaJ2xnR6DxA3wujbimmcQZdygXUuKa06KiFbKQUmXw/cG0
-         IKVDqBnUah1DoQTlcOPQtKUgUTbv2ysWVVhjtt/wAYfIcRpZhd56j3T1MZv07XNlgxWZ
-         Drtdi7IwY5KqVOkJMGrzLlZWd4bP/yRiDMa1nj8xVFy+rDPsPAkd2xAOwBVNrOHm2cDU
-         /q3KieptWwpvlcAA1rHZPmJ2FmJ7YF7W/I9Gi5cUGRpDLk2DEF9ZHoeY+pmH7PIYidq2
-         B/cg==
-X-Gm-Message-State: APjAAAVBHOIcdUe8cq2PvZYPjQPAcTcmOOKAZ6O1o1jBfO7+MgB1kZbr
-        xwyAJbRnId8NGMW7ltALuN54YKuwLwa/4AsGyh0xiTe2TMlLeMoxCd2dw3iWxXKu5OrkvxPJOTP
-        rr/NLSZkbIQfYQNJfPhiRhLEV
-X-Received: by 2002:adf:df83:: with SMTP id z3mr2783914wrl.389.1579264442699;
-        Fri, 17 Jan 2020 04:34:02 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyXrFbb1XX82iYVpnh0BdWbZbvio6PUNm045gC9KyuT7ceLT/vO7ufARgEZP9im72FHYd9BGQ==
-X-Received: by 2002:adf:df83:: with SMTP id z3mr2783892wrl.389.1579264442359;
-        Fri, 17 Jan 2020 04:34:02 -0800 (PST)
-Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id n3sm4655448wmc.27.2020.01.17.04.34.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 04:34:01 -0800 (PST)
-Date:   Fri, 17 Jan 2020 13:34:00 +0100
-From:   Oleksandr Natalenko <oleksandr@redhat.com>
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>, christian.brauner@ubuntu.com,
-        sjpark@amazon.de, Minchan Kim <minchan@google.com>
-Subject: Re: [PATCH v2 4/5] mm/madvise: allow KSM hints for remote API
-Message-ID: <20200117123400.o3ne6kazkovq4okd@butterfly.localdomain>
-References: <20200116235953.163318-1-minchan@kernel.org>
- <20200116235953.163318-5-minchan@kernel.org>
- <37338e14-5a55-1926-b6c1-5f98b6a6fdb5@virtuozzo.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <37338e14-5a55-1926-b6c1-5f98b6a6fdb5@virtuozzo.com>
+        Fri, 17 Jan 2020 07:34:56 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200117123455euoutp02b9b6bf92ca89e7e3a3167fe0c5b7a1a5~qrLDl61I01680516805euoutp02k
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 12:34:55 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200117123455euoutp02b9b6bf92ca89e7e3a3167fe0c5b7a1a5~qrLDl61I01680516805euoutp02k
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1579264495;
+        bh=F25q0dx4N/0otUjQDoHpV71xu06zNDNkTXl4Brete48=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WVIk9WZ7igwbiY57pJGt76wHKXABLcMBN1KFBNH7qdPB/s9lvzn6i/1A2ZnSh7wqQ
+         2zsCs3bWrB8WpSgwr46spkIuci3AnFVwuv2XhkF0C7bit2M3KbEYzEcQSZ3YAuf/tB
+         QS7u/n9tUw0h1p4JBE4BMzJStkqSZOcMJVkOZZ4o=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200117123454eucas1p23c0c5069e2790d347ffc84f6a96d9f4d~qrLDOjdKY1731917319eucas1p2t;
+        Fri, 17 Jan 2020 12:34:54 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 75.7F.60679.EE9A12E5; Fri, 17
+        Jan 2020 12:34:54 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200117123454eucas1p1e8f0e527dc39f1e0993b14c7098002e4~qrLC-7z6u1979919799eucas1p1h;
+        Fri, 17 Jan 2020 12:34:54 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200117123454eusmtrp1553c3f46c879c87089ac5ba875aed1da~qrLC-Ympv0166501665eusmtrp1u;
+        Fri, 17 Jan 2020 12:34:54 +0000 (GMT)
+X-AuditID: cbfec7f4-0cbff7000001ed07-0f-5e21a9eed3ce
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id CB.C8.08375.EE9A12E5; Fri, 17
+        Jan 2020 12:34:54 +0000 (GMT)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200117123454eusmtip23bc56662ae3e42b6cbef4d1d8707c7be~qrLCkYGbi1301313013eusmtip2C;
+        Fri, 17 Jan 2020 12:34:53 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH 2/3] ARM: exynos_defconfig: Enable devfreq thermal
+ integration
+Date:   Fri, 17 Jan 2020 13:34:47 +0100
+Message-Id: <20200117123448.13807-2-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200117123448.13807-1-m.szyprowski@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBIsWRmVeSWpSXmKPExsWy7djP87rvVirGGWydoGWxccZ6VovrX56z
+        Wpw/v4Hd4vKuOWwWM87vY7JYe+QuuwObx6ZVnWwefVtWMXp83iQXwBzFZZOSmpNZllqkb5fA
+        ldE206fgGnvF5xPzmBsYL7B1MXJySAiYSJxbcYGli5GLQ0hgBaPEydcX2SCcL4wSk26vgcp8
+        ZpSYc+AUK0zL8i2f2EFsIYHljBL7F7LCdZx4vY4ZJMEmYCjR9bYLbIeIgLNEw9RGJpAiZoFt
+        jBKvF8wE6xYWCJD48RyiiEVAVWL2iQdANgcHr4CtRMtmG4hl8hKrNxxgBglzCthJfLnkBxG+
+        ziaxaoENSFhCwEVi1ZpiiLCwxKvjW9ghbBmJ05N7wO6XEGhmlHh4bi07hNPDKHG5aQYjRJW1
+        xJ1zv8DWMgtoSqzfpQ8x01Fi90NNCJNP4sZbQZBiZiBz0rbpzBBhXomONiGIGWoSs46vg9t6
+        8MIlZgjbQ+LT1W/Q4JzIKPHg9FamCYzysxB2LWBkXMUonlpanJueWmyUl1quV5yYW1yal66X
+        nJ+7iREY/6f/Hf+yg3HXn6RDjAIcjEo8vAXLFOOEWBPLiitzDzFKcDArifDe7QUK8aYkVlal
+        FuXHF5XmpBYfYpTmYFES5zVe9DJWSCA9sSQ1OzW1ILUIJsvEwSnVwOg//esGF47E6yvfZ9op
+        vn59iPfGrm2a376FTLvewFxtKhP8qUY3ZUV4hpL18jVFtW+eBhkteXi19LedUr3Qjchlkx28
+        U1ROp9WKRzyNyt42u3IB00dR4aXzFvd1iqnaMPXML16tOO/JP4n6E5sWC2wSir5v80xrb4EM
+        zzVe9507tzCah2hJ1CmxFGckGmoxFxUnAgDMv3E2+wIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNLMWRmVeSWpSXmKPExsVy+t/xe7rvVirGGbzYI2axccZ6VovrX56z
+        Wpw/v4Hd4vKuOWwWM87vY7JYe+QuuwObx6ZVnWwefVtWMXp83iQXwBylZ1OUX1qSqpCRX1xi
+        qxRtaGGkZ2hpoWdkYqlnaGwea2VkqqRvZ5OSmpNZllqkb5egl9E206fgGnvF5xPzmBsYL7B1
+        MXJySAiYSCzf8om9i5GLQ0hgKaPEpFOLWSESMhInpzVA2cISf651gTUICXxilJj8uQrEZhMw
+        lOh6CxEXEXCVOLSilxlkELPADkaJ7pYL7CAJYQE/iecLbjKD2CwCqhKzTzwAauDg4BWwlWjZ
+        bAMxX15i9YYDzCBhTgE7iS+X/CBW2Ur0LLvBPIGRbwEjwypGkdTS4tz03GJDveLE3OLSvHS9
+        5PzcTYzAgNx27OfmHYyXNgYfYhTgYFTi4S1YphgnxJpYVlyZe4hRgoNZSYT3bi9QiDclsbIq
+        tSg/vqg0J7X4EKMp0EkTmaVEk/OB0ZJXEm9oamhuYWlobmxubGahJM7bIXAwRkggPbEkNTs1
+        tSC1CKaPiYNTqoGx7U2eye7JQl7tT/f/Y7aey/hIUX+yUKv62iuP9wd/PKv0ouVSVuva2au2
+        HhTcus9v5fpz5eaPivLf+amkLrQ3Uj3n2c73NbdLsen7hqRV96XV9y09HXv2qvPJX/t1n2sf
+        eaVZbJcmNOOUkq7iUp79avlPeNVmaxdZazFvF1ienyO9/XoAH6eEEktxRqKhFnNRcSIAVt6r
+        Hl4CAAA=
+X-CMS-MailID: 20200117123454eucas1p1e8f0e527dc39f1e0993b14c7098002e4
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200117123454eucas1p1e8f0e527dc39f1e0993b14c7098002e4
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200117123454eucas1p1e8f0e527dc39f1e0993b14c7098002e4
+References: <20200117123448.13807-1-m.szyprowski@samsung.com>
+        <CGME20200117123454eucas1p1e8f0e527dc39f1e0993b14c7098002e4@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
+Panfrost driver provides a devfreq driver for the Mali GPU and allows to
+scale GPU core frequency. Enable support for devfreq thermal integration
+to enable cooling of GPU thermal zone by reducing GPU core frequency.
 
-On Fri, Jan 17, 2020 at 01:13:14PM +0300, Kirill Tkhai wrote:
-> On 17.01.2020 02:59, Minchan Kim wrote:
-> > From: Oleksandr Natalenko <oleksandr@redhat.com>
-> > 
-> > It all began with the fact that KSM works only on memory that is marked
-> > by madvise(). And the only way to get around that is to either:
-> > 
-> >   * use LD_PRELOAD; or
-> >   * patch the kernel with something like UKSM or PKSM.
-> > 
-> > (i skip ptrace can of worms here intentionally)
-> > 
-> > To overcome this restriction, lets employ a new remote madvise API. This
-> > can be used by some small userspace helper daemon that will do auto-KSM
-> > job for us.
-> > 
-> > I think of two major consumers of remote KSM hints:
-> > 
-> >   * hosts, that run containers, especially similar ones and especially in
-> >     a trusted environment, sharing the same runtime like Node.js;
-> > 
-> >   * heavy applications, that can be run in multiple instances, not
-> >     limited to opensource ones like Firefox, but also those that cannot be
-> >     modified since they are binary-only and, maybe, statically linked.
-> > 
-> > Speaking of statistics, more numbers can be found in the very first
-> > submission, that is related to this one [1]. For my current setup with
-> > two Firefox instances I get 100 to 200 MiB saved for the second instance
-> > depending on the amount of tabs.
-> > 
-> > 1 FF instance with 15 tabs:
-> > 
-> >    $ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
-> >    410
-> > 
-> > 2 FF instances, second one has 12 tabs (all the tabs are different):
-> > 
-> >    $ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
-> >    592
-> > 
-> > At the very moment I do not have specific numbers for containerised
-> > workload, but those should be comparable in case the containers share
-> > similar/same runtime.
-> > 
-> > [1] https://lore.kernel.org/patchwork/patch/1012142/
-> > 
-> > Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
-> > Signed-off-by: Minchan Kim <minchan@google.com>
-> > ---
-> >  mm/madvise.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/mm/madvise.c b/mm/madvise.c
-> > index 84cffd0900f1..89557998d287 100644
-> > --- a/mm/madvise.c
-> > +++ b/mm/madvise.c
-> > @@ -1000,6 +1000,8 @@ process_madvise_behavior_valid(int behavior)
-> >  	switch (behavior) {
-> >  	case MADV_COLD:
-> >  	case MADV_PAGEOUT:
-> > +	case MADV_MERGEABLE:
-> > +	case MADV_UNMERGEABLE:
-> >  		return true;
-> >  	default:
-> >  		return false;
-> 
-> Remote madvise on KSM parameters should be OK.
-> 
-> One thing is madvise_behavior_valid() places MADV_MERGEABLE/UNMERGEABLE
-> in #ifdef brackes, so -EINVAL is returned by madvise() syscall if KSM
-> is not enabled. Here we should follow the same way for symmetry.
-> 
+This fixes following warning during boot on Exynos5422-based Odroid XU4:
 
-Thanks for the suggestion.
+panfrost 11800000.gpu: [drm:panfrost_devfreq_init] Failed to register cooling device
 
-Minchan, shall you adopt it directly, or I should send a separate patch?
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ arch/arm/configs/exynos_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos_defconfig
+index c05263de08a5..d80dbdaf00f8 100644
+--- a/arch/arm/configs/exynos_defconfig
++++ b/arch/arm/configs/exynos_defconfig
+@@ -155,6 +155,7 @@ CONFIG_SENSORS_NTC_THERMISTOR=y
+ CONFIG_SENSORS_PWM_FAN=y
+ CONFIG_SENSORS_INA2XX=y
+ CONFIG_CPU_THERMAL=y
++CONFIG_DEVFREQ_THERMAL=y
+ CONFIG_THERMAL_EMULATION=y
+ CONFIG_WATCHDOG=y
+ CONFIG_S3C2410_WATCHDOG=y
 -- 
-  Best regards,
-    Oleksandr Natalenko (post-factum)
-    Senior Software Maintenance Engineer
+2.17.1
 
