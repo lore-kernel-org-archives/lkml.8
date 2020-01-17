@@ -2,164 +2,83 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED5EAC33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC65C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C02E92073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:28:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18190206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:30:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KGwKWFKU"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="WwRUF9vK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbgAQN2U (ORCPT
+        id S1727012AbgAQNab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 08:28:20 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42967 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbgAQN2U (ORCPT
+        Fri, 17 Jan 2020 08:30:31 -0500
+Received: from mail-qk1-f176.google.com ([209.85.222.176]:43257 "EHLO
+        mail-qk1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726861AbgAQNab (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 08:28:20 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 4so11969385pfz.9
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 05:28:20 -0800 (PST)
+        Fri, 17 Jan 2020 08:30:31 -0500
+Received: by mail-qk1-f176.google.com with SMTP id t129so22622098qke.10
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 05:30:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0Uq9w8KRDPv2naiVGbzo1YruGuVK6eQQzWbOQYDeecw=;
-        b=KGwKWFKU8LpyyRPZZIjn241CT5YAMcsFkRMS+vcUU6Je9CLIHqi9KEsRG4O9zYbk/K
-         CTzDWNvPcyEppR+1PrMUEclVDew8SRrSgPmu2kKu8VJRoZ9zPOWucfSNBDxyEL3QvIAn
-         nOkR5Hwn6wa/UYgS+dyHidzR8Y5c9EQf7wORozmG5TEGsoSZCWZWX37qeWxU0tCx+OnT
-         nv0wcfy3+xUicbIu1uTVyRU/jyZ2sIGQTZxnZhJMjwmUXAj+s3dR3lgUkcdNnRCPxLYL
-         bLjfBjTD9xJl45zF+TnjXx/v73Vnh/tgZbjdVJD8JBisXrb2v/P2AsVANsj6YkWyrvJN
-         YhPw==
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=U4/RhVLZS3DfSJ3cg9+WjUoTzOlLIbTI9zPCVAjn1nY=;
+        b=WwRUF9vKt/5s/PIHYqrzuoQMr2a8YirD708F+kCBoHzuyHxGQbvciWODf9JXNvicud
+         fqkP5IagKLSw36fHs65g0Fuc+OBpucXWd0khkY0AI6jOJOaB2wCwCz+Fem2Dxod2uAOF
+         7DqLsEJ0gJGCKrTJ1dZ5pI5Z+1GLrrAKe1wYPDFdTrrQDKYdNeRC8Udk9m0cvmXuhZoH
+         gitDSWd2DQbEKfWmn+/wi5caB9h9sCIjcwUX5lfPy+BRMxU+eA9KRNN0i8RazrzcxYAj
+         SgGSUMOXtda41CAn75tZhLeh2/If/6LK07j7rx65Jk9ahagGfAX1JfzmuLeHrI2//Zs+
+         UyLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0Uq9w8KRDPv2naiVGbzo1YruGuVK6eQQzWbOQYDeecw=;
-        b=A3uWlbN/XNkvb3xKdBRS1S0EdPeEZrCGAsUW0LItjOERsrJ0okMxw2i8NqvDxf4MWB
-         qxCqFq6BV5MIJHFOSmMrduJebed0YzblPGjHFe2/1l6dkcmcGdRvDcC20vflWVGNDFeS
-         QQT2in5UhCz3wB4781szCsSZHfbbD/7uUDFBanenBl5CsRSlaS5p1IO4PRX+9f51sPtr
-         ukuz2+R/Sm6SwLhEjzM23xH4XVheuLwJ7KOndID0F1AaQeyRv5O94PI6Ob7u3/t3mQkf
-         Fp/lxvy1t32BljgieGjMXLbrFzByBZ/k39JvgjuYKGYkKLt1iV35WK/cRUWmtklMplAI
-         BRVA==
-X-Gm-Message-State: APjAAAWQ4xjJNhlr56d9HUPOR8X0NBSsRAJcgq9EI+mKwI8GlphV7ipS
-        i21L+g2PAIEKMnD9Uk/iouM=
-X-Google-Smtp-Source: APXvYqyRa5bPkS0cG3zloOH2k5dMVEL4C0YaP/hjBpfFF4s/zTbF/WZZ2pyaRtjPo4Vg3Yz+SB8szw==
-X-Received: by 2002:a63:28c7:: with SMTP id o190mr44013043pgo.394.1579267699670;
-        Fri, 17 Jan 2020 05:28:19 -0800 (PST)
-Received: from localhost.localdomain ([103.211.17.168])
-        by smtp.googlemail.com with ESMTPSA id i3sm30798353pfo.72.2020.01.17.05.28.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 05:28:18 -0800 (PST)
-From:   Amol Grover <frextrite@gmail.com>
-To:     Corey Minyard <minyard@acm.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Amol Grover <frextrite@gmail.com>
-Subject: [PATCH v3] drivers: char: ipmi: ipmi_msghandler: Pass lockdep expression to RCU lists
-Date:   Fri, 17 Jan 2020 18:55:22 +0530
-Message-Id: <20200117132521.31020-1-frextrite@gmail.com>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=U4/RhVLZS3DfSJ3cg9+WjUoTzOlLIbTI9zPCVAjn1nY=;
+        b=uMI68xPs0A6//SezN68pFH08C/JjSzneeSNF0TTKPUvm265V7FbHpVS9qVWev6++7S
+         Pjet3hzkCOtdMdx7pg4Yvk9+55RxXBpYtKLuXUygb/Q7R9uLKuyZ4L+i5BrTyH232DuZ
+         YNL+ltU68w2+hxx7dBtUT1Sde5zcyWe2rp4gYBuJneb7eSqhpmB7jPXMuKeWKSXtngy9
+         EBkOYb8S0bGNxZjIa0vCbbKTNOYhfuJfqRDHhPjBbaS+pRgcHqrZNWNSE6NHtQHQ7C/B
+         vEDysZKAmbk+7rZ2Xxta67UIPJn4hFMWcDuircAFUsAgrTXg+grj0M5kkE6uFUORPFJM
+         QZDg==
+X-Gm-Message-State: APjAAAWvOBfcaCqASaOBP5Fnm0Ialt1cpg0BtwnhrYvOHOCALkeKXq1h
+        FZDMceKYfLh/d1k+xEhFIKHPGxevzHSNjw==
+X-Google-Smtp-Source: APXvYqylfHOqkWU3ftpd4sx7sBeSiuzylqb2aIYlnoIXhgDLdJTrg4fN/JqIAWiMZCi38UjMkMiwVQ==
+X-Received: by 2002:a37:7005:: with SMTP id l5mr36899936qkc.334.1579267828641;
+        Fri, 17 Jan 2020 05:30:28 -0800 (PST)
+Received: from ?IPv6:2600:1000:b029:6649:b819:fcc3:734e:5994? ([2600:1000:b029:6649:b819:fcc3:734e:5994])
+        by smtp.gmail.com with ESMTPSA id v4sm12909646qtd.24.2020.01.17.05.30.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jan 2020 05:30:26 -0800 (PST)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH -next v4] mm/hotplug: silence a lockdep splat with printk()
+Date:   Fri, 17 Jan 2020 08:30:24 -0500
+Message-Id: <D58FE32E-C5D9-4812-BCD8-BB3E6C4A7C55@lca.pw>
+References: <6f924bf7-835b-0176-1b12-aff4f1f4be0e@redhat.com>
+Cc:     akpm@linux-foundation.org, mhocko@kernel.org,
+        sergey.senozhatsky.work@gmail.com, pmladek@suse.com,
+        rostedt@goodmis.org, peterz@infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@suse.com>
+In-Reply-To: <6f924bf7-835b-0176-1b12-aff4f1f4be0e@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-intf->cmd_rcvrs is traversed with list_for_each_entry_rcu
-outside an RCU read-side critical section but under the
-protection of intf->cmd_rcvrs_mutex.
 
-ipmi_interfaces is traversed using list_for_each_entry_rcu
-outside an RCU read-side critical section but under the protection
-of ipmi_interfaces_mutex.
 
-Hence, add the corresponding lockdep expression to the list traversal
-primitive to silence false-positive lockdep warnings, and
-harden RCU lists.
+> On Jan 17, 2020, at 7:53 AM, David Hildenbrand <david@redhat.com> wrote:
+> 
+> Can't we just use the zone_idx() stored in the memmap instead?
 
-Add macro for the corresponding lockdep expression to make the code
-clean and concise.
-
-Signed-off-by: Amol Grover <frextrite@gmail.com>
----
-v3:
-- Remove rcu_read_lock_held() from lockdep expression since it is
-  implicitly checked.
-- Remove unintended macro usage.
- 
-v2:
-- Fix sparse error
-  CHECK: Alignment should match open parenthesis
-
- drivers/char/ipmi/ipmi_msghandler.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
-index cad9563f8f48..64ba16dcb681 100644
---- a/drivers/char/ipmi/ipmi_msghandler.c
-+++ b/drivers/char/ipmi/ipmi_msghandler.c
-@@ -618,6 +618,8 @@ static DEFINE_MUTEX(ipmidriver_mutex);
- 
- static LIST_HEAD(ipmi_interfaces);
- static DEFINE_MUTEX(ipmi_interfaces_mutex);
-+#define ipmi_interfaces_mutex_held() \
-+	lockdep_is_held(&ipmi_interfaces_mutex)
- static struct srcu_struct ipmi_interfaces_srcu;
- 
- /*
-@@ -1321,7 +1323,8 @@ static void _ipmi_destroy_user(struct ipmi_user *user)
- 	 * synchronize_srcu()) then free everything in that list.
- 	 */
- 	mutex_lock(&intf->cmd_rcvrs_mutex);
--	list_for_each_entry_rcu(rcvr, &intf->cmd_rcvrs, link) {
-+	list_for_each_entry_rcu(rcvr, &intf->cmd_rcvrs, link,
-+				lockdep_is_held(&intf->cmd_rcvrs_mutex)) {
- 		if (rcvr->user == user) {
- 			list_del_rcu(&rcvr->link);
- 			rcvr->next = rcvrs;
-@@ -1599,7 +1602,8 @@ static struct cmd_rcvr *find_cmd_rcvr(struct ipmi_smi *intf,
- {
- 	struct cmd_rcvr *rcvr;
- 
--	list_for_each_entry_rcu(rcvr, &intf->cmd_rcvrs, link) {
-+	list_for_each_entry_rcu(rcvr, &intf->cmd_rcvrs, link,
-+				lockdep_is_held(&intf->cmd_rcvrs_mutex)) {
- 		if ((rcvr->netfn == netfn) && (rcvr->cmd == cmd)
- 					&& (rcvr->chans & (1 << chan)))
- 			return rcvr;
-@@ -1614,7 +1618,8 @@ static int is_cmd_rcvr_exclusive(struct ipmi_smi *intf,
- {
- 	struct cmd_rcvr *rcvr;
- 
--	list_for_each_entry_rcu(rcvr, &intf->cmd_rcvrs, link) {
-+	list_for_each_entry_rcu(rcvr, &intf->cmd_rcvrs, link,
-+				lockdep_is_held(&intf->cmd_rcvrs_mutex)) {
- 		if ((rcvr->netfn == netfn) && (rcvr->cmd == cmd)
- 					&& (rcvr->chans & chans))
- 			return 0;
-@@ -3450,7 +3455,8 @@ int ipmi_add_smi(struct module         *owner,
- 	/* Look for a hole in the numbers. */
- 	i = 0;
- 	link = &ipmi_interfaces;
--	list_for_each_entry_rcu(tintf, &ipmi_interfaces, link) {
-+	list_for_each_entry_rcu(tintf, &ipmi_interfaces, link,
-+				ipmi_interfaces_mutex_held()) {
- 		if (tintf->intf_num != i) {
- 			link = &tintf->link;
- 			break;
--- 
-2.24.1
-
+I am having a hard time to guess what that means. Care to elaborate?
