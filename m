@@ -2,171 +2,113 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C685C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6836AC33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:23:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D2B82082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:23:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 494722073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:23:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbgAQLXm convert rfc822-to-8bit (ORCPT
+        id S1727047AbgAQLXs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 06:23:42 -0500
-Received: from mx1.unisoc.com ([222.66.158.135]:53860 "EHLO
-        SHSQR01.spreadtrum.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726785AbgAQLXm (ORCPT
+        Fri, 17 Jan 2020 06:23:48 -0500
+Received: from mout.kundenserver.de ([217.72.192.75]:51133 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726785AbgAQLXr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 06:23:42 -0500
-Received: from ig2.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-        by SHSQR01.spreadtrum.com with ESMTPS id 00HBLTXn074222
-        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
-        Fri, 17 Jan 2020 19:21:29 +0800 (CST)
-        (envelope-from Orson.Zhai@unisoc.com)
-Received: from lenovo (10.0.74.130) by BJMBX01.spreadtrum.com (10.0.64.7) with
- Microsoft SMTP Server (TLS) id 15.0.847.32; Fri, 17 Jan 2020 19:22:06 +0800
-Date:   Fri, 17 Jan 2020 19:22:02 +0800
-From:   Orson Zhai <orson.zhai@spreadtrum.com>
-To:     Lee Jones <lee.jones@linaro.org>
-CC:     Orson Zhai <orson.zhai@unisoc.com>, Rob Herring <robh@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, <linux-kernel@vger.kernel.org>,
-        <baolin.wang@unisoc.com>, <kevin.tang@unisoc.com>,
-        <chunyan.zhang@unisoc.com>, <liangcai.fan@unisoc.com>
-Subject: Re: [PATCH v3] mfd: syscon: Add arguments support for syscon
- reference
-Message-ID: <20200117112202.GG19966@lenovo>
-References: <1576037311-6052-1-git-send-email-orson.zhai@unisoc.com>
- <20200116135207.GS325@dell>
+        Fri, 17 Jan 2020 06:23:47 -0500
+Received: from mail-qt1-f172.google.com ([209.85.160.172]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MZCX1-1j5QHY2xEn-00V6oc; Fri, 17 Jan 2020 12:23:45 +0100
+Received: by mail-qt1-f172.google.com with SMTP id w47so21472012qtk.4;
+        Fri, 17 Jan 2020 03:23:45 -0800 (PST)
+X-Gm-Message-State: APjAAAWpDkR505DpUSrB+mwD4UiSMh6wouTVvTnUJKE/MOEe0a91APQm
+        Pb5WQBHH+C/O3a/WBTA+ii9h4GkFiFLkb+GZvWw=
+X-Google-Smtp-Source: APXvYqyvj+qVxj0YCsmU7P1XOliY6rtqSxryof0W+wMqmW4n2F+6uFJgm4139nMmKoUQOXfgYZ5UmpVyaFMrptCFtJ8=
+X-Received: by 2002:ac8:47d3:: with SMTP id d19mr6878361qtr.142.1579260224350;
+ Fri, 17 Jan 2020 03:23:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200116135207.GS325@dell>
-X-Originating-IP: [10.0.74.130]
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX01.spreadtrum.com (10.0.64.7)
-X-MAIL: SHSQR01.spreadtrum.com 00HBLTXn074222
+References: <cover.1579248206.git.michal.simek@xilinx.com> <0274919c5e3b134df19d943f99cb7e84e5135ccd.1579248206.git.michal.simek@xilinx.com>
+In-Reply-To: <0274919c5e3b134df19d943f99cb7e84e5135ccd.1579248206.git.michal.simek@xilinx.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 17 Jan 2020 12:23:28 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a14ASj7Bq7pntaxPRomGKfAALyD6GGR-APYEdh=ja6UkQ@mail.gmail.com>
+Message-ID: <CAK8P3a14ASj7Bq7pntaxPRomGKfAALyD6GGR-APYEdh=ja6UkQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] asm-generic: Make dma-contiguous.h a mandatory
+ include/asm header
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michal Simek <monstr@monstr.eu>, git@xilinx.com,
+        Christoph Hellwig <hch@lst.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-riscv@lists.infradead.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Guo Ren <guoren@kernel.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Wesley Terpstra <wesley@sifive.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        linux-xtensa@linux-xtensa.org, "H. Peter Anvin" <hpa@zytor.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Chris Zankel <chris@zankel.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        James Hogan <jhogan@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:iqPNv77XDTa0tcdeV36iCL4kfPwGX7DaQUkNLXyOMGI9eqV7hw2
+ H7H8wvbSYKPKWAxlikAxs4SyQ4WFfIGfTkBuPuxFJAcjkRVoKvBAGMdd+0AqrQ4kYmZDv56
+ NG+o9UWNcnUqnGfCH4/xpJ5H5A1z2RWo9rsTO0Do372LyosgOEHVZX37UPM+oR/3H3ZmjJ8
+ Lit61zkwDJd0i4MTP7/4Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:cdafQtaYOIk=:zkk7ZvnyKm5EzeZkRU0des
+ 8xFhpBTVhX8NAcMqv/hFyL+BrjmrPh0+fIBEHTwIEGkx4HvtTmJmd/nd0m3mdhAyLNJCgGdt3
+ zHQq2IfKyssLKH1Yf+aJNRxaL00wTSm18klJP5cO+mMv2n8mbjpgmoKy9atPR6UWlSjH546kr
+ NRm/2oTKKd5WLZC7Q1gXGTw+JijjwIJ+r+g8CVz12+KPeFqgvNxPklu40Aai8drjGQwO/WLnJ
+ M4xiBOwQACAV78iS0mnZ6IuPR35mSbKJVgDHlxVpSabIwgv4CildM6wTWYcSPhtrrgfsm51zC
+ X38DppkbP8Ulu0LpD99CUPLs8ArVPgH6L0D3WsCgUAsDWG1weey2RBOOAulBOdpgwGIJ/aTJG
+ pap0Ml9aoFI5gYwz1h7SEBrRqbAwNrK2cSlCIDjMhJh2X1JIHFXFJLXFdtYYb+DAOtlJOEMvG
+ f8Pe10L0ZudN1b8VLNG83uuCAJefv391N1G6sjjiOSo0vqZRDi5UaljwHD8w4muPGhTOPMnJt
+ z5zGUZhHLl8pKBCuyvSvgjR3YULaDGszzZvoyzLJ1FB1S0pfj+Gk6LlZLTecI+qaq+Sb752Mr
+ W56rj7Jlw2mo1n6c8WVbyA+mPO7L4Ls2FEoTR6PoXv/BvSJoUxfp8l9i1pSLWKd6PCx3PUQ+U
+ k4tBMNo9uPeYOOzuOYXNyTUv07SX2ChoeSjJYRaD10+QlbfNRNCl80o4OOet7V4sc0eSW2L/2
+ y4yzX7iJQm93yFo1nFXHUAqr27x5yIwy789HxeTdtdFbU3hHrXJLXQxU6tIlLjSqrxQSkzwXf
+ t3B+lU27NtDFgYsH1mQA8h0IulyXdVJCsHk3z2h0luNa6cBukEVBkGJMIxtwUz+EI7Dc6Vu61
+ I0+Q378NUSEsEKgowPXw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lee,
+On Fri, Jan 17, 2020 at 9:03 AM Michal Simek <michal.simek@xilinx.com> wrote:
+>
+> dma-continuguous.h is generic for all architectures except arm32 which has
+> its own version.
+>
+> Similar change was done for msi.h by commit a1b39bae16a6
+> ("asm-generic: Make msi.h a mandatory include/asm header")
+>
+> Suggested-by: Christoph Hellwig <hch@infradead.org>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> ---
 
-On Thu, Jan 16, 2020 at 01:52:07PM +0000, Lee Jones wrote:
-> On Wed, 11 Dec 2019, Orson Zhai wrote:
->
-> > There are a lot of similar global registers being used across multiple SoCs
-> > from Unisoc. But most of these registers are assigned with different offset
-> > for different SoCs. It is hard to handle all of them in an all-in-one
-> > kernel image.
-> >
-> > Add a helper function to get regmap with arguments where we could put some
-> > extra information such as the offset value.
-> >
-> > Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
-> > Tested-by: Baolin Wang <baolin.wang@unisoc.com>
-> > ---
-> >  drivers/mfd/syscon.c       | 29 +++++++++++++++++++++++++++++
-> >  include/linux/mfd/syscon.h | 14 ++++++++++++++
-> >  2 files changed, 43 insertions(+)
->
-> Something really odd is happening when I try to apply this patch.
->
-> Patchwork doesn't like it either.
->
-> Could you please rebase it and re-send using `git send-mail`, thanks.
-
-I have sent v3 to you with rebasing on v5.5-rc6.
->
-> Also apply my and Arnd's Ack when re-sending.
-
-Done, but add reviewed-by for Arnd as he indicated at previous mail.
-
-Best,
-Orson
-
->
-> > diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-> > index e22197c..2918b05 100644
-> > --- a/drivers/mfd/syscon.c
-> > +++ b/drivers/mfd/syscon.c
-> > @@ -224,6 +224,35 @@ struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
-> >  }
-> >  EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_phandle);
-> >
-> > +struct regmap *syscon_regmap_lookup_by_phandle_args(struct device_node *np,
-> > +                                       const char *property,
-> > +                                       int arg_count,
-> > +                                       unsigned int *out_args)
-> > +{
-> > +       struct device_node *syscon_np;
-> > +       struct of_phandle_args args;
-> > +       struct regmap *regmap;
-> > +       unsigned int index;
-> > +       int rc;
-> > +
-> > +       rc = of_parse_phandle_with_fixed_args(np, property, arg_count,
-> > +                       0, &args);
-> > +       if (rc)
-> > +               return ERR_PTR(rc);
-> > +
-> > +       syscon_np = args.np;
-> > +       if (!syscon_np)
-> > +               return ERR_PTR(-ENODEV);
-> > +
-> > +       regmap = syscon_node_to_regmap(syscon_np);
-> > +       for (index = 0; index < arg_count; index++)
-> > +               out_args[index] = args.args[index];
-> > +       of_node_put(syscon_np);
-> > +
-> > +       return regmap;
-> > +}
-> > +EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_phandle_args);
-> > +
-> >  static int syscon_probe(struct platform_device *pdev)
-> >  {
-> >         struct device *dev = &pdev->dev;
-> > diff --git a/include/linux/mfd/syscon.h b/include/linux/mfd/syscon.h
-> > index 112dc66..714cab1 100644
-> > --- a/include/linux/mfd/syscon.h
-> > +++ b/include/linux/mfd/syscon.h
-> > @@ -23,6 +23,11 @@ extern struct regmap *syscon_regmap_lookup_by_compatible(const char *s);
-> >  extern struct regmap *syscon_regmap_lookup_by_phandle(
-> >                                         struct device_node *np,
-> >                                         const char *property);
-> > +extern struct regmap *syscon_regmap_lookup_by_phandle_args(
-> > +                                       struct device_node *np,
-> > +                                       const char *property,
-> > +                                       int arg_count,
-> > +                                       unsigned int *out_args);
-> >  #else
-> >  static inline struct regmap *device_node_to_regmap(struct device_node *np)
-> >  {
-> > @@ -45,6 +50,15 @@ static inline struct regmap *syscon_regmap_lookup_by_phandle(
-> >  {
-> >         return ERR_PTR(-ENOTSUPP);
-> >  }
-> > +
-> > +static struct regmap *syscon_regmap_lookup_by_phandle_args(
-> > +                                       struct device_node *np,
-> > +                                       const char *property,
-> > +                                       int arg_count,
-> > +                                       unsigned int *out_args)
-> > +{
-> > +       return ERR_PTR(-ENOTSUPP);
-> > +}
-> >  #endif
-> >
-> >  #endif /* __LINUX_MFD_SYSCON_H__ */
->
-> --
-> Lee Jones [李琼斯]
-> Linaro Services Technical Lead
-> Linaro.org │ Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
-________________________________
- This email (including its attachments) is intended only for the person or entity to which it is addressed and may contain information that is privileged, confidential or otherwise protected from disclosure. Unauthorized use, dissemination, distribution or copying of this email or the information herein or taking any action in reliance on the contents of this email or the information herein, by anyone other than the intended recipient, or an employee or agent responsible for delivering the message to the intended recipient, is strictly prohibited. If you are not the intended recipient, please do not read, copy, use or disclose any part of this e-mail to others. Please notify the sender immediately and permanently delete this e-mail and any attachments if you received it in error. Internet communications cannot be guaranteed to be timely, secure, error-free or virus-free. The sender does not accept liability for any errors or omissions.
-本邮件及其附件具有保密性质，受法律保护不得泄露，仅发送给本邮件所指特定收件人。严禁非经授权使用、宣传、发布或复制本邮件或其内容。若非该特定收件人，请勿阅读、复制、 使用或披露本邮件的任何内容。若误收本邮件，请从系统中永久性删除本邮件及所有附件，并以回复邮件的方式即刻告知发件人。无法保证互联网通信及时、安全、无误或防毒。发件人对任何错漏均不承担责任。
+Acked-by: Arnd Bergmann <arnd@arndb.de>
