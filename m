@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 161D4C33CB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF12C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E255524653
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7975B246A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:09:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbgAQKJR (ORCPT
+        id S1729342AbgAQKJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 05:09:17 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55428 "EHLO
+        Fri, 17 Jan 2020 05:09:29 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55448 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729162AbgAQKJN (ORCPT
+        with ESMTP id S1729304AbgAQKJ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 05:09:13 -0500
+        Fri, 17 Jan 2020 05:09:27 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1isOYX-0005Qm-Ur; Fri, 17 Jan 2020 11:08:46 +0100
+        id 1isOYw-0005b0-6A; Fri, 17 Jan 2020 11:09:10 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id AEFDD1C19CD;
-        Fri, 17 Jan 2020 11:08:40 +0100 (CET)
-Date:   Fri, 17 Jan 2020 10:08:40 -0000
-From:   "tip-bot2 for Hewenliang" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E07E61C19CD;
+        Fri, 17 Jan 2020 11:09:09 +0100 (CET)
+Date:   Fri, 17 Jan 2020 10:09:09 -0000
+From:   "tip-bot2 for Waiman Long" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] idle: fix spelling mistake "iterrupts" -> "interrupts"
-Cc:     Hewenliang <hewenliang4@huawei.com>,
+Subject: [tip: locking/core] locking/lockdep: Fix lockdep_stats indentation problem
+Cc:     Waiman Long <longman@redhat.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200110025604.34373-1-hewenliang4@huawei.com>
-References: <20200110025604.34373-1-hewenliang4@huawei.com>
+        Bart Van Assche <bvanassche@acm.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20191211213139.29934-1-longman@redhat.com>
+References: <20191211213139.29934-1-longman@redhat.com>
 MIME-Version: 1.0
-Message-ID: <157925572055.396.10697981012861050378.tip-bot2@tip-bot2>
+Message-ID: <157925574974.396.9931702297640535543.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -55,37 +55,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
+The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     3e0de271fff77abb933f1b69c213854c3eda9125
-Gitweb:        https://git.kernel.org/tip/3e0de271fff77abb933f1b69c213854c3eda9125
-Author:        Hewenliang <hewenliang4@huawei.com>
-AuthorDate:    Thu, 09 Jan 2020 21:56:04 -05:00
+Commit-ID:     a030f9767da1a6bbcec840fc54770eb11c2414b6
+Gitweb:        https://git.kernel.org/tip/a030f9767da1a6bbcec840fc54770eb11c2414b6
+Author:        Waiman Long <longman@redhat.com>
+AuthorDate:    Wed, 11 Dec 2019 16:31:39 -05:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Fri, 17 Jan 2020 10:19:22 +01:00
+CommitterDate: Fri, 17 Jan 2020 10:19:30 +01:00
 
-idle: fix spelling mistake "iterrupts" -> "interrupts"
+locking/lockdep: Fix lockdep_stats indentation problem
 
-There is a spelling misake in comments of cpuidle_idle_call. Fix it.
+It was found that two lines in the output of /proc/lockdep_stats have
+indentation problem:
 
-Signed-off-by: Hewenliang <hewenliang4@huawei.com>
+  # cat /proc/lockdep_stats
+     :
+   in-process chains:                   25057
+   stack-trace entries:                137827 [max: 524288]
+   number of stack traces:        7973
+   number of stack hash chains:   6355
+   combined max dependencies:      1356414598
+   hardirq-safe locks:                     57
+   hardirq-unsafe locks:                 1286
+     :
+
+All the numbers displayed in /proc/lockdep_stats except the two stack
+trace numbers are formatted with a field with of 11. To properly align
+all the numbers, a field width of 11 is now added to the two stack
+trace numbers.
+
+Fixes: 8c779229d0f4 ("locking/lockdep: Report more stack trace statistics")
+Signed-off-by: Waiman Long <longman@redhat.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Link: https://lkml.kernel.org/r/20200110025604.34373-1-hewenliang4@huawei.com
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Link: https://lkml.kernel.org/r/20191211213139.29934-1-longman@redhat.com
 ---
- kernel/sched/idle.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/locking/lockdep_proc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-index ffa959e..b743bf3 100644
---- a/kernel/sched/idle.c
-+++ b/kernel/sched/idle.c
-@@ -158,7 +158,7 @@ static void cpuidle_idle_call(void)
- 	/*
- 	 * Suspend-to-idle ("s2idle") is a system state in which all user space
- 	 * has been frozen, all I/O devices have been suspended and the only
--	 * activity happens here and in iterrupts (if any).  In that case bypass
-+	 * activity happens here and in interrupts (if any). In that case bypass
- 	 * the cpuidle governor and go stratight for the deepest idle state
- 	 * available.  Possibly also suspend the local tick and the entire
- 	 * timekeeping to prevent timer interrupts from kicking us out of idle
+diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
+index dadb7b7..9bb6d24 100644
+--- a/kernel/locking/lockdep_proc.c
++++ b/kernel/locking/lockdep_proc.c
+@@ -286,9 +286,9 @@ static int lockdep_stats_show(struct seq_file *m, void *v)
+ 	seq_printf(m, " stack-trace entries:           %11lu [max: %lu]\n",
+ 			nr_stack_trace_entries, MAX_STACK_TRACE_ENTRIES);
+ #if defined(CONFIG_TRACE_IRQFLAGS) && defined(CONFIG_PROVE_LOCKING)
+-	seq_printf(m, " number of stack traces:        %llu\n",
++	seq_printf(m, " number of stack traces:        %11llu\n",
+ 		   lockdep_stack_trace_count());
+-	seq_printf(m, " number of stack hash chains:   %llu\n",
++	seq_printf(m, " number of stack hash chains:   %11llu\n",
+ 		   lockdep_stack_hash_count());
+ #endif
+ 	seq_printf(m, " combined max dependencies:     %11u\n",
