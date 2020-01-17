@@ -2,116 +2,103 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC5A1C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4871AC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADA412087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 273512087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:11:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729475AbgAQKKc (ORCPT
+        id S1729191AbgAQKLO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 05:10:32 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:51849 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729211AbgAQKK3 (ORCPT
+        Fri, 17 Jan 2020 05:11:14 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:64928 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726890AbgAQKLN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 05:10:29 -0500
-Received: from mail-qt1-f179.google.com ([209.85.160.179]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1Mo7if-1jPZsX3TI3-00papY; Fri, 17 Jan 2020 11:10:27 +0100
-Received: by mail-qt1-f179.google.com with SMTP id w8so6929852qts.11;
-        Fri, 17 Jan 2020 02:10:26 -0800 (PST)
-X-Gm-Message-State: APjAAAUEDzsZQi9ARRL4u2fVW9n7pv71gxBBz7zQFldLOUe+9rwitPKI
-        y2LXShZzdxt1zNksoOxbOwYUoHYVgj34QmX8Xsk=
-X-Google-Smtp-Source: APXvYqwJseIcLf52SoCo+jtyEMNWCmLScJZGo/aM/tEE3YgOeqebesjzIckzh3dwWAmCE7mLdstmifhUAdg/ilxjg+0=
-X-Received: by 2002:ac8:768d:: with SMTP id g13mr6672928qtr.7.1579255825449;
- Fri, 17 Jan 2020 02:10:25 -0800 (PST)
+        Fri, 17 Jan 2020 05:11:13 -0500
+X-AuditID: c0a8fbf4-183ff70000001fa6-cc-5e2188408057
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id E9.DA.08102.048812E5; Fri, 17 Jan 2020 11:11:12 +0100 (CET)
+Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0439.000; Fri, 17 Jan 2020 11:11:07 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "lee.jones@linaro.org" <lee.jones@linaro.org>
+CC:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH] mfd: bd70528: Fix hour register mask
+Thread-Topic: [PATCH] mfd: bd70528: Fix hour register mask
+Thread-Index: AQHVy33u6ExLp0ReyUCqWPc5BSkWM6fubBCAgAADpgCAAAKhgIAAIoKAgAAASAA=
+Date:   Fri, 17 Jan 2020 10:11:06 +0000
+Message-ID: <1c5c4c8bb1c6070bb98a59f008b63eeb742f5af1.camel@fi.rohmeurope.com>
+References: <20200115082933.GA29117@localhost.localdomain>
+         <83e8e1ecc40a58e2e6d1960bbb41c8dcfe730ce1.camel@fi.rohmeurope.com>
+         <20200117075714.GA1822218@kroah.com>
+         <b5835b0fe842a01888d66c07281e13fc64c2c9ef.camel@fi.rohmeurope.com>
+         <20200117101009.GC15507@dell>
+In-Reply-To: <20200117101009.GC15507@dell>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5A7F71BB26483645B325C84A167A07AD@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <cover.1579248206.git.michal.simek@xilinx.com> <0274919c5e3b134df19d943f99cb7e84e5135ccd.1579248206.git.michal.simek@xilinx.com>
-In-Reply-To: <0274919c5e3b134df19d943f99cb7e84e5135ccd.1579248206.git.michal.simek@xilinx.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 17 Jan 2020 11:10:09 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3bfO9EdL6o4+yY5BCw0pc1ANYocVjyohmG34jcjLiWpA@mail.gmail.com>
-Message-ID: <CAK8P3a3bfO9EdL6o4+yY5BCw0pc1ANYocVjyohmG34jcjLiWpA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] asm-generic: Make dma-contiguous.h a mandatory
- include/asm header
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michal Simek <monstr@monstr.eu>, git@xilinx.com,
-        Christoph Hellwig <hch@lst.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-riscv@lists.infradead.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Guo Ren <guoren@kernel.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Wesley Terpstra <wesley@sifive.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        linux-xtensa@linux-xtensa.org, "H. Peter Anvin" <hpa@zytor.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Chris Zankel <chris@zankel.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        James Hogan <jhogan@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:NoA6lR5asYNCyYKhe9jWMGVyZrcIPwFSmU/9i+MCsvjD7l/q+0E
- xamkGFPsa8WqWcpoTbKLa0HTFaxvsRDU3Yg1Tjs5VjPvEa0YzXlOTtB3H+HkUQLhOK18FNM
- T7d7QrUxg40WjYU29hDjIqfDeU8vaco2MiUSREKxtCEILK7r8Ok0/re0d55j9UMA+dbmPdd
- Q5ORnP1qoOhIYkN4s6C9Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:moewDwzL1zY=:Og/pj7BHnPsRu+8o/xR4jd
- /5FTFityP5vYdrAZ8u4f+NKv6rFWAXiKCGvUNOrKPS+uozyMXVzFVn9mn0BNuk49R4sTcvGiV
- /3mU1R1HdB6XM0NufLzKsZrh0bOP0zuW69QDX6Jf3/888gGK83uWEwGF/h0j5Sq6Fq9ieEunq
- rnRa+FNRnArnru6lWAqxwFLeodgnvUTEje6C2luxM/rv31CP97nI76r/sNggx0LoD25sgb+wk
- B4fXK4r6rHxmJpsUAB4TFHFVkBQ35xEtPP1HvFhDh9jiHrI8kn86LUg/TDDRub1/uVZ7zCklw
- FDS90rkhZDfEgOXuXMmplYuydxFxZ5J5rn5dd83zA6L3Mjgy2FG6ES8eKWzao4YVmB9Wduf7P
- xT9wsLcqqiDWbnzXGf4zKotbSRmzPh5Fv++MirVf8JMCdAzbBT0boZwPJ6iWrfkU/YCcUH7pG
- WeE0UXuRO3RVbgnexVPjLzBKZyX6YPi3extl0jEV7d8yqASmv/Kl5Qf4/pnLN02wxwhhDjRSo
- LfvutuyEY11++msvCeKnQeitTSrwLo+R/VB6KHb8Ji1Zlk79m51hBudGDrxCvGbngglFlj1/5
- Aj3Kb7UwL+cXDLCuBCzC7JgcoIMS3ojk07wwIA4kF8iAyNKRU1CwXQK9oLVpyUY3ueqglKHkM
- 4gWKEIE7xrnrIqcQYwa5Q3CQNWVMakSQo08oLy0UxUEp3jPx86yTFLpOurDppOZ+TUgS5z6t5
- TN+j9px/tXMV5B/LPPgcBZfaFFBxvYLBGZtBgt/V/CIQhXpE+NReitfu1neyJdDTkzpFVQzzK
- ZLa+TVfzc5R8QNK8838TmlIcv70M4a/zkgtTMAfBbxA24lD4vyG0JIDnIcKdsI+MjZabomZMp
- X8KXQN2N5yTRNHF73S3w==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpmk+LIzCtJLcpLzFFi42I5sOL3Rl2HDsU4g6ZdPBbt75axWzQvXs9m
+        cf/rUUaLy7vmsFnMWXqCxWLTmmtsDmwe89ZUe+ycdZfdY9OqTjaPO9f2sHnsn7uG3ePzJrkA
+        tihum6TEkrLgzPQ8fbsE7owJ+/uZC9YJVizunc7UwPhFoIuRk0NCwETi37MvTF2MXBxCAlcZ
+        Jd4vOw3lnGCUuLrhGksXIwcHm4CNRNdNdpAGEQFDiSUnnrKA1DALLGWS6N11gxEkISxgKbH5
+        314miCIriVvvHoD1igj4Sfw47A8SZhFQlbi8aD1YOS9Q+OLhB+wQu/qZJN7P3ADWyymgJTH5
+        P8gCTg5GAVmJzoZ3YHFmAXGJTc++s0JcLSCxZM95ZghbVOLl439QcSWJvT8fgu1lFtCUWL9L
+        H6LVQWL/9vlsELaixJTuh+wQNwhKnJz5hGUCo9gsJBtmIXTPQtI9C0n3LCTdCxhZVzFK5CZm
+        5qQnlqQa6hWlluoV5WfkAqnk/NxNjJBI/bKD8f8hz0OMTByMhxglOZiURHlF9sjGCfEl5adU
+        ZiQWZ8QXleakFh9ilOBgVhLhPTkDKMebklhZlVqUD5OS5mBREudVfzgxVkgAZFd2ampBahFM
+        VoaDQ0mCl7dVMU5IsCg1PbUiLTOnBCHNxMEJMpxLSqQ4NS8ltSixtCQjHpQ+4ouBCQQkxQO0
+        174NqJ23uCAxFygK0XqKUZtjwsu5i5g5jsxduohZiCUvPy9VSpy3oQWoVACkNKM0D27RK0Zx
+        DkYlYV6NdqAsDzBlw815BbSCCWjFBGc5kBUliQgpqQbG2s3TTN5wyzQ/ivTc6/KnOlTCe8W6
+        X7FG+sYXfmSlOwjWF35MmDLBIkzRknOd3MSLp5ZJnlcX3HFaO75UgHVCtdOXy30MU3Y7brT3
+        TXm1lmvfxPlywidVkr8wT5HgiXSbwm8x1UZn+5aShXwX5Dje/ln78YjFq5KTSZduex/cYb53
+        3aNiV6HzSizFGYmGWsxFxYkAGI+k1pYDAAA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 9:03 AM Michal Simek <michal.simek@xilinx.com> wrote:
->
-> dma-continuguous.h is generic for all architectures except arm32 which has
-> its own version.
->
-> Similar change was done for msi.h by commit a1b39bae16a6
-> ("asm-generic: Make msi.h a mandatory include/asm header")
->
-> Suggested-by: Christoph Hellwig <hch@infradead.org>
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> ---
->
-> Changes in v2:
-> - New patch suggested by Christoph
-
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+DQpPbiBGcmksIDIwMjAtMDEtMTcgYXQgMTA6MTAgKzAwMDAsIExlZSBKb25lcyB3cm90ZToNCj4g
+T24gRnJpLCAxNyBKYW4gMjAyMCwgVmFpdHRpbmVuLCBNYXR0aSB3cm90ZToNCj4gDQo+ID4gT24g
+RnJpLCAyMDIwLTAxLTE3IGF0IDA4OjU3ICswMTAwLCBncmVna2hAbGludXhmb3VuZGF0aW9uLm9y
+Zw0KPiA+IHdyb3RlOg0KPiA+ID4gT24gRnJpLCBKYW4gMTcsIDIwMjAgYXQgMDc6NDQ6MDdBTSAr
+MDAwMCwgVmFpdHRpbmVuLCBNYXR0aSB3cm90ZToNCj4gPiA+ID4gSXMgaXQgcG9zc2libGUgdG8g
+Z2V0IHRoaXMgaW4gNS40IHN0YWJsZSAtIHdoaWxlIGxlYXZpbmcgdGhpcw0KPiA+ID4gPiBvdXQN
+Cj4gPiA+ID4gb2YNCj4gPiA+ID4gY3VycmVudCBNRkQgdHJlZSBhbmQgYXBwbHlpbmcgdGhlIEJE
+NzE4Mjggc2VyaWVzIHRvIE1GRD8NCj4gPiA+IA0KPiA+ID4gV2Ugb25seSB0YWtlIHBhdGNoZXMg
+dGhhdCBhcmUgaW4gTGludXMncyB0cmVlIGZvciB0aGUgc3RhYmxlDQo+ID4gPiB0cmVlLA0KPiA+
+ID4gdW5sZXNzIHRoZXJlIGFyZSB2ZXJ5IGJpZyByZWFzb25zIG5vdCB0byBkbyBzbyAoaS5lLiBp
+dCBpcw0KPiA+ID4gdG90YWxseQ0KPiA+ID4gcmV3cml0dGVuIGluIGEgZGlmZmVyZW50IHdheSB0
+aGVyZS4pDQo+ID4gPiANCj4gPiA+IE9uY2UgdGhlIGNoYW5nZS9maXggaXMgaW4gTGludXMncyB0
+cmVlLCB0aGVuIHlvdSBjYW4gYmFja3BvcnQgaXQNCj4gPiA+IHRvDQo+ID4gPiBzdGFibGUgaW4g
+YSBkaWZmZXJlbnQgd2F5IGlmIHlvdSB3YW50LCBidXQgeW91IG5lZWQgdG8gZ2l2ZSBsb3RzDQo+
+ID4gPiBvZg0KPiA+ID4gcmVhc29ucyB3aHkgaXQgaXMgZG9uZSB0aGF0IHdheS4NCj4gPiANCj4g
+PiBSaWdodC4gVGhhbmtzIGZvciB0aGUgZXhwbGFuYXRpb24gR3JlZy4gSSBoYXZlIG5vIF9zdHJv
+bmdfIHJlYXNvbnMNCj4gPiAtDQo+ID4gd2hpY2ggbWVhbnMgSSdsbCBzcGxpdCB0aGUgUlRDIHN1
+cHBvcnQgcGF0Y2ggaW4gQkQ3MTgyOCBzZXJpZXMgaW50bw0KPiA+IHR3bw0KPiA+IC0gZmlyc3Qg
+b2YgdGhlIHBhdGNoZXMgYmVpbmcgdGhpcyBmaXgsIHNlY29uZCBiZWluZyB0aGUgQkQ3MTgyOA0K
+PiA+IHN1cHBvcnQuIFRoZW4gdGhpcyBmaXggY2FuIGJlIHRha2VuIGluIDUuNCBhZnRlciBpdCBo
+YXMgYmVlbiBtZXJnZWQNCj4gPiB0bw0KPiA+IExpbnVzJyB0cmVlIC0gdGhlIEJENzE4Mjggc3Vw
+cG9ydCBjYW4gYmUgb21pdHRlZCBmcm9tIDUuNA0KPiA+IA0KPiA+IEkgaG9wZSB0aGUgQkQ3MTgy
+OCBzZXJpZXMgY291bGQgc3RpbGwgbWFrZSBpdCB0byBuZXh0IHJlbGVhc2UgLSBidXQNCj4gPiBp
+Zg0KPiA+IGl0IHdvbnQsIHRoZW4gaXQgbWlnaHQgYmUgaW4gbmV4dCBhZnRlciB0aGF0IDpdDQo+
+ID4gDQo+ID4gTGVlLCBwbGVhc2Ugc2tpcCB0aGlzIG9uZSwgSSdsbCBkbyB2MTAgb2YgdGhlIEJE
+NzE4Mjggc2VyaWVzIHdoZXJlDQo+ID4gdGhpcw0KPiA+IGZpeCBpcyBpbmNsdWRlZCBhcyBzZXBh
+cmF0ZSBmaXgtcGF0Y2guDQo+IA0KPiBXaWxsIGxvb2sgb3V0IGZvciBpdC4NCj4gDQpUaGFua3Mh
+IEl0IHNob3VsZCBiZSBvbiBpdCdzIHdheSB0aHJvdWdoIHRoZSBtYWlsIHNlcnZlcnMgOl0NCg0K
+QnIsDQoJTWF0dGkgVmFpdHRpbmVuDQoNCg==
