@@ -2,112 +2,125 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8C3C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CDCC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94A782082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:05:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98CE822522
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:05:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="irAG46LM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A0hPrtDo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728909AbgAQOFP (ORCPT
+        id S1728884AbgAQOFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 09:05:15 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:59685 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726885AbgAQOFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 09:05:14 -0500
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47zjWD35x8zJv;
-        Fri, 17 Jan 2020 15:05:12 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1579269912; bh=+231y6ZND1a+e2pV2RjuPIKlHeV8kdbhF4SiUXm8rhU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=irAG46LM2InaZHcAyXRu9G+As+Fh2rYWHaa6Cbpan7O8jRKys93znY1oUhRGu7AmH
-         nWLbHEAF03BEAqfct1gIq0n19iV5RNCemQfA8mmQraFXMumlS2mmIgv9P/uMFZJ1BX
-         E7lS/Dn9pOOU8dENCMoFmzIApbx26sw0nohy8acGU3fVcUbmQL3r1zGXAWUKmRu/ft
-         rF07OppKyWGr6tw/S4Q9aFX0Wcvtu9/ffwgnOUWvz15czk9/4m+Rb8F4iLcAd+herx
-         DJiHFnloh3c547VWNaTksBxo/fZYSRJgkmvlKVTzp0Bi5F4MszOZL4g2XfL9MzAw5k
-         FhVhLGTLkoJow==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Fri, 17 Jan 2020 15:05:11 +0100
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mmc: core: limit probe clock frequency to configured
- f_max
-Message-ID: <20200117140511.GC26135@qmqm.qmqm.pl>
-References: <f471bceaf237d582d746bd289c4c4f3639cb7b45.1577962382.git.mirq-linux@rere.qmqm.pl>
- <CAPDyKFpZWnkK7UmCZ8M4UnM05wR3MQsPrpEjOJuwkKcN2gePSg@mail.gmail.com>
+        Fri, 17 Jan 2020 09:05:37 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51590 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728600AbgAQOFh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 09:05:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579269935;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Kl1x70pKGGUA6E1oFz3MQgXzpA7N/510hb+vBFFN4JE=;
+        b=A0hPrtDoi+v1Yl8jGrT0+Vmt6QyluQw01r3EAyHou58GwkpSlon117S5gq8xu7yAHnJ3fd
+        6aY6+B0pHFixxCJa+cugIS3xMj2jOtsUf7TynMKGBpQKsrlpAIEchBy1cMXNnOKjnpB/ij
+        pwxymrVWkA02+na7Y+w8jfzUtPyf/RU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-328-XKgm1uMuNBKGXmyXGp49_g-1; Fri, 17 Jan 2020 09:05:31 -0500
+X-MC-Unique: XKgm1uMuNBKGXmyXGp49_g-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9D9BA1084426;
+        Fri, 17 Jan 2020 14:05:29 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2749283866;
+        Fri, 17 Jan 2020 14:05:28 +0000 (UTC)
+Subject: Re: [LKP] Re: [mm/hugetlb] c77c0a8ac4: will-it-scale.per_process_ops
+ 15.9% improvement
+To:     Feng Tang <feng.tang@intel.com>, Michal Hocko <mhocko@kernel.org>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Davidlohr Bueso <dbueso@suse.de>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+References: <20200114085637.GA29297@shao2-debian>
+ <20200114091251.GE19428@dhcp22.suse.cz>
+ <bd474ca4-9f47-0ab1-f461-513789fc074d@redhat.com>
+ <20200117065628.GC86012@shbuild999.sh.intel.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <48f750d3-92b4-98d3-5cab-531304bf9fa1@redhat.com>
+Date:   Fri, 17 Jan 2020 09:05:27 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPDyKFpZWnkK7UmCZ8M4UnM05wR3MQsPrpEjOJuwkKcN2gePSg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200117065628.GC86012@shbuild999.sh.intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 03:07:22PM +0100, Ulf Hansson wrote:
-> On Thu, 2 Jan 2020 at 11:54, Micha³ Miros³aw <mirq-linux@rere.qmqm.pl> wrote:
-> >
-> > Currently MMC core disregards host->f_max during card initialization
-> > phase. Obey upper boundary for the clock frequency and skip faster
-> > speeds when they are above the limit.
-> 
-> Is this a hypothetical problem or a real problem?
+On 1/17/20 1:56 AM, Feng Tang wrote:
+> Hi Waiman and Michal,
+>
+> On Tue, Jan 14, 2020 at 09:57:14AM -0500, Waiman Long wrote:
+>> On 1/14/20 4:12 AM, Michal Hocko wrote:
+>>> On Tue 14-01-20 16:56:37, kernel test robot wrote:
+>>>> Greeting,
+>>>>
+>>>> FYI, we noticed a 15.9% improvement of will-it-scale.per_process_ops due to commit:
+>>>>
+>>>>
+>>>> commit: c77c0a8ac4c522638a8242fcb9de9496e3cdbb2d ("mm/hugetlb: defer freeing of huge pages if in non-task context")
+>>>> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+>>> This is more than surprising because the patch has only changed the
+>>> behavior for hugetlb pages freed from the (soft)interrupt context and
+>>> that should be a very rare event. Does the test really generate a lot of
+>>> those?
+>>>
+>> Yes, I have the same question. I was not expecting to see any
+>> performance impact.
+> We have the same question and did some further check.
+>
+> This is the "pagefault3" test case of will-it-scale, and is  
+> mmap/get_page/munmap test. The source code is: 
+> https://github.com/antonblanchard/will-it-scale/blob/master/tests/page_fault3.c 
+>
+> And its running on LKP does NOT involve any hugetlb actions, as
+> could be checking HugePages_* in /proc/meminfo.
+>
+> We also did another check, reverted c77c0a8ac4c5 and simply added
+> some printk inside free_huge_page(), which can also bring 15%
+> improvement.
+>
+> So one possible reason could be the commit changes the cache
+> alignment of other kernel codes in final bzImage, which happens
+> to hugely affect this test case.
+>
+> Thanks,
+> Feng
+>
+That sounds reasonable to me. Thanks for the investigation.
 
-This is a problem on noisy or broken boards or cards - so needed for
-debugging such a combination. I wouldn't expect this is required for
-normal devices.
+Cheers,
+Longman
 
-> > Signed-off-by: Micha³ Miros³aw <mirq-linux@rere.qmqm.pl>
-> > ---
-> >  drivers/mmc/core/core.c | 10 ++++++++--
-> >  1 file changed, 8 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
-> > index abf8f5eb0a1c..aa54d359dab7 100644
-> > --- a/drivers/mmc/core/core.c
-> > +++ b/drivers/mmc/core/core.c
-> > @@ -2330,7 +2330,13 @@ void mmc_rescan(struct work_struct *work)
-> >         }
-> >
-> >         for (i = 0; i < ARRAY_SIZE(freqs); i++) {
-> > -               if (!mmc_rescan_try_freq(host, max(freqs[i], host->f_min)))
-> > +               unsigned int freq = freqs[i];
-> > +               if (freq > host->f_max) {
-> > +                       if (i + 1 < ARRAY_SIZE(freqs))
-> > +                               continue;
-> > +                       freq = host->f_max;
-> 
-> This looks wrong to me. For example, what if f_max = 250KHz and f_min = 50 KHz.
-> 
-> Then we should try with 250KHz, then 200KHz and then 100KHz. This
-> isn't what the above code does, I think.
-> 
-> Instead it will try with 200KHz and then 100KHz, thus skip 250KHz.
-> 
-> Maybe we should figure out what index of freqs[] to start the loop for
-> (before actually starting the loop), depending on the value of f_max -
-> rather than always start at 0.
-
-Yes, it will skip higher frequencies. I didn't view it a problem,
-because the new code guarantees at least one frequency will be tried.
-The eMMC standard specifies only max init frequency (400kHz), so all we
-should try is something less whatever works.
-
-SD spec specifies minimal frequency (100kHz), but I wouldn't expect
-this to be enforced nor required to be anywhere.
-
-Best Regards
-Micha³ Miros³aw
