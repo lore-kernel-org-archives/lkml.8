@@ -2,68 +2,68 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D21C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26BFEC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E980420730
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9AB52082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:50:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KOF5uLIu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YD19WJUY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729064AbgAQJtq (ORCPT
+        id S1726901AbgAQJut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 04:49:46 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28730 "EHLO
+        Fri, 17 Jan 2020 04:50:49 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27538 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727665AbgAQJto (ORCPT
+        with ESMTP id S1726362AbgAQJut (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 04:49:44 -0500
+        Fri, 17 Jan 2020 04:50:49 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579254583;
+        s=mimecast20190719; t=1579254648;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=2DEmJ5gzdkN5fJt0y4FiCUVkAhDydkqj1OLIvLy08AQ=;
-        b=KOF5uLIuL8EQoMcmV/0PLGJxqH0RLZO0MXYE2gk81Znld+Ne/pxwybiwRfuY27hxPsqWBY
-        YAPwhQeaew1skfJ6C+NLxErF3vtkfIyNp7CGYPHBwSJKwfsDMU6dFfr2NLwi2oYJ9MyoCU
-        9V9bps9pXPynlkSe8e86fBKp186mInA=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-105-TaQJBqswMQKrbwh0H6qgxQ-1; Fri, 17 Jan 2020 04:49:40 -0500
-X-MC-Unique: TaQJBqswMQKrbwh0H6qgxQ-1
-Received: by mail-lj1-f200.google.com with SMTP id b15so6027814ljp.7
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 01:49:40 -0800 (PST)
+        bh=oJRJOOtAJx4rABOIyWYmHnWYUrcoGrCqCdDRh2YY52I=;
+        b=YD19WJUYZAJBREAk8ub3j0ctH0SOOPxc3Gn6Yaa9Mrn59JcDAZMvuVtG/R7RI4y738i+Di
+        Pd+Mo+sOjox0XRP1ZZD/t/+WtySQnVUsxrwYCqtJd5YbKR2J+qGdmlYGiUHUPNCBNbpksW
+        U6Yfw5ac+GEBbddZgFWoa3z0WzMQvjM=
+Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
+ [209.85.208.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-209-Jb8pC3TmOVC8GHx3E3vcsg-1; Fri, 17 Jan 2020 04:50:47 -0500
+X-MC-Unique: Jb8pC3TmOVC8GHx3E3vcsg-1
+Received: by mail-lj1-f199.google.com with SMTP id u9so6042528ljg.12
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 01:50:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
          :message-id:mime-version:content-transfer-encoding;
-        bh=2DEmJ5gzdkN5fJt0y4FiCUVkAhDydkqj1OLIvLy08AQ=;
-        b=HnLkAe8jOjVCkSxUYqp/Zy0UTYc+/q0tCP1xIpQS//NhjtxJIHnkpRQLfVO1WU4jr8
-         MpgesgJKZxI8RlSXXnl7I1a9OyLEYJ3BqPUBcsDWM5HEalQ300gFtYrgEY0oZQ1b7a6X
-         I1zXiaWvXWhRdLOB38GFtZtZapNiynzhgKfnWUaskIAfl2WWZJI1KzNXvdJ7r5OWGAg0
-         Q5xxAIAV1DKP8U9+DroUY0+fy0YYmf34Ps3gA2TI/b/PQr5HnlO2ju0qoVkspDhZiR/8
-         eP0VIBhUej7c8CGzcPdKbiMs1PiD8k8jUyC4Z9NKj7GPue0gBOpTI5CEieYCzWVOipLK
-         QcuA==
-X-Gm-Message-State: APjAAAVCQM/61oAa5dlVnzxuGDHk1hAwAvfJJCFSnWndwZWLdbvSKOVN
-        6I/XwB0SlPnpwsvhDdVD/Lf3iWUowF5D3uKcSzKE3UqxEguKQmCEpEYM366eUVar7bRLELCJdYA
-        23d7J1oJXPVJpVY6sHM/2fT7R
-X-Received: by 2002:a2e:5357:: with SMTP id t23mr5182972ljd.227.1579254578785;
-        Fri, 17 Jan 2020 01:49:38 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyk8gykyxX78t+pO2Au2DCESKKccxpSnivLcv8OMT8l6K8LCcsYcPg8bPfRFnts07+nJ1KN3Q==
-X-Received: by 2002:a2e:5357:: with SMTP id t23mr5182947ljd.227.1579254578524;
-        Fri, 17 Jan 2020 01:49:38 -0800 (PST)
-Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
-        by smtp.gmail.com with ESMTPSA id r9sm13683623lfc.72.2020.01.17.01.49.37
+        bh=oJRJOOtAJx4rABOIyWYmHnWYUrcoGrCqCdDRh2YY52I=;
+        b=nZcK5ZtDZ/dnyAsrSsLNkxZb8kqMxhVw/VJi/QTCY5+ExlMu5dNx2HvYKC0wzVnp5R
+         Hu2SnDwGHZu2dwO5nK6M/0rgguJA9nQISSjJ7tb+Au7faejk76Qy+oI3R8EM2ghVz/PX
+         idyUQNdCxUFruez5OEJg49Kjh0sP9ty9hjbyZVSTU5pKZt9DQbmZDylTHebHZSrjREJN
+         K/x4k1BDNCT5FIdI0lE5Yx6BmovvF1ZHyQHOTLjQA685k0UFNYeqjzP94Yv1I0nAAaYW
+         706iKchFkHlURTXvBoTyE60dieMp9BkzV1oYY3XI5i5aZcWbfAhh4Cg1nphWusonkGGS
+         pwPA==
+X-Gm-Message-State: APjAAAU7WiSeYJEhM7RjJiWISbmo141Ve1oi5CTlZUCQ1hur3aN1c0OL
+        +pRFm+PdNM5mU5ORCtqZvzzY0GieVTngGoGFsUiEJ/AY13IAvNPVdEkHUAVmh0GFTJH3rSV1N8y
+        yVGah5OyVog5BFgW5Css6t6+c
+X-Received: by 2002:a2e:3a0c:: with SMTP id h12mr5110078lja.200.1579254646256;
+        Fri, 17 Jan 2020 01:50:46 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxVH1mvGN7jFxhc1CGWH4ht8uwwpUWB8gY29//W0Sp2WPWefYaaYkajI0yi/HmyV1E0o/g6WQ==
+X-Received: by 2002:a2e:3a0c:: with SMTP id h12mr5110047lja.200.1579254646128;
+        Fri, 17 Jan 2020 01:50:46 -0800 (PST)
+Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
+        by smtp.gmail.com with ESMTPSA id s9sm14012128ljh.90.2020.01.17.01.50.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 01:49:37 -0800 (PST)
+        Fri, 17 Jan 2020 01:50:45 -0800 (PST)
 Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id C6AC21804D6; Fri, 17 Jan 2020 10:49:36 +0100 (CET)
+        id D7C9C1804D6; Fri, 17 Jan 2020 10:50:44 +0100 (CET)
 From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
 To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
 Cc:     Alexei Starovoitov <ast@kernel.org>,
@@ -92,11 +92,11 @@ Cc:     Alexei Starovoitov <ast@kernel.org>,
         <linux-kselftest@vger.kernel.org>,
         clang-built-linux@googlegroups.com
 Subject: Re: [PATCH bpf-next v3 09/11] selftests: Remove tools/lib/bpf from include path
-In-Reply-To: <CAEf4Bzba5FHN_iN52qRiGisRcauur1FqDY545EwE+RVR-nFvQA@mail.gmail.com>
-References: <157918093154.1357254.7616059374996162336.stgit@toke.dk> <157918094179.1357254.14428494370073273452.stgit@toke.dk> <CAEf4Bzba5FHN_iN52qRiGisRcauur1FqDY545EwE+RVR-nFvQA@mail.gmail.com>
+In-Reply-To: <CAEf4BzYaLd25P7Uu=aFHW_=nHOCPdCpZCcoJobhRoSGQUA49HQ@mail.gmail.com>
+References: <157918093154.1357254.7616059374996162336.stgit@toke.dk> <157918094179.1357254.14428494370073273452.stgit@toke.dk> <CAEf4Bzba5FHN_iN52qRiGisRcauur1FqDY545EwE+RVR-nFvQA@mail.gmail.com> <CAEf4BzYaLd25P7Uu=aFHW_=nHOCPdCpZCcoJobhRoSGQUA49HQ@mail.gmail.com>
 X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Fri, 17 Jan 2020 10:49:36 +0100
-Message-ID: <87r1zyquof.fsf@toke.dk>
+Date:   Fri, 17 Jan 2020 10:50:44 +0100
+Message-ID: <87o8v2qumj.fsf@toke.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
@@ -107,192 +107,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Andrii Nakryiko <andrii.nakryiko@gmail.com> writes:
 
-> On Thu, Jan 16, 2020 at 5:28 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@re=
-dhat.com> wrote:
+> On Thu, Jan 16, 2020 at 2:41 PM Andrii Nakryiko
+> <andrii.nakryiko@gmail.com> wrote:
 >>
->> From: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
->>
->> To make sure no new files are introduced that doesn't include the bpf/
->> prefix in its #include, remove tools/lib/bpf from the include path
->> entirely.
->>
->> Instead, we introduce a new header files directory under the scratch too=
-ls/
->> dir, and add a rule to run the 'install_headers' rule from libbpf to hav=
-e a
->> full set of consistent libbpf headers in $(OUTPUT)/tools/include/bpf, and
->> then use $(OUTPUT)/tools/include as the include path for selftests.
->>
->> For consistency we also make sure we put all the scratch build files from
->> other bpftool and libbpf into tools/build/, so everything stays within
->> selftests/.
->>
->> Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
->> ---
->>  tools/testing/selftests/bpf/.gitignore |    1 +
->>  tools/testing/selftests/bpf/Makefile   |   50 +++++++++++++++++++------=
--------
->>  2 files changed, 31 insertions(+), 20 deletions(-)
->>
->> diff --git a/tools/testing/selftests/bpf/.gitignore b/tools/testing/self=
-tests/bpf/.gitignore
->> index 1d14e3ab70be..849be9990ad2 100644
->> --- a/tools/testing/selftests/bpf/.gitignore
->> +++ b/tools/testing/selftests/bpf/.gitignore
->> @@ -40,3 +40,4 @@ test_cpp
->>  /bpf_gcc
->>  /tools
->>  bpf_helper_defs.h
->> +/include/bpf
+>> On Thu, Jan 16, 2020 at 5:28 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@r=
+edhat.com> wrote:
+>> >
+>> > From: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
+>> >
+>> > To make sure no new files are introduced that doesn't include the bpf/
+>> > prefix in its #include, remove tools/lib/bpf from the include path
+>> > entirely.
+>> >
+>> > Instead, we introduce a new header files directory under the scratch t=
+ools/
+>> > dir, and add a rule to run the 'install_headers' rule from libbpf to h=
+ave a
+>> > full set of consistent libbpf headers in $(OUTPUT)/tools/include/bpf, =
+and
+>> > then use $(OUTPUT)/tools/include as the include path for selftests.
+>> >
+>> > For consistency we also make sure we put all the scratch build files f=
+rom
+>> > other bpftool and libbpf into tools/build/, so everything stays within
+>> > selftests/.
+>> >
+>> > Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
+>> > ---
 >
-> Isn't the real path (within selftests/bpf) a tools/include/bpf, which
-> is already ignored through /tools rule?
+> BTW, this change also now forces full rebuild regardless if anything
+> changed or not :(
 
-Yeah, you're correct. I started out with having it in include/bpf, but
-ended up moving it, and guess I forgot to remove the .gitignore. Will fix.
-
->> diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selfte=
-sts/bpf/Makefile
->> index 1fd7da49bd56..c3fa695bb028 100644
->> --- a/tools/testing/selftests/bpf/Makefile
->> +++ b/tools/testing/selftests/bpf/Makefile
->> @@ -20,8 +20,8 @@ CLANG         ?=3D clang
->>  LLC            ?=3D llc
->>  LLVM_OBJCOPY   ?=3D llvm-objcopy
->>  BPF_GCC                ?=3D $(shell command -v bpf-gcc;)
->> -CFLAGS +=3D -g -Wall -O2 $(GENFLAGS) -I$(CURDIR) -I$(APIDIR) -I$(LIBDIR=
-)  \
->> -         -I$(BPFDIR) -I$(GENDIR) -I$(TOOLSINCDIR)                      \
->> +CFLAGS +=3D -g -Wall -O2 $(GENFLAGS) -I$(CURDIR) -I$(APIDIR)           =
-   \
->> +         -I$(INCLUDE_DIR) -I$(GENDIR) -I$(LIBDIR) -I$(TOOLSINCDIR)     \
->>           -Dbpf_prog_load=3Dbpf_prog_test_load                          =
-  \
->>           -Dbpf_load_program=3Dbpf_test_load_program
->>  LDLIBS +=3D -lcap -lelf -lz -lrt -lpthread
->> @@ -97,11 +97,15 @@ OVERRIDE_TARGETS :=3D 1
->>  override define CLEAN
->>         $(call msg,CLEAN)
->>         $(RM) -r $(TEST_GEN_PROGS) $(TEST_GEN_PROGS_EXTENDED) $(TEST_GEN=
-_FILES) $(EXTRA_CLEAN)
->> -       $(MAKE) -C $(BPFDIR) OUTPUT=3D$(OUTPUT)/ clean
->>  endef
->>
->>  include ../lib.mk
->>
->> +SCRATCH_DIR :=3D $(OUTPUT)/tools
->> +BUILD_DIR :=3D $(SCRATCH_DIR)/build
->> +INCLUDE_DIR :=3D $(SCRATCH_DIR)/include
->> +INCLUDE_BPF :=3D $(INCLUDE_DIR)/bpf/bpf.h
->> +
->>  # Define simple and short `make test_progs`, `make test_sysctl`, etc ta=
-rgets
->>  # to build individual tests.
->>  # NOTE: Semicolon at the end is critical to override lib.mk's default s=
-tatic
->> @@ -120,7 +124,7 @@ $(OUTPUT)/urandom_read: urandom_read.c
->>         $(call msg,BINARY,,$@)
->>         $(CC) -o $@ $< -Wl,--build-id
->>
->> -$(OUTPUT)/test_stub.o: test_stub.c
->> +$(OUTPUT)/test_stub.o: test_stub.c $(INCLUDE_BPF)
->>         $(call msg,CC,,$@)
->>         $(CC) -c $(CFLAGS) -o $@ $<
->>
->> @@ -129,7 +133,7 @@ $(OUTPUT)/runqslower: force
->>         $(Q)$(MAKE) $(submake_extras) -C $(TOOLSDIR)/bpf/runqslower     =
-      \
->>                     OUTPUT=3D$(CURDIR)/tools/ VMLINUX_BTF=3D$(abspath ..=
-/../../../vmlinux)
->>
->> -BPFOBJ :=3D $(OUTPUT)/libbpf.a
->> +BPFOBJ :=3D $(BUILD_DIR)/libbpf/libbpf.a
->>
->>  $(TEST_GEN_PROGS) $(TEST_GEN_PROGS_EXTENDED): $(OUTPUT)/test_stub.o $(B=
-PFOBJ)
->>
->> @@ -155,17 +159,23 @@ force:
->>  DEFAULT_BPFTOOL :=3D $(OUTPUT)/tools/sbin/bpftool
->>  BPFTOOL ?=3D $(DEFAULT_BPFTOOL)
->>
->> -$(DEFAULT_BPFTOOL): force
->> -       $(Q)$(MAKE) $(submake_extras)  -C $(BPFTOOLDIR)                 =
-      \
->> +$(BUILD_DIR)/libbpf $(BUILD_DIR)/bpftool $(INCLUDE_DIR):
->> +       $(call msg,MKDIR,,$@)
->> +       mkdir -p $@
->> +
->> +$(DEFAULT_BPFTOOL): force $(BUILD_DIR)/bpftool
->
-> directories should be included as order-only dependencies (after | )
-
-OK.
-
->> +       $(Q)$(MAKE) $(submake_extras)  -C $(BPFTOOLDIR)         \
->> +                   OUTPUT=3D$(BUILD_DIR)/bpftool/                      =
-  \
->>                     prefix=3D DESTDIR=3D$(OUTPUT)/tools/ install
->>
->> -$(BPFOBJ): force
->> -       $(Q)$(MAKE) $(submake_extras) -C $(BPFDIR) OUTPUT=3D$(OUTPUT)/
->> +$(BPFOBJ): force $(BUILD_DIR)/libbpf
->
-> same
->
->> +       $(Q)$(MAKE) $(submake_extras) -C $(BPFDIR) \
->> +               OUTPUT=3D$(BUILD_DIR)/libbpf/
->>
->> -BPF_HELPERS :=3D $(OUTPUT)/bpf_helper_defs.h $(wildcard $(BPFDIR)/bpf_*=
-.h)
->> -$(OUTPUT)/bpf_helper_defs.h: $(BPFOBJ)
->> -       $(Q)$(MAKE) $(submake_extras) -C $(BPFDIR)                      =
-      \
->> -                   OUTPUT=3D$(OUTPUT)/ $(OUTPUT)/bpf_helper_defs.h
->> +BPF_HELPERS :=3D $(wildcard $(BPFDIR)/bpf_*.h) $(INCLUDE_BPF)
->
-> Shouldn't all BPF_HELPERS come from $(INCLUDE_DIR)/bpf now?
->
->> +$(INCLUDE_BPF): force $(BPFOBJ)
->
-> And this can be more properly a $(BPF_HELPERS): force $(BPFOBJ)?
->
->> +       $(Q)$(MAKE) $(submake_extras) -C $(BPFDIR) install_headers \
->> +               OUTPUT=3D$(BUILD_DIR)/libbpf/ DESTDIR=3D$(SCRATCH_DIR) p=
-refix=3D
->>
->>  # Get Clang's default includes on this system, as opposed to those seen=
- by
->>  # '-target bpf'. This fixes "missing" files on some architectures/distr=
-os,
->> @@ -185,8 +195,8 @@ MENDIAN=3D$(if $(IS_LITTLE_ENDIAN),-mlittle-endian,-=
-mbig-endian)
->>
->>  CLANG_SYS_INCLUDES =3D $(call get_sys_includes,$(CLANG))
->>  BPF_CFLAGS =3D -g -D__TARGET_ARCH_$(SRCARCH) $(MENDIAN)                =
-  \
->> -            -I$(OUTPUT) -I$(CURDIR) -I$(CURDIR)/include/uapi           \
->> -            -I$(APIDIR) -I$(LIBDIR) -I$(BPFDIR) -I$(abspath $(OUTPUT)/.=
-./usr/include)
->> +            -I$(INCLUDE_DIR) -I$(CURDIR) -I$(CURDIR)/include/uapi      \
->> +            -I$(APIDIR) -I$(abspath $(OUTPUT)/../usr/include)
->>
->>  CLANG_CFLAGS =3D $(CLANG_SYS_INCLUDES) \
->>                -Wno-compare-distinct-pointer-types
->> @@ -306,7 +316,7 @@ $(TRUNNER_TEST_OBJS): $(TRUNNER_OUTPUT)/%.test.o:   =
-                \
->>                       $(TRUNNER_EXTRA_HDRS)                             \
->>                       $(TRUNNER_BPF_OBJS)                               \
->>                       $(TRUNNER_BPF_SKELS)                              \
->> -                     $$(BPFOBJ) | $(TRUNNER_OUTPUT)
->> +                     $$(BPFOBJ) $$(INCLUDE_BPF) | $(TRUNNER_OUTPUT)
->
-> singling out $(INCLUDE_BPF) looks weird? But I think $(BPFOBJ)
-> achieves the same effect, so this change can be probably dropped? Same
-> below.
-
-I was having some trouble getting the dependency order right here.
-$(INCLUDE_BPF) depends on $(BPFOBJ), not the other way around. May be
-fixable though, I'll take another look.
+It does? Hmm, that was not intentional (I was mostly focused on making
+sure a clean make worked, not the opposite). I'll see if I can't fix
+that as well...
 
 -Toke
 
