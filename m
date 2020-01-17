@@ -2,245 +2,169 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 415ACC33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C99DEC33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C7E021D7D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AA3621D7D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:22:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PQGuifeg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgAQWU3 (ORCPT
+        id S1728688AbgAQWWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 17:20:29 -0500
-Received: from mga09.intel.com ([134.134.136.24]:16792 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726857AbgAQWU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 17:20:29 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 14:18:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,331,1574150400"; 
-   d="scan'208";a="424631108"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga005.fm.intel.com with ESMTP; 17 Jan 2020 14:18:48 -0800
-Date:   Sat, 18 Jan 2020 06:18:59 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        David Rientjes <rientjes@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Wei Yang <richardw.yang@linux.intel.com>, hannes@cmpxchg.org,
-        vdavydov.dev@gmail.com, akpm@linux-foundation.org,
-        kirill.shutemov@linux.intel.com, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        alexander.duyck@gmail.com, stable@vger.kernel.org
-Subject: Re: [Patch v3] mm: thp: grab the lock before manipulation defer list
-Message-ID: <20200117221859.GA29229@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20200116013100.7679-1-richardw.yang@linux.intel.com>
- <0bb34c4a-97c7-0b3c-cf43-8af6cf9c4396@virtuozzo.com>
- <alpine.DEB.2.21.2001161357240.109233@chino.kir.corp.google.com>
- <20200117091002.GM19428@dhcp22.suse.cz>
- <alpine.DEB.2.21.2001170125350.20618@chino.kir.corp.google.com>
- <20200117153839.pcnfomzuaha3dafh@box>
- <4d117021-da90-6069-1991-4df2249567f8@linux.alibaba.com>
+        Fri, 17 Jan 2020 17:22:21 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:55362 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726857AbgAQWWV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 17:22:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579299739;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=LvUJp7hWH4b8KBv58qMnYIc4CO2d+CINLvU+6GlKxQo=;
+        b=PQGuifegfxxVohoX0LP7ElRfljmHDt+p0aAXnUhzKBrSy5FHijrNlEpT3e7zbTyLLfaOxr
+        Sw4ADIIksccGB8Ni9Oe106rv2FKDgnipio4+LOsIAKf4kR0dz6PLX1CJLx+nWxZ5y3U4iM
+        hwMsq6Jk/iV2S2ysN12pDc88xhfy5BQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-171-ZkFIqCMBPBmmHLtoZwDtSw-1; Fri, 17 Jan 2020 17:22:16 -0500
+X-MC-Unique: ZkFIqCMBPBmmHLtoZwDtSw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 478CB10054E3;
+        Fri, 17 Jan 2020 22:22:14 +0000 (UTC)
+Received: from treble (ovpn-123-54.rdu2.redhat.com [10.10.123.54])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1F62B60BE1;
+        Fri, 17 Jan 2020 22:22:12 +0000 (UTC)
+Date:   Fri, 17 Jan 2020 16:22:10 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Marco Elver <elver@google.com>
+Cc:     David Sterba <dsterba@suse.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Btrfs <linux-btrfs@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: linux-next: Tree for Dec 6 (objtool, lots in btrfs)
+Message-ID: <20200117222210.yygssfl2koxnafb4@treble>
+References: <b9b0c81b-0ca8-dfb7-958f-cd58a449b6fb@infradead.org>
+ <ba2a7a9b-933b-d4e4-8970-85b6c1291fca@infradead.org>
+ <20191213235054.6k2lcnwa63r26zwi@treble>
+ <c6a33c21-3e71-ac98-cc95-db008764917c@infradead.org>
+ <20191214054515.ougsr5ykhl3vvy57@treble>
+ <fe1e0318-9b74-7ae0-07bd-d7a6c908e79a@infradead.org>
+ <20191217152511.GG3929@suse.cz>
+ <20200117172629.yqowxl642hdx4vcm@treble>
+ <CANpmjNP6Q5-uOVi5TvbnHKbHkubqrbzW1+QZqvoEVty6X7ZDXw@mail.gmail.com>
+ <20200117212649.opf4lt4w4jgwmrt7@treble>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <4d117021-da90-6069-1991-4df2249567f8@linux.alibaba.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200117212649.opf4lt4w4jgwmrt7@treble>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 11:17:38AM -0800, Yang Shi wrote:
->
->
->On 1/17/20 7:38 AM, Kirill A. Shutemov wrote:
->> On Fri, Jan 17, 2020 at 01:31:50AM -0800, David Rientjes wrote:
->> > On Fri, 17 Jan 2020, Michal Hocko wrote:
->> > 
->> > > On Thu 16-01-20 14:01:59, David Rientjes wrote:
->> > > > On Thu, 16 Jan 2020, Kirill Tkhai wrote:
->> > > > 
->> > > > > > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
->> > > > > > index c5b5f74cfd4d..6450bbe394e2 100644
->> > > > > > --- a/mm/memcontrol.c
->> > > > > > +++ b/mm/memcontrol.c
->> > > > > > @@ -5360,10 +5360,12 @@ static int mem_cgroup_move_account(struct page *page,
->> > > > > >   	}
->> > > > > >   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->> > > > > > -	if (compound && !list_empty(page_deferred_list(page))) {
->> > > > > > +	if (compound) {
->> > > > > >   		spin_lock(&from->deferred_split_queue.split_queue_lock);
->> > > > > > -		list_del_init(page_deferred_list(page));
->> > > > > > -		from->deferred_split_queue.split_queue_len--;
->> > > > > > +		if (!list_empty(page_deferred_list(page))) {
->> > > > > > +			list_del_init(page_deferred_list(page));
->> > > > > > +			from->deferred_split_queue.split_queue_len--;
->> > > > > > +		}
->> > > > > >   		spin_unlock(&from->deferred_split_queue.split_queue_lock);
->> > > > > >   	}
->> > > > > >   #endif
->> > > > > > @@ -5377,11 +5379,13 @@ static int mem_cgroup_move_account(struct page *page,
->> > > > > >   	page->mem_cgroup = to;
->> > > > > >   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->> > > > > > -	if (compound && list_empty(page_deferred_list(page))) {
->> > > > > > +	if (compound) {
->> > > > > >   		spin_lock(&to->deferred_split_queue.split_queue_lock);
->> > > > > > -		list_add_tail(page_deferred_list(page),
->> > > > > > -			      &to->deferred_split_queue.split_queue);
->> > > > > > -		to->deferred_split_queue.split_queue_len++;
->> > > > > > +		if (list_empty(page_deferred_list(page))) {
->> > > > > > +			list_add_tail(page_deferred_list(page),
->> > > > > > +				      &to->deferred_split_queue.split_queue);
->> > > > > > +			to->deferred_split_queue.split_queue_len++;
->> > > > > > +		}
->> > > > > >   		spin_unlock(&to->deferred_split_queue.split_queue_lock);
->> > > > > >   	}
->> > > > > >   #endif
->> > > > > The patch looks OK for me. But there is another question. I forget, why we unconditionally
->> > > > > add a page with empty deferred list to deferred_split_queue. Shouldn't we also check that
->> > > > > it was initially in the list? Something like:
->> > > > > 
->> > > > > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
->> > > > > index d4394ae4e5be..0be0136adaa6 100644
->> > > > > --- a/mm/memcontrol.c
->> > > > > +++ b/mm/memcontrol.c
->> > > > > @@ -5289,6 +5289,7 @@ static int mem_cgroup_move_account(struct page *page,
->> > > > >   	struct pglist_data *pgdat;
->> > > > >   	unsigned long flags;
->> > > > >   	unsigned int nr_pages = compound ? hpage_nr_pages(page) : 1;
->> > > > > +	bool split = false;
->> > > > >   	int ret;
->> > > > >   	bool anon;
->> > > > > @@ -5346,6 +5347,7 @@ static int mem_cgroup_move_account(struct page *page,
->> > > > >   		if (!list_empty(page_deferred_list(page))) {
->> > > > >   			list_del_init(page_deferred_list(page));
->> > > > >   			from->deferred_split_queue.split_queue_len--;
->> > > > > +			split = true;
->> > > > >   		}
->> > > > >   		spin_unlock(&from->deferred_split_queue.split_queue_lock);
->> > > > >   	}
->> > > > > @@ -5360,7 +5362,7 @@ static int mem_cgroup_move_account(struct page *page,
->> > > > >   	page->mem_cgroup = to;
->> > > > >   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->> > > > > -	if (compound) {
->> > > > > +	if (compound && split) {
->> > > > >   		spin_lock(&to->deferred_split_queue.split_queue_lock);
->> > > > >   		if (list_empty(page_deferred_list(page))) {
->> > > > >   			list_add_tail(page_deferred_list(page),
->> > > > > 
->> > > > I think that's a good point, especially considering that the current code
->> > > > appears to unconditionally place any compound page on the deferred split
->> > > > queue of the destination memcg.  The correct list that it should appear
->> > > > on, I believe, depends on whether the pmd has been split for the process
->> > > > being moved: note the MC_TARGET_PAGE caveat in
->> > > > mem_cgroup_move_charge_pte_range() that does not move the charge for
->> > > > compound pages with split pmds.  So when mem_cgroup_move_account() is
->> > > > called with compound == true, we're moving the charge of the entire
->> > > > compound page: why would it appear on that memcg's deferred split queue?
->> > > I believe Kirill asked how do we know that the page should be actually
->> > > added to the deferred list just from the list_empty check. In other
->> > > words what if the page hasn't been split at all?
->> > > 
->> > Right, and I don't think that it necessarily is and the second
->> > conditional in Wei's patch will always succeed unless we have raced.  That
->> > patch is for a lock concern but I think Kirill's question has uncovered
->> > something more interesting.
->> > 
->> > Kirill S would definitely be best to answer Kirill T's question, but from
->> > my understanding when mem_cgroup_move_account() is called with
->> > compound == true that we always have an intact pmd (we never migrate
->> > partial page charges for pages on the deferred split queue with the
->> > current charge migration implementation) and thus the underlying page is
->> > not eligible to be split and shouldn't be on the deferred split queue.
->> > 
->> > In other words, a page being on the deferred split queue for a memcg
->> > should only happen when it is charged to that memcg.  (This wasn't the
->> > case when we only had per-node split queues.)  I think that's currently
->> > broken in mem_cgroup_move_account() before Wei's patch.
->> Right. It's broken indeed.
->
->Hmm... Yes, definitely. I wasn't realized this at the first place.
->
->> 
->> We are dealing with anon page here. And it cannot be on deferred list as
->> long as it's mapped with PMD. We cannot get compound == true &&
->> !list_empty() on the (first) enter to the function. Any PMD-mapped page
->> will be put onto deferred by the function. This is wrong.
->> 
->> The fix is not obvious.
->> 
->> This comment got in mem_cgroup_move_charge_pte_range() my attention:
->> 
->> 			/*
->> 			 * We can have a part of the split pmd here. Moving it
->> 			 * can be done but it would be too convoluted so simply
->> 			 * ignore such a partial THP and keep it in original
->> 			 * memcg. There should be somebody mapping the head.
->> 			 */
->> 
->> That's exactly the case we care about: PTE-mapped THP that has to be split
->> under load. We don't move charge of them between memcgs and therefore we
->> should not move the page to different memcg.
->> 
->> I guess this will do the trick :P
->
->It seems correct to me. In addition, memcg move charge just move PMD mapped
->THP, the THP should be never on the deferred split queue of "from" if it is
->PMD mapped, so actually we don't have to move it to the deferred split queue
->of "to".
->
+On Fri, Jan 17, 2020 at 03:26:49PM -0600, Josh Poimboeuf wrote:
+> On Fri, Jan 17, 2020 at 09:28:27PM +0100, Marco Elver wrote:
+> > On Fri, 17 Jan 2020 at 18:26, Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> > >
+> > > On Tue, Dec 17, 2019 at 04:25:11PM +0100, David Sterba wrote:
+> > > > On Fri, Dec 13, 2019 at 11:05:18PM -0800, Randy Dunlap wrote:
+> > > > > OK, that fixes most of them, but still leaves these 2:
+> > > > >
+> > > > > btrfs006.out:fs/btrfs/extent_io.o: warning: objtool: __set_extent_bit()+0x536: unreachable instruction
+> > > >
+> > > > Hard to read from the assembly what C statement is it referring to. I
+> > > > think there are also several functions inlined, I don't see anything
+> > > > suspicious inside __set_extent_bit itself.
+> > > >
+> > > > > btrfs006.out:fs/btrfs/relocation.o: warning: objtool: add_tree_block()+0x501: unreachable instruction
+> > > >
+> > > > Probably also heavily inlined, the function has like 50 lines, a few
+> > > > non-trivial function calls but the offset in the warning suggests a
+> > > > larger size.
+> > > >
+> > > > While browsing the callees I noticed that both have in common a function
+> > > > that is supposed to print and stop at fatal errors. They're
+> > > > extent_io_tree_panic (extent_io.c) and backref_tree_panic
+> > > > (relocation.c). Both call btrfs_panic which is a macro:
+> > > >
+> > > > 3239 #define btrfs_panic(fs_info, errno, fmt, args...)                       \
+> > > > 3240 do {                                                                    \
+> > > > 3241         __btrfs_panic(fs_info, __func__, __LINE__, errno, fmt, ##args); \
+> > > > 3242         BUG();                                                          \
+> > > > 3243 } while (0)
+> > > >
+> > > > There are no conditionals and BUG has the __noreturn annotation
+> > > > (unreachable()) so all is in place and I don't have better ideas what's
+> > > > causing the reports.
+> > >
+> > > I think KCSAN is somehow disabling GCC's detection of implicit noreturn
+> > > functions -- or at least some calls to them.  So GCC is inserting dead
+> > > code after the calls.  BUG() uses __builtin_unreachable(), so GCC should
+> > > know better.
+> > >
+> > > If this is specific to KCSAN then I might just disable these warnings
+> > > for KCSAN configs.
+> > 
+> > I noticed that this is also a CC_OPTIMIZE_FOR_SIZE config. I recently
+> > sent some patches to turn some inlines into __always_inlines because
+> > CC_OPTIMIZE_FOR_SIZE decides to not inline functions that should
+> > always be inlined.
+> > 
+> > I noticed that 'assfail' is a 'static inline' function and you
+> > mentioned earlier that GCC seems to not be able to determine if it
+> > returns or not. If CC_OPTIMIZE_FOR_SIZE decides to not inline, then
+> > maybe this could be a problem?  It could also be the compiler having
+> > some trouble here with the CC_OPTIMIZE_FOR_SIZE + KCSAN combination.
+> 
+> Even for a non-inlined static function, GCC typically detects when it's
+> implicitly "noreturn", and optimizes the call sites accordingly.  And
+> that has also been true even for CC_OPTIMIZE_FOR_SIZE in the past.  So
+> something changed apparently.  (KCSAN was just a guess.)
 
-Well, I got the point.
+I'm actually seeing this issue pop up recently in other places, without
+KCSAN enabled.  So it may just be a new GCC bug (albeit a very minor
+one).  Sorry for blaming KCSAN :-) I'll need to dig some more.
 
-Since Kirill S found the correct solution, should I prepare v3 or Kirill will
-send it?
+The easy fix would be something like:
 
->> 
->> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
->> index c5b5f74cfd4d..e87ee4c10f6e 100644
->> --- a/mm/memcontrol.c
->> +++ b/mm/memcontrol.c
->> @@ -5359,14 +5359,6 @@ static int mem_cgroup_move_account(struct page *page,
->>   		__mod_lruvec_state(to_vec, NR_WRITEBACK, nr_pages);
->>   	}
->> -#ifdef CONFIG_TRANSPARENT_HUGEPAGE
->> -	if (compound && !list_empty(page_deferred_list(page))) {
->> -		spin_lock(&from->deferred_split_queue.split_queue_lock);
->> -		list_del_init(page_deferred_list(page));
->> -		from->deferred_split_queue.split_queue_len--;
->> -		spin_unlock(&from->deferred_split_queue.split_queue_lock);
->> -	}
->> -#endif
->>   	/*
->>   	 * It is safe to change page->mem_cgroup here because the page
->>   	 * is referenced, charged, and isolated - we can't race with
->> @@ -5376,16 +5368,6 @@ static int mem_cgroup_move_account(struct page *page,
->>   	/* caller should have done css_get */
->>   	page->mem_cgroup = to;
->> -#ifdef CONFIG_TRANSPARENT_HUGEPAGE
->> -	if (compound && list_empty(page_deferred_list(page))) {
->> -		spin_lock(&to->deferred_split_queue.split_queue_lock);
->> -		list_add_tail(page_deferred_list(page),
->> -			      &to->deferred_split_queue.split_queue);
->> -		to->deferred_split_queue.split_queue_len++;
->> -		spin_unlock(&to->deferred_split_queue.split_queue_lock);
->> -	}
->> -#endif
->> -
->>   	spin_unlock_irqrestore(&from->move_lock, flags);
->>   	ret = 0;
+diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+index eb8bd0258360..4db39fef3b56 100644
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -655,7 +655,7 @@ alloc_extent_state_atomic(struct extent_state *prealloc)
+ 	return prealloc;
+ }
+ 
+-static void extent_io_tree_panic(struct extent_io_tree *tree, int err)
++static void __noreturn extent_io_tree_panic(struct extent_io_tree *tree, int err)
+ {
+ 	struct inode *inode = tree->private_data;
+ 
+diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
+index d897a8e5e430..b7a94b1739ae 100644
+--- a/fs/btrfs/relocation.c
++++ b/fs/btrfs/relocation.c
+@@ -321,7 +321,7 @@ static struct rb_node *tree_search(struct rb_root *root, u64 bytenr)
+ 	return NULL;
+ }
+ 
+-static void backref_tree_panic(struct rb_node *rb_node, int errno, u64 bytenr)
++static void __noreturn backref_tree_panic(struct rb_node *rb_node, int errno, u64 bytenr)
+ {
+ 
+ 	struct btrfs_fs_info *fs_info = NULL;
 
--- 
-Wei Yang
-Help you, Help me
