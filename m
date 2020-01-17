@@ -2,108 +2,227 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 868BFC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD58CC33CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D2E92072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:41:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 835F92072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:43:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fyT8LCxk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LOIu42vh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729099AbgAQPlr (ORCPT
+        id S1729052AbgAQPnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 10:41:47 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37807 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728780AbgAQPlr (ORCPT
+        Fri, 17 Jan 2020 10:43:22 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:38911 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728780AbgAQPnV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 10:41:47 -0500
-Received: by mail-lf1-f67.google.com with SMTP id b15so18686567lfc.4;
-        Fri, 17 Jan 2020 07:41:45 -0800 (PST)
+        Fri, 17 Jan 2020 10:43:21 -0500
+Received: by mail-oi1-f195.google.com with SMTP id l9so22531826oii.5;
+        Fri, 17 Jan 2020 07:43:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bjNAA894HypFtC+HqN0qFxQlTwc+VZ8apApQMaLAIM8=;
-        b=fyT8LCxkLnDZzaRXL1FmS0gRdRQpqouUhY/8iZqYs8NJ0fwyMg97gTLA29QJrI1bD3
-         u8NYbJ3cdbTm3Ol4rrqWRJYXwJ7BX3uMwm1PG8CgNFbNKfP1KR7ezlF5Oher/KkxSvw+
-         uXeLLt/vmEkHkCVh+eGVjLPFOLNWdLjvP7DAb6uLc6rOjCV/DI4yaJWwZwLsnOyxnonv
-         FpQsLlgrzF8UvCFTjubvRKWkp3wciw6pQn+SH9hM/vhHr67dP0+gMIJUEvSrAvnEycqf
-         7Ch6yihGRPRp3t/1OvbfUZmKkkamN7AHClDkRhLLpEYveqBGThd0lgy9dlHN3WT0tm0C
-         jS5g==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3f+W4Xvm6P1QHWnul/IjVaVbxVFaJSRxnQJCYSx9gEI=;
+        b=LOIu42vhUzF9Mu+lfoPqpOM9rxI1BC0+cdUy0nL1Gb7u3qDzLDNkVue67qKqOoK+PQ
+         Zn0Z3eCYKz+sKmY1O6Mn+WxgRGFX72kZoLjIe+w86hCt3HGdyJq31rZsIXKh48QL3EdQ
+         rU+KJKKMm1WS8V4qptEUaxHH1wFPLxl1H2HGSac240BD+K5g8YYI9TubdoT/efcMF6vt
+         kf1pL7QgoR7QjzeHho5AWwkXQumqELeFZjbyqV0pGMF5IGIMHm4pEJhR+evgK94fj+4q
+         k+FUfh61EvtqNxZiiT3x3akhV3X+lmzmWeU2tYIavKm5Ze/oHBk/AhtjmFCyAeTOwvB9
+         5NFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bjNAA894HypFtC+HqN0qFxQlTwc+VZ8apApQMaLAIM8=;
-        b=L9a2iNIjV3Wi46HqRLJlDm+w00++CqEx68EQ89lqWUSMW2ZUIXZRlf7HAZQyD+wLfj
-         /QX8TrHb58DAhvi40p3xeZjsd5wecrlVeKZFgMolGPZRFUmwZegHJD8opOQBNsD5d9ko
-         vyU/FC2vCeRZlwo+dUxplX8WWSBSiy3yS7RjsaurTgI1x5OJfIrfaFyVTpraE6CjFu6x
-         Yhh6RkHtiJPAIpUW/k5WXcZL46vZKuzEUT1VAKEzZBcdh34CZx0SRtwuDKZ65Rp5cs7l
-         EK9iN6xQpwCGxFsE+n1VMYDWJUAq/Gqyc+wkdXcSZlOLSy3vJ5CG9uBEwgh0dOrhT8RP
-         S7Zg==
-X-Gm-Message-State: APjAAAWY8P4mN108bMrWNRaqP9+SsVSL01UrKFzPV/oKPYa9mEsi/83o
-        egQFCdEM+bt75HfnYnOqalvrwtUh
-X-Google-Smtp-Source: APXvYqy+HXGhOEViyKTkzAPTLJYK9Ofk4wOAPuLAwk+GkTb5KOspMGKqeRlVT1s5/xAgtU2Nl1f0fQ==
-X-Received: by 2002:ac2:42ca:: with SMTP id n10mr3296793lfl.215.1579275704224;
-        Fri, 17 Jan 2020 07:41:44 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id y11sm14244102lfc.27.2020.01.17.07.41.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jan 2020 07:41:43 -0800 (PST)
-Subject: Re: [PATCH v3] mmc: tegra: fix SDR50 tuning override
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Lucas Stach <dev@lynxeye.de>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <9aff1d859935e59edd81e4939e40d6c55e0b55f6.1578390388.git.mirq-linux@rere.qmqm.pl>
- <CAPDyKFqXmbnH_NWZZTHHCE+Lt-f3JHAhJ8-=aoKNEPyQed44YA@mail.gmail.com>
- <20200117141145.GD26135@qmqm.qmqm.pl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <dbac86b6-a0b7-cf55-645a-ff0f39b7ae55@gmail.com>
-Date:   Fri, 17 Jan 2020 18:41:42 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3f+W4Xvm6P1QHWnul/IjVaVbxVFaJSRxnQJCYSx9gEI=;
+        b=YLMnjYvvtd+vTQXshfiz5pYqMRuAP46rmx4N5+rhU0Y4dEIZ0ybJOrBsXloUqpa3r1
+         If6ozni9c9q3A3tXj+K/TraxCXcc2//TbGPNNnL8Lyuo5UdY7hsvXjSzOq0EzawzQMyn
+         NpCFCYswS+4xmwHC9wYCB4fncCGt4EW31hdIM4IfSeCDWU/6rkdhHVX0Qxr/hTzPdKMR
+         0sbZ6iFwK0NVb3aSTZH5NnLL4xOfBJYRe236nmOKDcx0cUvJ513pAuCA6OTuoCnmGeWp
+         1oFkV3hZhjp4rEn5s4uFhPmnx8c3LrnLvINyyCGX5q1yoO5Ue09FgVOeZt1FBkJF+JlD
+         XYMQ==
+X-Gm-Message-State: APjAAAV8KEdiYNbNBONlrj+GxCR3Yc/CXUm3/qH8n5VO6B8ckxeDGVOd
+        2Cyh6NhDIgo7J3R2cv6O81H8D+1oPvx1s0dv6ZI=
+X-Google-Smtp-Source: APXvYqwQX6C67Z5k/Olz9ErSM0kNCQ/PtxFi1i1R+R/MleSFSQsUjHJQx0I1YtYGt5q3PkOX37rRHIstPathPjducks=
+X-Received: by 2002:a05:6808:24e:: with SMTP id m14mr3934910oie.168.1579275800172;
+ Fri, 17 Jan 2020 07:43:20 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200117141145.GD26135@qmqm.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <CAGi-RUJvqJoCXWN2YugRn=WYEk9yzt7m3OPfX_o++PmJWQ3woQ@mail.gmail.com>
+ <87wo9ub5f6.fsf@nanos.tec.linutronix.de> <CAGi-RUK_TA+WWvXJSrsa=_Pwq0pV1ffUKOCBu5c1t8O5Xs+UJg@mail.gmail.com>
+ <CAGi-RUJG=SB7az5FFVTzzgefn_VXUbyQX1dtBN+9gkR7MgyC6g@mail.gmail.com>
+ <87imldbqe3.fsf@nanos.tec.linutronix.de> <CAGi-RULNwpiNGYALYRG84SOUzkvNTbgctmXoS=Luh29xDHJzYw@mail.gmail.com>
+ <87v9pcw55q.fsf@nanos.tec.linutronix.de> <CAGi-RUJPJ59AMZp3Wap=9zSWLmQSXVDtkbD+O6Hofizf8JWyRg@mail.gmail.com>
+ <87pnfjwxtx.fsf@nanos.tec.linutronix.de> <CAGi-RUJtqdLtFBVMxL8TOQ3LGRqqrV4Ge7Fu9mTyDoQVYxtA5g@mail.gmail.com>
+ <87zhem172r.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87zhem172r.fsf@nanos.tec.linutronix.de>
+From:   Ramon Fried <rfried.dev@gmail.com>
+Date:   Fri, 17 Jan 2020 17:43:08 +0200
+Message-ID: <CAGi-RUJkr0gPbynYe+Gkk-JoeyCHdSvd9zdgCv4Hij5vfGVMEA@mail.gmail.com>
+Subject: Re: MSI irqchip configured as IRQCHIP_ONESHOT_SAFE causes spurious IRQs
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     hkallweit1@gmail.com, Bjorn Helgaas <bhelgaas@google.com>,
+        maz@kernel.org, lorenzo.pieralisi@arm.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-17.01.2020 17:11, Michał Mirosław пишет:
-> On Thu, Jan 16, 2020 at 03:39:54PM +0100, Ulf Hansson wrote:
->> On Tue, 7 Jan 2020 at 10:47, Michał Mirosław <mirq-linux@rere.qmqm.pl> wrote:
->>>
->>> Commit 7ad2ed1dfcbe inadvertently mixed up a quirk flag's name and
->>> broke SDR50 tuning override. Use correct NVQUIRK_ name.
->>>
->>> Fixes: 7ad2ed1dfcbe ("mmc: tegra: enable UHS-I modes")
->>> Cc: <stable@vger.kernel.org> # 4f6aa3264af4: mmc: tegra: Only advertise UHS modes if IO regulator is present
->>
->> I am dropping this tag, simply because I don't understand what it should tell.
-> 
-> It tells the maintainer that he needs to cherry-pick this commit if
-> its not in particular stable version already. I guess this is only
-> for v4.4, as v4.9+ already have it, and v3.16 does not include the
-> Fixed commit.
-
-I guess it could be: Cc: <stable@vger.kernel.org> # v4.4+
-
-And then you could email Greg KH or Sasha Levin, asking to pick up the
-additional commit to the stable kernel, or they will ask you by
-themselves about why the patch isn't applying and how to handle it.
+On Fri, Jan 17, 2020 at 4:38 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Ramon,
+>
+> Ramon Fried <rfried.dev@gmail.com> writes:
+> >> So from a software perspective you want to do something like this:
+> >>
+> >> gic_irq_handler()
+> >> {
+> >>    mask_ack(gic_irqX);
+> >>
+> >>    pending = read(msi_status);
+> >>    for_each_bit(bit, pending) {
+> >>        ack(msi_status, bit);  // This clears the latch in the MSI block
+> >>        handle_irq(irqof(bit));
+> >>    }
+> >>    unmask(gic_irqX);
+> >> }
+> >>
+> >> And that works perfectly correct without masking the MSI interrupt at
+> >> the PCI level for a threaded handler simply because the PCI device
+> >> will not send another interrupt until the previous one has been
+> >> handled by the driver unless the PCI device is broken.
+> >
+> > I'm missing something here, isn't this implementation blocks IRQ's only during
+> > the HW handler and not during the threaded handler ? (Assuming that I selected
+> > handle_level_irq() as the default handler)
+>
+> handle_level_irq() is the proper handler for the actual GIC interrupt
+> which does the demultiplexing. The MSI interrupts want to have
+> handle_edge_irq().
+>
+> > Actually my implementation current implementation is very similar to what
+> > you just described:
+> >
+> > static void eq_msi_isr(struct irq_desc *desc)
+> > {
+> >         struct irq_chip *chip = irq_desc_get_chip(desc);
+> >         struct eq_msi *msi;
+> >         u16 status;
+> >         unsigned long bitmap;
+> >         u32 bit;
+> >         u32 virq;
+> >
+> >         chained_irq_enter(chip, desc);
+> >         msi = irq_desc_get_handler_data(desc);
+> >
+> >         while ((status = readw(msi->gcsr_regs_base + LINK_GCSR5_OFFSET)
+> >                 & MSI_IRQ_REQ) != 0) {
+> >                 pr_debug("MSI: %x\n", status >> 12);
+> >
+> >                 bitmap = status >> 12;
+> >                 for_each_set_bit(bit, &bitmap, msi->num_of_vectors) {
+> >                         virq = irq_find_mapping(msi->inner_domain, bit);
+> >                         if (virq) {
+> >                                 generic_handle_irq(virq);
+> >                         } else {
+> >                                 pr_err("unexpected MSI\n");
+> >                                 handle_bad_irq(desc);
+>
+> Now if you look at the example I gave you there is a subtle difference:
+>
+> >>    pending = read(msi_status);
+> >>    for_each_bit(bit, pending) {
+> >>        ack(msi_status, bit);  // This clears the latch in the MSI block
+> >>        handle_irq(irqof(bit));
+> >>    }
+>
+> And this clearing is important when one of the MSI interrupts is
+> actually having a threaded handler.
+>
+>  MSI interrupt fires
+>   -> sets bit in msi_status
+>     -> MSI block raises GIC interrupt because msi_status != 0
+>
+>  CPU handles GIC interrupt
+>    pending = read(msi_status);
+>    for_each_bit(bit, pending)
+>       handle_irq()
+>         primary_handler()
+>            -> WAKEUP_THREAD
+>
+>    RETI, but msi_status is still != 0
+>
+> > Additionally the domain allocation is defined like:
+> > static int eq_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+> >                                  unsigned int nr_irqs, void *args)
+> > {
+> >         struct eq_msi *msi = domain->host_data;
+> >         unsigned long bit;
+> >         u32 mask;
+> >
+> >         /* We only allow 32 MSI per device */
+> >         WARN_ON(nr_irqs > 32);
+> >         if (nr_irqs > 32)
+> >                 return -ENOSPC;
+> >
+> >         bit = find_first_zero_bit(msi->used, msi->num_of_vectors);
+> >         if (bit >= msi->num_of_vectors)
+> >                 return -ENOSPC;
+> >
+> >         set_bit(bit, msi->used);
+> >
+> >         mask = readw(msi->gcsr_regs_base + LINK_GCSR6_OFFSET);
+> >         mask |= BIT(bit) << 12;
+> >         writew(mask, msi->gcsr_regs_base + LINK_GCSR6_OFFSET);
+> >
+> >         irq_domain_set_info(domain, virq, bit, &eq_msi_bottom_irq_chip,
+> >                             domain->host_data, handle_level_irq,
+>
+> This is wrong. MSI is edge type, not level and you are really mixing up
+> the concepts here.
+>
+> The fact that the MSI block raises a level interrupt on the output side
+> has absolutely nothing to do with the type of the MSI interrupt itself.
+>
+> MSI is edge type by definition and this does not change just because
+> there is a translation unit between the MSI interrupt and the CPU
+> controller.
+>
+> The actual MSI interrupts do not even know about the existance of that
+> MSI block at all. They do not care, as all they need to know is a
+> message and an address. When an interrupt is raised in the device the
+> MSI chip associated to the device (PCI or something else) writes this
+> message to the address exactly ONCE. And this exactly ONCE defines the
+> edge nature of MSI.
+OK, now I understand my mistake. thanks.
+>
+> A proper designed MSI device should not send another message before the
+> interrupt handler which is associated to the device has handled the
+> interrupt at the device level.
+By "MSI device" you mean the MSI controller in the SOC or the endpoint
+that sends the MSI ?
+>
+> So you really have to understand that the GIC interrupt and the MSI
+> interrupts are two different entities. They just have a 'connection'
+> because the message/address which is handed to the MSI device triggers
+> that GIC interrupt via the MSI translation unit. But they are still
+> different and independent entities.
+>
+> See?
+>
+> Thanks,
+>
+>         tglx
+>
+>
+>
+>
+>
+>
