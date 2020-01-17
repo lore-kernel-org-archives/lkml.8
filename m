@@ -2,34 +2,36 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C38C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A72C33CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFE6C20728
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:58:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 003B2217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:58:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="SqV3Jw+T"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="SpQSiS9/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbgAQM6u (ORCPT
+        id S1727040AbgAQM6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 07:58:50 -0500
+        Fri, 17 Jan 2020 07:58:51 -0500
 Received: from esa6.hc3370-68.iphmx.com ([216.71.155.175]:24029 "EHLO
         esa6.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbgAQM6u (ORCPT
+        with ESMTP id S1726587AbgAQM6u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 17 Jan 2020 07:58:50 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=citrix.com; s=securemail; t=1579265930;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=eUFpfewzCDJA8AIMqKbJFmmJ3o8RPdk06EsWQKEdESU=;
-  b=SqV3Jw+Tp2NiAYvfTW5kieGxZtUF353yfeU3m1oq4oVSlZlvHmaPKbiu
-   Hxas1Uz/NzSPuzZEh86B4uDxW/p/OJnP4k9py9iYMTWP+K2MMHhRsCF2w
-   J8E11gVSZ1gHE+WV4Rbn2ylKvXetXtJUC3XVsm1uDVxVG6FTYILcDadm0
-   I=;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=4o9RJx4StHoB6G/jxqKKoPDaZjJC3Q3+qMbkHErq6tg=;
+  b=SpQSiS9/KHUuklPY1uzrE47ds80wJ4lqcAK/1frmAUd1CtVvrpwlnThf
+   SG5IMSj+DhZrdyn6UDT3Z1M58ZZKbHggy1crA2vMraXY5wImU5BygTXwe
+   q5L/Syq/Fumxlp2d8VDrzmIhjgiEw+S8uKK3BhI4r3nLL4b800W3/JKuW
+   Y=;
 Authentication-Results: esa6.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=sergey.dyasli@citrix.com; spf=Pass smtp.mailfrom=sergey.dyasli@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
 Received-SPF: None (esa6.hc3370-68.iphmx.com: no sender
   authenticity information available from domain of
@@ -57,18 +59,18 @@ Received-SPF: None (esa6.hc3370-68.iphmx.com: no sender
   envelope-from="sergey.dyasli@citrix.com";
   x-sender="postmaster@mail.citrix.com";
   x-conformance=sidf_compatible
-IronPort-SDR: cYJtGt6LdwnYC5653CHAMVVeanmloFH0E67hIHUgcoEZSsvCeioxQxxsBrqjj+K978/MaI/e/l
- 0J6GlKAajUQftwzwGGBHrSj8NAWktiZYEAKXYGHyNfwtpBwT5jmqun2bgFtRIAG3cIlaw1nC8V
- r2bjF0mqnViaII8Tb7HRhu6yPIUvp3LYgE1ttmVwMSDjpx9mjnJXhYYSSp7bKeEIzOMtm0VtNR
- 7zLfUwPEeCg7d0EhuOqk5VYtlpn6j2y/MicWZ524RsZvrLyKCqewKNMeWmyAYCzU+qFLZQ85A1
- 5XU=
+IronPort-SDR: zD3guFlkH9JhD+uSChmLcxdihehn1gAY55V0yNOLmfd5xHNkkyjQkaG1rNe8JDLriMbXtqsdj0
+ 81dpZI705lNPF60X/LSI9Zed8Ipu/jX3FdGD0/VCa2xZQHYWL1ajeD5dMTEwtRTi9r2yF6xi9U
+ BWpJr6wpKSm7udaVNwywU2OV5nt7AoxiT6BZueqhYAr6rFhXtL4h856U0/kqypBQmHvOBz7pSc
+ dndcgglECoHTuRJtrokHRkSL/prOB0icVkoTw4UuoGG6SOWAn45h1sm75ZIutyTQgiKCbBK8cc
+ FgM=
 X-SBRS: 2.7
-X-MesageID: 11502054
+X-MesageID: 11502055
 X-Ironport-Server: esa6.hc3370-68.iphmx.com
 X-Remote-IP: 162.221.158.21
 X-Policy: $RELAYED
 X-IronPort-AV: E=Sophos;i="5.70,330,1574139600"; 
-   d="scan'208";a="11502054"
+   d="scan'208";a="11502055"
 From:   Sergey Dyasli <sergey.dyasli@citrix.com>
 To:     <xen-devel@lists.xen.org>, <kasan-dev@googlegroups.com>,
         <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
@@ -82,10 +84,12 @@ CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
         Ross Lagerwall <ross.lagerwall@citrix.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Sergey Dyasli <sergey.dyasli@citrix.com>
-Subject: [PATCH v2 0/4] basic KASAN support for Xen PV domains
-Date:   Fri, 17 Jan 2020 12:58:30 +0000
-Message-ID: <20200117125834.14552-1-sergey.dyasli@citrix.com>
+Subject: [PATCH v2 1/4] kasan: introduce set_pmd_early_shadow()
+Date:   Fri, 17 Jan 2020 12:58:31 +0000
+Message-ID: <20200117125834.14552-2-sergey.dyasli@citrix.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200117125834.14552-1-sergey.dyasli@citrix.com>
+References: <20200117125834.14552-1-sergey.dyasli@citrix.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
@@ -93,34 +97,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series allows to boot and run Xen PV kernels (Dom0 and DomU) with
-CONFIG_KASAN=y. It has been used internally for some time now with good
-results for finding memory corruption issues in Dom0 kernel.
+It is incorrect to call pmd_populate_kernel() multiple times for the
+same page table from inside Xen PV domains. Xen notices it during
+kasan_populate_early_shadow():
 
-Only Outline instrumentation is supported at the moment.
+    (XEN) mm.c:3222:d155v0 mfn 3704b already pinned
 
-Sergey Dyasli (2):
-  kasan: introduce set_pmd_early_shadow()
-  x86/xen: add basic KASAN support for PV kernel
+This happens for kasan_early_shadow_pte when USE_SPLIT_PTE_PTLOCKS is
+enabled. Fix this by introducing set_pmd_early_shadow() which calls
+pmd_populate_kernel() only once and uses set_pmd() afterwards.
 
-Ross Lagerwall (2):
-  xen: teach KASAN about grant tables
-  xen/netback: fix grant copy across page boundary
+Signed-off-by: Sergey Dyasli <sergey.dyasli@citrix.com>
+---
+v1 --> v2:
+- Fix compilation without CONFIG_XEN_PV
+- Slightly updated description
 
- arch/x86/mm/kasan_init_64.c       | 12 +++++++
- arch/x86/xen/Makefile             |  7 ++++
- arch/x86/xen/enlighten_pv.c       |  3 ++
- arch/x86/xen/mmu_pv.c             | 38 ++++++++++++++++++++
- drivers/net/xen-netback/common.h  |  2 +-
- drivers/net/xen-netback/netback.c | 60 +++++++++++++++++++++++++------
- drivers/xen/Makefile              |  2 ++
- drivers/xen/grant-table.c         |  5 ++-
- include/xen/xen-ops.h             | 10 ++++++
- kernel/Makefile                   |  2 ++
- lib/Kconfig.kasan                 |  3 +-
- mm/kasan/init.c                   | 32 ++++++++++++-----
- 12 files changed, 154 insertions(+), 22 deletions(-)
+RFC --> v1:
+- New patch
+---
+ mm/kasan/init.c | 32 ++++++++++++++++++++++++--------
+ 1 file changed, 24 insertions(+), 8 deletions(-)
 
+diff --git a/mm/kasan/init.c b/mm/kasan/init.c
+index ce45c491ebcd..7791fe0a7704 100644
+--- a/mm/kasan/init.c
++++ b/mm/kasan/init.c
+@@ -81,6 +81,26 @@ static inline bool kasan_early_shadow_page_entry(pte_t pte)
+ 	return pte_page(pte) == virt_to_page(lm_alias(kasan_early_shadow_page));
+ }
+ 
++#ifdef CONFIG_XEN_PV
++static inline void set_pmd_early_shadow(pmd_t *pmd)
++{
++	static bool pmd_populated = false;
++	pte_t *early_shadow = lm_alias(kasan_early_shadow_pte);
++
++	if (likely(pmd_populated)) {
++		set_pmd(pmd, __pmd(__pa(early_shadow) | _PAGE_TABLE));
++	} else {
++		pmd_populate_kernel(&init_mm, pmd, early_shadow);
++		pmd_populated = true;
++	}
++}
++#else
++static inline void set_pmd_early_shadow(pmd_t *pmd)
++{
++	pmd_populate_kernel(&init_mm, pmd, lm_alias(kasan_early_shadow_pte));
++}
++#endif /* ifdef CONFIG_XEN_PV */
++
+ static __init void *early_alloc(size_t size, int node)
+ {
+ 	void *ptr = memblock_alloc_try_nid(size, size, __pa(MAX_DMA_ADDRESS),
+@@ -120,8 +140,7 @@ static int __ref zero_pmd_populate(pud_t *pud, unsigned long addr,
+ 		next = pmd_addr_end(addr, end);
+ 
+ 		if (IS_ALIGNED(addr, PMD_SIZE) && end - addr >= PMD_SIZE) {
+-			pmd_populate_kernel(&init_mm, pmd,
+-					lm_alias(kasan_early_shadow_pte));
++			set_pmd_early_shadow(pmd);
+ 			continue;
+ 		}
+ 
+@@ -157,8 +176,7 @@ static int __ref zero_pud_populate(p4d_t *p4d, unsigned long addr,
+ 			pud_populate(&init_mm, pud,
+ 					lm_alias(kasan_early_shadow_pmd));
+ 			pmd = pmd_offset(pud, addr);
+-			pmd_populate_kernel(&init_mm, pmd,
+-					lm_alias(kasan_early_shadow_pte));
++			set_pmd_early_shadow(pmd);
+ 			continue;
+ 		}
+ 
+@@ -198,8 +216,7 @@ static int __ref zero_p4d_populate(pgd_t *pgd, unsigned long addr,
+ 			pud_populate(&init_mm, pud,
+ 					lm_alias(kasan_early_shadow_pmd));
+ 			pmd = pmd_offset(pud, addr);
+-			pmd_populate_kernel(&init_mm, pmd,
+-					lm_alias(kasan_early_shadow_pte));
++			set_pmd_early_shadow(pmd);
+ 			continue;
+ 		}
+ 
+@@ -271,8 +288,7 @@ int __ref kasan_populate_early_shadow(const void *shadow_start,
+ 			pud_populate(&init_mm, pud,
+ 					lm_alias(kasan_early_shadow_pmd));
+ 			pmd = pmd_offset(pud, addr);
+-			pmd_populate_kernel(&init_mm, pmd,
+-					lm_alias(kasan_early_shadow_pte));
++			set_pmd_early_shadow(pmd);
+ 			continue;
+ 		}
+ 
 -- 
 2.17.1
 
