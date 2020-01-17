@@ -2,148 +2,92 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D769EC33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0526C33CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6D1B2064C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:58:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B40692064C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:00:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="A++MSgED"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ruUfKV6b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729096AbgAQP6l (ORCPT
+        id S1729138AbgAQQAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 10:58:41 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38811 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728739AbgAQP6k (ORCPT
+        Fri, 17 Jan 2020 11:00:25 -0500
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:35954 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729014AbgAQQAY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 10:58:40 -0500
-Received: by mail-lj1-f194.google.com with SMTP id w1so26993776ljh.5
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 07:58:39 -0800 (PST)
+        Fri, 17 Jan 2020 11:00:24 -0500
+Received: by mail-yb1-f196.google.com with SMTP id w9so5777850ybs.3;
+        Fri, 17 Jan 2020 08:00:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=y+sOBVwPXHpl/jOGredPdQ/eMOPx1R53v2YKaybpo74=;
-        b=A++MSgEDqeaqay+NQuCUGyeIN2kG3UsGiJA8e/G48HxQP8Bai+mCDaVLzeYStNnnDm
-         OyvxPnQSMyas2dvhw+Ev+6t/pEUZAXksiKLHl+1AfZmB/wgG7IV+a0lbL4wum4G6josY
-         AO6GhNHfbnpj4l3ztmzAa6Rk91MIiFzabf08PaVz/+GXjOHNdQ2EjEUOtxuJRRED7yjI
-         9aW6ceb4+In7CtnXksxhGhzmTu50yp71ijp3ckj5puwmhwt5XYU8PEJmdjf0AB7UaZ2V
-         yFMfdhKaeZQBSkydOifCuhn2wGgnSlIM20Md1n144gVX9DwAYQDUtbf8a7Oxgq5qbq57
-         oMhg==
+        bh=R6gBWA7SJp0IcPVqVM3hwE72NvzIgdBdGK4yP72/Gwo=;
+        b=ruUfKV6bHwzTOS5F8ooHLNOmfdUm48sa+7jU399UnMsKjYXNBXtZHGwtMpflzRuSr8
+         WXMKeqPFsfFDE54N/H5z7YuaiJedtzWvS5sKwnpBjgHFEhAgH/+5dtZH+OnTvDGhIfkz
+         qzDneArYZPr5nULzpyKcHnQ3Dh3DKNvFc3dB2wTz9FOA3ESOyunDdYonVtEj9GQRWqK+
+         VGzPHJIUkfSh//RmDwGo5+SQdIxTM6UpyXcbDIgiBr97mNQrnLgLRfZYwwWieMk3jeE5
+         lYmEv6A2F4qX8bKOmd78SJKjK8Nh4YhXzLae5Usw/XbsSch14dJZe2C3oRkFyw4dNYCL
+         Azmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=y+sOBVwPXHpl/jOGredPdQ/eMOPx1R53v2YKaybpo74=;
-        b=X9LUkVYDKlFbVZPuSRGoRdxI1F7uqdXodRWJX30zYQkU6+tmqxCaM28pHFgCiN6CwF
-         KOujSn3ZMqc47d5vH1EmVRZm/zOBm9gxYys4NwM5AAYXEydG1eoNrc9GjMnptehK9oZE
-         1UqZZzFzz5c0XD+g0Wgav+RA4mjvv/i8PAzG0eV3XXfnJd5X8/yc/9dRnAEAYDsYdCEx
-         wM+0vU18UCjcgTmw4RtrUP8bMBwl3MfU3Wi9vtKrcJysZkZ2cC0Dv+93E31CePDcXAtT
-         tovWgboaLWYYlYNXoBh37Pg3+DEFOnJiPqJ4vkgiOJzA6cFr/pKB5GNe/+jn7cpF+b2q
-         tBZA==
-X-Gm-Message-State: APjAAAVbzYlIZMD8eDPdbxJr16A1xvcYksD23eYJalp15iVcd5EhTPBu
-        L3yG6eaWKvyBgPqc3aKFJwXM2A==
-X-Google-Smtp-Source: APXvYqxrmQaVRsNtHHNzyFR0xx1ZpXxJ6+StbGbRoizxb9hy6Tpqd1hlRsR9BMFheoCQmtN8dCj4Uw==
-X-Received: by 2002:a2e:9a04:: with SMTP id o4mr6084808lji.214.1579276718652;
-        Fri, 17 Jan 2020 07:58:38 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id q186sm12694326ljq.14.2020.01.17.07.58.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 07:58:37 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 3729B100CFF; Fri, 17 Jan 2020 18:58:37 +0300 (+03)
-Date:   Fri, 17 Jan 2020 18:58:37 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>, ktkhai@virtuozzo.com,
-        christian.brauner@ubuntu.com, sjpark@amazon.de
-Subject: Re: [PATCH v2 2/5] mm: introduce external memory hinting API
-Message-ID: <20200117155837.bowyjpndfiym6cgs@box>
-References: <20200116235953.163318-1-minchan@kernel.org>
- <20200116235953.163318-3-minchan@kernel.org>
- <20200117115225.GV19428@dhcp22.suse.cz>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=R6gBWA7SJp0IcPVqVM3hwE72NvzIgdBdGK4yP72/Gwo=;
+        b=fnlKM1MA97soE7Ons/aGjKckyuVseiq6yNTV96ZTZlZn7X9ApC2nEG0ypcg8R8mRYZ
+         bZF6ispOPbhJz3XBUCwqf7622cVL4ZV4wowAjuZEwp0ZXkRACZD08ux/kkIt0Qf96kdD
+         b4xbxAstwq7HGmMpmrYEoM/GOVHlUWX7a8b39leuvJbnPyIwSNtlhcPzL4pc5TYizOYw
+         zrbNHSzD5Z2IBUSV/G3L32qeABkN09IHfQGNdLbRMk1rPbCDezFlhYidqvO4qdTl1qd2
+         Antfk5at6d7bxYwD9BC1E7e9xDb7Ch8ZMHrjFBd9IomlJXfobJTL+4CMtRQKW7w2KYW7
+         db8A==
+X-Gm-Message-State: APjAAAU6Li+6gvSHE8GEc7XiZVYM1EQVny3X8yn/j3QBDs/iGXEX4MYR
+        +RbhntI5MpgF8LG6pxzNfTxq6Qqb
+X-Google-Smtp-Source: APXvYqz5wH0WCn9zkrIzZPKEQq5O51Es8+lkzehbJ4+QO5ND36pLlkfc6zOX1ZqfACeo0xTCAZjCFA==
+X-Received: by 2002:a5b:7c3:: with SMTP id t3mr25264044ybq.261.1579276823950;
+        Fri, 17 Jan 2020 08:00:23 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id g190sm11083367ywd.85.2020.01.17.08.00.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 17 Jan 2020 08:00:23 -0800 (PST)
+Date:   Fri, 17 Jan 2020 08:00:22 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 00/71] 4.14.166-stable review
+Message-ID: <20200117160022.GA25706@roeck-us.net>
+References: <20200116231709.377772748@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200117115225.GV19428@dhcp22.suse.cz>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200116231709.377772748@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 12:52:25PM +0100, Michal Hocko wrote:
-> On Thu 16-01-20 15:59:50, Minchan Kim wrote:
-> > There is usecase that System Management Software(SMS) want to give
-> > a memory hint like MADV_[COLD|PAGEEOUT] to other processes and
-> > in the case of Android, it is the ActivityManagerService.
-> > 
-> > It's similar in spirit to madvise(MADV_WONTNEED), but the information
-> > required to make the reclaim decision is not known to the app. Instead,
-> > it is known to the centralized userspace daemon(ActivityManagerService),
-> > and that daemon must be able to initiate reclaim on its own without
-> > any app involvement.
-> > 
-> > To solve the issue, this patch introduces new syscall process_madvise(2).
-> > It uses pidfd of an external processs to give the hint.
-> > 
-> >  int process_madvise(int pidfd, void *addr, size_t length, int advise,
-> > 			unsigned long flag);
-> > 
-> > Since it could affect other process's address range, only privileged
-> > process(CAP_SYS_PTRACE) or something else(e.g., being the same UID)
-> > gives it the right to ptrace the process could use it successfully.
-> > The flag argument is reserved for future use if we need to extend the
-> > API.
-> > 
-> > I think supporting all hints madvise has/will supported/support to
-> > process_madvise is rather risky. Because we are not sure all hints make
-> > sense from external process and implementation for the hint may rely on
-> > the caller being in the current context so it could be error-prone.
-> > Thus, I just limited hints as MADV_[COLD|PAGEOUT] in this patch.
-> > 
-> > If someone want to add other hints, we could hear hear the usecase and
-> > review it for each hint. It's more safe for maintainace rather than
-> > introducing a buggy syscall but hard to fix it later.
+On Fri, Jan 17, 2020 at 12:17:58AM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.166 release.
+> There are 71 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> I have brought this up when we discussed this in the past but there is
-> no reflection on that here so let me bring that up again. 
+> Responses should be made by Sat, 18 Jan 2020 23:16:00 +0000.
+> Anything received after that time might be too late.
 > 
-> I believe that the interface has an inherent problem that it is racy.
-> The external entity needs to know the address space layout of the target
-> process to do anyhing useful on it. The address space is however under
-> the full control of the target process though and the external entity
-> has no means to find out that the layout has changed. So
-> time-to-check-time-to-act is an inherent problem.
-> 
-> This is a serious design flaw and it should be explained why it doesn't
-> matter or how to use the interface properly to prevent that problem.
 
-I agree, it looks flawed.
+Build results:
+	total: 172 pass: 172 fail: 0
+Qemu test results:
+	total: 375 pass: 375 fail: 0
 
-Also I don't see what System Management Software can generically do on
-sub-process level. I mean how can it decide which part of address space is
-less important than other.
-
-I see how a manager can indicate that this process (or a group of
-processes) is less important than other, but on per-addres-range basis?
-
--- 
- Kirill A. Shutemov
+Guenter
