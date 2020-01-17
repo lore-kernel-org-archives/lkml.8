@@ -2,103 +2,584 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F1B3C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F87CC33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 518A42082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:13:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F76E2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:13:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hwT52K1d"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FXTpSUV6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbgAQMNZ (ORCPT
+        id S1728721AbgAQMNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 07:13:25 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:38447 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726892AbgAQMNY (ORCPT
+        Fri, 17 Jan 2020 07:13:51 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:42098 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726898AbgAQMNu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 07:13:24 -0500
-Received: by mail-oi1-f195.google.com with SMTP id l9so21959395oii.5;
-        Fri, 17 Jan 2020 04:13:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc;
-        bh=j9LdKm6yNd5aXn+rN0edQ8Jaz0F5s+sFTFnF9WgkgBY=;
-        b=hwT52K1dJOOsr+O6qALLUpZhk9Jfylg2E/jmuJiqovVYnNtANFj8pHkWHPd3kCTSwT
-         XTVloVKx+xw0fFVM1eIOmElCJ0ZEUKai+JyYq0m2cZ7G83TtZABDckiQgwL35PkuaO16
-         m5xpG+cjJAr99XFuLFK5gzilba4QRN8ZYKOqbsoGYa/BfDsGTCAWJ+D+bKj0Y6orJQGY
-         ebQisqQHEilstcz2sOsCqnWbyu0ptJOMtss3i7917tMQq6wy7R0iL1wjsLfQFCpCb6gL
-         jgod+mlBxJfVhbp3APRYAoI7AM/hK2KTU/12HDo5qvrHzTHO79z012kCG5kvyWMS5WN2
-         4tOw==
+        Fri, 17 Jan 2020 07:13:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579263228;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Hj3D4l5/vNfTgB2bMBZdkGZmT+8aRmh1K7mJlxaJG7Q=;
+        b=FXTpSUV6g/SEZXPSGkKVNoJ5uj8i4Ey2t/brSMq2xU4r/Sw3O2aOvxffj9eQpdaoLJhXj8
+        xEa43K/v/k7gP8yVlOe+PDc7drSOWpAE8+Fe5Jyy16ixxBh9FoCWDzXp/UIUk0dY/260MF
+        TQASOK3MpAgw0U5jIVgvawX7Vo5hWBA=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-396-8ZIl6ZjfNxas120JO_MipQ-1; Fri, 17 Jan 2020 07:13:47 -0500
+X-MC-Unique: 8ZIl6ZjfNxas120JO_MipQ-1
+Received: by mail-qv1-f71.google.com with SMTP id d7so15372818qvq.12
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 04:13:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc;
-        bh=j9LdKm6yNd5aXn+rN0edQ8Jaz0F5s+sFTFnF9WgkgBY=;
-        b=UH5QBDQrxl0Rr+J/QFW2M9cXUgDe7QDeQ/fGUjmRkDPl67N2VkaEtMd6j7gEEcK+3V
-         vDwSY9brRvAo9mPfAeZ9GSujlgTurHNBkP38rv6gvRm0ljgseIK3gVUlIS0m5lpi4/pP
-         H9fqvc82jX9vgDlVTPSwcCKOb0b5kihspMp+MqEV+oC29od2/ejp3gTlgAZd/Su+BfLd
-         pe/DHABhguStekRfbOOQNfxEE5GZQmipUNUghXT1u/rOFuzPBFPUfC00iBoHzOxRr3Wn
-         FKd3ucYp1iiy6Ac2rXxqGzY9QPMbB9Mc6NMI9VYR28T/wOlA6IJWSKxIlLJGZclq9/cI
-         3erg==
-X-Gm-Message-State: APjAAAV2IOlDOXsWtdZwcUoMQQK1r4Cj5O+LxqE56ixx42aJ1Z6iZfgn
-        452yK3SvFjOGcaqY1w6qrWRV66tT8o1Pn4Ds1Nc=
-X-Google-Smtp-Source: APXvYqyK2sogu8+jyU3vGsF46DTDsA765vsyTHqA+AkGu0AcxB7pNmzp2BD3vbnNDBFAMn6+P87/6TH46HulpscBxmw=
-X-Received: by 2002:aca:1b08:: with SMTP id b8mr3245485oib.62.1579263203997;
- Fri, 17 Jan 2020 04:13:23 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Hj3D4l5/vNfTgB2bMBZdkGZmT+8aRmh1K7mJlxaJG7Q=;
+        b=TUhgl3zu/WgKhmL9fg3HiYwxjXjRhRcBBXj27w3WvLdsGQpVBO2OhoeyY+HoHnOHgt
+         MgCgF8UCe8a+to8YBHt950CAN2fogiopI4VDSfNSRKBEcsk6xHSepvBlFlsybSpNAdHn
+         Tk3URF7tKJH+6z+OcZ5MsJxktZcnr+wC9V7HBxffokHH4QC1HAwvZrd3wsUrXkXeDjwH
+         ogG3lywb4xK6DCTgnc5b+tE8V5weprSOETVYOaj27/8bBRPoTset8fdKcw1lFvWV/+3b
+         xVVk5Q28sAXKOQUkYIGKCjuRoI7N7ascTsuVVm6xnFghwv5E47YvUmio9PTXL+0VoCII
+         uO+g==
+X-Gm-Message-State: APjAAAUoZlYJByKDzGPEnDnLQtu4/FTmTG+IPDdBFBFcrdJjNzdNMOhq
+        d26G8BeSCT8Dw9Nk50nfgAi3gpQhj/iSUe2FDdy+Bwg/RRvnkCFdKNfM88ac2wfj4VgsCdfz8+F
+        xMF8QnG5XQ0OgilSq8+EnxfU4
+X-Received: by 2002:ac8:7586:: with SMTP id s6mr7134323qtq.309.1579263226869;
+        Fri, 17 Jan 2020 04:13:46 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyEft0asS0huNjhVp6yZhJw3Jdo4Wjrk2KVbvLIvnkvgdNBBN9qj9j92UG5rRWAl8zuyFy9WQ==
+X-Received: by 2002:ac8:7586:: with SMTP id s6mr7134287qtq.309.1579263226457;
+        Fri, 17 Jan 2020 04:13:46 -0800 (PST)
+Received: from redhat.com (bzq-79-179-85-180.red.bezeqint.net. [79.179.85.180])
+        by smtp.gmail.com with ESMTPSA id i14sm11791980qkl.133.2020.01.17.04.13.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2020 04:13:45 -0800 (PST)
+Date:   Fri, 17 Jan 2020 07:13:36 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        tiwei.bie@intel.com, jgg@mellanox.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, lingshan.zhu@intel.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        kevin.tian@intel.com, stefanha@redhat.com, rdunlap@infradead.org,
+        hch@infradead.org, aadam@redhat.com, jakub.kicinski@netronome.com,
+        jiri@mellanox.com, shahafs@mellanox.com, hanand@xilinx.com,
+        mhabets@solarflare.com
+Subject: Re: [PATCH 3/5] vDPA: introduce vDPA bus
+Message-ID: <20200117070324-mutt-send-email-mst@kernel.org>
+References: <20200116124231.20253-1-jasowang@redhat.com>
+ <20200116124231.20253-4-jasowang@redhat.com>
 MIME-Version: 1.0
-Received: by 2002:a8a:87:0:0:0:0:0 with HTTP; Fri, 17 Jan 2020 04:13:23 -0800 (PST)
-In-Reply-To: <CAK8P3a28NRp+SGr44=DTYqL0+ZqtamHwn+WYNTxVRJOJ3HtLSg@mail.gmail.com>
-References: <CGME20200115082824epcas1p4eb45d088c2f88149acb94563c4a9b276@epcas1p4.samsung.com>
- <20200115082447.19520-1-namjae.jeon@samsung.com> <20200115082447.19520-10-namjae.jeon@samsung.com>
- <CAK8P3a3Vqz=T_=sFwBBPa2_Hi_dA=BwWod=L9JkLxUgi=aKNWw@mail.gmail.com>
- <CAKYAXd9_qmanQCcrdpScFWvPXuZvk4jhv7Gc=t_vRL9zqWNSjA@mail.gmail.com>
- <20200115133838.q33p5riihsinp6c4@pali> <CAK8P3a1ozgLYpDtveU0CtLj5fEFG8i=_QrnEAtoVFt-yC=Dc0g@mail.gmail.com>
- <20200115142428.ugsp3binf2vuiarq@pali> <CAK8P3a0_sotmv40qHkhE5M=PwEYLuJfX+uRFZvh9iGzhv6R6vw@mail.gmail.com>
- <20200115153943.qw35ya37ws6ftlnt@pali> <CAK8P3a1iYPA9MrXORiWmy1vQGoazwHs7OfPdoHLZLJDWqu9jqA@mail.gmail.com>
- <002801d5cce2$228d79f0$67a86dd0$@samsung.com> <CAK8P3a28NRp+SGr44=DTYqL0+ZqtamHwn+WYNTxVRJOJ3HtLSg@mail.gmail.com>
-From:   Namjae Jeon <linkinjeon@gmail.com>
-Date:   Fri, 17 Jan 2020 20:13:23 +0800
-Message-ID: <CAKYAXd-eYLvduvnJhkF6my_XVpZSudnss0Qp35+-CUx_F_TUCA@mail.gmail.com>
-Subject: Re: [PATCH v10 09/14] exfat: add misc operations
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Christoph Hellwig <hch@lst.de>, sj1557.seo@samsung.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200116124231.20253-4-jasowang@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020-01-17 18:13 GMT+08:00, Arnd Bergmann <arnd@arndb.de>:
-> On Fri, Jan 17, 2020 at 3:59 AM Namjae Jeon <namjae.jeon@samsung.com>
-> wrote:
->>
->>
->> > This is what I think the timezone mount option should be used
->> > for: if we don't know what the timezone was for the on-disk timestamp,
->> > use
->> > the one provided by the user. However, if none was specified, it should
->> > be
->> > either sys_tz or UTC (i.e. no conversion). I would prefer the use of
->> > UTC
->> > here given the problems with sys_tz, but sys_tz would be more
->> > consistent
->> > with how fs/fat works.
->> Hi Arnd,
->>
->> Could you please review this change ?
->
-> Looks all good to me now.
-Thanks for your review!
+On Thu, Jan 16, 2020 at 08:42:29PM +0800, Jason Wang wrote:
+> vDPA device is a device that uses a datapath which complies with the
+> virtio specifications with vendor specific control path. vDPA devices
+> can be both physically located on the hardware or emulated by
+> software. vDPA hardware devices are usually implemented through PCIE
+> with the following types:
+> 
+> - PF (Physical Function) - A single Physical Function
+> - VF (Virtual Function) - Device that supports single root I/O
+>   virtualization (SR-IOV). Its Virtual Function (VF) represents a
+>   virtualized instance of the device that can be assigned to different
+>   partitions
+> - VDEV (Virtual Device) - With technologies such as Intel Scalable
+>   IOV, a virtual device composed by host OS utilizing one or more
+>   ADIs.
+> - SF (Sub function) - Vendor specific interface to slice the Physical
+>   Function to multiple sub functions that can be assigned to different
+>   partitions as virtual devices.
+> 
+> >From a driver's perspective, depends on how and where the DMA
+> translation is done, vDPA devices are split into two types:
+> 
+> - Platform specific DMA translation - From the driver's perspective,
+>   the device can be used on a platform where device access to data in
+>   memory is limited and/or translated. An example is a PCIE vDPA whose
+>   DMA request was tagged via a bus (e.g PCIE) specific way. DMA
+>   translation and protection are done at PCIE bus IOMMU level.
+> - Device specific DMA translation - The device implements DMA
+>   isolation and protection through its own logic. An example is a vDPA
+>   device which uses on-chip IOMMU.
+> 
+> To hide the differences and complexity of the above types for a vDPA
+> device/IOMMU options and in order to present a generic virtio device
+> to the upper layer, a device agnostic framework is required.
+> 
+> This patch introduces a software vDPA bus which abstracts the
+> common attributes of vDPA device, vDPA bus driver and the
+> communication method (vdpa_config_ops) between the vDPA device
+> abstraction and the vDPA bus driver:
+> 
+> With the abstraction of vDPA bus and vDPA bus operations, the
+> difference and complexity of the under layer hardware is hidden from
+> upper layer. The vDPA bus drivers on top can use a unified
+> vdpa_config_ops to control different types of vDPA device.
+> 
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
+> ---
+>  MAINTAINERS                  |   1 +
+>  drivers/virtio/Kconfig       |   2 +
+>  drivers/virtio/Makefile      |   1 +
+>  drivers/virtio/vdpa/Kconfig  |   9 ++
+>  drivers/virtio/vdpa/Makefile |   2 +
+>  drivers/virtio/vdpa/vdpa.c   | 141 ++++++++++++++++++++++++++
+>  include/linux/vdpa.h         | 191 +++++++++++++++++++++++++++++++++++
+>  7 files changed, 347 insertions(+)
+>  create mode 100644 drivers/virtio/vdpa/Kconfig
+>  create mode 100644 drivers/virtio/vdpa/Makefile
+>  create mode 100644 drivers/virtio/vdpa/vdpa.c
+>  create mode 100644 include/linux/vdpa.h
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index d4bda9c900fa..578d2a581e3b 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -17540,6 +17540,7 @@ F:	tools/virtio/
+>  F:	drivers/net/virtio_net.c
+>  F:	drivers/block/virtio_blk.c
+>  F:	include/linux/virtio*.h
+> +F:	include/linux/vdpa.h
+>  F:	include/uapi/linux/virtio_*.h
+>  F:	drivers/crypto/virtio/
+>  F:	mm/balloon_compaction.c
+> diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
+> index 078615cf2afc..9c4fdb64d9ac 100644
+> --- a/drivers/virtio/Kconfig
+> +++ b/drivers/virtio/Kconfig
+> @@ -96,3 +96,5 @@ config VIRTIO_MMIO_CMDLINE_DEVICES
+>  	 If unsure, say 'N'.
+>  
+>  endif # VIRTIO_MENU
+> +
+> +source "drivers/virtio/vdpa/Kconfig"
+> diff --git a/drivers/virtio/Makefile b/drivers/virtio/Makefile
+> index 3a2b5c5dcf46..fdf5eacd0d0a 100644
+> --- a/drivers/virtio/Makefile
+> +++ b/drivers/virtio/Makefile
+> @@ -6,3 +6,4 @@ virtio_pci-y := virtio_pci_modern.o virtio_pci_common.o
+>  virtio_pci-$(CONFIG_VIRTIO_PCI_LEGACY) += virtio_pci_legacy.o
+>  obj-$(CONFIG_VIRTIO_BALLOON) += virtio_balloon.o
+>  obj-$(CONFIG_VIRTIO_INPUT) += virtio_input.o
+> +obj-$(CONFIG_VDPA) += vdpa/
+> diff --git a/drivers/virtio/vdpa/Kconfig b/drivers/virtio/vdpa/Kconfig
+> new file mode 100644
+> index 000000000000..3032727b4d98
+> --- /dev/null
+> +++ b/drivers/virtio/vdpa/Kconfig
+> @@ -0,0 +1,9 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +config VDPA
+> +	tristate
+> +        default n
+> +        help
+> +          Enable this module to support vDPA device that uses a
+> +          datapath which complies with virtio specifications with
+> +          vendor specific control path.
+> +
+> diff --git a/drivers/virtio/vdpa/Makefile b/drivers/virtio/vdpa/Makefile
+> new file mode 100644
+> index 000000000000..ee6a35e8a4fb
+> --- /dev/null
+> +++ b/drivers/virtio/vdpa/Makefile
+> @@ -0,0 +1,2 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +obj-$(CONFIG_VDPA) += vdpa.o
+> diff --git a/drivers/virtio/vdpa/vdpa.c b/drivers/virtio/vdpa/vdpa.c
+> new file mode 100644
+> index 000000000000..2b0e4a9f105d
+> --- /dev/null
+> +++ b/drivers/virtio/vdpa/vdpa.c
+> @@ -0,0 +1,141 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * vDPA bus.
+> + *
+> + * Copyright (c) 2019, Red Hat. All rights reserved.
+> + *     Author: Jason Wang <jasowang@redhat.com>
+> + *
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/idr.h>
+> +#include <linux/vdpa.h>
+> +
+> +#define MOD_VERSION  "0.1"
+> +#define MOD_DESC     "vDPA bus"
+> +#define MOD_AUTHOR   "Jason Wang <jasowang@redhat.com>"
+> +#define MOD_LICENSE  "GPL v2"
+> +
+> +static DEFINE_IDA(vdpa_index_ida);
+> +
+> +struct device *vdpa_get_parent(struct vdpa_device *vdpa)
+> +{
+> +	return vdpa->dev.parent;
+> +}
+> +EXPORT_SYMBOL(vdpa_get_parent);
+> +
+> +void vdpa_set_parent(struct vdpa_device *vdpa, struct device *parent)
+> +{
+> +	vdpa->dev.parent = parent;
+> +}
+> +EXPORT_SYMBOL(vdpa_set_parent);
+> +
+> +struct vdpa_device *dev_to_vdpa(struct device *_dev)
+> +{
+> +	return container_of(_dev, struct vdpa_device, dev);
+> +}
+> +EXPORT_SYMBOL_GPL(dev_to_vdpa);
+> +
+> +struct device *vdpa_to_dev(struct vdpa_device *vdpa)
+> +{
+> +	return &vdpa->dev;
+> +}
+> +EXPORT_SYMBOL_GPL(vdpa_to_dev);
+> +
+> +static int vdpa_dev_probe(struct device *d)
+> +{
+> +	struct vdpa_device *dev = dev_to_vdpa(d);
+> +	struct vdpa_driver *drv = drv_to_vdpa(dev->dev.driver);
+> +	int ret = 0;
+> +
+> +	if (drv && drv->probe)
+> +		ret = drv->probe(d);
+> +
+> +	return ret;
+> +}
+> +
+> +static int vdpa_dev_remove(struct device *d)
+> +{
+> +	struct vdpa_device *dev = dev_to_vdpa(d);
+> +	struct vdpa_driver *drv = drv_to_vdpa(dev->dev.driver);
+> +
+> +	if (drv && drv->remove)
+> +		drv->remove(d);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct bus_type vdpa_bus = {
+> +	.name  = "vdpa",
+> +	.probe = vdpa_dev_probe,
+> +	.remove = vdpa_dev_remove,
+> +};
+> +
+> +int register_vdpa_device(struct vdpa_device *vdpa)
+> +{
+> +	int err;
+> +
+> +	if (!vdpa_get_parent(vdpa))
+> +		return -EINVAL;
+> +
+> +	if (!vdpa->config)
+> +		return -EINVAL;
+> +
+> +	err = ida_simple_get(&vdpa_index_ida, 0, 0, GFP_KERNEL);
+> +	if (err < 0)
+> +		return -EFAULT;
+> +
+> +	vdpa->dev.bus = &vdpa_bus;
+> +	device_initialize(&vdpa->dev);
+> +
+> +	vdpa->index = err;
+> +	dev_set_name(&vdpa->dev, "vdpa%u", vdpa->index);
+> +
+> +	err = device_add(&vdpa->dev);
+> +	if (err)
+> +		ida_simple_remove(&vdpa_index_ida, vdpa->index);
+> +
+> +	return err;
+> +}
+> +EXPORT_SYMBOL_GPL(register_vdpa_device);
+> +
+> +void unregister_vdpa_device(struct vdpa_device *vdpa)
+> +{
+> +	int index = vdpa->index;
+> +
+> +	device_unregister(&vdpa->dev);
+> +	ida_simple_remove(&vdpa_index_ida, index);
+> +}
+> +EXPORT_SYMBOL_GPL(unregister_vdpa_device);
+> +
+> +int register_vdpa_driver(struct vdpa_driver *driver)
+> +{
+> +	driver->drv.bus = &vdpa_bus;
+> +	return driver_register(&driver->drv);
+> +}
+> +EXPORT_SYMBOL_GPL(register_vdpa_driver);
+> +
+> +void unregister_vdpa_driver(struct vdpa_driver *driver)
+> +{
+> +	driver_unregister(&driver->drv);
+> +}
+> +EXPORT_SYMBOL_GPL(unregister_vdpa_driver);
+> +
+> +static int vdpa_init(void)
+> +{
+> +	if (bus_register(&vdpa_bus) != 0)
+> +		panic("virtio bus registration failed");
+> +	return 0;
+> +}
+> +
+> +static void __exit vdpa_exit(void)
+> +{
+> +	bus_unregister(&vdpa_bus);
+> +	ida_destroy(&vdpa_index_ida);
+> +}
+> +core_initcall(vdpa_init);
+> +module_exit(vdpa_exit);
+> +
+> +MODULE_VERSION(MOD_VERSION);
+> +MODULE_AUTHOR(MOD_AUTHOR);
+> +MODULE_LICENSE(MOD_LICENSE);
+> diff --git a/include/linux/vdpa.h b/include/linux/vdpa.h
+> new file mode 100644
+> index 000000000000..47760137ef66
+> --- /dev/null
+> +++ b/include/linux/vdpa.h
+> @@ -0,0 +1,191 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _LINUX_VDPA_H
+> +#define _LINUX_VDPA_H
+> +
+> +#include <linux/device.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/vhost_iotlb.h>
+> +
+> +/**
+> + * vDPA callback definition.
+> + * @callback: interrupt callback function
+> + * @private: the data passed to the callback function
+> + */
+> +struct vdpa_callback {
+> +	irqreturn_t (*callback)(void *data);
+> +	void *private;
+> +};
+> +
+> +/**
+> + * vDPA device - representation of a vDPA device
+> + * @dev: underlying device
+> + * @config: the configuration ops for this device.
+> + * @index: device index
+> + */
+> +struct vdpa_device {
+> +	struct device dev;
+> +	const struct vdpa_config_ops *config;
+> +	int index;
+> +};
+> +
+> +/**
+> + * vDPA_config_ops - operations for configuring a vDPA device.
+> + * Note: vDPA device drivers are required to implement all of the
+> + * operations unless it is optional mentioned in the following list.
+> + * @set_vq_address:		Set the address of virtqueue
+> + *				@vdev: vdpa device
+> + *				@idx: virtqueue index
+> + *				@desc_area: address of desc area
+> + *				@driver_area: address of driver area
+> + *				@device_area: address of device area
+> + *				Returns integer: success (0) or error (< 0)
+> + * @set_vq_num:			Set the size of virtqueue
+> + *				@vdev: vdpa device
+> + *				@idx: virtqueue index
+> + *				@num: the size of virtqueue
+> + * @kick_vq:			Kick the virtqueue
+> + *				@vdev: vdpa device
+> + *				@idx: virtqueue index
+
+
+This seems wrong: kicks are data path so drivers should not
+do it in a vendor specific way. How about an API
+returning the device/resource that can then be
+mapped as appropriate?
+
+
+> + * @set_vq_cb:			Set the interrupt callback function for
+> + *				a virtqueue
+> + *				@vdev: vdpa device
+> + *				@idx: virtqueue index
+> + *				@cb: virtio-vdev interrupt callback structure
+
+
+Calls are data path too, I think we need some way to map MSI?
+
+> + * @set_vq_ready:		Set ready status for a virtqueue
+> + *				@vdev: vdpa device
+> + *				@idx: virtqueue index
+> + *				@ready: ready (true) not ready(false)
+> + * @get_vq_ready:		Get ready status for a virtqueue
+> + *				@vdev: vdpa device
+> + *				@idx: virtqueue index
+> + *				Returns boolean: ready (true) or not (false)
+> + * @set_vq_state:		Set the state for a virtqueue
+> + *				@vdev: vdpa device
+> + *				@idx: virtqueue index
+> + *				@state: virtqueue state (last_avail_idx)
+> + *				Returns integer: success (0) or error (< 0)
+> + * @get_vq_state:		Get the state for a virtqueue
+> + *				@vdev: vdpa device
+> + *				@idx: virtqueue index
+> + *				Returns virtqueue state (last_avail_idx)
+> + * @get_vq_align:		Get the virtqueue align requirement
+> + *				for the device
+> + *				@vdev: vdpa device
+> + *				Returns virtqueue algin requirement
+
+
+Where does this come from? Spec dictates that for a data path,
+vendor specific values for this will break userspace ...
+
+> + * @get_features:		Get virtio features supported by the device
+> + *				@vdev: vdpa device
+> + *				Returns the virtio features support by the
+> + *				device
+> + * @set_features:		Set virtio features supported by the driver
+> + *				@vdev: vdpa device
+> + *				@features: feature support by the driver
+> + *				Returns integer: success (0) or error (< 0)
+> + * @set_config_cb:		Set the config interrupt callback
+> + *				@vdev: vdpa device
+> + *				@cb: virtio-vdev interrupt callback structure
+> + * @get_vq_num_max:		Get the max size of virtqueue
+> + *				@vdev: vdpa device
+> + *				Returns u16: max size of virtqueue
+
+
+I'm not sure this has to be uniform across VQs.
+
+> + * @get_device_id:		Get virtio device id
+> + *				@vdev: vdpa device
+> + *				Returns u32: virtio device id
+
+
+is this the virtio ID? PCI ID?
+
+> + * @get_vendor_id:		Get id for the vendor that provides this device
+> + *				@vdev: vdpa device
+> + *				Returns u32: virtio vendor id
+
+what's the idea behind this? userspace normally doesn't interact with
+this ... debugging?
+
+> + * @get_status:			Get the device status
+> + *				@vdev: vdpa device
+> + *				Returns u8: virtio device status
+> + * @set_status:			Set the device status
+> + *				@vdev: vdpa device
+> + *				@status: virtio device status
+> + * @get_config:			Read from device specific configuration space
+> + *				@vdev: vdpa device
+> + *				@offset: offset from the beginning of
+> + *				configuration space
+> + *				@buf: buffer used to read to
+> + *				@len: the length to read from
+> + *				configuration space
+> + * @set_config:			Write to device specific configuration space
+> + *				@vdev: vdpa device
+> + *				@offset: offset from the beginning of
+> + *				configuration space
+> + *				@buf: buffer used to write from
+> + *				@len: the length to write to
+> + *				configuration space
+> + * @get_generation:		Get device config generation (optional)
+> + *				@vdev: vdpa device
+> + *				Returns u32: device generation
+> + * @set_map:			Set device memory mapping, optional
+> + *				and only needed for device that using
+> + *				device specific DMA translation
+> + *				(on-chip IOMMU)
+> + *				@vdev: vdpa device
+> + *				@iotlb: vhost memory mapping to be
+> + *				used by the vDPA
+> + *				Returns integer: success (0) or error (< 0)
+
+OK so any change just swaps in a completely new mapping?
+Wouldn't this make minor changes such as memory hotplug
+quite expensive?
+
+> + */
+> +struct vdpa_config_ops {
+> +	/* Virtqueue ops */
+> +	int (*set_vq_address)(struct vdpa_device *vdev,
+> +			      u16 idx, u64 desc_area, u64 driver_area,
+> +			      u64 device_area);
+> +	void (*set_vq_num)(struct vdpa_device *vdev, u16 idx, u32 num);
+> +	void (*kick_vq)(struct vdpa_device *vdev, u16 idx);
+> +	void (*set_vq_cb)(struct vdpa_device *vdev, u16 idx,
+> +			  struct vdpa_callback *cb);
+> +	void (*set_vq_ready)(struct vdpa_device *vdev, u16 idx, bool ready);
+> +	bool (*get_vq_ready)(struct vdpa_device *vdev, u16 idx);
+> +	int (*set_vq_state)(struct vdpa_device *vdev, u16 idx, u64 state);
+> +	u64 (*get_vq_state)(struct vdpa_device *vdev, u16 idx);
+> +
+> +	/* Device ops */
+> +	u16 (*get_vq_align)(struct vdpa_device *vdev);
+> +	u64 (*get_features)(struct vdpa_device *vdev);
+> +	int (*set_features)(struct vdpa_device *vdev, u64 features);
+> +	void (*set_config_cb)(struct vdpa_device *vdev,
+> +			      struct vdpa_callback *cb);
+> +	u16 (*get_vq_num_max)(struct vdpa_device *vdev);
+> +	u32 (*get_device_id)(struct vdpa_device *vdev);
+> +	u32 (*get_vendor_id)(struct vdpa_device *vdev);
+> +	u8 (*get_status)(struct vdpa_device *vdev);
+> +	void (*set_status)(struct vdpa_device *vdev, u8 status);
+> +	void (*get_config)(struct vdpa_device *vdev, unsigned int offset,
+> +			   void *buf, unsigned int len);
+> +	void (*set_config)(struct vdpa_device *vdev, unsigned int offset,
+> +			   const void *buf, unsigned int len);
+> +	u32 (*get_generation)(struct vdpa_device *vdev);
+> +
+> +	/* Mem table */
+> +	int (*set_map)(struct vdpa_device *vdev, struct vhost_iotlb *iotlb);
+> +};
+> +
+> +int register_vdpa_device(struct vdpa_device *vdpa);
+> +void unregister_vdpa_device(struct vdpa_device *vdpa);
+> +
+> +struct device *vdpa_get_parent(struct vdpa_device *vdpa);
+> +void vdpa_set_parent(struct vdpa_device *vdpa, struct device *parent);
+> +
+> +struct vdpa_device *dev_to_vdpa(struct device *_dev);
+> +struct device *vdpa_to_dev(struct vdpa_device *vdpa);
+> +
+> +/**
+> + * vdpa_driver - operations for a vDPA driver
+> + * @driver: underlying device driver
+> + * @probe: the function to call when a device is found.  Returns 0 or -errno.
+> + * @remove: the function to call when a device is removed.
+> + */
+> +struct vdpa_driver {
+> +	struct device_driver drv;
+> +	int (*probe)(struct device *dev);
+> +	void (*remove)(struct device *dev);
+> +};
+> +
+> +int register_vdpa_driver(struct vdpa_driver *drv);
+> +void unregister_vdpa_driver(struct vdpa_driver *drv);
+> +
+> +static inline struct vdpa_driver *drv_to_vdpa(struct device_driver *drv)
+> +{
+> +	return container_of(drv, struct vdpa_driver, drv);
+> +}
+> +
+> +#endif /* _LINUX_VDPA_H */
+> -- 
+> 2.19.1
+
