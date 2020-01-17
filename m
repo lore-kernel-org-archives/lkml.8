@@ -4,32 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C389C33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 890AFC33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4217C24697
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:41:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D38F246A7
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:42:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729440AbgAQRl4 (ORCPT
+        id S1728842AbgAQRl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 12:41:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40622 "EHLO mail.kernel.org"
+        Fri, 17 Jan 2020 12:41:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729276AbgAQRld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729285AbgAQRld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 17 Jan 2020 12:41:33 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E82442464B;
-        Fri, 17 Jan 2020 17:41:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3817624694;
+        Fri, 17 Jan 2020 17:41:33 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1isVch-000Qb3-S9; Fri, 17 Jan 2020 12:41:31 -0500
-Message-Id: <20200117174131.757396978@goodmis.org>
+        id 1isVci-000Qc5-4u; Fri, 17 Jan 2020 12:41:32 -0500
+Message-Id: <20200117174132.033584043@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Fri, 17 Jan 2020 12:41:40 -0500
+Date:   Fri, 17 Jan 2020 12:41:42 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org,
         linux-rt-users <linux-rt-users@vger.kernel.org>
@@ -39,10 +39,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         John Kacur <jkacur@redhat.com>,
         Julia Cartwright <julia@ni.com>,
         Daniel Wagner <wagi@monom.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Dick Hollenbeck <dick@softplc.com>
-Subject: [PATCH RT 29/32] sched/core: migrate_enable() must access takedown_cpu_task on
- !HOTPLUG_CPU
+        Tom Zanussi <zanussi@kernel.org>
+Subject: [PATCH RT 31/32] sched: migrate_enable: Busy loop until the migration request is
+ completed
 References: <20200117174111.282847363@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -58,51 +57,53 @@ If anyone has any objections, please let me know.
 
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-[ Upstream commit a61d1977f692e46bad99a100f264981ba08cb4bd ]
+[ Upstream commit 140d7f54a5fff02898d2ca9802b39548bf7455f1 ]
 
-The variable takedown_cpu_task is never declared/used on !HOTPLUG_CPU
-except for migrate_enable(). This leads to a link error.
+If user task changes the CPU affinity mask of a running task it will
+dispatch migration request if the current CPU is no longer allowed. This
+might happen shortly before a task enters a migrate_disable() section.
+Upon leaving the migrate_disable() section, the task will notice that
+the current CPU is no longer allowed and will will dispatch its own
+migration request to move it off the current CPU.
+While invoking __schedule() the first migration request will be
+processed and the task returns on the "new" CPU with "arg.done = 0". Its
+own migration request will be processed shortly after and will result in
+memory corruption if the stack memory, designed for request, was used
+otherwise in the meantime.
 
-Don't use takedown_cpu_task in !HOTPLUG_CPU.
+Spin until the migration request has been processed if it was accepted.
 
-Reported-by: Dick Hollenbeck <dick@softplc.com>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/cpu.c        | 2 ++
- kernel/sched/core.c | 2 ++
- 2 files changed, 4 insertions(+)
+ kernel/sched/core.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 5366c8c69c2f..b9d7ac61d707 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -846,7 +846,9 @@ static int take_cpu_down(void *_param)
- 	return 0;
- }
- 
-+#ifdef CONFIG_PREEMPT_RT_BASE
- struct task_struct *takedown_cpu_task;
-+#endif
- 
- static int takedown_cpu(unsigned int cpu)
- {
 diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index e465381b464d..cbd76324babd 100644
+index cbd76324babd..4616c086dd26 100644
 --- a/kernel/sched/core.c
 +++ b/kernel/sched/core.c
-@@ -7314,9 +7314,11 @@ void migrate_enable(void)
+@@ -7329,7 +7329,7 @@ void migrate_enable(void)
  
- 	p->migrate_disable = 0;
- 	rq->nr_pinned--;
-+#ifdef CONFIG_HOTPLUG_CPU
- 	if (rq->nr_pinned == 0 && unlikely(!cpu_active(cpu)) &&
- 	    takedown_cpu_task)
- 		wake_up_process(takedown_cpu_task);
-+#endif
+ 	WARN_ON(smp_processor_id() != cpu);
+ 	if (!is_cpu_allowed(p, cpu)) {
+-		struct migration_arg arg = { p };
++		struct migration_arg arg = { .task = p };
+ 		struct cpu_stop_work work;
+ 		struct rq_flags rf;
  
- 	if (!p->migrate_disable_scheduled)
- 		goto out;
+@@ -7342,7 +7342,10 @@ void migrate_enable(void)
+ 				    &arg, &work);
+ 		tlb_migrate_finish(p->mm);
+ 		__schedule(true);
+-		WARN_ON_ONCE(!arg.done && !work.disabled);
++		if (!work.disabled) {
++			while (!arg.done)
++				cpu_relax();
++		}
+ 	}
+ 
+ out:
 -- 
 2.24.1
 
