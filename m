@@ -2,168 +2,176 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F72C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 03:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE79AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 03:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFD002072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 03:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0C762072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 03:28:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YXyAbo2k"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YkAbiYxF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729305AbgAQDYk (ORCPT
+        id S1729447AbgAQD2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 22:24:40 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40768 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727015AbgAQDYj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 22:24:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579231477;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+z4PFQogA0lIvahw7YP4uLF4t1xZszt+CkkNUyFYHwc=;
-        b=YXyAbo2k8YzkqF5kJHfZ4T1xmtFQ2MAHITu+H5TBgYIbR937usc6Wh7iv+SoNJMRSx2p9O
-        USbU/KpZlEz0wjzJmfUSzpTNsrHz9MaD0uUuuik023I5Xxuyus5H2l5QpdKYZSGMnl/Z4f
-        5TSvcPy8tOGCovF2vK2QtpJBblYWMM8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-91-795C9JhONcm5-QoMmNE9_A-1; Thu, 16 Jan 2020 22:24:23 -0500
-X-MC-Unique: 795C9JhONcm5-QoMmNE9_A-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 02CDB18C8C01;
-        Fri, 17 Jan 2020 03:24:21 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-166.pek2.redhat.com [10.72.12.166])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0EF5160C63;
-        Fri, 17 Jan 2020 03:24:16 +0000 (UTC)
-Date:   Fri, 17 Jan 2020 11:24:13 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Khalid Aziz <khalid@gonehiking.org>
-Cc:     Kairui Song <kasong@redhat.com>, Baoquan He <bhe@redhat.com>,
-        linux-pci@vger.kernel.org, kexec@lists.infradead.org,
-        Jerry Hoemann <Jerry.Hoemann@hpe.com>,
-        Randy Wright <rwright@hpe.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>
-Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
- kdump kernel
-Message-ID: <20200117032413.GA16906@dhcp-128-65.nay.redhat.com>
-References: <20200110230003.GB1875851@anatevka.americas.hpqcorp.net>
- <d2715683-f171-a825-3c0b-678b6c5c1a79@gonehiking.org>
- <20200111005041.GB19291@MiWiFi-R3L-srv>
- <dc46c904-1652-09b3-f351-6b3a3e761d74@gonehiking.org>
- <CACPcB9c0-nRjM3DSN8wzZBTPsJKWjZ9d_aNTq5zUj4k4egb32Q@mail.gmail.com>
- <CABeXuvqquCU+1G=5onk9owASorhpcYWeWBge9U35BrorABcsuw@mail.gmail.com>
- <CACPcB9cQY9Vu3wG-QYZS6W6T_PZxnJ1ABNUUAF_qvk-VSxbpTA@mail.gmail.com>
- <b2360db7-66f5-421d-8fe0-150f08aa2f39@gonehiking.org>
- <CACPcB9epDPcowhnSJuEHQ8miCBX1oKjFx4Wdn4aYPe2_pueA5A@mail.gmail.com>
- <6b56ce15-5a5a-97b7-ded1-1fd88fec26eb@gonehiking.org>
+        Thu, 16 Jan 2020 22:28:40 -0500
+Received: from mail-eopbgr40051.outbound.protection.outlook.com ([40.107.4.51]:38359
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727015AbgAQD2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 22:28:40 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lfbwxUh7hOHO8O2aejxQz5Cfb0fSyOmABbXu9WKwWO+7cg1q9L/eRIqxkLP+SdDNZW9N2cO2ao0ABiWQjeFKNhiT5AkMgsodJSmbYE1WbtltPGFxFnKhbVgBSmzL90WXkfNyD1HE/I/DLIs0Y5q2iriHLEdyXKkrj4Wu708IRbENMWthIZNHeSo6Y5nSlPND0tbHxAvQS2BT9QdVn3yAQlUlwsYthOHgW1LWAv4+52NIHsxGvUyO9seRxP8KL+POfSnmoYrW+nohPGYJD+ymZGNSLXUouNfPaXtkWxdx1xPZ2t1L+u/4BNUndSsjZQz8W3S0d97QuH+jvqTy6GdWRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=//8jhs7rs+O9Gw3wNQH5NyAluIcKlNz04jBJ9uUMdes=;
+ b=F50NOCr9MeWwew+IGtsxG57aJktrJFGvhQvoGMm3yw166ZK9JmlTDiFy6+pH4+JFu3unzlU3pUlqXrL4ozjuRRakMXDBRZ1ztjtkC3/HP6+YuqJEHqJB+ya7wMX2tL+OwNNFSzCVqiCMvjulVNeshZCEWSyg9zNMcsNM3Gh4PP6vFm0GWrmckHSuTOOkp0fTeUQJPi39Wrhe7L2J0MRgEmMtNhCejjmuZln7A+X3Mz7Q/m3WG4Q/PKXPF1httlr+n/CiWX30p/uZiN4yb0bRtaOTIfk8z0Tdt6UjD3f76qSrjfsdJXAuxaErro2Hmp8ekiqSsgoyUQ8qzMA2i+X9ug==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=//8jhs7rs+O9Gw3wNQH5NyAluIcKlNz04jBJ9uUMdes=;
+ b=YkAbiYxFyto8tIXot3nqGdQ+iR7XpLXZRrhFG6KhaLbH8HYyvDe3VQLp42HVDZ5BrYELmgGim4mUCGzlHfLWJ3mONvGbAULVAPN+t1zdlN5To16N+IuW/F9ABKGeac3DWXOQX1fcCBRCAof6+ITe1/zItR2RgoQZ3/1GqqoLaes=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB5987.eurprd04.prod.outlook.com (20.178.114.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.8; Fri, 17 Jan 2020 03:28:33 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2623.018; Fri, 17 Jan 2020
+ 03:28:33 +0000
+Received: from localhost.localdomain (119.31.174.66) by HK2PR06CA0005.apcprd06.prod.outlook.com (2603:1096:202:2e::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2644.18 via Frontend Transport; Fri, 17 Jan 2020 03:28:30 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>
+CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH] nvmem: imx: ocotp: add i.MX8MP support
+Thread-Topic: [PATCH] nvmem: imx: ocotp: add i.MX8MP support
+Thread-Index: AQHVzOYys8WB3+BLO0KUDipX7ftHWA==
+Date:   Fri, 17 Jan 2020 03:28:33 +0000
+Message-ID: <1579231433-14201-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2PR06CA0005.apcprd06.prod.outlook.com
+ (2603:1096:202:2e::17) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 78393aa3-4716-4117-9bc3-08d79afd5481
+x-ms-traffictypediagnostic: AM0PR04MB5987:|AM0PR04MB5987:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB5987DAEDB2237407A6B0423188310@AM0PR04MB5987.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2733;
+x-forefront-prvs: 0285201563
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(376002)(396003)(136003)(366004)(199004)(189003)(44832011)(81166006)(8936002)(71200400001)(86362001)(316002)(69590400006)(110136005)(956004)(6506007)(6512007)(8676002)(52116002)(81156014)(16526019)(4326008)(5660300002)(6486002)(26005)(54906003)(2616005)(64756008)(66946007)(186003)(66476007)(36756003)(478600001)(66556008)(2906002)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5987;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: NZgnkBHC2U40WrIkCms9WvdnySYh8zhQI8nux+9YE2mcIglc9tgXDCapinFrQkNeiP+BOgnpO5Qf8NfW1djF+XgecCAjwcFiICvguYhUr/gnUA6JqiruNSk/41r7DVotQZGYwMHhu6quNTmRFck8JYrXEMkG8MGaDOLkUg5ov9ybbGROXnbaABey/UJgC+lEnsdJe7GbYfFeS16zfDXk2VYSpBwpT6yEJoXq4sKjTU0fLKO/y5jZAeXc9puhdXkLoOrCwoCPQGhxjP8jqoD0xmSpx8KBImDLgq6fwTI/xwAYozs9VB6+M64SBc2JT1nDfvD5iwDEn0yvDS4lDVAvbFsEnNwCoezAWUJtWvSjw7WxIyrzXSlA0eMBXRLkUDuQh9PRXG1D3XkhwjnxyuObvPsUAWluO+D7OahbmQxy/+XsBw736BJHLvSKKFFs6Jp0JuI8GvIpHDOUlWZ/iURUY6qgS6fO5vqz7cweS+TAbJ+zE+PIxntbqhhyqEGfENcZ
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6b56ce15-5a5a-97b7-ded1-1fd88fec26eb@gonehiking.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78393aa3-4716-4117-9bc3-08d79afd5481
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jan 2020 03:28:33.3027
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: M0fYWZ2QxsrgkjrGEaRernDON8Bg0+U9GL0htN+EXPUonHLjkcDcIl7idwoosEkiuxOm7nqrisQV0MYtFmYp5g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5987
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/15/20 at 02:17pm, Khalid Aziz wrote:
-> On 1/15/20 11:05 AM, Kairui Song wrote:
-> > On Thu, Jan 16, 2020 at 1:31 AM Khalid Aziz <khalid@gonehiking.org> wrote:
-> >>
-> >> On 1/13/20 10:07 AM, Kairui Song wrote:
-> >>> On Sun, Jan 12, 2020 at 2:33 AM Deepa Dinamani <deepa.kernel@gmail.com> wrote:
-> >>>>
-> >>>>> Hi, there are some previous works about this issue, reset PCI devices
-> >>>>> in kdump kernel to stop ongoing DMA:
-> >>>>>
-> >>>>> [v7,0/5] Reset PCIe devices to address DMA problem on kdump with iommu
-> >>>>> https://lore.kernel.org/patchwork/cover/343767/
-> >>>>>
-> >>>>> [v2] PCI: Reset PCIe devices to stop ongoing DMA
-> >>>>> https://lore.kernel.org/patchwork/patch/379191/
-> >>>>>
-> >>>>> And didn't get merged, that patch are trying to fix some DMAR error
-> >>>>> problem, but resetting devices is a bit too destructive, and the
-> >>>>> problem is later fixed in IOMMU side. And in most case the DMA seems
-> >>>>> harmless, as they targets first kernel's memory and kdump kernel only
-> >>>>> live in crash memory.
-> >>>>
-> >>>> I was going to ask the same. If the kdump kernel had IOMMU on, would
-> >>>> that still be a problem?
-> >>>
-> >>> It will still fail, doing DMA is not a problem, it only go wrong when
-> >>> a device's upstream bridge is mistakenly shutdown before the device
-> >>> shutdown.
-> >>>
-> >>>>
-> >>>>> Also, by the time kdump kernel is able to scan and reset devices,
-> >>>>> there are already a very large time window where things could go
-> >>>>> wrong.
-> >>>>>
-> >>>>> The currently problem observed only happens upon kdump kernel
-> >>>>> shutdown, as the upper bridge is disabled before the device is
-> >>>>> disabledm so DMA will raise error. It's more like a problem of wrong
-> >>>>> device shutting down order.
-> >>>>
-> >>>> The way it was described earlier "During this time, the SUT sometimes
-> >>>> gets a PCI error that raises an NMI." suggests that it isn't really
-> >>>> restricted to kexec/kdump.
-> >>>> Any attached device without an active driver might attempt spurious or
-> >>>> malicious DMA and trigger the same during normal operation.
-> >>>> Do you have available some more reporting of what happens during the
-> >>>> PCIe error handling?
-> >>>
-> >>> Let me add more info about this:
-> >>>
-> >>> On the machine where I can reproduce this issue, the first kernel
-> >>> always runs fine, and kdump kernel works fine during dumping the
-> >>> vmcore, even if I keep the kdump kernel running for hours, nothing
-> >>> goes wrong. If there are DMA during normal operation that will cause
-> >>> problem, this should have exposed it.
-> >>>
-> >>
-> >> This is the part that is puzzling me. Error shows up only when kdump
-> >> kernel is being shut down. kdump kernel can run for hours without this
-> >> issue. What is the operation from downstream device that is resulting in
-> >> uncorrectable error - is it indeed a DMA request? Why does that
-> >> operation from downstream device not happen until shutdown?
-> >>
-> >> I just want to make sure we fix the right problem in the right way.
-> >>
-> > 
-> > Actually the device could keep sending request with no problem during
-> > kdump kernel running. Eg. keep sending DMA, and all DMA targets first
-> > kernel's system memory, so kdump runs fine as long as nothing touch
-> > the reserved crash memory. And the error is reported by the port, when
-> > shutdown it has bus master bit, and downstream request will cause
-> > error.
-> > 
-> 
-> Problem really is there are active devices while kdump kernel is
-> running. You did say earlier - "And in most case the DMA seems
-> harmless, as they targets first kernel's memory and kdump kernel only
-> live in crash memory.". Even if this holds today, it is going to break
-> one of these days. There is the "reset_devices" option but that does not
-> work if driver is not loaded by kdump kernel. Can we try to shut down
-> devices in machine_crash_shutdown() before we start kdump kernel?
+From: Peng Fan <peng.fan@nxp.com>
 
-It is not a good idea :)  We do not add extra logic after a panic
-because the kernel is not stable and we want a correct vmcore.
+i.MX8MP has 96 banks with each bank 4 words. And it has different
+ctrl register layout, so add new macros for that.
 
-Similar suggestions had been rejected a lot of times..
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
 
-Thanks
-Dave
+dt-bindings doc has been posted by Anson Huang
+
+ drivers/nvmem/imx-ocotp.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+
+diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
+index 4ba9cc8f76df..794858093086 100644
+--- a/drivers/nvmem/imx-ocotp.c
++++ b/drivers/nvmem/imx-ocotp.c
+@@ -44,6 +44,11 @@
+ #define IMX_OCOTP_BM_CTRL_ERROR		0x00000200
+ #define IMX_OCOTP_BM_CTRL_REL_SHADOWS	0x00000400
+=20
++#define IMX_OCOTP_BM_CTRL_ADDR_8MP		0x000001FF
++#define IMX_OCOTP_BM_CTRL_BUSY_8MP		0x00000200
++#define IMX_OCOTP_BM_CTRL_ERROR_8MP		0x00000400
++#define IMX_OCOTP_BM_CTRL_REL_SHADOWS_8MP	0x00000800
++
+ #define IMX_OCOTP_BM_CTRL_DEFAULT				\
+ 	{							\
+ 		.bm_addr =3D IMX_OCOTP_BM_CTRL_ADDR,		\
+@@ -52,6 +57,14 @@
+ 		.bm_rel_shadows =3D IMX_OCOTP_BM_CTRL_REL_SHADOWS,\
+ 	}
+=20
++#define IMX_OCOTP_BM_CTRL_8MP					\
++	{							\
++		.bm_addr =3D IMX_OCOTP_BM_CTRL_ADDR_8MP,		\
++		.bm_busy =3D IMX_OCOTP_BM_CTRL_BUSY_8MP,		\
++		.bm_error =3D IMX_OCOTP_BM_CTRL_ERROR_8MP,	\
++		.bm_rel_shadows =3D IMX_OCOTP_BM_CTRL_REL_SHADOWS_8MP,\
++	}
++
+ #define TIMING_STROBE_PROG_US		10	/* Min time to blow a fuse */
+ #define TIMING_STROBE_READ_NS		37	/* Min time before read */
+ #define TIMING_RELAX_NS			17
+@@ -520,6 +533,13 @@ static const struct ocotp_params imx8mn_params =3D {
+ 	.ctrl =3D IMX_OCOTP_BM_CTRL_DEFAULT,
+ };
+=20
++static const struct ocotp_params imx8mp_params =3D {
++	.nregs =3D 384,
++	.bank_address_words =3D 0,
++	.set_timing =3D imx_ocotp_set_imx6_timing,
++	.ctrl =3D IMX_OCOTP_BM_CTRL_8MP,
++};
++
+ static const struct of_device_id imx_ocotp_dt_ids[] =3D {
+ 	{ .compatible =3D "fsl,imx6q-ocotp",  .data =3D &imx6q_params },
+ 	{ .compatible =3D "fsl,imx6sl-ocotp", .data =3D &imx6sl_params },
+@@ -532,6 +552,7 @@ static const struct of_device_id imx_ocotp_dt_ids[] =3D=
+ {
+ 	{ .compatible =3D "fsl,imx8mq-ocotp", .data =3D &imx8mq_params },
+ 	{ .compatible =3D "fsl,imx8mm-ocotp", .data =3D &imx8mm_params },
+ 	{ .compatible =3D "fsl,imx8mn-ocotp", .data =3D &imx8mn_params },
++	{ .compatible =3D "fsl,imx8mp-ocotp", .data =3D &imx8mp_params },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, imx_ocotp_dt_ids);
+--=20
+2.16.4
 
