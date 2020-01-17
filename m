@@ -2,156 +2,89 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B41C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94559C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00C812082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:28:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tCMW61Fm"
+	by mail.kernel.org (Postfix) with ESMTP id 631822083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:28:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579256935;
+	bh=suwMI1QB4tKt0L71pj59z86vMYUS4jKFhoFEicCNSic=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=tWi2FEsuw98wq2meALUZdEYqwYJ8vHIOFbyCBXuV5JhiY2iwzw58znBK7q/X+UIK7
+	 k4e6cSNd0R4ZGtdFfo5lThHmxTTGJsqgpQ1FadorGsve1q9LYZdz9dkh5rwmkC7MT/
+	 WeOyq3FoqHLZtRUsvEooIrYLcUq3WYI8u3pj1K4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbgAQK2p (ORCPT
+        id S1728767AbgAQK2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 05:28:45 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34901 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727047AbgAQK2o (ORCPT
+        Fri, 17 Jan 2020 05:28:54 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:44970 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbgAQK2y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 05:28:44 -0500
-Received: by mail-wr1-f66.google.com with SMTP id g17so22134433wro.2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 02:28:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=HM8k535bB4Zqi0GfEwiVkH65Q1Hx/nKHz6GT9gtlJK8=;
-        b=tCMW61FmdGXdIuVJCSqzhkwiTfYOiBEraLBbZak05Sydy8wmfz0edGWG5HrRIsuJLG
-         XThNvBabfIFmMR1OhH9jUJ9a0fcI5ii9eWn6NkqJZRwdHAJ3+zYROsw4UuYiIJWdnmXD
-         G1w6KXRhriSabWcDZiOnERZQQRRcebgZ6MUzd4euNcxa2i81NB6ftT3PyJ4H6EF6F7EM
-         3hMaklaXVx2Vjb8mhoE8oTea1xrJL7bAOUnYD2pTShBwNKq1q6OyTiOo+X/982WAKlqe
-         mB689VYvqjIUZpOwAG3fGg2ss4aqyI3S4KO6NDGqNK3PqDbctNcqrdhGIDHnjitMPoTb
-         bbkw==
+        Fri, 17 Jan 2020 05:28:54 -0500
+Received: by mail-oi1-f196.google.com with SMTP id d62so21691772oia.11;
+        Fri, 17 Jan 2020 02:28:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=HM8k535bB4Zqi0GfEwiVkH65Q1Hx/nKHz6GT9gtlJK8=;
-        b=rkxhTWkN8o90A3sU7yCAsZNaRJDlB13CE42hoQwh9D3l7Ex3vCFQ92ALiEj4D2PpGu
-         AQ88YRZC6DnhFpPq7ymyXSlzLkPU7v0ddMwNvh43WJcZiQoba5UZrIojYQK6UWowLzyj
-         6fbUTF3NFB8l/ghKk6/wL6Xcd9iLtiBE8MmAwcgjntH5uMuqEHryd7wjzc2JAyYptwVx
-         GwTq/5gf4+DJenRT9MclrYPRIXvcvAI6ZjFZZ0gVLCQUMfX6wgJI0DnnmW7XzrHCUMRf
-         lT9fI8iCe9NJwU3Wjx/fjY3nfQ4ZMOnE49YHurjFXe0/EsHbrYSvZe0MU/I/8r87b+kP
-         lw3A==
-X-Gm-Message-State: APjAAAXvtvBx+GOMdXhPrefiDr46wargQfWCBDcwqpi5J9Ie3IZIPMBI
-        LGvSFvyLSTh0SEaPBqMz03iEiQ==
-X-Google-Smtp-Source: APXvYqwDd77HblT/audWRHo3+KrxugU1EyNDv8T/9d4EkPqm8mp6uRaVfV41S/do8ghBL1uvF/IRNQ==
-X-Received: by 2002:a5d:67c7:: with SMTP id n7mr2234575wrw.319.1579256923293;
-        Fri, 17 Jan 2020 02:28:43 -0800 (PST)
-Received: from dell ([2.27.35.221])
-        by smtp.gmail.com with ESMTPSA id l7sm33815710wrq.61.2020.01.17.02.28.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 02:28:42 -0800 (PST)
-Date:   Fri, 17 Jan 2020 10:28:54 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v10 08/13] regulator: bd718x7: Split driver to common and
- bd718x7 specific parts
-Message-ID: <20200117102854.GF15507@dell>
-References: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
- <def409ab024717e6cd917c488e62fe04ad66bd52.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EDb4Q0+hZEmpUHyJ58sIFBV1rQVFKf0GHq7e/+qq/Ec=;
+        b=qJVCj+ywAmzeBAniebpB+ISn7j605qY8oOXqkiQuCvQQ3tmIbt6V9N1snu6peaYKoy
+         nQ+vd04ihQ6d+bocrm2VuUsEF4lwJpXQrgELYKvo3d0fgum4VPg17MbO94EUTM5gdUIZ
+         JYx5GKdbhFpf/1ln7U+9WP8KqWAcwsuiWjbdpzYUbIruQdvlZLONfhqsAXGKvVw8q7Ln
+         TYOcWfPkKbmZqN5q/l8UubmX1/O71ZGU0gqBMflPOGCDDPYl7a8Iu0FL4BoBdS1iFx3q
+         lxwGargjdL+3wGicJBkdTufX2BnUUXEo6qVyZnPsEcF6bpn5H32PlrkWYrlIiUN/r46/
+         LmGw==
+X-Gm-Message-State: APjAAAVWwMsZYPol4g0uwhrOpa568qlbfYqy8pM/Ny5szbm4TRRfli5P
+        0L4MtGJFndXQoUHVPPdY/33Gag7M0r5M3+cNbJ4tIw==
+X-Google-Smtp-Source: APXvYqziaLNisKwzuXE+4sPDjNUgpRCnJvjyKkzuhA7eI8Oll8NfuogDFcMFUusVtm44RvTNW++hHwmHsUtA9C2X3OI=
+X-Received: by 2002:a54:488d:: with SMTP id r13mr2770861oic.115.1579256933826;
+ Fri, 17 Jan 2020 02:28:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <def409ab024717e6cd917c488e62fe04ad66bd52.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CGME20200117045233epcas1p4ec7b610173ad1536e340fd83aea3e4ed@epcas1p4.samsung.com>
+ <ddb60cb0-5e54-3ed9-4d61-3098cc2d71d9@samsung.com>
+In-Reply-To: <ddb60cb0-5e54-3ed9-4d61-3098cc2d71d9@samsung.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 17 Jan 2020 11:28:42 +0100
+Message-ID: <CAJZ5v0jh-Vap=m09AcRVY1EyMjb-Q-Kt69Wk-jUCga2qg7=EBg@mail.gmail.com>
+Subject: Re: [GIT PULL] devfreq next for v5.6
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     "Rafael J. Wysocki <rjw@rjwysocki.net>" <rjw@rjwysocki.net>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Chanwoo Choi (chanwoo@kernel.org)" <chanwoo@kernel.org>,
+        =?UTF-8?B?7ZWo66qF7KO8?= <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jan 2020, Matti Vaittinen wrote:
+On Fri, Jan 17, 2020 at 5:52 AM Chanwoo Choi <cw00.choi@samsung.com> wrote:
+>
+> Dear Rafael,
+>
+> This is devfreq-next pull request for v5.6-rc1. I add detailed description of
+> this pull request on the following tag. Please pull devfreq with following updates.
+> - tag name : devfreq-next-for-5.6
+>
+> Best Regards,
+> Chanwoo Choi
+>
+>
+> The following changes since commit fd6988496e79a6a4bdb514a4655d2920209eb85d:
+>
+>   Linux 5.5-rc4 (2019-12-29 15:29:16 -0800)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git tags/devfreq-next-for-5.6
 
-> Few ROHM PMICs allow setting the voltage states for different system states
-> like RUN, IDLE, SUSPEND and LPSR. States are then changed via SoC specific
-> mechanisms. bd718x7 driver implemented device-tree parsing functions for
-> these state specific voltages. The parsing functions can be re-used by
-> other ROHM chip drivers like bd71828. Split the generic functions from
-> bd718x7-regulator.c to rohm-regulator.c and export them for other modules
-> to use.
-> 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> Acked-by: Mark Brown <broonie@kernel.org>
-> ---
-> no changes since v9
-> 
->  drivers/regulator/Kconfig             |   4 +
->  drivers/regulator/Makefile            |   1 +
->  drivers/regulator/bd718x7-regulator.c | 183 ++++++++------------------
->  drivers/regulator/rohm-regulator.c    |  95 +++++++++++++
->  include/linux/mfd/rohm-generic.h      |  66 ++++++++++
->  5 files changed, 221 insertions(+), 128 deletions(-)
->  create mode 100644 drivers/regulator/rohm-regulator.c
-
-[...]
-
-> diff --git a/include/linux/mfd/rohm-generic.h b/include/linux/mfd/rohm-generic.h
-> index ff3dd7578fd3..6cc5a0819959 100644
-> --- a/include/linux/mfd/rohm-generic.h
-> +++ b/include/linux/mfd/rohm-generic.h
-> @@ -4,6 +4,9 @@
->  #ifndef __LINUX_MFD_ROHM_H__
->  #define __LINUX_MFD_ROHM_H__
->  
-> +#include <linux/regmap.h>
-> +#include <linux/regulator/driver.h>
-> +
->  enum rohm_chip_type {
->  	ROHM_CHIP_TYPE_BD71837 = 0,
->  	ROHM_CHIP_TYPE_BD71847,
-> @@ -17,4 +20,67 @@ struct rohm_regmap_dev {
->  	struct regmap *regmap;
->  };
->  
-> +enum {
-> +	ROHM_DVS_LEVEL_UNKNOWN,
-> +	ROHM_DVS_LEVEL_RUN,
-> +	ROHM_DVS_LEVEL_IDLE,
-> +	ROHM_DVS_LEVEL_SUSPEND,
-> +	ROHM_DVS_LEVEL_LPSR,
-> +#define ROHM_DVS_LEVEL_MAX ROHM_DVS_LEVEL_LPSR
-
-Haven't seen this before.  Is it legit?
-
-What about:
-
-     ROHM_DVS_LEVEL_MAX = ROHM_DVS_LEVEL_LPSR
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Pulled, thanks!
