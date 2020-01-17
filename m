@@ -2,115 +2,147 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8CBBC33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A37F1C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D1062072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:53:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579279997;
-	bh=mBQAJutEDV6nEd8FVh19iVewgPPATKXXMP9SXeqk1eE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OXdQ05Xj/9u7/jnwR4IaDI5zvUvpYKC2VJ448I55gMKx9X4mrZL/55wrYqhcMqm8w
-	 fo6I6Nv+8+TXdHHOpnmZzWvadKjvulpdX97RIFkWalbO2kEvX253N585xCt8CyXVYk
-	 SXnlPkEpisPjrtZkAA+byxBN8ABu4y4n/Wa/DTcM=
+	by mail.kernel.org (Postfix) with ESMTP id 79BAA2072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:53:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gDSXd6OH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728853AbgAQQxQ (ORCPT
+        id S1729035AbgAQQx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 11:53:16 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:42354 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726559AbgAQQxQ (ORCPT
+        Fri, 17 Jan 2020 11:53:56 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:33256 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726684AbgAQQxz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 11:53:16 -0500
-Received: by mail-qt1-f196.google.com with SMTP id j5so22236071qtq.9;
-        Fri, 17 Jan 2020 08:53:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yuUv1OXPdVXWCIetDO046G9cCpe5yN5/7bZ6LwPz4B0=;
-        b=qejqoYN8Ckgk98zDdvv5t54CTIJkmQNW8KtQRyuyEU5uMhUYYKKdT62/lehyI7sVJm
-         qDJZ79DuRMyEyQ5o4Sh/7vvL5aHNSe/eGoS0al+CWlnzItuoZmCOirDYyqSxEDCMdULT
-         KMOPWsJfXCxADqkxSg3zY36dU/UpJqlnGRoyFbac5jbYRQUByodAZngML6pRT7ATH01E
-         VQnhvcD0HAZSbw7aP5UlTlCFkCxiR7SbsQkQHmQ0s5TuN0SBNFPHY6A/V0/y9Uscci6n
-         EeCF2xh5jqi4sRdsIwmsa6b0NditLe5KWesqcI88MZv6SzbmERB6gu6sNYB3BpWuVxhb
-         SKHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yuUv1OXPdVXWCIetDO046G9cCpe5yN5/7bZ6LwPz4B0=;
-        b=b9zJ22Dh8kEjRg8ts3PG2wyjQJ6zOxGZLUY/ETtCrupepWMZRknPN/6lrtR5289nm3
-         9wpQNRxjfm8paa3Uc3SjYGhYthUVYILIHDQNWd18wZlVJw42ot1rjDC8Y01tM1mJazgz
-         JbmNGaDmkxnstUZSrfjmToQzGxt8RwKOL4fsO14gUNcsXsknYWpyTHs2U28uDi3aAqNS
-         PwVeqNmNdw7gaQc9nw/G3poaKWKLPecHJojuH9OWDM/j1gGLc5jJwJ9EmpBPocF6dh8Z
-         2vS6+tOJZ6kPBA3deB/Cwj+VDuNZKNXV2i69cMTnwEEWnwf2XEEk6qNZTrY6nsMv7B0L
-         1X8Q==
-X-Gm-Message-State: APjAAAUpebE/ErzPUY312c16yWYkp+G9JRyFR8IQ5oFjTPRnEAECx0cJ
-        vv9u0wkHpZ/Zao+MY4bxw/0=
-X-Google-Smtp-Source: APXvYqzeqNYl3PDuAsOWUjZm+WEOTe7nEQaEy/4qU5UBYITUMTORCCIXd/KpbM11ytW1Gz0pKvbUzg==
-X-Received: by 2002:ac8:21fd:: with SMTP id 58mr8021334qtz.90.1579279994927;
-        Fri, 17 Jan 2020 08:53:14 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::1:7d10])
-        by smtp.gmail.com with ESMTPSA id l17sm12141256qkk.22.2020.01.17.08.53.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 Jan 2020 08:53:14 -0800 (PST)
-Date:   Fri, 17 Jan 2020 08:53:11 -0800
-From:   Tejun Heo <tj@kernel.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>, cgroups@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] clone3: allow spawning processes into cgroups
-Message-ID: <20200117165311.GH2677547@devbig004.ftw2.facebook.com>
-References: <20191223061504.28716-1-christian.brauner@ubuntu.com>
- <20191223061504.28716-3-christian.brauner@ubuntu.com>
- <20200107163204.GB2677547@devbig004.ftw2.facebook.com>
- <20200108180906.l4mvtdmh7nm2z7sc@wittgenstein>
- <20200116122944.nj3e66eusxu6sb44@wittgenstein>
+        Fri, 17 Jan 2020 11:53:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579280034;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=+D+2i5u8m+6VdqENi+Zlil9tmBeW+a+J8CirwEbN+O0=;
+        b=gDSXd6OHh2XgJ6RErOo1Md3rfTRRjT1TpVROsBUK8bD98gk9SvDN7OunLYm6pzzXV0D8/d
+        w0yApYMkIX1cL+vVno21ahkPw4U7t4txVq/evlvt92yEFotAMJUU0aH+c+iqP1awr9alXv
+        7io2x773q6+HT/5C3gPQihNIDXcrhG8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-153-ketbYkMvMuyd-WQZaOp4qw-1; Fri, 17 Jan 2020 11:53:51 -0500
+X-MC-Unique: ketbYkMvMuyd-WQZaOp4qw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F2233190B2CD;
+        Fri, 17 Jan 2020 16:53:48 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7055B81201;
+        Fri, 17 Jan 2020 16:53:48 +0000 (UTC)
+To:     David Howells <dhowells@redhat.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+From:   Waiman Long <longman@redhat.com>
+Subject: Performance regression introduced by commit b667b8673443 ("pipe:
+ Advance tail pointer inside of wait spinlock in pipe_read()")
+Organization: Red Hat
+Message-ID: <c6ed1ca0-3e39-714c-9590-54e13695b9b9@redhat.com>
+Date:   Fri, 17 Jan 2020 11:53:48 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200116122944.nj3e66eusxu6sb44@wittgenstein>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Christian.
+David,
 
-Sorry about late reply.
+I had found that parallel kernel build became much slower when a
+5.5-based kernel is used. On a 2-socket 96-thread x86-64 system, the
+"make -j88" time increased from less than 3 minutes with the 5.4 kernel
+to more than double with the 5.5 kernel.
 
-On Thu, Jan 16, 2020 at 01:29:44PM +0100, Christian Brauner wrote:
-> Could it be that you misread cgroup_attach_permissions()? Because it
-> does check for write permissions on the destination cgroup.procs file.
-> That's why I've added the cgroup_get_from_file() helper. :) See:
-> 
-> static int cgroup_attach_permissions(struct cgroup *src_cgrp,
-> 				     struct cgroup *dst_cgrp,
-> 				     struct super_block *sb, bool thread)
-> {
-> 	int ret = 0;
-> 
-> 	ret = cgroup_procs_write_permission(src_cgrp, dst_cgrp, sb);
-> 	if (ret)
-> 		return ret;
+So I used bisection to try to find the culprit:
 
-So, if you look at cgroup_procs_write_permission(), it's only checking
-the write perm of the common ancestor, not the destination because it
-assumes that the destination is already checked by the vfs layer, and
-we need to check both.
+b667b867344301e24f21d4a4c844675ff61d89e1 is the first bad commit
+commit b667b867344301e24f21d4a4c844675ff61d89e1
+Author: David Howells <dhowells@redhat.com>
+Date:=C2=A0=C2=A0 Tue Sep 24 16:09:04 2019 +0100
 
-Thanks.
+=C2=A0=C2=A0=C2=A0 pipe: Advance tail pointer inside of wait spinlock in =
+pipe_read()
+=C2=A0=C2=A0=C2=A0
+=C2=A0=C2=A0=C2=A0 Advance the pipe ring tail pointer inside of wait spin=
+lock in
+pipe_read()
+=C2=A0=C2=A0=C2=A0 so that the pipe can be written into with kernel notif=
+ications from
+=C2=A0=C2=A0=C2=A0 contexts where pipe->mutex cannot be taken.
+=C2=A0=C2=A0=C2=A0
+=C2=A0=C2=A0=C2=A0 Signed-off-by: David Howells <dhowells@redhat.com>
 
--- 
-tejun
+diff --git a/fs/pipe.c b/fs/pipe.c
+index 69afeab8a73a..ea134f69a292 100644
+--- a/fs/pipe.c
++++ b/fs/pipe.c
+@@ -325,9 +325,14 @@ pipe_read(struct kiocb *iocb, struct iov_iter *to)
+=C2=A0
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!buf-=
+>len) {
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pipe_buf_release(pipe, buf);
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spin_lock_irq(&pipe->wait.lock);
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tail++;
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pipe->tail =3D tail;
+-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 do_wakeup =3D 1;
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 do_wakeup =3D 0;
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 wake_up_interruptible_sync_poll_locked(
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 &pipe->wait, EPOLLOUT |
+EPOLLWRNORM);
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spin_unlock_irq(&pipe->wait.lock);
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kill_fasync(&pipe->fasync_writers,
+SIGIO, POLL_O
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+
+I guess the make command may make heavy use of pipe. The adding of
+spinlock code in your patch may probably over-serialize the pipe
+operation. Could you achieve the same functionality without adding a lock=
+?
+
+Cheers,
+Longman
+
