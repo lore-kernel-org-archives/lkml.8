@@ -2,201 +2,98 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF1FC33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 20:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 698FCC33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 20:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8E9D2072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 20:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 394C820663
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 20:15:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="Aiqs1Vgd"
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="b/n+rnpA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729673AbgAQUPA (ORCPT
+        id S1729693AbgAQUPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 15:15:00 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:11189 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729590AbgAQUPA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 15:15:00 -0500
-X-Greylist: delayed 701 seconds by postgrey-1.27 at vger.kernel.org; Fri, 17 Jan 2020 15:14:59 EST
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1579292098;
-        s=strato-dkim-0002; d=hartkopp.net;
-        h=In-Reply-To:Date:Message-ID:From:Cc:References:To:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=QEo/tDgeU262hRs3LehiNBf8B0dTyOdN3vdoJhDFEZw=;
-        b=Aiqs1VgdpGNNIuLSA4GmSZebYXionpkNhN8hZbpGyFhh0N1IKiApnM1ArV/T3T/L63
-        XOPvlzGpgXYdfeUh1lE5IP5CgptVtZ4wr6pX+Jc4is2fBb0ELR+Juye2LwH3hBNq2XRV
-        B+2MfpmZ7jUSZUEeEQTyiFC7CU+hDdAeypimh0GH7qB9YuuDkkZ7b5SBYySbpYLHwrhs
-        n3FnpEtnbzGn7ZXT/9SUeSwb+7cCf1hPfI30QxzH7jYCH5jKsGj3K4zEq6ko3LR+nNfl
-        eOv6Mt5IREKbw0a+6VdTxO81WrfldyyIl6JkUSRnyFc5H3BUeHak+JhLQKEzAvqoT4wR
-        kSNA==
-X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjG14FZxedJy6qgO1o3HMbEWKNteTQLYO"
-X-RZG-CLASS-ID: mo00
-Received: from [192.168.40.177]
-        by smtp.strato.de (RZmta 46.1.4 DYNA|AUTH)
-        with ESMTPSA id 3013f9w0HK2sUOF
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Fri, 17 Jan 2020 21:02:54 +0100 (CET)
-Subject: Re: general protection fault in can_rx_register
-To:     dev.kurt@vandijck-laurijssen.be, mkl@pengutronix.de,
-        o.rempel@pengutronix.de
-References: <00000000000030dddb059c562a3f@google.com>
-Cc:     syzbot <syzbot+c3ea30e1e2485573f953@syzkaller.appspotmail.com>,
-        davem@davemloft.net, linux-can@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-From:   Oliver Hartkopp <socketcan@hartkopp.net>
-Message-ID: <55ad363b-1723-28aa-78b1-8aba5565247e@hartkopp.net>
-Date:   Fri, 17 Jan 2020 21:02:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 17 Jan 2020 15:15:48 -0500
+Received: from first.geanix.com ([116.203.34.67]:55076 "EHLO first.geanix.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727519AbgAQUPs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 15:15:48 -0500
+Received: from localhost (87-49-44-45-mobile.dk.customer.tdc.net [87.49.44.45])
+        by first.geanix.com (Postfix) with ESMTPSA id 8A681AB7CF;
+        Fri, 17 Jan 2020 20:14:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
+        t=1579292096; bh=NyD2V5SZSfQVTYmJ6N+L70KBjajwnojRIy5BahhEoVQ=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To;
+        b=b/n+rnpA3v2O8rwAeqUqPDB/3pEwDc8aT2Fzok20ORw+bUJDTkgOWQJHZ3Eb86Nia
+         h98IRvImFLnZ3NQRetCb6D/15fc32Ni9LV793Q5O3DKiP92rHDevyMv5bwJLFN0Ta6
+         ctOCLIZmzJBbNrwj5Z2qa7uSVgnhjj37BGjVLtTy5oUdnotiRsWizk+MAELt9JT9KH
+         GFdOjdO64TpbS+k62YS0jqpEbH46IEswdqmK+kaLNugVhwRmefu4zDFGZCI48g0Lsf
+         W4gUgVPD8KoWVI0J28kJEVZhPwjJMfaGqologNqBxhwXb0FMrHeMhgdOTg9/hJ2g9S
+         as4l4hd/ssMvQ==
+From:   Esben Haabendal <esben@geanix.com>
+To:     Han Xu <han.xu@nxp.com>
+Cc:     vkoul@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        boris.brezillon@collabora.com, festevam@gmail.com,
+        linux-imx@nxp.com, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/6] mtd: rawnand: gpmi: set the pinctrl state for suspend/reusme
+References: <1579038243-28550-1-git-send-email-han.xu@nxp.com>
+        <1579038243-28550-7-git-send-email-han.xu@nxp.com>
+Date:   Fri, 17 Jan 2020 21:15:44 +0100
+In-Reply-To: <1579038243-28550-7-git-send-email-han.xu@nxp.com> (Han Xu's
+        message of "Wed, 15 Jan 2020 05:44:03 +0800")
+Message-ID: <87wo9pvnyn.fsf@geanix.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <00000000000030dddb059c562a3f@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc, Oleksij, Kurt,
+Han Xu <han.xu@nxp.com> writes:
 
-On 17/01/2020 14.46, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    f5ae2ea6 Fix built-in early-load Intel microcode alignment
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1033df15e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=cfbb8fa33f49f9f3
-> dashboard link: 
-> https://syzkaller.appspot.com/bug?extid=c3ea30e1e2485573f953
-> compiler:       clang version 10.0.0 
-> (https://github.com/llvm/llvm-project/ 
-> c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13204f15e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=138f5db9e00000
-> 
-> The bug was bisected to:
-> 
-> commit 9868b5d44f3df9dd75247acd23dddff0a42f79be
-> Author: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
-> Date:   Mon Oct 8 09:48:33 2018 +0000
-> 
->      can: introduce CAN_REQUIRED_SIZE macro
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=129bfdb9e00000
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=119bfdb9e00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=169bfdb9e00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+c3ea30e1e2485573f953@syzkaller.appspotmail.com
-> Fixes: 9868b5d44f3d ("can: introduce CAN_REQUIRED_SIZE macro")
-> 
-> kasan: CONFIG_KASAN_INLINE enabled
-> kasan: GPF could be caused by NULL-ptr deref or user memory access
-> general protection fault: 0000 [#1] PREEMPT SMP KASAN
-> CPU: 0 PID: 9593 Comm: syz-executor302 Not tainted 5.5.0-rc6-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS 
-> Google 01/01/2011
-> RIP: 0010:hlist_add_head_rcu include/linux/rculist.h:528 [inline]
-> RIP: 0010:can_rx_register+0x43b/0x600 net/can/af_can.c:476
-
-include/linux/rculist.h:528 is
-
-struct hlist_node *first = h->first;
-
-which would mean that 'h' must be NULL.
-
-But the h parameter is rcv_list from
-rcv_list = can_rcv_list_find(&can_id, &mask, dev_rcv_lists);
-
-Which can not return NULL - at least when dev_rcv_lists is a proper 
-pointer to the dev_rcv_lists provided by can_dev_rcv_lists_find().
-
-So either dev->ml_priv is NULL in the case of having a CAN interface 
-(here vxcan) or we have not allocated net->can.rx_alldev_list in 
-can_pernet_init() properly (which would lead to an -ENOMEM which is 
-reported to whom?).
-
-Hm. I'm lost. Any ideas?
-
-Regards,
-Oliver
-
-
-> Code: 48 89 d8 48 c1 e8 03 42 80 3c 28 00 74 08 48 89 df e8 89 22 8a fa 
-> 4c 89 33 4d 89 e5 49 c1 ed 03 48 b8 00 00 00 00 00 fc ff df <41> 80 7c 
-> 05 00 00 74 08 4c 89 e7 e8 c5 21 8a fa 4d 8b 34 24 4c 89
-> RSP: 0018:ffffc90003e27d00 EFLAGS: 00010202
-> RAX: dffffc0000000000 RBX: ffff8880a77336c8 RCX: ffff88809306a100
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a77336c0
-> RBP: ffffc90003e27d58 R08: ffffffff87289cd6 R09: fffff520007c4f94
-> R10: fffff520007c4f94 R11: 0000000000000000 R12: 0000000000000008
-> R13: 0000000000000001 R14: ffff88809fbcf000 R15: ffff8880a7733690
-> FS:  00007fb132f26700(0000) GS:ffff8880aec00000(0000) 
-> knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 000000000178f590 CR3: 00000000996d6000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->   raw_enable_filters net/can/raw.c:189 [inline]
->   raw_enable_allfilters net/can/raw.c:255 [inline]
->   raw_bind+0x326/0x1230 net/can/raw.c:428
->   __sys_bind+0x2bd/0x3a0 net/socket.c:1649
->   __do_sys_bind net/socket.c:1660 [inline]
->   __se_sys_bind net/socket.c:1658 [inline]
->   __x64_sys_bind+0x7a/0x90 net/socket.c:1658
->   do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x446ba9
-> Code: e8 0c e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 
-> f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 
-> f0 ff ff 0f 83 5b 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007fb132f25d98 EFLAGS: 00000246 ORIG_RAX: 0000000000000031
-> RAX: ffffffffffffffda RBX: 00000000006dbc88 RCX: 0000000000446ba9
-> RDX: 0000000000000008 RSI: 0000000020000180 RDI: 0000000000000003
-> RBP: 00000000006dbc80 R08: 00007fb132f26700 R09: 0000000000000000
-> R10: 00007fb132f26700 R11: 0000000000000246 R12: 00000000006dbc8c
-> R13: 0000000000000000 R14: 0000000000000000 R15: 068500100000003c
-> Modules linked in:
-> ---[ end trace 0dedabb13ca8e7d7 ]---
-> RIP: 0010:hlist_add_head_rcu include/linux/rculist.h:528 [inline]
-> RIP: 0010:can_rx_register+0x43b/0x600 net/can/af_can.c:476
-> Code: 48 89 d8 48 c1 e8 03 42 80 3c 28 00 74 08 48 89 df e8 89 22 8a fa 
-> 4c 89 33 4d 89 e5 49 c1 ed 03 48 b8 00 00 00 00 00 fc ff df <41> 80 7c 
-> 05 00 00 74 08 4c 89 e7 e8 c5 21 8a fa 4d 8b 34 24 4c 89
-> RSP: 0018:ffffc90003e27d00 EFLAGS: 00010202
-> RAX: dffffc0000000000 RBX: ffff8880a77336c8 RCX: ffff88809306a100
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a77336c0
-> RBP: ffffc90003e27d58 R08: ffffffff87289cd6 R09: fffff520007c4f94
-> R10: fffff520007c4f94 R11: 0000000000000000 R12: 0000000000000008
-> R13: 0000000000000001 R14: ffff88809fbcf000 R15: ffff8880a7733690
-> FS:  00007fb132f26700(0000) GS:ffff8880aec00000(0000) 
-> knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 000000000178f590 CR3: 00000000996d6000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> 
-> 
+> set the correct pinctrl state in system pm suspend/resume ops
+>
+> Signed-off-by: Han Xu <han.xu@nxp.com>
 > ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> For information about bisection process see: 
-> https://goo.gl/tpsmEJ#bisection
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+>  drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c
+> index 73644c96fa9b..de1e3dbb2eb1 100644
+> --- a/drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c
+> +++ b/drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/pinctrl/consumer.h>
+>  #include <linux/dma/mxs-dma.h>
+>  #include "gpmi-nand.h"
+>  #include "gpmi-regs.h"
+> @@ -2692,6 +2693,7 @@ static int gpmi_pm_suspend(struct device *dev)
+>  {
+>  	int ret;
+>  
+> +	pinctrl_pm_select_sleep_state(dev);
+>  	ret = pm_runtime_force_suspend(dev);
+>  
+>  	return ret;
+> @@ -2708,6 +2710,8 @@ static int gpmi_pm_resume(struct device *dev)
+>  		return ret;
+>  	}
+>  
+> +	pinctrl_pm_select_default_state(dev);
+> +
+>  	/* re-init the GPMI registers */
+>  	ret = gpmi_init(this);
+>  	if (ret) {
+
+Acked-by: Esben Haabendal <esben@geanix.com>
