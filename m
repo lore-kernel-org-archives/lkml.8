@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4134C33CB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3437C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DBBB24691
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9E282467D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:42:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729557AbgAQRmM (ORCPT
+        id S1729583AbgAQRmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 12:42:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40040 "EHLO mail.kernel.org"
+        Fri, 17 Jan 2020 12:42:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729281AbgAQRld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 12:41:33 -0500
+        id S1729260AbgAQRlc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 12:41:32 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14B3524683;
-        Fri, 17 Jan 2020 17:41:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58CEB20842;
+        Fri, 17 Jan 2020 17:41:32 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1isVci-000QbZ-0K; Fri, 17 Jan 2020 12:41:32 -0500
-Message-Id: <20200117174131.893547195@goodmis.org>
+        id 1isVch-000QYz-94; Fri, 17 Jan 2020 12:41:31 -0500
+Message-Id: <20200117174131.158849136@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Fri, 17 Jan 2020 12:41:41 -0500
+Date:   Fri, 17 Jan 2020 12:41:36 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org,
         linux-rt-users <linux-rt-users@vger.kernel.org>
@@ -39,9 +39,8 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         John Kacur <jkacur@redhat.com>,
         Julia Cartwright <julia@ni.com>,
         Daniel Wagner <wagi@monom.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Daniel Wagner <dwagner@suse.de>
-Subject: [PATCH RT 30/32] lib/smp_processor_id: Adjust check_preemption_disabled()
+        Tom Zanussi <zanussi@kernel.org>
+Subject: [PATCH RT 25/32] Revert "cpufreq: drop K8s driver from beeing selected"
 References: <20200117174111.282847363@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -55,39 +54,34 @@ If anyone has any objections, please let me know.
 
 ------------------
 
-From: Daniel Wagner <dwagner@suse.de>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-[ Upstream commit af3c1c5fdf177870fb5e6e16b24e374696ab28f5 ]
+[ Upstream commit d64b599394a1bf4ecbe7093e03b88cfbbb77d5f8 ]
 
-The current->migrate_disable counter is not always defined leading to
-build failures with DEBUG_PREEMPT && !PREEMPT_RT_BASE.
+Borislav Petkov tried to reproduce the crash on his K8 without any luck.
 
-Restrict the access to ->migrate_disable to same set where
-->migrate_disable is modified.
+Allow to enable the driver since it looks like the bug was fixed in the
+meantime.
 
-Signed-off-by: Daniel Wagner <dwagner@suse.de>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-[bigeasy: adjust condition + description]
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- lib/smp_processor_id.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/cpufreq/Kconfig.x86 | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/smp_processor_id.c b/lib/smp_processor_id.c
-index 0c80992aa337..2e7398534b66 100644
---- a/lib/smp_processor_id.c
-+++ b/lib/smp_processor_id.c
-@@ -22,8 +22,10 @@ notrace static unsigned int check_preemption_disabled(const char *what1,
- 	 * Kernel threads bound to a single CPU can safely use
- 	 * smp_processor_id():
- 	 */
-+#if defined(CONFIG_PREEMPT_RT_BASE) && (defined(CONFIG_SMP) || defined(CONFIG_SCHED_DEBUG))
- 	if (current->migrate_disable)
- 		goto out;
-+#endif
+diff --git a/drivers/cpufreq/Kconfig.x86 b/drivers/cpufreq/Kconfig.x86
+index bb4a6160d0f7..35f71825b7f3 100644
+--- a/drivers/cpufreq/Kconfig.x86
++++ b/drivers/cpufreq/Kconfig.x86
+@@ -125,7 +125,7 @@ config X86_POWERNOW_K7_ACPI
  
- 	if (current->nr_cpus_allowed == 1)
- 		goto out;
+ config X86_POWERNOW_K8
+ 	tristate "AMD Opteron/Athlon64 PowerNow!"
+-	depends on ACPI && ACPI_PROCESSOR && X86_ACPI_CPUFREQ && !PREEMPT_RT_BASE
++	depends on ACPI && ACPI_PROCESSOR && X86_ACPI_CPUFREQ
+ 	help
+ 	  This adds the CPUFreq driver for K8/early Opteron/Athlon64 processors.
+ 	  Support for K10 and newer processors is now in acpi-cpufreq.
 -- 
 2.24.1
 
