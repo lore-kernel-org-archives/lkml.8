@@ -2,203 +2,113 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81EA7C33CB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2DBC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6203C20842
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 938B62064C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:17:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xbl0pzAB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729030AbgAQPPy (ORCPT
+        id S1729049AbgAQPRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 10:15:54 -0500
-Received: from mx2.suse.de ([195.135.220.15]:60106 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729061AbgAQPPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 10:15:49 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 09FD5AF42;
-        Fri, 17 Jan 2020 15:15:47 +0000 (UTC)
-From:   =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
-To:     cgroups@vger.kernel.org
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Li Zefan <lizefan@huawei.com>, Tejun Heo <tj@kernel.org>,
-        alex.shi@linux.alibaba.com, guro@fb.com, kernel-team@android.com,
-        linger.lee@mediatek.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com,
-        shuah@kernel.org, tomcherry@google.com
-Subject: [PATCH 3/3] kselftest/cgroup: add cgroup destruction test
-Date:   Fri, 17 Jan 2020 16:15:33 +0100
-Message-Id: <20200117151533.12381-4-mkoutny@suse.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200117151533.12381-1-mkoutny@suse.com>
-References: <20200116043612.52782-1-surenb@google.com>
- <20200117151533.12381-1-mkoutny@suse.com>
+        Fri, 17 Jan 2020 10:17:18 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:49700 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728739AbgAQPRS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 10:17:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=sBS1drMzIhipzCNVy8OKMGnYXRx1U8GXiDqx0O3pTls=; b=xbl0pzABN8FSNelcDT6OE28U8
+        HtKNAW5hqWR2aK0rwRmivz6TD2a1dOR4KBEyFdUexiwybn4+TrVTs2blfRtmRRWowiYvGEkvQwBk6
+        qKzlb8f4+R+GRzo9aHjcTzk/cemxdltFEgpH8q8UVw8rGy5CHop4vm0lsXn9Fda5VHKXg+oME3YIf
+        P/vAxSvt6eoTYznz+6FmU7sd48hb7XN0PqyS3hkI19lQF1YpGqPTtO3ZrZpciCneGvlidVhA0b3gv
+        fYnMLparMSSo+FiqTeQkk5kSfRCPP72WIZjZN72rk2XLjTziEeKubyP98Ud2xX+Z3MH+vkrN94gcb
+        iQ/g18erg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1isTMq-0000eo-Fx; Fri, 17 Jan 2020 15:17:00 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3CA8E304123;
+        Fri, 17 Jan 2020 16:15:21 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 784C320261863; Fri, 17 Jan 2020 16:16:58 +0100 (CET)
+Date:   Fri, 17 Jan 2020 16:16:58 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     James Clark <James.Clark@arm.com>
+Cc:     Will Deacon <will@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>, nd <nd@arm.com>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Tan Xiaojun <tanxiaojun@huawei.com>,
+        Al Grant <Al.Grant@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] Return EINVAL when precise_ip perf events are
+ requested on Arm
+Message-ID: <20200117151658.GH14879@hirez.programming.kicks-ass.net>
+References: <20200115105855.13395-1-james.clark@arm.com>
+ <20200115105855.13395-2-james.clark@arm.com>
+ <20200117123920.GB8199@willie-the-truck>
+ <20200117140143.GD14879@hirez.programming.kicks-ass.net>
+ <1231fd60-79cd-fcdf-8b99-a3be746bf2d1@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1231fd60-79cd-fcdf-8b99-a3be746bf2d1@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suren Baghdasaryan <surenb@google.com>
+On Fri, Jan 17, 2020 at 03:00:37PM +0000, James Clark wrote:
+> Hi Peter,
+> 
+> Do you mean something like this?
 
-Add new test to verify that a cgroup with dead processes can be destroyed.
-The test spawns a child process which allocates and touches 100MB of RAM
-to ensure prolonged exit. Subsequently it kills the child, waits until
-the cgroup containing the child is empty and destroys the cgroup.
+Yes.
 
-Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-Signed-off-by: Michal Koutný <mkoutny@suse.com>
----
- tools/testing/selftests/cgroup/test_core.c | 113 +++++++++++++++++++++
- 1 file changed, 113 insertions(+)
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 43d1d4945433..f74acd085bea 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -10812,6 +10812,12 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+>                 goto err_pmu;
+>         }
+>  
+> +       if (event->attr.precise_ip &&
+> +               !(pmu->capabilities & PERF_PMU_CAP_PRECISE_IP)) {
+> +               err = -EOPNOTSUPP;
+> +               goto err_pmu;
+> +       }
+> +
+>         err = exclusive_event_init(event);
+>         if (err)
+>                 goto err_pmu;
+> 
+> 
+> Or should it only be done via sysfs to not break userspace?
 
-diff --git a/tools/testing/selftests/cgroup/test_core.c b/tools/testing/selftests/cgroup/test_core.c
-index c5ca669feb2b..2a5242ec1a49 100644
---- a/tools/testing/selftests/cgroup/test_core.c
-+++ b/tools/testing/selftests/cgroup/test_core.c
-@@ -2,7 +2,10 @@
- 
- #include <linux/limits.h>
- #include <sys/types.h>
-+#include <sys/mman.h>
-+#include <sys/wait.h>
- #include <unistd.h>
-+#include <fcntl.h>
- #include <stdio.h>
- #include <errno.h>
- #include <signal.h>
-@@ -12,6 +15,115 @@
- #include "../kselftest.h"
- #include "cgroup_util.h"
- 
-+static int touch_anon(char *buf, size_t size)
-+{
-+	int fd;
-+	char *pos = buf;
-+
-+	fd = open("/dev/urandom", O_RDONLY);
-+	if (fd < 0)
-+		return -1;
-+
-+	while (size > 0) {
-+		ssize_t ret = read(fd, pos, size);
-+
-+		if (ret < 0) {
-+			if (errno != EINTR) {
-+				close(fd);
-+				return -1;
-+			}
-+		} else {
-+			pos += ret;
-+			size -= ret;
-+		}
-+	}
-+	close(fd);
-+
-+	return 0;
-+}
-+
-+static int alloc_and_touch_anon_noexit(const char *cgroup, void *arg)
-+{
-+	int ppid = getppid();
-+	size_t size = (size_t)arg;
-+	void *buf;
-+
-+	buf = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON,
-+		   0, 0);
-+	if (buf == MAP_FAILED)
-+		return -1;
-+
-+	if (touch_anon((char *)buf, size)) {
-+		munmap(buf, size);
-+		return -1;
-+	}
-+
-+	while (getppid() == ppid)
-+		sleep(1);
-+
-+	munmap(buf, size);
-+	return 0;
-+}
-+
-+/*
-+ * Create a child process that allocates and touches 100MB, then waits to be
-+ * killed. Wait until the child is attached to the cgroup, kill all processes
-+ * in that cgroup and wait until "cgroup.events" is empty. At this point try to
-+ * destroy the empty cgroup. The test helps detect race conditions between
-+ * dying processes leaving the cgroup and cgroup destruction path.
-+ */
-+static int test_cgcore_destroy(const char *root)
-+{
-+	int ret = KSFT_FAIL;
-+	char *cg_test = NULL;
-+	int child_pid;
-+	char buf[PAGE_SIZE];
-+
-+	cg_test = cg_name(root, "cg_test");
-+
-+	if (!cg_test)
-+		goto cleanup;
-+
-+	for (int i = 0; i < 10; i++) {
-+		if (cg_create(cg_test))
-+			goto cleanup;
-+
-+		child_pid = cg_run_nowait(cg_test, alloc_and_touch_anon_noexit,
-+					  (void *) MB(100));
-+
-+		if (child_pid < 0)
-+			goto cleanup;
-+
-+		/* wait for the child to enter cgroup */
-+		if (cg_wait_for_proc_count(cg_test, 1))
-+			goto cleanup;
-+
-+		if (cg_killall(cg_test))
-+			goto cleanup;
-+
-+		/* wait for cgroup to be empty */
-+		while (1) {
-+			if (cg_read(cg_test, "cgroup.procs", buf, sizeof(buf)))
-+				goto cleanup;
-+			if (buf[0] == '\0')
-+				break;
-+			usleep(1000);
-+		}
-+
-+		if (rmdir(cg_test))
-+			goto cleanup;
-+
-+		if (waitpid(child_pid, NULL, 0) < 0)
-+			goto cleanup;
-+	}
-+	ret = KSFT_PASS;
-+cleanup:
-+	if (cg_test)
-+		cg_destroy(cg_test);
-+	free(cg_test);
-+	return ret;
-+}
-+
- /*
-  * A(0) - B(0) - C(1)
-  *        \ D(0)
-@@ -512,6 +624,7 @@ struct corecg_test {
- 	T(test_cgcore_populated),
- 	T(test_cgcore_proc_migration),
- 	T(test_cgcore_thread_migration),
-+	T(test_cgcore_destroy),
- };
- #undef T
- 
--- 
-2.24.1
+So we've added checks like this in the past and gotten away with it. Do
+you already know of some userspace that will break due to it?
+
+An alternative approach is adding a sysctl like kernel.perf_nostrict
+which would disable this or something, that way 'old' userspace has a
+chicken bit.
 
