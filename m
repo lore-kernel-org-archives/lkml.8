@@ -2,123 +2,107 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE7EC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E2AC33CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC07D20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1886520684
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:53:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iMrhQwjW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733194AbgAQAtW convert rfc822-to-8bit (ORCPT
+        id S1733254AbgAQAxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 19:49:22 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:37473 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726378AbgAQAtW (ORCPT
+        Thu, 16 Jan 2020 19:53:39 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38461 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729937AbgAQAxj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 19:49:22 -0500
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-143-KhgvyvhuP5WGglsW0BZP2w-1; Thu, 16 Jan 2020 19:49:18 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8887C800D41;
-        Fri, 17 Jan 2020 00:49:16 +0000 (UTC)
-Received: from aion.usersys.redhat.com (ovpn-126-23.rdu2.redhat.com [10.10.126.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E7C8481200;
-        Fri, 17 Jan 2020 00:49:15 +0000 (UTC)
-Received: by aion.usersys.redhat.com (Postfix, from userid 1000)
-        id 278561A006B; Thu, 16 Jan 2020 19:49:15 -0500 (EST)
-Date:   Thu, 16 Jan 2020 19:49:15 -0500
-From:   Scott Mayhew <smayhew@redhat.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [BISECT BUG] NFS v4 root not working after 6d972518b821 ("NFS:
- Add fs_context support.")
-Message-ID: <20200117004915.GA3111@aion.usersys.redhat.com>
-References: <CAJKOXPeCVwZfBsCVbc9RQUGi0UfWQw0uFamPiQasiO8fSthFsQ@mail.gmail.com>
+        Thu, 16 Jan 2020 19:53:39 -0500
+Received: by mail-lj1-f196.google.com with SMTP id w1so24671371ljh.5;
+        Thu, 16 Jan 2020 16:53:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nRLDsV5J+qkOKcJynurEZXps9+tP4i1Xe6Phm4XOTR4=;
+        b=iMrhQwjWDdPKI17qs9lOaGZLJHmZhyiEvzn82Awp6aaTvIDjibKrQqROs7KVHLnDkj
+         +BKr4D8ciYkZh9eGI5EnwF/l6gKa4Kn9exonPDrEe7bOJC/gvh852Epnk4F06U9Kf4i1
+         8D2+59treVJTUWw81qtv/A2G88pYtJ541Y5Q7HT0QynigJoxeKacAoHWW1Ft6+89FEDq
+         4P9BOc9TYT0iT/eWH9sc2GmkMt7ILDI0bbioHQP4ey4JaJZt84+cvOdC0otA2Chgrey2
+         26AtZH/WryNmwS8wzeVaneTrmAx2wEHk8wnSfvGRZ5zq1bVHCz3TYJ9E1VVI6DA0eUsi
+         ALBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nRLDsV5J+qkOKcJynurEZXps9+tP4i1Xe6Phm4XOTR4=;
+        b=k+pGvdG/CqfJz6DaffjZADKSIdT/+BUJQaU0Bry5QvcgEfOxlkEaQt2/WQbSFGI0Ko
+         SSUXhXv/XaA1mtIbrvdM1bOmUHqumWcx0nvtSoaYfnIqC7vOOhz0MTHT4sG2YHaR+Tei
+         kffe/XP18QEBjpNaF7wRpO3NPN0iDCTC2jsVDbuHU7OOxpsd6/ez9IXfjRM8uHzrDOs0
+         kckh7stUDPFWM4lWXNyRlFCOK8i6B5MvsFVQGIkS9Z9JFVqapjEwtfIoukgIXdGf4yPT
+         8Bv7eyVS7S10gtKwWmBk2Epu5fnJlDas0tTUweF7u7Zuwggh65VxfNVmUrQZ5A8cB3Ma
+         S0IQ==
+X-Gm-Message-State: APjAAAUfCxthHzDjAfORVtLHF+R/+X4/uD5p0RxvQ1JhLevMFUeMPLuB
+        pA1NK0aW6h7MdwXFEYntr1KwGJBd
+X-Google-Smtp-Source: APXvYqy6N5uWsJX2pC47nHo5QlrWFFY2e2OPd/lAApVB9k1YS6UkqwsiTsIaBBoYfOU+3tzo+xOurQ==
+X-Received: by 2002:a2e:9b12:: with SMTP id u18mr4119536lji.274.1579222417031;
+        Thu, 16 Jan 2020 16:53:37 -0800 (PST)
+Received: from localhost.localdomain ([109.126.145.157])
+        by smtp.gmail.com with ESMTPSA id r26sm11174346lfm.82.2020.01.16.16.53.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 16:53:36 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] io_uring: remove extra check in __io_commit_cqring
+Date:   Fri, 17 Jan 2020 03:52:46 +0300
+Message-Id: <0d023acc096d63db454927590a5aca07deeac1cf.1579222330.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <CAJKOXPeCVwZfBsCVbc9RQUGi0UfWQw0uFamPiQasiO8fSthFsQ@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: KhgvyvhuP5WGglsW0BZP2w-1
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aion.usersys.redhat.com
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Jan 2020, Krzysztof Kozlowski wrote:
+__io_commit_cqring() is almost always called when there is a change in
+the rings, so the check is rather pessimising.
 
-> Hi all,
-> 
-> Bisect pointed to 6d972518b821 ("NFS: Add fs_context support.") for
-> failures of mounting NFS v4 root on my boards:
-> mount.nfs4 -o vers=4,nolock 192.168.1.10:/srv/nfs/odroidhc1 /new_root
-> [ 24.980839] NFS4: Couldn't follow remote path
-> [ 24.986201] NFS: Value for 'minorversion' out of range
-> mount.nfs4: Numerical result out of range
-> 
-> https://krzk.eu/#/builders/21/builds/1692
-> Full console log:
-> https://krzk.eu/#/builders/21/builds/1692/steps/14/logs/serial0
-> 
-> Enabling NFS v4.1 in defconfig seems to help. I can send patches for
-> this (for defconfigs) but probably the root cause should be fixed as
-> well.
-> 
-> Environment:
-> 1. Arch ARM Linux
-> 2. exynos_defconfig
-> 3. Exynos boards (Odroid XU3, etc), ARMv7, octa-core (Cortex-A7+A15),
-> Exynos5422 SoC
-> 4. systemd, boot up with static IP set in kernel command line
-> 5. No swap
-> 6. Kernel, DTB and initramfs are downloaded with TFTP
-> 7. NFS root from NFSv4 server
-> 
-> Let me know if you need more details.
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+---
+ fs/io_uring.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-I haven't had much luck reproducing this.  I disabled v4.1 in my .config
-and I can still boot a VM with NFS root (granted, I don't really use NFS
-root so this setup is brand new and pretty basic):
-
-[root@localhost ~]# cat /proc/cmdline
-BOOT_IMAGE=mountapi/vmlinuz initrd=mountapi/initrd.img ip=dhcp selinux=0 console=tty0 console=ttyS0,115200 root=nfs4:192.168.122.3:/export/nfsroot/fedora31
-
-[root@localhost ~]# grep nfs /proc/mounts
-192.168.122.3:/export/nfsroot/fedora31 / nfs rw,relatime,vers=4.0,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=192.168.122.69,local_lock=none,addr=192.168.122.3 0 0
-
-Just out of curiousity, what version of the mount.nfs program do you
-have in your initramfs?  I'm wondering if it's maybe passing the mount
-options differently than mine.  FWIW I'm using version 2.4.2:
-
-[smayhew@aion tmp]$ lsinitrd /var/lib/tftpboot/mountapi/initrd.img|grep mount.nfs
--rwsr-xr-x   1 root     root       208600 Feb 14  2019 usr/sbin/mount.nfs
-lrwxrwxrwx   1 root     root            9 Feb 14  2019 usr/sbin/mount.nfs4 -> mount.nfs
-[smayhew@aion tmp]$ /usr/lib/dracut/skipcpio /var/lib/tftpboot/mountapi/initrd.img|zcat|cpio -id usr/sbin/mount.nfs
-256163 blocks
-[smayhew@aion tmp]$ ./usr/sbin/mount.nfs -V
-mount.nfs: (linux nfs-utils 2.4.2)
-[smayhew@aion tmp]$
-
--Scott
-
-> 
-> Best regards,
-> Krzysztof
-> 
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index f9709a3a673c..ea91f4d92fc0 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -859,14 +859,12 @@ static void __io_commit_cqring(struct io_ring_ctx *ctx)
+ {
+ 	struct io_rings *rings = ctx->rings;
+ 
+-	if (ctx->cached_cq_tail != READ_ONCE(rings->cq.tail)) {
+-		/* order cqe stores with ring update */
+-		smp_store_release(&rings->cq.tail, ctx->cached_cq_tail);
++	/* order cqe stores with ring update */
++	smp_store_release(&rings->cq.tail, ctx->cached_cq_tail);
+ 
+-		if (wq_has_sleeper(&ctx->cq_wait)) {
+-			wake_up_interruptible(&ctx->cq_wait);
+-			kill_fasync(&ctx->cq_fasync, SIGIO, POLL_IN);
+-		}
++	if (wq_has_sleeper(&ctx->cq_wait)) {
++		wake_up_interruptible(&ctx->cq_wait);
++		kill_fasync(&ctx->cq_fasync, SIGIO, POLL_IN);
+ 	}
+ }
+ 
+-- 
+2.24.0
 
