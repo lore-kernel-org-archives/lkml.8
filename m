@@ -2,70 +2,68 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B3EC33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 08:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33CC2C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 08:03:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47D6F2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 08:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09D1C2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 08:03:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="V7pcvnC7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="Lfol5RQl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729370AbgAQIDh (ORCPT
+        id S1729437AbgAQIDl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 03:03:37 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37522 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729210AbgAQIDg (ORCPT
+        Fri, 17 Jan 2020 03:03:41 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41845 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729399AbgAQIDj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 03:03:36 -0500
-Received: by mail-wm1-f66.google.com with SMTP id f129so6535920wmf.2
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 00:03:36 -0800 (PST)
+        Fri, 17 Jan 2020 03:03:39 -0500
+Received: by mail-wr1-f65.google.com with SMTP id c9so21700402wrw.8
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 00:03:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=i++Wnr6lskfdyTEf2bt4TSLzH2Xad/WDR/WNYAW09E4=;
-        b=V7pcvnC73rYBS0KY9vSQuPPoEpxAvmkxo2YQx7SaJqwU7P4l65Hxjt9kOwliECjw9P
-         YSW/B284rrNNrsol0MpsGM3wcVvOQakDsgmtc9GVvvGrDYey7UrZ2qH6NscydWjrDnci
-         N+w0eDBnqHXYHUDgbLNnU7vcr4iOoh8jEH0sW2C5UZ751dm6PAdbcuF6gKQqUGWShSp6
-         PLLBJbhrzE2b9vaANhz7QeZU70gLhGkoDA6DM7CgZHpV6A4EcMED9tJUSQb67/A+gmZp
-         eAE04AXEcX//EN3QzjxcaulB9DofVRVeo85B4JZCm5LtlBV1DZROEdJRinPTDd/wuMyP
-         cD8w==
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=0dxc8QtGQ0PTjujap7aKZ1LJY+erIVhDCOoHmhzPCX8=;
+        b=Lfol5RQlR3KGOLzmjrmaD4btTKkwlxLirjdWy1fMTWxNPqnZsyb0NOd7gB1DJ+c78g
+         gF8D8lqSDpb3r1K6LZFEATwaKrWbUKBBoiTIAFVg8GHKi1MNG3xtrVcGWy5QQppXfflX
+         9SR65wlDDiu/cxOLVjoy5ZXOeninl5K6F6d/z+RNnhAGcPh61N54/d/z3PlIyPrkzJqa
+         kejynOqCGEeEBoItKELgRLMSr7jkFE34Jx/8dgu9pRJXEfWNg+LtWz0c3y0K35VcZGMx
+         +AfwMfiuOkfoKJ8gx7/Gt8zUgOZR4KHqYRBgHDW1Fz2iHs9rWnydYd+kJFwzoTWR5qyQ
+         NifQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=i++Wnr6lskfdyTEf2bt4TSLzH2Xad/WDR/WNYAW09E4=;
-        b=n1WPofddAwjlTmmGKCaijl7zw9R5F0fj0b6P77ELoqvGU2ZPZd98qKbSVpOmZVwYl8
-         ghQNu7icFbJ7JryaXw8c3qrpaR3lkkeEGBbthCCG6A45iwvyK3hQX5GqD9/PJYsBf/9O
-         /75BCaSA9SEOX3YgRlzVD+PDB+PAm5JYIxDlMBd00od+VO4mz/l6knZ6+gxx93M+YIrr
-         J+nYBL4xhvLc/bou8+y1LhgazA5DfQi5Q5B/LzYsvlz2I/eDDmkvhHD+Zx58JoYK9gq7
-         KTNZdnXT2FAejIRE9CenDmIO/AKmn9l4gUq+Phx+jPNoxrMF2qGV7Zuuk3WGEOJwtgJ4
-         0trQ==
-X-Gm-Message-State: APjAAAXnZtKh3jNGv1DsIp9HrVq4LGYlUInqm80HvnlXM6qu14jclWdA
-        IFFUt6XCzjhsv2Pq4z1mEVQCoCaJzb4XAQz/
-X-Google-Smtp-Source: APXvYqxl96ObJwT48mJl919pgWBhjJ834NW1hgROfepdvC4HdYZrfui8PwfpswFTjDrAhkPvRoSP8Q==
-X-Received: by 2002:a05:600c:28d:: with SMTP id 13mr3383409wmk.52.1579248215057;
-        Fri, 17 Jan 2020 00:03:35 -0800 (PST)
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=0dxc8QtGQ0PTjujap7aKZ1LJY+erIVhDCOoHmhzPCX8=;
+        b=bFQlDBdkvoq92Mcz6Q+Fg637aIb9HYZqhO8cpX303DpS+aTa5WTlaDaxwfPwYRN3oj
+         b2b5zigHtwSNlT3IGA5sPk8Mr/VeyOwThhO4+h1gV8vAnp01c2jRtF1mCix5JbSyPBal
+         BDrJsMhoNY5WusvIzDzRbX5ywx8mO6QnJb2CHLOcIV8I4qHVTC6yXqnJ/KWH/lRM2TwI
+         Nb4WBQFX9B3wlKgOYcoHCR/xwJruUuGP5UOelk8dz4ckfbq8HolDSxU7ig0qAXan21+H
+         Wr83kMbKVQ6/77P1fHtvx4D+gZnbVSPahhbAVcBoEm1zeByL/A41DUfNWLkLqwdn+gFa
+         dkpQ==
+X-Gm-Message-State: APjAAAVbN0CA1k6diq1l5MlSPEVjpoecwpru81iz6GnSdC7IcuJBHGOz
+        GiZRl2cRMs++6FuLJADtQBHFH5cUAGMcoxcL
+X-Google-Smtp-Source: APXvYqyPIStCdr8O+woTvblUlJbT07zm348a3w9jixRcjfWMr8KNQCBHIGn8jgpPoYfAhE5mn3DrZg==
+X-Received: by 2002:adf:ef49:: with SMTP id c9mr1770134wrp.292.1579248217005;
+        Fri, 17 Jan 2020 00:03:37 -0800 (PST)
 Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id w8sm3110202wmd.2.2020.01.17.00.03.33
+        by smtp.gmail.com with ESMTPSA id c195sm3477036wmd.45.2020.01.17.00.03.36
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 17 Jan 2020 00:03:34 -0800 (PST)
+        Fri, 17 Jan 2020 00:03:36 -0800 (PST)
 From:   Michal Simek <michal.simek@xilinx.com>
 To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
         michal.simek@xilinx.com, git@xilinx.com,
         Christoph Hellwig <hch@lst.de>
-Cc:     Paul Burton <paulburton@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Manjukumar Matha <manjukumar.harthikote-matha@xilinx.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
         linux-mips@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
         linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
         linux-s390@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>,
@@ -75,7 +73,6 @@ Cc:     Paul Burton <paulburton@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Ralf Baechle <ralf@linux-mips.org>,
         Paul Walmsley <paul.walmsley@sifive.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
         Max Filippov <jcmvbkbc@gmail.com>,
         linux-xtensa@linux-xtensa.org, "H. Peter Anvin" <hpa@zytor.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
@@ -83,7 +80,6 @@ Cc:     Paul Burton <paulburton@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
         Deepa Dinamani <deepa.kernel@gmail.com>,
         Chris Zankel <chris@zankel.net>,
-        Manish Narani <manish.narani@xilinx.com>,
         Ingo Molnar <mingo@redhat.com>,
         Waiman Long <longman@redhat.com>,
         linux-arm-kernel@lists.infradead.org,
@@ -91,12 +87,13 @@ Cc:     Paul Burton <paulburton@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
         Vasily Gorbik <gor@linux.ibm.com>,
         James Hogan <jhogan@kernel.org>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Guo Ren <ren_guo@c-sky.com>
-Subject: [PATCH v2 0/2] microblaze: Enable CMA
-Date:   Fri, 17 Jan 2020 09:03:30 +0100
-Message-Id: <cover.1579248206.git.michal.simek@xilinx.com>
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+Subject: [PATCH v2 1/2] asm-generic: Make dma-contiguous.h a mandatory include/asm header
+Date:   Fri, 17 Jan 2020 09:03:31 +0100
+Message-Id: <0274919c5e3b134df19d943f99cb7e84e5135ccd.1579248206.git.michal.simek@xilinx.com>
 X-Mailer: git-send-email 2.25.0
+In-Reply-To: <cover.1579248206.git.michal.simek@xilinx.com>
+References: <cover.1579248206.git.michal.simek@xilinx.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -104,38 +101,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+dma-continuguous.h is generic for all architectures except arm32 which has
+its own version.
 
-the patchset enable CMA on Microblaze. Based on Christoph request I have
-created the first patch which makes dma-continugous.h mandatory for all
-archs before Microblaze wiring.
+Similar change was done for msi.h by commit a1b39bae16a6
+("asm-generic: Make msi.h a mandatory include/asm header")
 
-Thanks,
-Michal
+Suggested-by: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
 
 Changes in v2:
 - New patch suggested by Christoph
-- Align commit message
-- Remove adding dma-contigous.h via Kbuild because it is done by previous
-  patch
 
-Michal Simek (2):
-  asm-generic: Make dma-contiguous.h a mandatory include/asm header
-  microblaze: Wire CMA allocator
+ arch/arm64/include/asm/Kbuild  | 1 -
+ arch/csky/include/asm/Kbuild   | 1 -
+ arch/mips/include/asm/Kbuild   | 1 -
+ arch/riscv/include/asm/Kbuild  | 1 -
+ arch/s390/include/asm/Kbuild   | 1 -
+ arch/x86/include/asm/Kbuild    | 1 -
+ arch/xtensa/include/asm/Kbuild | 1 -
+ include/asm-generic/Kbuild     | 1 +
+ 8 files changed, 1 insertion(+), 7 deletions(-)
 
- arch/arm64/include/asm/Kbuild         | 1 -
- arch/csky/include/asm/Kbuild          | 1 -
- arch/microblaze/Kconfig               | 1 +
- arch/microblaze/configs/mmu_defconfig | 2 ++
- arch/microblaze/mm/init.c             | 4 ++++
- arch/mips/include/asm/Kbuild          | 1 -
- arch/riscv/include/asm/Kbuild         | 1 -
- arch/s390/include/asm/Kbuild          | 1 -
- arch/x86/include/asm/Kbuild           | 1 -
- arch/xtensa/include/asm/Kbuild        | 1 -
- include/asm-generic/Kbuild            | 1 +
- 11 files changed, 8 insertions(+), 7 deletions(-)
-
+diff --git a/arch/arm64/include/asm/Kbuild b/arch/arm64/include/asm/Kbuild
+index bd23f87d6c55..d3077c991962 100644
+--- a/arch/arm64/include/asm/Kbuild
++++ b/arch/arm64/include/asm/Kbuild
+@@ -3,7 +3,6 @@ generic-y += bugs.h
+ generic-y += delay.h
+ generic-y += div64.h
+ generic-y += dma.h
+-generic-y += dma-contiguous.h
+ generic-y += dma-mapping.h
+ generic-y += early_ioremap.h
+ generic-y += emergency-restart.h
+diff --git a/arch/csky/include/asm/Kbuild b/arch/csky/include/asm/Kbuild
+index 4d4754e6bf89..bc15a26c782f 100644
+--- a/arch/csky/include/asm/Kbuild
++++ b/arch/csky/include/asm/Kbuild
+@@ -7,7 +7,6 @@ generic-y += delay.h
+ generic-y += device.h
+ generic-y += div64.h
+ generic-y += dma.h
+-generic-y += dma-contiguous.h
+ generic-y += dma-mapping.h
+ generic-y += emergency-restart.h
+ generic-y += exec.h
+diff --git a/arch/mips/include/asm/Kbuild b/arch/mips/include/asm/Kbuild
+index 61b0fc2026e6..179403ae5837 100644
+--- a/arch/mips/include/asm/Kbuild
++++ b/arch/mips/include/asm/Kbuild
+@@ -6,7 +6,6 @@ generated-y += syscall_table_64_n64.h
+ generated-y += syscall_table_64_o32.h
+ generic-y += current.h
+ generic-y += device.h
+-generic-y += dma-contiguous.h
+ generic-y += emergency-restart.h
+ generic-y += export.h
+ generic-y += irq_work.h
+diff --git a/arch/riscv/include/asm/Kbuild b/arch/riscv/include/asm/Kbuild
+index 1efaeddf1e4b..ec0ca8c6ab64 100644
+--- a/arch/riscv/include/asm/Kbuild
++++ b/arch/riscv/include/asm/Kbuild
+@@ -7,7 +7,6 @@ generic-y += div64.h
+ generic-y += extable.h
+ generic-y += flat.h
+ generic-y += dma.h
+-generic-y += dma-contiguous.h
+ generic-y += dma-mapping.h
+ generic-y += emergency-restart.h
+ generic-y += exec.h
+diff --git a/arch/s390/include/asm/Kbuild b/arch/s390/include/asm/Kbuild
+index 2531f673f099..1832ae6442ef 100644
+--- a/arch/s390/include/asm/Kbuild
++++ b/arch/s390/include/asm/Kbuild
+@@ -7,7 +7,6 @@ generated-y += unistd_nr.h
+ generic-y += asm-offsets.h
+ generic-y += cacheflush.h
+ generic-y += device.h
+-generic-y += dma-contiguous.h
+ generic-y += dma-mapping.h
+ generic-y += div64.h
+ generic-y += emergency-restart.h
+diff --git a/arch/x86/include/asm/Kbuild b/arch/x86/include/asm/Kbuild
+index 8b52bc5ddf69..ea34464d6221 100644
+--- a/arch/x86/include/asm/Kbuild
++++ b/arch/x86/include/asm/Kbuild
+@@ -7,7 +7,6 @@ generated-y += unistd_32_ia32.h
+ generated-y += unistd_64_x32.h
+ generated-y += xen-hypercalls.h
+ 
+-generic-y += dma-contiguous.h
+ generic-y += early_ioremap.h
+ generic-y += export.h
+ generic-y += mcs_spinlock.h
+diff --git a/arch/xtensa/include/asm/Kbuild b/arch/xtensa/include/asm/Kbuild
+index 3acc31e55e02..271917c24b7f 100644
+--- a/arch/xtensa/include/asm/Kbuild
++++ b/arch/xtensa/include/asm/Kbuild
+@@ -4,7 +4,6 @@ generic-y += bug.h
+ generic-y += compat.h
+ generic-y += device.h
+ generic-y += div64.h
+-generic-y += dma-contiguous.h
+ generic-y += dma-mapping.h
+ generic-y += emergency-restart.h
+ generic-y += exec.h
+diff --git a/include/asm-generic/Kbuild b/include/asm-generic/Kbuild
+index ddfee1bd9dc1..cd17d50697cc 100644
+--- a/include/asm-generic/Kbuild
++++ b/include/asm-generic/Kbuild
+@@ -4,5 +4,6 @@
+ # (This file is not included when SRCARCH=um since UML borrows several
+ # asm headers from the host architecutre.)
+ 
++mandatory-y += dma-contiguous.h
+ mandatory-y += msi.h
+ mandatory-y += simd.h
 -- 
 2.25.0
 
