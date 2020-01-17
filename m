@@ -2,155 +2,96 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C46C33CB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A4CC33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:13:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F13E02087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:12:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9E862467D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:13:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579255988;
+	bh=wABE1KL6Dom6ZK0s82ipPm+b7d+G3j2jQRbLEB2QhJw=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=HgX2OX2z2N+e7Cak+jKGFtQA22I1Va8GzuBXJK/tJZNfL9mFGYEaZXy1X0mlQz2X/
+	 Urf69F/Kkx0hOUgAFUwIWIAfxhy6FQ4GLnxdd+mbO4dsSwxh1EslCcWG+JMfDGIJ/U
+	 hi3VSDxyeiMrN3tqvi+RJW/pCzYlOZJhAQmGVa80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbgAQKM2 (ORCPT
+        id S1726979AbgAQKNH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 05:12:28 -0500
-Received: from mx2.suse.de ([195.135.220.15]:55052 "EHLO mx2.suse.de"
+        Fri, 17 Jan 2020 05:13:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726220AbgAQKM1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 05:12:27 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 984CEB9BF;
-        Fri, 17 Jan 2020 10:12:24 +0000 (UTC)
-Subject: Re: [patch] mm, thp: fix defrag setting if newline is not used
-To:     David Rientjes <rientjes@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <alpine.DEB.2.21.2001141757490.108121@chino.kir.corp.google.com>
- <20200116191609.3972fd5301cf364a27381923@linux-foundation.org>
- <025511aa-4721-2edb-d658-78d6368a9101@suse.cz>
- <alpine.DEB.2.21.2001170136280.20618@chino.kir.corp.google.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <a3c269a7-ff41-ee7c-9041-ee06e50c5a10@suse.cz>
-Date:   Fri, 17 Jan 2020 11:12:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        id S1726220AbgAQKNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 05:13:06 -0500
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 499502087E;
+        Fri, 17 Jan 2020 10:13:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579255985;
+        bh=wABE1KL6Dom6ZK0s82ipPm+b7d+G3j2jQRbLEB2QhJw=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=NfdayOHo1oYl7k46HXKjfLoR0O9A88lnCmiyazES/WIG3kOFVbMOhBB7/k2B2tDnd
+         Nb+ru+wNxgcZqLW8qBfOxDt59vzfzGPgOlmLFAODpJyT33wlCfbY0/b1N/F7Drvtlw
+         +xu8KC2S8dkSxCtX40B1xVGdq/PjspMQthenCba0=
+Date:   Fri, 17 Jan 2020 11:13:02 +0100 (CET)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Petr Mladek <pmladek@suse.com>
+cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Nicolai Stange <nstange@suse.de>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] livepatch/samples/selftest: Clean up show variables
+ handling
+In-Reply-To: <20200116153145.2392-1-pmladek@suse.com>
+Message-ID: <nycvar.YFH.7.76.2001171112490.31058@cbobk.fhfr.pm>
+References: <20200116153145.2392-1-pmladek@suse.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.2001170136280.20618@chino.kir.corp.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/17/20 10:43 AM, David Rientjes wrote:
-> On Fri, 17 Jan 2020, Vlastimil Babka wrote:
-> 
->>>> If thp defrag setting "defer" is used and a newline is *not* used when
->>>> writing to the sysfs file, this is interpreted as the "defer+madvise"
->>>> option.
->>>>
->>>> This is because we do prefix matching and if five characters are written
->>>> without a newline, the current code ends up comparing to the first five
->>>> bytes of the "defer+madvise" option and using that instead.
->>>>
->>>> Find the length of what the user is writing and use that to guide our
->>>> decision on which string comparison to do.
->>>
->>> Gee, why is this code so complicated?  Can't we just do
->>>
->>> 	if (sysfs_streq(buf, "always")) {
->>> 		...
->>> 	} else if sysfs_streq(buf, "defer+madvise")) {
->>> 		...
->>> 	}
->>> 	...
->>
->> Yeah, if we knew this existed :)
->>
->> We would lose the prefix matching but hopefully nobody will complain.
->>
-> 
-> I tested Vlastimil's patch and it works as intended so I was about to 
-> modify the changelog and send his patch and ask for a sign-off line 
-> because I think I agree the *partial* prefix matching has ~0.1% chance of 
-> breaking userspace and that 0.1% chance outweighs my desire to make the 
-> code consistent for all options.
+On Thu, 16 Jan 2020, Petr Mladek wrote:
 
-If prefix matching worked with "echo alw > /sys..." then I would expect
-some script out there relies on it, but since it only works with "echo
--n alw > /..." then perhaps there's no such script :)
-
-> But if userspace were broken by this, then at least it was already broken 
-> for "defer" depending on newline vs no newline.  (What we do know is that 
-> nobody has used "defer" for the past couple years without a newline :).
+> Dan Carpenter reported suspicious allocations of shadow variables
+> in the sample module, see
+> https://lkml.kernel.org/r/20200107132929.ficffmrm5ntpzcqa@kili.mountain
 > 
-> If nobody objects, I'll test and send Andrew's version with the changelog 
-> because I think we all agree the risk of breakage here is very minimal and 
-> actually fixes the case for defer.  
+> The code did not cause a real problem. But it was indeed misleading
+> and semantically wrong. I got confused several times when cleaning it.
+> So I decided to split the change into few steps. I hope that
+> it will help reviewers and future readers.
+> 
+> The changes of the sample module are basically the same as in the RFC.
+> In addition, there is a clean up of the module used by the selftest.
+> 
+> 
+> Petr Mladek (4):
+>   livepatch/sample: Use the right type for the leaking data pointer
+>   livepatch/selftest: Clean up shadow variable names and type
+>   livepatch/samples/selftest: Use klp_shadow_alloc() API correctly
+>   livepatch: Handle allocation failure in the sample of shadow variable
+>     API
+> 
+>  lib/livepatch/test_klp_shadow_vars.c      | 119 +++++++++++++++++-------------
+>  samples/livepatch/livepatch-shadow-fix1.c |  39 ++++++----
+>  samples/livepatch/livepatch-shadow-fix2.c |   4 +-
+>  samples/livepatch/livepatch-shadow-mod.c  |   4 +-
+>  4 files changed, 99 insertions(+), 67 deletions(-)
 
-Agreed.
+I've pushed this to for-5.6/selftests. Thanks,
+
+-- 
+Jiri Kosina
+SUSE Labs
+
