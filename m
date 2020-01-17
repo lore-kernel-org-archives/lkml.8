@@ -2,95 +2,171 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9A4C33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7E8C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 992AD2072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:30:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CFFA2064C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:30:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZtisCfjA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728811AbgAQVac (ORCPT
+        id S1729145AbgAQVap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 16:30:32 -0500
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:39981 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726744AbgAQVac (ORCPT
+        Fri, 17 Jan 2020 16:30:45 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:35093 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726744AbgAQVao (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 16:30:32 -0500
-Received: by mail-yb1-f193.google.com with SMTP id l197so5158990ybf.7;
-        Fri, 17 Jan 2020 13:30:31 -0800 (PST)
+        Fri, 17 Jan 2020 16:30:44 -0500
+Received: by mail-qt1-f194.google.com with SMTP id e12so22931397qto.2;
+        Fri, 17 Jan 2020 13:30:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=oKpJrpMP/WbiwVT8VF9eF4TKH+tXOjUsUEulh6dUpSw=;
+        b=ZtisCfjADHKFGS8o8e4KIuHaDJC/xyclaJ5vqDJIXm5Wrpcq2jsu1dpGYrbMc0EiN5
+         aD2ZtqJ5kO3qMGy2kukqbaVq+bN2uyoA+FQK5QZa6GqyLIl5xj9kPoJsXh1NPy9mYWHZ
+         Df7icJ+9GU0YMhkXtCe1sJ9emvzmzIfFi175xOHBsdwgP9zpTU6wtz+lLCkNVWis1/Ih
+         f726gk7Az81OAW+ZSC3XvVr/LS8pJOvy5Da49AyeIuNTq33bDLdxBokHkKfq/XMxnAjn
+         eM4xKe8nxEEl090/fSg4wPNpNHvCXlErB1Q89+KFi+uiVxMszLSLwfvHkeE0rwOd4u3r
+         x8sA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=StE2NY3HtsEMqXd4ZB/pMSObV0z3IPCkBkqgILuERJs=;
-        b=bukzU4gWyvcWbsHRtX9EFKOAS9LpRKz+Cxy+vdFOYfaSP+sodL+FfCiBz9COHKFG4f
-         7AjuvJJ6xwC1F9LRFNlSEy5EMnV4ob0ru5dFTSP+gfHCmSGIS/xOu4+sp9y5Z5zBYfz3
-         hK+K4WMzDV2Nx8Je5LY27QECnp9+nmaLgfqwRXP6eSd5uHxqJPFQzQWcml5UXKuXUjxN
-         NNXPm5DPUzIIGdGr02+V8M2Pl+9TK7yTldiZJmCE1rXXtIl4vYxcdgII1B+BUQRKrcJx
-         zKoQM4gNjIfHjUUmmqIZnJhhKCQ2Q5XPmtbD/qn2GEJrebMJOLhmZjYb93pUen15ixQk
-         sF9A==
-X-Gm-Message-State: APjAAAXB5pQqcdeqntcjOQL9EO1zarjrIkPscUWUhVrI5uI3vgou/ciA
-        fXfFS4Vi4SyasjA8+2gBR7+Ib4+5NrryZ6/ktwA=
-X-Google-Smtp-Source: APXvYqyydCcuBvXqI6tlUiplDf/E1iuWoEaUxAHjE4jekm6pKid2lg4rYKaCqMgIhDE5T7Z5+6c5101kFWsYqSx9pNk=
-X-Received: by 2002:a25:3604:: with SMTP id d4mr28915145yba.290.1579296631352;
- Fri, 17 Jan 2020 13:30:31 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=oKpJrpMP/WbiwVT8VF9eF4TKH+tXOjUsUEulh6dUpSw=;
+        b=S2o9JP+sQh8eFZwNW3F7v3DiIre2v4EcRw9BaNYNSfSEdTUokE3ozIBlH8F7H1gxIU
+         FDpgz7maNKsFvn7T4oOx1jzpDAOz5VVRtxSxl8aG/75+qzGJN8g6PfF8LeKWIjs/j2Sk
+         CeyyN32lr8P7O3/uGh3PZnbcKFommoN3kqR8JLezDWEqKCfdbJe5dpzW6Ff10n/3hD2l
+         VXORmKHco7wkPcT0gOOBQwd8vggVDbr6qPmMVquxUd4lmL/zReq7U34uagxVDRsgUz4e
+         /IwHIn/79wtkEl1JadoMyaG2jo6IDLjpTf9hzYytZc2QHj6+231Y/hTd+kxGg7Bm2m13
+         VFTg==
+X-Gm-Message-State: APjAAAXyOPwEfrgbHR9z51YOwiUWob8ltTCIwek+C2XPsbLHrMPbnzIF
+        VHUKuGIimmRn/y8keyf2ex308F7StIEzmjlZmFA=
+X-Google-Smtp-Source: APXvYqzF1gj4bIlwoe5msPiG+wBSblLtJO0oPNeDcVYjXiuMENAAjDDrH5pD8NKfKq+pPDxE8OOJmtbFJoZHeMN2MHQ=
+X-Received: by 2002:ac8:7b29:: with SMTP id l9mr9287898qtu.141.1579296642749;
+ Fri, 17 Jan 2020 13:30:42 -0800 (PST)
 MIME-Version: 1.0
-References: <c6ed1ca0-3e39-714c-9590-54e13695b9b9@redhat.com>
- <CAHk-=wink2z6EtvhKfhSvfC2hKBseVU8UWsM+HLsQP9x3mD7Xw@mail.gmail.com>
- <5c184396-7cc8-ee72-2335-dce9a977c8d4@redhat.com> <b70a0334-63be-b3a5-6f8a-714fbe4637c7@redhat.com>
-In-Reply-To: <b70a0334-63be-b3a5-6f8a-714fbe4637c7@redhat.com>
-From:   Akemi Yagi <toracat@elrepo.org>
-Date:   Fri, 17 Jan 2020 13:30:20 -0800
-Message-ID: <CABA31DpOsnDxL8VcwRebU8RmAMqv9UAc5zRe8oz14f3-TeWSQA@mail.gmail.com>
-Subject: Re: Performance regression introduced by commit b667b8673443 ("pipe:
- Advance tail pointer inside of wait spinlock in pipe_read()")
-To:     Waiman Long <longman@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+References: <157926819690.1555735.10756593211671752826.stgit@toke.dk> <157926819920.1555735.13051810516683828343.stgit@toke.dk>
+In-Reply-To: <157926819920.1555735.13051810516683828343.stgit@toke.dk>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 17 Jan 2020 13:30:31 -0800
+Message-ID: <CAEf4BzY3RM3LS3bvU4dHY+8U27RaezeaC9rfuW1YLAcFQEQKEA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v4 02/10] tools/bpf/runqslower: Fix override
+ option for VMLINUX_BTF
+To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-rdma@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 10:11 AM Waiman Long <longman@redhat.com> wrote:
+On Fri, Jan 17, 2020 at 5:37 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@redh=
+at.com> wrote:
 >
-> On 1/17/20 12:29 PM, Waiman Long wrote:
-> > On 1/17/20 12:05 PM, Linus Torvalds wrote:
-
-> >> GNU make v4.2.1 is buggy. The fix was done over two years ago, but
-> >> there hasn't been a new release since then, so a lot of distributions
-> >> have the buggy version..
-> >>
-> >> The fix is commit b552b05 ("[SV 51159] Use a non-blocking read with
-> >> pselect to avoid hangs.") In the make the git tree.
-> >>      Linus
-> >
-> > Yes, I did use make v4.2.1 which is the version that is shipped in
-> > RHEL8. I will build new make and try it.
-
-> > Longman
-> >
-> I built a make with the lastest make git tree and the problem was gone
-> with the new make. So it was a bug in make not the kernel. Sorry for the
-> noise.
+> From: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
 >
-> Longman
+> The runqslower tool refuses to build without a file to read vmlinux BTF
+> from. The build fails with an error message to override the location by
+> setting the VMLINUX_BTF variable if autodetection fails. However, the
+> Makefile doesn't actually work with that override - the error message is
+> still emitted.
+>
+> Fix this by including the value of VMLINUX_BTF in the expansion, and only
+> emitting the error message if the *result* is empty. Also permit running
+> 'make clean' even though no VMLINUX_BTF is set.
+>
+> Fixes: 9c01546d26d2 ("tools/bpf: Add runqslower tool to tools/bpf")
+> Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
+> ---
 
-If you are using RHEL8, building your own make is the only solution at
-this time. There is a bugzilla entry filed for this make bug but the
-progress is slow:
+approach looks good, thanks, few nits below
 
-https://bugzilla.redhat.com/show_bug.cgi?id=1774790
+>  tools/bpf/runqslower/Makefile |   18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+>
+> diff --git a/tools/bpf/runqslower/Makefile b/tools/bpf/runqslower/Makefil=
+e
+> index cff2fbcd29a8..b62fc9646c39 100644
+> --- a/tools/bpf/runqslower/Makefile
+> +++ b/tools/bpf/runqslower/Makefile
+> @@ -10,13 +10,9 @@ CFLAGS :=3D -g -Wall
+>
+>  # Try to detect best kernel BTF source
+>  KERNEL_REL :=3D $(shell uname -r)
+> -ifneq ("$(wildcard /sys/kernel/btf/vmlinux)","")
+> -VMLINUX_BTF :=3D /sys/kernel/btf/vmlinux
+> -else ifneq ("$(wildcard /boot/vmlinux-$(KERNEL_REL))","")
+> -VMLINUX_BTF :=3D /boot/vmlinux-$(KERNEL_REL)
+> -else
+> -$(error "Can't detect kernel BTF, use VMLINUX_BTF to specify it explicit=
+ly")
+> -endif
+> +VMLINUX_BTF_PATHS :=3D /sys/kernel/btf/vmlinux /boot/vmlinux-$(KERNEL_RE=
+L)
+> +VMLINUX_BTF_PATH :=3D $(abspath $(or $(VMLINUX_BTF),$(firstword \
+> +       $(wildcard $(VMLINUX_BTF_PATHS)))))
 
-The same bug in Fedora make was dealt with fairly quickly, thanks to
-the great "pressure" from Linus. ;-)
+you can drop abspath, relative path for VMLINUX_BTF would work just fine
 
-Akemi
+>
+>  abs_out :=3D $(abspath $(OUTPUT))
+>  ifeq ($(V),1)
+> @@ -67,9 +63,13 @@ $(OUTPUT):
+>         $(call msg,MKDIR,$@)
+>         $(Q)mkdir -p $(OUTPUT)
+>
+> -$(OUTPUT)/vmlinux.h: $(VMLINUX_BTF) | $(OUTPUT) $(BPFTOOL)
+> +$(OUTPUT)/vmlinux.h: $(VMLINUX_BTF_PATH) | $(OUTPUT) $(BPFTOOL)
+>         $(call msg,GEN,$@)
+> -       $(Q)$(BPFTOOL) btf dump file $(VMLINUX_BTF) format c > $@
+> +       @if [ ! -e "$(VMLINUX_BTF_PATH)" ] ; then \
+
+$(Q), not @
+
+> +               echo "Couldn't find kernel BTF; set VMLINUX_BTF to specif=
+y its location."; \
+> +               exit 1;\
+
+nit: please align \'s (same above for VMLONUX_BTF_PATH) at the right
+edge as it's done everywhere in this Makefile
+
+> +       fi
+> +       $(Q)$(BPFTOOL) btf dump file $(VMLINUX_BTF_PATH) format c > $@
+>
+>  $(OUTPUT)/libbpf.a: | $(OUTPUT)
+>         $(Q)$(MAKE) $(submake_extras) -C $(LIBBPF_SRC)                   =
+      \
+>
