@@ -2,146 +2,136 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B61C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 06:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F21AC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 06:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56B7F20730
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 06:40:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D346D21835
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 06:43:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="qg8e6L+j"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="PdioLmsQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729146AbgAQGk2 (ORCPT
+        id S1729058AbgAQGns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 01:40:28 -0500
-Received: from mail-mw2nam10on2057.outbound.protection.outlook.com ([40.107.94.57]:1761
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727740AbgAQGk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 01:40:28 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=giTwVwVg1oldl2SCR8qed7gTqpFYbHoFzpEUdlfcReI4vKGGIdOjeP9X83aHMOyEbituGlOzLFiSXpE3V3tRMpl6b4bQccjsoo0tXhj0FMpM29bHW9Wmto25+D1uXhSPcFr4okdNSG0JfBJbqGnLbr1wyT1GT9hYNF6yVwb0qibGByGEhIwjRyLT7G5FNSUjtsFJ5EiC7T4YrR3xT30tGeg3WTd8Uabz4j0lIf/zetJRtxqUhEOC+OI0v8LBLOUbKTVzhQYwhfzJboXslvQcXLGakrzk8WxpeMgaesPXcc4tR0XB7KlCMDWDEMnCrS7JPm8oaBT2w88EMghk7aV8Ng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M7PlYcFP3EEH+lmOdKm6xLjy7fO+3S5nWCyTd4vUZWs=;
- b=UHTl1sADN8wS/qfEyIqV6xQTWZvI0Sqh5bgWMpBJU4zuzOuDeH5WYr/PmrT74z2YSBsnzlkVzjk/AFNlPm/rrSoN8xOc/e0vIepS5coJsjcEqS27/7tvgZIpYwKvxs6eGW/cFT1ZJ+6vRzY5oOTcPMiUmIPRb0Ti0scVwc3aGRputkd/FdYCV5RHCAF6/aS2vqxeO/ATGdxDq7Tc0ZvxDAnR0TrVipJAUkBm9Oi6/E+2u/IXIYrelnNvT5nbsHqkFTZj5soaqcP+AxvNKueTWrOXEk1Oa0/ehYC53raDKwMxiboDZO+7MaPCzz+U4LJNNt+S779iV+Zwtmgpv+ytUQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M7PlYcFP3EEH+lmOdKm6xLjy7fO+3S5nWCyTd4vUZWs=;
- b=qg8e6L+jd827EplBYKqLUIXQzu8L34TVeIJcapWQ14JHr6ZFaRj48TEGAsisyx4SwPsaip3L8RZaegjILQl12tye11fK5d+1kniWPRe9UqcJSmoV4HjearpB9sKXQlS4vJotRfDMTjZktgbBBzHYcD+dACtFxFwqsbuw0cU28jY=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Rijo-john.Thomas@amd.com; 
-Received: from CY4PR12MB1925.namprd12.prod.outlook.com (10.175.62.7) by
- CY4PR12MB1846.namprd12.prod.outlook.com (10.175.59.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.18; Fri, 17 Jan 2020 06:40:25 +0000
-Received: from CY4PR12MB1925.namprd12.prod.outlook.com
- ([fe80::9be:baba:170f:3e2]) by CY4PR12MB1925.namprd12.prod.outlook.com
- ([fe80::9be:baba:170f:3e2%3]) with mapi id 15.20.2644.023; Fri, 17 Jan 2020
- 06:40:24 +0000
-Subject: Re: [PATCH][next][V2] tee: fix memory allocation failure checks on
- drv_data and amdtee
-To:     Colin King <colin.king@canonical.com>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
-        Gary R Hook <gary.hook@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-crypto@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200116154852.84532-1-colin.king@canonical.com>
-From:   "Thomas, Rijo-john" <Rijo-john.Thomas@amd.com>
-Message-ID: <e6fd526e-316f-539d-9f5e-c039041c4f2e@amd.com>
-Date:   Fri, 17 Jan 2020 12:10:14 +0530
+        Fri, 17 Jan 2020 01:43:48 -0500
+Received: from mout.web.de ([212.227.15.3]:60315 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727766AbgAQGns (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 01:43:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1579243413;
+        bh=W3xTZNyIcJFJet1srMw6HJ9rO3pWfMwV+2cdIGIMLTw=;
+        h=X-UI-Sender-Class:Cc:Subject:To:From:Date;
+        b=PdioLmsQTVqNHUxh/ojzkZuhX1Ql/SS/NY5qA0Qdwrs4oLwZbv0/BDFK5k3XYcXIF
+         BDYu2d+TiCZGdMg2bRKfT7DJ1WY8Ksx8vcUWfuOX8BdK+FnkNPnWR/V8vnRDjNCYYn
+         uIZM16XuxRGmUaAcpSmwaPV6rhScwDR4vzZmc3+o=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.243.146.240]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MCvVz-1ijqmE1Put-009ihG; Fri, 17
+ Jan 2020 07:43:33 +0100
+Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        linkinjeon@gmail.com
+Subject: RE: [PATCH v10 11/14] exfat: add Kconfig and Makefile
+To:     Namjae Jeon <namjae.jeon@samsung.com>,
+        linux-fsdevel@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <035cb0ee-50d6-06e4-2d97-e7b9d9c3ed38@web.de>
+Date:   Fri, 17 Jan 2020 07:43:22 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-In-Reply-To: <20200116154852.84532-1-colin.king@canonical.com>
+ Thunderbird/68.4.1
+MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MAXPR01CA0116.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:5d::34) To CY4PR12MB1925.namprd12.prod.outlook.com
- (2603:10b6:903:120::7)
-MIME-Version: 1.0
-Received: from [10.138.134.82] (165.204.156.251) by MAXPR01CA0116.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:5d::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.18 via Frontend Transport; Fri, 17 Jan 2020 06:40:22 +0000
-X-Originating-IP: [165.204.156.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 552964ac-aac8-40df-98a1-08d79b1821b9
-X-MS-TrafficTypeDiagnostic: CY4PR12MB1846:|CY4PR12MB1846:
-X-LD-Processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <CY4PR12MB18461BD949484F38CD2509BACF310@CY4PR12MB1846.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-Forefront-PRVS: 0285201563
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(136003)(376002)(346002)(366004)(199004)(189003)(31696002)(478600001)(5660300002)(66476007)(316002)(26005)(66946007)(66556008)(53546011)(6486002)(4326008)(6666004)(2616005)(2906002)(86362001)(16526019)(8936002)(52116002)(186003)(8676002)(16576012)(81166006)(110136005)(81156014)(36756003)(956004)(31686004);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1846;H:CY4PR12MB1925.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /0RLqTyl3TLlJUFIG1FRC6QZ6zB9voM1lMHXGJh8koPhslvSwFZRa4Fg2BH6kL7/m9ltLdda4/80jNKRz8I1Mqatt1cHqL/wUfhphPjzGDDvz4POqTrgeUm4gRlv47LqD7s3k5tfqcGfEho+kxE72kkgDtrcpcBsP9h0HEH1A4hmlhLwhFUq/B8V5hR9q9Zi3fBWw3d3Aa6i0UiJvZGg9o88QqqCuV4Ck8D1n9ZOYL0G7mx+nXs2myBVUtvIm+PFWa3fT8Plikag8xLV+tiPlFmKTJV2Gmxo6h2aoSNUc3ZCh9AxN0IiR41oODo2rwp4wlkwEkYgXIHDnJJa3czPDwY/Ganqy13X5T9ioQ5n45GUpWZLEGVy0w3EKXPxIqamcsWA+UbRCEaAKGrPtr0nSTbVgE9t95dplLTpgUBOb1uI/xm8mUemXTJuxMAI08KE
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 552964ac-aac8-40df-98a1-08d79b1821b9
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2020 06:40:24.7124
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7EWVShPJ3Lny2JN33yytohBNqTP4mef6Y2hRfDpaf6lamZ4ZRrCsWEKI3u/KRxHwJjRYrKOYnC9O3ue1+LL1+Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1846
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:CflHRozTXJ43+lem+oXl+sVKDLPONe/LOtZhyKsTFstIfNjxzi0
+ EN434X5AsDbBRkwz9gFsh9iwUf4nmpfRZ4GU+lf3cyG18U6KF8xmNmw0lIr9iJd7FKP1AGq
+ jYcTTRsksGai+DFDWgFctPRx/S98XLOG2GTkqVVL/GF4Hqwdx14mAaq6sPARZusiHgKnz7l
+ gAO7hZbqFSIspkNmjspaw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:tO8ZaTAqnOg=:Vv9FvClsnpekuOxeHBC9yD
+ lIg61WJZZhKAu4BPYlRsa79KhBffzz0LS2H1ZAnwT3WBcRciaxk4c4z+Cbks246ZDNXoRpuMI
+ KV0YDPvqBFEEsDFuRM0aEjj4Iib3n2HFIaHTrZ29o04q6Gcb7jvQNcv8GNBnBvTXlxtDGEDoK
+ ZHAhDmNPzQV/F1cF9WOBor2PoLIH8I4IN8JoCVyGaGzHeZx8SKVfMz4M9SgBgMb2EJMB8FqC/
+ J28AyxTbLjD+aGvtk39GYxMaw1z1b4PXvQjgBzkwXN8KBmA7fJjpeqcp0/H54590IOU2lhDm+
+ En/1TQBVDUjHCW7ooM9Um4FfTXUxTyC5gx6CEyO7ugc3rzDbCQFP7wWF+AUZAGChBRcI73kY3
+ gx4VzfiIWhS0JU03Owtbd9ayHtZsLfG+UdYebM+ofGb6Ej2I7lr5v/zBcJUPY1innhWNiCkt4
+ eoZHk2zJLmdLTjZ+2C2RzDdyr7ttjv/hVW5nCyGRZE3ZtGf++9q1uICOkoP/hliWzV7RHmtRF
+ h5pJCk8ISFiYL6ouUSUNWunXOV73SG+UpbQ9YyVwk8SxZ9q5e+/ndSD5TtMEXor5fE3eMbCZH
+ c1FmmO/YWDVwKfUF2Mlbq2IFz9WmuT6Fn+lOyi8qgt6661jpywE46nJFDcJLwJ0dm3bz85OH+
+ 7twQAUIm+ZMZKQhgKFgQTmyFMct6ruwNxQguitz3aQNYgEUdY8h82wxA4lGXd9mecElTDF2Aj
+ jWcGkcA8DL4PuF9ApUfCXMeIObo7gYfsu/ZyEkC3oh6sPqX51QZTcpC8zaP2LH7p4R6IITwx1
+ ZBhksfVnPeT1fA5hPFH2Z7TBofHB/r+xdc4yGDKcICBsVZGZ5YTyXMewvUlsli6501IuiIV8t
+ Lfhl+akKGyZey+azRZzX/y9KvcR98jwmCtjL1Z473z4LhKfu41OFUkDUB5j1hwi0lRIyzi7Ia
+ XB4iwytJym3JIlCqTc0gT1SVpyc3HbsSOX/12L63Q7iuNXVdxf/cFAaKpau/O+l2zkaCJSAAo
+ 21QGMAVKeDl+ZSZs/HdVjcLmBAYrSZUktlr0eSI3F2i5d32Mk74wP0AxqSOL+vhAkoWgUTQno
+ 66zoe3Hc7uPHh5bibHZxGJlPchLGqGdEZoaUZwbH+bODZEoxfd4ZFvINtP0Q4cB159A+mGEWG
+ FCw24+7y4cTALE3e1P9vtA4LkqsBGJ8FKHrHG0Ohs+D0NNhsGsYuEoRrwv5MYCIxmM7KhaFEu
+ I5qsGvfoYaXj4ypUb+aXlC543bTl07bYwB/1C94QcuahOVwaSdt0xt7Qqkew=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> Could you please review updated description ?
+=E2=80=A6
+> +++ b/fs/exfat/Kconfig
+> @@ -15,7 +15,7 @@ config EXFAT_DEFAULT_IOCHARSET
+=E2=80=A6
+> +         UTF-16 character that exfat filesystem use. and can be overrid=
+den with
 
+I suggest to improve this wording a bit more.
 
-On 16/01/20 9:18 pm, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Currently the memory allocation failure checks on drv_data and
-> amdtee are using IS_ERR rather than checking for a null pointer.
-> Fix these checks to use the conventional null pointer check.
-> 
-> Addresses-Coverity: ("Dereference null return")
-> Fixes: 757cc3e9ff1d ("tee: add AMD-TEE driver")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-
-Reviewed-by: Rijo Thomas <Rijo-john.Thomas@amd.com>
-
-Thanks,
-Rijo
-
-> ---
-> V2: update to apply against cryptodev-2.6 tree tip
-> ---
->  drivers/tee/amdtee/core.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/tee/amdtee/core.c b/drivers/tee/amdtee/core.c
-> index be8937eb5d43..6370bb55f512 100644
-> --- a/drivers/tee/amdtee/core.c
-> +++ b/drivers/tee/amdtee/core.c
-> @@ -446,11 +446,11 @@ static int __init amdtee_driver_init(void)
->  	}
->  
->  	drv_data = kzalloc(sizeof(*drv_data), GFP_KERNEL);
-> -	if (IS_ERR(drv_data))
-> +	if (!drv_data)
->  		return -ENOMEM;
->  
->  	amdtee = kzalloc(sizeof(*amdtee), GFP_KERNEL);
-> -	if (IS_ERR(amdtee)) {
-> +	if (!amdtee) {
->  		rc = -ENOMEM;
->  		goto err_kfree_drv_data;
->  	}
-> 
+Regards,
+Markus
