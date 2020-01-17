@@ -2,88 +2,200 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2B4C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5275C33CAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDD25214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86D02214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:33:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=3ksolutions.sk header.i=@3ksolutions.sk header.b="TkBU61dQ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bV2jRU6y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731668AbgAQAcG (ORCPT
+        id S1731934AbgAQAdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 19:32:06 -0500
-Received: from mail.prewas.sk ([212.5.209.170]:49349 "EHLO mail.prewas.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730487AbgAQAcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 19:32:05 -0500
-dkim-signature: v=1; a=rsa-sha256; d=3ksolutions.sk; s=mail.prewas.sk;
-        c=relaxed/relaxed; q=dns/txt; h=From:Subject:Date:Message-ID:To:CC:MIME-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:References;
-        bh=/ufg4YOpQeSX7cHfO6yjVhqqe1zoV2RAyfuHFpGADIk=;
-        b=TkBU61dQOLsmC1C6opABH7EfcFHApUscqlJRZ39KvqiJMLdBy9gZAcE1Jim9nPqJMBop8CDciT17nbvKUTjAaPGQVBkeOAcNkSm2lF5k7G9hD+S96I29nZtl+3XbufAcC2vuyJQAxQvUkqZOYv4ApGF9pySPSF6LJ94NhTgQs3uGkjAjuQ5qt9+dyyWBGsO8ehklAECOExbDLkIy7E3NuzSGzh93eZT8oP7mkDGdy/JuhapHCOVtnG6+N1
-        /rt7Q4IOKZLWWek0HAN6zJdQPny+zwD9TRd4pedc4+q++gVvCOqeoZWij0TIOsocFbnihgdfGmaXp3YF/kfLKe6Ghb2w==
-Received: from [10.0.1.61] (pcfilo.vital.sk [10.0.1.61])
-        by mail.prewas.sk with ESMTPSA
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128)
-        ; Fri, 17 Jan 2020 01:31:48 +0100
-Subject: Re: [PATCH] tty: serial: amba-pl011: added RS485 support
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-serial@vger.kernel.org
-References: <20200106235203.27256-1-sistik@3ksolutions.sk>
- <20200107072748.GA1014453@kroah.com>
-From:   "Ivan Sistik - 3K Solutions, s. r. o." <sistik@3ksolutions.sk>
-Message-ID: <f6deeb06-39b7-f140-c6bd-c977c5ad2b5a@3ksolutions.sk>
-Date:   Fri, 17 Jan 2020 01:31:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 16 Jan 2020 19:33:20 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:35705 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728898AbgAQAdU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 19:33:20 -0500
+Received: by mail-pj1-f65.google.com with SMTP id s7so2472565pjc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 16:33:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=oENCplfxYS/x7buWRMyVXnbpGnLZpIshtiMHjv9RuL8=;
+        b=bV2jRU6y0Hh6CrGd9dfjiMuxbQQNzdSTfEvXeBz9zlwazA3Bv7xhlQ16RLSo1vq3qp
+         sKAA1RLxDtCbnfvdl6r0RqQ7/YH45+KPrOXl+ZuKIs0xl6Xly3Iyc3qu4jwwVexcYQEf
+         3DIq3zQlj/uLuWIEaVA91MFzhRVQhmIllJ8aQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=oENCplfxYS/x7buWRMyVXnbpGnLZpIshtiMHjv9RuL8=;
+        b=PE/exTU4c6r1LSG1mot8hErHVC3409u/MAupJJpASEhuB/vPIzlLPmkS5LhO9Z/7kN
+         IA1eQNnpoQSW1Kr1A5nQf38RCK8jxfusq6GuFUJ92RKHobqBQrCG6UqJfUFnqun7fThr
+         qtCnxfNnn3QeFLj26lw51g5hGjV1Uh1I7WY9Zp7BlWlToGAnSfItIW2advnZCz8ZtPr6
+         owq01j82so5PimjSDF+Ubdm18Jg71ulCofoI/A6yaTxZMYUHYTz7C6crrLLWXuHmAw5g
+         Gd2h5hi6cJaCJgnxxx2Bdzg4UpEFpFkM9RuxmOXR5AlaJT2tNdjLAjXIbzis1a+8qgVp
+         n7JA==
+X-Gm-Message-State: APjAAAUToX36I0QSf2D1Phr1HVm3Ysdf4fjQY4hoFqkcvxjxXzyjW+4U
+        me4CcFNZs+zrJs9TsCppd1jflA==
+X-Google-Smtp-Source: APXvYqxq9YT/v0a4+lRet2n7yMQNshcu5xGQDYh95K/OSZa/KOXrXQkzsYGL4BILezDUTMyoUO6WMA==
+X-Received: by 2002:a17:902:a5c2:: with SMTP id t2mr40927930plq.86.1579221198354;
+        Thu, 16 Jan 2020 16:33:18 -0800 (PST)
+Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:172e:4646:c089:ce59])
+        by smtp.gmail.com with ESMTPSA id c188sm667420pga.83.2020.01.16.16.33.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 16:33:17 -0800 (PST)
+From:   Prashant Malani <pmalani@chromium.org>
+To:     enric.balletbo@collabora.com, groeck@chromium.org,
+        bleung@chromium.org, lee.jones@linaro.org, sre@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Jon Flatley <jflat@chromium.org>,
+        Prashant Malani <pmalani@chromium.org>
+Subject: [PATCH v7 3/3] power: supply: cros-ec-usbpd-charger: Fix host events
+Date:   Thu, 16 Jan 2020 16:28:24 -0800
+Message-Id: <20200117002820.56872-3-pmalani@chromium.org>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+In-Reply-To: <20200117002820.56872-1-pmalani@chromium.org>
+References: <20200117002820.56872-1-pmalani@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20200107072748.GA1014453@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7. 1. 2020 at 8:27 Greg Kroah-Hartman wrote:
+From: Jon Flatley <jflat@chromium.org>
 
->> +config SERIAL_AMBA_PL011_SOFT_RS485
->> +	bool "RS485 software direction switching for ARM AMBA PL011 serial"
->> +	depends on SERIAL_AMBA_PL011=y
-> 
-> Why "=y" here?  Shouldn't this just read:
-> 	depends on SERIAL_AMBA_PL011?
-> 
->> +	select SERIAL_CORE
-> 
-> Is this needed?  SERIAL_AMBA_PL011 already selects this.
+There's a bug on ACPI platforms where host events from the ECPD ACPI
+device never make their way to the cros-ec-usbpd-charger driver. This
+makes it so the only time the charger driver updates its state is when
+user space accesses its sysfs attributes.
 
-I am not sure. I found this few lines above:
+Now that these events have been unified into a single notifier chain on
+both ACPI and non-ACPI platforms, update the charger driver to use this
+new notifier.
 
-> config SERIAL_AMBA_PL010_CONSOLE
-> 	bool "Support for console on AMBA serial port"
-> 	depends on SERIAL_AMBA_PL010=y
-> 	select SERIAL_CORE_CONSOLE
+Reviewed-by: Benson Leung <bleung@chromium.org>
+Co-Developed-by: Prashant Malani <pmalani@chromium.org>
+Signed-off-by: Jon Flatley <jflat@chromium.org>
+Signed-off-by: Prashant Malani <pmalani@chromium.org>
+---
 
-and modified it for my purpose.
+Changes in v7(pmalani@chromium.org):
+- Alphabetize #include header.
 
+Changes in v6(pmalani@chromium.org):
+- Patch first introduced into the series in v6.
 
-Thanks,
+ drivers/power/supply/Kconfig              |  2 +-
+ drivers/power/supply/cros_usbpd-charger.c | 50 ++++++++---------------
+ 2 files changed, 19 insertions(+), 33 deletions(-)
 
-Ivan
+diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+index 27164a1d3c7c4..ba74ddd793c3d 100644
+--- a/drivers/power/supply/Kconfig
++++ b/drivers/power/supply/Kconfig
+@@ -659,7 +659,7 @@ config CHARGER_RT9455
+ 
+ config CHARGER_CROS_USBPD
+ 	tristate "ChromeOS EC based USBPD charger"
+-	depends on CROS_EC
++	depends on CROS_USBPD_NOTIFY
+ 	default n
+ 	help
+ 	  Say Y here to enable ChromeOS EC based USBPD charger
+diff --git a/drivers/power/supply/cros_usbpd-charger.c b/drivers/power/supply/cros_usbpd-charger.c
+index 6cc7c3910e098..7eea080048f43 100644
+--- a/drivers/power/supply/cros_usbpd-charger.c
++++ b/drivers/power/supply/cros_usbpd-charger.c
+@@ -9,6 +9,7 @@
+ #include <linux/module.h>
+ #include <linux/platform_data/cros_ec_commands.h>
+ #include <linux/platform_data/cros_ec_proto.h>
++#include <linux/platform_data/cros_usbpd_notify.h>
+ #include <linux/platform_device.h>
+ #include <linux/power_supply.h>
+ #include <linux/slab.h>
+@@ -524,32 +525,21 @@ static int cros_usbpd_charger_property_is_writeable(struct power_supply *psy,
+ }
+ 
+ static int cros_usbpd_charger_ec_event(struct notifier_block *nb,
+-				       unsigned long queued_during_suspend,
++				       unsigned long host_event,
+ 				       void *_notify)
+ {
+-	struct cros_ec_device *ec_device;
+-	struct charger_data *charger;
+-	u32 host_event;
++	struct charger_data *charger = container_of(nb, struct charger_data,
++						    notifier);
+ 
+-	charger = container_of(nb, struct charger_data, notifier);
+-	ec_device = charger->ec_device;
+-
+-	host_event = cros_ec_get_host_event(ec_device);
+-	if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_PD_MCU)) {
+-		cros_usbpd_charger_power_changed(charger->ports[0]->psy);
+-		return NOTIFY_OK;
+-	} else {
+-		return NOTIFY_DONE;
+-	}
++	cros_usbpd_charger_power_changed(charger->ports[0]->psy);
++	return NOTIFY_OK;
+ }
+ 
+ static void cros_usbpd_charger_unregister_notifier(void *data)
+ {
+ 	struct charger_data *charger = data;
+-	struct cros_ec_device *ec_device = charger->ec_device;
+ 
+-	blocking_notifier_chain_unregister(&ec_device->event_notifier,
+-					   &charger->notifier);
++	cros_usbpd_unregister_notify(&charger->notifier);
+ }
+ 
+ static int cros_usbpd_charger_probe(struct platform_device *pd)
+@@ -683,21 +673,17 @@ static int cros_usbpd_charger_probe(struct platform_device *pd)
+ 		goto fail;
+ 	}
+ 
+-	if (ec_device->mkbp_event_supported) {
+-		/* Get PD events from the EC */
+-		charger->notifier.notifier_call = cros_usbpd_charger_ec_event;
+-		ret = blocking_notifier_chain_register(
+-						&ec_device->event_notifier,
+-						&charger->notifier);
+-		if (ret < 0) {
+-			dev_warn(dev, "failed to register notifier\n");
+-		} else {
+-			ret = devm_add_action_or_reset(dev,
+-					cros_usbpd_charger_unregister_notifier,
+-					charger);
+-			if (ret < 0)
+-				goto fail;
+-		}
++	/* Get PD events from the EC */
++	charger->notifier.notifier_call = cros_usbpd_charger_ec_event;
++	ret = cros_usbpd_register_notify(&charger->notifier);
++	if (ret < 0) {
++		dev_warn(dev, "failed to register notifier\n");
++	} else {
++		ret = devm_add_action_or_reset(dev,
++				cros_usbpd_charger_unregister_notifier,
++				charger);
++		if (ret < 0)
++			goto fail;
+ 	}
+ 
+ 	return 0;
+-- 
+2.25.0.341.g760bfbb309-goog
 
