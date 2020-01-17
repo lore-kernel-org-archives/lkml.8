@@ -2,93 +2,125 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04EC0C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F057CC33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C59412083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:12:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579284744;
-	bh=IdyrMy2nrlmfkVGDIpnIS4HjWOBUiobj0MXhdDTQd80=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MPHai/yJDebTrkc1lFb3a07g7qT7+oWVHp1VXi1n/Dreilfj4fnj3EuwLU3U2fWQ4
-	 7WeJTTYuXWx8MnfD2BTmqG9BVfP2DDkZUTgNUbNeT48yapfJSl5iqA4ejYqyvWEaKr
-	 3QPNxNw4j6Ydt6M9Wave1sLrq+M4KMsTtibA5CQg=
+	by mail.kernel.org (Postfix) with ESMTP id D235F20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:12:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729246AbgAQSMY (ORCPT
+        id S1729297AbgAQSM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 13:12:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47388 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726603AbgAQSMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 13:12:23 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE02220748;
-        Fri, 17 Jan 2020 18:12:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579284743;
-        bh=IdyrMy2nrlmfkVGDIpnIS4HjWOBUiobj0MXhdDTQd80=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qn8SJYF+AS+5NobYCLPOms9TMfbOAaRLKRT/vF9O3TGrTA/TSz2xio4FkapxEPz75
-         ddlusE4o2/5Y5ESlOgi6OjeXsjycbBuHKF0v1wIePlD9F9K4cLQ30MncZqSa7pMBI2
-         naGnJwDelSv6i33seCm+qy64/LRjP4yCKeXIGxo0=
-Date:   Fri, 17 Jan 2020 19:12:20 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Chen-Yu Tsai <wens@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: sun8i: a83t: Fix incorrect clk and reset
- macros for EMAC device
-Message-ID: <20200117181220.biryjou5zvqfxdnt@gilmour.lan>
-References: <20200114094252.8908-1-wens@kernel.org>
+        Fri, 17 Jan 2020 13:12:28 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:52135 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726603AbgAQSM2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 13:12:28 -0500
+Received: from ip5f5bd679.dynamic.kabel-deutschland.de ([95.91.214.121] helo=localhost.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1isW6b-0005Yu-Af; Fri, 17 Jan 2020 18:12:25 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tejun Heo <tj@kernel.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH v4 0/6] clone3 & cgroups: allow spawning processes into cgroups
+Date:   Fri, 17 Jan 2020 19:12:13 +0100
+Message-Id: <20200117181219.14542-1-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="bzobas6k7fsnitoh"
-Content-Disposition: inline
-In-Reply-To: <20200114094252.8908-1-wens@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hey Tejun,
 
---bzobas6k7fsnitoh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This is v4 of the promised series to enable spawning processes into a
+target cgroup different from the parent's cgroup.
 
-On Tue, Jan 14, 2020 at 05:42:52PM +0800, Chen-Yu Tsai wrote:
-> From: Chen-Yu Tsai <wens@csie.org>
->
-> When the raw numbers used for clk and reset indices in the EMAC device
-> node were converted to the new macros, the order of the clk and reset
-> properties was overlooked, and thus the incorrect macros were used.
-> This results in the EMAC being non-responsive, as well as an oops due
-> to incorrect usage of the reset control.
->
-> Correct the macro types, and also reorder the clk and reset properties
-> to match all the other device nodes.
->
-> Fixes: 765866edb16a ("ARM: dts: sunxi: Use macros for references to CCU clocks")
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+/* v1 */
+Link: https://lore.kernel.org/r/20191218173516.7875-1-christian.brauner@ubuntu.com
 
-Queued as a fix for 5.6, thanks!
-Maxime
+/* v2 */
+Link: https://lore.kernel.org/r/20191223061504.28716-1-christian.brauner@ubuntu.com
+Rework locking and remove unneeded helper functions. Please see
+individual patch changelogs for details.
+With this I've been able to run the cgroup selftests and stress tests in
+loops for a long time without any regressions or deadlocks; lockdep and
+kasan did not complain either.
 
---bzobas6k7fsnitoh
-Content-Type: application/pgp-signature; name="signature.asc"
+/* v3 */
+Link: https://lore.kernel.org/r/20200117002143.15559-1-christian.brauner@ubuntu.com
+Split preliminary work into separate patches.
+See changelog of individual commits.
 
------BEGIN PGP SIGNATURE-----
+/* v4 */
+Verify that we have write access to the target cgroup. This is usually
+done by the vfs but since we aren't going through the vfs with
+CLONE_INTO_CGROUP we need to do it ourselves.
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXiH5BAAKCRDj7w1vZxhR
-xaaXAQDsG2aEO1qdNIVRhFZfwLaBsqA68VlRWQyNaM9q4IclmgEApgHG16xb1DWI
-RSmavsHC0ZQmsOTVpBI4SiaME4t3qw0=
-=cMS9
------END PGP SIGNATURE-----
+With this cgroup migration will be a lot easier, and accounting will be
+more exact. It also allows for nice features such as creating a frozen
+process by spawning it into a frozen cgroup.
+The code simplifies container creation and exec logic quite a bit as
+well.
 
---bzobas6k7fsnitoh--
+I've tried to contain all core changes for this features in
+kernel/cgroup/* to avoid exposing cgroup internals. This has mostly
+worked.
+When a new process is supposed to be spawned in a cgroup different from
+the parent's then we briefly acquire the cgroup mutex right before
+fork()'s point of no return and drop it once the child process has been
+attached to the tasklist and to its css_set. This is done to ensure that
+the cgroup isn't removed behind our back. The cgroup mutex is _only_
+held in this case; the usual case, where the child is created in the
+same cgroup as the parent does not acquire it since the cgroup can't be
+removed.
+
+The series already comes with proper testing. Once we've decided that
+this approach is good I'll expand the test-suite even more.
+
+The branch can be found in the following locations:
+[1]: kernel.org: https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/log/?h=clone_into_cgroup
+[2]: github.com: https://github.com/brauner/linux/tree/clone_into_cgroup
+[3]: gitlab.com: https://gitlab.com/brauner/linux/commits/clone_into_cgroup
+
+Thanks!
+Christian
+
+Christian Brauner (6):
+  cgroup: unify attach permission checking
+  cgroup: add cgroup_get_from_file() helper
+  cgroup: refactor fork helpers
+  cgroup: add cgroup_may_write() helper
+  clone3: allow spawning processes into cgroups
+  selftests/cgroup: add tests for cloning into cgroups
+
+ include/linux/cgroup-defs.h                   |   6 +-
+ include/linux/cgroup.h                        |  26 +-
+ include/linux/sched/task.h                    |   4 +
+ include/uapi/linux/sched.h                    |   5 +
+ kernel/cgroup/cgroup.c                        | 310 ++++++++++++++----
+ kernel/cgroup/pids.c                          |  16 +-
+ kernel/fork.c                                 |  19 +-
+ tools/testing/selftests/cgroup/Makefile       |   6 +-
+ tools/testing/selftests/cgroup/cgroup_util.c  | 126 +++++++
+ tools/testing/selftests/cgroup/cgroup_util.h  |   4 +
+ tools/testing/selftests/cgroup/test_core.c    |  64 ++++
+ .../selftests/clone3/clone3_selftests.h       |  19 +-
+ 12 files changed, 521 insertions(+), 84 deletions(-)
+
+
+base-commit: b3a987b0264d3ddbb24293ebff10eddfc472f653
+-- 
+2.25.0
+
