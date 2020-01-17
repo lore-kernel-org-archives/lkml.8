@@ -2,99 +2,145 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68AE7C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 23:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F219BC33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 23:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E4F7222C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 23:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C06B02073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 23:22:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="vy72WAyz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PQQUb8An"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730211AbgAQXSV (ORCPT
+        id S1730219AbgAQXWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 18:18:21 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:54964 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730076AbgAQXSV (ORCPT
+        Fri, 17 Jan 2020 18:22:16 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47665 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730075AbgAQXWP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 18:18:21 -0500
-Received: by mail-pj1-f65.google.com with SMTP id kx11so3804387pjb.4
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 15:18:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=VLG8/maPK56SKNLr2yTnp4t8L0TJHtYxqLK8FSBIkjM=;
-        b=vy72WAyzSSQasq9HbUjrg3RmYtI0feBoyIRzXbcaqQasdTSoh8bCrZS8wj1qS5OHDb
-         ix+JfCHG/FPIkn3ARXwVJ5pihxlwF0EWzuqY8J14IqUpdeFxx7AsAykB2E3xX3mOvNBA
-         A5Su205h1jqTioIim81JdQb/+gZXY6nnPxfpDbBB+/MJkk8vCbNpbk31oSxcihMauRs/
-         5kUeoF2Pt9b1xQ7bWG9iE12gAjuJhVXC/A1N1wIY93iMdDj6tRVPbPQ/IsUYDqOTklSI
-         UgwobEyvB3G2xHgMgOeD8xBSY/lTb79pn1iFqfQpEZdLcZ8P+e2CabEO6lk7YCKaWhAu
-         HKRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VLG8/maPK56SKNLr2yTnp4t8L0TJHtYxqLK8FSBIkjM=;
-        b=AirBsqiOtjpp+lS1+dFFKuoHG3M4vCYb9mB4IJOUYyu8X2OA6+g/nVygZcJyUBSpMo
-         SWVHRSHBm82sLtwumeqQYjd9vtiE5Ii8pcuqGxNhGyz+DYEnoDE2+j5fDLbVFf+vu60s
-         jshvRE8HD1ccRzE7pnZZ2erXvBznY+k0ObApCAjcY6CFblh60ja+9rHjtIOGIYxlxAbx
-         QMo4E5kPtrTWi4c8jAFpi6UX2v4tlkytsEHpen2ot7F/im3z3QRC5ASUBvODO8GhUYtu
-         8nIPXZljGrURljoTjVL/ILcyZf6FNXR+7AfPHEz8VUi4CH8cTX1vDttnRdlZSVlLa/0V
-         Ferg==
-X-Gm-Message-State: APjAAAVFj4r4o4zT75ha0yq6EZnIsXGGL21xzCxAxgRBWvy8ZKAz1i4a
-        qUGMiBKkRSuOEjONBlfsJ4zE1Q==
-X-Google-Smtp-Source: APXvYqyav0hbbsufO88stfLwuT5j7l9xrp4RSPyN0zoqp/A7wZAkTVx0csOHgCvKj9+MAqieRPBHhQ==
-X-Received: by 2002:a17:90a:246d:: with SMTP id h100mr8365827pje.127.1579303100597;
-        Fri, 17 Jan 2020 15:18:20 -0800 (PST)
-Received: from debian ([122.178.20.229])
-        by smtp.gmail.com with ESMTPSA id z64sm31598159pfz.23.2020.01.17.15.18.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 15:18:19 -0800 (PST)
-Date:   Sat, 18 Jan 2020 04:48:13 +0530
-From:   Jeffrin Jose <jeffrin@rajagiritech.edu.in>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        jeffrin@rajagiritech.edu.in
-Subject: Re: [PATCH 5.4 000/203] 5.4.13-stable review
-Message-ID: <20200117231813.GA2799@debian>
-References: <20200116231745.218684830@linuxfoundation.org>
+        Fri, 17 Jan 2020 18:22:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579303334;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3/SHYbTc4mVQlnGSSRKlNXBA4512ItBob86hriSAwCo=;
+        b=PQQUb8Anov88HLEqj9Uurmi51e/cPPe+8QtSPPQux6A2J4I2Tjz7Jvnx/OR16wRM7cXJIa
+        Oc3UAOR38Seq3iiBIFsAezzWfYtyIkTTKrB5nEYlceD7q1ros9AY2eNfYkLgi3CAD0Jf/d
+        LW4UbpJCJelGeU330ImargskCpQcNBE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-169-W9xSDrvmNN6DIb-3p0VLUw-1; Fri, 17 Jan 2020 18:22:11 -0500
+X-MC-Unique: W9xSDrvmNN6DIb-3p0VLUw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 980228017CC;
+        Fri, 17 Jan 2020 23:22:08 +0000 (UTC)
+Received: from malachite.bss.redhat.com (dhcp-10-20-1-90.bss.redhat.com [10.20.1.90])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7315A5C1D8;
+        Fri, 17 Jan 2020 23:22:03 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     intel-gfx@lists.freedesktop.org,
+        Jani Nikula <jani.nikula@intel.com>
+Cc:     Perry Yuan <pyuan@redhat.com>,
+        AceLan Kao <acelan.kao@canonical.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        Lee Shawn C <shawn.c.lee@intel.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4] drm/i915: Don't use VBT for detecting DPCD backlight controls
+Date:   Fri, 17 Jan 2020 18:21:54 -0500
+Message-Id: <20200117232155.135579-1-lyude@redhat.com>
+In-Reply-To: <20200116211623.53799-5-lyude@redhat.com>
+References: <20200116211623.53799-5-lyude@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 12:15:17AM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.13 release.
-> There are 203 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 18 Jan 2020 23:16:00 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.13-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
-> 
+Despite the fact that the VBT appears to have a field for specifying
+that a system is equipped with a panel that supports standard VESA
+backlight controls over the DP AUX channel, so far every system we've
+spotted DPCD backlight control support on doesn't actually set this
+field correctly and all have it set to INTEL_BACKLIGHT_DISPLAY_DDI.
 
-hello,
+While we don't know the exact reason for this VBT misuse, talking with
+some vendors indicated that there's a good number of laptop panels out
+there that supposedly support both PWM backlight controls and DPCD
+backlight controls as a workaround until Intel supports DPCD backlight
+controls across platforms universally. This being said, the X1 Extreme
+2nd Gen that I have here (note that Lenovo is not the hardware vendor
+that informed us of this) PWM backlight controls are advertised, but
+only DPCD controls actually function. I'm going to make an educated
+guess here and say that on systems like this one, it's likely that PWM
+backlight controls might have been intended to work but were never
+really tested by QA.
 
-compiled and booted 5.4.13-rc1+ . No regressions according to "sudo dmesg -l err"
+Since we really need backlights to work without any extra module
+parameters, let's take the risk here and rely on the standard DPCD caps
+to tell us whether AUX backlight controls are supported or not. We still
+check the VBT, just so we can print a debugging message on systems that
+advertise DPCD backlight support on the panel but not in the VBT.
 
---
-software engineer
-rajagiri school of engineering and technology
+Changes since v3:
+* Print a debugging message if we enable DPCD backlight control on a
+  device which doesn't report DPCD backlight controls in it's VBT,
+  instead of warning on custom panel backlight interfaces.
+
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=3D112376
+Cc: Jani Nikula <jani.nikula@intel.com>
+Cc: Perry Yuan <pyuan@redhat.com>
+Cc: AceLan Kao <acelan.kao@canonical.com>
+---
+ drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c b/driv=
+ers/gpu/drm/i915/display/intel_dp_aux_backlight.c
+index 77a759361c5c..0f8edc775375 100644
+--- a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
++++ b/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
+@@ -328,15 +328,16 @@ intel_dp_aux_display_control_capable(struct intel_c=
+onnector *connector)
+ int intel_dp_aux_init_backlight_funcs(struct intel_connector *intel_conn=
+ector)
+ {
+ 	struct intel_panel *panel =3D &intel_connector->panel;
+-	struct drm_i915_private *dev_priv =3D to_i915(intel_connector->base.dev=
+);
++	enum intel_backlight_type type =3D
++		to_i915(intel_connector->base.dev)->vbt.backlight.type;
+=20
+ 	if (i915_modparams.enable_dpcd_backlight =3D=3D 0 ||
+ 	    (i915_modparams.enable_dpcd_backlight =3D=3D -1 &&
+-	    dev_priv->vbt.backlight.type !=3D INTEL_BACKLIGHT_VESA_EDP_AUX_INTE=
+RFACE))
++	     !intel_dp_aux_display_control_capable(intel_connector)))
+ 		return -ENODEV;
+=20
+-	if (!intel_dp_aux_display_control_capable(intel_connector))
+-		return -ENODEV;
++	if (type !=3D INTEL_BACKLIGHT_VESA_EDP_AUX_INTERFACE)
++		DRM_DEBUG_DRIVER("Ignoring VBT backlight type\n");
+=20
+ 	panel->backlight.setup =3D intel_dp_aux_setup_backlight;
+ 	panel->backlight.enable =3D intel_dp_aux_enable_backlight;
+--=20
+2.24.1
+
