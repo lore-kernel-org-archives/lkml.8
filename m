@@ -2,95 +2,113 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E60C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B613C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F20192072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:12:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1046B2072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:12:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="q8t1Qzsn";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mQPMWpAl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PQHzcFEw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729210AbgAQAMZ (ORCPT
+        id S1729423AbgAQAMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 19:12:25 -0500
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:33397 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726684AbgAQAMY (ORCPT
+        Thu, 16 Jan 2020 19:12:45 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46064 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726684AbgAQAMp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 19:12:24 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 7F77D21DC7;
-        Thu, 16 Jan 2020 19:12:23 -0500 (EST)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Thu, 16 Jan 2020 19:12:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm1; bh=eMruiSYqr1FxGghMIkkwNO55AX7K0Cr
-        Pd/V2d5+JeQI=; b=q8t1QzsnN7aoHs5/oaQCUpnRKJOrTZLBriRrb4klqqVpPSZ
-        Um6oV+3SNMrOy5PwmT2iO8D49u0osrdZV1+HklG93xUe/fBWpHyOu081AKDm0fRQ
-        +1nPn2Li+Sah1hFEN/UdBUyPF4Plf0d9whgGbQfd/gIYKSiSnTzv6TUt7OD5PN1w
-        of3G4rlAGfwtOIEY3rELHVsQ0enyuW3QNfzbgsO7g+ZtE6r0c3Bhn0aZEyZ47bKb
-        SJ/8A3uTqKm3DvS/BbbVQgEvEYKJ8+M26b0+zPmDD+AtVVjQKHOnEGE25FjKkZP1
-        0PrEeLF/34UtmHjK7wOOxiT1XoLoWW/VgKlRXSQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=eMruiS
-        Yqr1FxGghMIkkwNO55AX7K0CrPd/V2d5+JeQI=; b=mQPMWpAlloFNUnR5IaRTbz
-        WdQoKVt9dpOpUidCoEVs6KgiV0wPrBcRfl+mDZG465t8vgF2+5+F9uI/hDmuhblN
-        TEl49/Hp7z2tIeqlwTyiafnYAgIIE3Y8cbM6c0dM1ceqaYOwVPktC6iWWt3lJJwI
-        kydBy6wI8Fj5ccfORDItCKOxScXrHF+KJiVUjYcS5D2KgQpWb7vLXGCviLcgur9v
-        USy6Mhbyh05iW+KZNZpt3pd0EL5W2BmdBkIbJBht5X6Ajzklx1BnNzYiHFKx+MKr
-        KOOK7riLtnwM2JQdj3t3XpOnaokIhxNEx7h7r2wM81u7WiYMwkHX3a1/qbV28hJg
-        ==
-X-ME-Sender: <xms:5vsgXjPzPjmGNbOzl4qF9YjQTapJv4O9SJallQc1HaM_QJgJhSG6Pg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrtdeigdduiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderreejnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
-    ufhiiigvpedt
-X-ME-Proxy: <xmx:5vsgXgmeRu9HhKIjdjSruKcatVe0gdyjRb7JNz0ODcPz6CFIVAiMKg>
-    <xmx:5vsgXhwOcysow1b8KHTly5xqI4h-RYe0sHsVXxEa_L3jzAf1YC4LMw>
-    <xmx:5vsgXpAdANiWGGbUoQttkFtotnlniLBxl9ZrwVPqsLOQ0dNjI2IcgQ>
-    <xmx:5_sgXtTQWzT_4-a6aFplwFF-MdBakhV7uAYIxsQEB0uwdnxxa8WMjw>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 96D2BE00A2; Thu, 16 Jan 2020 19:12:22 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-754-g09d1619-fmstable-20200113v1
-Mime-Version: 1.0
-Message-Id: <2ebf5f23-66dc-40c5-9812-f635f70b5245@www.fastmail.com>
-In-Reply-To: <1579123790-6894-12-git-send-email-eajames@linux.ibm.com>
-References: <1579123790-6894-1-git-send-email-eajames@linux.ibm.com>
- <1579123790-6894-12-git-send-email-eajames@linux.ibm.com>
-Date:   Fri, 17 Jan 2020 10:42:01 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Eddie James" <eajames@linux.ibm.com>,
-        linux-aspeed@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        mark.rutland@arm.com, "Jason Cooper" <jason@lakedaemon.net>,
-        "Marc Zyngier" <maz@kernel.org>,
-        "Rob Herring" <robh+dt@kernel.org>, tglx@linutronix.de,
-        "Joel Stanley" <joel@jms.id.au>
-Subject: =?UTF-8?Q?Re:_[PATCH_v6_11/12]_ARM:_dts:_aspeed:_witherspoon:_Enable_XDM?=
- =?UTF-8?Q?A_Engine?=
-Content-Type: text/plain
+        Thu, 16 Jan 2020 19:12:45 -0500
+Received: by mail-wr1-f65.google.com with SMTP id j42so20959537wrj.12;
+        Thu, 16 Jan 2020 16:12:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sW9GJJtS3r0rfOsE2akR9nsq8uqRMddnQuBnai/zpRI=;
+        b=PQHzcFEwi5iLVrwpmxazY2ThTMGpLLwC4m7PDRdFQtZGFhCba1u9oC1PIa67JWhHul
+         pLJyFZcXKRpiZXUyU1RHMJPg7TUAgVVfSmomJ0qfGu03Z0OLfSEaYtLMzUP9F9cpFWsn
+         Y6cv3w9fWX3BPig4xuGPaBb0r37gd862zYucDfWVRE4pRwaxo2wDAQ6HPWzLJQre862v
+         q7dX6iLP/ksN0K8TRtqXz97pFcB3QfEqZ7CyWGUqVHPeWPUDlEL1pSbKwSUbs3TJBo05
+         GSGw8PSFfmiJ4G8VHcEPHqu+RrqohRi+f8DQ1tsSvIQdQCZhtQiID2lZdkHIYf1v/L4m
+         2juA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sW9GJJtS3r0rfOsE2akR9nsq8uqRMddnQuBnai/zpRI=;
+        b=E1yjgxrwdcV7cXL/PpT2qBoQhaqW1f9O4srh93hPD7dkNdJMu93qQ+0pKPN7X5pcZm
+         y9yEbeCxQcNhgM6ScBaS+y5KKDFMOO3R94Ldgs3puNl7En76C7LpXMrSH+Ku+dqjKPqB
+         jeSC52S335zaOAvx4+f/RSI0DpwJjZ7J8jlJxPWZzsHwxAomaxz/uE+tkOiYegv+rjdy
+         9fJxE1tR1sTSjfah01ZWj7XowiOsPpV/ibHwI9V8/mykp/+jaPUyZyXf42OT+PB5S245
+         4cBzWoihC81C6NlGQp3OEhTUM55+AguvTLoY74p0vndZ56q9+uvT/UkE1xCbcvF/42TA
+         /wWA==
+X-Gm-Message-State: APjAAAVP6fyQh0LU8uzke/0yYNOGN12h1jbSm1FCjFoti/TbxCQyrjMy
+        A5lMeTMKVLwfAFTiz3UuEByr26+WFUKGXuxxjak++azr
+X-Google-Smtp-Source: APXvYqwUVxhK4jEa+K7rSVVi3aq0FsMfm+MgOSUONxJBcrdtupdYV50S839f2RHgMLFxGa1B6+kmgdGwSk5kg+DvQnw=
+X-Received: by 2002:a5d:494b:: with SMTP id r11mr35538wrs.184.1579219962503;
+ Thu, 16 Jan 2020 16:12:42 -0800 (PST)
+MIME-Version: 1.0
+References: <20200102172413.654385-1-amanieu@gmail.com> <20200104123928.1048822-1-amanieu@gmail.com>
+ <20200105151928.qrmhnwer3r5ffc77@wittgenstein> <20200107123548.5fzu4v6czrlhrhmh@wittgenstein>
+In-Reply-To: <20200107123548.5fzu4v6czrlhrhmh@wittgenstein>
+From:   Richard Weinberger <richard.weinberger@gmail.com>
+Date:   Fri, 17 Jan 2020 01:12:31 +0100
+Message-ID: <CAFLxGvzG4DJH5a7cAV6U+wPBqHUOJ6XQmy-u2ibawM3jsQXQBw@mail.gmail.com>
+Subject: Re: [PATCH] um: Implement copy_thread_tls
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     "Amanieu d'Antras" <amanieu@gmail.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        stable <stable@vger.kernel.org>,
+        linux-um <linux-um@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Christian Brauner <christian@brauner.io>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jan 7, 2020 at 1:36 PM Christian Brauner
+<christian.brauner@ubuntu.com> wrote:
+>
+> On Sun, Jan 05, 2020 at 04:19:28PM +0100, Christian Brauner wrote:
+> > On Sat, Jan 04, 2020 at 01:39:30PM +0100, Amanieu d'Antras wrote:
+> > > This is required for clone3 which passes the TLS value through a
+> > > struct rather than a register.
+> > >
+> > > Signed-off-by: Amanieu d'Antras <amanieu@gmail.com>
+> > > Cc: linux-um@lists.infradead.org
+> > > Cc: <stable@vger.kernel.org> # 5.3.x
+> >
+> > Thanks. I'm picking this up as part of the copy_thread_tls() series.
+> > (Leaving the patch in tact so people can Ack right here if they want to.)
+> > If I could get an Ack from one of the maintainers that would be great;
+> > see
+> > https://lore.kernel.org/lkml/20200102172413.654385-1-amanieu@gmail.com
+> > for more context.
+> >
+> > Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+>
+> I've this up as part of the series link in above ^^ and moved it into
+> https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/log/?h=clone3_tls
+>
+> If I hear no objections I'll merge into into my fixes tree today or
+> tomorrow.
+>
+> An Ack from one of the maintainers would still be appreciated.
 
+For sure too late, but better than nothing? ;-)
 
-On Thu, 16 Jan 2020, at 07:59, Eddie James wrote:
-> Enable the XDMA engine node.
-> 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Acked-by: Richard Weinberger <richard@nod.at>
 
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+-- 
+Thanks,
+//richard
