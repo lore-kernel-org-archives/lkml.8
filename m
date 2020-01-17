@@ -2,211 +2,137 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4F1C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66ED6C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 955C620728
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:40:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EC052073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:40:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="poWzvnim"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j15iXKGq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbgAQNkO (ORCPT
+        id S1727667AbgAQNkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 08:40:14 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36475 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726861AbgAQNkO (ORCPT
+        Fri, 17 Jan 2020 08:40:18 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38248 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726861AbgAQNkQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 08:40:14 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p17so7688103wma.1
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 05:40:12 -0800 (PST)
+        Fri, 17 Jan 2020 08:40:16 -0500
+Received: by mail-pl1-f194.google.com with SMTP id f20so9891272plj.5;
+        Fri, 17 Jan 2020 05:40:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=x0v+Cpelm9h83Fd8YoEOutozcn/2jODQn8Ym6ta3pDI=;
-        b=poWzvnimT8QTMy+z+ojdYjNwWKCfVW89Yxmci6IP1hOwVnknCtXaCr8i8dPxqfj1c6
-         6NHh9Vy22UuVjsdvRslMJxmzZ2r72OldpIzBGyTPzKMTdk2Z9oSf67RccUHaMNaQhd+k
-         lm/c63jSCsXUx2RU7tiHMS5C5Y2FizJpTWV+bQFZk8UuOie9JPNvsSkh5+vGRPhAp0aq
-         HK0OQ1Srf/D3qXPwbVceBBawRHCIp88uRHmu2HP+uHbb1PD3am4Blq1K6Lz24AmMxi2p
-         OWYnjJ/q+UHi4g8eny5q5ITFQpVAiYSQZTcj7rH44ZY1d2LCEmOKY9qNl6Wk1issBSPO
-         JpLg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RlKM/XYrBa3kEOwzCqWtgXvilXlmKMO+nK4gGJZhPfg=;
+        b=j15iXKGqjYlNBJ1O5MSIPLWXuL/l4gus32mS8VNjxmISFECRxV5UZEPyHvRH6yoQLO
+         uO4qX4SvAMVnuN+JxcDHCmJ6Gsp6dOhvkk929w+ntR8qY+Ztw8hObJ2GNudF+tkNALDA
+         l+RMK5xSjtCPuFAtz8/lE4mOWThFWTjgw8BmcUHvZbZctPRvyg4ef2fRfrCRwb3LjY1w
+         LMN1l7RF/4hgRpgYwrTI8doJZzjLMIc0u0EROorqpVdYkUaoj/Wj39EYG3zCIa07R2QV
+         5Eg2S48eXDdQYhiXyVafm2Cc3tx6lssLzMDuY9Xy3ylGnJLts8EvE+LxOtEmk9OFwL9l
+         8r0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=x0v+Cpelm9h83Fd8YoEOutozcn/2jODQn8Ym6ta3pDI=;
-        b=MwPx6vyRfZUx1aOOLsUSzbmJMuzUZevKSFQjUhqFjIqMumeYD6P0NoVyXGOChS8K5q
-         foyPJuxUolOwXmWZ5CvbY6PVBnEpjVhh13FejhgDB9usTYJViRwIFzq4keC2vkZNAQFs
-         rA+EuLWJRR3R2FlVdBiHx7C7Jk6BVS9BwQe96srwnd0dvRI+znQVdJngvPpVdeRVRu8D
-         A7Wo93vdSFnJv+su28JaE7B9aczA/0fPJjaWEAx0qi5+AHBglmWfmFN0JyEsMrbTU2Uj
-         GVVqgLm6R0lCgeGcTDtXOuqSDP6xriXGgL+rtIIxzK+7Nm/Qwp8ztWwsnPHG58EAumC1
-         2WQw==
-X-Gm-Message-State: APjAAAV/a3w3NInnD1GkwiXYS0GMRzCuZisOzS0NFSMjVqVcqSDEX5vS
-        kFZQHV3G/KFsEczZ28DCBi1ZVg==
-X-Google-Smtp-Source: APXvYqxGyR41SDvj5mCeLz1WXPpVshSUQyPXa3ccVTn3jG4GO+EYu0SQxB8cs1Dtg2CXlW/4Esj78Q==
-X-Received: by 2002:a7b:c764:: with SMTP id x4mr4598002wmk.116.1579268411354;
-        Fri, 17 Jan 2020 05:40:11 -0800 (PST)
-Received: from dell ([2.27.35.221])
-        by smtp.gmail.com with ESMTPSA id s8sm32993260wrt.57.2020.01.17.05.40.09
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RlKM/XYrBa3kEOwzCqWtgXvilXlmKMO+nK4gGJZhPfg=;
+        b=I2ZD380EUxxUM38G4u0IKcJKFOg/RrWFE90njIz3/LuejcyR0URddtVz/PW9OOCLB/
+         6VoUGl5vpfhAUtf98f18eu+X0b1diacw4aqZD9nugXqe/GvhSytUL6CaRwZ8FIyyr0Pl
+         206vYeUGFt9P5OZkecB2X5xn/QX83IKFg8kIY54cOgjYQPb4B6WG/DYK7mf1Hgx2PYp1
+         yt+b5QUCflvVqyzaPtLNvYSJQqxyjIcz7Pm8iTu1vcx6QbQ2mGeTAwWPGFVAoQji6Eet
+         wlknV3Onqyri/pysbI5z6vbtAV4X8QNwB8jfI4P4+gLOv+fF5MNBKfDZ8BAE8k3T8eyr
+         CxJA==
+X-Gm-Message-State: APjAAAXAwDwyVfXOTJhudCxzzxm47g63nDsJtQm25O3v1QgSkYluqSSP
+        G4UbC0P22P+MWxyoAO10WTc=
+X-Google-Smtp-Source: APXvYqzxmaDfnD4G85RlkpYrpXtxDrj9FaouwSSrEYObW8QCM4XIkoNSNpMzFf8n3qW5tBKyql+dKg==
+X-Received: by 2002:a17:902:8d8a:: with SMTP id v10mr28505346plo.90.1579268416120;
+        Fri, 17 Jan 2020 05:40:16 -0800 (PST)
+Received: from localhost.localdomain ([103.211.17.168])
+        by smtp.googlemail.com with ESMTPSA id s18sm29522422pfh.179.2020.01.17.05.40.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 05:40:10 -0800 (PST)
-Date:   Fri, 17 Jan 2020 13:40:26 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "broonie@kernel.org" <broonie@kernel.org>
-Subject: Re: [PATCH v10 08/13] regulator: bd718x7: Split driver to common and
- bd718x7 specific parts
-Message-ID: <20200117134026.GM15507@dell>
-References: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
- <def409ab024717e6cd917c488e62fe04ad66bd52.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
- <20200117102854.GF15507@dell>
- <4bd035fb2c78e96f18006f06c5d8d9d2f1a1b70d.camel@fi.rohmeurope.com>
+        Fri, 17 Jan 2020 05:40:15 -0800 (PST)
+From:   Amol Grover <frextrite@gmail.com>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Amol Grover <frextrite@gmail.com>
+Subject: [PATCH v3 1/3] drivers: target: target_core_device: Pass lockdep expression to RCU lists
+Date:   Fri, 17 Jan 2020 19:08:53 +0530
+Message-Id: <20200117133854.32550-1-frextrite@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <4bd035fb2c78e96f18006f06c5d8d9d2f1a1b70d.camel@fi.rohmeurope.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jan 2020, Vaittinen, Matti wrote:
+nacl->lun_entry_hlist is traversed with hlist_for_each_entry_rcu
+outside an RCU read-side critical section but under the
+protection of nacl->lun_entry_mutex.
 
-> Hello Lee,
-> 
-> On Fri, 2020-01-17 at 10:28 +0000, Lee Jones wrote:
-> > On Fri, 17 Jan 2020, Matti Vaittinen wrote:
-> > 
-> > > Few ROHM PMICs allow setting the voltage states for different
-> > > system states
-> > > like RUN, IDLE, SUSPEND and LPSR. States are then changed via SoC
-> > > specific
-> > > mechanisms. bd718x7 driver implemented device-tree parsing
-> > > functions for
-> > > these state specific voltages. The parsing functions can be re-used 
-> > > by
-> > > other ROHM chip drivers like bd71828. Split the generic functions
-> > > from
-> > > bd718x7-regulator.c to rohm-regulator.c and export them for other
-> > > modules
-> > > to use.
-> > > 
-> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > > Acked-by: Mark Brown <broonie@kernel.org>
-> > > ---
-> > > no changes since v9
-> > > 
-> > >  drivers/regulator/Kconfig             |   4 +
-> > >  drivers/regulator/Makefile            |   1 +
-> > >  drivers/regulator/bd718x7-regulator.c | 183 ++++++++------------
-> > > ------
-> > >  drivers/regulator/rohm-regulator.c    |  95 +++++++++++++
-> > >  include/linux/mfd/rohm-generic.h      |  66 ++++++++++
-> > >  5 files changed, 221 insertions(+), 128 deletions(-)
-> > >  create mode 100644 drivers/regulator/rohm-regulator.c
-> > 
-> > [...]
-> > 
-> > > diff --git a/include/linux/mfd/rohm-generic.h
-> > > b/include/linux/mfd/rohm-generic.h
-> > > index ff3dd7578fd3..6cc5a0819959 100644
-> > > --- a/include/linux/mfd/rohm-generic.h
-> > > +++ b/include/linux/mfd/rohm-generic.h
-> > > @@ -4,6 +4,9 @@
-> > >  #ifndef __LINUX_MFD_ROHM_H__
-> > >  #define __LINUX_MFD_ROHM_H__
-> > >  
-> > > +#include <linux/regmap.h>
-> > > +#include <linux/regulator/driver.h>
-> > > +
-> > >  enum rohm_chip_type {
-> > >  	ROHM_CHIP_TYPE_BD71837 = 0,
-> > >  	ROHM_CHIP_TYPE_BD71847,
-> > > @@ -17,4 +20,67 @@ struct rohm_regmap_dev {
-> > >  	struct regmap *regmap;
-> > >  };
-> > >  
-> > > +enum {
-> > > +	ROHM_DVS_LEVEL_UNKNOWN,
-> > > +	ROHM_DVS_LEVEL_RUN,
-> > > +	ROHM_DVS_LEVEL_IDLE,
-> > > +	ROHM_DVS_LEVEL_SUSPEND,
-> > > +	ROHM_DVS_LEVEL_LPSR,
-> > > +#define ROHM_DVS_LEVEL_MAX ROHM_DVS_LEVEL_LPSR
-> > 
-> > Haven't seen this before.  Is it legit?
-> > 
-> 
-> I don't know why it wouldn't be :) I kind of grew used to that when I
-> still did some networking stuff.
+Hence, add the corresponding lockdep expression to the list traversal
+primitive to silence false-positive lockdep warnings, and
+harden RCU lists.
 
-Networking it not a good example.
+Signed-off-by: Amol Grover <frextrite@gmail.com>
+---
+v3:
+- Remove rcu_read_lock_held() from lockdep expression since it is
+  implicitly checked for.
+- Remove unintended macro usage.
 
-It's full of odd little quirks to the standard styling.
+v2:
+- Fix sparse error
+  CHECK: Alignment should match open parenthesis
 
-> It doesn't really matter in this case but for example the netlink
-> headers do:
-> 
-> enum {
->    foo,
-> #define foo foo
->    bar,
-> #define bar bar
-> ...
-> };
-> 
-> https://elixir.bootlin.com/linux/v5.5-rc6/source/include/uapi/linux/rtnetlink.h
-> 
-> What is the good here is that this allows one to nicely exclude
-> unsupported stuff using preprocessor:
-> 
-> #include <header_with_or_without_foo_dependng_on_version.h>
-> 
-> #ifdef foo
-> use_foo(foo);
-> #endif
-> 
-> What about:
-> > 
-> >      ROHM_DVS_LEVEL_MAX = ROHM_DVS_LEVEL_LPSR
-> 
-> Anyways, I don't see why define wouldn't be Ok here - but sure it can
-> be changed if you insist ;) Just let me know if you can accept the
-> define or not :)
+ drivers/target/target_core_device.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-Let's go for not in this instance. :D
-
+diff --git a/drivers/target/target_core_device.c b/drivers/target/target_core_device.c
+index 2d19f0e332b0..306c626183d5 100644
+--- a/drivers/target/target_core_device.c
++++ b/drivers/target/target_core_device.c
+@@ -247,7 +247,8 @@ void core_free_device_list_for_node(
+ 	struct se_dev_entry *deve;
+ 
+ 	mutex_lock(&nacl->lun_entry_mutex);
+-	hlist_for_each_entry_rcu(deve, &nacl->lun_entry_hlist, link) {
++	hlist_for_each_entry_rcu(deve, &nacl->lun_entry_hlist, link,
++				 lockdep_is_held(&nacl->lun_entry_mutex)) {
+ 		struct se_lun *lun = rcu_dereference_check(deve->se_lun,
+ 					lockdep_is_held(&nacl->lun_entry_mutex));
+ 		core_disable_device_list_for_node(lun, deve, nacl, tpg);
+@@ -276,7 +277,8 @@ struct se_dev_entry *target_nacl_find_deve(struct se_node_acl *nacl, u64 mapped_
+ {
+ 	struct se_dev_entry *deve;
+ 
+-	hlist_for_each_entry_rcu(deve, &nacl->lun_entry_hlist, link)
++	hlist_for_each_entry_rcu(deve, &nacl->lun_entry_hlist, link,
++				 lockdep_is_held(&nacl->lun_entry_mutex))
+ 		if (deve->mapped_lun == mapped_lun)
+ 			return deve;
+ 
+@@ -460,7 +462,8 @@ void core_clear_lun_from_tpg(struct se_lun *lun, struct se_portal_group *tpg)
+ 	list_for_each_entry(nacl, &tpg->acl_node_list, acl_list) {
+ 
+ 		mutex_lock(&nacl->lun_entry_mutex);
+-		hlist_for_each_entry_rcu(deve, &nacl->lun_entry_hlist, link) {
++		hlist_for_each_entry_rcu(deve, &nacl->lun_entry_hlist, link,
++					 lockdep_is_held(&nacl->lun_entry_mutex)) {
+ 			struct se_lun *tmp_lun = rcu_dereference_check(deve->se_lun,
+ 					lockdep_is_held(&nacl->lun_entry_mutex));
+ 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.24.1
+
