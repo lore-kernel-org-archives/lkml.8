@@ -7,41 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC18C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 488CFC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99F882082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B67B2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:37:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727580AbgAQKha (ORCPT
+        id S1726371AbgAQKhh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 05:37:30 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55542 "EHLO
+        Fri, 17 Jan 2020 05:37:37 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55549 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726901AbgAQKh1 (ORCPT
+        with ESMTP id S1726343AbgAQKhd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 05:37:27 -0500
+        Fri, 17 Jan 2020 05:37:33 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1isP0A-0006Hp-TT; Fri, 17 Jan 2020 11:37:19 +0100
+        id 1isP0A-0006Hn-Ki; Fri, 17 Jan 2020 11:37:18 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 841621C19DA;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4743E1C19DC;
         Fri, 17 Jan 2020 11:37:18 +0100 (CET)
 Date:   Fri, 17 Jan 2020 10:37:18 -0000
-From:   "tip-bot2 for Mark Rutland" <tip-bot2@linutronix.de>
+From:   "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf: Correctly handle failed perf_get_aux_event()
-Cc:     Vince Weaver <vincent.weaver@maine.edu>,
-        Mark Rutland <mark.rutland@arm.com>,
+Subject: [tip: perf/urgent] perf/x86/intel/uncore: Add PCI ID of IMC for Xeon
+ E3 V5 Family
+Cc:     "Rosales-fernandez, Carlos" <carlos.rosales-fernandez@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <1578687311-158748-1-git-send-email-kan.liang@linux.intel.com>
+References: <1578687311-158748-1-git-send-email-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Message-ID: <157925743836.396.4515564402096923150.tip-bot2@tip-bot2>
+Message-ID: <157925743809.396.16389498590955839229.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,64 +59,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     da9ec3d3dd0f1240a48920be063448a2242dbd90
-Gitweb:        https://git.kernel.org/tip/da9ec3d3dd0f1240a48920be063448a2242dbd90
-Author:        Mark Rutland <mark.rutland@arm.com>
-AuthorDate:    Mon, 06 Jan 2020 12:03:39 
+Commit-ID:     e74383045119fb8055cf31cb39e0fe951d67163a
+Gitweb:        https://git.kernel.org/tip/e74383045119fb8055cf31cb39e0fe951d67163a
+Author:        Kan Liang <kan.liang@linux.intel.com>
+AuthorDate:    Fri, 10 Jan 2020 12:15:11 -08:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 17 Jan 2020 11:32:44 +01:00
+CommitterDate: Fri, 17 Jan 2020 11:33:18 +01:00
 
-perf: Correctly handle failed perf_get_aux_event()
+perf/x86/intel/uncore: Add PCI ID of IMC for Xeon E3 V5 Family
 
-Vince reports a worrying issue:
+The IMC uncore support is missed for E3-1585 v5 CPU.
 
-| so I was tracking down some odd behavior in the perf_fuzzer which turns
-| out to be because perf_even_open() sometimes returns 0 (indicating a file
-| descriptor of 0) even though as far as I can tell stdin is still open.
+Intel Xeon E3 V5 Family has Sky Lake CPU.
+Add the PCI ID of IMC for Intel Xeon E3 V5 Family.
 
-... and further the cause:
-
-| error is triggered if aux_sample_size has non-zero value.
-|
-| seems to be this line in kernel/events/core.c:
-|
-| if (perf_need_aux_event(event) && !perf_get_aux_event(event, group_leader))
-|                goto err_locked;
-|
-| (note, err is never set)
-
-This seems to be a thinko in commit:
-
-  ab43762ef010967e ("perf: Allow normal events to output AUX data")
-
-... and we should probably return -EINVAL here, as this should only
-happen when the new event is mis-configured or does not have a
-compatible aux_event group leader.
-
-Fixes: ab43762ef010967e ("perf: Allow normal events to output AUX data")
-Reported-by: Vince Weaver <vincent.weaver@maine.edu>
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Reported-by: Rosales-fernandez, Carlos <carlos.rosales-fernandez@intel.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Tested-by: Vince Weaver <vincent.weaver@maine.edu>
+Tested-by: Rosales-fernandez, Carlos <carlos.rosales-fernandez@intel.com>
+Link: https://lkml.kernel.org/r/1578687311-158748-1-git-send-email-kan.liang@linux.intel.com
 ---
- kernel/events/core.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/events/intel/uncore_snb.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index a1f8bde..2173c23 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -11465,8 +11465,10 @@ SYSCALL_DEFINE5(perf_event_open,
- 		}
- 	}
- 
--	if (perf_need_aux_event(event) && !perf_get_aux_event(event, group_leader))
-+	if (perf_need_aux_event(event) && !perf_get_aux_event(event, group_leader)) {
-+		err = -EINVAL;
- 		goto err_locked;
-+	}
- 
- 	/*
- 	 * Must be under the same ctx::mutex as perf_install_in_context(),
+diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
+index dbaa1b0..c37cb12 100644
+--- a/arch/x86/events/intel/uncore_snb.c
++++ b/arch/x86/events/intel/uncore_snb.c
+@@ -15,6 +15,7 @@
+ #define PCI_DEVICE_ID_INTEL_SKL_HQ_IMC		0x1910
+ #define PCI_DEVICE_ID_INTEL_SKL_SD_IMC		0x190f
+ #define PCI_DEVICE_ID_INTEL_SKL_SQ_IMC		0x191f
++#define PCI_DEVICE_ID_INTEL_SKL_E3_IMC		0x1918
+ #define PCI_DEVICE_ID_INTEL_KBL_Y_IMC		0x590c
+ #define PCI_DEVICE_ID_INTEL_KBL_U_IMC		0x5904
+ #define PCI_DEVICE_ID_INTEL_KBL_UQ_IMC		0x5914
+@@ -658,6 +659,10 @@ static const struct pci_device_id skl_uncore_pci_ids[] = {
+ 		.driver_data = UNCORE_PCI_DEV_DATA(SNB_PCI_UNCORE_IMC, 0),
+ 	},
+ 	{ /* IMC */
++		PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_SKL_E3_IMC),
++		.driver_data = UNCORE_PCI_DEV_DATA(SNB_PCI_UNCORE_IMC, 0),
++	},
++	{ /* IMC */
+ 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_KBL_Y_IMC),
+ 		.driver_data = UNCORE_PCI_DEV_DATA(SNB_PCI_UNCORE_IMC, 0),
+ 	},
+@@ -826,6 +831,7 @@ static const struct imc_uncore_pci_dev desktop_imc_pci_ids[] = {
+ 	IMC_DEV(SKL_HQ_IMC, &skl_uncore_pci_driver),  /* 6th Gen Core H Quad Core */
+ 	IMC_DEV(SKL_SD_IMC, &skl_uncore_pci_driver),  /* 6th Gen Core S Dual Core */
+ 	IMC_DEV(SKL_SQ_IMC, &skl_uncore_pci_driver),  /* 6th Gen Core S Quad Core */
++	IMC_DEV(SKL_E3_IMC, &skl_uncore_pci_driver),  /* Xeon E3 V5 Gen Core processor */
+ 	IMC_DEV(KBL_Y_IMC, &skl_uncore_pci_driver),  /* 7th Gen Core Y */
+ 	IMC_DEV(KBL_U_IMC, &skl_uncore_pci_driver),  /* 7th Gen Core U */
+ 	IMC_DEV(KBL_UQ_IMC, &skl_uncore_pci_driver),  /* 7th Gen Core U Quad Core */
