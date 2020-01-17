@@ -2,169 +2,452 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2597C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2354C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7734E2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:03:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="j5QfMYv0"
+	by mail.kernel.org (Postfix) with ESMTP id 71A402082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:03:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgAQKDH (ORCPT
+        id S1726988AbgAQKDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 05:03:07 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:44909 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726554AbgAQKDG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 05:03:06 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200117100305euoutp01a0708cb5ccac32af602ebfb483511801~qpGffXj8_1352413524euoutp01d
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 10:03:05 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200117100305euoutp01a0708cb5ccac32af602ebfb483511801~qpGffXj8_1352413524euoutp01d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579255385;
-        bh=FCkijMQphRE8Mr4fW6ndAfrNvL8gGE95bsivtOZKJ30=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=j5QfMYv076MRYuAvV9unKr0uS4ufwRSCIsTjKsnBVV0dRcBKcMesk+Dstxdv/FYDa
-         fUH/+q3TdmhbvM8Da8d38z5E7Mz2wm2c41wcdIot37xLH4OWnZIAwcOmDgp36dzuJ7
-         Xssy0jqfjlN3wMZdJ9QgybqwgWmnkQwoG6O1UKFI=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200117100305eucas1p2ff5eb893a046122f6bc743ce871fa547~qpGfQ8rTh0451504515eucas1p2a;
-        Fri, 17 Jan 2020 10:03:05 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 64.2A.61286.956812E5; Fri, 17
-        Jan 2020 10:03:05 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200117100304eucas1p1758fb3bcddb6440d914684f863fa550d~qpGex6Blh1996119961eucas1p1g;
-        Fri, 17 Jan 2020 10:03:04 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200117100304eusmtrp1803be891b65d0223e1f0acfaebbe872b~qpGexFAua3085130851eusmtrp1F;
-        Fri, 17 Jan 2020 10:03:04 +0000 (GMT)
-X-AuditID: cbfec7f2-ef1ff7000001ef66-3c-5e218659b042
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 56.A5.08375.856812E5; Fri, 17
-        Jan 2020 10:03:04 +0000 (GMT)
-Received: from [106.120.51.74] (unknown [106.120.51.74]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200117100304eusmtip277a70c91926c89454bd5ab1160a717c4~qpGeQ7X-51169211692eusmtip2S;
-        Fri, 17 Jan 2020 10:03:04 +0000 (GMT)
-Subject: Re: [PATCH 1/1] drm/bridge: anx78xx: fix integer type used for
- storing dp link rate
-To:     Tobias Schramm <t.schramm@manjaro.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <4486560b-05e5-6c03-0a8e-4f193141a5c8@samsung.com>
-Date:   Fri, 17 Jan 2020 11:03:03 +0100
+        Fri, 17 Jan 2020 05:03:11 -0500
+Received: from relay.sw.ru ([185.231.240.75]:50980 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726220AbgAQKDJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 05:03:09 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1isOSZ-00068G-7R; Fri, 17 Jan 2020 13:02:35 +0300
+Subject: Re: [PATCH v2 1/5] mm: factor out madvise's core functionality
+To:     Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+        linux-api@vger.kernel.org, oleksandr@redhat.com,
+        Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>, christian.brauner@ubuntu.com,
+        sjpark@amazon.de, "Kirill A. Shutemov" <kirill@shutemov.name>
+References: <20200116235953.163318-1-minchan@kernel.org>
+ <20200116235953.163318-2-minchan@kernel.org>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <d3b8431d-fa3d-6a16-8af1-a68b3ac8ca58@virtuozzo.com>
+Date:   Fri, 17 Jan 2020 13:02:34 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
-        Thunderbird/68.2.2
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200109084801.3117-2-t.schramm@manjaro.org>
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200116235953.163318-2-minchan@kernel.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFKsWRmVeSWpSXmKPExsWy7djPc7qRbYpxBoc62C16z51ksvi/bSKz
-        xZWv79ksrn5/yWxx8s1VFovOiUvYLS7vmsNmcagv2uLeur3MDpwe72+0snvs/baAxWN2x0xW
-        jxMTLjF5bP/2gNXjfvdxJo+Gw2sYPQ70Tmbx+LxJLoAzissmJTUnsyy1SN8ugStj/+TlTAVb
-        eSue7nnP2MA4jbuLkZNDQsBE4s3jaexdjFwcQgIrGCX+d91hg3C+MEpsffiQEcL5zChx+d5X
-        FpiW12f2Q1UtZ5RY3bCLGcJ5yyhx/3c3M0iVsECcxMOFu1hAEiICtxklVm4+CDaLWaCVUeLZ
-        2clgVWwCmhJ/N99kA7F5Bewklq45CRZnEVCVWNbVwQ5iiwpESDy58pgVokZQ4uTMJ2B3cApY
-        STSsfArWyywgL7H97RxmCFtc4taT+UwgyyQE7rFLzDu5nhXicBeJNSeXQNnCEq+Ob2GHsGUk
-        Tk/ugXquXuL+ihZmiOYOYBBs2MkMkbCWuHPuF9A2DqANmhLrd+lDhB0lGs9+YAYJSwjwSdx4
-        KwhxA5/EpG3TocK8Eh1tQhDVihL3z26FGigusfTCV7YJjEqzkHw2C8k3s5B8Mwth7wJGllWM
-        4qmlxbnpqcWGeanlesWJucWleel6yfm5mxiBKez0v+OfdjB+vZR0iFGAg1GJh3dGkEKcEGti
-        WXFl7iFGCQ5mJRHekzNk44R4UxIrq1KL8uOLSnNSiw8xSnOwKInzGi96GSskkJ5YkpqdmlqQ
-        WgSTZeLglGpg3FZV9mKXo1zCC8t73wT//PQwC7maITCx6f4l9777RXc+ylyd0VhvfrNgYsbW
-        qEdp7u6npn6OKq6PX8VeFTjjrRK/bVL82wU/brT+WsBg4vhTVuSCGuNCnbllIjedHQ09y++d
-        UjbR7u/UFH9wKe35oWYFr4w5u/wkLp1+u8LGI63hnWDOkbxbSizFGYmGWsxFxYkAQX8Y7V0D
-        AAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLIsWRmVeSWpSXmKPExsVy+t/xe7oRbYpxBkcXKlj0njvJZPF/20Rm
-        iytf37NZXP3+ktni5JurLBadE5ewW1zeNYfN4lBftMW9dXuZHTg93t9oZffY+20Bi8fsjpms
-        HicmXGLy2P7tAavH/e7jTB4Nh9cwehzonczi8XmTXABnlJ5NUX5pSapCRn5xia1StKGFkZ6h
-        pYWekYmlnqGxeayVkamSvp1NSmpOZllqkb5dgl7G/snLmQq28lY83fOesYFxGncXIyeHhICJ
-        xOsz+9m6GLk4hASWMko0P37GBJEQl9g9/y0zhC0s8edaF1TRa0aJgwv2sIEkhAXiJB4u3MUC
-        khARuM0ocfrKVGYQh1mglVFiZ8dFRoiWvYwSe+b1gs1iE9CU+Lv5Jlg7r4CdxNI1J8HiLAKq
-        Esu6OthBbFGBCIm3v2+yQtQISpyc+YQFxOYUsJJoWPkUrJdZQF3iz7xLzBC2vMT2t3OgbHGJ
-        W0/mM01gFJqFpH0WkpZZSFpmIWlZwMiyilEktbQ4Nz232FCvODG3uDQvXS85P3cTIzBqtx37
-        uXkH46WNwYcYBTgYlXh4ZwQpxAmxJpYVV+YeYpTgYFYS4T05QzZOiDclsbIqtSg/vqg0J7X4
-        EKMp0HMTmaVEk/OBCSWvJN7Q1NDcwtLQ3Njc2MxCSZy3Q+BgjJBAemJJanZqakFqEUwfEwen
-        VAOjjnGwdJiS4yV+U6VT+2VPLbIRbY7Ly1F/N5Pn7JOFJ+v//n+myuqt1paxVMzH3G3PuaKN
-        tUHvpA4sdVvhLbozJF7Wx3aC4gMhwbP7s4q/H5ihVnjmwu3L5oHqc4w6NE8/mbe6/vGeT9IG
-        5UfKX5iq9P9l2SYhVr5l3W1phnU615oWCv3ZLXZaiaU4I9FQi7moOBEAXZU0H/ACAAA=
-X-CMS-MailID: 20200117100304eucas1p1758fb3bcddb6440d914684f863fa550d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200109084920eucas1p1ed027ed22778b67eb86301d3bdf34bb5
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200109084920eucas1p1ed027ed22778b67eb86301d3bdf34bb5
-References: <20200109084801.3117-1-t.schramm@manjaro.org>
-        <CGME20200109084920eucas1p1ed027ed22778b67eb86301d3bdf34bb5@eucas1p1.samsung.com>
-        <20200109084801.3117-2-t.schramm@manjaro.org>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.01.2020 09:48, Tobias Schramm wrote:
-> commit ff1e8fb68ea0 ("drm/bridge: analogix-anx78xx: Avoid drm_dp_link helpers")
-> changed the link training logic to remove use of drm_dp_link helpers. However
-> the new logic stores the maximum link rate in a u8, overflowing it.
-> This commit changes the logic to store the max link rate in a unsigned int
-> instead.
->
-> Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
+On 17.01.2020 02:59, Minchan Kim wrote:
+> This patch factor out madvise's core functionality so that upcoming
+> patch can reuse it without duplication. It shouldn't change any behavior.
+> 
+> Signed-off-by: Minchan Kim <minchan@kernel.org>
 > ---
->  drivers/gpu/drm/bridge/analogix-anx78xx.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.c b/drivers/gpu/drm/bridge/analogix-anx78xx.c
-> index 274989f96a91..0f38b8c40dff 100644
-> --- a/drivers/gpu/drm/bridge/analogix-anx78xx.c
-> +++ b/drivers/gpu/drm/bridge/analogix-anx78xx.c
-> @@ -748,6 +748,7 @@ static int anx78xx_init_pdata(struct anx78xx *anx78xx)
->  static int anx78xx_dp_link_training(struct anx78xx *anx78xx)
+>  mm/madvise.c | 194 +++++++++++++++++++++++++++++----------------------
+>  1 file changed, 111 insertions(+), 83 deletions(-)
+> 
+> diff --git a/mm/madvise.c b/mm/madvise.c
+> index bcdb6a042787..0c901de531e4 100644
+> --- a/mm/madvise.c
+> +++ b/mm/madvise.c
+> @@ -35,6 +35,7 @@
+>  struct madvise_walk_private {
+>  	struct mmu_gather *tlb;
+>  	bool pageout;
+> +	struct task_struct *task;
+>  };
+>  
+>  /*
+> @@ -306,12 +307,13 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
+>  	bool pageout = private->pageout;
+>  	struct mm_struct *mm = tlb->mm;
+>  	struct vm_area_struct *vma = walk->vma;
+> +	struct task_struct *task = private->task;
+>  	pte_t *orig_pte, *pte, ptent;
+>  	spinlock_t *ptl;
+>  	struct page *page = NULL;
+>  	LIST_HEAD(page_list);
+>  
+> -	if (fatal_signal_pending(current))
+> +	if (fatal_signal_pending(task))
+>  		return -EINTR;
+
+This EINTR may confuse userspace. Users will think the syscall was interrupted,
+and it may be restarted, but this is not true.
+
+What we care here? Current task received fatal signal, while walk_page_range(..&cold_walk_ops..)
+is a long cycle. So, this check allows to break the cycle faster.
+
+Iteration over remote task's mm may also be long, and we still may need to break
+it if current received a signal.
+
+So, we'd better left fatal_signal_pending(current) here.
+
+Maybe we need both tasks fatal_signal_pending() checks and different retvals here,
+but it's up to you.
+
+>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> @@ -469,12 +471,14 @@ static const struct mm_walk_ops cold_walk_ops = {
+>  };
+>  
+>  static void madvise_cold_page_range(struct mmu_gather *tlb,
+> +			     struct task_struct *task,
+>  			     struct vm_area_struct *vma,
+>  			     unsigned long addr, unsigned long end)
 >  {
->  	u8 dp_bw, dpcd[2];
-> +	unsigned int max_link_rate;
->  	int err;
+>  	struct madvise_walk_private walk_private = {
+>  		.pageout = false,
+>  		.tlb = tlb,
+> +		.task = task,
+>  	};
 >  
->  	err = regmap_write(anx78xx->map[I2C_IDX_RX_P0], SP_HDMI_MUTE_CTRL_REG,
-> @@ -866,8 +867,8 @@ static int anx78xx_dp_link_training(struct anx78xx *anx78xx)
->  	if (err)
->  		return err;
+>  	tlb_start_vma(tlb, vma);
+> @@ -482,7 +486,7 @@ static void madvise_cold_page_range(struct mmu_gather *tlb,
+>  	tlb_end_vma(tlb, vma);
+>  }
 >  
-> -	dpcd[0] = drm_dp_max_link_rate(anx78xx->dpcd);
-> -	dpcd[0] = drm_dp_link_rate_to_bw_code(dpcd[0]);
-> +	max_link_rate = drm_dp_max_link_rate(anx78xx->dpcd);
-> +	dpcd[0] = drm_dp_link_rate_to_bw_code(max_link_rate);
+> -static long madvise_cold(struct vm_area_struct *vma,
+> +static long madvise_cold(struct task_struct *task, struct vm_area_struct *vma,
+>  			struct vm_area_struct **prev,
+>  			unsigned long start_addr, unsigned long end_addr)
+>  {
+> @@ -495,19 +499,21 @@ static long madvise_cold(struct vm_area_struct *vma,
+>  
+>  	lru_add_drain();
+>  	tlb_gather_mmu(&tlb, mm, start_addr, end_addr);
+> -	madvise_cold_page_range(&tlb, vma, start_addr, end_addr);
+> +	madvise_cold_page_range(&tlb, task, vma, start_addr, end_addr);
+>  	tlb_finish_mmu(&tlb, start_addr, end_addr);
+>  
+>  	return 0;
+>  }
+>  
+>  static void madvise_pageout_page_range(struct mmu_gather *tlb,
+> +			     struct task_struct *task,
+>  			     struct vm_area_struct *vma,
+>  			     unsigned long addr, unsigned long end)
+>  {
+>  	struct madvise_walk_private walk_private = {
+>  		.pageout = true,
+>  		.tlb = tlb,
+> +		.task = task,
+>  	};
+>  
+>  	tlb_start_vma(tlb, vma);
+> @@ -531,9 +537,9 @@ static inline bool can_do_pageout(struct vm_area_struct *vma)
+>  		inode_permission(file_inode(vma->vm_file), MAY_WRITE) == 0;
+>  }
+>  
+> -static long madvise_pageout(struct vm_area_struct *vma,
+> -			struct vm_area_struct **prev,
+> -			unsigned long start_addr, unsigned long end_addr)
+> +static long madvise_pageout(struct task_struct *task,
+> +		struct vm_area_struct *vma, struct vm_area_struct **prev,
+> +		unsigned long start_addr, unsigned long end_addr)
+>  {
+>  	struct mm_struct *mm = vma->vm_mm;
+>  	struct mmu_gather tlb;
+> @@ -547,7 +553,7 @@ static long madvise_pageout(struct vm_area_struct *vma,
+>  
+>  	lru_add_drain();
+>  	tlb_gather_mmu(&tlb, mm, start_addr, end_addr);
+> -	madvise_pageout_page_range(&tlb, vma, start_addr, end_addr);
+> +	madvise_pageout_page_range(&tlb, task, vma, start_addr, end_addr);
 
+This is new remote VMA iteration.
 
-The code converts bw_code to rate, then reverse, maybe it should be
-simplified:
+I found Kirill Shutemov is not in CC. CC Kirill.
 
-dpcd[0] = anx78xx->dpcd[DP_MAX_LINK_RATE];
-
-
-Regards
-
-Andrzej
-
-
->  	err = regmap_write(anx78xx->map[I2C_IDX_TX_P0],
->  			   SP_DP_MAIN_LINK_BW_SET_REG, dpcd[0]);
->  	if (err)
-
+>  	tlb_finish_mmu(&tlb, start_addr, end_addr);
+>  
+>  	return 0;
+> @@ -751,7 +757,8 @@ static long madvise_dontneed_single_vma(struct vm_area_struct *vma,
+>  	return 0;
+>  }
+>  
+> -static long madvise_dontneed_free(struct vm_area_struct *vma,
+> +static long madvise_dontneed_free(struct mm_struct *mm,
+> +				  struct vm_area_struct *vma,
+>  				  struct vm_area_struct **prev,
+>  				  unsigned long start, unsigned long end,
+>  				  int behavior)
+> @@ -763,8 +770,8 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
+>  	if (!userfaultfd_remove(vma, start, end)) {
+>  		*prev = NULL; /* mmap_sem has been dropped, prev is stale */
+>  
+> -		down_read(&current->mm->mmap_sem);
+> -		vma = find_vma(current->mm, start);
+> +		down_read(&mm->mmap_sem);
+> +		vma = find_vma(mm, start);
+>  		if (!vma)
+>  			return -ENOMEM;
+>  		if (start < vma->vm_start) {
+> @@ -811,7 +818,8 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
+>   * Application wants to free up the pages and associated backing store.
+>   * This is effectively punching a hole into the middle of a file.
+>   */
+> -static long madvise_remove(struct vm_area_struct *vma,
+> +static long madvise_remove(struct mm_struct *mm,
+> +				struct vm_area_struct *vma,
+>  				struct vm_area_struct **prev,
+>  				unsigned long start, unsigned long end)
+>  {
+> @@ -845,13 +853,13 @@ static long madvise_remove(struct vm_area_struct *vma,
+>  	get_file(f);
+>  	if (userfaultfd_remove(vma, start, end)) {
+>  		/* mmap_sem was not released by userfaultfd_remove() */
+> -		up_read(&current->mm->mmap_sem);
+> +		up_read(&mm->mmap_sem);
+>  	}
+>  	error = vfs_fallocate(f,
+>  				FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
+>  				offset, end - start);
+>  	fput(f);
+> -	down_read(&current->mm->mmap_sem);
+> +	down_read(&mm->mmap_sem);
+>  	return error;
+>  }
+>  
+> @@ -925,21 +933,23 @@ static int madvise_inject_error(int behavior,
+>  #endif
+>  
+>  static long
+> -madvise_vma(struct vm_area_struct *vma, struct vm_area_struct **prev,
+> +madvise_vma(struct task_struct *task, struct mm_struct *mm,
+> +		struct vm_area_struct *vma, struct vm_area_struct **prev,
+>  		unsigned long start, unsigned long end, int behavior)
+>  {
+>  	switch (behavior) {
+>  	case MADV_REMOVE:
+> -		return madvise_remove(vma, prev, start, end);
+> +		return madvise_remove(mm, vma, prev, start, end);
+>  	case MADV_WILLNEED:
+>  		return madvise_willneed(vma, prev, start, end);
+>  	case MADV_COLD:
+> -		return madvise_cold(vma, prev, start, end);
+> +		return madvise_cold(task, vma, prev, start, end);
+>  	case MADV_PAGEOUT:
+> -		return madvise_pageout(vma, prev, start, end);
+> +		return madvise_pageout(task, vma, prev, start, end);
+>  	case MADV_FREE:
+>  	case MADV_DONTNEED:
+> -		return madvise_dontneed_free(vma, prev, start, end, behavior);
+> +		return madvise_dontneed_free(mm, vma, prev, start,
+> +						end, behavior);
+>  	default:
+>  		return madvise_behavior(vma, prev, start, end, behavior);
+>  	}
+> @@ -984,67 +994,19 @@ madvise_behavior_valid(int behavior)
+>  }
+>  
+>  /*
+> - * The madvise(2) system call.
+> + * madvise_common - request behavior hint to address range of the target process
+>   *
+> - * Applications can use madvise() to advise the kernel how it should
+> - * handle paging I/O in this VM area.  The idea is to help the kernel
+> - * use appropriate read-ahead and caching techniques.  The information
+> - * provided is advisory only, and can be safely disregarded by the
+> - * kernel without affecting the correct operation of the application.
+> + * @task: task_struct got behavior hint, not giving the hint
+> + * @mm: mm_struct got behavior hint, not giving the hint
+> + * @start: base address of the hinted range
+> + * @len_in: length of the hinted range
+> + * @behavior: requested hint
+>   *
+> - * behavior values:
+> - *  MADV_NORMAL - the default behavior is to read clusters.  This
+> - *		results in some read-ahead and read-behind.
+> - *  MADV_RANDOM - the system should read the minimum amount of data
+> - *		on any access, since it is unlikely that the appli-
+> - *		cation will need more than what it asks for.
+> - *  MADV_SEQUENTIAL - pages in the given range will probably be accessed
+> - *		once, so they can be aggressively read ahead, and
+> - *		can be freed soon after they are accessed.
+> - *  MADV_WILLNEED - the application is notifying the system to read
+> - *		some pages ahead.
+> - *  MADV_DONTNEED - the application is finished with the given range,
+> - *		so the kernel can free resources associated with it.
+> - *  MADV_FREE - the application marks pages in the given range as lazy free,
+> - *		where actual purges are postponed until memory pressure happens.
+> - *  MADV_REMOVE - the application wants to free up the given range of
+> - *		pages and associated backing store.
+> - *  MADV_DONTFORK - omit this area from child's address space when forking:
+> - *		typically, to avoid COWing pages pinned by get_user_pages().
+> - *  MADV_DOFORK - cancel MADV_DONTFORK: no longer omit this area when forking.
+> - *  MADV_WIPEONFORK - present the child process with zero-filled memory in this
+> - *              range after a fork.
+> - *  MADV_KEEPONFORK - undo the effect of MADV_WIPEONFORK
+> - *  MADV_HWPOISON - trigger memory error handler as if the given memory range
+> - *		were corrupted by unrecoverable hardware memory failure.
+> - *  MADV_SOFT_OFFLINE - try to soft-offline the given range of memory.
+> - *  MADV_MERGEABLE - the application recommends that KSM try to merge pages in
+> - *		this area with pages of identical content from other such areas.
+> - *  MADV_UNMERGEABLE- cancel MADV_MERGEABLE: no longer merge pages with others.
+> - *  MADV_HUGEPAGE - the application wants to back the given range by transparent
+> - *		huge pages in the future. Existing pages might be coalesced and
+> - *		new pages might be allocated as THP.
+> - *  MADV_NOHUGEPAGE - mark the given range as not worth being backed by
+> - *		transparent huge pages so the existing pages will not be
+> - *		coalesced into THP and new pages will not be allocated as THP.
+> - *  MADV_DONTDUMP - the application wants to prevent pages in the given range
+> - *		from being included in its core dump.
+> - *  MADV_DODUMP - cancel MADV_DONTDUMP: no longer exclude from core dump.
+> - *
+> - * return values:
+> - *  zero    - success
+> - *  -EINVAL - start + len < 0, start is not page-aligned,
+> - *		"behavior" is not a valid value, or application
+> - *		is attempting to release locked or shared pages,
+> - *		or the specified address range includes file, Huge TLB,
+> - *		MAP_SHARED or VMPFNMAP range.
+> - *  -ENOMEM - addresses in the specified range are not currently
+> - *		mapped, or are outside the AS of the process.
+> - *  -EIO    - an I/O error occurred while paging in data.
+> - *  -EBADF  - map exists, but area maps something that isn't a file.
+> - *  -EAGAIN - a kernel resource was temporarily unavailable.
+> + * @task could be a zombie leader if it calls sys_exit so accessing mm_struct
+> + * via task->mm is prohibited. Please use @mm instead of task->mm.
+>   */
+> -SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
+> +static int madvise_common(struct task_struct *task, struct mm_struct *mm,
+> +			unsigned long start, size_t len_in, int behavior)
+>  {
+>  	unsigned long end, tmp;
+>  	struct vm_area_struct *vma, *prev;
+> @@ -1082,10 +1044,10 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
+>  
+>  	write = madvise_need_mmap_write(behavior);
+>  	if (write) {
+> -		if (down_write_killable(&current->mm->mmap_sem))
+> +		if (down_write_killable(&mm->mmap_sem))
+>  			return -EINTR;
+>  	} else {
+> -		down_read(&current->mm->mmap_sem);
+> +		down_read(&mm->mmap_sem);
+>  	}
+>  
+>  	/*
+> @@ -1093,7 +1055,7 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
+>  	 * ranges, just ignore them, but return -ENOMEM at the end.
+>  	 * - different from the way of handling in mlock etc.
+>  	 */
+> -	vma = find_vma_prev(current->mm, start, &prev);
+> +	vma = find_vma_prev(mm, start, &prev);
+>  	if (vma && start > vma->vm_start)
+>  		prev = vma;
+>  
+> @@ -1118,7 +1080,7 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
+>  			tmp = end;
+>  
+>  		/* Here vma->vm_start <= start < tmp <= (end|vma->vm_end). */
+> -		error = madvise_vma(vma, &prev, start, tmp, behavior);
+> +		error = madvise_vma(task, mm, vma, &prev, start, tmp, behavior);
+>  		if (error)
+>  			goto out;
+>  		start = tmp;
+> @@ -1130,14 +1092,80 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
+>  		if (prev)
+>  			vma = prev->vm_next;
+>  		else	/* madvise_remove dropped mmap_sem */
+> -			vma = find_vma(current->mm, start);
+> +			vma = find_vma(mm, start);
+>  	}
+>  out:
+>  	blk_finish_plug(&plug);
+>  	if (write)
+> -		up_write(&current->mm->mmap_sem);
+> +		up_write(&mm->mmap_sem);
+>  	else
+> -		up_read(&current->mm->mmap_sem);
+> +		up_read(&mm->mmap_sem);
+>  
+>  	return error;
+>  }
+> +
+> +/*
+> + * The madvise(2) system call.
+> + *
+> + * Applications can use madvise() to advise the kernel how it should
+> + * handle paging I/O in this VM area.  The idea is to help the kernel
+> + * use appropriate read-ahead and caching techniques.  The information
+> + * provided is advisory only, and can be safely disregarded by the
+> + * kernel without affecting the correct operation of the application.
+> + *
+> + * behavior values:
+> + *  MADV_NORMAL - the default behavior is to read clusters.  This
+> + *		results in some read-ahead and read-behind.
+> + *  MADV_RANDOM - the system should read the minimum amount of data
+> + *		on any access, since it is unlikely that the appli-
+> + *		cation will need more than what it asks for.
+> + *  MADV_SEQUENTIAL - pages in the given range will probably be accessed
+> + *		once, so they can be aggressively read ahead, and
+> + *		can be freed soon after they are accessed.
+> + *  MADV_WILLNEED - the application is notifying the system to read
+> + *		some pages ahead.
+> + *  MADV_DONTNEED - the application is finished with the given range,
+> + *		so the kernel can free resources associated with it.
+> + *  MADV_FREE - the application marks pages in the given range as lazy free,
+> + *		where actual purges are postponed until memory pressure happens.
+> + *  MADV_REMOVE - the application wants to free up the given range of
+> + *		pages and associated backing store.
+> + *  MADV_DONTFORK - omit this area from child's address space when forking:
+> + *		typically, to avoid COWing pages pinned by get_user_pages().
+> + *  MADV_DOFORK - cancel MADV_DONTFORK: no longer omit this area when forking.
+> + *  MADV_WIPEONFORK - present the child process with zero-filled memory in this
+> + *              range after a fork.
+> + *  MADV_KEEPONFORK - undo the effect of MADV_WIPEONFORK
+> + *  MADV_HWPOISON - trigger memory error handler as if the given memory range
+> + *		were corrupted by unrecoverable hardware memory failure.
+> + *  MADV_SOFT_OFFLINE - try to soft-offline the given range of memory.
+> + *  MADV_MERGEABLE - the application recommends that KSM try to merge pages in
+> + *		this area with pages of identical content from other such areas.
+> + *  MADV_UNMERGEABLE- cancel MADV_MERGEABLE: no longer merge pages with others.
+> + *  MADV_HUGEPAGE - the application wants to back the given range by transparent
+> + *		huge pages in the future. Existing pages might be coalesced and
+> + *		new pages might be allocated as THP.
+> + *  MADV_NOHUGEPAGE - mark the given range as not worth being backed by
+> + *		transparent huge pages so the existing pages will not be
+> + *		coalesced into THP and new pages will not be allocated as THP.
+> + *  MADV_DONTDUMP - the application wants to prevent pages in the given range
+> + *		from being included in its core dump.
+> + *  MADV_DODUMP - cancel MADV_DONTDUMP: no longer exclude from core dump.
+> + *
+> + * return values:
+> + *  zero    - success
+> + *  -EINVAL - start + len < 0, start is not page-aligned,
+> + *		"behavior" is not a valid value, or application
+> + *		is attempting to release locked or shared pages,
+> + *		or the specified address range includes file, Huge TLB,
+> + *		MAP_SHARED or VMPFNMAP range.
+> + *  -ENOMEM - addresses in the specified range are not currently
+> + *		mapped, or are outside the AS of the process.
+> + *  -EIO    - an I/O error occurred while paging in data.
+> + *  -EBADF  - map exists, but area maps something that isn't a file.
+> + *  -EAGAIN - a kernel resource was temporarily unavailable.
+> + */
+> +SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
+> +{
+> +	return madvise_common(current, current->mm, start, len_in, behavior);
+> +}
+> 
 
