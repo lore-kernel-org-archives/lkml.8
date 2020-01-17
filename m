@@ -2,123 +2,183 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F57C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 549C7C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A77A20728
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:37:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nyCDumfv"
+	by mail.kernel.org (Postfix) with ESMTP id 2EB1A20728
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:38:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbgAQNhg (ORCPT
+        id S1728721AbgAQNiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 08:37:36 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:35898 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726973AbgAQNhf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 08:37:35 -0500
-Received: by mail-pj1-f68.google.com with SMTP id n59so3338267pjb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 05:37:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YHBJFZwYhK7Tmr8esHxqJUtoRn8WnZqTo+H+EnwYrJo=;
-        b=nyCDumfvEcGI6zIFcDK5993aLcMZr2BSrphFpVcsIQuJdGZXvAjSxzqH+3c5I9Paf5
-         AXRmanS3PLoIGFPLvxYipMqaTeiAD2kEWff4ROiwS4h0BEJd116OLwyHSiYcRxjm5iHB
-         5qhIrMXvU0e+VyL0sw+9be4Jx0S6pXmg+kCSt9gDaNyoeFxk/Ph6os7uImlW3gbsAj0g
-         DSlOUoP2+jyIkbnHe7USSl7SA/EgB4ObNw0G1wIcgPAXfUxelXegmmO/IDwMKirYFM5h
-         /biIw7TgNJY/5OS6wogEgiDzzd/T16483kcJttOHMzl/0UzUU1J1odaLt0KmFfHrldT9
-         Rpsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YHBJFZwYhK7Tmr8esHxqJUtoRn8WnZqTo+H+EnwYrJo=;
-        b=cWR6u/FtIniliqzDdrpdX6OqyKJuZ1rvPsCUb+GDXH89Icuu1J32XUBFgfWc/i8izu
-         A839GJTzhLQig+or0etMbO0TbnyzoYsiRI5z04REpc2oIA+C8PkT9RoCld4vuxfhEvLl
-         LiKOMp0V7UlK0y45DIx3GKXyJUPJUfdNmw0vJFTjIaNLVLcqGkyKetlATR2y7m7vlN44
-         n1dohEipWFof8Y1Fzfe1NVDoTdbBp6ui2tc9WFDtFBF9sDTNRGflqdAooUSUbI96S/4L
-         hGP4yEr99kyHc2+VA5QVZqlRopx9EST2HDFSnvkv8b5KR4ZjBXaaG+aOy7dOAWbl5mVZ
-         A84w==
-X-Gm-Message-State: APjAAAVdbzcGB8uzmT6fBy0hz0J3RqybA3Cr9QthJzpqOudwJIwKf8Lo
-        amrdyDWMnTGccdU1HVN97UI=
-X-Google-Smtp-Source: APXvYqw8EPpDPsWKBxlJK9XKZQjLvJ/SuPz8bvOZHAxShVJvBgezCmAcl0rhxK02SG64hvN+9RT1fQ==
-X-Received: by 2002:a17:90b:4004:: with SMTP id ie4mr5679480pjb.49.1579268254980;
-        Fri, 17 Jan 2020 05:37:34 -0800 (PST)
-Received: from localhost.localdomain ([103.211.17.168])
-        by smtp.googlemail.com with ESMTPSA id e15sm3229519pja.13.2020.01.17.05.37.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 05:37:34 -0800 (PST)
-From:   Amol Grover <frextrite@gmail.com>
-To:     Santosh Shilimkar <ssantosh@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Amol Grover <frextrite@gmail.com>
-Subject: [PATCH v2] drivers: soc: ti: knav_qmss_queue: Pass lockdep expression to RCU lists
-Date:   Fri, 17 Jan 2020 19:00:49 +0530
-Message-Id: <20200117133048.31708-1-frextrite@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        Fri, 17 Jan 2020 08:38:05 -0500
+Received: from mga02.intel.com ([134.134.136.20]:44152 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726974AbgAQNiF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 08:38:05 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 05:38:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,330,1574150400"; 
+   d="scan'208";a="373653184"
+Received: from nntpdsd52-183.inn.intel.com ([10.125.52.183])
+  by orsmga004.jf.intel.com with ESMTP; 17 Jan 2020 05:38:00 -0800
+From:   roman.sudarikov@linux.intel.com
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org, eranian@google.com,
+        bgregg@netflix.com, ak@linux.intel.com, kan.liang@linux.intel.com,
+        gregkh@linuxfoundation.org
+Cc:     alexander.antonov@intel.com, roman.sudarikov@linux.intel.com
+Subject: [PATCH v4 0/2] perf x86: Exposing IO stack to IO PMON mapping through sysfs
+Date:   Fri, 17 Jan 2020 16:37:57 +0300
+Message-Id: <20200117133759.5729-1-roman.sudarikov@linux.intel.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-inst->handles is traversed using list_for_each_entry_rcu
-outside an RCU read-side critical section but under the protection
-of knav_dev_lock.
+From: Roman Sudarikov <roman.sudarikov@linux.intel.com>
 
-Hence, add corresponding lockdep expression to silence false-positive
-lockdep warnings, and harden RCU lists.
+The previous version can be found at:
+v3: https://lkml.kernel.org/r/20200113135444.12027-1-roman.sudarikov@linux.intel.com
 
-Add macro for the corresponding lockdep expression.
+Changes in this revision are:
+v3 -> v4:
+- Addressed comments from Greg Kroah-Hartman:
+  1. Reworked handling of newly introduced attribute.
+  2. Required Documentation update is expected in the follow up patchset
 
-Signed-off-by: Amol Grover <frextrite@gmail.com>
----
-v2:
-- Remove rcu_read_lock_held() from lockdep expression since it is
-  implicitly checked for.
 
- drivers/soc/ti/knav_qmss_queue.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+The previous version can be found at:
+v2: https://lkml.kernel.org/r/20191210091451.6054-1-roman.sudarikov@linux.intel.com
 
-diff --git a/drivers/soc/ti/knav_qmss_queue.c b/drivers/soc/ti/knav_qmss_queue.c
-index 1ccc9064e1eb..37f3db6c041c 100644
---- a/drivers/soc/ti/knav_qmss_queue.c
-+++ b/drivers/soc/ti/knav_qmss_queue.c
-@@ -25,6 +25,8 @@
- 
- static struct knav_device *kdev;
- static DEFINE_MUTEX(knav_dev_lock);
-+#define knav_dev_lock_held() \
-+	lockdep_is_held(&knav_dev_lock)
- 
- /* Queue manager register indices in DTS */
- #define KNAV_QUEUE_PEEK_REG_INDEX	0
-@@ -52,8 +54,9 @@ static DEFINE_MUTEX(knav_dev_lock);
- #define knav_queue_idx_to_inst(kdev, idx)			\
- 	(kdev->instances + (idx << kdev->inst_shift))
- 
--#define for_each_handle_rcu(qh, inst)			\
--	list_for_each_entry_rcu(qh, &inst->handles, list)
-+#define for_each_handle_rcu(qh, inst)				\
-+	list_for_each_entry_rcu(qh, &inst->handles, list,	\
-+				knav_dev_lock_held())
- 
- #define for_each_instance(idx, inst, kdev)		\
- 	for (idx = 0, inst = kdev->instances;		\
+Changes in this revision are:
+v2 -> v3:
+- Addressed comments from Peter and Kan
+
+The previous version can be found at:
+v1: https://lkml.kernel.org/r/20191126163630.17300-1-roman.sudarikov@linux.intel.com
+
+Changes in this revision are:
+v1 -> v2:
+- Fixed process related issues;
+- This patch set includes kernel support for IIO stack to PMON mapping;
+- Stephane raised concerns regarding output format which may require
+code changes in the user space part of the feature only. We will continue
+output format discussion in the context of user space update.
+
+Intel® Xeon® Scalable processor family (code name Skylake-SP) makes
+significant changes in the integrated I/O (IIO) architecture. The new
+solution introduces IIO stacks which are responsible for managing traffic
+between the PCIe domain and the Mesh domain. Each IIO stack has its own
+PMON block and can handle either DMI port, x16 PCIe root port, MCP-Link
+or various built-in accelerators. IIO PMON blocks allow concurrent
+monitoring of I/O flows up to 4 x4 bifurcation within each IIO stack.
+
+Software is supposed to program required perf counters within each IIO
+stack and gather performance data. The tricky thing here is that IIO PMON
+reports data per IIO stack but users have no idea what IIO stacks are -
+they only know devices which are connected to the platform.
+
+Understanding IIO stack concept to find which IIO stack that particular
+IO device is connected to, or to identify an IIO PMON block to program
+for monitoring specific IIO stack assumes a lot of implicit knowledge
+about given Intel server platform architecture.
+
+This patch set introduces:
+1. An infrastructure for exposing an Uncore unit to Uncore PMON mapping
+   through sysfs-backend;
+2. A new --iiostat mode in perf stat to provide I/O performance metrics
+   per I/O device.
+
+Usage examples:
+
+1. List all devices below IIO stacks
+  ./perf stat --iiostat=show
+
+Sample output w/o libpci:
+
+    S0-RootPort0-uncore_iio_0<00:00.0>
+    S1-RootPort0-uncore_iio_0<81:00.0>
+    S0-RootPort1-uncore_iio_1<18:00.0>
+    S1-RootPort1-uncore_iio_1<86:00.0>
+    S1-RootPort1-uncore_iio_1<88:00.0>
+    S0-RootPort2-uncore_iio_2<3d:00.0>
+    S1-RootPort2-uncore_iio_2<af:00.0>
+    S1-RootPort3-uncore_iio_3<da:00.0>
+
+Sample output with libpci:
+
+    S0-RootPort0-uncore_iio_0<00:00.0 Sky Lake-E DMI3 Registers>
+    S1-RootPort0-uncore_iio_0<81:00.0 Ethernet Controller X710 for 10GbE SFP+>
+    S0-RootPort1-uncore_iio_1<18:00.0 Omni-Path HFI Silicon 100 Series [discrete]>
+    S1-RootPort1-uncore_iio_1<86:00.0 Ethernet Controller XL710 for 40GbE QSFP+>
+    S1-RootPort1-uncore_iio_1<88:00.0 Ethernet Controller XL710 for 40GbE QSFP+>
+    S0-RootPort2-uncore_iio_2<3d:00.0 Ethernet Connection X722 for 10GBASE-T>
+    S1-RootPort2-uncore_iio_2<af:00.0 Omni-Path HFI Silicon 100 Series [discrete]>
+    S1-RootPort3-uncore_iio_3<da:00.0 NVMe Datacenter SSD [Optane]>
+
+2. Collect metrics for all I/O devices below IIO stack
+
+  ./perf stat --iiostat -- dd if=/dev/zero of=/dev/nvme0n1 bs=1M oflag=direct
+    357708+0 records in
+    357707+0 records out
+    375083606016 bytes (375 GB, 349 GiB) copied, 215.381 s, 1.7 GB/s
+
+  Performance counter stats for 'system wide':
+
+     device             Inbound Read(MB)    Inbound Write(MB)    Outbound Read(MB)   Outbound Write(MB)
+    00:00.0                    0                    0                    0                    0
+    81:00.0                    0                    0                    0                    0
+    18:00.0                    0                    0                    0                    0
+    86:00.0                    0                    0                    0                    0
+    88:00.0                    0                    0                    0                    0
+    3b:00.0                    3                    0                    0                    0
+    3c:03.0                    3                    0                    0                    0
+    3d:00.0                    3                    0                    0                    0
+    af:00.0                    0                    0                    0                    0
+    da:00.0               358559                   44                    0                   22
+
+    215.383783574 seconds time elapsed
+
+
+3. Collect metrics for comma separted list of I/O devices
+
+  ./perf stat --iiostat=da:00.0 -- dd if=/dev/zero of=/dev/nvme0n1 bs=1M oflag=direct
+    381555+0 records in
+    381554+0 records out
+    400088457216 bytes (400 GB, 373 GiB) copied, 374.044 s, 1.1 GB/s
+
+  Performance counter stats for 'system wide':
+
+     device             Inbound Read(MB)    Inbound Write(MB)    Outbound Read(MB)   Outbound Write(MB)
+    da:00.0               382462                   47                    0                   23
+
+    374.045775505 seconds time elapsed
+
+Roman Sudarikov (2):
+  perf x86: Infrastructure for exposing an Uncore unit to PMON mapping
+  perf x86: Exposing an Uncore unit to PMON for Intel Xeon® server
+    platform
+
+ arch/x86/events/intel/uncore.c       |  46 ++++++++
+ arch/x86/events/intel/uncore.h       |   6 +
+ arch/x86/events/intel/uncore_snbep.c | 160 +++++++++++++++++++++++++++
+ 3 files changed, 212 insertions(+)
+
+
+base-commit: 219d54332a09e8d8741c1e1982f5eae56099de85
 -- 
-2.24.1
+2.19.1
 
