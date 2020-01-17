@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74244C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C0CC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5144421582
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C488B2465A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:47:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgAQMq4 (ORCPT
+        id S1726991AbgAQMrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 07:46:56 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52790 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726559AbgAQMq4 (ORCPT
+        Fri, 17 Jan 2020 07:47:13 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:13302 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726897AbgAQMrN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 07:46:56 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00HCbfnw132606
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 07:46:54 -0500
+        Fri, 17 Jan 2020 07:47:13 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00HCl6Mj097461
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 07:47:12 -0500
 Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xk0qvm0pe-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xk0qgk698-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 07:46:54 -0500
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 07:47:12 -0500
 Received: from localhost
         by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <kjain@linux.ibm.com>;
-        Fri, 17 Jan 2020 12:46:52 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        Fri, 17 Jan 2020 12:47:08 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
         by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 17 Jan 2020 12:46:46 -0000
+        Fri, 17 Jan 2020 12:47:02 -0000
 Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00HCkja658065088
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00HCl18v38338914
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Jan 2020 12:46:45 GMT
+        Fri, 17 Jan 2020 12:47:01 GMT
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2063EAE04D;
-        Fri, 17 Jan 2020 12:46:45 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 12C17AE057;
+        Fri, 17 Jan 2020 12:47:01 +0000 (GMT)
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 45D60AE051;
-        Fri, 17 Jan 2020 12:46:40 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 0D3F9AE051;
+        Fri, 17 Jan 2020 12:46:56 +0000 (GMT)
 Received: from localhost.localdomain.com (unknown [9.199.44.232])
         by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 17 Jan 2020 12:46:40 +0000 (GMT)
+        Fri, 17 Jan 2020 12:46:55 +0000 (GMT)
 From:   Kajol Jain <kjain@linux.ibm.com>
 To:     acme@kernel.org, mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org
 Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
@@ -59,87 +59,342 @@ Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
         gregkh@linuxfoundation.org, kjain@linux.ibm.com,
         benh@kernel.crashing.org
-Subject: [RFC 2/6] powerpc/hv-24x7: Add sysfs files inside hv-24x7 device to show processor details
-Date:   Fri, 17 Jan 2020 18:16:16 +0530
+Subject: [RFC 5/6] perf/tools: Enhance JSON/metric infrastructure to handle "?"
+Date:   Fri, 17 Jan 2020 18:16:19 +0530
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200117124620.26094-1-kjain@linux.ibm.com>
 References: <20200117124620.26094-1-kjain@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 20011712-0012-0000-0000-0000037E43C6
+x-cbid: 20011712-0012-0000-0000-0000037E43CB
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20011712-0013-0000-0000-000021BA7A9F
-Message-Id: <20200117124620.26094-3-kjain@linux.ibm.com>
+x-cbparentid: 20011712-0013-0000-0000-000021BA7AA6
+Message-Id: <20200117124620.26094-6-kjain@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-01-17_03:2020-01-16,2020-01-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
- mlxscore=0 impostorscore=0 malwarescore=0 phishscore=0 adultscore=0
- mlxlogscore=999 priorityscore=1501 spamscore=0 lowpriorityscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001170101
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=2
+ bulkscore=0 impostorscore=0 mlxscore=0 spamscore=0 mlxlogscore=999
+ lowpriorityscore=0 priorityscore=1501 malwarescore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001170102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To expose the system dependent parameter like total number of
-sockets and numbers of chips per socket, patch adds two sysfs files.
-"sockets" and "chips" are added to /sys/devices/hv_24x7/interface/
-of the "hv_24x7" pmu.
+Patch enhances current metric infrastructure to handle "?" in the metric
+expression. The "?" can be use for parameters whose value not known while
+creating metric events and which can be replace later at runtime to
+the proper value. It also add flexibility to create multiple events out
+of single metric event added in json file.
+
+Patch adds function 'arch_get_runtimeparam' which is a arch specific
+function, returns the count of metric events need to be created.
+By default it return 1.
+
+One loop is added in function 'metricgroup__add_metric', which create
+multiple events at run time depend on return value of
+'arch_get_runtimeparam' and merge that event in 'group_list'.
+
+This infrastructure needed for hv_24x7 socket/chip level events.
+"hv_24x7" chip level events needs specific chip-id to which the
+data is requested. Function 'arch_get_runtimeparam' implemented
+in header.c which extract number of sockets from sysfs file
+"sockets" under "/sys/devices/hv_24x7/interface/".
 
 Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
 ---
- arch/powerpc/perf/hv-24x7.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ tools/perf/arch/powerpc/util/header.c |  40 +++++++++
+ tools/perf/util/expr.h                |   1 +
+ tools/perf/util/expr.y                |  17 +++-
+ tools/perf/util/metricgroup.c         | 117 +++++++++++++++++---------
+ tools/perf/util/metricgroup.h         |   1 +
+ tools/perf/util/stat-shadow.c         |   5 ++
+ 6 files changed, 138 insertions(+), 43 deletions(-)
 
-diff --git a/arch/powerpc/perf/hv-24x7.c b/arch/powerpc/perf/hv-24x7.c
-index 64d9fc526d68..e498824eb4f7 100644
---- a/arch/powerpc/perf/hv-24x7.c
-+++ b/arch/powerpc/perf/hv-24x7.c
-@@ -450,6 +450,20 @@ static ssize_t device_show_string(struct device *dev,
- 	return sprintf(buf, "%s\n", (char *)d->var);
- }
+diff --git a/tools/perf/arch/powerpc/util/header.c b/tools/perf/arch/powerpc/util/header.c
+index 3b4cdfc5efd6..28425edb901c 100644
+--- a/tools/perf/arch/powerpc/util/header.c
++++ b/tools/perf/arch/powerpc/util/header.c
+@@ -7,6 +7,11 @@
+ #include <string.h>
+ #include <linux/stringify.h>
+ #include "header.h"
++#include "metricgroup.h"
++#include "evlist.h"
++#include <dirent.h>
++#include "pmu.h"
++#include <api/fs/fs.h>
  
-+#ifdef CONFIG_PPC_RTAS
-+static ssize_t sockets_show(struct device *dev,
-+			    struct device_attribute *attr, char *buf)
-+{
-+	return sprintf(buf, "%d\n", physsockets);
-+}
+ #define mfspr(rn)       ({unsigned long rval; \
+ 			 asm volatile("mfspr %0," __stringify(rn) \
+@@ -16,6 +21,8 @@
+ #define PVR_VER(pvr)    (((pvr) >>  16) & 0xFFFF) /* Version field */
+ #define PVR_REV(pvr)    (((pvr) >>   0) & 0xFFFF) /* Revison field */
+ 
++#define SOCKETS_INFO_FILE_PATH "/devices/hv_24x7/interface/"
 +
-+static ssize_t chips_show(struct device *dev, struct device_attribute *attr,
-+			  char *buf)
-+{
-+	return sprintf(buf, "%d\n", physchips);
-+}
-+#endif
-+
- static struct attribute *device_str_attr_create_(char *name, char *str)
+ int
+ get_cpuid(char *buffer, size_t sz)
  {
- 	struct dev_ext_attribute *attr = kzalloc(sizeof(*attr), GFP_KERNEL);
-@@ -1096,6 +1110,10 @@ PAGE_0_ATTR(catalog_len, "%lld\n",
- 		(unsigned long long)be32_to_cpu(page_0->length) * 4096);
- static BIN_ATTR_RO(catalog, 0/* real length varies */);
- static DEVICE_ATTR_RO(domains);
-+#ifdef CONFIG_PPC_RTAS
-+static DEVICE_ATTR_RO(sockets);
-+static DEVICE_ATTR_RO(chips);
-+#endif
+@@ -44,3 +51,36 @@ get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
  
- static struct bin_attribute *if_bin_attrs[] = {
- 	&bin_attr_catalog,
-@@ -1106,6 +1124,10 @@ static struct attribute *if_attrs[] = {
- 	&dev_attr_catalog_len.attr,
- 	&dev_attr_catalog_version.attr,
- 	&dev_attr_domains.attr,
-+#ifdef CONFIG_PPC_RTAS
-+	&dev_attr_sockets.attr,
-+	&dev_attr_chips.attr,
-+#endif
- 	NULL,
+ 	return bufp;
+ }
++
++int arch_get_runtimeparam(void)
++{
++	int count = 0;
++	DIR *dir;
++	char path[PATH_MAX];
++	const char *sysfs = sysfs__mountpoint();
++	char filename[] = "sockets";
++	FILE *file;
++	char buf[16], *num;
++	int data;
++
++	if (!sysfs)
++		goto out;
++	snprintf(path, PATH_MAX,
++		 "%s" SOCKETS_INFO_FILE_PATH, sysfs);
++	dir = opendir(path);
++	if (!dir)
++		goto out;
++	strcat(path, filename);
++	file = fopen(path, "r");
++	if (!file)
++		goto out;
++
++	data = fread(buf, 1, sizeof(buf), file);
++	if (data == 0)
++		goto out;
++	count = strtol(buf, &num, 10);
++out:
++	if (!count)
++		count = 1;
++	return count;
++}
+diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
+index 046160831f90..85ebea68b0c5 100644
+--- a/tools/perf/util/expr.h
++++ b/tools/perf/util/expr.h
+@@ -15,6 +15,7 @@ struct parse_ctx {
+ 	struct parse_id ids[MAX_PARSE_ID];
  };
  
++extern int expr__runtimeparam;
+ void expr__ctx_init(struct parse_ctx *ctx);
+ void expr__add_id(struct parse_ctx *ctx, const char *id, double val);
+ #ifndef IN_EXPR_Y
+diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+index f9a20a39b64a..26c62b631525 100644
+--- a/tools/perf/util/expr.y
++++ b/tools/perf/util/expr.y
+@@ -36,6 +36,8 @@
+ %type <num> expr if_expr
+ 
+ %{
++int expr__runtimeparam;
++
+ static int expr__lex(YYSTYPE *res, const char **pp);
+ 
+ static void expr__error(double *final_val __maybe_unused,
+@@ -101,7 +103,7 @@ static int expr__symbol(YYSTYPE *res, const char *p, const char **pp)
+ 	if (*p == '#')
+ 		*dst++ = *p++;
+ 
+-	while (isalnum(*p) || *p == '_' || *p == '.' || *p == ':' || *p == '@' || *p == '\\') {
++	while (isalnum(*p) || *p == '_' || *p == '.' || *p == ':' || *p == '@' || *p == '\\' || *p == '?') {
+ 		if (p - s >= MAXIDLEN)
+ 			return -1;
+ 		/*
+@@ -112,6 +114,19 @@ static int expr__symbol(YYSTYPE *res, const char *p, const char **pp)
+ 			*dst++ = '/';
+ 		else if (*p == '\\')
+ 			*dst++ = *++p;
++		else if (*p == '?') {
++			int size = snprintf(NULL, 0, "%d", expr__runtimeparam);
++			char * paramval = (char *)malloc(size);
++			int i = 0;
++			if(!paramval)
++				*dst++ = '0';
++			else {
++				sprintf(paramval, "%d", expr__runtimeparam);
++				while(i < size)
++					*dst++ = paramval[i++];
++				free(paramval);
++			}
++		}
+ 		else
+ 			*dst++ = *p;
+ 		p++;
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 02aee946b6c1..ec87a120cd7e 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -399,6 +399,11 @@ void metricgroup__print(bool metrics, bool metricgroups, char *filter,
+ 	strlist__delete(metriclist);
+ }
+ 
++int __weak arch_get_runtimeparam(void)
++{
++	return 1;
++}
++
+ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+ 				   struct list_head *group_list)
+ {
+@@ -419,52 +424,80 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+ 			continue;
+ 		if (match_metric(pe->metric_group, metric) ||
+ 		    match_metric(pe->metric_name, metric)) {
+-			const char **ids;
+-			int idnum;
+-			struct egroup *eg;
+-			bool no_group = false;
+-
+-			pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
+-
+-			if (expr__find_other(pe->metric_expr,
+-					     NULL, &ids, &idnum) < 0)
+-				continue;
+-			if (events->len > 0)
+-				strbuf_addf(events, ",");
+-			for (j = 0; j < idnum; j++) {
+-				pr_debug("found event %s\n", ids[j]);
+-				/*
+-				 * Duration time maps to a software event and can make
+-				 * groups not count. Always use it outside a
+-				 * group.
+-				 */
+-				if (!strcmp(ids[j], "duration_time")) {
+-					if (j > 0)
+-						strbuf_addf(events, "}:W,");
+-					strbuf_addf(events, "duration_time");
+-					no_group = true;
++			int k, count;
++
++			count = arch_get_runtimeparam();
++
++			/* This loop is added to create multiple
++			 * events depend on count value and add
++			 * those events to group_list.
++			 */
++			for (k = 0; k < count; k++) {
++				const char **ids;
++				int idnum;
++				struct egroup *eg;
++				bool no_group = false;
++				char value[PATH_MAX];
++
++				pr_debug("metric expr %s for %s\n",
++					 pe->metric_expr, pe->metric_name);
++				expr__runtimeparam = k;
++				if (expr__find_other(pe->metric_expr, NULL,
++						     &ids, &idnum) < 0)
+ 					continue;
++				if (events->len > 0)
++					strbuf_addf(events, ",");
++				for (j = 0; j < idnum; j++) {
++					pr_debug("found event %s\n", ids[j]);
++					/*
++					 * Duration time maps to a software
++					 * event and can make groups not count.
++					 * Always use it outside a group.
++					 */
++					if (!strcmp(ids[j], "duration_time")) {
++						if (j > 0)
++							strbuf_addf(events,
++								    "}:W,");
++						strbuf_addf(events,
++							    "duration_time");
++						no_group = true;
++						continue;
++					}
++					strbuf_addf(events, "%s%s",
++						    j == 0 || no_group ? "{" :
++						    ",", ids[j]);
++					no_group = false;
+ 				}
+-				strbuf_addf(events, "%s%s",
+-					j == 0 || no_group ? "{" : ",",
+-					ids[j]);
+-				no_group = false;
+-			}
+-			if (!no_group)
+-				strbuf_addf(events, "}:W");
++				if (!no_group)
++					strbuf_addf(events, "}:W");
+ 
+-			eg = malloc(sizeof(struct egroup));
+-			if (!eg) {
+-				ret = -ENOMEM;
+-				break;
++				eg = malloc(sizeof(struct egroup));
++				if (!eg) {
++					ret = -ENOMEM;
++					break;
++				}
++				eg->ids = ids;
++				eg->idnum = idnum;
++				strcpy(value, pe->metric_name);
++				if (strstr(pe->metric_name, "?")) {
++					int size = snprintf(NULL, 0, "%d", k);
++					char *param = (char *)malloc(size + 1);
++
++					if (!param) {
++						strcat(value, "_0");
++					} else {
++						sprintf(param, "%c%d", '_', k);
++						value[strlen(value) - 1] = '\0';
++						strcat(value, param);
++						free(param);
++					}
++				}
++				eg->metric_name = strdup(value);
++				eg->metric_expr = pe->metric_expr;
++				eg->metric_unit = pe->unit;
++				list_add_tail(&eg->nd, group_list);
++				ret = 0;
+ 			}
+-			eg->ids = ids;
+-			eg->idnum = idnum;
+-			eg->metric_name = pe->metric_name;
+-			eg->metric_expr = pe->metric_expr;
+-			eg->metric_unit = pe->unit;
+-			list_add_tail(&eg->nd, group_list);
+-			ret = 0;
+ 		}
+ 	}
+ 	return ret;
+diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
+index 475c7f912864..81224ba1270d 100644
+--- a/tools/perf/util/metricgroup.h
++++ b/tools/perf/util/metricgroup.h
+@@ -34,4 +34,5 @@ int metricgroup__parse_groups(const struct option *opt,
+ void metricgroup__print(bool metrics, bool groups, char *filter,
+ 			bool raw, bool details);
+ bool metricgroup__has_metric(const char *metric);
++int arch_get_runtimeparam(void);
+ #endif
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 2c41d47f6f83..147a39b1ff5b 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -780,7 +780,12 @@ static void generic_metric(struct perf_stat_config *config,
+ 
+ 	if (!metric_events[i]) {
+ 		const char *p = metric_expr;
++		if (strstr(p, "?")) {
++			char *tmp = strrchr(metric_name, '_');
+ 
++			tmp++;
++			expr__runtimeparam = strtol(tmp, &tmp, 10);
++		}
+ 		if (expr__parse(&ratio, &pctx, &p) == 0) {
+ 			char *unit;
+ 			char metric_bf[64];
 -- 
 2.18.1
 
