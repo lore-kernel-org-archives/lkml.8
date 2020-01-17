@@ -2,232 +2,104 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5392AC33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD122C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F9920748
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:02:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4B6B20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:03:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FV3USbmX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729998AbgAQWCR (ORCPT
+        id S1730056AbgAQWDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 17:02:17 -0500
-Received: from mga04.intel.com ([192.55.52.120]:1512 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729497AbgAQWCR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 17:02:17 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 14:02:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,331,1574150400"; 
-   d="scan'208";a="426143529"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 17 Jan 2020 14:02:15 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1isZh1-000Fqv-77; Sat, 18 Jan 2020 06:02:15 +0800
-Date:   Sat, 18 Jan 2020 06:01:16 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:locking/urgent] BUILD SUCCESS
- 39e7234f00bc93613c086ae42d852d5f4147120a
-Message-ID: <5e222eac.H7AVPc0BDH+y32XI%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Fri, 17 Jan 2020 17:03:12 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:40350 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729246AbgAQWDL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 17:03:11 -0500
+Received: by mail-lf1-f66.google.com with SMTP id i23so19468714lfo.7;
+        Fri, 17 Jan 2020 14:03:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9R3Ww6earNCtZebZRc9I5yA2IHJbRCUq0sChrfhPDZM=;
+        b=FV3USbmXIYjOHA1i6XJ+MUUP92JtMmfzVKBIZZtlt00LOFL4fGpIJ78Y4d86nlR7G3
+         sH47a+3DCTNswhjXYeHDCUfCQC+NdcfVw7h50KC3rHgzi+m0OBBiEqtve3jN+hLhHlaz
+         ABwTFoDWsiUChRJ40eSVJvSENp4+7WS7Sbhb6wQyLAhP82TFJZiNrCHdBjFMPax+/8Ue
+         nFNYhlgVlomc1tNTpsxrwdS+uRNspCbcFxRWkh5Oc57A0F7hHEdrmbJLfxRCB4ULY5Ls
+         W8BoFJ7xXUcx9eMNK96OEsjFlGm/2KXv6sSsPLp09H2JKn+Su8IzCvS+QtruF/fq7DSU
+         JafA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9R3Ww6earNCtZebZRc9I5yA2IHJbRCUq0sChrfhPDZM=;
+        b=tnm98YB4cjv2tl1v5NVb4MAIziTG63ADkHTuDIMmtDt+BkZIcGln1Gb3m/+bTIq1l5
+         5VohS0hVPRImuvZXdvK4Naoa9cNF+eXCKesFq7u6wlauJID8ZtCJ2A1A1vi4eDTzcszo
+         BZOhaBJIPpltmJTyv3Z0/Zj91bWY0ts1IMzq8vHmiwkU6PXgC3LRJ+KHkeXJLQ8HRZUA
+         nFw0Wst4fzlu/gSaa4n5/eoFl3ekLdk4JlS6RQ0CfOKGvlGD6dqBZdyRaJX4FgRUEe4D
+         0h6MtvztwUqTelcNfmnggcR3XYgS7SQ5HVPVn5sB62xvehXOLZif5kZigktFi2Jmh8d1
+         tWlg==
+X-Gm-Message-State: APjAAAXcVgIm/CW/wDVfvrPNIjhzD0ujF17JcPC27lRc/8XSVlNlZuMF
+        +9GrDOFONov84GT/74+yye91ktZVNidSh9fD3Kk=
+X-Google-Smtp-Source: APXvYqy1//URi/l3A2TCsVlmrW8AuNR+fyzLB0N9QxT1g2GwmoaL3MeqQwGb1ucLp4z664LqNXsa5n8EE/+aIvECesY=
+X-Received: by 2002:a05:6512:4c6:: with SMTP id w6mr6500197lfq.157.1579298589568;
+ Fri, 17 Jan 2020 14:03:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <20200117212825.11755-1-kpsingh@chromium.org> <CAEf4BzZ1STEe-RvsLYBccXXLSip2N49cgjE1kE+PvnQaKipM5Q@mail.gmail.com>
+In-Reply-To: <CAEf4BzZ1STEe-RvsLYBccXXLSip2N49cgjE1kE+PvnQaKipM5Q@mail.gmail.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Fri, 17 Jan 2020 14:02:58 -0800
+Message-ID: <CAADnVQJhooV_QKxx+yxu4vo=4+-ofxpPG-edPAuYAG-qyN3Sqw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2] libbpf: Load btf_vmlinux only once per object.
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     KP Singh <kpsingh@chromium.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Anton Protopopov <a.s.protopopov@gmail.com>,
+        Florent Revest <revest@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git  locking/urgent
-branch HEAD: 39e7234f00bc93613c086ae42d852d5f4147120a  locking/rwsem: Fix kernel crash when spinning on RWSEM_OWNER_UNKNOWN
+On Fri, Jan 17, 2020 at 1:55 PM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+>
+> On Fri, Jan 17, 2020 at 1:28 PM KP Singh <kpsingh@chromium.org> wrote:
+> >
+> > From: KP Singh <kpsingh@google.com>
+> >
+> > As more programs (TRACING, STRUCT_OPS, and upcoming LSM) use vmlinux
+> > BTF information, loading the BTF vmlinux information for every program
+> > in an object is sub-optimal. The fix was originally proposed in:
+> >
+> >    https://lore.kernel.org/bpf/CAEf4BzZodr3LKJuM7QwD38BiEH02Cc1UbtnGpVkCJ00Mf+V_Qg@mail.gmail.com/
+> >
+> > The btf_vmlinux is populated in the object if any of the programs in
+> > the object requires it just before the programs are loaded and freed
+> > after the programs finish loading.
+> >
+> > Reported-by: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+> > Reviewed-by: Brendan Jackman <jackmanb@chromium.org>
+> > Signed-off-by: KP Singh <kpsingh@google.com>
+> > ---
+>
+> Looks great!
+>
+> Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-elapsed time: 494m
-
-configs tested: 169
-configs skipped: 0
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-csky                 randconfig-a001-20200118
-openrisc             randconfig-a001-20200118
-s390                 randconfig-a001-20200118
-sh                   randconfig-a001-20200118
-xtensa               randconfig-a001-20200118
-parisc                            allnoconfig
-parisc                            allyesonfig
-parisc                         b180_defconfig
-parisc                        c3000_defconfig
-parisc                              defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-x86_64               randconfig-e001-20200118
-x86_64               randconfig-e002-20200118
-x86_64               randconfig-e003-20200118
-i386                 randconfig-e001-20200118
-i386                 randconfig-e002-20200118
-i386                 randconfig-e003-20200118
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-c6x                  randconfig-a001-20200118
-h8300                randconfig-a001-20200118
-microblaze           randconfig-a001-20200118
-nios2                randconfig-a001-20200118
-sparc64              randconfig-a001-20200118
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64               randconfig-c001-20200118
-x86_64               randconfig-c002-20200118
-x86_64               randconfig-c003-20200118
-i386                 randconfig-c001-20200118
-i386                 randconfig-c002-20200118
-i386                 randconfig-c003-20200118
-x86_64               randconfig-f001-20200118
-x86_64               randconfig-f002-20200118
-x86_64               randconfig-f003-20200118
-i386                 randconfig-f001-20200118
-i386                 randconfig-f002-20200118
-i386                 randconfig-f003-20200118
-x86_64               randconfig-d001-20200118
-x86_64               randconfig-d002-20200118
-x86_64               randconfig-d003-20200118
-i386                 randconfig-d001-20200118
-i386                 randconfig-d002-20200118
-i386                 randconfig-d003-20200118
-arc                  randconfig-a001-20200118
-arm                  randconfig-a001-20200118
-arm64                randconfig-a001-20200118
-ia64                 randconfig-a001-20200118
-powerpc              randconfig-a001-20200118
-sparc                randconfig-a001-20200118
-alpha                randconfig-a001-20200118
-m68k                 randconfig-a001-20200118
-mips                 randconfig-a001-20200118
-nds32                randconfig-a001-20200118
-parisc               randconfig-a001-20200118
-riscv                randconfig-a001-20200118
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-x86_64               randconfig-h001-20200118
-x86_64               randconfig-h002-20200118
-x86_64               randconfig-h003-20200118
-i386                 randconfig-h001-20200118
-i386                 randconfig-h002-20200118
-i386                 randconfig-h003-20200118
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-csky                 randconfig-a001-20200117
-openrisc             randconfig-a001-20200117
-s390                 randconfig-a001-20200117
-sh                   randconfig-a001-20200117
-xtensa               randconfig-a001-20200117
-alpha                randconfig-a001-20200117
-m68k                 randconfig-a001-20200117
-mips                 randconfig-a001-20200117
-nds32                randconfig-a001-20200117
-parisc               randconfig-a001-20200117
-riscv                randconfig-a001-20200117
-x86_64               randconfig-g001-20200118
-x86_64               randconfig-g002-20200118
-x86_64               randconfig-g003-20200118
-i386                 randconfig-g001-20200118
-i386                 randconfig-g002-20200118
-i386                 randconfig-g003-20200118
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-x86_64               randconfig-b001-20200118
-x86_64               randconfig-b002-20200118
-x86_64               randconfig-b003-20200118
-i386                 randconfig-b001-20200118
-i386                 randconfig-b002-20200118
-i386                 randconfig-b003-20200118
-um                                  defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-i386                             alldefconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-
----
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+Applied. Thanks
