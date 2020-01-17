@@ -2,272 +2,161 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC742C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 05:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6CE3C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 05:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6E182082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 05:33:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D49A20842
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 05:45:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gG61D97M"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="g1tKwRlv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbgAQFdb (ORCPT
+        id S1726688AbgAQFpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 00:33:31 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:38278 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726903AbgAQFdb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 00:33:31 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00H5XT4S118946;
-        Thu, 16 Jan 2020 23:33:29 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579239209;
-        bh=a+33OR85V3xZEu8mxosXzm1BM3SAHJpRKF4zPt7Tcuc=;
-        h=From:To:CC:Subject:Date;
-        b=gG61D97Mi+T5/H5/Ifejh4e5fDO9S5PXCdA1CgOaFUXqjBbXN69MzSES/U5IzQEoE
-         KQdoRWpO9AzbIhFi0E4FxPmuvFrpWOL/5Z43XqJnhxM2CobA5hkHls1gzmSegZBk40
-         I0jZAzt0rYyn6sO6h6UGqKCLPKa1MGOaaYXhPJl4=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00H5XTEt075311
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 16 Jan 2020 23:33:29 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 16
- Jan 2020 23:33:29 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 16 Jan 2020 23:33:29 -0600
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00H5XRQb027554;
-        Thu, 16 Jan 2020 23:33:28 -0600
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Kishon Vijay Abraham I <kishon@ti.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL v2] PHY: For 5.6
-Date:   Fri, 17 Jan 2020 11:05:40 +0530
-Message-ID: <20200117053540.20451-1-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 17 Jan 2020 00:45:40 -0500
+Received: from mail-eopbgr60062.outbound.protection.outlook.com ([40.107.6.62]:63463
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725813AbgAQFpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 00:45:40 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MT5zGZbuLPhJHIPKZrB4lk5/dOIBXlhj0J0pdO+guwKvKPbighZq5gVdfeYhtOZtbRgc2l7HBFQSHQb/p2c+jSuDIWDwPsp58ZaWFahc5GtzfnmRd502dUL99z0AJqXGIQ3z/YT5NQIiTgJoDf/KITKIorrW0KyJyqT6xXLc/7S1QlPc0tpwHxLLOX20+4VH/xq0AK68xsJeUdI++e/FfYQf86L06pANRxhN+3pyLUea5ro+1HgOjxXjI9JqM0vNuK89Bh9w0vpH/zM2QC3C1+0q9L/yv/f5op3KGsViE8ehjDorssX+xPELoCPQTbO3H66yQ38X6Bp8t8rlYqZyzA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PYYrVZB2owAhkvx/mOJd55oxR8Oirq2c7ZhRm5ycDRU=;
+ b=mLgUFKYC9/FNypl1qzOLJDIMi7keXl6VDRnMHfqPB/hk1xEqcCGzJJFoinrmbxOeluFgLOtu80qWTJq1jj7lu4iRyPGKPENzG8gCvaDTyHeGOC++9AYo4Gf1jOdacPvY8Pc+NVd+gPvomMKwgtgQwbCdIhV8eDJehKs/6eCWf6Rrc1LydOvPBU6l2Vk9VzHvgCsddAfIum47+ExAVcm3Yub4XUEBPFyS2sn6uQWJ+53DtAqY3RrH3+bOY2I0oHT1m4x2XxyvgKoc80VzXSNJox5od5MerODC/X5UD+YpEzpun2x4cvVzVoNof+En9GrCE0IQvcGYVAb8aG4KETjM7Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PYYrVZB2owAhkvx/mOJd55oxR8Oirq2c7ZhRm5ycDRU=;
+ b=g1tKwRlvsUDx1JupGOs5GA3PY3O8EmmdMDO5qBC/gsED80ErxTfExYsGYSh7+zqt+0b8KkN/buPu7luXx8l4QBGuxNuRBLwS4zLJ5B+ev11OO7QjwxnBEUdPyA7bZLGJmKgJp1yM4aXxjVVpjVZvhsD6+GJCG4JJpBrvLAGE++4=
+Received: from DB7PR04MB4618.eurprd04.prod.outlook.com (52.135.139.151) by
+ DB7PR04MB5977.eurprd04.prod.outlook.com (20.178.104.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.23; Fri, 17 Jan 2020 05:45:34 +0000
+Received: from DB7PR04MB4618.eurprd04.prod.outlook.com
+ ([fe80::5cb4:81c8:1618:5ca]) by DB7PR04MB4618.eurprd04.prod.outlook.com
+ ([fe80::5cb4:81c8:1618:5ca%7]) with mapi id 15.20.2644.023; Fri, 17 Jan 2020
+ 05:45:34 +0000
+From:   Joakim Zhang <qiangqing.zhang@nxp.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "maz@kernel.org" <maz@kernel.org>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>, Andy Duan <fugang.duan@nxp.com>
+Subject: RE: [PATCH V5 1/2] dt-bindings/irq: add binding for NXP INTMUX
+ interrupt multiplexer
+Thread-Topic: [PATCH V5 1/2] dt-bindings/irq: add binding for NXP INTMUX
+ interrupt multiplexer
+Thread-Index: AQHVy2HlCqpoVSNPM0u45sIas5IfRaftr8UAgACn8XA=
+Date:   Fri, 17 Jan 2020 05:45:34 +0000
+Message-ID: <DB7PR04MB461896F81D346CC88505F2C1E6310@DB7PR04MB4618.eurprd04.prod.outlook.com>
+References: <1579064664-16452-1-git-send-email-qiangqing.zhang@nxp.com>
+ <1579064664-16452-2-git-send-email-qiangqing.zhang@nxp.com>
+ <20200116192928.GA1014@bogus>
+In-Reply-To: <20200116192928.GA1014@bogus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=qiangqing.zhang@nxp.com; 
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 977a6aff-8f08-4067-ad20-08d79b1078f2
+x-ms-traffictypediagnostic: DB7PR04MB5977:|DB7PR04MB5977:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB597773FF6250900BAF968C96E6310@DB7PR04MB5977.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:826;
+x-forefront-prvs: 0285201563
+x-forefront-antispam-report: SFV:NSPM;SFS:(10001)(10009020)(4636009)(376002)(136003)(366004)(396003)(346002)(39860400002)(199004)(189003)(2906002)(6506007)(7696005)(53546011)(8676002)(7416002)(478600001)(4326008)(45080400002)(33656002)(66476007)(9686003)(66556008)(66946007)(55016002)(66446008)(64756008)(76116006)(5660300002)(52536014)(316002)(71200400001)(966005)(86362001)(186003)(6916009)(8936002)(26005)(81156014)(81166006)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB5977;H:DB7PR04MB4618.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: FwwuNqtz10LabuwFjopuQ0idSmlcqseK2jlavUDGB2dLeEfw39z39qS1bKzFDdhut7jaA1+ac1qyBTvc6MUFCv3vxaplLsP3gjjDzCa25bGhLwkvJEmHpUhxlGFnw6M77jVpJqoNpHOPFJN/dYOanx8sJXUdfPG3iwXjk/DCrtzdQ3fcpwivf07EvE6Qh807xXVRBfi5S41ODKiYhuBTte6LITHM3g8U1Qr8GAJWpYq4sgQSHPSCDXkhv2He/IXlXHu41V/fwoHKmlA9542QVNm8Bg6y7omZljQt1tb+FiCs0lBk0I8JVrDZZ+uVkB1a9ojgZFJyKGfoYfYrMt7gTJTZtB+DZL0ZDu7P1kP2Uzzi0SKKFDua9bwdQNTi/KhNRpYCk3Mg2Q/Yc6QVJJDwqJB95XVS6IkFMHfP5uZDRVaLMcaQYU030Qn8FCzkg5oczq2KRuo9JN50BvGrmScZ7ldmnCydiPa6BXjpUek31Fj2HHR9+CVkztcOQOjer6o/MmdWX2o/acRExZe5G6EH4gSGA1f5WEfXaGYI4iVb2cFBFvdn2UHKU1xUQrZeRIcj9JFqh4SF///coJb3JoecDQ==
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 977a6aff-8f08-4067-ad20-08d79b1078f2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jan 2020 05:45:34.6227
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: AcjBoS/cbfvV4ItbqNjYejQcvhoMTYUPPRbmPdSt91mEWd8MBKVAiEg6ZclOdc1QC7m2TDSl+9b+vAhzzG8uSQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5977
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
-
-Please find the updated pull request for 5.6 merge window below.
-
-Here I fixed the incorrect commit ID in Fixes tag on one of the
-patch. Rest of it remains the same as in v1 PR.
-
-PHY core now creates a device link between PHY consumer and PHY
-provider required for suspend/resume ordering and also adds support
-for DisplayPort controller to pass configuration parameters to PHY.
-
-It includes new PHY drivers for TI's J721E SoC (PCIe and USB), eMMC
-PHY driver for Intel's LGM SoC and USB PHY driver for Broadcom
-SoC.
-
-For the detailed list of changes, please see the tag message below.
-All these changes have been in linux -next for a while now.
-Consider merging this for the next merge window and let me know if I
-have to change something.
-
-Thanks
-Kishon
-
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
-
-  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git tags/phy-for-5.6_v2
-
-for you to fetch changes up to 8a79db5e83a5d52c74e6f3c40d6f312cf899213e:
-
-  dt-bindings: phy: Add PHY_TYPE_DP definition (2020-01-17 10:54:35 +0530)
-
-----------------------------------------------------------------
-phy: for 5.6
-
-*) Add support in PHY core to create link between PHY consumer and PHY
-   provider
-*) Add DisplayPort PHY configuration set to be used for negotiating the
-   configurations to be used between DisplayPort controller and
-   DisplayPort PHY
-*) Add PHY wrapper driver (configure inputs to Cadence Sierra PHY) for
-   TI's J721E SoC and adapt Cadence Sierra PHY driver to be used for
-   J721E SoC (Supports USB and PCIe)
-*) Add PHY driver for eMMC PHY in Intel LGM SoC
-*) Add PHY support for 7216 and 7211 Broadcom SoCs which uses the new
-   Synopsys USB Controller
-*) Add support for 16nm SATA PHY present in Broadcom 7216 SoC
-*) Fix lost packet issue, fix MDIO from getting inaccessible, fix
-   occasional transaction failures, fix USB driver from crashing in
-   Broadcom USB PHY driver
-*) Fix missing PCS SW reset in UFS PHY of Qualcomm SM8150
-*) Use "struct phy_configure_opts_mipi_dphy" to pass parameters from
-   display controller to rockchip-inno-dsidphy
-*) Other cleanups including compile testing for some of the PHY drivers,
-   fixing Kconfig indentation, duplicate writes in drivers etc.,
-
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-
-----------------------------------------------------------------
-Al Cooper (13):
-      phy: usb: EHCI DMA may lose a burst of DMA data for 7255xA0 family
-      phy: usb: Get all drivers that use USB clks using correct enable/disable
-      phy: usb: Put USB phys into IDDQ on suspend to save power in S2 mode
-      phy: usb: Add "wake on" functionality
-      phy: usb: Restructure in preparation for adding 7216 USB support
-      dt-bindings: Add Broadcom STB USB PHY binding document
-      phy: usb: Add support for new Synopsys USB controller on the 7216
-      phy: usb: Add support for new Synopsys USB controller on the 7211b0
-      phy: usb: fix driver to defer on clk_get defer
-      phy: usb: PHY's MDIO registers not accessible without device installed
-      phy: usb: bdc: Fix occasional failure with BDC on 7211
-      phy: usb: USB driver is crashing during S3 resume on 7216
-      phy: usb: Add support for wake and USB low power mode for 7211 S2/S5
-
-Alexandre Torgue (1):
-      phy: core: Add consumer device link support
-
-Anil Varughese (1):
-      phy: cadence: Sierra: Configure both lane cdb and common cdb registers for external SSC
-
-Chuhong Yuan (1):
-      phy: ti-pipe3: make clk operations symmetric in probe and remove
-
-Colin Ian King (1):
-      phy: cadence: Sierra: remove redundant initialization of pointer regmap
-
-Florian Fainelli (2):
-      dt-bindings: phy: Document BCM7216 SATA PHY compatible string
-      phy: brcm-sata: Implement 7216 initialization sequence
-
-Heiko Stuebner (2):
-      dt-bindings: phy: drop #clock-cells from rockchip,px30-dsi-dphy
-      phy/rockchip: inno-dsidphy: generalize parameter handling
-
-Jyri Sarha (1):
-      dt-bindings: phy: Add PHY_TYPE_DP definition
-
-Kishon Vijay Abraham I (13):
-      dt-bindings: phy: Sierra: Add bindings for Sierra in TI's J721E
-      phy: cadence: Sierra: Make "phy_clk" and "sierra_apb" optional resources
-      phy: cadence: Sierra: Use "regmap" for read and write to Sierra registers
-      phy: cadence: Sierra: Add support for SERDES_16G used in J721E SoC
-      phy: cadence: Sierra: Make cdns_sierra_phy_init() as phy_ops
-      phy: cadence: Sierra: Modify register macro names to be in sync with Sierra user guide
-      phy: cadence: Sierra: Get reset control "array" for each link
-      phy: cadence: Sierra: Check for PLL lock during PHY power on
-      phy: cadence: Sierra: Change MAX_LANES of Sierra to 16
-      phy: cadence: Sierra: Set cmn_refclk_dig_div/cmn_refclk1_dig_div frequency to 25MHz
-      phy: cadence: Sierra: Use correct dev pointer in cdns_sierra_phy_remove()
-      dt-bindings: phy: Document WIZ (SERDES wrapper) bindings
-      phy: ti: j721e-wiz: Add support for WIZ module present in TI J721E SoC
-
-Krzysztof Kozlowski (3):
-      phy: hisilicon: Fix Kconfig indentation
-      phy: mediatek: Fix Kconfig indentation
-      phy: Enable compile testing for some of drivers
-
-Ma Feng (1):
-      phy: lantiq: vrx200-pcie: Remove unneeded semicolon
-
-Maxime Ripard (1):
-      dt-bindings: usb: Convert Allwinner A80 USB PHY controller to a schema
-
-Nathan Chancellor (1):
-      phy: qualcomm: Adjust indentation in read_poll_timeout
-
-Nishad Kamdar (1):
-      phy: qcom-qmp: Use the correct style for SPDX License Identifier
-
-Ramuthevar Vadivel Murugan (3):
-      dt-bindings: phy: intel-emmc-phy: Add YAML schema for LGM eMMC PHY
-      phy: intel-lgm-emmc: Add support for eMMC PHY
-      phy: intel-lgm-emmc: Fix warning by adding missing MODULE_LICENSE
-
-Roger Quadros (3):
-      phy: cadence: Sierra: add phy_reset hook
-      dt-bindings: phy: ti,phy-j721e-wiz: Add Type-C dir GPIO
-      phy: ti: j721e-wiz: Manage typec-gpio-dir
-
-Vinod Koul (4):
-      phy: qcom-qmp: Use register defines
-      phy: qcom-qmp: remove duplicate powerdown write
-      phy: qcom-qmp: remove no_pcs_sw_reset for sm8150
-      phy: qcom-qmp: Add SW reset register
-
-Wei Yongjun (1):
-      phy: ti: j721e-wiz: Fix return value check in wiz_probe()
-
-Yuti Amonkar (1):
-      phy: Add DisplayPort configuration options
-
- Documentation/devicetree/bindings/phy/allwinner,sun9i-a80-usb-phy.yaml | 135 ++++++++++++++++++
- Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt         |  69 +++++++--
- Documentation/devicetree/bindings/phy/brcm-sata-phy.txt                |   1 +
- Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml          |  56 ++++++++
- Documentation/devicetree/bindings/phy/phy-cadence-sierra.txt           |  13 +-
- Documentation/devicetree/bindings/phy/rockchip,px30-dsi-dphy.yaml      |   5 -
- Documentation/devicetree/bindings/phy/sun9i-usb-phy.txt                |  37 -----
- Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml            | 221 +++++++++++++++++++++++++++++
- drivers/phy/Kconfig                                                    |   1 +
- drivers/phy/Makefile                                                   |   1 +
- drivers/phy/allwinner/Kconfig                                          |   3 +-
- drivers/phy/broadcom/Kconfig                                           |   4 +-
- drivers/phy/broadcom/Makefile                                          |   2 +-
- drivers/phy/broadcom/phy-brcm-sata.c                                   | 120 ++++++++++++++++
- drivers/phy/broadcom/phy-brcm-usb-init-synopsys.c                      | 414 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
- drivers/phy/broadcom/phy-brcm-usb-init.c                               | 226 +++++++++++++++---------------
- drivers/phy/broadcom/phy-brcm-usb-init.h                               | 148 ++++++++++++++++++--
- drivers/phy/broadcom/phy-brcm-usb.c                                    | 269 ++++++++++++++++++++++++++++-------
- drivers/phy/cadence/phy-cadence-sierra.c                               | 709 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------------------
- drivers/phy/hisilicon/Kconfig                                          |  16 +--
- drivers/phy/intel/Kconfig                                              |   9 ++
- drivers/phy/intel/Makefile                                             |   2 +
- drivers/phy/intel/phy-intel-emmc.c                                     | 284 +++++++++++++++++++++++++++++++++++++
- drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c                            |   2 +-
- drivers/phy/marvell/Kconfig                                            |   8 +-
- drivers/phy/mediatek/Kconfig                                           |  25 ++--
- drivers/phy/phy-core.c                                                 |  49 ++++++-
- drivers/phy/qualcomm/phy-qcom-apq8064-sata.c                           |   2 +-
- drivers/phy/qualcomm/phy-qcom-qmp.c                                    |   7 +-
- drivers/phy/qualcomm/phy-qcom-qmp.h                                    |   2 +-
- drivers/phy/rockchip/Kconfig                                           |   1 +
- drivers/phy/rockchip/phy-rockchip-inno-dsidphy.c                       | 319 +++++++++++++-----------------------------
- drivers/phy/samsung/Kconfig                                            |   8 +-
- drivers/phy/ti/Kconfig                                                 |  19 ++-
- drivers/phy/ti/Makefile                                                |   1 +
- drivers/phy/ti/phy-j721e-wiz.c                                         | 959 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- drivers/phy/ti/phy-ti-pipe3.c                                          |  18 +--
- drivers/usb/renesas_usbhs/rcar2.c                                      |   2 +-
- drivers/usb/renesas_usbhs/rza2.c                                       |   2 +-
- include/dt-bindings/phy/phy.h                                          |   1 +
- include/linux/phy/phy-dp.h                                             |  95 +++++++++++++
- include/linux/phy/phy.h                                                |  14 +-
- 42 files changed, 3635 insertions(+), 644 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun9i-a80-usb-phy.yaml
- create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
- delete mode 100644 Documentation/devicetree/bindings/phy/sun9i-usb-phy.txt
- create mode 100644 Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
- create mode 100644 drivers/phy/broadcom/phy-brcm-usb-init-synopsys.c
- create mode 100644 drivers/phy/intel/Kconfig
- create mode 100644 drivers/phy/intel/Makefile
- create mode 100644 drivers/phy/intel/phy-intel-emmc.c
- create mode 100644 drivers/phy/ti/phy-j721e-wiz.c
- create mode 100644 include/linux/phy/phy-dp.h
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJyaW5nIDxyb2Jo
+QGtlcm5lbC5vcmc+DQo+IFNlbnQ6IDIwMjDE6jHUwjE3yNUgMzoyOQ0KPiBUbzogSm9ha2ltIFpo
+YW5nIDxxaWFuZ3FpbmcuemhhbmdAbnhwLmNvbT4NCj4gQ2M6IG1hekBrZXJuZWwub3JnOyBqYXNv
+bkBsYWtlZGFlbW9uLm5ldDsgdGdseEBsaW51dHJvbml4LmRlOw0KPiByb2JoK2R0QGtlcm5lbC5v
+cmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBzaGF3bmd1b0BrZXJuZWwub3JnOw0KPiBzLmhhdWVy
+QHBlbmd1dHJvbml4LmRlOyBrZXJuZWxAcGVuZ3V0cm9uaXguZGU7IGZlc3RldmFtQGdtYWlsLmNv
+bTsNCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5l
+bC5vcmc7DQo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgZGwtbGludXgt
+aW14IDxsaW51eC1pbXhAbnhwLmNvbT47IEFuZHkNCj4gRHVhbiA8ZnVnYW5nLmR1YW5AbnhwLmNv
+bT47IEpvYWtpbSBaaGFuZyA8cWlhbmdxaW5nLnpoYW5nQG54cC5jb20+DQo+IFN1YmplY3Q6IFJl
+OiBbUEFUQ0ggVjUgMS8yXSBkdC1iaW5kaW5ncy9pcnE6IGFkZCBiaW5kaW5nIGZvciBOWFAgSU5U
+TVVYDQo+IGludGVycnVwdCBtdWx0aXBsZXhlcg0KPiANCj4gT24gV2VkLCAxNSBKYW4gMjAyMCAx
+MzowNDoyMyArMDgwMCwgSm9ha2ltIFpoYW5nIHdyb3RlOg0KPiA+IFRoaXMgcGF0Y2ggYWRkcyB0
+aGUgRFQgYmluZGluZ3MgZm9yIHRoZSBOWFAgSU5UTVVYIGludGVycnVwdA0KPiA+IG11bHRpcGxl
+eGVyIGZvciBpLk1YOCBmYW1pbHkgU29Dcy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEpvYWtp
+bSBaaGFuZyA8cWlhbmdxaW5nLnpoYW5nQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gIC4uLi9pbnRl
+cnJ1cHQtY29udHJvbGxlci9mc2wsaW50bXV4LnlhbWwgICAgICB8IDY3ICsrKysrKysrKysrKysr
+KysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDY3IGluc2VydGlvbnMoKykNCj4gPiAgY3JlYXRl
+IG1vZGUgMTAwNjQ0DQo+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2ludGVy
+cnVwdC1jb250cm9sbGVyL2ZzbCxpbnRtdXgueWFtbA0KPiA+DQo+IA0KPiBNeSBib3QgZm91bmQg
+ZXJyb3JzIHJ1bm5pbmcgJ21ha2UgZHRfYmluZGluZ19jaGVjaycgb24geW91ciBwYXRjaDoNCj4g
+DQo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3NpbXBsZS1mcmFt
+ZWJ1ZmZlci5leGFtcGxlLmR0czoyDQo+IDEuMTYtMzcuMTE6IFdhcm5pbmcgKGNob3Nlbl9ub2Rl
+X2lzX3Jvb3QpOiAvZXhhbXBsZS0wL2Nob3NlbjogY2hvc2VuIG5vZGUNCj4gbXVzdCBiZSBhdCBy
+b290IG5vZGUNCj4gRXJyb3I6DQo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9p
+bnRlcnJ1cHQtY29udHJvbGxlci9mc2wsaW50bXV4LmV4YW1wbGUuZHQNCj4gczoyMC4yNy0yOCBz
+eW50YXggZXJyb3IgRkFUQUwgRVJST1I6IFVuYWJsZSB0byBwYXJzZSBpbnB1dCB0cmVlDQo+IHNj
+cmlwdHMvTWFrZWZpbGUubGliOjMwMDogcmVjaXBlIGZvciB0YXJnZXQNCj4gJ0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9mc2wsaW50bXV4LmV4
+YW1wbGUuZA0KPiB0LnlhbWwnIGZhaWxlZA0KPiBtYWtlWzFdOiAqKioNCj4gW0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9mc2wsaW50bXV4LmV4
+YW1wbGUuZA0KPiB0LnlhbWxdIEVycm9yIDENCj4gTWFrZWZpbGU6MTI2MzogcmVjaXBlIGZvciB0
+YXJnZXQgJ2R0X2JpbmRpbmdfY2hlY2snIGZhaWxlZA0KPiBtYWtlOiAqKiogW2R0X2JpbmRpbmdf
+Y2hlY2tdIEVycm9yIDINCj4gDQo+IFNlZQ0KPiBodHRwczovL2V1cjAxLnNhZmVsaW5rcy5wcm90
+ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cHMlM0ElMkYlMkZwYXRjaHcNCj4gb3JrLm96bGFi
+cy5vcmclMkZwYXRjaCUyRjEyMjMxNzImYW1wO2RhdGE9MDIlN0MwMSU3Q3FpYW5ncWluZy56aGFu
+DQo+IGclNDBueHAuY29tJTdDYWFkZTQyZTI1NmYyNDhkYzJlZjcwOGQ3OWFiYTY5NDElN0M2ODZl
+YTFkM2JjMmI0YzYNCj4gZmE5MmNkOTljNWMzMDE2MzUlN0MwJTdDMCU3QzYzNzE0Nzk5NzcyNjg4
+ODI2NSZhbXA7c2RhdGE9N29wc1pPDQo+IFYlMkZLeklKQmw0TW9FRVNDWVphJTJCamx6S0tvZkc2
+bTg0U3NmQUhnJTNEJmFtcDtyZXNlcnZlZD0wDQo+IFBsZWFzZSBjaGVjayBhbmQgcmUtc3VibWl0
+Lg0KSGkgUm9iLA0KDQptYWtlIGR0X2JpbmRpbmdfY2hlY2sgRFRfU0NIRU1BX0ZJTEVTPURvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9mc2wsaW50
+bXV4LnlhbWwNCiAgQ0hLRFQgICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW50
+ZXJydXB0LWNvbnRyb2xsZXIvZnNsLGludG11eC55YW1sDQogIFNDSEVNQSAgRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Byb2Nlc3NlZC1zY2hlbWEueWFtbA0KICBEVEMgICAgIERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9mc2ws
+aW50bXV4LmV4YW1wbGUuZHQueWFtbA0KICBDSEVDSyAgIERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9mc2wsaW50bXV4LmV4YW1wbGUuZHQueWFt
+bA0KDQpJIGRvbid0IGtub3cgRFRDIGFsc28gbmVlZCBwYXNzIHRoZSBjaGVjaywgc29ycnkgZm9y
+IHRoYXQuIEkgd2lsbCByZS1zZW5kIHRoZSBwYXRjaCBzZXQuDQoNCkJlc3QgUmVnYXJkcywNCkpv
+YWtpbSBaaGFuZw0K
