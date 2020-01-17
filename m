@@ -2,147 +2,105 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7232C33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 04:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D593C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 04:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB70D20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 04:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 680D320748
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 04:10:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KWRYeoGP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NfiCKMOX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729290AbgAQEHh (ORCPT
+        id S1729673AbgAQEKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 23:07:37 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:33083 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727023AbgAQEHg (ORCPT
+        Thu, 16 Jan 2020 23:10:19 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:39184 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729340AbgAQEKT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 23:07:36 -0500
-Received: by mail-io1-f66.google.com with SMTP id z8so24516369ioh.0;
-        Thu, 16 Jan 2020 20:07:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=RQQ9qmJfALB3jvs3h7v5mfdPDr+Bl2r17SesMRcqOsE=;
-        b=KWRYeoGPAAAN/w8oxb7L/g32DsecNbKN0roRQUG2kHc60k8ZC66yPQbKI8L4/Ma72M
-         TytNd9yV4gxD5xT9wzGifg+IL68Ni1AuM5UjCUtCJAHTE5hoedYcZMwnBb5mpl62opfZ
-         YpzjHt+VPe6wctZrdmw/1oLcOkiZgrv8ekIwymO8Yjs+dLlN+2QRjeU6L2WoMd04JuH5
-         0fzh11K1PqQZ+906r86GJbfXJM114Z0ixML2cBvsm/lH62gZDxQWIVzlULsgT5qYJdaP
-         hNSTu/Hudpd3wcqADf4cVE1CrbTD7Q3WhrU4qHP1US/pLcHrc+bVjU2zjnq4x56nBS96
-         dIxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=RQQ9qmJfALB3jvs3h7v5mfdPDr+Bl2r17SesMRcqOsE=;
-        b=XMiyGWdmgmAl1D59suF57yJTOQizYYYisqikx+1Uvvx8QwrhS71kX0nJsW4pvqcbVE
-         Yc768dcqvV843Fsiaz9Dhrf3w2kw7VxVkFy40yFNB9Dz6NImoqO5dhzYke5TiHMZTm8C
-         1QLB3TDOHYo8lGWMNN6jydpSaPPEa9Kuwm2elTGHw2l6VPfLEdIaYdOuZLvntuGcYLsu
-         S3QRHrwzkEwvSQTILd+hu4zfpfv5X5c99I20FUp1mE9ZKwB1YPN9ECD7FXrkLGueHS4Z
-         vo8qatmigPsmlpRuSrGbgKuqbbcoBwGTn46lXj8c0laNXM3EJ+zBb49LmXGAcmtPv5UM
-         lQgQ==
-X-Gm-Message-State: APjAAAWf/Rc7pbiUR90nlt5Pxs6O61NX2AxM8oL9iq7Rtau41mCLZk2K
-        U4yFVPphIeopIR/SoO1f2CQWqUMn1TG8/pzc8mE=
-X-Google-Smtp-Source: APXvYqwuX6GZteC/eOCDjRdvkjt3g3PCkqJ9DuvH2ogsyQclVDQ+MtnsrsSCBG9/MuRhWMAnZrdY+8AwJG2pv7EGqZk=
-X-Received: by 2002:a6b:ec0f:: with SMTP id c15mr27966363ioh.149.1579234055350;
- Thu, 16 Jan 2020 20:07:35 -0800 (PST)
+        Thu, 16 Jan 2020 23:10:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=KM4jBWrreX7YdYs9/PMtNlfIXwcq6JEXQmTdCdMcdKE=; b=NfiCKMOXXLzXSiHqQtYL6XeHm
+        6mo8pYpAJf3rdBor+acqnZjJX7Zr9BNldK4zJA0RqojzhLXBmPGZ0wGxSrNYlKFsPXJ0wKpTlYhIY
+        xr1rbvYE9DhOL46mm+cT+8PF1z/3yRVwZ8v2MYM5QSMg0Y8eJzoYuJ36bvARy6O7cKMjTA6KjBGj5
+        F/I8Vgc7UDGE7ltMtAPPHSc30BBOPZEyuoj7msXd5G2vOEjIKAhHLzmBTjkmaz1Stt22kRPRbrboD
+        6N3hppDqwXRgqrX4ivw5L1bYyambOTJN1BIrtb52/j/bvAuVka7nV/b6dFwDdIxJ5R4gmY2TYr+CO
+        WWVt7vZOg==;
+Received: from [2601:1c0:6280:3f0::ed68]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1isIxW-0005LR-JB; Fri, 17 Jan 2020 04:10:10 +0000
+Subject: Re: [PATCH 4/5] virtio: introduce a vDPA based transport
+To:     Jason Wang <jasowang@redhat.com>, mst@redhat.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Cc:     tiwei.bie@intel.com, jgg@mellanox.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, lingshan.zhu@intel.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        kevin.tian@intel.com, stefanha@redhat.com, hch@infradead.org,
+        aadam@redhat.com, jakub.kicinski@netronome.com, jiri@mellanox.com,
+        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com
+References: <20200116124231.20253-1-jasowang@redhat.com>
+ <20200116124231.20253-5-jasowang@redhat.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <e71bdbfe-559c-e881-26d4-03080cee42ed@infradead.org>
+Date:   Thu, 16 Jan 2020 20:10:08 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <20200113232212.138327-1-helgaas@kernel.org> <CAK7LNASYynBVaaGROEjy1PC7+9xatO7gf2LTRGG1UOpiXtzENw@mail.gmail.com>
-In-Reply-To: <CAK7LNASYynBVaaGROEjy1PC7+9xatO7gf2LTRGG1UOpiXtzENw@mail.gmail.com>
-Reply-To: bjorn@helgaas.com
-From:   Bjorn Helgaas <bjorn.helgaas@gmail.com>
-Date:   Thu, 16 Jan 2020 22:07:24 -0600
-Message-ID: <CABhMZUVjx-z51FkCNPTKzP3=8m4CBM3cp57ZvMBcMXTfA6ARKw@mail.gmail.com>
-Subject: Re: [PATCH] kconfig: fix documentation typos
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200116124231.20253-5-jasowang@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 8:18 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> On Tue, Jan 14, 2020 at 8:22 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > From: Bjorn Helgaas <bhelgaas@google.com>
-> >
-> > Fix a couple typos in kconfig-language documentation.
-> >
-> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > ---
-> >  Documentation/kbuild/kconfig-language.rst | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/Documentation/kbuild/kconfig-language.rst b/Documentation/kbuild/kconfig-language.rst
-> > index 74bef19f69f0..f547720bd82d 100644
-> > --- a/Documentation/kbuild/kconfig-language.rst
-> > +++ b/Documentation/kbuild/kconfig-language.rst
-> > @@ -594,7 +594,7 @@ The two different resolutions for b) can be tested in the sample Kconfig file
-> >  Documentation/kbuild/Kconfig.recursion-issue-02.
-> >
-> >  Below is a list of examples of prior fixes for these types of recursive issues;
-> > -all errors appear to involve one or more select's and one or more "depends on".
-> > +all errors appear to involve one or more "selects" and one or more "depends on".
->
->
-> I think "selects" is strange here.
->
-> "select" is a Kconfig keyword.
-> select's is intentional, I guess.
->
->
-> Keep it as-is, or perhaps change it into "select" (singular) ?
+Hi,
 
-With rare exceptions, apostrophes are not used to form a plural noun.
+On 1/16/20 4:42 AM, Jason Wang wrote:
+> diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
+> index 9c4fdb64d9ac..b4276999d17d 100644
+> --- a/drivers/virtio/Kconfig
+> +++ b/drivers/virtio/Kconfig
+> @@ -43,6 +43,19 @@ config VIRTIO_PCI_LEGACY
+>  
+>  	  If unsure, say Y.
+>  
+> +config VIRTIO_VDPA
+> +	tristate "vDPA driver for virtio devices"
+> +	depends on VDPA && VIRTIO
+> +	default n
+> +	help
+> +	  This driver provides support for virtio based paravirtual
 
-Maybe it could be recast as "... at least one 'select' attribute and
-at least one 'depends on' attribute"?
+	                                   virtio-based
 
-I'm not quite sure what the intended meaning is, because the table it
-refers to has lines that contain only "depends on" (without "select")
-and also lines that contain only "select" (no "depends on").
+> +	  device driver over vDPA bus. For this to be useful, you need
+> +	  an appropriate vDPA device implementation that operates on a
+> +          physical device to allow the datapath of virtio to be
+
+use tab + 2 spaces above for indentation, not lots of spaces.
+
+> +	  offloaded to hardware.
+> +
+> +	  If unsure, say M.
+> +
+>  config VIRTIO_PMEM
+>  	tristate "Support for virtio pmem driver"
+>  	depends on VIRTIO
 
 
-> >  ============    ===================================
-> >  commit          fix
-> > @@ -656,7 +656,7 @@ the use of the xconfig configurator [1]_. Work should be done to confirm if
-> >  the deduced semantics matches our intended Kconfig design goals.
-> >
-> >  Having well defined semantics can be useful for tools for practical
-> > -evaluation of depenencies, for instance one such use known case was work to
-> > +evaluation of dependencies, for instance one such case was work to
-> >  express in boolean abstraction of the inferred semantics of Kconfig to
-> >  translate Kconfig logic into boolean formulas and run a SAT solver on this to
-> >  find dead code / features (always inactive), 114 dead features were found in
-> > @@ -683,7 +683,7 @@ abstraction the inferred semantics of Kconfig to translate Kconfig logic into
-> >  boolean formulas and run a SAT solver on it [5]_. Another known related project
-> >  is CADOS [6]_ (former VAMOS [7]_) and the tools, mainly undertaker [8]_, which
-> >  has been introduced first with [9]_.  The basic concept of undertaker is to
-> > -exract variability models from Kconfig, and put them together with a
-> > +extract variability models from Kconfig and put them together with a
-> >  propositional formula extracted from CPP #ifdefs and build-rules into a SAT
-> >  solver in order to find dead code, dead files, and dead symbols. If using a SAT
-> >  solver is desirable on Kconfig one approach would be to evaluate repurposing
-> > --
-> > 2.25.0.rc1.283.g88dfdc4193-goog
-> >
->
->
-> --
-> Best Regards
-> Masahiro Yamada
+-- 
+~Randy
+
