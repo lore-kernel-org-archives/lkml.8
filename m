@@ -2,170 +2,105 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F94C47409
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0783C33CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3778E21582
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B80C72082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:14:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579295664;
+	bh=OS7yVO2N6BDDdHCe/tuw7AF3sNjZ1YfY9NXe0Sml+nc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=G0X2h86sTlmPv0h768ize4/iwUkgSuOaUxOtKid2XOF2HNHxl30tdDAfaDlqO9bQE
+	 y2wXEFmMKPwE1Y9duA4DcYL1VzzGgCiLN2CxTs34z1R+yAlWcc9x1yDllNokt3zHBw
+	 xV7v58TwuedRJVoj15uyNmIjAqdXpssMekSOvanA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728899AbgAQVMZ (ORCPT
+        id S1726903AbgAQVOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 16:12:25 -0500
-Received: from asavdk4.altibox.net ([109.247.116.15]:43254 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726925AbgAQVMZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 16:12:25 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
+        Fri, 17 Jan 2020 16:14:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33226 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726587AbgAQVOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 16:14:23 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id E0FCA803CD;
-        Fri, 17 Jan 2020 22:12:18 +0100 (CET)
-Date:   Fri, 17 Jan 2020 22:12:17 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>
-Cc:     Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
-        David Lechner <david@lechnology.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/5] drm/mipi_dbi: Add support for display offsets
-Message-ID: <20200117211217.GA28658@ravnborg.org>
-References: <20200115124548.3951-1-geert+renesas@glider.be>
- <20200115124548.3951-4-geert+renesas@glider.be>
+        by mail.kernel.org (Postfix) with ESMTPSA id 7190820748;
+        Fri, 17 Jan 2020 21:14:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579295662;
+        bh=OS7yVO2N6BDDdHCe/tuw7AF3sNjZ1YfY9NXe0Sml+nc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Y74wESVeAfeNLVHeRVBf/+nfKeyMgbscXlK4eJ6NVy4KMvwkUF9e04+4DegV98Oje
+         aiw2NOlFvwFSeT2VOWw/h53pmLOJY9Bjlcd6UBajXgFwSqxMlib/fQf/RqnFDkZNCs
+         ZNjGlyPzHp4FqcL3o0hvZ/80ZByIBTYbrP3t0350=
+Date:   Fri, 17 Jan 2020 22:14:19 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Topi Miettinen <toiwoton@gmail.com>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] firmware_loader: load files from the mount namespace of
+ init
+Message-ID: <20200117211419.GA2042215@kroah.com>
+References: <bb46ebae-4746-90d9-ec5b-fce4c9328c86@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200115124548.3951-4-geert+renesas@glider.be>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
-        a=3or2sDVh_ekwW7J8m1sA:9 a=WLNlSafAV1l-oZNU:21 a=aATE8E100ZN-Va1G:21
-        a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22 a=pHzHmUro8NiASowvMSCR:22
-        a=xoEH_sTeL_Rfw54TyV31:22
+In-Reply-To: <bb46ebae-4746-90d9-ec5b-fce4c9328c86@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Noralf.
-
-If you could find time to review this patch it would be great.
-I am reluctant to apply it until you have acked/reviewed it.
-
-Thanks in advance,
-
-	Sam
-
-On Wed, Jan 15, 2020 at 01:45:46PM +0100, Geert Uytterhoeven wrote:
-> If the resolution of the TFT display is smaller than the maximum
-> resolution supported by the display controller, the display may be
-> connected to the driver output arrays with a horizontal and/or vertical
-> offset, leading to a shifted image.
+On Fri, Jan 17, 2020 at 08:36:13PM +0200, Topi Miettinen wrote:
+> Hi,
 > 
-> Add support for specifying these offsets.
+> I have an experimental setup where almost every possible system service
+> (even early startup ones) runs in separate namespace, using a dedicated,
+> minimal file system. In process of minimizing the contents of the file
+> systems with regards to modules and firmware files, I noticed that in my
+> system, the firmware files are loaded from three different mount namespaces,
+> those of systemd-udevd, init and systemd-networkd. The logic of the source
+> namespace is not very clear, it seems to depend on the driver, but the
+> namespace of the current process is used.
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> ---
-> v2:
->   - Add Reviewed-by.
-> ---
->  drivers/gpu/drm/drm_mipi_dbi.c | 30 ++++++++++++++++++++----------
->  include/drm/drm_mipi_dbi.h     | 12 ++++++++++++
->  2 files changed, 32 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_mipi_dbi.c b/drivers/gpu/drm/drm_mipi_dbi.c
-> index 16bff1be4b8ac622..27fe81a53c88e338 100644
-> --- a/drivers/gpu/drm/drm_mipi_dbi.c
-> +++ b/drivers/gpu/drm/drm_mipi_dbi.c
-> @@ -238,6 +238,23 @@ int mipi_dbi_buf_copy(void *dst, struct drm_framebuffer *fb,
->  }
->  EXPORT_SYMBOL(mipi_dbi_buf_copy);
->  
-> +static void mipi_dbi_set_window_address(struct mipi_dbi_dev *dbidev,
-> +					unsigned int xs, unsigned int xe,
-> +					unsigned int ys, unsigned int ye)
-> +{
-> +	struct mipi_dbi *dbi = &dbidev->dbi;
-> +
-> +	xs += dbidev->left_offset;
-> +	xe += dbidev->left_offset;
-> +	ys += dbidev->top_offset;
-> +	ye += dbidev->top_offset;
-> +
-> +	mipi_dbi_command(dbi, MIPI_DCS_SET_COLUMN_ADDRESS, (xs >> 8) & 0xff,
-> +			 xs & 0xff, (xe >> 8) & 0xff, xe & 0xff);
-> +	mipi_dbi_command(dbi, MIPI_DCS_SET_PAGE_ADDRESS, (ys >> 8) & 0xff,
-> +			 ys & 0xff, (ye >> 8) & 0xff, ye & 0xff);
-> +}
-> +
->  static void mipi_dbi_fb_dirty(struct drm_framebuffer *fb, struct drm_rect *rect)
->  {
->  	struct drm_gem_object *gem = drm_gem_fb_get_obj(fb, 0);
-> @@ -271,12 +288,8 @@ static void mipi_dbi_fb_dirty(struct drm_framebuffer *fb, struct drm_rect *rect)
->  		tr = cma_obj->vaddr;
->  	}
->  
-> -	mipi_dbi_command(dbi, MIPI_DCS_SET_COLUMN_ADDRESS,
-> -			 (rect->x1 >> 8) & 0xff, rect->x1 & 0xff,
-> -			 ((rect->x2 - 1) >> 8) & 0xff, (rect->x2 - 1) & 0xff);
-> -	mipi_dbi_command(dbi, MIPI_DCS_SET_PAGE_ADDRESS,
-> -			 (rect->y1 >> 8) & 0xff, rect->y1 & 0xff,
-> -			 ((rect->y2 - 1) >> 8) & 0xff, (rect->y2 - 1) & 0xff);
-> +	mipi_dbi_set_window_address(dbidev, rect->x1, rect->x2 - 1, rect->y1,
-> +				    rect->y2 - 1);
->  
->  	ret = mipi_dbi_command_buf(dbi, MIPI_DCS_WRITE_MEMORY_START, tr,
->  				   width * height * 2);
-> @@ -366,10 +379,7 @@ static void mipi_dbi_blank(struct mipi_dbi_dev *dbidev)
->  
->  	memset(dbidev->tx_buf, 0, len);
->  
-> -	mipi_dbi_command(dbi, MIPI_DCS_SET_COLUMN_ADDRESS, 0, 0,
-> -			 ((width - 1) >> 8) & 0xFF, (width - 1) & 0xFF);
-> -	mipi_dbi_command(dbi, MIPI_DCS_SET_PAGE_ADDRESS, 0, 0,
-> -			 ((height - 1) >> 8) & 0xFF, (height - 1) & 0xFF);
-> +	mipi_dbi_set_window_address(dbidev, 0, width - 1, 0, height - 1);
->  	mipi_dbi_command_buf(dbi, MIPI_DCS_WRITE_MEMORY_START,
->  			     (u8 *)dbidev->tx_buf, len);
->  
-> diff --git a/include/drm/drm_mipi_dbi.h b/include/drm/drm_mipi_dbi.h
-> index 67c66f5ee591e80f..33f325f5af2b921f 100644
-> --- a/include/drm/drm_mipi_dbi.h
-> +++ b/include/drm/drm_mipi_dbi.h
-> @@ -109,6 +109,18 @@ struct mipi_dbi_dev {
->  	 */
->  	unsigned int rotation;
->  
-> +	/**
-> +	 * @left_offset: Horizontal offset of the display relative to the
-> +	 *               controller's driver array
-> +	 */
-> +	unsigned int left_offset;
-> +
-> +	/**
-> +	 * @top_offset: Vertical offset of the display relative to the
-> +	 *              controller's driver array
-> +	 */
-> +	unsigned int top_offset;
-> +
->  	/**
->  	 * @backlight: backlight device (optional)
->  	 */
-> -- 
-> 2.17.1
+> So, this patch tries to make things a bit clearer and changes the loading of
+> firmware files only from the mount namespace of init. This may also improve
+> security, though I think that using firmware files as attack vector could be
+> too impractical anyway.
+
+I like this, but:
+
+> Later, it might make sense to make the mount namespace configurable, for
+> example with a new file in
+> /proc/sys/kernel/firmware_config/. That would allow a dedicated file system
+> only for firmware files and those need not be present anywhere else. This
+> configurability would make more sense if made also for kernel modules and
+> /sbin/modprobe. Modules are already loaded from init namespace
+> (usermodehelper uses kthreadd namespace) except when directly loaded by
+> systemd-udevd.
+
+I think you answered your question of why firmware is loaded from the
+namespace of systemd-udevd at times, it happens due to a module being
+asked to be loaded which then called out and asked for firmware as part
+of its probe process.
+
+Now saying that the firmware load namespace is going to be tied always
+to the modprobe namespace is problematic, as we can't guarantee that
+will always happen for all bus and driver types.
+
+So resetting this all back to the init namespace seems to make sense to
+me, and odds are it will not break anything.
+
+But, as you are adding a new firmware feature, any chance you can write
+an additional test to the firmware self-tests so that we can verify that
+this really is working the way you are saying it does, so we can trust
+it and verify it doesn't break in the future?
+
+thanks,
+
+greg k-h
