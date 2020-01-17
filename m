@@ -2,146 +2,130 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A497C33CAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 01:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B89B9C33CAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 01:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30FC42072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 01:32:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DAAF2072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 01:33:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ah4TFo6I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388326AbgAQBcn convert rfc822-to-8bit (ORCPT
+        id S2388414AbgAQBdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 20:32:43 -0500
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2991 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730070AbgAQBcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 20:32:43 -0500
-Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 6C97B6AC903F5DAB9BDA;
-        Fri, 17 Jan 2020 09:32:41 +0800 (CST)
-Received: from DGGEMM506-MBX.china.huawei.com ([169.254.3.174]) by
- DGGEMM401-HUB.china.huawei.com ([10.3.20.209]) with mapi id 14.03.0439.000;
- Fri, 17 Jan 2020 09:32:34 +0800
-From:   "Zengtao (B)" <prime.zeng@hisilicon.com>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-CC:     Linuxarm <linuxarm@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3] cpu-topology: Skip the exist but not possible cpu
- nodes
-Thread-Topic: [PATCH v3] cpu-topology: Skip the exist but not possible cpu
- nodes
-Thread-Index: AQHVzA+GWMm+RLGKHUGB0ShIe4jJg6fssZOAgAFbuYA=
-Date:   Fri, 17 Jan 2020 01:32:33 +0000
-Message-ID: <678F3D1BB717D949B966B68EAEB446ED340EFACC@DGGEMM506-MBX.china.huawei.com>
-References: <1579139255-29262-1-git-send-email-prime.zeng@hisilicon.com>
- <20200116122420.GA40666@bogus>
-In-Reply-To: <20200116122420.GA40666@bogus>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.74.221.187]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 16 Jan 2020 20:33:24 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:45155 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730070AbgAQBdY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 20:33:24 -0500
+Received: by mail-lf1-f65.google.com with SMTP id 203so17067914lfa.12;
+        Thu, 16 Jan 2020 17:33:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=Vv41OytkG2lm8SDKlOhg/H6yihO/V8R0f5z4QUp0HiY=;
+        b=Ah4TFo6IAW4T2As4EOtGEwjyCC4a/sieRz+Y9ll6/X1YfVcWC45I32GbSnGbdYDCbA
+         PmwYVbh8mD6sH146gnqDd9pPR1E6Wq/Nq+0qVafy5jYXBBII88hwa9iBwTiZV7vqrRId
+         1Wrii4CzY7JPvxuGQgCME78phMA22NwqzOojZy+oSzxK2ADHsH9kRkkDpFjXeTZBm5zf
+         WF21SQmP/Gxcg9oxq7ylsx5S8xywWyAqoRb/aloJyaCiP1+z5T1+uaxRxL0c30rjTESI
+         4OyJorxOeoHIDMq1K0uow3O9+S8DnQ/2PY5qoNGc/ioUXKJ3s4FZHjgaA2QdicF47S1s
+         EFLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Vv41OytkG2lm8SDKlOhg/H6yihO/V8R0f5z4QUp0HiY=;
+        b=uOi99bAAaazzG0IL3qwUG7I/1PX17QvwtvsAWqV+cFx72PmTaQtrLm14oWTW/+REP3
+         UJfDDnWfOuJsqJHyDz5BK1SWQ35SolbWhd/d0WYv2P277XlbiJRhoFsT/qAKlssyJL7z
+         ekRoQ7bjprYT8YJXE9PZVGHU2JVnpXzZrW/0oouhhRnMBgNGhN2hS80X6caW0T6b7S0m
+         uRR6zoqujdUkBmDM4GgXmNN+PRHK5+k3CsyVVv46lqhqYsZy9s3CMfIlvXdnxWPsjd6j
+         lPjV0m821Nph+ZapwZfRvk9niqYRxC0kHHHVN28MA0OZcgCZRd1FK4OYTtSTcUx7/zz+
+         lydw==
+X-Gm-Message-State: APjAAAU1gzFLg5lnMN1vHF7RTF/zrT/uWNJk+f/edFWv4HwYG24VJ/wm
+        v9xXBAPyuTjS8i3gp+q/oQ4=
+X-Google-Smtp-Source: APXvYqxw8NkIQQimSy+3i2QsgTXNgXe3GdPb4+CIflp9GmK5A8gUyzNBZXzEBOPS4cO2XeJFaBceUQ==
+X-Received: by 2002:a19:c1c1:: with SMTP id r184mr4172932lff.128.1579224801780;
+        Thu, 16 Jan 2020 17:33:21 -0800 (PST)
+Received: from localhost.localdomain ([109.126.145.157])
+        by smtp.gmail.com with ESMTPSA id q10sm11608696ljj.60.2020.01.16.17.33.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 17:33:21 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>, willy@infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] fs: optimise kiocb_set_rw_flags()
+Date:   Fri, 17 Jan 2020 04:32:37 +0300
+Message-Id: <5328b35d948ea2a3aa5df2b1d740c7cb1f38c846.1579224594.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <8cecd243-38aa-292d-15cd-49b485f9253f@gmail.com>
+References: <8cecd243-38aa-292d-15cd-49b485f9253f@gmail.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Sudeep Holla [mailto:sudeep.holla@arm.com]
-> Sent: Thursday, January 16, 2020 8:25 PM
-> To: Zengtao (B)
-> Cc: Linuxarm; Greg Kroah-Hartman; Rafael J. Wysocki; Sudeep Holla;
-> linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH v3] cpu-topology: Skip the exist but not possible cpu
-> nodes
-> 
-> Sorry for being pedantic and not mentioning this earlier. Can you
-> improve
-> the $subject. I prefer:
-> 
-> cpu-topology: Don't error on more than CONFIG_NR_CPUS CPUs in
-> device tree
-> 
-> On Thu, Jan 16, 2020 at 09:47:35AM +0800, Zeng Tao wrote:
-> > When CONFIG_NR_CPUS is smaller than the cpu nodes defined in the
-> device
-> > tree, all the cpu nodes parsing will fail.
-> > And this is not reasonable for a legal device tree configs.
-> > In this patch, skip such cpu nodes rather than return an error.
-> >
-> 
-> Also the commit log to be:
-> "
-> When the kernel is configured with CONFIG_NR_CPUS smaller than the
-> number of CPU nodes in the device tree(DT), all the CPU nodes parsing
-> done to fetch topology information will fail. This is not reasonable
-> as it is legal to have all the physical CPUs in the system in the DT.
-> 
-> Let us just skip such CPU DT nodes that are not used in the kernel
-> rather than returning an error.
-> "
-> > Signed-off-by: Zeng Tao <prime.zeng@hisilicon.com>
-> > ---
-> > Changelog:
-> > v2->v3:
-> >  -Fix the Review comments by sudeep, including fix typo, remove
-> redundant check
-> >  logic, change the warning print level etc.
-> > v1->v2:
-> >  -Remove redundant -ENODEV assignment in get_cpu_for_node
-> >  -Add comment to describe the get_cpu_for_node return values
-> >  -Add skip process for cpu threads
-> >  -Update the commit log with more detail
-> > ---
-> >  drivers/base/arch_topology.c | 20 +++++++++++++++-----
-> >  1 file changed, 15 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/base/arch_topology.c
-> b/drivers/base/arch_topology.c
-> > index 5fe44b3..d4302a1 100644
-> > --- a/drivers/base/arch_topology.c
-> > +++ b/drivers/base/arch_topology.c
-> > @@ -248,6 +248,16 @@ core_initcall(free_raw_capacity);
-> >  #endif
-> >
-> >  #if defined(CONFIG_ARM64) || defined(CONFIG_RISCV)
-> > +/*
-> > + * This function returns the logic cpu number of the node.
-> > + * There are basically three kinds of return values:
-> > + * (1) logic cpu number which is > 0.
-> > + * (2) -ENODEV when the node is valid one which can be found in the
-> device tree
-> > + * but there is no possible cpu nodes to match, when the
-> CONFIG_NR_CPUS is
-> > + * smaller than cpus node numbers in device tree, this will happen.
-> It's
-> > + * suggested to just ignore this case.
-> 
-> I prefer (2) to be reword as below:
-> "
-> -ENODEV when the device tree(DT) node is valid and found in the DT but
-> there is no possible logical CPU in the kernel to match. This happens
-> when CONFIG_NR_CPUS is configure to be smaller than the number of
-> CPU
-> nodes in DT. We need to just ignore this case.
-> "
-> 
-> With all these changes you can stick:
-> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-> 
-OK, I will take the above suggestions, thanks for the patience, ^_^
+kiocb_set_rw_flags() generates a poor code with several memory writes
+and a lot of jumps. Help compilers to optimise it.
 
-Regards
-Zengtao 
-> --
-> Regards,
-> Sudeep
+Tested with gcc 9.2 on x64-86, and as a result, it its output now is a
+plain code without jumps accumulating in a register before a memory
+write.
+
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+---
+
+v2: check for 0 flags in advance (Matthew Wilcox)
+
+ include/linux/fs.h | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 98e0349adb52..22b46fc8fdfa 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3402,22 +3402,28 @@ static inline int iocb_flags(struct file *file)
+ 
+ static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
+ {
++	int kiocb_flags = 0;
++
++	if (!flags)
++		return 0;
+ 	if (unlikely(flags & ~RWF_SUPPORTED))
+ 		return -EOPNOTSUPP;
+ 
+ 	if (flags & RWF_NOWAIT) {
+ 		if (!(ki->ki_filp->f_mode & FMODE_NOWAIT))
+ 			return -EOPNOTSUPP;
+-		ki->ki_flags |= IOCB_NOWAIT;
++		kiocb_flags |= IOCB_NOWAIT;
+ 	}
+ 	if (flags & RWF_HIPRI)
+-		ki->ki_flags |= IOCB_HIPRI;
++		kiocb_flags |= IOCB_HIPRI;
+ 	if (flags & RWF_DSYNC)
+-		ki->ki_flags |= IOCB_DSYNC;
++		kiocb_flags |= IOCB_DSYNC;
+ 	if (flags & RWF_SYNC)
+-		ki->ki_flags |= (IOCB_DSYNC | IOCB_SYNC);
++		kiocb_flags |= (IOCB_DSYNC | IOCB_SYNC);
+ 	if (flags & RWF_APPEND)
+-		ki->ki_flags |= IOCB_APPEND;
++		kiocb_flags |= IOCB_APPEND;
++
++	ki->ki_flags |= kiocb_flags;
+ 	return 0;
+ }
+ 
+-- 
+2.24.0
+
