@@ -2,102 +2,114 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A11C33CB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD65C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C39F206D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:24:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C50292083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:24:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NG/bBZ9x"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="b4Mr7Ihr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729188AbgAQSYN (ORCPT
+        id S1729247AbgAQSYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 13:24:13 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43330 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726970AbgAQSYM (ORCPT
+        Fri, 17 Jan 2020 13:24:19 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:37856 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726970AbgAQSYS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 13:24:12 -0500
-Received: by mail-pf1-f196.google.com with SMTP id x6so12309629pfo.10;
-        Fri, 17 Jan 2020 10:24:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dZq4930H9HujJy04y88tu8oZfEIDfkU1+0+vk4EgxTk=;
-        b=NG/bBZ9xt5g9xcqgnyHR4u+N+LkBsrI+BB+q+EzgjQFYNsPWuGmYkwmAWpvfFhxU3G
-         hdQMFqfOLdO3y3NvlwAQaic7RwMAhfIf/Ar1LAeJOjxvB1UhpEDNYR2mkek1zAEqa5cR
-         c6mzvmoG0Xl4rncgYPfA3xyx1YxZnckNwJbCL2ommLHjUfLYxL1TPdbjiaK/I2S7CctC
-         NvbTyHnpS7U5XIhdI3+4cV9y4ePt/CPHDqCHhcVaxSbwPeLQUJqFR/vcZzUQG0O15ddP
-         g41Nv3n9k4dFlpPuPK5RdAhYWSiKtMQBtJIJlBGDJi5jzQqeriLfjO+D5sSV+ixV8Q5D
-         JO/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dZq4930H9HujJy04y88tu8oZfEIDfkU1+0+vk4EgxTk=;
-        b=afralLiHjqmzN8qSILru28pepTnCIffwDE4OAhW00RbBY1b3Ry1o5dph7Xd+8PJ6DX
-         F4CXo6xnjp56z9Ljo4sGNsW+CMMFmDoNXjtljH0aR6tEl4C30+vH8s9LYBneeQ0JkLOi
-         KeWucy53zJ+uEDwmNFSzbRjlmFbSo7orc56VYQGHcNNoPdXdbW/py3e9EknirZPI4lFd
-         t/4gRDpwwpMRO3MAHIv9YVrQFfZ2eRq7Pm1ZSdlLb0OSQo8xfzefJvsEUY48oO1Pp4+3
-         WEUUA5vRK1XgJMH8ZTADmG+oBeEIaPBav3xX6qyDkE1e8OfZR65kZjf+zEdS4vSpTH2p
-         uHQg==
-X-Gm-Message-State: APjAAAXjxqnggnXkVkjlLok7v71gMU78p7TCJhNhwcI1KW4f5nr6pwc4
-        oJwWkVR9jr0I3q5GyFSwkdc=
-X-Google-Smtp-Source: APXvYqwqwtjiy/0ADuAQYaj/8wr83Ow+Ynf/qWks0ep1fuSe0WQLg9Hb44mfoLAT+0d/JXjA/BTNug==
-X-Received: by 2002:a63:fc57:: with SMTP id r23mr45446402pgk.71.1579285451964;
-        Fri, 17 Jan 2020 10:24:11 -0800 (PST)
-Received: from ?IPv6:2001:4898:d8:28:a811:24b6:1823:a6d9? ([2001:4898:80e8:8:2821:24b6:1823:a6d9])
-        by smtp.gmail.com with ESMTPSA id s18sm30103344pfh.179.2020.01.17.10.24.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jan 2020 10:24:11 -0800 (PST)
-Subject: Re: [PATCH v9 2/2] EDAC: add EDAC driver for DMC520
-To:     Scott Branden <scott.branden@broadcom.com>,
-        Borislav Petkov <bp@alien8.de>,
-        James Morse <james.morse@arm.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-edac@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        sashal@kernel.org, hangl@microsoft.com,
-        Lei Wang <lewan@microsoft.com>, shji@microsoft.com,
-        ruizhao@microsoft.com, Yuqing Shen <yuqing.shen@broadcom.com>,
-        ray.jui@broadcom.com, wangglei@gmail.com
-References: <6a462190-0af2-094a-daa8-f480d54a1fbf@gmail.com>
- <aa80b8a5-5297-91c6-6410-99e43b53bd20@broadcom.com>
-From:   Shiping Ji <shiping.linux@gmail.com>
-Message-ID: <d05f6394-e076-6c99-965a-28444c0f24f9@gmail.com>
-Date:   Fri, 17 Jan 2020 10:24:10 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Fri, 17 Jan 2020 13:24:18 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00HIDFPF186359;
+        Fri, 17 Jan 2020 18:24:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=V6jdRO8DhqcENdZcDjhcv4ayNKUxDX1LtbH6Da7E+34=;
+ b=b4Mr7Ihr0XV9WdlwaWg34Hl0DTRKBlJWqerwaqJco3cCtBY7/FeDhy6hUVpcVsto44uK
+ 6yX0cRD7SwWdMna9wbQ5LCIEnTwRD6/QKS77/hPrJxhmebfvn+9HJq1yWHKqOTHAKC7l
+ nC3zc6dRW+WJbKy7zpM2na1+VI0W39bNZ+L6OKzs/x05DecBuD9+unYJX2FK22B3wEpK
+ ZEMWL2dfG1bxlwt0ynLP1mLqpziNw6UJose15+KzmDa80uS0XexrsIFD0dRfTESCaWHG
+ 4CXVQP+bunQ/dSk35jRca/uY6pQ+CsImV4gsmNOzyPeuyx9CIo6WyJfMxkC4jw/pgovm iA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2xf74st9er-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Jan 2020 18:24:08 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00HIAmtU141255;
+        Fri, 17 Jan 2020 18:24:07 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2xk24ff8bm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Jan 2020 18:24:07 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00HIO6VS005836;
+        Fri, 17 Jan 2020 18:24:06 GMT
+Received: from [10.209.227.41] (/10.209.227.41)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 17 Jan 2020 10:24:05 -0800
+Subject: Re: [PATCH v2] drivers: soc: ti: knav_qmss_queue: Pass lockdep
+ expression to RCU lists
+To:     Amol Grover <frextrite@gmail.com>, arm-soc <arm@kernel.org>
+Cc:     Santosh Shilimkar <ssantosh@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+References: <20200117133048.31708-1-frextrite@gmail.com>
+From:   santosh.shilimkar@oracle.com
+Organization: Oracle Corporation
+Message-ID: <5d77df7f-8693-0232-dbfe-0acfc37e040f@oracle.com>
+Date:   Fri, 17 Jan 2020 10:24:04 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <aa80b8a5-5297-91c6-6410-99e43b53bd20@broadcom.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200117133048.31708-1-frextrite@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9503 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=945
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001170142
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9503 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001170142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/16/2020 4:31 PM, Scott Branden wrote:
-> Hi Shiping,
+On 1/17/20 5:30 AM, Amol Grover wrote:
+> inst->handles is traversed using list_for_each_entry_rcu
+> outside an RCU read-side critical section but under the protection
+> of knav_dev_lock.
 > 
-> Here is another small change to cleanup.
->> +    } else {
->> +        memset(info, 0, sizeof(struct ecc_error_info));
-> This should be sizeof(*info), not sizeof(struct ecc_error_info)
-> for better programming to allow info to change type in the future
-> without the code changing.
+> Hence, add corresponding lockdep expression to silence false-positive
+> lockdep warnings, and harden RCU lists.
+> 
+> Add macro for the corresponding lockdep expression.
+> 
+> Signed-off-by: Amol Grover <frextrite@gmail.com>
+> ---
+> v2:
+> - Remove rcu_read_lock_held() from lockdep expression since it is
+>    implicitly checked for.
+> 
+Looks fine to me.
 
-Yes, two occurrences will be replaced in the next patch, thanks!
+Hi Olof, Arnd,
+Can you please pick this one and apply to your driver-soc branch ?
+I already sent out pull request and hence the request.
 
--- 
-Best regards,
-Shiping Ji
+regards,
+Santosh
