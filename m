@@ -2,184 +2,105 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 152D7C33CAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 01:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B7BC33CAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 01:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC62020728
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 01:29:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 831AE20728
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 01:29:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388230AbgAQB3s (ORCPT
+        id S2388281AbgAQB3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 20:29:48 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:54112 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730070AbgAQB3q (ORCPT
+        Thu, 16 Jan 2020 20:29:52 -0500
+Received: from ZXSHCAS1.zhaoxin.com ([203.148.12.81]:54065 "EHLO
+        ZXSHCAS1.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730070AbgAQB3t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 20:29:46 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1isGS9-0006Qz-2F; Fri, 17 Jan 2020 02:29:37 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 50722100C19; Fri, 17 Jan 2020 02:29:36 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org
-Cc:     chenhc@lemote.com, paul.burton@mips.com,
-        linux-kernel@vger.kernel.org, maz@kernel.org,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: Re: [PATCH v1 1/2] genirq: Check for level based percpu irq
-In-Reply-To: <20200117001706.40620-1-jiaxun.yang@flygoat.com>
-References: <20200113101251.37471-1-jiaxun.yang@flygoat.com> <20200117001706.40620-1-jiaxun.yang@flygoat.com>
-Date:   Fri, 17 Jan 2020 02:29:36 +0100
-Message-ID: <875zhaeupr.fsf@nanos.tec.linutronix.de>
+        Thu, 16 Jan 2020 20:29:49 -0500
+Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHCAS1.zhaoxin.com
+ (10.28.252.161) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Fri, 17 Jan
+ 2020 09:29:46 +0800
+Received: from [10.32.64.11] (10.32.64.11) by zxbjmbx1.zhaoxin.com
+ (10.29.252.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Fri, 17 Jan
+ 2020 09:29:39 +0800
+Subject: Re: [PATCH] x86/speculation/spectre_v2: Exclude Zhaoxin CPUs from
+ SPECTRE_V2
+To:     Thomas Gleixner <tglx@linutronix.de>, <mingo@redhat.com>,
+        <bp@alien8.de>, <hpa@zytor.com>, <x86@kernel.org>,
+        <luto@kernel.org>, <pawan.kumar.gupta@linux.intel.com>,
+        <peterz@infradead.org>, <fenghua.yu@intel.com>,
+        <vineela.tummalapalli@intel.com>, <linux-kernel@vger.kernel.org>
+CC:     <DavidWang@zhaoxin.com>, <CooperYan@zhaoxin.com>,
+        <QiyuanWang@zhaoxin.com>, <HerryYang@zhaoxin.com>
+References: <1579146434-2668-1-git-send-email-TonyWWang-oc@zhaoxin.com>
+ <87r1zzuy48.fsf@nanos.tec.linutronix.de>
+From:   Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+Message-ID: <b61738fe-4a2f-db39-4740-8c4a4ee5d91d@zhaoxin.com>
+Date:   Fri, 17 Jan 2020 09:29:45 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <87r1zzuy48.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.32.64.11]
+X-ClientProxiedBy: zxbjmbx1.zhaoxin.com (10.29.252.163) To
+ zxbjmbx1.zhaoxin.com (10.29.252.163)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jiaxun Yang <jiaxun.yang@flygoat.com> writes:
-> MIPS processors implemented their IPI IRQ and CPU interrupt line
-> as level triggered IRQ. However, our current percpu_irq flow is trying
-> do it in a level triggered manner.
-
-So what are you trying to solve? The CPU uses level type and the per cpu
-irq flow does the same. I can't find the problem with that.
-
-> Thus we attempt to determine whether it is or not level triggered type by
-> checking if both ack and eoi operation not exist. And handle it in
-> mask/unmask way.
-
-What? No. This is fundamentally wrong.
-
-percpu interrupts which are used for IPIs/per CPU timers/PERF have the
-the following semantics:
-
- 1) No serialization required because the interrupt cannot happen
-    concurrently on the same CPU
-
- 2) The interrupt handler is strictly hard interrupt context. There
-    can't be a threaded handler associated to it.
-
- 3) The interrupt hardware interaction is reduced to the absolute minimum
-    depending on the trigger type of the relevant interrupt controller.
-
-Now #3 is the interesting one here and there are the following cases:
-
- A) Edge type
-
-    Edge type interrupts are events which are triggered once when the
-    level of the interrupt line changes. Depending on the implementation
-    and configuration of the interrupt controller they react on either
-    one direction of level change (low -> high, high ->low) or on both,
-
-    They require that the interrupt is acked at the interrupt controller
-    _before_ the handler runs. That's required because otherwise the
-    device could issue a new interrupt after the initial one has been
-    handled and before the ack was issued. That ack would then clear the
-    new interrupt which would get lost and potentially starve the device
-    forever.
-
-    See handle_edge_irq()
-
-    Edge type interrupts are also not suitable for interrupt sharing.
-
-    Note, that MSI interrupts are edge type because the interrupt
-    message is only sent once when the event happens.
-
- B) Level type
-
-    Level type interrupts react on a static level state. If the
-    interrupt line has the implementation/configuration defined level
-    then the interrupt is delivered to the CPU up to the point where the
-    interrupt line returns to the inactive level.
-
-    For regular operation they usually require that the interrupt is
-    masked before the handler runs and unmasked after the handler
-    completes. This is required to prevent interrupt storms in case the
-    handler reenables interrupts at the CPU level which is not relevant
-    for Linux unless the interrupt handler is threaded. For threaded
-    handlers the line must be masked until the thread completes.
-    
-    They are lossless because if the interrupt is reactivated after
-    handling the initial one before the unmask of the line happens it is
-    immediately delivered to the CPU again after the unmask takes place.
-
-    Level interrupts can be shared lossless. (Note that interrupt
-    sharing is a design fail from a performance perspective because the
-    handling requires that all devices which share the same line need to
-    be polled whether they actually issued an interrupt).
-
-    Some level type controllers require an MASK/ACK sequence to work
-    correctly. That's often the case when the controller supports both
-    level and edge mode.
-
- C) EOI type
-
-    EOI type interrupts are from their concept level interrupts.
-    
-    Contrary to regular level interrupts they do not require the mask
-    and unmask operation to prevent an interrupt storm. The interrupt
-    controller guarantees not to deliver the still active interrupt up
-    to the point where the software issues EOI.
-
-    The EOI happens after the actual device handler has run. That's a
-    very efficient solution which avoids slow mask/unmask operations and
-    at the same time guarantees that no interrupts are lost.
-
-So lets look how this relates to strict per cpu interrupts,
-i.e. interrupts which can only be delivered to one particular CPU.
-
-As documented above the strict percpuness removes the requirement for
-locking as the CPU itself guarantees non-reentrancy for the same
-interrupt as long as interrupts are disabled at the CPU level while the
-interrupt is serviced.
-
-Aside of that this also affects the required operations for interrupt
-handling. None of the true per cpu interrupts requires any form of
-mask/unmask operation in the handler. They only require that the
-relevant ACK/EOI operations take place. So for the 3 types above this
-results in the following:
-
- A) Edge type
-
-    Issue ACK before invoking the handler
-
- B) Level type
-
-    If the controller does not require ACK, then no action is required.
-
-    If the controller requires ACK, the ACK has to be issued before
-    invoking the handler.
-
- C) EOI type
-
-    Issue EOI after invoking the handler
-
-As the MIPS GIC is a strict level type controller which does not require
-ACK or EOI operations, the irq_ack/irq_eoi callbacks are completely
-bogus.
-
-There is also no need to change anything in the core code percpu handler
-implementations.
-
-All you need to do is to remove the bogus irq_ack/irq_eoi function
-pointers from the MIPS GIC irq_chip and be done with it.
-
-Thanks,
-
-        tglx
 
 
-    
+On 17/01/2020 01:09, Thomas Gleixner wrote:
+> Tony,
+> 
+> Tony W Wang-oc <TonyWWang-oc@zhaoxin.com> writes:
+> 
+>> @@ -1023,6 +1023,7 @@ static void identify_cpu_without_cpuid(struct cpuinfo_x86 *c)
+>>  #define MSBDS_ONLY		BIT(5)
+>>  #define NO_SWAPGS		BIT(6)
+>>  #define NO_ITLB_MULTIHIT	BIT(7)
+>> +#define NO_SPECTRE_V2		BIT(8)
+>>  
+>>  #define VULNWL(_vendor, _family, _model, _whitelist)	\
+>>  	{ X86_VENDOR_##_vendor, _family, _model, X86_FEATURE_ANY, _whitelist }
+>> @@ -1084,6 +1085,10 @@ static const __initconst struct x86_cpu_id cpu_vuln_whitelist[] = {
+>>  	/* FAMILY_ANY must be last, otherwise 0x0f - 0x12 matches won't work */
+>>  	VULNWL_AMD(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
+>>  	VULNWL_HYGON(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS | NO_SWAPGS | NO_ITLB_MULTIHIT),
+>> +
+>> +	/* Zhaoxin Family 7 */
+>> +	VULNWL(CENTAUR,	7, X86_MODEL_ANY,	NO_SPECTRE_V2),
+>> +	VULNWL(ZHAOXIN,	7, X86_MODEL_ANY,	NO_SPECTRE_V2),
+>>  	{}
+>>  };
+>>  
+>> @@ -1116,7 +1121,9 @@ static void __init cpu_set_bug_bits(struct cpuinfo_x86 *c)
+>>  		return;
+>>  
+>>  	setup_force_cpu_bug(X86_BUG_SPECTRE_V1);
+>> -	setup_force_cpu_bug(X86_BUG_SPECTRE_V2);
+>> +
+>> +	if (!cpu_matches(NO_SPECTRE_V2))
+>> +		setup_force_cpu_bug(X86_BUG_SPECTRE_V2);
+> 
+> That's way better. But as you might have noticed yourself this conflicts
+> with the other patch which excludes these machines from the SWAPGS bug.
+> 
+> Granted it's a trivial conflict, but maintainers are not there to mop up
+> the mess others create. So the right thing here is to resend both
+> patches as a patch series with the conflict properly resolved.
+> 
 
-  
+Sorry for this conflict. Will resend these two patches as a patch set.
+
+Sincerely
+TonyWWang-oc
