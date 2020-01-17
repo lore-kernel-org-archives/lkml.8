@@ -2,173 +2,198 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 017C5C33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 03:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20692C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 03:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3C60206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 03:44:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5C712087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 03:46:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZrPQuiye"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgAQDoB (ORCPT
+        id S1729499AbgAQDqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 22:44:01 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46812 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726688AbgAQDoB (ORCPT
+        Thu, 16 Jan 2020 22:46:31 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43334 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726688AbgAQDqa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 22:44:01 -0500
-Received: by mail-pg1-f193.google.com with SMTP id z124so10952919pgb.13;
-        Thu, 16 Jan 2020 19:44:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=qjTEZbkvZijH4Q89/0bwix+Zc3hP19cN20BTOTVd7ng=;
-        b=USjaUajzaBwGhFtukQxPiT+886qWEyeCz5lpJ0xteL+2JwjFLeGOdlNP5Jh20qiU2n
-         +AA7BNHss0g+hekJICM/C1Ofb51mBV18DqbO4rM+UQ2GCRSGmuPMZTflhAwBaEBxg7J2
-         nPiJeLzUr7E/5kWNx35VYdfOhwL/kW1/mXLoVqWPE/QS4BZKdaImbk9l6hDWb2WBOA/m
-         jjGYATRHT2Ed9yeZA7F8ALw5VCqQJJ2o5I9Z4PDbg6kfaPEWglKjhdEWRvTOhBrPgcxX
-         Hx5wGdTh/Hen8I7I59fNO1Ykw+DkBO0qwDUKLod6y8b01R+HOmYzUEUOMMT2YyCVAvGy
-         kP9A==
-X-Gm-Message-State: APjAAAV8Aa8dvKR6Dxr7H34Qg7RgNYUY83jaLsEG7R1CEQulkZBtCOXr
-        WN+GTyGuafoDAAW76aiJwEge0fj6Wu0=
-X-Google-Smtp-Source: APXvYqx/V246VdMxBbBw6pKES2lQAgrm1BArd8h4eU99sD0DLcnzC23G7dv2zleCjsyJJHEo8NIsRQ==
-X-Received: by 2002:aa7:914b:: with SMTP id 11mr931294pfi.69.1579232640078;
-        Thu, 16 Jan 2020 19:44:00 -0800 (PST)
-Received: from ?IPv6:2601:647:4000:d7:8dfb:7edd:e01b:b201? ([2601:647:4000:d7:8dfb:7edd:e01b:b201])
-        by smtp.gmail.com with ESMTPSA id b65sm27119652pgc.18.2020.01.16.19.43.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jan 2020 19:43:58 -0800 (PST)
-Subject: Re: [PATCH v1 1/1] scsi: ufs: Add command logging infrastructure
-To:     "Asutosh Das (asd)" <asutoshd@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        cang@codeaurora.org
-Cc:     Avri Altman <Avri.Altman@wdc.com>,
-        "Winkler, Tomas" <tomas.winkler@intel.com>, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Evan Green <evgreen@chromium.org>,
-        Janek Kotas <jank@cadence.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Subhash Jadavani <subhashj@codeaurora.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        open list <linux-kernel@vger.kernel.org>
-References: <1571808560-3965-1-git-send-email-cang@codeaurora.org>
- <5B8DA87D05A7694D9FA63FD143655C1B9DCF0AFE@hasmsx108.ger.corp.intel.com>
- <MN2PR04MB6991C2AF4DDEDD84C7887258FC6B0@MN2PR04MB6991.namprd04.prod.outlook.com>
- <01eb3c55e35738f2853fbc7175a12eaa@codeaurora.org>
- <20191029054620.GG1929@tuxbook-pro>
- <b7de9358-b8ba-3100-a3f2-ebed8aaab490@codeaurora.org>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <a07f3244-6536-0667-cf61-3ef8b8bc6c7e@acm.org>
-Date:   Thu, 16 Jan 2020 19:43:56 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Thu, 16 Jan 2020 22:46:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579232789;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=fo7HRBfpWlP4As+UqwBqxox4rOzMxaYO651E0ZJDut8=;
+        b=ZrPQuiye03y8ZuSXkO8MLcAj1CJ37yBaYbo6FFY4jQYODYzi5VKC9maE689e1xNTZmlYjZ
+        peI5lVhWRG6FDKyeOmNDjPOJGxXU8qmBLWmtfMe9Nl1VgWLQPdGUjfPOwggHlSsI02iKSp
+        uQ6ojC43A+6SlPDxE83f17k2ELMTQas=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-7-icHzL5KWM-Wf_6BX15mz1w-1; Thu, 16 Jan 2020 22:46:27 -0500
+X-MC-Unique: icHzL5KWM-Wf_6BX15mz1w-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3BEF6185432C;
+        Fri, 17 Jan 2020 03:46:26 +0000 (UTC)
+Received: from localhost (ovpn-12-20.pek2.redhat.com [10.72.12.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 77F3F1A7E3;
+        Fri, 17 Jan 2020 03:46:22 +0000 (UTC)
+Date:   Fri, 17 Jan 2020 11:46:20 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Dave Young <dyoung@redhat.com>,
+        Jerry Hoemann <Jerry.Hoemann@hpe.com>,
+        Randy Wright <rwright@hpe.com>
+Cc:     Khalid Aziz <khalid@gonehiking.org>,
+        Kairui Song <kasong@redhat.com>, linux-pci@vger.kernel.org,
+        kexec@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>
+Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
+ kdump kernel
+Message-ID: <20200117034620.GD22191@MiWiFi-R3L-srv>
+References: <d2715683-f171-a825-3c0b-678b6c5c1a79@gonehiking.org>
+ <20200111005041.GB19291@MiWiFi-R3L-srv>
+ <dc46c904-1652-09b3-f351-6b3a3e761d74@gonehiking.org>
+ <CACPcB9c0-nRjM3DSN8wzZBTPsJKWjZ9d_aNTq5zUj4k4egb32Q@mail.gmail.com>
+ <CABeXuvqquCU+1G=5onk9owASorhpcYWeWBge9U35BrorABcsuw@mail.gmail.com>
+ <CACPcB9cQY9Vu3wG-QYZS6W6T_PZxnJ1ABNUUAF_qvk-VSxbpTA@mail.gmail.com>
+ <b2360db7-66f5-421d-8fe0-150f08aa2f39@gonehiking.org>
+ <CACPcB9epDPcowhnSJuEHQ8miCBX1oKjFx4Wdn4aYPe2_pueA5A@mail.gmail.com>
+ <6b56ce15-5a5a-97b7-ded1-1fd88fec26eb@gonehiking.org>
+ <20200117032413.GA16906@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <b7de9358-b8ba-3100-a3f2-ebed8aaab490@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200117032413.GA16906@dhcp-128-65.nay.redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-16 15:03, Asutosh Das (asd) wrote:
-> On 10/28/2019 10:46 PM, Bjorn Andersson wrote:
->> On Mon 28 Oct 19:37 PDT 2019, cang@codeaurora.org wrote:
->>
->>> On 2019-10-23 18:33, Avri Altman wrote:
->>>>>
->>>>>> Add the necessary infrastructure to keep timestamp history of
->>>>>> commands, events and other useful info for debugging complex issues.
->>>>>> This helps in diagnosing events leading upto failure.
->>>>>
->>>>> Why not use tracepoints, for that?
->>>> Ack on Tomas's comment.
->>>> Are there any pieces of information that you need not provided by the
->>>> upiu tracer?
->>>>
->>>> Thanks,
->>>> Avri
->>>
->>> In extreme cases, when the UFS runs into bad state, system may crash.
->>> There
->>> may not be a chance to collect trace. If trace is not collected and
->>> failure
->>> is hard to be reproduced, some command logs prints would be very
->>> helpful to
->>> help understand what was going on before we run into failure.
->>>
->>
->> This is a common problem shared among many/all subsystems, so it's
->> better to rely on a generic solution for this; such as using tracepoints
->> dumped into pstore/ramoops.
->>
->> Regards,
->> Bjorn
->>
+On 01/17/20 at 11:24am, Dave Young wrote:
+> On 01/15/20 at 02:17pm, Khalid Aziz wrote:
+> > On 1/15/20 11:05 AM, Kairui Song wrote:
+> > > On Thu, Jan 16, 2020 at 1:31 AM Khalid Aziz <khalid@gonehiking.org> wrote:
+> > >>
+> > >> On 1/13/20 10:07 AM, Kairui Song wrote:
+> > >>> On Sun, Jan 12, 2020 at 2:33 AM Deepa Dinamani <deepa.kernel@gmail.com> wrote:
+> > >>>>
+> > >>>>> Hi, there are some previous works about this issue, reset PCI devices
+> > >>>>> in kdump kernel to stop ongoing DMA:
+> > >>>>>
+> > >>>>> [v7,0/5] Reset PCIe devices to address DMA problem on kdump with iommu
+> > >>>>> https://lore.kernel.org/patchwork/cover/343767/
+> > >>>>>
+> > >>>>> [v2] PCI: Reset PCIe devices to stop ongoing DMA
+> > >>>>> https://lore.kernel.org/patchwork/patch/379191/
+> > >>>>>
+> > >>>>> And didn't get merged, that patch are trying to fix some DMAR error
+> > >>>>> problem, but resetting devices is a bit too destructive, and the
+> > >>>>> problem is later fixed in IOMMU side. And in most case the DMA seems
+> > >>>>> harmless, as they targets first kernel's memory and kdump kernel only
+> > >>>>> live in crash memory.
+> > >>>>
+> > >>>> I was going to ask the same. If the kdump kernel had IOMMU on, would
+> > >>>> that still be a problem?
+> > >>>
+> > >>> It will still fail, doing DMA is not a problem, it only go wrong when
+> > >>> a device's upstream bridge is mistakenly shutdown before the device
+> > >>> shutdown.
+> > >>>
+> > >>>>
+> > >>>>> Also, by the time kdump kernel is able to scan and reset devices,
+> > >>>>> there are already a very large time window where things could go
+> > >>>>> wrong.
+> > >>>>>
+> > >>>>> The currently problem observed only happens upon kdump kernel
+> > >>>>> shutdown, as the upper bridge is disabled before the device is
+> > >>>>> disabledm so DMA will raise error. It's more like a problem of wrong
+> > >>>>> device shutting down order.
+> > >>>>
+> > >>>> The way it was described earlier "During this time, the SUT sometimes
+> > >>>> gets a PCI error that raises an NMI." suggests that it isn't really
+> > >>>> restricted to kexec/kdump.
+> > >>>> Any attached device without an active driver might attempt spurious or
+> > >>>> malicious DMA and trigger the same during normal operation.
+> > >>>> Do you have available some more reporting of what happens during the
+> > >>>> PCIe error handling?
+> > >>>
+> > >>> Let me add more info about this:
+> > >>>
+> > >>> On the machine where I can reproduce this issue, the first kernel
+> > >>> always runs fine, and kdump kernel works fine during dumping the
+> > >>> vmcore, even if I keep the kdump kernel running for hours, nothing
+> > >>> goes wrong. If there are DMA during normal operation that will cause
+> > >>> problem, this should have exposed it.
+> > >>>
+> > >>
+> > >> This is the part that is puzzling me. Error shows up only when kdump
+> > >> kernel is being shut down. kdump kernel can run for hours without this
+> > >> issue. What is the operation from downstream device that is resulting in
+> > >> uncorrectable error - is it indeed a DMA request? Why does that
+> > >> operation from downstream device not happen until shutdown?
+> > >>
+> > >> I just want to make sure we fix the right problem in the right way.
+> > >>
+> > > 
+> > > Actually the device could keep sending request with no problem during
+> > > kdump kernel running. Eg. keep sending DMA, and all DMA targets first
+> > > kernel's system memory, so kdump runs fine as long as nothing touch
+> > > the reserved crash memory. And the error is reported by the port, when
+> > > shutdown it has bus master bit, and downstream request will cause
+> > > error.
+> > > 
+> > 
+> > Problem really is there are active devices while kdump kernel is
+> > running. You did say earlier - "And in most case the DMA seems
+> > harmless, as they targets first kernel's memory and kdump kernel only
+> > live in crash memory.". Even if this holds today, it is going to break
+> > one of these days. There is the "reset_devices" option but that does not
+> > work if driver is not loaded by kdump kernel. Can we try to shut down
+> > devices in machine_crash_shutdown() before we start kdump kernel?
 > 
-> Reviving this discussion.
+> It is not a good idea :)  We do not add extra logic after a panic
+> because the kernel is not stable and we want a correct vmcore.
 > 
-> Another issue with using ftrace is that several subsystems use it.
-> Consider a situation in which we store a history of 64 commands,
-> responses and some other required info in ftrace.
-> 
-> Say there's a command that's stuck for seconds until the software times
-> out. In this case, the other ftrace events are still enabled and keep
-> writing to ftrace buffer thus overwriting some/most of the ufs's command
-> history; thus the history is more or less lost. And there's a need to
-> reproduce the issue with other tracing disabled.
-> 
-> So what we need is a client specific logging mechanism, which is
-> lightweight as ftrace and can be parsed from ramdumps.
-> 
-> I'm open to ideas but ftrace in its current form may not be suitable for
-> this.
+> Similar suggestions had been rejected a lot of times..
 
-Hi Asutosh,
+Yes.
 
-Are you aware that it is already possible today to figure out which SCSI
-commands are pending? Are you familiar with the files under
-/sys/kernel/debug/block/? An example:
+About this bug, I think HPE may need to check if their firmware/hardware
+has special design. I checked other vendors' system which has many
+devices under several bridges, this issue is not seen.
 
-$ (cd /sys/kernel/debug/block && grep -aH . */*/busy)
-nvme0n1/hctx7/busy:0000000006f07009 {.op=READ, .cmd_flags=META|PRIO,
-.rq_flags=DONTPREP|IO_STAT, .state=in_flight, .tag=275, .internal_tag=-1}
+Say the issue again, we have been excluding the unneeded devices drivers
+from kdump initramfs. This issue is seen first time. And we don't suggest
+customer to close IOMMU in kdump kernel if hardware IOMMU is deployed.
 
-Bart.
+So for a system with hardware IOMMU, those devices will go through these
+life cycles:
 
+1) devices handling DMA transferring in 1st kernel;
+2) after crash, we don't shutdown them. Means they are keeping alive,
+and handling DMA transferring;
+3) during kdump kernel boot, hardware IOMMU initialization will copy the
+old iommu translation table to make the on-flight DMA continue;
+4) device driver will initialize the relevant device, to reset it;
+   - if no device driver loaded, the device will keep active in the
+     whole kdump kernel life cycle
+5) when vmcore dumping is done, we try to reboot kdump kernel, shutdown
+all devices;
+
+The issue happened in the 5) step. As Kairui provided log, shutting down
+the bridge which subordinate devices are not controlled by loaded driver
+will cause the UR and NMI, then hang happened.
+
+Thanks
+Baoquan
 
