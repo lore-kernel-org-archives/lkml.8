@@ -2,145 +2,124 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26BFEC33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B16BC33CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9AB52082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:50:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60FD220730
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:50:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YD19WJUY"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="i9BMvz3E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgAQJut (ORCPT
+        id S1727007AbgAQJux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 04:50:49 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27538 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726362AbgAQJut (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 04:50:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579254648;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=oJRJOOtAJx4rABOIyWYmHnWYUrcoGrCqCdDRh2YY52I=;
-        b=YD19WJUYZAJBREAk8ub3j0ctH0SOOPxc3Gn6Yaa9Mrn59JcDAZMvuVtG/R7RI4y738i+Di
-        Pd+Mo+sOjox0XRP1ZZD/t/+WtySQnVUsxrwYCqtJd5YbKR2J+qGdmlYGiUHUPNCBNbpksW
-        U6Yfw5ac+GEBbddZgFWoa3z0WzMQvjM=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-209-Jb8pC3TmOVC8GHx3E3vcsg-1; Fri, 17 Jan 2020 04:50:47 -0500
-X-MC-Unique: Jb8pC3TmOVC8GHx3E3vcsg-1
-Received: by mail-lj1-f199.google.com with SMTP id u9so6042528ljg.12
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 01:50:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=oJRJOOtAJx4rABOIyWYmHnWYUrcoGrCqCdDRh2YY52I=;
-        b=nZcK5ZtDZ/dnyAsrSsLNkxZb8kqMxhVw/VJi/QTCY5+ExlMu5dNx2HvYKC0wzVnp5R
-         Hu2SnDwGHZu2dwO5nK6M/0rgguJA9nQISSjJ7tb+Au7faejk76Qy+oI3R8EM2ghVz/PX
-         idyUQNdCxUFruez5OEJg49Kjh0sP9ty9hjbyZVSTU5pKZt9DQbmZDylTHebHZSrjREJN
-         K/x4k1BDNCT5FIdI0lE5Yx6BmovvF1ZHyQHOTLjQA685k0UFNYeqjzP94Yv1I0nAAaYW
-         706iKchFkHlURTXvBoTyE60dieMp9BkzV1oYY3XI5i5aZcWbfAhh4Cg1nphWusonkGGS
-         pwPA==
-X-Gm-Message-State: APjAAAU7WiSeYJEhM7RjJiWISbmo141Ve1oi5CTlZUCQ1hur3aN1c0OL
-        +pRFm+PdNM5mU5ORCtqZvzzY0GieVTngGoGFsUiEJ/AY13IAvNPVdEkHUAVmh0GFTJH3rSV1N8y
-        yVGah5OyVog5BFgW5Css6t6+c
-X-Received: by 2002:a2e:3a0c:: with SMTP id h12mr5110078lja.200.1579254646256;
-        Fri, 17 Jan 2020 01:50:46 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxVH1mvGN7jFxhc1CGWH4ht8uwwpUWB8gY29//W0Sp2WPWefYaaYkajI0yi/HmyV1E0o/g6WQ==
-X-Received: by 2002:a2e:3a0c:: with SMTP id h12mr5110047lja.200.1579254646128;
-        Fri, 17 Jan 2020 01:50:46 -0800 (PST)
-Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
-        by smtp.gmail.com with ESMTPSA id s9sm14012128ljh.90.2020.01.17.01.50.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 01:50:45 -0800 (PST)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id D7C9C1804D6; Fri, 17 Jan 2020 10:50:44 +0100 (CET)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-rdma@vger.kernel.org,
-        "open list\:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH bpf-next v3 09/11] selftests: Remove tools/lib/bpf from include path
-In-Reply-To: <CAEf4BzYaLd25P7Uu=aFHW_=nHOCPdCpZCcoJobhRoSGQUA49HQ@mail.gmail.com>
-References: <157918093154.1357254.7616059374996162336.stgit@toke.dk> <157918094179.1357254.14428494370073273452.stgit@toke.dk> <CAEf4Bzba5FHN_iN52qRiGisRcauur1FqDY545EwE+RVR-nFvQA@mail.gmail.com> <CAEf4BzYaLd25P7Uu=aFHW_=nHOCPdCpZCcoJobhRoSGQUA49HQ@mail.gmail.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Fri, 17 Jan 2020 10:50:44 +0100
-Message-ID: <87o8v2qumj.fsf@toke.dk>
+        Fri, 17 Jan 2020 04:50:53 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:6126 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726053AbgAQJuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 04:50:50 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 47zbL80nqyzB09b7;
+        Fri, 17 Jan 2020 10:26:56 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=i9BMvz3E; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id SBcmuNiYkyF6; Fri, 17 Jan 2020 10:26:56 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47zbL76pYtzB09b5;
+        Fri, 17 Jan 2020 10:26:55 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1579253216; bh=9zDNZlzTkeycpSWCb0TYhvoG++VQ0gIX3RE4mUEvdOg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=i9BMvz3Et5VUQDFvPy+FmGSkBzSFXqfiloNAGK6ETWirQC9BSIX++qp5CDw2aZert
+         7ZvsFo1ljH6SQeneQhVz/i5r8XjA4pPDw6RSVCjw8z88fAGEB5eOFuEaHhNOp6Saa6
+         njr+TNa2sSfV/s65M9dLdazSTLW/6PBL5xvi/9Nc=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id F18298B83E;
+        Fri, 17 Jan 2020 10:26:56 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id QrD_JOibNVgE; Fri, 17 Jan 2020 10:26:56 +0100 (CET)
+Received: from [172.25.230.103] (po15451.idsi0.si.c-s.fr [172.25.230.103])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C07418B83B;
+        Fri, 17 Jan 2020 10:26:56 +0100 (CET)
+Subject: Re: [RFC PATCH v4 00/11] powerpc: switch VDSO to C implementation.
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, nathanl@linux.ibm.com,
+        arnd@arndb.de, tglx@linutronix.de, vincenzo.frascino@arm.com,
+        luto@kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org
+References: <cover.1579196675.git.christophe.leroy@c-s.fr>
+ <20200117085851.GS3191@gate.crashing.org>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <345e2772-cde9-7d86-874e-347db1453c80@c-s.fr>
+Date:   Fri, 17 Jan 2020 10:26:56 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200117085851.GS3191@gate.crashing.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrii Nakryiko <andrii.nakryiko@gmail.com> writes:
 
-> On Thu, Jan 16, 2020 at 2:41 PM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
+
+Le 17/01/2020 à 09:58, Segher Boessenkool a écrit :
+> Hi!
+> 
+> On Thu, Jan 16, 2020 at 05:58:24PM +0000, Christophe Leroy wrote:
+>> On a powerpc8xx, with current powerpc/32 ASM VDSO:
 >>
->> On Thu, Jan 16, 2020 at 5:28 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@r=
-edhat.com> wrote:
->> >
->> > From: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
->> >
->> > To make sure no new files are introduced that doesn't include the bpf/
->> > prefix in its #include, remove tools/lib/bpf from the include path
->> > entirely.
->> >
->> > Instead, we introduce a new header files directory under the scratch t=
-ools/
->> > dir, and add a rule to run the 'install_headers' rule from libbpf to h=
-ave a
->> > full set of consistent libbpf headers in $(OUTPUT)/tools/include/bpf, =
-and
->> > then use $(OUTPUT)/tools/include as the include path for selftests.
->> >
->> > For consistency we also make sure we put all the scratch build files f=
-rom
->> > other bpftool and libbpf into tools/build/, so everything stays within
->> > selftests/.
->> >
->> > Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
->> > ---
->
-> BTW, this change also now forces full rebuild regardless if anything
-> changed or not :(
+>> gettimeofday:    vdso: 907 nsec/call
+>> clock-getres-realtime:    vdso: 484 nsec/call
+>> clock-gettime-realtime:    vdso: 899 nsec/call
+>>
+>> The first patch adds VDSO generic C support without any changes to common code.
+>> Performance is as follows:
+>>
+>> gettimeofday:    vdso: 1211 nsec/call
+>> clock-getres-realtime:    vdso: 722 nsec/call
+>> clock-gettime-realtime:    vdso: 1216 nsec/call
+>>
+>> Then a few changes in the common code have allowed performance improvement. At
+>> the end of the series we have:
+>>
+>> gettimeofday:    vdso: 974 nsec/call
+>> clock-getres-realtime:    vdso: 545 nsec/call
+>> clock-gettime-realtime:    vdso: 941 nsec/call
+>>
+>> The final result is rather close to pure ASM VDSO:
+>> * 7% more on gettimeofday (9 cycles)
+>> * 5% more on clock-gettime-realtime (6 cycles)
+>> * 12% more on clock-getres-realtime (8 cycles)
+> 
+> Nice!  Much better.
+> 
+> It should be tested on more representative hardware, too, but this looks
+> promising alright :-)
+> 
 
-It does? Hmm, that was not intentional (I was mostly focused on making
-sure a clean make worked, not the opposite). I'll see if I can't fix
-that as well...
+Yes.
 
--Toke
+Now the challenge is to get VDSO32 buildable on PPC64. The big issue is 
+that in most powerpc/include/asm/*.h , CONFIG_PPC64 is used to know if 
+the build is a 64 bits build or a 32 bits build, so VDSO32 build fails.
 
+I don't know how this could be easily fixed.
+
+Christophe
