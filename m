@@ -2,179 +2,117 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB9AC33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C5EC33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:16:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A299721D56
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9D6621D56
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:16:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NkZOrXzL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oKyPNlVD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729028AbgAQWP6 (ORCPT
+        id S1729078AbgAQWQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 17:15:58 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44485 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726982AbgAQWP5 (ORCPT
+        Fri, 17 Jan 2020 17:16:17 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:50132 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726861AbgAQWQR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 17:15:57 -0500
-Received: by mail-pl1-f193.google.com with SMTP id az3so10391243plb.11
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 14:15:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YARhjqHfu3XnvFV7m022gWlMRwz6JsfilVyY5Ay7UrY=;
-        b=NkZOrXzLv98pN3E39cEyacMcPnPLQFK9DJqD3IiZVnfNxTXyf6WyyJxn/TLdSoFKSb
-         liWaUbRi6oZHlC+4BpeNt7EXfzMkYZcjfMlqcxqPv7IKK9gwEEW1JTBpopjQXt7QXFgm
-         YU9H9S2KD/uMsUPfA4T2BGx3CkGXZ8MOpAzIc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YARhjqHfu3XnvFV7m022gWlMRwz6JsfilVyY5Ay7UrY=;
-        b=ghpjx05wHHjdfFzdenxPcX46ovwVuwDvlEmjQUJMaR7BPfmSnxbjyn6NnuFCDhLnrf
-         PZs6wnge0vYXFhrKbgMCTqjzN+kE1F6gpLUHHpr51ThCwcB1trcVFNqp9aPlB9wfWAi7
-         bI3B0GXnFBlW6BwuUphT6BKa3QfHqIyLgjVBji3QZ+l8eSH3VVJydAEY0JVlXd6jV9IV
-         J3bgluwVlIfWJLJbfyoMkDNX+7VNy7d0ouRJEnuME5GQJzCdcffUycylsBCjb03oqwfC
-         5GLoxWjBFfeBAXmi5cgQkMfsY3NGc0wYTb3uNRFWAmBWiH+nH0hXc/g6jDik0MahCdOD
-         9YZQ==
-X-Gm-Message-State: APjAAAUCesdc4nGYBObMPPI1xLXLaeQe2mAHsDGD4TVGQETPSRqBHnYz
-        z2eioeEz3z5w+GzD7UOaxabA9Q==
-X-Google-Smtp-Source: APXvYqxevNzacDfhqVUFU9WP0mcyHbwMOPtg3KBADlZVplAkcfA7QKZqfCvnYsEpqCMea8UV5hwyjA==
-X-Received: by 2002:a17:90b:3c9:: with SMTP id go9mr8410990pjb.7.1579299356657;
-        Fri, 17 Jan 2020 14:15:56 -0800 (PST)
-Received: from chromium.org ([165.231.253.166])
-        by smtp.gmail.com with ESMTPSA id dw10sm8424303pjb.11.2020.01.17.14.15.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 14:15:55 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Fri, 17 Jan 2020 23:16:03 +0100
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
-Subject: Re: [PATCH bpf-next v2 08/10] tools/libbpf: Add support for
- BPF_PROG_TYPE_LSM
-Message-ID: <20200117221603.GA25978@chromium.org>
-References: <20200115171333.28811-1-kpsingh@chromium.org>
- <20200115171333.28811-9-kpsingh@chromium.org>
- <CAEf4BzZodr3LKJuM7QwD38BiEH02Cc1UbtnGpVkCJ00Mf+V_Qg@mail.gmail.com>
- <20200116124955.GD240584@google.com>
- <CAEf4BzYa+m0OCZXqnNsab+q3+HLboL45eRdBrGdZD+6Z4CRSiQ@mail.gmail.com>
+        Fri, 17 Jan 2020 17:16:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=CFwRKOc+gezyceo0kC40ZLd3xOsAPmQzS5kapaZ2B18=; b=oKyPNlVDNwLxSQvsjfAkGK9aF
+        R9eBYNoE5+kpCUwwuCM4AIBAFTneRiyrGJFIsrpgGpiY5vl652zEBt5pFSlhiGeGXy8CW1OjBk3iQ
+        P/mwDGmpeXiizWRqFXXiZq5GZ/nCoznlISFqOqczXQzwAEKz4cjuJtZc988M18xUs01YsUj3eeJPP
+        k5rUNPFnZIkmxfG8BzmfOUyVedBRIrP7PicBbfBevLz5OkFNdhy4PMuLb2AB73bfVZh67MXl9jMop
+        LqLNId60/MmxANfdKyra+NdBP9yZ465zbOrudluqx7J0gwtqrMApT0L59lqQWDWHhdzNZxc4xqkSO
+        qyuO8rj6w==;
+Received: from [2601:1c0:6280:3f0::ed68]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1isZuG-0001rZ-79; Fri, 17 Jan 2020 22:15:56 +0000
+Subject: Re: mmotm 2019-12-10-19-14 uploaded (objtool: func() falls through)
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        Peter Zijlstra <peterz@infradead.org>
+References: <20191211031432.iyKVQ6m9n%akpm@linux-foundation.org>
+ <07777464-b9d8-ff1d-41d9-f62cc44f09f3@infradead.org>
+ <20191212184859.zjj2ycfkvpcns5bk@treble>
+ <042c6cd7-c983-03f1-6a79-5642549f57c4@infradead.org>
+ <20191212205811.4vrrb4hou3tbiada@treble>
+ <20200117181121.3h72dajey7oticbf@treble>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <d1dc6614-9089-62a8-e303-84b9d57297a3@infradead.org>
+Date:   Fri, 17 Jan 2020 14:15:54 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzYa+m0OCZXqnNsab+q3+HLboL45eRdBrGdZD+6Z4CRSiQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200117181121.3h72dajey7oticbf@treble>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16-Jan 11:10, Andrii Nakryiko wrote:
-> On Thu, Jan 16, 2020 at 4:49 AM KP Singh <kpsingh@chromium.org> wrote:
-> >
-> > Thanks for the review Andrii!
-> >
-> > I will incorporate the fixes in the next revision.
-> >
-> > On 15-Jan 13:19, Andrii Nakryiko wrote:
-> > > On Wed, Jan 15, 2020 at 9:13 AM KP Singh <kpsingh@chromium.org> wrote:
-> > > >
-> > > > From: KP Singh <kpsingh@google.com>
-> > > >
-> > > > * Add functionality in libbpf to attach eBPF program to LSM hooks
-> > > > * Lookup the index of the LSM hook in security_hook_heads and pass it in
-> > > >   attr->lsm_hook_index
-> > > >
-> > > > Signed-off-by: KP Singh <kpsingh@google.com>
-> > > > ---
-> > > >  tools/lib/bpf/bpf.c      |   6 +-
-> > > >  tools/lib/bpf/bpf.h      |   1 +
-> > > >  tools/lib/bpf/libbpf.c   | 143 ++++++++++++++++++++++++++++++++++-----
-> > > >  tools/lib/bpf/libbpf.h   |   4 ++
-> > > >  tools/lib/bpf/libbpf.map |   3 +
-> > > >  5 files changed, 138 insertions(+), 19 deletions(-)
-> > > >
+On 1/17/20 10:11 AM, Josh Poimboeuf wrote:
+> On Thu, Dec 12, 2019 at 02:58:11PM -0600, Josh Poimboeuf wrote:
+>> On Thu, Dec 12, 2019 at 12:21:17PM -0800, Randy Dunlap wrote:
+>>> On 12/12/19 10:48 AM, Josh Poimboeuf wrote:
+>>>> On Wed, Dec 11, 2019 at 08:31:08AM -0800, Randy Dunlap wrote:
+>>>>> On 12/10/19 7:14 PM, Andrew Morton wrote:
+>>>>>> The mm-of-the-moment snapshot 2019-12-10-19-14 has been uploaded to
+>>>>>>
+>>>>>>    http://www.ozlabs.org/~akpm/mmotm/
+>>>>>>
+>>>>>> mmotm-readme.txt says
+>>>>>>
+>>>>>> README for mm-of-the-moment:
+>>>>>>
+>>>>>> http://www.ozlabs.org/~akpm/mmotm/
+>>>>>>
+>>>>>> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+>>>>>> more than once a week.
+>>>>>>
+>>>>>> You will need quilt to apply these patches to the latest Linus release (5.x
+>>>>>> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+>>>>>> http://ozlabs.org/~akpm/mmotm/series
+>>>>>>
+>>>>>> The file broken-out.tar.gz contains two datestamp files: .DATE and
+>>>>>> .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
+>>>>>> followed by the base kernel version against which this patch series is to
+>>>>>> be applied.
+>>>>>
+>>>>> on x86_64:
+>>>>>
+>>>>> drivers/hwmon/f71882fg.o: warning: objtool: f71882fg_update_device() falls through to next function show_pwm_auto_point_temp_hyst()
+>>>>> drivers/ide/ide-probe.o: warning: objtool: hwif_register_devices() falls through to next function hwif_release_dev()
+>>>>> drivers/ide/ide-probe.o: warning: objtool: ide_host_remove() falls through to next function ide_disable_port()
+>>>>
+>>>> Randy, can you share the .o files?
+>>>
+>>> Sure. They are attached.
+>>
+>> These look like compiler bugs to me... execution is falling off the edge
+>> of the functions for no apparent reason.  Could potentially be triggered
+>> by the '#define if' trace code.
 > 
-> [...]
+> Randy, do you happen to have a config which triggers the above bugs?  I
+> can reduce the test cases and open a GCC bug.
 > 
-> > >
-> > > > +{
-> > > > +       struct btf *btf = bpf_find_kernel_btf();
-> > >
-> > > ok, it's probably time to do this right. Let's ensure we load kernel
-> > > BTF just once, keep it inside bpf_object while we need it and then
-> > > release it after successful load. We are at the point where all the
-> > > new types of program is loading/releasing kernel BTF for every section
-> > > and it starts to feel very wasteful.
-> >
-> > Sure, will give it a shot in v3.
-> 
-> thanks!
-> 
-> [...]
-> 
-> > >
-> > > > +               if (!strcmp(btf__name_by_offset(btf, m->name_off), name))
-> > > > +                       return j + 1;
-> > >
-> > > I looked briefly through kernel-side patch introducing lsm_hook_index,
-> > > but it didn't seem to explain why this index needs to be (unnaturally)
-> > > 1-based. So asking here first as I'm looking through libbpf changes?
-> >
-> > The lsm_hook_idx is one-based as it makes it easy to validate the
-> > input. If we make it zero-based it's hard to check if the user
-> > intended to attach to the LSM hook at index 0 or did not set it.
-> 
-> Think about providing FDs. 0 is a valid, though rarely
-> intended/correct value. Yet we don't make all FD arguments
-> artificially 1-based, right? This extra +1/-1 translation just makes
-> for more confusing interface, IMO. If user "accidentally" guessed type
-> signature of very first hook, well, so be it... If not, BPF verifier
-> will politely refuse. Seems like enough protection.
 
-Thanks! I see your point and will update to using the
-more-conventional 0-based indexing for the next revision.
+No, but I'll try to recreate the issue and get back to you.
 
-- KP
+-- 
+~Randy
 
-> 
-> >
-> > We are then up to the verifier to reject the loaded program which
-> > may or may not match the signature of the hook at lsm_hook_idx = 0.
-> >
-> > I will clarify this in the commit log as well.
-> >
-> 
-> [...]
