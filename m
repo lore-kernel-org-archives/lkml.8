@@ -2,288 +2,190 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B85EC33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E92C33CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2650A2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFFBE2083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:33:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dN35GK7z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dae11mxX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbgAQJdK (ORCPT
+        id S1728992AbgAQJd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 04:33:10 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59057 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726950AbgAQJdF (ORCPT
+        Fri, 17 Jan 2020 04:33:28 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:41638 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727005AbgAQJdJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 04:33:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579253584;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RHvGcF9xzuVRZeTw2ecPotSnBNnYfAGaG6neQxJf86E=;
-        b=dN35GK7zGCUpG0LFQSUBSG1CgLt1FSOGs6m7zva8+yffm/jwGGI3wr/AylucgVT3ycN/T7
-        GMFGws07c4tYx5RRAdQD8nvBMxjGGaPcti+njxy9BsSHDqnE9JPifItR2VVyvNYZoeNEHW
-        uY4H0fJmi0jE+XgOYZIxVs6kn5qp6UA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-139-IavVhmtuNH2UPO5_fDnW7w-1; Fri, 17 Jan 2020 04:33:03 -0500
-X-MC-Unique: IavVhmtuNH2UPO5_fDnW7w-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 46405107ACC7;
-        Fri, 17 Jan 2020 09:33:00 +0000 (UTC)
-Received: from [10.72.12.168] (ovpn-12-168.pek2.redhat.com [10.72.12.168])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 291178121F;
-        Fri, 17 Jan 2020 09:32:40 +0000 (UTC)
-Subject: Re: [PATCH 5/5] vdpasim: vDPA device simulator
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     "mst@redhat.com" <mst@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "tiwei.bie@intel.com" <tiwei.bie@intel.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "cunming.liang@intel.com" <cunming.liang@intel.com>,
-        "zhihong.wang@intel.com" <zhihong.wang@intel.com>,
-        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
-        "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "aadam@redhat.com" <aadam@redhat.com>,
-        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Shahaf Shuler <shahafs@mellanox.com>,
-        "hanand@xilinx.com" <hanand@xilinx.com>,
-        "mhabets@solarflare.com" <mhabets@solarflare.com>, kuba@kernel.org
-References: <20200116124231.20253-1-jasowang@redhat.com>
- <20200116124231.20253-6-jasowang@redhat.com>
- <20200116154658.GJ20978@mellanox.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <aea2bff8-82c8-2c0f-19ee-e86db73e199f@redhat.com>
-Date:   Fri, 17 Jan 2020 17:32:39 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 17 Jan 2020 04:33:09 -0500
+Received: by mail-ed1-f65.google.com with SMTP id c26so21622725eds.8;
+        Fri, 17 Jan 2020 01:33:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=jSBTkJwtcUerpe5D53vGoy3o8kE/mglpH/syhpG7qgc=;
+        b=Dae11mxXI7xzPj9oLj+8qe2n1K9uZRbfEULM8ZnQ8VthlUUa3g9WGpEutXAx75Dila
+         RzuEcvtPCbDSHztA3G6JJN+efdyBqbw5VUYD8noVZQklvaC2r3reAD696Wq5rmtr0VHR
+         C3cfehhQ8rl5VORtFPRQpnjkgqPqkcjvPu/WmqCIBwcfuKQ/PLrn0NExhoDrdGA67gZb
+         mlQ6VzxBzjsm5y+MLPoxu8pMpenZvTlPcyluAyS70IdZnkBw1BWvLIUzzNVx4B/r9wfA
+         bifmWiXV7o3MK8Jka9Nr1tvR6i2r9F59oOPOGNcn205jec2wmcqfJJOJylr2XSZ5Zl4J
+         DVJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=jSBTkJwtcUerpe5D53vGoy3o8kE/mglpH/syhpG7qgc=;
+        b=iEprUu5xbtsJzy0X3zV/pA2Iq6lDbOHy0Z/FDq4DsAKF9wq88Ah3hp/P9b38eHE8W1
+         Hy4JlIJwfOmDTeS/hNrHr5kVVlLsbgC3E8ZVBaHnSbV7fYMS2/T7l2sw4OdTPLSiwTYf
+         Pj5XOEKNasPTC8U7pRFQnQuvSwfca78A3Ib9HyMYmZI69DcnV/Sfjf24x1kobzAAwMi3
+         EK4ISSVLNaA0tFkDp/p/e4eOPIas6kX2nN35EhBfsNivl15ukfXXE4/b2QMdozbCNmWc
+         TOMEb77c4tSHgzjhMCBGYM/LgYYyjTm65aX4ufs2JFvW8D1tdJL2ezZG+QQWHamqFJYV
+         uZ/A==
+X-Gm-Message-State: APjAAAUulZpBsICVLZKPVqTRAr3kcjwZwIeyFJ38+4ObyW8Kzpr+yegK
+        yb+RCHscOabjEw5G0afgSJPWONZM
+X-Google-Smtp-Source: APXvYqy3/PrY1adqexEo9QZ4ojVjDe/bPHeUwG0RJarlzo6SmgKei80eBsp7arJuV0Ogq5+Qyayptw==
+X-Received: by 2002:adf:e591:: with SMTP id l17mr2007406wrm.139.1579253128997;
+        Fri, 17 Jan 2020 01:25:28 -0800 (PST)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id x10sm32358781wrv.60.2020.01.17.01.25.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2020 01:25:28 -0800 (PST)
+Date:   Fri, 17 Jan 2020 10:25:27 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Namjae Jeon <namjae.jeon@samsung.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
+        sj1557.seo@samsung.com, linkinjeon@gmail.com, arnd@arndb.de
+Subject: Re: [PATCH v10 03/14] exfat: add inode operations
+Message-ID: <20200117092527.5m4i2fvo7mge7z37@pali>
+References: <20200115082447.19520-1-namjae.jeon@samsung.com>
+ <CGME20200115082820epcas1p34ebebebaf610fd61c4e9882fca8ddbd5@epcas1p3.samsung.com>
+ <20200115082447.19520-4-namjae.jeon@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <20200116154658.GJ20978@mellanox.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200115082447.19520-4-namjae.jeon@samsung.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wednesday 15 January 2020 17:24:36 Namjae Jeon wrote:
+> This adds the implementation of inode operations for exfat.
+> 
+> Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
+> Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
+> ---
+>  fs/exfat/inode.c |  667 +++++++++++++++++++++
+>  fs/exfat/namei.c | 1442 ++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 2109 insertions(+)
+>  create mode 100644 fs/exfat/inode.c
+>  create mode 100644 fs/exfat/namei.c
+> 
+> diff --git a/fs/exfat/inode.c b/fs/exfat/inode.c
+> new file mode 100644
+> index 000000000000..56cf09db1920
+> --- /dev/null
+> +++ b/fs/exfat/inode.c
+> @@ -0,0 +1,667 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Copyright (C) 2012-2013 Samsung Electronics Co., Ltd.
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/buffer_head.h>
+> +#include <linux/mpage.h>
+> +#include <linux/bio.h>
+> +#include <linux/blkdev.h>
+> +#include <linux/time.h>
+> +#include <linux/writeback.h>
+> +#include <linux/uio.h>
+> +#include <linux/random.h>
+> +#include <linux/iversion.h>
+> +
+> +#include "exfat_raw.h"
+> +#include "exfat_fs.h"
+> +
+> +static int __exfat_write_inode(struct inode *inode, int sync)
+> +{
+> +	int ret = -EIO;
+> +	unsigned long long on_disk_size;
+> +	struct exfat_dentry *ep, *ep2;
+> +	struct exfat_entry_set_cache *es = NULL;
+> +	struct super_block *sb = inode->i_sb;
+> +	struct exfat_sb_info *sbi = EXFAT_SB(sb);
+> +	struct exfat_inode_info *ei = EXFAT_I(inode);
+> +	bool is_dir = (ei->type == TYPE_DIR) ? true : false;
+> +
+> +	if (inode->i_ino == EXFAT_ROOT_INO)
+> +		return 0;
+> +
+> +	/*
+> +	 * If the indode is already unlinked, there is no need for updating it.
+> +	 */
+> +	if (ei->dir.dir == DIR_DELETED)
+> +		return 0;
+> +
+> +	if (is_dir && ei->dir.dir == sbi->root_dir && ei->entry == -1)
+> +		return 0;
+> +
+> +	exfat_set_vol_flags(sb, VOL_DIRTY);
+> +
+> +	/* get the directory entry of given file or directory */
+> +	es = exfat_get_dentry_set(sb, &(ei->dir), ei->entry, ES_ALL_ENTRIES,
+> +		&ep);
+> +	if (!es)
+> +		return -EIO;
+> +	ep2 = ep + 1;
+> +
+> +	ep->dentry.file.attr = cpu_to_le16(exfat_make_attr(inode));
+> +
+> +	/* set FILE_INFO structure using the acquired struct exfat_dentry */
+> +	exfat_set_entry_time(sbi, &inode->i_ctime,
+> +			&ep->dentry.file.create_time,
+> +			&ep->dentry.file.create_date,
+> +			&ep->dentry.file.create_tz);
 
-On 2020/1/16 =E4=B8=8B=E5=8D=8811:47, Jason Gunthorpe wrote:
-> On Thu, Jan 16, 2020 at 08:42:31PM +0800, Jason Wang wrote:
->> This patch implements a software vDPA networking device. The datapath
->> is implemented through vringh and workqueue. The device has an on-chip
->> IOMMU which translates IOVA to PA. For kernel virtio drivers, vDPA
->> simulator driver provides dma_ops. For vhost driers, set_map() methods
->> of vdpa_config_ops is implemented to accept mappings from vhost.
->>
->> A sysfs based management interface is implemented, devices are
->> created and removed through:
->>
->> /sys/devices/virtual/vdpa_simulator/netdev/{create|remove}
-> This is very gross, creating a class just to get a create/remove and
-> then not using the class for anything else? Yuk.
+And here is missing updating of create_time_ms entry too.
 
+> +	exfat_set_entry_time(sbi, &inode->i_mtime,
+> +			&ep->dentry.file.modify_time,
+> +			&ep->dentry.file.modify_date,
+> +			&ep->dentry.file.modify_tz);
 
-It includes more information, e.g the devices and the link from vdpa_sim=20
-device and vdpa device.
+And here modify_time_ms too.
 
+> +	exfat_set_entry_time(sbi, &inode->i_atime,
+> +			&ep->dentry.file.access_time,
+> +			&ep->dentry.file.access_date,
+> +			&ep->dentry.file.access_tz);
+> +
+> +	/* File size should be zero if there is no cluster allocated */
+> +	on_disk_size = i_size_read(inode);
+> +
+> +	if (ei->start_clu == EXFAT_EOF_CLUSTER)
+> +		on_disk_size = 0;
+> +
+> +	ep2->dentry.stream.valid_size = cpu_to_le64(on_disk_size);
+> +	ep2->dentry.stream.size = ep2->dentry.stream.valid_size;
+> +
+> +	ret = exfat_update_dir_chksum_with_entry_set(sb, es, sync);
+> +	kfree(es);
+> +	return ret;
+> +}
 
->
->> Netlink based lifecycle management could be implemented for vDPA
->> simulator as well.
-> This is just begging for a netlink based approach.
->
-> Certainly netlink driven removal should be an agreeable standard for
-> all devices, I think.
-
-
-Well, I think Parav had some proposals during the discussion of mdev=20
-approach. But I'm not sure if he had any RFC codes for me to integrate=20
-it into vdpasim.
-
-Or do you want me to propose the netlink API? If yes, would you prefer=20
-to a new virtio dedicated one or be a subset of devlink?
-
-But it might be better to reach an agreement for all the vendors here.
-
-Rob, Steve, Tiwei, Lingshan, Harpreet, Martin, Jakub, please share your=20
-thoughts about the management API here.
-
-
->
->> +struct vdpasim_virtqueue {
->> +	struct vringh vring;
->> +	struct vringh_kiov iov;
->> +	unsigned short head;
->> +	bool ready;
->> +	u64 desc_addr;
->> +	u64 device_addr;
->> +	u64 driver_addr;
->> +	u32 num;
->> +	void *private;
->> +	irqreturn_t (*cb)(void *data);
->> +};
->> +
->> +#define VDPASIM_QUEUE_ALIGN PAGE_SIZE
->> +#define VDPASIM_QUEUE_MAX 256
->> +#define VDPASIM_DEVICE_ID 0x1
->> +#define VDPASIM_VENDOR_ID 0
->> +#define VDPASIM_VQ_NUM 0x2
->> +#define VDPASIM_CLASS_NAME "vdpa_simulator"
->> +#define VDPASIM_NAME "netdev"
->> +
->> +u64 vdpasim_features =3D (1ULL << VIRTIO_F_ANY_LAYOUT) |
->> +		       (1ULL << VIRTIO_F_VERSION_1)  |
->> +		       (1ULL << VIRTIO_F_IOMMU_PLATFORM);
-> Is not using static here intentional?
-
-
-No, let me fix.
-
-
->
->> +static void vdpasim_release_dev(struct device *_d)
->> +{
->> +	struct vdpa_device *vdpa =3D dev_to_vdpa(_d);
->> +	struct vdpasim *vdpasim =3D vdpa_to_sim(vdpa);
->> +
->> +	sysfs_remove_link(vdpasim_dev->devices_kobj, vdpasim->name);
->> +
->> +	mutex_lock(&vsim_list_lock);
->> +	list_del(&vdpasim->next);
->> +	mutex_unlock(&vsim_list_lock);
->> +
->> +	kfree(vdpasim->buffer);
->> +	kfree(vdpasim);
->> +}
-> It is again a bit weird to see a realease function in a driver. This
-> stuff is usually in the remove remove function.
-
-
-Will fix.
-
-
->
->> +static int vdpasim_create(const guid_t *uuid)
->> +{
->> +	struct vdpasim *vdpasim, *tmp;
->> +	struct virtio_net_config *config;
->> +	struct vdpa_device *vdpa;
->> +	struct device *dev;
->> +	int ret =3D -ENOMEM;
->> +
->> +	mutex_lock(&vsim_list_lock);
->> +	list_for_each_entry(tmp, &vsim_devices_list, next) {
->> +		if (guid_equal(&tmp->uuid, uuid)) {
->> +			mutex_unlock(&vsim_list_lock);
->> +			return -EEXIST;
->> +		}
->> +	}
->> +
->> +	vdpasim =3D kzalloc(sizeof(*vdpasim), GFP_KERNEL);
->> +	if (!vdpasim)
->> +		goto err_vdpa_alloc;
->> +
->> +	vdpasim->buffer =3D kmalloc(PAGE_SIZE, GFP_KERNEL);
->> +	if (!vdpasim->buffer)
->> +		goto err_buffer_alloc;
->> +
->> +	vdpasim->iommu =3D vhost_iotlb_alloc(2048, 0);
->> +	if (!vdpasim->iommu)
->> +		goto err_iotlb;
->> +
->> +	config =3D &vdpasim->config;
->> +	config->mtu =3D 1500;
->> +	config->status =3D VIRTIO_NET_S_LINK_UP;
->> +	eth_random_addr(config->mac);
->> +
->> +	INIT_WORK(&vdpasim->work, vdpasim_work);
->> +	spin_lock_init(&vdpasim->lock);
->> +
->> +	guid_copy(&vdpasim->uuid, uuid);
->> +
->> +	list_add(&vdpasim->next, &vsim_devices_list);
->> +	vdpa =3D &vdpasim->vdpa;
->> +
->> +	mutex_unlock(&vsim_list_lock);
->> +
->> +	vdpa =3D &vdpasim->vdpa;
->> +	vdpa->config =3D &vdpasim_net_config_ops;
->> +	vdpa_set_parent(vdpa, &vdpasim_dev->dev);
->> +	vdpa->dev.release =3D vdpasim_release_dev;
->> +
->> +	vringh_set_iotlb(&vdpasim->vqs[0].vring, vdpasim->iommu);
->> +	vringh_set_iotlb(&vdpasim->vqs[1].vring, vdpasim->iommu);
->> +
->> +	dev =3D &vdpa->dev;
->> +	dev->coherent_dma_mask =3D DMA_BIT_MASK(64);
->> +	set_dma_ops(dev, &vdpasim_dma_ops);
->> +
->> +	ret =3D register_vdpa_device(vdpa);
->> +	if (ret)
->> +		goto err_register;
->> +
->> +	sprintf(vdpasim->name, "%pU", uuid);
->> +
->> +	ret =3D sysfs_create_link(vdpasim_dev->devices_kobj, &vdpa->dev.kobj=
-,
->> +				vdpasim->name);
->> +	if (ret)
->> +		goto err_link;
-> The goto err_link does the wrong unwind, once register is completed
-> the error unwind is unregister & put_device, not kfree. This is why I
-> recommend to always initalize the device early, and always using
-> put_device during error unwinds.
-
-
-Will fix.
-
-
->
-> This whole guid thing seems unncessary when the device is immediately
-> assigned a vdpa index from the ida.
-
-
-The problem here is that user need to know which vdpa_sim is the one=20
-that is just created.
-
-
-> If you were not using syfs you'd
-> just return that index from the creation netlink.
-
-
-Yes it is.
-
-Thanks
-
-
->
-> Jason
->
-
+-- 
+Pali Rohár
+pali.rohar@gmail.com
