@@ -2,87 +2,138 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD77C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17FCCC33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A6EC20728
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:16:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF3782073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:16:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="w3CYcgiy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729011AbgAQJQI (ORCPT
+        id S1729207AbgAQJQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 04:16:08 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:41653 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726406AbgAQJQH (ORCPT
+        Fri, 17 Jan 2020 04:16:47 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:47382 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726406AbgAQJQq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 04:16:07 -0500
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1isNjX-0007eJ-Le; Fri, 17 Jan 2020 10:16:03 +0100
-Message-ID: <f1d39d02b558f2255ed3270110bbf051a8f76f6c.camel@pengutronix.de>
-Subject: Re: [PATCH RESEND] MAINTAINERS: fix style in RESET CONTROLLER
- FRAMEWORK
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Joe Perches <joe@perches.com>, kernel@pengutronix.de,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 17 Jan 2020 10:16:02 +0100
-In-Reply-To: <20200116184836.10256-1-lukas.bulwahn@gmail.com>
-References: <20200116184836.10256-1-lukas.bulwahn@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Fri, 17 Jan 2020 04:16:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=fd//sQhURzNiFh+3rBkISyoHiyHAC+Y1nYl72Fl+UGY=; b=w3CYcgiyynYypofPTttFS2ZPq
+        eMkbppx5Xg5Afvj5g/fBtKuYp4hmkP3ZJlkx1H6RWPuGwAA4RzuS011mlbPapebhQF8EnfTfgDEBR
+        VY6E+ytpC1YHjItk19vwSLVNWQXoLz6qIcBlnIcdilypz1rAeEPLKD6sCD+Q33LXxOADq4BHXzEqv
+        sFvw981bXTAvLZbwLsBeo858CWxDwMb+6oclr/SnFfJSG7oMUJuwr5dyUFj5lfepQCzAhT3j83Fs8
+        U03JmiUsLLmPBve7dTN08drPY/12pDdHII+hP9rii4OWCDjFcFE8iZ57dJLtapy7C5+ezS92ep5mO
+        9I+0H3NHw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1isNkC-0004bi-HH; Fri, 17 Jan 2020 09:16:44 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 24D27304A59;
+        Fri, 17 Jan 2020 10:15:06 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4C94E20AFB27D; Fri, 17 Jan 2020 10:16:43 +0100 (CET)
+Date:   Fri, 17 Jan 2020 10:16:43 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     kan.liang@linux.intel.com
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org,
+        like.xu@linux.intel.com, ak@linux.intel.com, stable@vger.kernel.org
+Subject: Re: [RESEND PATCH 1/2] perf/x86/intel/uncore: Fix missing marker for
+ snr_uncore_imc_freerunning_events
+Message-ID: <20200117091643.GY2827@hirez.programming.kicks-ass.net>
+References: <20200116200210.18937-1-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200116200210.18937-1-kan.liang@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lukas,
-
-On Thu, 2020-01-16 at 19:48 +0100, Lukas Bulwahn wrote:
-> Commit 37859277374d ("MAINTAINERS: add reset controller framework
-> keywords") slips in some formatting with spaces instead of tabs, which
-> ./scripts/checkpatch.pl -f MAINTAINERS complains about:
+On Thu, Jan 16, 2020 at 12:02:09PM -0800, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
 > 
->   WARNING: MAINTAINERS entries use one tab after TYPE:
->   #14047: FILE: MAINTAINERS:14047:
->   +K:      \b(?:devm_|of_)?reset_control(?:ler_[a-z]+|_[a-z_]+)?\b
+> An Oops during the boot is found on some SNR machines.
 > 
-> Fixes: 37859277374d ("MAINTAINERS: add reset controller framework keywords")
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> ---
-> applies cleanly on v5.5-rc6 and next-20200116
-> Philipp, please pick this patch.
+> [   15.795410] BUG: unable to handle page fault for address:
+> 00000000000022b0
+> [   15.795412] #PF: supervisor read access in kernel mode
+> [   15.795413] #PF: error_code(0x0000) - not-present page
+> [   15.795414] PGD 0 P4D 0
+> [   15.795418] Oops: 0000 [#1] SMP NOPTI
+> [   15.795420] CPU: 6 PID: 941 Comm: systemd-udevd Not tainted
+> 5.3.0-snr-v5.3 #292
+> [   15.795421] Hardware name: Intel Corporation JACOBSVILLE/JACOBSVILLE,
+> BIOS JBVLCRB1.86B.0011.D44.1909191126 09/19/2019
+> [   15.795428] RIP: 0010:strlen+0x0/0x20
+> [   15.795431] Code: 48 89 f9 74 09 48 83 c1 01 80 39 00 75 f7 31 d2 44
+> 0f
+> b6 04 16 44 88 04 11 48 83 c2 01 45 84 c0 75 ee c3 0f 1f 80 00 00 00 00
+> <80> 3f 00 74 10 48 89 f8 48 83 c0 01 80 38 00 75 f7 48 29 f8 c3 31
+> [   15.855395] i801_smbus 0000:00:1f.4: SPD Write Disable is set
+> [   15.858351] RSP: 0018:ffffaeb4812039c8 EFLAGS: 00010202
+> [   15.858353] RAX: 0000000000000000 RBX: ffff9fec99c71300 RCX:
+> 0000000000008000
+> [   15.858354] RDX: 00000000000022b0 RSI: 0000000000000cc0 RDI:
+> 00000000000022b0
+> [   15.858355] RBP: 00000000000022b0 R08: 0000000000000000 R09:
+> 0000000000000000
+> [   15.858356] R10: 0000000000000000 R11: 0000000000000000 R12:
+> ffff9fec8583a800
+> [   15.858357] R13: 0000000000000cc0 R14: ffff9fec94015648 R15:
+> ffff9fec81f291a8
+> [   15.858358] FS:  00007f89e7160940(0000) GS:ffff9fec9dc00000(0000)
+> knlGS:0000000000000000
+> [   15.858361] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   15.864343] i801_smbus 0000:00:1f.4: SMBus using polling
+> [   15.869998] CR2: 00000000000022b0 CR3: 0000000842ca2000 CR4:
+> 0000000000340ee0
+> [   15.870000] Call Trace:
+> [   15.870006]  kstrdup+0x1a/0x60
+> [   15.870012]  __kernfs_new_node+0x41/0x1f0
+> [   15.870018]  ? __mutex_unlock_slowpath+0x4d/0x2a0
+> [   15.895135] ioatdma 0000:00:01.3: enabling device (0004 -> 0006)
+> [   15.899395]  kernfs_new_node+0x36/0x60
+> [   15.899400]  __kernfs_create_file+0x2c/0xf3
+> [   15.961374]  sysfs_add_file_mode_ns+0xa4/0x1a0
+> [   15.961379]  internal_create_group+0x117/0x370
+> [   15.972133]  ? sysfs_add_file_mode_ns+0xa4/0x1a0
+> [   15.972138]  internal_create_groups.part.0+0x3d/0xa0
+> [   15.982656]  device_add+0x625/0x690
+> [   15.982662]  pmu_dev_alloc+0x93/0xf0
+> [   15.982664]  perf_pmu_register+0x292/0x3e0
+> [   15.982674]  uncore_pmu_register+0x76/0x120 [intel_uncore]
+> [   15.982681]  intel_uncore_init+0x1fd/0xe2c [intel_uncore]
+> [   15.982688]  ? uncore_types_init+0x1d4/0x1d4 [intel_uncore]
+> [   16.013580]  do_one_initcall+0x5d/0x2e4
+> [   16.013584]  ? do_init_module+0x23/0x230
+> [   16.013586]  ? rcu_read_lock_sched_held+0x6b/0x80
+> [   16.013589]  ? kmem_cache_alloc_trace+0x2c4/0x2f0
+> [   16.013591]  ? do_init_module+0x23/0x230
+> [   16.013594]  do_init_module+0x5c/0x230
+> [   16.013597]  load_module+0x2779/0x2a90
+> [   16.013605]  ? ima_post_read_file+0xfd/0x110
+> [   16.026926] ioatdma 0000:00:01.4: enabling device (0004 -> 0006)
+> [   16.028808]  ? __do_sys_finit_module+0xaa/0x110
+> [   16.060527]  __do_sys_finit_module+0xaa/0x110
+> [   16.060536]  do_syscall_64+0x5c/0xb0
+> [   16.060540]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 > 
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index d2aa9db61ab6..83eae48ad4f2 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -14067,7 +14067,7 @@ F:	include/dt-bindings/reset/
->  F:	include/linux/reset.h
->  F:	include/linux/reset/
->  F:	include/linux/reset-controller.h
-> -K:      \b(?:devm_|of_)?reset_control(?:ler_[a-z]+|_[a-z_]+)?\b
-> +K:	\b(?:devm_|of_)?reset_control(?:ler_[a-z]+|_[a-z_]+)?\b
->  
->  RESTARTABLE SEQUENCES SUPPORT
->  M:	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> This snr_uncore_imc_freerunning_events array was missing an end-marker.
 
-Thank you, applied to reset/fixes now.
-
-regards
-Philipp
-
+Surely you can convey the same without the need to include that splat?
+That is, what actual useful information is there that you cannot more
+easily write?
