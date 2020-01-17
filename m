@@ -2,120 +2,99 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26995C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 08:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E83C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 08:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0C622072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 08:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E82DF2083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 08:08:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZBBjk6Rv"
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="ctgc1bMF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729400AbgAQIIk (ORCPT
+        id S1729475AbgAQIIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 03:08:40 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:58740 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727002AbgAQIIk (ORCPT
+        Fri, 17 Jan 2020 03:08:46 -0500
+Received: from fanzine.igalia.com ([178.60.130.6]:38119 "EHLO
+        fanzine.igalia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727002AbgAQIIp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 03:08:40 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00H88Tu3019621;
-        Fri, 17 Jan 2020 02:08:29 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579248509;
-        bh=h04PjAMDL1FtVudgz/Df4dwDowqI3YAr79xF/WspK4g=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ZBBjk6Rve2UPz25W/dSwPh/q1PllomFVILWHvh1uHVpp7IpeW8yRUKO7YjGO2vEFF
-         zVhwxLq5CHrvun2rUcSiFPg/MUcvUuFOLse+Njw/H+ewHZ21TM4SrX/VzJ8O8AiUXc
-         EK+TEqgPwSsaQv/4dl3NipafMwGZ2CVF4XoDv3S8=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00H88Tt6052815
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 17 Jan 2020 02:08:29 -0600
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 17
- Jan 2020 02:08:29 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 17 Jan 2020 02:08:29 -0600
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00H88QTL071044;
-        Fri, 17 Jan 2020 02:08:27 -0600
-Subject: Re: [PATCH] arm: dts: ti: k3-am654-main: Update otap-del-sel values
-To:     Faiz Abbas <faiz_abbas@ti.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <mark.rutland@arm.com>, <robh+dt@kernel.org>, <nm@ti.com>
-References: <20200109085152.10573-1-faiz_abbas@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <5dc0bca0-502d-01b8-554b-4c4bc06688a8@ti.com>
-Date:   Fri, 17 Jan 2020 10:08:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 17 Jan 2020 03:08:45 -0500
+X-Greylist: delayed 2593 seconds by postgrey-1.27 at vger.kernel.org; Fri, 17 Jan 2020 03:08:45 EST
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com; s=20170329;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID; bh=xkBF8jCSOWPumWg9R+MOpddk9K9WEJFLsXsk5vUpwbU=;
+        b=ctgc1bMFPsEvVCcRWuutv+YO2ueOPTps5Bt6MPdOZxl0KloyUOn9f0hYS7JBAP89XHhp/vfRf7bptujxrAIlMsrG0sWnRbKLIAuU7iS9+xFRPoZ8VL+OvJ7WMAu1kkK7v3nMnJ3y3hIxjvVhUeA8s0Wcjg080Em0FF8EeHom99OO8mLi13fCUVAKq5Pj50iiEdcc4m63hho9fAfWt+TAU3Zyf0QCRtiYU9AMd98dJqiA64iCO3yjrPiofo+VNVdjjJ74qNABJwgbedobd2rr8QEMJduQYJOcFwUubSPhukHyPiVuM1DC7scKUrxgryJ2apfGF+D9rINzKTEEJhxXrw==;
+Received: from [192.168.10.170] (helo=ip170.dynamic.igalia.com)
+        by fanzine.igalia.com with esmtpsa 
+        (Cipher TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256) (Exim)
+        id 1isM0Y-00039r-B1; Fri, 17 Jan 2020 08:25:30 +0100
+Message-ID: <cb93a21557216d1b389390c556f421132aac88f0.camel@igalia.com>
+Subject: Re: [PATCH AUTOSEL 5.4 003/205] drm/v3d: don't leak bin job if
+ v3d_job_init fails.
+From:   Iago Toral <itoral@igalia.com>
+To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org
+Date:   Fri, 17 Jan 2020 08:25:30 +0100
+In-Reply-To: <20200116164300.6705-3-sashal@kernel.org>
+References: <20200116164300.6705-1-sashal@kernel.org>
+         <20200116164300.6705-3-sashal@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-In-Reply-To: <20200109085152.10573-1-faiz_abbas@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/01/2020 10:51, Faiz Abbas wrote:
-> According to the latest AM65x Data Manual[1], a different output tap
-> delay value is optimum for a given speed mode. Update these values.
+Hi Sasha,
+
+
+please notice that there were two separate patches that addressed the
+same issue and applying both simultaneously leads to a double free
+(which is what I see is happening with this patch: see the second call
+to kfree(bin) right below the one added here). This issue was raised
+previously here:
+
+https://lists.freedesktop.org/archives/dri-devel/2019-October/241425.html
+
+Iago
+
+On Thu, 2020-01-16 at 11:39 -0500, Sasha Levin wrote:
+> From: Iago Toral Quiroga <itoral@igalia.com>
 > 
-> [1] http://www.ti.com/lit/gpn/am6526
+> [ Upstream commit 0d352a3a8a1f26168d09f7073e61bb4b328e3bb9 ]
 > 
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-
-I believe this patch is going to be updated, as the dt binding has 
-received comments. As such, going to ignore this for now.
-
--Tero
-
+> If the initialization of the job fails we need to kfree() it
+> before returning.
+> 
+> Signed-off-by: Iago Toral Quiroga <itoral@igalia.com>
+> Signed-off-by: Eric Anholt <eric@anholt.net>
+> Link: 
+> https://patchwork.freedesktop.org/patch/msgid/20190916071125.5255-1-itoral@igalia.com
+> Fixes: a783a09ee76d ("drm/v3d: Refactor job management.")
+> Reviewed-by: Eric Anholt <eric@anholt.net>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 > ---
+>  drivers/gpu/drm/v3d/v3d_gem.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> This patch depends on my two kernel series posted here:
-> https://patchwork.kernel.org/project/linux-mmc/list/?series=225425
-> https://patchwork.kernel.org/project/linux-mmc/list/?series=225459
-> 
->   arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 12 +++++++++++-
->   1 file changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> index efb24579922c..c8d812fdfa0a 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> @@ -253,7 +253,17 @@
->   		interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
->   		mmc-ddr-1_8v;
->   		mmc-hs200-1_8v;
-> -		ti,otap-del-sel = <0x2>;
-> +		ti,otap-del-sel-legacy = <0x0>;
-> +		ti,otap-del-sel-mmc-hs = <0x0>;
-> +		ti,otap-del-sel-sd-hs = <0x0>;
-> +		ti,otap-del-sel-sdr12 = <0x0>;
-> +		ti,otap-del-sel-sdr25 = <0x0>;
-> +		ti,otap-del-sel-sdr50 = <0x8>;
-> +		ti,otap-del-sel-sdr104 = <0x5>;
-> +		ti,otap-del-sel-ddr50 = <0x5>;
-> +		ti,otap-del-sel-ddr52 = <0x5>;
-> +		ti,otap-del-sel-hs200 = <0x5>;
-> +		ti,otap-del-sel-hs400 = <0x0>;
->   		ti,trm-icp = <0x8>;
->   		dma-coherent;
->   	};
-> 
+> diff --git a/drivers/gpu/drm/v3d/v3d_gem.c
+> b/drivers/gpu/drm/v3d/v3d_gem.c
+> index 19c092d75266..6316bf3646af 100644
+> --- a/drivers/gpu/drm/v3d/v3d_gem.c
+> +++ b/drivers/gpu/drm/v3d/v3d_gem.c
+> @@ -565,6 +565,7 @@ v3d_submit_cl_ioctl(struct drm_device *dev, void
+> *data,
+>  		ret = v3d_job_init(v3d, file_priv, &bin->base,
+>  				   v3d_job_free, args->in_sync_bcl);
+>  		if (ret) {
+> +			kfree(bin);
+>  			v3d_job_put(&render->base);
+>  			kfree(bin);
+>  			return ret;
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
