@@ -2,121 +2,288 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5052EC33CB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD84C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2397720748
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:15:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CF3220748
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:19:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BSQILfuB"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TkemZIod"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726999AbgAQVPH (ORCPT
+        id S1726935AbgAQVT0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 16:15:07 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37441 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbgAQVPH (ORCPT
+        Fri, 17 Jan 2020 16:19:26 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39423 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726744AbgAQVT0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 16:15:07 -0500
-Received: by mail-pl1-f195.google.com with SMTP id c23so10353443plz.4
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 13:15:06 -0800 (PST)
+        Fri, 17 Jan 2020 16:19:26 -0500
+Received: by mail-pf1-f196.google.com with SMTP id q10so12501905pfs.6
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 13:19:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=hDjGeeleL+HbTBakSqxyCbAUHlP2+qcu6KumLAPqXUU=;
-        b=BSQILfuBRSQobvuJiAwCAtFsCtM5EZ3Yjz+WXkxV3tDNF5BEcRY5ml8/FNx+XC8r/U
-         6vyAvm4ctOfcS7xDBhoVpynWvqR8/3HjleemRToNRjKjCR6ms8QKn+6An++QgXP1j8uX
-         in1mTw1za0l9RIg4JeYi2tH7UWttIWEWUb1og=
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xQ1cLk8AoXeuMnKaeWOsZO8UOMouGKhMSseZSkEh3GE=;
+        b=TkemZIodaalJY7NhP8tqKO8FcrHui0ykeJnmEu0rE/fbHzNyBS4V9bBJ46T5sEREG5
+         Yl6uPvIvEYkYH+Q/0loq+RaQpLIyjDHRu/Uz0+q6dCKQuLBmFwYW0HMs7rA9dTuT2+wJ
+         AgJNy6RrszArjB9DsPScMNZr4c/3hXNVacSow=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hDjGeeleL+HbTBakSqxyCbAUHlP2+qcu6KumLAPqXUU=;
-        b=L3PsN9vnDKmQb/3RoMFm4pXZE4o1T0cPESULPc/8f2TRuBSrVYte/5gNBgKCAnA5TV
-         0mjrmEOmeEE7cMIf5knrGg5VU41WRWrcf8QZfhSg+yIPn3d47k+FMXIfucl3Iz5LQRsu
-         M33JqGEQMscluc9jlybZM/x3Sh5ebDp6oU52Jhny/jPndTqJuQfiZfgdq0811/6dycU6
-         PQAWp1PrOYXZdES+iGZBLorwgkUyTEb4blnfR/co75k41o0hSqUE11Xh0U/ZzXSVGIje
-         gIR4hRqgyuLpoO10xX4Dk6nRxqAeMwRPPG9H/EkBtp7DkpkY67n5IvAfnGqZDyq7ehAv
-         NUEA==
-X-Gm-Message-State: APjAAAU4NmbFN6bjPnvsrweeyZyfAf9uKzGfo+qu9EfTZ4BibdJm0eLD
-        wcWrpimLDXziomCi2dJoD5WIKw==
-X-Google-Smtp-Source: APXvYqxj2qC2Kag4Dy81hHsTvTzPaCLiACq64wPFUzQ1WtYhCxyGXVujZhSdp9ocQqLQzPqwwuoxLg==
-X-Received: by 2002:a17:90a:c705:: with SMTP id o5mr8049276pjt.67.1579295706568;
-        Fri, 17 Jan 2020 13:15:06 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a23sm32043042pfg.82.2020.01.17.13.15.05
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xQ1cLk8AoXeuMnKaeWOsZO8UOMouGKhMSseZSkEh3GE=;
+        b=Z21aLVqUhTPBLKtVWSVlrBcDMhNMrfSob2Io1prgsKWO8jMGkgimdLQTtp4u9QksTl
+         0XVx65sRR4kZSVe+q8rvsR1I4SAgKr0qUgV6Wg3ik2Z9jPg/OuDVuKO9sUXwA1FFJLxD
+         7TxmbKuVO/nexSRqRDRUGc5/ZXoL5gLSpq+SqrNinuBrFMGkb+3WTsc8M3rZn0xthUEF
+         Nws9WtE0UocYhPoQWRIeOyDeBvnSHifUnbW0hkjUmPkG3x0yy1NCAidCAx5ewK6yzPJQ
+         snWQ8Ubn4vX3ZDFAXDUWxo+54+HUYiM2+Ocg6LWhnSG+wMXaHBt9GJAzlsu2a5xMFh+E
+         bJ1A==
+X-Gm-Message-State: APjAAAWdmvO9n+dhzJH44wOu9s9EnmA7MAWHWd5yfoUKE0uAubcb3XS2
+        XPruCO3C9JG705h4DC1O3jA74w==
+X-Google-Smtp-Source: APXvYqxklwQN4hb4h7rQyUp+FqWvLu9tWtd2vCg8YQ9W2WZ8ZQXBY7Gogl25eaHpTd4/WozJVoUhhA==
+X-Received: by 2002:aa7:9115:: with SMTP id 21mr5002360pfh.224.1579295965102;
+        Fri, 17 Jan 2020 13:19:25 -0800 (PST)
+Received: from chromium.org ([165.231.253.166])
+        by smtp.gmail.com with ESMTPSA id 81sm31092889pfx.30.2020.01.17.13.19.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 13:15:05 -0800 (PST)
-Date:   Fri, 17 Jan 2020 13:15:04 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-kernel@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Oleg Nesterov <oleg@redhat.com>, stable@vger.kernel.org,
-        Serge Hallyn <serge@hallyn.com>, Eric Paris <eparis@redhat.com>
-Subject: Re: [PATCH v3] ptrace: reintroduce usage of subjective credentials
- in ptrace_has_cap()
-Message-ID: <202001171310.A74535C0@keescook>
-References: <20200117105717.29803-1-christian.brauner@ubuntu.com>
+        Fri, 17 Jan 2020 13:19:24 -0800 (PST)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Fri, 17 Jan 2020 22:19:32 +0100
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Anton Protopopov <a.s.protopopov@gmail.com>,
+        Florent Revest <revest@chromium.org>
+Subject: Re: [PATCH bpf-next] libbpf: Load btf_vmlinux only once per object.
+Message-ID: <20200117211932.GA6256@chromium.org>
+References: <20200117165821.21482-1-kpsingh@chromium.org>
+ <CAEf4Bzazg0HQt7dSXMBdGTePL+zrTxVP5v5WpSYKk8PFpF4iYg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200117105717.29803-1-christian.brauner@ubuntu.com>
+In-Reply-To: <CAEf4Bzazg0HQt7dSXMBdGTePL+zrTxVP5v5WpSYKk8PFpF4iYg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 11:57:18AM +0100, Christian Brauner wrote:
-> -static int ptrace_has_cap(struct user_namespace *ns, unsigned int mode)
-> +static int ptrace_has_cap(const struct cred *cred, struct user_namespace *ns,
-> +			  unsigned int mode)
->  {
-> -	if (mode & PTRACE_MODE_NOAUDIT)
-> -		return has_ns_capability_noaudit(current, ns, CAP_SYS_PTRACE);
-> -	else
-> -		return has_ns_capability(current, ns, CAP_SYS_PTRACE);
-> +	return security_capable(cred, ns, CAP_SYS_PTRACE,
-> +				(mode & PTRACE_MODE_NOAUDIT) ? CAP_OPT_NOAUDIT :
-> +							       CAP_OPT_NONE);
->  }
+Thanks for taking a look. Sending out a v2 with the fixes.
 
-Eek, no. I think this inverts the check.
+On 17-Jan 11:02, Andrii Nakryiko wrote:
+> On Fri, Jan 17, 2020 at 8:58 AM KP Singh <kpsingh@chromium.org> wrote:
+> >
+> > From: KP Singh <kpsingh@google.com>
+> >
+> > As more programs (TRACING, STRUCT_OPS, and upcoming LSM) use vmlinux
+> > BTF information, loading the BTF vmlinux information for every program
+> > in an object is sub-optimal. The fix was originally proposed in:
+> >
+> >    https://lore.kernel.org/bpf/CAEf4BzZodr3LKJuM7QwD38BiEH02Cc1UbtnGpVkCJ00Mf+V_Qg@mail.gmail.com/
+> >
+> > The btf_vmlinux is populated in the object if any of the programs in
+> > the object requires it just before the programs are loaded and freed
+> > after the programs finish loading.
+> >
+> > Reported-by: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+> > Reviewed-by: Brendan Jackman <jackmanb@chromium.org>
+> > Signed-off-by: KP Singh <kpsingh@google.com>
+> > ---
+> 
+> Thanks for the clean up! Few issues, but overall I like this.
 
-Before:
-bool has_ns_capability(struct task_struct *t,
-                       struct user_namespace *ns, int cap)
-{
-	...
-        ret = security_capable(__task_cred(t), ns, cap, CAP_OPT_NONE);
-	...
-        return (ret == 0);
-}
+Thanks!
 
-static int ptrace_has_cap(struct user_namespace *ns, unsigned int mode)
-{
-	...
-                return has_ns_capability(current, ns, CAP_SYS_PTRACE);
-}
+> 
+> >  tools/lib/bpf/libbpf.c | 148 +++++++++++++++++++++++++++--------------
+> >  1 file changed, 97 insertions(+), 51 deletions(-)
+> >
+> > diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> > index 3afaca9bce1d..db0e93882a3b 100644
+> > --- a/tools/lib/bpf/libbpf.c
+> > +++ b/tools/lib/bpf/libbpf.c
+> > @@ -385,6 +385,10 @@ struct bpf_object {
+> 
+> [...]
+> 
+> > @@ -2364,6 +2357,38 @@ static int bpf_object__finalize_btf(struct bpf_object *obj)
+> >         return 0;
+> >  }
+> >
+> > +static inline bool libbpf_prog_needs_vmlinux_btf(struct bpf_program *prog)
+> > +{
+> 
+> I suspect that at some point this approach won't be flexible enough,
+> but it simplifies error handling right now, so I'm ok with it.
 
-After:
-static int ptrace_has_cap(const struct cred *cred, struct user_namespace *ns,
-                       unsigned int mode)
-{
-	return security_capable(cred, ns, CAP_SYS_PTRACE,
-				(mode & PTRACE_MODE_NOAUDIT) ? CAP_OPT_NOAUDIT :
-							       CAP_OPT_NONE);
-}
+Acknowledged.
 
-Note lack of "== 0" on the security_capable() return value, but it's
-needed. To avoid confusion, I think ptrace_has_cap() should likely
-return bool too.
+> 
+> > +       if (prog->type == BPF_PROG_TYPE_STRUCT_OPS)
+> > +               return true;
+> > +
+> > +       /* BPF_PROG_TYPE_TRACING programs which do not attach to other programs
+> > +        * also need vmlinux BTF
+> > +        */
+> > +       if (prog->type == BPF_PROG_TYPE_TRACING && !prog->attach_prog_fd)
+> > +               return true;
+> > +
+> > +       return false;
+> > +}
+> > +
+> > +static int bpf_object__load_vmlinux_btf(struct bpf_object *obj)
+> > +{
+> > +       struct bpf_program *prog;
+> > +
+> > +       bpf_object__for_each_program(prog, obj) {
+> > +               if (libbpf_prog_needs_vmlinux_btf(prog)) {
+> > +                       obj->btf_vmlinux = libbpf_find_kernel_btf();
+> > +                       if (IS_ERR(obj->btf_vmlinux)) {
+> > +                               pr_warn("vmlinux BTF is not found\n");
+> 
+> please, emit error code as well
+> 
+> also, clear out btf_vmlinux, otherwise your code will attempt to free
+> invalid pointer later on
 
--Kees
+Done, also changed it so that the error code does not get clobbered.
+ 
+> > +                               return -EINVAL;
+> > +                       }
+> > +                       return 0;
+> > +               }
+> > +       }
+> > +
+> > +       return 0;
+> > +}
+> 
+> [...]
+> 
+> > @@ -5280,10 +5301,17 @@ int bpf_object__load_xattr(struct bpf_object_load_attr *attr)
+> >         err = err ? : bpf_object__resolve_externs(obj, obj->kconfig);
+> >         err = err ? : bpf_object__sanitize_and_load_btf(obj);
+> >         err = err ? : bpf_object__sanitize_maps(obj);
+> > +       err = err ? : bpf_object__load_vmlinux_btf(obj);
+> >         err = err ? : bpf_object__init_kern_struct_ops_maps(obj);
+> >         err = err ? : bpf_object__create_maps(obj);
+> >         err = err ? : bpf_object__relocate(obj, attr->target_btf_path);
+> >         err = err ? : bpf_object__load_progs(obj, attr->log_level);
+> > +
+> > +       if (obj->btf_vmlinux) {
+> 
+> you can skip this check, btf__free(NULL) is handled properly as noop
 
--- 
-Kees Cook
+Done. Skipped.
+
+> 
+> > +               btf__free(obj->btf_vmlinux);
+> > +               obj->btf_vmlinux = NULL;
+> > +       }
+> > +
+> >         if (err)
+> >                 goto out;
+> 
+> [...]
+> 
+> > +
+> > +static inline int __find_vmlinux_btf_id(struct btf *btf, const char *name,
+> > +                                       enum bpf_attach_type attach_type)
+> > +{
+> > +       int err;
+> > +
+> > +       if (attach_type == BPF_TRACE_RAW_TP)
+> > +               err = find_btf_by_prefix_kind(btf, BTF_TRACE_PREFIX, name,
+> > +                                             BTF_KIND_TYPEDEF);
+> > +       else
+> > +               err = btf__find_by_name_kind(btf, name, BTF_KIND_FUNC);
+> > +
+> > +       return err;
+> > +}
+> > +
+> >  int libbpf_find_vmlinux_btf_id(const char *name,
+> >                                enum bpf_attach_type attach_type)
+> >  {
+> >         struct btf *btf = libbpf_find_kernel_btf();
+> 
+> I had complaints previously about doing too much heavy-lifting in
+> variable assignment, not sure why this slipped through. Can you please
+> split this into variable declaration and separate assignment below?
+
+Done.
+
+> 
+> > -       char raw_tp_btf[128] = BTF_PREFIX;
+> > -       char *dst = raw_tp_btf + sizeof(BTF_PREFIX) - 1;
+> > -       const char *btf_name;
+> > -       int err = -EINVAL;
+> > -       __u32 kind;
+> >
+> >         if (IS_ERR(btf)) {
+> >                 pr_warn("vmlinux BTF is not found\n");
+> >                 return -EINVAL;
+> >         }
+> >
+> > -       if (attach_type == BPF_TRACE_RAW_TP) {
+> > -               /* prepend "btf_trace_" prefix per kernel convention */
+> > -               strncat(dst, name, sizeof(raw_tp_btf) - sizeof(BTF_PREFIX));
+> > -               btf_name = raw_tp_btf;
+> > -               kind = BTF_KIND_TYPEDEF;
+> > -       } else {
+> > -               btf_name = name;
+> > -               kind = BTF_KIND_FUNC;
+> > -       }
+> > -       err = btf__find_by_name_kind(btf, btf_name, kind);
+> > -       btf__free(btf);
+> > -       return err;
+> > +       return __find_vmlinux_btf_id(btf, name, attach_type);
+> >  }
+> >
+> >  static int libbpf_find_prog_btf_id(const char *name, __u32 attach_prog_fd)
+> > @@ -6567,10 +6612,11 @@ static int libbpf_find_prog_btf_id(const char *name, __u32 attach_prog_fd)
+> >         return err;
+> >  }
+> >
+> > -static int libbpf_find_attach_btf_id(const char *name,
+> > -                                    enum bpf_attach_type attach_type,
+> > -                                    __u32 attach_prog_fd)
+> > +static int libbpf_find_attach_btf_id(struct bpf_program *prog)
+> >  {
+> > +       enum bpf_attach_type attach_type = prog->expected_attach_type;
+> > +       __u32 attach_prog_fd = prog->attach_prog_fd;
+> > +       const char *name = prog->section_name;
+> >         int i, err;
+> >
+> >         if (!name)
+> > @@ -6585,8 +6631,8 @@ static int libbpf_find_attach_btf_id(const char *name,
+> >                         err = libbpf_find_prog_btf_id(name + section_defs[i].len,
+> >                                                       attach_prog_fd);
+> >                 else
+> > -                       err = libbpf_find_vmlinux_btf_id(name + section_defs[i].len,
+> > -                                                        attach_type);
+> > +                       err = __find_vmlinux_btf_id(prog->obj->btf_vmlinux,
+> > +                               name + section_defs[i].len, attach_type);
+> 
+> argument indentation is off here, please fix
+
+Fixed.
+
+- KP
+> 
+> >                 if (err <= 0)
+> >                         pr_warn("%s is not found in vmlinux BTF\n", name);
+> >                 return err;
+> > --
+> > 2.20.1
+> >
