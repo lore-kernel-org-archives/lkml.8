@@ -2,176 +2,79 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52823C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D22A3C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28E982087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:20:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qjj9nW9d"
+	by mail.kernel.org (Postfix) with ESMTP id 9477520842
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:21:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579270898;
+	bh=4on+F+4Fhjf/p/7y7ME9mgfzHOEfkvu+t5ETPOT9sRo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EoqD8XtHp23Rn80MWNiOtaU2VonEo3bcGMFRs438prF8h8V/EW2cnKgu0B6VGBN16
+	 OYUVXu7c7ILjgNxVmo5mPGj+h1kTPJF6cjMAAgSlHr2iMwUAW4UpMwKnsBuZ0VrSXb
+	 V4xxv0rmtZVoh6ST5fuyG7ZZggsT6y+nrQ2sqTFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728820AbgAQOUY (ORCPT
+        id S1727040AbgAQOVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 09:20:24 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:39683 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbgAQOUY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 09:20:24 -0500
-Received: by mail-lf1-f65.google.com with SMTP id y1so18461123lfb.6
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 06:20:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=52SkNZCDjqwxNsCcswgc3O2QxOVfgfXytI8P8HG/hjw=;
-        b=Qjj9nW9dxWRF+Ax36+7qhoA1Px7MXOMy+ceUUUE6CKRjaeHNEOMfCQBKHcfvx3qtgJ
-         8L2Z31hEkJdFjf/gQI9JwTVIe6aZ+Pkjcqc9v5prj78+Wp3LSPEdSsJl8+8TfNHDGaDF
-         ta7wGQZtv3ou6yFIuhjgkMxR4NK8rV5EPnrii55f9yut23+YyqZwRItoAlG5R0lcLa9F
-         84etdt9fwpulHMXMRhFEWxdIsqG0NVyRgB181x7lNbUy9Exui1Gw0O4SJbCtlfDeWo2M
-         vJmD/0kxbMVPiuUeA7CnFDj36GE8+Qt56pqouhfaeku7wIR2flOP2CFr7fvld/O9KcVC
-         DPhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=52SkNZCDjqwxNsCcswgc3O2QxOVfgfXytI8P8HG/hjw=;
-        b=rUUptzxHhLnCAGvdZ5DQFoWLcGxSsrDhf6zuhfnqe3JWiqTsHupX3IGEx0GGG7e/JP
-         W7iH6E3r6ZpVgOh+JaiVieOpyVrGLFDnnp9cQM65hk/1A28tI+c98qEpkNp9VysgM915
-         leKP9TMXAcF0b8/4p/z6CfwDMTQb+M1VEk7/Gq+hHbwu2ffNGCAJinvs/aRR0NdouAfY
-         PxXJwWpOgaxR+6QERWqH4/NmY4EXda8FCuxf7SBVqt67ZYPq8TNoxmR6z05+IJyyc5M8
-         PBEjYi0DopPIhXV5vkQgFK9eeTGsbUQuzjwg4WWgDj7x7PkH6e2M67cqIQjjzGY1vCIU
-         MtCw==
-X-Gm-Message-State: APjAAAVi9BGlr5bf8x+1xOEEeWxrG4QQZ53dHUY9xSd9HtOaDR3mvOsM
-        zDbFCc7hY2f0AY6/Oy/yT/UcbsFNr8t69AuVf02mFg==
-X-Google-Smtp-Source: APXvYqzn27YvmjJNXYMQoWyCdW5HlsnNohXOOvT7SYPL0O7k6CJ4/XyfF0XM6atuASauDlszTUTZx9PkubYB4Fgkeug=
-X-Received: by 2002:ac2:5b41:: with SMTP id i1mr5576756lfp.82.1579270821671;
- Fri, 17 Jan 2020 06:20:21 -0800 (PST)
+        Fri, 17 Jan 2020 09:21:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49730 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726574AbgAQOVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 09:21:37 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B556F2072B;
+        Fri, 17 Jan 2020 14:21:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579270897;
+        bh=4on+F+4Fhjf/p/7y7ME9mgfzHOEfkvu+t5ETPOT9sRo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2ILH4lnrV4NV/+WsLU6xnYfNIvkQ665YOYiKkYT1V3BaXlOZuBKU3vEm3Fi3x9u6j
+         LuU0Zhbdu56XaJFHtxnyKO+4WiK44eEvf6DWkAkEo35vTVJhXQdVMuQ+ickFcYIYdH
+         0+f+u1iO3q64mCRkRhutO3qIa0UI0ytQDKQm5Te0=
+Date:   Fri, 17 Jan 2020 15:21:35 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Zeng Tao <prime.zeng@hisilicon.com>, linuxarm@huawei.com,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] cpu-topology: Don't error on more than CONFIG_NR_CPUS
+ CPUs in device tree
+Message-ID: <20200117142134.GA1858257@kroah.com>
+References: <1579225973-32423-1-git-send-email-prime.zeng@hisilicon.com>
+ <20200117101957.GA4099@bogus>
 MIME-Version: 1.0
-References: <20200116231745.218684830@linuxfoundation.org>
-In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 17 Jan 2020 19:50:10 +0530
-Message-ID: <CA+G9fYvRAU-4xF_Kxrz6A39HvX8020joox_rUtgb=ATq2czDOg@mail.gmail.com>
-Subject: Re: [PATCH 5.4 000/203] 5.4.13-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200117101957.GA4099@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jan 2020 at 04:49, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.4.13 release.
-> There are 203 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 18 Jan 2020 23:16:00 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.4.13-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Fri, Jan 17, 2020 at 10:19:57AM +0000, Sudeep Holla wrote:
+> On Fri, Jan 17, 2020 at 09:52:52AM +0800, Zeng Tao wrote:
+> > When the kernel is configured with CONFIG_NR_CPUS smaller than the
+> > number of CPU nodes in the device tree(DT), all the CPU nodes parsing
+> > done to fetch topology information will fail. This is not reasonable
+> > as it is legal to have all the physical CPUs in the system in the DT.
+> >
+> > Let us just skip such CPU DT nodes that are not used in the kernel
+> > rather than returning an error.
+> >
+> > Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+> > Signed-off-by: Zeng Tao <prime.zeng@hisilicon.com>
+> 
+> Hi Greg,
+> 
+> Can you pick this patch for v5.6 ?
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+oops, didn't realize this was for me, sorry, will go do so now.
 
-Summary
-------------------------------------------------------------------------
-
-kernel: 5.4.13-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.4.y
-git commit: 3c8b6cdc962e6e3a21ee5786133fdab225fa26b9
-git describe: v5.4.12-204-g3c8b6cdc962e
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
-ld/v5.4.12-204-g3c8b6cdc962e
-
-No regressions (compared to build v5.4.12)
-
-No fixes (compared to build v5.4.12)
-
-Ran 23712 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* libgpiod
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* kselftest
-* ltp-hugetlb-tests
-* ltp-mm-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* ssuite
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+greg k-h
