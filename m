@@ -2,321 +2,306 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06EBDC33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1090FC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D169D20730
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D851920730
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:43:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729112AbgAQJnN (ORCPT
+        id S1726915AbgAQJnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 04:43:13 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43486 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgAQJnM (ORCPT
+        Fri, 17 Jan 2020 04:43:53 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:29460 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726371AbgAQJnw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 04:43:12 -0500
-Received: by mail-lj1-f195.google.com with SMTP id a13so25776454ljm.10;
-        Fri, 17 Jan 2020 01:43:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=z1kMD4HdpZmd95mxetDcFZUnOUJ+q+R/THflY84iZzQ=;
-        b=SuCoSnuQCupPlpUs4PyVOC8wYgvuqTonEMxWjMX+XENhUdZHEY3A4n3UTduoaaFZg/
-         pAC0NsN9g4M0K0EEb55VCy0zK3SPZTJRaHtzIwp/9M1hawDZ2+5k2Imv82MZY7+ERig6
-         OHU6TAX+QFHUXXrVevpYLXGrQcTChOQo4sEoRUliDs9aOP6LAN0UeWFH8EjhASlS2Xyv
-         Tmfv4eZWWX8TeGTnTSfEOHv+DosV/t/nstO/oTVYqX4I8yeNe+4kCbdeXDxkNmgfLwQL
-         XxPXLDNIekzVwdiBKIuIrPbdZiHaCzep3x3j+3PoIuXU9QFrctVmd3sD6XQXxWkwKmQv
-         mfoQ==
-X-Gm-Message-State: APjAAAVoUYXEEhRiNgxuPYhv86fZrwcBBUEe5zYIgm9r66bhC4LiXwfM
-        R7MkHqUfw5CYbdXtzdyKp3A=
-X-Google-Smtp-Source: APXvYqy/4hTettOxj4EtCC5wQDx2MLz8L5vWcBfw6yJFqc21Ljvr7RF41HYDIW8lS7NMPeeUE+dR4A==
-X-Received: by 2002:a2e:870b:: with SMTP id m11mr5076761lji.93.1579254188528;
-        Fri, 17 Jan 2020 01:43:08 -0800 (PST)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id h24sm12078739ljl.80.2020.01.17.01.43.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 01:43:07 -0800 (PST)
-Date:   Fri, 17 Jan 2020 11:42:55 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: [PATCH v10 11/13] gpio: bd71828: Initial support for ROHM BD71828
- PMIC GPIOs
-Message-ID: <c8ed62a1efa0c6fde93a8a08fe6bc74a450a34f3.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
+        Fri, 17 Jan 2020 04:43:52 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00H9CLft092567
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 04:26:24 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xk0qsxe46-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 04:26:23 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Fri, 17 Jan 2020 09:26:20 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 17 Jan 2020 09:26:18 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00H9QHHw54591650
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Jan 2020 09:26:17 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2CD164C04E;
+        Fri, 17 Jan 2020 09:26:17 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AA6624C074;
+        Fri, 17 Jan 2020 09:26:15 +0000 (GMT)
+Received: from bangoria.in.ibm.com (unknown [9.124.31.171])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 17 Jan 2020 09:26:15 +0000 (GMT)
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To:     acme@kernel.org, jolsa@redhat.com
+Cc:     namhyung@kernel.org, irogers@google.com, songliubraving@fb.com,
+        yao.jin@linux.intel.com, linux-kernel@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Subject: [PATCH 1/3] perf annotate: Nuke privsize
+Date:   Fri, 17 Jan 2020 14:56:10 +0530
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200117092612.30874-1-ravi.bangoria@linux.ibm.com>
+References: <20200117092612.30874-1-ravi.bangoria@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20011709-4275-0000-0000-000003986B45
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20011709-4276-0000-0000-000038AC6C3E
+Message-Id: <20200117092612.30874-2-ravi.bangoria@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-17_02:2020-01-16,2020-01-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 suspectscore=2 mlxlogscore=999
+ impostorscore=0 adultscore=0 mlxscore=0 priorityscore=1501 bulkscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001170072
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ROHM BD71828 PMIC contains 4 pins which can be configured by OTP
-to be used for general purposes. First 3 can be used as outputs
-and 4.th pin can be used as input. Allow them to be controlled
-via GPIO framework.
+We don't use privsize now and it's always 0. Remove privsize
+from code. Also simplify disasm_line allocation and freeing
+code which was bit complex because of privsize.
 
-The driver assumes all of the pins are configured as GPIOs and
-trusts that the reserved pins in other OTP configurations are
-excluded from control using "gpio-reserved-ranges" device tree
-property (or left untouched by GPIO users).
-
-Typical use for 4.th pin (input) is to use it as HALL sensor
-input so that this pin state is toggled when HALL sensor detects
-LID position change (from close to open or open to close). PMIC
-HW implements some extra logic which allows PMIC to power-up the
-system when this pin is toggled. Please see the data sheet for
-details of GPIO options which can be selected by OTP settings.
-
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 ---
-no changes since v9
+ tools/perf/builtin-top.c     |  2 +-
+ tools/perf/ui/gtk/annotate.c |  2 +-
+ tools/perf/util/annotate.c   | 92 +++++++++++++-----------------------
+ tools/perf/util/annotate.h   |  3 +-
+ 4 files changed, 35 insertions(+), 64 deletions(-)
 
- drivers/gpio/Kconfig        |  12 +++
- drivers/gpio/Makefile       |   1 +
- drivers/gpio/gpio-bd71828.c | 159 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 172 insertions(+)
- create mode 100644 drivers/gpio/gpio-bd71828.c
-
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 2ed599236a1c..9a0bdf9ea463 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1021,6 +1021,18 @@ config GPIO_BD70528
- 	  This driver can also be built as a module. If so, the module
- 	  will be called gpio-bd70528.
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 795e353de095..26765e41c083 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -143,7 +143,7 @@ static int perf_top__parse_source(struct perf_top *top, struct hist_entry *he)
+ 		return err;
+ 	}
  
-+config GPIO_BD71828
-+	tristate "ROHM BD71828 GPIO support"
-+	depends on MFD_ROHM_BD71828
-+	help
-+	  Support for GPIOs on ROHM BD71828 PMIC. There are three GPIOs
-+	  available on the ROHM PMIC in total. The GPIOs are limited to
-+	  outputs only and pins must be configured to GPIO outputs by
-+	  OTP. Enable this only if you want to use these pins as outputs.
+-	err = symbol__annotate(&he->ms, evsel, 0, &top->annotation_opts, NULL);
++	err = symbol__annotate(&he->ms, evsel, &top->annotation_opts, NULL);
+ 	if (err == 0) {
+ 		top->sym_filter_entry = he;
+ 	} else {
+diff --git a/tools/perf/ui/gtk/annotate.c b/tools/perf/ui/gtk/annotate.c
+index 22cc240f7371..35f9641bf670 100644
+--- a/tools/perf/ui/gtk/annotate.c
++++ b/tools/perf/ui/gtk/annotate.c
+@@ -174,7 +174,7 @@ static int symbol__gtk_annotate(struct map_symbol *ms, struct evsel *evsel,
+ 	if (ms->map->dso->annotate_warned)
+ 		return -1;
+ 
+-	err = symbol__annotate(ms, evsel, 0, &annotation__default_options, NULL);
++	err = symbol__annotate(ms, evsel, &annotation__default_options, NULL);
+ 	if (err) {
+ 		char msg[BUFSIZ];
+ 		symbol__strerror_disassemble(ms, err, msg, sizeof(msg));
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index f5e77ed237e8..7f9851772462 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -1143,7 +1143,6 @@ static int disasm_line__parse(char *line, const char **namep, char **rawp)
+ }
+ 
+ struct annotate_args {
+-	size_t			 privsize;
+ 	struct arch		*arch;
+ 	struct map_symbol	 ms;
+ 	struct evsel	*evsel;
+@@ -1153,83 +1152,55 @@ struct annotate_args {
+ 	int			 line_nr;
+ };
+ 
+-static void annotation_line__delete(struct annotation_line *al)
++static void annotation_line__new(struct annotation_line *al,
++				 struct annotate_args *args,
++				 int nr)
+ {
+-	void *ptr = (void *) al - al->privsize;
+-
+-	free_srcline(al->path);
+-	zfree(&al->line);
+-	free(ptr);
++	al->offset = args->offset;
++	al->line = strdup(args->line);
++	al->line_nr = args->line_nr;
++	al->data_nr = nr;
+ }
+ 
+-/*
+- * Allocating the annotation line data with following
+- * structure:
+- *
+- *    --------------------------------------
+- *    private space | struct annotation_line
+- *    --------------------------------------
+- *
+- * Size of the private space is stored in 'struct annotation_line'.
+- *
+- */
+-static struct annotation_line *
+-annotation_line__new(struct annotate_args *args, size_t privsize)
++static size_t disasm_line_size(int nr)
+ {
+ 	struct annotation_line *al;
+-	struct evsel *evsel = args->evsel;
+-	size_t size = privsize + sizeof(*al);
+-	int nr = 1;
+-
+-	if (perf_evsel__is_group_event(evsel))
+-		nr = evsel->core.nr_members;
+ 
+-	size += sizeof(al->data[0]) * nr;
+-
+-	al = zalloc(size);
+-	if (al) {
+-		al = (void *) al + privsize;
+-		al->privsize   = privsize;
+-		al->offset     = args->offset;
+-		al->line       = strdup(args->line);
+-		al->line_nr    = args->line_nr;
+-		al->data_nr    = nr;
+-	}
+-
+-	return al;
++	return (sizeof(struct disasm_line) + (sizeof(al->data[0]) * nr));
+ }
+ 
+ /*
+  * Allocating the disasm annotation line data with
+  * following structure:
+  *
+- *    ------------------------------------------------------------
+- *    privsize space | struct disasm_line | struct annotation_line
+- *    ------------------------------------------------------------
++ *    -------------------------------------------
++ *    struct disasm_line | struct annotation_line
++ *    -------------------------------------------
+  *
+  * We have 'struct annotation_line' member as last member
+  * of 'struct disasm_line' to have an easy access.
+- *
+  */
+ static struct disasm_line *disasm_line__new(struct annotate_args *args)
+ {
+ 	struct disasm_line *dl = NULL;
+-	struct annotation_line *al;
+-	size_t privsize = args->privsize + offsetof(struct disasm_line, al);
++	int nr = 1;
+ 
+-	al = annotation_line__new(args, privsize);
+-	if (al != NULL) {
+-		dl = disasm_line(al);
++	if (perf_evsel__is_group_event(args->evsel))
++		nr = args->evsel->core.nr_members;
+ 
+-		if (dl->al.line == NULL)
+-			goto out_delete;
++	dl = zalloc(disasm_line_size(nr));
++	if (!dl)
++		return NULL;
+ 
+-		if (args->offset != -1) {
+-			if (disasm_line__parse(dl->al.line, &dl->ins.name, &dl->ops.raw) < 0)
+-				goto out_free_line;
++	annotation_line__new(&dl->al, args, nr);
++	if (dl->al.line == NULL)
++		goto out_delete;
+ 
+-			disasm_line__init_ins(dl, args->arch, &args->ms);
+-		}
++	if (args->offset != -1) {
++		if (disasm_line__parse(dl->al.line, &dl->ins.name, &dl->ops.raw) < 0)
++			goto out_free_line;
 +
-+	  This driver can also be built as a module. If so, the module
-+	  will be called gpio-bd71828.
-+
- config GPIO_BD9571MWV
- 	tristate "ROHM BD9571 GPIO support"
- 	depends on MFD_BD9571MWV
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 34eb8b2b12dd..8629b81b5c17 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -37,6 +37,7 @@ obj-$(CONFIG_GPIO_ATH79)		+= gpio-ath79.o
- obj-$(CONFIG_GPIO_BCM_KONA)		+= gpio-bcm-kona.o
- obj-$(CONFIG_GPIO_BCM_XGS_IPROC)	+= gpio-xgs-iproc.o
- obj-$(CONFIG_GPIO_BD70528)		+= gpio-bd70528.o
-+obj-$(CONFIG_GPIO_BD71828)		+= gpio-bd71828.o
- obj-$(CONFIG_GPIO_BD9571MWV)		+= gpio-bd9571mwv.o
- obj-$(CONFIG_GPIO_BRCMSTB)		+= gpio-brcmstb.o
- obj-$(CONFIG_GPIO_BT8XX)		+= gpio-bt8xx.o
-diff --git a/drivers/gpio/gpio-bd71828.c b/drivers/gpio/gpio-bd71828.c
-new file mode 100644
-index 000000000000..04aade9e0a4d
---- /dev/null
-+++ b/drivers/gpio/gpio-bd71828.c
-@@ -0,0 +1,159 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+// Copyright (C) 2018 ROHM Semiconductors
-+
-+#include <linux/gpio/driver.h>
-+#include <linux/mfd/rohm-bd71828.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#define GPIO_OUT_REG(off) (BD71828_REG_GPIO_CTRL1 + (off))
-+#define HALL_GPIO_OFFSET 3
-+
-+/*
-+ * These defines can be removed when
-+ * "gpio: Add definition for GPIO direction"
-+ * (9208b1e77d6e8e9776f34f46ef4079ecac9c3c25 in GPIO tree) gets merged,
-+ */
-+#ifndef GPIO_LINE_DIRECTION_IN
-+	#define GPIO_LINE_DIRECTION_IN 1
-+	#define GPIO_LINE_DIRECTION_OUT 0
-+#endif
-+
-+struct bd71828_gpio {
-+	struct rohm_regmap_dev chip;
-+	struct gpio_chip gpio;
-+};
-+
-+static void bd71828_gpio_set(struct gpio_chip *chip, unsigned int offset,
-+			     int value)
-+{
-+	int ret;
-+	struct bd71828_gpio *bdgpio = gpiochip_get_data(chip);
-+	u8 val = (value) ? BD71828_GPIO_OUT_HI : BD71828_GPIO_OUT_LO;
-+
-+	/*
-+	 * The HALL input pin can only be used as input. If this is the pin
-+	 * we are dealing with - then we are done
-+	 */
-+	if (offset == HALL_GPIO_OFFSET)
-+		return;
-+
-+	ret = regmap_update_bits(bdgpio->chip.regmap, GPIO_OUT_REG(offset),
-+				 BD71828_GPIO_OUT_MASK, val);
-+	if (ret)
-+		dev_err(bdgpio->chip.dev, "Could not set gpio to %d\n", value);
-+}
-+
-+static int bd71828_gpio_get(struct gpio_chip *chip, unsigned int offset)
-+{
-+	int ret;
-+	unsigned int val;
-+	struct bd71828_gpio *bdgpio = gpiochip_get_data(chip);
-+
-+	if (offset == HALL_GPIO_OFFSET)
-+		ret = regmap_read(bdgpio->chip.regmap, BD71828_REG_IO_STAT,
-+				  &val);
-+	else
-+		ret = regmap_read(bdgpio->chip.regmap, GPIO_OUT_REG(offset),
-+				  &val);
-+	if (!ret)
-+		ret = (val & BD71828_GPIO_OUT_MASK);
-+
-+	return ret;
-+}
-+
-+static int bd71828_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
-+				   unsigned long config)
-+{
-+	struct bd71828_gpio *bdgpio = gpiochip_get_data(chip);
-+
-+	if (offset == HALL_GPIO_OFFSET)
-+		return -ENOTSUPP;
-+
-+	switch (pinconf_to_config_param(config)) {
-+	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-+		return regmap_update_bits(bdgpio->chip.regmap,
-+					  GPIO_OUT_REG(offset),
-+					  BD71828_GPIO_DRIVE_MASK,
-+					  BD71828_GPIO_OPEN_DRAIN);
-+	case PIN_CONFIG_DRIVE_PUSH_PULL:
-+		return regmap_update_bits(bdgpio->chip.regmap,
-+					  GPIO_OUT_REG(offset),
-+					  BD71828_GPIO_DRIVE_MASK,
-+					  BD71828_GPIO_PUSH_PULL);
-+	default:
-+		break;
-+	}
-+	return -ENOTSUPP;
-+}
-+
-+static int bd71828_get_direction(struct gpio_chip *chip, unsigned int offset)
-+{
-+	/*
-+	 * Pin usage is selected by OTP data. We can't read it runtime. Hence
-+	 * we trust that if the pin is not excluded by "gpio-reserved-ranges"
-+	 * the OTP configuration is set to OUT. (Other pins but HALL input pin
-+	 * on BD71828 can't really be used for general purpose input - input
-+	 * states are used for specific cases like regulator control or
-+	 * PMIC_ON_REQ.
-+	 */
-+	if (offset == HALL_GPIO_OFFSET)
-+		return GPIO_LINE_DIRECTION_IN;
-+
-+	return GPIO_LINE_DIRECTION_OUT;
-+}
-+
-+static int bd71828_probe(struct platform_device *pdev)
-+{
-+	struct bd71828_gpio *bdgpio;
-+	struct rohm_regmap_dev *bd71828;
-+
-+	bd71828 = dev_get_drvdata(pdev->dev.parent);
-+	if (!bd71828) {
-+		dev_err(&pdev->dev, "No MFD driver data\n");
-+		return -EINVAL;
-+	}
-+
-+	bdgpio = devm_kzalloc(&pdev->dev, sizeof(*bdgpio),
-+			      GFP_KERNEL);
-+	if (!bdgpio)
-+		return -ENOMEM;
-+
-+	bdgpio->chip.dev = &pdev->dev;
-+	bdgpio->gpio.parent = pdev->dev.parent;
-+	bdgpio->gpio.label = "bd71828-gpio";
-+	bdgpio->gpio.owner = THIS_MODULE;
-+	bdgpio->gpio.get_direction = bd71828_get_direction;
-+	bdgpio->gpio.set_config = bd71828_gpio_set_config;
-+	bdgpio->gpio.can_sleep = true;
-+	bdgpio->gpio.get = bd71828_gpio_get;
-+	bdgpio->gpio.set = bd71828_gpio_set;
-+	bdgpio->gpio.base = -1;
-+
-+	/*
-+	 * See if we need some implementation to mark some PINs as
-+	 * not controllable based on DT info or if core can handle
-+	 * "gpio-reserved-ranges" and exclude them from control
-+	 */
-+	bdgpio->gpio.ngpio = 4;
-+	bdgpio->gpio.of_node = pdev->dev.parent->of_node;
-+	bdgpio->chip.regmap = bd71828->regmap;
-+
-+	return devm_gpiochip_add_data(&pdev->dev, &bdgpio->gpio,
-+				     bdgpio);
-+}
-+
-+static struct platform_driver bd71828_gpio = {
-+	.driver = {
-+		.name = "bd71828-gpio"
-+	},
-+	.probe = bd71828_probe,
-+};
-+
-+module_platform_driver(bd71828_gpio);
-+
-+MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
-+MODULE_DESCRIPTION("BD71828 voltage regulator driver");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:bd71828-gpio");
++		disasm_line__init_ins(dl, args->arch, &args->ms);
+ 	}
+ 
+ 	return dl;
+@@ -1248,7 +1219,9 @@ void disasm_line__free(struct disasm_line *dl)
+ 	else
+ 		ins__delete(&dl->ops);
+ 	zfree(&dl->ins.name);
+-	annotation_line__delete(&dl->al);
++	free_srcline(dl->al.path);
++	zfree(&dl->al.line);
++	free(dl);
+ }
+ 
+ int disasm_line__scnprintf(struct disasm_line *dl, char *bf, size_t size, bool raw, int max_ins_name)
+@@ -2143,13 +2116,12 @@ void symbol__calc_percent(struct symbol *sym, struct evsel *evsel)
+ 	annotation__calc_percent(notes, evsel, symbol__size(sym));
+ }
+ 
+-int symbol__annotate(struct map_symbol *ms, struct evsel *evsel, size_t privsize,
++int symbol__annotate(struct map_symbol *ms, struct evsel *evsel,
+ 		     struct annotation_options *options, struct arch **parch)
+ {
+ 	struct symbol *sym = ms->sym;
+ 	struct annotation *notes = symbol__annotation(sym);
+ 	struct annotate_args args = {
+-		.privsize	= privsize,
+ 		.evsel		= evsel,
+ 		.options	= options,
+ 	};
+@@ -2784,7 +2756,7 @@ int symbol__tty_annotate(struct map_symbol *ms, struct evsel *evsel,
+ 	struct symbol *sym = ms->sym;
+ 	struct rb_root source_line = RB_ROOT;
+ 
+-	if (symbol__annotate(ms, evsel, 0, opts, NULL) < 0)
++	if (symbol__annotate(ms, evsel, opts, NULL) < 0)
+ 		return -1;
+ 
+ 	symbol__calc_percent(sym, evsel);
+@@ -3064,7 +3036,7 @@ int symbol__annotate2(struct map_symbol *ms, struct evsel *evsel,
+ 	if (perf_evsel__is_group_event(evsel))
+ 		nr_pcnt = evsel->core.nr_members;
+ 
+-	err = symbol__annotate(ms, evsel, 0, options, parch);
++	err = symbol__annotate(ms, evsel, options, parch);
+ 	if (err)
+ 		goto out_free_offsets;
+ 
+diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+index 7075d98f69d9..4a86558646ff 100644
+--- a/tools/perf/util/annotate.h
++++ b/tools/perf/util/annotate.h
+@@ -139,7 +139,6 @@ struct annotation_line {
+ 	u64			 cycles;
+ 	u64			 cycles_max;
+ 	u64			 cycles_min;
+-	size_t			 privsize;
+ 	char			*path;
+ 	u32			 idx;
+ 	int			 idx_asm;
+@@ -350,7 +349,7 @@ struct annotated_source *symbol__hists(struct symbol *sym, int nr_hists);
+ void symbol__annotate_zero_histograms(struct symbol *sym);
+ 
+ int symbol__annotate(struct map_symbol *ms,
+-		     struct evsel *evsel, size_t privsize,
++		     struct evsel *evsel,
+ 		     struct annotation_options *options,
+ 		     struct arch **parch);
+ int symbol__annotate2(struct map_symbol *ms,
 -- 
-2.21.0
+2.24.1
 
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
