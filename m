@@ -4,66 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F93FC33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC196C33CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64D042073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78CC92082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:59:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wxhfBwQL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XnUDwVsA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbgAQJ61 (ORCPT
+        id S1728792AbgAQJ6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 04:58:27 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37381 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbgAQJ6X (ORCPT
+        Fri, 17 Jan 2020 04:58:24 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53174 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726553AbgAQJ6V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 04:58:23 -0500
-Received: by mail-wr1-f68.google.com with SMTP id w15so22099905wru.4
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 01:58:23 -0800 (PST)
+        Fri, 17 Jan 2020 04:58:21 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p9so6801810wmc.2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 01:58:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=oEZO1tHQEt0bWv28Oy3IvAVUFn4DqaeIaGai6PraEec=;
-        b=wxhfBwQL5TJ5/9yiN3RRUZhvbaAPPzkRwHzceE/VHVWj5GUh+gxYgKe2jP+kwmzeMI
-         EaHvdmSNhR9Opw+UwIewCo8H/OZ+xC44WdBtaYLGW6pw/+OWO4Y1NuKkTvFrCJXol58J
-         70aYgF06gtm4NOgU6/s4hfIkDiLWb0RN25NaOyN/bu19vRvxn1dSvWIwHZiT//34vz8o
-         esPVhMJNpnDTzyjuO2EEiSvSKriq/kQBzPpgmeN2w/JckYDrUXppa/xJle4iK6p5Oxug
-         oI5z44S2FUUTxyYQW2vdalOX/KG75fWRRJF+8OWKdSlyn22OS1nuuPNXiw+L21bB5ESE
-         tSWg==
+        bh=qe7hebl/mzA5Y4yspidYJnXz8QIxCuPLK7wWr6/hKiU=;
+        b=XnUDwVsAsNbFlvaGv/Mxxp0g86KC+WA5dTFlLpL3YnqfDrJo/0yGU2CmRdOBii7lpG
+         cgNKD4vTO3v0iOZt1Jh7WC8sDleIaoYBdJDF3pzL8Mg0w0h3bmnLF7/+Gnqmj/TiHn+u
+         LgoRzxYHQuZERRdKSOJOMMAT6ez71f4mH4BW+EgVXHQYR9g2DLgjw0Pzwxh9veFGhnew
+         XLurquhFXdcDw336nu8esZFEMSAOfVZ+8RqYK9Q5pBxPJ/DvIcxT8WuwRCPTppiMo8ny
+         NnuooOC+D0jo5hqmTC7sFj/rP5wAb3Ve1hNlMQmlo44t+cq8FP/9A3jqncxCeKwrI1PW
+         mu7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=oEZO1tHQEt0bWv28Oy3IvAVUFn4DqaeIaGai6PraEec=;
-        b=YeA+aIa3uIXl6IS9wb9mYGYTpC30Z131CXzJhWY8NCZ/qDJzgec6kWFHc/1ujMbti4
-         iLgX7IgrW0fdv1HMhtC5SmyV/gIDCmQMu6py3l450NttTZ+DZnIwqwkh6UPNNsLoSJ3Z
-         V/tebzQnlwknUekb8QkfFJwbssUNIOjvhwhXOEzXnXbfNX4J2cHJUcbDKSEeBeME9Dd1
-         qkUllmqcE6iouQLaPcJpRFjjwXndqHePvUpJP7HirFxKBPPPFTnIkZpCFhSCDI23HRK7
-         CbkzOdf8/vvBYMcFuaBoHH25a9/S/6IsThWRL9h5cqDQZIGOx03MtR9KabI3in1lRjpW
-         aOOw==
-X-Gm-Message-State: APjAAAUgMk3Q6FgTd5uIxBnBG1t3+7B7nYgowRVtUDgQFyv85aalRbZt
-        kBLJFggLe33cSOI2zbx7zZBbkQ==
-X-Google-Smtp-Source: APXvYqwpFZ3pwsF1/ou9d0DgmDePMhDP3yynADnlPd6NBv83FW+DWmoD0ul6gRA+QrkhUB+1vzP6ZA==
-X-Received: by 2002:adf:f28c:: with SMTP id k12mr2226628wro.360.1579255102370;
-        Fri, 17 Jan 2020 01:58:22 -0800 (PST)
+        bh=qe7hebl/mzA5Y4yspidYJnXz8QIxCuPLK7wWr6/hKiU=;
+        b=K0MCnv/eV4cIiQd5eiYvZVn1DxNzBj08Mj+xrN//9pw5J9c309rqH1iMlbIm3SzWpi
+         S6v9n0fQSL1LvxXdmErHY2daLruEu7m5kboUJPPccVk5xjcjRjaaJPWwzCGYhDH4ryp5
+         iPnIpXP9a6tg82JZHaRaPU/jc9BCafciSnsjMJ7Y5vZZnBQ6CFHr0z+5vcMs3Ss6VoQX
+         kRP6YPtgoxuDJK6609bfsc6mCLkWVSE6C6fzTKcQhE+JrQeQLdGeEy7hKbRfzNSdqkzt
+         cdVQ84fY4lxkmtbSIdu77+LAaadRZUMKn+onD4BpVzDYU/lVZsa/pU7jjJoN4QgnqCWs
+         A6/Q==
+X-Gm-Message-State: APjAAAU3/pvtI5bnEdX7KGdoI6Qmf0HA4LA9S25RnxtwItWYCTnP79uw
+        F6cG+WuOY/rh/0uf7tgtzY8WUg==
+X-Google-Smtp-Source: APXvYqwpwCwY0KSiQCpa+dAUbkJVcleZ1Gny74AahZORM5PCAEWPnzkdDQK3w/4N3GYV63g7phio2g==
+X-Received: by 2002:a05:600c:2046:: with SMTP id p6mr3729467wmg.110.1579255099536;
+        Fri, 17 Jan 2020 01:58:19 -0800 (PST)
 Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id r62sm9967007wma.32.2020.01.17.01.58.21
+        by smtp.googlemail.com with ESMTPSA id r62sm9967007wma.32.2020.01.17.01.58.18
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 17 Jan 2020 01:58:21 -0800 (PST)
+        Fri, 17 Jan 2020 01:58:19 -0800 (PST)
 From:   Georgi Djakov <georgi.djakov@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Georgi Djakov <georgi.djakov@linaro.org>,
+        Dmitry Osipenko <digetx@gmail.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 03/12] interconnect: Move internal structs into a separate file
-Date:   Fri, 17 Jan 2020 11:58:07 +0200
-Message-Id: <20200117095816.23575-4-georgi.djakov@linaro.org>
+Subject: [PATCH 01/12] interconnect: Add a common helper for removing all nodes
+Date:   Fri, 17 Jan 2020 11:58:05 +0200
+Message-Id: <20200117095816.23575-2-georgi.djakov@linaro.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200117095816.23575-1-georgi.djakov@linaro.org>
 References: <20200117095816.23575-1-georgi.djakov@linaro.org>
@@ -74,107 +75,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the interconnect framework internal structs into a separate file,
-so that it can be included and used by ftrace code. This will allow us
-to expose some more useful information in the traces.
+The removal of all nodes from a provider seem to be a common functionality
+for all existing users and it would make sense to factor out this into a
+a common helper function.
 
+Suggested-by: Dmitry Osipenko <digetx@gmail.com>
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 ---
- drivers/interconnect/core.c     | 30 ++-----------------------
- drivers/interconnect/internal.h | 40 +++++++++++++++++++++++++++++++++
- 2 files changed, 42 insertions(+), 28 deletions(-)
- create mode 100644 drivers/interconnect/internal.h
+ drivers/interconnect/core.c           | 22 ++++++++++++++++++++++
+ include/linux/interconnect-provider.h |  6 ++++++
+ 2 files changed, 28 insertions(+)
 
 diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-index 1b811423020a..f30a326dc7ce 100644
+index c498796adc07..1b811423020a 100644
 --- a/drivers/interconnect/core.c
 +++ b/drivers/interconnect/core.c
-@@ -19,39 +19,13 @@
- #include <linux/of.h>
- #include <linux/overflow.h>
+@@ -742,6 +742,28 @@ void icc_node_del(struct icc_node *node)
+ }
+ EXPORT_SYMBOL_GPL(icc_node_del);
  
-+#include "internal.h"
-+
- static DEFINE_IDR(icc_idr);
- static LIST_HEAD(icc_providers);
- static DEFINE_MUTEX(icc_lock);
- static struct dentry *icc_debugfs_dir;
- 
--/**
-- * struct icc_req - constraints that are attached to each node
-- * @req_node: entry in list of requests for the particular @node
-- * @node: the interconnect node to which this constraint applies
-- * @dev: reference to the device that sets the constraints
-- * @tag: path tag (optional)
-- * @avg_bw: an integer describing the average bandwidth in kBps
-- * @peak_bw: an integer describing the peak bandwidth in kBps
-- */
--struct icc_req {
--	struct hlist_node req_node;
--	struct icc_node *node;
--	struct device *dev;
--	u32 tag;
--	u32 avg_bw;
--	u32 peak_bw;
--};
--
--/**
-- * struct icc_path - interconnect path structure
-- * @num_nodes: number of hops (nodes)
-- * @reqs: array of the requests applicable to this path of nodes
-- */
--struct icc_path {
--	size_t num_nodes;
--	struct icc_req reqs[];
--};
--
- static void icc_summary_show_one(struct seq_file *s, struct icc_node *n)
- {
- 	if (!n)
-diff --git a/drivers/interconnect/internal.h b/drivers/interconnect/internal.h
-new file mode 100644
-index 000000000000..5853e8faf223
---- /dev/null
-+++ b/drivers/interconnect/internal.h
-@@ -0,0 +1,40 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Interconnect framework internal structs
++/**
++ * icc_nodes_remove() - remove all previously added nodes from provider
++ * @provider: the interconnect provider we are removing nodes from
 + *
-+ * Copyright (c) 2019, Linaro Ltd.
-+ * Author: Georgi Djakov <georgi.djakov@linaro.org>
++ * Return: 0 on success, or an error code otherwise
 + */
++int icc_nodes_remove(struct icc_provider *provider)
++{
++	struct icc_node *n, *tmp;
 +
-+#ifndef __DRIVERS_INTERCONNECT_INTERNAL_H
-+#define __DRIVERS_INTERCONNECT_INTERNAL_H
++	if (WARN_ON(IS_ERR_OR_NULL(provider)))
++		return -EINVAL;
 +
-+/**
-+ * struct icc_req - constraints that are attached to each node
-+ * @req_node: entry in list of requests for the particular @node
-+ * @node: the interconnect node to which this constraint applies
-+ * @dev: reference to the device that sets the constraints
-+ * @tag: path tag (optional)
-+ * @avg_bw: an integer describing the average bandwidth in kBps
-+ * @peak_bw: an integer describing the peak bandwidth in kBps
-+ */
-+struct icc_req {
-+	struct hlist_node req_node;
-+	struct icc_node *node;
-+	struct device *dev;
-+	u32 tag;
-+	u32 avg_bw;
-+	u32 peak_bw;
-+};
++	list_for_each_entry_safe_reverse(n, tmp, &provider->nodes, node_list) {
++		icc_node_del(n);
++		icc_node_destroy(n->id);
++	}
 +
-+/**
-+ * struct icc_path - interconnect path structure
-+ * @num_nodes: number of hops (nodes)
-+ * @reqs: array of the requests applicable to this path of nodes
-+ */
-+struct icc_path {
-+	size_t num_nodes;
-+	struct icc_req reqs[];
-+};
++	return 0;
++}
++EXPORT_SYMBOL_GPL(icc_nodes_remove);
 +
-+#endif
+ /**
+  * icc_provider_add() - add a new interconnect provider
+  * @provider: the interconnect provider that will be added into topology
+diff --git a/include/linux/interconnect-provider.h b/include/linux/interconnect-provider.h
+index b16f9effa555..31440c921216 100644
+--- a/include/linux/interconnect-provider.h
++++ b/include/linux/interconnect-provider.h
+@@ -98,6 +98,7 @@ int icc_link_create(struct icc_node *node, const int dst_id);
+ int icc_link_destroy(struct icc_node *src, struct icc_node *dst);
+ void icc_node_add(struct icc_node *node, struct icc_provider *provider);
+ void icc_node_del(struct icc_node *node);
++int icc_nodes_remove(struct icc_provider *provider);
+ int icc_provider_add(struct icc_provider *provider);
+ int icc_provider_del(struct icc_provider *provider);
+ 
+@@ -130,6 +131,11 @@ void icc_node_del(struct icc_node *node)
+ {
+ }
+ 
++static inline int icc_nodes_remove(struct icc_provider *provider)
++{
++	return -ENOTSUPP;
++}
++
+ static inline int icc_provider_add(struct icc_provider *provider)
+ {
+ 	return -ENOTSUPP;
