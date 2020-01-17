@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FE9C33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E4EC33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 403C224679
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B6952467D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:43:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729701AbgAQRnA (ORCPT
+        id S1729728AbgAQRnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 12:43:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39980 "EHLO mail.kernel.org"
+        Fri, 17 Jan 2020 12:43:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729148AbgAQRlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 12:41:31 -0500
+        id S1729126AbgAQRla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 12:41:30 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A24A6222C3;
+        by mail.kernel.org (Postfix) with ESMTPSA id 47CAF24656;
         Fri, 17 Jan 2020 17:41:30 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1isVcf-000QTJ-J6; Fri, 17 Jan 2020 12:41:29 -0500
-Message-Id: <20200117174129.434057274@goodmis.org>
+        id 1isVcf-000QSH-6m; Fri, 17 Jan 2020 12:41:29 -0500
+Message-Id: <20200117174129.076462344@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Fri, 17 Jan 2020 12:41:25 -0500
+Date:   Fri, 17 Jan 2020 12:41:23 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org,
         linux-rt-users <linux-rt-users@vger.kernel.org>
@@ -39,8 +39,10 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         John Kacur <jkacur@redhat.com>,
         Julia Cartwright <julia@ni.com>,
         Daniel Wagner <wagi@monom.org>,
-        Tom Zanussi <zanussi@kernel.org>, Scott Wood <swood@redhat.com>
-Subject: [PATCH RT 14/32] sched: __set_cpus_allowed_ptr: Check cpus_mask, not cpus_ptr
+        Tom Zanussi <zanussi@kernel.org>,
+        kbuild test robot <lkp@intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH RT 12/32] posix-timers: Unlock expiry lock in the early return
 References: <20200117174111.282847363@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -54,37 +56,40 @@ If anyone has any objections, please let me know.
 
 ------------------
 
-From: Scott Wood <swood@redhat.com>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-[ Upstream commit e5606fb7b042db634ed62b4dd733d62e050e468f ]
+[ Upstream commit 356a2781375ec58521a9bc3f500488745990c242 ]
 
-This function is concerned with the long-term cpu mask, not the
-transitory mask the task might have while migrate disabled.  Before
-this patch, if a task was migrate disabled at the time
-__set_cpus_allowed_ptr() was called, and the new mask happened to be
-equal to the cpu that the task was running on, then the mask update
-would be lost.
+Patch ("posix-timers: Add expiry lock") acquired a lock in
+run_posix_cpu_timers() but didn't drop the lock in the early return.
 
-Signed-off-by: Scott Wood <swood@redhat.com>
+Unlock the lock in the early return path.
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/sched/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/time/posix-cpu-timers.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 3413b9ebef1f..d6bd8129a390 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1157,7 +1157,7 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
- 		goto out;
- 	}
+diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
+index 765e700962ab..c9964dc3276b 100644
+--- a/kernel/time/posix-cpu-timers.c
++++ b/kernel/time/posix-cpu-timers.c
+@@ -1175,8 +1175,10 @@ static void __run_posix_cpu_timers(struct task_struct *tsk)
+ 	expiry_lock = this_cpu_ptr(&cpu_timer_expiry_lock);
+ 	spin_lock(expiry_lock);
  
--	if (cpumask_equal(p->cpus_ptr, new_mask))
-+	if (cpumask_equal(&p->cpus_mask, new_mask))
- 		goto out;
- 
- 	dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
+-	if (!lock_task_sighand(tsk, &flags))
++	if (!lock_task_sighand(tsk, &flags)) {
++		spin_unlock(expiry_lock);
+ 		return;
++	}
+ 	/*
+ 	 * Here we take off tsk->signal->cpu_timers[N] and
+ 	 * tsk->cpu_timers[N] all the timers that are firing, and
 -- 
 2.24.1
 
