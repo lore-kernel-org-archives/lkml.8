@@ -2,175 +2,109 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CEADC33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDFC5C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73F80206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:18:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Gwc1ffaY"
+	by mail.kernel.org (Postfix) with ESMTP id 965282083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:19:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbgAQOSx (ORCPT
+        id S1728680AbgAQOTi convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 09:18:53 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43619 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbgAQOSx (ORCPT
+        Fri, 17 Jan 2020 09:19:38 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:50295 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726957AbgAQOTi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 09:18:53 -0500
-Received: by mail-lj1-f194.google.com with SMTP id a13so26621407ljm.10
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 06:18:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=izl8X8htH6wd+vn9Cs0AC1/6VQCcPbr4rYfSk8DimxE=;
-        b=Gwc1ffaYv8M2rMuqLKx2lwC3Gq02E1wmNIQGuinDvivAFoNSsAr8lHwnOjrP32Rv16
-         FPOCM1wFusAWhmhho6ScmKHmYKYNvNpTmdhUU/hwgXVSlgtddOxj40fIhVCc2fwioX68
-         CD8Y4am055TFS6P2ZLIfZmfaYF5uyqAiaExMZA2XfPShNi2x7qU3zp2h64ZGkqlTVaMi
-         MQfcJdbo5F8TmQfPr4Fl5yQD+cR1BzDiX0Gq31iYTkjHxFBvcoM71eTQlbhMrDxUUrL8
-         m3csY+D1mJ+ZBP5ph8JALy4m3pLwmv/ZcxfzpOZlb/5ucmK3jiK3qEv/CfGbZHX/qObm
-         GGog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=izl8X8htH6wd+vn9Cs0AC1/6VQCcPbr4rYfSk8DimxE=;
-        b=m/jQgU1M/z4MwHs3XyVEtzmL2VpJKy1W7iHTRVqgo3PQ1IJ1LzC5BO36hYWPnDRo0T
-         smX2gtn71mUBqKm9OMcYV6ABS5x8wqW5GgEuMdE8elEkq1pSvejl6pbu2ztYrYDrR6fa
-         RqTxBsP25iMgVVENKuTXpPN+7ptEXXlOfVUuNXL1FnbOi/IflHmIXdbC86wmnyB6WUvs
-         651f1pRbimUEp90JUi8x3PeQjPcX0PmlIC17RoPmZooyj2bBfFCDlgGFH05+UPKByAnK
-         WEZsjk4ap8u/glhJsqxnOLuUNtAzteiqNSgyep1FykjrSiyTah0/9qNIbXwSRGQ/MsLN
-         fMOw==
-X-Gm-Message-State: APjAAAU315fVVi/Pn3+jwkn1owtZHGh5XIE5d6hcHYnn6cLWHybDQvE8
-        s+4diH328ktoaKUOjw0pLW5Om72SJJhbCCO8ueb8vw==
-X-Google-Smtp-Source: APXvYqwTocEXxDm/G9a8m6fZ+15Qkx+FNufaRBY410Ij98pzm8omSXqu2TidOs0mqRF43++b0ftoC3PljDsqko3MRJc=
-X-Received: by 2002:a2e:9692:: with SMTP id q18mr5654444lji.177.1579270730571;
- Fri, 17 Jan 2020 06:18:50 -0800 (PST)
-MIME-Version: 1.0
-References: <20200116231713.087649517@linuxfoundation.org>
-In-Reply-To: <20200116231713.087649517@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 17 Jan 2020 19:48:36 +0530
-Message-ID: <CA+G9fYtPTLCUo36ADbcpR+HaQem00TPiAQptCr6pZpYGwb81Aw@mail.gmail.com>
-Subject: Re: [PATCH 4.19 00/84] 4.19.97-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
+        Fri, 17 Jan 2020 09:19:38 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1isSTF-0006eE-5w; Fri, 17 Jan 2020 15:19:33 +0100
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1isSTE-0007Jv-BR; Fri, 17 Jan 2020 15:19:32 +0100
+Message-ID: <e839f09ce459cb374184ac1871db6e0be24f2418.camel@pengutronix.de>
+Subject: Re: [PATCH 1/4] remoteproc: qcom: q6v5-mss: Use
+ regmap_read_poll_timeout
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Sibi Sankar <sibis@codeaurora.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org
+Cc:     ohad@wizery.com, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        agross@kernel.org
+Date:   Fri, 17 Jan 2020 15:19:32 +0100
+In-Reply-To: <20200117135130.3605-2-sibis@codeaurora.org>
+References: <20200117135130.3605-1-sibis@codeaurora.org>
+         <20200117135130.3605-2-sibis@codeaurora.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jan 2020 at 04:58, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.19.97 release.
-> There are 84 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 18 Jan 2020 23:16:00 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.97-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Fri, 2020-01-17 at 19:21 +0530, Sibi Sankar wrote:
+> Replace the loop for HALT_ACK detection with regmap_read_poll_timeout.
+> 
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+>  drivers/remoteproc/qcom_q6v5_mss.c | 16 ++++++----------
+>  1 file changed, 6 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
+> index 51f451311f5fc..f20b39c6ff0ed 100644
+> --- a/drivers/remoteproc/qcom_q6v5_mss.c
+> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
+> @@ -73,6 +73,7 @@
+>  #define NAV_AXI_IDLE_BIT		BIT(2)
+>  
+>  #define HALT_ACK_TIMEOUT_MS		100
+> +#define NAV_HALT_ACK_TIMEOUT_US		200
+>  
+>  /* QDSP6SS_RESET */
+>  #define Q6SS_STOP_CORE			BIT(0)
+> @@ -746,7 +747,6 @@ static void q6v5proc_halt_nav_axi_port(struct q6v5 *qproc,
+>  				       struct regmap *halt_map,
+>  				       u32 offset)
+>  {
+> -	unsigned long timeout;
+>  	unsigned int val;
+>  	int ret;
+>  
+> @@ -760,15 +760,11 @@ static void q6v5proc_halt_nav_axi_port(struct q6v5 *qproc,
+>  			   NAV_AXI_HALTREQ_BIT);
+>  
+>  	/* Wait for halt ack*/
+> -	timeout = jiffies + msecs_to_jiffies(HALT_ACK_TIMEOUT_MS);
+> -	for (;;) {
+> -		ret = regmap_read(halt_map, offset, &val);
+> -		if (ret || (val & NAV_AXI_HALTACK_BIT) ||
+> -		    time_after(jiffies, timeout))
+> -			break;
+> -
+> -		udelay(5);
+> -	}
+> +	ret = regmap_read_poll_timeout(halt_map, offset, val,
+> +				       (val & NAV_AXI_HALTACK_BIT),
+> +				       5, NAV_HALT_ACK_TIMEOUT_US);
+> +	if (ret)
+> +		dev_err(qproc->dev, "nav halt ack timeout\n");
+>  
+>  	ret = regmap_read(halt_map, offset, &val);
+>  	if (ret || !(val & NAV_AXI_IDLE_BIT))
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.19.97-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.19.y
-git commit: e301315724e25ac136c78f10a08928c03bdf7466
-git describe: v4.19.96-85-ge301315724e2
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.96-85-ge301315724e2
-
-No regressions (compared to build v4.19.96)
-
-No fixes (compared to build v4.19.96)
-
-Ran 24423 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-fs-tests
-* network-basic-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* ssuite
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+regards
+Philipp
