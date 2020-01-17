@@ -2,149 +2,148 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE90C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B5FC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD6FF20730
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:17:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lXaFjflM"
+	by mail.kernel.org (Postfix) with ESMTP id 31FE520730
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:17:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbgAQLRP (ORCPT
+        id S1726979AbgAQLRa convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 06:17:15 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37517 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbgAQLRO (ORCPT
+        Fri, 17 Jan 2020 06:17:30 -0500
+Received: from mx1.unisoc.com ([222.66.158.135]:34211 "EHLO
+        SHSQR01.spreadtrum.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726343AbgAQLRa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 06:17:14 -0500
-Received: by mail-wr1-f66.google.com with SMTP id w15so22361574wru.4;
-        Fri, 17 Jan 2020 03:17:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=lb6HArX/g/KCKLiMjLu+XY17yFYbcyDDPVo4BbaNQSA=;
-        b=lXaFjflMUG4KgT+rHlgrZ2J6LX3z9dCr8qA60GhCyRv+braKqnWg2MZC3qFFx5VGbt
-         Q2v1pDIdvpR2I4FQoWw4/JRe+ZlCdYXP/IXQszlbox2QbN90fb4K1kxMXDA4Rz1FCOFB
-         X4zbsiEG0Ahox5iTJqmx1WMlmmOrxhfCwuiq2qAJxOPa2cIHYm/mPsX/TmpMINCiT1LH
-         xMVChRQ05te11fUbNPK9x8ZD+jh5Kp29Zg9RhAi2YRVKNZs7iWwsJN5w1mzzN1TbIDqq
-         yS6ZBGr1ImR1g+JTUAi0RS11cX7l+NDOKGN0Et5fvExSC5tGbFmKSywr+0BLscG2CGij
-         Yv1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=lb6HArX/g/KCKLiMjLu+XY17yFYbcyDDPVo4BbaNQSA=;
-        b=k++LrseueUmZGgp7Jn/ZpBMRr9TABX7L/ul8UVPQjVAMtK05rTXhzC2TjaE1SQe/Yq
-         jNZkFvUD01o6hNBkyJ+U7mz7TOKd09tg/ObwSnXOBTAJW206NTSCpkrylIthgdIJydRf
-         i1duf55xSUfGcSB5lpMc2Qnf1NConChI8rtLa1aAixmyTYwJbly9hDZiAI8P1L3f4clp
-         6sbkY2YwL7ooNZWSqJy3J3m/9K3SMZTxP0ShPg1GhLq0cXkV3GGrAk+XotC3Aa6jvyAv
-         PLcI/z85y0f66KN6xCsFugFAfDAqKKtWWikFQtkqYJFMcJ6YZCHocfGhyt/mC/QQnTCP
-         yyDQ==
-X-Gm-Message-State: APjAAAUd0LSYI0mqdgKcPni9vfpmKIFFG0QHNehQ7LNLxhBgjE9thBCn
-        KmRFW/1SxzhYWb7IRulMq8I=
-X-Google-Smtp-Source: APXvYqykJEE5W6CkA+zQNXrcARlTK82n1dxVOTXXCX4nxgev1aRy2vD4CFEiHWUELiH1xO/i5uypvw==
-X-Received: by 2002:adf:ee82:: with SMTP id b2mr2427569wro.194.1579259832362;
-        Fri, 17 Jan 2020 03:17:12 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id p18sm8936190wmg.4.2020.01.17.03.17.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 03:17:11 -0800 (PST)
-Date:   Fri, 17 Jan 2020 12:17:10 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com, linkinjeon@gmail.com, arnd@arndb.de
-Subject: Re: [PATCH v10 03/14] exfat: add inode operations
-Message-ID: <20200117111710.pfo4k53vay4fhkoo@pali>
-References: <20200115082447.19520-1-namjae.jeon@samsung.com>
- <CGME20200115082820epcas1p34ebebebaf610fd61c4e9882fca8ddbd5@epcas1p3.samsung.com>
- <20200115082447.19520-4-namjae.jeon@samsung.com>
+        Fri, 17 Jan 2020 06:17:30 -0500
+Received: from ig2.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
+        by SHSQR01.spreadtrum.com with ESMTPS id 00HBGQni070418
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
+        Fri, 17 Jan 2020 19:16:27 +0800 (CST)
+        (envelope-from Orson.Zhai@unisoc.com)
+Received: from localhost (10.0.74.130) by BJMBX01.spreadtrum.com (10.0.64.7)
+ with Microsoft SMTP Server (TLS) id 15.0.847.32; Fri, 17 Jan 2020 19:17:04
+ +0800
+From:   Orson Zhai <orson.zhai@unisoc.com>
+To:     Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+CC:     <linux-kernel@vger.kernel.org>, <baolin.wang@unisoc.com>,
+        <chunyan.zhang@unisoc.com>, Orson Zhai <orson.zhai@unisoc.com>
+Subject: [PATCH v3] mfd: syscon: Add arguments support for syscon reference
+Date:   Fri, 17 Jan 2020 19:16:52 +0800
+Message-ID: <1579259812-27186-1-git-send-email-orson.zhai@unisoc.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200115082447.19520-4-namjae.jeon@samsung.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset="utf-8"
+X-Originating-IP: [10.0.74.130]
+X-ClientProxiedBy: shcas04.spreadtrum.com (10.29.35.89) To
+ BJMBX01.spreadtrum.com (10.0.64.7)
+Content-Transfer-Encoding: 8BIT
+X-MAIL: SHSQR01.spreadtrum.com 00HBGQni070418
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday 15 January 2020 17:24:36 Namjae Jeon wrote:
-> This adds the implementation of inode operations for exfat.
-> 
-> Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
-> Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
-> ---
->  fs/exfat/inode.c |  667 +++++++++++++++++++++
->  fs/exfat/namei.c | 1442 ++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 2109 insertions(+)
->  create mode 100644 fs/exfat/inode.c
->  create mode 100644 fs/exfat/namei.c
-> 
+There are a lot of similar global registers being used across multiple SoCs
+from Unisoc. But most of these registers are assigned with different offset
+for different SoCs. It is hard to handle all of them in an all-in-one
+kernel image.
 
-...
+Add a helper function to get regmap with arguments where we could put some
+extra information such as the offset value.
 
-> diff --git a/fs/exfat/namei.c b/fs/exfat/namei.c
-> new file mode 100644
-> index 000000000000..7298de74e9b8
-> --- /dev/null
-> +++ b/fs/exfat/namei.c
+Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
+Tested-by: Baolin Wang <baolin.wang@unisoc.com>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Lee Jones <lee.jones@linaro.org>
+---
 
-...
+V3 Change:
+ Rebase on latest kernel v5.5-rc6 for Lee.
 
-> +/* lookup a file */
-> +static int exfat_find(struct inode *dir, struct qstr *qname,
-> +		struct exfat_dir_entry *info)
-> +{
+ drivers/mfd/syscon.c       | 29 +++++++++++++++++++++++++++++
+ include/linux/mfd/syscon.h | 14 ++++++++++++++
+ 2 files changed, 43 insertions(+)
 
-...
+diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+index e22197c..2918b05 100644
+--- a/drivers/mfd/syscon.c
++++ b/drivers/mfd/syscon.c
+@@ -224,6 +224,35 @@ struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
+ }
+ EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_phandle);
 
-> +
-> +		exfat_get_entry_time(sbi, &info->ctime,
-> +				ep->dentry.file.create_time,
-> +				ep->dentry.file.create_date,
-> +				ep->dentry.file.create_tz);
++struct regmap *syscon_regmap_lookup_by_phandle_args(struct device_node *np,
++                                       const char *property,
++                                       int arg_count,
++                                       unsigned int *out_args)
++{
++       struct device_node *syscon_np;
++       struct of_phandle_args args;
++       struct regmap *regmap;
++       unsigned int index;
++       int rc;
++
++       rc = of_parse_phandle_with_fixed_args(np, property, arg_count,
++                       0, &args);
++       if (rc)
++               return ERR_PTR(rc);
++
++       syscon_np = args.np;
++       if (!syscon_np)
++               return ERR_PTR(-ENODEV);
++
++       regmap = syscon_node_to_regmap(syscon_np);
++       for (index = 0; index < arg_count; index++)
++               out_args[index] = args.args[index];
++       of_node_put(syscon_np);
++
++       return regmap;
++}
++EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_phandle_args);
++
+ static int syscon_probe(struct platform_device *pdev)
+ {
+        struct device *dev = &pdev->dev;
+diff --git a/include/linux/mfd/syscon.h b/include/linux/mfd/syscon.h
+index 112dc66..714cab1 100644
+--- a/include/linux/mfd/syscon.h
++++ b/include/linux/mfd/syscon.h
+@@ -23,6 +23,11 @@ extern struct regmap *syscon_regmap_lookup_by_compatible(const char *s);
+ extern struct regmap *syscon_regmap_lookup_by_phandle(
+                                        struct device_node *np,
+                                        const char *property);
++extern struct regmap *syscon_regmap_lookup_by_phandle_args(
++                                       struct device_node *np,
++                                       const char *property,
++                                       int arg_count,
++                                       unsigned int *out_args);
+ #else
+ static inline struct regmap *device_node_to_regmap(struct device_node *np)
+ {
+@@ -45,6 +50,15 @@ static inline struct regmap *syscon_regmap_lookup_by_phandle(
+ {
+        return ERR_PTR(-ENOTSUPP);
+ }
++
++static struct regmap *syscon_regmap_lookup_by_phandle_args(
++                                       struct device_node *np,
++                                       const char *property,
++                                       int arg_count,
++                                       unsigned int *out_args)
++{
++       return ERR_PTR(-ENOTSUPP);
++}
+ #endif
 
-Here is missing processing of create_time_ms.
+ #endif /* __LINUX_MFD_SYSCON_H__ */
+--
+2.7.4
 
-> +		exfat_get_entry_time(sbi, &info->mtime,
-> +				ep->dentry.file.modify_time,
-> +				ep->dentry.file.modify_date,
-> +				ep->dentry.file.modify_tz);
-
-And here modify_time_ms.
-
-> +		exfat_get_entry_time(sbi, &info->atime,
-> +				ep->dentry.file.access_time,
-> +				ep->dentry.file.access_date,
-> +				ep->dentry.file.access_tz);
-> +		kfree(es);
-> +
-> +		if (info->type == TYPE_DIR) {
-> +			exfat_chain_set(&cdir, info->start_clu,
-> +				EXFAT_B_TO_CLU(info->size, sbi), info->flags);
-> +			count = exfat_count_dir_entries(sb, &cdir);
-> +			if (count < 0)
-> +				return -EIO;
-> +
-> +			info->num_subdirs = count + EXFAT_MIN_SUBDIR;
-> +		}
-> +	}
-> +	return 0;
-> +}
-
--- 
-Pali Rohár
-pali.rohar@gmail.com
+________________________________
+ This email (including its attachments) is intended only for the person or entity to which it is addressed and may contain information that is privileged, confidential or otherwise protected from disclosure. Unauthorized use, dissemination, distribution or copying of this email or the information herein or taking any action in reliance on the contents of this email or the information herein, by anyone other than the intended recipient, or an employee or agent responsible for delivering the message to the intended recipient, is strictly prohibited. If you are not the intended recipient, please do not read, copy, use or disclose any part of this e-mail to others. Please notify the sender immediately and permanently delete this e-mail and any attachments if you received it in error. Internet communications cannot be guaranteed to be timely, secure, error-free or virus-free. The sender does not accept liability for any errors or omissions.
+本邮件及其附件具有保密性质，受法律保护不得泄露，仅发送给本邮件所指特定收件人。严禁非经授权使用、宣传、发布或复制本邮件或其内容。若非该特定收件人，请勿阅读、复制、 使用或披露本邮件的任何内容。若误收本邮件，请从系统中永久性删除本邮件及所有附件，并以回复邮件的方式即刻告知发件人。无法保证互联网通信及时、安全、无误或防毒。发件人对任何错漏均不承担责任。
