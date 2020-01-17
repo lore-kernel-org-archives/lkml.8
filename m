@@ -2,172 +2,137 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D88C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25527C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB6912083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:16:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579270576;
-	bh=4qSApj3kP2KygbojYW6xtWszdgOndInNtrCKFim9YTU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OtuWX+5Mu1nL4P9FvjEtHqCIEh3uKQGWYfd/AL7W70R8CJ8H60yxoB1Cx4XTCLwsC
-	 kemLz0o1Ah6EloOt0IwQQHhsD4/VZxSalzc9GQFVmiG1KSX7uDykbDfDMWCSaILEof
-	 TI+OKFFyisC6AOhZMBrG5fHUlLpNcikexL3WWH1I=
+	by mail.kernel.org (Postfix) with ESMTP id EF685206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:18:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="eHsCIVZG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728780AbgAQOQQ (ORCPT
+        id S1727033AbgAQOSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 09:16:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39208 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726587AbgAQOQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 09:16:15 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD5FF2082F;
-        Fri, 17 Jan 2020 14:16:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579270574;
-        bh=4qSApj3kP2KygbojYW6xtWszdgOndInNtrCKFim9YTU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Q+4F2dL3F84tNrmeuvWtZB3t9Hej6s2EVIzAv1pjdkuFUbDb9SGrNyIrNP87WUN3z
-         PT5i+gtg9XHqijkWr6X8DrcJ7mjd3QVwYY3pGYMMHe0cc4Y7/NsgSQ9sl00WxPUcnG
-         EFHHyv1y89ZnGSBleUDNry4sbdeEj9/+Q5JAJlXQ=
-Date:   Fri, 17 Jan 2020 15:16:12 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     roman.sudarikov@linux.intel.com
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, eranian@google.com,
-        bgregg@netflix.com, ak@linux.intel.com, kan.liang@linux.intel.com,
-        alexander.antonov@intel.com
-Subject: Re: [PATCH v4 1/2] perf x86: Infrastructure for exposing an Uncore
- unit to PMON mapping
-Message-ID: <20200117141612.GB1856891@kroah.com>
-References: <20200117133759.5729-1-roman.sudarikov@linux.intel.com>
- <20200117133759.5729-2-roman.sudarikov@linux.intel.com>
+        Fri, 17 Jan 2020 09:18:11 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:38196 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726950AbgAQOSK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 09:18:10 -0500
+Received: by mail-qv1-f65.google.com with SMTP id t6so10750224qvs.5
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 06:18:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=QZuEFUKjv//ibyKVev2kASTpvRJGWKtlTct99HsCngM=;
+        b=eHsCIVZGsneURBSnnMRV2NrM9GAmfJxh+Z6wX5tGZ6yuKUHiDFGGeg9M5+wc7embk7
+         vUUCBLrImj0GJ2uiMswlXW2SVZD+MnqK2SMD7exdwCQ9sJBPeUoIHFVitK3taC+w3mm7
+         VkfQwarKOIjdASLiZ0k8jXwLqcD3xYmORlzx23HF3AIfx2Gq2Updp507eQ6xH5tsSkRe
+         NC+04vKyBwJxxvo3QjZC8c9Z/38Df+LKZtQiAwgSVrFg7xoB9KcQaUScZb0g3+4cs3T/
+         AKfNDgt/OQ0i3v8LT55qLwE9ZvPGA3UO8Z7CZBYKzFBlkklzWMQ43nNdVlO4fyADya30
+         IlNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QZuEFUKjv//ibyKVev2kASTpvRJGWKtlTct99HsCngM=;
+        b=qD28qXBgAPwAJHFSICvlnta95HMylLFITb4mZvK1l2Y9D4Ta26GMmhkJh3hO438NCK
+         8kF098MwzIF0xl5Sly6zVGtoPt9a/aUft+jt7cQEWlMT6iVooezHM1Wn8To+v2vSdcDV
+         Ke0B70tw5W5yjZyACcU8IfhwlgX1mux1uePDEOh37BJX4wkQRkocNBddxGAQVixtDTQY
+         c14xleM4V4Xdeg36zEMCTJ+X0QlCjlV5xJpacuWCfki1ghIHqj7KibJjoclmw3iHGKux
+         PoxEuTZVRU6OJI+h3AkmRJKhdQZkE5cTIX1j6qJNgvnUcOB3qjgwgjZQiH2EoS3Yo2wq
+         Vv3g==
+X-Gm-Message-State: APjAAAXEoNHk1FCaCe3J48W79dfYPGu8DisW2Eo+7is5dwk4Vd+j4BVn
+        0DsCvmGW63f+Ldl3jbDYVUMXX9kPOqOV/g==
+X-Google-Smtp-Source: APXvYqyVK4nL9OgB+euaXnwZw6RE6de018kfPkbe0U7aGHdH1reADSe2XSJ8P75DEADf92W/TOE82g==
+X-Received: by 2002:a05:6214:1745:: with SMTP id dc5mr7651088qvb.230.1579270689133;
+        Fri, 17 Jan 2020 06:18:09 -0800 (PST)
+Received: from [192.168.1.106] ([107.15.81.208])
+        by smtp.gmail.com with ESMTPSA id 206sm11803384qkf.132.2020.01.17.06.18.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jan 2020 06:18:08 -0800 (PST)
+Subject: Re: [PATCH] nbd: fix potential NULL pointer fault in connect and
+ disconnect process
+To:     Sun Ke <sunke32@huawei.com>, axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, nbd@other.debian.org,
+        linux-kernel@vger.kernel.org
+References: <20200117115005.37006-1-sunke32@huawei.com>
+From:   Josef Bacik <josef@toxicpanda.com>
+Message-ID: <875eaffb-d1e1-2d7e-09c9-81bab345e707@toxicpanda.com>
+Date:   Fri, 17 Jan 2020 09:18:07 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200117133759.5729-2-roman.sudarikov@linux.intel.com>
+In-Reply-To: <20200117115005.37006-1-sunke32@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 04:37:58PM +0300, roman.sudarikov@linux.intel.com wrote:
-> From: Roman Sudarikov <roman.sudarikov@linux.intel.com>
+On 1/17/20 6:50 AM, Sun Ke wrote:
+> Connect and disconnect a nbd device repeatedly, will cause
+> NULL pointer fault.
 > 
-> Intel® Xeon® Scalable processor family (code name Skylake-SP) makes
-> significant changes in the integrated I/O (IIO) architecture. The new
-> solution introduces IIO stacks which are responsible for managing traffic
-> between the PCIe domain and the Mesh domain. Each IIO stack has its own
-> PMON block and can handle either DMI port, x16 PCIe root port, MCP-Link
-> or various built-in accelerators. IIO PMON blocks allow concurrent
-> monitoring of I/O flows up to 4 x4 bifurcation within each IIO stack.
+> It will appear by the steps:
+> 1. Connect the nbd device and disconnect it, but now nbd device
+>     is not disconnected totally.
+> 2. Connect the same nbd device again immediately, it will fail
+>     in nbd_start_device with a EBUSY return value.
+> 3. Wait a second to make sure the last config_refs is reduced
+>     and run nbd_config_put to disconnect the nbd device totally.
+> 4. Start another process to open the nbd_device, config_refs
+>     will increase and at the same time disconnect it.
 > 
-> Software is supposed to program required perf counters within each IIO
-> stack and gather performance data. The tricky thing here is that IIO PMON
-> reports data per IIO stack but users have no idea what IIO stacks are -
-> they only know devices which are connected to the platform.
+> To fix it, add a NBD_HAS_STARTED flag. Set it in nbd_start_device_ioctl
+> and nbd_genl_connect if nbd device is started successfully.
+> Clear it in nbd_config_put. Test it in nbd_genl_disconnect and
+> nbd_genl_reconfigure.
+
+I don't doubt what you are seeing, but what exactly are we NULL pointer 
+dereferencing?  I can't quite figure it out from the steps.
+
 > 
-> Understanding IIO stack concept to find which IIO stack that particular
-> IO device is connected to, or to identify an IIO PMON block to program
-> for monitoring specific IIO stack assumes a lot of implicit knowledge
-> about given Intel server platform architecture.
-> 
-> Usage example:
->     /sys/devices/uncore_<type>_<pmu_idx>/mapping
-> 
-> Each Uncore unit type, by its nature, can be mapped to its own context,
-> for example:
-> 1. CHA - each uncore_cha_<pmu_idx> is assigned to manage a distinct slice
->    of LLC capacity;
-> 2. UPI - each uncore_upi_<pmu_idx> is assigned to manage one link of Intel
->    UPI Subsystem;
-> 3. IIO - each uncore_iio_<pmu_idx> is assigned to manage one stack of the
->    IIO module;
-> 4. IMC - each uncore_imc_<pmu_idx> is assigned to manage one channel of
->    Memory Controller.
-> 
-> Implementation details:
-> Two callbacks added to struct intel_uncore_type to discover and map Uncore
-> units to PMONs:
->     int (*get_topology)(struct intel_uncore_type *type, int max_dies)
->     int (*set_mapping)(struct intel_uncore_type *type, int max_dies)
-> 
-> Details of IIO Uncore unit mapping to IIO PMON:
-> Each IIO stack is either DMI port, x16 PCIe root port, MCP-Link or various
-> built-in accelerators. For Uncore IIO Unit type, the mapping file
-> holds bus numbers of devices, which can be monitored by that IIO PMON block
-> on each die.
-> 
-> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-> Co-developed-by: Alexander Antonov <alexander.antonov@intel.com>
-> Signed-off-by: Alexander Antonov <alexander.antonov@intel.com>
-> Signed-off-by: Roman Sudarikov <roman.sudarikov@linux.intel.com>
+> Signed-off-by: Sun Ke <sunke32@huawei.com>
 > ---
->  arch/x86/events/intel/uncore.c | 46 ++++++++++++++++++++++++++++++++++
->  arch/x86/events/intel/uncore.h |  6 +++++
->  2 files changed, 52 insertions(+)
+>   drivers/block/nbd.c | 21 +++++++++++++++++++++
+>   1 file changed, 21 insertions(+)
 > 
-> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-> index 86467f85c383..55201bfde2c8 100644
-> --- a/arch/x86/events/intel/uncore.c
-> +++ b/arch/x86/events/intel/uncore.c
-> @@ -825,6 +825,44 @@ static const struct attribute_group uncore_pmu_attr_group = {
->  	.attrs = uncore_pmu_attrs,
->  };
->  
-> +static ssize_t mapping_show(struct device *dev,
-> +				struct device_attribute *attr, char *buf)
-> +{
-> +	struct intel_uncore_pmu *pmu = dev_get_drvdata(dev);
-> +
-> +	return snprintf(buf, PAGE_SIZE - 1, "%s\n", pmu->mapping);
-> +}
-> +static DEVICE_ATTR_RO(mapping);
-> +
-> +static struct attribute *mapping_attrs[] = {
-> +	&dev_attr_mapping.attr,
-> +	NULL,
-> +};
-> +
-> +static struct attribute_group mapping_group = {
-> +	.attrs = mapping_attrs,
-> +};
-> +
-> +static umode_t
-> +not_visible(struct kobject *kobj, struct attribute *attr, int i)
-> +{
-> +	return 0;
-> +}
-> +
-> +static const struct attribute_group *attr_update[] = {
-> +	&mapping_group,
-> +	NULL,
-> +};
+> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+> index b4607dd96185..ddd364e208ab 100644
+> --- a/drivers/block/nbd.c
+> +++ b/drivers/block/nbd.c
+> @@ -83,6 +83,7 @@ struct link_dead_args {
+>   
+>   #define NBD_DESTROY_ON_DISCONNECT	0
+>   #define NBD_DISCONNECT_REQUESTED	1
+> +#define NBD_HAS_STARTED				2
+>   
+>   struct nbd_config {
+>   	u32 flags;
+> @@ -1215,6 +1216,7 @@ static void nbd_config_put(struct nbd_device *nbd)
+>   		nbd->disk->queue->limits.discard_alignment = 0;
+>   		blk_queue_max_discard_sectors(nbd->disk->queue, UINT_MAX);
+>   		blk_queue_flag_clear(QUEUE_FLAG_DISCARD, nbd->disk->queue);
+> +		clear_bit(NBD_HAS_STARTED, &nbd->flags);
+>   
+>   		mutex_unlock(&nbd->config_lock);
+>   		nbd_put(nbd);
+> @@ -1290,6 +1292,8 @@ static int nbd_start_device_ioctl(struct nbd_device *nbd, struct block_device *b
+>   	ret = nbd_start_device(nbd);
+>   	if (ret)
+>   		return ret;
+> +	else
+> +		set_bit(NBD_HAS_STARTED, &nbd->flags);
 
-ATTRIBUTE_GROUPS()?
+The else is superfluous here.  Thanks,
 
-
-> +
-> +static void uncore_platform_mapping(struct intel_uncore_type *t)
-> +{
-> +	if (t->get_topology && t->set_mapping &&
-> +	    !t->get_topology(t, max_dies) && !t->set_mapping(t, max_dies))
-> +		mapping_group.is_visible = NULL;
-
-No need to set something to NULL that is already set to NULL, right?
-
-thanks,
-
-greg k-h
+Josef
