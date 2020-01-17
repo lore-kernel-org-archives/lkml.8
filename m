@@ -2,70 +2,101 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B221C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC33C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1336120728
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:14:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D882D20728
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:16:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579281367;
+	bh=ls7j/b+u7rT7WIU3wPjF1LwdU2krDlteOJ4YNDm0Txs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=ybmchQU7q1MJgejr0cvjWcylnIsdgvnPkRvB4HtGDd8i6y9zWQcWE2JaY9+GOuAtV
+	 Q6b3ZoPLRqjN/QvOX2urQcfESqRw4SH7bR+/NMVlq2SPA0ovcg+nzR9zwyssWSpg4x
+	 1T8F/Ac1MqULdBjmifGWMbHkc7p7L1l21vLNMPDE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbgAQROd (ORCPT
+        id S1727766AbgAQRQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 12:14:33 -0500
-Received: from mga14.intel.com ([192.55.52.115]:18058 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726603AbgAQROc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 12:14:32 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 09:14:32 -0800
-X-IronPort-AV: E=Sophos;i="5.70,330,1574150400"; 
-   d="scan'208";a="214543568"
-Received: from ddalessa-mobl.amr.corp.intel.com (HELO [10.254.201.179]) ([10.254.201.179])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 17 Jan 2020 09:14:30 -0800
-Subject: Re: [PATCH] IB/hfi1: Fix logical condition in msix_request_irq
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-References: <20200116222658.5285-1-natechancellor@gmail.com>
-From:   Dennis Dalessandro <dennis.dalessandro@intel.com>
-Message-ID: <2fb6f478-4ca5-0f52-a818-20c3d97730c2@intel.com>
-Date:   Fri, 17 Jan 2020 12:14:29 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Fri, 17 Jan 2020 12:16:07 -0500
+Received: from conuserg-08.nifty.com ([210.131.2.75]:20894 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726603AbgAQRQG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 12:16:06 -0500
+Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id 00HHFttT008842;
+        Sat, 18 Jan 2020 02:15:56 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 00HHFttT008842
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1579281356;
+        bh=o7UmDXEbY6/lJKfSeZ85C9oBWx5szmcnLgIbcjg4jwE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=pfbXG7yDEesfxclBm+SA9LWzBKBD+to/PSmABzTePJweZBrag8DVKtOWGj8K2Y5+Y
+         yN1Uhn12/DOL4eDui1eI58L6kh8rTZQG8iHm338amnjhHMgFsxYbbbKCnMmWvXdRtr
+         ofbRT7vs6t6Wsn/KllB7DNe95UDVr+eh/OwN5lDFtbDwXWqzyLS8vaJ0QYogNEZyrn
+         zBOmHl3n2IJxnrg5BPBbxb9tRu8vjK6zghs8jCnVbfVWIchwA6ZlLKO8SJ3/qE1oqA
+         z/stZDJTGH7D8svrU/7k3MhBtf3r91KAWAJKoOET2itp1GGE45nMc9cvfbn3YY8nq8
+         5oU954z9pb34A==
+X-Nifty-SrcIP: [126.93.102.113]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] kbuild: use -S instead of -E for precise cc-option test in Kconfig
+Date:   Sat, 18 Jan 2020 02:14:35 +0900
+Message-Id: <20200117171435.11591-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200116222658.5285-1-natechancellor@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/16/2020 5:26 PM, Nathan Chancellor wrote:
-> Clang warns:
-> 
-> drivers/infiniband/hw/hfi1/msix.c:136:22: warning: overlapping
-> comparisons always evaluate to false [-Wtautological-overlap-compare]
->          if (type < IRQ_SDMA && type >= IRQ_OTHER)
->              ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~
-> 1 warning generated.
-> 
-> It is impossible for something to be less than 0 (IRQ_SDMA) and greater
-> than or equal to 3 (IRQ_OTHER) at the same time. A logical OR should
-> have been used to keep the same logic as before.
-> 
-> Link: https://github.com/ClangBuiltLinux/linux/issues/841
-> Fixes: 13d2a8384bd9 ("IB/hfi1: Decouple IRQ name from type")
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Currently, -E (stop after the preprocessing stage) is used to check
+whether the given compiler flag is supported.
 
-Acked-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+While it is faster than -S (or -c), it can be false-positive. You need
+to run the compilation proper to check the flag more precisely.
+
+For example, when testing "--param asan-instrument-allocas=1", my gcc
+gives a different result for -E vs -S.
+
+$ gcc -Werror --param asan-instrument-allocas=1 -E -x c /dev/null -o /dev/null
+$ echo $?
+0
+
+$ gcc -Werror --param asan-instrument-allocas=1 -S -x c /dev/null -o /dev/null
+cc1: error: invalid --param name ‘asan-instrument-allocas’; did you mean ‘asan-instrument-writes’?
+$ echo $?
+1
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ scripts/Kconfig.include | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
+index d4adfbe42690..bfb44b265a94 100644
+--- a/scripts/Kconfig.include
++++ b/scripts/Kconfig.include
+@@ -25,7 +25,7 @@ failure = $(if-success,$(1),n,y)
+ 
+ # $(cc-option,<flag>)
+ # Return y if the compiler supports <flag>, n otherwise
+-cc-option = $(success,$(CC) -Werror $(CLANG_FLAGS) $(1) -E -x c /dev/null -o /dev/null)
++cc-option = $(success,$(CC) -Werror $(CLANG_FLAGS) $(1) -S -x c /dev/null -o /dev/null)
+ 
+ # $(ld-option,<flag>)
+ # Return y if the linker supports <flag>, n otherwise
+-- 
+2.17.1
+
