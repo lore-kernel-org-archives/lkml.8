@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24BD3C33CB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B39A7C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDE9821582
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:01:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B2CA20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:01:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="MyI5A+xB"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="NJ21HVXS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730066AbgAQWBD (ORCPT
+        id S1730108AbgAQWBI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 17:01:03 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:38362 "EHLO mail.andi.de1.cc"
+        Fri, 17 Jan 2020 17:01:08 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:38480 "EHLO mail.andi.de1.cc"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729361AbgAQWBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 17:01:02 -0500
+        id S1730040AbgAQWBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 17:01:03 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:To:From:Sender:Reply-To:Cc:
         Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=txK711xVT2FClEAldfopb3dlqvKdPJUxZlgvaJsxe+I=; b=MyI5A+xB99uOPsjzd6vtiBsWRA
-        2l4waYncLKoooxr/+29thTb+AxHalIbPFcF+Z94UDlqosLT0IoPNOqyq99F4rArHmhTEFxFf7oqoD
-        o3JOICKRS28OLVymCAKetIYThITWrnLas6Jn6pT44KcmziZnN5rjW7IkG1w5/9fGfkUk=;
+        bh=X60lhDD3EIIas99/kMy31DwPl9X0FpUBM1BVk43FGZM=; b=NJ21HVXSsv2aS36MiDR40AQ3VW
+        QkvAmK4dHtiyoagnktdOq7OQ0l0U0cJXdG5pdLfqSOEaB9XiHS/T2OMZ0lbCWfxKONZkyhCINj/Km
+        7jjpkPNOahPWFeQVjIG+WA07lWdF3Qr+vWlf/8vbBm2Z6u3HI9JOM/ghYlnQIPONWjao=;
 Received: from p200300ccff371b001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff37:1b00:1a3d:a2ff:febf:d33a] helo=aktux)
         by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <andreas@kemnade.info>)
-        id 1isZfk-00077b-Vk; Fri, 17 Jan 2020 23:00:57 +0100
+        id 1isZfm-000780-Mb; Fri, 17 Jan 2020 23:00:58 +0100
 Received: from andi by aktux with local (Exim 4.92)
         (envelope-from <andreas@kemnade.info>)
-        id 1isZfk-0003ya-ML; Fri, 17 Jan 2020 23:00:56 +0100
+        id 1isZfm-0003yg-DA; Fri, 17 Jan 2020 23:00:58 +0100
 From:   Andreas Kemnade <andreas@kemnade.info>
 To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
         pmeerw@pmeerw.net, lee.jones@linaro.org, b.galvani@gmail.com,
         linus.walleij@linaro.org, andreas@kemnade.info,
         linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
         phh@phh.me, stefan@agner.ch, letux-kernel@openphoenux.org
-Subject: [PATCH 2/5] mfd: rn5t618: add ADC subdevice for RC5T619
-Date:   Fri, 17 Jan 2020 22:59:23 +0100
-Message-Id: <20200117215926.15194-3-andreas@kemnade.info>
+Subject: [RFC PATCH 4/5] mfd: rn5t618: add IRQ definitions for RN5T618
+Date:   Fri, 17 Jan 2020 22:59:25 +0100
+Message-Id: <20200117215926.15194-5-andreas@kemnade.info>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200117215926.15194-1-andreas@kemnade.info>
 References: <20200117215926.15194-1-andreas@kemnade.info>
@@ -58,25 +58,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds a subdevice for the ADC in the RC5T619.
+Previously, only the definitions for the RC5T619 were
+available.
 
 Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 ---
- drivers/mfd/rn5t618.c | 1 +
- 1 file changed, 1 insertion(+)
+Untested, IMHO only acceptable with a Tested-By
+
+ drivers/mfd/rn5t618.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
 diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
-index 073de8e0e78b..321836f78120 100644
+index 321836f78120..6828fd40b0a1 100644
 --- a/drivers/mfd/rn5t618.c
 +++ b/drivers/mfd/rn5t618.c
-@@ -24,6 +24,7 @@ static const struct mfd_cell rn5t618_cells[] = {
+@@ -58,6 +58,24 @@ static const struct regmap_config rn5t618_regmap_config = {
+ 	.cache_type	= REGCACHE_RBTREE,
  };
  
- static const struct mfd_cell rc5t619_cells[] = {
-+	{ .name = "rn5t618-adc" },
- 	{ .name = "rn5t618-regulator" },
- 	{ .name = "rc5t619-rtc" },
- 	{ .name = "rn5t618-wdt" },
++static const struct regmap_irq rn5t618_irqs[] = {
++	REGMAP_IRQ_REG(RN5T618_IRQ_SYS, 0, BIT(0)),
++	REGMAP_IRQ_REG(RN5T618_IRQ_DCDC, 0, BIT(1)),
++	REGMAP_IRQ_REG(RN5T618_IRQ_ADC, 0, BIT(3)),
++	REGMAP_IRQ_REG(RN5T618_IRQ_GPIO, 0, BIT(4)),
++	REGMAP_IRQ_REG(RN5T618_IRQ_CHG, 0, BIT(6)),
++};
++
++static const struct regmap_irq_chip rn5t618_irq_chip = {
++	.name = "rn5t618",
++	.irqs = rn5t618_irqs,
++	.num_irqs = ARRAY_SIZE(rn5t618_irqs),
++	.num_regs = 1,
++	.status_base = RN5T618_INTMON,
++	.mask_base = RN5T618_INTEN,
++	.mask_invert = true,
++};
++
+ static const struct regmap_irq rc5t619_irqs[] = {
+ 	REGMAP_IRQ_REG(RN5T618_IRQ_SYS, 0, BIT(0)),
+ 	REGMAP_IRQ_REG(RN5T618_IRQ_DCDC, 0, BIT(1)),
+@@ -92,6 +110,9 @@ static int rn5t618_irq_init(struct rn5t618 *rn5t618)
+ 	case RC5T619:
+ 		irq_chip = &rc5t619_irq_chip;
+ 		break;
++	case RN5T618:
++		irq_chip = &rn5t618_irq_chip;
++		break;
+ 	default:
+ 		irq_chip = NULL;
+ 		break;
 -- 
 2.20.1
 
