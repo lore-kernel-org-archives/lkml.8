@@ -2,99 +2,65 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E83C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 08:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 073C2C33CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 08:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E82DF2083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 08:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6FB32072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 08:11:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="ctgc1bMF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VPu106z9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729475AbgAQIIq (ORCPT
+        id S1729425AbgAQILv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 03:08:46 -0500
-Received: from fanzine.igalia.com ([178.60.130.6]:38119 "EHLO
-        fanzine.igalia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727002AbgAQIIp (ORCPT
+        Fri, 17 Jan 2020 03:11:51 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:43666 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728986AbgAQILu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 03:08:45 -0500
-X-Greylist: delayed 2593 seconds by postgrey-1.27 at vger.kernel.org; Fri, 17 Jan 2020 03:08:45 EST
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com; s=20170329;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID; bh=xkBF8jCSOWPumWg9R+MOpddk9K9WEJFLsXsk5vUpwbU=;
-        b=ctgc1bMFPsEvVCcRWuutv+YO2ueOPTps5Bt6MPdOZxl0KloyUOn9f0hYS7JBAP89XHhp/vfRf7bptujxrAIlMsrG0sWnRbKLIAuU7iS9+xFRPoZ8VL+OvJ7WMAu1kkK7v3nMnJ3y3hIxjvVhUeA8s0Wcjg080Em0FF8EeHom99OO8mLi13fCUVAKq5Pj50iiEdcc4m63hho9fAfWt+TAU3Zyf0QCRtiYU9AMd98dJqiA64iCO3yjrPiofo+VNVdjjJ74qNABJwgbedobd2rr8QEMJduQYJOcFwUubSPhukHyPiVuM1DC7scKUrxgryJ2apfGF+D9rINzKTEEJhxXrw==;
-Received: from [192.168.10.170] (helo=ip170.dynamic.igalia.com)
-        by fanzine.igalia.com with esmtpsa 
-        (Cipher TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256) (Exim)
-        id 1isM0Y-00039r-B1; Fri, 17 Jan 2020 08:25:30 +0100
-Message-ID: <cb93a21557216d1b389390c556f421132aac88f0.camel@igalia.com>
-Subject: Re: [PATCH AUTOSEL 5.4 003/205] drm/v3d: don't leak bin job if
- v3d_job_init fails.
-From:   Iago Toral <itoral@igalia.com>
-To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org
-Date:   Fri, 17 Jan 2020 08:25:30 +0100
-In-Reply-To: <20200116164300.6705-3-sashal@kernel.org>
-References: <20200116164300.6705-1-sashal@kernel.org>
-         <20200116164300.6705-3-sashal@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1-2 
+        Fri, 17 Jan 2020 03:11:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=rD9C3QZDVPq66OWwLFkfMJWBC5e6DghTwHl4BX8+F6E=; b=VPu106z9ozgNTCS0RAvX4vITL
+        VEFKgRREs1Ryw3/kfCzj7/WnaMwSBPAnguXLRD8NAyM+7XMP3ftjNRXXm9YdcEi4JPYJ44BgQ6j4A
+        OjMg7YEcldQVbdP+EIx3GHFTuuy/VzCaLNwJ+162IaWhdXBWGYbZjPb73RJzWGWDHzGNqnHnHaN5t
+        04pdzIlmy7KqTdiF/8AAI/Y485V81hqNQVOAncSKYRkyrAr8kJBG9bJXs/kfatROTJJ1THI3sKilx
+        FnMFsKeTPrMmK2JjkwqjqgJSqyA80qE8nO56+lmckc4AvDqSl1efcHY3JK6sgB20uGBsXKa730xTc
+        JlSc8KYuw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1isMjI-0004NH-RF; Fri, 17 Jan 2020 08:11:44 +0000
+Date:   Fri, 17 Jan 2020 00:11:44 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-ide@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] ide/MIPS/docs: remove no longer used au1xxx-ide
+ driver
+Message-ID: <20200117081144.GA16691@infradead.org>
+References: <CGME20200116122951eucas1p1d36493f2b496bb13dca4fd1a17abad49@eucas1p1.samsung.com>
+ <20200116122938.20789-1-b.zolnierkie@samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200116122938.20789-1-b.zolnierkie@samsung.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sasha,
+Always great to kill off another legacy ide driver:
 
-
-please notice that there were two separate patches that addressed the
-same issue and applying both simultaneously leads to a double free
-(which is what I see is happening with this patch: see the second call
-to kfree(bin) right below the one added here). This issue was raised
-previously here:
-
-https://lists.freedesktop.org/archives/dri-devel/2019-October/241425.html
-
-Iago
-
-On Thu, 2020-01-16 at 11:39 -0500, Sasha Levin wrote:
-> From: Iago Toral Quiroga <itoral@igalia.com>
-> 
-> [ Upstream commit 0d352a3a8a1f26168d09f7073e61bb4b328e3bb9 ]
-> 
-> If the initialization of the job fails we need to kfree() it
-> before returning.
-> 
-> Signed-off-by: Iago Toral Quiroga <itoral@igalia.com>
-> Signed-off-by: Eric Anholt <eric@anholt.net>
-> Link: 
-> https://patchwork.freedesktop.org/patch/msgid/20190916071125.5255-1-itoral@igalia.com
-> Fixes: a783a09ee76d ("drm/v3d: Refactor job management.")
-> Reviewed-by: Eric Anholt <eric@anholt.net>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/gpu/drm/v3d/v3d_gem.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/gpu/drm/v3d/v3d_gem.c
-> b/drivers/gpu/drm/v3d/v3d_gem.c
-> index 19c092d75266..6316bf3646af 100644
-> --- a/drivers/gpu/drm/v3d/v3d_gem.c
-> +++ b/drivers/gpu/drm/v3d/v3d_gem.c
-> @@ -565,6 +565,7 @@ v3d_submit_cl_ioctl(struct drm_device *dev, void
-> *data,
->  		ret = v3d_job_init(v3d, file_priv, &bin->base,
->  				   v3d_job_free, args->in_sync_bcl);
->  		if (ret) {
-> +			kfree(bin);
->  			v3d_job_put(&render->base);
->  			kfree(bin);
->  			return ret;
-
+Acked-by: Christoph Hellwig <hch@lst.de>
