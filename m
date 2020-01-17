@@ -2,116 +2,130 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18530C33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0315C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBD4A20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C636A2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:11:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HAN247Kh"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="YiYCYDVL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729085AbgAQSLf (ORCPT
+        id S1729140AbgAQSL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 13:11:35 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54604 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728901AbgAQSLf (ORCPT
+        Fri, 17 Jan 2020 13:11:56 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:46443 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726603AbgAQSLz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 13:11:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579284694;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QsgYM2TGG8lRq9niu1aCEnMk5zwASxNohdIB47d0fPM=;
-        b=HAN247KhsXlAXS/uKkIwMhHto4+DzkLslP8y9QlSqDhQoYmxIkWouLHtonrf0AWsi6IqGF
-        raiHOaVCO579vBG6NXEo5eVAlIcfBFcL8VR2GuGc9pth32W1yIMv2gpg3Rm1KQErX4joBR
-        S+1vsg8PRTL3DohBYuempntnF3d0gh4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-9-cuZZlEvPPxqHNMDkMEDNpQ-1; Fri, 17 Jan 2020 13:11:28 -0500
-X-MC-Unique: cuZZlEvPPxqHNMDkMEDNpQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EAEBDDB20;
-        Fri, 17 Jan 2020 18:11:25 +0000 (UTC)
-Received: from treble (ovpn-123-54.rdu2.redhat.com [10.10.123.54])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id ED0E95D9CD;
-        Fri, 17 Jan 2020 18:11:23 +0000 (UTC)
-Date:   Fri, 17 Jan 2020 12:11:21 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: mmotm 2019-12-10-19-14 uploaded (objtool: func() falls through)
-Message-ID: <20200117181121.3h72dajey7oticbf@treble>
-References: <20191211031432.iyKVQ6m9n%akpm@linux-foundation.org>
- <07777464-b9d8-ff1d-41d9-f62cc44f09f3@infradead.org>
- <20191212184859.zjj2ycfkvpcns5bk@treble>
- <042c6cd7-c983-03f1-6a79-5642549f57c4@infradead.org>
- <20191212205811.4vrrb4hou3tbiada@treble>
+        Fri, 17 Jan 2020 13:11:55 -0500
+Received: by mail-io1-f67.google.com with SMTP id t26so27021577ioi.13
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 10:11:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pihRMUVPHOuetXPQB62i/znalvf4yuPPPZW6nrkenRs=;
+        b=YiYCYDVLfijh0VBDaOrzuQu0kkrp7uU5HKIcT7fScOno85GNhEF++toFH+s5pPItOG
+         cGhvvowM9J8eBxYgIhqHvHiJHd7Wv8LEOH1QARwrueRijAKUrFdflJXJZjg7ilhX9wAO
+         t3zQna4c8b+XzpB52VkLOYbvtAMuoTgm1qc1MJlf1KNnapF93hpg3dGhmEtD2mr+BRYO
+         6S0Yp2siDHvU9/eVLYKTOQ2iZEhI9KKQxT5NJQciIAlx9XZoH0VEGtYtD/ZqcJfoVQOO
+         6UG1srhq33t1FaLPpdv6GptGvuqV7PpqGrLiSYCrTC14q1h0Js/hAFje3j8TNEBhOK9v
+         H3JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pihRMUVPHOuetXPQB62i/znalvf4yuPPPZW6nrkenRs=;
+        b=XntfTQv5eYHH29emQYqnKoHFoibkApUfZrxpNEQ83QIWOKGfM3BT1vJdHFqlUNvTx/
+         Zz2rza+QB3Hch364AFlM8nH6I8aPDSlJdcrJb43fRNRRFOtT+NXogZudpm8owFYAIC6H
+         44Lsau0zTbHC4sUn3oNkkih1/6SpVOacGsK2VtEsdRh4AFsxktdm+Z6tY7WqGeohuoy+
+         tJ3p/8UrPV0vqIk0MWU/vrO8Qg4ZVqUQhUMMoKCfTwYbhfQHW6+BCVLFPc3vOpx6AOx4
+         beKUqiXut1m2ignx7+jr4d2WyY0gNQP6aHWnN8Ys0r/WhuV/Ap4t6n5crKVnuuWhTBMH
+         ncBQ==
+X-Gm-Message-State: APjAAAUw83aayjKdF4IvcDiaVe5GvZAC2fgg5ooV6saqhVtwzQn7VULA
+        51c96yureISzwblgR+PjTW36PmwwpbnKt5xEPy3R0w==
+X-Google-Smtp-Source: APXvYqyn+Z0s4+oQK4CAzP3vyOMtqUmmJDDi66iqhyQJpT6lPCntXFrjPUzzVDBaoiSvrrYPkZbNTmnmB0uE+DmUf7w=
+X-Received: by 2002:a02:6957:: with SMTP id e84mr33315769jac.11.1579284714979;
+ Fri, 17 Jan 2020 10:11:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191212205811.4vrrb4hou3tbiada@treble>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+References: <1579205259-4845-1-git-send-email-santosh.shilimkar@oracle.com>
+ <20200117000358.fe7ew4vvnz4yxbzj@localhost> <148b6ec3-6a8e-ced8-41b3-3dffd5528ed6@oracle.com>
+In-Reply-To: <148b6ec3-6a8e-ced8-41b3-3dffd5528ed6@oracle.com>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Fri, 17 Jan 2020 10:11:43 -0800
+Message-ID: <CAOesGMiWL93ypL_4xqfqgwfVSOKtu8UqerzxV=Zr-aUkLp+rBw@mail.gmail.com>
+Subject: Re: [GIT_PULL] SOC: TI Keystone Ring Accelerator driver for v5.6
+To:     Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Cc:     SoC Team <soc@kernel.org>, ARM-SoC Maintainers <arm@kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 02:58:11PM -0600, Josh Poimboeuf wrote:
-> On Thu, Dec 12, 2019 at 12:21:17PM -0800, Randy Dunlap wrote:
-> > On 12/12/19 10:48 AM, Josh Poimboeuf wrote:
-> > > On Wed, Dec 11, 2019 at 08:31:08AM -0800, Randy Dunlap wrote:
-> > >> On 12/10/19 7:14 PM, Andrew Morton wrote:
-> > >>> The mm-of-the-moment snapshot 2019-12-10-19-14 has been uploaded to
-> > >>>
-> > >>>    http://www.ozlabs.org/~akpm/mmotm/
-> > >>>
-> > >>> mmotm-readme.txt says
-> > >>>
-> > >>> README for mm-of-the-moment:
-> > >>>
-> > >>> http://www.ozlabs.org/~akpm/mmotm/
-> > >>>
-> > >>> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-> > >>> more than once a week.
-> > >>>
-> > >>> You will need quilt to apply these patches to the latest Linus release (5.x
-> > >>> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-> > >>> http://ozlabs.org/~akpm/mmotm/series
-> > >>>
-> > >>> The file broken-out.tar.gz contains two datestamp files: .DATE and
-> > >>> .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
-> > >>> followed by the base kernel version against which this patch series is to
-> > >>> be applied.
-> > >>
-> > >> on x86_64:
-> > >>
-> > >> drivers/hwmon/f71882fg.o: warning: objtool: f71882fg_update_device() falls through to next function show_pwm_auto_point_temp_hyst()
-> > >> drivers/ide/ide-probe.o: warning: objtool: hwif_register_devices() falls through to next function hwif_release_dev()
-> > >> drivers/ide/ide-probe.o: warning: objtool: ide_host_remove() falls through to next function ide_disable_port()
-> > > 
-> > > Randy, can you share the .o files?
-> > 
-> > Sure. They are attached.
-> 
-> These look like compiler bugs to me... execution is falling off the edge
-> of the functions for no apparent reason.  Could potentially be triggered
-> by the '#define if' trace code.
+On Thu, Jan 16, 2020 at 9:05 PM <santosh.shilimkar@oracle.com> wrote:
+>
+> On 1/16/20 4:03 PM, Olof Johansson wrote:
+> > Hi,
+> >
+> > On Thu, Jan 16, 2020 at 12:07:39PM -0800, Santosh Shilimkar wrote:
+> >> Its bit late for pull request, but if possible, please pull it to
+> >> soc drivers tree.
+> >>
+> >> The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+> >>
+> >>    Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+> >>
+> >> are available in the git repository at:
+> >>
+> >>    git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git tags/drivers_soc_for_5.6
+> >>
+> >> for you to fetch changes up to 3277e8aa2504d97e022ecb9777d784ac1a439d36:
+> >>
+> >>    soc: ti: k3: add navss ringacc driver (2020-01-15 10:07:27 -0800)
+> >>
+> >> ----------------------------------------------------------------
+> >> SOC: TI Keystone Ring Accelerator driver
+> >>
+> >> The Ring Accelerator (RINGACC or RA) provides hardware acceleration to
+> >> enable straightforward passing of work between a producer and a consumer.
+> >> There is one RINGACC module per NAVSS on TI AM65x SoCs.
+> >
+> > This driver doesn't seem to have exported symbols, and no in-kernel
+> > users. So how will it be used?
+> >
+> > Usually we ask to hold off until the consuming side/drivers are also ready.
+> >
+> The other patches getting merged via Vinod's tree. The combined series
+> is split into couple of series. Vinod is going to pull this branch
+> and apply rest of the patchset. And then couple of additional consumer
+> drivers will get posted.
 
-Randy, do you happen to have a config which triggers the above bugs?  I
-can reduce the test cases and open a GCC bug.
+Ok -- might have been useful to get that in the tag description for
+context. Something to consider next time.
 
--- 
-Josh
+> > Also, is there a reason this is under drivers/soc/ instead of somewhere more
+> > suitable in the drivers subsystem? It's not "soc glue code" in the same way as
+> > drivers/soc was intended originally.
+> >
+> These kind of SOC IP drivers, we put into drivers/soc/ because of lack
+> of specific subsystem where they fit in. Navigator was also similar example.
 
+Hmm. At some point we'll have to push the brakes on this, since
+drivers/soc can't become a catch-all for random stuff like the old
+mach directories were. But it's tricky to tell just when -- sometimes
+you have to let the mess show up too.
+
+I'll merge this when I do the next pass (today, likely).
+
+-Olof
