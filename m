@@ -2,227 +2,132 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD58CC33CB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 524D6C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:44:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 835F92072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:43:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LOIu42vh"
+	by mail.kernel.org (Postfix) with ESMTP id 1C4252072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:44:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579275862;
+	bh=PLGG5v2UjtFrJh7Ix0P046cuCtmSFKLW+sw9968VJTw=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=pCnkazagjtRNGZs431GmNjgyYTNwa4a1Dxp6Jw8BEuBAfeECrysTrFsSIuYrj8t4l
+	 jUwXtOuas5FpAYE+YcWsIBawkzHkgCMLuxk1EZSa3utAXcUdeC5YvJkNMKI5ATrUZa
+	 ibK+ayOaPZN2Av+sEC/OTqWsCo63FRP9SbDLIiPQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729052AbgAQPnW (ORCPT
+        id S1729110AbgAQPoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 10:43:22 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:38911 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728780AbgAQPnV (ORCPT
+        Fri, 17 Jan 2020 10:44:21 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53660 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728780AbgAQPoU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 10:43:21 -0500
-Received: by mail-oi1-f195.google.com with SMTP id l9so22531826oii.5;
-        Fri, 17 Jan 2020 07:43:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3f+W4Xvm6P1QHWnul/IjVaVbxVFaJSRxnQJCYSx9gEI=;
-        b=LOIu42vhUzF9Mu+lfoPqpOM9rxI1BC0+cdUy0nL1Gb7u3qDzLDNkVue67qKqOoK+PQ
-         Zn0Z3eCYKz+sKmY1O6Mn+WxgRGFX72kZoLjIe+w86hCt3HGdyJq31rZsIXKh48QL3EdQ
-         rU+KJKKMm1WS8V4qptEUaxHH1wFPLxl1H2HGSac240BD+K5g8YYI9TubdoT/efcMF6vt
-         kf1pL7QgoR7QjzeHho5AWwkXQumqELeFZjbyqV0pGMF5IGIMHm4pEJhR+evgK94fj+4q
-         k+FUfh61EvtqNxZiiT3x3akhV3X+lmzmWeU2tYIavKm5Ze/oHBk/AhtjmFCyAeTOwvB9
-         5NFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3f+W4Xvm6P1QHWnul/IjVaVbxVFaJSRxnQJCYSx9gEI=;
-        b=YLMnjYvvtd+vTQXshfiz5pYqMRuAP46rmx4N5+rhU0Y4dEIZ0ybJOrBsXloUqpa3r1
-         If6ozni9c9q3A3tXj+K/TraxCXcc2//TbGPNNnL8Lyuo5UdY7hsvXjSzOq0EzawzQMyn
-         NpCFCYswS+4xmwHC9wYCB4fncCGt4EW31hdIM4IfSeCDWU/6rkdhHVX0Qxr/hTzPdKMR
-         0sbZ6iFwK0NVb3aSTZH5NnLL4xOfBJYRe236nmOKDcx0cUvJ513pAuCA6OTuoCnmGeWp
-         1oFkV3hZhjp4rEn5s4uFhPmnx8c3LrnLvINyyCGX5q1yoO5Ue09FgVOeZt1FBkJF+JlD
-         XYMQ==
-X-Gm-Message-State: APjAAAV8KEdiYNbNBONlrj+GxCR3Yc/CXUm3/qH8n5VO6B8ckxeDGVOd
-        2Cyh6NhDIgo7J3R2cv6O81H8D+1oPvx1s0dv6ZI=
-X-Google-Smtp-Source: APXvYqwQX6C67Z5k/Olz9ErSM0kNCQ/PtxFi1i1R+R/MleSFSQsUjHJQx0I1YtYGt5q3PkOX37rRHIstPathPjducks=
-X-Received: by 2002:a05:6808:24e:: with SMTP id m14mr3934910oie.168.1579275800172;
- Fri, 17 Jan 2020 07:43:20 -0800 (PST)
-MIME-Version: 1.0
-References: <CAGi-RUJvqJoCXWN2YugRn=WYEk9yzt7m3OPfX_o++PmJWQ3woQ@mail.gmail.com>
- <87wo9ub5f6.fsf@nanos.tec.linutronix.de> <CAGi-RUK_TA+WWvXJSrsa=_Pwq0pV1ffUKOCBu5c1t8O5Xs+UJg@mail.gmail.com>
- <CAGi-RUJG=SB7az5FFVTzzgefn_VXUbyQX1dtBN+9gkR7MgyC6g@mail.gmail.com>
- <87imldbqe3.fsf@nanos.tec.linutronix.de> <CAGi-RULNwpiNGYALYRG84SOUzkvNTbgctmXoS=Luh29xDHJzYw@mail.gmail.com>
- <87v9pcw55q.fsf@nanos.tec.linutronix.de> <CAGi-RUJPJ59AMZp3Wap=9zSWLmQSXVDtkbD+O6Hofizf8JWyRg@mail.gmail.com>
- <87pnfjwxtx.fsf@nanos.tec.linutronix.de> <CAGi-RUJtqdLtFBVMxL8TOQ3LGRqqrV4Ge7Fu9mTyDoQVYxtA5g@mail.gmail.com>
- <87zhem172r.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87zhem172r.fsf@nanos.tec.linutronix.de>
-From:   Ramon Fried <rfried.dev@gmail.com>
-Date:   Fri, 17 Jan 2020 17:43:08 +0200
-Message-ID: <CAGi-RUJkr0gPbynYe+Gkk-JoeyCHdSvd9zdgCv4Hij5vfGVMEA@mail.gmail.com>
-Subject: Re: MSI irqchip configured as IRQCHIP_ONESHOT_SAFE causes spurious IRQs
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     hkallweit1@gmail.com, Bjorn Helgaas <bhelgaas@google.com>,
-        maz@kernel.org, lorenzo.pieralisi@arm.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 17 Jan 2020 10:44:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=MO5mnIdK1revfmpWP6iIsmX9v4V7hiNKb4UKiswsbnc=; b=Ij5qe4j5ge+X
+        DJVob3VXbx8oOuN1pES+Uzm2ZaWYbqITKdIh1wEantG/FQA78d1/Kjeif1n7m71LOzTMED5mchDzW
+        EjvRN9mBcvSoGx4byc0meLChSBsEu+VQgcDls4/7UUx8ZkLzcaJdgwsHXz2FwsnSj2tMSzMHfPT9H
+        4SitY=;
+Received: from fw-tnat-cam4.arm.com ([217.140.106.52] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1isTnG-0006tt-Ej; Fri, 17 Jan 2020 15:44:18 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 21A02D02A2A; Fri, 17 Jan 2020 15:44:18 +0000 (GMT)
+From:   Mark Brown <broonie@kernel.org>
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Saravanan Sekar <sravanhome@gmail.com>
+Subject: Applied "regulator: mpq7920: Fix incorrect defines" to the regulator tree
+In-Reply-To: <20200115002953.14731-1-axel.lin@ingics.com>
+Message-Id: <applied-20200115002953.14731-1-axel.lin@ingics.com>
+X-Patchwork-Hint: ignore
+Date:   Fri, 17 Jan 2020 15:44:18 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 4:38 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Ramon,
->
-> Ramon Fried <rfried.dev@gmail.com> writes:
-> >> So from a software perspective you want to do something like this:
-> >>
-> >> gic_irq_handler()
-> >> {
-> >>    mask_ack(gic_irqX);
-> >>
-> >>    pending = read(msi_status);
-> >>    for_each_bit(bit, pending) {
-> >>        ack(msi_status, bit);  // This clears the latch in the MSI block
-> >>        handle_irq(irqof(bit));
-> >>    }
-> >>    unmask(gic_irqX);
-> >> }
-> >>
-> >> And that works perfectly correct without masking the MSI interrupt at
-> >> the PCI level for a threaded handler simply because the PCI device
-> >> will not send another interrupt until the previous one has been
-> >> handled by the driver unless the PCI device is broken.
-> >
-> > I'm missing something here, isn't this implementation blocks IRQ's only during
-> > the HW handler and not during the threaded handler ? (Assuming that I selected
-> > handle_level_irq() as the default handler)
->
-> handle_level_irq() is the proper handler for the actual GIC interrupt
-> which does the demultiplexing. The MSI interrupts want to have
-> handle_edge_irq().
->
-> > Actually my implementation current implementation is very similar to what
-> > you just described:
-> >
-> > static void eq_msi_isr(struct irq_desc *desc)
-> > {
-> >         struct irq_chip *chip = irq_desc_get_chip(desc);
-> >         struct eq_msi *msi;
-> >         u16 status;
-> >         unsigned long bitmap;
-> >         u32 bit;
-> >         u32 virq;
-> >
-> >         chained_irq_enter(chip, desc);
-> >         msi = irq_desc_get_handler_data(desc);
-> >
-> >         while ((status = readw(msi->gcsr_regs_base + LINK_GCSR5_OFFSET)
-> >                 & MSI_IRQ_REQ) != 0) {
-> >                 pr_debug("MSI: %x\n", status >> 12);
-> >
-> >                 bitmap = status >> 12;
-> >                 for_each_set_bit(bit, &bitmap, msi->num_of_vectors) {
-> >                         virq = irq_find_mapping(msi->inner_domain, bit);
-> >                         if (virq) {
-> >                                 generic_handle_irq(virq);
-> >                         } else {
-> >                                 pr_err("unexpected MSI\n");
-> >                                 handle_bad_irq(desc);
->
-> Now if you look at the example I gave you there is a subtle difference:
->
-> >>    pending = read(msi_status);
-> >>    for_each_bit(bit, pending) {
-> >>        ack(msi_status, bit);  // This clears the latch in the MSI block
-> >>        handle_irq(irqof(bit));
-> >>    }
->
-> And this clearing is important when one of the MSI interrupts is
-> actually having a threaded handler.
->
->  MSI interrupt fires
->   -> sets bit in msi_status
->     -> MSI block raises GIC interrupt because msi_status != 0
->
->  CPU handles GIC interrupt
->    pending = read(msi_status);
->    for_each_bit(bit, pending)
->       handle_irq()
->         primary_handler()
->            -> WAKEUP_THREAD
->
->    RETI, but msi_status is still != 0
->
-> > Additionally the domain allocation is defined like:
-> > static int eq_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
-> >                                  unsigned int nr_irqs, void *args)
-> > {
-> >         struct eq_msi *msi = domain->host_data;
-> >         unsigned long bit;
-> >         u32 mask;
-> >
-> >         /* We only allow 32 MSI per device */
-> >         WARN_ON(nr_irqs > 32);
-> >         if (nr_irqs > 32)
-> >                 return -ENOSPC;
-> >
-> >         bit = find_first_zero_bit(msi->used, msi->num_of_vectors);
-> >         if (bit >= msi->num_of_vectors)
-> >                 return -ENOSPC;
-> >
-> >         set_bit(bit, msi->used);
-> >
-> >         mask = readw(msi->gcsr_regs_base + LINK_GCSR6_OFFSET);
-> >         mask |= BIT(bit) << 12;
-> >         writew(mask, msi->gcsr_regs_base + LINK_GCSR6_OFFSET);
-> >
-> >         irq_domain_set_info(domain, virq, bit, &eq_msi_bottom_irq_chip,
-> >                             domain->host_data, handle_level_irq,
->
-> This is wrong. MSI is edge type, not level and you are really mixing up
-> the concepts here.
->
-> The fact that the MSI block raises a level interrupt on the output side
-> has absolutely nothing to do with the type of the MSI interrupt itself.
->
-> MSI is edge type by definition and this does not change just because
-> there is a translation unit between the MSI interrupt and the CPU
-> controller.
->
-> The actual MSI interrupts do not even know about the existance of that
-> MSI block at all. They do not care, as all they need to know is a
-> message and an address. When an interrupt is raised in the device the
-> MSI chip associated to the device (PCI or something else) writes this
-> message to the address exactly ONCE. And this exactly ONCE defines the
-> edge nature of MSI.
-OK, now I understand my mistake. thanks.
->
-> A proper designed MSI device should not send another message before the
-> interrupt handler which is associated to the device has handled the
-> interrupt at the device level.
-By "MSI device" you mean the MSI controller in the SOC or the endpoint
-that sends the MSI ?
->
-> So you really have to understand that the GIC interrupt and the MSI
-> interrupts are two different entities. They just have a 'connection'
-> because the message/address which is handed to the MSI device triggers
-> that GIC interrupt via the MSI translation unit. But they are still
-> different and independent entities.
->
-> See?
->
-> Thanks,
->
->         tglx
->
->
->
->
->
->
+The patch
+
+   regulator: mpq7920: Fix incorrect defines
+
+has been applied to the regulator tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.6
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 53ba2f1aa3860f7ea0bf81543aab4a66af3f01d0 Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Wed, 15 Jan 2020 08:29:53 +0800
+Subject: [PATCH] regulator: mpq7920: Fix incorrect defines
+
+Fix defines for MPQ7920_MASK_BUCK_ILIM and MPQ7920_DISCHARGE_ON
+Remove unused MPQ7920_REG_REGULATOR_EN1.
+
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Link: https://lore.kernel.org/r/20200115002953.14731-1-axel.lin@ingics.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/regulator/mpq7920.h | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/regulator/mpq7920.h b/drivers/regulator/mpq7920.h
+index 1498a1e3f4f5..489924655a96 100644
+--- a/drivers/regulator/mpq7920.h
++++ b/drivers/regulator/mpq7920.h
+@@ -43,11 +43,10 @@
+ #define MPQ7920_LDO5_REG_B		0x1e
+ #define MPQ7920_LDO5_REG_C		0x1f
+ #define MPQ7920_REG_MODE		0x20
+-#define MPQ7920_REG_REGULATOR_EN1	0x22
+ #define MPQ7920_REG_REGULATOR_EN	0x22
+ 
+ #define MPQ7920_MASK_VREF		0x7f
+-#define MPQ7920_MASK_BUCK_ILIM		0xd0
++#define MPQ7920_MASK_BUCK_ILIM		0xc0
+ #define MPQ7920_MASK_LDO_ILIM		BIT(6)
+ #define MPQ7920_MASK_DISCHARGE		BIT(5)
+ #define MPQ7920_MASK_MODE		0xc0
+@@ -57,7 +56,7 @@
+ #define MPQ7920_MASK_DVS_SLEWRATE	0xc0
+ #define MPQ7920_MASK_OVP		0x40
+ #define MPQ7920_OVP_DISABLE		~(0x40)
+-#define MPQ7920_DISCHARGE_ON		0x1
++#define MPQ7920_DISCHARGE_ON		BIT(5)
+ 
+ #define MPQ7920_REGULATOR_EN_OFFSET	7
+ 
+-- 
+2.20.1
+
