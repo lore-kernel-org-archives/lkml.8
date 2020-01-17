@@ -2,93 +2,176 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D8EC33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52823C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41DA520842
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28E982087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:20:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="edJyoHs6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qjj9nW9d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728794AbgAQOUP (ORCPT
+        id S1728820AbgAQOUY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 09:20:15 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50991 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726574AbgAQOUP (ORCPT
+        Fri, 17 Jan 2020 09:20:24 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39683 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726574AbgAQOUY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 09:20:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579270813;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=eeEZ0qUeju7e6fsOK/2xeFdlefM8ZRogr0yjS7mThiU=;
-        b=edJyoHs6H5HD88e018WwZg5uNH44ie3xKXYAPzQ7u4mwxXrefcece+pbricjEooxg9ndCG
-        Mo0bezkIUfmf8iU5yUI35Rcl5byXTKQ/BX4qgjWduTbbt+vcK8KZURkA8zCyGG1mgWf/7z
-        l8V8y/MPoPDWYmNCdcaNYozeweZ1w5g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-436-r2Rpb7Z4N9ao2YSI1_W4aQ-1; Fri, 17 Jan 2020 09:20:11 -0500
-X-MC-Unique: r2Rpb7Z4N9ao2YSI1_W4aQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 711248010CE;
-        Fri, 17 Jan 2020 14:20:10 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-49.rdu2.redhat.com [10.10.120.49])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 24CD3845C6;
-        Fri, 17 Jan 2020 14:20:04 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAJKOXPeCVwZfBsCVbc9RQUGi0UfWQw0uFamPiQasiO8fSthFsQ@mail.gmail.com>
-References: <CAJKOXPeCVwZfBsCVbc9RQUGi0UfWQw0uFamPiQasiO8fSthFsQ@mail.gmail.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     dhowells@redhat.com,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Scott Mayhew <smayhew@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [BISECT BUG] NFS v4 root not working after 6d972518b821 ("NFS: Add fs_context support.")
+        Fri, 17 Jan 2020 09:20:24 -0500
+Received: by mail-lf1-f65.google.com with SMTP id y1so18461123lfb.6
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 06:20:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=52SkNZCDjqwxNsCcswgc3O2QxOVfgfXytI8P8HG/hjw=;
+        b=Qjj9nW9dxWRF+Ax36+7qhoA1Px7MXOMy+ceUUUE6CKRjaeHNEOMfCQBKHcfvx3qtgJ
+         8L2Z31hEkJdFjf/gQI9JwTVIe6aZ+Pkjcqc9v5prj78+Wp3LSPEdSsJl8+8TfNHDGaDF
+         ta7wGQZtv3ou6yFIuhjgkMxR4NK8rV5EPnrii55f9yut23+YyqZwRItoAlG5R0lcLa9F
+         84etdt9fwpulHMXMRhFEWxdIsqG0NVyRgB181x7lNbUy9Exui1Gw0O4SJbCtlfDeWo2M
+         vJmD/0kxbMVPiuUeA7CnFDj36GE8+Qt56pqouhfaeku7wIR2flOP2CFr7fvld/O9KcVC
+         DPhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=52SkNZCDjqwxNsCcswgc3O2QxOVfgfXytI8P8HG/hjw=;
+        b=rUUptzxHhLnCAGvdZ5DQFoWLcGxSsrDhf6zuhfnqe3JWiqTsHupX3IGEx0GGG7e/JP
+         W7iH6E3r6ZpVgOh+JaiVieOpyVrGLFDnnp9cQM65hk/1A28tI+c98qEpkNp9VysgM915
+         leKP9TMXAcF0b8/4p/z6CfwDMTQb+M1VEk7/Gq+hHbwu2ffNGCAJinvs/aRR0NdouAfY
+         PxXJwWpOgaxR+6QERWqH4/NmY4EXda8FCuxf7SBVqt67ZYPq8TNoxmR6z05+IJyyc5M8
+         PBEjYi0DopPIhXV5vkQgFK9eeTGsbUQuzjwg4WWgDj7x7PkH6e2M67cqIQjjzGY1vCIU
+         MtCw==
+X-Gm-Message-State: APjAAAVi9BGlr5bf8x+1xOEEeWxrG4QQZ53dHUY9xSd9HtOaDR3mvOsM
+        zDbFCc7hY2f0AY6/Oy/yT/UcbsFNr8t69AuVf02mFg==
+X-Google-Smtp-Source: APXvYqzn27YvmjJNXYMQoWyCdW5HlsnNohXOOvT7SYPL0O7k6CJ4/XyfF0XM6atuASauDlszTUTZx9PkubYB4Fgkeug=
+X-Received: by 2002:ac2:5b41:: with SMTP id i1mr5576756lfp.82.1579270821671;
+ Fri, 17 Jan 2020 06:20:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <433862.1579270803.1@warthog.procyon.org.uk>
-Date:   Fri, 17 Jan 2020 14:20:03 +0000
-Message-ID: <433863.1579270803@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+References: <20200116231745.218684830@linuxfoundation.org>
+In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 17 Jan 2020 19:50:10 +0530
+Message-ID: <CA+G9fYvRAU-4xF_Kxrz6A39HvX8020joox_rUtgb=ATq2czDOg@mail.gmail.com>
+Subject: Re: [PATCH 5.4 000/203] 5.4.13-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-You seem to be running afoul of the check here:
+On Fri, 17 Jan 2020 at 04:49, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.4.13 release.
+> There are 203 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 18 Jan 2020 23:16:00 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.4.13-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-	case Opt_minorversion:
-		if (result.uint_32 > NFS4_MAX_MINOR_VERSION)
-			goto out_of_bounds;
-		ctx->minorversion = result.uint_32;
-		break;
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-which would seem to indicate that the mount process is supplying
-minorversion=X as an option.  Can you modify your kernel to print param->key
-and param->string at the top of nfs_fs_context_parse_param()?  Adding
-something like:
+Summary
+------------------------------------------------------------------------
 
-	pr_notice("NFSOP '%s=%s'\n", param->key, param->string);
+kernel: 5.4.13-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.4.y
+git commit: 3c8b6cdc962e6e3a21ee5786133fdab225fa26b9
+git describe: v5.4.12-204-g3c8b6cdc962e
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
+ld/v5.4.12-204-g3c8b6cdc962e
 
-will likely suffice unless you're directly driving the new mount API - in
-which case param->string might be things other than a string, but that's
-unlikely.  It might also be NULL, but printk should handle that.
+No regressions (compared to build v5.4.12)
 
-David
+No fixes (compared to build v5.4.12)
 
+Ran 23712 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* libgpiod
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* kselftest
+* ltp-hugetlb-tests
+* ltp-mm-tests
+* ltp-open-posix-tests
+* kvm-unit-tests
+* ssuite
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
