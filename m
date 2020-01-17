@@ -2,96 +2,141 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D8FC33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 07:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35AA2C33CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 07:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41C2120748
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 07:09:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Xcv27WJ0"
+	by mail.kernel.org (Postfix) with ESMTP id 0946A2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 07:10:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729186AbgAQHJM (ORCPT
+        id S1729271AbgAQHKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 02:09:12 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:41785 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726675AbgAQHJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 02:09:12 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47zXH93XX5z9sRd;
-        Fri, 17 Jan 2020 18:09:09 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1579244950;
-        bh=hkDVEvnVrmeAFNUKNofyyOq6lC5b2ZpNBu3ZZrmArgo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Xcv27WJ0dGjZYHmzjoLCL/lOhmlsNLiwu17andBxyxlOUfacAP8LKTo8c3e8u4KmM
-         JU+RMeHzNRpiWB8o5YYlLi453iohed2DAmXk9B0ZL17avUtZCS0w4/lI1T/ESiC4cO
-         kKZ3oiySmZD4k2zWX9sEjt5obBskcQbZSX4ziTHsle6pOGocgEcWv8DzeZ3swKw7oW
-         AByzp+L7ZxTwl6536NHvwwE/d7xGoQh0nHy4B0x8rtlcLhkcJCVuBuua3b3uWLEJeq
-         OWGR4bjQ6okhoFJzneDcCYti6CvsFn5CFCpFPWT1j06FtWH5BR8k6NWswgvpIX+n0v
-         viGIw9VdIaKqg==
-Date:   Fri, 17 Jan 2020 18:09:07 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Artem Bityutskiy <dedekind1@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Zhihao Cheng <chengzhihao1@huawei.com>,
-        Richard Weinberger <richard@nod.at>
-Subject: linux-next: Fixes tag needs some work in the ubifs tree
-Message-ID: <20200117180907.2e5cfb88@canb.auug.org.au>
+        Fri, 17 Jan 2020 02:10:45 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:37425 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729191AbgAQHKo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 02:10:44 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1isLm1-0003Yx-HD; Fri, 17 Jan 2020 08:10:29 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1isLly-0000eh-QS; Fri, 17 Jan 2020 08:10:26 +0100
+Date:   Fri, 17 Jan 2020 08:10:26 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     zdhays@gmail.com, zhays@lexmark.com,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Piotr Sroka <piotrs@cadence.com>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] mtd: rawnand: micron: don't error out if internal ECC
+ is set
+Message-ID: <20200117071026.gydlruw2cxre2r2u@pengutronix.de>
+References: <20200110162503.7185-1-zdhays@gmail.com>
+ <20200116192221.49986c13@xps13>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/bxdP.u+XNFU2PKE8DSSq+4_";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200116192221.49986c13@xps13>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 08:02:50 up 62 days, 22:21, 55 users,  load average: 0.07, 0.07,
+ 0.02
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/bxdP.u+XNFU2PKE8DSSq+4_
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Zak, Miquel,
 
-Hi all,
+On 20-01-16 19:22, Miquel Raynal wrote:
+> Hi Zak,
+> 
+> zdhays@gmail.com wrote on Fri, 10 Jan 2020 11:25:01 -0500:
+> 
+> > From: Zak Hays <zdhays@gmail.com>
+> > 
+> > Recent changes to the driver require use of on-die correction if
+> > the internal ECC enable bit is set. On some Micron parts, this bit
+> > is enabled by default and there is no method for disabling it.
 
-In commit
+Which changes did you mean here?
 
-  f5de5b83303e ("ubifs: Fix deadlock in concurrent bulk-read and writepage")
+> > This is a false assumption though as that bit being enabled does not
+> > necessarily mean that the on-die ECC *has* to be used. It has been
+> > verified with a Micron FAE that other methods of error correction are
+> > still valid even if this bit is set.
 
-Fixes tag
+It would be cool if a micron FAE can provide a document with all the
+quirks and how those quirks can be handled.
 
-  Fixes: 4793e7c5e1c ("UBIFS: add bulk-read facility")
+> > HW ECC offers generally higher performance than on-die so it is
+> > preferred in some situations. This also allows multiple NAND parts to
+> > be supported on the same PCB as some parts may not support on-die
+> > error correction.
 
-has these problem(s):
+By HW ECC you mean the host ecc controller?
 
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
+> > With that in mind, only throw a warning that the on-die bit is set
+> > and allow the init to continue.
+> 
+> I don't think I can take this patch as-is. We must find a reliable way
+> to discriminate Micron parts features. If we cannot (I think we can't
+> before of the endless list of bugs they have introduced without
+> documenting them), the best way is to build a static table.
 
---=20
-Cheers,
-Stephen Rothwell
++1 for 'find a reliable way to discriminate Micron parts features'
 
---Sig_/bxdP.u+XNFU2PKE8DSSq+4_
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Regards,
+  Marco
 
------BEGIN PGP SIGNATURE-----
+> > 
+> > Signed-off-by: Zak Hays <zdhays@gmail.com>
+> > ---
+> >  drivers/mtd/nand/raw/nand_micron.c | 4 +---
+> >  1 file changed, 1 insertion(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/mtd/nand/raw/nand_micron.c b/drivers/mtd/nand/raw/nand_micron.c
+> > index 56654030ec7f..ec40c76443be 100644
+> > --- a/drivers/mtd/nand/raw/nand_micron.c
+> > +++ b/drivers/mtd/nand/raw/nand_micron.c
+> > @@ -455,9 +455,7 @@ static int micron_nand_init(struct nand_chip *chip)
+> >  
+> >  	if (ondie == MICRON_ON_DIE_MANDATORY &&
+> >  	    chip->ecc.mode != NAND_ECC_ON_DIE) {
+> > -		pr_err("On-die ECC forcefully enabled, not supported\n");
+> > -		ret = -EINVAL;
+> > -		goto err_free_manuf_data;
+> > +		pr_warn("WARNING: On-die ECC forcefully enabled, use caution with other methods\n");
+> >  	}
+> >  
+> >  	if (chip->ecc.mode == NAND_ECC_ON_DIE) {
+> 
+> Thanks,
+> Miquèl
+> 
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4hXZMACgkQAVBC80lX
-0GwUkAf/fa2Z0NdtI3ovO8DzpRFShpHAqeYF4FoPahil2joxk28lqfVPNiFKfx90
-WdKGK64MFTQ2a5pTBMS5lwIMKg/blR1ge4CRwQtSjuxH9gyKiEXPlTY3b7kLF/sh
-hWdb5XLuJT/F/C77xrq5EhxCSqItzKNt0kA9uUyEm7Ri14LThtTs73tRrrUC/nn5
-+G92Y4Eaf8NgkDkYdJW9cNzepzBLHaRhKChYsoWrY2NmfoCl11+HENSu4Z3mZfFq
-IeDL745I3nmO3pXMjKGhX1xWcItiuhK/laj6fvahK85BE3Dx+r3ivkxho3XO5LF9
-dIsGhUiTf7qcfNN0Q4juoBetpXs7aw==
-=a0tD
------END PGP SIGNATURE-----
-
---Sig_/bxdP.u+XNFU2PKE8DSSq+4_--
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
