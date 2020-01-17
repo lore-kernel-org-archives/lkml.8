@@ -2,150 +2,307 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2905C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 04:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B82BC33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 04:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A0DE2072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 04:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE9B42072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 04:46:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="BlS6NIK1"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IIAa5eZ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730377AbgAQEpF (ORCPT
+        id S1729160AbgAQEqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 23:45:05 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46922 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730156AbgAQEpC (ORCPT
+        Thu, 16 Jan 2020 23:46:46 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:13921 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbgAQEqp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 23:45:02 -0500
-Received: by mail-pg1-f195.google.com with SMTP id z124so11017667pgb.13
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 20:45:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MokgjokDaau9PgXyah9t7meHx+Hp5LMTUHDw4uxid9Q=;
-        b=BlS6NIK15PEm+eGSVYgfuya7QskELbcfjwOh1z3Jdu1JKvJY+x77K34YboZBqXLnpu
-         ukSggBDcAIlckCCzX59yCIqp51vum22WZ5LHagb2zwzDAiqTqL9TtTP8rO4fZAOdTQvD
-         rbuR4N2BQf6SeOtFecPN+cI7EorQsbcIB0tOM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=MokgjokDaau9PgXyah9t7meHx+Hp5LMTUHDw4uxid9Q=;
-        b=o+WY/S9fo0+KpP3rpDY/6uAhz4IVtBT2iLJdaKbBzxAWniXAKzJe6w08rd5471Uyf9
-         48OPwbSFqYOno/rvisie9vb4Jp9o5IX8ibWEo2djkWR5ZX9ALxIz3Z+TWJ+uwwQWGp/2
-         uWROiaJ9KPwh7NhLOCl5cT5AuPRuH2ZGywGVQ+ylUzdJ7fQsj4UU1OxiBSp5XVw2XO0r
-         /myyVTKOLaDSaxHUpvck2pP8KT3w8B6N4pd0aJAQrv0gZCluz4kzje4oKZW5f7yn7Wiz
-         ytx+bXzHUQoiyxS1ZWuQmTMFTh45zFKOARBdwZau18oFgXo23D+pjtuQKtJ7aOLg5oec
-         FHvA==
-X-Gm-Message-State: APjAAAXlBtbyT9IhzKww7fvlZieHRoldtcQYuet5fHOKCs0Q+lOnq8g7
-        p2ZjTubQRep8tIlWL8Fqtv+93A==
-X-Google-Smtp-Source: APXvYqwUdDO5bNxgzt6V8gz6Oa/ENBV9pGGLK7LI4eMh6x+tGOBXjL92+yPMhVTxDrc87pkEz8Fwyw==
-X-Received: by 2002:a63:6c82:: with SMTP id h124mr43082388pgc.328.1579236301832;
-        Thu, 16 Jan 2020 20:45:01 -0800 (PST)
-Received: from [10.230.24.186] ([192.19.224.250])
-        by smtp.gmail.com with ESMTPSA id c17sm26857376pfi.104.2020.01.16.20.44.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jan 2020 20:45:00 -0800 (PST)
-Subject: Re: [PATCH v3 0/3] ata: ahci_brcm: Follow-up changes for BCM7216
-To:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Tejun Heo <tj@kernel.org>, Jaedon Shin <jaedon.shin@gmail.com>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <20200107183022.26224-1-f.fainelli@gmail.com>
- <d32d1c1e6f32eeed811fa00e1b5d8ca121eea70f.camel@pengutronix.de>
-From:   Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- mQENBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAG0MEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPokB
- xAQQAQgArgUCXJvPrRcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFrZXktdXNh
- Z2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2RpbmdAcGdw
- LmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29tLmNvbQUb
- AwAAAAMWAgEFHgEAAAAEFQgJCgAKCRCBMbXEKbxmoE4DB/9JySDRt/ArjeOHOwGA2sLR1DV6
- Mv6RuStiefNvJ14BRfMkt9EV/dBp9CsI+slwj9/ZlBotQXlAoGr4uivZvcnQ9dWDjTExXsRJ
- WcBwUlSUPYJc/kPWFnTxF8JFBNMIQSZSR2dBrDqRP0UWYJ5XaiTbVRpd8nka9BQu4QB8d/Bx
- VcEJEth3JF42LSF9DPZlyKUTHOj4l1iZ/Gy3AiP9jxN50qol9OT37adOJXGEbix8zxoCAn2W
- +grt1ickvUo95hYDxE6TSj4b8+b0N/XT5j3ds1wDd/B5ZzL9fgBjNCRzp8McBLM5tXIeTYu9
- mJ1F5OW89WvDTwUXtT19P1r+qRqKuQENBFPAG8EBCACsa+9aKnvtPjGAnO1mn1hHKUBxVML2
- C3HQaDp5iT8Q8A0ab1OS4akj75P8iXYfZOMVA0Lt65taiFtiPT7pOZ/yc/5WbKhsPE9dwysr
- vHjHL2gP4q5vZV/RJduwzx8v9KrMZsVZlKbvcvUvgZmjG9gjPSLssTFhJfa7lhUtowFof0fA
- q3Zy+vsy5OtEe1xs5kiahdPb2DZSegXW7DFg15GFlj+VG9WSRjSUOKk+4PCDdKl8cy0LJs+r
- W4CzBB2ARsfNGwRfAJHU4Xeki4a3gje1ISEf+TVxqqLQGWqNsZQ6SS7jjELaB/VlTbrsUEGR
- 1XfIn/sqeskSeQwJiFLeQgj3ABEBAAGJAkEEGAECASsFAlPAG8IFGwwAAADAXSAEGQEIAAYF
- AlPAG8EACgkQk2AGqJgvD1UNFQgAlpN5/qGxQARKeUYOkL7KYvZFl3MAnH2VeNTiGFoVzKHO
- e7LIwmp3eZ6GYvGyoNG8cOKrIPvXDYGdzzfwxVnDSnAE92dv+H05yanSUv/2HBIZa/LhrPmV
- hXKgD27XhQjOHRg0a7qOvSKx38skBsderAnBZazfLw9OukSnrxXqW/5pe3mBHTeUkQC8hHUD
- Cngkn95nnLXaBAhKnRfzFqX1iGENYRH3Zgtis7ZvodzZLfWUC6nN8LDyWZmw/U9HPUaYX8qY
- MP0n039vwh6GFZCqsFCMyOfYrZeS83vkecAwcoVh8dlHdke0rnZk/VytXtMe1u2uc9dUOr68
- 7hA+Z0L5IQAKCRCBMbXEKbxmoLoHCACXeRGHuijOmOkbyOk7x6fkIG1OXcb46kokr2ptDLN0
- Ky4nQrWp7XBk9ls/9j5W2apKCcTEHONK2312uMUEryWI9BlqWnawyVL1LtyxLLpwwsXVq5m5
- sBkSqma2ldqBu2BHXZg6jntF5vzcXkqG3DCJZ2hOldFPH+czRwe2OOsiY42E/w7NUyaN6b8H
- rw1j77+q3QXldOw/bON361EusWHdbhcRwu3WWFiY2ZslH+Xr69VtYAoMC1xtDxIvZ96ps9ZX
- pUPJUqHJr8QSrTG1/zioQH7j/4iMJ07MMPeQNkmj4kGQOdTcsFfDhYLDdCE5dj5WeE6fYRxE
- Q3up0ArDSP1L
-Message-ID: <33d3589b-accf-04c2-5527-5a0f9c632d0b@broadcom.com>
-Date:   Thu, 16 Jan 2020 20:44:58 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 16 Jan 2020 23:46:45 -0500
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200117044642epoutp03a0a3f10dc8cdbd1ad8b891c3822d0cc4~qkyQPEWrN0284402844epoutp03k
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 04:46:42 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200117044642epoutp03a0a3f10dc8cdbd1ad8b891c3822d0cc4~qkyQPEWrN0284402844epoutp03k
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1579236402;
+        bh=8TyQ9j2geK6dsKVBQtGWrmSGr2S6AI2j1CFOQJE7FWU=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=IIAa5eZ86etjx89eJlJ7zlmLt0LcWDWMlXHlsdShzROmB4gw8uzBi0XkNTOWvZPaQ
+         gNEdg2wyQ6AP5XwVI1izoO67M7KmmFLLa8pA67wseXBNxGyFyxLlWec2XJzN3vJtH6
+         owCJjpkM5TuNV8VOlwKKbu4bo1jhMY7lhxV3dJzY=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200117044641epcas1p2111c822e5bdf49a881456c9c481d7ad0~qkyPh9zoX0093500935epcas1p2G;
+        Fri, 17 Jan 2020 04:46:41 +0000 (GMT)
+Received: from epsmges1p2.samsung.com (unknown [182.195.40.155]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 47zT6h4CGwzMqYkp; Fri, 17 Jan
+        2020 04:46:36 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        BA.0E.48498.C2C312E5; Fri, 17 Jan 2020 13:46:36 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200117044636epcas1p199cbea72715ca9f48562ff77094aa276~qkyKWCetE2541025410epcas1p1R;
+        Fri, 17 Jan 2020 04:46:36 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200117044636epsmtrp17bb2c2a92b5fbdd579bccf15e96976b8~qkyKU7w3O3159531595epsmtrp1r;
+        Fri, 17 Jan 2020 04:46:36 +0000 (GMT)
+X-AuditID: b6c32a36-a3dff7000001bd72-e7-5e213c2c1ec1
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        FF.95.10238.B2C312E5; Fri, 17 Jan 2020 13:46:35 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200117044635epsmtip14b657370de78c342addc6ee218cd3d04~qkyKDmxfb1858018580epsmtip1f;
+        Fri, 17 Jan 2020 04:46:35 +0000 (GMT)
+Subject: Re: [PATCH v5] PM / devfreq: Add debugfs support with
+ devfreq_summary file
+To:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     leonard.crestez@nxp.com, lukasz.luba@arm.com, a.swigon@samsung.com,
+        m.szyprowski@samsung.com, enric.balletbo@collabora.com,
+        hl@rock-chips.com, digetx@gmail.com, bjorn.andersson@linaro.org,
+        jcrouse@codeaurora.org, chanwoo@kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <628a2885-ff7d-9765-fc19-9e2bad6bab3b@samsung.com>
+Date:   Fri, 17 Jan 2020 13:53:56 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-In-Reply-To: <d32d1c1e6f32eeed811fa00e1b5d8ca121eea70f.camel@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200116105909.29281-1-cw00.choi@samsung.com>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrPJsWRmVeSWpSXmKPExsWy7bCmga6OjWKcwdffihb357UyWpze/47F
+        YuKNKywWqz8+ZrRYc/sQo8WPDaeYLTYuyLY42/SG3WLF3Y+sFpd3zWGz+Nx7hNFiYVMLu8Xa
+        I3fZLW43rmBz4PNYM28No8flvl4mjx13lzB67Jx1l91j06pONo871/aweWx8t4PJ4++s/Swe
+        fVtWMXp83iQXwBWVbZORmpiSWqSQmpecn5KZl26r5B0c7xxvamZgqGtoaWGupJCXmJtqq+Ti
+        E6DrlpkD9IGSQlliTilQKCCxuFhJ386mKL+0JFUhI7+4xFYptSAlp8CyQK84Mbe4NC9dLzk/
+        18rQwMDIFKgwITujZ114wXqbitvXH7M1MPbrdDFyckgImEjM2P+YrYuRi0NIYAejRE/HZTaQ
+        hJDAJ0aJNcdzIRLfGCX2dh1k7WLkAOtYP7UAIr6XUeLxh/csEM57RomJV/pZQLqFBUIlZs3u
+        YgWxRQSsJE7/72AGKWIWWMYkcfLZDbAiNgEtif0vboCt4xdQlLj64zEjiM0rYCfx9PV3sGYW
+        AVWJzp6VYHFRgTCJk9taoGoEJU7OfAI2h1PAWmLxjUdg9cwC4hK3nsxngrDlJba/nQO2WELg
+        FLvEyu6nrBBPu0i8WfmJBcIWlnh1fAs7hC0l8bK/Dcqullh58ggbRHMHo8SW/Regmo0l9i+d
+        zAQKC2YBTYn1u/QhwooSO3/PZYRYzCfx7msPNLh4JTrahCBKlCUuP7jLBGFLSixu72SbwKg0
+        C8k7s5C8MAvJC7MQli1gZFnFKJZaUJybnlpsWGCEHNmbGMGJW8tsB+Oicz6HGAU4GJV4eGcE
+        KcQJsSaWFVfmHmKU4GBWEuE9OUM2Tog3JbGyKrUoP76oNCe1+BCjKTC0JzJLiSbnA7NKXkm8
+        oamRsbGxhYmhmamhoZI473QXoDkC6YklqdmpqQWpRTB9TBycUg2M1ovObvA6siVEKOSbo85i
+        5c69D9fOPNzPvDVloop7saW2MMcK3pzrDw531Dk/UlizdsOpWk2urmpFI93wS+vnGgQ/e1xu
+        tbbaYs+J8mMK29rcy1PfZ23g3JeldHiK4wcFiVd/zDo92h64ZJgn7ZBRD/O6auL6VoVhy8Xt
+        XHf27FbKSLCxaElXYinOSDTUYi4qTgQAaAsH2/IDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrJIsWRmVeSWpSXmKPExsWy7bCSnK62jWKcwfr9Nhb357UyWpze/47F
+        YuKNKywWqz8+ZrRYc/sQo8WPDaeYLTYuyLY42/SG3WLF3Y+sFpd3zWGz+Nx7hNFiYVMLu8Xa
+        I3fZLW43rmBz4PNYM28No8flvl4mjx13lzB67Jx1l91j06pONo871/aweWx8t4PJ4++s/Swe
+        fVtWMXp83iQXwBXFZZOSmpNZllqkb5fAldGzLrxgvU3F7euP2RoY+3W6GDk4JARMJNZPLehi
+        5OIQEtjNKLH41262LkZOoLikxLSLR5khaoQlDh8uBgkLCbxllHi9PhrEFhYIlfg04QcziC0i
+        YCVx+n8HM8gcZoFlTBInnrQxQwztY5RYvfArC0gVm4CWxP4XN8AW8AsoSlz98ZgRxOYVsJN4
+        +vo7K4jNIqAq0dmzEiwuKhAmsXPJYyaIGkGJkzOfgM3hFLCWWHzjEVg9s4C6xJ95l5ghbHGJ
+        W0/mM0HY8hLb385hnsAoPAtJ+ywkLbOQtMxC0rKAkWUVo2RqQXFuem6xYYFhXmq5XnFibnFp
+        Xrpecn7uJkZwBGtp7mC8vCT+EKMAB6MSD++MIIU4IdbEsuLK3EOMEhzMSiK8J2fIxgnxpiRW
+        VqUW5ccXleakFh9ilOZgURLnfZp3LFJIID2xJDU7NbUgtQgmy8TBKdXAyMWWesoq4p4q29ae
+        jeyJr3+IHxGV236qvMXHQ7Zov+6i34qrL7BlHnk9/+5f6RuXwq61rLv7w3bR1oefdoYs6WBc
+        1HRbNibY6cq1ruwfn6Kz7t3hnrtj1i2T+kiOawwnJkRucav6IpNfKp3dwWZZkDpf6rTmRLWX
+        5kw2b7OfT1Ka+cbr1uvtLkosxRmJhlrMRcWJAHi/goDcAgAA
+X-CMS-MailID: 20200117044636epcas1p199cbea72715ca9f48562ff77094aa276
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200116105149epcas1p36fa4867bae7d1a6f4827a8ddb4e75b35
+References: <CGME20200116105149epcas1p36fa4867bae7d1a6f4827a8ddb4e75b35@epcas1p3.samsung.com>
+        <20200116105909.29281-1-cw00.choi@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 1/8/2020 1:25 AM, Philipp Zabel wrote:
-> Hi Florian,
+On 1/16/20 7:59 PM, Chanwoo Choi wrote:
+> Add debugfs interface to provide debugging information of devfreq device.
+> It contains 'devfreq_summary' entry to show the summary of registered
+> devfreq devices as following and the additional debugfs file will be added.
+> - /sys/kernel/debug/devfreq/devfreq_summary
 > 
-> On Tue, 2020-01-07 at 10:30 -0800, Florian Fainelli wrote:
->> Hi Jens, Philipp,
->>
->> These three patches are a follow-up to my previous series titled: ata:
->> ahci_brcm: Fixes and new device support.
->>
->> After submitting the BCM7216 RESCAL reset driver, Philipp the reset
->> controller maintained indicated that the reset line should be self
->> de-asserting and so reset_control_reset() should be used instead.
->>
->> These three patches update the driver in that regard. It would be great if
->> you could apply those and get them queued up for 5.6 since they are
->> directly related to the previous series.
->>
->> Changes in v3:
->> - introduced a preliminary patch making use of the proper reset control
->>   API in order to manage the optional reset controller line
->> - updated patches after introducing that preliminary patch
+> [Detailed description of each field of 'devfreq_summary' debugfs file]
+> - dev_name	: Device name of h/w
+> - dev		: Device name made by devfreq core
+> - parent_dev	: If devfreq device uses the passive governor,
+> 		  show parent devfreq device name. Otherwise, show 'null'.
+> - governor	: Devfreq governor name
+> - polling_ms	: If devfreq device uses the simple_ondemand governor,
+> 		  polling_ms is necessary for the period. (unit: millisecond)
+> - cur_freq_Hz	: Current frequency (unit: Hz)
+> - min_freq_Hz	: Minimum frequency (unit: Hz)
+> - max_freq_Hz	: Maximum frequency (unit: Hz)
 > 
-> The third patch could be simplified by storing the rescal reset control
-> in a separate struct member and relying on the optional reset control
-> API more. This is just a suggestion though, the series looks fine as-is.
+> [For example on Exynos5422-based Odroid-XU3 board]
+> $ cat /sys/kernel/debug/devfreq/devfreq_summary
+> dev_name                       dev        parent_dev governor        polling_ms  cur_freq_Hz  min_freq_Hz  max_freq_Hz
+> ------------------------------ ---------- ---------- --------------- ---------- ------------ ------------ ------------
+> 10c20000.memory-controller     devfreq0   null       simple_ondemand          0    165000000    165000000    825000000
+> soc:bus_wcore                  devfreq1   null       simple_ondemand         50    532000000     88700000    532000000
+> soc:bus_noc                    devfreq2   devfreq1   passive                  0    111000000     66600000    111000000
+> soc:bus_fsys_apb               devfreq3   devfreq1   passive                  0    222000000    111000000    222000000
+> soc:bus_fsys                   devfreq4   devfreq1   passive                  0    200000000     75000000    200000000
+> soc:bus_fsys2                  devfreq5   devfreq1   passive                  0    200000000     75000000    200000000
+> soc:bus_mfc                    devfreq6   devfreq1   passive                  0    333000000     83250000    333000000
+> soc:bus_gen                    devfreq7   devfreq1   passive                  0    266000000     88700000    266000000
+> soc:bus_peri                   devfreq8   devfreq1   passive                  0     66600000     66600000     66600000
+> soc:bus_g2d                    devfreq9   devfreq1   passive                  0    333000000     83250000    333000000
+> soc:bus_g2d_acp                devfreq10  devfreq1   passive                  0    266000000     66500000    266000000
+> soc:bus_jpeg                   devfreq11  devfreq1   passive                  0    300000000     75000000    300000000
+> soc:bus_jpeg_apb               devfreq12  devfreq1   passive                  0    166500000     83250000    166500000
+> soc:bus_disp1_fimd             devfreq13  devfreq1   passive                  0    200000000    120000000    200000000
+> soc:bus_disp1                  devfreq14  devfreq1   passive                  0    300000000    120000000    300000000
+> soc:bus_gscl_scaler            devfreq15  devfreq1   passive                  0    300000000    150000000    300000000
+> soc:bus_mscl                   devfreq16  devfreq1   passive                  0    666000000     84000000    666000000
 > 
-> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+> [lkp: Reported the build error]
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+> Changes from v4:
+> - Fix wrong patch description
+> Changes from v3:
+> - Remove the unneeded checking of return value when calling debugfs_create_dir
+> - Add missing IS_ENABLED(CONFIG_DEVFREQ_GOV_PASSIVE) condition
+> Changes from v2:
+> - Show 'null' at 'parent_dev' field when governor of devfreq device
+>   is not passive
+> Changes from v1:
+> - Drop the patch about 'devfreq_transitions' debugfs file
+> - Modify from 'hz' to 'Hz'
+> - Edit the indentation of 'devfreq_summary' when show summary
+> - Exchange sequence between PTR_ERR and IS_ERR when debugfs_create_dir
+> 
+>  drivers/devfreq/devfreq.c | 82 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 82 insertions(+)
+> 
+> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+> index 89260b17598f..cceee8bc3c2f 100644
+> --- a/drivers/devfreq/devfreq.c
+> +++ b/drivers/devfreq/devfreq.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/kmod.h>
+>  #include <linux/sched.h>
+> +#include <linux/debugfs.h>
+>  #include <linux/errno.h>
+>  #include <linux/err.h>
+>  #include <linux/init.h>
+> @@ -33,6 +34,7 @@
+>  #define HZ_PER_KHZ	1000
+>  
+>  static struct class *devfreq_class;
+> +static struct dentry *devfreq_debugfs;
+>  
+>  /*
+>   * devfreq core provides delayed work based load monitoring helper
+> @@ -1643,6 +1645,81 @@ static struct attribute *devfreq_attrs[] = {
+>  };
+>  ATTRIBUTE_GROUPS(devfreq);
+>  
+> +/**
+> + * devfreq_summary_show() - Show the summary of the devfreq devices
+> + * @s:		seq_file instance to show the summary of devfreq devices
+> + * @data:	not used
+> + *
+> + * Show the summary of the devfreq devices via 'devfreq_summary' debugfs file.
+> + * It helps that user can know the detailed information of the devfreq devices.
+> + *
+> + * Return 0 always because it shows the information without any data change.
+> + */
+> +static int devfreq_summary_show(struct seq_file *s, void *data)
+> +{
+> +	struct devfreq *devfreq;
+> +	struct devfreq *p_devfreq = NULL;
+> +	unsigned long cur_freq, min_freq, max_freq;
+> +	unsigned int polling_ms;
+> +
+> +	seq_printf(s, "%-30s %-10s %-10s %-15s %10s %12s %12s %12s\n",
+> +			"dev_name",
+> +			"dev",
+> +			"parent_dev",
+> +			"governor",
+> +			"polling_ms",
+> +			"cur_freq_Hz",
+> +			"min_freq_Hz",
+> +			"max_freq_Hz");
+> +	seq_printf(s, "%30s %10s %10s %15s %10s %12s %12s %12s\n",
+> +			"------------------------------",
+> +			"----------",
+> +			"----------",
+> +			"---------------",
+> +			"----------",
+> +			"------------",
+> +			"------------",
+> +			"------------");
+> +
+> +	mutex_lock(&devfreq_list_lock);
+> +
+> +	list_for_each_entry_reverse(devfreq, &devfreq_list, node) {
+> +#if IS_ENABLED(CONFIG_DEVFREQ_GOV_PASSIVE)
+> +		if (!strncmp(devfreq->governor_name, DEVFREQ_GOV_PASSIVE,
+> +							DEVFREQ_NAME_LEN)) {
+> +			struct devfreq_passive_data *data = devfreq->data;
+> +
+> +			if (data)
+> +				p_devfreq = data->parent;
+> +		} else {
+> +			p_devfreq = NULL;
+> +		}
+> +#endif
+> +
+> +		mutex_lock(&devfreq->lock);
+> +		cur_freq = devfreq->previous_freq,
+> +		get_freq_range(devfreq, &min_freq, &max_freq);
+> +		polling_ms = devfreq->profile->polling_ms,
+> +		mutex_unlock(&devfreq->lock);
+> +
+> +		seq_printf(s,
+> +			"%-30s %-10s %-10s %-15s %10d %12ld %12ld %12ld\n",
+> +			dev_name(devfreq->dev.parent),
+> +			dev_name(&devfreq->dev),
+> +			p_devfreq ? dev_name(&p_devfreq->dev) : "null",
+> +			devfreq->governor_name,
+> +			polling_ms,
+> +			cur_freq,
+> +			min_freq,
+> +			max_freq);
+> +	}
+> +
+> +	mutex_unlock(&devfreq_list_lock);
+> +
+> +	return 0;
+> +}
+> +DEFINE_SHOW_ATTRIBUTE(devfreq_summary);
+> +
+>  static int __init devfreq_init(void)
+>  {
+>  	devfreq_class = class_create(THIS_MODULE, "devfreq");
+> @@ -1659,6 +1736,11 @@ static int __init devfreq_init(void)
+>  	}
+>  	devfreq_class->dev_groups = devfreq_groups;
+>  
+> +	devfreq_debugfs = debugfs_create_dir("devfreq", NULL);
+> +	debugfs_create_file("devfreq_summary", 0444,
+> +				devfreq_debugfs, NULL,
+> +				&devfreq_summary_fops);
+> +
+>  	return 0;
+>  }
+>  subsys_initcall(devfreq_init);
+> 
 
-Thanks! Jens is that good for you?
+Applied it.
+
 -- 
-Florian
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
