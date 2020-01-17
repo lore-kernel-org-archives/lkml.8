@@ -2,152 +2,96 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D15BC33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 19:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D47C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 19:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0496B20728
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 19:20:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DnM8G63I"
+	by mail.kernel.org (Postfix) with ESMTP id 6B74F20728
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 19:20:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579288839;
+	bh=1KiRU8JtKAnHsFqwSMovv1D+wZlaPEx1howCZbKYWl0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=15g9T6wy6zJ2xfvc87jJYmJOHmdmIDrDfnypIYPPF3TEqX46QTqVDQHjHguAoTZ/m
+	 5H7h4fbtIIlORk8bfp3dPATabB4p/IWDa5ho6CjPXKiwlcBqmlTS2qNtdcG27etR+X
+	 m2G/buT9Cmy//FHxlXfGu7b3HYrfReuMqPck14wA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729439AbgAQTUM (ORCPT
+        id S1729551AbgAQTUi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 14:20:12 -0500
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:34705 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727115AbgAQTUM (ORCPT
+        Fri, 17 Jan 2020 14:20:38 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41375 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727573AbgAQTUh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 14:20:12 -0500
-Received: by mail-yb1-f195.google.com with SMTP id l7so6648979ybp.1;
-        Fri, 17 Jan 2020 11:20:11 -0800 (PST)
+        Fri, 17 Jan 2020 14:20:37 -0500
+Received: by mail-lj1-f193.google.com with SMTP id h23so27570985ljc.8
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 11:20:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=PVL+1at2XquoxaJr8gNJePY05DA3HgkzJpTeOanPYYc=;
-        b=DnM8G63IIVppr6XMWLXO+/4+OFGTdA9iPZ41kuZT5VKIG8KmqTHlnuc+yhN6y92FOX
-         cR99cfH86Nrk9bI2hQmgR7qu2nkIr7uw/YyIAsuw2FMSaqty+A5nHfadN7V0xNiKnz4X
-         0ODnLraNGO6u8je3921Zv1A257d9RK/7DeVXVL7sI62/H7VQczbRw+RRqloMQ94U9PJM
-         5L9Tp6NnT97tdyZbPyHVozL8Cza/RPjV8xXFdhxp3y03RYg00gAXdgCbwTJOKXJ4ufum
-         2iu9p45Kb9bKuD8HwW+L+uMj3CR0voRvjtvUZk4/JHTXGMsDk30lqw5RB9yS0Y67agFK
-         bLNg==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gjn/4JEsak9XgJfi8H/1wSFhagaL5qBcKMX83cbL8lM=;
+        b=J6oAUgFSgqzQVKrljKHl0wA585Cu8h3LZrzViJ+RlD9Jt/9vla5+6+/UIQPgOQl7gS
+         Sqo6g3ob4Mo41Mx8brh1v3MW0bYMAAA7LEOEXM69LJf7+iKCWNvVV55BAqfB3KEywnX0
+         UAZ5Zj0s7Dfyx43GFe9KrRl9tX1FMBy8+oVzI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PVL+1at2XquoxaJr8gNJePY05DA3HgkzJpTeOanPYYc=;
-        b=sqzjBjFHs2joJ2UOROZ8cD4RuhzmjE1UzwatDpScBht+BKhmoYAeoBU+Ibw2mrFy0c
-         NyUF2vck4Dzq0JZlCWVOEyRNGIggIloE+wUI4GIiLHowJk9sub/n4UZWYmBptaONxysS
-         L577EvE9kOt700JxUjtUp44p8HlH8GVnh/bPLr5djTRx+9DI1mlKgeceQ04dRNvfnVHW
-         CshHq8Q5SETl4BeweV1t440bn8jlx7SKHx/5WPcVpD9tFO8hRLSlMuo2p2rl1S5FwNLO
-         deif9W9q/JeJXdCZV0LTtdgm2G5bgMeJ02UgR5i8KxyWeNUTjgrtuTpzfCWdLE9gCa/D
-         bavw==
-X-Gm-Message-State: APjAAAVeOo6j65EHNApRUEhH0Od6qKvcISiwUzZi1cQ6Uvk/n/BhYQ7n
-        /oBl6QNFXa+hSWga6bUXCjE=
-X-Google-Smtp-Source: APXvYqxqBEcc/n4INQDJkoFxEz+JwcY8XYI3hQMiBpfbBsnMAjD2KNy6rZ4KN1kYqTM3dQhsd0leWA==
-X-Received: by 2002:a25:8042:: with SMTP id a2mr27460203ybn.195.1579288811366;
-        Fri, 17 Jan 2020 11:20:11 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id a12sm11950536ywa.95.2020.01.17.11.20.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 Jan 2020 11:20:10 -0800 (PST)
-Subject: Re: [RFC PATCH 3/3] scripts: Use -B dtc option to generate dtb build
- information.
-To:     Alexandre Torgue <alexandre.torgue@st.com>, robh+dt@kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        david@gibson.dropbear.id.au, sjg@chromium.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, devicetree-compiler@vger.kernel.org
-References: <20200113181625.3130-1-alexandre.torgue@st.com>
- <20200113181625.3130-4-alexandre.torgue@st.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <bc5a94e3-389e-7ef4-5d14-1f7ab30a0826@gmail.com>
-Date:   Fri, 17 Jan 2020 13:20:10 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gjn/4JEsak9XgJfi8H/1wSFhagaL5qBcKMX83cbL8lM=;
+        b=iRYx8w7Q67NwGDOa2283N/lMDN3Km+M7rhSszaiPvHhpbi5DekYhSIlhxxmwmQ524/
+         8+7VEpIx02uSU4he2JTPYJFHUfOhloiHGqcHjU1ElikhJ3NjKZp0aytxAAzwcxqDQqEm
+         K3laQ2v8HTqQ/8u6+Zp8h6A1zq4iYbTuuuKNkfkR4LRBOOlcLL9wavVyDN0F3i43qQ7V
+         5fYdKV0mYUyMH1AnHvVt/QD5MzqxlZFfPPXvcrzwLxFrZzVpp0odAsGpH870abj67Kbl
+         zjTjd8JnI/Qbuv485pieV4o4pYKEzvjvHPmUG21KxJQGmnRQxOnFjf3gXU9/rSZq4thO
+         NFTg==
+X-Gm-Message-State: APjAAAXNdkAwxAXsS92cc727mWDk5SAomPG4qDHy6r/dQXtl/ju7PAjt
+        YrtIyEbmiZ3ulMG3LiJ3XqHzzO+G3Jw=
+X-Google-Smtp-Source: APXvYqzmxtiT6qbAgsiO8SytHsLb3M/r9eSj1ydzPwSMHmwGSO4tnzWCVauAIJVBr+sIgD0//8UmTA==
+X-Received: by 2002:a2e:3e03:: with SMTP id l3mr6524495lja.237.1579288835110;
+        Fri, 17 Jan 2020 11:20:35 -0800 (PST)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
+        by smtp.gmail.com with ESMTPSA id s2sm12711972lji.53.2020.01.17.11.20.34
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jan 2020 11:20:34 -0800 (PST)
+Received: by mail-lj1-f179.google.com with SMTP id j1so27552647lja.2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 11:20:34 -0800 (PST)
+X-Received: by 2002:a2e:7a13:: with SMTP id v19mr6522426ljc.43.1579288833652;
+ Fri, 17 Jan 2020 11:20:33 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200113181625.3130-4-alexandre.torgue@st.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <c6ed1ca0-3e39-714c-9590-54e13695b9b9@redhat.com>
+ <CAHk-=wink2z6EtvhKfhSvfC2hKBseVU8UWsM+HLsQP9x3mD7Xw@mail.gmail.com>
+ <5c184396-7cc8-ee72-2335-dce9a977c8d4@redhat.com> <b70a0334-63be-b3a5-6f8a-714fbe4637c7@redhat.com>
+In-Reply-To: <b70a0334-63be-b3a5-6f8a-714fbe4637c7@redhat.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 17 Jan 2020 11:20:17 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wiOwghtCi8kpdefmLbyG0oSH23vYrMOU8v_XKEe7va-4g@mail.gmail.com>
+Message-ID: <CAHk-=wiOwghtCi8kpdefmLbyG0oSH23vYrMOU8v_XKEe7va-4g@mail.gmail.com>
+Subject: Re: Performance regression introduced by commit b667b8673443 ("pipe:
+ Advance tail pointer inside of wait spinlock in pipe_read()")
+To:     Waiman Long <longman@redhat.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/13/20 12:16 PM, Alexandre Torgue wrote:
-> This commit adds a new script to create a string in tmp file with
-> some information (date, linux version, user). This file is then used by
-> dtc with -B option to append dts file with a new property.
-> During kernel boot it will then be possible to printout DTB build
-> information (date, linux version used, user).
-> 
-> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-> 
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index 3fa32f83b2d7..6a98eac1e56d 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -235,6 +235,7 @@ quiet_cmd_gzip = GZIP    $@
->  # DTC
->  # ---------------------------------------------------------------------------
->  DTC ?= $(objtree)/scripts/dtc/dtc
-> +DTB_GEN_INFO ?= $(objtree)/scripts/gen_dtb_build_info
->  
->  # Disable noisy checks by default
->  ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
-> @@ -275,11 +276,13 @@ $(obj)/%.dtb.S: $(obj)/%.dtb FORCE
->  
->  quiet_cmd_dtc = DTC     $@
->  cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
-> -	$(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
-> -	$(DTC) -O $(2) -o $@ -b 0 \
-> +       $(DTB_GEN_INFO) $(@).info ;\
-> +       $(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
-> +       $(DTC) -O $(2) -o $@ -b 0 -B $(@).info\
->  		$(addprefix -i,$(dir $<) $(DTC_INCLUDE)) $(DTC_FLAGS) \
-> -		-d $(depfile).dtc.tmp $(dtc-tmp) ; \
-> -	cat $(depfile).pre.tmp $(depfile).dtc.tmp > $(depfile)
-> +               -d $(depfile).dtc.tmp $(dtc-tmp) ; \
-> +       rm $(@).info ; \
-> +       cat $(depfile).pre.tmp $(depfile).dtc.tmp > $(depfile)
->  
->  $(obj)/%.dtb: $(src)/%.dts $(DTC) FORCE
->  	$(call if_changed_dep,dtc,dtb)
-> diff --git a/scripts/gen_dtb_build_info b/scripts/gen_dtb_build_info
-> new file mode 100755
-> index 000000000000..30cf7506b9d5
-> --- /dev/null
-> +++ b/scripts/gen_dtb_build_info
-> @@ -0,0 +1,11 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +DTB_TARGET=$@
-> +COMPILE_BY=$(whoami | sed 's/\\/\\\\/')
-> +
-> +touch $DTB_TARGET
-> +
-> +{
-> +  echo From Linux $KERNELRELEASE by $COMPILE_BY the $(date).
-> +} > $DTB_TARGET
-> 
+On Fri, Jan 17, 2020 at 10:11 AM Waiman Long <longman@redhat.com> wrote:
+>
+> I built a make with the lastest make git tree and the problem was gone
+> with the new make. So it was a bug in make not the kernel. Sorry for the
+> noise.
 
-This specific set of information does not seem to me to be sufficient
-to be of much use.  In my previous attempt to capture build time
-information into the DTB I included more information that this,
-which I felt provided more of the information that would be valuable
-to a developer (or testing person) in a development environment,
-test environment, or on an end user system.  The exact set of
-information is easy to bike shed over, but one could explain what
-information might be useful and why (I did not provide that explanation
-in my patch series, but in retrospect should have).
+I think I spent about three days trying to figure it out. At least it
+felt that way. I looked at the pipe code a _lot_, also blaming the
+kernel for obvious reasons.
 
+             Linus
