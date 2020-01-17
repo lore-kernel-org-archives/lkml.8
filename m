@@ -2,125 +2,221 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F11DC33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ECBBC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 101512072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:08:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9EEA2072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:09:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DvHWMCRk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729047AbgAQPID (ORCPT
+        id S1729037AbgAQPJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 10:08:03 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:56526 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728739AbgAQPID (ORCPT
+        Fri, 17 Jan 2020 10:09:48 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34015 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728512AbgAQPJr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 10:08:03 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1isTE7-0002eh-OF; Fri, 17 Jan 2020 16:07:59 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6E8501C19E6;
-        Fri, 17 Jan 2020 16:07:59 +0100 (CET)
-Date:   Fri, 17 Jan 2020 15:07:59 -0000
-From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/urgent] lib/vdso: Make __arch_update_vdso_data() logic
- understandable
-Cc:     Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200114185946.656652824@linutronix.de>
-References: <20200114185946.656652824@linutronix.de>
+        Fri, 17 Jan 2020 10:09:47 -0500
+Received: by mail-lj1-f195.google.com with SMTP id z22so26838443ljg.1
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 07:09:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=e3JzqJCtTjEIWA4ajF5t2u9dR2tsl69Sfhdd/Wg8osE=;
+        b=DvHWMCRkloeYc2K+zGpBjUveN7quhIye5EUx9C7Nw3QaP4aHmgS47656bo+4nA4fwQ
+         kazKbrEcEn94RqhLdBet0gKBPDtXUHqu07YSlZmLP6AP0UmMNk4d1Ac3zuXxeRstvIzt
+         tvLNVFU+tSJTN1Wz7vtUwWVrJ7FsJXGu1tqcqObAJ849KQdjLhSY8PUFIrafURi5Xcp1
+         SzyJSY5oMercLl+qB2B9WGIs3o+kt9cl2yN2Eed/JO32U/NyjjBzyxU34XBkTbRIN5DM
+         OpoYsPwFKNumPozNkcE/8E2gK1pWCZETrXOfDiWEsNAWTNmQlrOKJqf540ckkdvxrR+I
+         6VXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=e3JzqJCtTjEIWA4ajF5t2u9dR2tsl69Sfhdd/Wg8osE=;
+        b=Uval8L9Z35FJoFcZDRrYBNbNttjcGE/Y05j/Rs5irWHd075pvmkpfAUkqo6vYfHvfs
+         05XY/IpCoq0MQqMONMpOnGq4s0E/YYCbYxfo/rw0mYq1bdpKezkY17nxPilQmwxAvrYj
+         lVFZPLDpEECsPVqsXY2hnuWkuES22Btw9mhMfdzxfyFwhybqE8/c2G4I3Tm4gPM/Kq56
+         g+l1MWzZsxHmCZ1xhQTFZrhV8vjGXgI51nNioLZWc/PjkaK7dGGJsev5HKU4lROjMvjF
+         MVsrpyUjr5HsQ84tierhq5XdYUsK2t4HN3BO+0Vi2NbI9v2UZRq6b5xUYMMRGF86zkHf
+         FZzw==
+X-Gm-Message-State: APjAAAWTU0FoDo3EqWtH+XwA5uRgB9C6Vg9ZGa47TbRbHLBUpEbvi2Jk
+        asOLonOnLGH23X/JcQQ67OVKfRy4kF8C54orsPvxBw==
+X-Google-Smtp-Source: APXvYqxpPT3fs02LGlprIaqb1fa4GNv3B59xS4h0atnEcCG7KeBOp6euiglZizqpVXggQ9ADtrEDRE65ygkYgzBJsPI=
+X-Received: by 2002:a2e:3309:: with SMTP id d9mr5870857ljc.262.1579273784825;
+ Fri, 17 Jan 2020 07:09:44 -0800 (PST)
 MIME-Version: 1.0
-Message-ID: <157927367926.396.7299991507019936952.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200114101319.GO3466@techsingularity.net>
+In-Reply-To: <20200114101319.GO3466@techsingularity.net>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Fri, 17 Jan 2020 16:09:33 +0100
+Message-ID: <CAKfTPtC7zuvWym8tSxXx6d+FhiSsedrS5sRZZagR5B7pXgZewA@mail.gmail.com>
+Subject: Re: [PATCH] sched, fair: Allow a small load imbalance between low
+ utilisation SD_NUMA domains v4
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Phil Auld <pauld@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Parth Shah <parth@linux.ibm.com>,
+        Rik van Riel <riel@surriel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/urgent branch of tip:
+On Tue, 14 Jan 2020 at 11:13, Mel Gorman <mgorman@techsingularity.net> wrote:
+>
+> Changelog since V3
+> o Allow a fixed imbalance a basic comparison with 2 tasks. This turned out to
+>   be as good or better than allowing an imbalance based on the group weight
+>   without worrying about potential spillover of the lower scheduler domains.
+>
+> Changelog since V2
+> o Only allow a small imbalance when utilisation is low to address reports that
+>   higher utilisation workloads were hitting corner cases.
+>
+> Changelog since V1
+> o Alter code flow                                               vincent.guittot
+> o Use idle CPUs for comparison instead of sum_nr_running        vincent.guittot
+> o Note that the division is still in place. Without it and taking
+>   imbalance_adj into account before the cutoff, two NUMA domains
+>   do not converage as being equally balanced when the number of
+>   busy tasks equals the size of one domain (50% of the sum).
+>
+> The CPU load balancer balances between different domains to spread load
+> and strives to have equal balance everywhere. Communicating tasks can
+> migrate so they are topologically close to each other but these decisions
+> are independent. On a lightly loaded NUMA machine, two communicating tasks
+> pulled together at wakeup time can be pushed apart by the load balancer.
+> In isolation, the load balancer decision is fine but it ignores the tasks
+> data locality and the wakeup/LB paths continually conflict. NUMA balancing
+> is also a factor but it also simply conflicts with the load balancer.
+>
+> This patch allows a fixed degree of imbalance of two tasks to exist
+> between NUMA domains regardless of utilisation levels. In many cases,
+> this prevents communicating tasks being pulled apart. It was evaluated
+> whether the imbalance should be scaled to the domain size. However, no
+> additional benefit was measured across a range of workloads and machines
+> and scaling adds the risk that lower domains have to be rebalanced. While
+> this could change again in the future, such a change should specify the
+> use case and benefit.
+>
+> The most obvious impact is on netperf TCP_STREAM -- two simple
+> communicating tasks with some softirq offload depending on the
+> transmission rate.
+>
+> 2-socket Haswell machine 48 core, HT enabled
+> netperf-tcp -- mmtests config config-network-netperf-unbound
+>                               baseline              lbnuma-v3
+> Hmean     64         568.73 (   0.00%)      577.56 *   1.55%*
+> Hmean     128       1089.98 (   0.00%)     1128.06 *   3.49%*
+> Hmean     256       2061.72 (   0.00%)     2104.39 *   2.07%*
+> Hmean     1024      7254.27 (   0.00%)     7557.52 *   4.18%*
+> Hmean     2048     11729.20 (   0.00%)    13350.67 *  13.82%*
+> Hmean     3312     15309.08 (   0.00%)    18058.95 *  17.96%*
+> Hmean     4096     17338.75 (   0.00%)    20483.66 *  18.14%*
+> Hmean     8192     25047.12 (   0.00%)    27806.84 *  11.02%*
+> Hmean     16384    27359.55 (   0.00%)    33071.88 *  20.88%*
+> Stddev    64           2.16 (   0.00%)        2.02 (   6.53%)
+> Stddev    128          2.31 (   0.00%)        2.19 (   5.05%)
+> Stddev    256         11.88 (   0.00%)        3.22 (  72.88%)
+> Stddev    1024        23.68 (   0.00%)        7.24 (  69.43%)
+> Stddev    2048        79.46 (   0.00%)       71.49 (  10.03%)
+> Stddev    3312        26.71 (   0.00%)       57.80 (-116.41%)
+> Stddev    4096       185.57 (   0.00%)       96.15 (  48.19%)
+> Stddev    8192       245.80 (   0.00%)      100.73 (  59.02%)
+> Stddev    16384      207.31 (   0.00%)      141.65 (  31.67%)
+>
+> In this case, there was a sizable improvement to performance and
+> a general reduction in variance. However, this is not univeral.
+> For most machines, the impact was roughly a 3% performance gain.
+>
+> Ops NUMA base-page range updates       19796.00         292.00
+> Ops NUMA PTE updates                   19796.00         292.00
+> Ops NUMA PMD updates                       0.00           0.00
+> Ops NUMA hint faults                   16113.00         143.00
+> Ops NUMA hint local faults %            8407.00         142.00
+> Ops NUMA hint local percent               52.18          99.30
+> Ops NUMA pages migrated                 4244.00           1.00
+>
+> Without the patch, only 52.18% of sampled accesses are local.  In an
+> earlier changelog, 100% of sampled accesses are local and indeed on
+> most machines, this was still the case. In this specific case, the
+> local sampled rates was 99.3% but note the "base-page range updates"
+> and "PTE updates".  The activity with the patch is negligible as were
+> the number of faults. The small number of pages migrated were related to
+> shared libraries.  A 2-socket Broadwell showed better results on average
+> but are not presented for brevity as the performance was similar except
+> it showed 100% of the sampled NUMA hints were local. The patch holds up
+> for a 4-socket Haswell, an AMD EPYC and AMD Epyc 2 machine.
+>
+> For dbench, the impact depends on the filesystem used and the number of
+> clients. On XFS, there is little difference as the clients typically
+> communicate with workqueues which have a separate class of scheduler
+> problem at the moment. For ext4, performance is generally better,
+> particularly for small numbers of clients as NUMA balancing activity is
+> negligible with the patch applied.
+>
+> A more interesting example is the Facebook schbench which uses a
+> number of messaging threads to communicate with worker threads. In this
+> configuration, one messaging thread is used per NUMA node and the number of
+> worker threads is varied. The 50, 75, 90, 95, 99, 99.5 and 99.9 percentiles
+> for response latency is then reported.
+>
+> Lat 50.00th-qrtle-1        44.00 (   0.00%)       37.00 (  15.91%)
+> Lat 75.00th-qrtle-1        53.00 (   0.00%)       41.00 (  22.64%)
+> Lat 90.00th-qrtle-1        57.00 (   0.00%)       42.00 (  26.32%)
+> Lat 95.00th-qrtle-1        63.00 (   0.00%)       43.00 (  31.75%)
+> Lat 99.00th-qrtle-1        76.00 (   0.00%)       51.00 (  32.89%)
+> Lat 99.50th-qrtle-1        89.00 (   0.00%)       52.00 (  41.57%)
+> Lat 99.90th-qrtle-1        98.00 (   0.00%)       55.00 (  43.88%)
+> Lat 50.00th-qrtle-2        42.00 (   0.00%)       42.00 (   0.00%)
+> Lat 75.00th-qrtle-2        48.00 (   0.00%)       47.00 (   2.08%)
+> Lat 90.00th-qrtle-2        53.00 (   0.00%)       52.00 (   1.89%)
+> Lat 95.00th-qrtle-2        55.00 (   0.00%)       53.00 (   3.64%)
+> Lat 99.00th-qrtle-2        62.00 (   0.00%)       60.00 (   3.23%)
+> Lat 99.50th-qrtle-2        63.00 (   0.00%)       63.00 (   0.00%)
+> Lat 99.90th-qrtle-2        68.00 (   0.00%)       66.00 (   2.94%
+>
+> For higher worker threads, the differences become negligible but it's
+> interesting to note the difference in wakeup latency at low utilisation
+> and mpstat confirms that activity was almost all on one node until
+> the number of worker threads increase.
+>
+> Hackbench generally showed neutral results across a range of machines.
+> This is different to earlier versions of the patch which allowed imbalances
+> for higher degrees of utilisation. perf bench pipe showed negligible
+> differences in overall performance as the differences are very close to
+> the noise.
+>
+> An earlier prototype of the patch showed major regressions for NAS C-class
+> when running with only half of the available CPUs -- 20-30% performance
+> hits were measured at the time. With this version of the patch, the impact
+> is negligible with small gains/losses within the noise measured. This is
+> because the number of threads far exceeds the small imbalance the aptch
+> cares about. Similarly, there were report of regressions for the autonuma
+> benchmark against earlier versions but again, normal load balancing now
+> applies for that workload.
+>
+> In general, the patch simply seeks to avoid unnecessary cross-node
+> migrations in the basic case where imbalances are very small.  For low
+> utilisation communicating workloads, this patch generally behaves better
+> with less NUMA balancing activity. For high utilisation, there is no
+> change in behaviour.
+>
+> Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
 
-Commit-ID:     9a6b55ac4a44060bcb782baf002859b2a2c63267
-Gitweb:        https://git.kernel.org/tip/9a6b55ac4a44060bcb782baf002859b2a2c63267
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Tue, 14 Jan 2020 19:52:38 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 17 Jan 2020 15:53:50 +01:00
-
-lib/vdso: Make __arch_update_vdso_data() logic understandable
-
-The function name suggests that this is a boolean checking whether the
-architecture asks for an update of the VDSO data, but it works the other
-way round. To spare further confusion invert the logic.
-
-Fixes: 44f57d788e7d ("timekeeping: Provide a generic update_vsyscall() implementation")
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20200114185946.656652824@linutronix.de
-
----
- arch/arm/include/asm/vdso/vsyscall.h | 4 ++--
- include/asm-generic/vdso/vsyscall.h  | 4 ++--
- kernel/time/vsyscall.c               | 2 +-
- 3 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm/include/asm/vdso/vsyscall.h b/arch/arm/include/asm/vdso/vsyscall.h
-index c4166f3..cff87d8 100644
---- a/arch/arm/include/asm/vdso/vsyscall.h
-+++ b/arch/arm/include/asm/vdso/vsyscall.h
-@@ -34,9 +34,9 @@ struct vdso_data *__arm_get_k_vdso_data(void)
- #define __arch_get_k_vdso_data __arm_get_k_vdso_data
- 
- static __always_inline
--int __arm_update_vdso_data(void)
-+bool __arm_update_vdso_data(void)
- {
--	return !cntvct_ok;
-+	return cntvct_ok;
- }
- #define __arch_update_vdso_data __arm_update_vdso_data
- 
-diff --git a/include/asm-generic/vdso/vsyscall.h b/include/asm-generic/vdso/vsyscall.h
-index ce41032..cec543d 100644
---- a/include/asm-generic/vdso/vsyscall.h
-+++ b/include/asm-generic/vdso/vsyscall.h
-@@ -12,9 +12,9 @@ static __always_inline struct vdso_data *__arch_get_k_vdso_data(void)
- #endif /* __arch_get_k_vdso_data */
- 
- #ifndef __arch_update_vdso_data
--static __always_inline int __arch_update_vdso_data(void)
-+static __always_inline bool __arch_update_vdso_data(void)
- {
--	return 0;
-+	return true;
- }
- #endif /* __arch_update_vdso_data */
- 
-diff --git a/kernel/time/vsyscall.c b/kernel/time/vsyscall.c
-index 5ee0f77..f0aab61 100644
---- a/kernel/time/vsyscall.c
-+++ b/kernel/time/vsyscall.c
-@@ -84,7 +84,7 @@ void update_vsyscall(struct timekeeper *tk)
- 	struct vdso_timestamp *vdso_ts;
- 	u64 nsec;
- 
--	if (__arch_update_vdso_data()) {
-+	if (!__arch_update_vdso_data()) {
- 		/*
- 		 * Some architectures might want to skip the update of the
- 		 * data page.
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
