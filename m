@@ -2,161 +2,122 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 687F5C33CB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 05:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DB8C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 05:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35DE62072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 05:16:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D0FC2072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 05:22:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="lhQdzzwy"
+	dkim=pass (1024-bit key) header.d=gotplt.org header.i=@gotplt.org header.b="nM9Zbgrc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729022AbgAQFQs (ORCPT
+        id S1728981AbgAQFWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 00:16:48 -0500
-Received: from mailout2.samsung.com ([203.254.224.25]:11428 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727740AbgAQFQs (ORCPT
+        Fri, 17 Jan 2020 00:22:22 -0500
+Received: from bonobo.elm.relay.mailchannels.net ([23.83.212.22]:12820 "EHLO
+        bonobo.elm.relay.mailchannels.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726706AbgAQFWW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 00:16:48 -0500
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200117051644epoutp023d6f71c83f2df9d3f15681a9b0ab33a8~qlMemCXlI3022430224epoutp02k
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 05:16:44 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200117051644epoutp023d6f71c83f2df9d3f15681a9b0ab33a8~qlMemCXlI3022430224epoutp02k
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579238204;
-        bh=Ve31F81RB+5f/YLj18CBdno2GZbuJKN9KNxty6tK3wc=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=lhQdzzwywXnkRC705BVL0YsW8W1apcEO9/0X39uolXtPT7PnZ+wT6Pnsj78GncKoG
-         YOjBOm3A+tmLY+Nyb2T82usjzwP8RcQ2rVgDd0U5i5NDyQ38D2z3IuhFeKJAHFAkfT
-         0KmLspe7MV0o4DwHlMTVU/bjln9lbuKSxx2Z5QwU=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200117051644epcas1p2cd702f26b18450c9e51ff28076316a8a~qlMeUe97W2278422784epcas1p2B;
-        Fri, 17 Jan 2020 05:16:44 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.158]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 47zTnQ00WwzMqYlm; Fri, 17 Jan
-        2020 05:16:42 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        8D.15.48498.833412E5; Fri, 17 Jan 2020 14:16:40 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200117051640epcas1p3c34eb80a85f094bc40328680ac2e414d~qlMahij2T0513605136epcas1p30;
-        Fri, 17 Jan 2020 05:16:40 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200117051640epsmtrp29988ed15b6b2c469e9bf678aee37731b~qlMag2TTI1927919279epsmtrp2H;
-        Fri, 17 Jan 2020 05:16:40 +0000 (GMT)
-X-AuditID: b6c32a36-a3dff7000001bd72-9d-5e214338f446
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        48.38.10238.833412E5; Fri, 17 Jan 2020 14:16:40 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200117051639epsmtip2d881e0424acf8def4ad95e60ae18cf57~qlMaUeOz92252822528epsmtip2Z;
-        Fri, 17 Jan 2020 05:16:39 +0000 (GMT)
-Subject: Re: [PATCH v4 2/3] interconnect: Relax requirement in
- of_icc_get_from_provider()
-To:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org
-Cc:     georgi.djakov@linaro.org, b.zolnierkie@samsung.com,
-        m.szyprowski@samsung.com, krzk@kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <a4068452-0de0-dc5d-a7a9-3312723a9163@samsung.com>
-Date:   Fri, 17 Jan 2020 14:24:00 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Fri, 17 Jan 2020 00:22:22 -0500
+X-Sender-Id: dreamhost|x-authsender|siddhesh@gotplt.org
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id BE1293414E3;
+        Fri, 17 Jan 2020 05:22:20 +0000 (UTC)
+Received: from pdx1-sub0-mail-a10.g.dreamhost.com (100-96-4-61.trex.outbound.svc.cluster.local [100.96.4.61])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id E605A341A31;
+        Fri, 17 Jan 2020 05:22:19 +0000 (UTC)
+X-Sender-Id: dreamhost|x-authsender|siddhesh@gotplt.org
+Received: from pdx1-sub0-mail-a10.g.dreamhost.com ([TEMPUNAVAIL].
+ [64.90.62.162])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384)
+        by 0.0.0.0:2500 (trex/5.18.5);
+        Fri, 17 Jan 2020 05:22:20 +0000
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|siddhesh@gotplt.org
+X-MailChannels-Auth-Id: dreamhost
+X-Supply-Robust: 370d02ba34fcfd4e_1579238540479_4289310058
+X-MC-Loop-Signature: 1579238540479:1777990223
+X-MC-Ingress-Time: 1579238540479
+Received: from pdx1-sub0-mail-a10.g.dreamhost.com (localhost [127.0.0.1])
+        by pdx1-sub0-mail-a10.g.dreamhost.com (Postfix) with ESMTP id 9060B8CAEC;
+        Thu, 16 Jan 2020 21:22:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=gotplt.org; h=subject:to
+        :cc:references:from:message-id:date:mime-version:in-reply-to
+        :content-type:content-transfer-encoding; s=gotplt.org; bh=Yj30kd
+        fElzmQt7WZpusShHxwZq4=; b=nM9ZbgrcosXlfUHZk83LH5gID02UM+bTsZex+w
+        yMJmbIWxJ/B7sowsTW462lJZqnewEJm5ybsjkPMUdyY63JstvK4KcgcDF8OTNDtV
+        4oYybuzlTs7kRCPjGA8NVYVNyi4Po+3r7hFJv2jUoikDhLUJlvLg2QwUkeFT2AtJ
+        PnSgc=
+Received: from [192.168.1.97] (unknown [123.252.202.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: siddhesh@gotplt.org)
+        by pdx1-sub0-mail-a10.g.dreamhost.com (Postfix) with ESMTPSA id 158898AB48;
+        Thu, 16 Jan 2020 21:22:11 -0800 (PST)
+Subject: Re: [PATCH] kselftest: Minimise dependency of get_size on C library
+ interfaces
+To:     Tim.Bird@sony.com, masami.hiramatsu@linaro.org
+Cc:     linux-kselftest@vger.kernel.org, shuah@kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200113164158.15803-1-siddhesh@gotplt.org>
+ <CAA93ih1KXO5oSKAB6PmQc6xOw4fX5T+2+zx91BD18YUxL+nWzQ@mail.gmail.com>
+ <ECADFF3FD767C149AD96A924E7EA6EAF982C37D2@USCULXMSG17.am.sony.com>
+X-DH-BACKEND: pdx1-sub0-mail-a10
+From:   Siddhesh Poyarekar <siddhesh@gotplt.org>
+Autocrypt: addr=siddhesh@gotplt.org; keydata=
+ mQENBFMAZNMBCACeatEKl6YY9iEVxzS64bPbvJsA1mLE2XFWmKXyYzm58dFqPMa0OQQTKCxj
+ FCOrc+LD2KtmypttcahKnk5Lk1lNU/lV2hCuR7jJ37sL+/TFQuMMgsLPED6XU4/AYK3VUJvg
+ GYLBnMVfpAGYLB5rnPvhFNx0r2KItO/CfiSEyD4g1Wu26SUAXGOp5hbSyBRGhju+8YJlhHBB
+ jn3vZfw7IpwAWDVjK0crqMhGDXoZwK+ADUFY5NERAkT3Lb7d11F6+W4558WQZCYIWa3rZ62d
+ 986OE7+7xKmJUcLLWvlv5spgUmvotZ4DMzaKba+waY5ygXdGIpm5seVIEUCTaBIe6QVLABEB
+ AAG0KFNpZGRoZXNoIFBveWFyZWthciA8c2lkZGhlc2hAZ290cGx0Lm9yZz6JATgEEwECACIF
+ Ale0y0wCGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEHnEPfvxzyGHUggIAJtLMvzH
+ jRQi/Dg6oSMUMPtH7oEmgnk482dC4MGNl/bCtUV7VVIAtEN5TGvHxk1EKBNqj49Q+mZjef82
+ iluW1RbXRY6+72yZ380yUC41SY+2hVOurJ//h3nvE+YHfO7QjV97yhIegc1kdwArVtgNNApL
+ xj5Nc2epT824uaSznVhwyAS2OIHFLmiMYuIW338uXVEug1XKBHwJ9MppVblk4zapc9fRGvRG
+ 72ivbTGXNgcza+Kkx1IdA0XB2dEQaAE1XR0FOshKtpeSDRERwZ17+rRT8EjmkRsR7qm1uvPS
+ NW7wMTtlj8ox/XuSyG0Coy1NRgqe5bi53ha1kBoKlLaxvyW5AQ0EUwBk0wEIAKELSISlJ9rz
+ 3tSBPNkpyqwIPn4//ZBuENJQfIWIWYM9r72sBRHZgiilsN7K7g6Ea7vLUVgv5+WInE4PWFQa
+ qUSbMubTjshnaIAIeSU0rslwRRqu2B9HmS8marB+UYdQ+MsPVEInrB8uroFf8Jh7h+2Oqs2M
+ KUMsayoFyQkVtwh3HI/AMTkmK6iun3AikOK+J9WLQx2Qqf+fLjY5/ZIjbowbd8GK3B4h4kUP
+ beUI5TNg6xcKVyxVPMy8HazfaDwlUHfh07K0UFWtaFuw9v3tlaieOTLH0D0cBXyYTAqgs7C6
+ 6cytxw+Qr6/+uHa8MMREDQwTEEwwick3h0h+vIhCsV0AEQEAAYkBHwQYAQIACQIbDAUCVOqz
+ 3wAKCRB5xD378c8hh/UzB/0Q13oL/aS8km9sXOa8M1roQ69NUpqpMEOGBWO5naK8wZ2QKh4D
+ 05DfNa7yT5FgPLI+a4kdOgWbW2fiE/wMYOMivjoFveOdlzPpsew6n2q5/cvopspriCGJWozT
+ kwv1dv9gfTKB7dDJt+ICdabp7aohvNi5xeZgM4GxCiO1rfr0Jn7NAR3L5tpQsVD4eDTa9jg0
+ qq/EiF+uLQH82D6bsxtS/Xre7b/sTKK3jE6sthui64w7F3X5M1qwk8XCsqCNA1Z2c+zWkLGH
+ 4ZeB/Rrxapu0H0/TAhBBtbDo665GaRb3NSKzG4rJSjXSEQc4rna/Y7/s3c9uB0yjdyXX08mn HzVO
+Message-ID: <cf97c840-70ba-d9b8-6994-0a7ef67b6c0d@gotplt.org>
+Date:   Fri, 17 Jan 2020 10:51:55 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <20200116144202.12116-3-a.swigon@samsung.com>
+In-Reply-To: <ECADFF3FD767C149AD96A924E7EA6EAF982C37D2@USCULXMSG17.am.sony.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTYRTn293uruLqa2adhGpeC1JQd7emN9EKkhSSsKKICtdluzhxL3Y3
-        yaQHPW3YC5faTIsiSDPMJ2Yty6ywqGX2sEiMMhpBz/UQpGjbNfK/3/nO73fO+Z3vUITyPBlP
-        FVudvMPKmWkyWtp1KykthV2RUKiuPrKIHW3Yj9jW2hYZW+NrI1m//7KcHeo5RbLBw/2IrfVf
-        l7CX+kfky6m8tqZDZN6rZ9fIvCMdTSgv2DavQLqpJMvEc0beoeKtBpux2FqUTa9ap1+h16Wr
-        mRRmCZtBq6ychc+mc/ILUlYWm0Nj0KpSzuwKPRVwgkCnLc1y2FxOXmWyCc5smrcbzfYl9lSB
-        swgua1GqwWbJZNRqjS5E3FpiejtxjLDfiN72vesCsRsNUW5EUYAXQ2C03I2iKSXuRhDwNiMx
-        +Ibgzni1TAx+IvCdeE+4UVREcfXsczKMldiHoCeQL5I+I2j21KFwIhZvhv2XPJJwYib2Ihge
-        PBhRE9gAnfWD0jAmcTL0BoYjlabjBHg6/jYiVuClMPykPYKleCH88j+IcOLwBhjo2jfJmQED
-        J8cidaJwJtyq+i0X68+Gl2OnJSKeD3s764jwEICDJIzXuyct5MCEp0Yu4lj4cLdjEsdD8JOP
-        FHE5NA70k6K4AkFH7yOZmNBC7/kqSXh7BE6Clp408TkBrkzUI7HxNPj0o1ImLlgBFQeUIiUR
-        hl6PSEQ8B84dPEQeQ7R3ih3vFAveKRa8/5udQdImNIu3C5YiXmDsmqm/3YYiJ5qc3o3OPszv
-        Q5hCdIyidq2qUCnjSoUySx8CiqBnKgZq5xYqFUaubDvvsOkdLjMv9CFdaNvHifg4gy108Fan
-        ntFptFotu5hJ1zEMPVtRkxOqg4s4J1/C83be8U8noaLidyO10vB9R8Y8tiT3c7k/5sVt3aby
-        yqSyxtaMHqN+cE+xP3X0eGN0u29083J9/4mdb1wNRvmdK+tvLqve0t7tLOUFaWxiq6ni/tCY
-        69m7m54Rz+DGjK9Hg+7cuF11H7/c0ERVcR8rW9aszg0Y8MXmA9KGLHdMkyHzokMz/96Cx386
-        tbRUMHFMMuEQuL+sSlePuAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAIsWRmVeSWpSXmKPExsWy7bCSvK6Fs2KcwZMeNov781oZLTbOWM9q
-        MX3vJjaL8+c3sFtc3jWHzeJz7xFGixnn9zFZrD1yl92Bw2PTqk42jzvX9rB59G1ZxejxeZNc
-        AEsUl01Kak5mWWqRvl0CV8bj3xOYCw5wVXzZtoK5gfEyRxcjJ4eEgInE7kXX2boYuTiEBHYz
-        Stz+P50NIiEpMe3iUeYuRg4gW1ji8OFiiJq3jBI7J75jBqkRFoiWaF07hQkkISIwi1Hi4I8+
-        sAZmgWSJO7NyIBr2MkqcetIBNpRNQEti/4sbYDa/gKLE1R+PGUFsXgE7iRtXNoPZLAKqEt/P
-        nwWrERUIk9i55DETRI2gxMmZT1hAbE4BK4nDk/+yg9jMAuoSf+ZdYoawxSVuPZnPBGHLSzRv
-        nc08gVF4FpL2WUhaZiFpmYWkZQEjyypGydSC4tz03GLDAsO81HK94sTc4tK8dL3k/NxNjOB4
-        0tLcwXh5SfwhRgEORiUe3hlBCnFCrIllxZW5hxglOJiVRHhPzpCNE+JNSaysSi3Kjy8qzUkt
-        PsQozcGiJM77NO9YpJBAemJJanZqakFqEUyWiYNTqoGx/fhDx6d5ffG9rn7SaZ2H0laeXhrl
-        9PDdFb8Q1gz55TZHpj90edsgnBeyjPNQ6QPhW9f33/hkXcO4Q4Bx65qniTdez547VeSk5Mqk
-        QzNWcLPU+5gWaJzjE3qr26qyOuqwmam3hu/xy0XmF/RuT7+alTor7KjXLWdnyfLLfQyyTwU1
-        QkM5/+cpsRRnJBpqMRcVJwIAF5plkqMCAAA=
-X-CMS-MailID: 20200117051640epcas1p3c34eb80a85f094bc40328680ac2e414d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200116144242eucas1p2bf8b4df91355974c8c96778f4ec117f7
-References: <20200116144202.12116-1-a.swigon@samsung.com>
-        <CGME20200116144242eucas1p2bf8b4df91355974c8c96778f4ec117f7@eucas1p2.samsung.com>
-        <20200116144202.12116-3-a.swigon@samsung.com>
+Content-Transfer-Encoding: 7bit
+X-VR-OUT-STATUS: OK
+X-VR-OUT-SCORE: 0
+X-VR-OUT-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedrtdeigdejkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucggtfgfnhhsuhgsshgtrhhisggvpdfftffgtefojffquffvnecuuegrihhlohhuthemuceftddtnecunecujfgurhepuffvfhfhkffffgggjggtgfesthejredttdefjeenucfhrhhomhepufhiugguhhgvshhhucfrohihrghrvghkrghruceoshhiugguhhgvshhhsehgohhtphhlthdrohhrgheqnecukfhppeduvdefrddvhedvrddvtddvrddujedvnecurfgrrhgrmhepmhhouggvpehsmhhtphdphhgvlhhopegludelvddrudeikedruddrleejngdpihhnvghtpeduvdefrddvhedvrddvtddvrddujedvpdhrvghtuhhrnhdqphgrthhhpefuihguughhvghshhcurfhohigrrhgvkhgrrhcuoehsihguughhvghshhesghhothhplhhtrdhorhhgqedpmhgrihhlfhhrohhmpehsihguughhvghshhesghhothhplhhtrdhorhhgpdhnrhgtphhtthhopefvihhmrdeuihhrugesshhonhihrdgtohhmnecuvehluhhsthgvrhfuihiivgeptd
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 1/16/20 11:42 PM, Artur Świgoń wrote:
-> This patch relaxes the condition in of_icc_get_from_provider() so that
-> it is no longer required to set '#interconnect-cells' to <1> in the DT,
-> and therefore it is not required to supply dummy node IDs in the
-> 'interconnects' property when node IDs are dynamically generated rather
-> than hardcoded (statically allocated).
+On 16/01/20 11:02 pm, Tim.Bird@sony.com wrote:
 > 
-> In case of the devfreq driver for exynos-bus, node IDs are dynamically
-> allocated and '#interconnect-cells' is always zero.
-> 
-> Signed-off-by: Artur Świgoń <a.swigon@samsung.com>
-> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  drivers/interconnect/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-> index 0be1764d3528..5ea270af5ff4 100644
-> --- a/drivers/interconnect/core.c
-> +++ b/drivers/interconnect/core.c
-> @@ -335,7 +335,7 @@ struct icc_node *of_icc_get_from_provider(struct of_phandle_args *spec)
->  	struct icc_node *node = ERR_PTR(-EPROBE_DEFER);
->  	struct icc_provider *provider;
->  
-> -	if (!spec || spec->args_count != 1)
-> +	if (!spec)
->  		return ERR_PTR(-EINVAL);
->  
->  	mutex_lock(&icc_lock);
+> Since the code no longer uses __builtin_strlen(), this comment should
+> change also, to say something like "and string length function.
 > 
 
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Oops, I had made the change (to drop the __builtin_strlen mention since
+the length is just computed inline now) and somehow dropped it in some
+copy-paste confusion.  Looks like a patchwork-bot applied my patch, so
+should I send an updated patch or just a comment fix follow-up?
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Thanks,
+Siddhesh
