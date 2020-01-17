@@ -2,70 +2,99 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1774C33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 23:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53179C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 23:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAE7521D7D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 23:14:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579302847;
-	bh=v0YVk8S4SZUlGrRcCxvJLlZjm9za0AdDfoBmPLz+R7A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2vPdIy5bMf6JYd41e54H/ApbQzxPqaoobhljaG60GHDLjXzzc2YAEL6+/EvfDAR6B
-	 23vDLn0sMO2SVQ0+gYO+fd0Eta9kVoOMxIldZpoaBB3gb6JccKkNv0HTTmWT2skdQ9
-	 JtUaZus1ZTuvVEtQnFv8dG72sPlarY/vQwGB77c8=
+	by mail.kernel.org (Postfix) with ESMTP id 2325A21835
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 23:15:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730157AbgAQXOH (ORCPT
+        id S1730202AbgAQXPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 18:14:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43936 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729354AbgAQXOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 18:14:06 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 17 Jan 2020 18:15:13 -0500
+Received: from mout-p-102.mailbox.org ([80.241.56.152]:56462 "EHLO
+        mout-p-102.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729354AbgAQXPN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 18:15:13 -0500
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91E3E21835;
-        Fri, 17 Jan 2020 23:14:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579302846;
-        bh=v0YVk8S4SZUlGrRcCxvJLlZjm9za0AdDfoBmPLz+R7A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=alpuonwavCzr6Oo8IytbhRkRRrlWERwxrRXu/NYoOtnBJEQTJPQ5Zs9BuWzA9Gnsz
-         phdqcCC+cote6rdizsJ/EOlRXaZe6HzCfQZUd8+WQ40seD1d0mMOTBYSaXUoBLbFyP
-         oQjEiV2YAJu0Iw04JREdE/d3X0tbRBnAKvqeOaMw=
-Date:   Sat, 18 Jan 2020 00:14:03 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/1] coresight: next v5.5-rc6
-Message-ID: <20200117231403.GA2132864@kroah.com>
-References: <20200117185607.24244-1-mathieu.poirier@linaro.org>
+        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 47zxjp0568zKmMr;
+        Sat, 18 Jan 2020 00:15:10 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
+        with ESMTP id ZU5ubjiWgZHp; Sat, 18 Jan 2020 00:15:06 +0100 (CET)
+Date:   Sat, 18 Jan 2020 10:14:48 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Sargun Dhillon <sargun@sargun.me>, linux-kernel@vger.kernel.org,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, tycho@tycho.ws, jannh@google.com,
+        christian.brauner@ubuntu.com, oleg@redhat.com, luto@amacapital.net,
+        viro@zeniv.linux.org.uk, gpascutto@mozilla.com,
+        ealvarez@mozilla.com, fweimer@redhat.com, jld@mozilla.com,
+        arnd@arndb.de
+Subject: Re: [PATCH v8 2/3] pid: Introduce pidfd_getfd syscall
+Message-ID: <20200117231448.btck3qzepvtz5lcp@yavin>
+References: <20200103162928.5271-1-sargun@sargun.me>
+ <20200103162928.5271-3-sargun@sargun.me>
+ <20200117230602.GA31944@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qclidy4gbrtvcf5h"
 Content-Disposition: inline
-In-Reply-To: <20200117185607.24244-1-mathieu.poirier@linaro.org>
+In-Reply-To: <20200117230602.GA31944@bombadil.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 11:56:06AM -0700, Mathieu Poirier wrote:
-> Hi Greg,
-> 
-> Just a single patch to add for the next cycle.
 
-Next cycle?
+--qclidy4gbrtvcf5h
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This doesn't apply to my char-misc-linus branch at all.  But it does
-apply to my -next branch which is for 5.6-rc1.
+On 2020-01-17, Matthew Wilcox <willy@infradead.org> wrote:
+> On Fri, Jan 03, 2020 at 08:29:27AM -0800, Sargun Dhillon wrote:
+> > +SYSCALL_DEFINE3(pidfd_getfd, int, pidfd, int, fd,
+> > +		unsigned int, flags)
+> > +{
+> > +	struct pid *pid;
+> > +	struct fd f;
+> > +	int ret;
+> > +
+> > +	/* flags is currently unused - make sure it's unset */
+> > +	if (flags)
+> > +		return -EINVAL;
+>=20
+> Is EINVAL the right errno here?  Often we use ENOSYS for bad flags to
+> syscalls.
 
-So which does this go to?
+I don't think that's right -- every syscall I've seen gives you -EINVAL
+for invalid flags (not to mention -ENOSYS would mean userspace would be
+confused as to whether the syscall is actually supported by the kernel).
 
-confused,
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
 
-greg k-h
+--qclidy4gbrtvcf5h
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXiI/4QAKCRCdlLljIbnQ
+EsZ4AP4r48SZU+VGb0kNxiTIYaI9vcaP9MHT16G7vRJU0mdV3gD5AVigsJnWLW0m
+gZGhf7y0bY18y31c5t2ijCRxidRHWAQ=
+=mswC
+-----END PGP SIGNATURE-----
+
+--qclidy4gbrtvcf5h--
