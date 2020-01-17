@@ -2,82 +2,65 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C762C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2251EC33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5849F2072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:12:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 038D820728
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:13:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbgAQRMd (ORCPT
+        id S1729012AbgAQRNC convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 12:12:33 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:50460 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726603AbgAQRMd (ORCPT
+        Fri, 17 Jan 2020 12:13:02 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:56972 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726603AbgAQRNB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 12:12:33 -0500
-Received: from ip5f5bd679.dynamic.kabel-deutschland.de ([95.91.214.121] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1isVAb-0007V1-EI; Fri, 17 Jan 2020 17:12:29 +0000
-Date:   Fri, 17 Jan 2020 18:12:28 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>, cgroups@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] clone3: allow spawning processes into cgroups
-Message-ID: <20200117171228.evtvrny3v7zjcocd@wittgenstein>
-References: <20191223061504.28716-1-christian.brauner@ubuntu.com>
- <20191223061504.28716-3-christian.brauner@ubuntu.com>
- <20200107163204.GB2677547@devbig004.ftw2.facebook.com>
- <20200108180906.l4mvtdmh7nm2z7sc@wittgenstein>
- <20200116122944.nj3e66eusxu6sb44@wittgenstein>
- <20200117165311.GH2677547@devbig004.ftw2.facebook.com>
+        Fri, 17 Jan 2020 12:13:01 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1isVB3-0004oZ-AA; Fri, 17 Jan 2020 18:12:57 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id CD600100C19; Fri, 17 Jan 2020 18:12:56 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Daniel =?utf-8?Q?D=C3=ADaz?= <daniel.diaz@linaro.org>,
+        shuah@kernel.org
+Cc:     Daniel =?utf-8?Q?D=C3=ADaz?= <daniel.diaz@linaro.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "open list\:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] selftests/x86: Build with LDFLAGS and LDLIBS
+In-Reply-To: <20200117165330.17015-1-daniel.diaz@linaro.org>
+References: <20200117165330.17015-1-daniel.diaz@linaro.org>
+Date:   Fri, 17 Jan 2020 18:12:56 +0100
+Message-ID: <87muam0zxj.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200117165311.GH2677547@devbig004.ftw2.facebook.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8BIT
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 08:53:11AM -0800, Tejun Heo wrote:
-> Hello, Christian.
-> 
-> Sorry about late reply.
-> 
-> On Thu, Jan 16, 2020 at 01:29:44PM +0100, Christian Brauner wrote:
-> > Could it be that you misread cgroup_attach_permissions()? Because it
-> > does check for write permissions on the destination cgroup.procs file.
-> > That's why I've added the cgroup_get_from_file() helper. :) See:
-> > 
-> > static int cgroup_attach_permissions(struct cgroup *src_cgrp,
-> > 				     struct cgroup *dst_cgrp,
-> > 				     struct super_block *sb, bool thread)
-> > {
-> > 	int ret = 0;
-> > 
-> > 	ret = cgroup_procs_write_permission(src_cgrp, dst_cgrp, sb);
-> > 	if (ret)
-> > 		return ret;
-> 
-> So, if you look at cgroup_procs_write_permission(), it's only checking
-> the write perm of the common ancestor, not the destination because it
-> assumes that the destination is already checked by the vfs layer, and
-> we need to check both.
+Daniel Díaz <daniel.diaz@linaro.org> writes:
 
-Ok, gimme 20 min.
+> During cross-compilation, it was discovered that LDFLAGS and
+> LDLIBS were not being used while building binaries, leading
+> to defaults which were not necessarily correct.
+>
+> OpenEmbedded reported this kind of problem:
+>   ERROR: QA Issue: No GNU_HASH in the ELF binary [...], didn't pass LDFLAGS?
+>
+> Signed-off-by: Daniel Díaz <daniel.diaz@linaro.org>
 
-Thanks!
-Christian
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
