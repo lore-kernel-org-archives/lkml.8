@@ -2,113 +2,271 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55065C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CBBC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 266B62072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:40:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ien6EDoN"
+	by mail.kernel.org (Postfix) with ESMTP id 776CA2072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:42:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgAQLkw (ORCPT
+        id S1726982AbgAQLmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 06:40:52 -0500
-Received: from mail-wr1-f50.google.com ([209.85.221.50]:46450 "EHLO
-        mail-wr1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726553AbgAQLkv (ORCPT
+        Fri, 17 Jan 2020 06:42:44 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39442 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726689AbgAQLmo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 06:40:51 -0500
-Received: by mail-wr1-f50.google.com with SMTP id z7so22341184wrl.13
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 03:40:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cHQb5eaBdV5Y7L3TXPPVy41eNKPTn60KouNuNMc9msc=;
-        b=Ien6EDoNa/m4pUnIPA72MpkL/XJJHXoZrkFTPYxbKxu3voOGYv9kEI8R08V5wAZDus
-         lmGUVQxnB2vV6k9b2k4i+TxFin4qLmhgf6FavkKizXOEBhWDt9zHuY+FPICzb17WIabb
-         K/bbnFEmybI5GFp3eIAdl3Gnox4Zmg6yaaO4+ymrUchHWVnjfeEP8ORPpLNH2/cpAmHU
-         8U5pQ9RA/seCpXDz0fwxzrinxrBblb5hroPwGvwf3C6ZOB5BCQup2LIhujk0qROJH00s
-         Sjw44GJoWpGJmIDDwelqN/hWworvvRG5ixRJ9nHrNijZ1dbqO+br7hdnqQ0uDKuwyofj
-         0D+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cHQb5eaBdV5Y7L3TXPPVy41eNKPTn60KouNuNMc9msc=;
-        b=GSDO3I2LCQj5AswS2k5DHHLPF4vRk0G3F7crNcvRikrLfACOAG6rb+f7t+vAH+VPTq
-         tVWkJ0+2UQglBlIUqLyLN6/B19GBiG3LD0ms2s1m4Brqh6PXsmLWPlI9H4Xtm/bNlNvI
-         3cu9+FIVUgwC8mgeiyf2gjh/YEZTnDNSMCU5U2pfx3Yt0nedFsLq0wfHnxPM1KCTQHju
-         lUJ+V+cVX7eWLIlDFfj6Upw9rpjIFFp6kLQ+Cre8sW52RjYzYrp1/GuHmZf2aEZUD+OS
-         HXoqg0OSPar88CwSMsjRLTfp7vcDFCEvIJOWEH8dfqVhyFXQOka3reij3n2VpKEMcKvA
-         3xlA==
-X-Gm-Message-State: APjAAAU2LHZI7yY+Sc5AeaEZXLnEG9G6XJyStAfAniiGQra7d+Cnr1vX
-        CEzapH2U5kR5q+vHrk9YdeYSCA==
-X-Google-Smtp-Source: APXvYqx4SDJrFH5PbnjbxtqdBbq22/luSDJ5avGneSLnZUnxk7Pek9UUYfIUD0uJMDR8APZl/pelvA==
-X-Received: by 2002:adf:f990:: with SMTP id f16mr2621833wrr.185.1579261249200;
-        Fri, 17 Jan 2020 03:40:49 -0800 (PST)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id s19sm9097445wmj.33.2020.01.17.03.40.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 03:40:48 -0800 (PST)
-Date:   Fri, 17 Jan 2020 11:40:45 +0000
-From:   Quentin Perret <qperret@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thara Gopinath <thara.gopinath@linaro.org>, mingo@redhat.com,
-        ionela.voinescu@arm.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rui.zhang@intel.com,
-        daniel.lezcano@linaro.org, viresh.kumar@linaro.org,
-        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
-        javi.merino@kernel.org, amit.kucheria@verdurent.com,
-        kernel-team@android.com
-Subject: Re: [Patch v8 4/7] sched/fair: Enable periodic update of average
- thermal pressure
-Message-ID: <20200117114045.GA219309@google.com>
-References: <1579031859-18692-1-git-send-email-thara.gopinath@linaro.org>
- <1579031859-18692-5-git-send-email-thara.gopinath@linaro.org>
- <20200116151502.GQ2827@hirez.programming.kicks-ass.net>
+        Fri, 17 Jan 2020 06:42:44 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id C88FF294768
+Subject: Re: [PATCH] platform/chrome: cros_ec: Match implementation with
+ headers
+To:     Benson Leung <bleung@google.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        groeck@chromium.org, bleung@chromium.org, dtor@chromium.org,
+        gwendal@chromium.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Evan Green <evgreen@chromium.org>
+References: <20191210100645.12138-1-enric.balletbo@collabora.com>
+ <20200116201204.GE208460@google.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <e51a289d-f4c6-0716-a959-0840efafcd31@collabora.com>
+Date:   Fri, 17 Jan 2020 12:42:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200116151502.GQ2827@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200116201204.GE208460@google.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 16 Jan 2020 at 16:15:02 (+0100), Peter Zijlstra wrote:
-> > @@ -10275,6 +10281,7 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
-> >  {
-> >  	struct cfs_rq *cfs_rq;
-> >  	struct sched_entity *se = &curr->se;
-> > +	unsigned long thermal_pressure = arch_cpu_thermal_pressure(cpu_of(rq));
-> >  
-> >  	for_each_sched_entity(se) {
-> >  		cfs_rq = cfs_rq_of(se);
-> > @@ -10286,6 +10293,7 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
-> >  
-> >  	update_misfit_status(curr, rq);
-> >  	update_overutilized_status(task_rq(curr));
-> > +	update_thermal_load_avg(rq_clock_task(rq), rq, thermal_pressure);
-> >  }
+Hi Benson,
+
+Many thanks for the review.
+
+On 16/1/20 21:12, Benson Leung wrote:
+> Hi Enric,
 > 
-> I'm thinking this is the wrong place; should this not be in
-> scheduler_tick(), right before calling sched_class::task_tick() ? Surely
-> any execution will affect thermals, not only fair class execution.
+> On Tue, Dec 10, 2019 at 11:06:45AM +0100, Enric Balletbo i Serra wrote:
+>> The 'cros_ec' core driver is the common interface for the cros_ec
+>> transport drivers to do the shared operations to register, unregister,
+>> suspend and resume. The interface is provided by including the header
+>> 'include/linux/platform_data/cros_ec_proto.h', however, instead of have
+>> the implementation of these functions in cros_ec_proto.c, it is in
+>> 'cros_ec.c', which is a different kernel module. Apart from being a bad
+>> practice, this can induce confusions allowing the users of the cros_ec
+>> protocol to call these functions.
+>>
+>> The register, unregister, suspend and resume functions *should* only be
+> 
+> Also mention that this moves the cros_ec_handle_event definition too.
+> 
 
-Right, but right now only CFS takes action when we overheat. That is,
-only CFS uses capacity_of() which is where the thermal signal gets
-reflected.
+Ack
 
-We definitely could (and maybe should) make RT and DL react to thermal
-pressure as well when they're both capacity-aware. But perhaps that's
-for later ? Thoughts ?
+>> called by the different transport drivers (i2c, spi, lpc, etc.), so make
+>> this a bit less confusing by moving these functions from the public
+>> in-kernel space to a private include in platform/chrome, and then, the
+>> interface for cros_ec module and for the cros_ec_proto module is clean.
+>>
+>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>> ---
+>>
+>>  drivers/platform/chrome/cros_ec.c           |  2 ++
+>>  drivers/platform/chrome/cros_ec.h           | 25 +++++++++++++++++++++
+>>  drivers/platform/chrome/cros_ec_i2c.c       |  2 ++
+>>  drivers/platform/chrome/cros_ec_ishtp.c     |  2 ++
+>>  drivers/platform/chrome/cros_ec_lpc.c       |  1 +
+>>  drivers/platform/chrome/cros_ec_rpmsg.c     |  2 ++
+>>  drivers/platform/chrome/cros_ec_spi.c       |  2 ++
+>>  include/linux/platform_data/cros_ec_proto.h | 16 -------------
+>>  8 files changed, 36 insertions(+), 16 deletions(-)
+>>  create mode 100644 drivers/platform/chrome/cros_ec.h
+>>
+>> diff --git a/drivers/platform/chrome/cros_ec.c b/drivers/platform/chrome/cros_ec.c
+>> index 6d6ce86a1408..65c3207d2d90 100644
+>> --- a/drivers/platform/chrome/cros_ec.c
+>> +++ b/drivers/platform/chrome/cros_ec.c
+>> @@ -18,6 +18,8 @@
+>>  #include <linux/suspend.h>
+>>  #include <asm/unaligned.h>
+>>  
+>> +#include "cros_ec.h"
+>> +
+>>  #define CROS_EC_DEV_EC_INDEX 0
+>>  #define CROS_EC_DEV_PD_INDEX 1
+>>  
+>> diff --git a/drivers/platform/chrome/cros_ec.h b/drivers/platform/chrome/cros_ec.h
+>> new file mode 100644
+>> index 000000000000..dc80550f5eaa
+>> --- /dev/null
+>> +++ b/drivers/platform/chrome/cros_ec.h
+>> @@ -0,0 +1,25 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +/*
+>> + * ChromeOS Embedded Controller core interface.
+>> + *
+>> + * Copyright (C) 2012 Google, Inc
+> 
+> Set Copyright date to 2020, especially for new file.
+> 
+
+Ok.
+
+>> + */
+>> +
+>> +#ifndef __CROS_EC_H
+>> +#define __CROS_EC_H
+>> +
+>> +/*
+>> + * The EC is unresponsive for a time after a reboot command.  Add a
+>> + * simple delay to make sure that the bus stays locked.
+>> + */
+>> +#define EC_REBOOT_DELAY_MS	50
+>> +
+>> +int cros_ec_register(struct cros_ec_device *ec_dev);
+>> +int cros_ec_unregister(struct cros_ec_device *ec_dev);
+>> +
+>> +int cros_ec_suspend(struct cros_ec_device *ec_dev);
+>> +int cros_ec_resume(struct cros_ec_device *ec_dev);
+>> +
+>> +bool cros_ec_handle_event(struct cros_ec_device *ec_dev);
+>> +
+>> +#endif /* __CROS_EC_H */
+>> diff --git a/drivers/platform/chrome/cros_ec_i2c.c b/drivers/platform/chrome/cros_ec_i2c.c
+>> index 9bd97bc8454b..6119eccd8a18 100644
+>> --- a/drivers/platform/chrome/cros_ec_i2c.c
+>> +++ b/drivers/platform/chrome/cros_ec_i2c.c
+>> @@ -14,6 +14,8 @@
+>>  #include <linux/platform_device.h>
+>>  #include <linux/slab.h>
+>>  
+>> +#include "cros_ec.h"
+>> +
+>>  /**
+>>   * Request format for protocol v3
+>>   * byte 0	0xda (EC_COMMAND_PROTOCOL_3)
+>> diff --git a/drivers/platform/chrome/cros_ec_ishtp.c b/drivers/platform/chrome/cros_ec_ishtp.c
+>> index e5996821d08b..e1fdb491a9a7 100644
+>> --- a/drivers/platform/chrome/cros_ec_ishtp.c
+>> +++ b/drivers/platform/chrome/cros_ec_ishtp.c
+>> @@ -14,6 +14,8 @@
+>>  #include <linux/platform_data/cros_ec_proto.h>
+>>  #include <linux/intel-ish-client-if.h>
+>>  
+>> +#include "cros_ec.h"
+>> +
+>>  /*
+>>   * ISH TX/RX ring buffer pool size
+>>   *
+>> diff --git a/drivers/platform/chrome/cros_ec_lpc.c b/drivers/platform/chrome/cros_ec_lpc.c
+>> index dccf479c6625..3e8ddd84bc41 100644
+>> --- a/drivers/platform/chrome/cros_ec_lpc.c
+>> +++ b/drivers/platform/chrome/cros_ec_lpc.c
+>> @@ -23,6 +23,7 @@
+>>  #include <linux/printk.h>
+>>  #include <linux/suspend.h>
+>>  
+>> +#include "cros_ec.h"
+>>  #include "cros_ec_lpc_mec.h"
+>>  
+>>  #define DRV_NAME "cros_ec_lpcs"
+>> diff --git a/drivers/platform/chrome/cros_ec_rpmsg.c b/drivers/platform/chrome/cros_ec_rpmsg.c
+>> index bd068afe43b5..dbc3f5523b83 100644
+>> --- a/drivers/platform/chrome/cros_ec_rpmsg.c
+>> +++ b/drivers/platform/chrome/cros_ec_rpmsg.c
+>> @@ -13,6 +13,8 @@
+>>  #include <linux/rpmsg.h>
+>>  #include <linux/slab.h>
+>>  
+>> +#include "cros_ec.h"
+>> +
+>>  #define EC_MSG_TIMEOUT_MS	200
+>>  #define HOST_COMMAND_MARK	1
+>>  #define HOST_EVENT_MARK		2
+>> diff --git a/drivers/platform/chrome/cros_ec_spi.c b/drivers/platform/chrome/cros_ec_spi.c
+>> index a831bd5a5b2f..46786d2d679a 100644
+>> --- a/drivers/platform/chrome/cros_ec_spi.c
+>> +++ b/drivers/platform/chrome/cros_ec_spi.c
+>> @@ -14,6 +14,8 @@
+>>  #include <linux/spi/spi.h>
+>>  #include <uapi/linux/sched/types.h>
+>>  
+>> +#include "cros_ec.h"
+>> +
+>>  /* The header byte, which follows the preamble */
+>>  #define EC_MSG_HEADER			0xec
+>>  
+>> diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
+>> index 119b9951c055..f490e208540a 100644
+>> --- a/include/linux/platform_data/cros_ec_proto.h
+>> +++ b/include/linux/platform_data/cros_ec_proto.h
+>> @@ -21,12 +21,6 @@
+>>  #define CROS_EC_DEV_SCP_NAME	"cros_scp"
+>>  #define CROS_EC_DEV_TP_NAME	"cros_tp"
+>>  
+>> -/*
+>> - * The EC is unresponsive for a time after a reboot command.  Add a
+>> - * simple delay to make sure that the bus stays locked.
+>> - */
+>> -#define EC_REBOOT_DELAY_MS		50
+>> -
+> 
+> Any reason why this define was moved?
+> 
+
+Hmm, no, right, I'll leave here. Preparing a v2.
 
 Thanks,
-Quentin
+ Enric
+
+
+>>  /*
+>>   * Max bus-specific overhead incurred by request/responses.
+>>   * I2C requires 1 additional byte for requests.
+>> @@ -206,10 +200,6 @@ struct cros_ec_dev {
+>>  
+>>  #define to_cros_ec_dev(dev)  container_of(dev, struct cros_ec_dev, class_dev)
+>>  
+>> -int cros_ec_suspend(struct cros_ec_device *ec_dev);
+>> -
+>> -int cros_ec_resume(struct cros_ec_device *ec_dev);
+>> -
+>>  int cros_ec_prepare_tx(struct cros_ec_device *ec_dev,
+>>  		       struct cros_ec_command *msg);
+>>  
+>> @@ -222,10 +212,6 @@ int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
+>>  int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
+>>  			    struct cros_ec_command *msg);
+>>  
+>> -int cros_ec_register(struct cros_ec_device *ec_dev);
+>> -
+>> -int cros_ec_unregister(struct cros_ec_device *ec_dev);
+>> -
+>>  int cros_ec_query_all(struct cros_ec_device *ec_dev);
+>>  
+>>  int cros_ec_get_next_event(struct cros_ec_device *ec_dev,
+>> @@ -238,8 +224,6 @@ int cros_ec_check_features(struct cros_ec_dev *ec, int feature);
+>>  
+>>  int cros_ec_get_sensor_count(struct cros_ec_dev *ec);
+>>  
+>> -bool cros_ec_handle_event(struct cros_ec_device *ec_dev);
+>> -
+>>  /**
+>>   * cros_ec_get_time_ns() - Return time in ns.
+>>   *
+>> -- 
+>> 2.20.1
+>>
+> 
