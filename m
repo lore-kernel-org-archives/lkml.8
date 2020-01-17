@@ -2,129 +2,107 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB035C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 855D9C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91EC72073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16D112073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:17:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="NQB/Y04L"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="pnkROUmJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729148AbgAQQO2 (ORCPT
+        id S1729121AbgAQQRe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 11:14:28 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:14541 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728977AbgAQQO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 11:14:27 -0500
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47zmNJ5xwVzJv;
-        Fri, 17 Jan 2020 17:14:24 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1579277664; bh=ftJBWCYEwkPQyHNpwkWvXU/BQm+kqTZFwefLuQQlqwU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NQB/Y04LIGN2kKOJeMq1qO6oh4T2EbROfjtVwr3tOtTy1cMfjTXI9gL9jDNn4KlHt
-         ijDLc7xdYuM1Yd1LCgJXTqrq6ZdAnSAPVitzrL6FDqjlTMZkVUIyBemBrGu+R/WCvN
-         5wUPcL3MFVrWwrv/k8mAKCYMAuRxcS6rgw35TZA57JuamX+8yIq3Hw7uWQUyFMIvyQ
-         kgnk5Rl+IV+lVzKs5Im6XwNqGCRCMCxkgYMKUCM317mIGcgiZg+LIpBn5lCo+lzwsA
-         fUf/0fBKdMJsXaw9Ms3FkldFGi1qLPSkuMgdhHSEuS681H2OZuEpFwajexwcmgWZg8
-         5V33/UMV05DhQ==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Fri, 17 Jan 2020 17:14:22 +0100
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mmc: core: limit probe clock frequency to configured
- f_max
-Message-ID: <20200117161422.GA11081@qmqm.qmqm.pl>
-References: <f471bceaf237d582d746bd289c4c4f3639cb7b45.1577962382.git.mirq-linux@rere.qmqm.pl>
- <CAPDyKFpZWnkK7UmCZ8M4UnM05wR3MQsPrpEjOJuwkKcN2gePSg@mail.gmail.com>
- <20200117140511.GC26135@qmqm.qmqm.pl>
- <CAPDyKFpkhwnzi5PAr_0bAriYteeBUVM5Qr1byiXtJkgYd=dKfw@mail.gmail.com>
+        Fri, 17 Jan 2020 11:17:34 -0500
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:54632 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729014AbgAQQRd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 11:17:33 -0500
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 00HGHP4j010840
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jan 2020 01:17:25 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 00HGHP4j010840
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1579277845;
+        bh=I3ut7fRPhrMVRpNLHqwLkp4DT8+R+lRU1N1ykqfVyVM=;
+        h=From:Date:Subject:To:Cc:From;
+        b=pnkROUmJt/MX4GjaBlKa/emow39nhrsPKAn3pGbnMt4fvsxMIuUAtFMTLUWn2T47M
+         QUdeEHRdoyNavCWqEIhyY2QP1ELygS8k2NElSAEwAyoNnpZDqFN6LxKltGXZ3KJAb0
+         bjFPUx/J5gC2GRxmP9QLTRjyvQ5YgPtThl7P1Jx67Wky26hYFkagoQPCVP/YfISLRV
+         OgHzoWnDV5d8t23lukaKz8s1B5BQJQQRPxcQdL7suzbeT+l3oh3Xs+XmONRWH9FeEh
+         zyrgMdzCR2Qr29krv33sQbn26EykZFx95LWqo5WkJjd2MmQIIwKRHOAGJ6hOUGtkpM
+         0J0HKsrG+fLtw==
+X-Nifty-SrcIP: [209.85.221.170]
+Received: by mail-vk1-f170.google.com with SMTP id y184so6769207vkc.11
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 08:17:25 -0800 (PST)
+X-Gm-Message-State: APjAAAVPe40ALiq4Upkj8kqqyxakHV4MOsizYpmDxzlR9/cbmwC1ynMr
+        /fuwdZqIFvnyFNA8cAxaZ9hyk8GZO4PzVylzrHA=
+X-Google-Smtp-Source: APXvYqxHSvowQPk4UTnHnWLjFJjpHtO78N8FWGDQXqpkhwKdrjrCbTgyX27LLY6X4gDjRNNR9AcXazktPpwapFpPbRw=
+X-Received: by 2002:a1f:72c3:: with SMTP id n186mr23949934vkc.12.1579277844236;
+ Fri, 17 Jan 2020 08:17:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPDyKFpkhwnzi5PAr_0bAriYteeBUVM5Qr1byiXtJkgYd=dKfw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 18 Jan 2020 01:16:48 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASSVYHunCn154ktOVDm=MOe+jhEq8Xc8g0JAtCjjJRHwQ@mail.gmail.com>
+Message-ID: <CAK7LNASSVYHunCn154ktOVDm=MOe+jhEq8Xc8g0JAtCjjJRHwQ@mail.gmail.com>
+Subject: [GIT PULL] ARM: dts: uniphier: UniPhier DT updates for v5.6
+To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 04:26:30PM +0100, Ulf Hansson wrote:
-> On Fri, 17 Jan 2020 at 15:05, Micha³ Miros³aw <mirq-linux@rere.qmqm.pl> wrote:
-> >
-> > On Thu, Jan 16, 2020 at 03:07:22PM +0100, Ulf Hansson wrote:
-> > > On Thu, 2 Jan 2020 at 11:54, Micha³ Miros³aw <mirq-linux@rere.qmqm.pl> wrote:
-> > > >
-> > > > Currently MMC core disregards host->f_max during card initialization
-> > > > phase. Obey upper boundary for the clock frequency and skip faster
-> > > > speeds when they are above the limit.
-> > >
-> > > Is this a hypothetical problem or a real problem?
-> >
-> > This is a problem on noisy or broken boards or cards - so needed for
-> > debugging such a combination. I wouldn't expect this is required for
-> > normal devices.
-> 
-> Alright.
-> 
-> >
-> > > > Signed-off-by: Micha³ Miros³aw <mirq-linux@rere.qmqm.pl>
-> > > > ---
-> > > >  drivers/mmc/core/core.c | 10 ++++++++--
-> > > >  1 file changed, 8 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
-> > > > index abf8f5eb0a1c..aa54d359dab7 100644
-> > > > --- a/drivers/mmc/core/core.c
-> > > > +++ b/drivers/mmc/core/core.c
-> > > > @@ -2330,7 +2330,13 @@ void mmc_rescan(struct work_struct *work)
-> > > >         }
-> > > >
-> > > >         for (i = 0; i < ARRAY_SIZE(freqs); i++) {
-> > > > -               if (!mmc_rescan_try_freq(host, max(freqs[i], host->f_min)))
-> > > > +               unsigned int freq = freqs[i];
-> > > > +               if (freq > host->f_max) {
-> > > > +                       if (i + 1 < ARRAY_SIZE(freqs))
-> > > > +                               continue;
-> > > > +                       freq = host->f_max;
-> > >
-> > > This looks wrong to me. For example, what if f_max = 250KHz and f_min = 50 KHz.
-> > >
-> > > Then we should try with 250KHz, then 200KHz and then 100KHz. This
-> > > isn't what the above code does, I think.
-> > >
-> > > Instead it will try with 200KHz and then 100KHz, thus skip 250KHz.
-> > >
-> > > Maybe we should figure out what index of freqs[] to start the loop for
-> > > (before actually starting the loop), depending on the value of f_max -
-> > > rather than always start at 0.
-> >
-> > Yes, it will skip higher frequencies. I didn't view it a problem,
-> > because the new code guarantees at least one frequency will be tried.
-> > The eMMC standard specifies only max init frequency (400kHz), so all we
-> > should try is something less whatever works.
-> >
-> > SD spec specifies minimal frequency (100kHz), but I wouldn't expect
-> > this to be enforced nor required to be anywhere.
-> 
-> Well, my point isn't so much about the specs, rather about providing a
-> consistent behaviour.
-> 
-> We deal with f_min constraints like I described above, then I think we
-> should make f_max behave the similar way.
+Hi Arnd, Olof,
 
-Okay, this would be a second fix as trying the same freq multiple times
-is not what this code is supposed to do.
+Here are UniPhier DT (32bit) updates for the v5.6 merge window.
+Please pull!
 
-Best Regards,
-Micha³ Miros³aw
+
+
+The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+
+  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-uniphier.git
+tags/uniphier-dt-v5.6
+
+for you to fetch changes up to 37f3e0096f716b06338a4771633b32b8e2a36f7f:
+
+  ARM: dts: uniphier: add reset-names to NAND controller node
+(2020-01-18 00:56:09 +0900)
+
+----------------------------------------------------------------
+UniPhier ARM SoC DT updates for v5.6
+
+- Add pinmux nodes for I2C ch5, ch6
+
+- Add reset-names to NAND controller node
+
+----------------------------------------------------------------
+Masahiro Yamada (2):
+      ARM: dts: uniphier: add pinmux nodes for I2C ch5, ch6
+      ARM: dts: uniphier: add reset-names to NAND controller node
+
+ arch/arm/boot/dts/uniphier-ld4.dtsi     |  3 ++-
+ arch/arm/boot/dts/uniphier-pinctrl.dtsi | 10 ++++++++++
+ arch/arm/boot/dts/uniphier-pro4.dtsi    |  3 ++-
+ arch/arm/boot/dts/uniphier-pro5.dtsi    |  3 ++-
+ arch/arm/boot/dts/uniphier-pxs2.dtsi    |  3 ++-
+ arch/arm/boot/dts/uniphier-sld8.dtsi    |  3 ++-
+ 6 files changed, 20 insertions(+), 5 deletions(-)
+
+
+-- 
+Best Regards
+Masahiro Yamada
