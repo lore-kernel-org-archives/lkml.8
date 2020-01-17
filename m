@@ -2,66 +2,53 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40062C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E12C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CD7D20842
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C876B2072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:32:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FmQwSDZ9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H8EQAFxi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728921AbgAQOaH (ORCPT
+        id S1728709AbgAQOcX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 09:30:07 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:47019 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726903AbgAQOaG (ORCPT
+        Fri, 17 Jan 2020 09:32:23 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35233 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726827AbgAQOcW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 09:30:06 -0500
-Received: by mail-lj1-f193.google.com with SMTP id m26so26623983ljc.13
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 06:30:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bOUktzlDXg0zUzkubFwDmsWxGrWYcwgBd+na/rDWhno=;
-        b=FmQwSDZ9h+ChPbSx+HUDFsx3AF4fv5d/eMn9a7u1uEOCoO/c9XWXbUfhUyGp4ZJN7y
-         EK/dPu9WgUo3VRcJW9dmKgcevdidRoR8xpduKfeV44he4GBxLYWq+RAsV7s2ZEqJgKpv
-         80fH/J/EorhB8PjJjWFtz/+Qvw4ZbwKgdNS2qT//ZrmdQ8HNy8oBJL59G4bWg/e7dJfG
-         Z3RCyq3lG8qzLXQ0ZZe45pjXzDiKJ1Y4PdLxhbv61HZQMvUbE1+rhxD4QxjPD0At7Cd/
-         qSTLrVsMBpn4KdhNFTkYu965rd2xDF5+UkmIuVM++QhL5fBLXHUuLOj2ZvuoO9wnN5Up
-         83DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bOUktzlDXg0zUzkubFwDmsWxGrWYcwgBd+na/rDWhno=;
-        b=MM+Mjw8MP86R3p7Ax6k0xXT/DkIaS92iFDTiS3uhw2f8x1ootJSOPWng4ye5n0pe4u
-         aYrEjTQW6lFDPEA72shb/WtY3YBrc3w6RrKbYDzaPuMwbxeWYE6ijxEi7Ju2caX65xfb
-         KNDGE0YJNH5RX/yaBczTXrLosrLgYEXq8W/d9XCsIbIqMosIswpqqqL9FjbmuRseqvAI
-         3ZMTGb2p/JdnmFg6th59Tz4WGQzXif9YwBc2fijvgEWUuJ9cFar7GujIDgDmpkqcDJsa
-         aqvxpZsJuiOTIVrzWb0M03SBdOrkwERxZWlNgqFzMdqvxql858u/W3N25akJ3JXUV96b
-         PXXg==
-X-Gm-Message-State: APjAAAWI60TCz21+QG1jICtu36XbxfF66ofUbyHKtNIQV8H+rnjIR/Im
-        v5p0fXEd2IxP0mjra75/4B6Uprw3DTVl5S7pRmZCOQ==
-X-Google-Smtp-Source: APXvYqyiVtaPmSmRKsJv+E6BT5J2aNfHikdDme4b2COPAIWbQbmpxMSggM9KkYEG9DtxjDGJdxn2gwcpwAI0VlxDI9U=
-X-Received: by 2002:a2e:b554:: with SMTP id a20mr5296619ljn.25.1579271404131;
- Fri, 17 Jan 2020 06:30:04 -0800 (PST)
-MIME-Version: 1.0
-References: <20200114101319.GO3466@techsingularity.net> <CAKfTPtBROKKtTkz55McjJo6b=Qq0QRVckFe2fQS2kdxf8kCJLw@mail.gmail.com>
- <20200117142628.GR3466@techsingularity.net>
-In-Reply-To: <20200117142628.GR3466@techsingularity.net>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Fri, 17 Jan 2020 15:29:52 +0100
-Message-ID: <CAKfTPtBz=DtstPOUF63N1SJRhTpgFxyH2DpApznH_Cd1og0CVg@mail.gmail.com>
-Subject: Re: [PATCH] sched, fair: Allow a small load imbalance between low
- utilisation SD_NUMA domains v4
+        Fri, 17 Jan 2020 09:32:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579271541;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=rB4/SIKshMmHhqm2XVjUkYvosyY6DPjwv3996fiGs1Q=;
+        b=H8EQAFxiEqjD21qBSMJ5/5iOWPYwweRfmhyc7vhlMj1/YH9XK5EKZfTi1epNE9k6+RK8TS
+        Qstw5Hx/Tye/HDpeO4t0/6crDdNl3soki9h2BzJqpwKPUMkaqMzDuanJ6f9NDjDk13em1u
+        F+gr0cv0MmIsmjerNhsw9wsa/aY4vpM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-434-XlCFKmivOK2-soQSTH3xow-1; Fri, 17 Jan 2020 09:32:17 -0500
+X-MC-Unique: XlCFKmivOK2-soQSTH3xow-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D2C21100550E;
+        Fri, 17 Jan 2020 14:32:15 +0000 (UTC)
+Received: from pauld.bos.csb (dhcp-17-51.bos.redhat.com [10.18.17.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4ECB51001901;
+        Fri, 17 Jan 2020 14:32:14 +0000 (UTC)
+Date:   Fri, 17 Jan 2020 09:32:12 -0500
+From:   Phil Auld <pauld@redhat.com>
 To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Phil Auld <pauld@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Valentin Schneider <valentin.schneider@arm.com>,
         Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
@@ -72,98 +59,77 @@ Cc:     Phil Auld <pauld@redhat.com>, Ingo Molnar <mingo@kernel.org>,
         Parth Shah <parth@linux.ibm.com>,
         Rik van Riel <riel@surriel.com>,
         LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH] sched, fair: Allow a small load imbalance between low
+ utilisation SD_NUMA domains v4
+Message-ID: <20200117143212.GB6339@pauld.bos.csb>
+References: <20200114101319.GO3466@techsingularity.net>
+ <20200116163529.GP3466@techsingularity.net>
+ <CAKfTPtBznUt20QFzeQBPELcmN6+F=BOx09oSqVMzSGvXF5ByHg@mail.gmail.com>
+ <20200117141503.GQ3466@techsingularity.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200117141503.GQ3466@techsingularity.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jan 2020 at 15:26, Mel Gorman <mgorman@techsingularity.net> wrote:
->
-> On Fri, Jan 17, 2020 at 02:16:15PM +0100, Vincent Guittot wrote:
-> > > A more interesting example is the Facebook schbench which uses a
-> > > number of messaging threads to communicate with worker threads. In this
-> > > configuration, one messaging thread is used per NUMA node and the number of
-> > > worker threads is varied. The 50, 75, 90, 95, 99, 99.5 and 99.9 percentiles
-> > > for response latency is then reported.
+On Fri, Jan 17, 2020 at 02:15:03PM +0000 Mel Gorman wrote:
+> On Fri, Jan 17, 2020 at 02:08:13PM +0100, Vincent Guittot wrote:
+> > > > This patch allows a fixed degree of imbalance of two tasks to exist
+> > > > between NUMA domains regardless of utilisation levels. In many cases,
+> > > > this prevents communicating tasks being pulled apart. It was evaluated
+> > > > whether the imbalance should be scaled to the domain size. However, no
+> > > > additional benefit was measured across a range of workloads and machines
+> > > > and scaling adds the risk that lower domains have to be rebalanced. While
+> > > > this could change again in the future, such a change should specify the
+> > > > use case and benefit.
+> > > >
 > > >
-> > > Lat 50.00th-qrtle-1        44.00 (   0.00%)       37.00 (  15.91%)
-> > > Lat 75.00th-qrtle-1        53.00 (   0.00%)       41.00 (  22.64%)
-> > > Lat 90.00th-qrtle-1        57.00 (   0.00%)       42.00 (  26.32%)
-> > > Lat 95.00th-qrtle-1        63.00 (   0.00%)       43.00 (  31.75%)
-> > > Lat 99.00th-qrtle-1        76.00 (   0.00%)       51.00 (  32.89%)
-> > > Lat 99.50th-qrtle-1        89.00 (   0.00%)       52.00 (  41.57%)
-> > > Lat 99.90th-qrtle-1        98.00 (   0.00%)       55.00 (  43.88%)
-> >
-> > Which parameter changes between above and below tests ?
-> >
-> > > Lat 50.00th-qrtle-2        42.00 (   0.00%)       42.00 (   0.00%)
-> > > Lat 75.00th-qrtle-2        48.00 (   0.00%)       47.00 (   2.08%)
-> > > Lat 90.00th-qrtle-2        53.00 (   0.00%)       52.00 (   1.89%)
-> > > Lat 95.00th-qrtle-2        55.00 (   0.00%)       53.00 (   3.64%)
-> > > Lat 99.00th-qrtle-2        62.00 (   0.00%)       60.00 (   3.23%)
-> > > Lat 99.50th-qrtle-2        63.00 (   0.00%)       63.00 (   0.00%)
-> > > Lat 99.90th-qrtle-2        68.00 (   0.00%)       66.00 (   2.94%
-> > >
->
-> The number of worker pool threads. Above is 1 worker thread, below is 2.
->
-> > > @@ -8691,16 +8687,37 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
-> > >                         env->migration_type = migrate_task;
-> > >                         lsub_positive(&nr_diff, local->sum_nr_running);
-> > >                         env->imbalance = nr_diff >> 1;
-> > > -                       return;
-> > > -               }
-> > > +               } else {
-> > >
-> > > -               /*
-> > > -                * If there is no overload, we just want to even the number of
-> > > -                * idle cpus.
-> > > -                */
-> > > -               env->migration_type = migrate_task;
-> > > -               env->imbalance = max_t(long, 0, (local->idle_cpus -
-> > > +                       /*
-> > > +                        * If there is no overload, we just want to even the number of
-> > > +                        * idle cpus.
-> > > +                        */
-> > > +                       env->migration_type = migrate_task;
-> > > +                       env->imbalance = max_t(long, 0, (local->idle_cpus -
-> > >                                                  busiest->idle_cpus) >> 1);
-> > > +               }
-> > > +
-> > > +               /* Consider allowing a small imbalance between NUMA groups */
-> > > +               if (env->sd->flags & SD_NUMA) {
-> > > +                       unsigned int imbalance_min;
-> > > +
-> > > +                       /*
-> > > +                        * Compute an allowed imbalance based on a simple
-> > > +                        * pair of communicating tasks that should remain
-> > > +                        * local and ignore them.
-> > > +                        *
-> > > +                        * NOTE: Generally this would have been based on
-> > > +                        * the domain size and this was evaluated. However,
-> > > +                        * the benefit is similar across a range of workloads
-> > > +                        * and machines but scaling by the domain size adds
-> > > +                        * the risk that lower domains have to be rebalanced.
-> > > +                        */
-> > > +                       imbalance_min = 2;
-> > > +                       if (busiest->sum_nr_running <= imbalance_min)
-> > > +                               env->imbalance = 0;
-> >
-> > Out of curiosity why have you decided to use the above instead of
-> >   env->imbalance -= min(env->imbalance, imbalance_adj);
-> >
-> > Have you seen perf regression with the min ?
-> >
->
-> I didn't see a regression with min() but at this point, we're only
-> dealing with the case of ignoring a small imbalance when the busiest
-> group is almost completely idle. The distinction between using min and
-> just ignoring the imbalance is almost irrevelant in that case.
+> > > Any thoughts on whether this is ok for tip or are there suggestions on
+> > > an alternative approach?
+> > 
+> > I have just finished to run some tests on my system with your patch
+> > and I haven't seen any noticeable any changes so far which was a bit
+> > expected. The tests that I usually run, use more than 4 tasks on my 2
+> > nodes system;
+> 
+> This is indeed expected. With more active tasks, normal load balancing
+> applies.
+> 
+> > the only exception is perf sched  pipe and the results
+> > for this test stays the same with and without your patch.
+> 
+> I never saw much difference with perf sched pipe either. It was
+> generally within the noise.
+> 
+> > I'm curious
+> > if this impacts Phil's tests which run LU.c benchmark with some
+> > burning cpu tasks
+> 
+> I didn't see any problem with LU.c whether parallelised by openMPI or
+> openMP but an independent check would be nice.
+> 
 
-yes you're right
+My particular case is not straight up LU.c. It's the group imbalance 
+setup which was totally borken before Vincent's work. The test setup
+is designed to show how the load balancer (used to) fail by using group
+scaled "load" at larger (NUMA) domain levels. It's very susceptible to 
+imbalances so I wanted to make sure your patch allowing imblanances 
+didn't re-break it. 
 
->
-> --
+
+Cheers,
+Phil
+
+
+> -- 
 > Mel Gorman
 > SUSE Labs
+> 
+
+-- 
+
