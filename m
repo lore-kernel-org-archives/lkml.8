@@ -4,138 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03FE3C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F32CC33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9B632087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:39:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22F712087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:40:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729271AbgAQOjw (ORCPT
+        id S1729288AbgAQOkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 09:39:52 -0500
-Received: from mx2.suse.de ([195.135.220.15]:57492 "EHLO mx2.suse.de"
+        Fri, 17 Jan 2020 09:40:01 -0500
+Received: from mx2.suse.de ([195.135.220.15]:58472 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728982AbgAQOjF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 09:39:05 -0500
+        id S1728512AbgAQOkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 09:40:00 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id B7C65AC7D;
-        Fri, 17 Jan 2020 14:39:03 +0000 (UTC)
-From:   Mian Yousaf Kaukab <ykaukab@suse.de>
-To:     linux-arm-kernel@lists.infradead.org, mathieu.poirier@linaro.org
-Cc:     linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com,
-        suzuki.poulose@arm.com, alexander.shishkin@linux.intel.com,
-        Mian Yousaf Kaukab <ykaukab@suse.de>
-Subject: [PATCH RFC 06/15] coresight: combine bus and PMU init calls
-Date:   Fri, 17 Jan 2020 15:40:01 +0100
-Message-Id: <20200117144010.11149-7-ykaukab@suse.de>
+        by mx2.suse.de (Postfix) with ESMTP id 59B93B17A;
+        Fri, 17 Jan 2020 14:39:58 +0000 (UTC)
+From:   Juergen Gross <jgross@suse.com>
+To:     xen-devel@lists.xenproject.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Juergen Gross <jgross@suse.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH] xen/blkfront: limit allocated memory size to actual use case
+Date:   Fri, 17 Jan 2020 15:39:55 +0100
+Message-Id: <20200117143955.18892-1-jgross@suse.com>
 X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20200117144010.11149-1-ykaukab@suse.de>
-References: <20200117144010.11149-1-ykaukab@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no need to initialize coresight bus at postcore level since
-coresight API is private now. Moreover, call etm_perf_init() from
-coresight_init() to combine bus and PMU into a single module. There
-are circular dependencies between them.
+Today the Xen blkfront driver allocates memory for one struct
+blkfront_ring_info for each communication ring. This structure is
+statically sized for the maximum supported configuration resulting
+in a size of more than 90 kB.
 
-Signed-off-by: Mian Yousaf Kaukab <ykaukab@suse.de>
+As the main size contributor is one array inside the struct, the
+memory allocation can easily be limited by moving this array to be
+the last structure element and to allocate only the memory for the
+actually needed array size.
+
+Signed-off-by: Juergen Gross <jgross@suse.com>
 ---
- drivers/hwtracing/coresight/coresight-bus.c      | 41 ++++++++++++++++++------
- drivers/hwtracing/coresight/coresight-etm-perf.c |  3 +-
- drivers/hwtracing/coresight/coresight-etm-perf.h |  2 ++
- 3 files changed, 34 insertions(+), 12 deletions(-)
+ drivers/block/xen-blkfront.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-bus.c b/drivers/hwtracing/coresight/coresight-bus.c
-index ef20f74c85fa..c2eaeeea98cd 100644
---- a/drivers/hwtracing/coresight/coresight-bus.c
-+++ b/drivers/hwtracing/coresight/coresight-bus.c
-@@ -1142,16 +1142,6 @@ int coresight_timeout(void __iomem *addr, u32 offset, int position, int value)
- 	return -EAGAIN;
- }
+diff --git a/drivers/block/xen-blkfront.c b/drivers/block/xen-blkfront.c
+index c02be06c5299..61491167da19 100644
+--- a/drivers/block/xen-blkfront.c
++++ b/drivers/block/xen-blkfront.c
+@@ -151,9 +151,6 @@ MODULE_PARM_DESC(max_ring_page_order, "Maximum order of pages to be used for the
+ #define BLK_RING_SIZE(info)	\
+ 	__CONST_RING_SIZE(blkif, XEN_PAGE_SIZE * (info)->nr_ring_pages)
  
--struct bus_type coresight_bustype = {
--	.name	= "coresight",
--};
--
--static int __init coresight_init(void)
--{
--	return bus_register(&coresight_bustype);
--}
--postcore_initcall(coresight_init);
+-#define BLK_MAX_RING_SIZE	\
+-	__CONST_RING_SIZE(blkif, XEN_PAGE_SIZE * XENBUS_MAX_RING_GRANTS)
 -
  /*
-  * coresight_release_platform_data: Release references to the devices connected
-  * to the output port of this device.
-@@ -1336,3 +1326,34 @@ char *coresight_alloc_device_name(struct coresight_dev_list *dict,
- 	return name;
- }
- EXPORT_SYMBOL_GPL(coresight_alloc_device_name);
-+
-+struct bus_type coresight_bustype = {
-+	.name	= "coresight",
-+};
-+
-+static int __init coresight_init(void)
-+{
-+	int ret;
-+
-+	ret = bus_register(&coresight_bustype);
-+	if (ret)
-+		return ret;
-+
-+	ret = etm_perf_init();
-+	if (ret)
-+		bus_unregister(&coresight_bustype);
-+
-+	return ret;
-+}
-+
-+static void __exit coresight_exit(void)
-+{
-+	/* TODO: perf_pmu_unregister() */
-+	bus_unregister(&coresight_bustype);
-+}
-+
-+module_init(coresight_init);
-+module_exit(coresight_exit);
-+
-+MODULE_DESCRIPTION("Coresight bus and pmu driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-index 84f1dcb69827..1bd71c2f6802 100644
---- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-+++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-@@ -579,7 +579,7 @@ void etm_perf_del_symlink_sink(struct coresight_device *csdev)
- 	csdev->ea = NULL;
- }
+  * ring-ref%u i=(-1UL) would take 11 characters + 'ring-ref' is 8, so 19
+  * characters are enough. Define to 20 to keep consistent with backend.
+@@ -177,12 +174,12 @@ struct blkfront_ring_info {
+ 	unsigned int evtchn, irq;
+ 	struct work_struct work;
+ 	struct gnttab_free_callback callback;
+-	struct blk_shadow shadow[BLK_MAX_RING_SIZE];
+ 	struct list_head indirect_pages;
+ 	struct list_head grants;
+ 	unsigned int persistent_gnts_c;
+ 	unsigned long shadow_free;
+ 	struct blkfront_info *dev_info;
++	struct blk_shadow shadow[];
+ };
  
--static int __init etm_perf_init(void)
-+int __init etm_perf_init(void)
- {
- 	int ret;
+ /*
+@@ -1915,7 +1912,8 @@ static int negotiate_mq(struct blkfront_info *info)
+ 		info->nr_rings = 1;
  
-@@ -606,4 +606,3 @@ static int __init etm_perf_init(void)
- 
- 	return ret;
- }
--device_initcall(etm_perf_init);
-diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.h b/drivers/hwtracing/coresight/coresight-etm-perf.h
-index 015213abe00a..4b1c1f55fb46 100644
---- a/drivers/hwtracing/coresight/coresight-etm-perf.h
-+++ b/drivers/hwtracing/coresight/coresight-etm-perf.h
-@@ -82,4 +82,6 @@ static inline void *etm_perf_sink_config(struct perf_output_handle *handle)
- 
- #endif /* CONFIG_CORESIGHT */
- 
-+int __init etm_perf_init(void);
-+
- #endif
+ 	info->rinfo = kvcalloc(info->nr_rings,
+-			       sizeof(struct blkfront_ring_info),
++			       struct_size(info->rinfo, shadow,
++					   BLK_RING_SIZE(info)),
+ 			       GFP_KERNEL);
+ 	if (!info->rinfo) {
+ 		xenbus_dev_fatal(info->xbdev, -ENOMEM, "allocating ring_info structure");
 -- 
 2.16.4
 
