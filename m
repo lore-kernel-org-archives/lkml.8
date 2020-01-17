@@ -2,116 +2,84 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,PDS_TONAME_EQ_TOLOCAL_SHORT,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E799CC33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 06:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C04C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 06:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3B5F20842
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 06:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF6D721582
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 06:28:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579242498;
+	bh=0RgEcPl4y6EU+Wh8MtTpHBo4siOzz7nrcdr5SAubNeY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JiBrF6Ff3SlOrbh0w8xlVcZMCiaHhJ5Epv7choC8a6h285S36Ka4RjztF/nuram5n
+	 U9rwLgyiOQQvgcK6NHzB1Px8Qk4xHqZpm8HC5g1hjlV0do9efFiJNmUHLECOwaZLCw
+	 RzPpu1h0KdKoYuyiUr4AMAkoNHDjohSUgV8xF8jo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729113AbgAQG1A (ORCPT
+        id S1728925AbgAQG2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 01:27:00 -0500
-Received: from mga17.intel.com ([192.55.52.151]:14600 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726479AbgAQG0j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 01:26:39 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 22:26:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,329,1574150400"; 
-   d="scan'208";a="424342466"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga005.fm.intel.com with ESMTP; 16 Jan 2020 22:26:29 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Derek Yerger <derek@djy.llc>,
-        kernel@najdan.com, Thomas Lambertz <mail@thomaslambertz.de>,
-        Rik van Riel <riel@surriel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Borislav Petkov <bp@suse.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 0/4] KVM: x86: TIF_NEED_FPU_LOAD bug fixes
-Date:   Thu, 16 Jan 2020 22:26:24 -0800
-Message-Id: <20200117062628.6233-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.1
+        Fri, 17 Jan 2020 01:28:18 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33851 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbgAQG2R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 01:28:17 -0500
+Received: by mail-wr1-f68.google.com with SMTP id t2so21517409wrr.1
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 22:28:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vvF3fPu42sSx+4imIXkbIazKn6wGHRrvMJiDBLGJfPw=;
+        b=m/oCh1sDRC/kXqKSFS+sZAhvHDlIfudqzQ2z6ERaO2XxSYSDY1hlY60vrt3yjZ+oV6
+         pCmSJgVrL/qxg0vfZOKuBsCO5SvB3blBSkpM2AfI1dbgw6xQpQ/JWEVz0rpLAjOtjFAI
+         zOztnxNq/nAvvliHOCGG/LDXa9Ye2pM5O8PR329p9AZ9bQBGXhDEdRFcs7OEXbGE349B
+         /Brt1ByzbyUd3xxYuNojF4C6vScOSeGCa7C6pdy+tyTR4eiE18+mnyAPy32lYvh0ESU2
+         HtBKneTYfaYyyWP0kCOT/zbt6sIjenyMUg6A08Oi3DmyPBOZ67M1BOcMA4Uy5KbrqJA6
+         sAtQ==
+X-Gm-Message-State: APjAAAWlW5f8Uep4qvQBJAjeJ6uZ0L8NItIa4cBa3CPuhqRwP0N1sAZM
+        H9abWkc4Ra31h31V0lhVgzk=
+X-Google-Smtp-Source: APXvYqwkZAR+jobw5u5vprLmpyWrVp8F0lhzB2GzsxGpJhiiei7yRMXMC6rKBJkshfqkczDtHNb/5Q==
+X-Received: by 2002:adf:f484:: with SMTP id l4mr1321649wro.207.1579242495892;
+        Thu, 16 Jan 2020 22:28:15 -0800 (PST)
+Received: from localhost (ip-37-188-146-105.eurotel.cz. [37.188.146.105])
+        by smtp.gmail.com with ESMTPSA id g25sm1700029wmh.3.2020.01.16.22.28.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 22:28:14 -0800 (PST)
+Date:   Fri, 17 Jan 2020 07:28:13 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     "buddy.zhang" <buddy.zhang@aliyun.com>
+Cc:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm/cma.c: find a named CMA area by name
+Message-ID: <20200117062813.GE19428@dhcp22.suse.cz>
+References: <20200116101322.17795-1-buddy.zhang@aliyun.com>
+ <20200116121240.GS19428@dhcp22.suse.cz>
+ <6EE060CC-A19D-4F9D-BE36-14CB20C44AE2@aliyun.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6EE060CC-A19D-4F9D-BE36-14CB20C44AE2@aliyun.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Three bug fixes related to deferring FPU loading to return to userspace,
-or in this case, deferring to entering a KVM guest.  And a cleanup patch I
-couldn't resist throwing on top.
+On Fri 17-01-20 10:16:46, buddy.zhang wrote:
+[...]
+>     So, if device want to use a special named CMA area on module,  
+>     "cma_find_by_name()" need export symbols.
 
-The crux of the matter is that TIF_FPU_NEED_LOAD can be set any time
-control is transferred out of KVM, e.g. via IRQ->softirq, not just when
-KVM is preempted.  The previous attempt to fix the underlying bug(s)
-by handling TIF_FPU_NEED_LOAD during kvm_sched_in() only made the bug(s)
-harder to hit, i.e. it resolved the preemption case but only shrunk the
-window where a softirq could corrupt state.
-
-Paolo, patch 01 will conflict with commit 95145c25a78c ("KVM: x86: Add a
-WARN on TIF_NEED_FPU_LOAD in kvm_load_guest_fpu()") that is sitting in
-kvm/queue.  The kvm/queue commit should simply be dropped.
-
-Patch 01 fixes the original underlying bug, which is that KVM doesn't
-handle TIF_FPU_NEED_LOAD when swapping between guest and userspace FPU
-state.
-
-Patch 02 fixes (unconfirmed) issues similar to the reported bug where KVM
-doesn't ensure CPU FPU state is fresh when accessing it during emulation.
-This patch is smoke tested only (via kvm-unit-tests' emulator tests).
-
-Patch 03 reverts the preemption bug fix, which simultaneously restores the
-handling of TIF_FPU_NEED_LOAD in vcpu_enter_guest() to fix the reported
-bugs[1][2] and removes the now-unnecessary preemption workaround.
-
-Alternatively, the handling of TIF_NEED_FPU_LOAD in the kvm_sched_in()
-path could be left in place, i.e it doesn't cause immediate damage, but
-as stated before, restoring FPU state after KVM is preempted only makes
-it harder to find the actual bugs.  Case in point, I originally split
-the revert into two separate patches (so that removing the kvm_sched_in()
-call wouldn't be tagged for stable), but that only hid the underlying
-kvm_put_guest_fpu() bug until I fully reverted the commit.
-
-Patch 04 removes an unused emulator context param from several of the
-functions that are fixed in patch 02.  The param was left behind during
-a previous KVM FPU state rework.
-
-Tested via Thomas Lambertz's mprime reproducer[3], which detected issues
-with buggy KVMs on my system in under a minute.  Ran clean for ~30 minutes
-on each of the first two patches and several hours with all three patches
-applied.
-
-[1] https://lore.kernel.org/kvm/1e525b08-6204-3238-5d56-513f82f1d7fb@djy.llc
-[2] https://lore.kernel.org/kvm/bug-206215-28872@https.bugzilla.kernel.org%2F
-[3] https://lore.kernel.org/lkml/217248af-e980-9cb0-ff0d-9773413b9d38@thomaslambertz.de
-
-Sean Christopherson (4):
-  KVM: x86: Handle TIF_NEED_FPU_LOAD in kvm_{load,put}_guest_fpu()
-  KVM: x86: Ensure guest's FPU state is loaded when accessing for
-    emulation
-  KVM: x86: Revert "KVM: X86: Fix fpu state crash in kvm guest"
-  KVM: x86: Remove unused ctxt param from emulator's FPU accessors
-
- arch/x86/kvm/emulate.c | 67 ++++++++++++++++++++++++++++++++----------
- arch/x86/kvm/x86.c     | 36 +++++++++++++++++------
- 2 files changed, 79 insertions(+), 24 deletions(-)
-
+My question was whether there actually is any device that would like to
+use this functionality. Your patch doesn't add any and there is no
+reference to any either. We do not add exports for the functionality
+which is not used in the tree.
 -- 
-2.24.1
-
+Michal Hocko
+SUSE Labs
