@@ -2,124 +2,110 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D75DFC33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C7CC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE16020728
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:12:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 394C320728
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:13:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lhgfgKE6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="3duxFG2M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729035AbgAQJMt (ORCPT
+        id S1729144AbgAQJNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 04:12:49 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36473 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbgAQJMt (ORCPT
+        Fri, 17 Jan 2020 04:13:49 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:47368 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726596AbgAQJNs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 04:12:49 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z3so21915015wru.3;
-        Fri, 17 Jan 2020 01:12:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=9CWsLIqrwr5TTd8YCdk6c0DzhIAalvDRij2MWOTKamY=;
-        b=lhgfgKE6EJRm2r/haIoK6XaxGkEeldPrTIUTJe8hm4n3MBfQwXTGIfYHmUCej37+Aa
-         qhom8q3kuKaMIzma4dLvW6JHgF8UB59+pVTgnzYLpcsMOsrl2H2oXapx951+uEF/9Ehf
-         /u+IgExKvlV6VhEhd4CtFR05GEUudpDjupKLJgGHRDkbsC5w54dCWi+C07kuc2Ki84Mo
-         jJ/AufZc2OFwud68n5+0CyqLPQroEPvLmt5Of4LfrOGUMuo6bUzDYaG44hhHYf5jm+V8
-         SHtMyBmUlLCnPLP0YeV1cPqCO29knY+QqsaShro0uEHYZ/38J/2I/J8q4VBquWFz+IJ9
-         UBCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=9CWsLIqrwr5TTd8YCdk6c0DzhIAalvDRij2MWOTKamY=;
-        b=MALrUIXgmJaISQP/8O9sIM2oBdnx2yIB7NlTujQ6md9V62DbcudoMzTWGMkt0TVjpy
-         CoKBENVRauAhJjBK178D+z03PU6FlPWjDowSLXiYoidIgO0JlFptZTbcNEwccHQlpn1Z
-         iyqcmUcfBnCnb95ii0ULG3R5OD60ArvF98+d91/8j6GNYXmZhYanbrOOD72xJYh0WRsG
-         Pwcy23ri2mGa/U063TCk+4M6cbMiv667dnOlShsaMt+W5ra9vkiiCruq1taYPW2fBxDX
-         v3/fA+YmIxp+I430z6/G62p/CMUHjQNqJuSY9zXeFIV87pFXpRs7X0qley0LXqMmjrIj
-         PBgQ==
-X-Gm-Message-State: APjAAAXaj5VGlPkw7dEPRAZJ6i5MYrqMIYTQb6Yarn45oEoK6H3qEDfR
-        pj67ejftkGbJtS/FGC4BQYY=
-X-Google-Smtp-Source: APXvYqywXwV7gAnLawo5RzJtIA5adPds/GcA0eswqRb5VaeqYfgpTVOyApPsfA1b8TxRigDunLGCiA==
-X-Received: by 2002:adf:8041:: with SMTP id 59mr1934966wrk.257.1579252367494;
-        Fri, 17 Jan 2020 01:12:47 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id b16sm34694644wrj.23.2020.01.17.01.12.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 01:12:46 -0800 (PST)
-Date:   Fri, 17 Jan 2020 10:12:45 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com, linkinjeon@gmail.com, arnd@arndb.de
-Subject: Re: [PATCH v10 11/14] exfat: add Kconfig and Makefile
-Message-ID: <20200117091245.ginzffry7anqofju@pali>
-References: <20200115082447.19520-1-namjae.jeon@samsung.com>
- <CGME20200115082825epcas1p1f22ddca6dbf5d70e65d3b0e3c25c3a59@epcas1p1.samsung.com>
- <20200115082447.19520-12-namjae.jeon@samsung.com>
- <20200115093915.cjef2jadiwe2eul4@pali>
- <002f01d5cced$ba0828b0$2e187a10$@samsung.com>
+        Fri, 17 Jan 2020 04:13:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=04DhqFKBcPWMrjsGDMVscjHECILU0b/xk1pMLiwRSqQ=; b=3duxFG2MBnvrY7lYp0yOqTlER
+        AHTjr7dEWwXAYhjrZQPx5vXU6y8ioLUM3qzTPORZTiIc9Wy8i1SdJERpEaKhRfwervP5bk6y1DzNW
+        w7Xux07QOwMuiPtbfho8jfkXH4dmK3vJo5p4D+WPagYHscnQ4oyPpIK3V7vihXeEraVKbO+4r+fax
+        qkxm8wxx134ky53hZIyu6oDGLo7vykXr93sz1N1c9q9/lG8m4Lks+nR849MvVzB3RXj6B21y1kYbI
+        yScQYr1xgWperFt+q34agHdlYfRB5SiVnqDIZ06zwiXAsCYsUyBmQntipUwnxAP+FA5T5VMxszBFj
+        hBCrv+CMw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1isNhH-0004ZH-Gh; Fri, 17 Jan 2020 09:13:43 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9321B304A59;
+        Fri, 17 Jan 2020 10:12:04 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B43F020AFB27D; Fri, 17 Jan 2020 10:13:41 +0100 (CET)
+Date:   Fri, 17 Jan 2020 10:13:41 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     kan.liang@linux.intel.com
+Cc:     mingo@redhat.com, acme@kernel.org, linux-kernel@vger.kernel.org,
+        eranian@google.com, ak@linux.intel.com
+Subject: Re: [RESEND PATCH V3] perf/x86: Consider pinned events for group
+ validation
+Message-ID: <20200117091341.GX2827@hirez.programming.kicks-ass.net>
+References: <1579201225-178031-1-git-send-email-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <002f01d5cced$ba0828b0$2e187a10$@samsung.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1579201225-178031-1-git-send-email-kan.liang@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 17 January 2020 13:22:27 Namjae Jeon wrote:
-> > > +config EXFAT_DEFAULT_IOCHARSET
-> > > +	string "Default iocharset for exFAT"
-> > > +	default "utf8"
-> > > +	depends on EXFAT_FS
-> > > +	help
-> > > +	  Set this to the default input/output character set you'd
-> > > +	  like exFAT to use. It should probably match the character set
-> > > +	  that most of your exFAT filesystems use, and can be overridden
-> > > +	  with the "iocharset" mount option for exFAT filesystems.
-> > 
-> > Hello! This description is incorrect. iocharset option specify what
-> > character set is expected by VFS layer and not character set used by exFAT
-> > filesystem. exFAT filesystem always uses UTF-16 as this is the only
-> > allowed by exFAT specification.
-> Hi Pali,
-> 
-> Could you please review updated description ?
-> 
-> diff --git a/fs/exfat/Kconfig b/fs/exfat/Kconfig
-> index 9eeaa6d06..f2b0cf2c1 100644
-> --- a/fs/exfat/Kconfig
-> +++ b/fs/exfat/Kconfig
-> @@ -15,7 +15,7 @@ config EXFAT_DEFAULT_IOCHARSET
->         default "utf8"
->         depends on EXFAT_FS
->         help
-> -         Set this to the default input/output character set you'd
-> -         like exFAT to use. It should probably match the character set
-> -         that most of your exFAT filesystems use, and can be overridden
-> -         with the "iocharset" mount option for exFAT filesystems.
-> +         Set this to the default input/output character set to use for
-> +         converting between the encoding is used for user visible filename and
-> +         UTF-16 character that exfat filesystem use. and can be overridden with
-> +         the "iocharset" mount option for exFAT filesystems.
+On Thu, Jan 16, 2020 at 11:00:25AM -0800, kan.liang@linux.intel.com wrote:
+> @@ -2054,9 +2057,38 @@ static int validate_group(struct perf_event *event)
+>  	if (n < 0)
+>  		goto out;
+>  
+> +	/*
+> +	 * Disable interrupts and preemption to prevent the events in this
+> +	 * CPU's cpuc going away and getting freed.
+> +	 */
+> +	local_irq_save(flags);
+> +
+> +	/*
+> +	 * The new group must can be scheduled together with current pinned
+> +	 * events. Otherwise, it will never get a chance to be scheduled later.
+> +	 *
+> +	 * It won't catch all possible cases that cannot schedule, such as
+> +	 * events pinned on CPU1, but the validation for a new CPU1 event
+> +	 * running on other CPU. However, it's good enough to handle common
+> +	 * cases like the global NMI watchdog.
+> +	 */
+> +	for (i = 0; i < cpuc->n_events; i++) {
+> +		pinned_event = cpuc->event_list[i];
+> +		if (WARN_ON_ONCE(!pinned_event))
+> +			continue;
+> +		if (!pinned_event->attr.pinned)
+> +			continue;
+> +		fake_cpuc->n_events = n;
+> +		n = collect_events(fake_cpuc, pinned_event, false);
+> +		if (n < 0)
+> +			goto irq;
+> +	}
+> +
 
-Hello! This is much better. Fine for me.
+So I still completely hate this, because it makes the counter scheduling
+more eratic.
 
--- 
-Pali Rohár
-pali.rohar@gmail.com
+It changes a situation where we only have false-positives (we allow
+scheduling a group that might not ever get to run) into a situation
+where we can have both false-positives and false-negatives.
+
+Imagine the pinned event is for a currently running task; and that task
+only runs sporadically. Then you can sometimes not create the group, but
+mostly it'll work.
+
+Yes, this is all very annoying, but I really don't see how this makes
+anything any better.
