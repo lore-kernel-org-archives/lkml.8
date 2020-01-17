@@ -2,135 +2,289 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CE4C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 05:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB09C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 05:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A79620730
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 05:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ED4920730
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 05:54:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="mpe++tUd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zuueGqO2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgAQFwI (ORCPT
+        id S1726899AbgAQFy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 00:52:08 -0500
-Received: from mailout1.samsung.com ([203.254.224.24]:11761 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbgAQFwI (ORCPT
+        Fri, 17 Jan 2020 00:54:56 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42562 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726370AbgAQFyz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 00:52:08 -0500
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200117055205epoutp01af238e2ee2c46654505005b744f4c59b~qlrWJyvg-0233002330epoutp01i
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 05:52:05 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200117055205epoutp01af238e2ee2c46654505005b744f4c59b~qlrWJyvg-0233002330epoutp01i
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579240325;
-        bh=pL9w1KAw9HjHZTaEzQOzdBlBCswZ4N9iJrQbbkHjEac=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=mpe++tUdsKb0I+gum5KSA1thsS9Qc2YTWHJiXxABhPIkEdJcTN9LT0wauH6wCj0yB
-         JT4rt2JeYI0O/V8vQ4twcuGO/h98NPU0qYPdkLoHvQWmZF5hYUd9JhARouBD/dl3sE
-         0FgHY7pKm5kJrq8be3eVzjQODGDl0I9A7/YWnYkk=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20200117055205epcas1p3db9389138b312197303b3c7ebbc09e94~qlrVqC2tn2139621396epcas1p3o;
-        Fri, 17 Jan 2020 05:52:05 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.153]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 47zVZB6ndVzMqYkw; Fri, 17 Jan
-        2020 05:52:02 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A8.4D.48498.28B412E5; Fri, 17 Jan 2020 14:52:02 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200117055202epcas1p13550813b01bb497ca79c8d31e45584c9~qlrS-fXzq2741527415epcas1p1o;
-        Fri, 17 Jan 2020 05:52:02 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200117055202epsmtrp27e5d328863ccefe8f53fb849727b81e1~qlrS_2dNl0834908349epsmtrp2C;
-        Fri, 17 Jan 2020 05:52:02 +0000 (GMT)
-X-AuditID: b6c32a36-a3dff7000001bd72-98-5e214b825da5
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        54.CB.06569.28B412E5; Fri, 17 Jan 2020 14:52:02 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200117055202epsmtip142f10c612090f7b8befdbadd21c4e795~qlrS02bs62205422054epsmtip1q;
-        Fri, 17 Jan 2020 05:52:02 +0000 (GMT)
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH] thermal: Drop explicit PM_OPP dependency from
- DEVFREQ_THERMAL
-Date:   Fri, 17 Jan 2020 14:59:14 +0900
-Message-Id: <20200117055914.14584-1-cw00.choi@samsung.com>
+        Fri, 17 Jan 2020 00:54:55 -0500
+Received: by mail-pf1-f194.google.com with SMTP id 4so11417007pfz.9
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 21:54:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=Q/D16bhvqH5hHjvjoTQudmXRrgAaci7GkcRJ3VoqrV8=;
+        b=zuueGqO2dcA9HFnhiUjIbLGDrymwtN+zw1K94WvZZ4HP2rrdQSN9Hc1m5jKl7hBTAj
+         SV7D+Ok0j2p+KRemGfGfDb8ricYaz2H0Rop8z8tHnpJR7HZmtspzyYdxZUPfYag+LeUK
+         62oHTgkBr1PANjxOHD29yDsnsHBvbofvvbUYy6w9IHv0/gBP4xJk1Eumkq8zUtcdtF8c
+         9s8fP5Nrngv+L/qFntBvw6Pq4ebGGx45yOWUiVxGanstEtlNnx0cT9JdbOP1NpYDtLyP
+         89/I9JIhdSdRKH3MJ4AAelZasASmFnsnVhvhg+uyDj4jqIF8IZEF0K9AcKJU+LRQqLeR
+         hwGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Q/D16bhvqH5hHjvjoTQudmXRrgAaci7GkcRJ3VoqrV8=;
+        b=cQPXqny2EDdKf7DLlRCJ3ZbTwPtxwHdj68had+zfxBZZBDJEmy5eJjGouZNubxhKUO
+         9h0Gi4S1759n5Tyysk5uUiHFxkQZA+Z3k65+ATmk1S4Fxuqb+xzbAu8EKK7G5vLy5euM
+         vUFEVbMzPcvU4DqKFQPvWJ+98s+q7jQQRLuZuW/bzBxNxvoMZySiiLd4TJxmFQ56YCBX
+         UNLNhNhPyjIMMg3Gto52i1iu73haobfSWGQbPlDabVOXewir/YpTctOay+Xkhq7R09fV
+         wzSwlfw5fOKMRIM6BOm2tRnP0qppEunQRQQZmVl1zV9OZzCw2VTB00OXDT2T44IxNUv/
+         lkrw==
+X-Gm-Message-State: APjAAAUEfkzmUvuOzrwvV77aDk6wdAjN+S+sI9J/Artp7R9g9cl5nXgf
+        KxJTl7ypDEIjDXkFb2PPAbp7gw==
+X-Google-Smtp-Source: APXvYqxM1YA3i7iz9IwAajQM2rCTJd7NLP2qLbZ2dw0oR2ndq4mfCfOvlwz6pUQRyaB56dTOmOyNUw==
+X-Received: by 2002:a62:e512:: with SMTP id n18mr1362167pff.50.1579240495154;
+        Thu, 16 Jan 2020 21:54:55 -0800 (PST)
+Received: from localhost.localdomain (li96-55.members.linode.com. [74.207.254.55])
+        by smtp.gmail.com with ESMTPSA id u7sm27578364pfh.128.2020.01.16.21.54.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 21:54:54 -0800 (PST)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mike Leach <mike.leach@linaro.org>
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v6 1/2] perf parse: Refactor struct perf_evsel_config_term
+Date:   Fri, 17 Jan 2020 13:52:50 +0800
+Message-Id: <20200117055251.24058-1-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrKKsWRmVeSWpSXmKPExsWy7bCmvm6Tt2KcwbsnFhbfz/1ksrj+5Tmr
-        xbzPshaXd81hs/jce4TR4snDPjYHNo/Fe14yedy5tofNo2/LKkaPjuOVHp83yQWwRmXbZKQm
-        pqQWKaTmJeenZOal2yp5B8c7x5uaGRjqGlpamCsp5CXmptoqufgE6Lpl5gDtV1IoS8wpBQoF
-        JBYXK+nb2RTll5akKmTkF5fYKqUWpOQUWBboFSfmFpfmpesl5+daGRoYGJkCFSZkZ7x9V1zw
-        lK3iwrzYBsaLrF2MnBwSAiYSh+e8ZOti5OIQEtjBKDFn7gRGCOcTo8SxL/+YIJxvjBJvF/xl
-        gmn5fBumai+jxOqVx6GqvjBKTLzfwQ5SxSagJbH/xQ02EFtEIFCidd4TsIXMAkkSd1ofgMWF
-        BQIkur7fA5vKIqAqsePNfkYQm1fASmJW70VGiG3yEqs3HGAGWSAh8JNV4v3k31BnuEj8WvCa
-        GcIWlnh1fAs7hC0l8fndXjYIu1pi5ckjbBDNHYwSW/ZfgHrbWGL/0slAgziALtKUWL9LHyKs
-        KLHz91xGiEP5JN597WEFKZEQ4JXoaBOCKFGWuPzgLtQJkhKL2zuhVnlIfJo5CywuJBAr8a1v
-        J8sERtlZCAsWMDKuYhRLLSjOTU8tNiwwQo6kTYzgJKVltoNx0TmfQ4wCHIxKPLwzghTihFgT
-        y4orcw8xSnAwK4nwnpwhGyfEm5JYWZValB9fVJqTWnyI0RQYehOZpUST84EJNK8k3tDUyNjY
-        2MLE0MzU0FBJnHe6C9AcgfTEktTs1NSC1CKYPiYOTqkGRj77nbbGCpM1JA/Ylb5+Gv4mrE4o
-        y7o09s48xeQVEzdO1rC42HRcp0Y7RqdkWoynxlqvbje+drUlmw49esQXZym94PRL486WFRH2
-        lUdem0hXTOStvRE6OfmPy1oloeuvW352h9bGmWWp7XwoLFE7gbmFY9JfkRKXDrkbXhNaK30O
-        LVB6qhuvxFKckWioxVxUnAgAD2oK4GgDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpiluLIzCtJLcpLzFFi42LZdlhJTrfJWzHOYPYjUYvv534yWVz/8pzV
-        Yt5nWYvLu+awWXzuPcJo8eRhH5sDm8fiPS+ZPO5c28Pm0bdlFaNHx/FKj8+b5AJYo7hsUlJz
-        MstSi/TtErgy3r4rLnjKVnFhXmwD40XWLkZODgkBE4nPtycwdjFycQgJ7GaUuLPrNFRCUmLa
-        xaPMXYwcQLawxOHDxRA1nxgl1p/czgRSwyagJbH/xQ02EFtEIFjiwop2sDizQIrEmXdH2EFs
-        YQE/if6n7WA1LAKqEjve7GcEsXkFrCRm9V5khNglL7F6wwHmCYw8CxgZVjFKphYU56bnFhsW
-        GOWllusVJ+YWl+al6yXn525iBIeMltYOxhMn4g8xCnAwKvHwzghSiBNiTSwrrsw9xCjBwawk
-        wntyhmycEG9KYmVValF+fFFpTmrxIUZpDhYlcV75/GORQgLpiSWp2ampBalFMFkmDk6pBkYd
-        xX19Yppzpfe0qfQfy2XUnvGz9uKrWbMzj8Zn+e4VD5dT93mgtCt45kS2O6e0057s4V/gISrm
-        0iIeoj0peeYEUe1Dup8sRS37z/Jv2tiosPUSH2+utbD6wS9S327Pm31RuKHo84lZXI3TXpzK
-        knx08xkj42N7cwWl85tPpzS7bVt+tiaw87oSS3FGoqEWc1FxIgAv8VFKFQIAAA==
-X-CMS-MailID: 20200117055202epcas1p13550813b01bb497ca79c8d31e45584c9
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200117055202epcas1p13550813b01bb497ca79c8d31e45584c9
-References: <CGME20200117055202epcas1p13550813b01bb497ca79c8d31e45584c9@epcas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit b9c69e043266 ("PM / devfreq: Add dependency on PM_OPP")
-has selected PM_OPP always to use it as the mandatory interface. So that
-CONFIG_DEVFREQ_THERMAL doesn't need to specify the PM_OPP dependency
-because if CONFIG_PM_DEVFREQ is enabled, PM_OPP is always enabled.
+The struct perf_evsel_config_term::val is a union which contains
+fields 'callgraph', 'drv_cfg' and 'branch' as string pointers.  This
+leads to the complex code logic for handling every type's string
+separately, and it's hard to release string as a general way.
 
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+This patch refactors the structure to add a common field 'str' in the
+'val' union as string pointer and remove the other three fields
+'callgraph', 'drv_cfg' and 'branch'.  Without passing field name, the
+patch simplifies the string handling with macro ADD_CONFIG_TERM_STR()
+for string pointer assignment.
+
+This patch fixes multiple warnings of line over 80 characters detected
+by checkpatch tool.
+
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 ---
- drivers/thermal/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
+ tools/perf/arch/arm/util/cs-etm.c |  2 +-
+ tools/perf/util/evsel.c           |  6 +--
+ tools/perf/util/evsel_config.h    |  4 +-
+ tools/perf/util/parse-events.c    | 62 ++++++++++++++++++++-----------
+ 4 files changed, 45 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-index 79b27865c6f4..9c3acd715428 100644
---- a/drivers/thermal/Kconfig
-+++ b/drivers/thermal/Kconfig
-@@ -175,7 +175,6 @@ config CLOCK_THERMAL
- config DEVFREQ_THERMAL
- 	bool "Generic device cooling support"
- 	depends on PM_DEVFREQ
--	depends on PM_OPP
- 	help
- 	  This implements the generic devfreq cooling mechanism through
- 	  frequency reduction for devices using devfreq.
+diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+index ede040cf82ad..2898cfdf8fe1 100644
+--- a/tools/perf/arch/arm/util/cs-etm.c
++++ b/tools/perf/arch/arm/util/cs-etm.c
+@@ -226,7 +226,7 @@ static int cs_etm_set_sink_attr(struct perf_pmu *pmu,
+ 		if (term->type != PERF_EVSEL__CONFIG_TERM_DRV_CFG)
+ 			continue;
+ 
+-		sink = term->val.drv_cfg;
++		sink = term->val.str;
+ 		snprintf(path, PATH_MAX, "sinks/%s", sink);
+ 
+ 		ret = perf_pmu__scan_file(pmu, path, "%x", &hash);
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index a69e64236120..549abd43816f 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -808,12 +808,12 @@ static void apply_config_terms(struct evsel *evsel,
+ 				perf_evsel__reset_sample_bit(evsel, TIME);
+ 			break;
+ 		case PERF_EVSEL__CONFIG_TERM_CALLGRAPH:
+-			callgraph_buf = term->val.callgraph;
++			callgraph_buf = term->val.str;
+ 			break;
+ 		case PERF_EVSEL__CONFIG_TERM_BRANCH:
+-			if (term->val.branch && strcmp(term->val.branch, "no")) {
++			if (term->val.str && strcmp(term->val.str, "no")) {
+ 				perf_evsel__set_sample_bit(evsel, BRANCH_STACK);
+-				parse_branch_str(term->val.branch,
++				parse_branch_str(term->val.str,
+ 						 &attr->branch_sample_type);
+ 			} else
+ 				perf_evsel__reset_sample_bit(evsel, BRANCH_STACK);
+diff --git a/tools/perf/util/evsel_config.h b/tools/perf/util/evsel_config.h
+index 1f8d2fe0b66e..b4a65201e4f7 100644
+--- a/tools/perf/util/evsel_config.h
++++ b/tools/perf/util/evsel_config.h
+@@ -36,18 +36,16 @@ struct perf_evsel_config_term {
+ 		u64	      period;
+ 		u64	      freq;
+ 		bool	      time;
+-		char	      *callgraph;
+-		char	      *drv_cfg;
+ 		u64	      stack_user;
+ 		int	      max_stack;
+ 		bool	      inherit;
+ 		bool	      overwrite;
+-		char	      *branch;
+ 		unsigned long max_events;
+ 		bool	      percore;
+ 		bool	      aux_output;
+ 		u32	      aux_sample_size;
+ 		u64	      cfg_chg;
++		char	      *str;
+ 	} val;
+ 	bool weak;
+ };
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index ed7c008b9c8b..f59f3c8da473 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1219,8 +1219,7 @@ static int config_attr(struct perf_event_attr *attr,
+ static int get_config_terms(struct list_head *head_config,
+ 			    struct list_head *head_terms __maybe_unused)
+ {
+-#define ADD_CONFIG_TERM(__type, __name, __val)			\
+-do {								\
++#define ADD_CONFIG_TERM(__type)					\
+ 	struct perf_evsel_config_term *__t;			\
+ 								\
+ 	__t = zalloc(sizeof(*__t));				\
+@@ -1229,9 +1228,19 @@ do {								\
+ 								\
+ 	INIT_LIST_HEAD(&__t->list);				\
+ 	__t->type       = PERF_EVSEL__CONFIG_TERM_ ## __type;	\
+-	__t->val.__name = __val;				\
+ 	__t->weak	= term->weak;				\
+-	list_add_tail(&__t->list, head_terms);			\
++	list_add_tail(&__t->list, head_terms)
++
++#define ADD_CONFIG_TERM_VAL(__type, __name, __val)		\
++do {								\
++	ADD_CONFIG_TERM(__type);				\
++	__t->val.__name = __val;				\
++} while (0)
++
++#define ADD_CONFIG_TERM_STR(__type, __val)			\
++do {								\
++	ADD_CONFIG_TERM(__type);				\
++	__t->val.str = __val;					\
+ } while (0)
+ 
+ 	struct parse_events_term *term;
+@@ -1239,53 +1248,62 @@ do {								\
+ 	list_for_each_entry(term, head_config, list) {
+ 		switch (term->type_term) {
+ 		case PARSE_EVENTS__TERM_TYPE_SAMPLE_PERIOD:
+-			ADD_CONFIG_TERM(PERIOD, period, term->val.num);
++			ADD_CONFIG_TERM_VAL(PERIOD, period, term->val.num);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_SAMPLE_FREQ:
+-			ADD_CONFIG_TERM(FREQ, freq, term->val.num);
++			ADD_CONFIG_TERM_VAL(FREQ, freq, term->val.num);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_TIME:
+-			ADD_CONFIG_TERM(TIME, time, term->val.num);
++			ADD_CONFIG_TERM_VAL(TIME, time, term->val.num);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_CALLGRAPH:
+-			ADD_CONFIG_TERM(CALLGRAPH, callgraph, term->val.str);
++			ADD_CONFIG_TERM_STR(CALLGRAPH, term->val.str);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_BRANCH_SAMPLE_TYPE:
+-			ADD_CONFIG_TERM(BRANCH, branch, term->val.str);
++			ADD_CONFIG_TERM_STR(BRANCH, term->val.str);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_STACKSIZE:
+-			ADD_CONFIG_TERM(STACK_USER, stack_user, term->val.num);
++			ADD_CONFIG_TERM_VAL(STACK_USER, stack_user,
++					    term->val.num);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_INHERIT:
+-			ADD_CONFIG_TERM(INHERIT, inherit, term->val.num ? 1 : 0);
++			ADD_CONFIG_TERM_VAL(INHERIT, inherit,
++					    term->val.num ? 1 : 0);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_NOINHERIT:
+-			ADD_CONFIG_TERM(INHERIT, inherit, term->val.num ? 0 : 1);
++			ADD_CONFIG_TERM_VAL(INHERIT, inherit,
++					    term->val.num ? 0 : 1);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_MAX_STACK:
+-			ADD_CONFIG_TERM(MAX_STACK, max_stack, term->val.num);
++			ADD_CONFIG_TERM_VAL(MAX_STACK, max_stack,
++					    term->val.num);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_MAX_EVENTS:
+-			ADD_CONFIG_TERM(MAX_EVENTS, max_events, term->val.num);
++			ADD_CONFIG_TERM_VAL(MAX_EVENTS, max_events,
++					    term->val.num);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_OVERWRITE:
+-			ADD_CONFIG_TERM(OVERWRITE, overwrite, term->val.num ? 1 : 0);
++			ADD_CONFIG_TERM_VAL(OVERWRITE, overwrite,
++					    term->val.num ? 1 : 0);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_NOOVERWRITE:
+-			ADD_CONFIG_TERM(OVERWRITE, overwrite, term->val.num ? 0 : 1);
++			ADD_CONFIG_TERM_VAL(OVERWRITE, overwrite,
++					    term->val.num ? 0 : 1);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_DRV_CFG:
+-			ADD_CONFIG_TERM(DRV_CFG, drv_cfg, term->val.str);
++			ADD_CONFIG_TERM_STR(DRV_CFG, term->val.str);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_PERCORE:
+-			ADD_CONFIG_TERM(PERCORE, percore,
+-					term->val.num ? true : false);
++			ADD_CONFIG_TERM_VAL(PERCORE, percore,
++					    term->val.num ? true : false);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT:
+-			ADD_CONFIG_TERM(AUX_OUTPUT, aux_output, term->val.num ? 1 : 0);
++			ADD_CONFIG_TERM_VAL(AUX_OUTPUT, aux_output,
++					    term->val.num ? 1 : 0);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE:
+-			ADD_CONFIG_TERM(AUX_SAMPLE_SIZE, aux_sample_size, term->val.num);
++			ADD_CONFIG_TERM_VAL(AUX_SAMPLE_SIZE, aux_sample_size,
++					    term->val.num);
+ 			break;
+ 		default:
+ 			break;
+@@ -1322,7 +1340,7 @@ static int get_config_chgs(struct perf_pmu *pmu, struct list_head *head_config,
+ 	}
+ 
+ 	if (bits)
+-		ADD_CONFIG_TERM(CFG_CHG, cfg_chg, bits);
++		ADD_CONFIG_TERM_VAL(CFG_CHG, cfg_chg, bits);
+ 
+ #undef ADD_CONFIG_TERM
+ 	return 0;
 -- 
 2.17.1
 
