@@ -2,119 +2,69 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A0DC33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 19:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E60A1C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 20:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F40FF2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 19:58:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0EE62072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 20:00:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579291127;
-	bh=V8k9Oh6NK0UEen8Tk1+Rnw4W0UunNskk3zLkAEJA0Dc=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=kT5O9hpRybbGdTCgnDLTi2lyOtBKJSUwFB8UbpNMJ0ZdGsjWTfHC/5IpFzi/v9mok
-	 lCetpibSaJDoWJXmUkUhfkM2mIM6qk+DNwwCOJ1U26f3ZtZEISdP+wKEiIKxajY1r5
-	 hK8UneyU4CadWJZEB6HV5yVGSL83YNWMuIUnEHAA=
+	s=default; t=1579291204;
+	bh=BhSWmBzfCPPdrgrWzh8CgtIdppc8+ZKyTTGhC+Kn3ic=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=v4P7jjs/stIXKJkfkv2Kem/pYajMfzu1+LAmMjRP50GjRPrtfLqtdNRgq43URsWfE
+	 O5/POwUtRzhBB/m3WYVmENHBdcUf8owovv3eTlWzlVDYGkm22fMj8GEexV+w5qSVXZ
+	 eEiCUEGemEsJMeC8S3LfSeblcqt+R32P5inqHVu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729587AbgAQT6q (ORCPT
+        id S1729606AbgAQUAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 14:58:46 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:40386 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726897AbgAQT6q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 14:58:46 -0500
-Received: by mail-qv1-f65.google.com with SMTP id dp13so11251256qvb.7;
-        Fri, 17 Jan 2020 11:58:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=sPdxpH8MyQUiW9CeltxFRckECiJJQpVH4BhIsZDdF38=;
-        b=mByunD+oO3XP1Dvhlmwzm3IO5l5bbxtR7KUnDCY2fpWJT/NmUuwRdNyextOSNzsTbh
-         p1gZ8nAYOytmy0hv1bgACpmjM4b3notpx/+JJTVlex00JnhTF7bGcNsjcI/THfBE3Qyo
-         R4rAF4E7PF6FZQMtIJ8e8X575u4L5RanoVjGr8A+00GRsQpGRq2o9krqCew2n/JGLYeO
-         20sgCShe0s/t7ZZUPjr96nhEyqh0hdnY/kK0QJKAQOo5qftObgn04Tn1AlWqtR34mnJ/
-         6kM0MiKYxqsyaC8byA0bW/WnqYXKH9thF+JXmJSwOK4jmHgKVglXwUZpsMXZvfnjFqYl
-         I4Kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=sPdxpH8MyQUiW9CeltxFRckECiJJQpVH4BhIsZDdF38=;
-        b=IYhkWDGAhwbRFyS1Xian1Fyzn3XxNSwxGecPbHF8b9+1AWcTe8D2D0J+EcYQq7SR1f
-         2prtmmOwbEXGpoTJ/+AdqiSjFZ/YtxbwZlOHHSZpEw2CPNKvwp9Sp5chdymZ2T9e4a5Y
-         JXXmwx+cyf0qz5tlU0J5CwAVFFEQuTZhILUZm1b6RXo8KdAM2SMNxiI97wauxIO9yIin
-         xZqNXrB2CBjgo8Y8fSnv5GJhc/PPQlCXtnxIS8Qb4tcWf+9SayiPrwq6fosWO9UiZHSy
-         ibLtgpHZG/jMiHcOwMxJ1VQYaJWrTtPl5BIusWjPuhUi1dgAF7qfBTgWgYpNRczhTg1I
-         KSsg==
-X-Gm-Message-State: APjAAAVJtavOy52k0WPiXZGjVECF5ugkx1skvlnSB3aRLM3gEwu5Km/2
-        PLdhssCZQSyuA5plTuHhxis=
-X-Google-Smtp-Source: APXvYqwb1bIBNMAR7yyfIfiMyf1BL/izMlEY5A/e6C9eCoL5eWd9sjR3mW0GtMaIPVo8m9Ng/U0+8Q==
-X-Received: by 2002:ad4:40c7:: with SMTP id x7mr9621275qvp.176.1579291124730;
-        Fri, 17 Jan 2020 11:58:44 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::1:7d10])
-        by smtp.gmail.com with ESMTPSA id t38sm13757528qta.78.2020.01.17.11.58.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 Jan 2020 11:58:44 -0800 (PST)
-Date:   Fri, 17 Jan 2020 11:58:42 -0800
-From:   Tejun Heo <tj@kernel.org>
-To:     Li Zefan <lizefan@huawei.com>, Johannes Weiner <hannes@cmpxchg.org>
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Omar Sandoval <osandov@fb.com>, kernel-team@fb.com
-Subject: [PATCH cgroup/for-5.6] iocost: Fix iocost_monitor.py due to helper
- type mismatch
-Message-ID: <20200117195842.GL2677547@devbig004.ftw2.facebook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        Fri, 17 Jan 2020 15:00:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38138 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726897AbgAQUAD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 15:00:03 -0500
+Subject: Re: [GIT PULL] io_uring fixes for 5.5-rc7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579291203;
+        bh=BhSWmBzfCPPdrgrWzh8CgtIdppc8+ZKyTTGhC+Kn3ic=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=g3S/zYwqzurmJW5IjTEupcMN3ADsiP7yFnljBg8/Pxt3mB4hUtHZsdoNyz9EhyqDi
+         JXFAq+FELF16bwo5xDfLvUkhOePOkK6ccTsvntlwdPcjr4EhtH7wds2r01YHzArD+F
+         3rq1JjXnCOffQrNfSHjbX2zipzsvNHQxUFyD6+Mg=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <48229b93-5e4d-78a2-3171-021e2a87c99b@kernel.dk>
+References: <48229b93-5e4d-78a2-3171-021e2a87c99b@kernel.dk>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <48229b93-5e4d-78a2-3171-021e2a87c99b@kernel.dk>
+X-PR-Tracked-Remote: git://git.kernel.dk/linux-block.git
+ tags/io_uring-5.5-2020-01-16
+X-PR-Tracked-Commit-Id: 44d282796f81eb1debc1d7cb53245b4cb3214cb5
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 25e73aadf297d78cf528841795cd37bad8320642
+Message-Id: <157929120315.30919.10911615195407990230.pr-tracker-bot@kernel.org>
+Date:   Fri, 17 Jan 2020 20:00:03 +0000
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        io-uring <io-uring@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From 9ea37e24d4a95dd934a0600d65caa25e409705bb Mon Sep 17 00:00:00 2001
-From: Tejun Heo <tj@kernel.org>
-Date: Fri, 17 Jan 2020 11:54:35 -0800
+The pull request you sent on Fri, 17 Jan 2020 07:33:15 -0700:
 
-iocost_monitor.py broke with recent versions of drgn due to helper
-being stricter about types.  Fix it so that it uses the correct type.
+> git://git.kernel.dk/linux-block.git tags/io_uring-5.5-2020-01-16
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Suggested-by: Omar Sandoval <osandov@fb.com>
----
-Applied to cgroup/for-5.6.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/25e73aadf297d78cf528841795cd37bad8320642
 
- tools/cgroup/iocost_monitor.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Thank you!
 
-diff --git a/tools/cgroup/iocost_monitor.py b/tools/cgroup/iocost_monitor.py
-index f79b23582a1d..7427a5ee761b 100644
---- a/tools/cgroup/iocost_monitor.py
-+++ b/tools/cgroup/iocost_monitor.py
-@@ -72,7 +72,7 @@ autop_names = {
-         name = BlkgIterator.blkcg_name(blkcg)
-         path = parent_path + '/' + name if parent_path else name
-         blkg = drgn.Object(prog, 'struct blkcg_gq',
--                           address=radix_tree_lookup(blkcg.blkg_tree, q_id))
-+                           address=radix_tree_lookup(blkcg.blkg_tree.address_of_(), q_id))
-         if not blkg.address_:
-             return
- 
-@@ -228,7 +228,7 @@ q_id = None
- root_iocg = None
- ioc = None
- 
--for i, ptr in radix_tree_for_each(blkcg_root.blkg_tree):
-+for i, ptr in radix_tree_for_each(blkcg_root.blkg_tree.address_of_()):
-     blkg = drgn.Object(prog, 'struct blkcg_gq', address=ptr)
-     try:
-         if devname == blkg.q.kobj.parent.name.string_().decode('utf-8'):
 -- 
-2.17.1
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
