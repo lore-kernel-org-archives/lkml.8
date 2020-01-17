@@ -2,207 +2,136 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F950C33CB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21786C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:08:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DF78206E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6AD22083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:08:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eMdJiZi7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cxkcf3TP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbgAQNIW (ORCPT
+        id S1726999AbgAQNI1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 08:08:22 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:51784 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726566AbgAQNIV (ORCPT
+        Fri, 17 Jan 2020 08:08:27 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42133 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726566AbgAQNI0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 08:08:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579266499;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=f0fEIf10fwHy27Ekg6+K5QOo8x0RxiGO588jBAOheeA=;
-        b=eMdJiZi7+ASSID5RCFsSq464Uk/JzJ/EVfrFqDk2uHyNt5njtUe16EacqQ0/fSEnm0Q2VU
-        Wqhfsfv6geaV6paiU8OXaW2iHM0HmmHqmU1RYdXYmtUpWwhTlqIS7mpZf0BZeYy25jXJgb
-        228a6C5YSHUNGhZHB/u6gwQZk8IwD6M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-305-CTHBq2s9MYiAiMJGd1-F8A-1; Fri, 17 Jan 2020 08:08:15 -0500
-X-MC-Unique: CTHBq2s9MYiAiMJGd1-F8A-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 59617800D41;
-        Fri, 17 Jan 2020 13:08:12 +0000 (UTC)
-Received: from [10.36.117.199] (ovpn-117-199.ams2.redhat.com [10.36.117.199])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C218A81200;
-        Fri, 17 Jan 2020 13:08:07 +0000 (UTC)
-Subject: Re: [PATCH RFC v1] mm: is_mem_section_removable() overhaul
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Leonardo Bras <leonardo@linux.ibm.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Allison Randal <allison@lohutok.net>,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        lantianyu1986@gmail.com, linuxppc-dev@lists.ozlabs.org
-References: <20200117105759.27905-1-david@redhat.com>
- <20200117113353.GT19428@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <c82a0dd7-a99b-6def-83d4-a19fbdd405d9@redhat.com>
-Date:   Fri, 17 Jan 2020 14:08:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Fri, 17 Jan 2020 08:08:26 -0500
+Received: by mail-lj1-f193.google.com with SMTP id y4so26406473ljj.9
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 05:08:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fkEYaSle2JXv+HIaW7TQmEwpjoa1M8+VdpzumuZ886A=;
+        b=cxkcf3TPH3rUD3X3ib8YlngkOJLOIMMSBDwzoNr1YjCka2aHgi37CKRMoXIkflAWe+
+         F4pDsNLfoeI+DRGSpVWdR6eJ2YQuzIXcEZWhkgoA0TYaxm76NPzKNDjEb9D5QW5AS+M1
+         Ly3u60WDuw9m4lrWdVD03Wf4ANiQEK/Qbbc3HsuPE/jI5TToyZbTI8BN9N4QCSxytsRe
+         LSaQhdZfqs1gF8sSAsMJk1oDDoihZMegBoOp+WfZDRXzsHoLCkNUQZFUla4qL6gx+oZ4
+         joc2z21VIT2rk0VSdaMDEupKdebQj3qCrPWln9R/5i9dQxRFh7c0yYFBnnLL8VGSxnEk
+         FeVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fkEYaSle2JXv+HIaW7TQmEwpjoa1M8+VdpzumuZ886A=;
+        b=fO0HIuG74LN7HduVyvW4Qr3MTDNyFmC9JWDNFPCOW+t5jiP2ti8P3Stc1kgTOwIMGT
+         qgJAB/bXi2N/IAkhqJ8EqVQGWvyQen24cR2/mSGlhu4MrdLP1QLkPn6Nd1/oGVnzxqA4
+         +o5q5tzzethIQLFI6jJVwP/Cc2kfU8aeymSh/iChcxYMZN2d/79rWp4oZ172DS87clA5
+         KCpDZTKqjHWNyAZwhCPbcCeJ9hvHpnjgD6di/+M41mW6S5aE2Ht6pZZb8GijYtoGy1Dv
+         3CTs3OiH+9hDaTdTbT+AfV6qQwojr6Bg5MKurrJdrgWrJ9HouyhSZHPM11Zf0zFHmTgx
+         GYsA==
+X-Gm-Message-State: APjAAAXANM9stG8W0qhOaZCitR8sqKlR0rIs2tlvOQlf0w9MIO5ZLzIm
+        AnzrMuejrXQWyH4bxZTZaPJgIXeW0notN1czrplJEPyplTJfHw==
+X-Google-Smtp-Source: APXvYqxcVXzs9+LAyiBiYyP3M65EJxWa+AYBrVwSPTnHmWscANOe892DtIVM0pEdSHRQHFsgIIEsvuKIjPi7JfiyBtg=
+X-Received: by 2002:a2e:3309:: with SMTP id d9mr5556603ljc.262.1579266504976;
+ Fri, 17 Jan 2020 05:08:24 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200117113353.GT19428@dhcp22.suse.cz>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Content-Transfer-Encoding: quoted-printable
+References: <20200114101319.GO3466@techsingularity.net> <20200116163529.GP3466@techsingularity.net>
+In-Reply-To: <20200116163529.GP3466@techsingularity.net>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Fri, 17 Jan 2020 14:08:13 +0100
+Message-ID: <CAKfTPtBznUt20QFzeQBPELcmN6+F=BOx09oSqVMzSGvXF5ByHg@mail.gmail.com>
+Subject: Re: [PATCH] sched, fair: Allow a small load imbalance between low
+ utilisation SD_NUMA domains v4
+To:     Mel Gorman <mgorman@techsingularity.net>,
+        Phil Auld <pauld@redhat.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Parth Shah <parth@linux.ibm.com>,
+        Rik van Riel <riel@surriel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.01.20 12:33, Michal Hocko wrote:
-> On Fri 17-01-20 11:57:59, David Hildenbrand wrote:
->> Let's refactor that code. We want to check if we can offline memory
->> blocks. Add a new function is_mem_section_offlineable() for that and
->> make it call is_mem_section_offlineable() for each contained section.
->> Within is_mem_section_offlineable(), add some more sanity checks and
->> directly bail out if the section contains holes or if it spans multipl=
-e
->> zones.
->=20
-> I didn't read the patch (yet) but I am wondering. If we want to touch
-> this code, can we simply always return true there? I mean whoever
-> depends on this check is racy and the failure can happen even after
-> the sysfs says good to go, right? The check is essentially as expensive
-> as calling the offlining code itself. So the only usecase I can think o=
-f
-> is a dumb driver to crawl over blocks and check which is removable and
-> try to hotremove it. But just trying to offline one block after another
-> is essentially going to achieve the same.
-
-Some thoughts:
-
-1. It allows you to check if memory is likely to be offlineable without
-doing expensive locking and trying to isolate pages (meaning:
-zone->lock, mem_hotplug_lock. but also, calling drain_all_pages()
-when isolating)
-
-2. There are use cases that want to identify a memory block/DIMM to
-unplug. One example is PPC DLPAR code (see this patch). Going over all
-memory block trying to offline them is an expensive operation.
-
-3. powerpc-utils (https://github.com/ibm-power-utilities/powerpc-utils)
-makes use of /sys/.../removable to speed up the search AFAIK.
-
-4. lsmem displays/groups by "removable".
-
-5. If "removable=3Dfalse" then it usually really is not offlineable.
-Of course, there could also be races (free the last unmovable page),
-but it means "don't even try". OTOH, "removable=3Dtrue" is more racy,
-and gives less guarantees. ("looks okay, feel free to try")
-
->=20
-> Or does anybody see any reasonable usecase that would break if we did
-> that unconditional behavior?
-
-If we would return always "true", then the whole reason the
-interface originally was introduced would be "broken" (meaning, less
-performant as you would try to offline any memory block).
-
-commit 5c755e9fd813810680abd56ec09a5f90143e815b
-Author: Badari Pulavarty <pbadari@us.ibm.com>
-Date:   Wed Jul 23 21:28:19 2008 -0700
-
-    memory-hotplug: add sysfs removable attribute for hotplug memory remo=
-ve
-   =20
-    Memory may be hot-removed on a per-memory-block basis, particularly o=
-n
-    POWER where the SPARSEMEM section size often matches the memory-block
-    size.  A user-level agent must be able to identify which sections of
-    memory are likely to be removable before attempting the potentially
-    expensive operation.  This patch adds a file called "removable" to th=
-e
-    memory directory in sysfs to help such an agent.  In this patch, a me=
-mory
-    block is considered removable if;
+Hi Mel,
 
 
-I'd love to see this go away (just like "valid_zones"), but I don't
-think it is possible.
+On Thu, 16 Jan 2020 at 17:35, Mel Gorman <mgorman@techsingularity.net> wrote:
+>
+> On Tue, Jan 14, 2020 at 10:13:20AM +0000, Mel Gorman wrote:
+> > Changelog since V3
+> > o Allow a fixed imbalance a basic comparison with 2 tasks. This turned out to
+> >   be as good or better than allowing an imbalance based on the group weight
+> >   without worrying about potential spillover of the lower scheduler domains.
+> >
+> > Changelog since V2
+> > o Only allow a small imbalance when utilisation is low to address reports that
+> >   higher utilisation workloads were hitting corner cases.
+> >
+> > Changelog since V1
+> > o Alter code flow                                             vincent.guittot
+> > o Use idle CPUs for comparison instead of sum_nr_running      vincent.guittot
+> > o Note that the division is still in place. Without it and taking
+> >   imbalance_adj into account before the cutoff, two NUMA domains
+> >   do not converage as being equally balanced when the number of
+> >   busy tasks equals the size of one domain (50% of the sum).
+> >
+> > The CPU load balancer balances between different domains to spread load
+> > and strives to have equal balance everywhere. Communicating tasks can
+> > migrate so they are topologically close to each other but these decisions
+> > are independent. On a lightly loaded NUMA machine, two communicating tasks
+> > pulled together at wakeup time can be pushed apart by the load balancer.
+> > In isolation, the load balancer decision is fine but it ignores the tasks
+> > data locality and the wakeup/LB paths continually conflict. NUMA balancing
+> > is also a factor but it also simply conflicts with the load balancer.
+> >
+> > This patch allows a fixed degree of imbalance of two tasks to exist
+> > between NUMA domains regardless of utilisation levels. In many cases,
+> > this prevents communicating tasks being pulled apart. It was evaluated
+> > whether the imbalance should be scaled to the domain size. However, no
+> > additional benefit was measured across a range of workloads and machines
+> > and scaling adds the risk that lower domains have to be rebalanced. While
+> > this could change again in the future, such a change should specify the
+> > use case and benefit.
+> >
+>
+> Any thoughts on whether this is ok for tip or are there suggestions on
+> an alternative approach?
 
-So this patch makes it work a little more correctly (multiplezones, holes=
-),
-cleans up the code and avoids races with unplug code. It can, however,
-not give more guarantees if memory offlining will actually succeed.
+I have just finished to run some tests on my system with your patch
+and I haven't seen any noticeable any changes so far which was a bit
+expected. The tests that I usually run, use more than 4 tasks on my 2
+nodes system; the only exception is perf sched  pipe and the results
+for this test stays the same with and without your patch. I'm curious
+if this impacts Phil's tests which run LU.c benchmark with some
+burning cpu tasks
 
---=20
-Thanks,
-
-David / dhildenb
-
+>
+> --
+> Mel Gorman
+> SUSE Labs
