@@ -2,66 +2,68 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 241D3C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A2E8C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 011722072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB2CA2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:20:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgAQKUG (ORCPT
+        id S1727289AbgAQKUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 05:20:06 -0500
-Received: from foss.arm.com ([217.140.110.172]:39044 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726085AbgAQKUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 05:20:05 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 58F0C11D4;
-        Fri, 17 Jan 2020 02:20:05 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 70BDA3F68E;
-        Fri, 17 Jan 2020 02:20:04 -0800 (PST)
-Date:   Fri, 17 Jan 2020 10:19:57 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Zeng Tao <prime.zeng@hisilicon.com>, linuxarm@huawei.com,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] cpu-topology: Don't error on more than CONFIG_NR_CPUS
- CPUs in device tree
-Message-ID: <20200117101957.GA4099@bogus>
-References: <1579225973-32423-1-git-send-email-prime.zeng@hisilicon.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1579225973-32423-1-git-send-email-prime.zeng@hisilicon.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Fri, 17 Jan 2020 05:20:35 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:48872 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbgAQKUe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 05:20:34 -0500
+Received: from localhost (82-95-191-104.ip.xs4all.nl [82.95.191.104])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id A6279155CAC73;
+        Fri, 17 Jan 2020 02:20:32 -0800 (PST)
+Date:   Fri, 17 Jan 2020 02:20:30 -0800 (PST)
+Message-Id: <20200117.022030.458227945074641961.davem@davemloft.net>
+To:     liuyonglong@huawei.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxarm@huawei.com, salil.mehta@huawei.com,
+        jakub.kicinski@netronome.com
+Subject: Re: [PATCH net] net: hns: fix soft lockup when there is not enough
+ memory
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1579160477-31030-1-git-send-email-liuyonglong@huawei.com>
+References: <1579160477-31030-1-git-send-email-liuyonglong@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 17 Jan 2020 02:20:34 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 09:52:52AM +0800, Zeng Tao wrote:
-> When the kernel is configured with CONFIG_NR_CPUS smaller than the
-> number of CPU nodes in the device tree(DT), all the CPU nodes parsing
-> done to fetch topology information will fail. This is not reasonable
-> as it is legal to have all the physical CPUs in the system in the DT.
->
-> Let us just skip such CPU DT nodes that are not used in the kernel
-> rather than returning an error.
->
-> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-> Signed-off-by: Zeng Tao <prime.zeng@hisilicon.com>
+From: Yonglong Liu <liuyonglong@huawei.com>
+Date: Thu, 16 Jan 2020 15:41:17 +0800
 
-Hi Greg,
+> When there is not enough memory and napi_alloc_skb() return NULL,
+> the HNS driver will print error message, and than try again, if
+> the memory is not enough for a while, huge error message and the
+> retry operation will cause soft lockup.
+> 
+> When napi_alloc_skb() return NULL because of no memory, we can
+> get a warn_alloc() call trace, so this patch deletes the error
+> message. We already use polling mode to handle irq, but the
+> retry operation will render the polling weight inactive, this
+> patch just return budget when the rx is not completed to avoid
+> dead loop.
+> 
+> Fixes: 36eedfde1a36 ("net: hns: Optimize hns_nic_common_poll for better performance")
+> Fixes: b5996f11ea54 ("net: add Hisilicon Network Subsystem basic ethernet support")
+> Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
 
-Can you pick this patch for v5.6 ?
-
---
-Regards,
-Sudeep
+Applied and queued up for -stable.
