@@ -2,160 +2,93 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF93C33CB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B32AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 256CA2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64EAB20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:52:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SCKFYcXA"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="DyEq/hO8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729360AbgAQVwD (ORCPT
+        id S1729822AbgAQVwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 16:52:03 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:34037 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbgAQVwD (ORCPT
+        Fri, 17 Jan 2020 16:52:22 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:42002 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbgAQVwW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 16:52:03 -0500
-Received: by mail-qt1-f196.google.com with SMTP id 5so22974638qtz.1;
-        Fri, 17 Jan 2020 13:52:02 -0800 (PST)
+        Fri, 17 Jan 2020 16:52:22 -0500
+Received: by mail-io1-f67.google.com with SMTP id n11so27597913iom.9
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 13:52:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=LXFr+Oe+DVTEU1iGCR5ab4LZThTsrbbCxkzxMkJjD5c=;
-        b=SCKFYcXAx2pYOkg8sBdmA6UuPGSAN4IeyL1Dz/KSEDe5j/IrkXBa5bXmt6hFX6UhDM
-         2YYiUQFJw+8eXd/z3QSihMEyOYslWrk5vlX3iUsqa28FTs+P7NiNAIdO8+kQMfhKOa5H
-         G7pz4MTfa/UlimYFKtDwhRX73LJsP1FnpKiQhV+JY3QcgfU0G6tLwr57mRjBknDU4y47
-         msMgfAq7oc+VegMblw7Xw8uk64413y5aq2GWD0MMhStKrj5p3zliEbHRu6HeTHyN57wx
-         o2FQQesMgQvTTsSRJew4/ERaY6H8GFbehj5A6j6jBrRm5YSlchBa5enyuQgApmiUP4/y
-         WIcQ==
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=zjQSft/7NYSlsFJpIJXa+QqqnK9LdZDneos7vXG6e8U=;
+        b=DyEq/hO8s4RZ+2iZ2TdF0sCag4usxI3IV+LW66SjqfJX3rwnC1ZGJHJSZhOGhZmvAK
+         kQwTRgq6NW+MozpJR4MRfVmSO/wMDbZry0xANexqWvW8vJeElOXYWTnu/3CKw9eb6+RE
+         aCO9SoMkbQCVq4bE/Kch+kDMFy54kHoSbNAkR4u9NrxejyV9dVVKI0Rx4DLt+awesfih
+         RrVEu/bcSG2pJjyx0uCjii6LOF5hAIINaP82K+kDr3NTSycSJZ2U/iZP9CVchB0dgCf8
+         HleBXwjXI32smI1oNmSWJxbIsEB9rwNVFjKn2ExvJibhuZLFTKFfIqNLg6e63yxxfTvH
+         sLCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=LXFr+Oe+DVTEU1iGCR5ab4LZThTsrbbCxkzxMkJjD5c=;
-        b=IVE0bbXgttmXNRct/wh81V6UOn9dEQmxsO+4cbkPjdklvcBJOAxXdg0Z2NMoDv/zIi
-         RipZWrXV9uRwr5nszgNLdOab6ICUkEfn6vmDSnBzffkNXlnBtonXCYutw1pQGg7LV57F
-         RV0E9fO5VbEvfvFvtGb4cde1gGPbY05lNdsHxLQAB36ed3rSDhNUVDVuew+qXKPSgmEL
-         PxyfCTtUCjEYLRuFw4EbL1O6btZu89SwlC5Lm968Ep8FER2mIMJUexlB2TyPitUXfw+M
-         Mhd1sUS7DYdk1dEJM5HfVKZfFYvpvCeSDPrhxDAXhF/KHS/0aMdC5Jbhnir8crEEdMc4
-         kx9g==
-X-Gm-Message-State: APjAAAVpP+UumZjTsAKAHfNXmm77q7caJ7L13k4Q5leD3DevjikrY+aF
-        U4t+//4Neecmaxoy9fwxxCaKR1G9DjY07JkYnik=
-X-Google-Smtp-Source: APXvYqzPEH9j5BfkpS6SL5DHwqfsDvCoAE4QyeeHElbCapqNYQ1YI48ORniseUuBtLPs6QBmFuL8F8zVKIchHdd54ls=
-X-Received: by 2002:ac8:7b29:: with SMTP id l9mr9364164qtu.141.1579297921555;
- Fri, 17 Jan 2020 13:52:01 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=zjQSft/7NYSlsFJpIJXa+QqqnK9LdZDneos7vXG6e8U=;
+        b=b6FtaJjo+8gkLShup6OQkztKa2wVm29Nz9nVYrBztzk8NvM3vHCekQieVfrBZdrDdV
+         b5xpiYxdJDeKHCW9i8A0bpiH9VcuR0CDpmIMDnh1NOWE6g056p4AEVFuXZxULPbaNEav
+         lMkriOTKfoyIlGMTwWakg/XYqr9vuRXMboY1sDRussR6F4eIbmXIi+RiKQ3Nhbpl4xl/
+         T/kT8cNLx5WqihO4ktKnrTaMmB0sSjhfrAeYOmaAlH0xdPNsn54ZfSnd5b8YqlQKofIP
+         n3Q3dJjwEI5x6Izk24aOoMbZAJ056wYZQlAsUDEP4DmzbTDAEicVE8FoGQuJTG1nKqdk
+         W8Vg==
+X-Gm-Message-State: APjAAAWxi8foQvdMQ++EbLzQCyzFRTaXoh3IGqCO1QL7gnbUdwZ6HR6v
+        k01cGnwLFwuO+upLYLaEhBIEhQ==
+X-Google-Smtp-Source: APXvYqyOI2ac0khuK6ygC3i3ZJ0K7jAaLTP91Od5vfsxqrMwyAW8rIVzKYRGxYrOiKkArJC9tu10wA==
+X-Received: by 2002:a05:6638:102:: with SMTP id x2mr34374608jao.71.1579297941757;
+        Fri, 17 Jan 2020 13:52:21 -0800 (PST)
+Received: from localhost ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id y62sm8243344ilk.32.2020.01.17.13.52.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2020 13:52:21 -0800 (PST)
+Date:   Fri, 17 Jan 2020 13:52:19 -0800 (PST)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Ilie Halip <ilie.halip@gmail.com>
+cc:     linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, Mao Han <han_mao@c-sky.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv: delete temporary files
+In-Reply-To: <20200115113243.23096-1-ilie.halip@gmail.com>
+Message-ID: <alpine.DEB.2.21.9999.2001171352080.98477@viisi.sifive.com>
+References: <20200115113243.23096-1-ilie.halip@gmail.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-References: <157926819690.1555735.10756593211671752826.stgit@toke.dk> <157926820131.1555735.1177228853838027248.stgit@toke.dk>
-In-Reply-To: <157926820131.1555735.1177228853838027248.stgit@toke.dk>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 17 Jan 2020 13:51:50 -0800
-Message-ID: <CAEf4BzbAV0TmEUL=62jz+RD6SPmu927z-dhGL9JHepcAOGMSJA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v4 04/10] tools/runqslower: Use consistent
- include paths for libbpf
-To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-rdma@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 5:37 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@redh=
-at.com> wrote:
->
-> From: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
->
-> Fix the runqslower tool to include libbpf header files with the bpf/
-> prefix, to be consistent with external users of the library. Also ensure
-> that all includes of exported libbpf header files (those that are exporte=
-d
-> on 'make install' of the library) use bracketed includes instead of quote=
-d.
->
-> To not break the build, keep the old include path until everything has be=
-en
-> changed to the new one; a subsequent patch will remove that.
->
-> Fixes: 6910d7d3867a ("selftests/bpf: Ensure bpf_helper_defs.h are taken f=
-rom selftests dir")
-> Acked-by: Andrii Nakryiko <andriin@fb.com>
-> Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
-> ---
->  tools/bpf/runqslower/Makefile         |    5 +++--
->  tools/bpf/runqslower/runqslower.bpf.c |    2 +-
->  tools/bpf/runqslower/runqslower.c     |    4 ++--
->  3 files changed, 6 insertions(+), 5 deletions(-)
->
-> diff --git a/tools/bpf/runqslower/Makefile b/tools/bpf/runqslower/Makefil=
-e
-> index b62fc9646c39..9f022f7f2593 100644
-> --- a/tools/bpf/runqslower/Makefile
-> +++ b/tools/bpf/runqslower/Makefile
-> @@ -5,6 +5,7 @@ LLC :=3D llc
->  LLVM_STRIP :=3D llvm-strip
->  DEFAULT_BPFTOOL :=3D $(OUTPUT)/sbin/bpftool
->  BPFTOOL ?=3D $(DEFAULT_BPFTOOL)
-> +INCLUDES :=3D -I$(OUTPUT) -I$(abspath ../../lib) -I$(abspath ../../lib/b=
-pf)
->  LIBBPF_SRC :=3D $(abspath ../../lib/bpf)
+On Wed, 15 Jan 2020, Ilie Halip wrote:
 
-drop LIBBPF_SRC, it's not used anymore
+> Temporary files used in the VDSO build process linger on even after make
+> mrproper: vdso-dummy.o.tmp, vdso.so.dbg.tmp.
+> 
+> Delete them once they're no longer needed.
+> 
+> Signed-off-by: Ilie Halip <ilie.halip@gmail.com>
 
->  CFLAGS :=3D -g -Wall
->
-> @@ -51,13 +52,13 @@ $(OUTPUT)/%.skel.h: $(OUTPUT)/%.bpf.o | $(BPFTOOL)
->
->  $(OUTPUT)/%.bpf.o: %.bpf.c $(OUTPUT)/libbpf.a | $(OUTPUT)
->         $(call msg,BPF,$@)
-> -       $(Q)$(CLANG) -g -O2 -target bpf -I$(OUTPUT) -I$(LIBBPF_SRC)      =
-     \
-> +       $(Q)$(CLANG) -g -O2 -target bpf $(INCLUDES)           \
+Thanks, queued for v5.5-rc.
 
-please preserve formatting and alignment conventions of a file
 
->                  -c $(filter %.c,$^) -o $@ &&                            =
-     \
->         $(LLVM_STRIP) -g $@
->
->  $(OUTPUT)/%.o: %.c | $(OUTPUT)
->         $(call msg,CC,$@)
-> -       $(Q)$(CC) $(CFLAGS) -I$(LIBBPF_SRC) -I$(OUTPUT) -c $(filter %.c,$=
-^) -o $@
-> +       $(Q)$(CC) $(CFLAGS) $(INCLUDES) -c $(filter %.c,$^) -o $@
->
->  $(OUTPUT):
-
-[...]
+- Paul
