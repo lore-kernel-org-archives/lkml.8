@@ -2,68 +2,72 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D7D9C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31522C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 275BA2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05C2B2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:58:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nuMqJZxd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sea0KpwG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbgAQJ6U (ORCPT
+        id S1728982AbgAQJ6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 04:58:20 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37971 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgAQJ6U (ORCPT
+        Fri, 17 Jan 2020 04:58:32 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39443 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728816AbgAQJ61 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 04:58:20 -0500
-Received: by mail-wr1-f66.google.com with SMTP id y17so22064268wrh.5
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 01:58:19 -0800 (PST)
+        Fri, 17 Jan 2020 04:58:27 -0500
+Received: by mail-wm1-f67.google.com with SMTP id 20so6911876wmj.4
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 01:58:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3DpksFiKzXK/7fbjaj2c/nORGzAHYKUMZjuznhKyE/A=;
-        b=nuMqJZxdVCCX+n+/YxBgdJ4TpjiSJVZnJXxlMxWZRz5RgIOiFYS+B7F9Lalf7GYqD5
-         gL4X5DKiJkg23Ks1lIataIP1G38YOHhmqbGFGR9w24l5SsL5EaGvN11+LkOFTPgGLCxW
-         6Rbgrn/5iqPZWPvBdqxaKDmOEY8NBgyexRv6+dHdeTT9geZrYol5UVWoSwjloEyGGgS5
-         bzxP1eQHhfo2m5Ym9d0eTLPNIrwFA5wynjZ4dpBdq6xLzs58GSthNml/UlP/FOV4aUfH
-         DnkuxVlQbHfLSkxr4eupfZBe2mhwiGNDcz4YGRahN1qpv8lrerxUl6QnrejKNzl9xcTf
-         SpSQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=69zkeA3EsoksrgUY9Um/6N1yWF5rzIHjf5tDoqGZRjI=;
+        b=sea0KpwGHD3wCe5ufSr5NLlr4rEoNNOinI4ctaz8jmXEG28tG4zKZtlJL3i9I4qW/M
+         T8AwNZyC2VQTGl3AgkVCvsvAvG7OhnaHBNy8hghQ1N+D+dGW9J9/e61CUgtx4BAARx22
+         Mm/2g7FfeNT5T/HobvqAlKUJjjrQ8yceJ0dVgXPsdJPYHyxoEcp2uCcRbYOaecrgLqUW
+         vp3aa3OrIdCOm63ZPndB6GwSYPGB+nGgNbIJIBkvcJ/eCT8bdwX4IUR0v285L9YBoXIs
+         IDcSN+uNsOFxv0s8Gj37bEftJBxtW18p+eIO8HbtyujAraPC24OYil5Oc7JBXkPW3Dzd
+         X28A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3DpksFiKzXK/7fbjaj2c/nORGzAHYKUMZjuznhKyE/A=;
-        b=YOkMXhyVXVAFt7BOC5dAM4BEZzQsWDTbMQn6alKtq8AUMRhsEZIUc3x0aK0fcMKwiX
-         UiwIr1ckuvlmnMDoewrsc3ag+usrxOaTTntXwu44I3KhIF6OsVypZbE7k3x5fRDYoLI/
-         CLbhTRkvlWDad5kacEAMFAdKUvlKSDzySIzpfy4tmqi9gPyxssJNjshaNwhkmetV/cvi
-         JNBXxhY+CBap8iOOdVy4kUCV9U1kjFgB6jw8dv7i3f/fE7ujC2H/XJ8+xJ7p1UZ0eLBX
-         ocluY6SITtS5JTQwcjYiZl72kGyk79AXridEilV5iI9tcLk/A6dZ4tp12c0F2094/7yl
-         +gEg==
-X-Gm-Message-State: APjAAAU/afk6FqpzIqqRhoxJzXICcXgdwtWbDnpfEFvPZJh0K8zyMHOv
-        xMyqjs8UYjuBVwJ2LiJqyhWiSQ==
-X-Google-Smtp-Source: APXvYqxgv93anb8pi24i+uB0+YmE6QHeeOW/Hzg9agECyryjOkofzsGOP7q/qxpz40T7xjs7Posn6g==
-X-Received: by 2002:a5d:410e:: with SMTP id l14mr2074508wrp.238.1579255098341;
-        Fri, 17 Jan 2020 01:58:18 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=69zkeA3EsoksrgUY9Um/6N1yWF5rzIHjf5tDoqGZRjI=;
+        b=YrLToY0j7rxJWDWx/5+R756XV9tt0ujvG3eS3xwWwK/4J1qIx0W3P0mgkzHuwWJx+9
+         lodVR8UyeUKOwIsHnG4r5l71qybhs+fyMiMnkyrQsOavGr9dtPm1R9FQRCR1iaDUv9FE
+         2KeG8vMgQX1YNQRZHqbaFC+MakPiZXdJ2MLRtLVa6okFbLSPMvfoQk60dS8tbWqekSzH
+         6DJJYCEKqc0AoaxOjECwIou+rqD97llj2zzAG/sL5Hv+cIJ3ZUo6t2YEKvi5ZEu8HX6m
+         PobiKrzhkJV6KehtIFsm86Te2qk6rulI59VVeRtF6Prx3LxD9C1xEfomIBpOn1/xP3Pj
+         USrw==
+X-Gm-Message-State: APjAAAV/406BHxeoRQYlPILzSTYGAXNf0fZTgcU8ucbuolVgSTQhRJhF
+        4MPfPFuWYsiuiVPIdLiGqCT28L0ltLQ=
+X-Google-Smtp-Source: APXvYqwo0Z7gY5lIK21vyoJch58yh5Dhjb6c6doWW6Fay3i1RC5pYgBybK/0QI27Sif2nJLw+LPoYw==
+X-Received: by 2002:a7b:c4cc:: with SMTP id g12mr3950050wmk.68.1579255105355;
+        Fri, 17 Jan 2020 01:58:25 -0800 (PST)
 Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id r62sm9967007wma.32.2020.01.17.01.58.17
+        by smtp.googlemail.com with ESMTPSA id r62sm9967007wma.32.2020.01.17.01.58.24
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 17 Jan 2020 01:58:17 -0800 (PST)
+        Fri, 17 Jan 2020 01:58:24 -0800 (PST)
 From:   Georgi Djakov <georgi.djakov@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Georgi Djakov <georgi.djakov@linaro.org>
-Subject: [GIT PULL 00/12] interconnect changes for 5.6
-Date:   Fri, 17 Jan 2020 11:58:04 +0200
-Message-Id: <20200117095816.23575-1-georgi.djakov@linaro.org>
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH 05/12] interconnect: Add basic tracepoints
+Date:   Fri, 17 Jan 2020 11:58:09 +0200
+Message-Id: <20200117095816.23575-6-georgi.djakov@linaro.org>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200117095816.23575-1-georgi.djakov@linaro.org>
+References: <20200117095816.23575-1-georgi.djakov@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -71,84 +75,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+The tracepoints can help with understanding the system behavior of a
+given interconnect path when the consumer drivers change their bandwidth
+demands. This might be interesting when we want to monitor the requested
+interconnect bandwidth for each client driver. The paths may share the
+same nodes and this will help to understand "who and when is requesting
+what". All this is useful for subsystem drivers developers and may also
+provide hints when optimizing the power and performance profile of the
+system.
 
-Here are the interconnect patches for the 5.6-rc1 merge window.
-
-- New core helper functions for some common functionalities in drivers.
-- Improvements in the information exposed via debugfs.
-- Basic tracepoints support.
-- New interconnect driver for msm8916 platforms.
-- Misc fixes.
-
-All patches have been for a while in linux-next without reported issues.
-Please consider queuing them into char-misc-next.
-
-The same is also available via a pull request with a signed tag below.
-
-Thanks,
-Georgi
-
-The following changes since commit d1eef1c619749b2a57e514a3fa67d9a516ffa919:
-
-  Linux 5.5-rc2 (2019-12-15 15:16:08 -0800)
-
-are available in the Git repository at:
-
-  https://git.linaro.org/people/georgi.djakov/linux.git tags/icc-5.6-rc1
-
-for you to fetch changes up to 30c8fa3ec61a46da80698e1f8ab95df4d42bf374:
-
-  interconnect: qcom: Add MSM8916 interconnect provider driver (2020-01-07 09:30:09 +0200)
-
-----------------------------------------------------------------
-interconnect patches for 5.6
-
-Here are the interconnect patches for the 5.6-rc1 merge window.
-
-- New core helper functions for some common functionalities in drivers.
-- Improvements in the information exposed via debugfs.
-- Basic tracepoints support.
-- New interconnect driver for msm8916 platforms.
-- Misc fixes.
-
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-
-----------------------------------------------------------------
-Georgi Djakov (11):
-  interconnect: Add a common helper for removing all nodes
-  interconnect: qcom: Use the new common helper for node removal
-  interconnect: Move internal structs into a separate file
-  interconnect: Add a name to struct icc_path
-  interconnect: Add basic tracepoints
-  interconnect: Add a common standard aggregate function
-  interconnect: qcom: Use the standard aggregate function
-  interconnect: Print the tag in the debugfs summary
-  interconnect: Check for valid path in icc_set_bw()
-  dt-bindings: interconnect: Add Qualcomm MSM8916 DT bindings
-  interconnect: qcom: Add MSM8916 interconnect provider driver
-
-Leonard Crestez (1):
-  interconnect: Add interconnect_graph file to debugfs
-
- .../bindings/interconnect/qcom,msm8916.yaml   |  77 +++
- Documentation/driver-api/interconnect.rst     |  22 +
- drivers/interconnect/Makefile                 |   1 +
- drivers/interconnect/core.c                   | 168 ++++--
- drivers/interconnect/internal.h               |  42 ++
- drivers/interconnect/qcom/Kconfig             |   9 +
- drivers/interconnect/qcom/Makefile            |   2 +
- drivers/interconnect/qcom/msm8916.c           | 554 ++++++++++++++++++
- drivers/interconnect/qcom/msm8974.c           |  32 +-
- drivers/interconnect/qcom/qcs404.c            |  32 +-
- drivers/interconnect/qcom/sdm845.c            |  16 +-
- drivers/interconnect/trace.h                  |  88 +++
- .../dt-bindings/interconnect/qcom,msm8916.h   | 100 ++++
- include/linux/interconnect-provider.h         |  14 +
- 14 files changed, 1057 insertions(+), 100 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,msm8916.yaml
- create mode 100644 drivers/interconnect/internal.h
- create mode 100644 drivers/interconnect/qcom/msm8916.c
+---
+ drivers/interconnect/Makefile |  1 +
+ drivers/interconnect/core.c   |  7 +++
+ drivers/interconnect/trace.h  | 88 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 96 insertions(+)
  create mode 100644 drivers/interconnect/trace.h
- create mode 100644 include/dt-bindings/interconnect/qcom,msm8916.h
 
+diff --git a/drivers/interconnect/Makefile b/drivers/interconnect/Makefile
+index 28f2ab0824d5..725029ae7a2c 100644
+--- a/drivers/interconnect/Makefile
++++ b/drivers/interconnect/Makefile
+@@ -1,5 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
++CFLAGS_core.o				:= -I$(src)
+ icc-core-objs				:= core.o
+ 
+ obj-$(CONFIG_INTERCONNECT)		+= icc-core.o
+diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+index 4f9bdb7f9165..fbec2e4fdfeb 100644
+--- a/drivers/interconnect/core.c
++++ b/drivers/interconnect/core.c
+@@ -21,6 +21,9 @@
+ 
+ #include "internal.h"
+ 
++#define CREATE_TRACE_POINTS
++#include "trace.h"
++
+ static DEFINE_IDR(icc_idr);
+ static LIST_HEAD(icc_providers);
+ static DEFINE_MUTEX(icc_lock);
+@@ -435,6 +438,8 @@ int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
+ 
+ 		/* aggregate requests for this node */
+ 		aggregate_requests(node);
++
++		trace_icc_set_bw(path, node, i, avg_bw, peak_bw);
+ 	}
+ 
+ 	ret = apply_constraints(path);
+@@ -453,6 +458,8 @@ int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
+ 
+ 	mutex_unlock(&icc_lock);
+ 
++	trace_icc_set_bw_end(path, ret);
++
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(icc_set_bw);
+diff --git a/drivers/interconnect/trace.h b/drivers/interconnect/trace.h
+new file mode 100644
+index 000000000000..3d668ff566bf
+--- /dev/null
++++ b/drivers/interconnect/trace.h
+@@ -0,0 +1,88 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Interconnect framework tracepoints
++ * Copyright (c) 2019, Linaro Ltd.
++ * Author: Georgi Djakov <georgi.djakov@linaro.org>
++ */
++
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM interconnect
++
++#if !defined(_TRACE_INTERCONNECT_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_INTERCONNECT_H
++
++#include <linux/interconnect.h>
++#include <linux/tracepoint.h>
++
++TRACE_EVENT(icc_set_bw,
++
++	TP_PROTO(struct icc_path *p, struct icc_node *n, int i,
++		 u32 avg_bw, u32 peak_bw),
++
++	TP_ARGS(p, n, i, avg_bw, peak_bw),
++
++	TP_STRUCT__entry(
++		__string(path_name, p->name)
++		__string(dev, dev_name(p->reqs[i].dev))
++		__string(node_name, n->name)
++		__field(u32, avg_bw)
++		__field(u32, peak_bw)
++		__field(u32, node_avg_bw)
++		__field(u32, node_peak_bw)
++	),
++
++	TP_fast_assign(
++		__assign_str(path_name, p->name);
++		__assign_str(dev, dev_name(p->reqs[i].dev));
++		__assign_str(node_name, n->name);
++		__entry->avg_bw = avg_bw;
++		__entry->peak_bw = peak_bw;
++		__entry->node_avg_bw = n->avg_bw;
++		__entry->node_peak_bw = n->peak_bw;
++	),
++
++	TP_printk("path=%s dev=%s node=%s avg_bw=%u peak_bw=%u agg_avg=%u agg_peak=%u",
++		  __get_str(path_name),
++		  __get_str(dev),
++		  __get_str(node_name),
++		  __entry->avg_bw,
++		  __entry->peak_bw,
++		  __entry->node_avg_bw,
++		  __entry->node_peak_bw)
++);
++
++TRACE_EVENT(icc_set_bw_end,
++
++	TP_PROTO(struct icc_path *p, int ret),
++
++	TP_ARGS(p, ret),
++
++	TP_STRUCT__entry(
++		__string(path_name, p->name)
++		__string(dev, dev_name(p->reqs[0].dev))
++		__field(int, ret)
++	),
++
++	TP_fast_assign(
++		__assign_str(path_name, p->name);
++		__assign_str(dev, dev_name(p->reqs[0].dev));
++		__entry->ret = ret;
++	),
++
++	TP_printk("path=%s dev=%s ret=%d",
++		  __get_str(path_name),
++		  __get_str(dev),
++		  __entry->ret)
++);
++
++#endif /* _TRACE_INTERCONNECT_H */
++
++/* This part must be outside protection */
++
++#undef TRACE_INCLUDE_PATH
++#define TRACE_INCLUDE_PATH .
++
++#undef TRACE_INCLUDE_FILE
++#define TRACE_INCLUDE_FILE trace
++
++#include <trace/define_trace.h>
