@@ -2,117 +2,106 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C00C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 05:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CC7C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 05:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8057D2083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 05:29:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579238955;
-	bh=/clOrGLn8OAp1OI6m5X00wsw+u3Jo3xhtsfAEOlmqMY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=myE7Z7JWgAvbyO6bFcbxEBedZmHexlyE9gV3xl0Gbgkd016uRWHCuZ94fZtKifW+h
-	 LRBvboZrYg17u/fGs4gSQdK9Gzo6z9IqtXIr0FqZ/6jgvdHO8SS1p/b1ZNEGTEeDTd
-	 I1iQjppPeV91tlI4oOTlByhkH8gon55F9jwH65lY=
+	by mail.kernel.org (Postfix) with ESMTP id B6FC520661
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 05:30:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DgKVSt/p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbgAQF3O (ORCPT
+        id S1726942AbgAQFat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 00:29:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55668 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725834AbgAQF3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 00:29:14 -0500
-Received: from localhost (unknown [122.182.218.15])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F37342072E;
-        Fri, 17 Jan 2020 05:29:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579238953;
-        bh=/clOrGLn8OAp1OI6m5X00wsw+u3Jo3xhtsfAEOlmqMY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nldw1FKn8NYMiMI0PeNeTNHGuNAZjOY3u9nlRhXuBzjE3j69A/60TQD3j1xoq6P23
-         7Wlj6W/WTPPJoDR4gIKC/1lVunYwMx10NrxFqlT3iSRm7h11X9JptdMf14LSusRiub
-         etVheOkx6KhLwn0tT0jbzMvuHDxdr6eX6QZdPwok=
-Date:   Fri, 17 Jan 2020 10:59:07 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     santosh.shilimkar@oracle.com, Olof Johansson <olof@lixom.net>
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>, soc@kernel.org,
-        arm@kernel.org, linux-arm-kernel@lists.infradead.org,
-        khilman@kernel.org, arnd@arndb.de, linux-kernel@vger.kernel.org
-Subject: Re: [GIT_PULL] SOC: TI Keystone Ring Accelerator driver for v5.6
-Message-ID: <20200117052907.GT2818@vkoul-mobl>
-References: <1579205259-4845-1-git-send-email-santosh.shilimkar@oracle.com>
- <20200117000358.fe7ew4vvnz4yxbzj@localhost>
- <148b6ec3-6a8e-ced8-41b3-3dffd5528ed6@oracle.com>
+        Fri, 17 Jan 2020 00:30:49 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:43786 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725813AbgAQFas (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 00:30:48 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00H5SsBd157673;
+        Fri, 17 Jan 2020 05:30:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
+ bh=aWiEefB1h7tIO6YvK1XsMNLlgppTykwjcM4m1HSnw1I=;
+ b=DgKVSt/pr20CKdnnBYvE1aCz2BMU7Nmny7cEtKsz4ovsgY72aQtktRNGEdgj+2FU3rry
+ +s0kEyLBFG2cSTQ3k7q/7gLGqMQ08HNXgPI6+Vj02Am+dA4VdTKFxnBgXd0HrWpyGgqt
+ Q10GTx+H7rll7S7Qw22UoMq1nGblOqVk1tUkGwKgYKRRDPVjTEbLZz71CL/LhKa/74al
+ ygtyWkXrtx2HbH26kmL/RvCdO+CEU9Hl4+KGOCosqsuPYtDz0sL1qQC1x7WokG1JHAtt
+ 7MI6Vwf5GRodxp3Rm8CZd8vOMfPJEZFCYLI0oMGVR2Yt95T+RAAeWf/UojJkKSH8K+FC ow== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2xf74spkau-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Jan 2020 05:30:17 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00H5TPuk075883;
+        Fri, 17 Jan 2020 05:30:17 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2xk24ec533-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Jan 2020 05:30:17 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00H5UGq1003447;
+        Fri, 17 Jan 2020 05:30:16 GMT
+Received: from kili.mountain (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 16 Jan 2020 21:30:15 -0800
+Date:   Fri, 17 Jan 2020 08:30:07 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH] tracing/boot: Fix an IS_ERR() vs NULL bug
+Message-ID: <20200117053007.5h2juv272pokqhtq@kili.mountain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <148b6ec3-6a8e-ced8-41b3-3dffd5528ed6@oracle.com>
+X-Mailer: git-send-email haha only kidding
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9502 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001170042
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9502 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001170042
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The trace_array_get_by_name() function doesn't return error pointers,
+it returns NULL on error.
 
-Add Peter
+Fixes: 4f712a4d04a4 ("tracing/boot: Add instance node support")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ kernel/trace/trace_boot.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 16-01-20, 21:05, santosh.shilimkar@oracle.com wrote:
-> On 1/16/20 4:03 PM, Olof Johansson wrote:
-> > Hi,
-> > 
-> > On Thu, Jan 16, 2020 at 12:07:39PM -0800, Santosh Shilimkar wrote:
-> > > Its bit late for pull request, but if possible, please pull it to
-> > > soc drivers tree.
-> > > 
-> > > The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
-> > > 
-> > >    Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
-> > > 
-> > > are available in the git repository at:
-> > > 
-> > >    git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git tags/drivers_soc_for_5.6
-> > > 
-> > > for you to fetch changes up to 3277e8aa2504d97e022ecb9777d784ac1a439d36:
-> > > 
-> > >    soc: ti: k3: add navss ringacc driver (2020-01-15 10:07:27 -0800)
-> > > 
-> > > ----------------------------------------------------------------
-> > > SOC: TI Keystone Ring Accelerator driver
-> > > 
-> > > The Ring Accelerator (RINGACC or RA) provides hardware acceleration to
-> > > enable straightforward passing of work between a producer and a consumer.
-> > > There is one RINGACC module per NAVSS on TI AM65x SoCs.
-> > 
-> > This driver doesn't seem to have exported symbols, and no in-kernel
-> > users. So how will it be used?
-> > 
-> > Usually we ask to hold off until the consuming side/drivers are also ready.
-> > 
-> The other patches getting merged via Vinod's tree. The combined series
-> is split into couple of series. Vinod is going to pull this branch
-> and apply rest of the patchset. And then couple of additional consumer
-> drivers will get posted.
-
-Yeah the TI driver series has been reviewed and was 'waiting' for
-dependency to be resolved before I could apply them
-FWIW here is the series under consideration: https://lore.kernel.org/dmaengine/20191223110458.30766-1-peter.ujfalusi@ti.com/
-
-> > Also, is there a reason this is under drivers/soc/ instead of somewhere more
-> > suitable in the drivers subsystem? It's not "soc glue code" in the same way as
-> > drivers/soc was intended originally.
-> > 
-> These kind of SOC IP drivers, we put into drivers/soc/ because of lack
-> of specific subsystem where they fit in. Navigator was also similar example.
-> 
-> Regards,
-> Santosh
-
+diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
+index fa9603dc6469..cd541ac1cbc1 100644
+--- a/kernel/trace/trace_boot.c
++++ b/kernel/trace/trace_boot.c
+@@ -322,7 +322,7 @@ trace_boot_init_instances(struct xbc_node *node)
+ 			continue;
+ 
+ 		tr = trace_array_get_by_name(p);
+-		if (IS_ERR(tr)) {
++		if (!tr) {
+ 			pr_err("Failed to get trace instance %s\n", p);
+ 			continue;
+ 		}
 -- 
-~Vinod
+2.11.0
+
