@@ -2,52 +2,55 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C54ABC33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24BD3C33CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 935342467A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:01:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDE9821582
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:01:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="Bz1vhflT"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="MyI5A+xB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730090AbgAQWBE (ORCPT
+        id S1730066AbgAQWBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 17:01:04 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:38364 "EHLO mail.andi.de1.cc"
+        Fri, 17 Jan 2020 17:01:03 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:38362 "EHLO mail.andi.de1.cc"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729972AbgAQWBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729361AbgAQWBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 17 Jan 2020 17:01:02 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:To:From:Sender:Reply-To:Cc:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=mOA7amCzgZnFtzXH6mRck7K1hhyXvnqJjhfchoHEFK4=; b=Bz1vhflTBMSKPImT96JNn4p0M2
-        vs4LZ9pEqTlwAx74/yyKNgjbDDv7fFkBBj0Qd6VXRRIfGcc451CZMftOZ9I/DK+SdRpeKP87Ye6yK
-        4egqd7X3kO3eBr6R+QMNTq2sL24N8dfN1mjyCvRORvt9KJdZ3+7b5guHOztlO647vYQc=;
+        References:In-Reply-To:Message-Id:Date:Subject:To:From:Sender:Reply-To:Cc:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=txK711xVT2FClEAldfopb3dlqvKdPJUxZlgvaJsxe+I=; b=MyI5A+xB99uOPsjzd6vtiBsWRA
+        2l4waYncLKoooxr/+29thTb+AxHalIbPFcF+Z94UDlqosLT0IoPNOqyq99F4rArHmhTEFxFf7oqoD
+        o3JOICKRS28OLVymCAKetIYThITWrnLas6Jn6pT44KcmziZnN5rjW7IkG1w5/9fGfkUk=;
 Received: from p200300ccff371b001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff37:1b00:1a3d:a2ff:febf:d33a] helo=aktux)
         by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <andreas@kemnade.info>)
-        id 1isZfh-00077D-Gd; Fri, 17 Jan 2020 23:00:53 +0100
+        id 1isZfk-00077b-Vk; Fri, 17 Jan 2020 23:00:57 +0100
 Received: from andi by aktux with local (Exim 4.92)
         (envelope-from <andreas@kemnade.info>)
-        id 1isZfh-0003yT-4F; Fri, 17 Jan 2020 23:00:53 +0100
+        id 1isZfk-0003ya-ML; Fri, 17 Jan 2020 23:00:56 +0100
 From:   Andreas Kemnade <andreas@kemnade.info>
 To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
         pmeerw@pmeerw.net, lee.jones@linaro.org, b.galvani@gmail.com,
         linus.walleij@linaro.org, andreas@kemnade.info,
         linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
         phh@phh.me, stefan@agner.ch, letux-kernel@openphoenux.org
-Subject: [PATCH 0/5] mfd: rn5t618: add ADC support
-Date:   Fri, 17 Jan 2020 22:59:21 +0100
-Message-Id: <20200117215926.15194-1-andreas@kemnade.info>
+Subject: [PATCH 2/5] mfd: rn5t618: add ADC subdevice for RC5T619
+Date:   Fri, 17 Jan 2020 22:59:23 +0100
+Message-Id: <20200117215926.15194-3-andreas@kemnade.info>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200117215926.15194-1-andreas@kemnade.info>
+References: <20200117215926.15194-1-andreas@kemnade.info>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,38 +58,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds support for the ADC in the RN5T618/RC5T619.
-It depends on the IRQ support added in the RTC support series here:
-https://lore.kernel.org/lkml/20191220122416.31881-1-andreas@kemnade.info/
+This adds a subdevice for the ADC in the RC5T619.
 
-First regmap setup has to be fixed because there is a register
-wrongly classified as volatile.
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+---
+ drivers/mfd/rn5t618.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-I tested the driver only with the RC5T619 but it should work with the with 
-the RN5T618 as well based on these facts:
-- The corresponding register definitions originally went into the kernel
-  for the RN5T618
-- Public datasheet sections about the ADC look same.
-- Out-of-tree code for these chips look same regarding to ADC
-
-I marked these untested patches as RFC, and IMHO they require a Tested-By.
-Feel free to ignore them if the whole series would be delayed just because
-of missing Tested-By for those.
-
-Andreas Kemnade (5):
-  mfd: rn5t618: mark ADC control register volatile
-  mfd: rn5t618: add ADC subdevice for RC5T619
-  iio: adc: rn5t618: Add ADC driver for RN5T618/RC5T619
-  mfd: rn5t618: add IRQ definitions for RN5T618
-  mfd: rn5t618: add ADC subdevice for RN5T618
-
- drivers/iio/adc/Kconfig       |  10 ++
- drivers/iio/adc/Makefile      |   1 +
- drivers/iio/adc/rn5t618-adc.c | 266 ++++++++++++++++++++++++++++++++++
- drivers/mfd/rn5t618.c         |  49 ++++++-
- 4 files changed, 324 insertions(+), 2 deletions(-)
- create mode 100644 drivers/iio/adc/rn5t618-adc.c
-
+diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
+index 073de8e0e78b..321836f78120 100644
+--- a/drivers/mfd/rn5t618.c
++++ b/drivers/mfd/rn5t618.c
+@@ -24,6 +24,7 @@ static const struct mfd_cell rn5t618_cells[] = {
+ };
+ 
+ static const struct mfd_cell rc5t619_cells[] = {
++	{ .name = "rn5t618-adc" },
+ 	{ .name = "rn5t618-regulator" },
+ 	{ .name = "rc5t619-rtc" },
+ 	{ .name = "rn5t618-wdt" },
 -- 
 2.20.1
 
