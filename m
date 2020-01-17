@@ -2,142 +2,111 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C25DC33CB7
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A40CEC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E874A2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79A2C2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:46:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579257976;
+	bh=2e9+N0hqL/50u6+X//maOUo2iUMLlVxVXjZBsTZFcCg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=W+fzqJd0MEpKmqtPoOYOFioFEimD4sXd/tcDzPZ2S7Z5TTb//+8XmDCs/n1APMymR
+	 MAzmSOrCRpVOTn4RHO3XMz6MnO+1+sgnJgXvkTGLfi5z0THuyuYEOx7nqpNMo5FaDN
+	 KHGgLPPPAQoX0L8NUNIu7KhMtaaFyutyM6KniyR8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbgAQKoB (ORCPT
+        id S1726903AbgAQKqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 05:44:01 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:42676 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgAQKoA (ORCPT
+        Fri, 17 Jan 2020 05:46:15 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:44420 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbgAQKqP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 05:44:00 -0500
-X-AuditID: c0a8fbf4-199ff70000001fa6-4e-5e218fed4080
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 71.2B.08102.DEF812E5; Fri, 17 Jan 2020 11:43:57 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0439.000; Fri, 17 Jan 2020 11:43:52 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "lee.jones@linaro.org" <lee.jones@linaro.org>
-CC:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "broonie@kernel.org" <broonie@kernel.org>
-Subject: Re: [PATCH v10 08/13] regulator: bd718x7: Split driver to common
- and bd718x7 specific parts
-Thread-Topic: [PATCH v10 08/13] regulator: bd718x7: Split driver to common
- and bd718x7 specific parts
-Thread-Index: AQHVzRntgaf9+M1fgkumSvjxkUTUjqfult4AgAAELYA=
-Date:   Fri, 17 Jan 2020 10:43:52 +0000
-Message-ID: <4bd035fb2c78e96f18006f06c5d8d9d2f1a1b70d.camel@fi.rohmeurope.com>
-References: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
-         <def409ab024717e6cd917c488e62fe04ad66bd52.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
-         <20200117102854.GF15507@dell>
-In-Reply-To: <20200117102854.GF15507@dell>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4E804124311BA34ABBF2DA0AA5EEBD93@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Fri, 17 Jan 2020 05:46:15 -0500
+Received: by mail-lf1-f66.google.com with SMTP id v201so17957652lfa.11;
+        Fri, 17 Jan 2020 02:46:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8jgHsmJwPHMIlC0HcDCT8ZD+TRcaXxlZELNYlF3LKZY=;
+        b=pj0drvNwtZsKmxGu1XWnkVg0SV0yMeEnYeOdHirOL0/qsgDrfMEfbrLRDqNfQG8M2Z
+         rySvklceeBcLvLdtczBvdxRcve4zX0M7WG1NLrG04tcQfwIWMuGewrCB9QW6qpbJkfOn
+         SRyUNc/h9jePw+Wbp7EyDoCludOEGNAbIy/CYlZb2D/SYm/AWtoI/MEaWpRXrGELk6Ow
+         QxEDt01C/rDD2NvvvHSoVweL3pF7xxhdsDAtjgl3/xlb1JWN+YHt4SrbXPHqJC3xVX9C
+         2C8RdhSzTwByO1tk4vudDXHPl+m70bOL/jIn3xxyN8Y7pKctZAm8mpwhDZuVIRsr4w8r
+         RFVg==
+X-Gm-Message-State: APjAAAX0KJekWh6GI3OIRzCHZ+Cl0NN519WXd8WwrM5UCrJYaKJZ3kbp
+        Rdoou/u9zOXjPqhsD+UeD23veozw
+X-Google-Smtp-Source: APXvYqxi/K6htkK284Rv6M81KJynrrAskgHoyO/TVif8r0RPYjT4Zw4f1JU7qDM5J4LbQ3cBAca4gQ==
+X-Received: by 2002:a19:7015:: with SMTP id h21mr4988560lfc.68.1579257973228;
+        Fri, 17 Jan 2020 02:46:13 -0800 (PST)
+Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
+        by smtp.gmail.com with ESMTPSA id t10sm12066002lji.61.2020.01.17.02.46.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2020 02:46:12 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1isP8m-0001ib-2d; Fri, 17 Jan 2020 11:46:12 +0100
+Date:   Fri, 17 Jan 2020 11:46:12 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] USB: serial: garmin_gps: Use flexible-array member
+Message-ID: <20200117104612.GT2301@localhost>
+References: <20200116220327.GA12537@embeddedor.com>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Ta0gUURiGOzOzs8fLxrStebIU3BIpsVrqxyEsggimfkQQEQhqY06upLs2
-        OxvdqDXsplZ2I9p0DVm1zC5u2cXVLpu3tig0tZXUWiqhTc2oLLOymabSPzPfOe95vucMfANJ
-        bR8dATNMIi+YuEw9HUzdOz/qih84Gp284GBRPHa2dqjxgcFyNf5c7KXwKf8bGpc0PFHh/EfX
-        VfhFzVUKv/zSCPBw+0ECn/xRQeCPBb0qfK3kB8DPaotoXNN/GeCmi+00LnveSuCishYKt3pX
-        4B5vI4331Teo8a/OampZGFvlqALsB98+Neuo2snetveoWVflIZrt7qyj2WbfTYI97Rgh2PMX
-        v6rZT66oNcGJIQmpnLh1bUa6af7SDSHGu6PVZHYgatvoYL7KBnKj8kAQRMwi5P+SA/JAMNQy
-        HQBVdnwnlUULQCfuO+g8ACHNJKC8LrUM6BgDcra8peQzJOOE6IS3F8jBVGYTGvOVEsqhdPQx
-        t5ySWR2zGPXf3y2XFBODzuTQ8gkNsxo9LvpGKaoGgJpGzpJyEMTMRaftbpVcAyYSHbIN/mlJ
-        MuHI1fdVpVyaQc66p6RSh6F3r3/93dej+hH/Hy3JzEFXaucr6DLUNtCsUupodDLfr1buMAU9
-        PPOGKgTT7BMM9nHaPoG2T6DtE+hzQFUJUBaXkZnOibxhnsBb5wlmY5b02mjOcgFlYj7fAmOe
-        lR5AQOAB0yGhD9Po6iKTtZNTzWnbjZzFmCJYM3mLByBI6nWansPRyVpNGrd9By+Y/0UzIKUP
-        18T6jyVpGdm1meezeeFfOhNCPdJYCyRwisCn89s2ZWSK4zEBg+TmwRE6C29K4wXOKhpT5PFI
-        sUjzIUehknf2EdlryeaypF0F9QIDLHxXXErC240O6dlQXFZKaimT2cRHhGtsuRLAyIDRavqv
-        C4BwCPRTNZ3yZ4RKP8//bgFJREiiwuVRskjkxqMIG6i9cHZwzY2FPq87zF4dsi4u8ZoYeSHg
-        K4Dltypinw6v3zXpzkCzs+1RR8XA49XXV746/qyl/2d56lhCaNX+obb3k47HxPh3D8VvNVx6
-        Hht35EFcXVP70MNLtl2BHDF+cVe9u6+7JklM3HOg133YuWXJdLdlvadzVQmcJnYPz+rqx3v1
-        lMXIGeaSgoX7DThf9fj5AwAA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200116220327.GA12537@embeddedor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gTGVlLA0KDQpPbiBGcmksIDIwMjAtMDEtMTcgYXQgMTA6MjggKzAwMDAsIExlZSBKb25l
-cyB3cm90ZToNCj4gT24gRnJpLCAxNyBKYW4gMjAyMCwgTWF0dGkgVmFpdHRpbmVuIHdyb3RlOg0K
-PiANCj4gPiBGZXcgUk9ITSBQTUlDcyBhbGxvdyBzZXR0aW5nIHRoZSB2b2x0YWdlIHN0YXRlcyBm
-b3IgZGlmZmVyZW50DQo+ID4gc3lzdGVtIHN0YXRlcw0KPiA+IGxpa2UgUlVOLCBJRExFLCBTVVNQ
-RU5EIGFuZCBMUFNSLiBTdGF0ZXMgYXJlIHRoZW4gY2hhbmdlZCB2aWEgU29DDQo+ID4gc3BlY2lm
-aWMNCj4gPiBtZWNoYW5pc21zLiBiZDcxOHg3IGRyaXZlciBpbXBsZW1lbnRlZCBkZXZpY2UtdHJl
-ZSBwYXJzaW5nDQo+ID4gZnVuY3Rpb25zIGZvcg0KPiA+IHRoZXNlIHN0YXRlIHNwZWNpZmljIHZv
-bHRhZ2VzLiBUaGUgcGFyc2luZyBmdW5jdGlvbnMgY2FuIGJlIHJlLXVzZWQgDQo+ID4gYnkNCj4g
-PiBvdGhlciBST0hNIGNoaXAgZHJpdmVycyBsaWtlIGJkNzE4MjguIFNwbGl0IHRoZSBnZW5lcmlj
-IGZ1bmN0aW9ucw0KPiA+IGZyb20NCj4gPiBiZDcxOHg3LXJlZ3VsYXRvci5jIHRvIHJvaG0tcmVn
-dWxhdG9yLmMgYW5kIGV4cG9ydCB0aGVtIGZvciBvdGhlcg0KPiA+IG1vZHVsZXMNCj4gPiB0byB1
-c2UuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogTWF0dGkgVmFpdHRpbmVuIDxtYXR0aS52YWl0
-dGluZW5AZmkucm9obWV1cm9wZS5jb20+DQo+ID4gQWNrZWQtYnk6IE1hcmsgQnJvd24gPGJyb29u
-aWVAa2VybmVsLm9yZz4NCj4gPiAtLS0NCj4gPiBubyBjaGFuZ2VzIHNpbmNlIHY5DQo+ID4gDQo+
-ID4gIGRyaXZlcnMvcmVndWxhdG9yL0tjb25maWcgICAgICAgICAgICAgfCAgIDQgKw0KPiA+ICBk
-cml2ZXJzL3JlZ3VsYXRvci9NYWtlZmlsZSAgICAgICAgICAgIHwgICAxICsNCj4gPiAgZHJpdmVy
-cy9yZWd1bGF0b3IvYmQ3MTh4Ny1yZWd1bGF0b3IuYyB8IDE4MyArKysrKysrKy0tLS0tLS0tLS0t
-LQ0KPiA+IC0tLS0tLQ0KPiA+ICBkcml2ZXJzL3JlZ3VsYXRvci9yb2htLXJlZ3VsYXRvci5jICAg
-IHwgIDk1ICsrKysrKysrKysrKysNCj4gPiAgaW5jbHVkZS9saW51eC9tZmQvcm9obS1nZW5lcmlj
-LmggICAgICB8ICA2NiArKysrKysrKysrDQo+ID4gIDUgZmlsZXMgY2hhbmdlZCwgMjIxIGluc2Vy
-dGlvbnMoKyksIDEyOCBkZWxldGlvbnMoLSkNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
-cnMvcmVndWxhdG9yL3JvaG0tcmVndWxhdG9yLmMNCj4gDQo+IFsuLi5dDQo+IA0KPiA+IGRpZmYg
-LS1naXQgYS9pbmNsdWRlL2xpbnV4L21mZC9yb2htLWdlbmVyaWMuaA0KPiA+IGIvaW5jbHVkZS9s
-aW51eC9tZmQvcm9obS1nZW5lcmljLmgNCj4gPiBpbmRleCBmZjNkZDc1NzhmZDMuLjZjYzVhMDgx
-OTk1OSAxMDA2NDQNCj4gPiAtLS0gYS9pbmNsdWRlL2xpbnV4L21mZC9yb2htLWdlbmVyaWMuaA0K
-PiA+ICsrKyBiL2luY2x1ZGUvbGludXgvbWZkL3JvaG0tZ2VuZXJpYy5oDQo+ID4gQEAgLTQsNiAr
-NCw5IEBADQo+ID4gICNpZm5kZWYgX19MSU5VWF9NRkRfUk9ITV9IX18NCj4gPiAgI2RlZmluZSBf
-X0xJTlVYX01GRF9ST0hNX0hfXw0KPiA+ICANCj4gPiArI2luY2x1ZGUgPGxpbnV4L3JlZ21hcC5o
-Pg0KPiA+ICsjaW5jbHVkZSA8bGludXgvcmVndWxhdG9yL2RyaXZlci5oPg0KPiA+ICsNCj4gPiAg
-ZW51bSByb2htX2NoaXBfdHlwZSB7DQo+ID4gIAlST0hNX0NISVBfVFlQRV9CRDcxODM3ID0gMCwN
-Cj4gPiAgCVJPSE1fQ0hJUF9UWVBFX0JENzE4NDcsDQo+ID4gQEAgLTE3LDQgKzIwLDY3IEBAIHN0
-cnVjdCByb2htX3JlZ21hcF9kZXYgew0KPiA+ICAJc3RydWN0IHJlZ21hcCAqcmVnbWFwOw0KPiA+
-ICB9Ow0KPiA+ICANCj4gPiArZW51bSB7DQo+ID4gKwlST0hNX0RWU19MRVZFTF9VTktOT1dOLA0K
-PiA+ICsJUk9ITV9EVlNfTEVWRUxfUlVOLA0KPiA+ICsJUk9ITV9EVlNfTEVWRUxfSURMRSwNCj4g
-PiArCVJPSE1fRFZTX0xFVkVMX1NVU1BFTkQsDQo+ID4gKwlST0hNX0RWU19MRVZFTF9MUFNSLA0K
-PiA+ICsjZGVmaW5lIFJPSE1fRFZTX0xFVkVMX01BWCBST0hNX0RWU19MRVZFTF9MUFNSDQo+IA0K
-PiBIYXZlbid0IHNlZW4gdGhpcyBiZWZvcmUuICBJcyBpdCBsZWdpdD8NCj4gDQoNCkkgZG9uJ3Qg
-a25vdyB3aHkgaXQgd291bGRuJ3QgYmUgOikgSSBraW5kIG9mIGdyZXcgdXNlZCB0byB0aGF0IHdo
-ZW4gSQ0Kc3RpbGwgZGlkIHNvbWUgbmV0d29ya2luZyBzdHVmZi4NCg0KSXQgZG9lc24ndCByZWFs
-bHkgbWF0dGVyIGluIHRoaXMgY2FzZSBidXQgZm9yIGV4YW1wbGUgdGhlIG5ldGxpbmsNCmhlYWRl
-cnMgZG86DQoNCmVudW0gew0KICAgZm9vLA0KI2RlZmluZSBmb28gZm9vDQogICBiYXIsDQojZGVm
-aW5lIGJhciBiYXINCi4uLg0KfTsNCg0KaHR0cHM6Ly9lbGl4aXIuYm9vdGxpbi5jb20vbGludXgv
-djUuNS1yYzYvc291cmNlL2luY2x1ZGUvdWFwaS9saW51eC9ydG5ldGxpbmsuaA0KDQpXaGF0IGlz
-IHRoZSBnb29kIGhlcmUgaXMgdGhhdCB0aGlzIGFsbG93cyBvbmUgdG8gbmljZWx5IGV4Y2x1ZGUN
-CnVuc3VwcG9ydGVkIHN0dWZmIHVzaW5nIHByZXByb2Nlc3NvcjoNCg0KI2luY2x1ZGUgPGhlYWRl
-cl93aXRoX29yX3dpdGhvdXRfZm9vX2RlcGVuZG5nX29uX3ZlcnNpb24uaD4NCg0KI2lmZGVmIGZv
-bw0KdXNlX2Zvbyhmb28pOw0KI2VuZGlmDQoNCldoYXQgYWJvdXQ6DQo+IA0KPiAgICAgIFJPSE1f
-RFZTX0xFVkVMX01BWCA9IFJPSE1fRFZTX0xFVkVMX0xQU1INCg0KQW55d2F5cywgSSBkb24ndCBz
-ZWUgd2h5IGRlZmluZSB3b3VsZG4ndCBiZSBPayBoZXJlIC0gYnV0IHN1cmUgaXQgY2FuDQpiZSBj
-aGFuZ2VkIGlmIHlvdSBpbnNpc3QgOykgSnVzdCBsZXQgbWUga25vdyBpZiB5b3UgY2FuIGFjY2Vw
-dCB0aGUNCmRlZmluZSBvciBub3QgOikNCg0KDQo+IA0K
+On Thu, Jan 16, 2020 at 04:03:27PM -0600, Gustavo A. R. Silva wrote:
+> Old code in the kernel uses 1-byte and 0-byte arrays to indicate the
+> presence of a "variable length array":
+> 
+> struct something {
+>     int length;
+>     u8 data[1];
+> };
+> 
+> struct something *instance;
+> 
+> instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
+> instance->length = size;
+> memcpy(instance->data, source, size);
+> 
+> There is also 0-byte arrays. Both cases pose confusion for things like
+> sizeof(), CONFIG_FORTIFY_SOURCE, etc.[1] Instead, the preferred mechanism
+> to declare variable-length types such as the one above is a flexible array
+> member[2] which need to be the last member of a structure and empty-sized:
+> 
+> struct something {
+>         int stuff;
+>         u8 data[];
+> };
+> 
+> Also, by making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> unadvertenly introduced[3] to the codebase from now on.
+> 
+> [1] https://github.com/KSPP/linux/issues/21
+> [2] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+
+Applied, thanks.
+
+Johan
