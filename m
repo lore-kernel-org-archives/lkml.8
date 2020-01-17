@@ -2,60 +2,86 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F5AC33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 03:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71305C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 03:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD65520684
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 03:54:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MSe05zNS"
+	by mail.kernel.org (Postfix) with ESMTP id 4F198206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 03:56:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729814AbgAQDyq (ORCPT
+        id S1729937AbgAQD4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 22:54:46 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:58496 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729037AbgAQDyp (ORCPT
+        Thu, 16 Jan 2020 22:56:19 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40304 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729058AbgAQD4R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 22:54:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=D2eqEc9iWrOC6nuYKXmjMUzCmhTUZW0frYdfgGY7luQ=; b=MSe05zNS4Up8FnibnyD4+SQ7p
-        /4LtR2VOkSRJZ/CtSg8cL/7mon6OmtAuZCyAJKfygQuVyHyFEMUUs4dvPxCnhb7bDisxw2YXkVZmc
-        4cErl3TezYDcnjHCnjcnC74scJJ47mv8t3VbxRLLKE5MOYghoguWk1MuyfnLYK8ZBlKLpW4EX2NJn
-        Z983NEOQm9at8lFsXomOM4qbWWsloDY7kOKSK9MqAxQIgfEuunVka2cpNXUs2HvXxEX1DM+jYD/v2
-        XHJekFPAr/A1JoiVv0FZSGNqz+CyQlzyuIxIQapjfI/XdCGcR/uFZPxQh/3rYRIh7jtwXuYCB1/aQ
-        76mQyRaow==;
-Received: from [2601:1c0:6280:3f0::ed68]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1isIia-00056b-Pd; Fri, 17 Jan 2020 03:54:44 +0000
-Subject: Re: [PATCH] kconfig: fix documentation typos
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-References: <20200113232212.138327-1-helgaas@kernel.org>
- <CAK7LNASYynBVaaGROEjy1PC7+9xatO7gf2LTRGG1UOpiXtzENw@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <26736fee-6e8e-9a05-59c4-6f9d13e31864@infradead.org>
-Date:   Thu, 16 Jan 2020 19:54:43 -0800
+        Thu, 16 Jan 2020 22:56:17 -0500
+Received: by mail-pg1-f193.google.com with SMTP id k25so10986935pgt.7;
+        Thu, 16 Jan 2020 19:56:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=5YnsAEUMA/49O0Bg6SphIKdPVmLp307T2CBQO5Sm5JE=;
+        b=jCdwM3j1T6gggUPOPfQnXt/1sP9P/ICSz+zi3oEdLHN9eLrtg/B26tUMf3PfVsr3Cv
+         FpYKX2lVUI/2nhJb6zb4IyMGXWw5BbNihzBOcEegD9tmrPl0gBZ4WYJrx/zJ2/3h3tQs
+         1Bu9aI+MhIOmE2NSRsb/kbcRMqfLU6u3JiKcCztcMDFBngUd1n+6NAS4pPYqJCFwkext
+         ks/fo7qT8FL9JirH/IE3XA9gYj/3D3iyS9n9DalJDRvPgR6oSefAXlPs6g5Uaw/rQUv+
+         Vd29TgcfXKu9WrPiKoP2n02bCuVwXSirLmIykBcO/gbAREfWZJ3SMxQ/nwu8nQv2W6Og
+         3s7Q==
+X-Gm-Message-State: APjAAAUwYbtYHLDIhIYrCvqQ+oncJZXLLM4lD+gwlRzRnoxnf+kdQDbB
+        bgNAEU/WkxhzmrY9+jlDQm4YXvV3KRQ=
+X-Google-Smtp-Source: APXvYqz64PfPy8wg/l/PHHwUA7aAqcvBVpEV/X0GHpsN859cjZ/xal8eatb790fsjjGPAsyhP6EEdw==
+X-Received: by 2002:a63:ce4b:: with SMTP id r11mr44153716pgi.419.1579233376456;
+        Thu, 16 Jan 2020 19:56:16 -0800 (PST)
+Received: from ?IPv6:2601:647:4000:d7:8dfb:7edd:e01b:b201? ([2601:647:4000:d7:8dfb:7edd:e01b:b201])
+        by smtp.gmail.com with ESMTPSA id x197sm28238945pfc.1.2020.01.16.19.56.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jan 2020 19:56:15 -0800 (PST)
+Subject: Re: [PATCH v2 1/9] scsi: ufs: goto with returned value while failed
+ to add WL
+To:     Bean Huo <huobean@gmail.com>, alim.akhtar@samsung.com,
+        avri.altman@wdc.com, asutoshd@codeaurora.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, stanley.chu@mediatek.com,
+        beanhuo@micron.com, tomas.winkler@intel.com, cang@codeaurora.org
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200116215914.16015-1-huobean@gmail.com>
+ <20200116215914.16015-2-huobean@gmail.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <36285cf0-7d04-f773-b266-2e3a1c9f6527@acm.org>
+Date:   Thu, 16 Jan 2020 19:56:14 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <CAK7LNASYynBVaaGROEjy1PC7+9xatO7gf2LTRGG1UOpiXtzENw@mail.gmail.com>
+In-Reply-To: <20200116215914.16015-2-huobean@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -64,49 +90,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/16/20 6:17 PM, Masahiro Yamada wrote:
-> On Tue, Jan 14, 2020 at 8:22 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->>
->> From: Bjorn Helgaas <bhelgaas@google.com>
->>
->> Fix a couple typos in kconfig-language documentation.
->>
->> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
->> ---
->>  Documentation/kbuild/kconfig-language.rst | 6 +++---
->>  1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/Documentation/kbuild/kconfig-language.rst b/Documentation/kbuild/kconfig-language.rst
->> index 74bef19f69f0..f547720bd82d 100644
->> --- a/Documentation/kbuild/kconfig-language.rst
->> +++ b/Documentation/kbuild/kconfig-language.rst
->> @@ -594,7 +594,7 @@ The two different resolutions for b) can be tested in the sample Kconfig file
->>  Documentation/kbuild/Kconfig.recursion-issue-02.
->>
->>  Below is a list of examples of prior fixes for these types of recursive issues;
->> -all errors appear to involve one or more select's and one or more "depends on".
->> +all errors appear to involve one or more "selects" and one or more "depends on".
+On 2020-01-16 13:59, Bean Huo wrote:
+> From: Bean Huo <beanhuo@micron.com>
 > 
-> 
-> I think "selects" is strange here.
+> This patch is to make goto statement with failure result in case of
+> failure of adding well known LUs.
 
-I thought so when I read it also.
+Please make the subject more clear, e.g. "Fix ufshcd_probe_hba() return
+value in case ufshcd_scsi_add_wlus() fails"
 
-> 
-> "select" is a Kconfig keyword.
-> select's is intentional, I guess.
+Thanks,
 
-Yes, I expect so.
-
-> Keep it as-is, or perhaps change it into "select" (singular) ?
-
-Maybe:
-
- Below is a list of examples of prior fixes for these types of recursive issues;
--all errors appear to involve one or more select's and one or more "depends on".
-+all errors appear to involve one or more "select"s and one or more "depends on".
-
-
--- 
-~Randy
+Bart.
 
