@@ -2,143 +2,200 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A8DC33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E9BC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01E1A206D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D477206D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:03:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HTYltra4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tA4axjUg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729130AbgAQRDQ (ORCPT
+        id S1729138AbgAQRDx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 12:03:16 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:23172 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726596AbgAQRDP (ORCPT
+        Fri, 17 Jan 2020 12:03:53 -0500
+Received: from mail-il1-f169.google.com ([209.85.166.169]:41131 "EHLO
+        mail-il1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726559AbgAQRDx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 12:03:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579280594;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=nUHHx7iXpExrATHGqXLS6oh3FDFfP2BIltk/UE3Vhk0=;
-        b=HTYltra4SC8RDgirC51pRWtM2a49zIFEBvT7Nhe+ZKqny4Z25ZEaubzIMSmo34nnjaBmjU
-        JvpaTmAy2stpQllEDOlB8eJhGeRUSi4yKxEwc0TGMzw18qv0HqGgVE4iW1a8xcW/k7NG3J
-        ajn0yVawRcn9U+fUbjmItTobCgyt2PM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-187-fQ8G1CdXNUyYBZD0B7P4ZQ-1; Fri, 17 Jan 2020 12:03:11 -0500
-X-MC-Unique: fQ8G1CdXNUyYBZD0B7P4ZQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 94596800D41;
-        Fri, 17 Jan 2020 17:03:09 +0000 (UTC)
-Received: from treble (ovpn-123-54.rdu2.redhat.com [10.10.123.54])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E9B2D60BE1;
-        Fri, 17 Jan 2020 17:03:07 +0000 (UTC)
-Date:   Fri, 17 Jan 2020 11:03:05 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     David Sterba <dsterba@suse.cz>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Btrfs <linux-btrfs@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: linux-next: Tree for Dec 6 (objtool, lots in btrfs)
-Message-ID: <20200117170305.qhwub4mf33vuw2y6@treble>
-References: <20191212184725.db3ost7rcopotr5u@treble>
- <b9b0c81b-0ca8-dfb7-958f-cd58a449b6fb@infradead.org>
- <ba2a7a9b-933b-d4e4-8970-85b6c1291fca@infradead.org>
- <20191213235054.6k2lcnwa63r26zwi@treble>
- <c6a33c21-3e71-ac98-cc95-db008764917c@infradead.org>
- <20191214054515.ougsr5ykhl3vvy57@treble>
- <20191217152954.GH3929@suse.cz>
- <20200110194622.GS3929@twin.jikos.cz>
- <20200117152805.ncy3z34imzpchg7m@treble>
- <20200117165019.GM3929@twin.jikos.cz>
+        Fri, 17 Jan 2020 12:03:53 -0500
+Received: by mail-il1-f169.google.com with SMTP id f10so21813166ils.8;
+        Fri, 17 Jan 2020 09:03:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=A9rXKRnJJ1nTCqM8mpLYzm67vNkb+m9EUg6D73cXEmU=;
+        b=tA4axjUgnsgsmjCKcVZVbiOt09ABpav8Mjt5KcCQ94jjqhs/XJW4xzAKPcg/B7x0e9
+         AvNaNOVtQMfN1fyczIKQ3eqCOhRdvNweaFlENmQS6uTYPC+BWXHUknAUgABxWiw9LYMg
+         okwTwOYd4rcxhnVoJ3OeDvkYfYjCL3D5mLB9zHxS6cP2O/5dd6RhXEW6PgxlcenZDq8V
+         +laOIrpnSnRUFY0dqIKVkIrtznKVCM8Dhd1Wl3OwFBm8nZfEKdpvo3G/mYzYBscu2AMq
+         pnMLBxwtKMoCpYnsFEJDJmP5xv6PL14NMMUOPq5D9qnq7LYNAKrRL3PBQr4ZQp9WYo5d
+         T6TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A9rXKRnJJ1nTCqM8mpLYzm67vNkb+m9EUg6D73cXEmU=;
+        b=K9Le3FHmQ1GLt3xgL5YIuGUE8tTyuTTdlpXdMw8tOYSAw1anC6Omv41Jvvz8XbCUyx
+         iBlY4E8JiVT3GQD5sswtMyUetpVjFSqk7OfPng9ZHIW+OAg8BC02bvMcgnIYTvTFCDFV
+         7XicgAu6mGaqkoPPwwwiUGw7ZKrFHd0i77Ej/XzlgtFZ1LgEMBXJvw3BqtDNlRdb7NHA
+         d0W6kKZi/IqjAXPkdiJFc0FUD+xebetfxtcdkrcxnqK46jOHPTTMNAk1Bh7Fz7ac/ZZf
+         6NwgbJ8fkJ7g1o/pKUcSc+bpMZk3hNrAtwxl4HYwgCVULK1uj9CoDB8xkrDGV9jjn67k
+         HJUQ==
+X-Gm-Message-State: APjAAAW072/+9ZPdtJDKq3BoR4tH3mwdEx9kicZAt8FJ/1/gQHkw0NNQ
+        e2GSkQIJ3MN96ZjKoxrF6sRhWpbvdmii59F7ecw=
+X-Google-Smtp-Source: APXvYqwQV7hNXZywjk4J+YZdw3tMMi4shv6RUZ4/q/kCiudIp3pK9F3OHyKe7jjqSR8Q7nSgLn0yU/6CIizPJh5Ehjg=
+X-Received: by 2002:a92:cc42:: with SMTP id t2mr3769738ilq.111.1579280631342;
+ Fri, 17 Jan 2020 09:03:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200117165019.GM3929@twin.jikos.cz>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <CABXGCsNu+nih5nZkuavoYot0eo5pF7quD4JviN+vWctPdmbu=A@mail.gmail.com>
+ <fe3cd3c3d4364ef4bfb14b5ac3fcee1d@realtek.com>
+In-Reply-To: <fe3cd3c3d4364ef4bfb14b5ac3fcee1d@realtek.com>
+From:   Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Date:   Fri, 17 Jan 2020 22:03:40 +0500
+Message-ID: <CABXGCsO6ODRapJgZG-Ot2oHDDyFVHPQAL_r7DESQe6yHSaXgQg@mail.gmail.com>
+Subject: Re: [rtw88] purge skb(s) not reported by firmware
+To:     Tony Chuang <yhchuang@realtek.com>
+Cc:     Linux List Kernel Mailing <linux-wireless@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 05:50:19PM +0100, David Sterba wrote:
-> On Fri, Jan 17, 2020 at 09:28:05AM -0600, Josh Poimboeuf wrote:
-> > On Fri, Jan 10, 2020 at 08:46:22PM +0100, David Sterba wrote:
-> > > On Tue, Dec 17, 2019 at 04:29:54PM +0100, David Sterba wrote:
-> > > > Separating the definitions by #ifdef looks ok, I'd rather do separate
-> > > > definitions of ASSERT too, to avoid the ternary operator. I'll send the
-> > > > patch.
-> > > 
-> > > Subject: [PATCH] btrfs: separate definition of assertion failure handlers
-> > > 
-> > > There's a report where objtool detects unreachable instructions, eg.:
-> > > 
-> > >   fs/btrfs/ctree.o: warning: objtool: btrfs_search_slot()+0x2d4: unreachable instruction
-> > > 
-> > > This seems to be a false positive due to compiler version. The cause is
-> > > in the ASSERT macro implementation that does the conditional check as
-> > > IS_DEFINED(CONFIG_BTRFS_ASSERT) and not an #ifdef.
-> > > 
-> > > To avoid that, use the ifdefs directly.
-> > > 
-> > > CC: Josh Poimboeuf <jpoimboe@redhat.com>
-> > > Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> > > Signed-off-by: David Sterba <dsterba@suse.com>
-> > > ---
-> > >  fs/btrfs/ctree.h | 20 ++++++++++++--------
-> > >  1 file changed, 12 insertions(+), 8 deletions(-)
-> > 
-> > This looks quite similar to my patch, would you mind giving me
-> > attribution?
-> 
-> So Co-developed-by: or "based on patch from Josh", or something else?
+On Mon, 13 Jan 2020 at 12:49, Tony Chuang <yhchuang@realtek.com> wrote:
+>
+> It seems like the firmware is not responsive, and is not reporting TX
+> status or consuming H2C commands.
+> The first trace dump "purge skb(s) not reported by firmware" will be
+> printed when driver timed-out for TX status report. It could happen
+> sometimes when driver turns power off too quickly after de-auth sent.
+> Or firmware just missed it. Originally I was thinking that the TX status
+> missing means that the firmware is not working, but seems it's not
+> true. So I think I might lower the print level (WARN() -> rtw_warn()).
+>
+> But from your kernel log I can see that the h2c commands failed to
+> be sent to firmware, which means there's another things that cause
+> firmware to stall. It will be better if you can turn the debug masks on,
+> and reproduce it, to help me so see what happened.
+> To turn the debug masks on:
+> $ echo 0xffffffff > /sys/module/rtw88/parameters/debug_mask
 
-Co-developed-by would be fine, thanks.
+Yet another catch.
+And it looks like it happened when I switched on/off WiFi in Network
+manager because the network not worked.
 
-> > > diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
-> > > index 569931dd0ce5..f90b82050d2d 100644
-> > > --- a/fs/btrfs/ctree.h
-> > > +++ b/fs/btrfs/ctree.h
-> > > @@ -3157,17 +3157,21 @@ do {								\
-> > >  	rcu_read_unlock();					\
-> > >  } while (0)
-> > >  
-> > > -__cold
-> > > -static inline void assfail(const char *expr, const char *file, int line)
-> > > +#ifdef CONFIG_BTRFS_ASSERT
-> > > +__cold __noreturn
-> > > +static inline void assertfail(const char *expr, const char *file, int line)
-> > >  {
-> > > -	if (IS_ENABLED(CONFIG_BTRFS_ASSERT)) {
-> > > -		pr_err("assertion failed: %s, in %s:%d\n", expr, file, line);
-> > > -		BUG();
-> > > -	}
-> > > +	pr_err("assertion failed: %s, in %s:%d\n", expr, file, line);
-> > > +	BUG();
-> > 
-> > assertfail() is definitely better than "assfail", but shouldn't you
-> > update the callers so it doesn't break the build?
-> 
-> I don't understand what you mean, the helper is not called directly (and
-> build does not fail with or without CONFIG_BTRFS_ASSERT), but always as
-> ASSERT, so I don't see what needs to be updated.
+https://pastebin.com/pYyswtwT
 
-Oops, you're right, I misread the patch.
+[64440.892201] rtw_pci 0000:05:00.0: wrong bfee role
+[64440.892280] wlp5s0: associated
+[66459.825899] rtw_pci 0000:05:00.0: failed to send h2c command
+[68226.924564] rtw_pci 0000:05:00.0: firmware failed to restore hardware setting
+[69219.317785] rtw_pci 0000:05:00.0: firmware failed to restore hardware setting
+[69219.822479] ------------[ cut here ]------------
+[69219.822595] purge skb(s) not reported by firmware
+[69219.822642] WARNING: CPU: 9 PID: 0 at
+drivers/net/wireless/realtek/rtw88/tx.c:155
+rtw_tx_report_purge_timer+0x20/0x50 [rtw88]
+[69219.822648] Modules linked in: ccm uinput rfcomm xt_CHECKSUM
+xt_MASQUERADE xt_conntrack ipt_REJECT nf_nat_tftp nf_conntrack_tftp
+tun bridge stp llc nft_objref nf_conntrack_netbios_ns
+nf_conntrack_broadcast nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib
+nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct
+nf_tables_set nft_chain_nat nf_tables ebtable_nat ebtable_broute
+ip6table_nat ip6table_mangle ip6table_raw ip6table_security
+iptable_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4
+iptable_mangle iptable_raw iptable_security ip_set nfnetlink
+ebtable_filter ebtables ip6table_filter ip6_tables iptable_filter cmac
+bnep sunrpc vfat fat edac_mce_amd snd_hda_codec_realtek kvm_amd
+snd_hda_codec_generic snd_hda_codec_hdmi ledtrig_audio kvm
+snd_hda_intel rtwpci snd_intel_dspcfg irqbypass rtw88 snd_hda_codec
+mac80211 btusb snd_hda_core btrtl btbcm crct10dif_pclmul snd_hwdep
+btintel crc32_pclmul snd_seq snd_seq_device eeepc_wmi bluetooth
+cfg80211 snd_pcm ghash_clmulni_intel joydev
+[69219.822689]  asus_wmi sparse_keymap snd_timer video wmi_bmof
+ecdh_generic snd sp5100_tco ecc k10temp pcspkr rfkill soundcore ccp
+i2c_piix4 libarc4 gpio_amdpt gpio_generic acpi_cpufreq binfmt_misc
+ip_tables xfs libcrc32c amdgpu amd_iommu_v2 gpu_sched ttm
+drm_kms_helper drm igb crc32c_intel dca i2c_algo_bit nvme nvme_core
+wmi pinctrl_amd fuse
+[69219.822716] CPU: 9 PID: 0 Comm: swapper/9 Not tainted
+5.5.0-0.rc6.git2.2.fc32.x86_64 #1
+[69219.822719] Hardware name: System manufacturer System Product
+Name/ROG STRIX X470-I GAMING, BIOS 3004 12/16/2019
+[69219.822727] RIP: 0010:rtw_tx_report_purge_timer+0x20/0x50 [rtw88]
+[69219.822731] Code: 84 00 00 00 00 00 0f 1f 40 00 0f 1f 44 00 00 8b
+47 a8 85 c0 75 01 c3 41 54 55 53 48 89 fb 48 c7 c7 20 6b 40 c1 e8 c0
+18 d5 e8 <0f> 0b 4c 8d a3 50 ff ff ff 4c 89 e7 e8 5f 25 7e e9 48 8d 7b
+98 48
+[69219.822735] RSP: 0018:ffffa5b1c03ace48 EFLAGS: 00010286
+[69219.822738] RAX: 0000000000000000 RBX: ffff8e3b92c57810 RCX: 0000000000000000
+[69219.822741] RDX: ffff8e3bbb5eaf40 RSI: ffff8e3bbb5dc5b8 RDI: 0000000000000300
+[69219.822744] RBP: 0000000000000101 R08: 00003ef47eeff977 R09: 0000000000000000
+[69219.822748] R10: 0000000000000000 R11: 0000000000000000 R12: ffffa5b1c03aced8
+[69219.822751] R13: ffffffffc139a3c0 R14: 00000001041c3868 R15: ffffffffc139a3c0
+[69219.822754] FS:  0000000000000000(0000) GS:ffff8e3bbb400000(0000)
+knlGS:0000000000000000
+[69219.822757] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[69219.822760] CR2: 00000d87813a8160 CR3: 0000000661156000 CR4: 00000000003406e0
+[69219.822763] Call Trace:
+[69219.822767]  <IRQ>
+[69219.822776]  call_timer_fn+0xaf/0x2c0
+[69219.822788]  run_timer_softirq+0x1bf/0x5e0
+[69219.822794]  ? sched_clock_cpu+0xc/0xc0
+[69219.822806]  __do_softirq+0xe1/0x45d
+[69219.822815]  irq_exit+0xf7/0x100
+[69219.822820]  smp_apic_timer_interrupt+0xa4/0x230
+[69219.822825]  apic_timer_interrupt+0xf/0x20
+[69219.822828]  </IRQ>
+[69219.822834] RIP: 0010:cpuidle_enter_state+0xce/0x400
+[69219.822838] Code: 80 7c 24 0f 00 74 17 9c 58 0f 1f 44 00 00 f6 c4
+02 0f 85 0b 03 00 00 31 ff e8 3e 31 8a ff e8 19 c7 91 ff fb 66 0f 1f
+44 00 00 <45> 85 ed 0f 88 5c 02 00 00 49 63 d5 4c 2b 64 24 10 48 8d 04
+52 48
+[69219.822843] RSP: 0018:ffffa5b1c0167e68 EFLAGS: 00000202 ORIG_RAX:
+ffffffffffffff13
+[69219.822847] RAX: ffff8e3bb6503380 RBX: ffff8e3baad93000 RCX: 0000000000000000
+[69219.822850] RDX: ffff8e3bb6503380 RSI: 0000000000000006 RDI: ffff8e3bb6503380
+[69219.822853] RBP: ffffffffab814d60 R08: 00003ef47eed9fb1 R09: 0000000000000000
+[69219.822855] R10: 0000000000000000 R11: 0000000000000000 R12: 00003ef47eed9fb1
+[69219.822858] R13: 0000000000000002 R14: 0000000000000002 R15: ffff8e3bb6503380
+[69219.822871]  ? cpuidle_enter_state+0xc7/0x400
+[69219.822879]  cpuidle_enter+0x29/0x40
+[69219.822884]  do_idle+0x1e9/0x290
+[69219.822892]  cpu_startup_entry+0x19/0x20
+[69219.822896]  start_secondary+0x16e/0x1c0
+[69219.822902]  secondary_startup_64+0xb6/0xc0
+[69219.822915] irq event stamp: 534378571
+[69219.822919] hardirqs last  enabled at (534378570):
+[<ffffffffaa00396b>] trace_hardirqs_on_thunk+0x1a/0x1c
+[69219.822926] hardirqs last disabled at (534378571):
+[<ffffffffaa003987>] trace_hardirqs_off_thunk+0x1a/0x1c
+[69219.822929] softirqs last  enabled at (534378546):
+[<ffffffffaa0f4138>] irq_enter+0x68/0x70
+[69219.822933] softirqs last disabled at (534378547):
+[<ffffffffaa0f4237>] irq_exit+0xf7/0x100
+[69219.822936] ---[ end trace dc2e3f2642bd6283 ]---
+[69220.006376] rtw_pci 0000:05:00.0: timed out to flush queue 2
+[69220.006634] rtw_pci 0000:05:00.0: sta 50:ff:20:04:c8:dc with macid 0 left
+[69222.707299] rtw_pci 0000:05:00.0: stop vif 80:c5:f2:74:cd:51 on port 0
+[69226.866078] rtw_pci 0000:05:00.0: start vif 7e:f2:b4:c5:77:d2 on port 0
+[69229.508705] rtw_pci 0000:05:00.0: stop vif 7e:f2:b4:c5:77:d2 on port 0
+[69229.965361] rtw_pci 0000:05:00.0: start vif 80:c5:f2:74:cd:51 on port 0
+[69232.596582] wlp5s0: authenticate with 50:ff:20:04:c8:dc
+[69232.596610] wlp5s0: capabilities/regulatory prevented using AP
+HT/VHT configuration, downgraded
+[69233.038518] wlp5s0: send auth to 50:ff:20:04:c8:dc (try 1/3)
+[69233.103760] wlp5s0: authenticate with 50:ff:20:04:c8:dc
+[69233.103810] wlp5s0: send auth to 50:ff:20:04:c8:dc (try 1/3)
 
--- 
-Josh
 
+--
+Best Regards,
+Mike Gavrilov.
