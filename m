@@ -2,101 +2,103 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5D2C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 715DFC33CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32A2C20684
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45560214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:22:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ec1g249k"
+	dkim=pass (2048-bit key) header.d=osandov-com.20150623.gappssmtp.com header.i=@osandov-com.20150623.gappssmtp.com header.b="DZers6f/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729138AbgAQQVe (ORCPT
+        id S1729240AbgAQQWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 11:21:34 -0500
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:59724 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727043AbgAQQVe (ORCPT
+        Fri, 17 Jan 2020 11:22:04 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33866 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729151AbgAQQWE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 11:21:34 -0500
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 00HGLMAf012801
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jan 2020 01:21:23 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 00HGLMAf012801
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1579278083;
-        bh=TeeWya+TG9Xy0gXdSPIQIspK/bwebir0dZTvUEpgOjM=;
-        h=From:Date:Subject:To:Cc:From;
-        b=ec1g249kdc0PQhw3ujyJ1T+jDGiYuST9J9aKBsRSpDerNwnFzShEX/DHHg40+8Gz1
-         cEnkEzA7jps6tAfyPZemBP0LSIdcI2wHDo0IVBcXPNaFcCd5Ogu2i6C0taogbjPH51
-         de3XLaA49zyPFoj1VixoTDhf2zxyj68HiaoIwxMU7KEzwKKiSfG7bKrR95a4dz+Nbi
-         9E0v7Y3E0PC3fv1nB995RCpVyij50nduOIzNDnn3nSf7BNVY0sHCd/5Fa+c4FBq0Iq
-         /Fkg/EH0YLjyl9PROpToKkUfAEcI/gR7CLvEh200EkJHZaGLCrAO2YOE0RYZ8ydKuw
-         Occ+WDCiRR5eA==
-X-Nifty-SrcIP: [209.85.217.48]
-Received: by mail-vs1-f48.google.com with SMTP id g15so15179053vsf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 08:21:23 -0800 (PST)
-X-Gm-Message-State: APjAAAXImPpq0H7vnKvgVojHHXtc6UDH791bEbIh9zLOmvDhP5rd7aUA
-        1UJbO1VnxY+guBKLwu2Tb6YNUkYQ8PGrzbAsEUQ=
-X-Google-Smtp-Source: APXvYqy5BIDYBDfunLSR9P1Boe13pWwbJ1agFjiJyemKtIJCKx+EHk7ILLhM1Y9qkDkJakd14A6OxFbWNB+6Yz7m5jA=
-X-Received: by 2002:a05:6102:2334:: with SMTP id b20mr5253722vsa.155.1579278081911;
- Fri, 17 Jan 2020 08:21:21 -0800 (PST)
+        Fri, 17 Jan 2020 11:22:04 -0500
+Received: by mail-pf1-f193.google.com with SMTP id i6so12177680pfc.1
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 08:22:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=osandov-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=B/QRDv8e8iQEqDNCGkiiDK4fWPlSZEWb6aUg/XWFLNs=;
+        b=DZers6f/bW85HgG9w6xwZ2W7ctE6cirUkp9BOXc4wzAQLJ8hbclatauI3Jbj0CHoK3
+         raCk5YguGXY7ntXQRwWygDUTHFX/ZCxFHtLg4MqKOtAOzrmkgYDKukHBZdsdmmARTe9Z
+         fnLvAzVpSyJ56zmYkFOTG/DAmSwYrs/z+jBQ1/D2HMxFlX1/xxY0ZLvqOLtGkZa+yjv2
+         JKxSQ/w95eNIT6dgTUPizuLLgOKUIoJJnsLDEbahCyq0yKkwKH2o00mJJYXQ+FJr72DS
+         G9izbKZMiUcKxaJ7+RA2zelE0AAv5k9TLUCWR8l0KG815UdhT9gTDuB7xezO08fHmJwl
+         YLLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=B/QRDv8e8iQEqDNCGkiiDK4fWPlSZEWb6aUg/XWFLNs=;
+        b=PIdAzfSza5dXldAb5Mmdq/s+sbA+vm6EYBMxqZLPV4ntitMYo2MBjYA44rSIqkFfcc
+         8iZhTbGF9cNP/ulwCDRoD4yw184hGIecytdfdsQt84aLo1s5aUM2IV55dRzvG4uPQdib
+         GLiJ+p2tQduOEgKmY2tS+97b5OGyXTWIGbuEMHbpOfPrw91EO1gQ4TCIK5Ps1ubInvk+
+         /sxi8hJpOJZ9tpgogqmDgcPiF796jQK3ETU4mNRK6ocs5jAmwom459wgyz9XWDnqWX0E
+         V98JCZY8iI0kSDgA6ksjTafF/Am++ixqj7GajWwuYQjaLVvah4DnYdc3udv+E0homvY8
+         1Cpw==
+X-Gm-Message-State: APjAAAUToknL+onsBBqJNQwSO7Ip7YjFOysKPToO0hNsEedgD2c3cHhJ
+        g/P0T9XQmWGuYf3/H1PwQA9dFA==
+X-Google-Smtp-Source: APXvYqwcs87BORO66K1Fb2Q4UZMx1Tbzz2nRXGK4re5uWiRJWWTgWw8OWfntW6QesxVSMp+PIgbbIQ==
+X-Received: by 2002:a63:d00f:: with SMTP id z15mr45867227pgf.143.1579278123365;
+        Fri, 17 Jan 2020 08:22:03 -0800 (PST)
+Received: from vader ([2601:602:8b80:8e0:e6a7:a0ff:fe0b:c9a8])
+        by smtp.gmail.com with ESMTPSA id b128sm28618425pga.43.2020.01.17.08.22.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2020 08:22:02 -0800 (PST)
+Date:   Fri, 17 Jan 2020 08:22:01 -0800
+From:   Omar Sandoval <osandov@osandov.com>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Colin Walters <walters@verbum.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Theodore Ts'o <tytso@mit.edu>, adilger.kernel@dilger.ca,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Chris Mason <clm@fb.com>, josef@toxicpanda.com,
+        dsterba@suse.com, linux-ext4 <linux-ext4@vger.kernel.org>,
+        xfs <linux-xfs@vger.kernel.org>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Making linkat() able to overwrite the target
+Message-ID: <20200117162201.GA282012@vader>
+References: <2397bb4a-2ca2-4b44-8c79-64efba9aa04d@www.fastmail.com>
+ <20200114170250.GA8904@ZenIV.linux.org.uk>
+ <3326.1579019665@warthog.procyon.org.uk>
+ <9351.1579025170@warthog.procyon.org.uk>
+ <359591.1579261375@warthog.procyon.org.uk>
 MIME-Version: 1.0
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 18 Jan 2020 01:20:46 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASEaiFia8NKZN8++-9RfGXOPKSFuCkdukBk9Jy7+nHecQ@mail.gmail.com>
-Message-ID: <CAK7LNASEaiFia8NKZN8++-9RfGXOPKSFuCkdukBk9Jy7+nHecQ@mail.gmail.com>
-Subject: [GIT PULL] arm64: dts: uniphier: UniPhier DT updates for v5.6
-To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <359591.1579261375@warthog.procyon.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd, Olof,
+On Fri, Jan 17, 2020 at 11:42:55AM +0000, David Howells wrote:
+> Hi Omar,
+> 
+> Do you still have your AT_REPLACE patches?  You said that you'd post a v4
+> series, though I don't see it.  I could make use of such a feature in
+> cachefiles inside the kernel.  For my original question, see:
+> 
+> 	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=fscache-iter
+> 
+> And do you have ext4 support for it?
 
-Here are UniPhier DT (64bit) updates for the v5.6 merge window.
-Please pull!
+Hi,
 
+Yes I still have those patches lying around and I'd be happy to dust
+them off and resend them. I don't have ext4 support. I'd be willing to
+take a stab at ext4 once Al is happy with the VFS part unless someone
+more familiar with ext4 wants to contribute that support.
 
-
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
-
-  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-uniphier.git
-tags/uniphier-dt64-v5.6
-
-for you to fetch changes up to e98d5023fe1f062bb549354a2428d930775fd67e:
-
-  arm64: dts: uniphier: add reset-names to NAND controller node
-(2020-01-18 00:56:18 +0900)
-
-----------------------------------------------------------------
-UniPhier ARM64 SoC DT updates for v5.6
-
-- Add reset-names to NAND controller node
-
-----------------------------------------------------------------
-Masahiro Yamada (1):
-      arm64: dts: uniphier: add reset-names to NAND controller node
-
- arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi | 3 ++-
- arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 3 ++-
- arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi | 3 ++-
- 3 files changed, 6 insertions(+), 3 deletions(-)
-
-
--- 
-Best Regards
-Masahiro Yamada
+Thanks for reviving interesting in this!
