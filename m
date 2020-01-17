@@ -2,273 +2,165 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29880C33CB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A42C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF9C220730
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7716220730
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:45:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XZSlbFNH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729015AbgAQJoy (ORCPT
+        id S1729142AbgAQJpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 04:44:54 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46477 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbgAQJox (ORCPT
+        Fri, 17 Jan 2020 04:45:05 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42436 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727580AbgAQJpD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 04:44:53 -0500
-Received: by mail-lf1-f65.google.com with SMTP id f15so17824292lfl.13;
-        Fri, 17 Jan 2020 01:44:51 -0800 (PST)
+        Fri, 17 Jan 2020 04:45:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579254302;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5e60O70yf6Qomf9+YnDTvYmEipGiMR/O0K5ZenifWPA=;
+        b=XZSlbFNH/GC/G6PWXEom+Cxcif0+Bjxhs32baK6z1sVgpRPcuR/dsjEi01AwndIFPX1/mF
+        sYit0WikFWmoyuidX1Dsvqp7KHEOgLpBEaqFCFIs0PaPguSHW850ztRyI8BM3rGsEUL4EA
+        j/XOWxDGhWu+Q6IwZ4I+T85NzF66T2s=
+Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
+ [209.85.208.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-3-WJG6E3V_PL2CoB1h1zFGmw-1; Fri, 17 Jan 2020 04:44:55 -0500
+X-MC-Unique: WJG6E3V_PL2CoB1h1zFGmw-1
+Received: by mail-lj1-f200.google.com with SMTP id r14so6011720ljc.18
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 01:44:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=99ZtqX1Uu/dRFujV+nE2kCO8rxV/7AKg5X0Vce9bHGo=;
-        b=IJuyhWWa4VKOIse7zY//cwogukg++W4g33wz/BOVXqKs9PrDgcAK7ZtGWgaJpXLYSY
-         2dL8c7wWGDmxbunlTuIIpX/irEn9PCQbg8bfpoHRK4BjbyHj8xXY8FE5lqj5CHEdi9SH
-         PUs87SO78x9j3p02ds61/h0xW+ozJwUfJHAAhS1ydscXJE0iUp0Ufou2oDSxp1ScgcDK
-         QhM81P3RqcJ8ea1vgrgPFZgF0ZR+5bbkMgPMTf8xtrON5RiQxoHt5UQ8WcJ1aarlRlOw
-         pxaYLhkjpB4P/N5c1GErqebsC62+bzyhg6zjgXXc3/Am6UzoBCf8iOzJeC/3NnWD9zDi
-         YwlA==
-X-Gm-Message-State: APjAAAVSbY7/uLTyWJEG69WRmEGJsJOei+bIfjj2WIa+Be7GFx0Xj+W9
-        w0g9oZURNmGwIRrK5DJIa9M=
-X-Google-Smtp-Source: APXvYqzEerwdHySXtkb2iXVMfOiAB5TCBDbSIAASYAhPIJ8I+0kUhXrmz1VWJT/C+kGqvU3BM81Z6w==
-X-Received: by 2002:ac2:599c:: with SMTP id w28mr4908038lfn.78.1579254290547;
-        Fri, 17 Jan 2020 01:44:50 -0800 (PST)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id w9sm12027578ljh.106.2020.01.17.01.44.48
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=5e60O70yf6Qomf9+YnDTvYmEipGiMR/O0K5ZenifWPA=;
+        b=tRlaTsjbfsFh0rQJ9qOxkofInTPJu4JlPaInzGm3/7ljATKbV6kefb0/2iUJAXGYoZ
+         Ky4p35ZZQrWmsqaOzl+QBbPdUhkY8z8o5Gya80aENtSMuld1wCbk5YZsiWX/Jk4IkX++
+         U2vlN7xmjm177TwJkoBZGhdq5z0mzIaah6hYSzGTZkdeNFLzVbJoqT9IZ2jrUca8HXYU
+         r4ipDJJfiEYqoLCQDK4zQlyHCAewyF/wO52PWWpfmtBB1VfvtbpE90nuTXYqf6IVW0X2
+         hN7p/gyWmbEVBOoqjNz5lhXkeoJ/O0BJsypMZ5FEJJyve5SyC4LBZYumtXWEZ39E9bqv
+         Hnvw==
+X-Gm-Message-State: APjAAAXfv5QOgnq8ypfpNDRz4SzD8DAUFUilAd0l3GBJHxOYhRIN+l76
+        +JpzsuBCkMDXPZMhw6H46VD342rLPVDmPd8O3chwpssAPda8Sj04iK9lcCfdkxTgJXjrnhmU/Sg
+        PvEDAZSjFlBTf4aoAr6wvS49x
+X-Received: by 2002:a2e:87ca:: with SMTP id v10mr5158817ljj.253.1579254294381;
+        Fri, 17 Jan 2020 01:44:54 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzvJCbTokiDeykif3nZ+JYIt3dpb4/7pPi4mp5CGEDLhLfyUkqDcuLiiQDfc6OvVTnHL7h8pg==
+X-Received: by 2002:a2e:87ca:: with SMTP id v10mr5158794ljj.253.1579254294206;
+        Fri, 17 Jan 2020 01:44:54 -0800 (PST)
+Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
+        by smtp.gmail.com with ESMTPSA id z13sm12089623ljh.21.2020.01.17.01.44.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 01:44:50 -0800 (PST)
-Date:   Fri, 17 Jan 2020 11:44:38 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Fri, 17 Jan 2020 01:44:53 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id E29BD1804D6; Fri, 17 Jan 2020 10:44:52 +0100 (CET)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: [PATCH v10 13/13] led: bd71828: Support LED outputs on ROHM BD71828
- PMIC
-Message-ID: <be25c96fa6020c5a36ed56f37f9783919e3b8f16.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-rdma@vger.kernel.org,
+        "open list\:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH bpf-next v3 02/11] tools/bpf/runqslower: Fix override option for VMLINUX_BTF
+In-Reply-To: <CAEf4Bzbz47nFh4tPBn2PTi3+YiYpMDxymgf36P=ZjbuBPoCrZg@mail.gmail.com>
+References: <157918093154.1357254.7616059374996162336.stgit@toke.dk> <157918093389.1357254.10041649215380772130.stgit@toke.dk> <CAEf4Bzbz47nFh4tPBn2PTi3+YiYpMDxymgf36P=ZjbuBPoCrZg@mail.gmail.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Fri, 17 Jan 2020 10:44:52 +0100
+Message-ID: <87wo9qquwb.fsf@toke.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ROHM BD71828 power management IC has two LED outputs for charge status
-and button pressing indications. The LED outputs can also be forced
-by SW so add driver allowing to use these LEDs for other indications
-as well.
+Andrii Nakryiko <andrii.nakryiko@gmail.com> writes:
 
-Leds are controlled by SW using 'Force ON' bits. Please note the
-constrains mentioned in data-sheet:
-    1. If one LED is forced ON - then also the other LED is forced.
-            => You can't use SW control to force ON one LED and allow HW
-               to control the other.
-    2. You can't force both LEDs OFF. If the FORCE bit for both LED's is
-       zero, then LEDs are controlled by HW and indicate button/charger
-       states as explained in data-sheet.
+> On Thu, Jan 16, 2020 at 5:23 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@re=
+dhat.com> wrote:
+>>
+>> From: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
+>>
+>> The runqslower tool refuses to build without a file to read vmlinux BTF
+>> from. The build fails with an error message to override the location by
+>> setting the VMLINUX_BTF variable if autodetection fails. However, the
+>> Makefile doesn't actually work with that override - the error message is
+>> still emitted.
+>>
+>> Fix this by including the value of VMLINUX_BTF in the expansion, and only
+>> emitting the error message if the *result* is empty. Also permit running
+>> 'make clean' even though no VMLINUX_BTF is set.
+>>
+>> Fixes: 9c01546d26d2 ("tools/bpf: Add runqslower tool to tools/bpf")
+>> Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
+>> ---
+>>  tools/bpf/runqslower/Makefile |   18 ++++++++++--------
+>>  1 file changed, 10 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/tools/bpf/runqslower/Makefile b/tools/bpf/runqslower/Makefi=
+le
+>> index cff2fbcd29a8..89fb7cd30f1a 100644
+>> --- a/tools/bpf/runqslower/Makefile
+>> +++ b/tools/bpf/runqslower/Makefile
+>> @@ -10,12 +10,14 @@ CFLAGS :=3D -g -Wall
+>>
+>>  # Try to detect best kernel BTF source
+>>  KERNEL_REL :=3D $(shell uname -r)
+>> -ifneq ("$(wildcard /sys/kernel/btf/vmlinux)","")
+>> -VMLINUX_BTF :=3D /sys/kernel/btf/vmlinux
+>> -else ifneq ("$(wildcard /boot/vmlinux-$(KERNEL_REL))","")
+>> -VMLINUX_BTF :=3D /boot/vmlinux-$(KERNEL_REL)
+>> -else
+>> -$(error "Can't detect kernel BTF, use VMLINUX_BTF to specify it explici=
+tly")
+>> +VMLINUX_BTF_PATHS :=3D $(VMLINUX_BTF) /sys/kernel/btf/vmlinux /boot/vml=
+inux-$(KERNEL_REL)
+>> +VMLINUX_BTF_PATH :=3D $(firstword $(wildcard $(VMLINUX_BTF_PATHS)))
+>
+> If user specifies VMLINUX_BTF pointing to non-existing file, but the
+> system has /sys/kernel/btf/vmlinux, the latter will still be used,
+> which is a very surprising behavior.
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
-no changes since v9
+Hmm, yeah, good point.
 
- drivers/leds/Kconfig        |  10 +++
- drivers/leds/Makefile       |   1 +
- drivers/leds/leds-bd71828.c | 118 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 129 insertions(+)
- create mode 100644 drivers/leds/leds-bd71828.c
+> Also MAKECMDGOALS feels like a fragile hack to me. How about we move
+> this VMLINUX_BTF guessing (without $(error)) into vmlinux.h rule
+> itself and use shell if conditional after it to check for file
+> existance and print nice error. That way we'll be checking VMLINUX_BTF
+> only when it's really needed.
 
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index 4b68520ac251..db408e03e296 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -545,6 +545,16 @@ config LEDS_BD2802
- 	  This option enables support for BD2802GU RGB LED driver chips
- 	  accessed via the I2C bus.
- 
-+config LEDS_BD71828
-+	tristate "LED driver for LEDS on ROHM BD71828 PMIC"
-+	depends on LEDS_CLASS
-+	depends on MFD_ROHM_BD71828
-+	help
-+	  This option enables support for LED outputs located on ROHM
-+	  BD71828 power management IC. ROHM BD71828 has two led output pins
-+	  which can be left to indicate HW states or controlled by SW. Say
-+	  yes here if you want to enable SW control for these LEDs.
-+
- config LEDS_INTEL_SS4200
- 	tristate "LED driver for Intel NAS SS4200 series"
- 	depends on LEDS_CLASS
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index 2da39e896ce8..a5164acfaf51 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -15,6 +15,7 @@ obj-$(CONFIG_LEDS_AN30259A)		+= leds-an30259a.o
- obj-$(CONFIG_LEDS_BCM6328)		+= leds-bcm6328.o
- obj-$(CONFIG_LEDS_BCM6358)		+= leds-bcm6358.o
- obj-$(CONFIG_LEDS_BD2802)		+= leds-bd2802.o
-+obj-$(CONFIG_LEDS_BD71828)		+= leds-bd71828.o
- obj-$(CONFIG_LEDS_CPCAP)		+= leds-cpcap.o
- obj-$(CONFIG_LEDS_LOCOMO)		+= leds-locomo.o
- obj-$(CONFIG_LEDS_LM3530)		+= leds-lm3530.o
-diff --git a/drivers/leds/leds-bd71828.c b/drivers/leds/leds-bd71828.c
-new file mode 100644
-index 000000000000..a02c2ac4a70b
---- /dev/null
-+++ b/drivers/leds/leds-bd71828.c
-@@ -0,0 +1,118 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+// Copyright (C) 2019 ROHM Semiconductors
-+
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/kernel.h>
-+#include <linux/leds.h>
-+#include <linux/mfd/rohm-bd71828.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+
-+#define BD71828_LED_TO_DATA(l) ((l)->id == ID_GREEN_LED ? \
-+	container_of((l), struct bd71828_leds, green) : \
-+	container_of((l), struct bd71828_leds, amber))
-+
-+/* Names for led identification - these match the data sheet names */
-+enum {
-+	ID_GREEN_LED,
-+	ID_AMBER_LED,
-+	ID_NMBR_OF,
-+};
-+
-+struct bd71828_led {
-+	struct led_init_data init_data;
-+	int id;
-+	struct led_classdev l;
-+	u8 force_mask;
-+};
-+
-+struct bd71828_leds {
-+	struct rohm_regmap_dev *bd71828;
-+	struct bd71828_led green;
-+	struct bd71828_led amber;
-+};
-+
-+static int bd71828_led_brightness_set(struct led_classdev *led_cdev,
-+				      enum led_brightness value)
-+{
-+	struct bd71828_led *l = container_of(led_cdev, struct bd71828_led, l);
-+	struct bd71828_leds *data;
-+	unsigned int val = BD71828_LED_OFF;
-+
-+	data = BD71828_LED_TO_DATA(l);
-+	if (value != LED_OFF)
-+		val = BD71828_LED_ON;
-+
-+	return regmap_update_bits(data->bd71828->regmap, BD71828_REG_LED_CTRL,
-+			    l->force_mask, val);
-+}
-+
-+static int bd71828_led_probe(struct platform_device *pdev)
-+{
-+	struct rohm_regmap_dev *bd71828;
-+	struct bd71828_leds *l;
-+	struct bd71828_led *g, *a;
-+	int ret;
-+
-+	bd71828 = dev_get_drvdata(pdev->dev.parent);
-+	l = devm_kzalloc(&pdev->dev, sizeof(*l), GFP_KERNEL);
-+	if (!l)
-+		return -ENOMEM;
-+	l->bd71828 = bd71828;
-+	a = &l->amber;
-+	g = &l->green;
-+
-+	/* Fill in details for 'AMBLED' */
-+	a->init_data.match_property.name = "rohm,led-compatible";
-+	a->init_data.match_property.raw_val = "bd71828-ambled";
-+	a->init_data.match_property.size = strlen("bd71828-ambled");
-+	a->id = ID_AMBER_LED;
-+	a->force_mask = BD71828_MASK_LED_AMBER;
-+
-+	/* Fill in details for 'GRNLED' */
-+	g->init_data.match_property.name = "rohm,led-compatible";
-+	g->init_data.match_property.raw_val = "bd71828-grnled";
-+	g->init_data.match_property.size = strlen("bd71828-grnled");
-+	g->id = ID_GREEN_LED;
-+	g->force_mask = BD71828_MASK_LED_GREEN;
-+
-+	a->l.brightness_set_blocking = bd71828_led_brightness_set;
-+	g->l.brightness_set_blocking = bd71828_led_brightness_set;
-+
-+	ret = devm_led_classdev_register_ext(&pdev->dev, &g->l, &g->init_data);
-+	if (ret)
-+		return ret;
-+
-+	return devm_led_classdev_register_ext(&pdev->dev, &a->l, &a->init_data);
-+}
-+
-+/*
-+ * Device is instantiated through parent MFD device and device matching is done
-+ * through platform_device_id.
-+ *
-+ * However, the *module* matching will be done trough DT aliases. This requires
-+ * of_device_id table - but no .of_match_table as *device* matching is still
-+ * done through platform_device_id.
-+ */
-+static const struct of_device_id bd71828_dt_match[] __used = {
-+	{ .compatible = "rohm,bd71828-leds" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, bd71828_dt_match);
-+
-+static struct platform_driver bd71828_led_driver = {
-+	.driver = {
-+		.name  = "bd71828-led",
-+	},
-+	.probe  = bd71828_led_probe,
-+};
-+
-+module_platform_driver(bd71828_led_driver);
-+
-+MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
-+MODULE_DESCRIPTION("ROHM BD71828 LED driver");
-+MODULE_LICENSE("GPL");
--- 
-2.21.0
+OK, sure, can do.
 
+-Toke
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
