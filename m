@@ -2,191 +2,161 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E69A8C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2939C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5B5720730
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:37:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vs5R2hhw"
+	by mail.kernel.org (Postfix) with ESMTP id D40E520730
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:37:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbgAQJhm (ORCPT
+        id S1728978AbgAQJhq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 04:37:42 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46696 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgAQJhm (ORCPT
+        Fri, 17 Jan 2020 04:37:46 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:33160 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727162AbgAQJho (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 04:37:42 -0500
-Received: by mail-pf1-f193.google.com with SMTP id n9so11669741pff.13
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 01:37:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=QA3liVZQ//A8v0S8gslClqjh5Qy88hxNQ2Z93K52ofg=;
-        b=vs5R2hhwKO56EZKTxJZ5z0B18rX5CF/+KxhBFMGO4SJt8OdMwZ5ykw+ezhdfR4nDfq
-         DxvVcHVIhvEWOmWtzZkS/Hqfl+9Wthba8RgOKCDsjtdaBCySD4N0tMtho22a+3YIXTB6
-         B1vV29o/GYIBpXxdayIK/bot6FhJFJ1quM3w/sA2sWfktLsoUXDeQX/sFRA4OOLm/TlK
-         /vRbVTiTUnsUUzFjvxrmgXuvqAOjCHonzvjxWAFMiF0Dzf2fmARMOlhTyXXVNAGJQVn+
-         5Q/BOy+nvcDlWxXwIpqI8pZBjlGv0BvJgdw+/OAT09SraxZ0Ogn28wnB97xXgVXkgKfa
-         5VGQ==
+        Fri, 17 Jan 2020 04:37:44 -0500
+Received: by mail-ed1-f68.google.com with SMTP id r21so21674238edq.0;
+        Fri, 17 Jan 2020 01:37:42 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=QA3liVZQ//A8v0S8gslClqjh5Qy88hxNQ2Z93K52ofg=;
-        b=rV22EnHy3Bv9CUGkbYzJiAn+vEf3HwXZpxjginpZdgdmA/q79dLo9Et3uUzeVA0eW+
-         tOeFtpB2CQPkpjLQsK9o0Uze5DfUWIPu55oEZ8EvyMYFwpEZxXZSpMq5WWJftWirSo55
-         v3eqSmW5PV9lzQNX0NiCsBtL/CH7sH13/c1ZQE84j7lidjkjBNcEdA9H7ZWnIjC3s2MF
-         mLXczEqVAcME6n3rmxNwRhx2c+hPKlJiNY8DrRz3DhGJcLQ1HqvSCd5bt8aW7kav2npB
-         W36B+8WxYRUDpHDXOLnM8JJZ735qDFt+vCke1ZyL+hsaZ083F4fekIGtLpAvo8goClMT
-         yFgQ==
-X-Gm-Message-State: APjAAAU1C3U3jdDKTzHIIcPpHmdb3vcnFYJjwHJSwg9KR6Nl4Gx4PtSd
-        H3xhg1NwJmc23+RDvGTwHFr0IaOksrc=
-X-Google-Smtp-Source: APXvYqwz3HekrbkmdtcEbR1VmpXsc0SwALfwaNRL0wyMGU2wkWobLlXrFQo7CpzHaSoY4qb9QPl5gQ==
-X-Received: by 2002:a63:1106:: with SMTP id g6mr43863751pgl.13.1579253512065;
-        Fri, 17 Jan 2020 01:31:52 -0800 (PST)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id w187sm29499070pfw.62.2020.01.17.01.31.51
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=c+wXb2cJErE61GOTeyodMvD+n3txh4GhuXDIAPrZGcI=;
+        b=S1v1KcJpxQ0hP+6IoIcLxVXcwGFD8/xhd3oGOxgyosateVXcJN5BeLwnBzTljv/Pj4
+         yvRZ+sFAgNWcfdMTY+9+dO+A8jLW5cMPPTXh2dsNzAzVcLewsHyjMh5H+siaXRsMWDtp
+         Wq+pAflEoSpoRB5/84/BlCiZFJxu7jECEllDsZbHcRMiyMhlW6IGrWCDdBKr3q1eAVgV
+         ExwBlSz8UJr/FOXV4piK3CUSBeey31limYUmR2cB/pgB3R/M+H3TcNAH7g4qU/2OyGt8
+         5t4t/GQHnzYUHDgvLWB0TcvlATI69eZZ6gTK7vtIVbpVkz7siG9hv965UoScGjU2XJxd
+         uAjg==
+X-Gm-Message-State: APjAAAVv2ir67XNu7jSRVfgQnESmz+/xLHXsb640LsBYKV3patqr7ZiH
+        15hvsnxHkTZM0dr67sHiDUueS2sX
+X-Google-Smtp-Source: APXvYqyQ0TQRX4itTVTmgpItDhRHub6JcjOgxB9gqqoEOimbj2vpgJOFCqHRW5vVfO10NgiYVksfuQ==
+X-Received: by 2002:a2e:8804:: with SMTP id x4mr5180236ljh.187.1579253479262;
+        Fri, 17 Jan 2020 01:31:19 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id r9sm13656820lfc.72.2020.01.17.01.31.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 01:31:51 -0800 (PST)
-Date:   Fri, 17 Jan 2020 01:31:50 -0800 (PST)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Michal Hocko <mhocko@kernel.org>
-cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Wei Yang <richardw.yang@linux.intel.com>, hannes@cmpxchg.org,
-        vdavydov.dev@gmail.com, akpm@linux-foundation.org,
-        kirill.shutemov@linux.intel.com, yang.shi@linux.alibaba.com,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, alexander.duyck@gmail.com,
-        stable@vger.kernel.org
-Subject: Re: [Patch v3] mm: thp: grab the lock before manipulation defer
- list
-In-Reply-To: <20200117091002.GM19428@dhcp22.suse.cz>
-Message-ID: <alpine.DEB.2.21.2001170125350.20618@chino.kir.corp.google.com>
-References: <20200116013100.7679-1-richardw.yang@linux.intel.com> <0bb34c4a-97c7-0b3c-cf43-8af6cf9c4396@virtuozzo.com> <alpine.DEB.2.21.2001161357240.109233@chino.kir.corp.google.com> <20200117091002.GM19428@dhcp22.suse.cz>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 17 Jan 2020 01:31:18 -0800 (PST)
+Date:   Fri, 17 Jan 2020 11:31:05 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: [PATCH v10 01/13] dt-bindings: leds: ROHM BD71282 PMIC LED driver
+Message-ID: <35bf147cc3077ceda9689655e5a23dad8098dbb2.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jan 2020, Michal Hocko wrote:
+Document ROHM BD71828 PMIC LED driver device tree bindings.
 
-> On Thu 16-01-20 14:01:59, David Rientjes wrote:
-> > On Thu, 16 Jan 2020, Kirill Tkhai wrote:
-> > 
-> > > > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> > > > index c5b5f74cfd4d..6450bbe394e2 100644
-> > > > --- a/mm/memcontrol.c
-> > > > +++ b/mm/memcontrol.c
-> > > > @@ -5360,10 +5360,12 @@ static int mem_cgroup_move_account(struct page *page,
-> > > >  	}
-> > > >  
-> > > >  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> > > > -	if (compound && !list_empty(page_deferred_list(page))) {
-> > > > +	if (compound) {
-> > > >  		spin_lock(&from->deferred_split_queue.split_queue_lock);
-> > > > -		list_del_init(page_deferred_list(page));
-> > > > -		from->deferred_split_queue.split_queue_len--;
-> > > > +		if (!list_empty(page_deferred_list(page))) {
-> > > > +			list_del_init(page_deferred_list(page));
-> > > > +			from->deferred_split_queue.split_queue_len--;
-> > > > +		}
-> > > >  		spin_unlock(&from->deferred_split_queue.split_queue_lock);
-> > > >  	}
-> > > >  #endif
-> > > > @@ -5377,11 +5379,13 @@ static int mem_cgroup_move_account(struct page *page,
-> > > >  	page->mem_cgroup = to;
-> > > >  
-> > > >  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> > > > -	if (compound && list_empty(page_deferred_list(page))) {
-> > > > +	if (compound) {
-> > > >  		spin_lock(&to->deferred_split_queue.split_queue_lock);
-> > > > -		list_add_tail(page_deferred_list(page),
-> > > > -			      &to->deferred_split_queue.split_queue);
-> > > > -		to->deferred_split_queue.split_queue_len++;
-> > > > +		if (list_empty(page_deferred_list(page))) {
-> > > > +			list_add_tail(page_deferred_list(page),
-> > > > +				      &to->deferred_split_queue.split_queue);
-> > > > +			to->deferred_split_queue.split_queue_len++;
-> > > > +		}
-> > > >  		spin_unlock(&to->deferred_split_queue.split_queue_lock);
-> > > >  	}
-> > > >  #endif
-> > > 
-> > > The patch looks OK for me. But there is another question. I forget, why we unconditionally
-> > > add a page with empty deferred list to deferred_split_queue. Shouldn't we also check that
-> > > it was initially in the list? Something like:
-> > > 
-> > > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> > > index d4394ae4e5be..0be0136adaa6 100644
-> > > --- a/mm/memcontrol.c
-> > > +++ b/mm/memcontrol.c
-> > > @@ -5289,6 +5289,7 @@ static int mem_cgroup_move_account(struct page *page,
-> > >  	struct pglist_data *pgdat;
-> > >  	unsigned long flags;
-> > >  	unsigned int nr_pages = compound ? hpage_nr_pages(page) : 1;
-> > > +	bool split = false;
-> > >  	int ret;
-> > >  	bool anon;
-> > >  
-> > > @@ -5346,6 +5347,7 @@ static int mem_cgroup_move_account(struct page *page,
-> > >  		if (!list_empty(page_deferred_list(page))) {
-> > >  			list_del_init(page_deferred_list(page));
-> > >  			from->deferred_split_queue.split_queue_len--;
-> > > +			split = true;
-> > >  		}
-> > >  		spin_unlock(&from->deferred_split_queue.split_queue_lock);
-> > >  	}
-> > > @@ -5360,7 +5362,7 @@ static int mem_cgroup_move_account(struct page *page,
-> > >  	page->mem_cgroup = to;
-> > >  
-> > >  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> > > -	if (compound) {
-> > > +	if (compound && split) {
-> > >  		spin_lock(&to->deferred_split_queue.split_queue_lock);
-> > >  		if (list_empty(page_deferred_list(page))) {
-> > >  			list_add_tail(page_deferred_list(page),
-> > > 
-> > 
-> > I think that's a good point, especially considering that the current code 
-> > appears to unconditionally place any compound page on the deferred split 
-> > queue of the destination memcg.  The correct list that it should appear 
-> > on, I believe, depends on whether the pmd has been split for the process 
-> > being moved: note the MC_TARGET_PAGE caveat in 
-> > mem_cgroup_move_charge_pte_range() that does not move the charge for 
-> > compound pages with split pmds.  So when mem_cgroup_move_account() is 
-> > called with compound == true, we're moving the charge of the entire 
-> > compound page: why would it appear on that memcg's deferred split queue?
-> 
-> I believe Kirill asked how do we know that the page should be actually
-> added to the deferred list just from the list_empty check. In other
-> words what if the page hasn't been split at all?
-> 
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+---
+no changes since v9
 
-Right, and I don't think that it necessarily is and the second 
-conditional in Wei's patch will always succeed unless we have raced.  That 
-patch is for a lock concern but I think Kirill's question has uncovered 
-something more interesting.
+ .../bindings/leds/rohm,bd71828-leds.yaml      | 52 +++++++++++++++++++
+ 1 file changed, 52 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/rohm,bd71828-leds.yaml
 
-Kirill S would definitely be best to answer Kirill T's question, but from 
-my understanding when mem_cgroup_move_account() is called with 
-compound == true that we always have an intact pmd (we never migrate 
-partial page charges for pages on the deferred split queue with the 
-current charge migration implementation) and thus the underlying page is 
-not eligible to be split and shouldn't be on the deferred split queue.
+diff --git a/Documentation/devicetree/bindings/leds/rohm,bd71828-leds.yaml b/Documentation/devicetree/bindings/leds/rohm,bd71828-leds.yaml
+new file mode 100644
+index 000000000000..b50f4bcc98f1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/rohm,bd71828-leds.yaml
+@@ -0,0 +1,52 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/leds/rohm,bd71828-leds.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ROHM BD71828 Power Management Integrated Circuit LED driver
++
++maintainers:
++  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
++
++description: |
++  This module is part of the ROHM BD71828 MFD device. For more details
++  see Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml.
++
++  The LED controller is represented as a sub-node of the PMIC node on the device
++  tree.
++
++  The device has two LED outputs referred as GRNLED and AMBLED in data-sheet.
++
++select: false
++
++properties:
++  compatible:
++    const: rohm,bd71828-leds
++
++patternProperties:
++  "^led-[1-2]$":
++    type: object
++    description:
++      Properties for a single LED.
++    properties:
++      #allOf:
++        #- $ref: "common.yaml#"
++      rohm,led-compatible:
++        description: LED identification string
++        allOf:
++          - $ref: "/schemas/types.yaml#/definitions/string"
++          - enum:
++            - bd71828-ambled
++            - bd71828-grnled
++      function:
++        description:
++          Purpose of LED as defined in dt-bindings/leds/common.h
++        $ref: "/schemas/types.yaml#/definitions/string"
++      color:
++        description:
++          LED colour as defined in dt-bindings/leds/common.h
++        $ref: "/schemas/types.yaml#/definitions/uint32"
++
++required:
++  - compatible
+-- 
+2.21.0
 
-In other words, a page being on the deferred split queue for a memcg 
-should only happen when it is charged to that memcg.  (This wasn't the 
-case when we only had per-node split queues.)  I think that's currently 
-broken in mem_cgroup_move_account() before Wei's patch.
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
