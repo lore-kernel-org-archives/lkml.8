@@ -2,115 +2,104 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC8EC33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC805C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 227812073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:33:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wa4/IqEf"
+	by mail.kernel.org (Postfix) with ESMTP id A3D932073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:33:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579260838;
+	bh=bkN7VjEkNSAq/nHwddwONb1PDmkFA9AYVNerP16qYmI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Y73ZY1/DwfANK8vrBroJjUbRFgdRp/SkXcceJ53P7srZ3e3/YYJk9yqdO9RZXsqZy
+	 16ssUfzOvrB1e3iv06K5gWmrD3PiABS2MBm9+jDy7xHaWET/L77Dp2/5OmLmMh7QnI
+	 ZlB8r55A0r25PN5b4G4wh/X1klA9h0PL9aCYvL7w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbgAQLdx (ORCPT
+        id S1727519AbgAQLd5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 06:33:53 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43526 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726885AbgAQLdw (ORCPT
+        Fri, 17 Jan 2020 06:33:57 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53369 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726371AbgAQLd4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 06:33:52 -0500
-Received: by mail-wr1-f68.google.com with SMTP id d16so22373441wre.10
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 03:33:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=HlGSqRPWCcpTVOvm2y/4qtBvBsg/45YDsT7XOrDxWQM=;
-        b=wa4/IqEfc6rA+A/P5fHdkezc4l0JT2FKB0L8O2eIS8GE75THnOPZY1efa7QMDwReoT
-         vQTSUimHGiira0WvCAsM9xAFumAjav8oSbE6ynre1ZUIhbMYZPjAKN73HxW9/V7ujGxj
-         p09HveO7MV5D2braT3bzrQkaDFCxkYT9oHVm933uCoSdV3ogA9miGjx+geK/7hsroHUy
-         ilTkQs1o36Mxs6PgZVX1sL0c6mQY8xf+kLlR3+kiomjPAFrl6eZ1GGl15YIXvkjLk2ck
-         z2RRWzaFarWf6iWxahIrJ9ABra2dOuzC0cSG+y7BBpy4MjHw0ENqLaHTuBNWG4FVHUS8
-         3Njw==
+        Fri, 17 Jan 2020 06:33:56 -0500
+Received: by mail-wm1-f68.google.com with SMTP id m24so7087217wmc.3
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 03:33:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=HlGSqRPWCcpTVOvm2y/4qtBvBsg/45YDsT7XOrDxWQM=;
-        b=iIUEsPdPGj3RSuBSsn8xsp0iA6+ofQgCJ0KGBz6J8kKbj7dn4Q+NMTZCri1rVqRqtI
-         XWtGszP4l+ZZ3tP/vRv27u1owOxqpEVeFCbNv2DyGK22E8HXxpjxFjZDjj+vnA4oHsTx
-         V880Jum66f5WSVBN3ZMBsgpqPdYmZyD5kbCUoC0wCSJsk4V/+RJ9MFKg1oTzj2MiOf0F
-         i+92XWM9Yw3T5a1ZrT18MhiEXtWZRyjdNH8sEwFx6i9+nglOt2MgIikIvGi8rEPyC81+
-         I48idVexIjwOPaYAcocbzTyLQK8de3psFxXr0nCFaJel6Wqomc2+eAlyKme2ajrfXSAV
-         F5MQ==
-X-Gm-Message-State: APjAAAWFdlsT8b/WgHXZIQGnG7MlSbE7mk+APCNMLCU9xXC7Ww+3g6fC
-        arIa7ZOWAW+h8AHZffeCthItZg==
-X-Google-Smtp-Source: APXvYqxWFzmFtAaZqwXcheoxbrUKo9fL18irV27YAg6aTrSXgtUWJp16xEvIUZeWzLPnBLgypfOWqQ==
-X-Received: by 2002:adf:ef03:: with SMTP id e3mr2544858wro.216.1579260830707;
-        Fri, 17 Jan 2020 03:33:50 -0800 (PST)
-Received: from dell ([2.27.35.221])
-        by smtp.gmail.com with ESMTPSA id u14sm33018273wrm.51.2020.01.17.03.33.49
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pS6tGirNA5l2St8BRcYo+tvzqyq6o10cg8yYZAWBJ5A=;
+        b=R4WBC+VlWYvqC6axq3f652mGllQUkBGx/sHGU8GcbsnRmab9wZJRNhElFlhv3vw/c4
+         3liEsKxX+b5K3Zhvne+Xm8xeuRB31Gcou4rxtAexnqdnXjLcriN3HnqS7vcvDmeip/cE
+         qGzBTYSBnCfgk6zK5x4JJkq2gaM8Foa1LUa20XQZLjffSI2TFYZaYgfkHBQLSGaplqRt
+         CcQSf0FI+45dXBvchsVJHmMngoSdXqQBvjB4UzH9b549l+7k9+GKqfYG7ytZd37fSYx7
+         Li1/WnCVYOb6+8j/mJvYcH+/GGQiJ6OwOhdfpGkPOi5Pgm/XFEmWb8E5wFMsYTyavLSL
+         NFUw==
+X-Gm-Message-State: APjAAAWWy8/SLYyb0BzPliitm0lorbwgytMv3GBK5MgrRMpvWlUGKexm
+        uloNP1K3yKnyH5choUtbjHo=
+X-Google-Smtp-Source: APXvYqxYYwk3Ieuhh1JlXLR3/Y6vU+ft9LXH9FfnZA5oIVuyDDQ22H4//+d0cssKHwtPEfLC9wp91g==
+X-Received: by 2002:a05:600c:228f:: with SMTP id 15mr4294224wmf.56.1579260834716;
+        Fri, 17 Jan 2020 03:33:54 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id t12sm33450532wrs.96.2020.01.17.03.33.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 03:33:50 -0800 (PST)
-Date:   Fri, 17 Jan 2020 11:34:04 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Prashant Malani <pmalani@chromium.org>
-Cc:     enric.balletbo@collabora.com, groeck@chromium.org,
-        bleung@chromium.org, sre@kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v6 2/3] mfd: cros_ec: Add cros-usbpd-notify subdevice
-Message-ID: <20200117113404.GI15507@dell>
-References: <20200114232219.93171-1-pmalani@chromium.org>
- <20200114232219.93171-2-pmalani@chromium.org>
+        Fri, 17 Jan 2020 03:33:54 -0800 (PST)
+Date:   Fri, 17 Jan 2020 12:33:53 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Leonardo Bras <leonardo@linux.ibm.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Allison Randal <allison@lohutok.net>,
+        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        lantianyu1986@gmail.com, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH RFC v1] mm: is_mem_section_removable() overhaul
+Message-ID: <20200117113353.GT19428@dhcp22.suse.cz>
+References: <20200117105759.27905-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200114232219.93171-2-pmalani@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200117105759.27905-1-david@redhat.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 Jan 2020, Prashant Malani wrote:
+On Fri 17-01-20 11:57:59, David Hildenbrand wrote:
+> Let's refactor that code. We want to check if we can offline memory
+> blocks. Add a new function is_mem_section_offlineable() for that and
+> make it call is_mem_section_offlineable() for each contained section.
+> Within is_mem_section_offlineable(), add some more sanity checks and
+> directly bail out if the section contains holes or if it spans multiple
+> zones.
 
-> Add the cros-usbpd-notify driver as a subdevice on platforms that
-> support the EC_FEATURE_USB_PD EC feature flag and don't have the
-> ACPI PD notification device defined.
-> 
-> This driver allows other cros-ec devices to receive PD event
-> notifications from the Chrome OS Embedded Controller (EC) via a
-> notification chain.
-> 
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> ---
-> 
-> Changes in v6:
-> - No changes.
-> 
-> Changes in v5:
-> - Updated the IS_ENABLED() check to check for CONFIG_OF instead of
->   !CONFIG_ACPI according to upstream comments.
-> 
-> Changes in v4:
-> - Removed #ifndef usage; instead, moved cros-usbpd-notify to a separate
->   mfd_cell and used an IS_ENABLED() check.
-> - Changed commit title and description slightly to reflect change in
->   code.
->  drivers/mfd/cros_ec_dev.c | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
+I didn't read the patch (yet) but I am wondering. If we want to touch
+this code, can we simply always return true there? I mean whoever
+depends on this check is racy and the failure can happen even after
+the sysfs says good to go, right? The check is essentially as expensive
+as calling the offlining code itself. So the only usecase I can think of
+is a dumb driver to crawl over blocks and check which is removable and
+try to hotremove it. But just trying to offline one block after another
+is essentially going to achieve the same.
 
-Applied, thanks.
-
+Or does anybody see any reasonable usecase that would break if we did
+that unconditional behavior?
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Michal Hocko
+SUSE Labs
