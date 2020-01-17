@@ -2,136 +2,140 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D933AC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DC5C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B05292082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:29:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xb7jsAG4"
+	by mail.kernel.org (Postfix) with ESMTP id 5833B2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:37:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728778AbgAQK3t (ORCPT
+        id S1727029AbgAQKh0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 05:29:49 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46722 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726956AbgAQK3t (ORCPT
+        Fri, 17 Jan 2020 05:37:26 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55540 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726890AbgAQKh0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 05:29:49 -0500
-Received: by mail-wr1-f66.google.com with SMTP id z7so22115187wrl.13
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 02:29:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=DOIA++XmF6OyZ+xJ0lY66rXDIlkVTtzTfAaf0LOOQ1o=;
-        b=Xb7jsAG4oxcPA6iqvvPHBejNoZD3ixcE1P7FFfAWMOFCYOecir8AoZxadglct5QZzz
-         +kYIkbIdbrLP+kbIoh4Jmded4VwWeRIJUti3YFU99iBNV2kFsk8vqTmfBtF62LtkXcQL
-         /AlK2k6GG1W6LNcGZB0aDRL2bgjv6GLc72xXScbAk+WwiUe813irDjP7P1IIcEiZVVGO
-         lntkdPynhRqUjeelMlTt3QeLMf5hV/3RN9LgmC364p0qgCbqS8u8JKhAHeXK32EbDCcq
-         wSG0tep/eGptdF43TSgp3Z9kpenvo5ZHoqxYI9rkTKyA8ONccfFtZo899CCEiZhXh50j
-         ZbYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=DOIA++XmF6OyZ+xJ0lY66rXDIlkVTtzTfAaf0LOOQ1o=;
-        b=tePmKBnNYVsD2OkMBDMyGGQdPOKPhXYA1uyv5yjpJ/QXCyLBmudGnuye6gseoiUsCP
-         tHM+VXRvjEWjEmxPFKz+RFS223220TV2reAm0tNdh/KpXsZ7iOkFXtnkH443niZz/fk7
-         UpvFH2BATU4UVht+0Zuubnj199ZLHiVosK3oCm/kDWHe7H9sP43rOFI282/bmh7JPvLG
-         VF68vN4akHrb2GznxZuy21HyVsPNLW2+WjT/rvHeL92hz8k4AV9P7nCECxVuJG3u1B21
-         ib3PsrrTN8LDo8tRia9b9rfI+UtXb0KrM3Mb+zZ5Ln4/0y/VkehYE337T0TW7ZcGF0yb
-         oqVA==
-X-Gm-Message-State: APjAAAUU9Ik19yB6YeeV704qNHiWvT2ijf5zbm/VPayTXwyZp3dHufYj
-        k8ttICzvn2CVEkWGHZ+BbFPn9w==
-X-Google-Smtp-Source: APXvYqyysOghdjks2ZZq2mPn4v8bkghYktQBOMyUrmyJQgRrwylds4oDKajBTuXW95Oob9msRS+enA==
-X-Received: by 2002:adf:f288:: with SMTP id k8mr2385882wro.301.1579256987204;
-        Fri, 17 Jan 2020 02:29:47 -0800 (PST)
-Received: from dell ([2.27.35.221])
-        by smtp.gmail.com with ESMTPSA id k13sm33250982wrx.59.2020.01.17.02.29.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 02:29:46 -0800 (PST)
-Date:   Fri, 17 Jan 2020 10:30:00 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v10 00/13] Support ROHM BD71828 PMIC
-Message-ID: <20200117103000.GG15507@dell>
-References: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
+        Fri, 17 Jan 2020 05:37:26 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1isP0A-0006Hj-2v; Fri, 17 Jan 2020 11:37:18 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id AC0651C19DA;
+        Fri, 17 Jan 2020 11:37:17 +0100 (CET)
+Date:   Fri, 17 Jan 2020 10:37:17 -0000
+From:   "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/urgent] perf/x86/intel/uncore: Remove PCIe3 unit for SNR
+Cc:     Kan Liang <kan.liang@linux.intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200116200210.18937-2-kan.liang@linux.intel.com>
+References: <20200116200210.18937-2-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <157925743741.396.664173780038702154.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jan 2020, Matti Vaittinen wrote:
+The following commit has been merged into the perf/urgent branch of tip:
 
-> Patch series introducing support for ROHM BD71828 PMIC
-> 
-> ROHM BD71828 is a power management IC containing 7 bucks and 7 LDOs. All
-> regulators can be controlled individually via I2C. Bucks 1,2,6 and
-> 7 can also be assigned to a "regulator group" controlled by run-levels.
-> Eg. Run level specific voltages and enable/disable statuses for each of
-> these bucks can be set via register interface. The buck run-level group
-> assignment (selection if buck is to be controlled individually or via
-> run-levels) can be changed at run-time via I2C.
-> 
-> This patch series brings only the basic support for controlling
-> regulators individually via I2C.
-> 
-> In addition to the bucks and LDOs there are:
-> 
-> - The usual clk gate
-> - 4 IO pins (mostly usable as GPO or tied to specific purpose)
-> - power button support
-> - RTC
-> - two LEDs
-> - battery charger
-> - HALL sensor input
-> 
-> This patch series adds support to regulators, clk, RTC, GPIOs and LEDs.
-> 
-> Power-supply driver for charger is not included in this series.
-> 
-> The series also adds LED DT-node lookup based on node name or given
-> property name/value pair in LED core. It also adds generic default-state
-> and default-trigger property handling to LED core. Follow-up patches
-> simplifying few other LED drivers should follow.
-> 
-> Changelog v10:
->   - Split RTC patch to a BD70528 fix (which hopefully goes to 5.4) and to
->     BD71828 support
+Commit-ID:     2167f1625c2f04a33145f325db0de285630f7bd1
+Gitweb:        https://git.kernel.org/tip/2167f1625c2f04a33145f325db0de285630f7bd1
+Author:        Kan Liang <kan.liang@linux.intel.com>
+AuthorDate:    Thu, 16 Jan 2020 12:02:10 -08:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Fri, 17 Jan 2020 11:33:38 +01:00
 
-Still missing LED Acks.
+perf/x86/intel/uncore: Remove PCIe3 unit for SNR
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+The PCIe Root Port driver for CPU Complex PCIe Root Ports are not
+loaded on SNR.
+
+The device ID for SNR PCIe3 unit is used by both uncore driver and the
+PCIe Root Port driver. If uncore driver is loaded, the PCIe Root Port
+driver never be probed.
+
+Remove the PCIe3 unit for SNR for now. The support for PCIe3 unit will
+be added later separately.
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lkml.kernel.org/r/20200116200210.18937-2-kan.liang@linux.intel.com
+---
+ arch/x86/events/intel/uncore_snbep.c | 24 ------------------------
+ 1 file changed, 24 deletions(-)
+
+diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+index 0116448..ad20220 100644
+--- a/arch/x86/events/intel/uncore_snbep.c
++++ b/arch/x86/events/intel/uncore_snbep.c
+@@ -369,11 +369,6 @@
+ #define SNR_M2M_PCI_PMON_BOX_CTL		0x438
+ #define SNR_M2M_PCI_PMON_UMASK_EXT		0xff
+ 
+-/* SNR PCIE3 */
+-#define SNR_PCIE3_PCI_PMON_CTL0			0x508
+-#define SNR_PCIE3_PCI_PMON_CTR0			0x4e8
+-#define SNR_PCIE3_PCI_PMON_BOX_CTL		0x4e4
+-
+ /* SNR IMC */
+ #define SNR_IMC_MMIO_PMON_FIXED_CTL		0x54
+ #define SNR_IMC_MMIO_PMON_FIXED_CTR		0x38
+@@ -4328,27 +4323,12 @@ static struct intel_uncore_type snr_uncore_m2m = {
+ 	.format_group	= &snr_m2m_uncore_format_group,
+ };
+ 
+-static struct intel_uncore_type snr_uncore_pcie3 = {
+-	.name		= "pcie3",
+-	.num_counters	= 4,
+-	.num_boxes	= 1,
+-	.perf_ctr_bits	= 48,
+-	.perf_ctr	= SNR_PCIE3_PCI_PMON_CTR0,
+-	.event_ctl	= SNR_PCIE3_PCI_PMON_CTL0,
+-	.event_mask	= SNBEP_PMON_RAW_EVENT_MASK,
+-	.box_ctl	= SNR_PCIE3_PCI_PMON_BOX_CTL,
+-	.ops		= &ivbep_uncore_pci_ops,
+-	.format_group	= &ivbep_uncore_format_group,
+-};
+-
+ enum {
+ 	SNR_PCI_UNCORE_M2M,
+-	SNR_PCI_UNCORE_PCIE3,
+ };
+ 
+ static struct intel_uncore_type *snr_pci_uncores[] = {
+ 	[SNR_PCI_UNCORE_M2M]		= &snr_uncore_m2m,
+-	[SNR_PCI_UNCORE_PCIE3]		= &snr_uncore_pcie3,
+ 	NULL,
+ };
+ 
+@@ -4357,10 +4337,6 @@ static const struct pci_device_id snr_uncore_pci_ids[] = {
+ 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x344a),
+ 		.driver_data = UNCORE_PCI_DEV_FULL_DATA(12, 0, SNR_PCI_UNCORE_M2M, 0),
+ 	},
+-	{ /* PCIe3 */
+-		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x334a),
+-		.driver_data = UNCORE_PCI_DEV_FULL_DATA(4, 0, SNR_PCI_UNCORE_PCIE3, 0),
+-	},
+ 	{ /* end: all zeroes */ }
+ };
+ 
