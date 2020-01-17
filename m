@@ -2,97 +2,146 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93264C33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5EAEC33CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 615F82082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:42:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579286573;
-	bh=CR8E6lRLBE6fE2cORjU/dqghNqr4V3/7DeaKyioujBg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SsgriOzHBnyD1GQPfTyN+KuyWyHvE2EpNtSYl0GgD7IpFv2xrnnexE3AyqZLLWl1U
-	 DodQuB6D4pGb4uIeekXlRqbaSQGHZNAcKrR9z+R8fEvz4mzbMnMhJce8dm5oD9Eb0F
-	 Xa0XDu/Axe8JAhsQzU/MU4PIwHyR2+HXsddH+aws=
+	by mail.kernel.org (Postfix) with ESMTP id BAE2A2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:43:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729130AbgAQSmw (ORCPT
+        id S1729308AbgAQSng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 13:42:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34590 "EHLO mail.kernel.org"
+        Fri, 17 Jan 2020 13:43:36 -0500
+Received: from mga12.intel.com ([192.55.52.136]:35316 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726603AbgAQSmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 13:42:52 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 151A02072B;
-        Fri, 17 Jan 2020 18:42:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579286571;
-        bh=CR8E6lRLBE6fE2cORjU/dqghNqr4V3/7DeaKyioujBg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wMBkHaU7nTUa9rSxSaYqB1xdjCgYNYdIGQr3eOYpgC0BC164j13Xdd9Oj6Cvw2VbC
-         CWbWP2Nq64c3XMw2xZ8ux6EwbKSyBQkXR2s1gx8vwdot3oh5v1tC2T3ZJNHomPGT+J
-         2+9ThHvcSsNigUnMp2N+KXtEnea9wVu0ofIrxmI0=
-Date:   Fri, 17 Jan 2020 19:42:49 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     roman.sudarikov@linux.intel.com, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        eranian@google.com, bgregg@netflix.com, kan.liang@linux.intel.com,
-        alexander.antonov@intel.com
-Subject: Re: [PATCH v4 2/2] perf =?iso-8859-1?Q?x86?=
- =?iso-8859-1?Q?=3A_Exposing_an_Uncore_unit_to_PMON_for_Intel_Xeon?=
- =?iso-8859-1?Q?=AE?= server platform
-Message-ID: <20200117184249.GB1969121@kroah.com>
-References: <20200117133759.5729-1-roman.sudarikov@linux.intel.com>
- <20200117133759.5729-3-roman.sudarikov@linux.intel.com>
- <20200117141944.GC1856891@kroah.com>
- <20200117162357.GK302770@tassilo.jf.intel.com>
- <20200117165406.GA1937954@kroah.com>
- <20200117172726.GM302770@tassilo.jf.intel.com>
+        id S1726897AbgAQSnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 13:43:35 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 10:43:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,331,1574150400"; 
+   d="scan'208";a="257916106"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga002.fm.intel.com with ESMTP; 17 Jan 2020 10:43:34 -0800
+Date:   Fri, 17 Jan 2020 10:43:34 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Derek Yerger <derek@djy.llc>,
+        kernel@najdan.com, Thomas Lambertz <mail@thomaslambertz.de>,
+        Rik van Riel <riel@surriel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 1/4] KVM: x86: Handle TIF_NEED_FPU_LOAD in
+ kvm_{load,put}_guest_fpu()
+Message-ID: <20200117184333.GF7175@linux.intel.com>
+References: <20200117062628.6233-1-sean.j.christopherson@intel.com>
+ <20200117062628.6233-2-sean.j.christopherson@intel.com>
+ <4d5dca91-8dbc-9ff3-b67a-2fa963da29cf@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200117172726.GM302770@tassilo.jf.intel.com>
+In-Reply-To: <4d5dca91-8dbc-9ff3-b67a-2fa963da29cf@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 09:27:26AM -0800, Andi Kleen wrote:
-> > > Could you suggest how such a 1:N mapping should be expressed instead in
-> > > sysfs?
+On Fri, Jan 17, 2020 at 10:31:53AM -0800, Dave Hansen wrote:
+> On 1/16/20 10:26 PM, Sean Christopherson wrote:
+> > Handle TIF_NEED_FPU_LOAD similar to how fpu__copy() handles the flag
+> > when duplicating FPU state to a new task struct.  TIF_NEED_FPU_LOAD can
+> > be set any time control is transferred out of KVM, be it voluntarily,
+> > e.g. if I/O is triggered during a KVM call to get_user_pages, or
+> > involuntarily, e.g. if softirq runs after an IRQ occurs.  Therefore,
+> > KVM must account for TIF_NEED_FPU_LOAD whenever it is (potentially)
+> > accessing CPU FPU state.
 > > 
-> > I have yet to figure out what it is you all are trying to express here
-> > given a lack of Documentation/ABI/ file :)
+> > Fixes: 5f409e20b7945 ("x86/fpu: Defer FPU state load until return to userspace")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > ---
+> >  arch/x86/kvm/x86.c | 27 ++++++++++++++++++++++++---
+> >  1 file changed, 24 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > index cf917139de6b..0c7211491f98 100644
+> > --- a/arch/x86/kvm/x86.c
+> > +++ b/arch/x86/kvm/x86.c
+> > @@ -8476,8 +8476,20 @@ static void kvm_load_guest_fpu(struct kvm_vcpu *vcpu)
+> >  {
+> >  	fpregs_lock();
+> >  
+> > -	copy_fpregs_to_fpstate(vcpu->arch.user_fpu);
+> > -	/* PKRU is separately restored in kvm_x86_ops->run.  */
+> > +	/*
+> > +	 * If userspace's FPU state is not resident in the CPU registers, just
+> > +	 * memcpy() from current, else save CPU state directly to user_fpu.
+> > +	 */
+> > +	if (test_thread_flag(TIF_NEED_FPU_LOAD))
+> > +		memcpy(&vcpu->arch.user_fpu->state, &current->thread.fpu.state,
+> > +		       fpu_kernel_xstate_size);
+> > +	else
+> > +		copy_fpregs_to_fpstate(vcpu->arch.user_fpu);
+> > +
+> > +	/*
+> > +	 * Load guest's FPU state to the CPU registers.  PKRU is separately
+> > +	 * loaded in kvm_x86_ops->run.
+> > +	 */
+> >  	__copy_kernel_to_fpregs(&vcpu->arch.guest_fpu->state,
+> >  				~XFEATURE_MASK_PKRU);
 > 
-> I thought the example Roman gave was clear.
+> Nit: it took me a minute to realize that there is both:
 > 
-> System has multiple dies
-> Each die has 4 pmon ports
-> Each pmon port per die maps to one PCI bus.
+> 	vcpu->arch.user_fpu
+> and
+> 	vcpu->arch.guest_fpu
 > 
-> He mapped it to 
-> 
-> pmon0-3: list of pci busses indexed by die
-> 
-> To be honest the approach doesn't seem unreasonable to me. It's similar
-> e.g. how we express lists of cpus or nodes in sysfs today.
+> It might help readability to have local variables for those, or at least
+> a comment to help differentiate the two.
 
-Again, you are having to parse a single line of output from sysfs that
-contains multiple values, one that will just keep getting bigger and
-bigger as time goes on until we run out of space.
+Or even better, add a helper to wrap the logic instead of copy+paste, e.g.:
 
-One value per file for sysfs, it's been the rule since the beginning.
-If there are files that violate this, ugh, it slips through, but as the
-submitter is asking for my review, I am going to actually follow the
-rules here.
+static void kvm_save_current_fpu(struct fpu *fpu)
+{
+	if (test_thread_flag(TIF_NEED_FPU_LOAD))
+		memcpy(&fpu->state, &current->thread.fpu.state,
+		       fpu_kernel_xstate_size);
+	else
+		copy_fpregs_to_fpstate(fpu);
+}
 
-greg k-h
+> 
+> 
+> > @@ -8492,7 +8504,16 @@ static void kvm_put_guest_fpu(struct kvm_vcpu *vcpu)
+> >  {
+> >  	fpregs_lock();
+> >  
+> > -	copy_fpregs_to_fpstate(vcpu->arch.guest_fpu);
+> > +	/*
+> > +	 * If guest's FPU state is not resident in the CPU registers, just
+> > +	 * memcpy() from current, else save CPU state directly to guest_fpu.
+> > +	 */
+> > +	if (test_thread_flag(TIF_NEED_FPU_LOAD))
+> > +		memcpy(&vcpu->arch.guest_fpu->state, &current->thread.fpu.state,
+> > +		       fpu_kernel_xstate_size);
+> > +	else
+> > +		copy_fpregs_to_fpstate(vcpu->arch.guest_fpu);
+> > +
+> >  	copy_kernel_to_fpregs(&vcpu->arch.user_fpu->state);
+> >  
+> >  	fpregs_mark_activate();
+> 
+> This also makes me wonder if we want to have copy_fpregs_to_fpstate()
+> check for TIF_NEED_FPU_LOAD and complain if it's set.
