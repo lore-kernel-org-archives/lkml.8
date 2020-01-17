@@ -2,65 +2,136 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DFD6C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 094B1C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DAD320730
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE9E72083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:58:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbgAQL4l (ORCPT
+        id S1726988AbgAQL6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 06:56:41 -0500
-Received: from mx2.suse.de ([195.135.220.15]:36732 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726785AbgAQL4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 06:56:41 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id A323DBAB6;
-        Fri, 17 Jan 2020 11:56:39 +0000 (UTC)
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Michael Reed <mdr@sgi.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: qla1280: Make checking for 64bit support consistent
-Date:   Fri, 17 Jan 2020 12:56:27 +0100
-Message-Id: <20200117115628.13219-1-tbogendoerfer@suse.de>
-X-Mailer: git-send-email 2.24.1
+        Fri, 17 Jan 2020 06:58:36 -0500
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:28377 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726785AbgAQL6g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 06:58:36 -0500
+Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
+  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="Claudiu.Beznea@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa6.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: FgvdYU/Gcd1OKOqQOfFME9o+87htsyBdSmJirRmi7ZNkdbypGQULhOZNsmLahpU25dsmt70bkK
+ ZccR+CmD1IVrua4ZyCdfWZ+giPIGEdMZNeLc2e5eoFd4lpwm2st7cdJfaDiYjIU1ZMi8yiMVGh
+ Za4MnLokUPZMY1P6a1FhgWGRIhHchezjp6NiPWQ3nMhjPSYSEmds0WESgzpciFiwuRiToQfld4
+ WEZia90k4ssTUf/f4Vgg3ICZXZYiMXha3bOA8Tl6QptvBmekUcILZuxWl9sSVurS7Y6OV5F2Ep
+ 10Y=
+X-IronPort-AV: E=Sophos;i="5.70,330,1574146800"; 
+   d="scan'208";a="61130320"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 17 Jan 2020 04:58:35 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 17 Jan 2020 04:58:35 -0700
+Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Fri, 17 Jan 2020 04:58:31 -0700
+From:   Claudiu Beznea <claudiu.beznea@microchip.com>
+To:     <radu_nicolae.pirea@upb.ro>, <richard.genoud@gmail.com>,
+        <lee.jones@linaro.org>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <nicolas.ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: [PATCH v5 0/2] add device tree for SAM9X60 SoC and SAM9X60-EK board
+Date:   Fri, 17 Jan 2020 13:58:27 +0200
+Message-ID: <1579262309-6542-1-git-send-email-claudiu.beznea@microchip.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use #ifdef QLA_64BIT_PTR to check if 64bit support is enabled.
-This fixes ("scsi: qla1280: Fix dma firmware download, if dma
-address is 64bit").
+Hi,
 
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
----
- drivers/scsi/qla1280.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This series contains only DT binding documentation for
+microchip,sam9x60-usart and add microchip,sam9x60-dbgu. I kept its
+title and versioning for reference. Only these 2 patches in this
+version left. The other were applied by Alexandre.
 
-diff --git a/drivers/scsi/qla1280.c b/drivers/scsi/qla1280.c
-index 607cbddcdd14..3337cd341d21 100644
---- a/drivers/scsi/qla1280.c
-+++ b/drivers/scsi/qla1280.c
-@@ -1699,7 +1699,7 @@ qla1280_load_firmware_pio(struct scsi_qla_host *ha)
- 	return err;
- }
- 
--#if QLA_64BIT_PTR
-+#ifdef QLA_64BIT_PTR
- #define LOAD_CMD	MBC_LOAD_RAM_A64_ROM
- #define DUMP_CMD	MBC_DUMP_RAM_A64_ROM
- #define CMD_ARGS	(BIT_7 | BIT_6 | BIT_4 | BIT_3 | BIT_2 | BIT_1 | BIT_0)
+Thank you,
+Claudiu Beznea
+
+Changes in v5:
+- remove patches:
+	- dt-bindings: atmel,at91rm9200-rtc: add microchip,sam9x60-rtc
+	- ARM: at91/defconfig: enable MMC_SDHCI_OF_AT91 and MICROCHIP_PIT64B
+	- ARM: dts: at91: sam9x60: add device tree for soc and board
+  as they were applied.
+- collected Acked-for-mfd-by
+
+Changes in v4:
+- remove patches:
+	- dt-bindings: atmel-tcb: remove wildcard
+	- dt-bindings: atmel-tcb: add microchip,sam9x60-tcb
+  since they were applied
+- address review comments
+- fix compatible list for dbug in sam9x60.dtsi
+
+Changes in v3:
+- remove applied patches from series
+- split patch "dt-bindings: atmel-tcb: add microchip,sam9x60-tcb" in two patches:
+	- dt-bindings: atmel-tcb: add microchip,sam9x60-tcb
+	- dt-bindings: atmel-tcb: remove wildcard
+- split patch "dt-bindings: atmel-usart: remove wildcard" in two patches:
+	- dt-bindings: atmel-usart: add microchip,sam9x60-{usart, dbgu}
+	- dt-bindings: atmel-usart: remove wildcard
+  and adapt them as per review comments
+- collect acked-by tags
+
+Changes in v2:
+- replace patch "dt-bindings: at_xdmac: add entry for microchip compatibles"
+  by patches:
+	- dt-bindings: at_xdmac: add microchip,sam9x60-dma
+	- dt-bindings: at_xdmac: remove wildcard.
+- replace patch "dt-bindings: atmel-usart: add microchip,<chip>-usart"
+  by patches:
+	- dt-bindings: atmel-usart: add microchip,sam9x60-{usart, dbgu}
+	- dt-bindings: atmel-usart: remove wildcard
+- remove patch "dt-bindings: spi_atmel: add microchip,sam9x60-spi"
+  as it was accepted
+- collect reviewed-by tags
+
+Claudiu Beznea (2):
+  dt-bindings: atmel-usart: remove wildcard
+  dt-bindings: atmel-usart: add microchip,sam9x60-{usart, dbgu}
+
+ Documentation/devicetree/bindings/mfd/atmel-usart.txt | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
 -- 
-2.24.1
+2.7.4
 
