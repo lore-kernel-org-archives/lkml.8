@@ -2,86 +2,150 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 749AEC33CAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 542CFC33CAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DAE020728
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:46:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qMwotpyq"
+	by mail.kernel.org (Postfix) with ESMTP id 1B63520728
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:47:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732675AbgAQAqt (ORCPT
+        id S1733174AbgAQAr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 19:46:49 -0500
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:49139 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726378AbgAQAqt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 19:46:49 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 2C01D7539;
-        Thu, 16 Jan 2020 19:46:48 -0500 (EST)
-Received: from imap21 ([10.202.2.71])
-  by compute3.internal (MEProxy); Thu, 16 Jan 2020 19:46:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=Bj7tew
-        rLhTxxbIYjCh4rz27oO210/CiYYk7GplSzEy8=; b=qMwotpyqVTtZxaUuZvgUko
-        wa5sLBLFtrXwpDa6S8AFaeWgpPYxfYAWW4fNRTZYXnCOy4TM3qYvYXG7Oy2lNJ9w
-        k1GOrmd3u/FGA/hXXYRVFu/4gPZkGzSqJVl1eU9/otOiPQDIjaDEzTH1qG3z+YdY
-        aGteF1iysrJ4MP/y2OCAXMriq+kvEpaOykzzBguva1mpl9Z+p86NyvhiZ3QdnEU0
-        c8+CB8HAMkdSKMYrGZtehj8+WIjyjtI3koNoMhjNTTC+oJpMOaUkTOPCZIoh9TtT
-        xRfvG71B/j54TBy1OWgPfWH3eccrE31EZ+HGxxWTZL4yPVudnHlRLx4IZTJSpp2A
-        ==
-X-ME-Sender: <xms:9wMhXkU7VZX7XD8FoBgC0Xmb4M-AGRdq5c5NozFMLuiaOPGfVR2Ecw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrtdeigddvfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedfveholhhi
-    nhcuhggrlhhtvghrshdfuceofigrlhhtvghrshesvhgvrhgsuhhmrdhorhhgqeenucffoh
-    hmrghinhepkhgvrhhnvghlrdhorhhgnecurfgrrhgrmhepmhgrihhlfhhrohhmpeifrghl
-    thgvrhhssehvvghrsghumhdrohhrghenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:9wMhXiqac_TG3DDoK0mUIthfFYVjFCbyUDTuPI4F_X3uxp_RZGtqgQ>
-    <xmx:9wMhXoS7TPA7XqiiOWlwjEC5EP6glsQt41-voAKHAipjpMF9yLd2Ww>
-    <xmx:9wMhXk1qPSX_LJ1olcICAhuImDgUJgs679uyS3tTsCqgvy3ios9aeQ>
-    <xmx:-AMhXi4NkJbWfDI6wfFdyhZMX_-weCeRVZYG87X59qU_RNY_xG7RKg>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id DD1EE660061; Thu, 16 Jan 2020 19:46:46 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-754-g09d1619-fmstable-20200113v1
-Mime-Version: 1.0
-Message-Id: <2397bb4a-2ca2-4b44-8c79-64efba9aa04d@www.fastmail.com>
-In-Reply-To: <9351.1579025170@warthog.procyon.org.uk>
-References: <20200114170250.GA8904@ZenIV.linux.org.uk>
- <3326.1579019665@warthog.procyon.org.uk>
- <9351.1579025170@warthog.procyon.org.uk>
-Date:   Thu, 16 Jan 2020 19:46:25 -0500
-From:   "Colin Walters" <walters@verbum.org>
-To:     "David Howells" <dhowells@redhat.com>,
-        "Al Viro" <viro@zeniv.linux.org.uk>
-Cc:     linux-fsdevel@vger.kernel.org, "Christoph Hellwig" <hch@lst.de>,
-        "Theodore Ts'o" <tytso@mit.edu>, adilger.kernel@dilger.ca,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        "Chris Mason" <clm@fb.com>, josef@toxicpanda.com, dsterba@suse.com,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        xfs <linux-xfs@vger.kernel.org>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Making linkat() able to overwrite the target
-Content-Type: text/plain
+        Thu, 16 Jan 2020 19:47:29 -0500
+Received: from mga07.intel.com ([134.134.136.100]:37145 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726378AbgAQAr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 19:47:29 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 16:47:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,327,1574150400"; 
+   d="scan'208";a="306066002"
+Received: from unknown (HELO localhost) ([10.239.159.54])
+  by orsmga001.jf.intel.com with ESMTP; 16 Jan 2020 16:47:24 -0800
+Date:   Fri, 17 Jan 2020 08:47:35 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     David Rientjes <rientjes@google.com>
+Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Wei Yang <richardw.yang@linux.intel.com>, hannes@cmpxchg.org,
+        mhocko@kernel.org, vdavydov.dev@gmail.com,
+        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
+        yang.shi@linux.alibaba.com, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        alexander.duyck@gmail.com, stable@vger.kernel.org
+Subject: Re: [Patch v3] mm: thp: grab the lock before manipulation defer list
+Message-ID: <20200117004735.GA16207@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20200116013100.7679-1-richardw.yang@linux.intel.com>
+ <0bb34c4a-97c7-0b3c-cf43-8af6cf9c4396@virtuozzo.com>
+ <alpine.DEB.2.21.2001161357240.109233@chino.kir.corp.google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.2001161357240.109233@chino.kir.corp.google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020, at 1:06 PM, David Howells wrote:
+On Thu, Jan 16, 2020 at 02:01:59PM -0800, David Rientjes wrote:
+>On Thu, 16 Jan 2020, Kirill Tkhai wrote:
+>
+>> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+>> > index c5b5f74cfd4d..6450bbe394e2 100644
+>> > --- a/mm/memcontrol.c
+>> > +++ b/mm/memcontrol.c
+>> > @@ -5360,10 +5360,12 @@ static int mem_cgroup_move_account(struct page *page,
+>> >  	}
+>> >  
+>> >  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>> > -	if (compound && !list_empty(page_deferred_list(page))) {
+>> > +	if (compound) {
+>> >  		spin_lock(&from->deferred_split_queue.split_queue_lock);
+>> > -		list_del_init(page_deferred_list(page));
+>> > -		from->deferred_split_queue.split_queue_len--;
+>> > +		if (!list_empty(page_deferred_list(page))) {
+>> > +			list_del_init(page_deferred_list(page));
+>> > +			from->deferred_split_queue.split_queue_len--;
+>> > +		}
+>> >  		spin_unlock(&from->deferred_split_queue.split_queue_lock);
+>> >  	}
+>> >  #endif
+>> > @@ -5377,11 +5379,13 @@ static int mem_cgroup_move_account(struct page *page,
+>> >  	page->mem_cgroup = to;
+>> >  
+>> >  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>> > -	if (compound && list_empty(page_deferred_list(page))) {
+>> > +	if (compound) {
+>> >  		spin_lock(&to->deferred_split_queue.split_queue_lock);
+>> > -		list_add_tail(page_deferred_list(page),
+>> > -			      &to->deferred_split_queue.split_queue);
+>> > -		to->deferred_split_queue.split_queue_len++;
+>> > +		if (list_empty(page_deferred_list(page))) {
+>> > +			list_add_tail(page_deferred_list(page),
+>> > +				      &to->deferred_split_queue.split_queue);
+>> > +			to->deferred_split_queue.split_queue_len++;
+>> > +		}
+>> >  		spin_unlock(&to->deferred_split_queue.split_queue_lock);
+>> >  	}
+>> >  #endif
+>> 
+>> The patch looks OK for me. But there is another question. I forget, why we unconditionally
+>> add a page with empty deferred list to deferred_split_queue. Shouldn't we also check that
+>> it was initially in the list? Something like:
+>> 
+>> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+>> index d4394ae4e5be..0be0136adaa6 100644
+>> --- a/mm/memcontrol.c
+>> +++ b/mm/memcontrol.c
+>> @@ -5289,6 +5289,7 @@ static int mem_cgroup_move_account(struct page *page,
+>>  	struct pglist_data *pgdat;
+>>  	unsigned long flags;
+>>  	unsigned int nr_pages = compound ? hpage_nr_pages(page) : 1;
+>> +	bool split = false;
+>>  	int ret;
+>>  	bool anon;
+>>  
+>> @@ -5346,6 +5347,7 @@ static int mem_cgroup_move_account(struct page *page,
+>>  		if (!list_empty(page_deferred_list(page))) {
+>>  			list_del_init(page_deferred_list(page));
+>>  			from->deferred_split_queue.split_queue_len--;
+>> +			split = true;
+>>  		}
+>>  		spin_unlock(&from->deferred_split_queue.split_queue_lock);
+>>  	}
+>> @@ -5360,7 +5362,7 @@ static int mem_cgroup_move_account(struct page *page,
+>>  	page->mem_cgroup = to;
+>>  
+>>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>> -	if (compound) {
+>> +	if (compound && split) {
+>>  		spin_lock(&to->deferred_split_queue.split_queue_lock);
+>>  		if (list_empty(page_deferred_list(page))) {
+>>  			list_add_tail(page_deferred_list(page),
+>> 
+>
+>I think that's a good point, especially considering that the current code 
+>appears to unconditionally place any compound page on the deferred split 
+>queue of the destination memcg.  The correct list that it should appear 
+>on, I believe, depends on whether the pmd has been split for the process 
+>being moved: note the MC_TARGET_PAGE caveat in 
+>mem_cgroup_move_charge_pte_range() that does not move the charge for 
+>compound pages with split pmds.  So when mem_cgroup_move_account() is 
+>called with compound == true, we're moving the charge of the entire 
+>compound page: why would it appear on that memcg's deferred split queue?
 
-> Yes, I suggested AT_LINK_REPLACE as said magical flag.
+Well, Kirill's change is easy to understand, while your statement here is a
+bit hard for me. Seems I lack some knowledge about cgroup. I am sorry about
+this. :-(
 
-This came up before right?
-
-https://lore.kernel.org/linux-fsdevel/cover.1524549513.git.osandov@fb.com/
+-- 
+Wei Yang
+Help you, Help me
