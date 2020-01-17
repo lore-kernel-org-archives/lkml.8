@@ -2,142 +2,92 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BD7C33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E46C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B082D2072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:33:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="kni8y1/K";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="uP5IsFwc"
+	by mail.kernel.org (Postfix) with ESMTP id 08B552072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:34:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729412AbgAQVdp (ORCPT
+        id S1729516AbgAQVeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 16:33:45 -0500
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:46923 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726587AbgAQVdo (ORCPT
+        Fri, 17 Jan 2020 16:34:11 -0500
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:59947 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726587AbgAQVeK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 16:33:44 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.west.internal (Postfix) with ESMTP id 769D25FF;
-        Fri, 17 Jan 2020 16:33:42 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Fri, 17 Jan 2020 16:33:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm1; bh=SdKZFOHmIi4bNTeW6qOOV5SAlt
-        jiwbYypCEPg9/G1Ok=; b=kni8y1/KswKEsd50YOqBrchNHB/lFc7Mf72oMhCplM
-        9FBU6DSdmpAOAVYrS+CBf6AH+ZFw6/9qTGmco9Zz1ygbD0jLVq7hH0hJ/0hymCwq
-        t4MWw8Rtgdf3p6htEvca0w05UBvtZyXEjW71y53zlM8GBEqrUPX0W8Teudqz/dNU
-        HKH/eEpia78OxBs13ZQuznoM8iJqo33i8/MbsuHOz+Q4D+vNa1Zhk7FMsETfWGJv
-        vUtf9NqZkrW/7ucVep1/v2kEllu0f4wHQFyjf6Y3QR7ehqv+UHIYRO6Y7tg9Iqn2
-        6l1HUO82Dbq8/La+Dgu3Qq3GDRjxIQsXo3QSrGrHHoTA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=SdKZFOHmIi4bNTeW6
-        qOOV5SAltjiwbYypCEPg9/G1Ok=; b=uP5IsFwcxSDoIIrk7Ps3dTCImUsP3l/xx
-        GqMnEBbOMsw20QWASJqp425AStjNtZnqH0lDs49eNyn1K92+8YPm/H5sLy9Wn7n9
-        lRSRh0Xu9Pn8ukfmj/Kd8Aa4kg52mN2ik9zvsNvJ4Iv8EEJ6jUaq61zI8CjKj/oK
-        mzn3+aN4+wAEwKDcedgI3sXll6LTDw5x7ngNF4AtW48CpeyPzRDLPu1grVHNP8Mr
-        yVC5ZWmi1xQYmqjTCmrUloWZVryjXT8oujKL26h8Xi/FKp6br5LucZ+n/NtqQvD1
-        AStBwudtZMnQSBpxZnwmlhQRxXfN9qJiOEMQHDky7mi9cosJUAzfA==
-X-ME-Sender: <xms:NSgiXv2nzkYfp6TI2mq6-4IMy2JeuJt7tlV5800rV8f6GVyIiLHGxw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrtdekgdehiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghlucfj
-    ohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecukfhppeejtd
-    drudefhedrudegkedrudehudenucfrrghrrghmpehmrghilhhfrhhomhepshgrmhhuvghl
-    sehshhholhhlrghnugdrohhrghenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:NSgiXr4AxUIzI8Gs_eOGX9qMswveztffU1Gl_acOG49z60IlolFGVw>
-    <xmx:NSgiXiODqgYlZwo06AooX5np6DrWytsem5jw2fZxWvI9SG59yM7nsw>
-    <xmx:NSgiXoBnYt59qBynLG87jpaiv_u7Lp61Lu5NKv_40r3ma7fimviXUw>
-    <xmx:NigiXv9sX4AC5qVwLFRgbA86OL4fYwLlrKMmeNE0E-dKOqfYRRBvjA>
-Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id EE9E48005C;
-        Fri, 17 Jan 2020 16:33:40 -0500 (EST)
-From:   Samuel Holland <samuel@sholland.org>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Samuel Holland <samuel@sholland.org>
-Subject: [PATCH 1/2] pinctrl: sunxi: Forward calls to irq_set_irq_wake
-Date:   Fri, 17 Jan 2020 15:33:39 -0600
-Message-Id: <20200117213340.47714-1-samuel@sholland.org>
-X-Mailer: git-send-email 2.23.0
+        Fri, 17 Jan 2020 16:34:10 -0500
+Received: from callcc.thunk.org (guestnat-104-133-0-111.corp.google.com [104.133.0.111] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 00HLXq7b017717
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 17 Jan 2020 16:33:53 -0500
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 696124207DF; Fri, 17 Jan 2020 16:33:52 -0500 (EST)
+Date:   Fri, 17 Jan 2020 16:33:52 -0500
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Jan Stancek <jstancek@redhat.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>, adilger@dilger.ca,
+        LTP List <ltp@lists.linux.it>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org, chrubis <chrubis@suse.cz>,
+        linux-ext4@vger.kernel.org
+Subject: Re: LTP: statx06: FAIL: Birth time < before time
+Message-ID: <20200117213352.GA481935@mit.edu>
+References: <CA+G9fYuBdcZvE6VPm9i2=F0mK5u3j6Z+RHbFBQ1zh9qbN_4kaw@mail.gmail.com>
+ <1555311261.2497849.1579281887353.JavaMail.zimbra@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1555311261.2497849.1579281887353.JavaMail.zimbra@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pinctrl irqchip may be connected to an irqchip that implements the
-.irq_set_wake callback, such as the R_INTC on A31 and newer sunxi SoCs.
-In order for GPIOs to be able to trigger wakeup, the IRQ from the
-pinctrl to the upper irqchip must also be enabled for wakeup. Since the
-kernel's IRQ core already manages the "wake_depth" of each IRQ, no
-additional accounting is needed in the pinctrl driver.
+On Fri, Jan 17, 2020 at 12:24:47PM -0500, Jan Stancek wrote:
+> > LTP syscalls statx06 test case getting failed from linux next 20200115
+> > tag onwards on all x86_64, i386, arm and arm64 devices
+> > 
+> > Test output:
+> > statx06.c:152: FAIL: Birth time < before time
+> 
+> [CC Theo & linux-ext4]
+> 
+> It's returning '0' in stx_btime for STATX_ALL or STATX_BTIME.
+> 
+> Looking at changes, I suspect:
+>   commit 927353987d503b24e1813245563cde0c6167af6e
+>   Author: Theodore Ts'o <tytso@mit.edu>
+>   Date:   Thu Nov 28 22:26:51 2019 -0500
+>     ext4: avoid fetching btime in ext4_getattr() unless requested
+> 
+> and that perhaps it should be instead...
+> 
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index c8355f022e6e..6d76eb6d2e7f 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -5398,7 +5398,7 @@ int ext4_getattr(const struct path *path, struct kstat *stat,
+>         struct ext4_inode_info *ei = EXT4_I(inode);
+>         unsigned int flags;
+> 
+> -       if ((query_flags & STATX_BTIME) &&
+> +       if ((request_mask & STATX_BTIME) &&
+>             EXT4_FITS_IN_INODE(raw_inode, ei, i_crtime)) {
+>                 stat->result_mask |= STATX_BTIME;
+>                 stat->btime.tv_sec = ei->i_crtime.tv_sec;
 
-Signed-off-by: Samuel Holland <samuel@sholland.org>
----
- drivers/pinctrl/sunxi/pinctrl-sunxi.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+Yep, nice catch!  Unfortunately we don't have a test like this in
+xfstests, or I would have caught this sooner.
 
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-index 0cbca30b75dc..df79da76321e 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-@@ -13,6 +13,7 @@
- #include <linux/io.h>
- #include <linux/clk.h>
- #include <linux/gpio/driver.h>
-+#include <linux/interrupt.h>
- #include <linux/irqdomain.h>
- #include <linux/irqchip/chained_irq.h>
- #include <linux/export.h>
-@@ -1058,6 +1059,14 @@ static void sunxi_pinctrl_irq_ack_unmask(struct irq_data *d)
- 	sunxi_pinctrl_irq_unmask(d);
- }
- 
-+static int sunxi_pinctrl_irq_set_wake(struct irq_data *d, unsigned int on)
-+{
-+	struct sunxi_pinctrl *pctl = irq_data_get_irq_chip_data(d);
-+	u8 bank = d->hwirq / IRQ_PER_BANK;
-+
-+	return irq_set_irq_wake(pctl->irq[bank], on);
-+}
-+
- static struct irq_chip sunxi_pinctrl_edge_irq_chip = {
- 	.name		= "sunxi_pio_edge",
- 	.irq_ack	= sunxi_pinctrl_irq_ack,
-@@ -1066,7 +1075,7 @@ static struct irq_chip sunxi_pinctrl_edge_irq_chip = {
- 	.irq_request_resources = sunxi_pinctrl_irq_request_resources,
- 	.irq_release_resources = sunxi_pinctrl_irq_release_resources,
- 	.irq_set_type	= sunxi_pinctrl_irq_set_type,
--	.flags		= IRQCHIP_SKIP_SET_WAKE,
-+	.irq_set_wake	= sunxi_pinctrl_irq_set_wake,
- };
- 
- static struct irq_chip sunxi_pinctrl_level_irq_chip = {
-@@ -1081,7 +1090,8 @@ static struct irq_chip sunxi_pinctrl_level_irq_chip = {
- 	.irq_request_resources = sunxi_pinctrl_irq_request_resources,
- 	.irq_release_resources = sunxi_pinctrl_irq_release_resources,
- 	.irq_set_type	= sunxi_pinctrl_irq_set_type,
--	.flags		= IRQCHIP_SKIP_SET_WAKE | IRQCHIP_EOI_THREADED |
-+	.irq_set_wake	= sunxi_pinctrl_irq_set_wake,
-+	.flags		= IRQCHIP_EOI_THREADED |
- 			  IRQCHIP_EOI_IF_HANDLED,
- };
- 
--- 
-2.23.0
+I've fixed this in the dev branch, so it will hopefully be fixed in
+the future linux-next tgs.
 
+							- Ted
