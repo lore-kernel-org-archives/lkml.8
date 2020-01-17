@@ -2,411 +2,138 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83756C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B994BC33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 406372072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:55:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="jOwHP8i3"
+	by mail.kernel.org (Postfix) with ESMTP id 9B3EA2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:57:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbgAQKzd (ORCPT
+        id S1726898AbgAQK5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 05:55:33 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:59690 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgAQKzd (ORCPT
+        Fri, 17 Jan 2020 05:57:44 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:41441 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbgAQK5n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 05:55:33 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200117105530euoutp02a9365f4209461c1ae6d942d036e37ae5~qp0Q5lF5V1737017370euoutp02S
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 10:55:30 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200117105530euoutp02a9365f4209461c1ae6d942d036e37ae5~qp0Q5lF5V1737017370euoutp02S
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579258530;
-        bh=lCv3C9dpauRpZCEpp2Anm3+rdRAqFnauFwbZJmU/EPc=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=jOwHP8i3XH8CSwZCf0E65m22p1yzAJmCPUXYTxShaPJKCuPFl7pYdvJpRGRfMVyV7
-         Iq0ClD0X6eD9j+ZBWuA6VZ3XsyYa64fTKwIFeEHdTSKkU5GABHfkPqIyz6iJUtracN
-         j+PAG2iE4ixoQWF89jg4E9UJ9BT+5b9XEoBqO/Ew=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200117105530eucas1p269ed4647c49a9a4dd197ceb301053b4d~qp0QeT3K13217932179eucas1p2O;
-        Fri, 17 Jan 2020 10:55:30 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 96.E2.60679.2A2912E5; Fri, 17
-        Jan 2020 10:55:30 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200117105530eucas1p192f06988f7030480d00c4c74dde46e62~qp0QJpbT10181501815eucas1p1P;
-        Fri, 17 Jan 2020 10:55:30 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200117105529eusmtrp20b8cfd42f625fc5dd4f74f635e0dc8b1~qp0QIqPxq1468914689eusmtrp2C;
-        Fri, 17 Jan 2020 10:55:29 +0000 (GMT)
-X-AuditID: cbfec7f4-0e5ff7000001ed07-37-5e2192a2f45a
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 10.EC.08375.1A2912E5; Fri, 17
-        Jan 2020 10:55:29 +0000 (GMT)
-Received: from [106.120.51.74] (unknown [106.120.51.74]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200117105528eusmtip202ee34f97c7360c178e9122e992ab49d~qp0PM1EUp1361713617eusmtip2S;
-        Fri, 17 Jan 2020 10:55:28 +0000 (GMT)
-Subject: Re: [RESEND v3 2/2] drm: bridge: adv7511: Add support for ADV7535
-From:   Andrzej Hajda <a.hajda@samsung.com>
-To:     Bogdan Togorean <bogdan.togorean@analog.com>,
-        dri-devel@lists.freedesktop.org
-Cc:     airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
-        mark.rutland@arm.com, narmstrong@baylibre.com,
-        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-        jernej.skrabec@siol.net, gregkh@linuxfoundation.org,
-        tglx@linutronix.de, sam@ravnborg.org, alexander.deucher@amd.com,
-        matt.redfearn@thinci.com, robdclark@chromium.org,
-        wsa+renesas@sang-engineering.com, linux-kernel@vger.kernel.org
-Message-ID: <97b4a2c6-2c2e-f486-f454-c340a0c3038c@samsung.com>
-Date:   Fri, 17 Jan 2020 11:55:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
-        Thunderbird/68.2.2
+        Fri, 17 Jan 2020 05:57:43 -0500
+Received: from ip5f5bd679.dynamic.kabel-deutschland.de ([95.91.214.121] helo=localhost.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1isPJt-0006EA-BV; Fri, 17 Jan 2020 10:57:41 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>
+Cc:     stable@vger.kernel.org, Serge Hallyn <serge@hallyn.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Eric Paris <eparis@redhat.com>
+Subject: [PATCH v3] ptrace: reintroduce usage of subjective credentials in ptrace_has_cap()
+Date:   Fri, 17 Jan 2020 11:57:18 +0100
+Message-Id: <20200117105717.29803-1-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-In-Reply-To: <982e6232-f257-86d2-3ca0-3a99daec3767@samsung.com>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SeUwTURDG8/ZttwtaXVdMxyMq9YgnntEXTzBGNyYe0cQYjWjFDaC0YFcU
-        xERQS1CEFDxbRLAKkqYGg4JaJJiiVkTrBV6RVAU1RdGoFIMHaLsY+e83M9+8+b7ksZg/zgxi
-        Y/XbRYNeG6dhgumKWx3uidbc0MjJ3hd9SZa7liLHXlYqyF7jEUy6KnIwqfd9Zsi+M6UMafju
-        xaT2YwNNDuScVZLHjpMMKXr6kCIOTyFFnNnryJOOJkyMVTeUpKSjHJGLZUcxyXYvDucF46Pf
-        jNDSECHYT9mR8PmZUSnkpT6khar2QlrIyzArhDLbAUa4bXpECZ/cbqVwuf2VQqjOtysFT6aL
-        Es4ea2CEd6dLaeF61mF6Bb82eM5mMS52h2iYNG9jcIy5qV2ZULcs6X2+i0lFueEHURAL3HSw
-        Zt9iDqJgludKEGTard1FG4LiqhZKLr4hMNualf9Wumw13YNzCF6X7qX8A55rRfDTluLn/twS
-        8Py0Yz8z3Fj4ffE54+cQbhX4vhym/cuYy8bQdj4tIFJx8+Ct6UdARHOjwNv4I3BtALcGmuub
-        FLKmH9Sam2k/B3HzwVblCTDmhsHl1pNYZjW8aC4IuAPuLgs3D+UpZNsL4bm1gJG5P7S4LnXH
-        GQJdVwsomfeAp2Q/lpczEJRfuIrlwWx46fa7Y/9eGAuljklyOwJOmIoofxu4PvCstZ/soQ/k
-        VhzHclsFGem8rA4Fz73y7gfVUPTAx5iQxtIjmaVHGkuPNJb/dwsRbUNqMVHSRYvSVL24M0zS
-        6qREfXRYVLyuDP39rnWdrrYryPFrkxNxLNL0Vp1YOTySV2h3SMk6JwIWa0JUjVmhkbxqszZ5
-        l2iI32BIjBMlJxrM0hq1aprVu57norXbxa2imCAa/k0pNmhQKtr2K2303HGm8VHOLW8j1MWa
-        +8ZZQxl9+Nc6x4j4WY764rD8FJKUNLu4+s7A9ya+84jPHJsQM7dRoUqutVAPlg+MnG9MH/nt
-        MY/3eFM/bB2zbZGtaOlIX2dNbGWKfXfijGsLct4sH+1MX4qTbtd31vRyZa6U0i6l6wyrZ06I
-        09kTmjS0FKOdMg4bJO0fWwdVmqoDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA03Sa0hTYRjAcd6ds7MpDo9T2ZtS6UCloNm8tNfy1icPESFpJFqupQeVNic7
-        0zI/NJLRNBSdZV5T8YLJQNLUUsS0i4kpOS9pOCdohpaKUTPv6Vbgtz8vz++BFx4uxn/GduOm
-        pKppVapMLiTs8cHd/plTNXrP+NOaWgnKGx5goeLpLja6r32Eob32QgyN/V4lUHZtM4HG1xcx
-        NPBjHEc5hXUcNNpZQaD6zyMs1GmuZqG+/Dg0sTGHIW33Ww5q3GgDqLXlMYbyhyPC+ZTWuENQ
-        S+PnKcNTA6BWJ7UcqlwzglPdlmqcKteVsqmWphyC+lBgZFErw8McqsMyy6Z6Kg0cyvywn0XV
-        FY8T1EJNM069zivCI/mxomCVMl1NeyQrGXWIME6M/ETiICTyCwgSif0l18/6BQp9Q4MTaXlK
-        Bq3yDb0hSi6ds3DSBi/d+VbZT2iAPjwX2HEhGQD3mt6wDppP1gPY88TJ9i6AXVXLmK2d4fZE
-        LpEL7PdnvgM4utRmBc7kBWjeMliHCPIE3GmdIg7ahYyCazuTnIPGyHwMDm162fA2gDvvLFbA
-        I0Ph14JNK8BJL7ho2rQCVzIGLm9NsW0zTnCgdB4/aDsyDDZ1m3HbUh+4/dSI2fo47Fiu+NcC
-        +GW+ilUA+GWHeNkhUnaIlB0i1QBvAi50OqNIUjBiESNTMOmpSaIEpaIF7J9J+/uN1pfA+Dyq
-        D5BcIHTglVz2iOezZRlMpqIPQC4mdOGZ8jzj+bxEWeZdWqWUqtLlNNMHAvc/V4i5uSYo948u
-        VS0VB4olKEgs8Zf4n0FCAU9H9l7jk0kyNX2LptNo1X/H4tq5aUD0n09OaMNryG0s6UWRY9aK
-        1L1hUi/vdQ9fMwjYjE9xiVwTrXMuqb9nuXLkVeJk5IOLsXrdx8QKqWPDqi5szSSP9f5lDMma
-        7a/7SUfcLhB5j5CFkoDdZMEyM2qyTGfPCPaK6HVvYGrMz6jSLxSZj3K03Q5hx25eDWjTxJyT
-        CnEmWSY+iakY2V89QowfPAMAAA==
-X-CMS-MailID: 20200117105530eucas1p192f06988f7030480d00c4c74dde46e62
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200107133859epcas4p45949a65be83ba877e98548d77279666c
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200107133859epcas4p45949a65be83ba877e98548d77279666c
-References: <20200107133431.5201-1-bogdan.togorean@analog.com>
-        <CGME20200107133859epcas4p45949a65be83ba877e98548d77279666c@epcas4p4.samsung.com>
-        <20200107133431.5201-3-bogdan.togorean@analog.com>
-        <982e6232-f257-86d2-3ca0-3a99daec3767@samsung.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.01.2020 11:27, Andrzej Hajda wrote:
-> On 07.01.2020 14:34, Bogdan Togorean wrote:
->> ADV7535 is a DSI to HDMI bridge chip like ADV7533 but it allows
->> 1080p@60Hz. v1p2 is fixed to 1.8V on ADV7535 but on ADV7533 can be 1.2V
->> or 1.8V and is configurable in a register.
->>
->> Signed-off-by: Bogdan Togorean <bogdan.togorean@analog.com>
->> ---
->>  drivers/gpu/drm/bridge/adv7511/Kconfig       | 13 ++----
->>  drivers/gpu/drm/bridge/adv7511/Makefile      |  3 +-
->>  drivers/gpu/drm/bridge/adv7511/adv7511.h     | 44 +++-----------------
->>  drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 35 ++++++++++------
->>  4 files changed, 32 insertions(+), 63 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/bridge/adv7511/Kconfig b/drivers/gpu/drm/bridge/adv7511/Kconfig
->> index 8a56ff81f4fb..47d4eb9e845d 100644
->> --- a/drivers/gpu/drm/bridge/adv7511/Kconfig
->> +++ b/drivers/gpu/drm/bridge/adv7511/Kconfig
->> @@ -4,8 +4,9 @@ config DRM_I2C_ADV7511
->>  	depends on OF
->>  	select DRM_KMS_HELPER
->>  	select REGMAP_I2C
->> +	select DRM_MIPI_DSI
->>  	help
->> -	  Support for the Analog Device ADV7511(W) and ADV7513 HDMI encoders.
->> +	  Support for the Analog Device ADV7511(W)/13/33/35 HDMI encoders.
->>  
->>  config DRM_I2C_ADV7511_AUDIO
->>  	bool "ADV7511 HDMI Audio driver"
->> @@ -15,16 +16,8 @@ config DRM_I2C_ADV7511_AUDIO
->>  	  Support the ADV7511 HDMI Audio interface. This is used in
->>  	  conjunction with the AV7511  HDMI driver.
->>  
->> -config DRM_I2C_ADV7533
->> -	bool "ADV7533 encoder"
->> -	depends on DRM_I2C_ADV7511
->> -	select DRM_MIPI_DSI
->> -	default y
->> -	help
->> -	  Support for the Analog Devices ADV7533 DSI to HDMI encoder.
->> -
->>  config DRM_I2C_ADV7511_CEC
->> -	bool "ADV7511/33 HDMI CEC driver"
->> +	bool "ADV7511/33/35 HDMI CEC driver"
->>  	depends on DRM_I2C_ADV7511
->>  	select CEC_CORE
->>  	default y
->> diff --git a/drivers/gpu/drm/bridge/adv7511/Makefile b/drivers/gpu/drm/bridge/adv7511/Makefile
->> index b46ebeb35fd4..d8ceb534b51f 100644
->> --- a/drivers/gpu/drm/bridge/adv7511/Makefile
->> +++ b/drivers/gpu/drm/bridge/adv7511/Makefile
->> @@ -1,6 +1,5 @@
->>  # SPDX-License-Identifier: GPL-2.0-only
->> -adv7511-y := adv7511_drv.o
->> +adv7511-y := adv7511_drv.o adv7533.o
->>  adv7511-$(CONFIG_DRM_I2C_ADV7511_AUDIO) += adv7511_audio.o
->>  adv7511-$(CONFIG_DRM_I2C_ADV7511_CEC) += adv7511_cec.o
->> -adv7511-$(CONFIG_DRM_I2C_ADV7533) += adv7533.o
->>  obj-$(CONFIG_DRM_I2C_ADV7511) += adv7511.o
->> diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511.h b/drivers/gpu/drm/bridge/adv7511/adv7511.h
->> index 52b2adfdc877..ed9cfd944098 100644
->> --- a/drivers/gpu/drm/bridge/adv7511/adv7511.h
->> +++ b/drivers/gpu/drm/bridge/adv7511/adv7511.h
->> @@ -220,6 +220,10 @@
->>  
->>  #define ADV7533_REG_CEC_OFFSET		0x70
->>  
->> +#define ADV7533_REG_SUPPLY_SELECT	0xe4
->> +
->> +#define ADV7533_V1P2_ENABLE		BIT(7)
->> +
->>  enum adv7511_input_clock {
->>  	ADV7511_INPUT_CLOCK_1X,
->>  	ADV7511_INPUT_CLOCK_2X,
->> @@ -320,6 +324,7 @@ struct adv7511_video_config {
->>  enum adv7511_type {
->>  	ADV7511,
->>  	ADV7533,
->> +	ADV7535,
->>  };
->>  
->>  #define ADV7511_MAX_ADDRS 3
->> @@ -393,7 +398,6 @@ static inline int adv7511_cec_init(struct device *dev, struct adv7511 *adv7511)
->>  }
->>  #endif
->>  
->> -#ifdef CONFIG_DRM_I2C_ADV7533
->>  void adv7533_dsi_power_on(struct adv7511 *adv);
->>  void adv7533_dsi_power_off(struct adv7511 *adv);
->>  void adv7533_mode_set(struct adv7511 *adv, const struct drm_display_mode *mode);
->> @@ -402,44 +406,6 @@ int adv7533_patch_cec_registers(struct adv7511 *adv);
->>  int adv7533_attach_dsi(struct adv7511 *adv);
->>  void adv7533_detach_dsi(struct adv7511 *adv);
->>  int adv7533_parse_dt(struct device_node *np, struct adv7511 *adv);
->> -#else
->> -static inline void adv7533_dsi_power_on(struct adv7511 *adv)
->> -{
->> -}
->> -
->> -static inline void adv7533_dsi_power_off(struct adv7511 *adv)
->> -{
->> -}
->> -
->> -static inline void adv7533_mode_set(struct adv7511 *adv,
->> -				    const struct drm_display_mode *mode)
->> -{
->> -}
->> -
->> -static inline int adv7533_patch_registers(struct adv7511 *adv)
->> -{
->> -	return -ENODEV;
->> -}
->> -
->> -static inline int adv7533_patch_cec_registers(struct adv7511 *adv)
->> -{
->> -	return -ENODEV;
->> -}
->> -
->> -static inline int adv7533_attach_dsi(struct adv7511 *adv)
->> -{
->> -	return -ENODEV;
->> -}
->> -
->> -static inline void adv7533_detach_dsi(struct adv7511 *adv)
->> -{
->> -}
->> -
->> -static inline int adv7533_parse_dt(struct device_node *np, struct adv7511 *adv)
->> -{
->> -	return -ENODEV;
->> -}
->> -#endif
->>  
->>  #ifdef CONFIG_DRM_I2C_ADV7511_AUDIO
->>  int adv7511_audio_init(struct device *dev, struct adv7511 *adv7511);
->> diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
->> index 9e13e466e72c..35595472e771 100644
->> --- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
->> +++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
->> @@ -367,7 +367,7 @@ static void adv7511_power_on(struct adv7511 *adv7511)
->>  	 */
->>  	regcache_sync(adv7511->regmap);
->>  
->> -	if (adv7511->type == ADV7533)
->> +	if (adv7511->type == ADV7533 || adv7511->type == ADV7535)
->>  		adv7533_dsi_power_on(adv7511);
->>  	adv7511->powered = true;
->>  }
->> @@ -387,7 +387,7 @@ static void __adv7511_power_off(struct adv7511 *adv7511)
->>  static void adv7511_power_off(struct adv7511 *adv7511)
->>  {
->>  	__adv7511_power_off(adv7511);
->> -	if (adv7511->type == ADV7533)
->> +	if (adv7511->type == ADV7533 || adv7511->type == ADV7535)
->>  		adv7533_dsi_power_off(adv7511);
->>  	adv7511->powered = false;
->>  }
->> @@ -761,7 +761,7 @@ static void adv7511_mode_set(struct adv7511 *adv7511,
->>  	regmap_update_bits(adv7511->regmap, 0x17,
->>  		0x60, (vsync_polarity << 6) | (hsync_polarity << 5));
->>  
->> -	if (adv7511->type == ADV7533)
->> +	if (adv7511->type == ADV7533 || adv7511->type == ADV7535)
->>  		adv7533_mode_set(adv7511, adj_mode);
->>  
->>  	drm_mode_copy(&adv7511->curr_mode, adj_mode);
->> @@ -874,7 +874,7 @@ static int adv7511_bridge_attach(struct drm_bridge *bridge)
->>  				 &adv7511_connector_helper_funcs);
->>  	drm_connector_attach_encoder(&adv->connector, bridge->encoder);
->>  
->> -	if (adv->type == ADV7533)
->> +	if (adv->type == ADV7533 || adv->type == ADV7535)
->>  		ret = adv7533_attach_dsi(adv);
->>  
->>  	if (adv->i2c_main->irq)
->> @@ -903,6 +903,7 @@ static const char * const adv7511_supply_names[] = {
->>  	"dvdd-3v",
->>  };
->>  
->> +/* The order of entries is important. If changed update hardcoded indices */
->>  static const char * const adv7533_supply_names[] = {
->>  	"avdd",
->>  	"dvdd",
->> @@ -952,7 +953,7 @@ static bool adv7511_cec_register_volatile(struct device *dev, unsigned int reg)
->>  	struct i2c_client *i2c = to_i2c_client(dev);
->>  	struct adv7511 *adv7511 = i2c_get_clientdata(i2c);
->>  
->> -	if (adv7511->type == ADV7533)
->> +	if (adv7511->type == ADV7533 || adv7511->type == ADV7535)
->>  		reg -= ADV7533_REG_CEC_OFFSET;
->>  
->>  	switch (reg) {
->> @@ -994,7 +995,7 @@ static int adv7511_init_cec_regmap(struct adv7511 *adv)
->>  		goto err;
->>  	}
->>  
->> -	if (adv->type == ADV7533) {
->> +	if (adv->type == ADV7533 || adv->type == ADV7535) {
->>  		ret = adv7533_patch_cec_registers(adv);
->>  		if (ret)
->>  			goto err;
->> @@ -1094,8 +1095,9 @@ static int adv7511_probe(struct i2c_client *i2c, const struct i2c_device_id *id)
->>  	struct adv7511_link_config link_config;
->>  	struct adv7511 *adv7511;
->>  	struct device *dev = &i2c->dev;
->> +	struct regulator *reg_v1p2;
->>  	unsigned int val;
->> -	int ret;
->> +	int ret, reg_v1p2_uV;
->>  
->>  	if (!dev->of_node)
->>  		return -EINVAL;
->> @@ -1163,6 +1165,17 @@ static int adv7511_probe(struct i2c_client *i2c, const struct i2c_device_id *id)
->>  	if (ret)
->>  		goto uninit_regulators;
->>  
->> +	if (adv7511->type == ADV7533) {
->> +		reg_v1p2 = adv7511->supplies[5].consumer;
->> +		reg_v1p2_uV = regulator_get_voltage(reg_v1p2);
->> +
->> +		if (reg_v1p2_uV == 1200000) {
->> +			regmap_update_bits(adv7511->regmap,
->> +				ADV7533_REG_SUPPLY_SELECT, ADV7533_V1P2_ENABLE,
->> +				ADV7533_V1P2_ENABLE);
->> +		}
->> +	}
->> +
->
-> In patch adding support for adv7535 you modifies adv7533 path. It looks
-> suspicious, maybe it would be better to extract it to separate patch.
-> Anyway this change requires tests from adv7533 users.
+Commit 69f594a38967 ("ptrace: do not audit capability check when outputing /proc/pid/stat")
+introduced the ability to opt out of audit messages for accesses to
+various proc files since they are not violations of policy.
+While doing so it somehow switched the check from ns_capable() to
+has_ns_capability{_noaudit}(). That means it switched from checking the
+subjective credentials of the task to using the objective credentials. I
+couldn't find the original lkml thread and so I don't know why this switch
+was done. But it seems wrong since ptrace_has_cap() is currently only used
+in ptrace_may_access(). And it's used to check whether the calling task
+(subject) has the CAP_SYS_PTRACE capability in the provided user namespace
+to operate on the target task (object). According to the cred.h comments
+this would mean the subjective credentials of the calling task need to be
+used.
+This switches it to use security_capable() because we only call
+ptrace_has_cap() in ptrace_may_access() and in there we already have a
+stable reference to the calling tasks creds under rcu_read_lock() so
+there's no need to go through another series of dereferences and rcu
+locking done in ns_capable{_noaudit}().
 
+As one example where this might be particularly problematic, Jann pointed
+out that in combination with the upcoming IORING_OP_OPENAT feature, this
+bug might allow unprivileged users to bypass the capability checks while
+asynchronously opening files like /proc/*/mem, because the capability
+checks for this would be performed against kernel credentials.
 
-One more thing, maybe it would be better to add some tolerance to 1.2V
-test, quick look at public datasheet suggest +/- 0.06V.
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Eric Paris <eparis@redhat.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Serge Hallyn <serge@hallyn.com>
+Reviewed-by: Jann Horn <jannh@google.com>
+Fixes: 69f594a38967 ("ptrace: do not audit capability check when outputing /proc/pid/stat")
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+/* v1 */
+Link: https://lore.kernel.org/r/20200115171736.16994-1-christian.brauner@ubuntu.com
 
+/* v2 */
+Link: https://lore.kernel.org/r/20200116224518.30598-1-christian.brauner@ubuntu.com
+- Christian Brauner <christian.brauner@ubuntu.com>:
+  - fix incorrect CAP_OPT_NOAUDIT, CAPT_OPT_NONE order
 
-Regards
+/* v3 */
+- Kees Cook <keescook@chromium.org>:
+  - remove misleading reference to cread guard mutex from commit message
+  - replace if-branches with ternary ?: operator
+---
+ kernel/ptrace.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-Andrzej
+diff --git a/kernel/ptrace.c b/kernel/ptrace.c
+index cb9ddcc08119..6eb3ccf180e0 100644
+--- a/kernel/ptrace.c
++++ b/kernel/ptrace.c
+@@ -264,12 +264,12 @@ static int ptrace_check_attach(struct task_struct *child, bool ignore_state)
+ 	return ret;
+ }
+ 
+-static int ptrace_has_cap(struct user_namespace *ns, unsigned int mode)
++static int ptrace_has_cap(const struct cred *cred, struct user_namespace *ns,
++			  unsigned int mode)
+ {
+-	if (mode & PTRACE_MODE_NOAUDIT)
+-		return has_ns_capability_noaudit(current, ns, CAP_SYS_PTRACE);
+-	else
+-		return has_ns_capability(current, ns, CAP_SYS_PTRACE);
++	return security_capable(cred, ns, CAP_SYS_PTRACE,
++				(mode & PTRACE_MODE_NOAUDIT) ? CAP_OPT_NOAUDIT :
++							       CAP_OPT_NONE);
+ }
+ 
+ /* Returns 0 on success, -errno on denial. */
+@@ -321,7 +321,7 @@ static int __ptrace_may_access(struct task_struct *task, unsigned int mode)
+ 	    gid_eq(caller_gid, tcred->sgid) &&
+ 	    gid_eq(caller_gid, tcred->gid))
+ 		goto ok;
+-	if (ptrace_has_cap(tcred->user_ns, mode))
++	if (ptrace_has_cap(cred, tcred->user_ns, mode))
+ 		goto ok;
+ 	rcu_read_unlock();
+ 	return -EPERM;
+@@ -340,7 +340,7 @@ static int __ptrace_may_access(struct task_struct *task, unsigned int mode)
+ 	mm = task->mm;
+ 	if (mm &&
+ 	    ((get_dumpable(mm) != SUID_DUMP_USER) &&
+-	     !ptrace_has_cap(mm->user_ns, mode)))
++	     !ptrace_has_cap(cred, mm->user_ns, mode)))
+ 	    return -EPERM;
+ 
+ 	return security_ptrace_access_check(task, mode);
 
-
->
-> Beside this the patch looks OK.
->
->
-> Regards
->
-> Andrzej
->
->
->>  	adv7511_packet_disable(adv7511, 0xffff);
->>  
->>  	adv7511->i2c_edid = i2c_new_ancillary_device(i2c, "edid",
->> @@ -1242,7 +1255,7 @@ static int adv7511_remove(struct i2c_client *i2c)
->>  {
->>  	struct adv7511 *adv7511 = i2c_get_clientdata(i2c);
->>  
->> -	if (adv7511->type == ADV7533)
->> +	if (adv7511->type == ADV7533 || adv7511->type == ADV7535)
->>  		adv7533_detach_dsi(adv7511);
->>  	i2c_unregister_device(adv7511->i2c_cec);
->>  	if (adv7511->cec_clk)
->> @@ -1266,9 +1279,8 @@ static const struct i2c_device_id adv7511_i2c_ids[] = {
->>  	{ "adv7511", ADV7511 },
->>  	{ "adv7511w", ADV7511 },
->>  	{ "adv7513", ADV7511 },
->> -#ifdef CONFIG_DRM_I2C_ADV7533
->>  	{ "adv7533", ADV7533 },
->> -#endif
->> +	{ "adv7535", ADV7535 },
->>  	{ }
->>  };
->>  MODULE_DEVICE_TABLE(i2c, adv7511_i2c_ids);
->> @@ -1277,9 +1289,8 @@ static const struct of_device_id adv7511_of_ids[] = {
->>  	{ .compatible = "adi,adv7511", .data = (void *)ADV7511 },
->>  	{ .compatible = "adi,adv7511w", .data = (void *)ADV7511 },
->>  	{ .compatible = "adi,adv7513", .data = (void *)ADV7511 },
->> -#ifdef CONFIG_DRM_I2C_ADV7533
->>  	{ .compatible = "adi,adv7533", .data = (void *)ADV7533 },
->> -#endif
->> +	{ .compatible = "adi,adv7535", .data = (void *)ADV7535 },
->>  	{ }
->>  };
->>  MODULE_DEVICE_TABLE(of, adv7511_of_ids);
->
+base-commit: b3a987b0264d3ddbb24293ebff10eddfc472f653
+-- 
+2.25.0
 
