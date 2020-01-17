@@ -2,143 +2,120 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54020C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B027CC33CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28F5D2465A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:48:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ASJ1h1nP"
+	by mail.kernel.org (Postfix) with ESMTP id 90ACD2464B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:48:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729504AbgAQWsF (ORCPT
+        id S1729721AbgAQWsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 17:48:05 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51951 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726975AbgAQWsD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 17:48:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579301282;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7k4t+Fu3CF2DfsPNI0vhFBgalYuQuqZvmgpsZb91eNk=;
-        b=ASJ1h1nPCOo3Vdby3q4B++sa0DIc9S6lHYB2OQ6c95pw1hXldcDxJvPtNbfP/3R9clXOgI
-        qAdIBMec30fjdIjHqLEGPCpuJKpUkzkVTS8IZkJpni3+SrSM5Y5DuVADuWVfMsiWlfKlXl
-        6Usuozt9/mGTZAzs7x1bYFEXzxYXaA0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-321-MgiloWWFN-CHT1vLgeHbOg-1; Fri, 17 Jan 2020 17:48:00 -0500
-X-MC-Unique: MgiloWWFN-CHT1vLgeHbOg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7D376800D53;
-        Fri, 17 Jan 2020 22:47:58 +0000 (UTC)
-Received: from malachite.bss.redhat.com (dhcp-10-20-1-90.bss.redhat.com [10.20.1.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7E8ED5DA32;
-        Fri, 17 Jan 2020 22:47:57 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Sean Paul <sean@poorly.run>, Wayne Lin <Wayne.Lin@amd.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] drm/dp_mst: Fix clearing payload state on topology disable
-Date:   Fri, 17 Jan 2020 17:47:49 -0500
-Message-Id: <20200117224749.128994-2-lyude@redhat.com>
-In-Reply-To: <20200117224749.128994-1-lyude@redhat.com>
-References: <20200117224749.128994-1-lyude@redhat.com>
+        Fri, 17 Jan 2020 17:48:52 -0500
+Received: from smtp1.savana.cz ([217.16.187.42]:29538 "EHLO icewarp.savana.cz"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728852AbgAQWsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 17:48:51 -0500
+Received: from [192.168.0.106] ([212.37.87.11])
+        by icewarp.savana.cz (IceWarp 11.2.1.1 RHEL6 x64) with ASMTP (SSL) id 202001172348481734;
+        Fri, 17 Jan 2020 23:48:48 +0100
+Subject: Re: [RFT PATCH 0/4] hwmon: k10temp driver improvements
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-hwmon@vger.kernel.org, Clemens Ladisch <clemens@ladisch.de>,
+        Jean Delvare <jdelvare@suse.com>, linux-kernel@vger.kernel.org
+References: <20200116141800.9828-1-linux@roeck-us.net>
+ <e452614a-5425-e77c-4e2f-2a17ca733b7f@sda1.eu>
+ <20200117184617.GD13396@roeck-us.net>
+From:   =?UTF-8?Q?Ondrej_=c4=8cerman?= <ocerman@sda1.eu>
+Message-ID: <5b4f8b92-d2ad-4eba-cd4f-4d0fddf92a52@sda1.eu>
+Date:   Fri, 17 Jan 2020 23:48:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200117184617.GD13396@roeck-us.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The issues caused by:
 
-64e62bdf04ab ("drm/dp_mst: Remove VCPI while disabling topology mgr")
+Dňa 17. 1. 2020 o 19:46 Guenter Roeck napísal(a):
+> On Fri, Jan 17, 2020 at 10:46:25AM +0100, Ondrej Čerman wrote:
+>> Dňa 16. 1. 2020 o 15:17 Guenter Roeck napísal(a):
+>>> This patch series implements various improvements for the k10temp driver.
+>>>
+>>> Patch 1/4 introduces the use of bit operations.
+>>>
+>>> Patch 2/4 converts the driver to use the devm_hwmon_device_register_with_info
+>>> API. This not only simplifies the code and reduces its size, it also
+>>> makes the code easier to maintain and enhance.
+>>>
+>>> Patch 3/4 adds support for reporting Core Complex Die (CCD) temperatures
+>>> on Ryzen 3 (Zen2) CPUs.
+>>>
+>>> Patch 4/4 adds support for reporting core and SoC current and voltage
+>>> information on Ryzen CPUs.
+>>>
+>>> With all patches in place, output on Ryzen 3900 CPUs looks as follows
+>>> (with the system under load).
+>>>
+>>> k10temp-pci-00c3
+>>> Adapter: PCI adapter
+>>> Vcore:        +1.36 V
+>>> Vsoc:         +1.18 V
+>>> Tdie:         +86.8°C  (high = +70.0°C)
+>>> Tctl:         +86.8°C
+>>> Tccd1:        +80.0°C
+>>> Tccd2:        +81.8°C
+>>> Icore:       +44.14 A
+>>> Isoc:        +13.83 A
+>>>
+>>> The patch series has only been tested with Ryzen 3900 CPUs. Further test
+>>> coverage will be necessary before the changes can be applied to the Linux
+>>> kernel.
+>>>
+>> Hello everyone, I am the author of https://github.com/ocerman/zenpower/ .
+>>
+>> It is nice to see this merged.
+>>
+>> I just want to warn you that there have been reported issues with
+>> Threadripper CPUs to zenpower issue tracker. Also I think that no-one tested
+>> EPYC CPUs.
+>>
+>> Most of the stuff I was able to figure out by trial-and-error approach and
+>> unfortunately because I do not own any Threadripper CPU I was not able to
+>> test and fix reported problems.
+>>
+> Thanks a lot for the note. The key problem seems to be that Threadripper
+> doesn't report SoC current and voltage. Is that correct ? If so, that
+> should be easy to solve.
 
-Prompted me to take a closer look at how we clear the payload state in
-general when disabling the topology, and it turns out there's actually
-two subtle issues here.
+Hello,
 
-The first is that we're not grabbing &mgr.payload_lock when clearing the
-payloads in drm_dp_mst_topology_mgr_set_mst(). Seeing as the canonical
-lock order is &mgr.payload_lock -> &mgr.lock (because we always want
-&mgr.lock to be the inner-most lock so topology validation always
-works), this makes perfect sense. It also means that -technically- there
-could be racing between someone calling
-drm_dp_mst_topology_mgr_set_mst() to disable the topology, along with a
-modeset occurring that's modifying the payload state at the same time.
+I thought that initially, but I was wrong. It seems like that these 
+multi-node CPUs are reporting SOC and Core voltage/current data at 
+particular node. Look at this HWiNFO64 screenshot of 2990WX for 
+reference: https://i.imgur.com/yM9X5nd.jpg . They also may be using 
+different addresses and/or factors.
 
-The second is the more obvious issue that Wayne Lin discovered, that
-we're not clearing proposed_payloads when disabling the topology.
+> On a side note, drivers/gpu/drm/amd/include/asic_reg/thm/thm_10_0_offset.h
+> suggests that two more temperature sensors might be available at 0x0005995C
+> and 0x00059960 (DIE3_TEMP and SW_TEMP). Have you ever tried that ?
+>
+> Thanks,
+> Guenter
 
-I actually can't see any obvious places where the racing caused by the
-first issue would break something, and it could be that some of our
-higher-level locks already prevent this by happenstance, but better safe
-then sorry. So, let's make it so that drm_dp_mst_topology_mgr_set_mst()
-first grabs &mgr.payload_lock followed by &mgr.lock so that we never
-race when modifying the payload state. Then, we also clear
-proposed_payloads to fix the original issue of enabling a new topology
-with a dirty payload state. This doesn't clear any of the drm_dp_vcpi
-structures, but those are getting destroyed along with the ports anyway.
+I was aware of 0005995c and I thought that it could be Tdie3 (that's why 
+I have included it in debug output, someone already shared that 3960X is 
+reporting data on that address). I think this one can be safely included.
 
-Cc: Sean Paul <sean@poorly.run>
-Cc: Wayne Lin <Wayne.Lin@amd.com>
-Signed-off-by: Lyude Paul <lyude@redhat.com>
----
- drivers/gpu/drm/drm_dp_mst_topology.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+I was not aware of the other address, I will try it.
 
-diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_=
-dp_mst_topology.c
-index 89c2a7505cbd..58287f4c1baf 100644
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -3483,6 +3483,7 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_m=
-st_topology_mgr *mgr, bool ms
- 	int ret =3D 0;
- 	struct drm_dp_mst_branch *mstb =3D NULL;
-=20
-+	mutex_lock(&mgr->payload_lock);
- 	mutex_lock(&mgr->lock);
- 	if (mst_state =3D=3D mgr->mst_state)
- 		goto out_unlock;
-@@ -3541,7 +3542,10 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_=
-mst_topology_mgr *mgr, bool ms
- 		/* this can fail if the device is gone */
- 		drm_dp_dpcd_writeb(mgr->aux, DP_MSTM_CTRL, 0);
- 		ret =3D 0;
--		memset(mgr->payloads, 0, mgr->max_payloads * sizeof(struct drm_dp_payl=
-oad));
-+		memset(mgr->payloads, 0,
-+		       mgr->max_payloads * sizeof(struct drm_dp_payload));
-+		memset(mgr->proposed_vcpis, 0,
-+		       mgr->max_payloads * sizeof(void*));
- 		mgr->payload_mask =3D 0;
- 		set_bit(0, &mgr->payload_mask);
- 		mgr->vcpi_mask =3D 0;
-@@ -3550,6 +3554,7 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_m=
-st_topology_mgr *mgr, bool ms
-=20
- out_unlock:
- 	mutex_unlock(&mgr->lock);
-+	mutex_unlock(&mgr->payload_lock);
- 	if (mstb)
- 		drm_dp_mst_topology_put_mstb(mstb);
- 	return ret;
---=20
-2.24.1
+Ondrej.
 
