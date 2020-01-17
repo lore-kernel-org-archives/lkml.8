@@ -2,114 +2,176 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F5FFC33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 20:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8037C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 20:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 278322082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 20:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2B2620748
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 20:21:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=netapp.onmicrosoft.com header.i=@netapp.onmicrosoft.com header.b="b6mkgzlf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RaocN2Vw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729702AbgAQUVd (ORCPT
+        id S1729730AbgAQUVy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 15:21:33 -0500
-Received: from mail-co1nam11on2080.outbound.protection.outlook.com ([40.107.220.80]:45411
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727519AbgAQUVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 15:21:32 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cHa9Abia6rOy7eFc63DrK0kWlsRMscyKbBWFps3cEm3Y7RKz/yUnS4/XYVP81qNMVfHDUHO3OUKpLA38SwXyf94HEMYSKY4itwuU5z9U9EZdQuEyA5OdP723VDEudXDcIuspWmPOx2U4WeMdDGX1mdxfA0myUb3VUl24YFy1VfHdX8XhB5xHDU0rr6T+hMRu14gQVf4AnvCsq+rV+m+77Obp4/nMDzVyQV8zsER5ev+dZ5cYwLbLxcgwzTX7PZ4Q/miJ4uNe5LmfTiArEnjf2tIpiMuTkzbha/9tuBxoQEsHxlxdkFx3xC65ssTMCFa3Z5jcJVp7koctsFQx+brs9Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G9ocQMgzh4Wlvy75izLt1QAGDYZ/sLmuv55AsCLVges=;
- b=VL7gebv1nCJeq4Op8IibH4ZBUZkhsoeVmBw9OM41dpWEkeip6pOy93A8wfKvKIqOj72ZSye6D341AryB3dLMRzXypRzuhBlJQvzOPciRKjSi0AXNpzzhVQDJr6NgJhQpgiYPg5PZjcWzYFLs7ryQmcR0Iw1dXqY7xt2JYJYub06Bu4TaFFHnizAGqdiXf0f8Q/EGmnYYoTzvLbBvHGkKDv/30uc1vIpmcQHLOgBsdsRu8II0xNi7s8tVt7MefjuamF7HhgCz/FkiNCuDLerwf0gweckpAzvwn5PxbYqGPuCUmtKCbODaGtnpPapP2VjWdvOf0idEC8sVtlczv2vcyA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=netapp.com; dmarc=pass action=none header.from=netapp.com;
- dkim=pass header.d=netapp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=netapp.onmicrosoft.com; s=selector1-netapp-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G9ocQMgzh4Wlvy75izLt1QAGDYZ/sLmuv55AsCLVges=;
- b=b6mkgzlfUxVMIvMCq5ri1g5kWl0z/DHcj8TMJ+ZsSddP/ySY7X8+SBxBxdZCvBTt06ENaHLt5EMvycFW+v4szpfnYAjx6zo3zc/6WS+QDfpTzw/m0k0RJEzhJ4geRnS8l5xQVJeVpnPKEF5bXaJjXNadA64tAGoOTuM7YfDRMzI=
-Received: from BL0PR06MB4370.namprd06.prod.outlook.com (10.167.241.142) by
- BL0PR06MB4772.namprd06.prod.outlook.com (52.132.0.222) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.21; Fri, 17 Jan 2020 20:21:30 +0000
-Received: from BL0PR06MB4370.namprd06.prod.outlook.com
- ([fe80::dd54:50fb:1e98:46a1]) by BL0PR06MB4370.namprd06.prod.outlook.com
- ([fe80::dd54:50fb:1e98:46a1%6]) with mapi id 15.20.2644.015; Fri, 17 Jan 2020
- 20:21:30 +0000
-From:   "Schumaker, Anna" <Anna.Schumaker@netapp.com>
-To:     "dhowells@redhat.com" <dhowells@redhat.com>
-CC:     "arnd@arndb.de" <arnd@arndb.de>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "smayhew@redhat.com" <smayhew@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH v2] nfs: Return EINVAL rather than ERANGE for mount parse
- errors
-Thread-Topic: [PATCH v2] nfs: Return EINVAL rather than ERANGE for mount parse
- errors
-Thread-Index: AQHVzU6IaiabJ44BLEKEqBOxHYczS6fvEiGAgAAHmoCAADMOgA==
-Date:   Fri, 17 Jan 2020 20:21:29 +0000
-Message-ID: <5e16e2118d1c7de73627b521a2f36df76ab0e698.camel@netapp.com>
-References: <20200117165133.GA5762@pi3>
-         <464519.1579276102@warthog.procyon.org.uk> <20200117144055.GB3215@pi3>
-         <CAJKOXPeCVwZfBsCVbc9RQUGi0UfWQw0uFamPiQasiO8fSthFsQ@mail.gmail.com>
-         <433863.1579270803@warthog.procyon.org.uk>
-         <465149.1579276509@warthog.procyon.org.uk>
-         <473345.1579281525@warthog.procyon.org.uk>
-In-Reply-To: <473345.1579281525@warthog.procyon.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.34.3 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Anna.Schumaker@netapp.com; 
-x-originating-ip: [68.42.68.242]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 124e0e1d-7348-4cb6-2edc-08d79b8ad660
-x-ms-traffictypediagnostic: BL0PR06MB4772:
-x-microsoft-antispam-prvs: <BL0PR06MB4772DA25F312C85D7B16ABE4F8310@BL0PR06MB4772.namprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0285201563
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(396003)(136003)(39860400002)(376002)(189003)(199004)(5660300002)(316002)(6486002)(54906003)(6512007)(2616005)(26005)(186003)(6506007)(558084003)(6916009)(478600001)(4326008)(36756003)(64756008)(81166006)(81156014)(8936002)(8676002)(76116006)(66476007)(66556008)(66446008)(86362001)(71200400001)(91956017)(2906002)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR06MB4772;H:BL0PR06MB4370.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: netapp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /Ois6fGfRZgnHhcu73w0hX23pJKdCgGxYXqljWvwr3T120nesEWRp5QFh8pbf7SpwA9kC9f3uDPzkWk2PHMMOM7XFWuBIL5s3piX3bMyAGaS3u9S3pOKahKDi0eu9l9JlXxQWnTo+GF2qppKkTYNDvlJCTM3MbaA9M/gORbYliBPwQZB9e7JUAFCWbFTSk7yXQuAt5WAhYOJ6qqpjp09Ttu3worri2Mz/6uB0zCTZIWaWbfzMIe7vgRxGOtATxaJLiBBzgokNnPZEwkpf7BAvn2Vvkb+EMv5Nzk5HiQQrhbI6/t5mbFz4VOtXfYPAVsYBhphsRwr4H7rT62CPcHbMG3a7LChbsx98ziJ8BluLtU/hrHG4Kv3wE9hkeHIL6LXySoA/ONyEBxmu88OPNsm0GLSaLv/85hMFrMoHCH002ZvOpu2JkIs+NY4HXEvUlFW
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D3EAB88D5DC9FD4799521EAF1AA44B5A@namprd06.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: netapp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 124e0e1d-7348-4cb6-2edc-08d79b8ad660
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jan 2020 20:21:29.8478
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4b0911a0-929b-4715-944b-c03745165b3a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RkgAkorxEE1pkjo9LAhD9V2jijR+x/SkThjwlt/hhjXoHmr0zKIGY3lBTgOXN0+u+5hukluG90xvza9Ougt2lg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR06MB4772
+        Fri, 17 Jan 2020 15:21:54 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43755 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727519AbgAQUVy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 15:21:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579292513;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=ZvKx1Czra6EoUEQ9CtfFs9u9YO5nby30A33ADtqe8Fw=;
+        b=RaocN2Vwf/tImWXVR8+fSdPluuI5ifkiM+SCllo7Dz+zE5ohbUec1Ea1Sb6R51Ljl3DkB/
+        1qbEts1t2u44M0LLgIECEiUQCIuizEN7+L1duIqQS+TbUtuVEGQeWtA+BiMdnq1DkLC4v9
+        F39pK2N2hg4YehIJR9LRkj2myrw3j5E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-17-YS719jqoNNCqNbAlhgJREA-1; Fri, 17 Jan 2020 15:21:50 -0500
+X-MC-Unique: YS719jqoNNCqNbAlhgJREA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 859018017CC;
+        Fri, 17 Jan 2020 20:21:49 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-12.phx2.redhat.com [10.3.112.12])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3706460BE1;
+        Fri, 17 Jan 2020 20:21:42 +0000 (UTC)
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
+        omosnace@redhat.com, nhorman@redhat.com, eparis@parisplace.org,
+        Richard Guy Briggs <rgb@redhat.com>
+Subject: [PATCH ghak28 V4] audit: log audit netlink multicast bind and unbind events
+Date:   Fri, 17 Jan 2020 15:21:02 -0500
+Message-Id: <ca70ee17d85860aa599e0001a75d639d819de7ae.1579292286.git.rgb@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTAxLTE3IGF0IDE3OjE4ICswMDAwLCBEYXZpZCBIb3dlbGxzIHdyb3RlOg0K
-PiBIaSBBbm5hLA0KPiANCj4gQ2FuIHlvdSBwaWNrIHRoaXMgcGF0Y2ggdXAgYW5kIGFkZCBpdCB0
-byB5b3VyIGJyYW5jaD8NCg0KU3VyZSEgSSBoYXZlIGl0IGFwcGxpZWQgb24gbXkgbGFwdG9wIG5v
-dywgYW5kIEknbGwgcHVzaCBpdCBvdXQgYmVmb3JlIEkgc2lnbiBvZmYNCmZvciB0aGUgd2Vla2Vu
-ZC4NCg0KVGhhbmtzIGZvciBmaXhpbmcgaXQgc28gcXVpY2tseSENCkFubmENCg0KPiANCj4gVGhh
-bmtzLA0KPiBEYXZpZA0KPiANCg==
+Log information about programs connecting to and disconnecting from the
+audit netlink multicast socket. This is needed so that during
+investigations a security officer can tell who or what had access to the
+audit trail.  This helps to meet the FAU_SAR.2 requirement for Common
+Criteria.  Here is the systemd startup event:
+
+type=UNKNOWN[1335] msg=audit(2020-01-17 10:30:33.731:6) : pid=1 uid=root auid=unset tty=(none) ses=unset subj=kernel comm=systemd exe=/usr/lib/systemd/systemd nl-mcgrp=1 op=connect res=yes
+
+And the events from the test suite:
+
+type=PROCTITLE msg=audit(2020-01-17 10:36:24.050:294) : proctitle=/usr/bin/perl -w amcast_joinpart/test
+type=SOCKADDR msg=audit(2020-01-17 10:36:24.050:294) : saddr={ saddr_fam=netlink nlnk-fam=16 nlnk-pid=0 }
+type=SYSCALL msg=audit(2020-01-17 10:36:24.050:294) : arch=x86_64 syscall=bind success=yes exit=0 a0=0x7 a1=0x55d65cb79090 a2=0xc a3=0x0 items=0 ppid=671 pid=674 auid=root uid=root gid=root euid=root suid=root fsuid=root egid=root sgid=root fsgid=root tty=ttyS0 ses=3 comm=perl exe=/usr/bin/perl subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 key=(null)
+type=UNKNOWN[1335] msg=audit(2020-01-17 10:36:24.050:294) : pid=674 uid=root auid=root tty=ttyS0 ses=3 subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 comm=perl exe=/usr/bin/perl nl-mcgrp=1 op=connect res=yes
+
+type=UNKNOWN[1335] msg=audit(2020-01-17 10:36:24.051:295) : pid=674 uid=root auid=root tty=ttyS0 ses=3 subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 comm=perl exe=/usr/bin/perl nl-mcgrp=1 op=disconnect res=yes
+
+Please see the upstream issue tracker:
+  https://github.com/linux-audit/audit-kernel/issues/28
+  https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Multicast-Socket-Join-Part
+  https://github.com/rgbriggs/audit-testsuite/compare/ghak28-mcast-part-join
+
+Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+
+---
+Note: msg type 1334 was skipped due to BPF accepted in another tree.
+Note: v5 due to previous 2014-10-07, 2015-07-23, 2016-11-30, 2017-10-13
+Note: subj attrs included due to missing syscall record for systemd (audit=1)
+Note: tried refactor of subj attrs, but this is yet another new order.
+---
+ include/uapi/linux/audit.h |  1 +
+ kernel/audit.c             | 48 ++++++++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 45 insertions(+), 4 deletions(-)
+
+diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
+index 3ad935527177..67fb24472dc2 100644
+--- a/include/uapi/linux/audit.h
++++ b/include/uapi/linux/audit.h
+@@ -116,6 +116,7 @@
+ #define AUDIT_FANOTIFY		1331	/* Fanotify access decision */
+ #define AUDIT_TIME_INJOFFSET	1332	/* Timekeeping offset injected */
+ #define AUDIT_TIME_ADJNTPVAL	1333	/* NTP value adjustment */
++#define AUDIT_EVENT_LISTENER	1335	/* Task joined multicast read socket */
+ 
+ #define AUDIT_AVC		1400	/* SE Linux avc denial or grant */
+ #define AUDIT_SELINUX_ERR	1401	/* Internal SE Linux Errors */
+diff --git a/kernel/audit.c b/kernel/audit.c
+index 17b0d523afb3..478259f3fa53 100644
+--- a/kernel/audit.c
++++ b/kernel/audit.c
+@@ -1520,20 +1520,60 @@ static void audit_receive(struct sk_buff  *skb)
+ 	audit_ctl_unlock();
+ }
+ 
++/* Log information about who is connecting to the audit multicast socket */
++static void audit_log_multicast_bind(int group, const char *op, int err)
++{
++	const struct cred *cred;
++	struct tty_struct *tty;
++	char comm[sizeof(current->comm)];
++	struct audit_buffer *ab;
++
++	if (!audit_enabled)
++		return;
++
++	ab = audit_log_start(audit_context(), GFP_KERNEL, AUDIT_EVENT_LISTENER);
++	if (!ab)
++		return;
++
++	cred = current_cred();
++	tty = audit_get_tty();
++	audit_log_format(ab, "pid=%u uid=%u auid=%u tty=%s ses=%u",
++			 task_pid_nr(current),
++			 from_kuid(&init_user_ns, cred->uid),
++			 from_kuid(&init_user_ns, audit_get_loginuid(current)),
++			 tty ? tty_name(tty) : "(none)",
++			 audit_get_sessionid(current));
++	audit_put_tty(tty);
++	audit_log_task_context(ab); /* subj= */
++	audit_log_format(ab, " comm=");
++	audit_log_untrustedstring(ab, get_task_comm(comm, current));
++	audit_log_d_path_exe(ab, current->mm); /* exe= */
++	audit_log_format(ab, " nl-mcgrp=%d op=%s res=%d", group, op, !err);
++	audit_log_end(ab);
++}
++
+ /* Run custom bind function on netlink socket group connect or bind requests. */
+-static int audit_bind(struct net *net, int group)
++static int audit_multicast_bind(struct net *net, int group)
+ {
++	int err = 0;
++
+ 	if (!capable(CAP_AUDIT_READ))
+-		return -EPERM;
++		err = -EPERM;
++	audit_log_multicast_bind(group, "connect", err);
++	return err;
++}
+ 
+-	return 0;
++static void audit_multicast_unbind(struct net *net, int group)
++{
++	audit_log_multicast_bind(group, "disconnect", 0);
+ }
+ 
+ static int __net_init audit_net_init(struct net *net)
+ {
+ 	struct netlink_kernel_cfg cfg = {
+ 		.input	= audit_receive,
+-		.bind	= audit_bind,
++		.bind	= audit_multicast_bind,
++		.unbind	= audit_multicast_unbind,
+ 		.flags	= NL_CFG_F_NONROOT_RECV,
+ 		.groups	= AUDIT_NLGRP_MAX,
+ 	};
+-- 
+1.8.3.1
+
