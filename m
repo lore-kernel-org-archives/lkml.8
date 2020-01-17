@@ -6,78 +6,68 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B02C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F70C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2AA22082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:01:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E100A2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:05:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbgAQLBB (ORCPT
+        id S1726896AbgAQLFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 06:01:01 -0500
-Received: from mx2.suse.de ([195.135.220.15]:56288 "EHLO mx2.suse.de"
+        Fri, 17 Jan 2020 06:05:38 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36412 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726196AbgAQLBA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 06:01:00 -0500
+        id S1726343AbgAQLFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 06:05:37 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 07982ADAD;
-        Fri, 17 Jan 2020 11:00:59 +0000 (UTC)
-Subject: Re: [PATCH] xen/balloon: Support xend-based toolstack take two
-To:     Juergen Gross <jgross@suse.com>
-Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        stable@vger.kernel.org
-References: <20200116170004.14373-1-jgross@suse.com>
-From:   Jan Beulich <jbeulich@suse.com>
-Message-ID: <c29c92e3-eb20-7e0a-0174-ef72398b0998@suse.com>
-Date:   Fri, 17 Jan 2020 12:01:02 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        by mx2.suse.de (Postfix) with ESMTP id 7FF90ADE7;
+        Fri, 17 Jan 2020 11:05:36 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 0C1241E0D53; Fri, 17 Jan 2020 12:05:36 +0100 (CET)
+Date:   Fri, 17 Jan 2020 12:05:36 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     "yukuai (C)" <yukuai3@huawei.com>
+Cc:     Jan Kara <jack@suse.cz>, hch@infradead.org,
+        darrick.wong@oracle.com, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        houtao1@huawei.com, zhengbin13@huawei.com, yi.zhang@huawei.com
+Subject: Re: [RFC] iomap: fix race between readahead and direct write
+Message-ID: <20200117110536.GE17141@quack2.suse.cz>
+References: <20200116063601.39201-1-yukuai3@huawei.com>
+ <20200116153206.GF8446@quack2.suse.cz>
+ <ce4bc2f3-a23e-f6ba-0ef1-66231cd1057d@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200116170004.14373-1-jgross@suse.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ce4bc2f3-a23e-f6ba-0ef1-66231cd1057d@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.01.2020 18:00, Juergen Gross wrote:
-> Commit 3aa6c19d2f38be ("xen/balloon: Support xend-based toolstack")
-> tried to fix a regression with running on rather ancient Xen versions.
-> Unfortunately the fix was based on the assumption that xend would
-> just use another Xenstore node, but in reality only some downstream
-> versions of xend are doing that. The upstream xend does not write
-> that Xenstore node at all, so the problem must be fixed in another
-> way.
+On Fri 17-01-20 17:39:03, yukuai (C) wrote:
+> On 2020/1/16 23:32, Jan Kara wrote:
+> > Thanks for the report and the patch. But the data integrity when mixing
+> > buffered and direct IO like this is best effort only. We definitely do not
+> > want to sacrifice performance of common cases or code complexity to make
+> > cases like this work reliably.
 > 
-> The easiest way to achieve that is to fall back to the behavior before
-> commit 5266b8e4445c ("xen: fix booting ballooned down hvm guest")
-> in case the static memory maximum can't be read.
+> In the patch, the only thing that is diffrent is that iomap_begin() will
+> be called for each page. However, it seems the performance in sequential
+> read didn't get worse. Is there a specific case that the performance
+> will get worse?
 
-I could use some help here: Prior to said commit there was
+Well, one of the big points of iomap infrastructure is that you call
+filesystem once to give you large extent instead of calling it to provide
+allocation for each page separately. The additional CPU overhead will be
+visible if you push the machine hard enough. So IMHO the overhead just is
+not worth it for a corner-case like you presented. But that's just my
+opinion, Darrick and Christoph are definitive arbiters here...
 
-	target_diff = new_target - balloon_stats.target_pages;
+								Honza
 
-
-Which is, afaict, ...
-
-> --- a/drivers/xen/xen-balloon.c
-> +++ b/drivers/xen/xen-balloon.c
-> @@ -94,7 +94,7 @@ static void watch_target(struct xenbus_watch *watch,
->  				  "%llu", &static_max) == 1))
->  			static_max >>= PAGE_SHIFT - 10;
->  		else
-> -			static_max = new_target;
-> +			static_max = balloon_stats.current_pages;
->  
->  		target_diff = (xen_pv_domain() || xen_initial_domain()) ? 0
->  				: static_max - balloon_stats.target_pages;
-
-... what the code does before your change. Afaict there was
-never a use of balloon_stats.current_pages in this function.
-
-Jan
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
