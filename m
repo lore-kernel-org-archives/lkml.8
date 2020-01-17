@@ -2,98 +2,122 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F32CC33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF617C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22F712087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2C442073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:41:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579272061;
+	bh=70SA5FZFcf9Oxm3e+DoawdK1k+mIw3VL6TygM6WWdsw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=B5xmFXZYG8tQu5VpPSABn2vHgUnOffgd/8m0bYWG26Dto3m9hdlIePQjoh2G1/SCo
+	 vMVTK7MtPxw5tUR9SmdFbVNKI8HZhHJwGU8R4tsVxUYDI7KL7gjJTdRipgiSVAGRe3
+	 XWfLeRek6E2uuCWHZkGoqioGXFkBGn62CjWe4Ppc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729288AbgAQOkB (ORCPT
+        id S1729019AbgAQOlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 09:40:01 -0500
-Received: from mx2.suse.de ([195.135.220.15]:58472 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728512AbgAQOkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 09:40:00 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 59B93B17A;
-        Fri, 17 Jan 2020 14:39:58 +0000 (UTC)
-From:   Juergen Gross <jgross@suse.com>
-To:     xen-devel@lists.xenproject.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Juergen Gross <jgross@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH] xen/blkfront: limit allocated memory size to actual use case
-Date:   Fri, 17 Jan 2020 15:39:55 +0100
-Message-Id: <20200117143955.18892-1-jgross@suse.com>
-X-Mailer: git-send-email 2.16.4
+        Fri, 17 Jan 2020 09:41:00 -0500
+Received: from mail-ed1-f53.google.com ([209.85.208.53]:35617 "EHLO
+        mail-ed1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727040AbgAQOlA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 09:41:00 -0500
+Received: by mail-ed1-f53.google.com with SMTP id f8so22471359edv.2;
+        Fri, 17 Jan 2020 06:40:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zZZmY0NZ3nanY6CGdzdqm2nKvibS1y2WTEksvVBINsU=;
+        b=ORPYWl4Alpo0D3rQ+zllFO3XnYzaYYFfHAhWYm7s8aCQBnPD/dtFJgFatljIhc0Rd8
+         HxaSZxMm1SChJsu9DbaRuggA396n2mRW6FFABh23rfJkegvYbb/tr+xROxI7JASeogqn
+         f7nCYCv3FmJxzVk8D736OAx7OiAN1w+6/b0FuoLmVM6lg2lDtzQtlgsj8nH9D5AqNz6f
+         3JXFCZwtiZXILDH7cYqKk7XaiahzQJgtUy4oL+4Mk2bQAVPtdV3qHrVl8WUNFhEKb17h
+         dM40XP2DHxUb8UI0KtSpTDyeqqUtEv/LfauUYby1btl9cP4e46zJ35NwZYxjdbc/JDOM
+         XtqQ==
+X-Gm-Message-State: APjAAAWxZcuS5GaQO7cODWokEd54TYVkYFmmNQLnl/kZE4UUhlkAJggE
+        9a7k3ZssK0j76gpBnspISJw=
+X-Google-Smtp-Source: APXvYqzZN50BtBL4RQAnyEs0TAHFK7BksaR7zBONsz127LnEq/RN5u+Qb6ureyTb1eyfPaJsg1y4SQ==
+X-Received: by 2002:a17:906:4d46:: with SMTP id b6mr8091781ejv.79.1579272058266;
+        Fri, 17 Jan 2020 06:40:58 -0800 (PST)
+Received: from pi3 ([194.230.155.229])
+        by smtp.googlemail.com with ESMTPSA id qh19sm901583ejb.55.2020.01.17.06.40.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2020 06:40:57 -0800 (PST)
+Date:   Fri, 17 Jan 2020 15:40:55 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Scott Mayhew <smayhew@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [BISECT BUG] NFS v4 root not working after 6d972518b821 ("NFS:
+ Add fs_context support.")
+Message-ID: <20200117144055.GB3215@pi3>
+References: <CAJKOXPeCVwZfBsCVbc9RQUGi0UfWQw0uFamPiQasiO8fSthFsQ@mail.gmail.com>
+ <433863.1579270803@warthog.procyon.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <433863.1579270803@warthog.procyon.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Today the Xen blkfront driver allocates memory for one struct
-blkfront_ring_info for each communication ring. This structure is
-statically sized for the maximum supported configuration resulting
-in a size of more than 90 kB.
+On Fri, Jan 17, 2020 at 02:20:03PM +0000, David Howells wrote:
+> You seem to be running afoul of the check here:
+> 
+> 	case Opt_minorversion:
+> 		if (result.uint_32 > NFS4_MAX_MINOR_VERSION)
+> 			goto out_of_bounds;
+> 		ctx->minorversion = result.uint_32;
+> 		break;
+> 
+> which would seem to indicate that the mount process is supplying
+> minorversion=X as an option.  Can you modify your kernel to print param->key
+> and param->string at the top of nfs_fs_context_parse_param()?  Adding
+> something like:
+> 
+> 	pr_notice("NFSOP '%s=%s'\n", param->key, param->string);
+> 
+> will likely suffice unless you're directly driving the new mount API - in
+> which case param->string might be things other than a string, but that's
+> unlikely.  It might also be NULL, but printk should handle that.
 
-As the main size contributor is one array inside the struct, the
-memory allocation can easily be limited by moving this array to be
-the last structure element and to allocate only the memory for the
-actually needed array size.
+The output:
 
-Signed-off-by: Juergen Gross <jgross@suse.com>
----
- drivers/block/xen-blkfront.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+NFS-Mount: 192.168.1.10:/srv/nfs/odroidhc1
+Waiting 10 seconds for device /dev/nfs ...
+[   14.652366] random: crng init done
+Mount cmd:
+mount.nfs4 -o vers=4,nolock 192.168.1.10:/srv/nfs/odroidhc1 /new_root
+[   22.938314] NFSOP 'source=192.168.1.10:/srv/nfs/odroidhc1'
+[   22.942638] NFSOP 'nolock=(null)'
+[   22.945772] NFSOP 'vers=4.2'
+[   22.948660] NFSOP 'addr=192.168.1.10'
+[   22.952350] NFSOP 'clientaddr=192.168.1.12'
+[   22.956831] NFS4: Couldn't follow remote path
+[   22.971001] NFSOP 'source=192.168.1.10:/srv/nfs/odroidhc1'
+[   22.975217] NFSOP 'nolock=(null)'
+[   22.978444] NFSOP 'vers=4'
+[   22.981265] NFSOP 'minorversion=1'
+[   22.984513] NFS: Value for 'minorversion' out of range
+mount.nfs4: Numerical result out of range
+:: running cleanup hook [udev]
+ERROR: Failed to mount the real root device.
+Bailing out, you are on your own. Good luck.
 
-diff --git a/drivers/block/xen-blkfront.c b/drivers/block/xen-blkfront.c
-index c02be06c5299..61491167da19 100644
---- a/drivers/block/xen-blkfront.c
-+++ b/drivers/block/xen-blkfront.c
-@@ -151,9 +151,6 @@ MODULE_PARM_DESC(max_ring_page_order, "Maximum order of pages to be used for the
- #define BLK_RING_SIZE(info)	\
- 	__CONST_RING_SIZE(blkif, XEN_PAGE_SIZE * (info)->nr_ring_pages)
- 
--#define BLK_MAX_RING_SIZE	\
--	__CONST_RING_SIZE(blkif, XEN_PAGE_SIZE * XENBUS_MAX_RING_GRANTS)
--
- /*
-  * ring-ref%u i=(-1UL) would take 11 characters + 'ring-ref' is 8, so 19
-  * characters are enough. Define to 20 to keep consistent with backend.
-@@ -177,12 +174,12 @@ struct blkfront_ring_info {
- 	unsigned int evtchn, irq;
- 	struct work_struct work;
- 	struct gnttab_free_callback callback;
--	struct blk_shadow shadow[BLK_MAX_RING_SIZE];
- 	struct list_head indirect_pages;
- 	struct list_head grants;
- 	unsigned int persistent_gnts_c;
- 	unsigned long shadow_free;
- 	struct blkfront_info *dev_info;
-+	struct blk_shadow shadow[];
- };
- 
- /*
-@@ -1915,7 +1912,8 @@ static int negotiate_mq(struct blkfront_info *info)
- 		info->nr_rings = 1;
- 
- 	info->rinfo = kvcalloc(info->nr_rings,
--			       sizeof(struct blkfront_ring_info),
-+			       struct_size(info->rinfo, shadow,
-+					   BLK_RING_SIZE(info)),
- 			       GFP_KERNEL);
- 	if (!info->rinfo) {
- 		xenbus_dev_fatal(info->xbdev, -ENOMEM, "allocating ring_info structure");
--- 
-2.16.4
+sh: can't access tty; job control turned off
+
+Best regards,
+Krzysztof
 
