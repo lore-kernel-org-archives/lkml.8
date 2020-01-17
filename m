@@ -2,158 +2,207 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE699C33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 04:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58103C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 04:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A9DD20842
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 04:26:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579235179;
-	bh=sNetLEyfDPRRuML0NIpfa9qER9/y0UxaFx7na4fO55o=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=yB7B9p2D6BFaAuCNo9Ep2aJHuU8x8vrRjJtPULQ3Av3NXUH5LK31qqtCreb+1/7D/
-	 5UeJnRFPWKsp4aszuapUFGvWYkDvm2+dapLyLUdFpIdEZHh78RMGlUpKIL2ICVUrIF
-	 BXkR359Li094e0PTl++ohnRsZvS3vyAmfeNzLdo8=
+	by mail.kernel.org (Postfix) with ESMTP id 24F9720748
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 04:31:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729890AbgAQE0S (ORCPT
+        id S1729019AbgAQEb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 23:26:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41278 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 23:31:27 -0500
+Received: from mga03.intel.com ([134.134.136.65]:14867 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726566AbgAQE0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 23:26:18 -0500
-Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D14620748;
-        Fri, 17 Jan 2020 04:26:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579235177;
-        bh=sNetLEyfDPRRuML0NIpfa9qER9/y0UxaFx7na4fO55o=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=rMEx8bsc/4AtbauemogLDvALm4D8Ac1B3FedkSrrOA8fykacy/zzBXR2Xwy10vQwQ
-         G/oOovc/lwHGyM5ET08+DGwOeow7T0qyj5fkpYzZIF1fd/GW5TOmRXKH3yD4GWVDJ6
-         Qt7IauzcUTw2QtSEUdWfVf1loVWNSPRl6z3dAVbI=
-Message-ID: <1579235176.2474.5.camel@kernel.org>
-Subject: Re: Unresolved reference for histogram variable
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Date:   Thu, 16 Jan 2020 22:26:16 -0600
-In-Reply-To: <20200116165658.4e8d15fb@gandalf.local.home>
-References: <20200116154216.58ca08eb@gandalf.local.home>
-         <20200116165658.4e8d15fb@gandalf.local.home>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.1-1 
-Mime-Version: 1.0
+        id S1726370AbgAQEb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 23:31:26 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 20:31:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,328,1574150400"; 
+   d="scan'208";a="373545879"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 16 Jan 2020 20:31:24 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1isJI4-0005f8-9p; Fri, 17 Jan 2020 12:31:24 +0800
+Date:   Fri, 17 Jan 2020 12:31:16 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/urgent] BUILD SUCCESS
+ a006483b2f97af685f0e60f3a547c9ad4c9b9e94
+Message-ID: <5e213894.hSm/+gfNsLO5ExxV%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/urgent
+branch HEAD: a006483b2f97af685f0e60f3a547c9ad4c9b9e94  x86/CPU/AMD: Ensure clearing of SME/SEV features is maintained
 
-On Thu, 2020-01-16 at 16:56 -0500, Steven Rostedt wrote:
-> On Thu, 16 Jan 2020 15:42:16 -0500
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > in parse_expr():
-> > 
-> > 	operand1->read_once = true;
-> > 	operand2->read_once = true;
-> > 
-> > Why is that?
-> > 
-> > This means that any variable used in an expression can not be use
-> > later
-> > on.
-> > 
-> > Or should the variable be detected that it is used multiple times
-> > in
-> > the expression, and have the parser detect this, and just reuse the
-> > same variable multiple times?
-> 
-> This patch seems to fix the problem, and lets us reuse the same
-> variable multiple times.
+elapsed time: 516m
 
-It works for me too, and seems like it should be a good fix for the
-problem.  The size and is_signed might be the overkill you're referring
-to, but I'd like to spend time tomorrow verifying that and doing some
-testing to make sure.
+configs tested: 144
+configs skipped: 71
 
-Thanks,
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Tom
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+c6x                  randconfig-a001-20200117
+h8300                randconfig-a001-20200117
+microblaze           randconfig-a001-20200117
+nios2                randconfig-a001-20200117
+sparc64              randconfig-a001-20200117
+alpha                               defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+parisc                            allnoconfig
+parisc                            allyesonfig
+parisc                         b180_defconfig
+parisc                        c3000_defconfig
+parisc                              defconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+x86_64               randconfig-g001-20200117
+x86_64               randconfig-g002-20200117
+x86_64               randconfig-g003-20200117
+i386                 randconfig-g001-20200117
+i386                 randconfig-g002-20200117
+i386                 randconfig-g003-20200117
+i386                             alldefconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+x86_64               randconfig-e001-20200117
+x86_64               randconfig-e002-20200117
+x86_64               randconfig-e003-20200117
+i386                 randconfig-e001-20200117
+i386                 randconfig-e002-20200117
+i386                 randconfig-e003-20200117
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                               rhel-7.6
+um                                  defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64               randconfig-b001-20200117
+x86_64               randconfig-b002-20200117
+x86_64               randconfig-b003-20200117
+i386                 randconfig-b001-20200117
+i386                 randconfig-b002-20200117
+i386                 randconfig-b003-20200117
+alpha                randconfig-a001-20200117
+m68k                 randconfig-a001-20200117
+mips                 randconfig-a001-20200117
+nds32                randconfig-a001-20200117
+parisc               randconfig-a001-20200117
+riscv                randconfig-a001-20200117
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+m68k                       m5475evb_defconfig
+m68k                          multi_defconfig
+m68k                           sun3_defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+x86_64               randconfig-c001-20200117
+x86_64               randconfig-c002-20200117
+x86_64               randconfig-c003-20200117
+i386                 randconfig-c001-20200117
+i386                 randconfig-c002-20200117
+i386                 randconfig-c003-20200117
+csky                 randconfig-a001-20200117
+openrisc             randconfig-a001-20200117
+s390                 randconfig-a001-20200117
+sh                   randconfig-a001-20200117
+xtensa               randconfig-a001-20200117
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+x86_64               randconfig-d001-20200117
+x86_64               randconfig-d002-20200117
+x86_64               randconfig-d003-20200117
+i386                 randconfig-d001-20200117
+i386                 randconfig-d002-20200117
+i386                 randconfig-d003-20200117
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+s390                             allmodconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                                defconfig
+arc                  randconfig-a001-20200117
+arm                  randconfig-a001-20200117
+arm64                randconfig-a001-20200117
+ia64                 randconfig-a001-20200117
+powerpc              randconfig-a001-20200117
+sparc                randconfig-a001-20200117
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+x86_64               randconfig-a001-20200117
+x86_64               randconfig-a002-20200117
+x86_64               randconfig-a003-20200117
+i386                 randconfig-a001-20200117
+i386                 randconfig-a002-20200117
+i386                 randconfig-a003-20200117
+x86_64               randconfig-h001-20200117
+x86_64               randconfig-h002-20200117
+x86_64               randconfig-h003-20200117
+i386                 randconfig-h001-20200117
+i386                 randconfig-h002-20200117
+i386                 randconfig-h003-20200117
+s390                             alldefconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
 
-> 
-> -- Steve
-> 
-> diff --git a/kernel/trace/trace_events_hist.c
-> b/kernel/trace/trace_events_hist.c
-> index 117a1202a6b9..b7f944735a4a 100644
-> --- a/kernel/trace/trace_events_hist.c
-> +++ b/kernel/trace/trace_events_hist.c
-> @@ -116,6 +116,7 @@ struct hist_field {
->  	struct ftrace_event_field	*field;
->  	unsigned long			flags;
->  	hist_field_fn_t			fn;
-> +	unsigned int			ref;
->  	unsigned int			size;
->  	unsigned int			offset;
->  	unsigned int                    is_signed;
-> @@ -2432,8 +2433,16 @@ static int contains_operator(char *str)
->  	return field_op;
->  }
->  
-> +static void get_hist_field(struct hist_field *hist_field)
-> +{
-> +	hist_field->ref++;
-> +}
-> +
->  static void __destroy_hist_field(struct hist_field *hist_field)
->  {
-> +	if (--hist_field->ref > 1)
-> +		return;
-> +
->  	kfree(hist_field->var.name);
->  	kfree(hist_field->name);
->  	kfree(hist_field->type);
-> @@ -2475,6 +2484,8 @@ static struct hist_field
-> *create_hist_field(struct hist_trigger_data *hist_data,
->  	if (!hist_field)
->  		return NULL;
->  
-> +	hist_field->ref = 1;
-> +
->  	hist_field->hist_data = hist_data;
->  
->  	if (flags & HIST_FIELD_FL_EXPR || flags &
-> HIST_FIELD_FL_ALIAS)
-> @@ -2670,6 +2681,19 @@ static struct hist_field
-> *create_var_ref(struct hist_trigger_data *hist_data,
->  {
->  	unsigned long flags = HIST_FIELD_FL_VAR_REF;
->  	struct hist_field *ref_field;
-> +	int i;
-> +
-> +	for (i = 0; i < hist_data->n_var_refs; i++) {
-> +		ref_field = hist_data->var_refs[i];
-> +		/* Maybe this is overkill? */
-> +		if (ref_field->var.idx == var_field->var.idx &&
-> +		    ref_field->var.hist_data == var_field->hist_data 
-> &&
-> +		    ref_field->size == var_field->size &&
-> +		    ref_field->is_signed == var_field->is_signed) {
-> +			get_hist_field(ref_field);
-> +			return ref_field;
-> +		}
-> +	}
->  
->  	ref_field = create_hist_field(var_field->hist_data, NULL,
-> flags, NULL);
->  	if (ref_field) {
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
