@@ -2,163 +2,106 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DATE_IN_PAST_03_06,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C75B9C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18053C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FA6C217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF1EC2072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:31:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="TKh3IrbQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aCfGSOvc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727162AbgAQM0u (ORCPT
+        id S1727032AbgAQMbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 07:26:50 -0500
-Received: from ozlabs.org ([203.11.71.1]:48903 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726812AbgAQM0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 07:26:49 -0500
-Received: by ozlabs.org (Postfix, from userid 1007)
-        id 47zgKd6pB0z9sRR; Fri, 17 Jan 2020 23:26:45 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-        d=gibson.dropbear.id.au; s=201602; t=1579264005;
-        bh=kurz+DTGyHKCLIvcZzXDHOZM5UqyeQHKPspRA/gpp50=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TKh3IrbQ1yepznLeAk1CcT3rhzHe3vmWKwn5CHGDbZGSnZjOTHAcU9RLfsarsrxcI
-         XfLCeX1zS2KhCU3GeA29/mdbe6L1IRTa8TPIubPcGpbTjFZkAV1EncUmATkK/PoSYI
-         ks4QUlFQDk+0W6JDU6EZ5mFNC2Q6DQgx3ZaNAevI=
-Date:   Fri, 17 Jan 2020 19:09:37 +1000
-From:   David Gibson <david@gibson.dropbear.id.au>
-To:     Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     robh+dt@kernel.org, Frank Rowand <frowand.list@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>, sjg@chromium.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, devicetree-compiler@vger.kernel.org,
-        Steve McIntyre <steve.mcintyre@linaro.org>
-Subject: Re: [RFC PATCH 1/3] dtc: Add dtb build information option
-Message-ID: <20200117090937.GU54439@umbus>
-References: <20200113181625.3130-1-alexandre.torgue@st.com>
- <20200113181625.3130-2-alexandre.torgue@st.com>
- <20200116005741.GB54439@umbus>
- <d2594b79-a45d-dcac-3642-90016a1408b8@st.com>
+        Fri, 17 Jan 2020 07:31:22 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:48402 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726812AbgAQMbV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 07:31:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=y7OrUKG84IY0L+tBNGtZ0PesKvrqAKx1boCrDm3c8aI=; b=aCfGSOvcFxmK5voqdOHyS7LwQ
+        d6/wkVWqxbLNG/EW5oQidIwEV53Be3pazDy5aB/p87ZdU7G8EKWv93VV1fq8es4jVTFDNXFfEi7Jc
+        7EoJkzlvlprHHNz1gyKk4odSdWvGevq0oowcsvhMWY/Yu7hWsFwHV21DLfoebPqSitaBFJ1aCWilj
+        vDrgf1a8jZaEMc208qKbRiGuVr8gg4gOxVfUoIol5xtN7JRNPUw0zBBCj6dPkVOju6ELFHnYDFyqm
+        vdlDyAa2R9fiyqu4kju8Qh0xrgov8SSP6SF/AZou9yai3dd/bYFYRLlhQlJtXzo1hQCd3q49ho+rv
+        z1RWFn8IQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1isQmI-0006vH-5F; Fri, 17 Jan 2020 12:31:06 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A10B1300F4B;
+        Fri, 17 Jan 2020 13:29:26 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C89162020D908; Fri, 17 Jan 2020 13:31:03 +0100 (CET)
+Date:   Fri, 17 Jan 2020 13:31:03 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Quentin Perret <qperret@google.com>
+Cc:     Thara Gopinath <thara.gopinath@linaro.org>, mingo@redhat.com,
+        ionela.voinescu@arm.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, viresh.kumar@linaro.org,
+        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        javi.merino@kernel.org, amit.kucheria@verdurent.com,
+        kernel-team@android.com
+Subject: Re: [Patch v8 4/7] sched/fair: Enable periodic update of average
+ thermal pressure
+Message-ID: <20200117123103.GB14879@hirez.programming.kicks-ass.net>
+References: <1579031859-18692-1-git-send-email-thara.gopinath@linaro.org>
+ <1579031859-18692-5-git-send-email-thara.gopinath@linaro.org>
+ <20200116151502.GQ2827@hirez.programming.kicks-ass.net>
+ <20200117114045.GA219309@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="E75mJrUy8lRi9cGN"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d2594b79-a45d-dcac-3642-90016a1408b8@st.com>
+In-Reply-To: <20200117114045.GA219309@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jan 17, 2020 at 11:40:45AM +0000, Quentin Perret wrote:
+> On Thursday 16 Jan 2020 at 16:15:02 (+0100), Peter Zijlstra wrote:
+> > > @@ -10275,6 +10281,7 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
+> > >  {
+> > >  	struct cfs_rq *cfs_rq;
+> > >  	struct sched_entity *se = &curr->se;
+> > > +	unsigned long thermal_pressure = arch_cpu_thermal_pressure(cpu_of(rq));
+> > >  
+> > >  	for_each_sched_entity(se) {
+> > >  		cfs_rq = cfs_rq_of(se);
+> > > @@ -10286,6 +10293,7 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
+> > >  
+> > >  	update_misfit_status(curr, rq);
+> > >  	update_overutilized_status(task_rq(curr));
+> > > +	update_thermal_load_avg(rq_clock_task(rq), rq, thermal_pressure);
+> > >  }
+> > 
+> > I'm thinking this is the wrong place; should this not be in
+> > scheduler_tick(), right before calling sched_class::task_tick() ? Surely
+> > any execution will affect thermals, not only fair class execution.
+> 
+> Right, but right now only CFS takes action when we overheat. That is,
+> only CFS uses capacity_of() which is where the thermal signal gets
+> reflected.
 
---E75mJrUy8lRi9cGN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sure, but we should still track the thermals unconditionally, even if
+only CFS consumes it.
 
-On Thu, Jan 16, 2020 at 09:58:23AM +0100, Alexandre Torgue wrote:
-> Hi David
->=20
-> On 1/16/20 1:57 AM, David Gibson wrote:
-> > On Mon, Jan 13, 2020 at 07:16:23PM +0100, Alexandre Torgue wrote:
-> > > This commit adds the possibility to add build information for a DTB.
-> > > Build information can be: build date, DTS version, "who built the DTB"
-> > > (same kind of information that we get in Linux with the Linux banner).
-> > >=20
-> > > To do this, an extra option "-B" using an information file as argument
-> > > has been added. If this option is used, input device tree is appended=
- with
-> > > a new string property "Build-info". This property is built with infor=
-mation
-> > > found in information file given as argument. This file has to be gene=
-rated
-> > > by user and shouldn't exceed 256 bytes.
-> > >=20
-> > > Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-> >=20
-> > At the very least, this patch of the series will need to be sent to
-> > upstream dtc first.
->=20
-> Ok sorry. I thought that sending all the series would give more
-> information.
+> We definitely could (and maybe should) make RT and DL react to thermal
+> pressure as well when they're both capacity-aware. But perhaps that's
+> for later ? Thoughts ?
 
-That's fair enough, but in order to merge, you'll need to post against
-upstream dtc.
-
-> > I'm also not terribly clear on what you're trying to accomplish here,
-> > and why it's useful.
->=20
-> Let's take Kernel boot at example (but could be extend to other DTB "user=
-s"
-> like U-Boot). When Linux kernel booting we get a log that gives useful
-> information about kernel image: source version, build date, people who bu=
-ilt
-> the kernel image, compiler version. This information is useful for debug =
-and
-> support. The aim is to get same kind of information but for the DTB.
->=20
-> > Since you're doing this specifically for use with dtbs built in the
-> > kernel build, could you just use a:
-> > 	Build-info =3D /incbin/ "build-info.txt";
-> > in each of the in-kernel .dts files?
->=20
-> My first idea was to not modify all existing .dts files. Adding an extra
-> option in dtc is (for me) the softer way to do it. I mean, compile
-> information should come through compiler without modify .dts files outside
-> from dtc. In this way it will be easy to everybody using dtc (inside our
-> outside Linux tree) to add dtb build info (even if they don't how to writ=
-e a
-> dts file).
-
-But you're not really having this information coming from the
-compiler.  Instead you're adding a compiler option that just force
-includes another file into the generated tree, and it's up to your
-build scripts to put something useful into that file.
-
-I don't really see that as preferable to modifying the .dts files.
-
-I also dislike the fact that the option as proposed is much more
-general than the name suggests, but also very similar too, but much
-more specific than the existing /incbin/ option.
-
-What might be better would be to have a dtc option which force appends
-an extra .dts to the mail .dts compiled.  You can then put an overlay
-template in that file, something like:
-
-&{/} {
-	linux,build-info =3D /incbin/ "build-info.txt;
-}
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---E75mJrUy8lRi9cGN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl4hec4ACgkQbDjKyiDZ
-s5JBkBAAqIBfwpRffu5P/FrP1ByZCpvCoDk8mmoWaN0k75RnPYkHuEoyj3NkVzv4
-mpJ0+e5m8yGrrMollgWKrUT3qojPVUYuu/ztkx9nspAa5M2pFiM4P1dLt4n/CVoA
-qdw/cHhCI1yQ4ws22P5mcw+rdJBegrdJgJNr14VqAy8uZsU8ANoNkmVIkAZO78kY
-41Og23xr20h2UDj4is4aUwKRs5n9eSDFv8DWruoQQxgXUkaGlAsJKeCLfRkmuJ81
-UnHq6Zkil0ueCvTJSmekz6dV29ius+uoAKZFWp6qMzUmVe4+amR3y1M0dLYXZjhU
-SkeudGQVEakWnnQ/3YXKD170eRnbBEFD/d0V377Ns6BOApI+YD77KRyMKw+fMoGB
-pK0HAxHf/rFIGke5H+dRJ+yGikPFKUuCuEvBoOB1/nAtj6aSR/HXqzGed0RQUvc5
-D6kvvILwsLry55n4IDsmI+AUzTvRJwcOTmQ47BGAKmwoNaJbNoO55uXzpR5euSjG
-+yQKirwMsQKXSM3HOx6D+nHpMKxBxPCN0m8s1+5/mJeFvrL3II3jouko+tDsx84A
-7rbEEmBil4ggTtv5LOPJCX6v2Ps8WbsWfiOAkP3JqlT+RaGKA8kOo7VrwLoZWprj
-NmCxLe1tG5MP8UM7NJvbf0dMoV5/pdfYEp1AiSH5dhAgsunnGas=
-=HQxc
------END PGP SIGNATURE-----
-
---E75mJrUy8lRi9cGN--
+Yeah, that's later head-aches. Even determining what to do there, except
+panic() is going to be 'interesting'.
