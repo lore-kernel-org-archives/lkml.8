@@ -2,127 +2,86 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1C9C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0998BC33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E5E02082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:39:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579264768;
-	bh=V9JQ89MenhRIDahBTT5r+ufS8fzK17VCIuTKQTYaIfQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d9FZ6qsVQoHNZVKSlr7LKsFxHrtRmM4Y8uSzzDbtCmupCbFCTVpiJ9+qYONpGtRPy
-	 LvejSimksA0XMDMwXa6Rwok0p4cSZtf9E5M6IP45+sCIYNK7L/ewDd6LWRmTSS4dze
-	 tc+F9qP3d1fReMfWepBNqByGr9UeGbY2TwwgqsLU=
+	by mail.kernel.org (Postfix) with ESMTP id D4DEF2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:40:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="evk1J7dh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbgAQMj1 (ORCPT
+        id S1727033AbgAQMkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 07:39:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53224 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726574AbgAQMj1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 07:39:27 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6932920730;
-        Fri, 17 Jan 2020 12:39:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579264766;
-        bh=V9JQ89MenhRIDahBTT5r+ufS8fzK17VCIuTKQTYaIfQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jaJPazZu/SigkBzXTBjsv060d3X9J2JT0m8OVULDMyaPBfiBIOKi1XEvA3mjCawnp
-         kmXkK440fgfk1n4ynXs95xCkp3GjF7w5n1MPXW9jXp4xp2xObqbRd2WKLd/IpPvjjs
-         12oeBCyURh2btIIidIosTVYk3wETSsoQIJ966RKA=
-Date:   Fri, 17 Jan 2020 12:39:21 +0000
-From:   Will Deacon <will@kernel.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, nd@arm.com,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Tan Xiaojun <tanxiaojun@huawei.com>,
-        Al Grant <al.grant@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] Return EINVAL when precise_ip perf events are
- requested on Arm
-Message-ID: <20200117123920.GB8199@willie-the-truck>
-References: <20200115105855.13395-1-james.clark@arm.com>
- <20200115105855.13395-2-james.clark@arm.com>
-MIME-Version: 1.0
+        Fri, 17 Jan 2020 07:40:18 -0500
+Received: from mail-qv1-f50.google.com ([209.85.219.50]:46614 "EHLO
+        mail-qv1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbgAQMkS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 07:40:18 -0500
+Received: by mail-qv1-f50.google.com with SMTP id u1so10600462qvk.13
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 04:40:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=EEYzszKyIEcUSg4iqz8XJMBTQPM568jpucE6cSO2l/U=;
+        b=evk1J7dhPrnQM4qt0qwrFduRec8uyXznMMQKil6cinRTO+JJTAVXMKaw1qJD+PVHa+
+         i0pyYtX/WQ0OAB4STCEQt1JODVxRHLTKAGzwICxbI1wNie5+GmxI17yhpYjwG5WqSXQ8
+         1zMeF/2IWWaNZK3jy/j2lFzH6KrCqxWGE0W1AesqhYadj4/E8yrhHVXrJTnKyD5CcOft
+         PZ01dFELmQNzLRj/poE5bk9etGYpcDM8/qKg3rLKfb7cdWavl+qWSwxfI34zSfyWz9eQ
+         Mrb8VWqOHSF9wbGufmywdzwvENLE82rVcDH2NxzWbXSooyfIe0tOQhUdfCwD07B1TKuP
+         HcgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=EEYzszKyIEcUSg4iqz8XJMBTQPM568jpucE6cSO2l/U=;
+        b=oQCSMje5BPu8vUNqQendesBNQ0/yyloiL9awO2E2ad9HTIdiWOthg/hxPeXisQFh9D
+         PY6WDh2oDEvnNgun9OC2DX4MpBFO5OqniSBRHdF1p7yU4f5HsAvWHl6UNAK2ldtmaLFV
+         8icjL+wZjZdKz8p279EbsjpIJE0AC7VAMBx2KpKcLkd/bzMuob/FAQs2R76mIuJ2QQF0
+         ayUwGaGpuH3xtN+ov/AdnVWhOwv6x8TKfI8tAEbWRLhTSDD1Hh80lvM1dqQrHGqw2uDQ
+         2dM+dRaWcYiiEK3vKyI/SLuvUR9CL6vLUWeIQUbpHLSSYS65tHjJO3jQkyqyeZh/0o28
+         bhnA==
+X-Gm-Message-State: APjAAAWYa2f2KvlVu2NOcms4EbU6GD/V2/SEy5IvakWocUEZIaJPUHJv
+        mFw+rmBDlUFeIpOe838ueCzCDEsw3yfu8Q==
+X-Google-Smtp-Source: APXvYqxaTaQTCBWUWSYM2ZkSOqMtEhsiGrDIXketYgP5z6ddSb2DBWc9zQGscIbC9h1BTeB0CKoq+Q==
+X-Received: by 2002:ad4:50d2:: with SMTP id e18mr7622075qvq.9.1579264817318;
+        Fri, 17 Jan 2020 04:40:17 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id e2sm11582651qkl.3.2020.01.17.04.40.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jan 2020 04:40:16 -0800 (PST)
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200115105855.13395-2-james.clark@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH -next v4] mm/hotplug: silence a lockdep splat with printk()
+Date:   Fri, 17 Jan 2020 07:40:15 -0500
+Message-Id: <6BED7E12-CC3B-4AED-ACC8-F3533D3F3C70@lca.pw>
+References: <d7068679-e28a-98a9-f5b8-49ea47f7c092@redhat.com>
+Cc:     akpm@linux-foundation.org, mhocko@kernel.org,
+        sergey.senozhatsky.work@gmail.com, pmladek@suse.com,
+        rostedt@goodmis.org, peterz@infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@suse.com>
+In-Reply-To: <d7068679-e28a-98a9-f5b8-49ea47f7c092@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi James,
 
-On Wed, Jan 15, 2020 at 10:58:55AM +0000, James Clark wrote:
-> ARM PMU events can be delivered with arbitrary skid, and there's
-> nothing the kernel can do to prevent this. Given that, the PMU
-> cannot support precise_ip != 0.
-> 
-> Also update comment to state that attr.config field is used to
-> set the event type rather than event_id which doesn't exist.
 
-"Also..." is usually a good sign that you should split up the patch. In
-this case, you're touching a UAPI header with a questionable clarification,
-so I'd definitely rather see that handled separately.
+> On Jan 17, 2020, at 3:51 AM, David Hildenbrand <david@redhat.com> wrote:
+>=20
+> -> you are accessing the pageblock without the zone lock. It could
+> change to "isolate" again in the meantime if I am not wrong!
 
-> Signed-off-by: James Clark <james.clark@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Tan Xiaojun <tanxiaojun@huawei.com>
-> Cc: Al Grant <al.grant@arm.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  drivers/perf/arm_pmu.c          | 3 +++
->  include/uapi/linux/perf_event.h | 4 ++--
->  2 files changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
-> index df352b334ea7..4ddbdb93b3b6 100644
-> --- a/drivers/perf/arm_pmu.c
-> +++ b/drivers/perf/arm_pmu.c
-> @@ -102,6 +102,9 @@ armpmu_map_event(struct perf_event *event,
->  	u64 config = event->attr.config;
->  	int type = event->attr.type;
->  
-> +	if (event->attr.precise)
-> +		return -EINVAL;
-
-You're right that this is a user-visible change, and I'm pretty nervous
-about it to be honest with you.
-
-Perhaps a better way would be to expose something under sysfs, a bit like
-the caps directory for the SPE PMU, which identifies the fields of the attr
-structure that the driver does not ignore. I think doing this as an Arm-PMU
-specific thing initially would be fine, but it would be even better to have
-something where a driver can tell perf core about the parts it responds to
-and have this stuff populated automatically. The current design makes it
-inevitable that PMU drivers will have issues like the one you point out in
-the cover letter.
-
-Thoughts?
-
-Will
+Since we are just dumping the state for debugging, it should be fine to acce=
+pt a bit inaccuracy here due to racing. I could put a bit comments over ther=
+e.=
