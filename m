@@ -2,137 +2,113 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7721BC33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C98C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 554C424653
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:14:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2494F20842
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:17:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579256268;
+	bh=2Lv8EHNmlOaEt3WUsINfySlGqQNtY/f3joSziB+hUB0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mit8zWspNx11n8Ai0YZAtYRcG6kG593/WVkrY8RBGGa72Nq1746T/qHHeZXRYo07Y
+	 JC8A02dO4p89jlLsrq1JI/O0c4XowR5g5Qk+Yj4GZqh/9nn4RS7LJSEMyuJbvvKdny
+	 KZqJdfrnBLS4WIkfOnXlA+6fcOd7C7dMUn1JJUio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728826AbgAQKN7 (ORCPT
+        id S1726763AbgAQKRr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 05:13:59 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:49095 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbgAQKN7 (ORCPT
+        Fri, 17 Jan 2020 05:17:47 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40433 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbgAQKRr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 05:13:59 -0500
-Received: from mail-qv1-f50.google.com ([209.85.219.50]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MPGNn-1jHVCi0JGn-00PaHr; Fri, 17 Jan 2020 11:13:57 +0100
-Received: by mail-qv1-f50.google.com with SMTP id u10so10469008qvi.2;
-        Fri, 17 Jan 2020 02:13:56 -0800 (PST)
-X-Gm-Message-State: APjAAAU9ap6FwXObtvnTs//6gnoM+EqhKhx4ZW1UbNJiubHCFYy9ySat
-        BkENvIJ0YJbSGCubhnyjVERlMku6xSY6hs84dqk=
-X-Google-Smtp-Source: APXvYqwoaZC78GW7dhwVxPbk7uX0hz+jyVaodXJrhdkhFvFgQCutvZKEI2XaD/dksfbE1GnJ9fve6CoS3eGjMTvkzHk=
-X-Received: by 2002:a0c:bd20:: with SMTP id m32mr6945190qvg.197.1579256035816;
- Fri, 17 Jan 2020 02:13:55 -0800 (PST)
+        Fri, 17 Jan 2020 05:17:47 -0500
+Received: by mail-wr1-f66.google.com with SMTP id c14so22108357wrn.7
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 02:17:45 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xrJxvLC7Z/aq3pNh/DrH8onU5ingWRht14zTkzqKmZo=;
+        b=jqUPfG9dVgXrH5MQLdZS0y2gfQS09X1d9FifVRc4K1ZHjfctqJkqEdbxCnN79kvCz1
+         ZNkLLAzVTER5TjWlZbrWm4/UsMiDOILso2K2BGvDmoapi372YOsLGy0E6zkPpSJcarG4
+         KZzOgl2YjNumwdjvMBXksRrFyw8pbsK7Wsvh0tkGKMon5svjVrbxKtJkO+VozGAb+FLk
+         +M9Z041o8WobMsq2yXJsF2Q1RELVFCqCzuZECzWL5a0s7DuUIbFoQkr78hfyvGVu2wvE
+         t9GhHHyeBr6MQML9GdmD382cuyoNaTWV+eaGFWU5zbdDv+NUN17U5UmeuUihw/P8y02u
+         /BdA==
+X-Gm-Message-State: APjAAAWbNpDJeVhdYDDIEN1ObAlVjqzVEVARZ++T+K3jDXsCD7nzUrjV
+        +j0hkH1Fi44Qlx5mydk/Jro=
+X-Google-Smtp-Source: APXvYqw/9Ju3QNPOArhDuA/7fC6UkD4daXdr3tfG0dWNf1FgyI+rtjyzIPNWnW7nUK0JVYzpkHRGSw==
+X-Received: by 2002:a5d:4fd0:: with SMTP id h16mr2290353wrw.255.1579256264741;
+        Fri, 17 Jan 2020 02:17:44 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id s3sm8680818wmh.25.2020.01.17.02.17.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2020 02:17:44 -0800 (PST)
+Date:   Fri, 17 Jan 2020 11:17:43 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org,
+        sergey.senozhatsky.work@gmail.com, pmladek@suse.com,
+        rostedt@goodmis.org, peterz@infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next v4] mm/hotplug: silence a lockdep splat with
+ printk()
+Message-ID: <20200117101743.GS19428@dhcp22.suse.cz>
+References: <20200117022111.18807-1-cai@lca.pw>
+ <d7068679-e28a-98a9-f5b8-49ea47f7c092@redhat.com>
+ <20200117085932.GK19428@dhcp22.suse.cz>
+ <b8aba013-16a8-8407-9330-8884d17b9594@redhat.com>
+ <20200117094009.GP19428@dhcp22.suse.cz>
+ <521da382-d9b2-8556-d603-5537b030d8fd@redhat.com>
 MIME-Version: 1.0
-References: <CGME20200115082824epcas1p4eb45d088c2f88149acb94563c4a9b276@epcas1p4.samsung.com>
- <20200115082447.19520-1-namjae.jeon@samsung.com> <20200115082447.19520-10-namjae.jeon@samsung.com>
- <CAK8P3a3Vqz=T_=sFwBBPa2_Hi_dA=BwWod=L9JkLxUgi=aKNWw@mail.gmail.com>
- <CAKYAXd9_qmanQCcrdpScFWvPXuZvk4jhv7Gc=t_vRL9zqWNSjA@mail.gmail.com>
- <20200115133838.q33p5riihsinp6c4@pali> <CAK8P3a1ozgLYpDtveU0CtLj5fEFG8i=_QrnEAtoVFt-yC=Dc0g@mail.gmail.com>
- <20200115142428.ugsp3binf2vuiarq@pali> <CAK8P3a0_sotmv40qHkhE5M=PwEYLuJfX+uRFZvh9iGzhv6R6vw@mail.gmail.com>
- <20200115153943.qw35ya37ws6ftlnt@pali> <CAK8P3a1iYPA9MrXORiWmy1vQGoazwHs7OfPdoHLZLJDWqu9jqA@mail.gmail.com>
- <002801d5cce2$228d79f0$67a86dd0$@samsung.com>
-In-Reply-To: <002801d5cce2$228d79f0$67a86dd0$@samsung.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 17 Jan 2020 11:13:39 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a28NRp+SGr44=DTYqL0+ZqtamHwn+WYNTxVRJOJ3HtLSg@mail.gmail.com>
-Message-ID: <CAK8P3a28NRp+SGr44=DTYqL0+ZqtamHwn+WYNTxVRJOJ3HtLSg@mail.gmail.com>
-Subject: Re: [PATCH v10 09/14] exfat: add misc operations
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     Namjae Jeon <linkinjeon@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Christoph Hellwig <hch@lst.de>, sj1557.seo@samsung.com
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:OMcV1PBMCdqp0Id1noAn4yilMyi9oASYNpqGuoesk2TPvBGjpmh
- eRgtqPPBuZHKOt7FnuUjVCE3xfBNculVtQ7lGk1riSO8rWfc6YMWHOE4GhDdTt2GmuLp7tF
- rGCLUrMOKZNuxj5kfY5qgOVU1AZ+dWv8ursve8enrtc86NE1/S6NUMoJ6Xod8mtcZ0YyUsH
- DrWT0Ik0WMh6m+agB7fbw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:nlZcbhdSFjo=:zrcTFlBcUvk+kOmgTtdREK
- GxI8BQONRe0KdBCIUvZ2pUV6ql8JFGo9lYKR8pnefEixu77axymKWOpbPR3ShknR+W/kk9NKL
- MltyEPZT1qV+uEzIrWCxbtce8AB6clRUTF2NvRMQvTri6Qsi0bqFfc8cT2SOOzoi8wPkEsnUK
- I8OjnIaf1GXBiVYHt38FvCsDXRGiuXz7pfQZdPjJ3o8oej9SxfWF92CR8x1V+dI5hURhn+hfY
- yXwKOdZbQWwnoRPIUhiWCQ2eLl5FuMPIe3JnXRA3w4BFLXrrlcPAr7/WRQ0C66OCN+9dNBQYy
- C6zw4xBzJU+S+nt4cm7bcLU2GvVqHPmiMJIdkQLlvNh1E0iuDDj3AVTsrVxlnpm2sKSe2RjH0
- u/BF6P+VOeYnF/mc+XbBX6uGBK6r5hrnzFnVWGMP0d3gk1c9yQq0SCtZA7PR09LZFX0eSg5Qa
- GJyruFYdO/s3qoo2fHWwFfWjMtHhrf0NwAsS2I0elSdzMIfqgDQe83/+iIrN5DFQeH0aT31+p
- 6DmC3X8NKsIrRpDann/kdSs3ysSThkp1s7ZEnQi651UnpVNFCtRIxFxRE05KFHJIYzqTXFwZP
- 0uxgdJaKYlRxVcDX8NHJWWNyldXVlMZhmojirxzY7VCUn111ZE/Q+tKlSHGcgFaEA2zf3l34b
- HxhG6LhyWZxF8Nu1dR32Q1T6XpEOJrFAyUMuIztn6XVNG1RXOf1n+frZMF4wrM7r/jaaquFt2
- 5CEc+4YfirHtasQtknQwaCtE2Flm7m7JyJrP6Yt8dPL24oOD7WKNJbi01LHc1up+k/reyoWE5
- T4kWbY/bJIrp9Da8B/emngAzUQoZP4fW4ryF/EbytMqIzGougBkB10towissxPeeOfoEV1Iyf
- /ylIQRoBV8bMYosQ2N+Q==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <521da382-d9b2-8556-d603-5537b030d8fd@redhat.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 3:59 AM Namjae Jeon <namjae.jeon@samsung.com> wrote:
->
->
-> > This is what I think the timezone mount option should be used
-> > for: if we don't know what the timezone was for the on-disk timestamp, use
-> > the one provided by the user. However, if none was specified, it should be
-> > either sys_tz or UTC (i.e. no conversion). I would prefer the use of UTC
-> > here given the problems with sys_tz, but sys_tz would be more consistent
-> > with how fs/fat works.
-> Hi Arnd,
->
-> Could you please review this change ?
+On Fri 17-01-20 10:42:10, David Hildenbrand wrote:
+> On 17.01.20 10:40, Michal Hocko wrote:
+> > On Fri 17-01-20 10:25:06, David Hildenbrand wrote:
+> >> On 17.01.20 09:59, Michal Hocko wrote:
+> >>> On Fri 17-01-20 09:51:05, David Hildenbrand wrote:
+> >>>> On 17.01.20 03:21, Qian Cai wrote:
+> >>> [...]
+> >>>>> Even though has_unmovable_pages doesn't hold any reference to the
+> >>>>> returned page this should be reasonably safe for the purpose of
+> >>>>> reporting the page (dump_page) because it cannot be hotremoved. The
+> >>>>
+> >>>> This is only true in the context of memory unplug, but not in the
+> >>>> context of is_mem_section_removable()-> is_pageblock_removable_nolock().
+> >>>
+> >>> Well, the above should hold for that path as well AFAICS. If the page is
+> >>> unmovable then a racing hotplug cannot remove it, right? Or do you
+> >>> consider a temporary unmovability to be a problem?
+> >>
+> >> Somebody could test /sys/devices/system/memory/memoryX/removable. While
+> >> returning the unmovable page, it could become movable and
+> >> offlining+removing could succeed.
+> > 
+> > Doesn't this path use device lock or something? If not than the new code
+> > is not more racy then the existing one. Just look at
+> > is_pageblock_removable_nolock and how it dereferences struct page
+> > (page_zonenum in  page_zone.)
+> > 
+> 
+> AFAIK no device lock, no device hotplug lock, no memory hotplug lock. I
+> think it holds a reference to the device and to the kernelfs node. But
+> AFAIK that does not block removal of offlining/memory, just when the
+> objects get freed.
 
-Looks all good to me now.
-
-      Arnd
-
-> /* Convert a EXFAT time/date pair to a UNIX date (seconds since 1 1 70). */
-> void exfat_get_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
->                 __le16 time, __le16 date, u8 tz)
-> {
->         u16 t = le16_to_cpu(time);
->         u16 d = le16_to_cpu(date);
->
->         ts->tv_sec = mktime64(1980 + (d >> 9), d >> 5 & 0x000F, d & 0x001F,
->                               t >> 11, (t >> 5) & 0x003F, (t & 0x001F) << 1);
->         ts->tv_nsec = 0;
->
->         if (tz & EXFAT_TZ_VALID)
->                 /* Adjust timezone to UTC0. */
->                 exfat_adjust_tz(ts, tz & ~EXFAT_TZ_VALID);
->         else
->                 /* Convert from local time to UTC using time_offset. */
->                 ts->tv_sec -= sbi->options.time_offset * SECS_PER_MIN;
-> }
->
-> /* Convert linear UNIX date to a EXFAT time/date pair. */
-> void exfat_set_entry_time(struct exfat_sb_info *sbi, struct timespec64 *ts,
->                 __le16 *time, __le16 *date, u8 *tz)
-> {
->         struct tm tm;
->         u16 t, d;
->
->         time64_to_tm(ts->tv_sec, 0, &tm);
->         t = (tm.tm_hour << 11) | (tm.tm_min << 5) | (tm.tm_sec >> 1);
->         d = ((tm.tm_year - 80) <<  9) | ((tm.tm_mon + 1) << 5) | tm.tm_mday;
->
->         *time = cpu_to_le16(t);
->         *date = cpu_to_le16(d);
->
->         /*
->          * Record 00h value for OffsetFromUtc field and 1 value for OffsetValid
->          * to indicate that local time and UTC are the same.
->          */
->         *tz = EXFAT_TZ_VALID;
-> }
->
-> Thanks!
->
+OK, so we are bug compatible after this patch ;)
+-- 
+Michal Hocko
+SUSE Labs
