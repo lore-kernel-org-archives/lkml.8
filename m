@@ -2,288 +2,163 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD84C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9A6C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CF3220748
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 816222082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:20:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TkemZIod"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IjpQ6Aru"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbgAQVT0 (ORCPT
+        id S1727005AbgAQVUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 16:19:26 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39423 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726744AbgAQVT0 (ORCPT
+        Fri, 17 Jan 2020 16:20:03 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:52965 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbgAQVUD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 16:19:26 -0500
-Received: by mail-pf1-f196.google.com with SMTP id q10so12501905pfs.6
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 13:19:25 -0800 (PST)
+        Fri, 17 Jan 2020 16:20:03 -0500
+Received: by mail-pj1-f65.google.com with SMTP id a6so3695139pjh.2
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 13:20:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xQ1cLk8AoXeuMnKaeWOsZO8UOMouGKhMSseZSkEh3GE=;
-        b=TkemZIodaalJY7NhP8tqKO8FcrHui0ykeJnmEu0rE/fbHzNyBS4V9bBJ46T5sEREG5
-         Yl6uPvIvEYkYH+Q/0loq+RaQpLIyjDHRu/Uz0+q6dCKQuLBmFwYW0HMs7rA9dTuT2+wJ
-         AgJNy6RrszArjB9DsPScMNZr4c/3hXNVacSow=
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=0ov/MSAN6f4SPopx5kOpmENhTI+79DbFyHl+2GkJMEA=;
+        b=IjpQ6AruYOQXtDxHd+zKg5GsKnESXxpMZo+UVz/wmImaZBIE8VKhbVzLt2LoklC5bD
+         l9h3c2KcYAhdV9hV9YOSoz+vrrcgb6HYYAfoqYyQcq4NzvKbdOmBgQtBZ8VIsv4SWiyq
+         XINwdMI5Yig58QPf0z8GIetXCQQjMGEz/8v98=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xQ1cLk8AoXeuMnKaeWOsZO8UOMouGKhMSseZSkEh3GE=;
-        b=Z21aLVqUhTPBLKtVWSVlrBcDMhNMrfSob2Io1prgsKWO8jMGkgimdLQTtp4u9QksTl
-         0XVx65sRR4kZSVe+q8rvsR1I4SAgKr0qUgV6Wg3ik2Z9jPg/OuDVuKO9sUXwA1FFJLxD
-         7TxmbKuVO/nexSRqRDRUGc5/ZXoL5gLSpq+SqrNinuBrFMGkb+3WTsc8M3rZn0xthUEF
-         Nws9WtE0UocYhPoQWRIeOyDeBvnSHifUnbW0hkjUmPkG3x0yy1NCAidCAx5ewK6yzPJQ
-         snWQ8Ubn4vX3ZDFAXDUWxo+54+HUYiM2+Ocg6LWhnSG+wMXaHBt9GJAzlsu2a5xMFh+E
-         bJ1A==
-X-Gm-Message-State: APjAAAWdmvO9n+dhzJH44wOu9s9EnmA7MAWHWd5yfoUKE0uAubcb3XS2
-        XPruCO3C9JG705h4DC1O3jA74w==
-X-Google-Smtp-Source: APXvYqxklwQN4hb4h7rQyUp+FqWvLu9tWtd2vCg8YQ9W2WZ8ZQXBY7Gogl25eaHpTd4/WozJVoUhhA==
-X-Received: by 2002:aa7:9115:: with SMTP id 21mr5002360pfh.224.1579295965102;
-        Fri, 17 Jan 2020 13:19:25 -0800 (PST)
-Received: from chromium.org ([165.231.253.166])
-        by smtp.gmail.com with ESMTPSA id 81sm31092889pfx.30.2020.01.17.13.19.18
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0ov/MSAN6f4SPopx5kOpmENhTI+79DbFyHl+2GkJMEA=;
+        b=QnQj6su2n4pGnLqZlsMyzfPvipw5JRKAy0vdWmW231BUgUPvtMkyiek/bSFCNEGU9l
+         C358karvdbpIrf/eY99F61WVU+QH37nADzIZLQ/OpNuLg2ZXgwinxxnenDWwDlE/v+oN
+         zaGKZItKRfwZmFbreYjZdyEYqLDUzufJutJgP0Mr1bY8/7Bb88mnuSX8SFDcU2LT889X
+         MKhDQSEjVGiCw8rDXtz8dl+LYdRWOzFAAqP19I4K4NcXQwoCnb72zUeZgsZhp3hU3UJu
+         M0aQPYgX1LugY1QFlzsTsbIdF8QBA6Ux+Wsck5RhWbXARMCo/OnD14Jaztf72bnks0AW
+         Au6g==
+X-Gm-Message-State: APjAAAWBZ283A1zMO9dQFikMdPzJugMtuXOoyaZcyzmrYBrzR8C6ASq8
+        Hp44D7O67lsUFrPoGXAAHfBURA==
+X-Google-Smtp-Source: APXvYqy3GM8G96xZEmnB/alOHFkZv4nSmr+HVZwvtwVaFU/LFlURsKL++MNAsUwSkHdtG7mGhpS4tw==
+X-Received: by 2002:a17:902:b401:: with SMTP id x1mr1280965plr.326.1579296002758;
+        Fri, 17 Jan 2020 13:20:02 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w11sm29039174pfn.4.2020.01.17.13.20.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 13:19:24 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Fri, 17 Jan 2020 22:19:32 +0100
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Anton Protopopov <a.s.protopopov@gmail.com>,
-        Florent Revest <revest@chromium.org>
-Subject: Re: [PATCH bpf-next] libbpf: Load btf_vmlinux only once per object.
-Message-ID: <20200117211932.GA6256@chromium.org>
-References: <20200117165821.21482-1-kpsingh@chromium.org>
- <CAEf4Bzazg0HQt7dSXMBdGTePL+zrTxVP5v5WpSYKk8PFpF4iYg@mail.gmail.com>
+        Fri, 17 Jan 2020 13:20:01 -0800 (PST)
+Date:   Fri, 17 Jan 2020 13:20:00 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Elena Petrova <lenaptr@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-hardening@lists.openwall.com,
+        syzkaller <syzkaller@googlegroups.com>
+Subject: Re: [PATCH v3 5/6] kasan: Unset panic_on_warn before calling panic()
+Message-ID: <202001171317.5E3C106F@keescook>
+References: <20200116012321.26254-1-keescook@chromium.org>
+ <20200116012321.26254-6-keescook@chromium.org>
+ <CACT4Y+batRaj_PaDnfzLjpLDOCChhpiayKeab-rNLx5LAj1sSQ@mail.gmail.com>
+ <202001161548.9E126B774F@keescook>
+ <CACT4Y+Z9o4B37-sNU2582FBv_2+evgyKVbVo-OAufLrsney=wA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAEf4Bzazg0HQt7dSXMBdGTePL+zrTxVP5v5WpSYKk8PFpF4iYg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CACT4Y+Z9o4B37-sNU2582FBv_2+evgyKVbVo-OAufLrsney=wA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for taking a look. Sending out a v2 with the fixes.
-
-On 17-Jan 11:02, Andrii Nakryiko wrote:
-> On Fri, Jan 17, 2020 at 8:58 AM KP Singh <kpsingh@chromium.org> wrote:
+On Fri, Jan 17, 2020 at 10:54:36AM +0100, Dmitry Vyukov wrote:
+> On Fri, Jan 17, 2020 at 12:49 AM Kees Cook <keescook@chromium.org> wrote:
 > >
-> > From: KP Singh <kpsingh@google.com>
+> > On Thu, Jan 16, 2020 at 06:23:01AM +0100, Dmitry Vyukov wrote:
+> > > On Thu, Jan 16, 2020 at 2:24 AM Kees Cook <keescook@chromium.org> wrote:
+> > > >
+> > > > As done in the full WARN() handler, panic_on_warn needs to be cleared
+> > > > before calling panic() to avoid recursive panics.
+> > > >
+> > > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > > ---
+> > > >  mm/kasan/report.c | 10 +++++++++-
+> > > >  1 file changed, 9 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/mm/kasan/report.c b/mm/kasan/report.c
+> > > > index 621782100eaa..844554e78893 100644
+> > > > --- a/mm/kasan/report.c
+> > > > +++ b/mm/kasan/report.c
+> > > > @@ -92,8 +92,16 @@ static void end_report(unsigned long *flags)
+> > > >         pr_err("==================================================================\n");
+> > > >         add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
+> > > >         spin_unlock_irqrestore(&report_lock, *flags);
+> > > > -       if (panic_on_warn)
+> > > > +       if (panic_on_warn) {
+> > > > +               /*
+> > > > +                * This thread may hit another WARN() in the panic path.
+> > > > +                * Resetting this prevents additional WARN() from panicking the
+> > > > +                * system on this thread.  Other threads are blocked by the
+> > > > +                * panic_mutex in panic().
+> > >
+> > > I don't understand part about other threads.
+> > > Other threads are not necessary inside of panic(). And in fact since
+> > > we reset panic_on_warn, they will not get there even if they should.
+> > > If I am reading this correctly, once one thread prints a warning and
+> > > is going to panic, other threads may now print infinite amounts of
+> > > warning and proceed past them freely. Why is this the behavior we
+> > > want?
 > >
-> > As more programs (TRACING, STRUCT_OPS, and upcoming LSM) use vmlinux
-> > BTF information, loading the BTF vmlinux information for every program
-> > in an object is sub-optimal. The fix was originally proposed in:
-> >
-> >    https://lore.kernel.org/bpf/CAEf4BzZodr3LKJuM7QwD38BiEH02Cc1UbtnGpVkCJ00Mf+V_Qg@mail.gmail.com/
-> >
-> > The btf_vmlinux is populated in the object if any of the programs in
-> > the object requires it just before the programs are loaded and freed
-> > after the programs finish loading.
-> >
-> > Reported-by: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-> > Reviewed-by: Brendan Jackman <jackmanb@chromium.org>
-> > Signed-off-by: KP Singh <kpsingh@google.com>
-> > ---
+> > AIUI, the issue is the current thread hitting another WARN and blocking
+> > on trying to call panic again. WARNs encountered during the execution of
+> > panic() need to not attempt to call panic() again.
 > 
-> Thanks for the clean up! Few issues, but overall I like this.
+> Yes, but the variable is global and affects other threads and the
+> comment talks about other threads, and that's the part I am confused
+> about (for both comment wording and the actual behavior). For the
+> "same thread hitting another warning" case we need a per-task flag or
+> something.
 
-Thanks!
+This is duplicating the common panic-on-warn logic (see the generic bug
+code), so I'd like to just have the same behavior between the three
+implementations of panic-on-warn (generic bug, kasan, ubsan), and then
+work to merge them into a common handler, and then perhaps fix the
+details of the behavior. I think it's more correct to allow the panicing
+thread to complete than to care about what the other threads are doing.
+Right now, a WARN within the panic code will either a) hang the machine,
+or b) not panic, allowing the rest of the threads to continue, maybe
+then hitting other WARNs and hanging. The generic bug code does not
+suffer from this.
 
-> 
-> >  tools/lib/bpf/libbpf.c | 148 +++++++++++++++++++++++++++--------------
-> >  1 file changed, 97 insertions(+), 51 deletions(-)
-> >
-> > diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> > index 3afaca9bce1d..db0e93882a3b 100644
-> > --- a/tools/lib/bpf/libbpf.c
-> > +++ b/tools/lib/bpf/libbpf.c
-> > @@ -385,6 +385,10 @@ struct bpf_object {
-> 
-> [...]
-> 
-> > @@ -2364,6 +2357,38 @@ static int bpf_object__finalize_btf(struct bpf_object *obj)
-> >         return 0;
-> >  }
-> >
-> > +static inline bool libbpf_prog_needs_vmlinux_btf(struct bpf_program *prog)
-> > +{
-> 
-> I suspect that at some point this approach won't be flexible enough,
-> but it simplifies error handling right now, so I'm ok with it.
-
-Acknowledged.
-
-> 
-> > +       if (prog->type == BPF_PROG_TYPE_STRUCT_OPS)
-> > +               return true;
-> > +
-> > +       /* BPF_PROG_TYPE_TRACING programs which do not attach to other programs
-> > +        * also need vmlinux BTF
-> > +        */
-> > +       if (prog->type == BPF_PROG_TYPE_TRACING && !prog->attach_prog_fd)
-> > +               return true;
-> > +
-> > +       return false;
-> > +}
-> > +
-> > +static int bpf_object__load_vmlinux_btf(struct bpf_object *obj)
-> > +{
-> > +       struct bpf_program *prog;
-> > +
-> > +       bpf_object__for_each_program(prog, obj) {
-> > +               if (libbpf_prog_needs_vmlinux_btf(prog)) {
-> > +                       obj->btf_vmlinux = libbpf_find_kernel_btf();
-> > +                       if (IS_ERR(obj->btf_vmlinux)) {
-> > +                               pr_warn("vmlinux BTF is not found\n");
-> 
-> please, emit error code as well
-> 
-> also, clear out btf_vmlinux, otherwise your code will attempt to free
-> invalid pointer later on
-
-Done, also changed it so that the error code does not get clobbered.
- 
-> > +                               return -EINVAL;
-> > +                       }
-> > +                       return 0;
-> > +               }
-> > +       }
-> > +
-> > +       return 0;
-> > +}
-> 
-> [...]
-> 
-> > @@ -5280,10 +5301,17 @@ int bpf_object__load_xattr(struct bpf_object_load_attr *attr)
-> >         err = err ? : bpf_object__resolve_externs(obj, obj->kconfig);
-> >         err = err ? : bpf_object__sanitize_and_load_btf(obj);
-> >         err = err ? : bpf_object__sanitize_maps(obj);
-> > +       err = err ? : bpf_object__load_vmlinux_btf(obj);
-> >         err = err ? : bpf_object__init_kern_struct_ops_maps(obj);
-> >         err = err ? : bpf_object__create_maps(obj);
-> >         err = err ? : bpf_object__relocate(obj, attr->target_btf_path);
-> >         err = err ? : bpf_object__load_progs(obj, attr->log_level);
-> > +
-> > +       if (obj->btf_vmlinux) {
-> 
-> you can skip this check, btf__free(NULL) is handled properly as noop
-
-Done. Skipped.
+-Kees
 
 > 
-> > +               btf__free(obj->btf_vmlinux);
-> > +               obj->btf_vmlinux = NULL;
-> > +       }
-> > +
-> >         if (err)
-> >                 goto out;
-> 
-> [...]
-> 
-> > +
-> > +static inline int __find_vmlinux_btf_id(struct btf *btf, const char *name,
-> > +                                       enum bpf_attach_type attach_type)
-> > +{
-> > +       int err;
-> > +
-> > +       if (attach_type == BPF_TRACE_RAW_TP)
-> > +               err = find_btf_by_prefix_kind(btf, BTF_TRACE_PREFIX, name,
-> > +                                             BTF_KIND_TYPEDEF);
-> > +       else
-> > +               err = btf__find_by_name_kind(btf, name, BTF_KIND_FUNC);
-> > +
-> > +       return err;
-> > +}
-> > +
-> >  int libbpf_find_vmlinux_btf_id(const char *name,
-> >                                enum bpf_attach_type attach_type)
-> >  {
-> >         struct btf *btf = libbpf_find_kernel_btf();
-> 
-> I had complaints previously about doing too much heavy-lifting in
-> variable assignment, not sure why this slipped through. Can you please
-> split this into variable declaration and separate assignment below?
-
-Done.
-
-> 
-> > -       char raw_tp_btf[128] = BTF_PREFIX;
-> > -       char *dst = raw_tp_btf + sizeof(BTF_PREFIX) - 1;
-> > -       const char *btf_name;
-> > -       int err = -EINVAL;
-> > -       __u32 kind;
+> > -Kees
 > >
-> >         if (IS_ERR(btf)) {
-> >                 pr_warn("vmlinux BTF is not found\n");
-> >                 return -EINVAL;
-> >         }
+> > >
+> > > > +                */
+> > > > +               panic_on_warn = 0;
+> > > >                 panic("panic_on_warn set ...\n");
+> > > > +       }
+> > > >         kasan_enable_current();
+> > > >  }
 > >
-> > -       if (attach_type == BPF_TRACE_RAW_TP) {
-> > -               /* prepend "btf_trace_" prefix per kernel convention */
-> > -               strncat(dst, name, sizeof(raw_tp_btf) - sizeof(BTF_PREFIX));
-> > -               btf_name = raw_tp_btf;
-> > -               kind = BTF_KIND_TYPEDEF;
-> > -       } else {
-> > -               btf_name = name;
-> > -               kind = BTF_KIND_FUNC;
-> > -       }
-> > -       err = btf__find_by_name_kind(btf, btf_name, kind);
-> > -       btf__free(btf);
-> > -       return err;
-> > +       return __find_vmlinux_btf_id(btf, name, attach_type);
-> >  }
-> >
-> >  static int libbpf_find_prog_btf_id(const char *name, __u32 attach_prog_fd)
-> > @@ -6567,10 +6612,11 @@ static int libbpf_find_prog_btf_id(const char *name, __u32 attach_prog_fd)
-> >         return err;
-> >  }
-> >
-> > -static int libbpf_find_attach_btf_id(const char *name,
-> > -                                    enum bpf_attach_type attach_type,
-> > -                                    __u32 attach_prog_fd)
-> > +static int libbpf_find_attach_btf_id(struct bpf_program *prog)
-> >  {
-> > +       enum bpf_attach_type attach_type = prog->expected_attach_type;
-> > +       __u32 attach_prog_fd = prog->attach_prog_fd;
-> > +       const char *name = prog->section_name;
-> >         int i, err;
-> >
-> >         if (!name)
-> > @@ -6585,8 +6631,8 @@ static int libbpf_find_attach_btf_id(const char *name,
-> >                         err = libbpf_find_prog_btf_id(name + section_defs[i].len,
-> >                                                       attach_prog_fd);
-> >                 else
-> > -                       err = libbpf_find_vmlinux_btf_id(name + section_defs[i].len,
-> > -                                                        attach_type);
-> > +                       err = __find_vmlinux_btf_id(prog->obj->btf_vmlinux,
-> > +                               name + section_defs[i].len, attach_type);
-> 
-> argument indentation is off here, please fix
-
-Fixed.
-
-- KP
-> 
-> >                 if (err <= 0)
-> >                         pr_warn("%s is not found in vmlinux BTF\n", name);
-> >                 return err;
 > > --
-> > 2.20.1
-> >
+> > Kees Cook
+
+-- 
+Kees Cook
