@@ -2,273 +2,154 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F642C33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 03:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A33CC33CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 03:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B71520684
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 03:53:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC41120684
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 03:53:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="djKQVSH/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t2YIul1P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729274AbgAQDxq (ORCPT
+        id S1729625AbgAQDxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 22:53:46 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60471 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729110AbgAQDxp (ORCPT
+        Thu, 16 Jan 2020 22:53:52 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:51669 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729110AbgAQDxu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 22:53:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579233222;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=LVghNsjkwzZgb//eJukU2qlgWLDg3WtK8FvODGeUu0Q=;
-        b=djKQVSH/5GNKtDckKD6G8UHzR6wcPzwv8HZ2/7SBqqk8XRv7DZlsbGNAo9FVJBr0fI2DP9
-        9aCr9rZlRAiD7ce/blkn6DjwafKAcCmHyK72k4HHy2nwgatgL2rtSTm1pbEu4Zi7KzjGyC
-        ybZWDa/X8f5XgxH5aVKl86F7eBg7WFA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-290-jZ8McRMOOKGR6bV5FNeOmA-1; Thu, 16 Jan 2020 22:53:41 -0500
-X-MC-Unique: jZ8McRMOOKGR6bV5FNeOmA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1F5161005510;
-        Fri, 17 Jan 2020 03:53:40 +0000 (UTC)
-Received: from localhost (ovpn-8-21.pek2.redhat.com [10.72.8.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B57B488872;
-        Fri, 17 Jan 2020 03:53:30 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ming Lei <ming.lei@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Peter Xu <peterx@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH V2] sched/isolation: isolate from handling managed interrupt
-Date:   Fri, 17 Jan 2020 11:53:26 +0800
-Message-Id: <20200117035326.20659-1-ming.lei@redhat.com>
+        Thu, 16 Jan 2020 22:53:50 -0500
+Received: by mail-pj1-f66.google.com with SMTP id d15so2555431pjw.1;
+        Thu, 16 Jan 2020 19:53:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=f0CpFBRgTSpSHqh2qxHh8dF2T+jWA4ebI3e9GQKOUfA=;
+        b=t2YIul1P+9P+NNySuURdDX/pnuGRgUCb+7bb5CHQQbykOUsSNt6n8p1sYw7G2krdif
+         7ELfKASe5hK8rDXEQoq56nze3q+v82cthQcfFfNjI+aCWZLTMapFHmEA7tVGpqHewDx7
+         Zesbrumz+SBu8Bjgf+azX+vW66YrT3jtDEJy4OABHVgn2apQufHQ/QbHHpsQiGuTzuiA
+         C6mUts4PAWlwPeX8toCQTuFJIFXJYlyEIEdvWc2orCbT7TCF0EqigqZvrYCs3Wc/xxrA
+         D5XHHsCDJVyBUxr/4jfcPGQ8y6a8/y5I1S6KfcPlHFFDIPCT2WFznD2X0ZZ1r+hFAqAF
+         p1Gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=f0CpFBRgTSpSHqh2qxHh8dF2T+jWA4ebI3e9GQKOUfA=;
+        b=LURaxRxuT1knhsR60ZOdZLl4vZCV10vdqICUPh/7coRtrOLnimPbO4WAZAWNMzepz1
+         iuBKoW7LKZVbl7guE2YcBICB59VpKSpzM1mLSW90VSvU+qQlFVMDwmtG+u20L4wYlUjM
+         CPlfaajlYgqCcRAx193PQGubqVu7Cdz/15hNm9SpOqLsxjJOgdokcZTJUi+ZpSg8+9lc
+         5gB1TPfxNaJEDKah8aS0vAHUkTJuhS/5YpQWrEW1Nh81USFC7WawM2kHxoBztByzQ/N8
+         DC+YOJUqd5biDl0Eb279HR97Mgr75hQIYzjLFvquCtvGcO8ztpfZUvOwSN8nojQKADzD
+         36qw==
+X-Gm-Message-State: APjAAAXqkKYYPnLaQD1qyJdamml7JXtyOPoikdu2G1kF6ccZcSaTYJ67
+        +Efsq2VpjF/lOs6+nliyU0o=
+X-Google-Smtp-Source: APXvYqwl9QSjdzurBW5ySak6XiDPzigdspaQ9CYNf8nBtoOFr53QFa1WMt2beNVp79QHHXOCgIj+Zw==
+X-Received: by 2002:a17:902:8bc3:: with SMTP id r3mr29744217plo.220.1579233229322;
+        Thu, 16 Jan 2020 19:53:49 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id a23sm28799687pfg.82.2020.01.16.19.53.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jan 2020 19:53:48 -0800 (PST)
+Subject: Re: [PATCH v2] hwmon: Driver for temperature sensors on SATA drives
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org,
+        Chris Healy <cphealy@gmail.com>
+References: <20191215174509.1847-1-linux@roeck-us.net>
+ <20191215174509.1847-2-linux@roeck-us.net> <yq1r211dvck.fsf@oracle.com>
+ <b22a519c-8f26-e731-345f-9deca1b2150e@roeck-us.net>
+ <yq1sgkq21ll.fsf@oracle.com> <20200108153341.GB28530@roeck-us.net>
+ <38af9fda-9edf-1b54-bd8d-92f712ae4cda@roeck-us.net>
+ <yq1r202spr9.fsf@oracle.com>
+ <403cfbf8-79da-94f1-509f-e90d1a165722@roeck-us.net>
+ <yq14kwwnioo.fsf@oracle.com> <20200116174703.GA7850@roeck-us.net>
+ <yq18sm6n9hp.fsf@oracle.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <87a7372c-702c-091a-ab3f-b589e68a1ecb@roeck-us.net>
+Date:   Thu, 16 Jan 2020 19:53:46 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <yq18sm6n9hp.fsf@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Userspace can't change managed interrupt's affinity via /proc interface,
-however, applications often require the specified isolated CPUs not
-disturbed by interrupts.
+On 1/16/20 5:43 PM, Martin K. Petersen wrote:
+> 
+> Guenter,
+> 
+>> Can you by any chance provide a full traceback ?
+> 
+> My test machines are tied up with something else right now. This is from
+> a few days ago (pristine hwmon-next, I believe):
+> 
+> [ 1055.611912] ------------[ cut here ]------------
+> [ 1055.611922] WARNING: CPU: 3 PID: 3233 at drivers/base/dd.c:519 really_probe+0x436/0x4f0
+> [ 1055.611925] Modules linked in: sd_mod sg ahci libahci libata drivetemp scsi_mod crc32c_intel igb i2c_algo_bit i2c_core dca hwmon ipv6 nf_defrag_ipv6 crc_ccitt
+> [ 1055.611955] CPU: 3 PID: 3233 Comm: kworker/u17:1 Tainted: G        W         5.5.0-rc1+ #21
+> [ 1055.611965] Workqueue: events_unbound async_run_entry_fn
+> [ 1055.611973] RIP: 0010:really_probe+0x436/0x4f0
+> [ 1055.611979] Code: c7 30 69 f8 82 e8 ba 94 e5 ff e9 60 ff ff ff 48 8d 7b 38 e8 cc d9 b4 ff 48 8b 43 38 48 85 c0 0f 85 41 fd ff ff e9 4f fd ff ff <0f> 0b e9 66 fc ff ff 48 8d 7d 50 e8 aa d9 b4 ff 4c 8b 6d 50 4d 85
+> [ 1055.611983] RSP: 0018:ffff8881edb77c98 EFLAGS: 00010287
+> [ 1055.611989] RAX: ffff8881e1f8fb80 RBX: ffffffffa033a000 RCX: ffffffff8182e583
+> [ 1055.611993] RDX: dffffc0000000000 RSI: 0000000000000004 RDI: ffff8881dec506a8
+> [ 1055.611997] RBP: ffff8881dec50238 R08: 0000000000000001 R09: fffffbfff09629ed
+> [ 1055.612000] R10: fffffbfff09629ec R11: 0000000000000003 R12: 0000000000000000
+> [ 1055.612004] R13: ffff8881dec506a8 R14: ffffffff8182eca0 R15: 000000000000000b
+> [ 1055.612009] FS:  0000000000000000(0000) GS:ffff8881f8900000(0000) knlGS:0000000000000000
+> [ 1055.612013] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [ 1055.612017] CR2: 00007f957884a000 CR3: 00000001df5ec003 CR4: 00000000000606e0
+> [ 1055.612020] Call Trace:
+> [ 1055.612038]  ? driver_probe_device+0x170/0x170
+> [ 1055.612045]  driver_probe_device+0x82/0x170
+> [ 1055.612058]  ? driver_probe_device+0x170/0x170
+> [ 1055.612064]  __driver_attach_async_helper+0xa3/0xe0
+> [ 1055.612076]  async_run_entry_fn+0x68/0x2a0
+> [ 1055.612094]  process_one_work+0x4df/0x990
+> [ 1055.612121]  ? pwq_dec_nr_in_flight+0x110/0x110
+> [ 1055.612127]  ? do_raw_spin_lock+0x113/0x1d0
+> [ 1055.612161]  worker_thread+0x78/0x5c0
+> [ 1055.612190]  ? process_one_work+0x990/0x990
+> [ 1055.612195]  kthread+0x1be/0x1e0
+> [ 1055.612202]  ? kthread_create_worker_on_cpu+0xd0/0xd0
+> [ 1055.612215]  ret_from_fork+0x3a/0x50
+> [ 1055.612251] irq event stamp: 3512
+> [ 1055.612259] hardirqs last  enabled at (3511): [<ffffffff81d2b874>] _raw_spin_unlock_irq+0x24/0x30
+> [ 1055.612265] hardirqs last disabled at (3512): [<ffffffff810029c9>] trace_hardirqs_off_thunk+0x1a/0x1c
+> [ 1055.612272] softirqs last  enabled at (3500): [<ffffffff820003a5>] __do_softirq+0x3a5/0x5a8
+> [ 1055.612281] softirqs last disabled at (3489): [<ffffffff810cec7b>] irq_exit+0xfb/0x100
+> [ 1055.612284] ---[ end trace f0a8dd9a37bea031 ]---
+> 
+>> Either case, I would like to track down how the warning happens, so any
+>> information you can provide that lets me reproduce the problem would be
+>> very helpful.
+> 
+> The three systems that exhibit the problem are stock (2010/2012/2014
+> vintage) x86_64 servers with onboard AHCI and a variety of 4-6 SATA
+> drives each.
+> 
+> For the qemu test I didn't have ahci configured but I had my SCSI temp
+> patch on top of yours and ran modprobe drivetemp; modprobe scsi_debug to
+> trigger the warnings.
+> 
 
-Add sub-parameter 'managed_irq' for 'isolcpus', so that we can isolate
-from handling managed interrupt.
+Interesting. Looks like your system performs asynchronous probing.
+No idea how that can result in that kind of problem, but who knows.
+Can you send me the qemu command line ?
 
-Not select irq effective CPU from isolated CPUs if the interrupt affinity
-includes at least one housekeeping CPU. This way guarantees that isolated
-CPUs won't be interrupted by managed irq if IO isn't submitted from any
-isolated CPU.
-
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Peter Xu <peterx@redhat.com>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
-V2:
-	- not allocate cpumask in context with irq_desc::lock held
-	- deal with cpu hotplug race with new flag of IRQD_MANAGED_FORCE_MIGRATE
-	- use comment doc from Thomas
-
-
- .../admin-guide/kernel-parameters.txt         |  9 +++++
- include/linux/irq.h                           |  8 ++++
- include/linux/sched/isolation.h               |  1 +
- kernel/irq/cpuhotplug.c                       |  6 ++-
- kernel/irq/manage.c                           | 37 ++++++++++++++++++-
- kernel/sched/isolation.c                      |  6 +++
- 6 files changed, 65 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentat=
-ion/admin-guide/kernel-parameters.txt
-index ade4e6ec23e0..e0f18ac866d4 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1933,6 +1933,15 @@
- 			  <cpu number> begins at 0 and the maximum value is
- 			  "number of CPUs in system - 1".
-=20
-+			managed_irq
-+			  Isolate from handling managed interrupt. Userspace can't
-+			  change managed interrupt's affinity via /proc interface,
-+			  however application often requires the specified isolated
-+			  CPUs not disturbed by interrupts. This way guarantees that
-+			  isolated CPU won't be interrupted if IO isn't submitted
-+			  from isolated CPU when managed interrupt is used by IO
-+			  drivers.
-+
- 			The format of <cpu-list> is described above.
-=20
-=20
-diff --git a/include/linux/irq.h b/include/linux/irq.h
-index 7853eb9301f2..0a6bd1c56205 100644
---- a/include/linux/irq.h
-+++ b/include/linux/irq.h
-@@ -209,6 +209,8 @@ struct irq_data {
-  * IRQD_SINGLE_TARGET		- IRQ allows only a single affinity target
-  * IRQD_DEFAULT_TRIGGER_SET	- Expected trigger already been set
-  * IRQD_CAN_RESERVE		- Can use reservation mode
-+ * IRQD_MANAGED_FORCE_MIGRATE	- Force to migrate irq after one CPU in it=
-s
-+ *				  affinity becomes online
-  */
- enum {
- 	IRQD_TRIGGER_MASK		=3D 0xf,
-@@ -231,6 +233,7 @@ enum {
- 	IRQD_SINGLE_TARGET		=3D (1 << 24),
- 	IRQD_DEFAULT_TRIGGER_SET	=3D (1 << 25),
- 	IRQD_CAN_RESERVE		=3D (1 << 26),
-+	IRQD_MANAGED_FORCE_MIGRATE	=3D (1 << 27),
- };
-=20
- #define __irqd_to_state(d) ACCESS_PRIVATE((d)->common, state_use_accesso=
-rs)
-@@ -390,6 +393,11 @@ static inline bool irqd_can_reserve(struct irq_data =
-*d)
- 	return __irqd_to_state(d) & IRQD_CAN_RESERVE;
- }
-=20
-+static inline bool irqd_managed_force_migrate(struct irq_data *d)
-+{
-+	return __irqd_to_state(d) & IRQD_MANAGED_FORCE_MIGRATE;
-+}
-+
- #undef __irqd_to_state
-=20
- static inline irq_hw_number_t irqd_to_hwirq(struct irq_data *d)
-diff --git a/include/linux/sched/isolation.h b/include/linux/sched/isolat=
-ion.h
-index 6c8512d3be88..0fbcbacd1b29 100644
---- a/include/linux/sched/isolation.h
-+++ b/include/linux/sched/isolation.h
-@@ -13,6 +13,7 @@ enum hk_flags {
- 	HK_FLAG_TICK		=3D (1 << 4),
- 	HK_FLAG_DOMAIN		=3D (1 << 5),
- 	HK_FLAG_WQ		=3D (1 << 6),
-+	HK_FLAG_MANAGED_IRQ	=3D (1 << 7),
- };
-=20
- #ifdef CONFIG_CPU_ISOLATION
-diff --git a/kernel/irq/cpuhotplug.c b/kernel/irq/cpuhotplug.c
-index 6c7ca2e983a5..20c7704ce019 100644
---- a/kernel/irq/cpuhotplug.c
-+++ b/kernel/irq/cpuhotplug.c
-@@ -77,7 +77,8 @@ static bool migrate_one_irq(struct irq_desc *desc)
- 	 * Note: Do not check desc->action as this might be a chained
- 	 * interrupt.
- 	 */
--	if (irqd_is_per_cpu(d) || !irqd_is_started(d) || !irq_needs_fixup(d)) {
-+	if ((irqd_is_per_cpu(d) || !irqd_is_started(d) || !irq_needs_fixup(d))
-+			&& !irqd_managed_force_migrate(d)) {
- 		/*
- 		 * If an irq move is pending, abort it if the dying CPU is
- 		 * the sole target.
-@@ -192,6 +193,9 @@ static void irq_restore_affinity_of_irq(struct irq_de=
-sc *desc, unsigned int cpu)
- 	 */
- 	if (!irqd_is_single_target(data))
- 		irq_set_affinity_locked(data, affinity, false);
-+
-+	if (irqd_managed_force_migrate(data))
-+		migrate_one_irq(desc);
- }
-=20
- /**
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index 1753486b440c..046329f2d39a 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -18,6 +18,7 @@
- #include <linux/sched.h>
- #include <linux/sched/rt.h>
- #include <linux/sched/task.h>
-+#include <linux/sched/isolation.h>
- #include <uapi/linux/sched/types.h>
- #include <linux/task_work.h>
-=20
-@@ -213,11 +214,45 @@ int irq_do_set_affinity(struct irq_data *data, cons=
-t struct cpumask *mask,
- 	struct irq_desc *desc =3D irq_data_to_desc(data);
- 	struct irq_chip *chip =3D irq_data_get_irq_chip(data);
- 	int ret;
-+	const struct cpumask *mask_to_set =3D mask;
-=20
- 	if (!chip || !chip->irq_set_affinity)
- 		return -EINVAL;
-=20
--	ret =3D chip->irq_set_affinity(data, mask, force);
-+	/*
-+	 * If this is a managed interrupt check whether the requested
-+	 * affinity mask intersects with a housekeeping CPU. If so, then
-+	 * remove the isolated CPUs from the mask and just keep the
-+	 * housekeeping CPU(s). This prevents the affinity setter from
-+	 * routing the interrupt to an isolated CPU to avoid that I/O
-+	 * submitted from a housekeeping CPU causes interrupts on an
-+	 * isolated one.
-+	 *
-+	 * If the masks do not intersect or include online CPU(s) then
-+	 * keep the requested mask. The isolated target CPUs are only
-+	 * receiving interrupts when the I/O operation was submitted
-+	 * directly from them.
-+	 *
-+	 * If all housekeeping CPUs are offline, 'FORCE_MIGRATE' is set
-+	 * so that we can migrate the irq from isolate CPU when any
-+	 * housekeeping CPU becomes online.
-+	 */
-+	if (irqd_affinity_is_managed(data)) {
-+		static struct cpumask tmp_mask;
-+		const struct cpumask *housekeeping =3D
-+			housekeeping_cpumask(HK_FLAG_MANAGED_IRQ);
-+
-+		if (cpumask_intersects(mask, housekeeping)) {
-+			cpumask_and(&tmp_mask, mask, housekeeping);
-+			if (cpumask_intersects(&tmp_mask, cpu_online_mask)) {
-+				mask_to_set =3D &tmp_mask;
-+				irqd_clear(data, IRQD_MANAGED_FORCE_MIGRATE);
-+			} else {
-+				irqd_set(data, IRQD_MANAGED_FORCE_MIGRATE);
-+			}
-+		}
-+	}
-+	ret =3D chip->irq_set_affinity(data, mask_to_set, force);
- 	switch (ret) {
- 	case IRQ_SET_MASK_OK:
- 	case IRQ_SET_MASK_OK_DONE:
-diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-index 9fcb2a695a41..008d6ac2342b 100644
---- a/kernel/sched/isolation.c
-+++ b/kernel/sched/isolation.c
-@@ -163,6 +163,12 @@ static int __init housekeeping_isolcpus_setup(char *=
-str)
- 			continue;
- 		}
-=20
-+		if (!strncmp(str, "managed_irq,", 12)) {
-+			str +=3D 12;
-+			flags |=3D HK_FLAG_MANAGED_IRQ;
-+			continue;
-+		}
-+
- 		pr_warn("isolcpus: Error, unknown flag\n");
- 		return 0;
- 	}
---=20
-2.20.1
-
+Thanks,
+Guenter
