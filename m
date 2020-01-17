@@ -2,133 +2,189 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB011C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDCCDC33CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B721D2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:25:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579285541;
-	bh=Ajf3BP5hBZsV+EVeWhN6NMnAll1+MYA0SUMuToB9Bi8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kfrVjcD60SJ0+tHvn4qSznRLl8VegL5I/b82W6SGRcdhNPkZu0bvAZsi8pjSSTpbR
-	 338e3wHJ/9wjmcDYELVqJg/Q9NRZb4GNKUOX1wkivcQtrqdt0CY4ZOPJj3mcC4+FXa
-	 NCTCi4M6hvPOC+ZPUD58Kwq2e5M1wt8ohs59xZ18=
+	by mail.kernel.org (Postfix) with ESMTP id A30892082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:30:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729011AbgAQSZl (ORCPT
+        id S1728779AbgAQSa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 13:25:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38294 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726970AbgAQSZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 13:25:40 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        Fri, 17 Jan 2020 13:30:26 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:36558 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726897AbgAQSa0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 13:30:26 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04F0E206D5;
-        Fri, 17 Jan 2020 18:25:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579285539;
-        bh=Ajf3BP5hBZsV+EVeWhN6NMnAll1+MYA0SUMuToB9Bi8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rGISdMu+rzywI2gZjVcM1WGByjW5TW2wt+NoZo0MifkumfhruGnOL0SOu98nDSXnW
-         vCTYqXaeAAUINnBx/ZLG1eN9wlBGnta3fl2ZvyHMKSqhoxKpzIugxEBDZ4JIuL9TWZ
-         ETmRjk8Oo4A+/dOMlHkUwJzBbOQsq0qkLu6XJqaE=
-Date:   Fri, 17 Jan 2020 19:25:37 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
-Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: arm: sunxi: add OrangePi 3 with eMMC
-Message-ID: <20200117182537.scttsuq26g6v6yno@gilmour.lan>
-References: <20200115194216.173117-1-jernej.skrabec@siol.net>
- <4200557.LvFx2qVVIh@jernej-laptop>
- <20200116122944.sgl2fgxf5mrg6i52@gilmour.lan>
- <12435330.uLZWGnKmhe@jernej-laptop>
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 8300420026;
+        Fri, 17 Jan 2020 19:30:20 +0100 (CET)
+Date:   Fri, 17 Jan 2020 19:30:19 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     srv_heupstream@mediatek.com, David Airlie <airlied@linux.ie>,
+        stonea168@163.com, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, cawa.cheng@mediatek.com,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-mediatek@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com
+Subject: Re: [PATCH v9 1/5] dt-bindings: display: panel: Add boe tv101wum-n16
+ panel bindings
+Message-ID: <20200117183019.GA14298@ravnborg.org>
+References: <20200116021511.22675-1-jitao.shi@mediatek.com>
+ <20200116021511.22675-2-jitao.shi@mediatek.com>
+ <20200117180817.GA17294@ravnborg.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="mplvgv5b6upxjosy"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <12435330.uLZWGnKmhe@jernej-laptop>
+In-Reply-To: <20200117180817.GA17294@ravnborg.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
+        a=mpaa-ttXAAAA:8 a=gEfo2CItAAAA:8 a=pGLkceISAAAA:8 a=VwQbUJbxAAAA:8
+        a=e5mUnYsNAAAA:8 a=EqPL98zj1DO2ifNQ5WsA:9 a=jVGOFjz3VEg0wm82:21
+        a=U5ioJVc0Wqf7HXB5:21 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=6heAxKwa5pAsJatQ0mat:22 a=sptkURWiP4Gy88Gu7hUp:22
+        a=AjGcO6oz07-iQ99wixmX:22 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jitao.
 
---mplvgv5b6upxjosy
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Jan 17, 2020 at 07:08:17PM +0100, Sam Ravnborg wrote:
+> Hi Jitao.
+> 
+> Looks good, much better than the individual files.
+> Rob Herring is still listed as maintainer which I questioned in last
+> feedback.
+> 
+> With this resolved (kept only if Rob confirms), this is
+> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 
-Hi,
+Rob confirmed on irc that he is not a dedicated reviewer of this
+binding. And furhtermore that it was OK I committed trivial panel
+bindings.
+Dropepd Rob and applied to drm-misc-next.
 
-On Thu, Jan 16, 2020 at 05:33:45PM +0100, Jernej =C5=A0krabec wrote:
-> Dne =C4=8Detrtek, 16. januar 2020 ob 13:29:44 CET je Maxime Ripard napisa=
-l(a):
-> > On Thu, Jan 16, 2020 at 12:10:58AM +0100, Jernej =C5=A0krabec wrote:
-> > > Hi!
-> > >
-> > > Dne sreda, 15. januar 2020 ob 22:57:31 CET je Rob Herring napisal(a):
-> > > > On Wed, Jan 15, 2020 at 1:42 PM Jernej Skrabec <jernej.skrabec@siol=
-=2Enet>
-> > >
-> > > wrote:
-> > > > > OrangePi 3 can optionally have eMMC. Add a compatible for it.
-> > > >
-> > > > Is this just a population option or a different board layout? If the
-> > > > former, I don't think you need a new compatible, just add/enable a
-> > > > node for the eMMC.
-> > >
-> > > I have only board with eMMC but I imagine it's the former. Even so,
-> > > current
-> > > approach with Allwinner boards is to have two different board DT file=
-s,
-> > > one for each variant. This can be seen from
-> > > Documentation/devicetree/bindings/arm/ sunxi.yaml which has a lot of
-> > > compatibles ending with "-emmc". I guess reason for that is to avoid
-> > > having MMC controller being powered on for no reason.
-> > The main reason for that is that those populating options can be
-> > conflicting. For example, last week we discussed an issue about the
-> > eMMC being on the same pin set than an SPI flash, both options being
-> > available.
-> >
-> > The solution Andre suggested then was to let the eMMC be disabled, and
-> > have the bootloader probe the emmc, and if found, enable
-> > it. Otherwise, it means that you have a SPI flash (and enable it).
-> >
-> > I guess a similar solution would apply here.
->
-> From what I can tell from schematic, pins are dedicated for eMMC.
->
-> So what solution do you suggest? Put eMMC node in original OrangePi 3 DT =
-and
-> set status to disabled?
+	Sam
 
-If it's always dedicated to eMMC, but the eMMC is not always there, I
-guess we could remove the non-removable property from the eMMC
-mode. IIRC, without it (and without CD GPIO), it will fall-back to
-polling the card and will be able to detect it if it's there (and not
-use it if it's not).
-
-Maxime
-
---mplvgv5b6upxjosy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXiH8IQAKCRDj7w1vZxhR
-xbWvAQDklRiCu9YordwQFOhckNNptssNw4rGbHaZXxEmxqtxQAD/UzPfwuDk4SR/
-fyxg+YnibVHtraJeNwUYsL27/pkCOQA=
-=TwtM
------END PGP SIGNATURE-----
-
---mplvgv5b6upxjosy--
+> 
+> On Thu, Jan 16, 2020 at 10:15:07AM +0800, Jitao Shi wrote:
+> > Add documentation for "boe,tv101wum-n16", "auo,kd101n80-45na",
+> > "boe,tv101wum-n53" and "auo,b101uan08.3" panels.
+> > 
+> > Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> > Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> > ---
+> >  .../display/panel/boe,tv101wum-nl6.yaml       | 81 +++++++++++++++++++
+> >  1 file changed, 81 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
+> > new file mode 100644
+> > index 000000000000..cc4e058f5eee
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
+> > @@ -0,0 +1,81 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/display/panel/boe,tv101wum-nl6.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: BOE TV101WUM-NL6 DSI Display Panel
+> > +
+> > +maintainers:
+> > +  - Thierry Reding <thierry.reding@gmail.com>
+> > +  - Sam Ravnborg <sam@ravnborg.org>
+> > +  - Rob Herring <robh+dt@kernel.org>
+> > +
+> > +allOf:
+> > +  - $ref: panel-common.yaml#
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +        # BOE TV101WUM-NL6 10.1" WUXGA TFT LCD panel
+> > +      - boe,tv101wum-nl6
+> > +        # AUO KD101N80-45NA 10.1" WUXGA TFT LCD panel
+> > +      - auo,kd101n80-45na
+> > +        # BOE TV101WUM-N53 10.1" WUXGA TFT LCD panel
+> > +      - boe,tv101wum-n53
+> > +        # AUO B101UAN08.3 10.1" WUXGA TFT LCD panel
+> > +      - auo,b101uan08.3
+> > +
+> > +  reg:
+> > +    description: the virtual channel number of a DSI peripheral
+> > +
+> > +  enable-gpios:
+> > +    description: a GPIO spec for the enable pin
+> > +
+> > +  pp1800-supply:
+> > +    description: core voltage supply
+> > +
+> > +  avdd-supply:
+> > +    description: phandle of the regulator that provides positive voltage
+> > +
+> > +  avee-supply:
+> > +    description: phandle of the regulator that provides negative voltage
+> > +
+> > +  backlight:
+> > +    description: phandle of the backlight device attached to the panel
+> > +
+> > +  port: true
+> > +
+> > +required:
+> > + - compatible
+> > + - reg
+> > + - enable-gpios
+> > + - pp1800-supply
+> > + - avdd-supply
+> > + - avee-supply
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    dsi {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +        panel@0 {
+> > +            compatible = "boe,tv101wum-nl6";
+> > +            reg = <0>;
+> > +            enable-gpios = <&pio 45 0>;
+> > +            avdd-supply = <&ppvarn_lcd>;
+> > +            avee-supply = <&ppvarp_lcd>;
+> > +            pp1800-supply = <&pp1800_lcd>;
+> > +            backlight = <&backlight_lcd0>;
+> > +            status = "okay";
+> > +            port {
+> > +                panel_in: endpoint {
+> > +                    remote-endpoint = <&dsi_out>;
+> > +                };
+> > +            };
+> > +        };
+> > +    };
+> > +
+> > +...
+> > -- 
+> > 2.21.0
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
