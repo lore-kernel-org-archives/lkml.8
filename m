@@ -2,150 +2,123 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 542CFC33CAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE7EC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B63520728
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:47:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC07D20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:49:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733174AbgAQAr3 (ORCPT
+        id S1733194AbgAQAtW convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 19:47:29 -0500
-Received: from mga07.intel.com ([134.134.136.100]:37145 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726378AbgAQAr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 19:47:29 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 16:47:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,327,1574150400"; 
-   d="scan'208";a="306066002"
-Received: from unknown (HELO localhost) ([10.239.159.54])
-  by orsmga001.jf.intel.com with ESMTP; 16 Jan 2020 16:47:24 -0800
-Date:   Fri, 17 Jan 2020 08:47:35 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     David Rientjes <rientjes@google.com>
-Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Wei Yang <richardw.yang@linux.intel.com>, hannes@cmpxchg.org,
-        mhocko@kernel.org, vdavydov.dev@gmail.com,
-        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
-        yang.shi@linux.alibaba.com, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        alexander.duyck@gmail.com, stable@vger.kernel.org
-Subject: Re: [Patch v3] mm: thp: grab the lock before manipulation defer list
-Message-ID: <20200117004735.GA16207@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20200116013100.7679-1-richardw.yang@linux.intel.com>
- <0bb34c4a-97c7-0b3c-cf43-8af6cf9c4396@virtuozzo.com>
- <alpine.DEB.2.21.2001161357240.109233@chino.kir.corp.google.com>
+        Thu, 16 Jan 2020 19:49:22 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:37473 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726378AbgAQAtW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 19:49:22 -0500
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-143-KhgvyvhuP5WGglsW0BZP2w-1; Thu, 16 Jan 2020 19:49:18 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8887C800D41;
+        Fri, 17 Jan 2020 00:49:16 +0000 (UTC)
+Received: from aion.usersys.redhat.com (ovpn-126-23.rdu2.redhat.com [10.10.126.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E7C8481200;
+        Fri, 17 Jan 2020 00:49:15 +0000 (UTC)
+Received: by aion.usersys.redhat.com (Postfix, from userid 1000)
+        id 278561A006B; Thu, 16 Jan 2020 19:49:15 -0500 (EST)
+Date:   Thu, 16 Jan 2020 19:49:15 -0500
+From:   Scott Mayhew <smayhew@redhat.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [BISECT BUG] NFS v4 root not working after 6d972518b821 ("NFS:
+ Add fs_context support.")
+Message-ID: <20200117004915.GA3111@aion.usersys.redhat.com>
+References: <CAJKOXPeCVwZfBsCVbc9RQUGi0UfWQw0uFamPiQasiO8fSthFsQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <CAJKOXPeCVwZfBsCVbc9RQUGi0UfWQw0uFamPiQasiO8fSthFsQ@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: KhgvyvhuP5WGglsW0BZP2w-1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aion.usersys.redhat.com
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2001161357240.109233@chino.kir.corp.google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 02:01:59PM -0800, David Rientjes wrote:
->On Thu, 16 Jan 2020, Kirill Tkhai wrote:
->
->> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
->> > index c5b5f74cfd4d..6450bbe394e2 100644
->> > --- a/mm/memcontrol.c
->> > +++ b/mm/memcontrol.c
->> > @@ -5360,10 +5360,12 @@ static int mem_cgroup_move_account(struct page *page,
->> >  	}
->> >  
->> >  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->> > -	if (compound && !list_empty(page_deferred_list(page))) {
->> > +	if (compound) {
->> >  		spin_lock(&from->deferred_split_queue.split_queue_lock);
->> > -		list_del_init(page_deferred_list(page));
->> > -		from->deferred_split_queue.split_queue_len--;
->> > +		if (!list_empty(page_deferred_list(page))) {
->> > +			list_del_init(page_deferred_list(page));
->> > +			from->deferred_split_queue.split_queue_len--;
->> > +		}
->> >  		spin_unlock(&from->deferred_split_queue.split_queue_lock);
->> >  	}
->> >  #endif
->> > @@ -5377,11 +5379,13 @@ static int mem_cgroup_move_account(struct page *page,
->> >  	page->mem_cgroup = to;
->> >  
->> >  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->> > -	if (compound && list_empty(page_deferred_list(page))) {
->> > +	if (compound) {
->> >  		spin_lock(&to->deferred_split_queue.split_queue_lock);
->> > -		list_add_tail(page_deferred_list(page),
->> > -			      &to->deferred_split_queue.split_queue);
->> > -		to->deferred_split_queue.split_queue_len++;
->> > +		if (list_empty(page_deferred_list(page))) {
->> > +			list_add_tail(page_deferred_list(page),
->> > +				      &to->deferred_split_queue.split_queue);
->> > +			to->deferred_split_queue.split_queue_len++;
->> > +		}
->> >  		spin_unlock(&to->deferred_split_queue.split_queue_lock);
->> >  	}
->> >  #endif
->> 
->> The patch looks OK for me. But there is another question. I forget, why we unconditionally
->> add a page with empty deferred list to deferred_split_queue. Shouldn't we also check that
->> it was initially in the list? Something like:
->> 
->> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
->> index d4394ae4e5be..0be0136adaa6 100644
->> --- a/mm/memcontrol.c
->> +++ b/mm/memcontrol.c
->> @@ -5289,6 +5289,7 @@ static int mem_cgroup_move_account(struct page *page,
->>  	struct pglist_data *pgdat;
->>  	unsigned long flags;
->>  	unsigned int nr_pages = compound ? hpage_nr_pages(page) : 1;
->> +	bool split = false;
->>  	int ret;
->>  	bool anon;
->>  
->> @@ -5346,6 +5347,7 @@ static int mem_cgroup_move_account(struct page *page,
->>  		if (!list_empty(page_deferred_list(page))) {
->>  			list_del_init(page_deferred_list(page));
->>  			from->deferred_split_queue.split_queue_len--;
->> +			split = true;
->>  		}
->>  		spin_unlock(&from->deferred_split_queue.split_queue_lock);
->>  	}
->> @@ -5360,7 +5362,7 @@ static int mem_cgroup_move_account(struct page *page,
->>  	page->mem_cgroup = to;
->>  
->>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->> -	if (compound) {
->> +	if (compound && split) {
->>  		spin_lock(&to->deferred_split_queue.split_queue_lock);
->>  		if (list_empty(page_deferred_list(page))) {
->>  			list_add_tail(page_deferred_list(page),
->> 
->
->I think that's a good point, especially considering that the current code 
->appears to unconditionally place any compound page on the deferred split 
->queue of the destination memcg.  The correct list that it should appear 
->on, I believe, depends on whether the pmd has been split for the process 
->being moved: note the MC_TARGET_PAGE caveat in 
->mem_cgroup_move_charge_pte_range() that does not move the charge for 
->compound pages with split pmds.  So when mem_cgroup_move_account() is 
->called with compound == true, we're moving the charge of the entire 
->compound page: why would it appear on that memcg's deferred split queue?
+On Thu, 16 Jan 2020, Krzysztof Kozlowski wrote:
 
-Well, Kirill's change is easy to understand, while your statement here is a
-bit hard for me. Seems I lack some knowledge about cgroup. I am sorry about
-this. :-(
+> Hi all,
+> 
+> Bisect pointed to 6d972518b821 ("NFS: Add fs_context support.") for
+> failures of mounting NFS v4 root on my boards:
+> mount.nfs4 -o vers=4,nolock 192.168.1.10:/srv/nfs/odroidhc1 /new_root
+> [ 24.980839] NFS4: Couldn't follow remote path
+> [ 24.986201] NFS: Value for 'minorversion' out of range
+> mount.nfs4: Numerical result out of range
+> 
+> https://krzk.eu/#/builders/21/builds/1692
+> Full console log:
+> https://krzk.eu/#/builders/21/builds/1692/steps/14/logs/serial0
+> 
+> Enabling NFS v4.1 in defconfig seems to help. I can send patches for
+> this (for defconfigs) but probably the root cause should be fixed as
+> well.
+> 
+> Environment:
+> 1. Arch ARM Linux
+> 2. exynos_defconfig
+> 3. Exynos boards (Odroid XU3, etc), ARMv7, octa-core (Cortex-A7+A15),
+> Exynos5422 SoC
+> 4. systemd, boot up with static IP set in kernel command line
+> 5. No swap
+> 6. Kernel, DTB and initramfs are downloaded with TFTP
+> 7. NFS root from NFSv4 server
+> 
+> Let me know if you need more details.
 
--- 
-Wei Yang
-Help you, Help me
+I haven't had much luck reproducing this.  I disabled v4.1 in my .config
+and I can still boot a VM with NFS root (granted, I don't really use NFS
+root so this setup is brand new and pretty basic):
+
+[root@localhost ~]# cat /proc/cmdline
+BOOT_IMAGE=mountapi/vmlinuz initrd=mountapi/initrd.img ip=dhcp selinux=0 console=tty0 console=ttyS0,115200 root=nfs4:192.168.122.3:/export/nfsroot/fedora31
+
+[root@localhost ~]# grep nfs /proc/mounts
+192.168.122.3:/export/nfsroot/fedora31 / nfs rw,relatime,vers=4.0,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=192.168.122.69,local_lock=none,addr=192.168.122.3 0 0
+
+Just out of curiousity, what version of the mount.nfs program do you
+have in your initramfs?  I'm wondering if it's maybe passing the mount
+options differently than mine.  FWIW I'm using version 2.4.2:
+
+[smayhew@aion tmp]$ lsinitrd /var/lib/tftpboot/mountapi/initrd.img|grep mount.nfs
+-rwsr-xr-x   1 root     root       208600 Feb 14  2019 usr/sbin/mount.nfs
+lrwxrwxrwx   1 root     root            9 Feb 14  2019 usr/sbin/mount.nfs4 -> mount.nfs
+[smayhew@aion tmp]$ /usr/lib/dracut/skipcpio /var/lib/tftpboot/mountapi/initrd.img|zcat|cpio -id usr/sbin/mount.nfs
+256163 blocks
+[smayhew@aion tmp]$ ./usr/sbin/mount.nfs -V
+mount.nfs: (linux nfs-utils 2.4.2)
+[smayhew@aion tmp]$
+
+-Scott
+
+> 
+> Best regards,
+> Krzysztof
+> 
+
