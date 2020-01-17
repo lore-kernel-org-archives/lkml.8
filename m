@@ -6,125 +6,76 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6E4C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F7FC33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 024E120748
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3E7920748
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:12:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="E7h8E3+i"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UArnIXPP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729903AbgAQVHn (ORCPT
+        id S1727531AbgAQVMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 16:07:43 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46825 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729818AbgAQVHn (ORCPT
+        Fri, 17 Jan 2020 16:12:15 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:57781 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726925AbgAQVMO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 16:07:43 -0500
-Received: by mail-pf1-f193.google.com with SMTP id n9so12470971pff.13
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 13:07:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=YCsqNVhAm1Di2ZHCi7r9WDsSeSKbdfgtbe1b6IQVMR8=;
-        b=E7h8E3+iNPnPKbULvSeSjkaSmiituhuO69cMDLqUOnoUXMVsx2OnVL0+YvFiDp56YI
-         G3qgW2BGPaNqNa/7GL2mLvawMMVyUJ3CXBfzy2rh0Zf1uFi3fLXBpZo/7X8MJTZFvVNp
-         wbmRQTeAuhoPXkt+1Euo3AeHJzb5a4CUU8JjQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YCsqNVhAm1Di2ZHCi7r9WDsSeSKbdfgtbe1b6IQVMR8=;
-        b=AB8cjgs3qGMijXoIPEjH7VbYpVjJ6KT/o3VFnDv21KOkYHOm1BsJpTNYlc9sDC5KBK
-         VueDUdbwvjUaqmkGnzvcUBukRPr3VwwLDD3rJ9BVhFiv32w6oFpPTgEvWuTreBPzp1yG
-         U5jxsB090P6QXoDNN9tgDCZCPMon0lqtYEfMvGxpAe/bDxOiuyGwc644TWjPWihzcQxW
-         l2/A+DBlHKscmQMes+XwPfYxKaSR30IcOcHzrY3/VepEQSwA8EMK2WIaUtLBXem8/nkg
-         jOocNfxIPlrdRsCuRpRDQzyLPDEcAsR6Ggags5SQpDs7VsmK/S8hV8QMRfHm8sfdk51K
-         +uzQ==
-X-Gm-Message-State: APjAAAXYbbWQ9bFnBiOR6qglXEmUqrzjgi0FPcaXh5dUwCGqNlz4n4BT
-        9QyMyznX52tA02Z+coeOfooVXA==
-X-Google-Smtp-Source: APXvYqzTfRUQytNCdU+h7w7eD9SUYQYpYSTDn6eIEjE3LOv1yzJWpeRIrNT7R1FFOHnW245zwomxTQ==
-X-Received: by 2002:a63:5fd7:: with SMTP id t206mr48142029pgb.281.1579295261638;
-        Fri, 17 Jan 2020 13:07:41 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j7sm32686601pgn.0.2020.01.17.13.07.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 13:07:40 -0800 (PST)
-Date:   Fri, 17 Jan 2020 13:07:39 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-kernel@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Oleg Nesterov <oleg@redhat.com>, stable@vger.kernel.org,
-        Serge Hallyn <serge@hallyn.com>, Eric Paris <eparis@redhat.com>
-Subject: Re: [REVIEW PATCH v2] ptrace: reintroduce usage of subjective
- credentials in ptrace_has_cap()
-Message-ID: <202001171303.B27CCDA544@keescook>
-References: <20200116224518.30598-1-christian.brauner@ubuntu.com>
- <202001161753.27427AD@keescook>
- <20200117051622.yre42znvc4r3i7ta@wittgenstein>
+        Fri, 17 Jan 2020 16:12:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579295533;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=UmqiytuiIU9vOhwhZx9H5B3yXKuSj3/yBA5qYjhpgwg=;
+        b=UArnIXPPeuCO5rNyhZm0GJIWs+LufBOtvZEenc3mLyvZYd8lsULDrB5YKNB5RCdR6GKc7F
+        gt4wF98nLN+X8e1hmozhTo3vkWKMu6+2U1SsX7Hd4qk3LhOJlON5IAaDO+ymhDj2i5H7jY
+        hQlomyfPJ/cmHYLOLB9oTlyLUSfAJtw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-135-qJl8acmNOSOxWKT0PgP05A-1; Fri, 17 Jan 2020 16:12:10 -0500
+X-MC-Unique: qJl8acmNOSOxWKT0PgP05A-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 93764DB22;
+        Fri, 17 Jan 2020 21:12:08 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-49.rdu2.redhat.com [10.10.120.49])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BDF0D845B5;
+        Fri, 17 Jan 2020 21:12:06 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <5e16e2118d1c7de73627b521a2f36df76ab0e698.camel@netapp.com>
+References: <5e16e2118d1c7de73627b521a2f36df76ab0e698.camel@netapp.com> <20200117165133.GA5762@pi3> <464519.1579276102@warthog.procyon.org.uk> <20200117144055.GB3215@pi3> <CAJKOXPeCVwZfBsCVbc9RQUGi0UfWQw0uFamPiQasiO8fSthFsQ@mail.gmail.com> <433863.1579270803@warthog.procyon.org.uk> <465149.1579276509@warthog.procyon.org.uk> <473345.1579281525@warthog.procyon.org.uk>
+To:     "Schumaker, Anna" <Anna.Schumaker@netapp.com>
+Cc:     dhowells@redhat.com, "arnd@arndb.de" <arnd@arndb.de>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "smayhew@redhat.com" <smayhew@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH v2] nfs: Return EINVAL rather than ERANGE for mount parse errors
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200117051622.yre42znvc4r3i7ta@wittgenstein>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <493070.1579295526.1@warthog.procyon.org.uk>
+Date:   Fri, 17 Jan 2020 21:12:06 +0000
+Message-ID: <493071.1579295526@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 06:16:23AM +0100, Christian Brauner wrote:
-> On Thu, Jan 16, 2020 at 06:29:26PM -0800, Kees Cook wrote:
-> > On Thu, Jan 16, 2020 at 11:45:18PM +0100, Christian Brauner wrote:
-> > > Commit 69f594a38967 ("ptrace: do not audit capability check when outputing /proc/pid/stat")
-> > > introduced the ability to opt out of audit messages for accesses to
-> > > various proc files since they are not violations of policy.
-> > > While doing so it somehow switched the check from ns_capable() to
-> > > has_ns_capability{_noaudit}(). That means it switched from checking the
-> > > subjective credentials of the task to using the objective credentials. I
-> > > couldn't find the original lkml thread and so I don't know why this switch
-> > > was done. But it seems wrong since ptrace_has_cap() is currently only used
-> > > in ptrace_may_access(). And it's used to check whether the calling task
-> > > (subject) has the CAP_SYS_PTRACE capability in the provided user namespace
-> > > to operate on the target task (object). According to the cred.h comments
-> > > this would mean the subjective credentials of the calling task need to be
-> > > used.
-> > 
-> > I don't follow this description. As far as I can see, both the current
-> > code and your patch end up using current's cred, yes? I'm not following
-> > the subjective/objective change mentioned here.
-> > 
-> > Before:
-> > bool has_ns_capability(struct task_struct *t,
-> >                        struct user_namespace *ns, int cap)
-> > {
-> >         int ret;
-> > 
-> >         rcu_read_lock();
-> >         ret = security_capable(__task_cred(t), ns, cap, CAP_OPT_NONE);
-> 
-> If I'm not mistaken, you're looking at the cuplrit: "__task_cred()":
-> [...]
-> #define __task_cred(task)	\
-> 	rcu_dereference((task)->real_cred)
+Schumaker, Anna <Anna.Schumaker@netapp.com> wrote:
 
-Ah! Yes, thank you. cred vs real_cred. That's what I missed!
+> Sure! I have it applied on my laptop now, and I'll push it out before I sign
+> off for the weekend.
 
-> > However, I'm still trying to see where cred_guard_mutex() comes into
-> > play for callers of ptrace_may_access(). I see it for the object
-> > ("task" arg in ptrace_may_access()), but if this is dealing with the cred
-> > on current, it's just the RCU read lock protecting it (which I think is
-> > fine here), but seems confusing in the commit log.
-> 
-> Ah, right. I'll drop that from the commit message and place in the rcu
-> lock.
+Ta!
 
-Thanks for the clarification. With that adjusted, please consider it:
+David
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
-(I wonder how hard it might be to build some self-tests for this to
-catch future glitches...)
-
--- 
-Kees Cook
