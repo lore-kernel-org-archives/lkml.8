@@ -2,120 +2,130 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B027CC33CB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62250C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90ACD2464B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 386AA2464B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:49:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="nncCfH9s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729721AbgAQWsw (ORCPT
+        id S1729335AbgAQWtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 17:48:52 -0500
-Received: from smtp1.savana.cz ([217.16.187.42]:29538 "EHLO icewarp.savana.cz"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728852AbgAQWsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 17:48:51 -0500
-Received: from [192.168.0.106] ([212.37.87.11])
-        by icewarp.savana.cz (IceWarp 11.2.1.1 RHEL6 x64) with ASMTP (SSL) id 202001172348481734;
-        Fri, 17 Jan 2020 23:48:48 +0100
-Subject: Re: [RFT PATCH 0/4] hwmon: k10temp driver improvements
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-hwmon@vger.kernel.org, Clemens Ladisch <clemens@ladisch.de>,
-        Jean Delvare <jdelvare@suse.com>, linux-kernel@vger.kernel.org
-References: <20200116141800.9828-1-linux@roeck-us.net>
- <e452614a-5425-e77c-4e2f-2a17ca733b7f@sda1.eu>
- <20200117184617.GD13396@roeck-us.net>
-From:   =?UTF-8?Q?Ondrej_=c4=8cerman?= <ocerman@sda1.eu>
-Message-ID: <5b4f8b92-d2ad-4eba-cd4f-4d0fddf92a52@sda1.eu>
-Date:   Fri, 17 Jan 2020 23:48:48 +0100
+        Fri, 17 Jan 2020 17:49:52 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45478 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728760AbgAQWtv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 17:49:51 -0500
+Received: by mail-pg1-f194.google.com with SMTP id b9so12312098pgk.12
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 14:49:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=ZnIsvgBNU6IQmG/k8i440EZAGu2ojc3ERdtZNixfQFc=;
+        b=nncCfH9sb+lCn6MBZwrKhtlnpXHpP12Uxnk3lrqoRTC/BwdpOG8vuwJXNu5mUKcg2q
+         Jeji/YArjEjWoD9/2zfF+GH5NKR5gDGLXBpZ9SRorZfVtAF5AEV+d2Syc5yRu3dAcHey
+         7EnVKIvntpJ4w5DxxBqhKCa8QzrBxGioD6svfLz7tfMj8FC9Y5jd+65540nO3Gow1K0G
+         QjmxcsC+mq2LS4PEc4zbgC8JwnzqRkN7hb8YY76bFE/8Rl9zKrC/vHL9hr54FasKyuB2
+         mFY2SEQw0VmR5oX3w7M9U8kR30KVmVroewdFcj6rprc96kuYdeqXNUjKHlJwTL+BXajD
+         j9Zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZnIsvgBNU6IQmG/k8i440EZAGu2ojc3ERdtZNixfQFc=;
+        b=tn9k1xD63Dh8xvT8jZAaqatw7ITpSoLUG86O7ySztxdcN6iZxX1Nw1lGhOpAarO9yJ
+         9rFWYGmC27N2UCEfCLGFO2Np6jb8DzkWsuERc7qfCZjvKHPB9VhWlYG5b3t6Nozf10Cf
+         ONwHIGMqaZ3IHfCwNr//73qIHQ2/zkpDy6tOygKfOnWIU4nD+aLGx7r4pG9RkFpGvSMh
+         N7TVHzHY2KyqjHBkyE6CoVZ4QBBIDvXus8BpArmH+q7FjIfBk2LISCcWFE8I70pSw8ue
+         pqoptO/+FvoaPz5i4WpBtZtYO01mtI211S1AWLpKT5Ol8ivUNJNxuFhIjEo0aRfklznQ
+         q3VQ==
+X-Gm-Message-State: APjAAAVSXyczoKICyWHigaveOFjbFYH/rbDqZDQulTKnA9XpaXJ+hOgR
+        rdehEeRzAL/ADto4nHdEmV+HBWulZQ4=
+X-Google-Smtp-Source: APXvYqyP1JX8KQQ+k8UNOCKh6AuflWfxrSKjgA5dn9nT5h5a76BuIFfrtAcE7Ax9M7gjptqCTYoucw==
+X-Received: by 2002:a62:1cd6:: with SMTP id c205mr5286906pfc.179.1579301390835;
+        Fri, 17 Jan 2020 14:49:50 -0800 (PST)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id y21sm30504299pfm.136.2020.01.17.14.49.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jan 2020 14:49:50 -0800 (PST)
+Subject: Re: [PATCH 0/2] optimise sqe-to-req flags
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <37a04c11e980f49cb17a4fd071d2d71a291a8fd5.1579299684.git.asml.silence@gmail.com>
+ <cover.1579300317.git.asml.silence@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <cf0b8769-0365-2fd1-c87e-fe2e44052b51@kernel.dk>
+Date:   Fri, 17 Jan 2020 15:49:49 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200117184617.GD13396@roeck-us.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1579300317.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 1/17/20 3:41 PM, Pavel Begunkov wrote:
+> *lost the cover-letter, but here we go*
+> 
+> The main idea is to optimise code like the following by directly
+> copying sqe flags:
+> 
+> if (sqe_flags & IOSQE_IO_HARDLINK)
+> 	req->flags |= REQ_F_HARDLINK;
+> 
+> The first patch is a minor cleanup, and the second one do the
+> trick. No functional changes.
+> 
+> The other thing to consider is whether to use such flags as 
+> REQ_F_LINK = IOSQE_IO_LINK, or directly use IOSQE_IO_LINK instead.
 
-Dňa 17. 1. 2020 o 19:46 Guenter Roeck napísal(a):
-> On Fri, Jan 17, 2020 at 10:46:25AM +0100, Ondrej Čerman wrote:
->> Dňa 16. 1. 2020 o 15:17 Guenter Roeck napísal(a):
->>> This patch series implements various improvements for the k10temp driver.
->>>
->>> Patch 1/4 introduces the use of bit operations.
->>>
->>> Patch 2/4 converts the driver to use the devm_hwmon_device_register_with_info
->>> API. This not only simplifies the code and reduces its size, it also
->>> makes the code easier to maintain and enhance.
->>>
->>> Patch 3/4 adds support for reporting Core Complex Die (CCD) temperatures
->>> on Ryzen 3 (Zen2) CPUs.
->>>
->>> Patch 4/4 adds support for reporting core and SoC current and voltage
->>> information on Ryzen CPUs.
->>>
->>> With all patches in place, output on Ryzen 3900 CPUs looks as follows
->>> (with the system under load).
->>>
->>> k10temp-pci-00c3
->>> Adapter: PCI adapter
->>> Vcore:        +1.36 V
->>> Vsoc:         +1.18 V
->>> Tdie:         +86.8°C  (high = +70.0°C)
->>> Tctl:         +86.8°C
->>> Tccd1:        +80.0°C
->>> Tccd2:        +81.8°C
->>> Icore:       +44.14 A
->>> Isoc:        +13.83 A
->>>
->>> The patch series has only been tested with Ryzen 3900 CPUs. Further test
->>> coverage will be necessary before the changes can be applied to the Linux
->>> kernel.
->>>
->> Hello everyone, I am the author of https://github.com/ocerman/zenpower/ .
->>
->> It is nice to see this merged.
->>
->> I just want to warn you that there have been reported issues with
->> Threadripper CPUs to zenpower issue tracker. Also I think that no-one tested
->> EPYC CPUs.
->>
->> Most of the stuff I was able to figure out by trial-and-error approach and
->> unfortunately because I do not own any Threadripper CPU I was not able to
->> test and fix reported problems.
->>
-> Thanks a lot for the note. The key problem seems to be that Threadripper
-> doesn't report SoC current and voltage. Is that correct ? If so, that
-> should be easy to solve.
+I think we should keep the names separate. I think it looks fine, though
+I do wish that we could just have both in an enum and not have to do
+weird naming. We sometimes do:
 
-Hello,
+enum {
+	__REQ_F_FOO
+};
 
-I thought that initially, but I was wrong. It seems like that these 
-multi-node CPUs are reporting SOC and Core voltage/current data at 
-particular node. Look at this HWiNFO64 screenshot of 2990WX for 
-reference: https://i.imgur.com/yM9X5nd.jpg . They also may be using 
-different addresses and/or factors.
+#define REQ_F_FOO	(1U << __REQ_F_FOO)
 
-> On a side note, drivers/gpu/drm/amd/include/asic_reg/thm/thm_10_0_offset.h
-> suggests that two more temperature sensors might be available at 0x0005995C
-> and 0x00059960 (DIE3_TEMP and SW_TEMP). Have you ever tried that ?
->
-> Thanks,
-> Guenter
+and with that we could have things Just Work in terms of numbering, if
+we keep the overlapped values at the start. Would need IOSQE_* to also
+use an enum, ala:
 
-I was aware of 0005995c and I thought that it could be Tdie3 (that's why 
-I have included it in debug output, someone already shared that 3960X is 
-reporting data on that address). I think this one can be safely included.
+enum {
+	__IOSQE_FIXED_FILE,
+	__IOSQE_IO_DRAIN,
+	...
+};
 
-I was not aware of the other address, I will try it.
+and then do
 
-Ondrej.
+#define IOSQE_FIXED_FILE	(1U << __IOSQE_FIXED_FILE)
+
+and have the __REQ enum start with
+
+enum {
+	__REQ_F_FIXED_FILE = __IOSQE_FIXED_FILE,
+	__REQ_F_IO_DRAIN = __IOSQE_IO_DRAIN,
+	...
+	__REQ_F_LINK_NEXT,
+	__REQ_F_FAIL_LINK,
+	...
+};
+
+-- 
+Jens Axboe
 
