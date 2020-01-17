@@ -2,317 +2,385 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2343FC33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A675C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBC4721582
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39F1C2192A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:31:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OVgpERU0"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xoe4Uv7s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730063AbgAQA2Q (ORCPT
+        id S1730568AbgAQAbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 19:28:16 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:34039 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729253AbgAQA2Q (ORCPT
+        Thu, 16 Jan 2020 19:31:09 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38087 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729387AbgAQAbJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 19:28:16 -0500
-Received: by mail-qk1-f193.google.com with SMTP id j9so21134163qkk.1;
-        Thu, 16 Jan 2020 16:28:15 -0800 (PST)
+        Thu, 16 Jan 2020 19:31:09 -0500
+Received: by mail-pl1-f195.google.com with SMTP id f20so9091967plj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 16:31:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=A6F4ZnavD0e/0chFQ3kgLKefPDVYDYjwgeigG3mgzgo=;
-        b=OVgpERU0SAEtw3TECBcLos0ASYCg7YIeD9Y4/Ao2eH0mpTyzJkhQbfgi1wFeVKfkeZ
-         hdnB5GFT/mrt92iJGgrbPNvht3FkXBgept9Qb6vekQY3doaf9BbWkF7u52xVfFaiNtJ/
-         f81szrToA9mEwByoQTAPv+8HHaVEf62zH4Y9JdritM2pGH7ZQr2I9TfPXktuX0oe4ZRN
-         4VPmG6YsEUwbDeec0dBpWeStKWSOrslt0ufERkNt37DPXWICDnu8TfmtIUB2b1/Ulyo5
-         5vsIxJ2wLzqxg8cUZJLykU/lkKt88LWYmXIrOAvvaFwJfLvL0HXxogWYZDnmTDC0wH97
-         Ks5Q==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rFqZefKjUSPC0iU5MicjaX3u+uee1dNGLtcIBbtUFmo=;
+        b=Xoe4Uv7sjA1xHJjxLB73m8iGixf19nc8knEnZ6RiFUzPPlp3QpLgx31datPnuhTxIY
+         4CmKE7I21cHgEurxN3JZBc77DXUz/0CrdGjb5Rvvye3GuCTGhSMJDIP113h8BEX5OvW0
+         bdS3Tq4CmwBW38G8yQ3p5kxm2/5sYEc4G4NwE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A6F4ZnavD0e/0chFQ3kgLKefPDVYDYjwgeigG3mgzgo=;
-        b=cYgdoDCvd+U7gauI7GWHFWHdsMcih1/rnagBXte1KaIEiSXPVHN0SofSU2H7nkkVtj
-         A2ABVRjiPs8R48XsxB2ovCqQiiB0/Ri9ZaON3+bsPnzl73jzwiD4UcgIk2Ho3fxxFFeZ
-         1La6J7J9GcRvmdHnNwHVFMcn1fsMnBnVn5mFMvlKKdLlo1ytH1gGASsTbTn7VTi6vJ7L
-         mvGx/tpaDWfRzDX+EKZIB7Ei2ua1biCBITXAsBJYXgATJtWewkHgpfxfBJyN8F7mfM4y
-         2rsTk+WOHrtbO5gqJPj+62w+OarOmYu0KqsrOH/3alC28NRcM0D78rsPh7nqBOfclEhZ
-         CQ8Q==
-X-Gm-Message-State: APjAAAWmyGcNIneN+7hOqDNPelOPLMl+zWzao4V9d05DPKX2QBT8D7RN
-        z8WsS0R8tl4CLjGTfRfwwdDYcboPnRKWGnwLMdXVRFAUhio=
-X-Google-Smtp-Source: APXvYqwsfFzq80hquq3LspX/KN8hSx+8XNuRLGL/HQaf/j7qBgvYUtZPltNqkh2RP5g3Ixh87lq8IwyPtjgKvxPCZeY=
-X-Received: by 2002:a05:620a:14a2:: with SMTP id x2mr36057955qkj.36.1579220894464;
- Thu, 16 Jan 2020 16:28:14 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rFqZefKjUSPC0iU5MicjaX3u+uee1dNGLtcIBbtUFmo=;
+        b=DQrzVRKGa9M2iRzwVVtII5vZuHtBGnjoHjtKfs5P3HYgH7Z6n6LwWDXQYXmGuXeYce
+         U0fhp7HGlDVMkp0YmfdCLaxLp5VK63vVySsGbPyB71hDIJyTDIPkDAWJgt2IBM0Sich+
+         xVWPMBHx03GppJaCrlnNZV5JGfP20j8jFkkLVmICMIuozz2cVmWQRw2VkL+IeGVgLFt0
+         catnlgsv8DFz6OollW0CeX0wy3mmZNWMbMuVwDGr9iNBtY1eTCx7JdWbScUY2jFYJfWp
+         kg0DGfYIug+hb4rcRice20lDoQ7APMif9N8DnHAkqcg7djyY+r5MZL+DZXC+wsc+bs4r
+         r/zA==
+X-Gm-Message-State: APjAAAVJb+e2s5OtG/kEXmmiqImMmz/hVFVWrezPqGO6hpzlp2fzgEPN
+        MeMdhw1OOZrITR/JtaaaHIAZug==
+X-Google-Smtp-Source: APXvYqzzwUSZagrBejRpbfZIYuoAhSilr3bMno4W7V6/gOCaCFQOuXDxiaNTYLkAMgh1nI6odHOHHQ==
+X-Received: by 2002:a17:90a:246d:: with SMTP id h100mr2287823pje.127.1579221067966;
+        Thu, 16 Jan 2020 16:31:07 -0800 (PST)
+Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:172e:4646:c089:ce59])
+        by smtp.gmail.com with ESMTPSA id c188sm667420pga.83.2020.01.16.16.31.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 16:31:07 -0800 (PST)
+From:   Prashant Malani <pmalani@chromium.org>
+To:     enric.balletbo@collabora.com, groeck@chromium.org,
+        bleung@chromium.org, lee.jones@linaro.org, sre@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Jon Flatley <jflat@chromium.org>,
+        Prashant Malani <pmalani@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>
+Subject: [PATCH v7 1/3] platform: chrome: Add cros-usbpd-notify driver
+Date:   Thu, 16 Jan 2020 16:28:20 -0800
+Message-Id: <20200117002820.56872-1-pmalani@chromium.org>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 MIME-Version: 1.0
-References: <20200115171333.28811-1-kpsingh@chromium.org> <20200115171333.28811-6-kpsingh@chromium.org>
-In-Reply-To: <20200115171333.28811-6-kpsingh@chromium.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 16 Jan 2020 16:28:03 -0800
-Message-ID: <CAEf4BzYJy40csmwfBgtD+UZY3X+hjqpQ=NwjUQ-cwy+RPF8VHA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 05/10] bpf: lsm: BTF API for LSM hooks
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 9:14 AM KP Singh <kpsingh@chromium.org> wrote:
->
-> From: KP Singh <kpsingh@google.com>
->
-> The BTF API provides information required by the BPF verifier to
-> attach eBPF programs to the LSM hooks by using the BTF information of
-> two types:
->
-> - struct security_hook_heads: This type provides the offset which
->   a new dynamically allocated security hook must be attached to.
-> - union security_list_options: This provides the information about the
->   function prototype required by the hook.
->
-> When the program is loaded:
->
-> - The verifier receives the index of a member in struct
->   security_hook_heads to which a program must be attached as
->   prog->aux->lsm_hook_index. The index is one-based for better
->   verification.
-> - bpf_lsm_type_by_index is used to determine the func_proto of
->   the LSM hook and updates prog->aux->attach_func_proto
-> - bpf_lsm_head_by_index is used to determine the hlist_head to which
->   the BPF program must be attached.
->
-> Signed-off-by: KP Singh <kpsingh@google.com>
-> ---
->  include/linux/bpf_lsm.h |  12 +++++
->  security/bpf/Kconfig    |   1 +
->  security/bpf/hooks.c    | 104 ++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 117 insertions(+)
->
-> diff --git a/include/linux/bpf_lsm.h b/include/linux/bpf_lsm.h
-> index 9883cf25241c..a9b4f7b41c65 100644
-> --- a/include/linux/bpf_lsm.h
-> +++ b/include/linux/bpf_lsm.h
-> @@ -19,6 +19,8 @@ extern struct security_hook_heads bpf_lsm_hook_heads;
->
->  int bpf_lsm_srcu_read_lock(void);
->  void bpf_lsm_srcu_read_unlock(int idx);
-> +const struct btf_type *bpf_lsm_type_by_index(struct btf *btf, u32 offset);
-> +const struct btf_member *bpf_lsm_head_by_index(struct btf *btf, u32 id);
->
->  #define CALL_BPF_LSM_VOID_HOOKS(FUNC, ...)                     \
->         do {                                                    \
-> @@ -65,6 +67,16 @@ static inline int bpf_lsm_srcu_read_lock(void)
->         return 0;
->  }
->  static inline void bpf_lsm_srcu_read_unlock(int idx) {}
-> +static inline const struct btf_type *bpf_lsm_type_by_index(
-> +       struct btf *btf, u32 index)
-> +{
-> +       return ERR_PTR(-EOPNOTSUPP);
-> +}
-> +static inline const struct btf_member *bpf_lsm_head_by_index(
-> +       struct btf *btf, u32 id)
-> +{
-> +       return ERR_PTR(-EOPNOTSUPP);
-> +}
->
->  #endif /* CONFIG_SECURITY_BPF */
->
-> diff --git a/security/bpf/Kconfig b/security/bpf/Kconfig
-> index 595e4ad597ae..9438d899b618 100644
-> --- a/security/bpf/Kconfig
-> +++ b/security/bpf/Kconfig
-> @@ -7,6 +7,7 @@ config SECURITY_BPF
->         depends on SECURITY
->         depends on BPF_SYSCALL
->         depends on SRCU
-> +       depends on DEBUG_INFO_BTF
->         help
->           This enables instrumentation of the security hooks with
->           eBPF programs.
-> diff --git a/security/bpf/hooks.c b/security/bpf/hooks.c
-> index b123d9cb4cd4..82725611693d 100644
-> --- a/security/bpf/hooks.c
-> +++ b/security/bpf/hooks.c
-> @@ -5,6 +5,8 @@
->   */
->
->  #include <linux/bpf_lsm.h>
-> +#include <linux/bpf.h>
-> +#include <linux/btf.h>
->  #include <linux/srcu.h>
->
->  DEFINE_STATIC_SRCU(security_hook_srcu);
-> @@ -18,3 +20,105 @@ void bpf_lsm_srcu_read_unlock(int idx)
->  {
->         return srcu_read_unlock(&security_hook_srcu, idx);
->  }
-> +
-> +static inline int validate_hlist_head(struct btf *btf, u32 type_id)
-> +{
-> +       s32 hlist_id;
-> +
-> +       hlist_id = btf_find_by_name_kind(btf, "hlist_head", BTF_KIND_STRUCT);
-> +       if (hlist_id < 0 || hlist_id != type_id)
-> +               return -EINVAL;
+From: Jon Flatley <jflat@chromium.org>
 
-This feels backwards and expensive. You already have type_id you want
-to check. Do a quick look up, check type and other attributes, if you
-want. There is no need to do linear search for struct named
-"hlist_head".
+ChromiumOS uses ACPI device with HID "GOOG0003" for power delivery
+related events. The existing cros-usbpd-charger driver relies on these
+events without ever actually receiving them on ACPI platforms. This is
+because in the ChromeOS kernel trees, the GOOG0003 device is owned by an
+ACPI driver that offers firmware updates to USB-C chargers.
 
-But in reality, you should trust kernel BTF, you already know that you
-found correct "security_hook_heads" struct, so its member has to be
-hlist_head, no?
+Introduce a new platform driver under cros-ec, the ChromeOS embedded
+controller, that handles these PD events and dispatches them
+appropriately over a notifier chain to all drivers that use them.
 
-> +
-> +       return 0;
-> +}
-> +
-> +/* Find the BTF representation of the security_hook_heads member for a member
-> + * with a given index in struct security_hook_heads.
-> + */
-> +const struct btf_member *bpf_lsm_head_by_index(struct btf *btf, u32 index)
-> +{
-> +       const struct btf_member *member;
-> +       const struct btf_type *t;
-> +       u32 off, i;
-> +       int ret;
-> +
-> +       t = btf_type_by_name_kind(btf, "security_hook_heads", BTF_KIND_STRUCT);
-> +       if (WARN_ON_ONCE(IS_ERR(t)))
-> +               return ERR_CAST(t);
-> +
-> +       for_each_member(i, t, member) {
-> +               /* We've found the id requested and need to check the
-> +                * the following:
-> +                *
-> +                * - Is it at a valid alignment for struct hlist_head?
-> +                *
-> +                * - Is it a valid hlist_head struct?
-> +                */
-> +               if (index == i) {
+On platforms that don't have the ACPI device defined, the driver gets
+instantiated for ECs which support the EC_FEATURE_USB_PD feature bit,
+and the notification events will get delivered using the MKBP event
+handling mechanism.
 
-Also not efficient. Check index to be < vlen(t), then member =
-btf_type_member(t) + index;
+Co-Developed-by: Prashant Malani <pmalani@chromium.org>
+Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
+Reviewed-by: Benson Leung <bleung@chromium.org>
+Signed-off-by: Jon Flatley <jflat@chromium.org>
+Signed-off-by: Prashant Malani <pmalani@chromium.org>
+---
 
+Changes in v7(pmalani@chromium.org):
+- Removed use of module_platform_driver() and module_acpi_driver() since
+  that was causing redefinition compilation errors on arm64 defconfig.
+  Instead, explicitly defined the init and exit routines and
+  register/unregister the platform and ACPI drivers there.
+- Alphabetize #include header.
 
-> +                       off = btf_member_bit_offset(t, member);
-> +                       if (off % 8)
-> +                               /* valid c code cannot generate such btf */
-> +                               return ERR_PTR(-EINVAL);
-> +                       off /= 8;
-> +
-> +                       if (off % __alignof__(struct hlist_head))
-> +                               return ERR_PTR(-EINVAL);
-> +
-> +                       ret = validate_hlist_head(btf, member->type);
-> +                       if (ret < 0)
-> +                               return ERR_PTR(ret);
-> +
-> +                       return member;
+Changes in v6(pmalani@chromium.org):
+- Fix build error from typo in cros_usbpd_notify_acpi_device_ids
+  variable name.
 
-This feels a bit over-cautious to double-check this. If
-security_hook_heads definition is controlled by kernel sources, then
-we could just trust vmlinux BTF?
+Changes in v5(pmalani@chromium.org):
+- Split the driver into platform and ACPI variants, each enclosed by
+  CONFIG_OF and CONFIG_ACPI #ifdefs respectively.
+- Updated the copyright year to 2020.
+- Reworded the commit message and Kconfig description to incorporate
+  the modified driver structure.
 
-> +               }
-> +       }
-> +
-> +       return ERR_PTR(-ENOENT);
-> +}
-> +
-> +/* Given an index of a member in security_hook_heads return the
-> + * corresponding type for the LSM hook. The members of the union
-> + * security_list_options have the same name as the security_hook_heads which
-> + * is ensured by the LSM_HOOK_INIT macro defined in include/linux/lsm_hooks.h
-> + */
-> +const struct btf_type *bpf_lsm_type_by_index(struct btf *btf, u32 index)
-> +{
-> +       const struct btf_member *member, *hook_head = NULL;
-> +       const struct btf_type *t, *hook_type = NULL;
-> +       u32 i;
-> +
-> +       hook_head = bpf_lsm_head_by_index(btf, index);
-> +       if (IS_ERR(hook_head))
-> +               return ERR_PTR(PTR_ERR(hook_head));
-> +
-> +       t = btf_type_by_name_kind(btf, "security_list_options", BTF_KIND_UNION);
-> +       if (WARN_ON_ONCE(IS_ERR(t)))
-> +               return ERR_CAST(t);
+Changes in v4(pmalani@chromium.org):
+- No code changes, but added new version so that versioning is
+  consistent with the next patch in the series.
 
-btf_type_by_name_kind() is a linear search (at least right now), so it
-might be a good idea to cache found type_id's of security_list_options
-and security_hook_heads?
+Changes in v3 (pmalani@chromium.org):
+- Renamed driver and files from "cros_ec_pd_notify" to
+  "cros_usbpd_notify" to be more consistent with other naming.
+- Moved the change to include cros-usbpd-notify in the charger MFD
+  into a separate follow-on patch.
 
-> +
-> +       for_each_member(i, t, member) {
-> +               if (hook_head->name_off == member->name_off) {
-> +                       /* There should be only one member with the same name
-> +                        * as the LSM hook. This should never really happen
-> +                        * and either indicates malformed BTF or someone trying
-> +                        * trick the LSM.
-> +                        */
-> +                       if (WARN_ON(hook_type))
-> +                               return ERR_PTR(-EINVAL);
-> +
-> +                       hook_type = btf_type_by_id(btf, member->type);
-> +                       if (unlikely(!hook_type))
-> +                               return ERR_PTR(-EINVAL);
-> +
-> +                       if (!btf_type_is_ptr(hook_type))
-> +                               return ERR_PTR(-EINVAL);
-> +               }
-> +       }
-> +
-> +       if (!hook_type)
-> +               return ERR_PTR(-ENOENT);
-> +
-> +       t = btf_type_by_id(btf, hook_type->type);
-> +       if (unlikely(!t))
-> +               return ERR_PTR(-EINVAL);
+Changes in v2 (pmalani@chromium.org):
+- Removed dependency on DT entry; instead, we will instantiate
+  the driver on detecting EC_FEATURE_USB_PD for non-ACPI platforms.
+- Modified the cros-ec-pd-notify device to be an mfd_cell under
+  usbpdcharger for non-ACPI platforms. Altered the platform_probe() call
+  to derive the cros EC structs appropriately.
+- Replaced "usbpd_notify" with "pd_notify" in functions and structures.
+- Addressed comments from upstream maintainer.
 
-why not do this inside the loop when you find correct member and not
-continue processing all the fields?
+ drivers/platform/chrome/Kconfig               |  10 +
+ drivers/platform/chrome/Makefile              |   1 +
+ drivers/platform/chrome/cros_usbpd_notify.c   | 180 ++++++++++++++++++
+ .../linux/platform_data/cros_usbpd_notify.h   |  17 ++
+ 4 files changed, 208 insertions(+)
+ create mode 100644 drivers/platform/chrome/cros_usbpd_notify.c
+ create mode 100644 include/linux/platform_data/cros_usbpd_notify.h
 
-> +
-> +       return t;
-> +}
-> --
-> 2.20.1
->
+diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
+index 5f57282a28da0..89df6c991089d 100644
+--- a/drivers/platform/chrome/Kconfig
++++ b/drivers/platform/chrome/Kconfig
+@@ -226,6 +226,16 @@ config CROS_USBPD_LOGGER
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called cros_usbpd_logger.
+ 
++config CROS_USBPD_NOTIFY
++	tristate "ChromeOS Type-C power delivery event notifier"
++	depends on CROS_EC
++	help
++	  If you say Y here, you get support for Type-C PD event notifications
++	  from the ChromeOS EC. On ACPI platorms this driver will bind to the
++	  GOOG0003 ACPI device, and on platforms which don't have this device it
++	  will get initialized on ECs which support the feature
++	  EC_FEATURE_USB_PD.
++
+ source "drivers/platform/chrome/wilco_ec/Kconfig"
+ 
+ endif # CHROMEOS_PLATFORMS
+diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
+index aacd5920d8a18..f6465f8ef0b5e 100644
+--- a/drivers/platform/chrome/Makefile
++++ b/drivers/platform/chrome/Makefile
+@@ -22,5 +22,6 @@ obj-$(CONFIG_CROS_EC_DEBUGFS)		+= cros_ec_debugfs.o
+ obj-$(CONFIG_CROS_EC_SENSORHUB)		+= cros_ec_sensorhub.o
+ obj-$(CONFIG_CROS_EC_SYSFS)		+= cros_ec_sysfs.o
+ obj-$(CONFIG_CROS_USBPD_LOGGER)		+= cros_usbpd_logger.o
++obj-$(CONFIG_CROS_USBPD_NOTIFY)		+= cros_usbpd_notify.o
+ 
+ obj-$(CONFIG_WILCO_EC)			+= wilco_ec/
+diff --git a/drivers/platform/chrome/cros_usbpd_notify.c b/drivers/platform/chrome/cros_usbpd_notify.c
+new file mode 100644
+index 0000000000000..4705164e38bf4
+--- /dev/null
++++ b/drivers/platform/chrome/cros_usbpd_notify.c
+@@ -0,0 +1,180 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright 2020 Google LLC
++ *
++ * This driver serves as the receiver of cros_ec PD host events.
++ */
++
++#include <linux/acpi.h>
++#include <linux/module.h>
++#include <linux/mfd/cros_ec.h>
++#include <linux/platform_data/cros_ec_commands.h>
++#include <linux/platform_data/cros_ec_proto.h>
++#include <linux/platform_data/cros_usbpd_notify.h>
++#include <linux/platform_device.h>
++
++#define DRV_NAME "cros-usbpd-notify"
++#define ACPI_DRV_NAME "GOOG0003"
++
++static BLOCKING_NOTIFIER_HEAD(cros_usbpd_notifier_list);
++
++/**
++ * cros_usbpd_register_notify - Register a notifier callback for PD events.
++ * @nb: Notifier block pointer to register
++ *
++ * On ACPI platforms this corresponds to host events on the ECPD
++ * "GOOG0003" ACPI device. On non-ACPI platforms this will filter mkbp events
++ * for USB PD events.
++ *
++ * Return: 0 on success or negative error code.
++ */
++int cros_usbpd_register_notify(struct notifier_block *nb)
++{
++	return blocking_notifier_chain_register(
++			&cros_usbpd_notifier_list, nb);
++}
++EXPORT_SYMBOL_GPL(cros_usbpd_register_notify);
++
++
++/**
++ * cros_usbpd_unregister_notify - Unregister notifier callback for PD events.
++ * @nb: Notifier block pointer to unregister
++ *
++ * Unregister a notifier callback that was previously registered with
++ * cros_usbpd_register_notify().
++ */
++void cros_usbpd_unregister_notify(struct notifier_block *nb)
++{
++	blocking_notifier_chain_unregister(&cros_usbpd_notifier_list, nb);
++}
++EXPORT_SYMBOL_GPL(cros_usbpd_unregister_notify);
++
++#ifdef CONFIG_ACPI
++
++static int cros_usbpd_notify_add_acpi(struct acpi_device *adev)
++{
++	return 0;
++}
++
++static void cros_usbpd_notify_acpi(struct acpi_device *adev, u32 event)
++{
++	blocking_notifier_call_chain(&cros_usbpd_notifier_list, event, NULL);
++}
++
++static const struct acpi_device_id cros_usbpd_notify_acpi_device_ids[] = {
++	{ ACPI_DRV_NAME, 0 },
++	{ }
++};
++MODULE_DEVICE_TABLE(acpi, cros_usbpd_notify_acpi_device_ids);
++
++static struct acpi_driver cros_usbpd_notify_acpi_driver = {
++	.name = DRV_NAME,
++	.class = DRV_NAME,
++	.ids = cros_usbpd_notify_acpi_device_ids,
++	.ops = {
++		.add = cros_usbpd_notify_add_acpi,
++		.notify = cros_usbpd_notify_acpi,
++	},
++};
++
++#endif /* CONFIG_ACPI */
++
++#ifdef CONFIG_OF
++
++static int cros_usbpd_notify_plat(struct notifier_block *nb,
++		unsigned long queued_during_suspend, void *data)
++{
++	struct cros_ec_device *ec_dev = (struct cros_ec_device *)data;
++	u32 host_event = cros_ec_get_host_event(ec_dev);
++
++	if (!host_event)
++		return NOTIFY_BAD;
++
++	if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_PD_MCU)) {
++		blocking_notifier_call_chain(&cros_usbpd_notifier_list,
++				host_event, NULL);
++		return NOTIFY_OK;
++	}
++	return NOTIFY_DONE;
++}
++
++static int cros_usbpd_notify_probe_plat(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct cros_ec_dev *ecdev = dev_get_drvdata(dev->parent);
++	struct notifier_block *nb;
++	int ret;
++
++	nb = devm_kzalloc(dev, sizeof(*nb), GFP_KERNEL);
++	if (!nb)
++		return -ENOMEM;
++
++	nb->notifier_call = cros_usbpd_notify_plat;
++	dev_set_drvdata(dev, nb);
++
++	ret = blocking_notifier_chain_register(&ecdev->ec_dev->event_notifier,
++						nb);
++	if (ret < 0) {
++		dev_err(dev, "Failed to register notifier\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static int cros_usbpd_notify_remove_plat(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct cros_ec_dev *ecdev = dev_get_drvdata(dev->parent);
++	struct notifier_block *nb =
++		(struct notifier_block *)dev_get_drvdata(dev);
++
++	blocking_notifier_chain_unregister(&ecdev->ec_dev->event_notifier,
++			nb);
++
++	return 0;
++}
++
++static struct platform_driver cros_usbpd_notify_plat_driver = {
++	.driver = {
++		.name = DRV_NAME,
++	},
++	.probe = cros_usbpd_notify_probe_plat,
++	.remove = cros_usbpd_notify_remove_plat,
++};
++
++#endif /* CONFIG_OF */
++
++static int __init cros_usbpd_notify_init(void)
++{
++	int ret = 0;
++#ifdef CONFIG_OF
++	ret = platform_driver_register(&cros_usbpd_notify_plat_driver);
++	if (ret != 0)
++		pr_err("cros-usbpd-notify platform driver register failed.\n");
++#endif
++#ifdef CONFIG_ACPI
++	ret = acpi_bus_register_driver(&cros_usbpd_notify_acpi_driver);
++	if (ret != 0)
++		pr_err("cros-usbpd-notify ACPI driver register failed.\n");
++#endif
++	return ret;
++}
++
++static void __exit cros_usbpd_notify_exit(void)
++{
++#ifdef CONFIG_OF
++	platform_driver_unregister(&cros_usbpd_notify_plat_driver);
++#endif
++#ifdef CONFIG_ACPI
++	acpi_bus_unregister_driver(&cros_usbpd_notify_acpi_driver);
++#endif
++}
++
++module_init(cros_usbpd_notify_init);
++module_exit(cros_usbpd_notify_exit);
++
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("ChromeOS power delivery notifier device");
++MODULE_AUTHOR("Jon Flatley <jflat@chromium.org>");
++MODULE_ALIAS("platform:" DRV_NAME);
+diff --git a/include/linux/platform_data/cros_usbpd_notify.h b/include/linux/platform_data/cros_usbpd_notify.h
+new file mode 100644
+index 0000000000000..4f2791722b6d3
+--- /dev/null
++++ b/include/linux/platform_data/cros_usbpd_notify.h
+@@ -0,0 +1,17 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * ChromeOS EC Power Delivery Notifier Driver
++ *
++ * Copyright 2020 Google LLC
++ */
++
++#ifndef __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H
++#define __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H
++
++#include <linux/notifier.h>
++
++int cros_usbpd_register_notify(struct notifier_block *nb);
++
++void cros_usbpd_unregister_notify(struct notifier_block *nb);
++
++#endif  /* __LINUX_PLATFORM_DATA_CROS_USBPD_NOTIFY_H */
+-- 
+2.25.0.341.g760bfbb309-goog
+
