@@ -2,126 +2,104 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A92F3C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABF0C33CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D5182072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:12:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mfrQZlcQ"
+	by mail.kernel.org (Postfix) with ESMTP id 7B76B2072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:12:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729151AbgAQQMV (ORCPT
+        id S1729208AbgAQQMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 11:12:21 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54738 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727043AbgAQQMV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 11:12:21 -0500
-Received: by mail-wm1-f68.google.com with SMTP id b19so7955506wmj.4;
-        Fri, 17 Jan 2020 08:12:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=87Y8vkRNzKb0ASfAWCTOo+g4i0PTErziTAjnA81V/50=;
-        b=mfrQZlcQcxWm461vn7Pt8/vwp1SAQ7XomvOWfq6a5tj0XZOlNBTD1IjGSxDD/zUh4I
-         hSZFNq5Nadxj3vVH80OUvRM7G14nnSIJ7kdoQTNad1MJYrPDZ5mJxi6ZXVZKve4UzmcN
-         ytQlgakS/nmzKPZZUuQbb3mbQupzySL2IxkuBaqmQTLqJDP8fhtKY2undDFl8S69VveB
-         u809iNgTl4+ynCRU0aDUajZjvKdaAUYwol0YMctQ6OvBWI/Lap9XxGYjjNpt93I1eQWJ
-         WVCoFiDYJpS2m/8TEI+7Io0jpctcv+vUt+K8We8OYl4P3b3cQimjWGggG/ff2wZ+NiyH
-         d2KA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=87Y8vkRNzKb0ASfAWCTOo+g4i0PTErziTAjnA81V/50=;
-        b=Pr99DE1xo7S5Kp+w88cX0PkTr1W0wzMv0W3AGoOaNiB1BkainrJ2Ei+7HIUjVGH/VT
-         NoQaMHSkjzYyeuJUohshMGz+7lmztwsDj8osFrUTYg57ReFNGcXEBxddDYIjTvzlGBrE
-         7vIy3VbeDza54TBkaaHxSNTKzDaXLUjKENk6JSnQX02+pXJF7W26KE+QHO+ms1dqr+ID
-         Mlx239anFtxeoh55nk8cWQuykmFBoUuJnBVjRVkN+pG7V25gPvbX6eYAE52+TBx4kI70
-         uDjamu9o6fM/nMcvL1/I7on+1z30h6WSfFGhHgYhDZ8iFzLyJ/PTvI7yt66/IJ5bK2rp
-         XAaQ==
-X-Gm-Message-State: APjAAAXjDOOordRDNCKEveLzhHNJByC6/g0C+WQxRNho5kmbq45MZ7KT
-        PjzbuP2m+j93ePUrv6cf+YumADL3zKQ=
-X-Google-Smtp-Source: APXvYqwKmQzUUW2YmhGe897OEvvoDWB7pzekwfxNYJd91bNINrY8kSfJYyN5wNtB8Gn+zLxpsrqOBw==
-X-Received: by 2002:a1c:a9c6:: with SMTP id s189mr5423712wme.151.1579277538784;
-        Fri, 17 Jan 2020 08:12:18 -0800 (PST)
-Received: from WINDOWSSS5SP16 ([82.31.89.128])
-        by smtp.gmail.com with ESMTPSA id i5sm10267480wml.31.2020.01.17.08.12.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 Jan 2020 08:12:17 -0800 (PST)
-From:   "Robert Milkowski" <rmilkowski@gmail.com>
-To:     <linux-nfs@vger.kernel.org>,
-        "'Trond Myklebust'" <trondmy@hammerspace.com>
-Cc:     "'Chuck Lever'" <chuck.lever@oracle.com>,
-        "'Anna Schumaker'" <anna.schumaker@netapp.com>,
-        <linux-kernel@vger.kernel.org>
-References: <115c01d5c66d$5dcd7ae0$196870a0$@gmail.com>
-In-Reply-To: <115c01d5c66d$5dcd7ae0$196870a0$@gmail.com>
-Subject: RE: [PATCH v2] NFSv4: try lease recovery on NFS4ERR_EXPIRED
-Date:   Fri, 17 Jan 2020 16:12:16 -0000
-Message-ID: <041101d5cd50$e398d720$aaca8560$@gmail.com>
+        Fri, 17 Jan 2020 11:12:34 -0500
+Received: from foss.arm.com ([217.140.110.172]:43142 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729153AbgAQQMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 11:12:33 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5F8B4113E;
+        Fri, 17 Jan 2020 08:12:32 -0800 (PST)
+Received: from arm.com (e112269-lin.cambridge.arm.com [10.1.194.52])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 74FA03F718;
+        Fri, 17 Jan 2020 08:12:31 -0800 (PST)
+Date:   Fri, 17 Jan 2020 16:12:27 +0000
+From:   Steven Price <steven.price@arm.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Rob Herring <robh@kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH AUTOSEL 5.4 002/205] drm/panfrost: Add missing check for
+ pfdev->regulator
+Message-ID: <20200117161226.GA8472@arm.com>
+References: <20200116164300.6705-1-sashal@kernel.org>
+ <20200116164300.6705-2-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQLAInB1/y2S+pDlHaM8/Hn+WlDXpKYaXLNw
-Content-Language: en-gb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200116164300.6705-2-sashal@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Anyone please?
+On Thu, Jan 16, 2020 at 04:39:37PM +0000, Sasha Levin wrote:
+> From: Steven Price <steven.price@arm.com>
+> 
+> [ Upstream commit 52282163dfa651849e905886845bcf6850dd83c2 ]
 
+This commit is effectively already in 5.4. Confusingly there were two
+versions of this upstream:
 
------Original Message-----
-From: Robert Milkowski <rmilkowski@gmail.com> 
-Sent: 08 January 2020 21:48
-To: linux-nfs@vger.kernel.org
-Cc: 'Trond Myklebust' <trondmy@hammerspace.com>; 'Chuck Lever'
-<chuck.lever@oracle.com>; 'Anna Schumaker' <anna.schumaker@netapp.com>;
-linux-kernel@vger.kernel.org
-Subject: [PATCH v2] NFSv4: try lease recovery on NFS4ERR_EXPIRED
+52282163dfa6 ("drm/panfrost: Add missing check for pfdev->regulator")
+c90f30812a79 ("drm/panfrost: Add missing check for pfdev->regulator")
 
-From: Robert Milkowski <rmilkowski@gmail.com>
+It got merged both through a -fixes branch and through the normal merge
+window. The two copies caused a bad merge in mainline and this was
+effectively reverted in commit 603e398a3db2 ("drm/panfrost: Remove NULL
+check for regulator").
 
-Currently, if an nfs server returns NFS4ERR_EXPIRED to open(), etc.
-we return EIO to applications without even trying to recover.
+c90f30812a79 is included in v5.4 so should already be in any v5.4.y
+release.
 
-Fixes: 272289a3df72 ("NFSv4: nfs4_do_handle_exception() handle revoke/expiry
-of a single stateid")
-Signed-off-by: Robert Milkowski <rmilkowski@gmail.com>
----
- fs/nfs/nfs4proc.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Steve
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c index 76d3716..2478405
-100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -481,6 +481,10 @@ static int nfs4_do_handle_exception(struct nfs_server
-*server,
- 						stateid);
- 				goto wait_on_recovery;
- 			}
-+			if (state == NULL) {
-+				nfs4_schedule_lease_recovery(clp);
-+				goto wait_on_recovery;
-+			}
- 			/* Fall through */
- 		case -NFS4ERR_OPENMODE:
- 			if (inode) {
---
-1.8.3.1
-
-
+> 
+> When modifying panfrost_devfreq_target() to support a device without a
+> regulator defined I missed the check on the error path. Let's add it.
+> 
+> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Fixes: e21dd290881b ("drm/panfrost: Enable devfreq to work without regulator")
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> Link: https://patchwork.freedesktop.org/patch/msgid/20190822093218.26014-1-steven.price@arm.com
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/gpu/drm/panfrost/panfrost_devfreq.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.c b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
+> index 12ff77dacc95..c1eb8cfe6aeb 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_devfreq.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
+> @@ -53,8 +53,10 @@ static int panfrost_devfreq_target(struct device *dev, unsigned long *freq,
+>  	if (err) {
+>  		dev_err(dev, "Cannot set frequency %lu (%d)\n", target_rate,
+>  			err);
+> -		regulator_set_voltage(pfdev->regulator, pfdev->devfreq.cur_volt,
+> -				      pfdev->devfreq.cur_volt);
+> +		if (pfdev->regulator)
+> +			regulator_set_voltage(pfdev->regulator,
+> +					      pfdev->devfreq.cur_volt,
+> +					      pfdev->devfreq.cur_volt);
+>  		return err;
+>  	}
+>  
+> -- 
+> 2.20.1
+> 
