@@ -2,138 +2,161 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B01AC33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A9FC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 524942082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:58:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Wu8zTcz9"
+	by mail.kernel.org (Postfix) with ESMTP id D3DD52082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:58:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729049AbgAQJ6e (ORCPT
+        id S1729126AbgAQJ6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 04:58:34 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45803 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728827AbgAQJ63 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 04:58:29 -0500
-Received: by mail-wr1-f68.google.com with SMTP id j42so22013851wrj.12
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 01:58:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=96TwPn9tZGUSDTaF/Oy40asyB7vDV/iwGB6pLp4mfFQ=;
-        b=Wu8zTcz9k2Vpywvl31N0c25HBVn2qwXOqD+MWlsqko83KPs6S99De4fRi1hfH9F8TT
-         Bg5GAmWjYud1pvlRTCQmmg2nHWybCYCtt0u8WW0WHk8rwJvl8LiDDa7JZ8IDcRORVEw3
-         2wtW9ktAzWPuLhTC9wg4wsxYNJZ4lJMqrpdVhlWS365QBIt5lSmxFzCPYY3ew2eFr4pF
-         zUcuQdWuHEqjjl0oFrXtTNXF7ZGD6DbBmaOEfE8ryP1K2/cuK94vwoX8VlgL+5iye5IJ
-         3jgdn1lOCh62EdMU1CYcA5EuwBGMv9Fyhn7RbNbIIRnp3RRBvf5FpZKvi2Mx0KXUm1Pf
-         asHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=96TwPn9tZGUSDTaF/Oy40asyB7vDV/iwGB6pLp4mfFQ=;
-        b=XPEgY3HN3iFM5/mxa7QgFS74TJy4rYyn6l/Ptmdn1Hd4G38nO2bqCUHwqNP//67XpN
-         2y2YIkhNnHdgik14RDzk0LK19RE5efuLN2J/gHgcesB2LRPkvve/G//NR5DUmKC5EO1p
-         Abi/GuPuJmunNVUdb7e0VKeahFG3JYzRCzhj/nnf88mJXZ1frGaHQHVcLF9sZL3SE5ym
-         FPVn0IhW6+y+K8z9MQoxqsFiTSUhwzo6Od/jg9K1Ed+PEDtA2Tvec06FHh31oY+pvqwP
-         JCs1Nrt3SdsOZJwXcUTaWGQh70gloAhk57axj4UFHUxZVRjZb6+rrBo/L9nbJ7wm3lku
-         373A==
-X-Gm-Message-State: APjAAAUxmlI2X1ga2+o09h/Ect//TsMfmktGtI7gmFpHXnnSD9iv2N8f
-        mUPOzyjuxxejfSqzxcb/k9Ij9w==
-X-Google-Smtp-Source: APXvYqw7rr5TbFsnSWWKlT8WqTuoJZTg7S/XbonYjwnU/AiKmIx6JDxL6B5TNmuGTi3EbzX1aVC3HA==
-X-Received: by 2002:adf:fe0e:: with SMTP id n14mr2278558wrr.116.1579255106666;
-        Fri, 17 Jan 2020 01:58:26 -0800 (PST)
-Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id r62sm9967007wma.32.2020.01.17.01.58.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 17 Jan 2020 01:58:26 -0800 (PST)
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 06/12] interconnect: Add a common standard aggregate function
-Date:   Fri, 17 Jan 2020 11:58:10 +0200
-Message-Id: <20200117095816.23575-7-georgi.djakov@linaro.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200117095816.23575-1-georgi.djakov@linaro.org>
-References: <20200117095816.23575-1-georgi.djakov@linaro.org>
+        Fri, 17 Jan 2020 04:58:36 -0500
+Received: from ofcsgdbm.dwd.de ([141.38.3.245]:33933 "EHLO ofcsgdbm.dwd.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728913AbgAQJ6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 04:58:32 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by ofcsg2dn1.dwd.de (Postfix) with ESMTP id 47zc2X49xYz6v5j
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 09:58:28 +0000 (UTC)
+X-Virus-Scanned: by amavisd-new at csg.dwd.de
+Received: from ofcsg2dn1.dwd.de ([127.0.0.1])
+        by localhost (ofcsg2dn1.dwd.de [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id 9ZkaTD7x98ih for <linux-kernel@vger.kernel.org>;
+        Fri, 17 Jan 2020 09:58:28 +0000 (UTC)
+Received: from ofmailhub.dwd.de (oflxs446.dwd.de [141.38.40.78])
+        by ofcsg2dn1.dwd.de (Postfix) with ESMTP id 47zc2X24mTz6v59;
+        Fri, 17 Jan 2020 09:58:28 +0000 (UTC)
+Received: from diagnostix.dwd.de (diagnostix.dwd.de [141.38.42.141])
+        by ofmailhub.dwd.de (Postfix) with ESMTP id BBD895B707;
+        Fri, 17 Jan 2020 09:58:27 +0000 (UTC)
+Date:   Fri, 17 Jan 2020 09:58:27 +0000 (UTC)
+From:   Holger Kiehl <Holger.Kiehl@dwd.de>
+X-X-Sender: kiehl@diagnostix.dwd.de
+To:     Guenter Roeck <linux@roeck-us.net>
+cc:     linux-hwmon@vger.kernel.org, Clemens Ladisch <clemens@ladisch.de>,
+        Jean Delvare <jdelvare@suse.com>, linux-kernel@vger.kernel.org
+Subject: Re: [RFT PATCH 0/4] hwmon: k10temp driver improvements
+In-Reply-To: <20200116141800.9828-1-linux@roeck-us.net>
+Message-ID: <alpine.LRH.2.21.2001170949500.21460@diagnostix.dwd.de>
+References: <20200116141800.9828-1-linux@roeck-us.net>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="646810922-661853023-1579255108=:21460"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently there is one very standard aggregation method that is used by
-several drivers. Let's add this as a common function, so that drivers
-could just point to it, instead of copy/pasting code.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Suggested-by: Evan Green <evgreen@chromium.org>
-Reviewed-by: Brian Masney <masneyb@onstation.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reviewed-by: Evan Green <evgreen@chromium.org>
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
- drivers/interconnect/core.c           | 10 ++++++++++
- include/linux/interconnect-provider.h |  8 ++++++++
- 2 files changed, 18 insertions(+)
+--646810922-661853023-1579255108=:21460
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-index fbec2e4fdfeb..03625406c69f 100644
---- a/drivers/interconnect/core.c
-+++ b/drivers/interconnect/core.c
-@@ -221,6 +221,16 @@ static int apply_constraints(struct icc_path *path)
- 	return ret;
- }
- 
-+int icc_std_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
-+		      u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
-+{
-+	*agg_avg += avg_bw;
-+	*agg_peak = max(*agg_peak, peak_bw);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(icc_std_aggregate);
-+
- /* of_icc_xlate_onecell() - Translate function using a single index.
-  * @spec: OF phandle args to map into an interconnect node.
-  * @data: private data (pointer to struct icc_onecell_data)
-diff --git a/include/linux/interconnect-provider.h b/include/linux/interconnect-provider.h
-index 31440c921216..0c494534b4d3 100644
---- a/include/linux/interconnect-provider.h
-+++ b/include/linux/interconnect-provider.h
-@@ -92,6 +92,8 @@ struct icc_node {
- 
- #if IS_ENABLED(CONFIG_INTERCONNECT)
- 
-+int icc_std_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
-+		      u32 peak_bw, u32 *agg_avg, u32 *agg_peak);
- struct icc_node *icc_node_create(int id);
- void icc_node_destroy(int id);
- int icc_link_create(struct icc_node *node, const int dst_id);
-@@ -104,6 +106,12 @@ int icc_provider_del(struct icc_provider *provider);
- 
- #else
- 
-+static inline int icc_std_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
-+				    u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
-+{
-+	return -ENOTSUPP;
-+}
-+
- static inline struct icc_node *icc_node_create(int id)
- {
- 	return ERR_PTR(-ENOTSUPP);
+On Thu, 16 Jan 2020, Guenter Roeck wrote:
+
+> This patch series implements various improvements for the k10temp driver.
+> 
+> Patch 1/4 introduces the use of bit operations.
+> 
+> Patch 2/4 converts the driver to use the devm_hwmon_device_register_with_info
+> API. This not only simplifies the code and reduces its size, it also
+> makes the code easier to maintain and enhance. 
+> 
+> Patch 3/4 adds support for reporting Core Complex Die (CCD) temperatures
+> on Ryzen 3 (Zen2) CPUs.
+> 
+> Patch 4/4 adds support for reporting core and SoC current and voltage
+> information on Ryzen CPUs.
+> 
+> With all patches in place, output on Ryzen 3900 CPUs looks as follows
+> (with the system under load).
+> 
+> k10temp-pci-00c3
+> Adapter: PCI adapter
+> Vcore:        +1.36 V
+> Vsoc:         +1.18 V
+> Tdie:         +86.8°C  (high = +70.0°C)
+> Tctl:         +86.8°C
+> Tccd1:        +80.0°C
+> Tccd2:        +81.8°C
+> Icore:       +44.14 A
+> Isoc:        +13.83 A
+> 
+> The patch series has only been tested with Ryzen 3900 CPUs. Further test
+> coverage will be necessary before the changes can be applied to the Linux
+> kernel.
+> 
+Here from my little Asrock A300 with a Ryzen 2400G:
+
+   sensors
+   k10temp-pci-00c3
+   Adapter: PCI adapter
+   Vcore:        +0.78 V  
+   Vsoc:         +1.11 V  
+   Tdie:         +44.8°C  (high = +70.0°C)
+   Tctl:         +44.8°C  
+   Icore:        +5.20 A  
+   Isoc:         +2.17 A  
+
+   nvme-pci-0100
+   Adapter: PCI adapter
+   Composite:    +41.9°C  (low  = -273.1°C, high = +80.8°C)
+                          (crit = +80.8°C)
+   Sensor 1:     +41.9°C  (low  = -273.1°C, high = +65261.8°C)
+   Sensor 2:     +44.9°C  (low  = -273.1°C, high = +65261.8°C)
+
+   nct6793-isa-0290
+   Adapter: ISA adapter
+   in0:                    +0.34 V  (min =  +0.00 V, max =  +1.74 V)
+   in1:                    +1.84 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in2:                    +3.41 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in3:                    +3.39 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in4:                    +0.26 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in5:                    +0.14 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in6:                    +0.67 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in7:                    +3.39 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in8:                    +3.26 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in9:                    +1.84 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in10:                   +0.19 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in11:                   +0.14 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in12:                   +1.85 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in13:                   +1.72 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   in14:                   +0.20 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+   fan1:                     0 RPM  (min =    0 RPM)
+   fan2:                   317 RPM  (min =    0 RPM)
+   fan3:                     0 RPM  (min =    0 RPM)
+   fan4:                     0 RPM  (min =    0 RPM)
+   fan5:                     0 RPM  (min =    0 RPM)
+   SYSTIN:                +113.0°C  (high =  +0.0°C, hyst =  +0.0°C)  sensor = thermistor
+   CPUTIN:                 +59.5°C  (high = +80.0°C, hyst = +75.0°C)  sensor = thermistor
+   AUXTIN0:                +45.0°C  (high =  +0.0°C, hyst =  +0.0°C)  ALARM  sensor = thermistor
+   AUXTIN1:               +107.0°C    sensor = thermistor
+   AUXTIN2:               +106.0°C    sensor = thermistor
+   AUXTIN3:               +103.0°C    sensor = thermistor
+   SMBUSMASTER 0:          +44.5°C  
+   PCH_CHIP_CPU_MAX_TEMP:   +0.0°C  
+   PCH_CHIP_TEMP:           +0.0°C  
+   PCH_CPU_TEMP:            +0.0°C  
+   intrusion0:            OK
+   intrusion1:            ALARM
+   beep_enable:           disabled
+
+   amdgpu-pci-0300
+   Adapter: PCI adapter
+   vddgfx:           N/A  
+   vddnb:            N/A  
+   edge:         +44.0°C  (crit = +80.0°C, hyst =  +0.0°C)
+
+Patches applied without any problem against Linus git tree.
+
+Many thanks for this work!
+
+Regards,
+Holger
+--646810922-661853023-1579255108=:21460--
