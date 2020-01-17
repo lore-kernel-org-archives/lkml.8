@@ -2,105 +2,144 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 295FAC33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 08:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B3CFC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 08:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F07062072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 08:54:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62A3F2072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 08:57:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KeIszkAk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z8gRccMg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729476AbgAQIyT (ORCPT
+        id S1729489AbgAQI5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 03:54:19 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:54186 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728901AbgAQIyT (ORCPT
+        Fri, 17 Jan 2020 03:57:46 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49070 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726897AbgAQI5o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 03:54:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=XO29zYwx4hHLz7JsjcnHBs2ZcfiIaLvQEPYDWFilZ/E=; b=KeIszkAkhcH1JxeD9bKiF9mhr
-        UD+kxnRJr210Af67SY0X89g28UCA82/xVx/nHgSZwYm+zGP/lJKgbBg7o1ru3Q83lH5AAfNfBhude
-        pV5JVb0l6MjmsCs3cg5EEsVdwJJQE7041jSg+B5BOkTmw/cPzy/pSkfZr7n0DbfHnAbs29+3cytnG
-        PJ5J90yWbUtXwJbfoR2ITc7dBMVMoYzqBZ1LNYw/uGlxoohPP4z4unud1/a/HDiqocG4MffgqkENl
-        1y3DSooclMrZhH0EEdgTBe1deUEbXYzYT8CojCujkLaAnLmDPXaOUqG5az/hzVEzLQMBo6zqLrrqS
-        4kdE54Jiw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1isNOQ-0004hX-Kl; Fri, 17 Jan 2020 08:54:15 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0803A304A59;
-        Fri, 17 Jan 2020 09:52:35 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2F03220AFB27D; Fri, 17 Jan 2020 09:54:12 +0100 (CET)
-Date:   Fri, 17 Jan 2020 09:54:12 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     kan.liang@linux.intel.com
-Cc:     acme@redhat.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, eranian@google.com
-Subject: Re: [RESEND PATCH V2] perf/x86/intel: Avoid unnecessary PEBS_ENABLE
- MSR access in PMI
-Message-ID: <20200117085412.GU2827@hirez.programming.kicks-ass.net>
-References: <20200116182112.20782-1-kan.liang@linux.intel.com>
+        Fri, 17 Jan 2020 03:57:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579251461;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5wGVm7vGifojmQs18rmKxAMnZ1ofaqDbsZAnJ2KgVM8=;
+        b=Z8gRccMgWKxmhcgATAsxjnPG7ZJeUjB36/8jg3uC3HTCZ629w2TCD05qOGKtAS4qTlf/b0
+        8sHV+nNAlBw7b58V8EzLDJsJaPKBrkXI58NvM/+P/FJ86jvjilwSU/6m7hTwKOVe2g7PXK
+        w/b2MdlHYEh3ODfBiuW6Qn0FNzWchxo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-326-bAqU4dETMIa9LQgbw4bJAg-1; Fri, 17 Jan 2020 03:57:40 -0500
+X-MC-Unique: bAqU4dETMIa9LQgbw4bJAg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F022BDB60;
+        Fri, 17 Jan 2020 08:57:36 +0000 (UTC)
+Received: from carbon (ovpn-200-25.brq.redhat.com [10.40.200.25])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 80A8219C5B;
+        Fri, 17 Jan 2020 08:57:24 +0000 (UTC)
+Date:   Fri, 17 Jan 2020 09:57:21 +0100
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        clang-built-linux@googlegroups.com, brouer@redhat.com
+Subject: Re: [PATCH bpf-next v3 00/11] tools: Use consistent libbpf include
+ paths everywhere
+Message-ID: <20200117095721.0030f414@carbon>
+In-Reply-To: <20200117041431.h7vvc32fungenyhg@ast-mbp.dhcp.thefacebook.com>
+References: <157918093154.1357254.7616059374996162336.stgit@toke.dk>
+        <20200117041431.h7vvc32fungenyhg@ast-mbp.dhcp.thefacebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200116182112.20782-1-kan.liang@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 10:21:12AM -0800, kan.liang@linux.intel.com wrote:
+On Thu, 16 Jan 2020 20:14:32 -0800
+Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
 
-> A PMI may land after cpuc->enabled=0 in x86_pmu_disable() and
-> PMI throttle may be triggered for the PMI. For this rare case,
-> intel_pmu_pebs_disable() will not touch PEBS_ENABLE MSR. The patch
-> explicitly disable the PEBS for this case.
+> On Thu, Jan 16, 2020 at 02:22:11PM +0100, Toke H=C3=B8iland-J=C3=B8rgense=
+n wrote:
+> > The recent commit 6910d7d3867a ("selftests/bpf: Ensure bpf_helper_defs.=
+h are
+> > taken from selftests dir") broke compilation against libbpf if it is in=
+stalled
+> > on the system, and $INCLUDEDIR/bpf is not in the include path.
+> >=20
+> > Since having the bpf/ subdir of $INCLUDEDIR in the include path has nev=
+er been a
+> > requirement for building against libbpf before, this needs to be fixed.=
+ One
+> > option is to just revert the offending commit and figure out a differen=
+t way to
+> > achieve what it aims for.  =20
+>=20
+> The offending commit has been in the tree for a week. So I applied Andrii=
+'s
+> revert of that change. It reintroduced the build dependency issue, but we=
+ lived
+> with it for long time, so we can take time to fix it cleanly.
+> I suggest to focus on that build dependency first.
+>=20
+> > However, this series takes a different approach:
+> > Changing all in-tree users of libbpf to consistently use a bpf/ prefix =
+in
+> > #include directives for header files from libbpf. =20
+>=20
+> I'm not sure it's a good idea. It feels nice, but think of a message we're
+> sending to everyone. We will get spamed with question: does bpf community
+> require all libbpf users to use bpf/ prefix ? What should be our answer?
 
-intel_pmu_handle_irq()
-  pmu_enabled = cpuc->enabled;
-  cpuc->enabled = 0;
-  __intel_pmu_disable_all();
+The answer should be: Yes. When libbpf install the header files the are
+installed under bpf/ prefix.  It is very confusing that samples and
+selftests can include libbpf.h without this prefix. Even worse
+including "bpf.h" pickup the libbpf version bpf/bpf.h, which have
+caused confusion.  The only reason for the direct "libbpf.h" include is
+historical, as there used-to-be a local file for that.
 
-  ...
-    x86_pmu_stop()
-      intel_pmu_disable_event()
-        intel_pmu_pebs_disable()
-	  if (cpuc->enabled) // FALSE!!!
 
-  cpuc->enabled = pmu_enabled;
-  if (pmu_enabled)
-    __intel_pmu_enable_all();
+> Require or recommend? If require.. what for? It works as-is. If recommend=
+ then
+> why suddenly we're changing all files in selftests and samples?
+> There is no good answer here. I think we should leave the things as-is.
 
-> @@ -2620,6 +2627,15 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
->  		handled++;
->  		x86_pmu.drain_pebs(regs);
->  		status &= x86_pmu.intel_ctrl | GLOBAL_STATUS_TRACE_TOPAPMI;
-> +
-> +		/*
-> +		 * PMI may land after cpuc->enabled=0 in x86_pmu_disable() and
-> +		 * PMI throttle may be triggered for the PMI.
-> +		 * For this rare case, intel_pmu_pebs_disable() will not touch
-> +		 * MSR_IA32_PEBS_ENABLE. Explicitly disable the PEBS here.
-> +		 */
-> +		if (unlikely(!cpuc->enabled && !cpuc->pebs_enabled))
-> +			wrmsrl(MSR_IA32_PEBS_ENABLE, 0);
->  	}
+I strongly believe we should correct this.  It doesn't make sense that
+someone copying out a sample or selftests, into a git-submodule libbpf
+(or distro installed libbpf-devel) have to understand that they have to
+update the include path for all the libbpf header files.
 
-How does that make sense? AFAICT this is all still completely broken.
-
-Please be more careful.
+--=20
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
 
