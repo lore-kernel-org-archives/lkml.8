@@ -4,32 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91491C33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C00C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AAEB2467D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D2A62467D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:43:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729797AbgAQRnV (ORCPT
+        id S1729813AbgAQRn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 12:43:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39980 "EHLO mail.kernel.org"
+        Fri, 17 Jan 2020 12:43:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728984AbgAQRla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729066AbgAQRla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 17 Jan 2020 12:41:30 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A34322464;
+        by mail.kernel.org (Postfix) with ESMTPSA id D34EB21D56;
         Fri, 17 Jan 2020 17:41:29 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1isVce-000QPA-Am; Fri, 17 Jan 2020 12:41:28 -0500
-Message-Id: <20200117174128.213232389@goodmis.org>
+        id 1isVce-000QQj-Ot; Fri, 17 Jan 2020 12:41:28 -0500
+Message-Id: <20200117174128.650393932@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Fri, 17 Jan 2020 12:41:17 -0500
+Date:   Fri, 17 Jan 2020 12:41:20 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org,
         linux-rt-users <linux-rt-users@vger.kernel.org>
@@ -40,9 +40,8 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Julia Cartwright <julia@ni.com>,
         Daniel Wagner <wagi@monom.org>,
         Tom Zanussi <zanussi@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
         Julien Grall <julien.grall@arm.com>
-Subject: [PATCH RT 06/32] KVM: arm/arm64: Let the timer expire in hardirq context on RT
+Subject: [PATCH RT 09/32] hrtimer: Dont grab the expiry lock for non-soft hrtimer
 References: <20200117174111.282847363@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -56,52 +55,39 @@ If anyone has any objections, please let me know.
 
 ------------------
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Julien Grall <julien.grall@arm.com>
 
-[ Upstream commit 719cc080c914045a6e35787bf4dc3ba91cfd3efb ]
+[ Upstream commit fd420354bea2f57c11f3de191dffdeea76531e76 ]
 
-The timers are canceled from an preempt-notifier which is invoked with
-disabled preemption which is not allowed on PREEMPT_RT.
-The timer callback is short so in could be invoked in hard-IRQ context
-on -RT.
+Acquiring the lock in hrtimer_grab_expiry_lock() is designed for
+sleeping-locks and should not be used with disabled interrupts.
+hrtimer_cancel() may invoke hrtimer_grab_expiry_lock() also for locks
+which expire in hard-IRQ context.
 
-Let the timer expire on hard-IRQ context even on -RT.
+Let hrtimer_cancel() invoke hrtimer_grab_expiry_lock() only for locks
+which expire in softirq context.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Marc Zyngier <maz@kernel.org>
-Tested-by: Julien Grall <julien.grall@arm.com>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Julien Grall <julien.grall@arm.com>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+[bigeasy: rewrite changelog]
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- virt/kvm/arm/arch_timer.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/time/hrtimer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/virt/kvm/arm/arch_timer.c b/virt/kvm/arm/arch_timer.c
-index 17cecc96f735..217d39f40393 100644
---- a/virt/kvm/arm/arch_timer.c
-+++ b/virt/kvm/arm/arch_timer.c
-@@ -67,7 +67,7 @@ static inline bool userspace_irqchip(struct kvm *kvm)
- static void soft_timer_start(struct hrtimer *hrt, u64 ns)
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index d6026c170c2d..49d20fe8570f 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -943,7 +943,7 @@ void hrtimer_grab_expiry_lock(const struct hrtimer *timer)
  {
- 	hrtimer_start(hrt, ktime_add_ns(ktime_get(), ns),
--		      HRTIMER_MODE_ABS);
-+		      HRTIMER_MODE_ABS_HARD);
- }
+ 	struct hrtimer_clock_base *base = READ_ONCE(timer->base);
  
- static void soft_timer_cancel(struct hrtimer *hrt, struct work_struct *work)
-@@ -638,10 +638,10 @@ void kvm_timer_vcpu_init(struct kvm_vcpu *vcpu)
- 	vcpu_ptimer(vcpu)->cntvoff = 0;
- 
- 	INIT_WORK(&timer->expired, kvm_timer_inject_irq_work);
--	hrtimer_init(&timer->bg_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS);
-+	hrtimer_init(&timer->bg_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_HARD);
- 	timer->bg_timer.function = kvm_bg_timer_expire;
- 
--	hrtimer_init(&timer->phys_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS);
-+	hrtimer_init(&timer->phys_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS_HARD);
- 	timer->phys_timer.function = kvm_phys_timer_expire;
- 
- 	vtimer->irq.irq = default_vtimer_irq.irq;
+-	if (base && base->cpu_base) {
++	if (timer->is_soft && base && base->cpu_base) {
+ 		spin_lock(&base->cpu_base->softirq_expiry_lock);
+ 		spin_unlock(&base->cpu_base->softirq_expiry_lock);
+ 	}
 -- 
 2.24.1
 
