@@ -6,47 +6,46 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4B2C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E420BC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6158C206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:08:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6CDE206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:08:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbgAQOIM (ORCPT
+        id S1727043AbgAQOIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 09:08:12 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:45638 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbgAQOIM (ORCPT
+        Fri, 17 Jan 2020 09:08:47 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34965 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726574AbgAQOIq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 09:08:12 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 59so22589126otp.12;
-        Fri, 17 Jan 2020 06:08:11 -0800 (PST)
+        Fri, 17 Jan 2020 09:08:46 -0500
+Received: by mail-ot1-f65.google.com with SMTP id i15so22629231oto.2;
+        Fri, 17 Jan 2020 06:08:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=oxppi7pIj8e5sSfdrBldrP06c7HVZk7Bw8KYy+1AxaI=;
-        b=SuS3x1PPA24kEimBCf17OmnyBoagBAeii7ZEUupWp/mX+fh8hP+df9x9zYG60Nl5gG
-         gPMVkK7fN7zQ6GsyOCH+fZxu3ZdlmX9jAB8eNhQgZQFs8d+K6tlt3ZRtjDqFS/LootbR
-         7aSHuAAU6HkpHXN4pR648bNyTMi5EtIVNVeIJivTkfcgdU1D6djC36hhpYPxmuJHexLC
-         Xo4HO81UaQ4WeaKTR+EHX/mIeFAfvPDJZBYnLpTjtACaAup6olQ+983IhqRC64T3Baz4
-         1/tsHvqWD4DMiFzS42ozkMl6Jvb9lsevoVSdTyMDYYYE9SNfoAJczpzU20b6U8qTnKi7
-         707g==
-X-Gm-Message-State: APjAAAVlQTaU3YHf9j42Qtwh+jIytGgrtySIUiEH13+/OUssINfCankf
-        Gi8IqebyTEi+TtRYDIXfT9+CL4y4Y4IMlyLU+ZM=
-X-Google-Smtp-Source: APXvYqz7FBS/FtklMvm4sU6CKtZ5bnsEJ9X8DfF6z56uTKJJzPruMzWUh0wv+Ed3caYwy5q2M9Zw0WNyCnMymcjACSk=
-X-Received: by 2002:a9d:dc1:: with SMTP id 59mr6064660ots.250.1579270091226;
- Fri, 17 Jan 2020 06:08:11 -0800 (PST)
+        bh=N+Kvtznk/wQ3RQceXPlbXNebs+cmr/OsrKXgAi73pC8=;
+        b=DxcJfHheUQ5tBzDKkzHorgR2gcLXoI0PCm4JF6jNBJ1PuJkeQCpVl3G4IK+c3Cr2+7
+         hDwIEIzmoHiZiHJLrYSUQK5PSRyv6igMbeC5Nm6VgMRyTqfyAu6qlvV/XdDjJffzY3S1
+         YFhcZYlmx1G4xc9rTVJDxBOmH883izdab+qlcMTTHVjtOZ5SUDDbOkpzfd/ZGG0/V2sT
+         R7FNGoRK1iUXzIBoKhrR3T7vD5sUB463qsrqRgv4v/niD6blgjmvNPCCRUkUFhq8NYcn
+         0N4DS+Az75mNGyA6LowGE1pE/j+ly5TlFFeEMA2Qx4z9fIJfw4tKdb/QZRlkv0jEFzGK
+         s9Cw==
+X-Gm-Message-State: APjAAAVScXDUCPVkUvcigxJapPyD9OBce1/z23/Oxvi7yTJDhq8U1FkF
+        kWYIj3qVYjjVWm6T3jZBm+XlPzlzq/zdFygFIuE=
+X-Google-Smtp-Source: APXvYqwfyMoS4OLZbI0D8YiBzxm1g6GgAYSbLMjZHjS79Rgj58kvMeYupqdn8up0R2mIakaN+MsqQVPiWg9tYoEVsD0=
+X-Received: by 2002:a05:6830:2141:: with SMTP id r1mr6202897otd.39.1579270125929;
+ Fri, 17 Jan 2020 06:08:45 -0800 (PST)
 MIME-Version: 1.0
-References: <CGME20200116145116eucas1p2d512db3f05f01d87bc9039af5bf70af3@eucas1p2.samsung.com>
- <c687dbc5-cf5a-9508-2a61-e757a1a14568@samsung.com>
-In-Reply-To: <c687dbc5-cf5a-9508-2a61-e757a1a14568@samsung.com>
+References: <CGME20200116145157eucas1p2401abc6b00654d767e872edbd0338957@eucas1p2.samsung.com>
+ <d98fea18-b72e-6d0f-33ac-1421738bd12b@samsung.com>
+In-Reply-To: <d98fea18-b72e-6d0f-33ac-1421738bd12b@samsung.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 17 Jan 2020 15:08:00 +0100
-Message-ID: <CAMuHMdW0qSAn3S+bpFieP=xukK5SapAq1oRC8XouuMJ6fgqOBA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] video: fbdev: sh_mobile_lcdcfb: fix sparse warnings
- about using incorrect types
+Date:   Fri, 17 Jan 2020 15:08:34 +0100
+Message-ID: <CAMuHMdVxesjdmL7asPwOP2xoS6quLs4-onT80afi7ui2GSZ-tg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] video: fbdev: sh_mobile_lcdcfb: add COMPILE_TEST support
 To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Cc:     Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
         DRI Development <dri-devel@lists.freedesktop.org>,
@@ -58,12 +57,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 3:51 PM Bartlomiej Zolnierkiewicz
+On Thu, Jan 16, 2020 at 3:52 PM Bartlomiej Zolnierkiewicz
 <b.zolnierkie@samsung.com> wrote:
-> Use ->screen_buffer instead of ->screen_base to fix sparse warnings.
->
-> [ Please see commit 17a7b0b4d974 ("fb.h: Provide alternate screen_base
->   pointer") for details. ]
+> Add COMPILE_TEST support to sh_mobile_lcdcfb driver for better compile
+> testing coverage.
 >
 > Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 
