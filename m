@@ -2,171 +2,317 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A937AC33CAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2343FC33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D3862077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBC4721582
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:28:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OVgpERU0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731295AbgAQAXO (ORCPT
+        id S1730063AbgAQA2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 19:23:14 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:53997 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728963AbgAQAXN (ORCPT
+        Thu, 16 Jan 2020 19:28:16 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:34039 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729253AbgAQA2Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 19:23:13 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1isFPl-0005sI-Nc; Fri, 17 Jan 2020 01:23:06 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id C48A9100C19; Fri, 17 Jan 2020 01:23:03 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Peter Xu <peterx@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>
-Subject: Re: [PATCH] sched/isolation: isolate from handling managed interrupt
-In-Reply-To: <20200116215814.GA24827@ming.t460p>
-References: <20200116094806.25372-1-ming.lei@redhat.com> <875zhbwqmm.fsf@nanos.tec.linutronix.de> <20200116215814.GA24827@ming.t460p>
-Date:   Fri, 17 Jan 2020 01:23:03 +0100
-Message-ID: <87d0bjdj88.fsf@nanos.tec.linutronix.de>
+        Thu, 16 Jan 2020 19:28:16 -0500
+Received: by mail-qk1-f193.google.com with SMTP id j9so21134163qkk.1;
+        Thu, 16 Jan 2020 16:28:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=A6F4ZnavD0e/0chFQ3kgLKefPDVYDYjwgeigG3mgzgo=;
+        b=OVgpERU0SAEtw3TECBcLos0ASYCg7YIeD9Y4/Ao2eH0mpTyzJkhQbfgi1wFeVKfkeZ
+         hdnB5GFT/mrt92iJGgrbPNvht3FkXBgept9Qb6vekQY3doaf9BbWkF7u52xVfFaiNtJ/
+         f81szrToA9mEwByoQTAPv+8HHaVEf62zH4Y9JdritM2pGH7ZQr2I9TfPXktuX0oe4ZRN
+         4VPmG6YsEUwbDeec0dBpWeStKWSOrslt0ufERkNt37DPXWICDnu8TfmtIUB2b1/Ulyo5
+         5vsIxJ2wLzqxg8cUZJLykU/lkKt88LWYmXIrOAvvaFwJfLvL0HXxogWYZDnmTDC0wH97
+         Ks5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A6F4ZnavD0e/0chFQ3kgLKefPDVYDYjwgeigG3mgzgo=;
+        b=cYgdoDCvd+U7gauI7GWHFWHdsMcih1/rnagBXte1KaIEiSXPVHN0SofSU2H7nkkVtj
+         A2ABVRjiPs8R48XsxB2ovCqQiiB0/Ri9ZaON3+bsPnzl73jzwiD4UcgIk2Ho3fxxFFeZ
+         1La6J7J9GcRvmdHnNwHVFMcn1fsMnBnVn5mFMvlKKdLlo1ytH1gGASsTbTn7VTi6vJ7L
+         mvGx/tpaDWfRzDX+EKZIB7Ei2ua1biCBITXAsBJYXgATJtWewkHgpfxfBJyN8F7mfM4y
+         2rsTk+WOHrtbO5gqJPj+62w+OarOmYu0KqsrOH/3alC28NRcM0D78rsPh7nqBOfclEhZ
+         CQ8Q==
+X-Gm-Message-State: APjAAAWmyGcNIneN+7hOqDNPelOPLMl+zWzao4V9d05DPKX2QBT8D7RN
+        z8WsS0R8tl4CLjGTfRfwwdDYcboPnRKWGnwLMdXVRFAUhio=
+X-Google-Smtp-Source: APXvYqwsfFzq80hquq3LspX/KN8hSx+8XNuRLGL/HQaf/j7qBgvYUtZPltNqkh2RP5g3Ixh87lq8IwyPtjgKvxPCZeY=
+X-Received: by 2002:a05:620a:14a2:: with SMTP id x2mr36057955qkj.36.1579220894464;
+ Thu, 16 Jan 2020 16:28:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200115171333.28811-1-kpsingh@chromium.org> <20200115171333.28811-6-kpsingh@chromium.org>
+In-Reply-To: <20200115171333.28811-6-kpsingh@chromium.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 16 Jan 2020 16:28:03 -0800
+Message-ID: <CAEf4BzYJy40csmwfBgtD+UZY3X+hjqpQ=NwjUQ-cwy+RPF8VHA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 05/10] bpf: lsm: BTF API for LSM hooks
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ming,
-
-Ming Lei <ming.lei@redhat.com> writes:
-> On Thu, Jan 16, 2020 at 01:08:17PM +0100, Thomas Gleixner wrote:
->> Ming Lei <ming.lei@redhat.com> writes:
->> > -	ret = chip->irq_set_affinity(data, mask, force);
->> > +	zalloc_cpumask_var(&tmp_mask, GFP_ATOMIC);
->> 
->> I clearly told you:
->> 
->>     "That's wrong. This code is called with interrupts disabled, so
->>      GFP_KERNEL is wrong. And NO, we won't do a GFP_ATOMIC allocation
->>      here."
->> 
->> Is that last sentence unclear in any way?
+On Wed, Jan 15, 2020 at 9:14 AM KP Singh <kpsingh@chromium.org> wrote:
 >
-> Yeah, it is clear.
+> From: KP Singh <kpsingh@google.com>
 >
-> But GFP_ATOMIC is usually allowed in atomic context, could you
-> explain it a bit why it can't be done in this case?
-
-You could have asked that question before sending this patch :)
-
-> We still can fallback to current behavior if the allocation fails.
-
-Allocation fail is not the main concern here. In general we avoid atomic
-allocations where ever we can, but even more so in contexts which are
-fully atomic even on PREEMPT_RT simply because PREEMPT_RT cannot support
-that.
-
-Regular spin_lock(); GFP_ATOMIC; spin_unlock(); sections are not a
-problem because spinlocks turn into sleepable 'spinlocks' on RT and are
-preemptible.
-
-irq_desc::lock is a raw spinlock which is a true spinlock on RT for
-obvious reasons and there any form of memory allocation is a NONO.
-
-> Or could you suggest to solve the issue in other way if GFP_ATOMIC
-> can't be done?
-
-Just use the same mechanism as irq_setup_affinity() for now. Not pretty,
-but it does the job. I have a plan how to avoid that, but that's a
-larger surgery.
-
-Let me give you a few comments on the rest of the patch while at it.
-
-> --- a/kernel/irq/manage.c
-> +++ b/kernel/irq/manage.c
-> @@ -20,6 +20,7 @@
->  #include <linux/sched/task.h>
->  #include <uapi/linux/sched/types.h>
->  #include <linux/task_work.h>
-> +#include <linux/sched/isolation.h>
-
-Can you please move this include next to the other linux/sched/ one?
-
-> @@ -212,12 +213,29 @@ int irq_do_set_affinity(struct irq_data *data, const struct cpumask *mask,
+> The BTF API provides information required by the BPF verifier to
+> attach eBPF programs to the LSM hooks by using the BTF information of
+> two types:
+>
+> - struct security_hook_heads: This type provides the offset which
+>   a new dynamically allocated security hook must be attached to.
+> - union security_list_options: This provides the information about the
+>   function prototype required by the hook.
+>
+> When the program is loaded:
+>
+> - The verifier receives the index of a member in struct
+>   security_hook_heads to which a program must be attached as
+>   prog->aux->lsm_hook_index. The index is one-based for better
+>   verification.
+> - bpf_lsm_type_by_index is used to determine the func_proto of
+>   the LSM hook and updates prog->aux->attach_func_proto
+> - bpf_lsm_head_by_index is used to determine the hlist_head to which
+>   the BPF program must be attached.
+>
+> Signed-off-by: KP Singh <kpsingh@google.com>
+> ---
+>  include/linux/bpf_lsm.h |  12 +++++
+>  security/bpf/Kconfig    |   1 +
+>  security/bpf/hooks.c    | 104 ++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 117 insertions(+)
+>
+> diff --git a/include/linux/bpf_lsm.h b/include/linux/bpf_lsm.h
+> index 9883cf25241c..a9b4f7b41c65 100644
+> --- a/include/linux/bpf_lsm.h
+> +++ b/include/linux/bpf_lsm.h
+> @@ -19,6 +19,8 @@ extern struct security_hook_heads bpf_lsm_hook_heads;
+>
+>  int bpf_lsm_srcu_read_lock(void);
+>  void bpf_lsm_srcu_read_unlock(int idx);
+> +const struct btf_type *bpf_lsm_type_by_index(struct btf *btf, u32 offset);
+> +const struct btf_member *bpf_lsm_head_by_index(struct btf *btf, u32 id);
+>
+>  #define CALL_BPF_LSM_VOID_HOOKS(FUNC, ...)                     \
+>         do {                                                    \
+> @@ -65,6 +67,16 @@ static inline int bpf_lsm_srcu_read_lock(void)
+>         return 0;
+>  }
+>  static inline void bpf_lsm_srcu_read_unlock(int idx) {}
+> +static inline const struct btf_type *bpf_lsm_type_by_index(
+> +       struct btf *btf, u32 index)
+> +{
+> +       return ERR_PTR(-EOPNOTSUPP);
+> +}
+> +static inline const struct btf_member *bpf_lsm_head_by_index(
+> +       struct btf *btf, u32 id)
+> +{
+> +       return ERR_PTR(-EOPNOTSUPP);
+> +}
+>
+>  #endif /* CONFIG_SECURITY_BPF */
+>
+> diff --git a/security/bpf/Kconfig b/security/bpf/Kconfig
+> index 595e4ad597ae..9438d899b618 100644
+> --- a/security/bpf/Kconfig
+> +++ b/security/bpf/Kconfig
+> @@ -7,6 +7,7 @@ config SECURITY_BPF
+>         depends on SECURITY
+>         depends on BPF_SYSCALL
+>         depends on SRCU
+> +       depends on DEBUG_INFO_BTF
+>         help
+>           This enables instrumentation of the security hooks with
+>           eBPF programs.
+> diff --git a/security/bpf/hooks.c b/security/bpf/hooks.c
+> index b123d9cb4cd4..82725611693d 100644
+> --- a/security/bpf/hooks.c
+> +++ b/security/bpf/hooks.c
+> @@ -5,6 +5,8 @@
+>   */
+>
+>  #include <linux/bpf_lsm.h>
+> +#include <linux/bpf.h>
+> +#include <linux/btf.h>
+>  #include <linux/srcu.h>
+>
+>  DEFINE_STATIC_SRCU(security_hook_srcu);
+> @@ -18,3 +20,105 @@ void bpf_lsm_srcu_read_unlock(int idx)
 >  {
->  	struct irq_desc *desc = irq_data_to_desc(data);
->  	struct irq_chip *chip = irq_data_get_irq_chip(data);
-> +	const struct cpumask *housekeeping_mask =
-> +		housekeeping_cpumask(HK_FLAG_MANAGED_IRQ);
+>         return srcu_read_unlock(&security_hook_srcu, idx);
+>  }
+> +
+> +static inline int validate_hlist_head(struct btf *btf, u32 type_id)
+> +{
+> +       s32 hlist_id;
+> +
+> +       hlist_id = btf_find_by_name_kind(btf, "hlist_head", BTF_KIND_STRUCT);
+> +       if (hlist_id < 0 || hlist_id != type_id)
+> +               return -EINVAL;
 
-Bah. This is unreadable garbage. What's wrong with defining the variable
-and retrieving the pointer later on? Especially as this is only required
-when there is an actual managed interrupt.
+This feels backwards and expensive. You already have type_id you want
+to check. Do a quick look up, check type and other attributes, if you
+want. There is no need to do linear search for struct named
+"hlist_head".
 
-> +	/*
-> +	 * Userspace can't change managed irq's affinity, make sure that
-> +	 * isolated CPU won't be selected as the effective CPU if this
-> +	 * irq's affinity includes at least one housekeeping CPU.
-> +	 *
-> +	 * This way guarantees that isolated CPU won't be interrupted if
-> +	 * IO isn't submitted from isolated CPU.
+But in reality, you should trust kernel BTF, you already know that you
+found correct "security_hook_heads" struct, so its member has to be
+hlist_head, no?
 
-This comment is more confusing than helpful. What about:
+> +
+> +       return 0;
+> +}
+> +
+> +/* Find the BTF representation of the security_hook_heads member for a member
+> + * with a given index in struct security_hook_heads.
+> + */
+> +const struct btf_member *bpf_lsm_head_by_index(struct btf *btf, u32 index)
+> +{
+> +       const struct btf_member *member;
+> +       const struct btf_type *t;
+> +       u32 off, i;
+> +       int ret;
+> +
+> +       t = btf_type_by_name_kind(btf, "security_hook_heads", BTF_KIND_STRUCT);
+> +       if (WARN_ON_ONCE(IS_ERR(t)))
+> +               return ERR_CAST(t);
+> +
+> +       for_each_member(i, t, member) {
+> +               /* We've found the id requested and need to check the
+> +                * the following:
+> +                *
+> +                * - Is it at a valid alignment for struct hlist_head?
+> +                *
+> +                * - Is it a valid hlist_head struct?
+> +                */
+> +               if (index == i) {
 
-	/*
-         * If this is a managed interrupt check whether the requested
-         * affinity mask intersects with a housekeeping CPU. If so, then
-         * remove the isolated CPUs from the mask and just keep the
-         * housekeeping CPU(s). This prevents the affinity setter from
-         * routing the interrupt to an isolated CPU to avoid that I/O
-         * submitted from a housekeeping CPU causes interrupts on an
-         * isolated one.
-         *
-         * If the masks do not intersect then keep the requested mask.
-         * The isolated target CPUs are only receiving interrupts
-         * when the I/O operation was submitted directly from them.
-         */
+Also not efficient. Check index to be < vlen(t), then member =
+btf_type_member(t) + index;
 
-Or something to that effect. Hmm?
 
-> +	 */
-> +	if (irqd_affinity_is_managed(data) && tmp_mask &&
-> +			cpumask_intersects(mask, housekeeping_mask))
-> +		cpumask_and(tmp_mask, mask, housekeeping_mask);
+> +                       off = btf_member_bit_offset(t, member);
+> +                       if (off % 8)
+> +                               /* valid c code cannot generate such btf */
+> +                               return ERR_PTR(-EINVAL);
+> +                       off /= 8;
+> +
+> +                       if (off % __alignof__(struct hlist_head))
+> +                               return ERR_PTR(-EINVAL);
+> +
+> +                       ret = validate_hlist_head(btf, member->type);
+> +                       if (ret < 0)
+> +                               return ERR_PTR(ret);
+> +
+> +                       return member;
 
-Now while writing the above comment the following interesting scenario
-came to my mind:
+This feels a bit over-cautious to double-check this. If
+security_hook_heads definition is controlled by kernel sources, then
+we could just trust vmlinux BTF?
 
-Housekeeping CPUs 0-2, Isolated CPUs 3-7
+> +               }
+> +       }
+> +
+> +       return ERR_PTR(-ENOENT);
+> +}
+> +
+> +/* Given an index of a member in security_hook_heads return the
+> + * corresponding type for the LSM hook. The members of the union
+> + * security_list_options have the same name as the security_hook_heads which
+> + * is ensured by the LSM_HOOK_INIT macro defined in include/linux/lsm_hooks.h
+> + */
+> +const struct btf_type *bpf_lsm_type_by_index(struct btf *btf, u32 index)
+> +{
+> +       const struct btf_member *member, *hook_head = NULL;
+> +       const struct btf_type *t, *hook_type = NULL;
+> +       u32 i;
+> +
+> +       hook_head = bpf_lsm_head_by_index(btf, index);
+> +       if (IS_ERR(hook_head))
+> +               return ERR_PTR(PTR_ERR(hook_head));
+> +
+> +       t = btf_type_by_name_kind(btf, "security_list_options", BTF_KIND_UNION);
+> +       if (WARN_ON_ONCE(IS_ERR(t)))
+> +               return ERR_CAST(t);
 
-Device has 4 queues. So the spreading results in:
+btf_type_by_name_kind() is a linear search (at least right now), so it
+might be a good idea to cache found type_id's of security_list_options
+and security_hook_heads?
 
- q0:   CPU 0/1, q1:   CPU 2/3, q2:   CPU 4/5, q3:   CPU 6/7
+> +
+> +       for_each_member(i, t, member) {
+> +               if (hook_head->name_off == member->name_off) {
+> +                       /* There should be only one member with the same name
+> +                        * as the LSM hook. This should never really happen
+> +                        * and either indicates malformed BTF or someone trying
+> +                        * trick the LSM.
+> +                        */
+> +                       if (WARN_ON(hook_type))
+> +                               return ERR_PTR(-EINVAL);
+> +
+> +                       hook_type = btf_type_by_id(btf, member->type);
+> +                       if (unlikely(!hook_type))
+> +                               return ERR_PTR(-EINVAL);
+> +
+> +                       if (!btf_type_is_ptr(hook_type))
+> +                               return ERR_PTR(-EINVAL);
+> +               }
+> +       }
+> +
+> +       if (!hook_type)
+> +               return ERR_PTR(-ENOENT);
+> +
+> +       t = btf_type_by_id(btf, hook_type->type);
+> +       if (unlikely(!t))
+> +               return ERR_PTR(-EINVAL);
 
-q1 is the interesting one. It's the one which gets the housekeeping mask
-applied and CPU3 is removed.
+why not do this inside the loop when you find correct member and not
+continue processing all the fields?
 
-So if CPU2 is offline when the mask is applied, then the result of the
-affinity setting operation is going to be an error code because the
-resulting mask is empty.
-
-Admittedly this is a weird corner case, but it's bound to happen and the
-resulting bug report is going to be hard to decode unless the reporter
-can provide a 100% reproducer or a very accurate description of the
-scenario.
-
-Thanks,
-
-        tglx
+> +
+> +       return t;
+> +}
+> --
+> 2.20.1
+>
