@@ -2,124 +2,115 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBCDC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8CBBC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 345252072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D1062072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:53:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579279900;
-	bh=iyYQNSR5fhGeuW5cKqX/JchIMbOEEsCgPajoa3HCsvE=;
+	s=default; t=1579279997;
+	bh=mBQAJutEDV6nEd8FVh19iVewgPPATKXXMP9SXeqk1eE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iOaWcbK9vSX3KWFkz7CMwLXzJUztrTuLW0aNt4nrAOwL5s6wtacTm0c3zAG10Ywg3
-	 e7Gb377v8Ue86aLxMv8hFV7M7vzHyolyrCLs0uIbHpa610d8+U896ZdoqlPiKQkARx
-	 iMRYSt+Cs3Lx/1/qBLJL6xjJWKckpWP+fBu6QWc4=
+	b=OXdQ05Xj/9u7/jnwR4IaDI5zvUvpYKC2VJ448I55gMKx9X4mrZL/55wrYqhcMqm8w
+	 fo6I6Nv+8+TXdHHOpnmZzWvadKjvulpdX97RIFkWalbO2kEvX253N585xCt8CyXVYk
+	 SXnlPkEpisPjrtZkAA+byxBN8ABu4y4n/Wa/DTcM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728982AbgAQQvj (ORCPT
+        id S1728853AbgAQQxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 11:51:39 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:37769 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726559AbgAQQvj (ORCPT
+        Fri, 17 Jan 2020 11:53:16 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:42354 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726559AbgAQQxQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 11:51:39 -0500
-Received: by mail-ed1-f66.google.com with SMTP id cy15so22896006edb.4;
-        Fri, 17 Jan 2020 08:51:37 -0800 (PST)
+        Fri, 17 Jan 2020 11:53:16 -0500
+Received: by mail-qt1-f196.google.com with SMTP id j5so22236071qtq.9;
+        Fri, 17 Jan 2020 08:53:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yuUv1OXPdVXWCIetDO046G9cCpe5yN5/7bZ6LwPz4B0=;
+        b=qejqoYN8Ckgk98zDdvv5t54CTIJkmQNW8KtQRyuyEU5uMhUYYKKdT62/lehyI7sVJm
+         qDJZ79DuRMyEyQ5o4Sh/7vvL5aHNSe/eGoS0al+CWlnzItuoZmCOirDYyqSxEDCMdULT
+         KMOPWsJfXCxADqkxSg3zY36dU/UpJqlnGRoyFbac5jbYRQUByodAZngML6pRT7ATH01E
+         VQnhvcD0HAZSbw7aP5UlTlCFkCxiR7SbsQkQHmQ0s5TuN0SBNFPHY6A/V0/y9Uscci6n
+         EeCF2xh5jqi4sRdsIwmsa6b0NditLe5KWesqcI88MZv6SzbmERB6gu6sNYB3BpWuVxhb
+         SKHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=96LG0GPidFH54SiCM0XDiVcbAovvK6mGYnlDshgyFRk=;
-        b=ZACNq0PBZx1aF+u30AEqD6OLmz3Cgnz4hm6rVpXBMoY62n1XVOMuvGT/SsmI3TeYQj
-         3b/N6T4ayIBXyp7kf1Uv341uIrU47z8OMkqQ/dkxkwqNFY5LI6yFOPBD/BjeBCu7K2X1
-         7Bf6FzbWsuPG7RfbJ5T6RfKSYYfUl+7zadkw0u15kAXS4p6zFmpHbB5McW4BK3mOpg/t
-         THikL7n5kZmSV8VxtCDg6eDu5H4y7UWCW4WDyl6srkGI3iT2vGN9kW4NFXKZAzf+GHH+
-         kSiOL0Mfr8sidjdeTp3EnDCZ1VA8D8A2145tL8/IVxtV6ojRnabbmg5oHFKew626nI7f
-         iWXw==
-X-Gm-Message-State: APjAAAV8vq1RBRhqTM0Bd52IdDA3cPX4RiBS3B+BXMQFLjxFPgAs7wir
-        E6AH4nFtSMBkq0AkZvUnqwM=
-X-Google-Smtp-Source: APXvYqyaZsIauOpq1X0POCeTjXRUEXNVExY8r79MwcWm5a05h47iWdsrJnU/Lpd7ANMzUquKS+XFLQ==
-X-Received: by 2002:a17:906:2db1:: with SMTP id g17mr8848463eji.240.1579279897085;
-        Fri, 17 Jan 2020 08:51:37 -0800 (PST)
-Received: from pi3 ([194.230.155.229])
-        by smtp.googlemail.com with ESMTPSA id z22sm1015705edq.79.2020.01.17.08.51.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 08:51:36 -0800 (PST)
-Date:   Fri, 17 Jan 2020 17:51:33 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Scott Mayhew <smayhew@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2] nfs: Return EINVAL rather than ERANGE for mount parse
- errors
-Message-ID: <20200117165133.GA5762@pi3>
-References: <464519.1579276102@warthog.procyon.org.uk>
- <20200117144055.GB3215@pi3>
- <CAJKOXPeCVwZfBsCVbc9RQUGi0UfWQw0uFamPiQasiO8fSthFsQ@mail.gmail.com>
- <433863.1579270803@warthog.procyon.org.uk>
- <465149.1579276509@warthog.procyon.org.uk>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yuUv1OXPdVXWCIetDO046G9cCpe5yN5/7bZ6LwPz4B0=;
+        b=b9zJ22Dh8kEjRg8ts3PG2wyjQJ6zOxGZLUY/ETtCrupepWMZRknPN/6lrtR5289nm3
+         9wpQNRxjfm8paa3Uc3SjYGhYthUVYILIHDQNWd18wZlVJw42ot1rjDC8Y01tM1mJazgz
+         JbmNGaDmkxnstUZSrfjmToQzGxt8RwKOL4fsO14gUNcsXsknYWpyTHs2U28uDi3aAqNS
+         PwVeqNmNdw7gaQc9nw/G3poaKWKLPecHJojuH9OWDM/j1gGLc5jJwJ9EmpBPocF6dh8Z
+         2vS6+tOJZ6kPBA3deB/Cwj+VDuNZKNXV2i69cMTnwEEWnwf2XEEk6qNZTrY6nsMv7B0L
+         1X8Q==
+X-Gm-Message-State: APjAAAUpebE/ErzPUY312c16yWYkp+G9JRyFR8IQ5oFjTPRnEAECx0cJ
+        vv9u0wkHpZ/Zao+MY4bxw/0=
+X-Google-Smtp-Source: APXvYqzeqNYl3PDuAsOWUjZm+WEOTe7nEQaEy/4qU5UBYITUMTORCCIXd/KpbM11ytW1Gz0pKvbUzg==
+X-Received: by 2002:ac8:21fd:: with SMTP id 58mr8021334qtz.90.1579279994927;
+        Fri, 17 Jan 2020 08:53:14 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::1:7d10])
+        by smtp.gmail.com with ESMTPSA id l17sm12141256qkk.22.2020.01.17.08.53.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 Jan 2020 08:53:14 -0800 (PST)
+Date:   Fri, 17 Jan 2020 08:53:11 -0800
+From:   Tejun Heo <tj@kernel.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Li Zefan <lizefan@huawei.com>,
+        Peter Zijlstra <peterz@infradead.org>, cgroups@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] clone3: allow spawning processes into cgroups
+Message-ID: <20200117165311.GH2677547@devbig004.ftw2.facebook.com>
+References: <20191223061504.28716-1-christian.brauner@ubuntu.com>
+ <20191223061504.28716-3-christian.brauner@ubuntu.com>
+ <20200107163204.GB2677547@devbig004.ftw2.facebook.com>
+ <20200108180906.l4mvtdmh7nm2z7sc@wittgenstein>
+ <20200116122944.nj3e66eusxu6sb44@wittgenstein>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <465149.1579276509@warthog.procyon.org.uk>
+In-Reply-To: <20200116122944.nj3e66eusxu6sb44@wittgenstein>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 03:55:09PM +0000, David Howells wrote:
-> commit b9423c912b770e5b9e4228d90da92b6a69693d8e
-> Author: David Howells <dhowells@redhat.com>
-> Date:   Fri Jan 17 15:37:46 2020 +0000
+Hello, Christian.
+
+Sorry about late reply.
+
+On Thu, Jan 16, 2020 at 01:29:44PM +0100, Christian Brauner wrote:
+> Could it be that you misread cgroup_attach_permissions()? Because it
+> does check for write permissions on the destination cgroup.procs file.
+> That's why I've added the cgroup_get_from_file() helper. :) See:
 > 
->     nfs: Return EINVAL rather than ERANGE for mount parse errors
->     
->     Return EINVAL rather than ERANGE for mount parse errors as the userspace
->     mount command doesn't necessarily understand what to do with anything other
->     than EINVAL.
->     
->     The old code returned -ERANGE as an intermediate error that then get
->     converted to -EINVAL, whereas the new code returns -ERANGE.
->     
->     This was induced by passing minorversion=1 to a v4 mount where
->     CONFIG_NFS_V4_1 was disabled in the kernel build.
->     
->     Fixes: 68f65ef40e1e ("NFS: Convert mount option parsing to use functionality from fs_parser.h")
->     Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
->     Signed-off-by: David Howells <dhowells@redhat.com>
+> static int cgroup_attach_permissions(struct cgroup *src_cgrp,
+> 				     struct cgroup *dst_cgrp,
+> 				     struct super_block *sb, bool thread)
+> {
+> 	int ret = 0;
 > 
-> diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-> index 429315c011ae..74508ed9aeec 100644
-> --- a/fs/nfs/fs_context.c
-> +++ b/fs/nfs/fs_context.c
-> @@ -769,8 +769,7 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
->  out_invalid_address:
->  	return nfs_invalf(fc, "NFS: Bad IP address specified");
->  out_of_bounds:
-> -	nfs_invalf(fc, "NFS: Value for '%s' out of range", param->key);
-> -	return -ERANGE;
-> +	return nfs_invalf(fc, "NFS: Value for '%s' out of range", param->key);
->  }
->  
->  /*
+> 	ret = cgroup_procs_write_permission(src_cgrp, dst_cgrp, sb);
+> 	if (ret)
+> 		return ret;
 
-Yes, the boards boots up, thanks!
+So, if you look at cgroup_procs_write_permission(), it's only checking
+the write perm of the common ancestor, not the destination because it
+assumes that the destination is already checked by the vfs layer, and
+we need to check both.
 
-Tested-by: Krzysztof Kozlowski <krzk@kernel.org>
+Thanks.
 
-I did not run extensive tests but few boots show also 2-3 seconds faster
-mount of NFS root (faster switch from initramfs to proper user-space
-from NFS).
-
-Best regards,
-Krzysztof
-
+-- 
+tejun
