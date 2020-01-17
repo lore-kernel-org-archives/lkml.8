@@ -2,171 +2,117 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7E8C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B17CFC33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CFFA2064C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:30:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 884772082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:33:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZtisCfjA"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="JvIdapIh";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jYXvSdN6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729145AbgAQVap (ORCPT
+        id S1729327AbgAQVdo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 16:30:45 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:35093 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726744AbgAQVao (ORCPT
+        Fri, 17 Jan 2020 16:33:44 -0500
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:35509 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727504AbgAQVdn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 16:30:44 -0500
-Received: by mail-qt1-f194.google.com with SMTP id e12so22931397qto.2;
-        Fri, 17 Jan 2020 13:30:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=oKpJrpMP/WbiwVT8VF9eF4TKH+tXOjUsUEulh6dUpSw=;
-        b=ZtisCfjADHKFGS8o8e4KIuHaDJC/xyclaJ5vqDJIXm5Wrpcq2jsu1dpGYrbMc0EiN5
-         aD2ZtqJ5kO3qMGy2kukqbaVq+bN2uyoA+FQK5QZa6GqyLIl5xj9kPoJsXh1NPy9mYWHZ
-         Df7icJ+9GU0YMhkXtCe1sJ9emvzmzIfFi175xOHBsdwgP9zpTU6wtz+lLCkNVWis1/Ih
-         f726gk7Az81OAW+ZSC3XvVr/LS8pJOvy5Da49AyeIuNTq33bDLdxBokHkKfq/XMxnAjn
-         eM4xKe8nxEEl090/fSg4wPNpNHvCXlErB1Q89+KFi+uiVxMszLSLwfvHkeE0rwOd4u3r
-         x8sA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=oKpJrpMP/WbiwVT8VF9eF4TKH+tXOjUsUEulh6dUpSw=;
-        b=S2o9JP+sQh8eFZwNW3F7v3DiIre2v4EcRw9BaNYNSfSEdTUokE3ozIBlH8F7H1gxIU
-         FDpgz7maNKsFvn7T4oOx1jzpDAOz5VVRtxSxl8aG/75+qzGJN8g6PfF8LeKWIjs/j2Sk
-         CeyyN32lr8P7O3/uGh3PZnbcKFommoN3kqR8JLezDWEqKCfdbJe5dpzW6Ff10n/3hD2l
-         VXORmKHco7wkPcT0gOOBQwd8vggVDbr6qPmMVquxUd4lmL/zReq7U34uagxVDRsgUz4e
-         /IwHIn/79wtkEl1JadoMyaG2jo6IDLjpTf9hzYytZc2QHj6+231Y/hTd+kxGg7Bm2m13
-         VFTg==
-X-Gm-Message-State: APjAAAXyOPwEfrgbHR9z51YOwiUWob8ltTCIwek+C2XPsbLHrMPbnzIF
-        VHUKuGIimmRn/y8keyf2ex308F7StIEzmjlZmFA=
-X-Google-Smtp-Source: APXvYqzF1gj4bIlwoe5msPiG+wBSblLtJO0oPNeDcVYjXiuMENAAjDDrH5pD8NKfKq+pPDxE8OOJmtbFJoZHeMN2MHQ=
-X-Received: by 2002:ac8:7b29:: with SMTP id l9mr9287898qtu.141.1579296642749;
- Fri, 17 Jan 2020 13:30:42 -0800 (PST)
+        Fri, 17 Jan 2020 16:33:43 -0500
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.west.internal (Postfix) with ESMTP id 777C8600;
+        Fri, 17 Jan 2020 16:33:42 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Fri, 17 Jan 2020 16:33:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm1; bh=W569kOUG9Jg4u
+        fvUVlvaDUcPU/rpbROxxV7I6tE2DMU=; b=JvIdapIhf1PQ0pRxH7UCvK7t44Lbf
+        LABB5VlyC1GktUBq5umdIIizzmBTkHHfPhfDHBISW4PAh2iJUJ+7zO98NnXJsU00
+        Ey83KG/Q5zSzXlA5PK0TaF3wrTdjDS81YsQkzO+59pKGtmJVcyyGSo06xSoevIzS
+        h1JnjKgbMv0vuLhVqEKyB0XNMYlNBc68iUcsImoU6GIyoitc60zpOaavBgdcti/9
+        7NKFZklCnzhlUzRq0737f8d1u9hn0glwmq5BqUUt83NVqCR6uizIrPAi4GwTar4E
+        CPwSZzPGjQSUnERY7zNMF7A/DXCTPw5rLcIaIBCtObwsWCcQb+ESbEECw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm1; bh=W569kOUG9Jg4ufvUVlvaDUcPU/rpbROxxV7I6tE2DMU=; b=jYXvSdN6
+        WrGmVN4Fdy1s0cGSqWusNtkGsjmcV8ZR286tt/NGrKG7YqiE1LEUrh+QgiwQ5CNE
+        Ogb97ruw/5rlRTFumaz73Fa+Zw6jp0haAKsx0TfvMF44aMV9f1JlT26udrvH7YXi
+        t7idtc2mnhkKuJHZbRcNB9QFBBNkimSHCXzf7QVXf+wJAA74PHljzkQKu7aQ1MdD
+        r6lhj/O2QHMrleUGe6qLPIlxrHT6gEkpuan2N4m1nH3sxyGBlgTqlCJmnqB27i6N
+        H9dTE47lkJUEUwqLQ2Lfajki9rfUbliKmQsmQPilvOa3SMB9eLmRAJrcfuO/x4CV
+        l6fc5X2MR6QonA==
+X-ME-Sender: <xms:NSgiXpfkIybxSwl0zX0HkxfywgfJ375v4nRWUJZ1Ssu8tPSQG6XO4Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrtdekgdehiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghl
+    ucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecukfhppe
+    ejtddrudefhedrudegkedrudehudenucfrrghrrghmpehmrghilhhfrhhomhepshgrmhhu
+    vghlsehshhholhhlrghnugdrohhrghenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:NSgiXlhAyq22NPKdoZ7Pjm4roHvCkcfrKmHg2KUq6oRsTRhJxgzg6w>
+    <xmx:NSgiXjJur8gvwdlC-9x0Dt1nUqRI47gZ5eQmW8il6aruv7aXEwtq2w>
+    <xmx:NSgiXi5f2UJUbn4ONVNqF0DBaLwvGaOoOJN8RmlXsPbDwm_v1M1P6w>
+    <xmx:NigiXomkNZ81FQQGPIhMxR7kgWs2iRrlv4F5ADujXVlZQ0xdbxrt1Q>
+Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 6376980059;
+        Fri, 17 Jan 2020 16:33:41 -0500 (EST)
+From:   Samuel Holland <samuel@sholland.org>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Samuel Holland <samuel@sholland.org>
+Subject: [PATCH 2/2] pinctrl: sunxi: Mask non-wakeup IRQs on suspend
+Date:   Fri, 17 Jan 2020 15:33:40 -0600
+Message-Id: <20200117213340.47714-2-samuel@sholland.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200117213340.47714-1-samuel@sholland.org>
+References: <20200117213340.47714-1-samuel@sholland.org>
 MIME-Version: 1.0
-References: <157926819690.1555735.10756593211671752826.stgit@toke.dk> <157926819920.1555735.13051810516683828343.stgit@toke.dk>
-In-Reply-To: <157926819920.1555735.13051810516683828343.stgit@toke.dk>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 17 Jan 2020 13:30:31 -0800
-Message-ID: <CAEf4BzY3RM3LS3bvU4dHY+8U27RaezeaC9rfuW1YLAcFQEQKEA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v4 02/10] tools/bpf/runqslower: Fix override
- option for VMLINUX_BTF
-To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-rdma@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 5:37 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@redh=
-at.com> wrote:
->
-> From: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
->
-> The runqslower tool refuses to build without a file to read vmlinux BTF
-> from. The build fails with an error message to override the location by
-> setting the VMLINUX_BTF variable if autodetection fails. However, the
-> Makefile doesn't actually work with that override - the error message is
-> still emitted.
->
-> Fix this by including the value of VMLINUX_BTF in the expansion, and only
-> emitting the error message if the *result* is empty. Also permit running
-> 'make clean' even though no VMLINUX_BTF is set.
->
-> Fixes: 9c01546d26d2 ("tools/bpf: Add runqslower tool to tools/bpf")
-> Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
-> ---
+The pin controller hardware does not distinguish IRQs intended for
+wakeup from other IRQs, so we must mask non-wakeup IRQs in software to
+prevent inadvertent wakeups. This is accomplished at the irqchip level
+via the IRQCHIP_MASK_ON_SUSPEND flag.
 
-approach looks good, thanks, few nits below
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+---
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
->  tools/bpf/runqslower/Makefile |   18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
->
-> diff --git a/tools/bpf/runqslower/Makefile b/tools/bpf/runqslower/Makefil=
-e
-> index cff2fbcd29a8..b62fc9646c39 100644
-> --- a/tools/bpf/runqslower/Makefile
-> +++ b/tools/bpf/runqslower/Makefile
-> @@ -10,13 +10,9 @@ CFLAGS :=3D -g -Wall
->
->  # Try to detect best kernel BTF source
->  KERNEL_REL :=3D $(shell uname -r)
-> -ifneq ("$(wildcard /sys/kernel/btf/vmlinux)","")
-> -VMLINUX_BTF :=3D /sys/kernel/btf/vmlinux
-> -else ifneq ("$(wildcard /boot/vmlinux-$(KERNEL_REL))","")
-> -VMLINUX_BTF :=3D /boot/vmlinux-$(KERNEL_REL)
-> -else
-> -$(error "Can't detect kernel BTF, use VMLINUX_BTF to specify it explicit=
-ly")
-> -endif
-> +VMLINUX_BTF_PATHS :=3D /sys/kernel/btf/vmlinux /boot/vmlinux-$(KERNEL_RE=
-L)
-> +VMLINUX_BTF_PATH :=3D $(abspath $(or $(VMLINUX_BTF),$(firstword \
-> +       $(wildcard $(VMLINUX_BTF_PATHS)))))
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+index df79da76321e..24ff591efded 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+@@ -1076,6 +1076,7 @@ static struct irq_chip sunxi_pinctrl_edge_irq_chip = {
+ 	.irq_release_resources = sunxi_pinctrl_irq_release_resources,
+ 	.irq_set_type	= sunxi_pinctrl_irq_set_type,
+ 	.irq_set_wake	= sunxi_pinctrl_irq_set_wake,
++	.flags		= IRQCHIP_MASK_ON_SUSPEND,
+ };
+ 
+ static struct irq_chip sunxi_pinctrl_level_irq_chip = {
+@@ -1092,6 +1093,7 @@ static struct irq_chip sunxi_pinctrl_level_irq_chip = {
+ 	.irq_set_type	= sunxi_pinctrl_irq_set_type,
+ 	.irq_set_wake	= sunxi_pinctrl_irq_set_wake,
+ 	.flags		= IRQCHIP_EOI_THREADED |
++			  IRQCHIP_MASK_ON_SUSPEND |
+ 			  IRQCHIP_EOI_IF_HANDLED,
+ };
+ 
+-- 
+2.23.0
 
-you can drop abspath, relative path for VMLINUX_BTF would work just fine
-
->
->  abs_out :=3D $(abspath $(OUTPUT))
->  ifeq ($(V),1)
-> @@ -67,9 +63,13 @@ $(OUTPUT):
->         $(call msg,MKDIR,$@)
->         $(Q)mkdir -p $(OUTPUT)
->
-> -$(OUTPUT)/vmlinux.h: $(VMLINUX_BTF) | $(OUTPUT) $(BPFTOOL)
-> +$(OUTPUT)/vmlinux.h: $(VMLINUX_BTF_PATH) | $(OUTPUT) $(BPFTOOL)
->         $(call msg,GEN,$@)
-> -       $(Q)$(BPFTOOL) btf dump file $(VMLINUX_BTF) format c > $@
-> +       @if [ ! -e "$(VMLINUX_BTF_PATH)" ] ; then \
-
-$(Q), not @
-
-> +               echo "Couldn't find kernel BTF; set VMLINUX_BTF to specif=
-y its location."; \
-> +               exit 1;\
-
-nit: please align \'s (same above for VMLONUX_BTF_PATH) at the right
-edge as it's done everywhere in this Makefile
-
-> +       fi
-> +       $(Q)$(BPFTOOL) btf dump file $(VMLINUX_BTF_PATH) format c > $@
->
->  $(OUTPUT)/libbpf.a: | $(OUTPUT)
->         $(Q)$(MAKE) $(submake_extras) -C $(LIBBPF_SRC)                   =
-      \
->
