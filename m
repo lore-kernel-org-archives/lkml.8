@@ -2,107 +2,134 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1180C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 19:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7728CC33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 19:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99CFC20663
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 19:06:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O4ddfGiY"
+	by mail.kernel.org (Postfix) with ESMTP id 5C24020728
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 19:11:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729436AbgAQTF7 (ORCPT
+        id S1729359AbgAQTLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 14:05:59 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:39305 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726761AbgAQTF7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 14:05:59 -0500
-Received: by mail-io1-f65.google.com with SMTP id c16so27138781ioh.6;
-        Fri, 17 Jan 2020 11:05:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:message-id:in-reply-to:references:subject:mime-version
-         :content-transfer-encoding;
-        bh=fRKHeayYr8iV/cXG+M7lT2xtOTZJWBbVT59Xh8S1MvU=;
-        b=O4ddfGiYLNJyMqHmd9cdLomXshl9mq5RBY/rio3IRZX5qlYNCb5CrZUBjMiiOMKwfx
-         FTuD4iGUfx7qEP4mikji1CnskdXSlioR9eYCsLMnPuQKSLg9QoSoWYXHUqYJ6x4H/wRz
-         lkgIA/01MKdwTcd9z8YbyfG5uJy3Wrtv0OIE2CR6WDNuhkkkkSDkIX6m12n1wWJ8qKce
-         XjEQCtNIP414cXJqd7zm4FmXvZg/OwIYmncqSSme2rCpmIdhToSdxYPvPyCDSBjGSRhO
-         0QtKZUMRY6Hz4ZEi4yJTW8D4dsstxcmYDqWc9ZTU2guydfrUy/atcWLf2GMIazobZu4e
-         VUPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:message-id:in-reply-to:references
-         :subject:mime-version:content-transfer-encoding;
-        bh=fRKHeayYr8iV/cXG+M7lT2xtOTZJWBbVT59Xh8S1MvU=;
-        b=ecsydvStmcVmQ0k58fW9wtt7hVLaHLAjqYye3kobC0P+x5QJgdrvwmkg3IZVr6UEG6
-         GXnpMXdyf2LzLyndiaxIlWMr+l5+n2sIcG7Rz7fjgDBwRD7ZkxGo1PZEahnbg6RY14Kf
-         tLq7h3xivNf4ywjBUTbvz5Yhejjk+qeKsMJBcMO0Fjb8llpa/laGBO32MBpg+WBkxKaV
-         PH7AXVVEfwYw1t0FqLmXoC6WeLmR0PhFKXIuNz+faMJn/M+5Nl4Ji3CQkeu96q8+knjY
-         iZxET9zm1b4S2tVneNLDW1tvbWWwjwp86NR7CxMekdx15GbhKqESL25pIbS+8SpT2jtv
-         kZEQ==
-X-Gm-Message-State: APjAAAVCkKIfsHyWBii7REkecm/wVVVhJyv1+Lh8ihCtaF54EXrmewOY
-        XbV9y/SeRjIZRZe03rTQQPI=
-X-Google-Smtp-Source: APXvYqxvaEi45NJAUlpGewyDxYkn1hQm+L6k2QrW2Y+cwUJIGg/RBVW5wwMRPnfJJHwUth74BMTpLQ==
-X-Received: by 2002:a6b:4917:: with SMTP id u23mr846824iob.202.1579287958380;
-        Fri, 17 Jan 2020 11:05:58 -0800 (PST)
-Received: from localhost ([184.63.162.180])
-        by smtp.gmail.com with ESMTPSA id w16sm8155740ilq.5.2020.01.17.11.05.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 11:05:57 -0800 (PST)
-Date:   Fri, 17 Jan 2020 11:05:48 -0800
-From:   John Fastabend <john.fastabend@gmail.com>
-To:     syzbot <syzbot+d73682fcf7fee6982fe3@syzkaller.appspotmail.com>,
-        andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net,
-        john.fastabend@gmail.com, kafai@fb.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
-Message-ID: <5e22058cd468d_1e572abf7dd745bc48@john-XPS-13-9370.notmuch>
-In-Reply-To: <000000000000ffc1f1059c58e648@google.com>
-References: <000000000000ffc1f1059c58e648@google.com>
-Subject: RE: WARNING in sk_psock_drop
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+        Fri, 17 Jan 2020 14:11:00 -0500
+Received: from mga12.intel.com ([192.55.52.136]:37633 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726761AbgAQTK7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 14:10:59 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 11:10:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,331,1574150400"; 
+   d="scan'208";a="263269243"
+Received: from rakeshmi-mobl.gar.corp.intel.com (HELO [10.252.131.157]) ([10.252.131.157])
+  by fmsmga001.fm.intel.com with ESMTP; 17 Jan 2020 11:10:56 -0800
+Subject: Re: [PATCH v1 7/8] ASoC: Intel: Switch DMI table match to a test of
+ variable
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-rtc@vger.kernel.org,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org
+References: <20200117175626.56358-1-andriy.shevchenko@linux.intel.com>
+ <20200117175626.56358-7-andriy.shevchenko@linux.intel.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <c92e0395-0a08-a400-eb48-0aa05e52cf30@linux.intel.com>
+Date:   Fri, 17 Jan 2020 13:10:55 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <20200117175626.56358-7-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    93ad0f96 net: wan: lapbether.c: Use built-in RCU list chec..
-> git tree:       net
-> console output: https://syzkaller.appspot.com/x/log.txt?x=132caa76e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=7e89bd00623fe71e
-> dashboard link: https://syzkaller.appspot.com/bug?extid=d73682fcf7fee6982fe3
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> 
-> Unfortunately, I don't have any reproducer for this crash yet.
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+d73682fcf7fee6982fe3@syzkaller.appspotmail.com
-> 
-> ------------[ cut here ]------------
-> WARNING: CPU: 1 PID: 11793 at include/net/sock.h:1578 sock_owned_by_me  
-> include/net/sock.h:1578 [inline]
-> WARNING: CPU: 1 PID: 11793 at include/net/sock.h:1578  
-> sk_psock_drop+0x5fa/0x7f0 net/core/skmsg.c:597
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 1 PID: 11793 Comm: syz-executor.3 Not tainted 5.5.0-rc5-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-> Google 01/01/2011
 
-I recently added this sock_owned_by_me so I'll take a look. Thanks for
-the report. Seems we have a case where its not held.
+
+On 1/17/20 11:56 AM, Andy Shevchenko wrote:
+> Since we have a common x86 quirk that provides an exported variable,
+> use it instead of local DMI table match.
+> 
+> Cc: Cezary Rojewski <cezary.rojewski@intel.com>
+> Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> Cc: Liam Girdwood <liam.r.girdwood@linux.intel.com>
+> Cc: Jie Yang <yang.jie@linux.intel.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: alsa-devel@alsa-project.org
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+Thanks Andy.
+
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+
+> ---
+>   .../intel/common/soc-acpi-intel-cht-match.c   | 28 ++-----------------
+>   1 file changed, 3 insertions(+), 25 deletions(-)
+> 
+> diff --git a/sound/soc/intel/common/soc-acpi-intel-cht-match.c b/sound/soc/intel/common/soc-acpi-intel-cht-match.c
+> index d0fb43c2b9f6..833d2e130e6e 100644
+> --- a/sound/soc/intel/common/soc-acpi-intel-cht-match.c
+> +++ b/sound/soc/intel/common/soc-acpi-intel-cht-match.c
+> @@ -5,31 +5,11 @@
+>    * Copyright (c) 2017, Intel Corporation.
+>    */
+>   
+> -#include <linux/dmi.h>
+> +#include <linux/platform_data/x86/machine.h>
+> +
+>   #include <sound/soc-acpi.h>
+>   #include <sound/soc-acpi-intel-match.h>
+>   
+> -static unsigned long cht_machine_id;
+> -
+> -#define CHT_SURFACE_MACH 1
+> -
+> -static int cht_surface_quirk_cb(const struct dmi_system_id *id)
+> -{
+> -	cht_machine_id = CHT_SURFACE_MACH;
+> -	return 1;
+> -}
+> -
+> -static const struct dmi_system_id cht_table[] = {
+> -	{
+> -		.callback = cht_surface_quirk_cb,
+> -		.matches = {
+> -			DMI_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
+> -			DMI_MATCH(DMI_PRODUCT_NAME, "Surface 3"),
+> -		},
+> -	},
+> -	{ }
+> -};
+> -
+>   static struct snd_soc_acpi_mach cht_surface_mach = {
+>   	.id = "10EC5640",
+>   	.drv_name = "cht-bsw-rt5645",
+> @@ -43,9 +23,7 @@ static struct snd_soc_acpi_mach *cht_quirk(void *arg)
+>   {
+>   	struct snd_soc_acpi_mach *mach = arg;
+>   
+> -	dmi_check_system(cht_table);
+> -
+> -	if (cht_machine_id == CHT_SURFACE_MACH)
+> +	if (x86_microsoft_surface_3_machine)
+>   		return &cht_surface_mach;
+>   	else
+>   		return mach;
+> 
