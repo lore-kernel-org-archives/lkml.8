@@ -2,188 +2,98 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3534C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43058C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA2D22073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:41:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 190D320842
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:42:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579272134;
+	bh=VZ5uMbxtpl0Luid9wrzbmKMBISeWWuZxMe/dI7xXvIU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cI8N+u+M9dVDo+FqrobWntMfW8MJn+3Cj1w96zVueERKA2AphgY71afPrwx4gev5a
+	 3+GYJ9TV+9U+3Doxh7Yno2yF/EFH02cPtcp0KNe4CqaUEzFPn/1XW8ERDGG3lb/0AP
+	 AIEv1SlKr/xOieobYwOTrZs5tOl5dqWTTIZSPGb0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729085AbgAQOlP convert rfc822-to-8bit (ORCPT
+        id S1728826AbgAQOmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 09:41:15 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:56428 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727040AbgAQOlP (ORCPT
+        Fri, 17 Jan 2020 09:42:13 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55179 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726951AbgAQOmM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 09:41:15 -0500
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1isSo6-00028f-V2; Fri, 17 Jan 2020 15:41:06 +0100
-Date:   Fri, 17 Jan 2020 15:41:06 +0100
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rik van Riel <riel@surriel.com>
-Subject: [PATCH 2/3 v2] smp: Add a smp_cond_func_t argument to
-  smp_call_function_many()
-Message-ID: <20200117144106.hptwafmclfoyptdq@linutronix.de>
-References: <20200117090137.1205765-1-bigeasy@linutronix.de>
- <20200117090137.1205765-3-bigeasy@linutronix.de>
- <20200117131510.GA14914@hirez.programming.kicks-ass.net>
+        Fri, 17 Jan 2020 09:42:12 -0500
+Received: by mail-wm1-f65.google.com with SMTP id b19so7662881wmj.4
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 06:42:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=l27XSLEjKU6VgUcqOxsElndg8dMBGVxtgq+CYtFeIUE=;
+        b=bWvYjIhEw5xy4EOQNaVZ2aDDwjypGGUNtC1FjVwGPwgPakNHLdj7F8OJv4jYg0ATGr
+         me04FZIPj9PfCAV00RndbbmFoW5UKguRbHCZDRuwSr2pYf610pxu3a/Un/exCWDNSpFP
+         rk+cseu+Gi5G0bw89J/vwtSqAt35J7DvmPPdRYpi/FjBDA1P4wi0WQS/vHVTpEoX1VfT
+         zQvjxJV9BTEIYH2u2hBRhH3oOkP0cZjlQMGFHbcwGWg0jdjafAuqBjc58kDR/fPeJCnM
+         RQCwje/o7hHaTWMZBWpDMoPUMbVCxJAq/tRmU65g7DMsnRrSWE6OshxAIClkHTlqqd+G
+         AsYw==
+X-Gm-Message-State: APjAAAXn1tP+/ryeSCD+Gi0j7VzYuQjoRneokqXp7OLiB7rsUpzat//l
+        mgoVLimY9FKJsiC8xMw2Lrk=
+X-Google-Smtp-Source: APXvYqz9INtJU0vNFZwKtzerxh/Rz1AUnLX3c27DJwAYUrHysG0T14s9u7AKy/MfBbNIxRshtMWX0w==
+X-Received: by 2002:a7b:cb0d:: with SMTP id u13mr5042513wmj.68.1579272131058;
+        Fri, 17 Jan 2020 06:42:11 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id a1sm34307416wrr.80.2020.01.17.06.42.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2020 06:42:10 -0800 (PST)
+Date:   Fri, 17 Jan 2020 15:42:09 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org,
+        sergey.senozhatsky.work@gmail.com, pmladek@suse.com,
+        rostedt@goodmis.org, peterz@infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next v4] mm/hotplug: silence a lockdep splat with
+ printk()
+Message-ID: <20200117144209.GA19428@dhcp22.suse.cz>
+References: <d7068679-e28a-98a9-f5b8-49ea47f7c092@redhat.com>
+ <6BED7E12-CC3B-4AED-ACC8-F3533D3F3C70@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200117131510.GA14914@hirez.programming.kicks-ass.net>
+In-Reply-To: <6BED7E12-CC3B-4AED-ACC8-F3533D3F3C70@lca.pw>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-on_each_cpu_cond_mask() allocates a new CPU mask. The newly allocated
-mask is a subset of the provided mask based on the conditional function.
-This memory allocation could be avoided by extending
-smp_call_function_many() with the conditional function and performing the
-remote function call based on the mask and the conditional function.
+On Fri 17-01-20 07:40:15, Qian Cai wrote:
+> 
+> 
+> > On Jan 17, 2020, at 3:51 AM, David Hildenbrand <david@redhat.com> wrote:
+> > 
+> > -> you are accessing the pageblock without the zone lock. It could
+> > change to "isolate" again in the meantime if I am not wrong!
+> 
+> Since we are just dumping the state for debugging, it should be fine
+> to accept a bit inaccuracy here due to racing. I could put a bit
+> comments over there.
 
-Rename smp_call_function_many() to smp_call_function_many_cond() and add
-the smp_cond_func_t argument. If smp_cond_func_t is provided then it is
-used before invoking the function.
-Provide smp_call_function_many() with cond_func set to NULL.
-Let on_each_cpu_cond_mask() use smp_call_function_many_cond().
+Sorry, I could have been more specific. The race I was talking about is
+not about accuracy. The current code is racy in that sense already
+because you are looking at a struct page you do not own so its state can
+change at any time. Please note that the zone->lock doesn't really
+prevent from the state transition because that applies only to free
+pages and those are obviously OK. So this is not really different.
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
-v1…v2: Use "if (!cond_func || cond_func(cpu, info))" instead of
-       "if (!cond_func || (cond_func && cond_func(cpu, info)))" as
-       suggested by Peter
+The race I've had in mind is a when a parallel hotplug would simply
+hotremove the section along with the memmap so the struct page was a
+complete garbage.
 
- kernel/smp.c | 77 ++++++++++++++++++++++++----------------------------
- 1 file changed, 36 insertions(+), 41 deletions(-)
-
-diff --git a/kernel/smp.c b/kernel/smp.c
-index c64044d68bc62..bf374d9533f83 100644
---- a/kernel/smp.c
-+++ b/kernel/smp.c
-@@ -395,22 +395,9 @@ int smp_call_function_any(const struct cpumask *mask,
- }
- EXPORT_SYMBOL_GPL(smp_call_function_any);
- 
--/**
-- * smp_call_function_many(): Run a function on a set of other CPUs.
-- * @mask: The set of cpus to run on (only runs on online subset).
-- * @func: The function to run. This must be fast and non-blocking.
-- * @info: An arbitrary pointer to pass to the function.
-- * @wait: If true, wait (atomically) until function has completed
-- *        on other CPUs.
-- *
-- * If @wait is true, then returns once @func has returned.
-- *
-- * You must not call this function with disabled interrupts or from a
-- * hardware interrupt handler or from a bottom half handler. Preemption
-- * must be disabled when calling this function.
-- */
--void smp_call_function_many(const struct cpumask *mask,
--			    smp_call_func_t func, void *info, bool wait)
-+static void smp_call_function_many_cond(const struct cpumask *mask,
-+					smp_call_func_t func, void *info,
-+					bool wait, smp_cond_func_t cond_func)
- {
- 	struct call_function_data *cfd;
- 	int cpu, next_cpu, this_cpu = smp_processor_id();
-@@ -448,7 +435,8 @@ void smp_call_function_many(const struct cpumask *mask,
- 
- 	/* Fastpath: do that cpu by itself. */
- 	if (next_cpu >= nr_cpu_ids) {
--		smp_call_function_single(cpu, func, info, wait);
-+		if (!cond_func || cond_func(cpu, info))
-+			smp_call_function_single(cpu, func, info, wait);
- 		return;
- 	}
- 
-@@ -465,6 +453,9 @@ void smp_call_function_many(const struct cpumask *mask,
- 	for_each_cpu(cpu, cfd->cpumask) {
- 		call_single_data_t *csd = per_cpu_ptr(cfd->csd, cpu);
- 
-+		if (cond_func && !cond_func(cpu, info))
-+			continue;
-+
- 		csd_lock(csd);
- 		if (wait)
- 			csd->flags |= CSD_FLAG_SYNCHRONOUS;
-@@ -486,6 +477,26 @@ void smp_call_function_many(const struct cpumask *mask,
- 		}
- 	}
- }
-+
-+/**
-+ * smp_call_function_many(): Run a function on a set of other CPUs.
-+ * @mask: The set of cpus to run on (only runs on online subset).
-+ * @func: The function to run. This must be fast and non-blocking.
-+ * @info: An arbitrary pointer to pass to the function.
-+ * @wait: If true, wait (atomically) until function has completed
-+ *        on other CPUs.
-+ *
-+ * If @wait is true, then returns once @func has returned.
-+ *
-+ * You must not call this function with disabled interrupts or from a
-+ * hardware interrupt handler or from a bottom half handler. Preemption
-+ * must be disabled when calling this function.
-+ */
-+void smp_call_function_many(const struct cpumask *mask,
-+			    smp_call_func_t func, void *info, bool wait)
-+{
-+	smp_call_function_many_cond(mask, func, info, wait, NULL);
-+}
- EXPORT_SYMBOL(smp_call_function_many);
- 
- /**
-@@ -684,33 +695,17 @@ void on_each_cpu_cond_mask(smp_cond_func_t cond_func, smp_call_func_t func,
- 			   void *info, bool wait, gfp_t gfp_flags,
- 			   const struct cpumask *mask)
- {
--	cpumask_var_t cpus;
--	int cpu, ret;
-+	int cpu = get_cpu();
- 
--	might_sleep_if(gfpflags_allow_blocking(gfp_flags));
-+	smp_call_function_many_cond(mask, func, info, wait, cond_func);
-+	if (cpumask_test_cpu(cpu, mask) && cond_func(cpu, info)) {
-+		unsigned long flags;
- 
--	if (likely(zalloc_cpumask_var(&cpus, (gfp_flags|__GFP_NOWARN)))) {
--		preempt_disable();
--		for_each_cpu(cpu, mask)
--			if (cond_func(cpu, info))
--				__cpumask_set_cpu(cpu, cpus);
--		on_each_cpu_mask(cpus, func, info, wait);
--		preempt_enable();
--		free_cpumask_var(cpus);
--	} else {
--		/*
--		 * No free cpumask, bother. No matter, we'll
--		 * just have to IPI them one by one.
--		 */
--		preempt_disable();
--		for_each_cpu(cpu, mask)
--			if (cond_func(cpu, info)) {
--				ret = smp_call_function_single(cpu, func,
--								info, wait);
--				WARN_ON_ONCE(ret);
--			}
--		preempt_enable();
-+		local_irq_save(flags);
-+		func(info);
-+		local_irq_restore(flags);
- 	}
-+	put_cpu();
- }
- EXPORT_SYMBOL(on_each_cpu_cond_mask);
- 
 -- 
-2.25.0
+Michal Hocko
+SUSE Labs
