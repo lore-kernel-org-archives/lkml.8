@@ -2,124 +2,87 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3080C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8491CC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A9F32072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:48:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y8YR04hg"
+	by mail.kernel.org (Postfix) with ESMTP id 58F3D214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:49:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729075AbgAQPsc (ORCPT
+        id S1729074AbgAQPti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 10:48:32 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:43957 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727667AbgAQPsb (ORCPT
+        Fri, 17 Jan 2020 10:49:38 -0500
+Received: from mout.kundenserver.de ([212.227.17.10]:35431 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727667AbgAQPti (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 10:48:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579276110;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LdBL2slNDE/rtW+Xz9P92Zb9qLwhk6nZyC6cAzxgr5o=;
-        b=Y8YR04hg2FUmh0mqjYstEsAciQoVoVmuL0MACefVXKxFdte8A56zf75Ji+5sXeSUR9hOVx
-        km3YwX0iQ6fl+hOGMwHuLcWj3ay8gau+elEU/pZR0vlgwG6P6sMO+MIx1oTwzh3eQjLP9Y
-        NAB9ywFxlKY9Bd6k5qFSo1C9vjd9xro=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-411-IabzsO5JOFearTadoPmb8Q-1; Fri, 17 Jan 2020 10:48:27 -0500
-X-MC-Unique: IabzsO5JOFearTadoPmb8Q-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 37B94107BAAB;
-        Fri, 17 Jan 2020 15:48:26 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-49.rdu2.redhat.com [10.10.120.49])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0AFC3101F942;
-        Fri, 17 Jan 2020 15:48:23 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200117144055.GB3215@pi3>
-References: <20200117144055.GB3215@pi3> <CAJKOXPeCVwZfBsCVbc9RQUGi0UfWQw0uFamPiQasiO8fSthFsQ@mail.gmail.com> <433863.1579270803@warthog.procyon.org.uk>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     dhowells@redhat.com,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Scott Mayhew <smayhew@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH] nfs: Return EINVAL rather than ERANGE for mount parse errors
+        Fri, 17 Jan 2020 10:49:38 -0500
+Received: from mail-qt1-f169.google.com ([209.85.160.169]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MvJjz-1jinLd3mL3-00rEnx; Fri, 17 Jan 2020 16:49:37 +0100
+Received: by mail-qt1-f169.google.com with SMTP id e25so10753924qtr.13;
+        Fri, 17 Jan 2020 07:49:36 -0800 (PST)
+X-Gm-Message-State: APjAAAXDjGVlH6AF6r4fS4/Db/I8MvPHpug0fcsRLRfkVLJXnMDg0ShG
+        P8mEhdIldoRT92MPkI67il6348Mleylv22nkpt8=
+X-Google-Smtp-Source: APXvYqztD+1sjrj8dopDcYp2VjNvyMd85uBQWSwxVcXENdTkLqC0YwLWTNTWjgtCs7i1WELihm2qeNB6W4rJuwnzTkY=
+X-Received: by 2002:ac8:47d3:: with SMTP id d19mr7972128qtr.142.1579276175723;
+ Fri, 17 Jan 2020 07:49:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <464518.1579276102.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Fri, 17 Jan 2020 15:48:22 +0000
-Message-ID: <464519.1579276102@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+References: <20200117152933.31175-1-geert+renesas@glider.be>
+In-Reply-To: <20200117152933.31175-1-geert+renesas@glider.be>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 17 Jan 2020 16:49:19 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2a243LkRu5Np-AmUoyWkSLTuDb9vA8oGwWOsjdHXsffQ@mail.gmail.com>
+Message-ID: <CAK8P3a2a243LkRu5Np-AmUoyWkSLTuDb9vA8oGwWOsjdHXsffQ@mail.gmail.com>
+Subject: Re: [PATCH 0/3] dmaengine: Miscellaneous cleanups
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Matt Porter <mporter@konsulko.com>, dmaengine@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:5bQm1FZoanPkTY63bYHQrI4BPXQt/WpPAXIPxlmiiH5ExvzQhPs
+ vfv29XBkmluopPWoXiC4fua0WWyvj2PM+/dgZpTSUQGrkK+e7vqZ4eYP1amQLbzeGR5yS1V
+ tGmqh9ED+zyXFdsdK/L02ieFTsc0TUgwgt36fxjYhX6m5l/oBrN3J8PsMo8stZxBKhWeiA3
+ if1+2Cys+nDlBLO1mO56A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:zjYbMpEZPZA=:jwO7+7FR3Ho5FlgowVQVMy
+ Vrwf3hKlGsr0oK0NawfMhRdGP2xSo3Fd3qJp3d9l+CsIQfhUEEwe3PweHfFQop3yKS1e6BHBQ
+ myLGo1MoLwp4vBrychHzCAHX3Ggm6Hfv86mnxKNRsWV23r36Q7BUlXhSUkm44MGDUUsktnJjC
+ b9RrlrzHJtr9FYXPP/mk32dpRgM7DLPPL1W7dUtFrZ4WqdOcvssBunqbDxgO3lWsYVpKChKCG
+ 1c+UeyUXG2rAVo5xkwiGGvqa+RqVCcVBKswfQgQNunGRxi8e3sySPet6hd79jRKvDDqjbGUQY
+ 948Mi42KFWb7MeGWwa1hQPCrP9CJXLbWF5EKpL76QN8llsmHbPl536ePL+JyEmfMwPZpWk/+J
+ R6Co8xcMQXGxwv0WCc3jycw2doPd6FoBDo1Tq7D7tqNMwijEdAQdn+SPJ1SnnBlqEJ+7RYDB1
+ TA/2pl9XqVc1EqvC6KDdqy4Rb+96Tx8M7btkF8O8eJt28swZeggEJT+dIx9g5AAEdGCMur6+h
+ q1XaqRZo0LTjKlj93a0Ckc6YLK4IV2YTM3mvJfgKTKA6+Db8WGV6BKeZa3pHZ+ZGRgCRvTy9R
+ 0q1yyqgpZ9Woz/NaFg49x28wGLR6k/rmRbIt5B2raZ2Hkyixq/bhCApNXF69cjmg5zdoIPI9s
+ 415AN5oqsxWej1bosfkpiqK57/Xi/WHgeE/YriBuy5NFx/4+B7pw5+pwDRlvI9TUYYDv1fRrU
+ ueY3KhxOfKUAfBptZU+Lv6avuiKAyYN2FFxj85yrk2VFODaAPQE+W4LaogW0JCWHtMaOExl4W
+ mLA/XbLGxArMKPKOe01qTFqSPc/6yI3CpUsyVEenkag/ZV3KeDyfEtV7APWW8ry8KbdP8IRpM
+ 2VqRbvRn/hDdU0GQDJEA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+On Fri, Jan 17, 2020 at 4:29 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+>
+>         Hi all,
+>
+> This patch series contains a few miscellaneous cleanups for the DMA
+> engine code and API.
+>
+> Thanks for your comments!
+>
+> Geert Uytterhoeven (3):
+>   dmaengine: Remove dma_device_satisfies_mask() wrapper
+>   dmaengine: Remove dma_request_slave_channel_compat() wrapper
+>   dmaengine: Move dma_get_{,any_}slave_channel() to private dmaengine.h
 
-Does this patch fix the problem?
+These all look good to me,
 
-David
----
-commit 3021f58ee1e2c9659e629d0ccf06d3e0876e805a
-Author: David Howells <dhowells@redhat.com>
-Date:   Fri Jan 17 15:37:46 2020 +0000
-
-    nfs: Return EINVAL rather than ERANGE for mount parse errors
-    =
-
-    Return EINVAL rather than ERANGE for mount parse errors as the userspa=
-ce
-    mount command doesn't necessarily understand what to do with anything =
-other
-    than EINVAL.
-    =
-
-    The old code returned -ERANGE as an intermediate error that then get
-    converted to -EINVAL, whereas the new code returns -ERANGE.
-    =
-
-    This was induced by passing minorversion=3D1 to a v4 mount where
-    CONFIG_NFS_V4_1 was disabled in the kernel build.
-    =
-
-    Fixes: 68f65ef40e1e ("NFS: Convert mount option parsing to use functio=
-nality from fs_parser.h")
-    Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
-    Signed-off-by: David Howells <dhowells@redhat.com>
-
-diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-index 429315c011ae..07cbd655dafb 100644
---- a/fs/nfs/fs_context.c
-+++ b/fs/nfs/fs_context.c
-@@ -770,7 +770,7 @@ static int nfs_fs_context_parse_param(struct fs_contex=
-t *fc,
- 	return nfs_invalf(fc, "NFS: Bad IP address specified");
- out_of_bounds:
- 	nfs_invalf(fc, "NFS: Value for '%s' out of range", param->key);
--	return -ERANGE;
-+	return -EINVAL;
- }
- =
-
- /*
-
+Acked-by: Arnd Bergmann <arnd@arndb.de>
