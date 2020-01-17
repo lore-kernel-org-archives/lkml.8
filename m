@@ -2,131 +2,462 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 653EFC33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD347C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 362312073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:28:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99D322083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:28:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iakLCct5"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="sxcGKW37"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729164AbgAQP2M (ORCPT
+        id S1729195AbgAQP20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 10:28:12 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:43070 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726942AbgAQP2M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 10:28:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579274891;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vX7MenyazFNxz1gceqizoJgoTU64O71K2UNBQUf1hrg=;
-        b=iakLCct57UdaZhWX+dWDp5/pwmGcjXaOG+tHCa5NOakJeRTh5BNjPbAgroD1+H+bQtRGp0
-        4q+iu4TEQdYjJG/1Z9P5mk4z9Dtc4yzYqU1KJuHUrcx4od2kZPsd36qGS+eJVr9ghk5U39
-        6EKSDUTVAYA9qONzOI5NkXq1amvVYCQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-266-UlEsAOqpPBecNTmYEIaVFQ-1; Fri, 17 Jan 2020 10:28:09 -0500
-X-MC-Unique: UlEsAOqpPBecNTmYEIaVFQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0A0D1100551A;
-        Fri, 17 Jan 2020 15:28:08 +0000 (UTC)
-Received: from treble (ovpn-123-54.rdu2.redhat.com [10.10.123.54])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1762484334;
-        Fri, 17 Jan 2020 15:28:07 +0000 (UTC)
-Date:   Fri, 17 Jan 2020 09:28:05 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     David Sterba <dsterba@suse.cz>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Btrfs <linux-btrfs@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: linux-next: Tree for Dec 6 (objtool, lots in btrfs)
-Message-ID: <20200117152805.ncy3z34imzpchg7m@treble>
-References: <20191211134929.GL3929@twin.jikos.cz>
- <c751bc1a-505c-5050-3c4c-c83be81b4e48@infradead.org>
- <20191212184725.db3ost7rcopotr5u@treble>
- <b9b0c81b-0ca8-dfb7-958f-cd58a449b6fb@infradead.org>
- <ba2a7a9b-933b-d4e4-8970-85b6c1291fca@infradead.org>
- <20191213235054.6k2lcnwa63r26zwi@treble>
- <c6a33c21-3e71-ac98-cc95-db008764917c@infradead.org>
- <20191214054515.ougsr5ykhl3vvy57@treble>
- <20191217152954.GH3929@suse.cz>
- <20200110194622.GS3929@twin.jikos.cz>
-MIME-Version: 1.0
+        Fri, 17 Jan 2020 10:28:26 -0500
+Received: from mail-eopbgr690040.outbound.protection.outlook.com ([40.107.69.40]:7782
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726942AbgAQP20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 10:28:26 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cl91XAA6QmDmmSR/VAp36/iAhj0xI7zHTjcIQWrMq09kdiObkBWYSikp+kjPx1avwhme4xDzd7SVIt5JdFxWO1jN0vWQoZbr0bZOxoprawj3vi6rsxuIac6r/73Jfkxstdsfdu6A04PBKezkxjbIk1ZlYxw0+xmm6THrl4zbMStaPeIPbahVvoZ6aGmn7xIok50VypIsVlFGfNsyM9ZWNpYSKCYu1xvNhcJ18n/Bp45XOinqvh67rrI3jTpsAgvULWWnU9A1FxoIkD4S/0EiEgcHeS5rAXk2fnc0NdXoQzO2wads68BBU3FhE6yuhTR8G5uq/+Fcfabv5kDyWq/OxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xIpMDPJI6SEyzJ0mtaxcKR1WnnkZmQCBpwGlxNjdj3M=;
+ b=DTtWg8bwhWOuby8csCbTIfs8b6FN09NNyucc61ODQS9XcgBanyqDP2/aWCUtCsLXZka3aBElUakZq0P9A+BQkF775k0FFAbLD3SK0tc3BDMThFg+KAwlOv0rl/OvXhKn0KojwBSqEePag0snk0Z3SxLHqNMKTdpKX28aZyCdTdJb9eeeBPeoTAYFIUkmNm+AEy4FwywDd7MqczHQYvl1z+VgIDQ0Jf6FtIZtIMwlht9iVU8+74gIWlPzdAsd1PsSivRFwTi6Fu6Q9OvlJp453neM8AwHDOnfu4EQKxIFPcJYY/C/aCPAr9i1b+y0UYTiwb0o+utJzNJ3UwYCeyE4nA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xIpMDPJI6SEyzJ0mtaxcKR1WnnkZmQCBpwGlxNjdj3M=;
+ b=sxcGKW37FPS7uYEkrytM85XANg8DnVhODWT8ObYXhBm4HF/7+eludatH9cDi+UY9K5Y+pEpzOTvFc/Fv584QDBAjX9dXJCUfyznFKZk/5q3+W+kE1GykUnNCIIReR47a9A3IQp2gL1AlmOTim6yGTn010eUoXWvblqyc2RZVRlw=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Thomas.Lendacky@amd.com; 
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.71.154) by
+ DM6PR12MB2732.namprd12.prod.outlook.com (20.176.116.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.16; Fri, 17 Jan 2020 15:28:20 +0000
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::a0cd:463:f444:c270]) by DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::a0cd:463:f444:c270%7]) with mapi id 15.20.2623.017; Fri, 17 Jan 2020
+ 15:28:20 +0000
+Subject: Re: [rfc] dma-mapping: preallocate unencrypted DMA atomic pool
+To:     David Rientjes <rientjes@google.com>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     "Singh, Brijesh" <brijesh.singh@amd.com>,
+        "Grimm, Jon" <jon.grimm@amd.com>, Joerg Roedel <joro@8bytes.org>,
+        baekhw@google.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+References: <alpine.DEB.2.21.1912311738130.68206@chino.kir.corp.google.com>
+From:   Tom Lendacky <thomas.lendacky@amd.com>
+Message-ID: <b22416ec-cc28-3fd2-3a10-89840be173fa@amd.com>
+Date:   Fri, 17 Jan 2020 09:28:18 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+In-Reply-To: <alpine.DEB.2.21.1912311738130.68206@chino.kir.corp.google.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200110194622.GS3929@twin.jikos.cz>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DM5PR13CA0061.namprd13.prod.outlook.com
+ (2603:10b6:3:117::23) To DM6PR12MB3163.namprd12.prod.outlook.com
+ (2603:10b6:5:15e::26)
+MIME-Version: 1.0
+Received: from [10.236.30.74] (165.204.77.1) by DM5PR13CA0061.namprd13.prod.outlook.com (2603:10b6:3:117::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.10 via Frontend Transport; Fri, 17 Jan 2020 15:28:19 +0000
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 888e90ba-ca74-42f5-cba4-08d79b61e1fd
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2732:|DM6PR12MB2732:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB27325902E1B037DD4D6518E3EC310@DM6PR12MB2732.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:529;
+X-Forefront-PRVS: 0285201563
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(396003)(136003)(39850400004)(346002)(189003)(199004)(316002)(186003)(6486002)(66476007)(66556008)(2616005)(26005)(110136005)(36756003)(31696002)(16576012)(956004)(2906002)(16526019)(54906003)(478600001)(8676002)(4326008)(86362001)(30864003)(81156014)(8936002)(31686004)(66946007)(5660300002)(81166006)(53546011)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2732;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: XB3hOODR/uepY+L9lu7yoKFUA/ksA0Cfx7rMm2F5vWKyAdLXaaCkUXFJ14T3k2LEgGec5Bim30QlvIYioriywcQk3sM8xaasOUzUfUes5eenZuCNHc4r+gLEY1fhjnkB9F0tZpM+ZCSyRcs3sGkffCF5Xk22TqgKJlXC+1YzRKfRz6b8bxmFjbBWJ4TQyTRlVa9bCoB+YbK0ZGD15YkXTJDPpwQohymBYHpuN2L83GqGvo10tJ8ZunJgksett9dcKfuNfpBiDe+UKClbTWrAd1r8SZFzhebr5+YHg1ATpq6ETLGiBX3wl1aFAesRS8BuiIUdKSayuX5FFAwMhSEvA0WUU/08k431ScwI+GHfP4gKFGJ7y1w+7JiCDVymIvRka7TuJogsJjmNjDDxuD37dAu0f7lECigoWtXUoxFmqxE2MbrXKIW8P8kyi8umlKvk
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 888e90ba-ca74-42f5-cba4-08d79b61e1fd
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2020 15:28:20.6001
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZDQ6xsySneGSUjGAC/xOqGPGOVzE719n+9P0M82kSMmhxmcZtqvYq4g1zYfC6G5Y7QJnGacTAXalUktjx3JYtA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2732
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 08:46:22PM +0100, David Sterba wrote:
-> On Tue, Dec 17, 2019 at 04:29:54PM +0100, David Sterba wrote:
-> > Separating the definitions by #ifdef looks ok, I'd rather do separate
-> > definitions of ASSERT too, to avoid the ternary operator. I'll send the
-> > patch.
+On 12/31/19 7:54 PM, David Rientjes wrote:
+> Christoph, Thomas, is something like this (without the diagnosic 
+> information included in this patch) acceptable for these allocations?  
+> Adding expansion support when the pool is half depleted wouldn't be *that* 
+> hard.
+
+Sorry for the delay in responding...  Overall, I think this will work
+well. If you want the default size to be adjustable, you can always go
+with a Kconfig setting or a command line parameter or both (I realize the
+command line parameter is not optimal).
+
+Just a couple of overall comments about the use of variable names and
+messages using both unencrypted and encrypted, I think the use should be
+consistent throughout the patch.
+
+Thanks,
+Tom
+
 > 
-> Subject: [PATCH] btrfs: separate definition of assertion failure handlers
+> Or are there alternatives we should consider?  Thanks!
 > 
-> There's a report where objtool detects unreachable instructions, eg.:
 > 
->   fs/btrfs/ctree.o: warning: objtool: btrfs_search_slot()+0x2d4: unreachable instruction
 > 
-> This seems to be a false positive due to compiler version. The cause is
-> in the ASSERT macro implementation that does the conditional check as
-> IS_DEFINED(CONFIG_BTRFS_ASSERT) and not an #ifdef.
 > 
-> To avoid that, use the ifdefs directly.
+> When AMD SEV is enabled in the guest, all allocations through 
+> dma_pool_alloc_page() must call set_memory_decrypted() for unencrypted 
+> DMA.  This includes dma_pool_alloc() and dma_direct_alloc_pages().  These 
+> calls may block which is not allowed in atomic allocation contexts such as 
+> from the NVMe driver.
 > 
-> CC: Josh Poimboeuf <jpoimboe@redhat.com>
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: David Sterba <dsterba@suse.com>
+> Preallocate a complementary unecrypted DMA atomic pool that is initially 
+> 4MB in size.  This patch does not contain dynamic expansion, but that 
+> could be added if necessary.
+> 
+> In our stress testing, our peak unecrypted DMA atomic allocation 
+> requirements is ~1.4MB, so 4MB is plenty.  This pool is similar to the 
+> existing DMA atomic pool but is unencrypted.
+> 
+> Signed-off-by: David Rientjes <rientjes@google.com>
 > ---
->  fs/btrfs/ctree.h | 20 ++++++++++++--------
->  1 file changed, 12 insertions(+), 8 deletions(-)
-
-This looks quite similar to my patch, would you mind giving me
-attribution?
-
-> diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
-> index 569931dd0ce5..f90b82050d2d 100644
-> --- a/fs/btrfs/ctree.h
-> +++ b/fs/btrfs/ctree.h
-> @@ -3157,17 +3157,21 @@ do {								\
->  	rcu_read_unlock();					\
->  } while (0)
+>  Based on v5.4 HEAD.
+> 
+>  This commit contains diagnostic information and is not intended for use 
+>  in a production environment.
+> 
+>  arch/x86/Kconfig            |   1 +
+>  drivers/iommu/dma-iommu.c   |   5 +-
+>  include/linux/dma-mapping.h |   7 ++-
+>  kernel/dma/direct.c         |  16 ++++-
+>  kernel/dma/remap.c          | 116 ++++++++++++++++++++++++++----------
+>  5 files changed, 108 insertions(+), 37 deletions(-)
+> 
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -1530,6 +1530,7 @@ config X86_CPA_STATISTICS
+>  config AMD_MEM_ENCRYPT
+>  	bool "AMD Secure Memory Encryption (SME) support"
+>  	depends on X86_64 && CPU_SUP_AMD
+> +	select DMA_DIRECT_REMAP
+>  	select DYNAMIC_PHYSICAL_MASK
+>  	select ARCH_USE_MEMREMAP_PROT
+>  	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
+> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> --- a/drivers/iommu/dma-iommu.c
+> +++ b/drivers/iommu/dma-iommu.c
+> @@ -928,7 +928,7 @@ static void __iommu_dma_free(struct device *dev, size_t size, void *cpu_addr)
 >  
-> -__cold
-> -static inline void assfail(const char *expr, const char *file, int line)
-> +#ifdef CONFIG_BTRFS_ASSERT
-> +__cold __noreturn
-> +static inline void assertfail(const char *expr, const char *file, int line)
+>  	/* Non-coherent atomic allocation? Easy */
+>  	if (IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
+> -	    dma_free_from_pool(cpu_addr, alloc_size))
+> +	    dma_free_from_pool(dev, cpu_addr, alloc_size))
+>  		return;
+>  
+>  	if (IS_ENABLED(CONFIG_DMA_REMAP) && is_vmalloc_addr(cpu_addr)) {
+> @@ -1011,7 +1011,8 @@ static void *iommu_dma_alloc(struct device *dev, size_t size,
+>  
+>  	if (IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
+>  	    !gfpflags_allow_blocking(gfp) && !coherent)
+> -		cpu_addr = dma_alloc_from_pool(PAGE_ALIGN(size), &page, gfp);
+> +		cpu_addr = dma_alloc_from_pool(dev, PAGE_ALIGN(size), &page,
+> +					       gfp);
+>  	else
+>  		cpu_addr = iommu_dma_alloc_pages(dev, size, &page, gfp, attrs);
+>  	if (!cpu_addr)
+> diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+> --- a/include/linux/dma-mapping.h
+> +++ b/include/linux/dma-mapping.h
+> @@ -629,9 +629,10 @@ void *dma_common_pages_remap(struct page **pages, size_t size,
+>  			pgprot_t prot, const void *caller);
+>  void dma_common_free_remap(void *cpu_addr, size_t size);
+>  
+> -bool dma_in_atomic_pool(void *start, size_t size);
+> -void *dma_alloc_from_pool(size_t size, struct page **ret_page, gfp_t flags);
+> -bool dma_free_from_pool(void *start, size_t size);
+> +bool dma_in_atomic_pool(struct device *dev, void *start, size_t size);
+> +void *dma_alloc_from_pool(struct device *dev, size_t size,
+> +			  struct page **ret_page, gfp_t flags);
+> +bool dma_free_from_pool(struct device *dev, void *start, size_t size);
+>  
+>  int
+>  dma_common_get_sgtable(struct device *dev, struct sg_table *sgt, void *cpu_addr,
+> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+> --- a/kernel/dma/direct.c
+> +++ b/kernel/dma/direct.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/dma-direct.h>
+>  #include <linux/scatterlist.h>
+>  #include <linux/dma-contiguous.h>
+> +#include <linux/dma-mapping.h>
+>  #include <linux/dma-noncoherent.h>
+>  #include <linux/pfn.h>
+>  #include <linux/set_memory.h>
+> @@ -131,6 +132,13 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
+>  	struct page *page;
+>  	void *ret;
+>  
+> +	if (!gfpflags_allow_blocking(gfp) && force_dma_unencrypted(dev)) {
+> +		ret = dma_alloc_from_pool(dev, size, &page, gfp);
+> +		if (!ret)
+> +			return NULL;
+> +		goto done;
+> +	}
+> +
+>  	page = __dma_direct_alloc_pages(dev, size, dma_handle, gfp, attrs);
+>  	if (!page)
+>  		return NULL;
+> @@ -156,7 +164,7 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
+>  		__dma_direct_free_pages(dev, size, page);
+>  		return NULL;
+>  	}
+> -
+> +done:
+>  	ret = page_address(page);
+>  	if (force_dma_unencrypted(dev)) {
+>  		set_memory_decrypted((unsigned long)ret, 1 << get_order(size));
+> @@ -185,6 +193,12 @@ void dma_direct_free_pages(struct device *dev, size_t size, void *cpu_addr,
 >  {
-> -	if (IS_ENABLED(CONFIG_BTRFS_ASSERT)) {
-> -		pr_err("assertion failed: %s, in %s:%d\n", expr, file, line);
-> -		BUG();
-> -	}
-> +	pr_err("assertion failed: %s, in %s:%d\n", expr, file, line);
-> +	BUG();
-
-assertfail() is definitely better than "assfail", but shouldn't you
-update the callers so it doesn't break the build?
-
--- 
-Josh
-
+>  	unsigned int page_order = get_order(size);
+>  
+> +	if (force_dma_unencrypted(dev) &&
+> +	    dma_in_atomic_pool(dev, cpu_addr, size)) {
+> +		dma_free_from_pool(dev, cpu_addr, size);
+> +		return;
+> +	}
+> +
+>  	if ((attrs & DMA_ATTR_NO_KERNEL_MAPPING) &&
+>  	    !force_dma_unencrypted(dev)) {
+>  		/* cpu_addr is a struct page cookie, not a kernel address */
+> diff --git a/kernel/dma/remap.c b/kernel/dma/remap.c
+> --- a/kernel/dma/remap.c
+> +++ b/kernel/dma/remap.c
+> @@ -8,6 +8,7 @@
+>  #include <linux/dma-contiguous.h>
+>  #include <linux/init.h>
+>  #include <linux/genalloc.h>
+> +#include <linux/set_memory.h>
+>  #include <linux/slab.h>
+>  #include <linux/vmalloc.h>
+>  
+> @@ -100,9 +101,11 @@ void dma_common_free_remap(void *cpu_addr, size_t size)
+>  
+>  #ifdef CONFIG_DMA_DIRECT_REMAP
+>  static struct gen_pool *atomic_pool __ro_after_init;
+> +static struct gen_pool *atomic_pool_unencrypted __ro_after_init;
+>  
+>  #define DEFAULT_DMA_COHERENT_POOL_SIZE  SZ_256K
+>  static size_t atomic_pool_size __initdata = DEFAULT_DMA_COHERENT_POOL_SIZE;
+> +static size_t atomic_pool_unencrypted_size __initdata = SZ_4M;
+>  
+>  static int __init early_coherent_pool(char *p)
+>  {
+> @@ -120,10 +123,11 @@ static gfp_t dma_atomic_pool_gfp(void)
+>  	return GFP_KERNEL;
+>  }
+>  
+> -static int __init dma_atomic_pool_init(void)
+> +static int __init __dma_atomic_pool_init(struct gen_pool **pool,
+> +				size_t pool_size, bool unencrypt)
+>  {
+> -	unsigned int pool_size_order = get_order(atomic_pool_size);
+> -	unsigned long nr_pages = atomic_pool_size >> PAGE_SHIFT;
+> +	unsigned int pool_size_order = get_order(pool_size);
+> +	unsigned long nr_pages = pool_size >> PAGE_SHIFT;
+>  	struct page *page;
+>  	void *addr;
+>  	int ret;
+> @@ -136,78 +140,128 @@ static int __init dma_atomic_pool_init(void)
+>  	if (!page)
+>  		goto out;
+>  
+> -	arch_dma_prep_coherent(page, atomic_pool_size);
+> +	arch_dma_prep_coherent(page, pool_size);
+>  
+> -	atomic_pool = gen_pool_create(PAGE_SHIFT, -1);
+> -	if (!atomic_pool)
+> +	*pool = gen_pool_create(PAGE_SHIFT, -1);
+> +	if (!*pool)
+>  		goto free_page;
+>  
+> -	addr = dma_common_contiguous_remap(page, atomic_pool_size,
+> +	addr = dma_common_contiguous_remap(page, pool_size,
+>  					   pgprot_dmacoherent(PAGE_KERNEL),
+>  					   __builtin_return_address(0));
+>  	if (!addr)
+>  		goto destroy_genpool;
+>  
+> -	ret = gen_pool_add_virt(atomic_pool, (unsigned long)addr,
+> -				page_to_phys(page), atomic_pool_size, -1);
+> +	ret = gen_pool_add_virt(*pool, (unsigned long)addr, page_to_phys(page),
+> +				pool_size, -1);
+>  	if (ret)
+>  		goto remove_mapping;
+> -	gen_pool_set_algo(atomic_pool, gen_pool_first_fit_order_align, NULL);
+> +	gen_pool_set_algo(*pool, gen_pool_first_fit_order_align, NULL);
+> +	if (unencrypt)
+> +		set_memory_decrypted((unsigned long)page_to_virt(page), nr_pages);
+>  
+> -	pr_info("DMA: preallocated %zu KiB pool for atomic allocations\n",
+> -		atomic_pool_size / 1024);
+> +	pr_info("DMA: preallocated %zu KiB pool for atomic allocations%s\n",
+> +		pool_size >> 10, unencrypt ? " (unencrypted)" : "");
+>  	return 0;
+>  
+>  remove_mapping:
+> -	dma_common_free_remap(addr, atomic_pool_size);
+> +	dma_common_free_remap(addr, pool_size);
+>  destroy_genpool:
+> -	gen_pool_destroy(atomic_pool);
+> -	atomic_pool = NULL;
+> +	gen_pool_destroy(*pool);
+> +	*pool = NULL;
+>  free_page:
+>  	if (!dma_release_from_contiguous(NULL, page, nr_pages))
+>  		__free_pages(page, pool_size_order);
+>  out:
+> -	pr_err("DMA: failed to allocate %zu KiB pool for atomic coherent allocation\n",
+> -		atomic_pool_size / 1024);
+> +	pr_err("DMA: failed to allocate %zu KiB pool for atomic coherent allocation%s\n",
+> +		pool_size >> 10, unencrypt ? " (unencrypted)" : "");
+>  	return -ENOMEM;
+>  }
+> +
+> +static int __init dma_atomic_pool_init(void)
+> +{
+> +	int ret;
+> +
+> +	ret = __dma_atomic_pool_init(&atomic_pool, atomic_pool_size, false);
+> +	if (ret)
+> +		return ret;
+> +	return __dma_atomic_pool_init(&atomic_pool_unencrypted,
+> +				      atomic_pool_unencrypted_size, true);
+> +}
+>  postcore_initcall(dma_atomic_pool_init);
+>  
+> -bool dma_in_atomic_pool(void *start, size_t size)
+> +static inline struct gen_pool *dev_to_pool(struct device *dev)
+>  {
+> -	if (unlikely(!atomic_pool))
+> -		return false;
+> +	if (force_dma_unencrypted(dev))
+> +		return atomic_pool_unencrypted;
+> +	return atomic_pool;
+> +}
+> +
+> +bool dma_in_atomic_pool(struct device *dev, void *start, size_t size)
+> +{
+> +	struct gen_pool *pool = dev_to_pool(dev);
+>  
+> -	return addr_in_gen_pool(atomic_pool, (unsigned long)start, size);
+> +	if (unlikely(!pool))
+> +		return false;
+> +	return addr_in_gen_pool(pool, (unsigned long)start, size);
+>  }
+>  
+> -void *dma_alloc_from_pool(size_t size, struct page **ret_page, gfp_t flags)
+> +static struct gen_pool *atomic_pool __ro_after_init;
+> +static size_t encrypted_pool_size;
+> +static size_t encrypted_pool_size_max;
+> +static spinlock_t encrypted_pool_size_lock;
+> +
+> +void *dma_alloc_from_pool(struct device *dev, size_t size,
+> +			  struct page **ret_page, gfp_t flags)
+>  {
+> +	struct gen_pool *pool = dev_to_pool(dev);
+>  	unsigned long val;
+>  	void *ptr = NULL;
+>  
+> -	if (!atomic_pool) {
+> -		WARN(1, "coherent pool not initialised!\n");
+> +	if (!pool) {
+> +		WARN(1, "%scoherent pool not initialised!\n",
+> +			force_dma_unencrypted(dev) ? "encrypted " : "");
+>  		return NULL;
+>  	}
+>  
+> -	val = gen_pool_alloc(atomic_pool, size);
+> +	val = gen_pool_alloc(pool, size);
+>  	if (val) {
+> -		phys_addr_t phys = gen_pool_virt_to_phys(atomic_pool, val);
+> +		phys_addr_t phys = gen_pool_virt_to_phys(pool, val);
+>  
+>  		*ret_page = pfn_to_page(__phys_to_pfn(phys));
+>  		ptr = (void *)val;
+>  		memset(ptr, 0, size);
+> +		if (force_dma_unencrypted(dev)) {
+> +			unsigned long flags;
+> +
+> +			spin_lock_irqsave(&encrypted_pool_size_lock, flags);
+> +			encrypted_pool_size += size;
+> +			if (encrypted_pool_size > encrypted_pool_size_max) {
+> +				encrypted_pool_size_max = encrypted_pool_size;
+> +				pr_info("max encrypted pool size now %lu\n",
+> +					encrypted_pool_size_max);
+> +			}
+> +			spin_unlock_irqrestore(&encrypted_pool_size_lock, flags);
+> +		}
+>  	}
+>  
+>  	return ptr;
+>  }
+>  
+> -bool dma_free_from_pool(void *start, size_t size)
+> +bool dma_free_from_pool(struct device *dev, void *start, size_t size)
+>  {
+> -	if (!dma_in_atomic_pool(start, size))
+> +	struct gen_pool *pool = dev_to_pool(dev);
+> +
+> +	if (!dma_in_atomic_pool(dev, start, size))
+>  		return false;
+> -	gen_pool_free(atomic_pool, (unsigned long)start, size);
+> +	gen_pool_free(pool, (unsigned long)start, size);
+> +	if (force_dma_unencrypted(dev)) {
+> +		unsigned long flags;
+> +
+> +		spin_lock_irqsave(&encrypted_pool_size_lock, flags);
+> +		encrypted_pool_size -= size;
+> +		spin_unlock_irqrestore(&encrypted_pool_size_lock, flags);
+> +	}
+>  	return true;
+>  }
+>  
+> @@ -220,7 +274,7 @@ void *arch_dma_alloc(struct device *dev, size_t size, dma_addr_t *dma_handle,
+>  	size = PAGE_ALIGN(size);
+>  
+>  	if (!gfpflags_allow_blocking(flags)) {
+> -		ret = dma_alloc_from_pool(size, &page, flags);
+> +		ret = dma_alloc_from_pool(dev, size, &page, flags);
+>  		if (!ret)
+>  			return NULL;
+>  		goto done;
+> @@ -251,7 +305,7 @@ void *arch_dma_alloc(struct device *dev, size_t size, dma_addr_t *dma_handle,
+>  void arch_dma_free(struct device *dev, size_t size, void *vaddr,
+>  		dma_addr_t dma_handle, unsigned long attrs)
+>  {
+> -	if (!dma_free_from_pool(vaddr, PAGE_ALIGN(size))) {
+> +	if (!dma_free_from_pool(dev, vaddr, PAGE_ALIGN(size))) {
+>  		phys_addr_t phys = dma_to_phys(dev, dma_handle);
+>  		struct page *page = pfn_to_page(__phys_to_pfn(phys));
+>  
+> 
