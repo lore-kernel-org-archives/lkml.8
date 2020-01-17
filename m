@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBBAC33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC42C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BB1920842
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 981102083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:04:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbgAQPEW (ORCPT
+        id S1729331AbgAQPE2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 10:04:22 -0500
+        Fri, 17 Jan 2020 10:04:28 -0500
 Received: from mx2.suse.de ([195.135.220.15]:46518 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729107AbgAQPEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 10:04:05 -0500
+        id S1729152AbgAQPED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 10:04:03 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D1902BBBD;
-        Fri, 17 Jan 2020 15:04:03 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id AA406BBB4;
+        Fri, 17 Jan 2020 15:04:01 +0000 (UTC)
 From:   Petr Mladek <pmladek@suse.com>
 To:     Jiri Kosina <jikos@kernel.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -32,9 +32,9 @@ Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
         Nicolai Stange <nstange@suse.de>,
         live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
         Petr Mladek <pmladek@suse.com>
-Subject: [POC 22/23] livepatch/module: Remove obsolete copy_module_elf()
-Date:   Fri, 17 Jan 2020 16:03:22 +0100
-Message-Id: <20200117150323.21801-23-pmladek@suse.com>
+Subject: [POC 17/23] livepatch: Load livepatches for modules when loading  the main livepatch
+Date:   Fri, 17 Jan 2020 16:03:17 +0100
+Message-Id: <20200117150323.21801-18-pmladek@suse.com>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20200117150323.21801-1-pmladek@suse.com>
 References: <20200117150323.21801-1-pmladek@suse.com>
@@ -43,182 +43,184 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The split livepatch modules can be relocated immedidately when they
-are loaded. There is no longer needed to preserve the elf sections.
+The livepatch modules have been split per-object. The livepatch module for
+"vmlinux" must always exist. It includes struct klp_patch and defines
+the sysfs interface. It must be loaded first and removed last.
+
+The related livepatch modules that are livepatching already loaded modules
+must be loaded before the main livepatch gets enabled.
+
+It might be possible to check if a livepatch module exists for each
+loaded module by calling "modprobe -qR". But it would be a nightmare
+to avoid races.
+
+Instead, names of all livepatched modules are statically defined
+in patch->obj_names array. klp_loaded_objects_livepatches()
+iterates over this list and loads the needed modules one
+by one. It must be called with klp_mutex released. It is
+safe becase:
+
+  1. The livepatch itself could not be removed until it returns
+     from mod->init(). Note that it is not visible in sysfs
+     interface at the moment.
+
+  2. Any operation with other livepatches is prevented using
+     klp_loading_livepatch variable. The affected operations
+     are klp_enable_livepatch() and enabled_store().
+
+  3. Modules loaded and removed in parallel are properly handled
+     by klp_module_coming() and klp_module_going() callbacks.
 
 Signed-off-by: Petr Mladek <pmladek@suse.com>
 ---
- Documentation/livepatch/module-elf-format.rst | 18 ++++++
- include/linux/module.h                        |  3 -
- kernel/module.c                               | 87 ---------------------------
- 3 files changed, 18 insertions(+), 90 deletions(-)
+ kernel/livepatch/core.c | 80 ++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 79 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/livepatch/module-elf-format.rst b/Documentation/livepatch/module-elf-format.rst
-index 9f0c997d4940..8c6b894c4661 100644
---- a/Documentation/livepatch/module-elf-format.rst
-+++ b/Documentation/livepatch/module-elf-format.rst
-@@ -14,6 +14,7 @@ This document outlines the Elf format requirements that livepatch modules must f
-    4. Livepatch symbols
-       4.1 A livepatch module's symbol table
-       4.2 Livepatch symbol format
-+   5. Symbol table and Elf section access
+diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+index 06676ec63ba7..6d4ec7642908 100644
+--- a/kernel/livepatch/core.c
++++ b/kernel/livepatch/core.c
+@@ -45,6 +45,7 @@ DEFINE_MUTEX(klp_mutex);
+ LIST_HEAD(klp_patches);
  
- 1. Background and motivation
- ============================
-@@ -295,3 +296,20 @@ See include/uapi/linux/elf.h for the actual definitions.
- [*]
-   Note that the 'Ndx' (Section index) for these symbols is SHN_LIVEPATCH (0xff20).
-   "OS" means OS-specific.
-+
-+5. Symbol table and Elf section access
-+======================================
-+A livepatch module's symbol table is accessible through module->symtab.
-+
-+Since apply_relocate_add() requires access to a module's section headers,
-+symbol table, and relocation section indices, Elf information is preserved for
-+livepatch modules and is made accessible by the module loader through
-+module->klp_info, which is a klp_modinfo struct. When a livepatch module loads,
-+this struct is filled in by the module loader. Its fields are documented below::
-+
-+	struct klp_modinfo {
-+		Elf_Ehdr hdr; /* Elf header */
-+		Elf_Shdr *sechdrs; /* Section header table */
-+		char *secstrings; /* String table for the section headers */
-+		unsigned int symndx; /* The symbol table section index */
-+	};
-diff --git a/include/linux/module.h b/include/linux/module.h
-index f69f3fd72dd5..8545f3087274 100644
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -483,9 +483,6 @@ struct module {
- #ifdef CONFIG_LIVEPATCH
- 	bool klp; /* Is this a livepatch module? */
- 	bool klp_alive;
--
--	/* Elf information */
--	struct klp_modinfo *klp_info;
- #endif
+ static struct kobject *klp_root_kobj;
++static struct klp_patch *klp_loading_patch;
  
- #ifdef CONFIG_MODULE_UNLOAD
-diff --git a/kernel/module.c b/kernel/module.c
-index c14b5135db27..442926fc5f34 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -2125,82 +2125,6 @@ static void module_enable_nx(const struct module *mod) { }
- static void module_enable_x(const struct module *mod) { }
- #endif /* CONFIG_ARCH_HAS_STRICT_MODULE_RWX */
- 
--
--#ifdef CONFIG_LIVEPATCH
--/*
-- * Persist Elf information about a module. Copy the Elf header,
-- * section header table, section string table, and symtab section
-- * index from info to mod->klp_info.
-- */
--static int copy_module_elf(struct module *mod, struct load_info *info)
--{
--	unsigned int size, symndx;
--	int ret;
--
--	size = sizeof(*mod->klp_info);
--	mod->klp_info = kmalloc(size, GFP_KERNEL);
--	if (mod->klp_info == NULL)
--		return -ENOMEM;
--
--	/* Elf header */
--	size = sizeof(mod->klp_info->hdr);
--	memcpy(&mod->klp_info->hdr, info->hdr, size);
--
--	/* Elf section header table */
--	size = sizeof(*info->sechdrs) * info->hdr->e_shnum;
--	mod->klp_info->sechdrs = kmemdup(info->sechdrs, size, GFP_KERNEL);
--	if (mod->klp_info->sechdrs == NULL) {
--		ret = -ENOMEM;
--		goto free_info;
--	}
--
--	/* Elf section name string table */
--	size = info->sechdrs[info->hdr->e_shstrndx].sh_size;
--	mod->klp_info->secstrings = kmemdup(info->secstrings, size, GFP_KERNEL);
--	if (mod->klp_info->secstrings == NULL) {
--		ret = -ENOMEM;
--		goto free_sechdrs;
--	}
--
--	/* Elf symbol section index */
--	symndx = info->index.sym;
--	mod->klp_info->symndx = symndx;
--
--	/*
--	 * For livepatch modules, core_kallsyms.symtab is a complete
--	 * copy of the original symbol table. Adjust sh_addr to point
--	 * to core_kallsyms.symtab since the copy of the symtab in module
--	 * init memory is freed at the end of do_init_module().
--	 */
--	mod->klp_info->sechdrs[symndx].sh_addr = \
--		(unsigned long) mod->core_kallsyms.symtab;
--
--	return 0;
--
--free_sechdrs:
--	kfree(mod->klp_info->sechdrs);
--free_info:
--	kfree(mod->klp_info);
--	return ret;
--}
--
--static void free_module_elf(struct module *mod)
--{
--	kfree(mod->klp_info->sechdrs);
--	kfree(mod->klp_info->secstrings);
--	kfree(mod->klp_info);
--}
--#else /* !CONFIG_LIVEPATCH */
--static int copy_module_elf(struct module *mod, struct load_info *info)
--{
--	return 0;
--}
--
--static void free_module_elf(struct module *mod)
--{
--}
--#endif /* CONFIG_LIVEPATCH */
--
- void __weak module_memfree(void *module_region)
+ static bool klp_is_module(struct klp_object *obj)
  {
+@@ -332,6 +333,16 @@ static ssize_t enabled_store(struct kobject *kobj, struct kobj_attribute *attr,
+ 		goto out;
+ 	}
+ 
++	/*
++	 * Do not manipulate other livepatches when a new one is being
++	 * loaded to make our live easier. The patch that is being londed
++	 * is not visible in sysfs at this point.
++	 */
++	if (klp_loading_patch) {
++		ret = -EBUSY;
++		goto out;
++	}
++
  	/*
-@@ -2244,9 +2168,6 @@ static void free_module(struct module *mod)
- 	/* Free any allocated parameters. */
- 	destroy_params(mod->kp, mod->num_kp);
+ 	 * Allow to reverse a pending transition in both ways. It might be
+ 	 * necessary to complete the transition without forcing and breaking
+@@ -1052,6 +1063,9 @@ int klp_add_object(struct klp_object *obj)
+ 	if (ret)
+ 		goto err;
  
--	if (is_livepatch_module(mod))
--		free_module_elf(mod);
--
- 	/* Now we can delete it from the lists */
- 	mutex_lock(&module_mutex);
- 	/* Unlink carefully: kallsyms could be walking list. */
-@@ -3967,12 +3888,6 @@ static int load_module(struct load_info *info, const char __user *uargs,
- 	if (err < 0)
- 		goto coming_cleanup;
++	if (!patch->enabled)
++		goto out;
++
+ 	ret = klp_init_object(patch, obj);
+ 	if (ret) {
+ 		pr_warn("failed to initialize patch '%s' for module '%s' (%d)\n",
+@@ -1081,6 +1095,7 @@ int klp_add_object(struct klp_object *obj)
+ 	if (patch != klp_transition_patch)
+ 		klp_post_patch_callback(obj);
  
--	if (is_livepatch_module(mod)) {
--		err = copy_module_elf(mod, info);
--		if (err < 0)
--			goto sysfs_cleanup;
--	}
--
- 	/* Get rid of temporary copy. */
- 	free_copy(info);
++out:
+ 	mutex_unlock(&klp_mutex);
+ 	return 0;
  
-@@ -3981,8 +3896,6 @@ static int load_module(struct load_info *info, const char __user *uargs,
+@@ -1147,12 +1162,43 @@ static int klp_try_load_object(const char *patch_name, const char *obj_name)
+ 	return 0;
+ }
  
- 	return do_init_module(mod);
++/*
++ * This function is guarded by klp_loading_patch instead of klp_mutex to avoid
++ * deadlocks. It loads other livepatch modules via modprobe called in userspace.
++ * The other modules need to take klp-mutex as well.
++ */
++static int klp_load_objects_livepatches(struct klp_patch *patch)
++{
++	int i, ret;
++
++	for (i = 0; patch->obj_names[i]; i++) {
++		char *obj_name = patch->obj_names[i];
++		struct module *patched_mod;
++		bool obj_alive;
++
++		mutex_lock(&module_mutex);
++		patched_mod = find_module(obj_name);
++		obj_alive = patched_mod ? patched_mod->klp_alive : false;
++		mutex_unlock(&module_mutex);
++
++		/* Load livepatch module only for loaded objects. */
++		if (!obj_alive)
++			continue;
++
++		ret = klp_try_load_object(patch->obj->patch_name, obj_name);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
+ static int __klp_enable_patch(struct klp_patch *patch)
+ {
+ 	struct klp_object *obj;
+ 	int ret;
  
-- sysfs_cleanup:
--	mod_sysfs_teardown(mod);
-  coming_cleanup:
- 	mod->state = MODULE_STATE_GOING;
- 	destroy_params(mod->kp, mod->num_kp);
+-	if (klp_transition_patch)
++	if (klp_transition_patch || klp_loading_patch)
+ 		return -EBUSY;
+ 
+ 	if (WARN_ON(patch->enabled))
+@@ -1199,6 +1245,21 @@ static int __klp_enable_patch(struct klp_patch *patch)
+ 	return ret;
+ }
+ 
++static int klp_check_patches_in_progress(void)
++{
++	struct klp_patch *patch;
++
++	if (klp_loading_patch)
++		patch = klp_loading_patch;
++	else if (klp_transition_patch)
++		patch = klp_transition_patch;
++	else
++		return 0;
++
++	pr_err("Already enabling livepatch: %s\n", patch->obj->mod->name);
++	return -EBUSY;
++}
++
+ /**
+  * klp_enable_patch() - enable the livepatch
+  * @patch:	patch to be enabled
+@@ -1233,6 +1294,12 @@ int klp_enable_patch(struct klp_patch *patch)
+ 
+ 	mutex_lock(&klp_mutex);
+ 
++	ret = klp_check_patches_in_progress();
++	if (ret) {
++		mutex_unlock(&klp_mutex);
++		return ret;
++	}
++
+ 	if (!klp_is_patch_compatible(patch)) {
+ 		pr_err("Livepatch patch (%s) is not compatible with the already installed livepatches.\n",
+ 			patch->obj->mod->name);
+@@ -1246,6 +1313,17 @@ int klp_enable_patch(struct klp_patch *patch)
+ 		return ret;
+ 	}
+ 
++	klp_loading_patch = patch;
++	mutex_unlock(&klp_mutex);
++
++	ret = klp_load_objects_livepatches(patch);
++
++	mutex_lock(&klp_mutex);
++	klp_loading_patch = NULL;
++
++	if (ret)
++		goto err;
++
+ 	ret = klp_init_patch(patch);
+ 	if (ret)
+ 		goto err;
 -- 
 2.16.4
 
