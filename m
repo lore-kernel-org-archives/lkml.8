@@ -2,134 +2,93 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 052FAC33CB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D3FC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFA7E2072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:21:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cd4EHkuZ"
+	by mail.kernel.org (Postfix) with ESMTP id 8FF6C2072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:21:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579256481;
+	bh=snmpxkWjNJj9XNjb6PGbKit0kLBRopgO1dzEZ4MMmjY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0UwNJQ7pTJOlfOSzyTJ0VICs2Xckt5Xd/cf3p+ng6GQgD+7aIWEsaSYLwxhSbynRa
+	 GfV1TwVGAWxraMmM5UR7w56A6JHCeAX8CKubax9JQ0RphDRr11SHnOO8jfTjOUL//B
+	 TFgedY5dKYvfyXM/JUZGnsgB9VZgvpGIAb+EjXRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728708AbgAQKVO (ORCPT
+        id S1728783AbgAQKVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 05:21:14 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37507 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726553AbgAQKVN (ORCPT
+        Fri, 17 Jan 2020 05:21:20 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:39773 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbgAQKVU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 05:21:13 -0500
-Received: by mail-wr1-f67.google.com with SMTP id w15so22180949wru.4
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 02:21:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=mZtLP4TF2DQa4kM6aWD8dXahaAIco0BNSoaIocAnb5A=;
-        b=Cd4EHkuZG/hB65hooW72qjpibWL8vCibrANu3y0wxb4ne8tJYxzzGXhWRsSr14VVgW
-         s47dP0HN/s6CpLzXIT/H4sWazukfC5WmPNB8s6Nbi+/mP9EtUcflQ/m0BcUQ+y0lmZWJ
-         2lndVQ0FbWMHCpjYO/LJxfxwpDDCEACulCfnDNHg+aCD86QuJlAqSBJN0MlBnIIcStnR
-         gubRP0kOgxTKVOzdfEq8OuT7LoaeMmYPl/cl7Sy1ndbwDEXuwaLAix2Z9ezMc+VxYaNq
-         uznP5Fd5AdP74eKcYYQglPaI8TUTHPm4ufdRVW5heAmr8vvabPtIfCsxMhWEJ31KnnYv
-         6AHw==
+        Fri, 17 Jan 2020 05:21:20 -0500
+Received: by mail-lf1-f68.google.com with SMTP id y1so17916321lfb.6;
+        Fri, 17 Jan 2020 02:21:18 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=mZtLP4TF2DQa4kM6aWD8dXahaAIco0BNSoaIocAnb5A=;
-        b=Qm+2Lhnzyu93+0mCNTStYoyU28aJEhhoW/eWOpn6a41w2Pnv4PGTXJkt3pUUc16rIs
-         vS6U62RwWzOhIfCZY0llbwbNVDyneDysfV38UtO4u11ASaLh6kebTDdQISCoe28gQ8hK
-         oyOXlO2sOmd7pPvxTl5QjXibXy6Dy4BclvKpDk/BtrQhLRctnU2YS5GzXU4OIfRy3lST
-         q0/dUAXC+wOkm4ll41RgchzLFT58xAV0npM3onxb3n0JNy9Qt/k4HRQ/MTOgA1hV0y/1
-         B3tmAFNAL3cCg88spHOIwIKY4Rh5LIV9Qp4z4Momq5yHBqhslL/cjkxBzXqMlNsV5mur
-         gZbQ==
-X-Gm-Message-State: APjAAAV5xDEWNk9B78XMyJadz6sejHfwu0lp1xmp8tLX7ekTVyOWcmiz
-        Pro/IBDNxOfMnJvIVsh7G65c9VJ+3go=
-X-Google-Smtp-Source: APXvYqyVa2FGtDblyP5Np3GyAl5Q+tTxMbe2sQTuTQwaCp7lmF6Cq26++iwlzp5gif2p7MajB+J13A==
-X-Received: by 2002:adf:e290:: with SMTP id v16mr2368769wri.16.1579256471100;
-        Fri, 17 Jan 2020 02:21:11 -0800 (PST)
-Received: from dell ([2.27.35.221])
-        by smtp.gmail.com with ESMTPSA id t5sm32760070wrr.35.2020.01.17.02.21.09
+         :mime-version:content-disposition:in-reply-to;
+        bh=eaqHcAIOe4AOO/TalL4e8/rw3+XC4UIZ6k8/4PUD8ow=;
+        b=AwTirvulevfHfqOelod+TeypmC1nHcwfwM4a+Kt7807sKybMntmfSYqNYbf1uhpY+h
+         PiUt+r+KAlscjMTGwjbNzBx/lc6gRl+kLq7U+p6RBoJAvF7DCitwpXdxLt3FxVhNTHyh
+         FDp8zA5WyulfUjLn21pTYrVqlHeZFrWO6oOORKIHaLa3SE0ZG5fkeqJmbYLERWPFYSPF
+         4N1b+zFlmNgy+dTKSoVa2HEQt6EB8muMlPomFGc628P7xyIuoxtkJOtRiDwDDQ3eNbwv
+         zO1K3/9u08GgEV5SkM3opNQgBuLRJb40VDhjt3bGpWSypCSy9Pnr68u6iU++Q1ialuey
+         DQdw==
+X-Gm-Message-State: APjAAAWf7fUW09ucCJTaq0m5E5AZzbIME/rE4gZW6DJu4H2hQIpwleZ7
+        3mRQBJij3VwCu5Cz8Xl4KeHPV5Dw
+X-Google-Smtp-Source: APXvYqzJQvBprQx7Ic5TrIAMUJR5Oqiu1a5ykCuEEgfOE/FHlJyXeV64gHVvKFNfZG5zSDko9pQmRQ==
+X-Received: by 2002:ac2:5195:: with SMTP id u21mr4892698lfi.141.1579256477904;
+        Fri, 17 Jan 2020 02:21:17 -0800 (PST)
+Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
+        by smtp.gmail.com with ESMTPSA id i197sm11929086lfi.56.2020.01.17.02.21.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 02:21:10 -0800 (PST)
-Date:   Fri, 17 Jan 2020 10:21:27 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v10 11/13] gpio: bd71828: Initial support for ROHM
- BD71828 PMIC GPIOs
-Message-ID: <20200117102127.GD15507@dell>
-References: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
- <c8ed62a1efa0c6fde93a8a08fe6bc74a450a34f3.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
+        Fri, 17 Jan 2020 02:21:17 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1isOke-0003q4-Lx; Fri, 17 Jan 2020 11:21:16 +0100
+Date:   Fri, 17 Jan 2020 11:21:16 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.19 592/671] USB: usb-skeleton: fix
+ use-after-free after driver unbind
+Message-ID: <20200117102116.GS2301@localhost>
+References: <20200116170509.12787-1-sashal@kernel.org>
+ <20200116170509.12787-329-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c8ed62a1efa0c6fde93a8a08fe6bc74a450a34f3.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200116170509.12787-329-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jan 2020, Matti Vaittinen wrote:
-
-> ROHM BD71828 PMIC contains 4 pins which can be configured by OTP
-> to be used for general purposes. First 3 can be used as outputs
-> and 4.th pin can be used as input. Allow them to be controlled
-> via GPIO framework.
+On Thu, Jan 16, 2020 at 12:03:50PM -0500, Sasha Levin wrote:
+> From: Johan Hovold <johan@kernel.org>
 > 
-> The driver assumes all of the pins are configured as GPIOs and
-> trusts that the reserved pins in other OTP configurations are
-> excluded from control using "gpio-reserved-ranges" device tree
-> property (or left untouched by GPIO users).
+> [ Upstream commit 6353001852776e7eeaab4da78922d4c6f2b076af ]
 > 
-> Typical use for 4.th pin (input) is to use it as HALL sensor
-> input so that this pin state is toggled when HALL sensor detects
-> LID position change (from close to open or open to close). PMIC
-> HW implements some extra logic which allows PMIC to power-up the
-> system when this pin is toggled. Please see the data sheet for
-> details of GPIO options which can be selected by OTP settings.
+> The driver failed to stop its read URB on disconnect, something which
+> could lead to a use-after-free in the completion handler after driver
+> unbind in case the character device has been closed.
 > 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Fixes: e7389cc9a7ff ("USB: skel_read really sucks royally")
+> Signed-off-by: Johan Hovold <johan@kernel.org>
+> Link: https://lore.kernel.org/r/20191009170944.30057-3-johan@kernel.org
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+This one isn't needed in any stable tree. As we discussed before, the
+skeleton driver is only there for documentation purposes. 
 
-Linus, Is that an Ack?
-
-> ---
-> no changes since v9
-> 
->  drivers/gpio/Kconfig        |  12 +++
->  drivers/gpio/Makefile       |   1 +
->  drivers/gpio/gpio-bd71828.c | 159 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 172 insertions(+)
->  create mode 100644 drivers/gpio/gpio-bd71828.c
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Johan
