@@ -2,138 +2,98 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A319C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B88D7C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C8682073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:36:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 905512072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:36:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgAQLgV (ORCPT
+        id S1727033AbgAQLgt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 06:36:21 -0500
-Received: from mga01.intel.com ([192.55.52.88]:59269 "EHLO mga01.intel.com"
+        Fri, 17 Jan 2020 06:36:49 -0500
+Received: from mx2.suse.de ([195.135.220.15]:55076 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726785AbgAQLgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 06:36:21 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 03:36:20 -0800
-X-IronPort-AV: E=Sophos;i="5.70,330,1574150400"; 
-   d="scan'208";a="218881938"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 03:36:15 -0800
-From:   Jani Nikula <jani.nikula@intel.com>
-To:     Lyude Paul <lyude@redhat.com>, intel-gfx@lists.freedesktop.org
-Cc:     dri-devel@lists.freedesktop.org, Perry Yuan <pyuan@redhat.com>,
-        AceLan Kao <acelan.kao@canonical.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
-        Lee Shawn C <shawn.c.lee@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/5] drm/i915: Don't use VBT for detecting DPCD backlight controls
-In-Reply-To: <20200116211623.53799-5-lyude@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20200116211623.53799-1-lyude@redhat.com> <20200116211623.53799-5-lyude@redhat.com>
-Date:   Fri, 17 Jan 2020 13:36:12 +0200
-Message-ID: <87zhemgvrn.fsf@intel.com>
+        id S1726371AbgAQLgs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 06:36:48 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D1675AE2C;
+        Fri, 17 Jan 2020 11:36:46 +0000 (UTC)
+Subject: Re: [PATCH] xen/balloon: Support xend-based toolstack take two
+To:     =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        stable@vger.kernel.org
+References: <20200116170004.14373-1-jgross@suse.com>
+ <c29c92e3-eb20-7e0a-0174-ef72398b0998@suse.com>
+ <dc509037-a7d6-caa5-8000-28aeb20b638e@suse.com>
+From:   Jan Beulich <jbeulich@suse.com>
+Message-ID: <4ddd12ae-94f7-0b16-346a-46e096d9ae6e@suse.com>
+Date:   Fri, 17 Jan 2020 12:36:50 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <dc509037-a7d6-caa5-8000-28aeb20b638e@suse.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Jan 2020, Lyude Paul <lyude@redhat.com> wrote:
-> Despite the fact that the VBT appears to have a field for specifying
-> that a system is equipped with a panel that supports standard VESA
-> backlight controls over the DP AUX channel, so far every system we've
-> spotted DPCD backlight control support on doesn't actually set this
-> field correctly and all have it set to INTEL_BACKLIGHT_DISPLAY_DDI.
->
-> While we don't know the exact reason for this VBT misuse, talking with
-> some vendors indicated that there's a good number of laptop panels out
-> there that supposedly support both PWM backlight controls and DPCD
-> backlight controls as a workaround until Intel supports DPCD backlight
-> controls across platforms universally. This being said, the X1 Extreme
-> 2nd Gen that I have here (note that Lenovo is not the hardware vendor
-> that informed us of this) PWM backlight controls are advertised, but
-> only DPCD controls actually function. I'm going to make an educated
-> guess here and say that on systems like this one, it's likely that PWM
-> backlight controls might have been intended to work but were never
-> really tested by QA.
->
-> Since we really need backlights to work without any extra module
-> parameters, let's take the risk here and rely on the standard DPCD caps
-> to tell us whether AUX backlight controls are supported or not. We still
-> check the VBT, but only to make sure that we don't enable DPCD backlight
-> controls on a panel that uses something other then the standard VESA
-> interfaces over AUX. Since panels using such non-standard interfaces
-> should probably have support added to i915, we'll print a warning when
-> seeing this in the VBT. We can remove this warning later if we end up
-> adding support for any custom backlight interfaces.
->
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=112376
-> Cc: Jani Nikula <jani.nikula@intel.com>
-> Cc: Perry Yuan <pyuan@redhat.com>
-> Cc: AceLan Kao <acelan.kao@canonical.com>
-> ---
->  .../drm/i915/display/intel_dp_aux_backlight.c    | 16 ++++++++++------
->  1 file changed, 10 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c b/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
-> index 77a759361c5c..3002b600635f 100644
-> --- a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
-> +++ b/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
-> @@ -330,13 +330,17 @@ int intel_dp_aux_init_backlight_funcs(struct intel_connector *intel_connector)
->  	struct intel_panel *panel = &intel_connector->panel;
->  	struct drm_i915_private *dev_priv = to_i915(intel_connector->base.dev);
->  
-> -	if (i915_modparams.enable_dpcd_backlight == 0 ||
-> -	    (i915_modparams.enable_dpcd_backlight == -1 &&
-> -	    dev_priv->vbt.backlight.type != INTEL_BACKLIGHT_VESA_EDP_AUX_INTERFACE))
-> -		return -ENODEV;
-> -
-> -	if (!intel_dp_aux_display_control_capable(intel_connector))
-> +	if (i915_modparams.enable_dpcd_backlight == 0)
->  		return -ENODEV;
-> +	if (i915_modparams.enable_dpcd_backlight == -1) {
-> +		if (dev_priv->vbt.backlight.type
-> +		    == INTEL_BACKLIGHT_PANEL_DRIVER_INTERFACE) {
-> +			DRM_WARN("VBT says panel uses custom panel driver interface, not using DPCD backlight controls\n");
-> +			return -ENODEV;
-> +		}
-> +		if (!intel_dp_aux_display_control_capable(intel_connector))
-> +			return -ENODEV;
+On 17.01.2020 12:31, Jürgen Groß wrote:
+> On 17.01.20 12:01, Jan Beulich wrote:
+>> On 16.01.2020 18:00, Juergen Gross wrote:
+>>> Commit 3aa6c19d2f38be ("xen/balloon: Support xend-based toolstack")
+>>> tried to fix a regression with running on rather ancient Xen versions.
+>>> Unfortunately the fix was based on the assumption that xend would
+>>> just use another Xenstore node, but in reality only some downstream
+>>> versions of xend are doing that. The upstream xend does not write
+>>> that Xenstore node at all, so the problem must be fixed in another
+>>> way.
+>>>
+>>> The easiest way to achieve that is to fall back to the behavior before
+>>> commit 5266b8e4445c ("xen: fix booting ballooned down hvm guest")
+>>> in case the static memory maximum can't be read.
+>>
+>> I could use some help here: Prior to said commit there was
+>>
+>> 	target_diff = new_target - balloon_stats.target_pages;
+>>
+>>
+>> Which is, afaict, ...
+>>
+>>> --- a/drivers/xen/xen-balloon.c
+>>> +++ b/drivers/xen/xen-balloon.c
+>>> @@ -94,7 +94,7 @@ static void watch_target(struct xenbus_watch *watch,
+>>>   				  "%llu", &static_max) == 1))
+>>>   			static_max >>= PAGE_SHIFT - 10;
+>>>   		else
+>>> -			static_max = new_target;
+>>> +			static_max = balloon_stats.current_pages;
+>>>   
+>>>   		target_diff = (xen_pv_domain() || xen_initial_domain()) ? 0
+>>>   				: static_max - balloon_stats.target_pages;
+>>
+>> ... what the code does before your change. Afaict there was
+>> never a use of balloon_stats.current_pages in this function.
+> 
+> That is a little bit indirect, yes. In the end I want static_max to
+> be either the maximum reported by Xen, or if not available, the current
+> assumed memory size, which can be found in balloon_stats.current_pages.
+> 
+> The main idea is to avoid a negative target_diff which would result in
+> not ballooning down.
 
-Functionally, I'm fine with trying this. But perhaps we should check aux
-and early return first, and then check what vbt says, to reduce the
-dmesg noise.
+All understood. Yet the change is then not a restore of prior behavior
+(just in a limited case), but a change to behavior that we never there
+before. I.e. it was indeed my assumption that the code was right, but
+the description was misleading.
 
-I'll probably want to see a debug message if we're enabling aux
-backlight even if dev_priv->vbt.backlight.type !=
-INTEL_BACKLIGHT_VESA_EDP_AUX_INTERFACE. It's the kind of debug trace
-you'll really want to get first.
-
-BR,
-Jani.
-
-
-
-> +	}
->  
->  	panel->backlight.setup = intel_dp_aux_setup_backlight;
->  	panel->backlight.enable = intel_dp_aux_enable_backlight;
-
--- 
-Jani Nikula, Intel Open Source Graphics Center
+Jan
