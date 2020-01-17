@@ -7,61 +7,57 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99586C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8332DC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C2072083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:44:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55E672083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:44:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579275892;
-	bh=/967xB+/cYvzMsCuYhElAPHe9VnRFEuTWVuo6fHsA7Y=;
+	s=default; t=1579275894;
+	bh=0G8EWTv2WuTcDjwZy69pwthwaxDtpeabMGIUbPuAWjc=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=ADZ+ugLVq1ahQSpLgCLtziv/AU9hvG7QXVzymkIPYDKjjJWyNo9GnfsNoTQyFBmQr
-	 wHDjPK7MBxOBPd6ZJOs/IrlESbNqo2n/vORfgbnb/dKQi/eM+v9unBdqemL9Odd8cC
-	 r4RoLrHCSOD+WD7Ha0oGqBNZOETnNPb47kEoUM1Q=
+	b=OaZ7kQtq/b3DLCndrKacz9/eSOR1U9iqOEOUNG657XZmISc7PJm5GS7VQl6FD9JHr
+	 R4XvW0Te11VEU7Zood+yYlOLWv1d3GMPigJ00I/2x2L0L00XKCo69A/p1ZP82aRpeS
+	 LLMIsmTRJZH6d8dJHDmOh6VSMwuzBVKNJOSl8Slo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729236AbgAQPoa (ORCPT
+        id S1729394AbgAQPox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 10:44:30 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53780 "EHLO
+        Fri, 17 Jan 2020 10:44:53 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54014 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728982AbgAQPoY (ORCPT
+        with ESMTP id S1729219AbgAQPoa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 10:44:24 -0500
+        Fri, 17 Jan 2020 10:44:30 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=nTgcYnW1bBqfkqgXrC6bADcDL5m+JJlT4b9lz90Hafo=; b=bK8g+eoibs1c
-        sshSw5ILQoPvUH2r+fGkJP36wgQioTIfHtdNDfPbwWA9DmXb/4rq0s+zW/8lr66WUmrgq4UzBGnrj
-        GBnZUn9FN81lrYV3PnDWFEtBW9Pb1HIP22SVx5Qbi4ooTjqCeBqgp46ujjrM/Ck9Vok6c6HgwOERw
-        Id7wc=;
+        List-Archive; bh=bubYcWmZxkJa2g3LCd3hNT3lwv8r6SjJCmZojEtnG3c=; b=V5YjMQHfnfmP
+        49ldVECEShgmWIeHNu+ZEfaUf0TNij3yOEwtWN07SOSMlK8lerypiOaPMkl+/CzXDTVJ6/bMVEVIv
+        weYofuBZr41MJsclYXvzS/fmkxkIu5XGQoIz77DWVtlD/VMJYywlGLQB9yYTg0XTUpc0kUuIqb7sN
+        /6sk8=;
 Received: from fw-tnat-cam4.arm.com ([217.140.106.52] helo=fitzroy.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1isTn9-0006rx-Qz; Fri, 17 Jan 2020 15:44:11 +0000
+        id 1isTnM-0006uV-8B; Fri, 17 Jan 2020 15:44:24 +0000
 Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 83ED6D02C26; Fri, 17 Jan 2020 15:44:11 +0000 (GMT)
+        id D6370D02A2A; Fri, 17 Jan 2020 15:44:23 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>
-Cc:     Alexander.Deucher@amd.com, alsa-devel@alsa-project.org,
-        broonie@kernel.org, "Cc:"@sirena.org.uk, "Cc:"@sirena.org.uk,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, moderated@sirena.org.uk,
-        open list <linux-kernel@vger.kernel.org>,
-        Ravulapati@sirena.org.uk, Vishnu@sirena.org.uk,
-        Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: amd: Additional DAI for I2S SP instance." to the asoc tree
-In-Reply-To: <1579261510-12580-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
-Message-Id: <applied-1579261510-12580-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+To:     Tomer Maimon <tmaimon77@gmail.com>
+Cc:     avifishman70@gmail.com, benjaminfair@google.com,
+        broonie@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, mark.rutland@arm.com,
+        openbmc@lists.ozlabs.org, robh+dt@kernel.org,
+        tali.perry1@gmail.com, venture@google.com, yuenn@google.com
+Subject: Applied "spi: npcm-pspi: modify reset support" to the spi tree
+In-Reply-To: <20200115162301.235926-5-tmaimon77@gmail.com>
+Message-Id: <applied-20200115162301.235926-5-tmaimon77@gmail.com>
 X-Patchwork-Hint: ignore
-Date:   Fri, 17 Jan 2020 15:44:11 +0000 (GMT)
+Date:   Fri, 17 Jan 2020 15:44:23 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -69,11 +65,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: amd: Additional DAI for I2S SP instance.
+   spi: npcm-pspi: modify reset support
 
-has been applied to the asoc tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.6
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.6
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -94,54 +90,121 @@ to this mail.
 Thanks,
 Mark
 
-From a174a6c226796824cb2f78157c0b183ed472fa3f Mon Sep 17 00:00:00 2001
-From: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
-Date: Fri, 17 Jan 2020 17:15:09 +0530
-Subject: [PATCH] ASoC: amd: Additional DAI for I2S SP instance.
+From b5df0b2ee2ee6b5bdeb55d76c17f695a1aa5388f Mon Sep 17 00:00:00 2001
+From: Tomer Maimon <tmaimon77@gmail.com>
+Date: Wed, 15 Jan 2020 18:23:01 +0200
+Subject: [PATCH] spi: npcm-pspi: modify reset support
 
-I2S SP instance has separate BCLK and LRCLK for Tx and Rx.
-Creating additional DAI for Rx.
+Modify NPCM perphiral SPI reset support from
+direct register access to reset controller support.
 
-Signed-off-by: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
-Link: https://lore.kernel.org/r/1579261510-12580-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+Link: https://lore.kernel.org/r/20200115162301.235926-5-tmaimon77@gmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/amd/raven/acp3x.h     | 2 +-
- sound/soc/amd/raven/pci-acp3x.c | 8 +++++++-
- 2 files changed, 8 insertions(+), 2 deletions(-)
+ drivers/spi/spi-npcm-pspi.c | 33 +++++++++++----------------------
+ 1 file changed, 11 insertions(+), 22 deletions(-)
 
-diff --git a/sound/soc/amd/raven/acp3x.h b/sound/soc/amd/raven/acp3x.h
-index b6a80dc0b641..21e7ac017f2b 100644
---- a/sound/soc/amd/raven/acp3x.h
-+++ b/sound/soc/amd/raven/acp3x.h
-@@ -13,7 +13,7 @@
- #define TDM_ENABLE 1
- #define TDM_DISABLE 0
+diff --git a/drivers/spi/spi-npcm-pspi.c b/drivers/spi/spi-npcm-pspi.c
+index d224aa63dbce..7e9e747b5626 100644
+--- a/drivers/spi/spi-npcm-pspi.c
++++ b/drivers/spi/spi-npcm-pspi.c
+@@ -12,6 +12,7 @@
+ #include <linux/spi/spi.h>
+ #include <linux/gpio.h>
+ #include <linux/of_gpio.h>
++#include <linux/reset.h>
  
--#define ACP3x_DEVS		3
-+#define ACP3x_DEVS		4
- #define ACP3x_PHY_BASE_ADDRESS 0x1240000
- #define	ACP3x_I2S_MODE	0
- #define	ACP3x_REG_START	0x1240000
-diff --git a/sound/soc/amd/raven/pci-acp3x.c b/sound/soc/amd/raven/pci-acp3x.c
-index 2f9f52905853..65330bb50e74 100644
---- a/sound/soc/amd/raven/pci-acp3x.c
-+++ b/sound/soc/amd/raven/pci-acp3x.c
-@@ -225,7 +225,13 @@ static int snd_acp3x_probe(struct pci_dev *pci,
- 		pdevinfo[2].id = 1;
- 		pdevinfo[2].parent = &pci->dev;
- 		pdevinfo[2].num_res = 1;
--		pdevinfo[2].res = &adata->res[2];
-+		pdevinfo[2].res = &adata->res[1];
-+
-+		pdevinfo[3].name = "acp3x_i2s_playcap";
-+		pdevinfo[3].id = 2;
-+		pdevinfo[3].parent = &pci->dev;
-+		pdevinfo[3].num_res = 1;
-+		pdevinfo[3].res = &adata->res[2];
- 		for (i = 0; i < ACP3x_DEVS; i++) {
- 			adata->pdev[i] =
- 				platform_device_register_full(&pdevinfo[i]);
+ #include <asm/unaligned.h>
+ 
+@@ -20,7 +21,7 @@
+ 
+ struct npcm_pspi {
+ 	struct completion xfer_done;
+-	struct regmap *rst_regmap;
++	struct reset_control *reset;
+ 	struct spi_master *master;
+ 	unsigned int tx_bytes;
+ 	unsigned int rx_bytes;
+@@ -59,12 +60,6 @@ struct npcm_pspi {
+ #define NPCM_PSPI_MIN_CLK_DIVIDER	4
+ #define NPCM_PSPI_DEFAULT_CLK		25000000
+ 
+-/* reset register */
+-#define NPCM7XX_IPSRST2_OFFSET	0x24
+-
+-#define NPCM7XX_PSPI1_RESET	BIT(22)
+-#define NPCM7XX_PSPI2_RESET	BIT(23)
+-
+ static inline unsigned int bytes_per_word(unsigned int bits)
+ {
+ 	return bits <= 8 ? 1 : 2;
+@@ -292,9 +287,9 @@ static int npcm_pspi_unprepare_transfer_hardware(struct spi_master *master)
+ 
+ static void npcm_pspi_reset_hw(struct npcm_pspi *priv)
+ {
+-	regmap_write(priv->rst_regmap, NPCM7XX_IPSRST2_OFFSET,
+-		     NPCM7XX_PSPI1_RESET << priv->id);
+-	regmap_write(priv->rst_regmap, NPCM7XX_IPSRST2_OFFSET, 0x0);
++	reset_control_assert(priv->reset);
++	udelay(5);
++	reset_control_deassert(priv->reset);
+ }
+ 
+ static irqreturn_t npcm_pspi_handler(int irq, void *dev_id)
+@@ -358,10 +353,6 @@ static int npcm_pspi_probe(struct platform_device *pdev)
+ 	if (num_cs < 0)
+ 		return num_cs;
+ 
+-	pdev->id = of_alias_get_id(np, "spi");
+-	if (pdev->id < 0)
+-		pdev->id = 0;
+-
+ 	master = spi_alloc_master(&pdev->dev, sizeof(*priv));
+ 	if (!master)
+ 		return -ENOMEM;
+@@ -371,7 +362,6 @@ static int npcm_pspi_probe(struct platform_device *pdev)
+ 	priv = spi_master_get_devdata(master);
+ 	priv->master = master;
+ 	priv->is_save_param = false;
+-	priv->id = pdev->id;
+ 
+ 	priv->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(priv->base)) {
+@@ -396,11 +386,10 @@ static int npcm_pspi_probe(struct platform_device *pdev)
+ 		goto out_disable_clk;
+ 	}
+ 
+-	priv->rst_regmap =
+-		syscon_regmap_lookup_by_compatible("nuvoton,npcm750-rst");
+-	if (IS_ERR(priv->rst_regmap)) {
+-		dev_err(&pdev->dev, "failed to find nuvoton,npcm750-rst\n");
+-		return PTR_ERR(priv->rst_regmap);
++	priv->reset = devm_reset_control_get(&pdev->dev, NULL);
++	if (IS_ERR(priv->reset)) {
++		ret = PTR_ERR(priv->reset);
++		goto out_disable_clk;
+ 	}
+ 
+ 	/* reset SPI-HW block */
+@@ -421,7 +410,7 @@ static int npcm_pspi_probe(struct platform_device *pdev)
+ 	master->min_speed_hz = DIV_ROUND_UP(clk_hz, NPCM_PSPI_MAX_CLK_DIVIDER);
+ 	master->mode_bits = SPI_CPHA | SPI_CPOL;
+ 	master->dev.of_node = pdev->dev.of_node;
+-	master->bus_num = pdev->id;
++	master->bus_num = -1;
+ 	master->bits_per_word_mask = SPI_BPW_MASK(8) | SPI_BPW_MASK(16);
+ 	master->transfer_one = npcm_pspi_transfer_one;
+ 	master->prepare_transfer_hardware =
+@@ -454,7 +443,7 @@ static int npcm_pspi_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto out_disable_clk;
+ 
+-	pr_info("NPCM Peripheral SPI %d probed\n", pdev->id);
++	pr_info("NPCM Peripheral SPI %d probed\n", master->bus_num);
+ 
+ 	return 0;
+ 
 -- 
 2.20.1
 
