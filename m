@@ -2,112 +2,108 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7DD7C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 07:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F23DC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 07:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAF2520748
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 07:57:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579247838;
-	bh=IjBrACMENfRnrwziX1OEE1eyJl5/3tzabzgvyUShm1I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LmV76kSOn01hOtbTB5WBqLy4PEIw6BmftzC+l/HH3BqzsbmIDP7md0zj3PzN7dJ80
-	 RQ846bDPFdVEUSHpyXnLpVXXslTtIjgSDF4JE6GQACPnITSWAZspHdtOQQjV1xbeQI
-	 lwCXXSepDuDDmeksuTgiRj5ASBpC1oBqDscG+TFk=
+	by mail.kernel.org (Postfix) with ESMTP id 412162073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 07:57:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rc+l/Rv9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729380AbgAQH5R (ORCPT
+        id S1729431AbgAQH5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 02:57:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59318 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726981AbgAQH5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 02:57:17 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB06F2073A;
-        Fri, 17 Jan 2020 07:57:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579247837;
-        bh=IjBrACMENfRnrwziX1OEE1eyJl5/3tzabzgvyUShm1I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HpCzoCI0TIWJEgVLCtHfO8Hp+0Dvw3u2nPSEiGBGbErrdSRrwaBCqnKeHZjW1kl/c
-         Jyy7rGb1AMTPQeeePJwKy8lEMO1Im5H5jW5jGrSStB9WkiRZbvf50bwLbsPRN9zZ/L
-         cy2hKbOSj+7ZOLd7cxvwSDhZ3JQ/I8Pq+ly8OU+I=
-Date:   Fri, 17 Jan 2020 08:57:14 +0100
-From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH] mfd: bd70528: Fix hour register mask
-Message-ID: <20200117075714.GA1822218@kroah.com>
-References: <20200115082933.GA29117@localhost.localdomain>
- <83e8e1ecc40a58e2e6d1960bbb41c8dcfe730ce1.camel@fi.rohmeurope.com>
+        Fri, 17 Jan 2020 02:57:41 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42428 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729125AbgAQH5k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 02:57:40 -0500
+Received: by mail-lj1-f195.google.com with SMTP id y4so25469800ljj.9
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 23:57:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=9pVB+0P7nfsJ3yw8f27fOejAwfBrljBWFRRLcIw8Iyo=;
+        b=Rc+l/Rv9m/ZgvuQmdU48ZHmimFov2VXRkFP5lEQwoadwha6Oef+WXSfBES2zbBCx/h
+         NNkM6Tj44JJ+76mP4cz4ZLHFvN5TRmqFaY96jC+NlxXTggJwdVtNYm+o3yC23Llv57uw
+         YcAix08P8IWYp/xu7PfwWu/fKyRgJrS4A4RQndR+TbN4TEbmiF7guUh2WDLidqfDAzvg
+         TFhLa2bpV9p5Av+imffz4msprTQvRhpyFIOw4YNqSuSsbJiCKFRz3ixfblLnTwTpxqL2
+         yPyEchnDgmpERX/DoXwwai2Yrn6AmB6hRn+0NoWbii8oG8BIfeO2t5CYCaRxiPgpAta1
+         ijrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=9pVB+0P7nfsJ3yw8f27fOejAwfBrljBWFRRLcIw8Iyo=;
+        b=Z8wr5zviLmkTPy7UygSFzKiOWhU721Y8YRc+1IlWwf7xpz9zyehNYYGpRYXZZAGJbK
+         j6ciWCvtyDMT8O+x5Fj+fMP4cqcbmYCe0uEpJ7JM88Wg/EWYiRRi4OAkjlrY5iTst5W0
+         zKBFkwNd+JJoTV4+yroKn3eo87rdifpdcVXtzWthfRA8n1GVMngPemUdMAIO7BJGxUHo
+         li7JzhYvZwPuul214z3A7O2KFsLtrBiu6o0127/Ac0rGX0m54iizQvvqSbJP7PgsrLxz
+         x+884jcIrytt/EHErxi2GGY55XBPJ0t/YBD+AsIA6t5MRlMFCOSpxsfOM7086g7XLWvA
+         MZDQ==
+X-Gm-Message-State: APjAAAV13yL1+S4PBOnMWZT83oDzFk9L+Gh7oqVLBauwRGDglyTEGA6X
+        vyBDeCoiWIHJdehuEwv06G1son0O5DWw2a9baDTzOQ==
+X-Google-Smtp-Source: APXvYqx3hxlXD94SSEkmtAQv90zVU0pdzIvcV/Q+Q2Smp4R1vzTVUUxtUbrlf9A0GfNNbLuErH9hB2dBBeyYJ4MDDHc=
+X-Received: by 2002:a2e:918c:: with SMTP id f12mr4948308ljg.66.1579247857887;
+ Thu, 16 Jan 2020 23:57:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <83e8e1ecc40a58e2e6d1960bbb41c8dcfe730ce1.camel@fi.rohmeurope.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 17 Jan 2020 08:57:27 +0100
+Message-ID: <CACRpkdatPeRrqDzb7ynELvRD_TUfjAc3XCYPKmE5BrQdFXakiQ@mail.gmail.com>
+Subject: [GIT PULL] gpio fixes for v5.5
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Kevin Hao <haokexin@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 07:44:07AM +0000, Vaittinen, Matti wrote:
-> Hello Lee, Alexandre, Greg & Sasha
-> 
-> On Wed, 2020-01-15 at 10:29 +0200, Matti Vaittinen wrote:
-> > When RTC is used in 24H mode (and it is by this driver) the maximum
-> > hour value is 24 in BCD. This occupies bits [5:0] - which means
-> > correct mask for HOUR register is 0x3f not 0x1f. Fix the mask
-> > 
-> > Fixes: 32a4a4ebf768 ("rtc: bd70528: Initial support for ROHM bd70528
-> > RTC")
-> > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> > ---
-> > 
-> > I just noticed this was never applied. I'd like to get this in as
-> > we currently have bd70528 RTC not working in few exiting releases.
-> > (Or it works as long as time is not set at the evening :/)
-> > 
-> > I think this once was in RTC tree but was dropped as Lee mentioned
-> > this
-> > belongs to MFD. Thus I dared to add the Alexandre's acked-by - please
-> > let me know if this is not Ok.
-> > 
-> > Lee, can you please pull this in so that we get the fix
-> > in-tree? I guess the fixes tag helps this to be included in some
-> > existing branches.
-> 
-> Actually - I don't know if applying this in MFD is good idea. The
-> BD71828 support series
-> 
-> (
-> https://lore.kernel.org/lkml/cover.1579078681.git.matti.vaittinen@fi.rohmeurope.com/
-> )
-> 
-> will fix this when applied (and conflict with this if both are
-> applied). I would like to get this fix in 5.4 though - but I don't
-> think the BD71828 series should be in 5.4.
-> 
-> Is it possible to get this in 5.4 stable - while leaving this out of
-> current MFD tree and applying the BD71828 series to MFD?
+Hi Linus,
 
-We only take patches that are in Linus's tree for the stable tree,
-unless there are very big reasons not to do so (i.e. it is totally
-rewritten in a different way there.)
+a GPIO fix for the ThunderX is all that appeared in the last week(s).
+The revert affects a single driver on a rare piece
+of silicon.
 
-Once the change/fix is in Linus's tree, then you can backport it to
-stable in a different way if you want, but you need to give lots of
-reasons why it is done that way.
+Please pull it in!
 
-thanks,
+Yours,
+Linus Walleij
 
-greg k-h
+The following changes since commit b3a987b0264d3ddbb24293ebff10eddfc472f653:
+
+  Linux 5.5-rc6 (2020-01-12 16:55:08 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
+tags/gpio-v5.5-4
+
+for you to fetch changes up to a564ac35d60564dd5b509e32afdc04e7aafee40e:
+
+  Revert "gpio: thunderx: Switch to GPIOLIB_IRQCHIP" (2020-01-15 11:17:21 +0100)
+
+----------------------------------------------------------------
+GPIO fixes for the v5.5 series:
+
+This reverts the GPIOLIB_IRQCHIP in the ThunderX driver.
+ThunderX is a piece of Arm-based server chip. I converted the driver to
+hierarchical gpiochip without access to real silicon and failed miserably
+since I didn't take MSI's into account.
+
+Kevin Hao helpfully stepped in and fixed it properly, let's revert it for
+v5.5 and put the proper conversion into v5.6.
+
+----------------------------------------------------------------
+Kevin Hao (1):
+      Revert "gpio: thunderx: Switch to GPIOLIB_IRQCHIP"
+
+ drivers/gpio/Kconfig         |   1 -
+ drivers/gpio/gpio-thunderx.c | 163 ++++++++++++++++++++++++++++---------------
+ 2 files changed, 107 insertions(+), 57 deletions(-)
