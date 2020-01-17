@@ -2,92 +2,91 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A38C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5873EC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D08C2064C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:01:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K7yil8bi"
+	by mail.kernel.org (Postfix) with ESMTP id 2544C2064C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:03:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579277015;
+	bh=6At2q0If10WxCD1jfLFBD2UadJLxWLIxOurliWYb72M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=d2gVIyls+eviKeA83AjM/r109yazlHqtSDbzM/EaKdTrSUhiy3zy+cDtK01V5yJaK
+	 qugZ1IRFb3ez8zct1qtUr2mKkENhhfpiJBwgJlV3uMGINZK1CFfGOooaW6q3LrQZwC
+	 vya9AskhhtYQI+EO0MPCZZ5xZgcLaIvUqp8uFhFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729252AbgAQQBu (ORCPT
+        id S1729145AbgAQQDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 11:01:50 -0500
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:40378 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727043AbgAQQBu (ORCPT
+        Fri, 17 Jan 2020 11:03:34 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:42385 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727043AbgAQQDe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 11:01:50 -0500
-Received: by mail-yb1-f193.google.com with SMTP id l197so4695319ybf.7;
-        Fri, 17 Jan 2020 08:01:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=G1m7fwdipTUrgXKvWUzuO8jGlXuTbd2dnX5HLdxRAbw=;
-        b=K7yil8biJXivZFq89eCAVb75/rniuAHi9cRBM2jxFqmWxE1Sw0vkwpa3k274KPSqTZ
-         PMRxPLqMsTTfYMLy16B6IZJWo1SKFvPFosH/RI/keGPhlhpZ3lpLtoSf2T/OOKY3Bxb9
-         WHh5ootfqfVNuT+BEtblOL9VxkGnJLO8F9FvzLMSeoK6wgWQPxkYZRhdPwzukRtxGpjB
-         8u4IJ56Fj2rZ2Gdrzg/J6Ap0jvVG3/K/n+edx6XVtJzmv56ypAv8LaeX9pOpDycSTDV8
-         eRhDKmh7FerGEPNoE1Rz9eCnR9EI3VGM49G4goKuFOJ5RKeC8JVTs3uTpzUPyn33GxbB
-         R8MQ==
+        Fri, 17 Jan 2020 11:03:34 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 66so22921734otd.9;
+        Fri, 17 Jan 2020 08:03:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=G1m7fwdipTUrgXKvWUzuO8jGlXuTbd2dnX5HLdxRAbw=;
-        b=feRLYTjA9xqZj5SYIFtX0d2DXj71vgmNb+5NXtTwlSIPFr0sHWq3zV/Q8CMyK2eJ+1
-         cE16H8xmvE/4FrChGALGNdMoEfUkkLnCOI3NyPU1Lgu7N5ZKyx7/nrXqba+XrUjI3/SP
-         v+Td05KlKY49l3HoXDcYV8KnVMqlhGmpb3Dlxi14Im1x1ICIdJHVmOnGa7cPyBNak8Az
-         bzLix3VsNMDvKcq3AGu0s+FHK4uOe1hsil6nPhcdKgYdgXY9l0W+VXixvcLyhWfmF6Ys
-         3/hqJBbPjRLofwA7kfDfNggUUtRffuRBtSXF1U12ChW1AiIMHwuOV6/TAlnKLQqY4747
-         zq9w==
-X-Gm-Message-State: APjAAAU6Wx1rwHHuAZRuNracpW5vkAdXMdiBRS3qbYbsw48UnJQIxdfm
-        UpWJu8rPmsNmXBaD/k8hao0=
-X-Google-Smtp-Source: APXvYqwWhJbcJJ4v8rxGtVJ4XVwhdMD7O1nSa3sJO3UwDQQzybYU008Q6WKHDa/t/Rvr/1e3M4MI9g==
-X-Received: by 2002:a5b:788:: with SMTP id b8mr17173343ybq.223.1579276909205;
-        Fri, 17 Jan 2020 08:01:49 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id t3sm12058062ywi.18.2020.01.17.08.01.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 17 Jan 2020 08:01:48 -0800 (PST)
-Date:   Fri, 17 Jan 2020 08:01:47 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.4 000/203] 5.4.13-stable review
-Message-ID: <20200117160147.GC25706@roeck-us.net>
-References: <20200116231745.218684830@linuxfoundation.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cc+2p/NdA2drwwZu+ds0cTqC+QOcu+GLQ3qVjGXmwRQ=;
+        b=JcMdD1uwsgLOkMvVOLTprtJuk2IDVYTdtlQIkJ8jNWO9iv1BPoiH8TSCkpfNW6UcYV
+         4izQizI+dtkV5JaeQxfiBR0TFKwEvh7psV8NfrqFbbFaCjTMXuEolKMgIzafmAanb15J
+         zODNYdX0FAsbZUaYVG2+a1inKURG5y+/9Yce2bHX9Ckd6EnlewIn+On5tVI3P0HITOGS
+         NC+q8l+umEXnvuEnsGVQJ7P+2Fgj2cMjprQ3b7I+HWhqs7aeH1fr9fE2An9GhhHNOiCk
+         3e4MVtjuaK/v87AOkiAAydtIBTDTYgLNOyBqM/jtKeB6tJwhf5z6E5hKUFOvMjqtTJVC
+         cSRg==
+X-Gm-Message-State: APjAAAV0z1tu6H2YKO2V9ds7q0CuxjNH0LjRl+NttlCP28l9s4wNnqFW
+        ebBSeQ7akEwnovDqMBwCxQ==
+X-Google-Smtp-Source: APXvYqwStuMK0QFk68kshtVW2xFzRr4VY3Yud366nVGYgDR/8no0d8SbTl51F5kthpK2jtrWklQcQg==
+X-Received: by 2002:a9d:5c86:: with SMTP id a6mr6621526oti.68.1579277012884;
+        Fri, 17 Jan 2020 08:03:32 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id f3sm8941303otl.38.2020.01.17.08.03.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2020 08:03:31 -0800 (PST)
+Received: (nullmailer pid 15163 invoked by uid 1000);
+        Fri, 17 Jan 2020 16:03:29 -0000
+Date:   Fri, 17 Jan 2020 10:03:29 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Remi Pommarel <repk@triplefau.lt>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Yue Wang <yue.wang@Amlogic.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>
+Subject: Re: [PATCH v5 1/7] dt-bindings: Add AXG PCIE PHY bindings
+Message-ID: <20200117160329.GA15110@bogus>
+References: <20200116111850.23690-1-repk@triplefau.lt>
+ <20200116111850.23690-2-repk@triplefau.lt>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200116231745.218684830@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200116111850.23690-2-repk@triplefau.lt>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 12:15:17AM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.13 release.
-> There are 203 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Thu, 16 Jan 2020 12:18:44 +0100, Remi Pommarel wrote:
+> Add documentation for PCIE PHYs found in AXG SoCs.
 > 
-> Responses should be made by Sat, 18 Jan 2020 23:16:00 +0000.
-> Anything received after that time might be too late.
+> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+> ---
+>  .../bindings/phy/amlogic,meson-axg-pcie.yaml  | 48 +++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
 > 
 
-Build results:
-	total: 158 pass: 158 fail: 0
-Qemu test results:
-	total: 389 pass: 389 fail: 0
-
-Guenter
+Reviewed-by: Rob Herring <robh@kernel.org>
