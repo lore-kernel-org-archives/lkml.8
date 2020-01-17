@@ -2,102 +2,118 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC565C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 20:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACEF9C33CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 20:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB2C02087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 20:41:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579293678;
-	bh=X+HN8JA8Xxvdsg8uqHSGhQAuKo7DGP04S09Aa7FL/CU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=xH3bgVLhyavnqxRMBI963EhVZv8++5QKS7RmP36AXaZ9eAqEvhb/itttPmGzABqR9
-	 KO2RjpVFy3/RCNwOr4ljRkRpCqHVRl4b9W4EcKbN5vUrWUpU/k1dTrS0Xj1taS74r6
-	 iSl6NDa7+N4fvzh0v0jk5ZOTDphhEdOEt4oDbYiM=
+	by mail.kernel.org (Postfix) with ESMTP id 8582B2072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 20:41:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="nn60vdPY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729777AbgAQUlS (ORCPT
+        id S1729817AbgAQUlf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 15:41:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56818 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727519AbgAQUlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 15:41:17 -0500
-Received: from localhost (187.sub-174-234-133.myvzw.com [174.234.133.187])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00EBA2072E;
-        Fri, 17 Jan 2020 20:41:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579293677;
-        bh=X+HN8JA8Xxvdsg8uqHSGhQAuKo7DGP04S09Aa7FL/CU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=zAbWCcjEPpYO5qaR8+LvWr1qAZhtcTHoGqsK0nGWhln0iZrm3FZgs3CuVsZtWRldg
-         KpjorYVAZaj58XfKaPP1ud7QblYwtxOBpVVIBkoARr2QUQbZZGOO/GiEmFW3vvqV9f
-         SDYFyuEb+ipV5kw195W6N9YLcRQOvHzoEodTb1aM=
-Date:   Fri, 17 Jan 2020 14:41:15 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Huong Nguyen <huong.nguyen@dell.com>,
-        Austin Bolen <Austin.Bolen@dell.com>
-Subject: Re: [PATCH v12 8/8] PCI/ACPI: Enable EDR support
-Message-ID: <20200117204115.GA126492@google.com>
+        Fri, 17 Jan 2020 15:41:35 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:42006 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727519AbgAQUlf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 15:41:35 -0500
+Received: by mail-il1-f195.google.com with SMTP id t2so22336829ilq.9
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 12:41:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=l67Q2JaZUuxYTTc14dadVG8CPVycSfA7W0h/5578mZM=;
+        b=nn60vdPY5om2CTLHZCbVBXuD2dZtq3zIDLFjv2f6o6pOmcpQs/R92aqkvIGklG1VpR
+         XpNW7h8CCl1ZSya8QZWLffcfrqvDWXl5mpvfQHLU6HDBeUc1PDAD56OIt0QJlcN/XWZ+
+         2sTUPoSecKfaTR2L4Ci21mLETPNqvNgPUoYE0OSz2plDFr+UCSZjkOPhI+GiEOQaaJ8H
+         oP6PnPn12MdknimQ5M8Fe85zN/+BQVIoG07WB//UeFh1qz+ilqI3tk07zQRi2qS27RNW
+         YwaR7d0Hzjdm+XiTGhn0sXAazXuwx8zTapGag25WVCVYr78/TJf9U8BhImtBvcbES8t6
+         qk3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=l67Q2JaZUuxYTTc14dadVG8CPVycSfA7W0h/5578mZM=;
+        b=d3ymnaQE0m2WOOCykpfU1ym82lXF+ywpGlaydqpJDpdFVY30uk5neG3CUjaj/X6/Gs
+         vyrU1fIcuMaQ+Jd/OssHXYFO4MeUVB0NIiKV2M8vUue/6szgoSpoVXAu1tBFE6l6bcXH
+         HiCE50LCb95ny8W0h7/rRFmBR3n9SXA99DS77FP1iEHEDwqPnRh4nwhcg10AebM0KhU/
+         RSHUgemQCX7Cb/hHVKYjz+DpfitiU5Qi0Gso2fC26KXY5iCoU74WejYG+TUIcKuN89qC
+         ehZM1g6GY2X86mqTU+NMjUhH4oo1X+iYf6OJ0FSPlXn3zWVDyX8+lEPXgyFeqErPulql
+         Il7w==
+X-Gm-Message-State: APjAAAV+e5N04i5Yv3Ms95JnLnGLErhBXKc5eGg31l30bN54ru2dTXaJ
+        PiueIK/WzrMhfQUCLrrBe4JvJA==
+X-Google-Smtp-Source: APXvYqyhD/DuCNRVkINRezmPM4CoIncLA7Blgo9UbiMKgcAlY+o2QZJtykuXI74GzHHVKdxUjToU5w==
+X-Received: by 2002:a92:ba93:: with SMTP id t19mr369490ill.0.1579293694120;
+        Fri, 17 Jan 2020 12:41:34 -0800 (PST)
+Received: from localhost ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id x77sm8237951ilk.34.2020.01.17.12.41.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2020 12:41:33 -0800 (PST)
+Date:   Fri, 17 Jan 2020 12:41:31 -0800 (PST)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Michal Simek <michal.simek@xilinx.com>
+cc:     linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
+        Christoph Hellwig <hch@lst.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        linux-mips@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-s390@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>,
+        x86@kernel.org, Guo Ren <guoren@kernel.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Wesley Terpstra <wesley@sifive.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        linux-xtensa@linux-xtensa.org, "H. Peter Anvin" <hpa@zytor.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Chris Zankel <chris@zankel.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        James Hogan <jhogan@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+Subject: Re: [PATCH v2 1/2] asm-generic: Make dma-contiguous.h a mandatory
+ include/asm header
+In-Reply-To: <0274919c5e3b134df19d943f99cb7e84e5135ccd.1579248206.git.michal.simek@xilinx.com>
+Message-ID: <alpine.DEB.2.21.9999.2001171241070.98477@viisi.sifive.com>
+References: <cover.1579248206.git.michal.simek@xilinx.com> <0274919c5e3b134df19d943f99cb7e84e5135ccd.1579248206.git.michal.simek@xilinx.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a15c5467ab8d52ede096b598e14c1beae1ce8e48.1578682741.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 12, 2020 at 02:44:02PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+On Fri, 17 Jan 2020, Michal Simek wrote:
+
+> dma-continuguous.h is generic for all architectures except arm32 which has
+> its own version.
 > 
-> As per PCI firmware specification r3.2 Downstream Port Containment
-> Related Enhancements ECN, sec 4.5.1, OS must implement following steps
-> to enable/use EDR feature.
+> Similar change was done for msi.h by commit a1b39bae16a6
+> ("asm-generic: Make msi.h a mandatory include/asm header")
 > 
-> 1. OS can use bit 7 of _OSC Control Field to negotiate control over
-> Downstream Port Containment (DPC) configuration of PCIe port. After _OSC
-> negotiation, firmware will Set this bit to grant OS control over PCIe
-> DPC configuration and Clear it if this feature was requested and denied,
-> or was not requested.
-> 
-> 2. Also, if OS supports EDR, it should expose its support to BIOS by
-> setting bit 7 of _OSC Support Field. And if OS sets bit 7 of _OSC
-> Control Field it must also expose support for EDR by setting bit 7 of
-> _OSC Support Field.
+> Suggested-by: Christoph Hellwig <hch@infradead.org>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 
-> --- a/drivers/pci/pcie/portdrv_core.c
-> +++ b/drivers/pci/pcie/portdrv_core.c
-> @@ -253,10 +253,13 @@ static int get_port_device_capability(struct pci_dev *dev)
->  	/*
->  	 * With dpc-native, allow Linux to use DPC even if it doesn't have
->  	 * permission to use AER.
-> +	 * If EDR support is enabled in OS, then even if AER is not handled in
-> +	 * OS, DPC service can be enabled.
+Acked-by: Paul Walmsley <paul.walmsley@sifive.com> # for arch/riscv
 
-Can you clarify this comment?  It talks about AER, but the code you
-added:
 
-  (IS_ENABLED(CONFIG_PCIE_EDR) && !host->native_dpc)
-
-doesn't have anything to do with AER.
-
->  	 */
->  	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
-> -	    pci_aer_available() &&
-> -	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
-> +	    ((IS_ENABLED(CONFIG_PCIE_EDR) && !host->native_dpc) ||
-> +	    (pci_aer_available() &&
-> +	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))))
->  		services |= PCIE_PORT_SERVICE_DPC;
+- Paul
