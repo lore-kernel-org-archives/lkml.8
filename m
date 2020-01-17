@@ -2,176 +2,189 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8037C33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 20:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43EB4C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 20:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2B2620748
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 20:21:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E4DC20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 20:24:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RaocN2Vw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Me3lnXCd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729730AbgAQUVy (ORCPT
+        id S1729710AbgAQUYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 15:21:54 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43755 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727519AbgAQUVy (ORCPT
+        Fri, 17 Jan 2020 15:24:22 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43413 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727519AbgAQUYW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 15:21:54 -0500
+        Fri, 17 Jan 2020 15:24:22 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579292513;
+        s=mimecast20190719; t=1579292661;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=ZvKx1Czra6EoUEQ9CtfFs9u9YO5nby30A33ADtqe8Fw=;
-        b=RaocN2Vwf/tImWXVR8+fSdPluuI5ifkiM+SCllo7Dz+zE5ohbUec1Ea1Sb6R51Ljl3DkB/
-        1qbEts1t2u44M0LLgIECEiUQCIuizEN7+L1duIqQS+TbUtuVEGQeWtA+BiMdnq1DkLC4v9
-        F39pK2N2hg4YehIJR9LRkj2myrw3j5E=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-17-YS719jqoNNCqNbAlhgJREA-1; Fri, 17 Jan 2020 15:21:50 -0500
-X-MC-Unique: YS719jqoNNCqNbAlhgJREA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 859018017CC;
-        Fri, 17 Jan 2020 20:21:49 +0000 (UTC)
-Received: from madcap2.tricolour.ca (ovpn-112-12.phx2.redhat.com [10.3.112.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3706460BE1;
-        Fri, 17 Jan 2020 20:21:42 +0000 (UTC)
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
-        omosnace@redhat.com, nhorman@redhat.com, eparis@parisplace.org,
-        Richard Guy Briggs <rgb@redhat.com>
-Subject: [PATCH ghak28 V4] audit: log audit netlink multicast bind and unbind events
-Date:   Fri, 17 Jan 2020 15:21:02 -0500
-Message-Id: <ca70ee17d85860aa599e0001a75d639d819de7ae.1579292286.git.rgb@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Mf9AA1Vrd3DLvKm6Ua6uODP6RU9/ZU9r8t0dJGIFs0Q=;
+        b=Me3lnXCdvVCtxDfHvpElbM7ysmXPPBSBDWyxn5OnXjRB6Zwp1vZy9x56rCOg0XdlLjtl1f
+        4iI1726fs8DN55v11cuGq1FbH+4fAQ/W53J4NYKUbqxjuYTsXE88yByfr0BqCpPYK+V9Bp
+        CEHj/LIzxni6SUCV50KG0XQqvbnjpxA=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-104-IGH7PCvtNcSWqha0y5CM5w-1; Fri, 17 Jan 2020 15:24:16 -0500
+X-MC-Unique: IGH7PCvtNcSWqha0y5CM5w-1
+Received: by mail-qv1-f69.google.com with SMTP id e10so16317830qvq.18
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 12:24:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:organization:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=Mf9AA1Vrd3DLvKm6Ua6uODP6RU9/ZU9r8t0dJGIFs0Q=;
+        b=NgFN480wqlutQbnP5iwWxq98PDFo6IwHkmWAq/ZLqyI1vRnpQBpxvTQKO1l5LmZqmA
+         U8ZKD78HZ976+NDOOD32gk7nzRlQkgrE1KxdnmjGYS7++dbwMc6nyGOcPUilAnU6s7Y5
+         Em+EZ8nRrWbrG17mIJc0hK0MQgmaBgBho8U/stMLKzHGuxNYc7BOVcCE0ZzZgzAd0fn/
+         8nastFZEM/GL9FVAHtKq0mguxySoHjbXoEmMkjDmsf5t4UCWL6KlMJxOomdtD7NKBKuj
+         DmnWD05kWHCWSMVDQOQrHtyNRjTuDx9E1t3STr6Bx8uj+/52qCC+FLvMlU8a7gtowQXH
+         H+2Q==
+X-Gm-Message-State: APjAAAUfPfi75rKZJBX/WT+I9wLJjHovObc9hdlMzpdTfvlDIykswq2y
+        18VLumDXR9dDbTYpqRw06huu3Z+R6JiLnoxNyXpxAaWSZyS2Fx2jNXoSCx/DBhD6O0XQqUb5VnB
+        P6Ww0REg4Trxp2Ci75+/mTIFQ
+X-Received: by 2002:a37:4894:: with SMTP id v142mr34009522qka.220.1579292655446;
+        Fri, 17 Jan 2020 12:24:15 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwlUDiTuA85gc4BfifYDTWJNreGhhsYLQMYYCP9814iR0p9cnrDza9FwVuJ5nHHKd2SwlXFlg==
+X-Received: by 2002:a37:4894:: with SMTP id v142mr34009504qka.220.1579292655192;
+        Fri, 17 Jan 2020 12:24:15 -0800 (PST)
+Received: from dhcp-10-20-1-90.bss.redhat.com ([144.121.20.162])
+        by smtp.gmail.com with ESMTPSA id q130sm12169501qka.114.2020.01.17.12.24.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2020 12:24:14 -0800 (PST)
+Message-ID: <05569e0b86c62589e67a9355159e9db8e42c0820.camel@redhat.com>
+Subject: Re: [PATCH v3 4/5] drm/i915: Don't use VBT for detecting DPCD
+ backlight controls
+From:   Lyude Paul <lyude@redhat.com>
+To:     Jani Nikula <jani.nikula@intel.com>,
+        intel-gfx@lists.freedesktop.org
+Cc:     dri-devel@lists.freedesktop.org, Perry Yuan <pyuan@redhat.com>,
+        AceLan Kao <acelan.kao@canonical.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Ville =?ISO-8859-1?Q?Syrj=E4l=E4?= 
+        <ville.syrjala@linux.intel.com>,
+        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+        Lee Shawn C <shawn.c.lee@intel.com>,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 17 Jan 2020 15:24:13 -0500
+In-Reply-To: <87zhemgvrn.fsf@intel.com>
+References: <20200116211623.53799-1-lyude@redhat.com>
+         <20200116211623.53799-5-lyude@redhat.com> <87zhemgvrn.fsf@intel.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Log information about programs connecting to and disconnecting from the
-audit netlink multicast socket. This is needed so that during
-investigations a security officer can tell who or what had access to the
-audit trail.  This helps to meet the FAU_SAR.2 requirement for Common
-Criteria.  Here is the systemd startup event:
+On Fri, 2020-01-17 at 13:36 +0200, Jani Nikula wrote:
+> On Thu, 16 Jan 2020, Lyude Paul <lyude@redhat.com> wrote:
+> > Despite the fact that the VBT appears to have a field for specifying
+> > that a system is equipped with a panel that supports standard VESA
+> > backlight controls over the DP AUX channel, so far every system we've
+> > spotted DPCD backlight control support on doesn't actually set this
+> > field correctly and all have it set to INTEL_BACKLIGHT_DISPLAY_DDI.
+> > 
+> > While we don't know the exact reason for this VBT misuse, talking with
+> > some vendors indicated that there's a good number of laptop panels out
+> > there that supposedly support both PWM backlight controls and DPCD
+> > backlight controls as a workaround until Intel supports DPCD backlight
+> > controls across platforms universally. This being said, the X1 Extreme
+> > 2nd Gen that I have here (note that Lenovo is not the hardware vendor
+> > that informed us of this) PWM backlight controls are advertised, but
+> > only DPCD controls actually function. I'm going to make an educated
+> > guess here and say that on systems like this one, it's likely that PWM
+> > backlight controls might have been intended to work but were never
+> > really tested by QA.
+> > 
+> > Since we really need backlights to work without any extra module
+> > parameters, let's take the risk here and rely on the standard DPCD caps
+> > to tell us whether AUX backlight controls are supported or not. We still
+> > check the VBT, but only to make sure that we don't enable DPCD backlight
+> > controls on a panel that uses something other then the standard VESA
+> > interfaces over AUX. Since panels using such non-standard interfaces
+> > should probably have support added to i915, we'll print a warning when
+> > seeing this in the VBT. We can remove this warning later if we end up
+> > adding support for any custom backlight interfaces.
+> > 
+> > Signed-off-by: Lyude Paul <lyude@redhat.com>
+> > Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=112376
+> > Cc: Jani Nikula <jani.nikula@intel.com>
+> > Cc: Perry Yuan <pyuan@redhat.com>
+> > Cc: AceLan Kao <acelan.kao@canonical.com>
+> > ---
+> >  .../drm/i915/display/intel_dp_aux_backlight.c    | 16 ++++++++++------
+> >  1 file changed, 10 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
+> > b/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
+> > index 77a759361c5c..3002b600635f 100644
+> > --- a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
+> > +++ b/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
+> > @@ -330,13 +330,17 @@ int intel_dp_aux_init_backlight_funcs(struct
+> > intel_connector *intel_connector)
+> >  	struct intel_panel *panel = &intel_connector->panel;
+> >  	struct drm_i915_private *dev_priv = to_i915(intel_connector-
+> > >base.dev);
+> >  
+> > -	if (i915_modparams.enable_dpcd_backlight == 0 ||
+> > -	    (i915_modparams.enable_dpcd_backlight == -1 &&
+> > -	    dev_priv->vbt.backlight.type !=
+> > INTEL_BACKLIGHT_VESA_EDP_AUX_INTERFACE))
+> > -		return -ENODEV;
+> > -
+> > -	if (!intel_dp_aux_display_control_capable(intel_connector))
+> > +	if (i915_modparams.enable_dpcd_backlight == 0)
+> >  		return -ENODEV;
+> > +	if (i915_modparams.enable_dpcd_backlight == -1) {
+> > +		if (dev_priv->vbt.backlight.type
+> > +		    == INTEL_BACKLIGHT_PANEL_DRIVER_INTERFACE) {
+> > +			DRM_WARN("VBT says panel uses custom panel driver
+> > interface, not using DPCD backlight controls\n");
+> > +			return -ENODEV;
+> > +		}
+> > +		if (!intel_dp_aux_display_control_capable(intel_connector))
+> > +			return -ENODEV;
+> 
+> Functionally, I'm fine with trying this. But perhaps we should check aux
+> and early return first, and then check what vbt says, to reduce the
+> dmesg noise.
+> 
+> I'll probably want to see a debug message if we're enabling aux
+> backlight even if dev_priv->vbt.backlight.type !=
+> INTEL_BACKLIGHT_VESA_EDP_AUX_INTERFACE. It's the kind of debug trace
+> you'll really want to get first.
 
-type=UNKNOWN[1335] msg=audit(2020-01-17 10:30:33.731:6) : pid=1 uid=root auid=unset tty=(none) ses=unset subj=kernel comm=systemd exe=/usr/lib/systemd/systemd nl-mcgrp=1 op=connect res=yes
-
-And the events from the test suite:
-
-type=PROCTITLE msg=audit(2020-01-17 10:36:24.050:294) : proctitle=/usr/bin/perl -w amcast_joinpart/test
-type=SOCKADDR msg=audit(2020-01-17 10:36:24.050:294) : saddr={ saddr_fam=netlink nlnk-fam=16 nlnk-pid=0 }
-type=SYSCALL msg=audit(2020-01-17 10:36:24.050:294) : arch=x86_64 syscall=bind success=yes exit=0 a0=0x7 a1=0x55d65cb79090 a2=0xc a3=0x0 items=0 ppid=671 pid=674 auid=root uid=root gid=root euid=root suid=root fsuid=root egid=root sgid=root fsgid=root tty=ttyS0 ses=3 comm=perl exe=/usr/bin/perl subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 key=(null)
-type=UNKNOWN[1335] msg=audit(2020-01-17 10:36:24.050:294) : pid=674 uid=root auid=root tty=ttyS0 ses=3 subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 comm=perl exe=/usr/bin/perl nl-mcgrp=1 op=connect res=yes
-
-type=UNKNOWN[1335] msg=audit(2020-01-17 10:36:24.051:295) : pid=674 uid=root auid=root tty=ttyS0 ses=3 subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 comm=perl exe=/usr/bin/perl nl-mcgrp=1 op=disconnect res=yes
-
-Please see the upstream issue tracker:
-  https://github.com/linux-audit/audit-kernel/issues/28
-  https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Multicast-Socket-Join-Part
-  https://github.com/rgbriggs/audit-testsuite/compare/ghak28-mcast-part-join
-
-Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-
----
-Note: msg type 1334 was skipped due to BPF accepted in another tree.
-Note: v5 due to previous 2014-10-07, 2015-07-23, 2016-11-30, 2017-10-13
-Note: subj attrs included due to missing syscall record for systemd (audit=1)
-Note: tried refactor of subj attrs, but this is yet another new order.
----
- include/uapi/linux/audit.h |  1 +
- kernel/audit.c             | 48 ++++++++++++++++++++++++++++++++++++++++++----
- 2 files changed, 45 insertions(+), 4 deletions(-)
-
-diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
-index 3ad935527177..67fb24472dc2 100644
---- a/include/uapi/linux/audit.h
-+++ b/include/uapi/linux/audit.h
-@@ -116,6 +116,7 @@
- #define AUDIT_FANOTIFY		1331	/* Fanotify access decision */
- #define AUDIT_TIME_INJOFFSET	1332	/* Timekeeping offset injected */
- #define AUDIT_TIME_ADJNTPVAL	1333	/* NTP value adjustment */
-+#define AUDIT_EVENT_LISTENER	1335	/* Task joined multicast read socket */
- 
- #define AUDIT_AVC		1400	/* SE Linux avc denial or grant */
- #define AUDIT_SELINUX_ERR	1401	/* Internal SE Linux Errors */
-diff --git a/kernel/audit.c b/kernel/audit.c
-index 17b0d523afb3..478259f3fa53 100644
---- a/kernel/audit.c
-+++ b/kernel/audit.c
-@@ -1520,20 +1520,60 @@ static void audit_receive(struct sk_buff  *skb)
- 	audit_ctl_unlock();
- }
- 
-+/* Log information about who is connecting to the audit multicast socket */
-+static void audit_log_multicast_bind(int group, const char *op, int err)
-+{
-+	const struct cred *cred;
-+	struct tty_struct *tty;
-+	char comm[sizeof(current->comm)];
-+	struct audit_buffer *ab;
-+
-+	if (!audit_enabled)
-+		return;
-+
-+	ab = audit_log_start(audit_context(), GFP_KERNEL, AUDIT_EVENT_LISTENER);
-+	if (!ab)
-+		return;
-+
-+	cred = current_cred();
-+	tty = audit_get_tty();
-+	audit_log_format(ab, "pid=%u uid=%u auid=%u tty=%s ses=%u",
-+			 task_pid_nr(current),
-+			 from_kuid(&init_user_ns, cred->uid),
-+			 from_kuid(&init_user_ns, audit_get_loginuid(current)),
-+			 tty ? tty_name(tty) : "(none)",
-+			 audit_get_sessionid(current));
-+	audit_put_tty(tty);
-+	audit_log_task_context(ab); /* subj= */
-+	audit_log_format(ab, " comm=");
-+	audit_log_untrustedstring(ab, get_task_comm(comm, current));
-+	audit_log_d_path_exe(ab, current->mm); /* exe= */
-+	audit_log_format(ab, " nl-mcgrp=%d op=%s res=%d", group, op, !err);
-+	audit_log_end(ab);
-+}
-+
- /* Run custom bind function on netlink socket group connect or bind requests. */
--static int audit_bind(struct net *net, int group)
-+static int audit_multicast_bind(struct net *net, int group)
- {
-+	int err = 0;
-+
- 	if (!capable(CAP_AUDIT_READ))
--		return -EPERM;
-+		err = -EPERM;
-+	audit_log_multicast_bind(group, "connect", err);
-+	return err;
-+}
- 
--	return 0;
-+static void audit_multicast_unbind(struct net *net, int group)
-+{
-+	audit_log_multicast_bind(group, "disconnect", 0);
- }
- 
- static int __net_init audit_net_init(struct net *net)
- {
- 	struct netlink_kernel_cfg cfg = {
- 		.input	= audit_receive,
--		.bind	= audit_bind,
-+		.bind	= audit_multicast_bind,
-+		.unbind	= audit_multicast_unbind,
- 		.flags	= NL_CFG_F_NONROOT_RECV,
- 		.groups	= AUDIT_NLGRP_MAX,
- 	};
+Good point, I'll send a respin of this patch with those changes
+> 
+> BR,
+> Jani.
+> 
+> 
+> 
+> > +	}
+> >  
+> >  	panel->backlight.setup = intel_dp_aux_setup_backlight;
+> >  	panel->backlight.enable = intel_dp_aux_enable_backlight;
 -- 
-1.8.3.1
+Cheers,
+	Lyude Paul
 
