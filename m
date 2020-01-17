@@ -2,124 +2,119 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B16BC33CB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E58C33CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60FD220730
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4272F20730
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:51:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="i9BMvz3E"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SwmqNV3n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbgAQJux (ORCPT
+        id S1728680AbgAQJvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 04:50:53 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:6126 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726053AbgAQJuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 04:50:50 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 47zbL80nqyzB09b7;
-        Fri, 17 Jan 2020 10:26:56 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=i9BMvz3E; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id SBcmuNiYkyF6; Fri, 17 Jan 2020 10:26:56 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47zbL76pYtzB09b5;
-        Fri, 17 Jan 2020 10:26:55 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1579253216; bh=9zDNZlzTkeycpSWCb0TYhvoG++VQ0gIX3RE4mUEvdOg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=i9BMvz3Et5VUQDFvPy+FmGSkBzSFXqfiloNAGK6ETWirQC9BSIX++qp5CDw2aZert
-         7ZvsFo1ljH6SQeneQhVz/i5r8XjA4pPDw6RSVCjw8z88fAGEB5eOFuEaHhNOp6Saa6
-         njr+TNa2sSfV/s65M9dLdazSTLW/6PBL5xvi/9Nc=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id F18298B83E;
-        Fri, 17 Jan 2020 10:26:56 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id QrD_JOibNVgE; Fri, 17 Jan 2020 10:26:56 +0100 (CET)
-Received: from [172.25.230.103] (po15451.idsi0.si.c-s.fr [172.25.230.103])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C07418B83B;
-        Fri, 17 Jan 2020 10:26:56 +0100 (CET)
-Subject: Re: [RFC PATCH v4 00/11] powerpc: switch VDSO to C implementation.
-To:     Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, nathanl@linux.ibm.com,
-        arnd@arndb.de, tglx@linutronix.de, vincenzo.frascino@arm.com,
-        luto@kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org
-References: <cover.1579196675.git.christophe.leroy@c-s.fr>
- <20200117085851.GS3191@gate.crashing.org>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <345e2772-cde9-7d86-874e-347db1453c80@c-s.fr>
-Date:   Fri, 17 Jan 2020 10:26:56 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Fri, 17 Jan 2020 04:51:02 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:55881 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726085AbgAQJu7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 04:50:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579254658;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=mYd4XcpTB2WmAb9JpP9U+6d1Bzc5qT6nYxXsqhauuYY=;
+        b=SwmqNV3n9XqABMdeYmONREnv2Wi5vstcEkzcBOhSImQ0RhDBF6qPCa0uLtGD3W1cijdJAL
+        y2vW80qGORmaF1kPAqDUi2e7cazTIMVuFDqvfiSk8SNtXNpnDbAuBAjs0POp1nzelpcpT5
+        QKFjflfZCjQAheGLGEKyTd0PCYGJgpA=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-377-FfZtS8XxNBmxYw9VpP1Ghg-1; Fri, 17 Jan 2020 04:50:55 -0500
+X-MC-Unique: FfZtS8XxNBmxYw9VpP1Ghg-1
+Received: by mail-qt1-f198.google.com with SMTP id b7so15603837qtg.23
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 01:50:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mYd4XcpTB2WmAb9JpP9U+6d1Bzc5qT6nYxXsqhauuYY=;
+        b=P4BYpc+OG85qrqLcarkgKIKtBgm5rXhV4b63DrglMK+v07Xpm6poET42az+KJsATgw
+         +ANeZc2NOxIyI6eaZkVI/nerVJJjQpsOedJAKGWtsqc9pgiEXjyLHma5sOUePoUwR9/K
+         kSaatCqwoSZFic/wIVIvJG38KWSt4eYTzrdJ5KtBQQQIU1tA7EzW8DbAMM/nU6Seib7D
+         lL9iok3cQvrAyhTgUmuktjUBz+fgAWPNyYKXqs/QFZDVxsBe/n1LCB8Dkr2pB4cSVlNc
+         rTBMPonzozNcKi4n9LFuz04XrXY5LbwAvE08hGzxlZJ1K3kNHpuvcfNhQ+UeuB0XqokY
+         oVKQ==
+X-Gm-Message-State: APjAAAVm/fO6BRqu6p+kUk5T3Xv6lsPsvv70aQQLuJdWA5BpdKEetgsf
+        N6ObYFE0ju2s5LlTxSVzsuieTVZhvgptJySl1JBD/tmGru8fGUMKvw+qxzfHnMzBBRJcBaKsKHW
+        f/m8zEAzwRUwzQ2ZZEWN0YAKp
+X-Received: by 2002:a37:a70b:: with SMTP id q11mr32130070qke.393.1579254655347;
+        Fri, 17 Jan 2020 01:50:55 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxPk0EzmH8BB5RmxgtwTU30bMvpsJqk/7qLf7iaQA6f+J68LLqTM68sZN85WrQckS6a24uP8w==
+X-Received: by 2002:a37:a70b:: with SMTP id q11mr32130048qke.393.1579254655163;
+        Fri, 17 Jan 2020 01:50:55 -0800 (PST)
+Received: from redhat.com (bzq-79-179-85-180.red.bezeqint.net. [79.179.85.180])
+        by smtp.gmail.com with ESMTPSA id t38sm12968064qta.78.2020.01.17.01.50.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2020 01:50:54 -0800 (PST)
+Date:   Fri, 17 Jan 2020 04:50:48 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Yan Zhao <yan.y.zhao@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Kevin Kevin <kevin.tian@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Lei Cao <lei.cao@stratus.com>
+Subject: Re: [PATCH v3 12/21] KVM: X86: Implement ring-based dirty memory
+ tracking
+Message-ID: <20200117045019-mutt-send-email-mst@kernel.org>
+References: <20200109145729.32898-1-peterx@redhat.com>
+ <20200109145729.32898-13-peterx@redhat.com>
+ <20200116033725-mutt-send-email-mst@kernel.org>
+ <20200116162703.GA344339@xz-x1>
 MIME-Version: 1.0
-In-Reply-To: <20200117085851.GS3191@gate.crashing.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200116162703.GA344339@xz-x1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 17/01/2020 à 09:58, Segher Boessenkool a écrit :
-> Hi!
+On Thu, Jan 16, 2020 at 11:27:03AM -0500, Peter Xu wrote:
+> On Thu, Jan 16, 2020 at 03:38:21AM -0500, Michael S. Tsirkin wrote:
+> > On Thu, Jan 09, 2020 at 09:57:20AM -0500, Peter Xu wrote:
+> > > +	/* If to map any writable page within dirty ring, fail it */
+> > > +	if ((kvm_page_in_dirty_ring(vcpu->kvm, vma->vm_pgoff) ||
+> > > +	     kvm_page_in_dirty_ring(vcpu->kvm, vma->vm_pgoff + pages - 1)) &&
+> > > +	    vma->vm_flags & VM_WRITE)
+> > > +		return -EINVAL;
+> > 
+> > Worth thinking about other flags. Do we want to force VM_SHARED?
+> > Disable VM_EXEC?
 > 
-> On Thu, Jan 16, 2020 at 05:58:24PM +0000, Christophe Leroy wrote:
->> On a powerpc8xx, with current powerpc/32 ASM VDSO:
->>
->> gettimeofday:    vdso: 907 nsec/call
->> clock-getres-realtime:    vdso: 484 nsec/call
->> clock-gettime-realtime:    vdso: 899 nsec/call
->>
->> The first patch adds VDSO generic C support without any changes to common code.
->> Performance is as follows:
->>
->> gettimeofday:    vdso: 1211 nsec/call
->> clock-getres-realtime:    vdso: 722 nsec/call
->> clock-gettime-realtime:    vdso: 1216 nsec/call
->>
->> Then a few changes in the common code have allowed performance improvement. At
->> the end of the series we have:
->>
->> gettimeofday:    vdso: 974 nsec/call
->> clock-getres-realtime:    vdso: 545 nsec/call
->> clock-gettime-realtime:    vdso: 941 nsec/call
->>
->> The final result is rather close to pure ASM VDSO:
->> * 7% more on gettimeofday (9 cycles)
->> * 5% more on clock-gettime-realtime (6 cycles)
->> * 12% more on clock-getres-realtime (8 cycles)
+> Makes sense to me.  I think it worths a standalone patch since they
+> should apply for the whole per-vcpu mmaped regions rather than only
+> for the dirty ring buffers.
 > 
-> Nice!  Much better.
+> (Should include KVM_PIO_PAGE_OFFSET, KVM_COALESCED_MMIO_PAGE_OFFSET,
+>  KVM_S390_SIE_PAGE_OFFSET, kvm_run, and this new one)
 > 
-> It should be tested on more representative hardware, too, but this looks
-> promising alright :-)
-> 
+> Thanks,
 
-Yes.
 
-Now the challenge is to get VDSO32 buildable on PPC64. The big issue is 
-that in most powerpc/include/asm/*.h , CONFIG_PPC64 is used to know if 
-the build is a 64 bits build or a 32 bits build, so VDSO32 build fails.
+I don't think we can change UAPI for existing ones.
+Userspace might be setting these by mistake.
 
-I don't know how this could be easily fixed.
+> -- 
+> Peter Xu
 
-Christophe
