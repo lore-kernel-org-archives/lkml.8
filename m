@@ -2,118 +2,148 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 433BCC33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D769EC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 199972064C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6D1B2064C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:58:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DAshugRV"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="A++MSgED"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729096AbgAQPzU (ORCPT
+        id S1729096AbgAQP6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 10:55:20 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:60159 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727043AbgAQPzT (ORCPT
+        Fri, 17 Jan 2020 10:58:41 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38811 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728739AbgAQP6k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 10:55:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579276518;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=YDF/Cwp5+/dLyQZcVzRTY0MuN6+ZElzaVy7SKb9ltJw=;
-        b=DAshugRVZTABbNzDEVC+5OojbBxHMLIgAKs6+BEwo2pCYqa4hh1zZDByKiRNTHvFHLn2N1
-        KJbDv/0317augEjO8EtGve/67aOHY1tvhWcm9eb4WRvonixLdqZxzfaCcZXLXXTD4xFO38
-        ivczRzuW5TyFOVFw12sG4ZyiLqeGm7w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-96-PDT3rNr4NG60KgD9i9Rz0g-1; Fri, 17 Jan 2020 10:55:15 -0500
-X-MC-Unique: PDT3rNr4NG60KgD9i9Rz0g-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 846461800D4F;
-        Fri, 17 Jan 2020 15:55:11 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-49.rdu2.redhat.com [10.10.120.49])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DC27019C7F;
-        Fri, 17 Jan 2020 15:55:09 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <464519.1579276102@warthog.procyon.org.uk>
-References: <464519.1579276102@warthog.procyon.org.uk> <20200117144055.GB3215@pi3> <CAJKOXPeCVwZfBsCVbc9RQUGi0UfWQw0uFamPiQasiO8fSthFsQ@mail.gmail.com> <433863.1579270803@warthog.procyon.org.uk>
-Cc:     dhowells@redhat.com, Krzysztof Kozlowski <krzk@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Scott Mayhew <smayhew@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v2] nfs: Return EINVAL rather than ERANGE for mount parse errors
+        Fri, 17 Jan 2020 10:58:40 -0500
+Received: by mail-lj1-f194.google.com with SMTP id w1so26993776ljh.5
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 07:58:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=y+sOBVwPXHpl/jOGredPdQ/eMOPx1R53v2YKaybpo74=;
+        b=A++MSgEDqeaqay+NQuCUGyeIN2kG3UsGiJA8e/G48HxQP8Bai+mCDaVLzeYStNnnDm
+         OyvxPnQSMyas2dvhw+Ev+6t/pEUZAXksiKLHl+1AfZmB/wgG7IV+a0lbL4wum4G6josY
+         AO6GhNHfbnpj4l3ztmzAa6Rk91MIiFzabf08PaVz/+GXjOHNdQ2EjEUOtxuJRRED7yjI
+         9aW6ceb4+In7CtnXksxhGhzmTu50yp71ijp3ckj5puwmhwt5XYU8PEJmdjf0AB7UaZ2V
+         yFMfdhKaeZQBSkydOifCuhn2wGgnSlIM20Md1n144gVX9DwAYQDUtbf8a7Oxgq5qbq57
+         oMhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=y+sOBVwPXHpl/jOGredPdQ/eMOPx1R53v2YKaybpo74=;
+        b=X9LUkVYDKlFbVZPuSRGoRdxI1F7uqdXodRWJX30zYQkU6+tmqxCaM28pHFgCiN6CwF
+         KOujSn3ZMqc47d5vH1EmVRZm/zOBm9gxYys4NwM5AAYXEydG1eoNrc9GjMnptehK9oZE
+         1UqZZzFzz5c0XD+g0Wgav+RA4mjvv/i8PAzG0eV3XXfnJd5X8/yc/9dRnAEAYDsYdCEx
+         wM+0vU18UCjcgTmw4RtrUP8bMBwl3MfU3Wi9vtKrcJysZkZ2cC0Dv+93E31CePDcXAtT
+         tovWgboaLWYYlYNXoBh37Pg3+DEFOnJiPqJ4vkgiOJzA6cFr/pKB5GNe/+jn7cpF+b2q
+         tBZA==
+X-Gm-Message-State: APjAAAVbzYlIZMD8eDPdbxJr16A1xvcYksD23eYJalp15iVcd5EhTPBu
+        L3yG6eaWKvyBgPqc3aKFJwXM2A==
+X-Google-Smtp-Source: APXvYqxrmQaVRsNtHHNzyFR0xx1ZpXxJ6+StbGbRoizxb9hy6Tpqd1hlRsR9BMFheoCQmtN8dCj4Uw==
+X-Received: by 2002:a2e:9a04:: with SMTP id o4mr6084808lji.214.1579276718652;
+        Fri, 17 Jan 2020 07:58:38 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id q186sm12694326ljq.14.2020.01.17.07.58.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2020 07:58:37 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 3729B100CFF; Fri, 17 Jan 2020 18:58:37 +0300 (+03)
+Date:   Fri, 17 Jan 2020 18:58:37 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>, ktkhai@virtuozzo.com,
+        christian.brauner@ubuntu.com, sjpark@amazon.de
+Subject: Re: [PATCH v2 2/5] mm: introduce external memory hinting API
+Message-ID: <20200117155837.bowyjpndfiym6cgs@box>
+References: <20200116235953.163318-1-minchan@kernel.org>
+ <20200116235953.163318-3-minchan@kernel.org>
+ <20200117115225.GV19428@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <465148.1579276509.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Fri, 17 Jan 2020 15:55:09 +0000
-Message-ID: <465149.1579276509@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200117115225.GV19428@dhcp22.suse.cz>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit b9423c912b770e5b9e4228d90da92b6a69693d8e
-Author: David Howells <dhowells@redhat.com>
-Date:   Fri Jan 17 15:37:46 2020 +0000
+On Fri, Jan 17, 2020 at 12:52:25PM +0100, Michal Hocko wrote:
+> On Thu 16-01-20 15:59:50, Minchan Kim wrote:
+> > There is usecase that System Management Software(SMS) want to give
+> > a memory hint like MADV_[COLD|PAGEEOUT] to other processes and
+> > in the case of Android, it is the ActivityManagerService.
+> > 
+> > It's similar in spirit to madvise(MADV_WONTNEED), but the information
+> > required to make the reclaim decision is not known to the app. Instead,
+> > it is known to the centralized userspace daemon(ActivityManagerService),
+> > and that daemon must be able to initiate reclaim on its own without
+> > any app involvement.
+> > 
+> > To solve the issue, this patch introduces new syscall process_madvise(2).
+> > It uses pidfd of an external processs to give the hint.
+> > 
+> >  int process_madvise(int pidfd, void *addr, size_t length, int advise,
+> > 			unsigned long flag);
+> > 
+> > Since it could affect other process's address range, only privileged
+> > process(CAP_SYS_PTRACE) or something else(e.g., being the same UID)
+> > gives it the right to ptrace the process could use it successfully.
+> > The flag argument is reserved for future use if we need to extend the
+> > API.
+> > 
+> > I think supporting all hints madvise has/will supported/support to
+> > process_madvise is rather risky. Because we are not sure all hints make
+> > sense from external process and implementation for the hint may rely on
+> > the caller being in the current context so it could be error-prone.
+> > Thus, I just limited hints as MADV_[COLD|PAGEOUT] in this patch.
+> > 
+> > If someone want to add other hints, we could hear hear the usecase and
+> > review it for each hint. It's more safe for maintainace rather than
+> > introducing a buggy syscall but hard to fix it later.
+> 
+> I have brought this up when we discussed this in the past but there is
+> no reflection on that here so let me bring that up again. 
+> 
+> I believe that the interface has an inherent problem that it is racy.
+> The external entity needs to know the address space layout of the target
+> process to do anyhing useful on it. The address space is however under
+> the full control of the target process though and the external entity
+> has no means to find out that the layout has changed. So
+> time-to-check-time-to-act is an inherent problem.
+> 
+> This is a serious design flaw and it should be explained why it doesn't
+> matter or how to use the interface properly to prevent that problem.
 
-    nfs: Return EINVAL rather than ERANGE for mount parse errors
-    =
+I agree, it looks flawed.
 
-    Return EINVAL rather than ERANGE for mount parse errors as the userspa=
-ce
-    mount command doesn't necessarily understand what to do with anything =
-other
-    than EINVAL.
-    =
+Also I don't see what System Management Software can generically do on
+sub-process level. I mean how can it decide which part of address space is
+less important than other.
 
-    The old code returned -ERANGE as an intermediate error that then get
-    converted to -EINVAL, whereas the new code returns -ERANGE.
-    =
+I see how a manager can indicate that this process (or a group of
+processes) is less important than other, but on per-addres-range basis?
 
-    This was induced by passing minorversion=3D1 to a v4 mount where
-    CONFIG_NFS_V4_1 was disabled in the kernel build.
-    =
-
-    Fixes: 68f65ef40e1e ("NFS: Convert mount option parsing to use functio=
-nality from fs_parser.h")
-    Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
-    Signed-off-by: David Howells <dhowells@redhat.com>
-
-diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-index 429315c011ae..74508ed9aeec 100644
---- a/fs/nfs/fs_context.c
-+++ b/fs/nfs/fs_context.c
-@@ -769,8 +769,7 @@ static int nfs_fs_context_parse_param(struct fs_contex=
-t *fc,
- out_invalid_address:
- 	return nfs_invalf(fc, "NFS: Bad IP address specified");
- out_of_bounds:
--	nfs_invalf(fc, "NFS: Value for '%s' out of range", param->key);
--	return -ERANGE;
-+	return nfs_invalf(fc, "NFS: Value for '%s' out of range", param->key);
- }
- =
-
- /*
-
+-- 
+ Kirill A. Shutemov
