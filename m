@@ -2,188 +2,260 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C353C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACC2C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4870F2072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:36:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 232C6214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:38:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dLz+DeXd"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="1+vrAV7y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729044AbgAQPgp (ORCPT
+        id S1729078AbgAQPio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 10:36:45 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44089 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728739AbgAQPgo (ORCPT
+        Fri, 17 Jan 2020 10:38:44 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:44667 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728831AbgAQPin (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 10:36:44 -0500
-Received: by mail-pl1-f193.google.com with SMTP id az3so9995693plb.11
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 07:36:44 -0800 (PST)
+        Fri, 17 Jan 2020 10:38:43 -0500
+Received: by mail-lf1-f67.google.com with SMTP id v201so18655016lfa.11
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 07:38:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=pwBF42N8bOInUjU3mqsM9gMbAa/G/sJJUIKIesRfdeA=;
-        b=dLz+DeXdaoeUIACOt7xvx6JZ/KdgW4elO6F4OJiTi95bhZNv5d0fTi8sf2esjEeHve
-         jrYJvTvtuTwk9455w9u6uWdHWVRnE2Jb+jmlZYKTHRxuESeUvLSApCr070QeGHnCUSHQ
-         WMwSgYvTh9T6hzji33cRrFwCpRBljihZmZYy5U11TO1jyUAqzKJ6fCEHy8e3bV4O/wxR
-         OAwCrbd7XqNaPEZBQQMj15F4sfT051R1jES7hQ/M3/UigVmN0OjjBXiLETRdBMmDnRnG
-         nC8arJzl3mRUBtRUIpf67KeJ0HgjqXZk6xkCP6pgJgGauSqz4fetpCLJ3l5+GefWmOyv
-         +nWg==
+        bh=5CjcNzOgQBmyIcnlhVOCHh9LmCSADzB4xHyoB2q1Vjs=;
+        b=1+vrAV7y4/yxDZYqJkvlHyCZRpYBgGdFyxJ7KIeKbpHtoUPDOyPX6e7BIM7zwU4DLL
+         0EM5K9CR2K6Im20ZKgF3p8ZeRE4e83kp+T4XK2JgU3GSOqJok0G8UfPYz3hNQaunRGVr
+         MfEDAbb74mdg+cUIdfYnA/gHmah0ng091NQv3qNjxB4tir/aLyyRHdqkg1qNfMMv/5af
+         ZWfu7kcfP8Vu3FPEFUh5Y8bPghSo/bgWGg9OihgLXVvh7uLAghuBEhYcCgDKoE50EINe
+         xUpPhsJ41KiezPUpHha861faGDxWqLfPdKcK5VpstLgrSvF2edmeSkakgXNRFIMoTvGJ
+         4anQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pwBF42N8bOInUjU3mqsM9gMbAa/G/sJJUIKIesRfdeA=;
-        b=OxAoDB38gogQo/wUWfDX2NN/1/tFncRevQ3lwkzCfN3bV6dqHTccqaMPRKD/JLi49k
-         iPYz4ANbipPQ0ZD4Og1VScZ1PqtKvM9a0A7s+G/WDmcqf8pzHFoCTUkXyhMcNMQK2uDP
-         Yi6lOuGN6k7/mdX+BiIaSve4Zz69AahdScLhjRO9Vn9iua9JwEup4S+7KdhijXdfnqZO
-         xs/bOi3t7zeVt95eLymDTZRSXcLjkbNWAYnzMjmAe7KW0XzJzjz8AR+vvzgMhRcNdAQt
-         CspeciuUrTot+yd7dTnkCmmCy46hx9dF+qOAjYB5D8gKT7eo5HM8KBJ6x/8wKOjF+dxr
-         KE9g==
-X-Gm-Message-State: APjAAAVkmaMjllFRzH9W2q3Am+d6VvFQZ0mxl3a/NQaG1RSxbctAauNd
-        O0tPKscBWO4cLe84KKGvlbwPPQ==
-X-Google-Smtp-Source: APXvYqyD8/HZXE/aMpUdpii4a83GeHFpYoYCaaceWICf147EcnNFrFFn2yGKuJYhU1mhHZIjnA4P9Q==
-X-Received: by 2002:a17:90a:330c:: with SMTP id m12mr6335610pjb.18.1579275403850;
-        Fri, 17 Jan 2020 07:36:43 -0800 (PST)
-Received: from leoy-ThinkPad-X240s (li96-55.members.linode.com. [74.207.254.55])
-        by smtp.gmail.com with ESMTPSA id b15sm29770249pft.58.2020.01.17.07.36.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 17 Jan 2020 07:36:43 -0800 (PST)
-Date:   Fri, 17 Jan 2020 23:36:30 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mike Leach <mike.leach@linaro.org>
-Subject: Re: [PATCH v6 2/2] perf parse: Copy string to perf_evsel_config_term
-Message-ID: <20200117153630.GA22019@leoy-ThinkPad-X240s>
-References: <20200117055251.24058-1-leo.yan@linaro.org>
- <20200117055251.24058-2-leo.yan@linaro.org>
- <20200117133409.GB3323@redhat.com>
+        bh=5CjcNzOgQBmyIcnlhVOCHh9LmCSADzB4xHyoB2q1Vjs=;
+        b=TAbeehtx5VTtqdZQPezcD+BlrO5+8MpNFmWSGRoEz278cxh5OZKoQYu4bUA1zRQgH+
+         2dOwq4IdXVzXipBgyEsAaLs7kkXVcFb8xRCRi1zNbh41mTv6f4YAEL2yJgbD0EudF9I6
+         SZA6Wxnk6TGTVKQuVmpfGPRiH+tsQnniBQiUaX7Fw4mbXivVVLPH3g76Vf8MVVLSJDuP
+         cEZVcftgLl9INzFjLFd6U2/7Ni54z5PAI+hXGck4s8Qj5DOT0IQCQ50tEFV/hnVVZAvf
+         tkbRA3p2IMqB9E5tyc07KhofCHLCR3LE5Qmi3pUky2yokiWgYOA39R6FCuu+4ubXUCaU
+         qx5w==
+X-Gm-Message-State: APjAAAUttj3TJIqMnIBv2PB58E9xba+qCNrzsKOrLFuS0bZcOhmJoiLc
+        skSnIJB5oO7np8Gyb/uP08VJWg==
+X-Google-Smtp-Source: APXvYqxeLCT+DVj/bGz04HP9ZT+9/kuBFxjk65y0imKgWabVrU4gDpiUO1q9DXMYRGZMlCOv/mu48Q==
+X-Received: by 2002:ac2:5310:: with SMTP id c16mr5840165lfh.102.1579275521366;
+        Fri, 17 Jan 2020 07:38:41 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id h19sm12546149ljl.57.2020.01.17.07.38.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2020 07:38:40 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id A58C1100CFF; Fri, 17 Jan 2020 18:38:39 +0300 (+03)
+Date:   Fri, 17 Jan 2020 18:38:39 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     David Rientjes <rientjes@google.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Wei Yang <richardw.yang@linux.intel.com>, hannes@cmpxchg.org,
+        vdavydov.dev@gmail.com, akpm@linux-foundation.org,
+        kirill.shutemov@linux.intel.com, yang.shi@linux.alibaba.com,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, alexander.duyck@gmail.com,
+        stable@vger.kernel.org
+Subject: Re: [Patch v3] mm: thp: grab the lock before manipulation defer list
+Message-ID: <20200117153839.pcnfomzuaha3dafh@box>
+References: <20200116013100.7679-1-richardw.yang@linux.intel.com>
+ <0bb34c4a-97c7-0b3c-cf43-8af6cf9c4396@virtuozzo.com>
+ <alpine.DEB.2.21.2001161357240.109233@chino.kir.corp.google.com>
+ <20200117091002.GM19428@dhcp22.suse.cz>
+ <alpine.DEB.2.21.2001170125350.20618@chino.kir.corp.google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200117133409.GB3323@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <alpine.DEB.2.21.2001170125350.20618@chino.kir.corp.google.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 10:34:09AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Jan 17, 2020 at 01:52:51PM +0800, Leo Yan escreveu:
-> > perf with CoreSight fails to record trace data with command:
-> > 
-> >   perf record -e cs_etm/@tmc_etr0/u --per-thread ls
-> >   failed to set sink "" on event cs_etm/@tmc_etr0/u with 21 (Is a
-> >   directory)/perf/
-> > 
-> > This failure is root caused with the commit 1dc925568f01 ("perf
-> > parse: Add a deep delete for parse event terms").
-> > 
-> > The log shows, cs_etm fails to parse the sink attribution; cs_etm event
-> > relies on the event configuration to pass sink name, but the event
-> > specific configuration data cannot be passed properly with flow:
-> > 
-> >   get_config_terms()
-> >     ADD_CONFIG_TERM(DRV_CFG, term->val.str);
-> >       __t->val.str = term->val.str;
-> >         `> __t->val.str is assigned to term->val.str;
-> > 
-> >   parse_events_terms__purge()
-> >     parse_events_term__delete()
-> >       zfree(&term->val.str);
-> >         `> term->val.str is freed and assigned to NULL pointer;
-> > 
-> >   cs_etm_set_sink_attr()
-> >     sink = __t->val.str;
-> >       `> sink string has been freed.
-> > 
-> > To fix this issue, in the function get_config_terms(), this patch
-> > changes to use strdup() for allocation a new duplicate string rather
-> > than directly assignment string pointer.
-> > 
-> > This patch addes a new field 'free_str' in the data structure
-> > perf_evsel_config_term; 'free_str' is set to true when the union is used
-> > as a string pointer; thus it can tell perf_evsel__free_config_terms() to
-> > free the string.
-> > 
-> > Fixes: 1dc925568f01 ("perf parse: Add a deep delete for parse event terms")
-> > Suggested-by: Jiri Olsa <jolsa@kernel.org>
-> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> > Acked-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> >  tools/perf/util/evsel.c        | 2 ++
-> >  tools/perf/util/evsel_config.h | 1 +
-> >  tools/perf/util/parse-events.c | 7 ++++++-
-> >  3 files changed, 9 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > index 549abd43816f..6fe9e28180e5 100644
-> > --- a/tools/perf/util/evsel.c
-> > +++ b/tools/perf/util/evsel.c
-> > @@ -1265,6 +1265,8 @@ static void perf_evsel__free_config_terms(struct evsel *evsel)
-> >  
-> >  	list_for_each_entry_safe(term, h, &evsel->config_terms, list) {
-> >  		list_del_init(&term->list);
-> > +		if (term->free_str)
-> > +			free(term->val.str);
+On Fri, Jan 17, 2020 at 01:31:50AM -0800, David Rientjes wrote:
+> On Fri, 17 Jan 2020, Michal Hocko wrote:
 > 
-> I'm replacing this with zfree, so that we can catch possible bugs where
-> term gets used after freed, just like you do below, in ADD_CONFIG_TERM_STR()
-
-Thanks a lot, Arnaldo.
-
-> >  		free(term);
-> >  	}
-> >  }
-> > diff --git a/tools/perf/util/evsel_config.h b/tools/perf/util/evsel_config.h
-> > index b4a65201e4f7..e026ab67b008 100644
-> > --- a/tools/perf/util/evsel_config.h
-> > +++ b/tools/perf/util/evsel_config.h
-> > @@ -32,6 +32,7 @@ enum evsel_term_type {
-> >  struct perf_evsel_config_term {
-> >  	struct list_head      list;
-> >  	enum evsel_term_type  type;
-> > +	bool		      free_str;
-> >  	union {
-> >  		u64	      period;
-> >  		u64	      freq;
-> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> > index f59f3c8da473..c01ba6f8fdad 100644
-> > --- a/tools/perf/util/parse-events.c
-> > +++ b/tools/perf/util/parse-events.c
-> > @@ -1240,7 +1240,12 @@ do {								\
-> >  #define ADD_CONFIG_TERM_STR(__type, __val)			\
-> >  do {								\
-> >  	ADD_CONFIG_TERM(__type);				\
-> > -	__t->val.str = __val;					\
-> > +	__t->val.str = strdup(__val);				\
-> > +	if (!__t->val.str) {					\
-> > +		zfree(&__t);					\
-> > +		return -ENOMEM;					\
-> > +	}							\
-> > +	__t->free_str = true;					\
-> >  } while (0)
-> >  
-> >  	struct parse_events_term *term;
-> > -- 
-> > 2.17.1
+> > On Thu 16-01-20 14:01:59, David Rientjes wrote:
+> > > On Thu, 16 Jan 2020, Kirill Tkhai wrote:
+> > > 
+> > > > > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> > > > > index c5b5f74cfd4d..6450bbe394e2 100644
+> > > > > --- a/mm/memcontrol.c
+> > > > > +++ b/mm/memcontrol.c
+> > > > > @@ -5360,10 +5360,12 @@ static int mem_cgroup_move_account(struct page *page,
+> > > > >  	}
+> > > > >  
+> > > > >  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> > > > > -	if (compound && !list_empty(page_deferred_list(page))) {
+> > > > > +	if (compound) {
+> > > > >  		spin_lock(&from->deferred_split_queue.split_queue_lock);
+> > > > > -		list_del_init(page_deferred_list(page));
+> > > > > -		from->deferred_split_queue.split_queue_len--;
+> > > > > +		if (!list_empty(page_deferred_list(page))) {
+> > > > > +			list_del_init(page_deferred_list(page));
+> > > > > +			from->deferred_split_queue.split_queue_len--;
+> > > > > +		}
+> > > > >  		spin_unlock(&from->deferred_split_queue.split_queue_lock);
+> > > > >  	}
+> > > > >  #endif
+> > > > > @@ -5377,11 +5379,13 @@ static int mem_cgroup_move_account(struct page *page,
+> > > > >  	page->mem_cgroup = to;
+> > > > >  
+> > > > >  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> > > > > -	if (compound && list_empty(page_deferred_list(page))) {
+> > > > > +	if (compound) {
+> > > > >  		spin_lock(&to->deferred_split_queue.split_queue_lock);
+> > > > > -		list_add_tail(page_deferred_list(page),
+> > > > > -			      &to->deferred_split_queue.split_queue);
+> > > > > -		to->deferred_split_queue.split_queue_len++;
+> > > > > +		if (list_empty(page_deferred_list(page))) {
+> > > > > +			list_add_tail(page_deferred_list(page),
+> > > > > +				      &to->deferred_split_queue.split_queue);
+> > > > > +			to->deferred_split_queue.split_queue_len++;
+> > > > > +		}
+> > > > >  		spin_unlock(&to->deferred_split_queue.split_queue_lock);
+> > > > >  	}
+> > > > >  #endif
+> > > > 
+> > > > The patch looks OK for me. But there is another question. I forget, why we unconditionally
+> > > > add a page with empty deferred list to deferred_split_queue. Shouldn't we also check that
+> > > > it was initially in the list? Something like:
+> > > > 
+> > > > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> > > > index d4394ae4e5be..0be0136adaa6 100644
+> > > > --- a/mm/memcontrol.c
+> > > > +++ b/mm/memcontrol.c
+> > > > @@ -5289,6 +5289,7 @@ static int mem_cgroup_move_account(struct page *page,
+> > > >  	struct pglist_data *pgdat;
+> > > >  	unsigned long flags;
+> > > >  	unsigned int nr_pages = compound ? hpage_nr_pages(page) : 1;
+> > > > +	bool split = false;
+> > > >  	int ret;
+> > > >  	bool anon;
+> > > >  
+> > > > @@ -5346,6 +5347,7 @@ static int mem_cgroup_move_account(struct page *page,
+> > > >  		if (!list_empty(page_deferred_list(page))) {
+> > > >  			list_del_init(page_deferred_list(page));
+> > > >  			from->deferred_split_queue.split_queue_len--;
+> > > > +			split = true;
+> > > >  		}
+> > > >  		spin_unlock(&from->deferred_split_queue.split_queue_lock);
+> > > >  	}
+> > > > @@ -5360,7 +5362,7 @@ static int mem_cgroup_move_account(struct page *page,
+> > > >  	page->mem_cgroup = to;
+> > > >  
+> > > >  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> > > > -	if (compound) {
+> > > > +	if (compound && split) {
+> > > >  		spin_lock(&to->deferred_split_queue.split_queue_lock);
+> > > >  		if (list_empty(page_deferred_list(page))) {
+> > > >  			list_add_tail(page_deferred_list(page),
+> > > > 
+> > > 
+> > > I think that's a good point, especially considering that the current code 
+> > > appears to unconditionally place any compound page on the deferred split 
+> > > queue of the destination memcg.  The correct list that it should appear 
+> > > on, I believe, depends on whether the pmd has been split for the process 
+> > > being moved: note the MC_TARGET_PAGE caveat in 
+> > > mem_cgroup_move_charge_pte_range() that does not move the charge for 
+> > > compound pages with split pmds.  So when mem_cgroup_move_account() is 
+> > > called with compound == true, we're moving the charge of the entire 
+> > > compound page: why would it appear on that memcg's deferred split queue?
+> > 
+> > I believe Kirill asked how do we know that the page should be actually
+> > added to the deferred list just from the list_empty check. In other
+> > words what if the page hasn't been split at all?
+> > 
 > 
+> Right, and I don't think that it necessarily is and the second 
+> conditional in Wei's patch will always succeed unless we have raced.  That 
+> patch is for a lock concern but I think Kirill's question has uncovered 
+> something more interesting.
+> 
+> Kirill S would definitely be best to answer Kirill T's question, but from 
+> my understanding when mem_cgroup_move_account() is called with 
+> compound == true that we always have an intact pmd (we never migrate 
+> partial page charges for pages on the deferred split queue with the 
+> current charge migration implementation) and thus the underlying page is 
+> not eligible to be split and shouldn't be on the deferred split queue.
+> 
+> In other words, a page being on the deferred split queue for a memcg 
+> should only happen when it is charged to that memcg.  (This wasn't the 
+> case when we only had per-node split queues.)  I think that's currently 
+> broken in mem_cgroup_move_account() before Wei's patch.
+
+Right. It's broken indeed.
+
+We are dealing with anon page here. And it cannot be on deferred list as
+long as it's mapped with PMD. We cannot get compound == true &&
+!list_empty() on the (first) enter to the function. Any PMD-mapped page
+will be put onto deferred by the function. This is wrong.
+
+The fix is not obvious.
+
+This comment got in mem_cgroup_move_charge_pte_range() my attention:
+
+			/*
+			 * We can have a part of the split pmd here. Moving it
+			 * can be done but it would be too convoluted so simply
+			 * ignore such a partial THP and keep it in original
+			 * memcg. There should be somebody mapping the head.
+			 */
+
+That's exactly the case we care about: PTE-mapped THP that has to be split
+under load. We don't move charge of them between memcgs and therefore we
+should not move the page to different memcg.
+
+I guess this will do the trick :P
+
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index c5b5f74cfd4d..e87ee4c10f6e 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -5359,14 +5359,6 @@ static int mem_cgroup_move_account(struct page *page,
+ 		__mod_lruvec_state(to_vec, NR_WRITEBACK, nr_pages);
+ 	}
+ 
+-#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+-	if (compound && !list_empty(page_deferred_list(page))) {
+-		spin_lock(&from->deferred_split_queue.split_queue_lock);
+-		list_del_init(page_deferred_list(page));
+-		from->deferred_split_queue.split_queue_len--;
+-		spin_unlock(&from->deferred_split_queue.split_queue_lock);
+-	}
+-#endif
+ 	/*
+ 	 * It is safe to change page->mem_cgroup here because the page
+ 	 * is referenced, charged, and isolated - we can't race with
+@@ -5376,16 +5368,6 @@ static int mem_cgroup_move_account(struct page *page,
+ 	/* caller should have done css_get */
+ 	page->mem_cgroup = to;
+ 
+-#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+-	if (compound && list_empty(page_deferred_list(page))) {
+-		spin_lock(&to->deferred_split_queue.split_queue_lock);
+-		list_add_tail(page_deferred_list(page),
+-			      &to->deferred_split_queue.split_queue);
+-		to->deferred_split_queue.split_queue_len++;
+-		spin_unlock(&to->deferred_split_queue.split_queue_lock);
+-	}
+-#endif
+-
+ 	spin_unlock_irqrestore(&from->move_lock, flags);
+ 
+ 	ret = 0;
+-- 
+ Kirill A. Shutemov
