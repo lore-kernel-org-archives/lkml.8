@@ -2,146 +2,138 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27ECEC33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75FDAC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEB4B20728
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ABA920728
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:15:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="phe1Ud2o"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BVuyOZXl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbgAQNPB (ORCPT
+        id S1727009AbgAQNPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 08:15:01 -0500
-Received: from mail-ot1-f42.google.com ([209.85.210.42]:39839 "EHLO
-        mail-ot1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbgAQNPA (ORCPT
+        Fri, 17 Jan 2020 08:15:17 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:39166 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbgAQNPR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 08:15:00 -0500
-Received: by mail-ot1-f42.google.com with SMTP id 77so22480420oty.6
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 05:15:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=B8YqwuFYQqcgYYrogodMJhZN7j+MHKf9rIlBL0O/Le8=;
-        b=phe1Ud2oxwDPz6N0qGWXhYFzGha1cekzFvcn3g626qlUYghuyTbxgeFkLbD/M/5L2u
-         FDYTHp9qH37eL4oqnFRBAXta5mf/ffxwB4CRYjCptTn0qENxhEnuJ6sd/k/c5WjQtL3l
-         CZK7j9ZJcq40q1mQa/jNGhIl8VicJfvINi+VTqNF9qMX85UYRNemMrGHv6Y80fNbk6dg
-         S9PPuTsUhR6lSiS6eVa+Gbu3kWZBLzmYXabHgR1/Uj8EbZ/xevu89+zvdF3lhTPSyKkD
-         PaFZsgRegpuHk3NdVQ+8Daz+cDXqVbLvfaHQH+1GTrWlCrdFvn5XQvguxBKRfdkeZq/s
-         GNkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B8YqwuFYQqcgYYrogodMJhZN7j+MHKf9rIlBL0O/Le8=;
-        b=Vc5ylP6Kf7+IzSJvIY8bNi8ALiOTgYZDlYSQkrENXjEknjMCqaU3g9kcmHiLkeynTG
-         5ct/K2IOI2d8J86njod5Sw2WNOiRwbya3dHB9jXOHjx1Fd1l4cetadAHEVsufDoCxms+
-         PP/cpvQlYacsdAmDOtyR2q6UyoFn5W2ghT4Xv4fDPrnEe7iYHKzhMXRxdwdjjq25b/Xk
-         LJOKt51hmLHpp5/WKOldttO/zWYjccJVDzIFVnwOvg5SVwRcPkV7zzhLVTY5Hjcw+7VX
-         qL79hKhACUmN5oKd7/Su5RQzIrk3bPNTWok2ISa2B3dp33O0LnYi8qQE/Z2IhtBZRkG1
-         2NPQ==
-X-Gm-Message-State: APjAAAXZDcQKm3n0BB3/L3ayrTfHKMitq5kLQLbn5HIoOl0FzjIPF17n
-        KlAXcVVSQY1fz92uoIMNPgHg2nP+LRY8iCijsqppxA==
-X-Google-Smtp-Source: APXvYqynE9NXU66Nq3blnE6X5VRCzGBBlylly2otE6jy/NdZxB8n4qYZlqLeRV0gBLCzSb/O+tcyFH8cZEHX5B05W4k=
-X-Received: by 2002:a9d:588c:: with SMTP id x12mr5863094otg.2.1579266899985;
- Fri, 17 Jan 2020 05:14:59 -0800 (PST)
+        Fri, 17 Jan 2020 08:15:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=48cCAdKtJJFxG1V9xoyyDVXy7gQ2+nn3VBYqzpk7WZY=; b=BVuyOZXlGmLvG8JXZTJ7AO3lY
+        FhsTy9Wpy6pxjC1uvbBoVsf65J/wo+R+fmrjkYQGnIB48Znc2z1eOnKyE8dPU6KiOmo7bkIhM2tB6
+        UgtWZ9cAjWoQOIZUFb1q3V8l3UPMrU1BGkI9TzCaMIN1SUcIBWfAloayDtNihphiTkALX4am7qVcA
+        RvS7uxDM2CU3/QW0V0utqpsSFGdrwbTmWJUoj9ssp23QNUlhJfDt+xnWdUBTF/4A1kr+suEhABeCw
+        MUJQgyvz9TZ3RpnTNOaOK38amifPF+WkvXwwHnEuvtxVo2MN5DA6J5C/xN46PhO3W+FPyi88t9YSY
+        BIZZ5L+rg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1isRSy-0005lh-LG; Fri, 17 Jan 2020 13:15:12 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2F915304A59;
+        Fri, 17 Jan 2020 14:13:33 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6A13F2020D908; Fri, 17 Jan 2020 14:15:10 +0100 (CET)
+Date:   Fri, 17 Jan 2020 14:15:10 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rik van Riel <riel@surriel.com>
+Subject: Re: [PATCH 2/3] smp: Add a smp_cond_func_t argument to
+ smp_call_function_many()
+Message-ID: <20200117131510.GA14914@hirez.programming.kicks-ass.net>
+References: <20200117090137.1205765-1-bigeasy@linutronix.de>
+ <20200117090137.1205765-3-bigeasy@linutronix.de>
 MIME-Version: 1.0
-References: <20200115165749.145649-1-elver@google.com> <CAK8P3a3b=SviUkQw7ZXZF85gS1JO8kzh2HOns5zXoEJGz-+JiQ@mail.gmail.com>
- <CANpmjNOpTYnF3ssqrE_s+=UA-2MpfzzdrXoyaifb3A55_mc0uA@mail.gmail.com>
- <CAK8P3a3WywSsahH2vtZ_EOYTWE44YdN+Pj6G8nt_zrL3sckdwQ@mail.gmail.com>
- <CANpmjNMk2HbuvmN1RaZ=8OV+tx9qZwKyRySONDRQar6RCGM1SA@mail.gmail.com> <CAK8P3a066Knr-KC2v4M8Dr1phr0Gbb2KeZZLQ7Ana0fkrgPDPg@mail.gmail.com>
-In-Reply-To: <CAK8P3a066Knr-KC2v4M8Dr1phr0Gbb2KeZZLQ7Ana0fkrgPDPg@mail.gmail.com>
-From:   Marco Elver <elver@google.com>
-Date:   Fri, 17 Jan 2020 14:14:48 +0100
-Message-ID: <CANpmjNO395-atZXu_yEArZqAQ+ib3Ack-miEhA9msJ6_eJsh4g@mail.gmail.com>
-Subject: Re: [PATCH -rcu] asm-generic, kcsan: Add KCSAN instrumentation for bitops
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        christophe leroy <christophe.leroy@c-s.fr>,
-        Daniel Axtens <dja@axtens.net>,
-        linux-arch <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200117090137.1205765-3-bigeasy@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jan 2020 at 13:25, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Wed, Jan 15, 2020 at 9:50 PM Marco Elver <elver@google.com> wrote:
-> > On Wed, 15 Jan 2020 at 20:55, Arnd Bergmann <arnd@arndb.de> wrote:
-> > > On Wed, Jan 15, 2020 at 8:51 PM Marco Elver <elver@google.com> wrote:
-> > > > On Wed, 15 Jan 2020 at 20:27, Arnd Bergmann <arnd@arndb.de> wrote:
-> > > Are there any that really just want kasan_check_write() but not one
-> > > of the kcsan checks?
-> >
-> > If I understood correctly, this suggestion would amount to introducing
-> > a new header, e.g. 'ksan-checks.h', that provides unified generic
-> > checks. For completeness, we will also need to consider reads. Since
-> > KCSAN provides 4 check variants ({read,write} x {plain,atomic}), we
-> > will need 4 generic check variants.
->
-> Yes, that was the idea.
->
-> > I certainly do not feel comfortable blindly introducing kcsan_checks
-> > in all places where we have kasan_checks, but it may be worthwhile
-> > adding this infrastructure and starting with atomic-instrumented and
-> > bitops-instrumented wrappers. The other locations you list above would
-> > need to be evaluated on a case-by-case basis to check if we want to
-> > report data races for those accesses.
->
-> I think the main question to answer is whether it is more likely to go
-> wrong because we are missing checks when one caller accidentally
-> only has one but not the other, or whether they go wrong because
-> we accidentally check both when we should only be checking one.
->
-> My guess would be that the first one is more likely to happen, but
-> the second one is more likely to cause problems when it happens.
+On Fri, Jan 17, 2020 at 10:01:36AM +0100, Sebastian Andrzej Siewior wrote:
 
-Right, I guess both have trade-offs.
+> @@ -448,7 +435,8 @@ void smp_call_function_many(const struct cpumask *mask,
+>  
+>  	/* Fastpath: do that cpu by itself. */
+>  	if (next_cpu >= nr_cpu_ids) {
+> +		if (!cond_func || (cond_func && cond_func(cpu, info)))
+> +			smp_call_function_single(cpu, func, info, wait);
 
-> > As a minor data point, {READ,WRITE}_ONCE in compiler.h currently only
-> > has kcsan_checks and not kasan_checks.
->
-> Right. This is because we want an explicit "atomic" check for kcsan
-> but we want to have the function inlined for kasan, right?
+Can't we write that like:
 
-Yes, correct.
+		if (!cond_func || cond_func(cpu, info))
 
-> > My personal preference would be to keep the various checks explicit,
-> > clearly opting into either KCSAN and/or KASAN. Since I do not think
-> > it's obvious if we want both for the existing and potentially new
-> > locations (in future), the potential for error by blindly using a
-> > generic 'ksan_check' appears worse than potentially adding a dozen
-> > lines or so.
-> >
-> > Let me know if you'd like to proceed with 'ksan-checks.h'.
->
-> Could you have a look at the files I listed and see if there are any
-> other examples that probably a different set of checks between the
-> two, besides the READ_ONCE() example?
+>  		return;
+>  	}
+>  
+> @@ -465,6 +453,9 @@ void smp_call_function_many(const struct cpumask *mask,
+>  	for_each_cpu(cpu, cfd->cpumask) {
+>  		call_single_data_t *csd = per_cpu_ptr(cfd->csd, cpu);
+>  
+> +		if (cond_func && !cond_func(cpu, info))
+> +			continue;
+> +
+>  		csd_lock(csd);
+>  		if (wait)
+>  			csd->flags |= CSD_FLAG_SYNCHRONOUS;
+> @@ -486,6 +477,26 @@ void smp_call_function_many(const struct cpumask *mask,
+>  		}
+>  	}
+>  }
+> +
+> +/**
+> + * smp_call_function_many(): Run a function on a set of other CPUs.
+> + * @mask: The set of cpus to run on (only runs on online subset).
+> + * @func: The function to run. This must be fast and non-blocking.
+> + * @info: An arbitrary pointer to pass to the function.
+> + * @wait: If true, wait (atomically) until function has completed
+> + *        on other CPUs.
+> + *
+> + * If @wait is true, then returns once @func has returned.
+> + *
+> + * You must not call this function with disabled interrupts or from a
+> + * hardware interrupt handler or from a bottom half handler. Preemption
+> + * must be disabled when calling this function.
+> + */
+> +void smp_call_function_many(const struct cpumask *mask,
+> +			    smp_call_func_t func, void *info, bool wait)
+> +{
+> +	smp_call_function_many_cond(mask, func, info, wait, NULL);
+> +}
+>  EXPORT_SYMBOL(smp_call_function_many);
+>  
+>  /**
+> @@ -684,33 +695,17 @@ void on_each_cpu_cond_mask(smp_cond_func_t cond_func, smp_call_func_t func,
+>  			   void *info, bool wait, gfp_t gfp_flags,
+>  			   const struct cpumask *mask)
+>  {
+> +	int cpu = get_cpu();
+>  
+> +	smp_call_function_many_cond(mask, func, info, wait, cond_func);
+> +	if (cpumask_test_cpu(cpu, mask) && cond_func(cpu, info)) {
+> +		unsigned long flags;
+>  
+> +		local_irq_save(flags);
+> +		func(info);
+> +		local_irq_restore(flags);
+>  	}
+> +	put_cpu();
+>  }
+>  EXPORT_SYMBOL(on_each_cpu_cond_mask);
 
-All the user-copy related code should probably have kcsan_checks as well.
-
-> If you can't find any, I would prefer having the simpler interface
-> with just one set of annotations.
-
-That's fair enough. I'll prepare a v2 series that first introduces the
-new header, and then applies it to the locations that seem obvious
-candidates for having both checks.
-
-Thanks,
--- Marco
+But yes, over-all this seems like a very nice cleanup.
