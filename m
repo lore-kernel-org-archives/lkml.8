@@ -2,318 +2,98 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 213A3C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 852A1C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3C1F20842
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:20:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BE792082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:21:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cpiQVRq1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbgAQVUX (ORCPT
+        id S1727231AbgAQVV0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 16:20:23 -0500
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:46887 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbgAQVUW (ORCPT
+        Fri, 17 Jan 2020 16:21:26 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:60004 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbgAQVV0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 16:20:22 -0500
-X-Originating-IP: 90.65.92.102
-Received: from localhost (lfbn-lyo-1-1913-102.w90-65.abo.wanadoo.fr [90.65.92.102])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id A4B4760002;
-        Fri, 17 Jan 2020 21:20:19 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v2] clk: at91: add at91sam9n12 pmc driver
-Date:   Fri, 17 Jan 2020 22:20:17 +0100
-Message-Id: <20200117212017.20278-1-alexandre.belloni@bootlin.com>
-X-Mailer: git-send-email 2.24.1
+        Fri, 17 Jan 2020 16:21:26 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00HLLJdd024057;
+        Fri, 17 Jan 2020 15:21:19 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579296079;
+        bh=ONsoTuB/2GclkLHgPRMr5rwXOyh+oEbisNCdNrkRWLU=;
+        h=From:To:CC:Subject:Date;
+        b=cpiQVRq1H+H+a6PYDafbcatf8gVlql4n/JDC/XV/AlYNLC4VixVvFowJ6vpH18Q98
+         i4g9vHK7OZUVzt4m55EH6+wqJSPh4HWqAjK+PKLHDfIqDFyC8QzxobBLMqnoXi2ZSs
+         sMq+pyJycY1z6q0+5EyrLXhRVCrvxevRn0HRHuyk=
+Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00HLLJ0d077243;
+        Fri, 17 Jan 2020 15:21:19 -0600
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 17
+ Jan 2020 15:21:19 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 17 Jan 2020 15:21:19 -0600
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00HLLGoI093192;
+        Fri, 17 Jan 2020 15:21:17 -0600
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+CC:     <linux-kernel@vger.kernel.org>, Hongbo Yao <yaohongbo@huawei.com>
+Subject: [PATCH] phy: ti: j721e-wiz: Fix build error without CONFIG_OF_ADDRESS
+Date:   Sat, 18 Jan 2020 02:53:10 +0530
+Message-ID: <20200117212310.2864-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a driver for the PMC clocks of the at91sam9n12 family.
+From: Hongbo Yao <yaohongbo@huawei.com>
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+If CONFIG_OF_ADDRESS is not set and COMPILE_TEST=y, the following
+error is seen while building phy-j721e-wiz.c
+
+drivers/phy/ti/phy-j721e-wiz.o: In function `wiz_remove':
+phy-j721e-wiz.c:(.text+0x1a): undefined reference to
+`of_platform_device_destroy'
+
+Fix the config dependency for PHY_J721E_WIZ here.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 091876cc355d ("phy: ti: j721e-wiz: Add support for WIZ module present in TI J721E SoC")
+Signed-off-by: Hongbo Yao <yaohongbo@huawei.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
-Changes in v2:
- - use nck for the number of peripheral clocks
- - correct alignment
+ drivers/phy/ti/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
- drivers/clk/at91/Makefile      |   3 +-
- drivers/clk/at91/at91sam9n12.c | 239 +++++++++++++++++++++++++++++++++
- 2 files changed, 241 insertions(+), 1 deletion(-)
- create mode 100644 drivers/clk/at91/at91sam9n12.c
-
-diff --git a/drivers/clk/at91/Makefile b/drivers/clk/at91/Makefile
-index 3732241352ce..d467c6f8650a 100644
---- a/drivers/clk/at91/Makefile
-+++ b/drivers/clk/at91/Makefile
-@@ -15,7 +15,8 @@ obj-$(CONFIG_HAVE_AT91_H32MX)		+= clk-h32mx.o
- obj-$(CONFIG_HAVE_AT91_GENERATED_CLK)	+= clk-generated.o
- obj-$(CONFIG_HAVE_AT91_I2S_MUX_CLK)	+= clk-i2s-mux.o
- obj-$(CONFIG_HAVE_AT91_SAM9X60_PLL)	+= clk-sam9x60-pll.o
--obj-$(CONFIG_SOC_AT91SAM9) += at91sam9260.o at91sam9rl.o at91sam9x5.o
-+obj-$(CONFIG_SOC_AT91SAM9) += at91sam9260.o at91sam9rl.o
-+obj-$(CONFIG_SOC_AT91SAM9) += at91sam9n12.o at91sam9x5.o
- obj-$(CONFIG_SOC_SAM9X60) += sam9x60.o
- obj-$(CONFIG_SOC_SAMA5D4) += sama5d4.o
- obj-$(CONFIG_SOC_SAMA5D2) += sama5d2.o
-diff --git a/drivers/clk/at91/at91sam9n12.c b/drivers/clk/at91/at91sam9n12.c
-new file mode 100644
-index 000000000000..844b2125d7cb
---- /dev/null
-+++ b/drivers/clk/at91/at91sam9n12.c
-@@ -0,0 +1,239 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/clk-provider.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/slab.h>
-+
-+#include <dt-bindings/clock/at91.h>
-+
-+#include "pmc.h"
-+
-+static const struct clk_master_characteristics mck_characteristics = {
-+	.output = { .min = 0, .max = 133333333 },
-+	.divisors = { 1, 2, 4, 3 },
-+	.have_div3_pres = 1,
-+};
-+
-+static u8 plla_out[] = { 0, 1, 2, 3, 0, 1, 2, 3 };
-+
-+static u16 plla_icpll[] = { 0, 0, 0, 0, 1, 1, 1, 1 };
-+
-+static const struct clk_range plla_outputs[] = {
-+	{ .min = 745000000, .max = 800000000 },
-+	{ .min = 695000000, .max = 750000000 },
-+	{ .min = 645000000, .max = 700000000 },
-+	{ .min = 595000000, .max = 650000000 },
-+	{ .min = 545000000, .max = 600000000 },
-+	{ .min = 495000000, .max = 555000000 },
-+	{ .min = 445000000, .max = 500000000 },
-+	{ .min = 400000000, .max = 450000000 },
-+};
-+
-+static const struct clk_pll_characteristics plla_characteristics = {
-+	.input = { .min = 2000000, .max = 32000000 },
-+	.num_output = ARRAY_SIZE(plla_outputs),
-+	.output = plla_outputs,
-+	.icpll = plla_icpll,
-+	.out = plla_out,
-+};
-+
-+static u8 pllb_out[] = { 0 };
-+
-+static const struct clk_range pllb_outputs[] = {
-+	{ .min = 30000000, .max = 100000000 },
-+};
-+
-+static const struct clk_pll_characteristics pllb_characteristics = {
-+	.input = { .min = 2000000, .max = 32000000 },
-+	.num_output = ARRAY_SIZE(pllb_outputs),
-+	.output = pllb_outputs,
-+	.out = pllb_out,
-+};
-+
-+static const struct {
-+	char *n;
-+	char *p;
-+	u8 id;
-+} at91sam9n12_systemck[] = {
-+	{ .n = "ddrck", .p = "masterck", .id = 2 },
-+	{ .n = "lcdck", .p = "masterck", .id = 3 },
-+	{ .n = "uhpck", .p = "usbck",    .id = 6 },
-+	{ .n = "udpck", .p = "usbck",    .id = 7 },
-+	{ .n = "pck0",  .p = "prog0",    .id = 8 },
-+	{ .n = "pck1",  .p = "prog1",    .id = 9 },
-+};
-+
-+static const struct clk_pcr_layout at91sam9n12_pcr_layout = {
-+	.offset = 0x10c,
-+	.cmd = BIT(12),
-+	.pid_mask = GENMASK(5, 0),
-+	.div_mask = GENMASK(17, 16),
-+};
-+
-+struct pck {
-+	char *n;
-+	u8 id;
-+};
-+
-+static const struct pck at91sam9n12_periphck[] = {
-+	{ .n = "pioAB_clk",  .id = 2, },
-+	{ .n = "pioCD_clk",  .id = 3, },
-+	{ .n = "fuse_clk",   .id = 4, },
-+	{ .n = "usart0_clk", .id = 5, },
-+	{ .n = "usart1_clk", .id = 6, },
-+	{ .n = "usart2_clk", .id = 7, },
-+	{ .n = "usart3_clk", .id = 8, },
-+	{ .n = "twi0_clk",   .id = 9, },
-+	{ .n = "twi1_clk",   .id = 10, },
-+	{ .n = "mci0_clk",   .id = 12, },
-+	{ .n = "spi0_clk",   .id = 13, },
-+	{ .n = "spi1_clk",   .id = 14, },
-+	{ .n = "uart0_clk",  .id = 15, },
-+	{ .n = "uart1_clk",  .id = 16, },
-+	{ .n = "tcb_clk",    .id = 17, },
-+	{ .n = "pwm_clk",    .id = 18, },
-+	{ .n = "adc_clk",    .id = 19, },
-+	{ .n = "dma0_clk",   .id = 20, },
-+	{ .n = "uhphs_clk",  .id = 22, },
-+	{ .n = "udphs_clk",  .id = 23, },
-+	{ .n = "lcdc_clk",   .id = 25, },
-+	{ .n = "sha_clk",    .id = 27, },
-+	{ .n = "ssc0_clk",   .id = 28, },
-+	{ .n = "aes_clk",    .id = 29, },
-+	{ .n = "trng_clk",   .id = 30, },
-+};
-+
-+static void __init at91sam9n12_pmc_setup(struct device_node *np)
-+{
-+	struct clk_range range = CLK_RANGE(0, 0);
-+	const char *slck_name, *mainxtal_name;
-+	struct pmc_data *at91sam9n12_pmc;
-+	const char *parent_names[6];
-+	struct regmap *regmap;
-+	struct clk_hw *hw;
-+	int i;
-+	bool bypass;
-+
-+	i = of_property_match_string(np, "clock-names", "slow_clk");
-+	if (i < 0)
-+		return;
-+
-+	slck_name = of_clk_get_parent_name(np, i);
-+
-+	i = of_property_match_string(np, "clock-names", "main_xtal");
-+	if (i < 0)
-+		return;
-+	mainxtal_name = of_clk_get_parent_name(np, i);
-+
-+	regmap = syscon_node_to_regmap(np);
-+	if (IS_ERR(regmap))
-+		return;
-+
-+	at91sam9n12_pmc = pmc_data_allocate(PMC_MAIN + 1,
-+					    nck(at91sam9n12_systemck),
-+					    nck(at91sam9n12_periphck), 0);
-+	if (!at91sam9n12_pmc)
-+		return;
-+
-+	hw = at91_clk_register_main_rc_osc(regmap, "main_rc_osc", 12000000,
-+					   50000000);
-+	if (IS_ERR(hw))
-+		goto err_free;
-+
-+	bypass = of_property_read_bool(np, "atmel,osc-bypass");
-+
-+	hw = at91_clk_register_main_osc(regmap, "main_osc", mainxtal_name,
-+					bypass);
-+	if (IS_ERR(hw))
-+		goto err_free;
-+
-+	parent_names[0] = "main_rc_osc";
-+	parent_names[1] = "main_osc";
-+	hw = at91_clk_register_sam9x5_main(regmap, "mainck", parent_names, 2);
-+	if (IS_ERR(hw))
-+		goto err_free;
-+
-+	at91sam9n12_pmc->chws[PMC_MAIN] = hw;
-+
-+	hw = at91_clk_register_pll(regmap, "pllack", "mainck", 0,
-+				   &at91rm9200_pll_layout, &plla_characteristics);
-+	if (IS_ERR(hw))
-+		goto err_free;
-+
-+	hw = at91_clk_register_plldiv(regmap, "plladivck", "pllack");
-+	if (IS_ERR(hw))
-+		goto err_free;
-+
-+	hw = at91_clk_register_pll(regmap, "pllbck", "mainck", 1,
-+				   &at91rm9200_pll_layout, &pllb_characteristics);
-+	if (IS_ERR(hw))
-+		goto err_free;
-+
-+	parent_names[0] = slck_name;
-+	parent_names[1] = "mainck";
-+	parent_names[2] = "plladivck";
-+	parent_names[3] = "pllbck";
-+	hw = at91_clk_register_master(regmap, "masterck", 4, parent_names,
-+				      &at91sam9x5_master_layout,
-+				      &mck_characteristics);
-+	if (IS_ERR(hw))
-+		goto err_free;
-+
-+	at91sam9n12_pmc->chws[PMC_MCK] = hw;
-+
-+	hw = at91sam9n12_clk_register_usb(regmap, "usbck", "pllbck");
-+	if (IS_ERR(hw))
-+		goto err_free;
-+
-+	parent_names[0] = slck_name;
-+	parent_names[1] = "mainck";
-+	parent_names[2] = "plladivck";
-+	parent_names[3] = "pllbck";
-+	parent_names[4] = "masterck";
-+	for (i = 0; i < 2; i++) {
-+		char name[6];
-+
-+		snprintf(name, sizeof(name), "prog%d", i);
-+
-+		hw = at91_clk_register_programmable(regmap, name,
-+						    parent_names, 5, i,
-+						    &at91sam9x5_programmable_layout);
-+		if (IS_ERR(hw))
-+			goto err_free;
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(at91sam9n12_systemck); i++) {
-+		hw = at91_clk_register_system(regmap, at91sam9n12_systemck[i].n,
-+					      at91sam9n12_systemck[i].p,
-+					      at91sam9n12_systemck[i].id);
-+		if (IS_ERR(hw))
-+			goto err_free;
-+
-+		at91sam9n12_pmc->shws[at91sam9n12_systemck[i].id] = hw;
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(at91sam9n12_periphck); i++) {
-+		hw = at91_clk_register_sam9x5_peripheral(regmap, &pmc_pcr_lock,
-+							 &at91sam9n12_pcr_layout,
-+							 at91sam9n12_periphck[i].n,
-+							 "masterck",
-+							 at91sam9n12_periphck[i].id,
-+							 &range);
-+		if (IS_ERR(hw))
-+			goto err_free;
-+
-+		at91sam9n12_pmc->phws[at91sam9n12_periphck[i].id] = hw;
-+	}
-+
-+	of_clk_add_hw_provider(np, of_clk_hw_pmc_get, at91sam9n12_pmc);
-+
-+	return;
-+
-+err_free:
-+	pmc_data_free(at91sam9n12_pmc);
-+}
-+/*
-+ * The TCB is used as the clocksource so its clock is needed early. This means
-+ * this can't be a platform driver.
-+ */
-+CLK_OF_DECLARE_DRIVER(at91sam9n12_pmc, "atmel,at91sam9n12-pmc",
-+		      at91sam9n12_pmc_setup);
+diff --git a/drivers/phy/ti/Kconfig b/drivers/phy/ti/Kconfig
+index 3a1d3887c99c..6dbe9d0b9ff3 100644
+--- a/drivers/phy/ti/Kconfig
++++ b/drivers/phy/ti/Kconfig
+@@ -36,6 +36,7 @@ config PHY_AM654_SERDES
+ config PHY_J721E_WIZ
+ 	tristate "TI J721E WIZ (SERDES Wrapper) support"
+ 	depends on OF && ARCH_K3 || COMPILE_TEST
++	depends on HAS_IOMEM && OF_ADDRESS
+ 	depends on COMMON_CLK
+ 	select GENERIC_PHY
+ 	select MULTIPLEXER
 -- 
-2.24.1
+2.17.1
 
