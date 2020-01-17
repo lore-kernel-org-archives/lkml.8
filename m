@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 869DEC33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A4EC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AA902072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7582E2072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:45:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579275901;
-	bh=M1qcblMBtK2HgtYvCeU2tDdR8sWNbc9UeQ5cFmDrVjY=;
+	s=default; t=1579275903;
+	bh=rWC9Z2vfXvulKPqHYc4Y6XjVOtFe2wD1tdbL3jOkEJY=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=X89ywC/7JxHr7HxuC7vCCi45VyPo01Db/uGbFUr0/p1HETDoQ4Y5miOQ9YIQm0qMl
-	 1Fs0/FE/jDf6Q0xTlkBovcOVXa+2JgKX96ObQnEYWXdo10Ksg1d5a9wOycFQx5r4Qy
-	 EUPDo9Lt3YJgGcXO6mtnPMUg4Ows1ErcOV+zjIZY=
+	b=Pqh+2CG1yHwonoN8nYW3uWQ+9xqcmAtZ6pIHCS2zDOvzQzEACz6jUSXsXqgO3UDVv
+	 bAtWgUYWjs0UU4uUTc+sR2CGRMuKkbITHd3BdoZOqB7unP1X2zhsNf1AGrGebT3b8M
+	 NmB5mxn81JZWFFabRCuadMz41p65yxekHx3VKlaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729436AbgAQPpA (ORCPT
+        id S1729417AbgAQPo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 10:45:00 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53976 "EHLO
+        Fri, 17 Jan 2020 10:44:59 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53974 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729210AbgAQPoa (ORCPT
+        with ESMTP id S1729207AbgAQPoa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 17 Jan 2020 10:44:30 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,17 +34,17 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=aNhfz5xSnBJuJUs9Nvc6bIIqDmzUTd5NmPbncOiwvWE=; b=uS47EFmEcy6v
-        6VUGZtKkE6CLNVfKOiGdJ4Y+D3FKbQLqDXkvL/whTBUbIhZb56/s10W2LYkw9AlzH/OUb9+9ednIJ
-        ZY8D7Hx+SwZ63UH0EMXbYLDUcp2j2HZqAR4zoONL6QKrukQoohacqjVjAjmaUJE6EnyfHy1YBl61M
-        6ZhTo=;
+        List-Archive; bh=YZm/5f9wodQfID90hCH6kdu/JpRhW+QGeHbLTu7g0DM=; b=Wu4Px26QUDJX
+        9BBVnJdZiujoKJDRPmgP7URAGeeMyS/2vWCDgNjtat6R+Jn/iNX6uDYsbaQoX2FpFED4ivBh0ykiy
+        gWthDXylaQc0TVOl5Co7tjBTBLMpbclsVxl9c6jd3o8B7cq+SFdcTwtX8Hix9hiS2VevtxOixKqYe
+        /084o=;
 Received: from fw-tnat-cam4.arm.com ([217.140.106.52] helo=fitzroy.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1isTnM-0006uW-An; Fri, 17 Jan 2020 15:44:24 +0000
+        id 1isTnM-0006ua-JB; Fri, 17 Jan 2020 15:44:24 +0000
 Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 062EED02BD9; Fri, 17 Jan 2020 15:44:24 +0000 (GMT)
+        id 4C87BD02A2A; Fri, 17 Jan 2020 15:44:24 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Tomer Maimon <tmaimon77@gmail.com>
 Cc:     avifishman70@gmail.com, benjaminfair@google.com,
@@ -53,9 +53,9 @@ Cc:     avifishman70@gmail.com, benjaminfair@google.com,
         Mark Brown <broonie@kernel.org>, mark.rutland@arm.com,
         openbmc@lists.ozlabs.org, robh+dt@kernel.org,
         tali.perry1@gmail.com, venture@google.com, yuenn@google.com
-Subject: Applied "spi: npcm-pspi: improve spi transfer performance" to the spi tree
-In-Reply-To: <20200115162301.235926-3-tmaimon77@gmail.com>
-Message-Id: <applied-20200115162301.235926-3-tmaimon77@gmail.com>
+Subject: Applied "spi: npcm-pspi: fix 16 bit send and receive support" to the spi tree
+In-Reply-To: <20200115162301.235926-2-tmaimon77@gmail.com>
+Message-Id: <applied-20200115162301.235926-2-tmaimon77@gmail.com>
 X-Patchwork-Hint: ignore
 Date:   Fri, 17 Jan 2020 15:44:24 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,11 +65,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: npcm-pspi: improve spi transfer performance
+   spi: npcm-pspi: fix 16 bit send and receive support
 
 has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.6
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -90,40 +90,79 @@ to this mail.
 Thanks,
 Mark
 
-From b4adf5b27d59cdefff1e6fcba99151edea65a9f7 Mon Sep 17 00:00:00 2001
+From 47416a5f27be0a0e815ef5f9f2f06618ae5e0470 Mon Sep 17 00:00:00 2001
 From: Tomer Maimon <tmaimon77@gmail.com>
-Date: Wed, 15 Jan 2020 18:22:59 +0200
-Subject: [PATCH] spi: npcm-pspi: improve spi transfer performance
+Date: Wed, 15 Jan 2020 18:22:58 +0200
+Subject: [PATCH] spi: npcm-pspi: fix 16 bit send and receive support
 
-Improving spi 8 bit per word mode transfer performance
-by using 16 bit per word transfer and receive when the data
-length is even and larger than one.
+Fixing NPCM BMC Peripheral SPI controller 16 bit
+send and receive support by writing and reading
+the SPI data in the right order.
 
 Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-Link: https://lore.kernel.org/r/20200115162301.235926-3-tmaimon77@gmail.com
+Link: https://lore.kernel.org/r/20200115162301.235926-2-tmaimon77@gmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-npcm-pspi.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/spi/spi-npcm-pspi.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/spi/spi-npcm-pspi.c b/drivers/spi/spi-npcm-pspi.c
-index fe624731c74c..d224aa63dbce 100644
+index fe624731c74c..c74611abe2a9 100644
 --- a/drivers/spi/spi-npcm-pspi.c
 +++ b/drivers/spi/spi-npcm-pspi.c
-@@ -178,6 +178,13 @@ static void npcm_pspi_setup_transfer(struct spi_device *spi,
- 		priv->mode = spi->mode;
- 	}
+@@ -195,6 +195,7 @@ static void npcm_pspi_setup_transfer(struct spi_device *spi,
+ static void npcm_pspi_send(struct npcm_pspi *priv)
+ {
+ 	int wsize;
++	u16 val;
  
-+	/*
-+	 * If transfer is even length, and 8 bits per word transfer,
-+	 * then implement 16 bits-per-word transfer.
-+	 */
-+	if (priv->bits_per_word == 8 && !(t->len & 0x1))
-+		t->bits_per_word = 16;
-+
- 	if (!priv->is_save_param || priv->bits_per_word != t->bits_per_word) {
- 		npcm_pspi_set_transfer_size(priv, t->bits_per_word);
- 		priv->bits_per_word = t->bits_per_word;
+ 	wsize = min(bytes_per_word(priv->bits_per_word), priv->tx_bytes);
+ 	priv->tx_bytes -= wsize;
+@@ -204,17 +205,18 @@ static void npcm_pspi_send(struct npcm_pspi *priv)
+ 
+ 	switch (wsize) {
+ 	case 1:
+-		iowrite8(*priv->tx_buf, NPCM_PSPI_DATA + priv->base);
++		val = *priv->tx_buf++;
++		iowrite8(val, NPCM_PSPI_DATA + priv->base);
+ 		break;
+ 	case 2:
+-		iowrite16(*priv->tx_buf, NPCM_PSPI_DATA + priv->base);
++		val = *priv->tx_buf++;
++		val = *priv->tx_buf++ | (val << 8);
++		iowrite16(val, NPCM_PSPI_DATA + priv->base);
+ 		break;
+ 	default:
+ 		WARN_ON_ONCE(1);
+ 		return;
+ 	}
+-
+-	priv->tx_buf += wsize;
+ }
+ 
+ static void npcm_pspi_recv(struct npcm_pspi *priv)
+@@ -230,18 +232,17 @@ static void npcm_pspi_recv(struct npcm_pspi *priv)
+ 
+ 	switch (rsize) {
+ 	case 1:
+-		val = ioread8(priv->base + NPCM_PSPI_DATA);
++		*priv->rx_buf++ = ioread8(priv->base + NPCM_PSPI_DATA);
+ 		break;
+ 	case 2:
+ 		val = ioread16(priv->base + NPCM_PSPI_DATA);
++		*priv->rx_buf++ = (val >> 8);
++		*priv->rx_buf++ = val & 0xff;
+ 		break;
+ 	default:
+ 		WARN_ON_ONCE(1);
+ 		return;
+ 	}
+-
+-	*priv->rx_buf = val;
+-	priv->rx_buf += rsize;
+ }
+ 
+ static int npcm_pspi_transfer_one(struct spi_master *master,
 -- 
 2.20.1
 
