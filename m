@@ -2,97 +2,184 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 711E3C33CAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 01:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 152D7C33CAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 01:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39E6F20728
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 01:29:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CeQQpeFl"
+	by mail.kernel.org (Postfix) with ESMTP id CC62020728
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 01:29:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388160AbgAQB3m (ORCPT
+        id S2388230AbgAQB3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 20:29:42 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:45718 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730070AbgAQB3m (ORCPT
+        Thu, 16 Jan 2020 20:29:48 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:54112 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730070AbgAQB3q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 20:29:42 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00H1O3hb155714;
-        Fri, 17 Jan 2020 01:29:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=XYEZpW6I+SWVCI8l8yTQxH4M0FMw+uzWBFImgbXRtMo=;
- b=CeQQpeFl2xAtM5g/e+1p/8BGWws+OXyEl5Y/mSO3cZ2R4avd5GrKI6z/heg1KSFbWJvZ
- /86EJbF03qhPz+CgAgPGgbzTg6ZcMC/Y3L1+1XXPT/gmeD45t0IYjj8ToEljTheWyx+f
- 8FtIhfp16RX9rAlbhwwE0iAfQyiw6hk6hjpoG+W8mb//AzJOf9SwZxBVtBr8yX4Fu29f
- kn1gNaMYuBePGJ76hlJtfPTPqKs/Tfrq5DeSgVoEa289FJoQSvoT1DIwmSHIEdV8xFn1
- edQyBVFzxVhyrTYTf94EvbvAVbthdA7mWKOo6w/wNQFxMzwKAZyFQkrB1J2Qhyz1u4VD ZQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2xf73u5whh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Jan 2020 01:29:36 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00H1O8KX086551;
-        Fri, 17 Jan 2020 01:29:35 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2xk22xvxj3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Jan 2020 01:29:35 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00H1TYev010198;
-        Fri, 17 Jan 2020 01:29:34 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 16 Jan 2020 17:29:33 -0800
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Michael Reed <mdr@sgi.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scsi: qla1280: Fix dma firmware download, if dma address is 64bit
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20200114160936.1517-1-tbogendoerfer@suse.de>
-        <yq18sm8nitd.fsf@oracle.com>
-        <20200116124335.43a679198f514cbdf7a929c4@suse.de>
-Date:   Thu, 16 Jan 2020 20:29:31 -0500
-In-Reply-To: <20200116124335.43a679198f514cbdf7a929c4@suse.de> (Thomas
-        Bogendoerfer's message of "Thu, 16 Jan 2020 12:43:35 +0100")
-Message-ID: <yq1d0bina4k.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Thu, 16 Jan 2020 20:29:46 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1isGS9-0006Qz-2F; Fri, 17 Jan 2020 02:29:37 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 50722100C19; Fri, 17 Jan 2020 02:29:36 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org
+Cc:     chenhc@lemote.com, paul.burton@mips.com,
+        linux-kernel@vger.kernel.org, maz@kernel.org,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH v1 1/2] genirq: Check for level based percpu irq
+In-Reply-To: <20200117001706.40620-1-jiaxun.yang@flygoat.com>
+References: <20200113101251.37471-1-jiaxun.yang@flygoat.com> <20200117001706.40620-1-jiaxun.yang@flygoat.com>
+Date:   Fri, 17 Jan 2020 02:29:36 +0100
+Message-ID: <875zhaeupr.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9502 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=836
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001170008
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9502 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=912 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001170008
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Jiaxun Yang <jiaxun.yang@flygoat.com> writes:
+> MIPS processors implemented their IPI IRQ and CPU interrupt line
+> as level triggered IRQ. However, our current percpu_irq flow is trying
+> do it in a level triggered manner.
 
-Thomas,
+So what are you trying to solve? The CPU uses level type and the per cpu
+irq flow does the same. I can't find the problem with that.
 
-> kbuild robot found an issue in the patch. Do you want a new version of
-> the patch or an incremental patch ?
+> Thus we attempt to determine whether it is or not level triggered type by
+> checking if both ack and eoi operation not exist. And handle it in
+> mask/unmask way.
 
-Incremental, please.
+What? No. This is fundamentally wrong.
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+percpu interrupts which are used for IPIs/per CPU timers/PERF have the
+the following semantics:
+
+ 1) No serialization required because the interrupt cannot happen
+    concurrently on the same CPU
+
+ 2) The interrupt handler is strictly hard interrupt context. There
+    can't be a threaded handler associated to it.
+
+ 3) The interrupt hardware interaction is reduced to the absolute minimum
+    depending on the trigger type of the relevant interrupt controller.
+
+Now #3 is the interesting one here and there are the following cases:
+
+ A) Edge type
+
+    Edge type interrupts are events which are triggered once when the
+    level of the interrupt line changes. Depending on the implementation
+    and configuration of the interrupt controller they react on either
+    one direction of level change (low -> high, high ->low) or on both,
+
+    They require that the interrupt is acked at the interrupt controller
+    _before_ the handler runs. That's required because otherwise the
+    device could issue a new interrupt after the initial one has been
+    handled and before the ack was issued. That ack would then clear the
+    new interrupt which would get lost and potentially starve the device
+    forever.
+
+    See handle_edge_irq()
+
+    Edge type interrupts are also not suitable for interrupt sharing.
+
+    Note, that MSI interrupts are edge type because the interrupt
+    message is only sent once when the event happens.
+
+ B) Level type
+
+    Level type interrupts react on a static level state. If the
+    interrupt line has the implementation/configuration defined level
+    then the interrupt is delivered to the CPU up to the point where the
+    interrupt line returns to the inactive level.
+
+    For regular operation they usually require that the interrupt is
+    masked before the handler runs and unmasked after the handler
+    completes. This is required to prevent interrupt storms in case the
+    handler reenables interrupts at the CPU level which is not relevant
+    for Linux unless the interrupt handler is threaded. For threaded
+    handlers the line must be masked until the thread completes.
+    
+    They are lossless because if the interrupt is reactivated after
+    handling the initial one before the unmask of the line happens it is
+    immediately delivered to the CPU again after the unmask takes place.
+
+    Level interrupts can be shared lossless. (Note that interrupt
+    sharing is a design fail from a performance perspective because the
+    handling requires that all devices which share the same line need to
+    be polled whether they actually issued an interrupt).
+
+    Some level type controllers require an MASK/ACK sequence to work
+    correctly. That's often the case when the controller supports both
+    level and edge mode.
+
+ C) EOI type
+
+    EOI type interrupts are from their concept level interrupts.
+    
+    Contrary to regular level interrupts they do not require the mask
+    and unmask operation to prevent an interrupt storm. The interrupt
+    controller guarantees not to deliver the still active interrupt up
+    to the point where the software issues EOI.
+
+    The EOI happens after the actual device handler has run. That's a
+    very efficient solution which avoids slow mask/unmask operations and
+    at the same time guarantees that no interrupts are lost.
+
+So lets look how this relates to strict per cpu interrupts,
+i.e. interrupts which can only be delivered to one particular CPU.
+
+As documented above the strict percpuness removes the requirement for
+locking as the CPU itself guarantees non-reentrancy for the same
+interrupt as long as interrupts are disabled at the CPU level while the
+interrupt is serviced.
+
+Aside of that this also affects the required operations for interrupt
+handling. None of the true per cpu interrupts requires any form of
+mask/unmask operation in the handler. They only require that the
+relevant ACK/EOI operations take place. So for the 3 types above this
+results in the following:
+
+ A) Edge type
+
+    Issue ACK before invoking the handler
+
+ B) Level type
+
+    If the controller does not require ACK, then no action is required.
+
+    If the controller requires ACK, the ACK has to be issued before
+    invoking the handler.
+
+ C) EOI type
+
+    Issue EOI after invoking the handler
+
+As the MIPS GIC is a strict level type controller which does not require
+ACK or EOI operations, the irq_ack/irq_eoi callbacks are completely
+bogus.
+
+There is also no need to change anything in the core code percpu handler
+implementations.
+
+All you need to do is to remove the bogus irq_ack/irq_eoi function
+pointers from the MIPS GIC irq_chip and be done with it.
+
+Thanks,
+
+        tglx
+
+
+    
+
+  
