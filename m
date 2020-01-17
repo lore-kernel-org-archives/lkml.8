@@ -2,118 +2,110 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C226C33CB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CCCC33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24460206E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:26:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iqXMZ7Sa"
+	by mail.kernel.org (Postfix) with ESMTP id B24A8206E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:28:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579282091;
+	bh=hvGeQ+Dzxlp757fj59Ku226Qwv2Mkij8C8AjAZvL4ws=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xW9JKavyI4Gnu/aAyEIyvvbyosVRxtY7N+w5QIR/qCKanGJEShJgGd9wQisCp50q+
+	 hp3LL8VAgwUjIL4CyyEGPkkvB5RVEUxsialE832cdVPv7neJDyva54s+5PXdSW3QWn
+	 RaFNkgFtIm43uRrG9gWpL6GtfW1BmJik0IuC9lBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729035AbgAQR0k (ORCPT
+        id S1728984AbgAQR2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 12:26:40 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28767 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726970AbgAQR0j (ORCPT
+        Fri, 17 Jan 2020 12:28:10 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:44003 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726684AbgAQR2K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 12:26:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579281998;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=lK3eediDWtVCh47lizBT55QqgySEaj52x7m9+e9sBh8=;
-        b=iqXMZ7SaEZWu55xq1C/E12C0FMSuuTajzGDtRCm5q/2esoBREr8cPJp8vFdF/C+2Tg7nwH
-        /4WHE8ag9hK4fA9uLeLwRKxnaa1fHjVrto8oNR+xN3cjh9ASwfSvddAzKjTmEp6GnoxWtx
-        LtNskhAsKAJYGp5ycqftb56mqgvm7gA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-351-4Q0abMuQNvWwEwjouYkmuQ-1; Fri, 17 Jan 2020 12:26:34 -0500
-X-MC-Unique: 4Q0abMuQNvWwEwjouYkmuQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8D0B8DB20;
-        Fri, 17 Jan 2020 17:26:32 +0000 (UTC)
-Received: from treble (ovpn-123-54.rdu2.redhat.com [10.10.123.54])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1906C9A84;
-        Fri, 17 Jan 2020 17:26:31 +0000 (UTC)
-Date:   Fri, 17 Jan 2020 11:26:29 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     David Sterba <dsterba@suse.cz>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Btrfs <linux-btrfs@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Marco Elver <elver@google.com>
-Subject: Re: linux-next: Tree for Dec 6 (objtool, lots in btrfs)
-Message-ID: <20200117172629.yqowxl642hdx4vcm@treble>
-References: <20191211134929.GL3929@twin.jikos.cz>
- <c751bc1a-505c-5050-3c4c-c83be81b4e48@infradead.org>
- <20191212184725.db3ost7rcopotr5u@treble>
- <b9b0c81b-0ca8-dfb7-958f-cd58a449b6fb@infradead.org>
- <ba2a7a9b-933b-d4e4-8970-85b6c1291fca@infradead.org>
- <20191213235054.6k2lcnwa63r26zwi@treble>
- <c6a33c21-3e71-ac98-cc95-db008764917c@infradead.org>
- <20191214054515.ougsr5ykhl3vvy57@treble>
- <fe1e0318-9b74-7ae0-07bd-d7a6c908e79a@infradead.org>
- <20191217152511.GG3929@suse.cz>
+        Fri, 17 Jan 2020 12:28:10 -0500
+Received: by mail-qt1-f195.google.com with SMTP id d18so22328496qtj.10;
+        Fri, 17 Jan 2020 09:28:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=YJBe+PR1JTzkbV6VdX/ClFM8UuTfYuVGKNcb10Up+LM=;
+        b=DbHiqO+e6kYuR6bMRUFqkRzJXzREnc/t8WeVUwNtwBq0US0ALqFtfBS3k8Ar5PzFae
+         jpbiR7Ax+NvFzgNUZfzP6b4KBWdJJ8us7/sDH5Tiro8mnHYZM1bos9P/GDhAcxVHXG4b
+         +CqRW+gbtb40Tq4JQ9+XfDuAtGc8xx7XWoPbLCDa9sXO0xSMc54OuWYlMPO3hMfg3xGs
+         R6SRfw70eNBH9z1vinkvQf3Pkmv//DOGZzpDO/JeaaQZKfMlTJoC34/zqw6bnCacSApd
+         hf6+skAgQQBrKH5W5od7c18HNBincCZTYsXdKlpO3ehhcjXZitzgNqPGCAFsoZlAoM4q
+         MvUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=YJBe+PR1JTzkbV6VdX/ClFM8UuTfYuVGKNcb10Up+LM=;
+        b=dlGsDK2AVaRbvusaEwWxDibqJoeiK/AU65ivacLnjYcLGTxCD6VYhitgt2zmk+hptR
+         MfK5Oi0TydvTAPAOfCqkA0RFxuYxHppwz0DY3K8zZDAOCrmo2XSvJ/m+pMI6IwnGzJ3y
+         SGRJWwfxMcy8YdtctsVJvBwnB9dEEBhgpnYmAGhMnJEpQXDOwCUNl/gq5CnEuzmoJL0k
+         /yqZPr8pRF7NKkW8KEjAUO3/EY5/P912PucbXcLVztykPCI9Xb68AjnO9Vpc8aFwyRYI
+         jyGDqZvtzS6wVXn4eLQ8CGW9qjlt4QVINVasnkVXUJv4QvU1qyJFmUCOCtS6vNzRb+1Q
+         jRLg==
+X-Gm-Message-State: APjAAAWFfcXNO2Ha9g7lMIHhylEmtT4DU5RLAyl3XBSPtrOy+d9nyvEq
+        YV5glm5kx1vtcdMj/2m6AGU=
+X-Google-Smtp-Source: APXvYqz2O/xFh6ygdxVfF7TRwAgb6tMQGsH1goOEKwF730KRP0mdEDko+yi0ag0UIHTaUnjOw9qRYQ==
+X-Received: by 2002:aed:2150:: with SMTP id 74mr8430727qtc.323.1579282089045;
+        Fri, 17 Jan 2020 09:28:09 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::1:7d10])
+        by smtp.gmail.com with ESMTPSA id r37sm13251937qtj.44.2020.01.17.09.28.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 Jan 2020 09:28:08 -0800 (PST)
+Date:   Fri, 17 Jan 2020 09:28:06 -0800
+From:   Tejun Heo <tj@kernel.org>
+To:     Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+Cc:     cgroups@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
+        Li Zefan <lizefan@huawei.com>, alex.shi@linux.alibaba.com,
+        guro@fb.com, kernel-team@android.com, linger.lee@mediatek.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com,
+        shuah@kernel.org, tomcherry@google.com
+Subject: Re: [PATCH 2/3] cgroup: Iterate tasks that did not finish do_exit()
+Message-ID: <20200117172806.GK2677547@devbig004.ftw2.facebook.com>
+References: <20200116043612.52782-1-surenb@google.com>
+ <20200117151533.12381-1-mkoutny@suse.com>
+ <20200117151533.12381-3-mkoutny@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191217152511.GG3929@suse.cz>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200117151533.12381-3-mkoutny@suse.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 04:25:11PM +0100, David Sterba wrote:
-> On Fri, Dec 13, 2019 at 11:05:18PM -0800, Randy Dunlap wrote:
-> > OK, that fixes most of them, but still leaves these 2:
-> > 
-> > btrfs006.out:fs/btrfs/extent_io.o: warning: objtool: __set_extent_bit()+0x536: unreachable instruction
+On Fri, Jan 17, 2020 at 04:15:32PM +0100, Michal Koutný wrote:
+> PF_EXITING is set earlier than actual removal from css_set when a task
+> is exitting. This can confuse cgroup.procs readers who see no PF_EXITING
+> tasks, however, rmdir is checking against css_set membership so it can
+> transitionally fail with EBUSY.
 > 
-> Hard to read from the assembly what C statement is it referring to. I
-> think there are also several functions inlined, I don't see anything
-> suspicious inside __set_extent_bit itself.
-> 
-> > btrfs006.out:fs/btrfs/relocation.o: warning: objtool: add_tree_block()+0x501: unreachable instruction
-> 
-> Probably also heavily inlined, the function has like 50 lines, a few
-> non-trivial function calls but the offset in the warning suggests a
-> larger size.
-> 
-> While browsing the callees I noticed that both have in common a function
-> that is supposed to print and stop at fatal errors. They're
-> extent_io_tree_panic (extent_io.c) and backref_tree_panic
-> (relocation.c). Both call btrfs_panic which is a macro:
-> 
-> 3239 #define btrfs_panic(fs_info, errno, fmt, args...)                       \
-> 3240 do {                                                                    \
-> 3241         __btrfs_panic(fs_info, __func__, __LINE__, errno, fmt, ##args); \
-> 3242         BUG();                                                          \
-> 3243 } while (0)
-> 
-> There are no conditionals and BUG has the __noreturn annotation
-> (unreachable()) so all is in place and I don't have better ideas what's
-> causing the reports.
+> Fix this by listing tasks that weren't unlinked from css_set active
+> lists.
+> It may happen that other users of the task iterator (without
+> CSS_TASK_ITER_PROCS) spot a PF_EXITING task before cgroup_exit(). This
+> is equal to the state before commit c03cd7738a83 ("cgroup: Include dying
+> leaders with live threads in PROCS iterations") but it may be reviewed
+> later.
 
-I think KCSAN is somehow disabling GCC's detection of implicit noreturn
-functions -- or at least some calls to them.  So GCC is inserting dead
-code after the calls.  BUG() uses __builtin_unreachable(), so GCC should
-know better.
+Yeah, this looks fine to me.  Any chance you can order this before the
+clean up so that we can mark it for -stable.
 
-If this is specific to KCSAN then I might just disable these warnings
-for KCSAN configs.
+Thanks.
 
 -- 
-Josh
-
+tejun
