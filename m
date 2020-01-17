@@ -2,698 +2,200 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A90C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25844C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1683C217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:33:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFFD320728
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:38:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="Obv9ozfA"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="bSqq+fKF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733081AbgAQAdj (ORCPT
+        id S1731077AbgAQAif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 19:33:39 -0500
-Received: from forward501j.mail.yandex.net ([5.45.198.251]:45120 "EHLO
-        forward501j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728905AbgAQAdi (ORCPT
+        Thu, 16 Jan 2020 19:38:35 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:35026 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726925AbgAQAie (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 19:33:38 -0500
-Received: from mxback14g.mail.yandex.net (mxback14g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:93])
-        by forward501j.mail.yandex.net (Yandex) with ESMTP id 297D9338009B;
-        Fri, 17 Jan 2020 03:33:31 +0300 (MSK)
-Received: from localhost (localhost [::1])
-        by mxback14g.mail.yandex.net (mxback/Yandex) with ESMTP id L3VhOUbm4G-XR8WJ4HO;
-        Fri, 17 Jan 2020 03:33:30 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1579221210;
-        bh=gIhOfI7J5j4DUJ4iVOinjbFGZNTbggBi2Lcme5iO/VE=;
-        h=Message-Id:Cc:Subject:In-Reply-To:Date:References:To:From;
-        b=Obv9ozfAtK4KgTvaV47O6BnZBEqLQ7WdqWVQOu88CAujpvBVmDHgljajA77CJOeEd
-         R7FvYZnHzMcODDKr9na+XFV9p9ulBEz697YY3EH+x/JLM0xYPzTP7eGv8Ng3b44rcR
-         ZFMMjqHnk8WT3z+Cq9hIIbQl6GtnNc3HLmEowp6M=
-Authentication-Results: mxback14g.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by sas2-fcc04dffb613.qloud-c.yandex.net with HTTP;
-        Fri, 17 Jan 2020 03:33:27 +0300
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Envelope-From: yjx@flygoat.com
-To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "mips-creator-ci20-dev@googlegroups.com" 
-        <mips-creator-ci20-dev@googlegroups.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "paul.burton@mips.com" <paul.burton@mips.com>,
-        "paulburton@kernel.org" <paulburton@kernel.org>,
-        "jhogan@kernel.org" <jhogan@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "syq@debian.org" <syq@debian.org>,
-        "ralf@linux-mips.org" <ralf@linux-mips.org>,
-        "rick.tyliu@ingenic.com" <rick.tyliu@ingenic.com>,
-        "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "geert+renesas@glider.be" <geert+renesas@glider.be>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "paul@crapouillou.net" <paul@crapouillou.net>,
-        "prasannatsmkumar@gmail.com" <prasannatsmkumar@gmail.com>,
-        "sernia.zhou@foxmail.com" <sernia.zhou@foxmail.com>,
-        "zhenwenjin@gmail.com" <zhenwenjin@gmail.com>,
-        "ebiederm@xmission.com" <ebiederm@xmission.com>,
-        "hns@goldelico.com" <hns@goldelico.com>,
-        "paul@boddie.org.uk" <paul@boddie.org.uk>
-In-Reply-To: <1579195429-59828-3-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1579195429-59828-1-git-send-email-zhouyanjie@wanyeetech.com> <1579195429-59828-3-git-send-email-zhouyanjie@wanyeetech.com>
-Subject: Re: [PATCH v2 1/6] MIPS: JZ4780: Introduce SMP support.
+        Thu, 16 Jan 2020 19:38:34 -0500
+Received: by mail-lf1-f65.google.com with SMTP id 15so17022225lfr.2;
+        Thu, 16 Jan 2020 16:38:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=lFmi0DxXN3LQfVQ6vLdLOH7+FXKf60l5t8jOk9ir+hY=;
+        b=bSqq+fKFKHllfQv4OkGRC0YVtTDOsOdFgKOM0YLGOeTcrFeEYB/RRnlN8Fc20L42Yg
+         VR6USRmCFpha6wIc+VWy+Jol3GGR10EURTbYmZZnN0XriEeaHR4g/fmndB3eoEwsQdby
+         GsGvRyC+iF0u27znNKyS1zrm8A47+zk3SAh1PZ8tVvI9Bf+ogZe0lst6WWe0EKQ/SZnK
+         Ki0keDTBTvgV6/RycTaInDHmaz8gOYVTGEDEi4gQXdp5vJfOKJy3Un7+aFlzo/RTefc+
+         keH6eakh4NiLb6I0VR1k+OOr2BBCe7xcaJ4eddPWHY7gph8emqlAu5J/znx0x0jyQTz5
+         HKfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=lFmi0DxXN3LQfVQ6vLdLOH7+FXKf60l5t8jOk9ir+hY=;
+        b=d/hvUeGNFh5RSQR4/gD2NeVfzwNlq/b7k1S27d3+atcXWuF/z+FDdMr3HmuWW3mZcl
+         567AnwKldf31IeAk4UQ4Ntl1aO6CCFMMIIyuCJVWr+8HojmF+kH8XwnuNT7H3Z+ha+ww
+         L7XJ0ZIqsZdBF5oKZAv/EOUm7JhguLNZbt3xBEs1VTLHhyI1d8iHp8alL25vNSmJEdY0
+         1Hf7glyJpMz6825cBYys5gXvqWKoeOdVjEJ6EjRtVT7TgOMhFCFwbQ8yU5SbyD29/3PF
+         V9ydwQOT4AwRyD9SR+ILhUfst69wGCSSC11sfJ2/3/wuiGf9jeurOrs3GiPHXHuw192L
+         CGiw==
+X-Gm-Message-State: APjAAAUavESn6pRpwoFeEDsEJBhhgxn0Xf2mQeQRHkLvwV5LOiDLX+gi
+        zrZz/aeR62mrXFU2xcZvCdgYc54Q5PJSEMeKW7LBSFYRKuk=
+X-Google-Smtp-Source: APXvYqx1/X32n1YsVwgIiVtIlX04BK83qTRTYXpZGzO2c20mhtHCRHRe/aNxxnQBJBqsuvHgDmYDIxupajkUvoYw094=
+X-Received: by 2002:ac2:52a3:: with SMTP id r3mr3855156lfm.189.1579221512601;
+ Thu, 16 Jan 2020 16:38:32 -0800 (PST)
 MIME-Version: 1.0
-X-Mailer: Yamail [ http://yandex.ru ] 5.0
-Date:   Fri, 17 Jan 2020 08:33:27 +0800
-Message-Id: <1347691579221207@sas2-fcc04dffb613.qloud-c.yandex.net>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=utf-8
+References: <20200116141800.9828-1-linux@roeck-us.net>
+In-Reply-To: <20200116141800.9828-1-linux@roeck-us.net>
+From:   Ken Moffat <zarniwhoop73@googlemail.com>
+Date:   Fri, 17 Jan 2020 00:38:20 +0000
+Message-ID: <CANVEwpZVZs5gnvQTgwZGcT6JG7WdGrOVpbHWGD08bjPascjL=g@mail.gmail.com>
+Subject: Re: [RFT PATCH 0/4] hwmon: k10temp driver improvements
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-hwmon@vger.kernel.org, Clemens Ladisch <clemens@ladisch.de>,
+        Jean Delvare <jdelvare@suse.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-17.01.2020, 02:35, "周琰杰 (Zhou Yanjie)" <zhouyanjie@wanyeetech.com>:
-> Forward port smp support from kernel 3.18.3 of CI20_linux
-> to upstream kernel 5.5.
+On Thu, 16 Jan 2020 at 14:18, Guenter Roeck <linux@roeck-us.net> wrote:
 >
-> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> ---
+> This patch series implements various improvements for the k10temp driver.
 >
-> Notes:
->     v1-v2:
->     1.Remove Remove unnecessary "plat_irq_dispatch(void)" in irq-ingenic.c.
->     2.Add a timeout check for "jz4780_boot_secondary()" to avoid a dead loop.
->     3.Replace hard code in smp.c with macro.
-
-Thanks for your enhancements, see my comments below. 
-
+> Patch 1/4 introduces the use of bit operations.
 >
->  arch/mips/include/asm/mach-jz4740/jz4780-smp.h | 98 ++++++++
->  arch/mips/jz4740/Kconfig | 3 +
->  arch/mips/jz4740/Makefile | 5 +
->  arch/mips/jz4740/prom.c | 4 +
->  arch/mips/jz4740/smp-entry.S | 57 +++++
->  arch/mips/jz4740/smp.c | 305 +++++++++++++++++++++++++
->  arch/mips/kernel/idle.c | 14 +-
->  7 files changed, 485 insertions(+), 1 deletion(-)
->  create mode 100644 arch/mips/include/asm/mach-jz4740/jz4780-smp.h
->  create mode 100644 arch/mips/jz4740/smp-entry.S
->  create mode 100644 arch/mips/jz4740/smp.c
+> Patch 2/4 converts the driver to use the devm_hwmon_device_register_with_=
+info
+> API. This not only simplifies the code and reduces its size, it also
+> makes the code easier to maintain and enhance.
 >
-> diff --git a/arch/mips/include/asm/mach-jz4740/jz4780-smp.h b/arch/mips/include/asm/mach-jz4740/jz4780-smp.h
-> new file mode 100644
-> index 00000000..9ed693e
-> --- /dev/null
-> +++ b/arch/mips/include/asm/mach-jz4740/jz4780-smp.h
-> @@ -0,0 +1,98 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +/*
-> + * Copyright (C) 2013, Paul Burton <paul.burton@imgtec.com>
-> + * JZ4780 SMP definitions
-> + */
-> +
-> +#ifndef __MIPS_ASM_MACH_JZ4740_JZ4780_SMP_H__
-> +#define __MIPS_ASM_MACH_JZ4740_JZ4780_SMP_H__
-> +
-> +#define read_c0_corectrl() __read_32bit_c0_register($12, 2)
-> +#define write_c0_corectrl(val) __write_32bit_c0_register($12, 2, val)
-> +
-> +#define read_c0_corestatus() __read_32bit_c0_register($12, 3)
-> +#define write_c0_corestatus(val) __write_32bit_c0_register($12, 3, val)
-> +
-> +#define read_c0_reim() __read_32bit_c0_register($12, 4)
-> +#define write_c0_reim(val) __write_32bit_c0_register($12, 4, val)
-> +
-> +#define read_c0_mailbox0() __read_32bit_c0_register($20, 0)
-> +#define write_c0_mailbox0(val) __write_32bit_c0_register($20, 0, val)
-> +
-> +#define read_c0_mailbox1() __read_32bit_c0_register($20, 1)
-> +#define write_c0_mailbox1(val) __write_32bit_c0_register($20, 1, val)
-> +
-> +#define smp_clr_pending(mask) do { \
-> + unsigned int stat; \
-> + stat = read_c0_corestatus(); \
-> + stat &= ~((mask) & 0xff); \
-> + write_c0_corestatus(stat); \
-> + } while (0)
-> +
-> +/*
-> + * Core Control register
-> + */
-> +#define CORECTRL_SLEEP1M_SHIFT 17
-> +#define CORECTRL_SLEEP1M (_ULCAST_(0x1) << CORECTRL_SLEEP1M_SHIFT)
-> +#define CORECTRL_SLEEP0M_SHIFT 16
-> +#define CORECTRL_SLEEP0M (_ULCAST_(0x1) << CORECTRL_SLEEP0M_SHIFT)
-> +#define CORECTRL_RPC1_SHIFT 9
-> +#define CORECTRL_RPC1 (_ULCAST_(0x1) << CORECTRL_RPC1_SHIFT)
-> +#define CORECTRL_RPC0_SHIFT 8
-> +#define CORECTRL_RPC0 (_ULCAST_(0x1) << CORECTRL_RPC0_SHIFT)
-> +#define CORECTRL_SWRST1_SHIFT 1
-> +#define CORECTRL_SWRST1 (_ULCAST_(0x1) << CORECTRL_SWRST1_SHIFT)
-> +#define CORECTRL_SWRST0_SHIFT 0
-> +#define CORECTRL_SWRST0 (_ULCAST_(0x1) << CORECTRL_SWRST0_SHIFT)
-> +
-> +/*
-> + * Core Status register
-> + */
-> +#define CORESTATUS_SLEEP1_SHIFT 17
-> +#define CORESTATUS_SLEEP1 (_ULCAST_(0x1) << CORESTATUS_SLEEP1_SHIFT)
-> +#define CORESTATUS_SLEEP0_SHIFT 16
-> +#define CORESTATUS_SLEEP0 (_ULCAST_(0x1) << CORESTATUS_SLEEP0_SHIFT)
-> +#define CORESTATUS_IRQ1P_SHIFT 9
-> +#define CORESTATUS_IRQ1P (_ULCAST_(0x1) << CORESTATUS_IRQ1P_SHIFT)
-> +#define CORESTATUS_IRQ0P_SHIFT 8
-> +#define CORESTATUS_IRQ0P (_ULCAST_(0x1) << CORESTATUS_IRQ8P_SHIFT)
-> +#define CORESTATUS_MIRQ1P_SHIFT 1
-> +#define CORESTATUS_MIRQ1P (_ULCAST_(0x1) << CORESTATUS_MIRQ1P_SHIFT)
-> +#define CORESTATUS_MIRQ0P_SHIFT 0
-> +#define CORESTATUS_MIRQ0P (_ULCAST_(0x1) << CORESTATUS_MIRQ0P_SHIFT)
-> +
-> +/*
-> + * Reset Entry & IRQ Mask register
-> + */
-> +#define REIM_ENTRY_SHIFT 16
-> +#define REIM_ENTRY (_ULCAST_(0xffff) << REIM_ENTRY_SHIFT)
-> +#define REIM_IRQ1M_SHIFT 9
-> +#define REIM_IRQ1M (_ULCAST_(0x1) << REIM_IRQ1M_SHIFT)
-> +#define REIM_IRQ0M_SHIFT 8
-> +#define REIM_IRQ0M (_ULCAST_(0x1) << REIM_IRQ0M_SHIFT)
-> +#define REIM_MBOXIRQ1M_SHIFT 1
-> +#define REIM_MBOXIRQ1M (_ULCAST_(0x1) << REIM_MBOXIRQ1M_SHIFT)
-> +#define REIM_MBOXIRQ0M_SHIFT 0
-> +#define REIM_MBOXIRQ0M (_ULCAST_(0x1) << REIM_MBOXIRQ0M_SHIFT)
-> +
-> +/*
-> + * CPM Low Power Control register
-> + */
-> +#define CPM_LPCR 0xb0000004
-
-Still a little bit dirty, but looks better. I'd prefer a SMP node.
-
-> +#define CPM_LPCR_PDSCPU (_ULCAST_(1) << 31)
-
-BIT(31)?
-
-> +#define CPM_LPCR_SCPUS (_ULCAST_(1) << 27)
-> +
-> +#ifdef CONFIG_SMP
-> +
-> +extern void jz4780_smp_wait_irqoff(void);
-> +
-> +extern void jz4780_smp_init(void);
-> +extern void jz4780_secondary_cpu_entry(void);
-> +
-> +#else /* !CONFIG_SMP */
-> +
-> +static inline void jz4780_smp_init(void) { }
-> +
-> +#endif /* !CONFIG_SMP */
-> +
-> +#endif /* __MIPS_ASM_MACH_JZ4740_JZ4780_SMP_H__ */
-> diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
-> index 412d2fa..0239597 100644
-> --- a/arch/mips/jz4740/Kconfig
-> +++ b/arch/mips/jz4740/Kconfig
-> @@ -34,9 +34,12 @@ config MACH_JZ4770
+> Patch 3/4 adds support for reporting Core Complex Die (CCD) temperatures
+> on Ryzen 3 (Zen2) CPUs.
 >
->  config MACH_JZ4780
->          bool
-> + select GENERIC_CLOCKEVENTS_BROADCAST if SMP
->          select MIPS_CPU_SCACHE
-> + select NR_CPUS_DEFAULT_2
->          select SYS_HAS_CPU_MIPS32_R2
->          select SYS_SUPPORTS_HIGHMEM
-> + select SYS_SUPPORTS_SMP
+> Patch 4/4 adds support for reporting core and SoC current and voltage
+> information on Ryzen CPUs.
 >
->  config MACH_X1000
->          bool
-> diff --git a/arch/mips/jz4740/Makefile b/arch/mips/jz4740/Makefile
-> index 6de14c0..0a0f024 100644
-> --- a/arch/mips/jz4740/Makefile
-> +++ b/arch/mips/jz4740/Makefile
-> @@ -12,3 +12,8 @@ CFLAGS_setup.o = -I$(src)/../../../scripts/dtc/libfdt
->  # PM support
+
+> k10temp-pci-00c3
+> Adapter: PCI adapter
+> Vcore:        +1.36 V
+> Vsoc:         +1.18 V
+> Tdie:         +86.8=C2=B0C  (high =3D +70.0=C2=B0C)
+> Tctl:         +86.8=C2=B0C
+> Tccd1:        +80.0=C2=B0C
+> Tccd2:        +81.8=C2=B0C
+> Icore:       +44.14 A
+> Isoc:        +13.83 A
 >
->  obj-$(CONFIG_PM) += pm.o
-> +
-> +# SMP support
-> +
-> +obj-$(CONFIG_SMP) += smp.o
-> +obj-$(CONFIG_SMP) += smp-entry.o
-> diff --git a/arch/mips/jz4740/prom.c b/arch/mips/jz4740/prom.c
-> index ff4555c..a79159e 100644
-> --- a/arch/mips/jz4740/prom.c
-> +++ b/arch/mips/jz4740/prom.c
-> @@ -8,10 +8,14 @@
->
->  #include <asm/bootinfo.h>
->  #include <asm/fw/fw.h>
-> +#include <asm/mach-jz4740/jz4780-smp.h>
->
->  void __init prom_init(void)
->  {
->          fw_init_cmdline();
-> +#if defined(CONFIG_MACH_JZ4780) && defined(CONFIG_SMP)
-> + jz4780_smp_init();
-> +#endif
->  }
->
->  void __init prom_free_prom_memory(void)
-> diff --git a/arch/mips/jz4740/smp-entry.S b/arch/mips/jz4740/smp-entry.S
-> new file mode 100644
-> index 00000000..20049a3
-> --- /dev/null
-> +++ b/arch/mips/jz4740/smp-entry.S
-> @@ -0,0 +1,57 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +/*
-> + * Copyright (C) 2013, Paul Burton <paul.burton@imgtec.com>
-> + * JZ4780 SMP entry point
-> + */
-> +
-> +#include <asm/addrspace.h>
-> +#include <asm/asm.h>
-> +#include <asm/asmmacro.h>
-> +#include <asm/cacheops.h>
-> +#include <asm/mipsregs.h>
-> +
-> +#define CACHE_SIZE (32 * 1024)
-> +#define CACHE_LINESIZE 32
-> +
-> +.extern jz4780_cpu_entry_sp
-> +.extern jz4780_cpu_entry_gp
-> +
-> +.section .text.smp-entry
-> +.balign 0x10000
-> +.set noreorder
-> +LEAF(jz4780_secondary_cpu_entry)
-> + mtc0 zero, CP0_CAUSE
-> +
-> + li t0, ST0_CU0
-> + mtc0 t0, CP0_STATUS
-> +
-> + /* cache setup */
-> + li t0, KSEG0
-> + ori t1, t0, CACHE_SIZE
-> + mtc0 zero, CP0_TAGLO, 0
-> +1: cache Index_Store_Tag_I, 0(t0)
-> + cache Index_Store_Tag_D, 0(t0)
-> + bne t0, t1, 1b
-> + addiu t0, t0, CACHE_LINESIZE
-> +
-> + /* kseg0 cache attribute */
-> + mfc0 t0, CP0_CONFIG, 0
-> + ori t0, t0, CONF_CM_CACHABLE_NONCOHERENT
-> + mtc0 t0, CP0_CONFIG, 0
-> +
-> + /* pagemask */
-> + mtc0 zero, CP0_PAGEMASK, 0
-> +
-> + /* retrieve sp */
-> + la t0, jz4780_cpu_entry_sp
-> + lw sp, 0(t0)
-> +
-> + /* retrieve gp */
-> + la t0, jz4780_cpu_entry_gp
-> + lw gp, 0(t0)
-> +
-> + /* jump to the kernel in kseg0 */
-> + la t0, smp_bootstrap
-> + jr t0
-> + nop
-> + END(jz4780_secondary_cpu_entry)
-> diff --git a/arch/mips/jz4740/smp.c b/arch/mips/jz4740/smp.c
-> new file mode 100644
-> index 00000000..35ec839
-> --- /dev/null
-> +++ b/arch/mips/jz4740/smp.c
-> @@ -0,0 +1,305 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2013, Paul Burton <paul.burton@imgtec.com>
-> + * JZ4780 SMP
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/of.h>
-> +#include <linux/sched.h>
-> +#include <linux/sched/task_stack.h>
-> +#include <linux/smp.h>
-> +#include <linux/tick.h>
-> +#include <asm/mach-jz4740/jz4780-smp.h>
-> +#include <asm/r4kcache.h>
-> +#include <asm/smp-ops.h>
-> +
-> +static struct clk *cpu_clock_gates[CONFIG_NR_CPUS] = { NULL };
-> +
-> +u32 jz4780_cpu_entry_sp;
-> +u32 jz4780_cpu_entry_gp;
-> +
-> +static struct cpumask cpu_running;
-> +
-> +static DEFINE_SPINLOCK(smp_lock);
-> +
-> +extern void (*r4k_blast_dcache)(void);
-> +
+> The patch series has only been tested with Ryzen 3900 CPUs. Further test
+> coverage will be necessary before the changes can be applied to the Linux
+> kernel.
 
-We've got that define in r4kcache.h
+I have some Zen1 and Zen1+ here.
 
-> +/*
-> + * The Ingenic jz4780 SMP variant has to write back dirty cache lines before
-> + * executing wait. The CPU & cache clock will be gated until we return from
-> + * the wait, and if another core attempts to access data from our data cache
-> + * during this time then it will lock up.
-> + */
-> +void jz4780_smp_wait_irqoff(void)
-> +{
-> + unsigned long pending = read_c0_cause() & read_c0_status() & CAUSEF_IP;
-> +
-> + /*
-> + * Going to idle has a significant overhead due to the cache flush so
-> + * try to avoid it if we'll immediately be woken again due to an IRQ.
-> + */
-> + if (!need_resched() && !pending) {
-> + r4k_blast_dcache();
-> +
-> + __asm__(
-> + " .set push \n"
-> + " .set mips3 \n"
-> + " sync \n"
-> + " wait \n"
-> + " .set pop \n");
-> + }
-> +
-> + local_irq_enable();
-> +}
-> +
-> +static irqreturn_t mbox_handler(int irq, void *dev_id)
-> +{
-> + int cpu = smp_processor_id();
-> + u32 action, status;
-> +
-> + spin_lock(&smp_lock);
-> +
-> + switch (cpu) {
-> + case 0:
-> + action = read_c0_mailbox0();
-> + write_c0_mailbox0(0);
-> + break;
-> + case 1:
-> + action = read_c0_mailbox1();
-> + write_c0_mailbox1(0);
-> + break;
-> + default:
-> + panic("unhandled cpu %d!", cpu);
-> + }
-> +
-> + /* clear pending mailbox interrupt */
-> + status = read_c0_corestatus();
-> + status &= ~(CORESTATUS_MIRQ0P << cpu);
-> + write_c0_corestatus(status);
-> +
-> + spin_unlock(&smp_lock);
-> +
-> + if (action & SMP_RESCHEDULE_YOURSELF)
-> + scheduler_ipi();
-> + if (action & SMP_CALL_FUNCTION)
-> + generic_smp_call_function_interrupt();
-> +
-> + return IRQ_HANDLED;
-> +}
-> +
-> +static struct irqaction mbox_action = {
-> + .handler = mbox_handler,
-> + .name = "core mailbox",
-> + .flags = IRQF_PERCPU | IRQF_NO_THREAD,
-> +};
-> +
-> +static void jz4780_smp_setup(void)
-> +{
-> + u32 addr, reim;
-> + int cpu;
-> +
-> + reim = read_c0_reim();
-> +
-> + for (cpu = 0; cpu < NR_CPUS; cpu++) {
-> + __cpu_number_map[cpu] = cpu;
-> + __cpu_logical_map[cpu] = cpu;
-> + set_cpu_possible(cpu, true);
-> + }
-> +
-> + /* mask mailbox interrupts for this core */
-> + reim &= ~REIM_MBOXIRQ0M;
-> + write_c0_reim(reim);
-> +
-> + /* clear mailboxes & pending mailbox IRQs */
-> + write_c0_mailbox0(0);
-> + write_c0_mailbox1(0);
-> + write_c0_corestatus(0);
-> +
-> + /* set reset entry point */
-> + addr = KSEG1ADDR((u32)&jz4780_secondary_cpu_entry);
-> + WARN_ON(addr & ~REIM_ENTRY);
-> + reim &= ~REIM_ENTRY;
-> + reim |= addr & REIM_ENTRY;
-> +
-> + /* unmask mailbox interrupts for this core */
-> + reim |= REIM_MBOXIRQ0M;
-> + write_c0_reim(reim);
-> + set_c0_status(STATUSF_IP3);
-> + irq_enable_hazard();
-> +
-> + cpumask_set_cpu(cpu, &cpu_running);
-> +}
-> +
-> +static void jz4780_smp_prepare_cpus(unsigned int max_cpus)
-> +{
-> + struct device_node *cpu_node;
-> + unsigned cpu, ctrl;
-> + int err;
-> +
-> + /* setup the mailbox IRQ */
-> + setup_irq(MIPS_CPU_IRQ_BASE + 3, &mbox_action);
-> +
-> + init_cpu_present(cpu_possible_mask);
-> +
-> + ctrl = read_c0_corectrl();
-> +
-> + for (cpu = 0; cpu < max_cpus; cpu++) {
-> + /* use reset entry point from REIM register */
-> + ctrl |= CORECTRL_RPC0 << cpu;
-> + }
-> +
-> + for_each_compatible_node(cpu_node, NULL, "ingenic,xburst") {
+My Ryzen 3 1300X, applied to 5.5.0-rc5
 
-for_each_of_cpu_node better?
+machine idle, I thought at first the temperature may be a bit low, so
+I've added other reported temperatures.  I now think it is maybe ok.
 
-> + err = of_property_read_u32_index(cpu_node, "reg", 0, &cpu);
+k10temp-pci-00c3
+Adapter: PCI adapter
+Vcore:        +1.41 V
+Vsoc:         +0.89 V
+Tdie:         +21.2=C2=B0C  (high =3D +70.0=C2=B0C)
+Tctl:         +21.2=C2=B0C
+Icore:       +30.14 A
+Isoc:         +8.66 A
 
-of_cpu_node_to_id?
+SYSTIN:                 +29.0=C2=B0C  (high =3D  +0.0=C2=B0C, hyst =3D  +0.=
+0=C2=B0C)
+ALARM  sensor =3D thermistor
+CPUTIN:                 +25.5=C2=B0C  (high =3D +80.0=C2=B0C, hyst =3D +75.=
+0=C2=B0C)
+sensor =3D thermistor
+AUXTIN0:                 -1.5=C2=B0C    sensor =3D thermistor
+AUXTIN1:                +87.0=C2=B0C    sensor =3D thermistor
+AUXTIN2:                +23.0=C2=B0C    sensor =3D thermistor
+AUXTIN3:                -27.0=C2=B0C    sensor =3D thermistor
+SMBUSMASTER 0:          +20.5=C2=B0C
 
-> + if (err) {
-> + pr_err("Failed to read index of %s\n",
-> + cpu_node->full_name);
-> + continue;
-> + }
-> +
-> + cpu_clock_gates[cpu] = of_clk_get(cpu_node, 0);
-> + if (IS_ERR(cpu_clock_gates[cpu])) {
-> + cpu_clock_gates[cpu] = NULL;
-> + continue;
-> + }
-> +
-> + err = clk_prepare(cpu_clock_gates[cpu]);
-> + if (err)
-> + pr_err("Failed to prepare CPU clock gate\n");
-> + }
-> +
-> + write_c0_corectrl(ctrl);
-> +}
-> +
-> +static int jz4780_boot_secondary(int cpu, struct task_struct *idle)
-> +{
-> + unsigned long flags;
-> + unsigned timeout;
-> + u32 ctrl;
-> +
-> + spin_lock_irqsave(&smp_lock, flags);
-> +
-> + /* ensure the core is in reset */
-> + ctrl = read_c0_corectrl();
-> + ctrl |= CORECTRL_SWRST0 << cpu;
-> + write_c0_corectrl(ctrl);
-> +
-> + /* ungate core clock */
-> + if (cpu_clock_gates[cpu])
-> + clk_enable(cpu_clock_gates[cpu]);
-> +
-> + /* power up the core */
-> + {
-> + outl(inl(CPM_LPCR) & ~CPM_LPCR_PDSCPU, CPM_LPCR);
-> + /* wait for the CPU to be powered up */
-> + timeout = 100;
-> + while (inl(CPM_LPCR) & CPM_LPCR_SCPUS) {
+After about 2 minutes of make -j8 on kernel, to load it
 
-readl/writel? inl is used for PIO rather than MMIO.
+k10temp-pci-00c3
+Adapter: PCI adapter
+Vcore:        +1.26 V
+Vsoc:         +0.89 V
+Tdie:         +46.2=C2=B0C  (high =3D +70.0=C2=B0C)
+Tctl:         +46.2=C2=B0C
+Icore:       +45.73 A
+Isoc:        +11.18 A
 
-> + if (timeout) {
-> + timeout--;
-> + udelay(10);
-> + continue;
-> + }
-> +
-> + pr_err("CPU%u: Wait for power up timeout\n", cpu);
-> + };
-> + }
-> +
-> + /* set entry sp/gp register values */
-> + jz4780_cpu_entry_sp = __KSTK_TOS(idle);
-> + jz4780_cpu_entry_gp = (u32)task_thread_info(idle);
-> + smp_wmb();
-> +
-> + /* take the core out of reset */
-> + ctrl &= ~(CORECTRL_SWRST0 << cpu);
-> + write_c0_corectrl(ctrl);
-> +
-> + cpumask_set_cpu(cpu, &cpu_running);
-> +
-> + spin_unlock_irqrestore(&smp_lock, flags);
-> +
-> + return 0;
-> +}
-> +
-> +static void jz4780_init_secondary(void)
-> +{
-> +}
-> +
-> +static void jz4780_smp_finish(void)
-> +{
-> + u32 reim;
-> +
-> + spin_lock(&smp_lock);
-> +
-> + /* unmask mailbox interrupts for this core */
-> + reim = read_c0_reim();
-> + reim |= REIM_MBOXIRQ0M << smp_processor_id();
-> + write_c0_reim(reim);
-> +
-> + spin_unlock(&smp_lock);
-> +
-> + /* unmask interrupts for this core */
-> + change_c0_status(ST0_IM, STATUSF_IP3 | STATUSF_IP2 |
-> + STATUSF_IP1 | STATUSF_IP0);
-> + irq_enable_hazard();
-> +
-> + /* force broadcast timer */
-> + tick_broadcast_force();
-> +}
-> +
-> +static void jz4780_send_ipi_single_locked(int cpu, unsigned int action)
-> +{
-> + u32 mbox;
-> +
-> + switch (cpu) {
-> + case 0:
-> + mbox = read_c0_mailbox0();
-> + write_c0_mailbox0(mbox | action);
-> + break;
-> + case 1:
-> + mbox = read_c0_mailbox1();
-> + write_c0_mailbox1(mbox | action);
-> + break;
-> + default:
-> + panic("unhandled cpu %d!", cpu);
-> + }
-> +}
-> +
-> +static void jz4780_send_ipi_single(int cpu, unsigned int action)
-> +{
-> + unsigned long flags;
-> +
-> + spin_lock_irqsave(&smp_lock, flags);
-> + jz4780_send_ipi_single_locked(cpu, action);
-> + spin_unlock_irqrestore(&smp_lock, flags);
-> +}
-> +
-> +static void jz4780_send_ipi_mask(const struct cpumask *mask,
-> + unsigned int action)
-> +{
-> + unsigned long flags;
-> + int cpu;
-> +
-> + spin_lock_irqsave(&smp_lock, flags);
-> +
-> + for_each_cpu(cpu, mask)
-> + jz4780_send_ipi_single_locked(cpu, action);
-> +
-> + spin_unlock_irqrestore(&smp_lock, flags);
-> +}
-> +
-> +static struct plat_smp_ops jz4780_smp_ops = {
-> + .send_ipi_single = jz4780_send_ipi_single,
-> + .send_ipi_mask = jz4780_send_ipi_mask,
-> + .init_secondary = jz4780_init_secondary,
-> + .smp_finish = jz4780_smp_finish,
-> + .boot_secondary = jz4780_boot_secondary,
-> + .smp_setup = jz4780_smp_setup,
-> + .prepare_cpus = jz4780_smp_prepare_cpus,
-> +};
-> +
-> +void jz4780_smp_init(void)
-> +{
-> + register_smp_ops(&jz4780_smp_ops);
-> +}
-> diff --git a/arch/mips/kernel/idle.c b/arch/mips/kernel/idle.c
-> index 37f8e78..a406de3 100644
-> --- a/arch/mips/kernel/idle.c
-> +++ b/arch/mips/kernel/idle.c
-> @@ -19,6 +19,10 @@
->  #include <asm/idle.h>
->  #include <asm/mipsregs.h>
->
-> +#ifdef CONFIG_MACH_JZ4780
-> +# include <asm/mach-jz4740/jz4780-smp.h>
-> +#endif
-> +
->  /*
->   * Not all of the MIPS CPUs have the "wait" instruction available. Moreover,
->   * the implementation of the "wait" feature differs between CPU families. This
-> @@ -172,7 +176,6 @@ void __init check_wait(void)
->          case CPU_CAVIUM_OCTEON_PLUS:
->          case CPU_CAVIUM_OCTEON2:
->          case CPU_CAVIUM_OCTEON3:
-> - case CPU_XBURST:
->          case CPU_LOONGSON32:
->          case CPU_XLR:
->          case CPU_XLP:
-> @@ -246,6 +249,15 @@ void __init check_wait(void)
->                     cpu_wait = r4k_wait;
->                   */
->                  break;
-> + case CPU_XBURST:
-> +#if defined(CONFIG_MACH_JZ4780) && defined(CONFIG_SMP)
-> + if (NR_CPUS > 1)
-> + cpu_wait = jz4780_smp_wait_irqoff;
-> + else
-> + cpu_wait = r4k_wait;
-> +#else
-> + cpu_wait = r4k_wait;
-> +#endif
->          default:
->                  break;
->          }
-> --
-> 2.7.4
+SYSTIN:                 +29.0=C2=B0C  (high =3D  +0.0=C2=B0C, hyst =3D  +0.=
+0=C2=B0C)
+ALARM  sensor =3D thermistor
+CPUTIN:                 +38.5=C2=B0C  (high =3D +80.0=C2=B0C, hyst =3D +75.=
+0=C2=B0C)
+sensor =3D thermistor
+AUXTIN0:                 -7.5=C2=B0C    sensor =3D thermistor
+AUXTIN1:                +85.0=C2=B0C    sensor =3D thermistor
+AUXTIN2:                +23.0=C2=B0C    sensor =3D thermistor
+AUXTIN3:                -27.0=C2=B0C    sensor =3D thermistor
+SMBUSMASTER 0:          +46.0=C2=B0C
+
+So I guess the temperatures *are* in the right area.
+Interestingly, the Vcore restores to above +1.4V when idle.
+
+And my Ryzen 5 3400G (Zen+), applied to 5.4.12, box is idle,
+also showing the gpu measurements of this APU to confirm the
+temperature:
+
+k10temp-pci-00c3
+Adapter: PCI adapter
+Vcore:        +0.94 V
+Vsoc:         +1.09 V
+Tdie:         +34.8=C2=B0C  (high =3D +70.0=C2=B0C)
+Tctl:         +34.8=C2=B0C
+Icore:        +6.24 A
+Isoc:         +8.30 A
+
+amdgpu-pci-0900
+Adapter: PCI adapter
+vddgfx:           N/A
+vddnb:            N/A
+edge:         +34.0=C2=B0C  (crit =3D +80.0=C2=B0C, hyst =3D  +0.0=C2=B0C)
+
+For my Ryzen 5 2500u laptop (Zen1), again showing the gpu:
+
+k10temp-pci-00c3
+Adapter: PCI adapter
+Vcore:        +0.97 V
+Vsoc:         +0.93 V
+Tdie:         +37.2=C2=B0C  (high =3D +70.0=C2=B0C)
+Tctl:         +37.2=C2=B0C
+Icore:       +19.75 A
+Isoc:         +8.66 A
+
+amdgpu-pci-0300
+Adapter: PCI adapter
+vddgfx:           N/A
+vddnb:            N/A
+edge:         +37.0=C2=B0C  (crit =3D +80.0=C2=B0C, hyst =3D  +0.0=C2=B0C)
+
+Thanks.
+=C4=B8en
+
+--=20
+We hope and trust that our values and loyal customers will bear with
+us in the coming months as we interact synergistically with change
+management in our striving for excellence.  That is our mission.
