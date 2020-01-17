@@ -2,72 +2,109 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 418CEC33CAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 01:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1BDFC33CAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 01:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 133052072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 01:20:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 971E82072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 01:21:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sigesBb1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387927AbgAQBUE (ORCPT
+        id S2387958AbgAQBVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 20:20:04 -0500
-Received: from mga05.intel.com ([192.55.52.43]:63274 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729100AbgAQBUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 20:20:03 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 17:20:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,327,1574150400"; 
-   d="scan'208";a="398482436"
-Received: from unknown (HELO joy-OptiPlex-7040) ([10.239.13.16])
-  by orsmga005.jf.intel.com with ESMTP; 16 Jan 2020 17:20:02 -0800
-Date:   Thu, 16 Jan 2020 20:10:51 -0500
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 0/3] vfio/type1: Reduce vfio_iommu.lock contention
-Message-ID: <20200117011050.GC1759@joy-OptiPlex-7040>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <157919849533.21002.4782774695733669879.stgit@gimli.home>
+        Thu, 16 Jan 2020 20:21:24 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:59486 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729031AbgAQBVY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 20:21:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=jcajjxZ1xWQD9GN1eFNPK4/qoRHMGlsWkodtrglknLA=; b=sigesBb15/hF+QKL8jZxrBOUc
+        nnZIcoGtGP8fXCdmd4UFK1FVFA+krbsrDCI4gNAiETqEt2BgzTsJnFlmQTdXBs7nEI3CTYD/QtLrS
+        78nB82UNUZc1TBhOoFPbQpN9qHRQwX7PtqmWCBSaWshL2egA1wXxWW6BE9/MeCeNHEjWHSZfN8GqD
+        WJpv4HOdgZ0o5mKmmGh6oaBW3h0JXeVs29rLeC6EYEgsGa8do4sj4jmol+hJHSyiU72+GTC7zm3RX
+        gkBrhYTmlTylxlJu2JWgE2xK76y1QjV+BVBMf+xI6I04LxhRq42PJr5uDXpfNZ0Wd6/+OZu3ivK7+
+        UEuNsYVfg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1isGKB-0003RF-3D; Fri, 17 Jan 2020 01:21:23 +0000
+Date:   Thu, 16 Jan 2020 17:21:23 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Pavel Begunkov <asml.silence@gmail.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fs: optimise kiocb_set_rw_flags()
+Message-ID: <20200117012123.GA9226@bombadil.infradead.org>
+References: <7d493d4872b75fc59556a63ee62c43b30c661ff9.1579223790.git.asml.silence@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <157919849533.21002.4782774695733669879.stgit@gimli.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <7d493d4872b75fc59556a63ee62c43b30c661ff9.1579223790.git.asml.silence@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thank you, Alex!
-I'll try it and let you know the result soon. :)
+On Fri, Jan 17, 2020 at 04:16:41AM +0300, Pavel Begunkov wrote:
+> kiocb_set_rw_flags() generates a poor code with several memory writes
+> and a lot of jumps. Help compilers to optimise it.
+> 
+> Tested with gcc 9.2 on x64-86, and as a result, it its output now is a
+> plain code without jumps accumulating in a register before a memory
+> write.
 
-On Fri, Jan 17, 2020 at 02:17:49AM +0800, Alex Williamson wrote:
-> Hi Yan,
-> 
-> I wonder if this might reduce the lock contention you're seeing in the
-> vfio_dma_rw series.  These are only compile tested on my end, so I hope
-> they're not too broken to test.  Thanks,
-> 
-> Alex
-> 
-> ---
-> 
-> Alex Williamson (3):
->       vfio/type1: Convert vfio_iommu.lock from mutex to rwsem
->       vfio/type1: Replace obvious read lock instances
->       vfio/type1: Introduce pfn_list mutex
-> 
-> 
->  drivers/vfio/vfio_iommu_type1.c |   67 ++++++++++++++++++++++++---------------
->  1 file changed, 41 insertions(+), 26 deletions(-)
-> 
+Nice!
+
+>  static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
+>  {
+> +	int kiocb_flags = 0;
+> +
+>  	if (unlikely(flags & ~RWF_SUPPORTED))
+>  		return -EOPNOTSUPP;
+>  
+>  	if (flags & RWF_NOWAIT) {
+>  		if (!(ki->ki_filp->f_mode & FMODE_NOWAIT))
+>  			return -EOPNOTSUPP;
+> -		ki->ki_flags |= IOCB_NOWAIT;
+> +		kiocb_flags |= IOCB_NOWAIT;
+>  	}
+>  	if (flags & RWF_HIPRI)
+> -		ki->ki_flags |= IOCB_HIPRI;
+> +		kiocb_flags |= IOCB_HIPRI;
+>  	if (flags & RWF_DSYNC)
+> -		ki->ki_flags |= IOCB_DSYNC;
+> +		kiocb_flags |= IOCB_DSYNC;
+>  	if (flags & RWF_SYNC)
+> -		ki->ki_flags |= (IOCB_DSYNC | IOCB_SYNC);
+> +		kiocb_flags |= (IOCB_DSYNC | IOCB_SYNC);
+>  	if (flags & RWF_APPEND)
+> -		ki->ki_flags |= IOCB_APPEND;
+> +		kiocb_flags |= IOCB_APPEND;
+> +
+> +	if (kiocb_flags)
+> +		ki->ki_flags |= kiocb_flags;
+>  	return 0;
+>  }
+
+Might it generate even better code to do ...
+
+ 	int kiocb_flags = 0;
+ 
++	if (!flags)
++		return 0;
+ 	if (unlikely(flags & ~RWF_SUPPORTED))
+ 		return -EOPNOTSUPP;
+ 
+...
+
+-	if (kiocb_flags)
+-		ki->ki_flags |= kiocb_flags;
++	ki->ki_flags |= kiocb_flags;
