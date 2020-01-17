@@ -2,87 +2,139 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8491CC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB04C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58F3D214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD42A2064C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:51:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729074AbgAQPti (ORCPT
+        id S1729096AbgAQPvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 10:49:38 -0500
-Received: from mout.kundenserver.de ([212.227.17.10]:35431 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727667AbgAQPti (ORCPT
+        Fri, 17 Jan 2020 10:51:44 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34065 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728739AbgAQPvn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 10:49:38 -0500
-Received: from mail-qt1-f169.google.com ([209.85.160.169]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MvJjz-1jinLd3mL3-00rEnx; Fri, 17 Jan 2020 16:49:37 +0100
-Received: by mail-qt1-f169.google.com with SMTP id e25so10753924qtr.13;
-        Fri, 17 Jan 2020 07:49:36 -0800 (PST)
-X-Gm-Message-State: APjAAAXDjGVlH6AF6r4fS4/Db/I8MvPHpug0fcsRLRfkVLJXnMDg0ShG
-        P8mEhdIldoRT92MPkI67il6348Mleylv22nkpt8=
-X-Google-Smtp-Source: APXvYqztD+1sjrj8dopDcYp2VjNvyMd85uBQWSwxVcXENdTkLqC0YwLWTNTWjgtCs7i1WELihm2qeNB6W4rJuwnzTkY=
-X-Received: by 2002:ac8:47d3:: with SMTP id d19mr7972128qtr.142.1579276175723;
- Fri, 17 Jan 2020 07:49:35 -0800 (PST)
+        Fri, 17 Jan 2020 10:51:43 -0500
+Received: by mail-ot1-f65.google.com with SMTP id a15so22918939otf.1;
+        Fri, 17 Jan 2020 07:51:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RjP6xd/aM21czdMmKXew0tRFkJqCnJh+EdhOGgIIkYQ=;
+        b=TZ/Z8+xIBFxBYUwheSwTOd+aFI4+hhQBFcTY8uhmAXj6pcnB7jVI+1K1FmnWripISO
+         hJb6fCS3002rknaRIIeIEJE6czW97YjdeLaEfn4ziuyZUa5FX9wtikWZVshZONGbgqAW
+         h2SvSaOuQMox+UN2FfmTYxI2FdXJy2Djhl7RBBgBJpp3yTFS5hI8c1QxIljpXMY9XpfK
+         K2Lq7A1ygFjb+KgLxZX5xMkHMY2hcJ7WBURe1VAcX1F9sNtQAqNl6q3JyzouijSRpiCR
+         pqjZq3bXPYFFjyo9gMbatSD7pHYvCRxKFAqFs2aBzGOFWhCO0K9y+nMT61zbK2vdqE1n
+         FgBw==
+X-Gm-Message-State: APjAAAU6WGaVqBKQH9C8BAIz450CyIchp3B169KpAGE2Yeo47kLLey2B
+        ru6JLWs1m+XxSj6jFZTwIxiomefV3Tj6z62SaKo=
+X-Google-Smtp-Source: APXvYqwHuswdiRCNHZRorbXFlUZ+ijMnK5tym/0cTkPp/nD8koF+iUggcxNHD3IMG21KEMdZbznVckqhBMp3JY8rbss=
+X-Received: by 2002:a9d:7984:: with SMTP id h4mr6699833otm.297.1579276302707;
+ Fri, 17 Jan 2020 07:51:42 -0800 (PST)
 MIME-Version: 1.0
-References: <20200117152933.31175-1-geert+renesas@glider.be>
-In-Reply-To: <20200117152933.31175-1-geert+renesas@glider.be>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 17 Jan 2020 16:49:19 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2a243LkRu5Np-AmUoyWkSLTuDb9vA8oGwWOsjdHXsffQ@mail.gmail.com>
-Message-ID: <CAK8P3a2a243LkRu5Np-AmUoyWkSLTuDb9vA8oGwWOsjdHXsffQ@mail.gmail.com>
-Subject: Re: [PATCH 0/3] dmaengine: Miscellaneous cleanups
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Matt Porter <mporter@konsulko.com>, dmaengine@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <201911151357.A9MjGImg%lkp@intel.com>
+In-Reply-To: <201911151357.A9MjGImg%lkp@intel.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 17 Jan 2020 16:51:21 +0100
+Message-ID: <CAMuHMdX6-jb1W8uC2_237m8ctCpsnGp=JCxqt8pCWVqNXHmkVg@mail.gmail.com>
+Subject: Re: drivers/acpi/processor_thermal.c:66:1: warning: the frame size of
+ 2160 bytes is larger than 2048 bytes
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     kbuild-all@lists.01.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kbuild test robot <lkp@intel.com>,
+        Linux PM list <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:5bQm1FZoanPkTY63bYHQrI4BPXQt/WpPAXIPxlmiiH5ExvzQhPs
- vfv29XBkmluopPWoXiC4fua0WWyvj2PM+/dgZpTSUQGrkK+e7vqZ4eYP1amQLbzeGR5yS1V
- tGmqh9ED+zyXFdsdK/L02ieFTsc0TUgwgt36fxjYhX6m5l/oBrN3J8PsMo8stZxBKhWeiA3
- if1+2Cys+nDlBLO1mO56A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:zjYbMpEZPZA=:jwO7+7FR3Ho5FlgowVQVMy
- Vrwf3hKlGsr0oK0NawfMhRdGP2xSo3Fd3qJp3d9l+CsIQfhUEEwe3PweHfFQop3yKS1e6BHBQ
- myLGo1MoLwp4vBrychHzCAHX3Ggm6Hfv86mnxKNRsWV23r36Q7BUlXhSUkm44MGDUUsktnJjC
- b9RrlrzHJtr9FYXPP/mk32dpRgM7DLPPL1W7dUtFrZ4WqdOcvssBunqbDxgO3lWsYVpKChKCG
- 1c+UeyUXG2rAVo5xkwiGGvqa+RqVCcVBKswfQgQNunGRxi8e3sySPet6hd79jRKvDDqjbGUQY
- 948Mi42KFWb7MeGWwa1hQPCrP9CJXLbWF5EKpL76QN8llsmHbPl536ePL+JyEmfMwPZpWk/+J
- R6Co8xcMQXGxwv0WCc3jycw2doPd6FoBDo1Tq7D7tqNMwijEdAQdn+SPJ1SnnBlqEJ+7RYDB1
- TA/2pl9XqVc1EqvC6KDdqy4Rb+96Tx8M7btkF8O8eJt28swZeggEJT+dIx9g5AAEdGCMur6+h
- q1XaqRZo0LTjKlj93a0Ckc6YLK4IV2YTM3mvJfgKTKA6+Db8WGV6BKeZa3pHZ+ZGRgCRvTy9R
- 0q1yyqgpZ9Woz/NaFg49x28wGLR6k/rmRbIt5B2raZ2Hkyixq/bhCApNXF69cjmg5zdoIPI9s
- 415AN5oqsxWej1bosfkpiqK57/Xi/WHgeE/YriBuy5NFx/4+B7pw5+pwDRlvI9TUYYDv1fRrU
- ueY3KhxOfKUAfBptZU+Lv6avuiKAyYN2FFxj85yrk2VFODaAPQE+W4LaogW0JCWHtMaOExl4W
- mLA/XbLGxArMKPKOe01qTFqSPc/6yI3CpUsyVEenkag/ZV3KeDyfEtV7APWW8ry8KbdP8IRpM
- 2VqRbvRn/hDdU0GQDJEA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 4:29 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
->
->         Hi all,
->
-> This patch series contains a few miscellaneous cleanups for the DMA
-> engine code and API.
->
-> Thanks for your comments!
->
-> Geert Uytterhoeven (3):
->   dmaengine: Remove dma_device_satisfies_mask() wrapper
->   dmaengine: Remove dma_request_slave_channel_compat() wrapper
->   dmaengine: Move dma_get_{,any_}slave_channel() to private dmaengine.h
+Hi Rafael, Viresh,
 
-These all look good to me,
+On Fri, Nov 15, 2019 at 6:23 AM kbuild test robot <lkp@intel.com> wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   96b95eff4a591dbac582c2590d067e356a18aacb
+> commit: 3000ce3c52f8b8db093e4dc649cd172390f71137 cpufreq: Use per-policy frequency QoS
+> date:   4 weeks ago
+> config: ia64-randconfig-a001-20191115 (attached as .config)
+> compiler: ia64-linux-gcc (GCC) 7.4.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         git checkout 3000ce3c52f8b8db093e4dc649cd172390f71137
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=7.4.0 make.cross ARCH=ia64
+>
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+Seeing similar warnings on arm64, so this triggered my attention.
+
+> --
+>    drivers/cpufreq/cpufreq.c: In function 'refresh_frequency_limits.part.33':
+> >> drivers/cpufreq/cpufreq.c:1116:1: warning: the frame size of 2160 bytes is larger than 2048 bytes [-Wframe-larger-than=]
+
+|       struct cpufreq_policy new_policy;
+
+That's a large struct on the stack...
+
+|       if (!policy_is_inactive(policy)) {
+|               new_policy = *policy;
+
+Let's make a copy?
+How well does this work, given struct cpufreq_policy contains a
+work_struct, list_head, kobject, completion, semaphore, spinlock_t,
+wait_queue_head_t, and two notifier_blocks, which are all objects you
+cannot just copy and reuse?
+
+|               pr_debug("updating policy for CPU %u\n", policy->cpu);
+|
+|               cpufreq_set_policy(policy, &new_policy);
+
+If cpufreq_set_policy() uses only a few fields from new_policy, it might
+be a good idea to extract those into its own structure.
+
+>     }
+>     ^
+>    drivers/cpufreq/cpufreq.c: In function 'store_scaling_governor':
+>    drivers/cpufreq/cpufreq.c:789:1: warning: the frame size of 2176 bytes is larger than 2048 bytes [-Wframe-larger-than=]
+
+|       struct cpufreq_policy new_policy;
+|
+|       memcpy(&new_policy, policy, sizeof(*policy));
+
+Likewise.
+
+>     }
+>     ^
+>    drivers/cpufreq/cpufreq.c: In function 'cpufreq_init_policy':
+>    drivers/cpufreq/cpufreq.c:1081:1: warning: the frame size of 2160 bytes is larger than 2048 bytes [-Wframe-larger-than=]
+
+|       struct cpufreq_policy new_policy;
+|
+|       memcpy(&new_policy, policy, sizeof(*policy));
+
+One more.
+
+>     }
+>     ^
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
