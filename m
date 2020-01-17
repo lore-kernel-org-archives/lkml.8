@@ -2,340 +2,185 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB903C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 06:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BACFC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 06:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B76992072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 06:45:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="SQawDGAI"
+	by mail.kernel.org (Postfix) with ESMTP id 4E9422082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 06:54:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729143AbgAQGpo (ORCPT
+        id S1729148AbgAQGyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 01:45:44 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52491 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726726AbgAQGpn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 01:45:43 -0500
-Received: by mail-wm1-f67.google.com with SMTP id p9so6277202wmc.2
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 22:45:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kT8tPUK6L9PWUiDm45+TRBWNAtdOjta2epvvVWDmezc=;
-        b=SQawDGAIAEIs1WOeVH1PHqR1VSCqOB2JGqvm8JqWCTXIEJYs+XDb3yQ1CoB4z6K4Oo
-         hC+0oUX1Z9XPJTxiasveFeoF80IUp/DLBkcMLp5iVPLnr/Q4ssVFwDeMDb3Qlua/eCAl
-         /d+R2/V4skTQPhkRUms2glAGzO7b1kv4YptoN+uE/sOzeNAnM6HGUSy77sTdcE0mzHFW
-         nzrtI9qA5fAzW7Aof36k4JPJOwZEmz++tFsedySP1b6/NufnUdkqRZo6osv187KK6+67
-         sW7Hp6SkoZ5punhiVxEs2CEauJLEjYe8s3mDvzLUaOD23g+D7yh0ELSo7D4Kuw1SO6cb
-         AD/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kT8tPUK6L9PWUiDm45+TRBWNAtdOjta2epvvVWDmezc=;
-        b=aj+W1obO+Ah3w765Jk9+woQmGlrV2rReoVoqvgv7a7md94KEWSVAb4s2zJDj8PAOs2
-         cmHBBf4qbG6ELKgjnP9XGiIqDKts9WYMqFGObBeCaHuganRqSD35W92S7Xahpxhxb3La
-         m4YyMTPfi0b5soaxpOcOHlqGj/sBqkIqlgbm1SGgZoX2Gw1zMt3OGsun0tpraFwJeSHw
-         mxVPekPrIn5BcBcriMyGJH1m3Bu+GruFmnk+V6LYuCz/VfL3/d6fztWbYFohn0WeXG+p
-         bCgE+bJTeVb94wYTwGFdNWrt8UwN26OU0+DWqjugSjH5MGsbq6J7Dv0x5YLGtT9LmNMz
-         xWBw==
-X-Gm-Message-State: APjAAAUJEELTWPUB4LJ4xjl2BVvITI87kGPnfXGFf8LL0ZlMUJX/5blb
-        c1XeM6vhzPRPFkG7eXhp5gV6fCYEW7vNx7Gm4TsTww==
-X-Google-Smtp-Source: APXvYqzm7mbKYpIzCReRqg4cthTMWToH3MI9+VF8y4RoSICRSnCExf7Y/HnStY9c+nfE2sTYD5et+fdqX9huvxTQqXs=
-X-Received: by 2002:a05:600c:10cd:: with SMTP id l13mr2971942wmd.102.1579243539254;
- Thu, 16 Jan 2020 22:45:39 -0800 (PST)
+        Fri, 17 Jan 2020 01:54:13 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9648 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726726AbgAQGyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 01:54:12 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 5BF37D7B6E95EAD49046;
+        Fri, 17 Jan 2020 14:54:10 +0800 (CST)
+Received: from [127.0.0.1] (10.74.221.148) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Fri, 17 Jan 2020
+ 14:54:04 +0800
+Subject: Re: [PATCH] net: optimize cmpxchg in ip_idents_reserve
+To:     Eric Dumazet <eric.dumazet@gmail.com>,
+        David Miller <davem@davemloft.net>
+References: <1579058620-26684-1-git-send-email-zhangshaokun@hisilicon.com>
+ <20200116.042722.153124126288244814.davem@davemloft.net>
+ <930faaff-4d18-452d-2e44-ef05b65dc858@gmail.com>
+ <1b3aaddf-22f5-1846-90f1-42e68583c1e4@gmail.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <jinyuqi@huawei.com>, <kuznet@ms2.inr.ac.ru>,
+        <yoshfuji@linux-ipv6.org>, <edumazet@google.com>,
+        <guoyang2@huawei.com>, Will Deacon <will@kernel.org>
+From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
+Message-ID: <430496fc-9f26-8cb4-91d8-505fda9af230@hisilicon.com>
+Date:   Fri, 17 Jan 2020 14:54:03 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.1.1
 MIME-Version: 1.0
-References: <20191223113443.68969-1-anup.patel@wdc.com> <20191223113443.68969-3-anup.patel@wdc.com>
- <mhng-24b22694-82f4-467b-b6a9-0fb2e186d3f2@palmerdabbelt-glaptop>
-In-Reply-To: <mhng-24b22694-82f4-467b-b6a9-0fb2e186d3f2@palmerdabbelt-glaptop>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Fri, 17 Jan 2020 12:15:28 +0530
-Message-ID: <CAAhSdy1MxVMm+7kxD3zE--_tzLk-pA0NOe_C54n6vbB4YxxrrQ@mail.gmail.com>
-Subject: Re: [PATCH v10 02/19] RISC-V: Add bitmap reprensenting ISA features
- common across CPUs
-To:     Palmer Dabbelt <palmerdabbelt@google.com>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim K <rkrcmar@redhat.com>, Alexander Graf <graf@amazon.com>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@lst.de>,
-        KVM General <kvm@vger.kernel.org>,
-        kvm-riscv@lists.infradead.org,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1b3aaddf-22f5-1846-90f1-42e68583c1e4@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.221.148]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 1:21 AM Palmer Dabbelt <palmerdabbelt@google.com> wrote:
->
-> On Mon, 23 Dec 2019 03:35:26 PST (-0800), Anup Patel wrote:
-> > This patch adds riscv_isa bitmap which represents Host ISA features
-> > common across all Host CPUs. The riscv_isa is not same as elf_hwcap
-> > because elf_hwcap will only have ISA features relevant for user-space
-> > apps whereas riscv_isa will have ISA features relevant to both kernel
-> > and user-space apps.
-> >
-> > One of the use-case for riscv_isa bitmap is in KVM hypervisor where
-> > we will use it to do following operations:
-> >
-> > 1. Check whether hypervisor extension is available
-> > 2. Find ISA features that need to be virtualized (e.g. floating
-> >    point support, vector extension, etc.)
-> >
-> > Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > Reviewed-by: Alexander Graf <graf@amazon.com>
-> > ---
-> >  arch/riscv/include/asm/hwcap.h | 22 +++++++++
-> >  arch/riscv/kernel/cpufeature.c | 83 ++++++++++++++++++++++++++++++++--
-> >  2 files changed, 102 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
-> > index 1bb0cd04aec3..5589c012e004 100644
-> > --- a/arch/riscv/include/asm/hwcap.h
-> > +++ b/arch/riscv/include/asm/hwcap.h
-> > @@ -8,6 +8,7 @@
-> >  #ifndef _ASM_RISCV_HWCAP_H
-> >  #define _ASM_RISCV_HWCAP_H
-> >
-> > +#include <linux/bits.h>
-> >  #include <uapi/asm/hwcap.h>
-> >
-> >  #ifndef __ASSEMBLY__
-> > @@ -22,6 +23,27 @@ enum {
-> >  };
-> >
-> >  extern unsigned long elf_hwcap;
-> > +
-> > +#define RISCV_ISA_EXT_a              ('a' - 'a')
-> > +#define RISCV_ISA_EXT_c              ('c' - 'a')
-> > +#define RISCV_ISA_EXT_d              ('d' - 'a')
-> > +#define RISCV_ISA_EXT_f              ('f' - 'a')
-> > +#define RISCV_ISA_EXT_h              ('h' - 'a')
-> > +#define RISCV_ISA_EXT_i              ('i' - 'a')
-> > +#define RISCV_ISA_EXT_m              ('m' - 'a')
-> > +#define RISCV_ISA_EXT_s              ('s' - 'a')
-> > +#define RISCV_ISA_EXT_u              ('u' - 'a')
->
-> Unfortunately the ISA doesn't really work this way any more: the single-letter
-> extensions are just aliases for longer extension strings, each of which
-> represents a single instruction.  I know we're saddled with some ABI that looks
-> this way, but I really don't want to add new code that depends on these defunct
-> assumptions -- there isn't that much in Linux right now, but there's a lot in
-> the FSF toolchain and getting that all out is going to be a long project.
++Cc Will Deacon,
 
-Yes, I am aware of this.
+On 2020/1/16 23:19, Eric Dumazet wrote:
+> 
+> 
+> On 1/16/20 7:12 AM, Eric Dumazet wrote:
+>>
+>>
+>> On 1/16/20 4:27 AM, David Miller wrote:
+>>> From: Shaokun Zhang <zhangshaokun@hisilicon.com>
+>>> Date: Wed, 15 Jan 2020 11:23:40 +0800
+>>>
+>>>> From: Yuqi Jin <jinyuqi@huawei.com>
+>>>>
+>>>> atomic_try_cmpxchg is called instead of atomic_cmpxchg that can reduce
+>>>> the access number of the global variable @p_id in the loop. Let's
+>>>> optimize it for performance.
+>>>>
+>>>> Cc: "David S. Miller" <davem@davemloft.net>
+>>>> Cc: Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>
+>>>> Cc: Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+>>>> Cc: Eric Dumazet <edumazet@google.com>
+>>>> Cc: Yang Guo <guoyang2@huawei.com>
+>>>> Signed-off-by: Yuqi Jin <jinyuqi@huawei.com>
+>>>> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+>>>
+>>> I doubt this makes any measurable improvement in performance.
+>>>
+>>> If you can document a specific measurable improvement under
+>>> a useful set of circumstances for real usage, then put those
+>>> details into the commit message and resubmit.
+>>>
+>>> Otherwise, I'm not applying this, sorry.
+>>>
+>>
+>>
+>> Real difference that could be made here is to 
+>> only use this cmpxchg() dance for CONFIG_UBSAN
+>>
+>> When CONFIG_UBSAN is not set, atomic_add_return() is just fine.
+>>
+>> (Supposedly UBSAN should not warn about that either, but this depends on compiler version)
+> 
+> I will test something like :
+> 
+> diff --git a/net/ipv4/route.c b/net/ipv4/route.c
+> index 2010888e68ca96ae880481973a6d808d6c5612c5..e2fa972f5c78f2aefc801db6a45b2a81141c3028 100644
+> --- a/net/ipv4/route.c
+> +++ b/net/ipv4/route.c
+> @@ -495,11 +495,15 @@ u32 ip_idents_reserve(u32 hash, int segs)
+>         if (old != now && cmpxchg(p_tstamp, old, now) == old)
+>                 delta = prandom_u32_max(now - old);
+>  
+> -       /* Do not use atomic_add_return() as it makes UBSAN unhappy */
+> +#ifdef CONFIG_UBSAN
 
-Paul had raised similar concerns so we are using bitmap to tackle this
+I appreciate Eric's idea.
 
-For example:
-BIT['h' - 'a'] represents whether 'h' extension is present or not
-In future, when we have incremental hxyz change in 'h' extension
-we will assign some bitpostion Bhxyz for this and BIT[Bhxyz]
-will represent whether 'hxyz' is present or not.
+> +       /* Do not use atomic_add_return() as it makes old UBSAN versions unhappy */
+>         do {
+>                 old = (u32)atomic_read(p_id);
+>                 new = old + delta + segs;
+>         } while (atomic_cmpxchg(p_id, old, new) != old);
 
->
-> > +
-> > +#define RISCV_ISA_EXT_MAX    256
->
-> Why so big?  It looks like the rest of the code just touches the first word,
-> and most of that is explicit.
+But about this, I still think that we can try to use atomic_try_cmpxchg instead
+of atomic_cmpxchg, like refcount_add_not_zero in include/linux/refcount.h
 
-Please see previous comment.
+I abstract the model, as follow:
+while (get_cycles() <= (time_temp + t_cnt))
+{
+	do{
+		old_temp = wk_in->num.counter;
+		oldt = atomic64_cmpxchg(&wk_in->num, old_temp, old_temp+1);
+	}while(oldt != old_temp);
 
-Here 256 is a ballpark size of bitmap. If you have any preferences then
-I can change to that value. I am sure this value will change in the future.
+	myndelay(delay_o);
+	w_cnt+=1;
+}
 
->
-> > +
-> > +unsigned long riscv_isa_extension_base(const unsigned long *isa_bitmap);
-> > +
-> > +#define riscv_isa_extension_mask(ext) BIT_MASK(RISCV_ISA_EXT_##ext)
-> > +
-> > +bool __riscv_isa_extension_available(const unsigned long *isa_bitmap, int bit);
-> > +#define riscv_isa_extension_available(isa_bitmap, ext)       \
-> > +     __riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_##ext)
-> > +
-> >  #endif
-> >
-> >  #endif /* _ASM_RISCV_HWCAP_H */
-> > diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
-> > index 0b40705567b7..e172a2322b34 100644
-> > --- a/arch/riscv/kernel/cpufeature.c
-> > +++ b/arch/riscv/kernel/cpufeature.c
-> > @@ -6,6 +6,7 @@
-> >   * Copyright (C) 2017 SiFive
-> >   */
-> >
-> > +#include <linux/bitmap.h>
-> >  #include <linux/of.h>
-> >  #include <asm/processor.h>
-> >  #include <asm/hwcap.h>
-> > @@ -13,15 +14,57 @@
-> >  #include <asm/switch_to.h>
-> >
-> >  unsigned long elf_hwcap __read_mostly;
-> > +
-> > +/* Host ISA bitmap */
-> > +static DECLARE_BITMAP(riscv_isa, RISCV_ISA_EXT_MAX) __read_mostly;
-> > +
-> >  #ifdef CONFIG_FPU
-> >  bool has_fpu __read_mostly;
-> >  #endif
-> >
-> > +/**
-> > + * riscv_isa_extension_base() - Get base extension word
-> > + *
-> > + * @isa_bitmap: ISA bitmap to use
-> > + * Return: base extension word as unsigned long value
-> > + *
-> > + * NOTE: If isa_bitmap is NULL then Host ISA bitmap will be used.
-> > + */
-> > +unsigned long riscv_isa_extension_base(const unsigned long *isa_bitmap)
-> > +{
-> > +     if (!isa_bitmap)
-> > +             return riscv_isa[0];
-> > +     return isa_bitmap[0];
-> > +}
-> > +EXPORT_SYMBOL_GPL(riscv_isa_extension_base);
->
-> This isn't used, which makes it hard to review.  Can you please split out the
-> changes that don't depend on the V extension to come out of draft?  That would
-> make it easier to take some of the code early, which lets us keep around less
-> diff.
+val = atomic64_read(&wk_in->num);
+while (get_cycles() <= (time_temp + t_cnt))
+{
+	do{
+		new_val = val + 1;
+			
+	}while(!atomic64_try_cmpxchg(&wk_in->num, &val, new_val));
 
-This is used by KVM RISC-V patches hence it is part of KVM RISC-V series.
+	myndelay(delay_o);
+	w_cnt += 1;
+}
 
->
-> > +
-> > +/**
-> > + * __riscv_isa_extension_available() - Check whether given extension
-> > + * is available or not
-> > + *
-> > + * @isa_bitmap: ISA bitmap to use
-> > + * @bit: bit position of the desired extension
-> > + * Return: true or false
-> > + *
-> > + * NOTE: If isa_bitmap is NULL then Host ISA bitmap will be used.
-> > + */
-> > +bool __riscv_isa_extension_available(const unsigned long *isa_bitmap, int bit)
-> > +{
-> > +     const unsigned long *bmap = (isa_bitmap) ? isa_bitmap : riscv_isa;
-> > +
-> > +     if (bit >= RISCV_ISA_EXT_MAX)
-> > +             return false;
-> > +
-> > +     return test_bit(bit, bmap) ? true : false;
-> > +}
-> > +EXPORT_SYMBOL_GPL(__riscv_isa_extension_available);
-> > +
-> >  void riscv_fill_hwcap(void)
-> >  {
-> >       struct device_node *node;
-> >       const char *isa;
-> > -     size_t i;
-> > +     char print_str[BITS_PER_LONG + 1];
-> > +     size_t i, j, isa_len;
-> >       static unsigned long isa2hwcap[256] = {0};
-> >
-> >       isa2hwcap['i'] = isa2hwcap['I'] = COMPAT_HWCAP_ISA_I;
-> > @@ -33,8 +76,11 @@ void riscv_fill_hwcap(void)
-> >
-> >       elf_hwcap = 0;
-> >
-> > +     bitmap_zero(riscv_isa, RISCV_ISA_EXT_MAX);
-> > +
-> >       for_each_of_cpu_node(node) {
-> >               unsigned long this_hwcap = 0;
-> > +             unsigned long this_isa = 0;
-> >
-> >               if (riscv_of_processor_hartid(node) < 0)
-> >                       continue;
-> > @@ -42,8 +88,24 @@ void riscv_fill_hwcap(void)
-> >               if (riscv_read_check_isa(node, &isa) < 0)
-> >                       continue;
-> >
-> > -             for (i = 0; i < strlen(isa); ++i)
-> > +             i = 0;
-> > +             isa_len = strlen(isa);
-> > +#if IS_ENABLED(CONFIG_32BIT)
-> > +             if (!strncmp(isa, "rv32", 4))
-> > +                     i += 4;
-> > +#elif IS_ENABLED(CONFIG_64BIT)
-> > +             if (!strncmp(isa, "rv64", 4))
-> > +                     i += 4;
->
-> We shouldn't be accepting arbitrary inputs and attempting to correct them, just
-> enforce that an actual ISA string is provided and check it against what the
-> kernel can support.
+If we take the access global variable out of loop, the performance become better
+on both x86 and arm64, as follow:
+Kunpeng920: 24 cores call it and the successful operations per second
+atomic64_read in loop 	   atomic64_read out of the loop
+6291034	                   8751962
 
-I agree that ISA string parsing is not perfect and will improve over time but
-ISA bitmap should have all the features set as provided via CPU DT nodes.
+Intel 6248: 20 cores call it and the successful operations per second
+atomic64_read in loop 	   atomic64_read out of the loop
+8934792	                   9978998
 
-We allow KVM RISC-V initialization to proceed only when 'H' extension is
-supported.
+So how about this? ;-)
 
->
-> > +#endif
-> > +             for (; i < isa_len; ++i) {
-> >                       this_hwcap |= isa2hwcap[(unsigned char)(isa[i])];
-> > +                     /*
-> > +                      * TODO: X, Y and Z extension parsing for Host ISA
-> > +                      * bitmap will be added in-future.
-> > +                      */
-> > +                     if ('a' <= isa[i] && isa[i] < 'x')
-> > +                             this_isa |= (1UL << (isa[i] - 'a'));
-> > +             }
-> >
-> >               /*
-> >                * All "okay" hart should have same isa. Set HWCAP based on
-> > @@ -54,6 +116,11 @@ void riscv_fill_hwcap(void)
-> >                       elf_hwcap &= this_hwcap;
-> >               else
-> >                       elf_hwcap = this_hwcap;
-> > +
-> > +             if (riscv_isa[0])
-> > +                     riscv_isa[0] &= this_isa;
-> > +             else
-> > +                     riscv_isa[0] = this_isa;
-> >       }
-> >
-> >       /* We don't support systems with F but without D, so mask those out
-> > @@ -63,7 +130,17 @@ void riscv_fill_hwcap(void)
-> >               elf_hwcap &= ~COMPAT_HWCAP_ISA_F;
-> >       }
-> >
-> > -     pr_info("elf_hwcap is 0x%lx\n", elf_hwcap);
-> > +     memset(print_str, 0, sizeof(print_str));
-> > +     for (i = 0, j = 0; i < BITS_PER_LONG; i++)
-> > +             if (riscv_isa[0] & BIT_MASK(i))
-> > +                     print_str[j++] = (char)('a' + i);
-> > +     pr_info("riscv: ISA extensions %s\n", print_str);
-> > +
-> > +     memset(print_str, 0, sizeof(print_str));
-> > +     for (i = 0, j = 0; i < BITS_PER_LONG; i++)
-> > +             if (elf_hwcap & BIT_MASK(i))
-> > +                     print_str[j++] = (char)('a' + i);
-> > +     pr_info("riscv: ELF capabilities %s\n", print_str);
-> >
-> >  #ifdef CONFIG_FPU
-> >       if (elf_hwcap & (COMPAT_HWCAP_ISA_F | COMPAT_HWCAP_ISA_D))
-> > --
-> > 2.17.1
+                delta = prandom_u32_max(now - old);
 
-Regards,
-Anup
++#ifdef CONFIG_UBSAN
+        /* Do not use atomic_add_return() as it makes UBSAN unhappy */
++       old = (u32)atomic_read(p_id);
+        do {
+-               old = (u32)atomic_read(p_id);
+                new = old + delta + segs;
+-       } while (atomic_cmpxchg(p_id, old, new) != old);
++       } while (!atomic_try_cmpxchg(p_id, &old, new));
++#else
++       new = atomic_add_return(segs + delta, p_id);
++#endif
+
+Thanks,
+Shaokun
+
+
+> +#else
+> +       new = atomic_add_return(segs + delta, p_id);
+> +#endif
+>  
+>         return new - segs;
+>  }
+> 
+> 
+> .
+> 
+
