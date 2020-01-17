@@ -2,120 +2,125 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 776DCC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB873C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:31:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5202D2192A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:31:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TU26B/fi"
+	by mail.kernel.org (Postfix) with ESMTP id 9BE8B214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:31:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729154AbgAQSbU (ORCPT
+        id S1729259AbgAQSbu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 13:31:20 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:55236 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726897AbgAQSbU (ORCPT
+        Fri, 17 Jan 2020 13:31:50 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:36638 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726761AbgAQSbu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 13:31:20 -0500
-Received: by mail-pj1-f65.google.com with SMTP id kx11so3509656pjb.4;
-        Fri, 17 Jan 2020 10:31:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8I536fgsZI1/zevVyUJAawaRzvWEK86euedntV25fzo=;
-        b=TU26B/fi+c45Ik85BE26c4cduIA5MPcBVhtczQDSk8MA+5XfAwrcK/Nycl4djR5xfo
-         +ywLdtk7ooCoZqLfFMElnAhBbJAxZ5lWTRjMHyilDY4buULBGysf5kJjqyuMZNEmSqjq
-         L0RotQJQBFAhlUIWfsC2VS+qwmMaeQrix0tyv+4XsLFg449r+OcXx/cbKVaSAt5AQjCv
-         7DUpyi9S1cekgRBBlA1fMTlSDHHvv2Al+J1YC5jvEckkTKzSs+rMGBzwgYkzX2e4YO7N
-         QcRtVdHpCerXDyNxqQBKv7tjMt/ZBRP+b5mv4VvBV2SDl3aPCYyxigk69nViAUmaEITk
-         9F5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8I536fgsZI1/zevVyUJAawaRzvWEK86euedntV25fzo=;
-        b=LjTkxRT3kbk01GLZTsqlttjLNtkyYnf+rDnzwSnJ2ckO7+udpWuC82xes4j0C/3Gyq
-         2xm2lK8P5/6xLYcQU+e0EN0B1r0pSmOpVHV9vLil7UiZNySPgdGhfHmhVSYV60L4ZiSO
-         7DrBLhqzIG0VcVIRhmtLUbCpNBWYWmXnCPupurkiiuqhwoE15TW+V68JGR90WoUz9dFb
-         k9+xosn0ckqeKlw3LX6FU+yM92jU01zQYw3LzLt/fYaVUPUnwhuwGGgFngdBhAqoVBAB
-         7AEnAnrOELZD6vrYG8VIruG1jVp5/2h14geYEv6uyeHPbukWKkV3ljZH9iS29Ivebo+l
-         +zbw==
-X-Gm-Message-State: APjAAAUlF/8YYdj2g+VPt0ZzT+leiCSHmFN8tQCK0Q68ev2ncbCBVAxX
-        03WVms0Gva/2nYVh/MP63tc=
-X-Google-Smtp-Source: APXvYqwQNLBotUtvThCp2G5pHQ8X9Ogb0cXYW6p5Yq8vsBdWs6t5kI2rZC/ismEXobuIx42s8mdKfA==
-X-Received: by 2002:a17:90a:2763:: with SMTP id o90mr7048740pje.110.1579285879585;
-        Fri, 17 Jan 2020 10:31:19 -0800 (PST)
-Received: from ?IPv6:2001:4898:d8:28:a811:24b6:1823:a6d9? ([2001:4898:80e8:2:2827:24b6:1823:a6d9])
-        by smtp.gmail.com with ESMTPSA id j8sm29771828pfe.182.2020.01.17.10.31.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jan 2020 10:31:19 -0800 (PST)
-Subject: Re: [PATCH v9 2/2] EDAC: add EDAC driver for DMC520
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     James Morse <james.morse@arm.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        sashal@kernel.org, hangl@microsoft.com,
-        Lei Wang <lewan@microsoft.com>, shji@microsoft.com,
-        ruizhao@microsoft.com, Scott Branden <scott.branden@broadcom.com>,
-        Yuqing Shen <yuqing.shen@broadcom.com>, ray.jui@broadcom.com,
-        wangglei@gmail.com
-References: <6a462190-0af2-094a-daa8-f480d54a1fbf@gmail.com>
- <20200117001843.GJ27148@zn.tnic>
-From:   Shiping Ji <shiping.linux@gmail.com>
-Message-ID: <d5989a4c-8173-2f03-7d20-6fdd32d19591@gmail.com>
-Date:   Fri, 17 Jan 2020 10:31:18 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Fri, 17 Jan 2020 13:31:50 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 8CDEC20026;
+        Fri, 17 Jan 2020 19:31:47 +0100 (CET)
+Date:   Fri, 17 Jan 2020 19:31:46 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        srv_heupstream@mediatek.com, stonea168@163.com,
+        cawa.cheng@mediatek.com, linux-mediatek@lists.infradead.org,
+        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com
+Subject: Re: [PATCH v9 0/5] add driver for "boe, tv101wum-nl6", "boe,
+ tv101wum-n53", "auo, kd101n80-45na" and "auo, b101uan08.3" panels
+Message-ID: <20200117183146.GB14298@ravnborg.org>
+References: <20200116021511.22675-1-jitao.shi@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20200117001843.GJ27148@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200116021511.22675-1-jitao.shi@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=e5mUnYsNAAAA:8
+        a=3tjGstHQEWMJ4ujXvacA:9 a=CjuIK1q_8ugA:10 a=Vxmtnl_E_bksehYqCbjh:22
+        a=pHzHmUro8NiASowvMSCR:22 a=xoEH_sTeL_Rfw54TyV31:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/16/2020 4:18 PM, Borislav Petkov wrote:
+Hi Jitao.
 
->> +/* The EDAC driver private data */
->> +struct dmc520_edac {
->> +	void __iomem *reg_base;
->> +	spinlock_t ecc_lock;
+Thanks for your perseverance on this.
+With the minor issue on the binding file resolved everything is now fine
+and patches are all applied to drm-misc-next.
+
+Thanks,
+
+	Sam
+
+On Thu, Jan 16, 2020 at 10:15:06AM +0800, Jitao Shi wrote:
+> Changes since v8:
+>  - merge the panel documents to one.
+>  - delay move the drm_panel_of_backlight after drm_panel_init
 > 
-> What does that spinlock protect? Also, its name is not very optimal.
-
-This is to protect concurrent writes to the mci->error_desc as suggested by James when reviewing the patch v3.
- 
->> +	reg_offset_low = is_ce ? REG_OFFSET_DRAM_ECC_ERRC_INT_INFO_31_00 :
->> +				 REG_OFFSET_DRAM_ECC_ERRD_INT_INFO_31_00;
->> +	reg_offset_high = is_ce ? REG_OFFSET_DRAM_ECC_ERRC_INT_INFO_63_32 :
->> +				  REG_OFFSET_DRAM_ECC_ERRD_INT_INFO_63_32;
+> Changes since v7:
+>  - base drm-misc-next branch
+>  - fix document pass dt_binding_check
+>  - remove backlight from panel driver
 > 
-> Those define names could be shorter.
-
-I'm trying to find a good scheme to make them shorter, at the moment they are named according to the TRM.
- 
->> +		if (irq >= 0) {
->> +			ret = devm_request_irq(&pdev->dev, irq,
->> +							dmc520_isr, IRQF_SHARED,
->> +							dev_name(&pdev->dev), mci);
+> Changes since v6:
+>  - fix boe_panel_init err uninit.
+>  - adjust the delay of backlight on.
 > 
-> Align arguments on the opening brace.
-
-I'm not sure how this can be done perfectly with tabs only :)
-
-All other comments have been addressed in the next patch, many thanks!
-
--- 
-Best regards,
-Shiping Ji
+> Changes since v5:
+>  - covert the documents to yaml
+>  - fine tune boe, tv101wum-n53 panel video timine
+> 
+> Changes since v4:
+>  - add auo,b101uan08.3 panel for this driver.
+>  - add boe,tv101wum-n53 panel for this driver.
+> 
+> Changes since v3:
+>  - remove check enable_gpio.
+>  - fine tune the auo,kd101n80-45na panel's power on timing.
+> 
+> Changes since v2:
+>  - correct the panel size
+>  - remove blank line in Kconfig
+>  - move auo,kd101n80-45na panel driver in this series.
+> 
+> Changes since v1:
+>  - update typo nl6 -> n16.
+>  - update new panel config and makefile are added in alphabetically order.
+>  - add the panel mode and panel info in driver data.
+>  - merge auo,kd101n80-45a and boe,tv101wum-nl6 in one driver
+> 
+> Jitao Shi (5):
+>   dt-bindings: display: panel: Add boe tv101wum-n16 panel bindings
+>   drm/panel: support for boe tv101wum-nl6 wuxga dsi video mode panel
+>   drm/panel: support for auo,kd101n80-45na wuxga dsi video mode panel
+>   drm/panel: support for boe,tv101wum-n53 wuxga dsi video mode panel
+>   drm/panel: support for auo,b101uan08.3 wuxga dsi video mode panel
+> 
+>  .../display/panel/boe,tv101wum-nl6.yaml       |  81 ++
+>  drivers/gpu/drm/panel/Kconfig                 |   9 +
+>  drivers/gpu/drm/panel/Makefile                |   1 +
+>  .../gpu/drm/panel/panel-boe-tv101wum-nl6.c    | 854 ++++++++++++++++++
+>  4 files changed, 945 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
+>  create mode 100644 drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
+> 
+> -- 
+> 2.21.0
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
