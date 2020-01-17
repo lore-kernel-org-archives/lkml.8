@@ -2,156 +2,132 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7101CC33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C005CC33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 477BC2072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:37:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="di2yyj+z"
+	by mail.kernel.org (Postfix) with ESMTP id 96D942083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 21:37:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579297043;
+	bh=TiUl3vxXPrNJYv+C72Doz3QU6XZr+ECnyQ786ta6B3I=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=e3eGsS0mzBuhKZWoi+NSfKV2mD29HwISl7r7fjqhMSoZDQeWhHXXyx2Yecn5usiTh
+	 k7xCneDnfRWWGp8NSZloEMsaPuGdNLZSEq/auX/9I2TQ2oOmjZ2ZG2IKffmUAQyPZa
+	 6KSgIh/T61eOmaMgZvC9NC5m5gYxz0+v58Z0Qig0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729182AbgAQVhJ (ORCPT
+        id S1729268AbgAQVhX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 16:37:09 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:39278 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbgAQVhI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 16:37:08 -0500
-Received: by mail-qk1-f193.google.com with SMTP id c16so24182417qko.6;
-        Fri, 17 Jan 2020 13:37:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=2JWxiBrKzgX6c58K05T7Uj8uthaAPk9I0HG0fUbgl2Q=;
-        b=di2yyj+zUzyiwdu9o+rxLuvbgoB7dTPwpFBNgyLV/RIImJaI/rV3kq41mVzfXGthXL
-         k1CDbjNlUUt1QDOpws4zX7lrQjilnCXze/8/TnDvUM1/xP71VHcg7SO4h20Sk1a9X/iT
-         N9a4P+TocZpdyrrkTlRE3jUOfwnbLa03eUxoolr0+WufJPDYGTKV3QmCl3PBf7aYSf/g
-         65IAMoyo4/wDBpeOpeE52Le9/rMfrWP8Ld3VQlpyrJJqCUY62G8oA9BOz2L2Oqr327RT
-         VUOOrNbOufy8Zz0XF6T2Goh27q6MrvGtMS3UbVfYwjSvdttcblfcaDsEvxBRgC95wISx
-         cD3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2JWxiBrKzgX6c58K05T7Uj8uthaAPk9I0HG0fUbgl2Q=;
-        b=lj6v6BEegc9yCrvv7XiYz07nBlOIfHzS1VC7yCSJzXWSrVqJfriorzETI+NJfS0ABK
-         8yaqE9ooiUbhkEByOqzGkESqna2HwmBHk1+SRTlyBib1SyrC3m9G6J4JgOR+pcizS6XD
-         6FPvszKksI8y/1OoD3/pieigEJdCZxTOkfFAoqgFYmbKAXz2ah8Z6OYQQTY2YIHfXrpy
-         WIePBfW9wN8Cq/pfCoqRtlY4HXKCHLia7y+FgkBYF7dthcj7BcRZXRcG4usaUWpen+la
-         XKndWe6u3TE5AF++PNFHDInKbj51i1mFze0I4EKa/M8/ZgzHN9VbzV/ebWuuXXidAa+y
-         485g==
-X-Gm-Message-State: APjAAAUUP7UKjXHQcTYdpk00/U+nVmeVZjZ27dTGYWHbfnOe+aUBgNxO
-        jYHEq+O2FGUyl/Celo3H2eOG3HlBjbtRnO9z3hs=
-X-Google-Smtp-Source: APXvYqzDdnFYJ8Lla7yyg06odfjJkmjvFBVnMNmJBo9Ki5bUjMkVb6uWSJ5ot1KuLFxTv46CZx8GfqnvIF9fwOV4eQI=
-X-Received: by 2002:a37:a685:: with SMTP id p127mr37379374qke.449.1579297027145;
- Fri, 17 Jan 2020 13:37:07 -0800 (PST)
+        Fri, 17 Jan 2020 16:37:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47108 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726587AbgAQVhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 16:37:22 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE15E2082F;
+        Fri, 17 Jan 2020 21:37:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579297041;
+        bh=TiUl3vxXPrNJYv+C72Doz3QU6XZr+ECnyQ786ta6B3I=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=w5Lx6yN8dKagG9+c5LzhGGokKJw3jF60UexVamEmOSX0jurdofNjO/fIg3toe9RF+
+         TQneVsmnUQ7RQWkSnqt0TB9pKaUhVGCMlJ3cb+avgCZoDC1nlXShtZ6XTuA/+3IwHO
+         cW38C2rFeBmuyzzS8KTeSlZ/dcayIi7nCoZkGMgk=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 8BE0635228BF; Fri, 17 Jan 2020 13:37:21 -0800 (PST)
+Date:   Fri, 17 Jan 2020 13:37:21 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH 1/1] rcu/tree: support kfree_bulk() interface in
+ kfree_rcu()
+Message-ID: <20200117213721.GN2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191231122241.5702-1-urezki@gmail.com>
+ <20200113190315.GA12543@paulmck-ThinkPad-P72>
+ <20200114164937.GA50403@google.com>
+ <20200115131446.GA18417@pc636>
+ <20200115225350.GA246464@google.com>
+ <20200117175217.GA23622@pc636>
+ <20200117185732.GH246464@google.com>
 MIME-Version: 1.0
-References: <157926819690.1555735.10756593211671752826.stgit@toke.dk> <157926820025.1555735.5663814379544078154.stgit@toke.dk>
-In-Reply-To: <157926820025.1555735.5663814379544078154.stgit@toke.dk>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 17 Jan 2020 13:36:55 -0800
-Message-ID: <CAEf4BzafS0FCsjJwG13eCEsE_TSLhg=wNY3RGfUnDwuP1KCz=w@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v4 03/10] selftests: Pass VMLINUX_BTF to
- runqslower Makefile
-To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-rdma@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200117185732.GH246464@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 5:37 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@redh=
-at.com> wrote:
->
-> From: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
->
-> Add a VMLINUX_BTF variable with the locally-built path when calling the
-> runqslower Makefile from selftests. This makes sure a simple 'make'
-> invocation in the selftests dir works even when there is no BTF informati=
-on
-> for the running kernel. Do a wildcard expansion and include the same path=
-s
-> for BTF for the running kernel as in the runqslower Makefile, to make it
-> possible to build selftests without having a vmlinux in the local tree.
->
-> Also fix the make invocation to use $(OUTPUT)/tools as the destination
-> directory instead of $(CURDIR)/tools.
->
-> Fixes: 3a0d3092a4ed ("selftests/bpf: Build runqslower from selftests")
-> Signed-off-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
-> ---
+On Fri, Jan 17, 2020 at 01:57:32PM -0500, Joel Fernandes wrote:
+> On Fri, Jan 17, 2020 at 06:52:17PM +0100, Uladzislau Rezki wrote:
+> > > > > > But rcuperf uses a single block size, which turns into kfree_bulk() using
+> > > > > > a single slab, which results in good locality of reference.  So I have to
+> > > > > 
+> > > > > You meant a "single cache" category when you say "single slab"? Just to
+> > > > > mention, the number of slabs (in a single cache) when a large number of
+> > > > > objects are allocated is more than 1 (not single). With current rcuperf, I
+> > > > > see 100s of slabs (each slab being one page) in the kmalloc-32 cache. Each
+> > > > > slab contains around 128 objects of type kfree_rcu (24 byte object aligned to
+> > > > > 32-byte slab object).
+> > > > > 
+> > > > I think that is about using different slab caches to break locality. It
+> > > > makes sense, IMHO, because usually the system make use of different slabs,
+> > > > because of different object sizes. From the other hand i guess there are
+> > > > test cases when only one slab gets used.
+> > > 
+> > > I was wondering about "locality". A cache can be split into many slabs. Only
+> > > the data on a page is local (contiguous). If there are a large number of
+> > > objects, then it goes to a new slab (on the same cache). At least on the
+> > > kmalloc slabs, there is only 1 slab per page. So for example, if on
+> > > kmalloc-32 slab, there are more than 128 objects, then it goes to a different
+> > > slab / page. So how is there still locality?
+> > > 
+> > Hmm.. On a high level:
+> > 
+> > one slab cache manages a specific object size, i.e. the slab memory consists of
+> > contiguous pages(when increased probably not) of memory(4096 bytes or so) divided
+> > into equal object size. For example when kmalloc() gets called, the appropriate
+> > cache size(slab that serves only specific size) is selected and an object assigned
+> > from it is returned.
+> > 
+> > But that is theory and i have not deeply analyzed how the SLAB works internally,
+> > so i can be wrong :)
+> > 
+> > You mentioned 128 objects per one slab in the kmalloc-32 slab-cache. But all of
+> > them follows each other, i mean it is sequential and is like regular array. In
+> 
+> Yes, for these 128 objects it is sequential. But the next 128 could be on
+> some other page is what I was saying  And we are allocating 10s of 1000s of
+> objects in this test.  (I believe pages are sequential only per slab and not
+> for a different slab within same cache).
+> 
+> > that sense freeing can be beneficial because when an access is done to any object
+> > whole CPU cache-line is fetched(if it was not before), usually it is 64K.
+> 
+> You mean size of the whole L1 cache right? cachelines are in the order of bytes.
+> 
+> > That is what i meant "locality". In order to "break it" i meant to allocate from
+> > different slabs to see how kfree_slub() behaves in that sense, what is more real
+> > scenario and workload, i think.
+> 
+> Ok, agreed.
+> (BTW I do agree your patch is beneficial, just wanted to get the slab
+> discussion right).
 
-With formatting fixes:
+Thank you both!
 
-Acked-by: Andrii Nakryiko <andriin@fb.com>
+Then I should be looking for an updated version of the patch with an upgraded
+commit log?  Or is there more investigation/testing/review in process?
 
->  tools/testing/selftests/bpf/Makefile |    8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftes=
-ts/bpf/Makefile
-> index 246d09ffb296..dcc8dbb1510b 100644
-> --- a/tools/testing/selftests/bpf/Makefile
-> +++ b/tools/testing/selftests/bpf/Makefile
-> @@ -124,10 +124,14 @@ $(OUTPUT)/test_stub.o: test_stub.c
->         $(call msg,CC,,$@)
->         $(CC) -c $(CFLAGS) -o $@ $<
->
-> +VMLINUX_BTF_PATHS :=3D $(abspath ../../../../vmlinux)                   =
- \
-> +                       /sys/kernel/btf/vmlinux                 \
-> +                       /boot/vmlinux-$(shell uname -r)
-
-it's not 100% consistent in this Makefile, unfortunately, but usually
-(and similarly to function arguments) we align items for such
-multi-line statements
-
-> +VMLINUX_BTF:=3D $(firstword $(wildcard $(VMLINUX_BTF_PATHS)))
->  .PHONY: $(OUTPUT)/runqslower
->  $(OUTPUT)/runqslower: force
-> -       $(Q)$(MAKE) $(submake_extras) -C $(TOOLSDIR)/bpf/runqslower      =
-     \
-> -                   OUTPUT=3D$(CURDIR)/tools/
-> +       $(Q)$(MAKE) $(submake_extras) -C $(TOOLSDIR)/bpf/runqslower     \
-> +                   OUTPUT=3D$(OUTPUT)/tools/ VMLINUX_BTF=3D$(VMLINUX_BTF=
-)
->
-
-please, keep \ alignment, it's all over the place
-
->  BPFOBJ :=3D $(OUTPUT)/libbpf.a
->
->
+							Thanx, Paul
