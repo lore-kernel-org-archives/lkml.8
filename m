@@ -2,101 +2,93 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5811C33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 03:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 254E0C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 03:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE9AB20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 03:36:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="kWipAHvo"
+	by mail.kernel.org (Postfix) with ESMTP id 07BEF206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 03:36:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729634AbgAQDgY (ORCPT
+        id S1729936AbgAQDgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 22:36:24 -0500
-Received: from forward103j.mail.yandex.net ([5.45.198.246]:57347 "EHLO
-        forward103j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726366AbgAQDgX (ORCPT
+        Thu, 16 Jan 2020 22:36:31 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54392 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726366AbgAQDg3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 22:36:23 -0500
-Received: from forward100q.mail.yandex.net (forward100q.mail.yandex.net [IPv6:2a02:6b8:c0e:4b:0:640:4012:bb97])
-        by forward103j.mail.yandex.net (Yandex) with ESMTP id 66D146740FD7;
-        Fri, 17 Jan 2020 06:36:19 +0300 (MSK)
-Received: from mxback12q.mail.yandex.net (mxback12q.mail.yandex.net [IPv6:2a02:6b8:c0e:1b3:0:640:3818:d096])
-        by forward100q.mail.yandex.net (Yandex) with ESMTP id 5F53D7080002;
-        Fri, 17 Jan 2020 06:36:19 +0300 (MSK)
-Received: from vla5-e763f15c6769.qloud-c.yandex.net (vla5-e763f15c6769.qloud-c.yandex.net [2a02:6b8:c18:340b:0:640:e763:f15c])
-        by mxback12q.mail.yandex.net (mxback/Yandex) with ESMTP id a1MeNzqhuk-aHdai45h;
-        Fri, 17 Jan 2020 06:36:19 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1579232179;
-        bh=o7C7QSp1tNndF9dhHqVnBtCm952xn76Pe6J9wt1IgLE=;
-        h=From:To:Subject:CC:References:Date:In-Reply-To:Message-ID;
-        b=kWipAHvojJC7ky63S86/CHCuZ2KWqiyYeY++7GTfxJ0qvWhfFKmtX9M61/QKW4/3V
-         QAPvjKGK5U8s8JOW2X3m48uxn//nthBXZWM51Mmo98jszuS3mV7jWZHh7/cvhHLhvv
-         nRKQcMCsg4aU3n4Aldzd3JPkOQNEXv4NtfVTAGMU=
-Authentication-Results: mxback12q.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by vla5-e763f15c6769.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id BHG1m4ySsO-aEW427WJ;
-        Fri, 17 Jan 2020 06:36:15 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Date:   Fri, 17 Jan 2020 11:36:04 +0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <1579195429-59828-3-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1579195429-59828-1-git-send-email-zhouyanjie@wanyeetech.com> <1579195429-59828-3-git-send-email-zhouyanjie@wanyeetech.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 1/6] MIPS: JZ4780: Introduce SMP support.
-To:     =?UTF-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>, linux-mips@vger.kernel.org
-CC:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        mips-creator-ci20-dev@googlegroups.com, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
-        mark.rutland@arm.com, syq@debian.org, ralf@linux-mips.org,
-        rick.tyliu@ingenic.com, jason@lakedaemon.net,
-        keescook@chromium.org, geert+renesas@glider.be, krzk@kernel.org,
-        paul@crapouillou.net, prasannatsmkumar@gmail.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
-        ebiederm@xmission.com, hns@goldelico.com, paul@boddie.org.uk
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <D9108DBE-BA95-47C6-81B3-74FBC44E04FE@flygoat.com>
+        Thu, 16 Jan 2020 22:36:29 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00H3WZWH003862
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 22:36:28 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xk0qtp757-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 22:36:28 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Fri, 17 Jan 2020 03:36:26 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 17 Jan 2020 03:36:23 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00H3aNOo47644822
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Jan 2020 03:36:23 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E6D89A405B;
+        Fri, 17 Jan 2020 03:36:22 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 307F8A4054;
+        Fri, 17 Jan 2020 03:36:22 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.212.27])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 17 Jan 2020 03:36:22 +0000 (GMT)
+Subject: Re: [PATCH v2] IMA: pre-allocate buffer to hold keyrings string
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        linux-integrity@vger.kernel.org
+Cc:     sashal@kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 16 Jan 2020 22:36:21 -0500
+In-Reply-To: <20200117021821.2566-1-nramas@linux.microsoft.com>
+References: <20200117021821.2566-1-nramas@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20011703-0012-0000-0000-0000037E17C3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20011703-0013-0000-0000-000021BA4D57
+Message-Id: <1579232181.5125.3.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-16_06:2020-01-16,2020-01-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ lowpriorityscore=0 mlxlogscore=999 adultscore=0 malwarescore=0
+ phishscore=0 clxscore=1015 priorityscore=1501 impostorscore=0 spamscore=0
+ mlxscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001170025
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 2020-01-16 at 18:18 -0800, Lakshmi Ramasubramanian wrote:
+> ima_match_keyring() is called while holding rcu read lock. Since this
+> function executes in atomic context, it should not call any function
+> that can sleep (such as kstrdup()).
+> 
+> This patch pre-allocates a buffer to hold the keyrings string read from
+> the IMA policy and uses that to match the given keyring.
+> 
+> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+> Fixes: e9085e0ad38a ("IMA: Add support to limit measuring keys")
 
+Thanks!  This patch is now queued in next-integrity-testing.
 
-=E4=BA=8E 2020=E5=B9=B41=E6=9C=8817=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=881=
-:23:44, "=E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie)" <zhouyanjie@wanyeetech=
-=2Ecom> =E5=86=99=E5=88=B0:
->Forward port smp support from kernel 3=2E18=2E3 of CI20_linux
->to upstream kernel 5=2E5=2E
->
->Tested-by: H=2E Nikolaus Schaller <hns@goldelico=2Ecom>
->Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
-eetech=2Ecom>
+Mimi
 
-Btw: I'm not clear with others attitude but personally I think we should a=
-void non-ASCII
-characters in kernel=2E
-
-Many people work on kernel with command line tools and a lot of terminals =
-didn't
-configured to display CJK characters properly=2E
-
-Pinyin or Wade=E2=80=93Giles of your name is enough for others to recogniz=
-e or
-credit you=2E
-
-Thanks=2E
-
->---
->
->
---=20
-Jiaxun Yang
