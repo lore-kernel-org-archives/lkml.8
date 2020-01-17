@@ -2,113 +2,180 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 530D3C33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 23:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 707BAC33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 23:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C09D21D56
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 23:04:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579302247;
-	bh=AZ7s+k9KLzB07bRhwmj5WpNU+WuRezIfV1WCiWED0ic=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FsDac2amOpZO3jIiU5bWteZOhZA0/+enQHPvJ+FbvS2Kk4/Xkzzu46RwunBTToA9k
-	 gkrhnJaMSI6GwjkmhW7Yf+dpYZc6GKh2RSN06V2/dq1K/cVPuIOXSxxzgCEmM+276j
-	 djQeam23L1KN6j7JgMFdJD13jqPIwKj71jqz2sUQ=
+	by mail.kernel.org (Postfix) with ESMTP id 42C9421D56
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 23:06:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XsWkvrfr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730035AbgAQXEF (ORCPT
+        id S1730120AbgAQXGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 18:04:05 -0500
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:49581 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729099AbgAQXEF (ORCPT
+        Fri, 17 Jan 2020 18:06:33 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:44810 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729099AbgAQXGd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 18:04:05 -0500
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 744C4585E;
-        Fri, 17 Jan 2020 18:04:02 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Fri, 17 Jan 2020 18:04:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=5quz/s
-        XDX8o8ICPwUpRb3ta3WYQ721Mtd7frfvTaU00=; b=gArZ7YMl0/16hrDswrK6K4
-        Oj1/8tYUm8W6ZSIHSp2E272yRYtNDil2/b+Zl1uR0y2yDMLrKFPfaIz8cwNw0TCe
-        /QXpv9G/bdVH1qnM7kVEXHVEB6BF3GEAtGZlwTvKPTLM9m7/cuJacUwm8/jnLde6
-        oake1xaY2Rd/fo94DOsXuyv3mOfstgSaUr5Orj2lRAOwhcYHMyPdNxU5WPKmh3ZY
-        zIIWtfx7pmMhjAkFxQsAkBsGqTpN4gD5/qko0JEam5s1fwPyMthWyik0V2YBeBqB
-        FuMd452qavUFwglnUYWUebwh8+kbfb6nzXVUa05WJYsnVhxzzYI696iuFAW22McA
-        ==
-X-ME-Sender: <xms:YT0iXnaBsenCTgvzg-F1rg31A2kwGO0iakIpJecYRwn6Wb-9ExUGUQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrtdelgddthecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfm
-    jfcuoehgrhgvghhkhheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgqeenucfkph
-    epkeefrdekiedrkeelrddutdejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvghes
-    khhrohgrhhdrtghomhenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:YT0iXlais33krYYwaT7vn-uWfQEnvuHvOa3KjDeSyBA1MwSMJ2yVkQ>
-    <xmx:YT0iXqFC-c0uJvp85UV0dfVlykGscfq6HanpacGVwHb8G7JDu832OA>
-    <xmx:YT0iXgDs-B2A7Z5byjQTVVnFgVmxFtRMenn4vH8U7_jIWUPPxy4bjw>
-    <xmx:Yj0iXshXyDKLHNAJMScgCbZ44x5VOJ2rnKHn1EdQ70m5uuN3Wo4ZOQ>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 10A2E80063;
-        Fri, 17 Jan 2020 18:04:01 -0500 (EST)
-Date:   Sat, 18 Jan 2020 00:03:56 +0100
-From:   Greg KH <gregkh@linux-foundation.org>
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     roman.sudarikov@linux.intel.com, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        eranian@google.com, bgregg@netflix.com, kan.liang@linux.intel.com,
-        alexander.antonov@intel.com
-Subject: Re: [PATCH v4 2/2] perf =?iso-8859-1?Q?x86?=
- =?iso-8859-1?Q?=3A_Exposing_an_Uncore_unit_to_PMON_for_Intel_Xeon?=
- =?iso-8859-1?Q?=AE?= server platform
-Message-ID: <20200117230356.GA2093716@kroah.com>
-References: <20200117133759.5729-1-roman.sudarikov@linux.intel.com>
- <20200117133759.5729-3-roman.sudarikov@linux.intel.com>
- <20200117141944.GC1856891@kroah.com>
- <20200117162357.GK302770@tassilo.jf.intel.com>
- <20200117165406.GA1937954@kroah.com>
- <20200117172726.GM302770@tassilo.jf.intel.com>
- <20200117184249.GB1969121@kroah.com>
- <20200117191220.GN302770@tassilo.jf.intel.com>
+        Fri, 17 Jan 2020 18:06:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=9Jk4K6+zM/z+rUgtMCtvyK2a+37DJxesv3XUbh+Vyoo=; b=XsWkvrfrPz0fwoeslrk01HqaN
+        t/J0vEDVfCPa22NNKmK4ZrrBhMoLiWe8tPPcTQ+zP9giX4JwiDBim7yjYEMV1+xrWMwfwDoqzG1wO
+        WJwSh3Eyx2A/sqgTHute+MZ5pKxoUJvvizoOma6rwuLdGpw/kMabDGLzWGyi43U9YcG0RJnxZZNPR
+        Pmh1uFYH9HFCGk2aVmfzG7+5sPxtomLpMcFjn+Rs3yQCTCcr7pkiSkWM9aCtsBq7Rv3TvyBiCJTdo
+        47mGECZ4S/A3nZaMaXLWWsfyCTwPq/yzYIOiRlBJSQr5pYR2YVOFkFNWVkZ7uKw3Xu1Trr3SiR47G
+        0vu5vxycw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1isagk-000647-Bu; Fri, 17 Jan 2020 23:06:02 +0000
+Date:   Fri, 17 Jan 2020 15:06:02 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Sargun Dhillon <sargun@sargun.me>
+Cc:     linux-kernel@vger.kernel.org,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, tycho@tycho.ws, jannh@google.com,
+        cyphar@cyphar.com, christian.brauner@ubuntu.com, oleg@redhat.com,
+        luto@amacapital.net, viro@zeniv.linux.org.uk,
+        gpascutto@mozilla.com, ealvarez@mozilla.com, fweimer@redhat.com,
+        jld@mozilla.com, arnd@arndb.de
+Subject: Re: [PATCH v8 2/3] pid: Introduce pidfd_getfd syscall
+Message-ID: <20200117230602.GA31944@bombadil.infradead.org>
+References: <20200103162928.5271-1-sargun@sargun.me>
+ <20200103162928.5271-3-sargun@sargun.me>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200117191220.GN302770@tassilo.jf.intel.com>
+In-Reply-To: <20200103162928.5271-3-sargun@sargun.me>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 11:12:20AM -0800, Andi Kleen wrote:
-> > > pmon0-3: list of pci busses indexed by die
-> > > 
-> > > To be honest the approach doesn't seem unreasonable to me. It's similar
-> > > e.g. how we express lists of cpus or nodes in sysfs today.
-> 
-> <snipped repeated form letter non answer to question>
-> 
-> Roman, 
-> 
-> I suppose you'll need something like
-> 
-> /sys/device/system/dieXXX/pci-pmon<0-3>/bus 
-> 
-> and bus could be a symlink to the pci bus directory.
+On Fri, Jan 03, 2020 at 08:29:27AM -0800, Sargun Dhillon wrote:
+> +++ b/kernel/pid.c
+> @@ -578,3 +578,93 @@ void __init pid_idr_init(void)
+>  	init_pid_ns.pid_cachep = KMEM_CACHE(pid,
+>  			SLAB_HWCACHE_ALIGN | SLAB_PANIC | SLAB_ACCOUNT);
+>  }
+> +
+> +static struct file *__pidfd_fget(struct task_struct *task, int fd)
+> +{
+> +	struct file *file;
+> +	int ret;
+> +
+> +	ret = mutex_lock_killable(&task->signal->cred_guard_mutex);
+> +	if (ret)
+> +		return ERR_PTR(ret);
+> +
+> +	if (ptrace_may_access(task, PTRACE_MODE_ATTACH_REALCREDS))
+> +		file = fget_task(task, fd);
+> +	else
+> +		file = ERR_PTR(-EPERM);
+> +
+> +	mutex_unlock(&task->signal->cred_guard_mutex);
+> +
+> +	return file ?: ERR_PTR(-EBADF);
+> +}
+> +
+> +static int pidfd_getfd(struct pid *pid, int fd)
+> +{
+> +	struct task_struct *task;
+> +	struct file *file;
+> +	int ret;
+> +
+> +	task = get_pid_task(pid, PIDTYPE_PID);
+> +	if (!task)
+> +		return -ESRCH;
+> +
+> +	file = __pidfd_fget(task, fd);
+> +	put_task_struct(task);
+> +	if (IS_ERR(file))
+> +		return PTR_ERR(file);
+> +
+> +	ret = security_file_receive(file);
+> +	if (ret) {
+> +		fput(file);
+> +		return ret;
+> +	}
+> +
+> +	ret = get_unused_fd_flags(O_CLOEXEC);
+> +	if (ret < 0)
+> +		fput(file);
+> +	else
+> +		fd_install(ret, file);
+> +
+> +	return ret;
+> +}
+> +
+> +/**
+> + * sys_pidfd_getfd() - Get a file descriptor from another process
+> + *
+> + * @pidfd:	the pidfd file descriptor of the process
+> + * @fd:		the file descriptor number to get
+> + * @flags:	flags on how to get the fd (reserved)
+> + *
+> + * This syscall gets a copy of a file descriptor from another process
+> + * based on the pidfd, and file descriptor number. It requires that
+> + * the calling process has the ability to ptrace the process represented
+> + * by the pidfd. The process which is having its file descriptor copied
+> + * is otherwise unaffected.
+> + *
+> + * Return: On success, a cloexec file descriptor is returned.
+> + *         On error, a negative errno number will be returned.
+> + */
 
-Why do you need to link to the pci bus directory?
+We don't usually kernel-doc syscalls.  They should have manpages instead.
 
-> The whole thing will be ugly and complicated and slow and difficult
-> to parse, but it will presumably follow Greg's rules.
+> +SYSCALL_DEFINE3(pidfd_getfd, int, pidfd, int, fd,
+> +		unsigned int, flags)
+> +{
+> +	struct pid *pid;
+> +	struct fd f;
+> +	int ret;
+> +
+> +	/* flags is currently unused - make sure it's unset */
+> +	if (flags)
+> +		return -EINVAL;
 
-Who needs to parse this?  What tool will do it and for what?
+Is EINVAL the right errno here?  Often we use ENOSYS for bad flags to
+syscalls.
 
-greg k-h
+> +	f = fdget(pidfd);
+> +	if (!f.file)
+> +		return -EBADF;
+> +
+> +	pid = pidfd_pid(f.file);
+> +	if (IS_ERR(pid))
+> +		ret = PTR_ERR(pid);
+> +	else
+> +		ret = pidfd_getfd(pid, fd);
+
+You can simplify this by having pidfd_pid() return ERR_PTR(-EBADF) if
+!f.file, and having pidfd_getfd() return PTR_ERR() if IS_ERR(pid).  Then
+this function looks like:
+
+	if (flags)
+		return -EINVAL;
+
+	f = fdget(pidfd);
+	pid = pidfd_pid(f.file);
+	ret = pidfd_getfd(pid, fd);
+	fdput(f);
+	return ret;
+
+You could even eliminate the 'pid' variable and just do:
+
+	ret = pidfd_getfd(pidfd_pid(f.file), fd);
+
+but that's a step too far for me.
+
+It's unfortunate that -EBADF might mean that either the first or second
+argument is a bad fd number.  I'm not sure I have a good alternative though.
