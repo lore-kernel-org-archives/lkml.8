@@ -2,192 +2,117 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA9EC33CB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 06:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D1EC33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 06:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D13520842
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 06:10:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE97C2087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 06:17:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="lZ41PadG"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ciYbDhSN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728927AbgAQGKq (ORCPT
+        id S1726903AbgAQGRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 01:10:46 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:35310 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726896AbgAQGKp (ORCPT
+        Fri, 17 Jan 2020 01:17:03 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:56638 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbgAQGRC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 01:10:45 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200117061044euoutp01ac8bd22ad2a24b175faa429a6ede0da7~ql7nnoI1u2286022860euoutp01D
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 06:10:44 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200117061044euoutp01ac8bd22ad2a24b175faa429a6ede0da7~ql7nnoI1u2286022860euoutp01D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579241444;
-        bh=Z9fFgcC2NnU134JInpRdOeaMJ6lEBQzGoW5uJcvMW/U=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=lZ41PadGlYGqApUjwlgpAoL85dsAVu8cZqohL2AMAJuoIj01UqafdsiJ/oPfAL3VV
-         rDGVKZ8dZvLurv6vJUJgR7Up22+6Rg77cDwMY0QkM7GqbQHDBXA+byYjRBes1QbIEz
-         6xcULKJoX618oxUmb0iCkR0SbYwB9HQD1eFqvVus=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200117061043eucas1p2c09d4396ff10f6dbc79c96f34208c712~ql7nORAld0919209192eucas1p2M;
-        Fri, 17 Jan 2020 06:10:43 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id A0.00.60679.3EF412E5; Fri, 17
-        Jan 2020 06:10:43 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200117061043eucas1p1783321b0e0c1447350bed76aa13e06db~ql7mr71v80895908959eucas1p1k;
-        Fri, 17 Jan 2020 06:10:43 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200117061043eusmtrp2e53fd1060d6415ffaf5ffed2443b11fc~ql7mrVnCk3019830198eusmtrp2V;
-        Fri, 17 Jan 2020 06:10:43 +0000 (GMT)
-X-AuditID: cbfec7f4-0e5ff7000001ed07-31-5e214fe37512
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 28.9D.07950.2EF412E5; Fri, 17
-        Jan 2020 06:10:42 +0000 (GMT)
-Received: from AMDC3555 (unknown [106.120.51.67]) by eusmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200117061042eusmtip15f3a7df5ef6055c40f4eb694d69c48d4~ql7mRvz8q3055330553eusmtip1Q;
-        Fri, 17 Jan 2020 06:10:42 +0000 (GMT)
-Message-ID: <7037771c6aaa7b72a41e33c621d4e0c6db7758ca.camel@samsung.com>
-Subject: Re: [PATCH v4 0/3] interconnect: Support Samsung Exynos use-case
-From:   Artur =?UTF-8?Q?=C5=9Awigo=C5=84?= <a.swigon@samsung.com>
-To:     Chanwoo Choi <cw00.choi@samsung.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc:     georgi.djakov@linaro.org, b.zolnierkie@samsung.com,
-        m.szyprowski@samsung.com, krzk@kernel.org
-Date:   Fri, 17 Jan 2020 07:10:41 +0100
-In-Reply-To: <95ac808c-aacf-8ca8-94a7-98bbdb37b39d@samsung.com>
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNKsWRmVeSWpSXmKPExsWy7djPc7qP/RXjDB4tVbbYOGM9q8X1L89Z
-        Labv3cRmcf78BnaLy7vmsFl87j3CaDHj/D4mi7VH7rI7cHhsWtXJ5nHn2h42j74tqxg9Pm+S
-        C2CJ4rJJSc3JLEst0rdL4Mro/7KJteC0RMWh3ZeZGhj3C3cxcnJICJhInD/2iqmLkYtDSGAF
-        o0TT2jPMEM4XRokP99ZAOZ8ZJc7/XsUO03LkVhM7RGI5o8SR089YQRJCAs8YJfpviIDYvAIe
-        Ejt/L2MEsYUFPCW+/7vABmKzCdhLnL39DWyfiEAro0TvqydgU5kFkiW2zr3IAmKzCKhKdK77
-        DxbnBGp4vOw4I8RmHYm3p/qAajiAFghK/N0hDNEqL9G8dTbYpRICy9glJt85AnWpi8SDf4+Y
-        IGxhiVfHt0DFZST+75wPFS+WeLrzPitEcwOjxKZlR5ghEtYSd879YgNZxiygKbF+lz6IKSHg
-        KLF9XRCEySdx460gxAl8EpO2TWeGCPNKdLQJQZhKErtm8kGMk5BoWn0NarSHxJ4bi1kmMCrO
-        QnhlFpJXZiEsXcDIvIpRPLW0ODc9tdgoL7Vcrzgxt7g0L10vOT93EyMwyZz+d/zLDsZdf5IO
-        MQpwMCrx8M4IUogTYk0sK67MPcQowcGsJMJ7coZsnBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXFe
-        40UvY4UE0hNLUrNTUwtSi2CyTBycUg2MmyNnFJtfPR1QJjZVwOig/PHVM4qCdz8/3j7vQWjR
-        9IAF4ooP7r1hXZr5zPjXxOa4Hjmro3u7pDZ75DDaWp9fcUk8wyZslarsZpnTK7sP87q8t0vZ
-        qh1t2beW9dty3udPz04IuLLiXPaR19Khh5tf9U6a8iTyZk286HzeY9o3Z+s/X39061Y5DyWW
-        4oxEQy3mouJEACh8WeQuAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCIsWRmVeSWpSXmKPExsVy+t/xu7qP/BXjDE48tLHYOGM9q8X1L89Z
-        Labv3cRmcf78BnaLy7vmsFl87j3CaDHj/D4mi7VH7rI7cHhsWtXJ5nHn2h42j74tqxg9Pm+S
-        C2CJ0rMpyi8tSVXIyC8usVWKNrQw0jO0tNAzMrHUMzQ2j7UyMlXSt7NJSc3JLEst0rdL0Mvo
-        /7KJteC0RMWh3ZeZGhj3C3cxcnJICJhIHLnVxN7FyMUhJLCUUaL7zCFGiISExMf1N1ghbGGJ
-        P9e62CCKnjBKPJw4HSzBK+AhsfP3MrAGYQFPie//LrCB2GwC9hJnb39jArFFBNoYJU5u0gKx
-        mQVSJO72zGIGsVkEVCU61/1nB7E5geofLzvOCLHgOKPEop1XmCAaNCVat/9mh7hCR+LtqT6W
-        LkYOoMWCEn93CEOUyEs0b53NPIFRcBaSjlkIVbOQVC1gZF7FKJJaWpybnltspFecmFtcmpeu
-        l5yfu4kRGEPbjv3csoOx613wIUYBDkYlHt4ZQQpxQqyJZcWVuYcYJTiYlUR4T86QjRPiTUms
-        rEotyo8vKs1JLT7EaAr0z0RmKdHkfGB855XEG5oamltYGpobmxubWSiJ83YIHIwREkhPLEnN
-        Tk0tSC2C6WPi4JRqYDzxc4f6N05hdZ9sbeWtB88/Oma5+Nnlq+orJ9xc+qb3Zaiv65yknB9p
-        7g+C5r2wClNq0k+WFTUQOrfh7G9G1/8GCmznPneclbwc3nRHbuLdNba7RVYen71MeVZhTt3p
-        89P6N6XJ1d83ZRM782+/yG69oP3y1pczrzs/nfGIQ2aCQC1Lzmuec7xKLMUZiYZazEXFiQBB
-        xFQltwIAAA==
-X-CMS-MailID: 20200117061043eucas1p1783321b0e0c1447350bed76aa13e06db
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200116144241eucas1p226c1d7fc2fad5bd1b9fb6d0fb1b22bff
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200116144241eucas1p226c1d7fc2fad5bd1b9fb6d0fb1b22bff
-References: <CGME20200116144241eucas1p226c1d7fc2fad5bd1b9fb6d0fb1b22bff@eucas1p2.samsung.com>
-        <20200116144202.12116-1-a.swigon@samsung.com>
-        <95ac808c-aacf-8ca8-94a7-98bbdb37b39d@samsung.com>
+        Fri, 17 Jan 2020 01:17:02 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00H68VoP186719;
+        Fri, 17 Jan 2020 06:16:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=4TOKhipqmrCsgvCLGU5jhoCV7/t8LwEnDe/T9FY/bdY=;
+ b=ciYbDhSNXaZI4kmd62VzISKNQqEwMNgub4uKinaEjmjtRlDpo9+DIIw3ookHr+Z/ZFDT
+ bJh/+MdDIQ8dQ/BwKZN3Sc95pAlELceNMdmlmJsXkuapi9UyL9wDzSowuBcDBSk+AZpw
+ JG0XiRBy9vo+oNriDRkeAotnRGLknYa8tHs1GsR6tiLSTg8rqyfKzt9r7LTZUEFTc3Q/
+ eOzSP+DegprTi7M/UgRvu6zm+zrJ26XYM0K7Ts5rikFxt/A1P1INIOhZAYwwJy2Q2Liy
+ /VmoOi2NBUf9KnbhUjac6iD8YZQyMQWwX8emFG4dAWPPafsyKhW2HtBUr5euAKvua2yr /Q== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2xf74spsg2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Jan 2020 06:16:52 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00H69HnS076237;
+        Fri, 17 Jan 2020 06:16:51 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2xk2309qtt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Jan 2020 06:16:51 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00H6Gn32031289;
+        Fri, 17 Jan 2020 06:16:49 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 16 Jan 2020 22:16:49 -0800
+Date:   Thu, 16 Jan 2020 22:16:47 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     linux-xfs@vger.kernel.org, hch@lst.de, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] xfs: remove unused variable 'done'
+Message-ID: <20200117061647.GR8247@magnolia>
+References: <20200117015011.50412-1-yuehaibing@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200117015011.50412-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9502 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001170048
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9502 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001170048
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chanwoo,
-
-On Fri, 2020-01-17 at 14:31 +0900, Chanwoo Choi wrote:
-> Hi Artur,
+On Fri, Jan 17, 2020 at 09:50:11AM +0800, YueHaibing wrote:
+> fs/xfs/xfs_inode.c: In function 'xfs_itruncate_extents_flags':
+> fs/xfs/xfs_inode.c:1523:8: warning: unused variable 'done' [-Wunused-variable]
 > 
-> I'm concerned about that make it the separate series
-> without use-case like exynos-bus, exynos-drm.
-> If this series is applied to v5.6, it doesn't make
-> the problem and the patches for exynos-bus/exynos-drm
-> will be reviewed and then merged on later kernel version.
+> commit 4bbb04abb4ee ("xfs: truncate should remove
+> all blocks, not just to the end of the page cache")
+> left behind this, so remove it.
 > 
-> But, if not, the interconnect, exynos-bus and exynos-drm
-> patches should be merged into the same kernel version,
-> it must require the immutable branch among interconnect,
-> devfreq and exynos-drm. I think that you need to consider
-> it between different subsystems.
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Thanks for the feedback. Due to the fact that the RFC depends
-on the proposed changes to the interconnect framework, I need
-to ensure that these three patches come first.
+Looks ok,
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-If there is any disagreement over any of these three patches,
-the rest of the RFC might need to be modified. In such case,
-I will update the RFC and send the rest of v4 patches (for
-exynos-bus, exynos-mixer, and probably also exynos5-dmc).
+--D
 
-> On 1/16/20 11:41 PM, Artur Świgoń wrote:
-> > Previously posted as a part of a larger RFC: [1].
-> > 
-> > The Exynos SoC family relies on the devfreq driver for frequency
-> > scaling. However, a way to programmatically enforce QoS contraints
-> > (i.e., minimum frequency) is desired. A solution which uses the
-> > interconnect framework to ensure QoS is currently being developed[1].
-> > 
-> > The exynos-bus hierarchy is composed of multiple buses which are probed
-> > separately. Sometimes the DMC is even handled by a different driver.
-> > Since the exynos-bus driver is generic and supports multiple differing
-> > bus hierarchies, IDs for nodes (i.e. buses) are assigned dynamically. Due
-> > to the unspecified relative probing order, every bus registers its own
-> > interconnect provider.
-> > 
-> > Rationale for each patch in this series:
-> > * Patch 01 (exporting of_icc_get_from_provider()) makes it easy to
-> >   retrieve the parent node from the DT (cf. patch 05 in [1]).
-> > * Patch 02 (allowing #interconnect-cells = <0>) allows to remove dummy
-> >   node IDs from the DT.
-> > * Patch 03 (allowing inter-provider node pairs) is necessary to make
-> >   such multi-provider hierarchy work. A new approach implemented in v3
-> >   ensures not to break any existing drivers.
-> > 
-> > ---
-> > Changes since v3 (to patches in this series):
-> > * Improve commit messages.
-> > 
-> > ---
-> > Artur Świgoń
-> > Samsung R&D Institute Poland
-> > Samsung Electronics
-> > 
-> > ---
-> > References:
-> > [1] https://patchwork.kernel.org/patch/11305287/
-> > 
-> > Artur Świgoń (3):
-> >   interconnect: Export of_icc_get_from_provider()
-> >   interconnect: Relax requirement in of_icc_get_from_provider()
-> >   interconnect: Allow inter-provider pairs to be configured
-> > 
-> >  drivers/interconnect/core.c           | 16 ++++++++--------
-> >  include/linux/interconnect-provider.h |  8 ++++++++
-> >  2 files changed, 16 insertions(+), 8 deletions(-)
-> > 
+> ---
+>  fs/xfs/xfs_inode.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+> index 1309f25..1979a00 100644
+> --- a/fs/xfs/xfs_inode.c
+> +++ b/fs/xfs/xfs_inode.c
+> @@ -1520,7 +1520,6 @@ xfs_itruncate_extents_flags(
+>  	xfs_fileoff_t		first_unmap_block;
+>  	xfs_filblks_t		unmap_len;
+>  	int			error = 0;
+> -	int			done = 0;
+>  
+>  	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
+>  	ASSERT(!atomic_read(&VFS_I(ip)->i_count) ||
+> -- 
+> 2.7.4
 > 
 > 
--- 
-Artur Świgoń
-Samsung R&D Institute Poland
-Samsung Electronics
-
-
