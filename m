@@ -2,243 +2,94 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA23C33CB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D54BC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE3FF20661
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:43:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gOkuC3C+"
+	by mail.kernel.org (Postfix) with ESMTP id 6B8B82073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:43:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728928AbgAQNnR (ORCPT
+        id S1728935AbgAQNna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 08:43:17 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:45731 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727580AbgAQNnD (ORCPT
+        Fri, 17 Jan 2020 08:43:30 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:56203 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726970AbgAQNna (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 08:43:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579268581;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LQICz1wSrd9+unk/KTAhm5BSjsKUGLh/wx6klsQzMyE=;
-        b=gOkuC3C+SK1TnB7TG4MlR6Jj2rff1V7Z6ZOF1Gk0aEFhdkyFUHpAu0HiJ22vSwEeR/h7P4
-        dt9MPWRe9RLliF/y7czgr5T/wqjTKHJfPYfQBFbxLsVmxVtGXnJmEnsKHwt0Yi6ZIbIFc/
-        gLWe2wM/zRmqARS3/9Sh0BRAohUjE5E=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-380-8UExuNVOMIqSIGP2Ve3GwA-1; Fri, 17 Jan 2020 08:43:00 -0500
-X-MC-Unique: 8UExuNVOMIqSIGP2Ve3GwA-1
-Received: by mail-lf1-f71.google.com with SMTP id t3so4383038lfp.15
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 05:42:59 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=LQICz1wSrd9+unk/KTAhm5BSjsKUGLh/wx6klsQzMyE=;
-        b=lSkV5EuoDDLzD7nUyRDRHFli3xNXO7t65tUbZ/1/uC1yRg2VlmzXy/6TYHwNJjuT2L
-         PSvGrtIsyMdW4AscTo/DtKURDhNgxobVRdx9FBPHIyw2RwZqsoF7RaMopRrTYBtxdMFb
-         N9smF1McxpXobKkLpz/zkzAztCdLCy7GQdciG3KAddW1/1rmzKR4Z0KozIp5GKF+qtqA
-         t9eSnhbIyI885SWnVhFHlN4O0Gt9noa5OuYpviVLwaG0CmywDzSUIAkNc0TugSYO2pdO
-         GYgAg2IglH9ZiKWD3PS/GpoQAtx3QwVAlJDN3ggPk+E/5QCgCeAm+DBahh+/TSolnpLP
-         rqLg==
-X-Gm-Message-State: APjAAAX+ks+6m78Stz/2so70HQnQR/LC4KNEavXpFIHqECp9jk5AOfiN
-        eRQqYLvFOcjqcqY8O7r+HQ8Y/HI0vTC2Dy2cp6kgk7YE6RFy7Vlyci2vFNVBbGMDVKjRhl1k241
-        yu2vH7Y6/OqbYVQV/EPa63i2B
-X-Received: by 2002:a05:651c:21c:: with SMTP id y28mr5577346ljn.164.1579268578549;
-        Fri, 17 Jan 2020 05:42:58 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwHAwELWdTWp8cnKfoF73NjYLMwS9bCVGuMLhOLg/d8FS+JPMoZdDFWlWeYmTFnPvP7DqNGsg==
-X-Received: by 2002:a05:651c:21c:: with SMTP id y28mr5577310ljn.164.1579268578268;
-        Fri, 17 Jan 2020 05:42:58 -0800 (PST)
-Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
-        by smtp.gmail.com with ESMTPSA id s23sm12499671lji.70.2020.01.17.05.42.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 05:42:56 -0800 (PST)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id DD4BF1804D6; Fri, 17 Jan 2020 14:36:46 +0100 (CET)
-Subject: [PATCH bpf-next v4 09/10] selftests: Remove tools/lib/bpf from
- include path
-From:   =?utf-8?q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Alexei Starovoitov <ast@kernel.org>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Date:   Fri, 17 Jan 2020 14:36:46 +0100
-Message-ID: <157926820677.1555735.5437255599683298212.stgit@toke.dk>
-In-Reply-To: <157926819690.1555735.10756593211671752826.stgit@toke.dk>
-References: <157926819690.1555735.10756593211671752826.stgit@toke.dk>
-User-Agent: StGit/0.21
+        Fri, 17 Jan 2020 08:43:30 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1isRuH-0000sJ-JM; Fri, 17 Jan 2020 14:43:25 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DA3001C19DF;
+        Fri, 17 Jan 2020 14:43:24 +0100 (CET)
+Date:   Fri, 17 Jan 2020 13:43:24 -0000
+From:   "tip-bot2 for Wei Liu" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/hyperv] x86/hyper-v: Add "polling" bit to hv_synic_sint
+Cc:     Wei Liu <wei.liu@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kelley <mikelley@microsoft.com>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20191222233404.1629-1-wei.liu@kernel.org>
+References: <20191222233404.1629-1-wei.liu@kernel.org>
 MIME-Version: 1.0
+Message-ID: <157926860444.396.6394055329835484109.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+The following commit has been merged into the x86/hyperv branch of tip:
 
-To make sure no new files are introduced that doesn't include the bpf/
-prefix in its #include, remove tools/lib/bpf from the include path
-entirely.
+Commit-ID:     538f127cd3bcf76071139f4bfe9cc3b2a46f3b3d
+Gitweb:        https://git.kernel.org/tip/538f127cd3bcf76071139f4bfe9cc3b2a46f3b3d
+Author:        Wei Liu <wei.liu@kernel.org>
+AuthorDate:    Sun, 22 Dec 2019 23:34:04 
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Fri, 17 Jan 2020 14:38:21 +01:00
 
-Instead, we introduce a new header files directory under the scratch tools/
-dir, and add a rule to run the 'install_headers' rule from libbpf to have a
-full set of consistent libbpf headers in $(OUTPUT)/tools/include/bpf, and
-then use $(OUTPUT)/tools/include as the include path for selftests.
+x86/hyper-v: Add "polling" bit to hv_synic_sint
 
-For consistency we also make sure we put all the scratch build files from
-other bpftool and libbpf into tools/build/, so everything stays within
-selftests/.
+That bit is documented in TLFS 5.0c as follows:
 
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+  Setting the polling bit will have the effect of unmasking an
+  interrupt source, except that an actual interrupt is not generated.
+
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Link: https://lore.kernel.org/r/20191222233404.1629-1-wei.liu@kernel.org
+
 ---
- tools/testing/selftests/bpf/.gitignore |    2 +
- tools/testing/selftests/bpf/Makefile   |   49 +++++++++++++++++++++-----------
- 2 files changed, 33 insertions(+), 18 deletions(-)
+ arch/x86/include/asm/hyperv-tlfs.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/bpf/.gitignore b/tools/testing/selftests/bpf/.gitignore
-index 1d14e3ab70be..8c9eac626996 100644
---- a/tools/testing/selftests/bpf/.gitignore
-+++ b/tools/testing/selftests/bpf/.gitignore
-@@ -39,4 +39,4 @@ test_cpp
- /no_alu32
- /bpf_gcc
- /tools
--bpf_helper_defs.h
-+
-diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-index 858d4e3369ad..ac0292a82fdc 100644
---- a/tools/testing/selftests/bpf/Makefile
-+++ b/tools/testing/selftests/bpf/Makefile
-@@ -20,8 +20,8 @@ CLANG		?= clang
- LLC		?= llc
- LLVM_OBJCOPY	?= llvm-objcopy
- BPF_GCC		?= $(shell command -v bpf-gcc;)
--CFLAGS += -g -Wall -O2 $(GENFLAGS) -I$(CURDIR) -I$(APIDIR) -I$(LIBDIR)  \
--	  -I$(BPFDIR) -I$(GENDIR) -I$(TOOLSINCDIR)			\
-+CFLAGS += -g -Wall -O2 $(GENFLAGS) -I$(CURDIR) -I$(APIDIR)		 \
-+	  -I$(INCLUDE_DIR) -I$(GENDIR) -I$(LIBDIR) -I$(TOOLSINCDIR)	\
- 	  -Dbpf_prog_load=bpf_prog_test_load				\
- 	  -Dbpf_load_program=bpf_test_load_program
- LDLIBS += -lcap -lelf -lz -lrt -lpthread
-@@ -97,11 +97,15 @@ OVERRIDE_TARGETS := 1
- override define CLEAN
- 	$(call msg,CLEAN)
- 	$(RM) -r $(TEST_GEN_PROGS) $(TEST_GEN_PROGS_EXTENDED) $(TEST_GEN_FILES) $(EXTRA_CLEAN)
--	$(MAKE) -C $(BPFDIR) OUTPUT=$(OUTPUT)/ clean
- endef
+diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+index 5f10f7f..92abc1e 100644
+--- a/arch/x86/include/asm/hyperv-tlfs.h
++++ b/arch/x86/include/asm/hyperv-tlfs.h
+@@ -809,7 +809,8 @@ union hv_synic_sint {
+ 		u64 reserved1:8;
+ 		u64 masked:1;
+ 		u64 auto_eoi:1;
+-		u64 reserved2:46;
++		u64 polling:1;
++		u64 reserved2:45;
+ 	} __packed;
+ };
  
- include ../lib.mk
- 
-+SCRATCH_DIR := $(OUTPUT)/tools
-+BUILD_DIR := $(SCRATCH_DIR)/build
-+INCLUDE_DIR := $(SCRATCH_DIR)/include
-+INCLUDE_BPF := $(INCLUDE_DIR)/bpf
-+
- # Define simple and short `make test_progs`, `make test_sysctl`, etc targets
- # to build individual tests.
- # NOTE: Semicolon at the end is critical to override lib.mk's default static
-@@ -120,7 +124,7 @@ $(OUTPUT)/urandom_read: urandom_read.c
- 	$(call msg,BINARY,,$@)
- 	$(CC) -o $@ $< -Wl,--build-id
- 
--$(OUTPUT)/test_stub.o: test_stub.c
-+$(OUTPUT)/test_stub.o: test_stub.c $(INCLUDE_BPF)
- 	$(call msg,CC,,$@)
- 	$(CC) -c $(CFLAGS) -o $@ $<
- 
-@@ -133,7 +137,7 @@ $(OUTPUT)/runqslower: force
- 	$(Q)$(MAKE) $(submake_extras) -C $(TOOLSDIR)/bpf/runqslower	\
- 		    OUTPUT=$(OUTPUT)/tools/ VMLINUX_BTF=$(VMLINUX_BTF)
- 
--BPFOBJ := $(OUTPUT)/libbpf.a
-+BPFOBJ := $(BUILD_DIR)/libbpf/libbpf.a
- 
- $(TEST_GEN_PROGS) $(TEST_GEN_PROGS_EXTENDED): $(OUTPUT)/test_stub.o $(BPFOBJ)
- 
-@@ -159,17 +163,28 @@ force:
- DEFAULT_BPFTOOL := $(OUTPUT)/tools/sbin/bpftool
- BPFTOOL ?= $(DEFAULT_BPFTOOL)
- 
--$(DEFAULT_BPFTOOL): force
--	$(Q)$(MAKE) $(submake_extras)  -C $(BPFTOOLDIR)			      \
-+$(BUILD_DIR)/libbpf $(BUILD_DIR)/bpftool $(INCLUDE_DIR):
-+	$(call msg,MKDIR,,$@)
-+	mkdir -p $@
-+
-+$(DEFAULT_BPFTOOL): force | $(BUILD_DIR)/bpftool
-+	$(Q)$(MAKE) $(submake_extras)  -C $(BPFTOOLDIR)		\
-+		    OUTPUT=$(BUILD_DIR)/bpftool/			\
- 		    prefix= DESTDIR=$(OUTPUT)/tools/ install
- 
--$(BPFOBJ): force
--	$(Q)$(MAKE) $(submake_extras) -C $(BPFDIR) OUTPUT=$(OUTPUT)/
-+$(BPFOBJ): force | $(BUILD_DIR)/libbpf
-+	$(Q)$(MAKE) $(submake_extras) -C $(BPFDIR) \
-+		OUTPUT=$(BUILD_DIR)/libbpf/
-+
-+$(INCLUDE_BPF): $(BPFOBJ) | $(INCLUDE_DIR)
-+	$(Q)$(MAKE) $(submake_extras) -C $(BPFDIR) install_headers \
-+		OUTPUT=$(BUILD_DIR)/libbpf/ DESTDIR=$(SCRATCH_DIR) prefix=
-+
-+BPF_HELPERS := $(or $(wildcard $(INCLUDE_BPF)/bpf_*.h),$(INCLUDE_BPF))
-+ifneq ($(BPF_HELPERS),$(INCLUDE_BPF))
-+$(BPF_HELPERS): $(INCLUDE_BPF)
-+endif
- 
--BPF_HELPERS := $(OUTPUT)/bpf_helper_defs.h $(wildcard $(BPFDIR)/bpf_*.h)
--$(OUTPUT)/bpf_helper_defs.h: $(BPFOBJ)
--	$(Q)$(MAKE) $(submake_extras) -C $(BPFDIR)			      \
--		    OUTPUT=$(OUTPUT)/ $(OUTPUT)/bpf_helper_defs.h
- 
- # Get Clang's default includes on this system, as opposed to those seen by
- # '-target bpf'. This fixes "missing" files on some architectures/distros,
-@@ -189,8 +204,8 @@ MENDIAN=$(if $(IS_LITTLE_ENDIAN),-mlittle-endian,-mbig-endian)
- 
- CLANG_SYS_INCLUDES = $(call get_sys_includes,$(CLANG))
- BPF_CFLAGS = -g -D__TARGET_ARCH_$(SRCARCH) $(MENDIAN) 			\
--	     -I$(OUTPUT) -I$(CURDIR) -I$(CURDIR)/include/uapi		\
--	     -I$(APIDIR) -I$(LIBDIR) -I$(BPFDIR) -I$(abspath $(OUTPUT)/../usr/include)
-+	     -I$(INCLUDE_DIR) -I$(CURDIR) -I$(CURDIR)/include/uapi	\
-+	     -I$(APIDIR) -I$(abspath $(OUTPUT)/../usr/include)
- 
- CLANG_CFLAGS = $(CLANG_SYS_INCLUDES) \
- 	       -Wno-compare-distinct-pointer-types
-@@ -392,7 +407,7 @@ $(OUTPUT)/test_cpp: test_cpp.cpp $(OUTPUT)/test_core_extern.skel.h $(BPFOBJ)
- 	$(call msg,CXX,,$@)
- 	$(CXX) $(CFLAGS) $^ $(LDLIBS) -o $@
- 
--EXTRA_CLEAN := $(TEST_CUSTOM_PROGS)					\
-+EXTRA_CLEAN := $(TEST_CUSTOM_PROGS) $(SCRATCH_DIR)			\
- 	prog_tests/tests.h map_tests/tests.h verifier/tests.h		\
- 	feature								\
--	$(addprefix $(OUTPUT)/,*.o *.skel.h no_alu32 bpf_gcc tools)
-+	$(addprefix $(OUTPUT)/,*.o *.skel.h no_alu32 bpf_gcc)
-
