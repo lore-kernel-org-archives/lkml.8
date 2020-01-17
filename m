@@ -2,137 +2,159 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C11C9C33CB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 02:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A6EC33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 02:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98FF720748
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 02:18:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579227494;
-	bh=Ndj/WTy0MkwCkb7DmYOWxNgnB3+VE+D1betT3nA30ks=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=0rAmv7SpPLCWRAfpSOEh62LyyBQ8PyOeUWceBzAGA8nRBKN1vEE6sagJMfBVdtUqx
-	 WtpLdO1qWkBxPcWRQ/FhTqVfXFAFmrjxRMyFal1oTzuWtoHvqJsaDFeA2Q2ZhZ7HXj
-	 PcUrpn44QAncQIktsPrF1WPUO9WZtcYuoOt8Y9E8=
+	by mail.kernel.org (Postfix) with ESMTP id 3F8022075B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 02:18:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="S27CgPjr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731657AbgAQCSN (ORCPT
+        id S2387500AbgAQCS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 21:18:13 -0500
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:19373 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726726AbgAQCSM (ORCPT
+        Thu, 16 Jan 2020 21:18:26 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:54188 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731794AbgAQCS0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 21:18:12 -0500
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 00H2HqMP010111;
-        Fri, 17 Jan 2020 11:17:53 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 00H2HqMP010111
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1579227473;
-        bh=8ybG8LjXBlt8T0MqbW/EKhRw7vw4GK5v/Kz9EhLSiY0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=F35/WcRvhA1a/o5pzi3b7XEcrkYuaJ9HjJR4tSAZQzHyl0nNPSC4nULLCaydo7oir
-         S3xRpZEhGYcn32Dkj6Yyn39G2HxOjMDcxrI+iSGRuvaOcs2MBai+ClrieZiuzJCntF
-         L9r4UOoP25mIv5LzUM1+/ioVO+HGBOTVptw88Ed5touScLztlXdDAp9tSqksw/IKX+
-         H9GjhA2gCNkaTA6sPXS76lcuPJLf9ymx1Y5lqGftbgHEkrnDsKdtDh5sPcB7/mrsmM
-         GhG1DfiTJGrTS0YPyy316J6sv8bARzpkYAsC0oaKLZpmqsTudgXNqy+LVN0KfXG8cU
-         RBizO/H0l2sKg==
-X-Nifty-SrcIP: [209.85.221.182]
-Received: by mail-vk1-f182.google.com with SMTP id h13so6266761vkn.10;
-        Thu, 16 Jan 2020 18:17:52 -0800 (PST)
-X-Gm-Message-State: APjAAAWhpsyZV3ciMCOs9UJ9oZIi1a3Lox6L3UKvbGi75bK5EQA+jn+Q
-        xfnj0XP2K+GabScy4wstve27lu5pX3hoqilusDk=
-X-Google-Smtp-Source: APXvYqxamBGY9Xjvh/06M1RPyeCEPFEdU4pr1Pslrd08CuggEi5cr4/SLwz18imIp0B/VXH59K8k/Vym1YLZr2jWIfw=
-X-Received: by 2002:a1f:72c3:: with SMTP id n186mr22174033vkc.12.1579227471741;
- Thu, 16 Jan 2020 18:17:51 -0800 (PST)
-MIME-Version: 1.0
-References: <20200113232212.138327-1-helgaas@kernel.org>
-In-Reply-To: <20200113232212.138327-1-helgaas@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 17 Jan 2020 11:17:15 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASYynBVaaGROEjy1PC7+9xatO7gf2LTRGG1UOpiXtzENw@mail.gmail.com>
-Message-ID: <CAK7LNASYynBVaaGROEjy1PC7+9xatO7gf2LTRGG1UOpiXtzENw@mail.gmail.com>
-Subject: Re: [PATCH] kconfig: fix documentation typos
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 16 Jan 2020 21:18:26 -0500
+Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 2B2B620B4798;
+        Thu, 16 Jan 2020 18:18:25 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2B2B620B4798
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1579227505;
+        bh=3DPtxdzEuRBvzO+EeSGb0wH3lYD0uB0b2KEtfivyzHM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=S27CgPjrSEEqIgHkbbHLBRnOjwZi0eK/hWi0J3rauKmjDqE0IIaMBThHyMWVye+DL
+         0E6aWpJcRIrUZgKrwxl3TePi6oDFRZsSlg01FH7UN28Nr/94Nru0byFqDv0GWtsJul
+         J2z7szb+pz0qE0MVqSmGGQvFlzKyB1myO10rwEVI=
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+To:     zohar@linux.ibm.com, linux-integrity@vger.kernel.org
+Cc:     sashal@kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] IMA: pre-allocate buffer to hold keyrings string
+Date:   Thu, 16 Jan 2020 18:18:21 -0800
+Message-Id: <20200117021821.2566-1-nramas@linux.microsoft.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 8:22 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> From: Bjorn Helgaas <bhelgaas@google.com>
->
-> Fix a couple typos in kconfig-language documentation.
->
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
->  Documentation/kbuild/kconfig-language.rst | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/kbuild/kconfig-language.rst b/Documentation/kbuild/kconfig-language.rst
-> index 74bef19f69f0..f547720bd82d 100644
-> --- a/Documentation/kbuild/kconfig-language.rst
-> +++ b/Documentation/kbuild/kconfig-language.rst
-> @@ -594,7 +594,7 @@ The two different resolutions for b) can be tested in the sample Kconfig file
->  Documentation/kbuild/Kconfig.recursion-issue-02.
->
->  Below is a list of examples of prior fixes for these types of recursive issues;
-> -all errors appear to involve one or more select's and one or more "depends on".
-> +all errors appear to involve one or more "selects" and one or more "depends on".
+ima_match_keyring() is called while holding rcu read lock. Since this
+function executes in atomic context, it should not call any function
+that can sleep (such as kstrdup()).
 
+This patch pre-allocates a buffer to hold the keyrings string read from
+the IMA policy and uses that to match the given keyring.
 
-I think "selects" is strange here.
+Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Fixes: e9085e0ad38a ("IMA: Add support to limit measuring keys")
+---
+ security/integrity/ima/ima_policy.c | 38 +++++++++++++++++++++++------
+ 1 file changed, 30 insertions(+), 8 deletions(-)
 
-"select" is a Kconfig keyword.
-select's is intentional, I guess.
-
-
-Keep it as-is, or perhaps change it into "select" (singular) ?
-
-
-
-
-
-
->
->  ============    ===================================
->  commit          fix
-> @@ -656,7 +656,7 @@ the use of the xconfig configurator [1]_. Work should be done to confirm if
->  the deduced semantics matches our intended Kconfig design goals.
->
->  Having well defined semantics can be useful for tools for practical
-> -evaluation of depenencies, for instance one such use known case was work to
-> +evaluation of dependencies, for instance one such case was work to
->  express in boolean abstraction of the inferred semantics of Kconfig to
->  translate Kconfig logic into boolean formulas and run a SAT solver on this to
->  find dead code / features (always inactive), 114 dead features were found in
-> @@ -683,7 +683,7 @@ abstraction the inferred semantics of Kconfig to translate Kconfig logic into
->  boolean formulas and run a SAT solver on it [5]_. Another known related project
->  is CADOS [6]_ (former VAMOS [7]_) and the tools, mainly undertaker [8]_, which
->  has been introduced first with [9]_.  The basic concept of undertaker is to
-> -exract variability models from Kconfig, and put them together with a
-> +extract variability models from Kconfig and put them together with a
->  propositional formula extracted from CPP #ifdefs and build-rules into a SAT
->  solver in order to find dead code, dead files, and dead symbols. If using a SAT
->  solver is desirable on Kconfig one approach would be to evaluate repurposing
-> --
-> 2.25.0.rc1.283.g88dfdc4193-goog
->
-
-
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index 9963863d6c92..3e296051feea 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -208,6 +208,10 @@ static LIST_HEAD(ima_policy_rules);
+ static LIST_HEAD(ima_temp_rules);
+ static struct list_head *ima_rules;
+ 
++/* Pre-allocated buffer used for matching keyrings. */
++static char *ima_keyrings;
++static size_t ima_keyrings_len;
++
+ static int ima_policy __initdata;
+ 
+ static int __init default_measure_policy_setup(char *str)
+@@ -369,7 +373,7 @@ int ima_lsm_policy_change(struct notifier_block *nb, unsigned long event,
+ static bool ima_match_keyring(struct ima_rule_entry *rule,
+ 			      const char *keyring, const struct cred *cred)
+ {
+-	char *keyrings, *next_keyring, *keyrings_ptr;
++	char *next_keyring, *keyrings_ptr;
+ 	bool matched = false;
+ 
+ 	if ((rule->flags & IMA_UID) && !rule->uid_op(cred->uid, rule->uid))
+@@ -381,15 +385,13 @@ static bool ima_match_keyring(struct ima_rule_entry *rule,
+ 	if (!keyring)
+ 		return false;
+ 
+-	keyrings = kstrdup(rule->keyrings, GFP_KERNEL);
+-	if (!keyrings)
+-		return false;
++	strcpy(ima_keyrings, rule->keyrings);
+ 
+ 	/*
+ 	 * "keyrings=" is specified in the policy in the format below:
+ 	 * keyrings=.builtin_trusted_keys|.ima|.evm
+ 	 */
+-	keyrings_ptr = keyrings;
++	keyrings_ptr = ima_keyrings;
+ 	while ((next_keyring = strsep(&keyrings_ptr, "|")) != NULL) {
+ 		if (!strcmp(next_keyring, keyring)) {
+ 			matched = true;
+@@ -397,8 +399,6 @@ static bool ima_match_keyring(struct ima_rule_entry *rule,
+ 		}
+ 	}
+ 
+-	kfree(keyrings);
+-
+ 	return matched;
+ }
+ 
+@@ -949,6 +949,7 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+ 	bool uid_token;
+ 	struct ima_template_desc *template_desc;
+ 	int result = 0;
++	size_t keyrings_len;
+ 
+ 	ab = integrity_audit_log_start(audit_context(), GFP_KERNEL,
+ 				       AUDIT_INTEGRITY_POLICY_RULE);
+@@ -1114,14 +1115,35 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+ 		case Opt_keyrings:
+ 			ima_log_string(ab, "keyrings", args[0].from);
+ 
++			keyrings_len = strlen(args[0].from) + 1;
++
+ 			if ((entry->keyrings) ||
+ 			    (entry->action != MEASURE) ||
+-			    (entry->func != KEY_CHECK)) {
++			    (entry->func != KEY_CHECK) ||
++			    (keyrings_len < 2)) {
+ 				result = -EINVAL;
+ 				break;
+ 			}
++
++			if (keyrings_len > ima_keyrings_len) {
++				char *tmpbuf;
++
++				tmpbuf = krealloc(ima_keyrings, keyrings_len,
++						  GFP_KERNEL);
++				if (!tmpbuf) {
++					result = -ENOMEM;
++					break;
++				}
++
++				ima_keyrings = tmpbuf;
++				ima_keyrings_len = keyrings_len;
++			}
++
+ 			entry->keyrings = kstrdup(args[0].from, GFP_KERNEL);
+ 			if (!entry->keyrings) {
++				kfree(ima_keyrings);
++				ima_keyrings = NULL;
++				ima_keyrings_len = 0;
+ 				result = -ENOMEM;
+ 				break;
+ 			}
 -- 
-Best Regards
-Masahiro Yamada
+2.17.1
+
