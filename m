@@ -2,159 +2,109 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12DF6C33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 04:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8840C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 04:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D37F620730
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 04:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BE5920730
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 04:24:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BmGThpJW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cIVbgfHF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729508AbgAQEWd (ORCPT
+        id S1729747AbgAQEYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 23:22:33 -0500
-Received: from mailout2.samsung.com ([203.254.224.25]:35833 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726566AbgAQEWc (ORCPT
+        Thu, 16 Jan 2020 23:24:13 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:51344 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726566AbgAQEYN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 23:22:32 -0500
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200117042230epoutp02649738447bb9271264ef826cb97cdd05~qkdH4DMkn1528015280epoutp02T
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 04:22:30 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200117042230epoutp02649738447bb9271264ef826cb97cdd05~qkdH4DMkn1528015280epoutp02T
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1579234950;
-        bh=yXs4dN9dWbgqK0plr9GWSMlt+yloNWhcLnkDRbj19+E=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=BmGThpJWjkfH9gEStarGQ4E/NKdI4kpTWkMg15/C7u62qMP0gWvnDhd5QChoEusCv
-         5T4Tham3RTgk1FuxACLsw9yJ7030KH4QpL1EhsPPeBV7VlbSuSadE4TTzCi708LZRu
-         xWH26O4yu/UmWP9IJJbaVpsNkure0odJAkB7BuoU=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200117042229epcas1p11c1eec0d0b812e38f8e240dc1bd75c43~qkdHMP4VA2840228402epcas1p1Y;
-        Fri, 17 Jan 2020 04:22:29 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.166]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 47zSZr3G17zMqYkV; Fri, 17 Jan
-        2020 04:22:28 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        55.AB.52419.486312E5; Fri, 17 Jan 2020 13:22:28 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200117042227epcas1p2b6ffef02aa47191accfec4bf00bac4a1~qkdFlXMrV2377523775epcas1p2-;
-        Fri, 17 Jan 2020 04:22:27 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200117042227epsmtrp27cdd49e69b55f65e1b91a1041cb3de02~qkdFkZWAH2547425474epsmtrp2A;
-        Fri, 17 Jan 2020 04:22:27 +0000 (GMT)
-X-AuditID: b6c32a37-59fff7000001ccc3-1e-5e213684a50b
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        7B.24.06569.386312E5; Fri, 17 Jan 2020 13:22:27 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200117042227epsmtip2ca212f321a68f125e5c1f744f20c3159~qkdFaJafF2635726357epsmtip2n;
-        Fri, 17 Jan 2020 04:22:27 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     =?UTF-8?Q?'Pali_Roh=C3=A1r'?= <pali.rohar@gmail.com>
-Cc:     <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <gregkh@linuxfoundation.org>, <valdis.kletnieks@vt.edu>,
-        <hch@lst.de>, <sj1557.seo@samsung.com>, <linkinjeon@gmail.com>,
-        <arnd@arndb.de>
-In-Reply-To: <20200115093915.cjef2jadiwe2eul4@pali>
-Subject: RE: [PATCH v10 11/14] exfat: add Kconfig and Makefile
-Date:   Fri, 17 Jan 2020 13:22:27 +0900
-Message-ID: <002f01d5cced$ba0828b0$2e187a10$@samsung.com>
+        Thu, 16 Jan 2020 23:24:13 -0500
+Received: by mail-pj1-f67.google.com with SMTP id d15so2583414pjw.1;
+        Thu, 16 Jan 2020 20:24:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=ANpzFmgjjuaZgNEEBDm5PaG+F+Suwy/uIclI0OaRnP4=;
+        b=cIVbgfHFRatkQnOmtGISxJXOYHYBnXKXuk/8gi0JxX7/6LqD7P28IGHSgERryqKAp3
+         qR4KGBZ2DCGcmtX+wZMFcOIuyjoxC2zW2YUI4XlgN+ao4SvFQXmcrv09ev3cGvkFj47s
+         q5RiJCo5xsqJ9Lf2XQEoaXMXFyJ4nKsj7/lQNoX/tkhFnTLE0kqF7wzs2Wmo9Ox5jhgJ
+         uiYY/5jaadyzv5m64cGex4Rc33tZ6Cl+oQWe0T2P7lmJnQogFAKZluEcG/0sP6gZu1J9
+         X9ZMQepYdPVTNRcTyR9mWXpoPukvLzVaAeuopMyYLoHgnJEv/OfYNVnfWtLtAFrEgnLA
+         LWDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=ANpzFmgjjuaZgNEEBDm5PaG+F+Suwy/uIclI0OaRnP4=;
+        b=eCFW+pTG3wHAnVrnLfA8wDnaArkXK0dixsjfRPp/Etr0AfnAAvVJ+E4hXDN8IoAnYO
+         SzGr60YNKPBmEhFelPPeXDPoE+ovTpKwnM9jyHWpNKjPVzLNCe9pqjhrUsPChojF7UCZ
+         YqMxtXxThj4DRjUWGFSujLAUBADAumYRduEZw238bBeqIZ/dfLg3I936BfugJ+rhbOIo
+         GdrQLCSo0NNTt3vv1IvKZxa9MMBVmQQJCBIka9CxJRKNjJbUtxuNwFgDDSbGB6IpAOGk
+         Ozcf6xGtBredW6jtSvGnKMkJTYXz6LY3n/iQUk6qaqB5G+ikTroJSpf5gV21GT8CCwvp
+         qgAA==
+X-Gm-Message-State: APjAAAUPqvD9nEXZslvwiILJJ+dySYdB1QcpyEKRpbCP4Q6wGfn1UExW
+        5RFdMXnaZZ/OG/b5stIlEH4=
+X-Google-Smtp-Source: APXvYqwE05jpaDTRqD3BU1fHu6zE7cC/ZX1k2DsUR0/fW/MOvfolBW34Hl0kZoAtkbRKjImpQRTWzQ==
+X-Received: by 2002:a17:902:b48e:: with SMTP id y14mr36241040plr.260.1579235052436;
+        Thu, 16 Jan 2020 20:24:12 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id j125sm26799062pfg.160.2020.01.16.20.24.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 20:24:11 -0800 (PST)
+Date:   Thu, 16 Jan 2020 20:24:09 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Input <linux-input@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH] input: max77650-onkey: add of_match table
+Message-ID: <20200117042409.GE47797@dtor-ws>
+References: <20191210100753.11090-1-brgl@bgdev.pl>
+ <20200110182841.GT8314@dtor-ws>
+ <CAMRc=Mcu-oNC009JLkNSDrKjg_ygb63ZTnrmu+8NwNZrOVsEZQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: ko
-Thread-Index: AQHvmPGd9hXZW1JGF9XPkytILTKCmQHO27G6AkKblqwC0Bzdx6eDnHCw
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOJsWRmVeSWpSXmKPExsWy7bCmrm6LmWKcweNeQYu/k46xWzQvXs9m
-        sXL1USaL63dvMVvs2XuSxeLyrjlsFhNP/2ay2PLvCKvFpfcfWBw4PX7/msTosXPWXXaP/XPX
-        sHvsvtnA5tG3ZRWjx+dNch6Htr9hC2CPyrHJSE1MSS1SSM1Lzk/JzEu3VfIOjneONzUzMNQ1
-        tLQwV1LIS8xNtVVy8QnQdcvMATpNSaEsMacUKBSQWFyspG9nU5RfWpKqkJFfXGKrlFqQklNg
-        aFCgV5yYW1yal66XnJ9rZWhgYGQKVJmQk7FnczdLwQWein1PZ7M1MF7h7GLk5JAQMJHYcWAy
-        UxcjF4eQwA5Giaf3vzNDOJ8YJV5vPswK4XxjlPj6fSMTTMv6sxegqvYyStzt2QuWEBJ4ySgx
-        d3ckiM0moCvx789+ti5GDg4RAQuJ+a3GIPXMAhcZJTZ872cBqeEUMJZ4enAJG4gtLGAnce/0
-        QXYQm0VAVeLK5E6wOK+ApcTHs/+YIGxBiZMzn4D1MgtoSyxb+JoZ4iAFiZ9Pl7FCxEUkZne2
-        MUPsdZPom1MAsldCoJld4tbTJjaIeheJS1+es0PYwhKvjm+BsqUkPr/bC3azhEC1xMf9UOM7
-        GCVefLeFsI0lbq7fwApSwiygKbF+lz5EWFFi5++5jBAX8Em8+9rDCjGFV6KjTQiiRFWi79Jh
-        aAhKS3S1f2CfwKg0C8lfs5D8NQvJL7MQli1gZFnFKJZaUJybnlpsWGCMHNWbGMGJVst8B+OG
-        cz6HGAU4GJV4eGcEKcQJsSaWFVfmHmKU4GBWEuE9OUM2Tog3JbGyKrUoP76oNCe1+BCjKTDY
-        JzJLiSbnA7NAXkm8oamRsbGxhYmZuZmpsZI47wwXoDkC6YklqdmpqQWpRTB9TBycUg2Myp2c
-        NXuO/9vitKvg6abtjwUXTVAO2HGWhTVmVUx90F+tFc/31J3WvL25+/Gxgut7879v/xweNG/X
-        5gjRb8nWp+MP5vyM5dxadezR+WNS3/Y/ONpTfexsV5N/w79d2tdfXpn1hfms75T0Fmd/25Bq
-        1p8mNz4HXkhmbPy+pfn1qgcn5Ppqf/19mK/EUpyRaKjFXFScCAA2TZ8rygMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMIsWRmVeSWpSXmKPExsWy7bCSvG6zmWKcweW5BhZ/Jx1jt2hevJ7N
-        YuXqo0wW1+/eYrbYs/cki8XlXXPYLCae/s1kseXfEVaLS+8/sDhwevz+NYnRY+esu+we++eu
-        YffYfbOBzaNvyypGj8+b5DwObX/DFsAexWWTkpqTWZZapG+XwJWx7s1LtoJ1PBUXOvYxNTBu
-        4uxi5OSQEDCRWH/2AnMXIxeHkMBuRonTnS8ZIRLSEsdOnAFKcADZwhKHDxdD1DxnlFi55QYb
-        SA2bgK7Evz/72UBqRAQsJOa3GoPUMAvcZpTY0X+IHa7h0oSNYA2cAsYSTw8uAbOFBewk7p0+
-        yA5iswioSlyZ3AkW5xWwlPh49h8ThC0ocXLmExYQm1lAW6L3YSsjjL1s4WtmiEMVJH4+XcYK
-        EReRmN3ZxgxxkJtE35yCCYzCs5BMmoVk0iwkk2Yh6V7AyLKKUTK1oDg3PbfYsMAoL7Vcrzgx
-        t7g0L10vOT93EyM46rS0djCeOBF/iFGAg1GJh3dGkEKcEGtiWXFl7iFGCQ5mJRHekzNk44R4
-        UxIrq1KL8uOLSnNSiw8xSnOwKInzyucfixQSSE8sSc1OTS1ILYLJMnFwSjUwBndPPecnofX5
-        Hf/+5vcM0X9iDmz5wLnshHhKRVIf+3rW7bdZizXTrK6oe8bWhktOvH4v9YPLbYt1e0TCipsa
-        VHojmj7N+Wiy+uL/xTeO5hywCovyU632n3X+uFj557YzVc/vZeuUCU+cGbJVao9jzY/G4lnn
-        ldMfWW5KaJvO8rL7bO2pk8HFSizFGYmGWsxFxYkAR96Im7YCAAA=
-X-CMS-MailID: 20200117042227epcas1p2b6ffef02aa47191accfec4bf00bac4a1
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200115082825epcas1p1f22ddca6dbf5d70e65d3b0e3c25c3a59
-References: <20200115082447.19520-1-namjae.jeon@samsung.com>
-        <CGME20200115082825epcas1p1f22ddca6dbf5d70e65d3b0e3c25c3a59@epcas1p1.samsung.com>
-        <20200115082447.19520-12-namjae.jeon@samsung.com>
-        <20200115093915.cjef2jadiwe2eul4@pali>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Mcu-oNC009JLkNSDrKjg_ygb63ZTnrmu+8NwNZrOVsEZQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > +config EXFAT_DEFAULT_IOCHARSET
-> > +	string =22Default iocharset for exFAT=22
-> > +	default =22utf8=22
-> > +	depends on EXFAT_FS
-> > +	help
-> > +	  Set this to the default input/output character set you'd
-> > +	  like exFAT to use. It should probably match the character set
-> > +	  that most of your exFAT filesystems use, and can be overridden
-> > +	  with the =22iocharset=22 mount option for exFAT filesystems.
->=20
-> Hello=21 This description is incorrect. iocharset option specify what
-> character set is expected by VFS layer and not character set used by exFA=
-T
-> filesystem. exFAT filesystem always uses UTF-16 as this is the only
-> allowed by exFAT specification.
-Hi Pali,
+On Sat, Jan 11, 2020 at 11:22:55AM +0100, Bartosz Golaszewski wrote:
+> pt., 10 sty 2020 o 19:28 Dmitry Torokhov <dmitry.torokhov@gmail.com> napisał(a):
+> >
+> > On Tue, Dec 10, 2019 at 11:07:53AM +0100, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > >
+> > > We need the of_match table if we want to use the compatible string in
+> > > the pmic's child node and get the onkey driver loaded automatically.
+> >
+> > Do we really need of_match table or adding
+> >
+> 
+> Not really. Technically not anyway but we merged bindings that define
+> it (at the time I didn't know any better) and seems we're stuck with
+> it. Please see the discussion below a similar patch for regulator
+> subsystem[1].
+> 
+> > MODULE_ALIAS("platform:max77650-onkey");
+> >
+> 
+> This is already in there, but if someone defines the compatible in the
+> device tree as per bindings, the module won't be loaded despite the
+> MODULE_ALIAS() definition.
 
-Could you please review updated description ?
+I see. Applied, thank you.
 
-diff --git a/fs/exfat/Kconfig b/fs/exfat/Kconfig
-index 9eeaa6d06..f2b0cf2c1 100644
---- a/fs/exfat/Kconfig
-+++ b/fs/exfat/Kconfig
-=40=40 -15,7 +15,7 =40=40 config EXFAT_DEFAULT_IOCHARSET
-        default =22utf8=22
-        depends on EXFAT_FS
-        help
--         Set this to the default input/output character set you'd
--         like exFAT to use. It should probably match the character set
--         that most of your exFAT filesystems use, and can be overridden
--         with the =22iocharset=22 mount option for exFAT filesystems.
-+         Set this to the default input/output character set to use for
-+         converting between the encoding is used for user visible filename=
- and
-+         UTF-16 character that exfat filesystem use. and can be overridden=
- with
-+         the =22iocharset=22 mount option for exFAT filesystems.
-
+-- 
+Dmitry
