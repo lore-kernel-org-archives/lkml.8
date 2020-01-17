@@ -2,365 +2,116 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B833C33CB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2008AC33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 381D82072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:58:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAF592072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:59:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HF6l6yQz"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="EN2yOUmj";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iAHrtXXO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729049AbgAQQ6L (ORCPT
+        id S1729075AbgAQQ7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 11:58:11 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39734 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728773AbgAQQ6L (ORCPT
+        Fri, 17 Jan 2020 11:59:16 -0500
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:38723 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726559AbgAQQ7P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 11:58:11 -0500
-Received: by mail-wr1-f67.google.com with SMTP id y11so23403429wrt.6
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 08:58:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ch4JihBgm1MlsgNfgw+itB/sh6G9olam+sxU+Mgk5n8=;
-        b=HF6l6yQzOMHnhQpwo0JI7TspKmGFjOLuHERiaYr3+yDZiK7Od93wls1E9liPtrGY2A
-         5qJ19576l/4+/ZpTwBy+XZJc/9lkKVmQWtwi3fPTPTq1Sx3eIYLn9o6np4NM6lMwa4iW
-         6yjYq4Kc1LTuZN/zqJ4wX0qRE0sJSWPitayGM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ch4JihBgm1MlsgNfgw+itB/sh6G9olam+sxU+Mgk5n8=;
-        b=XQcFPJw9rttBbjR/Lm5FKsA6yx4voN6OB9xb93fqe68xgM4PK3tS/5FD0s0mu4xI+b
-         gPfSjpiAkSu0L4ejC36FZLTr8z2zzH6Z8KNcGHuLR2GBvKPDk6anPODTx8dUF/C5bWWj
-         m0iK5gahTaskg0DezDd1fgLSAxDbGFhhxhvOxylKbWyTTNcqVttTMbL3Bt2OV1D1HiAi
-         3zTb+dp10uJ7NMjtNnVQZKuXX1SSAq+c73vIdB/e/0DN1H10VGl08bSloFt/ZcHxhMI/
-         50zhFagnYY//BkYZjgvZR29rdAGA5Ct7Ng06dRHs4ZOpC7Pu5ZSC0Nil9+i1LsvO59Fy
-         R1iQ==
-X-Gm-Message-State: APjAAAUS3AW1UK0wRCIRagVk4tA91RtA7WKOtNfpDOuO9TEKwnnK9Tvp
-        DVvnczguTRAr8dMjiZTXMlgElI1E4G5udA==
-X-Google-Smtp-Source: APXvYqxz5iDEFsSeiYwNAz1xAKoRASNQqBKp34pg+UmGol/za1iTd0rqdzocPUKdqtIeiMegUoIQRA==
-X-Received: by 2002:a5d:5403:: with SMTP id g3mr4306140wrv.302.1579280287859;
-        Fri, 17 Jan 2020 08:58:07 -0800 (PST)
-Received: from kpsingh-kernel.localdomain (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
-        by smtp.gmail.com with ESMTPSA id u22sm36351030wru.30.2020.01.17.08.58.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 08:58:07 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Anton Protopopov <a.s.protopopov@gmail.com>,
-        Florent Revest <revest@chromium.org>
-Subject: [PATCH bpf-next] libbpf: Load btf_vmlinux only once per object.
-Date:   Fri, 17 Jan 2020 17:58:21 +0100
-Message-Id: <20200117165821.21482-1-kpsingh@chromium.org>
-X-Mailer: git-send-email 2.20.1
+        Fri, 17 Jan 2020 11:59:15 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id 8947122022;
+        Fri, 17 Jan 2020 11:59:12 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Fri, 17 Jan 2020 11:59:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=NBrDhIy8eEyYhuxfQaqDFlK5PD1
+        nOIBhbHxOQiXIM/A=; b=EN2yOUmjgN0bvAvLK+0GRYiokaf/38It9Hh5+pOCRC6
+        CO48owweftGksIgxq18Ru9qqKqqVBAGyAHkRwVSyYy5XbIHV0YJIXIO/dk8k2eVx
+        8pD+8R25WeiEdEiSV4NDfNRWYfiYe9Gn0gDTIING967LA2yDFAjYMk5Vk/YYBDeV
+        uQQd6zxHacpB7MnFSuVTHVvOu1DW2f7ZO4eeKsyp7q78opgZrMfDh4ezqBCBqtdW
+        WT/eR5UDlGwJupSQrhT0gV+xBP2DE6gi3zhTd+12e6duYTG9qqNLLUBiW8rTiuaB
+        SXupCEpFgGMMktVlSH05XXTRiUw2rbJSY31aKUtOoXw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=NBrDhI
+        y8eEyYhuxfQaqDFlK5PD1nOIBhbHxOQiXIM/A=; b=iAHrtXXO58x3KevYTmn+Nu
+        yqJvL5VY1yUNQdCACdVct00zYFkL4o3uSZaJ1D4pXWiRdEqruinGdXEIxB5I0w/H
+        0YZbxsdQeCedyYeE2saAlzjclvLLpkFR3/Tj1xK+nxjN+eQINp+3J88fm/2d6oV5
+        jcWFDugu/OA0l8S2u1+ovGnKpw9W3Bf3tVk4loTP1RXvdHxthVfKNb0LsSjJik1N
+        0jlCpt5QILgQiGNAo6wwAc211QPYYI1w+H+LovUZpzc9EkIbJuj/BbO2CspenW3I
+        D9fw9D19riyawJsU8vfWrG6r8Wj4XVNyyqwW629Pq9T0P/gJ0hSXoxTTQm1w4sQw
+        ==
+X-ME-Sender: <xms:4OchXiiJk837b64CCO8FEtGGWsRjocvuWoMiW8nbRLFVrL-HzaEn0g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrtdekgddtudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfm
+    jfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledruddtje
+    enucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmnecuvehl
+    uhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:4OchXvrdke6JP-2FvNqh9RM5U-tcGGKUaPiG0ejiVt6axHOs9Tnd9g>
+    <xmx:4OchXtt5R1wbtnKou18ponl7pXSNKLSqCGiy3pgLN31WZOlNcEQTQw>
+    <xmx:4OchXhY7zfE9xUMpAiTsWLFJnrMqdudHcvHeQJBaIYcIoa7_bCSACw>
+    <xmx:4OchXlbuhvmcjrgt4ESEJOcdUkyLxFSAE5JmpiiA4L9jA2hTP3f3Xg>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id F2C073060AEC;
+        Fri, 17 Jan 2020 11:59:11 -0500 (EST)
+Date:   Fri, 17 Jan 2020 17:59:09 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Steven Price <steven.price@arm.com>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Rob Herring <robh@kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH AUTOSEL 5.4 002/205] drm/panfrost: Add missing check for
+ pfdev->regulator
+Message-ID: <20200117165909.GA1949937@kroah.com>
+References: <20200116164300.6705-1-sashal@kernel.org>
+ <20200116164300.6705-2-sashal@kernel.org>
+ <20200117161226.GA8472@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200117161226.GA8472@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: KP Singh <kpsingh@google.com>
+On Fri, Jan 17, 2020 at 04:12:27PM +0000, Steven Price wrote:
+> On Thu, Jan 16, 2020 at 04:39:37PM +0000, Sasha Levin wrote:
+> > From: Steven Price <steven.price@arm.com>
+> > 
+> > [ Upstream commit 52282163dfa651849e905886845bcf6850dd83c2 ]
+> 
+> This commit is effectively already in 5.4. Confusingly there were two
+> versions of this upstream:
+> 
+> 52282163dfa6 ("drm/panfrost: Add missing check for pfdev->regulator")
+> c90f30812a79 ("drm/panfrost: Add missing check for pfdev->regulator")
+> 
+> It got merged both through a -fixes branch and through the normal merge
+> window. The two copies caused a bad merge in mainline and this was
+> effectively reverted in commit 603e398a3db2 ("drm/panfrost: Remove NULL
+> check for regulator").
+> 
+> c90f30812a79 is included in v5.4 so should already be in any v5.4.y
+> release.
 
-As more programs (TRACING, STRUCT_OPS, and upcoming LSM) use vmlinux
-BTF information, loading the BTF vmlinux information for every program
-in an object is sub-optimal. The fix was originally proposed in:
+Have I mentioned this month just how much I hate the way the DRM tree
+handles stable patches like this?  This kind of fallout is a pain for
+stable maintainers, I dred every time I see a drm patch tagged for
+stable.
 
-   https://lore.kernel.org/bpf/CAEf4BzZodr3LKJuM7QwD38BiEH02Cc1UbtnGpVkCJ00Mf+V_Qg@mail.gmail.com/
+But we've been over this all before :(
 
-The btf_vmlinux is populated in the object if any of the programs in
-the object requires it just before the programs are loaded and freed
-after the programs finish loading.
-
-Reported-by: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Reviewed-by: Brendan Jackman <jackmanb@chromium.org>
-Signed-off-by: KP Singh <kpsingh@google.com>
----
- tools/lib/bpf/libbpf.c | 148 +++++++++++++++++++++++++++--------------
- 1 file changed, 97 insertions(+), 51 deletions(-)
-
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index 3afaca9bce1d..db0e93882a3b 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -385,6 +385,10 @@ struct bpf_object {
- 	struct list_head list;
- 
- 	struct btf *btf;
-+	/* Parse and load BTF vmlinux if any of the programs in the object need
-+	 * it at load time.
-+	 */
-+	struct btf *btf_vmlinux;
- 	struct btf_ext *btf_ext;
- 
- 	void *priv;
-@@ -633,7 +637,8 @@ find_member_by_name(const struct btf *btf, const struct btf_type *t,
- }
- 
- #define STRUCT_OPS_VALUE_PREFIX "bpf_struct_ops_"
--#define STRUCT_OPS_VALUE_PREFIX_LEN (sizeof(STRUCT_OPS_VALUE_PREFIX) - 1)
-+static int find_btf_by_prefix_kind(const struct btf *btf, const char *prefix,
-+				   const char *name, __u32 kind);
- 
- static int
- find_struct_ops_kern_types(const struct btf *btf, const char *tname,
-@@ -644,7 +649,6 @@ find_struct_ops_kern_types(const struct btf *btf, const char *tname,
- 	const struct btf_type *kern_type, *kern_vtype;
- 	const struct btf_member *kern_data_member;
- 	__s32 kern_vtype_id, kern_type_id;
--	char vtname[128] = STRUCT_OPS_VALUE_PREFIX;
- 	__u32 i;
- 
- 	kern_type_id = btf__find_by_name_kind(btf, tname, BTF_KIND_STRUCT);
-@@ -660,13 +664,11 @@ find_struct_ops_kern_types(const struct btf *btf, const char *tname,
- 	 * find "struct bpf_struct_ops_tcp_congestion_ops" from the
- 	 * btf_vmlinux.
- 	 */
--	strncat(vtname + STRUCT_OPS_VALUE_PREFIX_LEN, tname,
--		sizeof(vtname) - STRUCT_OPS_VALUE_PREFIX_LEN - 1);
--	kern_vtype_id = btf__find_by_name_kind(btf, vtname,
--					       BTF_KIND_STRUCT);
-+	kern_vtype_id = find_btf_by_prefix_kind(btf, STRUCT_OPS_VALUE_PREFIX,
-+						tname, BTF_KIND_STRUCT);
- 	if (kern_vtype_id < 0) {
--		pr_warn("struct_ops init_kern: struct %s is not found in kernel BTF\n",
--			vtname);
-+		pr_warn("struct_ops init_kern: struct %s%s is not found in kernel BTF\n",
-+			STRUCT_OPS_VALUE_PREFIX, tname);
- 		return kern_vtype_id;
- 	}
- 	kern_vtype = btf__type_by_id(btf, kern_vtype_id);
-@@ -683,8 +685,8 @@ find_struct_ops_kern_types(const struct btf *btf, const char *tname,
- 			break;
- 	}
- 	if (i == btf_vlen(kern_vtype)) {
--		pr_warn("struct_ops init_kern: struct %s data is not found in struct %s\n",
--			tname, vtname);
-+		pr_warn("struct_ops init_kern: struct %s data is not found in struct %s%s\n",
-+			tname, STRUCT_OPS_VALUE_PREFIX, tname);
- 		return -EINVAL;
- 	}
- 
-@@ -835,7 +837,6 @@ static int bpf_map__init_kern_struct_ops(struct bpf_map *map,
- 
- static int bpf_object__init_kern_struct_ops_maps(struct bpf_object *obj)
- {
--	struct btf *kern_btf = NULL;
- 	struct bpf_map *map;
- 	size_t i;
- 	int err;
-@@ -846,20 +847,12 @@ static int bpf_object__init_kern_struct_ops_maps(struct bpf_object *obj)
- 		if (!bpf_map__is_struct_ops(map))
- 			continue;
- 
--		if (!kern_btf) {
--			kern_btf = libbpf_find_kernel_btf();
--			if (IS_ERR(kern_btf))
--				return PTR_ERR(kern_btf);
--		}
--
--		err = bpf_map__init_kern_struct_ops(map, obj->btf, kern_btf);
--		if (err) {
--			btf__free(kern_btf);
-+		err = bpf_map__init_kern_struct_ops(map, obj->btf,
-+						    obj->btf_vmlinux);
-+		if (err)
- 			return err;
--		}
- 	}
- 
--	btf__free(kern_btf);
- 	return 0;
- }
- 
-@@ -2364,6 +2357,38 @@ static int bpf_object__finalize_btf(struct bpf_object *obj)
- 	return 0;
- }
- 
-+static inline bool libbpf_prog_needs_vmlinux_btf(struct bpf_program *prog)
-+{
-+	if (prog->type == BPF_PROG_TYPE_STRUCT_OPS)
-+		return true;
-+
-+	/* BPF_PROG_TYPE_TRACING programs which do not attach to other programs
-+	 * also need vmlinux BTF
-+	 */
-+	if (prog->type == BPF_PROG_TYPE_TRACING && !prog->attach_prog_fd)
-+		return true;
-+
-+	return false;
-+}
-+
-+static int bpf_object__load_vmlinux_btf(struct bpf_object *obj)
-+{
-+	struct bpf_program *prog;
-+
-+	bpf_object__for_each_program(prog, obj) {
-+		if (libbpf_prog_needs_vmlinux_btf(prog)) {
-+			obj->btf_vmlinux = libbpf_find_kernel_btf();
-+			if (IS_ERR(obj->btf_vmlinux)) {
-+				pr_warn("vmlinux BTF is not found\n");
-+				return -EINVAL;
-+			}
-+			return 0;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int bpf_object__sanitize_and_load_btf(struct bpf_object *obj)
- {
- 	int err = 0;
-@@ -4891,18 +4916,14 @@ load_program(struct bpf_program *prog, struct bpf_insn *insns, int insns_cnt,
- 	return ret;
- }
- 
--static int libbpf_find_attach_btf_id(const char *name,
--				     enum bpf_attach_type attach_type,
--				     __u32 attach_prog_fd);
-+static int libbpf_find_attach_btf_id(struct bpf_program *prog);
- 
- int bpf_program__load(struct bpf_program *prog, char *license, __u32 kern_ver)
- {
- 	int err = 0, fd, i, btf_id;
- 
- 	if (prog->type == BPF_PROG_TYPE_TRACING) {
--		btf_id = libbpf_find_attach_btf_id(prog->section_name,
--						   prog->expected_attach_type,
--						   prog->attach_prog_fd);
-+		btf_id = libbpf_find_attach_btf_id(prog);
- 		if (btf_id <= 0)
- 			return btf_id;
- 		prog->attach_btf_id = btf_id;
-@@ -5280,10 +5301,17 @@ int bpf_object__load_xattr(struct bpf_object_load_attr *attr)
- 	err = err ? : bpf_object__resolve_externs(obj, obj->kconfig);
- 	err = err ? : bpf_object__sanitize_and_load_btf(obj);
- 	err = err ? : bpf_object__sanitize_maps(obj);
-+	err = err ? : bpf_object__load_vmlinux_btf(obj);
- 	err = err ? : bpf_object__init_kern_struct_ops_maps(obj);
- 	err = err ? : bpf_object__create_maps(obj);
- 	err = err ? : bpf_object__relocate(obj, attr->target_btf_path);
- 	err = err ? : bpf_object__load_progs(obj, attr->log_level);
-+
-+	if (obj->btf_vmlinux) {
-+		btf__free(obj->btf_vmlinux);
-+		obj->btf_vmlinux = NULL;
-+	}
-+
- 	if (err)
- 		goto out;
- 
-@@ -6504,34 +6532,51 @@ static int bpf_object__collect_struct_ops_map_reloc(struct bpf_object *obj,
- 	return -EINVAL;
- }
- 
--#define BTF_PREFIX "btf_trace_"
-+#define BTF_TRACE_PREFIX "btf_trace_"
-+#define BTF_MAX_NAME_SIZE 128
-+
-+static int find_btf_by_prefix_kind(const struct btf *btf, const char *prefix,
-+				   const char *name, __u32 kind)
-+{
-+	char btf_type_name[BTF_MAX_NAME_SIZE];
-+	int ret;
-+
-+	ret = snprintf(btf_type_name, sizeof(btf_type_name),
-+		       "%s%s", prefix, name);
-+	/* snprintf returns the number of characters written excluding the
-+	 * the terminating null. So, if >= BTF_MAX_NAME_SIZE are written, it
-+	 * indicates truncation.
-+	 */
-+	if (ret < 0 || ret >= sizeof(btf_type_name))
-+		return -ENAMETOOLONG;
-+	return btf__find_by_name_kind(btf, btf_type_name, kind);
-+}
-+
-+static inline int __find_vmlinux_btf_id(struct btf *btf, const char *name,
-+					enum bpf_attach_type attach_type)
-+{
-+	int err;
-+
-+	if (attach_type == BPF_TRACE_RAW_TP)
-+		err = find_btf_by_prefix_kind(btf, BTF_TRACE_PREFIX, name,
-+					      BTF_KIND_TYPEDEF);
-+	else
-+		err = btf__find_by_name_kind(btf, name, BTF_KIND_FUNC);
-+
-+	return err;
-+}
-+
- int libbpf_find_vmlinux_btf_id(const char *name,
- 			       enum bpf_attach_type attach_type)
- {
- 	struct btf *btf = libbpf_find_kernel_btf();
--	char raw_tp_btf[128] = BTF_PREFIX;
--	char *dst = raw_tp_btf + sizeof(BTF_PREFIX) - 1;
--	const char *btf_name;
--	int err = -EINVAL;
--	__u32 kind;
- 
- 	if (IS_ERR(btf)) {
- 		pr_warn("vmlinux BTF is not found\n");
- 		return -EINVAL;
- 	}
- 
--	if (attach_type == BPF_TRACE_RAW_TP) {
--		/* prepend "btf_trace_" prefix per kernel convention */
--		strncat(dst, name, sizeof(raw_tp_btf) - sizeof(BTF_PREFIX));
--		btf_name = raw_tp_btf;
--		kind = BTF_KIND_TYPEDEF;
--	} else {
--		btf_name = name;
--		kind = BTF_KIND_FUNC;
--	}
--	err = btf__find_by_name_kind(btf, btf_name, kind);
--	btf__free(btf);
--	return err;
-+	return __find_vmlinux_btf_id(btf, name, attach_type);
- }
- 
- static int libbpf_find_prog_btf_id(const char *name, __u32 attach_prog_fd)
-@@ -6567,10 +6612,11 @@ static int libbpf_find_prog_btf_id(const char *name, __u32 attach_prog_fd)
- 	return err;
- }
- 
--static int libbpf_find_attach_btf_id(const char *name,
--				     enum bpf_attach_type attach_type,
--				     __u32 attach_prog_fd)
-+static int libbpf_find_attach_btf_id(struct bpf_program *prog)
- {
-+	enum bpf_attach_type attach_type = prog->expected_attach_type;
-+	__u32 attach_prog_fd = prog->attach_prog_fd;
-+	const char *name = prog->section_name;
- 	int i, err;
- 
- 	if (!name)
-@@ -6585,8 +6631,8 @@ static int libbpf_find_attach_btf_id(const char *name,
- 			err = libbpf_find_prog_btf_id(name + section_defs[i].len,
- 						      attach_prog_fd);
- 		else
--			err = libbpf_find_vmlinux_btf_id(name + section_defs[i].len,
--							 attach_type);
-+			err = __find_vmlinux_btf_id(prog->obj->btf_vmlinux,
-+				name + section_defs[i].len, attach_type);
- 		if (err <= 0)
- 			pr_warn("%s is not found in vmlinux BTF\n", name);
- 		return err;
--- 
-2.20.1
-
+greg k-h
