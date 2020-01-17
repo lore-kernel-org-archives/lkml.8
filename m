@@ -2,170 +2,124 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF71C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D75DFC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3245320728
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:10:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579252210;
-	bh=lMSyebM5ZwFu9iT+QQQXF3BmAi+QB0FhdKpUWgZV/Gw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KeAEC95bSWFVcnBB5pNoUocNvdKtc4yUDTkdzgBQSgJCEDDVqvS30zSyEeevMTi/M
-	 AjjqZG3I33Dp+QqCes5+oKL/Ti0uSG480A8xSIWT9Yp6rRFdy2zHwtJOkEzSgP13jD
-	 gi4rHavROu1Hokp9sCPdxwbVEOiaS4qjO29hPxvs=
+	by mail.kernel.org (Postfix) with ESMTP id AE16020728
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:12:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lhgfgKE6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729160AbgAQJKI (ORCPT
+        id S1729035AbgAQJMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 04:10:08 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52798 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726578AbgAQJKG (ORCPT
+        Fri, 17 Jan 2020 04:12:49 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36473 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726596AbgAQJMt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 04:10:06 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p9so6644131wmc.2;
-        Fri, 17 Jan 2020 01:10:04 -0800 (PST)
+        Fri, 17 Jan 2020 04:12:49 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z3so21915015wru.3;
+        Fri, 17 Jan 2020 01:12:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=9CWsLIqrwr5TTd8YCdk6c0DzhIAalvDRij2MWOTKamY=;
+        b=lhgfgKE6EJRm2r/haIoK6XaxGkEeldPrTIUTJe8hm4n3MBfQwXTGIfYHmUCej37+Aa
+         qhom8q3kuKaMIzma4dLvW6JHgF8UB59+pVTgnzYLpcsMOsrl2H2oXapx951+uEF/9Ehf
+         /u+IgExKvlV6VhEhd4CtFR05GEUudpDjupKLJgGHRDkbsC5w54dCWi+C07kuc2Ki84Mo
+         jJ/AufZc2OFwud68n5+0CyqLPQroEPvLmt5Of4LfrOGUMuo6bUzDYaG44hhHYf5jm+V8
+         SHtMyBmUlLCnPLP0YeV1cPqCO29knY+QqsaShro0uEHYZ/38J/2I/J8q4VBquWFz+IJ9
+         UBCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qOAMOjVIT0Dy7HI3yT3GvFvQG+nWIqkGdWAkQAANxIs=;
-        b=i3VC2hk3c7Q3umUhqRHyLDAyLAgkubw4cZCh4mKyXs61HhZD1+5VQ3YTpUu236ei0Z
-         SKQHO6whSmioWOc3uUnzFp1/1pLdx//nOGxriKznClIeyHUjHOiKJs7nOD3IryBDu1Wm
-         28jxbHcQdOY4uLODGBSBGBy3rfSxnFMFyBqp/z3qdPrWmDwXWEHcwsPNcHUqmRyl0c+6
-         D8rNUWZauarKWpNJ8QJhaF3o5I258UQKQZ4Nb8GRhWpGutoO5pThxchuBFtC2g/8fQZ4
-         JloFRzFtEw8/V9tLLAMP+O6qmY/JzYAi8PaYGd6SwG6+0NjInFCWAA9BGOf/vXe9r+92
-         EPyA==
-X-Gm-Message-State: APjAAAUgWwxA98muPFLoYFTWX7D198/tpo30uCMbrEqTD86xHV2qcKy4
-        2U5wwi/ijU2UsrwR6evUAQg=
-X-Google-Smtp-Source: APXvYqxXrq0ijHEf/PD9PkyhW0nrCXshQ4ZYmw0U20Dw/jgMjbfIqhSoiXZ5+/XBrR3qI7+rqI7Ndg==
-X-Received: by 2002:a7b:cb46:: with SMTP id v6mr3683767wmj.117.1579252204153;
-        Fri, 17 Jan 2020 01:10:04 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id x132sm2683366wmg.0.2020.01.17.01.10.03
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=9CWsLIqrwr5TTd8YCdk6c0DzhIAalvDRij2MWOTKamY=;
+        b=MALrUIXgmJaISQP/8O9sIM2oBdnx2yIB7NlTujQ6md9V62DbcudoMzTWGMkt0TVjpy
+         CoKBENVRauAhJjBK178D+z03PU6FlPWjDowSLXiYoidIgO0JlFptZTbcNEwccHQlpn1Z
+         iyqcmUcfBnCnb95ii0ULG3R5OD60ArvF98+d91/8j6GNYXmZhYanbrOOD72xJYh0WRsG
+         Pwcy23ri2mGa/U063TCk+4M6cbMiv667dnOlShsaMt+W5ra9vkiiCruq1taYPW2fBxDX
+         v3/fA+YmIxp+I430z6/G62p/CMUHjQNqJuSY9zXeFIV87pFXpRs7X0qley0LXqMmjrIj
+         PBgQ==
+X-Gm-Message-State: APjAAAXaj5VGlPkw7dEPRAZJ6i5MYrqMIYTQb6Yarn45oEoK6H3qEDfR
+        pj67ejftkGbJtS/FGC4BQYY=
+X-Google-Smtp-Source: APXvYqywXwV7gAnLawo5RzJtIA5adPds/GcA0eswqRb5VaeqYfgpTVOyApPsfA1b8TxRigDunLGCiA==
+X-Received: by 2002:adf:8041:: with SMTP id 59mr1934966wrk.257.1579252367494;
+        Fri, 17 Jan 2020 01:12:47 -0800 (PST)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id b16sm34694644wrj.23.2020.01.17.01.12.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 01:10:03 -0800 (PST)
-Date:   Fri, 17 Jan 2020 10:10:02 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Rientjes <rientjes@google.com>
-Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Wei Yang <richardw.yang@linux.intel.com>, hannes@cmpxchg.org,
-        vdavydov.dev@gmail.com, akpm@linux-foundation.org,
-        kirill.shutemov@linux.intel.com, yang.shi@linux.alibaba.com,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, alexander.duyck@gmail.com,
-        stable@vger.kernel.org
-Subject: Re: [Patch v3] mm: thp: grab the lock before manipulation defer list
-Message-ID: <20200117091002.GM19428@dhcp22.suse.cz>
-References: <20200116013100.7679-1-richardw.yang@linux.intel.com>
- <0bb34c4a-97c7-0b3c-cf43-8af6cf9c4396@virtuozzo.com>
- <alpine.DEB.2.21.2001161357240.109233@chino.kir.corp.google.com>
+        Fri, 17 Jan 2020 01:12:46 -0800 (PST)
+Date:   Fri, 17 Jan 2020 10:12:45 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Namjae Jeon <namjae.jeon@samsung.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
+        sj1557.seo@samsung.com, linkinjeon@gmail.com, arnd@arndb.de
+Subject: Re: [PATCH v10 11/14] exfat: add Kconfig and Makefile
+Message-ID: <20200117091245.ginzffry7anqofju@pali>
+References: <20200115082447.19520-1-namjae.jeon@samsung.com>
+ <CGME20200115082825epcas1p1f22ddca6dbf5d70e65d3b0e3c25c3a59@epcas1p1.samsung.com>
+ <20200115082447.19520-12-namjae.jeon@samsung.com>
+ <20200115093915.cjef2jadiwe2eul4@pali>
+ <002f01d5cced$ba0828b0$2e187a10$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2001161357240.109233@chino.kir.corp.google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <002f01d5cced$ba0828b0$2e187a10$@samsung.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 16-01-20 14:01:59, David Rientjes wrote:
-> On Thu, 16 Jan 2020, Kirill Tkhai wrote:
+On Friday 17 January 2020 13:22:27 Namjae Jeon wrote:
+> > > +config EXFAT_DEFAULT_IOCHARSET
+> > > +	string "Default iocharset for exFAT"
+> > > +	default "utf8"
+> > > +	depends on EXFAT_FS
+> > > +	help
+> > > +	  Set this to the default input/output character set you'd
+> > > +	  like exFAT to use. It should probably match the character set
+> > > +	  that most of your exFAT filesystems use, and can be overridden
+> > > +	  with the "iocharset" mount option for exFAT filesystems.
+> > 
+> > Hello! This description is incorrect. iocharset option specify what
+> > character set is expected by VFS layer and not character set used by exFAT
+> > filesystem. exFAT filesystem always uses UTF-16 as this is the only
+> > allowed by exFAT specification.
+> Hi Pali,
 > 
-> > > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> > > index c5b5f74cfd4d..6450bbe394e2 100644
-> > > --- a/mm/memcontrol.c
-> > > +++ b/mm/memcontrol.c
-> > > @@ -5360,10 +5360,12 @@ static int mem_cgroup_move_account(struct page *page,
-> > >  	}
-> > >  
-> > >  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> > > -	if (compound && !list_empty(page_deferred_list(page))) {
-> > > +	if (compound) {
-> > >  		spin_lock(&from->deferred_split_queue.split_queue_lock);
-> > > -		list_del_init(page_deferred_list(page));
-> > > -		from->deferred_split_queue.split_queue_len--;
-> > > +		if (!list_empty(page_deferred_list(page))) {
-> > > +			list_del_init(page_deferred_list(page));
-> > > +			from->deferred_split_queue.split_queue_len--;
-> > > +		}
-> > >  		spin_unlock(&from->deferred_split_queue.split_queue_lock);
-> > >  	}
-> > >  #endif
-> > > @@ -5377,11 +5379,13 @@ static int mem_cgroup_move_account(struct page *page,
-> > >  	page->mem_cgroup = to;
-> > >  
-> > >  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> > > -	if (compound && list_empty(page_deferred_list(page))) {
-> > > +	if (compound) {
-> > >  		spin_lock(&to->deferred_split_queue.split_queue_lock);
-> > > -		list_add_tail(page_deferred_list(page),
-> > > -			      &to->deferred_split_queue.split_queue);
-> > > -		to->deferred_split_queue.split_queue_len++;
-> > > +		if (list_empty(page_deferred_list(page))) {
-> > > +			list_add_tail(page_deferred_list(page),
-> > > +				      &to->deferred_split_queue.split_queue);
-> > > +			to->deferred_split_queue.split_queue_len++;
-> > > +		}
-> > >  		spin_unlock(&to->deferred_split_queue.split_queue_lock);
-> > >  	}
-> > >  #endif
-> > 
-> > The patch looks OK for me. But there is another question. I forget, why we unconditionally
-> > add a page with empty deferred list to deferred_split_queue. Shouldn't we also check that
-> > it was initially in the list? Something like:
-> > 
-> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> > index d4394ae4e5be..0be0136adaa6 100644
-> > --- a/mm/memcontrol.c
-> > +++ b/mm/memcontrol.c
-> > @@ -5289,6 +5289,7 @@ static int mem_cgroup_move_account(struct page *page,
-> >  	struct pglist_data *pgdat;
-> >  	unsigned long flags;
-> >  	unsigned int nr_pages = compound ? hpage_nr_pages(page) : 1;
-> > +	bool split = false;
-> >  	int ret;
-> >  	bool anon;
-> >  
-> > @@ -5346,6 +5347,7 @@ static int mem_cgroup_move_account(struct page *page,
-> >  		if (!list_empty(page_deferred_list(page))) {
-> >  			list_del_init(page_deferred_list(page));
-> >  			from->deferred_split_queue.split_queue_len--;
-> > +			split = true;
-> >  		}
-> >  		spin_unlock(&from->deferred_split_queue.split_queue_lock);
-> >  	}
-> > @@ -5360,7 +5362,7 @@ static int mem_cgroup_move_account(struct page *page,
-> >  	page->mem_cgroup = to;
-> >  
-> >  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> > -	if (compound) {
-> > +	if (compound && split) {
-> >  		spin_lock(&to->deferred_split_queue.split_queue_lock);
-> >  		if (list_empty(page_deferred_list(page))) {
-> >  			list_add_tail(page_deferred_list(page),
-> > 
+> Could you please review updated description ?
 > 
-> I think that's a good point, especially considering that the current code 
-> appears to unconditionally place any compound page on the deferred split 
-> queue of the destination memcg.  The correct list that it should appear 
-> on, I believe, depends on whether the pmd has been split for the process 
-> being moved: note the MC_TARGET_PAGE caveat in 
-> mem_cgroup_move_charge_pte_range() that does not move the charge for 
-> compound pages with split pmds.  So when mem_cgroup_move_account() is 
-> called with compound == true, we're moving the charge of the entire 
-> compound page: why would it appear on that memcg's deferred split queue?
+> diff --git a/fs/exfat/Kconfig b/fs/exfat/Kconfig
+> index 9eeaa6d06..f2b0cf2c1 100644
+> --- a/fs/exfat/Kconfig
+> +++ b/fs/exfat/Kconfig
+> @@ -15,7 +15,7 @@ config EXFAT_DEFAULT_IOCHARSET
+>         default "utf8"
+>         depends on EXFAT_FS
+>         help
+> -         Set this to the default input/output character set you'd
+> -         like exFAT to use. It should probably match the character set
+> -         that most of your exFAT filesystems use, and can be overridden
+> -         with the "iocharset" mount option for exFAT filesystems.
+> +         Set this to the default input/output character set to use for
+> +         converting between the encoding is used for user visible filename and
+> +         UTF-16 character that exfat filesystem use. and can be overridden with
+> +         the "iocharset" mount option for exFAT filesystems.
 
-I believe Kirill asked how do we know that the page should be actually
-added to the deferred list just from the list_empty check. In other
-words what if the page hasn't been split at all?
+Hello! This is much better. Fine for me.
 
 -- 
-Michal Hocko
-SUSE Labs
+Pali Rohár
+pali.rohar@gmail.com
