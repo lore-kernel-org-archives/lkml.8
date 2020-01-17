@@ -2,98 +2,150 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43058C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A303C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 190D320842
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C4FD2087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:43:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579272134;
-	bh=VZ5uMbxtpl0Luid9wrzbmKMBISeWWuZxMe/dI7xXvIU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cI8N+u+M9dVDo+FqrobWntMfW8MJn+3Cj1w96zVueERKA2AphgY71afPrwx4gev5a
-	 3+GYJ9TV+9U+3Doxh7Yno2yF/EFH02cPtcp0KNe4CqaUEzFPn/1XW8ERDGG3lb/0AP
-	 AIEv1SlKr/xOieobYwOTrZs5tOl5dqWTTIZSPGb0=
+	s=default; t=1579272218;
+	bh=l9dNkpy42xWo2MvF+JA9gM6i4jvOvRUbfjb3y1NTJ4Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZnyjP0egYsoOGqeujqqJvH2gDlhGJSIDC9YYzkbBz9C0SR5J/cxcDpnkSM56g6wXX
+	 Km7JDtarTSwyZba2PwDaXRG/YIEfR5pvkz0P5wZrwWI5VOtG48R8mXVhgrcPB9ItaQ
+	 8C0zfi9PpdS7H2Fi5D+g/qsNRWTzXpYZRsxdUcoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728826AbgAQOmN (ORCPT
+        id S1728916AbgAQOnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 09:42:13 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55179 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726951AbgAQOmM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 09:42:12 -0500
-Received: by mail-wm1-f65.google.com with SMTP id b19so7662881wmj.4
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 06:42:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=l27XSLEjKU6VgUcqOxsElndg8dMBGVxtgq+CYtFeIUE=;
-        b=bWvYjIhEw5xy4EOQNaVZ2aDDwjypGGUNtC1FjVwGPwgPakNHLdj7F8OJv4jYg0ATGr
-         me04FZIPj9PfCAV00RndbbmFoW5UKguRbHCZDRuwSr2pYf610pxu3a/Un/exCWDNSpFP
-         rk+cseu+Gi5G0bw89J/vwtSqAt35J7DvmPPdRYpi/FjBDA1P4wi0WQS/vHVTpEoX1VfT
-         zQvjxJV9BTEIYH2u2hBRhH3oOkP0cZjlQMGFHbcwGWg0jdjafAuqBjc58kDR/fPeJCnM
-         RQCwje/o7hHaTWMZBWpDMoPUMbVCxJAq/tRmU65g7DMsnRrSWE6OshxAIClkHTlqqd+G
-         AsYw==
-X-Gm-Message-State: APjAAAXn1tP+/ryeSCD+Gi0j7VzYuQjoRneokqXp7OLiB7rsUpzat//l
-        mgoVLimY9FKJsiC8xMw2Lrk=
-X-Google-Smtp-Source: APXvYqz9INtJU0vNFZwKtzerxh/Rz1AUnLX3c27DJwAYUrHysG0T14s9u7AKy/MfBbNIxRshtMWX0w==
-X-Received: by 2002:a7b:cb0d:: with SMTP id u13mr5042513wmj.68.1579272131058;
-        Fri, 17 Jan 2020 06:42:11 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id a1sm34307416wrr.80.2020.01.17.06.42.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 06:42:10 -0800 (PST)
-Date:   Fri, 17 Jan 2020 15:42:09 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org,
-        sergey.senozhatsky.work@gmail.com, pmladek@suse.com,
-        rostedt@goodmis.org, peterz@infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next v4] mm/hotplug: silence a lockdep splat with
- printk()
-Message-ID: <20200117144209.GA19428@dhcp22.suse.cz>
-References: <d7068679-e28a-98a9-f5b8-49ea47f7c092@redhat.com>
- <6BED7E12-CC3B-4AED-ACC8-F3533D3F3C70@lca.pw>
+        Fri, 17 Jan 2020 09:43:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45004 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727040AbgAQOnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 09:43:37 -0500
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDC7621582;
+        Fri, 17 Jan 2020 14:43:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579272215;
+        bh=l9dNkpy42xWo2MvF+JA9gM6i4jvOvRUbfjb3y1NTJ4Y=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=m321RqFtUFJMgNkG+s8ex5ThgxIMpwaC62Yfe8crlUBqb9cl52m6bOP1DIpBll05b
+         BFCUTk38T937s2LUbQ/bDuwRqQoGQTQu5jqMnWbW3s2fseQxRK6jMVgkFwQBrgJGv5
+         5AmYGZNtE6yKpyZtc+p1vS01TPGwrZSX3uBNyqio=
+Received: by mail-qt1-f174.google.com with SMTP id w30so21872964qtd.12;
+        Fri, 17 Jan 2020 06:43:35 -0800 (PST)
+X-Gm-Message-State: APjAAAW3Jp4b59heWbfClBim6t3V8m6Ppz651dysuAxt3CpSKhkcdwLI
+        GWPbTv/CnYJqmhuV6YlCp4sc258Dx2bCPX82nw==
+X-Google-Smtp-Source: APXvYqxEVbHzmpE4xONFjszFZpsuqS3YBUpF7tWlys7E6wSsvdHOS4H0qRXHF0jQ0zFp5mHDccmIf9qS92ljgYLITlY=
+X-Received: by 2002:ac8:59:: with SMTP id i25mr7774293qtg.110.1579272214805;
+ Fri, 17 Jan 2020 06:43:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6BED7E12-CC3B-4AED-ACC8-F3533D3F3C70@lca.pw>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20200113181625.3130-1-alexandre.torgue@st.com>
+ <20200113181625.3130-2-alexandre.torgue@st.com> <20200116005741.GB54439@umbus>
+ <d2594b79-a45d-dcac-3642-90016a1408b8@st.com> <20200117090937.GU54439@umbus>
+In-Reply-To: <20200117090937.GU54439@umbus>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 17 Jan 2020 08:43:23 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKTsX9efYDMjGahFDxj0cEfzozeNrY1Nq1bECzgOZGqdQ@mail.gmail.com>
+Message-ID: <CAL_JsqKTsX9efYDMjGahFDxj0cEfzozeNrY1Nq1bECzgOZGqdQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/3] dtc: Add dtb build information option
+To:     David Gibson <david@gibson.dropbear.id.au>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Simon Glass <sjg@chromium.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Devicetree Compiler <devicetree-compiler@vger.kernel.org>,
+        Steve McIntyre <steve.mcintyre@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 17-01-20 07:40:15, Qian Cai wrote:
-> 
-> 
-> > On Jan 17, 2020, at 3:51 AM, David Hildenbrand <david@redhat.com> wrote:
-> > 
-> > -> you are accessing the pageblock without the zone lock. It could
-> > change to "isolate" again in the meantime if I am not wrong!
-> 
-> Since we are just dumping the state for debugging, it should be fine
-> to accept a bit inaccuracy here due to racing. I could put a bit
-> comments over there.
+On Fri, Jan 17, 2020 at 6:26 AM David Gibson
+<david@gibson.dropbear.id.au> wrote:
+>
+> On Thu, Jan 16, 2020 at 09:58:23AM +0100, Alexandre Torgue wrote:
+> > Hi David
+> >
+> > On 1/16/20 1:57 AM, David Gibson wrote:
+> > > On Mon, Jan 13, 2020 at 07:16:23PM +0100, Alexandre Torgue wrote:
+> > > > This commit adds the possibility to add build information for a DTB.
+> > > > Build information can be: build date, DTS version, "who built the DTB"
+> > > > (same kind of information that we get in Linux with the Linux banner).
+> > > >
+> > > > To do this, an extra option "-B" using an information file as argument
+> > > > has been added. If this option is used, input device tree is appended with
+> > > > a new string property "Build-info". This property is built with information
+> > > > found in information file given as argument. This file has to be generated
+> > > > by user and shouldn't exceed 256 bytes.
+> > > >
+> > > > Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+> > >
+> > > At the very least, this patch of the series will need to be sent to
+> > > upstream dtc first.
+> >
+> > Ok sorry. I thought that sending all the series would give more
+> > information.
+>
+> That's fair enough, but in order to merge, you'll need to post against
+> upstream dtc.
+>
+> > > I'm also not terribly clear on what you're trying to accomplish here,
+> > > and why it's useful.
+> >
+> > Let's take Kernel boot at example (but could be extend to other DTB "users"
+> > like U-Boot). When Linux kernel booting we get a log that gives useful
+> > information about kernel image: source version, build date, people who built
+> > the kernel image, compiler version. This information is useful for debug and
+> > support. The aim is to get same kind of information but for the DTB.
+> >
+> > > Since you're doing this specifically for use with dtbs built in the
+> > > kernel build, could you just use a:
+> > >     Build-info = /incbin/ "build-info.txt";
+> > > in each of the in-kernel .dts files?
+> >
+> > My first idea was to not modify all existing .dts files. Adding an extra
+> > option in dtc is (for me) the softer way to do it. I mean, compile
+> > information should come through compiler without modify .dts files outside
+> > from dtc. In this way it will be easy to everybody using dtc (inside our
+> > outside Linux tree) to add dtb build info (even if they don't how to write a
+> > dts file).
+>
+> But you're not really having this information coming from the
+> compiler.  Instead you're adding a compiler option that just force
+> includes another file into the generated tree, and it's up to your
+> build scripts to put something useful into that file.
+>
+> I don't really see that as preferable to modifying the .dts files.
+>
+> I also dislike the fact that the option as proposed is much more
+> general than the name suggests, but also very similar too, but much
+> more specific than the existing /incbin/ option.
+>
+> What might be better would be to have a dtc option which force appends
+> an extra .dts to the mail .dts compiled.  You can then put an overlay
+> template in that file, something like:
+>
+> &{/} {
+>         linux,build-info = /incbin/ "build-info.txt;
+> }
 
-Sorry, I could have been more specific. The race I was talking about is
-not about accuracy. The current code is racy in that sense already
-because you are looking at a struct page you do not own so its state can
-change at any time. Please note that the zone->lock doesn't really
-prevent from the state transition because that applies only to free
-pages and those are obviously OK. So this is not really different.
+I like this suggestion either as an include another dts file or an
+overlay. The latter could be useful as a way to maintain current dtb
+files while splitting the source files into base and overlay dts
+files.
 
-The race I've had in mind is a when a parallel hotplug would simply
-hotremove the section along with the memmap so the struct page was a
-complete garbage.
+But no, let's not prepend this with 'linux'. It's not a property
+specific for Linux to consume.
 
--- 
-Michal Hocko
-SUSE Labs
+Rob
