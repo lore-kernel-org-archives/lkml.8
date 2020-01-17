@@ -2,134 +2,78 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15643C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D801BC33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3C492082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:56:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Afi57NmS"
+	by mail.kernel.org (Postfix) with ESMTP id AF23220748
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:57:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729384AbgAQS4L (ORCPT
+        id S1729388AbgAQS50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 13:56:11 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34012 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726603AbgAQS4K (ORCPT
+        Fri, 17 Jan 2020 13:57:26 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:37984 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726761AbgAQS5Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 13:56:10 -0500
-Received: by mail-pf1-f195.google.com with SMTP id i6so12355704pfc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 10:56:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=UkoQ4nyifh7YprS+4/LmLf8NkjkvRebOrTXBRE37Y34=;
-        b=Afi57NmSu6mVLyLVY2bm5P9bxE6WIrfLdGkFkU+xutZbEiG2AmufMLW0vvw+smTrNd
-         eK+90elSwPoIWkEHzAtqtnVSSk9EJdEtweqBTtHVr3+T3atlRnopLa5JFI4E0xBaVDxF
-         qzM0KHQlnQ47aAv7WOpKffUWZj51sFf6ayBB82Ydt9W7BC+bxte4jrlpQlF3Xs163gBf
-         Pt3ZUyWoGdPA0av2tfL9qgoFGkFrQ8GY4VdlgTxy7W/N6j56vO+MMxvMo2v2jeL3CbNd
-         CtPfaWIUgMzVmDiTx/Z175FBnpNL8ztWjNA1VP2jQ67nsogSH7A6Zz5QtEOo5/RAsFLe
-         jNPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=UkoQ4nyifh7YprS+4/LmLf8NkjkvRebOrTXBRE37Y34=;
-        b=UG2M+O2eawXFWmOcsp/3oGglLAyVfbJrcGno0sqaA8Ea0wFCx5WBU3GxRxCSCyuoaW
-         ldBPYfk134jGEIHU794XhlykPfBfDY9IsY16QxOsjzHHnSY+HQf9WwIIeLixZG47B7Fs
-         P6RO9O2NAfERWqsx4DyGk9XGMZVmy8QFgwsKfMdTfQLwU98oKQG20rpY2wzHQFSwSbaX
-         breMpZUAvDSsb6aerFNFrH8RKA0eSEK6eSjNBSnMucvmFy1C1KcaCD3XBQuWLubO7WU7
-         B+hhGpoGBhzBiSsQufcggwqTcQrjLlFJRm1cta1mNWE1JLmeJH8cqYMnUEovcPNhiiqv
-         aSIg==
-X-Gm-Message-State: APjAAAWhJPo7nL9RDoLT0WGddM5MnuoPO8H1du7hMfnh7fYI6sPG+9L/
-        ibpmfv6CAz2ZgLXWmV/kXYIHzg==
-X-Google-Smtp-Source: APXvYqwuqnHTthBlGcBYhcMhhAoDEc/iVnS8+lDVO/wVH/677XnbZTEn0iNg7nF/LNPKmKcdlfnyoA==
-X-Received: by 2002:a65:621a:: with SMTP id d26mr45686355pgv.151.1579287370272;
-        Fri, 17 Jan 2020 10:56:10 -0800 (PST)
-Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id r8sm5899181pjo.22.2020.01.17.10.56.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 10:56:09 -0800 (PST)
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] coresight: etm4x: Fix unused function warning
-Date:   Fri, 17 Jan 2020 11:56:07 -0700
-Message-Id: <20200117185607.24244-2-mathieu.poirier@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200117185607.24244-1-mathieu.poirier@linaro.org>
-References: <20200117185607.24244-1-mathieu.poirier@linaro.org>
+        Fri, 17 Jan 2020 13:57:25 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id C90E120026;
+        Fri, 17 Jan 2020 19:57:23 +0100 (CET)
+Date:   Fri, 17 Jan 2020 19:57:22 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] video: fbdev: arcfb: add COMPILE_TEST support
+Message-ID: <20200117185722.GA24508@ravnborg.org>
+References: <CGME20200116144909eucas1p1b247368aded82dad3ca8da852deaca1a@eucas1p1.samsung.com>
+ <acf2cc2e-614d-f0fb-ce40-cee62bfcde4c@samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <acf2cc2e-614d-f0fb-ce40-cee62bfcde4c@samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=hD80L64hAAAA:8
+        a=7gkXJVJtAAAA:8 a=e5mUnYsNAAAA:8 a=D1x47FpqbbcrrsTMZkUA:9
+        a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
-
-Some of the newly added code in the etm4x driver is inside of an #ifdef,
-and some other code is outside of it, leading to a harmless warning when
-CONFIG_CPU_PM is disabled:
-
-drivers/hwtracing/coresight/coresight-etm4x.c:68:13: error: 'etm4_os_lock' defined but not used [-Werror=unused-function]
- static void etm4_os_lock(struct etmv4_drvdata *drvdata)
-             ^~~~~~~~~~~~
-
-To avoid the warning and simplify the the #ifdef checks, use
-IS_ENABLED() instead, so the compiler can drop the unused functions
-without complaining.
-
-Fixes: f188b5e76aae ("coresight: etm4x: Save/restore state across CPU low power states")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-[Fixed capital 'f' in title]
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
----
- drivers/hwtracing/coresight/coresight-etm4x.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-index dc3f507e7562..a90d757f7043 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-@@ -1132,7 +1132,6 @@ static void etm4_init_trace_id(struct etmv4_drvdata *drvdata)
- 	drvdata->trcid = coresight_get_trace_id(drvdata->cpu);
- }
- 
--#ifdef CONFIG_CPU_PM
- static int etm4_cpu_save(struct etmv4_drvdata *drvdata)
- {
- 	int i, ret = 0;
-@@ -1402,17 +1401,17 @@ static struct notifier_block etm4_cpu_pm_nb = {
- 
- static int etm4_cpu_pm_register(void)
- {
--	return cpu_pm_register_notifier(&etm4_cpu_pm_nb);
-+	if (IS_ENABLED(CONFIG_CPU_PM))
-+		return cpu_pm_register_notifier(&etm4_cpu_pm_nb);
-+
-+	return 0;
- }
- 
- static void etm4_cpu_pm_unregister(void)
- {
--	cpu_pm_unregister_notifier(&etm4_cpu_pm_nb);
-+	if (IS_ENABLED(CONFIG_CPU_PM))
-+		cpu_pm_unregister_notifier(&etm4_cpu_pm_nb);
- }
--#else
--static int etm4_cpu_pm_register(void) { return 0; }
--static void etm4_cpu_pm_unregister(void) { }
--#endif
- 
- static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
- {
--- 
-2.20.1
-
+On Thu, Jan 16, 2020 at 03:49:07PM +0100, Bartlomiej Zolnierkiewicz wrote:
+> Add COMPILE_TEST support to arcfb driver for better compile
+> testing coverage.
+> 
+> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+> ---
+>  drivers/video/fbdev/Kconfig |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> Index: b/drivers/video/fbdev/Kconfig
+> ===================================================================
+> --- a/drivers/video/fbdev/Kconfig
+> +++ b/drivers/video/fbdev/Kconfig
+> @@ -435,7 +435,7 @@ config FB_FM2
+>  
+>  config FB_ARC
+>  	tristate "Arc Monochrome LCD board support"
+> -	depends on FB && X86
+> +	depends on FB && (X86 || COMPILE_TEST)
+>  	select FB_SYS_FILLRECT
+>  	select FB_SYS_COPYAREA
+>  	select FB_SYS_IMAGEBLIT
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
