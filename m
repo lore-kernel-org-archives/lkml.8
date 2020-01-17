@@ -2,96 +2,79 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A4CC33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA14C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9E862467D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:13:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579255988;
-	bh=wABE1KL6Dom6ZK0s82ipPm+b7d+G3j2jQRbLEB2QhJw=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=HgX2OX2z2N+e7Cak+jKGFtQA22I1Va8GzuBXJK/tJZNfL9mFGYEaZXy1X0mlQz2X/
-	 Urf69F/Kkx0hOUgAFUwIWIAfxhy6FQ4GLnxdd+mbO4dsSwxh1EslCcWG+JMfDGIJ/U
-	 hi3VSDxyeiMrN3tqvi+RJW/pCzYlOZJhAQmGVa80=
+	by mail.kernel.org (Postfix) with ESMTP id 3AA0C24653
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:13:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbgAQKNH (ORCPT
+        id S1728765AbgAQKNL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 05:13:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47116 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726220AbgAQKNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 05:13:06 -0500
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 499502087E;
-        Fri, 17 Jan 2020 10:13:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579255985;
-        bh=wABE1KL6Dom6ZK0s82ipPm+b7d+G3j2jQRbLEB2QhJw=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=NfdayOHo1oYl7k46HXKjfLoR0O9A88lnCmiyazES/WIG3kOFVbMOhBB7/k2B2tDnd
-         Nb+ru+wNxgcZqLW8qBfOxDt59vzfzGPgOlmLFAODpJyT33wlCfbY0/b1N/F7Drvtlw
-         +xu8KC2S8dkSxCtX40B1xVGdq/PjspMQthenCba0=
-Date:   Fri, 17 Jan 2020 11:13:02 +0100 (CET)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Petr Mladek <pmladek@suse.com>
-cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] livepatch/samples/selftest: Clean up show variables
- handling
-In-Reply-To: <20200116153145.2392-1-pmladek@suse.com>
-Message-ID: <nycvar.YFH.7.76.2001171112490.31058@cbobk.fhfr.pm>
-References: <20200116153145.2392-1-pmladek@suse.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Fri, 17 Jan 2020 05:13:11 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:48816 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726220AbgAQKNI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 05:13:08 -0500
+Received: from localhost (82-95-191-104.ip.xs4all.nl [82.95.191.104])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 90F9C155C314E;
+        Fri, 17 Jan 2020 02:13:05 -0800 (PST)
+Date:   Fri, 17 Jan 2020 02:13:03 -0800 (PST)
+Message-Id: <20200117.021303.345472263852340147.davem@davemloft.net>
+To:     f.fainelli@gmail.com
+Cc:     netdev@vger.kernel.org, cphealy@gmail.com,
+        rmk+kernel@armlinux.org.uk, andrew@lunn.ch, hkallweit1@gmail.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v3] net: phy: Maintain MDIO device and bus
+ statistics
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200116044856.1819-1-f.fainelli@gmail.com>
+References: <20200116044856.1819-1-f.fainelli@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 17 Jan 2020 02:13:07 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Jan 2020, Petr Mladek wrote:
+From: Florian Fainelli <f.fainelli@gmail.com>
+Date: Wed, 15 Jan 2020 20:48:50 -0800
 
-> Dan Carpenter reported suspicious allocations of shadow variables
-> in the sample module, see
-> https://lkml.kernel.org/r/20200107132929.ficffmrm5ntpzcqa@kili.mountain
+> We maintain global statistics for an entire MDIO bus, as well as broken
+> down, per MDIO bus address statistics. Given that it is possible for
+> MDIO devices such as switches to access MDIO bus addresses for which
+> there is not a mdio_device instance created (therefore not a a
+> corresponding device directory in sysfs either), we also maintain
+> per-address statistics under the statistics folder. The layout looks
+> like this:
 > 
-> The code did not cause a real problem. But it was indeed misleading
-> and semantically wrong. I got confused several times when cleaning it.
-> So I decided to split the change into few steps. I hope that
-> it will help reviewers and future readers.
+> /sys/class/mdio_bus/../statistics/
+> 	transfers
+> 	errrors
+> 	writes
+> 	reads
+> 	transfers_<addr>
+> 	errors_<addr>
+> 	writes_<addr>
+> 	reads_<addr>
 > 
-> The changes of the sample module are basically the same as in the RFC.
-> In addition, there is a clean up of the module used by the selftest.
+> When a mdio_device instance is registered, a statistics/ folder is
+> created with the tranfers, errors, writes and reads attributes which
+> point to the appropriate MDIO bus statistics structure.
 > 
+> Statistics are 64-bit unsigned quantities and maintained through the
+> u64_stats_sync.h helper functions.
 > 
-> Petr Mladek (4):
->   livepatch/sample: Use the right type for the leaking data pointer
->   livepatch/selftest: Clean up shadow variable names and type
->   livepatch/samples/selftest: Use klp_shadow_alloc() API correctly
->   livepatch: Handle allocation failure in the sample of shadow variable
->     API
-> 
->  lib/livepatch/test_klp_shadow_vars.c      | 119 +++++++++++++++++-------------
->  samples/livepatch/livepatch-shadow-fix1.c |  39 ++++++----
->  samples/livepatch/livepatch-shadow-fix2.c |   4 +-
->  samples/livepatch/livepatch-shadow-mod.c  |   4 +-
->  4 files changed, 99 insertions(+), 67 deletions(-)
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-I've pushed this to for-5.6/selftests. Thanks,
-
--- 
-Jiri Kosina
-SUSE Labs
-
+Applied, thanks Florian.
