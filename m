@@ -2,110 +2,151 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F6ACC33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2CD1C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E854214AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:32:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P84BI8hW"
+	by mail.kernel.org (Postfix) with ESMTP id BEB98214AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:32:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729182AbgAQPcK (ORCPT
+        id S1729214AbgAQPcP convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 10:32:10 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43711 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbgAQPcJ (ORCPT
+        Fri, 17 Jan 2020 10:32:15 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:43708 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726942AbgAQPcN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 10:32:09 -0500
-Received: by mail-pf1-f193.google.com with SMTP id x6so12109674pfo.10;
-        Fri, 17 Jan 2020 07:32:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=vsblHe4BrZXvpcTixylwUCR+Uct1lSaVWajbm+319XI=;
-        b=P84BI8hWdgxcB+0kowQ9tTtH+clpCV53/uwgm1fVI3l8tZjFgkNNRf3A3bWGHBpJN1
-         L2X6gHUqblk8BNR1ihsyAebJ9nWxkeTvSQXlYM/aorOhx5T5kWXu1H2RSP2jbA1+p2u1
-         t1tVDMlGoGu+e++dT6VlGayNKXBK6Y7hnpBCTZ5PXF3rykHUEcgVb/2LROaEmBJPP7q1
-         hr9Jwq4PHcB+SOOyvs8L8lFEd1AxMtB4Kji7061vXqQxlAHP6QjGtJH3DdLOG7QqzHxG
-         GolP3+EQ6m2rIBo0KTDBekAbZ+vxVLOaBj7OQk5nQiyzvQu5LlaaiMyQv+qLtPew1jkK
-         QR3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=vsblHe4BrZXvpcTixylwUCR+Uct1lSaVWajbm+319XI=;
-        b=t6qZlQgXo0GZvY6HX8Luq3PqnUbYU7B0GluCK1WtZCKk2z8ornhATs76/I+CM9AwWW
-         0LDVT1FjI2M4NJ4PVIOuTII6dpDRpl0vrZUZFIVqGtDFUCCeHPcxVwZT2iCE8CDmZt8I
-         afdYKPb9suewIHroY57+ZzscoUghkQdTK6eHmjFNEG8MF7S1vLy2MD+r0dxrny+b4CHW
-         pi3GGJ5PmZy9c651mYGlnRbOkPbMlRcWBvvIHq9dqpr0l1iydibgmHps/K9n6N669Q/O
-         9acuh06DRUFbb3SzJhwnPofc7uty2l/uCDYF640tQ9KsyFsoF26WQc4w0b2wqYWdtmLk
-         CdkQ==
-X-Gm-Message-State: APjAAAX4FphzzmfIcrEaUY/QmAPdXWnsO4sAO0jQw6PrW9x3eQHRgLx4
-        PsN5rp2+SJwjUPKC/+DApLg=
-X-Google-Smtp-Source: APXvYqyx/DoiLmiFuSGvMMgvwwNgyzCWwMzktxQaXrSFe6BTj7v3p5/Cs7TEnH62gct1Yemj0iRhcg==
-X-Received: by 2002:a63:2842:: with SMTP id o63mr46669470pgo.317.1579275129159;
-        Fri, 17 Jan 2020 07:32:09 -0800 (PST)
-Received: from localhost.localdomain ([103.211.17.168])
-        by smtp.googlemail.com with ESMTPSA id d20sm7851020pjs.2.2020.01.17.07.32.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 07:32:08 -0800 (PST)
-From:   Amol Grover <frextrite@gmail.com>
-To:     Hannes Reinecke <hare@suse.de>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Amol Grover <frextrite@gmail.com>
-Subject: [PATCH 2/2] drivers: scsi: qedf: qedf_main: Pass lockdep expression to RCU lists
-Date:   Fri, 17 Jan 2020 21:01:24 +0530
-Message-Id: <20200117153123.2648-2-frextrite@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200117153123.2648-1-frextrite@gmail.com>
-References: <20200117153123.2648-1-frextrite@gmail.com>
+        Fri, 17 Jan 2020 10:32:13 -0500
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-192-DZDUZOR_OCKUlzu7mSXGRA-1; Fri, 17 Jan 2020 10:32:10 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6DACE100551D;
+        Fri, 17 Jan 2020 15:32:09 +0000 (UTC)
+Received: from aion.usersys.redhat.com (ovpn-126-23.rdu2.redhat.com [10.10.126.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 47864675AF;
+        Fri, 17 Jan 2020 15:32:09 +0000 (UTC)
+Received: by aion.usersys.redhat.com (Postfix, from userid 1000)
+        id 80DC71A00A4; Fri, 17 Jan 2020 10:32:08 -0500 (EST)
+Date:   Fri, 17 Jan 2020 10:32:08 -0500
+From:   Scott Mayhew <smayhew@redhat.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "dhowells@redhat.com" <dhowells@redhat.com>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>
+Subject: Re: [BISECT BUG] NFS v4 root not working after 6d972518b821 ("NFS:
+ Add fs_context support.")
+Message-ID: <20200117153208.GB3111@aion.usersys.redhat.com>
+References: <20200117144055.GB3215@pi3>
+ <CAJKOXPeCVwZfBsCVbc9RQUGi0UfWQw0uFamPiQasiO8fSthFsQ@mail.gmail.com>
+ <433863.1579270803@warthog.procyon.org.uk>
+ <461540.1579273958@warthog.procyon.org.uk>
+ <b31b09abeea4982e038b0e66e45889bb2c9df750.camel@hammerspace.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <b31b09abeea4982e038b0e66e45889bb2c9df750.camel@hammerspace.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: DZDUZOR_OCKUlzu7mSXGRA-1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aion.usersys.redhat.com
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-lport->disc.rports is traversed using list_for_each_entry_rcu
-outside an RCU read-side critical section but under the protection
-of lport->disc.disc_mutex.
+On Fri, 17 Jan 2020, Trond Myklebust wrote:
 
-Hence, add corresponding lockdep expression to silence false-positive
-lockdep warnings, and harden RCU lists.
+> On Fri, 2020-01-17 at 15:12 +0000, David Howells wrote:
+> > Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > 
+> > > mount.nfs4 -o vers=4,nolock 192.168.1.10:/srv/nfs/odroidhc1
+> > > /new_root
+> > 
+> > Okay, it looks like the mount command makes two attempts at mounting.
+> > Firstly, it does this:
+> > 
+> > > [   22.938314] NFSOP 'source=192.168.1.10:/srv/nfs/odroidhc1'
+> > > [   22.942638] NFSOP 'nolock=(null)'
+> > > [   22.945772] NFSOP 'vers=4.2'
+> > > [   22.948660] NFSOP 'addr=192.168.1.10'
+> > > [   22.952350] NFSOP 'clientaddr=192.168.1.12'
+> > > [   22.956831] NFS4: Couldn't follow remote path
+> > 
+> > Which accepts the "vers=4.2" parameter as there's no check that that
+> > is
+> > actually valid given the configuration, but then fails
+> > later.  Secondly, it
+> > does this:
+> > 
+> > > [   22.971001] NFSOP 'source=192.168.1.10:/srv/nfs/odroidhc1'
+> > > [   22.975217] NFSOP 'nolock=(null)'
+> > > [   22.978444] NFSOP 'vers=4'
+> > > [   22.981265] NFSOP 'minorversion=1'
+> > > [   22.984513] NFS: Value for 'minorversion' out of range
+> > > mount.nfs4: Numerical result out of range
+> > 
+> > which fails because of the minorversion=1 specification, where the
+> > kernel
+> > config didn't enable NFS_V4_1.
+> > 
+> > It looks like it ought to have failed prior to these patches in the
+> > same way:
+> > 
+> > 		case Opt_minorversion:
+> > 			if (nfs_get_option_ul(args, &option))
+> > 				goto out_invalid_value;
+> > 			if (option > NFS4_MAX_MINOR_VERSION)
+> > 				goto out_invalid_value;
+> > 			mnt->minorversion = option;
+> > 			break;
+> > 
+> 
+> It looks like someone changed the return value from the old EINVAL to
+> something else? The "Numerical result out of range" message above
+> suggests it has been changed to EOVERFLOW, which probably is not
+> supported by 'mount'.
 
-Signed-off-by: Amol Grover <frextrite@gmail.com>
----
- drivers/scsi/qedf/qedf_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+It's returning ERANGE... and nope, mount.nfs doesn't support it (see
+nfs_autonegotiate() in utils/mount/stropts.c).  Changing it to return
+EINVAL fixes it:
 
-diff --git a/drivers/scsi/qedf/qedf_main.c b/drivers/scsi/qedf/qedf_main.c
-index 604856e72cfb..17eab7f8cf05 100644
---- a/drivers/scsi/qedf/qedf_main.c
-+++ b/drivers/scsi/qedf/qedf_main.c
-@@ -420,7 +420,8 @@ static void qedf_link_recovery(struct work_struct *work)
- 	 * ADISC since the rport is in state ready.
- 	 */
- 	mutex_lock(&lport->disc.disc_mutex);
--	list_for_each_entry_rcu(rdata, &lport->disc.rports, peers) {
-+	list_for_each_entry_rcu(rdata, &lport->disc.rports, peers,
-+				lockdep_is_held(&lport->disc.disc_mutex)) {
- 		if (kref_get_unless_zero(&rdata->kref)) {
- 			fc_rport_login(rdata);
- 			kref_put(&rdata->kref, fc_rport_destroy);
--- 
-2.24.1
+diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+index 429315c011ae..74508ed9aeec 100644
+--- a/fs/nfs/fs_context.c
++++ b/fs/nfs/fs_context.c
+@@ -769,8 +769,7 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
+ out_invalid_address:
+        return nfs_invalf(fc, "NFS: Bad IP address specified");
+ out_of_bounds:
+-       nfs_invalf(fc, "NFS: Value for '%s' out of range", param->key);
+-       return -ERANGE;
++       return nfs_invalf(fc, "NFS: Value for '%s' out of range", param->key);
+ }
+ 
+ /*
+
+
+I think I may have been running a hacked up version of mount.nfs
+before... because as soon as I updated my nfs-utils package it stopped
+working for me too.
+
+-Scott
+> 
+> -- 
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+> 
+> 
 
