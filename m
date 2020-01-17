@@ -2,101 +2,102 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4221C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B7EC33CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B37F21582
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:37:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579279064;
-	bh=QITaCsdXo+beqVbpmLEHNnO8yN5UaTe2pdDbiDeEz6s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yTDt0uH6iamISOfoWbEi+Yheu2Hw67Ocd46rQWGaMlp+TV+23jiwCC2M7AuZWHJRy
-	 JyWkV0EgfK3xStDrCfpd8+EimhVzjW4VPIj1qHVkjEgvuz3eNsnghSPrglG7qezVTR
-	 I69GUNYBSG+FmxPAQpSnFNauNeHWN2rdOou04Igo=
+	by mail.kernel.org (Postfix) with ESMTP id C8CF92087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 16:39:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TU1UVM4z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728992AbgAQQhn (ORCPT
+        id S1727022AbgAQQjY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 11:37:43 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36000 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbgAQQhn (ORCPT
+        Fri, 17 Jan 2020 11:39:24 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55590 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726763AbgAQQjX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 11:37:43 -0500
-Received: by mail-ot1-f68.google.com with SMTP id m2so18207658otq.3;
-        Fri, 17 Jan 2020 08:37:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:content-language
-         :user-agent;
-        bh=YOEsOn/2ceJnOpjp8uwYUwADDl3plvKBrE/DaARo/5Q=;
-        b=FLqBm3vLnfyxLfT5w1EuzFMNXRGzGClQEs92whLt5qBWnZmIdmXP+lrkWMjFKMJm6g
-         14vKOsMlXVFXU48ot0mMKFnNkXl6KvIGAm5hpNghJlEn0VMFwe5B5GT0rd0QtqEqBwLq
-         8jajuGptfF3rd4NEOc0MC8mwa4wKrU+eNMQOEgjWskRZ45vMkDnXbSE0HwdbAbNBjpgY
-         /lXVj2tfxz8YdUf+E1LX/uS2uRb3Bt4BuWWwpUOld+MGMjQ+MmKndnieqOy9Xm20EMDR
-         9KJNF3y4vliY25QXx2rWNkCYgiLRqhzhN/ouTkoRByyNlqg3sTnAgDjczn1L4UKZje5q
-         I78w==
-X-Gm-Message-State: APjAAAVM9n7hwTF6v77Lwep9dg+wafhPfrdY4H2blzTbC08b3nzp4hT/
-        oqG9Oi9PfqCz62eBQyQ5KQ==
-X-Google-Smtp-Source: APXvYqxEp02bOdsOrY4x2V8OzMEjYATtM+Wclbr3Jw3HUtzLC89EUmNfZSLi42oRdwh4RdqgmiCWyg==
-X-Received: by 2002:a05:6830:612:: with SMTP id w18mr6793151oti.264.1579279062684;
-        Fri, 17 Jan 2020 08:37:42 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 15sm4068557otv.20.2020.01.17.08.37.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 08:37:41 -0800 (PST)
-Received: (nullmailer pid 3439 invoked by uid 1000);
-        Fri, 17 Jan 2020 16:37:40 -0000
-Date:   Fri, 17 Jan 2020 10:37:40 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Joakim Zhang <qiangqing.zhang@nxp.com>
-Cc:     "maz@kernel.org" <maz@kernel.org>,
-        "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>, Andy Duan <fugang.duan@nxp.com>
-Subject: Re: [PATCH V6 1/2] dt-bindings/irq: add binding for NXP INTMUX
- interrupt  multiplexer
-Message-ID: <20200117163740.GA3378@bogus>
-References: <20200117060653.27485-1-qiangqing.zhang@nxp.com>
- <20200117060653.27485-2-qiangqing.zhang@nxp.com>
+        Fri, 17 Jan 2020 11:39:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579279162;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5m8tHXb1DlBkr0D20ikl66SMlJetA3DFtBUIb+crum8=;
+        b=TU1UVM4zqKNJMzDfhABdD93ZE5hpD9QkA/cfq/PqpP18BFh70KG4TfcxpPAatMx5Fcra0N
+        xziazrFu1zuCXzwZNGuPWv31sWq0CzA5c0cE+WCiqyOU0c7tper2icVGF1L0xRm6pGoiX8
+        U4wQgOclCtJEXhoqxN86R6i6KTxZi5s=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-347-mdVlBjycMx6djPNIoMft3g-1; Fri, 17 Jan 2020 11:39:14 -0500
+X-MC-Unique: mdVlBjycMx6djPNIoMft3g-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 84C7B800D41;
+        Fri, 17 Jan 2020 16:39:11 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-49.rdu2.redhat.com [10.10.120.49])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CB6E91001902;
+        Fri, 17 Jan 2020 16:39:08 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200117162201.GA282012@vader>
+References: <20200117162201.GA282012@vader> <2397bb4a-2ca2-4b44-8c79-64efba9aa04d@www.fastmail.com> <20200114170250.GA8904@ZenIV.linux.org.uk> <3326.1579019665@warthog.procyon.org.uk> <9351.1579025170@warthog.procyon.org.uk> <359591.1579261375@warthog.procyon.org.uk>
+To:     Omar Sandoval <osandov@osandov.com>
+Cc:     dhowells@redhat.com, Colin Walters <walters@verbum.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Theodore Ts'o <tytso@mit.edu>, adilger.kernel@dilger.ca,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Chris Mason <clm@fb.com>, josef@toxicpanda.com,
+        dsterba@suse.com, linux-ext4 <linux-ext4@vger.kernel.org>,
+        xfs <linux-xfs@vger.kernel.org>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Making linkat() able to overwrite the target
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200117060653.27485-2-qiangqing.zhang@nxp.com>
-Content-Language: en-US
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <469670.1579279148.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Fri, 17 Jan 2020 16:39:08 +0000
+Message-ID: <469671.1579279148@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jan 2020 06:10:05 +0000, Joakim Zhang wrote:
-> 
-> This patch adds the DT bindings for the NXP INTMUX interrupt multiplexer
-> for i.MX8 family SoCs.
-> 
-> Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
-> ---
->  .../interrupt-controller/fsl,intmux.yaml      | 68 +++++++++++++++++++
->  1 file changed, 68 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,intmux.yaml
-> 
+Omar Sandoval <osandov@osandov.com> wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> Yes I still have those patches lying around and I'd be happy to dust
+> them off and resend them.
+
+That would be great if you could.  I could use them here:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log=
+/?h=3Dfscache-iter
+
+I'm performing invalidation by creating a vfs_tmpfile() and then replacing=
+ the
+on-disk file whilst letting ops resume on the temporary file.  Replacing t=
+he
+on-disk file currently, however, involves unlinking the old one before I c=
+an
+link in a new one - which leaves a window in which nothing is there.  I co=
+uld
+use one or more side dirs in which to create new files and rename them ove=
+r,
+but that has potential lock bottleneck issues - and is particularly fun if=
+ an
+entire volume is invalidated (e.g. AFS vos release).
+
+David
+
