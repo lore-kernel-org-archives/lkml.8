@@ -2,112 +2,115 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0584DC33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A56FC33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDEFC2072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:12:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41B942087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:13:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ExrQy03a"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="PsMSRXeE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729050AbgAQPMs (ORCPT
+        id S1729078AbgAQPNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 10:12:48 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:40345 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728739AbgAQPMr (ORCPT
+        Fri, 17 Jan 2020 10:13:35 -0500
+Received: from esa5.hc3370-68.iphmx.com ([216.71.155.168]:19426 "EHLO
+        esa5.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728739AbgAQPNf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 10:12:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579273965;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=fMvdkxieshf5qMjWzbe24xoi8/IPuS4Clb2g2FTl2C0=;
-        b=ExrQy03aVacZicLDVAEg+YPyZqSw0F8cNaDFGPPWWcL9pvAvLv60PZnfQhgbs3vPTRpvwx
-        +IU/AOeje4x16TiURg9n1bXUd98SzfC9dhRvsCffHPDIOiQj5xYwhKw0clgRh60T+Gw2ZK
-        qZZhEP3VQpqL4wtb7GT25mIYvRq3btw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-344-EvqXYFZrOwil26R6rgB_qw-1; Fri, 17 Jan 2020 10:12:42 -0500
-X-MC-Unique: EvqXYFZrOwil26R6rgB_qw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BB0301800D4F;
-        Fri, 17 Jan 2020 15:12:40 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-49.rdu2.redhat.com [10.10.120.49])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1274B81201;
-        Fri, 17 Jan 2020 15:12:38 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200117144055.GB3215@pi3>
-References: <20200117144055.GB3215@pi3> <CAJKOXPeCVwZfBsCVbc9RQUGi0UfWQw0uFamPiQasiO8fSthFsQ@mail.gmail.com> <433863.1579270803@warthog.procyon.org.uk>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     dhowells@redhat.com,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Scott Mayhew <smayhew@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [BISECT BUG] NFS v4 root not working after 6d972518b821 ("NFS: Add fs_context support.")
+        Fri, 17 Jan 2020 10:13:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1579274014;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=tR8JPZbHUxcZYXs3lZBKPNz8XTBMiBMdbSOleTglRB8=;
+  b=PsMSRXeEGo/JtnRfZ0Wr2+7+X/OBrUWLAHjSAy0lT4OGrPzVTldbCO1c
+   6JsdTFBB3RUYt8ZVNZOfjaDlolFXsMF0Wlu9XjjT865qkvxqM5RfHWg2d
+   EtUNhHTk8pjFhv87vliSUQ/AosmSnFQ2ueVxRG7tC56Gcj/0kXrFiXAmr
+   Q=;
+Authentication-Results: esa5.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa5.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
+  receiver=esa5.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa5.hc3370-68.iphmx.com: domain of
+  roger.pau@citrix.com designates 162.221.158.21 as permitted
+  sender) identity=mailfrom; client-ip=162.221.158.21;
+  receiver=esa5.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
+  ip4:168.245.78.127 ~all"
+Received-SPF: None (esa5.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa5.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: MsqHqo/exLDBnrLIXYxKtkRAkIRd8DjhZPa9DS0cCXIi5VRV8F/SHzhPUKSaKvvctb3jOKo46/
+ Nm6wmJ0zJxkLagzwnNszZjvEsnU/lFq3kluQOaxXk6fMMUQxOwxdelpkuM21DBBOcpGjBW4dv/
+ kc9WUZeUnFl0Eq41vtfo8XYJD6Kl6jTuxkCBU6XSjgsGcLrks6RH+Bie/lbsWRu3sfbcI2st6q
+ dVrqNu9WhdtryEZERBHTNHTECnHKBii+dEVWkczpONl4H4/1u7OR2f1p0PPyhXCHTCMFA4qFn1
+ 0OY=
+X-SBRS: 2.7
+X-MesageID: 11445514
+X-Ironport-Server: esa5.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.70,330,1574139600"; 
+   d="scan'208";a="11445514"
+Date:   Fri, 17 Jan 2020 16:13:24 +0100
+From:   Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
+To:     Juergen Gross <jgross@suse.com>
+CC:     <xen-devel@lists.xenproject.org>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH] xen/blkfront: limit allocated memory size to actual use
+ case
+Message-ID: <20200117151324.GS11756@Air-de-Roger>
+References: <20200117143955.18892-1-jgross@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <461539.1579273958.1@warthog.procyon.org.uk>
-Date:   Fri, 17 Jan 2020 15:12:38 +0000
-Message-ID: <461540.1579273958@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200117143955.18892-1-jgross@suse.com>
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL01.citrite.net (10.69.22.125)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On Fri, Jan 17, 2020 at 03:39:55PM +0100, Juergen Gross wrote:
+> Today the Xen blkfront driver allocates memory for one struct
+> blkfront_ring_info for each communication ring. This structure is
+> statically sized for the maximum supported configuration resulting
+> in a size of more than 90 kB.
+> 
+> As the main size contributor is one array inside the struct, the
+> memory allocation can easily be limited by moving this array to be
+> the last structure element and to allocate only the memory for the
+> actually needed array size.
+> 
+> Signed-off-by: Juergen Gross <jgross@suse.com>
 
-> mount.nfs4 -o vers=4,nolock 192.168.1.10:/srv/nfs/odroidhc1 /new_root
+Acked-by: Roger Pau Monné <roger.pau@citrix.com>
 
-Okay, it looks like the mount command makes two attempts at mounting.
-Firstly, it does this:
+Thanks! It would be nice to backport this, but I'm not sure it would
+qualify as a bug fix.
 
-> [   22.938314] NFSOP 'source=192.168.1.10:/srv/nfs/odroidhc1'
-> [   22.942638] NFSOP 'nolock=(null)'
-> [   22.945772] NFSOP 'vers=4.2'
-> [   22.948660] NFSOP 'addr=192.168.1.10'
-> [   22.952350] NFSOP 'clientaddr=192.168.1.12'
-> [   22.956831] NFS4: Couldn't follow remote path
-
-Which accepts the "vers=4.2" parameter as there's no check that that is
-actually valid given the configuration, but then fails later.  Secondly, it
-does this:
-
-> [   22.971001] NFSOP 'source=192.168.1.10:/srv/nfs/odroidhc1'
-> [   22.975217] NFSOP 'nolock=(null)'
-> [   22.978444] NFSOP 'vers=4'
-> [   22.981265] NFSOP 'minorversion=1'
-> [   22.984513] NFS: Value for 'minorversion' out of range
-> mount.nfs4: Numerical result out of range
-
-which fails because of the minorversion=1 specification, where the kernel
-config didn't enable NFS_V4_1.
-
-It looks like it ought to have failed prior to these patches in the same way:
-
-		case Opt_minorversion:
-			if (nfs_get_option_ul(args, &option))
-				goto out_invalid_value;
-			if (option > NFS4_MAX_MINOR_VERSION)
-				goto out_invalid_value;
-			mnt->minorversion = option;
-			break;
-
-David
-
+Roger.
