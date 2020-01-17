@@ -2,206 +2,116 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E6AC33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2355AC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7A79206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:32:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E545A206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:32:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="maUgKAXX"
+	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="QIG/EJ+M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbgAQNcU (ORCPT
+        id S1727065AbgAQNcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 08:32:20 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37157 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbgAQNcT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 08:32:19 -0500
-Received: by mail-ot1-f65.google.com with SMTP id k14so22547253otn.4;
-        Fri, 17 Jan 2020 05:32:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tK6yTRQuQj1ysf+qFmwzb4MAE8WBgbRY6Jdv8kjUY2Y=;
-        b=maUgKAXXE+taK+/FHrWhtUoZX7XUCYsZw0K5IE8OZDGUiW/6pd15Jv2omxt3VtQyag
-         iOl3zKq9lztaI9ZJv4xIe/pn0GhHDj9Dmn5NOHsLBxOpIrJb6ua4j3TZrSDMNNUefTnb
-         z48nz9TzA8adjfzBmCz9aUDvE1TY9y1iMZywduQNmrVZLQO7UC/Ll0g+6wn1z0LXgQtu
-         b0qIY51XVrgGj0N7WSgoiCe4FZ46tFDz0oGXClJ8qXYUI4t5hwI2bsrpfmxSi62GNMec
-         mZDH+AgjAOBDw1gqyi3njlW3tgrcXP7IdXUKCGHB7BxlvCbKQDkXlNw7M53PtxVeVXVz
-         Y7fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tK6yTRQuQj1ysf+qFmwzb4MAE8WBgbRY6Jdv8kjUY2Y=;
-        b=eCu8UnMC0PMzYXxG4B6v0WwK4qdfviyPdAdE8p5ldvG1mFHpNwcFgnyO0MhbutCKoW
-         8zzU4TOh2rEkOCf7Nwx8E/NaDr2/9qyOwu+s8+YYoS2h8k74gGiEVFNpmZI8jnRsh4Vg
-         WYW9XkdoyphlvaSj7a/VEYgtUaV93Yn9KXIqM2qN81++eis7st1QVXVXlYVkTLpV1njJ
-         IVq+fYhGZJF+Ha8/JZ8YdOvdn9RuSRJVBxd+QrZb7SVW1k6HWh90py9WE4fL7u8pbxlf
-         YpoqoBDKzvh6Sfcip+eR84ccCCRcjnCfw8TrDgn22dkM6PwbRlpUX+LK2KFZ6jyYrUGo
-         uGYw==
-X-Gm-Message-State: APjAAAVng/XC4Q/oK7FLl/DHLXMb4mS7cVVJCu6uwfh6Fo6cKyg75iHE
-        NTcBdUW7Yng9cmUUVgCFiNI640ueYweADnHzzjU=
-X-Google-Smtp-Source: APXvYqw6raVtIYUn0e2R2apGYNS0K5IlDIscXZnfcTgAW1uPVcThOhTQoqPbOF5LsgXFVoadJCwyWmJYirZWAA1hhSE=
-X-Received: by 2002:a9d:5c8a:: with SMTP id a10mr5702494oti.95.1579267938333;
- Fri, 17 Jan 2020 05:32:18 -0800 (PST)
+        Fri, 17 Jan 2020 08:32:45 -0500
+Received: from mail-mw2nam10on2084.outbound.protection.outlook.com ([40.107.94.84]:6139
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726587AbgAQNco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 08:32:44 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CfNahnekJYr17HjP5VORP6qpNoN2xgLu6Z3TQaPAJEjuIt762HXuvHk11kZ/JiqXUQtP3468ZNgLRG0t5LcCQ+ZY7keBuNklmQpu7cPGeT1F3Lxtdrq2GEg94bERDD0Blze8Xeqmfv+oTjGUTGpxdvTkgVWjLhGk/cIy1G29GsZdkZ7/WYSi5YsQfTz4mi3A2u9nUZGVxlHBbgNgbPNZYh8lSVs7u9gFJOpca7mlWaY5DmcNDxK1XKw4gJ90lfAFZBaIEGkdRktxVoUultxGfy7qCotJCtAZ0+iLgm9fZ0JvXGtfxCSu9Vtq6Xvl235vVkvtNLQLJVyyPRNyiItM8w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6hy3Uud9n2KfRRQBPtasw4zmxXoff9OJ/awRbDuqPD4=;
+ b=ONQuHk8shekku6UDEQ2Bq5kpiPzQob0ISAlxgHDKDiFXiH2RcbbPXLe/vOWEvXLK1/XAV1c6sl7RkPImJ7A3hMllgNlUiRu3GKPHEUunUlrC8ERan6IV1PU2G/vBPXYW8zzFn/fCsv2OXH4hyNVP54NSJJoR0IY7M5akUozGTip6RNfmEYPL9W8jLau+ZFy/HXAChX3z0nLqbEmtGfBhmiopXLVttm3s7zc90QwO2V8XFeBqlKIt+62mrYTdQyFa6Ekl0kOflUEU2+w3tLx3X2VDSblGR1U6bhU1ZreEiCI2p91m8ZoI8Bo9tfYSbpLXCzs1N3PJeX9cBOFdAmlNQg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=micron.com; dmarc=pass action=none header.from=micron.com;
+ dkim=pass header.d=micron.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6hy3Uud9n2KfRRQBPtasw4zmxXoff9OJ/awRbDuqPD4=;
+ b=QIG/EJ+MlRn7rEeU7OLEXuiG5u0CO0mO0RrREZGdl6bo7UGJqiyVyXTt2W/i6UBIVcZlJyBs6GhSSn8T31nMTM+FmM6BQ0C4xqoFCKJuXGuIQQOoSpUn4DCdQrsfh0d5RPYc4llky1a6XLdNlgSszqWz7C+mQ02Q+zYwOHFuqt8=
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com (20.176.179.87) by
+ BN7PR08MB5459.namprd08.prod.outlook.com (20.176.31.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.13; Fri, 17 Jan 2020 13:32:42 +0000
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::981f:90d7:d45f:fd11]) by BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::981f:90d7:d45f:fd11%7]) with mapi id 15.20.2644.021; Fri, 17 Jan 2020
+ 13:32:41 +0000
+From:   "Bean Huo (beanhuo)" <beanhuo@micron.com>
+To:     Bart Van Assche <bvanassche@acm.org>, Bean Huo <huobean@gmail.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] Re: [PATCH v2 5/9] scsi: ufs: Delete two unnecessary
+ functions
+Thread-Topic: [EXT] Re: [PATCH v2 5/9] scsi: ufs: Delete two unnecessary
+ functions
+Thread-Index: AQHVzOpYbAB83sjWkEy6eA8UAyZP4Kfu2v/Q
+Date:   Fri, 17 Jan 2020 13:32:41 +0000
+Message-ID: <BN7PR08MB5684EBF75EF47DD5FF7F4638DB310@BN7PR08MB5684.namprd08.prod.outlook.com>
+References: <20200116215914.16015-1-huobean@gmail.com>
+ <20200116215914.16015-6-huobean@gmail.com>
+ <b315bf53-6b64-0e1f-ffd4-823dce99954e@acm.org>
+In-Reply-To: <b315bf53-6b64-0e1f-ffd4-823dce99954e@acm.org>
+Accept-Language: en-150, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYmVhbmh1b1xhcHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJhMjllMzViXG1zZ3NcbXNnLWQ0MGEyMzdkLTM5MmQtMTFlYS04Yjg4LWRjNzE5NjFmOWRkM1xhbWUtdGVzdFxkNDBhMjM3Zi0zOTJkLTExZWEtOGI4OC1kYzcxOTYxZjlkZDNib2R5LnR4dCIgc3o9IjUxMyIgdD0iMTMyMjM3NDE1NTkyMTk3NjEwIiBoPSJsaW9tdjhKcWs5emFZZFYzZmhma1RiZnR2M1U9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
+x-dg-rorf: true
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=beanhuo@micron.com; 
+x-originating-ip: [195.89.176.137]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a241584d-d54d-46dd-31ba-08d79b51ba76
+x-ms-traffictypediagnostic: BN7PR08MB5459:|BN7PR08MB5459:|BN7PR08MB5459:
+x-microsoft-antispam-prvs: <BN7PR08MB545986E279D74297C4164443DB310@BN7PR08MB5459.namprd08.prod.outlook.com>
+x-ms-exchange-transport-forked: True
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0285201563
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(39860400002)(366004)(136003)(346002)(199004)(189003)(81156014)(9686003)(5660300002)(66476007)(64756008)(66556008)(66446008)(55016002)(81166006)(54906003)(8936002)(110136005)(7696005)(2906002)(66946007)(76116006)(71200400001)(7416002)(4744005)(316002)(26005)(8676002)(478600001)(4326008)(33656002)(86362001)(52536014)(6506007)(186003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR08MB5459;H:BN7PR08MB5684.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: micron.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 7SseaJR7aNfKMcArK9Jbt/wbNAn0bya6b0UB62BWxSpZBOlecCNAli59/4H81gkM5zwDuXlZ5ghdO/IztW6l9Le+pK2C+3UAsPhyh+nvGMTYG3AdibR41d60CsR9l1rg9lH49QjG4N/H/cOe38pUgN/gAeBCmWNmiXs/3L/SV2dqtAM8lLxW5CI09Qb2FRRwZ+lVB343wfgFwyAKdHOzyS2Fr0Ir5o+H//WGJHsYlO447ayD91/S8jXzKD8/VUfzBHIg5Gr4Dnw3tCFfbAii6hHUOOKAwsGRUHcmsPdmT94ZRqqkS8yYNENULAWSQxVFFQwIWfilo/7rEH5f1F2pzK0MfNP+pXPF9pgiVGE5nhuSlx+QCeyxb1VlZYgFkQpIJCPBcDOi7R0DkNW0Jj/fFm+g5UC1IXVLetKW7oe2R87NqE9ZWf6lnAruKl2izrhakaAf4zSC0k0QewYg/bhyHPvCY2VeB3UJdDPWLLKgS5PS/lnoVkwV3WY2g1MFf3HZ
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <CAGi-RUJvqJoCXWN2YugRn=WYEk9yzt7m3OPfX_o++PmJWQ3woQ@mail.gmail.com>
- <87wo9ub5f6.fsf@nanos.tec.linutronix.de> <CAGi-RUK_TA+WWvXJSrsa=_Pwq0pV1ffUKOCBu5c1t8O5Xs+UJg@mail.gmail.com>
- <CAGi-RUJG=SB7az5FFVTzzgefn_VXUbyQX1dtBN+9gkR7MgyC6g@mail.gmail.com>
- <87imldbqe3.fsf@nanos.tec.linutronix.de> <CAGi-RULNwpiNGYALYRG84SOUzkvNTbgctmXoS=Luh29xDHJzYw@mail.gmail.com>
- <87v9pcw55q.fsf@nanos.tec.linutronix.de> <CAGi-RUJPJ59AMZp3Wap=9zSWLmQSXVDtkbD+O6Hofizf8JWyRg@mail.gmail.com>
- <87pnfjwxtx.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87pnfjwxtx.fsf@nanos.tec.linutronix.de>
-From:   Ramon Fried <rfried.dev@gmail.com>
-Date:   Fri, 17 Jan 2020 15:32:07 +0200
-Message-ID: <CAGi-RUJtqdLtFBVMxL8TOQ3LGRqqrV4Ge7Fu9mTyDoQVYxtA5g@mail.gmail.com>
-Subject: Re: MSI irqchip configured as IRQCHIP_ONESHOT_SAFE causes spurious IRQs
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     hkallweit1@gmail.com, Bjorn Helgaas <bhelgaas@google.com>,
-        maz@kernel.org, lorenzo.pieralisi@arm.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: micron.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a241584d-d54d-46dd-31ba-08d79b51ba76
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jan 2020 13:32:41.7819
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OYNgaI14m69pwzwsvJ9MTCF1c2Si8FA7t5V/m4U1K1KkS+mrpMS5qyqPZiawXUQY4U6FL+3pHpZgpzltRh/XGA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR08MB5459
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thomas,
-Thanks a lot for the detailed answer.
-
-> > Basically, 32 MSI vectors are represented by a single GIC irq.
-> > There's a status registers which every bit correspond to an MSI vector, and
-> > individual MSI needs to be acked on that registers. in any case where
-> > there's asserted bit the GIC IRQ level is high.
->
-> Which is not that bad.
->
-> >> > It's configured with handle_level_irq() as the GIC is level IRQ.
-> >>
-> >> Which is completely bonkers. MSI has edge semantics and sharing an
-> >> interrupt line for edge type interrupts is broken by design, unless the
-> >> hardware which handles the incoming MSIs and forwards them to the level
-> >> type interrupt line is designed properly and the driver does the right
-> >> thing.
-> >
-> > Yes, the design of the HW is sort of broken. I concur.
->
-> As you describe it, it's not that bad.
->
-> >> > The ack callback acks the GIC irq.  the mask/unmask calls
-> >> > pci_msi_mask_irq() / pci_msi_unmask_irq()
-> >>
-> >> What? How is that supposed to work with multiple MSIs?
-> > Acking is per MSI vector as I described above, so it should work.
->
-> No. This is the wrong approach. Lets look at the hardware:
->
-> | GIC   line X |------| MSI block | <--- Messages from devices
->
-> The MSI block latches the incoming message up to the point where it is
-> acknowledged in the MSI block. This makes sure that the level semantics
-> of the GIC are met.
->
-> So from a software perspective you want to do something like this:
->
-> gic_irq_handler()
-> {
->    mask_ack(gic_irqX);
->
->    pending = read(msi_status);
->    for_each_bit(bit, pending) {
->        ack(msi_status, bit);  // This clears the latch in the MSI block
->        handle_irq(irqof(bit));
->    }
->    unmask(gic_irqX);
-> }
->
-> And that works perfectly correct without masking the MSI interrupt at
-> the PCI level for a threaded handler simply because the PCI device will
-> not send another interrupt until the previous one has been handled by
-> the driver unless the PCI device is broken.
-I'm missing something here, isn't this implementation blocks IRQ's only during
-the HW handler and not during the threaded handler ? (Assuming that I selected
-handle_level_irq() as the default handler)
-
-Actually my implementation current implementation is very similar to what
-you just described:
-
-static void eq_msi_isr(struct irq_desc *desc)
-{
-        struct irq_chip *chip = irq_desc_get_chip(desc);
-        struct eq_msi *msi;
-        u16 status;
-        unsigned long bitmap;
-        u32 bit;
-        u32 virq;
-
-        chained_irq_enter(chip, desc);
-        msi = irq_desc_get_handler_data(desc);
-
-        while ((status = readw(msi->gcsr_regs_base + LINK_GCSR5_OFFSET)
-                & MSI_IRQ_REQ) != 0) {
-                pr_debug("MSI: %x\n", status >> 12);
-
-                bitmap = status >> 12;
-                for_each_set_bit(bit, &bitmap, msi->num_of_vectors) {
-                        virq = irq_find_mapping(msi->inner_domain, bit);
-                        if (virq) {
-                                generic_handle_irq(virq);
-                        } else {
-                                pr_err("unexpected MSI\n");
-                                handle_bad_irq(desc);
-                        }
-                }
-        }
-        chained_irq_exit(chip, desc);
-}
-
-Additionally the domain allocation is defined like:
-static int eq_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
-                                 unsigned int nr_irqs, void *args)
-{
-        struct eq_msi *msi = domain->host_data;
-        unsigned long bit;
-        u32 mask;
-
-        /* We only allow 32 MSI per device */
-        WARN_ON(nr_irqs > 32);
-        if (nr_irqs > 32)
-                return -ENOSPC;
-
-        bit = find_first_zero_bit(msi->used, msi->num_of_vectors);
-        if (bit >= msi->num_of_vectors)
-                return -ENOSPC;
-
-        set_bit(bit, msi->used);
-
-        mask = readw(msi->gcsr_regs_base + LINK_GCSR6_OFFSET);
-        mask |= BIT(bit) << 12;
-        writew(mask, msi->gcsr_regs_base + LINK_GCSR6_OFFSET);
-
-        irq_domain_set_info(domain, virq, bit, &eq_msi_bottom_irq_chip,
-                            domain->host_data, handle_level_irq,
-                            NULL, NULL);
-
-        pr_debug("Enabling MSI irq: %lu\n", bit);
-
-        return 0;
-}
-
->
-> If that's the case, then you have to work around that at the device
-> driver level, not at the irq chip level, by installing a primary handler
-> which quiesces the device (not the MSI part).
->
-> Thanks,
->
->         tglx
+SGksIEJhcnQNCg0KPiA+IEZyb206IEJlYW4gSHVvIDxiZWFuaHVvQG1pY3Jvbi5jb20+DQo+ID4N
+Cj4gPiBEZWxldGUgdWZzaGNkX3JlYWRfcG93ZXJfZGVzYygpIGFuZCB1ZnNoY2RfcmVhZF9kZXZp
+Y2VfZGVzYygpLA0KPiA+IGRpcmVjdGx5IGlubGluZSB1ZnNoY2RfcmVhZF9kZXNjKCkgaW50byBp
+dHMgY2FsbGVycy4NCj4gDQo+IEhvdyBhYm91dCBjaGFuZ2luZyB0aGUgc3ViamVjdCBpbnRvICJJ
+bmxpbmUgdHdvIGZ1bmN0aW9ucyBpbnRvIHRoZWlyIGNhbGxlcnMiPw0KPiBPdGhlcndpc2UgdGhp
+cyBwYXRjaCBsb29rcyBmaW5lIHRvIG1lLg0KPiANCkkgc2FpZCB5b3UgYXJlIGV4cGVydCBvbiBF
+bmdsaXNoLCAgaXQgd2lsbCBiZSBjaGFuZ2VkIGluIHRoZSBuZXh0IHZlcnNpb24uDQoNClRoYW5r
+cywNCi8vQmVhbg0K
