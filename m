@@ -2,52 +2,52 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ECEDC33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 07:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B3FC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 07:44:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52B4620728
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 07:44:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D68E20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 07:44:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="ryBSdqRb"
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="mW6lK9ue"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729263AbgAQHoG (ORCPT
+        id S1729325AbgAQHoK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 02:44:06 -0500
-Received: from mail-dm6nam11on2044.outbound.protection.outlook.com ([40.107.223.44]:8462
+        Fri, 17 Jan 2020 02:44:10 -0500
+Received: from mail-dm6nam11on2089.outbound.protection.outlook.com ([40.107.223.89]:60705
         "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727804AbgAQHoF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 02:44:05 -0500
+        id S1727804AbgAQHoJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 02:44:09 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CSf1yzEo+LeQlYZmaE+lRE6hImkowpyXs8F5EQa6B9w4z6r4C7D2EWm7RmzFQu+SjRghAbpdydwHnlaBo4Tqe8VwN1HkbFRjKJJDE2IK9NMXp0HQS8H4i06X8UqdpEvzmqSbA9Z81YggN146Ss3yro7Q+kSpNm/BFAZ5Zb0peuWRQ4fy4pqgYClRtnvATi84aIzBc82XvzWG58/vn2hUJDx04CVnpS7Cc36eGzSXtt7A4YOR9SRjxCenz7nCyO98YFJO4QgNNHx0VLE11X4UKPDD2soXfW0fncDSHh2rsYh1uEuwVhL8YOQ3A8mhjSqgVZELBSB3GNWX0BqxXrgxyA==
+ b=Hn/GXslAc/iyvvOXk1DFl6FX+mp42fXmtHQbwK+BiCia+2ztuIdpC/SCeG8wp1wgADQy9zKTWwk88j64I6bEaKcSfMoVXuiBGYkgklYP32Ewl5syPk5cwCemcumFc4v1Slbe9vuAAn8XKN6X5hxlPUiIr8ATssCslMnSnfmAixbdzZMIKftLLgdh4jr/nqoZRO2dfaoVQH8dcDNE1pg1R+KnmUPRA+DSgf103f05J2SWBy8qsBttgrDSg+VRDbGpXMeWo3Z8MxwtAG6p7lk8xNdMHm2YC6XgA/GiHoU3dmoXvToz96wE47fpCYiI9/FENFG3nMweR79BtgbxJx9wKw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R4ZmAoJ5SHPqhdVbD2ZMWRl6EnQAXCTAeercScOkxEY=;
- b=W0XvaiRXD61FtZp26bU9ScQWJI4fL/tUV3JpOxr8xYpLkxTUNgC6sBfsHs1AioMaGXP7ZG7svZCXboTyxdwllpJc2HVHVs4vJ3QObwar/xi3+jR8l316aNguGAHd+0UQZk9uK74/lWNpvltFR8VtumKmb1h5sFpYWmqK/P+rJdZ0Z3/Z+TWBYNqenIXoqqVoQhi+5mL7rx/i8PR1pZLG106SrGxGPznmNMVDBg+15b6VEvNvNNmLlrRep31j9DG6rHk/VoUH0UP7TkrlwEf7rv/20MuV43/yHUjeVhH4FVEutfuC+Vdhb7zzYBPoLwbLB42ZhJ9K1W+1kbTgr9MdfQ==
+ bh=yY7dT9Uu4EIpwCcoMVNkJiqk6krljwcG6BPRo9t5UC4=;
+ b=nCPrludUZhAqOWdsJaqakflSgAm4pW86Mk3sz1LRYrn7osbkO1FlyocCNq2pycApPIMiN2CKajNSoubXpZo6eYVTCS3oEbxaJ3vGvukZ4YYK/nwj1lQ/B/Q41T+ynJ/sQfpiNdRA6NVovTuypnJYkHTMsUUgWXUqECH2zL+I9NhPDbJoCu9MBDFXFwnpOGBjIbY3lotPJwIUibR14A5jpf6xcgNVnfPJ8zdEiIXPeFx8mTRLtOjrK6QCZnAi3JFMswR51ErHPjIY0C32HOw/BFo5cMnNsxYuKMTp7ndivtGMJGdb464RZ7nYMPIy2W8av2njHKe/JHvgMsJRlqTslw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
  dkim=pass header.d=sifive.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R4ZmAoJ5SHPqhdVbD2ZMWRl6EnQAXCTAeercScOkxEY=;
- b=ryBSdqRbuCvpv5NrRu0q6O/sLmFf/dVPFla1hRdRCyiyxsOsWPOa8eHnw2qY6nucNAo4QuSQnmmYiR28JCscTJmxDfcMGNItoE1K8cY4fW1WxRScyI1CkE3Fe9LHPbD6Bv7NG6bg7H7OGGFa5ppDZqjdCIlVPOg478/5sc7VMao=
+ bh=yY7dT9Uu4EIpwCcoMVNkJiqk6krljwcG6BPRo9t5UC4=;
+ b=mW6lK9uejF2pz0n6Q+WOGYkT53ZmV7XpGj9PgP7aWJqNsMXOTzs1NsdqfMaBlI5eD9XaG6wKZJkd+YKPO6Thz4aUEE5yZDoEqavTolHQQr3lKvtPZggBOj5D+y4K6AmmeZLeFP0iwEj27lHaWffjXehZw7Xyk2Nju7RAQg6R+NY=
 Authentication-Results: spf=none (sender IP is )
  smtp.mailfrom=yash.shah@sifive.com; 
 Received: from CH2PR13MB3368.namprd13.prod.outlook.com (52.132.246.90) by
  CH2PR13MB3765.namprd13.prod.outlook.com (20.180.15.150) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.6; Fri, 17 Jan 2020 07:44:03 +0000
+ 15.20.2644.6; Fri, 17 Jan 2020 07:44:08 +0000
 Received: from CH2PR13MB3368.namprd13.prod.outlook.com
  ([fe80::eccb:16ac:e897:85d5]) by CH2PR13MB3368.namprd13.prod.outlook.com
  ([fe80::eccb:16ac:e897:85d5%3]) with mapi id 15.20.2644.021; Fri, 17 Jan 2020
- 07:44:03 +0000
+ 07:44:08 +0000
 From:   Yash Shah <yash.shah@sifive.com>
 To:     paul.walmsley@sifive.com, palmer@dabbelt.com
 Cc:     aou@eecs.berkeley.edu, allison@lohutok.net,
@@ -55,84 +55,112 @@ Cc:     aou@eecs.berkeley.edu, allison@lohutok.net,
         tglx@linutronix.de, bp@suse.de, anup@brainfault.org,
         linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
         sachin.ghadi@sifive.com, Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH v4 0/2] cacheinfo support to read no. of L2 cache ways enabled
-Date:   Fri, 17 Jan 2020 13:13:36 +0530
-Message-Id: <1579247018-6720-1-git-send-email-yash.shah@sifive.com>
+Subject: [PATCH v4 1/2] riscv: cacheinfo: Implement cache_get_priv_group with a generic ops structure
+Date:   Fri, 17 Jan 2020 13:13:37 +0530
+Message-Id: <1579247018-6720-2-git-send-email-yash.shah@sifive.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1579247018-6720-1-git-send-email-yash.shah@sifive.com>
+References: <1579247018-6720-1-git-send-email-yash.shah@sifive.com>
 Content-Type: text/plain
 X-ClientProxiedBy: BM1PR0101CA0056.INDPRD01.PROD.OUTLOOK.COM
  (2603:1096:b00:19::18) To CH2PR13MB3368.namprd13.prod.outlook.com
  (2603:10b6:610:2c::26)
 MIME-Version: 1.0
-Received: from dhananjayk-PowerEdge-R620.open-silicon.com (114.143.65.226) by BM1PR0101CA0056.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:19::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2644.19 via Frontend Transport; Fri, 17 Jan 2020 07:43:59 +0000
+Received: from dhananjayk-PowerEdge-R620.open-silicon.com (114.143.65.226) by BM1PR0101CA0056.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:19::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2644.19 via Frontend Transport; Fri, 17 Jan 2020 07:44:04 +0000
 X-Mailer: git-send-email 2.7.4
 X-Originating-IP: [114.143.65.226]
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2d7090a3-fe10-41eb-984c-08d79b2105ce
+X-MS-Office365-Filtering-Correlation-Id: 77398771-fe30-42b8-2c80-08d79b2108ca
 X-MS-TrafficTypeDiagnostic: CH2PR13MB3765:
 X-LD-Processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <CH2PR13MB376525E3AA3D839E23FA10DD8C310@CH2PR13MB3765.namprd13.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Microsoft-Antispam-PRVS: <CH2PR13MB3765F002E5F7321D3EE1F5BB8C310@CH2PR13MB3765.namprd13.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
 X-Forefront-PRVS: 0285201563
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(346002)(136003)(39850400004)(366004)(396003)(376002)(189003)(199004)(6512007)(2616005)(107886003)(316002)(956004)(5660300002)(52116002)(36756003)(16526019)(1006002)(6666004)(26005)(66476007)(66946007)(66556008)(186003)(966005)(6486002)(86362001)(8936002)(6506007)(44832011)(8676002)(81156014)(81166006)(4326008)(478600001)(7416002)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3765;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(346002)(136003)(39850400004)(366004)(396003)(376002)(189003)(199004)(6512007)(2616005)(107886003)(316002)(956004)(5660300002)(52116002)(36756003)(16526019)(1006002)(6666004)(26005)(66476007)(66946007)(66556008)(186003)(6486002)(86362001)(8936002)(6506007)(44832011)(8676002)(81156014)(81166006)(4326008)(478600001)(7416002)(2906002)(41533002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3765;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 Received-SPF: None (protection.outlook.com: sifive.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 1GgEoWgoop3FGJbUiDnlG+7BawdWqoHOvb2q/Jc8TE3yxTaiUjol03LpxnrU5rsPrU5W7HA/YufZa/oi1LFrCzOf+Er9qHWJ0VwDhF+5QRUzsOVXD2O2awWpiHtTWafqDAPNSFA8LVRjBrW/Ha+YB2LcBYOOEfF7vxo9ZlxwKKp+imV5X+jyqgYfNSsidXOUtKk9SERiRVfBSu+BagCZ7mv/EampSnrVcrR7O+NegHB0Qx3sO+3nx1BQLyQjTqHAvXrjSTsZQsC6PRnvxDyZ/xEQloKuHUmtTfspHz1GnbVTuvJ1xUU3vByJP+lILwmAxdCG6Al1o+L/dUl1pycGs9Ne8NkL708ETgbx7V4ssuis7vndibTm4z0YT1auBHi+z6HhSIrwStk9YM+4AtXosHvs7vWgmXmAI6C9PW/OpabaXCJQ31BNDh7VPde/m8Uj2Z7XDcPaqkBXvgQSxMd8Wz38A4DygmpQqbuL73i320Y=
+X-Microsoft-Antispam-Message-Info: QczVaYO2FIVaPbRRINN0oxy1XhfhN5JYMejIbDTkKDCZTW0vtOnifvUSNX4kYe1YAO+NXSbLeYRIko1q2XAVqw8C/x6wNoI6SVCcOb9+bi3ISji3KGs48weK10fVdtqOS02pmTrRjTsUHRrCCAFmIN/Nm0aEtlNDAvyHxD5hWtrsYdCEt0x3rAJGuzgP8CoPPsIsVJdVRjIZaloGcQlD4w95pP4bHmLC4zDFOxN2UvLEpeeyFCPHtrhrRZiQw3AvByo4klc0c6NqIgFr7mFpyOycPlRaUwS7wadPHav2PjpUOWZoN7gTxdUWjnGUYqUQM8bhuZb1qDq1DPWxrN6NLFL9tZWbveMNX6nzayeia4sX56HmiV7RfZTGcD9tU4iM2Xu7a9vkgHRvR9d1y9cy3EUlHbuFNtd164ssgjLZZy/QPU32Tv4TtNRdRnw794dICC7z8DkmyGKikoqy0FjJrBaSHMVThHhNky9iKYn2OTI=
 X-OriginatorOrg: sifive.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2d7090a3-fe10-41eb-984c-08d79b2105ce
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2020 07:44:03.1615
+X-MS-Exchange-CrossTenant-Network-Message-Id: 77398771-fe30-42b8-2c80-08d79b2108ca
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2020 07:44:08.1557
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yBcKrqmJO+KbCuGJLPjQAZIbV+PzYyb4vyE2LW+xcl3wVBGUPHBQO/R5I+EnBj4LMpYgJ+okHtN6RTMQLfKsgA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: ywxWHEW4GKCSgyWSsVW1wo0p7C91cjGap/iPI1QeSZLzp2i0Mvi9wdu7OpIv9GAEIO0hU3bd7qj9KO2P3DPBYQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3765
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patchset includes 2 patches. Patch 1 implements cache_get_priv_group
-which make use of a generic ops structure to return a private attribute
-group for custom cacheinfo. Patch 2 implements a private attribute named
-"number_of_ways_enabled" in the cacheinfo framework. Reading this
-attribute returns the number of L2 cache ways enabled at runtime,
+Implement cache_get_priv_group() that will make use of a generic ops
+structure to return a private attribute group for custom cache info.
 
-This patchset is based on Linux v5.5-rc6 and tested on HiFive Unleashed
-board.
+Using riscv_set_cacheinfo_ops() users can hook their own custom function
+to return the private attribute group for cacheinfo. In future we can
+add more ops to this generic ops structure for SOC specific cacheinfo.
 
-v4 vs v3:
-- Rename "sifive_l2_largest_wayenabled" to "l2_largest_wayenabled" and
-  make it a static function
-
-v3 vs v2:
-- As per Anup Patel's suggestion[0], implement a new approach which uses
-  generic ops structure. Hence addition of patch 1 to this series and
-  corresponding changes to patch 2.
-- Dropped "riscv: dts: Add DT support for SiFive L2 cache controller"
-  patch since it is already merged
-- Rebased on Linux v5.5-rc6
-
-Changes in v2:
-- Rebase the series on v5.5-rc3
-- Remove the reserved-memory node from DT
-
-[0]: https://lore.kernel.org/linux-riscv/CAAhSdy0CXde5s_ya=4YvmA4UQ5f5gLU-Z_FaOr8LPni+s_615Q@mail.gmail.com/
-
-Yash Shah (2):
-  riscv: cacheinfo: Implement cache_get_priv_group with a generic ops
-    structure
-  riscv: Add support to determine no. of L2 cache way enabled
-
- arch/riscv/include/asm/cacheinfo.h   | 15 ++++++++++++++
- arch/riscv/kernel/cacheinfo.c        | 17 ++++++++++++++++
- drivers/soc/sifive/sifive_l2_cache.c | 38 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 70 insertions(+)
+Signed-off-by: Yash Shah <yash.shah@sifive.com>
+Reviewed-by: Anup Patel <anup@brainfault.org>
+---
+ arch/riscv/include/asm/cacheinfo.h | 15 +++++++++++++++
+ arch/riscv/kernel/cacheinfo.c      | 17 +++++++++++++++++
+ 2 files changed, 32 insertions(+)
  create mode 100644 arch/riscv/include/asm/cacheinfo.h
 
+diff --git a/arch/riscv/include/asm/cacheinfo.h b/arch/riscv/include/asm/cacheinfo.h
+new file mode 100644
+index 0000000..5d9662e
+--- /dev/null
++++ b/arch/riscv/include/asm/cacheinfo.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#ifndef _ASM_RISCV_CACHEINFO_H
++#define _ASM_RISCV_CACHEINFO_H
++
++#include <linux/cacheinfo.h>
++
++struct riscv_cacheinfo_ops {
++	const struct attribute_group * (*get_priv_group)(struct cacheinfo
++							*this_leaf);
++};
++
++void riscv_set_cacheinfo_ops(struct riscv_cacheinfo_ops *ops);
++
++#endif /* _ASM_RISCV_CACHEINFO_H */
+diff --git a/arch/riscv/kernel/cacheinfo.c b/arch/riscv/kernel/cacheinfo.c
+index 4c90c07..bd0f122 100644
+--- a/arch/riscv/kernel/cacheinfo.c
++++ b/arch/riscv/kernel/cacheinfo.c
+@@ -7,6 +7,23 @@
+ #include <linux/cpu.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
++#include <asm/cacheinfo.h>
++
++static struct riscv_cacheinfo_ops *rv_cache_ops;
++
++void riscv_set_cacheinfo_ops(struct riscv_cacheinfo_ops *ops)
++{
++	rv_cache_ops = ops;
++}
++EXPORT_SYMBOL_GPL(riscv_set_cacheinfo_ops);
++
++const struct attribute_group *
++cache_get_priv_group(struct cacheinfo *this_leaf)
++{
++	if (rv_cache_ops && rv_cache_ops->get_priv_group)
++		return rv_cache_ops->get_priv_group(this_leaf);
++	return NULL;
++}
+ 
+ static void ci_leaf_init(struct cacheinfo *this_leaf,
+ 			 struct device_node *node,
 -- 
 2.7.4
 
