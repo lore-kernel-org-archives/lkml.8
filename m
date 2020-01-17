@@ -2,171 +2,72 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B987DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 01:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72684C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 01:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E6D02075B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 01:46:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iY2seqg1"
+	by mail.kernel.org (Postfix) with ESMTP id 529262064C
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 01:50:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388438AbgAQBqp (ORCPT
+        id S2388562AbgAQBuo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 20:46:45 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:42117 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726741AbgAQBqp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 20:46:45 -0500
-Received: by mail-ed1-f67.google.com with SMTP id e10so20781876edv.9;
-        Thu, 16 Jan 2020 17:46:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sOb/SV2XPZ+MT9Y0830giiJE0Po7TMwJifwEW5Nm80w=;
-        b=iY2seqg1UJtFEnTHYs/aw9KqnM4pWWmmei5HcKqQ7jfMVSyKbbYuuBelmmYaPC7Yj1
-         xqVRmK3XG+UOgyTtnf1utiQEBnO+xnnC9mKhhz+qL8WRRcBtplgIg0jqvpLTaXfzC9Jk
-         5J0bzj+CbKfe3snr72xuFPU58h+S4dtLOmsYLY6tUhDASAZUcJpWPBhKW82YAgYwntgH
-         E0kjwPvAcAN37S408KgBOtCxvD40LqgUVmCSbPOBTyI+pKQazXETSmvysBW0LLzVuGoX
-         lzh6LfbkxgFkH4OXIefpbLx8dOLmNIPeXSLcwpMelcB12pazS/h8uu0rAiAH0erAa7Yc
-         Jxtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sOb/SV2XPZ+MT9Y0830giiJE0Po7TMwJifwEW5Nm80w=;
-        b=A2poryVuYZKN7gNP/bub778mZURg+giMqodU1daEuU4aqdpZ6Zd5f+/0jHgNTRvulj
-         aOOnzIfg9OtxSKZqqufI22Jr+a1sjabEwpsrbOGgy7GkEGFcaMv7C91Vnm4vcC+wa4x6
-         5gyqGqeKSyIXczh5N7MXS8595AIllQMilckyPNq8v5BdNdGA3hH9C0lixM83u3ZLmjgl
-         Sh8xQpYgVX3HP10viFS5V5ZQdkfDVBMz72Ug32LXDaBNc1SyD9s7WJXX+ioZptcxrJd6
-         S1zVVkH9goqg1UjNS6w/FumKbqDP7xz8+xDngMA7PiTVpuhEk0OU7kfOjCy0SOmDYlng
-         1mRg==
-X-Gm-Message-State: APjAAAVFCXRPKEDSHg4zoLwsaKVOYP/Bex3HAuerkYAzCtCnajGvay4J
-        krZInqw8CFbaadqDDBo1tpn1qwAW
-X-Google-Smtp-Source: APXvYqzuBW2dDJYcsyuUBvZcd4tLyHSvrb0OY0P0K/KzBqbWqs3xChHAsXjJpOWpw30Ow+5E5Blg0A==
-X-Received: by 2002:a05:6402:282:: with SMTP id l2mr1382890edv.187.1579225603122;
-        Thu, 16 Jan 2020 17:46:43 -0800 (PST)
-Received: from localhost.localdomain ([109.126.145.157])
-        by smtp.gmail.com with ESMTPSA id bm18sm932370edb.97.2020.01.16.17.46.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 17:46:42 -0800 (PST)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] io_uring: hide uring_fd in ctx
-Date:   Fri, 17 Jan 2020 04:45:59 +0300
-Message-Id: <2aefced4902f33f2b70aaedc32bc8d60a20efd7a.1579225489.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Thu, 16 Jan 2020 20:50:44 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9181 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729602AbgAQBun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 Jan 2020 20:50:43 -0500
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 72BF3EE69A289885EECF;
+        Fri, 17 Jan 2020 09:50:39 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Fri, 17 Jan 2020
+ 09:50:31 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <darrick.wong@oracle.com>, <linux-xfs@vger.kernel.org>,
+        <hch@lst.de>
+CC:     <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] xfs: remove unused variable 'done'
+Date:   Fri, 17 Jan 2020 09:50:11 +0800
+Message-ID: <20200117015011.50412-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-req->ring_fd and req->ring_file are used only during the prep stage
-during submission, which is is protected by mutex. There is no need
-to store them per-request, place them in ctx.
+fs/xfs/xfs_inode.c: In function 'xfs_itruncate_extents_flags':
+fs/xfs/xfs_inode.c:1523:8: warning: unused variable 'done' [-Wunused-variable]
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+commit 4bbb04abb4ee ("xfs: truncate should remove
+all blocks, not just to the end of the page cache")
+left behind this, so remove it.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- fs/io_uring.c | 27 ++++++++++++---------------
- 1 file changed, 12 insertions(+), 15 deletions(-)
+ fs/xfs/xfs_inode.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 2ace3f1962ff..9ee01c7422cb 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -251,6 +251,8 @@ struct io_ring_ctx {
- 	 */
- 	struct fixed_file_data	*file_data;
- 	unsigned		nr_user_files;
-+	int 			ring_fd;
-+	struct file 		*ring_file;
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index 1309f25..1979a00 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -1520,7 +1520,6 @@ xfs_itruncate_extents_flags(
+ 	xfs_fileoff_t		first_unmap_block;
+ 	xfs_filblks_t		unmap_len;
+ 	int			error = 0;
+-	int			done = 0;
  
- 	/* if used, fixed mapped user buffers */
- 	unsigned		nr_user_bufs;
-@@ -475,15 +477,10 @@ struct io_kiocb {
- 	};
- 
- 	struct io_async_ctx		*io;
--	union {
--		/*
--		 * ring_file is only used in the submission path, and
--		 * llist_node is only used for poll deferred completions
--		 */
--		struct file		*ring_file;
--		struct llist_node	llist_node;
--	};
--	int				ring_fd;
-+	/*
-+	 * llist_node is only used for poll deferred completions
-+	 */
-+	struct llist_node		llist_node;
- 	bool				has_user;
- 	bool				in_async;
- 	bool				needs_fixed_file;
-@@ -1139,7 +1136,6 @@ static struct io_kiocb *io_get_req(struct io_ring_ctx *ctx,
- 
- got_it:
- 	req->io = NULL;
--	req->ring_file = NULL;
- 	req->file = NULL;
- 	req->ctx = ctx;
- 	req->flags = 0;
-@@ -2721,7 +2717,7 @@ static int io_close_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 
- 	req->close.fd = READ_ONCE(sqe->fd);
- 	if (req->file->f_op == &io_uring_fops ||
--	    req->close.fd == req->ring_fd)
-+	    req->close.fd == req->ctx->ring_fd)
- 		return -EBADF;
- 
- 	return 0;
-@@ -4382,7 +4378,7 @@ static int io_grab_files(struct io_kiocb *req)
- 	int ret = -EBADF;
- 	struct io_ring_ctx *ctx = req->ctx;
- 
--	if (!req->ring_file)
-+	if (!ctx->ring_file)
- 		return -EBADF;
- 
- 	rcu_read_lock();
-@@ -4393,7 +4389,7 @@ static int io_grab_files(struct io_kiocb *req)
- 	 * the fd has changed since we started down this path, and disallow
- 	 * this operation if it has.
- 	 */
--	if (fcheck(req->ring_fd) == req->ring_file) {
-+	if (fcheck(ctx->ring_fd) == ctx->ring_file) {
- 		list_add(&req->inflight_entry, &ctx->inflight_list);
- 		req->flags |= REQ_F_INFLIGHT;
- 		req->work.files = current->files;
-@@ -4765,6 +4761,9 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
- 		statep = &state;
- 	}
- 
-+	ctx->ring_fd = ring_fd;
-+	ctx->ring_file = ring_file;
-+
- 	for (i = 0; i < nr; i++) {
- 		const struct io_uring_sqe *sqe;
- 		struct io_kiocb *req;
-@@ -4797,8 +4796,6 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
- 			}
- 		}
- 
--		req->ring_file = ring_file;
--		req->ring_fd = ring_fd;
- 		req->has_user = *mm != NULL;
- 		req->in_async = async;
- 		req->needs_fixed_file = async;
+ 	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
+ 	ASSERT(!atomic_read(&VFS_I(ip)->i_count) ||
 -- 
-2.24.0
+2.7.4
+
 
