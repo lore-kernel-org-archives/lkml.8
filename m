@@ -2,185 +2,68 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BACFC33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 06:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51031C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 06:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E9422082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 06:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 229FE206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 06:56:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579244183;
+	bh=RL6Suh/Keq4jZcRU9Xr3AdFfyHTsGr1REc7Cisq2aSY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hkbK6lnCSLvVCF8tXe7UVQq2AQH4xbCxKCqBeH8VAQwmEMKzDexTMMWWuk/q3cGuY
+	 v5yvKL4y32N7k8ZiE8APZyj91BVVBXepGCB4MJrZs5Sg7OGPvHPpyhFa7DI4UCAZMq
+	 sj+YXHqkc6+z8dGH8l950SmOeRDUGBzkRap1GbgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729148AbgAQGyN (ORCPT
+        id S1727766AbgAQG4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 01:54:13 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9648 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726726AbgAQGyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 01:54:12 -0500
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5BF37D7B6E95EAD49046;
-        Fri, 17 Jan 2020 14:54:10 +0800 (CST)
-Received: from [127.0.0.1] (10.74.221.148) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Fri, 17 Jan 2020
- 14:54:04 +0800
-Subject: Re: [PATCH] net: optimize cmpxchg in ip_idents_reserve
-To:     Eric Dumazet <eric.dumazet@gmail.com>,
-        David Miller <davem@davemloft.net>
-References: <1579058620-26684-1-git-send-email-zhangshaokun@hisilicon.com>
- <20200116.042722.153124126288244814.davem@davemloft.net>
- <930faaff-4d18-452d-2e44-ef05b65dc858@gmail.com>
- <1b3aaddf-22f5-1846-90f1-42e68583c1e4@gmail.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <jinyuqi@huawei.com>, <kuznet@ms2.inr.ac.ru>,
-        <yoshfuji@linux-ipv6.org>, <edumazet@google.com>,
-        <guoyang2@huawei.com>, Will Deacon <will@kernel.org>
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-Message-ID: <430496fc-9f26-8cb4-91d8-505fda9af230@hisilicon.com>
-Date:   Fri, 17 Jan 2020 14:54:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.1.1
+        Fri, 17 Jan 2020 01:56:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46002 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726596AbgAQG4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 01:56:21 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2CB52072B;
+        Fri, 17 Jan 2020 06:56:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579244181;
+        bh=RL6Suh/Keq4jZcRU9Xr3AdFfyHTsGr1REc7Cisq2aSY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PRY0XkAek+7pTgd7uKpNvBFyBzvlmpJVHK5TqszaeG+o2P/NnBhCYKljP1Jv8Ec+/
+         sAQrict3f2vUkY5QwPiebRd/+iy1yR1/UbjcffvUWyp/XjCMEieCHWdLDZKKJaZ4eq
+         dFarjSUnJ/nILpHSDECkgVDB3B8LYUF+YgtonTzQ=
+Date:   Fri, 17 Jan 2020 07:54:26 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL v2] PHY: For 5.6
+Message-ID: <20200117065426.GA1699866@kroah.com>
+References: <20200117053540.20451-1-kishon@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <1b3aaddf-22f5-1846-90f1-42e68583c1e4@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.221.148]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200117053540.20451-1-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Cc Will Deacon,
-
-On 2020/1/16 23:19, Eric Dumazet wrote:
+On Fri, Jan 17, 2020 at 11:05:40AM +0530, Kishon Vijay Abraham I wrote:
+> Hi Greg,
 > 
+> Please find the updated pull request for 5.6 merge window below.
 > 
-> On 1/16/20 7:12 AM, Eric Dumazet wrote:
->>
->>
->> On 1/16/20 4:27 AM, David Miller wrote:
->>> From: Shaokun Zhang <zhangshaokun@hisilicon.com>
->>> Date: Wed, 15 Jan 2020 11:23:40 +0800
->>>
->>>> From: Yuqi Jin <jinyuqi@huawei.com>
->>>>
->>>> atomic_try_cmpxchg is called instead of atomic_cmpxchg that can reduce
->>>> the access number of the global variable @p_id in the loop. Let's
->>>> optimize it for performance.
->>>>
->>>> Cc: "David S. Miller" <davem@davemloft.net>
->>>> Cc: Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>
->>>> Cc: Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
->>>> Cc: Eric Dumazet <edumazet@google.com>
->>>> Cc: Yang Guo <guoyang2@huawei.com>
->>>> Signed-off-by: Yuqi Jin <jinyuqi@huawei.com>
->>>> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
->>>
->>> I doubt this makes any measurable improvement in performance.
->>>
->>> If you can document a specific measurable improvement under
->>> a useful set of circumstances for real usage, then put those
->>> details into the commit message and resubmit.
->>>
->>> Otherwise, I'm not applying this, sorry.
->>>
->>
->>
->> Real difference that could be made here is to 
->> only use this cmpxchg() dance for CONFIG_UBSAN
->>
->> When CONFIG_UBSAN is not set, atomic_add_return() is just fine.
->>
->> (Supposedly UBSAN should not warn about that either, but this depends on compiler version)
-> 
-> I will test something like :
-> 
-> diff --git a/net/ipv4/route.c b/net/ipv4/route.c
-> index 2010888e68ca96ae880481973a6d808d6c5612c5..e2fa972f5c78f2aefc801db6a45b2a81141c3028 100644
-> --- a/net/ipv4/route.c
-> +++ b/net/ipv4/route.c
-> @@ -495,11 +495,15 @@ u32 ip_idents_reserve(u32 hash, int segs)
->         if (old != now && cmpxchg(p_tstamp, old, now) == old)
->                 delta = prandom_u32_max(now - old);
->  
-> -       /* Do not use atomic_add_return() as it makes UBSAN unhappy */
-> +#ifdef CONFIG_UBSAN
+> Here I fixed the incorrect commit ID in Fixes tag on one of the
+> patch. Rest of it remains the same as in v1 PR.
 
-I appreciate Eric's idea.
+Ok, that worked, I've pulled this version now.
 
-> +       /* Do not use atomic_add_return() as it makes old UBSAN versions unhappy */
->         do {
->                 old = (u32)atomic_read(p_id);
->                 new = old + delta + segs;
->         } while (atomic_cmpxchg(p_id, old, new) != old);
+thanks,
 
-But about this, I still think that we can try to use atomic_try_cmpxchg instead
-of atomic_cmpxchg, like refcount_add_not_zero in include/linux/refcount.h
-
-I abstract the model, as follow:
-while (get_cycles() <= (time_temp + t_cnt))
-{
-	do{
-		old_temp = wk_in->num.counter;
-		oldt = atomic64_cmpxchg(&wk_in->num, old_temp, old_temp+1);
-	}while(oldt != old_temp);
-
-	myndelay(delay_o);
-	w_cnt+=1;
-}
-
-val = atomic64_read(&wk_in->num);
-while (get_cycles() <= (time_temp + t_cnt))
-{
-	do{
-		new_val = val + 1;
-			
-	}while(!atomic64_try_cmpxchg(&wk_in->num, &val, new_val));
-
-	myndelay(delay_o);
-	w_cnt += 1;
-}
-
-If we take the access global variable out of loop, the performance become better
-on both x86 and arm64, as follow:
-Kunpeng920: 24 cores call it and the successful operations per second
-atomic64_read in loop 	   atomic64_read out of the loop
-6291034	                   8751962
-
-Intel 6248: 20 cores call it and the successful operations per second
-atomic64_read in loop 	   atomic64_read out of the loop
-8934792	                   9978998
-
-So how about this? ;-)
-
-                delta = prandom_u32_max(now - old);
-
-+#ifdef CONFIG_UBSAN
-        /* Do not use atomic_add_return() as it makes UBSAN unhappy */
-+       old = (u32)atomic_read(p_id);
-        do {
--               old = (u32)atomic_read(p_id);
-                new = old + delta + segs;
--       } while (atomic_cmpxchg(p_id, old, new) != old);
-+       } while (!atomic_try_cmpxchg(p_id, &old, new));
-+#else
-+       new = atomic_add_return(segs + delta, p_id);
-+#endif
-
-Thanks,
-Shaokun
-
-
-> +#else
-> +       new = atomic_add_return(segs + delta, p_id);
-> +#endif
->  
->         return new - segs;
->  }
-> 
-> 
-> .
-> 
-
+greg k-h
