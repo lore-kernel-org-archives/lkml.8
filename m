@@ -2,193 +2,164 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7FAC33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C579C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A2A621582
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:04:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579298694;
-	bh=ec1O7egKn0cduWWf5vzCmil8ePkqut6YAK6KdPx2npo=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=Pe8yo7rcdVaNjfhG9bCVXfyFV2JoYFDIn35rQQowsGGzB8FRCymiNJCAAR6G2SV1D
-	 T2Rnw7Cr8A9AhrcjbmaXmWlo4t/79eB2R4Pogz1EKUb6CHwtz2GX9BK9yRDDrXfVIm
-	 dfnPfa0Yonr4cdBdo0zMTVlqWLRxKsn/SnUTMzQo=
+	by mail.kernel.org (Postfix) with ESMTP id CEB4321D56
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:11:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IY7dG2oF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729967AbgAQWEx (ORCPT
+        id S1729968AbgAQWLv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 17:04:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48550 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729246AbgAQWEx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 17:04:53 -0500
-Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B92C620748;
-        Fri, 17 Jan 2020 22:04:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579298692;
-        bh=ec1O7egKn0cduWWf5vzCmil8ePkqut6YAK6KdPx2npo=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=FQdHl2O10HrtTushfop9FCpbpDKM3TVun3w2BJFDPsyH8wVeYKwl1a01v/858k4Lx
-         0xfNGsXyOCLKCn+imeFjfkkEVslfzjZpwN7TLCnJGuwE1be3mK6wce1h4jqviLuTKo
-         FZdgxfa8yABGmINobhqsnOHaAeRatPajs4yPNrJw=
-Message-ID: <1579298690.4518.15.camel@kernel.org>
-Subject: Re: Unresolved reference for histogram variable
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Date:   Fri, 17 Jan 2020 16:04:50 -0600
-In-Reply-To: <20200116165658.4e8d15fb@gandalf.local.home>
-References: <20200116154216.58ca08eb@gandalf.local.home>
-         <20200116165658.4e8d15fb@gandalf.local.home>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.1-1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 17 Jan 2020 17:11:51 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38738 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729246AbgAQWLu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 17:11:50 -0500
+Received: by mail-pf1-f195.google.com with SMTP id x185so12559176pfc.5
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 14:11:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=I07pR0oCHYZ+OosxxFEWPv5kDJlwMJ/Csumm0eUVygc=;
+        b=IY7dG2oFgZVtqoBqrQQrRCWrDUSV1LC/NSDgr//4rHlhS6Vp+V2u9iTNfTll0hhDN0
+         DdXnXLiBhzLElgcNysVIBSjuv1OZHnhvzacjA3ME7q7snNAM7nhpF2/eLxykhfZW9nxZ
+         p9bT7Qf/wSA3MOfjBFHK00dxMdnX6IDsCoC1fY5U2jLU64alEpoY1r9mUrfYgG3Utqsq
+         xDxk6JCxmxEFka1Jf6072QxB24IglEagJ24t0HdToxnLnNCEuF6zAoMUQaNJvfDrgwaf
+         5AjBAIM9OAWoOBELnt7qJa4Hs15KW19nZkxmsmx4U3bj7f18zSMFOyPOyJctM0TiPkZs
+         pkOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=I07pR0oCHYZ+OosxxFEWPv5kDJlwMJ/Csumm0eUVygc=;
+        b=CJAfkgeCAeQMsCz4f5dvE6ilVa4LSLRng5W1jahkMDiXSAeGgXpT3lkiITJZF1kifT
+         03jzP8mt5POxoi7j6uwxXfKIRz4HpKIuO1KzBqnfpI9jSdeaLqzbJkg2Dnepii8548CF
+         xCN0oUtrUBdkz4L5dMRn5G9bu7EjnHrksPyWEs3PnXq9pvlbQj5S7o42uT+gO1G9bLqm
+         h046dWbesVfZH2bOdE0llJQrem1wyTjHlBQtbqwOmkl+YTS2bLIf6kxlmlr/aPcq9lOv
+         wrpLA3dkGrZuPJc2NfBZUXspu1gxQDoFuPSmfe8FR34F0vJfhkvwODQYGpRmT3cv5NSv
+         zxqg==
+X-Gm-Message-State: APjAAAVjmhQdijiSBcBEJU/QeDB/A0K8daE8C13AGzFplbbxIB9tVbU+
+        RiESXHIywo5o9EeX3h6MU7OhKkCkDto=
+X-Google-Smtp-Source: APXvYqzl5ui39E2Jhw94MkIfpeo/6fENDkaM2NcZLxDoCcu8TbV6QLo/CC4vzcYcHtJWW6l4jIGhIA==
+X-Received: by 2002:a63:d62:: with SMTP id 34mr49600714pgn.268.1579299109485;
+        Fri, 17 Jan 2020 14:11:49 -0800 (PST)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id a195sm30899088pfa.120.2020.01.17.14.11.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2020 14:11:48 -0800 (PST)
+Date:   Fri, 17 Jan 2020 14:11:48 -0800 (PST)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: [patch v2] mm, thp: fix defrag setting if newline is not used
+In-Reply-To: <a3c269a7-ff41-ee7c-9041-ee06e50c5a10@suse.cz>
+Message-ID: <alpine.DEB.2.21.2001171411020.56385@chino.kir.corp.google.com>
+References: <alpine.DEB.2.21.2001141757490.108121@chino.kir.corp.google.com> <20200116191609.3972fd5301cf364a27381923@linux-foundation.org> <025511aa-4721-2edb-d658-78d6368a9101@suse.cz> <alpine.DEB.2.21.2001170136280.20618@chino.kir.corp.google.com>
+ <a3c269a7-ff41-ee7c-9041-ee06e50c5a10@suse.cz>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
+If thp defrag setting "defer" is used and a newline is *not* used when
+writing to the sysfs file, this is interpreted as the "defer+madvise"
+option.
 
-On Thu, 2020-01-16 at 16:56 -0500, Steven Rostedt wrote:
-> On Thu, 16 Jan 2020 15:42:16 -0500
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > in parse_expr():
-> > 
-> > 	operand1->read_once = true;
-> > 	operand2->read_once = true;
-> > 
-> > Why is that?
-> > 
-> > This means that any variable used in an expression can not be use
-> > later
-> > on.
-> > 
-> > Or should the variable be detected that it is used multiple times
-> > in
-> > the expression, and have the parser detect this, and just reuse the
-> > same variable multiple times?
-> 
-> This patch seems to fix the problem, and lets us reuse the same
-> variable multiple times.
-> 
+This is because we do prefix matching and if five characters are written
+without a newline, the current code ends up comparing to the first five
+bytes of the "defer+madvise" option and using that instead.
 
-I tested this patch after removing the checks for size and is_signed,
-which aren't needed because just the var.idx and hist_data is enough to
-know you're referencing the same variable.
+Use the more appropriate sysfs_streq() that handles the trailing newline
+for us.  Since this doubles as a nice cleanup, do it in enabled_store()
+as well.
 
-So removing these lines: 
+Fixes: 21440d7eb904 ("mm, thp: add new defer+madvise defrag option")
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Suggested-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: David Rientjes <rientjes@google.com>
+---
+ Latest 5.5-rc6 doesn't boot for me, something to be debugged separately,
+ so this was tested on 5.4.  No changes in this area, however, between
+ the two kernels.
 
-		    ref_field->size == var_field->size &&
-		    ref_field->is_signed == var_field->is_signed) {
+ mm/huge_memory.c | 24 ++++++++----------------
+ 1 file changed, 8 insertions(+), 16 deletions(-)
 
-passed selftests and the specific failure you found.
-
-Just to clarify some more about what the problem was is that without
-your patch, we would have two separate references to the same variable,
-and during resolve_var_refs(), they'd both want to be resolved
-separately, so in this case, since the first reference to start wasn't
-part of an expression, it wouldn't get the read-once flag set, so would
-be read normally, and then the second reference would do the read-once
-read and also be read but using read-once.  So everything worked and
-you didn't see a problem: 
-
- from: start2=$start,delta=common_timestamp-$start
-
-In the second case, when you switched them around, the first reference
-would be resolved by doing the read-once, and following that the second
-reference would try to resolve and see that the variable had already
-been read, so failed as unset, which caused it to short-circuit out and
-not do the trigger action to generate the synthetic event:
-
- to: delta=common_timestamp-$start,start2=$start
-
-With your patch, we only have the single resolution which happens
-correctly the one time it's resolved, so this can't happen.
-
-Anyway, here's my reviewed and tested-by:
-
-Reviewed-by: Tom Zanuss <zanussi@kernel.org>
-Tested-by: Tom Zanussi <zanussi@kernel.org>
-
-Thanks,
-
-Tom
-
-
-
-> -- Steve
-> 
-> diff --git a/kernel/trace/trace_events_hist.c
-> b/kernel/trace/trace_events_hist.c
-> index 117a1202a6b9..b7f944735a4a 100644
-> --- a/kernel/trace/trace_events_hist.c
-> +++ b/kernel/trace/trace_events_hist.c
-> @@ -116,6 +116,7 @@ struct hist_field {
->  	struct ftrace_event_field	*field;
->  	unsigned long			flags;
->  	hist_field_fn_t			fn;
-> +	unsigned int			ref;
->  	unsigned int			size;
->  	unsigned int			offset;
->  	unsigned int                    is_signed;
-> @@ -2432,8 +2433,16 @@ static int contains_operator(char *str)
->  	return field_op;
->  }
->  
-> +static void get_hist_field(struct hist_field *hist_field)
-> +{
-> +	hist_field->ref++;
-> +}
-> +
->  static void __destroy_hist_field(struct hist_field *hist_field)
->  {
-> +	if (--hist_field->ref > 1)
-> +		return;
-> +
->  	kfree(hist_field->var.name);
->  	kfree(hist_field->name);
->  	kfree(hist_field->type);
-> @@ -2475,6 +2484,8 @@ static struct hist_field
-> *create_hist_field(struct hist_trigger_data *hist_data,
->  	if (!hist_field)
->  		return NULL;
->  
-> +	hist_field->ref = 1;
-> +
->  	hist_field->hist_data = hist_data;
->  
->  	if (flags & HIST_FIELD_FL_EXPR || flags &
-> HIST_FIELD_FL_ALIAS)
-> @@ -2670,6 +2681,19 @@ static struct hist_field
-> *create_var_ref(struct hist_trigger_data *hist_data,
->  {
->  	unsigned long flags = HIST_FIELD_FL_VAR_REF;
->  	struct hist_field *ref_field;
-> +	int i;
-> +
-> +	for (i = 0; i < hist_data->n_var_refs; i++) {
-> +		ref_field = hist_data->var_refs[i];
-> +		/* Maybe this is overkill? */
-> +		if (ref_field->var.idx == var_field->var.idx &&
-> +		    ref_field->var.hist_data == var_field->hist_data 
-> &&
-> +		    ref_field->size == var_field->size &&
-> +		    ref_field->is_signed == var_field->is_signed) {
-> +			get_hist_field(ref_field);
-> +			return ref_field;
-> +		}
-> +	}
->  
->  	ref_field = create_hist_field(var_field->hist_data, NULL,
-> flags, NULL);
->  	if (ref_field) {
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 13cc93785006..1c61dea937bc 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -177,16 +177,13 @@ static ssize_t enabled_store(struct kobject *kobj,
+ {
+ 	ssize_t ret = count;
+ 
+-	if (!memcmp("always", buf,
+-		    min(sizeof("always")-1, count))) {
++	if (sysfs_streq(buf, "always")) {
+ 		clear_bit(TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG, &transparent_hugepage_flags);
+ 		set_bit(TRANSPARENT_HUGEPAGE_FLAG, &transparent_hugepage_flags);
+-	} else if (!memcmp("madvise", buf,
+-			   min(sizeof("madvise")-1, count))) {
++	} else if (sysfs_streq(buf, "madvise")) {
+ 		clear_bit(TRANSPARENT_HUGEPAGE_FLAG, &transparent_hugepage_flags);
+ 		set_bit(TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG, &transparent_hugepage_flags);
+-	} else if (!memcmp("never", buf,
+-			   min(sizeof("never")-1, count))) {
++	} else if (sysfs_streq(buf, "never")) {
+ 		clear_bit(TRANSPARENT_HUGEPAGE_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG, &transparent_hugepage_flags);
+ 	} else
+@@ -250,32 +247,27 @@ static ssize_t defrag_store(struct kobject *kobj,
+ 			    struct kobj_attribute *attr,
+ 			    const char *buf, size_t count)
+ {
+-	if (!memcmp("always", buf,
+-		    min(sizeof("always")-1, count))) {
++	if (sysfs_streq(buf, "always")) {
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG, &transparent_hugepage_flags);
+ 		set_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
+-	} else if (!memcmp("defer+madvise", buf,
+-		    min(sizeof("defer+madvise")-1, count))) {
++	} else if (sysfs_streq(buf, "defer+madvise")) {
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG, &transparent_hugepage_flags);
+ 		set_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
+-	} else if (!memcmp("defer", buf,
+-		    min(sizeof("defer")-1, count))) {
++	} else if (sysfs_streq(buf, "defer")) {
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG, &transparent_hugepage_flags);
+ 		set_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
+-	} else if (!memcmp("madvise", buf,
+-			   min(sizeof("madvise")-1, count))) {
++	} else if (sysfs_streq(buf, "madvise")) {
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
+ 		set_bit(TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG, &transparent_hugepage_flags);
+-	} else if (!memcmp("never", buf,
+-			   min(sizeof("never")-1, count))) {
++	} else if (sysfs_streq(buf, "never")) {
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
