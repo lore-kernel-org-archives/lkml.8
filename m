@@ -2,124 +2,161 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9DCC33CAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A472C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EB7520748
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:57:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4E282072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 00:58:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="LCUsaS5g"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fUt6uxpP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387527AbgAQA5q (ORCPT
+        id S2387606AbgAQA6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 19:57:46 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:44485 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732786AbgAQA5o (ORCPT
+        Thu, 16 Jan 2020 19:58:50 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:43465 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730151AbgAQA6u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 19:57:44 -0500
-Received: by mail-il1-f195.google.com with SMTP id z12so19897671iln.11
-        for <linux-kernel@vger.kernel.org>; Thu, 16 Jan 2020 16:57:44 -0800 (PST)
+        Thu, 16 Jan 2020 19:58:50 -0500
+Received: by mail-lf1-f66.google.com with SMTP id 9so17043524lfq.10;
+        Thu, 16 Jan 2020 16:58:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Mu/pNuS/FahWpK5OpV2jIoZhFJwqyLEItDAbCnL8HQk=;
-        b=LCUsaS5g4PPDTy9O4qGRxrisdep17HNjeETndzOWv5yxZOS+j2Xu+LeeAqMogg8iaW
-         cLVTi7aOyerVIelFKy5lA6kgXDwkDXk+aKF7KioY00mjzEUBY+vgbM4dOX92JYvHtqKf
-         rTGpaIqfgjyKbAd5fMyIjyNJgGLdHGHa2vHBAo8Uxvz3G8K44fvHUfy+sup9AtiWDwOb
-         TfuUowM2t/0AUnc8xO5xlRGz5yBdTcoZBDBlZeVublMSPRYaOEHQP49P73Ct2DTTzKfk
-         5Jr7pA3cQq/UhEABQSeT532qQEo1QmxWQFBSjU3Oe4T02soaCuQkAkwADCe5TfcsDj0Z
-         I2bw==
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fRCSf2IOoA77e10gK8Ib+9UK9eBjNY5RtJQmOUUp8sI=;
+        b=fUt6uxpPvp6K70miMr4/NAm39ZXsOg1k7TRPkDKT9OjjXAhu2WNgNGdsVL2LabEy0d
+         W59D59O8ykWjmJlSoSVjlW87eA5YNkxN5kqegYH6JHga60kvtqN4RLGpOjqAUcSbjt5s
+         5AgsjfkCwTfAKvfDIcRebZHZLP0uPqvL3DtmJTqAgB+pORujalyfeP9BgRio5Ofqaule
+         uu0xNEtQJ+/kFz05LCqkPqkH0WQlCb6EXvM4Oedjwyi+4XKA3ZBmGV+nk1X+QToaZYBQ
+         OQEOi6KLkvBNxc4c4xRWk1GV6Cg2uHxH/0/uiy9cVrmJVSW2LevlxjAcGLDpsBGC4jd7
+         yz4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Mu/pNuS/FahWpK5OpV2jIoZhFJwqyLEItDAbCnL8HQk=;
-        b=Q/9GKnzNZNA5/a2CGRKDfQfQKW7GMgWMaNfl7fWVm0/D0qiY2tCyQRMO7r6jStHJr3
-         N4LfKs1nSIHcMxBl2Qg2tz2cG/6wO/QuaRKBe+p/ar+9wssIlWPPoNWy23KzLQJRBoKu
-         nq4YnVK/g6WdR1QAc4bhV5a25ZPr+bTsG8F9twBxhYqWhUCpIZ3QZtc5HtZGs4B3qziy
-         DEB7Zk5JUoV3AO1UmE/30VoWifJrALj6W5SHXh9uVns2t5+gcTvBmi6txiFVxe8lAoaH
-         tH1ut8l+Dq3D9azl+buJy+2u9ak9dk07Xr7whJc+5/OQ4b9fbi1Dn+shXqLZ0ygwRPvB
-         +l4w==
-X-Gm-Message-State: APjAAAWJSfFAHYcdlhporZL/5YPAjhe5J3PYAhYY4Lh/8wzXaC0vWqtB
-        RzL3j9lOc8NXG9nTF6EY+YnWZhBm24bew0otiW5ncw==
-X-Google-Smtp-Source: APXvYqw/CkNe0hxSpvYSyP+wzmWexXT7AUfno1y7RoiK65BXmWWA+WUuANcefhLNvisDdntfyHqLzezUq0I053z6qP4=
-X-Received: by 2002:a92:afc5:: with SMTP id v66mr909656ill.123.1579222663852;
- Thu, 16 Jan 2020 16:57:43 -0800 (PST)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fRCSf2IOoA77e10gK8Ib+9UK9eBjNY5RtJQmOUUp8sI=;
+        b=beGshsBRuQvetu2ZwzDLRSGdYxnXgeiRU3LZ6jirrC4rFUPoC58ZK+KmwdreImXCGQ
+         Ahic3fizNbGmWX3KNbvDQElItTzkobHekm+0qgo2108L0ohdi1cTO+21ghhwVTWebMDH
+         IlqGUCyRdVWM4eDm6sOwarSrSMCEWPBPHYyKt2noHKbSddngUHdodyzmXUXO5/EGntf+
+         UeDOjMl4r8B43BJRcYmvwE0Pm+xu3pPwrIyWmFrMR5ST+tSydTR878/gg0/DhqpwiSDT
+         gANz7aLSHOhv6zUySwhxuzKbVMp96rh3AdxBZcNito+BfabB3yXzX7mxqwOP5iZ40D57
+         aytA==
+X-Gm-Message-State: APjAAAWvTMZFJ1B2aVAUojq8ZeRrD0I/SR87F9elx3uvdJBaqg1nT3Qf
+        2Y/2cGfBbI2xFiYB/shcBuyNbAQa
+X-Google-Smtp-Source: APXvYqySz36mKaX6aI7zNsuPJ/j5CU7xnYF9siWAveGCc27fYbn9xeFHVsbR4krPyitIp+vtV2i4tg==
+X-Received: by 2002:ac2:58c2:: with SMTP id u2mr4023936lfo.206.1579222728101;
+        Thu, 16 Jan 2020 16:58:48 -0800 (PST)
+Received: from localhost.localdomain ([109.126.145.157])
+        by smtp.gmail.com with ESMTPSA id d24sm11459100lja.82.2020.01.16.16.58.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 16:58:47 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] io_uring: optimise use of ctx->drain_next
+Date:   Fri, 17 Jan 2020 03:57:59 +0300
+Message-Id: <6063bf6baa6fa1f5ec45272eb7c0b428698ded7f.1579222634.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <20200110063755.19804-1-zhang.lyra@gmail.com> <20200110063755.19804-3-zhang.lyra@gmail.com>
- <CAOesGMjNkVpTOhSrLUKjNZnKFk55DTgg29QzVBEFVh3Z=Ra+cQ@mail.gmail.com>
- <CAAfSe-tx+S_tc1y0c5wobQy2xygNr01b3LOqQ4FQtHoDNhHNeA@mail.gmail.com> <CAOesGMhNxkyAYMeHSRAuxzR51-5eHZ278LLVYe-3jaS7EKa-jw@mail.gmail.com>
-In-Reply-To: <CAOesGMhNxkyAYMeHSRAuxzR51-5eHZ278LLVYe-3jaS7EKa-jw@mail.gmail.com>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Thu, 16 Jan 2020 16:57:32 -0800
-Message-ID: <CAOesGMi=1uKK=rCyD+d5yTE3O+HpNXTntNghLaWXt86z+GaKhg@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] arm64: dts: Add Unisoc's SC9863A SoC support
-To:     Chunyan Zhang <zhang.lyra@gmail.com>
-Cc:     SoC Team <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 4:56 PM Olof Johansson <olof@lixom.net> wrote:
->
-> On Sun, Jan 12, 2020 at 5:44 PM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
-> >
-> > On Sat, 11 Jan 2020 at 01:41, Olof Johansson <olof@lixom.net> wrote:
-> > >
-> > > Hi,
-> > >
-> > > On Thu, Jan 9, 2020 at 10:38 PM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
-> > > >
-> > > > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> > > >
-> > > > Add basic DT to support Unisoc's SC9863A, with this patch,
-> > > > the board sp9863a-1h10 can run into console.
-> > > >
-> > > > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> > >
-> > > You reposting a patch that we have already applied, and there's also
-> > > no changelog for it in the description.
-> >
-> > Oh, I have to explain a bit.
-> >
-> > I was expecting an email which inform me that the patch was got merged.
-> > That's the reason I resent this patchset.
->
-> Ah, yes -- me too. This was a combination of two things:
->
-> 1) The patch was originally sent to arm@kernel.org, not soc@kernel.org
-> 2) I bounced it to there to apply it using PatchWork
->
-> ... but, it seems that the bot won't reply to patches that have been
-> bounced, only those who were originally sent there.
->
-> In this case, I should have made a manual reply -- I've gotten too
-> used to the bot and relied on it doing it.
->
-> > About the changelog, this new patchset actually had a cover-letter[1]
-> > in which I documented a little changes (which was not important now).
->
-> Not sure why, but I seem to have missed it. Maybe because it was 3
-> patches on v5, and I didn't notice that one was now a cover letter.
-> Anyway, all good.
->
-> I'll also apply 1/2 shortly.
+Move setting ctx->drain_next to the only place it could be set, when it
+got linked non-head requests. The same for checking it, it's interesting
+only for a head of a link or a non-linked request.
 
-I'm ahead of myself, it's already applied as well.
+No functional changes here. This removes some code from the common path
+and also removes REQ_F_DRAIN_LINK flag, as it doesn't need it anymore.
 
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+---
+ fs/io_uring.c | 41 +++++++++++++++++++++--------------------
+ 1 file changed, 21 insertions(+), 20 deletions(-)
 
--Olof
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index ea91f4d92fc0..2ace3f1962ff 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -506,7 +506,6 @@ struct io_kiocb {
+ #define REQ_F_LINK		64	/* linked sqes */
+ #define REQ_F_LINK_TIMEOUT	128	/* has linked timeout */
+ #define REQ_F_FAIL_LINK		256	/* fail rest of links */
+-#define REQ_F_DRAIN_LINK	512	/* link should be fully drained */
+ #define REQ_F_TIMEOUT		1024	/* timeout request */
+ #define REQ_F_ISREG		2048	/* regular file */
+ #define REQ_F_MUST_PUNT		4096	/* must be punted even for NONBLOCK */
+@@ -4543,12 +4542,6 @@ static void io_queue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ {
+ 	int ret;
+ 
+-	if (unlikely(req->ctx->drain_next)) {
+-		req->flags |= REQ_F_IO_DRAIN;
+-		req->ctx->drain_next = 0;
+-	}
+-	req->ctx->drain_next = (req->flags & REQ_F_DRAIN_LINK) != 0;
+-
+ 	ret = io_req_defer(req, sqe);
+ 	if (ret) {
+ 		if (ret != -EIOCBQUEUED) {
+@@ -4615,8 +4608,10 @@ static bool io_submit_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
+ 	if (*link) {
+ 		struct io_kiocb *head = *link;
+ 
+-		if (sqe_flags & IOSQE_IO_DRAIN)
+-			head->flags |= REQ_F_DRAIN_LINK | REQ_F_IO_DRAIN;
++		if (sqe_flags & IOSQE_IO_DRAIN) {
++			head->flags |= REQ_F_IO_DRAIN;
++			ctx->drain_next = 1;
++		}
+ 
+ 		if (sqe_flags & IOSQE_IO_HARDLINK)
+ 			req->flags |= REQ_F_HARDLINK;
+@@ -4640,18 +4635,24 @@ static bool io_submit_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
+ 			io_queue_link_head(head);
+ 			*link = NULL;
+ 		}
+-	} else if (sqe_flags & (IOSQE_IO_LINK|IOSQE_IO_HARDLINK)) {
+-		req->flags |= REQ_F_LINK;
+-		if (sqe_flags & IOSQE_IO_HARDLINK)
+-			req->flags |= REQ_F_HARDLINK;
+-
+-		INIT_LIST_HEAD(&req->link_list);
+-		ret = io_req_defer_prep(req, sqe);
+-		if (ret)
+-			req->flags |= REQ_F_FAIL_LINK;
+-		*link = req;
+ 	} else {
+-		io_queue_sqe(req, sqe);
++		if (unlikely(ctx->drain_next)) {
++			req->flags |= REQ_F_IO_DRAIN;
++			req->ctx->drain_next = 0;
++		}
++		if (sqe_flags & (IOSQE_IO_LINK|IOSQE_IO_HARDLINK)) {
++			req->flags |= REQ_F_LINK;
++			if (sqe_flags & IOSQE_IO_HARDLINK)
++				req->flags |= REQ_F_HARDLINK;
++
++			INIT_LIST_HEAD(&req->link_list);
++			ret = io_req_defer_prep(req, sqe);
++			if (ret)
++				req->flags |= REQ_F_FAIL_LINK;
++			*link = req;
++		} else {
++			io_queue_sqe(req, sqe);
++		}
+ 	}
+ 
+ 	return true;
+-- 
+2.24.0
+
