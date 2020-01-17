@@ -2,79 +2,175 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24AC5C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB34EC33CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E66E0206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1926206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:14:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="BW+cTQ8x"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w4bY3R8T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728775AbgAQOLt (ORCPT
+        id S1727028AbgAQOOU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 09:11:49 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:2136 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726587AbgAQOLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 09:11:48 -0500
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47zjfp2SzTzJv;
-        Fri, 17 Jan 2020 15:11:46 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1579270306; bh=XmEtgDG0oQyn3sFStAiiuxUsYkO0wEPHkuJs+F8ucvw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BW+cTQ8x5vNorbyo8Z9YUUvoj8OQUvY6DvyE5ZhRGTXoKj2jyQz5grz6N2ihuhJrU
-         Fj66MNklsymohTWe4x0dI1IzLMR0MadoMO7uGnpSk6Lo8svaAGZ77PmudPUpndUSmy
-         jEcC6ZIUmovIhJK5ccrwPrYq2i5pPuFWsJ6uE5JLqvgLs/X9RJJnC4jXqNiBig7Y63
-         vAm56mXPBkaMEbtwLW7fVs9fdr91CvzTorlpaye8J6GLI/Rf0e42TIlO1nX6c5XHUY
-         Qo0cOv0dKQOx/YniIRk8MUI8JYwHoPLjrDnpeyIkWky7QxWYEiVrToiwKKz+0C9mMX
-         sxEMafgp9SRzw==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Fri, 17 Jan 2020 15:11:45 +0100
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Lucas Stach <dev@lynxeye.de>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] mmc: tegra: fix SDR50 tuning override
-Message-ID: <20200117141145.GD26135@qmqm.qmqm.pl>
-References: <9aff1d859935e59edd81e4939e40d6c55e0b55f6.1578390388.git.mirq-linux@rere.qmqm.pl>
- <CAPDyKFqXmbnH_NWZZTHHCE+Lt-f3JHAhJ8-=aoKNEPyQed44YA@mail.gmail.com>
+        Fri, 17 Jan 2020 09:14:20 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39467 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726890AbgAQOOT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 09:14:19 -0500
+Received: by mail-lj1-f196.google.com with SMTP id l2so26562327lja.6
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 06:14:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=NAVl4mPYQplvO0E1VEcLtuftfASYI5IMVIWdknaGvCA=;
+        b=w4bY3R8TtyJb7jkXithwHOwZVPqqwh2yl4FR0j7r+RWErw279gj5h/c5naJx/MsCYb
+         18drbwEsvdJ0TvouP+nLV7sW5F1K3cOYwgT5gcVlvt7VwGkE8scxWSG+Ip3Zrsz9/k/1
+         gx6nPqc/PvPWNlXlJRF2yB4tLn0oZ/cQS7BEOfzZBNNlt8QB3hzJf7S8fp5pLTXEVN5y
+         iWvj4IMvNQfLXBKS6WZfxwi/80JcCzRPGtxDqFZu1+/dzXW9iYUjrsNnjDOtffG4tiOg
+         I2cy8W0bhSNZuYEZrY1Y0z58q+vTy/mSqVA4+t7kCJMjO5YqXX6XXTqbdyUKUprHMW7x
+         dcWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=NAVl4mPYQplvO0E1VEcLtuftfASYI5IMVIWdknaGvCA=;
+        b=JiF2ta3hWyF0YpoFBziAXXq1gB+sKdJ+i3WjyHGxGRAJFBBX5QwaireeyONtKh7FGx
+         y00HPY/dElzw+LZp3zGJxOKZcet20CNaXSpwpcOVv2N0OoXxE49NzmpVAwK0uRD/BuiS
+         ufZI8ePrDwu1hLyKTqv3qyH6MJkvAK7WTrD+DF157vaz27D/FW6wP5KYUjW0RB0ZioAU
+         Z3+8+8AkpTo62noVCF0x7mmDL1MqQ/sx48wx2PY4hu9swV0/PmISZ9bajMwm6L8LalQd
+         W8uCqCN33Zzqhe44wLyGNf7gp33dFRTy8PKPf4we8GZq2ygCLAxNtTpwQfcssLBUTaZE
+         /1jA==
+X-Gm-Message-State: APjAAAXCPMKWpuQ/HVjPbh1EL+/7qBGLOSYeM6AzZInhJrHuxXHvbWDN
+        PElqayASCCQr/EJieI1PIpBJpv1lMMxGS2GsRM1pCg==
+X-Google-Smtp-Source: APXvYqwpOzoJj2hqKTH6cWieOe3rC3BLloHvdlHV9wBMM9oHOg7W/FAdqxxxJ+gcLiULKuLaCD3MTGedsFjV7mB+fO8=
+X-Received: by 2002:a2e:b017:: with SMTP id y23mr5943206ljk.229.1579270457363;
+ Fri, 17 Jan 2020 06:14:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPDyKFqXmbnH_NWZZTHHCE+Lt-f3JHAhJ8-=aoKNEPyQed44YA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200116231709.377772748@linuxfoundation.org>
+In-Reply-To: <20200116231709.377772748@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 17 Jan 2020 19:43:51 +0530
+Message-ID: <CA+G9fYv_DsFjC_d=K95z1NdhgrBqGbLAURKTpG608fd9DK2aCQ@mail.gmail.com>
+Subject: Re: [PATCH 4.14 00/71] 4.14.166-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 03:39:54PM +0100, Ulf Hansson wrote:
-> On Tue, 7 Jan 2020 at 10:47, Micha³ Miros³aw <mirq-linux@rere.qmqm.pl> wrote:
-> >
-> > Commit 7ad2ed1dfcbe inadvertently mixed up a quirk flag's name and
-> > broke SDR50 tuning override. Use correct NVQUIRK_ name.
-> >
-> > Fixes: 7ad2ed1dfcbe ("mmc: tegra: enable UHS-I modes")
-> > Cc: <stable@vger.kernel.org> # 4f6aa3264af4: mmc: tegra: Only advertise UHS modes if IO regulator is present
-> 
-> I am dropping this tag, simply because I don't understand what it should tell.
+On Fri, 17 Jan 2020 at 05:02, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.14.166 release.
+> There are 71 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 18 Jan 2020 23:16:00 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.14.166-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.14.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-It tells the maintainer that he needs to cherry-pick this commit if
-its not in particular stable version already. I guess this is only
-for v4.4, as v4.9+ already have it, and v3.16 does not include the
-Fixed commit.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Best Regards,
-Micha³ Miros³aw
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.14.166-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.14.y
+git commit: e0cdfda2225350bfbf0a3d0a6ba1c2717512f26b
+git describe: v4.14.165-72-ge0cdfda22253
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
+ild/v4.14.165-72-ge0cdfda22253
+
+No regressions (compared to build v4.14.165)
+
+No fixes (compared to build v4.14.165)
+
+Ran 24180 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* v4l2-compliance
+* ltp-cve-tests
+* network-basic-tests
+* spectre-meltdown-checker-test
+* ltp-open-posix-tests
+* kvm-unit-tests
+* ssuite
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
