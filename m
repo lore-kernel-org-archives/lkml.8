@@ -2,121 +2,138 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37947C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A319C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BB402073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:34:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oBGOm9Jv"
+	by mail.kernel.org (Postfix) with ESMTP id 3C8682073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:36:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbgAQLe6 (ORCPT
+        id S1726974AbgAQLgV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 06:34:58 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43647 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726371AbgAQLe5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 06:34:57 -0500
-Received: by mail-wr1-f68.google.com with SMTP id d16so22376891wre.10
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 03:34:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=evNHCWWR8VDQgkVk+W1DMeAHVIxkJQGWyaVBPtYnDrc=;
-        b=oBGOm9JvQ2c/xRqP4pTi1fYT4Xeumb+8oGfQHcf95V0670qJ/7pQ7y3K2WG7YtLHNr
-         VyjVpgrZFjiUcr8izrBXeqTrurwr6KnbGdtcbzwhRXGj5tHqowSJogHYzEWuicTLKVlI
-         XPdZBH5SApp7zifRAvPMp23HYM2ZCB2mnYCHb4MA+iWYjA40RXVo4rIZvjdqK9SxJRGt
-         EnISdUOZNFjodtS6vvsGwC24f38bRxelB2c6jbM+MVlj0gtS9KtCIyvlyvgw7FjvyIv8
-         6sDFWcWIKeuo0wrRqSv0bJy5m3N3iftgPM9U7u3/05jsbtJ045OCH2Hd4Vq+C1l1fEpL
-         PDdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=evNHCWWR8VDQgkVk+W1DMeAHVIxkJQGWyaVBPtYnDrc=;
-        b=WFYoATpS4O+0JuUI7mtuqB2UCYYSZqU0f1wmMP3curdzarIIUcFPWN5F8nxlb6SJWz
-         Ll8LeqWmGkJk5N98VK0bL0tMz8mV9fCUo8CBhuGlr/sDNYuM0WXNW13rjgp+r2leHbKI
-         /ozcIKjDZJ5qfVdtEat747GJXF6YP+um+2TlsA4TwWs9/RQwnRDUsTiJoirUzuBLH32m
-         QZ6sV4hb2NiGABXiylwO4Jyk2zuHJy3cTz6Usz1uklx6Jsx0QuRaO43hljNOMH55ZqDw
-         Sca4Ju9NQrVd2TnaH96SlPqjFQglq/p5oFBnwy21fmfC98rKcBx59A6AuaJQf4X4hWaC
-         w0tA==
-X-Gm-Message-State: APjAAAXp9Ts/Qm0SIu0WpWPr2UI7VfJP8s11Lj6xCiMiF1FqnC7EGxT6
-        3PWxPrMPQLODe1GTCxcA910fuQ==
-X-Google-Smtp-Source: APXvYqxHUoUVGRG19E3ieVqNqnW2+WCjFDV9O+aG5AQe2K9rCp3BeYzv7LTq4ZhJWMCqeroBuJrIKg==
-X-Received: by 2002:adf:fe12:: with SMTP id n18mr2784294wrr.158.1579260896233;
-        Fri, 17 Jan 2020 03:34:56 -0800 (PST)
-Received: from dell ([2.27.35.221])
-        by smtp.gmail.com with ESMTPSA id 60sm34545482wrn.86.2020.01.17.03.34.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 03:34:55 -0800 (PST)
-Date:   Fri, 17 Jan 2020 11:35:11 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Prashant Malani <pmalani@chromium.org>
-Cc:     enric.balletbo@collabora.com, groeck@chromium.org,
-        bleung@chromium.org, sre@kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v7 2/3] mfd: cros_ec: Add cros-usbpd-notify subdevice
-Message-ID: <20200117113511.GJ15507@dell>
-References: <20200117002820.56872-1-pmalani@chromium.org>
- <20200117002820.56872-2-pmalani@chromium.org>
+        Fri, 17 Jan 2020 06:36:21 -0500
+Received: from mga01.intel.com ([192.55.52.88]:59269 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726785AbgAQLgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 06:36:21 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 03:36:20 -0800
+X-IronPort-AV: E=Sophos;i="5.70,330,1574150400"; 
+   d="scan'208";a="218881938"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 03:36:15 -0800
+From:   Jani Nikula <jani.nikula@intel.com>
+To:     Lyude Paul <lyude@redhat.com>, intel-gfx@lists.freedesktop.org
+Cc:     dri-devel@lists.freedesktop.org, Perry Yuan <pyuan@redhat.com>,
+        AceLan Kao <acelan.kao@canonical.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+        Lee Shawn C <shawn.c.lee@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/5] drm/i915: Don't use VBT for detecting DPCD backlight controls
+In-Reply-To: <20200116211623.53799-5-lyude@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200116211623.53799-1-lyude@redhat.com> <20200116211623.53799-5-lyude@redhat.com>
+Date:   Fri, 17 Jan 2020 13:36:12 +0200
+Message-ID: <87zhemgvrn.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200117002820.56872-2-pmalani@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Jan 2020, Prashant Malani wrote:
-
-> Add the cros-usbpd-notify driver as a subdevice on platforms that
-> support the EC_FEATURE_USB_PD EC feature flag and don't have the
-> ACPI PD notification device defined.
-> 
-> This driver allows other cros-ec devices to receive PD event
-> notifications from the Chrome OS Embedded Controller (EC) via a
-> notification chain.
-> 
-> Reviewed-by: Benson Leung <bleung@chromium.org>
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+On Thu, 16 Jan 2020, Lyude Paul <lyude@redhat.com> wrote:
+> Despite the fact that the VBT appears to have a field for specifying
+> that a system is equipped with a panel that supports standard VESA
+> backlight controls over the DP AUX channel, so far every system we've
+> spotted DPCD backlight control support on doesn't actually set this
+> field correctly and all have it set to INTEL_BACKLIGHT_DISPLAY_DDI.
+>
+> While we don't know the exact reason for this VBT misuse, talking with
+> some vendors indicated that there's a good number of laptop panels out
+> there that supposedly support both PWM backlight controls and DPCD
+> backlight controls as a workaround until Intel supports DPCD backlight
+> controls across platforms universally. This being said, the X1 Extreme
+> 2nd Gen that I have here (note that Lenovo is not the hardware vendor
+> that informed us of this) PWM backlight controls are advertised, but
+> only DPCD controls actually function. I'm going to make an educated
+> guess here and say that on systems like this one, it's likely that PWM
+> backlight controls might have been intended to work but were never
+> really tested by QA.
+>
+> Since we really need backlights to work without any extra module
+> parameters, let's take the risk here and rely on the standard DPCD caps
+> to tell us whether AUX backlight controls are supported or not. We still
+> check the VBT, but only to make sure that we don't enable DPCD backlight
+> controls on a panel that uses something other then the standard VESA
+> interfaces over AUX. Since panels using such non-standard interfaces
+> should probably have support added to i915, we'll print a warning when
+> seeing this in the VBT. We can remove this warning later if we end up
+> adding support for any custom backlight interfaces.
+>
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=112376
+> Cc: Jani Nikula <jani.nikula@intel.com>
+> Cc: Perry Yuan <pyuan@redhat.com>
+> Cc: AceLan Kao <acelan.kao@canonical.com>
 > ---
-> 
-> Changes in v7:
-> - No changes.
-> 
-> Changes in v6:
-> - No changes.
-> 
-> Changes in v5:
-> - Updated the IS_ENABLED() check to check for CONFIG_OF instead of
->   !CONFIG_ACPI according to upstream comments.
-> 
-> Changes in v4:
-> - Removed #ifndef usage; instead, moved cros-usbpd-notify to a separate
->   mfd_cell and used an IS_ENABLED() check.
-> - Changed commit title and description slightly to reflect change in
->   code.
-> 
->  drivers/mfd/cros_ec_dev.c | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
+>  .../drm/i915/display/intel_dp_aux_backlight.c    | 16 ++++++++++------
+>  1 file changed, 10 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c b/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
+> index 77a759361c5c..3002b600635f 100644
+> --- a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
+> +++ b/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
+> @@ -330,13 +330,17 @@ int intel_dp_aux_init_backlight_funcs(struct intel_connector *intel_connector)
+>  	struct intel_panel *panel = &intel_connector->panel;
+>  	struct drm_i915_private *dev_priv = to_i915(intel_connector->base.dev);
+>  
+> -	if (i915_modparams.enable_dpcd_backlight == 0 ||
+> -	    (i915_modparams.enable_dpcd_backlight == -1 &&
+> -	    dev_priv->vbt.backlight.type != INTEL_BACKLIGHT_VESA_EDP_AUX_INTERFACE))
+> -		return -ENODEV;
+> -
+> -	if (!intel_dp_aux_display_control_capable(intel_connector))
+> +	if (i915_modparams.enable_dpcd_backlight == 0)
+>  		return -ENODEV;
+> +	if (i915_modparams.enable_dpcd_backlight == -1) {
+> +		if (dev_priv->vbt.backlight.type
+> +		    == INTEL_BACKLIGHT_PANEL_DRIVER_INTERFACE) {
+> +			DRM_WARN("VBT says panel uses custom panel driver interface, not using DPCD backlight controls\n");
+> +			return -ENODEV;
+> +		}
+> +		if (!intel_dp_aux_display_control_capable(intel_connector))
+> +			return -ENODEV;
 
-Applied v6, since Patchwork can pick-up the Acks and there haven't
-been any changes since then.
+Functionally, I'm fine with trying this. But perhaps we should check aux
+and early return first, and then check what vbt says, to reduce the
+dmesg noise.
+
+I'll probably want to see a debug message if we're enabling aux
+backlight even if dev_priv->vbt.backlight.type !=
+INTEL_BACKLIGHT_VESA_EDP_AUX_INTERFACE. It's the kind of debug trace
+you'll really want to get first.
+
+BR,
+Jani.
+
+
+
+> +	}
+>  
+>  	panel->backlight.setup = intel_dp_aux_setup_backlight;
+>  	panel->backlight.enable = intel_dp_aux_enable_backlight;
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Jani Nikula, Intel Open Source Graphics Center
