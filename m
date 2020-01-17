@@ -4,25 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E2EC33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A88CFC33CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82A3124681
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BA1A20842
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:04:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729148AbgAQPEB (ORCPT
+        id S1729399AbgAQPEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 10:04:01 -0500
-Received: from mx2.suse.de ([195.135.220.15]:46104 "EHLO mx2.suse.de"
+        Fri, 17 Jan 2020 10:04:45 -0500
+Received: from mx2.suse.de ([195.135.220.15]:46254 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729064AbgAQPD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 10:03:58 -0500
+        id S1729133AbgAQPEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 10:04:01 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 2879BAD00;
-        Fri, 17 Jan 2020 15:03:56 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 5D7BEBB77;
+        Fri, 17 Jan 2020 15:04:00 +0000 (UTC)
 From:   Petr Mladek <pmladek@suse.com>
 To:     Jiri Kosina <jikos@kernel.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -32,9 +32,9 @@ Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
         Nicolai Stange <nstange@suse.de>,
         live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
         Petr Mladek <pmladek@suse.com>
-Subject: [POC 04/23] livepatch: Prevent loading livepatch sub-module unintentionally.
-Date:   Fri, 17 Jan 2020 16:03:04 +0100
-Message-Id: <20200117150323.21801-5-pmladek@suse.com>
+Subject: [POC 14/23] livepatch: Never block livepatch modules when the related module is being removed
+Date:   Fri, 17 Jan 2020 16:03:14 +0100
+Message-Id: <20200117150323.21801-15-pmladek@suse.com>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20200117150323.21801-1-pmladek@suse.com>
 References: <20200117150323.21801-1-pmladek@suse.com>
@@ -43,142 +43,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Livepatch is split into several modules. The main module is for livepatching
-vmlinux. The rest is for livepatching other modules.
+Originally, it was not possible to remove the single livepatch module when
+the code was used during a forced transition. There were no guarantees that
+the code was no longer used.
 
-Only the livepatch module for vmlinux can be loaded by users. Others are
-loaded automatically when the related module is or gets loaded.
+Even the split livepatch modules have to stay when the entire livepatch
+gets disabled/replaced and the livepatch modules were used during
+a forced transition.
 
-Users might try to load any livepatch module. It must be allowed
-only when the related livepatch module for vmlinux and the livepatched
-module are loaded.
+On the other hand, klp_module_going() callback is called when the patched
+module is about to be removed. It's code should no longer be used.
+The same should be true also for the related livepatch module. Therefore
+the livepatch module could always get removed as well.
 
-Also it is important to check that obj->name is listed in patch->obj_names.
-Otherwise this module would not be loaded automatically. And it would
-lead into inconsistent behavier. Anyway, the missing name means a mistake
-somewhere and must be reported.
-
-klp_add_object() is taking over the job done by klp_module_coming().
-The error message is taken from there so that selftests do not need
-to get updated.
+It allows to load the patched module again in the future. Otherwise,
+it would get blocked because the related livepatch module could not
+get loaded more times.
 
 Signed-off-by: Petr Mladek <pmladek@suse.com>
 ---
- kernel/livepatch/core.c | 78 ++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 77 insertions(+), 1 deletion(-)
+ kernel/livepatch/core.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-index ec7ffc7db3a7..e2c7dc6c2d5f 100644
+index 73462b66f63f..4b55d805f3ec 100644
 --- a/kernel/livepatch/core.c
 +++ b/kernel/livepatch/core.c
-@@ -88,6 +88,18 @@ static struct klp_object *klp_find_object(struct klp_patch *patch,
- 	return NULL;
- }
- 
-+static struct klp_patch *klp_find_patch(const char *patch_name)
-+{
-+	struct klp_patch *patch;
-+
-+	klp_for_each_patch(patch) {
-+		if (!strcmp(patch->obj->patch_name, patch_name))
-+			return patch;
-+	}
-+
-+	return NULL;
-+}
-+
- struct klp_find_arg {
- 	const char *objname;
- 	const char *name;
-@@ -920,15 +932,79 @@ static int klp_check_object(struct klp_object *obj, bool is_module)
- 	return klp_check_module_name(obj, is_module);
- }
- 
-+static bool klp_is_object_name_supported(struct klp_patch *patch,
-+					 const char *name)
-+{
-+	int i;
-+
-+	for (i = 0; patch->obj_names[i]; i++) {
-+		if (!strcmp(name, patch->obj_names[i]))
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
-+/* Must be called under klp_mutex */
-+static bool klp_is_object_compatible(struct klp_patch *patch,
-+				     struct klp_object *obj)
-+{
-+	struct module *patched_mod;
-+
-+	if (!klp_is_object_name_supported(patch, obj->name)) {
-+		pr_err("Livepatch (%s) is not supposed to livepatch the module: %s\n",
-+		       obj->patch_name, obj->name);
-+		return false;
-+	}
-+
-+	mutex_lock(&module_mutex);
-+	patched_mod = find_module(obj->name);
-+	mutex_unlock(&module_mutex);
-+
-+	if (!patched_mod) {
-+		pr_err("Livepatched module is not loaded: %s\n", obj->name);
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
- int klp_add_object(struct klp_object *obj)
- {
-+	struct klp_patch *patch;
- 	int ret;
- 
- 	ret = klp_check_object(obj, true);
- 	if (ret)
- 		return ret;
- 
-+	mutex_lock(&klp_mutex);
-+
-+	patch = klp_find_patch(obj->patch_name);
-+	if (!patch) {
-+		pr_err("Can't load livepatch (%s) for module when the livepatch (%s) for vmcore is not loaded\n",
-+		       obj->mod->name, obj->patch_name);
-+		ret = -EINVAL;
-+		goto err;
-+	}
-+
-+	if (!klp_is_object_compatible(patch, obj)) {
-+		ret = -EINVAL;
-+		goto err;
-+	}
-+
-+	mutex_unlock(&klp_mutex);
- 	return 0;
-+
-+err:
-+	/*
-+	 * If a patch is unsuccessfully applied, return
-+	 * error to the module loader.
-+	 */
-+	pr_warn("patch '%s' failed for module '%s', refusing to load module '%s'\n",
-+		patch->obj->patch_name, obj->name, obj->name);
-+	mutex_unlock(&klp_mutex);
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(klp_add_object);
- 
-@@ -1033,7 +1109,7 @@ int klp_enable_patch(struct klp_patch *patch)
- {
- 	int ret;
- 
--	if (!patch || !patch->obj)
-+	if (!patch || !patch->obj || !patch->obj_names)
- 		return -EINVAL;
- 
- 	ret = klp_check_object(patch->obj, false);
+@@ -1391,6 +1391,13 @@ void klp_module_going(struct module *mod)
+ 	klp_for_each_patch(patch) {
+ 		klp_for_each_object_safe(patch, obj, tmp_obj) {
+ 			if (obj->name && !strcmp(obj->name, mod->name)) {
++				/*
++				 * The livepatched module is about to be
++				 * destroyed. It's code is no longer used.
++				 * Same is true for the livepatch even when
++				 * it was part of forced transition.
++				 */
++				obj->forced = false;
+ 				klp_remove_object(obj);
+ 			}
+ 		}
 -- 
 2.16.4
 
