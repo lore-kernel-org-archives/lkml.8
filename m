@@ -2,117 +2,126 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C5EC33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DEDC33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9D6621D56
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:16:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 586D621D7D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:16:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oKyPNlVD"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kW1I3h9C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbgAQWQR (ORCPT
+        id S1729317AbgAQWQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 17:16:17 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:50132 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726861AbgAQWQR (ORCPT
+        Fri, 17 Jan 2020 17:16:23 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:60148 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726861AbgAQWQX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 17:16:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=CFwRKOc+gezyceo0kC40ZLd3xOsAPmQzS5kapaZ2B18=; b=oKyPNlVDNwLxSQvsjfAkGK9aF
-        R9eBYNoE5+kpCUwwuCM4AIBAFTneRiyrGJFIsrpgGpiY5vl652zEBt5pFSlhiGeGXy8CW1OjBk3iQ
-        P/mwDGmpeXiizWRqFXXiZq5GZ/nCoznlISFqOqczXQzwAEKz4cjuJtZc988M18xUs01YsUj3eeJPP
-        k5rUNPFnZIkmxfG8BzmfOUyVedBRIrP7PicBbfBevLz5OkFNdhy4PMuLb2AB73bfVZh67MXl9jMop
-        LqLNId60/MmxANfdKyra+NdBP9yZ465zbOrudluqx7J0gwtqrMApT0L59lqQWDWHhdzNZxc4xqkSO
-        qyuO8rj6w==;
-Received: from [2601:1c0:6280:3f0::ed68]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1isZuG-0001rZ-79; Fri, 17 Jan 2020 22:15:56 +0000
-Subject: Re: mmotm 2019-12-10-19-14 uploaded (objtool: func() falls through)
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        Peter Zijlstra <peterz@infradead.org>
-References: <20191211031432.iyKVQ6m9n%akpm@linux-foundation.org>
- <07777464-b9d8-ff1d-41d9-f62cc44f09f3@infradead.org>
- <20191212184859.zjj2ycfkvpcns5bk@treble>
- <042c6cd7-c983-03f1-6a79-5642549f57c4@infradead.org>
- <20191212205811.4vrrb4hou3tbiada@treble>
- <20200117181121.3h72dajey7oticbf@treble>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <d1dc6614-9089-62a8-e303-84b9d57297a3@infradead.org>
-Date:   Fri, 17 Jan 2020 14:15:54 -0800
+        Fri, 17 Jan 2020 17:16:23 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00HM8HXd150359;
+        Fri, 17 Jan 2020 22:09:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=HFFGUnfSqVWShYbKt3p582lD3bfMPINDrNFPG0jJqvE=;
+ b=kW1I3h9CqDB0WI8iNf10+m0iPa1caxU1I2lL1DtfW2t6Uujt+6MaHhDAA108OOEPPtMf
+ goLIn+mP/rVpqL+EO+HM0B7wM5FQpwXMNqCmaqcrB6Z600IT925wNPtfUgkBRPg35LZM
+ Mo3dMDUo92fmDi4WY7wvg2kCn4OK3T3EzCi9VB+NxluNT0ym96Ld1u4W/C9uk8KvsMGr
+ ALkR6o/MlhLR0mM5EhBRvTo5MSi/0IRdQQoo4d7fwn4ZOJsqxEcP9dswoYez6M29dLuT
+ +cn9qJ0lC19z4UEYkqRZLSynbDNwNVrxZ4aMQ/66dfOuMU/4COFYdA4k5s46rgjTEbHD 5A== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2xf74037wy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Jan 2020 22:09:48 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00HM8mVc008512;
+        Fri, 17 Jan 2020 22:09:48 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2xjxm9pau4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Jan 2020 22:09:47 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00HM9iG3027286;
+        Fri, 17 Jan 2020 22:09:44 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 17 Jan 2020 14:09:44 -0800
+Subject: Re: [PATCH v9 3/8] hugetlb_cgroup: add reservation accounting for
+ private mappings
+To:     Mina Almasry <almasrymina@google.com>
+Cc:     shuah <shuah@kernel.org>, David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Greg Thelen <gthelen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org,
+        Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>,
+        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
+        Hillf Danton <hdanton@sina.com>
+References: <20191217231615.164161-1-almasrymina@google.com>
+ <20191217231615.164161-3-almasrymina@google.com>
+ <dec1ccd5-5973-c498-f2fe-390c1c51b2d0@oracle.com>
+ <CAHS8izMzXpNMCmFh_SD7n+4+rj3QTqyRfeWQyXAhFo1-qV4iEQ@mail.gmail.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <0ea993b0-af18-cee8-527e-f6df7e76b0be@oracle.com>
+Date:   Fri, 17 Jan 2020 14:09:42 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <20200117181121.3h72dajey7oticbf@treble>
+In-Reply-To: <CAHS8izMzXpNMCmFh_SD7n+4+rj3QTqyRfeWQyXAhFo1-qV4iEQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9503 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001170170
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9503 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001170170
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/17/20 10:11 AM, Josh Poimboeuf wrote:
-> On Thu, Dec 12, 2019 at 02:58:11PM -0600, Josh Poimboeuf wrote:
->> On Thu, Dec 12, 2019 at 12:21:17PM -0800, Randy Dunlap wrote:
->>> On 12/12/19 10:48 AM, Josh Poimboeuf wrote:
->>>> On Wed, Dec 11, 2019 at 08:31:08AM -0800, Randy Dunlap wrote:
->>>>> On 12/10/19 7:14 PM, Andrew Morton wrote:
->>>>>> The mm-of-the-moment snapshot 2019-12-10-19-14 has been uploaded to
->>>>>>
->>>>>>    http://www.ozlabs.org/~akpm/mmotm/
->>>>>>
->>>>>> mmotm-readme.txt says
->>>>>>
->>>>>> README for mm-of-the-moment:
->>>>>>
->>>>>> http://www.ozlabs.org/~akpm/mmotm/
->>>>>>
->>>>>> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
->>>>>> more than once a week.
->>>>>>
->>>>>> You will need quilt to apply these patches to the latest Linus release (5.x
->>>>>> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
->>>>>> http://ozlabs.org/~akpm/mmotm/series
->>>>>>
->>>>>> The file broken-out.tar.gz contains two datestamp files: .DATE and
->>>>>> .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
->>>>>> followed by the base kernel version against which this patch series is to
->>>>>> be applied.
->>>>>
->>>>> on x86_64:
->>>>>
->>>>> drivers/hwmon/f71882fg.o: warning: objtool: f71882fg_update_device() falls through to next function show_pwm_auto_point_temp_hyst()
->>>>> drivers/ide/ide-probe.o: warning: objtool: hwif_register_devices() falls through to next function hwif_release_dev()
->>>>> drivers/ide/ide-probe.o: warning: objtool: ide_host_remove() falls through to next function ide_disable_port()
->>>>
->>>> Randy, can you share the .o files?
->>>
->>> Sure. They are attached.
+On 1/14/20 2:52 PM, Mina Almasry wrote:
+> On Mon, Jan 13, 2020 at 4:55 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+>>> +#ifdef CONFIG_CGROUP_HUGETLB
+>>> +     /*
+>>> +      * Since we check for HPAGE_RESV_OWNER above, this must a private
+>>> +      * mapping, and these values should be none-zero, and should point to
+>>> +      * the hugetlb_cgroup counter to uncharge for this reservation.
+>>> +      */
+>>> +     WARN_ON(!resv->reservation_counter);
+>>> +     WARN_ON(!resv->pages_per_hpage);
+>>> +     WARN_ON(!resv->css);
 >>
->> These look like compiler bugs to me... execution is falling off the edge
->> of the functions for no apparent reason.  Could potentially be triggered
->> by the '#define if' trace code.
+>> I was once again wondering if these were always non-NULL for private mappings.
+>> It seems that reservation_counter (h_gc) would be NULL in these cases from
+>> these early checks in hugetlb_cgroup_charge_cgroup().
+>>
 > 
-> Randy, do you happen to have a config which triggers the above bugs?  I
-> can reduce the test cases and open a GCC bug.
-> 
+> You are right. I'm fixing in v10 the code and comments to account for
+> h_cg potentially being NULL, but I'm having trouble testing. Looking
+> at the code, I'm a bit confused by the checks. Seems to me
+> hugetlb_cgroup_disabled() is the same as #ifdef CONFIG_CGROUP_HUGETLB;
+> I can't find a way to enable the Kconfig but have that return false
+> unless I hack the code.
 
-No, but I'll try to recreate the issue and get back to you.
+What about the boot options?
+
+cgroup_disable=
+cgroup_no_v1=
 
 -- 
-~Randy
-
+Mike Kravetz
