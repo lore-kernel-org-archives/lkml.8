@@ -2,211 +2,147 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9EAC33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E7C7C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8094421D7D
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:56:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579301768;
-	bh=CWecaCz+3cpDlm8YlyE4B6sbx15L8F/2ceqDO53Fg1c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=esZnbkrO/6OKXTnoPbjthqHA7purHQqKcN1BXfgmc1WDdSPkuMOxW9F3OwFlkmkpi
-	 4yR41mANZ792/+QhjhXYKZrdWPD7lOE5LNLlPXa9Qp0eUSM5tzhD084qwJ8zwL8mJj
-	 Iies50lVrUcKmeLUy/cJWWrWx6xIjm7D9Y7vLiB4=
+	by mail.kernel.org (Postfix) with ESMTP id 449EB21D56
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:56:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mSNZ/egw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729829AbgAQW4H (ORCPT
+        id S1730055AbgAQW4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 17:56:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57878 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728927AbgAQW4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 17:56:07 -0500
-Received: from localhost (187.sub-174-234-133.myvzw.com [174.234.133.187])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E92621D56;
-        Fri, 17 Jan 2020 22:56:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579301766;
-        bh=CWecaCz+3cpDlm8YlyE4B6sbx15L8F/2ceqDO53Fg1c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=t3ZC+R9U23lctpqQnFRlaO5o65vDhMZwIr4BKiUhIv5o631gRwJ5iOwYFd2oHFY/I
-         0aw1vBg9S+uJ+VGIRotIeoTmwZvTZNEi9aXJpRMfaGUM/zJdGmzfzfFyVpT5SlvgXz
-         EkDotAfE4RPlBpwHpnmrJWZoybA9JN4Xp1Lla6u4=
-Date:   Fri, 17 Jan 2020 16:56:04 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, Keith Busch <keith.busch@intel.com>
-Subject: Re: [PATCH v12 5/8] PCI/AER: Allow clearing Error Status Register in
- FF mode
-Message-ID: <20200117220902.GA139245@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e4fa9c6253fd2bfc49746f98e4024fb4980c8936.1578682741.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 17 Jan 2020 17:56:15 -0500
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:46039 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729147AbgAQW4P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 17:56:15 -0500
+Received: by mail-pg1-f201.google.com with SMTP id q1so15247150pge.12
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 14:56:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=YjsrWHQk2Ef6EHqeIvIXkz/PqYhiYpHlX5C3YmPgP0Q=;
+        b=mSNZ/egwZMUmNm1xCRqbVDVxIgJ6PFHFMD97bYM6PSRiI0fnVpa/c12S1s1e8l9lw3
+         4kJDr5myZh+2kfmLJaaAEkMEyaQ7kZLp+1occpsd9NPK1bruNXoY8zJc7ak14IL03QZe
+         tQYueFop0SCDJZTSzY7KkD4Cg5Snz5DeVEVNli2apaOIfDqXOylKHzuofDWMjNrZJU8N
+         hUtED5YDA2ThS+KjvTVPVSZ9hp2yCUvcNaBB5hVRNC1Y8D5MByJpTWoP+2uK4ggVt1x8
+         DIfsFSUPEoYc7WqM2Q1f9BmZlW5m8ZrGf39dOPe9VBVxkRcYilUThhxblU6pZgYALu5p
+         SGUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=YjsrWHQk2Ef6EHqeIvIXkz/PqYhiYpHlX5C3YmPgP0Q=;
+        b=kIFN2tRIon0zT0M/eBO+w9T0VE/S8o7845bxyH5m/0gMAzuZawkY3r4I2vz3N3G6E8
+         VuIGXgKzpgIOtQ9hHqIdkIE7+Zjq07zDGmKkiI+jxzXJ8QVJyqg1vQeU18RohuWFAqCi
+         oJQSV9gTifA6o2c3ONOJzZgqJwo4quRvwJq6ImZoUy8lUDV2EOoT8eAovfXzNhMoerBv
+         C9eK7aaehdG2WKDuk2q6EB5uzXyQC+assOEEpaur/UHmauFrqUldmCPd5+oTBjtR/3+O
+         +14QuTcfhWyxj6Ts/bOKBQBD0VhApRywuPPVbFHqD80wH59ddqQBfSFqmV6hIWfFDaeu
+         fIjg==
+X-Gm-Message-State: APjAAAVnEsQZXaAL8wc/sAmyRRmEqkwk/BgSiV243mNPoxnP7ujs2z1r
+        jVSXDob+9Lh2+CqNEFu1+3dDk6uAgdZI
+X-Google-Smtp-Source: APXvYqyz6Htr5YrcybMBordUJnmC5nMxj+CYUOrxzx3s7H3o4YTtrCUUGDPO0qBaXmphcnbRdVW3Yra5sMzi
+X-Received: by 2002:a63:3f82:: with SMTP id m124mr48101369pga.431.1579301774378;
+ Fri, 17 Jan 2020 14:56:14 -0800 (PST)
+Date:   Fri, 17 Jan 2020 14:56:08 -0800
+Message-Id: <20200117225608.220838-1-brianvv@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+Subject: [PATCH bpf-next] bpf: Fix memory leaks in generic update/delete batch ops
+From:   Brian Vazquez <brianvv@google.com>
+To:     Brian Vazquez <brianvv.kernel@gmail.com>,
+        Brian Vazquez <brianvv@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 12, 2020 at 02:43:59PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> As per PCI firmware specification r3.2 System Firmware Intermediary
-> (SFI) _OSC and DPC Updates ECR
-> (https://members.pcisig.com/wg/PCI-SIG/document/13563), sec titled
-> "DPC Event Handling Implementation Note", page 10, Error Disconnect
-> Recover (EDR) support allows OS to handle error recovery and clearing
-> Error Registers even in FF mode. So create exception for FF mode checks
-> in pci_cleanup_aer_uncorrect_error_status(), pci_aer_clear_fatal_status()
-> and pci_cleanup_aer_error_status_regs() functions when its being called
-> from DPC code path.
-> 
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Acked-by: Keith Busch <keith.busch@intel.com>
-> ---
->  Documentation/PCI/pcieaer-howto.rst       |  2 +-
->  drivers/net/ethernet/intel/ice/ice_main.c |  2 +-
->  drivers/ntb/hw/idt/ntb_hw_idt.c           |  2 +-
->  drivers/pci/pci.c                         |  2 +-
->  drivers/pci/pci.h                         |  2 +-
->  drivers/pci/pcie/aer.c                    | 16 ++++++++--------
->  drivers/pci/pcie/dpc.c                    |  4 ++--
->  drivers/pci/pcie/err.c                    |  2 +-
->  drivers/scsi/lpfc/lpfc_attr.c             |  2 +-
->  include/linux/aer.h                       | 12 ++++++++----
->  10 files changed, 25 insertions(+), 21 deletions(-)
-> 
-> diff --git a/Documentation/PCI/pcieaer-howto.rst b/Documentation/PCI/pcieaer-howto.rst
-> index 18bdefaafd1a..184c966b61cb 100644
-> --- a/Documentation/PCI/pcieaer-howto.rst
-> +++ b/Documentation/PCI/pcieaer-howto.rst
-> @@ -243,7 +243,7 @@ messages to root port when an error is detected.
->  
->  ::
->  
-> -  int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev);`
-> +  int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev, bool ff_check);
->  
->  pci_cleanup_aer_uncorrect_error_status cleanups the uncorrectable
->  error status register.
+generic update/delete batch ops functions were using __bpf_copy_key
+without properly freeing the memory. Handle the memory allocation and
+copy_from_user separately.
 
-> diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
-> index 69bff085acf7..8378dbf3500b 100644
-> --- a/drivers/net/ethernet/intel/ice/ice_main.c
-> +++ b/drivers/net/ethernet/intel/ice/ice_main.c
-> @@ -3491,7 +3491,7 @@ static pci_ers_result_t ice_pci_err_slot_reset(struct pci_dev *pdev)
->  			result = PCI_ERS_RESULT_DISCONNECT;
->  	}
->  
-> -	err = pci_cleanup_aer_uncorrect_error_status(pdev);
-> +	err = pci_cleanup_aer_uncorrect_error_status(pdev, 1);
->  	if (err)
->  		dev_dbg(&pdev->dev,
->  			"pci_cleanup_aer_uncorrect_error_status failed, error %d\n",
-> diff --git a/drivers/ntb/hw/idt/ntb_hw_idt.c b/drivers/ntb/hw/idt/ntb_hw_idt.c
-> index dcf234680535..9023308be2de 100644
-> --- a/drivers/ntb/hw/idt/ntb_hw_idt.c
-> +++ b/drivers/ntb/hw/idt/ntb_hw_idt.c
-> @@ -2675,7 +2675,7 @@ static int idt_init_pci(struct idt_ntb_dev *ndev)
->  	if (ret != 0)
->  		dev_warn(&pdev->dev, "PCIe AER capability disabled\n");
->  	else /* Cleanup uncorrectable error status before getting to init */
-> -		pci_cleanup_aer_uncorrect_error_status(pdev);
-> +		pci_cleanup_aer_uncorrect_error_status(pdev, 1);
->  
->  	/* First enable the PCI device */
->  	ret = pcim_enable_device(pdev);
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: aa2e93b8e58e ("bpf: Add generic support for update and delete
+batch ops")
+Signed-off-by: Brian Vazquez <brianvv@google.com>
+---
+ kernel/bpf/syscall.c | 30 +++++++++++++++++++-----------
+ 1 file changed, 19 insertions(+), 11 deletions(-)
 
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index 63366344acff..5bd72d9343f6 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -280,8 +280,8 @@ static void dpc_process_error(struct dpc_dev *dpc)
->  		 dpc_get_aer_uncorrect_severity(pdev, &info) &&
->  		 aer_get_device_error_info(pdev, &info)) {
->  		aer_print_error(pdev, &info);
-> -		pci_cleanup_aer_uncorrect_error_status(pdev);
-> -		pci_aer_clear_fatal_status(pdev);
-> +		pci_cleanup_aer_uncorrect_error_status(pdev, 0);
-> +		pci_aer_clear_fatal_status(pdev, 0);
->  	}
->  
->  	/* We configure DPC so it only triggers on ERR_FATAL */
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index c26a71460f02f..9a840c57f6df7 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -1239,12 +1239,15 @@ int generic_map_delete_batch(struct bpf_map *map,
+ 	if (!max_count)
+ 		return 0;
+ 
++	key = kmalloc(map->key_size, GFP_USER | __GFP_NOWARN);
++	if (!key)
++		return -ENOMEM;
++
+ 	for (cp = 0; cp < max_count; cp++) {
+-		key = __bpf_copy_key(keys + cp * map->key_size, map->key_size);
+-		if (IS_ERR(key)) {
+-			err = PTR_ERR(key);
++		err = -EFAULT;
++		if (copy_from_user(key, keys + cp * map->key_size,
++				   map->key_size))
+ 			break;
+-		}
+ 
+ 		if (bpf_map_is_dev_bound(map)) {
+ 			err = bpf_map_offload_delete_elem(map, key);
+@@ -1264,6 +1267,8 @@ int generic_map_delete_batch(struct bpf_map *map,
+ 	}
+ 	if (copy_to_user(&uattr->batch.count, &cp, sizeof(cp)))
+ 		err = -EFAULT;
++
++	kfree(key);
+ 	return err;
+ }
+ 
+@@ -1294,18 +1299,21 @@ int generic_map_update_batch(struct bpf_map *map,
+ 	if (!max_count)
+ 		return 0;
+ 
++	key = kmalloc(map->key_size, GFP_USER | __GFP_NOWARN);
++	if (!key)
++		return -ENOMEM;
++
+ 	value = kmalloc(value_size, GFP_USER | __GFP_NOWARN);
+-	if (!value)
++	if (!value) {
++		kfree(key);
+ 		return -ENOMEM;
++	}
+ 
+ 	for (cp = 0; cp < max_count; cp++) {
+-		key = __bpf_copy_key(keys + cp * map->key_size, map->key_size);
+-		if (IS_ERR(key)) {
+-			err = PTR_ERR(key);
+-			break;
+-		}
+ 		err = -EFAULT;
+-		if (copy_from_user(value, values + cp * value_size, value_size))
++		if (copy_from_user(key, keys + cp * map->key_size,
++		    map->key_size) ||
++		    copy_from_user(value, values + cp * value_size, value_size))
+ 			break;
+ 
+ 		err = bpf_map_update_value(map, f, key, value,
+-- 
+2.25.0.341.g760bfbb309-goog
 
-> diff --git a/drivers/scsi/lpfc/lpfc_attr.c b/drivers/scsi/lpfc/lpfc_attr.c
-> index 4ff82b36a37a..5b37efd29e20 100644
-> --- a/drivers/scsi/lpfc/lpfc_attr.c
-> +++ b/drivers/scsi/lpfc/lpfc_attr.c
-> @@ -4810,7 +4810,7 @@ lpfc_aer_cleanup_state(struct device *dev, struct device_attribute *attr,
->  		return -EINVAL;
->  
->  	if (phba->hba_flag & HBA_AER_ENABLED)
-> -		rc = pci_cleanup_aer_uncorrect_error_status(phba->pcidev);
-> +		rc = pci_cleanup_aer_uncorrect_error_status(phba->pcidev, 1);
->  
->  	if (rc == 0)
->  		return strlen(buf);
-> diff --git a/include/linux/aer.h b/include/linux/aer.h
-> index fa19e01f418a..f4f49df500ad 100644
-> --- a/include/linux/aer.h
-> +++ b/include/linux/aer.h
-> @@ -44,8 +44,10 @@ struct aer_capability_regs {
->  /* PCIe port driver needs this function to enable AER */
->  int pci_enable_pcie_error_reporting(struct pci_dev *dev);
->  int pci_disable_pcie_error_reporting(struct pci_dev *dev);
-> -int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev);
-> -int pci_cleanup_aer_error_status_regs(struct pci_dev *dev);
-> +int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev,
-> +					   bool ff_check);
-
-IIUC your intent is that drivers should only call this with
-ff_check=1, and only the single case in dpc.c should call it with
-ff_check=0.  But the existence of that parameter creates an
-opportunity for drivers to do it wrong.
-
-The "ff_check==0" case needs to be internal to drivers/pci and not
-even visible to drivers.  E.g., you can leave the interface of
-pci_cleanup_aer_uncorrect_error_status() alone and make it call
-internal-to-PCI function.
-
-There should be no changes to drivers or the documentation.
-
-> +int pci_cleanup_aer_error_status_regs(struct pci_dev *dev,
-> +				      bool ff_check);
-
-Same for this.
-
-pci_cleanup_aer_error_status_regs() is only used inside drivers/pci
-anyway, so should probably be moved out of linux/aer.h.
-
->  void pci_save_aer_state(struct pci_dev *dev);
->  void pci_restore_aer_state(struct pci_dev *dev);
->  #else
-> @@ -57,11 +59,13 @@ static inline int pci_disable_pcie_error_reporting(struct pci_dev *dev)
->  {
->  	return -EINVAL;
->  }
-> -static inline int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev)
-> +static inline int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev,
-> +							 bool ff_check)
->  {
->  	return -EINVAL;
->  }
-> -static inline int pci_cleanup_aer_error_status_regs(struct pci_dev *dev)
-> +static inline int pci_cleanup_aer_error_status_regs(struct pci_dev *dev,
-> +						    bool ff_check)
->  {
->  	return -EINVAL;
->  }
-> -- 
-> 2.21.0
-> 
