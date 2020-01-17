@@ -2,138 +2,382 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B994BC33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E51FFC33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B3EA2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:57:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB60F2072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:58:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AX7eeADQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbgAQK5o (ORCPT
+        id S1726982AbgAQK6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 05:57:44 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:41441 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgAQK5n (ORCPT
+        Fri, 17 Jan 2020 05:58:17 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25989 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726196AbgAQK6R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 05:57:43 -0500
-Received: from ip5f5bd679.dynamic.kabel-deutschland.de ([95.91.214.121] helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1isPJt-0006EA-BV; Fri, 17 Jan 2020 10:57:41 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>
-Cc:     stable@vger.kernel.org, Serge Hallyn <serge@hallyn.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Eric Paris <eparis@redhat.com>
-Subject: [PATCH v3] ptrace: reintroduce usage of subjective credentials in ptrace_has_cap()
-Date:   Fri, 17 Jan 2020 11:57:18 +0100
-Message-Id: <20200117105717.29803-1-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.25.0
+        Fri, 17 Jan 2020 05:58:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579258695;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=pfb7ZqQ08slR2j6b3nkPpigirqDHm9QWjl/R0SsgtyU=;
+        b=AX7eeADQG6IvNRXvz5bPuQnZ51g/nMNoiaxnDAkAaRpU1/oaBRW8kbFRDT+19Zgd0ItgJ6
+        57Ph7JJ4KVdLHsGsqRK7wfmuMx+jZW8ts7huFp0WCFt36tS0615tyapPDSU3Sr8barvhVx
+        niQglg27Za9KW5/JfaqfMDR91BsGf/A=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-221-Y1B2syKMNCWezWBqhccdsA-1; Fri, 17 Jan 2020 05:58:12 -0500
+X-MC-Unique: Y1B2syKMNCWezWBqhccdsA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CB8D118C43E5;
+        Fri, 17 Jan 2020 10:58:08 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-116-244.ams2.redhat.com [10.36.116.244])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D7254845D2;
+        Fri, 17 Jan 2020 10:57:59 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Leonardo Bras <leonardo@linux.ibm.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Allison Randal <allison@lohutok.net>,
+        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        lantianyu1986@gmail.com, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH RFC v1] mm: is_mem_section_removable() overhaul
+Date:   Fri, 17 Jan 2020 11:57:59 +0100
+Message-Id: <20200117105759.27905-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 69f594a38967 ("ptrace: do not audit capability check when outputing /proc/pid/stat")
-introduced the ability to opt out of audit messages for accesses to
-various proc files since they are not violations of policy.
-While doing so it somehow switched the check from ns_capable() to
-has_ns_capability{_noaudit}(). That means it switched from checking the
-subjective credentials of the task to using the objective credentials. I
-couldn't find the original lkml thread and so I don't know why this switch
-was done. But it seems wrong since ptrace_has_cap() is currently only used
-in ptrace_may_access(). And it's used to check whether the calling task
-(subject) has the CAP_SYS_PTRACE capability in the provided user namespace
-to operate on the target task (object). According to the cred.h comments
-this would mean the subjective credentials of the calling task need to be
-used.
-This switches it to use security_capable() because we only call
-ptrace_has_cap() in ptrace_may_access() and in there we already have a
-stable reference to the calling tasks creds under rcu_read_lock() so
-there's no need to go through another series of dereferences and rcu
-locking done in ns_capable{_noaudit}().
+Let's refactor that code. We want to check if we can offline memory
+blocks. Add a new function is_mem_section_offlineable() for that and
+make it call is_mem_section_offlineable() for each contained section.
+Within is_mem_section_offlineable(), add some more sanity checks and
+directly bail out if the section contains holes or if it spans multiple
+zones.
 
-As one example where this might be particularly problematic, Jann pointed
-out that in combination with the upcoming IORING_OP_OPENAT feature, this
-bug might allow unprivileged users to bypass the capability checks while
-asynchronously opening files like /proc/*/mem, because the capability
-checks for this would be performed against kernel credentials.
+The old code was inherently racy with concurrent offlining/memory
+unplug. Let's avoid that and grab the device_hotplug_lock. Luckily
+we are already holding it when calling from powerpc code.
 
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Eric Paris <eparis@redhat.com>
-Cc: stable@vger.kernel.org
-Reviewed-by: Serge Hallyn <serge@hallyn.com>
-Reviewed-by: Jann Horn <jannh@google.com>
-Fixes: 69f594a38967 ("ptrace: do not audit capability check when outputing /proc/pid/stat")
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+Note1: If somebody wants to export this function for use in driver code, =
+we
+need a variant that takes the device_hotplug_lock()
+
+Note2: If we could have a zombie device (not clear yet), the present
+section checks would properly bail out early.
+
+Note3: I'd prefer the mem_hotplug_lock in read, but as we are about to
+change the locking on the removal path (IOW, don't hold it when removing
+memory block devices), I do not want to go down that path.
+
+Note4: For now we would have returned "removable" although we would
+block offlining due to memory holes, multiple zones, or missing
+sections.
+
+Tested with DIMMs on x86-64. Compile-tested on Power.
+
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Leonardo Bras <leonardo@linux.ibm.com>
+Cc: Nathan Lynch <nathanl@linux.ibm.com>
+Cc: Allison Randal <allison@lohutok.net>
+Cc: Nathan Fontenot <nfont@linux.vnet.ibm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: lantianyu1986@gmail.com
+Cc: linuxppc-dev@lists.ozlabs.org
+Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
-/* v1 */
-Link: https://lore.kernel.org/r/20200115171736.16994-1-christian.brauner@ubuntu.com
+ .../platforms/pseries/hotplug-memory.c        | 24 ++-----
+ drivers/base/memory.c                         | 37 ++++++----
+ include/linux/memory.h                        |  1 +
+ include/linux/memory_hotplug.h                |  5 +-
+ mm/memory_hotplug.c                           | 68 +++++++++----------
+ 5 files changed, 67 insertions(+), 68 deletions(-)
 
-/* v2 */
-Link: https://lore.kernel.org/r/20200116224518.30598-1-christian.brauner@ubuntu.com
-- Christian Brauner <christian.brauner@ubuntu.com>:
-  - fix incorrect CAP_OPT_NOAUDIT, CAPT_OPT_NONE order
-
-/* v3 */
-- Kees Cook <keescook@chromium.org>:
-  - remove misleading reference to cread guard mutex from commit message
-  - replace if-branches with ternary ?: operator
----
- kernel/ptrace.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/kernel/ptrace.c b/kernel/ptrace.c
-index cb9ddcc08119..6eb3ccf180e0 100644
---- a/kernel/ptrace.c
-+++ b/kernel/ptrace.c
-@@ -264,12 +264,12 @@ static int ptrace_check_attach(struct task_struct *child, bool ignore_state)
- 	return ret;
- }
- 
--static int ptrace_has_cap(struct user_namespace *ns, unsigned int mode)
-+static int ptrace_has_cap(const struct cred *cred, struct user_namespace *ns,
-+			  unsigned int mode)
+diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/power=
+pc/platforms/pseries/hotplug-memory.c
+index c126b94d1943..8d80159465e4 100644
+--- a/arch/powerpc/platforms/pseries/hotplug-memory.c
++++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
+@@ -337,34 +337,24 @@ static int pseries_remove_mem_node(struct device_no=
+de *np)
+=20
+ static bool lmb_is_removable(struct drmem_lmb *lmb)
  {
--	if (mode & PTRACE_MODE_NOAUDIT)
--		return has_ns_capability_noaudit(current, ns, CAP_SYS_PTRACE);
--	else
--		return has_ns_capability(current, ns, CAP_SYS_PTRACE);
-+	return security_capable(cred, ns, CAP_SYS_PTRACE,
-+				(mode & PTRACE_MODE_NOAUDIT) ? CAP_OPT_NOAUDIT :
-+							       CAP_OPT_NONE);
+-	int i, scns_per_block;
+-	bool rc =3D true;
+-	unsigned long pfn, block_sz;
+-	u64 phys_addr;
++	struct memory_block *mem;
++	bool rc =3D false;
+=20
+ 	if (!(lmb->flags & DRCONF_MEM_ASSIGNED))
+ 		return false;
+=20
+-	block_sz =3D memory_block_size_bytes();
+-	scns_per_block =3D block_sz / MIN_MEMORY_BLOCK_SIZE;
+-	phys_addr =3D lmb->base_addr;
+-
+ #ifdef CONFIG_FA_DUMP
+ 	/*
+ 	 * Don't hot-remove memory that falls in fadump boot memory area
+ 	 * and memory that is reserved for capturing old kernel memory.
+ 	 */
+-	if (is_fadump_memory_area(phys_addr, block_sz))
++	if (is_fadump_memory_area(lmb->base_addr,  memory_block_size_bytes()))
+ 		return false;
+ #endif
+-
+-	for (i =3D 0; i < scns_per_block; i++) {
+-		pfn =3D PFN_DOWN(phys_addr);
+-		if (!pfn_present(pfn))
+-			continue;
+-
+-		rc =3D rc && is_mem_section_removable(pfn, PAGES_PER_SECTION);
+-		phys_addr +=3D MIN_MEMORY_BLOCK_SIZE;
++	mem =3D lmb_to_memblock(lmb);
++	if (mem) {
++		rc =3D is_memory_block_offlineable(mem);
++		put_device(&mem->dev);
+ 	}
+=20
+ 	return rc;
+diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+index c6d288fad493..f744250c34d0 100644
+--- a/drivers/base/memory.c
++++ b/drivers/base/memory.c
+@@ -104,6 +104,25 @@ static ssize_t phys_index_show(struct device *dev,
+ 	return sprintf(buf, "%08lx\n", phys_index);
  }
- 
- /* Returns 0 on success, -errno on denial. */
-@@ -321,7 +321,7 @@ static int __ptrace_may_access(struct task_struct *task, unsigned int mode)
- 	    gid_eq(caller_gid, tcred->sgid) &&
- 	    gid_eq(caller_gid, tcred->gid))
- 		goto ok;
--	if (ptrace_has_cap(tcred->user_ns, mode))
-+	if (ptrace_has_cap(cred, tcred->user_ns, mode))
- 		goto ok;
- 	rcu_read_unlock();
- 	return -EPERM;
-@@ -340,7 +340,7 @@ static int __ptrace_may_access(struct task_struct *task, unsigned int mode)
- 	mm = task->mm;
- 	if (mm &&
- 	    ((get_dumpable(mm) != SUID_DUMP_USER) &&
--	     !ptrace_has_cap(mm->user_ns, mode)))
-+	     !ptrace_has_cap(cred, mm->user_ns, mode)))
- 	    return -EPERM;
- 
- 	return security_ptrace_access_check(task, mode);
-
-base-commit: b3a987b0264d3ddbb24293ebff10eddfc472f653
--- 
-2.25.0
+=20
++/*
++ * Test if a memory block is likely to be offlineable. Returns true if
++ * the block is already offline.
++ *
++ * Called under device_hotplug_lock.
++ */
++bool is_memory_block_offlineable(struct memory_block *mem)
++{
++	int i;
++
++	if (mem->state !=3D MEM_ONLINE)
++		return true;
++
++	for (i =3D 0; i < sections_per_block; i++)
++		if (!is_mem_section_offlineable(mem->start_section_nr + i))
++			return false;
++	return true;
++}
++
+ /*
+  * Show whether the memory block is likely to be offlineable (or is alre=
+ady
+  * offline). Once offline, the memory block could be removed. The return
+@@ -114,20 +133,14 @@ static ssize_t removable_show(struct device *dev, s=
+truct device_attribute *attr,
+ 			      char *buf)
+ {
+ 	struct memory_block *mem =3D to_memory_block(dev);
+-	unsigned long pfn;
+-	int ret =3D 1, i;
+-
+-	if (mem->state !=3D MEM_ONLINE)
+-		goto out;
++	int ret;
+=20
+-	for (i =3D 0; i < sections_per_block; i++) {
+-		if (!present_section_nr(mem->start_section_nr + i))
+-			continue;
+-		pfn =3D section_nr_to_pfn(mem->start_section_nr + i);
+-		ret &=3D is_mem_section_removable(pfn, PAGES_PER_SECTION);
+-	}
++	ret =3D lock_device_hotplug_sysfs();
++	if (ret)
++		return ret;
++	ret =3D is_memory_block_offlineable(mem);
++	unlock_device_hotplug();
+=20
+-out:
+ 	return sprintf(buf, "%d\n", ret);
+ }
+=20
+diff --git a/include/linux/memory.h b/include/linux/memory.h
+index 0b8d791b6669..faf03eb64ecc 100644
+--- a/include/linux/memory.h
++++ b/include/linux/memory.h
+@@ -91,6 +91,7 @@ typedef int (*walk_memory_blocks_func_t)(struct memory_=
+block *, void *);
+ extern int walk_memory_blocks(unsigned long start, unsigned long size,
+ 			      void *arg, walk_memory_blocks_func_t func);
+ extern int for_each_memory_block(void *arg, walk_memory_blocks_func_t fu=
+nc);
++extern bool is_memory_block_offlineable(struct memory_block *mem);
+ #define CONFIG_MEM_BLOCK_SIZE	(PAGES_PER_SECTION<<PAGE_SHIFT)
+ #endif /* CONFIG_MEMORY_HOTPLUG_SPARSE */
+=20
+diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplu=
+g.h
+index f4d59155f3d4..8d087772f748 100644
+--- a/include/linux/memory_hotplug.h
++++ b/include/linux/memory_hotplug.h
+@@ -306,15 +306,14 @@ static inline void pgdat_resize_init(struct pglist_=
+data *pgdat) {}
+=20
+ #ifdef CONFIG_MEMORY_HOTREMOVE
+=20
+-extern bool is_mem_section_removable(unsigned long pfn, unsigned long nr=
+_pages);
++extern bool is_mem_section_offlineable(unsigned long nr);
+ extern void try_offline_node(int nid);
+ extern int offline_pages(unsigned long start_pfn, unsigned long nr_pages=
+);
+ extern int remove_memory(int nid, u64 start, u64 size);
+ extern void __remove_memory(int nid, u64 start, u64 size);
+=20
+ #else
+-static inline bool is_mem_section_removable(unsigned long pfn,
+-					unsigned long nr_pages)
++static inline bool is_mem_section_offlineable(unsigned long nr)
+ {
+ 	return false;
+ }
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 7a6de9b0dcab..a6d14d2b7f0c 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1128,46 +1128,51 @@ static unsigned long next_active_pageblock(unsign=
+ed long pfn)
+ 	return pfn + pageblock_nr_pages;
+ }
+=20
+-static bool is_pageblock_removable_nolock(unsigned long pfn)
++static int count_system_ram_pages_cb(unsigned long start_pfn,
++				     unsigned long nr_pages, void *data)
+ {
+-	struct page *page =3D pfn_to_page(pfn);
++	unsigned long *nr_system_ram_pages =3D data;
++
++	*nr_system_ram_pages +=3D nr_pages;
++	return 0;
++}
++
++/*
++ * Check if a section is likely to be offlineable.
++ *
++ * Called with device_hotplug_lock.
++ */
++bool is_mem_section_offlineable(unsigned long nr)
++{
++	const unsigned long start_pfn =3D section_nr_to_pfn(nr);
++	const unsigned long end_pfn =3D start_pfn + PAGES_PER_SECTION;
++	unsigned long pfn, nr_pages =3D 0;
+ 	struct zone *zone;
+=20
+-	/*
+-	 * We have to be careful here because we are iterating over memory
+-	 * sections which are not zone aware so we might end up outside of
+-	 * the zone but still within the section.
+-	 * We have to take care about the node as well. If the node is offline
+-	 * its NODE_DATA will be NULL - see page_zone.
+-	 */
+-	if (!node_online(page_to_nid(page)))
++	if (!present_section_nr(nr))
+ 		return false;
+-
+-	zone =3D page_zone(page);
+-	pfn =3D page_to_pfn(page);
+-	if (!zone_spans_pfn(zone, pfn))
++	if (!online_section_nr(nr))
+ 		return false;
+=20
+-	return !has_unmovable_pages(zone, page, MIGRATE_MOVABLE,
+-				    MEMORY_OFFLINE);
+-}
+-
+-/* Checks if this range of memory is likely to be hot-removable. */
+-bool is_mem_section_removable(unsigned long start_pfn, unsigned long nr_=
+pages)
+-{
+-	unsigned long end_pfn, pfn;
++	/* we don't allow to offline sections with holes */
++	walk_system_ram_range(start_pfn, PAGES_PER_SECTION, &nr_pages,
++			      count_system_ram_pages_cb);
++	if (nr_pages !=3D PAGES_PER_SECTION)
++		return false;
+=20
+-	end_pfn =3D min(start_pfn + nr_pages,
+-			zone_end_pfn(page_zone(pfn_to_page(start_pfn))));
++	/* we don't allow to offline sections with mixed zones/nodes */
++	zone =3D test_pages_in_a_zone(start_pfn, end_pfn);
++	if (!zone)
++		return false;
+=20
+-	/* Check the starting page of each pageblock within the range */
++	/* check each pageblock if it contains unmovable pages */
+ 	for (pfn =3D start_pfn; pfn < end_pfn; pfn =3D next_active_pageblock(pf=
+n)) {
+-		if (!is_pageblock_removable_nolock(pfn))
++		if (has_unmovable_pages(zone, pfn_to_page(pfn), MIGRATE_MOVABLE,
++					MEMORY_OFFLINE))
+ 			return false;
+ 		cond_resched();
+ 	}
+=20
+-	/* All pageblocks in the memory block are likely to be hot-removable */
+ 	return true;
+ }
+=20
+@@ -1436,15 +1441,6 @@ static void node_states_clear_node(int node, struc=
+t memory_notify *arg)
+ 		node_clear_state(node, N_MEMORY);
+ }
+=20
+-static int count_system_ram_pages_cb(unsigned long start_pfn,
+-				     unsigned long nr_pages, void *data)
+-{
+-	unsigned long *nr_system_ram_pages =3D data;
+-
+-	*nr_system_ram_pages +=3D nr_pages;
+-	return 0;
+-}
+-
+ static int __ref __offline_pages(unsigned long start_pfn,
+ 		  unsigned long end_pfn)
+ {
+--=20
+2.24.1
 
