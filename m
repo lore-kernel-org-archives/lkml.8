@@ -2,134 +2,182 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E66C6C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 04:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB19C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 04:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C72A720728
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 04:00:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7A2B2077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 04:00:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RsKQHLuc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730107AbgAQEAP (ORCPT
+        id S1730220AbgAQEAV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 Jan 2020 23:00:15 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36387 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbgAQEAN (ORCPT
+        Thu, 16 Jan 2020 23:00:21 -0500
+Received: from mail-io1-f42.google.com ([209.85.166.42]:40097 "EHLO
+        mail-io1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbgAQEAS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 Jan 2020 23:00:13 -0500
-Received: by mail-pg1-f193.google.com with SMTP id k3so11000187pgc.3;
-        Thu, 16 Jan 2020 20:00:13 -0800 (PST)
+        Thu, 16 Jan 2020 23:00:18 -0500
+Received: by mail-io1-f42.google.com with SMTP id x1so24469613iop.7;
+        Thu, 16 Jan 2020 20:00:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dWWfJaURmsOQ3gW/I5cX63NQOzc27+1p7Rp9O4pX5yo=;
+        b=RsKQHLuc6uNM3k6juQztjjat/V3GWbnLqFJSu/HfXVn2wSGEEcwdQHNe/TdUPRKyL4
+         iEx5Ml60uCGFoFKNt/4WdXmsMeqcQW5yfBKJ8KodB9nbHeHaoZbGf72vnsEV9aDp87nK
+         eeGQhZg8ffauTETAWipn6SeEiMJ4rcb/QMZu0BlHe0WAIEB9c3XS71mOyQMDJ0Zwf82/
+         PKZG5Ev0YGYb1rSrG1L16Cxg7NuA8ZTA60QWhK38NkScdb2l6d9VrdisYF91GidZPl40
+         LYE8hm7Fjlcxe85KxFtpvL9YKFomj9nv/WLQK2s77Bba2RdR/4imq2CbCD/gu+eYJm4R
+         U+zQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=j/gmt+S+U5biY49eR+qUY302EUGG1032iY8t1Ue0P1s=;
-        b=SjDjmIptcOzs3J32TQ2+idVc5baQvUVKjWwx/vINIdyY+ETBRl9/yyElOuiPGzwMME
-         JLJ9QG0vQu0+4tgUAoBmlu+JZXKyB0taGZJuf2HWcjNUH8JAnvK1true3bwuRZsHBym7
-         OM3fxA9YleS0FoSQJdq6RCnUKTtlkEtns884vsZZ1lOeZQI5vGakkKjIo2Trv3av0oTg
-         qUiOicfmquxA1z7ITO27HYChrBppf6+BtisMKK0jFoYjX5cXs+cMDs6kPb3M3C2TH5XG
-         oKe1dRks/dVN9Kpz2wRTYXwKCpQjT8UwGXkKosHKum6b1ixm630tpYuuBTDncKiZ5tCg
-         09uw==
-X-Gm-Message-State: APjAAAVcFnnf8P6sld5eezfeJ2S15vR45ItdQwFOawDAznuO3Sf34z9e
-        nogBdJlzeKpGr0S2LrQqASLV4a6Wl50=
-X-Google-Smtp-Source: APXvYqzojzQMzN/4c4rIhB+N1ix9vQkiluNoIBRoleUyxoTu7MgidTGKioWDjBx1jvV8QJgO04VrqA==
-X-Received: by 2002:a63:ce4b:: with SMTP id r11mr44165950pgi.419.1579233612897;
-        Thu, 16 Jan 2020 20:00:12 -0800 (PST)
-Received: from ?IPv6:2601:647:4000:d7:8dfb:7edd:e01b:b201? ([2601:647:4000:d7:8dfb:7edd:e01b:b201])
-        by smtp.gmail.com with ESMTPSA id u26sm26061663pfn.46.2020.01.16.20.00.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jan 2020 20:00:12 -0800 (PST)
-Subject: Re: [PATCH v2 6/9] scsi: ufs: Delete is_init_prefetch from struct
- ufs_hba
-To:     Bean Huo <huobean@gmail.com>, alim.akhtar@samsung.com,
-        avri.altman@wdc.com, asutoshd@codeaurora.org, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, stanley.chu@mediatek.com,
-        beanhuo@micron.com, tomas.winkler@intel.com, cang@codeaurora.org
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200116215914.16015-1-huobean@gmail.com>
- <20200116215914.16015-7-huobean@gmail.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <125ff67c-bcd5-69e7-2ec8-203b805c246b@acm.org>
-Date:   Thu, 16 Jan 2020 20:00:10 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dWWfJaURmsOQ3gW/I5cX63NQOzc27+1p7Rp9O4pX5yo=;
+        b=MX276bAsQdUndKD5C22o4qCrF8nUTWNLFgsx+awIDXlWRv6dA9Yi3nBJCpKGSThobs
+         dwFMASDbSJeQL2aVj7AaJ+ogv7CxIzbEMEVH9FKAYoduoZpngupgRirT+gJH5V7S7fXC
+         HxCvIGtbDd0Q2CwCKNXeLPXWCsYEJL6l5z41HgdUkhg2/WyMKvP19jU7gS++90Sj8D02
+         Joz1EAA9OUip26Y5VThqKZsLjZhaugRpeNcbRhp94AeYLZvz/2SblXupONk6c14s+vzt
+         3ru+foM16l1qOM6p1nYEeoa8UgOT8sfl+hw21yrXkFmDw3jiXxZmCVQSd3nJnGmwE0Lg
+         +5LA==
+X-Gm-Message-State: APjAAAVDnM5XR6dEKHDff4GtE2+biHOTw1rPgXKBticRZAw/O7x4QU6M
+        KzAFsUcqOIVYdzwF9pX/js+lRB9GDUZYjOKeLa4=
+X-Google-Smtp-Source: APXvYqwibINkfFs9b53KPq3W0e3f9E1ZwCkRXy1fkMNxHTHKGjNeRHl5Nh+PtLpPL1i1LpQ+FTDXwcZcQ373qW2lf8E=
+X-Received: by 2002:a02:b385:: with SMTP id p5mr31237614jan.43.1579233617266;
+ Thu, 16 Jan 2020 20:00:17 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200116215914.16015-7-huobean@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CABXGCsNu+nih5nZkuavoYot0eo5pF7quD4JviN+vWctPdmbu=A@mail.gmail.com>
+ <fe3cd3c3d4364ef4bfb14b5ac3fcee1d@realtek.com>
+In-Reply-To: <fe3cd3c3d4364ef4bfb14b5ac3fcee1d@realtek.com>
+From:   Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Date:   Fri, 17 Jan 2020 09:00:06 +0500
+Message-ID: <CABXGCsMUwgUNFiYDLqDPWaUw3zu0oJWUY-gFktJwpqc4JxHFSA@mail.gmail.com>
+Subject: Re: [rtw88] purge skb(s) not reported by firmware
+To:     Tony Chuang <yhchuang@realtek.com>
+Cc:     Linux List Kernel Mailing <linux-wireless@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-16 13:59, Bean Huo wrote:
-> From: Bean Huo <beanhuo@micron.com>
-> 
-> Without variable is_init_prefetch, the current logic can guarantee
-> ufshcd_init_icc_levels() will execute only once, delete it now.
-> 
-> Signed-off-by: Bean Huo <beanhuo@micron.com>
-> ---
->  drivers/scsi/ufs/ufshcd.c | 5 +----
->  drivers/scsi/ufs/ufshcd.h | 2 --
->  2 files changed, 1 insertion(+), 6 deletions(-)
-> 
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index 44b7c0a44b8d..31b6e2a7c166 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -6967,8 +6967,7 @@ static int ufs_lu_add(struct ufs_hba *hba)
->  {
->  	int ret;
->  
-> -	if (!hba->is_init_prefetch)
-> -		ufshcd_init_icc_levels(hba);
-> +	ufshcd_init_icc_levels(hba);
->  
->  	/* Add required well known logical units to scsi mid layer */
->  	ret = ufshcd_scsi_add_wlus(hba);
-> @@ -6994,8 +6993,6 @@ static int ufs_lu_add(struct ufs_hba *hba)
->  	scsi_scan_host(hba->host);
->  	pm_runtime_put_sync(hba->dev);
->  
-> -	if (!hba->is_init_prefetch)
-> -		hba->is_init_prefetch = true;
->  out:
->  	return ret;
->  }
+On Mon, 13 Jan 2020 at 12:49, Tony Chuang <yhchuang@realtek.com> wrote:
+>
+> But from your kernel log I can see that the h2c commands failed to
+> be sent to firmware, which means there's another things that cause
+> firmware to stall. It will be better if you can turn the debug masks on,
+> and reproduce it, to help me so see what happened.
+> To turn the debug masks on:
+> $ echo 0xffffffff > /sys/module/rtw88/parameters/debug_mask
+>
 
-The current code calls ufshcd_init_icc_levels() once per HBA. This patch
-changes that into one call per LUN. It seems like the patch description
-contradicts the code I see above.
+wlp5s0: RX AssocResp from 50:ff:20:04:c8:dc (capab=0x1811 status=0 aid=1)
+rtw_pci 0000:05:00.0: sta 50:ff:20:04:c8:dc joined with macid 0
+rtw_pci 0000:05:00.0: wrong bfee role
+wlp5s0: associated
+rtw_pci 0000:05:00.0: failed to send h2c command
+rtw_pci 0000:05:00.0: failed to send h2c command
+------------[ cut here ]------------
+purge skb(s) not reported by firmware
+WARNING: CPU: 7 PID: 0 at drivers/net/wireless/realtek/rtw88/tx.c:155
+rtw_tx_report_purge_timer+0x20/0x50 [rtw88]
+Modules linked in: uinput rfcomm xt_CHECKSUM xt_MASQUERADE
+xt_conntrack ipt_REJECT nf_nat_tftp nf_conntrack_tftp tun bridge stp
+llc ccm nft_objref nf_conntrack_netbios_ns nf_conntrack_broadcast
+nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet
+nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nf_tables_set
+nft_chain_nat nf_tables ebtable_nat ebtable_broute ip6table_nat
+ip6table_mangle ip6table_raw ip6table_security iptable_nat nf_nat
+nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 iptable_mangle iptable_raw
+iptable_security ip_set nfnetlink ebtable_filter ebtables
+ip6table_filter ip6_tables iptable_filter cmac bnep sunrpc vfat fat
+snd_hda_codec_realtek snd_hda_codec_generic ledtrig_audio
+snd_hda_codec_hdmi edac_mce_amd kvm_amd snd_hda_intel snd_intel_dspcfg
+kvm irqbypass snd_hda_codec btusb rtwpci btrtl rtw88 snd_hda_core
+btbcm crct10dif_pclmul snd_hwdep btintel crc32_pclmul mac80211 snd_seq
+snd_seq_device bluetooth eeepc_wmi snd_pcm ghash_clmulni_intel
+asus_wmi joydev
+ sparse_keymap snd_timer ecdh_generic cfg80211 video wmi_bmof ecc snd
+pcspkr sp5100_tco ccp k10temp soundcore i2c_piix4 rfkill libarc4
+gpio_amdpt gpio_generic acpi_cpufreq binfmt_misc ip_tables xfs
+libcrc32c amdgpu amd_iommu_v2 gpu_sched ttm drm_kms_helper drm igb
+crc32c_intel nvme dca i2c_algo_bit nvme_core wmi pinctrl_amd fuse
+CPU: 7 PID: 0 Comm: swapper/7 Not tainted 5.5.0-0.rc6.git2.2.fc32.x86_64 #1
+Hardware name: System manufacturer System Product Name/ROG STRIX
+X470-I GAMING, BIOS 3004 12/16/2019
+RIP: 0010:rtw_tx_report_purge_timer+0x20/0x50 [rtw88]
+Code: 84 00 00 00 00 00 0f 1f 40 00 0f 1f 44 00 00 8b 47 a8 85 c0 75
+01 c3 41 54 55 53 48 89 fb 48 c7 c7 20 bb 10 c1 e8 c0 c8 04 d4 <0f> 0b
+4c 8d a3 50 ff ff ff 4c 89 e7 e8 5f d5 ad d4 48 8d 7b 98 48
+RSP: 0018:ffffbb9dc0354e48 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: ffff920758997810 RCX: 0000000000000000
+RDX: ffff92077afeaf40 RSI: ffff92077afdc5b8 RDI: 0000000000000300
+RBP: 0000000000000101 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000001 R11: 0000000000000000 R12: ffffbb9dc0354ed8
+R13: ffffffffc109f3c0 R14: 00000001009d4a78 R15: ffffffffc109f3c0
+FS:  0000000000000000(0000) GS:ffff92077ae00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000562f61eee7e0 CR3: 00000006d7082000 CR4: 00000000003406e0
+Call Trace:
+ <IRQ>
+ call_timer_fn+0xaf/0x2c0
+ run_timer_softirq+0x1bf/0x5e0
+ ? clockevents_program_event+0x50/0xf0
+ __do_softirq+0xe1/0x45d
+ irq_exit+0xf7/0x100
+ smp_apic_timer_interrupt+0xa4/0x230
+ apic_timer_interrupt+0xf/0x20
+ </IRQ>
+RIP: 0010:cpuidle_enter_state+0xce/0x400
+Code: 80 7c 24 0f 00 74 17 9c 58 0f 1f 44 00 00 f6 c4 02 0f 85 0b 03
+00 00 31 ff e8 3e 31 8a ff e8 19 c7 91 ff fb 66 0f 1f 44 00 00 <45> 85
+ed 0f 88 5c 02 00 00 49 63 d5 4c 2b 64 24 10 48 8d 04 52 48
+RSP: 0018:ffffbb9dc0157e68 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
+RAX: 0000000000000000 RBX: ffff92076ac8d400 RCX: 000000000000001f
+RDX: 0000000000000000 RSI: 0000000022a8dc79 RDI: ffffffff9590fd27
+RBP: ffffffff96814d60 R08: 000009a60caadd47 R09: 000000000000aeef
+R10: 00000000000026d2 R11: ffff92077afed824 R12: 000009a60caadd47
+R13: 0000000000000002 R14: 0000000000000002 R15: ffff9207764b8000
+ ? cpuidle_enter_state+0xc7/0x400
+ ? cpuidle_enter_state+0xc7/0x400
+ cpuidle_enter+0x29/0x40
+ do_idle+0x1e9/0x290
+ cpu_startup_entry+0x19/0x20
+ start_secondary+0x16e/0x1c0
+ secondary_startup_64+0xb6/0xc0
+irq event stamp: 15178100
+hardirqs last  enabled at (15178099): [<ffffffff951b61ff>]
+tick_nohz_idle_exit+0x5f/0xc0
+hardirqs last disabled at (15178100): [<ffffffff95b7422e>] __schedule+0xde/0x9c0
+softirqs last  enabled at (15178094): [<ffffffff950f4138>] irq_enter+0x68/0x70
+softirqs last disabled at (15178093): [<ffffffff950f411d>] irq_enter+0x4d/0x70
+---[ end trace 48f8cd6a9096abc3 ]---
+rtw_pci 0000:05:00.0: sta 50:ff:20:04:c8:dc with macid 0 left
+wlp5s0: authenticate with 50:ff:20:04:c8:dc
+wlp5s0: capabilities/regulatory prevented using AP HT/VHT
+configuration, downgraded
+wlp5s0: send auth to 50:ff:20:04:c8:dc (try 1/3)
+wlp5s0: send auth to 50:ff:20:04:c8:dc (try 2/3)
+wlp5s0: send auth to 50:ff:20:04:c8:dc (try 3/3)
+wlp5s0: authentication with 50:ff:20:04:c8:dc timed out
+wlp5s0: authenticate with 50:ff:20:04:c8:dc
+wlp5s0: capabilities/regulatory prevented using AP HT/VHT
+configuration, downgraded
+wlp5s0: send auth to 50:ff:20:04:c8:dc (try 1/3)
+wlp5s0: authenticated
 
-Thanks,
 
-Bart.
+Here is full version: https://pastebin.com/neBaLf4A
+
+
+--
+Best Regards,
+Mike Gavrilov.
