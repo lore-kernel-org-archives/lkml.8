@@ -2,119 +2,141 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C590C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E90C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 425A82072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AE4A2072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:35:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="eqXflPFu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bfs.de header.i=@bfs.de header.b="C+HDCZge"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728816AbgAQOdT (ORCPT
+        id S1728739AbgAQOfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 09:33:19 -0500
-Received: from mail-pl1-f170.google.com ([209.85.214.170]:33315 "EHLO
-        mail-pl1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbgAQOdT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 09:33:19 -0500
-Received: by mail-pl1-f170.google.com with SMTP id ay11so9950740plb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 06:33:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:to:cc:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=w4mp3hsKOArV78Fh9THmePV3c421RHxulbG70WLaTp4=;
-        b=eqXflPFuuamkC1dxHfVih0Dj2pBPqEkO4/H0rMCRtDNvHwZgbkHR13FKZyhkKvu7be
-         Qv/iPkXTtzSY4uhWfe9sCrh88KI7jbsKHwe5Re+NHjLOFtVcmsh7nPI8BxJ1qHt7S59W
-         uGZoQLZ4b9zCqSaZBxXoY8uP5Yy3wwbgMrvK+Y+PuHOw+eeTujlkeBb8XUF8lYQtKDU+
-         vt1RVkUWp7m7ldiTe3YbeUSRV4+Sp2julnGyUaD4ukaCbcPAtiIL1bYmTGHPeY/3eah7
-         oKo5TJ1cJIHzNHKvXcL9uvmOf2YndiXZKffTvkqOU81wMb6GYo/bvvRbwqG6acshfEsK
-         luXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=w4mp3hsKOArV78Fh9THmePV3c421RHxulbG70WLaTp4=;
-        b=fjVmFchu/nP8zzapgcAntcpweE0V3X2CsKb+PN9X1BQv3PUug6Se+UEuzMQTOqM5QJ
-         T3QfAouAGNXl8+EBP+pHp+a9QWXzXJVAnEXwad1ySmCMbed930Yu9yiyM5Er9CwvlSt+
-         sJV5hqKsKf2/6+JWoYzAjyvtU4BzeoupIiMc0Qy8nKn7XsVyIvFxfSMG6od4/xjQV5j6
-         GaYTjh8VYd+xgGa50nuLuBCt0I7ti8rgq5vS8vqJpuwA6MDoX38Mm9LSxvd4Yj3eLhVF
-         mQ/ZPTa+P/kLWSbL93rHGPGVtz0AD7Nu0asCniX2/T7FnRKu13T9WDUuVOaEkQtWzZU6
-         bfKQ==
-X-Gm-Message-State: APjAAAUlhWr1Wo2P1rdFPGSlQKr8cfa0GC+TZuZLmPr4MHwrSMpQMI2O
-        9PWNUpO1e4BuS+XRFj5ckoxKTRN0biM=
-X-Google-Smtp-Source: APXvYqy3SNNpATed1MOyfomAGHqYY170zILmu6a0D/TplCHXTJqzBxhRkSyWNeyLP4Z/AmC9I7R5VQ==
-X-Received: by 2002:a17:902:6b09:: with SMTP id o9mr35417493plk.209.1579271597816;
-        Fri, 17 Jan 2020 06:33:17 -0800 (PST)
-Received: from [192.168.1.182] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id b8sm30023821pff.114.2020.01.17.06.33.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jan 2020 06:33:17 -0800 (PST)
-From:   Jens Axboe <axboe@kernel.dk>
-Subject: [GIT PULL] io_uring fixes for 5.5-rc7
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     io-uring <io-uring@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Message-ID: <48229b93-5e4d-78a2-3171-021e2a87c99b@kernel.dk>
-Date:   Fri, 17 Jan 2020 07:33:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 17 Jan 2020 09:35:13 -0500
+Received: from mx01-fr.bfs.de ([193.174.231.67]:9092 "EHLO mx01-fr.bfs.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726890AbgAQOfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 09:35:13 -0500
+X-Greylist: delayed 502 seconds by postgrey-1.27 at vger.kernel.org; Fri, 17 Jan 2020 09:35:11 EST
+Received: from mail-fr.bfs.de (mail-fr.bfs.de [10.177.18.200])
+        by mx01-fr.bfs.de (Postfix) with ESMTPS id 94FDE2036D;
+        Fri, 17 Jan 2020 15:26:44 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bfs.de; s=dkim201901;
+        t=1579271204; h=from:from:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vklTv1W7/ocwmfCw1yXAs37PNEse48aUNTXTC6C3H0c=;
+        b=C+HDCZgeGXwzghdLLVb2Z0kGY2gmufm+jURg6DQu2im7bC26WaFaEGGZHoHUTepbTyVNE3
+        LyPcEiGpaelRbhLIZxMf2/0n8H5ErY6WVaFrhdQNBhHOUqWJoPfU8+ev2pa2q+WGha2Dhr
+        Ydcuq/q7qL4JBz6PFxmasSmfMsD1Ho//QAmoocevBaA5r/j/nTJcybSFRFFRGGOFfLkfg2
+        5TPNV4ogtJVZMnOmeGpdz6H9aDulCYBnpqa5GGpZSXChfJwis1KO7DA/zNxAcsiW+VVv4C
+        DgnFGrOBYi9G6qmPOwXcIrmZ9ZEGyUaTHx5tUCILIMs9N9nshMW6WSsNdoPFsQ==
+Received: from [134.92.181.33] (unknown [134.92.181.33])
+        by mail-fr.bfs.de (Postfix) with ESMTPS id 204E5BEEBD;
+        Fri, 17 Jan 2020 15:26:43 +0100 (CET)
+Message-ID: <5E21C422.6040708@bfs.de>
+Date:   Fri, 17 Jan 2020 15:26:42 +0100
+From:   walter harms <wharms@bfs.de>
+Reply-To: wharms@bfs.de
+User-Agent: Mozilla/5.0 (X11; U; Linux x86_64; de; rv:1.9.1.16) Gecko/20101125 SUSE/3.0.11 Thunderbird/3.0.11
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+To:     Colin King <colin.king@canonical.com>
+CC:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?B?Q2hyaXN0aWFuIEvDtm5pZw==?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Nikola Cornij <Nikola.Cornij@amd.com>,
+        Wenjing Liu <Wenjing.Liu@amd.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] drm/amd/display: fix for-loop with incorrectly
+ sized loop counter
+References: <20200117133305.113280-1-colin.king@canonical.com>
+In-Reply-To: <20200117133305.113280-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+Authentication-Results: mx01-fr.bfs.de
+X-Spamd-Result: default: False [-3.10 / 7.00];
+         ARC_NA(0.00)[];
+         HAS_REPLYTO(0.00)[wharms@bfs.de];
+         BAYES_HAM(-3.00)[100.00%];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         REPLYTO_ADDR_EQ_FROM(0.00)[];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[15];
+         NEURAL_HAM(-0.00)[-0.999,0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         RCVD_COUNT_TWO(0.00)[2];
+         MID_RHS_MATCH_FROM(0.00)[];
+         RCVD_TLS_ALL(0.00)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
-
-A set of fixes that should go into this release. This pull request
-contains:
-
-- Ensure ->result is always set when IO is retried (Bijan)
-
-- In conjunction with the above, fix a regression in polled IO issue
-  when retried (me/Bijan)
-
-- Don't setup async context for read/write fixed, otherwise we may
-  wrongly map the iovec on retry (me)
-
-- Cancel io-wq work if we fail getting mm reference (me)
-
-- Ensure dependent work is always initialized correctly (me)
-
-- Only allow original task to submit IO, don't allow it from a passed
-  ring fd (me)
-
-Please pull!
 
 
-  git://git.kernel.dk/linux-block.git tags/io_uring-5.5-2020-01-16
+Am 17.01.2020 14:33, schrieb Colin King:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> A for-loop is iterating from 0 up to 1000 however the loop variable count
+> is a u8 and hence not large enough.  Fix this by making count an int.
+> Also remove the redundant initialization of count since this is never used
+> and add { } on the loop statement make the loop block clearer.
+> 
+> Addresses-Coverity: ("Operands don't affect result")
+> Fixes: ed581a0ace44 ("drm/amd/display: wait for update when setting dpg test pattern")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+> index 6ab298c65247..cbed738a4246 100644
+> --- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+> +++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+> @@ -3680,7 +3680,7 @@ static void set_crtc_test_pattern(struct dc_link *link,
+>  			struct pipe_ctx *odm_pipe;
+>  			enum controller_dp_color_space controller_color_space;
+>  			int opp_cnt = 1;
+> -			uint8_t count = 0;
+> +			int count;
+>  
+>  			switch (test_pattern_color_space) {
+>  			case DP_TEST_PATTERN_COLOR_SPACE_RGB:
+> @@ -3725,11 +3725,12 @@ static void set_crtc_test_pattern(struct dc_link *link,
+>  				width,
+>  				height);
+>  			/* wait for dpg to blank pixel data with test pattern */
+> -			for (count = 0; count < 1000; count++)
+> +			for (count = 0; count < 1000; count++) {
+>  				if (opp->funcs->dpg_is_blanked(opp))
+>  					break;
+>  				else
+>  					udelay(100);
+> +			}
+>  		}
+>  	}
+>  	break;
 
+Nitpick:
+the else is useless you can remove it.
 
-----------------------------------------------------------------
-Bijan Mottahedeh (1):
-      io_uring: clear req->result always before issuing a read/write request
-
-Jens Axboe (5):
-      io_uring: don't setup async context for read/write fixed
-      io-wq: cancel work if we fail getting a mm reference
-      io_uring: be consistent in assigning next work from handler
-      io_uring: ensure workqueue offload grabs ring mutex for poll list
-      io_uring: only allow submit from owning task
-
- fs/io-wq.c    | 12 ++++++----
- fs/io_uring.c | 72 +++++++++++++++++++++++++++++++++++++++--------------------
- 2 files changed, 56 insertions(+), 28 deletions(-)
-
--- 
-Jens Axboe
+re,
+ wh
 
