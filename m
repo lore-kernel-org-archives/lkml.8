@@ -2,108 +2,288 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F248DC33CB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B85EC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA11720748
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:33:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2650A2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:33:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="sfIxgB7U"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dN35GK7z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgAQJc7 (ORCPT
+        id S1728249AbgAQJdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 04:32:59 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41116 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgAQJcv (ORCPT
+        Fri, 17 Jan 2020 04:33:10 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59057 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726950AbgAQJdF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 04:32:51 -0500
-Received: by mail-lj1-f196.google.com with SMTP id h23so25752668ljc.8
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 01:32:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FlrrQ/nssXV3OvXK75kddNho6rYCmJKAPSJyNmFq/w0=;
-        b=sfIxgB7U1bB9LTHv0aHc7+QPCc3l8aYtittaJhGCf65F4xYxO3R+NyNy7CBNHdyLGp
-         uMwnKyb0dIEMTY7wxolA0Reylx3j0aNQDjR5xJdjPg0xM/WiO27fLuMH/GkWsLvSI+DN
-         iXoFD3iOr9AcURuzFrX3i3T/lG9a6+XXG9VJfSX1VT5+4j76mU+al5u048Crn9z26bbt
-         KWdiosskdzObfWZYDQ5ckAF7/hPZ7OLqLW3+q+3sl+grqKpCTrus8UssWJ8X/ilZp2Yj
-         lT+OZNAbPsUpJfmqA9JaeSgVDb4PL0+EUdbH8znbwp8c0STIJvyAD7iVTTy98f/myk1O
-         fbfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FlrrQ/nssXV3OvXK75kddNho6rYCmJKAPSJyNmFq/w0=;
-        b=XKHjvbjpoF+WeIeWSVC1eezOl4D3fowNhGvge7mgQK5Wjs5DUdcl8djSMlSNRkYuU4
-         sb97RxEX9p9nPLbhD0zuAeAHViV1OmUeMlVtvVUGxeuWza37FMVCtCYNCKl3WpURB1CP
-         Vha9V1Cj30y8VxlN4yS1rXkg9xSOFwsj/BgRx57vqyPEpV2qNBaVcge3oy/ZEFNsCF43
-         pZldeJim2/DOGt7qkmC5uG7Mm0/myiZvnUNeuYxaukWF8V3iGP/qZVmUYUqhfehoyXfD
-         gwfbhsTEx5iJZEbafPaSlAjhyzNQeygQIu7gVRTiPLpuPZbjOEdOFe9TDjv0gpg13OFU
-         neIw==
-X-Gm-Message-State: APjAAAWWkBrYu7sHCqXdWUVe0q4q5h9CFwzmpjTRK/T+b7SGDCCFQ5Bj
-        6IPoSle4ocbydY0IOTyHWHtj9eFLoL61Cw==
-X-Google-Smtp-Source: APXvYqzgGR4ExJ+km0xQAR1IChwYbjGAZZkFrIRdRT9Cl7m98qU9fIismOpqDd/0unVYDWccrg14LQ==
-X-Received: by 2002:a2e:858b:: with SMTP id b11mr4984229lji.135.1579253569462;
-        Fri, 17 Jan 2020 01:32:49 -0800 (PST)
-Received: from ?IPv6:2a00:1fa0:671:f22f:7825:2eb6:5778:a5ff? ([2a00:1fa0:671:f22f:7825:2eb6:5778:a5ff])
-        by smtp.gmail.com with ESMTPSA id h19sm12050355ljl.57.2020.01.17.01.32.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jan 2020 01:32:48 -0800 (PST)
-Subject: Re: [PATCH AUTOSEL 4.19 104/671] ARM: dts: r8a7743: Fix sorting of
- rwdt node
-To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     Biju Das <biju.das@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-References: <20200116165502.8838-1-sashal@kernel.org>
- <20200116165502.8838-104-sashal@kernel.org>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <3a84e4dc-1d2a-3809-ffac-33d75eb73351@cogentembedded.com>
-Date:   Fri, 17 Jan 2020 12:32:21 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 17 Jan 2020 04:33:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579253584;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RHvGcF9xzuVRZeTw2ecPotSnBNnYfAGaG6neQxJf86E=;
+        b=dN35GK7zGCUpG0LFQSUBSG1CgLt1FSOGs6m7zva8+yffm/jwGGI3wr/AylucgVT3ycN/T7
+        GMFGws07c4tYx5RRAdQD8nvBMxjGGaPcti+njxy9BsSHDqnE9JPifItR2VVyvNYZoeNEHW
+        uY4H0fJmi0jE+XgOYZIxVs6kn5qp6UA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-139-IavVhmtuNH2UPO5_fDnW7w-1; Fri, 17 Jan 2020 04:33:03 -0500
+X-MC-Unique: IavVhmtuNH2UPO5_fDnW7w-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 46405107ACC7;
+        Fri, 17 Jan 2020 09:33:00 +0000 (UTC)
+Received: from [10.72.12.168] (ovpn-12-168.pek2.redhat.com [10.72.12.168])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 291178121F;
+        Fri, 17 Jan 2020 09:32:40 +0000 (UTC)
+Subject: Re: [PATCH 5/5] vdpasim: vDPA device simulator
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     "mst@redhat.com" <mst@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "tiwei.bie@intel.com" <tiwei.bie@intel.com>,
+        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
+        "cunming.liang@intel.com" <cunming.liang@intel.com>,
+        "zhihong.wang@intel.com" <zhihong.wang@intel.com>,
+        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
+        "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
+        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
+        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
+        "eperezma@redhat.com" <eperezma@redhat.com>,
+        "lulu@redhat.com" <lulu@redhat.com>,
+        Parav Pandit <parav@mellanox.com>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>,
+        "stefanha@redhat.com" <stefanha@redhat.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "aadam@redhat.com" <aadam@redhat.com>,
+        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Shahaf Shuler <shahafs@mellanox.com>,
+        "hanand@xilinx.com" <hanand@xilinx.com>,
+        "mhabets@solarflare.com" <mhabets@solarflare.com>, kuba@kernel.org
+References: <20200116124231.20253-1-jasowang@redhat.com>
+ <20200116124231.20253-6-jasowang@redhat.com>
+ <20200116154658.GJ20978@mellanox.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <aea2bff8-82c8-2c0f-19ee-e86db73e199f@redhat.com>
+Date:   Fri, 17 Jan 2020 17:32:39 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200116165502.8838-104-sashal@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200116154658.GJ20978@mellanox.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
 
-On 16.01.2020 19:45, Sasha Levin wrote:
+On 2020/1/16 =E4=B8=8B=E5=8D=8811:47, Jason Gunthorpe wrote:
+> On Thu, Jan 16, 2020 at 08:42:31PM +0800, Jason Wang wrote:
+>> This patch implements a software vDPA networking device. The datapath
+>> is implemented through vringh and workqueue. The device has an on-chip
+>> IOMMU which translates IOVA to PA. For kernel virtio drivers, vDPA
+>> simulator driver provides dma_ops. For vhost driers, set_map() methods
+>> of vdpa_config_ops is implemented to accept mappings from vhost.
+>>
+>> A sysfs based management interface is implemented, devices are
+>> created and removed through:
+>>
+>> /sys/devices/virtual/vdpa_simulator/netdev/{create|remove}
+> This is very gross, creating a class just to get a create/remove and
+> then not using the class for anything else? Yuk.
 
-> From: Biju Das <biju.das@bp.renesas.com>
-> 
-> [ Upstream commit 383f6024981d32425fa453bf2e66b546fdbc1314 ]
-> 
-> Watchdog node is incorrectly placed on r8a7743 SoC dtsi. This patch fixes
-> the sorting order.
-> 
-> Fixes: b5beb5d4c81c358f50a8310108 ("ARM: dts: r8a7743: Add watchdog support to SoC dtsi")
-> 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->   arch/arm/boot/dts/r8a7743.dtsi | 20 ++++++++++----------
->   1 file changed, 10 insertions(+), 10 deletions(-)
 
-    I doubt that the DT node reordering is worth merging into the -stable 
-kernels...
+It includes more information, e.g the devices and the link from vdpa_sim=20
+device and vdpa device.
 
-MBR, Sergei
+
+>
+>> Netlink based lifecycle management could be implemented for vDPA
+>> simulator as well.
+> This is just begging for a netlink based approach.
+>
+> Certainly netlink driven removal should be an agreeable standard for
+> all devices, I think.
+
+
+Well, I think Parav had some proposals during the discussion of mdev=20
+approach. But I'm not sure if he had any RFC codes for me to integrate=20
+it into vdpasim.
+
+Or do you want me to propose the netlink API? If yes, would you prefer=20
+to a new virtio dedicated one or be a subset of devlink?
+
+But it might be better to reach an agreement for all the vendors here.
+
+Rob, Steve, Tiwei, Lingshan, Harpreet, Martin, Jakub, please share your=20
+thoughts about the management API here.
+
+
+>
+>> +struct vdpasim_virtqueue {
+>> +	struct vringh vring;
+>> +	struct vringh_kiov iov;
+>> +	unsigned short head;
+>> +	bool ready;
+>> +	u64 desc_addr;
+>> +	u64 device_addr;
+>> +	u64 driver_addr;
+>> +	u32 num;
+>> +	void *private;
+>> +	irqreturn_t (*cb)(void *data);
+>> +};
+>> +
+>> +#define VDPASIM_QUEUE_ALIGN PAGE_SIZE
+>> +#define VDPASIM_QUEUE_MAX 256
+>> +#define VDPASIM_DEVICE_ID 0x1
+>> +#define VDPASIM_VENDOR_ID 0
+>> +#define VDPASIM_VQ_NUM 0x2
+>> +#define VDPASIM_CLASS_NAME "vdpa_simulator"
+>> +#define VDPASIM_NAME "netdev"
+>> +
+>> +u64 vdpasim_features =3D (1ULL << VIRTIO_F_ANY_LAYOUT) |
+>> +		       (1ULL << VIRTIO_F_VERSION_1)  |
+>> +		       (1ULL << VIRTIO_F_IOMMU_PLATFORM);
+> Is not using static here intentional?
+
+
+No, let me fix.
+
+
+>
+>> +static void vdpasim_release_dev(struct device *_d)
+>> +{
+>> +	struct vdpa_device *vdpa =3D dev_to_vdpa(_d);
+>> +	struct vdpasim *vdpasim =3D vdpa_to_sim(vdpa);
+>> +
+>> +	sysfs_remove_link(vdpasim_dev->devices_kobj, vdpasim->name);
+>> +
+>> +	mutex_lock(&vsim_list_lock);
+>> +	list_del(&vdpasim->next);
+>> +	mutex_unlock(&vsim_list_lock);
+>> +
+>> +	kfree(vdpasim->buffer);
+>> +	kfree(vdpasim);
+>> +}
+> It is again a bit weird to see a realease function in a driver. This
+> stuff is usually in the remove remove function.
+
+
+Will fix.
+
+
+>
+>> +static int vdpasim_create(const guid_t *uuid)
+>> +{
+>> +	struct vdpasim *vdpasim, *tmp;
+>> +	struct virtio_net_config *config;
+>> +	struct vdpa_device *vdpa;
+>> +	struct device *dev;
+>> +	int ret =3D -ENOMEM;
+>> +
+>> +	mutex_lock(&vsim_list_lock);
+>> +	list_for_each_entry(tmp, &vsim_devices_list, next) {
+>> +		if (guid_equal(&tmp->uuid, uuid)) {
+>> +			mutex_unlock(&vsim_list_lock);
+>> +			return -EEXIST;
+>> +		}
+>> +	}
+>> +
+>> +	vdpasim =3D kzalloc(sizeof(*vdpasim), GFP_KERNEL);
+>> +	if (!vdpasim)
+>> +		goto err_vdpa_alloc;
+>> +
+>> +	vdpasim->buffer =3D kmalloc(PAGE_SIZE, GFP_KERNEL);
+>> +	if (!vdpasim->buffer)
+>> +		goto err_buffer_alloc;
+>> +
+>> +	vdpasim->iommu =3D vhost_iotlb_alloc(2048, 0);
+>> +	if (!vdpasim->iommu)
+>> +		goto err_iotlb;
+>> +
+>> +	config =3D &vdpasim->config;
+>> +	config->mtu =3D 1500;
+>> +	config->status =3D VIRTIO_NET_S_LINK_UP;
+>> +	eth_random_addr(config->mac);
+>> +
+>> +	INIT_WORK(&vdpasim->work, vdpasim_work);
+>> +	spin_lock_init(&vdpasim->lock);
+>> +
+>> +	guid_copy(&vdpasim->uuid, uuid);
+>> +
+>> +	list_add(&vdpasim->next, &vsim_devices_list);
+>> +	vdpa =3D &vdpasim->vdpa;
+>> +
+>> +	mutex_unlock(&vsim_list_lock);
+>> +
+>> +	vdpa =3D &vdpasim->vdpa;
+>> +	vdpa->config =3D &vdpasim_net_config_ops;
+>> +	vdpa_set_parent(vdpa, &vdpasim_dev->dev);
+>> +	vdpa->dev.release =3D vdpasim_release_dev;
+>> +
+>> +	vringh_set_iotlb(&vdpasim->vqs[0].vring, vdpasim->iommu);
+>> +	vringh_set_iotlb(&vdpasim->vqs[1].vring, vdpasim->iommu);
+>> +
+>> +	dev =3D &vdpa->dev;
+>> +	dev->coherent_dma_mask =3D DMA_BIT_MASK(64);
+>> +	set_dma_ops(dev, &vdpasim_dma_ops);
+>> +
+>> +	ret =3D register_vdpa_device(vdpa);
+>> +	if (ret)
+>> +		goto err_register;
+>> +
+>> +	sprintf(vdpasim->name, "%pU", uuid);
+>> +
+>> +	ret =3D sysfs_create_link(vdpasim_dev->devices_kobj, &vdpa->dev.kobj=
+,
+>> +				vdpasim->name);
+>> +	if (ret)
+>> +		goto err_link;
+> The goto err_link does the wrong unwind, once register is completed
+> the error unwind is unregister & put_device, not kfree. This is why I
+> recommend to always initalize the device early, and always using
+> put_device during error unwinds.
+
+
+Will fix.
+
+
+>
+> This whole guid thing seems unncessary when the device is immediately
+> assigned a vdpa index from the ida.
+
+
+The problem here is that user need to know which vdpa_sim is the one=20
+that is just created.
+
+
+> If you were not using syfs you'd
+> just return that index from the creation netlink.
+
+
+Yes it is.
+
+Thanks
+
+
+>
+> Jason
+>
+
