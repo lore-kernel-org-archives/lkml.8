@@ -2,175 +2,182 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 381E5C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EADF6C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07AFE24653
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B475E21D7D
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 22:52:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cb3k7qTY"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z6i13jfN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730073AbgAQWvz (ORCPT
+        id S1730101AbgAQWwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 17:51:55 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35322 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728927AbgAQWvz (ORCPT
+        Fri, 17 Jan 2020 17:52:01 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:45746 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728927AbgAQWwB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 17:51:55 -0500
-Received: by mail-wm1-f66.google.com with SMTP id p17so9179320wmb.0;
-        Fri, 17 Jan 2020 14:51:53 -0800 (PST)
+        Fri, 17 Jan 2020 17:52:01 -0500
+Received: by mail-oi1-f193.google.com with SMTP id n16so23656545oie.12
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 14:52:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=x0se5PsWKgfvt31l3mqEKGiEnfoaKNuR8Ii/GhrHCb0=;
-        b=Cb3k7qTYEq+BzZTIpESkbV8UQhEjMMfgrXK6+q6jIZ6lZ/FD83b4m2Cc5+d/3Kz8rf
-         +1rME0s2s4mRDHl5Uc8e2VeTze6nQn0QFxIbmZdcWA7iZeZG8G5LrqxWEV2k1STiX1g1
-         PtWIQZLLsDv7v9GWMOb7Em58EV6VT2dDc9li0FMu6XCHD92GmePrLFVWHxJFPE+MumYq
-         anfCtfMUSn+KPsXejDa9tlRLNVnpXkeON3+wCV+fWxzMCS0CV0kDKFGS66l3+upa36eb
-         kSdzl0ESEz5aaA8Ly+POGIU8sD3ladsqW/gF5s4VGDxAWoULseYtm3PZxlXzARJDDSeQ
-         oSPA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bPRY1mht45VkQ0r3COkN8IZorbBTnfRW7uTMCnHTRE0=;
+        b=Z6i13jfNRgszkiyaik7lyEAAVG5xeSergpq0jyYAmn09fomUVv6yiq7uAN86DnOPPt
+         5IpwyBbL2gNEO1sRGGaytaK3vMyYGHPDANhTUtjk3Kq/trAWPeCsqusygof4adCNpyuP
+         GWMr3cO2ljXEwsHCYqTnjhhUncVpepTqUogLniTH3meeC2k/rFljqF1U2LGQSwLK7otI
+         TXn4BgO0YMzDxORkpEhBRhIacygXmch95Qc+Ex7GdCrQkRlRJEGcec7s4pSLmCOgRyt+
+         ztdHFz9/XiDEO7qwsuprUY2YYngQ0YcxihkvXDruOyoMl1rKAKOrvRrs/VvuJzQ6t1Ox
+         /vQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=x0se5PsWKgfvt31l3mqEKGiEnfoaKNuR8Ii/GhrHCb0=;
-        b=c2pdFD6Zpgu/HjQuKAngUhqpUj3cT9ZTdwTz860jN4qUQHlY8uDWD3ZG62JWfBGuMC
-         jaUM2Ize7L7P5nfv51fbuiu9HUMRFOGnlIH0XoOIZQtUDBMyRPYORzxvc8Vr7bEuSqiW
-         JtjTzIyISU1Xu609DMnrBAxcSJKJBZLZNhOuY5l90q16aMqifQZP6G8HVSIiDfOf+zbi
-         8gK3YIrjNRB1LOI4qDcTL753EBqY7HVJue2/uwKFTsSQV4LCpB9fQICL2GoXHZDNmFD9
-         7ci77Tilil7l+v/ROkZskYH7S7AGlThm5bUjC7FlkfGOvoZ1er8Aj2gs/niS20omEnGi
-         lSQQ==
-X-Gm-Message-State: APjAAAX5/iTpLmPkQByZHau/ICfN7uSanYqKuOky26cOk2CFnF0W+kXk
-        K6OfWDFaIcxFdSCpjUChfwM=
-X-Google-Smtp-Source: APXvYqyfbPI9bgHRb8Atz6VGPe0wOtNnReQyHgWRrgoN+moHJ+YqxTkMDq9s4T0wfpoo6b9j5ETtyA==
-X-Received: by 2002:a7b:c5d8:: with SMTP id n24mr6796728wmk.124.1579301513296;
-        Fri, 17 Jan 2020 14:51:53 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id l3sm32829387wrt.29.2020.01.17.14.51.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 14:51:52 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Abbott Liu <liuwenliang@huawei.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, glider@google.com,
-        dvyukov@google.com, corbet@lwn.net, linux@armlinux.org.uk,
-        christoffer.dall@arm.com, marc.zyngier@arm.com, arnd@arndb.de,
-        nico@fluxnic.net, vladimir.murzin@arm.com, keescook@chromium.org,
-        jinb.park7@gmail.com, alexandre.belloni@bootlin.com,
-        ard.biesheuvel@linaro.org, daniel.lezcano@linaro.org,
-        pombredanne@nexb.com, rob@landley.net, gregkh@linuxfoundation.org,
-        akpm@linux-foundation.org, mark.rutland@arm.com,
-        catalin.marinas@arm.com, yamada.masahiro@socionext.com,
-        tglx@linutronix.de, thgarnie@google.com, dhowells@redhat.com,
-        geert@linux-m68k.org, andre.przywara@arm.com,
-        julien.thierry@arm.com, drjones@redhat.com, philip@cog.systems,
-        mhocko@suse.com, kirill.shutemov@linux.intel.com,
-        kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
-        ryabinin.a.a@gmail.com
-Subject: [PATCH v7 3/7] ARM: Disable instrumentation for some code
-Date:   Fri, 17 Jan 2020 14:48:35 -0800
-Message-Id: <20200117224839.23531-4-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200117224839.23531-1-f.fainelli@gmail.com>
-References: <20200117224839.23531-1-f.fainelli@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bPRY1mht45VkQ0r3COkN8IZorbBTnfRW7uTMCnHTRE0=;
+        b=YuR96SOOXAQgF4rMTQgsqeopbWlilEx43KTUEawL5nMsUpXRi3LmAqbmWogI7IeEmr
+         UYOLfbBrO1TDRX0LC5JVb8TrvTmr6QplpXBxXDzWphRAh8+F4xRyQzCv0X4XpkHVT6pf
+         qQ32rQneVScwxdOaFBcmXNy+K/ObOfNR5QQjwnim0ft7etYRE0sQLTTnpid0x4Ofew8R
+         KzqETJVI+lHxsUT3zcq7JbF8YgAzH4IekgX4uAenyqy9yymDV5fzEcaGxl+VLFmpNoeo
+         FunHXYOVo3rEdKNdwamvLsoTDsZHPAsFdCy87Jo6pUBRg7vFNK4nJorD0HHbpXnPJrlG
+         c6lw==
+X-Gm-Message-State: APjAAAW0M0Pft37jEbt4vI0BoTrKUiSDj6zqb4snnIEuZFWgKpKnTJDb
+        t7P0+5d2yiD+7Uo/4guDpKQo+8LETihwst4544+MYQ==
+X-Google-Smtp-Source: APXvYqw1nQ5WcChQLMUCNxlulVn4wohCILAMLAOqS6fv5lqjkkAKqK5gq7uqYTHhWtTvtwp3I3GiDp+2QAATZtwedXA=
+X-Received: by 2002:aca:d4c1:: with SMTP id l184mr5259065oig.172.1579301520140;
+ Fri, 17 Jan 2020 14:52:00 -0800 (PST)
+MIME-Version: 1.0
+References: <20200117164017.GA21582@paulmck-ThinkPad-P72> <3760F60F-4133-4FE1-9A4C-F335A8230285@lca.pw>
+In-Reply-To: <3760F60F-4133-4FE1-9A4C-F335A8230285@lca.pw>
+From:   Marco Elver <elver@google.com>
+Date:   Fri, 17 Jan 2020 23:51:48 +0100
+Message-ID: <CANpmjNPdfB=hrcXJbPzdisxnBUZW3JEK9UbTpTy+a20b=6OdJg@mail.gmail.com>
+Subject: Re: [PATCH -rcu] kcsan: Make KCSAN compatible with lockdep
+To:     Qian Cai <cai@lca.pw>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Dmitriy Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Ryabinin <aryabinin@virtuozzo.com>
+On Fri, 17 Jan 2020 at 17:59, Qian Cai <cai@lca.pw> wrote:
+>
+>
+>
+> > On Jan 17, 2020, at 11:40 AM, Paul E. McKenney <paulmck@kernel.org> wrote:
+> >
+> > True enough, but even if we reach the nirvana state where there is general
+> > agreement on what constitutes a data race in need of fixing and KCSAN
+> > faithfully checks based on that data-race definition, we need to handle
+> > the case where someone introduces a bug that results in a destructive
+> > off-CPU access to a per-CPU variable, which is exactly the sort of thing
+> > that KCSAN is supposed to detect.  But suppose that this variable is
+> > frequently referenced from functions that are inlined all over the place.
+> >
+> > Then that one bug might result in huge numbers of data-race reports in
+> > a very short period of time, especially on a large system.
+>
+> It sounds like the case with debug_pagealloc where it prints a spam of those, and then the system is just dead.
+>
+> [   28.992752][  T394] Reported by Kernel Concurrency Sanitizer on:
+> [   28.992752][  T394] CPU: 0 PID: 394 Comm: pgdatinit0 Not tainted 5.5.0-rc6-next-20200115+ #3
+> [   28.992752][  T394] Hardware name: HP ProLiant XL230a Gen9/ProLiant XL230a Gen9, BIOS U13 01/22/2018
+> [   28.992752][  T394] ===============================================================
+> [   28.992752][  T394] ==================================================================
+> [   28.992752][  T394] BUG: KCSAN: data-race in __change_page_attr / __change_page_attr
+> [   28.992752][  T394]
+> [   28.992752][  T394] read to 0xffffffffa01a6de0 of 8 bytes by task 395 on cpu 16:
+> [   28.992752][  T394]  __change_page_attr+0xe81/0x1620
+> [   28.992752][  T394]  __change_page_attr_set_clr+0xde/0x4c0
+> [   28.992752][  T394]  __set_pages_np+0xcc/0x100
+> [   28.992752][  T394]  __kernel_map_pages+0xd6/0xdb
+> [   28.992752][  T394]  __free_pages_ok+0x1a8/0x730
+> [   28.992752][  T394]  __free_pages+0x51/0x90
+> [   28.992752][  T394]  __free_pages_core+0x1c7/0x2c0
+> [   28.992752][  T394]  deferred_free_range+0x59/0x8f
+> [   28.992752][  T394]  deferred_init_max21d
+> [   28.992752][  T394]  deferred_init_memmap+0x14a/0x1c1
+> [   28.992752][  T394]  kthread+0x1e0/0x200
+> [   28.992752][  T394]  ret_from_fork+0x3a/0x50
+> [   28.992752][  T394]
+> [   28.992752][  T394] write to 0xffffffffa01a6de0 of 8 bytes by task 394 on cpu 0:
+> [   28.992752][  T394]  __change_page_attr+0xe9c/0x1620
+> [   28.992752][  T394]  __change_page_attr_set_clr+0xde/0x4c0
+> [   28.992752][  T394]  __set_pages_np+0xcc/0x100
+> [   28.992752][  T394]  __kernel_map_pages+0xd6/0xdb
+> [   28.992752][  T394]  __free_pages_ok+0x1a8/0x730
+> [   28.992752][  T394]  __free_pages+0x51/0x90
+> [   28.992752][  T394]  __free_pages_core+0x1c7/0x2c0
+> [   28.992752][  T394]  deferred_free_range+0x59/0x8f
+> [   28.992752][  T394]  deferred_init_maxorder+0x1d6/0x21d
+> [   28.992752][  T394]  deferred_init_memmap+0x14a/0x1c1
+> [   28.992752][  T394]  kthread+0x1e0/0x200
+> [   28.992752][  T394]  ret_from_fork+0x3a/0x50
+>
+> It point out to this,
+>
+>                 pgprot_val(new_prot) &= ~pgprot_val(cpa->mask_clr);
+>                 pgprot_val(new_prot) |= pgprot_val(cpa->mask_set);
+>
+>                 cpa_inc_4k_install();
+>                 /* Hand in lpsize = 0 to enforce the protection mechanism */
+>                 new_prot = static_protections(new_prot, address, pfn, 1, 0,
+>                                               CPA_PROTECT);
+>
+> In static_protections(),
+>
+>         /*
+>          * There is no point in checking RW/NX conflicts when the requested
+>          * mapping is setting the page !PRESENT.
+>          */
+>         if (!(pgprot_val(prot) & _PAGE_PRESENT))
+>                 return prot;
+>
+> Is there a data race there?
 
-Disable instrumentation for arch/arm/boot/compressed/* and
-arch/arm/vdso/* because that code would not linkd with kernel image.
+Yes. I was finally able to reproduce this data race on linux-next (my
+system doesn't crash though, maybe not enough cores?). Here is a trace
+with line numbers:
 
-Disable instrumentation for arch/arm/kvm/hyp/*. See commit a6cdf1c08cbf
-("kvm: arm64: Disable compiler instrumentation for hypervisor code") for
-more details.
+read to 0xffffffffaa59a000 of 8 bytes by interrupt on cpu 7:
+ cpa_inc_4k_install arch/x86/mm/pat/set_memory.c:131 [inline]
+ __change_page_attr+0x10cf/0x1840 arch/x86/mm/pat/set_memory.c:1514
+ __change_page_attr_set_clr+0xce/0x490 arch/x86/mm/pat/set_memory.c:1636
+ __set_pages_np+0xc4/0xf0 arch/x86/mm/pat/set_memory.c:2148
+ __kernel_map_pages+0xb0/0xc8 arch/x86/mm/pat/set_memory.c:2178
+ kernel_map_pages include/linux/mm.h:2719 [inline]
+<snip>
 
-Disable instrumentation for arch/arm/mm/physaddr.c. See commit
-ec6d06efb0ba ("arm64: Add support for CONFIG_DEBUG_VIRTUAL") for more
-details.
+write to 0xffffffffaa59a000 of 8 bytes by task 1 on cpu 6:
+ cpa_inc_4k_install arch/x86/mm/pat/set_memory.c:131 [inline]
+ __change_page_attr+0x10ea/0x1840 arch/x86/mm/pat/set_memory.c:1514
+ __change_page_attr_set_clr+0xce/0x490 arch/x86/mm/pat/set_memory.c:1636
+ __set_pages_p+0xc4/0xf0 arch/x86/mm/pat/set_memory.c:2129
+ __kernel_map_pages+0x2e/0xc8 arch/x86/mm/pat/set_memory.c:2176
+ kernel_map_pages include/linux/mm.h:2719 [inline]
+<snip>
 
-Disable kasan check in the function unwind_pop_register because it does
-not matter that kasan checks failed when unwind_pop_register read stack
-memory of task.
+Both accesses are due to the same "cpa_4k_install++" in
+cpa_inc_4k_install. Now you can see that a data race here could be
+potentially undesirable: depending on compiler optimizations or how
+x86 executes a non-LOCK'd increment, you may lose increments, corrupt
+the counter, etc. Since this counter only seems to be used for
+printing some stats, this data race itself is unlikely to cause harm
+to the system though.
 
-Reported-by: Florian Fainelli <f.fainelli@gmail.com>
-Reported-by: Marc Zyngier <marc.zyngier@arm.com>
-Tested-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Abbott Liu <liuwenliang@huawei.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- arch/arm/boot/compressed/Makefile | 1 +
- arch/arm/kernel/unwind.c          | 6 +++++-
- arch/arm/mm/Makefile              | 1 +
- arch/arm/vdso/Makefile            | 2 ++
- 4 files changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/compressed/Makefile b/arch/arm/boot/compressed/Makefile
-index a1e883c5e5c4..83991a0447fa 100644
---- a/arch/arm/boot/compressed/Makefile
-+++ b/arch/arm/boot/compressed/Makefile
-@@ -24,6 +24,7 @@ OBJS		+= hyp-stub.o
- endif
- 
- GCOV_PROFILE		:= n
-+KASAN_SANITIZE		:= n
- 
- # Prevents link failures: __sanitizer_cov_trace_pc() is not linked in.
- KCOV_INSTRUMENT		:= n
-diff --git a/arch/arm/kernel/unwind.c b/arch/arm/kernel/unwind.c
-index 4574e6aea0a5..f73601416f90 100644
---- a/arch/arm/kernel/unwind.c
-+++ b/arch/arm/kernel/unwind.c
-@@ -236,7 +236,11 @@ static int unwind_pop_register(struct unwind_ctrl_block *ctrl,
- 		if (*vsp >= (unsigned long *)ctrl->sp_high)
- 			return -URC_FAILURE;
- 
--	ctrl->vrs[reg] = *(*vsp)++;
-+	/* Use READ_ONCE_NOCHECK here to avoid this memory access
-+	 * from being tracked by KASAN.
-+	 */
-+	ctrl->vrs[reg] = READ_ONCE_NOCHECK(*(*vsp));
-+	(*vsp)++;
- 	return URC_OK;
- }
- 
-diff --git a/arch/arm/mm/Makefile b/arch/arm/mm/Makefile
-index 7cb1699fbfc4..432302911d6e 100644
---- a/arch/arm/mm/Makefile
-+++ b/arch/arm/mm/Makefile
-@@ -16,6 +16,7 @@ endif
- obj-$(CONFIG_ARM_PTDUMP_CORE)	+= dump.o
- obj-$(CONFIG_ARM_PTDUMP_DEBUGFS)	+= ptdump_debugfs.o
- obj-$(CONFIG_MODULES)		+= proc-syms.o
-+KASAN_SANITIZE_physaddr.o	:= n
- obj-$(CONFIG_DEBUG_VIRTUAL)	+= physaddr.o
- 
- obj-$(CONFIG_ALIGNMENT_TRAP)	+= alignment.o
-diff --git a/arch/arm/vdso/Makefile b/arch/arm/vdso/Makefile
-index 0fda344beb0b..1f76a5ff6e49 100644
---- a/arch/arm/vdso/Makefile
-+++ b/arch/arm/vdso/Makefile
-@@ -42,6 +42,8 @@ GCOV_PROFILE := n
- # Prevents link failures: __sanitizer_cov_trace_pc() is not linked in.
- KCOV_INSTRUMENT := n
- 
-+KASAN_SANITIZE := n
-+
- # Force dependency
- $(obj)/vdso.o : $(obj)/vdso.so
- 
--- 
-2.17.1
-
+Thanks,
+-- Marco
