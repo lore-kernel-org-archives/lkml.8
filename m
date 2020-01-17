@@ -2,101 +2,135 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 271C0C33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4E2C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:46:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0253320842
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:45:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4662E20842
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:46:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="yCgP2tn8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KY4r6VIz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729238AbgAQSp6 (ORCPT
+        id S1729347AbgAQSqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 13:45:58 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:45540 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727519AbgAQSp6 (ORCPT
+        Fri, 17 Jan 2020 13:46:20 -0500
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:40631 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727519AbgAQSqU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 13:45:58 -0500
-Received: by mail-il1-f196.google.com with SMTP id p8so22052670iln.12
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 10:45:57 -0800 (PST)
+        Fri, 17 Jan 2020 13:46:20 -0500
+Received: by mail-yb1-f194.google.com with SMTP id l197so4940956ybf.7;
+        Fri, 17 Jan 2020 10:46:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=420/qCDRks1KhueK56gSNAOoSvZ7SEAp1yLAyd/yyFM=;
-        b=yCgP2tn8pQLxdsNWd/XN2QqX2CXdZFqGPPFyzspWIdPa9qUzOoE2kzJU1IE0tUdWjL
-         4BXq38kFJEGC3fc597AP4qMsw2oTCVb8ODMgBngH5myjiGjB0NOgakVVrF8qkT1jXQCn
-         lcO05570Ul45oz3t/HUGQpCHaUiWQZDkcmiWSn7H3n69c4jvAgrogYO2eMwdWaOVw7ly
-         kSRJDVqj9ChZDf6ytvSZIzdeVpVR4iAZVONpFwOkRNCMuH4elY7iGxXBZMrL6nTdRyKB
-         41MQk98RiEplwZ7uLSd6xiVgOh81zfAfG8v/8tKttjGBjQHuuobYT8OKSbu06Jjjy3ih
-         8PYA==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=upiGYbGt4/LTnrmjthjRUd/hQNqIVUczO1R2BQSLGfI=;
+        b=KY4r6VIzM+ASfF28p395PqWwDWo1qH3UJln63Un1GQdKyFyhWH8Yvs1nf52LBQUL4B
+         nya6HvXndacLywWJA4slAjzFivTcwN/ylU/gh3AAB4M8kQwh6bAwNsKB+4JtsYvtWEmu
+         RNcjbn0mJhaPN2dbgu3PkxGB+LyvC83Gb+7s8iFl2Iwr1PMRr3eGwXFZM/BeGuCc5yCU
+         tPbD040KWJF8qMy4pZbSJTMrPjvVnsPNP01XDzlHuWIWhSrGiMI20o4qx8E1Dha0AyzE
+         3rtGf3ftTCv/qi7jJnaZBy7IIsu572sj+VOZFzfLd6RjvpHf8YrDdJGFa+vuNNaC/qaL
+         jpsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=420/qCDRks1KhueK56gSNAOoSvZ7SEAp1yLAyd/yyFM=;
-        b=DuofvHYixXarQ24ShovI671WlKa9OLCJ1JVyE9LVWdcnCLPBYy6RJ+z8tCqSLzaUlk
-         Dyx4GuH2x/5szwl47FUFnyk1KvWE9LKT9fa1X/JQsrCGn2yYV/5byufiJZBVWRl/KPGb
-         epdpFvV9+KLg2ZjIAnDOFAdmi+rDfLHFDPTGeM7aMc4gYzY3vSQ7JDNLr/hZG6eYkcTK
-         dsrvVXV0BgGeX9/3PuIue5GfmUORIQg8/Y+84tqarpSSKVjeAlo5obiFTw3l1BRKptwH
-         RPG6Y0GdAxnraWJjghs8MC+KpnZVwIJwCwim6dAOBsvEkkYOXRIHZ4VBYfQ7WA7hjxbf
-         Ub8w==
-X-Gm-Message-State: APjAAAWhsbgxWinRgRv3/KmJJ6hi2NmTKD1MtvPYMHsITztnbh4C1BAN
-        wLilqrvrQ5GU6GglZbAsYzqFYe1PMHqrlWmIQYiGqw==
-X-Google-Smtp-Source: APXvYqyD3T0zxOFN2wcBKJ8V0hfXKMNOlDpYBDr5FI3wwBYODV4MtVy/MotlaHesUUq+1J5hAlsR+yalSwQOTCFwfJk=
-X-Received: by 2002:a92:5d03:: with SMTP id r3mr3908789ilb.278.1579286757291;
- Fri, 17 Jan 2020 10:45:57 -0800 (PST)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=upiGYbGt4/LTnrmjthjRUd/hQNqIVUczO1R2BQSLGfI=;
+        b=KBn76O7WEJa0uu2D7sOxL7kkq9bg1SMae3IoQ62CzrK7hC8UxP0wGRBCdAKsebY97Q
+         jc2P1IGFcygSLzRU/T/GZipIuKS2QC7b19/JZhopVPfi549dX45FZAaQ4EgbVvgRMVg8
+         RhQIWkm4B+tHJlmv7HOTdjCMxrMEzCuuVGq47Yr7ZcqLg9ZdVygC3ISiOmW0rZa3HtvM
+         YF4d1dvfwbGLNWicb4wS1EQVEgHNG8vv54/G/6uva/eQ3HqdPWSrQl4TsxDD1OUXKLRa
+         LeQoJ5QYFlDgvFJV5v7uk8941ksmAKtxkN9q/ag1DLP2Go47icdZ9eHeX6gax730iqqQ
+         pUhg==
+X-Gm-Message-State: APjAAAWU3iiex96kxEMDTevIyuaUPPUSVa2M6owyvJHqrGxklV6EgaAL
+        gYwFf+XN65dL2aI58WSIgyk=
+X-Google-Smtp-Source: APXvYqy0w74WsHNKTpINtKaumk26VLINbUlvOmM74GHUgNWc16V11mp9TxxPQaMRVHX+cXOa3z69wQ==
+X-Received: by 2002:a25:5887:: with SMTP id m129mr32550513ybb.172.1579286779295;
+        Fri, 17 Jan 2020 10:46:19 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d186sm12100098ywe.0.2020.01.17.10.46.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 17 Jan 2020 10:46:18 -0800 (PST)
+Date:   Fri, 17 Jan 2020 10:46:17 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Ondrej =?utf-8?Q?=C4=8Cerman?= <ocerman@sda1.eu>
+Cc:     linux-hwmon@vger.kernel.org, Clemens Ladisch <clemens@ladisch.de>,
+        Jean Delvare <jdelvare@suse.com>, linux-kernel@vger.kernel.org
+Subject: Re: [RFT PATCH 0/4] hwmon: k10temp driver improvements
+Message-ID: <20200117184617.GD13396@roeck-us.net>
+References: <20200116141800.9828-1-linux@roeck-us.net>
+ <e452614a-5425-e77c-4e2f-2a17ca733b7f@sda1.eu>
 MIME-Version: 1.0
-References: <20200113065808.25f28c40@canb.auug.org.au> <CAOesGMifHn6DbNgYm6YUbdKjSL5rNgdWrq+HX9dEusrOr9xX2A@mail.gmail.com>
- <20200113113837.130c3936@canb.auug.org.au>
-In-Reply-To: <20200113113837.130c3936@canb.auug.org.au>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Fri, 17 Jan 2020 10:45:46 -0800
-Message-ID: <CAOesGMgiAp=xjpyvXSmuXL493Ki3DvWXf3N5uncP3s08_FpvuQ@mail.gmail.com>
-Subject: Re: linux-next: Signed-off-by missing for commit in the arm-soc tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Ludovic Barre <ludovic.barre@st.com>,
-        Yann Gautier <yann.gautier@st.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e452614a-5425-e77c-4e2f-2a17ca733b7f@sda1.eu>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+On Fri, Jan 17, 2020 at 10:46:25AM +0100, Ondrej Čerman wrote:
+> Dňa 16. 1. 2020 o 15:17 Guenter Roeck napísal(a):
+> > This patch series implements various improvements for the k10temp driver.
+> > 
+> > Patch 1/4 introduces the use of bit operations.
+> > 
+> > Patch 2/4 converts the driver to use the devm_hwmon_device_register_with_info
+> > API. This not only simplifies the code and reduces its size, it also
+> > makes the code easier to maintain and enhance.
+> > 
+> > Patch 3/4 adds support for reporting Core Complex Die (CCD) temperatures
+> > on Ryzen 3 (Zen2) CPUs.
+> > 
+> > Patch 4/4 adds support for reporting core and SoC current and voltage
+> > information on Ryzen CPUs.
+> > 
+> > With all patches in place, output on Ryzen 3900 CPUs looks as follows
+> > (with the system under load).
+> > 
+> > k10temp-pci-00c3
+> > Adapter: PCI adapter
+> > Vcore:        +1.36 V
+> > Vsoc:         +1.18 V
+> > Tdie:         +86.8°C  (high = +70.0°C)
+> > Tctl:         +86.8°C
+> > Tccd1:        +80.0°C
+> > Tccd2:        +81.8°C
+> > Icore:       +44.14 A
+> > Isoc:        +13.83 A
+> > 
+> > The patch series has only been tested with Ryzen 3900 CPUs. Further test
+> > coverage will be necessary before the changes can be applied to the Linux
+> > kernel.
+> > 
+> Hello everyone, I am the author of https://github.com/ocerman/zenpower/ .
+> 
+> It is nice to see this merged.
+> 
+> I just want to warn you that there have been reported issues with
+> Threadripper CPUs to zenpower issue tracker. Also I think that no-one tested
+> EPYC CPUs.
+> 
+> Most of the stuff I was able to figure out by trial-and-error approach and
+> unfortunately because I do not own any Threadripper CPU I was not able to
+> test and fix reported problems.
+> 
+Thanks a lot for the note. The key problem seems to be that Threadripper
+doesn't report SoC current and voltage. Is that correct ? If so, that
+should be easy to solve.
 
-On Sun, Jan 12, 2020 at 4:38 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi Olof,
->
-> On Sun, 12 Jan 2020 11:59:58 -0800 Olof Johansson <olof@lixom.net> wrote:
-> >
-> > Thanks for the report. Time to automate this at our end, we've had a
-> > few too many of these slip through all the way to you lately.
-> >
-> > Where do you keep your scripts that you catch these things with? Do
-> > you have a writeup of the checks you do? I should add it to my
-> > automation once and for all.
->
-> I should export my linux-next scripts as a git repo, but I haven't (yet) :-(
->
-> Attached pleas find check_commits which I run after fetching each tree
-> and pass the changed commit range.  This, in turn, runs check_fixes
-> (also attached).
+On a side note, drivers/gpu/drm/amd/include/asic_reg/thm/thm_10_0_offset.h
+suggests that two more temperature sensors might be available at 0x0005995C
+and 0x00059960 (DIE3_TEMP and SW_TEMP). Have you ever tried that ?
 
-Thanks for sharing these. I'll add some slightly edited versions of
-these to our soc-scripts repo and reference this thread and you as the
-original author.
-
-
--Olof
+Thanks,
+Guenter
