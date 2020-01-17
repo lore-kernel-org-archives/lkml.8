@@ -2,269 +2,180 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCBAC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 087C2C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33A982073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:17:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB71C2083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:19:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728783AbgAQMRp (ORCPT
+        id S1727032AbgAQMTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 07:17:45 -0500
-Received: from foss.arm.com ([217.140.110.172]:40508 "EHLO foss.arm.com"
+        Fri, 17 Jan 2020 07:19:41 -0500
+Received: from mga04.intel.com ([192.55.52.120]:57225 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726917AbgAQMRp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 07:17:45 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AEB1911D4;
-        Fri, 17 Jan 2020 04:17:43 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C72BD3F6C4;
-        Fri, 17 Jan 2020 04:17:41 -0800 (PST)
-Date:   Fri, 17 Jan 2020 12:17:37 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     bjorn@helgaas.com, Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Andrew Murray <andrew.murray@arm.com>, treding@nvidia.com,
-        jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH] PCI: Add MCFG quirks for Tegra194 host controllers
-Message-ID: <20200117121736.GA7072@e121166-lin.cambridge.arm.com>
-References: <20200103174935.5612-1-vidyas@nvidia.com>
- <CABhMZUUHGEEhsJ-+foSsodqtKXyX5ZNPkGgv_VzXz=Qv+NVcUA@mail.gmail.com>
- <9a767725-9671-6402-4e1c-a648f5a7860b@nvidia.com>
+        id S1726917AbgAQMTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 07:19:41 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 04:19:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,330,1574150400"; 
+   d="scan'208";a="424444740"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga005.fm.intel.com with ESMTP; 17 Jan 2020 04:19:40 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1isQbD-000408-Tk; Fri, 17 Jan 2020 20:19:39 +0800
+Date:   Fri, 17 Jan 2020 20:18:53 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/cpu] BUILD SUCCESS
+ bb02e2cb715a3f3552dbe765ea4a07799e4dff43
+Message-ID: <5e21a62d.EtGxFRrOfG3cJm+z%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9a767725-9671-6402-4e1c-a648f5a7860b@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 04, 2020 at 09:14:42AM +0530, Vidya Sagar wrote:
-> On 1/3/2020 11:34 PM, Bjorn Helgaas wrote:
-> > External email: Use caution opening links or attachments
-> > 
-> > 
-> > On Fri, Jan 3, 2020 at 11:50 AM Vidya Sagar <vidyas@nvidia.com> wrote:
-> > > 
-> > > The PCIe controller in Tegra194 SoC is not completely ECAM-compliant.
-> > 
-> > What is the plan for making these SoCs ECAM-compliant?  When was
-> > Tegra194 designed?  Is it shipping to end customers, i.e., would I be
-> > able to buy one?
-> Tegra194 is designed in 2017 and started shipping from 2018 onwards.
-> Nothing much can be done for Tegra194 to make it fully ECAM compliant
-> at this point in time. Tegra194 based development kits are available @
-> https://developer.nvidia.com/embedded/jetson-agx-xavier-developer-kit
-> Currently the BSP has the kernel booting through Device Tree mechanism
-> and there is a plan to support UEFI based boot as well in the future software
-> releases for which we need this quirky way of handling ECAM.
-> Tegra194 is going to be the only and last chip with this issue and next chip
-> in line in Tegra SoC series will be fully compliant with ECAM.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/cpu
+branch HEAD: bb02e2cb715a3f3552dbe765ea4a07799e4dff43  x86/cpu: Print "VMX disabled" error message iff KVM is enabled
 
-ACPI on ARM64 works on a standard subset of systems, defined by the
-ARM SBSA:
+elapsed time: 1791m
 
-http://infocenter.arm.com/help/topic/com.arm.doc.den0029c/Server_Base_System_Architecture_v6_0_ARM_DEN_0029C_SBSA_6_0.pdf
+configs tested: 117
+configs skipped: 1
 
-These patches will have to be carried out of tree, the MCFG quirk
-mechanism (merged as Bjorn said more than three years ago) was supposed
-to be a temporary plaster to bootstrap server platforms with teething
-issues, the aim is to remove it eventually not to add more code to it
-indefinitely.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-So I am afraid but this quirk (and any other coming our way) will not be
-merged in an upstream kernel anymore - for any queries please put Nvidia
-in touch.
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+m68k                          multi_defconfig
+m68k                       m5475evb_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                     edosk2674_defconfig
+m68k                           sun3_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                                defconfig
+ia64                             alldefconfig
+parisc                            allnoconfig
+parisc                            allyesonfig
+parisc                         b180_defconfig
+parisc                        c3000_defconfig
+parisc                              defconfig
+riscv                          rv32_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+riscv                    nommu_virt_defconfig
+riscv                            allyesconfig
+sparc64              randconfig-a001-20200117
+nios2                randconfig-a001-20200117
+c6x                  randconfig-a001-20200117
+h8300                randconfig-a001-20200117
+riscv                randconfig-a001-20200117
+parisc               randconfig-a001-20200117
+m68k                 randconfig-a001-20200117
+alpha                randconfig-a001-20200117
+nds32                randconfig-a001-20200117
+alpha                               defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+arc                  randconfig-a001-20200116
+arm                  randconfig-a001-20200116
+arm64                randconfig-a001-20200116
+ia64                 randconfig-a001-20200116
+powerpc              randconfig-a001-20200116
+sparc                randconfig-a001-20200116
+sh                               allmodconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                                allnoconfig
+sh                            titan_defconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64               randconfig-b001-20200116
+x86_64               randconfig-b002-20200116
+x86_64               randconfig-b003-20200116
+i386                 randconfig-b001-20200116
+i386                 randconfig-b002-20200116
+i386                 randconfig-b003-20200116
+x86_64               randconfig-g001-20200116
+x86_64               randconfig-g002-20200116
+x86_64               randconfig-g003-20200116
+i386                 randconfig-g001-20200116
+i386                 randconfig-g002-20200116
+i386                 randconfig-g003-20200116
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+arm64                            allyesconfig
+arm                               allnoconfig
+arm64                             allnoconfig
+arm64                            allmodconfig
+s390                 randconfig-a001-20200117
+sh                   randconfig-a001-20200117
+xtensa               randconfig-a001-20200117
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+mips                             allmodconfig
+mips                           32r2_defconfig
+mips                             allyesconfig
+mips                              allnoconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                               rhel-7.6
+i386                              allnoconfig
+i386                                defconfig
+i386                             allyesconfig
+i386                             alldefconfig
+x86_64               randconfig-d001-20200116
+x86_64               randconfig-d002-20200116
+x86_64               randconfig-d003-20200116
+i386                 randconfig-d001-20200116
+i386                 randconfig-d002-20200116
+i386                 randconfig-d003-20200116
+s390                              allnoconfig
+s390                             alldefconfig
+s390                          debug_defconfig
+s390                             allmodconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+s390                             allyesconfig
 
-Thanks,
-Lorenzo
-
-> - Vidya Sagar
-> > 
-> > I do not want to add these quirks indefinitely, and the first quirks
-> > were added over three years ago.
-> > 
-> > > With the current hardware design limitations in place, ECAM can be enabled
-> > > only for one controller (C5 controller to be precise) with bus numbers
-> > > starting from 160 instead of 0. A different approach is taken to avoid this
-> > > abnormal way of enabling ECAM  for just one controller and to also enable
-> > > configuration space access for all the other controllers. In this approach,
-> > > MCFG quirks are added for each controller with a 30MB PCIe aperture
-> > > resource for each controller in the disguise of ECAM region. But, this
-> > > region actually contains DesignWare core's internal Address Translation
-> > > Unit (iATU) using which the ECAM ops access configuration space in the
-> > > otherwise standard way of programming iATU registers in DesignWare core
-> > > based IPs for a respective B:D:F.
-> > > 
-> > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> > > ---
-> > >   drivers/acpi/pci_mcfg.c                    | 13 +++
-> > >   drivers/pci/controller/dwc/pcie-tegra194.c | 95 ++++++++++++++++++++++
-> > >   include/linux/pci-ecam.h                   |  1 +
-> > >   3 files changed, 109 insertions(+)
-> > > 
-> > > diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
-> > > index 6b347d9920cc..a42918ecc19a 100644
-> > > --- a/drivers/acpi/pci_mcfg.c
-> > > +++ b/drivers/acpi/pci_mcfg.c
-> > > @@ -116,6 +116,19 @@ static struct mcfg_fixup mcfg_quirks[] = {
-> > >          THUNDER_ECAM_QUIRK(2, 12),
-> > >          THUNDER_ECAM_QUIRK(2, 13),
-> > > 
-> > > +       { "NVIDIA", "TEGRA194", 1, 0, MCFG_BUS_ANY, &tegra194_pcie_ops,
-> > > +         DEFINE_RES_MEM(0x38200000, (30 * SZ_1M))},
-> > > +       { "NVIDIA", "TEGRA194", 1, 1, MCFG_BUS_ANY, &tegra194_pcie_ops,
-> > > +         DEFINE_RES_MEM(0x30200000, (30 * SZ_1M))},
-> > > +       { "NVIDIA", "TEGRA194", 1, 2, MCFG_BUS_ANY, &tegra194_pcie_ops,
-> > > +         DEFINE_RES_MEM(0x32200000, (30 * SZ_1M))},
-> > > +       { "NVIDIA", "TEGRA194", 1, 3, MCFG_BUS_ANY, &tegra194_pcie_ops,
-> > > +         DEFINE_RES_MEM(0x34200000, (30 * SZ_1M))},
-> > > +       { "NVIDIA", "TEGRA194", 1, 4, MCFG_BUS_ANY, &tegra194_pcie_ops,
-> > > +         DEFINE_RES_MEM(0x36200000, (30 * SZ_1M))},
-> > > +       { "NVIDIA", "TEGRA194", 1, 5, MCFG_BUS_ANY, &tegra194_pcie_ops,
-> > > +         DEFINE_RES_MEM(0x3a200000, (30 * SZ_1M))},
-> > > +
-> > >   #define XGENE_V1_ECAM_MCFG(rev, seg) \
-> > >          {"APM   ", "XGENE   ", rev, seg, MCFG_BUS_ANY, \
-> > >                  &xgene_v1_pcie_ecam_ops }
-> > > diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > index cbe95f0ea0ca..91496978deb7 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > @@ -21,6 +21,8 @@
-> > >   #include <linux/of_irq.h>
-> > >   #include <linux/of_pci.h>
-> > >   #include <linux/pci.h>
-> > > +#include <linux/pci-acpi.h>
-> > > +#include <linux/pci-ecam.h>
-> > >   #include <linux/phy/phy.h>
-> > >   #include <linux/pinctrl/consumer.h>
-> > >   #include <linux/platform_device.h>
-> > > @@ -895,6 +897,99 @@ static struct dw_pcie_host_ops tegra_pcie_dw_host_ops = {
-> > >          .set_num_vectors = tegra_pcie_set_msi_vec_num,
-> > >   };
-> > > 
-> > > +#if defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS)
-> > > +struct tegra194_pcie_acpi  {
-> > > +       void __iomem *dbi_base;
-> > > +       void __iomem *iatu_base;
-> > > +};
-> > > +
-> > > +static int tegra194_acpi_init(struct pci_config_window *cfg)
-> > > +{
-> > > +       struct device *dev = cfg->parent;
-> > > +       struct tegra194_pcie_acpi *pcie;
-> > > +
-> > > +       pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
-> > > +       if (!pcie)
-> > > +               return -ENOMEM;
-> > > +
-> > > +       pcie->dbi_base = cfg->win;
-> > > +       pcie->iatu_base = cfg->win + SZ_256K;
-> > > +       cfg->priv = pcie;
-> > > +
-> > > +       return 0;
-> > > +}
-> > > +
-> > > +static inline void atu_reg_write(struct tegra194_pcie_acpi *pcie, int index,
-> > > +                                u32 val, u32 reg)
-> > > +{
-> > > +       u32 offset = PCIE_GET_ATU_OUTB_UNR_REG_OFFSET(index);
-> > > +
-> > > +       writel(val, pcie->iatu_base + offset + reg);
-> > > +}
-> > > +
-> > > +static void program_outbound_atu(struct tegra194_pcie_acpi *pcie, int index,
-> > > +                                int type, u64 cpu_addr, u64 pci_addr, u64 size)
-> > > +{
-> > > +       atu_reg_write(pcie, index, lower_32_bits(cpu_addr),
-> > > +                     PCIE_ATU_LOWER_BASE);
-> > > +       atu_reg_write(pcie, index, upper_32_bits(cpu_addr),
-> > > +                     PCIE_ATU_UPPER_BASE);
-> > > +       atu_reg_write(pcie, index, lower_32_bits(pci_addr),
-> > > +                     PCIE_ATU_LOWER_TARGET);
-> > > +       atu_reg_write(pcie, index, lower_32_bits(cpu_addr + size - 1),
-> > > +                     PCIE_ATU_LIMIT);
-> > > +       atu_reg_write(pcie, index, upper_32_bits(pci_addr),
-> > > +                     PCIE_ATU_UPPER_TARGET);
-> > > +       atu_reg_write(pcie, index, type, PCIE_ATU_CR1);
-> > > +       atu_reg_write(pcie, index, PCIE_ATU_ENABLE, PCIE_ATU_CR2);
-> > > +}
-> > > +
-> > > +static void __iomem *tegra194_map_bus(struct pci_bus *bus,
-> > > +                                     unsigned int devfn, int where)
-> > > +{
-> > > +       struct pci_config_window *cfg = bus->sysdata;
-> > > +       struct tegra194_pcie_acpi *pcie = cfg->priv;
-> > > +       u32 busdev;
-> > > +       int type;
-> > > +
-> > > +       if (bus->number < cfg->busr.start || bus->number > cfg->busr.end)
-> > > +               return NULL;
-> > > +
-> > > +       if (bus->number == cfg->busr.start) {
-> > > +               if (PCI_SLOT(devfn) == 0)
-> > > +                       return pcie->dbi_base + where;
-> > > +               else
-> > > +                       return NULL;
-> > > +       }
-> > > +
-> > > +       busdev = PCIE_ATU_BUS(bus->number) | PCIE_ATU_DEV(PCI_SLOT(devfn)) |
-> > > +                PCIE_ATU_FUNC(PCI_FUNC(devfn));
-> > > +
-> > > +       if (bus->parent->number == cfg->busr.start) {
-> > > +               if (PCI_SLOT(devfn) == 0)
-> > > +                       type = PCIE_ATU_TYPE_CFG0;
-> > > +               else
-> > > +                       return NULL;
-> > > +       } else {
-> > > +               type = PCIE_ATU_TYPE_CFG1;
-> > > +       }
-> > > +
-> > > +       program_outbound_atu(pcie, PCIE_ATU_REGION_INDEX0, type,
-> > > +                            cfg->res.start + SZ_128K, busdev, SZ_128K);
-> > > +       return (void __iomem *)(pcie->dbi_base + SZ_128K + where);
-> > > +}
-> > > +
-> > > +struct pci_ecam_ops tegra194_pcie_ops = {
-> > > +       .bus_shift      = 20,
-> > > +       .init           = tegra194_acpi_init,
-> > > +       .pci_ops        = {
-> > > +               .map_bus        = tegra194_map_bus,
-> > > +               .read           = pci_generic_config_read,
-> > > +               .write          = pci_generic_config_write,
-> > > +       }
-> > > +};
-> > > +#endif /* defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS) */
-> > > +
-> > >   static void tegra_pcie_disable_phy(struct tegra_pcie_dw *pcie)
-> > >   {
-> > >          unsigned int phy_count = pcie->phy_count;
-> > > diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
-> > > index a73164c85e78..6156140dcbb6 100644
-> > > --- a/include/linux/pci-ecam.h
-> > > +++ b/include/linux/pci-ecam.h
-> > > @@ -57,6 +57,7 @@ extern struct pci_ecam_ops pci_thunder_ecam_ops; /* Cavium ThunderX 1.x */
-> > >   extern struct pci_ecam_ops xgene_v1_pcie_ecam_ops; /* APM X-Gene PCIe v1 */
-> > >   extern struct pci_ecam_ops xgene_v2_pcie_ecam_ops; /* APM X-Gene PCIe v2.x */
-> > >   extern struct pci_ecam_ops al_pcie_ops; /* Amazon Annapurna Labs PCIe */
-> > > +extern struct pci_ecam_ops tegra194_pcie_ops; /* Tegra194 PCIe */
-> > >   #endif
-> > > 
-> > >   #ifdef CONFIG_PCI_HOST_COMMON
-> > > --
-> > > 2.17.1
-> > > 
-> 
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
