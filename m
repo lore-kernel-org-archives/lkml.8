@@ -2,85 +2,50 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2322C33CB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11105C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCE3F2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:00:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC67B2192A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:01:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729221AbgAQJAB (ORCPT
+        id S1729152AbgAQJBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 04:00:01 -0500
-Received: from gate.crashing.org ([63.228.1.57]:51278 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726908AbgAQJAA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 04:00:00 -0500
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 00H8ws29002697;
-        Fri, 17 Jan 2020 02:58:54 -0600
-Received: (from segher@localhost)
-        by gate.crashing.org (8.14.1/8.14.1/Submit) id 00H8wpV1002692;
-        Fri, 17 Jan 2020 02:58:51 -0600
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date:   Fri, 17 Jan 2020 02:58:51 -0600
-From:   Segher Boessenkool <segher@kernel.crashing.org>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, nathanl@linux.ibm.com,
-        arnd@arndb.de, tglx@linutronix.de, vincenzo.frascino@arm.com,
-        luto@kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org
-Subject: Re: [RFC PATCH v4 00/11] powerpc: switch VDSO to C implementation.
-Message-ID: <20200117085851.GS3191@gate.crashing.org>
-References: <cover.1579196675.git.christophe.leroy@c-s.fr>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1579196675.git.christophe.leroy@c-s.fr>
-User-Agent: Mutt/1.4.2.3i
+        Fri, 17 Jan 2020 04:01:45 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55033 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726917AbgAQJBp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 04:01:45 -0500
+Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1isNVf-0003eT-Nj; Fri, 17 Jan 2020 10:01:43 +0100
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH 0/3] smp: Avoid memory allocation in on_each_cpu_cond()
+Date:   Fri, 17 Jan 2020 10:01:34 +0100
+Message-Id: <20200117090137.1205765-1-bigeasy@linutronix.de>
+X-Mailer: git-send-email 2.25.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+x86 is using on_each_cpu_cond_mask() in native_flush_tlb_others() in a
+preempt disabled section. The memory allocation in
+on_each_cpu_cond_mask() gives me a headache on RT.
+This is an attempt to get rid of the memory allocation and potentially
+accelerating the code path :)
 
-On Thu, Jan 16, 2020 at 05:58:24PM +0000, Christophe Leroy wrote:
-> On a powerpc8xx, with current powerpc/32 ASM VDSO:
-> 
-> gettimeofday:    vdso: 907 nsec/call
-> clock-getres-realtime:    vdso: 484 nsec/call
-> clock-gettime-realtime:    vdso: 899 nsec/call
-> 
-> The first patch adds VDSO generic C support without any changes to common code.
-> Performance is as follows:
-> 
-> gettimeofday:    vdso: 1211 nsec/call
-> clock-getres-realtime:    vdso: 722 nsec/call
-> clock-gettime-realtime:    vdso: 1216 nsec/call
-> 
-> Then a few changes in the common code have allowed performance improvement. At
-> the end of the series we have:
-> 
-> gettimeofday:    vdso: 974 nsec/call
-> clock-getres-realtime:    vdso: 545 nsec/call
-> clock-gettime-realtime:    vdso: 941 nsec/call
-> 
-> The final result is rather close to pure ASM VDSO:
-> * 7% more on gettimeofday (9 cycles)
-> * 5% more on clock-gettime-realtime (6 cycles)
-> * 12% more on clock-getres-realtime (8 cycles)
-
-Nice!  Much better.
-
-It should be tested on more representative hardware, too, but this looks
-promising alright :-)
+Sebastian
 
 
-Segher
