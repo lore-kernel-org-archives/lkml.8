@@ -2,81 +2,152 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2DFC33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 19:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F26BC33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 19:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F39BD20728
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 19:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39D9D20728
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 19:13:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tut0kCOM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729402AbgAQTMW (ORCPT
+        id S1729473AbgAQTNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 14:12:22 -0500
-Received: from mga17.intel.com ([192.55.52.151]:50673 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727573AbgAQTMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 14:12:21 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 11:12:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,331,1574150400"; 
-   d="scan'208";a="424581003"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by fmsmga005.fm.intel.com with ESMTP; 17 Jan 2020 11:12:20 -0800
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id B640B300DE4; Fri, 17 Jan 2020 11:12:20 -0800 (PST)
-Date:   Fri, 17 Jan 2020 11:12:20 -0800
-From:   Andi Kleen <ak@linux.intel.com>
-To:     roman.sudarikov@linux.intel.com
-Cc:     gregkh@linux-foundation.org, roman.sudarikov@linux.intel.com,
-        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, eranian@google.com,
-        bgregg@netflix.com, kan.liang@linux.intel.com,
-        alexander.antonov@intel.com
-Subject: Re: [PATCH v4 2/2] perf =?iso-8859-1?Q?x86?=
- =?iso-8859-1?Q?=3A_Exposing_an_Uncore_unit_to_PMON_for_Intel_Xeon?=
- =?iso-8859-1?Q?=AE?= server platform
-Message-ID: <20200117191220.GN302770@tassilo.jf.intel.com>
-References: <20200117133759.5729-1-roman.sudarikov@linux.intel.com>
- <20200117133759.5729-3-roman.sudarikov@linux.intel.com>
- <20200117141944.GC1856891@kroah.com>
- <20200117162357.GK302770@tassilo.jf.intel.com>
- <20200117165406.GA1937954@kroah.com>
- <20200117172726.GM302770@tassilo.jf.intel.com>
- <20200117184249.GB1969121@kroah.com>
+        Fri, 17 Jan 2020 14:13:12 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:43195 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727573AbgAQTNM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 14:13:12 -0500
+Received: by mail-qk1-f193.google.com with SMTP id t129so23748208qke.10;
+        Fri, 17 Jan 2020 11:13:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ADIZocMZReJrjMbw9nPTOASTb/3FgLZiglzVEfrysHc=;
+        b=tut0kCOMkdGJSiNqMoxqMqsN95iTpjZu26IZYYPHVmrheqlXj7wgoVZYGYSrZTagC0
+         GlOiATVb3lLOs9X8kl58SAff/aaXsJE6HaoAaHgB6AMQa1Zcgp/x9B6RbVX+2oQzZEZX
+         FSow2qGOHBbyb5gmJBiHYD2/ybpmCEfwNU8WwqAH/OPYjua8zM8mFhSnQKP8NGiy05yJ
+         OoHtNQMzYZobtel7K8BxouDmmQanyxIF0PkWOQl0lou3apjHcHm0wWoSrSgmOyKHM1bA
+         rquGOWNKd7PfXAcpUnzquGxUzuXWygcks7+mmsdCa5cz/Qt5prxbbCCKDsj5c6HEXh7L
+         DC9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ADIZocMZReJrjMbw9nPTOASTb/3FgLZiglzVEfrysHc=;
+        b=PCaJzBrBEa59F3zgp3iYmM1uU7cl6WWWrBFeLZYHxl4bafE1rcOSMAX+Yn29SNPy8V
+         4Yq91A61mdaDUD56VqJxPFs6YZ/i1TEysABv21T+9MyuAG4ot8fvvPCmsWkciO2F2+rP
+         rq8YRmGSV+9xvA3YHhSRmVppaqGVd5OiP6jJjMFnUgNkHu3gFOMpVRvPl8segfjeE25M
+         bk9QdWd1yMS7Tk7B5HQVHhrDUn8d+/erMZILTvCvJxM+pT1nlzgHOtpwEwmpLWQWkvHZ
+         kj6R6dRpgoYN5GqDfZ2yc1k4T97PzHzTHD5Ro3Dtrs2FFGiRKeTGhP5k7TII7Ux9UBdb
+         8GzQ==
+X-Gm-Message-State: APjAAAU+KZGf73YxfObFUqB6vbf819VwS9gTURBDuMiRQq55pAA6Mo80
+        YI4I4i42ruxzfGFWX8EIlgK4UTkT
+X-Google-Smtp-Source: APXvYqwBzsRQf1NPdmTAvAquDKQ6qIbj/WfZZRFcf353pxdlfi6NrpAJmiumxVkeVhosLLaIzFGYFA==
+X-Received: by 2002:a37:6287:: with SMTP id w129mr39639039qkb.381.1579288390967;
+        Fri, 17 Jan 2020 11:13:10 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id h204sm611223qke.6.2020.01.17.11.13.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 Jan 2020 11:13:10 -0800 (PST)
+Subject: Re: [RFC PATCH 0/3] Add device tree build information
+To:     Alexandre Torgue <alexandre.torgue@st.com>, robh+dt@kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        david@gibson.dropbear.id.au, sjg@chromium.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, devicetree-compiler@vger.kernel.org
+References: <20200113181625.3130-1-alexandre.torgue@st.com>
+ <f21ad44d-f119-2035-b4ee-16b3619879af@gmail.com>
+ <233e0a5f-d38f-908c-5ca7-66ee87d0fcae@st.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <7cfd0bc0-13fd-98ea-9bfd-6cfbbfd77b6d@gmail.com>
+Date:   Fri, 17 Jan 2020 13:13:08 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200117184249.GB1969121@kroah.com>
+In-Reply-To: <233e0a5f-d38f-908c-5ca7-66ee87d0fcae@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > pmon0-3: list of pci busses indexed by die
-> > 
-> > To be honest the approach doesn't seem unreasonable to me. It's similar
-> > e.g. how we express lists of cpus or nodes in sysfs today.
 
-<snipped repeated form letter non answer to question>
+On 1/16/20 2:19 AM, Alexandre Torgue wrote:
+> Hi Franck,
+> 
+> On 1/16/20 3:28 AM, Frank Rowand wrote:
+>> On 1/13/20 12:16 PM, Alexandre Torgue wrote:
+>>> Hi,
+>>>
+>>> The goal of this series is to add device tree build information in dtb.
+>>> This information can be dtb build date, where devicetree files come from,
+>>> who built the dtb ... Actually, same kind of information that you can find
+>>> in the Linux banner which is printout during kernel boot. Having the same
+>>> kind of information for device tree is useful for debugging and maintenance.
+>>>
+>>> To achieve that a new option "-B" (using an argument) is added to dtc.
+>>> The argument is a file containing a string with build information
+>>> (e.g., From Linux 5.5.0-rc1 by alex the Mon Jan 13 18:25:38 CET 2020).
+>>> DTC use it to append dts file with a new string property "Build-info".
+>>>
+>>> of/fdt.c is modified to printout "Build-info" property during Kernel boot and
+>>> scripts/Makefile.lib is modified to use dtc -B option during kernel make (this
+>>> last part could be improved for sure).
+>>
+>> Please read through the thread at:
+>>
+>>    https://lore.kernel.org/linux-arm-kernel/550A42AC.8060104@gmail.com/
+>>
+>> which was my attempt to do something similar.
+> 
+> Yes the idea is the same: get build DTB information like build date,
+> "who built the DTB" ... The difference seems to be the way to do it.
+> In my case, I don't want to modify existing dts source files., but I
+> "just" append them by creating a new property with a string
+> containing this build information.> 
+> Why your proposition has not been accepted ?
 
-Roman, 
+Since you are asking this question, I am presuming that you did not
+read the replies in the thread I referenced.  Please read through
+the entire thread.  Most of the review comments were objecting to
+the concept of my proposal.
 
-I suppose you'll need something like
+-Frank
 
-/sys/device/system/dieXXX/pci-pmon<0-3>/bus 
-
-and bus could be a symlink to the pci bus directory.
-
-The whole thing will be ugly and complicated and slow and difficult
-to parse, but it will presumably follow Greg's rules.
-
--Andi
+> 
+> Regards
+> Alex
+> 
+>>
+>> -Frank
+>>
+>>>
+>>> Regards
+>>> Alex
+>>>
+>>> Alexandre Torgue (3):
+>>>    dtc: Add dtb build information option
+>>>    of: fdt: print dtb build information
+>>>    scripts: Use -B dtc option to generate dtb build information.
+>>>
+>>>   drivers/of/fdt.c           |  9 +++++++
+>>>   scripts/Makefile.lib       | 11 +++++---
+>>>   scripts/dtc/dtc.c          | 55 +++++++++++++++++++++++++++++++++-----
+>>>   scripts/gen_dtb_build_info | 11 ++++++++
+>>>   4 files changed, 76 insertions(+), 10 deletions(-)
+>>>   create mode 100755 scripts/gen_dtb_build_info
+>>>
+>>
+> 
 
