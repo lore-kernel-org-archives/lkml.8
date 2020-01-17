@@ -2,274 +2,211 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B784C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4F1C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C5652073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 955C620728
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 13:40:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="poWzvnim"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729117AbgAQNiO (ORCPT
+        id S1727029AbgAQNkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 08:38:14 -0500
-Received: from mga02.intel.com ([134.134.136.20]:44152 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726974AbgAQNiO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 08:38:14 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 05:38:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,330,1574150400"; 
-   d="scan'208";a="373653222"
-Received: from nntpdsd52-183.inn.intel.com ([10.125.52.183])
-  by orsmga004.jf.intel.com with ESMTP; 17 Jan 2020 05:38:09 -0800
-From:   roman.sudarikov@linux.intel.com
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, eranian@google.com,
-        bgregg@netflix.com, ak@linux.intel.com, kan.liang@linux.intel.com,
-        gregkh@linuxfoundation.org
-Cc:     alexander.antonov@intel.com, roman.sudarikov@linux.intel.com
-Subject: [PATCH v4 2/2] =?UTF-8?q?perf=20x86:=20Exposing=20an=20Uncore=20u?= =?UTF-8?q?nit=20to=20PMON=20for=20Intel=20Xeon=C2=AE=20server=20platform?=
-Date:   Fri, 17 Jan 2020 16:37:59 +0300
-Message-Id: <20200117133759.5729-3-roman.sudarikov@linux.intel.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20200117133759.5729-1-roman.sudarikov@linux.intel.com>
-References: <20200117133759.5729-1-roman.sudarikov@linux.intel.com>
+        Fri, 17 Jan 2020 08:40:14 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36475 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726861AbgAQNkO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 08:40:14 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p17so7688103wma.1
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 05:40:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=x0v+Cpelm9h83Fd8YoEOutozcn/2jODQn8Ym6ta3pDI=;
+        b=poWzvnimT8QTMy+z+ojdYjNwWKCfVW89Yxmci6IP1hOwVnknCtXaCr8i8dPxqfj1c6
+         6NHh9Vy22UuVjsdvRslMJxmzZ2r72OldpIzBGyTPzKMTdk2Z9oSf67RccUHaMNaQhd+k
+         lm/c63jSCsXUx2RU7tiHMS5C5Y2FizJpTWV+bQFZk8UuOie9JPNvsSkh5+vGRPhAp0aq
+         HK0OQ1Srf/D3qXPwbVceBBawRHCIp88uRHmu2HP+uHbb1PD3am4Blq1K6Lz24AmMxi2p
+         OWYnjJ/q+UHi4g8eny5q5ITFQpVAiYSQZTcj7rH44ZY1d2LCEmOKY9qNl6Wk1issBSPO
+         JpLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=x0v+Cpelm9h83Fd8YoEOutozcn/2jODQn8Ym6ta3pDI=;
+        b=MwPx6vyRfZUx1aOOLsUSzbmJMuzUZevKSFQjUhqFjIqMumeYD6P0NoVyXGOChS8K5q
+         foyPJuxUolOwXmWZ5CvbY6PVBnEpjVhh13FejhgDB9usTYJViRwIFzq4keC2vkZNAQFs
+         rA+EuLWJRR3R2FlVdBiHx7C7Jk6BVS9BwQe96srwnd0dvRI+znQVdJngvPpVdeRVRu8D
+         A7Wo93vdSFnJv+su28JaE7B9aczA/0fPJjaWEAx0qi5+AHBglmWfmFN0JyEsMrbTU2Uj
+         GVVqgLm6R0lCgeGcTDtXOuqSDP6xriXGgL+rtIIxzK+7Nm/Qwp8ztWwsnPHG58EAumC1
+         2WQw==
+X-Gm-Message-State: APjAAAV/a3w3NInnD1GkwiXYS0GMRzCuZisOzS0NFSMjVqVcqSDEX5vS
+        kFZQHV3G/KFsEczZ28DCBi1ZVg==
+X-Google-Smtp-Source: APXvYqxGyR41SDvj5mCeLz1WXPpVshSUQyPXa3ccVTn3jG4GO+EYu0SQxB8cs1Dtg2CXlW/4Esj78Q==
+X-Received: by 2002:a7b:c764:: with SMTP id x4mr4598002wmk.116.1579268411354;
+        Fri, 17 Jan 2020 05:40:11 -0800 (PST)
+Received: from dell ([2.27.35.221])
+        by smtp.gmail.com with ESMTPSA id s8sm32993260wrt.57.2020.01.17.05.40.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2020 05:40:10 -0800 (PST)
+Date:   Fri, 17 Jan 2020 13:40:26 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "broonie@kernel.org" <broonie@kernel.org>
+Subject: Re: [PATCH v10 08/13] regulator: bd718x7: Split driver to common and
+ bd718x7 specific parts
+Message-ID: <20200117134026.GM15507@dell>
+References: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
+ <def409ab024717e6cd917c488e62fe04ad66bd52.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
+ <20200117102854.GF15507@dell>
+ <4bd035fb2c78e96f18006f06c5d8d9d2f1a1b70d.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <4bd035fb2c78e96f18006f06c5d8d9d2f1a1b70d.camel@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roman Sudarikov <roman.sudarikov@linux.intel.com>
+On Fri, 17 Jan 2020, Vaittinen, Matti wrote:
 
-Current version supports a server line starting Intel® Xeon® Processor
-Scalable Family and introduces mapping for IIO Uncore units only.
-Other units can be added on demand.
+> Hello Lee,
+> 
+> On Fri, 2020-01-17 at 10:28 +0000, Lee Jones wrote:
+> > On Fri, 17 Jan 2020, Matti Vaittinen wrote:
+> > 
+> > > Few ROHM PMICs allow setting the voltage states for different
+> > > system states
+> > > like RUN, IDLE, SUSPEND and LPSR. States are then changed via SoC
+> > > specific
+> > > mechanisms. bd718x7 driver implemented device-tree parsing
+> > > functions for
+> > > these state specific voltages. The parsing functions can be re-used 
+> > > by
+> > > other ROHM chip drivers like bd71828. Split the generic functions
+> > > from
+> > > bd718x7-regulator.c to rohm-regulator.c and export them for other
+> > > modules
+> > > to use.
+> > > 
+> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > > Acked-by: Mark Brown <broonie@kernel.org>
+> > > ---
+> > > no changes since v9
+> > > 
+> > >  drivers/regulator/Kconfig             |   4 +
+> > >  drivers/regulator/Makefile            |   1 +
+> > >  drivers/regulator/bd718x7-regulator.c | 183 ++++++++------------
+> > > ------
+> > >  drivers/regulator/rohm-regulator.c    |  95 +++++++++++++
+> > >  include/linux/mfd/rohm-generic.h      |  66 ++++++++++
+> > >  5 files changed, 221 insertions(+), 128 deletions(-)
+> > >  create mode 100644 drivers/regulator/rohm-regulator.c
+> > 
+> > [...]
+> > 
+> > > diff --git a/include/linux/mfd/rohm-generic.h
+> > > b/include/linux/mfd/rohm-generic.h
+> > > index ff3dd7578fd3..6cc5a0819959 100644
+> > > --- a/include/linux/mfd/rohm-generic.h
+> > > +++ b/include/linux/mfd/rohm-generic.h
+> > > @@ -4,6 +4,9 @@
+> > >  #ifndef __LINUX_MFD_ROHM_H__
+> > >  #define __LINUX_MFD_ROHM_H__
+> > >  
+> > > +#include <linux/regmap.h>
+> > > +#include <linux/regulator/driver.h>
+> > > +
+> > >  enum rohm_chip_type {
+> > >  	ROHM_CHIP_TYPE_BD71837 = 0,
+> > >  	ROHM_CHIP_TYPE_BD71847,
+> > > @@ -17,4 +20,67 @@ struct rohm_regmap_dev {
+> > >  	struct regmap *regmap;
+> > >  };
+> > >  
+> > > +enum {
+> > > +	ROHM_DVS_LEVEL_UNKNOWN,
+> > > +	ROHM_DVS_LEVEL_RUN,
+> > > +	ROHM_DVS_LEVEL_IDLE,
+> > > +	ROHM_DVS_LEVEL_SUSPEND,
+> > > +	ROHM_DVS_LEVEL_LPSR,
+> > > +#define ROHM_DVS_LEVEL_MAX ROHM_DVS_LEVEL_LPSR
+> > 
+> > Haven't seen this before.  Is it legit?
+> > 
+> 
+> I don't know why it wouldn't be :) I kind of grew used to that when I
+> still did some networking stuff.
 
-IIO stack to PMON mapping is exposed through:
-    /sys/devices/uncore_iio_<pmu_idx>/mapping
-    in the following format: domain:bus
+Networking it not a good example.
 
-For example, on a 4-die Intel Xeon® server platform:
-    $ cat /sys/devices/uncore_iio_0/mapping
-    0000:00,0000:40,0000:80,0000:c0
+It's full of odd little quirks to the standard styling.
 
-Which means:
-IIO PMON block 0 on die 0 belongs to IIO stack on bus 0x00, domain 0x0000
-IIO PMON block 0 on die 1 belongs to IIO stack on bus 0x40, domain 0x0000
-IIO PMON block 0 on die 2 belongs to IIO stack on bus 0x80, domain 0x0000
-IIO PMON block 0 on die 3 belongs to IIO stack on bus 0xc0, domain 0x0000
+> It doesn't really matter in this case but for example the netlink
+> headers do:
+> 
+> enum {
+>    foo,
+> #define foo foo
+>    bar,
+> #define bar bar
+> ...
+> };
+> 
+> https://elixir.bootlin.com/linux/v5.5-rc6/source/include/uapi/linux/rtnetlink.h
+> 
+> What is the good here is that this allows one to nicely exclude
+> unsupported stuff using preprocessor:
+> 
+> #include <header_with_or_without_foo_dependng_on_version.h>
+> 
+> #ifdef foo
+> use_foo(foo);
+> #endif
+> 
+> What about:
+> > 
+> >      ROHM_DVS_LEVEL_MAX = ROHM_DVS_LEVEL_LPSR
+> 
+> Anyways, I don't see why define wouldn't be Ok here - but sure it can
+> be changed if you insist ;) Just let me know if you can accept the
+> define or not :)
 
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-Co-developed-by: Alexander Antonov <alexander.antonov@intel.com>
-Signed-off-by: Alexander Antonov <alexander.antonov@intel.com>
-Signed-off-by: Roman Sudarikov <roman.sudarikov@linux.intel.com>
----
- arch/x86/events/intel/uncore_snbep.c | 160 +++++++++++++++++++++++++++
- 1 file changed, 160 insertions(+)
+Let's go for not in this instance. :D
 
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index b10a5ec79e48..813009b48a0f 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -273,6 +273,30 @@
- #define SKX_CPUNODEID			0xc0
- #define SKX_GIDNIDMAP			0xd4
- 
-+/*
-+ * The CPU_BUS_NUMBER MSR returns the values of the respective CPUBUSNO CSR
-+ * that BIOS programmed. MSR has package scope.
-+ * |  Bit  |  Default  |  Description
-+ * | [63]  |    00h    | VALID - When set, indicates the CPU bus
-+ *                       numbers have been initialized. (RO)
-+ * |[62:48]|    ---    | Reserved
-+ * |[47:40]|    00h    | BUS_NUM_5 — Return the bus number BIOS assigned
-+ *                       CPUBUSNO(5). (RO)
-+ * |[39:32]|    00h    | BUS_NUM_4 — Return the bus number BIOS assigned
-+ *                       CPUBUSNO(4). (RO)
-+ * |[31:24]|    00h    | BUS_NUM_3 — Return the bus number BIOS assigned
-+ *                       CPUBUSNO(3). (RO)
-+ * |[23:16]|    00h    | BUS_NUM_2 — Return the bus number BIOS assigned
-+ *                       CPUBUSNO(2). (RO)
-+ * |[15:8] |    00h    | BUS_NUM_1 — Return the bus number BIOS assigned
-+ *                       CPUBUSNO(1). (RO)
-+ * | [7:0] |    00h    | BUS_NUM_0 — Return the bus number BIOS assigned
-+ *                       CPUBUSNO(0). (RO)
-+ */
-+#define SKX_MSR_CPU_BUS_NUMBER		0x300
-+#define SKX_MSR_CPU_BUS_VALID_BIT	(1ULL << 63)
-+#define BUS_NUM_STRIDE			8
-+
- /* SKX CHA */
- #define SKX_CHA_MSR_PMON_BOX_FILTER_TID		(0x1ffULL << 0)
- #define SKX_CHA_MSR_PMON_BOX_FILTER_LINK	(0xfULL << 9)
-@@ -3580,6 +3604,9 @@ static struct intel_uncore_ops skx_uncore_iio_ops = {
- 	.read_counter		= uncore_msr_read_counter,
- };
- 
-+static int skx_iio_get_topology(struct intel_uncore_type *type, int max_dies);
-+static int skx_iio_set_mapping(struct intel_uncore_type *type, int max_dies);
-+
- static struct intel_uncore_type skx_uncore_iio = {
- 	.name			= "iio",
- 	.num_counters		= 4,
-@@ -3594,6 +3621,8 @@ static struct intel_uncore_type skx_uncore_iio = {
- 	.constraints		= skx_uncore_iio_constraints,
- 	.ops			= &skx_uncore_iio_ops,
- 	.format_group		= &skx_uncore_iio_format_group,
-+	.get_topology		= skx_iio_get_topology,
-+	.set_mapping		= skx_iio_set_mapping,
- };
- 
- enum perf_uncore_iio_freerunning_type_id {
-@@ -3780,6 +3809,137 @@ static int skx_count_chabox(void)
- 	return hweight32(val);
- }
- 
-+static inline int skx_msr_cpu_bus_read(int cpu, u64 *topology)
-+{
-+	u64 msr_value;
-+
-+	if (rdmsrl_on_cpu(cpu, SKX_MSR_CPU_BUS_NUMBER, &msr_value) ||
-+			!(msr_value & SKX_MSR_CPU_BUS_VALID_BIT))
-+		return -ENXIO;
-+
-+	*topology = msr_value;
-+
-+	return 0;
-+}
-+
-+static int skx_iio_get_topology(struct intel_uncore_type *type, int max_dies)
-+{
-+	int ret, cpu, die, current_die;
-+	struct pci_bus *bus = NULL;
-+
-+	/*
-+	 * Verified single-segment environments only; disabled for multiple
-+	 * segment topologies for now.
-+	 */
-+	while ((bus = pci_find_next_bus(bus)) && !pci_domain_nr(bus))
-+		;
-+	if (bus)
-+		return -EPERM;
-+
-+	type->topology = kcalloc(max_dies, sizeof(u64), GFP_KERNEL);
-+	if (!type->topology)
-+		return -ENOMEM;
-+
-+	/*
-+	 * Using cpus_read_lock() to ensure cpu is not going down between
-+	 * looking at cpu_online_mask.
-+	 */
-+	cpus_read_lock();
-+	/* Invalid value to start loop.*/
-+	current_die = -1;
-+	for_each_online_cpu(cpu) {
-+		die = topology_logical_die_id(cpu);
-+		if (current_die == die)
-+			continue;
-+		ret = skx_msr_cpu_bus_read(cpu, &type->topology[die]);
-+		if (ret) {
-+			kfree(type->topology);
-+			break;
-+		}
-+		current_die = die;
-+	}
-+	cpus_read_unlock();
-+
-+	return ret;
-+}
-+
-+static inline u8 skx_iio_stack_bus(struct intel_uncore_pmu *pmu, int die)
-+{
-+	return pmu->type->topology[die] >> (pmu->pmu_idx * BUS_NUM_STRIDE);
-+}
-+
-+static int skx_iio_set_box_mapping(struct intel_uncore_pmu *pmu, int max_dies)
-+{
-+	char *buf;
-+	int die = 0;
-+	/* Length of template "%04x:%02x," without null character. */
-+	const int template_len = 8;
-+
-+	/*
-+	 * Root bus 0x00 is valid only for die 0 AND pmu_idx = 0.
-+	 * Set "0" platform mapping for PMUs which have zero stack bus and
-+	 * non-zero index.
-+	 */
-+	if (!skx_iio_stack_bus(pmu, die) && pmu->pmu_idx) {
-+		pmu->mapping = kzalloc(2, GFP_KERNEL);
-+		if (!pmu->mapping)
-+			return -ENOMEM;
-+		sprintf(pmu->mapping, "0");
-+		return 0;
-+	}
-+
-+	pmu->mapping = kzalloc(max_dies * template_len + 1, GFP_KERNEL);
-+	if (!pmu->mapping)
-+		return -ENOMEM;
-+
-+	buf = pmu->mapping;
-+	for (; die < max_dies; die++) {
-+		buf += snprintf(buf, template_len + 1, "%04x:%02x,", 0,
-+				skx_iio_stack_bus(pmu, die));
-+	}
-+
-+	*(--buf) = '\0';
-+
-+	return 0;
-+}
-+
-+static int skx_iio_set_mapping(struct intel_uncore_type *type, int max_dies)
-+{
-+	/*
-+	 * Each IIO stack (PCIe root port) has its own IIO PMON block, so each
-+	 * "mapping" holds bus number(s) of PCIe root port(s), which can
-+	 * be monitored by that IIO PMON block.
-+	 *
-+	 * For example, on 4-die Xeon platform with up to 6 IIO stacks per die
-+	 * and, therefore, 6 IIO PMON blocks per die, the "mapping"
-+	 * of IIO PMON block 0 holds "0000:00,0000:40,0000:80,0000:c0":
-+	 *
-+	 * $ cat /sys/devices/uncore_iio_0/mapping
-+	 * 0000:00,0000:40,0000:80,0000:c0
-+	 *
-+	 * Which means:
-+	 * IIO PMON 0 on die 0 belongs to PCIe RP on bus 0x00, domain 0x0000
-+	 * IIO PMON 0 on die 1 belongs to PCIe RP on bus 0x40, domain 0x0000
-+	 * IIO PMON 0 on die 2 belongs to PCIe RP on bus 0x80, domain 0x0000
-+	 * IIO PMON 0 on die 3 belongs to PCIe RP on bus 0xc0, domain 0x0000
-+	 */
-+
-+	int ret;
-+	struct intel_uncore_pmu *pmu = type->pmus;
-+
-+	for (; pmu - type->pmus < type->num_boxes; pmu++) {
-+		ret = skx_iio_set_box_mapping(pmu, max_dies);
-+		if (ret) {
-+			for (; pmu->pmu_idx > 0; --pmu)
-+				kfree(pmu->mapping);
-+			break;
-+		}
-+	}
-+
-+	kfree(type->topology);
-+	return ret;
-+}
-+
- void skx_uncore_cpu_init(void)
- {
- 	skx_uncore_chabox.num_boxes = skx_count_chabox();
 -- 
-2.19.1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
