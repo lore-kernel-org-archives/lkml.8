@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A87C33CB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 19:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF41C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 19:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3564E2072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 19:34:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09A7520842
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 19:34:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729598AbgAQTej (ORCPT
+        id S1729625AbgAQTel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 14:34:39 -0500
+        Fri, 17 Jan 2020 14:34:41 -0500
 Received: from mga18.intel.com ([134.134.136.126]:18185 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726761AbgAQTei (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 14:34:38 -0500
+        id S1729559AbgAQTej (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 14:34:39 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 11:30:54 -0800
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 11:30:56 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,331,1574150400"; 
-   d="scan'208";a="274474197"
+   d="scan'208";a="274474207"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by FMSMGA003.fm.intel.com with ESMTP; 17 Jan 2020 11:30:54 -0800
+  by FMSMGA003.fm.intel.com with ESMTP; 17 Jan 2020 11:30:55 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -42,9 +42,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Borislav Petkov <bp@suse.de>,
         Dave Hansen <dave.hansen@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v2 2/4] KVM: x86: Ensure guest's FPU state is loaded when accessing for emulation
-Date:   Fri, 17 Jan 2020 11:30:50 -0800
-Message-Id: <20200117193052.1339-3-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 4/4] KVM: x86: Remove unused ctxt param from emulator's FPU accessors
+Date:   Fri, 17 Jan 2020 11:30:52 -0800
+Message-Id: <20200117193052.1339-5-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200117193052.1339-1-sean.j.christopherson@intel.com>
 References: <20200117193052.1339-1-sean.j.christopherson@intel.com>
@@ -55,180 +55,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lock the FPU regs and reload the current thread's FPU state, which holds
-the guest's FPU state, to the CPU registers if necessary prior to
-accessing guest FPU state as part of emulation.  kernel_fpu_begin() can
-be called from softirq context, therefore KVM must ensure softirqs are
-disabled (locking the FPU regs disables softirqs) when touching CPU FPU
-state.
+Remove an unused struct x86_emulate_ctxt * param from low level helpers
+used to access guest FPU state.  The unused param was left behind by
+commit 6ab0b9feb82a ("x86,kvm: remove KVM emulator get_fpu / put_fpu").
 
-Note, for all intents and purposes this reverts commit 6ab0b9feb82a7
-("x86,kvm: remove KVM emulator get_fpu / put_fpu"), but at the time it
-was applied, removing get/put_fpu() was correct.  The re-introduction
-of {get,put}_fpu() is necessitated by the deferring of FPU state load.
+No functional change intended.
 
-Fixes: 5f409e20b7945 ("x86/fpu: Defer FPU state load until return to userspace")
-Cc: stable@vger.kernel.org
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/emulate.c | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ arch/x86/kvm/emulate.c | 28 +++++++++++++---------------
+ 1 file changed, 13 insertions(+), 15 deletions(-)
 
 diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
-index 952d1a4f4d7e..2a5bed60ce50 100644
+index 2a5bed60ce50..3e3b3cd60cce 100644
 --- a/arch/x86/kvm/emulate.c
 +++ b/arch/x86/kvm/emulate.c
-@@ -22,6 +22,7 @@
- #include "kvm_cache_regs.h"
- #include <asm/kvm_emulate.h>
- #include <linux/stringify.h>
-+#include <asm/fpu/api.h>
- #include <asm/debugreg.h>
- #include <asm/nospec-branch.h>
- 
-@@ -1075,8 +1076,23 @@ static void fetch_register_operand(struct operand *op)
- 	}
+@@ -1090,7 +1090,7 @@ static void emulator_put_fpu(void)
+ 	fpregs_unlock();
  }
  
-+static void emulator_get_fpu(void)
-+{
-+	fpregs_lock();
-+
-+	fpregs_assert_state_consistent();
-+	if (test_thread_flag(TIF_NEED_FPU_LOAD))
-+		switch_fpu_return();
-+}
-+
-+static void emulator_put_fpu(void)
-+{
-+	fpregs_unlock();
-+}
-+
- static void read_sse_reg(struct x86_emulate_ctxt *ctxt, sse128_t *data, int reg)
+-static void read_sse_reg(struct x86_emulate_ctxt *ctxt, sse128_t *data, int reg)
++static void read_sse_reg(sse128_t *data, int reg)
  {
-+	emulator_get_fpu();
+ 	emulator_get_fpu();
  	switch (reg) {
- 	case 0: asm("movdqa %%xmm0, %0" : "=m"(*data)); break;
- 	case 1: asm("movdqa %%xmm1, %0" : "=m"(*data)); break;
-@@ -1098,11 +1114,13 @@ static void read_sse_reg(struct x86_emulate_ctxt *ctxt, sse128_t *data, int reg)
- #endif
- 	default: BUG();
- 	}
-+	emulator_put_fpu();
+@@ -1117,8 +1117,7 @@ static void read_sse_reg(struct x86_emulate_ctxt *ctxt, sse128_t *data, int reg)
+ 	emulator_put_fpu();
  }
  
- static void write_sse_reg(struct x86_emulate_ctxt *ctxt, sse128_t *data,
- 			  int reg)
+-static void write_sse_reg(struct x86_emulate_ctxt *ctxt, sse128_t *data,
+-			  int reg)
++static void write_sse_reg(sse128_t *data, int reg)
  {
-+	emulator_get_fpu();
+ 	emulator_get_fpu();
  	switch (reg) {
- 	case 0: asm("movdqa %0, %%xmm0" : : "m"(*data)); break;
- 	case 1: asm("movdqa %0, %%xmm1" : : "m"(*data)); break;
-@@ -1124,10 +1142,12 @@ static void write_sse_reg(struct x86_emulate_ctxt *ctxt, sse128_t *data,
- #endif
- 	default: BUG();
- 	}
-+	emulator_put_fpu();
+@@ -1145,7 +1144,7 @@ static void write_sse_reg(struct x86_emulate_ctxt *ctxt, sse128_t *data,
+ 	emulator_put_fpu();
  }
  
- static void read_mmx_reg(struct x86_emulate_ctxt *ctxt, u64 *data, int reg)
+-static void read_mmx_reg(struct x86_emulate_ctxt *ctxt, u64 *data, int reg)
++static void read_mmx_reg(u64 *data, int reg)
  {
-+	emulator_get_fpu();
+ 	emulator_get_fpu();
  	switch (reg) {
- 	case 0: asm("movq %%mm0, %0" : "=m"(*data)); break;
- 	case 1: asm("movq %%mm1, %0" : "=m"(*data)); break;
-@@ -1139,10 +1159,12 @@ static void read_mmx_reg(struct x86_emulate_ctxt *ctxt, u64 *data, int reg)
- 	case 7: asm("movq %%mm7, %0" : "=m"(*data)); break;
- 	default: BUG();
- 	}
-+	emulator_put_fpu();
+@@ -1162,7 +1161,7 @@ static void read_mmx_reg(struct x86_emulate_ctxt *ctxt, u64 *data, int reg)
+ 	emulator_put_fpu();
  }
  
- static void write_mmx_reg(struct x86_emulate_ctxt *ctxt, u64 *data, int reg)
+-static void write_mmx_reg(struct x86_emulate_ctxt *ctxt, u64 *data, int reg)
++static void write_mmx_reg(u64 *data, int reg)
  {
-+	emulator_get_fpu();
+ 	emulator_get_fpu();
  	switch (reg) {
- 	case 0: asm("movq %0, %%mm0" : : "m"(*data)); break;
- 	case 1: asm("movq %0, %%mm1" : : "m"(*data)); break;
-@@ -1154,6 +1176,7 @@ static void write_mmx_reg(struct x86_emulate_ctxt *ctxt, u64 *data, int reg)
- 	case 7: asm("movq %0, %%mm7" : : "m"(*data)); break;
- 	default: BUG();
+@@ -1234,7 +1233,7 @@ static void decode_register_operand(struct x86_emulate_ctxt *ctxt,
+ 		op->type = OP_XMM;
+ 		op->bytes = 16;
+ 		op->addr.xmm = reg;
+-		read_sse_reg(ctxt, &op->vec_val, reg);
++		read_sse_reg(&op->vec_val, reg);
+ 		return;
  	}
-+	emulator_put_fpu();
- }
- 
- static int em_fninit(struct x86_emulate_ctxt *ctxt)
-@@ -1161,7 +1184,9 @@ static int em_fninit(struct x86_emulate_ctxt *ctxt)
- 	if (ctxt->ops->get_cr(ctxt, 0) & (X86_CR0_TS | X86_CR0_EM))
- 		return emulate_nm(ctxt);
- 
-+	emulator_get_fpu();
- 	asm volatile("fninit");
-+	emulator_put_fpu();
+ 	if (ctxt->d & Mmx) {
+@@ -1285,7 +1284,7 @@ static int decode_modrm(struct x86_emulate_ctxt *ctxt,
+ 			op->type = OP_XMM;
+ 			op->bytes = 16;
+ 			op->addr.xmm = ctxt->modrm_rm;
+-			read_sse_reg(ctxt, &op->vec_val, ctxt->modrm_rm);
++			read_sse_reg(&op->vec_val, ctxt->modrm_rm);
+ 			return rc;
+ 		}
+ 		if (ctxt->d & Mmx) {
+@@ -1862,10 +1861,10 @@ static int writeback(struct x86_emulate_ctxt *ctxt, struct operand *op)
+ 				       op->bytes * op->count);
+ 		break;
+ 	case OP_XMM:
+-		write_sse_reg(ctxt, &op->vec_val, op->addr.xmm);
++		write_sse_reg(&op->vec_val, op->addr.xmm);
+ 		break;
+ 	case OP_MM:
+-		write_mmx_reg(ctxt, &op->mm_val, op->addr.mm);
++		write_mmx_reg(&op->mm_val, op->addr.mm);
+ 		break;
+ 	case OP_NONE:
+ 		/* no writeback */
+@@ -5495,11 +5494,10 @@ static int flush_pending_x87_faults(struct x86_emulate_ctxt *ctxt)
  	return X86EMUL_CONTINUE;
  }
  
-@@ -1172,7 +1197,9 @@ static int em_fnstcw(struct x86_emulate_ctxt *ctxt)
- 	if (ctxt->ops->get_cr(ctxt, 0) & (X86_CR0_TS | X86_CR0_EM))
- 		return emulate_nm(ctxt);
- 
-+	emulator_get_fpu();
- 	asm volatile("fnstcw %0": "+m"(fcw));
-+	emulator_put_fpu();
- 
- 	ctxt->dst.val = fcw;
- 
-@@ -1186,7 +1213,9 @@ static int em_fnstsw(struct x86_emulate_ctxt *ctxt)
- 	if (ctxt->ops->get_cr(ctxt, 0) & (X86_CR0_TS | X86_CR0_EM))
- 		return emulate_nm(ctxt);
- 
-+	emulator_get_fpu();
- 	asm volatile("fnstsw %0": "+m"(fsw));
-+	emulator_put_fpu();
- 
- 	ctxt->dst.val = fsw;
- 
-@@ -4092,8 +4121,12 @@ static int em_fxsave(struct x86_emulate_ctxt *ctxt)
- 	if (rc != X86EMUL_CONTINUE)
- 		return rc;
- 
-+	emulator_get_fpu();
-+
- 	rc = asm_safe("fxsave %[fx]", , [fx] "+m"(fx_state));
- 
-+	emulator_put_fpu();
-+
- 	if (rc != X86EMUL_CONTINUE)
- 		return rc;
- 
-@@ -4136,6 +4169,8 @@ static int em_fxrstor(struct x86_emulate_ctxt *ctxt)
- 	if (rc != X86EMUL_CONTINUE)
- 		return rc;
- 
-+	emulator_get_fpu();
-+
- 	if (size < __fxstate_size(16)) {
- 		rc = fxregs_fixup(&fx_state, size);
- 		if (rc != X86EMUL_CONTINUE)
-@@ -4151,6 +4186,8 @@ static int em_fxrstor(struct x86_emulate_ctxt *ctxt)
- 		rc = asm_safe("fxrstor %[fx]", : [fx] "m"(fx_state));
- 
- out:
-+	emulator_put_fpu();
-+
- 	return rc;
+-static void fetch_possible_mmx_operand(struct x86_emulate_ctxt *ctxt,
+-				       struct operand *op)
++static void fetch_possible_mmx_operand(struct operand *op)
+ {
+ 	if (op->type == OP_MM)
+-		read_mmx_reg(ctxt, &op->mm_val, op->addr.mm);
++		read_mmx_reg(&op->mm_val, op->addr.mm);
  }
  
-@@ -5448,7 +5485,9 @@ static int flush_pending_x87_faults(struct x86_emulate_ctxt *ctxt)
- {
- 	int rc;
+ static int fastop(struct x86_emulate_ctxt *ctxt, void (*fop)(struct fastop *))
+@@ -5578,10 +5576,10 @@ int x86_emulate_insn(struct x86_emulate_ctxt *ctxt)
+ 			 * Now that we know the fpu is exception safe, we can fetch
+ 			 * operands from it.
+ 			 */
+-			fetch_possible_mmx_operand(ctxt, &ctxt->src);
+-			fetch_possible_mmx_operand(ctxt, &ctxt->src2);
++			fetch_possible_mmx_operand(&ctxt->src);
++			fetch_possible_mmx_operand(&ctxt->src2);
+ 			if (!(ctxt->d & Mov))
+-				fetch_possible_mmx_operand(ctxt, &ctxt->dst);
++				fetch_possible_mmx_operand(&ctxt->dst);
+ 		}
  
-+	emulator_get_fpu();
- 	rc = asm_safe("fwait");
-+	emulator_put_fpu();
- 
- 	if (unlikely(rc != X86EMUL_CONTINUE))
- 		return emulate_exception(ctxt, MF_VECTOR, 0, false);
+ 		if (unlikely(emul_flags & X86EMUL_GUEST_MASK) && ctxt->intercept) {
 -- 
 2.24.1
 
