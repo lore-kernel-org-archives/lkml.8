@@ -2,135 +2,399 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D39C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A8AC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D98B20728
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:25:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 768D22082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 10:27:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="D0MRgklu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbgAQKZu (ORCPT
+        id S1726885AbgAQK1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 05:25:50 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55490 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbgAQKZu (ORCPT
+        Fri, 17 Jan 2020 05:27:35 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:53970 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbgAQK1f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 05:25:50 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1isOoy-00063A-Oh; Fri, 17 Jan 2020 11:25:44 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1E03F1C19D7;
-        Fri, 17 Jan 2020 11:25:44 +0100 (CET)
-Date:   Fri, 17 Jan 2020 10:25:43 -0000
-From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/core] watchdog/softlockup: Enforce that timestamp is valid on boot
-Cc:     Robert Richter <rrichter@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <87o8v3uuzl.fsf@nanos.tec.linutronix.de>
-References: <87o8v3uuzl.fsf@nanos.tec.linutronix.de>
+        Fri, 17 Jan 2020 05:27:35 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200117102732euoutp018a1e83cd4c8f76f1905d5f99de2fb04b~qpb2S5IkQ0078400784euoutp01f
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 10:27:32 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200117102732euoutp018a1e83cd4c8f76f1905d5f99de2fb04b~qpb2S5IkQ0078400784euoutp01f
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1579256853;
+        bh=bTfhQitb0NO9m5qt55r1QEwjc0OWAYz3OAD+x0ZllQE=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=D0MRgkluAfgmHw9hPe4q5z0yRnc8qFr3GjNoQagxcTGcQ6sMSzUfAXYAKMZkujPHR
+         2O17uF45tsQCBhjKb75qjFEpxGFR9L3u3ROUSKHLjXYH0EQwTPY7nDx6qp2Hpx8ep1
+         H25nyV9gI2e8K9i2yrw4TIJE+bmDizy34tQ2TcHM=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200117102732eucas1p210aff5117fb2e578e00c2d5cb479420a~qpb19Fl_y3155631556eucas1p2E;
+        Fri, 17 Jan 2020 10:27:32 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id C7.BD.61286.41C812E5; Fri, 17
+        Jan 2020 10:27:32 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200117102731eucas1p2cce1ecd1d36a5b209d73df59d7245da0~qpb1RkpcB1699216992eucas1p2H;
+        Fri, 17 Jan 2020 10:27:31 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200117102731eusmtrp11930d4cab98b10388a71d2f1a3bb4919~qpb1QtELx1399313993eusmtrp1m;
+        Fri, 17 Jan 2020 10:27:31 +0000 (GMT)
+X-AuditID: cbfec7f2-f0bff7000001ef66-61-5e218c146be2
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id B8.F8.08375.31C812E5; Fri, 17
+        Jan 2020 10:27:31 +0000 (GMT)
+Received: from [106.120.51.74] (unknown [106.120.51.74]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200117102730eusmtip13d0f85c6defeaa0f9df3002127e559a4~qpb0C1sGp2982629826eusmtip1K;
+        Fri, 17 Jan 2020 10:27:30 +0000 (GMT)
+Subject: Re: [RESEND v3 2/2] drm: bridge: adv7511: Add support for ADV7535
+To:     Bogdan Togorean <bogdan.togorean@analog.com>,
+        dri-devel@lists.freedesktop.org
+Cc:     airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
+        mark.rutland@arm.com, narmstrong@baylibre.com,
+        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        jernej.skrabec@siol.net, gregkh@linuxfoundation.org,
+        tglx@linutronix.de, sam@ravnborg.org, alexander.deucher@amd.com,
+        matt.redfearn@thinci.com, robdclark@chromium.org,
+        wsa+renesas@sang-engineering.com, linux-kernel@vger.kernel.org
+From:   Andrzej Hajda <a.hajda@samsung.com>
+Message-ID: <982e6232-f257-86d2-3ca0-3a99daec3767@samsung.com>
+Date:   Fri, 17 Jan 2020 11:27:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Thunderbird/68.2.2
 MIME-Version: 1.0
-Message-ID: <157925674381.396.17427763570273066050.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200107133431.5201-3-bogdan.togorean@analog.com>
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sf0yMcRzH932+zz33lC5PJ/osP+JkxuZHo+07LGyNL8PITENxeJamDneO
+        /NhEsiuVSLlOEroJ/SDqkhkOpayjXOTHnNbN/DqWulosdPcw/ff6ft6fz/vzeW9fHitzuWA+
+        XrNT1GrUCSrOl62u67NNCcwYFzs95eh4kmlrYEjem1sycij1JCa/q49jYnd/40jKhQqOtPZ+
+        xKThSytL0o4Xy8mz2gKOmF80M6TWUcQQa9Za8ryvA5PU2w/kpKSvCpHrlbmYZNkWzlPS1JZ+
+        jn5qnU9LC0sR/daWKqenk5tZeruniKWnDfkyWnk5jaOPslsY+tVmk1NLzzsZvXOmVE4dR+sZ
+        WpzXytH35ypYejczh12uXOM7Z7OYEL9L1E6L2OC75UF7GbP9w+Kkcksjm4zez0lHPjwIM8Fd
+        8lPuYaVQguBhzQD7DnA3gjxzMSs9uhDcsqRz/yZ6aoxIEi4iKDSlYenhQtBUbseermHCYnD8
+        LPVyoLAS3J05XissZGHoLjvoFThhEvRff+m1VQgRYPtqlqUjnmeFCeC8m+ApDxeiwWnvkEkt
+        AdCQ72Q97CPMhQ9vm72jWAgBi6sASxwEr5xnGc8uEOw8WDrsjMcThEhwVYVLCYbBp/obcolH
+        weOcDFbiA+AoOYylWQOCqqs3sSTMhje2H5zHBw/cXFE7TSrPB2O2+a+9P7S5AqQT/OFE9Sks
+        lRVgOKKUuseBo6nqr2EQmJ+6uWykMg0KZhoUxjQojOn/3iLEXkZBol6XGCfqwjTi7qk6daJO
+        r4mbumlbYiUa+KyPf9V/r0Hulo1WJPBI5acwRo2NVcrUu3R7Eq0IeKwKVDQYR8cqFZvVe/aK
+        2m3rtfoEUWdFI3lWFaSYcf5jjFKIU+8Ut4ridlH7T2V4n+BkNPS337qe/r7pi2Su9nshQ/ct
+        cDaGvDZEdRuHt0exkdfKJjbB5+ornWNHjIkOXpbyPbycxmlOxESuyi8PmLI0NnS/z4oR3NMw
+        wW/V0vtdP1S5l6zt4/WZda+f/CLrDXWhDzOW6HtXFw/ZcSWp7eWSnAv+SROHVB4L5woa42PG
+        jJ5VuHuWitVtUYdNxlqd+g9giozRqAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBKsWRmVeSWpSXmKPExsVy+t/xu7rCPYpxBhefG1r0njvJZDHtzm5W
+        i6bWKcwW/7dNZLa48vU9m0Xz4vVsFle/v2S2OPnmKotF58Ql7BaXd81hs1h6/SKTxa77C5gs
+        DvVFW1z7+ZjZonXvEXaLFT+3Mlps3jSV2aLvnLuDkEfrpb9sHq+uOnqsmbeG0eP9jVZ2j9kN
+        F1k89n5bwOIxu2Mmq8emVZ1sHicmXGLyeHfuHLvH9m8PWD32z13D7nG/+ziTx5JpV9k8ni1c
+        z+JxoHcyS4BQlJ5NUX5pSapCRn5xia1StKGFkZ6hpYWekYmlnqGxeayVkamSvp1NSmpOZllq
+        kb5dgl7GkYdrmQpeeFWs236KpYHxmU0XIyeHhICJxLcdMxi7GLk4hASWMkrc/TCPESIhLrF7
+        /ltmCFtY4s+1LjYQW0jgNaNE9zNJEFtYwEvi/u81YDUiAsESH//eYAexmQX6mCXO/lKFGHqc
+        UeLm2zlgQ9kENCX+br4JNohXwE7i3LulrF2MHBwsAqoSTw7kgIRFBSIk3v6+yQpRIihxcuYT
+        FhCbU8Be4sW9i2wQ89Ul/sy7xAxhy0tsfzsHyhaXuPVkPtMERqFZSNpnIWmZhaRlFpKWBYws
+        qxhFUkuLc9Nziw31ihNzi0vz0vWS83M3MQJTybZjPzfvYLy0MfgQowAHoxIP74wghTgh1sSy
+        4srcQ4wSHMxKIrwnZ8jGCfGmJFZWpRblxxeV5qQWH2I0BfptIrOUaHI+MM3llcQbmhqaW1ga
+        mhubG5tZKInzdggcjBESSE8sSc1OTS1ILYLpY+LglGpgzMoOs7Ve9n3Lxki2U9d1Nzef63/B
+        77lxHfPSjnUTVunKOfbd97ScW6i13WZfx+3rbG95lz8+kKeifzX3T96Zg4anshS+1EU++bQm
+        e0/p1CNbpvws6zKb1PPbedMdt11xOQ9finQeD50xc7btRP4TCRe0IzxUdDRUt534ecZRb6dV
+        /6rge6Llc5VYijMSDbWYi4oTAUpMp8M7AwAA
+X-CMS-MailID: 20200117102731eucas1p2cce1ecd1d36a5b209d73df59d7245da0
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200107133859epcas4p45949a65be83ba877e98548d77279666c
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200107133859epcas4p45949a65be83ba877e98548d77279666c
+References: <20200107133431.5201-1-bogdan.togorean@analog.com>
+        <CGME20200107133859epcas4p45949a65be83ba877e98548d77279666c@epcas4p4.samsung.com>
+        <20200107133431.5201-3-bogdan.togorean@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the core/core branch of tip:
+On 07.01.2020 14:34, Bogdan Togorean wrote:
+> ADV7535 is a DSI to HDMI bridge chip like ADV7533 but it allows
+> 1080p@60Hz. v1p2 is fixed to 1.8V on ADV7535 but on ADV7533 can be 1.2V
+> or 1.8V and is configurable in a register.
+>
+> Signed-off-by: Bogdan Togorean <bogdan.togorean@analog.com>
+> ---
+>  drivers/gpu/drm/bridge/adv7511/Kconfig       | 13 ++----
+>  drivers/gpu/drm/bridge/adv7511/Makefile      |  3 +-
+>  drivers/gpu/drm/bridge/adv7511/adv7511.h     | 44 +++-----------------
+>  drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 35 ++++++++++------
+>  4 files changed, 32 insertions(+), 63 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/bridge/adv7511/Kconfig b/drivers/gpu/drm/bridge/adv7511/Kconfig
+> index 8a56ff81f4fb..47d4eb9e845d 100644
+> --- a/drivers/gpu/drm/bridge/adv7511/Kconfig
+> +++ b/drivers/gpu/drm/bridge/adv7511/Kconfig
+> @@ -4,8 +4,9 @@ config DRM_I2C_ADV7511
+>  	depends on OF
+>  	select DRM_KMS_HELPER
+>  	select REGMAP_I2C
+> +	select DRM_MIPI_DSI
+>  	help
+> -	  Support for the Analog Device ADV7511(W) and ADV7513 HDMI encoders.
+> +	  Support for the Analog Device ADV7511(W)/13/33/35 HDMI encoders.
+>  
+>  config DRM_I2C_ADV7511_AUDIO
+>  	bool "ADV7511 HDMI Audio driver"
+> @@ -15,16 +16,8 @@ config DRM_I2C_ADV7511_AUDIO
+>  	  Support the ADV7511 HDMI Audio interface. This is used in
+>  	  conjunction with the AV7511  HDMI driver.
+>  
+> -config DRM_I2C_ADV7533
+> -	bool "ADV7533 encoder"
+> -	depends on DRM_I2C_ADV7511
+> -	select DRM_MIPI_DSI
+> -	default y
+> -	help
+> -	  Support for the Analog Devices ADV7533 DSI to HDMI encoder.
+> -
+>  config DRM_I2C_ADV7511_CEC
+> -	bool "ADV7511/33 HDMI CEC driver"
+> +	bool "ADV7511/33/35 HDMI CEC driver"
+>  	depends on DRM_I2C_ADV7511
+>  	select CEC_CORE
+>  	default y
+> diff --git a/drivers/gpu/drm/bridge/adv7511/Makefile b/drivers/gpu/drm/bridge/adv7511/Makefile
+> index b46ebeb35fd4..d8ceb534b51f 100644
+> --- a/drivers/gpu/drm/bridge/adv7511/Makefile
+> +++ b/drivers/gpu/drm/bridge/adv7511/Makefile
+> @@ -1,6 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+> -adv7511-y := adv7511_drv.o
+> +adv7511-y := adv7511_drv.o adv7533.o
+>  adv7511-$(CONFIG_DRM_I2C_ADV7511_AUDIO) += adv7511_audio.o
+>  adv7511-$(CONFIG_DRM_I2C_ADV7511_CEC) += adv7511_cec.o
+> -adv7511-$(CONFIG_DRM_I2C_ADV7533) += adv7533.o
+>  obj-$(CONFIG_DRM_I2C_ADV7511) += adv7511.o
+> diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511.h b/drivers/gpu/drm/bridge/adv7511/adv7511.h
+> index 52b2adfdc877..ed9cfd944098 100644
+> --- a/drivers/gpu/drm/bridge/adv7511/adv7511.h
+> +++ b/drivers/gpu/drm/bridge/adv7511/adv7511.h
+> @@ -220,6 +220,10 @@
+>  
+>  #define ADV7533_REG_CEC_OFFSET		0x70
+>  
+> +#define ADV7533_REG_SUPPLY_SELECT	0xe4
+> +
+> +#define ADV7533_V1P2_ENABLE		BIT(7)
+> +
+>  enum adv7511_input_clock {
+>  	ADV7511_INPUT_CLOCK_1X,
+>  	ADV7511_INPUT_CLOCK_2X,
+> @@ -320,6 +324,7 @@ struct adv7511_video_config {
+>  enum adv7511_type {
+>  	ADV7511,
+>  	ADV7533,
+> +	ADV7535,
+>  };
+>  
+>  #define ADV7511_MAX_ADDRS 3
+> @@ -393,7 +398,6 @@ static inline int adv7511_cec_init(struct device *dev, struct adv7511 *adv7511)
+>  }
+>  #endif
+>  
+> -#ifdef CONFIG_DRM_I2C_ADV7533
+>  void adv7533_dsi_power_on(struct adv7511 *adv);
+>  void adv7533_dsi_power_off(struct adv7511 *adv);
+>  void adv7533_mode_set(struct adv7511 *adv, const struct drm_display_mode *mode);
+> @@ -402,44 +406,6 @@ int adv7533_patch_cec_registers(struct adv7511 *adv);
+>  int adv7533_attach_dsi(struct adv7511 *adv);
+>  void adv7533_detach_dsi(struct adv7511 *adv);
+>  int adv7533_parse_dt(struct device_node *np, struct adv7511 *adv);
+> -#else
+> -static inline void adv7533_dsi_power_on(struct adv7511 *adv)
+> -{
+> -}
+> -
+> -static inline void adv7533_dsi_power_off(struct adv7511 *adv)
+> -{
+> -}
+> -
+> -static inline void adv7533_mode_set(struct adv7511 *adv,
+> -				    const struct drm_display_mode *mode)
+> -{
+> -}
+> -
+> -static inline int adv7533_patch_registers(struct adv7511 *adv)
+> -{
+> -	return -ENODEV;
+> -}
+> -
+> -static inline int adv7533_patch_cec_registers(struct adv7511 *adv)
+> -{
+> -	return -ENODEV;
+> -}
+> -
+> -static inline int adv7533_attach_dsi(struct adv7511 *adv)
+> -{
+> -	return -ENODEV;
+> -}
+> -
+> -static inline void adv7533_detach_dsi(struct adv7511 *adv)
+> -{
+> -}
+> -
+> -static inline int adv7533_parse_dt(struct device_node *np, struct adv7511 *adv)
+> -{
+> -	return -ENODEV;
+> -}
+> -#endif
+>  
+>  #ifdef CONFIG_DRM_I2C_ADV7511_AUDIO
+>  int adv7511_audio_init(struct device *dev, struct adv7511 *adv7511);
+> diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+> index 9e13e466e72c..35595472e771 100644
+> --- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+> +++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+> @@ -367,7 +367,7 @@ static void adv7511_power_on(struct adv7511 *adv7511)
+>  	 */
+>  	regcache_sync(adv7511->regmap);
+>  
+> -	if (adv7511->type == ADV7533)
+> +	if (adv7511->type == ADV7533 || adv7511->type == ADV7535)
+>  		adv7533_dsi_power_on(adv7511);
+>  	adv7511->powered = true;
+>  }
+> @@ -387,7 +387,7 @@ static void __adv7511_power_off(struct adv7511 *adv7511)
+>  static void adv7511_power_off(struct adv7511 *adv7511)
+>  {
+>  	__adv7511_power_off(adv7511);
+> -	if (adv7511->type == ADV7533)
+> +	if (adv7511->type == ADV7533 || adv7511->type == ADV7535)
+>  		adv7533_dsi_power_off(adv7511);
+>  	adv7511->powered = false;
+>  }
+> @@ -761,7 +761,7 @@ static void adv7511_mode_set(struct adv7511 *adv7511,
+>  	regmap_update_bits(adv7511->regmap, 0x17,
+>  		0x60, (vsync_polarity << 6) | (hsync_polarity << 5));
+>  
+> -	if (adv7511->type == ADV7533)
+> +	if (adv7511->type == ADV7533 || adv7511->type == ADV7535)
+>  		adv7533_mode_set(adv7511, adj_mode);
+>  
+>  	drm_mode_copy(&adv7511->curr_mode, adj_mode);
+> @@ -874,7 +874,7 @@ static int adv7511_bridge_attach(struct drm_bridge *bridge)
+>  				 &adv7511_connector_helper_funcs);
+>  	drm_connector_attach_encoder(&adv->connector, bridge->encoder);
+>  
+> -	if (adv->type == ADV7533)
+> +	if (adv->type == ADV7533 || adv->type == ADV7535)
+>  		ret = adv7533_attach_dsi(adv);
+>  
+>  	if (adv->i2c_main->irq)
+> @@ -903,6 +903,7 @@ static const char * const adv7511_supply_names[] = {
+>  	"dvdd-3v",
+>  };
+>  
+> +/* The order of entries is important. If changed update hardcoded indices */
+>  static const char * const adv7533_supply_names[] = {
+>  	"avdd",
+>  	"dvdd",
+> @@ -952,7 +953,7 @@ static bool adv7511_cec_register_volatile(struct device *dev, unsigned int reg)
+>  	struct i2c_client *i2c = to_i2c_client(dev);
+>  	struct adv7511 *adv7511 = i2c_get_clientdata(i2c);
+>  
+> -	if (adv7511->type == ADV7533)
+> +	if (adv7511->type == ADV7533 || adv7511->type == ADV7535)
+>  		reg -= ADV7533_REG_CEC_OFFSET;
+>  
+>  	switch (reg) {
+> @@ -994,7 +995,7 @@ static int adv7511_init_cec_regmap(struct adv7511 *adv)
+>  		goto err;
+>  	}
+>  
+> -	if (adv->type == ADV7533) {
+> +	if (adv->type == ADV7533 || adv->type == ADV7535) {
+>  		ret = adv7533_patch_cec_registers(adv);
+>  		if (ret)
+>  			goto err;
+> @@ -1094,8 +1095,9 @@ static int adv7511_probe(struct i2c_client *i2c, const struct i2c_device_id *id)
+>  	struct adv7511_link_config link_config;
+>  	struct adv7511 *adv7511;
+>  	struct device *dev = &i2c->dev;
+> +	struct regulator *reg_v1p2;
+>  	unsigned int val;
+> -	int ret;
+> +	int ret, reg_v1p2_uV;
+>  
+>  	if (!dev->of_node)
+>  		return -EINVAL;
+> @@ -1163,6 +1165,17 @@ static int adv7511_probe(struct i2c_client *i2c, const struct i2c_device_id *id)
+>  	if (ret)
+>  		goto uninit_regulators;
+>  
+> +	if (adv7511->type == ADV7533) {
+> +		reg_v1p2 = adv7511->supplies[5].consumer;
+> +		reg_v1p2_uV = regulator_get_voltage(reg_v1p2);
+> +
+> +		if (reg_v1p2_uV == 1200000) {
+> +			regmap_update_bits(adv7511->regmap,
+> +				ADV7533_REG_SUPPLY_SELECT, ADV7533_V1P2_ENABLE,
+> +				ADV7533_V1P2_ENABLE);
+> +		}
+> +	}
+> +
 
-Commit-ID:     11e31f608b499f044f24b20be73f1dcab3e43f8a
-Gitweb:        https://git.kernel.org/tip/11e31f608b499f044f24b20be73f1dcab3e43f8a
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Thu, 16 Jan 2020 19:17:02 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 17 Jan 2020 11:19:22 +01:00
 
-watchdog/softlockup: Enforce that timestamp is valid on boot
+In patch adding support for adv7535 you modifies adv7533 path. It looks
+suspicious, maybe it would be better to extract it to separate patch.
+Anyway this change requires tests from adv7533 users.
 
-Robert reported that during boot the watchdog timestamp is set to 0 for one
-second which is the indicator for a watchdog reset.
+Beside this the patch looks OK.
 
-The reason for this is that the timestamp is in seconds and the time is
-taken from sched clock and divided by ~1e9. sched clock starts at 0 which
-means that for the first second during boot the watchdog timestamp is 0,
-i.e. reset.
 
-Use ULONG_MAX as the reset indicator value so the watchdog works correctly
-right from the start. ULONG_MAX would only conflict with a real timestamp
-if the system reaches an uptime of 136 years on 32bit and almost eternity
-on 64bit.
+Regards
 
-Reported-by: Robert Richter <rrichter@marvell.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/87o8v3uuzl.fsf@nanos.tec.linutronix.de
+Andrzej
 
----
- kernel/watchdog.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-index e3774e9..b6b1f54 100644
---- a/kernel/watchdog.c
-+++ b/kernel/watchdog.c
-@@ -161,6 +161,8 @@ static void lockup_detector_update_enable(void)
- 
- #ifdef CONFIG_SOFTLOCKUP_DETECTOR
- 
-+#define SOFTLOCKUP_RESET	ULONG_MAX
-+
- /* Global variables, exported for sysctl */
- unsigned int __read_mostly softlockup_panic =
- 			CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC_VALUE;
-@@ -272,7 +274,7 @@ notrace void touch_softlockup_watchdog_sched(void)
- 	 * Preemption can be enabled.  It doesn't matter which CPU's timestamp
- 	 * gets zeroed here, so use the raw_ operation.
- 	 */
--	raw_cpu_write(watchdog_touch_ts, 0);
-+	raw_cpu_write(watchdog_touch_ts, SOFTLOCKUP_RESET);
- }
- 
- notrace void touch_softlockup_watchdog(void)
-@@ -296,14 +298,14 @@ void touch_all_softlockup_watchdogs(void)
- 	 * the softlockup check.
- 	 */
- 	for_each_cpu(cpu, &watchdog_allowed_mask)
--		per_cpu(watchdog_touch_ts, cpu) = 0;
-+		per_cpu(watchdog_touch_ts, cpu) = SOFTLOCKUP_RESET;
- 	wq_watchdog_touch(-1);
- }
- 
- void touch_softlockup_watchdog_sync(void)
- {
- 	__this_cpu_write(softlockup_touch_sync, true);
--	__this_cpu_write(watchdog_touch_ts, 0);
-+	__this_cpu_write(watchdog_touch_ts, SOFTLOCKUP_RESET);
- }
- 
- static int is_softlockup(unsigned long touch_ts)
-@@ -379,7 +381,7 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
- 	/* .. and repeat */
- 	hrtimer_forward_now(hrtimer, ns_to_ktime(sample_period));
- 
--	if (touch_ts == 0) {
-+	if (touch_ts == SOFTLOCKUP_RESET) {
- 		if (unlikely(__this_cpu_read(softlockup_touch_sync))) {
- 			/*
- 			 * If the time stamp was touched atomically
+>  	adv7511_packet_disable(adv7511, 0xffff);
+>  
+>  	adv7511->i2c_edid = i2c_new_ancillary_device(i2c, "edid",
+> @@ -1242,7 +1255,7 @@ static int adv7511_remove(struct i2c_client *i2c)
+>  {
+>  	struct adv7511 *adv7511 = i2c_get_clientdata(i2c);
+>  
+> -	if (adv7511->type == ADV7533)
+> +	if (adv7511->type == ADV7533 || adv7511->type == ADV7535)
+>  		adv7533_detach_dsi(adv7511);
+>  	i2c_unregister_device(adv7511->i2c_cec);
+>  	if (adv7511->cec_clk)
+> @@ -1266,9 +1279,8 @@ static const struct i2c_device_id adv7511_i2c_ids[] = {
+>  	{ "adv7511", ADV7511 },
+>  	{ "adv7511w", ADV7511 },
+>  	{ "adv7513", ADV7511 },
+> -#ifdef CONFIG_DRM_I2C_ADV7533
+>  	{ "adv7533", ADV7533 },
+> -#endif
+> +	{ "adv7535", ADV7535 },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(i2c, adv7511_i2c_ids);
+> @@ -1277,9 +1289,8 @@ static const struct of_device_id adv7511_of_ids[] = {
+>  	{ .compatible = "adi,adv7511", .data = (void *)ADV7511 },
+>  	{ .compatible = "adi,adv7511w", .data = (void *)ADV7511 },
+>  	{ .compatible = "adi,adv7513", .data = (void *)ADV7511 },
+> -#ifdef CONFIG_DRM_I2C_ADV7533
+>  	{ .compatible = "adi,adv7533", .data = (void *)ADV7533 },
+> -#endif
+> +	{ .compatible = "adi,adv7535", .data = (void *)ADV7535 },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(of, adv7511_of_ids);
+
+
