@@ -2,98 +2,111 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB231C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F88AC33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F7A22072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:10:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DWpBvWGB"
+	by mail.kernel.org (Postfix) with ESMTP id E784420842
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:10:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729099AbgAQPKw (ORCPT
+        id S1729134AbgAQPK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 10:10:52 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36667 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728512AbgAQPKw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 10:10:52 -0500
-Received: by mail-pf1-f194.google.com with SMTP id x184so12102505pfb.3;
-        Fri, 17 Jan 2020 07:10:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=DesUuflALP+M7Km3HyTVIX1iNswVs/ME2CU4gzFT4Bg=;
-        b=DWpBvWGBMlKlVcVxGbxODHWtx994uCyaKuHhJXPGKXe0dvuwCzvW/yIJ93SuOIXiDG
-         GBEaabSSZLNcY7B4LCf/yUKKtsvxeVtUDhG2DyC0Z0+16PpUzeerwfDqYfS8gAFgio7Z
-         4fh9yBiql1lnwq7tDPBT+XyYUiH0wwZj+Btjc036QRDyfFl9bs9jDMrAhdhEyWQyO8zh
-         awk7tB05Lbm12vUCZmPwH9I+/0/fL5is3EkI1yeSumPDOEK0ocqTA7TqGSHRxAeFZ8VH
-         CSCc1Q0fBnKaIwkwoDta+nwU6TngMjQoIyiPuOHNG9nMJ1DUsnB8VXRs7ksytmrYUJae
-         IE2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=DesUuflALP+M7Km3HyTVIX1iNswVs/ME2CU4gzFT4Bg=;
-        b=k0PZEQtpv2wS7hw4L6wOWqRzSEbS/uCdkwLuXvefX/FJSWakBAgAeM4Rb27u4RXUgQ
-         IwYioySHHYFAQVMmQkJxh6dpONPAooIzKSBsn33esLRH+lSexNE35Wmbm5bYhjxZHyGP
-         DXYiOcAjORsTLpOATlJh5qp/aAcMnfl7CpPP4AVs6ZkbGBDKFGM9Z7nNjroNgofnMdOx
-         PoUOm/fCdCeVylZue8/N/QSd8WaSrhGDzwyk3+eIL1i5KydKi/NcswcU9i6LjFk4tu7z
-         Y3+3NNyiUzgQImzx7qAfyN8Z0r2O4vQ/3N52U16RcvPMQvn7knYac4qkOkjh65taq1uf
-         m00Q==
-X-Gm-Message-State: APjAAAUOChzuVJ1m/6hB5hDzsXz48VFUHSHzzxBhBWmtwFc7nSIbLns2
-        cTXSw/D56Q4Zx+wZGRO+Ab4=
-X-Google-Smtp-Source: APXvYqz/UbONNd/ImMYq7DVrn/QXiJMSbUBYaajwrveO1mKgOAMGBMufrQEdkzI2nM0yyNgabqSFjA==
-X-Received: by 2002:a63:89c2:: with SMTP id v185mr44627341pgd.135.1579273851867;
-        Fri, 17 Jan 2020 07:10:51 -0800 (PST)
-Received: from localhost (64.64.229.47.16clouds.com. [64.64.229.47])
-        by smtp.gmail.com with ESMTPSA id u13sm7821436pjn.29.2020.01.17.07.10.50
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 17 Jan 2020 07:10:51 -0800 (PST)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     alexaundru.ardelean@analog.com, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, davem@davemloft.net,
-        netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
-Subject: [PATCH] net: phy: adin: fix a warning about msleep
-Date:   Fri, 17 Jan 2020 23:10:42 +0800
-Message-Id: <20200117151042.28742-1-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 17 Jan 2020 10:10:58 -0500
+Received: from mga12.intel.com ([192.55.52.136]:56221 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728512AbgAQPK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 10:10:56 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 07:10:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,330,1574150400"; 
+   d="scan'208";a="243692720"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 17 Jan 2020 07:10:55 -0800
+Received: from [10.251.27.134] (kliang2-mobl.ccr.corp.intel.com [10.251.27.134])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 36420580332;
+        Fri, 17 Jan 2020 07:10:55 -0800 (PST)
+Subject: Re: [RESEND PATCH V2] perf/x86/intel: Avoid unnecessary PEBS_ENABLE
+ MSR access in PMI
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     acme@redhat.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, eranian@google.com
+References: <20200116182112.20782-1-kan.liang@linux.intel.com>
+ <20200117085412.GU2827@hirez.programming.kicks-ass.net>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <e6126115-a802-35fe-3b53-65e8a3d84db7@linux.intel.com>
+Date:   Fri, 17 Jan 2020 10:10:53 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
+MIME-Version: 1.0
+In-Reply-To: <20200117085412.GU2827@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-found a warning by the following command:
-./scripts/checkpatch.pl -f drivers/net/phy/adin.c
 
-WARNING: msleep < 20ms can sleep for up to 20ms; see Documentation/timers/timers-howto.rst
- #628: FILE: drivers/net/phy/adin.c:628:
-+	msleep(10);
 
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
----
- drivers/net/phy/adin.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 1/17/2020 3:54 AM, Peter Zijlstra wrote:
+> On Thu, Jan 16, 2020 at 10:21:12AM -0800, kan.liang@linux.intel.com wrote:
+> 
+>> A PMI may land after cpuc->enabled=0 in x86_pmu_disable() and
+>> PMI throttle may be triggered for the PMI. For this rare case,
+>> intel_pmu_pebs_disable() will not touch PEBS_ENABLE MSR. The patch
+>> explicitly disable the PEBS for this case.
+> 
+> intel_pmu_handle_irq()
+>    pmu_enabled = cpuc->enabled;
+>    cpuc->enabled = 0;
+>    __intel_pmu_disable_all();
+> 
+>    ...
+>      x86_pmu_stop()
+>        intel_pmu_disable_event()
+>          intel_pmu_pebs_disable()
+> 	  if (cpuc->enabled) // FALSE!!!
 
-diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index cf5a391c93e6..6de25a2d3a05 100644
---- a/drivers/net/phy/adin.c
-+++ b/drivers/net/phy/adin.c
-@@ -625,7 +625,7 @@ static int adin_soft_reset(struct phy_device *phydev)
- 	if (rc < 0)
- 		return rc;
- 
--	msleep(10);
-+	msleep(20);
- 
- 	/* If we get a read error something may be wrong */
- 	rc = phy_read_mmd(phydev, MDIO_MMD_VEND1,
--- 
-2.17.1
+Right, it always be false in PMI.
+We force the 'enabled' to 0 when entering the PMI.
 
+For this case, I think we may add a variable to save the pebs_enabled 
+when entering PMI. If it's changed, we have to write the new value.
+I will prepare the V3.
+
+Thanks,
+Kan
+
+> 
+>    cpuc->enabled = pmu_enabled;
+>    if (pmu_enabled)
+>      __intel_pmu_enable_all();
+> 
+>> @@ -2620,6 +2627,15 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
+>>   		handled++;
+>>   		x86_pmu.drain_pebs(regs);
+>>   		status &= x86_pmu.intel_ctrl | GLOBAL_STATUS_TRACE_TOPAPMI;
+>> +
+>> +		/*
+>> +		 * PMI may land after cpuc->enabled=0 in x86_pmu_disable() and
+>> +		 * PMI throttle may be triggered for the PMI.
+>> +		 * For this rare case, intel_pmu_pebs_disable() will not touch
+>> +		 * MSR_IA32_PEBS_ENABLE. Explicitly disable the PEBS here.
+>> +		 */
+>> +		if (unlikely(!cpuc->enabled && !cpuc->pebs_enabled))
+>> +			wrmsrl(MSR_IA32_PEBS_ENABLE, 0);
+>>   	}
+> 
+> How does that make sense? AFAICT this is all still completely broken.
+> 
+> Please be more careful.
+> 
