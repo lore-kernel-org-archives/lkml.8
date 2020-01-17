@@ -2,120 +2,292 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4745AC33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9B3C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AF202073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:48:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579272521;
-	bh=YYIc8ncjw9IAf4/GDADFxUHjnSxt8C1GJ/RrzEV40ag=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=s05yXd+IVB1zOocEy9VobNaRhIVFrlvipoLXLpYPqHMtFgDDJM1TgksfCDDRfxQCS
-	 DmtT5UaVZbgBg9BXj6SOLpVwPzZNMRKUYbQ3gvqlsmAsjAvuKjSqY1dld/wkNv14zj
-	 sLY5SmYGz4XDqmbC0u0HnAIHcMD7YaOJWJDqGMWE=
+	by mail.kernel.org (Postfix) with ESMTP id 8D49320728
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:50:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbgAQOsk (ORCPT
+        id S1728977AbgAQOuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 09:48:40 -0500
-Received: from mail-oi1-f169.google.com ([209.85.167.169]:45233 "EHLO
-        mail-oi1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726827AbgAQOsk (ORCPT
+        Fri, 17 Jan 2020 09:50:52 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:56459 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726827AbgAQOuw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 09:48:40 -0500
-Received: by mail-oi1-f169.google.com with SMTP id n16so22370939oie.12;
-        Fri, 17 Jan 2020 06:48:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dyE4NzvdMsyKga26H8tQKOSJjEOPcWYAXtxjXIGSauM=;
-        b=uRDdYi242KUktL5GwKg/yethULGwGsgG72YBU8OfsSl6uZii0ON+vs5BSfkqTtK8up
-         Ut088jFxshpuWlJvJ4D4qBOPJk2QnfRB3QBuN+269Lzyc7pcif41z24xyGK95BsqWtXm
-         yutrVRymJSxhLMeUb+sPnnsTIJ8YF9pimsYYMGYx5Zb3JPRGeqjrmvhVhVw/1drkCTvQ
-         1zn6qmRMYbTUiBF5Z19HTi0nuMG4dkNjVUni7D7TWg79vteUQHypyTjhTPgazwGcXKdW
-         C/Q5Neb8JIGZmIWWe8HeHtnNlqiAy08MYAuuSwAaqu5c6DDKim3fM3UKK6i+klSljeQI
-         kQWg==
-X-Gm-Message-State: APjAAAXxi4ytemILCi2Pi5vi6qApJaPcy4s6rZQn4twUFKMeR9xwCDwY
-        XMBR6lmGvI4PyZlIU+xt1lCqEow=
-X-Google-Smtp-Source: APXvYqyABfMThOmRvFNhbdQGFqiqtT+906MusSLrADtaBvi+FGDgJmdep6F7xH8DXrsB8rHtfy/eFA==
-X-Received: by 2002:a54:4117:: with SMTP id l23mr3541405oic.140.1579272518846;
-        Fri, 17 Jan 2020 06:48:38 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id f4sm7824851oij.25.2020.01.17.06.48.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 06:48:38 -0800 (PST)
-Received: (nullmailer pid 13001 invoked by uid 1000);
-        Fri, 17 Jan 2020 14:48:37 -0000
-Date:   Fri, 17 Jan 2020 08:48:37 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Amelie Delaunay <amelie.delaunay@st.com>
-Cc:     Minas Harutyunyan <hminas@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: Re: [PATCHv2 1/2] dt-bindings: usb: dwc2: add support for STM32MP15
- SoCs USB OTG HS and FS
-Message-ID: <20200117144837.GA27455@bogus>
-References: <20200116144524.16070-1-amelie.delaunay@st.com>
- <20200116144524.16070-2-amelie.delaunay@st.com>
+        Fri, 17 Jan 2020 09:50:52 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1isSxS-0002HB-8d; Fri, 17 Jan 2020 15:50:46 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9854F1C19E2;
+        Fri, 17 Jan 2020 15:50:45 +0100 (CET)
+Date:   Fri, 17 Jan 2020 14:50:45 -0000
+From:   "tip-bot2 for Marco Elver" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: core/debugobjects] debugobjects: Fix various data races
+Cc:     Qian Cai <cai@lca.pw>, Marco Elver <elver@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200116185529.11026-1-elver@google.com>
+References: <20200116185529.11026-1-elver@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200116144524.16070-2-amelie.delaunay@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <157927264536.396.656322891347828320.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 03:45:23PM +0100, Amelie Delaunay wrote:
-> Add the specific compatible string for the DWC2 IP found in the STM32MP15
-> SoCs.
-> STM32MP15 SoCs uses sensing comparators to detect Vbus valid levels and
-> ID pin state. usb33d-supply described the regulator supplying Vbus and ID
-> sensing comparators.
-> 
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-> ---
->  Documentation/devicetree/bindings/usb/dwc2.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/dwc2.yaml b/Documentation/devicetree/bindings/usb/dwc2.yaml
-> index 71cf7ba32237..0b86250b97a9 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc2.yaml
-> +++ b/Documentation/devicetree/bindings/usb/dwc2.yaml
-> @@ -58,6 +58,8 @@ properties:
->        - const: st,stm32f4x9-fsotg
->        - const: st,stm32f4x9-hsotg
->        - const: st,stm32f7-hsotg
-> +      - const: st,stm32mp15-fsotg
-> +      - const: st,stm32mp15-hsotg
->        - const: samsung,s3c6400-hsotg
->  
->    reg:
-> @@ -103,6 +105,10 @@ properties:
->    vusb_a-supply:
->      description: phandle to voltage regulator of analog section.
->  
-> +  vusb33d_supply:
+The following commit has been merged into the core/debugobjects branch of tip:
 
-Not a valid regulator property.
+Commit-ID:     35fd7a637c42bb54ba4608f4d40ae6e55fc88781
+Gitweb:        https://git.kernel.org/tip/35fd7a637c42bb54ba4608f4d40ae6e55fc88781
+Author:        Marco Elver <elver@google.com>
+AuthorDate:    Thu, 16 Jan 2020 19:55:29 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Fri, 17 Jan 2020 15:45:01 +01:00
 
-> +    description: reference to the external VBUS and ID sensing comparators, in
-> +      order to perform OTG operation, used on STM32MP15 SoCs.
+debugobjects: Fix various data races
 
-Are they external or part of the SoC? When we have Vbus sense and ID 
-GPIOs, those go in the connector node, so this probably should too if 
-these are board components.
+The counters obj_pool_free, and obj_nr_tofree, and the flag obj_freeing are
+read locklessly outside the pool_lock critical sections. If read with plain
+accesses, this would result in data races.
 
-Rob
+This is addressed as follows:
+
+ * reads outside critical sections become READ_ONCE()s (pairing with
+   WRITE_ONCE()s added);
+
+ * writes become WRITE_ONCE()s (pairing with READ_ONCE()s added); since
+   writes happen inside critical sections, only the write and not the read
+   of RMWs needs to be atomic, thus WRITE_ONCE(var, var +/- X) is
+   sufficient.
+
+The data races were reported by KCSAN:
+
+  BUG: KCSAN: data-race in __free_object / fill_pool
+
+  write to 0xffffffff8beb04f8 of 4 bytes by interrupt on cpu 1:
+   __free_object+0x1ee/0x8e0 lib/debugobjects.c:404
+   __debug_check_no_obj_freed+0x199/0x330 lib/debugobjects.c:969
+   debug_check_no_obj_freed+0x3c/0x44 lib/debugobjects.c:994
+   slab_free_hook mm/slub.c:1422 [inline]
+
+  read to 0xffffffff8beb04f8 of 4 bytes by task 1 on cpu 2:
+   fill_pool+0x3d/0x520 lib/debugobjects.c:135
+   __debug_object_init+0x3c/0x810 lib/debugobjects.c:536
+   debug_object_init lib/debugobjects.c:591 [inline]
+   debug_object_activate+0x228/0x320 lib/debugobjects.c:677
+   debug_rcu_head_queue kernel/rcu/rcu.h:176 [inline]
+
+  BUG: KCSAN: data-race in __debug_object_init / fill_pool
+
+  read to 0xffffffff8beb04f8 of 4 bytes by task 10 on cpu 6:
+   fill_pool+0x3d/0x520 lib/debugobjects.c:135
+   __debug_object_init+0x3c/0x810 lib/debugobjects.c:536
+   debug_object_init_on_stack+0x39/0x50 lib/debugobjects.c:606
+   init_timer_on_stack_key kernel/time/timer.c:742 [inline]
+
+  write to 0xffffffff8beb04f8 of 4 bytes by task 1 on cpu 3:
+   alloc_object lib/debugobjects.c:258 [inline]
+   __debug_object_init+0x717/0x810 lib/debugobjects.c:544
+   debug_object_init lib/debugobjects.c:591 [inline]
+   debug_object_activate+0x228/0x320 lib/debugobjects.c:677
+   debug_rcu_head_queue kernel/rcu/rcu.h:176 [inline]
+
+  BUG: KCSAN: data-race in free_obj_work / free_object
+
+  read to 0xffffffff9140c190 of 4 bytes by task 10 on cpu 6:
+   free_object+0x4b/0xd0 lib/debugobjects.c:426
+   debug_object_free+0x190/0x210 lib/debugobjects.c:824
+   destroy_timer_on_stack kernel/time/timer.c:749 [inline]
+
+  write to 0xffffffff9140c190 of 4 bytes by task 93 on cpu 1:
+   free_obj_work+0x24f/0x480 lib/debugobjects.c:313
+   process_one_work+0x454/0x8d0 kernel/workqueue.c:2264
+   worker_thread+0x9a/0x780 kernel/workqueue.c:2410
+
+Reported-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Marco Elver <elver@google.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20200116185529.11026-1-elver@google.com
+
+---
+ lib/debugobjects.c | 46 ++++++++++++++++++++++++---------------------
+ 1 file changed, 25 insertions(+), 21 deletions(-)
+
+diff --git a/lib/debugobjects.c b/lib/debugobjects.c
+index 6126119..48054db 100644
+--- a/lib/debugobjects.c
++++ b/lib/debugobjects.c
+@@ -132,14 +132,18 @@ static void fill_pool(void)
+ 	struct debug_obj *obj;
+ 	unsigned long flags;
+ 
+-	if (likely(obj_pool_free >= debug_objects_pool_min_level))
++	if (likely(READ_ONCE(obj_pool_free) >= debug_objects_pool_min_level))
+ 		return;
+ 
+ 	/*
+ 	 * Reuse objs from the global free list; they will be reinitialized
+ 	 * when allocating.
++	 *
++	 * Both obj_nr_tofree and obj_pool_free are checked locklessly; the
++	 * READ_ONCE()s pair with the WRITE_ONCE()s in pool_lock critical
++	 * sections.
+ 	 */
+-	while (obj_nr_tofree && (obj_pool_free < obj_pool_min_free)) {
++	while (READ_ONCE(obj_nr_tofree) && (READ_ONCE(obj_pool_free) < obj_pool_min_free)) {
+ 		raw_spin_lock_irqsave(&pool_lock, flags);
+ 		/*
+ 		 * Recheck with the lock held as the worker thread might have
+@@ -148,9 +152,9 @@ static void fill_pool(void)
+ 		while (obj_nr_tofree && (obj_pool_free < obj_pool_min_free)) {
+ 			obj = hlist_entry(obj_to_free.first, typeof(*obj), node);
+ 			hlist_del(&obj->node);
+-			obj_nr_tofree--;
++			WRITE_ONCE(obj_nr_tofree, obj_nr_tofree - 1);
+ 			hlist_add_head(&obj->node, &obj_pool);
+-			obj_pool_free++;
++			WRITE_ONCE(obj_pool_free, obj_pool_free + 1);
+ 		}
+ 		raw_spin_unlock_irqrestore(&pool_lock, flags);
+ 	}
+@@ -158,7 +162,7 @@ static void fill_pool(void)
+ 	if (unlikely(!obj_cache))
+ 		return;
+ 
+-	while (obj_pool_free < debug_objects_pool_min_level) {
++	while (READ_ONCE(obj_pool_free) < debug_objects_pool_min_level) {
+ 		struct debug_obj *new[ODEBUG_BATCH_SIZE];
+ 		int cnt;
+ 
+@@ -174,7 +178,7 @@ static void fill_pool(void)
+ 		while (cnt) {
+ 			hlist_add_head(&new[--cnt]->node, &obj_pool);
+ 			debug_objects_allocated++;
+-			obj_pool_free++;
++			WRITE_ONCE(obj_pool_free, obj_pool_free + 1);
+ 		}
+ 		raw_spin_unlock_irqrestore(&pool_lock, flags);
+ 	}
+@@ -236,7 +240,7 @@ alloc_object(void *addr, struct debug_bucket *b, struct debug_obj_descr *descr)
+ 	obj = __alloc_object(&obj_pool);
+ 	if (obj) {
+ 		obj_pool_used++;
+-		obj_pool_free--;
++		WRITE_ONCE(obj_pool_free, obj_pool_free - 1);
+ 
+ 		/*
+ 		 * Looking ahead, allocate one batch of debug objects and
+@@ -255,7 +259,7 @@ alloc_object(void *addr, struct debug_bucket *b, struct debug_obj_descr *descr)
+ 					       &percpu_pool->free_objs);
+ 				percpu_pool->obj_free++;
+ 				obj_pool_used++;
+-				obj_pool_free--;
++				WRITE_ONCE(obj_pool_free, obj_pool_free - 1);
+ 			}
+ 		}
+ 
+@@ -309,8 +313,8 @@ static void free_obj_work(struct work_struct *work)
+ 		obj = hlist_entry(obj_to_free.first, typeof(*obj), node);
+ 		hlist_del(&obj->node);
+ 		hlist_add_head(&obj->node, &obj_pool);
+-		obj_pool_free++;
+-		obj_nr_tofree--;
++		WRITE_ONCE(obj_pool_free, obj_pool_free + 1);
++		WRITE_ONCE(obj_nr_tofree, obj_nr_tofree - 1);
+ 	}
+ 	raw_spin_unlock_irqrestore(&pool_lock, flags);
+ 	return;
+@@ -324,7 +328,7 @@ free_objs:
+ 	if (obj_nr_tofree) {
+ 		hlist_move_list(&obj_to_free, &tofree);
+ 		debug_objects_freed += obj_nr_tofree;
+-		obj_nr_tofree = 0;
++		WRITE_ONCE(obj_nr_tofree, 0);
+ 	}
+ 	raw_spin_unlock_irqrestore(&pool_lock, flags);
+ 
+@@ -375,10 +379,10 @@ free_to_obj_pool:
+ 	obj_pool_used--;
+ 
+ 	if (work) {
+-		obj_nr_tofree++;
++		WRITE_ONCE(obj_nr_tofree, obj_nr_tofree + 1);
+ 		hlist_add_head(&obj->node, &obj_to_free);
+ 		if (lookahead_count) {
+-			obj_nr_tofree += lookahead_count;
++			WRITE_ONCE(obj_nr_tofree, obj_nr_tofree + lookahead_count);
+ 			obj_pool_used -= lookahead_count;
+ 			while (lookahead_count) {
+ 				hlist_add_head(&objs[--lookahead_count]->node,
+@@ -396,15 +400,15 @@ free_to_obj_pool:
+ 			for (i = 0; i < ODEBUG_BATCH_SIZE; i++) {
+ 				obj = __alloc_object(&obj_pool);
+ 				hlist_add_head(&obj->node, &obj_to_free);
+-				obj_pool_free--;
+-				obj_nr_tofree++;
++				WRITE_ONCE(obj_pool_free, obj_pool_free - 1);
++				WRITE_ONCE(obj_nr_tofree, obj_nr_tofree + 1);
+ 			}
+ 		}
+ 	} else {
+-		obj_pool_free++;
++		WRITE_ONCE(obj_pool_free, obj_pool_free + 1);
+ 		hlist_add_head(&obj->node, &obj_pool);
+ 		if (lookahead_count) {
+-			obj_pool_free += lookahead_count;
++			WRITE_ONCE(obj_pool_free, obj_pool_free + lookahead_count);
+ 			obj_pool_used -= lookahead_count;
+ 			while (lookahead_count) {
+ 				hlist_add_head(&objs[--lookahead_count]->node,
+@@ -423,7 +427,7 @@ free_to_obj_pool:
+ static void free_object(struct debug_obj *obj)
+ {
+ 	__free_object(obj);
+-	if (!obj_freeing && obj_nr_tofree) {
++	if (!READ_ONCE(obj_freeing) && READ_ONCE(obj_nr_tofree)) {
+ 		WRITE_ONCE(obj_freeing, true);
+ 		schedule_delayed_work(&debug_obj_work, ODEBUG_FREE_WORK_DELAY);
+ 	}
+@@ -982,7 +986,7 @@ repeat:
+ 		debug_objects_maxchecked = objs_checked;
+ 
+ 	/* Schedule work to actually kmem_cache_free() objects */
+-	if (!obj_freeing && obj_nr_tofree) {
++	if (!READ_ONCE(obj_freeing) && READ_ONCE(obj_nr_tofree)) {
+ 		WRITE_ONCE(obj_freeing, true);
+ 		schedule_delayed_work(&debug_obj_work, ODEBUG_FREE_WORK_DELAY);
+ 	}
+@@ -1008,12 +1012,12 @@ static int debug_stats_show(struct seq_file *m, void *v)
+ 	seq_printf(m, "max_checked   :%d\n", debug_objects_maxchecked);
+ 	seq_printf(m, "warnings      :%d\n", debug_objects_warnings);
+ 	seq_printf(m, "fixups        :%d\n", debug_objects_fixups);
+-	seq_printf(m, "pool_free     :%d\n", obj_pool_free + obj_percpu_free);
++	seq_printf(m, "pool_free     :%d\n", READ_ONCE(obj_pool_free) + obj_percpu_free);
+ 	seq_printf(m, "pool_pcp_free :%d\n", obj_percpu_free);
+ 	seq_printf(m, "pool_min_free :%d\n", obj_pool_min_free);
+ 	seq_printf(m, "pool_used     :%d\n", obj_pool_used - obj_percpu_free);
+ 	seq_printf(m, "pool_max_used :%d\n", obj_pool_max_used);
+-	seq_printf(m, "on_free_list  :%d\n", obj_nr_tofree);
++	seq_printf(m, "on_free_list  :%d\n", READ_ONCE(obj_nr_tofree));
+ 	seq_printf(m, "objs_allocated:%d\n", debug_objects_allocated);
+ 	seq_printf(m, "objs_freed    :%d\n", debug_objects_freed);
+ 	return 0;
