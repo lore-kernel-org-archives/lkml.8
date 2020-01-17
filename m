@@ -2,190 +2,371 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E92C33CB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE2AC33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFFBE2083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:33:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BB4A2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 09:33:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dae11mxX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bun+1DGx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728992AbgAQJd2 (ORCPT
+        id S1729044AbgAQJdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 04:33:28 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:41638 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727005AbgAQJdJ (ORCPT
+        Fri, 17 Jan 2020 04:33:38 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:50299 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726343AbgAQJc7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 04:33:09 -0500
-Received: by mail-ed1-f65.google.com with SMTP id c26so21622725eds.8;
-        Fri, 17 Jan 2020 01:33:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=jSBTkJwtcUerpe5D53vGoy3o8kE/mglpH/syhpG7qgc=;
-        b=Dae11mxXI7xzPj9oLj+8qe2n1K9uZRbfEULM8ZnQ8VthlUUa3g9WGpEutXAx75Dila
-         RzuEcvtPCbDSHztA3G6JJN+efdyBqbw5VUYD8noVZQklvaC2r3reAD696Wq5rmtr0VHR
-         C3cfehhQ8rl5VORtFPRQpnjkgqPqkcjvPu/WmqCIBwcfuKQ/PLrn0NExhoDrdGA67gZb
-         mlQ6VzxBzjsm5y+MLPoxu8pMpenZvTlPcyluAyS70IdZnkBw1BWvLIUzzNVx4B/r9wfA
-         bifmWiXV7o3MK8Jka9Nr1tvR6i2r9F59oOPOGNcn205jec2wmcqfJJOJylr2XSZ5Zl4J
-         DVJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=jSBTkJwtcUerpe5D53vGoy3o8kE/mglpH/syhpG7qgc=;
-        b=iEprUu5xbtsJzy0X3zV/pA2Iq6lDbOHy0Z/FDq4DsAKF9wq88Ah3hp/P9b38eHE8W1
-         Hy4JlIJwfOmDTeS/hNrHr5kVVlLsbgC3E8ZVBaHnSbV7fYMS2/T7l2sw4OdTPLSiwTYf
-         Pj5XOEKNasPTC8U7pRFQnQuvSwfca78A3Ib9HyMYmZI69DcnV/Sfjf24x1kobzAAwMi3
-         EK4ISSVLNaA0tFkDp/p/e4eOPIas6kX2nN35EhBfsNivl15ukfXXE4/b2QMdozbCNmWc
-         TOMEb77c4tSHgzjhMCBGYM/LgYYyjTm65aX4ufs2JFvW8D1tdJL2ezZG+QQWHamqFJYV
-         uZ/A==
-X-Gm-Message-State: APjAAAUulZpBsICVLZKPVqTRAr3kcjwZwIeyFJ38+4ObyW8Kzpr+yegK
-        yb+RCHscOabjEw5G0afgSJPWONZM
-X-Google-Smtp-Source: APXvYqy3/PrY1adqexEo9QZ4ojVjDe/bPHeUwG0RJarlzo6SmgKei80eBsp7arJuV0Ogq5+Qyayptw==
-X-Received: by 2002:adf:e591:: with SMTP id l17mr2007406wrm.139.1579253128997;
-        Fri, 17 Jan 2020 01:25:28 -0800 (PST)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id x10sm32358781wrv.60.2020.01.17.01.25.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 01:25:28 -0800 (PST)
-Date:   Fri, 17 Jan 2020 10:25:27 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com, linkinjeon@gmail.com, arnd@arndb.de
-Subject: Re: [PATCH v10 03/14] exfat: add inode operations
-Message-ID: <20200117092527.5m4i2fvo7mge7z37@pali>
-References: <20200115082447.19520-1-namjae.jeon@samsung.com>
- <CGME20200115082820epcas1p34ebebebaf610fd61c4e9882fca8ddbd5@epcas1p3.samsung.com>
- <20200115082447.19520-4-namjae.jeon@samsung.com>
+        Fri, 17 Jan 2020 04:32:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579253576;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=GjodTc+NxXpXZK3ZFiQXvOKJvfATQRwDI15WnbNFZWs=;
+        b=Bun+1DGxMtQJfpxe5pzM5vzfgQLvL0cx4U50Z+73bHnw03xdZlkIvKRGRJTtyL6K4qmSub
+        CpUhCBR/GxA0wCRw3mY0rhbvP9YzLUQbDxQizRrnD+vrwelzkqo5JBtPIvniC2YlYA4zOP
+        hk2ozEYWusWN18Bg8cTrNqUrU+jsXko=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-130-_HQSAA8RM6efHyvV5nrALA-1; Fri, 17 Jan 2020 04:32:55 -0500
+X-MC-Unique: _HQSAA8RM6efHyvV5nrALA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C9BDD477;
+        Fri, 17 Jan 2020 09:32:52 +0000 (UTC)
+Received: from [10.72.12.168] (ovpn-12-168.pek2.redhat.com [10.72.12.168])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DD49738B;
+        Fri, 17 Jan 2020 09:32:36 +0000 (UTC)
+Subject: Re: [PATCH 4/5] virtio: introduce a vDPA based transport
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     "mst@redhat.com" <mst@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "tiwei.bie@intel.com" <tiwei.bie@intel.com>,
+        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
+        "cunming.liang@intel.com" <cunming.liang@intel.com>,
+        "zhihong.wang@intel.com" <zhihong.wang@intel.com>,
+        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
+        "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
+        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
+        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
+        "eperezma@redhat.com" <eperezma@redhat.com>,
+        "lulu@redhat.com" <lulu@redhat.com>,
+        Parav Pandit <parav@mellanox.com>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>,
+        "stefanha@redhat.com" <stefanha@redhat.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "aadam@redhat.com" <aadam@redhat.com>,
+        "jakub.kicinski@netronome.com" <jakub.kicinski@netronome.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Shahaf Shuler <shahafs@mellanox.com>,
+        "hanand@xilinx.com" <hanand@xilinx.com>,
+        "mhabets@solarflare.com" <mhabets@solarflare.com>
+References: <20200116124231.20253-1-jasowang@redhat.com>
+ <20200116124231.20253-5-jasowang@redhat.com>
+ <20200116153807.GI20978@mellanox.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <8e8aa4b7-4948-5719-9618-e28daffba1a5@redhat.com>
+Date:   Fri, 17 Jan 2020 17:32:35 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200115082447.19520-4-namjae.jeon@samsung.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200116153807.GI20978@mellanox.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday 15 January 2020 17:24:36 Namjae Jeon wrote:
-> This adds the implementation of inode operations for exfat.
-> 
-> Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
-> Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
-> ---
->  fs/exfat/inode.c |  667 +++++++++++++++++++++
->  fs/exfat/namei.c | 1442 ++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 2109 insertions(+)
->  create mode 100644 fs/exfat/inode.c
->  create mode 100644 fs/exfat/namei.c
-> 
-> diff --git a/fs/exfat/inode.c b/fs/exfat/inode.c
-> new file mode 100644
-> index 000000000000..56cf09db1920
-> --- /dev/null
-> +++ b/fs/exfat/inode.c
-> @@ -0,0 +1,667 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Copyright (C) 2012-2013 Samsung Electronics Co., Ltd.
-> + */
-> +
-> +#include <linux/init.h>
-> +#include <linux/buffer_head.h>
-> +#include <linux/mpage.h>
-> +#include <linux/bio.h>
-> +#include <linux/blkdev.h>
-> +#include <linux/time.h>
-> +#include <linux/writeback.h>
-> +#include <linux/uio.h>
-> +#include <linux/random.h>
-> +#include <linux/iversion.h>
-> +
-> +#include "exfat_raw.h"
-> +#include "exfat_fs.h"
-> +
-> +static int __exfat_write_inode(struct inode *inode, int sync)
-> +{
-> +	int ret = -EIO;
-> +	unsigned long long on_disk_size;
-> +	struct exfat_dentry *ep, *ep2;
-> +	struct exfat_entry_set_cache *es = NULL;
-> +	struct super_block *sb = inode->i_sb;
-> +	struct exfat_sb_info *sbi = EXFAT_SB(sb);
-> +	struct exfat_inode_info *ei = EXFAT_I(inode);
-> +	bool is_dir = (ei->type == TYPE_DIR) ? true : false;
-> +
-> +	if (inode->i_ino == EXFAT_ROOT_INO)
-> +		return 0;
-> +
-> +	/*
-> +	 * If the indode is already unlinked, there is no need for updating it.
-> +	 */
-> +	if (ei->dir.dir == DIR_DELETED)
-> +		return 0;
-> +
-> +	if (is_dir && ei->dir.dir == sbi->root_dir && ei->entry == -1)
-> +		return 0;
-> +
-> +	exfat_set_vol_flags(sb, VOL_DIRTY);
-> +
-> +	/* get the directory entry of given file or directory */
-> +	es = exfat_get_dentry_set(sb, &(ei->dir), ei->entry, ES_ALL_ENTRIES,
-> +		&ep);
-> +	if (!es)
-> +		return -EIO;
-> +	ep2 = ep + 1;
-> +
-> +	ep->dentry.file.attr = cpu_to_le16(exfat_make_attr(inode));
-> +
-> +	/* set FILE_INFO structure using the acquired struct exfat_dentry */
-> +	exfat_set_entry_time(sbi, &inode->i_ctime,
-> +			&ep->dentry.file.create_time,
-> +			&ep->dentry.file.create_date,
-> +			&ep->dentry.file.create_tz);
 
-And here is missing updating of create_time_ms entry too.
+On 2020/1/16 =E4=B8=8B=E5=8D=8811:38, Jason Gunthorpe wrote:
+> On Thu, Jan 16, 2020 at 08:42:30PM +0800, Jason Wang wrote:
+>> diff --git a/drivers/virtio/virtio_vdpa.c b/drivers/virtio/virtio_vdpa=
+.c
+>> new file mode 100644
+>> index 000000000000..86936e5e7ec3
+>> +++ b/drivers/virtio/virtio_vdpa.c
+>> @@ -0,0 +1,400 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * VIRTIO based driver for vDPA device
+>> + *
+>> + * Copyright (c) 2020, Red Hat. All rights reserved.
+>> + *     Author: Jason Wang <jasowang@redhat.com>
+>> + *
+>> + */
+>> +
+>> +#include <linux/init.h>
+>> +#include <linux/module.h>
+>> +#include <linux/device.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/uuid.h>
+>> +#include <linux/virtio.h>
+>> +#include <linux/vdpa.h>
+>> +#include <linux/virtio_config.h>
+>> +#include <linux/virtio_ring.h>
+>> +
+>> +#define MOD_VERSION  "0.1"
+>> +#define MOD_AUTHOR   "Jason Wang <jasowang@redhat.com>"
+>> +#define MOD_DESC     "vDPA bus driver for virtio devices"
+>> +#define MOD_LICENSE  "GPL v2"
+>> +
+>> +#define to_virtio_vdpa_device(dev) \
+>> +	container_of(dev, struct virtio_vdpa_device, vdev)
+> Should be a static function
 
-> +	exfat_set_entry_time(sbi, &inode->i_mtime,
-> +			&ep->dentry.file.modify_time,
-> +			&ep->dentry.file.modify_date,
-> +			&ep->dentry.file.modify_tz);
 
-And here modify_time_ms too.
+Ok.
 
-> +	exfat_set_entry_time(sbi, &inode->i_atime,
-> +			&ep->dentry.file.access_time,
-> +			&ep->dentry.file.access_date,
-> +			&ep->dentry.file.access_tz);
-> +
-> +	/* File size should be zero if there is no cluster allocated */
-> +	on_disk_size = i_size_read(inode);
-> +
-> +	if (ei->start_clu == EXFAT_EOF_CLUSTER)
-> +		on_disk_size = 0;
-> +
-> +	ep2->dentry.stream.valid_size = cpu_to_le64(on_disk_size);
-> +	ep2->dentry.stream.size = ep2->dentry.stream.valid_size;
-> +
-> +	ret = exfat_update_dir_chksum_with_entry_set(sb, es, sync);
-> +	kfree(es);
-> +	return ret;
-> +}
 
--- 
-Pali Rohár
-pali.rohar@gmail.com
+>
+>> +struct virtio_vdpa_device {
+>> +	struct virtio_device vdev;
+>> +	struct vdpa_device *vdpa;
+>> +	u64 features;
+>> +
+>> +	/* The lock to protect virtqueue list */
+>> +	spinlock_t lock;
+>> +	/* List of virtio_vdpa_vq_info */
+>> +	struct list_head virtqueues;
+>> +};
+>> +
+>> +struct virtio_vdpa_vq_info {
+>> +	/* the actual virtqueue */
+>> +	struct virtqueue *vq;
+>> +
+>> +	/* the list node for the virtqueues list */
+>> +	struct list_head node;
+>> +};
+>> +
+>> +static struct vdpa_device *vd_get_vdpa(struct virtio_device *vdev)
+>> +{
+>> +	struct virtio_vdpa_device *vd_dev =3D to_virtio_vdpa_device(vdev);
+>> +	struct vdpa_device *vdpa =3D vd_dev->vdpa;
+>> +
+>> +	return vdpa;
+> Bit of a long way to say
+>
+>    return to_virtio_vdpa_device(vdev)->vdpa
+>
+> ?
+
+
+Right.
+
+
+>
+>> +err_vq:
+>> +	vring_del_virtqueue(vq);
+>> +error_new_virtqueue:
+>> +	ops->set_vq_ready(vdpa, index, 0);
+>> +	WARN_ON(ops->get_vq_ready(vdpa, index));
+> A warn_on during error unwind? Sketchy, deserves a comment I think
+
+
+Yes, it's a hint of bug in the vDPA driver. Will add a comment.
+
+
+>
+>> +static void virtio_vdpa_release_dev(struct device *_d)
+>> +{
+>> +	struct virtio_device *vdev =3D
+>> +	       container_of(_d, struct virtio_device, dev);
+>> +	struct virtio_vdpa_device *vd_dev =3D
+>> +	       container_of(vdev, struct virtio_vdpa_device, vdev);
+>> +	struct vdpa_device *vdpa =3D vd_dev->vdpa;
+>> +
+>> +	devm_kfree(&vdpa->dev, vd_dev);
+>> +}
+> It is unusual for the release function to not be owned by the
+> subsystem, through the class.
+
+
+This is how virtio_pci and virtio_mmio work now. Virtio devices may have=20
+different transports which require different release functions. I think=20
+this is the reason why virtio
+
+
+> I'm not sure there are enough module ref
+> counts to ensure that this function is not unloaded?
+
+
+Let me double check this.
+
+
+>
+> Usually to make this all work sanely the subsytem provides some
+> allocation function
+>
+>   vdpa_dev =3D vdpa_alloc_dev(parent, ops, sizeof(struct virtio_vdpa_de=
+vice))
+>   struct virtio_vdpa_device *priv =3D vdpa_priv(vdpa_dev)
+>
+> Then the subsystem naturally owns all the memory.
+>
+> Otherwise it gets tricky to ensure that the module doesn't unload
+> before all the krefs are put.
+
+
+I see.
+
+
+>
+>> +
+>> +static int virtio_vdpa_probe(struct device *dev)
+>> +{
+>> +	struct vdpa_device *vdpa =3D dev_to_vdpa(dev);
+> The probe function for a class should accept the classes type already,
+> no casting.
+
+
+Right.
+
+
+>
+>> +	const struct vdpa_config_ops *ops =3D vdpa->config;
+>> +	struct virtio_vdpa_device *vd_dev;
+>> +	int rc;
+>> +
+>> +	vd_dev =3D devm_kzalloc(dev, sizeof(*vd_dev), GFP_KERNEL);
+>> +	if (!vd_dev)
+>> +		return -ENOMEM;
+> This is not right, the struct device lifetime is controled by a kref,
+> not via devm. If you want to use a devm unwind then the unwind is
+> put_device, not devm_kfree.
+
+
+I'm not sure I get the point here. The lifetime is bound to underlying=20
+vDPA device and devres allow to be freed before the vpda device is=20
+released. But I agree using devres of underlying vdpa device looks wired.
+
+
+>
+> In this simple situation I don't see a reason to use devm.
+>
+>> +	vd_dev->vdev.dev.parent =3D &vdpa->dev;
+>> +	vd_dev->vdev.dev.release =3D virtio_vdpa_release_dev;
+>> +	vd_dev->vdev.config =3D &virtio_vdpa_config_ops;
+>> +	vd_dev->vdpa =3D vdpa;
+>> +	INIT_LIST_HEAD(&vd_dev->virtqueues);
+>> +	spin_lock_init(&vd_dev->lock);
+>> +
+>> +	vd_dev->vdev.id.device =3D ops->get_device_id(vdpa);
+>> +	if (vd_dev->vdev.id.device =3D=3D 0)
+>> +		return -ENODEV;
+>> +
+>> +	vd_dev->vdev.id.vendor =3D ops->get_vendor_id(vdpa);
+>> +	rc =3D register_virtio_device(&vd_dev->vdev);
+>> +	if (rc)
+>> +		put_device(dev);
+> And a ugly unwind like this is why you want to have device_initialize()
+> exposed to the driver,
+
+
+In this context, which "driver" did you mean here? (Note, virtio-vdpa is=20
+the driver for vDPA bus here).
+
+
+>   so there is a clear pairing that calling
+> device_initialize() must be followed by put_device. This should also
+> use the goto unwind style
+>
+>> +	else
+>> +		dev_set_drvdata(dev, vd_dev);
+>> +
+>> +	return rc;
+>> +}
+>> +
+>> +static void virtio_vdpa_remove(struct device *dev)
+>> +{
+> Remove should also already accept the right type
+
+
+Yes.
+
+
+>
+>> +	struct virtio_vdpa_device *vd_dev =3D dev_get_drvdata(dev);
+>> +
+>> +	unregister_virtio_device(&vd_dev->vdev);
+>> +}
+>> +
+>> +static struct vdpa_driver virtio_vdpa_driver =3D {
+>> +	.drv =3D {
+>> +		.name	=3D "virtio_vdpa",
+>> +	},
+>> +	.probe	=3D virtio_vdpa_probe,
+>> +	.remove =3D virtio_vdpa_remove,
+>> +};
+> Still a little unclear on binding, is this supposed to bind to all
+> vdpa devices?
+
+
+Yes, it expected to drive all vDPA devices.
+
+
+>
+> Where is the various THIS_MODULE's I expect to see in a scheme like
+> this?
+>
+> All function pointers must be protected by a held module reference
+> count, ie the above probe/remove and all the pointers in ops.
+
+
+Will double check, since I don't see this in other virtio transport=20
+drivers (PCI or MMIO).
+
+
+>
+>> +static int __init virtio_vdpa_init(void)
+>> +{
+>> +	return register_vdpa_driver(&virtio_vdpa_driver);
+>> +}
+>> +
+>> +static void __exit virtio_vdpa_exit(void)
+>> +{
+>> +	unregister_vdpa_driver(&virtio_vdpa_driver);
+>> +}
+>> +
+>> +module_init(virtio_vdpa_init)
+>> +module_exit(virtio_vdpa_exit)
+> Best to provide the usual 'module_pci_driver' like scheme for this
+> boiler plate.
+
+
+Ok.
+
+
+>
+>> +MODULE_VERSION(MOD_VERSION);
+>> +MODULE_LICENSE(MOD_LICENSE);
+>> +MODULE_AUTHOR(MOD_AUTHOR);
+>> +MODULE_DESCRIPTION(MOD_DESC);
+> Why the indirection with 2nd defines?
+
+
+Will fix.
+
+Thanks
+
+
+>
+> Jason
+>
+
