@@ -2,178 +2,137 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBADC33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7C6C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E0882082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 347C320728
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 18:33:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="fmtRpFL1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729148AbgAQScp (ORCPT
+        id S1729293AbgAQSdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 13:32:45 -0500
-Received: from mga03.intel.com ([134.134.136.65]:14707 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726603AbgAQSco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 13:32:44 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 10:31:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,331,1574150400"; 
-   d="scan'208";a="227299845"
-Received: from ray.jf.intel.com (HELO [10.7.201.139]) ([10.7.201.139])
-  by orsmga006.jf.intel.com with ESMTP; 17 Jan 2020 10:31:53 -0800
-Subject: Re: [PATCH 1/4] KVM: x86: Handle TIF_NEED_FPU_LOAD in
- kvm_{load,put}_guest_fpu()
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Derek Yerger <derek@djy.llc>,
-        kernel@najdan.com, Thomas Lambertz <mail@thomaslambertz.de>,
-        Rik van Riel <riel@surriel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20200117062628.6233-1-sean.j.christopherson@intel.com>
- <20200117062628.6233-2-sean.j.christopherson@intel.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <4d5dca91-8dbc-9ff3-b67a-2fa963da29cf@intel.com>
-Date:   Fri, 17 Jan 2020 10:31:53 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200117062628.6233-2-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=utf-8
+        Fri, 17 Jan 2020 13:33:18 -0500
+Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:36510 "EHLO
+        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727573AbgAQSdR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 13:33:17 -0500
+Received: from pps.filterd (m0170397.ppops.net [127.0.0.1])
+        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00HIUNuO017820
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 13:33:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=gYYhrZJCgbqRHjjG9WGfvThIkFBKVsDM/jSmTOJvDlI=;
+ b=fmtRpFL1GUByQnp+gCvADMY/3NKoJl/6HKckRqCtkJKeIawPYKJKJdW3N8c+/YFFFpSp
+ +6qks+KE3auNzPqAETyyP2qZa9/CEfMANnScRapllG5IHHX6AwRCt9AyV0QuTBPj9X5c
+ N5FKYFoJy+gGQ+3oRRCjc7U6qs1/pGL3m74yrr2IUwPUqsOkIui7M/ZJu3sgsM7GKrbS
+ 7Eg903JpkVlUCI8L22aAXtNH8DLrBMBrO7hnGMve9Rymi2OfNu6bjWvnjuwrPkJtmGIr
+ +STolngXy16vRZrJKruKWlRYjMdLOeu8pDR+rWrS/8PWtNqqfFjADqfbOLDieKQZni53 AQ== 
+Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0b-00154904.pphosted.com with ESMTP id 2xk0s4mddj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 13:33:16 -0500
+Received: from pps.filterd (m0142699.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00HIScQV086270
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 13:33:15 -0500
+Received: from ausxippc101.us.dell.com (ausxippc101.us.dell.com [143.166.85.207])
+        by mx0a-00154901.pphosted.com with ESMTP id 2xkht2gg66-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 13:33:15 -0500
+X-LoopCount0: from 10.166.132.131
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.60,346,1549951200"; 
+   d="scan'208";a="1348425647"
+From:   <Mario.Limonciello@dell.com>
+To:     <pmenzel@molgen.mpg.de>, <mathias.nyman@linux.intel.com>,
+        <mika.westerberg@linux.intel.com>
+CC:     <andreas.noever@gmail.com>, <michael.jamet@intel.com>,
+        <YehezkelShB@gmail.com>, <ck@xatom.net>,
+        <linux-kernel@vger.kernel.org>, <anthony.wong@canonical.com>
+Subject: RE: USB devices on Dell TB16 dock stop working after resuming
+Thread-Topic: USB devices on Dell TB16 dock stop working after resuming
+Thread-Index: AQHVkxGi4f0HmqPYOkmPAZlfRfFMhqd7dbiAgAAFewCAABDQAP//m/tggABrZQCAAALDgIAXnKiAgAEsYACAAyR+AIAABDKAgAAGv4CAAAE5AIAAAhEAgASPp4CAAbeOgIAAE+eAgCXUBQCABGcYAIAnTzqAgAApv5A=
+Date:   Fri, 17 Jan 2020 18:33:12 +0000
+Message-ID: <789c7db3bafa4bf9a9348123492196b0@AUSX13MPC105.AMER.DELL.COM>
+References: <20191104154446.GH2552@lahna.fi.intel.com>
+ <ea829adedf0445c0845e25d6e4b47905@AUSX13MPC105.AMER.DELL.COM>
+ <d8cb6bc6-8145-eaed-5ba4-d7291478bdd7@molgen.mpg.de>
+ <20191104162103.GI2552@lahna.fi.intel.com>
+ <f0257624-920e-eec4-a2ec-7adf8ecbcc9d@molgen.mpg.de>
+ <20191120105048.GY11621@lahna.fi.intel.com>
+ <20191122105012.GD11621@lahna.fi.intel.com>
+ <edfe1e3c-779b-61e4-8551-f2e13d46d733@molgen.mpg.de>
+ <20191122112921.GF11621@lahna.fi.intel.com>
+ <ae67c377-4763-4648-a91c-b9351e3b1cf1@molgen.mpg.de>
+ <20191122114108.GG11621@lahna.fi.intel.com>
+ <cf4140c8-5b92-f1e5-c9e4-e362ab06d6f8@linux.intel.com>
+ <e5e3df06-4ddd-aadb-f1ad-6dd24fa2a5c2@molgen.mpg.de>
+ <4b25e707-d2b5-11d1-4b16-48122828fde7@linux.intel.com>
+ <a9e12353-6f88-edeb-0d78-15c1ac75666b@molgen.mpg.de>
+ <87670037-8af5-c209-cbf8-70042e0a8fc5@linux.intel.com>
+ <44d8eb12-9af5-7b9a-fa24-be8e8ec3cd48@molgen.mpg.de>
+In-Reply-To: <44d8eb12-9af5-7b9a-fa24-be8e8ec3cd48@molgen.mpg.de>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-01-17T18:33:10.8705013Z;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual;
+ aiplabel=External Public
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.143.18.86]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-17_05:2020-01-16,2020-01-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 phishscore=0 suspectscore=0 adultscore=0 clxscore=1015
+ impostorscore=0 mlxlogscore=996 malwarescore=0 bulkscore=0
+ priorityscore=1501 mlxscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1910280000 definitions=main-2001170143
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
+ clxscore=1015 suspectscore=0 malwarescore=0 spamscore=0 mlxscore=0
+ bulkscore=0 phishscore=0 mlxlogscore=999 adultscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-2001170143
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/16/20 10:26 PM, Sean Christopherson wrote:
-> Handle TIF_NEED_FPU_LOAD similar to how fpu__copy() handles the flag
-> when duplicating FPU state to a new task struct.  TIF_NEED_FPU_LOAD can
-> be set any time control is transferred out of KVM, be it voluntarily,
-> e.g. if I/O is triggered during a KVM call to get_user_pages, or
-> involuntarily, e.g. if softirq runs after an IRQ occurs.  Therefore,
-> KVM must account for TIF_NEED_FPU_LOAD whenever it is (potentially)
-> accessing CPU FPU state.
-> 
-> Fixes: 5f409e20b7945 ("x86/fpu: Defer FPU state load until return to userspace")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/x86.c | 27 ++++++++++++++++++++++++---
->  1 file changed, 24 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index cf917139de6b..0c7211491f98 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -8476,8 +8476,20 @@ static void kvm_load_guest_fpu(struct kvm_vcpu *vcpu)
->  {
->  	fpregs_lock();
->  
-> -	copy_fpregs_to_fpstate(vcpu->arch.user_fpu);
-> -	/* PKRU is separately restored in kvm_x86_ops->run.  */
-> +	/*
-> +	 * If userspace's FPU state is not resident in the CPU registers, just
-> +	 * memcpy() from current, else save CPU state directly to user_fpu.
-> +	 */
-> +	if (test_thread_flag(TIF_NEED_FPU_LOAD))
-> +		memcpy(&vcpu->arch.user_fpu->state, &current->thread.fpu.state,
-> +		       fpu_kernel_xstate_size);
-> +	else
-> +		copy_fpregs_to_fpstate(vcpu->arch.user_fpu);
-> +
-> +	/*
-> +	 * Load guest's FPU state to the CPU registers.  PKRU is separately
-> +	 * loaded in kvm_x86_ops->run.
-> +	 */
->  	__copy_kernel_to_fpregs(&vcpu->arch.guest_fpu->state,
->  				~XFEATURE_MASK_PKRU);
-
-Nit: it took me a minute to realize that there is both:
-
-	vcpu->arch.user_fpu
-and
-	vcpu->arch.guest_fpu
-
-It might help readability to have local variables for those, or at least
-a comment to help differentiate the two.
-
-
-> @@ -8492,7 +8504,16 @@ static void kvm_put_guest_fpu(struct kvm_vcpu *vcpu)
->  {
->  	fpregs_lock();
->  
-> -	copy_fpregs_to_fpstate(vcpu->arch.guest_fpu);
-> +	/*
-> +	 * If guest's FPU state is not resident in the CPU registers, just
-> +	 * memcpy() from current, else save CPU state directly to guest_fpu.
-> +	 */
-> +	if (test_thread_flag(TIF_NEED_FPU_LOAD))
-> +		memcpy(&vcpu->arch.guest_fpu->state, &current->thread.fpu.state,
-> +		       fpu_kernel_xstate_size);
-> +	else
-> +		copy_fpregs_to_fpstate(vcpu->arch.guest_fpu);
-> +
->  	copy_kernel_to_fpregs(&vcpu->arch.user_fpu->state);
->  
->  	fpregs_mark_activate();
-
-This also makes me wonder if we want to have copy_fpregs_to_fpstate()
-check for TIF_NEED_FPU_LOAD and complain if it's set.
+PiA+IEkgd2FzIGFibGUgdG8gcmVwcm9kdWNlIHRoZSBpc3N1ZSB3aXRoIGFuIGV4dGVybmFsIEhT
+IGh1YiBhcyB3ZWxsLCBzb8KgIHRoaXMgaXNzdWUNCj4gPiBhcHBlYXJzIHRvIGJlIG1vcmUgcmVs
+YXRlZCB0byBBU01lZGlhIGhvc3QgdGhhbiB0aGUgYnVpbHQgaW4gSFMgaHViIGluIFRCMTYNCj4g
+DQo+IEkgY29udGFjdGVkIHRoZSAoR2VybWFuKSBEZWxsIHN1cHBvcnQsIGFuZCB0aGV5IGFza2Vk
+IG1lIHRvIHVwZGF0ZSB0aGUgbGFwdG9wDQo+IGZpcm13YXJlIHRvIDEuOS4xIGNsYWltaW5nIHRo
+YXQgdGhlc2UgaXNzdWVzIG1pZ2h0IGJlIGZpeGVkIHRoZXJlIChkZXNwaXRlIHRoZQ0KPiBjaGFu
+Z2UtbG9nIG5vdCBjb250YWluaW5nIHRoYXQpLiBBbnl3YXksIGFmdGVyIHRoZSB1cGRhdGUsIHRo
+ZSB1c2VyIGlzIHN0aWxsDQo+IGFibGUgdG8gcmVwcm9kdWNlIHRoZSBpc3N1ZS4NCj4gDQo+IE1h
+cmlvLCB3aGF0IGNhbiBJIGRvLCBzbyB0aGUgaXNzdWUgaXMgZXNjYWxhdGVkIHRvIHlvdXIgdGVh
+bSwgc28geW91IGNhbiB3b3JrDQo+IHdpdGggQVNNZWRpYSB0byBzb2x2ZSB0aGlzPw0KPiANCj4g
+DQo+IEtpbmQgcmVnYXJkcywNCj4gDQo+IFBhdWwNCg0KRnJvbSB0aGlzIHRocmVhZCBpdCBkb2Vz
+IHNvdW5kIHRvIG1lIGxpa2UgYW4gQVNNZWRpYSBmaXJtd2FyZSBwcm9ibGVtLA0Kbm90IGEgTGlu
+dXgga2VybmVsIHByb2JsZW0uDQoNCkkgZG8ga25vdyB0aGVyZSBpcyBhbiB1cGRhdGVkIEFTTWVk
+aWEgZmlybXdhcmUgYmluYXJ5IGF2YWlsYWJsZS4gIFJpZ2h0IG5vdw0KaG93ZXZlciB0aGVyZSBp
+cyB1bmZvcnR1bmF0ZWx5IG5vdCBhIHdheSB0byB1cGRhdGUgQVNNZWRpYSBodWIgZmlybXdhcmUg
+dXNpbmcNCmZyZWUgc29mdHdhcmUuICBJZiBwb3NzaWJsZSwgSSB3b3VsZCByZWNvbW1lbmQgdGhh
+dCB5b3UgdHJ5IHRvIHVwZGF0ZSB0aGUNCmZpcm13YXJlIHVzaW5nIGEgV2luZG93cyBtYWNoaW5l
+IGFuZCBzZWUgaWYgaXQgaGVscHMgdGhlIHByb2JsZW0uDQoNCkknbSBzb3JyeSBhbmQgSSBkb24n
+dCBpbnRlbmQgdG8gInBhc3MgdGhlIGJ1Y2siIGJ1dCBpZiB0aGF0IGRvZXNuJ3QgaGVscCB0aGlz
+IG5lZWRzDQp0byBiZSBwcmlvcml0aXplZCBhbmQgZXNjYWxhdGVkIHdpdGggRGVsbCBzdXBwb3J0
+Lg0KDQpUaGV5IHdpbGwgdGhlbiB3b3JrIHdpdGggdGhlIGFwcHJvcHJpYXRlIGVuZ2luZWVyaW5n
+IHRlYW0gd2hvIG93bnMgdGhlIHJlbGF0aW9uc2hpcA0KdG8gQVNNZWRpYSB0byByZXNvbHZlIGl0
+Lg0K
