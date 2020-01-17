@@ -2,128 +2,213 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB21C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9E8C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F22682072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:44:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579275878;
-	bh=WF3FFhPkrqrk3QgXdf0/m03RRt588HmvqHv1uHbiXbI=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=DtLbWOCTusVyWPUke7mNmCYgCO897iTsndNEqN6xChnoagUSq6fcVVqX3nLgYMI3v
-	 1N0R92zpoRBpbediMVmGfKFAjFas7G8GzI3ou0CZ5JDMOPyGhO42CjmzhOwBNPG1P3
-	 93vM7CCS1WRJ6z2ZnieChlE4DwB6wPFsRBIzN0Vk=
+	by mail.kernel.org (Postfix) with ESMTP id 41E472072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:44:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729320AbgAQPog (ORCPT
+        id S1729352AbgAQPoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 10:44:36 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53712 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729108AbgAQPoW (ORCPT
+        Fri, 17 Jan 2020 10:44:39 -0500
+Received: from mailout.easymail.ca ([64.68.200.34]:33580 "EHLO
+        mailout.easymail.ca" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729274AbgAQPoe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 10:44:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=8Fd9JrGlzE97H+p1Gp47dQ7I2EhtuAf7Is5IfV90Dvo=; b=LEYYaC/4VbEt
-        dMy1I46NGPyVv290D7iyYXUSukX01id+emmBuxvHngWLF3u+52RogaXqY2H53SOWeX/Vfh57YmCLn
-        KawFKtpcVKRDt5jYpeUsrSJhUIFZj68lNp2j7fzbsEE4agOhRpqQ7Qs0pP1fZuqmdW0M/v8Mh4IZ6
-        g9Fjw=;
-Received: from fw-tnat-cam4.arm.com ([217.140.106.52] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1isTnA-0006s9-Bg; Fri, 17 Jan 2020 15:44:12 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 0E693D02C26; Fri, 17 Jan 2020 15:44:12 +0000 (GMT)
-From:   Mark Brown <broonie@kernel.org>
-To:     Wei Yongjun <weiyongjun1@huawei.com>
-Cc:     alsa-devel@alsa-project.org, Bard Liao <bardliao@realtek.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        kernel-janitors@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Shuming Fan <shumingf@realtek.com>,
-        Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: rt700: fix return value check in rt700_sdw_probe()" to the asoc tree
-In-Reply-To: <20200115143027.94364-1-weiyongjun1@huawei.com>
-Message-Id: <applied-20200115143027.94364-1-weiyongjun1@huawei.com>
-X-Patchwork-Hint: ignore
-Date:   Fri, 17 Jan 2020 15:44:12 +0000 (GMT)
+        Fri, 17 Jan 2020 10:44:34 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mailout.easymail.ca (Postfix) with ESMTP id D0D1EA0FE0;
+        Fri, 17 Jan 2020 15:44:32 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at emo05-pco.easydns.vpn
+Received: from mailout.easymail.ca ([127.0.0.1])
+        by localhost (emo05-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id mApu5MmsP17a; Fri, 17 Jan 2020 15:44:32 +0000 (UTC)
+Received: from mail.gonehiking.org (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        by mailout.easymail.ca (Postfix) with ESMTPA id 55C98A0E2B;
+        Fri, 17 Jan 2020 15:44:19 +0000 (UTC)
+Received: from [192.168.1.4] (rhapsody.internal [192.168.1.4])
+        by mail.gonehiking.org (Postfix) with ESMTP id 346C83F02E;
+        Fri, 17 Jan 2020 08:44:19 -0700 (MST)
+Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
+ kdump kernel
+To:     Dave Young <dyoung@redhat.com>
+Cc:     Kairui Song <kasong@redhat.com>, Baoquan He <bhe@redhat.com>,
+        linux-pci@vger.kernel.org, kexec@lists.infradead.org,
+        Jerry Hoemann <Jerry.Hoemann@hpe.com>,
+        Randy Wright <rwright@hpe.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>
+References: <20200110230003.GB1875851@anatevka.americas.hpqcorp.net>
+ <d2715683-f171-a825-3c0b-678b6c5c1a79@gonehiking.org>
+ <20200111005041.GB19291@MiWiFi-R3L-srv>
+ <dc46c904-1652-09b3-f351-6b3a3e761d74@gonehiking.org>
+ <CACPcB9c0-nRjM3DSN8wzZBTPsJKWjZ9d_aNTq5zUj4k4egb32Q@mail.gmail.com>
+ <CABeXuvqquCU+1G=5onk9owASorhpcYWeWBge9U35BrorABcsuw@mail.gmail.com>
+ <CACPcB9cQY9Vu3wG-QYZS6W6T_PZxnJ1ABNUUAF_qvk-VSxbpTA@mail.gmail.com>
+ <b2360db7-66f5-421d-8fe0-150f08aa2f39@gonehiking.org>
+ <CACPcB9epDPcowhnSJuEHQ8miCBX1oKjFx4Wdn4aYPe2_pueA5A@mail.gmail.com>
+ <6b56ce15-5a5a-97b7-ded1-1fd88fec26eb@gonehiking.org>
+ <20200117032413.GA16906@dhcp-128-65.nay.redhat.com>
+From:   Khalid Aziz <khalid@gonehiking.org>
+Autocrypt: addr=khalid@gonehiking.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <f7c5d044-b821-2edd-7b24-ca36056b61bb@gonehiking.org>
+Date:   Fri, 17 Jan 2020 08:44:19 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200117032413.GA16906@dhcp-128-65.nay.redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On 1/16/20 8:24 PM, Dave Young wrote:
+> On 01/15/20 at 02:17pm, Khalid Aziz wrote:
+>> On 1/15/20 11:05 AM, Kairui Song wrote:
+>>> On Thu, Jan 16, 2020 at 1:31 AM Khalid Aziz <khalid@gonehiking.org> wrote:
+>>>>
+>>>> On 1/13/20 10:07 AM, Kairui Song wrote:
+>>>>> On Sun, Jan 12, 2020 at 2:33 AM Deepa Dinamani <deepa.kernel@gmail.com> wrote:
+>>>>>>
+>>>>>>> Hi, there are some previous works about this issue, reset PCI devices
+>>>>>>> in kdump kernel to stop ongoing DMA:
+>>>>>>>
+>>>>>>> [v7,0/5] Reset PCIe devices to address DMA problem on kdump with iommu
+>>>>>>> https://lore.kernel.org/patchwork/cover/343767/
+>>>>>>>
+>>>>>>> [v2] PCI: Reset PCIe devices to stop ongoing DMA
+>>>>>>> https://lore.kernel.org/patchwork/patch/379191/
+>>>>>>>
+>>>>>>> And didn't get merged, that patch are trying to fix some DMAR error
+>>>>>>> problem, but resetting devices is a bit too destructive, and the
+>>>>>>> problem is later fixed in IOMMU side. And in most case the DMA seems
+>>>>>>> harmless, as they targets first kernel's memory and kdump kernel only
+>>>>>>> live in crash memory.
+>>>>>>
+>>>>>> I was going to ask the same. If the kdump kernel had IOMMU on, would
+>>>>>> that still be a problem?
+>>>>>
+>>>>> It will still fail, doing DMA is not a problem, it only go wrong when
+>>>>> a device's upstream bridge is mistakenly shutdown before the device
+>>>>> shutdown.
+>>>>>
+>>>>>>
+>>>>>>> Also, by the time kdump kernel is able to scan and reset devices,
+>>>>>>> there are already a very large time window where things could go
+>>>>>>> wrong.
+>>>>>>>
+>>>>>>> The currently problem observed only happens upon kdump kernel
+>>>>>>> shutdown, as the upper bridge is disabled before the device is
+>>>>>>> disabledm so DMA will raise error. It's more like a problem of wrong
+>>>>>>> device shutting down order.
+>>>>>>
+>>>>>> The way it was described earlier "During this time, the SUT sometimes
+>>>>>> gets a PCI error that raises an NMI." suggests that it isn't really
+>>>>>> restricted to kexec/kdump.
+>>>>>> Any attached device without an active driver might attempt spurious or
+>>>>>> malicious DMA and trigger the same during normal operation.
+>>>>>> Do you have available some more reporting of what happens during the
+>>>>>> PCIe error handling?
+>>>>>
+>>>>> Let me add more info about this:
+>>>>>
+>>>>> On the machine where I can reproduce this issue, the first kernel
+>>>>> always runs fine, and kdump kernel works fine during dumping the
+>>>>> vmcore, even if I keep the kdump kernel running for hours, nothing
+>>>>> goes wrong. If there are DMA during normal operation that will cause
+>>>>> problem, this should have exposed it.
+>>>>>
+>>>>
+>>>> This is the part that is puzzling me. Error shows up only when kdump
+>>>> kernel is being shut down. kdump kernel can run for hours without this
+>>>> issue. What is the operation from downstream device that is resulting in
+>>>> uncorrectable error - is it indeed a DMA request? Why does that
+>>>> operation from downstream device not happen until shutdown?
+>>>>
+>>>> I just want to make sure we fix the right problem in the right way.
+>>>>
+>>>
+>>> Actually the device could keep sending request with no problem during
+>>> kdump kernel running. Eg. keep sending DMA, and all DMA targets first
+>>> kernel's system memory, so kdump runs fine as long as nothing touch
+>>> the reserved crash memory. And the error is reported by the port, when
+>>> shutdown it has bus master bit, and downstream request will cause
+>>> error.
+>>>
+>>
+>> Problem really is there are active devices while kdump kernel is
+>> running. You did say earlier - "And in most case the DMA seems
+>> harmless, as they targets first kernel's memory and kdump kernel only
+>> live in crash memory.". Even if this holds today, it is going to break
+>> one of these days. There is the "reset_devices" option but that does not
+>> work if driver is not loaded by kdump kernel. Can we try to shut down
+>> devices in machine_crash_shutdown() before we start kdump kernel?
+> 
+> It is not a good idea :)  We do not add extra logic after a panic
+> because the kernel is not stable and we want a correct vmcore.
+> 
 
-   ASoC: rt700: fix return value check in rt700_sdw_probe()
+I agree any extra code in panic path opens up door to more trouble. For
+kdump kernel if hardware is not in a good shape when it boots up, we are
+still in no better place. There may be some room to do minimal and
+absolutely essential hardware shutdown in panic path to ensure kdump
+kernel can work reliably, but such code has to be approached very
+carefully. For this specific problem, it seems to stems from not loading
+the same drivers in kdump kernel that were running in previous kernel.
+Recommendation for situations like this just might be that one must load
+all the same driver and use "reset_devices" option if they want to
+ensure stability for kdump kernel. I can see reluctance to load any more
+drivers than absolutely needed in kdump kernel, but not doing that has
+side-effects as we are seeing in this case.
 
-has been applied to the asoc tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.6
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 20435df1c1d708b44f58da17653f2ea609aee790 Mon Sep 17 00:00:00 2001
-From: Wei Yongjun <weiyongjun1@huawei.com>
-Date: Wed, 15 Jan 2020 14:30:27 +0000
-Subject: [PATCH] ASoC: rt700: fix return value check in rt700_sdw_probe()
-
-In case of error, the function devm_regmap_init() returns ERR_PTR() and
-never returns NULL. The NULL test in the return value check should be
-replaced with IS_ERR().
-
-Fixes: 7d2a5f9ae41e ("ASoC: rt700: add rt700 codec driver")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Link: https://lore.kernel.org/r/20200115143027.94364-1-weiyongjun1@huawei.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/codecs/rt700-sdw.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/sound/soc/codecs/rt700-sdw.c b/sound/soc/codecs/rt700-sdw.c
-index 314103601af3..a4b95425886f 100644
---- a/sound/soc/codecs/rt700-sdw.c
-+++ b/sound/soc/codecs/rt700-sdw.c
-@@ -460,8 +460,8 @@ static int rt700_sdw_probe(struct sdw_slave *slave,
- 
- 	regmap = devm_regmap_init(&slave->dev, NULL,
- 		&slave->dev, &rt700_regmap);
--	if (!regmap)
--		return -EINVAL;
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
- 
- 	rt700_init(&slave->dev, sdw_regmap, regmap, slave);
- 
--- 
-2.20.1
-
+--
+Khalid
