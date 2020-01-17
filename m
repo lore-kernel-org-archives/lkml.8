@@ -2,147 +2,157 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53464C33C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E64C33C9E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25B77206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:24:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fBfVQH3N"
+	by mail.kernel.org (Postfix) with ESMTP id 7B26C2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 17:25:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579281947;
+	bh=CfA6PalcUM+tFVt754bJzF0If1B88pRMpWaYg+nSQyE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=a94V5niWRRkwcFGo0EbPAKN0f3R0/FepoWUkMxzbjwTDJ+5NejmMHf1sVbOhFSGmd
+	 rvPsM6kIPAVRdo9uJNwtBGN1soYbbh+/EMrkAU/J2F3MKSm1VZPannCxwMUvQrQ1f5
+	 e953gJ0FFc7qkYtTpnP75ewbjnvnGXfaVvQkBOto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbgAQRYz (ORCPT
+        id S1729011AbgAQRZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 12:24:55 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:54986 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726603AbgAQRYy (ORCPT
+        Fri, 17 Jan 2020 12:25:46 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:53040 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726761AbgAQRZq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 12:24:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579281894;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9xJSRhNfq8Tr3ojPfxyB93atGe8xjio+WX3BHwdtb3E=;
-        b=fBfVQH3NTGthNIG5ljm1qBQ7yORU3jsNmq1M4QoJYscnbw0LaxGnRXLeVxa1iUtSF3jJe5
-        mRffyAdG4v+b0HKvPgjAacz/poimYp6KaEToetcc4cRa/Vf+aVfZHhozybwuK9GCF8oavQ
-        T50cDKBPuDjk1H3Al+oZvCl7ilPYLuQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-374-ancvZ7HdO96rWud3lYvvqg-1; Fri, 17 Jan 2020 12:24:50 -0500
-X-MC-Unique: ancvZ7HdO96rWud3lYvvqg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5196A800D41;
-        Fri, 17 Jan 2020 17:24:48 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0E45A7DB34;
-        Fri, 17 Jan 2020 17:24:48 +0000 (UTC)
-Received: from zmail17.collab.prod.int.phx2.redhat.com (zmail17.collab.prod.int.phx2.redhat.com [10.5.83.19])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 9262787092;
-        Fri, 17 Jan 2020 17:24:47 +0000 (UTC)
-Date:   Fri, 17 Jan 2020 12:24:47 -0500 (EST)
-From:   Jan Stancek <jstancek@redhat.com>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>, tytso@mit.edu,
-        adilger@dilger.ca
-Cc:     LTP List <ltp@lists.linux.it>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org, chrubis <chrubis@suse.cz>,
-        linux-ext4@vger.kernel.org
-Message-ID: <1555311261.2497849.1579281887353.JavaMail.zimbra@redhat.com>
-In-Reply-To: <CA+G9fYuBdcZvE6VPm9i2=F0mK5u3j6Z+RHbFBQ1zh9qbN_4kaw@mail.gmail.com>
-References: <CA+G9fYuBdcZvE6VPm9i2=F0mK5u3j6Z+RHbFBQ1zh9qbN_4kaw@mail.gmail.com>
-Subject: Re: LTP: statx06: FAIL: Birth time < before time
+        Fri, 17 Jan 2020 12:25:46 -0500
+Received: by mail-pj1-f66.google.com with SMTP id a6so3441741pjh.2;
+        Fri, 17 Jan 2020 09:25:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=O6GjsjLdF3u6QLI5q0dD+3l/bBEMHaJ5dAb8y6Mck+U=;
+        b=JqwkgU9IxwECTSV0V3T1eXt0A2xbh+rnP7Fbo22LN6kPWiEFpaTxDwYq5XRSJlWIvf
+         VQQUSrCz+yoEbltmBdC2DdDWfg72LGb+Hx4RMGoRwbSKp1hGTpdoteJI4DeV5EIRuNxf
+         /WgI018GPWSngOvsGIvUa589LsuFmf3c8V5fpKBybBwo8JTy7IMoziZWDVp8jMf7DIE1
+         kD8yQ0v/kqb2jg+KVXtjKJ1MQr2CZcitsGskuoyRkZyx2AL8JaW3H2EywqvRZ94mtNye
+         /Y6JV6JvO4xlCyvPjzKrFcNonwOSGuV9i6O/U9z9J5n0EwLaS0NiHQvvxEhC+6sAaGcP
+         KrSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=O6GjsjLdF3u6QLI5q0dD+3l/bBEMHaJ5dAb8y6Mck+U=;
+        b=ED8YAm4qsA5VpfNoReznQnnoGozCTfD/z1BxwaHtGXYLNf8Wmgcap1eIGIpDlgxyqd
+         P3wRQoVqqjeHFklE0gDzhARpKBBR1ynwPHx0LsWzUM16a9gNEJJ6GhZQzVpadCn6nrGg
+         HuICjj6E1kzg6/Ol2DtDYZMetISEs3ZReczekLRivcxW05bStHPyp/N/76vzDF0e5zrY
+         PEvGtWaP+Jznos4IVlzvfIk/qZVAmS5OhDm8t87IMXLzUR5Ymk++qdhuCwva0OF/aKNP
+         yw50fj/RGPqFlj4Ct3pqHI06sRQ61OIrv9z2yxoA9iRqEU9WIH34u8XcF7I7EleJg52M
+         LbFA==
+X-Gm-Message-State: APjAAAUuStU48oinZfVEagQufn3X5ctTpu/YPodqSOjkS3R25sNXbVGy
+        6JLGOZ2btNkIrsDxJuAKVd0=
+X-Google-Smtp-Source: APXvYqx8f0eQEgijs91XAtTYgArwFV8jFPXy58RBBXwOQamACGkVUyyFk2lDHsuVjxOAvcHTkqMjrQ==
+X-Received: by 2002:a17:902:bd41:: with SMTP id b1mr135916plx.82.1579281945200;
+        Fri, 17 Jan 2020 09:25:45 -0800 (PST)
+Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id k10sm8162500pjq.14.2020.01.17.09.25.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2020 09:25:44 -0800 (PST)
+Date:   Fri, 17 Jan 2020 09:25:42 -0800
+From:   Minchan Kim <minchan@kernel.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>, ktkhai@virtuozzo.com,
+        christian.brauner@ubuntu.com, sjpark@amazon.de
+Subject: Re: [PATCH v2 2/5] mm: introduce external memory hinting API
+Message-ID: <20200117172542.GA140922@google.com>
+References: <20200116235953.163318-1-minchan@kernel.org>
+ <20200116235953.163318-3-minchan@kernel.org>
+ <20200117115225.GV19428@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.43.17.25, 10.4.195.23]
-Thread-Topic: statx06: FAIL: Birth time < before time
-Thread-Index: BGRUuw3BMnr+jewWkQoEmCDnUAKxyQ==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200117115225.GV19428@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
------ Original Message -----
-> LTP syscalls statx06 test case getting failed from linux next 20200115
-> tag onwards on all x86_64, i386, arm and arm64 devices
+On Fri, Jan 17, 2020 at 12:52:25PM +0100, Michal Hocko wrote:
+> On Thu 16-01-20 15:59:50, Minchan Kim wrote:
+> > There is usecase that System Management Software(SMS) want to give
+> > a memory hint like MADV_[COLD|PAGEEOUT] to other processes and
+> > in the case of Android, it is the ActivityManagerService.
+> > 
+> > It's similar in spirit to madvise(MADV_WONTNEED), but the information
+> > required to make the reclaim decision is not known to the app. Instead,
+> > it is known to the centralized userspace daemon(ActivityManagerService),
+> > and that daemon must be able to initiate reclaim on its own without
+> > any app involvement.
+> > 
+> > To solve the issue, this patch introduces new syscall process_madvise(2).
+> > It uses pidfd of an external processs to give the hint.
+> > 
+> >  int process_madvise(int pidfd, void *addr, size_t length, int advise,
+> > 			unsigned long flag);
+> > 
+> > Since it could affect other process's address range, only privileged
+> > process(CAP_SYS_PTRACE) or something else(e.g., being the same UID)
+> > gives it the right to ptrace the process could use it successfully.
+> > The flag argument is reserved for future use if we need to extend the
+> > API.
+> > 
+> > I think supporting all hints madvise has/will supported/support to
+> > process_madvise is rather risky. Because we are not sure all hints make
+> > sense from external process and implementation for the hint may rely on
+> > the caller being in the current context so it could be error-prone.
+> > Thus, I just limited hints as MADV_[COLD|PAGEOUT] in this patch.
+> > 
+> > If someone want to add other hints, we could hear hear the usecase and
+> > review it for each hint. It's more safe for maintainace rather than
+> > introducing a buggy syscall but hard to fix it later.
 > 
-> Test output:
-> statx06.c:152: FAIL: Birth time < before time
-
-[CC Theo & linux-ext4]
-
-It's returning '0' in stx_btime for STATX_ALL or STATX_BTIME.
-
-Looking at changes, I suspect:
-  commit 927353987d503b24e1813245563cde0c6167af6e
-  Author: Theodore Ts'o <tytso@mit.edu>
-  Date:   Thu Nov 28 22:26:51 2019 -0500
-    ext4: avoid fetching btime in ext4_getattr() unless requested
-
-and that perhaps it should be instead...
-
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index c8355f022e6e..6d76eb6d2e7f 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -5398,7 +5398,7 @@ int ext4_getattr(const struct path *path, struct kstat *stat,
-        struct ext4_inode_info *ei = EXT4_I(inode);
-        unsigned int flags;
-
--       if ((query_flags & STATX_BTIME) &&
-+       if ((request_mask & STATX_BTIME) &&
-            EXT4_FITS_IN_INODE(raw_inode, ei, i_crtime)) {
-                stat->result_mask |= STATX_BTIME;
-                stat->btime.tv_sec = ei->i_crtime.tv_sec;
-
-That allows test to pass again.
-
-> statx06.c:156: PASS: Modified time Passed
-> statx06.c:156: PASS: Access time Passed
-> statx06.c:156: PASS: Change time Passed
+> I have brought this up when we discussed this in the past but there is
+> no reflection on that here so let me bring that up again. 
 > 
-> strace output snippet:
-> [pid   498] clock_getres(CLOCK_REALTIME_COARSE, {tv_sec=0, tv_nsec=1000000})
-> = 0
-> [pid   498] nanosleep({tv_sec=0, tv_nsec=1000000}, NULL) = 0
-> [pid   498] openat(AT_FDCWD, \"mount_ext/test_file.txt\",
-> O_RDWR|O_CREAT, 0666) = 3
-> [pid   498] clock_getres(CLOCK_REALTIME_COARSE, {tv_sec=0, tv_nsec=1000000})
-> = 0
-> [pid   498] nanosleep({tv_sec=0, tv_nsec=1000000}, NULL) = 0
-> [pid   498] statx(AT_FDCWD, \"mount_ext/test_file.txt\",
-> AT_STATX_SYNC_AS_STAT, STATX_ALL, {stx_mask=STATX_BASIC_STATS,
-> stx_attributes=0, stx_mode=S_IFREG|0644, stx_size=0, ...}) = 0
-> [pid   498] write(2, \"statx06.c:152: \33[1;31mFAIL: \33[0m\"...,
-> 57statx06.c:152: [1;31mFAIL: [0mBirth time < before time
-> ) = 57
+> I believe that the interface has an inherent problem that it is racy.
+> The external entity needs to know the address space layout of the target
+> process to do anyhing useful on it. The address space is however under
+> the full control of the target process though and the external entity
+> has no means to find out that the layout has changed. So
+> time-to-check-time-to-act is an inherent problem.
 > 
-> Full test log link,
-> https://lkft.validation.linaro.org/scheduler/job/1107634#L2276
-> 
-> Test results comparison link,
-> https://qa-reports.linaro.org/lkft/linux-next-oe/tests/ltp-syscalls-tests/statx06
-> 
-> Test case link,
-> https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/syscalls/statx/statx06.c
-> 
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
-> 
-> 
+> This is a serious design flaw and it should be explained why it doesn't
+> matter or how to use the interface properly to prevent that problem.
+
+Sorry for the missing that part.
+
+It's not a particular problem of this API because other APIs already have
+done with that(e.g., move_pages, process_vm_writev).
+
+Point is userspace has several ways for the control of target process
+like SIGSTOP, cgroup freezer or even no need to control since platform
+is already aware of that the process will never run until he grant it
+or it's resilient even though the race happens.
+
+In future, if we want to support more fine-grained consistency model
+like memory layout, we could provide some API to get cookie(e.g.,
+seq count which is updated whenever vma of the process changes).  And then
+we could feed the cookie to process_madvise's last argument so that
+it can fail if founds it's not matched.
+For that API, Daniel already posted RFC - process_getinfo[1].
+https://lore.kernel.org/lkml/20190520035254.57579-1-minchan@kernel.org/T/#m7694416fd179b2066a2c62b5b139b14e3894e224
 
