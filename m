@@ -2,271 +2,155 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD8DC33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 08:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B14AC33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 08:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D25F12082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 08:33:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=oppoglobal.onmicrosoft.com header.i=@oppoglobal.onmicrosoft.com header.b="YZLISQqk"
+	by mail.kernel.org (Postfix) with ESMTP id 2C681222C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 08:35:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579250120;
+	bh=cp/ktM/dmtoDtuAhz2mQTckERL9vbLg4ESnKJ2wY7IY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=m6ZjUxS04NeDr9Qnv4NJj2obUzsRdsg1qWJrN1jHXUfz67ef3Cl39Rnn6q9f89D/r
+	 AeXMbRMcbdahugIE9VuSM0v7dbQZZFxxzTTPhbqFvY6LUEHaVGrm/tQhcdIXpM8CQZ
+	 MIr+Sx69dXBaZSwj5kuXnrvY9urv/HNA0m1Ej4pw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729665AbgAQIdU (ORCPT
+        id S1729689AbgAQIfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 03:33:20 -0500
-Received: from mail-eopbgr1300089.outbound.protection.outlook.com ([40.107.130.89]:56480
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727002AbgAQIdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 03:33:19 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dtn6RerhD6TrCsDnNyidnJ6hnoNtdfZNIc7cNVCcgipd4sGBWKSgk9aZ3WSDTlGNRRexJTYOXsJln37mn2GcNV2unFFwyYs35HaPPeD7XgYgh+2+1PzNAEEttME2RSkOSEAFuLZu1lxpNhoJThSnMSD8nem4waUNoWeAMAkPKP9N9lU63XyjHYz4stwHXDNWS5lY1tV70+V+bHRqh+zUauBsIm0ZWiN8Nc08zV6TMP4tzV7g4jcZC5sSvTacvEEz/fmR9G7pzozgs0nJyM35QJCWFR8mSaRW16K+N3bCebvpj6SNv2+90Ver7qitwFTOYHMr05A4Q2lv8JqgWi9WGA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YFTTf0RxC0c05dt30u6FWqU/t6EK405ESQYzvHjPZHs=;
- b=WBoZdxW2GlsxJCqex0e9Er7DmLdYnmK4yNOmzLPh8uo8LHEAoC2TO6RLVs5x3oekzrLFK1QL3EutbjpcrxfbgxgrPSxcMLkI4HMdFRKnfZGvLe3PX1rpuoVQgP0hT7Cmir22CS+7oRp51ngc0PXs4KWJtacdJp26Wqwo5yfe5hUhgp93pfRhei5SboP+dMfAsLtnCGwfYo9wnoJWIfRz025o0qMrLbac2DXipSM2DWC8cJ8HadJ9l7ivpjM8nz2Ie2f1pgr6be3acCIO/VgZrQmE8C9KzVvHixcb051h0p+RC14bC+UBAU9raL7dW/RkRwrn45eWVlrqF3YVAcV1iA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oppo.com; dmarc=pass action=none header.from=oppo.com;
- dkim=pass header.d=oppo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oppoglobal.onmicrosoft.com; s=selector1-oppoglobal-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YFTTf0RxC0c05dt30u6FWqU/t6EK405ESQYzvHjPZHs=;
- b=YZLISQqkLaLKExnW2we0BAOM5PFaAsnm16I+MVBvzezSBjfJPlLTW1d+M6G+4NF6iod7NLNFW7/foFlWhn7Bj5pE36GAt+IXolVNgTKYPJiO9ybobLaBCSdg5edHv42Vbgr60CfwUTBteKUc/oa+6xEkqkqn1mmdnB4VI+WMRJc=
-Received: from HK0PR02MB2563.apcprd02.prod.outlook.com (52.133.210.11) by
- HK0PR02MB3425.apcprd02.prod.outlook.com (20.177.69.78) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.19; Fri, 17 Jan 2020 08:33:09 +0000
-Received: from HK0PR02MB2563.apcprd02.prod.outlook.com
- ([fe80::c091:ad63:8876:b001]) by HK0PR02MB2563.apcprd02.prod.outlook.com
- ([fe80::c091:ad63:8876:b001%2]) with mapi id 15.20.2644.021; Fri, 17 Jan 2020
- 08:33:09 +0000
-From:   =?utf-8?B?6ZmI5a6J5bqG?= <chenanqing@oppo.com>
-To:     "Yan, Zheng" <zyan@redhat.com>, Jeff Layton <jlayton@kernel.org>,
-        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: reply:just thank you all for your reply: [PATCH]--fix the race
- condition of remove_session_caps of ceph which tirgger bugon,
-Thread-Topic: reply:just thank you all for your reply: [PATCH]--fix the race
- condition of remove_session_caps of ceph which tirgger bugon,
-Thread-Index: AdXNDvhdW1jjFpB+SwymxnWKBZijNw==
-Date:   Fri, 17 Jan 2020 08:33:09 +0000
-Message-ID: <HK0PR02MB2563F5F9BE8E368DB9571EDCAB310@HK0PR02MB2563.apcprd02.prod.outlook.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=chenanqing@oppo.com; 
-x-originating-ip: [58.255.79.105]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5a68b8c2-7c9e-4df4-8a8f-08d79b27e209
-x-ms-traffictypediagnostic: HK0PR02MB3425:
-x-microsoft-antispam-prvs: <HK0PR02MB3425C986C2A90679EDA8B338AB310@HK0PR02MB3425.apcprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:279;
-x-forefront-prvs: 0285201563
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(39850400004)(346002)(136003)(366004)(396003)(199004)(189003)(66556008)(66476007)(66946007)(52536014)(66446008)(64756008)(81156014)(8676002)(81166006)(55016002)(8936002)(7696005)(71200400001)(2906002)(85182001)(86362001)(186003)(6506007)(53546011)(478600001)(33656002)(966005)(316002)(110136005)(76116006)(9686003)(26005)(5660300002)(11606004);DIR:OUT;SFP:1101;SCL:1;SRVR:HK0PR02MB3425;H:HK0PR02MB2563.apcprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: oppo.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: bwDJUPYToEe+19tjcrpZS5vs3WXK0WXc7bQuq7dpTkIbwW9eHzh2XXqVaDCN5HmKhW2dCAIuF2eH75wrGHGgZy+eGOed+uJJefObIUk0i8qkqHkNsNtFw6VOlCZYZ0TwiaXy0HVgX85fEDQ8Hz/gXL6GxcZn/EP6Ic0AzJhSnqml8SwVtL1rxRkkIr+A/dEAzujWJWz6S/ohTfaS4h9xnMMEyWFiazeNpftaZ3jqDBwiCX35O9+6A3xm4V4bEjFS7ZpAlWT0IQtFtE5rXca/Z4wmJdrSkCpg3RJho9Ul0BYsNInQSTIxUqOzx5lqXc0xEBbeHLyzxZ+r4WR6hTtTTUXnCJweF1iADISu0bSt/oHRYO0bJO7OyG2L9niT3oqgl3DMNdDU0gEn0gjQDHZ/hp5s7fOB05ghFX/XGtPMcV0PxcLG9iA7if/YOWc6mUmXfOEcHRq38fk801p3eP+7MS1wlkNms8ij0emDLOhs2Vk74D4wiBFkuOuvw42Dde4WHBBDZxrhVtRfzyvzGS67RlY5dqwr2lPDyLWOaSa3PAXQFHQtxC2I+qXB9aMHQ3jK
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 17 Jan 2020 03:35:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44358 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727002AbgAQIfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 03:35:19 -0500
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B147220728;
+        Fri, 17 Jan 2020 08:35:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579250117;
+        bh=cp/ktM/dmtoDtuAhz2mQTckERL9vbLg4ESnKJ2wY7IY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=k+2atMjooYUHauwz9g7SwXtbaa8N2Xp07fY96vmJcR8n0go+Q8bNSozeylluPU1xT
+         lDvT8st40WidJSwBE+/2xYMcNmeaVeQ+ZI5cssGqXaq98OizEILj3dTmwVs6T/qo7r
+         2jKHoqcD8vtiKQbH+2/qXWxV63iwzxgPomnzfIdY=
+Received: by mail-io1-f52.google.com with SMTP id d15so25168853iog.3;
+        Fri, 17 Jan 2020 00:35:17 -0800 (PST)
+X-Gm-Message-State: APjAAAXK8oHXiP7LeAJTMf0B7VQUEMU23oPr0vubDZMfIMupsD9ME9Lz
+        3Bv50Inun2E1JDyupmVt1AJeg36Tf7zhs2h3Fk0=
+X-Google-Smtp-Source: APXvYqyUzHUUSyhZCCc2hOzOzCT2PKcdpu79m9BCKZgH9glu6EHQle4w87rkM/wJxYua8E4vGMiRa9Ng0bVSjuFIifc=
+X-Received: by 2002:a6b:f206:: with SMTP id q6mr30555906ioh.264.1579250117041;
+ Fri, 17 Jan 2020 00:35:17 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: oppo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5a68b8c2-7c9e-4df4-8a8f-08d79b27e209
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jan 2020 08:33:09.3301
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f1905eb1-c353-41c5-9516-62b4a54b5ee6
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yEM+vByjo86mj4yWJDtKCWYlVy7ABwodzeLnm1TdWYZowTQBsu95txwvn25NVOwG5GdVZp/C+m+XZkkSwZu2FA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0PR02MB3425
+References: <1577799707-11855-1-git-send-email-light.hsieh@mediatek.com> <1577799707-11855-2-git-send-email-light.hsieh@mediatek.com>
+In-Reply-To: <1577799707-11855-2-git-send-email-light.hsieh@mediatek.com>
+From:   Sean Wang <sean.wang@kernel.org>
+Date:   Fri, 17 Jan 2020 00:35:06 -0800
+X-Gmail-Original-Message-ID: <CAGp9LzpRQAU9TFLVFHrv=YoUUiRUQA5V_Rz+zRxAeBqqGyOiSA@mail.gmail.com>
+Message-ID: <CAGp9LzpRQAU9TFLVFHrv=YoUUiRUQA5V_Rz+zRxAeBqqGyOiSA@mail.gmail.com>
+Subject: Re: [PATCH v7 2/6] Supporting driving setting without mapping current
+ to register value
+To:     Light Hsieh <light.hsieh@mediatek.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, kuohong.wang@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dGhhbmsgeW91IGFsbCBmb3IgeW91IHJlcGx5ICxpdCdzIG15IGZpcnN0IHRpbWUgdG8gc3VibWl0
-IHBhdGNoICxhbHRob3VnaCBpdCBpcyBmaXhlZCBieSA6DQpjb21taXQgODdiYzViODk1ZDk0YTBm
-NDBmZTE3MGQ0Y2Y1NzcxYzhlOGY4NWQxNQ0KDQpJJ20gc29ycnkgZm9yIG15IGNhcmVsZXNzIHdo
-aWNoIHdhc3RlIHlvdXIgc29tZSB0aW1lIC4NCg0KDQoNCk9uIDEvMTYvMjAgOTozMSBQTSwgSmVm
-ZiBMYXl0b24gd3JvdGU6DQo+IE9uIFRodSwgMjAyMC0wMS0xNiBhdCAwMjowMiArMDAwMCwg6ZmI
-5a6J5bqGIHdyb3RlOg0KPj4gSGkgQWxs77yMSSB0aGluayBJIGZpbmQgYSBidWcgaW4gdGhlIGNl
-cGggLg0KPj4NCj4+DQo+PiBiYWNrZ3JvdW5kOg0KPj4gWzM0MTg2ODcuMTIzNjEwXSBrZXJuZWwg
-QlVHIGF0IGZzL2NlcGgvbWRzX2NsaWVudC5jOjEzMjUhDQo+PiBbMzQxODY4Ny4xMjQxMDJdIGlu
-dmFsaWQgb3Bjb2RlOiAwMDAwIFsjMV0gU01QIFszNDE4Njg3LjEzMDEzMl0gQ1BVOg0KPj4gMjcg
-UElEOiA0NTM2OTIgQ29tbToga3dvcmtlci8yNzoyIEtkdW1wOiBsb2FkZWQgVGFpbnRlZDogUCBP
-RQ0KPj4gLS0tLS0tLS0tLS0tIFQgMy4xMC4wLTk1Ny4yNy4yLmVsNy54ODZfNjQgIzEgWzM0MTg2
-ODcuMTMxNDI3XQ0KPj4gSGFyZHdhcmUgbmFtZTogSW5zcHVyIE5GNTI4OE01L1laTUItMDA4MzQt
-MTAxLCBCSU9TIDQuMC4wOCAwOS8xOS8yMDE5DQo+PiBbMzQxODY4Ny4xMzIxMDldIFdvcmtxdWV1
-ZTogY2VwaC1tc2dyIGNlcGhfY29uX3dvcmtmbiBbbGliY2VwaF0NCj4+IFszNDE4Njg3LjEzMjc5
-Ml0gdGFzazogZmZmZjk0YzkzMjY1MjA4MCB0aTogZmZmZjk0YjczZGFlNDAwMCB0YXNrLnRpOg0K
-Pj4gZmZmZjk0YjczZGFlNDAwMCBbMzQxODY4Ny4xMzM0ODhdIFJJUDogMDAxMDpbPGZmZmZmZmZm
-YzFhY2RjOWY+XQ0KPj4gWzxmZmZmZmZmZmMxYWNkYzlmPl0gcmVtb3ZlX3Nlc3Npb25fY2Fwcysw
-eDFiZi8weDFkMCBbY2VwaF0NCj4+IFszNDE4Njg3LjEzNDIxM10gUlNQOiAwMDE4OmZmZmY5NGI3
-M2RhZTdiZTAgRUZMQUdTOiAwMDAxMDIwMg0KPj4gWzM0MTg2ODcuMTM0OTMzXSBSQVg6IDAwMDAw
-MDAwMDAwMDAwMDEgUkJYOiBmZmZmOTRhMDlhNDllZDM4IFJDWDoNCj4+IGZmZmY5NGI3M2RhZTdi
-ZTggWzM0MTg2ODcuMTM1NjY4XSBSRFg6IGZmZmY5NGM0MDlmNzgxMTggUlNJOg0KPj4gZmZmZjk0
-YjczZGFlN2JlOCBSREk6IGZmZmY5NGEwOWE0OWU4MDAgWzM0MTg2ODcuMTM2NDA3XSBSQlA6DQo+
-PiBmZmZmOTRiNzNkYWU3YzM4IFIwODogZmZmZjk0YzQwOWY3ODExOCBSMDk6IDAwMDAwMDAwMDAw
-MDAwMDENCj4+IFszNDE4Njg3LjEzNzE0N10gUjEwOiAwMDAwMDAwMDAwMDAwMDAwIFIxMTogMDAw
-MDAwMDAwMDAwMDAwMCBSMTI6DQo+PiBmZmZmOTRhMDlhNDllODAwIFszNDE4Njg3LjEzNzg5NV0g
-UjEzOiBmZmZmOTRiNzNkYWU3YmU4IFIxNDoNCj4+IGZmZmY5NGM0MDlmNzgwMDAgUjE1OiBmZmZm
-OTRhMDlhNDllZDQwIFszNDE4Njg3LjEzODY0OF0gRlM6DQo+PiAwMDAwMDAwMDAwMDAwMDAwKDAw
-MDApIEdTOmZmZmY5NGUwYmMwYzAwMDAoMDAwMCkNCj4+IGtubEdTOjAwMDAwMDAwMDAwMDAwMDAg
-WzM0MTg2ODcuMTM5NDE0XSBDUzogMDAxMCBEUzogMDAwMCBFUzogMDAwMA0KPj4gQ1IwOiAwMDAw
-MDAwMDgwMDUwMDMzIFszNDE4Njg3LjE0MDE3NV0gQ1IyOiAwMDAwN2Y0OWM4NjFhMzMwIENSMzog
-MDAwMDAwMmU0ZWVjNDAwMCBDUjQ6IDAwMDAwMDAwMDA3NjA3ZTAgWzM0MTg2ODcuMTQwOTM5XSBE
-UjA6IDAwMDAwMDAwMDAwMDAwMDAgRFIxOiAwMDAwMDAwMDAwMDAwMDAwIERSMjogMDAwMDAwMDAw
-MDAwMDAwMCBbMzQxODY4Ny4xNDE2OTRdIERSMzogMDAwMDAwMDAwMDAwMDAwMCBEUjY6IDAwMDAw
-MDAwZmZmZTBmZjAgRFI3OiAwMDAwMDAwMDAwMDAwNDAwIFszNDE4Njg3LjE0MjQzOV0gUEtSVTog
-MDAwMDAwMDAgWzM0MTg2ODcuMTQzMTczXSBDYWxsIFRyYWNlOg0KPj4gWzM0MTg2ODcuMTQzOTA3
-XSBbPGZmZmZmZmZmYzFhZDM5OWM+XSBkaXNwYXRjaCsweDM5Yy8weGIwMCBbY2VwaF0NCj4+IFsz
-NDE4Njg3LjE0NDYzNV0gWzxmZmZmZmZmZmJkODFiNTZhPl0gPyBrZXJuZWxfcmVjdm1zZysweDNh
-LzB4NTANCj4+IFszNDE4Njg3LjE0NTM2MV0gWzxmZmZmZmZmZmMxYTYwZmI0Pl0gdHJ5X3JlYWQr
-MHg1MTQvMHgxMmMwIFtsaWJjZXBoXQ0KPj4gWzM0MTg2ODcuMTQ2MDgxXSBbPGZmZmZmZmZmYzFh
-NjFmNjQ+XSBjZXBoX2Nvbl93b3JrZm4rMHhlNC8weDE1MzANCj4+IFtsaWJjZXBoXSBbMzQxODY4
-Ny4xNDY3OTVdIFs8ZmZmZmZmZmZiZDJkMWI2MD5dID8NCj4+IGZpbmlzaF90YXNrX3N3aXRjaCsw
-eGUwLzB4MWMwIFszNDE4Njg3LjE0NzUwMl0gWzxmZmZmZmZmZmJkOTY5YWJhPl0gPw0KPj4gX19z
-Y2hlZHVsZSsweDQyYS8weDg2MCBbMzQxODY4Ny4xNDgyMDFdIFs8ZmZmZmZmZmZiZDJiYWY5Zj5d
-DQo+PiBwcm9jZXNzX29uZV93b3JrKzB4MTdmLzB4NDQwIFszNDE4Njg3LjE0ODg5NV0gWzxmZmZm
-ZmZmZmJkMmJjMDM2Pl0NCj4+IHdvcmtlcl90aHJlYWQrMHgxMjYvMHgzYzAgWzM0MTg2ODcuMTQ5
-NTc5XSBbPGZmZmZmZmZmYmQyYmJmMTA+XSA/DQo+PiBtYW5hZ2Vfd29ya2Vycy5pc3JhLjI1KzB4
-MmEwLzB4MmEwDQo+PiBbMzQxODY4Ny4xNTAyNjFdIFs8ZmZmZmZmZmZiZDJjMmU4MT5dIGt0aHJl
-YWQrMHhkMS8weGUwDQo+PiBbMzQxODY4Ny4xNTA5MzNdIFs8ZmZmZmZmZmZiZDJjMmRiMD5dID8g
-aW5zZXJ0X2t0aHJlYWRfd29yaysweDQwLzB4NDANCj4+IFszNDE4Njg3LjE1MTYwM10gWzxmZmZm
-ZmZmZmJkOTc2YzFkPl0NCj4+IHJldF9mcm9tX2Zvcmtfbm9zcGVjX2JlZ2luKzB4Ny8weDIxDQo+
-PiBbMzQxODY4Ny4xNTIyNjZdIFs8ZmZmZmZmZmZiZDJjMmRiMD5dID8gaW5zZXJ0X2t0aHJlYWRf
-d29yaysweDQwLzB4NDANCj4+IFszNDE4Njg3LjE1MjkyMV0gQ29kZTogNWQgNDEgNWUgNDEgNWYg
-NWQgYzMgNDggODkgZmEgNDggYzcgYzYgNjggMzENCj4+IGFlIGMxIDQ4IGM3IGM3IDk4IDBmIGFm
-IGMxIDMxIGMwIGU4IDhkIDVjIGFkIGZiIGU5IDk2IGZlIGZmIGZmIGU4IDAzDQo+PiBhOSA3YyBm
-YiAwZiAwYiA8MGY+IDBiIDBmIDFmIDQ0IDAwIDAwIDY2IDJlIDBmIDFmIDg0IDAwIDAwIDAwIDAw
-IDAwDQo+PiAwZiAxZiA0NCAwMCBbMzQxODY4Ny4xNTQzMThdIFJJUCBbPGZmZmZmZmZmYzFhY2Rj
-OWY+XQ0KPj4gcmVtb3ZlX3Nlc3Npb25fY2FwcysweDFiZi8weDFkMCBbY2VwaF0gWzM0MTg2ODcu
-MTU0OTk4XSBSU1ANCj4+IDxmZmZmOTRiNzNkYWU3YmUwPg0KPj4NCj4+DQo+PiBhbmQgSSBmaW5k
-IGFub3RoZXIgdGhyZWFkIHdoaWNoIGlzIHdhaXRpbmcgZm9yIHRoZSBzcGlubG9jayBvZiBzZXNz
-aW9uLT5zX2NhcF9sb2NrLg0KPj4gUElEOiA1MTIxMzAgVEFTSzogZmZmZjk0YmNiNWFmYzEwMCBD
-UFU6IDYyIENPTU1BTkQ6ICJrd29ya2VyLzYyOjQiDQo+PiAjMCBbZmZmZjk0ZTBiYzU4OGU0OF0g
-Y3Jhc2hfbm1pX2NhbGxiYWNrIGF0IGZmZmZmZmZmYmQyNTYwMjcNCj4+ICMxIFtmZmZmOTRlMGJj
-NTg4ZTU4XSBubWlfaGFuZGxlIGF0IGZmZmZmZmZmYmQ5NmU5MWMNCj4+ICMyIFtmZmZmOTRlMGJj
-NTg4ZWIwXSBkb19ubWkgYXQgZmZmZmZmZmZiZDk2ZWIzZA0KPj4gIzMgW2ZmZmY5NGUwYmM1ODhl
-ZjBdIGVuZF9yZXBlYXRfbm1pIGF0IGZmZmZmZmZmYmQ5NmRkODkgW2V4Y2VwdGlvbg0KPj4gUklQ
-OiBuYXRpdmVfcXVldWVkX3NwaW5fbG9ja19zbG93cGF0aCs0NjJdDQo+PiBSSVA6IGZmZmZmZmZm
-YmQzMTM1ZGUgUlNQOiBmZmZmOTRjZmJmMmNmODAwIFJGTEFHUzogMDAwMDAyMDINCj4+IFJBWDog
-MDAwMDAwMDAwMDAwMDAwMSBSQlg6IGZmZmY5NGM0MDlmNzgwMDAgUkNYOiAwMDAwMDAwMDAwMDAw
-MDAxDQo+PiBSRFg6IDAwMDAwMDAwMDAwMDAxMDEgUlNJOiAwMDAwMDAwMDAwMDAwMDAxIFJESTog
-ZmZmZjk0YTA5YTQ5ZWQzOA0KPj4gUkJQOiBmZmZmOTRjZmJmMmNmODAwIFI4OiAwMDAwMDAwMDAw
-MDAwMTAxIFI5OiBmZmZmOTRhMWU2ZDJlMTgwDQo+PiBSMTA6IGZmZmY5NGUxYmZiYmEwZTAgUjEx
-OiBmZmZmZmZmZmZmZmZmZmZmIFIxMjogZmZmZjk0YTZjNzYzZTliMA0KPj4gUjEzOiBmZmZmOTRh
-MDlhNDllZDM4IFIxNDogZmZmZjk0YTA5YTQ5ZTgwMCBSMTU6IDAwMDAwMDAwMDAwMDA0MDANCj4+
-IE9SSUdfUkFYOiBmZmZmZmZmZmZmZmZmZmZmIENTOiAwMDEwIFNTOiAwMDE4DQo+PiAtLS0gPE5N
-SSBleGNlcHRpb24gc3RhY2s+IC0tLQ0KPj4gIzQgW2ZmZmY5NGNmYmYyY2Y4MDBdIG5hdGl2ZV9x
-dWV1ZWRfc3Bpbl9sb2NrX3Nsb3dwYXRoIGF0DQo+PiBmZmZmZmZmZmJkMzEzNWRlDQo+PiAjNSBb
-ZmZmZjk0Y2ZiZjJjZjgwOF0gcXVldWVkX3NwaW5fbG9ja19zbG93cGF0aCBhdCBmZmZmZmZmZmJk
-OTVlMmNiDQo+PiAjNiBbZmZmZjk0Y2ZiZjJjZjgxOF0gX3Jhd19zcGluX2xvY2sgYXQgZmZmZmZm
-ZmZiZDk2YzdhMA0KPj4gIzcgW2ZmZmY5NGNmYmYyY2Y4MjhdIF9fY2VwaF9yZW1vdmVfY2FwIGF0
-IGZmZmZmZmZmYzFhYzEzNjYNCj4+IFtjZXBoXS0tLS0tLS0tLS10aGlzIGZ1bmN0aW9uIGlzIHdh
-aXRpbmcgZm9yIHNwaW5sb2NrIG9mDQo+PiBzZXNzaW9uLT5zX2NhcF9sb2NrDQo+PiAjOCBbZmZm
-Zjk0Y2ZiZjJjZjg3MF0gY2VwaF9xdWV1ZV9jYXBzX3JlbGVhc2UgYXQgZmZmZmZmZmZjMWFjMTU2
-Yw0KPj4gW2NlcGhdDQo+PiAjOSBbZmZmZjk0Y2ZiZjJjZjg5MF0gY2VwaF9kZXN0cm95X2lub2Rl
-IGF0IGZmZmZmZmZmYzFhYWFiZDUgW2NlcGhdDQo+PiAjMTAgW2ZmZmY5NGNmYmYyY2Y4ZDBdIGRl
-c3Ryb3lfaW5vZGUgYXQgZmZmZmZmZmZiZDQ1ZmU0Yg0KPj4gIzExIFtmZmZmOTRjZmJmMmNmOGU4
-XSBldmljdCBhdCBmZmZmZmZmZmJkNDVmZjg1DQo+PiAjMTIgW2ZmZmY5NGNmYmYyY2Y5MTBdIGlw
-dXQgYXQgZmZmZmZmZmZiZDQ2MDgyYw0KPj4gIzEzIFtmZmZmOTRjZmJmMmNmOTQwXSBjZXBoX3B1
-dF93cmJ1ZmZlcl9jYXBfcmVmcyBhdCBmZmZmZmZmZmMxYWM0NmU0DQo+PiBbY2VwaF0NCj4+ICMx
-NCBbZmZmZjk0Y2ZiZjJjZjliMF0gd3JpdGVwYWdlc19maW5pc2ggYXQgZmZmZmZmZmZjMWFiOWVj
-YyBbY2VwaF0NCj4+ICMxNSBbZmZmZjk0Y2ZiZjJjZmEzMF0gX19jb21wbGV0ZV9yZXF1ZXN0IGF0
-IGZmZmZmZmZmYzFhNjdlYmUNCj4+IFtsaWJjZXBoXQ0KPj4gIzE2IFtmZmZmOTRjZmJmMmNmYTUw
-XSBoYW5kbGVfcmVwbHkgYXQgZmZmZmZmZmZjMWE3MGQxZCBbbGliY2VwaF0NCj4+ICMxNyBbZmZm
-Zjk0Y2ZiZjJjZmMxMF0gZGlzcGF0Y2ggYXQgZmZmZmZmZmZjMWE3MmFlMyBbbGliY2VwaF0NCj4+
-ICMxOCBbZmZmZjk0Y2ZiZjJjZmNkMF0gdHJ5X3JlYWQgYXQgZmZmZmZmZmZjMWE2MGZiNCBbbGli
-Y2VwaF0NCj4+ICMxOSBbZmZmZjk0Y2ZiZjJjZmQ5MF0gY2VwaF9jb25fd29ya2ZuIGF0IGZmZmZm
-ZmZmYzFhNjFmNjQgW2xpYmNlcGhdDQo+PiAjMjAgW2ZmZmY5NGNmYmYyY2ZlMjBdIHByb2Nlc3Nf
-b25lX3dvcmsgYXQgZmZmZmZmZmZiZDJiYWY5Zg0KPj4gIzIxIFtmZmZmOTRjZmJmMmNmZTY4XSB3
-b3JrZXJfdGhyZWFkIGF0IGZmZmZmZmZmYmQyYmMwMzYNCj4+ICMyMiBbZmZmZjk0Y2ZiZjJjZmVj
-OF0ga3RocmVhZCBhdCBmZmZmZmZmZmJkMmMyZTgxDQo+PiAjMjMgW2ZmZmY5NGNmYmYyY2ZmNTBd
-IHJldF9mcm9tX2Zvcmtfbm9zcGVjX2JlZ2luIGF0IGZmZmZmZmZmYmQ5NzZjMWQNCj4+DQo+PiBh
-ZnRlciBJIHJlYWQgdGhlIGNlcGggbW9kdWxlIG9mIGh0dHBzOi8vZ2l0aHViLmNvbS90b3J2YWxk
-cy9saW51eC5naXQNCj4+IGFuZCBrZXJuZWwvZ2l0L25leHQvbGludXgtbmV4dC5naXQgLEkgdGhp
-bmsgdGhlIGJ1ZyBpcyBleGlzdGVkIGFsbCB0aGUgc2FtZS4NCj4+DQo+PiBzbyBJIG1ha2UgYSBw
-YXRjaCxtYXliZSBJIHNob3VsZCByZXBsYWNlIHRoZSBwcl93YXJuX3JhdGVsaW1pdGVkIGJ5IHNv
-bWUgZnVuY3Rpb24gbGlrZSB1ZGVsYXk/DQo+Pg0KPg0KDQpJIHRoaW5rIHRoaXMgYnVnIGlzIGZp
-eGVkIGJ5Lg0KDQpjb21taXQgODdiYzViODk1ZDk0YTBmNDBmZTE3MGQ0Y2Y1NzcxYzhlOGY4NWQx
-NQ0KQXV0aG9yOiBZYW4sIFpoZW5nIDx6eWFuQHJlZGhhdC5jb20+DQpEYXRlOiAgIFN1biBKdW4g
-MiAwOTo0NTozOCAyMDE5ICswODAwDQoNCmNlcGg6IHVzZSBjZXBoX2V2aWN0X2lub2RlIHRvIGNs
-ZWFudXAgaW5vZGUncyByZXNvdXJjZQ0KDQpyZW1vdmVfc2Vzc2lvbl9jYXBzKCkgcmVsaWVzIG9u
-IF9fd2FpdF9vbl9mcmVlaW5nX2lub2RlKCksIHRvIHdhaXQgZm9yIGZyZWVpbmcgaW5vZGUgdG8g
-cmVtb3ZlIGl0cyBjYXBzLiBCdXQgVkZTIHdha2VzIGZyZWVpbmcgaW5vZGUgd2FpdGVycyBiZWZv
-cmUgY2FsbGluZyBkZXN0cm95X2lub2RlKCkuDQoNCkNjOiBzdGFibGVAdmdlci5rZXJuZWwub3Jn
-DQpMaW5rOiBodHRwczovL3RyYWNrZXIuY2VwaC5jb20vaXNzdWVzLzQwMTAyDQpTaWduZWQtb2Zm
-LWJ5OiAiWWFuLCBaaGVuZyIgPHp5YW5AcmVkaGF0LmNvbT4NClJldmlld2VkLWJ5OiBKZWZmIExh
-eXRvbiA8amxheXRvbkByZWRoYXQuY29tPg0KU2lnbmVkLW9mZi1ieTogSWx5YSBEcnlvbW92IDxp
-ZHJ5b21vdkBnbWFpbC5jb20+DQoNCg0KDQoNCj4gVGhhbmtzIGZvciB0aGUgcGF0Y2guDQo+DQo+
-IEZpcnN0LCBiZSBzdXJlIHlvdSBmb2xsb3cgdGhlIHBhdGNoIHN1Ym1pc3Npb24gZ3VpZGVsaW5l
-cyB3aGVuIHNlbmRpbmcNCj4gYSBwYXRjaC4gSW4gcGFydGljdWxhciwgZ2l0LXNlbmQtZW1haWwg
-aXMgcmVhbGx5IHRoZSBiZXN0IHdheSB0bw0KPiBzdWJtaXQgcGF0Y2hlcy4NCj4NCj4+IGRpZmYg
-LS1naXQgYS9mcy9jZXBoL21kc19jbGllbnQuYyBiL2ZzL2NlcGgvbWRzX2NsaWVudC5jIGluZGV4
-DQo+PiA0Y2ZjNGRmOWZjMzQuLjM3MzRkMmFmYjNjNSAxMDA2NDQNCj4+IC0tLSBhL2ZzL2NlcGgv
-bWRzX2NsaWVudC5jDQo+PiArKysgYi9mcy9jZXBoL21kc19jbGllbnQuYw0KPj4gQEAgLTE1MDMs
-OCArMTUwMywxNCBAQCBzdGF0aWMgdm9pZCByZW1vdmVfc2Vzc2lvbl9jYXBzKHN0cnVjdCBjZXBo
-X21kc19zZXNzaW9uICpzZXNzaW9uKQ0KPj4gICAgICAgICAgICAgICAgICB3aGlsZSAoIWxpc3Rf
-ZW1wdHkoJnNlc3Npb24tPnNfY2FwcykpIHsNCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICBj
-YXAgPSBsaXN0X2VudHJ5KHNlc3Npb24tPnNfY2Fwcy5uZXh0LA0KPj4gICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IGNlcGhfY2FwLCBzZXNzaW9uX2NhcHMp
-Ow0KPj4gLSAgICAgICAgICAgICAgICAgICAgICAgaWYgKGNhcCA9PSBwcmV2KQ0KPj4gLSAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgYnJlYWs7DQo+PiArICAgICAgICAgICAgICAgICAg
-ICAgICBpZiAoY2FwID09IHByZXYpIHsNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgc3Bpbl91bmxvY2soJnNlc3Npb24tPnNfY2FwX2xvY2spOw0KPj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICBwcl93YXJuX3JhdGVsaW1pdGVkKA0KPj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAicmVtb3ZpbmcgY2FwICVwLCBpbm9kZSBpcyAlcCBiZSBkZWxheWVk
-XG4iLA0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjYXAsICBpbm9kZSk7DQo+
-PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNwaW5fbG9jaygmc2Vzc2lvbi0+c19j
-YXBfbG9jayk7DQo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbnRpbnVlOw0K
-Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgfQ0KPg0KPiAoY2MnaW5nIFpoZW5nKQ0KPg0KPiBU
-aGF0IHNlZW1zIGxpa2UgaXQgbWlnaHQgYmUgcHJvbmUgdG8gc3Bpbm5pbmcgZm9yIGEgdmVyeSBs
-b25nIHRpbWUgaWYNCj4gd2UgaGF2ZSBhbiBpbm9kZSB3aXRoIGFuIG91dHN0YW5kaW5nIHJlZmVy
-ZW5jZSBmb3IgYSBsb25nIHRpbWUuIEkgZ2V0DQo+IHRoYXQgdGhpcyBpcyBhIHByb2JsZW0gdGhv
-dWdoLg0KPg0KPiBJIHRoaW5rIHRoZSByZWFsIGJ1ZyBpcyB0aGF0IHRoaXMgaXMgbm90IG1vdmlu
-ZyB0aGUgY2FwIHRvIHRoZSBlbmQgb2YNCj4gdGhlIGxpc3QsIHNvIHRoYXQgaXQgY2FuIGF0dGVt
-cHQgdG8gY2xlYW4gdXAgbW9yZSB0aGFuIG9uZSB0aGF0IG1pZ2h0DQo+IGJlIHRoZXJlLiBQcm9i
-YWJseSB3ZSBqdXN0IG5lZWQgdG8gZG8gYSBsaXN0X21vdmVfdGFpbCBvbiB0aGUgZW50cnkNCj4g
-YmVmb3JlIGRyb3BwaW5nIHRoZSBzcGlubG9jaz8NCj4NCj4NCj4NCj4+ICAgICAgICAgICAgICAg
-ICAgICAgICAgICBwcmV2ID0gY2FwOw0KPj4gICAgICAgICAgICAgICAgICAgICAgICAgIHZpbm8g
-PSBjYXAtPmNpLT5pX3Zpbm87DQo+PiAgICAgICAgICAgICAgICAgICAgICAgICAgc3Bpbl91bmxv
-Y2soJnNlc3Npb24tPnNfY2FwX2xvY2spOw0KPj4gQEAgLTE1MjAsNiArMTUyNiwxMyBAQCBzdGF0
-aWMgdm9pZCByZW1vdmVfc2Vzc2lvbl9jYXBzKHN0cnVjdCBjZXBoX21kc19zZXNzaW9uICpzZXNz
-aW9uKQ0KPj4gICAgICAgICAgLy8gZHJvcCBjYXAgZXhwaXJlcyBhbmQgdW5sb2NrIHNfY2FwX2xv
-Y2sNCj4+ICAgICAgICAgIGRldGFjaF9jYXBfcmVsZWFzZXMoc2Vzc2lvbiwgJmRpc3Bvc2UpOw0K
-Pj4NCj4+ICsgICAgICAgLyoNCj4+ICsgICAgICAgICogaWYgY2VwaF9hc3luY19pcHV0IGV4ZWN1
-dGUgY2VwaF9kZXN0cm95X2lub2RlIHdoaWNoDQo+PiArICAgICAgICAqIGNhbGwgX19jZXBoX3Jl
-bW92ZV9jYXAgZmluYWxseSB0byBkZWMgdGhlIHNlc3Npb24tPnNfbnJfY2Fwcw0KPj4gKyAgICAg
-ICAgKiBtYXliZSBhZnRlciB0aGFuIEJVR09OLGJlY2F1c2UgaXQgbmVlZCBzZXNzaW9uLT5zX2Nh
-cF9sb2NrDQo+PiArICAgICAgICAqIHRoZW4gQlVHT04oc2Vzc2lvbi0+c19ucl9jYXBzID4gMCkg
-bXVzdCBiZSB0cmlnZ2VyZWQgLA0KPj4gKyAgICAgICAgKiBhbHRob3VnaCBpdCBpcyBqdXN0IGEg
-cmFjZSBjb25kaXRpb24uDQo+PiArICAgICAgICAqLw0KPj4gICAgICAgICAgQlVHX09OKHNlc3Np
-b24tPnNfbnJfY2FwcyA+IDApOw0KPj4gICAgICAgICAgQlVHX09OKCFsaXN0X2VtcHR5KCZzZXNz
-aW9uLT5zX2NhcF9mbHVzaGluZykpOw0KPj4gICAgICAgICAgc3Bpbl91bmxvY2soJnNlc3Npb24t
-PnNfY2FwX2xvY2spOw0KPj4NCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQpPUFBP
-DQoNCuacrOeUteWtkOmCruS7tuWPiuWFtumZhOS7tuWQq+aciU9QUE/lhazlj7jnmoTkv53lr4bk
-v6Hmga/vvIzku4XpmZDkuo7pgq7ku7bmjIfmmI7nmoTmlLbku7bkurrkvb/nlKjvvIjljIXlkKvk
-uKrkurrlj4rnvqTnu4TvvInjgILnpoHmraLku7vkvZXkurrlnKjmnKrnu4/mjojmnYPnmoTmg4Xl
-hrXkuIvku6Xku7vkvZXlvaLlvI/kvb/nlKjjgILlpoLmnpzmgqjplJnmlLbkuobmnKzpgq7ku7bv
-vIzor7fnq4vljbPku6XnlLXlrZDpgq7ku7bpgJrnn6Xlj5Hku7bkurrlubbliKDpmaTmnKzpgq7k
-u7blj4rlhbbpmYTku7bjgIINCg0KVGhpcyBlLW1haWwgYW5kIGl0cyBhdHRhY2htZW50cyBjb250
-YWluIGNvbmZpZGVudGlhbCBpbmZvcm1hdGlvbiBmcm9tIE9QUE8sIHdoaWNoIGlzIGludGVuZGVk
-IG9ubHkgZm9yIHRoZSBwZXJzb24gb3IgZW50aXR5IHdob3NlIGFkZHJlc3MgaXMgbGlzdGVkIGFi
-b3ZlLiBBbnkgdXNlIG9mIHRoZSBpbmZvcm1hdGlvbiBjb250YWluZWQgaGVyZWluIGluIGFueSB3
-YXkgKGluY2x1ZGluZywgYnV0IG5vdCBsaW1pdGVkIHRvLCB0b3RhbCBvciBwYXJ0aWFsIGRpc2Ns
-b3N1cmUsIHJlcHJvZHVjdGlvbiwgb3IgZGlzc2VtaW5hdGlvbikgYnkgcGVyc29ucyBvdGhlciB0
-aGFuIHRoZSBpbnRlbmRlZCByZWNpcGllbnQocykgaXMgcHJvaGliaXRlZC4gSWYgeW91IHJlY2Vp
-dmUgdGhpcyBlLW1haWwgaW4gZXJyb3IsIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRlciBieSBwaG9u
-ZSBvciBlbWFpbCBpbW1lZGlhdGVseSBhbmQgZGVsZXRlIGl0IQ0K
+On Tue, Dec 31, 2019 at 5:41 AM Light Hsieh <light.hsieh@mediatek.com> wrote:
+>
+> MediaTek's smarphone project actual usage does need to know current value
+> (in mA) in procedure of finding the best driving setting.
+> The steps in the procedure is like as follow:
+>
+> 1. set driving setting field in setting register as 0, measure waveform,
+>    perform test, and etc.
+> 2. set driving setting field in setting register as 1, measure waveform,
+>    perform test, and etc.
+> ...
+> n. set driving setting field in setting register as n-1, measure
+>    waveform, perform test, and etc.
+> Check the results of steps 1~n and adopt the setting that get best result.
+>
+> This procedure does need to know the mapping between current to register
+> value.
+> Therefore, setting driving without mapping current is more practical for
+> MediaTek's smartphone usage.
+>
+> Change-Id: I8bd6a2cecc0af650923704589b5b90097b0ff77e
+
+If removing the change-ids, add a prefix "pinctrl: mediatek:" to the
+subject, and proper signed-off-by tags, then Acked-by: Sean Wang
+<sean.wang@kernel.org>.
+
+> ---
+>  drivers/pinctrl/mediatek/pinctrl-mt6765.c        |  4 ++--
+>  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 12 ++++++++++++
+>  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h |  5 +++++
+>  3 files changed, 19 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mt6765.c b/drivers/pinctrl/mediatek/pinctrl-mt6765.c
+> index 32451e8..1212264 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-mt6765.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mt6765.c
+> @@ -1077,8 +1077,8 @@
+>         .bias_disable_get = mtk_pinconf_bias_disable_get,
+>         .bias_set = mtk_pinconf_bias_set,
+>         .bias_get = mtk_pinconf_bias_get,
+> -       .drive_set = mtk_pinconf_drive_set_rev1,
+> -       .drive_get = mtk_pinconf_drive_get_rev1,
+> +       .drive_set = mtk_pinconf_drive_set_raw,
+> +       .drive_get = mtk_pinconf_drive_get_raw,
+>         .adv_pull_get = mtk_pinconf_adv_pull_get,
+>         .adv_pull_set = mtk_pinconf_adv_pull_set,
+>  };
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> index d63e05e..2247eae 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> @@ -608,6 +608,18 @@ int mtk_pinconf_drive_get_rev1(struct mtk_pinctrl *hw,
+>         return 0;
+>  }
+>
+> +int mtk_pinconf_drive_set_raw(struct mtk_pinctrl *hw,
+> +                              const struct mtk_pin_desc *desc, u32 arg)
+> +{
+> +       return mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DRV, arg);
+> +}
+> +
+> +int mtk_pinconf_drive_get_raw(struct mtk_pinctrl *hw,
+> +                              const struct mtk_pin_desc *desc, int *val)
+> +{
+> +       return mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DRV, val);
+> +}
+> +
+>  int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
+>                              const struct mtk_pin_desc *desc, bool pullup,
+>                              u32 arg)
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+> index 1b7da42..75d0e07 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+> @@ -288,6 +288,11 @@ int mtk_pinconf_drive_set_rev1(struct mtk_pinctrl *hw,
+>  int mtk_pinconf_drive_get_rev1(struct mtk_pinctrl *hw,
+>                                const struct mtk_pin_desc *desc, int *val);
+>
+> +int mtk_pinconf_drive_set_raw(struct mtk_pinctrl *hw,
+> +                              const struct mtk_pin_desc *desc, u32 arg);
+> +int mtk_pinconf_drive_get_raw(struct mtk_pinctrl *hw,
+> +                              const struct mtk_pin_desc *desc, int *val);
+> +
+>  int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
+>                              const struct mtk_pin_desc *desc, bool pullup,
+>                              u32 arg);
+> --
+> 1.8.1.1.dirty
