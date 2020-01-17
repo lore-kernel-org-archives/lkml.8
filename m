@@ -2,79 +2,88 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EFEC33CB6
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A58C8C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 580EB2072B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:35:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 724E42072B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 14:36:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579271794;
+	bh=T+tM8XLKiveDCjG2afrekTDa7DvT12FJcZuWsK9nIS8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=G+AVnjJN9vAJRtzs730d82bXP9SKTXHH/sOouHBh0gXlU1Mlig/EFyKLReJX6XIMg
+	 ZyKQnN6ybU0p6lmOiyiRruYOefcfbOEhEfpYM9DbQ2U747O1WyetEi/cUEj6XdUC8V
+	 wDqTDJbtlIeHR19J8qtsQkFBOi+6DX7K5bH7Ahfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728895AbgAQOfZ (ORCPT
+        id S1728775AbgAQOgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 09:35:25 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:36300 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726890AbgAQOfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 09:35:25 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6C905200DE5;
-        Fri, 17 Jan 2020 15:35:23 +0100 (CET)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 57034200DDB;
-        Fri, 17 Jan 2020 15:35:23 +0100 (CET)
-Received: from fsr-ub1864-014.ea.freescale.net (fsr-ub1864-014.ea.freescale.net [10.171.95.219])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 07E6B2048C;
-        Fri, 17 Jan 2020 15:35:22 +0100 (CET)
-From:   =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        linux-crypto@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] crypto: caam - add support for i.MX8M Plus
-Date:   Fri, 17 Jan 2020 16:35:13 +0200
-Message-Id: <20200117143513.7652-1-horia.geanta@nxp.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 17 Jan 2020 09:36:33 -0500
+Received: from mail-ed1-f41.google.com ([209.85.208.41]:38010 "EHLO
+        mail-ed1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726942AbgAQOgd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 09:36:33 -0500
+Received: by mail-ed1-f41.google.com with SMTP id i16so22446722edr.5;
+        Fri, 17 Jan 2020 06:36:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=H4aYYP5AqFJ3Bp+q4OGVka8zI0UJFy5rbCnPHZ0rHek=;
+        b=SOk7gZypapa5fJcaGJwMWB9MkSwEn3xhy3XG8XagUdWDSXt9WLNyIQEkCPGh53rwy6
+         i47bOsVvLssc660dIBAEbAvXvYKtBJYvFQ1m2wvxm79TY2WYCwoHsXvpNJCosUa8TEgR
+         C3Z0F+UG+ymEmwiP1xIBIv+6Hapyj4EmVsamLO7RQqU01buSuLqrt8HuZcd8zIM0qEiQ
+         HjyGXBEWGQUxvdMdv+5tiI9YUmMppZpUYWmrL4kTvNGdabiC5jIhA9Qqu1t05q4SjE2E
+         p59NHnnqFH2VRXSl4cudW2IX1bADS4V1hmQz6FTyIWBQWt4zspkNYtL00cVclW61FW3b
+         UtAw==
+X-Gm-Message-State: APjAAAWv3266GEXzwak7k8ONA4ijNQWUnFqGoDrHRFYFgp3RKoX4tduk
+        tlNksFztNxcFJKxt479fQ8o=
+X-Google-Smtp-Source: APXvYqylfmjgftirP/3R0/bK+q/MT/hT7xjBH4da12u3eRqY+0MPaSabIAFYhwsLRMUWoEM45fNrJg==
+X-Received: by 2002:aa7:c591:: with SMTP id g17mr4142644edq.341.1579271791174;
+        Fri, 17 Jan 2020 06:36:31 -0800 (PST)
+Received: from pi3 ([194.230.155.229])
+        by smtp.googlemail.com with ESMTPSA id p24sm978321eds.17.2020.01.17.06.36.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2020 06:36:30 -0800 (PST)
+Date:   Fri, 17 Jan 2020 15:36:28 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Scott Mayhew <smayhew@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [BISECT BUG] NFS v4 root not working after 6d972518b821 ("NFS:
+ Add fs_context support.")
+Message-ID: <20200117143628.GA3215@pi3>
+References: <20200117131649.GA12406@pi3>
+ <CAJKOXPeCVwZfBsCVbc9RQUGi0UfWQw0uFamPiQasiO8fSthFsQ@mail.gmail.com>
+ <365390.1579265674@warthog.procyon.org.uk>
+ <432921.1579270135@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <432921.1579270135@warthog.procyon.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the crypto engine used in i.mx8mp (i.MX 8M "Plus"),
-which is very similar to the one used in i.mx8mq, i.mx8mm, i.mx8mn.
+On Fri, Jan 17, 2020 at 02:08:55PM +0000, David Howells wrote:
+> Can you do:
+> 
+> 	grep NFS .config
+> 
+> for your kernel config?
 
-Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
----
- drivers/crypto/caam/ctrl.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+It is a regular exynos_defconfig from the same tree (so linux-next).
 
-diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
-index 88a58a8fc533..7139366da016 100644
---- a/drivers/crypto/caam/ctrl.c
-+++ b/drivers/crypto/caam/ctrl.c
-@@ -99,12 +99,13 @@ static inline int run_descriptor_deco0(struct device *ctrldev, u32 *desc,
- 
- 	if (ctrlpriv->virt_en == 1 ||
- 	    /*
--	     * Apparently on i.MX8MQ, 8MM, 8MN it doesn't matter if virt_en == 1
-+	     * Apparently on i.MX8M{Q,M,N,P} it doesn't matter if virt_en == 1
- 	     * and the following steps should be performed regardless
- 	     */
- 	    of_machine_is_compatible("fsl,imx8mq") ||
- 	    of_machine_is_compatible("fsl,imx8mm") ||
--	    of_machine_is_compatible("fsl,imx8mn")) {
-+	    of_machine_is_compatible("fsl,imx8mn") ||
-+	    of_machine_is_compatible("fsl,imx8mp")) {
- 		clrsetbits_32(&ctrl->deco_rsr, 0, DECORSR_JR0);
- 
- 		while (!(rd_reg32(&ctrl->deco_rsr) & DECORSR_VALID) &&
--- 
-2.17.1
+Best regards,
+Krzysztof
 
