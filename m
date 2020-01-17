@@ -2,127 +2,190 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6464C33CB7
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D10B7C33CB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:16:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C0C82073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:16:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g7pz9kl1"
+	by mail.kernel.org (Postfix) with ESMTP id A94852082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 12:16:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728665AbgAQMQR (ORCPT
+        id S1727032AbgAQMQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 07:16:17 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:44433 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbgAQMQP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 17 Jan 2020 07:16:15 -0500
-Received: by mail-ot1-f67.google.com with SMTP id h9so22289356otj.11
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 04:16:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OLdYBE/MVxP+IEJf5xYlwkMrALul6wc+ioyfNkUWx5I=;
-        b=g7pz9kl1SZ/Rtizxe7LcT2bFiTs+MSNviUNGniWPuzf45z2CYzL4iGWTrXAGs2wWGZ
-         EyXJFu8BIuzwBomcBYL/A+bXs32khfiabuAK2svc8iM1uDRZGHgjKn88EgfPDwX9S5X6
-         SDFUCbO/O9xR2SsCQ8Z5cznpog8IU9TZ9OxIw1befHw/r4+lSKAX1GGztcvA7Nyx26Kw
-         bvahlLr5o0k1MQHyx6bPEH1u/boYopqP6Vg2/U5ijC9+y3fBL5yIgWav4qRoyPbu0abz
-         qBsayuGbjmAupos/roG3h4teNpMMYntyCbdo+Qb0Exs0+bN+TBEGmApbtLWp96xtyIMw
-         0m5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OLdYBE/MVxP+IEJf5xYlwkMrALul6wc+ioyfNkUWx5I=;
-        b=XHn8hcYyLGV9lY43JAQe7U1K6vyr1QwSCpWnSjXs1FZKqU3C3Eb1VJzgVcZ2/s4d2r
-         sYSR5jHNEaF50MmGK60SRKYzGYxgb4/nbWppMgFlKpo38Xzo3ZavJH0OEHDnbbzAT+La
-         ESs2Vd1sQiCEdaPJXx64m7WYbpMAKQeGUnXciMNkwBeBchwqpuFPirJkcpemwgUPq2g0
-         94vSOb266EPYgY37Y5Vzr3Li3hLOD/iYMDGay+ft7BPRJjDf/s03LbMa0farQiQU7zt0
-         v+mLkawEsMVfjSftKUdhxLyE7xM+rFRwba3o/GqMHFS8q6UmD+Hn/dhhJJmft7mr53SA
-         RGNA==
-X-Gm-Message-State: APjAAAVvmFJPMiPIAtcRVHy3fTqNRDY99p/fLaXA+2Q269/AaxPfod47
-        zkOQfwxpJUKelgdko2KQ4rCKnZojKGx1fD9U/njWVQ==
-X-Google-Smtp-Source: APXvYqwUSNCN2VPjDlM+0347SqxocVqyJCbtMj2edv7XT6B2yU4dwOF6tZWsqNRaBrPa01DezuFaq6ETWxnNC4uSscs=
-X-Received: by 2002:a9d:6e14:: with SMTP id e20mr6073905otr.283.1579263374814;
- Fri, 17 Jan 2020 04:16:14 -0800 (PST)
+Received: from mail-sz.amlogic.com ([211.162.65.117]:46620 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726892AbgAQMQO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 07:16:14 -0500
+Received: from [10.28.39.79] (10.28.39.79) by mail-sz.amlogic.com (10.28.11.5)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Fri, 17 Jan
+ 2020 20:16:40 +0800
+Subject: Re: [PATCH v6 1/5] dt-bindings: clock: meson: add A1 PLL clock
+ controller bindings
+To:     Rob Herring <robh@kernel.org>
+CC:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200116080440.118679-1-jian.hu@amlogic.com>
+ <20200116080440.118679-2-jian.hu@amlogic.com> <20200116204817.GA9529@bogus>
+From:   Jian Hu <jian.hu@amlogic.com>
+Message-ID: <a1b0f318-dbbb-c596-2780-2c52911323ec@amlogic.com>
+Date:   Fri, 17 Jan 2020 20:16:40 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-References: <20200116154852.84532-1-colin.king@canonical.com> <e6fd526e-316f-539d-9f5e-c039041c4f2e@amd.com>
-In-Reply-To: <e6fd526e-316f-539d-9f5e-c039041c4f2e@amd.com>
-From:   Jens Wiklander <jens.wiklander@linaro.org>
-Date:   Fri, 17 Jan 2020 13:16:03 +0100
-Message-ID: <CAHUa44FFshAu+4Ue3Q4MDb_+sHCr20KjM3N=usJZsANvdr47eg@mail.gmail.com>
-Subject: Re: [PATCH][next][V2] tee: fix memory allocation failure checks on
- drv_data and amdtee
-To:     "Thomas, Rijo-john" <Rijo-john.Thomas@amd.com>
-Cc:     Colin King <colin.king@canonical.com>,
-        Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
-        Gary R Hook <gary.hook@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>, kernel-janitors@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200116204817.GA9529@bogus>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.28.39.79]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 7:40 AM Thomas, Rijo-john
-<Rijo-john.Thomas@amd.com> wrote:
->
->
->
-> On 16/01/20 9:18 pm, Colin King wrote:
-> > From: Colin Ian King <colin.king@canonical.com>
-> >
-> > Currently the memory allocation failure checks on drv_data and
-> > amdtee are using IS_ERR rather than checking for a null pointer.
-> > Fix these checks to use the conventional null pointer check.
-> >
-> > Addresses-Coverity: ("Dereference null return")
-> > Fixes: 757cc3e9ff1d ("tee: add AMD-TEE driver")
-> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
->
-> Reviewed-by: Rijo Thomas <Rijo-john.Thomas@amd.com>
+Hi Rob
 
-Acked-by: Jens Wiklander <jens.wiklander@linaro.org>
+Thanks for your review
 
-Thanks,
-Jens
+On 2020/1/17 4:48, Rob Herring wrote:
+> On Thu, Jan 16, 2020 at 04:04:36PM +0800, Jian Hu wrote:
+>> Add the documentation to support Amlogic A1 PLL clock driver,
+>> and add A1 PLL clock controller bindings.
+>>
+>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+>> ---
+>>   .../bindings/clock/amlogic,a1-pll-clkc.yaml   | 54 +++++++++++++++++++
+>>   include/dt-bindings/clock/a1-pll-clkc.h       | 16 ++++++
+>>   2 files changed, 70 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+>>   create mode 100644 include/dt-bindings/clock/a1-pll-clkc.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+>> new file mode 100644
+>> index 000000000000..071240b65e70
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+>> @@ -0,0 +1,54 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/amlogic,a1-pll-clkc.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: Amlogic Meson A/C serials PLL Clock Control Unit Device Tree Bindings
+>> +
+>> +maintainers:
+>> +  - Neil Armstrong <narmstrong@baylibre.com>
+>> +  - Jerome Brunet <jbrunet@baylibre.com>
+>> +  - Jian Hu <jian.hu@jian.hu.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: amlogic,a1-pll-clkc
+>> +
+>> +  "#clock-cells":
+>> +    const: 1
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    maxItems: 2
+> 
+> Not necessary, so drop. Implied by the length of 'items'.
+> 
+Ok, I will remove it.
+>> +    items:
+>> +     - description: input xtal_fixpll
+>> +     - description: input xtal_hifipll
+>> +
+>> +  clock-names:
+>> +    maxItems: 2
+> 
+> Same here.
+OK, remove it.
+> 
+>> +    items:
+>> +      - const: xtal_fixpll
+>> +      - const: xtal_hifipll
+>> +
+>> +required:
+>> +  - compatible
+>> +  - "#clock-cells"
+>> +  - reg
+>> +  - clocks
+>> +  - clock-names
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    clkc_pll: pll-clock-controller@7c80 {
+>> +                compatible = "amlogic,a1-pll-clkc";
+>> +                reg = <0 0x7c80 0 0x18c>;
+>> +                #clock-cells = <1>;
+>> +                clocks = <&clkc_periphs CLKID_XTAL_FIXPLL>,
+>> +                         <&clkc_periphs CLKID_XTAL_HIFIPLL>;
+> 
+> The example will fail to build because these aren't defined.
+> 
+> Run 'make dt_binding_check'.
+> 
+I have verified it, it is caused by CLKID_XTAL_FIXPLL and 
+CLKID_XTAL_HIFIPLL. They are defined in 
+include/dt-bindings/clock/a1-clkc.h in another patch [4/5].
 
->
-> Thanks,
-> Rijo
->
-> > ---
-> > V2: update to apply against cryptodev-2.6 tree tip
-> > ---
-> >  drivers/tee/amdtee/core.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/tee/amdtee/core.c b/drivers/tee/amdtee/core.c
-> > index be8937eb5d43..6370bb55f512 100644
-> > --- a/drivers/tee/amdtee/core.c
-> > +++ b/drivers/tee/amdtee/core.c
-> > @@ -446,11 +446,11 @@ static int __init amdtee_driver_init(void)
-> >       }
-> >
-> >       drv_data = kzalloc(sizeof(*drv_data), GFP_KERNEL);
-> > -     if (IS_ERR(drv_data))
-> > +     if (!drv_data)
-> >               return -ENOMEM;
-> >
-> >       amdtee = kzalloc(sizeof(*amdtee), GFP_KERNEL);
-> > -     if (IS_ERR(amdtee)) {
-> > +     if (!amdtee) {
-> >               rc = -ENOMEM;
-> >               goto err_kfree_drv_data;
-> >       }
-> >
+The same with patch [4/5], there will be compiling error, too.
+
+If change CLKID_XTAL_FIXPLL to '1', and change CLKID_XTAL_HIFIPLL to
+'4', it can be compiled successfully.
+
+Should I use macros or numbers?
+
+>> +                clock-names = "xtal_fixpll", "xtal_hifipll";
+>> +    };
+>> diff --git a/include/dt-bindings/clock/a1-pll-clkc.h b/include/dt-bindings/clock/a1-pll-clkc.h
+>> new file mode 100644
+>> index 000000000000..58eae237e503
+>> --- /dev/null
+>> +++ b/include/dt-bindings/clock/a1-pll-clkc.h
+>> @@ -0,0 +1,16 @@
+>> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+>> +/*
+>> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+>> + */
+>> +
+>> +#ifndef __A1_PLL_CLKC_H
+>> +#define __A1_PLL_CLKC_H
+>> +
+>> +#define CLKID_FIXED_PLL				1
+>> +#define CLKID_FCLK_DIV2				6
+>> +#define CLKID_FCLK_DIV3				7
+>> +#define CLKID_FCLK_DIV5				8
+>> +#define CLKID_FCLK_DIV7				9
+>> +#define CLKID_HIFI_PLL				10
+>> +
+>> +#endif /* __A1_PLL_CLKC_H */
+>> -- 
+>> 2.24.0
+>>
+> 
+> .
+> 
