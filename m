@@ -2,167 +2,161 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A4EC33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37776C33CB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7582E2072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:45:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579275903;
-	bh=rWC9Z2vfXvulKPqHYc4Y6XjVOtFe2wD1tdbL3jOkEJY=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=Pqh+2CG1yHwonoN8nYW3uWQ+9xqcmAtZ6pIHCS2zDOvzQzEACz6jUSXsXqgO3UDVv
-	 bAtWgUYWjs0UU4uUTc+sR2CGRMuKkbITHd3BdoZOqB7unP1X2zhsNf1AGrGebT3b8M
-	 NmB5mxn81JZWFFabRCuadMz41p65yxekHx3VKlaE=
+	by mail.kernel.org (Postfix) with ESMTP id 10FD92072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 15:46:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729417AbgAQPo7 (ORCPT
+        id S1729130AbgAQPqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 10:44:59 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53974 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729207AbgAQPoa (ORCPT
+        Fri, 17 Jan 2020 10:46:17 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:56646 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728816AbgAQPqR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 10:44:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=YZm/5f9wodQfID90hCH6kdu/JpRhW+QGeHbLTu7g0DM=; b=Wu4Px26QUDJX
-        9BBVnJdZiujoKJDRPmgP7URAGeeMyS/2vWCDgNjtat6R+Jn/iNX6uDYsbaQoX2FpFED4ivBh0ykiy
-        gWthDXylaQc0TVOl5Co7tjBTBLMpbclsVxl9c6jd3o8B7cq+SFdcTwtX8Hix9hiS2VevtxOixKqYe
-        /084o=;
-Received: from fw-tnat-cam4.arm.com ([217.140.106.52] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1isTnM-0006ua-JB; Fri, 17 Jan 2020 15:44:24 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 4C87BD02A2A; Fri, 17 Jan 2020 15:44:24 +0000 (GMT)
-From:   Mark Brown <broonie@kernel.org>
-To:     Tomer Maimon <tmaimon77@gmail.com>
-Cc:     avifishman70@gmail.com, benjaminfair@google.com,
-        broonie@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, mark.rutland@arm.com,
-        openbmc@lists.ozlabs.org, robh+dt@kernel.org,
-        tali.perry1@gmail.com, venture@google.com, yuenn@google.com
-Subject: Applied "spi: npcm-pspi: fix 16 bit send and receive support" to the spi tree
-In-Reply-To: <20200115162301.235926-2-tmaimon77@gmail.com>
-Message-Id: <applied-20200115162301.235926-2-tmaimon77@gmail.com>
-X-Patchwork-Hint: ignore
-Date:   Fri, 17 Jan 2020 15:44:24 +0000 (GMT)
+        Fri, 17 Jan 2020 10:46:17 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1isTp4-0003O1-M9; Fri, 17 Jan 2020 16:46:10 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id E0AE8100C19; Fri, 17 Jan 2020 16:46:09 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ming Lei <ming.lei@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     Ming Lei <ming.lei@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Peter Xu <peterx@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>
+Subject: Re: [PATCH V2] sched/isolation: isolate from handling managed interrupt
+In-Reply-To: <20200117035326.20659-1-ming.lei@redhat.com>
+References: <20200117035326.20659-1-ming.lei@redhat.com>
+Date:   Fri, 17 Jan 2020 16:46:09 +0100
+Message-ID: <87v9pa13y6.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+Ming Lei <ming.lei@redhat.com> writes:
+>  #ifdef CONFIG_CPU_ISOLATION
+> diff --git a/kernel/irq/cpuhotplug.c b/kernel/irq/cpuhotplug.c
+> index 6c7ca2e983a5..20c7704ce019 100644
+> --- a/kernel/irq/cpuhotplug.c
+> +++ b/kernel/irq/cpuhotplug.c
+> @@ -77,7 +77,8 @@ static bool migrate_one_irq(struct irq_desc *desc)
+>  	 * Note: Do not check desc->action as this might be a chained
+>  	 * interrupt.
+>  	 */
+> -	if (irqd_is_per_cpu(d) || !irqd_is_started(d) || !irq_needs_fixup(d)) {
+> +	if ((irqd_is_per_cpu(d) || !irqd_is_started(d) || !irq_needs_fixup(d))
+> +			&& !irqd_managed_force_migrate(d)) {
 
-   spi: npcm-pspi: fix 16 bit send and receive support
+That's broken. Assume the bit is set and then the remaining CPU goes
+offline and shuts down the interupt. As a consequence the interrupt is
+in shutdown state when the first CPU of the affinity set comes online
+again. It will see the force migrate bit which prevents starting it up
+again. FAIL!
 
-has been applied to the spi tree at
+>  		/*
+>  		 * If an irq move is pending, abort it if the dying CPU is
+>  		 * the sole target.
+> @@ -192,6 +193,9 @@ static void irq_restore_affinity_of_irq(struct irq_desc *desc, unsigned int cpu)
+>  	 */
+>  	if (!irqd_is_single_target(data))
+>  		irq_set_affinity_locked(data, affinity, false);
+> +
+> +	if (irqd_managed_force_migrate(data))
+> +		migrate_one_irq(desc);
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
+That's not a good idea, really. This is forceful migration which we only
+should do when there is no other option especially on X86 for the
+interrupts which cannot be safely migrated outside of an actual
+interrupt service routine of that interrupt line. When a CPU is
+unplugged then we have to do this, no matter what. This isolation thing
+is best effort and does not justify this at all.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+I really do not like this force migrate wording either. We force stuff
+when there is no other way out, but this is not the case here.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+We know that there is an isolation mask set, right? So we can simply do:
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+-  	if (!irqd_is_single_target(data))
++	if (!irqd_is_single_target(data) || hk_should_isolate(data, affinity))
+  		irq_set_affinity_locked(data, affinity, false);
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+and have
+
+static bool hk_should_isolate(data, affinity)
+{
+        if (!hk_isolation)
+        	return false;
+
+        if (!irqd_is_managed(data))
+        	return false;
+
+        if (!cpumask_intersects(affinity, hk_isolmask))
+        	return false;
+
+        e = irq_data_get_effective_affinity_mask(data);
+        return !cpumask_subset(e, hk_isolmask);
+}
+
+and let irq_set_affinity_locked() -> irq_do_set_affinity() do the right
+thing, i.e. migrate it directly or mark it pending for migration.
+
+> @@ -213,11 +214,45 @@ int irq_do_set_affinity(struct irq_data *data, const struct cpumask *mask,
+>  	struct irq_desc *desc = irq_data_to_desc(data);
+>  	struct irq_chip *chip = irq_data_get_irq_chip(data);
+>  	int ret;
+> +	const struct cpumask *mask_to_set = mask;
+>
+>  	if (!chip || !chip->irq_set_affinity)
+>  		return -EINVAL;
+>  
+> -	ret = chip->irq_set_affinity(data, mask, force);
+>
+> +	if (irqd_affinity_is_managed(data)) {
+> +		static struct cpumask tmp_mask;
+
+What protects this mask? Assume there are two concurrent callers on
+different CPUs for different interrupts. -> FAIL!
+
+The place I pointed you to does TheRightThing.
+
+Aside of that this mask is only needed when ISOLATION is enabled in Kconfig.
+
+> +		const struct cpumask *housekeeping =
+> +			housekeeping_cpumask(HK_FLAG_MANAGED_IRQ);
+
+Can you please code in a way which makes these horrible line breaks go away?
+
+> +
+> +		if (cpumask_intersects(mask, housekeeping)) {
+> +			cpumask_and(&tmp_mask, mask, housekeeping);
+> +			if (cpumask_intersects(&tmp_mask, cpu_online_mask)) {
+> +				mask_to_set = &tmp_mask;
+> +				irqd_clear(data, IRQD_MANAGED_FORCE_MIGRATE);
+> +			} else {
+> +				irqd_set(data, IRQD_MANAGED_FORCE_MIGRATE);
+
+And with the above this flag dance is not required at all.
+
+Please take your time and analyze the code you are changing properly
+before you send out the next half baken version.
+
+I'm happy to review and help, but this frenzy mode sucks.
 
 Thanks,
-Mark
 
-From 47416a5f27be0a0e815ef5f9f2f06618ae5e0470 Mon Sep 17 00:00:00 2001
-From: Tomer Maimon <tmaimon77@gmail.com>
-Date: Wed, 15 Jan 2020 18:22:58 +0200
-Subject: [PATCH] spi: npcm-pspi: fix 16 bit send and receive support
-
-Fixing NPCM BMC Peripheral SPI controller 16 bit
-send and receive support by writing and reading
-the SPI data in the right order.
-
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-Link: https://lore.kernel.org/r/20200115162301.235926-2-tmaimon77@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-npcm-pspi.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/spi/spi-npcm-pspi.c b/drivers/spi/spi-npcm-pspi.c
-index fe624731c74c..c74611abe2a9 100644
---- a/drivers/spi/spi-npcm-pspi.c
-+++ b/drivers/spi/spi-npcm-pspi.c
-@@ -195,6 +195,7 @@ static void npcm_pspi_setup_transfer(struct spi_device *spi,
- static void npcm_pspi_send(struct npcm_pspi *priv)
- {
- 	int wsize;
-+	u16 val;
- 
- 	wsize = min(bytes_per_word(priv->bits_per_word), priv->tx_bytes);
- 	priv->tx_bytes -= wsize;
-@@ -204,17 +205,18 @@ static void npcm_pspi_send(struct npcm_pspi *priv)
- 
- 	switch (wsize) {
- 	case 1:
--		iowrite8(*priv->tx_buf, NPCM_PSPI_DATA + priv->base);
-+		val = *priv->tx_buf++;
-+		iowrite8(val, NPCM_PSPI_DATA + priv->base);
- 		break;
- 	case 2:
--		iowrite16(*priv->tx_buf, NPCM_PSPI_DATA + priv->base);
-+		val = *priv->tx_buf++;
-+		val = *priv->tx_buf++ | (val << 8);
-+		iowrite16(val, NPCM_PSPI_DATA + priv->base);
- 		break;
- 	default:
- 		WARN_ON_ONCE(1);
- 		return;
- 	}
--
--	priv->tx_buf += wsize;
- }
- 
- static void npcm_pspi_recv(struct npcm_pspi *priv)
-@@ -230,18 +232,17 @@ static void npcm_pspi_recv(struct npcm_pspi *priv)
- 
- 	switch (rsize) {
- 	case 1:
--		val = ioread8(priv->base + NPCM_PSPI_DATA);
-+		*priv->rx_buf++ = ioread8(priv->base + NPCM_PSPI_DATA);
- 		break;
- 	case 2:
- 		val = ioread16(priv->base + NPCM_PSPI_DATA);
-+		*priv->rx_buf++ = (val >> 8);
-+		*priv->rx_buf++ = val & 0xff;
- 		break;
- 	default:
- 		WARN_ON_ONCE(1);
- 		return;
- 	}
--
--	*priv->rx_buf = val;
--	priv->rx_buf += rsize;
- }
- 
- static int npcm_pspi_transfer_one(struct spi_master *master,
--- 
-2.20.1
-
+        tglx
