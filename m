@@ -2,106 +2,83 @@ Return-Path: <SRS0=N8G3=3G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58467C33CB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C80C33CB6
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CA9B20730
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 274942082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 Jan 2020 11:59:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ClagO6lm"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="PM41rsZG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbgAQL7t (ORCPT
+        id S1728847AbgAQL7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 06:59:49 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46122 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726785AbgAQL7s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 06:59:48 -0500
-Received: by mail-oi1-f195.google.com with SMTP id 13so21907035oij.13;
-        Fri, 17 Jan 2020 03:59:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=pEpbeENWmzxz4rGGPG2emBNNwpm/eUYhVctDWE6aqOA=;
-        b=ClagO6lmFYVU4PjTVkAjUeiFz/iZJDASj1yHyrmIbXHJIpW0xyGpdvPsSABrkqWEYD
-         U4Y60z60SdQg8EEUCx4/a9OobAGfsS3lM9W7NwaY5dOxvTYCxiKB9EJnclM2YQ+uD2un
-         DCBTpv+jVAYpbFoXE2q6icaCHLpAJt2kv+Ig7MhSBvLgxW/iKXalJqJ7M3PXJo4Xpa2H
-         bSOEePsokNBqXVlgrPUrrnmDu7bdyEPgphi8cWb9DTInRLIROAETn7fPAv9llKtNer4O
-         EvwHCHEiOV4TYnNhoBHSi+sHDtu/GPBIFt7QXqLNzhoR4nqvF+THkMVuC+nJfu2sVgXe
-         buHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=pEpbeENWmzxz4rGGPG2emBNNwpm/eUYhVctDWE6aqOA=;
-        b=Z2NUM7u/PaKZU6Yjb4Il7p8fHmzLwHyw0wtqWBQaY0n5hfA7DAMnShGXmEi+Ekcu8g
-         1wB1C/HFp0wgNV1/au4dBeB0Gygvw+Z5cOB0He24xn1Jzu7bW9LaAhQGYRUyEbZF3ppg
-         6H+7R3m4fGliFGKuAp19yCsCzGjVbKiJuIjWsfgRE7h2SasRR0JY+PstroDIBOsvgaMp
-         cS9OV5XDvWPtwL1f26dmVdMGkuP0zKzOT4/heo52BYLlbDsEMYokFkIgTwMkfmRG1ZQm
-         zJD0MaeEzYyrCa3fWdgftLXardAVoMwghWFV5Kh5HZ91iveM8g9BcfwgQh4gXZaIpjY/
-         eGCA==
-X-Gm-Message-State: APjAAAUwFAF7DIi9i8zY9C/vNiNbke1LwBWce8GxjsR/ilMNx9fQ0Y4U
-        HGMt1skLJ/SoiNBxoh5CCQ4Mcz0iCouoV+dw6JA=
-X-Google-Smtp-Source: APXvYqwNPPeN5UZgmUnicJrQewCoV7WMpviMutktzeujCAP9/GQ1G6oTxNl2s9Rikfx5Lsn+VBGIu+OCrMIti+8Be44=
-X-Received: by 2002:aca:1b08:: with SMTP id b8mr3196649oib.62.1579262387623;
- Fri, 17 Jan 2020 03:59:47 -0800 (PST)
+        Fri, 17 Jan 2020 06:59:52 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:60594 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726785AbgAQL7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 Jan 2020 06:59:51 -0500
+Received: from zn.tnic (p200300EC2F08DC0079C7688FDBAC99E0.dip0.t-ipconnect.de [IPv6:2003:ec:2f08:dc00:79c7:688f:dbac:99e0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E25881EC0BED;
+        Fri, 17 Jan 2020 12:59:49 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1579262390;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:
+         content-transfer-encoding:content-transfer-encoding:in-reply-to:
+         references; bh=AtJoha7l9Yk3LZHJbuIP73vlwlGWTrB83wUfhtrYGmM=;
+        b=PM41rsZGaO7WoZoE0zClsOUYJWoakrJ4QIKQNLMrb92cSQ33f7r7WatCdgCrDEYq2ysHuA
+        +5pp6O/I2GJr7I0DzTCFGTNufb7+nOWO1rpp5ACD/hkx1V1gSJw72XAYmbA1eFvGhjjRoj
+        qqWouBbFaBIIsnpFqRSPjXB/Jtnl/8Q=
+From:   Borislav Petkov <bp@alien8.de>
+To:     linux-edac <linux-edac@vger.kernel.org>
+Cc:     Yazen Ghannam <Yazen.Ghannam@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH] EDAC/amd64: Do not warn when removing instances
+Date:   Fri, 17 Jan 2020 12:59:39 +0100
+Message-Id: <20200117115939.5524-1-bp@alien8.de>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Received: by 2002:a8a:87:0:0:0:0:0 with HTTP; Fri, 17 Jan 2020 03:59:47 -0800 (PST)
-In-Reply-To: <20200117091245.ginzffry7anqofju@pali>
-References: <20200115082447.19520-1-namjae.jeon@samsung.com>
- <CGME20200115082825epcas1p1f22ddca6dbf5d70e65d3b0e3c25c3a59@epcas1p1.samsung.com>
- <20200115082447.19520-12-namjae.jeon@samsung.com> <20200115093915.cjef2jadiwe2eul4@pali>
- <002f01d5cced$ba0828b0$2e187a10$@samsung.com> <20200117091245.ginzffry7anqofju@pali>
-From:   Namjae Jeon <linkinjeon@gmail.com>
-Date:   Fri, 17 Jan 2020 19:59:47 +0800
-Message-ID: <CAKYAXd9Gq33qxs=tQvg0v2qOUncDmM2wEeepeiC9Rv18ek56vQ@mail.gmail.com>
-Subject: Re: [PATCH v10 11/14] exfat: add Kconfig and Makefile
-To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
-        sj1557.seo@samsung.com, arnd@arndb.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> Hi Pali,
->>
->> Could you please review updated description ?
->>
->> diff --git a/fs/exfat/Kconfig b/fs/exfat/Kconfig
->> index 9eeaa6d06..f2b0cf2c1 100644
->> --- a/fs/exfat/Kconfig
->> +++ b/fs/exfat/Kconfig
->> @@ -15,7 +15,7 @@ config EXFAT_DEFAULT_IOCHARSET
->>         default "utf8"
->>         depends on EXFAT_FS
->>         help
->> -         Set this to the default input/output character set you'd
->> -         like exFAT to use. It should probably match the character set
->> -         that most of your exFAT filesystems use, and can be overridden
->> -         with the "iocharset" mount option for exFAT filesystems.
->> +         Set this to the default input/output character set to use for
->> +         converting between the encoding is used for user visible
->> filename and
->> +         UTF-16 character that exfat filesystem use. and can be
->> overridden with
->> +         the "iocharset" mount option for exFAT filesystems.
->
-> Hello! This is much better. Fine for me.
-Thanks for your review!
->
-> --
-> Pali Roh=C3=A1r
-> pali.rohar@gmail.com
->
+From: Borislav Petkov <bp@suse.de>
+
+On machines which do not populate all nodes with DIMMs, the driver
+doesn't initialize an instance there. However, the instance removal
+remove_one_instance() path will warn unconditionally, which is wrong.
+
+Remove the WARN_ON() even if the warning is innocent because it causes a
+splat in dmesg.
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+---
+ drivers/edac/amd64_edac.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+index 428ce98f6776..d2a6d3319650 100644
+--- a/drivers/edac/amd64_edac.c
++++ b/drivers/edac/amd64_edac.c
+@@ -3573,9 +3573,6 @@ static void remove_one_instance(unsigned int nid)
+ 	struct mem_ctl_info *mci;
+ 	struct amd64_pvt *pvt;
+ 
+-	mci = find_mci_by_dev(&F3->dev);
+-	WARN_ON(!mci);
+-
+ 	/* Remove from EDAC CORE tracking list */
+ 	mci = edac_mc_del_mc(&F3->dev);
+ 	if (!mci)
+-- 
+2.21.0
+
