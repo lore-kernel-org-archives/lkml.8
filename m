@@ -2,159 +2,98 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 151B8C33CB6
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 00:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B104C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 00:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEEC222525
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 00:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C8E424656
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 00:28:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="keR5G9ua"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I5T13goF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730481AbgARAZr (ORCPT
+        id S1730493AbgARA2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 Jan 2020 19:25:47 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:39859 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730358AbgARAZq (ORCPT
+        Fri, 17 Jan 2020 19:28:17 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:32907 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729824AbgARA2R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 Jan 2020 19:25:46 -0500
-Received: by mail-pj1-f68.google.com with SMTP id e11so4075442pjt.4
-        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 16:25:46 -0800 (PST)
+        Fri, 17 Jan 2020 19:28:17 -0500
+Received: by mail-lf1-f65.google.com with SMTP id n25so19704640lfl.0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 16:28:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vWxirRR7Wfy2+PcTI0hB09FZtOC8LZoqLVZIg5Rnm1w=;
-        b=keR5G9uaZyDKFwyyJfHkvYRIfOR1MoqFTmzm6I/pcaGvIGLBRhvXtIXXMyq0QV+9ft
-         mG3A66ewUhY6vWPdVRIY6lgW1+993WgUmn1NtpThipmkWt7gNeF4qtTABYABLNHYHsnG
-         w/broOmqKVddFYyItFNPg/8rRgL28SYNRX6U8=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sGezdQEF2oN9RzY7rtgG+ABo1URCw4cTByw+RslsSBA=;
+        b=I5T13goFYmuvhic8IOyx+Eb2v01MCLImHwdW7Ks0bHFKt9Di/V7VBYl6PqBlFnN+O3
+         k/4bL+RYk7BLwDufMAmexCv3gtA1SBAk3GKfwKIAjTWjmTMjqT7c4vSIk+2kyduqUyEg
+         Tw1t5BQMq15a81gICP43jCw4lSqrKTJsQPvr0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vWxirRR7Wfy2+PcTI0hB09FZtOC8LZoqLVZIg5Rnm1w=;
-        b=d7bNaRQee/+BS9tnmJfp/Phzqm13bM7nw9gpJwPrRefQyNjaQOr8nEDslsDIl6ruE8
-         9bgMEYxbxiZfwzFkAhIF62+AaoiRa43/WeziSHI56UPfSNfujjjXf9Xx8SzXYvuuFTXM
-         subsQ4y031fLbm3nBNty2PGRFdlUN570DMFA3zCCZKEkldZhGJMYh0BEA+3+0lWrjPBR
-         Zqy3i/gl9f156fL++rYv3n912N3qR0qPD+fiK1I3Ny1OSmWJ3GPZ6pMNEjd+DapPabMm
-         SgTw3OVTHTcm/Xoeep1SX/FET8aOfP0/7tSZCmeDxsMr3KHGCqJszcxvAwM9XYkILf20
-         RR6g==
-X-Gm-Message-State: APjAAAV8V1P1ruUwBfkVPV/shLC5ByXiBbhWF9g0KQf0dA3aQuDePOVj
-        euk85dM41mzRuIiiI6VeVlPm3Q==
-X-Google-Smtp-Source: APXvYqyAHHhOtcjeWVJpTuOw/QAHVhoZa9cf71t5ukErCzSzAwsv3H8gj+cnIHOhw9jc312u5c2ubQ==
-X-Received: by 2002:a17:90a:8b82:: with SMTP id z2mr9302343pjn.59.1579307146062;
-        Fri, 17 Jan 2020 16:25:46 -0800 (PST)
-Received: from evgreen2.mtv.corp.google.com ([2620:15c:202:201:ffda:7716:9afc:1301])
-        by smtp.gmail.com with ESMTPSA id 199sm32194947pfv.81.2020.01.17.16.25.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 17 Jan 2020 16:25:45 -0800 (PST)
-From:   Evan Green <evgreen@chromium.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Evan Green <evgreen@chromium.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] PCI/MSI: Avoid torn updates to MSI pairs
-Date:   Fri, 17 Jan 2020 16:25:30 -0800
-Message-Id: <20200117162444.v2.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid>
-X-Mailer: git-send-email 2.24.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sGezdQEF2oN9RzY7rtgG+ABo1URCw4cTByw+RslsSBA=;
+        b=dIzogXmvHNuZYviZUn5i8kNdIMwjYUEoCy0iW0CUL2LvBTSLfKNMfYOe+wlLPt8rb2
+         CSC9WbCeBGL+YbFRrCyDr226kEzhI0ko2BY+3y+3bv3FkpXEB574NaPBZVpZzAS3pFZJ
+         SBG1K5cMN1EJdnknPdpRPCI5tHzMZmfNFgwxW0ekcc8QLAEQKnspx+1fBRnP0R8OJ26U
+         8Ps+FB/zuUaiKypF9dD56jJFwmXOS6q0myH1p8ZDrd2kxUR4a+qDL1prQfH+GPl7/p0w
+         yye04ks1iiHGkAr/kR4TaQG3hi51dLln6MiacHdNiS0a64loWai/vNybDhpt+HFmAuQV
+         vHfw==
+X-Gm-Message-State: APjAAAVj6yMSq15iyo+1ZjJ4WZTs/sDAd3QTRtx+w2TT7yClhaPBLdM+
+        zMyebbjYSnprXAq9ggkHUEAvkyxSzqU=
+X-Google-Smtp-Source: APXvYqxgmhP9AeMuXYDQrQQwKTgJWdLRX4CGDRVH5K9cOFiZqmEY5q8ynL2KS0KD6ArBPPGQ/5DJUA==
+X-Received: by 2002:a19:22cc:: with SMTP id i195mr6502191lfi.148.1579307295278;
+        Fri, 17 Jan 2020 16:28:15 -0800 (PST)
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
+        by smtp.gmail.com with ESMTPSA id p15sm12680105lfo.88.2020.01.17.16.28.14
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jan 2020 16:28:15 -0800 (PST)
+Received: by mail-lj1-f173.google.com with SMTP id m26so28157481ljc.13
+        for <linux-kernel@vger.kernel.org>; Fri, 17 Jan 2020 16:28:14 -0800 (PST)
+X-Received: by 2002:a2e:b054:: with SMTP id d20mr6953708ljl.190.1579307293688;
+ Fri, 17 Jan 2020 16:28:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200116133102.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid>
+In-Reply-To: <20200116133102.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Fri, 17 Jan 2020 16:27:37 -0800
+X-Gmail-Original-Message-ID: <CAE=gft7mM-YUmuL=opwgJYy_o4=bhb=iO7_SWQWahhbJ8z=95A@mail.gmail.com>
+Message-ID: <CAE=gft7mM-YUmuL=opwgJYy_o4=bhb=iO7_SWQWahhbJ8z=95A@mail.gmail.com>
+Subject: Re: [PATCH] PCI/MSI: Avoid torn updates to MSI pairs
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__pci_write_msi_msg() updates three registers in the device: address
-high, address low, and data. On x86 systems, address low contains
-CPU targeting info, and data contains the vector. The order of writes
-is address, then data.
+On Thu, Jan 16, 2020 at 1:31 PM Evan Green <evgreen@chromium.org> wrote:
+>
+> __pci_write_msi_msg() updates three registers in the device: address
+> high, address low, and data. On x86 systems, address low contains
+> CPU targeting info, and data contains the vector. The order of writes
+> is address, then data.
+>
+> This is problematic if an interrupt comes in after address has
+> been written, but before data is updated, and the SMP affinity of
+> the interrupt is changing. In this case, the interrupt targets the
+> wrong vector on the new CPU.
+>
+> This case is pretty easy to stumble into using xhci and CPU hotplugging.
+> Create a script that targets interrupts at a set of cores and then
+> offlines those cores. Put some stress on USB, and then watch xhci lose
+> an interrupt and die.
+>
+> Avoid this by disabling MSIs during the update.
+>
+> Signed-off-by: Evan Green <evgreen@chromium.org>
 
-This is problematic if an interrupt comes in after address has
-been written, but before data is updated, and both the SMP affinity
-and target vector are being changed. In this case, the interrupt targets
-the wrong vector on the new CPU.
-
-This case is pretty easy to stumble into using xhci and CPU hotplugging.
-Create a script that repeatedly targets interrupts at a set of cores and
-then offlines those cores. Put some stress on USB, and then watch xhci
-lose an interrupt and die.
-
-Avoid this by disabling MSIs during the update.
-
-Signed-off-by: Evan Green <evgreen@chromium.org>
----
-
-Changes in v2:
-- Also mask msi-x interrupts during the update
-- Restore the enable/mask bit to its previous value, rather than
-unconditionally enabling interrupts
-
-
-Bjorn,
-I was unsure whether disabling MSIs temporarily is actually an okay
-thing to do. I considered using the mask bit, but got the impression
-that not all devices support the mask bit. Let me know if this going to
-cause problems or there's a better way. I can include the repro
-script I used to cause mayhem if needed.
-
----
- drivers/pci/msi.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-index 6b43a5455c7af..bb21a7739fa2c 100644
---- a/drivers/pci/msi.c
-+++ b/drivers/pci/msi.c
-@@ -311,6 +311,7 @@ void __pci_read_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
- void __pci_write_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
- {
- 	struct pci_dev *dev = msi_desc_to_pci_dev(entry);
-+	u16 msgctl;
- 
- 	if (dev->current_state != PCI_D0 || pci_dev_is_disconnected(dev)) {
- 		/* Don't touch the hardware now */
-@@ -320,15 +321,25 @@ void __pci_write_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
- 		if (!base)
- 			goto skip;
- 
-+		pci_read_config_word(dev, dev->msix_cap + PCI_MSIX_FLAGS,
-+				     &msgctl);
-+
-+		pci_write_config_word(dev, dev->msix_cap + PCI_MSIX_FLAGS,
-+				      msgctl | PCI_MSIX_FLAGS_MASKALL);
-+
- 		writel(msg->address_lo, base + PCI_MSIX_ENTRY_LOWER_ADDR);
- 		writel(msg->address_hi, base + PCI_MSIX_ENTRY_UPPER_ADDR);
- 		writel(msg->data, base + PCI_MSIX_ENTRY_DATA);
-+		pci_write_config_word(dev, dev->msix_cap + PCI_MSIX_FLAGS,
-+				      msgctl);
-+
- 	} else {
- 		int pos = dev->msi_cap;
--		u16 msgctl;
-+		u16 enabled;
- 
- 		pci_read_config_word(dev, pos + PCI_MSI_FLAGS, &msgctl);
--		msgctl &= ~PCI_MSI_FLAGS_QSIZE;
-+		enabled = msgctl & PCI_MSI_FLAGS_ENABLE;
-+		msgctl &= ~(PCI_MSI_FLAGS_QSIZE | PCI_MSI_FLAGS_ENABLE);
- 		msgctl |= entry->msi_attrib.multiple << 4;
- 		pci_write_config_word(dev, pos + PCI_MSI_FLAGS, msgctl);
- 
-@@ -343,6 +354,9 @@ void __pci_write_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
- 			pci_write_config_word(dev, pos + PCI_MSI_DATA_32,
- 					      msg->data);
- 		}
-+
-+		msgctl |= enabled;
-+		pci_write_config_word(dev, pos + PCI_MSI_FLAGS, msgctl);
- 	}
- 
- skip:
--- 
-2.24.1
-
+Note to reviewers: I posted a v2 of this patch with some improvements here:
+https://lore.kernel.org/lkml/20200117162444.v2.1.I9c7e72144ef639cc135ea33ef332852a6b33730f@changeid/T/#u
