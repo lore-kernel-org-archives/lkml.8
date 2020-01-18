@@ -2,82 +2,87 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8EAFC33CB6
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 22:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CCAAC32771
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 22:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B3F2246A8
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 22:30:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2593D2469D
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 22:41:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="i3JtNAjS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbgARWaC (ORCPT
+        id S1727120AbgARWlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 17:30:02 -0500
-Received: from mail-io1-f69.google.com ([209.85.166.69]:42995 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726957AbgARWaB (ORCPT
+        Sat, 18 Jan 2020 17:41:16 -0500
+Received: from [198.137.202.133] ([198.137.202.133]:36394 "EHLO
+        bombadil.infradead.org" rhost-flags-FAIL-FAIL-OK-OK)
+        by vger.kernel.org with ESMTP id S1727008AbgARWlP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 17:30:01 -0500
-Received: by mail-io1-f69.google.com with SMTP id e7so17550616iog.9
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jan 2020 14:30:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=yYySPTzXjesI6rMbrrYCnEOoWQeyP6zwNDoBKllcD6s=;
-        b=WFFEfrzQ0Y6yQV89NTwJ37XUbiXNkIPfnz0RWeh3eCwo8YWLMsaN6b04GCH2lDhfTY
-         dnD0C/ynFFE+iguI3mhitQQhVFJp4mtKssCQwpDZXTeu+iXFqV72LPlNmneke+oSVM8S
-         uIKM4TdS7hx2qxRNIRjgeAtruRCeVaEaOUbphbx8Id1ZAGh81nY12/gqsCC492Nuba/c
-         /8mnK33oMJX9LQkBKTGJWcXL5lHTrtGl2yNddJa09A2tQOVWCUmdsa7d6lOlUImFXS0l
-         3ig9KzYkWdnG6HsAEVFtn5FqRtCMd/mv1SapEBR4njqSK8Ko5z5+Sm5c2lmdyuo8NXD6
-         Nn7Q==
-X-Gm-Message-State: APjAAAV49XPjBjybaAFgnwo1qdMOFvC7sAFNne0COX7HyMMGlZuECr+c
-        ia5yBfZaBgPa5IsB46F6Dv/usnsgV5vXGI66g9psezAEcVuH
-X-Google-Smtp-Source: APXvYqx1pd31epsuW/G1/6eX4XtJtvHwMaQ8qI1MCUim2ZtcFsWE4ZOYVf2vl7dBgVGnmVgzwNIdSp63LSgF0NEjWlUwyEVcpUX/
+        Sat, 18 Jan 2020 17:41:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=vyYDHKvf8gCiisBHbQ1RzC91plzB3US9sNYD80kKiaU=; b=i3JtNAjSE6Cmh9ec2614Kqpaz
+        pDvpbDSOyBvB5PYbf5RdTTHw3IkY3UyZpv7p/iS4hp7Y9znPQfJD+m39U6zVkL2DauuWgBMqi5L6k
+        jvo3y72b8rppMJdJ9NaEy2r18bFFClCbtPYjg0xMA5nzaIgtIVvgdNLXmKIc1jPPF82YEO5Ii+1fL
+        FhaMWUP32RjrC/UzIS+KZorvqO8WST7q8Kq+EYPnVo+qmSfEk4WccgUg1LwSLoXPiz5WFq72ByCpC
+        lGnF3ASEkbw8TAr/Ofw/A25tEeIt+ePR+ef3xIYFoGgSnA9SMJOOGREbOVuP2NsjmBYp+dgSBicrR
+        dCE+PeD2g==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iswlg-0001Y2-1d; Sat, 18 Jan 2020 22:40:36 +0000
+Date:   Sat, 18 Jan 2020 14:40:35 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Christoph Hellwig <hch@lst.de>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Waiman Long <longman@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-ext4@vger.kernel.org, cluster-devel@redhat.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: RFC: hold i_rwsem until aio completes
+Message-ID: <20200118224035.GA26801@bombadil.infradead.org>
+References: <20200114161225.309792-1-hch@lst.de>
+ <20200114192700.GC22037@ziepe.ca>
+ <20200115065614.GC21219@lst.de>
+ <20200115132428.GA25201@ziepe.ca>
+ <20200115143347.GL2827@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:d214:: with SMTP id q20mr29420477iob.298.1579386600669;
- Sat, 18 Jan 2020 14:30:00 -0800 (PST)
-Date:   Sat, 18 Jan 2020 14:30:00 -0800
-In-Reply-To: <0000000000006de432059c6cabb1@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004bc94b059c71994f@google.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in bitmap_port_gc
-From:   syzbot <syzbot+53cdd0ec0bbabd53370a@syzkaller.appspotmail.com>
-To:     arvid.brodin@alten.se, coreteam@netfilter.org, davem@davemloft.net,
-        fw@strlen.de, gregkh@linuxfoundation.org, jeremy@azazel.net,
-        kadlec@netfilter.org, kstewart@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200115143347.GL2827@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Wed, Jan 15, 2020 at 03:33:47PM +0100, Peter Zijlstra wrote:
+> On Wed, Jan 15, 2020 at 09:24:28AM -0400, Jason Gunthorpe wrote:
+> 
+> > I was interested because you are talking about allowing the read/write side
+> > of a rw sem to be held across a return to user space/etc, which is the
+> > same basic problem.
+> 
+> No it is not; allowing the lock to be held across userspace doesn't
+> change the owner. This is a crucial difference, PI depends on there
+> being a distinct owner. That said, allowing the lock to be held across
+> userspace still breaks PI in that it completely wrecks the ability to
+> analyze the critical section.
 
-commit b9a1e627405d68d475a3c1f35e685ccfb5bbe668
-Author: Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Thu Jul 4 00:21:13 2019 +0000
+Thinking about this from a PI point of view, the problem is not that we
+returned to userspace still holding the lock, it's that boosting this
+process's priority will not help release the lock faster because this
+process no longer owns the lock.
 
-    hsr: implement dellink to clean up resources
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=170438d6e00000
-start commit:   25e73aad Merge tag 'io_uring-5.5-2020-01-16' of git://git...
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=148438d6e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=108438d6e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d9290aeb7e6cf1c4
-dashboard link: https://syzkaller.appspot.com/bug?extid=53cdd0ec0bbabd53370a
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17eb74c9e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14db11d1e00000
-
-Reported-by: syzbot+53cdd0ec0bbabd53370a@syzkaller.appspotmail.com
-Fixes: b9a1e627405d ("hsr: implement dellink to clean up resources")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+If we had a lock owner handoff API (ie I can donate my lock to another
+owner), that would solve this problem.  We'd want to have special owners
+to denote "RCU" "bottom halves" or "irq" so we know what we can do about
+PI.  I don't think we need a "I have stolen this lock from somebody else"
+API, but maybe I'm wrong there.
