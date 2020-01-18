@@ -2,136 +2,104 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DEFEC33CB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 08:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B91C33CB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 08:04:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 703BE20730
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 08:01:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579334494;
-	bh=QZRfRTcVJI//te9sCP4zKTxHjzJXiThJCDSqkyFq4H0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GrFUo4ecrYoe5Mtybsu47511u98LmN3kalkqqQY9b8Qz2wLb9Vqd+lrQdOjxbj1BT
-	 mWD40DxQL7WD+YmcA686LQ8G4EHo9NMnmdEbP/U9IXEPd68DsPMq3bfo6W9TpLvt+j
-	 U4YG8GYtaK5CTVX1f7+o6j4iR/umuc1SBN5QGRBg=
+	by mail.kernel.org (Postfix) with ESMTP id 9AB4520730
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 08:04:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="xhJ7gcm/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbgARIBd convert rfc822-to-8bit (ORCPT
+        id S1726602AbgARIE0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 03:01:33 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:46571 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726416AbgARIBd (ORCPT
+        Sat, 18 Jan 2020 03:04:26 -0500
+Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:43046 "EHLO
+        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726416AbgARIE0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 03:01:33 -0500
-Received: by mail-ed1-f66.google.com with SMTP id m8so24499800edi.13;
-        Sat, 18 Jan 2020 00:01:31 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=ERU6n/vLZIFZzZezcuFNkuC3YsIDUkY1X3kuKRLhtPI=;
-        b=eOgsulatxPkywHX40RO1s4lGujdrNsZOhY7xYFyktnUWeN6DdMwkjdr8fc5tc8VOcQ
-         bb+JQaCgaIgdestFURn13nodToqF1Egn4qp248N+af6iWkhhwsTqGMcUUoNf66PscbmM
-         +a/i/0gayRgMdgKRcqr9VGolp3RfAMJBHesNwx2MYjqo0dqphXR3DDut1529vN/biP9u
-         Y9d6JX8Yce6HszQC8RbD0LnU9/weCwlhNXB7Xs5f5qf+nFz+WuOiNZPzXradnMLHIqeU
-         1m359M2+zxEMpAtK9n258Lmw0oi80mqSOeED3/xlRrKTHxmU/rYca65fAgpp85oky9Ix
-         Zd7A==
-X-Gm-Message-State: APjAAAWT2bpVSj5yQ0KD3eim8xBJXrhB1H2t+N0RhkqRL6mS7zkW13ls
-        lsqklSh8r555P7RPqB5XXhw=
-X-Google-Smtp-Source: APXvYqzM9VN5q/4nn9B+1luAc1pp6crhzwh/UF9BKC38MwwSTn2ijgX/sa79XihoD247g4XK/lOAqA==
-X-Received: by 2002:a50:d55d:: with SMTP id f29mr7582483edj.364.1579334491153;
-        Sat, 18 Jan 2020 00:01:31 -0800 (PST)
-Received: from kozik-lap ([194.230.155.229])
-        by smtp.googlemail.com with ESMTPSA id d23sm403430ejt.40.2020.01.18.00.01.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 18 Jan 2020 00:01:30 -0800 (PST)
-Date:   Sat, 18 Jan 2020 09:01:28 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: Re: [PATCH] sh: sh4a: Remove unused tmu3_device
-Message-ID: <20200118080128.GA7123@kozik-lap>
-References: <20200108194520.3341-1-krzk@kernel.org>
- <CAMuHMdULhY=_GF2MsX-h_j=eLKL+2x3=YcgmFRsAy1_LUOdZ+g@mail.gmail.com>
+        Sat, 18 Jan 2020 03:04:26 -0500
+Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
+        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 9A2472E148F;
+        Sat, 18 Jan 2020 11:04:22 +0300 (MSK)
+Received: from vla1-5a8b76e65344.qloud-c.yandex.net (vla1-5a8b76e65344.qloud-c.yandex.net [2a02:6b8:c0d:3183:0:640:5a8b:76e6])
+        by mxbackcorp2j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id muAey6KGiP-4LvGNOBc;
+        Sat, 18 Jan 2020 11:04:22 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1579334662; bh=mzWO7FgHoEWNjnX84D+nJnPHJUiMjBrNmWaYiTUOznQ=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=xhJ7gcm/zTBF4pqWS7rYnpQ9OsFdcJLAvjSeA8/y0X82qjgtgAcm2x5NzojkeOncz
+         iQIlnHOrqX7YiTvmP5dgwq+PPDIat9Zkbay5QToMIziLIlm4DhEEpeIAepwy5JTBl3
+         HBDb81nhL8Ctltx3If2S0cpUP3dXoujMzPd9+zqY=
+Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from unknown (unknown [2a02:6b8:b080:8305::1:9])
+        by vla1-5a8b76e65344.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id BhMT5Z59Wh-4LWipmcK;
+        Sat, 18 Jan 2020 11:04:21 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH v2 1/2] mm/rmap: fix and simplify reusing mergeable
+ anon_vma as parent when fork
+To:     Wei Yang <richardw.yang@linux.intel.com>,
+        Li Xinhai <lixinhai.lxh@gmail.com>
+Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        akpm <akpm@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rik van Riel <riel@redhat.com>,
+        "kirill.shutemov" <kirill.shutemov@linux.intel.com>
+References: <b8269278-85b5-9fd2-9bce-6defffcad6e8@yandex-team.ru>
+ <20200110023029.GB16823@richard> <20200110112357351531132@gmail.com>
+ <20200110053442.GA27846@richard>
+ <d89587b7-f59f-3897-968b-969b946a9e8a@yandex-team.ru>
+ <20200111223820.GA15506@richard>
+ <a6a7bb3b-434e-277c-694f-d5a18e629d2c@yandex-team.ru>
+ <20200113003343.GA27210@richard>
+ <1cf002fa-a3cb-bcef-57dc-ac9c09dcf2eb@yandex-team.ru>
+ <2020011422424965556826@gmail.com> <20200115012055.GC4916@richard>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <8f335403-4a14-bd17-39da-6299dd962fc6@yandex-team.ru>
+Date:   Sat, 18 Jan 2020 11:04:21 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <CAMuHMdULhY=_GF2MsX-h_j=eLKL+2x3=YcgmFRsAy1_LUOdZ+g@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200115012055.GC4916@richard>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 01:56:58PM +0100, Geert Uytterhoeven wrote:
-> Hi Krzysztof,
+On 15/01/2020 04.20, Wei Yang wrote:
+> On Tue, Jan 14, 2020 at 10:42:52PM +0800, Li Xinhai wrote:
+>> On 2020-01-13 at 19:07 Konstantin Khlebnikov wrote:
+>>
+>>>
+>>> Because I want to keep both heuristics.
+>>> This seems most sane way of interaction between them.
+>>>
+>>> Unfortunately even this patch is slightly broken.
+>>> Condition prev->anon_vma->parent == pvma->anon_vma doesn't guarantee that
+>>> prev vma has the same set of anon-vmas like current vma.
+>>> I.e. anon_vma_clone(vma, prev) might be not enough for keeping connectivity.
+>>
+>> New patch is required?
 > 
-> On Wed, Jan 8, 2020 at 8:45 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > Remove left-over from previous cleanups to silence the warning:
-> >
-> >     arch/sh/kernel/cpu/sh4a/setup-sh7786.c:243:31:
-> >         warning: ‘tmu3_device’ defined but not used [-Wunused-variable]
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > ---
-> >  arch/sh/kernel/cpu/sh4a/setup-sh7786.c | 21 ---------------------
-> >  1 file changed, 21 deletions(-)
-> >
-> > diff --git a/arch/sh/kernel/cpu/sh4a/setup-sh7786.c b/arch/sh/kernel/cpu/sh4a/setup-sh7786.c
-> > index 4b0db8259e3d..22d1c38f742f 100644
-> > --- a/arch/sh/kernel/cpu/sh4a/setup-sh7786.c
-> > +++ b/arch/sh/kernel/cpu/sh4a/setup-sh7786.c
-> > @@ -229,27 +229,6 @@ static struct platform_device tmu2_device = {
-> >         .num_resources  = ARRAY_SIZE(tmu2_resources),
-> >  };
-> >
-> > -static struct sh_timer_config tmu3_platform_data = {
-> > -       .channels_mask = 7,
-> > -};
-> > -
-> > -static struct resource tmu3_resources[] = {
-> > -       DEFINE_RES_MEM(0xffde0000, 0x2c),
-> > -       DEFINE_RES_IRQ(evt2irq(0x7c0)),
-> > -       DEFINE_RES_IRQ(evt2irq(0x7c0)),
-> > -       DEFINE_RES_IRQ(evt2irq(0x7c0)),
-> > -};
-> > -
-> > -static struct platform_device tmu3_device = {
-> > -       .name           = "sh-tmu",
-> > -       .id             = 3,
-> > -       .dev = {
-> > -               .platform_data  = &tmu3_platform_data,
-> > -       },
-> > -       .resource       = tmu3_resources,
-> > -       .num_resources  = ARRAY_SIZE(tmu3_resources),
-> > -};
-> > -
-> >  static const struct sh_dmae_channel dmac0_channels[] = {
-> >         {
-> >                 .offset = 0,
-> 
-> Looks like the previous cleanup accidentally removed one too many tmu
-> device pointers.  The old style used one device per timer, the new style
-> uses one device per 3 timers, i.e. 4 devices for 12 timers.
-> 
-> So the correct fix would be to re-add "&tmu3_device" to
-> sh7786_early_devices[].
-> 
-> Fixes: 1399c195ef5009bf ("sh: Switch to new style TMU device")
+> My suggestion is separate the fix and new approach instead of mess them into
+> one patch.
 
-Indeed, thanks. I'll send v2.
+Yep, it's messy. Maybe it's could be better to revert recent change,
+apply second patch from this set and write something new after that.
 
-Best regards,
-Krzysztof
-
+> 
+>> It is necessary to call anon_vma_clone(vma, pvma) to link all anon_vma which
+>> currently linked by pvma, then link the prev->anon_vma to vma. By this way,
+>> connectivity of vma should be maintained, right?
+>>
+>>> Building such case isn't trivial job but I see nothing that could prevent it.
+>>>
+>>
+> 
