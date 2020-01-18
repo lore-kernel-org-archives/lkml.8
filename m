@@ -8,130 +8,106 @@ X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D154C33CB7
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65762C32771
 	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 20:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60C6824690
+	by mail.kernel.org (Postfix) with ESMTP id 35A3924680
 	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 20:56:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B519eFUo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uY7GjVez"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbgARU4k (ORCPT
+        id S1727085AbgARU4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 15:56:40 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35540 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727041AbgARU4k (ORCPT
+        Sat, 18 Jan 2020 15:56:39 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43119 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727031AbgARU4i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 15:56:40 -0500
-Received: by mail-wr1-f67.google.com with SMTP id g17so25824684wro.2
-        for <linux-kernel@vger.kernel.org>; Sat, 18 Jan 2020 12:56:39 -0800 (PST)
+        Sat, 18 Jan 2020 15:56:38 -0500
+Received: by mail-wr1-f66.google.com with SMTP id d16so25854265wre.10
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jan 2020 12:56:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=76oGiDrq8kVI9ofJf4Cj0FF8xLQAXivYPqr31KwJvbA=;
-        b=B519eFUoq9aYU2Hroc3ku2dSbFfpLhYrLX3/lPqZr8RJ1/mfhkb2sxrtrVX0Qp+3sv
-         2ZMeARit+ZIGpFwcTp/galJOipbpqXxxYYX4EkVEmDW8JpNY0iCIYwZEg8/vO2rMPgBn
-         Ka4VbX4Fa8cw07BUx4Lgv7dGn4GTiZsbWqQVb0kafRWC6LkaLzRoWXtD70hADSLNp5P3
-         QDjDkLFysmbZshIu6c1Xw/HmipoF39d0sv8QHyt3kBfMpgcOhnqb5muoFdpyCNMVeuun
-         jFWawypvpJTdhwNPYtFwIdB3quug/IZFP8MilSbk318frQdrMyS67lLZmstfatgIHZup
-         Lo2A==
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=SK7/yao5fsaBBNvMW9060fS3yhEeL6JTPeMbh6+XWqc=;
+        b=uY7GjVezYNXJ3TKzjl3dgF372yMrTSK7w8G47a/AMGYZwte7SDotv1Z4OSzMi2hFbU
+         HO70+ZQbQIVHEcDERjal0Q4EtM6qCSNRB5pTYuOYBj4F/gmd0cx5jvmYKNCf4BoqyLTF
+         oAL1hIaF3KswqbIZ0b7nH4rOZbzF5NqcfONvMDucYT+E+OUBfsDxKdYRBpaxfjrkADEP
+         UhQls3ufvsek5LwLYty8+TSLu/Yz0xEB4KlSt2KPffq2sS9DOMomkyOScz7k5THZK4ZO
+         VR7PCf69zcSS2jneZ2x+glnImSDlw/hO3OhmwNSulHSrQgbE26NKp0vpGM9hm8VMel74
+         EqZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=76oGiDrq8kVI9ofJf4Cj0FF8xLQAXivYPqr31KwJvbA=;
-        b=rXQiYdfu73zbqWLiqSX6PArqrbe0Ogdqo/lDpjak7SiU3lh26x5eC2FVMsqAFVS4mx
-         Y7XiioBDtfSrPwfW8E4D/780UAaUrQ/sRmPUSvEvJZasBaahZQ2vBRq3qa4AB/Zmg+re
-         ruVZAwZu3bKKOIH4DUSKwCW7akcowhRk03MJXgNcpFnrknR0NZHBY85+oZD1aijcy+AN
-         AYlOwfYahOE31Fb9eMYaLjk5PzGNnpQlR6c2vuQetMLbMF0gGyQlR8wT15rXfGRdDGnX
-         nQf73cXy7fx3Xa/mE1IDNhndqstZZAu6EqjdgnJ5Qia3tYvegt5LhOaVpTZsgHVZXc0x
-         Hxnw==
-X-Gm-Message-State: APjAAAW+U2TnkJsppsJkmdVtAy8vPyDSiDJ6xqp5JNBN0jbx5iOV2pDB
-        oib0hCWqyGUaUlqyQ8IV9M3HrJdeaUyrKw==
-X-Google-Smtp-Source: APXvYqy4rwLBc1QYJrE8daRAziDK3Ob8LGEQ6GlbZ9BEa4nGLNmRd4LhueGNitrdzfVKpLUBixuc+g==
-X-Received: by 2002:a5d:494f:: with SMTP id r15mr10264690wrs.143.1579380998222;
-        Sat, 18 Jan 2020 12:56:38 -0800 (PST)
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=SK7/yao5fsaBBNvMW9060fS3yhEeL6JTPeMbh6+XWqc=;
+        b=m7BGUi2ub2msJDcwrhybzDYEaHzWdCcWMX03uk7ZdHZaIx7ezrI+9FPPMgQ6y6QnsE
+         xQ2D8FwgQZikuAWIyceh0UOVdKmWkskyaEtVuTL4tflSBQ1FhikNreW2kHiGyQNqT61x
+         vFeqNZXJ079ESqNfF2UicFMyjLdUuq1wzZvn1yIE67takWDS/Pj7RXVgJKnpZ9pepJ8C
+         dPO37EPHT6U+kVaR1Yzlg17WfkMYAoItEv4VJyRIE+TJ6UpM7w4oc7xASbytBBwHbbgk
+         revT8oOtXHV5h+y3gHVYMxeueEQh9LGH280dKx8FXMg90K6FPM0zs8v3Z5PuCFhbpfod
+         L3yw==
+X-Gm-Message-State: APjAAAVhTi6xC6eA7WewAEZEP4/iCe9JKBLZw28Wazkxp89VGy+1jnFo
+        48YxozVi5RMDeuk6RwvOU+CMGy2gYKDwIA==
+X-Google-Smtp-Source: APXvYqz62KvAMiiicYrdtpzq79/NMDixMBfVUQi/cgwdgvWRPUa4ige7jZ8h4/yZHPX7LjHyYk6pbQ==
+X-Received: by 2002:a05:6000:1047:: with SMTP id c7mr10209792wrx.341.1579380996778;
+        Sat, 18 Jan 2020 12:56:36 -0800 (PST)
 Received: from Lappy.lan (cpc157701-rdng30-2-0-cust857.15-3.cable.virginm.net. [86.18.131.90])
-        by smtp.gmail.com with ESMTPSA id t125sm16244042wmf.17.2020.01.18.12.56.37
+        by smtp.gmail.com with ESMTPSA id t125sm16244042wmf.17.2020.01.18.12.56.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jan 2020 12:56:37 -0800 (PST)
+        Sat, 18 Jan 2020 12:56:35 -0800 (PST)
 From:   Ben Whitten <ben.whitten@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     afaerber@suse.de, Ben Whitten <ben.whitten@gmail.com>,
         Mark Brown <broonie@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: [PATCH v2 2/2] regmap: stop splitting writes to non incrementing registers
-Date:   Sat, 18 Jan 2020 20:56:25 +0000
-Message-Id: <20200118205625.14532-2-ben.whitten@gmail.com>
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Han Nandor <nandor.han@vaisala.com>
+Subject: [PATCH v2 1/2] regmap: fix writes to non incrementing registers
+Date:   Sat, 18 Jan 2020 20:56:24 +0000
+Message-Id: <20200118205625.14532-1-ben.whitten@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200118205625.14532-1-ben.whitten@gmail.com>
-References: <20200118205625.14532-1-ben.whitten@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When writing to non incrementing registers we should not split
-the writes in any way, writing in one transaction.
+When checking if a register block is writable we must ensure that the
+block does not start with or contain a non incrementing register.
 
+Fixes: 8b9f9d4dc511 ("regmap: verify if register is writeable before writing operations")
 Signed-off-by: Ben Whitten <ben.whitten@gmail.com>
 ---
- drivers/base/regmap/regmap.c | 38 +++++++++++++++++++++---------------
- 1 file changed, 22 insertions(+), 16 deletions(-)
+ drivers/base/regmap/regmap.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
-index 59f911e57719..d0dbf0ffd70f 100644
+index 19f57ccfbe1d..59f911e57719 100644
 --- a/drivers/base/regmap/regmap.c
 +++ b/drivers/base/regmap/regmap.c
-@@ -1528,24 +1528,30 @@ static int _regmap_raw_write_impl(struct regmap *map, unsigned int reg,
- 		int win_offset = (reg - range->range_min) % range->window_len;
- 		int win_residue = range->window_len - win_offset;
+@@ -1488,11 +1488,18 @@ static int _regmap_raw_write_impl(struct regmap *map, unsigned int reg,
  
--		/* If the write goes beyond the end of the window split it */
--		while (val_num > win_residue) {
--			dev_dbg(map->dev, "Writing window %d/%zu\n",
--				win_residue, val_len / map->format.val_bytes);
--			ret = _regmap_raw_write_impl(map, reg, val,
--						     win_residue *
--						     map->format.val_bytes);
--			if (ret != 0)
--				return ret;
-+		if (!regmap_writeable_noinc(map, reg)) {
-+			/* If the write goes beyond the end of the window
-+			 * split it */
-+			while (val_num > win_residue) {
-+				dev_dbg(map->dev, "Writing window %d/%zu\n",
-+					win_residue,
-+					val_len / map->format.val_bytes);
-+				ret = _regmap_raw_write_impl(map, reg, val,
-+							     win_residue *
-+							     map->format.val_bytes);
-+				if (ret != 0)
-+					return ret;
+ 	WARN_ON(!map->bus);
  
--			reg += win_residue;
--			val_num -= win_residue;
--			val += win_residue * map->format.val_bytes;
--			val_len -= win_residue * map->format.val_bytes;
-+				reg += win_residue;
-+				val_num -= win_residue;
-+				val += win_residue * map->format.val_bytes;
-+				val_len -= win_residue * map->format.val_bytes;
+-	/* Check for unwritable registers before we start */
+-	for (i = 0; i < val_len / map->format.val_bytes; i++)
+-		if (!regmap_writeable(map,
+-				     reg + regmap_get_offset(map, i)))
+-			return -EINVAL;
++	/* Check for unwritable or noinc registers in range
++	 * before we start
++	 */
++	if (!regmap_writeable_noinc(map, reg)) {
++		for (i = 0; i < val_len / map->format.val_bytes; i++) {
++			unsigned int element =
++				reg + regmap_get_offset(map, i);
++			if (!regmap_writeable(map, element) ||
++				regmap_writeable_noinc(map, element))
++				return -EINVAL;
++		}
++	}
  
--			win_offset = (reg - range->range_min) %
--				range->window_len;
--			win_residue = range->window_len - win_offset;
-+				win_offset = (reg - range->range_min) %
-+					range->window_len;
-+				win_residue = range->window_len - win_offset;
-+			}
-+		} else {
-+			val_num = 1;
- 		}
- 
- 		ret = _regmap_select_page(map, &reg, range, val_num);
+ 	if (!map->cache_bypass && map->format.parse_val) {
+ 		unsigned int ival;
 -- 
 2.17.1
 
