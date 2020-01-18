@@ -2,100 +2,184 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDE8C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 16:32:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE4E4C33CB7
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 16:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D88E62469E
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 16:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A465F2469C
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 16:34:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ex9jv8/J"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ZGIE2CXj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgARQcI (ORCPT
+        id S1726810AbgARQel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 11:32:08 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:38800 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726413AbgARQcH (ORCPT
+        Sat, 18 Jan 2020 11:34:41 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46043 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726597AbgARQel (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 11:32:07 -0500
-Received: by mail-yw1-f65.google.com with SMTP id 10so15841033ywv.5;
-        Sat, 18 Jan 2020 08:32:07 -0800 (PST)
+        Sat, 18 Jan 2020 11:34:41 -0500
+Received: by mail-pl1-f196.google.com with SMTP id b22so11202117pls.12
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jan 2020 08:34:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0hwMyrYJwbFmWaPuS3q0otAF1/PqypL0XBe4hF/vqqA=;
-        b=Ex9jv8/JkhJ5IqB4oiK0VaYO3Tmwm47pdvWv1yW9yhyReoaz8hnHKOvDvZT9/ZnOLF
-         +ToEJaAaQ8pgRjUZVfcNhpim0acBuQKuhrEV2e0UZhA9w6juzVNxZAbqmDaz/dl7VnkB
-         0qz6v60Ajh9JK6vRv1PCiUGfsCfzZ1mzc0DSIY4acrQI/GeSoqnzjSIwNyzAQgTBKIe4
-         nIoaCSeHMt2A3EnKIZKuBls+ZNZ/TIaQhWOx1kQPTxez4c3dJ0ZDmjrYUUWEDLd0A31J
-         CS0HnJYsBowE8Be4lD6HshM6pzBP52eswqpi6nEH/czNhTwElQpETLxqwZ4opcp7d/I6
-         y9Nw==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=xMFDEvWRj8MaBdHNVYJXJ8QUKiSOTRU80rGI0rv4uJs=;
+        b=ZGIE2CXjajj/msR/dYQWp91xDlgC57BMTSfQXO1QFTzOJ/68miqK3qzkv0KwkakU6N
+         /TfAEtLk1222VjQdALyeieiIRIJrcIATsUEim4n0jhXutbanUsAZqCuSor3g/7XBi4nG
+         RV64K8oZwOOEKX4p4yjW7BqLw4MhrpgwUTM7aoOf0jUs7cfLG6lb2sRWyLcmZnM7yGGz
+         1Ud7lcACM3/+fUcZEriZPrQlyhldJRsex+rVABZcq9TohblyQT1eZKt44Dsf+kj9IwIg
+         ZPDX1iPUl4J42Aw3pHQEZSbz6GpbGIs/RkpewQfeTkCeZZzxq1ttS0awASuGvQUchNVX
+         TB7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=0hwMyrYJwbFmWaPuS3q0otAF1/PqypL0XBe4hF/vqqA=;
-        b=riA1z/Nt8zMQ29oOUaMefkVFjn4y8WD/YHvO5nFC0omX+6q6GyiSns8pF1ZQHmBuww
-         6AOwXmim6A5SVHD5piTM1B6rphMmGaRkkHBuc9TH/Msi7TAu62m3U6V+O0BkkgJQd9YQ
-         EM9dP4GXb8EmRmCD061J7vLgzf8+8mbw5A+KaexzbQC/F1dfFvQMuKTIs3fXqOKHBceB
-         GuVEoUcYAA4w89FAv/oKLGnQJU/XjxkEN7TmrA26i9PCeQJyBDBk4SM2vcvsyhiAOsos
-         qHhjCJWHr+r1G4mxmmNBzPFKo3NiwpW45cKk0jhG0ikQ5VTNYiKGO6+kzEb+8T7lR/C7
-         DtWQ==
-X-Gm-Message-State: APjAAAXcseYuuNpvWJEpzduUMD2MN3lhoXk/eOTRf2R9JWNDnV8gtL3N
-        gWb7Tk5pUeghhBu3iXYZL7c=
-X-Google-Smtp-Source: APXvYqxq1WnW2Zpt2zxGvKiCv4IauzETlp7PrE/Dg60vUeUsbAYO4tUDHRgwJzuQo9Q/fo16HkNhyw==
-X-Received: by 2002:a81:1ac6:: with SMTP id a189mr32727599ywa.85.1579365126643;
-        Sat, 18 Jan 2020 08:32:06 -0800 (PST)
-Received: from newpc-fedora.timestop.xyz (cpe-74-132-3-215.kya.res.rr.com. [74.132.3.215])
-        by smtp.gmail.com with ESMTPSA id a23sm13277949ywa.32.2020.01.18.08.32.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jan 2020 08:32:06 -0800 (PST)
-From:   Dillon Brock <dab9861@gmail.com>
-Cc:     Dillon Brock <dab9861@gmail.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        bh=xMFDEvWRj8MaBdHNVYJXJ8QUKiSOTRU80rGI0rv4uJs=;
+        b=Z3arzjIjFa0biH6rO2Dgkc0ndGr5gWv3bF/zAr47Nfnv8EOMLlTAj5gAN1pI1Tqumb
+         JymvtIZlZ+0osADX3TkBb5dzhBxULY+TQ1qE06JGLS8TwSNTWghTtiISywioY+e5Lyfh
+         aLTrHiYu/j0s5NTJKqSWvnhA4kDwfw8B4ZQd8T72VI+BXFYF7pR/k1mtNE9Bw/4esyyL
+         fZNSW32Sbm1Vf7CJAium+sraD5l3po1hRcZGEJisf7D4t9VHYWKV6Y6LicLSDbauY/hc
+         Y7xTKvK3WwxGNhmU7lI82c9hlwaJMU6miuQ6sM9O3h4wOKHyFXIU2Lzo1lfNjza5w2JA
+         iM+g==
+X-Gm-Message-State: APjAAAVIyUYBWGHpwDwLbofgukmzCdkMF+msPuGHgjG0MAE4mrx+k6AU
+        2ISoTt+GI85vEJDLQhoYo/JlGMn9LI8=
+X-Google-Smtp-Source: APXvYqxGaAAFii+9SovIezKp4nEQIrJGNIXs2ajW0kq9V+zST4DNJfKagj+qQNdZj3lDRLr9QQqjTA==
+X-Received: by 2002:a17:902:16a:: with SMTP id 97mr5583527plb.163.1579365280551;
+        Sat, 18 Jan 2020 08:34:40 -0800 (PST)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id k44sm3194803pjb.20.2020.01.18.08.34.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 18 Jan 2020 08:34:40 -0800 (PST)
+Subject: Re: [PATCH v2] io_uring: optimise sqe-to-req flags translation
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] IB/opa_vnic: Spelling correction of 'erorr' to 'error'
-Date:   Sat, 18 Jan 2020 11:25:42 -0500
-Message-Id: <20200118162542.15188-1-dab9861@gmail.com>
-X-Mailer: git-send-email 2.21.1
+References: <b507d39e-ec2b-5c9f-0fd0-6ab1b0491cad@kernel.dk>
+ <06bcf64774c4730b33d1ef65e4fcb67f381cae08.1579340590.git.asml.silence@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <b773df2f-8873-77f3-d25d-b59c66f3a04b@kernel.dk>
+Date:   Sat, 18 Jan 2020 09:34:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <06bcf64774c4730b33d1ef65e4fcb67f381cae08.1579340590.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Correcting a minor spelling mistake in the comments.
+On 1/18/20 3:24 AM, Pavel Begunkov wrote:
+> For each IOSQE_* flag there is a corresponding REQ_F_* flag. And there
+> is a repetitive pattern of their translation:
+> e.g. if (sqe->flags & SQE_FLAG*) req->flags |= REQ_F_FLAG*
+> 
+> Use the same numerical values/bits for them, and copy them instead of
+> manual handling.
+> 
+> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+> ---
+> 
+> v2: enum to generate bits (Jens Axboe)
+>     Comments cross 80 chars, but IMHO more visually appealing
+> 
+> Crosses 
+> 
+>  fs/io_uring.c                 | 75 +++++++++++++++++++++--------------
+>  include/uapi/linux/io_uring.h | 26 +++++++++---
+>  2 files changed, 67 insertions(+), 34 deletions(-)
+> 
+> diff --git a/fs/io_uring.c b/fs/io_uring.c
+> index ed1adeda370e..e3e2438a7480 100644
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -452,6 +452,49 @@ struct io_async_ctx {
+>  	};
+>  };
+>  
+> +enum {
+> +	REQ_F_FIXED_FILE_BIT	= IOSQE_FIXED_FILE_BIT,
+> +	REQ_F_IO_DRAIN_BIT	= IOSQE_IO_DRAIN_BIT,
+> +	REQ_F_LINK_BIT		= IOSQE_IO_LINK_BIT,
+> +	REQ_F_HARDLINK_BIT	= IOSQE_IO_HARDLINK_BIT,
+> +	REQ_F_FORCE_ASYNC_BIT	= IOSQE_ASYNC_BIT,
+> +
+> +	REQ_F_LINK_NEXT_BIT,
+> +	REQ_F_FAIL_LINK_BIT,
+> +	REQ_F_INFLIGHT_BIT,
+> +	REQ_F_CUR_POS_BIT,
+> +	REQ_F_NOWAIT_BIT,
+> +	REQ_F_IOPOLL_COMPLETED_BIT,
+> +	REQ_F_LINK_TIMEOUT_BIT,
+> +	REQ_F_TIMEOUT_BIT,
+> +	REQ_F_ISREG_BIT,
+> +	REQ_F_MUST_PUNT_BIT,
+> +	REQ_F_TIMEOUT_NOSEQ_BIT,
+> +	REQ_F_COMP_LOCKED_BIT,
+> +};
 
-Signed-off-by: Dillon Brock <dab9861@gmail.com>
----
- drivers/infiniband/ulp/opa_vnic/opa_vnic_encap.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Perfect
 
-diff --git a/drivers/infiniband/ulp/opa_vnic/opa_vnic_encap.h b/drivers/infiniband/ulp/opa_vnic/opa_vnic_encap.h
-index e4c9bf2ef7e2..4480092c68e0 100644
---- a/drivers/infiniband/ulp/opa_vnic/opa_vnic_encap.h
-+++ b/drivers/infiniband/ulp/opa_vnic/opa_vnic_encap.h
-@@ -358,7 +358,7 @@ struct opa_veswport_summary_counters {
-  * @rx_drop_state: received packets in non-forwarding port state
-  * @rx_logic: other receive errors
-  *
-- * All the above are counters of corresponding erorr conditions.
-+ * All the above are counters of corresponding error conditions.
-  */
- struct opa_veswport_error_counters {
- 	__be16  vp_instance;
+> +enum {
+> +	/* correspond one-to-one to IOSQE_IO_* flags*/
+> +	REQ_F_FIXED_FILE	= BIT(REQ_F_FIXED_FILE_BIT),	/* ctx owns file */
+
+I'd put the comment on top of the line instead, these lines are way too
+long.
+
+> diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
+> index 955fd477e530..cee59996b23a 100644
+> --- a/include/uapi/linux/io_uring.h
+> +++ b/include/uapi/linux/io_uring.h
+> @@ -10,6 +10,7 @@
+>  
+>  #include <linux/fs.h>
+>  #include <linux/types.h>
+> +#include <linux/bits.h>
+>  
+>  /*
+>   * IO submission data structure (Submission Queue Entry)
+> @@ -45,14 +46,29 @@ struct io_uring_sqe {
+>  	};
+>  };
+>  
+> +enum {
+> +	IOSQE_FIXED_FILE_BIT,
+> +	IOSQE_IO_DRAIN_BIT,
+> +	IOSQE_IO_LINK_BIT,
+> +	IOSQE_IO_HARDLINK_BIT,
+> +	IOSQE_ASYNC_BIT,
+> +};
+> +
+>  /*
+>   * sqe->flags
+>   */
+> -#define IOSQE_FIXED_FILE	(1U << 0)	/* use fixed fileset */
+> -#define IOSQE_IO_DRAIN		(1U << 1)	/* issue after inflight IO */
+> -#define IOSQE_IO_LINK		(1U << 2)	/* links next sqe */
+> -#define IOSQE_IO_HARDLINK	(1U << 3)	/* like LINK, but stronger */
+> -#define IOSQE_ASYNC		(1U << 4)	/* always go async */
+> +enum {
+> +	/* use fixed fileset */
+> +	IOSQE_FIXED_FILE	= BIT(IOSQE_FIXED_FILE_BIT),
+
+Let's please not use BIT() for the user visible part, though. And I'd
+leave these as defines, sometimes apps do things ala:
+
+#ifndef IOSQE_IO_LINK
+#define IOSQE_IO_LINK ...
+#endif
+
+to make it easier to co-exist with old and new headers.
+
 -- 
-2.21.1
+Jens Axboe
 
