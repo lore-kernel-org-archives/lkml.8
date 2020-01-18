@@ -2,74 +2,139 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22583C33CB7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 05:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 935B7C33CB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 05:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0066324683
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 05:26:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DE4C2073A
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 05:31:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbgARF0y (ORCPT
+        id S1726345AbgARFbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 00:26:54 -0500
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:44113 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725385AbgARF0y (ORCPT
+        Sat, 18 Jan 2020 00:31:05 -0500
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:60911 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725385AbgARFbF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 00:26:54 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04455;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0To.bGaW_1579325203;
-Received: from localhost(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0To.bGaW_1579325203)
+        Sat, 18 Jan 2020 00:31:05 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0To.f-S7_1579325449;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0To.f-S7_1579325449)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 18 Jan 2020 13:26:51 +0800
+          Sat, 18 Jan 2020 13:31:00 +0800
+Subject: Re: [Patch v4] mm: thp: remove the defer list related code since this
+ will not happen
 From:   Yang Shi <yang.shi@linux.alibaba.com>
-To:     mhocko@suse.com, richardw.yang@linux.intel.com,
-        akpm@linux-foundation.org
-Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: [PATCH] mm: move_pages: fix the return value if there are not-migrated pages
-Date:   Sat, 18 Jan 2020 13:26:43 +0800
-Message-Id: <1579325203-16405-1-git-send-email-yang.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+To:     Wei Yang <richardw.yang@linux.intel.com>, hannes@cmpxchg.org,
+        mhocko@kernel.org, vdavydov.dev@gmail.com,
+        akpm@linux-foundation.org, ktkhai@virtuozzo.com,
+        kirill.shutemov@linux.intel.com
+Cc:     cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, alexander.duyck@gmail.com,
+        rientjes@google.com, stable@vger.kernel.org
+References: <20200117233836.3434-1-richardw.yang@linux.intel.com>
+ <e73272a8-87e9-5e22-4f78-588b640f4fc4@linux.alibaba.com>
+Message-ID: <25e1226a-9cce-6a75-f0e9-b42f5afa22da@linux.alibaba.com>
+Date:   Fri, 17 Jan 2020 21:30:45 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
+MIME-Version: 1.0
+In-Reply-To: <e73272a8-87e9-5e22-4f78-588b640f4fc4@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The do_move_pages_to_node() might return > 0 value, the number of pages
-that are not migrated, then the value will be returned to userspace
-directly.  But, move_pages() syscall would just return 0 or errno.  So,
-we need reset the return value to 0 for such case as what pre-v4.17 did.
 
-Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Wei Yang <richardw.yang@linux.intel.com>
-Cc: <stable@vger.kernel.org>    [4.17+]
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
----
- mm/migrate.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 86873b6..3e75432 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -1659,8 +1659,11 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
- 			goto out_flush;
- 
- 		err = do_move_pages_to_node(mm, &pagelist, current_node);
--		if (err)
-+		if (err) {
-+			if (err > 0)
-+				err = 0;
- 			goto out;
-+		}
- 		if (i > start) {
- 			err = store_status(status, start, current_node, i - start);
- 			if (err)
--- 
-1.8.3.1
+On 1/17/20 4:57 PM, Yang Shi wrote:
+>
+>
+> On 1/17/20 3:38 PM, Wei Yang wrote:
+>> If compound is true, this means it is a PMD mapped THP. Which implies
+>> the page is not linked to any defer list. So the first code chunk will
+>> not be executed.
+>>
+>> Also with this reason, it would not be proper to add this page to a
+>> defer list. So the second code chunk is not correct.
+>>
+>> Based on this, we should remove the defer list related code.
+>>
+>> Fixes: 87eaceb3faa5 ("mm: thp: make deferred split shrinker memcg 
+>> aware")
+>>
+>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+>> Suggested-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+>> Cc: <stable@vger.kernel.org>    [5.4+]
+>>
+>> ---
+>> v4:
+>>    * finally we identified the related code is not necessary and not
+>>      correct, just remove it
+>>    * thanks to Kirill T first spot some problem
+>
+> Thanks for debugging and figuring this out. Acked-by: Yang Shi 
+> <yang.shi@linux.alibaba.com>
+
+BTW, the patch itself is fine, but the subject looks really confusing. 
+It sounds like we would remove all deferred list code. I'd suggest 
+rephrase it to:
+
+mm: thp: don't need care deferred split queue in memcg charge move path
+
+>
+>> v3:
+>>    * remove all review/ack tag since rewrite the changelog
+>>    * use deferred_split_huge_page as the example of race
+>>    * add cc stable 5.4+ tag as suggested by David Rientjes
+>>
+>> v2:
+>>    * move check on compound outside suggested by Alexander
+>>    * an example of the race condition, suggested by Michal
+>> ---
+>>   mm/memcontrol.c | 18 ------------------
+>>   1 file changed, 18 deletions(-)
+>>
+>> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+>> index 6c83cf4ed970..27c231bf4565 100644
+>> --- a/mm/memcontrol.c
+>> +++ b/mm/memcontrol.c
+>> @@ -5340,14 +5340,6 @@ static int mem_cgroup_move_account(struct page 
+>> *page,
+>>           __mod_lruvec_state(to_vec, NR_WRITEBACK, nr_pages);
+>>       }
+>>   -#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>> -    if (compound && !list_empty(page_deferred_list(page))) {
+>> - spin_lock(&from->deferred_split_queue.split_queue_lock);
+>> -        list_del_init(page_deferred_list(page));
+>> -        from->deferred_split_queue.split_queue_len--;
+>> - spin_unlock(&from->deferred_split_queue.split_queue_lock);
+>> -    }
+>> -#endif
+>>       /*
+>>        * It is safe to change page->mem_cgroup here because the page
+>>        * is referenced, charged, and isolated - we can't race with
+>> @@ -5357,16 +5349,6 @@ static int mem_cgroup_move_account(struct page 
+>> *page,
+>>       /* caller should have done css_get */
+>>       page->mem_cgroup = to;
+>>   -#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>> -    if (compound && list_empty(page_deferred_list(page))) {
+>> - spin_lock(&to->deferred_split_queue.split_queue_lock);
+>> -        list_add_tail(page_deferred_list(page),
+>> - &to->deferred_split_queue.split_queue);
+>> -        to->deferred_split_queue.split_queue_len++;
+>> - spin_unlock(&to->deferred_split_queue.split_queue_lock);
+>> -    }
+>> -#endif
+>> -
+>>       spin_unlock_irqrestore(&from->move_lock, flags);
+>>         ret = 0;
+>
 
