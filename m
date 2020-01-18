@@ -2,90 +2,91 @@ Return-Path: <SRS0=3sb/=3H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EACC33CB7
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 13:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE7DC33CB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 13:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D491724696
-	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 13:36:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579354597;
-	bh=gS0FpdIGCTXsJZGpT65ekhWKidMVCXDvjjsVjOFw2WA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=V8vEBM6cHCJcNqFhckcCTCg/S97fPQ1BUiGE7P18khQwmNH+wj7nUbim27PrvzXM/
-	 Mg1H1kFypu7mZkxV+0M4135pbU0+jhsnUhiQ7sZqsAD4Ip1zwDqQA0/X/a5Yk9F+fA
-	 zs5W/SR3+EqyueZTmd0T/wtZHRlzf5l7Hhkab4dg=
+	by mail.kernel.org (Postfix) with ESMTP id BB5BE24696
+	for <linux-kernel@archiver.kernel.org>; Sat, 18 Jan 2020 13:37:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EY3A6DSL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729074AbgARNgh (ORCPT
+        id S1729091AbgARNha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 18 Jan 2020 08:36:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50670 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727012AbgARNgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 18 Jan 2020 08:36:36 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B2F524696;
-        Sat, 18 Jan 2020 13:36:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579354596;
-        bh=gS0FpdIGCTXsJZGpT65ekhWKidMVCXDvjjsVjOFw2WA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JJD9E9Mmu4lcx9+EWAu3bqjGQAyeG15sovjzS3r5OfKntg8DEoTKItOK4TgCBCXuZ
-         z924H5UE3z8fwqzQrIRi5eGUk2JlQ/DnETNabdQqjKZcfFMuRyj4xosdMpztl/MSmp
-         IyOwM8b1ncGRVR2cM5rGAHIbXR9s/Pkp1i7BvEhU=
-Date:   Sat, 18 Jan 2020 13:36:32 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: iio: adis16480: add compatible entry
- for ADIS16490
-Message-ID: <20200118133632.2b4b15e5@archlinux>
-In-Reply-To: <20200116131148.18149-2-alexandru.ardelean@analog.com>
-References: <20200116131148.18149-1-alexandru.ardelean@analog.com>
-        <20200116131148.18149-2-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 18 Jan 2020 08:37:30 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:44612 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727162AbgARNh3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 18 Jan 2020 08:37:29 -0500
+Received: by mail-qv1-f66.google.com with SMTP id n8so11983188qvg.11
+        for <linux-kernel@vger.kernel.org>; Sat, 18 Jan 2020 05:37:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VF7Ybre9nicDdkbJ8YLCx9ZGXACXxQfpsesRhP5xc4k=;
+        b=EY3A6DSLTKp1/kz1PrlGIeXEHIfZ+oH6MwVnlkr7xQTR3QolUfLzcrf937teMuKRrb
+         zujAJVMsdgkbQFnO7cdoFfEDSmlT6jfMb9+hqE49E2xj6fg4AzURPCHdn/fCXSbXhwEJ
+         yTxjNPWuM83IaBXYefWXukRwVW8We1HyswaRf+1gQ6WUlu+ntdM8jfDaSvHUA5QTaXe9
+         ZSbr9yOKCstPniXl7afwYigPQOdWs3y8vaqUVQeu7emu2B+C/jljkfi9d2e9Bv/JVoBz
+         s7xJnj4qdvZpwBrajm/Kd4AIsI8+9J48hr/ks/cqpU7LVTZ9YjpJ/sv0HCRQpfN3OnmO
+         o3JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VF7Ybre9nicDdkbJ8YLCx9ZGXACXxQfpsesRhP5xc4k=;
+        b=GG/uBXneBleBQjh1wQcL6JsX3Zf12TJ96vdJxg+3LjYBUy3OYqq/FONDxXYakGpXUz
+         Hx+421bhq3/eYgRhRXOC6QPRF9twu0+reqpia6Zwghegdup4XAnzvz8lfbmDQ1gezw/X
+         2YnDy1lX+dzeBHTcdYzGMUsWLyN2oiY4r4FtSSouEmYyhipg/2gwwgFVVTrJV6Blky+S
+         MmEHNpUUJcIpp4/ag0SPe9y8MACKGP0u8DirxkfgEw4u7A7L6kL2cwIE1nsB22To1eUL
+         CzV+/nu1UTA2NHfzLTMKomhaf6B5+S+M/g8BFQ19lxo5Q2jtsBgPCwTeh4n+igZzwTNL
+         J/Ag==
+X-Gm-Message-State: APjAAAU3bV4M+4qXfDb9TBcsIk49FAs+kPza9jHdtqPRobLcCKgj2iW9
+        C6YcEUVPtA7BmMF/6sOgbZYsYegfoYTdH9ZyxujbFA==
+X-Google-Smtp-Source: APXvYqwYblXYgB6+GHPK1LDSZMKjsXLHY5pS/MY8CjPumGXuzkIwxuXY7SK9oa8eOhjw5iioY3V40KhDw4njeWh5CLo=
+X-Received: by 2002:a05:6214:1103:: with SMTP id e3mr12426686qvs.159.1579354648459;
+ Sat, 18 Jan 2020 05:37:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <CAKv+Gu8WBSsG2e8bVpARcwNBrGtMLzUA+bbikHymrZsNQE6wvw@mail.gmail.com>
+ <934E6F23-96FE-4C59-9387-9ABA2959DBBB@lca.pw> <CAKv+Gu9PfAHP4_Xaj3_PHFGQCsZRk2oXGbh8oTt22y3aCJBFTg@mail.gmail.com>
+In-Reply-To: <CAKv+Gu9PfAHP4_Xaj3_PHFGQCsZRk2oXGbh8oTt22y3aCJBFTg@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Sat, 18 Jan 2020 14:37:17 +0100
+Message-ID: <CACT4Y+bKhgRdCM1v8wTht=pEcX6u-J_Rq6=zA5yfMuBUcj169w@mail.gmail.com>
+Subject: Re: [PATCH -next] x86/efi_64: fix a user-memory-access in runtime
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Qian Cai <cai@lca.pw>, Ard Biesheuvel <ardb@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Jan 2020 15:11:48 +0200
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+On Sat, Jan 18, 2020 at 2:35 PM Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
+> > > On Jan 18, 2020, at 3:00 AM, Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+> > >
+> > > Can't we just use READ_ONCE_NOCHECK() instead?
+> >
+> > My understanding is that KASAN actually want to make sure there is a no dereference of user memory because it has security implications. Does that make no sense here?
+>
+> Not really. This code runs extremely early in the boot, with a
+> temporary 1:1 memory mapping installed so that the EFI firmware can
+> transition into virtually remapped mode.
+>
+> Furthermore, the same issue exists for mixed mode, so we'll need to
+> fix that as well. I'll spin a patch and credit you as the reporter.
 
-> This change adds an entry for ADIS16490 in the list of compatible devices
-> defined in the dt-bindings of the adis16480 driver.
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Applied.
-
-Thanks,
-
-Jonathan
-
-> ---
->  Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt b/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt
-> index ed7783f45233..cd903a1d880d 100644
-> --- a/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt
-> +++ b/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt
-> @@ -8,6 +8,7 @@ Required properties for the ADIS16480:
->  	* "adi,adis16480"
->  	* "adi,adis16485"
->  	* "adi,adis16488"
-> +	* "adi,adis16490"
->  	* "adi,adis16495-1"
->  	* "adi,adis16495-2"
->  	* "adi,adis16495-3"
-
+If this code runs extremely early and uses even completely different
+mapping, it may make sense to disable KASAN instrumentation of this
+file in Makefile.
